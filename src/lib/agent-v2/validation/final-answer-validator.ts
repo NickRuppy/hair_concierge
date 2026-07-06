@@ -32,6 +32,7 @@ import {
 import { validateUserFacingLanguage } from "@/lib/agent-v2/validation/user-facing-language"
 export interface AgentV2FinalAnswerValidationContext {
   selectedProductProjections: readonly {
+    tool_name?: "select_products" | "load_product_facts"
     valid_product_ids?: readonly string[]
     allowed_claim_sources?: readonly string[]
     products?: readonly {
@@ -50,6 +51,7 @@ export interface AgentV2FinalAnswerValidationContext {
   recentEvidenceText?: string
   toolCallHistory: readonly Partial<AgentV2ToolCallTrace>[]
   safetyMode: "normal" | "restricted" | "hard_short_circuit"
+  isTrustedProductSelectionTurn?: boolean
   requiredGuidancePackageIds: readonly string[]
   loadedGuidancePackageIds?: readonly string[]
   currentRoutineLayer: "basics" | "goals" | "problems" | "deep_dive" | null
@@ -103,7 +105,37 @@ export function validateAgentV2FinalAnswer(
     }
   }
 
-  const terminalAnswer = parsed.data
+  let terminalAnswer = parsed.data
+  let findings = collectAgentV2FinalAnswerFindings(terminalAnswer, context)
+
+  const hiddenPendingSanitization = sanitizeHiddenPendingFollowupAction(terminalAnswer, findings)
+  if (hiddenPendingSanitization) {
+    terminalAnswer = hiddenPendingSanitization.answer
+    findings = [
+      ...collectAgentV2FinalAnswerFindings(terminalAnswer, context),
+      hiddenPendingSanitization.warning,
+    ]
+  }
+
+  const policyAdjustedFindings = applyValidatorDietPolicy(context, findings)
+  const errors = policyAdjustedFindings.filter((finding) => finding.severity !== "warn")
+  const warnings = policyAdjustedFindings.filter((finding) => finding.severity === "warn")
+
+  return {
+    ok: errors.length === 0,
+    errors,
+    warnings,
+    checked_payload_mode: terminalAnswer.answer_mode,
+    sanitized_answer: terminalAnswer,
+    accepted_session_memory_writes: terminalAnswer.session_memory_writes,
+    dropped_session_memory_writes: memorySanitization.dropped,
+  }
+}
+
+function collectAgentV2FinalAnswerFindings(
+  terminalAnswer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): AgentV2ValidationError[] {
   const findings: AgentV2ValidationError[] = []
 
   validateModePayload(terminalAnswer, findings)
@@ -125,6 +157,8 @@ export function validateAgentV2FinalAnswer(
   validateNamedProductLookupRequired(terminalAnswer, context, findings)
   validateProductLookupResultClaims(terminalAnswer, context, findings)
   validateTrustedSelectedProductCaveat(terminalAnswer, context, findings)
+  validateProductFactContradictionCaveat(terminalAnswer, context, findings)
+  validateTrustedSelectedProductClarification(terminalAnswer, context, findings)
   validateNamedProductDetailAnswer(terminalAnswer, context, findings)
   validateRoutineToolRequired(terminalAnswer, context, findings)
   validateRoutineThreadContinuity(terminalAnswer, context, findings)
@@ -147,17 +181,90 @@ export function validateAgentV2FinalAnswer(
     findings,
   )
 
-  const errors = findings.filter((finding) => finding.severity !== "warn")
-  const warnings = findings.filter((finding) => finding.severity === "warn")
+  return findings
+}
+
+function applyValidatorDietPolicy(
+  context: AgentV2FinalAnswerValidationContext,
+  findings: AgentV2ValidationError[],
+): AgentV2ValidationError[] {
+  if (context.safetyMode !== "normal") return findings
+
+  const blockingFindings = findings.filter((finding) => finding.severity !== "warn")
+  if (blockingFindings.length === 0) return findings
+  if (!blockingFindings.every(isSoftenableHiddenMetadataFinding)) return findings
+
+  return findings.map((finding) => {
+    if (finding.severity === "warn") return finding
+    if (!isSoftenableHiddenMetadataFinding(finding)) return finding
+
+    return {
+      ...finding,
+      severity: "warn",
+      message: `${finding.message} Softened by validator diet because no truth, safety, product-ID, product-facts, or UI-integrity blocker was present.`,
+      reason_code: finding.reason_code ?? "validator_diet_softened",
+    }
+  })
+}
+
+function isSoftenableHiddenMetadataFinding(finding: AgentV2ValidationError): boolean {
+  switch (finding.validator_id) {
+    case "request_interpretation_confidence":
+      return true
+    case "request_interpretation_answer_mode":
+      return (
+        finding.path?.[0] === "request_interpretation" &&
+        finding.path?.[1] === "product_request_kind"
+      )
+    default:
+      return false
+  }
+}
+
+function sanitizeHiddenPendingFollowupAction(
+  answer: AgentV2TerminalAnswer,
+  findings: readonly AgentV2ValidationError[],
+): { answer: AgentV2TerminalAnswer; warning: AgentV2ValidationError } | null {
+  if (!answer.pending_followup_action) return null
+
+  const blockingFindings = findings.filter((finding) => finding.severity !== "warn")
+  if (blockingFindings.length === 0) return null
+  if (
+    !blockingFindings.some((finding) => finding.validator_id === "pending_followup_action_hidden")
+  ) {
+    return null
+  }
+  if (!blockingFindings.every(isSanitizableHiddenPendingFollowupFinding)) return null
+
+  const hiddenPendingFinding =
+    blockingFindings.find((finding) => finding.validator_id === "pending_followup_action_hidden") ??
+    blockingFindings[0]
+
+  const sanitizedAnswer = AgentV2TerminalAnswerSchema.parse({
+    ...answer,
+    pending_followup_action: null,
+  })
 
   return {
-    ok: errors.length === 0,
-    errors,
-    warnings,
-    checked_payload_mode: terminalAnswer.answer_mode,
-    sanitized_answer: terminalAnswer,
-    accepted_session_memory_writes: terminalAnswer.session_memory_writes,
-    dropped_session_memory_writes: memorySanitization.dropped,
+    answer: sanitizedAnswer,
+    warning: {
+      ...hiddenPendingFinding,
+      severity: "warn",
+      message:
+        "pending_followup_action was removed because the visible answer did not offer a confirmable next step.",
+      reason_code: "pending_followup_action_sanitized",
+    },
+  }
+}
+
+function isSanitizableHiddenPendingFollowupFinding(finding: AgentV2ValidationError): boolean {
+  switch (finding.validator_id) {
+    case "pending_followup_action_hidden":
+    case "pending_followup_action_kind_mismatch":
+    case "pending_followup_action_category_mismatch":
+      return true
+    default:
+      return false
   }
 }
 
@@ -1526,7 +1633,7 @@ function validateProductAssessmentGrounding(
       path: ["payload", "assessed_product_ids"],
       rejected_value: assessedProductIds,
       expected:
-        "Each assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching select_products projection facts.",
+        "Each assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching load_product_facts projection facts.",
     })
   }
 }
@@ -1534,6 +1641,8 @@ function validateProductAssessmentGrounding(
 function projectionProvidesProductAssessmentFacts(
   projection: AgentV2FinalAnswerValidationContext["selectedProductProjections"][number],
 ): boolean {
+  if (projection.tool_name !== "load_product_facts") return false
+
   const productFactSources = new Set([
     "selected_products.supported_claims",
     "selected_products.comparison_facts",
@@ -1557,7 +1666,7 @@ function validateProductAssessmentVisibleIdentity(
   const missingNames = answer.payload.assessed_product_ids
     .map((productId) => ({ productId, name: productNamesById.get(productId) }))
     .filter((item): item is { productId: string; name: string } => Boolean(item.name))
-    .filter((item) => !hasNormalizedPhrase(visibleText, item.name))
+    .filter((item) => !visibleProductIdentityMentionsName(visibleText, item.name))
 
   if (missingNames.length === 0) return
 
@@ -1574,6 +1683,26 @@ function validateProductAssessmentVisibleIdentity(
     repair_hint:
       "Start or frame the product_assessment answer with the canonical assessed product name(s), then continue with the grounded fit or usage answer. Do not use only a generic category or shortened marketing descriptor.",
   })
+}
+
+function visibleProductIdentityMentionsName(
+  normalizedVisibleText: string,
+  productName: string,
+): boolean {
+  if (hasNormalizedPhrase(normalizedVisibleText, productName)) return true
+
+  const compactName = removePackSizeDetails(productName)
+  return compactName !== productName && hasNormalizedPhrase(normalizedVisibleText, compactName)
+}
+
+function removePackSizeDetails(value: string): string {
+  return value
+    .replace(
+      /(?:[,;]\s*)?\b\d+(?:[,.]\d+)?\s*(?:ml|milliliter|l|liter|g|gramm|kg|oz|fl\.?\s*oz)\b/giu,
+      " ",
+    )
+    .replace(/\s+/g, " ")
+    .trim()
 }
 
 function collectResolvedProductAssessmentIds(
@@ -1634,6 +1763,9 @@ function validateTrustedSelectedProductCaveat(
     ) ||
     /(?:kann|konnte|lässt|laesst).{0,60}(?:nicht|nicht\s+sicher).{0,60}(?:prüfen|pruefen|bewerten|bestätigen|bestaetigen).{0,80}\b(?:produkt|variante|katalogtreffer|produktdatensatz|produktdaten)\b/iu.test(
       visibleText,
+    ) ||
+    /(?:ohne|keine|keinen).{0,40}(?:weitere|speziellen|stärkeren|staerkeren).{0,80}(?:produkteigenschaften|produktdaten|detailclaims|zusatzversprechen).{0,80}(?:nicht|keine|nicht\s+abschließend|nicht\s+abschliessend)/iu.test(
+      visibleText,
     )
   ) {
     errors.push({
@@ -1643,9 +1775,80 @@ function validateTrustedSelectedProductCaveat(
       severity: "block",
       path: ["payload", "user_facing_answer_de"],
       repair_hint:
-        "Acknowledge the selected catalog product as the canonical product. If you lack enough specs for a detailed claim, say which claim is unsupported, not that the product itself is unverified.",
+        "Acknowledge the selected catalog product as the canonical product. For fit, usage, frequency, keep/stop/replace, or product-property answers, call load_product_facts and answer from those facts. If a specific requested claim is still unsupported, name only that missing claim, not the product identity.",
     })
   }
+}
+
+function validateProductFactContradictionCaveat(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  const visibleText = normalizeVisibleText(readUserFacingAnswer(answer.payload))
+  if (!hasUnsupportedHeatProtectionCaveat(visibleText)) return
+  if (!loadedProductFactsSupportHeatProtection(context)) return
+
+  errors.push({
+    validator_id: "product_fact_contradiction_caveat",
+    message:
+      "Final answer says heat protection cannot be confirmed even though loaded product facts support heat protection.",
+    severity: "block",
+    path: ["payload", "user_facing_answer_de"],
+    repair_hint:
+      "Use the loaded product facts: if heat protection is supported, do not caveat it as unconfirmed. For general fit answers, omit unrelated caveats unless the user asked about that property.",
+  })
+}
+
+function hasUnsupportedHeatProtectionCaveat(visibleText: string): boolean {
+  return /\b(?:hitzeschutz|schutzwirkung)\b.{0,140}\b(?:nicht\s+sicher|nicht\s+eindeutig|nicht\s+abschliessend|nicht\s+bestatigen|nicht\s+belegen)\b.{0,100}\b(?:bestatigen|belegen|sagen|einschatzen)?\b/iu.test(
+    visibleText,
+  )
+}
+
+function loadedProductFactsSupportHeatProtection(
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  return context.selectedProductProjections.some((projection) =>
+    (projection.products ?? []).some((product) =>
+      (product.supported_claims ?? []).some(isPositiveHeatProtectionClaim),
+    ),
+  )
+}
+
+function isPositiveHeatProtectionClaim(claim: unknown): boolean {
+  if (!claim || typeof claim !== "object") return false
+  const record = claim as Record<string, unknown>
+  const field = typeof record.field === "string" ? normalizeVisibleText(record.field) : ""
+  const value = record.value
+  const label = typeof record.label === "string" ? normalizeVisibleText(record.label) : ""
+  const isHeatField = field === "heat protection" || field === "provides heat protection"
+  const positiveValue =
+    value === true ||
+    (typeof value === "string" &&
+      /^(?:true|ja|yes|1)$/iu.test(value.trim().toLocaleLowerCase("de-DE")))
+
+  return isHeatField && (positiveValue || /\bhitzeschutz\s+ja\b/iu.test(label))
+}
+
+function validateTrustedSelectedProductClarification(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  if (!context.isTrustedProductSelectionTurn) return
+  if ((context.trustedSelectedProductIds ?? []).length === 0) return
+  if (answer.answer_mode !== "clarification") return
+
+  errors.push({
+    validator_id: "trusted_product_selection_clarification",
+    message:
+      "After a trusted product selection, answer the open product question for that selected product instead of asking what product the user means.",
+    severity: "block",
+    path: ["answer_mode"],
+    repair_hint:
+      "Use the trusted selected product identity. For fit, usage, frequency, keep/stop/replace, or product-property answers, call load_product_facts and submit product_assessment. Only ask a new clarification if the selected product is clear but the user's original question itself is genuinely missing.",
+  })
 }
 
 function validateNamedProductLookupRequired(
@@ -1654,10 +1857,16 @@ function validateNamedProductLookupRequired(
   errors: AgentV2ValidationError[],
 ): void {
   if (context.productIntakeEnabled === false) return
+  if (
+    context.isTrustedProductSelectionTurn &&
+    (context.trustedSelectedProductIds ?? []).length > 0
+  ) {
+    return
+  }
 
   const modelRequiresLookup =
     answer.request_interpretation.specific_product_candidate === true &&
-    isNamedProductLookupTurn(answer) &&
+    isNamedProductDetailLookupTurn(answer) &&
     isLookupGuardedAnswerMode(answer)
 
   const deterministicContextRequiresLookup =
@@ -1718,11 +1927,12 @@ function validateProductLookupResultClaims(
       .filter((result) => result.status === "found_exact" && result.product?.id)
       .map((result) => result.product?.id as string),
   )
-  const relevantUnresolvedLookupResults = unresolvedLookupResults.filter(
-    (result) =>
-      unresolvedLookupResultMatchesAnswerClaim(result, answer, context) ||
-      unresolvedLookupResultMatchesPendingCategoryAssessment(result, answer),
-  )
+  const relevantUnresolvedLookupResults = unresolvedLookupResults
+    .filter((result) => unresolvedLookupResultMatchesClaimTarget(result, answer, context))
+    .filter(
+      (result) =>
+        !unresolvedLookupResultIsSupersededByExactClaim(result, lookupResults, claimedProductIds),
+    )
   if (
     claimedProductIds.length > 0 &&
     claimedProductIds.every((productId) => exactLookupProductIds.has(productId)) &&
@@ -1740,7 +1950,7 @@ function validateProductLookupResultClaims(
       unresolvedLookupResultMakesProductSpecificClaim(result, answer, context),
     ) ||
     relevantUnresolvedLookupResults.some((result) =>
-      unresolvedLookupResultMatchesPendingCategoryAssessment(result, answer),
+      unresolvedLookupResultContributesPendingCategoryClaim(result, answer),
     )
 
   if (!makesProductSpecificClaim) return
@@ -1758,9 +1968,25 @@ function validateProductLookupResultClaims(
   })
 }
 
-function isNamedProductLookupTurn(answer: AgentV2TerminalAnswer): boolean {
+function unresolvedLookupResultIsSupersededByExactClaim(
+  unresolved: AgentV2ProductLookupValidationResult,
+  lookupResults: readonly AgentV2ProductLookupValidationResult[],
+  claimedProductIds: readonly string[],
+): boolean {
+  if (claimedProductIds.length === 0) return false
+  const claimed = new Set(claimedProductIds)
+  return lookupResults.some(
+    (result) =>
+      result.status === "found_exact" &&
+      result.product?.id &&
+      claimed.has(result.product.id) &&
+      lookupResultsDescribeSameProductIdentity(unresolved, result),
+  )
+}
+
+function isNamedProductDetailLookupTurn(answer: AgentV2TerminalAnswer): boolean {
   return (
-    PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind) ||
+    answer.request_interpretation.product_request_kind === "product_detail" ||
     ROUTINE_TOOL_INTENTS.has(answer.request_interpretation.routine_intent)
   )
 }
@@ -1926,13 +2152,7 @@ function unresolvedLookupResultMatchesAnswerClaim(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
 ): boolean {
-  const lookupBrand = lookup.input_identity?.brand_text?.trim() ?? ""
-  const lookupProductName = lookup.input_identity?.product_name_text?.trim() ?? ""
-  const identityParts = [
-    lookupBrand && lookupProductName ? `${lookupBrand} ${lookupProductName}` : null,
-    !lookupBrand ? lookupProductName : null,
-    lookup.product?.name,
-  ].filter((part): part is string => Boolean(part?.trim()))
+  const identityParts = getLookupIdentityParts(lookup)
 
   if (identityParts.length === 0) {
     const answerCategory =
@@ -1965,6 +2185,65 @@ function unresolvedLookupResultMatchesAnswerClaim(
   )
 }
 
+function getLookupIdentityParts(lookup: AgentV2ProductLookupValidationResult): string[] {
+  const lookupBrand = lookup.input_identity?.brand_text?.trim() ?? ""
+  const lookupProductName = lookup.input_identity?.product_name_text?.trim() ?? ""
+  return [
+    lookupBrand && lookupProductName ? `${lookupBrand} ${lookupProductName}` : null,
+    !lookupBrand ? lookupProductName : null,
+    lookup.product?.name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+}
+
+function unresolvedLookupResultMatchesClaimTarget(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  if (answer.answer_mode !== "product_assessment") {
+    return (
+      unresolvedLookupResultMatchesAnswerClaim(lookup, answer, context) ||
+      unresolvedLookupResultContributesPendingCategoryClaim(lookup, answer)
+    )
+  }
+
+  return (
+    unresolvedLookupResultMakesProductSpecificClaim(lookup, answer, context) ||
+    unresolvedLookupResultContributesPendingCategoryClaim(lookup, answer)
+  )
+}
+
+function unresolvedLookupResultContributesPendingCategoryClaim(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+): boolean {
+  if (answer.answer_mode === "product_assessment") return false
+  if (isGroundedProductSelectionRecommendation(answer)) return false
+  return unresolvedLookupResultMatchesPendingCategoryAssessment(lookup, answer)
+}
+
+function isGroundedProductSelectionRecommendation(answer: AgentV2TerminalAnswer): boolean {
+  if (answer.answer_mode !== "product_recommendation") return false
+  if (
+    answer.request_interpretation.product_request_kind !== "specific_products" &&
+    answer.request_interpretation.product_request_kind !== "compare_products"
+  ) {
+    return false
+  }
+  if (answer.tool_grounding.used_product_tool !== true) return false
+
+  const groundedProductIds = new Set(
+    answer.tool_grounding.product_ids.filter((id) => id.trim().length > 0),
+  )
+  if (groundedProductIds.size === 0) return false
+
+  const payloadProductIds = extractPayloadProductIds(answer)
+  return (
+    payloadProductIds.length > 0 &&
+    payloadProductIds.every((productId) => groundedProductIds.has(productId))
+  )
+}
+
 function productLookupIdentityMatchesEvidence(
   identity: string,
   evidence: string,
@@ -1992,6 +2271,45 @@ function productLookupIdentityMatchesEvidence(
   return identityTokens.every((token) => evidenceTokens.has(token))
 }
 
+function lookupResultsDescribeSameProductIdentity(
+  left: AgentV2ProductLookupValidationResult,
+  right: AgentV2ProductLookupValidationResult,
+): boolean {
+  const leftCategory = left.input_identity?.category ?? left.category ?? null
+  const rightCategory = right.input_identity?.category ?? right.category ?? null
+  if (leftCategory && rightCategory && leftCategory !== rightCategory) return false
+
+  const leftParts = getLookupIdentityParts(left)
+  const rightParts = getLookupIdentityParts(right)
+  if (leftParts.length === 0 || rightParts.length === 0) return false
+
+  return leftParts.some((leftPart) =>
+    rightParts.some(
+      (rightPart) =>
+        productLookupIdentityMatchesEvidence(leftPart, rightPart, left) ||
+        productLookupIdentityMatchesEvidence(rightPart, leftPart, right) ||
+        productIdentityTokenOverlapIsStrong(leftPart, rightPart),
+    ),
+  )
+}
+
+function productIdentityTokenOverlapIsStrong(left: string, right: string): boolean {
+  const leftTokens = productIdentityTokens(left)
+  const rightTokens = productIdentityTokens(right)
+  if (leftTokens.length < 2 || rightTokens.length < 2) return false
+
+  const rightTokenSet = new Set(rightTokens)
+  const overlap = leftTokens.filter((token) => rightTokenSet.has(token)).length
+  const shorterLength = Math.min(leftTokens.length, rightTokens.length)
+  return overlap >= 2 && overlap >= Math.ceil(shorterLength * 0.75)
+}
+
+function productIdentityTokens(value: string): string[] {
+  return normalizeVisibleText(removePackSizeDetails(value))
+    .split(" ")
+    .filter((token) => token.length >= 2)
+}
+
 function unresolvedLookupMatchesNamedProductClaimByCategory(
   lookup: AgentV2ProductLookupValidationResult,
   answer: AgentV2TerminalAnswer,
@@ -2001,6 +2319,20 @@ function unresolvedLookupMatchesNamedProductClaimByCategory(
   if (!namedProductContext?.plausible_exact_name) return false
   const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
   if (!lookupCategory || lookupCategory !== namedProductContext.category) return false
+  const identityParts = getLookupIdentityParts(lookup)
+  if (identityParts.length > 0) {
+    const evidenceParts = [
+      namedProductContext.display_name,
+      context.latestUserMessage,
+      answer.request_interpretation.evidence_quote,
+    ].filter((part): part is string => Boolean(part?.trim()))
+    const matchesCurrentNamedProduct = identityParts.some((identity) =>
+      evidenceParts.some((evidence) =>
+        productLookupIdentityMatchesEvidence(identity, evidence, lookup),
+      ),
+    )
+    if (!matchesCurrentNamedProduct) return false
+  }
   return makesUnresolvedNamedProductSpecificClaim(answer, context)
 }
 
@@ -2009,10 +2341,67 @@ function unresolvedLookupResultMakesProductSpecificClaim(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
 ): boolean {
-  if (!unresolvedLookupResultMatchesAnswerClaim(lookup, answer, context)) return false
-
   const userFacing = readUserFacingAnswer(answer.payload)
+  const referencedChunks = getUnresolvedLookupReferenceChunks(lookup, userFacing)
+  if (referencedChunks.length > 0) {
+    return referencedChunks.some((chunk) => unresolvedLookupReferenceChunkMakesClaim(chunk))
+  }
+
+  if (!unresolvedLookupResultMatchesAnswerClaim(lookup, answer, context)) return false
   return hasNamedProductClaimPredicate(userFacing) || hasPronounProductClaim(userFacing)
+}
+
+function getUnresolvedLookupReferenceChunks(
+  lookup: AgentV2ProductLookupValidationResult,
+  text: string,
+): string[] {
+  const chunks = splitVisibleAnswerIntoClaimChunks(text)
+  const identityParts = getLookupIdentityParts(lookup)
+  if (identityParts.length > 0) {
+    return chunks.filter((chunk) =>
+      identityParts.some((identity) =>
+        productLookupIdentityMatchesEvidence(identity, chunk, lookup),
+      ),
+    )
+  }
+
+  const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
+  const parsedCategory = AgentV2CareCategorySchema.safeParse(lookupCategory)
+
+  return chunks.filter(
+    (chunk) =>
+      parsedCategory.success &&
+      hasCategoryReference(normalizeVisibleText(chunk), parsedCategory.data),
+  )
+}
+
+function splitVisibleAnswerIntoClaimChunks(text: string): string[] {
+  return text
+    .split(/(?:\n+|(?<=[.!?])\s+)/u)
+    .map((chunk) => chunk.trim())
+    .filter((chunk) => chunk.length > 0)
+}
+
+function unresolvedLookupReferenceChunkMakesClaim(chunk: string): boolean {
+  const hasClaim = hasNamedProductClaimPredicate(chunk) || hasPronounProductClaim(chunk)
+  if (!hasClaim) return false
+  return !hasUnresolvedProductDeferralLanguage(chunk) || hasProductClaimBeyondDeferral(chunk)
+}
+
+function hasUnresolvedProductDeferralLanguage(text: string): boolean {
+  const normalized = normalizeVisibleText(text)
+  return /\b(?:noch\s+in\s+prufung|prufen\s+wir\s+noch|kann\s+ich\s+noch\s+nicht\s+bewerten|kann\s+ich\s+(?:es|ihn|sie|das)?\s*noch\s+nicht\s+bewerten|melde\s+mich|melden\s+uns|liegt\s+noch\s+nicht\s+vor|ist\s+noch\s+offen)\b/u.test(
+    normalized,
+  )
+}
+
+function hasProductClaimBeyondDeferral(text: string): boolean {
+  return hasNamedProductClaimPredicate(
+    text.replace(
+      /\b(?:noch\s+in\s+Pr(?:ü|ue)fung|pr(?:ü|ue)fen\s+wir\s+noch|kann\s+ich\s+(?:es|ihn|sie|das)?\s*noch\s+nicht\s+bewerten|melde\s+mich|melden\s+uns|liegt\s+noch\s+nicht\s+vor|ist\s+noch\s+offen)\b/giu,
+      "",
+    ),
+  )
 }
 
 function unresolvedLookupResultMatchesPendingCategoryAssessment(
@@ -2024,6 +2413,12 @@ function unresolvedLookupResultMatchesPendingCategoryAssessment(
   const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
   const parsedCategory = AgentV2CareCategorySchema.safeParse(lookupCategory)
   if (!parsedCategory.success) return false
+  if (
+    answer.answer_mode === "product_assessment" &&
+    answer.request_interpretation.care_category !== parsedCategory.data
+  ) {
+    return false
+  }
 
   const normalized = normalizeVisibleText(readUserFacingAnswer(answer.payload))
   if (!hasPersonalizedHairContext(normalized)) return false

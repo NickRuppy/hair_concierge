@@ -3,6 +3,7 @@ import { join } from "node:path"
 
 import { sendProductIntakeReviewNotification } from "@/lib/product-intake/notifications"
 import { captureProductIntakeException } from "@/lib/observability/product-intake"
+import { normalizeIdentityText } from "@/lib/product-identity/normalize"
 import type {
   ProductIntakeFinalReviewedPayload,
   ProductIntakeResearchedPayload,
@@ -173,6 +174,57 @@ type ApprovalRpcResult = {
   product_line_id: string | null
 }
 
+export function buildCanonicalBrandLineAliasApprovalError(params: {
+  canonicalBrand: string | null | undefined
+  canonicalBrandExists: boolean
+  lineAlias: { alias: string } | null
+}): Error | null {
+  const canonicalBrand = params.canonicalBrand?.trim() ?? ""
+  if (!canonicalBrand || params.canonicalBrandExists || !params.lineAlias) return null
+
+  return new Error(
+    `Reviewed product canonical_brand "${canonicalBrand}" is a brand-line alias (${params.lineAlias.alias}), not a canonical brand. Set canonical_brand to the owning brand and put the line/range in product_line before approval.`,
+  )
+}
+
+async function assertReviewedCanonicalBrandCanBeApproved(params: {
+  supabase: SupabaseClient
+  finalPayload: ProductIntakeFinalReviewedPayload
+}) {
+  const canonicalBrand = params.finalPayload.product.canonical_brand
+  const normalizedBrand = normalizeIdentityText(canonicalBrand)
+  if (!normalizedBrand) return
+
+  const [{ data: existingBrand, error: brandError }, { data: lineAlias, error: aliasError }] =
+    await Promise.all([
+      params.supabase
+        .from("brands")
+        .select("id")
+        .eq("normalized_name", normalizedBrand)
+        .maybeSingle(),
+      params.supabase
+        .from("brand_aliases")
+        .select("alias")
+        .eq("normalized_alias", normalizedBrand)
+        .not("product_line_id", "is", null)
+        .maybeSingle(),
+    ])
+
+  if (brandError) {
+    throw new Error(`validate reviewed canonical brand: ${brandError.message}`)
+  }
+  if (aliasError) {
+    throw new Error(`validate reviewed brand alias: ${aliasError.message}`)
+  }
+
+  const approvalError = buildCanonicalBrandLineAliasApprovalError({
+    canonicalBrand,
+    canonicalBrandExists: Boolean(existingBrand),
+    lineAlias: lineAlias as { alias: string } | null,
+  })
+  if (approvalError) throw approvalError
+}
+
 export async function approveReviewedSubmission(params: {
   supabase: SupabaseClient
   submission: ReviewActionSubmission
@@ -182,6 +234,11 @@ export async function approveReviewedSubmission(params: {
   reviewedAt: string
   reviewNotes: string | null
 }): Promise<ApprovalRpcResult> {
+  await assertReviewedCanonicalBrandCanBeApproved({
+    supabase: params.supabase,
+    finalPayload: params.finalPayload,
+  })
+
   const { data, error } = await params.supabase.rpc("product_intake_approve_reviewed_product", {
     p_submission_id: params.submission.id,
     p_final_payload: params.finalPayload,

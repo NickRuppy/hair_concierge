@@ -442,6 +442,7 @@ export interface ShampooRecommendationMetadata extends BaseRecommendationMetadat
   matched_bucket: ShampooBucket | null
   matched_concern_code: string | null
   fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  product_thickness?: HairThickness | null
   matched_scalp_route?: "oily" | "balanced" | "dry" | "dandruff" | "dry_flakes" | "irritated" | null
   cleansing_intensity?: "gentle" | "regular" | "clarifying" | null
 }
@@ -544,6 +545,7 @@ export interface BondbuilderRecommendationMetadata extends BaseRecommendationMet
   category: "bondbuilder"
   matched_intensity: ProductBondRepairIntensity | null
   application_mode: ProductBondApplicationMode | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
   bond_repair_axis?: ProductBondRepairAxis | null
   treatment_mode?: ProductBondTreatmentMode | null
   product_format?: ProductBondProductFormat | null
@@ -586,6 +588,7 @@ export interface PeelingRecommendationMetadata extends BaseRecommendationMetadat
   category: "peeling"
   scalp_type_focus: ProductScalpTypeFocus | null
   peeling_type: ProductPeelingType | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
 }
 
 export type RecommendationMetadata =
@@ -826,13 +829,14 @@ export interface MessageRagContext {
   product_intake_offer?: ProductIntakeOffer | null
   product_lookup_clarification?: ProductLookupClarification | null
   product_lookup_selection?: ProductLookupSelectionContext | null
+  product_lookup_selection_trace?: ProductLookupSelectionTrace | null
 }
 
 export type MessageDecisionContext = MessageRagContext
 
 export interface ProductLookupClarification {
   id: string
-  kind: "variant_selection" | "category_mismatch"
+  kind: "variant_selection" | "category_mismatch" | "link_existing_product"
   source: "chat"
   original_user_message?: string | null
   query: {
@@ -853,9 +857,12 @@ export interface ProductLookupClarification {
 export interface ProductLookupClarificationCandidate {
   product_id: string
   name: string
+  brand_name?: string | null
+  product_line_name?: string | null
+  image_url?: string | null
   category: ProductIntakeCategoryKey | string | null
   category_label_de: string
-  reason: "same_brand_same_category" | "category_mismatch"
+  reason: "same_brand_same_category" | "category_mismatch" | "link_existing_product"
 }
 
 export interface ProductLookupSelectionContext {
@@ -864,6 +871,30 @@ export interface ProductLookupSelectionContext {
   source_assistant_message_id: string
   selected_product_id: string
   selected_product_name: string
+}
+
+export interface ProductLookupSelectionTrace {
+  source: "product_lookup_clarification"
+  selected_product: {
+    id: string
+    name: string
+    category: string | null
+  }
+  lookup_identity: {
+    category: string | null
+    brand_text: string | null
+    product_name_text: string | null
+    evidence_quote: string | null
+  }
+  called_load_product_facts: boolean
+  tool_calls: {
+    name: string
+    arguments_summary?: string
+    output_summary?: string
+  }[]
+  validation_error_ids: string[]
+  repair_attempt_reasons: string[]
+  failure_stage: string | null
 }
 
 export interface ProductIntakeOffer {

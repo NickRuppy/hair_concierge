@@ -31,6 +31,7 @@ import {
   type BrandResolutionCatalogInput,
   type ProductIdentityBrand,
 } from "@/lib/product-identity/brand-resolution"
+import { getProductDisplayName } from "@/lib/product-display-name"
 import type {
   ProductIntakeCategoryKey,
   ProductIntakeOffer,
@@ -51,6 +52,7 @@ export type ProductLookupExecution = {
 export type ProductLookupCatalogLoader = () => Promise<{
   catalog: ProductLookupCatalog
   brandCatalog: BrandResolutionCatalogInput
+  verifiedOwnedProductIds?: ReadonlySet<string>
 }>
 
 export type ProductLookupTurnOutcome = {
@@ -64,7 +66,7 @@ export type ProductLookupTurnOutcome = {
 }
 
 const PRODUCT_INTAKE_VISIBLE_FAILURE_COPY =
-  "Das konkrete Produkt haben wir noch nicht in unserer Datenbank. Wenn du magst, gib es kurz hier ein, dann prüfen wir es für dich."
+  "Ich kann dieses Produkt noch nicht direkt für dich bewerten. Gib es kurz hier ein, dann verknüpfen wir es mit einem vorhandenen geprüften Datensatz oder prüfen es für dich."
 
 export function normalizeProductLookupExecutionInput(input: {
   category?: unknown
@@ -146,6 +148,7 @@ export async function buildProductLookupTurnOutcome(params: {
     pendingReviewFallbackAllowed && !pendingReviewProductLookupFailureFallback
       ? buildPendingReviewCategoryFollowupFallback({
           activeProductContexts: params.activeProductContexts ?? [],
+          namedProductContext: params.namedProductContext,
           trace: params.trace,
           latestUserMessage: params.latestUserMessage,
         })
@@ -201,8 +204,8 @@ export async function buildProductLookupTurnOutcome(params: {
         )
       : null
   const answer =
-    visibleFailure && productIntakeOffer
-      ? withProductIntakeVisibleFailureCopy(baseAnswer)
+    productIntakeOffer && (visibleFailure || answerDefersUnknownProductForIntake)
+      ? withProductIntakeVisibleFailureCopy(baseAnswer, productIntakeOffer)
       : baseAnswer
   const executionsForClarification =
     productLookupActionsAllowed &&
@@ -215,6 +218,11 @@ export async function buildProductLookupTurnOutcome(params: {
           requestId: params.requestId,
         })
       : executionsWithFallback
+  const clarificationBrandCatalog =
+    productLookupActionsAllowed &&
+    executionsForClarification.some(productLookupExecutionHasClarificationCandidates)
+      ? (await params.loadProductLookupCatalogs()).brandCatalog
+      : null
   const productLookupClarification = productLookupActionsAllowed
     ? selectProductLookupClarificationForAnswer(
         answer,
@@ -223,6 +231,7 @@ export async function buildProductLookupTurnOutcome(params: {
         {
           allowFallbackClarification:
             visibleFailure || Boolean(deterministicLookupFallback || categorylessLookupFallback),
+          brandCatalog: clarificationBrandCatalog,
         },
       )
     : null
@@ -257,9 +266,13 @@ export async function buildProductLookupTurnOutcome(params: {
   const trustedSelectedProductProjection = buildStoredProjectionForTrustedSelectedProduct(
     params.trustedSelectedProductContext,
   )
+  const reconciledAnswer =
+    productLookupClarification != null
+      ? withProductLookupClarificationCopy(answer, productLookupClarification)
+      : answer
 
   return {
-    answer,
+    answer: reconciledAnswer,
     visibleFailure,
     productIntakeOffer,
     productLookupClarification,
@@ -269,7 +282,61 @@ export async function buildProductLookupTurnOutcome(params: {
   }
 }
 
-function withProductIntakeVisibleFailureCopy(answer: AgentV2TerminalAnswer): AgentV2TerminalAnswer {
+function withProductLookupClarificationCopy(
+  answer: AgentV2TerminalAnswer,
+  clarification: ProductLookupClarification,
+): AgentV2TerminalAnswer {
+  const copy = buildProductLookupClarificationCopy({
+    kind: clarification.kind,
+    queryDisplayName: productLookupClarificationQueryDisplayName(clarification),
+    candidates: clarification.candidates,
+  })
+
+  switch (answer.answer_mode) {
+    case "clarification":
+      return {
+        ...answer,
+        payload: {
+          ...answer.payload,
+          user_facing_answer_de: copy.userFacingAnswerDe,
+          question_de: copy.questionDe,
+          missing_keys: copy.missingKeys,
+        },
+      }
+    case "product_recommendation":
+    case "product_assessment":
+    case "routine":
+    case "general_advice":
+    case "constraint_blocked":
+    case "safety_boundary":
+    case "domain_boundary":
+    case "social":
+      return {
+        ...answer,
+        payload: {
+          ...answer.payload,
+          user_facing_answer_de: copy.userFacingAnswerDe,
+        },
+      } as AgentV2TerminalAnswer
+  }
+
+  const exhaustive: never = answer
+  return exhaustive
+}
+
+function productLookupClarificationQueryDisplayName(
+  clarification: ProductLookupClarification,
+): string {
+  return [clarification.query.brand_text, clarification.query.product_name_text]
+    .filter((part): part is string => Boolean(part?.trim()))
+    .join(" ")
+}
+
+function withProductIntakeVisibleFailureCopy(
+  answer: AgentV2TerminalAnswer,
+  offer: ProductIntakeOffer,
+): AgentV2TerminalAnswer {
+  const userFacingAnswer = productIntakeOfferDeferralCopy(offer)
   switch (answer.answer_mode) {
     case "product_recommendation":
     case "product_assessment":
@@ -282,7 +349,7 @@ function withProductIntakeVisibleFailureCopy(answer: AgentV2TerminalAnswer): Age
         ...answer,
         payload: {
           ...answer.payload,
-          user_facing_answer_de: PRODUCT_INTAKE_VISIBLE_FAILURE_COPY,
+          user_facing_answer_de: userFacingAnswer,
         },
       } as AgentV2TerminalAnswer
     case "safety_boundary":
@@ -292,6 +359,17 @@ function withProductIntakeVisibleFailureCopy(answer: AgentV2TerminalAnswer): Age
 
   const exhaustive: never = answer
   return exhaustive
+}
+
+function productIntakeOfferDeferralCopy(offer: ProductIntakeOffer): string {
+  const displayName = [
+    offer.extracted_identity?.brand_text,
+    offer.extracted_identity?.product_name_text,
+  ]
+    .filter((part): part is string => Boolean(part?.trim()))
+    .join(" ")
+  if (!displayName) return PRODUCT_INTAKE_VISIBLE_FAILURE_COPY
+  return `Ich kann ${displayName} noch nicht direkt für dich bewerten. Gib es kurz hier ein, dann verknüpfen wir es mit einem vorhandenen geprüften Datensatz oder prüfen es für dich.`
 }
 
 function selectProductIntakeOfferForAnswer(
@@ -399,8 +477,80 @@ const PRODUCT_LOOKUP_CATEGORY_LABELS: Record<ProductIntakeCategoryKey, string> =
   bondbuilder: "Bondbuilder",
 }
 
+const PRODUCT_LOOKUP_CATEGORY_CONFIRMATION_OBJECTS: Record<ProductIntakeCategoryKey, string> = {
+  shampoo: "dieses Shampoo",
+  conditioner: "diesen Conditioner",
+  leave_in: "dieses Leave-in",
+  mask: "diese Maske/Kur",
+  oil: "dieses Öl",
+  dry_shampoo: "dieses Trockenshampoo",
+  deep_cleansing_shampoo: "dieses Tiefenreinigungsshampoo",
+  bondbuilder: "diesen Bondbuilder",
+}
+
 function isProductIntakeCategoryKey(value: string | null): value is ProductIntakeCategoryKey {
   return Object.prototype.hasOwnProperty.call(PRODUCT_LOOKUP_CATEGORY_LABELS, value ?? "")
+}
+
+function buildProductLookupClarificationCopy(params: {
+  kind: ProductLookupClarification["kind"]
+  queryDisplayName: string
+  candidates: readonly Pick<
+    ProductLookupClarification["candidates"][number],
+    "name" | "category" | "category_label_de"
+  >[]
+}): {
+  userFacingAnswerDe: string
+  questionDe: string
+  missingKeys: string[]
+} {
+  if (params.kind === "link_existing_product") {
+    return {
+      userFacingAnswerDe:
+        "Wir kennen dieses Produkt bereits. Es ist kein Chaarlie-Empfehlungsprodukt, aber wir können es für dein Profil analysieren, wenn du es zu deiner Routine hinzufügst.",
+      questionDe: "Möchtest du es zu deiner Routine hinzufügen?",
+      missingKeys: ["product_link_confirmation"],
+    }
+  }
+
+  if (params.kind === "category_mismatch") {
+    const categoryLabel = params.candidates[0]?.category_label_de ?? "anderer Kategorie"
+    const questionDe = "Meinst du dieses Produkt?"
+    return {
+      userFacingAnswerDe: `Wir haben es als ${categoryLabel} gefunden. Bitte bestätige kurz, ob du dieses Produkt meinst.`,
+      questionDe,
+      missingKeys: ["product_confirmation"],
+    }
+  }
+
+  if (params.candidates.length === 1 && params.candidates[0]) {
+    const candidate = params.candidates[0]
+    const candidateDisplayName = getProductDisplayName(candidate.name)
+    const confirmationObject = productLookupCandidateConfirmationObject(candidate)
+    const questionDe = `Meinst du ${confirmationObject}?`
+    return {
+      userFacingAnswerDe: `Ich habe dazu ${candidateDisplayName} gefunden. Bitte bestätige kurz, ob du ${confirmationObject} meinst.`,
+      questionDe,
+      missingKeys: ["product_variant"],
+    }
+  }
+
+  const displayName = params.queryDisplayName.trim()
+  const subject = displayName ? `zu ${displayName} ` : ""
+  const questionDe = "Welche genaue Variante meinst du?"
+  return {
+    userFacingAnswerDe: `Ich finde ${subject}mehrere mögliche Varianten und möchte nichts Falsches bewerten. ${questionDe}`,
+    questionDe,
+    missingKeys: ["product_variant"],
+  }
+}
+
+function productLookupCandidateConfirmationObject(
+  candidate: Pick<ProductLookupClarification["candidates"][number], "category">,
+): string {
+  return isProductIntakeCategoryKey(candidate.category)
+    ? PRODUCT_LOOKUP_CATEGORY_CONFIRMATION_OBJECTS[candidate.category]
+    : "dieses Produkt"
 }
 
 function productLookupCandidateCategory(candidate: ProductLookupResult["candidates"][number]) {
@@ -408,21 +558,105 @@ function productLookupCandidateCategory(candidate: ProductLookupResult["candidat
 }
 
 function productLookupCandidateName(candidate: ProductLookupResult["candidates"][number]) {
-  return candidate.product.cleanName ?? candidate.product.name
+  return candidate.product.name
+}
+
+type ProductLookupIdentityProduct = {
+  brandId?: string | null
+  brand_id?: string | null
+  productLineId?: string | null
+  product_line_id?: string | null
+}
+
+function productLookupBrandId(product: ProductLookupIdentityProduct) {
+  return product.brandId ?? product.brand_id ?? null
+}
+
+function productLookupProductLineId(product: ProductLookupIdentityProduct) {
+  return product.productLineId ?? product.product_line_id ?? null
+}
+
+function productLookupCandidateImageUrl(candidate: ProductLookupResult["candidates"][number]) {
+  return candidate.product.imageUrl ?? candidate.product.image_url ?? null
+}
+
+function productIdentityProductLineName(
+  productLine: NonNullable<BrandResolutionCatalogInput["productLines"]>[number],
+): string {
+  return (
+    productLine.canonical_name ??
+    productLine.canonicalName ??
+    productLine.name ??
+    productLine.key ??
+    productLine.id ??
+    ""
+  )
+}
+
+function productLookupCandidateBrandName(
+  candidate: ProductLookupResult["candidates"][number],
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  return productLookupBrandName(candidate.product, brandCatalog)
+}
+
+function productLookupBrandName(
+  product: ProductLookupIdentityProduct,
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  const brandId = productLookupBrandId(product)
+  if (!brandId) return null
+  const brand = brandCatalog?.brands.find(
+    (candidateBrand) => (candidateBrand.id ?? candidateBrand.key ?? null) === brandId,
+  )
+  return brand ? productIdentityBrandName(brand) : null
+}
+
+function productLookupCandidateLineName(
+  candidate: ProductLookupResult["candidates"][number],
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  return productLookupLineName(candidate.product, brandCatalog)
+}
+
+function productLookupLineName(
+  product: ProductLookupIdentityProduct,
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  const productLineId = productLookupProductLineId(product)
+  if (!productLineId) return null
+  const productLine = brandCatalog?.productLines?.find(
+    (candidateLine) => (candidateLine.id ?? candidateLine.key ?? null) === productLineId,
+  )
+  return productLine ? productIdentityProductLineName(productLine) : null
 }
 
 function selectProductLookupClarificationForAnswer(
   answer: AgentV2TerminalAnswer,
   executions: readonly ProductLookupExecution[],
   latestUserMessage: string,
-  options: { allowFallbackClarification?: boolean } = {},
+  options: {
+    allowFallbackClarification?: boolean
+    brandCatalog?: BrandResolutionCatalogInput | null
+  } = {},
 ): ProductLookupClarification | null {
-  if (!options.allowFallbackClarification && !answerSupportsProductIntakeOffer(answer)) return null
+  const hasLinkableExistingProduct = executions.some(
+    (execution) =>
+      execution.result.status === "found_linkable_existing" && Boolean(execution.result.product),
+  )
+  if (
+    !options.allowFallbackClarification &&
+    !answerSupportsProductIntakeOffer(answer) &&
+    !hasLinkableExistingProduct
+  ) {
+    return null
+  }
 
   const eligibleExecutions = executions.filter(
     (candidate) =>
       agentV2ProductLookupStatusHasClarificationCard(candidate.result.status) &&
-      candidate.result.candidates.length > 0,
+      (candidate.result.candidates.length > 0 ||
+        (candidate.result.status === "found_linkable_existing" && Boolean(candidate.result.product))),
   )
   const execution =
     eligibleExecutions.find((candidate) =>
@@ -430,9 +664,16 @@ function selectProductLookupClarificationForAnswer(
     ) ?? (eligibleExecutions.length === 1 ? eligibleExecutions[0] : null)
   if (!execution) return null
 
-  const candidateCategories = execution.result.candidates
-    .map((candidate) => productLookupCandidateCategory(candidate))
-    .filter(isProductIntakeCategoryKey)
+  const linkableProductCategory =
+    execution.result.status === "found_linkable_existing"
+      ? execution.result.product?.category_key
+      : null
+  const candidateCategories = [
+    ...execution.result.candidates.map((candidate) => productLookupCandidateCategory(candidate)),
+    linkableProductCategory,
+  ].filter((value): value is ProductIntakeCategoryKey =>
+    isProductIntakeCategoryKey(value ?? null),
+  )
   const uniqueCandidateCategories = [...new Set(candidateCategories)]
   const sameCandidateCategory =
     uniqueCandidateCategories.length === 1 ? uniqueCandidateCategories[0] : null
@@ -441,30 +682,60 @@ function selectProductLookupClarificationForAnswer(
     : sameCandidateCategory
 
   const kind =
-    execution.result.status === "category_mismatch" ? "category_mismatch" : "variant_selection"
-  const candidates = execution.result.candidates.slice(0, 3).map((candidate) => {
-    const candidateCategory = productLookupCandidateCategory(candidate)
-    const reason =
-      category && candidateCategory && candidateCategory !== category
+    execution.result.status === "found_linkable_existing"
+      ? "link_existing_product"
+      : execution.result.status === "category_mismatch"
         ? "category_mismatch"
-        : "same_brand_same_category"
-    return {
-      product_id: candidate.productId,
-      name: productLookupCandidateName(candidate),
-      category: candidateCategory,
-      category_label_de: isProductIntakeCategoryKey(candidateCategory)
-        ? PRODUCT_LOOKUP_CATEGORY_LABELS[candidateCategory]
+        : "variant_selection"
+  const candidates: ProductLookupClarification["candidates"] = execution.result.candidates
+    .slice(0, 3)
+    .map((candidate) => {
+      const candidateCategory = productLookupCandidateCategory(candidate)
+      const reason =
+        category && candidateCategory && candidateCategory !== category
+          ? "category_mismatch"
+          : "same_brand_same_category"
+      return {
+        product_id: candidate.productId,
+        name: productLookupCandidateName(candidate),
+        brand_name:
+          productLookupCandidateBrandName(candidate, options.brandCatalog) ??
+          execution.input.brand_text,
+        product_line_name: productLookupCandidateLineName(candidate, options.brandCatalog),
+        image_url: productLookupCandidateImageUrl(candidate),
+        category: candidateCategory,
+        category_label_de: isProductIntakeCategoryKey(candidateCategory)
+          ? PRODUCT_LOOKUP_CATEGORY_LABELS[candidateCategory]
+          : "Produkt",
+        reason,
+      } satisfies ProductLookupClarification["candidates"][number]
+    })
+  if (kind === "link_existing_product" && execution.result.product) {
+    const linkedProduct = execution.result.product
+    const productCategory = linkedProduct.category_key
+    candidates.push({
+      product_id: linkedProduct.id,
+      name: linkedProduct.name,
+      brand_name:
+        productLookupBrandName(linkedProduct, options.brandCatalog) ?? execution.input.brand_text,
+      product_line_name: productLookupLineName(linkedProduct, options.brandCatalog),
+      image_url: linkedProduct.image_url ?? null,
+      category: productCategory,
+      category_label_de: isProductIntakeCategoryKey(productCategory)
+        ? PRODUCT_LOOKUP_CATEGORY_LABELS[productCategory]
         : "Produkt",
-      reason,
-    } satisfies ProductLookupClarification["candidates"][number]
-  })
+      reason: "link_existing_product",
+    })
+  }
 
   const categoryLabel = sameCandidateCategory
     ? PRODUCT_LOOKUP_CATEGORY_LABELS[sameCandidateCategory]
     : null
   const firstCandidateCategoryLabel = candidates[0]?.category_label_de ?? "einer anderen Kategorie"
   const prompt =
-    kind === "category_mismatch"
+    kind === "link_existing_product"
+      ? "Möchtest du dieses bekannte Produkt zu deiner Routine hinzufügen?"
+      : kind === "category_mismatch"
       ? `Wir haben es als ${firstCandidateCategoryLabel} gefunden. Meinst du dieses Produkt?`
       : !categoryLabel
         ? "Meinst du eines dieser Produkte?"
@@ -508,7 +779,8 @@ function selectProductLookupClarificationForAnswer(
 function productLookupExecutionHasClarificationCandidates(execution: ProductLookupExecution) {
   return (
     agentV2ProductLookupStatusHasClarificationCard(execution.result.status) &&
-    execution.result.candidates.length > 0
+    (execution.result.candidates.length > 0 ||
+      (execution.result.status === "found_linkable_existing" && Boolean(execution.result.product)))
   )
 }
 
@@ -517,7 +789,8 @@ function traceLookupCallCanRecoverClarification(call: AgentV2Trace["tool_calls"]
   return (
     call.output_summary === "product_lookup:ambiguous" ||
     call.output_summary === "product_lookup:needs_variant_selection" ||
-    call.output_summary === "product_lookup:category_mismatch"
+    call.output_summary === "product_lookup:category_mismatch" ||
+    call.output_summary === "product_lookup:found_linkable_existing"
   )
 }
 
@@ -619,6 +892,7 @@ async function buildCategorylessKnownBrandLookupFallback(params: {
     execution,
     answer: buildCategorylessKnownBrandClarificationAnswer({
       input,
+      lookupResult: result,
       usedGuidancePackageIds: params.trace.loaded_guidance_package_ids,
     }),
   }
@@ -675,7 +949,14 @@ function answerDefersUnknownProductToIntake(answer: AgentV2TerminalAnswer): bool
     /\b(?:prüfen|pruefen|hinzuf(?:ue|ü)gen|einreichen|verifizieren|verifiziert|verifizierte|verifizierter)\b/iu.test(
       text,
     )
-  return (mentionsMissingDatabase || mentionsUnverifiedProduct) && mentionsProductReview
+  const mentionsNotDirectlyAssessable =
+    /\b(?:nicht|noch nicht)\b[\s\S]{0,80}\bdirekt\b[\s\S]{0,80}\b(?:bewerten|beurteilen|einsch(?:ae|ä)tzen)\b/iu.test(
+      text,
+    )
+  return (
+    ((mentionsMissingDatabase || mentionsUnverifiedProduct) && mentionsProductReview) ||
+    (mentionsNotDirectlyAssessable && mentionsProductReview)
+  )
 }
 
 function userFacingAnswerText(answer: AgentV2TerminalAnswer): string {
@@ -733,12 +1014,27 @@ function cleanupCategorylessKnownBrandProductName(value: string): string | null 
 
 function buildCategorylessKnownBrandClarificationAnswer(params: {
   input: ProductLookupExecutionInput
+  lookupResult: ProductLookupResult
   usedGuidancePackageIds: readonly string[]
 }): AgentV2TerminalAnswer {
   const displayName = [params.input.brand_text, params.input.product_name_text]
     .filter((part): part is string => Boolean(part?.trim()))
     .join(" ")
-  const userFacingAnswer = `Ich finde zu ${displayName} mehrere mögliche Varianten und möchte nichts Falsches bewerten. Welche genaue Variante meinst du?`
+  const copy = buildProductLookupClarificationCopy({
+    kind:
+      params.lookupResult.status === "category_mismatch" ? "category_mismatch" : "variant_selection",
+    queryDisplayName: displayName,
+    candidates: params.lookupResult.candidates.map((candidate) => {
+      const candidateCategory = productLookupCandidateCategory(candidate)
+      return {
+        name: productLookupCandidateName(candidate),
+        category: candidateCategory,
+        category_label_de: isProductIntakeCategoryKey(candidateCategory)
+          ? PRODUCT_LOOKUP_CATEGORY_LABELS[candidateCategory]
+          : "Produkt",
+      }
+    }),
+  })
 
   return {
     answer_mode: "clarification",
@@ -787,9 +1083,9 @@ function buildCategorylessKnownBrandClarificationAnswer(params: {
     pending_followup_action: null,
     session_memory_writes: [],
     payload: {
-      user_facing_answer_de: userFacingAnswer,
-      question_de: "Welche genaue Variante meinst du?",
-      missing_keys: ["product_variant"],
+      user_facing_answer_de: copy.userFacingAnswerDe,
+      question_de: copy.questionDe,
+      missing_keys: copy.missingKeys,
     },
   }
 }
@@ -878,6 +1174,7 @@ function buildPendingReviewProductLookupFailureFallback(params: {
 
 function buildPendingReviewCategoryFollowupFallback(params: {
   activeProductContexts: readonly AgentV2ActiveProductContext[]
+  namedProductContext: AgentV2NamedProductContext | null
   trace: AgentV2Trace
   latestUserMessage: string
 }): AgentV2TerminalAnswer | null {
@@ -885,9 +1182,10 @@ function buildPendingReviewCategoryFollowupFallback(params: {
     (context) => context.status === "pending_review" && context.category,
   )
   const matchingContexts = pendingContexts.filter((context) =>
-    latestMessageLooksLikePendingProductFollowupForCategory({
+    pendingReviewContextMatchesCategoryFollowup({
+      context,
+      namedProductContext: params.namedProductContext,
       latestUserMessage: params.latestUserMessage,
-      category: context.category,
     }),
   )
   if (matchingContexts.length !== 1) return null
@@ -961,6 +1259,34 @@ function buildPendingReviewProductAnswer(params: {
   }
 }
 
+function pendingReviewContextMatchesCategoryFollowup(params: {
+  context: AgentV2ActiveProductContext
+  namedProductContext: AgentV2NamedProductContext | null
+  latestUserMessage: string
+}): boolean {
+  if (
+    !latestMessageLooksLikePendingProductFollowupForCategory({
+      latestUserMessage: params.latestUserMessage,
+      category: params.context.category,
+    })
+  ) {
+    return false
+  }
+
+  if (
+    params.namedProductContext &&
+    params.namedProductContext.named_product_intent !== "background"
+  ) {
+    return pendingReviewContextMatchesNamedProductContext({
+      context: params.context,
+      namedProductContext: params.namedProductContext,
+      latestUserMessage: params.latestUserMessage,
+    })
+  }
+
+  return true
+}
+
 function latestMessageLooksLikePendingProductFollowupForCategory(params: {
   latestUserMessage: string
   category: string | null
@@ -983,6 +1309,38 @@ function latestMessageLooksLikePendingProductFollowupForCategory(params: {
 
   return /\b(?:wie oft|benutzen|verwenden|anwenden|nehmen|passt|bewerten|beurteilen|einsch(?:ae|ä)tzen|h(?:ae|ä)ltst)\b/iu.test(
     params.latestUserMessage,
+  )
+}
+
+function pendingReviewContextMatchesNamedProductContext(params: {
+  context: AgentV2ActiveProductContext
+  namedProductContext: AgentV2NamedProductContext
+  latestUserMessage: string
+}): boolean {
+  if (
+    params.context.category &&
+    params.context.category !== params.namedProductContext.category
+  ) {
+    return false
+  }
+
+  const contextIdentityParts = [
+    params.context.brand_text && params.context.product_name_text
+      ? `${params.context.brand_text} ${params.context.product_name_text}`
+      : null,
+    params.context.product_name_text,
+    params.context.display_name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+  if (contextIdentityParts.length === 0) return false
+
+  const evidenceParts = [params.namedProductContext.display_name, params.latestUserMessage].filter(
+    (part) => Boolean(part.trim()),
+  )
+
+  return contextIdentityParts.some((identity) =>
+    evidenceParts.some((evidence) =>
+      normalizedProductTextOverlaps(identity, evidence, params.context.brand_text),
+    ),
   )
 }
 
@@ -1328,7 +1686,7 @@ function buildDeterministicNamedProductFallbackAnswer(params: {
     }
   }
 
-  const userFacingAnswer = `Ich habe ${displayName} noch nicht in unserer Datenbank. Wenn du magst, füge es kurz hinzu, dann prüfen wir es konkret für dich.`
+  const userFacingAnswer = `Ich kann ${displayName} noch nicht direkt für dich bewerten. Füge es kurz hinzu, dann verknüpfen wir es mit einem vorhandenen geprüften Datensatz oder prüfen es konkret für dich.`
 
   return {
     ...baseAnswer,

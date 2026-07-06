@@ -76,6 +76,8 @@ type FakeRepoOptions = {
   failMatchedUsage?: boolean
   failSubmissionLink?: boolean
   submissions?: ProductIntakeSubmissionRow[]
+  catalog?: ProductIntakeCatalog
+  brandCatalog?: BrandResolutionCatalogInput
 }
 
 function makeUsage(
@@ -162,10 +164,10 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
   const repository: ProductIntakeRepository = {
     async loadCatalog(params) {
       catalogModes.push(params?.eligibilityMode ?? "default")
-      return catalog
+      return options.catalog ?? catalog
     },
     async loadBrandResolutionCatalog() {
-      return brandCatalog
+      return options.brandCatalog ?? brandCatalog
     },
     async findUserProductUsage() {
       return usage
@@ -447,6 +449,76 @@ test("matched manual intake links user usage to the existing product without cre
   assert.equal(fake.usage?.match_status, "matched")
   assert.deepEqual(fake.catalogModes, ["intake_dedupe"])
   assert.deepEqual(fake.calls, ["replace_usage_matched:product-garnier-mask"])
+})
+
+test("matched manual intake reuses approved non-recommended Balea product across brand namespace", async () => {
+  const fake = createFakeRepository({
+    conversationIds: [CONVERSATION_ID],
+    catalog: {
+      products: [
+        {
+          id: "product-balea-hair-sealer",
+          name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+          brandId: "brand-balea-professional",
+          productLineId: "line-brilliant-blond",
+          categoryKey: "leave_in",
+          isActive: true,
+          lifecycleStatus: "active",
+          isChaarlieRecommended: false,
+        },
+      ],
+      identifiers: [],
+    },
+    brandCatalog: {
+      brands: [
+        { id: "brand-balea", canonical_name: "Balea" },
+        { id: "brand-balea-professional", canonical_name: "Balea Professional" },
+      ],
+      productLines: [
+        { id: "line-professional", brand_id: "brand-balea", canonical_name: "Professional" },
+        {
+          id: "line-brilliant-blond",
+          brand_id: "brand-balea-professional",
+          canonical_name: "Brilliant Blond",
+        },
+      ],
+      brandAliases: [
+        {
+          brand_id: "brand-balea",
+          product_line_id: "line-professional",
+          alias: "Balea Professional",
+        },
+      ],
+    },
+  })
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "chat",
+    input: chatProductIntakeSubmissionSchema.parse({
+      source_conversation_id: CONVERSATION_ID,
+      intake_method: "manual",
+      category: "leave_in",
+      frequency_range: "weekly_2x",
+      brand_text: "Balea Professional",
+      product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+    }),
+    repository: fake.repository,
+    now: () => "2026-07-01T10:00:00.000Z",
+  })
+
+  assert.equal(result.status, "matched")
+  assert.equal(result.matched_product_id, "product-balea-hair-sealer")
+  assert.equal(result.submission, null)
+  assert.equal(fake.usage?.product_id, "product-balea-hair-sealer")
+  assert.equal(fake.usage?.product_submission_id, null)
+  assert.equal(fake.usage?.match_status, "matched")
+  assert.deepEqual(fake.submissions, [])
+  assert.deepEqual(fake.catalogModes, ["intake_dedupe"])
+  assert.deepEqual(fake.calls, [
+    `verify_conversation:${CONVERSATION_ID}`,
+    "replace_usage_matched:product-balea-hair-sealer",
+  ])
 })
 
 test("matched photo intake verifies and clears tmp uploads without creating a submission", async () => {

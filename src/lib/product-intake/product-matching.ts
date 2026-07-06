@@ -17,6 +17,8 @@ export type ProductIntakeCatalogProduct = {
   brand_id?: string | null
   productLineId?: string | null
   product_line_id?: string | null
+  imageUrl?: string | null
+  image_url?: string | null
   categoryKey?: string | null
   category_key?: string | null
   isActive?: boolean | null
@@ -71,6 +73,7 @@ export type ProductIntakeMatchReason =
   | "identifier_source_mismatch_review"
   | "brand_line_name_category_exact"
   | "brand_name_category_exact"
+  | "full_text_name_category_exact"
   | "fuzzy_candidates_review"
   | "text_category_mismatch_review"
   | "category_required"
@@ -371,6 +374,24 @@ function fuzzyTextCandidates(
     .map(({ product }) => product)
 }
 
+function fullTextIdentityTokens(input: ProductIntakeMatchInput): string[] {
+  const value = input.productName ?? input.cleanProductName ?? ""
+  return tokenizeProductName(value)
+}
+
+function strongFullTextCandidates(
+  input: ProductIntakeMatchInput,
+  catalog: ProductIntakeCatalog,
+): ProductIntakeCatalogProduct[] {
+  const inputTokens = new Set(fullTextIdentityTokens(input))
+  if (inputTokens.size < 4) return []
+
+  return activeProducts(catalog).filter((product) => {
+    const productTokens = new Set(tokenizeProductName(productCleanName(product)))
+    return Array.from(inputTokens).every((token) => productTokens.has(token))
+  })
+}
+
 export function matchProductIntake(
   input: ProductIntakeMatchInput,
   catalog: ProductIntakeCatalog,
@@ -515,6 +536,46 @@ export function matchProductIntake(
       "fuzzy_candidates_review",
       reviewCandidatesByCategory(
         brandNameMatches,
+        selectedCategoryKey,
+        "fuzzy_candidates_review",
+        "text_category_mismatch_review",
+      ),
+    )
+  }
+
+  const fullTextMatches = lineId && products.some((product) => sameBrand(product, brandId))
+    ? []
+    : strongFullTextCandidates(input, catalog)
+  const sameCategoryFullTextMatches = categoryExactMatches(fullTextMatches, selectedCategoryKey)
+
+  if (sameCategoryFullTextMatches.length === 1 && fullTextMatches.length === 1) {
+    return result(
+      "matched",
+      "full_text_name_category_exact",
+      [exactCandidate(sameCategoryFullTextMatches[0], "full_text_name_category_exact")],
+      sameCategoryFullTextMatches[0],
+    )
+  }
+
+  if (sameCategoryFullTextMatches.length > 1) {
+    return result(
+      "pending_review",
+      "fuzzy_candidates_review",
+      reviewCandidatesByCategory(
+        fullTextMatches,
+        selectedCategoryKey,
+        "fuzzy_candidates_review",
+        "text_category_mismatch_review",
+      ),
+    )
+  }
+
+  if (fullTextMatches.length > 0) {
+    return result(
+      "pending_review",
+      "text_category_mismatch_review",
+      reviewCandidatesByCategory(
+        fullTextMatches,
         selectedCategoryKey,
         "fuzzy_candidates_review",
         "text_category_mismatch_review",

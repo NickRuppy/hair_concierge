@@ -925,8 +925,8 @@ test("AgentV2 production pipeline recovers product intake offer from failed not-
   })
   const responseText = await readStream(result.stream)
   assert.match(responseText, /Jean & Lean Conditioner/)
-  assert.match(responseText, /noch nicht in unserer Datenbank/)
-  assert.match(responseText, /füge es kurz hinzu/)
+  assert.match(responseText, /noch nicht direkt für dich bewerten/)
+  assert.match(responseText, /vorhandenen geprüften Datensatz/)
   assert.doesNotMatch(responseText, /Antwort gerade nicht sauber zusammensetzen/)
 })
 
@@ -1019,7 +1019,7 @@ test("AgentV2 production pipeline uses warm intake copy for visible lookup failu
   const responseText = await readStream(result.stream)
   assert.equal(
     responseText,
-    "Das konkrete Produkt haben wir noch nicht in unserer Datenbank. Wenn du magst, gib es kurz hier ein, dann prüfen wir es für dich.",
+    "Ich kann Jean & Lean Conditioner noch nicht direkt für dich bewerten. Gib es kurz hier ein, dann verknüpfen wir es mit einem vorhandenen geprüften Datensatz oder prüfen es für dich.",
   )
 })
 
@@ -1113,7 +1113,7 @@ test("AgentV2 production pipeline still attaches intake when concrete not-found 
   })
   assert.equal(
     await readStream(result.stream),
-    "Ich habe Codex Smoke Mango Conditioner noch nicht in unserer Datenbank. Wenn du magst, füge es kurz hinzu, dann prüfen wir es konkret für dich.",
+    "Ich kann Codex Smoke Mango Conditioner noch nicht direkt für dich bewerten. Gib es kurz hier ein, dann verknüpfen wir es mit einem vorhandenen geprüften Datensatz oder prüfen es für dich.",
   )
 })
 
@@ -1201,7 +1201,7 @@ test("AgentV2 production pipeline attaches intake when concrete not-found lookup
   })
   assert.equal(
     await readStream(result.stream),
-    "Ich habe Jean & Lean Conditioner Mystery Rose noch nicht in unserer Datenbank. Wenn du magst, füge es kurz hinzu, dann prüfen wir es konkret für dich.",
+    "Ich kann Jean & Lean Conditioner Mystery Rose noch nicht direkt für dich bewerten. Gib es kurz hier ein, dann verknüpfen wir es mit einem vorhandenen geprüften Datensatz oder prüfen es für dich.",
   )
 })
 
@@ -1677,6 +1677,102 @@ test("AgentV2 production pipeline blocks category follow-ups from persisted pend
   assert.doesNotMatch(responseText, /bei jedem Waschen/)
 })
 
+test("AgentV2 production pipeline does not block a different named conditioner because another conditioner is pending", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks about a different named conditioner.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "balea professional more blond conditioner",
+      specific_product_candidate: true,
+      confidence: 0.74,
+    },
+    payload: {
+      user_facing_answer_de:
+        "Zum Balea Professional More Blond Conditioner kann ich dir helfen, sobald wir die konkreten Produktdaten geprüft haben.",
+      category_or_topic: "conditioner",
+      key_points_de: ["Balea Professional More Blond Conditioner ist ein anderer Conditioner."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const persistedState: AgentV2ConversationStateV2 = {
+    ...createDefaultAgentV2ConversationState(),
+    agent_v2: {
+      ...createDefaultAgentV2ConversationState().agent_v2,
+      active_product_contexts: [
+        {
+          status: "pending_review",
+          product_id: null,
+          submission_id: "submission-codex-smoke-pending",
+          category: "conditioner",
+          brand_text: "Codex Smoke",
+          product_name_text: "Mango Conditioner",
+          display_name: "Codex Smoke Mango Conditioner",
+          original_user_message: "Ich habe Codex Smoke Mango Conditioner eingereicht.",
+          source: "product_intake_submission",
+          updated_at: "1970-01-01T00:00:00.000Z",
+        },
+      ],
+      active_resolved_product_context: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Was hältst du von balea professional more blond conditioner?",
+      conversationId: "conversation-different-named-conditioner-with-pending-context",
+      userId: "user-1",
+      requestId: "request-different-named-conditioner-with-pending-context",
+      productIntakeEnabled: false,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<AgentV2ConversationStateV2> => persistedState,
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async () => agentResult,
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+  assert.equal(result.productLookupClarification, null)
+  const responseText = await readStream(result.stream)
+  assert.match(responseText, /Balea Professional More Blond Conditioner/)
+  assert.doesNotMatch(responseText, /Codex Smoke Mango Conditioner/)
+  assert.doesNotMatch(responseText, /noch in Prüfung/)
+})
+
 test("AgentV2 production pipeline preserves safety boundary copy without attaching intake", async () => {
   const hairProfile = createCompleteHairProfile()
   const agentResult = createAgentV2Result()
@@ -2003,8 +2099,10 @@ test("AgentV2 production pipeline surfaces lookup clarification from variant-sel
             products: [
               {
                 id: "syoss-intense-curls-shampoo",
-                name: "Intense Curls Shampoo",
+                name: "Intense Curls Shampoo (legacy duplicate)",
                 brandId: "brand-syoss",
+                productLineId: "line-intense",
+                imageUrl: "https://example.test/syoss-intense-curls.png",
                 categoryKey: "shampoo",
                 isActive: true,
                 lifecycleStatus: "active",
@@ -2015,7 +2113,9 @@ test("AgentV2 production pipeline surfaces lookup clarification from variant-sel
           }),
           loadBrandResolutionCatalog: async () => ({
             brands: [{ id: "brand-syoss", canonical_name: "Syoss" }],
-            productLines: [],
+            productLines: [
+              { id: "line-intense", brand_id: "brand-syoss", canonical_name: "Intense" },
+            ],
             brandAliases: [],
           }),
         }) as never,
@@ -2037,9 +2137,25 @@ test("AgentV2 production pipeline surfaces lookup clarification from variant-sel
   assert.equal(result.productLookupClarification?.query.brand_text, "Syoss")
   assert.doesNotMatch(result.productLookupClarification?.copy.prompt_de ?? "", /Syoss Syoss/i)
   assert.equal(result.productLookupClarification?.copy.prompt_de, "Meinst du dieses Shampoo?")
+  const responseText = await readStream(result.stream)
+  assert.match(responseText, /Ich habe dazu Intense Curls Shampoo gefunden\./)
+  assert.doesNotMatch(responseText, /legacy duplicate/i)
+  assert.match(responseText, /Bitte bestätige kurz, ob du dieses Shampoo meinst/)
+  assert.doesNotMatch(responseText, /mehrere mögliche Varianten/)
+  assert.doesNotMatch(responseText, /passt.*(?:gut|mittelgut|nicht)|geeignet/i)
   assert.equal(
     result.productLookupClarification?.candidates[0]?.product_id,
     "syoss-intense-curls-shampoo",
+  )
+  assert.equal(
+    result.productLookupClarification?.candidates[0]?.name,
+    "Intense Curls Shampoo (legacy duplicate)",
+  )
+  assert.equal(result.productLookupClarification?.candidates[0]?.brand_name, "Syoss")
+  assert.equal(result.productLookupClarification?.candidates[0]?.product_line_name, "Intense")
+  assert.equal(
+    result.productLookupClarification?.candidates[0]?.image_url,
+    "https://example.test/syoss-intense-curls.png",
   )
   assert.equal(
     result.productLookupClarification?.none_action.product_intake_offer.extracted_identity
@@ -2152,6 +2268,9 @@ test("AgentV2 production pipeline surfaces category-less lookup clarification ca
 
   assert.equal(result.productIntakeOffer, null)
   assert.equal(result.productLookupClarification?.kind, "variant_selection")
+  const responseText = await readStream(result.stream)
+  assert.match(responseText, /Ich finde zu Syoss Intense mehrere mögliche Varianten/)
+  assert.match(responseText, /Welche genaue Variante meinst du/)
   assert.equal(
     result.productLookupClarification?.copy.prompt_de,
     "Meinst du eines dieser Produkte?",
@@ -2384,6 +2503,11 @@ test("AgentV2 production pipeline recovers lookup clarification from trace-only 
   assert.equal(result.productIntakeOffer, null)
   assert.equal(result.productLookupClarification?.kind, "variant_selection")
   assert.equal(result.productLookupClarification?.copy.prompt_de, "Meinst du dieses Shampoo?")
+  const responseText = await readStream(result.stream)
+  assert.match(responseText, /Ich habe dazu Intense Curls Shampoo gefunden\./)
+  assert.match(responseText, /Bitte bestätige kurz, ob du dieses Shampoo meinst/)
+  assert.doesNotMatch(responseText, /mehrere mögliche Varianten/)
+  assert.doesNotMatch(responseText, /passt.*(?:gut|mittelgut|nicht)|geeignet/i)
   assert.equal(
     result.productLookupClarification?.candidates[0]?.product_id,
     "syoss-intense-curls-shampoo",
@@ -2488,6 +2612,9 @@ test("AgentV2 production pipeline uses concise category-mismatch clarification c
     result.productLookupClarification?.copy.prompt_de,
     "Wir haben es als Conditioner gefunden. Meinst du dieses Produkt?",
   )
+  const responseText = await readStream(result.stream)
+  assert.match(responseText, /Wir haben es als Conditioner gefunden/)
+  assert.match(responseText, /Bitte bestätige kurz, ob du dieses Produkt meinst/)
   assert.equal(
     result.productLookupClarification?.candidates[0]?.product_id,
     "acme-hydra-glow-conditioner",
@@ -3406,7 +3533,9 @@ test("AgentV2 production pipeline scopes lookup to public products and user-owne
                 {
                   id: "hidden-conditioner",
                   name: "Hidden Conditioner",
+                  image_url: "https://example.test/hidden-conditioner.png",
                   brand_id: "brand-test",
+                  product_line_id: "line-hidden",
                   category_key: "conditioner",
                   is_active: true,
                   lifecycle_status: "active",
@@ -3425,7 +3554,13 @@ test("AgentV2 production pipeline scopes lookup to public products and user-owne
           },
           loadBrandResolutionCatalog: async () => ({
             brands: [{ id: "brand-test", canonical_name: "Testmarke" }],
-            productLines: [],
+            productLines: [
+              {
+                id: "line-hidden",
+                brand_id: "brand-test",
+                canonical_name: "Hidden Linie",
+              },
+            ],
             brandAliases: [],
           }),
         }) as never,
@@ -3453,9 +3588,26 @@ test("AgentV2 production pipeline scopes lookup to public products and user-owne
   assert.deepEqual(loadCatalogModes, [{ eligibilityMode: "intake_dedupe" }])
   assert.deepEqual(lookupResults, [
     { status: "found_exact", productId: "owned-conditioner" },
-    { status: "not_found", productId: null },
+    { status: "found_linkable_existing", productId: "hidden-conditioner" },
   ])
   assert.equal(result.productIntakeOffer, null)
+  assert.equal(result.productLookupClarification?.kind, "link_existing_product")
+  assert.equal(result.productLookupClarification?.candidates[0]?.product_id, "hidden-conditioner")
+  assert.equal(result.productLookupClarification?.candidates[0]?.brand_name, "Testmarke")
+  assert.equal(result.productLookupClarification?.candidates[0]?.product_line_name, "Hidden Linie")
+  assert.equal(
+    result.productLookupClarification?.candidates[0]?.image_url,
+    "https://example.test/hidden-conditioner.png",
+  )
+  assert.match(
+    result.productLookupClarification?.copy.prompt_de ?? "",
+    /zu deiner Routine hinzufügen/i,
+  )
+  const responseText = await readStream(result.stream)
+  assert.match(
+    responseText,
+    /kein Chaarlie-Empfehlungsprodukt/i,
+  )
 })
 
 test("AgentV2 production pipeline defaults product intake lookup off", async () => {
@@ -3747,6 +3899,8 @@ test("AgentV2 production pipeline does not render intake for broad brand-family 
   const hairProfile = createCompleteHairProfile()
   const agentResult = createAgentV2Result()
   let lookupCalled = false
+  let loadCatalogCalls = 0
+  let loadBrandCatalogCalls = 0
 
   const result = await runAgentV2ProductionPipeline(
     {
@@ -3782,12 +3936,18 @@ test("AgentV2 production pipeline does not render intake for broad brand-family 
       },
       createProductIntakeRepository: () =>
         ({
-          loadCatalog: async () => ({ products: [], identifiers: [] }),
-          loadBrandResolutionCatalog: async () => ({
-            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
-            productLines: [],
-            brandAliases: [],
-          }),
+          loadCatalog: async () => {
+            loadCatalogCalls += 1
+            return { products: [], identifiers: [] }
+          },
+          loadBrandResolutionCatalog: async () => {
+            loadBrandCatalogCalls += 1
+            return {
+              brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+              productLines: [],
+              brandAliases: [],
+            }
+          },
         }) as never,
       runAgentV2ResponsesTurn: async (params) => {
         const originalLookup = params.tools.lookup_product_candidate
@@ -3801,6 +3961,8 @@ test("AgentV2 production pipeline does not render intake for broad brand-family 
   )
 
   assert.equal(lookupCalled, false)
+  assert.equal(loadCatalogCalls, 0)
+  assert.equal(loadBrandCatalogCalls, 0)
   assert.equal(result.productIntakeOffer, null)
 })
 

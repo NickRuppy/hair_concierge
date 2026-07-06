@@ -33,6 +33,17 @@ test("Agent V2 product lookup policy maps not_found to intake-card handoff", () 
   assert.equal(agentV2ProductLookupStatusHasClarificationCard("not_found"), false)
 })
 
+test("Agent V2 product lookup policy maps known linkable products to clarification cards", () => {
+  const guidance = getAgentV2ProductLookupAssistantGuidance("found_linkable_existing")
+
+  assert.equal(guidance.pending_ui_action, "product_lookup_clarification_card")
+  assert.match(guidance.assistant_instruction_de, /nicht als Chaarlie-Empfehlung gelistet/)
+  assert.equal(isAgentV2ProductLookupUnresolvedStatus("found_linkable_existing"), true)
+  assert.equal(agentV2ProductLookupStatusBlocksProductSpecificAnswer("found_linkable_existing"), true)
+  assert.equal(agentV2ProductLookupStatusHasPendingCard("found_linkable_existing"), true)
+  assert.equal(agentV2ProductLookupStatusHasClarificationCard("found_linkable_existing"), true)
+})
+
 test("Agent V2 product lookup policy maps variant and category conflicts to clarification cards", () => {
   for (const status of ["ambiguous", "needs_variant_selection", "category_mismatch"]) {
     const guidance = getAgentV2ProductLookupAssistantGuidance(status)

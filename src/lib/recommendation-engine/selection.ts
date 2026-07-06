@@ -310,11 +310,90 @@ function appendUnselectedProducts<T extends MatchedProduct>(selected: T[], pool:
   return [...selected, ...pool.filter((product) => !seen.has(product.id))]
 }
 
+function prependPreservedProducts<T extends MatchedProduct>(
+  products: T[],
+  pool: T[],
+  preserveProductIds: readonly string[] | undefined,
+  mapPreserved: (product: T) => T = (product) => product,
+): T[] {
+  const preservedIds = new Set(preserveProductIds ?? [])
+  if (preservedIds.size === 0) return products
+
+  const seen = new Set(products.map((product) => product.id))
+  const preserved: T[] = []
+
+  for (const product of pool) {
+    if (!preservedIds.has(product.id) || seen.has(product.id)) continue
+    const mapped = mapPreserved(product)
+    preserved.push(mapped)
+    seen.add(product.id)
+  }
+
+  return preserved.length > 0 ? [...preserved, ...products] : products
+}
+
 function shampooSpecKey(
   productId: string,
+  thickness: HairProfile["thickness"] | null | undefined,
   shampooBucket: ShampooFitSpec["shampoo_bucket"],
 ): string {
-  return `${productId}:${shampooBucket ?? "unknown"}`
+  return `${productId}:${thickness ?? "unknown"}:${shampooBucket ?? "unknown"}`
+}
+
+function fitStatusRank(status: CategoryFitStatus): number {
+  switch (status) {
+    case "ideal":
+      return 4
+    case "supportive":
+      return 3
+    case "unknown":
+      return 2
+    case "mismatch":
+      return 1
+    default:
+      return 0
+  }
+}
+
+function chooseShampooSpecForProduct(params: {
+  productId: string
+  matchedBucket: ShampooFitSpec["shampoo_bucket"] | null
+  targetBucket: ShampooFitSpec["shampoo_bucket"] | null
+  specsByKey: ReadonlyMap<string, ProductShampooSpecRow>
+  specsByProductId: ReadonlyMap<string, readonly ProductShampooSpecRow[]>
+  decision: ShampooCategoryDecision
+}): ProductShampooSpecRow | null {
+  const targetThickness = params.decision.targetProfile?.thickness ?? null
+
+  if (params.matchedBucket) {
+    const matchedSpec = params.specsByKey.get(
+      shampooSpecKey(params.productId, targetThickness, params.matchedBucket),
+    )
+    if (matchedSpec) return matchedSpec
+  }
+
+  if (params.targetBucket) {
+    const targetSpec = params.specsByKey.get(
+      shampooSpecKey(params.productId, targetThickness, params.targetBucket),
+    )
+    if (targetSpec) return targetSpec
+  }
+
+  const productSpecs = params.specsByProductId.get(params.productId) ?? []
+  if (productSpecs.length === 0) return null
+  if (productSpecs.length === 1) return productSpecs[0] ?? null
+
+  return [...productSpecs].sort((left, right) => {
+    const leftRank = fitStatusRank(evaluateShampooFit(params.decision, left).status)
+    const rightRank = fitStatusRank(evaluateShampooFit(params.decision, right).status)
+    if (rightRank !== leftRank) return rightRank - leftRank
+
+    const leftThicknessExact = targetThickness && left.thickness === targetThickness ? 1 : 0
+    const rightThicknessExact = targetThickness && right.thickness === targetThickness ? 1 : 0
+    if (rightThicknessExact !== leftThicknessExact) return rightThicknessExact - leftThicknessExact
+
+    return 0
+  })[0]
 }
 
 function mapShampooBucketToScalpRoute(
@@ -500,7 +579,15 @@ function buildShampooTopReasons(
     )
   }
   if (fit.status === "mismatch") {
-    tradeoffs.push("Weicht vom aktuellen Kopfhaut-Fokus ab.")
+    if (fit.reasonCodes.includes("shampoo_thickness_mismatch")) {
+      tradeoffs.push("Die gepflegte Haardicke des Produkts passt nicht zu deiner Haardicke.")
+    }
+    if (fit.reasonCodes.includes("shampoo_scalp_route_mismatch")) {
+      tradeoffs.push("Weicht vom aktuellen Kopfhaut-Fokus ab.")
+    }
+    if (tradeoffs.length === 0) {
+      tradeoffs.push("Passt nicht exakt zum abgeleiteten Shampoo-Fokus.")
+    }
   }
   if (
     fit.status === "supportive" &&
@@ -672,7 +759,20 @@ export function rerankConditionerProductsWithEngine(params: {
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        prependPreservedProducts(
+          acceptable,
+          scored.filter(
+            (product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown",
+          ),
+          preserveProductIds,
+          markConditionerFallback,
+        ),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const fallback = scored
@@ -708,30 +808,48 @@ export function rerankShampooProductsWithEngine(params: {
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
   const specsByKey = new Map(
-    specs.map((spec) => [shampooSpecKey(spec.product_id, spec.shampoo_bucket), spec] as const),
+    specs.map(
+      (spec) => [shampooSpecKey(spec.product_id, spec.thickness, spec.shampoo_bucket), spec] as const,
+    ),
   )
+  const specsByProductId = new Map<string, ProductShampooSpecRow[]>()
+  for (const spec of specs) {
+    const productSpecs = specsByProductId.get(spec.product_id) ?? []
+    productSpecs.push(spec)
+    specsByProductId.set(spec.product_id, productSpecs)
+  }
+  const preservedProductIdSet = new Set(preserveProductIds ?? [])
+  const targetThickness = targetProfile.thickness ?? hairProfile?.thickness ?? null
   const eligibleCandidates = filterUnverifiedOwnedAssessmentCandidates(
     candidates,
     includeProductIds,
     (productId) => {
+      if (preservedProductIdSet.has(productId)) {
+        return (specsByProductId.get(productId)?.length ?? 0) > 0
+      }
       const bucket = bucketByProductId?.get(productId) ?? targetProfile.shampooBucket
-      return specsByKey.has(shampooSpecKey(productId, bucket))
+      return specsByKey.has(shampooSpecKey(productId, targetThickness, bucket))
     },
   )
 
   const scored: ScoredShampooProduct[] = eligibleCandidates.map((product) => {
     const matchedBucket = bucketByProductId?.get(product.id) ?? null
-    const spec =
-      specsByKey.get(shampooSpecKey(product.id, matchedBucket ?? targetProfile.shampooBucket)) ??
-      null
-    const fit = evaluateShampooFit(
+    const spec = chooseShampooSpecForProduct({
+      productId: product.id,
+      matchedBucket,
+      targetBucket: targetProfile.shampooBucket,
+      specsByKey,
+      specsByProductId,
       decision,
-      spec ?? {
-        shampoo_bucket: matchedBucket,
-        scalp_route: matchedBucket ? null : targetProfile.scalpRoute,
-        cleansing_intensity: null,
-      },
-    )
+    })
+    const fallbackSpec = matchedBucket
+      ? ({
+          shampoo_bucket: matchedBucket,
+          scalp_route: null,
+          cleansing_intensity: null,
+        } satisfies ShampooFitSpec)
+      : null
+    const fit = evaluateShampooFit(decision, spec ?? fallbackSpec)
     const { positives, tradeoffs } = buildShampooTopReasons(decision, fit, matchedBucket)
     const score =
       toBaseScore(product) +
@@ -750,12 +868,13 @@ export function rerankShampooProductsWithEngine(params: {
         scalp_type: hairProfile?.scalp_type ?? null,
         scalp_condition: hairProfile?.scalp_condition ?? null,
       },
-      matched_bucket: matchedBucket ?? targetProfile.shampooBucket,
-      matched_concern_code: matchedBucket ?? targetProfile.shampooBucket,
+      product_thickness: spec?.thickness ?? null,
+      matched_bucket: spec?.shampoo_bucket ?? matchedBucket ?? null,
+      matched_concern_code: spec?.shampoo_bucket ?? matchedBucket ?? null,
       fit_status: fit.status,
       matched_scalp_route:
         spec?.scalp_route ??
-        mapShampooBucketToScalpRoute(matchedBucket ?? targetProfile.shampooBucket),
+        mapShampooBucketToScalpRoute(spec?.shampoo_bucket ?? matchedBucket ?? null),
       cleansing_intensity: spec?.cleansing_intensity ?? null,
     }
 
@@ -770,10 +889,6 @@ export function rerankShampooProductsWithEngine(params: {
   scored.sort(compareScoredProducts)
 
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
-  if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
-  }
-
   const mismatches = scored
     .filter((product) => product._fitStatus === "mismatch")
     .map(markShampooFallback)
@@ -901,12 +1016,16 @@ export function rerankOilProductsWithEngine(params: {
     eligibilityRows.length === 0
       ? candidates
       : exactPurposeProductIds.size >= SELECTION_LIMIT
-        ? candidates.filter((product) => exactPurposeProductIds.has(product.id))
+        ? candidates.filter(
+            (product) =>
+              exactPurposeProductIds.has(product.id) || preserveProductIds?.includes(product.id),
+          )
         : candidates.filter(
             (product) =>
               exactPurposeProductIds.has(product.id) ||
               finishBridgeProductIds.has(product.id) ||
-              classicSubtypeProductIds.has(product.id),
+              classicSubtypeProductIds.has(product.id) ||
+              preserveProductIds?.includes(product.id),
           )
   const visibleCandidates = filterUnverifiedOwnedAssessmentCandidates(
     eligibleCandidates,
@@ -925,6 +1044,14 @@ export function rerankOilProductsWithEngine(params: {
     const classicSubtypeMatch = productEligibility.some(
       (row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype,
     )
+    const selectedEligibility =
+      productEligibility.find((row) => row.oil_purpose === targetProfile.purpose) ??
+      productEligibility.find((row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose) ??
+      productEligibility.find(
+        (row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype,
+      ) ??
+      productEligibility[0] ??
+      null
     const lightOilFit = productEligibility.some(
       (row) => row.oil_purpose === "light_finish" || row.oil_subtype === "trocken-oel",
     )
@@ -967,14 +1094,16 @@ export function rerankOilProductsWithEngine(params: {
       matched_profile: {
         thickness: hairProfile?.thickness ?? null,
       },
-      matched_subtype: targetProfile.matcherSubtype,
-      use_mode: targetProfile.purpose,
+      matched_subtype: selectedEligibility?.oil_subtype ?? targetProfile.matcherSubtype,
+      use_mode: selectedEligibility?.oil_purpose ?? targetProfile.purpose,
       adjunct_scalp_support: targetProfile.adjunctScalpSupport,
       fit_status: exactPurposeMatch
         ? "ideal"
         : finishBridgeMatch || classicSubtypeMatch
           ? "supportive"
-          : "unknown",
+          : productEligibility.length > 0
+            ? "mismatch"
+            : "unknown",
       purpose_fit: exactPurposeMatch ? "exact" : finishBridgeMatch ? "bridge" : "unknown",
       scalp_caution: targetProfile.scalpCaution,
       density_weight_caution: targetProfile.densityWeightCaution,
@@ -1096,6 +1225,7 @@ export function rerankBondbuilderProductsWithEngine(params: {
         usage_hint: getBondbuilderUsageHint(spec?.usage_protocol),
         matched_intensity: target.bondRepairIntensity,
         application_mode: target.applicationMode,
+        fit_status: fit.status,
         bond_repair_axis: spec?.bond_repair_axis ?? null,
         treatment_mode: spec?.treatment_mode ?? null,
         product_format: spec?.product_format ?? null,
@@ -1309,10 +1439,29 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
     target.colorSafeRequest
 
   if (acceptable.length > 0) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        prependPreservedProducts(
+          acceptable,
+          scored.filter((product) => product._fitStatus === "mismatch"),
+          preserveProductIds,
+        ),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   if (strictRequest) {
+    const preservedMismatch = prependPreservedProducts(
+      [],
+      scored.filter((product) => product._fitStatus === "mismatch"),
+      preserveProductIds,
+    )
+    if (preservedMismatch.length > 0) {
+      return stripScore(sliceWithIncludedProductIds(preservedMismatch, preserveProductIds, SELECTION_LIMIT))
+    }
+
     return []
   }
 
@@ -1384,7 +1533,17 @@ export function rerankDryShampooProductsWithEngine(params: {
 
   scored.sort(compareScoredProducts)
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
-  return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds(
+      prependPreservedProducts(
+        acceptable,
+        scored.filter((product) => product._fitStatus === "mismatch"),
+        preserveProductIds,
+      ),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
+  )
 }
 
 function buildPeelingUsageHint(decision: PeelingCategoryDecision): string {
@@ -1432,6 +1591,7 @@ export function rerankPeelingProductsWithEngine(params: {
       usage_hint: buildPeelingUsageHint(decision),
       scalp_type_focus: target.scalpTypeFocus,
       peeling_type: target.peelingType,
+      fit_status: fit.status,
     }
 
     return {
@@ -1685,7 +1845,14 @@ export function rerankLeaveInProductsWithEngine(params: {
 
     return stripScore(
       sliceWithIncludedProductIds(
-        appendUnselectedProducts(selected, scored),
+        prependPreservedProducts(
+          appendUnselectedProducts(selected, scored),
+          scored.filter(
+            (product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown",
+          ),
+          preserveProductIds,
+          markLeaveInFallback,
+        ),
         preserveProductIds,
         SELECTION_LIMIT,
       ),
@@ -1693,7 +1860,20 @@ export function rerankLeaveInProductsWithEngine(params: {
   }
 
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        prependPreservedProducts(
+          acceptable,
+          scored.filter(
+            (product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown",
+          ),
+          preserveProductIds,
+          markLeaveInFallback,
+        ),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const fallback = scored
@@ -1704,7 +1884,18 @@ export function rerankLeaveInProductsWithEngine(params: {
     .map(markLeaveInFallback)
 
   return stripScore(
-    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+    sliceWithIncludedProductIds(
+      prependPreservedProducts(
+        [...acceptable, ...fallback],
+        scored.filter(
+          (product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown",
+        ),
+        preserveProductIds,
+        markLeaveInFallback,
+      ),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
   )
 }
 
@@ -1922,7 +2113,20 @@ export function rerankMaskProductsWithEngine(params: {
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        prependPreservedProducts(
+          acceptable,
+          scored.filter(
+            (product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown",
+          ),
+          preserveProductIds,
+          markMaskFallback,
+        ),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const fallback = scored
@@ -1933,7 +2137,18 @@ export function rerankMaskProductsWithEngine(params: {
     .map(markMaskFallback)
 
   return stripScore(
-    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+    sliceWithIncludedProductIds(
+      prependPreservedProducts(
+        [...acceptable, ...fallback],
+        scored.filter(
+          (product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown",
+        ),
+        preserveProductIds,
+        markMaskFallback,
+      ),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
   )
 }
 
@@ -2146,7 +2361,6 @@ export async function selectShampooProductsWithEngine(params: {
   const { data: specs, error } = await supabase
     .from("product_shampoo_specs")
     .select("product_id, thickness, shampoo_bucket, scalp_route, cleansing_intensity")
-    .eq("thickness", hairProfile.thickness)
     .in(
       "product_id",
       candidates.map((candidate) => candidate.id),

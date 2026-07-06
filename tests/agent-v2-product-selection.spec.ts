@@ -154,6 +154,7 @@ function createFakeProductSelectionAdminClient(params: {
   selectedProduct: Record<string, unknown>
   ownedProductIds?: readonly string[]
   verifiedSpecProductIds?: readonly string[]
+  existingCategoryUsage?: Record<string, unknown> | null
   conversationState?: Record<string, unknown> | null
   conversationStateError?: { message: string } | null
   existingMessages?: Array<Record<string, unknown>>
@@ -161,9 +162,24 @@ function createFakeProductSelectionAdminClient(params: {
 }) {
   const insertedMessages: Array<Record<string, unknown>> = []
   const conversationUpdates: Array<Record<string, unknown>> = []
+  const rpcCalls: Array<{ fn: string; args: Record<string, unknown> }> = []
   const client = {
     insertedMessages,
     conversationUpdates,
+    rpcCalls,
+    async rpc(fn: string, args: Record<string, unknown>) {
+      rpcCalls.push({ fn, args })
+      return {
+        data: {
+          id: "usage-linked-1",
+          user_id: args.p_user_id,
+          category: args.p_category,
+          product_id: args.p_product_id,
+          match_status: "matched",
+        },
+        error: null,
+      }
+    },
     from(table: string) {
       const query = {
         operation: null as "insert" | "update" | "select" | null,
@@ -236,7 +252,14 @@ function createFakeProductSelectionAdminClient(params: {
             const productId = this.filters.find((filter) => filter.column === "product_id")?.value
             const isOwned =
               typeof productId === "string" && params.ownedProductIds?.includes(productId)
-            return { data: isOwned ? { id: "usage-1", product_id: productId } : null, error: null }
+            if (isOwned) {
+              return { data: { id: "usage-1", product_id: productId }, error: null }
+            }
+            const category = this.filters.find((filter) => filter.column === "category")?.value
+            if (typeof category === "string" && params.existingCategoryUsage !== undefined) {
+              return { data: params.existingCategoryUsage, error: null }
+            }
+            return { data: null, error: null }
           }
           return { data: null, error: null }
         },
@@ -245,7 +268,14 @@ function createFakeProductSelectionAdminClient(params: {
             const productId = this.filters.find((filter) => filter.column === "product_id")?.value
             const isOwned =
               typeof productId === "string" && params.ownedProductIds?.includes(productId)
-            return { data: isOwned ? { id: "usage-1", product_id: productId } : null, error: null }
+            if (isOwned) {
+              return { data: { id: "usage-1", product_id: productId }, error: null }
+            }
+            const category = this.filters.find((filter) => filter.column === "category")?.value
+            if (typeof category === "string" && params.existingCategoryUsage !== undefined) {
+              return { data: params.existingCategoryUsage, error: null }
+            }
+            return { data: null, error: null }
           }
           if (table === "conversation_states") {
             if (params.conversationStateError) {
@@ -616,7 +646,7 @@ test("chat product lookup clarification is driven by structured pipeline metadat
 
 test("chat route preserves product lookup clarification from visible repair fallback", async () => {
   const modelAnswer =
-    "Ich finde zu Syoss Intense Volume Shampoo mehrere mögliche Varianten und möchte nichts Falsches bewerten."
+    "Ich habe dazu Intense Curls Shampoo gefunden. Bitte bestätige kurz, ob du dieses Shampoo meinst."
   const productLookupClarification = {
     id: "clarification-visible-failure",
     kind: "variant_selection",
@@ -1272,6 +1302,157 @@ test("chat product selection rejects non-recommended products not owned by the u
   assert.equal(admin.insertedMessages.length, 0)
 })
 
+test("chat product selection links known non-recommended products from link-existing cards", async () => {
+  const assistantText =
+    "Danke, ich habe das bekannte Produkt zu deiner Routine hinzugefügt und bewerte es jetzt für dich."
+  const admin = createFakeProductSelectionAdminClient({
+    sourceMessage: {
+      id: "assistant-link-existing-1",
+      conversation_id: "conversation-1",
+      role: "assistant",
+      rag_context: {
+        product_lookup_clarification: {
+          id: "clarification-link-existing-1",
+          kind: "link_existing_product",
+          source: "chat",
+          original_user_message:
+            "Passt der Balea Professional Leave-In Serum Brilliant Blond Hair Sealer zu mir?",
+          query: {
+            brand_text: "Balea Professional",
+            product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+            category: "leave_in",
+          },
+          copy: {
+            prompt_de:
+              "Wir kennen dieses Produkt bereits. Es ist kein Chaarlie-Empfehlungsprodukt, aber wir können es für dein Profil analysieren, wenn du es zu deiner Routine hinzufügst.",
+          },
+          candidates: [
+            {
+              product_id: "balea-hair-sealer",
+              name: "Leave-In Serum Brilliant Blond Hair Sealer",
+              brand_name: "Balea Professional",
+              category: "leave_in",
+              category_label_de: "Leave-in",
+              reason: "link_existing_product",
+            },
+          ],
+          none_action: {
+            label_de: "Nein, mein Produkt hinzufügen",
+            product_intake_offer: {
+              id: "offer-link-existing-1",
+              source: "chat",
+              reason: "product_lookup_not_found",
+              category: "leave_in",
+            },
+          },
+        },
+      },
+    },
+    conversation: { id: "conversation-1", user_id: "user-1" },
+    selectedProduct: {
+      id: "balea-hair-sealer",
+      name: "Leave-In Serum Brilliant Blond Hair Sealer",
+      category_key: "leave_in",
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: false,
+    },
+    existingCategoryUsage: null,
+  })
+  let trustedContext: unknown = null
+  let pipelineCalled = false
+  const handler = createProductSelectionPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    createAdminClient: () => admin as never,
+    randomUUID: () => "selection-request-1",
+    productIntakeEnabled: () => true,
+    runAgentV2ProductionPipeline: (async (params: { trustedSelectedProductContext?: unknown }) => {
+      pipelineCalled = true
+      trustedContext = params.trustedSelectedProductContext
+      return {
+        stream: createTextStream(assistantText),
+        conversationId: "conversation-1",
+        intent: "general_chat",
+        matchedProducts: [],
+        sources: [],
+        retrievalSummary: { final_context_count: 0 },
+        routerDecision: {
+          confidence: 0.9,
+          retrieval_mode: "agent_v2_responses",
+          response_mode: "answer_direct",
+          slot_completeness: 1,
+          policy_overrides: [],
+        },
+        conversationStateTransition: { next_state: "selection" } as never,
+        categoryDecision: undefined,
+        engineTrace: undefined,
+        debugTrace: {},
+        visibleFailure: false,
+        answerMode: "product_assessment",
+      }
+    }) as never,
+    buildAssistantDecisionContext: (params) => ({
+      sources: [],
+      product_lookup_selection: params.productLookupSelection,
+    }),
+    buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
+    persistConversationStateTransition: async () => ({ status: "persisted", error: null }),
+  })
+
+  const response = await handler(
+    new Request("https://example.test/api/chat/product-selection", {
+      method: "POST",
+      body: JSON.stringify({
+        conversation_id: "conversation-1",
+        assistant_message_id: "assistant-link-existing-1",
+        clarification_id: "clarification-link-existing-1",
+        selected_product_id: "balea-hair-sealer",
+      }),
+    }),
+  )
+  const responseText = await response.text()
+
+  assert.equal(response.status, 200)
+  assert.equal(pipelineCalled, true)
+  assert.equal(admin.rpcCalls.length, 1)
+  assert.equal(admin.rpcCalls[0]?.fn, "product_intake_replace_usage_with_matched_product")
+  assert.deepEqual(admin.rpcCalls[0]?.args, {
+    p_user_id: "user-1",
+    p_category: "leave_in",
+    p_existing_usage_id: null,
+    p_product_id: "balea-hair-sealer",
+    p_product_name: "Leave-In Serum Brilliant Blond Hair Sealer",
+    p_frequency_range: "less_than_monthly",
+    p_brand_text: "Balea Professional",
+    p_intake_method: "manual",
+    p_source: "chat",
+    p_updated_at: admin.rpcCalls[0]?.args.p_updated_at,
+  })
+  assert.equal(typeof admin.rpcCalls[0]?.args.p_updated_at, "string")
+  assert.match(responseText, /product_lookup_selection/)
+  assert.deepEqual(trustedContext, {
+    source: "product_lookup_clarification",
+    original_user_message:
+      "Passt der Balea Professional Leave-In Serum Brilliant Blond Hair Sealer zu mir?",
+    selected_product: {
+      id: "balea-hair-sealer",
+      name: "Leave-In Serum Brilliant Blond Hair Sealer",
+      category: "leave_in",
+    },
+    lookup_identity: {
+      category: "leave_in",
+      brand_text: "Balea Professional",
+      product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+      evidence_quote: "Balea Professional Leave-In Serum Brilliant Blond Hair Sealer",
+    },
+  })
+})
+
 test("chat product selection returns existing selection answer on replay", async () => {
   const existingSelection = {
     source: "product_lookup_clarification",
@@ -1580,14 +1761,47 @@ test("chat product selection continues with trusted selected product context", a
         conversationStateTransition: { next_state: "selection" } as never,
         categoryDecision: undefined,
         engineTrace: undefined,
-        debugTrace: {},
+        debugTrace: {
+          agent_v2_trace: {
+            tool_calls: [
+              {
+                call_id: "call_facts",
+                name: "load_product_facts",
+                arguments: { product_id: "syoss-intense-volume-shampoo" },
+                output_summary: "facts_loaded=true",
+              },
+            ],
+            validation_errors: [
+              {
+                validator_id: "product_assessment_grounding",
+                message: "Needs product facts grounding.",
+                severity: "block",
+              },
+            ],
+            validation_warnings: [],
+            repair_attempts: [
+              {
+                reason: "missing_guidance_or_tools",
+                validation_errors: [
+                  {
+                    validator_id: "product_assessment_grounding",
+                    message: "Needs product facts grounding.",
+                    severity: "block",
+                  },
+                ],
+              },
+            ],
+            failure_stage: "repair_failed",
+          },
+        } as never,
         visibleFailure: false,
         answerMode: "product_recommendation",
       }
     }) as never,
     buildAssistantDecisionContext: (params) => ({
       sources: [],
-      product_lookup_selection: params.productLookupSelection,
+      product_lookup_selection: params.productLookupSelection ?? null,
+      product_lookup_selection_trace: params.productLookupSelectionTrace ?? null,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
     persistConversationStateTransition: async (_admin, params) => {
@@ -1646,7 +1860,75 @@ test("chat product selection continues with trusted selected product context", a
       selected_product_name: "Syoss Intense Volume Shampoo",
     },
   )
-  assert.deepEqual(persistedSelectionTransition, { next_state: "selection" })
+  assert.deepEqual(
+    (admin.insertedMessages[0]?.rag_context as { product_lookup_selection_trace?: unknown })
+      .product_lookup_selection_trace,
+    {
+      source: "product_lookup_clarification",
+      selected_product: {
+        id: "syoss-intense-volume-shampoo",
+        name: "Syoss Intense Volume Shampoo",
+        category: "shampoo",
+      },
+      lookup_identity: {
+        category: "shampoo",
+        brand_text: "Syoss",
+        product_name_text: "Intense Volume Shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+      called_load_product_facts: true,
+      tool_calls: [
+        {
+          name: "load_product_facts",
+          arguments_summary: "product_id=syoss-intense-volume-shampoo",
+          output_summary: "facts_loaded=true",
+        },
+      ],
+      validation_error_ids: ["product_assessment_grounding"],
+      repair_attempt_reasons: ["missing_guidance_or_tools"],
+      failure_stage: "repair_failed",
+    },
+  )
+  const activeProductContext = (
+    persistedSelectionTransition as {
+      next_state?: { agent_v2?: { active_product_contexts?: unknown[] } }
+    }
+  )?.next_state?.agent_v2?.active_product_contexts?.[0] as
+    | (Record<string, unknown> & { updated_at?: unknown })
+    | undefined
+  const activeResolvedProductContext = (
+    persistedSelectionTransition as {
+      next_state?: { agent_v2?: { active_resolved_product_context?: unknown } }
+    }
+  )?.next_state?.agent_v2?.active_resolved_product_context as
+    | Record<string, unknown>
+    | undefined
+
+  assert.equal(typeof activeProductContext?.updated_at, "string")
+  assert.deepEqual(
+    activeProductContext
+      ? { ...activeProductContext, updated_at: "<timestamp>" }
+      : activeProductContext,
+    {
+      status: "resolved",
+      product_id: "syoss-intense-volume-shampoo",
+      submission_id: null,
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+      display_name: "Syoss Intense Volume Shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      source: "product_lookup_selection",
+      updated_at: "<timestamp>",
+    },
+  )
+  assert.deepEqual(activeResolvedProductContext, {
+    source: "product_lookup_selection",
+    product_id: "syoss-intense-volume-shampoo",
+    name: "Syoss Intense Volume Shampoo",
+    category: "shampoo",
+    original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+  })
 })
 
 test("chat product selection allows user-owned non-recommended selected products", async () => {
@@ -2299,7 +2581,16 @@ test("chat product selection persists resolved state before assistant message in
   assert.equal(response.status, 200)
   assert.match(responseText, /"type":"error"/)
   assert.match(responseText, /Produktauswahl konnte nicht verarbeitet werden/)
-  assert.deepEqual(persistedSelectionTransition, { next_state: "selection" })
+  const activeProductContext = (
+    persistedSelectionTransition as {
+      next_state?: { agent_v2?: { active_product_contexts?: unknown[] } }
+    }
+  )?.next_state?.agent_v2?.active_product_contexts?.[0] as
+    | (Record<string, unknown> & { updated_at?: unknown })
+    | undefined
+
+  assert.equal(activeProductContext?.product_id, "syoss-intense-volume-shampoo")
+  assert.equal(activeProductContext?.source, "product_lookup_selection")
 })
 
 test("chat route does not infer product intake offer from raw user message", async () => {

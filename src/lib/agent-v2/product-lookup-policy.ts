@@ -31,6 +31,13 @@ const PRODUCT_LOOKUP_POLICIES: Record<ProductLookupStatus, AgentV2ProductLookupP
     unresolved: false,
     blocks_product_specific_answer: false,
   },
+  found_linkable_existing: {
+    pending_ui_action: "product_lookup_clarification_card",
+    assistant_instruction_de:
+      "Das Produkt ist als geprüfter Datensatz bekannt, aber noch nicht für diese Nutzerin verknüpft und nicht als Chaarlie-Empfehlung gelistet. Bitte nicht fachlich bewerten, sondern kurz erklären, dass sie es über die Karte zu ihrer Routine hinzufügen kann.",
+    unresolved: true,
+    blocks_product_specific_answer: true,
+  },
   not_found: {
     pending_ui_action: "product_intake_card",
     assistant_instruction_de:

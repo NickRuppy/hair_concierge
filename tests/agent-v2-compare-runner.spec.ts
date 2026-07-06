@@ -183,6 +183,17 @@ test("AgentV2 trace timing accepts legacy partial model steps without latency", 
   assert.equal(parsed.success, true)
 })
 
+test("AgentV2 Compare runner keeps load_product_facts fail-closed instead of broad-selecting", () => {
+  const source = readFileSync("src/lib/agent-v2/compare/run-agent-v2.ts", "utf-8")
+
+  assert.doesNotMatch(
+    source,
+    /load_product_facts:\s*\(input,\s*executionContext\)\s*=>\s*runSelectProductsProjection\(input,\s*executionContext,\s*"load_product_facts"\)/,
+  )
+  assert.match(source, /load_product_facts:[\s\S]*requireSingleResolvedProduct:\s*true/)
+  assert.match(source, /buildEmptyLoadProductFactsProjectionForCompare/)
+})
+
 test("AgentV2 Compare runner preserves routine thread context across follow-up turns", () => {
   const initialContext = updateAgentV2RoutineThreadContext(null, {
     answer_mode: "routine",

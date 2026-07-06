@@ -1,9 +1,16 @@
 import { getOpenAI } from "@/lib/openai/client"
+import {
+  isSelectableProductCategory,
+  type SelectableProductCategory,
+} from "@/lib/agent/contracts"
 import { createBuildOrFixRoutineTool } from "@/lib/agent/tools/build-or-fix-routine"
 import { buildCareBalanceToolContext } from "@/lib/agent/tools/care-balance-context"
 import { getUserContext } from "@/lib/agent/tools/get-user-context"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
-import type { SelectProductsToolResult } from "@/lib/agent/tools/select-products"
+import type {
+  SelectProductsTargetProductHint,
+  SelectProductsToolResult,
+} from "@/lib/agent/tools/select-products"
 import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import { buildRecommendationEngineRuntimeFromPersistence } from "@/lib/recommendation-engine/runtime"
@@ -63,6 +70,67 @@ function normalizeTurns(value: { prompt?: string; turns?: string[] }): string[] 
 type AgentV2SelectProductsProjectionForCompare = ReturnType<typeof projectSelectProductsForAgentV2>
 type AgentV2RuntimeToolExecutionContext = {
   effectiveCareContext?: EffectiveCareContext
+}
+
+function buildEmptyLoadProductFactsProjectionForCompare(
+  category: unknown,
+): AgentV2SelectProductsProjectionForCompare {
+  return {
+    tool_name: "load_product_facts",
+    category:
+      typeof category === "string" && isSelectableProductCategory(category) ? category : null,
+    decision: "no_catalog_match",
+    product_response_policy: "no_catalog_match",
+    policy_reason:
+      "No single resolved product identity was available, so product facts were not loaded.",
+    valid_product_ids: [],
+    products: [],
+    missing_required_data: [],
+    constraint_blockers: [],
+    comparison_facts: null,
+    allowed_claim_sources: [],
+    trace: {
+      profile_basis: [],
+      category_guidance:
+        "Load product facts only after one concrete product identity has been resolved.",
+    },
+  }
+}
+
+function selectSingleCompareProductFactsTarget(params: {
+  category: SelectableProductCategory | null
+  trustedSurfacedProductProjections: readonly AgentV2SelectProductsProjectionForCompare[]
+}): {
+  targetProductIds: string[]
+  targetProductHints: SelectProductsTargetProductHint[]
+} {
+  if (!params.category) {
+    return { targetProductIds: [], targetProductHints: [] }
+  }
+
+  const productsById = new Map<string, SelectProductsTargetProductHint>()
+  for (const projection of params.trustedSurfacedProductProjections) {
+    if (projection.category !== params.category) continue
+    const validIds = new Set(projection.valid_product_ids ?? [])
+    for (const product of projection.products) {
+      if (validIds.size > 0 && !validIds.has(product.product_id)) continue
+      productsById.set(product.product_id, {
+        product_id: product.product_id,
+        name: product.name,
+        category: projection.category,
+      })
+    }
+  }
+
+  if (productsById.size !== 1) {
+    return { targetProductIds: [], targetProductHints: [] }
+  }
+
+  const [target] = productsById.values()
+  return {
+    targetProductIds: [target.product_id],
+    targetProductHints: [target],
+  }
 }
 
 export function normalizeAgentV2MatchedProductsForFinalAnswer(
@@ -733,6 +801,75 @@ export async function runAgentV2ComparisonForUser(
     if (turnCareBalanceContext) {
       latestCareBalanceTrace = turnCareBalanceContext
     }
+    const runSelectProductsProjection = async (
+      input: Record<string, unknown>,
+      executionContext?: AgentV2RuntimeToolExecutionContext,
+      toolOptions: {
+        toolName?: AgentV2SelectProductsProjectionForCompare["tool_name"]
+        requireSingleResolvedProduct?: boolean
+      } = {},
+    ) => {
+      latestSelectProductsResult = null
+      const toolName = toolOptions.toolName ?? "select_products"
+      const effectiveCareContext =
+        executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
+      const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
+        context.profile,
+        effectiveCareContext,
+      )
+      const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
+        context.routine_inventory,
+        effectiveCareContext,
+      )
+      const productToolMessage = buildAgentV2ProductToolMessage({
+        latestMessage: message,
+        recentMessages,
+      })
+      const inputCategory =
+        typeof input.category === "string" && isSelectableProductCategory(input.category)
+          ? input.category
+          : null
+      const factsTarget = toolOptions.requireSingleResolvedProduct
+        ? selectSingleCompareProductFactsTarget({
+            category: inputCategory,
+            trustedSurfacedProductProjections,
+          })
+        : { targetProductIds: [], targetProductHints: [] }
+
+      if (toolOptions.requireSingleResolvedProduct && factsTarget.targetProductIds.length !== 1) {
+        const emptyProjection = buildEmptyLoadProductFactsProjectionForCompare(input.category)
+        selectedProductProjections.push(emptyProjection)
+        return emptyProjection
+      }
+
+      const projection = await selectProducts({
+        category: input.category as Parameters<typeof selectProducts>[0]["category"],
+        message: productToolMessage,
+        hairProfile: effectiveHairProfile,
+        memoryContext,
+        routineItems: effectiveRoutineItems,
+        effectiveCareContext,
+        targetProductIds: factsTarget.targetProductIds,
+        targetProductHints: factsTarget.targetProductHints,
+      })
+      const rawResult =
+        latestSelectProductsResult ??
+        ({
+          projection,
+          products: [],
+          effectiveHairProfile,
+          runtime: {} as SelectProductsToolResult["runtime"],
+        } satisfies SelectProductsToolResult)
+      if (rawResult.projection.care_balance_context) {
+        latestCareBalanceTrace = rawResult.projection.care_balance_context
+      }
+      const agentProjection = projectSelectProductsForAgentV2(rawResult, {
+        includeCareBalanceContext: options.includeCareBalanceContext,
+        toolName,
+      })
+      selectedProductProjections.push(agentProjection)
+      return agentProjection
+    }
     const result = await runAgentV2ResponsesTurn({
       client: getOpenAI() as unknown as Parameters<typeof runAgentV2ResponsesTurn>[0]["client"],
       message,
@@ -760,47 +897,13 @@ export async function runAgentV2ComparisonForUser(
           missing_fields: ["category"],
           intake_offer: null,
         }),
-        select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-          latestSelectProductsResult = null
-          const effectiveCareContext =
-            executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
-          const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
-            context.profile,
-            effectiveCareContext,
-          )
-          const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
-            context.routine_inventory,
-            effectiveCareContext,
-          )
-          const productToolMessage = buildAgentV2ProductToolMessage({
-            latestMessage: message,
-            recentMessages,
-          })
-          const projection = await selectProducts({
-            category: input.category as Parameters<typeof selectProducts>[0]["category"],
-            message: productToolMessage,
-            hairProfile: effectiveHairProfile,
-            memoryContext,
-            routineItems: effectiveRoutineItems,
-            effectiveCareContext,
-          })
-          const rawResult =
-            latestSelectProductsResult ??
-            ({
-              projection,
-              products: [],
-              effectiveHairProfile,
-              runtime: {} as SelectProductsToolResult["runtime"],
-            } satisfies SelectProductsToolResult)
-          if (rawResult.projection.care_balance_context) {
-            latestCareBalanceTrace = rawResult.projection.care_balance_context
-          }
-          const agentProjection = projectSelectProductsForAgentV2(rawResult, {
-            includeCareBalanceContext: options.includeCareBalanceContext,
-          })
-          selectedProductProjections.push(agentProjection)
-          return agentProjection
-        },
+        load_product_facts: (input, executionContext) =>
+          runSelectProductsProjection(input, executionContext, {
+            toolName: "load_product_facts",
+            requireSingleResolvedProduct: true,
+          }),
+        select_products: (input, executionContext) =>
+          runSelectProductsProjection(input, executionContext, { toolName: "select_products" }),
         build_or_fix_routine: async (
           input,
           executionContext?: AgentV2RuntimeToolExecutionContext,

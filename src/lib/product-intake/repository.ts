@@ -98,7 +98,7 @@ export function createSupabaseProductIntakeRepository(
       let productsQuery = admin
         .from("products")
         .select(
-          "id, name, brand_id, product_line_id, category_key, is_active, lifecycle_status, is_chaarlie_recommended",
+          "id, name, brand_id, product_line_id, image_url, category_key, is_active, lifecycle_status, is_chaarlie_recommended",
         )
         .eq(
           "is_active",

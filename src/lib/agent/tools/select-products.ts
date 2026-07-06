@@ -34,6 +34,7 @@ import type {
   LeaveInRecommendationMetadata,
   MaskRecommendationMetadata,
   OilRecommendationMetadata,
+  PeelingRecommendationMetadata,
   ShampooRecommendationMetadata,
 } from "@/lib/types"
 import type {
@@ -60,6 +61,8 @@ import {
   PRODUCT_BOND_REPAIR_AXIS_LABELS,
   PRODUCT_BOND_TREATMENT_MODE_LABELS,
   PRODUCT_BOND_USAGE_PROTOCOL_LABELS,
+  PRODUCT_PEELING_TYPE_LABELS,
+  PRODUCT_SCALP_TYPE_FOCUS_LABELS,
   type DryShampooFormat,
   type DryShampooHairColorFit,
   type DryShampooPrimaryEffect,
@@ -146,6 +149,8 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "reset_focus",
   "reset_intensity",
   "color_treated_suitability",
+  "scalp_type_focus",
+  "peeling_type",
   "primary_effect",
   "hair_color_fit",
   "scalp_sensitivity_fit",
@@ -951,6 +956,39 @@ const DRY_SHAMPOO_FORMAT_LABELS: Record<DryShampooFormat, string> = {
   foam_or_liquid: "Schaum/Liquid",
 }
 
+const DRY_SHAMPOO_FIT_STATUS_LABELS: Record<
+  NonNullable<DryShampooRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstützender Treffer",
+  mismatch: "weicht etwas ab",
+  unknown: "Daten unvollständig",
+  not_applicable: "nicht anwendbar",
+}
+
+const BOND_BUILDER_FIT_STATUS_LABELS: Record<
+  NonNullable<BondbuilderRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstützender Treffer",
+  mismatch: "weicht etwas ab",
+  unknown: "Daten unvollständig",
+  not_applicable: "nicht anwendbar",
+}
+
+const PEELING_FIT_STATUS_LABELS: Record<
+  NonNullable<PeelingRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstützender Treffer",
+  mismatch: "weicht etwas ab",
+  unknown: "Daten unvollständig",
+  not_applicable: "nicht anwendbar",
+}
+
 const LEAVE_IN_FIT_STATUS_PREFIXES: Record<
   NonNullable<LeaveInRecommendationMetadata["fit_status"]>,
   string
@@ -1127,9 +1165,9 @@ function buildShampooDisplayableFitReason(meta: ShampooRecommendationMetadata): 
   const prefix = meta.fit_status
     ? (SHAMPOO_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
     : "Treffer"
-  const thickness = meta.matched_profile.thickness
-    ? (SHAMPOO_THICKNESS_FIT_PHRASES[meta.matched_profile.thickness] ??
-      `${meta.matched_profile.thickness} Haar`)
+  const productThickness = meta.product_thickness ?? meta.matched_profile.thickness
+  const thickness = productThickness
+    ? (SHAMPOO_THICKNESS_FIT_PHRASES[productThickness] ?? `${productThickness} Haar`)
     : null
   const scalp = meta.matched_scalp_route
     ? (SHAMPOO_SCALP_ROUTE_FIT_PHRASES[meta.matched_scalp_route] ?? null)
@@ -1526,6 +1564,14 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
         "product_spec",
         meta.format ? `Format: ${DRY_SHAMPOO_FORMAT_LABELS[meta.format]}` : null,
       ),
+      buildClaim(
+        "fit_status",
+        meta.fit_status,
+        "category_decision",
+        meta.fit_status
+          ? `Fit: ${DRY_SHAMPOO_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+          : null,
+      ),
     ])
   }
 
@@ -1565,6 +1611,41 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
           ? `Lifecycle: ${meta.lifecycle_status}`
           : null,
       ),
+      buildClaim(
+        "fit_status",
+        meta.fit_status,
+        "category_decision",
+        meta.fit_status
+          ? `Fit: ${BOND_BUILDER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+          : null,
+      ),
+    ])
+  }
+
+  if (meta?.category === "peeling") {
+    return uniqueClaims([
+      buildClaim(
+        "scalp_type_focus",
+        meta.scalp_type_focus,
+        "product_spec",
+        meta.scalp_type_focus
+          ? `Kopfhaut-Fokus: ${PRODUCT_SCALP_TYPE_FOCUS_LABELS[meta.scalp_type_focus]}`
+          : null,
+      ),
+      buildClaim(
+        "peeling_type",
+        meta.peeling_type,
+        "product_spec",
+        meta.peeling_type ? `Peeling-Typ: ${PRODUCT_PEELING_TYPE_LABELS[meta.peeling_type]}` : null,
+      ),
+      buildClaim(
+        "fit_status",
+        meta.fit_status,
+        "category_decision",
+        meta.fit_status
+          ? `Fit: ${PEELING_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+          : null,
+      ),
     ])
   }
 
@@ -1575,11 +1656,11 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
   return uniqueClaims([
     buildClaim(
       "thickness",
-      meta.matched_profile.thickness,
+      meta.product_thickness,
       "product_spec",
-      meta.matched_profile.thickness
+      meta.product_thickness
         ? `Haardicke: ${
-            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+            HAIR_THICKNESS_LABELS[meta.product_thickness] ?? meta.product_thickness
           }`
         : null,
     ),
@@ -2692,8 +2773,18 @@ function isExplicitProductSelectionJob(routeContext?: SelectProductsRouteContext
   return hasExplicitProductAskSignal(routeContext?.message ?? "")
 }
 
+function hasMismatchFitClaim(product: SelectedProductResult): boolean {
+  return product.supported_claims.some(
+    (claim) => claim.field === "fit_status" && claim.value.split(":")[0] === "mismatch",
+  )
+}
+
 function hasExplicitProductAskSignal(message: string): boolean {
   const normalized = normalizeRouteMessage(message)
+
+  if (/\bpass(?:t|en|end)\b[\s\S]{0,120}\bzu mir\b/.test(normalized)) {
+    return true
+  }
 
   return /\b(welch(?:e|es|en|er|em)?|empfehl\w*|kaufen|produkt|produkte|pick|auswahl|option|optionen|a oder b|besser|nimm|nehmen)\b/.test(
     normalized,
@@ -3175,6 +3266,16 @@ export function projectSelectedProducts(
   const projectedProducts = displayableProducts.map((product, index) =>
     projectDisplayableProduct(product, index + 1, routeContext),
   )
+  const effectiveProductPolicy =
+    productPolicy.product_response_policy === "recommend" &&
+    isExplicitProductSelectionJob(routeContext) &&
+    projectedProducts.some(hasMismatchFitClaim)
+      ? {
+          product_response_policy: "recommend_with_caveat" as const,
+          policy_reason:
+            "Das ausgewählte Produkt passt nicht exakt zu den Profil- und Kategorieachsen; bewerte es nur mit Caveat statt als klare Empfehlung.",
+        }
+      : productPolicy
   const packetUnsupportedSignals = uniqueUnsupportedSignals([
     ...buildUnsupportedRequestedSignals(
       routeContext?.activeProfileSignals ?? [],
@@ -3204,8 +3305,8 @@ export function projectSelectedProducts(
   return {
     category: resolvedCategory,
     decision,
-    product_response_policy: productPolicy.product_response_policy,
-    policy_reason: productPolicy.policy_reason,
+    product_response_policy: effectiveProductPolicy.product_response_policy,
+    policy_reason: effectiveProductPolicy.policy_reason,
     profile_basis: buildProfileBasis(hairProfile, resolvedCategory, categoryDecision, routeContext),
     category_guidance: buildCategoryGuidance({
       category: resolvedCategory,

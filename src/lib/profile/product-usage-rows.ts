@@ -95,19 +95,35 @@ function normalizeText(value: string | null | undefined): string | null {
   return trimmed ? trimmed : null
 }
 
+function normalizeForCoverage(value: string): string {
+  return value
+    .toLocaleLowerCase("de")
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
+
+function phraseCovers(container: string, contained: string): boolean {
+  const normalizedContainer = normalizeForCoverage(container)
+  const normalizedContained = normalizeForCoverage(contained)
+  if (!normalizedContainer || !normalizedContained) return false
+  return (
+    normalizedContainer === normalizedContained ||
+    ` ${normalizedContainer} `.includes(` ${normalizedContained} `)
+  )
+}
+
 function appendDistinct(parts: string[], value: string | null | undefined): void {
   const text = normalizeText(value)
   if (!text) return
 
-  const normalizedText = text.toLocaleLowerCase("de")
-  const alreadyCovered = parts.some((part) => {
-    const normalizedPart = part.toLocaleLowerCase("de")
-    return normalizedPart === normalizedText || normalizedPart.includes(normalizedText)
-  })
+  const alreadyCovered = parts.some((part) => phraseCovers(part, text))
+  if (alreadyCovered) return
 
-  if (!alreadyCovered) {
-    parts.push(text)
-  }
+  const retainedParts = parts.filter((part) => !phraseCovers(text, part))
+  parts.splice(0, parts.length, ...retainedParts, text)
 }
 
 function joinedProductDisplayName(row: UserProductUsageRow): string | null {

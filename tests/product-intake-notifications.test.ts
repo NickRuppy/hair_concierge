@@ -2,9 +2,11 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  buildProductIntakeReviewConversationStateTransition,
   sendProductIntakeReviewNotification,
   type ProductSubmissionForNotification,
 } from "../src/lib/product-intake/notifications"
+import { createDefaultAgentV2ConversationState } from "../src/lib/agent-v2/production/persisted-session-state"
 
 function notificationSubmission(
   patch: Partial<ProductSubmissionForNotification> = {},
@@ -46,7 +48,7 @@ function createNotificationSupabaseFake(
 
   class Query {
     private readonly table: string
-    private operation: "insert" | "select" | "update" | null = null
+    private operation: "insert" | "select" | "update" | "upsert" | null = null
     private selected = false
 
     constructor(table: string) {
@@ -65,6 +67,12 @@ function createNotificationSupabaseFake(
     update() {
       this.operation = "update"
       calls.push(`update:${this.table}`)
+      return this
+    }
+
+    upsert() {
+      this.operation = "upsert"
+      calls.push(`upsert:${this.table}`)
       return this
     }
 
@@ -109,6 +117,13 @@ function createNotificationSupabaseFake(
       if (this.table === "messages" && this.operation === "select") {
         return {
           data: options.existingMessageId ? { id: options.existingMessageId } : null,
+          error: null,
+        }
+      }
+
+      if (this.table === "conversation_states" && this.operation === "select") {
+        return {
+          data: null,
           error: null,
         }
       }
@@ -249,4 +264,76 @@ test("review notification treats duplicate deterministic message id as already s
   assert.ok(supabase.calls.includes("select:messages"))
   assert.ok(supabase.calls.includes("insert:messages"))
   assert.ok(supabase.calls.includes("update:conversations"))
+})
+
+test("approved review notification resolves matching pending active product context", () => {
+  const previousState = createDefaultAgentV2ConversationState()
+  previousState.agent_v2.active_product_contexts = [
+    {
+      status: "pending_review",
+      product_id: null,
+      submission_id: "submission-other",
+      category: "oil",
+      brand_text: "NEQI",
+      product_name_text: "Hair Oil",
+      display_name: "NEQI Hair Oil",
+      original_user_message: "Ich habe NEQI Hair Oil eingereicht.",
+      source: "product_intake_submission",
+      updated_at: "2026-07-03T08:00:00.000Z",
+    },
+    {
+      status: "pending_review",
+      product_id: null,
+      submission_id: "submission-1",
+      category: "leave_in",
+      brand_text: "AUSSIE",
+      product_name_text: "Leave-In Haarserum 100 Hours Hydration",
+      display_name: "AUSSIE Leave-In Haarserum 100 Hours Hydration",
+      original_user_message: "Ich habe AUSSIE Leave-In Haarserum 100 Hours Hydration eingereicht.",
+      source: "product_intake_submission",
+      updated_at: "2026-07-03T08:30:00.000Z",
+    },
+  ]
+
+  const transition = buildProductIntakeReviewConversationStateTransition({
+    previousState,
+    submission: notificationSubmission({
+      id: "submission-1",
+      status: "approved",
+      category: "leave_in",
+      brand_text: "AUSSIE",
+      product_name_text: "Leave-In Haarserum 100 Hours Hydration",
+      approved_product_id: "product-aussie",
+    }),
+    nowIso: "2026-07-03T10:24:32.000Z",
+  })
+
+  assert.ok(transition)
+  assert.equal(transition.reason, "product_intake_review_resolved")
+  assert.deepEqual(
+    transition.next_state.agent_v2.active_product_contexts.map((context) => ({
+      status: context.status,
+      product_id: context.product_id,
+      submission_id: context.submission_id,
+      display_name: context.display_name,
+    })),
+    [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: "submission-other",
+        display_name: "NEQI Hair Oil",
+      },
+      {
+        status: "resolved",
+        product_id: "product-aussie",
+        submission_id: "submission-1",
+        display_name: "AUSSIE Leave-In Haarserum 100 Hours Hydration",
+      },
+    ],
+  )
+  assert.equal(
+    transition.next_state.agent_v2.active_resolved_product_context?.product_id,
+    "product-aussie",
+  )
 })

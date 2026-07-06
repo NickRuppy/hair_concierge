@@ -459,6 +459,38 @@ test("existing non-recommended active product can match", () => {
   assert.equal(result.matchedProduct?.id, "garnier-mask")
 })
 
+test("intake can reuse an approved non-recommended product despite duplicate brand namespace", () => {
+  const baleaCatalog: ProductIntakeCatalog = {
+    products: [
+      {
+        id: "balea-hair-sealer",
+        name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+        brandId: "brand-balea-professional",
+        productLineId: "line-brilliant-blond",
+        categoryKey: "leave_in",
+        isActive: true,
+        isChaarlieRecommended: false,
+      },
+    ],
+    identifiers: [],
+  }
+
+  const result = matchProductIntake(
+    {
+      selectedCategoryKey: "leave_in",
+      brandId: "brand-balea",
+      productLineId: "line-professional",
+      cleanProductName: "Leave-In Serum Brilliant Blond Hair Sealer",
+      productName: "Leave-In Serum Brilliant Blond Hair Sealer",
+    },
+    baleaCatalog,
+  )
+
+  assert.equal(result.status, "matched")
+  assert.equal(result.matchedProduct?.id, "balea-hair-sealer")
+  assert.equal(result.reason, "full_text_name_category_exact")
+})
+
 test("brand plus clean name and category can match when no line exists", () => {
   const result = matchProductIntake(
     {

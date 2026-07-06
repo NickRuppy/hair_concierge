@@ -12,6 +12,7 @@ const catalog: ProductLookupCatalog = {
     {
       id: "garnier-mask",
       name: "Hair Food Aloe Maske",
+      imageUrl: "https://example.test/garnier-mask.png",
       brandId: "brand-garnier",
       productLineId: "line-fructis",
       categoryKey: "mask",
@@ -138,10 +139,15 @@ test("user-visible lookup does not return exact hits for non-Chaarlie-recommende
     offerId: "test-offer",
   })
 
-  assert.equal(result.status, "not_found")
-  assert.equal(result.product, null)
+  assert.equal(result.status, "found_linkable_existing")
+  assert.equal(result.product?.id, "garnier-mask")
+  assert.equal(
+    (result.product as { image_url?: string | null } | null)?.image_url,
+    "https://example.test/garnier-mask.png",
+  )
+  assert.equal(result.product?.is_chaarlie_recommended, false)
   assert.deepEqual(result.candidates, [])
-  assert.equal(result.intake_offer?.reason, "product_lookup_not_found")
+  assert.equal(result.intake_offer, null)
 })
 
 test("intake-dedupe lookup can find active non-Chaarlie-recommended products", () => {
@@ -163,6 +169,168 @@ test("intake-dedupe lookup can find active non-Chaarlie-recommended products", (
   assert.equal(result.status, "found_exact")
   assert.equal(result.product?.id, "garnier-mask")
   assert.equal(result.product?.is_chaarlie_recommended, false)
+  assert.equal(result.intake_offer, null)
+})
+
+test("intake-dedupe lookup can find approved non-recommended products across duplicate brand namespace", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "leave_in",
+      brand_text: "Balea Professional",
+      product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+    },
+    catalog: {
+      products: [
+        {
+          id: "balea-hair-sealer",
+          name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+          brandId: "brand-balea-professional",
+          productLineId: "line-brilliant-blond",
+          categoryKey: "leave_in",
+          isActive: true,
+          lifecycleStatus: "active",
+          isChaarlieRecommended: false,
+        },
+      ],
+      identifiers: [],
+    },
+    brandCatalog: {
+      brands: [
+        { id: "brand-balea", canonical_name: "Balea" },
+      ],
+      productLines: [
+        { id: "line-professional", brand_id: "brand-balea", canonical_name: "Professional" },
+        {
+          id: "line-brilliant-blond",
+          brand_id: "brand-balea-professional",
+          canonical_name: "Brilliant Blond",
+        },
+      ],
+      brandAliases: [
+        {
+          brand_id: "brand-balea",
+          product_line_id: "line-professional",
+          alias: "Balea Professional",
+        },
+      ],
+    },
+    offerId: "test-offer",
+    eligibilityMode: "intake_dedupe",
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.product?.id, "balea-hair-sealer")
+  assert.equal(result.product?.is_chaarlie_recommended, false)
+  assert.equal(result.intake_offer, null)
+})
+
+test("user-visible lookup can link approved non-recommended products across duplicate brand namespace", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "leave_in",
+      brand_text: "Balea Professional",
+      product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+    },
+    catalog: {
+      products: [
+        {
+          id: "balea-professional-visible-product",
+          name: "Balea Professional Aqua Hyaluron Leave-in",
+          brandId: "brand-balea",
+          productLineId: "line-professional",
+          categoryKey: "leave_in",
+          isActive: true,
+          lifecycleStatus: "active",
+          isChaarlieRecommended: true,
+        },
+        {
+          id: "balea-hair-sealer",
+          name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+          brandId: "brand-balea-professional",
+          productLineId: "line-brilliant-blond",
+          categoryKey: "leave_in",
+          isActive: true,
+          lifecycleStatus: "active",
+          isChaarlieRecommended: false,
+        },
+      ],
+      identifiers: [],
+    },
+    brandCatalog: {
+      brands: [
+        { id: "brand-balea", canonical_name: "Balea" },
+      ],
+      productLines: [
+        { id: "line-professional", brand_id: "brand-balea", canonical_name: "Professional" },
+        {
+          id: "line-brilliant-blond",
+          brand_id: "brand-balea-professional",
+          canonical_name: "Brilliant Blond",
+        },
+      ],
+      brandAliases: [
+        {
+          brand_id: "brand-balea",
+          product_line_id: "line-professional",
+          alias: "Balea Professional",
+        },
+      ],
+    },
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "found_linkable_existing")
+  assert.equal(result.product?.id, "balea-hair-sealer")
+  assert.equal(result.product?.is_chaarlie_recommended, false)
+  assert.deepEqual(result.candidates, [])
+  assert.equal(result.intake_offer, null)
+})
+
+test("user-visible lookup can link approved non-recommended products when brand text includes the full line", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "leave_in",
+      brand_text: "Balea Professional Brilliant Blond",
+      product_name_text: "hair sealer Leave-in",
+    },
+    catalog: {
+      products: [
+        {
+          id: "balea-hair-sealer",
+          name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+          brandId: "brand-balea",
+          productLineId: "line-professional-brilliant-blond",
+          categoryKey: "leave_in",
+          isActive: true,
+          lifecycleStatus: "active",
+          isChaarlieRecommended: false,
+        },
+      ],
+      identifiers: [],
+    },
+    brandCatalog: {
+      brands: [{ id: "brand-balea", canonical_name: "Balea" }],
+      productLines: [
+        {
+          id: "line-professional-brilliant-blond",
+          brand_id: "brand-balea",
+          canonical_name: "Professional Brilliant Blond",
+        },
+      ],
+      brandAliases: [
+        {
+          brand_id: "brand-balea",
+          product_line_id: "line-professional-brilliant-blond",
+          alias: "Balea Professional Brilliant Blond",
+        },
+      ],
+    },
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "found_linkable_existing")
+  assert.equal(result.product?.id, "balea-hair-sealer")
+  assert.deepEqual(result.candidates, [])
   assert.equal(result.intake_offer, null)
 })
 

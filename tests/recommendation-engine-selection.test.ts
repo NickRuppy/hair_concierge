@@ -14,6 +14,7 @@ import type {
   DeepCleansingShampooRecommendationMetadata,
   DryShampooRecommendationMetadata,
   LeaveInRecommendationMetadata,
+  MaskRecommendationMetadata,
   OilRecommendationMetadata,
   PeelingRecommendationMetadata,
   ShampooRecommendationMetadata,
@@ -401,6 +402,50 @@ test("engine conditioner reranking preserves explicit assessment target inside t
   assert.ok(reranked.some((product) => product.id === "assessment-target"))
 })
 
+test("engine conditioner assessments preserve selected mismatch targets", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const decision = runtime.categories.conditioner
+  const candidates = [
+    createMatchedProduct("top-1", "Conditioner", { combined_score: 0.99 }),
+    createMatchedProduct("top-2", "Conditioner", { combined_score: 0.98 }),
+    createMatchedProduct("top-3", "Conditioner", { combined_score: 0.97 }),
+    createMatchedProduct("assessment-mismatch", "Conditioner", { combined_score: 0.1 }),
+  ]
+  const specs: ProductConditionerRerankSpecs[] = [
+    ...["top-1", "top-2", "top-3"].map((product_id) => ({
+      product_id,
+      weight: "medium" as const,
+      repair_level: "high" as const,
+      balance_direction: "moisture" as const,
+      ingredient_flags: [],
+    })),
+    {
+      product_id: "assessment-mismatch",
+      weight: "rich",
+      repair_level: "low",
+      balance_direction: "protein",
+      ingredient_flags: [],
+    },
+  ]
+
+  const reranked = rerankConditionerProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    hairProfile: SEVERE_DAMAGE_PROFILE,
+    preserveProductIds: ["assessment-mismatch"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as ConditionerRecommendationMetadata | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "assessment-mismatch")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.equal(meta?.product_weight, "rich")
+  assert.equal(meta?.product_repair_level, "low")
+  assert.equal(meta?.product_balance_direction, "protein")
+})
+
 test("engine mask reranking rewards complete fit metadata over unknown balance", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
   const decision = runtime.categories.mask
@@ -594,6 +639,52 @@ test("engine mask reranking hides missing specs when three known mask fits exist
   )
 })
 
+test("engine mask assessments preserve selected mismatch targets", () => {
+  const decision = createMaskDecision({
+    balance: "protein",
+    repairLevel: "medium",
+    weight: "medium",
+    needStrength: 2,
+  })
+  const candidates = [
+    createMatchedProduct("known-1", "Maske", { combined_score: 0.5 }),
+    createMatchedProduct("known-2", "Maske", { combined_score: 0.49 }),
+    createMatchedProduct("known-3", "Maske", { combined_score: 0.48 }),
+    createMatchedProduct("selected-moisture-rich", "Maske", { combined_score: 0.1 }),
+  ]
+  const specs: ProductMaskSpecs[] = [
+    ...["known-1", "known-2", "known-3"].map((product_id) => ({
+      product_id,
+      weight: "medium" as const,
+      concentration: "medium" as const,
+      balance_direction: "protein" as const,
+      ingredient_flags: [],
+    })),
+    {
+      product_id: "selected-moisture-rich",
+      weight: "rich",
+      concentration: "high",
+      balance_direction: "moisture",
+      ingredient_flags: [],
+    },
+  ]
+
+  const reranked = rerankMaskProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    preserveProductIds: ["selected-moisture-rich"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as MaskRecommendationMetadata | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "selected-moisture-rich")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.equal(meta?.product_balance_direction, "moisture")
+  assert.equal(meta?.product_weight, "rich")
+})
+
 test("engine leave-in reranking strongly prefers heat-safe fit for heat styling profiles", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
   const decision = runtime.categories.leaveIn
@@ -775,6 +866,64 @@ test("engine leave-in reranking excludes hard mismatches when three viable fits 
     reranked.some((product) => product.id === "mismatch"),
     false,
   )
+})
+
+test("engine leave-in assessments preserve selected hard mismatch targets", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const decision = runtime.categories.leaveIn
+  const candidates = [
+    createMatchedProduct("ideal-1", "Leave-in", { combined_score: 0.99, suitable_thicknesses: ["fine"] }),
+    createMatchedProduct("ideal-2", "Leave-in", { combined_score: 0.98, suitable_thicknesses: ["fine"] }),
+    createMatchedProduct("ideal-3", "Leave-in", { combined_score: 0.97, suitable_thicknesses: ["fine"] }),
+    createMatchedProduct("selected-no-heat", "Leave-in", {
+      combined_score: 0.1,
+      suitable_thicknesses: ["fine"],
+    }),
+  ]
+  const idealSpec = (product_id: string): ProductLeaveInSpecs => ({
+    product_id,
+    format: "spray",
+    weight: "medium",
+    roles: ["replacement_conditioner", "styling_prep"],
+    provides_heat_protection: true,
+    heat_protection_max_c: 220,
+    heat_activation_required: false,
+    care_benefits: ["repair", "anti_frizz"],
+    ingredient_flags: [],
+    application_stage: ["towel_dry", "pre_heat"],
+  })
+
+  const reranked = rerankLeaveInProductsWithEngine({
+    candidates,
+    specs: [
+      idealSpec("ideal-1"),
+      idealSpec("ideal-2"),
+      idealSpec("ideal-3"),
+      {
+        product_id: "selected-no-heat",
+        format: "cream",
+        weight: "rich",
+        roles: ["extension_conditioner"],
+        provides_heat_protection: false,
+        heat_protection_max_c: null,
+        heat_activation_required: false,
+        care_benefits: ["moisture", "shine"],
+        ingredient_flags: [],
+        application_stage: ["towel_dry"],
+      },
+    ],
+    decision,
+    hairProfile: SEVERE_DAMAGE_PROFILE,
+    preserveProductIds: ["selected-no-heat"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as LeaveInRecommendationMetadata | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "selected-no-heat")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.equal(meta?.provides_heat_protection, false)
+  assert.equal(meta?.product_weight, "rich")
 })
 
 test("engine leave-in reranking does not use hard-gated mismatches as fallback fill", () => {
@@ -1322,6 +1471,118 @@ test("engine shampoo reranking preserves included assessment target products ins
   )
 })
 
+test("engine shampoo assessment targets keep actual scalp-route facts when they mismatch the profile", () => {
+  const balancedProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "fine" as const,
+    scalp_type: "balanced" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(balancedProfile, [])
+  const decision = runtime.categories.shampoo
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("normal-1", "Shampoo", { combined_score: 1 }),
+      createMatchedProduct("normal-2", "Shampoo", { combined_score: 0.99 }),
+      createMatchedProduct("normal-3", "Shampoo", { combined_score: 0.98 }),
+      createMatchedProduct("anti-dandruff-target", "Shampoo", { combined_score: 0.1 }),
+    ],
+    decision,
+    hairProfile: balancedProfile,
+    bucketByProductId: new Map([
+      ["normal-1", "normal"],
+      ["normal-2", "normal"],
+      ["normal-3", "normal"],
+    ]),
+    specs: [
+      ...["normal-1", "normal-2", "normal-3"].map((product_id) => ({
+        product_id,
+        thickness: "fine" as const,
+        shampoo_bucket: "normal" as const,
+        scalp_route: "balanced" as const,
+        cleansing_intensity: "regular" as const,
+      })),
+      {
+        product_id: "anti-dandruff-target",
+        thickness: "fine",
+        shampoo_bucket: "schuppen",
+        scalp_route: "dandruff",
+        cleansing_intensity: "regular",
+      },
+    ],
+    includeProductIds: ["anti-dandruff-target"],
+    preserveProductIds: ["anti-dandruff-target"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as ShampooRecommendationMetadata | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "anti-dandruff-target")
+  assert.equal(meta?.matched_bucket, "schuppen")
+  assert.equal(meta?.matched_scalp_route, "dandruff")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.match(meta?.tradeoffs.join("\n") ?? "", /Fallback/)
+})
+
+test("engine shampoo assessment targets keep actual thickness facts when they mismatch the profile", () => {
+  const balancedProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "fine" as const,
+    scalp_type: "balanced" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(balancedProfile, [])
+  const decision = runtime.categories.shampoo
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("normal-1", "Shampoo", { combined_score: 1 }),
+      createMatchedProduct("normal-2", "Shampoo", { combined_score: 0.99 }),
+      createMatchedProduct("normal-3", "Shampoo", { combined_score: 0.98 }),
+      createMatchedProduct("coarse-target", "Shampoo", { combined_score: 0.1 }),
+    ],
+    decision,
+    hairProfile: balancedProfile,
+    bucketByProductId: new Map([
+      ["normal-1", "normal"],
+      ["normal-2", "normal"],
+      ["normal-3", "normal"],
+      ["coarse-target", "normal"],
+    ]),
+    specs: [
+      ...["normal-1", "normal-2", "normal-3"].map((product_id) => ({
+        product_id,
+        thickness: "fine" as const,
+        shampoo_bucket: "normal" as const,
+        scalp_route: "balanced" as const,
+        cleansing_intensity: "regular" as const,
+      })),
+      {
+        product_id: "coarse-target",
+        thickness: "coarse",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "regular",
+      },
+    ],
+    includeProductIds: ["coarse-target"],
+    preserveProductIds: ["coarse-target"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as
+    | (ShampooRecommendationMetadata & { product_thickness?: string | null })
+    | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "coarse-target")
+  assert.equal(meta?.matched_bucket, "normal")
+  assert.equal(meta?.matched_scalp_route, "balanced")
+  assert.equal(meta?.product_thickness, "coarse")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.match(meta?.tradeoffs.join("\n") ?? "", /Fallback/)
+})
+
 test("engine shampoo reranking does not force routine-owned products without assessment targeting", () => {
   const balancedProfile = {
     ...LOW_DAMAGE_PROFILE,
@@ -1770,6 +2031,52 @@ test("engine oil reranking hides finish bridge candidates when exact purpose cov
     reranked.map((product) => product.id),
     ["exact-1", "exact-2", "exact-3"],
   )
+})
+
+test("engine oil assessments preserve selected non-exact targets and expose product oil purpose", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
+  })
+  const decision = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    requestContext,
+  ).categories.oil
+
+  const reranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("exact-1", "Öle", { combined_score: 0.7 }),
+      createMatchedProduct("exact-2", "Öle", { combined_score: 0.68 }),
+      createMatchedProduct("exact-3", "Öle", { combined_score: 0.66 }),
+      createMatchedProduct("selected-prewash", "Öle", { combined_score: 0.1 }),
+    ],
+    decision,
+    hairProfile: LOW_DAMAGE_PROFILE,
+    eligibilityRows: [
+      ...["exact-1", "exact-2", "exact-3"].map((product_id) => ({
+        product_id,
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel" as const,
+        oil_purpose: "styling_finish" as const,
+      })),
+      {
+        product_id: "selected-prewash",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "natuerliches-oel",
+        oil_purpose: "pre_wash_oiling",
+      },
+    ],
+    preserveProductIds: ["selected-prewash"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "selected-prewash")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.equal(meta?.use_mode, "pre_wash_oiling")
+  assert.equal(meta?.matched_subtype, "natuerliches-oel")
 })
 
 test("engine oil reranking allows only adjacent finish bridge below exact threshold", () => {
@@ -2499,6 +2806,60 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
   assert.deepEqual(reranked, [])
 })
 
+test("engine deep-cleansing shampoo assessments preserve selected strict-request mismatches", () => {
+  const decision: DeepCleansingShampooCategoryDecision = {
+    category: "deep_cleansing_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["metal_mineral_hard_water_or_hard_water_context"],
+    currentInventory: null,
+    targetProfile: {
+      scalpTypeFocus: "balanced",
+      resetNeedLevel: "strong",
+      resetFocus: "metal_mineral_hard_water",
+      targetIntensity: "medium",
+      colorTreatedCaution: true,
+      colorSafeRequest: true,
+      cautionFlags: ["color_or_bleach_caution"],
+    },
+    notes: [],
+  }
+
+  const reranked = rerankDeepCleansingShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("broad", "Deep Cleansing Shampoo", { combined_score: 0.7 }),
+      createMatchedProduct("selected-generic", "Deep Cleansing Shampoo", { combined_score: 0.1 }),
+    ],
+    specs: [
+      {
+        product_id: "broad",
+        scalp_type_focus: "balanced",
+        reset_intensity: "medium",
+        reset_focus: "broad_spectrum_detox",
+        color_treated_suitability: "suitable",
+      },
+      {
+        product_id: "selected-generic",
+        scalp_type_focus: "balanced",
+        reset_intensity: "medium",
+        reset_focus: "product_sebum_buildup",
+        color_treated_suitability: "unsuitable_or_unknown",
+      },
+    ],
+    decision,
+    preserveProductIds: ["selected-generic"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as
+    | DeepCleansingShampooRecommendationMetadata
+    | undefined
+
+  assert.equal(reranked[0]?.id, "selected-generic")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.equal(meta?.reset_focus, "product_sebum_buildup")
+  assert.equal(meta?.color_treated_suitability, "unsuitable_or_unknown")
+})
+
 test("engine dry shampoo reranking prefers exact bridge effect and color fit", () => {
   const decision: DryShampooCategoryDecision = {
     category: "dry_shampoo",
@@ -2600,6 +2961,63 @@ test("engine dry shampoo reranking filters aerosol when non-spray format is requ
     reranked.map((product) => product.id),
     ["foam"],
   )
+})
+
+test("engine dry shampoo assessments preserve selected mismatch targets", () => {
+  const decision: DryShampooCategoryDecision = {
+    category: "dry_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      primaryEffectTarget: "volume_texture",
+      hairColorFitTarget: "dark",
+      requiresSensitiveFit: false,
+      preferredFormat: null,
+      bridgeNeedReasonCodes: ["dry_shampoo_volume_texture_request"],
+      cautionReasonCodes: [],
+    },
+    notes: [],
+  }
+  const idealSpec = (product_id: string): ProductDryShampooSpecs => ({
+    product_id,
+    primary_effect: "volume_texture",
+    hair_color_fit: "dark",
+    scalp_sensitivity_fit: "normal_only",
+    format: "aerosol_spray",
+  })
+
+  const reranked = rerankDryShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("ideal-1", "Dry Shampoo", { combined_score: 0.75 }),
+      createMatchedProduct("ideal-2", "Dry Shampoo", { combined_score: 0.74 }),
+      createMatchedProduct("ideal-3", "Dry Shampoo", { combined_score: 0.73 }),
+      createMatchedProduct("selected-classic", "Dry Shampoo", { combined_score: 0.1 }),
+    ],
+    specs: [
+      idealSpec("ideal-1"),
+      idealSpec("ideal-2"),
+      idealSpec("ideal-3"),
+      {
+        product_id: "selected-classic",
+        primary_effect: "classic_refresh",
+        hair_color_fit: "blonde_light",
+        scalp_sensitivity_fit: "normal_only",
+        format: "aerosol_spray",
+      },
+    ],
+    decision,
+    preserveProductIds: ["selected-classic"],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as DryShampooRecommendationMetadata | undefined
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "selected-classic")
+  assert.equal(meta?.fit_status, "mismatch")
+  assert.equal(meta?.primary_effect, "classic_refresh")
+  assert.equal(meta?.hair_color_fit, "blonde_light")
 })
 
 test("engine dry shampoo reranking understands current live dry-shampoo spec fields", () => {

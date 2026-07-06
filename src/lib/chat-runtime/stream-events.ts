@@ -5,6 +5,7 @@ import type {
   ProductIntakeOffer,
   ProductLookupClarification,
   ProductLookupSelectionContext,
+  ProductLookupSelectionTrace,
   RecommendationEngineTrace,
   ResponseMode,
   RouterDecision,
@@ -19,6 +20,7 @@ export type AssistantDecisionContextInput = {
   productIntakeOffer?: ProductIntakeOffer | null
   productLookupClarification?: ProductLookupClarification | null
   productLookupSelection?: ProductLookupSelectionContext | null
+  productLookupSelectionTrace?: ProductLookupSelectionTrace | null
 }
 
 export function buildAssistantDecisionContext(
@@ -32,6 +34,7 @@ export function buildAssistantDecisionContext(
     productIntakeOffer,
     productLookupClarification,
     productLookupSelection,
+    productLookupSelectionTrace,
   } = params
 
   if (
@@ -41,7 +44,8 @@ export function buildAssistantDecisionContext(
     !responseMode &&
     !productIntakeOffer &&
     !productLookupClarification &&
-    !productLookupSelection
+    !productLookupSelection &&
+    !productLookupSelectionTrace
   ) {
     return null
   }
@@ -54,6 +58,7 @@ export function buildAssistantDecisionContext(
     product_intake_offer: productIntakeOffer ?? null,
     product_lookup_clarification: productLookupClarification ?? null,
     product_lookup_selection: productLookupSelection ?? null,
+    product_lookup_selection_trace: productLookupSelectionTrace ?? null,
   }
 }
 

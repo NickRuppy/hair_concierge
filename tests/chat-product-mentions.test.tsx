@@ -76,6 +76,9 @@ function createProductLookupClarification(): ProductLookupClarification {
       {
         product_id: "product-syoss-intense-curls",
         name: "Syoss Intense Curls",
+        brand_name: "Syoss",
+        product_line_name: "Intense",
+        image_url: "https://example.test/syoss-curls.png",
         category: "shampoo",
         category_label_de: "Shampoo",
         reason: "same_brand_same_category",
@@ -114,6 +117,50 @@ function createProductLookupClarificationWithTwoCandidates(): ProductLookupClari
         reason: "same_brand_same_category",
       },
     ],
+  }
+}
+
+function createLinkExistingProductLookupClarification(): ProductLookupClarification {
+  return {
+    id: "clarification-link-existing-1",
+    kind: "link_existing_product",
+    source: "chat",
+    query: {
+      brand_text: "Balea Professional",
+      product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+      category: "leave_in",
+    },
+    copy: {
+      prompt_de:
+        "Wir kennen dieses Produkt bereits. Es ist kein Chaarlie-Empfehlungsprodukt, aber wir können es für dein Profil analysieren, wenn du es zu deiner Routine hinzufügst.",
+    },
+    candidates: [
+      {
+        product_id: "balea-hair-sealer",
+        name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+        brand_name: "Balea",
+        product_line_name: "Professional Brilliant Blond",
+        image_url: "https://example.test/balea-hair-sealer.png",
+        category: "leave_in",
+        category_label_de: "Leave-in",
+        reason: "link_existing_product",
+      },
+    ],
+    none_action: {
+      label_de: "Nein, mein Produkt hinzufügen",
+      product_intake_offer: {
+        id: "offer-link-existing-1",
+        source: "chat",
+        reason: "product_lookup_not_found",
+        category: "leave_in",
+        intake_method: "manual",
+        missing_fields: [],
+        extracted_identity: {
+          brand_text: "Balea Professional",
+          product_name_text: "Leave-In Serum Brilliant Blond Hair Sealer",
+        },
+      },
+    },
   }
 }
 
@@ -284,9 +331,65 @@ test("assistant product lookup clarification renders an enabled structured selec
     <ChatMessage message={message} hairProfile={null} onSelectProductCandidate={() => {}} />,
   )
 
-  assert.match(html, /Syoss Intense Curls/)
+  assert.match(html, /Syoss · Intense/)
+  assert.match(html, />Curls</)
   assert.match(html, /Auswählen/)
   assert.doesNotMatch(html, /<button[^>]*\sdisabled(?:=""|>| )[^>]*>[\s\S]*Auswählen/)
+})
+
+test("assistant product lookup clarification renders link-existing products as add actions", () => {
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={createLinkExistingProductLookupClarification()}
+      conversationId="conversation-1"
+      assistantMessageId="message-link-existing-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.match(html, /Balea · Professional Brilliant Blond/)
+  assert.match(html, /Hair Sealer Leave-in Serum/)
+  assert.doesNotMatch(html, />Balea Professional Brilliant Blond Hair Sealer Leave-in Serum</)
+  assert.match(html, /Hinzufügen/)
+  assert.match(html, /Kein Chaarlie-Empfehlungsprodukt/)
+  assert.doesNotMatch(html, /Auswählen/)
+})
+
+test("assistant product lookup clarification candidate names can wrap instead of truncating", () => {
+  const clarification = createProductLookupClarification()
+  clarification.candidates[0].name =
+    "Syoss Intense Curls Shampoo Ultra Definition Long Name For Wrapping"
+
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={clarification}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.match(html, /Curls Shampoo Ultra Definition Long Name For Wrapping/)
+  assert.doesNotMatch(html, />Syoss Intense Curls Shampoo Ultra Definition Long Name For Wrapping</)
+  assert.doesNotMatch(html, /\btruncate\b/)
+  assert.match(html, /\bbreak-words\b/)
+})
+
+test("assistant product lookup clarification hides legacy duplicate suffixes in candidates", () => {
+  const clarification = createProductLookupClarification()
+  clarification.candidates[0].name = "Syoss Intense Curls Shampoo (legacy duplicate)"
+
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={clarification}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.match(html, /Curls Shampoo/)
+  assert.doesNotMatch(html, /legacy duplicate/)
 })
 
 test("assistant product lookup clarification disables selection on the streaming message", () => {
@@ -300,7 +403,8 @@ test("assistant product lookup clarification disables selection on the streaming
     <ChatMessage message={message} hairProfile={null} isStreamingMessage />,
   )
 
-  assert.match(html, /Syoss Intense Curls/)
+  assert.match(html, /Syoss · Intense/)
+  assert.match(html, />Curls</)
   assert.match(html, /<button[^>]*\sdisabled(?:=""|>| )[^>]*>[\s\S]*Auswählen/)
 })
 
@@ -342,7 +446,8 @@ test("assistant product lookup clarification locks after a later matching select
     />,
   )
 
-  assert.match(html, /Syoss Intense Curls/)
+  assert.match(html, /Syoss · Intense/)
+  assert.match(html, />Curls</)
   assert.match(html, /Ausgewählt/)
   assert.match(html, /<button[^>]*\sdisabled(?:=""|>| )[^>]*>[\s\S]*Ausgewählt/)
   assert.doesNotMatch(html, /Nein, mein Produkt hinzufügen/)
@@ -393,7 +498,8 @@ test("assistant product lookup clarification suppresses recommendation cards", (
     <ChatMessage message={message} hairProfile={null} onProductClick={() => {}} />,
   )
 
-  assert.match(html, /Syoss Intense Curls/)
+  assert.match(html, /Syoss · Intense/)
+  assert.match(html, />Curls</)
   assert.doesNotMatch(html, /Balea Professional Ultimate Volume/)
 })
 
@@ -406,6 +512,35 @@ test("normal product intake offers render as an action card without duplicate he
   assert.match(html, /Daten eingeben/)
   assert.doesNotMatch(html, /Danke für dein Produkt/)
   assert.doesNotMatch(html, /Wir haben es noch nicht sicher in unserer Datenbank/)
+})
+
+test("photo product intake marks barcode optional unless explicitly requested", () => {
+  const html = renderToStaticMarkup(
+    <ProductIntakeCard
+      offer={createProductIntakeOffer({ intake_method: "photo" })}
+      conversationId="conversation-1"
+    />,
+  )
+
+  assert.match(html, /Vorderseite/)
+  assert.match(html, /Barcode optional/)
+  assert.doesNotMatch(html, /Barcode erforderlich/)
+})
+
+test("needs-more-info photo intake marks barcode as required when missing", () => {
+  const html = renderToStaticMarkup(
+    <ProductIntakeCard
+      offer={createProductIntakeOffer({
+        reason: "needs_more_info",
+        intake_method: "photo",
+        missing_fields: ["Barcodefoto"],
+      })}
+      conversationId="conversation-1"
+    />,
+  )
+
+  assert.match(html, /Barcode erforderlich/)
+  assert.doesNotMatch(html, /Barcode optional/)
 })
 
 test("needs-more-info product intake offers keep explicit repair guidance", () => {

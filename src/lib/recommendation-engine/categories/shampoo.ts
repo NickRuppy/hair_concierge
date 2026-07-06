@@ -12,6 +12,7 @@ import type {
 import { getPlannedStep } from "@/lib/recommendation-engine/categories/shared"
 
 export interface ShampooFitSpec {
+  thickness?: NormalizedProfile["thickness"]
   shampoo_bucket: ShampooBucket | null
   scalp_route: "oily" | "balanced" | "dry" | "dandruff" | "dry_flakes" | "irritated" | null
   cleansing_intensity: "gentle" | "regular" | "clarifying" | null
@@ -96,6 +97,7 @@ export function buildShampooCategoryDecision(
     planReasonCodes: step.reasonCodes,
     currentInventory: profile.routineInventory.shampoo,
     targetProfile: {
+      thickness: profile.thickness ?? null,
       scalpRoute: mapBucketToScalpRoute(shampooBucket),
       shampooBucket,
       secondaryBucket:
@@ -128,11 +130,34 @@ export function evaluateShampooFit(
     }
   }
 
+  const thicknessMatchesTarget =
+    target.thickness && spec.thickness ? spec.thickness === target.thickness : null
+  const thicknessReasonCodes =
+    thicknessMatchesTarget === null
+      ? []
+      : [
+          thicknessMatchesTarget
+            ? "shampoo_thickness_exact_match"
+            : "shampoo_thickness_mismatch",
+        ]
+
   if (spec.shampoo_bucket && spec.shampoo_bucket === target.shampooBucket) {
+    if (thicknessMatchesTarget === false) {
+      return {
+        status: "mismatch",
+        reasonCodes: ["shampoo_bucket_exact_match", ...thicknessReasonCodes],
+        missingFields: [],
+      }
+    }
+
     if (!target.cleansingIntensity || !spec.cleansing_intensity) {
       return {
         status: "supportive",
-        reasonCodes: ["shampoo_bucket_exact_match", "shampoo_cleansing_intensity_missing"],
+        reasonCodes: [
+          "shampoo_bucket_exact_match",
+          ...thicknessReasonCodes,
+          "shampoo_cleansing_intensity_missing",
+        ],
         missingFields: target.cleansingIntensity ? ["cleansing_intensity"] : [],
       }
     }
@@ -140,14 +165,22 @@ export function evaluateShampooFit(
     if (target.cleansingIntensity !== spec.cleansing_intensity) {
       return {
         status: "supportive",
-        reasonCodes: ["shampoo_bucket_exact_match", "shampoo_cleansing_intensity_mismatch"],
+        reasonCodes: [
+          "shampoo_bucket_exact_match",
+          ...thicknessReasonCodes,
+          "shampoo_cleansing_intensity_mismatch",
+        ],
         missingFields: [],
       }
     }
 
     return {
       status: "ideal",
-      reasonCodes: ["shampoo_bucket_exact_match", "shampoo_cleansing_intensity_exact_match"],
+      reasonCodes: [
+        "shampoo_bucket_exact_match",
+        ...thicknessReasonCodes,
+        "shampoo_cleansing_intensity_exact_match",
+      ],
       missingFields: [],
     }
   }
@@ -157,9 +190,17 @@ export function evaluateShampooFit(
     target.secondaryBucket &&
     spec.shampoo_bucket === target.secondaryBucket
   ) {
+    if (thicknessMatchesTarget === false) {
+      return {
+        status: "mismatch",
+        reasonCodes: ["shampoo_secondary_bucket_partial_match", ...thicknessReasonCodes],
+        missingFields: [],
+      }
+    }
+
     return {
       status: "supportive",
-      reasonCodes: ["shampoo_secondary_bucket_partial_match"],
+      reasonCodes: ["shampoo_secondary_bucket_partial_match", ...thicknessReasonCodes],
       missingFields: target.cleansingIntensity ? ["cleansing_intensity"] : [],
     }
   }
@@ -185,7 +226,15 @@ export function evaluateShampooFit(
   if (target.scalpRoute !== resolvedRoute) {
     return {
       status: "mismatch",
-      reasonCodes: ["shampoo_scalp_route_mismatch"],
+      reasonCodes: [...thicknessReasonCodes, "shampoo_scalp_route_mismatch"],
+      missingFields: [],
+    }
+  }
+
+  if (thicknessMatchesTarget === false) {
+    return {
+      status: "mismatch",
+      reasonCodes: ["shampoo_scalp_route_exact_match", ...thicknessReasonCodes],
       missingFields: [],
     }
   }
@@ -193,7 +242,11 @@ export function evaluateShampooFit(
   if (!target.cleansingIntensity || !spec.cleansing_intensity) {
     return {
       status: "supportive",
-      reasonCodes: ["shampoo_scalp_route_exact_match", "shampoo_cleansing_intensity_missing"],
+      reasonCodes: [
+        "shampoo_scalp_route_exact_match",
+        ...thicknessReasonCodes,
+        "shampoo_cleansing_intensity_missing",
+      ],
       missingFields: target.cleansingIntensity ? ["cleansing_intensity"] : [],
     }
   }
@@ -201,14 +254,22 @@ export function evaluateShampooFit(
   if (target.cleansingIntensity !== spec.cleansing_intensity) {
     return {
       status: "supportive",
-      reasonCodes: ["shampoo_scalp_route_exact_match", "shampoo_cleansing_intensity_mismatch"],
+      reasonCodes: [
+        "shampoo_scalp_route_exact_match",
+        ...thicknessReasonCodes,
+        "shampoo_cleansing_intensity_mismatch",
+      ],
       missingFields: [],
     }
   }
 
   return {
     status: "ideal",
-    reasonCodes: ["shampoo_scalp_route_exact_match", "shampoo_cleansing_intensity_exact_match"],
+    reasonCodes: [
+      "shampoo_scalp_route_exact_match",
+      ...thicknessReasonCodes,
+      "shampoo_cleansing_intensity_exact_match",
+    ],
     missingFields: [],
   }
 }

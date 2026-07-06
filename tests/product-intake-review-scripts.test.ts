@@ -18,6 +18,7 @@ import {
   renderQueueOutput,
   type ProductIntakeQueueRow,
 } from "../scripts/product-intake/queue-reporting"
+import { buildCanonicalBrandLineAliasApprovalError } from "../scripts/product-intake/review-actions"
 import {
   buildProductIntakeReviewMessage,
   buildProductIntakeReviewRagContext,
@@ -227,6 +228,32 @@ test("product intake CLI preserves inline flag values containing equals signs", 
   assert.equal(args.flags.get("reason"), "pH=5,5")
   assert.equal(args.flags.get("apply"), true)
   assert.deepEqual(args.positional, ["extra"])
+})
+
+test("approval guard rejects canonical brands that are actually line aliases", () => {
+  const error = buildCanonicalBrandLineAliasApprovalError({
+    canonicalBrand: "Balea Professional",
+    canonicalBrandExists: false,
+    lineAlias: {
+      alias: "Balea Professional",
+    },
+  })
+
+  assert.match(
+    error?.message ?? "",
+    /canonical_brand "Balea Professional" is a brand-line alias/,
+  )
+
+  assert.equal(
+    buildCanonicalBrandLineAliasApprovalError({
+      canonicalBrand: "K18 Professional",
+      canonicalBrandExists: true,
+      lineAlias: {
+        alias: "K18 Professional",
+      },
+    }),
+    null,
+  )
 })
 
 test("queue reporting derives ops status, filters, report counts, and csv output", () => {

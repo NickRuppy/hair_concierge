@@ -1,6 +1,20 @@
 import { createHash } from "node:crypto"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  loadAgentV2ConversationStateForUser,
+  persistConversationStateTransition,
+} from "@/lib/chat-runtime/conversation-state-store"
+import {
+  AGENT_V2_PRODUCTION_ENGINE,
+  type AgentV2ConversationStateTransition,
+  type AgentV2ConversationStateV2,
+} from "@/lib/agent-v2/production/persisted-session-state"
+import {
+  buildPrimaryResolvedProductContext,
+  mergeActiveProductContexts,
+  type AgentV2ActiveProductContext,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
 import type { MessageRagContext, ProductIntakeOffer, ProductSubmission } from "@/lib/types"
 
 const ONBOARDING_REVIEW_CONVERSATION_TITLE = "Produktprüfung"
@@ -151,6 +165,88 @@ export function buildProductIntakeReviewRagContext(
   }
 
   return context
+}
+
+export function buildProductIntakeReviewConversationStateTransition(params: {
+  previousState: AgentV2ConversationStateV2
+  submission: ProductSubmissionForNotification
+  nowIso?: string
+}): AgentV2ConversationStateTransition | null {
+  if (params.submission.status !== "approved" && params.submission.status !== "matched_existing") {
+    return null
+  }
+  if (!params.submission.approved_product_id) return null
+
+  const nowIso = params.nowIso ?? new Date().toISOString()
+  const label = productLabel(params.submission) || "dein Produkt"
+  const previousContexts = params.previousState.agent_v2.active_product_contexts.filter(
+    (context) => context.submission_id !== params.submission.id,
+  )
+  const resolvedContext: AgentV2ActiveProductContext = {
+    status: "resolved",
+    product_id: params.submission.approved_product_id,
+    submission_id: params.submission.id,
+    category: params.submission.category,
+    brand_text: params.submission.brand_text,
+    product_name_text: params.submission.product_name_text,
+    display_name: label,
+    original_user_message: `Wir haben ${label} geprüft und in deiner Routine verknüpft.`,
+    source: "product_intake_submission",
+    updated_at: nowIso,
+  }
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: previousContexts,
+    next: [resolvedContext],
+    latestMessageNamesActionableProduct: false,
+  })
+  const nextState: AgentV2ConversationStateV2 = {
+    ...params.previousState,
+    agent_v2: {
+      ...params.previousState.agent_v2,
+      active_product_contexts: activeProductContexts,
+      active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
+    },
+  }
+
+  return {
+    previous_state: params.previousState,
+    next_state: nextState,
+    reason: "product_intake_review_resolved",
+    changed_fields: [
+      "agent_v2.active_product_contexts",
+      "agent_v2.active_resolved_product_context",
+    ],
+    classifier_override: null,
+    updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
+  }
+}
+
+async function persistProductIntakeReviewConversationStateBestEffort(params: {
+  supabase: SupabaseClient
+  conversationId: string
+  submission: ProductSubmissionForNotification
+  updatedAt: string
+}): Promise<void> {
+  try {
+    const previousState = await loadAgentV2ConversationStateForUser(params.supabase, {
+      conversationId: params.conversationId,
+      userId: params.submission.user_id,
+    })
+    const transition = buildProductIntakeReviewConversationStateTransition({
+      previousState,
+      submission: params.submission,
+      nowIso: params.updatedAt,
+    })
+    if (!transition) return
+
+    await persistConversationStateTransition(params.supabase, {
+      conversationId: params.conversationId,
+      userId: params.submission.user_id,
+      transition,
+    })
+  } catch (error) {
+    console.warn("[product-intake] notification conversation state update failed", error)
+  }
 }
 
 async function findOrCreateOnboardingReviewConversation(
@@ -322,6 +418,12 @@ export async function sendProductIntakeReviewNotification(
     if (existingMessageId) {
       notificationMaterialized = true
       await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
+      await persistProductIntakeReviewConversationStateBestEffort({
+        supabase,
+        conversationId,
+        submission,
+        updatedAt: sentAt,
+      })
       return { sent: false, reason: "already_sent" }
     }
 
@@ -341,6 +443,12 @@ export async function sendProductIntakeReviewNotification(
     if (isDuplicateKeyError(messageError)) {
       notificationMaterialized = true
       await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
+      await persistProductIntakeReviewConversationStateBestEffort({
+        supabase,
+        conversationId,
+        submission,
+        updatedAt: sentAt,
+      })
       return { sent: false, reason: "already_sent" }
     }
 
@@ -352,6 +460,12 @@ export async function sendProductIntakeReviewNotification(
 
     notificationMaterialized = true
     await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
+    await persistProductIntakeReviewConversationStateBestEffort({
+      supabase,
+      conversationId,
+      submission,
+      updatedAt: sentAt,
+    })
 
     return { sent: true, conversationId, messageId: message.id }
   } catch (error) {

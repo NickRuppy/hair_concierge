@@ -4,7 +4,11 @@ import { createHash } from "crypto"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { isProductIntakeEnabled } from "@/lib/product-intake/config"
-import { isProductEligibleForMode } from "@/lib/product-catalog/eligibility"
+import {
+  isProductEligibleForMode,
+  productIsActive,
+  productLifecycleStatus,
+} from "@/lib/product-catalog/eligibility"
 import { runAgentV2ProductionPipeline } from "@/lib/agent-v2/production/chat-pipeline"
 import {
   buildActiveProductContextFromTrustedSelection,
@@ -19,13 +23,12 @@ import {
 } from "@/lib/agent-v2/production/persisted-session-state"
 import { buildAssistantDecisionContext, buildDoneEventData } from "@/lib/chat-runtime/stream-events"
 import { persistConversationStateTransition } from "@/lib/chat-runtime/conversation-state-store"
+import type { PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 import { ERR_UNAUTHORIZED } from "@/lib/vocabulary"
-import {
-  hasVerifiedProductSpecs,
-  type SpecReadinessClient,
-} from "@/lib/product-intake/spec-readiness"
+import { hasVerifiedProductSpecs } from "@/lib/product-intake/spec-readiness"
 import {
   buildResolvedProductSelection,
+  getResolvedProductSelectionDisplayName,
   getResolvedProductSelectionStableKeyParts,
   productLookupSelectionResolvesSourceCard,
   toProductLookupSelectionContext,
@@ -34,7 +37,10 @@ import type {
   MessageRagContext,
   ProductLookupClarification,
   ProductLookupSelectionContext,
+  ProductLookupSelectionTrace,
 } from "@/lib/types"
+import type { AgentV2ToolCallTrace, AgentV2ValidationError } from "@/lib/agent-v2/contracts"
+import type { AgentV2TrustedSelectedProductContext } from "@/lib/agent-v2/resolved-product-selection-adapter"
 
 export const maxDuration = 60
 
@@ -66,10 +72,64 @@ type ProductSelectionAdminClient = {
   from: (table: string) => {
     select: (columns: string) => ProductSelectionFilterQuery
   }
+  rpc?: (
+    fn: string,
+    args: Record<string, unknown>,
+  ) => Promise<{ data: unknown | null; error: { message?: string | null } | null }>
 }
+
+const LINK_EXISTING_PRODUCT_FREQUENCY_PLACEHOLDER = "less_than_monthly"
 
 function readString(value: unknown): string | null {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
+}
+
+function summarizeTraceArguments(args: unknown): string | undefined {
+  if (!args || typeof args !== "object" || Array.isArray(args)) return undefined
+  const record = args as Record<string, unknown>
+  const parts: string[] = []
+  for (const key of ["product_id", "category", "brand_text", "product_name_text", "reason"]) {
+    const value = record[key]
+    if (typeof value === "string" && value.trim().length > 0) {
+      parts.push(`${key}=${value.trim()}`)
+    }
+  }
+  return parts.length > 0 ? parts.join("; ") : undefined
+}
+
+function compactValidationIds(errors: readonly AgentV2ValidationError[] | undefined): string[] {
+  return Array.from(
+    new Set(
+      (errors ?? [])
+        .map((error) => error.validator_id)
+        .filter((validatorId): validatorId is string => typeof validatorId === "string"),
+    ),
+  )
+}
+
+function buildProductLookupSelectionTrace(params: {
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext
+  debugTrace: PipelineTraceDraft
+}): ProductLookupSelectionTrace {
+  const agentTrace = params.debugTrace.agent_v2_trace ?? null
+  const toolCalls = (agentTrace?.tool_calls ?? []).map((call: AgentV2ToolCallTrace) => ({
+    name: call.name,
+    arguments_summary: summarizeTraceArguments(call.arguments),
+    output_summary: call.output_summary,
+  }))
+
+  return {
+    source: "product_lookup_clarification",
+    selected_product: params.trustedSelectedProductContext.selected_product,
+    lookup_identity: params.trustedSelectedProductContext.lookup_identity,
+    called_load_product_facts: toolCalls.some((call) => call.name === "load_product_facts"),
+    tool_calls: toolCalls,
+    validation_error_ids: compactValidationIds(agentTrace?.validation_errors),
+    repair_attempt_reasons: Array.from(
+      new Set((agentTrace?.repair_attempts ?? []).map((attempt) => attempt.reason)),
+    ),
+    failure_stage: agentTrace?.failure_stage ?? null,
+  }
 }
 
 function readClarification(value: unknown): ProductLookupClarification | null {
@@ -319,6 +379,73 @@ async function isSelectedProductVisibleToUser(params: {
   })
 }
 
+function isLinkableExistingProduct(product: {
+  id?: string | null
+  is_active?: boolean | null
+  lifecycle_status?: string | null
+}): boolean {
+  return Boolean(product.id) && productIsActive(product) && productLifecycleStatus(product) === "active"
+}
+
+async function linkExistingProductForUser(params: {
+  admin: ProductSelectionAdminClient
+  userId: string
+  product: {
+    id?: string | null
+    name?: string | null
+    category?: string | null
+    category_key?: string | null
+  }
+  selectedCandidate: ProductLookupClarification["candidates"][number]
+}) {
+  if (!params.admin.rpc || !params.product.id) return false
+  const category = params.product.category_key ?? params.product.category ?? params.selectedCandidate.category
+  if (!category) return false
+
+  const { data: existingUsage, error: existingUsageError } = await params.admin
+    .from("user_product_usage")
+    .select("id, frequency_range")
+    .eq("user_id", params.userId)
+    .eq("category", category)
+    .maybeSingle()
+
+  if (existingUsageError) {
+    console.error("Failed to load existing usage before linking product:", existingUsageError)
+    return false
+  }
+
+  const existingUsageRecord =
+    existingUsage && typeof existingUsage === "object" && !Array.isArray(existingUsage)
+      ? (existingUsage as { id?: unknown; frequency_range?: unknown })
+      : null
+  const existingUsageId =
+    typeof existingUsageRecord?.id === "string" ? existingUsageRecord.id : null
+  const existingFrequencyRange =
+    typeof existingUsageRecord?.frequency_range === "string"
+      ? existingUsageRecord.frequency_range
+      : LINK_EXISTING_PRODUCT_FREQUENCY_PLACEHOLDER
+
+  const { error } = await params.admin.rpc("product_intake_replace_usage_with_matched_product", {
+    p_user_id: params.userId,
+    p_category: category,
+    p_existing_usage_id: existingUsageId,
+    p_product_id: params.product.id,
+    p_product_name: params.product.name ?? params.selectedCandidate.name,
+    p_frequency_range: existingFrequencyRange,
+    p_brand_text: params.selectedCandidate.brand_name ?? null,
+    p_intake_method: "manual",
+    p_source: "chat",
+    p_updated_at: new Date().toISOString(),
+  })
+
+  if (error) {
+    console.error("Failed to link existing product from product selection:", error)
+    return false
+  }
+
+  return true
+}
+
 async function loadCurrentAgentV2State(params: {
   admin: ReturnType<typeof createAdminClient>
   conversationId: string
@@ -412,6 +539,49 @@ async function persistResolvedSelectionState(params: {
   return result.status !== "failed"
 }
 
+function buildSelectionResolvedTransition(params: {
+  transition: unknown
+  resolvedSelection: ReturnType<typeof buildResolvedProductSelection>
+}): AgentV2ConversationStateTransition {
+  const trustedContext = buildTrustedSelectedProductContext(params.resolvedSelection)
+  const activeContext = buildActiveProductContextFromTrustedSelection(trustedContext)
+  const transition =
+    params.transition && typeof params.transition === "object"
+      ? (params.transition as Partial<AgentV2ConversationStateTransition>)
+      : {}
+
+  const nextState = normalizeAgentV2ConversationState(transition.next_state)
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: nextState.agent_v2.active_product_contexts,
+    next: activeContext ? [activeContext] : [],
+    latestMessageNamesActionableProduct: true,
+  })
+  const changedFields = [
+    ...(Array.isArray(transition.changed_fields) ? transition.changed_fields : []),
+    "agent_v2.active_product_contexts",
+    "agent_v2.active_resolved_product_context",
+  ]
+
+  return {
+    previous_state: normalizeAgentV2ConversationState(transition.previous_state),
+    next_state: {
+      ...nextState,
+      agent_v2: {
+        ...nextState.agent_v2,
+        active_product_contexts: activeProductContexts,
+        active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
+      },
+    },
+    reason:
+      typeof transition.reason === "string"
+        ? transition.reason
+        : "product_lookup_selection_resolved",
+    changed_fields: [...new Set(changedFields)],
+    classifier_override: null,
+    updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
+  }
+}
+
 export function createProductSelectionPostHandler(overrides: ProductSelectionRuntimeDeps = {}) {
   const deps = {
     createClient,
@@ -503,15 +673,29 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       .eq("id", selectedProductId)
       .single()
 
-    if (
-      productError ||
-      !selectedProduct ||
-      !(await isSelectedProductVisibleToUser({
-        admin: admin as unknown as ProductSelectionAdminClient,
+    const productSelectionAdmin = admin as unknown as ProductSelectionAdminClient
+    const productIsVisible =
+      !productError &&
+      selectedProduct &&
+      (await isSelectedProductVisibleToUser({
+        admin: productSelectionAdmin,
         userId: user.id,
         product: selectedProduct,
       }))
-    ) {
+    const productWasLinked =
+      !productIsVisible &&
+      !productError &&
+      selectedProduct &&
+      clarification.kind === "link_existing_product" &&
+      isLinkableExistingProduct(selectedProduct) &&
+      (await linkExistingProductForUser({
+        admin: productSelectionAdmin,
+        userId: user.id,
+        product: selectedProduct,
+        selectedCandidate,
+      }))
+
+    if (productError || !selectedProduct || (!productIsVisible && !productWasLinked)) {
       return NextResponse.json(
         { error: "Dieses Produkt ist nicht mehr verfügbar." },
         { status: 400 },
@@ -524,7 +708,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       selectedProduct,
       sourceAssistantMessageId,
     })
-    const selectedProductName = resolvedSelection.selectedProduct.name
+    const selectedProductName = getResolvedProductSelectionDisplayName(resolvedSelection)
     const selectionContext = toProductLookupSelectionContext(resolvedSelection)
 
     const { data: existingMessages } = await admin
@@ -604,6 +788,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     )
 
     const selectionTurnMessage = `Der Nutzer hat in der Produktklärung "${selectedProductName}" ausgewählt. Diese Auswahl ersetzt die zuvor unklare Produktangabe. Beantworte die offene Frage jetzt ausschließlich für "${selectedProductName}". Nutze die ursprüngliche Nachricht nur, um die Frageabsicht zu verstehen, nicht als Produktidentität.`
+    const trustedSelectedProductContext = buildTrustedSelectedProductContext(resolvedSelection)
 
     const pipelineResult = await deps.runAgentV2ProductionPipeline({
       message: selectionTurnMessage,
@@ -611,7 +796,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       userId: user.id,
       requestId: deps.randomUUID(),
       productIntakeEnabled: deps.productIntakeEnabled(),
-      trustedSelectedProductContext: buildTrustedSelectedProductContext(resolvedSelection),
+      trustedSelectedProductContext,
     })
 
     const fullContent = await readTextStream(pipelineResult.stream)
@@ -621,12 +806,20 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       engineTrace: pipelineResult.engineTrace ?? null,
       responseMode: pipelineResult.routerDecision.response_mode,
       productLookupSelection: selectionContext,
+      productLookupSelectionTrace: buildProductLookupSelectionTrace({
+        trustedSelectedProductContext,
+        debugTrace: pipelineResult.debugTrace,
+      }),
     })
     const productRecommendations = null
+    const resolvedSelectionTransition = buildSelectionResolvedTransition({
+      transition: pipelineResult.conversationStateTransition,
+      resolvedSelection,
+    })
     const statePersistenceResult = await deps.persistConversationStateTransition(admin, {
       conversationId,
       userId: user.id,
-      transition: pipelineResult.conversationStateTransition,
+      transition: resolvedSelectionTransition,
     })
     if (statePersistenceResult.status === "failed") {
       return streamProductSelectionError()

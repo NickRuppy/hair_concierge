@@ -181,10 +181,46 @@ function selectProductsToolCall(
   }
 }
 
+function loadProductFactsToolCall(
+  overrides: Partial<{
+    category: string
+    reason: string
+    user_request: string | null
+    evidence_quote: string
+  }> = {},
+) {
+  return {
+    name: "load_product_facts",
+    call_id: "call_facts",
+    arguments: {
+      category: "shampoo",
+      reason: "User asks whether a resolved product suits them.",
+      user_request: "Passt Test Shampoo zu mir?",
+      evidence_quote: "Passt Test Shampoo zu mir?",
+      ...overrides,
+    },
+  }
+}
+
 function selectedProjection(productId: string, name: string) {
   return {
     valid_product_ids: [productId],
     products: [{ product_id: productId, name }],
+  }
+}
+
+function selectedAssessmentProjection(productId: string, name: string) {
+  return {
+    ...baseValidationContext.selectedProductProjections[0],
+    tool_name: "load_product_facts" as const,
+    valid_product_ids: [productId],
+    products: [
+      {
+        ...baseValidationContext.selectedProductProjections[0].products[0],
+        product_id: productId,
+        name,
+      },
+    ],
   }
 }
 
@@ -325,7 +361,7 @@ function routineBasicsAnswer(
 const baseValidationContext = {
   selectedProductProjections: [
     {
-      tool_name: "select_products",
+      tool_name: "select_products" as const,
       category: "shampoo",
       decision: "recommended",
       product_response_policy: "recommend",
@@ -493,7 +529,54 @@ function domainBoundaryAnswer(overrides: Record<string, unknown> = {}) {
 test("validator accepts known product ids", () => {
   const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
 
-  assert.equal(result.ok, true)
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator diet softens hidden product interpretation metadata when answer is otherwise safe", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    interpreted_intent:
+      "User asks for shampoo direction; answer gives safe category-level guidance without product IDs.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "specific_products",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "default",
+      evidence_quote: "Welches Shampoo passt zu mir?",
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: [
+        ...requiredGuidanceForAnswer("general_advice", "shampoo"),
+        "base.product_recommendation.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Bei deinem Profil würde ich ein leichtes Shampoo priorisieren und nichts Reichhaltiges am Ansatz aufbauen.",
+      category_or_topic: "shampoo",
+      key_points_de: ["Leichtes Shampoo priorisieren."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, baseValidationContext)
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(result.errors.length, 0)
+  assert.ok(
+    result.warnings.some(
+      (warning) =>
+        warning.validator_id === "request_interpretation_answer_mode" &&
+        warning.reason_code === "validator_diet_softened",
+    ),
+  )
 })
 
 test("validator accepts grounded text-only product assessment without visible recommendations", () => {
@@ -541,7 +624,9 @@ test("validator accepts grounded text-only product assessment without visible re
           evidence_quote: "Test Shampoo",
         },
       },
+      loadProductFactsToolCall(),
     ],
+    selectedProductProjections: [selectedAssessmentProjection("prod_1", "Test Shampoo")],
     productLookupResults: [
       {
         status: "found_exact",
@@ -597,6 +682,7 @@ test("validator accepts found-exact lookup grounding for product assessment with
     selectedProductProjections: [
       {
         ...baseValidationContext.selectedProductProjections[0],
+        tool_name: "load_product_facts" as const,
         valid_product_ids: ["prod_syoss_volume"],
         products: [
           {
@@ -625,10 +711,8 @@ test("validator accepts found-exact lookup grounding for product assessment with
           evidence_quote: "Syoss Volume Shampoo",
         },
       },
-      selectProductsToolCall({
-        product_request_kind: "product_detail",
-        requested_product_count: 1,
-        count_policy: "exact",
+      loadProductFactsToolCall({
+        user_request: "Passt das Syoss Volume Shampoo zu mir?",
         evidence_quote: "Syoss Volume Shampoo",
       }),
     ],
@@ -643,6 +727,196 @@ test("validator accepts found-exact lookup grounding for product assessment with
           evidence_quote: "Syoss Volume Shampoo",
         },
         product: { id: "prod_syoss_volume", name: "Syoss Volume Shampoo" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator ignores stale pending same-category context for a different found product", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether a different named conditioner suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Passt der Urban Alchemy Moisture Mist Conditioner zu mir?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "conditioner"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_urban_alchemy_mist"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_urban_alchemy_mist"],
+      user_facing_answer_de:
+        "Urban Alchemy Moisture Mist Conditioner passt eher leicht zu deinem feinen Haar und kann als Conditioner sinnvoll sein.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt der Urban Alchemy Moisture Mist Conditioner zu mir?",
+    recentEvidenceText:
+      "Jean & Len Granatapfel Rose Conditioner ist noch in Prüfung. Passt der Urban Alchemy Moisture Mist Conditioner zu mir?",
+    namedProductContext: {
+      display_name: "Urban Alchemy Moisture Mist Conditioner",
+      category: "conditioner",
+      plausible_exact_name: true,
+      named_product_intent: "evaluation",
+    },
+    selectedProductProjections: [
+      selectedAssessmentProjection(
+        "prod_urban_alchemy_mist",
+        "Urban Alchemy Moisture Mist Conditioner",
+      ),
+    ],
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "conditioner",
+          brand_text: "Urban Alchemy",
+          product_name_text: "Moisture Mist Conditioner",
+          reason: "User asks whether a different named conditioner suits them.",
+          evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+        },
+      },
+      loadProductFactsToolCall({
+        category: "conditioner",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ],
+    productLookupResults: [
+      {
+        status: "not_found",
+        category: "conditioner",
+        input_identity: {
+          category: "conditioner",
+          brand_text: "Jean & Len",
+          product_name_text: "Granatapfel Rose Conditioner",
+          evidence_quote: "Jean & Len Granatapfel Rose Conditioner",
+        },
+        product: null,
+      },
+      {
+        status: "found_exact",
+        category: "conditioner",
+        input_identity: {
+          category: "conditioner",
+          brand_text: "Urban Alchemy",
+          product_name_text: "Moisture Mist Conditioner",
+          evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+        },
+        product: {
+          id: "prod_urban_alchemy_mist",
+          name: "Urban Alchemy Moisture Mist Conditioner",
+        },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator lets an exact product assessment override stale pending context for the same submitted product", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether the now-approved submitted leave-in suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Okay und wäre der passend für mich?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "leave_in"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_aussie_100h"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_aussie_100h"],
+      user_facing_answer_de:
+        "**AUSSIE SOS Leave-In Haarserum 100 Hours Hydration** passt eher als Zusatzpflege zu dir, vor allem sparsam in den Längen.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Okay und wäre der passend für mich?",
+    recentEvidenceText:
+      "Gute Nachrichten: Wir haben AUSSIE Leave-In Haarserum 100 Hours Hydration geprüft und in deiner Routine verknüpft. Okay und wäre der passend für mich?",
+    namedProductContext: {
+      display_name: "AUSSIE Leave-In Haarserum 100 Hours Hydration",
+      category: "leave_in",
+      plausible_exact_name: true,
+      named_product_intent: "current_use_product_question",
+    },
+    selectedProductProjections: [
+      selectedAssessmentProjection(
+        "prod_aussie_100h",
+        "AUSSIE SOS Leave-In Haarserum 100 Hours Hydration, 160 ml",
+      ),
+    ],
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "leave_in",
+          brand_text: "AUSSIE",
+          product_name_text: "Leave-In Haarserum 100 Hours Hydration",
+          reason: "User asks whether the now-approved submitted leave-in suits them.",
+          evidence_quote: "AUSSIE Leave-In Haarserum 100 Hours Hydration",
+        },
+      },
+      loadProductFactsToolCall({
+        category: "leave_in",
+        evidence_quote: "AUSSIE Leave-In Haarserum 100 Hours Hydration",
+      }),
+    ],
+    productLookupResults: [
+      {
+        status: "not_found",
+        category: "leave_in",
+        input_identity: {
+          category: "leave_in",
+          brand_text: "AUSSIE",
+          product_name_text: "Leave-In Haarserum 100 Hours Hydration",
+          evidence_quote: "Ich habe AUSSIE Leave-In Haarserum 100 Hours Hydration eingereicht.",
+        },
+        product: null,
+      },
+      {
+        status: "found_exact",
+        category: "leave_in",
+        input_identity: {
+          category: "leave_in",
+          brand_text: "AUSSIE",
+          product_name_text: "Leave-In Haarserum 100 Hours Hydration",
+          evidence_quote: "AUSSIE Leave-In Haarserum 100 Hours Hydration",
+        },
+        product: {
+          id: "prod_aussie_100h",
+          name: "AUSSIE SOS Leave-In Haarserum 100 Hours Hydration, 160 ml",
+        },
       },
     ],
   })
@@ -713,7 +987,10 @@ test("validator blocks product assessment from found-exact identity without prod
   })
 
   assert.equal(result.ok, false)
-  assert.ok(result.errors.some((error) => error.validator_id === "product_assessment_grounding"))
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_assessment_grounding"),
+    JSON.stringify(result.errors, null, 2),
+  )
 })
 
 test("validator blocks product assessment that omits the resolved product name", () => {
@@ -996,6 +1273,7 @@ test("validator blocks pronoun product advice while active product review is pen
   )
 
   assert.equal(result.ok, false)
+  console.error("load_product_facts regression errors", JSON.stringify(result.errors, null, 2))
   assert.ok(
     result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
     JSON.stringify(result.errors, null, 2),
@@ -1043,8 +1321,8 @@ test("AgentV2 validator blocks confirmable next step without pending follow-up a
   const result = validateAgentV2FinalAnswer(answer, {
     ...baseValidationContext,
     selectedProductProjections: [],
-    latestUserMessage: "Maske",
-    recentEvidenceText: "Maske",
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
     toolCallHistory: [],
     knownHardRuleIds: [],
   })
@@ -1897,6 +2175,55 @@ test("validator allows identity-only acknowledgement for trusted selected produc
   assert.equal(result.ok, true)
 })
 
+test("validator blocks generic clarification after trusted product selection", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "clarification",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("clarification"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Ich bin mir gerade nicht sicher, was du genau möchtest. Formuliere es bitte einmal konkreter.",
+        question_de: "Was möchtest du wissen?",
+        missing_keys: ["request_focus"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      isTrustedProductSelectionTurn: true,
+      latestUserMessage:
+        'Der Nutzer hat in der Produktklärung "Syoss Intense Curls Shampoo" ausgewählt.',
+      recentEvidenceText: "Syoss Intense Curls Shampoo wurde aus der Auswahlkarte bestätigt.",
+      trustedSelectedProductIds: ["prod_1"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: { id: "prod_1", name: "Syoss Intense Curls Shampoo" },
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "trusted_product_selection_clarification"),
+  )
+})
+
 test("validator requires product tool for trusted selected product suitability claims", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -1942,7 +2269,7 @@ test("validator requires product tool for trusted selected product suitability c
   assert.ok(result.errors.some((error) => error.validator_id === "product_tool_required"))
 })
 
-test("validator allows claim-level hedge for trusted selected product", () => {
+test("validator blocks generic missing-product-properties hedge for trusted selected product", () => {
   const result = validateAgentV2FinalAnswer(
     {
       ...baseAnswer,
@@ -1982,9 +2309,85 @@ test("validator allows claim-level hedge for trusted selected product", () => {
     },
   )
 
-  assert.equal(
+  assert.equal(result.ok, false)
+  assert.ok(
     result.errors.some((error) => error.validator_id === "trusted_product_unverified_caveat"),
-    false,
+  )
+})
+
+test("validator blocks unsupported heat-protection hedge when product facts support heat protection", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        care_category: "leave_in",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Passt das zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "leave_in"),
+        used_product_tool: true,
+        product_ids: ["leave_in_1"],
+      },
+      payload: {
+        assessment_kind: "fit",
+        user_facing_answer_de:
+          "**Balea Professional Brilliant Blond Hair Sealer Leave-in Serum** passt grundsätzlich gut zu dir. Einen Hitzeschutz oder eine konkrete Schutzwirkung kann ich für diese Variante hier nicht sicher bestätigen.",
+        assessed_product_ids: ["leave_in_1"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [
+        {
+          ...selectedAssessmentProjection(
+            "leave_in_1",
+            "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+          ),
+          products: [
+            {
+              ...selectedAssessmentProjection(
+                "leave_in_1",
+                "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+              ).products[0],
+              supported_claims: [
+                {
+                  field: "heat_protection",
+                  value: "true",
+                  evidence: "product_spec",
+                  label: "Hitzeschutz: ja",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      toolCallHistory: [loadProductFactsToolCall({ category: "leave_in" })],
+      latestUserMessage: "Passt das zu mir?",
+      recentEvidenceText: "Passt das zu mir?",
+      trustedSelectedProductIds: ["leave_in_1"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "leave_in",
+          product: {
+            id: "leave_in_1",
+            name: "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+          },
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_fact_contradiction_caveat"),
   )
 })
 
@@ -2009,6 +2412,393 @@ test("validator allows claims for exact lookup products when another lookup is u
   assert.equal(
     result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
     false,
+  )
+})
+
+test("validator does not let stale pending active product block resolved product assessment follow-up", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "ja ok, passt das denn zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** passt eher gut zu dir, aber nicht als Hauptlösung für Frizz. Es ist für deinen feinen Haaransatz und den ausgeglichenen Kopfhaut-Fokus passend, und bei deinem Rhythmus von 3-4 Wäschen pro Woche ist es als normales Shampoo stimmig. Deine raue Schuppenschicht und die wellige, feine Struktur profitieren meist stärker von Conditioner und Leave-in als von mehr Shampoo-Pflege.",
+        assessment_kind: "fit",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "ja ok, passt das denn zu mir?",
+      recentEvidenceText:
+        "Der Nutzer hat Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege ausgewählt.",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "leave_in",
+          input_identity: {
+            category: "leave_in",
+            brand_text: "Balea Professional",
+            product_name_text: "brilliant blond hair sealer Leave-in",
+            evidence_quote: "Balea Professional brilliant blond hair sealer Leave-in",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "passt das denn zu mir",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+  )
+})
+
+test("validator does not let same-category pending product block resolved product assessment follow-up", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "ja ok, passt das denn zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** ist für dein feines Haar als Shampoo geeignet, solange Conditioner und Leave-in die Längenpflege übernehmen.",
+        assessment_kind: "fit",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "ja ok, passt das denn zu mir?",
+      recentEvidenceText:
+        "Der Nutzer hat Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege ausgewaehlt.",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "passt das denn zu mir",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks same-category pending product assessment claims", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "compare_products",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote:
+          "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** passt eher gut zu dir. **Balea Professional Brilliant Blond Shampoo** passt ebenfalls gut, weil es mild reinigt und deine Längen nicht beschwert.",
+        assessment_kind: "comparison",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      recentEvidenceText:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "compare_products",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Head & Shoulders DERMAXPRO",
+        }),
+      ],
+    },
+  )
+
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator allows mixed answer that assesses resolved product and defers pending product", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "compare_products",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote:
+          "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** ist für deinen feinen Ansatz als Shampoo geeignet. **Balea Professional Brilliant Blond Shampoo** ist noch in Prüfung, deshalb kann ich es noch nicht bewerten.",
+        assessment_kind: "comparison",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      recentEvidenceText:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "compare_products",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Head & Shoulders DERMAXPRO",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks mixed answer that assesses resolved product and claims about pending product", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "compare_products",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote:
+          "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** passt eher gut zu dir. **Balea Professional Brilliant Blond Shampoo** ist zwar noch in Prüfung, wirkt aber für deine Längen geeignet.",
+        assessment_kind: "comparison",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      recentEvidenceText:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "compare_products",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Head & Shoulders DERMAXPRO",
+        }),
+      ],
+    },
+  )
+
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
   )
 })
 
@@ -2686,8 +3476,8 @@ test("AgentV2 validator checks visible prose offers even when next_step_offer_de
   const result = validateAgentV2FinalAnswer(answer, {
     ...baseValidationContext,
     selectedProductProjections: [],
-    latestUserMessage: "Maske",
-    recentEvidenceText: "Maske",
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
     toolCallHistory: [],
     knownHardRuleIds: [],
   })
@@ -2868,8 +3658,8 @@ test("AgentV2 validator allows informational next step without pending follow-up
   const result = validateAgentV2FinalAnswer(answer, {
     ...baseValidationContext,
     selectedProductProjections: [],
-    latestUserMessage: "Maske",
-    recentEvidenceText: "Maske",
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
     toolCallHistory: [],
     knownHardRuleIds: [],
   })
@@ -2877,7 +3667,7 @@ test("AgentV2 validator allows informational next step without pending follow-up
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
 })
 
-test("AgentV2 validator blocks hidden pending action behind informational next step", () => {
+test("AgentV2 validator strips hidden pending action behind informational next step", () => {
   const answer = createValidGeneralAdviceAnswer({
     payload: {
       user_facing_answer_de:
@@ -2898,21 +3688,74 @@ test("AgentV2 validator blocks hidden pending action behind informational next s
   const result = validateAgentV2FinalAnswer(answer, {
     ...baseValidationContext,
     selectedProductProjections: [],
-    latestUserMessage: "Maske",
-    recentEvidenceText: "Maske",
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
     toolCallHistory: [],
     knownHardRuleIds: [],
   })
 
-  assert.equal(result.ok, false)
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(result.sanitized_answer?.pending_followup_action, null)
+  assert.equal(result.errors.length, 0)
   assert.ok(
-    result.errors.some((error) => error.validator_id === "pending_followup_action_hidden"),
-    JSON.stringify(result.errors, null, 2),
+    result.warnings.some(
+      (warning) =>
+        warning.validator_id === "pending_followup_action_hidden" &&
+        warning.reason_code === "pending_followup_action_sanitized",
+    ),
+    JSON.stringify(result.warnings, null, 2),
   )
 })
 
-test("AgentV2 validator blocks hidden pending follow-up actions without visible offer", () => {
+test("AgentV2 validator strips hidden pending follow-up actions without visible offer", () => {
   const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(result.sanitized_answer?.pending_followup_action, null)
+  assert.equal(result.errors.length, 0)
+  assert.ok(
+    result.warnings.some(
+      (warning) =>
+        warning.validator_id === "pending_followup_action_hidden" &&
+        warning.reason_code === "pending_followup_action_sanitized",
+    ),
+    JSON.stringify(result.warnings, null, 2),
+  )
+})
+
+test("AgentV2 validator keeps hidden pending action blocking when mixed with product truth failures", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: ["prod_unknown"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
     payload: {
       user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
       category_or_topic: "mask",
@@ -2938,7 +3781,9 @@ test("AgentV2 validator blocks hidden pending follow-up actions without visible 
   })
 
   assert.equal(result.ok, false)
+  assert.ok(result.sanitized_answer?.pending_followup_action)
   assert.ok(result.errors.some((error) => error.validator_id === "pending_followup_action_hidden"))
+  assert.ok(result.errors.some((error) => error.validator_id === "known_product_ids"))
 })
 
 test("AgentV2 validator blocks next-step offers that are not rendered in the visible answer", () => {
@@ -5690,6 +6535,100 @@ test("validator accepts one visible recommendation per multi-category product sl
   )
 
   assert.equal(result.ok, true, JSON.stringify(result.errors))
+})
+
+test("validator requires load_product_facts for one-product assessment grounding", () => {
+  const selectProductsOnlyProjection = {
+    ...baseValidationContext.selectedProductProjections[0],
+    tool_name: "select_products" as const,
+    valid_product_ids: ["prod_syoss_volume"],
+    products: [
+      {
+        product_id: "prod_syoss_volume",
+        name: "Syoss Volume Shampoo",
+        supported_claims: [
+          {
+            field: "shampoo_bucket",
+            value: "light",
+            evidence: "product_spec",
+            label: "leichte Reinigung",
+          },
+        ],
+      },
+    ],
+  }
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      interpreted_intent: "User asks whether a named shampoo suits them.",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Passt das Syoss Volume Shampoo zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        used_product_tool: true,
+        used_routine_tool: false,
+        product_ids: ["prod_syoss_volume"],
+        routine_step_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Syoss Volume Shampoo kann als leichtes Shampoo grundsätzlich zu deinem Profil passen; für Frizz bleiben Conditioner und Leave-in wichtiger.",
+        assessed_product_ids: ["prod_syoss_volume"],
+        assessment_summary_de: "Passt.",
+        usage_notes_de: [],
+        caveats_de: [],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Passt das Syoss Volume Shampoo zu mir?",
+      recentEvidenceText: "Passt das Syoss Volume Shampoo zu mir?",
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "shampoo",
+            brand_text: "Syoss",
+            product_name_text: "Syoss Volume Shampoo",
+            reason: "User asks whether a named shampoo suits them.",
+            evidence_quote: "Syoss Volume Shampoo",
+          },
+        },
+        selectProductsToolCall({
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "Syoss Volume Shampoo",
+        }),
+      ],
+      selectedProductProjections: [selectProductsOnlyProjection],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Syoss",
+            product_name_text: "Syoss Volume Shampoo",
+            evidence_quote: "Syoss Volume Shampoo",
+          },
+          product: { id: "prod_syoss_volume", name: "Syoss Volume Shampoo" },
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
 })
 
 test("validator still blocks single-category exact-count mismatches", () => {

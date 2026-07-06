@@ -107,6 +107,7 @@ export function buildEmptyReplayReport(generatedAt = new Date().toISOString()): 
     skipped_missing_product_name: 0,
     status_counts: {
       found_exact: 0,
+      found_linkable_existing: 0,
       ambiguous: 0,
       needs_variant_selection: 0,
       category_mismatch: 0,

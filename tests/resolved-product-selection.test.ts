@@ -153,6 +153,40 @@ test("converts a resolved selection to persisted message selection context", () 
   })
 })
 
+test("hides legacy duplicate suffixes from persisted selection labels while preserving raw product names", () => {
+  const clarification = createClarification({
+    original_user_message: "   ",
+  })
+  const rawProductName = "Syoss Intense Curls Shampoo (legacy duplicate)"
+  const selection = buildResolvedProductSelection({
+    clarification,
+    selectedCandidate: {
+      ...clarification.candidates[0],
+      name: rawProductName,
+    },
+    selectedProduct: {
+      id: "syoss-intense-curls-shampoo",
+      name: rawProductName,
+      category: "shampoo",
+      category_key: null,
+    },
+    sourceAssistantMessageId: "assistant-message-1",
+  })
+
+  assert.equal(selection.selectedProduct.name, rawProductName)
+  assert.equal(
+    selection.originalUserMessage,
+    "Ich meine Syoss Intense Curls Shampoo. Kannst du dieses Produkt bewerten?",
+  )
+  assert.deepEqual(toProductLookupSelectionContext(selection), {
+    source: "product_lookup_clarification",
+    clarification_id: "clarification-syoss-intense",
+    source_assistant_message_id: "assistant-message-1",
+    selected_product_id: "syoss-intense-curls-shampoo",
+    selected_product_name: "Syoss Intense Curls Shampoo",
+  })
+})
+
 test("matches persisted selections by source card and optionally selected product id", () => {
   const selection = {
     source: "product_lookup_clarification" as const,

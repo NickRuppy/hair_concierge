@@ -487,6 +487,7 @@ export interface LeaveInTargetProfile {
 export type LeaveInCategoryDecision = CategoryDecisionBase<"leave_in", LeaveInTargetProfile>
 
 export interface ShampooTargetProfile {
+  thickness?: HairThickness | null
   scalpRoute: CanonicalScalpRoute | null
   shampooBucket: ShampooBucket | null
   secondaryBucket: ShampooBucket | null

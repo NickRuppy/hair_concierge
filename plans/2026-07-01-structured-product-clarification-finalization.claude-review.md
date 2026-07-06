@@ -1,0 +1,36 @@
+Using the reviewing-plans skill — I've read the plan and grounded every load-bearing claim against the code. Here's the verdict.
+
+---
+
+**Verdict:** Approve with revisions
+
+The plan is shaped right, targets a real and reproducible bug, and picks the correct boundary. Two things need pinning down before a subagent runs it: the "contradiction detection" mechanism (currently fuzzy) and the fact that the plural copy has *two* sources plus existing fixtures that encode the buggy pairing.
+
+**Lean shape**
+- **Irreducible goal:** When a product-lookup clarification card is forced, the visible bubble text must not contradict the card's candidate count (the concrete failure: 1-candidate card + "mehrere mögliche Varianten" bubble).
+- **Load-bearing step:** Step 2 (reconcile at the outcome boundary). Everything else is supporting: Step 1 is the helper Step 2 needs; Step 4 is verification-only (correct); Step 5 is correctly deferred. **Step 3 is secondary** — it changes model-facing guidance (`"mehrere mögliche Treffer"`), a *different string* than the visible bug (`"mehrere mögliche Varianten"`), and Step 2 already forces the visible text regardless. Consider deferring Step 3 alongside Step 5.
+- **Hard tradeoff the plan avoids:** "replace *only* the copy *if the count contradicts the bubble wording*" needs a plural/singular detector over free German text — the plan never says how to detect a contradiction. The canonical single-source-of-truth move is to **deterministically regenerate the bubble copy whenever a card is forced** (drop the free-text diff), accepting the loss of model-authored naturalness. Pick one explicitly.
+
+**Prior art**
+- This is a **projection-vs-display reconciliation / single-source-of-truth** boundary. Canonical shape: render the display string deterministically from the authoritative structured object (here, the card's `candidates`), rather than diffing free text against it. The plan half-adopts this (it forces the card) but then proposes text-diffing the bubble — the weaker half. Regenerating from the card is the cleaner, testable shape.
+- Client delivery verified as **synthesized, not live-streamed**: the bubble is `createTextStream(String(answer.payload.user_facing_answer_de ?? ""))` (`src/lib/agent-v2/production/chat-pipeline.ts:1325`), consumed by `src/app/api/chat/route.ts:296-346`. So mutating `answer` before `buildProductLookupTurnOutcome` returns *does* control the visible text — no model-token stream bypasses reconciliation. The approach is viable.
+
+**Blockers** (will fail or regress as written)
+- None that hard-fail. The closest is the unspecified detection mechanism (below) — a subagent could implement a fragile regex or silently skip it.
+
+**High-confidence issues** (correctness, not preference)
+1. **Detection mechanism is unspecified (fuzzy verb).** Step 2 says replace "if the card candidate count contradicts the bubble wording" — there is no rule for detecting that contradiction in arbitrary German copy. Recommend: when `productLookupClarification != null`, set `user_facing_answer_de` from the candidate-aware helper unconditionally (deterministic), keyed on `productLookupClarification.candidates.length`. This removes the fragile detector and matches the stated "one source of truth" goal.
+2. **The plural string has two sources, not one.** Besides the model's own text, `buildCategorylessKnownBrandClarificationAnswer` hardcodes `"...mehrere mögliche Varianten..."` regardless of count (`src/lib/agent-v2/production/product-lookup-turn-outcome.ts:799`). Step 2 reconciliation covers both, but the plan should either fix `:799` at source via the Step 1 helper *or* explicitly state that `:799` is intentionally left because Step 2 is the single chokepoint. As written it's easy to miss.
+3. **Step 3 plumbing gap + mislabeled impact.** `getAgentV2ProductLookupAssistantGuidance(status)` is status-only (`src/lib/agent-v2/product-lookup-policy.ts:88-96`); making it candidate-aware requires threading count through `enrichAgentV2ProductLookupResultForAssistant` (called at `src/lib/agent-v2/runtime/responses-agent.ts:951`, where `output.candidates` is available). The plan doesn't mention this signature change. And the guidance string it edits (`"mehrere mögliche Treffer"`, policy.ts:44/51) is not the string the user saw — Step 3 does not fix the visible bug.
+
+**Smaller / nice-to-haves**
+- **Existing fixtures already encode the bug — enumerate them.** The exact failure is reproduced by `tests/agent-v2-product-lookup-clarification.spec.ts:2394-2501`: card prompt `"Meinst du dieses Shampoo?"` (1 candidate) + bubble `"...mehrere mögliche Varianten..."`. It runs the real pipeline but **does not assert the stream** — that's why the bug is latent. The plan's regression test #3 should *extend this test with a `readStream(result.stream)` assertion*, not add a duplicate. Separately, `tests/agent-v2-product-selection.spec.ts:617-656` pairs the same plural bubble with a single-candidate card but **mocks `runAgentV2ProductionPipeline`** (line ~692), so Step 2 won't break it — leave a note that it now encodes stale behavior. 7 test sites reference the plural string; the executor should sweep them.
+- **Placement precision.** "before the stream events are built" is imprecise — stream events live in `chat-pipeline.ts`. The reconciliation must mutate `answer` *inside* `buildProductLookupTurnOutcome`, immediately before the `return` (~line 263, after `productLookupClarification` is computed at line 219-230). Placing it earlier risks disturbing `productIntakeOffer`/`nextContextsForTurn` derivations that read `baseAnswer`.
+- **"Is a lookup clarification" signal.** Use `productLookupClarification != null` (card forced), not `answer_mode` — a `category_mismatch` card can ride a `constraint_blocked` answer, while the categoryless fallback is `clarification`.
+- **Verification commands check out.** `npx tsx --test` is the repo convention (`package.json` `test:agent`, `docs/ci-flow.md:48`); `npm run typecheck` (package.json:15) and `npm run ci:verify` (package.json:16) exist. Add `tests/agent-v2-product-selection.spec.ts` to the focused run since it holds the plural fixtures.
+- **Step 4 claim is grounded:** `blocks_product_specific_answer` + the `product_lookup_unresolved` validator genuinely block suitability-before-selection (`src/lib/agent-v2/validation/final-answer-validator.ts:1780`, severity `block`). Safe to treat as verification-only.
+
+**Bottom line**
+Approve once you (1) make Step 2 deterministic — regenerate the bubble from the card's candidate count rather than detecting a "contradiction" in free text; (2) call out the second plural-string source at `product-lookup-turn-outcome.ts:799`; (3) demote/clarify Step 3 as secondary defense-in-depth and note its signature change; and (4) point the regression work at extending `clarification.spec.ts:2394` (add the stream assertion) and updating the stale fixtures rather than only adding new tests. The core mechanism and boundary are correct and the client-delivery path confirms it will actually work.
+
+Want me to spec the leaner deterministic-regenerate counter-proposal (Step 1 + Step 2 merged into one helper called at the return boundary) so you can compare side-by-side?

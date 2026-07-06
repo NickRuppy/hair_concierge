@@ -487,6 +487,99 @@ test("projectSelectedProducts returns generic recommend policy for ordinary prod
   assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
 })
 
+test("projectSelectedProducts caveats explicit shampoo picks that mismatch the scalp route", () => {
+  const result = projectSelectedProducts(
+    [
+      createShampooMatchedProduct(
+        "anti-dandruff",
+        0.74,
+        ["Schwächerer Treffer für feines Haar und Schuppen-Fokus"],
+        ["Nachgeordnet: nicht ganz so passend zum abgeleiteten Fokus."],
+        {
+          matched_profile: {
+            thickness: "fine",
+            scalp_type: "balanced",
+            scalp_condition: null,
+          },
+          matched_bucket: "schuppen",
+          matched_concern_code: "schuppen",
+          matched_scalp_route: "dandruff",
+          fit_status: "mismatch",
+        },
+      ),
+    ],
+    { thickness: "fine", scalp_type: "balanced", scalp_condition: null } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(
+      createRelevantShampooDecision({
+        targetProfile: {
+          scalpRoute: "balanced",
+          shampooBucket: "normal",
+          secondaryBucket: null,
+          cleansingIntensity: "regular",
+        },
+      }),
+    ),
+    { userJob: "product_pick", concerns: [] },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.product_response_policy, "recommend_with_caveat")
+  assert.match(result.policy_reason, /passt nicht exakt|Caveat/i)
+  assert.equal(result.products[0]?.product_id, "anti-dandruff")
+  assert.equal(
+    result.products[0]?.supported_claims.find((claim) => claim.field === "fit_status")?.value,
+    "mismatch",
+  )
+})
+
+test("projectSelectedProducts caveats passt-zu-mir shampoo mismatches even without userJob", () => {
+  const result = projectSelectedProducts(
+    [
+      createShampooMatchedProduct(
+        "ogx-keratin-oil",
+        0.72,
+        ["Schwächerer Treffer für kräftiges Haar und trockenen Kopfhaut-Fokus"],
+        ["Nachgeordnet: nicht ganz so passend zum abgeleiteten Fokus."],
+        {
+          matched_profile: {
+            thickness: "fine",
+            scalp_type: "balanced",
+            scalp_condition: null,
+          },
+          product_thickness: "coarse",
+          matched_bucket: "trocken",
+          matched_concern_code: "trocken",
+          matched_scalp_route: "dry",
+          cleansing_intensity: "gentle",
+          fit_status: "mismatch",
+        },
+      ),
+    ],
+    { thickness: "fine", scalp_type: "balanced", scalp_condition: null } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(
+      createRelevantShampooDecision({
+        targetProfile: {
+          scalpRoute: "balanced",
+          shampooBucket: "normal",
+          secondaryBucket: null,
+          cleansingIntensity: "regular",
+        },
+      }),
+    ),
+    {
+      message: "passt das OGX Keratin Oil shampoo zu mir?",
+      concerns: [],
+    },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.product_response_policy, "recommend_with_caveat")
+  assert.match(result.policy_reason, /passt nicht exakt|Caveat/i)
+  assert.equal(result.products[0]?.product_id, "ogx-keratin-oil")
+})
+
 test("projectSelectedProducts does not let profile length concerns veto direct shampoo picks", () => {
   const result = projectSelectedProducts(
     [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
@@ -2817,14 +2910,15 @@ test("projectSelectedProducts exposes per-product shampoo claims from structured
           top_reasons: ["Passt zum normalen Kopfhaut-Fokus"],
           tradeoffs: [],
           usage_hint: "",
-          matched_profile: {
-            thickness: "normal",
-            scalp_type: "balanced",
-            scalp_condition: null,
-          },
-          matched_bucket: "normal",
-          matched_concern_code: "normal",
-          fit_status: "ideal",
+	          matched_profile: {
+	            thickness: "normal",
+	            scalp_type: "balanced",
+	            scalp_condition: null,
+	          },
+	          product_thickness: "normal",
+	          matched_bucket: "normal",
+	          matched_concern_code: "normal",
+	          fit_status: "ideal",
           matched_scalp_route: "balanced",
           cleansing_intensity: "regular",
         },
@@ -2911,11 +3005,75 @@ test("projectSelectedProducts exposes per-product shampoo claims from structured
       ],
     ],
   )
-  assert.equal(
-    product.supported_claims.some(
-      (claim) => claim.field === "chemical_treatment" || claim.field === "scalp_condition",
+	  assert.equal(
+	    product.supported_claims.some(
+	      (claim) => claim.field === "chemical_treatment" || claim.field === "scalp_condition",
+	    ),
+	    false,
+	  )
+})
+
+test("projectSelectedProducts exposes shampoo product thickness rather than profile thickness", () => {
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("p-coarse", 0.72, {
+        name: "OGX Keratin Oil",
+        recommendation_meta: {
+          category: "shampoo",
+          score: 0.72,
+          top_reasons: [],
+          tradeoffs: [
+            "Fallback: Dieser Treffer passt nicht exakt zum abgeleiteten Shampoo-Fokus und erscheint nur, weil der Katalog nicht genug sichere Treffer geliefert hat.",
+          ],
+          usage_hint: "",
+          matched_profile: {
+            thickness: "fine",
+            scalp_type: "balanced",
+            scalp_condition: null,
+          },
+          product_thickness: "coarse",
+          matched_bucket: "trocken",
+          matched_concern_code: "trocken",
+          fit_status: "mismatch",
+          matched_scalp_route: "dry",
+          cleansing_intensity: "gentle",
+        },
+      }),
+    ],
+    {
+      thickness: "fine",
+      scalp_type: "balanced",
+      scalp_condition: null,
+    } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(
+      createRelevantShampooDecision({
+        targetProfile: {
+          scalpRoute: "balanced",
+          shampooBucket: "normal",
+          secondaryBucket: null,
+          cleansingIntensity: "regular",
+        },
+      }),
     ),
-    false,
+    { userJob: "product_pick", concerns: [] },
+  )
+
+  const product = result.products[0]
+
+  assert.deepEqual(
+    product.supported_claims.map((claim) => [claim.field, claim.value, claim.evidence]),
+    [
+      ["thickness", "coarse", "product_spec"],
+      ["scalp_route", "dry", "product_spec"],
+      ["shampoo_bucket", "trocken", "product_spec"],
+      ["cleansing_intensity", "gentle", "product_spec"],
+      ["fit_status", "mismatch", "category_decision"],
+    ],
+  )
+  assert.equal(
+    product.fit_reason,
+    "Schwächerer Treffer für kräftiges Haar und trockenen Kopfhaut-Fokus; Reinigungsintensität: sanft.",
   )
 })
 

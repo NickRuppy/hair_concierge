@@ -53,6 +53,8 @@ export function ProductIntakeImageFields({
   labelClassName = "block rounded-xl border border-border/80 bg-background px-3 py-3 text-sm text-foreground transition-colors",
   frontLabelClassName,
   barcodeLabelClassName,
+  frontLabel = "Vorderseite",
+  barcodeLabel = "Barcode",
   inputClassName = "sr-only",
   statusClassName = "flex items-center gap-2 text-xs text-muted-foreground",
   errorClassName = "text-xs text-destructive",
@@ -65,6 +67,8 @@ export function ProductIntakeImageFields({
   labelClassName?: string
   frontLabelClassName?: string
   barcodeLabelClassName?: string
+  frontLabel?: string
+  barcodeLabel?: string
   inputClassName?: string
   statusClassName?: string
   errorClassName?: string
@@ -72,7 +76,7 @@ export function ProductIntakeImageFields({
   return (
     <div className="space-y-2">
       <ProductIntakeImageField
-        label="Vorderseite"
+        label={frontLabel}
         ready={frontReady}
         kind="front"
         onUpload={onUpload}
@@ -80,7 +84,7 @@ export function ProductIntakeImageFields({
         inputClassName={inputClassName}
       />
       <ProductIntakeImageField
-        label="Barcode"
+        label={barcodeLabel}
         ready={barcodeReady}
         kind="barcode"
         onUpload={onUpload}

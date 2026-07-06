@@ -3,6 +3,7 @@ import type {
   ProductLookupClarificationCandidate,
   ProductLookupSelectionContext,
 } from "@/lib/types"
+import { getProductDisplayName } from "@/lib/product-display-name"
 
 export type ResolvedProductSelection = {
   source: "product_lookup_clarification"
@@ -53,6 +54,7 @@ export function buildResolvedProductSelection(params: {
 }): ResolvedProductSelection {
   const selectedProductName =
     readString(params.selectedProduct.name) ?? params.selectedCandidate.name
+  const selectedProductDisplayName = getProductDisplayName(selectedProductName)
   const selectedProductCategory =
     readString(params.selectedProduct.category_key) ??
     readString(params.selectedProduct.category) ??
@@ -62,10 +64,10 @@ export function buildResolvedProductSelection(params: {
   const evidenceQuote =
     brandText || productNameText
       ? [brandText, productNameText].filter(Boolean).join(" ")
-      : selectedProductName
+      : selectedProductDisplayName
   const originalUserMessage =
     readString(params.clarification.original_user_message) ??
-    `Ich meine ${selectedProductName}. Kannst du dieses Produkt bewerten?`
+    `Ich meine ${selectedProductDisplayName}. Kannst du dieses Produkt bewerten?`
 
   return {
     source: "product_lookup_clarification",
@@ -94,8 +96,14 @@ export function toProductLookupSelectionContext(
     clarification_id: selection.clarificationId,
     source_assistant_message_id: selection.sourceAssistantMessageId,
     selected_product_id: selection.selectedProduct.id,
-    selected_product_name: selection.selectedProduct.name,
+    selected_product_name: getResolvedProductSelectionDisplayName(selection),
   }
+}
+
+export function getResolvedProductSelectionDisplayName(
+  selection: ResolvedProductSelection,
+): string {
+  return getProductDisplayName(selection.selectedProduct.name)
 }
 
 export function productLookupSelectionResolvesSourceCard(
