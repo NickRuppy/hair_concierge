@@ -266,7 +266,9 @@ export function RoutineDrawer({
               />
             </div>
             {isVerifiedProduct && (
-              <span className="mr-8 inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-3 text-xs font-semibold text-emerald-800">
+              /* mt-10 drops the badge below the sheet's absolute close button
+                 so the two don't crowd each other at narrow widths. */
+              <span className="mt-10 inline-flex h-8 shrink-0 items-center gap-1 self-start rounded-full bg-emerald-50 px-3 text-xs font-semibold text-emerald-800">
                 <Check className="h-3.5 w-3.5" aria-hidden="true" />
                 Drin
               </span>

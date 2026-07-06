@@ -168,14 +168,17 @@ export function RoutineCard({ card, busy, onTap, onDismissSuggestion }: RoutineC
             />
           )}
           <span className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B50A0]">
-            {card.kind === "suggestion"
-              ? `${card.categoryLabel} · Vorgeschlagen`
-              : card.categoryLabel}
+            {card.categoryLabel}
           </span>
           {card.kind === "pending" && (
             <span className="inline-flex shrink-0 items-center gap-[5px] rounded-full bg-[rgba(232,188,100,0.30)] px-2 py-[2px] text-[9px] font-semibold uppercase tracking-[0.10em] text-[#6e5318]">
               <span aria-hidden="true" className="h-[5px] w-[5px] rounded-full bg-[#C89538]" />
               In Prüfung
+            </span>
+          )}
+          {card.kind === "suggestion" && (
+            <span className="inline-flex shrink-0 items-center rounded-full bg-[rgba(107,80,160,0.15)] px-2 py-[2px] text-[9px] font-semibold uppercase tracking-[0.10em] text-[#6B50A0]">
+              Vorgeschlagen
             </span>
           )}
         </div>

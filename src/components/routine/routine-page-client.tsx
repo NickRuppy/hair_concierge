@@ -63,9 +63,10 @@ export function RoutinePageClient() {
   )
 
   const summary = useMemo(() => {
-    const active = cards.filter((card) => card.kind !== "suggestion").length
+    // Three disjoint buckets: verified/active vs pending vs suggestions.
     const pending = cards.filter((card) => card.kind === "pending").length
     const suggestions = cards.filter((card) => card.kind === "suggestion").length
+    const active = cards.length - pending - suggestions
     return { active, pending, suggestions }
   }, [cards])
 
@@ -258,7 +259,7 @@ export function RoutinePageClient() {
             <div className="grid min-w-[260px] grid-cols-3 gap-2 text-center text-xs">
               <div className="rounded-md border border-border px-3 py-2">
                 <p className="text-lg font-semibold text-[var(--text-heading)]">{summary.active}</p>
-                <p className="text-muted-foreground">Produkte</p>
+                <p className="text-muted-foreground">aktiv</p>
               </div>
               <div className="rounded-md border border-border px-3 py-2">
                 <p className="text-lg font-semibold text-[var(--text-heading)]">
@@ -270,7 +271,9 @@ export function RoutinePageClient() {
                 <p className="text-lg font-semibold text-[var(--text-heading)]">
                   {summary.suggestions}
                 </p>
-                <p className="text-muted-foreground">Vorschläge</p>
+                <p className="text-muted-foreground">
+                  {summary.suggestions === 1 ? "Vorschlag" : "Vorschläge"}
+                </p>
               </div>
             </div>
           </section>
