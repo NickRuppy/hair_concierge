@@ -1526,7 +1526,7 @@ function validateProductAssessmentGrounding(
       path: ["payload", "assessed_product_ids"],
       rejected_value: assessedProductIds,
       expected:
-        "Each assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching select_products projection facts.",
+        "Each assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching load_product_facts projection facts.",
     })
   }
 }
@@ -1643,7 +1643,7 @@ function validateTrustedSelectedProductCaveat(
       severity: "block",
       path: ["payload", "user_facing_answer_de"],
       repair_hint:
-        "Acknowledge the selected catalog product as the canonical product. If you lack enough specs for a detailed claim, say which claim is unsupported, not that the product itself is unverified.",
+        "Acknowledge the selected catalog product as the canonical product. For fit, usage, frequency, keep/stop/replace, or product-property answers, call load_product_facts and answer from those facts. If a specific requested claim is still unsupported, name only that missing claim, not the product identity.",
     })
   }
 }
@@ -1719,9 +1719,7 @@ function validateProductLookupResultClaims(
       .map((result) => result.product?.id as string),
   )
   const relevantUnresolvedLookupResults = unresolvedLookupResults.filter(
-    (result) =>
-      unresolvedLookupResultMatchesAnswerClaim(result, answer, context) ||
-      unresolvedLookupResultMatchesPendingCategoryAssessment(result, answer),
+    (result) => unresolvedLookupResultMatchesClaimTarget(result, answer, context),
   )
   if (
     claimedProductIds.length > 0 &&
@@ -1740,7 +1738,7 @@ function validateProductLookupResultClaims(
       unresolvedLookupResultMakesProductSpecificClaim(result, answer, context),
     ) ||
     relevantUnresolvedLookupResults.some((result) =>
-      unresolvedLookupResultMatchesPendingCategoryAssessment(result, answer),
+      unresolvedLookupResultContributesPendingCategoryClaim(result, answer),
     )
 
   if (!makesProductSpecificClaim) return
@@ -1926,13 +1924,7 @@ function unresolvedLookupResultMatchesAnswerClaim(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
 ): boolean {
-  const lookupBrand = lookup.input_identity?.brand_text?.trim() ?? ""
-  const lookupProductName = lookup.input_identity?.product_name_text?.trim() ?? ""
-  const identityParts = [
-    lookupBrand && lookupProductName ? `${lookupBrand} ${lookupProductName}` : null,
-    !lookupBrand ? lookupProductName : null,
-    lookup.product?.name,
-  ].filter((part): part is string => Boolean(part?.trim()))
+  const identityParts = getLookupIdentityParts(lookup)
 
   if (identityParts.length === 0) {
     const answerCategory =
@@ -1963,6 +1955,42 @@ function unresolvedLookupResultMatchesAnswerClaim(
       ),
     ) || unresolvedLookupMatchesNamedProductClaimByCategory(lookup, answer, context)
   )
+}
+
+function getLookupIdentityParts(lookup: AgentV2ProductLookupValidationResult): string[] {
+  const lookupBrand = lookup.input_identity?.brand_text?.trim() ?? ""
+  const lookupProductName = lookup.input_identity?.product_name_text?.trim() ?? ""
+  return [
+    lookupBrand && lookupProductName ? `${lookupBrand} ${lookupProductName}` : null,
+    !lookupBrand ? lookupProductName : null,
+    lookup.product?.name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+}
+
+function unresolvedLookupResultMatchesClaimTarget(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  if (answer.answer_mode !== "product_assessment") {
+    return (
+      unresolvedLookupResultMatchesAnswerClaim(lookup, answer, context) ||
+      unresolvedLookupResultContributesPendingCategoryClaim(lookup, answer)
+    )
+  }
+
+  return (
+    unresolvedLookupResultMakesProductSpecificClaim(lookup, answer, context) ||
+    unresolvedLookupResultContributesPendingCategoryClaim(lookup, answer)
+  )
+}
+
+function unresolvedLookupResultContributesPendingCategoryClaim(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+): boolean {
+  if (answer.answer_mode === "product_assessment") return false
+  return unresolvedLookupResultMatchesPendingCategoryAssessment(lookup, answer)
 }
 
 function productLookupIdentityMatchesEvidence(
@@ -2009,10 +2037,67 @@ function unresolvedLookupResultMakesProductSpecificClaim(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
 ): boolean {
-  if (!unresolvedLookupResultMatchesAnswerClaim(lookup, answer, context)) return false
-
   const userFacing = readUserFacingAnswer(answer.payload)
+  const referencedChunks = getUnresolvedLookupReferenceChunks(lookup, userFacing)
+  if (referencedChunks.length > 0) {
+    return referencedChunks.some((chunk) => unresolvedLookupReferenceChunkMakesClaim(chunk))
+  }
+
+  if (!unresolvedLookupResultMatchesAnswerClaim(lookup, answer, context)) return false
   return hasNamedProductClaimPredicate(userFacing) || hasPronounProductClaim(userFacing)
+}
+
+function getUnresolvedLookupReferenceChunks(
+  lookup: AgentV2ProductLookupValidationResult,
+  text: string,
+): string[] {
+  const chunks = splitVisibleAnswerIntoClaimChunks(text)
+  const identityParts = getLookupIdentityParts(lookup)
+  if (identityParts.length > 0) {
+    return chunks.filter((chunk) =>
+      identityParts.some((identity) =>
+        productLookupIdentityMatchesEvidence(identity, chunk, lookup),
+      ),
+    )
+  }
+
+  const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
+  const parsedCategory = AgentV2CareCategorySchema.safeParse(lookupCategory)
+
+  return chunks.filter(
+    (chunk) =>
+      parsedCategory.success &&
+      hasCategoryReference(normalizeVisibleText(chunk), parsedCategory.data),
+  )
+}
+
+function splitVisibleAnswerIntoClaimChunks(text: string): string[] {
+  return text
+    .split(/(?:\n+|(?<=[.!?])\s+)/u)
+    .map((chunk) => chunk.trim())
+    .filter((chunk) => chunk.length > 0)
+}
+
+function unresolvedLookupReferenceChunkMakesClaim(chunk: string): boolean {
+  const hasClaim = hasNamedProductClaimPredicate(chunk) || hasPronounProductClaim(chunk)
+  if (!hasClaim) return false
+  return !hasUnresolvedProductDeferralLanguage(chunk) || hasProductClaimBeyondDeferral(chunk)
+}
+
+function hasUnresolvedProductDeferralLanguage(text: string): boolean {
+  const normalized = normalizeVisibleText(text)
+  return /\b(?:noch\s+in\s+prufung|prufen\s+wir\s+noch|kann\s+ich\s+noch\s+nicht\s+bewerten|kann\s+ich\s+(?:es|ihn|sie|das)?\s*noch\s+nicht\s+bewerten|melde\s+mich|melden\s+uns|liegt\s+noch\s+nicht\s+vor|ist\s+noch\s+offen)\b/u.test(
+    normalized,
+  )
+}
+
+function hasProductClaimBeyondDeferral(text: string): boolean {
+  return hasNamedProductClaimPredicate(
+    text.replace(
+      /\b(?:noch\s+in\s+Pr(?:ü|ue)fung|pr(?:ü|ue)fen\s+wir\s+noch|kann\s+ich\s+(?:es|ihn|sie|das)?\s*noch\s+nicht\s+bewerten|melde\s+mich|melden\s+uns|liegt\s+noch\s+nicht\s+vor|ist\s+noch\s+offen)\b/giu,
+      "",
+    ),
+  )
 }
 
 function unresolvedLookupResultMatchesPendingCategoryAssessment(
@@ -2024,6 +2109,12 @@ function unresolvedLookupResultMatchesPendingCategoryAssessment(
   const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
   const parsedCategory = AgentV2CareCategorySchema.safeParse(lookupCategory)
   if (!parsedCategory.success) return false
+  if (
+    answer.answer_mode === "product_assessment" &&
+    answer.request_interpretation.care_category !== parsedCategory.data
+  ) {
+    return false
+  }
 
   const normalized = normalizeVisibleText(readUserFacingAnswer(answer.payload))
   if (!hasPersonalizedHairContext(normalized)) return false

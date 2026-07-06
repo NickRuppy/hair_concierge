@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Intake Review Cockpit Options</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #272426;
+        --muted: #706967;
+        --line: #e6dedb;
+        --panel: #fff;
+        --paper: #f8f5f2;
+        --rose: #d96072;
+        --green: #20764a;
+        --amber: #9a6b13;
+        --blue: #345d9d;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      header {
+        padding: 26px 32px 18px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      h1, h2, h3, p { margin: 0; }
+      h1 { font-size: 28px; }
+      header p { margin-top: 7px; color: var(--muted); }
+      main {
+        display: grid;
+        gap: 18px;
+        padding: 22px 32px 34px;
+      }
+      .option-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .option {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .option.recommended { border-color: var(--rose); box-shadow: 0 0 0 2px rgba(217, 96, 114, .08); }
+      .option-head { padding: 16px; border-bottom: 1px solid var(--line); }
+      .option-head h2 { font-size: 17px; }
+      .tag { display: inline-block; margin-bottom: 9px; padding: 4px 7px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #f1ebe8; color: var(--muted); }
+      .recommended .tag { background: #fff0f2; color: #9b2c3b; }
+      .screen {
+        min-height: 440px;
+        padding: 14px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+      }
+      .bar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfaf8;
+      }
+      .dot { width: 9px; height: 9px; border-radius: 999px; background: var(--rose); }
+      .dot.green { background: var(--green); }
+      .dot.amber { background: var(--amber); }
+      .dot.blue { background: var(--blue); }
+      .bar strong { font-size: 13px; }
+      .bar span { margin-left: auto; color: var(--muted); font-size: 12px; }
+      .layout {
+        display: grid;
+        grid-template-columns: 118px 1fr;
+        gap: 10px;
+      }
+      .lane, .detail, .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+      .lane { padding: 8px; display: grid; gap: 8px; align-content: start; }
+      .pill {
+        padding: 8px;
+        border-radius: 7px;
+        background: #faf7f5;
+        border: 1px solid #eee6e2;
+        font-size: 12px;
+      }
+      .pill.active { border-color: var(--rose); background: #fff5f6; }
+      .pill small { display: block; margin-top: 3px; color: var(--muted); }
+      .detail { padding: 12px; display: grid; gap: 10px; align-content: start; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .card { padding: 10px; min-height: 80px; }
+      .card h3 { font-size: 13px; margin-bottom: 7px; }
+      .line { height: 7px; border-radius: 999px; background: #eee7e3; margin: 7px 0; }
+      .line.short { width: 62%; }
+      .line.good { background: #dbeee3; }
+      .line.warn { background: #f5dfac; }
+      .line.bad { background: #f0bbc2; }
+      .preview-img {
+        height: 104px;
+        border-radius: 7px;
+        background:
+          linear-gradient(90deg, transparent 44%, rgba(0,0,0,.12) 44% 56%, transparent 56%),
+          linear-gradient(#fff, #f4efec);
+        border: 1px solid #ece5e1;
+      }
+      .steps { display: grid; gap: 8px; }
+      .step {
+        padding: 9px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        font-size: 12px;
+        background: #fbfaf8;
+      }
+      .step strong { display: block; margin-bottom: 3px; }
+      .cta { padding: 10px 12px; border: 0; border-radius: 7px; background: var(--rose); color: #fff; font-weight: 800; }
+      .ghost { padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; background: #fff; font-weight: 700; }
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .note {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+      }
+      .note h3 { font-size: 14px; margin-bottom: 8px; }
+      .note p { color: var(--muted); font-size: 13px; line-height: 1.45; }
+      @media (max-width: 1050px) {
+        .option-grid, .notes { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Product Intake Review Cockpit: Direction Options</h1>
+      <p>Static planning mockup for comparing the review-app shape before implementation.</p>
+    </header>
+    <main>
+      <section class="option-grid">
+        <article class="option">
+          <div class="option-head">
+            <span class="tag">A: local helper</span>
+            <h2>Keep the current package tool, but polish it</h2>
+          </div>
+          <div class="screen">
+            <div class="bar"><span class="dot amber"></span><strong>Local review package</strong><span>Manual ops</span></div>
+            <div class="layout">
+              <div class="lane">
+                <div class="pill active">Blond Sealer<small>needs rework</small></div>
+                <div class="pill">Syoss<small>image ready</small></div>
+                <div class="pill">Smoke tests<small>blocked</small></div>
+              </div>
+              <div class="detail">
+                <div class="card"><h3>Research state</h3><div class="line warn"></div><div class="line short"></div></div>
+                <div class="row">
+                  <div class="card"><h3>Image</h3><div class="preview-img"></div></div>
+                  <div class="card"><h3>Properties</h3><div class="line good"></div><div class="line bad"></div><div class="line"></div></div>
+                </div>
+                <button class="ghost">Run command locally</button>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="option recommended">
+          <div class="option-head">
+            <span class="tag">B: recommended</span>
+            <h2>Build a durable research cockpit</h2>
+          </div>
+          <div class="screen">
+            <div class="bar"><span class="dot blue"></span><strong>Research job active</strong><span>Last update 2 min ago</span></div>
+            <div class="layout">
+              <div class="lane">
+                <div class="pill active">Needs Nick<small>3 ready</small></div>
+                <div class="pill">Rework<small>2 comments</small></div>
+                <div class="pill">Publishing<small>1 running</small></div>
+              </div>
+              <div class="detail">
+                <div class="row">
+                  <div class="card"><h3>Identity confidence</h3><div class="line good"></div><div class="line short"></div></div>
+                  <div class="card"><h3>Existing catalog match</h3><div class="line good"></div><div class="line"></div></div>
+                </div>
+                <div class="row">
+                  <div class="card"><h3>Scored image candidates</h3><div class="preview-img"></div></div>
+                  <div class="card"><h3>Source-backed properties</h3><div class="line good"></div><div class="line good"></div><div class="line warn"></div></div>
+                </div>
+                <button class="cta">Publish product & notify user</button>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="option">
+          <div class="option-head">
+            <span class="tag">C: high automation</span>
+            <h2>Auto-publish high-confidence products</h2>
+          </div>
+          <div class="screen">
+            <div class="bar"><span class="dot green"></span><strong>Auto-review lane</strong><span>Strict gates</span></div>
+            <div class="layout">
+              <div class="lane">
+                <div class="pill active">Auto-ready<small>12 products</small></div>
+                <div class="pill">Exceptions<small>4 products</small></div>
+                <div class="pill">Audit<small>published</small></div>
+              </div>
+              <div class="detail">
+                <div class="steps">
+                  <div class="step"><strong>Gate 1</strong>Exact identity and duplicate check</div>
+                  <div class="step"><strong>Gate 2</strong>Vision image judge passes</div>
+                  <div class="step"><strong>Gate 3</strong>All required specs high confidence</div>
+                </div>
+                <button class="ghost">Review audit log</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+      <section class="notes">
+        <div class="note">
+          <h3>A is too small</h3>
+          <p>It improves today's pain but keeps the core problem: local files and invisible work. It is not enough for a scalable intake process.</p>
+        </div>
+        <div class="note">
+          <h3>B is the best next step</h3>
+          <p>It gives Nick a real queue, durable job state, scored research, visible rework, and one explicit publishing handoff without jumping to risky auto-publish.</p>
+        </div>
+        <div class="note">
+          <h3>C comes later</h3>
+          <p>Auto-publish is attractive, but only after the cockpit produces enough audit history to prove the research and image gates are reliable.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

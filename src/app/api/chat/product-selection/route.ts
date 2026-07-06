@@ -412,6 +412,49 @@ async function persistResolvedSelectionState(params: {
   return result.status !== "failed"
 }
 
+function buildSelectionResolvedTransition(params: {
+  transition: unknown
+  resolvedSelection: ReturnType<typeof buildResolvedProductSelection>
+}): AgentV2ConversationStateTransition {
+  const trustedContext = buildTrustedSelectedProductContext(params.resolvedSelection)
+  const activeContext = buildActiveProductContextFromTrustedSelection(trustedContext)
+  const transition =
+    params.transition && typeof params.transition === "object"
+      ? (params.transition as Partial<AgentV2ConversationStateTransition>)
+      : {}
+
+  const nextState = normalizeAgentV2ConversationState(transition.next_state)
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: nextState.agent_v2.active_product_contexts,
+    next: activeContext ? [activeContext] : [],
+    latestMessageNamesActionableProduct: true,
+  })
+  const changedFields = [
+    ...(Array.isArray(transition.changed_fields) ? transition.changed_fields : []),
+    "agent_v2.active_product_contexts",
+    "agent_v2.active_resolved_product_context",
+  ]
+
+  return {
+    previous_state: normalizeAgentV2ConversationState(transition.previous_state),
+    next_state: {
+      ...nextState,
+      agent_v2: {
+        ...nextState.agent_v2,
+        active_product_contexts: activeProductContexts,
+        active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
+      },
+    },
+    reason:
+      typeof transition.reason === "string"
+        ? transition.reason
+        : "product_lookup_selection_resolved",
+    changed_fields: [...new Set(changedFields)],
+    classifier_override: null,
+    updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
+  }
+}
+
 export function createProductSelectionPostHandler(overrides: ProductSelectionRuntimeDeps = {}) {
   const deps = {
     createClient,
@@ -604,6 +647,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     )
 
     const selectionTurnMessage = `Der Nutzer hat in der Produktklärung "${selectedProductName}" ausgewählt. Diese Auswahl ersetzt die zuvor unklare Produktangabe. Beantworte die offene Frage jetzt ausschließlich für "${selectedProductName}". Nutze die ursprüngliche Nachricht nur, um die Frageabsicht zu verstehen, nicht als Produktidentität.`
+    const trustedSelectedProductContext = buildTrustedSelectedProductContext(resolvedSelection)
 
     const pipelineResult = await deps.runAgentV2ProductionPipeline({
       message: selectionTurnMessage,
@@ -611,7 +655,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       userId: user.id,
       requestId: deps.randomUUID(),
       productIntakeEnabled: deps.productIntakeEnabled(),
-      trustedSelectedProductContext: buildTrustedSelectedProductContext(resolvedSelection),
+      trustedSelectedProductContext,
     })
 
     const fullContent = await readTextStream(pipelineResult.stream)
@@ -623,10 +667,14 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       productLookupSelection: selectionContext,
     })
     const productRecommendations = null
+    const resolvedSelectionTransition = buildSelectionResolvedTransition({
+      transition: pipelineResult.conversationStateTransition,
+      resolvedSelection,
+    })
     const statePersistenceResult = await deps.persistConversationStateTransition(admin, {
       conversationId,
       userId: user.id,
-      transition: pipelineResult.conversationStateTransition,
+      transition: resolvedSelectionTransition,
     })
     if (statePersistenceResult.status === "failed") {
       return streamProductSelectionError()

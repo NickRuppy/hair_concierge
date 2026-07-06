@@ -188,6 +188,20 @@ function selectedProjection(productId: string, name: string) {
   }
 }
 
+function selectedAssessmentProjection(productId: string, name: string) {
+  return {
+    ...baseValidationContext.selectedProductProjections[0],
+    valid_product_ids: [productId],
+    products: [
+      {
+        ...baseValidationContext.selectedProductProjections[0].products[0],
+        product_id: productId,
+        name,
+      },
+    ],
+  }
+}
+
 function lookupProductCandidateToolCall() {
   return {
     name: "lookup_product_candidate",
@@ -2009,6 +2023,393 @@ test("validator allows claims for exact lookup products when another lookup is u
   assert.equal(
     result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
     false,
+  )
+})
+
+test("validator does not let stale pending active product block resolved product assessment follow-up", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "ja ok, passt das denn zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** passt eher gut zu dir, aber nicht als Hauptlösung für Frizz. Es ist für deinen feinen Haaransatz und den ausgeglichenen Kopfhaut-Fokus passend, und bei deinem Rhythmus von 3-4 Wäschen pro Woche ist es als normales Shampoo stimmig. Deine raue Schuppenschicht und die wellige, feine Struktur profitieren meist stärker von Conditioner und Leave-in als von mehr Shampoo-Pflege.",
+        assessment_kind: "fit",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "ja ok, passt das denn zu mir?",
+      recentEvidenceText:
+        "Der Nutzer hat Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege ausgewählt.",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "leave_in",
+          input_identity: {
+            category: "leave_in",
+            brand_text: "Balea Professional",
+            product_name_text: "brilliant blond hair sealer Leave-in",
+            evidence_quote: "Balea Professional brilliant blond hair sealer Leave-in",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "passt das denn zu mir",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+  )
+})
+
+test("validator does not let same-category pending product block resolved product assessment follow-up", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "ja ok, passt das denn zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** ist für dein feines Haar als Shampoo geeignet, solange Conditioner und Leave-in die Längenpflege übernehmen.",
+        assessment_kind: "fit",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "ja ok, passt das denn zu mir?",
+      recentEvidenceText:
+        "Der Nutzer hat Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege ausgewaehlt.",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "passt das denn zu mir",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks same-category pending product assessment claims", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "compare_products",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote:
+          "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** passt eher gut zu dir. **Balea Professional Brilliant Blond Shampoo** passt ebenfalls gut, weil es mild reinigt und deine Längen nicht beschwert.",
+        assessment_kind: "comparison",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      recentEvidenceText:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "compare_products",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Head & Shoulders DERMAXPRO",
+        }),
+      ],
+    },
+  )
+
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator allows mixed answer that assesses resolved product and defers pending product", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "compare_products",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote:
+          "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** ist für deinen feinen Ansatz als Shampoo geeignet. **Balea Professional Brilliant Blond Shampoo** ist noch in Prüfung, deshalb kann ich es noch nicht bewerten.",
+        assessment_kind: "comparison",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      recentEvidenceText:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "compare_products",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Head & Shoulders DERMAXPRO",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks mixed answer that assesses resolved product and claims about pending product", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "compare_products",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote:
+          "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+        product_ids: ["resolved_shampoo"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege** passt eher gut zu dir. **Balea Professional Brilliant Blond Shampoo** ist zwar noch in Prüfung, wirkt aber für deine Längen geeignet.",
+        assessment_kind: "comparison",
+        assessed_product_ids: ["resolved_shampoo"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      recentEvidenceText:
+        "Vergleich Head & Shoulders DERMAXPRO und Balea Professional Brilliant Blond Shampoo",
+      trustedSelectedProductIds: ["resolved_shampoo"],
+      selectedProductProjections: [
+        selectedAssessmentProjection(
+          "resolved_shampoo",
+          "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        ),
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: {
+            id: "resolved_shampoo",
+            name: "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          },
+        },
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Balea Professional",
+            product_name_text: "Brilliant Blond Shampoo",
+            evidence_quote: "Balea Professional Brilliant Blond Shampoo",
+          },
+          product: null,
+        },
+      ],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          product_request_kind: "compare_products",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Head & Shoulders DERMAXPRO",
+        }),
+      ],
+    },
+  )
+
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
   )
 })
 

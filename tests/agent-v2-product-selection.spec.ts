@@ -1646,7 +1646,46 @@ test("chat product selection continues with trusted selected product context", a
       selected_product_name: "Syoss Intense Volume Shampoo",
     },
   )
-  assert.deepEqual(persistedSelectionTransition, { next_state: "selection" })
+  const activeProductContext = (
+    persistedSelectionTransition as {
+      next_state?: { agent_v2?: { active_product_contexts?: unknown[] } }
+    }
+  )?.next_state?.agent_v2?.active_product_contexts?.[0] as
+    | (Record<string, unknown> & { updated_at?: unknown })
+    | undefined
+  const activeResolvedProductContext = (
+    persistedSelectionTransition as {
+      next_state?: { agent_v2?: { active_resolved_product_context?: unknown } }
+    }
+  )?.next_state?.agent_v2?.active_resolved_product_context as
+    | Record<string, unknown>
+    | undefined
+
+  assert.equal(typeof activeProductContext?.updated_at, "string")
+  assert.deepEqual(
+    activeProductContext
+      ? { ...activeProductContext, updated_at: "<timestamp>" }
+      : activeProductContext,
+    {
+      status: "resolved",
+      product_id: "syoss-intense-volume-shampoo",
+      submission_id: null,
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+      display_name: "Syoss Intense Volume Shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      source: "product_lookup_selection",
+      updated_at: "<timestamp>",
+    },
+  )
+  assert.deepEqual(activeResolvedProductContext, {
+    source: "product_lookup_selection",
+    product_id: "syoss-intense-volume-shampoo",
+    name: "Syoss Intense Volume Shampoo",
+    category: "shampoo",
+    original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+  })
 })
 
 test("chat product selection allows user-owned non-recommended selected products", async () => {
@@ -2299,7 +2338,16 @@ test("chat product selection persists resolved state before assistant message in
   assert.equal(response.status, 200)
   assert.match(responseText, /"type":"error"/)
   assert.match(responseText, /Produktauswahl konnte nicht verarbeitet werden/)
-  assert.deepEqual(persistedSelectionTransition, { next_state: "selection" })
+  const activeProductContext = (
+    persistedSelectionTransition as {
+      next_state?: { agent_v2?: { active_product_contexts?: unknown[] } }
+    }
+  )?.next_state?.agent_v2?.active_product_contexts?.[0] as
+    | (Record<string, unknown> & { updated_at?: unknown })
+    | undefined
+
+  assert.equal(activeProductContext?.product_id, "syoss-intense-volume-shampoo")
+  assert.equal(activeProductContext?.source, "product_lookup_selection")
 })
 
 test("chat route does not infer product intake offer from raw user message", async () => {

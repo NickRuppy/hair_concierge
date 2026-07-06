@@ -1,0 +1,774 @@
+[
+  {
+    "submission_id": "c1bba940-44f6-43b6-bdde-f7e67baeedef",
+    "product_id": "931892fb-cc29-4e50-b402-6aae0a494389",
+    "category_key": "conditioner",
+    "brand_id": "1a4871a2-893b-4d49-9743-d00c15a63edc",
+    "product_line_id": "129eb15a-bbe1-4054-9a8a-148ad27c14f4",
+    "approved_at": "2026-07-05T17:54:10.569Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Pantene",
+        "product_line": "Pro-V",
+        "clean_name": "Moisture Boost Pflegespülung",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-05/c1bba940-44f6-43b6-bdde-f7e67baeedef/pantene-pro-v-moisture-boost-conditioner-6a8551187707.webp",
+        "price_eur": 8.95,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-05T19:49:24+02:00",
+        "price_checked_at": "2026-07-05T19:49:24+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "retailer_sku",
+          "value": "3150289",
+          "source": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/"
+        },
+        {
+          "type": "gtin",
+          "value": "08700216939140",
+          "source": "https://static.prod.ecom.mueller.de/products/8700216939140/Markant_8700216939140_FrontView_08700216939140_C1N1_s01_v01.jpg"
+        }
+      ],
+      "category_specs": {
+        "product_conditioner_specs": [
+          {
+            "thickness": "fine",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "thickness": "normal",
+            "protein_moisture_balance": "snaps"
+          }
+        ],
+        "product_conditioner_rerank_specs": {
+          "weight": "light",
+          "repair_level": "medium",
+          "ingredient_flags": [
+            "silicones",
+            "humectants"
+          ],
+          "balance_direction": "moisture"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+          "title": "Pantene Pro-V Moisture Boost Pflegespülung online bestellen | MÜLLER",
+          "evidence": "Exact PDP lists Pantene Pro-V Moisture Boost Pflegespülung, article number 3150289, 800 ml, price 8.95 EUR, delivery in Germany in 2-3 working days, add-to-cart availability, ingredients, manufacturer Procter & Gamble, and claims for lightweight moisture for dry, normal to fine hair."
+        },
+        {
+          "url": "https://static.prod.ecom.mueller.de/products/8700216939140/Markant_8700216939140_FrontView_08700216939140_C1N1_s01_v01.jpg",
+          "title": "Müller product image asset for Pantene Pro-V Moisture Boost Pflegespülung 800 ml",
+          "evidence": "Product-only front packshot corresponding to the Müller PDP and showing the 800 ml XXL pump bottle with Pantene Pro-V Moisture Boost Active Nutri-Plex Pflegespülung label."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "Müller DE price is displayed in EUR.",
+        "product.image_url": "Chosen Müller product-only front packshot because it shows the exact 800 ml XXL pump bottle from the accepted PDP on a clean light background; rejected 200 ml tube and Rose Water/Nutrient Blends images as wrong size/variant/market.",
+        "product.price_eur": "Stored 8.95 EUR from the accepted Müller DE PDP, which shows home delivery available in Germany and an add-to-cart flow at check time.",
+        "product.clean_name": "Removed brand and line from the Müller PDP title, leaving the saleable product name Moisture Boost Pflegespülung.",
+        "product.category_key": "Submitted category is conditioner and the Müller PDP product type is Haarspülung & Conditioner.",
+        "product.product_line": "Used resolved_brand.product_line exactly from the prompt: Pro-V.",
+        "product.affiliate_link": "Chosen Müller DE PDP because mandatory preferred-host audit found no exact dm or Rossmann PDP, while this mueller.de PDP is exact, German-market, purchase-capable, and higher priority than Amazon DE or secondary sources.",
+        "product.canonical_brand": "Used resolved_brand.canonical_brand exactly from the prompt: Pantene.",
+        "product.purchase_link_status": "Set to available because the Müller PDP shows Lieferung nach Hause, Lieferbar in 2 - 3 Werktagen, quantity selector, and In den Warenkorb.",
+        "category_specs.product_conditioner_specs": "Müller states the conditioner is specifically for dry, normal to fine hair and gives extra moisture without weighing down; mapped to fine and normal thickness with moisture-need pull-test target snaps.",
+        "category_specs.product_conditioner_rerank_specs": "Weight light from the PDP's schwerelose claim and normal-to-fine target; repair medium from repair/bond-protection claims but not a dedicated bondbuilder; balance_direction moisture from the product name and moisture claims; ingredient flags silicones and humectants from Bis-Aminopropyl Dimethicone and Propylene Glycol/Panthenol."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-05T17:54:03.063+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_conditioner_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "protein_moisture_balance": "snaps"
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_conditioner_rerank_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "light",
+            "repair_level": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "humectants"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "543a1eb6-dbb2-4013-9f55-82b1517c3b33",
+    "product_id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+    "category_key": "conditioner",
+    "brand_id": "b0500f20-3e0a-420b-9371-66b2d5431d33",
+    "product_line_id": "6a98c227-a9b4-4638-8047-3051cef93daf",
+    "approved_at": "2026-07-05T19:53:11.853Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Neqi",
+        "product_line": "Diamond Glass",
+        "clean_name": "Conditioner",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-05/543a1eb6-dbb2-4013-9f55-82b1517c3b33/neqi-diamond-glass-conditioner-9e6b663cb850.webp",
+        "price_eur": 12.95,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-05T21:49:00+02:00",
+        "price_checked_at": "2026-07-05T21:49:00+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4063528097613",
+          "source": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "3101240",
+          "source": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "NQ-DG-CO-201",
+          "source": "https://en.johnbeerens.com/collections/merk-neqi/products/neqi-diamond-glass-conditioner-250ml"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "source": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass"
+        }
+      ],
+      "category_specs": {
+        "product_conditioner_specs": [
+          {
+            "thickness": "fine",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "thickness": "normal",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "thickness": "coarse",
+            "protein_moisture_balance": "snaps"
+          }
+        ],
+        "product_conditioner_rerank_specs": {
+          "weight": "medium",
+          "repair_level": "low",
+          "ingredient_flags": [
+            "silicones",
+            "oils",
+            "proteins",
+            "humectants"
+          ],
+          "balance_direction": "moisture"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "title": "NEQI Conditioner Diamond Glass, 250 ml dauerhaft günstig online kaufen | dm.de",
+          "evidence": "Exact dm.de PDP confirms NEQI Conditioner Diamond Glass 250 ml, price 12.95 EUR, Lieferbar status, in-cart capability, GTIN 4063528097613, dm article number 3101240, rinse-out conditioner use, all-hair-types positioning, light/non-weighing texture, shine, anti-frizz, detangling, care, and ingredient list."
+        },
+        {
+          "url": "https://neqi-hair.com/products/diamond-glass-conditioner",
+          "title": "Diamond Glass Conditioner – NEQI – Professional hair care",
+          "evidence": "Official brand PDP confirms Diamond Glass Conditioner, regular price 12.95 EUR, 250 ml size, all-hair-types positioning including straight, curly, fine, and thick hair, rinse-out use, moisture, shine, anti-frizz, detangling, and ingredient list. It also links dm as an availability partner."
+        },
+        {
+          "url": "https://en.johnbeerens.com/collections/merk-neqi/products/neqi-diamond-glass-conditioner-250ml",
+          "title": "NEQI Diamond Glass Conditioner 250ml",
+          "evidence": "Secondary EU retailer PDP confirms exact identity, 250 ml size, SKU NQ-DG-CO-201, barcode 4063528097613, all-hair-types positioning, usage, claims, ingredients, and the high-resolution product-only image source."
+        },
+        {
+          "url": "https://en.johnbeerens.com/cdn/shop/files/diamandglassco.png?v=1768314037&width=5000",
+          "title": "JohnBeerens product image asset for NEQI Diamond Glass Conditioner 250 ml",
+          "evidence": "Exact product-only front packshot of the gold NEQI Diamond Glass Conditioner tube showing the 250 ml / 8.5 fl oz label, with full product visible and no outer box, bundle, model, lifestyle scene, or retailer badge."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "The chosen dm.de PDP displays the price in EUR.",
+        "product.image_url": "Kept the already accepted JohnBeerens direct CDN packshot because it is exact to NEQI Diamond Glass Conditioner 250 ml, product-only, front-facing, full product visible, high-resolution via Shopify width parameter, and cleaner for background removal than the lower-resolution dm rendered image.",
+        "product.price_eur": "Stored 12.95 EUR from the chosen dm.de affiliate PDP, which displays the exact product price and current Lieferbar status.",
+        "product.clean_name": "Removed the canonical brand and product line from the saleable title, leaving Conditioner.",
+        "product.category_key": "Submitted category is conditioner; dm and NEQI describe a rinse-out Spuelung/Conditioner used after shampooing and rinsed after 2-3 minutes.",
+        "product.product_line": "Diamond Glass is the stable NEQI product line shown on the official brand PDP, dm PDP, retailer PDP, and packaging.",
+        "product.affiliate_link": "Selected the exact dm.de PDP because dm is the top purchase URL preference for conditioner, the page is a concrete product-detail page, it is exact to NEQI Diamond Glass Conditioner 250 ml, and it currently shows Lieferbar with cart capability. This beats the brand-direct PDP because dm is preferred for conditioner and beats JohnBeerens because dm is a preferred German retailer with available status.",
+        "product.canonical_brand": "Used brand_resolution_context.resolved_brand.canonical_brand exactly: Neqi.",
+        "product.purchase_link_status": "Set to available because the chosen dm.de PDP displays In den Warenkorb and Lieferbar with standard shipping information.",
+        "category_specs.product_conditioner_specs": "All three thickness rows are intentional: dm says the conditioner is suitable for all hair types, and the official NEQI PDP explicitly includes feines and dickes Haar; normal is included as the midpoint under the same all-hair-types claim. The moisture-need value snaps is based on intensive moisture, smoothness, anti-frizz, and hydration claims rather than a protein-repair positioning.",
+        "category_specs.product_conditioner_rerank_specs": "Weight is medium because sources call the formula conditioning/rich but also light and non-weighing. Repair level is low because evidence supports cosmetic conditioning, detangling, shine, and frizz control rather than strong repair. Balance direction is moisture from Feuchtigkeit/hydration claims. Ingredient flags come from dimethicone/amodimethicone, juniper oil/C13-15 alkane, oat peptide/hydrolyzed Verbascum, glycerin/propylene glycol."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-05T19:52:57.682+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_conditioner_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "protein_moisture_balance": "snaps"
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_conditioner_rerank_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "31599472-d295-4f2f-8a3b-b6caaabc6c8b",
+    "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+    "category_key": "leave_in",
+    "brand_id": "f09f382e-2c26-41f2-b52b-deacc7e54b13",
+    "product_line_id": "ba6f473a-7c37-43c3-a51a-87f504521a3b",
+    "approved_at": "2026-07-05T21:54:58.618Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Bali Curls",
+        "product_line": "Bonding Repair",
+        "clean_name": "Leave-In Cream N°3",
+        "category_key": "leave_in",
+        "affiliate_link": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-05/31599472-d295-4f2f-8a3b-b6caaabc6c8b/bali-curls-cream-bonding-repair-leave-in-6d7f2b078a4f.webp",
+        "price_eur": 13.9,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-05T23:50:00+02:00",
+        "price_checked_at": "2026-07-05T23:50:00+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4262391991732",
+          "source": "https://www.haar-shop.ch/de/76228369-bonding-repair-leave-in-creme.html"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "55315965018456",
+          "source": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "76228369",
+          "source": "https://www.haar-shop.ch/de/76228369-bonding-repair-leave-in-creme.html"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "source": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3"
+        }
+      ],
+      "category_specs": {
+        "product_leave_in_specs": {
+          "roles": [
+            "extension_conditioner",
+            "styling_prep"
+          ],
+          "format": "cream",
+          "weight": "light",
+          "care_benefits": [
+            "moisture",
+            "protein",
+            "repair",
+            "detangling",
+            "anti_frizz",
+            "shine",
+            "curl_definition"
+          ],
+          "ingredient_flags": [
+            "polymers",
+            "proteins",
+            "humectants"
+          ],
+          "application_stage": [
+            "towel_dry"
+          ],
+          "heat_protection_max_c": null,
+          "heat_activation_required": false,
+          "provides_heat_protection": false
+        },
+        "product_leave_in_fit_specs": {
+          "weight": "light",
+          "care_benefits": [
+            "curl_definition",
+            "repair",
+            "detangle_smooth"
+          ],
+          "conditioner_relationship": "booster_only"
+        },
+        "product_leave_in_eligibility": [
+          {
+            "thickness": "fine",
+            "need_bucket": "repair",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "repair",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "curl_definition",
+            "styling_context": "air_dry"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "non_heat_style"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "title": "BONDING REPAIR LEAVE-IN CREAM N°3 – Bali Care",
+          "evidence": "Official brand PDP confirms BALI CURLS, Bonding Repair Leave-In Cream N°3, 150 ML, price 13,90 EUR, in-stock/add-to-cart state, leave-in use on damp hair without rinsing, lightweight care-booster positioning, repair/moisture/detangling/curl-definition claims, silicone-free claim, and ingredient list. It mentions protection from UV rays, heat, and humidity but gives no pre-heat/device-use instruction or Celsius rating."
+        },
+        {
+          "url": "https://www.haar-shop.ch/de/76228369-bonding-repair-leave-in-creme.html",
+          "title": "Bali Curls • Bonding Repair Leave-In Creme 150 ml • haar-shop.ch",
+          "evidence": "Retailer PDP confirms Bali Curls Bonding Repair Leave-In Creme, 150 ml, article number 76228369, GTIN 4262391991732, in-stock status, cream format, styling-base positioning, damaged/curly hair fit, light-care description, and a clean product-only packshot URL."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "Official brand-direct PDP price is displayed in EUR.",
+        "product.image_url": "Chosen Haar-Shop product-only packshot because it depicts the exact Bali Curls Bonding Repair Leave-In Creme 150 ml tube on a clean light/white background, without box, bundle, lifestyle scene, badges, or sale overlays. Official Shopify alternatives were exact but had decorative grey brand shapes or mood/text compositions.",
+        "product.price_eur": "Official brand-direct PDP used as affiliate_link shows 13,90 EUR and an in-stock/add-to-cart state.",
+        "product.clean_name": "Official PDP title is BONDING REPAIR LEAVE-IN CREAM N°3; after removing brand and line, the DB-ready clean name is Leave-In Cream N°3.",
+        "product.category_key": "Submitted category is leave_in, and official use instructions describe a no-rinse cream applied to damp hair after washing.",
+        "product.product_line": "Official and retailer titles consistently use Bonding Repair as the product family/line.",
+        "product.affiliate_link": "Mandatory preferred-host searches across dm.de, rossmann.de, mueller.de, douglas.de, hagel-shop.de, flaconi.de, notino.de, otto.de, and amazon.de found no acceptable German preferred-retailer PDP. For leave_in, brand-direct is next after dm and beats lower-priority/international sources because the official Bali Care PDP is exact, purchasable, and in stock.",
+        "product.canonical_brand": "Used resolved_brand.canonical_brand exactly from the prompt: Bali Curls.",
+        "product.price_checked_at": "Checked during this rework run on 2026-07-05T23:50:00+02:00.",
+        "product.purchase_link_status": "Official PDP states the item is in stock and provides an add-to-cart action.",
+        "product.purchase_link_checked_at": "Checked during this rework run on 2026-07-05T23:50:00+02:00.",
+        "category_specs.product_leave_in_specs": "Format cream, roles, towel-dry application, repair/moisture/detangling/anti-frizz/curl-definition benefits, protein/humectant/polymer flags, and silicone exclusion are based on official PDP copy and INCI. Weight remains light because the official PDP calls it a light daily care booster without build-up or greasy residue, the visible label says Lightweight-Creme, and Haar-Shop describes it as light care. provides_heat_protection is corrected to false because Chaarlie treats heat protection as device/pre-heat styling protection; sources only make a broad marketing claim about protection from external heat, with no device-use instruction or max temperature.",
+        "category_specs.product_leave_in_fit_specs": "Light booster-only fit reflects a leave-in styling-base/care-booster, not a rinse-out conditioner replacement. Benefits are limited to curl_definition, repair, and detangle_smooth; heat_protect is removed because no approval-safe device heat-protection evidence exists.",
+        "category_specs.product_leave_in_eligibility": "Eligibility is conservative for damaged/curly/wavy hair and lightweight no-build-up positioning. Fine and normal thickness get repair/non-heat styling; normal also gets curl-definition air-dry fit; coarse gets moisture_anti_frizz/non-heat styling because the product is lightweight rather than rich. No heat_style rows are emitted."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-05T21:54:51.899+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_leave_in_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "format": "cream",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "protein",
+              "repair",
+              "detangling",
+              "anti_frizz",
+              "shine",
+              "curl_definition"
+            ],
+            "ingredient_flags": [
+              "polymers",
+              "proteins",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_fit_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "curl_definition",
+              "repair",
+              "detangle_smooth"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_eligibility",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "need_bucket": "repair",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "repair",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "curl_definition",
+            "styling_context": "air_dry"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "non_heat_style"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "34a0dc1b-c8d7-437a-932e-0024b2074868",
+    "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    "category_key": "leave_in",
+    "brand_id": "b0500f20-3e0a-420b-9371-66b2d5431d33",
+    "product_line_id": "6a98c227-a9b4-4638-8047-3051cef93daf",
+    "approved_at": "2026-07-05T22:23:22.397Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Neqi",
+        "product_line": "Diamond Glass",
+        "clean_name": "Ultimate Styling Spray",
+        "category_key": "leave_in",
+        "affiliate_link": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-05/34a0dc1b-c8d7-437a-932e-0024b2074868/neqi-spray-diamond-glass-ultimate-leave-in-338c7ff911fb.webp",
+        "price_eur": 12.95,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-06T00:20:54+02:00",
+        "price_checked_at": "2026-07-06T00:20:54+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4063528094575",
+          "source": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "3080142",
+          "source": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "source": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate"
+        }
+      ],
+      "category_specs": {
+        "product_leave_in_specs": {
+          "roles": [
+            "styling_prep"
+          ],
+          "format": "spray",
+          "weight": "light",
+          "care_benefits": [
+            "moisture",
+            "anti_frizz",
+            "shine"
+          ],
+          "ingredient_flags": [
+            "silicones",
+            "polymers",
+            "humectants"
+          ],
+          "application_stage": [
+            "towel_dry",
+            "pre_heat",
+            "post_style"
+          ],
+          "heat_protection_max_c": 230,
+          "heat_activation_required": true,
+          "provides_heat_protection": true
+        },
+        "product_leave_in_fit_specs": {
+          "weight": "light",
+          "care_benefits": [
+            "heat_protect",
+            "detangle_smooth"
+          ],
+          "conditioner_relationship": "booster_only"
+        },
+        "product_leave_in_eligibility": [
+          {
+            "thickness": "fine",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "fine",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "fine",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "title": "NEQI Leave-In Spray Diamond Glass Ultimate, 180 ml | dm.de",
+          "evidence": "Exact German PDP for NEQI Leave-In Spray Diamond Glass Ultimate, 180 ml; price 12.95 EUR; Lieferbar; dm article number 3080142; GTIN 4063528094575; category Leave-In; texture Spray; properties include Hitzeschutz and Ohne Sulfat; usage says apply to towel-dried hair and blow-dry under heat and tension."
+        },
+        {
+          "url": "https://www.dm.de/marken/neqi-2280606",
+          "title": "NEQI: Haarpflege kaufen | dm",
+          "evidence": "Preferred retailer brand listing confirms exact product row: NEQI Leave-In Spray Diamond Glass Ultimate, 180 ml, price 12.95 EUR, Lieferbar, and links to the accepted dm PDP."
+        },
+        {
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "title": "Diamond Glass Ultimate Styling Spray | NEQI Professional hair care",
+          "evidence": "Official brand page confirms product identity as Diamond Glass Ultimate Styling Spray, 12.95 EUR regular price, Diamond Glass line, heat protection up to 230 C, ultra-light formula, all hair types, moisture protection, anti-frizz, shine, towel-dried application, heat/tension blow-dry activation, and ingredients."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "dm.de and NEQI German storefront list the product in EUR.",
+        "product.image_url": "Selected dm product-only packshot because it matches exact brand, Diamond Glass Ultimate variant, spray bottle, and 180 ml size on the accepted PDP; the URL was upgraded to 1200x1200 transformation for review processing.",
+        "product.price_eur": "12.95 EUR from the accepted dm PDP, which states Lieferbar and price 12,95 EUR.",
+        "product.clean_name": "Cleaned from official title Diamond Glass Ultimate Styling Spray by removing brand and researched product line.",
+        "product.category_key": "Submission and dm breadcrumb/category identify the product as Leave-In.",
+        "product.product_line": "Official NEQI navigation and title place the product in the Diamond Glass line; dm title also contains Diamond Glass.",
+        "product.affiliate_link": "dm PDP was selected because leave_in preference is dm > brand-direct > Rossmann > Amazon DE; dm has an exact product PDP, German market URL, current price, and deliverable status, beating brand-direct and lower-priority sources.",
+        "product.canonical_brand": "Used resolved_brand.canonical_brand exactly: Neqi.",
+        "product.price_checked_at": "Timestamp from this research run.",
+        "product.purchase_link_status": "Set to available because the accepted dm PDP states Lieferbar and shows In den Warenkorb.",
+        "product.purchase_link_checked_at": "Timestamp from this research run.",
+        "category_specs.product_leave_in_specs": "dm and official sources support spray format, heat protection, towel-dried/pre-heat use, heat activation, moisture protection, anti-frizz, shine, and lightweight positioning. Ingredient flags come from listed silicones, polymers, and humectants.",
+        "category_specs.product_leave_in_fit_specs": "Classified as light booster/styling-prep leave-in rather than conditioner replacement because sources emphasize styling, heat activation, shine, frizz control, and smoothing rather than rinse-out conditioner replacement.",
+        "category_specs.product_leave_in_eligibility": "Product is stated suitable for all hair types and ultra-light, but strongest documented use case is heat styling for heat protection, moisture/anti-frizz, and shine, so eligibility is limited to heat_style contexts across fine, normal, and coarse thickness."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-05T22:23:10.301+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_leave_in_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "format": "spray",
+            "weight": "light",
+            "roles": [
+              "styling_prep"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 230,
+            "heat_activation_required": true,
+            "care_benefits": [
+              "moisture",
+              "anti_frizz",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "pre_heat",
+              "post_style"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_fit_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "heat_protect",
+              "detangle_smooth"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_eligibility",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          }
+        ]
+      }
+    ]
+  }
+]

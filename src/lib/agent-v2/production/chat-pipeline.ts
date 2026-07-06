@@ -6,6 +6,7 @@ import {
   createSelectProductsTool,
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
+import { isSelectableProductCategory } from "@/lib/agent/contracts"
 import {
   loadAgentV2ProductionConversationHistory,
   verifyAgentV2ProductionConversationOwnership,
@@ -58,7 +59,10 @@ import {
   projectRoutineForAgentV2,
   type AgentV2RoutineProjection,
 } from "@/lib/agent-v2/tools/routine-projection"
-import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
+import {
+  projectSelectProductsForAgentV2,
+  type AgentV2SelectProductsProjection,
+} from "@/lib/agent-v2/tools/select-products-projection"
 import {
   buildAgentV2Classification,
   buildAgentV2RouterDecision,
@@ -194,6 +198,7 @@ async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; dur
 function selectProductAssessmentTargetProductIds(params: {
   productRequestKind: string | null
   category: string | null
+  explicitProductId?: string | null
   executions: readonly ProductLookupExecution[]
   trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null
   activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
@@ -238,7 +243,53 @@ function selectProductAssessmentTargetProductIds(params: {
     ids.push(params.activeResolvedProductContext.product_id)
   }
 
+  if (params.explicitProductId?.trim()) {
+    ids.push(params.explicitProductId.trim())
+  }
+
   return [...new Set(ids)]
+}
+
+function selectSingleProductFactsTarget(params: {
+  category: string | null
+  executions: readonly ProductLookupExecution[]
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
+}): string[] {
+  if (!params.category) return []
+
+  const latestExactLookup = [...params.executions]
+    .reverse()
+    .find(
+      (execution) =>
+        execution.result.status === "found_exact" &&
+        execution.result.product?.id &&
+        productAssessmentCategoryMatches(
+          execution.result.product.category_key ?? execution.result.category,
+          params.category!,
+        ),
+    )
+
+  if (latestExactLookup?.result.product?.id) {
+    return [latestExactLookup.result.product.id]
+  }
+
+  const trustedProduct = params.trustedSelectedProductContext?.selected_product
+  if (
+    trustedProduct?.id &&
+    productAssessmentCategoryMatches(trustedProduct.category, params.category)
+  ) {
+    return [trustedProduct.id]
+  }
+
+  if (
+    params.activeResolvedProductContext?.product_id &&
+    productAssessmentCategoryMatches(params.activeResolvedProductContext.category, params.category)
+  ) {
+    return [params.activeResolvedProductContext.product_id]
+  }
+
+  return []
 }
 
 function selectProductAssessmentTargetProductHints(params: {
@@ -295,6 +346,30 @@ function selectProductAssessmentTargetProductHints(params: {
   }
 
   return hints
+}
+
+function buildEmptyLoadProductFactsProjection(category: unknown): AgentV2SelectProductsProjection {
+  return {
+    tool_name: "load_product_facts",
+    category:
+      typeof category === "string" && isSelectableProductCategory(category) ? category : null,
+    decision: "no_catalog_match",
+    product_response_policy: "no_catalog_match",
+    policy_reason:
+      "No single resolved product identity was available, so product facts were not loaded.",
+    valid_product_ids: [],
+    products: [],
+    missing_required_data: [],
+    constraint_blockers: [],
+    comparison_facts: null,
+    care_balance_context: null,
+    allowed_claim_sources: [],
+    trace: {
+      profile_basis: [],
+      category_guidance:
+        "Load product facts only after one concrete product identity has been resolved.",
+    },
+  }
 }
 
 function productAssessmentCategoryMatches(
@@ -902,6 +977,90 @@ export async function runAgentV2ProductionPipeline(
           }) as unknown as AgentV2ResponsesClient)
         : ((deps.getOpenAI ?? getOpenAI)() as unknown as AgentV2ResponsesClient))
   const agentStart = performance.now()
+  const loadProductProjection = async (
+    input: Record<string, unknown>,
+    executionContext: AgentV2RuntimeToolExecutionContext | undefined,
+    options: {
+      productRequestKind: string | null
+      requireSingleResolvedProduct?: boolean
+      toolName?: AgentV2SelectProductsProjection["tool_name"]
+    },
+  ) => {
+    const effectiveCareContext =
+      executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
+    const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
+      userContext.profile,
+      effectiveCareContext,
+    )
+    const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
+      userContext.routine_inventory,
+      effectiveCareContext,
+    )
+    const productToolMessage = buildAgentV2ProductToolMessage({
+      latestMessage: message,
+      recentMessages,
+    })
+    const category = typeof input.category === "string" ? input.category : null
+    const targetProductIds = options.requireSingleResolvedProduct
+      ? selectSingleProductFactsTarget({
+          category,
+          executions: productLookupExecutions,
+          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+          activeResolvedProductContext,
+        })
+      : selectProductAssessmentTargetProductIds({
+          productRequestKind: options.productRequestKind,
+          category,
+          explicitProductId: typeof input.product_id === "string" ? input.product_id : null,
+          executions: productLookupExecutions,
+          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+          activeResolvedProductContext,
+        })
+    const targetProductHints = selectProductAssessmentTargetProductHints({
+      targetProductIds,
+      executions: productLookupExecutions,
+      trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+      activeResolvedProductContext,
+    })
+
+    if (options.requireSingleResolvedProduct && targetProductIds.length !== 1) {
+      const emptyProjection = buildEmptyLoadProductFactsProjection(input.category)
+      selectedProductProjections.push(emptyProjection)
+      return emptyProjection
+    }
+
+    let rawResult: SelectProductsToolResult | null = null
+    const selectProductsForCall = (deps.createSelectProductsTool ?? createSelectProductsTool)({
+      onResult: (result) => {
+        rawResult = result
+      },
+    })
+    const projection = await selectProductsForCall({
+      category: input.category as Parameters<typeof selectProductsForCall>[0]["category"],
+      message: productToolMessage,
+      hairProfile: effectiveHairProfile,
+      memoryContext,
+      routineItems: effectiveRoutineItems,
+      effectiveCareContext,
+      targetProductIds,
+      targetProductHints,
+    })
+    const resultForProjection =
+      rawResult ??
+      ({
+        projection,
+        products: [],
+        effectiveHairProfile,
+        runtime: {} as SelectProductsToolResult["runtime"],
+      } satisfies SelectProductsToolResult)
+    selectedProductResults.push(resultForProjection)
+    const agentProjection = projectSelectProductsForAgentV2(resultForProjection, {
+      includeCareBalanceContext: true,
+      toolName: options.toolName,
+    })
+    selectedProductProjections.push(agentProjection)
+    return agentProjection
+  }
 
   const result = await runTurn({
     client,
@@ -948,66 +1107,21 @@ export async function runAgentV2ProductionPipeline(
         productLookupExecutions.push({ input: lookupInput, result })
         return result
       },
-      select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-        const effectiveCareContext =
-          executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
-        const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
-          userContext.profile,
-          effectiveCareContext,
-        )
-        const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
-          userContext.routine_inventory,
-          effectiveCareContext,
-        )
-        const productToolMessage = buildAgentV2ProductToolMessage({
-          latestMessage: message,
-          recentMessages,
-        })
-        const targetProductIds = selectProductAssessmentTargetProductIds({
+      load_product_facts: async (
+        input,
+        executionContext?: AgentV2RuntimeToolExecutionContext,
+      ) =>
+        loadProductProjection(input, executionContext, {
+          productRequestKind: "product_detail",
+          requireSingleResolvedProduct: true,
+          toolName: "load_product_facts",
+        }),
+      select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) =>
+        loadProductProjection(input, executionContext, {
           productRequestKind:
             typeof input.product_request_kind === "string" ? input.product_request_kind : null,
-          category: typeof input.category === "string" ? input.category : null,
-          executions: productLookupExecutions,
-          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
-          activeResolvedProductContext,
-        })
-        const targetProductHints = selectProductAssessmentTargetProductHints({
-          targetProductIds,
-          executions: productLookupExecutions,
-          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
-          activeResolvedProductContext,
-        })
-        let rawResult: SelectProductsToolResult | null = null
-        const selectProductsForCall = (deps.createSelectProductsTool ?? createSelectProductsTool)({
-          onResult: (result) => {
-            rawResult = result
-          },
-        })
-        const projection = await selectProductsForCall({
-          category: input.category as Parameters<typeof selectProductsForCall>[0]["category"],
-          message: productToolMessage,
-          hairProfile: effectiveHairProfile,
-          memoryContext,
-          routineItems: effectiveRoutineItems,
-          effectiveCareContext,
-          targetProductIds,
-          targetProductHints,
-        })
-        const resultForProjection =
-          rawResult ??
-          ({
-            projection,
-            products: [],
-            effectiveHairProfile,
-            runtime: {} as SelectProductsToolResult["runtime"],
-          } satisfies SelectProductsToolResult)
-        selectedProductResults.push(resultForProjection)
-        const agentProjection = projectSelectProductsForAgentV2(resultForProjection, {
-          includeCareBalanceContext: true,
-        })
-        selectedProductProjections.push(agentProjection)
-        return agentProjection
-      },
+          toolName: "select_products",
+        }),
       build_or_fix_routine: async (
         input,
         executionContext?: AgentV2RuntimeToolExecutionContext,

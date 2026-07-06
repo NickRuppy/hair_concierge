@@ -1,0 +1,234 @@
+[
+  {
+    "submission_id": "faf95e36-df25-45a1-8a5b-0f41309c9dba",
+    "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+    "category_key": "conditioner",
+    "brand_id": "2e355c7d-5aab-4e99-9c27-ef24bc52af8a",
+    "product_line_id": "94cc3047-c498-4a00-865e-638ddfe98982",
+    "approved_at": "2026-06-27T12:36:06.210Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Jean&Len",
+        "product_line": "Colorglow",
+        "clean_name": "Granatapfel Rose Conditioner",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.jeanlen.de/en/color-conditioner-granatapfel-rose",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-06-26/faf95e36-df25-45a1-8a5b-0f41309c9dba/jean-len-colorglow-granatapfel-rose-conditioner-7f240bf93445.webp",
+        "price_eur": 4.29,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-26T14:10:00.000Z",
+        "price_checked_at": "2026-06-26T14:10:00.000Z"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4262401738883",
+          "source": "dm product listing"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "3086487",
+          "source": "dm product listing"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "2900100221",
+          "source": "Jean&Len product page"
+        }
+      ],
+      "category_specs": {
+        "product_conditioner_specs": [
+          {
+            "thickness": "fine",
+            "protein_moisture_balance": "stretches_bounces"
+          },
+          {
+            "thickness": "normal",
+            "protein_moisture_balance": "stretches_bounces"
+          }
+        ],
+        "product_conditioner_rerank_specs": {
+          "weight": "medium",
+          "repair_level": "low",
+          "ingredient_flags": [
+            "humectants",
+            "oils"
+          ],
+          "balance_direction": "moisture"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.jeanlen.de/en/color-conditioner-granatapfel-rose",
+          "title": "Jean&Len Color Conditioner Pomegranate Rose",
+          "evidence": "Official product page identifies the product as Color Conditioner Pomegranate Rose, 300 ml, with pomegranate, rose extract and panthenol, and lists the current product price."
+        },
+        {
+          "url": "https://www.dm.de/jean-len-conditioner-colorglow-granatapfel-rose-p4262401738883.html",
+          "title": "dm Jean&Len Conditioner Colorglow Granatapfel Rose",
+          "evidence": "Retailer listing confirms the German product name, 300 ml size, brand, conditioner category, GTIN 4262401738883 and retailer sku 3086487."
+        },
+        {
+          "url": "https://vivavoss.com/en/products/conditioner-colorglow-granatapfel-rose-300-ml",
+          "title": "VivaVoss Jean&Len Conditioner Colorglow Granatapfel Rose ingredients",
+          "evidence": "Secondary product listing gives the ingredient list including panthenol, glycerin, sunflower seed oil, pomegranate extract, rose extract and conditioning agents; used only to support ingredient flags."
+        }
+      ],
+      "field_rationales": {
+        "product.image_url": "Final product image generated locally and approved by reviewer.",
+        "product.price_eur": "The official Jean&Len page lists a 4.29 EUR product price at review time.",
+        "product.clean_name": "Official and retailer pages identify the product as a Colorglow conditioner with Granatapfel/Rose variant.",
+        "product.category_key": "The user submitted it as conditioner and both official and retailer pages categorize it as conditioner.",
+        "product.affiliate_link": "The official Jean&Len product page is stable and purchase-capable.",
+        "product.canonical_brand": "The submitted brand text has a typo; the official and retailer listings use Jean&Len.",
+        "product.purchase_link_status": "The official Jean&Len page is available at review time.",
+        "category_specs.product_conditioner_specs": "Product positioning is a color-care conditioner for softness, shine and combability; it is suitable as a normal-use conditioner for fine to normal hair rather than a heavy repair conditioner.",
+        "category_specs.product_conditioner_rerank_specs": "Claims and ingredients suggest medium weight, low repair intensity, moisture/softness direction, humectants from panthenol/glycerin and oil-like conditioning from sunflower oil.",
+        "category_specs.product_conditioner_specs[0].thickness": "Include fine hair because sources emphasize softness, shine and easier combability rather than a heavy mask-like repair profile.",
+        "category_specs.product_conditioner_specs[1].thickness": "Include normal hair because the product is a standard rinse-out conditioner for color-treated hair.",
+        "category_specs.product_conditioner_rerank_specs.weight": "Medium because it is a classic conditioner with conditioning agents and oil-like emollience, but not marketed as an intensive mask or very rich repair product.",
+        "category_specs.product_conditioner_rerank_specs.repair_level": "Low because the product mainly promises color shine, smoothness and combability; damaged hair is listed as target hair type, but there is no strong bond or protein repair claim.",
+        "category_specs.product_conditioner_rerank_specs.ingredient_flags": "Humectants from panthenol/glycerin and oils from sunflower seed oil; no silicone flag because dm lists the product as silicone-free.",
+        "category_specs.product_conditioner_rerank_specs.balance_direction": "Moisture because product claims and ingredients point to softness, smoothness, panthenol, glycerin and botanical extracts.",
+        "category_specs.product_conditioner_specs[0].protein_moisture_balance": "Use stretches_bounces because the product is moisture/softness oriented and not positioned as a protein-building repair conditioner.",
+        "category_specs.product_conditioner_specs[1].protein_moisture_balance": "Use stretches_bounces because claims point to smoothness, combability and shine rather than protein structure repair."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-06-26T14:10:00.000Z",
+        "notes": "Local dry-run test payload. Do not apply without final human approval."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_conditioner_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "protein_moisture_balance": "stretches_bounces"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "protein_moisture_balance": "stretches_bounces"
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_conditioner_rerank_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "humectants",
+              "oils"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "2b34c3dc-6c2b-4b90-b6d2-a0fceaef176c",
+    "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+    "category_key": "shampoo",
+    "brand_id": "98be54c5-e077-4b8a-bbb8-9859c269058a",
+    "product_line_id": "ee610489-1772-4698-9219-a554a652d8d3",
+    "approved_at": "2026-06-27T12:36:27.901Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Syoss",
+        "product_line": "Intense Volume",
+        "clean_name": "Shampoo",
+        "category_key": "shampoo",
+        "affiliate_link": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-06-26/2b34c3dc-6c2b-4b90-b6d2-a0fceaef176c/syoss-intense-volume-shampoo-87f8cd2ff690.webp",
+        "price_eur": 3.95,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-27T00:00:00.000Z",
+        "price_checked_at": "2026-06-27T00:00:00.000Z"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4015100860481",
+          "source": "dm product listing"
+        }
+      ],
+      "category_specs": {
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.syoss.net/care/shampoo/syoss-intense-volume-deep-caring-shampoo.html",
+          "title": "Syoss official product page",
+          "evidence": "Official Syoss page names Intense Volume Deep Caring Shampoo, with 3% Collagen-Lift-Complex, gentle wash for fine, flat hair, soft formula for everyday use, no weighing down, and up to 48h volume."
+        },
+        {
+          "url": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+          "title": "dm product listing",
+          "evidence": "dm lists syoss Shampoo Intense Volume, 440 ml, price 3.95 EUR, available, GTIN 4015100860481, ideal for fine and flat hair, daily cleansing, volume effect, and ingredients."
+        }
+      ],
+      "field_rationales": {
+        "identifiers[0]": "dm lists GTIN 4015100860481 for this product.",
+        "product.image_url": "Final product image generated locally and approved by reviewer.",
+        "product.price_eur": "dm lists the 440 ml product at 3.95 EUR on the checked product page.",
+        "product.clean_name": "After separating brand and line, the remaining product name is Shampoo; dm title is Shampoo Intense Volume and the official page is Intense Volume Deep Caring Shampoo.",
+        "product.category_key": "The submission category is shampoo and both sources identify the item as shampoo.",
+        "product.product_line": "The repeated range/variant signal is Intense Volume; keeping it as the product line avoids duplicating it in the clean product name.",
+        "product.affiliate_link": "The dm product page is the German retailer page used for price, availability, GTIN, and purchase link.",
+        "product.canonical_brand": "Both official Syoss/Henkel and dm use Syoss as the brand.",
+        "category_specs.scalp_route": "Balanced is the package-level default route for the same reason as the row-level scalp_route.",
+        "product.purchase_link_status": "dm product page was available and showed the product as deliverable during review.",
+        "category_specs.cleansing_intensity": "Gentle is the package-level default intensity because both source pages emphasize mild/daily use rather than clarifying cleansing.",
+        "category_specs.product_shampoo_specs": "Shampoo specs are inferred from source positioning: fine/flat hair, gentle wash, everyday use, no weighing down, and volume effect rather than scalp treatment.",
+        "category_specs.product_shampoo_specs[0].thickness": "Only fine hair is included because the official and dm copy specifically target fine, flat hair.",
+        "category_specs.product_shampoo_specs[0].scalp_route": "Set to balanced as the neutral scalp route because source claims are hair-volume focused, not scalp-condition focused.",
+        "category_specs.product_shampoo_specs[0].shampoo_bucket": "Set to normal because the sources do not position it for dandruff, irritation, dry scalp, or oily/dehydrated scalp; the primary need is volume.",
+        "category_specs.product_shampoo_specs[0].cleansing_intensity": "Set to gentle because official Syoss says gentle wash and soft formula for everyday use, and dm says it is suitable for daily cleansing."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-06-27T00:00:00.000Z",
+        "notes": "Prepared for human review; final approval still required before Supabase write."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_shampoo_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "gentle"
+          }
+        ]
+      }
+    ]
+  }
+]

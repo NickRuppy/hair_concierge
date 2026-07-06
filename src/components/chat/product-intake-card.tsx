@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useMemo, useState } from "react"
+import { useEffect, useId, useMemo, useState } from "react"
 import { CheckCircle2 } from "lucide-react"
 import {
   PRODUCT_CATEGORY_DISPLAY_LABELS,
@@ -28,11 +28,12 @@ import type { ProductIntakeCategoryKey, ProductIntakeOffer } from "@/lib/types"
 type ProductIntakeCardProps = {
   offer: ProductIntakeOffer
   conversationId: string
+  onSubmitted?: (status: ProductIntakeSubmittedStatus) => void
 }
 
-type ProductIntakeSubmittedStatus = "pending_review" | "matched"
+export type ProductIntakeSubmittedStatus = "pending_review" | "matched"
 
-export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardProps) {
+export function ProductIntakeCard({ offer, conversationId, onSubmitted }: ProductIntakeCardProps) {
   const brandListId = useId()
   const [method, setMethod] = useState<ProductIntakeMethod>(offer.intake_method ?? "photo")
   const [category, setCategory] = useState<ProductIntakeCategoryKey | "">(offer.category ?? "")
@@ -112,6 +113,12 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
     "block rounded-xl border border-border/80 bg-background px-3 py-3 text-sm text-foreground transition-colors"
   const missingImageFieldClassName =
     "block rounded-xl border border-secondary/60 bg-[var(--brand-coral-light)] px-3 py-3 text-sm text-foreground transition-colors"
+
+  useEffect(() => {
+    if (submittedStatus) {
+      onSubmitted?.(submittedStatus)
+    }
+  }, [onSubmitted, submittedStatus])
 
   function handleBrandTextChange(value: string) {
     setBrandText(value)
@@ -201,7 +208,8 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
         throw new Error(body.error ?? "Produkt konnte nicht gespeichert werden.")
       }
 
-      setSubmittedStatus(body.status === "matched" ? "matched" : "pending_review")
+      const nextStatus = body.status === "matched" ? "matched" : "pending_review"
+      setSubmittedStatus(nextStatus)
     } catch (submitError) {
       setError(
         submitError instanceof Error

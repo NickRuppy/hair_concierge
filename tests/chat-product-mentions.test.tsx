@@ -190,9 +190,21 @@ function findButtons(node: ReactNode): ButtonElement[] {
   const element = node as ReactElement<{ children?: ReactNode } & Partial<ButtonElementProps>>
 
   return [
-    "disabled" in element.props && "onClick" in element.props ? (element as ButtonElement) : null,
+    "onClick" in element.props ? (element as ButtonElement) : null,
     ...React.Children.toArray(element.props.children).flatMap((child) => findButtons(child)),
   ].filter((button): button is ButtonElement => Boolean(button))
+}
+
+function findElementsByType<P>(node: ReactNode, type: React.ElementType): ReactElement<P>[] {
+  if (!React.isValidElement(node)) return []
+  const element = node as ReactElement<{ children?: ReactNode }>
+
+  return [
+    element.type === type ? (element as ReactElement<P>) : null,
+    ...React.Children.toArray(element.props.children).flatMap((child) =>
+      findElementsByType<P>(child, type),
+    ),
+  ].filter((match): match is ReactElement<P> => Boolean(match))
 }
 
 function createProductIntakeOffer(overrides: Partial<ProductIntakeOffer> = {}): ProductIntakeOffer {
@@ -282,6 +294,7 @@ test("assistant product lookup clarification renders an enabled structured selec
 
   assert.match(html, /Syoss Intense Curls/)
   assert.match(html, /Auswählen/)
+  assert.doesNotMatch(html, /truncate/)
   assert.doesNotMatch(html, /<button[^>]*\sdisabled(?:=""|>| )[^>]*>[\s\S]*Auswählen/)
 })
 
@@ -370,10 +383,50 @@ test("assistant product lookup clarification keeps candidate actions locked whil
   const secondCandidateButton = buttonsAfterResolvedRequest.at(1)
   assert.ok(secondCandidateButton)
 
+  const selectedCandidateButton = buttonsAfterResolvedRequest.at(0)
+  assert.ok(selectedCandidateButton)
+
+  assert.equal(textContent(selectedCandidateButton), "Ausgewählt")
   assert.equal(textContent(secondCandidateButton), "Auswählen")
   assert.equal(secondCandidateButton.props.disabled, true)
   await secondCandidateButton.props.onClick()
   assert.deepEqual(selectedProductIds, ["product-syoss-intense-curls"])
+})
+
+test("assistant product lookup clarification collapses candidates after nested intake submission", async () => {
+  const harness = createClientStateHarness(
+    () =>
+      ProductLookupClarificationCard({
+        clarification: createProductLookupClarificationWithTwoCandidates(),
+        conversationId: "conversation-1",
+        assistantMessageId: "message-clarification-1",
+        onSelectProduct: async () => {},
+      }) as ReactElement,
+  )
+
+  const firstRenderButtons = findButtons(harness.render())
+  const addOwnProductButton = firstRenderButtons.find((button) =>
+    textContent(button).includes("Nein, mein Produkt hinzufügen"),
+  )
+  assert.ok(addOwnProductButton)
+
+  await addOwnProductButton.props.onClick()
+
+  const openIntakeTree = harness.render()
+  const intakeCards = findElementsByType<{
+    onSubmitted?: (status: "pending_review" | "matched") => void
+  }>(openIntakeTree, ProductIntakeCard)
+  assert.equal(intakeCards.length, 1)
+
+  intakeCards[0].props.onSubmitted?.("pending_review")
+
+  const html = renderToStaticMarkup(harness.render())
+
+  assert.match(html, /Danke, wir prüfen dein Produkt\./)
+  assert.doesNotMatch(html, /Syoss Intense Curls/)
+  assert.doesNotMatch(html, /Syoss Volume Lift/)
+  assert.doesNotMatch(html, /Nein, mein Produkt hinzufügen/)
+  assert.doesNotMatch(html, /Auswählen/)
 })
 
 test("assistant product lookup clarification suppresses recommendation cards", () => {

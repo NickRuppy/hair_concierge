@@ -990,6 +990,331 @@ test("AgentV2 production pipeline passes lookup-sourced exact product hints into
   )
 })
 
+test("AgentV2 production pipeline injects trusted selected product into load_product_facts", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const selectedProduct = createProduct("syoss-intense-curls-shampoo")
+  selectedProduct.name = "Intense Curls Shampoo"
+  selectedProduct.brand = "Syoss"
+  let loadProductFactsResult: unknown = null
+
+  const selection: SelectProductsToolResult = {
+    projection: {
+      category: "shampoo",
+      decision: "recommended",
+      product_response_policy: "recommend_with_caveat",
+      policy_reason: "Trusted selected product assessment.",
+      profile_basis: ["Feines, welliges Haar."],
+      category_guidance: "Shampoo passt als konkrete Produktbewertung.",
+      products: [
+        {
+          rank: 1,
+          product_id: selectedProduct.id,
+          name: selectedProduct.name,
+          brand: selectedProduct.brand,
+          price_eur: selectedProduct.price_eur,
+          currency: selectedProduct.currency,
+          fit_reason: "Leicht genug fuer feines Haar.",
+          caveat: "Frizz braucht zusaetzliche Laengenpflege.",
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [selectedProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "shampoo",
+      message: "passt das zu mir?",
+    }),
+  }
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-load-product-facts",
+      productIntakeEnabled: true,
+      trustedSelectedProductContext: {
+        source: "product_lookup_clarification",
+        original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+        selected_product: {
+          id: selectedProduct.id,
+          name: selectedProduct.name,
+          category: "shampoo",
+        },
+        lookup_identity: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Intense Volume Shampoo",
+          evidence_quote: "Syoss Intense Volume Shampoo",
+        },
+      },
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          assert.equal(input.category, "shampoo")
+          assert.deepEqual(input.targetProductIds, [selectedProduct.id])
+          assert.deepEqual(input.targetProductHints, [
+            {
+              product_id: selectedProduct.id,
+              name: selectedProduct.name,
+              category: "shampoo",
+            },
+          ])
+          options.onResult?.(selection)
+          return selection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        loadProductFactsResult = await params.tools.load_product_facts({
+          category: "shampoo",
+          reason: "The follow-up asks about the selected product.",
+          user_request: "passt das zu mir?",
+          evidence_quote: "passt das zu mir?",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(
+    (loadProductFactsResult as { products?: Array<{ product_id?: string }> }).products?.[0]
+      ?.product_id,
+    selectedProduct.id,
+  )
+})
+
+test("AgentV2 production pipeline keeps load_product_facts scoped to latest exact lookup", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const lookupProduct = createProduct("syoss-intense-volume-shampoo")
+  lookupProduct.name = "Intense Volume Shampoo"
+  lookupProduct.brand = "Syoss"
+  const staleProduct = createProduct("syoss-stale-shampoo")
+  staleProduct.name = "Stale Shampoo"
+  staleProduct.brand = "Syoss"
+  let loadProductFactsResult: unknown = null
+
+  const selection: SelectProductsToolResult = {
+    projection: {
+      category: "shampoo",
+      decision: "recommended",
+      product_response_policy: "recommend_with_caveat",
+      policy_reason: "Latest exact product assessment.",
+      profile_basis: ["Feines, welliges Haar."],
+      category_guidance: "Shampoo passt als konkrete Produktbewertung.",
+      products: [
+        {
+          rank: 1,
+          product_id: lookupProduct.id,
+          name: lookupProduct.name,
+          brand: lookupProduct.brand,
+          price_eur: lookupProduct.price_eur,
+          currency: lookupProduct.currency,
+          fit_reason: "Leicht genug fuer feines Haar.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [lookupProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "shampoo",
+      message: "passt das Syoss Intense Volume Shampoo zu mir?",
+    }),
+  }
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "passt das Syoss Intense Volume Shampoo zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-load-product-facts-latest-exact",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          agent_v2: {
+            ...createDefaultAgentV2ConversationState().agent_v2,
+            active_product_contexts: [
+              {
+                status: "resolved",
+                product_id: staleProduct.id,
+                submission_id: null,
+                category: "shampoo",
+                brand_text: staleProduct.brand,
+                product_name_text: staleProduct.name,
+                display_name: staleProduct.name,
+                original_user_message: "passt das alte Shampoo zu mir?",
+                source: "product_lookup_selection",
+                updated_at: "2026-06-29T10:00:00.000Z",
+              },
+            ],
+          },
+        }) as ConversationState,
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({
+            products: [
+              {
+                id: lookupProduct.id,
+                name: lookupProduct.name,
+                brandId: "brand-syoss",
+                categoryKey: "shampoo",
+                isActive: true,
+                lifecycleStatus: "active",
+                isChaarlieRecommended: true,
+              },
+            ],
+            identifiers: [],
+          }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-syoss", canonical_name: "Syoss" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          assert.deepEqual(input.targetProductIds, [lookupProduct.id])
+          assert.deepEqual(input.targetProductHints, [
+            {
+              product_id: lookupProduct.id,
+              name: lookupProduct.name,
+              category: "shampoo",
+            },
+          ])
+          options.onResult?.(selection)
+          return selection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        const lookupResult = await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Intense Volume Shampoo",
+        })
+        assert.equal((lookupResult as { status?: string }).status, "found_exact")
+
+        loadProductFactsResult = await params.tools.load_product_facts({
+          category: "shampoo",
+          reason: "The user asks about the exact product in the current turn.",
+          user_request: "passt das zu mir?",
+          evidence_quote: "Syoss Intense Volume Shampoo",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(
+    (loadProductFactsResult as { products?: Array<{ product_id?: string }> }).products?.[0]
+      ?.product_id,
+    lookupProduct.id,
+  )
+})
+
+test("AgentV2 production pipeline fails load_product_facts closed without resolved product", async () => {
+  const hairProfile = createCompleteHairProfile()
+  let loadProductFactsResult: unknown = null
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-load-product-facts-no-target",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createSelectProductsTool: () => async () => {
+        throw new Error("load_product_facts must not broad-search without one resolved product")
+      },
+      runAgentV2ResponsesTurn: async (params) => {
+        loadProductFactsResult = await params.tools.load_product_facts({
+          category: "shampoo",
+          reason: "The user asks a referential follow-up without a resolved product.",
+          user_request: "passt das zu mir?",
+          evidence_quote: "das",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.deepEqual(
+    (loadProductFactsResult as { valid_product_ids?: string[] }).valid_product_ids,
+    [],
+  )
+  assert.equal((loadProductFactsResult as { tool_name?: string }).tool_name, "load_product_facts")
+})
+
 test("AgentV2 production pipeline keeps parallel select_products results isolated", async () => {
   const hairProfile = createCompleteHairProfile()
   const shampooProduct = createProduct("shampoo-product")

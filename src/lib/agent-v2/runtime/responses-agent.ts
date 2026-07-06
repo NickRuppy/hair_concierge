@@ -43,6 +43,7 @@ import type { CareBalanceToolContext } from "@/lib/agent/tools/care-balance-cont
 import {
   BuildOrFixRoutineToolInputSchema,
   ClassifyTurnGateToolParametersSchema,
+  LoadProductFactsToolInputSchema,
   LookupProductCandidateToolInputSchema,
   type CurrentCareFactInput,
   SelectProductsToolInputSchema,
@@ -76,6 +77,7 @@ type AgentV2ToolName =
   | "load_advisor_guidance"
   | "set_current_care_context"
   | "lookup_product_candidate"
+  | "load_product_facts"
   | "select_products"
   | "build_or_fix_routine"
 type AgentV2RuntimeToolName = keyof AgentV2RuntimeTools
@@ -110,6 +112,10 @@ interface AgentV2RuntimeTools {
     executionContext?: AgentV2RuntimeToolExecutionContext,
   ) => Promise<unknown>
   select_products: (
+    input: Record<string, unknown>,
+    executionContext?: AgentV2RuntimeToolExecutionContext,
+  ) => Promise<unknown>
+  load_product_facts: (
     input: Record<string, unknown>,
     executionContext?: AgentV2RuntimeToolExecutionContext,
   ) => Promise<unknown>
@@ -961,7 +967,7 @@ export async function runAgentV2ResponsesTurn(params: {
           executableArguments,
         )
         if (lookupResult) productLookupResults.push(lookupResult)
-      } else if (call.name === "select_products") {
+      } else if (call.name === "select_products" || call.name === "load_product_facts") {
         selectedProductProjections.push(assistantVisibleOutput as AgentV2SelectProductsProjection)
       } else if (call.name === "build_or_fix_routine") {
         routineProjections.push(assistantVisibleOutput as AgentV2RoutineProjection)
@@ -1090,7 +1096,7 @@ function buildInputItems(
   if (trustedSelectedProductContext) {
     items.push({
       role: "system",
-      content: `The user just selected a product from a trusted Chaarlie catalog clarification card. Treat this as a verified found_exact product lookup for this turn: selected_product is a catalog-resolved product, not an unknown or unverified product. The selected product identity replaces the previously ambiguous product wording from the original message. Acknowledge the selection briefly in German and answer the pending original product question using only the selected product identity. Do not say the selected product is not verified, not found, not a catalog hit, or cannot be checked as a product. If a requested claim is unsupported by available product facts, say that specific claim is not available instead of calling the product unverified. Do not answer as if the unresolved original product name was selected. Do not ask which variant again and do not call lookup_product_candidate again for this selected product unless the user introduces a different product. ${JSON.stringify(
+      content: `The user just selected a product from a trusted Chaarlie catalog clarification card. Treat this as a verified found_exact product lookup for this turn: selected_product is a catalog-resolved product, not an unknown or unverified product. The selected product identity replaces the previously ambiguous product wording from the original message. Acknowledge the selection briefly in German and answer the pending original product question using only the selected product identity. For fit, usage, frequency, keep/stop/replace, or product-property answers about this selected product, call load_product_facts before submit_final_answer. Do not say the selected product is not verified, not found, not a catalog hit, or cannot be checked as a product. If a requested claim is unsupported by available product facts, say that specific claim is not available instead of calling the product unverified. Do not answer as if the unresolved original product name was selected. Do not ask which variant again and do not call lookup_product_candidate again for this selected product unless the user introduces a different product. ${JSON.stringify(
         trustedSelectedProductContext,
       )}`,
     })
@@ -1099,7 +1105,7 @@ function buildInputItems(
   if (activeProductContexts.length > 0) {
     items.push({
       role: "system",
-      content: `Conversation-scoped active product context. Use only when the latest user message naturally continues one of these product topics; do not force it into unrelated questions or broad product recommendations. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave the single-product context and use the normal recommendation path instead of asking which variant. Resolved entries can support product_assessment when grounded by product facts; pending_review entries block product-specific advice and should be described as still under review. Max three entries are kept. ${JSON.stringify(
+      content: `Conversation-scoped active product context. Use only when the latest user message naturally continues one of these product topics; do not force it into unrelated questions or broad product recommendations. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave the single-product context and use the normal recommendation path instead of asking which variant. Resolved entries can support product_assessment when grounded by load_product_facts; pending_review entries block product-specific advice and should be described as still under review. Max three entries are kept. ${JSON.stringify(
         activeProductContexts.map((context) => ({
           status: context.status,
           product_id: context.product_id,
@@ -1128,7 +1134,7 @@ function buildInputItems(
   if (!trustedSelectedProductContext && activeResolvedProductContext) {
     items.push({
       role: "system",
-      content: `Active resolved product from the previous product clarification. The selected_product name/id/category is the canonical product identity for natural follow-ups such as "wie oft?", "passt das?", "soll ich es behalten?", or "wie nutze ich es?" when the user appears to continue the same product topic. It is a catalog-resolved product, not an unknown or unverified product. original_user_message is historical context only; do not use its older unresolved product wording as the product identity, do not ask which variant again, and do not call lookup_product_candidate for that older wording unless the user names a different product in the latest message. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave this single-product context and use the normal recommendation path. Do not say the selected_product itself is not verified or not a catalog hit; if a specific requested claim is unsupported, say that claim is unavailable. Do not force this active product into unrelated new topics. ${JSON.stringify(
+      content: `Active resolved product from the previous product clarification. The selected_product name/id/category is the canonical product identity for natural follow-ups such as "wie oft?", "passt das?", "soll ich es behalten?", or "wie nutze ich es?" when the user appears to continue the same product topic. It is a catalog-resolved product, not an unknown or unverified product. For fit, usage, frequency, keep/stop/replace, or product-property answers about this selected product, call load_product_facts before submit_final_answer. original_user_message is historical context only; do not use its older unresolved product wording as the product identity, do not ask which variant again, and do not call lookup_product_candidate for that older wording unless the user names a different product in the latest message. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave this single-product context and use the normal recommendation path. Do not say the selected_product itself is not verified or not a catalog hit; if a specific requested claim is unsupported, say that claim is unavailable. Do not force this active product into unrelated new topics. ${JSON.stringify(
         activeResolvedProductContext,
       )}`,
     })
@@ -1155,7 +1161,7 @@ function buildNamedProductContextGuidance(
   }
 
   const productAssessmentGuidance = params.productIntakeEnabled
-    ? "For product_detail, comparison, routine_usage, or fit questions about this named product, resolve identity with lookup_product_candidate first. Use product_assessment for verified product-specific answers, not broad product_recommendation."
+    ? "For product_detail, comparison, routine_usage, or fit questions about this named product, resolve identity with lookup_product_candidate first. If identity resolves and the user asks about one product, call load_product_facts before product_assessment. Use product_assessment for verified product-specific answers, not broad product_recommendation."
     : "For product_detail, comparison, routine_usage, or fit questions about this named product, use product_assessment only when the product is already verified by available catalog facts; otherwise answer cautiously."
   const guidance = [
     `Current user named a plausible exact product: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
@@ -1419,10 +1425,10 @@ function buildTerminalPayloadFieldGuidance(): string {
     "Plain informational next-step suggestions are not confirmable offers and must not create pending_followup_action.",
     "If next_step_offer_de is non-null and asks the user to continue, choose a matching pending_followup_action. Use product_recommendation for concrete product offers, advisor_response for non-mutating continuations, and routine_mutation only for explicit routine create/change offers.",
     "The pending_followup_action kind and category must match the visible offer: offers to recommend passende Produkte/Masken/Leave-ins/etc. are product_recommendation with the category; offers to add, integrate, build, or change the routine are routine_mutation.",
-    "When resolving a short confirmation of pending_followup_action.kind advisor_response, do not call select_products or build_or_fix_routine; answer the confirmed explanation from guidance and recent context.",
+    "When resolving a short confirmation of pending_followup_action.kind advisor_response, do not call select_products, load_product_facts, or build_or_fix_routine; answer the confirmed explanation from guidance and recent context.",
     "Only pending_followup_action.kind routine_mutation can authorize build_or_fix_routine on a short next-turn confirmation.",
     "Before submitting non-trivial category, product, routine, or general advice, load the relevant guidance package. Terminal tool_grounding.used_guidance_package_ids must include required base packages and category packages.",
-    "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, resolve product identity before making claims. When product intake lookup is enabled, call lookup_product_candidate first. If identity is found/resolved and product facts are needed, select_products may be used as internal grounding; the final answer should be product_assessment unless the user asked for alternatives or broad recommendations. If lookup cannot resolve the product, answer as clarification or constraint_blocked and do not infer from the product name.",
+    "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, resolve product identity before making claims. When product intake lookup is enabled, call lookup_product_candidate first. If identity is found/resolved and the user asks about one product, call load_product_facts before product_assessment; use select_products only for alternatives, recommendations, or comparisons. If lookup cannot resolve the product, answer as clarification or constraint_blocked and do not infer from the product name.",
     "For product_detail turns, terminal request_interpretation must match the resolved product/category and current user question. Product_assessment answers must ground assessed_product_ids in lookup, trusted selection, active context, or product projection facts.",
     "For a concrete product ask inside an active routine, including a short acceptance of the previous offer such as matching products for that routine step, use answer_mode product_recommendation, set request_interpretation.product_request_kind to specific_products, call select_products first, keep routine_context.active=true, include routine_context step/category when known, and preserve routine_context.return_path. Return to the routine through routine_context and visible prose only when useful. Do not also call build_or_fix_routine unless the latest user message asks to change the routine.",
     "For pure summary, recap, overview, or explanation follow-ups inside an active routine thread, answer from routineThreadContext as general_advice, keep routine_context.active=true, set routine_intent none, and do not call build_or_fix_routine.",
@@ -1791,6 +1797,11 @@ function validateExecutableToolArguments(
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
   }
 
+  if (name === "load_product_facts") {
+    const parsed = LoadProductFactsToolInputSchema.safeParse(value)
+    return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
+  }
+
   if (name === "lookup_product_candidate") {
     const parsed = LookupProductCandidateToolInputSchema.safeParse(value)
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
@@ -1830,6 +1841,7 @@ function isExecutableToolName(name: string): name is AgentV2ToolName {
     name === "load_advisor_guidance" ||
     name === "set_current_care_context" ||
     name === "lookup_product_candidate" ||
+    name === "load_product_facts" ||
     name === "select_products" ||
     name === "build_or_fix_routine"
   )
@@ -1873,6 +1885,12 @@ function buildRepairState(
     requiredTools.push("lookup_product_candidate")
   }
   if (
+    validatorIds.has("product_assessment_grounding") &&
+    !safetyProductFirst &&
+    allowedExecutableTools.has("load_product_facts")
+  ) {
+    requiredTools.push("load_product_facts")
+  } else if (
     validatorIds.has("product_tool_required") &&
     !safetyProductFirst &&
     allowedExecutableTools.has("select_products")
@@ -2096,11 +2114,13 @@ function resolveAllowedExecutableTools(params: {
 
   if (params.pendingFollowupAction.kind === "advisor_response") {
     allowed.delete("select_products")
+    allowed.delete("load_product_facts")
     allowed.delete("build_or_fix_routine")
   } else if (params.pendingFollowupAction.kind === "product_recommendation") {
     allowed.delete("build_or_fix_routine")
   } else if (params.pendingFollowupAction.kind === "routine_mutation") {
     allowed.delete("select_products")
+    allowed.delete("load_product_facts")
   }
 
   return allowed
@@ -2121,7 +2141,9 @@ function resolveDisallowedExecutableToolReason(params: {
   if (params.isShortFollowupConfirmation && params.pendingFollowupAction) {
     if (
       params.pendingFollowupAction.kind === "advisor_response" &&
-      (params.name === "select_products" || params.name === "build_or_fix_routine")
+      (params.name === "select_products" ||
+        params.name === "load_product_facts" ||
+        params.name === "build_or_fix_routine")
     ) {
       return "pending_advisor_response_tool_not_allowed"
     }
@@ -2133,7 +2155,7 @@ function resolveDisallowedExecutableToolReason(params: {
     }
     if (
       params.pendingFollowupAction.kind === "routine_mutation" &&
-      params.name === "select_products"
+      (params.name === "select_products" || params.name === "load_product_facts")
     ) {
       return "pending_routine_mutation_tool_not_allowed"
     }
@@ -2603,11 +2625,11 @@ function buildActiveResolvedProductFollowupFallback(params: {
   const productName = activeProduct.name.trim() || "das ausgewählte Produkt"
   const categoryLabel = getFallbackCareCategoryLabelDe(category)
   const isFitFollowup = isActiveResolvedProductFitFollowupMessage(params.message)
+  if (isFitFollowup) return null
+
   const userFacingAnswer = isSelectionTurn
     ? `Alles klar, ich beziehe mich ab jetzt auf **${productName}**. Damit ist die Produktidentität eindeutig geklärt; du kannst dazu direkt weiterfragen, zum Beispiel zur Häufigkeit, Einordnung oder ob du es in deiner Routine behalten solltest.`
-    : isFitFollowup
-      ? `Die Produktidentität ist klar: **${productName}**. Ob es genau zu deinem Frizz oder deinem Haarprofil passt, kann ich ohne weitere Produkteigenschaften nicht abschließend bewerten. Als ${categoryLabel} kann ich es erst sicher einordnen, wenn die relevanten Produktdaten vorliegen.`
-      : category === "shampoo"
+    : category === "shampoo"
         ? `Für **${productName}**: Orientier dich an deinem normalen Waschrhythmus. Wenn du gerade 3–4× pro Woche wäschst, kannst du es bei diesen Wäschen verwenden. Gib Shampoo vor allem auf Kopfhaut und Ansatz und spül es gründlich aus; die Längen bekommen nur den Schaum beim Ausspülen ab.`
         : `Für **${productName}**: Ich würde es in deiner Routine wie ${categoryLabel} behandeln und erst einmal nach Bedarf statt starr jeden Tag nutzen. Wenn du mir sagst, wie dein Haar danach wirkt, kann ich Dosierung und Häufigkeit feiner einordnen.`
 

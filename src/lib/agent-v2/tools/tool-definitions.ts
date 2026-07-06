@@ -131,9 +131,18 @@ export function buildAgentV2ResponsesTools(params: {
 
     productTools.push({
       type: "function",
+      name: "load_product_facts",
+      description:
+        "Load grounded catalog facts and profile-fit context for one resolved product before a product-specific final answer. Use this when the user asks whether one concrete resolved product fits them, how to use it, usage frequency, whether to keep it, stop it, or replace it, or asks a product-specific property question and identity is already known from trusted selection, active resolved product context, or an exact lookup result. If product identity is ambiguous or missing, use lookup_product_candidate first. If the user asks for recommendations, alternatives, broad category options, or comparisons, use select_products instead. The backend injects the trusted or active resolved product ID; do not invent or pass product IDs.",
+      strict: true,
+      parameters: toStrictJsonSchema(LoadProductFactsToolInputSchema),
+    })
+
+    productTools.push({
+      type: "function",
       name: "select_products",
       description:
-        "Select grounded products from the catalog for explicit product recommendations, system-chosen catalog comparisons, or internal product-facts/projection grounding when a resolved named product needs catalog facts. German category-fit questions such as 'welches Shampoo passt zu feinem Haar?', 'welche Spülung passt?', or 'was soll ich kaufen?' are explicit product asks and require select_products with visible recommendation output. Named-product assessment/detail turns such as 'Can I use Product X as heat protectant?', 'Is Product X color-safe?', or 'Is Product X chelating?' must start with lookup_product_candidate for identity resolution; use select_products only when product projection facts are needed after identity is resolved, and do not turn that internal grounding into recommendation cards unless the user explicitly asks for alternatives or product recommendations. Load product_assessment/category guidance for assessment turns when available; use product_recommendation guidance for actual recommendations and compatibility grounding. For product asks inside active routine threads, use product_request_kind specific_products and preserve routine context in the final answer. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo asks, use category deep_cleansing_shampoo instead of shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol asks, use category bondbuilder instead of leave_in or mask.",
+        "Select grounded products from the catalog for explicit recommendations, alternatives, or comparisons. German category-fit questions such as 'welches Shampoo passt zu feinem Haar?', 'welche Spülung passt?', or 'was soll ich kaufen?' are explicit product asks and require select_products with visible recommendation output. For one resolved product detail or fit assessment, use load_product_facts instead of select_products. Named-product assessment/detail turns such as 'Can I use Product X as heat protectant?', 'Is Product X color-safe?', or 'Is Product X chelating?' must start with lookup_product_candidate when identity is not already resolved. Load product_assessment/category guidance for assessment turns when available; use product_recommendation guidance for actual recommendations and compatibility grounding. For product asks inside active routine threads, use product_request_kind specific_products and preserve routine context in the final answer. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo asks, use category deep_cleansing_shampoo instead of shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol asks, use category bondbuilder instead of leave_in or mask.",
       strict: true,
       parameters: toStrictJsonSchema(SelectProductsToolInputSchema),
     })
@@ -153,6 +162,17 @@ export const LookupProductCandidateToolInputSchema = z.strictObject({
 })
 
 export type LookupProductCandidateToolInput = z.infer<typeof LookupProductCandidateToolInputSchema>
+
+export const LoadProductFactsToolInputSchema = z.strictObject({
+  category: AgentV2GuidanceCategorySchema.describe(
+    "Resolved product category. Use the selected product category from trusted context when available.",
+  ),
+  reason: z.string(),
+  user_request: z.string().nullable(),
+  evidence_quote: z.string().min(1),
+})
+
+export type LoadProductFactsToolInput = z.infer<typeof LoadProductFactsToolInputSchema>
 
 export const SelectProductsToolInputSchema = z.strictObject({
   category: AgentV2GuidanceCategorySchema.describe(

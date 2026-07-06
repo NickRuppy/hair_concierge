@@ -10,7 +10,7 @@ import type {
 import type { SelectableProductCategory } from "@/lib/agent/contracts"
 
 export interface AgentV2SelectProductsProjection {
-  tool_name: "select_products"
+  tool_name: "select_products" | "load_product_facts"
   category: SelectableProductCategory | null
   decision: SelectProductsDecision
   product_response_policy: ProductResponsePolicy
@@ -41,7 +41,10 @@ export interface AgentV2SelectProductsProjection {
 
 export function projectSelectProductsForAgentV2(
   result: SelectProductsToolResult,
-  options: { includeCareBalanceContext?: boolean } = {},
+  options: {
+    includeCareBalanceContext?: boolean
+    toolName?: AgentV2SelectProductsProjection["tool_name"]
+  } = {},
 ): AgentV2SelectProductsProjection {
   const projection = result.projection
   const productSignals = projection.products.flatMap(
@@ -49,7 +52,7 @@ export function projectSelectProductsForAgentV2(
   )
 
   return {
-    tool_name: "select_products",
+    tool_name: options.toolName ?? "select_products",
     category: projection.category,
     decision: projection.decision,
     product_response_policy: projection.product_response_policy,

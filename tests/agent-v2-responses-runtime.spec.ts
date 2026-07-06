@@ -22,6 +22,7 @@ test("AgentV2 exposes only the V0 advisor toolset", () => {
   assert.deepEqual(names, [
     "build_or_fix_routine",
     "load_advisor_guidance",
+    "load_product_facts",
     "select_products",
     "set_current_care_context",
     "submit_final_answer",
@@ -44,6 +45,7 @@ test("AgentV2 exposes product intake lookup only when explicitly enabled", () =>
   assert.deepEqual(names, [
     "build_or_fix_routine",
     "load_advisor_guidance",
+    "load_product_facts",
     "lookup_product_candidate",
     "select_products",
     "set_current_care_context",
@@ -61,6 +63,7 @@ test("AgentV2 omits product intake lookup tool when product intake is disabled",
   assert.deepEqual(names, [
     "build_or_fix_routine",
     "load_advisor_guidance",
+    "load_product_facts",
     "select_products",
     "set_current_care_context",
     "submit_final_answer",
@@ -170,6 +173,26 @@ test("AgentV2 lookup tool description covers partial product identity outcomes",
   assert.match(lookupTool.description, /broad/i)
 })
 
+test("AgentV2 product facts tool is distinct from recommendation selection", () => {
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: true,
+  })
+  const factsTool = tools.find((candidate) => candidate.name === "load_product_facts")
+  const selectTool = tools.find((candidate) => candidate.name === "select_products")
+  assert.ok(factsTool)
+  assert.ok(selectTool)
+
+  assert.match(factsTool.description, /one resolved product/i)
+  assert.match(factsTool.description, /fit/i)
+  assert.match(factsTool.description, /usage/i)
+  assert.match(factsTool.description, /keep/i)
+  assert.match(factsTool.description, /lookup_product_candidate/)
+  assert.match(factsTool.description, /select_products/)
+  assert.match(selectTool.description, /recommendations, alternatives, or comparisons/i)
+  assert.match(selectTool.description, /load_product_facts/)
+})
+
 test("AgentV2 strict tool schemas avoid open records and root unions", () => {
   const tools = buildAgentV2ResponsesTools({
     safetyMode: "normal",
@@ -209,6 +232,12 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
     "brand_text",
     "product_name_text",
     "reason",
+    "evidence_quote",
+  ])
+  assertRequiredToolFields(tools, "load_product_facts", [
+    "category",
+    "reason",
+    "user_request",
     "evidence_quote",
   ])
   assertRequiredToolFields(tools, "build_or_fix_routine", [
@@ -402,7 +431,9 @@ function emptyExtractedConstraints() {
 
 function requiredGuidanceForAnswer(answerMode: string, category = "none"): string[] {
   const ids = ["base.advisor_rules.v1", "base.answer_contract.v1", "base.tone_and_format.v1"]
-  if (answerMode === "product_recommendation") ids.push("base.product_recommendation.v1")
+  if (answerMode === "product_recommendation" || answerMode === "product_assessment") {
+    ids.push("base.product_recommendation.v1")
+  }
   if (answerMode === "routine") ids.push("base.routine_building.v1")
   if (answerMode === "general_advice") ids.push("base.general_advice.v1")
   if (answerMode === "safety_boundary") ids.push("base.safety_boundaries.v1")
@@ -916,6 +947,44 @@ function terminalNamedProductRecommendation(
       comparison_notes_de: [],
       usage_notes_de: [],
       next_step_offer_de: null,
+    },
+  })
+}
+
+function terminalProductAssessment(
+  call_id: string,
+  product: { product_id: string; name: string },
+  options: { includeProductFacts: boolean } = { includeProductFacts: true },
+) {
+  return terminalCall(call_id, {
+    ...terminalGeneralAdviceArguments(),
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether the resolved product suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "shampoo",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "passt das zu mir?",
+      specific_product_candidate: true,
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["shampoo"],
+      raw_constraints: ["passt das zu mir?"],
+    },
+    tool_grounding: {
+      ...terminalGeneralAdviceArguments().tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+      used_product_tool: options.includeProductFacts,
+      product_ids: [product.product_id],
+    },
+    pending_followup_action: null,
+    payload: {
+      user_facing_answer_de: `**${product.name}** passt fuer dein feines, welliges Haar eher gut als Shampoo, solange Conditioner und Leave-in die Laengenpflege uebernehmen.`,
+      assessment_kind: "fit",
+      assessed_product_ids: [product.product_id],
     },
   })
 }
@@ -1721,6 +1790,7 @@ function fakeAgentV2Tools() {
       markdown_brief: "Guidance.",
     }),
     select_products: async () => ({ valid_product_ids: [] }),
+    load_product_facts: async () => ({ valid_product_ids: [] }),
     lookup_product_candidate: async () => ({ status: "insufficient_identity" }),
     build_or_fix_routine: async () => ({ visible_steps: [] }),
   }
@@ -2787,7 +2857,7 @@ test("AgentV2 runtime fallback answers active resolved product follow-ups withou
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Welche genaue Variante/i)
 })
 
-test("AgentV2 runtime fallback handles active resolved product fit follow-ups without inventing fit", async () => {
+test("AgentV2 runtime fallback does not invent missing-facts caveats for resolved product fit follow-ups", async () => {
   const client = fakeResponsesClientWithOutputs([
     guidanceCall("call_1", {
       answer_mode_hint: "general_advice",
@@ -2874,10 +2944,120 @@ test("AgentV2 runtime fallback handles active resolved product fit follow-ups wi
   })
 
   assert.equal(result.trace.failure_stage, "repair_failed")
-  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht abschließend bewerten/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Produktfakten/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /nicht sauber prüfen/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /nicht abschließend/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /ohne weitere Produkteigenschaften/)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt gut/i)
+})
+
+test("AgentV2 runtime repairs resolved product assessments by loading product facts", async () => {
+  const selectedProduct = {
+    product_id: "syoss-intense-curls-shampoo",
+    name: "Syoss Intense Curls",
+  }
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["shampoo"],
+    }),
+    terminalProductAssessment("call_2", selectedProduct, { includeProductFacts: false }),
+    functionCall("call_3", "load_product_facts", {
+      category: "shampoo",
+      reason: "The user asks whether the trusted selected product suits them.",
+      user_request: "passt das zu mir?",
+      evidence_quote: "passt das zu mir?",
+    }),
+    terminalProductAssessment("call_4", selectedProduct),
+  ])
+  const toolInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "passt das zu mir?",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "Ich finde mehrere Syoss Varianten. Bitte waehle die richtige aus.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    trustedSelectedProductContext: {
+      source: "product_lookup_clarification",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      selected_product: {
+        id: selectedProduct.product_id,
+        name: selectedProduct.name,
+        category: "shampoo",
+      },
+      lookup_identity: {
+        category: "shampoo",
+        brand_text: "Syoss",
+        product_name_text: "Intense Volume Shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    },
+    tools: {
+      ...fakeAgentV2Tools(),
+      load_product_facts: async (input) => {
+        toolInputs.push(input)
+        return {
+          tool_name: "load_product_facts",
+          category: "shampoo",
+          decision: "recommended",
+          product_response_policy: "recommend_with_caveat",
+          policy_reason: "Resolved product facts loaded for assessment.",
+          valid_product_ids: [selectedProduct.product_id],
+          products: [
+            {
+              rank: 1,
+              product_id: selectedProduct.product_id,
+              name: selectedProduct.name,
+              brand: "Syoss",
+              price_eur: null,
+              currency: null,
+              fit_reason: "Leicht genug fuer feines, welliges Haar.",
+              caveat: "Shampoo allein loest Frizz nicht.",
+              supported_claims: [],
+              unsupported_requested_signals: [],
+            },
+          ],
+          comparison_facts: null,
+          missing_info: [],
+          unsupported_requested_signals: [],
+          missing_required_data: [],
+          constraint_blockers: [],
+          allowed_claim_sources: [
+            "selected_products.category_guidance",
+            "selected_products.caveat",
+          ],
+        }
+      },
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "product_assessment")
+  assert.deepEqual(toolInputs, [
+    {
+      category: "shampoo",
+      reason: "The user asks whether the trusted selected product suits them.",
+      user_request: "passt das zu mir?",
+      evidence_quote: "passt das zu mir?",
+    },
+  ])
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "load_product_facts"],
+  )
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.equal(result.trace.repair_attempts[0]?.reason, "missing_guidance_or_tools")
+  assert.ok(
+    result.trace.repair_attempts[0]?.validation_errors.some(
+      (error) => error.validator_id === "product_assessment_grounding",
+    ),
+  )
 })
 
 test("AgentV2 runtime repairs trusted selected product unverified caveat", async () => {
@@ -7353,6 +7533,9 @@ test("AgentV2 hard short circuit bypasses model and product tools", async () => 
       },
       select_products: async () => {
         throw new Error("products should not be called")
+      },
+      load_product_facts: async () => {
+        throw new Error("product facts should not be called")
       },
       lookup_product_candidate: async () => {
         throw new Error("lookup should not be called")

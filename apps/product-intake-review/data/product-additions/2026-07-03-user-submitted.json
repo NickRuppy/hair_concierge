@@ -1,0 +1,672 @@
+[
+  {
+    "submission_id": "da654fc1-97de-4cdb-ae3f-e2b6e8694494",
+    "product_id": "010cf825-4892-4f78-bf20-26ad72122c60",
+    "category_key": "oil",
+    "brand_id": "b0500f20-3e0a-420b-9371-66b2d5431d33",
+    "product_line_id": "d1c5e61c-1b76-4b02-8770-84893ae52941",
+    "approved_at": "2026-07-03T08:32:00.124Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Neqi",
+        "product_line": "Smooth Strength",
+        "clean_name": "Smooth Strength Rosemary Oil",
+        "category_key": "oil",
+        "affiliate_link": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-02/da654fc1-97de-4cdb-ae3f-e2b6e8694494/neqi-rosmarin-smooth-strength-oil-34fe005e64c1.webp",
+        "price_eur": 9.95,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-03T10:12:00+02:00",
+        "price_checked_at": "2026-07-03T10:12:00+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4063528086280",
+          "source": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "NF-NQ-HO-RO-201",
+          "source": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "NQ-HO-RO-201",
+          "source": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "60081158",
+          "source": "https://www.haar-shop.ch/en/60081158-nq-rosemary-oil-75ml.html"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "NQ-HO-RO-101",
+          "source": "https://www.johnbeerens.com/products/neqi-rosemary-oil-75ml"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil",
+          "source": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil"
+        }
+      ],
+      "category_specs": {
+        "product_oil_eligibility": [
+          {
+            "thickness": "fine",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "styling-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          },
+          {
+            "thickness": "normal",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "styling-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          },
+          {
+            "thickness": "coarse",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "styling-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil",
+          "title": "NEQI Smooth Strength Rosemary Oil, 75 ml - Cosmeterie",
+          "evidence": "Exact product page identifies NEQI Smooth Strength Rosemary Oil, 75 ml; price 9.95 EUR; in stock; EAN 4063528086280; item number NF-NQ-HO-RO-201; manufacturer number NQ-HO-RO-201; product type oils; for all hair types; vegan, silicone-free and sulphate-free. Application says apply to palms or scalp, massage, leave at least 10 minutes, then rinse thoroughly. INCI starts with sweet almond oil, castor seed oil, safflower seed oil, rosemary leaf oil, mint leaf oil and lavender oil/extract."
+        },
+        {
+          "url": "https://www.cosmeterie.com/neqi/smooth-strength-rosemary-oil",
+          "title": "NEQI Smooth Strength Rosemary Oil, 75 ml - Cosmeterie Online Shop",
+          "evidence": "International product page corroborates exact product identity, 75 ml size, EAN 4063528086280, manufacturer number NQ-HO-RO-201, all-hair-types suitability, rich formula, silicone-free and sulphate-free claims, rinse-out application, and the same oil-dominant INCI."
+        },
+        {
+          "url": "https://www.haar-shop.ch/en/60081158-nq-rosemary-oil-75ml.html",
+          "title": "Neqi Hair Smooth Strength Rosemary Oil 75 ml - haar-shop.ch",
+          "evidence": "Independent retailer corroborates Smooth Strength Rosemary Oil, SKU 60081158, 75 ml size, EAN 4063528086280, in-stock status, hair oil category, all-hair-types suitability, vegan and sulfate-free claims, and rinse-out pre-wash usage after at least 10 minutes."
+        },
+        {
+          "url": "https://www.johnbeerens.com/products/neqi-rosemary-oil-75ml",
+          "title": "NEQI Rosemary Oil 75ml - JohnBeerens.com",
+          "evidence": "Retailer page corroborates NEQI Rosemary Oil 75 ml, barcode 4063528086280, SKU NQ-HO-RO-101, all-hair-types suitability, oil-dominant INCI, and pre-wash usage. Its product image is a cleaner exact front bottle packshot suitable as the raw image candidate."
+        }
+      ],
+      "field_rationales": {
+        "identifiers": "Cosmeterie corroborates EAN, item number and manufacturer number; haar-shop.ch corroborates EAN and SKU 60081158; JohnBeerens corroborates barcode/EAN and its retailer SKU.",
+        "product.currency": "Price source is EUR.",
+        "product.image_url": "Selected the JohnBeerens direct PNG image because it is exact-product, single bottle, front-facing, clean white/light background, and avoids the dark reflection tail that blocked the previous Cosmeterie processed image.",
+        "product.price_eur": "Cosmeterie.at lists the 75 ml product at 9.95 EUR.",
+        "product.clean_name": "Removed the submitted brand prefix and normalized Rosmarin to the retailer-supported English product name: Smooth Strength Rosemary Oil.",
+        "product.category_key": "Submitted category is oil and retailers list the product as oil/hair oil.",
+        "product.product_line": "Smooth Strength appears consistently in the product name and on the visible product label; no product_line was supplied by brand resolution.",
+        "product.affiliate_link": "Cosmeterie.at is an exact EUR purchase page and shows the item available at the time checked.",
+        "product.canonical_brand": "Used resolved_brand.canonical_brand exactly as required: Neqi.",
+        "product.purchase_link_status": "Cosmeterie.at shows the item in stock and add-to-cart available.",
+        "category_specs.product_oil_eligibility": "Reviewer feedback was correct that this is not a strict natural/single oil in Chaarlie terms. The INCI is a formulated blend of almond, castor, safflower, rosemary, mint and lavender oils plus camphor, menthol, tocopheryl acetate and fragrance allergens, so oil_subtype is mapped to styling-oel rather than natuerliches-oel. Usage evidence is consistently pre-wash/rinse-out after at least 10 minutes, so oil_purpose remains pre_wash_oiling. Retailers state all hair types, so rows cover fine, normal and coarse thickness with the same conservative rinse-out purpose."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-03T08:31:52.329+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_oil_eligibility",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "oil_subtype": "styling-oel",
+            "oil_purpose": "pre_wash_oiling",
+            "ingredient_flags": [
+              "oils"
+            ]
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "oil_subtype": "styling-oel",
+            "oil_purpose": "pre_wash_oiling",
+            "ingredient_flags": [
+              "oils"
+            ]
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "oil_subtype": "styling-oel",
+            "oil_purpose": "pre_wash_oiling",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "13fcd492-95f6-4d7e-959a-19247c9937a9",
+    "product_id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+    "category_key": "leave_in",
+    "brand_id": "5d3fb981-61d6-4066-aced-ce48a84b0eb9",
+    "product_line_id": "0c7cc842-1b89-4f8e-bdbd-7a065a35ecd5",
+    "approved_at": "2026-07-03T10:24:32.074Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "AUSSIE",
+        "product_line": "SOS",
+        "clean_name": "Leave-In Haarserum 100 Hours Hydration, 160 ml",
+        "category_key": "leave_in",
+        "affiliate_link": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-03/13fcd492-95f6-4d7e-959a-19247c9937a9/aussie-leave-in-haarserum-100-hours-hydration-dcc594e28b04.webp",
+        "price_eur": 8.95,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-03T12:19:49+02:00",
+        "price_checked_at": "2026-07-03T12:19:49+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "8006530085724",
+          "source": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "3135991",
+          "source": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+          "source": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "1622-215-0160",
+          "source": "https://lyko.com/sv/aussie/aussie-sos-super-serum-all-in-one-leavein-treatment-160-ml"
+        }
+      ],
+      "category_specs": {
+        "product_leave_in_specs": {
+          "roles": [
+            "extension_conditioner",
+            "styling_prep"
+          ],
+          "format": "serum",
+          "weight": "medium",
+          "care_benefits": [
+            "moisture",
+            "detangling",
+            "anti_frizz",
+            "shine"
+          ],
+          "ingredient_flags": [
+            "silicones",
+            "polymers",
+            "oils",
+            "humectants"
+          ],
+          "application_stage": [
+            "towel_dry",
+            "dry_hair"
+          ],
+          "heat_protection_max_c": null,
+          "heat_activation_required": false,
+          "provides_heat_protection": false
+        },
+        "product_leave_in_fit_specs": {
+          "weight": "medium",
+          "care_benefits": [
+            "detangle_smooth"
+          ],
+          "conditioner_relationship": "booster_only"
+        },
+        "product_leave_in_eligibility": [
+          {
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "air_dry"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "air_dry"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "shine_protect",
+            "styling_context": "air_dry"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "shine_protect",
+            "styling_context": "air_dry"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+          "title": "AUSSIE Leave-In Haarserum 100 Hours Hydration, 160 ml",
+          "evidence": "Exact German dm PDP confirms AUSSIE Leave-In Haarserum 100 Hours Hydration, 160 ml, 8.95 EUR, In den Warenkorb, Lieferbar, Standardversand 2-3 Werktage, dm-Artikelnummer 3135991, GTIN 8006530085724, leave-in serum, up to 100 hours moisture, no rinse-out, anti-frizz, usage on damp or dry hair, and ingredients."
+        },
+        {
+          "url": "https://lyko.com/sv/aussie/aussie-sos-super-serum-all-in-one-leavein-treatment-160-ml",
+          "title": "Aussie SOS Super Serum All In One LeaveIn Treatment 160 ml",
+          "evidence": "Exact PDP confirms Aussie SOS Super Serum All In One Leave-In Treatment 160 ml, leave-in category, 100-hour hydration, smoothing, softening, detangling, frizz/flyaway control, shine, damp-or-dry application, no rinse-out, retailer SKU 1622-215-0160, and the selected high-resolution product-only packshot."
+        },
+        {
+          "url": "https://www.apotekhjartat.se/varumarken/aussie/aussie-sos-super-serum-160-ml",
+          "title": "Aussie SOS Super Serum 160 ml",
+          "evidence": "Exact PDP confirms 160 ml Aussie SOS Super Serum, Procter & Gamble brand owner, moisturizing leave-in serum, shine, detangling, damp-or-dry application, no rinse-out, EAN 8700216441094, and ingredient list matching dm."
+        },
+        {
+          "url": "https://www.watsons.com.tr/aussie-sos-super-serum-durulanmayan-serum-160-ml/p/BP_1476055",
+          "title": "Aussie Sos Super Serum Durulanmayan Serum 160 ml",
+          "evidence": "Exact Turkish PDP confirms 160 ml hair serum identity, product code 1476055, barcode 8006530085724, 100-hour hydration, all-in-one leave-in conditioner/serum, no rinse-out, frizz/flyaway control, and split-end support; not used for German affiliate or EUR price."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "dm PDP price is a German EUR price, so currency is EUR.",
+        "product.image_url": "Lyko remains the best raw image source: exact AUSSIE SOS Super Serum 100 Hours Hydration 160 ml product-only front packshot, plain light background, readable label, and 960 px source. The dm PDP image is exact and renderable but exposed as a smaller transformed asset, while Watsons includes more distracting page/promo visual context.",
+        "product.price_eur": "Price comes from the same accepted dm PDP used as affiliate_link: 8.95 EUR, with In den Warenkorb and Lieferbar availability verified on 2026-07-03T12:19:49+02:00.",
+        "product.clean_name": "Uses the German dm PDP identity without repeating the brand prefix: Leave-In Haarserum 100 Hours Hydration, 160 ml.",
+        "product.category_key": "Submitted category is leave_in, dm breadcrumb places the product under Leave-In, and all exact PDPs describe no-rinse leave-in use.",
+        "product.product_line": "SOS appears on the visible product label and in supporting exact PDP identities as Aussie SOS Super Serum.",
+        "product.affiliate_link": "The reviewer-provided dm.de PDP is identity-correct, German-market, allowlisted, purchasable, and highest priority under dm > brand-direct > Rossmann > Amazon DE. Other preferred hosts were audited and do not beat the accepted dm source.",
+        "product.canonical_brand": "brand_resolution_context.resolved_brand is null, but Nick approved reviewer_value.canonical_brand AUSSIE for this intake, so the DB-ready brand spelling is AUSSIE.",
+        "product.price_checked_at": "Timestamp records the live dm price check.",
+        "product.purchase_link_status": "Set to available because the accepted dm PDP shows In den Warenkorb, Lieferbar, and Standardversand 2-3 Werktage.",
+        "product.purchase_link_checked_at": "Timestamp records the live dm purchase availability check.",
+        "category_specs.product_leave_in_specs": "dm and supporting PDPs describe a no-rinse serum applied after shower or on the go to damp or dry hair, with moisture, detangling, anti-frizz, shine, and no evidenced heat protection.",
+        "category_specs.product_leave_in_fit_specs": "Medium booster-only fit is conservative because the product is a silicone/oil-containing serum with detangling and smoothing benefits, not a rinse-conditioner replacement and not a heat-protect product.",
+        "category_specs.product_leave_in_eligibility": "Eligibility focuses on normal/coarse hair with moisture_anti_frizz or shine_protect needs for air-dry and non-heat styling; fine hair is excluded because the formula is silicone/oil-rich and supporting review evidence flags greasiness risk on thin hair."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-03T10:24:25.337+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_leave_in_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "format": "serum",
+            "weight": "medium",
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "detangling",
+              "anti_frizz",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_fit_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_eligibility",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "air_dry"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "air_dry"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "non_heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "shine_protect",
+            "styling_context": "air_dry"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "shine_protect",
+            "styling_context": "air_dry"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "7628db39-97d6-4829-a77a-77121e7ac7d0",
+    "product_id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+    "category_key": "conditioner",
+    "brand_id": "0f5509c6-470e-45de-8798-3fff554358cc",
+    "product_line_id": "63083d0a-2bd5-4732-8d2c-d4350268475c",
+    "approved_at": "2026-07-03T13:51:18.285Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Schwarzkopf",
+        "product_line": "GLISS Liquid Silk",
+        "clean_name": "Spülung",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-03/7628db39-97d6-4829-a77a-77121e7ac7d0/schwarzkopf-gliss-conditioner-liquid-silk-b17a418d9be9.webp",
+        "price_eur": 2.99,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-03T15:30:00+02:00",
+        "price_checked_at": "2026-07-03T15:30:00+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100812350",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "154406",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350"
+        }
+      ],
+      "category_specs": {
+        "product_conditioner_specs": [
+          {
+            "thickness": "normal",
+            "protein_moisture_balance": "stretches_bounces"
+          },
+          {
+            "thickness": "coarse",
+            "protein_moisture_balance": "stretches_bounces"
+          }
+        ],
+        "product_conditioner_rerank_specs": {
+          "weight": "medium",
+          "repair_level": "medium",
+          "ingredient_flags": [
+            "silicones",
+            "polymers",
+            "oils",
+            "proteins",
+            "humectants"
+          ],
+          "balance_direction": "balanced"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+          "title": "Gliss Liquid Silk Spülung",
+          "evidence": "German allowlisted Rossmann PDP confirms Gliss Liquid Silk Spülung, 200 ml, EAN 4015100812350, article number 154406, price 2.99 EUR, add-to-cart availability, target hair sprödes/glanzloses Haar, Ceramide and silk positioning, application, and full ingredient list."
+        },
+        {
+          "url": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/liquid-silk/glanz-spuelung.html",
+          "title": "Liquid Silk Spülung",
+          "evidence": "Official Schwarzkopf CH product page confirms Gliss | Liquid Silk Spülung, 200 ml, for sprödes/glanzloses Haar, with Ceramide & Seide, intended to smooth the hair surface, improve combability, shine, and softness, and lists matching ingredients."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "EUR matches the selected German Rossmann price source.",
+        "product.image_url": "Selected a new Rossmann DE direct image URL from the exact German PDP, avoiding the previously rejected haar-shop.ch candidate. It is a product-only front packshot candidate on a clean light/white processing background.",
+        "product.price_eur": "Stored 2.99 from the selected Rossmann DE PDP, which shows 200 ml, 1 L = 14.95 EUR, and add-to-cart availability.",
+        "product.clean_name": "Used approved reviewer_value.clean_name exactly for this intake: Spülung.",
+        "product.category_key": "Submitted product category and category_contract require conditioner.",
+        "product.product_line": "Used approved reviewer_value.product_line exactly for this intake: GLISS Liquid Silk.",
+        "product.affiliate_link": "Selected Rossmann DE because it is an allowlisted German purchasable PDP for the exact product and EAN; no higher-preference dm.de PDP was found in the targeted pass, and Rossmann is next in the purchase URL preference.",
+        "product.canonical_brand": "Used approved reviewer_value.canonical_brand exactly because brand_resolution_context.resolved_brand is null and review_decisions approved product.canonical_brand as Schwarzkopf.",
+        "product.purchase_link_status": "Set available because the selected Rossmann DE PDP shows In den Warenkorb.",
+        "category_specs.product_conditioner_specs": "Mapped to normal and coarse hair because the formula is a medium-care smoothing conditioner for brittle/dull hair with silicones, cationic conditioning agents, oil, humectants, and proteins; fine hair was not selected due to the medium weight profile.",
+        "category_specs.product_conditioner_rerank_specs": "Weight medium and repair_level medium are supported by the Rossmann and official care positioning plus ingredient profile; balance_direction balanced reflects combined conditioning/emollient agents plus hydrolyzed silk, sericin, keratin, glycerin, and glycosphingolipids."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-03T13:51:03.415+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_conditioner_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "protein_moisture_balance": "stretches_bounces"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "protein_moisture_balance": "stretches_bounces"
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_conditioner_rerank_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "repair_level": "medium",
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "f11b0cff-0d0d-48f3-9592-3c2f6fda4c32",
+    "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+    "category_key": "shampoo",
+    "brand_id": "2e68e1ae-bf77-4ca9-a1f4-0e96301e57d5",
+    "product_line_id": "a01c3e90-6505-462d-9e9d-3ec507d8502d",
+    "approved_at": "2026-07-03T14:18:11.254Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "L'Oréal Paris",
+        "product_line": "Elvital",
+        "clean_name": "Glycolic Gloss Shampoo",
+        "category_key": "shampoo",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-03/f11b0cff-0d0d-48f3-9592-3c2f6fda4c32/l-oreal-paris-elvital-shampoo-glycolic-gloss-191b2698129c.webp",
+        "price_eur": 6.99,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-03T14:06:48.213Z",
+        "price_checked_at": "2026-07-03T14:06:48.213Z"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3600524128005",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "153527",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005"
+        }
+      ],
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005",
+          "title": "L’Oréal Paris Elvital Glycolic Gloss Shampoo",
+          "evidence": "German Rossmann PDP confirms L’Oréal Paris Elvital Glycolic Gloss Shampoo, 200 ml, EAN 3600524128005, article number 153527, price 6.99 EUR, add-to-cart availability, sulphate-free application wording, and product claims for shine, smoothness, fiber care, and dull/lackluster hair."
+        },
+        {
+          "url": "https://www.loreal-paris.de/elvital/glycolic-gloss/shampoo",
+          "title": "Elvital Glycolic Gloss Shampoo | L’Oréal Paris",
+          "evidence": "Official L’Oréal Paris DE page confirms the Elvital Glycolic Gloss shampoo identity and positioning for dull/lackluster hair with glycolic acid gloss complex."
+        },
+        {
+          "url": "https://www.dm.at/p/d/1346429/l-oreal-paris-elvital-shampoo-glycolic-gloss",
+          "title": "L’ORÉAL PARiS ELVITAL Shampoo Glycolic Gloss",
+          "evidence": "dm.at identity evidence confirms the same Elvital Glycolic Gloss shampoo and GTIN 3600524128005; used as supporting EU identity evidence, not as German purchase URL."
+        }
+      ],
+      "field_rationales": {
+        "identifiers": "Rossmann product URL and PDP provide EAN 3600524128005 and article number 153527; URL is stored as retailer_url for exact future matching.",
+        "product.image_url": "Selected Rossmann direct product-only front packshot for the exact German Elvital Glycolic Gloss Shampoo; image is below ideal 800px but exact, clean, and suitable for pipeline QA.",
+        "product.price_eur": "Rossmann DE lists 6.99 EUR for the 200 ml product.",
+        "product.clean_name": "Stored Glycolic Gloss Shampoo as the product name without repeating the brand or Elvital line prefix.",
+        "product.category_key": "Submission category is shampoo and all accepted sources describe a shampoo.",
+        "product.product_line": "Elvital is the canonical German product line shown by Rossmann and L’Oréal Paris DE; Glycolic Gloss stays in the clean product name to avoid duplicating the display name.",
+        "product.affiliate_link": "Rossmann DE is an allowlisted German purchasable PDP, preferred over non-German Elvive sources and supporting dm.at/official identity pages.",
+        "product.canonical_brand": "Canonical brand table contains L’Oréal Paris; Rossmann and official L’Oréal DE sources use L’Oréal Paris Elvital.",
+        "product.purchase_link_status": "Rossmann DE page exposes add-to-cart purchase availability.",
+        "category_specs.product_shampoo_specs": "Sources describe shine, hair fiber care, smoothness, and dull/lackluster hair. They do not support dry scalp, dandruff, irritation, oily scalp, or clarifying routing, so all thickness rows stay normal/balanced with regular cleansing intensity."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-03T14:18:04.003+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_shampoo_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          }
+        ]
+      }
+    ]
+  }
+]

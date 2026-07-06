@@ -1,0 +1,199 @@
+[
+  {
+    "submission_id": "0ba45dc1-2081-43db-9434-a569fffda992",
+    "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+    "category_key": "leave_in",
+    "brand_id": "3ab00799-f4b0-42b1-b7ff-9c0e4e47112b",
+    "product_line_id": "1b351bd9-8838-49c7-b03b-f17b75bd3c04",
+    "approved_at": "2026-07-01T09:25:16.569Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Balea Professional",
+        "product_line": "Brilliant Blond",
+        "clean_name": "Hair Sealer Leave-in Serum",
+        "category_key": "leave_in",
+        "affiliate_link": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+        "image_url": "https://cdn.webshopapp.com/shops/316565/files/479143194/650x650x2/balea-professional-leave-in-serum-brilliant-blond.jpg",
+        "price_eur": 5.59,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-01T08:55:05.052Z",
+        "price_checked_at": "2026-07-01T08:55:05.052Z"
+      },
+      "identifiers": [
+        {
+          "type": "retailer_url",
+          "value": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "source": "Duitse Voordeel Drogist product page"
+        }
+      ],
+      "category_specs": {
+        "product_leave_in_specs": {
+          "roles": [
+            "styling_prep",
+            "extension_conditioner"
+          ],
+          "format": "serum",
+          "weight": "medium",
+          "care_benefits": [
+            "repair",
+            "protein",
+            "shine",
+            "anti_frizz"
+          ],
+          "ingredient_flags": [
+            "silicones",
+            "oils",
+            "proteins",
+            "humectants"
+          ],
+          "application_stage": [
+            "towel_dry",
+            "pre_heat"
+          ],
+          "heat_protection_max_c": 230,
+          "heat_activation_required": false,
+          "provides_heat_protection": true
+        },
+        "product_leave_in_fit_specs": {
+          "weight": "medium",
+          "care_benefits": [
+            "heat_protect",
+            "repair",
+            "detangle_smooth"
+          ],
+          "conditioner_relationship": "booster_only"
+        },
+        "product_leave_in_eligibility": [
+          {
+            "thickness": "fine",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "normal",
+            "need_bucket": "repair",
+            "styling_context": "heat_style"
+          },
+          {
+            "thickness": "coarse",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "title": "Balea PROFESSIONAL Leave-in Serum Brilliant Blond Hair Sealer 100 ml",
+          "evidence": "Product page lists Balea Professional brand, product title, 100 ml size, EUR 5.59 price, in-stock status, leave-in serum description, target bleached/highlighted/naturally blonde hair, heat protection up to 230 C, jojoba oil, keratin, INCI, and no-rinse directions."
+        },
+        {
+          "url": "https://naturalspices.com.ua/product/syrovatka-dlya-osvitlenogo-volossya-z-keratynom-balea-professional-leave-in-serum-brilliant-blond-hair-sealer-100-ml/",
+          "title": "Balea professional Leave-In Serum Brilliant Blond Hair Sealer 100 ml",
+          "evidence": "Second retailer page matches product name and 100 ml volume, shows in-stock status, lists heat protection up to 230 C, target blonde hair types, jojoba oil, keratin, Germany as country, Balea as manufacturer, and matching INCI."
+        },
+        {
+          "url": "https://cdn.webshopapp.com/shops/316565/files/479143194/650x650x2/balea-professional-leave-in-serum-brilliant-blond.jpg",
+          "title": "Front packshot image",
+          "evidence": "Image shows a front-facing Balea Professional Brilliant Blond Hair Sealer pump bottle with visible product line, Hair Sealer name, and heat-protection badge."
+        }
+      ],
+      "field_rationales": {
+        "product.image_url": "Primary retailer CDN image is a clear front packshot matching the product label.",
+        "product.price_eur": "Primary retailer page lists EUR 5.59 including VAT.",
+        "product.clean_name": "Retailer title consistently names the product as Leave-in Serum Brilliant Blond Hair Sealer 100 ml; clean name separates the Brilliant Blond line from the product type.",
+        "product.category_key": "Sources describe a leave-in serum and no-rinse use.",
+        "product.affiliate_link": "Primary retailer page directly matches product identity and currently lists price and availability.",
+        "product.canonical_brand": "Primary retailer title and brand link identify Balea Professional.",
+        "product.purchase_link_status": "Primary retailer page states the product is in stock.",
+        "category_specs.product_leave_in_specs": "Serum format, no-rinse directions, heat protection up to 230 C, jojoba oil, keratin, hydrolyzed wheat protein, dimethicone/dimethiconol, glycerin/propylene glycol/panthenol, shine and repair claims are source-supported. Medium weight is Chaarlie synthesis from serum format plus silicone/oil/fatty-alcohol formula. application_stage uses towel_dry because the category contract maps after-washing/damp/no-rinse evidence to towel_dry and forbids post_wash.",
+        "category_specs.product_leave_in_fit_specs": "The product is positioned as targeted leave-in care and heat-styling support for blonde lengths, not as a standalone rinse-out conditioner replacement.",
+        "category_specs.product_leave_in_eligibility": "Heat-styling eligibility is directly supported by the 230 C heat-protection claim; repair and shine fit are supported by source benefits. Thickness mapping is Chaarlie synthesis and should remain reviewer-visible."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "codex-source-research",
+        "reviewed_at": "2026-07-01T08:55:05.052Z",
+        "notes": "Prepared for Nick review from reseller evidence. Official dm.de source was not found; leave-in application_stage was corrected to the allowed towel_dry value."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_leave_in_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "format": "serum",
+            "weight": "medium",
+            "roles": [
+              "styling_prep",
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 230,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "repair",
+              "protein",
+              "shine",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "pre_heat"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_fit_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "heat_protect",
+              "repair",
+              "detangle_smooth"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_leave_in_eligibility",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "need_bucket": "repair",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          }
+        ]
+      }
+    ]
+  }
+]

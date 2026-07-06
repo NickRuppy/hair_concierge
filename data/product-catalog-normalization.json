@@ -3441,7 +3441,12 @@
           "product_line": null
         }
       ],
-      "known_titles": ["Balea Pflegeöl Natural Beauty"],
+      "known_titles": [
+        "Balea Pflegeöl Natural Beauty",
+        "Balea Natural Beauty Bio-Argan Haaröl",
+        "Bio-Argan Haaröl",
+        "Bio-Argan Oil"
+      ],
       "identifiers": [],
       "notes": null,
       "review_status": "reviewed"

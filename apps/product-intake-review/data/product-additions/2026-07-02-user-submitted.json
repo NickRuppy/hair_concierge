@@ -1,0 +1,369 @@
+[
+  {
+    "submission_id": "83ea8171-0db8-4198-b4e9-afde62cb73bc",
+    "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+    "category_key": "conditioner",
+    "brand_id": "cc4e9231-de8b-490f-a337-3f36464a38e1",
+    "product_line_id": "62805dcc-a5ac-4a93-95aa-6c9d32c64a45",
+    "approved_at": "2026-07-02T08:28:11.575Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "John Frieda",
+        "product_line": "Frizz Ease Wunder-Reparatur",
+        "clean_name": "Conditioner",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-conditioner/p/5037156298697",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-02/83ea8171-0db8-4198-b4e9-afde62cb73bc/john-frieda-conditioner-frizz-ease-wunder-reparatur-e20bcd669472.webp",
+        "price_eur": 9.99,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-02T07:50:29.423Z",
+        "price_checked_at": "2026-07-02T07:50:29.423Z"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "5037156298697",
+          "source": "Rossmann product URL for the 250 ml listing"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "214257",
+          "source": "Rossmann product listing"
+        }
+      ],
+      "category_specs": {
+        "product_conditioner_specs": [
+          {
+            "thickness": "normal",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "thickness": "coarse",
+            "protein_moisture_balance": "snaps"
+          }
+        ],
+        "product_conditioner_rerank_specs": {
+          "weight": "medium",
+          "repair_level": "high",
+          "ingredient_flags": [
+            "oils",
+            "humectants"
+          ],
+          "balance_direction": "moisture"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-conditioner/p/5037156298697",
+          "title": "Rossmann JOHN FRIEDA Frizz Ease Wunder-Reparatur Conditioner",
+          "evidence": "Confirms brand, line, product name, conditioner category, 250 ml size, price 9.99 EUR, article number 214257, German-market listing, target hair type, color-treated suitability, ceramide repair positioning, vegan claim, usage instructions, and full ingredient list."
+        },
+        {
+          "url": "https://www.flaconi.de/haare/john-frieda/frizz-ease/john-frieda-frizz-ease-wunder-reparatur-rl-conditioner.html",
+          "title": "Flaconi JOHN FRIEDA Frizz Ease Wunder-Reparatur RL Conditioner",
+          "evidence": "Confirms John Frieda Frizz Ease Wunder-Reparatur RL Conditioner, conditioner category, 250 ml option at 9.99 EUR, dry/unruly/dull hair positioning, ceramide repair claims, breakage reduction claim, vegan formula, application instructions, and matching ingredient list."
+        },
+        {
+          "url": "https://www.idealo.de/preisvergleich/OffersOfProduct/4923622_-frizz-ease-wunder-reparatur-conditioner-250ml-john-frieda.html",
+          "title": "Idealo John Frieda Frizz Ease Wunder-Reparatur Conditioner 250 ml",
+          "evidence": "Confirms 250 ml tube packaging, John Frieda Frizz Ease series, conditioner category, repair/moisture/anti-frizz effects, target hair types including dry, damaged, frizzy and unruly hair, and rinse-out application."
+        }
+      ],
+      "field_rationales": {
+        "identifiers[0]": "Rossmann's exact 250 ml product URL ends in /p/5037156298697, so this is treated as the GTIN-like product identifier for the submitted item.",
+        "identifiers[1]": "Rossmann lists Artikelnummer 214257 on the exact 250 ml conditioner page.",
+        "product.image_url": "Rossmann provides an exact product-only front packshot for the same 250 ml listing. It is clean enough for review/background removal, though the direct render URL exposed by the page is 600x600.",
+        "product.price_eur": "Rossmann and Flaconi both show the 250 ml variant at 9.99 EUR at research time.",
+        "product.clean_name": "After separating brand and line, the remaining product name is Conditioner; Rossmann and Flaconi both identify it as Wunder-Reparatur Conditioner.",
+        "product.category_key": "The submission category is conditioner and Rossmann, Flaconi, and Idealo all categorize the product as a conditioner/rinse-out hair care product.",
+        "product.product_line": "The repeated source identity is John Frieda Frizz Ease Wunder-Reparatur, so Frizz Ease Wunder-Reparatur is the product line.",
+        "product.affiliate_link": "Rossmann is the clearest German retailer page for the exact 250 ml product and price.",
+        "product.canonical_brand": "All sources use John Frieda as the brand.",
+        "product.purchase_link_status": "Rossmann page was available and purchase-capable at research time.",
+        "category_specs.product_conditioner_specs": "The product is positioned for stubborn, damaged, frizzy, dry hair and uses emollient/humectant/ceramide conditioning rather than protein repair, so it is best scoped to normal and coarse hair with moisture-need pull-test fit.",
+        "category_specs.product_conditioner_rerank_specs": "The product has strong repair claims and ceramide positioning, but the formula is a daily conditioner rather than a mask; ingredient flags come from oils and humectants in the INCI.",
+        "category_specs.product_conditioner_specs[0].thickness": "Include normal hair because the product is a standard rinse-out conditioner but has repair/anti-frizz conditioning weight.",
+        "category_specs.product_conditioner_specs[1].thickness": "Include coarse hair because sources explicitly position it for widerspenstiges, geschädigtes and krauses/frizzy hair.",
+        "category_specs.product_conditioner_rerank_specs.weight": "Medium because it contains cetearyl alcohol, isopropyl myristate, conditioning quats and oils, but it is still a daily rinse-out conditioner and not an intensive mask.",
+        "category_specs.product_conditioner_rerank_specs.repair_level": "High because Rossmann and Flaconi emphasize Wunder-Reparatur, ceramides, damage repair, breakage reduction after one use and future damage prevention.",
+        "category_specs.product_conditioner_rerank_specs.ingredient_flags": "Oils from olive oil and castor oil; humectants from panthenol, propylene glycol and dipropylene glycol. No silicone, polymer or protein flag from the listed INCI.",
+        "category_specs.product_conditioner_rerank_specs.balance_direction": "Moisture because the formula is driven by smoothing/emollient/humectant conditioning and ceramide support, with no protein ingredients listed.",
+        "category_specs.product_conditioner_specs[0].protein_moisture_balance": "Use snaps because the ingredient and claim pattern is moisture/smoothing/anti-frizz support with oils, panthenol, glycols and ceramide, not protein-building care.",
+        "category_specs.product_conditioner_specs[1].protein_moisture_balance": "Use snaps for coarse hair for the same moisture-oriented repair/anti-frizz positioning."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-02T08:01:20.882+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_conditioner_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "protein_moisture_balance": "snaps"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "protein_moisture_balance": "snaps"
+          }
+        ]
+      },
+      {
+        "type": "upsert",
+        "table": "product_conditioner_rerank_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "repair_level": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "b9602865-fb5b-475c-9589-3018ad080e71",
+    "product_id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+    "category_key": "mask",
+    "brand_id": "2e355c7d-5aab-4e99-9c27-ef24bc52af8a",
+    "product_line_id": "0eb84c21-50be-4400-9f74-cd97d59bbc4f",
+    "approved_at": "2026-07-02T10:10:55.275Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Jean&Len",
+        "product_line": "Rosemary/Ginger",
+        "clean_name": "Hair Mask Hydration Rosemary/Ginger",
+        "category_key": "mask",
+        "affiliate_link": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-02/b9602865-fb5b-475c-9589-3018ad080e71/jean-len-hydration-rosemary-ginger-maske-70f6faa5762a.webp",
+        "price_eur": 7.99,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-02T11:26:04+02:00",
+        "price_checked_at": "2026-07-02T11:26:04+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "retailer_sku",
+          "value": "2900101127",
+          "source": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger"
+        }
+      ],
+      "category_specs": {
+        "product_mask_specs": {
+          "weight": "medium",
+          "concentration": "high",
+          "ingredient_flags": [
+            "polymers",
+            "oils",
+            "proteins",
+            "humectants"
+          ],
+          "balance_direction": "moisture"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+          "title": "Hair Mask Hydration Rosemary/Ginger, 200 ml",
+          "evidence": "Official Jean&Len product page confirms brand, product title, 200 ml size, 7.99 EUR price, availability in 3-5 days, product number 2900101127, dry/brittle/dull hair positioning, free-from claims, usage, and full INCI."
+        },
+        {
+          "url": "https://www.fresh-store.eu/en/hair/126395-jean-len-hair-mask-hydration-rosemaryginger-200-ml-676-fl-oz.html",
+          "title": "Jean & Len Hair Mask Hydration Rosemary/Ginger 200 ml / 6.76 fl oz",
+          "evidence": "Retailer page corroborates product identity, 200 ml size, hair mask category, Rosemary/Ginger variant, and a broadly matching ingredient list."
+        }
+      ],
+      "field_rationales": {
+        "product.currency": "Official Jean&Len shop price is in EUR.",
+        "product.image_url": "Official brand-hosted front packshot shows the exact Jean&Len Rosemary Ginger Hair Mask Hydration jar.",
+        "product.price_eur": "Official Jean&Len page currently lists the product at 7.99 EUR.",
+        "product.clean_name": "Official listing title without the brand prefix.",
+        "product.category_key": "Submitted category is mask and official page categorizes the item as extra care hair mask.",
+        "product.product_line": "No catalog product_line was resolved; Rosemary/Ginger is the stable official line/variant shown in the product title and product copy.",
+        "product.affiliate_link": "Official Jean&Len product page is the authoritative purchasable source.",
+        "product.canonical_brand": "Used resolved_brand.canonical_brand exactly from the review packet.",
+        "product.purchase_link_status": "Official product page says available with 3-5 day delivery time.",
+        "category_specs.product_mask_specs": "Cetearyl alcohol, isopropyl palmitate, oils, and conditioning quats indicate a medium mask rather than a light leave-in or very rich butter.",
+        "category_specs.product_mask_specs.weight": "Cetearyl alcohol, isopropyl palmitate, oils, and conditioning quats indicate a medium mask rather than a light leave-in or very rich butter.",
+        "category_specs.product_mask_specs.concentration": "Rinse-out mask format plus concentrated conditioning base supports high concentration.",
+        "category_specs.product_mask_specs.ingredient_flags": "INCI supports humectants, oils/emollients, hydrolyzed rice protein, and glucomannan polymer/film-former; no silicone flag because official page claims silicone-free and no obvious silicones appear in the listed INCI.",
+        "category_specs.product_mask_specs.balance_direction": "Official positioning is moisture for dry, brittle, dull hair; INCI includes glycerin and emollients, with protein present but not dominant."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-02T09:37:13.105+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_mask_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "weight": "medium",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "polymers",
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "submission_id": "0cbb3b66-b55d-410b-ad95-87efa2acea4e",
+    "product_id": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+    "category_key": "shampoo",
+    "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+    "product_line_id": "01b7218e-cefc-4a88-9435-58ff23bd221c",
+    "approved_at": "2026-07-02T20:21:07.752Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "OGX",
+        "product_line": "Renewing Argan Oil of Morocco",
+        "clean_name": "Renewing Argan Oil of Morocco Shampoo",
+        "category_key": "shampoo",
+        "affiliate_link": "https://www.pharmacy295.gr/catalog/mallia/sampoyan/product/ogx-argan-oil-of-morocco-sampoyan-anadomisis-385ml--022796976116",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-02/0cbb3b66-b55d-410b-ad95-87efa2acea4e/ogx-renewing-argan-oil-of-morocco-shampoo-17e27d35101c.webp",
+        "price_eur": 6.59,
+        "currency": "EUR",
+        "purchase_link_status": "unavailable",
+        "purchase_link_checked_at": "2026-07-02T22:15:00+02:00",
+        "price_checked_at": "2026-07-02T22:15:00+02:00"
+      },
+      "identifiers": [
+        {
+          "type": "barcode",
+          "value": "022796976116",
+          "source": "https://www.pharmacy295.gr/catalog/mallia/sampoyan/product/ogx-argan-oil-of-morocco-sampoyan-anadomisis-385ml--022796976116"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "C007813",
+          "source": "https://www.pharmacy295.gr/catalog/mallia/sampoyan/product/ogx-argan-oil-of-morocco-sampoyan-anadomisis-385ml--022796976116"
+        },
+        {
+          "type": "retailer_sku",
+          "value": "11060",
+          "source": "https://gpc.ge/en/details/hair-care/shampoo/ogx--shampoo-with-restorative-argan-oil-385-ml-6116-3055?product=11060"
+        },
+        {
+          "type": "retailer_url",
+          "value": "https://www.pharmacy295.gr/catalog/mallia/sampoyan/product/ogx-argan-oil-of-morocco-sampoyan-anadomisis-385ml--022796976116",
+          "source": "https://www.pharmacy295.gr/catalog/mallia/sampoyan/product/ogx-argan-oil-of-morocco-sampoyan-anadomisis-385ml--022796976116"
+        }
+      ],
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.pharmacy295.gr/catalog/mallia/sampoyan/product/ogx-argan-oil-of-morocco-sampoyan-anadomisis-385ml--022796976116",
+          "title": "OGX - ARGAN OIL OF MOROCCO Shampoo 385ml",
+          "evidence": "Retailer page identifies OGX Argan Oil of Morocco reconstructing shampoo, 385 ml, code C007813, web price 6.59 EUR, catalog price 7.66 EUR, and temporary out-of-stock status. It describes use for dry and damaged hair, sulfate-free positioning, argan oil, shine, softness, and daily-use/cleansing tags, but does not establish a dry-scalp route."
+        },
+        {
+          "url": "https://gpc.ge/en/details/hair-care/shampoo/ogx--shampoo-with-restorative-argan-oil-385-ml-6116-3055?product=11060",
+          "title": "OGX shampoo with restorative argan oil 385 ml",
+          "evidence": "Retailer page confirms the same OGX argan oil shampoo, 385 ml, one unit, manufacturer Johnson & Johnson, product number 11060, and supplies the selected product-only packshot."
+        },
+        {
+          "url": "https://www.esquire.com/style/grooming/g65861196/best-drugstore-shampoo/",
+          "title": "The 9 Best Drugstore Shampoos for Men, Starting at Just $8",
+          "evidence": "Independent editorial source lists OGX Renewing + Argan Oil of Morocco Hydrating Shampoo for shine/frizz, hydrating feel, argan-kernel oil, frizzy/damaged hair, and sulfate-free status. It says the shampoo cleanses the scalp but frames the benefit around hair smoothness, shine, and damage protection, not dry scalp, dandruff, irritation, or oily scalp treatment."
+        }
+      ],
+      "field_rationales": {
+        "identifiers": "Pharmacy295 URL exposes 022796976116, stored as barcode because it is a barcode-like product identifier; Pharmacy295 code C007813 and GPC product number 11060 are stored as retailer_sku.",
+        "product.currency": "The selected price source is EUR.",
+        "product.image_url": "Selected raw image is a direct CDN packshot tied to the GPC product page for the exact OGX argan oil shampoo 385 ml; prior cockpit image review already approved it for processing.",
+        "product.price_eur": "Pharmacy295 lists a web price of 6.59 EUR for the exact 385 ml product.",
+        "product.clean_name": "Submitted name is source-supported after removing the brand prefix.",
+        "product.category_key": "Submission category is shampoo and all evidence describes shampoo.",
+        "product.product_line": "Brand resolution context provided product line Renewing Argan Oil of Morocco; stored exactly.",
+        "product.affiliate_link": "Pharmacy295 is the EUR product page with identity, size, price, barcode-like URL identifier, retailer code, and availability state.",
+        "product.canonical_brand": "Brand resolution context provided canonical brand OGX with high confidence; stored exactly.",
+        "product.purchase_link_status": "Pharmacy295 currently marks the product temporarily out of stock and unavailable in listed stores, so the purchase link is unavailable.",
+        "category_specs.product_shampoo_specs": "Reworked per reviewer instruction: dry/damaged hair and hydration/frizz claims are hair-length/condition claims, not proof of dry scalp. No source supports dandruff, irritated scalp, oily scalp, dry flakes, dry scalp, or clarifying/deep-cleansing routing. Therefore all thickness rows use shampoo_bucket normal, scalp_route balanced, and cleansing_intensity regular."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "nick",
+        "reviewed_at": "2026-07-02T20:21:02.277+00:00",
+        "notes": "Auto-approved after processed image and properties were both approved."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_shampoo_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "normal",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "coarse",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          }
+        ]
+      }
+    ]
+  }
+]

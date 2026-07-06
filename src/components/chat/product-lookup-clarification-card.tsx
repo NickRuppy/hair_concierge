@@ -5,7 +5,11 @@ import { Check, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import type { ProductLookupClarification, ProductLookupSelectionContext } from "@/lib/types"
-import { ProductIntakeCard } from "./product-intake-card"
+import {
+  ProductIntakeCard,
+  ProductIntakeSubmittedState,
+  type ProductIntakeSubmittedStatus,
+} from "./product-intake-card"
 
 type ProductLookupClarificationCardProps = {
   clarification: ProductLookupClarification
@@ -31,6 +35,8 @@ export function ProductLookupClarificationCard({
   const [showIntake, setShowIntake] = useState(false)
   const [selectingProductId, setSelectingProductId] = useState<string | null>(null)
   const [submittedProductId, setSubmittedProductId] = useState<string | null>(null)
+  const [submittedIntakeStatus, setSubmittedIntakeStatus] =
+    useState<ProductIntakeSubmittedStatus | null>(null)
   const [selectionError, setSelectionError] = useState<string | null>(null)
   const selectedProductId =
     resolvedSelection?.clarification_id === clarification.id
@@ -54,6 +60,10 @@ export function ProductLookupClarificationCard({
     !clarification.none_action?.product_intake_offer
   ) {
     return null
+  }
+
+  if (submittedIntakeStatus) {
+    return <ProductIntakeSubmittedState status={submittedIntakeStatus} />
   }
 
   async function selectProduct(productId: string) {
@@ -85,7 +95,8 @@ export function ProductLookupClarificationCard({
 
       <div className="mt-3 space-y-2">
         {clarification.candidates.map((candidate) => {
-          const isSelected = candidate.product_id === selectedProductId
+          const optimisticSelectedProductId = selectedProductId ?? submittedProductId
+          const isSelected = candidate.product_id === optimisticSelectedProductId
           const isSubmitted = candidate.product_id === submittedProductId
 
           return (
@@ -98,7 +109,7 @@ export function ProductLookupClarificationCard({
               }`}
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-[var(--text-heading)]">
+                <p className="overflow-hidden break-words text-sm font-semibold leading-snug text-[var(--text-heading)] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
                   {candidate.name}
                 </p>
                 <span className="mt-1 inline-flex max-w-full items-center rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[11px] font-medium text-primary">
@@ -114,11 +125,7 @@ export function ProductLookupClarificationCard({
                 className="shrink-0 gap-1.5"
               >
                 <Check className="h-4 w-4" aria-hidden="true" />
-                {isSelected
-                  ? "Ausgewählt"
-                  : selectingProductId === candidate.product_id || isSubmitted
-                    ? "Wird ausgewählt"
-                    : "Auswählen"}
+                {isSelected ? "Ausgewählt" : isSubmitted ? "Ausgewählt" : "Auswählen"}
               </Button>
             </div>
           )
@@ -149,6 +156,7 @@ export function ProductLookupClarificationCard({
           <ProductIntakeCard
             offer={clarification.none_action.product_intake_offer}
             conversationId={conversationId}
+            onSubmitted={setSubmittedIntakeStatus}
           />
         </div>
       ) : null}

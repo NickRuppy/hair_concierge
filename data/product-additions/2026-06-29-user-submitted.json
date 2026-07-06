@@ -1,0 +1,96 @@
+[
+  {
+    "submission_id": "545b11b4-75b6-4466-a9e8-d87a04d66088",
+    "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+    "category_key": "shampoo",
+    "brand_id": "98be54c5-e077-4b8a-bbb8-9859c269058a",
+    "product_line_id": "b1d0bde2-5b28-4ed3-93e8-47c66bdecef9",
+    "approved_at": "2026-06-29T15:23:22.404Z",
+    "reviewed_by": "nick",
+    "final_payload": {
+      "product": {
+        "canonical_brand": "Syoss",
+        "product_line": "Intense Fullness",
+        "clean_name": "Shampoo",
+        "category_key": "shampoo",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-fullness/p/4015100860429",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-06-29/545b11b4-75b6-4466-a9e8-d87a04d66088/syoss-intense-fullness-shampoo-1db3778ea171.webp",
+        "price_eur": 4.49,
+        "currency": "EUR",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-29T13:18:07.000Z",
+        "price_checked_at": "2026-06-29T13:18:07.000Z"
+      },
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4015100860429",
+          "source": "Syoss official product schema"
+        }
+      ],
+      "category_specs": {
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-fullness-kraeftigendes-shampoo.html",
+          "title": "Syoss official product page",
+          "evidence": "Official Syoss page names Syoss Intense Fullness Kraeftigendes Shampoo, lists GTIN 4015100860429, describes it for thin/weak hair, and says the 3% Niacinamide volume complex gives fine, weak hair more volume and fullness."
+        },
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-fullness/p/4015100860429",
+          "title": "Rossmann product listing",
+          "evidence": "Rossmann product URL resolves for GTIN 4015100860429 and is used as the German purchase link; current search listing surfaced the product as available online at 4.49 EUR. Plain curl is client-challenged, so Nick should re-check the retailer price in the browser during final review."
+        }
+      ],
+      "field_rationales": {
+        "identifiers[0]": "The official Syoss structured product data lists GTIN 4015100860429.",
+        "product.image_url": "Finales Chaarlie-Produktbild freigegeben. Original review-app source type: review_app_source_search",
+        "product.price_eur": "The Rossmann search listing surfaced 4.49 EUR for this GTIN; because the Rossmann page body is client-challenged from curl, this should be re-checked in-browser before approval.",
+        "product.clean_name": "After separating brand and product line, the product type is Shampoo.",
+        "product.category_key": "The submission category is shampoo and the official Syoss product page is a shampoo page.",
+        "product.product_line": "The repeated range/variant signal is Intense Fullness; keeping it as product_line avoids duplicating the variant in clean_name.",
+        "product.affiliate_link": "Rossmann is the German retailer page for GTIN 4015100860429 and is the best currently identified purchase link.",
+        "product.canonical_brand": "The submitted brand and official source both use Syoss.",
+        "category_specs.scalp_route": "Balanced is the package-level default route for the same reason as the row-level scalp_route.",
+        "product.purchase_link_status": "The Rossmann URL returned HTTP 200 and the product appeared available in the search listing.",
+        "category_specs.cleansing_intensity": "Regular is the package-level default intensity because the source positions the product as a standard volume shampoo.",
+        "category_specs.product_shampoo_specs": "Specs are inferred from source positioning: fine/thin/weak hair and volume/fullness claims, with no dandruff, irritation, dry scalp, or oily/dehydrated scalp positioning.",
+        "category_specs.product_shampoo_specs[0].thickness": "Only fine hair is included because Syoss specifically targets thin/fine, weak hair.",
+        "category_specs.product_shampoo_specs[0].scalp_route": "Set to balanced as the neutral scalp route because sources do not claim a dry, oily, dandruff, flaky, or irritated scalp use case.",
+        "category_specs.product_shampoo_specs[0].shampoo_bucket": "Set to normal because the product is hair-volume focused rather than scalp-condition focused.",
+        "category_specs.product_shampoo_specs[0].cleansing_intensity": "Set to regular because the source does not make a clarifying claim or an explicit mild/gentle daily-cleansing claim."
+      },
+      "review": {
+        "manual_reviewed": true,
+        "reviewed_by": "codex-research",
+        "reviewed_at": "2026-06-29T13:18:07.000Z",
+        "notes": "Prepared locally for Nick's final review. No Supabase approval, storage upload, or user notification has been run."
+      }
+    },
+    "spec_operations": [
+      {
+        "type": "upsert",
+        "table": "product_shampoo_specs",
+        "rows": [
+          {
+            "product_id": "__PRODUCT_ID__",
+            "thickness": "fine",
+            "shampoo_bucket": "normal",
+            "scalp_route": "balanced",
+            "cleansing_intensity": "regular"
+          }
+        ]
+      }
+    ]
+  }
+]

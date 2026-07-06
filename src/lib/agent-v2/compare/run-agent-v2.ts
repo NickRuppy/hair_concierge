@@ -733,6 +733,52 @@ export async function runAgentV2ComparisonForUser(
     if (turnCareBalanceContext) {
       latestCareBalanceTrace = turnCareBalanceContext
     }
+    const runSelectProductsProjection = async (
+      input: Record<string, unknown>,
+      executionContext?: AgentV2RuntimeToolExecutionContext,
+      toolName: AgentV2SelectProductsProjectionForCompare["tool_name"] = "select_products",
+    ) => {
+      latestSelectProductsResult = null
+      const effectiveCareContext =
+        executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
+      const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
+        context.profile,
+        effectiveCareContext,
+      )
+      const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
+        context.routine_inventory,
+        effectiveCareContext,
+      )
+      const productToolMessage = buildAgentV2ProductToolMessage({
+        latestMessage: message,
+        recentMessages,
+      })
+      const projection = await selectProducts({
+        category: input.category as Parameters<typeof selectProducts>[0]["category"],
+        message: productToolMessage,
+        hairProfile: effectiveHairProfile,
+        memoryContext,
+        routineItems: effectiveRoutineItems,
+        effectiveCareContext,
+      })
+      const rawResult =
+        latestSelectProductsResult ??
+        ({
+          projection,
+          products: [],
+          effectiveHairProfile,
+          runtime: {} as SelectProductsToolResult["runtime"],
+        } satisfies SelectProductsToolResult)
+      if (rawResult.projection.care_balance_context) {
+        latestCareBalanceTrace = rawResult.projection.care_balance_context
+      }
+      const agentProjection = projectSelectProductsForAgentV2(rawResult, {
+        includeCareBalanceContext: options.includeCareBalanceContext,
+        toolName,
+      })
+      selectedProductProjections.push(agentProjection)
+      return agentProjection
+    }
     const result = await runAgentV2ResponsesTurn({
       client: getOpenAI() as unknown as Parameters<typeof runAgentV2ResponsesTurn>[0]["client"],
       message,
@@ -760,47 +806,10 @@ export async function runAgentV2ComparisonForUser(
           missing_fields: ["category"],
           intake_offer: null,
         }),
-        select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-          latestSelectProductsResult = null
-          const effectiveCareContext =
-            executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
-          const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
-            context.profile,
-            effectiveCareContext,
-          )
-          const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
-            context.routine_inventory,
-            effectiveCareContext,
-          )
-          const productToolMessage = buildAgentV2ProductToolMessage({
-            latestMessage: message,
-            recentMessages,
-          })
-          const projection = await selectProducts({
-            category: input.category as Parameters<typeof selectProducts>[0]["category"],
-            message: productToolMessage,
-            hairProfile: effectiveHairProfile,
-            memoryContext,
-            routineItems: effectiveRoutineItems,
-            effectiveCareContext,
-          })
-          const rawResult =
-            latestSelectProductsResult ??
-            ({
-              projection,
-              products: [],
-              effectiveHairProfile,
-              runtime: {} as SelectProductsToolResult["runtime"],
-            } satisfies SelectProductsToolResult)
-          if (rawResult.projection.care_balance_context) {
-            latestCareBalanceTrace = rawResult.projection.care_balance_context
-          }
-          const agentProjection = projectSelectProductsForAgentV2(rawResult, {
-            includeCareBalanceContext: options.includeCareBalanceContext,
-          })
-          selectedProductProjections.push(agentProjection)
-          return agentProjection
-        },
+        load_product_facts: (input, executionContext) =>
+          runSelectProductsProjection(input, executionContext, "load_product_facts"),
+        select_products: (input, executionContext) =>
+          runSelectProductsProjection(input, executionContext, "select_products"),
         build_or_fix_routine: async (
           input,
           executionContext?: AgentV2RuntimeToolExecutionContext,
