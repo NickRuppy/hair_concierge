@@ -530,7 +530,12 @@ test("validator diet softens hidden product interpretation metadata when answer 
     },
   }
 
-  const result = validateAgentV2FinalAnswer(answer, baseValidationContext)
+  // Softening applies only when no products were fetched this turn; with
+  // fetched-but-hidden products the mismatch stays blocking (repairable).
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+  })
 
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
   assert.equal(result.errors.length, 0)
@@ -541,6 +546,14 @@ test("validator diet softens hidden product interpretation metadata when answer 
         warning.reason_code === "validator_diet_softened",
     ),
     JSON.stringify(result.warnings, null, 2),
+  )
+
+  const withFetchedProducts = validateAgentV2FinalAnswer(answer, baseValidationContext)
+  assert.ok(
+    withFetchedProducts.errors.some(
+      (error) => error.validator_id === "request_interpretation_answer_mode",
+    ),
+    "fetched-but-hidden products must keep the mismatch blocking",
   )
 })
 
@@ -9750,6 +9763,38 @@ test("pending same-category intake does not veto a generic recommendation for ot
 
   assert.ok(
     !result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("runtime-loaded guidance satisfies the requirement when the model omits it from grounding", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: [
+          "base.advisor_rules.v1",
+          "base.answer_contract.v1",
+          "base.tone_and_format.v1",
+          "base.product_recommendation.v1",
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      loadedGuidancePackageIds: [
+        "base.advisor_rules.v1",
+        "base.answer_contract.v1",
+        "base.tone_and_format.v1",
+        "base.product_recommendation.v1",
+        "category.shampoo.v1",
+      ],
+    },
+  )
+
+  assert.ok(
+    !result.errors.some((error) => error.validator_id === "required_guidance_loaded"),
     JSON.stringify(result.errors, null, 2),
   )
 })

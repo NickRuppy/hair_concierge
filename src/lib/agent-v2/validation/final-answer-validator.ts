@@ -275,13 +275,33 @@ function isSoftenableHiddenMetadataFinding(
         !ROUTINE_TOOL_INTENTS.has(answer.request_interpretation.routine_intent)
       )
     case "request_interpretation_answer_mode":
+      // Not softenable when this turn fetched products the answer hides:
+      // a concrete product ask must not silently collapse into category advice.
       return (
         finding.path?.[0] === "request_interpretation" &&
-        finding.path?.[1] === "product_request_kind"
+        finding.path?.[1] === "product_request_kind" &&
+        !hasUnsurfacedSelectedProducts(answer, context)
       )
     default:
       return false
   }
+}
+
+function hasUnsurfacedSelectedProducts(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const fetchedProductIds = context.selectedProductProjections.flatMap((projection) =>
+    (projection.products ?? [])
+      .map((product) => product.product_id)
+      .filter((id): id is string => Boolean(id && id.trim().length > 0)),
+  )
+  if (fetchedProductIds.length === 0) return false
+  const surfaced = new Set([
+    ...answer.tool_grounding.product_ids,
+    ...extractPayloadProductIds(answer),
+  ])
+  return !fetchedProductIds.some((id) => surfaced.has(id))
 }
 
 function sanitizeHiddenPendingFollowupAction(
@@ -1698,9 +1718,10 @@ function validateRequiredGuidance(
   const loaded = context.loadedGuidancePackageIds
     ? new Set(context.loadedGuidancePackageIds)
     : reported
-  const missing = getRequiredGuidancePackageIds(answer, context).filter(
-    (id) => !reported.has(id) || !loaded.has(id),
-  )
+  // The runtime-loaded set is authoritative: a package that was actually
+  // loaded into the model context satisfies the requirement even when the
+  // model forgets to recite it in used_guidance_package_ids.
+  const missing = getRequiredGuidancePackageIds(answer, context).filter((id) => !loaded.has(id))
   if (missing.length > 0) {
     errors.push({
       validator_id: "required_guidance_loaded",
