@@ -68,3 +68,18 @@ test("loadCatalog keeps the intake dedupe path open for all active products", as
   assert.ok(productsCall)
   assert.deepEqual(productsCall.eq, [{ column: "is_active", value: true }])
 })
+
+test("loadCatalog only selects live product columns", async () => {
+  const { admin, calls } = createAdminStub()
+  const repository = createSupabaseProductIntakeRepository(admin as never)
+
+  await repository.loadCatalog({ eligibilityMode: "intake_dedupe" })
+
+  const productsCall = calls.find((call) => call.table === "products")
+  assert.ok(productsCall?.select)
+  const selectedColumns = productsCall.select.split(",").map((column) => column.trim())
+  assert.ok(selectedColumns.includes("name"))
+  assert.ok(selectedColumns.includes("brand_id"))
+  assert.ok(selectedColumns.includes("product_line_id"))
+  assert.ok(!selectedColumns.includes("clean_name"))
+})
