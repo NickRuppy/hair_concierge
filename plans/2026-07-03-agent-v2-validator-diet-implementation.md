@@ -1,8 +1,9 @@
 # Agent V2 Validator Diet Implementation Plan
 
 Date: 2026-07-03
-Status: Implemented in branch; not staged or committed
-Base: `codex/selected-product-facts-card-polish`
+Status: Implemented, committed, pushed, and included in PR #199 as of 2026-07-06
+Base: `codex/selected-product-facts-card-polish`; shipping branch:
+`codex/agent-v2-validator-diet-slice-1-product-facts`
 
 ## Goal
 

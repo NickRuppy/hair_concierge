@@ -293,6 +293,7 @@ export function ProductIntakeCard({
             uploading={busy === "front" || busy === "barcode" ? busy : null}
             onUpload={uploadImage}
             labelClassName={imageFieldClassName}
+            barcodeLabel={needsBarcodeImage ? "Barcode erforderlich" : "Barcode optional"}
             frontLabelClassName={needsFrontImage ? missingImageFieldClassName : imageFieldClassName}
             barcodeLabelClassName={
               needsBarcodeImage ? missingImageFieldClassName : imageFieldClassName

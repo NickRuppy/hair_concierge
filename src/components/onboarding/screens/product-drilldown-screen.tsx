@@ -221,6 +221,7 @@ export function ProductDrilldownScreen({
             uploading={uploading}
             uploadError={uploadError}
             onUpload={handleUpload}
+            barcodeLabel="Barcode optional"
             labelClassName="block rounded-xl border border-border bg-muted p-4 text-sm font-medium text-foreground"
             statusClassName="flex items-center gap-2 text-sm text-[var(--text-sub)]"
             errorClassName="text-sm text-destructive"

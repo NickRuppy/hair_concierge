@@ -727,6 +727,35 @@ test("normal product intake offers render as an action card without duplicate he
   assert.doesNotMatch(html, /Wir haben es noch nicht sicher in unserer Datenbank/)
 })
 
+test("photo product intake marks barcode optional unless explicitly requested", () => {
+  const html = renderToStaticMarkup(
+    <ProductIntakeCard
+      offer={createProductIntakeOffer({ intake_method: "photo" })}
+      conversationId="conversation-1"
+    />,
+  )
+
+  assert.match(html, /Vorderseite/)
+  assert.match(html, /Barcode optional/)
+  assert.doesNotMatch(html, /Barcode erforderlich/)
+})
+
+test("needs-more-info photo intake marks barcode as required when missing", () => {
+  const html = renderToStaticMarkup(
+    <ProductIntakeCard
+      offer={createProductIntakeOffer({
+        reason: "needs_more_info",
+        intake_method: "photo",
+        missing_fields: ["Barcodefoto"],
+      })}
+      conversationId="conversation-1"
+    />,
+  )
+
+  assert.match(html, /Barcode erforderlich/)
+  assert.doesNotMatch(html, /Barcode optional/)
+})
+
 test("needs-more-info product intake offers keep explicit repair guidance", () => {
   const html = renderToStaticMarkup(
     <ProductIntakeCard

@@ -1,5 +1,10 @@
 # Product Facts Tool Contract Plan
 
+Status: Historical/superseded as of 2026-07-06. The archived dirty worktrees contain
+`load_product_facts` implementations, but PR #199 ships the one-product grounding fix through
+targeted `select_products` projection instead. Treat this file as design history unless a future
+follow-up explicitly reopens the separate tool direction.
+
 ## Goal
 
 Make AgentV2 reliably answer follow-up questions about one resolved product, such as "passt das zu mir?", "wie oft?", or "soll ich es behalten?", by loading product facts for that exact product before composing the final answer.
