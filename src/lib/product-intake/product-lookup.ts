@@ -53,6 +53,9 @@ export type ProductLookupResult = {
 export type ProductLookupProduct = {
   id: string
   name: string
+  brand_id: string | null
+  product_line_id: string | null
+  image_url: string | null
   category_key: string | null
   is_chaarlie_recommended: boolean | null
 }
@@ -180,6 +183,9 @@ function toLookupProduct(product: ProductIntakeCatalogProduct): ProductLookupPro
   return {
     id: product.id,
     name: product.name,
+    brand_id: productBrandId(product),
+    product_line_id: product.productLineId ?? product.product_line_id ?? null,
+    image_url: product.imageUrl ?? product.image_url ?? null,
     category_key: productCategoryKey(product),
     is_chaarlie_recommended: productChaarlieRecommended(product),
   }

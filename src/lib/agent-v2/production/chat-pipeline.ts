@@ -446,6 +446,9 @@ function buildActiveResolvedProductLookupResult(params: {
     product: {
       id: product.id,
       name: product.name,
+      brand_id: product.brandId ?? product.brand_id ?? null,
+      product_line_id: product.productLineId ?? product.product_line_id ?? null,
+      image_url: product.imageUrl ?? product.image_url ?? null,
       category_key: category,
       is_chaarlie_recommended:
         product.isChaarlieRecommended ?? product.is_chaarlie_recommended ?? null,

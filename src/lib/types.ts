@@ -863,6 +863,9 @@ export interface ProductLookupClarification {
 export interface ProductLookupClarificationCandidate {
   product_id: string
   name: string
+  brand_name?: string | null
+  product_line_name?: string | null
+  image_url?: string | null
   category: ProductIntakeCategoryKey | string | null
   category_label_de: string
   reason: "same_brand_same_category" | "category_mismatch"

@@ -885,3 +885,86 @@ test("chat stream error helper preserves structured server error messages", () =
     "Das Produkt konnte nicht ausgewählt werden. Bitte versuche es erneut.",
   )
 })
+
+function createProductLookupClarificationWithDisplayData(): ProductLookupClarification {
+  const clarification = createProductLookupClarification()
+
+  return {
+    ...clarification,
+    candidates: [
+      {
+        ...clarification.candidates[0],
+        brand_name: "Syoss",
+        product_line_name: "Intense",
+        image_url: "https://example.test/syoss-curls.png",
+      },
+    ],
+  }
+}
+
+test("assistant product lookup clarification renders candidate images and brand line labels", () => {
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={createProductLookupClarificationWithDisplayData()}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.match(html, /<img[^>]*src="https:\/\/example\.test\/syoss-curls\.png"/)
+  assert.match(html, /Syoss · Intense/)
+  assert.match(html, />Curls</)
+  assert.doesNotMatch(html, />Syoss Intense Curls</)
+})
+
+test("assistant product lookup clarification renders a category fallback without an image url", () => {
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={createProductLookupClarification()}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.doesNotMatch(html, /<img\b/)
+  assert.match(html, /Syoss Intense Curls/)
+})
+
+test("assistant product lookup clarification candidate names can wrap instead of truncating", () => {
+  const clarification = createProductLookupClarificationWithDisplayData()
+  clarification.candidates[0].name =
+    "Syoss Intense Curls Shampoo Ultra Definition Long Name For Wrapping"
+
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={clarification}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.match(html, /Curls Shampoo Ultra Definition Long Name For Wrapping/)
+  assert.doesNotMatch(html, />Syoss Intense Curls Shampoo Ultra Definition Long Name For Wrapping</)
+  assert.doesNotMatch(html, /\btruncate\b/)
+  assert.match(html, /\bbreak-words\b/)
+})
+
+test("assistant product lookup clarification hides legacy duplicate suffixes in candidates", () => {
+  const clarification = createProductLookupClarification()
+  clarification.candidates[0].name = "Syoss Intense Curls Shampoo (legacy duplicate)"
+
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={clarification}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={() => {}}
+    />,
+  )
+
+  assert.match(html, /Curls Shampoo/)
+  assert.doesNotMatch(html, /legacy duplicate/)
+})

@@ -5,7 +5,9 @@ import { Check, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import type { ProductLookupIntakeReviewResolution } from "@/lib/chat/product-lookup-selection-ui"
+import { getProductDisplayName } from "@/lib/product-display-name"
 import type { ProductLookupClarification, ProductLookupSelectionContext } from "@/lib/types"
+import { ProductImage } from "./product-image"
 import { ProductIntakeCard, ProductIntakeSubmittedState } from "./product-intake-card"
 
 type ProductLookupClarificationCardProps = {
@@ -114,6 +116,10 @@ export function ProductLookupClarificationCard({
           {clarification.candidates.map((candidate) => {
             const isSelected = candidate.product_id === selectedProductId
             const isSubmitted = candidate.product_id === submittedProductId
+            const candidateDisplayName = getProductDisplayName(candidate.name, {
+              brandName: candidate.brand_name,
+              productLineName: candidate.product_line_name,
+            })
 
             return (
               <div
@@ -124,9 +130,21 @@ export function ProductLookupClarificationCard({
                     : "border-border bg-background"
                 }`}
               >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-[var(--text-heading)]">
-                    {candidate.name}
+                <ProductImage
+                  imageUrl={candidate.image_url ?? null}
+                  category={candidate.category_label_de}
+                  size="sm"
+                />
+                <div className="min-w-0 flex-1 space-y-1">
+                  {candidate.brand_name || candidate.product_line_name ? (
+                    <p className="break-words text-xs leading-tight text-muted-foreground">
+                      {[candidate.brand_name, candidate.product_line_name]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  ) : null}
+                  <p className="break-words text-sm font-semibold leading-snug text-[var(--text-heading)]">
+                    {candidateDisplayName}
                   </p>
                   <span className="mt-1 inline-flex max-w-full items-center rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[11px] font-medium text-primary">
                     {candidate.category_label_de}

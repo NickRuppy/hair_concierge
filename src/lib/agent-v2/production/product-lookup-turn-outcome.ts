@@ -226,6 +226,11 @@ export async function buildProductLookupTurnOutcome(params: {
           requestId: params.requestId,
         })
       : executionsWithFallback
+  const clarificationBrandCatalog =
+    productLookupActionsAllowed &&
+    executionsForClarification.some(productLookupExecutionHasClarificationCandidates)
+      ? (await params.loadProductLookupCatalogs()).brandCatalog
+      : null
   const productLookupClarification = productLookupActionsAllowed
     ? selectProductLookupClarificationForAnswer(
         answer,
@@ -234,6 +239,7 @@ export async function buildProductLookupTurnOutcome(params: {
         {
           allowFallbackClarification:
             visibleFailure || Boolean(deterministicLookupFallback || categorylessLookupFallback),
+          brandCatalog: clarificationBrandCatalog,
         },
       )
     : null
@@ -562,11 +568,84 @@ function productLookupCandidateName(candidate: ProductLookupResult["candidates"]
   return candidate.product.cleanName ?? candidate.product.name
 }
 
+type ProductLookupIdentityProduct = {
+  brandId?: string | null
+  brand_id?: string | null
+  productLineId?: string | null
+  product_line_id?: string | null
+}
+
+function productLookupBrandId(product: ProductLookupIdentityProduct) {
+  return product.brandId ?? product.brand_id ?? null
+}
+
+function productLookupProductLineId(product: ProductLookupIdentityProduct) {
+  return product.productLineId ?? product.product_line_id ?? null
+}
+
+function productLookupCandidateImageUrl(candidate: ProductLookupResult["candidates"][number]) {
+  return candidate.product.imageUrl ?? candidate.product.image_url ?? null
+}
+
+function productIdentityProductLineName(
+  productLine: NonNullable<BrandResolutionCatalogInput["productLines"]>[number],
+): string {
+  return (
+    productLine.canonical_name ??
+    productLine.canonicalName ??
+    productLine.name ??
+    productLine.key ??
+    productLine.id ??
+    ""
+  )
+}
+
+function productLookupCandidateBrandName(
+  candidate: ProductLookupResult["candidates"][number],
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  return productLookupBrandName(candidate.product, brandCatalog)
+}
+
+function productLookupBrandName(
+  product: ProductLookupIdentityProduct,
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  const brandId = productLookupBrandId(product)
+  if (!brandId) return null
+  const brand = brandCatalog?.brands.find(
+    (candidateBrand) => (candidateBrand.id ?? candidateBrand.key ?? null) === brandId,
+  )
+  return brand ? productIdentityBrandName(brand) : null
+}
+
+function productLookupCandidateLineName(
+  candidate: ProductLookupResult["candidates"][number],
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  return productLookupLineName(candidate.product, brandCatalog)
+}
+
+function productLookupLineName(
+  product: ProductLookupIdentityProduct,
+  brandCatalog: BrandResolutionCatalogInput | null | undefined,
+): string | null {
+  const productLineId = productLookupProductLineId(product)
+  if (!productLineId) return null
+  const productLine = brandCatalog?.productLines?.find(
+    (candidateLine) => (candidateLine.id ?? candidateLine.key ?? null) === productLineId,
+  )
+  return productLine ? productIdentityProductLineName(productLine) : null
+}
+
 function selectProductLookupClarificationForAnswer(
   answer: AgentV2TerminalAnswer,
   executions: readonly ProductLookupExecution[],
   latestUserMessage: string,
-  options: { allowFallbackClarification?: boolean } = {},
+  options: {
+    allowFallbackClarification?: boolean
+    brandCatalog?: BrandResolutionCatalogInput | null
+  } = {},
 ): ProductLookupClarification | null {
   if (!options.allowFallbackClarification && !answerSupportsProductIntakeOffer(answer)) return null
 
@@ -603,6 +682,11 @@ function selectProductLookupClarificationForAnswer(
     return {
       product_id: candidate.productId,
       name: productLookupCandidateName(candidate),
+      brand_name:
+        productLookupCandidateBrandName(candidate, options.brandCatalog) ??
+        execution.input.brand_text,
+      product_line_name: productLookupCandidateLineName(candidate, options.brandCatalog),
+      image_url: productLookupCandidateImageUrl(candidate),
       category: candidateCategory,
       category_label_de: isProductIntakeCategoryKey(candidateCategory)
         ? PRODUCT_LOOKUP_CATEGORY_LABELS[candidateCategory]
