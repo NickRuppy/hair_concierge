@@ -33,13 +33,26 @@ function CardTile({ card }: { card: RoutineUiCard }) {
 
   if (card.kind === "pending") {
     return (
-      <div className={cn(baseClassName, "bg-[#F2EEFA]")}>
+      <div
+        className={baseClassName}
+        style={{ background: "linear-gradient(155deg,#F5EBD2,#E6D4A8)" }}
+      >
         <Hourglass className="h-8 w-8 text-[#8a6a30]" aria-hidden="true" />
       </div>
     )
   }
 
-  const imageUrl = card.kind === "suggestion" ? null : (card.product?.image_url ?? null)
+  if (card.kind === "suggestion") {
+    return (
+      <div className={cn(baseClassName, "bg-[#F2EEFA] opacity-70 saturate-[0.7]")}>
+        <span aria-hidden="true" className="font-serif text-3xl font-medium text-[#6B50A0]/25">
+          {card.categoryLabel.charAt(0)}
+        </span>
+      </div>
+    )
+  }
+
+  const imageUrl = card.product?.image_url ?? null
 
   return (
     <div className={cn(baseClassName, "bg-[#F2EEFA]")}>
@@ -159,11 +172,18 @@ export function RoutineCard({ card, busy, onTap, onDismissSuggestion }: RoutineC
               ? `${card.categoryLabel} · Vorgeschlagen`
               : card.categoryLabel}
           </span>
+          {card.kind === "pending" && (
+            <span className="inline-flex shrink-0 items-center gap-[5px] rounded-full bg-[rgba(232,188,100,0.30)] px-2 py-[2px] text-[9px] font-semibold uppercase tracking-[0.10em] text-[#6e5318]">
+              <span aria-hidden="true" className="h-[5px] w-[5px] rounded-full bg-[#C89538]" />
+              In Prüfung
+            </span>
+          )}
         </div>
 
         <p
           className={cn(
             "text-[15px] font-semibold leading-[1.22] text-[var(--text-heading)]",
+            card.kind === "pending" && "text-[rgba(31,26,20,0.7)]",
             card.kind === "suggestion" && "text-sm font-normal text-[rgba(31,26,20,0.82)]",
           )}
         >

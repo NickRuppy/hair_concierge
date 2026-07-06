@@ -32,39 +32,48 @@ export type FrequencyControlModel = {
   preferred: { leftPercent: number } | null
 }
 
+const PENDING_CARD_BACKGROUND: CSSProperties = {
+  background:
+    "repeating-linear-gradient(135deg, rgba(232,188,100,0.05) 0, rgba(232,188,100,0.05) 6px, transparent 6px, transparent 14px), rgba(232,188,100,0.10)",
+}
+
+const YELLOW_CARD_CLASSES = "border-[rgba(200,160,40,0.22)] bg-[rgba(220,180,60,0.12)]"
+
 const CARD_VISUALS: Record<RoutineUiCard["kind"], RoutineCardVisual> = {
   verified_matches: {
-    cardClassName: "border-border bg-card",
+    cardClassName: "border-[rgba(110,170,110,0.22)] bg-[rgba(110,170,110,0.10)]",
     dotClassName: "bg-[#6FAA70]",
     action: "chevron",
     actionLabel: null,
   },
   verified_swap: {
-    cardClassName: "border-border bg-card",
+    cardClassName: YELLOW_CARD_CLASSES,
     dotClassName: "bg-[#C8A038]",
     action: "swap",
     actionLabel: "Tausch",
   },
   verified_unnecessary: {
-    cardClassName: "border-border bg-card",
+    cardClassName: YELLOW_CARD_CLASSES,
     dotClassName: "bg-[#C8A038]",
     action: "trash",
     actionLabel: "Entfernen?",
   },
   verified_more_freq: {
-    cardClassName: "border-border bg-card",
+    cardClassName: "border-[rgba(200,100,80,0.22)] bg-[rgba(200,100,80,0.09)]",
     dotClassName: "bg-[#C86850]",
     action: "more",
     actionLabel: "Häufiger",
   },
   pending: {
-    cardClassName: "border-border bg-card",
+    cardClassName: "border-[rgba(232,188,100,0.35)] border-l-[3px] border-l-[#E8BC64] pl-[12px]",
+    cardStyle: PENDING_CARD_BACKGROUND,
     dotClassName: null,
     action: "chevron",
     actionLabel: null,
   },
   suggestion: {
-    cardClassName: "border-border bg-card",
+    cardClassName:
+      "border-transparent bg-[rgba(110,105,95,0.10)] shadow-[inset_0_2px_5px_rgba(31,26,20,0.10),inset_0_-1px_1px_rgba(255,255,255,0.55),inset_0_0_0_1px_rgba(31,26,20,0.04)]",
     dotClassName: "bg-[#6B50A0]",
     action: "chat",
     actionLabel: "Chat",
