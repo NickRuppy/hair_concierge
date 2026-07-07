@@ -6,7 +6,7 @@
 
 **Worktree:** `.worktrees/routine-artifact-current-main` · branch `codex/routine-artifact-current-main`
 **Dev server:** `http://localhost:3315` (dev-login: `GET /api/dev/login?next=/routine` gives an authenticated session)
-**Spec:** `docs/superpowers/specs/2026-06-08-routine-artifact-design.md` (root checkout — note the 2026-07-06 deltas section)
+**Implementation reference:** this handoff doc. The original routine spec/plan files are historical planning inputs and are not part of the current `origin/main` tree.
 **Verification pattern:** Playwright script at 430×930, `page.goto("http://localhost:3315/api/dev/login?next=/routine")`, dismiss cookie banner ("Alle akzeptieren"), screenshot. Never commit the script.
 
 ## Design tokens (from locked mockups v17–v22)
@@ -50,11 +50,11 @@ Nothing — UI polish complete, feature fully committed, Codex review findings f
 | `3ee2f38` | Trigger-created conversations get German titles ("Routine · {Kategorie}" etc.). |
 | `e5e8230` | BONUS bug found in verification: `products.category` raw labels ("Shampoo") vs API keys ("shampoo") — strict equality 422'd all adds. Now compares via `normalizeCategoryKey`. |
 
-Verification: routine suite 50/50, live add/replace 200 through trigger-protected DB, heat_protectant dismiss 200, CareBalance delta text live-flips both directions without reload.
+Verification: routine suite 54/54, live add/replace 200 through trigger-protected DB, heat_protectant dismiss 200, CareBalance delta text live-flips both directions without reload.
 
 ### Open decisions (user)
 
-None. Next: final `ci:verify` → push + PR (user confirmation pending).
+None. Next: clean working tree → push + PR (user confirmation pending).
 
 ### Backlog (explicitly deferred, next work package)
 
@@ -64,14 +64,14 @@ None. Next: final `ci:verify` → push + PR (user confirmation pending).
 
 ### After polish completes (ship gate, per CLAUDE.md)
 
-1. `npm run ci:verify`
-2. Codex review via `codex:codex-rescue` agent on `git diff main...HEAD`
-3. Fix real findings
-4. Push + PR (squash-merge)
+1. Keep the worktree clean except intentional PR content.
+2. Push + PR (squash-merge).
+3. Apply migration `20260706130000_dismissed_suggestions.sql` to production Supabase as an explicit deploy step.
+4. Run one authenticated production smoke on `/routine` after deploy.
 
 ## Constraints for any resuming session
 
-- Worktree contains OTHER uncommitted work (chat/header/agent/api files). NEVER `git add -A` — stage explicitly by path.
+- Worktree should be clean before push. If local tool metadata appears under `supabase/.temp/*`, do not include it in the PR.
 - Do not touch the data layer (`src/lib/routines/*.ts` logic, API handlers) except where the punch list requires it.
 - 8-stop frequency enum from `src/lib/vocabulary/frequencies.ts` is canonical; never invent values.
 - Typecheck before every commit (pre-commit hook enforces).
