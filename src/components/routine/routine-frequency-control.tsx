@@ -198,7 +198,22 @@ export function RoutineFrequencyControl({
       </div>
 
       <div className="mt-2 flex min-h-4 items-center justify-between gap-3 text-[11px] text-muted-foreground">
-        <span>{model.deltaLabel}</span>
+        {/* Swatch mirrors the target-band bracket so the caption visually
+            maps to the plum line under the track. */}
+        <span
+          className={cn(
+            "flex items-center gap-1.5",
+            showTarget && card.frequencyTarget?.delta === "in_range" && "text-[#6B50A0]",
+          )}
+        >
+          {showTarget && bracket && (
+            <span
+              aria-hidden="true"
+              className="inline-block h-[3px] w-3 shrink-0 rounded-full bg-[rgba(107,80,160,0.35)]"
+            />
+          )}
+          {model.deltaLabel}
+        </span>
         {showTarget && (
           <span>
             {model.preferredLabel ? `Chaarlie: ${model.preferredLabel}` : "Kein Ziel gesetzt"}
