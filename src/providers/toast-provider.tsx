@@ -39,8 +39,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ toasts, toast, dismiss }}>
       {children}
-      {/* Toast viewport */}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      {/* Toast viewport: above overlays like the z-50 bottom sheet, so
+          feedback from actions inside a sheet stays visible. */}
+      <div className="fixed bottom-4 right-4 z-[60] flex flex-col gap-2">
         {toasts.map((t) => (
           <div
             key={t.id}
@@ -51,9 +52,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             }`}
           >
             <p className="text-sm font-semibold">{t.title}</p>
-            {t.description && (
-              <p className="text-sm opacity-80">{t.description}</p>
-            )}
+            {t.description && <p className="text-sm opacity-80">{t.description}</p>}
           </div>
         ))}
       </div>

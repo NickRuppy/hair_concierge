@@ -6,6 +6,7 @@ import { MessageCircle, RefreshCw } from "lucide-react"
 
 import { Header } from "@/components/layout/header"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/providers/toast-provider"
 import { launchRoutineChatTrigger, type RoutineChatTriggerType } from "@/lib/routines/chat-triggers"
 import type { RoutineUiCard, RoutineUiShape } from "@/lib/routines/types"
 import type { HairProfile } from "@/lib/types"
@@ -51,6 +52,7 @@ async function readError(response: Response, fallback: string): Promise<string> 
 
 export function RoutinePageClient() {
   const router = useRouter()
+  const { toast } = useToast()
   const [routine, setRoutine] = useState<RoutineUiShape>(EMPTY_ROUTINE)
   const [loadState, setLoadState] = useState<LoadState>("loading")
   const [error, setError] = useState<string | null>(null)
@@ -124,18 +126,18 @@ export function RoutinePageClient() {
         if (!response.ok) {
           throw new Error(await readError(response, "Nutzung konnte nicht gespeichert werden."))
         }
-      } catch (saveError) {
+      } catch {
+        // Roll back the optimistic slider value and surface the failure.
         setRoutine(previousRoutine)
-        setError(
-          saveError instanceof Error
-            ? saveError.message
-            : "Nutzung konnte nicht gespeichert werden.",
-        )
+        toast({
+          title: "Speichern fehlgeschlagen. Bitte versuche es noch einmal.",
+          variant: "destructive",
+        })
       } finally {
         setBusyKey(null)
       }
     },
-    [routine],
+    [routine, toast],
   )
 
   const removeUsage = useCallback(
