@@ -135,11 +135,13 @@ export function RoutineFrequencyControl({
             />
           )}
 
-          {/* Target-range band (overlay on the track) */}
+          {/* Target-range band: overlays the fill and overhangs the 6px track
+              slightly so the healthy zone stays readable on both the filled
+              and unfilled portions. */}
           {model.band && (
             <div
               aria-hidden="true"
-              className="absolute inset-y-0 rounded-full bg-[rgba(107,80,160,0.15)]"
+              className="absolute -bottom-[2px] -top-[2px] z-[1] rounded-full bg-[rgba(107,80,160,0.15)]"
               style={{
                 left: `${model.band.leftPercent}%`,
                 width: `${Math.max(model.band.widthPercent, 2)}%`,
@@ -153,7 +155,7 @@ export function RoutineFrequencyControl({
               key={stop.value}
               aria-hidden="true"
               className={cn(
-                "absolute top-1/2 z-[1] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full",
+                "absolute top-1/2 z-[2] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full",
                 selectedIndex >= 0 && index <= selectedIndex
                   ? "bg-white/70"
                   : "bg-[rgba(31,26,20,0.2)]",
@@ -165,7 +167,7 @@ export function RoutineFrequencyControl({
           {/* Thumb */}
           {selectedIndex >= 0 && (
             <div
-              className="absolute top-1/2 z-[2] h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-[#D4616A] bg-white shadow-[0_4px_10px_-2px_rgba(31,26,20,0.18)] transition-[left] duration-100"
+              className="absolute top-1/2 z-[3] h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-[#D4616A] bg-white shadow-[0_4px_10px_-2px_rgba(31,26,20,0.18)] transition-[left] duration-100"
               style={{ left: `${fillPercent}%` }}
             />
           )}
