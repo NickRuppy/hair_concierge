@@ -104,15 +104,17 @@ function DrawerTile({ card }: { card: RoutineUiCard }) {
 
   const imageUrl = card.product?.image_url ?? null
   return (
-    <div className={cn(baseClassName, "bg-[#F2EEFA]")}>
+    // #F3EFE8 matches the standardized baked background of catalog imagery,
+    // so the tile merges with the photo (see routine-card.tsx CardTile).
+    <div className={cn(baseClassName, "bg-[#F3EFE8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]")}>
       {imageUrl ? (
         <Image
           src={imageUrl}
           alt=""
-          width={46}
-          height={70}
+          width={54}
+          height={82}
           unoptimized
-          className="h-[80%] w-[60%] object-contain"
+          className="h-[94%] w-[72%] object-contain"
         />
       ) : (
         <span aria-hidden="true" className="font-serif text-2xl font-medium text-[#6B50A0]/25">

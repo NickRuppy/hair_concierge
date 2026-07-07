@@ -46,7 +46,7 @@ function CardTile({ card }: { card: RoutineUiCard }) {
 
   if (card.kind === "suggestion") {
     return (
-      <div className={cn(baseClassName, "bg-[#F2EEFA] opacity-70 saturate-[0.7]")}>
+      <div className={cn(baseClassName, "bg-[#F3EFE8] opacity-70 saturate-[0.7]")}>
         <span aria-hidden="true" className="font-serif text-3xl font-medium text-[#6B50A0]/25">
           {card.categoryLabel.charAt(0)}
         </span>
@@ -57,15 +57,18 @@ function CardTile({ card }: { card: RoutineUiCard }) {
   const imageUrl = card.product?.image_url ?? null
 
   return (
-    <div className={cn(baseClassName, "bg-[#F2EEFA]")}>
+    // #F3EFE8 matches the standardized baked background of catalog imagery
+    // (scripts/product-intake/finalize-package-image.ts BACKGROUND), so the
+    // tile merges with the photo and the product reads free-standing.
+    <div className={cn(baseClassName, "bg-[#F3EFE8]")}>
       {imageUrl ? (
         <Image
           src={imageUrl}
           alt=""
-          width={53}
-          height={80}
+          width={62}
+          height={94}
           unoptimized
-          className="h-[80%] w-[60%] object-contain"
+          className="h-[94%] w-[72%] object-contain"
         />
       ) : (
         <span aria-hidden="true" className="font-serif text-3xl font-medium text-[#6B50A0]/25">
