@@ -52,6 +52,16 @@ Nothing — UI polish complete, feature fully committed, Codex review findings f
 
 Verification: routine suite 54/54, live add/replace 200 through trigger-protected DB, heat_protectant dismiss 200, CareBalance delta text live-flips both directions without reload.
 
+### User drawer-feedback round (2026-07-07, post-review) — all fixed
+
+| Commit | Change |
+|---|---|
+| `bcf63a3` | ROOT CAUSE of both reported drawer bugs: bottom-sheet drag-to-dismiss pointer-captured on every pointerdown, swallowing ALL clicks inside the sheet (close ×, chat CTA, remove, shop). Now captures only after 12px downward movement; heals chat drawer too. |
+| `15d7e5b` | Chat-trigger seed messages: brand no longer duplicated ("Syoss Syoss…"). |
+| `9f972a0` | "Drin" badge removed from routine drawer (trivially always-true there; chat drawer's real membership toggle untouched). |
+| `7289dcb` | Slider: current value as large centered serif headline; target band moved to a plum bracket BELOW the track (no color-mixing with coral fill); 4% min bracket for single-stop ranges. |
+| `bc067ef` | Tile blends with imagery: asset audit showed intake pipeline flattens images onto `#F3EFE8` (`finalize-package-image.ts`) — tile color changed plum-ice → `#F3EFE8`, photo enlarged ~18%. Pending sand tile + suggestion ghost kept. |
+
 ### Open decisions (user)
 
 None. Next: clean working tree → push + PR (user confirmation pending).
