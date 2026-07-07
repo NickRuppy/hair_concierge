@@ -38,6 +38,16 @@ type ApiResult<TBody extends Record<string, unknown>> = {
 
 type RoutineApiDeps = {
   createClient: () => Promise<unknown>
+  /**
+   * Service-role client for `user_product_usage` writes that touch
+   * review-managed fields (`product_id`, `match_status`, `brand_text`,
+   * `intake_method`, `source`, ...): the DB trigger
+   * `protect_user_product_usage_review_fields` rejects those fields for
+   * regular authenticated clients. Auth + ownership are always verified on
+   * the session client first, and every admin query MUST be scoped to the
+   * verified user id.
+   */
+  createAdminClient: () => unknown
   loadRoutineArtifactData: (params: { userId: string }) => Promise<RoutineArtifactData>
   shapeRoutineForUi: RoutineApiShapeFunction
   createDismissal: (params: {
@@ -361,8 +371,13 @@ export function createRoutineApiHandlers(deps: RoutineApiDeps) {
         )
       }
 
+      // Review-managed fields require the service-role client (see
+      // RoutineApiDeps.createAdminClient). Ownership was verified above via
+      // the session client; keep every write explicitly user-scoped.
+      const adminClient = asRoutineClient(deps.createAdminClient())
+
       if (replacementRow) {
-        const { data, error } = await table(client, "user_product_usage")
+        const { data, error } = await table(adminClient, "user_product_usage")
           .update(productPayload(product))
           .eq("id", replacementRow.id)
           .eq("user_id", user.id)
@@ -380,7 +395,7 @@ export function createRoutineApiHandlers(deps: RoutineApiDeps) {
         return json({ error: "Für diese Kategorie fehlt ein Frequenzziel." }, 422)
       }
 
-      const { data, error } = await table(client, "user_product_usage")
+      const { data, error } = await table(adminClient, "user_product_usage")
         .insert({
           user_id: user.id,
           category,

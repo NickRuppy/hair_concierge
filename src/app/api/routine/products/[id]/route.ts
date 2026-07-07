@@ -4,6 +4,7 @@ import { createRoutineApiHandlers } from "@/lib/routines/api-handlers"
 import { createDismissal } from "@/lib/routines/dismissals"
 import { loadRoutineArtifactData } from "@/lib/routines/load-routine-artifact-data"
 import { shapeRoutineForUi } from "@/lib/routines/shape-for-ui"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
 type RouteContext = {
@@ -12,6 +13,7 @@ type RouteContext = {
 
 const handlers = createRoutineApiHandlers({
   createClient,
+  createAdminClient,
   loadRoutineArtifactData,
   shapeRoutineForUi,
   createDismissal,

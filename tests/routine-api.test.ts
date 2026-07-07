@@ -146,6 +146,8 @@ function createHandlers({
   const client = createFakeClient(fakeState)
   const handlers = createRoutineApiHandlers({
     createClient: async () => client as never,
+    // Same fake DB for the service-role path used by review-managed writes.
+    createAdminClient: () => client as never,
     loadRoutineArtifactData: async (params) => {
       calls.load.push(params)
       return loadResult as never
