@@ -2,7 +2,6 @@
 
 import {
   ArrowLeftRight,
-  Check,
   Clock,
   Hourglass,
   MessageCircle,
@@ -255,7 +254,8 @@ export function RoutineDrawer({
         <BottomSheetContent className="max-h-[85vh]">
           <BottomSheetHeader className="gap-4 border-b border-border pb-4">
             <DrawerTile card={card} />
-            <div className="min-w-0 flex-1">
+            {/* pr-10 keeps the title clear of the sheet's absolute close button. */}
+            <div className="min-w-0 flex-1 pr-10">
               {brand && <p className="text-[11px] font-medium text-muted-foreground">{brand}</p>}
               <BottomSheetTitle className="font-serif text-lg font-medium leading-tight">
                 {title}
@@ -265,14 +265,6 @@ export function RoutineDrawer({
                 pending={isPending}
               />
             </div>
-            {isVerifiedProduct && (
-              /* mt-10 drops the badge below the sheet's absolute close button
-                 so the two don't crowd each other at narrow widths. */
-              <span className="mt-10 inline-flex h-8 shrink-0 items-center gap-1 self-start rounded-full bg-emerald-50 px-3 text-xs font-semibold text-emerald-800">
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                Drin
-              </span>
-            )}
           </BottomSheetHeader>
 
           <div className="space-y-5 pt-4">
