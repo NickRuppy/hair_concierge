@@ -154,6 +154,7 @@ export function buildRecommendationEngineRuntimeFromEffectiveContext(
     damage,
     careNeeds,
     reset,
+    shampooCadenceAssessment,
   })
   const plan = buildInterventionPlan(normalized, damage, careNeeds, reset, requestContext)
   const legacyPlanComparison = buildCareBalanceLegacyComparison(careBalance, plan)
