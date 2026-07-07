@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { MessageCircle, RefreshCw } from "lucide-react"
+import { MessageCircle, RefreshCw, SlidersHorizontal } from "lucide-react"
 
 import { Header } from "@/components/layout/header"
 import { Button } from "@/components/ui/button"
@@ -313,18 +313,30 @@ export function RoutinePageClient() {
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Sobald Produkte aus deinem Profil oder Chat erkannt wurden, erscheint hier deine
-                stabile Routine-Übersicht.
+                stabile Routine-Übersicht. Sicher, dass du noch nichts eingetragen hast?
               </p>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-4 w-auto"
-                onClick={() => router.push("/chat")}
-              >
-                <MessageCircle className="h-4 w-4" />
-                Im Chat starten
-              </Button>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-auto"
+                  onClick={() => router.push("/onboarding")}
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Onboarding anpassen
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-auto"
+                  onClick={() => router.push("/chat")}
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Im Chat starten
+                </Button>
+              </div>
             </section>
           )}
 
