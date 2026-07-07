@@ -30,7 +30,7 @@ test("buildPayPalPlanPayload creates active infinite fixed-price plans", () => {
         sequence: 1,
         total_cycles: 0,
         pricing_scheme: {
-          fixed_price: { value: "17.49", currency_code: "EUR" },
+          fixed_price: { value: "34.99", currency_code: "EUR" },
         },
       },
     ],

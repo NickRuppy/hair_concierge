@@ -140,22 +140,12 @@ export async function POST(req: NextRequest) {
 
     const origin = req.nextUrl.origin
     const stripe = getStripe()
-    const discountCouponId = process.env.STRIPE_DISCOUNT_COUPON_ID
-    if (!discountCouponId) {
-      // The UI advertises 50%-off discounted prices unconditionally. If the coupon is
-      // not configured, Stripe will charge the full anchor price — surface this loudly
-      // so a misconfigured environment is obvious in logs.
-      console.warn(
-        "[stripe] STRIPE_DISCOUNT_COUPON_ID is not set — checkout will charge the full anchor price. Configure the discount coupon in Stripe + env to match the UI.",
-      )
-    }
 
     const params = buildStripeCheckoutSessionParams({
       origin,
       priceId,
       customerId,
       customerEmail,
-      discountCouponId,
       leadId: resolvedLeadId,
     })
     const session = await stripe.checkout.sessions.create(params)

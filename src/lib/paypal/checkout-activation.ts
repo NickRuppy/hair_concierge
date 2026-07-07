@@ -15,6 +15,7 @@ import {
   toBillingSubscriptionInputFromPayPal,
   type PayPalSubscription,
 } from "./subscription-shapes"
+import { getPayPalIntervalForPlanId } from "./plans"
 
 export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
@@ -248,9 +249,8 @@ function assertActivePayPalSubscription(
 }
 
 function intervalFromPlanId(planId: string): BillingInterval {
-  if (planId && planId === process.env.PAYPAL_PLAN_ID_MONTHLY) return "month"
-  if (planId && planId === process.env.PAYPAL_PLAN_ID_QUARTERLY) return "quarter"
-  if (planId && planId === process.env.PAYPAL_PLAN_ID_ANNUAL) return "year"
+  const interval = getPayPalIntervalForPlanId(planId)
+  if (interval) return interval
   throw new PayPalCheckoutActivationError(
     "paypal_subscription_interval_unknown",
     "PayPal subscription plan id does not match a configured interval",

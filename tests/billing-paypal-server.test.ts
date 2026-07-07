@@ -44,7 +44,11 @@ import {
   createStripeCheckoutEmailAccessConflictResponse,
 } from "../src/app/api/stripe/create-checkout-session/route"
 import { handleBillingReconcile } from "../src/app/api/billing/reconcile/route"
-import { EXPECTED_PAYPAL_PLAN_SHAPES, getPayPalPlanId } from "../src/lib/paypal/plans"
+import {
+  EXPECTED_PAYPAL_PLAN_SHAPES,
+  getPayPalIntervalForPlanId,
+  getPayPalPlanId,
+} from "../src/lib/paypal/plans"
 import {
   mapPayPalSubscriptionStatus,
   toBillingSubscriptionInputFromPayPal,
@@ -1911,6 +1915,38 @@ test("getPayPalPlanId reads interval-specific server env vars", () => {
   }
 })
 
+test("getPayPalIntervalForPlanId recognizes current and legacy plan ids", () => {
+  const previous = {
+    monthly: process.env.PAYPAL_PLAN_ID_MONTHLY,
+    quarterly: process.env.PAYPAL_PLAN_ID_QUARTERLY,
+    annual: process.env.PAYPAL_PLAN_ID_ANNUAL,
+    legacyMonthly: process.env.PAYPAL_LEGACY_PLAN_IDS_MONTHLY,
+    legacyQuarterly: process.env.PAYPAL_LEGACY_PLAN_ID_QUARTERLY,
+    legacyAnnual: process.env.PAYPAL_LEGACY_PLAN_IDS_ANNUAL,
+  }
+  process.env.PAYPAL_PLAN_ID_MONTHLY = "P-new-month"
+  process.env.PAYPAL_PLAN_ID_QUARTERLY = "P-new-quarter"
+  process.env.PAYPAL_PLAN_ID_ANNUAL = "P-new-year"
+  process.env.PAYPAL_LEGACY_PLAN_IDS_MONTHLY = "P-old-month-a, P-old-month-b"
+  process.env.PAYPAL_LEGACY_PLAN_ID_QUARTERLY = "P-old-quarter"
+  process.env.PAYPAL_LEGACY_PLAN_IDS_ANNUAL = "P-old-year"
+
+  try {
+    assert.equal(getPayPalIntervalForPlanId("P-new-month"), "month")
+    assert.equal(getPayPalIntervalForPlanId("P-old-month-b"), "month")
+    assert.equal(getPayPalIntervalForPlanId("P-old-quarter"), "quarter")
+    assert.equal(getPayPalIntervalForPlanId("P-old-year"), "year")
+    assert.equal(getPayPalIntervalForPlanId("P-unknown"), null)
+  } finally {
+    restoreEnv("PAYPAL_PLAN_ID_MONTHLY", previous.monthly)
+    restoreEnv("PAYPAL_PLAN_ID_QUARTERLY", previous.quarterly)
+    restoreEnv("PAYPAL_PLAN_ID_ANNUAL", previous.annual)
+    restoreEnv("PAYPAL_LEGACY_PLAN_IDS_MONTHLY", previous.legacyMonthly)
+    restoreEnv("PAYPAL_LEGACY_PLAN_ID_QUARTERLY", previous.legacyQuarterly)
+    restoreEnv("PAYPAL_LEGACY_PLAN_IDS_ANNUAL", previous.legacyAnnual)
+  }
+})
+
 test("getPayPalPlanId throws when the interval plan id is missing", () => {
   const previous = process.env.PAYPAL_PLAN_ID_MONTHLY
   delete process.env.PAYPAL_PLAN_ID_MONTHLY
@@ -1924,9 +1960,9 @@ test("getPayPalPlanId throws when the interval plan id is missing", () => {
 
 test("expected PayPal plan definitions use configured EUR prices and intervals", () => {
   assert.deepEqual(EXPECTED_PAYPAL_PLAN_SHAPES, {
-    month: { amount: "7.49", currency: "EUR", intervalUnit: "MONTH", intervalCount: 1 },
-    quarter: { amount: "17.49", currency: "EUR", intervalUnit: "MONTH", intervalCount: 3 },
-    year: { amount: "49.99", currency: "EUR", intervalUnit: "YEAR", intervalCount: 1 },
+    month: { amount: "14.99", currency: "EUR", intervalUnit: "MONTH", intervalCount: 1 },
+    quarter: { amount: "34.99", currency: "EUR", intervalUnit: "MONTH", intervalCount: 3 },
+    year: { amount: "99.99", currency: "EUR", intervalUnit: "YEAR", intervalCount: 1 },
   })
 })
 
@@ -1967,7 +2003,7 @@ test("validatePayPalPlanShape accepts the expected active PayPal billing plan sh
 test("validatePayPalPlanShape rejects wrong amount, currency, or interval count", () => {
   assert.throws(
     () => validatePayPalPlanShape(paypalPlan("ACTIVE", { value: "8.49" }), "month"),
-    /expected amount 7\.49 but received 8\.49/,
+    /expected amount 14\.99 but received 8\.49/,
   )
   assert.throws(
     () => validatePayPalPlanShape(paypalPlan("ACTIVE", { currency_code: "USD" }), "month"),
@@ -2050,7 +2086,7 @@ function paypalPlan(
         },
         pricing_scheme: {
           fixed_price: {
-            value: overrides.value ?? "7.49",
+            value: overrides.value ?? "14.99",
             currency_code: overrides.currency_code ?? "EUR",
           },
         },

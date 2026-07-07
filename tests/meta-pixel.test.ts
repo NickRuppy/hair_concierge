@@ -134,7 +134,7 @@ test("purchase tracking fires with value metadata and event id even without cons
         eventId: "cs_test_purchase",
         interval: "quarter",
         paymentMethodType: "card",
-        value: 17.49,
+        value: 34.99,
       },
       { doc: dom.doc, win: dom.win },
     ),
@@ -153,7 +153,7 @@ test("purchase tracking fires with value metadata and event id even without cons
         currency: "EUR",
         payment_method_type: "card",
         subscription_interval: "quarter",
-        value: 17.49,
+        value: 34.99,
       },
       { eventID: "cs_test_purchase" },
     ],
@@ -171,7 +171,7 @@ test("purchase tracking dedupes the same checkout session in browser storage", (
     currency: "EUR",
     eventId: "cs_test_dedupe",
     interval: "month",
-    value: 7.49,
+    value: 14.99,
   } as const
 
   assert.equal(trackMetaPurchaseConfirmed(purchase, { doc: dom.doc, win: dom.win }), true)
@@ -194,7 +194,7 @@ test("subscription and purchase tracking remain best-effort when session storage
         currency: "EUR",
         eventId: "cs_storage_blocked",
         interval: "month",
-        value: 7.49,
+        value: 14.99,
       },
       { doc: dom.doc, win: dom.win },
     ),

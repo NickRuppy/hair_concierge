@@ -30,7 +30,7 @@ function renderCheckout(paypalEnabled: boolean) {
         onChangePlan={() => undefined}
         onPayPalCheckoutStarted={() => undefined}
         onRetry={() => undefined}
-        planLabel="Jetzt starten — €17,49 im Quartal"
+        planLabel="Jetzt starten — €34,99 im Quartal"
         source="quiz_result_offer"
         stripe={Promise.resolve(null)}
       />,
@@ -60,7 +60,7 @@ test("PayPal enabled checkout renders express PayPal first and keeps card checko
   const html = renderCheckout(true)
 
   assert.match(html, /Sicher bezahlen/)
-  assert.match(html, /Jetzt starten — €17,49 im Quartal/)
+  assert.match(html, /Jetzt starten — €34,99 im Quartal/)
   assert.match(html, /PayPal öffnet sich zur Bestätigung\. Danach aktivieren wir dein Konto\./)
   assert.match(html, />oder</)
   assert.match(html, /Karte &amp; weitere/)
@@ -77,7 +77,7 @@ test("PayPal disabled checkout preserves the immediate Stripe checkout surface",
   const html = renderCheckout(false)
 
   assert.match(html, /Sicher bezahlen/)
-  assert.match(html, /Jetzt starten — €17,49 im Quartal/)
+  assert.match(html, /Jetzt starten — €34,99 im Quartal/)
   assert.doesNotMatch(html, /PayPal öffnet sich zur Bestätigung/)
   assert.doesNotMatch(html, />oder</)
   assert.doesNotMatch(html, /SEPA/)

@@ -202,16 +202,11 @@ export function ResultOfferPricing({
                   {plan.name}
                 </span>
                 <span className="mt-1 block text-[11px] leading-snug text-muted-foreground">
-                  <s className="text-muted-foreground/70">{plan.price}</s>{" "}
-                  <strong className="font-semibold text-foreground">{plan.discountedPrice}</strong>{" "}
-                  {getPlanDetail(plan)}
+                  {[plan.price, getPlanDetail(plan)].filter(Boolean).join(" · ")}
                 </span>
               </span>
-              <span className="flex shrink-0 flex-col items-end leading-none">
-                <span className="text-[12px] text-muted-foreground line-through">{plan.price}</span>
-                <span className="mt-0.5 text-[17px] font-bold text-[var(--brand-plum-darkest)]">
-                  {plan.discountedPrice}
-                </span>
+              <span className="shrink-0 text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]">
+                {plan.price}
               </span>
             </button>
           )

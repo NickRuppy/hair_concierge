@@ -122,7 +122,7 @@ test("purchase completion browser event routes to PostHog and Meta", () => {
       interval: "month",
       paymentMethodType: undefined,
       planId: "premium_month",
-      value: 7.49,
+      value: 14.99,
     })
 
     assert.deepEqual(
@@ -298,7 +298,7 @@ test("Customer.io adapter maps app payloads to snake_case vendor payloads", () =
         interval: "month",
         paymentMethodType: undefined,
         planId: "premium_month",
-        value: 7.49,
+        value: 14.99,
       }),
       true,
     )
@@ -311,7 +311,7 @@ test("Customer.io adapter maps app payloads to snake_case vendor payloads", () =
           currency: "EUR",
           interval: "month",
           plan_id: "premium_month",
-          value: 7.49,
+          value: 14.99,
         },
       ],
     ])
@@ -331,7 +331,7 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
         interval: "quarter",
         paymentMethodType: "card",
         planId: "premium_quarter",
-        value: 17.49,
+        value: 34.99,
       }),
       true,
     )
@@ -350,7 +350,7 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
         currency: "EUR",
         payment_method_type: "card",
         subscription_interval: "quarter",
-        value: 17.49,
+        value: 34.99,
       },
       { eventID: "cs_test_purchase" },
     ],

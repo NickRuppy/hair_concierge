@@ -14,7 +14,7 @@ test("builds purchase and subscription events from a completed checkout", () => 
     planId: "premium_month",
     session: {
       id: "cs_test_123",
-      amount_total: 749,
+      amount_total: 1499,
       currency: "eur",
       customer: "cus_123",
       subscription: "sub_123",
@@ -37,7 +37,7 @@ test("builds purchase and subscription events from a completed checkout", () => 
   )
   assert.equal(sync.events[0].messageId, "purchase_completed:cs_test_123")
   assert.equal(sync.events[0].properties.source, "stripe_webhook")
-  assert.equal(sync.events[0].properties.amount, 7.49)
+  assert.equal(sync.events[0].properties.amount, 14.99)
   assert.equal(sync.events[0].properties.currency, "EUR")
   assert.equal(sync.events[0].timestamp, "2026-05-28T10:00:00.000Z")
   assert.equal(sync.events[1].messageId, "subscription_started:sub_123")
