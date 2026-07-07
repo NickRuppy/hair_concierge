@@ -271,6 +271,12 @@ export interface EffectiveCareContext {
   conflicts: CareBalanceConflict[]
 }
 
+export interface CareBalanceFrequencyTargetBand {
+  minFrequency: ProductFrequency
+  maxFrequency: ProductFrequency
+  preferredFrequency: ProductFrequency
+}
+
 export type CareBalanceCadencePolicy =
   | {
       kind: "match_shampoo_frequency"
@@ -282,31 +288,42 @@ export type CareBalanceCadencePolicy =
       heatExposureTier: HeatExposureTier
       relevantTools: StylingTool[]
       expected: "with_meaningful_heat" | "optional_for_airflow_only"
+      targetBand: CareBalanceFrequencyTargetBand | null
     }
   | {
       kind: "occasional_reset"
       resetNeed: ResetLevel
       cautionAtOrAbove: ProductFrequency
       vulnerableCautionAtOrAbove: ProductFrequency | null
+      targetBand: CareBalanceFrequencyTargetBand
     }
   | {
       kind: "bridge_between_washes"
       shampooFrequency: ProductFrequency | null
       expected: "short_bridge_only"
+      targetBand: CareBalanceFrequencyTargetBand
     }
   | {
       kind: "need_based_support"
       supportNeed: DamageLevel
       loadSensitive: boolean
       suggestedBand: ProductFrequency | null
+      targetBand: CareBalanceFrequencyTargetBand
     }
   | {
       kind: "protocol_based"
       priority: BondBuilderPriority
       suggestedBand: ProductFrequency | null
+      targetBand: CareBalanceFrequencyTargetBand
     }
   | { kind: "baseline_cleansing"; shampooFrequency: ProductFrequency | null }
   | { kind: "not_applicable" }
+
+export type CareBalanceFrequencyDelta = "missing" | "below" | "in_range" | "above" | "unknown"
+
+export interface CareBalanceFrequencyTarget extends CareBalanceFrequencyTargetBand {
+  delta: CareBalanceFrequencyDelta
+}
 
 export interface CareBalanceSelectionHint {
   code: string
@@ -324,6 +341,7 @@ export interface CareBalanceRow {
   decisiveReasonCodes: CareBalanceReasonCode[]
   contextReasonCodes: CareBalanceReasonCode[]
   cadencePolicy: CareBalanceCadencePolicy
+  frequencyTarget: CareBalanceFrequencyTarget | null
   selectionHints: CareBalanceSelectionHint[]
 }
 

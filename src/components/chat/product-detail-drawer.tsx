@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import type { Product, HairProfile } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { getProductIdentityDisplayParts } from "@/lib/product-lines/display"
@@ -23,11 +24,33 @@ import {
 } from "./product-display-model"
 import { ProductImage } from "./product-image"
 
+const ROUTINE_ACTION_CATEGORIES = new Set([
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "mask",
+  "oil",
+  "heat_protectant",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
+])
+
+export interface ProductDetailRoutineAction {
+  category?: string | null
+  productId?: string | null
+  existingUsageId?: string | null
+  alreadyInRoutine?: boolean
+  onChanged?: () => Promise<void> | void
+}
+
 interface ProductDetailDrawerProps {
   product: Product | null
   hairProfile: HairProfile | null
   open: boolean
   onOpenChange: (open: boolean) => void
+  routineAction?: ProductDetailRoutineAction
 }
 
 export function ProductDetailDrawer({
@@ -35,9 +58,21 @@ export function ProductDetailDrawer({
   hairProfile,
   open,
   onOpenChange,
+  routineAction,
 }: ProductDetailDrawerProps) {
   if (!product) return null
 
+  const resolvedRoutineAction: ProductDetailRoutineAction | undefined = routineAction
+    ? {
+        ...routineAction,
+        category:
+          routineAction.category ??
+          product.recommendation_meta?.category ??
+          product.category ??
+          null,
+        productId: routineAction.productId ?? product.id,
+      }
+    : undefined
   const categoryLabel = getProductCategoryLabel(
     product.recommendation_meta?.category ?? product.category,
   )
@@ -70,6 +105,7 @@ export function ProductDetailDrawer({
               </Badge>
             )}
           </div>
+          <ProductRoutineActionButton routineAction={resolvedRoutineAction} />
         </BottomSheetHeader>
 
         <div className="space-y-5 pt-2">
@@ -144,4 +180,164 @@ export function ProductDetailDrawer({
       </BottomSheetContent>
     </BottomSheet>
   )
+}
+
+export function ProductRoutineActionButton({
+  routineAction,
+}: {
+  routineAction?: ProductDetailRoutineAction
+}) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isConfirmingReplace, setIsConfirmingReplace] = useState(false)
+  const [replacementUsageId, setReplacementUsageId] = useState<string | null>(
+    routineAction?.existingUsageId ?? null,
+  )
+  const [error, setError] = useState<string | null>(null)
+
+  const category = normalizeRoutineCategory(routineAction?.category)
+  const productId = routineAction?.productId?.trim()
+
+  useEffect(() => {
+    setReplacementUsageId(routineAction?.existingUsageId ?? null)
+    setIsConfirmingReplace(false)
+    setError(null)
+  }, [productId, routineAction?.existingUsageId])
+
+  if (!routineAction || !category || !productId) return null
+
+  if (routineAction.alreadyInRoutine) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="ml-auto inline-flex h-8 shrink-0 items-center justify-center rounded-full border border-border bg-muted px-3 text-xs font-semibold text-muted-foreground"
+      >
+        Drin
+      </button>
+    )
+  }
+
+  const submitRoutineAction = async (confirmReplace: boolean) => {
+    if (replacementUsageId && !confirmReplace) {
+      setError(null)
+      setIsConfirmingReplace(true)
+      return
+    }
+
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      const body: Record<string, string | boolean> = {
+        category,
+        productId,
+      }
+
+      if (replacementUsageId) {
+        body.replaceUsageId = replacementUsageId
+        body.confirmReplace = true
+      }
+
+      const response = await fetch("/api/routine/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      })
+
+      if (response.status === 409) {
+        const conflictBody = (await response.json().catch(() => null)) as {
+          existingUsageId?: unknown
+        } | null
+        if (typeof conflictBody?.existingUsageId === "string") {
+          setReplacementUsageId(conflictBody.existingUsageId)
+          setIsConfirmingReplace(true)
+          return
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error("Routine product request failed")
+      }
+
+      setIsConfirmingReplace(false)
+      await routineAction.onChanged?.()
+    } catch {
+      setError("Konnte nicht gespeichert werden.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (isConfirmingReplace) {
+    return (
+      <div className="ml-auto flex shrink-0 flex-col items-end gap-1">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => submitRoutineAction(true)}
+            className="inline-flex h-8 items-center justify-center rounded-full bg-primary px-3 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Ersetzen
+          </button>
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => {
+              setError(null)
+              setIsConfirmingReplace(false)
+            }}
+            className="inline-flex h-8 items-center justify-center rounded-full border border-border px-3 text-xs font-semibold text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Abbrechen
+          </button>
+        </div>
+        {error && <p className="max-w-32 text-right text-xs leading-4 text-destructive">{error}</p>}
+      </div>
+    )
+  }
+
+  return (
+    <div className="ml-auto flex shrink-0 flex-col items-end gap-1">
+      <button
+        type="button"
+        disabled={isSubmitting}
+        aria-label="Zur Routine hinzufügen"
+        onClick={() => submitRoutineAction(false)}
+        className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-primary px-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isSubmitting ? "..." : "+"}
+      </button>
+      {error && <p className="max-w-32 text-right text-xs leading-4 text-destructive">{error}</p>}
+    </div>
+  )
+}
+
+function normalizeRoutineCategory(category: string | null | undefined): string | null {
+  if (!category) return null
+
+  const normalized = category
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_")
+  const aliases: Record<string, string> = {
+    deep_cleansing: "deep_cleansing_shampoo",
+    deep_cleansing_shampoo: "deep_cleansing_shampoo",
+    tiefenreinigung: "deep_cleansing_shampoo",
+    dry_shampoo: "dry_shampoo",
+    trockenshampoo: "dry_shampoo",
+    leave_in: "leave_in",
+    leavein: "leave_in",
+    leave_in_conditioner: "leave_in",
+    öl: "oil",
+    oel: "oil",
+    haaröl: "oil",
+    haaroel: "oil",
+    scrub: "peeling",
+  }
+
+  const resolved = aliases[normalized] ?? normalized
+  return ROUTINE_ACTION_CATEGORIES.has(resolved) ? resolved : null
 }

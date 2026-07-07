@@ -95,8 +95,18 @@ export async function buildProductLookupTurnOutcome(params: {
   const latestMessageNamesNewProduct = Boolean(
     params.namedProductContext && params.namedProductContext.named_product_intent !== "background",
   )
+  const latestMessageNamesActiveResolvedProduct = namedProductContextMatchesResolvedProduct(
+    params.namedProductContext,
+    params.activeResolvedProductContext,
+  )
+  const hasFoundExactLookupForActiveResolvedProduct = foundExactLookupMatchesResolvedProduct(
+    params.executions,
+    params.activeResolvedProductContext,
+  )
   const suppressStaleLookupActions =
-    Boolean(params.activeResolvedProductContext) && !latestMessageNamesNewProduct
+    Boolean(params.activeResolvedProductContext) &&
+    (!latestMessageNamesNewProduct ||
+      (latestMessageNamesActiveResolvedProduct && !hasFoundExactLookupForActiveResolvedProduct))
   const productLookupActionsAllowed =
     params.safetyMode === "normal" && params.productIntakeEnabled && !suppressStaleLookupActions
   const pendingReviewFallbackAllowed = params.safetyMode === "normal"
@@ -284,6 +294,33 @@ export async function buildProductLookupTurnOutcome(params: {
     nextActiveResolvedProductContext,
     trustedSelectedProductProjection,
   }
+}
+
+function namedProductContextMatchesResolvedProduct(
+  namedProductContext: AgentV2NamedProductContext | null,
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null,
+): boolean {
+  if (!namedProductContext || !activeResolvedProductContext?.product_id) return false
+  const namedCategory = namedProductContext.category
+  const activeCategory = activeResolvedProductContext.category
+  if (namedCategory && activeCategory && namedCategory !== activeCategory) return false
+
+  return normalizedProductTextOverlaps(
+    namedProductContext.display_name,
+    activeResolvedProductContext.name,
+  )
+}
+
+function foundExactLookupMatchesResolvedProduct(
+  executions: readonly ProductLookupExecution[],
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null,
+): boolean {
+  if (!activeResolvedProductContext?.product_id) return false
+  return executions.some(
+    (execution) =>
+      execution.result.status === "found_exact" &&
+      execution.result.product?.id === activeResolvedProductContext.product_id,
+  )
 }
 
 function withProductIntakeVisibleFailureCopy(

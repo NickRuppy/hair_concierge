@@ -4,6 +4,15 @@ import { getUnauthenticatedRedirectTarget } from "../src/lib/auth/unauthenticate
 
 test("sends unauthenticated app routes to login even without returning cookie", () => {
   assert.equal(getUnauthenticatedRedirectTarget("/chat", "", false), "/auth?next=%2Fchat")
+  assert.equal(getUnauthenticatedRedirectTarget("/routine", "", false), "/auth?next=%2Froutine")
+  assert.equal(
+    getUnauthenticatedRedirectTarget("/routine/current", "?view=week", false),
+    "/auth?next=%2Froutine%2Fcurrent%3Fview%3Dweek",
+  )
+  assert.equal(
+    getUnauthenticatedRedirectTarget("/api/routine/current", "", false),
+    "/auth?next=%2Fapi%2Froutine%2Fcurrent",
+  )
   assert.equal(
     getUnauthenticatedRedirectTarget("/profile", "?tab=routine", false),
     "/auth?next=%2Fprofile%3Ftab%3Droutine",

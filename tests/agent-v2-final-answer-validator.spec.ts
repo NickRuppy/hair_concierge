@@ -891,6 +891,154 @@ test("validator blocks product assessment from identity-only projection without 
   )
 })
 
+test("validator accepts routine usage assessment from trusted routine product context without product facts", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether their routine product cadence should change.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "Passt die Bali Curls Deep Hydration Mask so in meiner Routine?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: ["prod_bali_mask"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "routine_usage",
+      assessed_product_ids: ["prod_bali_mask"],
+      user_facing_answer_de:
+        "Für Bali Curls Deep Hydration Mask würde ich in deiner Routine erst einmal bei 1×/Woche bleiben. Das passt zu deiner aktuellen Einordnung als Haarmaske.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt die Bali Curls Deep Hydration Mask so in meiner Routine?",
+    recentEvidenceText:
+      "Ich benutze aktuell Bali Curls Deep Hydration Mask als Haarmaske. aktuell nutze ich es 1×/Woche; Chaarlies Ziel wäre 1×/Woche.",
+    selectedProductProjections: [
+      {
+        valid_product_ids: ["prod_bali_mask"],
+        products: [
+          {
+            product_id: "prod_bali_mask",
+            name: "Bali Curls Deep Hydration Mask",
+            supported_claims: [],
+          },
+        ],
+        allowed_claim_sources: ["selected_products.name", "routine_inventory"],
+      },
+    ],
+    trustedSelectedProductIds: ["prod_bali_mask"],
+    routineInventoryProductIds: ["prod_bali_mask"],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "mask",
+        input_identity: {
+          category: "mask",
+          brand_text: "Bali Curls",
+          product_name_text: "Deep Hydration Mask",
+          evidence_quote: "Bali Curls Deep Hydration Mask",
+        },
+        product: { id: "prod_bali_mask", name: "Bali Curls Deep Hydration Mask" },
+      },
+    ],
+    toolCallHistory: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator still requires product guidance for non-routine routine usage assessments", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether a catalog product cadence should change.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "Passt die Bali Curls Deep Hydration Mask so in meiner Routine?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_bali_mask"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "routine_usage",
+      assessed_product_ids: ["prod_bali_mask"],
+      user_facing_answer_de:
+        "Für Bali Curls Deep Hydration Mask würde ich in deiner Routine erst einmal bei 1×/Woche bleiben.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt die Bali Curls Deep Hydration Mask so in meiner Routine?",
+    recentEvidenceText: "Passt die Bali Curls Deep Hydration Mask so in meiner Routine?",
+    selectedProductProjections: [
+      {
+        valid_product_ids: ["prod_bali_mask"],
+        products: [
+          {
+            product_id: "prod_bali_mask",
+            name: "Bali Curls Deep Hydration Mask",
+            supported_claims: [
+              {
+                field: "category",
+                value: "mask",
+                evidence: "product_spec",
+                label: "Haarmaske",
+              },
+            ],
+          },
+        ],
+        allowed_claim_sources: ["selected_products.supported_claims"],
+      },
+    ],
+    trustedSelectedProductIds: ["prod_bali_mask"],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "mask",
+        input_identity: {
+          category: "mask",
+          brand_text: "Bali Curls",
+          product_name_text: "Deep Hydration Mask",
+          evidence_quote: "Bali Curls Deep Hydration Mask",
+        },
+        product: { id: "prod_bali_mask", name: "Bali Curls Deep Hydration Mask" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "required_guidance_loaded"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
 test("validator blocks product assessment that omits the resolved product name", () => {
   const answer = {
     ...baseAnswer,

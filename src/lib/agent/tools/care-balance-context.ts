@@ -32,12 +32,24 @@ export interface CareBalanceToolRow {
   strength: CareBalanceRow["recommendationStrength"]
   current_frequency: CareBalanceRow["currentFrequency"]
   cadence_policy: CareBalanceRow["cadencePolicy"]
+  frequency_target: CareBalanceToolFrequencyTarget | null
   reason_codes: string[]
   context_reason_codes: string[]
   selection_hint_codes: string[]
   usage_hint: string
   caveats: string[]
   authority: CareBalanceToolAuthority
+}
+
+export interface CareBalanceToolFrequencyTarget {
+  min_frequency: ProductFrequency
+  max_frequency: ProductFrequency
+  preferred_frequency: ProductFrequency
+  delta: CareBalanceRow["frequencyTarget"] extends infer TTarget
+    ? TTarget extends { delta: infer TDelta }
+      ? TDelta
+      : never
+    : never
 }
 
 export interface CareBalanceToolShampooCadence {
@@ -111,6 +123,14 @@ export function projectCareBalanceRowForTool(row: CareBalanceRow): CareBalanceTo
     strength: row.recommendationStrength,
     current_frequency: row.currentFrequency,
     cadence_policy: row.cadencePolicy,
+    frequency_target: row.frequencyTarget
+      ? {
+          min_frequency: row.frequencyTarget.minFrequency,
+          max_frequency: row.frequencyTarget.maxFrequency,
+          preferred_frequency: row.frequencyTarget.preferredFrequency,
+          delta: row.frequencyTarget.delta,
+        }
+      : null,
     reason_codes: row.decisiveReasonCodes,
     context_reason_codes: row.contextReasonCodes,
     selection_hint_codes: row.selectionHints.map((hint) => hint.code),

@@ -322,6 +322,20 @@ export async function runAgentV2ResponsesTurn(params: {
     trustedSelectedProductProjection
       ? [trustedSelectedProductProjection, ...activeProductProjections]
       : activeProductProjections
+  const routineInventoryProductIds = [
+    ...new Set([
+      ...(params.activeResolvedProductContext?.source === "routine_inventory"
+        ? [params.activeResolvedProductContext.product_id]
+        : []),
+      ...activeProductContexts.flatMap((context) =>
+        context.source === "routine_inventory" &&
+        context.status === "resolved" &&
+        context.product_id
+          ? [context.product_id]
+          : [],
+      ),
+    ]),
+  ]
   const activeResolvedLookupResults = activeProductContexts
     .map((context) => activeProductContextToTrustedSelectedProductContext(context))
     .filter((context): context is AgentV2TrustedSelectedProductContext => Boolean(context))
@@ -422,6 +436,7 @@ export async function runAgentV2ResponsesTurn(params: {
       : activeProductContexts.flatMap((context) =>
           context.status === "resolved" && context.product_id ? [context.product_id] : [],
         ),
+    routineInventoryProductIds,
     routineProjections,
     latestUserMessage: params.message,
     recentEvidenceText: buildRecentEvidenceText(params.recentMessages, routineThreadContext),
@@ -1083,7 +1098,7 @@ function buildInputItems(
   if (userContext.careBalanceContext) {
     items.push({
       role: "system",
-      content: `CareBalance product-usage context. Treat this as the current-turn category decision context: what exists, what is missing, what is underused/overused, and what should be added first at category level. It may provide soft product-ranking hints, but it is not product truth and not saved routine storage. Product-specific claims still require product metadata. Saved routine changes still require routine tooling and user permission. Frequency interpretation: shampoo_cadence is the only full target-range/delta cadence model; for other categories, do not invent shampoo-style target bands. Interpret non-shampoo usage from each row's action, current_frequency, cadence_policy, reason_codes, and usage_hint. Policy kinds: match_shampoo_frequency means conditioner-like use is tied to washes; match_heat_exposure means heat protectant is tied to meaningful heat events; occasional_reset means reset products are occasional and cautious; bridge_between_washes means dry shampoo is a short bridge only, not a positive target; need_based_support means soft care is need/load-sensitive; protocol_based means bond builders are product/protocol-specific; baseline_cleansing means basic cleansing context; not_applicable means do not force cadence commentary. If this conflicts with prior visible routine wording, trust current routine inventory and CareBalance for category inventory and first-lever decisions; use prior visible routine only for conversational continuity. ${JSON.stringify(
+      content: `CareBalance product-usage context. Treat this as the current-turn category decision context: what exists, what is missing, what is underused/overused, and what should be added first at category level. It may provide soft product-ranking hints, but it is not product truth and not saved routine storage. Product-specific claims still require product metadata. Saved routine changes still require routine tooling and user permission. Frequency interpretation: shampoo_cadence is the shampoo-specific assessment; row.frequency_target is the category-level target range when present. Do not invent target bands when frequency_target is null. Interpret non-shampoo usage from each row's action, current_frequency, cadence_policy, frequency_target, reason_codes, and usage_hint. Policy kinds: match_shampoo_frequency means conditioner-like use is tied to washes; match_heat_exposure means heat protectant is tied to meaningful heat events; occasional_reset means reset products are occasional and cautious; bridge_between_washes means dry shampoo is a short bridge only, not a positive target; need_based_support means soft care is need/load-sensitive; protocol_based means bond builders are product/protocol-specific; baseline_cleansing means basic cleansing context; not_applicable means do not force cadence commentary. If this conflicts with prior visible routine wording, trust current routine inventory and CareBalance for category inventory and first-lever decisions; use prior visible routine only for conversational continuity. ${JSON.stringify(
         userContext.careBalanceContext,
       )}`,
     })
@@ -1149,7 +1164,7 @@ function buildInputItems(
   if (activeProductContexts.length > 0) {
     items.push({
       role: "system",
-      content: `Conversation-scoped active product context. Use only when the latest user message naturally continues one of these product topics; do not force it into unrelated questions or broad product recommendations. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave the single-product context and use the normal recommendation path instead of asking which variant. Resolved entries can support single-product product_assessment when grounded by product facts. A pending_review entry blocks product-specific advice only for that same pending product identity; a different named product in the same category must be looked up or answered normally. Max three entries are kept. ${JSON.stringify(
+      content: `Conversation-scoped active product context. Use only when the latest user message naturally continues one of these product topics; do not force it into unrelated questions or broad product recommendations. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave the single-product context and use the normal recommendation path instead of asking which variant. Resolved entries can support single-product product_assessment when grounded by product facts. For source routine_inventory, cadence/placement questions about the current routine use should be product_assessment with assessment_kind routine_usage; do not make ingredient, performance, or exact product-property claims unless product facts are available. A pending_review entry blocks product-specific advice only for that same pending product identity; a different named product in the same category must be looked up or answered normally. Max three entries are kept. ${JSON.stringify(
         activeProductContexts.map((context) => ({
           status: context.status,
           product_id: context.product_id,
@@ -1178,7 +1193,7 @@ function buildInputItems(
   if (!trustedSelectedProductContext && activeResolvedProductContext) {
     items.push({
       role: "system",
-      content: `Active resolved product from the previous product clarification. The selected_product name/id/category is the canonical product identity for natural follow-ups such as "wie oft?", "passt das?", "soll ich es behalten?", or "wie nutze ich es?" when the user appears to continue the same product topic. It is a catalog-resolved product, not an unknown or unverified product. original_user_message is historical context only; do not use its older unresolved product wording as the product identity, do not ask which variant again, and do not call lookup_product_candidate for that older wording unless the user names a different product in the latest message. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave this single-product context and use the normal recommendation path. Do not say the selected_product itself is not verified or not a catalog hit; if a specific requested claim is unsupported, say that claim is unavailable. Do not force this active product into unrelated new topics. ${JSON.stringify(
+      content: `Active resolved product from the previous product clarification. The selected_product name/id/category is the canonical product identity for natural follow-ups such as "wie oft?", "passt das?", "soll ich es behalten?", or "wie nutze ich es?" when the user appears to continue the same product topic. It is a catalog-resolved product, not an unknown or unverified product. If source is routine_inventory and the latest question is about current cadence, placement, or whether to change routine use, answer as product_assessment with assessment_kind routine_usage; do not make ingredient, performance, or exact product-property claims unless product facts are available. original_user_message is historical context only; do not use its older unresolved product wording as the product identity, do not ask which variant again, and do not call lookup_product_candidate for that older wording unless the user names a different product in the latest message. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave this single-product context and use the normal recommendation path. Do not say the selected_product itself is not verified or not a catalog hit; if a specific requested claim is unsupported, say that claim is unavailable. Do not force this active product into unrelated new topics. ${JSON.stringify(
         activeResolvedProductContext,
       )}`,
     })
@@ -1205,8 +1220,8 @@ function buildNamedProductContextGuidance(
   }
 
   const productAssessmentGuidance = params.productIntakeEnabled
-    ? "For product_detail, routine_usage, or fit questions about this named product, resolve identity with lookup_product_candidate first. Use product_assessment only for one verified product-specific answer, not broad product_recommendation or multi-product comparison. For comparisons between products, use select_products/product_recommendation."
-    : "For product_detail, routine_usage, or fit questions about this named product, avoid product_assessment unless an active resolved catalog product and product facts are already available. Otherwise answer cautiously as general_advice or constraint_blocked. For comparisons between products, use select_products/product_recommendation rather than product_assessment."
+    ? "For product_detail, routine_usage, or fit questions about this named product, resolve identity with lookup_product_candidate first. Use product_assessment only for one verified product-specific answer, not broad product_recommendation or multi-product comparison. Use assessment_kind routine_usage only for cadence/placement/routine-use questions; fit/detail still need product facts. For comparisons between products, use select_products/product_recommendation."
+    : "For product_detail, routine_usage, or fit questions about this named product, avoid product_assessment unless an active resolved catalog product and product facts are already available. Routine inventory cadence/placement questions may use product_assessment with assessment_kind routine_usage from the active routine context. Otherwise answer cautiously as general_advice or constraint_blocked. For comparisons between products, use select_products/product_recommendation rather than product_assessment."
   const guidance = [
     `Current user named a plausible exact product: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
     productAssessmentGuidance,
@@ -2670,7 +2685,14 @@ function buildKnownIntentFallbackAnswer(params: {
   })
   if (activeResolvedProductFallback) return activeResolvedProductFallback
 
-  if (params.reason !== "generic" && params.reason !== "composition_failed") return null
+  const categoryOnlyLookupCategory = detectCategoryOnlyLookupFallbackCategory(params.trace)
+  if (
+    params.reason !== "generic" &&
+    params.reason !== "composition_failed" &&
+    !(params.reason === "empty_product_result" && categoryOnlyLookupCategory)
+  ) {
+    return null
+  }
 
   const recentRecommendationFitFallback = buildRecentRecommendationFitClarificationFallback({
     message: params.message,
@@ -2678,6 +2700,21 @@ function buildKnownIntentFallbackAnswer(params: {
     usedGuidancePackageIds: params.trace.loaded_guidance_package_ids,
   })
   if (recentRecommendationFitFallback) return recentRecommendationFitFallback
+
+  if (
+    categoryOnlyLookupCategory &&
+    hasLoadedGeneralAdviceFallbackGuidance(
+      categoryOnlyLookupCategory,
+      params.trace.loaded_guidance_package_ids,
+    )
+  ) {
+    return buildCategoryOnlyLookupFallback({
+      message: params.message,
+      routineThreadContext: params.routineThreadContext,
+      category: categoryOnlyLookupCategory,
+      usedGuidancePackageIds: params.trace.loaded_guidance_package_ids,
+    })
+  }
 
   const productLookupFallback = buildProductLookupClarificationFallback({
     message: params.message,
@@ -2783,11 +2820,20 @@ function buildActiveResolvedProductFollowupFallback(params: {
   const productName = activeProduct.name.trim() || "das ausgewählte Produkt"
   const categoryLabel = getFallbackCareCategoryLabelDe(category)
   const isFitFollowup = isActiveResolvedProductFitFollowupMessage(params.message)
+  const routineProductFitFallback = isFitFollowup
+    ? buildRoutineInventoryProductFitFallback({
+        productName,
+        categoryLabel,
+        originalMessage:
+          params.activeResolvedProductContext?.original_user_message ?? params.message,
+      })
+    : null
   const userFacingAnswer =
     isSelectionTurn || isCategoryClarification
       ? `Alles klar, ich beziehe mich ab jetzt auf **${productName}**. Damit ist die Produktidentität eindeutig geklärt; du kannst dazu direkt weiterfragen, zum Beispiel zur Häufigkeit, Einordnung oder ob du es in deiner Routine behalten solltest.`
       : isFitFollowup
-        ? `Ich weiß, dass du **${productName}** meinst. Ob es wirklich gut zu dir passt, kann ich gerade nicht zuverlässig aus den verfügbaren Produktdaten ableiten. Sicher ist nur: Ich würde es erst bewerten, wenn die konkreten Produktfakten sauber geladen sind; bis dahin würde ich kein klares Ja oder Nein daraus machen.`
+        ? (routineProductFitFallback ??
+          `Ich weiß, dass du **${productName}** meinst. Ob es wirklich gut zu dir passt, kann ich gerade nicht zuverlässig aus den verfügbaren Produktdaten ableiten. Sicher ist nur: Ich würde es erst bewerten, wenn die konkreten Produktfakten sauber geladen sind; bis dahin würde ich kein klares Ja oder Nein daraus machen.`)
         : category === "shampoo"
           ? `Für **${productName}**: Orientier dich an deinem normalen Waschrhythmus. Wenn du gerade 3–4× pro Woche wäschst, kannst du es bei diesen Wäschen verwenden. Gib Shampoo vor allem auf Kopfhaut und Ansatz und spül es gründlich aus; die Längen bekommen nur den Schaum beim Ausspülen ab.`
           : `Für **${productName}**: Ich würde es in deiner Routine wie ${categoryLabel} behandeln und erst einmal nach Bedarf statt starr jeden Tag nutzen. Wenn du mir sagst, wie dein Haar danach wirkt, kann ich Dosierung und Häufigkeit feiner einordnen.`
@@ -2840,6 +2886,65 @@ function buildActiveResolvedProductFollowupFallback(params: {
       next_step_offer_de: null,
     },
   }
+}
+
+function buildRoutineInventoryProductFitFallback(params: {
+  productName: string
+  categoryLabel: string
+  originalMessage: string
+}): string | null {
+  const routineContext = readRoutineInventoryMessageContext(params.originalMessage)
+  if (
+    !routineContext.currentFrequency &&
+    !routineContext.targetFrequency &&
+    !routineContext.reason
+  ) {
+    return null
+  }
+
+  const cadence =
+    routineContext.currentFrequency && routineContext.targetFrequency
+      ? routineContext.currentFrequency === routineContext.targetFrequency
+        ? `Deine Nutzung liegt bei **${routineContext.currentFrequency}**, und Chaarlies Zielbereich ist ebenfalls **${routineContext.targetFrequency}**.`
+        : `Aktuell nutzt du es **${routineContext.currentFrequency}**, Chaarlies Ziel wäre **${routineContext.targetFrequency}**.`
+      : routineContext.currentFrequency
+        ? `Aktuell nutzt du es **${routineContext.currentFrequency}**.`
+        : routineContext.targetFrequency
+          ? `Chaarlies Ziel wäre **${routineContext.targetFrequency}**.`
+          : null
+  const reason = routineContext.reason
+    ? `Das passt zur aktuellen Routine-Einordnung: ${routineContext.reason}.`
+    : `Das passt zur aktuellen Einordnung als ${params.categoryLabel}.`
+  const action =
+    routineContext.currentFrequency &&
+    routineContext.targetFrequency &&
+    routineContext.currentFrequency === routineContext.targetFrequency
+      ? `Für **${params.productName}** würde ich in deiner Routine erst einmal bei **${routineContext.currentFrequency}** bleiben.`
+      : `Für **${params.productName}** würde ich die Nutzung eher an Chaarlies Zielbereich ausrichten.`
+  const observation =
+    "Beobachte nur, wie dein Haar danach fällt: Wenn es schneller schwer oder fettig wirkt, wäre weniger sinnvoll; wenn es weicher, glänzender oder definierter wirkt, passt die Einordnung."
+
+  return [action, cadence, `${reason}`, observation]
+    .filter((part): part is string => Boolean(part))
+    .join(" ")
+}
+
+function readRoutineInventoryMessageContext(message: string): {
+  currentFrequency: string | null
+  targetFrequency: string | null
+  reason: string | null
+} {
+  return {
+    currentFrequency: readRoutineMessageSegment(message, /aktuell nutze ich es\s+([^;.]+)/iu),
+    targetFrequency: readRoutineMessageSegment(message, /Chaarlies Ziel wäre\s+([^;.]+)/iu),
+    reason: readRoutineMessageSegment(message, /der Grund ist:\s+(.+?)(?:\.\s*Bitte|$)/iu),
+  }
+}
+
+function readRoutineMessageSegment(message: string, pattern: RegExp): string | null {
+  const match = pattern.exec(message)
+  const value = match?.[1]?.trim().replace(/\.+$/u, "").trim()
+  return value ? value : null
 }
 
 function buildRecentRecommendationFitClarificationFallback(params: {
@@ -3420,6 +3525,121 @@ function buildProductLookupClarificationFallback(params: {
       missing_keys: [
         lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
       ],
+    },
+  }
+}
+
+const CATEGORY_ONLY_LOOKUP_LABELS: Partial<Record<AgentV2CareCategory, string[]>> = {
+  shampoo: ["shampoo"],
+  conditioner: ["conditioner", "spulung", "spuelung"],
+  mask: ["maske", "haarmaske", "kur", "haarkur"],
+  leave_in: ["leave in", "leave-in", "leavein"],
+  oil: ["öl", "oil", "haaröl"],
+  bondbuilder: ["bondbuilder", "bond builder", "bond repair"],
+  deep_cleansing_shampoo: ["tiefenreinigungsshampoo", "deep cleansing shampoo"],
+  dry_shampoo: ["trockenshampoo", "dry shampoo"],
+  peeling: ["peeling", "kopfhaut peeling", "kopfhaut-peeling"],
+}
+
+function detectCategoryOnlyLookupFallbackCategory(trace: AgentV2Trace): AgentV2CareCategory | null {
+  const latestLookupCall = [...trace.tool_calls]
+    .reverse()
+    .find((call) => call.name === "lookup_product_candidate")
+  const lookupStatus = readProductLookupStatus(latestLookupCall?.output_summary)
+  if (lookupStatus !== "insufficient_identity" && lookupStatus !== "not_found") return null
+
+  const category = readFallbackCareCategory(latestLookupCall?.arguments?.category)
+  if (category === "unknown") return null
+
+  const productName = readNonEmptyString(latestLookupCall?.arguments?.product_name_text)
+  if (!productName) return null
+
+  const normalizedProductName = normalizeCategoryOnlyLookupText(productName)
+  const categoryLabels = CATEGORY_ONLY_LOOKUP_LABELS[category] ?? []
+  return categoryLabels.some(
+    (label) => normalizeCategoryOnlyLookupText(label) === normalizedProductName,
+  )
+    ? category
+    : null
+}
+
+function normalizeCategoryOnlyLookupText(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("de-DE")
+    .replace(/ä/g, "a")
+    .replace(/ö/g, "o")
+    .replace(/ü/g, "u")
+    .replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+}
+
+function buildCategoryOnlyLookupFallback(params: {
+  message: string
+  routineThreadContext: AgentV2RoutineThreadContext | null
+  category: AgentV2CareCategory
+  usedGuidancePackageIds: string[]
+}): AgentV2TerminalAnswer {
+  const routineActive = params.routineThreadContext?.active === true
+  const categoryFallback = buildCategorySpecificAddStepRoutineFallback(params.category)
+  const categoryNoun = getFallbackCareCategoryNounDe(params.category)
+
+  return {
+    answer_mode: "general_advice",
+    interpreted_intent: "Category guidance fallback after category-only product lookup.",
+    request_interpretation: {
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: params.category,
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: params.message.slice(0, 240) || categoryNoun,
+      specific_product_candidate: false,
+      confidence: 0,
+    },
+    confidence: 0,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: [params.category],
+      raw_constraints: [params.message],
+    },
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: buildFallbackGuidancePackageIds(
+        "general_advice",
+        params.category,
+        params.usedGuidancePackageIds,
+      ),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: routineActive,
+      routine_layer: params.routineThreadContext?.current_layer ?? null,
+      step_id: null,
+      category: params.category,
+      return_path: routineActive ? ["routine"] : [],
+    },
+    pending_followup_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de:
+        categoryFallback?.userFacingAnswer ??
+        `${categoryNoun} würde ich hier als Kategorie einordnen, nicht als konkretes Produkt. Ich würde zuerst prüfen, ob dieser Schritt dein aktuelles Haarziel wirklich besser abdeckt als die bestehende Basis aus Shampoo und Conditioner. Wenn ja, dann eher gezielt und sparsam einsetzen statt die Routine unnötig größer zu machen.`,
+      category_or_topic: params.category,
+      key_points_de: categoryFallback?.keyPoints ?? [
+        `${categoryNoun} ist hier eine Kategorie, kein konkreter Produkttreffer.`,
+        "Erst den Nutzen für dein Profil prüfen.",
+        "Konkrete Produktempfehlungen können danach separat folgen.",
+      ],
+      next_step_offer_de: null,
     },
   }
 }
