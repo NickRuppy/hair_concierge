@@ -8,29 +8,33 @@ import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
+type ResultPageFocusTarget = "unlock-plan" | "pricing" | null
+
 export function ResultPageClient({
   leadId,
   name,
   quizAnswers,
   focusRoutine,
+  focusTarget = null,
   hasAccess,
 }: {
   leadId: string
   name: string
   quizAnswers: QuizAnswers
   focusRoutine: boolean
+  focusTarget?: ResultPageFocusTarget
   hasAccess: boolean
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
   const cta = getQuizResultCta({ canGoStraightToRoutine: hasAccess })
 
   useEffect(() => {
-    if (!focusRoutine) return
+    if (!focusTarget) return
 
     window.requestAnimationFrame(() => {
-      document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth", block: "start" })
+      document.getElementById(focusTarget)?.scrollIntoView({ behavior: "smooth", block: "start" })
     })
-  }, [focusRoutine])
+  }, [focusTarget])
 
   if (hasAccess) {
     return (

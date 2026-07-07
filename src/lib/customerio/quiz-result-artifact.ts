@@ -23,7 +23,7 @@ function firstName(name: string): string {
 
 function resultUrl(siteUrl: string, leadId: string): string {
   const url = new URL(`/result/${leadId}`, siteUrl)
-  url.searchParams.set("focus", "routine")
+  url.searchParams.set("focus", "unlock-plan")
 
   return url.toString()
 }
