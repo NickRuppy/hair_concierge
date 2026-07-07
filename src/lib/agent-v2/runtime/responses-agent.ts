@@ -3534,7 +3534,7 @@ const CATEGORY_ONLY_LOOKUP_LABELS: Partial<Record<AgentV2CareCategory, string[]>
   conditioner: ["conditioner", "spulung", "spuelung"],
   mask: ["maske", "haarmaske", "kur", "haarkur"],
   leave_in: ["leave in", "leave-in", "leavein"],
-  oil: ["ol", "oel", "oil", "haarol", "haaroel"],
+  oil: ["öl", "oil", "haaröl"],
   bondbuilder: ["bondbuilder", "bond builder", "bond repair"],
   deep_cleansing_shampoo: ["tiefenreinigungsshampoo", "deep cleansing shampoo"],
   dry_shampoo: ["trockenshampoo", "dry shampoo"],
