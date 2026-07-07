@@ -30,19 +30,21 @@
 | `5a69edb` | P1 — state visual identities (tints/dots, amber pending w/ hourglass + stripes, gray inset suggestion w/o slider) |
 | `3b27203` | P2 — new `routine-drawer.tsx` (verified + pending variants, slider inside, coral shop CTA, contextual chat CTA, remove), slider restyle in `routine-frequency-control.tsx`, header slimmed, stats wording |
 | `9f25d80` | Batch 2 Commit 1 — stats pluralization ("1 Vorschlag"), disjoint buckets ("aktiv · in Prüfung · Vorschläge"), suggestion eyebrow → category + plum "Vorgeschlagen" pill, drawer top-right decramped |
+| `27403f0` | Batch 2 Commit 2 — C-marker pixel-exact on its stop tick (verified numerically, 240.14px === 240.14px); plum target band rendered above coral fill with 2px vertical overhang, now visible |
+| `4f051d9` | Batch 2 Commit 3 — slider failure toast + rollback. Fixed 2 real bugs: `/routine` had no layout so ToastProvider was never mounted (added `src/app/routine/layout.tsx`); toast viewport z-index below drawer (bumped to z-[60] in `src/providers/toast-provider.tsx`) |
+| `334d9a2` | Batch 2 — empty state extended with spec reassurance line + "Onboarding anpassen" CTA → /onboarding |
+| `62ee6a5` | This handoff doc |
 
-### In flight (agent batch 2, may be partially done — check `git log` + `git status`)
+### In flight (final adoption commit — check `git log` for "fix(routine): ball frequency indicator + calmer pending cards")
 
-- **Commit 2 "fix(routine): slider C-marker alignment + target band visibility"** — `routine-frequency-control.tsx` edits possibly uncommitted in the working tree. Verify: C-marker must sit exactly on its stop tick (same `index/(stops-1)` math as ticks/thumb); plum band must render ABOVE the coral fill so it's visible. Zoom-screenshot the slider to confirm.
-- **Commit 3 "fix(routine): slider failure feedback"** — PATCH failure → rollback to previous value + German toast ("Speichern fehlgeschlagen. Bitte versuche es noch einmal."). Toast pattern: `src/providers/toast-provider` as used in `src/app/profile/page.tsx`.
-- **Empty-state audit** — verify `isEmpty` path in `routine-page-client.tsx` renders spec popup ("Sicher, dass du noch nichts eingetragen hast?" + CTA "/onboarding"). Fix + commit only if broken.
-- **A/B screenshots (no commits, revert afterwards):** `/tmp/ab-balls-with.png` (7-ball freq indicator on cards) vs `/tmp/ab-balls-without.png`; `/tmp/ab-pending-muted.png` (24px hourglass, half-opacity stripes). User decides afterwards whether to adopt either.
-- **Cleanup:** delete `check.local.mjs` / `check2.local.mjs` from worktree root if present.
+User decisions from the A/B review, being implemented as one commit:
+1. **Ball indicator adopted on verified + suggestion cards ONLY** (8 dots, coral fill to current stop; suggestion shows preferred stop).
+2. **Pending cards lose the frequency line entirely** — no balls, no freq text. "· von dir angelegt" scratched everywhere (carries no information). Pending card = eyebrow + "In Prüfung" pill + product name. Frequency stays editable in the pending drawer.
+3. **Pending muting adopted**: 24px hourglass, stripes at half opacity, border + badge + amber tile kept.
 
 ### Open decisions (user)
 
-1. Ball indicator on cards: adopt or skip (pending A/B screenshots).
-2. Pending softening: adopt or skip (pending A/B screenshot).
+None — all A/B decisions made (see In flight above).
 
 ### Backlog (explicitly deferred, next work package)
 
