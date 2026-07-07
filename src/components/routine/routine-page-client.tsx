@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MessageCircle, RefreshCw, SlidersHorizontal } from "lucide-react"
 
@@ -95,10 +95,38 @@ export function RoutinePageClient() {
     void loadRoutine()
   }, [loadRoutine])
 
+  // Card kind / action icon / target-delta text derive from CareBalance,
+  // which only the server can recompute. After a successful frequency PATCH
+  // we silently re-fetch the shaped routine (debounced across slider drags);
+  // the optimistic value stays visible during the round-trip.
+  const refreshSeq = useRef(0)
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const refreshRoutine = useCallback(async () => {
+    const seq = refreshSeq.current
+    try {
+      const response = await fetch("/api/routine", { cache: "no-store" })
+      if (!response.ok) return
+      const body = (await response.json()) as RoutineApiBody
+      // A newer mutation invalidated this snapshot — drop it.
+      if (seq === refreshSeq.current) setRoutine(extractRoutine(body))
+    } catch {
+      // Keep the optimistic state; the next mutation re-fetches again.
+    }
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (refreshTimer.current) clearTimeout(refreshTimer.current)
+    }
+  }, [])
+
   const patchFrequency = useCallback(
     async (card: RoutineUiCard, frequency: ProductFrequency) => {
       if (!card.usageRow?.id) return
       const previousRoutine = routine
+      refreshSeq.current += 1
+      if (refreshTimer.current) clearTimeout(refreshTimer.current)
       setBusyKey(`frequency:${card.id}`)
       setError(null)
       setRoutine((current) => ({
@@ -126,6 +154,9 @@ export function RoutinePageClient() {
         if (!response.ok) {
           throw new Error(await readError(response, "Nutzung konnte nicht gespeichert werden."))
         }
+
+        // Coalesce refreshes across quick successive slider changes.
+        refreshTimer.current = setTimeout(() => void refreshRoutine(), 400)
       } catch {
         // Roll back the optimistic slider value and surface the failure.
         setRoutine(previousRoutine)
@@ -137,7 +168,7 @@ export function RoutinePageClient() {
         setBusyKey(null)
       }
     },
-    [routine, toast],
+    [routine, toast, refreshRoutine],
   )
 
   const removeUsage = useCallback(
