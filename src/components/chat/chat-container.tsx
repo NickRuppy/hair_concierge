@@ -16,7 +16,7 @@ import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
-import { consumeRoutineTriggerSeed } from "@/lib/routines/chat-triggers"
+import { clearRoutineTriggerSeed, readRoutineTriggerSeed } from "@/lib/routines/chat-triggers"
 import { useRouter } from "next/navigation"
 import {
   buildProductIntakeOfferStateByMessageId,
@@ -171,15 +171,31 @@ export function ChatContainer({
   }, [currentConversationId, initialConversationId, loadConversation])
 
   useEffect(() => {
-    if (!currentConversationId || messages.length > 0 || isStreaming) return
-    if (consumedRoutineSeedConversationRef.current === currentConversationId) return
+    const routineSeedConversationId = currentConversationId ?? initialConversationId
+    if (!routineSeedConversationId || messages.length > 0 || isStreaming) return
+    if (consumedRoutineSeedConversationRef.current === routineSeedConversationId) return
 
-    const seedMessage = consumeRoutineTriggerSeed(currentConversationId, window.sessionStorage)
+    const seedMessage = readRoutineTriggerSeed(routineSeedConversationId, window.sessionStorage)
     if (!seedMessage) return
 
-    consumedRoutineSeedConversationRef.current = currentConversationId
-    void sendMessage(seedMessage)
-  }, [currentConversationId, isStreaming, messages.length, sendMessage])
+    consumedRoutineSeedConversationRef.current = routineSeedConversationId
+    const conversationId = routineSeedConversationId
+    void sendMessage(seedMessage, { conversationId }).then(async (sent) => {
+      if (sent) {
+        await loadConversation(conversationId)
+        clearRoutineTriggerSeed(conversationId, window.sessionStorage)
+        return
+      }
+      consumedRoutineSeedConversationRef.current = null
+    })
+  }, [
+    currentConversationId,
+    initialConversationId,
+    isStreaming,
+    loadConversation,
+    messages.length,
+    sendMessage,
+  ])
 
   useEffect(() => {
     if (wasStreamingRef.current && !isStreaming) {

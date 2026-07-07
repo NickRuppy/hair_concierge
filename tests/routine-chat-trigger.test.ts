@@ -3,7 +3,9 @@ import test from "node:test"
 
 import {
   buildRoutineChatSeedMessage,
+  clearRoutineTriggerSeed,
   createRoutineTriggerStorageKey,
+  readRoutineTriggerSeed,
   launchRoutineChatTrigger,
   persistRoutineTriggerSeed,
   type RoutineChatTriggerInput,
@@ -105,6 +107,27 @@ test("routine trigger storage helper persists seed under deterministic conversat
 
   assert.equal(createRoutineTriggerStorageKey("conversation-1"), "routine-trigger:conversation-1")
   assert.equal(writes.get("routine-trigger:conversation-1"), "Bitte prüfe meine Routine.")
+})
+
+test("routine trigger storage can read without deleting until send succeeds", () => {
+  const values = new Map<string, string>([
+    ["routine-trigger:conversation-1", "Bitte prüfe meine Routine."],
+  ])
+  const storage = {
+    getItem(key: string) {
+      return values.get(key) ?? null
+    },
+    removeItem(key: string) {
+      values.delete(key)
+    },
+  }
+
+  assert.equal(readRoutineTriggerSeed("conversation-1", storage), "Bitte prüfe meine Routine.")
+  assert.equal(values.get("routine-trigger:conversation-1"), "Bitte prüfe meine Routine.")
+
+  clearRoutineTriggerSeed("conversation-1", storage)
+
+  assert.equal(values.has("routine-trigger:conversation-1"), false)
 })
 
 test("routine trigger launcher uses session storage by default", async () => {

@@ -24,6 +24,10 @@ type ChatStreamApplyOptions = {
   expectedCurrentConversationId?: string | null
 }
 
+type SendMessageOptions = {
+  conversationId?: string | null
+}
+
 export function hasExistingProductSelectionMessage(
   messages: readonly Message[],
   params: ProductSelectionParams,
@@ -44,7 +48,7 @@ interface UseChatReturn {
   isStreaming: boolean
   conversations: Conversation[]
   currentConversationId: string | null
-  sendMessage: (content: string) => Promise<void>
+  sendMessage: (content: string, options?: SendMessageOptions) => Promise<boolean>
   selectProductCandidate: (params: ProductSelectionParams) => Promise<void>
   submitFeedback: (messageId: string, score: -1 | 1) => Promise<void>
   loadConversation: (id: string) => Promise<void>
@@ -527,8 +531,10 @@ export function useChat(): UseChatReturn {
   )
 
   const sendMessage = useCallback(
-    async (content: string) => {
-      if (isStreaming) return
+    async (content: string, options: SendMessageOptions = {}) => {
+      if (isStreaming) return false
+
+      const targetConversationId = options.conversationId ?? currentConversationId
 
       // Track first chat message (before optimistic update changes state)
       const isFirstMessage = messages.length === 0
@@ -536,7 +542,7 @@ export function useChat(): UseChatReturn {
       // Add user message optimistically
       const userMessage: Message = {
         id: `temp-${Date.now()}`,
-        conversation_id: currentConversationId || "",
+        conversation_id: targetConversationId || "",
         role: "user",
         content,
         product_recommendations: null,
@@ -558,7 +564,7 @@ export function useChat(): UseChatReturn {
       // Create placeholder for assistant message
       const assistantMessage: Message = {
         id: `temp-assistant-${Date.now()}`,
-        conversation_id: currentConversationId || "",
+        conversation_id: targetConversationId || "",
         role: "assistant",
         content: "",
         product_recommendations: null,
@@ -580,7 +586,7 @@ export function useChat(): UseChatReturn {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message: content,
-            conversation_id: currentConversationId || undefined,
+            conversation_id: targetConversationId || undefined,
           }),
           signal: abortRef.current.signal,
         })
@@ -600,11 +606,12 @@ export function useChat(): UseChatReturn {
 
         await readChatEventStream(res, {
           targetAssistantMessageId: assistantMessage.id,
-          expectedCurrentConversationId: currentConversationId,
+          expectedCurrentConversationId: targetConversationId,
         })
 
         // Refresh conversations list
         loadConversations()
+        return true
       } catch (error) {
         if ((error as Error).name !== "AbortError") {
           // Update assistant message with error
@@ -620,6 +627,7 @@ export function useChat(): UseChatReturn {
             return updated
           })
         }
+        return false
       } finally {
         setIsStreaming(false)
         abortRef.current = null

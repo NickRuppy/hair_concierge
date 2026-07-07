@@ -92,6 +92,20 @@ export function persistRoutineTriggerSeed(
   storage.setItem(createRoutineTriggerStorageKey(conversationId), seedMessage)
 }
 
+export function readRoutineTriggerSeed(
+  conversationId: string,
+  storage: Pick<RoutineTriggerStorage, "getItem">,
+): string | null {
+  return clean(storage.getItem(createRoutineTriggerStorageKey(conversationId)))
+}
+
+export function clearRoutineTriggerSeed(
+  conversationId: string,
+  storage: Pick<RoutineTriggerStorage, "removeItem">,
+): void {
+  storage.removeItem(createRoutineTriggerStorageKey(conversationId))
+}
+
 export function consumeRoutineTriggerSeed(
   conversationId: string,
   storage: Pick<RoutineTriggerStorage, "getItem" | "removeItem">,
