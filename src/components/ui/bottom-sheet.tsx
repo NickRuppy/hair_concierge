@@ -28,7 +28,11 @@ interface BottomSheetProps {
   children: React.ReactNode
 }
 
-function BottomSheet({ open: controlledOpen, onOpenChange: controlledOnOpenChange, children }: BottomSheetProps) {
+function BottomSheet({
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  children,
+}: BottomSheetProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
   const titleId = React.useId()
 
@@ -57,6 +61,11 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
     const [dragY, setDragY] = React.useState(0)
     const [dragging, setDragging] = React.useState(false)
     const dragStartY = React.useRef(0)
+    // Drag candidate before the movement threshold is reached. We must NOT
+    // setPointerCapture on plain taps: with capture active the browser
+    // dispatches the subsequent `click` to the capturing panel instead of the
+    // child button, which silently kills every button/link inside the sheet.
+    const pendingDrag = React.useRef<{ pointerId: number; startY: number } | null>(null)
     const contentRef = React.useRef<HTMLDivElement>(null)
     const panelRef = React.useRef<HTMLDivElement>(null)
     const closeButtonRef = React.useRef<HTMLButtonElement>(null)
@@ -69,7 +78,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         if (typeof ref === "function") ref(node)
         else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node
       },
-      [ref]
+      [ref],
     )
 
     React.useEffect(() => {
@@ -118,7 +127,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         if (!panel) return
 
         const focusable = panel.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         )
         if (focusable.length === 0) return
 
@@ -164,6 +173,9 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
     // Drag handlers
     const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
       const target = e.target as HTMLElement
+      // Elements with their own pointer interactions (e.g. sliders) manage
+      // their own capture — never hijack their gestures.
+      if (target.closest('[role="slider"]')) return
       // Only start drag from the handle area or when scrolled to top
       const isHandle = target.closest("[data-bottom-sheet-handle]")
       const scrollContainer = contentRef.current
@@ -171,22 +183,38 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
 
       if (!isHandle && !isScrolledToTop) return
 
-      setDragging(true)
-      dragStartY.current = e.clientY
-      panelRef.current?.setPointerCapture(e.pointerId)
+      // Record a drag candidate only — capture happens after real movement.
+      pendingDrag.current = { pointerId: e.pointerId, startY: e.clientY }
     }, [])
 
     const handlePointerMove = React.useCallback(
       (e: React.PointerEvent) => {
+        const pending = pendingDrag.current
+        if (!dragging && pending && e.pointerId === pending.pointerId) {
+          const delta = e.clientY - pending.startY
+          if (delta > 12) {
+            // Real downward drag: take over the gesture now.
+            dragStartY.current = pending.startY
+            pendingDrag.current = null
+            setDragging(true)
+            panelRef.current?.setPointerCapture(e.pointerId)
+            setDragY(Math.max(0, delta))
+          } else if (delta < -12) {
+            // Upward movement is not a dismiss gesture.
+            pendingDrag.current = null
+          }
+          return
+        }
         if (!dragging) return
         const delta = e.clientY - dragStartY.current
         // Only allow dragging downward
         setDragY(Math.max(0, delta))
       },
-      [dragging]
+      [dragging],
     )
 
     const handlePointerUp = React.useCallback(() => {
+      pendingDrag.current = null
       if (!dragging) return
       setDragging(false)
       if (dragY > 80) {
@@ -221,7 +249,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
           aria-labelledby={titleId}
           className={cn(
             "fixed inset-x-0 bottom-0 z-50 flex max-h-[60vh] flex-col rounded-t-2xl bg-background shadow-[0_-4px_32px_rgba(0,0,0,0.3)]",
-            className
+            className,
           )}
           style={{
             animation: closing
@@ -260,21 +288,16 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
           </div>
         </div>
       </div>,
-      document.body
+      document.body,
     )
-  }
+  },
 )
 BottomSheetContent.displayName = "BottomSheetContent"
 
 // --- BottomSheetHeader ---
 
 function BottomSheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("flex items-start gap-4", className)}
-      {...props}
-    />
-  )
+  return <div className={cn("flex items-start gap-4", className)} {...props} />
 }
 
 // --- BottomSheetTitle ---
@@ -293,13 +316,11 @@ function BottomSheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHead
 
 // --- BottomSheetDescription ---
 
-function BottomSheetDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p
-      className={cn("text-sm text-muted-foreground", className)}
-      {...props}
-    />
-  )
+function BottomSheetDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={cn("text-sm text-muted-foreground", className)} {...props} />
 }
 
 export {
