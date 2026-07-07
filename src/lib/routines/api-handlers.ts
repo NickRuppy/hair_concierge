@@ -1,5 +1,5 @@
-import { PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import { isProductEligibleForMode } from "@/lib/product-catalog/eligibility"
+import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
 import { isUnselectedShampooFallbackItem } from "@/lib/product-usage/shampoo-fallback"
 import type { RoutineArtifactData, RoutineUiShape } from "@/lib/routines/types"
 import type { ProductUsageMatchStatus } from "@/lib/types"
@@ -99,7 +99,10 @@ type AddProductRequest = {
 
 const PRODUCT_SELECT =
   "id, category, name, brand, is_active, lifecycle_status, is_chaarlie_recommended"
-const VALID_CATEGORIES = new Set<string>(PRODUCT_CATEGORY_ORDER)
+// Canonical inventory categories from the recommendation engine — the
+// onboarding list is narrower (it lacks heat_protectant) and must not gate
+// categories CareBalance can emit.
+const VALID_CATEGORIES = new Set<string>(INVENTORY_CATEGORIES)
 const VALID_PRODUCT_FREQUENCIES = new Set<string>(PRODUCT_FREQUENCIES)
 
 function isObject(value: unknown): value is Record<string, unknown> {
