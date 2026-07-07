@@ -1,4 +1,5 @@
 import { isProductEligibleForMode } from "@/lib/product-catalog/eligibility"
+import { normalizeCategoryKey } from "@/lib/product-identity"
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
 import { isUnselectedShampooFallbackItem } from "@/lib/product-usage/shampoo-fallback"
 import type { RoutineArtifactData, RoutineUiShape } from "@/lib/routines/types"
@@ -331,7 +332,9 @@ export function createRoutineApiHandlers(deps: RoutineApiDeps) {
         return json({ error: "Produkt wurde nicht gefunden." }, 404)
       }
 
-      if (product.category !== category) {
+      // products.category holds raw catalog strings ("Shampoo", "Öl", ...) —
+      // normalize before comparing against the usage-category key.
+      if (normalizeCategoryKey(product.category) !== category) {
         return json({ error: "Produkt passt nicht zu dieser Kategorie." }, 422)
       }
 
