@@ -16,6 +16,8 @@ import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
+import { consumeRoutineTriggerSeed } from "@/lib/routines/chat-triggers"
+import { useRouter } from "next/navigation"
 import {
   buildProductIntakeOfferStateByMessageId,
   buildProductLookupClarificationStateByMessageId,
@@ -25,7 +27,25 @@ const JUMP_TO_LATEST_THRESHOLD_PX = 80
 const USER_OVERRIDE_DISTANCE_PX = 200
 const ASSISTANT_TOP_PADDING_PX = 16
 
-export function ChatContainer() {
+type ChatContainerProps = {
+  conversationId?: string | null
+}
+
+type RoutineProductMembership = {
+  category: string | null
+  usageId: string | null
+}
+
+type RoutineMembershipCard = {
+  category?: string | null
+  usageRow?: { id?: string | null } | null
+  product?: { id?: string | null } | null
+}
+
+export function ChatContainer({
+  conversationId: initialConversationId = null,
+}: ChatContainerProps) {
+  const router = useRouter()
   const { profile } = useAuth()
   const {
     messages,
@@ -57,6 +77,9 @@ export function ChatContainer() {
   const sidebarPanelRef = useRef<HTMLDivElement>(null)
   const sidebarCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [drawerProduct, setDrawerProduct] = useState<Product | null>(null)
+  const [routineProductMembership, setRoutineProductMembership] = useState<
+    Map<string, RoutineProductMembership>
+  >(() => new Map())
   const [drawerOpen, setDrawerOpen] = useState(false)
   const messagesScrollRef = useRef<HTMLDivElement>(null)
   const messagesContentRef = useRef<HTMLDivElement>(null)
@@ -68,6 +91,8 @@ export function ChatContainer() {
   const programmaticScrollRef = useRef(false)
   const assistantContentByIdRef = useRef(new Map<string, string>())
   const wasStreamingRef = useRef(isStreaming)
+  const consumedRoutineSeedConversationRef = useRef<string | null>(null)
+  const suppressInitialConversationReloadRef = useRef(false)
   const [showJumpToLatest, setShowJumpToLatest] = useState(false)
 
   // Track IDs of messages appended during this session (not from history loads).
@@ -99,6 +124,28 @@ export function ChatContainer() {
 
   const isEmpty = messages.length === 0
 
+  const loadRoutineProductMembership = useCallback(async () => {
+    const response = await fetch("/api/routine")
+    if (!response.ok) return
+
+    const body = (await response.json().catch(() => null)) as {
+      routine?: { cards?: RoutineMembershipCard[] }
+    } | null
+    const cards = Array.isArray(body?.routine?.cards) ? body.routine.cards : []
+    const nextMembership = new Map<string, RoutineProductMembership>()
+
+    for (const card of cards) {
+      const productId = card.product?.id?.trim()
+      if (!productId) continue
+      nextMembership.set(productId, {
+        category: card.category ?? null,
+        usageId: card.usageRow?.id ?? null,
+      })
+    }
+
+    setRoutineProductMembership(nextMembership)
+  }, [])
+
   // Clear newMessageIds after animation completes so streaming deltas don't get smooth-scroll
   useEffect(() => {
     if (newMessageIds.size > 0) {
@@ -112,6 +159,27 @@ export function ChatContainer() {
   useEffect(() => {
     loadConversations()
   }, [loadConversations])
+
+  useEffect(() => {
+    if (suppressInitialConversationReloadRef.current && currentConversationId === null) return
+    if (!initialConversationId) {
+      suppressInitialConversationReloadRef.current = false
+      return
+    }
+    if (!initialConversationId || currentConversationId === initialConversationId) return
+    loadConversation(initialConversationId)
+  }, [currentConversationId, initialConversationId, loadConversation])
+
+  useEffect(() => {
+    if (!currentConversationId || messages.length > 0 || isStreaming) return
+    if (consumedRoutineSeedConversationRef.current === currentConversationId) return
+
+    const seedMessage = consumeRoutineTriggerSeed(currentConversationId, window.sessionStorage)
+    if (!seedMessage) return
+
+    consumedRoutineSeedConversationRef.current = currentConversationId
+    void sendMessage(seedMessage)
+  }, [currentConversationId, isStreaming, messages.length, sendMessage])
 
   useEffect(() => {
     if (wasStreamingRef.current && !isStreaming) {
@@ -316,6 +384,19 @@ export function ChatContainer() {
     }, 300)
   }, [clearSidebarCloseTimer, finishSidebarClose])
 
+  const handleSelectConversation = useCallback(
+    (conversationId: string) => {
+      router.push(`/chat/${conversationId}`)
+    },
+    [router],
+  )
+
+  const handleStartNewConversation = useCallback(() => {
+    suppressInitialConversationReloadRef.current = true
+    startNewConversation()
+    router.push("/chat")
+  }, [router, startNewConversation])
+
   useEffect(() => {
     return () => clearSidebarCloseTimer()
   }, [clearSidebarCloseTimer])
@@ -369,10 +450,14 @@ export function ChatContainer() {
     }
   }, [sidebarState])
 
-  const handleProductClick = useCallback((product: Product) => {
-    setDrawerProduct(product)
-    setDrawerOpen(true)
-  }, [])
+  const handleProductClick = useCallback(
+    (product: Product) => {
+      setDrawerProduct(product)
+      setDrawerOpen(true)
+      void loadRoutineProductMembership()
+    },
+    [loadRoutineProductMembership],
+  )
 
   const handleSendMessage = useCallback(
     (message: string) => {
@@ -417,8 +502,8 @@ export function ChatContainer() {
         <ConversationSidebar
           conversations={conversations}
           currentId={currentConversationId}
-          onSelect={loadConversation}
-          onNew={startNewConversation}
+          onSelect={handleSelectConversation}
+          onNew={handleStartNewConversation}
           onDelete={deleteConversation}
         />
       </div>
@@ -452,8 +537,8 @@ export function ChatContainer() {
             <ConversationSidebar
               conversations={conversations}
               currentId={currentConversationId}
-              onSelect={loadConversation}
-              onNew={startNewConversation}
+              onSelect={handleSelectConversation}
+              onNew={handleStartNewConversation}
               onDelete={deleteConversation}
               onClose={closeSidebar}
               isMobile
@@ -642,6 +727,17 @@ export function ChatContainer() {
         hairProfile={hairProfile}
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
+        routineAction={
+          drawerProduct
+            ? {
+                category: drawerProduct.category,
+                productId: drawerProduct.id,
+                existingUsageId: routineProductMembership.get(drawerProduct.id)?.usageId ?? null,
+                alreadyInRoutine: routineProductMembership.has(drawerProduct.id),
+                onChanged: loadRoutineProductMembership,
+              }
+            : undefined
+        }
       />
     </div>
   )

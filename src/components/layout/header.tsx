@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/providers/auth-provider"
-import { Menu, MessageCircle, User, LogOut, Shield, CircleUserRound } from "lucide-react"
+import { CircleUserRound, ListChecks, LogOut, MessageCircle, Shield, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -35,6 +35,10 @@ export function Header() {
           <NavLink href="/chat" current={pathname}>
             <MessageCircle className="mr-1.5 h-4 w-4" />
             Chat
+          </NavLink>
+          <NavLink href="/routine" current={pathname}>
+            <ListChecks className="mr-1.5 h-4 w-4" />
+            Routine
           </NavLink>
           <NavLink href="/profile" current={pathname}>
             <User className="mr-1.5 h-4 w-4" />
@@ -72,6 +76,10 @@ export function Header() {
             <NavLink href="/chat" current={pathname} onClick={() => setMenuOpen(false)} mobile>
               <MessageCircle className="mr-1.5 h-4 w-4" />
               Chat
+            </NavLink>
+            <NavLink href="/routine" current={pathname} onClick={() => setMenuOpen(false)} mobile>
+              <ListChecks className="mr-1.5 h-4 w-4" />
+              Routine
             </NavLink>
             <NavLink href="/profile" current={pathname} onClick={() => setMenuOpen(false)} mobile>
               <User className="mr-1.5 h-4 w-4" />

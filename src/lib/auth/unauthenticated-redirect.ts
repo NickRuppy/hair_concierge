@@ -1,9 +1,11 @@
 const AUTH_FIRST_PREFIXES = [
   "/chat",
+  "/routine",
   "/profile",
   "/onboarding",
   "/admin",
   "/api/chat",
+  "/api/routine",
   "/api/profile",
   "/api/products",
   "/api/memory",

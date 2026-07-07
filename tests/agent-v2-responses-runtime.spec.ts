@@ -3713,6 +3713,7 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
               shampooFrequency: "daily_1x",
               expected: "after_every_wash",
             },
+            frequency_target: null,
             reason_codes: ["conditioner_missing", "dry_lengths"],
             context_reason_codes: [],
             selection_hint_codes: [],
@@ -3732,6 +3733,7 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
             strength: "medium",
             current_frequency: null,
             cadence_policy: { kind: "not_applicable" },
+            frequency_target: null,
             reason_codes: ["leave_in_missing", "frizz"],
             context_reason_codes: [],
             selection_hint_codes: [],
@@ -3775,9 +3777,13 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
   assert.match(content, /leave_in/)
   assert.match(content, /current-turn category decision context/)
   assert.match(content, /not product truth/)
-  assert.match(content, /shampoo_cadence is the only full target-range\/delta cadence model/)
-  assert.match(content, /do not invent shampoo-style target bands/)
-  assert.match(content, /action, current_frequency, cadence_policy, reason_codes, and usage_hint/)
+  assert.match(content, /shampoo_cadence is the shampoo-specific assessment/)
+  assert.match(content, /row\.frequency_target is the category-level target range when present/)
+  assert.match(content, /Do not invent target bands when frequency_target is null/)
+  assert.match(
+    content,
+    /action, current_frequency, cadence_policy, frequency_target, reason_codes, and usage_hint/,
+  )
   assert.match(content, /match_shampoo_frequency means conditioner-like use is tied to washes/)
   assert.match(
     content,

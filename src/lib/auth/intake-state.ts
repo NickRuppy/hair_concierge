@@ -37,20 +37,29 @@ export function getAuthenticatedAppRedirect(
     return null
   }
 
-  switch (pathname) {
-    case "/auth":
-      if (intakeState === "needs_quiz") return "/quiz"
-      if (intakeState === "needs_onboarding") return "/onboarding"
-      return "/chat"
-    case "/quiz":
-      if (intakeState === "needs_quiz") return null
-      if (intakeState === "needs_onboarding") return "/onboarding"
-      return "/chat"
-    case "/chat":
-      if (intakeState === "needs_quiz") return "/quiz"
-      if (intakeState === "needs_onboarding") return "/onboarding"
-      return null
-    default:
-      return null
+  if (pathname === "/auth") {
+    if (intakeState === "needs_quiz") return "/quiz"
+    if (intakeState === "needs_onboarding") return "/onboarding"
+    return "/chat"
   }
+
+  if (pathname === "/quiz") {
+    if (intakeState === "needs_quiz") return null
+    if (intakeState === "needs_onboarding") return "/onboarding"
+    return "/chat"
+  }
+
+  if (isAuthenticatedAppRoute(pathname)) {
+    if (intakeState === "needs_quiz") return "/quiz"
+    if (intakeState === "needs_onboarding") return "/onboarding"
+    return null
+  }
+
+  return null
+}
+
+function isAuthenticatedAppRoute(pathname: string): boolean {
+  return ["/chat", "/routine"].some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  )
 }

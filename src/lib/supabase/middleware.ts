@@ -4,6 +4,28 @@ import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/inta
 import { findCurrentManualAccessGrant } from "@/lib/billing/subscriptions"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 
+const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/chat", "/routine"]
+const SUB_REQUIRED_PREFIXES = [
+  "/onboarding",
+  "/chat",
+  "/api/chat",
+  "/api/product-intake",
+  "/routine",
+  "/api/routine",
+]
+
+export function pathMatchesRoutePrefix(pathname: string, prefix: string) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
+}
+
+export function isAuthenticatedAppRoutePath(pathname: string) {
+  return AUTHENTICATED_APP_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
+}
+
+export function requiresSubscriptionPath(pathname: string) {
+  return SUB_REQUIRED_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -71,7 +93,7 @@ export async function updateSession(request: NextRequest) {
   const isForcedAuthLogin =
     pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
   const needsAuthenticatedAppRouting =
-    pathname === "/auth" || pathname === "/quiz" || pathname === "/chat"
+    pathname === "/auth" || pathname === "/quiz" || isAuthenticatedAppRoutePath(pathname)
 
   // Public routes that don't need auth
   const publicRoutes = [
@@ -140,8 +162,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // --- Subscription paywall ---------------------------------------------
-  const SUB_REQUIRED_PREFIXES = ["/onboarding", "/chat", "/api/chat", "/api/product-intake"]
-  const needsSub = SUB_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+  const needsSub = requiresSubscriptionPath(pathname)
 
   if (needsSub) {
     const { data: billingRows, error: billingError } = await supabase
