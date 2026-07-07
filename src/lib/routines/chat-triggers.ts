@@ -31,7 +31,14 @@ function clean(value: string | null | undefined): string | null {
 function joinProductName(input: RoutineChatTriggerInput): string | null {
   const brand = clean(input.brand)
   const productName = clean(input.productName)
-  if (brand && productName) return `${brand} ${productName}`
+  if (brand && productName) {
+    // Display names often already carry the brand ("Syoss Intense Fullness
+    // Shampoo") — don't prepend it twice.
+    const alreadyBranded = productName
+      .toLocaleLowerCase("de")
+      .startsWith(brand.toLocaleLowerCase("de"))
+    return alreadyBranded ? productName : `${brand} ${productName}`
+  }
   return productName ?? brand
 }
 
