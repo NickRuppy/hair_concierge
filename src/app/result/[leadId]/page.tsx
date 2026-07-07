@@ -80,6 +80,8 @@ async function getAuthenticatedResultAccess(): Promise<boolean> {
 
 export default async function ResultPage({ params, searchParams }: Props) {
   const [{ leadId }, sp] = await Promise.all([params, searchParams])
+  const focusRoutine = sp.focus === "routine"
+  const focusTarget = sp.focus === "unlock-plan" ? "unlock-plan" : focusRoutine ? "pricing" : null
   const [lead, hasAccess] = await Promise.all([
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
@@ -95,7 +97,8 @@ export default async function ResultPage({ params, searchParams }: Props) {
       leadId={lead.id}
       name={lead.name}
       quizAnswers={quizAnswers}
-      focusRoutine={sp.focus === "routine"}
+      focusRoutine={focusRoutine}
+      focusTarget={focusTarget}
       hasAccess={hasAccess}
     />
   )

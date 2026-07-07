@@ -32,6 +32,25 @@ test("allows unauthenticated PayPal webhook calls through the proxy", async () =
   assert.equal(response.headers.get("location"), null)
 })
 
+test("redirects legacy offer links to the combined result offer with the quiz lead id", async () => {
+  const response = await updateSession(
+    new NextRequest("https://chaarlie.de/offer?lead_id=lead-123"),
+  )
+
+  assert.equal(response.status, 307)
+  assert.equal(
+    response.headers.get("location"),
+    "https://chaarlie.de/result/lead-123?focus=unlock-plan",
+  )
+})
+
+test("redirects bare legacy offer links to pricing", async () => {
+  const response = await updateSession(new NextRequest("https://chaarlie.de/offer"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/pricing")
+})
+
 test("preserves refreshed Supabase cookies on middleware redirects", () => {
   const supabaseResponse = NextResponse.next()
   supabaseResponse.cookies.set("sb-test-auth-token", "fresh", {

@@ -51,7 +51,7 @@ test("builds Customer.io message data from quiz result narrative", () => {
     assert.equal(payload.messageData.cta_label, QUIZ_RESULT_ARTIFACT_CTA_LABEL)
     assert.equal(
       payload.messageData.result_url,
-      "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?focus=routine",
+      "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?focus=unlock-plan",
     )
     assert.equal(Array.isArray(payload.messageData.rows), true)
     assert.equal(Array.isArray(payload.messageData.routine_levers), true)

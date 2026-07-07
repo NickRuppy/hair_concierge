@@ -32,6 +32,7 @@ test("result offer page shell renders the unified diagnostic offer sections and 
   assert.doesNotMatch(html, /Haargefühl/i)
   assert.doesNotMatch(html, /Worauf wir hinarbeiten/i)
   assert.match(html, /Dein vollständiger 30-Tage-Plan ist fertig/i)
+  assert.match(html, /id="unlock-plan"/i)
   assert.match(html, /Ausgearbeitet von Chaarlie\./i)
   assert.match(html, /Warum diese Empfehlung\?/i)
   assert.match(html, /Chaarlie bewertet erst dein Haar, dann die Produkte\./i)

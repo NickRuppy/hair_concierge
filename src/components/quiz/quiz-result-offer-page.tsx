@@ -210,7 +210,7 @@ export function QuizResultOfferPageShell({
           </article>
         </section>
 
-        <section className="border-t border-border py-8">
+        <section id="unlock-plan" className="scroll-mt-[72px] border-t border-border py-8">
           <article className="relative min-h-[248px] overflow-hidden rounded-[16px] border border-border bg-white shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
             <div className="space-y-2 p-6 blur-[5px]">
               <div className="h-3 w-3/4 rounded-full bg-[var(--brand-plum-ice)]" />

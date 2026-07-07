@@ -10,6 +10,21 @@ export async function updateSession(request: NextRequest) {
   })
 
   const { pathname } = request.nextUrl
+  if (pathname === "/offer") {
+    const url = request.nextUrl.clone()
+    const leadId = url.searchParams.get("lead_id") ?? url.searchParams.get("lead")
+
+    url.search = ""
+    if (leadId) {
+      url.pathname = `/result/${encodeURIComponent(leadId)}`
+      url.searchParams.set("focus", "unlock-plan")
+    } else {
+      url.pathname = "/pricing"
+    }
+
+    return NextResponse.redirect(url)
+  }
+
   const isPublicMarketingRoute =
     pathname === "/" ||
     ["/agb", "/datenschutz", "/impressum", "/kontakt", "/pricing", "/widerruf"].some(
