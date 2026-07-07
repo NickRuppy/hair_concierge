@@ -38,11 +38,23 @@
 
 ### In flight
 
-Nothing — UI polish is complete and visually verified at 430px (final screenshot 2026-07-07).
+Nothing — UI polish complete, feature fully committed, Codex review findings fixed.
+
+### Codex review (2026-07-07) — all findings fixed
+
+| Commit | Finding fixed |
+|---|---|
+| `743c286` | Add/replace writes review-managed fields via service-role client (DB trigger `protect_user_product_usage_review_fields` blocked session-client writes). Auth/ownership stay session-side; admin writes user-scoped. PATCH/DELETE audited: unaffected by trigger. |
+| `b0e182e` | Silent GET re-fetch after frequency PATCH (400ms debounced, sequence-guarded) — card state/delta text now live-refresh from CareBalance. |
+| `3cb05e4` | `VALID_CATEGORIES` sourced from engine `INVENTORY_CATEGORIES` (heat_protectant addressable). New contract test `tests/routine-category-contract.test.ts`. |
+| `3ee2f38` | Trigger-created conversations get German titles ("Routine · {Kategorie}" etc.). |
+| `e5e8230` | BONUS bug found in verification: `products.category` raw labels ("Shampoo") vs API keys ("shampoo") — strict equality 422'd all adds. Now compares via `normalizeCategoryKey`. |
+
+Verification: routine suite 50/50, live add/replace 200 through trigger-protected DB, heat_protectant dismiss 200, CareBalance delta text live-flips both directions without reload.
 
 ### Open decisions (user)
 
-None.
+None. Next: final `ci:verify` → push + PR (user confirmation pending).
 
 ### Backlog (explicitly deferred, next work package)
 
