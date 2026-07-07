@@ -14,6 +14,7 @@ import {
   AgentV2TerminalAnswerSchema,
   type AgentV2RoutineThreadContext,
 } from "../src/lib/agent-v2/contracts"
+import { buildRoutineChatSeedMessage } from "../src/lib/routines/chat-triggers"
 
 test("AgentV2 exposes only the V0 advisor toolset", () => {
   const tools = buildAgentV2ResponsesTools({ safetyMode: "normal" })
@@ -1924,7 +1925,19 @@ test("AgentV2 runtime treats trusted clarification selection as found exact look
     tools: fakeAgentV2Tools(),
   })
 
-  assert.equal(result.trace.failure_stage, null)
+  assert.equal(
+    result.trace.failure_stage,
+    null,
+    JSON.stringify(
+      {
+        validation_errors: result.trace.validation_errors,
+        repair_attempts: result.trace.repair_attempts,
+        final_answer: result.final_answer,
+      },
+      null,
+      2,
+    ),
+  )
   assert.equal(result.final_answer.request_interpretation.specific_product_candidate, true)
   assert.deepEqual(
     result.trace.tool_calls.map((call) => call.name),
@@ -3281,6 +3294,99 @@ test("AgentV2 runtime fallback answers active resolved product follow-ups withou
   assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Welche genaue Variante/i)
+})
+
+test("AgentV2 runtime accepts routine inventory product assessment from routine context", async () => {
+  const productId = "ogx-miracle-coconut-oil"
+  const productName = "OGX Miracle Coconut Oil"
+  const message = buildRoutineChatSeedMessage({
+    type: "discuss_product",
+    categoryLabel: "Haaröl",
+    productName,
+    currentFrequency: "2×/Woche",
+    targetFrequency: "2×/Woche",
+    reason: "Dieses Produkt ist in deiner Routine sinnvoll eingeordnet",
+  })
+  const assessmentTerminal = (call_id: string) =>
+    terminalCall(call_id, {
+      ...terminalGeneralAdviceArguments(),
+      answer_mode: "product_assessment",
+      interpreted_intent: "Der Nutzer fragt, ob die aktuelle Routine-Nutzung des Haaröls passt.",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "oil",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "OGX Miracle Coconut Oil als Haaröl",
+        specific_product_candidate: true,
+      }),
+      extracted_constraints: {
+        ...emptyExtractedConstraints(),
+        product_categories: ["oil"],
+      },
+      tool_grounding: {
+        ...terminalGeneralAdviceArguments().tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "oil"),
+        used_product_tool: true,
+        product_ids: [productId],
+      },
+      payload: {
+        assessment_kind: "routine_usage",
+        assessed_product_ids: [productId],
+        user_facing_answer_de: `Für **${productName}** würde ich in deiner Routine bei **2×/Woche** bleiben. Das Produkt ist in deiner Routine sinnvoll eingeordnet.`,
+      },
+    })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["oil"],
+    }),
+    functionCall(
+      "call_2",
+      "select_products",
+      selectProductsArguments({
+        category: "oil",
+        user_request: "Passt OGX Miracle Coconut Oil als Haaröl zu meiner Routine?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "OGX Miracle Coconut Oil als Haaröl",
+      }),
+    ),
+    assessmentTerminal("call_3"),
+    assessmentTerminal("call_4"),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message,
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "routine_inventory",
+      product_id: productId,
+      name: productName,
+      category: "oil",
+      original_user_message: message,
+    },
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => ({
+        valid_product_ids: [productId],
+        products: [{ product_id: productId, name: productName, supported_claims: [] }],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.answer_mode, "product_assessment")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /OGX Miracle Coconut Oil/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /2×\/Woche/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /sinnvoll eingeordnet/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /^Ich weiß/i)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Inhaltsstoffprüfung/i)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Produktfakten/)
 })
 
 test("AgentV2 runtime fallback answers resolved product fit follow-ups without generic clarification", async () => {
@@ -6556,6 +6662,42 @@ test("AgentV2 runtime repairs Bondbuilder category education by loading category
   assert.match(result.final_answer.payload.user_facing_answer_de, /Look-alikes|nicht automatisch/i)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /4 Arten/i)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /vier Arten/i)
+})
+
+test("AgentV2 runtime treats category-only Bondbuilder lookup as category guidance fallback", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["bondbuilder"],
+    }),
+    functionCall("call_2", "lookup_product_candidate", {
+      category: "bondbuilder",
+      brand_text: null,
+      product_name_text: "Bondbuilder",
+      reason: "The user asks how the Bondbuilder category fits into the routine.",
+      evidence_quote: "Kategorie Bondbuilder sinnvoll in meine Routine einordnen",
+    }),
+    terminalProductRecommendation("call_3", ["missing_product"], "bondbuilder"),
+    terminalProductRecommendation("call_4", ["missing_product"], "bondbuilder"),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message:
+      "Ich möchte die Kategorie Bondbuilder sinnvoll in meine Routine einordnen. Bitte noch keine konkreten Produktempfehlungen.",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.equal(result.final_answer.request_interpretation.care_category, "bondbuilder")
+  assert.equal(result.final_answer.request_interpretation.specific_product_candidate, false)
+  assert.equal(result.final_answer.tool_grounding.used_product_tool, false)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Bondbuilder-Kategorie/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Produkttreffer/)
 })
 
 test("AgentV2 runtime returns safe fallback after repair failure", async () => {

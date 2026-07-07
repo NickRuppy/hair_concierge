@@ -66,7 +66,7 @@ export function buildRoutineChatSeedMessage(input: RoutineChatTriggerInput): str
 
   if (input.type === "onboard_category") {
     const subject = product ? `${product} als ${category}` : `die Kategorie ${category}`
-    return `Ich möchte ${subject} sinnvoll in meine Routine einordnen.${context} Bitte sag mir, wie ich das am besten nutze und worauf ich achten sollte.`
+    return `Ich möchte ${subject} sinnvoll in meine Routine einordnen.${context} Bitte erklär mir profilbezogen, warum diese Kategorie für mich sinnvoll sein könnte, wie ich sie grundsätzlich nutze und worauf ich achten sollte. Bitte noch keine konkreten Produktempfehlungen.`
   }
 
   if (input.type === "discuss_product") {

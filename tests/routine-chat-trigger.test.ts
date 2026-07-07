@@ -53,10 +53,54 @@ function routineCard(overrides: Partial<RoutineUiCard> = {}): RoutineUiCard {
   }
 }
 
+type TriggerCall = { table: string; operation: string; payload?: unknown }
+
+function createRecordingStateClient(
+  calls: TriggerCall[],
+  options: {
+    upsertError?: { message?: string } | null
+    updateError?: { message?: string } | null
+  } = {},
+) {
+  return {
+    from(table: "conversation_states" | "conversations") {
+      if (table === "conversation_states") {
+        return {
+          upsert(payload: unknown, upsertOptions: unknown) {
+            calls.push({ table, operation: "upsert", payload: { payload, options: upsertOptions } })
+            return Promise.resolve({ error: options.upsertError ?? null })
+          },
+        }
+      }
+
+      return {
+        update(payload: unknown) {
+          calls.push({ table, operation: "update", payload })
+          const query = {
+            eq(column: string, value: string) {
+              calls.push({ table, operation: `eq:${column}`, payload: value })
+              return query
+            },
+            then(
+              resolve: (value: { error: { message?: string } | null }) => unknown,
+              reject?: (reason: unknown) => unknown,
+            ) {
+              return Promise.resolve({ error: options.updateError ?? null }).then(resolve, reject)
+            },
+          }
+          return query
+        },
+      }
+    },
+  } as never
+}
+
 test("routine trigger seeds are German first-person messages with visible routine context", () => {
   const onboarding = buildRoutineChatSeedMessage(baseTrigger())
   assert.match(onboarding, /^Ich /)
   assert.match(onboarding, /Beispielmarke Repair Mask als Haarkur sinnvoll in meine Routine/)
+  assert.match(onboarding, /warum diese Kategorie für mich sinnvoll sein könnte/)
+  assert.match(onboarding, /Bitte noch keine konkreten Produktempfehlungen/)
   assert.match(onboarding, /aktuell nutze ich es 1x pro Woche/)
   assert.match(onboarding, /Chaarlies Ziel wäre 1-2x pro Woche/)
   assert.match(onboarding, /der Grund ist: meine Längen wirken trocken/)
@@ -170,7 +214,7 @@ test("routine trigger launcher uses session storage by default", async () => {
 })
 
 test("routine trigger endpoint creates only a conversation and returns a server-derived seed", async () => {
-  const calls: Array<{ table: string; operation: string; payload?: unknown }> = []
+  const calls: TriggerCall[] = []
   const loadCalls: Array<{ userId: string }> = []
   const handler = createRoutineChatTriggerPostHandler({
     createClient: async () => ({
@@ -195,9 +239,14 @@ test("routine trigger endpoint creates only a conversation and returns a server-
               },
             }
           },
+          upsert(payload: unknown, options: unknown) {
+            calls.push({ table, operation: "upsert", payload: { payload, options } })
+            return Promise.resolve({ error: null })
+          },
         }
       },
     }),
+    createStateClient: () => createRecordingStateClient(calls),
     loadRoutineArtifactData: async (params) => {
       loadCalls.push(params)
       return {
@@ -247,8 +296,188 @@ test("routine trigger endpoint creates only a conversation and returns a server-
       is_active: true,
     },
   })
+  const stateUpsert = calls.find(
+    (call) => call.table === "conversation_states" && call.operation === "upsert",
+  )
+  assert.equal(stateUpsert, undefined)
   assert.equal(
     calls.some((call) => call.table === "messages"),
     false,
+  )
+})
+
+test("routine trigger endpoint seeds routine inventory product context for product discussions", async () => {
+  const calls: TriggerCall[] = []
+  const handler = createRoutineChatTriggerPostHandler({
+    createClient: async () => ({
+      auth: {
+        async getUser() {
+          return { data: { user: { id: "user-1" } }, error: null }
+        },
+      },
+      from(table: string) {
+        return {
+          insert(payload: unknown) {
+            calls.push({ table, operation: "insert", payload })
+            return {
+              select(columns: string) {
+                calls.push({ table, operation: `select:${columns}` })
+                return {
+                  async single() {
+                    return { data: { id: "conversation-1" }, error: null }
+                  },
+                }
+              },
+            }
+          },
+          upsert(payload: unknown, options: unknown) {
+            calls.push({ table, operation: "upsert", payload: { payload, options } })
+            return Promise.resolve({ error: null })
+          },
+        }
+      },
+    }),
+    createStateClient: () => createRecordingStateClient(calls),
+    loadRoutineArtifactData: async (params) =>
+      ({
+        userId: params.userId,
+        hairProfile: null,
+        usageRows: [],
+        pendingSubmissionsById: new Map(),
+        activeDismissedCategories: new Set(),
+        runtime: { careBalance: { rows: [] } },
+      }) as never,
+    shapeRoutineForUi: () => ({ hairProfile: null, cards: [routineCard()] }),
+  })
+
+  const response = await handler(
+    new Request("https://app.test/api/chat/trigger", {
+      method: "POST",
+      body: JSON.stringify(baseTrigger({ type: "discuss_product", cardId: "usage-1" })),
+    }),
+  )
+
+  const body = (await response.json()) as { conversationId?: string; seedMessage?: string }
+  assert.equal(response.status, 200)
+  assert.equal(body.conversationId, "conversation-1")
+  assert.match(body.seedMessage ?? "", /Ich benutze aktuell Server Brand Server Mask als Haarkur/)
+
+  const stateUpsert = calls.find(
+    (call) => call.table === "conversation_states" && call.operation === "upsert",
+  )
+  assert.ok(stateUpsert)
+  assert.equal(
+    (stateUpsert.payload as { payload: { conversation_id: string } }).payload.conversation_id,
+    "conversation-1",
+  )
+  assert.equal(
+    (
+      stateUpsert.payload as {
+        payload: {
+          state: {
+            agent_v2: {
+              active_resolved_product_context: { product_id: string; source: string }
+            }
+          }
+        }
+      }
+    ).payload.state.agent_v2.active_resolved_product_context.product_id,
+    "product-1",
+  )
+  assert.equal(
+    (
+      stateUpsert.payload as {
+        payload: {
+          state: {
+            agent_v2: {
+              active_resolved_product_context: { product_id: string; source: string }
+            }
+          }
+        }
+      }
+    ).payload.state.agent_v2.active_resolved_product_context.source,
+    "routine_inventory",
+  )
+  assert.equal(
+    calls.some((call) => call.table === "messages"),
+    false,
+  )
+})
+
+test("routine trigger endpoint deactivates the created conversation if context seeding fails", async () => {
+  const calls: TriggerCall[] = []
+  const handler = createRoutineChatTriggerPostHandler({
+    createClient: async () => ({
+      auth: {
+        async getUser() {
+          return { data: { user: { id: "user-1" } }, error: null }
+        },
+      },
+      from(table: string) {
+        return {
+          insert(payload: unknown) {
+            calls.push({ table, operation: "insert", payload })
+            return {
+              select(columns: string) {
+                calls.push({ table, operation: `select:${columns}` })
+                return {
+                  async single() {
+                    return { data: { id: "conversation-1" }, error: null }
+                  },
+                }
+              },
+            }
+          },
+          upsert(payload: unknown, options: unknown) {
+            calls.push({ table, operation: "upsert", payload: { payload, options } })
+            return Promise.resolve({ error: null })
+          },
+        }
+      },
+    }),
+    createStateClient: () =>
+      createRecordingStateClient(calls, { upsertError: { message: "state write failed" } }),
+    loadRoutineArtifactData: async (params) =>
+      ({
+        userId: params.userId,
+        hairProfile: null,
+        usageRows: [],
+        pendingSubmissionsById: new Map(),
+        activeDismissedCategories: new Set(),
+        runtime: { careBalance: { rows: [] } },
+      }) as never,
+    shapeRoutineForUi: () => ({ hairProfile: null, cards: [routineCard()] }),
+  })
+
+  const response = await handler(
+    new Request("https://app.test/api/chat/trigger", {
+      method: "POST",
+      body: JSON.stringify(baseTrigger({ type: "discuss_product", cardId: "usage-1" })),
+    }),
+  )
+
+  assert.equal(response.status, 500)
+  assert.ok(
+    calls.find((call) => call.table === "conversation_states" && call.operation === "upsert"),
+  )
+  assert.deepEqual(
+    calls.filter((call) => call.table === "conversations" && call.operation === "update"),
+    [{ table: "conversations", operation: "update", payload: { is_active: false } }],
+  )
+  assert.ok(
+    calls.find(
+      (call) =>
+        call.table === "conversations" &&
+        call.operation === "eq:id" &&
+        call.payload === "conversation-1",
+    ),
+  )
+  assert.ok(
+    calls.find(
+      (call) =>
+        call.table === "conversations" &&
+        call.operation === "eq:user_id" &&
+        call.payload === "user-1",
+    ),
   )
 })

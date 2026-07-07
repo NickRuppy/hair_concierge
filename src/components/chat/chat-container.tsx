@@ -166,9 +166,15 @@ export function ChatContainer({
       suppressInitialConversationReloadRef.current = false
       return
     }
+    if (
+      messages.length === 0 &&
+      readRoutineTriggerSeed(initialConversationId, window.sessionStorage)
+    ) {
+      return
+    }
     if (!initialConversationId || currentConversationId === initialConversationId) return
     loadConversation(initialConversationId)
-  }, [currentConversationId, initialConversationId, loadConversation])
+  }, [currentConversationId, initialConversationId, loadConversation, messages.length])
 
   useEffect(() => {
     const routineSeedConversationId = currentConversationId ?? initialConversationId

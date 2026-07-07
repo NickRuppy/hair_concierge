@@ -288,6 +288,108 @@ test("product lookup outcome does not let one pending product answer for a diffe
   assert.equal(outcome.productIntakeOffer?.id, "product-intake-redken")
 })
 
+test("product lookup outcome does not ask for a variant when the named product is already resolved from routine inventory", async () => {
+  const agentResult = createAgentV2Result()
+  agentResult.trace.failure_stage = "repair_failed"
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "clarification",
+    request_interpretation: {
+      ...agentResult.final_answer.request_interpretation,
+      primary_intent: "clarification",
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      evidence_quote: "Bali Curls Moisturising Conditioner",
+      specific_product_candidate: true,
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich finde zu Bali Curls Moisturising Conditioner mehrere mögliche Varianten und möchte nichts Falsches bewerten. Welche genaue Variante meinst du?",
+      question_de: "Welche genaue Variante meinst du?",
+      missing_keys: ["product_variant"],
+    },
+  }
+
+  const outcome = await buildProductLookupTurnOutcome({
+    productIntakeEnabled: true,
+    safetyMode: "normal",
+    activeProductContexts: [
+      {
+        status: "resolved",
+        product_id: "bali-curls-conditioner",
+        submission_id: null,
+        category: "conditioner",
+        brand_text: "Bali Curls",
+        product_name_text: "Moisturising Conditioner",
+        display_name: "Bali Curls Moisturising Conditioner",
+        original_user_message:
+          "Ich benutze aktuell Bali Curls Moisturising Conditioner als Conditioner.",
+        source: "routine_inventory",
+        updated_at: "2026-07-07T10:00:00.000Z",
+      },
+    ],
+    activeResolvedProductContext: {
+      source: "routine_inventory",
+      product_id: "bali-curls-conditioner",
+      name: "Bali Curls Moisturising Conditioner",
+      category: "conditioner",
+      original_user_message:
+        "Ich benutze aktuell Bali Curls Moisturising Conditioner als Conditioner.",
+    },
+    trustedSelectedProductContext: null,
+    namedProductContext: {
+      display_name: "Bali Curls Moisturising Conditioner",
+      category: "conditioner",
+      plausible_exact_name: true,
+      named_product_intent: "current_use_product_question",
+    },
+    executions: [
+      {
+        input: {
+          category: "conditioner",
+          brand_text: "Bali Curls",
+          product_name_text: "Moisturising Conditioner",
+        },
+        result: {
+          status: "needs_variant_selection",
+          category: "conditioner",
+          product: null,
+          candidates: [
+            {
+              productId: "bali-curls-conditioner",
+              product: {
+                id: "bali-curls-conditioner",
+                name: "Bali Curls Moisturising Conditioner",
+                cleanName: "Bali Curls Moisturising Conditioner",
+                brandId: "brand-bali-curls",
+                categoryKey: "conditioner",
+                imageUrl: null,
+              },
+              confidence: "exact",
+              reason: "brand_name_category_exact",
+              reasonCodes: ["brand_name_category_exact"],
+            },
+          ],
+          missing_fields: [],
+          intake_offer: null,
+        },
+      },
+    ],
+    trace: agentResult.trace,
+    finalAnswer: agentResult.final_answer,
+    latestUserMessage:
+      "Ich benutze aktuell Bali Curls Moisturising Conditioner als Conditioner. Passt das zu mir?",
+    loadProductLookupCatalogs: async () => ({
+      catalog: { products: [], identifiers: [] },
+      brandCatalog: { brands: [], productLines: [], brandAliases: [] },
+    }),
+    requestId: "request-routine-resolved-product",
+  })
+
+  assert.equal(outcome.productLookupClarification, null)
+  assert.equal(outcome.productIntakeOffer, null)
+})
+
 test("product lookup outcome keeps newer resolved same-category context ahead of older pending context", async () => {
   const agentResult = createAgentV2Result()
   agentResult.final_answer = {

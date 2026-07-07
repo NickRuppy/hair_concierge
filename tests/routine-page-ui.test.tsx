@@ -124,15 +124,18 @@ test("routine product drawer receives loaded profile context", () => {
 
 test("routine trigger seeds are sent from session storage with the route conversation id", () => {
   const source = read("src/components/chat/chat-container.tsx")
+  const hookSource = read("src/hooks/use-chat.ts")
 
   assert.match(source, /currentConversationId \?\? initialConversationId/)
   assert.match(
     source,
     /readRoutineTriggerSeed\(routineSeedConversationId, window\.sessionStorage\)/,
   )
+  assert.match(source, /readRoutineTriggerSeed\(initialConversationId, window\.sessionStorage\)/)
   assert.match(source, /sendMessage\(seedMessage, \{ conversationId \}\)/)
   assert.match(source, /await loadConversation\(conversationId\)/)
   assert.match(source, /clearRoutineTriggerSeed\(conversationId, window\.sessionStorage\)/)
+  assert.match(hookSource, /setCurrentConversationId\(targetConversationId\)/)
   assert.doesNotMatch(
     source,
     /readRoutineTriggerSeed\(currentConversationId, window\.localStorage\)/,

@@ -539,6 +539,11 @@ export function useChat(): UseChatReturn {
       // Track first chat message (before optimistic update changes state)
       const isFirstMessage = messages.length === 0
 
+      if (targetConversationId && currentConversationIdRef.current !== targetConversationId) {
+        currentConversationIdRef.current = targetConversationId
+        setCurrentConversationId(targetConversationId)
+      }
+
       // Add user message optimistically
       const userMessage: Message = {
         id: `temp-${Date.now()}`,

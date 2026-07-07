@@ -43,6 +43,7 @@ export interface AgentV2FinalAnswerValidationContext {
     comparison_facts?: Record<string, readonly unknown[]> | null
   }[]
   trustedSelectedProductIds?: readonly string[]
+  routineInventoryProductIds?: readonly string[]
   productLookupResults?: readonly AgentV2ProductLookupValidationResult[]
   routineProjections: readonly {
     routine_layer?: AgentV2RoutineLayer
@@ -1741,13 +1742,19 @@ function getRequiredGuidancePackageIds(
 
   const required = new Set<string>(ALWAYS_REQUIRED_GUIDANCE_PACKAGE_IDS)
 
-  for (const id of BASE_GUIDANCE_BY_ANSWER_MODE[answer.answer_mode] ?? []) {
+  const usesRoutineInventoryUsageContext = isRoutineInventoryUsageProductAssessment(answer, context)
+  const baseGuidanceIds = usesRoutineInventoryUsageContext
+    ? ["base.general_advice.v1"]
+    : (BASE_GUIDANCE_BY_ANSWER_MODE[answer.answer_mode] ?? [])
+
+  for (const id of baseGuidanceIds) {
     required.add(id)
   }
 
   if (
     PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind) &&
-    !isGroundedByTrustedProductSelection(answer, context)
+    !isGroundedByTrustedProductSelection(answer, context) &&
+    !usesRoutineInventoryUsageContext
   ) {
     required.add("base.product_recommendation.v1")
   }
@@ -1900,11 +1907,17 @@ function validateProductAssessmentGrounding(
   )
   const groundedProductIds = new Set(answer.tool_grounding.product_ids)
   const resolvedProductIds = new Set(collectResolvedProductAssessmentIds(context))
+  const routineUsageProductIds = new Set(context.routineInventoryProductIds ?? [])
+  const canUseRoutineContextForProductFacts = answer.payload.assessment_kind === "routine_usage"
 
   const invalidCount = assessedProductIds.length !== 1
   const missingFromGrounding = assessedProductIds.filter((id) => !groundedProductIds.has(id))
   const missingResolvedIdentity = assessedProductIds.filter((id) => !resolvedProductIds.has(id))
-  const missingProductFacts = assessedProductIds.filter((id) => !productFactProductIds.has(id))
+  const missingProductFacts = assessedProductIds.filter(
+    (id) =>
+      !productFactProductIds.has(id) &&
+      !(canUseRoutineContextForProductFacts && routineUsageProductIds.has(id)),
+  )
 
   if (
     assessedProductIds.length === 0 ||
@@ -1916,14 +1929,36 @@ function validateProductAssessmentGrounding(
     errors.push({
       validator_id: "product_assessment_grounding",
       message:
-        "Product assessment requires exactly one assessed product ID grounded by verified product identity and matching product projection facts.",
+        "Product assessment requires exactly one assessed product ID grounded by verified product identity and product facts, or trusted routine inventory context for routine_usage.",
       severity: "block",
       path: ["payload", "assessed_product_ids"],
       rejected_value: assessedProductIds,
       expected:
-        "The single assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching select_products projection facts.",
+        "For fit/detail, the single assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching select_products projection facts. For routine_usage, the product may instead be sourced from routine_inventory.",
     })
   }
+}
+
+function isRoutineUsageProductAssessment(answer: AgentV2TerminalAnswer): boolean {
+  return (
+    answer.answer_mode === "product_assessment" &&
+    answer.payload.assessment_kind === "routine_usage"
+  )
+}
+
+function isRoutineInventoryUsageProductAssessment(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  if (!isRoutineUsageProductAssessment(answer)) return false
+  const routineInventoryProductIds = new Set(context.routineInventoryProductIds ?? [])
+  if (routineInventoryProductIds.size === 0) return false
+
+  const assessedProductIds = extractPayloadProductIds(answer)
+  return (
+    assessedProductIds.length === 1 &&
+    assessedProductIds.every((productId) => routineInventoryProductIds.has(productId))
+  )
 }
 
 function productIdsWithProductAssessmentFacts(
