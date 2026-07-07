@@ -28,7 +28,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
 
   const result = await buildCheckoutPurchaseAnalytics(
     {
-      amount_total: 1749,
+      amount_total: 3499,
       currency: "eur",
       id: "cs_test_123",
       payment_method_types: ["card", "sepa_debit"],
@@ -42,7 +42,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
     interval: "quarter",
     paymentMethodType: "card",
     planId: "premium_quarter",
-    value: 17.49,
+    value: 34.99,
   })
   assert.equal(retrieveCalls.length, 1)
   assert.deepEqual(retrieveCalls[0], [
@@ -74,7 +74,7 @@ test("buildCheckoutPurchaseAnalytics omits payment method when actual method is 
 
   const result = await buildCheckoutPurchaseAnalytics(
     {
-      amount_total: 749,
+      amount_total: 1499,
       currency: "eur",
       id: "cs_test_unexpanded",
       payment_method_types: ["sepa_debit"],

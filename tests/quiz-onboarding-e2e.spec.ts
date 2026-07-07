@@ -258,7 +258,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       ).toBeVisible()
       await expect(page.getByText(/Was dein Haar jetzt braucht/i)).toBeVisible()
       await expect(
-        page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }),
+        page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }),
       ).toBeVisible()
       await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
       expect(analyzeRequestCount).toBe(0)
@@ -558,7 +558,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       ).toBeVisible()
       await expect(page.getByText(/Was dein Haar jetzt braucht/i)).toBeVisible()
       await expect(
-        page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }),
+        page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }),
       ).toBeVisible()
       await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
     })

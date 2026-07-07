@@ -28,7 +28,7 @@ const FEATURES_BY_INTERVAL: Record<BillingInterval, readonly string[]> = {
 function PlanCard({ plan }: { plan: StripePricingPlan }) {
   const isPopular = Boolean(plan.badge)
   const features = FEATURES_BY_INTERVAL[plan.interval]
-  const discountedDigits = plan.discountedPrice.replace(/^€/, "")
+  const priceDigits = plan.price.replace(/^€/, "")
 
   const cardBorder = isPopular
     ? "border-[var(--brand-plum)] shadow-[0_20px_50px_-20px_rgba(var(--brand-plum-rgb),0.3)]"
@@ -57,15 +57,14 @@ function PlanCard({ plan }: { plan: StripePricingPlan }) {
         ) : null}
       </p>
 
-      <p className="text-sm text-muted-foreground line-through">{plan.price}</p>
       <p
-        aria-label={`${plan.discountedPrice} ${plan.perMonth}`}
+        aria-label={`${plan.price} ${plan.perMonth}`}
         className="font-header text-[42px] font-semibold text-[var(--brand-plum-darkest)] leading-none"
       >
         <sup aria-hidden="true" className="text-2xl font-medium text-muted-foreground mr-0.5">
           €
         </sup>
-        <span aria-hidden="true">{discountedDigits}</span>
+        <span aria-hidden="true">{priceDigits}</span>
       </p>
 
       <p className="text-sm text-muted-foreground mt-1.5 mb-6">{plan.perMonth}</p>

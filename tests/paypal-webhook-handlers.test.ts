@@ -549,6 +549,46 @@ test("refund and reversal events are known log-only events", async () => {
   assert.equal(profiles["user-1"].subscription_status, "active")
 })
 
+test("activation refresh keeps the stored interval for legacy PayPal plan ids", async () => {
+  const { supabase, billing, profiles } = createSupabaseStub({
+    billing: [
+      {
+        user_id: "user-1",
+        provider_subscription_id: "I-active",
+        interval: "year",
+        metadata: { plan_id: "P-old-year" },
+      },
+    ],
+    profiles: {
+      "user-1": {
+        id: "user-1",
+        email: "paypal@example.com",
+        subscription_status: "active",
+        subscription_interval: "year",
+      },
+    },
+    paypalIntents: [],
+  })
+
+  const result = await handlePayPalWebhookEvent(
+    paymentEvent("WH-legacy-plan", "PAYMENT.SALE.COMPLETED"),
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => ({
+        ...subscription("ACTIVE", futureIso()),
+        plan_id: "P-old-year",
+        custom_id: undefined,
+      }),
+    },
+  )
+
+  assert.deepEqual(result, { handled: true })
+  assert.equal(billing[0].interval, "year")
+  assert.equal(profiles["user-1"].subscription_interval, "year")
+})
+
 function event(id: string, eventType: string): PayPalWebhookEvent {
   return { id, event_type: eventType, resource: { id: "I-active" } }
 }

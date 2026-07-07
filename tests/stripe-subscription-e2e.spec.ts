@@ -47,7 +47,7 @@ test.describe.skip("Stripe subscription golden path (manual)", () => {
     await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
 
     // 2. Start checkout from the result offer page's selected plan CTA.
-    await page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }).click()
+    await page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }).click()
 
     // 3. The embedded Stripe iframe loads inline on the result page.
     await expect(page.getByRole("button", { name: /Plan ändern/i })).toBeVisible({

@@ -5,7 +5,6 @@ type BuildStripeCheckoutSessionParamsInput = {
   priceId: string
   customerId?: string
   customerEmail?: string
-  discountCouponId?: string
   leadId?: string | null
 }
 
@@ -14,7 +13,6 @@ export function buildStripeCheckoutSessionParams({
   priceId,
   customerId,
   customerEmail,
-  discountCouponId,
   leadId,
 }: BuildStripeCheckoutSessionParamsInput): Stripe.Checkout.SessionCreateParams {
   return {
@@ -33,7 +31,6 @@ export function buildStripeCheckoutSessionParams({
       },
     },
     excluded_payment_method_types: ["sepa_debit"],
-    ...(discountCouponId ? { discounts: [{ coupon: discountCouponId }] } : {}),
     metadata: leadId ? { lead_id: leadId } : undefined,
   }
 }

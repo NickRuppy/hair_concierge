@@ -25,6 +25,7 @@ import {
 } from "@/lib/paypal/duplicate-guard"
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
+import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
 
 export type PayPalWebhookEvent = {
   id?: string
@@ -218,7 +219,7 @@ async function activateOrRefreshSubscription(
     premiumTierId: deps.premiumTierId,
     activationKey: boundIntent?.token,
     accountEmail: boundIntent?.email ?? null,
-    interval: boundIntent?.interval ?? intervalFromMetadata(subscription),
+    interval: boundIntent?.interval ?? existing?.interval ?? intervalFromMetadata(subscription),
     leadId: boundIntent?.lead_id ?? null,
     linkQuizToProfile: deps.linkQuizToProfile,
   })
@@ -273,6 +274,9 @@ function getEventSubscriptionId(event: PayPalWebhookEvent, eventType: string): s
 }
 
 function intervalFromMetadata(subscription: PayPalSubscription): BillingInterval {
+  const configuredInterval = getPayPalIntervalForPlanId(subscription.plan_id)
+  if (configuredInterval) return configuredInterval
+
   const interval = subscription.plan_id?.toLowerCase()
   if (interval?.includes("quarter")) return "quarter"
   if (interval?.includes("year") || interval?.includes("annual")) return "year"

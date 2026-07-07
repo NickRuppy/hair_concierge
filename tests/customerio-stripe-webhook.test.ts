@@ -220,7 +220,7 @@ test("webhook event schedules best-effort Customer.io checkout sync after fulfil
           data: {
             object: {
               id: "cs_123",
-              amount_total: 749,
+              amount_total: 1499,
               currency: "eur",
               status: "complete",
               payment_status: "paid",
@@ -260,7 +260,7 @@ test("webhook event schedules best-effort Customer.io checkout sync after fulfil
         "subscription_started",
       ])
       assert.equal(calls[1].body.timestamp, "2027-01-15T08:00:00.000Z")
-      assert.equal(((calls[1].body.properties as Record<string, unknown>) ?? {}).amount, 7.49)
+      assert.equal(((calls[1].body.properties as Record<string, unknown>) ?? {}).amount, 14.99)
     })
   } finally {
     globalThis.fetch = originalFetch
@@ -280,7 +280,7 @@ test("webhook event activates non-SEPA async payment success", async () => {
       data: {
         object: {
           id: "cs_async_succeeded",
-          amount_total: 1749,
+          amount_total: 3499,
           currency: "eur",
           status: "complete",
           payment_status: "paid",
@@ -322,7 +322,7 @@ test("webhook event activates async success when SEPA was offered but a non-SEPA
       data: {
         object: {
           id: "cs_mixed_async_succeeded",
-          amount_total: 1749,
+          amount_total: 3499,
           currency: "eur",
           status: "complete",
           payment_status: "paid",
@@ -366,7 +366,7 @@ test("webhook event skips SEPA async payment success during SEPA sunset", async 
       data: {
         object: {
           id: "cs_sepa_async_succeeded",
-          amount_total: 749,
+          amount_total: 1499,
           currency: "eur",
           status: "complete",
           payment_status: "paid",
@@ -404,7 +404,7 @@ test("webhook event skips SEPA async payment success when the session payment me
       data: {
         object: {
           id: "cs_session_sepa_async_succeeded",
-          amount_total: 749,
+          amount_total: 1499,
           currency: "eur",
           status: "complete",
           payment_status: "paid",
@@ -442,7 +442,7 @@ test("webhook event acknowledges unpaid checkout completion without granting acc
       data: {
         object: {
           id: "cs_unpaid",
-          amount_total: 749,
+          amount_total: 1499,
           currency: "eur",
           status: "complete",
           payment_status: "unpaid",
