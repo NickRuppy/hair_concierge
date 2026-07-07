@@ -218,7 +218,11 @@ test("routine trigger endpoint creates only a conversation and returns a server-
   assert.deepEqual(calls[0], {
     table: "conversations",
     operation: "insert",
-    payload: { user_id: "user-1", title: null, is_active: true },
+    payload: {
+      user_id: "user-1",
+      title: "Alternativen · Server Brand Server Mask",
+      is_active: true,
+    },
   })
   assert.equal(
     calls.some((call) => call.table === "messages"),

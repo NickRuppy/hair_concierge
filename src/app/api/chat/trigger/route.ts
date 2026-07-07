@@ -25,7 +25,7 @@ type TriggerRouteClient = {
     getUser(): Promise<{ data: { user: { id: string } | null } }>
   }
   from(table: "conversations"): {
-    insert(payload: { user_id: string; title: null; is_active: true }): {
+    insert(payload: { user_id: string; title: string | null; is_active: true }): {
       select(columns: "id"): {
         single(): Promise<{ data: { id: string } | null; error: { message?: string } | null }>
       }
@@ -120,6 +120,18 @@ function serverRoutineTriggerInput(
   }
 }
 
+/**
+ * Sidebar title for the seeded conversation. `/api/chat` only titles
+ * conversations it creates itself, so routine-triggered chats must get a
+ * meaningful German title at creation time (no LLM call needed).
+ */
+function conversationTitle(type: RoutineChatTriggerInput["type"], card: RoutineUiCard): string {
+  if (type === "onboard_category") return `Routine · ${card.categoryLabel}`
+  const productName = card.productName?.trim()
+  const subject = productName && productName.length <= 40 ? productName : card.categoryLabel
+  return type === "alternatives" ? `Alternativen · ${subject}` : `Routine · ${subject}`
+}
+
 export function createRoutineChatTriggerPostHandler(
   overrides: RoutineChatTriggerPostHandlerDeps = {},
 ) {
@@ -162,7 +174,7 @@ export function createRoutineChatTriggerPostHandler(
       .from("conversations")
       .insert({
         user_id: user.id,
-        title: null,
+        title: conversationTitle(parsed.type, card),
         is_active: true,
       })
       .select("id")
