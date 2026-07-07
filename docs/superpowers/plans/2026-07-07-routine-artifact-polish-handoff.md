@@ -34,17 +34,15 @@
 | `4f051d9` | Batch 2 Commit 3 — slider failure toast + rollback. Fixed 2 real bugs: `/routine` had no layout so ToastProvider was never mounted (added `src/app/routine/layout.tsx`); toast viewport z-index below drawer (bumped to z-[60] in `src/providers/toast-provider.tsx`) |
 | `334d9a2` | Batch 2 — empty state extended with spec reassurance line + "Onboarding anpassen" CTA → /onboarding |
 | `62ee6a5` | This handoff doc |
+| `ac0b6fa` | Final adoption — ball indicator on verified + suggestion cards (8 dots, coral fill; suggestion shows preferred stop); pending cards lose frequency line entirely ("von dir angelegt" scratched — pending card = eyebrow + pill + name, frequency stays editable in drawer); pending muted (24px hourglass, half-opacity stripes) |
 
-### In flight (final adoption commit — check `git log` for "fix(routine): ball frequency indicator + calmer pending cards")
+### In flight
 
-User decisions from the A/B review, being implemented as one commit:
-1. **Ball indicator adopted on verified + suggestion cards ONLY** (8 dots, coral fill to current stop; suggestion shows preferred stop).
-2. **Pending cards lose the frequency line entirely** — no balls, no freq text. "· von dir angelegt" scratched everywhere (carries no information). Pending card = eyebrow + "In Prüfung" pill + product name. Frequency stays editable in the pending drawer.
-3. **Pending muting adopted**: 24px hourglass, stripes at half opacity, border + badge + amber tile kept.
+Nothing — UI polish is complete and visually verified at 430px (final screenshot 2026-07-07).
 
 ### Open decisions (user)
 
-None — all A/B decisions made (see In flight above).
+None.
 
 ### Backlog (explicitly deferred, next work package)
 
