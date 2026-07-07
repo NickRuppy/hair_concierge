@@ -12,9 +12,11 @@ import {
 } from "lucide-react"
 
 import type { RoutineUiCard } from "@/lib/routines/types"
+import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import { cn } from "@/lib/utils"
 import {
   getRoutineCardVisual,
+  routineCardBallIndex,
   routineCardFrequencyLine,
   routineCardTitle,
   type RoutineCardVisual,
@@ -37,7 +39,7 @@ function CardTile({ card }: { card: RoutineUiCard }) {
         className={baseClassName}
         style={{ background: "linear-gradient(155deg,#F5EBD2,#E6D4A8)" }}
       >
-        <Hourglass className="h-8 w-8 text-[#8a6a30]" aria-hidden="true" />
+        <Hourglass className="h-6 w-6 text-[#8a6a30]" aria-hidden="true" />
       </div>
     )
   }
@@ -119,6 +121,7 @@ function CardAction({ visual }: { visual: RoutineCardVisual }) {
 export function RoutineCard({ card, busy, onTap, onDismissSuggestion }: RoutineCardProps) {
   const visual = getRoutineCardVisual(card)
   const frequencyLine = routineCardFrequencyLine(card)
+  const ballIndex = routineCardBallIndex(card)
 
   return (
     <article
@@ -193,7 +196,24 @@ export function RoutineCard({ card, busy, onTap, onDismissSuggestion }: RoutineC
           {routineCardTitle(card)}
         </p>
 
-        {frequencyLine && <p className="text-[11px] text-muted-foreground">{frequencyLine}</p>}
+        {frequencyLine && (
+          <p className="flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground">
+            {ballIndex >= 0 && (
+              <span aria-hidden="true" className="inline-flex shrink-0 items-center gap-[3px]">
+                {PRODUCT_FREQUENCIES.map((frequency, index) => (
+                  <span
+                    key={frequency}
+                    className={cn(
+                      "h-[6px] w-[6px] rounded-full",
+                      index <= ballIndex ? "bg-[#D4616A]" : "bg-[rgba(31,26,20,0.10)]",
+                    )}
+                  />
+                ))}
+              </span>
+            )}
+            <span className="truncate">{frequencyLine}</span>
+          </p>
+        )}
       </div>
 
       <CardAction visual={visual} />

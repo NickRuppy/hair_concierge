@@ -34,7 +34,7 @@ export type FrequencyControlModel = {
 
 const PENDING_CARD_BACKGROUND: CSSProperties = {
   background:
-    "repeating-linear-gradient(135deg, rgba(232,188,100,0.05) 0, rgba(232,188,100,0.05) 6px, transparent 6px, transparent 14px), rgba(232,188,100,0.10)",
+    "repeating-linear-gradient(135deg, rgba(232,188,100,0.025) 0, rgba(232,188,100,0.025) 6px, transparent 6px, transparent 14px), rgba(232,188,100,0.10)",
 }
 
 const YELLOW_CARD_CLASSES = "border-[rgba(200,160,40,0.22)] bg-[rgba(220,180,60,0.12)]"
@@ -126,22 +126,37 @@ export function routineCardTitle(card: RoutineUiCard): string {
   return card.productName ?? "Produkt ohne eindeutigen Namen"
 }
 
+/**
+ * Frequency shown on the card row. Pending cards intentionally show none —
+ * the frequency stays editable in the pending drawer.
+ */
 export function routineCardFrequencyLine(card: RoutineUiCard): string | null {
-  if (card.kind === "suggestion") {
-    const preferred = normalizeProductFrequency(card.frequencyTarget?.preferredFrequency)
-    return preferred ? `Vorschlag: ${displayFrequencyLabel(preferred)}` : null
-  }
+  if (card.kind === "pending") return null
 
-  const current =
+  const frequency = routineCardBallFrequency(card)
+  if (!frequency) return null
+  const label = displayFrequencyLabel(frequency)
+  return card.kind === "suggestion" ? `Vorschlag: ${label}` : label
+}
+
+/**
+ * Stop shown by the ball mini-indicator: the current frequency on verified
+ * cards, Chaarlie's preferred stop on suggestions, nothing on pending cards.
+ */
+export function routineCardBallFrequency(card: RoutineUiCard): ProductFrequency | null {
+  if (card.kind === "pending") return null
+  if (card.kind === "suggestion") {
+    return normalizeProductFrequency(card.frequencyTarget?.preferredFrequency)
+  }
+  return (
     normalizeProductFrequency(card.usageRow?.frequency_range) ??
     normalizeProductFrequency(card.currentFrequency)
+  )
+}
 
-  if (card.kind === "pending") {
-    const label = current ? displayFrequencyLabel(current) : "Frequenz offen"
-    return `${label} · von dir angelegt`
-  }
-
-  return current ? displayFrequencyLabel(current) : null
+export function routineCardBallIndex(card: RoutineUiCard): number {
+  const frequency = routineCardBallFrequency(card)
+  return frequency ? PRODUCT_FREQUENCIES.indexOf(frequency) : -1
 }
 
 const FREQUENCY_STOPS: SliderStop[] = PRODUCT_FREQUENCIES.map((value) => ({
