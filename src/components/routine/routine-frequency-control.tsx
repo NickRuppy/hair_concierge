@@ -68,14 +68,28 @@ export function RoutineFrequencyControl({
     }
   }
 
+  // Target-range bracket below the track; single-stop ranges get a minimum
+  // visual width centered on the stop so they don't collapse to a sliver.
+  const bracket = model.band
+    ? model.band.widthPercent < 4
+      ? {
+          leftPercent: Math.min(
+            96,
+            Math.max(0, model.band.leftPercent + model.band.widthPercent / 2 - 2),
+          ),
+          widthPercent: 4,
+        }
+      : model.band
+    : null
+
   return (
     <div className={cn("w-full select-none", disabled && "opacity-60")}>
-      <div className="mb-1 flex min-h-5 items-center justify-between gap-3 text-xs">
-        <span className="font-medium text-[var(--text-heading)]">Nutzung</span>
-        <span className="text-right text-muted-foreground">
-          Aktuell: <span className="text-[var(--text-heading)]">{model.currentLabel}</span>
-        </span>
-      </div>
+      <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        Nutzung
+      </span>
+      <p className="mt-1 text-center font-serif text-xl font-medium leading-tight text-[var(--text-heading)]">
+        {model.currentLabel}
+      </p>
 
       <div
         ref={trackRef}
@@ -101,7 +115,7 @@ export function RoutineFrequencyControl({
         }}
         onPointerUp={() => setDragging(false)}
         className={cn(
-          "relative flex h-11 touch-none items-end rounded-sm pb-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          "relative flex h-12 touch-none items-end rounded-sm pb-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           disabled ? "cursor-not-allowed" : "cursor-pointer",
         )}
       >
@@ -135,16 +149,16 @@ export function RoutineFrequencyControl({
             />
           )}
 
-          {/* Target-range band: overlays the fill and overhangs the 6px track
-              slightly so the healthy zone stays readable on both the filled
-              and unfilled portions. */}
-          {model.band && (
+          {/* Target-range bracket: a plum underline below the track keeps the
+              healthy zone readable without color-mixing with the coral fill. */}
+          {bracket && (
             <div
               aria-hidden="true"
-              className="absolute -bottom-[2px] -top-[2px] z-[1] rounded-full bg-[rgba(107,80,160,0.15)]"
+              className="absolute h-[3px] rounded-full bg-[rgba(107,80,160,0.35)]"
               style={{
-                left: `${model.band.leftPercent}%`,
-                width: `${Math.max(model.band.widthPercent, 2)}%`,
+                left: `${bracket.leftPercent}%`,
+                width: `${bracket.widthPercent}%`,
+                top: "calc(100% + 4px)",
               }}
             />
           )}
