@@ -1,9 +1,8 @@
 import { LandingHeader } from "@/components/landing/landing-header"
 import { Hero } from "@/components/landing/hero"
 import { PainStrip } from "@/components/landing/pain-strip"
-import { WhatIs } from "@/components/landing/what-is"
+import { WhatYouGet } from "@/components/landing/what-you-get"
 import { HowItWorks } from "@/components/landing/how-it-works"
-import { Features } from "@/components/landing/features"
 import { Pricing } from "@/components/landing/pricing"
 import { Faq } from "@/components/landing/faq"
 import { FinalCta } from "@/components/landing/final-cta"
@@ -19,9 +18,8 @@ export default function Home() {
       <main className="pb-[84px] md:pb-0">
         <Hero />
         <PainStrip />
-        <WhatIs />
+        <WhatYouGet />
         <HowItWorks />
-        <Features />
         <Pricing />
         <Faq />
         <FinalCta />
