@@ -37,8 +37,9 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
   for (const path of [
     "src/components/landing/landing-header.tsx",
     "src/components/landing/hero.tsx",
-    "src/components/landing/pricing.tsx",
+    "src/components/landing/how-it-works.tsx",
     "src/components/landing/final-cta.tsx",
+    "src/components/landing/sticky-quiz-cta.tsx",
     "src/components/landing/site-footer.tsx",
   ]) {
     const source = read(path)

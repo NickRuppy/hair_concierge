@@ -31,12 +31,7 @@ export function SiteFooter() {
             <ul className="flex flex-col gap-2.5">
               <li>
                 <Link href="/quiz" prefetch={false} className={linkClass}>
-                  Quiz starten
-                </Link>
-              </li>
-              <li>
-                <Link href="/#preise" className={linkClass}>
-                  Preise
+                  Haaranalyse starten
                 </Link>
               </li>
             </ul>
