@@ -2,14 +2,14 @@
 
 ## Purpose
 
-Customer.io is the lifecycle and campaign destination. Browser tracking remains useful for behavior analytics, but campaign-critical lead and billing state must come from server-side app events after our own Supabase or Stripe truth is written.
+Customer.io is the lifecycle and campaign destination. Browser tracking remains useful for behavior analytics, but campaign-critical lead and billing state must come from server-side app events after our own Supabase truth is written.
 
 ## Identity Rules
 
 - Anonymous browsing uses the Customer.io browser SDK anonymous identity.
 - Pre-auth quiz leads are identified by normalized `email`.
 - Authenticated users and customers are identified by Supabase `user.id`.
-- `email`, `lead_id`, and `stripe_customer_id` are linkage traits, not app primary keys.
+- `email`, `lead_id`, `provider_customer_id`, and `stripe_customer_id` are linkage traits, not app primary keys.
 - `lead_id` is never the Customer.io person ID.
 - Long-term app identity remains Supabase `user.id`, not email.
 
@@ -79,10 +79,13 @@ Customer.io campaigns should use server-source events for canonical triggers.
 ```txt
 quiz_profile_submitted
 purchase_completed
+payment_completed
 subscription_started
 subscription_updated
 subscription_cancelled
+subscription_expired
 payment_failed
+refund_completed
 ```
 
 Browser events such as `quiz_lead_captured` remain analytics signals. Do not use browser `quiz_lead_captured` as the Customer.io campaign trigger when `quiz_profile_submitted` is available.
@@ -94,50 +97,54 @@ marketing/lifecycle campaigns. They may send without `marketing_consent` only wh
 delivers the artifact the user requested or just completed, avoids promotional email copy, and
 uses the Customer.io App API transactional send path.
 
-Browser `purchase_completed` and `subscription_started` must not be routed to Customer.io once server Stripe webhook events are live. PostHog and Meta can still receive the browser-return events.
+Browser `purchase_completed` and `subscription_started` must not be routed to Customer.io once server billing outbox events are live. PostHog billing events should also come from the server outbox, while Meta can still receive browser-return events for Pixel/CAPI dedupe.
 
 ## Event Source Rules
 
 - `quiz_profile_submitted` uses `source: "quiz_lead_api"`.
-- Stripe lifecycle events use `source: "stripe_webhook"`.
+- Billing lifecycle events use `source: "billing_analytics_outbox"` and include `billing_provider`.
 - Browser return events may use `source: "browser_return"` when sent to Customer.io.
 
-## Stripe Payload Boundary
+## Billing Payload Boundary
 
 Customer.io may receive subscription and payment lifecycle details needed for campaigns:
 
 ```txt
-stripe_event_id
+source_event_id
 checkout_session_id
+provider_customer_id
+provider_subscription_id
+billing_provider
 stripe_customer_id
 stripe_subscription_id
 invoice_id
 amount
 amount_due
+value
 currency
 interval
 plan_id
 subscription_status
+current_period_end
+cancel_at_period_end
 attempt_count
 ```
 
-Do not send payment instrument details, card brand, last4, billing address, tax IDs, bank details, or unnecessary Stripe internals.
+During the transition, Stripe events continue writing `stripe_customer_id`, `stripe_subscription_id`, and `subscription_interval` alongside provider-neutral traits. Do not remove those Stripe-specific traits until live Customer.io segments/campaigns have been audited and migrated.
+
+Do not send payment instrument details, card brand, last4, billing address, tax IDs, bank details, raw provider webhook bodies, provider signatures, or unnecessary provider internals.
 
 ## Failure Behavior
 
-Customer.io sync is best-effort. Failures must never block quiz lead capture, payment fulfillment, auth email confirmation, or subscription activation. Log enough context to debug without logging secrets.
+Customer.io sync is best-effort. Failures must never block quiz lead capture, payment fulfillment, auth email confirmation, or subscription activation. Billing delivery failures are recorded in `billing_analytics_deliveries` with attempts and `last_error`; log enough context to debug without logging secrets.
 
-V1 uses logging only. Supabase remains the source of truth for manual backfills.
+Supabase remains the source of truth for manual replay. Billing replay should use `billing_analytics_outbox` and `billing_analytics_deliveries`.
 
-Manual replay should use Supabase rows as truth: rebuild the Customer.io payload from the lead/profile/subscription row and send it through the matching server-owned channel. Lifecycle events use the Pipelines API with stable `messageId` values; transactional/service artifacts such as `quiz_result_artifact` use the Customer.io App API after resetting their send status for replay. Do not replay from browser analytics events.
+Manual replay should use Supabase rows as truth: rebuild the Customer.io payload from the lead/profile/subscription/outbox row and send it through the matching server-owned channel. Lifecycle events use the Pipelines API with stable `messageId` values; transactional/service artifacts such as `quiz_result_artifact` use the Customer.io App API after resetting their send status for replay. Do not replay from browser analytics events.
 
 Use these stable message ID shapes for manual replay:
 
 ```txt
 quiz_profile_submitted:<lead_id>
-purchase_completed:<checkout_session_id>
-subscription_started:<stripe_subscription_id_or_checkout_session_id>
-subscription_updated:<stripe_subscription_id>:<stripe_event_id>
-subscription_cancelled:<stripe_subscription_id>:<stripe_event_id>
-payment_failed:<invoice_id>
+<canonical_event_name>:<billing_analytics_event_key>
 ```

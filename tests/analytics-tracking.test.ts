@@ -114,7 +114,7 @@ test("quiz step views route to PostHog, Customer.io, and Meta", () => {
   })
 })
 
-test("purchase completion browser event routes to PostHog and Meta", () => {
+test("purchase completion browser event routes to Meta only", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("purchase_completed", {
       checkoutSessionId: "cs_test_123",
@@ -127,16 +127,16 @@ test("purchase completion browser event routes to PostHog and Meta", () => {
 
     assert.deepEqual(
       calls.map((call) => call.destination),
-      ["posthog", "meta"],
+      ["meta"],
     )
   })
 })
 
-test("browser revenue return events do not route to Customer.io", () => {
+test("browser revenue return events only route to Meta", () => {
   assert.equal(eventRoutes.purchase_completed.customerio, false)
   assert.equal(eventRoutes.subscription_started.customerio, false)
-  assert.equal(eventRoutes.purchase_completed.posthog, true)
-  assert.equal(eventRoutes.subscription_started.posthog, true)
+  assert.equal(eventRoutes.purchase_completed.posthog, false)
+  assert.equal(eventRoutes.subscription_started.posthog, false)
   assert.equal(eventRoutes.purchase_completed.meta, true)
   assert.equal(eventRoutes.subscription_started.meta, true)
 })

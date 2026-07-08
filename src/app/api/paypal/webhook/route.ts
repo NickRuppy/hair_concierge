@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { paypalRequest } from "@/lib/paypal/client"
 import { handlePayPalWebhookEvent } from "@/lib/paypal/webhook-handlers"
@@ -50,6 +50,8 @@ export async function POST(request: Request) {
       premiumTierId,
       freeTierId,
       linkQuizToProfile,
+      defer: after,
+      recordBillingAnalytics: true,
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown"

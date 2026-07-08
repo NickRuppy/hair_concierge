@@ -20,6 +20,16 @@ import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import { linkQuizToProfile as defaultLinkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import type Stripe from "stripe"
 import {
+  amountFromMinorUnits,
+  billingAnalyticsEventKey,
+  normalizedCurrency,
+  planIdForInterval,
+} from "@/lib/billing/analytics-events"
+import {
+  recordBillingAnalyticsEvent,
+  type BillingAnalyticsEventInput,
+} from "@/lib/billing/analytics-outbox"
+import {
   identifyCustomerIoServerPerson,
   logCustomerIoServerResult,
   trackCustomerIoServerEvent,
@@ -52,6 +62,98 @@ function stripeEventTimestamp(event: Stripe.Event) {
   return typeof event.created === "number"
     ? new Date(event.created * 1000).toISOString()
     : new Date().toISOString()
+}
+
+function invoiceSubscriptionId(invoice: Stripe.Invoice) {
+  const candidate = invoice as Stripe.Invoice & {
+    subscription?: string | { id?: string } | null
+    parent?: {
+      subscription_details?: { subscription?: string | { id?: string } | null } | null
+    } | null
+  }
+  return (
+    stripeId(candidate.subscription) ??
+    stripeId(candidate.parent?.subscription_details?.subscription)
+  )
+}
+
+export function shouldRecordStripePaymentCompleted(invoice: Stripe.Invoice) {
+  const candidate = invoice as Stripe.Invoice & { billing_reason?: string | null }
+  return candidate.billing_reason !== "subscription_create"
+}
+
+function stripeChargeCustomerId(charge: Stripe.Charge) {
+  return stripeId(charge.customer)
+}
+
+async function recordStripeBillingAnalytics(
+  supabase: SupabaseClient,
+  defer: (work: () => void | Promise<void>) => void,
+  input: Omit<BillingAnalyticsEventInput, "provider">,
+) {
+  await recordBillingAnalyticsEvent(supabase, { ...input, provider: "stripe" }, { defer })
+}
+
+async function recordStripeCheckoutAnalytics(input: {
+  activation: CheckoutAccountResult
+  defer: (work: () => void | Promise<void>) => void
+  eventId: string
+  session: Stripe.Checkout.Session
+  supabase: SupabaseClient
+  timestamp: string
+}) {
+  const { activation, defer, eventId, session, supabase, timestamp } = input
+  if (!activation.stripeSubscriptionId || !activation.stripeCustomerId) return
+
+  const interval = activation.subscriptionInterval
+  const value = amountFromMinorUnits(session.amount_total)
+  const currency = normalizedCurrency(session.currency)
+  const planId = planIdForInterval(interval)
+
+  await recordStripeBillingAnalytics(supabase, defer, {
+    eventKey: billingAnalyticsEventKey({
+      provider: "stripe",
+      eventName: "purchase_completed",
+      sourceObjectId: session.id,
+    }),
+    eventName: "purchase_completed",
+    userId: activation.userId,
+    providerCustomerId: activation.stripeCustomerId,
+    providerSubscriptionId: activation.stripeSubscriptionId,
+    sourceEventId: eventId,
+    sourceObjectId: session.id,
+    occurredAt: timestamp,
+    payload: {
+      checkout_session_id: session.id,
+      meta_event_id: session.id,
+      value,
+      currency,
+      interval,
+      plan_id: planId,
+      subscription_status: activation.subscriptionStatus,
+    },
+  })
+
+  await recordStripeBillingAnalytics(supabase, defer, {
+    eventKey: billingAnalyticsEventKey({
+      provider: "stripe",
+      eventName: "subscription_started",
+      sourceObjectId: activation.stripeSubscriptionId,
+    }),
+    eventName: "subscription_started",
+    userId: activation.userId,
+    providerCustomerId: activation.stripeCustomerId,
+    providerSubscriptionId: activation.stripeSubscriptionId,
+    sourceEventId: eventId,
+    sourceObjectId: activation.stripeSubscriptionId,
+    occurredAt: timestamp,
+    payload: {
+      checkout_session_id: session.id,
+      interval,
+      plan_id: planId,
+      subscription_status: activation.subscriptionStatus,
+    },
+  })
 }
 
 function scheduleCustomerIoLifecycle(
@@ -134,6 +236,7 @@ type StripeWebhookEventDeps = {
   getFreeTierId?: (supabase: SupabaseClient) => Promise<string>
   getPremiumTierId?: (supabase: SupabaseClient) => Promise<string>
   linkQuizToProfile?: typeof defaultLinkQuizToProfile
+  recordBillingAnalytics?: boolean
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event, deps: StripeWebhookEventDeps) {
@@ -144,6 +247,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     getFreeTierId: resolveFreeTierId = getFreeTierId,
     getPremiumTierId: resolvePremiumTierId = getPremiumTierId,
     linkQuizToProfile = defaultLinkQuizToProfile,
+    recordBillingAnalytics = false,
   } = deps
   const timestamp = stripeEventTimestamp(event)
 
@@ -170,7 +274,19 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         }
         throw err
       }
-      scheduleCheckoutCompletedSync({ activation, defer, eventId: event.id, session, timestamp })
+      if (!recordBillingAnalytics) {
+        scheduleCheckoutCompletedSync({ activation, defer, eventId: event.id, session, timestamp })
+      }
+      if (recordBillingAnalytics) {
+        await recordStripeCheckoutAnalytics({
+          activation,
+          defer,
+          eventId: event.id,
+          session,
+          supabase,
+          timestamp,
+        })
+      }
       break
     }
     case "checkout.session.expired": {
@@ -189,7 +305,25 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         defer,
       })
       if (activation) {
-        scheduleCheckoutCompletedSync({ activation, defer, eventId: event.id, session, timestamp })
+        if (!recordBillingAnalytics) {
+          scheduleCheckoutCompletedSync({
+            activation,
+            defer,
+            eventId: event.id,
+            session,
+            timestamp,
+          })
+        }
+        if (recordBillingAnalytics) {
+          await recordStripeCheckoutAnalytics({
+            activation,
+            defer,
+            eventId: event.id,
+            session,
+            supabase,
+            timestamp,
+          })
+        }
       }
       break
     }
@@ -200,6 +334,32 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         stripe,
         freeTierId: await resolveFreeTierId(supabase),
       })
+      const customerId = stripeId(session.customer)
+      const subscriptionId = stripeId(session.subscription)
+      if (customerId && subscriptionId) {
+        const profile = await findProfileByStripeCustomerId(supabase, customerId)
+        if (profile?.id && recordBillingAnalytics) {
+          await recordStripeBillingAnalytics(supabase, defer, {
+            eventKey: billingAnalyticsEventKey({
+              provider: "stripe",
+              eventName: "payment_failed",
+              sourceObjectId: session.id,
+            }),
+            eventName: "payment_failed",
+            userId: profile.id,
+            providerCustomerId: customerId,
+            providerSubscriptionId: subscriptionId,
+            sourceEventId: event.id,
+            sourceObjectId: session.id,
+            occurredAt: timestamp,
+            payload: {
+              checkout_session_id: session.id,
+              subscription_status: "canceled",
+              reason: "async_payment_failed",
+            },
+          })
+        }
+      }
       break
     }
     case "charge.dispute.created": {
@@ -217,29 +377,55 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         supabase,
       })
       if (!result.matchedCurrentSubscription) break
-      scheduleCustomerIoLifecycle(defer, `subscription updated ${subscription.id}`, async () => {
-        const customerId = stripeId(subscription.customer)
-        if (!customerId) return
-        const profile = await findProfileByStripeCustomerId(supabase, customerId)
-        if (!profile?.id) return
-        const sync = buildCustomerIoSubscriptionLifecycleSync({
-          email: profile.email,
-          eventType: "subscription_updated",
-          interval: profile.subscription_interval,
-          status: profile.subscription_status ?? subscription.status,
-          stripeCustomerId: customerId,
-          stripeEventId: event.id,
-          stripeSubscriptionId: subscription.id,
-          timestamp,
-          userId: profile.id,
+      const customerId = stripeId(subscription.customer)
+      const eventName =
+        subscription.cancel_at_period_end || subscription.status === "canceled"
+          ? "subscription_cancelled"
+          : "subscription_updated"
+      if (customerId && result.profileId && recordBillingAnalytics) {
+        await recordStripeBillingAnalytics(supabase, defer, {
+          eventKey: billingAnalyticsEventKey({
+            provider: "stripe",
+            eventName,
+            sourceObjectId: `${subscription.id}:${event.id}`,
+          }),
+          eventName,
+          userId: result.profileId,
+          providerCustomerId: customerId,
+          providerSubscriptionId: subscription.id,
+          sourceEventId: event.id,
+          sourceObjectId: subscription.id,
+          occurredAt: timestamp,
+          payload: {
+            subscription_status: subscription.status,
+            cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+          },
         })
-        await dispatchCustomerIoLifecycle({
-          userId: sync.userId,
-          identifyTraits: sync.identifyTraits,
-          identifyMessageId: sync.identifyMessageId,
-          events: [sync.event],
+      }
+      if (!recordBillingAnalytics)
+        scheduleCustomerIoLifecycle(defer, `subscription updated ${subscription.id}`, async () => {
+          const customerId = stripeId(subscription.customer)
+          if (!customerId) return
+          const profile = await findProfileByStripeCustomerId(supabase, customerId)
+          if (!profile?.id) return
+          const sync = buildCustomerIoSubscriptionLifecycleSync({
+            email: profile.email,
+            eventType: "subscription_updated",
+            interval: profile.subscription_interval,
+            status: profile.subscription_status ?? subscription.status,
+            stripeCustomerId: customerId,
+            stripeEventId: event.id,
+            stripeSubscriptionId: subscription.id,
+            timestamp,
+            userId: profile.id,
+          })
+          await dispatchCustomerIoLifecycle({
+            userId: sync.userId,
+            identifyTraits: sync.identifyTraits,
+            identifyMessageId: sync.identifyMessageId,
+            events: [sync.event],
+          })
         })
-      })
       break
     }
     case "customer.subscription.deleted": {
@@ -249,53 +435,168 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         freeTierId: await resolveFreeTierId(supabase),
       })
       if (!result.matchedCurrentSubscription) break
-      scheduleCustomerIoLifecycle(defer, `subscription deleted ${subscription.id}`, async () => {
-        const customerId = stripeId(subscription.customer)
-        if (!customerId) return
-        const profile = await findProfileByStripeCustomerId(supabase, customerId)
-        if (!profile?.id) return
-        const sync = buildCustomerIoSubscriptionLifecycleSync({
-          email: profile.email,
-          eventType: "subscription_cancelled",
-          interval: profile.subscription_interval,
-          status: profile.subscription_status ?? "canceled",
-          stripeCustomerId: customerId,
-          stripeEventId: event.id,
-          stripeSubscriptionId: subscription.id,
-          timestamp,
+      const customerId = stripeId(subscription.customer)
+      if (customerId && result.profileId && recordBillingAnalytics) {
+        await recordStripeBillingAnalytics(supabase, defer, {
+          eventKey: billingAnalyticsEventKey({
+            provider: "stripe",
+            eventName: "subscription_cancelled",
+            sourceObjectId: `${subscription.id}:${event.id}`,
+          }),
+          eventName: "subscription_cancelled",
+          userId: result.profileId,
+          providerCustomerId: customerId,
+          providerSubscriptionId: subscription.id,
+          sourceEventId: event.id,
+          sourceObjectId: subscription.id,
+          occurredAt: timestamp,
+          payload: {
+            subscription_status: "canceled",
+            cancel_at_period_end: false,
+          },
+        })
+      }
+      if (!recordBillingAnalytics)
+        scheduleCustomerIoLifecycle(defer, `subscription deleted ${subscription.id}`, async () => {
+          const customerId = stripeId(subscription.customer)
+          if (!customerId) return
+          const profile = await findProfileByStripeCustomerId(supabase, customerId)
+          if (!profile?.id) return
+          const sync = buildCustomerIoSubscriptionLifecycleSync({
+            email: profile.email,
+            eventType: "subscription_cancelled",
+            interval: profile.subscription_interval,
+            status: profile.subscription_status ?? "canceled",
+            stripeCustomerId: customerId,
+            stripeEventId: event.id,
+            stripeSubscriptionId: subscription.id,
+            timestamp,
+            userId: profile.id,
+          })
+          await dispatchCustomerIoLifecycle({
+            userId: sync.userId,
+            identifyTraits: sync.identifyTraits,
+            identifyMessageId: sync.identifyMessageId,
+            events: [sync.event],
+          })
+        })
+      break
+    }
+    case "invoice.payment_succeeded": {
+      const invoice = event.data.object as unknown as Stripe.Invoice
+      if (!shouldRecordStripePaymentCompleted(invoice)) break
+      const customerId = stripeId(invoice.customer)
+      if (!customerId) break
+      const profile = await findProfileByStripeCustomerId(supabase, customerId)
+      if (!profile?.id) break
+      const subscriptionId = invoiceSubscriptionId(invoice) ?? profile.stripe_subscription_id
+      if (recordBillingAnalytics)
+        await recordStripeBillingAnalytics(supabase, defer, {
+          eventKey: billingAnalyticsEventKey({
+            provider: "stripe",
+            eventName: "payment_completed",
+            sourceObjectId: invoice.id,
+          }),
+          eventName: "payment_completed",
           userId: profile.id,
+          providerCustomerId: customerId,
+          providerSubscriptionId: subscriptionId,
+          sourceEventId: event.id,
+          sourceObjectId: invoice.id,
+          occurredAt: timestamp,
+          payload: {
+            value: amountFromMinorUnits(invoice.amount_paid),
+            currency: normalizedCurrency(invoice.currency),
+            subscription_status: profile.subscription_status,
+            interval: profile.subscription_interval,
+            invoice_id: invoice.id,
+          },
         })
-        await dispatchCustomerIoLifecycle({
-          userId: sync.userId,
-          identifyTraits: sync.identifyTraits,
-          identifyMessageId: sync.identifyMessageId,
-          events: [sync.event],
-        })
-      })
       break
     }
     case "invoice.payment_failed": {
       const invoice = event.data.object as unknown as Stripe.Invoice
       await handleInvoicePaymentFailed(invoice)
-      scheduleCustomerIoLifecycle(defer, `payment failed ${invoice.id}`, async () => {
-        const customerId = stripeId(invoice.customer)
-        if (!customerId) return
-        const profile = await findProfileByStripeCustomerId(supabase, customerId)
-        if (!profile?.id) return
-        const sync = buildCustomerIoInvoicePaymentFailedSync({
-          email: profile.email,
-          invoice,
-          stripeEventId: event.id,
-          timestamp,
+      const customerId = stripeId(invoice.customer)
+      if (!customerId) break
+      const profile = await findProfileByStripeCustomerId(supabase, customerId)
+      if (!profile?.id) break
+      if (recordBillingAnalytics)
+        await recordStripeBillingAnalytics(supabase, defer, {
+          eventKey: billingAnalyticsEventKey({
+            provider: "stripe",
+            eventName: "payment_failed",
+            sourceObjectId: invoice.id,
+          }),
+          eventName: "payment_failed",
           userId: profile.id,
+          providerCustomerId: customerId,
+          providerSubscriptionId: invoiceSubscriptionId(invoice) ?? profile.stripe_subscription_id,
+          sourceEventId: event.id,
+          sourceObjectId: invoice.id,
+          occurredAt: timestamp,
+          payload: {
+            amount_due: amountFromMinorUnits(invoice.amount_due),
+            currency: normalizedCurrency(invoice.currency),
+            attempt_count: invoice.attempt_count,
+            subscription_status: profile.subscription_status,
+            interval: profile.subscription_interval,
+          },
         })
-        await dispatchCustomerIoLifecycle({
-          userId: sync.userId,
-          identifyTraits: sync.identifyTraits,
-          identifyMessageId: sync.identifyMessageId,
-          events: [sync.event],
+      if (!recordBillingAnalytics)
+        scheduleCustomerIoLifecycle(defer, `payment failed ${invoice.id}`, async () => {
+          const sync = buildCustomerIoInvoicePaymentFailedSync({
+            email: profile.email,
+            invoice,
+            stripeEventId: event.id,
+            timestamp,
+            userId: profile.id,
+          })
+          await dispatchCustomerIoLifecycle({
+            userId: sync.userId,
+            identifyTraits: sync.identifyTraits,
+            identifyMessageId: sync.identifyMessageId,
+            events: [sync.event],
+          })
         })
-      })
+      break
+    }
+    case "charge.refunded": {
+      const charge = event.data.object as unknown as Stripe.Charge
+      const customerId = stripeChargeCustomerId(charge)
+      if (!customerId) {
+        console.warn("[stripe] charge.refunded missing customer", { chargeId: charge.id })
+        break
+      }
+      const profile = await findProfileByStripeCustomerId(supabase, customerId)
+      if (!profile?.id) {
+        console.warn("[stripe] charge.refunded has no linked profile", {
+          chargeId: charge.id,
+          customerId,
+        })
+        break
+      }
+      if (recordBillingAnalytics)
+        await recordStripeBillingAnalytics(supabase, defer, {
+          eventKey: billingAnalyticsEventKey({
+            provider: "stripe",
+            eventName: "refund_completed",
+            sourceObjectId: charge.id,
+          }),
+          eventName: "refund_completed",
+          userId: profile.id,
+          providerCustomerId: customerId,
+          providerSubscriptionId: profile.stripe_subscription_id,
+          sourceEventId: event.id,
+          sourceObjectId: charge.id,
+          occurredAt: timestamp,
+          payload: {
+            value: amountFromMinorUnits(charge.amount_refunded),
+            currency: normalizedCurrency(charge.currency),
+            subscription_status: profile.subscription_status,
+            interval: profile.subscription_interval,
+          },
+        })
       break
     }
     default:
@@ -338,7 +639,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await handleStripeWebhookEvent(event, { supabase, stripe })
+    await handleStripeWebhookEvent(event, { supabase, stripe, recordBillingAnalytics: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown"
     await releaseWebhookEventClaim(supabase, "stripe", event.id)
