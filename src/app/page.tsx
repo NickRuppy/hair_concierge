@@ -7,6 +7,7 @@ import { Pricing } from "@/components/landing/pricing"
 import { Faq } from "@/components/landing/faq"
 import { FinalCta } from "@/components/landing/final-cta"
 import { SiteFooter } from "@/components/landing/site-footer"
+import { StickyQuizCta } from "@/components/landing/sticky-quiz-cta"
 import { LandingTracking } from "@/providers/route-providers"
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
     <>
       <LandingTracking />
       <LandingHeader />
-      <main>
+      <main className="pb-[84px] md:pb-0">
         <Hero />
         <WhatIs />
         <HowItWorks />
@@ -24,6 +25,7 @@ export default function Home() {
         <FinalCta />
       </main>
       <SiteFooter />
+      <StickyQuizCta />
     </>
   )
 }
