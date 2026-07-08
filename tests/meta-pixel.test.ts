@@ -88,6 +88,27 @@ test("track helpers dispatch standard, custom, and page view events after initia
   ])
 })
 
+test("standard events tracked before init and consent flush after both are ready", () => {
+  const dom = createMetaDom()
+
+  assert.equal(
+    trackMetaEvent("ViewContent", { content_name: "pricing_page" }, { win: dom.win }),
+    true,
+  )
+  assert.deepEqual(dom.calls, [])
+
+  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+
+  assert.deepEqual(dom.calls, [])
+  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
+
+  assert.deepEqual(dom.calls, [
+    ["consent", "grant"],
+    ["track", "ViewContent", { content_name: "pricing_page" }],
+  ])
+})
+
 test("meta tracking stops after consent revoke and resumes after consent grant", () => {
   const dom = createMetaDom()
   initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
@@ -111,13 +132,50 @@ test("meta tracking stops after consent revoke and resumes after consent grant",
   ])
 })
 
+test("queued standard events are discarded after explicit consent revoke", () => {
+  const dom = createMetaDom()
+
+  assert.equal(
+    trackMetaEvent("ViewContent", { content_name: "pricing_page" }, { win: dom.win }),
+    true,
+  )
+  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+
+  assert.equal(revokeMetaPixelConsent({ win: dom.win }), true)
+  assert.equal(trackMetaEvent("Lead", { content_name: "after_revoke" }, { win: dom.win }), false)
+  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
+
+  assert.deepEqual(dom.calls, [
+    ["consent", "revoke"],
+    ["consent", "grant"],
+  ])
+})
+
+test("subscription confirmation does not queue or dedupe before consent is usable", () => {
+  const dom = createMetaDom()
+
+  assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), false)
+  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
+
+  assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), true)
+  assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), false)
+
+  assert.deepEqual(dom.calls, [
+    ["consent", "grant"],
+    ["track", "Subscribe", { content_name: "premium_subscription" }],
+  ])
+})
+
 test("meta tracking does nothing without a pixel id or initialized fbq", () => {
   const dom = createMetaDom()
 
   assert.equal(initMetaPixel({ pixelId: "", win: dom.win, doc: dom.doc }), false)
-  assert.equal(trackMetaEvent("Lead", undefined, { win: dom.win }), false)
+  assert.equal(trackMetaEvent("Lead", undefined), false)
   assert.equal(trackMetaCustomEvent("QuizStarted", undefined, { win: dom.win }), false)
-  assert.equal(trackMetaPageView({ win: dom.win }), false)
+  assert.equal(trackMetaPageView(), false)
   assert.equal(dom.insertedScripts.length, 0)
 })
 

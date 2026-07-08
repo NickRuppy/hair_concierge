@@ -339,6 +339,37 @@ test("payment webhooks require a subscription identifier instead of using the sa
   )
 })
 
+test("refund analytics without a subscription link releases the webhook claim for retry", async () => {
+  const { supabase } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+  })
+  const refund = {
+    id: "WH-refund-missing-link",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "SALE-1" },
+  }
+
+  await assert.rejects(
+    () =>
+      handlePayPalWebhookEvent(refund, {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        recordBillingAnalytics: true,
+      }),
+    /missing a subscription link/,
+  )
+
+  const retry = await handlePayPalWebhookEvent(refund, {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: false,
+  })
+
+  assert.deepEqual(retry, { handled: false })
+})
+
 test("PAYMENT.SALE.COMPLETED refreshes the paid-through date", async () => {
   const periodEnd = futureIso(30)
   const { supabase, billing } = createSupabaseStub({

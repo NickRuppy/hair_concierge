@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { handleStripeWebhookEvent } from "../src/app/api/stripe/webhook/route"
+import {
+  handleStripeWebhookEvent,
+  shouldRecordStripePaymentCompleted,
+} from "../src/app/api/stripe/webhook/route"
 import {
   findProfileByStripeCustomerId,
   handleCheckoutSessionCompleted,
@@ -12,6 +15,8 @@ function stubDeps() {
   const users: Record<string, { id: string; email: string }> = {}
   const profiles: Record<string, any> = {}
   const billing: any[] = []
+  const billingAnalyticsOutbox: any[] = []
+  const billingAnalyticsDeliveries: any[] = []
   const canceledSubscriptions: string[] = []
   const subscriptionPaymentMethods: Record<string, { id: string; type?: string }> = {
     sub_123: { id: "pm_card", type: "card" },
@@ -79,6 +84,26 @@ function stubDeps() {
             }
             return builder
           },
+          insert(row: any) {
+            if (table === "billing_analytics_outbox") {
+              const inserted = {
+                ...row,
+                id: `outbox_${billingAnalyticsOutbox.length + 1}`,
+                created_at: new Date().toISOString(),
+              }
+              billingAnalyticsOutbox.push(inserted)
+              return {
+                select: () => ({
+                  single: async () => ({ data: inserted, error: null }),
+                }),
+              }
+            }
+            return {
+              select: () => ({
+                single: async () => ({ data: row, error: null }),
+              }),
+            }
+          },
           upsert(row: any) {
             if (table === "profiles") {
               profiles[row.id] = { ...(profiles[row.id] ?? {}), ...row }
@@ -90,6 +115,22 @@ function stubDeps() {
               )
               if (existing) Object.assign(existing, row)
               else billing.push(row)
+            } else if (table === "billing_analytics_deliveries") {
+              for (const delivery of row) {
+                billingAnalyticsDeliveries.push({
+                  ...delivery,
+                  id: `delivery_${billingAnalyticsDeliveries.length + 1}`,
+                  status: "pending",
+                  attempts: 0,
+                  processing_started_at: null,
+                  next_attempt_at: null,
+                  delivered_at: null,
+                  last_error: null,
+                  provider_request_id: null,
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString(),
+                })
+              }
             }
             return {
               error: null,
@@ -103,6 +144,8 @@ function stubDeps() {
         function rowsForTable() {
           if (table === "profiles") return Object.values(profiles)
           if (table === "billing_subscriptions") return billing
+          if (table === "billing_analytics_outbox") return billingAnalyticsOutbox
+          if (table === "billing_analytics_deliveries") return billingAnalyticsDeliveries
           return []
         }
 
@@ -139,7 +182,15 @@ function stubDeps() {
     premiumTierId: "tier_premium",
   }
 
-  return { billing, canceledSubscriptions, deps, profiles, subscriptionPaymentMethods }
+  return {
+    billing,
+    billingAnalyticsDeliveries,
+    billingAnalyticsOutbox,
+    canceledSubscriptions,
+    deps,
+    profiles,
+    subscriptionPaymentMethods,
+  }
 }
 
 function withEnv(name: string, value: string, fn: () => Promise<void>) {
@@ -195,6 +246,18 @@ test("profile lookup by Stripe customer returns campaign fields", async () => {
     subscription_interval: "quarter",
     subscription_status: "active",
   })
+})
+
+test("skips initial Stripe subscription invoice analytics to avoid double counting checkout", () => {
+  assert.equal(
+    shouldRecordStripePaymentCompleted({ billing_reason: "subscription_create" } as any),
+    false,
+  )
+  assert.equal(
+    shouldRecordStripePaymentCompleted({ billing_reason: "subscription_cycle" } as any),
+    true,
+  )
+  assert.equal(shouldRecordStripePaymentCompleted({ billing_reason: null } as any), true)
 })
 
 test("webhook event schedules best-effort Customer.io checkout sync after fulfillment", async () => {
@@ -265,6 +328,49 @@ test("webhook event schedules best-effort Customer.io checkout sync after fulfil
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test("production checkout analytics uses outbox instead of duplicate direct Customer.io sync", async () => {
+  const { billingAnalyticsOutbox, deps, profiles } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_checkout_outbox",
+      type: "checkout.session.completed",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_outbox",
+          amount_total: 1499,
+          currency: "eur",
+          status: "complete",
+          payment_status: "paid",
+          customer: "cus_outbox",
+          customer_details: { email: "buyer@example.com" },
+          subscription: "sub_123",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getPremiumTierId: async () => "tier_premium",
+      linkQuizToProfile: async () => {},
+      recordBillingAnalytics: true,
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  const profile = Object.values(profiles).find(
+    (candidate: any) => candidate.email === "buyer@example.com",
+  ) as any
+  assert.equal(profile.subscription_status, "active")
+  assert.equal(deferred.length, 3)
+  assert.deepEqual(
+    billingAnalyticsOutbox.map((row) => row.event_name),
+    ["purchase_completed", "subscription_started"],
+  )
 })
 
 test("webhook event activates non-SEPA async payment success", async () => {
