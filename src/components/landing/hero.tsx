@@ -8,7 +8,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="overflow-hidden bg-[linear-gradient(180deg,var(--background)_0%,var(--brand-plum-ice)_100%)] pt-10 lg:pt-14"
+      className="overflow-x-clip bg-[linear-gradient(180deg,var(--background)_0%,var(--brand-plum-ice)_100%)] pt-10 lg:pt-14"
     >
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-9 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
         <div>
@@ -51,7 +51,7 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="-mb-[70px] lg:-mb-[90px]">
+        <div className="relative z-10 -mb-[70px] lg:-mb-[90px]">
           <ResultPreviewPhone />
         </div>
       </div>
