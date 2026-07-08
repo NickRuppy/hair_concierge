@@ -14,15 +14,17 @@ export default function Home() {
     <>
       <LandingTracking />
       <LandingHeader />
-      <main className="pb-[84px] md:pb-0">
-        <Hero />
-        <PainStrip />
-        <WhatYouGet />
-        <HowItWorks />
-        <Faq />
-        <FinalCta />
-      </main>
-      <SiteFooter />
+      <div className="pb-[84px] md:pb-0">
+        <main>
+          <Hero />
+          <PainStrip />
+          <WhatYouGet />
+          <HowItWorks />
+          <Faq />
+          <FinalCta />
+        </main>
+        <SiteFooter />
+      </div>
       <StickyQuizCta />
     </>
   )
