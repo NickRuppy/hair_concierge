@@ -9,41 +9,36 @@ type FaqItem = {
 
 const items: FaqItem[] = [
   {
-    question: "Wie unterscheidet sich Chaarlie von anderen Beauty-Quizzes?",
+    question: "Wie unterscheidet sich die Haaranalyse von Beauty-Quizzes?",
     answer:
-      "Klassische Beauty-Quizzes fragen nach deinem Haartyp und schlagen dir eine Produkt-Range vor. Chaarlie kombiniert zwei Dinge: dein vollständiges Haarprofil (Struktur, Protein-Feuchtigkeit-Balance, Kopfhaut etc.) und deine tatsächliche Routine (Wäsche, Hitze-Styling, Nachtpflege etc.). Daraus bekommst du konkrete Empfehlungen mit echten Produktnamen — inklusive Drogerie-Alternativen. Kein Verkauf eigener Produkte.",
+      "Klassische Quizzes fragen deinen Haartyp ab und schlagen dir eine Produkt-Range vor. Chaarlie kombiniert dein vollständiges Haarprofil (Struktur, Protein-Feuchtigkeits-Balance, Kopfhaut u. a.) mit deiner tatsächlichen Routine — und gibt dir konkrete Empfehlungen mit echten Produktnamen, inklusive Drogerie-Alternativen. Wir verkaufen keine eigenen Produkte.",
   },
   {
     question: "Brauche ich Vorwissen zur Haarpflege?",
     answer:
-      "Nein. Das Quiz erklärt dir alles, was du wissen musst, während du es ausfüllst. Wenn du dich noch nie mit Haarpflege beschäftigt hast, ist Chaarlie genau für dich gebaut.",
+      "Nein. Die Analyse erklärt dir alles, was du wissen musst, während du sie ausfüllst. Wenn du dich noch nie mit Haarpflege beschäftigt hast, ist Chaarlie genau für dich gebaut.",
   },
   {
     question: "Wie lange dauert es, bis ich Ergebnisse sehe?",
     answer:
-      "Dein Haarprofil und die Routine bekommst du sofort nach dem Quiz. Sichtbare Veränderungen im Haar selbst hängen vom Ausgangszustand ab — in der Regel zeigen sich Effekte nach 2 bis 4 Wochen konsequenter Anwendung der empfohlenen Routine.",
-  },
-  {
-    question: "Kann ich jederzeit kündigen?",
-    answer:
-      "Ja. Alle Pläne sind monatlich, quartalsweise oder jährlich kündbar — zum Ende der jeweiligen Abrechnungsperiode.",
+      "Dein Haarprofil und die Routine bekommst du sofort. Sichtbare Veränderungen im Haar zeigen sich in der Regel nach 2 bis 4 Wochen konsequenter Anwendung.",
   },
   {
     question: "Sind die empfohlenen Produkte teuer?",
     answer:
-      "Wir empfehlen Produkte für jeden Preisbereich. Für jedes Salon-Produkt gibt es auch eine Drogerie-Alternative, die ähnlich gut funktioniert. Du entscheidest, was zu deinem Budget passt.",
+      "Wir empfehlen Produkte für jeden Preisbereich. Für jedes Salon-Produkt gibt es eine Drogerie-Alternative, die ähnlich gut funktioniert. Du entscheidest, was zu deinem Budget passt.",
   },
   {
     question: "Wer steht hinter Chaarlie?",
     answer:
-      "Chaarlie ist ein Produkt der Haarmony LLC (Delaware, USA). Wir verkaufen keine eigenen Produkte und sind keinem Hersteller verpflichtet.",
+      "Ein kleines, unabhängiges Team. Wir verkaufen keine eigenen Produkte und sind keinem Hersteller verpflichtet — unsere Empfehlungen richten sich nur nach deinem Haar.",
   },
   {
     question: "Was passiert mit meinen Daten?",
     answer: (
       <>
-        Deine Antworten werden ausschließlich verwendet, um deine persönliche Diagnose und Routine
-        zu erstellen. Wir verkaufen keine Daten an Dritte. Details findest du in unserer{" "}
+        Deine Antworten werden ausschließlich verwendet, um deine persönliche Analyse und Routine zu
+        erstellen. Wir verkaufen keine Daten an Dritte. Details findest du in unserer{" "}
         <Link href="/datenschutz" className="underline hover:text-[var(--brand-plum-darkest)]">
           Datenschutzerklärung
         </Link>
