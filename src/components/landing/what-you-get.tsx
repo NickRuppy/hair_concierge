@@ -36,7 +36,7 @@ export function WhatYouGet() {
     <section className="py-14">
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
-          eyebrow="Das bekommst du — sofort nach den 10 Fragen"
+          eyebrow="Das bekommst du — sofort nach den 9 Fragen"
           title="Keine Produkt-Werbung. Eine Diagnose."
         />
 

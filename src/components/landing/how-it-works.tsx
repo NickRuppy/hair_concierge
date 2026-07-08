@@ -12,7 +12,7 @@ const steps: Step[] = [
   {
     number: "1",
     title: "Haaranalyse machen",
-    body: "2 Minuten, 10 Fragen. Zugtest, Oberfläche, Kopfhaut, deine Ziele.",
+    body: "2 Minuten, 9 Fragen. Zugtest, Oberfläche, Kopfhaut, deine Ziele.",
   },
   {
     number: "2",
