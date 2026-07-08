@@ -15,14 +15,14 @@ export function FinalCta() {
           className="mx-auto mb-8 max-w-[520px] text-[17px]"
           style={{ color: "rgba(255,255,255,0.75)" }}
         >
-          Zwei Minuten. Kostenlos. Ohne Anmeldung. Du bekommst dein Haarprofil sofort.
+          Zwei Minuten. Kostenlos. Ohne Anmeldung. Dein Haarprofil sofort.
         </p>
         <Link
           href="/quiz"
           prefetch={false}
           className="inline-block rounded-[14px] bg-[var(--brand-coral)] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:bg-white hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
         >
-          Quiz starten
+          Kostenlose Haaranalyse starten
         </Link>
       </div>
     </section>
