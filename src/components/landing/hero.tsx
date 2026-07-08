@@ -1,95 +1,57 @@
 import Link from "next/link"
 
-const outcomeChecks = [
-  "Dein Haarprofil",
-  "Dein Pflegehebel",
-  "Routine & Produkte",
-  "Drogerie-Alternativen",
-] as const
+import { ResultPreviewPhone } from "@/components/landing/result-preview-phone"
 
-function CheckIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="#2D9F5E"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-5 w-5 shrink-0"
-      aria-hidden="true"
-    >
-      <polyline points="16 6 8 14 4 10" />
-    </svg>
-  )
-}
+const trustMarkers = ["Kostenlos", "Ohne Anmeldung", "DSGVO-konform"] as const
 
 export function Hero() {
   return (
     <section
       id="top"
-      className="bg-[linear-gradient(180deg,var(--background)_0%,var(--brand-plum-ice)_100%)] py-20 lg:py-24"
+      className="overflow-hidden bg-[linear-gradient(180deg,var(--background)_0%,var(--brand-plum-ice)_100%)] pt-10 lg:pt-14"
     >
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-9 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
         <div>
-          <h1 className="mb-5 font-header text-[clamp(36px,5vw,64px)] font-medium leading-[1.1] text-[var(--brand-plum-darkest)]">
-            Weißt du, was deine Haare{" "}
-            <em className="font-medium italic text-[var(--brand-plum)]">wirklich</em> brauchen?
+          <p className="mb-3.5 flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.11em] text-[var(--brand-coral)] before:inline-block before:h-1.5 before:w-1.5 before:rounded-full before:bg-[var(--brand-coral)] before:content-['']">
+            Kostenlose 2-Minuten-Haaranalyse
+          </p>
+          <h1 className="mb-4 font-header text-[clamp(31px,8vw,54px)] font-medium leading-[1.1] text-[var(--brand-plum-darkest)]">
+            In 2 Minuten weißt du, was deine Haare{" "}
+            <em className="font-medium italic text-[var(--brand-plum)]">wirklich</em> brauchen.
           </h1>
-          <p className="mb-8 max-w-[520px] text-lg text-muted-foreground">
-            Chaarlie analysiert dein Haar und zeigt dir, was deine Haare tatsächlich brauchen.
-            Individuell, nicht pauschal. In 2 Minuten, kostenlos.
+          <p className="mb-6 max-w-[480px] text-[17px] text-muted-foreground">
+            Ehrliche Analyse statt Marketing — dein{" "}
+            <b className="font-semibold text-[var(--brand-plum-darkest)]">Haarprofil</b>, deine{" "}
+            <b className="font-semibold text-[var(--brand-plum-darkest)]">Routine</b>, deine{" "}
+            <b className="font-semibold text-[var(--brand-plum-darkest)]">Produkte</b>.
           </p>
 
-          <ul className="grid max-w-[480px] grid-cols-2 gap-2.5">
-            {outcomeChecks.map((label) => (
-              <li
-                key={label}
-                className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-4 py-3.5 text-sm font-semibold text-[var(--brand-plum-darkest)]"
-              >
-                <CheckIcon />
-                <span>{label}</span>
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-6 flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--brand-coral)] before:inline-block before:h-1.5 before:w-1.5 before:rounded-full before:bg-[var(--brand-coral)] before:content-['']">
-            Starte heute damit
-          </p>
-        </div>
-
-        <div className="rounded-[20px] border border-border bg-card p-8 shadow-[0_20px_60px_-20px_rgba(42,24,69,0.15)]">
-          {/* Custom Link styling instead of <Button variant="landingCta"> because we
-              need an anchor element with a multi-line label (CTA + subtitle). */}
           <Link
             href="/quiz"
-            prefetch={false}
-            className="block rounded-[14px] bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-dark))] px-8 py-[18px] text-center text-white shadow-[0_10px_32px_rgba(var(--brand-coral-rgb),0.31),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all hover:bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-deep))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral-dark)] focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5"
+            className="block max-w-[440px] rounded-[14px] bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-dark))] px-8 py-4 text-center text-white shadow-[0_10px_32px_rgba(var(--brand-coral-rgb),0.31),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all hover:bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-deep))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral-dark)] focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5"
           >
-            <span className="block text-lg font-bold text-white">Quiz starten</span>
-            <span className="mt-1 block text-[13px] font-normal text-white/85">
-              In ca. 2 Minuten · Kostenlos
+            <span className="block text-lg font-bold text-white">
+              Kostenlose Haaranalyse starten
+            </span>
+            <span className="mt-0.5 block text-[13px] font-normal text-white/85">
+              2 Minuten · ohne Anmeldung · Ergebnis sofort
             </span>
           </Link>
 
-          <div className="mt-6 rounded-[14px] bg-[var(--brand-plum-ice)] p-4">
-            <p className="mb-2 font-header text-[17px] leading-[1.35] text-[var(--brand-plum-darkest)]">
-              Analyse statt Produkt-Raten.
-            </p>
-            <p className="text-[14px] leading-relaxed text-muted-foreground">
-              Chaarlie verbindet Haarprofil, Kopfhaut, Ziele und Routine zu Empfehlungen, die du
-              nachvollziehen kannst.
-            </p>
-          </div>
+          <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.07em] text-muted-foreground">
+            {trustMarkers.map((label) => (
+              <span key={label} className="flex items-center gap-1">
+                <span aria-hidden="true" className="text-[#2D9F5E]">
+                  ✓
+                </span>
+                {label}
+              </span>
+            ))}
+          </p>
+        </div>
 
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <span aria-hidden="true" className="text-lg tracking-[2px] text-[var(--brand-plum)]">
-              ★★★★★
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-muted-foreground">
-              4,9 / 5 aus ersten Nutzerinnen-Feedbacks
-            </span>
-          </div>
+        <div className="-mb-[70px] lg:-mb-[90px]">
+          <ResultPreviewPhone />
         </div>
       </div>
     </section>
