@@ -8,22 +8,22 @@ test.describe("Core user flows — smoke test @ci", () => {
     expect(response?.ok() || response?.status() === 304).toBeTruthy()
     // Hero H1 is the marketing landing's signature copy
     const heroHeading = page.locator("h1").first()
-    await expect(heroHeading).toContainText("Weißt du, was deine Haare")
-    // The header CTA should link to /quiz
-    const quizCta = page.getByRole("link", { name: "Quiz starten" }).first()
+    await expect(heroHeading).toContainText("In 2 Minuten weißt du")
+    // The header CTA should link to /quiz (multiple CTAs share this name — take the header's)
+    const quizCta = page.getByRole("link", { name: "Haaranalyse starten" }).first()
     await expect(quizCta).toHaveAttribute("href", "/quiz")
     // Returning users need a visible sign-in path — header has Anmelden → /chat
     // (middleware routes signed-in users straight to /chat, signed-out returning
     // users through /auth with next preserved)
     const signInLink = page.getByRole("link", { name: "Anmelden" })
     await expect(signInLink).toHaveAttribute("href", "/chat")
-    // Pricing card CTAs must funnel through /quiz, not deep-link to /pricing
-    // (anonymous /pricing visits 400 on the identity check at checkout).
-    const planCta = page.getByRole("link", { name: "Plan wählen" }).first()
-    await expect(planCta).toHaveAttribute("href", "/quiz")
-    // Footer "Preise" is an in-page anchor to the pricing section, not /pricing.
-    const footerPreise = page.locator('footer a[href="/#preise"]').filter({ hasText: "Preise" })
-    await expect(footerPreise).toBeVisible()
+    // The pricing section was removed from the landing — anonymous /pricing visits
+    // hit a checkout dead-end, so there is no "Plan wählen" CTA on the page anymore.
+    await expect(page.getByText("Plan wählen")).toHaveCount(0)
+    // The footer no longer exposes a "Preise" link (it deep-linked to /pricing).
+    // A stable legal link like Impressum must still be present.
+    await expect(page.locator('footer a[href="/pricing"]')).toHaveCount(0)
+    await expect(page.locator('footer a[href="/impressum"]')).toBeVisible()
     // Take a screenshot as evidence
     await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })

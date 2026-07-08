@@ -34,11 +34,6 @@ export function SiteFooter() {
                   Haaranalyse starten
                 </Link>
               </li>
-              <li>
-                <Link href="/pricing" className={linkClass}>
-                  Preise
-                </Link>
-              </li>
             </ul>
           </div>
 
