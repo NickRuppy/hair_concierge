@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/landing/section-heading"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 type Item = { title: string; body: React.ReactNode }
 
@@ -36,7 +37,7 @@ export function WhatYouGet() {
     <section className="py-14">
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
-          eyebrow="Das bekommst du — sofort nach den 9 Fragen"
+          eyebrow={`Das bekommst du — sofort nach den ${QUIZ_TOTAL_QUESTIONS} Fragen`}
           title="Keine Produkt-Werbung. Eine Diagnose."
         />
 
