@@ -33,9 +33,25 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://chaarlie.de"),
   title: "Chaarlie — Dein persönlicher Haarpflege-Berater",
   description:
-    "Chaarlie ist dein persönlicher Haarpflege-Berater. Erhalte individuelle Tipps, Produktempfehlungen und Haaranalysen — auf dein Haar zugeschnitten.",
+    "Kostenlose Haaranalyse in 2 Minuten. Dein Haarprofil, deine Routine und konkrete Produkte — ehrlich, ohne Anmeldung.",
+  openGraph: {
+    title: "Weißt du, was deine Haare wirklich brauchen?",
+    description:
+      "Kostenlose Haaranalyse in 2 Minuten. Dein Haarprofil, deine Routine und konkrete Produkte — ehrlich, ohne Anmeldung.",
+    url: "/",
+    siteName: "Chaarlie",
+    locale: "de_DE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Weißt du, was deine Haare wirklich brauchen?",
+    description:
+      "Kostenlose Haaranalyse in 2 Minuten. Dein Haarprofil, deine Routine und konkrete Produkte — ehrlich, ohne Anmeldung.",
+  },
 }
 
 export default function RootLayout({

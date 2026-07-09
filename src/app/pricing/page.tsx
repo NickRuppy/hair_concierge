@@ -1,3 +1,7 @@
+import { redirect } from "next/navigation"
+
+import { createClient } from "@/lib/supabase/server"
+
 import { PricingCards } from "./pricing-cards"
 
 export default async function PricingPage({
@@ -7,6 +11,19 @@ export default async function PricingPage({
 }) {
   const sp = await searchParams
   const leadId = sp.lead ?? null
+
+  // Pricing requires an identity to check out with. Anonymous visitors with no
+  // lead (direct URL, stale /offer links) can't complete checkout — send them
+  // into the quiz instead of a dead-end payment form. Lead-carrying (post-quiz)
+  // and authenticated (resubscribe/app) visitors keep normal pricing.
+  if (!leadId) {
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) redirect("/quiz")
+  }
+
   const showResubBanner = sp.reason === "resubscribe"
   const rawInterval = sp.interval
   const initialInterval =

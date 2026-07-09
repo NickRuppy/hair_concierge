@@ -237,7 +237,7 @@ export function PricingCards({
             onChangePlan={() => {
               setCheckoutError(null)
               setSelectedInterval(null)
-              router.replace("/pricing")
+              router.replace(leadId ? `/pricing?lead=${encodeURIComponent(leadId)}` : "/pricing")
             }}
             onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
             onRetry={() => {
