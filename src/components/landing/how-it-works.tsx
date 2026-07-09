@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { SectionHeading } from "@/components/landing/section-heading"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 type Step = {
   number: string
@@ -12,7 +13,7 @@ const steps: Step[] = [
   {
     number: "1",
     title: "Haaranalyse machen",
-    body: "2 Minuten, 9 Fragen. Zugtest, Oberfläche, Kopfhaut, deine Ziele.",
+    body: `2 Minuten, ${QUIZ_TOTAL_QUESTIONS} Fragen. Zugtest, Oberfläche, Kopfhaut, deine Ziele.`,
   },
   {
     number: "2",
