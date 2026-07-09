@@ -104,6 +104,8 @@ export async function updateSession(request: NextRequest) {
     "/api/quiz",
     "/result",
     "/api/og",
+    "/opengraph-image",
+    "/twitter-image",
     "/datenschutz",
     "/impressum",
     "/agb",
