@@ -28,6 +28,17 @@ test.describe("Core user flows — smoke test @ci", () => {
     await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })
 
+  test("anonymous /pricing with no lead redirects into the quiz", async ({ page }) => {
+    await page.goto("/pricing")
+    await expect(page).toHaveURL(/\/quiz(\?.*)?$/)
+  })
+
+  test("/pricing with a lead param still renders the plans", async ({ page }) => {
+    await page.goto("/pricing?lead=smoke-test-lead")
+    await expect(page).toHaveURL(/\/pricing/)
+    await expect(page.getByRole("heading", { name: /Haar-Concierge/i })).toBeVisible()
+  })
+
   test("2. Quiz page loads with intro and first quiz step after clicking start", async ({
     page,
   }) => {
