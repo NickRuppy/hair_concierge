@@ -29,6 +29,7 @@ export function Hero() {
           <Link
             href="/quiz"
             prefetch={false}
+            data-landing-hero-cta
             className="block max-w-[440px] rounded-[14px] bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-dark))] px-8 py-4 text-center text-white shadow-[0_10px_32px_rgba(var(--brand-coral-rgb),0.31),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all hover:bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-deep))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral-dark)] focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5"
           >
             <span className="block text-lg font-bold text-white">

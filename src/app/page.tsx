@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <LandingTracking />
       <LandingHeader />
-      <div className="pb-[calc(84px+env(safe-area-inset-bottom))] md:pb-0">
+      <div className="pb-[var(--landing-sticky-cta-clearance)] md:pb-0">
         <main>
           <Hero />
           <PainStrip />

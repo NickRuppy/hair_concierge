@@ -72,7 +72,7 @@ export function CookieConsent() {
         <div
           role="dialog"
           aria-label="Cookie-Einstellungen"
-          className="fixed inset-x-2 bottom-2 z-[100] mx-auto max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl sm:inset-x-0 sm:bottom-6 sm:flex sm:max-w-4xl sm:items-center sm:gap-6 sm:rounded-2xl sm:px-6 sm:py-4"
+          className="fixed inset-x-2 bottom-[calc(0.5rem+var(--landing-sticky-cta-offset,0px))] z-[100] mx-auto max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl transition-[bottom] duration-200 ease-out motion-reduce:transition-none sm:inset-x-0 sm:flex sm:max-w-4xl sm:items-center sm:gap-6 sm:rounded-2xl sm:px-6 sm:py-4 md:bottom-6"
         >
           <div className="sm:flex-1">
             <h2 className="text-sm font-semibold text-foreground sm:text-base">

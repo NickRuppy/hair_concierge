@@ -88,6 +88,7 @@
   --brand-coral-deeper: #9F3D45;
   --brand-coral-light: #FDEEF0;
   --brand-coral-rgb: 212, 97, 106;
+  --landing-sticky-cta-clearance: calc(84px + env(safe-area-inset-bottom));
 
   /* Text tokens */
   --text-heading: #2A1845;
