@@ -69,7 +69,7 @@ The main interactive session (intended: Fable 5) is the orchestrator: it decompo
 When all tasks on a worktree/feature branch are complete, follow this order before pushing:
 
 1. **Verify** — `npm run ci:verify` passes (typecheck + lint + build)
-2. **Codex review** — Invoke the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`) on the full branch diff (`git diff main...HEAD`) with an explicit `read-only, review only, do not edit files` brief and no `--write`. Do NOT use the `/codex:rescue` skill — it has been observed stalling silently. This step catches integration-level issues (wrong API flags, outdated library patterns, cross-file problems) that per-task reviews miss.
+2. **Codex review** — Fetch the latest remote refs, then invoke the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`) on the full branch diff (`git diff origin/main...HEAD`) with an explicit `read-only, review only, do not edit files` brief and no `--write`. Do NOT use the `/codex:rescue` skill — it has been observed stalling silently. This step catches integration-level issues (wrong API flags, outdated library patterns, cross-file problems) that per-task reviews miss.
 3. **Fix findings** — Address any real issues Codex found. Skip false positives.
 4. **Push + PR** — Only now push and create the PR. The PR should be the clean artifact, not the iteration ground.
 
