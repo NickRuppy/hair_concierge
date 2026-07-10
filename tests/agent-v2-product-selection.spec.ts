@@ -290,7 +290,7 @@ function createProductLookupClarificationSourceMessage(): Record<string, unknown
     id: "assistant-clarification-1",
     conversation_id: "conversation-1",
     role: "assistant",
-    rag_context: {
+    message_context: {
       product_lookup_clarification: {
         id: "clarification-1",
         kind: "variant_selection",
@@ -390,8 +390,6 @@ test("chat product intake offer is driven by structured pipeline metadata and pr
           stream: createTextStream(modelAnswer),
           intent: "product_question",
           matchedProducts: [],
-          sources: [{ title: "Source that should not be shown" }],
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 0.8,
             retrieval_mode: "semantic",
@@ -405,7 +403,7 @@ test("chat product intake offer is driven by structured pipeline metadata and pr
           answerMode: "product_recommendation",
           productIntakeOffer,
         }),
-        buildAssistantDecisionContext: (params: { productIntakeOffer?: unknown }) => {
+        buildAssistantMessageContext: (params: { productIntakeOffer?: unknown }) => {
           decisionContextProductIntakeOffer = params.productIntakeOffer
           return { product_intake_offer: params.productIntakeOffer }
         },
@@ -414,7 +412,6 @@ test("chat product intake offer is driven by structured pipeline metadata and pr
           memoryExtractionCalls.push(args)
           return Promise.resolve()
         },
-        buildRetrievalDebugEventData: () => ({ route_debug: true }),
         finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
           response_composition: {},
           decision_context: {
@@ -455,14 +452,17 @@ test("chat product intake offer is driven by structured pipeline metadata and pr
 
   assert.equal(response.status, 200)
   assert.match(responseText, /product_intake_offer/)
+  assert.doesNotMatch(responseText, /"type":"sources"/)
+  assert.doesNotMatch(responseText, /"type":"retrieval_debug"/)
   assert.match(responseText, new RegExp(modelAnswer))
   assert.equal(messageRows[1]?.content, modelAnswer)
   assert.deepEqual(decisionContextProductIntakeOffer, productIntakeOffer)
   assert.deepEqual(
-    (messageRows[1]?.rag_context as { product_intake_offer?: unknown } | undefined)
+    (messageRows[1]?.message_context as { product_intake_offer?: unknown } | undefined)
       ?.product_intake_offer,
     productIntakeOffer,
   )
+  assert.deepEqual(messageRows[1]?.rag_context, messageRows[1]?.message_context)
   assert.equal(statePersistenceCalls.length, 1)
   assert.equal(memoryExtractionCalls.length, 0)
   assert.equal(traceRows.length, 1)
@@ -546,8 +546,6 @@ test("chat product lookup clarification is driven by structured pipeline metadat
           stream: createTextStream(modelAnswer),
           intent: "product_question",
           matchedProducts: [],
-          sources: [],
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 0.8,
             retrieval_mode: "semantic",
@@ -562,13 +560,12 @@ test("chat product lookup clarification is driven by structured pipeline metadat
           productIntakeOffer: null,
           productLookupClarification,
         }),
-        buildAssistantDecisionContext: (params: { productLookupClarification?: unknown }) => {
+        buildAssistantMessageContext: (params: { productLookupClarification?: unknown }) => {
           decisionContextProductLookupClarification = params.productLookupClarification
           return { product_lookup_clarification: params.productLookupClarification }
         },
         buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
         extractConversationMemory: async () => {},
-        buildRetrievalDebugEventData: () => ({ route_debug: true }),
         finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
           response_composition: {},
           decision_context: {
@@ -608,7 +605,7 @@ test("chat product lookup clarification is driven by structured pipeline metadat
   assert.equal(messageRows[1]?.content, modelAnswer)
   assert.deepEqual(decisionContextProductLookupClarification, productLookupClarification)
   assert.deepEqual(
-    (messageRows[1]?.rag_context as { product_lookup_clarification?: unknown } | undefined)
+    (messageRows[1]?.message_context as { product_lookup_clarification?: unknown } | undefined)
       ?.product_lookup_clarification,
     productLookupClarification,
   )
@@ -693,8 +690,6 @@ test("chat route preserves product lookup clarification from visible repair fall
           stream: createTextStream(modelAnswer),
           intent: "product_question",
           matchedProducts: [],
-          sources: [],
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 0.8,
             retrieval_mode: "agent_v2_responses",
@@ -711,13 +706,12 @@ test("chat route preserves product lookup clarification from visible repair fall
           productIntakeOffer: null,
           productLookupClarification,
         }),
-        buildAssistantDecisionContext: (params: { productLookupClarification?: unknown }) => {
+        buildAssistantMessageContext: (params: { productLookupClarification?: unknown }) => {
           decisionContextProductLookupClarification = params.productLookupClarification
           return { product_lookup_clarification: params.productLookupClarification }
         },
         buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
         extractConversationMemory: async () => {},
-        buildRetrievalDebugEventData: () => ({ route_debug: true }),
         finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
           response_composition: {},
           decision_context: {
@@ -756,7 +750,7 @@ test("chat route preserves product lookup clarification from visible repair fall
   assert.match(responseText, new RegExp(modelAnswer))
   assert.deepEqual(decisionContextProductLookupClarification, productLookupClarification)
   assert.deepEqual(
-    (messageRows[1]?.rag_context as { product_lookup_clarification?: unknown } | undefined)
+    (messageRows[1]?.message_context as { product_lookup_clarification?: unknown } | undefined)
       ?.product_lookup_clarification,
     productLookupClarification,
   )
@@ -835,8 +829,6 @@ test("chat route preserves product intake offer from visible product lookup fail
           stream: createTextStream(modelAnswer),
           intent: "product_question",
           matchedProducts: [],
-          sources: [],
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 0,
             retrieval_mode: "agent_v2_responses",
@@ -853,13 +845,12 @@ test("chat route preserves product intake offer from visible product lookup fail
           productIntakeOffer,
           productLookupClarification: null,
         }),
-        buildAssistantDecisionContext: (params: { productIntakeOffer?: unknown }) => {
+        buildAssistantMessageContext: (params: { productIntakeOffer?: unknown }) => {
           decisionContextProductIntakeOffer = params.productIntakeOffer
           return { product_intake_offer: params.productIntakeOffer }
         },
         buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
         extractConversationMemory: async () => {},
-        buildRetrievalDebugEventData: () => ({ route_debug: true }),
         finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
           response_composition: {},
           decision_context: {
@@ -904,7 +895,7 @@ test("chat route preserves product intake offer from visible product lookup fail
   assert.match(responseText, new RegExp(modelAnswer))
   assert.deepEqual(decisionContextProductIntakeOffer, productIntakeOffer)
   assert.deepEqual(
-    (messageRows[1]?.rag_context as { product_intake_offer?: unknown } | undefined)
+    (messageRows[1]?.message_context as { product_intake_offer?: unknown } | undefined)
       ?.product_intake_offer,
     productIntakeOffer,
   )
@@ -917,7 +908,7 @@ test("chat product selection rejects products outside the persisted clarificatio
       id: "assistant-clarification-1",
       conversation_id: "conversation-1",
       role: "assistant",
-      rag_context: {
+      message_context: {
         product_lookup_clarification: {
           id: "clarification-1",
           kind: "variant_selection",
@@ -1293,7 +1284,7 @@ test("chat product selection returns existing selection answer on replay", async
       {
         id: "existing-selection-message",
         content: "Alles klar, ich beziehe mich auf Syoss Intense Volume Shampoo.",
-        rag_context: { product_lookup_selection: existingSelection },
+        message_context: { product_lookup_selection: existingSelection },
         langfuse_trace_id: "trace-1",
       },
     ],
@@ -1386,7 +1377,7 @@ test("chat product selection fails closed when replay state cannot be loaded", a
       {
         id: "existing-selection-message",
         content: "Alles klar, ich beziehe mich auf Syoss Intense Volume Shampoo.",
-        rag_context: { product_lookup_selection: existingSelection },
+        message_context: { product_lookup_selection: existingSelection },
       },
     ],
     conversationStateError: { message: "state read failed" },
@@ -1454,7 +1445,7 @@ test("chat product selection rejects a different candidate click after clarifica
       {
         id: "existing-selection-message",
         content: "Alles klar, ich beziehe mich auf Syoss Intense Volume Shampoo.",
-        rag_context: { product_lookup_selection: existingSelection },
+        message_context: { product_lookup_selection: existingSelection },
       },
     ],
   })
@@ -1503,7 +1494,7 @@ test("chat product selection continues with trusted selected product context", a
       id: "assistant-clarification-1",
       conversation_id: "conversation-1",
       role: "assistant",
-      rag_context: {
+      message_context: {
         product_lookup_clarification: {
           id: "clarification-1",
           kind: "variant_selection",
@@ -1568,8 +1559,6 @@ test("chat product selection continues with trusted selected product context", a
         conversationId: "conversation-1",
         intent: "general_chat",
         matchedProducts: [],
-        sources: [],
-        retrievalSummary: { final_context_count: 0 },
         routerDecision: {
           confidence: 0.9,
           retrieval_mode: "agent_v2_responses",
@@ -1585,8 +1574,7 @@ test("chat product selection continues with trusted selected product context", a
         answerMode: "product_recommendation",
       }
     }) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -1636,7 +1624,7 @@ test("chat product selection continues with trusted selected product context", a
   assert.equal(admin.insertedMessages[0]?.role, "assistant")
   assert.equal(admin.insertedMessages[0]?.content, assistantText)
   assert.deepEqual(
-    (admin.insertedMessages[0]?.rag_context as { product_lookup_selection?: unknown })
+    (admin.insertedMessages[0]?.message_context as { product_lookup_selection?: unknown })
       .product_lookup_selection,
     {
       source: "product_lookup_clarification",
@@ -1695,8 +1683,6 @@ test("chat product selection allows user-owned non-recommended selected products
         conversationId: "conversation-1",
         intent: "general_chat",
         matchedProducts: [],
-        sources: [],
-        retrievalSummary: { final_context_count: 0 },
         routerDecision: {
           confidence: 0.9,
           retrieval_mode: "agent_v2_responses",
@@ -1712,8 +1698,7 @@ test("chat product selection allows user-owned non-recommended selected products
         answerMode: "product_assessment",
       }
     }) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -1771,8 +1756,6 @@ test("chat product selection rejects user-owned non-recommended products without
         conversationId: "conversation-1",
         intent: "general_chat",
         matchedProducts: [],
-        sources: [],
-        retrievalSummary: { final_context_count: 0 },
         routerDecision: {
           confidence: 0.9,
           retrieval_mode: "agent_v2_responses",
@@ -1788,7 +1771,7 @@ test("chat product selection rejects user-owned non-recommended products without
         answerMode: "product_assessment",
       }
     }) as never,
-    buildAssistantDecisionContext: () => ({ sources: [] }),
+    buildAssistantMessageContext: () => null,
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
     persistConversationStateTransition: async () => ({ status: "persisted", error: null }),
   })
@@ -1844,8 +1827,6 @@ test("chat product selection suppresses recommendation cards from the selection 
           category: "shampoo",
         },
       ],
-      sources: [],
-      retrievalSummary: { final_context_count: 0 },
       routerDecision: {
         confidence: 0.9,
         retrieval_mode: "agent_v2_responses",
@@ -1860,8 +1841,7 @@ test("chat product selection suppresses recommendation cards from the selection 
       visibleFailure: false,
       answerMode: "product_recommendation",
     })) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -1892,7 +1872,7 @@ test("chat product selection grounds category-mismatch selections on the selecte
       id: "assistant-clarification-1",
       conversation_id: "conversation-1",
       role: "assistant",
-      rag_context: {
+      message_context: {
         product_lookup_clarification: {
           id: "clarification-1",
           kind: "category_mismatch",
@@ -1951,8 +1931,6 @@ test("chat product selection grounds category-mismatch selections on the selecte
         conversationId: "conversation-1",
         intent: "general_chat",
         matchedProducts: [],
-        sources: [],
-        retrievalSummary: { final_context_count: 0 },
         routerDecision: {
           confidence: 0.9,
           retrieval_mode: "agent_v2_responses",
@@ -1968,8 +1946,7 @@ test("chat product selection grounds category-mismatch selections on the selecte
         answerMode: "general_advice",
       }
     }) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -2021,7 +1998,7 @@ test("chat product selection duplicate-key persistence does not mutate state twi
       {
         id: "b1809fe7-61ed-5519-9a44-8417984caa10",
         content: "Bereits gespeichert: Syoss Intense Volume Shampoo.",
-        rag_context: {
+        message_context: {
           product_lookup_selection: {
             source: "product_lookup_clarification",
             clarification_id: "clarification-1",
@@ -2056,8 +2033,6 @@ test("chat product selection duplicate-key persistence does not mutate state twi
       conversationId: "conversation-1",
       intent: "general_chat",
       matchedProducts: [],
-      sources: [],
-      retrievalSummary: { final_context_count: 0 },
       routerDecision: {
         confidence: 0.9,
         retrieval_mode: "agent_v2_responses",
@@ -2072,8 +2047,7 @@ test("chat product selection duplicate-key persistence does not mutate state twi
       visibleFailure: false,
       answerMode: "product_recommendation",
     })) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -2156,8 +2130,6 @@ test("chat product selection streams an error when active product state persiste
       conversationId: "conversation-1",
       intent: "general_chat",
       matchedProducts: [],
-      sources: [],
-      retrievalSummary: { final_context_count: 0 },
       routerDecision: {
         confidence: 0.9,
         retrieval_mode: "agent_v2_responses",
@@ -2172,8 +2144,7 @@ test("chat product selection streams an error when active product state persiste
       visibleFailure: false,
       answerMode: "product_assessment",
     })) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -2209,7 +2180,7 @@ test("chat product selection persists resolved state before assistant message in
       id: "assistant-clarification-1",
       conversation_id: "conversation-1",
       role: "assistant",
-      rag_context: {
+      message_context: {
         product_lookup_clarification: {
           id: "clarification-1",
           kind: "variant_selection",
@@ -2267,8 +2238,6 @@ test("chat product selection persists resolved state before assistant message in
       conversationId: "conversation-1",
       intent: "general_chat",
       matchedProducts: [],
-      sources: [],
-      retrievalSummary: { final_context_count: 0 },
       routerDecision: {
         confidence: 0.9,
         retrieval_mode: "agent_v2_responses",
@@ -2283,8 +2252,7 @@ test("chat product selection persists resolved state before assistant message in
       visibleFailure: false,
       answerMode: "product_recommendation",
     })) as never,
-    buildAssistantDecisionContext: (params) => ({
-      sources: [],
+    buildAssistantMessageContext: (params) => ({
       product_lookup_selection: params.productLookupSelection,
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -2364,8 +2332,6 @@ test("chat route does not infer product intake offer from raw user message", asy
           stream: createTextStream(modelAnswer),
           intent: "routine_question",
           matchedProducts: [],
-          sources: [],
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 0.8,
             retrieval_mode: "semantic",
@@ -2378,7 +2344,7 @@ test("chat route does not infer product intake offer from raw user message", asy
           visibleFailure: false,
           answerMode: "product_recommendation",
         }),
-        buildAssistantDecisionContext: (params: { productIntakeOffer?: unknown }) => ({
+        buildAssistantMessageContext: (params: { productIntakeOffer?: unknown }) => ({
           product_intake_offer: params.productIntakeOffer,
         }),
         buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -2386,7 +2352,6 @@ test("chat route does not infer product intake offer from raw user message", asy
           memoryExtractionCalls.push(args)
           return Promise.resolve()
         },
-        buildRetrievalDebugEventData: () => ({ route_debug: true }),
         finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
           response_composition: {},
           decision_context: {

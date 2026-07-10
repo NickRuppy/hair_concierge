@@ -67,7 +67,7 @@ function createMessage(index: number): Message {
     role: index % 2 === 0 ? "assistant" : "user",
     content: `Message ${index}`,
     product_recommendations: null,
-    rag_context: null,
+    message_context: null,
     token_usage: null,
     langfuse_trace_id: null,
     langfuse_trace_url: null,

@@ -17,13 +17,16 @@ import {
   normalizeAgentV2ConversationState,
   type AgentV2ConversationStateTransition,
 } from "@/lib/agent-v2/production/persisted-session-state"
-import { buildAssistantDecisionContext, buildDoneEventData } from "@/lib/chat-runtime/stream-events"
+import { buildAssistantMessageContext, buildDoneEventData } from "@/lib/chat-runtime/stream-events"
+import {
+  buildMessageContextWriteColumns,
+  normalizeMessageContextRow,
+  readPersistedMessageContext,
+  type PersistedMessageContextColumns,
+} from "@/lib/chat-runtime/message-context"
 import { persistConversationStateTransition } from "@/lib/chat-runtime/conversation-state-store"
 import { ERR_UNAUTHORIZED } from "@/lib/vocabulary"
-import {
-  hasVerifiedProductSpecs,
-  type SpecReadinessClient,
-} from "@/lib/product-intake/spec-readiness"
+import { hasVerifiedProductSpecs } from "@/lib/product-intake/spec-readiness"
 import {
   buildResolvedProductSelection,
   getResolvedProductSelectionStableKeyParts,
@@ -31,7 +34,7 @@ import {
   toProductLookupSelectionContext,
 } from "@/lib/product-intake/resolved-product-selection"
 import type {
-  MessageRagContext,
+  MessageContext,
   ProductLookupClarification,
   ProductLookupSelectionContext,
 } from "@/lib/types"
@@ -49,7 +52,7 @@ type ProductSelectionRuntimeDeps = {
   createClient?: typeof createClient
   createAdminClient?: typeof createAdminClient
   runAgentV2ProductionPipeline?: typeof runAgentV2ProductionPipeline
-  buildAssistantDecisionContext?: typeof buildAssistantDecisionContext
+  buildAssistantMessageContext?: typeof buildAssistantMessageContext
   buildDoneEventData?: typeof buildDoneEventData
   persistConversationStateTransition?: typeof persistConversationStateTransition
   productIntakeEnabled?: () => boolean
@@ -79,6 +82,17 @@ function readClarification(value: unknown): ProductLookupClarification | null {
   return candidate
 }
 
+type ExistingSelectionMessage = {
+  id?: string | null
+  content?: string | null
+  message_context?: MessageContext | null
+  product_recommendations?: unknown[] | null
+  langfuse_trace_id?: string | null
+  langfuse_trace_url?: string | null
+}
+
+type PersistedExistingSelectionMessage = ExistingSelectionMessage & PersistedMessageContextColumns
+
 function findExistingSelectionMessage(
   rows: unknown,
   sourceCard: {
@@ -86,24 +100,19 @@ function findExistingSelectionMessage(
     sourceAssistantMessageId: string
     selectedProductId?: string | null
   },
-): {
-  id?: string | null
-  content?: string | null
-  rag_context?: MessageRagContext | null
-  product_recommendations?: unknown[] | null
-  langfuse_trace_id?: string | null
-  langfuse_trace_url?: string | null
-} | null {
+): ExistingSelectionMessage | null {
   if (!Array.isArray(rows)) return null
 
-  return (
-    rows.find((row) => {
-      if (!row || typeof row !== "object" || Array.isArray(row)) return false
-      const record = row as { rag_context?: MessageRagContext | null }
-      const existing = record.rag_context?.product_lookup_selection
-      return productLookupSelectionResolvesSourceCard(existing, sourceCard)
-    }) ?? null
-  )
+  for (const row of rows) {
+    if (!row || typeof row !== "object" || Array.isArray(row)) continue
+    const normalized = normalizeMessageContextRow(row as PersistedExistingSelectionMessage)
+    const existing = normalized.message_context?.product_lookup_selection
+    if (productLookupSelectionResolvesSourceCard(existing, sourceCard)) {
+      return normalized
+    }
+  }
+
+  return null
 }
 
 function isDuplicateKeyError(
@@ -417,7 +426,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     createClient,
     createAdminClient,
     runAgentV2ProductionPipeline,
-    buildAssistantDecisionContext,
+    buildAssistantMessageContext,
     buildDoneEventData,
     persistConversationStateTransition,
     productIntakeEnabled: isProductIntakeEnabled,
@@ -463,7 +472,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
 
     const { data: sourceMessage, error: sourceMessageError } = await admin
       .from("messages")
-      .select("id, conversation_id, role, rag_context")
+      .select("id, conversation_id, role, message_context, rag_context")
       .eq("id", sourceAssistantMessageId)
       .eq("conversation_id", conversationId)
       .single()
@@ -479,8 +488,8 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       )
     }
 
-    const ragContext = sourceMessage.rag_context as MessageRagContext | null
-    const clarification = readClarification(ragContext?.product_lookup_clarification)
+    const messageContext = readPersistedMessageContext(sourceMessage)
+    const clarification = readClarification(messageContext?.product_lookup_clarification)
     if (!clarification || clarification.id !== clarificationId) {
       return NextResponse.json({ error: "Produktauswahl ist nicht mehr gültig." }, { status: 400 })
     }
@@ -530,7 +539,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     const { data: existingMessages } = await admin
       .from("messages")
       .select(
-        "id, content, rag_context, product_recommendations, langfuse_trace_id, langfuse_trace_url",
+        "id, content, message_context, rag_context, product_recommendations, langfuse_trace_id, langfuse_trace_url",
       )
       .eq("conversation_id", conversationId)
       .eq("role", "assistant")
@@ -554,7 +563,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       )
     }
     const existingSelection =
-      existingSelectionMessage?.rag_context?.product_lookup_selection ?? selectionContext
+      existingSelectionMessage?.message_context?.product_lookup_selection ?? selectionContext
     if (existingSelectionMessage) {
       const storedResolvedSelection =
         resolveStoredSelection({
@@ -583,7 +592,6 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
         langfuseTraceUrl: existingSelectionMessage.langfuse_trace_url ?? null,
         doneData: deps.buildDoneEventData({
           intent: "general_chat",
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 1,
             retrieval_mode: "agent_v2_responses",
@@ -615,8 +623,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     })
 
     const fullContent = await readTextStream(pipelineResult.stream)
-    const assistantRagContext = deps.buildAssistantDecisionContext({
-      sources: pipelineResult.sources,
+    const assistantMessageContext = deps.buildAssistantMessageContext({
       categoryDecision: pipelineResult.categoryDecision,
       engineTrace: pipelineResult.engineTrace ?? null,
       responseMode: pipelineResult.routerDecision.response_mode,
@@ -652,7 +659,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
         conversation_id: conversationId,
         role: "assistant",
         content: fullContent,
-        rag_context: assistantRagContext,
+        ...buildMessageContextWriteColumns(assistantMessageContext),
         product_recommendations: productRecommendations,
       })
       .select("id")
@@ -662,12 +669,13 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       const { data: duplicateMessage } = await admin
         .from("messages")
         .select(
-          "id, content, rag_context, product_recommendations, langfuse_trace_id, langfuse_trace_url",
+          "id, content, message_context, rag_context, product_recommendations, langfuse_trace_id, langfuse_trace_url",
         )
         .eq("id", assistantSelectionMessageId)
         .single()
       const duplicateSelection =
-        duplicateMessage?.rag_context?.product_lookup_selection ?? selectionContext
+        (duplicateMessage ? readPersistedMessageContext(duplicateMessage) : null)
+          ?.product_lookup_selection ?? selectionContext
       const storedResolvedSelection =
         resolveStoredSelection({
           clarification,
@@ -695,7 +703,6 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
         langfuseTraceUrl: duplicateMessage?.langfuse_trace_url ?? null,
         doneData: deps.buildDoneEventData({
           intent: "general_chat",
-          retrievalSummary: { final_context_count: 0 },
           routerDecision: {
             confidence: 1,
             retrieval_mode: "agent_v2_responses",
@@ -728,7 +735,6 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       productLookupSelection: selectionContext,
       doneData: deps.buildDoneEventData({
         intent: pipelineResult.intent,
-        retrievalSummary: pipelineResult.retrievalSummary,
         routerDecision: pipelineResult.routerDecision,
         categoryDecision: pipelineResult.categoryDecision,
       }),

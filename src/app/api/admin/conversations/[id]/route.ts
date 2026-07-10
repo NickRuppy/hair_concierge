@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import { normalizeMessageContextRows } from "@/lib/chat-runtime/message-context"
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -42,7 +43,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const { data: messages, error: msgError } = await admin
     .from("messages")
     .select(
-      "id, conversation_id, role, content, product_recommendations, rag_context, langfuse_trace_id, langfuse_trace_url, user_feedback_score, user_feedback_at, created_at",
+      "id, conversation_id, role, content, product_recommendations, message_context, rag_context, langfuse_trace_id, langfuse_trace_url, user_feedback_score, user_feedback_at, created_at",
     )
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
@@ -88,7 +89,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   return NextResponse.json({
     conversation,
-    messages: messages || [],
+    messages: normalizeMessageContextRows(messages || []),
     traces,
     conversation_state: conversationState,
     user: userProfile,

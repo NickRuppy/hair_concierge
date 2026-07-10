@@ -166,15 +166,15 @@ async function runScenario(params: {
         assertions.push(...runContentAssertions(sse, turn.content))
       }
 
-      // DB persistence check (verify rag_context is persisted)
+      // DB persistence check (verify the assistant message and canonical context are persisted)
       if (conversationId && sse.content.length > 0) {
         // Small delay to let async persistence complete
         await new Promise((r) => setTimeout(r, 1000))
         const dbMsg = await fetchLatestAssistantMessage(session.admin, conversationId)
         if (dbMsg) {
-          const dbSourceCount = dbMsg.rag_context?.sources
-            ? (dbMsg.rag_context.sources as unknown[]).length
-            : 0
+          const expectedResponseMode =
+            typeof sse.done_data?.response_mode === "string" ? sse.done_data.response_mode : null
+          const persistedResponseMode = dbMsg.message_context?.response_mode ?? null
           assertions.push({
             tier: "db",
             name: "message_persisted",
@@ -184,12 +184,13 @@ async function runScenario(params: {
           })
           assertions.push({
             tier: "db",
-            name: "rag_context_persisted",
+            name: "message_context_persisted",
             passed:
-              dbSourceCount === sse.sources.length ||
-              (sse.sources.length === 0 && dbSourceCount === 0),
-            expected: `${sse.sources.length} sources`,
-            actual: `${dbSourceCount} sources`,
+              expectedResponseMode !== null
+                ? persistedResponseMode === expectedResponseMode
+                : dbMsg.message_context !== null,
+            expected: expectedResponseMode ?? "message_context persisted",
+            actual: persistedResponseMode ?? "null",
           })
         }
       }

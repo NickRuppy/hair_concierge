@@ -16,6 +16,7 @@ import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 import { NextResponse } from "next/server"
 import type { ConversationStatePersistenceTrace } from "@/lib/types"
 import type { PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
+import { buildMessageContextWriteColumns } from "@/lib/chat-runtime/message-context"
 
 export const maxDuration = 60
 
@@ -45,14 +46,9 @@ async function loadChatRuntimeDeps() {
   const [
     { createAdminClient },
     { runAgentV2ProductionPipeline },
-    { buildAssistantDecisionContext, buildDoneEventData },
+    { buildAssistantMessageContext, buildDoneEventData },
     { extractConversationMemory },
-    {
-      buildRetrievalDebugEventData,
-      finalizeChatTurnTrace,
-      summarizeEngineTraceForLangfuse,
-      summarizeProductsForLangfuse,
-    },
+    { finalizeChatTurnTrace, summarizeEngineTraceForLangfuse, summarizeProductsForLangfuse },
     { summarizeAgentV2TraceForLangfuse },
     { persistConversationStateTransition },
     { chatMessageSchema },
@@ -72,10 +68,9 @@ async function loadChatRuntimeDeps() {
   return {
     createAdminClient,
     runAgentV2ProductionPipeline,
-    buildAssistantDecisionContext,
+    buildAssistantMessageContext,
     buildDoneEventData,
     extractConversationMemory,
-    buildRetrievalDebugEventData,
     finalizeChatTurnTrace,
     summarizeEngineTraceForLangfuse,
     summarizeProductsForLangfuse,
@@ -179,10 +174,9 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
     const {
       createAdminClient,
       runAgentV2ProductionPipeline,
-      buildAssistantDecisionContext,
+      buildAssistantMessageContext,
       buildDoneEventData,
       extractConversationMemory,
-      buildRetrievalDebugEventData,
       finalizeChatTurnTrace,
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
@@ -297,8 +291,6 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         stream,
         intent,
         matchedProducts,
-        sources,
-        retrievalSummary,
         routerDecision,
         conversationStateTransition,
         categoryDecision,
@@ -388,17 +380,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 type: "confidence",
                 data: {
                   confidence: routerDecision.confidence,
-                  retrieval_mode: routerDecision.retrieval_mode,
                 },
-              })}\n\n`,
-            ),
-          )
-
-          controller.enqueue(
-            encoder.encode(
-              `data: ${JSON.stringify({
-                type: "retrieval_debug",
-                data: buildRetrievalDebugEventData(routeDebugTrace),
               })}\n\n`,
             ),
           )
@@ -433,21 +415,11 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 matchedProducts.length > 0
                   ? matchedProducts.slice(0, 3)
                   : []
-              const responseSources =
-                productIntakeOfferToSend || productLookupClarificationToSend ? [] : sources
               const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
               if (productsToSend.length > 0) {
                 controller.enqueue(
                   encoder.encode(
                     `data: ${JSON.stringify({ type: "product_recommendations", data: productsToSend })}\n\n`,
-                  ),
-                )
-              }
-
-              if (responseSources.length > 0) {
-                controller.enqueue(
-                  encoder.encode(
-                    `data: ${JSON.stringify({ type: "sources", data: responseSources })}\n\n`,
                   ),
                 )
               }
@@ -474,20 +446,20 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 )
               }
 
+              const messageContext = buildAssistantMessageContext({
+                categoryDecision: routeCategoryDecision,
+                engineTrace: routeEngineTrace,
+                responseMode: routerDecision.response_mode,
+                productIntakeOffer: productIntakeOfferToSend,
+                productLookupClarification: productLookupClarificationToSend,
+              })
               const { data: assistantMessageRow, error: assistantMessageError } = await admin
                 .from("messages")
                 .insert({
                   conversation_id: activeConversationId,
                   role: "assistant",
                   content: fullContent,
-                  rag_context: buildAssistantDecisionContext({
-                    sources: responseSources,
-                    categoryDecision: routeCategoryDecision,
-                    engineTrace: routeEngineTrace,
-                    responseMode: routerDecision.response_mode,
-                    productIntakeOffer: productIntakeOfferToSend,
-                    productLookupClarification: productLookupClarificationToSend,
-                  }),
+                  ...buildMessageContextWriteColumns(messageContext),
                   product_recommendations: productsToSend.length > 0 ? productsToSend : null,
                   langfuse_trace_id: langfuseTraceId,
                   langfuse_trace_url: langfuseTraceUrl,
@@ -598,7 +570,6 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
               const completedTrace = finalizeChatTurnTrace(routeDebugTrace, {
                 assistant_content: fullContent,
-                sources: responseSources,
                 product_count: productsToSend.length,
                 status: isVisibleFailure ? "failed" : "completed",
                 stream_read_ms: Math.round(deps.now() - streamReadStart),
@@ -655,7 +626,6 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                     type: "done",
                     data: buildDoneEventData({
                       intent,
-                      retrievalSummary,
                       routerDecision: routeRouterDecision,
                       categoryDecision: routeCategoryDecision,
                     }),
@@ -675,7 +645,6 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
               error instanceof Error ? error.message : "Unbekannter Stream-Fehler"
             const failedTrace = finalizeChatTurnTrace(routeDebugTrace, {
               assistant_content: fullContent,
-              sources,
               product_count: 0,
               status: "failed",
               error: errorMessage,

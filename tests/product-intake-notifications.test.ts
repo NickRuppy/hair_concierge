@@ -36,6 +36,7 @@ function createNotificationSupabaseFake(
   options: {
     claimSucceeds?: boolean
     existingMessageId?: string | null
+    existingMessageColumn?: "message_context" | "rag_context"
     messageInsertError?: { code?: string; message: string } | null
     messageInsertId?: string | null
     stateUpsertError?: { message: string } | null
@@ -51,6 +52,7 @@ function createNotificationSupabaseFake(
     private readonly table: string
     private operation: "insert" | "select" | "update" | "upsert" | null = null
     private selected = false
+    private containsColumn: string | null = null
 
     constructor(table: string) {
       this.table = table
@@ -97,7 +99,9 @@ function createNotificationSupabaseFake(
       return this
     }
 
-    contains() {
+    contains(column: string) {
+      this.containsColumn = column
+      calls.push(`contains:${this.table}:${column}`)
       return this
     }
 
@@ -119,8 +123,12 @@ function createNotificationSupabaseFake(
       }
 
       if (this.table === "messages" && this.operation === "select") {
+        const expectedColumn = options.existingMessageColumn ?? "message_context"
         return {
-          data: options.existingMessageId ? { id: options.existingMessageId } : null,
+          data:
+            options.existingMessageId && this.containsColumn === expectedColumn
+              ? { id: options.existingMessageId }
+              : null,
           error: null,
         }
       }
@@ -268,6 +276,25 @@ test("review notification keeps sent claim when existing message is found", asyn
   assert.ok(!supabase.calls.includes("insert:messages"))
   assert.ok(!supabase.calls.includes("release:product_submissions"))
   assert.ok(supabase.calls.includes("update:conversations"))
+})
+
+test("review notification finds existing legacy message through rag_context fallback", async () => {
+  const supabase = createNotificationSupabaseFake({
+    existingMessageId: "message-existing",
+    existingMessageColumn: "rag_context",
+  })
+
+  const result = await sendProductIntakeReviewNotification(
+    supabase as never,
+    notificationSubmission(),
+  )
+
+  assert.deepEqual(result, { sent: false, reason: "already_sent" })
+  assert.deepEqual(
+    supabase.calls.filter((call) => call.startsWith("contains:messages:")),
+    ["contains:messages:message_context", "contains:messages:rag_context"],
+  )
+  assert.ok(!supabase.calls.includes("insert:messages"))
 })
 
 test("review notification keeps delivery success after message is materialized", async () => {

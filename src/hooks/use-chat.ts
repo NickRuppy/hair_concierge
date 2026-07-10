@@ -33,7 +33,7 @@ export function hasExistingProductSelectionMessage(
   params: ProductSelectionParams,
 ): boolean {
   return messages.some((message) => {
-    const selection = message.rag_context?.product_lookup_selection
+    const selection = message.message_context?.product_lookup_selection
     return (
       message.role === "assistant" &&
       selection?.source === "product_lookup_clarification" &&
@@ -158,10 +158,10 @@ export function applyChatStreamEventToMessages(
       if (!target || target.role !== "assistant") return updated
       updated[targetIndex] = {
         ...target,
-        rag_context: {
-          ...(target.rag_context ?? { sources: [], category_decision: null }),
+        message_context: {
+          ...(target.message_context ?? {}),
           product_intake_offer: event.data as NonNullable<
-            Message["rag_context"]
+            Message["message_context"]
           >["product_intake_offer"],
         },
       }
@@ -175,10 +175,10 @@ export function applyChatStreamEventToMessages(
       if (!target || target.role !== "assistant") return updated
       updated[targetIndex] = {
         ...target,
-        rag_context: {
-          ...(target.rag_context ?? { sources: [], category_decision: null }),
+        message_context: {
+          ...(target.message_context ?? {}),
           product_lookup_clarification: event.data as NonNullable<
-            Message["rag_context"]
+            Message["message_context"]
           >["product_lookup_clarification"],
         },
       }
@@ -192,10 +192,10 @@ export function applyChatStreamEventToMessages(
       if (!target || target.role !== "assistant") return updated
       updated[targetIndex] = {
         ...target,
-        rag_context: {
-          ...(target.rag_context ?? { sources: [], category_decision: null }),
+        message_context: {
+          ...(target.message_context ?? {}),
           product_lookup_selection: event.data as NonNullable<
-            Message["rag_context"]
+            Message["message_context"]
           >["product_lookup_selection"],
         },
       }
@@ -223,21 +223,6 @@ export function applyChatStreamEventToMessages(
       }
       return updated
     }
-    case "sources": {
-      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
-      if (targetIndex < 0) return [...messages]
-      const updated = [...messages]
-      const target = updated[targetIndex]
-      if (!target || target.role !== "assistant") return updated
-      updated[targetIndex] = {
-        ...target,
-        rag_context: {
-          ...(target.rag_context ?? { category_decision: null }),
-          sources: event.data as NonNullable<Message["rag_context"]>["sources"],
-        },
-      }
-      return updated
-    }
     case "done": {
       const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
       if (targetIndex < 0) return [...messages]
@@ -246,18 +231,15 @@ export function applyChatStreamEventToMessages(
       if (!target || target.role !== "assistant") return updated
       const data = event.data as
         | {
-            category_decision?: NonNullable<Message["rag_context"]>["category_decision"]
+            category_decision?: NonNullable<Message["message_context"]>["category_decision"]
           }
         | null
         | undefined
       updated[targetIndex] = {
         ...target,
-        rag_context: {
-          sources: target.rag_context?.sources ?? [],
+        message_context: {
+          ...(target.message_context ?? {}),
           category_decision: data?.category_decision ?? null,
-          product_intake_offer: target.rag_context?.product_intake_offer ?? null,
-          product_lookup_clarification: target.rag_context?.product_lookup_clarification ?? null,
-          product_lookup_selection: target.rag_context?.product_lookup_selection ?? null,
         },
       }
       return updated
@@ -279,30 +261,30 @@ export function applyProductIntakeSubmissionToMessages(
   patch: ProductIntakeSubmissionPatch,
 ): Message[] {
   return messages.map((message) => {
-    if (message.id !== patch.messageId || !message.rag_context) return message
+    if (message.id !== patch.messageId || !message.message_context) return message
 
     const submissionFields = {
       ...(patch.submissionId ? { submission_id: patch.submissionId } : {}),
       submitted_status: patch.status,
     }
 
-    const offer = message.rag_context.product_intake_offer
+    const offer = message.message_context.product_intake_offer
     if (offer?.id === patch.offerId) {
       return {
         ...message,
-        rag_context: {
-          ...message.rag_context,
+        message_context: {
+          ...message.message_context,
           product_intake_offer: { ...offer, ...submissionFields },
         },
       }
     }
 
-    const clarification = message.rag_context.product_lookup_clarification
+    const clarification = message.message_context.product_lookup_clarification
     if (clarification?.none_action?.product_intake_offer?.id === patch.offerId) {
       return {
         ...message,
-        rag_context: {
-          ...message.rag_context,
+        message_context: {
+          ...message.message_context,
           product_lookup_clarification: {
             ...clarification,
             none_action: {
@@ -459,7 +441,6 @@ export function useChat(): UseChatReturn {
         case "product_lookup_clarification":
         case "product_lookup_selection":
         case "assistant_message":
-        case "sources":
         case "done":
           setMessages((prev) => applyChatStreamEventToMessages(prev, event, options))
           break
@@ -551,7 +532,7 @@ export function useChat(): UseChatReturn {
         role: "user",
         content,
         product_recommendations: null,
-        rag_context: null,
+        message_context: null,
         token_usage: null,
         langfuse_trace_id: null,
         langfuse_trace_url: null,
@@ -573,7 +554,7 @@ export function useChat(): UseChatReturn {
         role: "assistant",
         content: "",
         product_recommendations: null,
-        rag_context: null,
+        message_context: null,
         token_usage: null,
         langfuse_trace_id: null,
         langfuse_trace_url: null,
@@ -673,7 +654,7 @@ export function useChat(): UseChatReturn {
         role: "assistant",
         content: "",
         product_recommendations: null,
-        rag_context: null,
+        message_context: null,
         token_usage: null,
         langfuse_trace_id: null,
         langfuse_trace_url: null,

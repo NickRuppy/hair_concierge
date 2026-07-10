@@ -36,7 +36,7 @@ type AssistantMessageRecord = {
       tradeoffs?: string[]
     } | null
   }> | null
-  rag_context: {
+  message_context: {
     category_decision?: {
       category?: string
       relevant?: boolean
@@ -162,7 +162,7 @@ async function fetchLatestAssistantMessage(userId: string): Promise<AssistantMes
 
   const { data: message, error: messageError } = await admin
     .from("messages")
-    .select("content, product_recommendations, rag_context")
+    .select("content, product_recommendations, message_context")
     .eq("conversation_id", conversation.id)
     .eq("role", "assistant")
     .order("created_at", { ascending: false })
@@ -339,7 +339,7 @@ test.describe.serial("Conditioner chat E2E", () => {
       .toBeGreaterThan(0)
 
     const assistantMessage = await fetchLatestAssistantMessage(currentUserId)
-    expect(assistantMessage?.rag_context?.category_decision).toEqual(
+    expect(assistantMessage?.message_context?.category_decision).toEqual(
       expect.objectContaining({
         category: "conditioner",
         relevant: true,
@@ -430,7 +430,7 @@ test.describe.serial("Conditioner chat E2E", () => {
       .toBeGreaterThan(0)
 
     const assistantMessage = await fetchLatestAssistantMessage(currentUserId)
-    expect(assistantMessage?.rag_context?.category_decision).toEqual(
+    expect(assistantMessage?.message_context?.category_decision).toEqual(
       expect.objectContaining({
         category: "conditioner",
         relevant: true,

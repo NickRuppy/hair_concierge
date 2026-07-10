@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { useToast } from "@/providers/toast-provider"
-import type { ConversationState, ConversationTurnTrace, MessageRagContext } from "@/lib/types"
+import type { ConversationState, ConversationTurnTrace, MessageContext } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
 import { ArrowLeft } from "lucide-react"
 
@@ -13,7 +13,7 @@ interface MessageRow {
   role: "user" | "assistant" | "system"
   content: string | null
   created_at: string
-  rag_context?: MessageRagContext | null
+  message_context?: MessageContext | null
   langfuse_trace_id?: string | null
   langfuse_trace_url?: string | null
   user_feedback_score?: -1 | 1 | null
@@ -124,7 +124,8 @@ function TraceBadge({
 function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
   const trace = traceRecord.trace
   const totalLatency = trace.latencies_ms.total_ms
-  const retrievalChunks = trace.retrieval.chunks ?? []
+  const legacyRetrieval = trace.retrieval ?? null
+  const retrievalChunks = legacyRetrieval?.chunks ?? []
   const matchedProducts = trace.decision_context.matched_products ?? []
   const engineVariant = trace.engine_variant ?? "classic"
   const toolLoopTrace = trace.agentic_tool_loop
@@ -205,27 +206,28 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
             </p>
           </div>
 
-          <div className="rounded-lg border bg-card p-3">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">Retrieval</p>
-            <p className="mt-1 font-medium text-foreground">
-              {trace.retrieval.final_context_count} finale Chunks
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Kandidaten vor Rerank: {trace.retrieval.candidate_count_before_rerank}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Rerankt: {trace.retrieval.reranked_count}
-            </p>
-          </div>
+          {legacyRetrieval ? (
+            <div className="rounded-lg border bg-card p-3">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Historisches Retrieval
+              </p>
+              <p className="mt-1 font-medium text-foreground">
+                {legacyRetrieval.final_context_count} finale Chunks
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Kandidaten vor Rerank: {legacyRetrieval.candidate_count_before_rerank}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Rerankt: {legacyRetrieval.reranked_count}
+              </p>
+            </div>
+          ) : null}
 
           <div className="rounded-lg border bg-card p-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Produkte</p>
             <p className="mt-1 font-medium text-foreground">{matchedProducts.length} gematcht</p>
             <p className="mt-1 text-xs text-muted-foreground">
               Routine-Plan: {trace.decision_context.should_plan_routine ? "ja" : "nein"}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Antwortquellen: {trace.response.sources.length}
             </p>
           </div>
 
@@ -234,9 +236,11 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
             <p className="mt-1 text-xs text-muted-foreground">
               Klassifikation: {formatDuration(trace.latencies_ms.classification_ms)}
             </p>
-            <p className="text-xs text-muted-foreground">
-              Retrieval: {formatDuration(trace.latencies_ms.retrieval_ms)}
-            </p>
+            {trace.latencies_ms.retrieval_ms != null ? (
+              <p className="text-xs text-muted-foreground">
+                Historisches Retrieval: {formatDuration(trace.latencies_ms.retrieval_ms)}
+              </p>
+            ) : null}
             <p className="text-xs text-muted-foreground">
               Prompt: {formatDuration(trace.latencies_ms.prompt_build_ms)}
             </p>
@@ -351,50 +355,54 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
           </div>
         ) : null}
 
-        <div>
-          <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
-            Retrieval-Pfad
-          </p>
-          <div className="rounded-lg border bg-card p-3">
-            <p className="text-xs text-muted-foreground">
-              Subqueries:{" "}
-              {trace.retrieval.subqueries.length > 0 ? trace.retrieval.subqueries.join(" | ") : "—"}
+        {legacyRetrieval ? (
+          <div>
+            <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+              Historischer Retrieval-Pfad
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Metadata-Filter:{" "}
-              {trace.retrieval.metadata_filter
-                ? JSON.stringify(trace.retrieval.metadata_filter)
-                : "—"}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Fallback: {trace.retrieval.fallback_used ? "ja" : "nein"}
-            </p>
+            <div className="rounded-lg border bg-card p-3">
+              <p className="text-xs text-muted-foreground">
+                Subqueries:{" "}
+                {legacyRetrieval.subqueries.length > 0
+                  ? legacyRetrieval.subqueries.join(" | ")
+                  : "—"}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Metadata-Filter:{" "}
+                {legacyRetrieval.metadata_filter
+                  ? JSON.stringify(legacyRetrieval.metadata_filter)
+                  : "—"}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Fallback: {legacyRetrieval.fallback_used ? "ja" : "nein"}
+              </p>
 
-            <div className="mt-3 space-y-2">
-              {retrievalChunks.length === 0 ? (
-                <p className="text-xs text-muted-foreground">Keine Chunks gespeichert.</p>
-              ) : (
-                retrievalChunks.map((chunk) => (
-                  <div key={chunk.chunk_id} className="rounded-md border bg-background p-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <TraceBadge label={chunk.source_type} />
-                      {chunk.retrieval_path ? <TraceBadge label={chunk.retrieval_path} /> : null}
-                      <span className="text-xs text-muted-foreground">
-                        Score: {chunk.weighted_similarity.toFixed(4)}
-                      </span>
-                      {chunk.source_name ? (
-                        <span className="text-xs text-muted-foreground">{chunk.source_name}</span>
-                      ) : null}
+              <div className="mt-3 space-y-2">
+                {retrievalChunks.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Keine Chunks gespeichert.</p>
+                ) : (
+                  retrievalChunks.map((chunk) => (
+                    <div key={chunk.chunk_id} className="rounded-md border bg-background p-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <TraceBadge label={chunk.source_type} />
+                        {chunk.retrieval_path ? <TraceBadge label={chunk.retrieval_path} /> : null}
+                        <span className="text-xs text-muted-foreground">
+                          Score: {chunk.weighted_similarity.toFixed(4)}
+                        </span>
+                        {chunk.source_name ? (
+                          <span className="text-xs text-muted-foreground">{chunk.source_name}</span>
+                        ) : null}
+                      </div>
+                      <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
+                        {chunk.content_preview}
+                      </p>
                     </div>
-                    <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
-                      {chunk.content_preview}
-                    </p>
-                  </div>
-                ))
-              )}
+                  ))
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
 
         <div>
           <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
@@ -669,11 +677,6 @@ export default function AdminConversationDetailPage() {
                     <p className="whitespace-pre-wrap text-sm leading-relaxed">
                       {msg.content || "—"}
                     </p>
-                    {msg.rag_context?.sources?.length ? (
-                      <p className="mt-2 text-xs opacity-60">
-                        Quellen gespeichert: {msg.rag_context.sources.length}
-                      </p>
-                    ) : null}
                     {msg.user_feedback_score ? (
                       <p className="mt-2 text-xs opacity-60">
                         Feedback: {msg.user_feedback_score > 0 ? "positiv" : "negativ"}{" "}

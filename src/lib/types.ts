@@ -820,8 +820,7 @@ export interface RoutinePlan {
   decision_context: RoutineDecisionContext
 }
 
-export interface MessageRagContext {
-  sources: CitationSource[]
+export interface MessageContext {
   category_decision?: ChatCategoryDecision | null
   engine_trace?: RecommendationEngineTrace | null
   response_mode?: ResponseMode | null
@@ -837,8 +836,6 @@ export interface MessageRagContext {
   product_lookup_clarification?: ProductLookupClarification | null
   product_lookup_selection?: ProductLookupSelectionContext | null
 }
-
-export type MessageDecisionContext = MessageRagContext
 
 export interface ProductLookupClarification {
   id: string
@@ -986,7 +983,8 @@ export interface ChatTraceLatencyBreakdown {
   history_load_ms: number
   router_ms: number
   conversation_create_ms: number
-  retrieval_ms: number
+  /** Present on historical pipelines that performed chunk retrieval. */
+  retrieval_ms?: number
   product_matching_ms: number
   prompt_build_ms: number
   stream_setup_ms: number
@@ -1117,7 +1115,8 @@ export interface ChatTurnTrace {
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
-  retrieval: {
+  /** Present only on historical trace versions that used chunk retrieval. */
+  retrieval?: {
     requested_count: number
     source_types: string[] | null
     metadata_filter: Record<string, string> | null
@@ -1145,7 +1144,8 @@ export interface ChatTurnTrace {
   agent_v2_trace?: import("@/lib/agent-v2/contracts").AgentV2Trace
   response: {
     assistant_content: string
-    sources: CitationSource[]
+    /** Present only on historical trace versions that emitted chat citations. */
+    sources?: unknown[]
     product_count: number
   }
   latencies_ms: ChatTraceLatencyBreakdown
@@ -1237,7 +1237,7 @@ export interface Message {
   role: "user" | "assistant" | "system"
   content: string | null
   product_recommendations: Product[] | null
-  rag_context: MessageRagContext | null
+  message_context: MessageContext | null
   token_usage: Record<string, number> | null
   langfuse_trace_id: string | null
   langfuse_trace_url: string | null
@@ -1281,14 +1281,6 @@ export interface ContentChunk {
   token_count: number | null
   metadata: Record<string, unknown>
   created_at: string
-}
-
-export interface CitationSource {
-  index: number // 1-based, matches [1] markers
-  source_type: string // "book", "product_list", etc.
-  label: string // German: "Fachbuch", "Produktmatrix"
-  source_name: string | null
-  snippet: string // First ~200 chars of chunk content
 }
 
 export type IntentType =
@@ -1358,16 +1350,8 @@ export interface ChatSSEEvent {
     | "product_lookup_selection"
     | "assistant_message"
     | "langfuse_trace"
-    | "sources"
     | "confidence"
-    | "retrieval_debug"
     | "done"
     | "error"
   data: unknown
-}
-
-/** Enriched citation source with optional hybrid retrieval metadata */
-export interface EnrichedCitationSource extends CitationSource {
-  confidence?: number
-  retrieval_path?: "dense" | "lexical" | "hybrid"
 }

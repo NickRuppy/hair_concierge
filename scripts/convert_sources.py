@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Convert all raw sources (DOCX, PDF, VTT) into structured Markdown files
-for RAG ingestion.
+for knowledge-base ingestion.
 
 Usage:
     python3 scripts/convert_sources.py
@@ -1020,7 +1020,7 @@ def generate_matrix_markdown(category: str, matrix: dict, uses_ingredient_flags:
     """Write legacy product-list Markdown files per cell (thickness x concern).
 
     These files are retained for rollback/regeneration only. Current AgentV2
-    product recommendations use structured product data, not product_list RAG
+    product recommendations use structured product data, not product-list knowledge chunks
     chunks.
 
     For matrices whose trailing parens encode ingredient flags (conditioner-drogerie,
@@ -1223,7 +1223,7 @@ def generate_product_json(category: str, matrix: dict, uses_ingredient_flags: bo
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("RAG Source Conversion Pipeline")
+    print("Knowledge Source Conversion Pipeline")
     print("=" * 60)
 
     parse_docx()

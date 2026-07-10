@@ -37,7 +37,7 @@ export function buildProductLookupClarificationStateByMessageId(
   const sourceCards = new Map<string, SourceCard>()
 
   for (const message of messages) {
-    const clarification = message.rag_context?.product_lookup_clarification
+    const clarification = message.message_context?.product_lookup_clarification
     if (!clarification || message.role !== "assistant") {
       continue
     }
@@ -62,7 +62,7 @@ export function buildProductLookupClarificationStateByMessageId(
   }
 
   for (const message of [...messages].reverse()) {
-    const selection = message.rag_context?.product_lookup_selection
+    const selection = message.message_context?.product_lookup_selection
     if (
       selection?.source === "product_lookup_clarification" &&
       selection.source_assistant_message_id &&
@@ -82,7 +82,7 @@ export function buildProductLookupClarificationStateByMessageId(
       }
     }
 
-    const review = message.rag_context?.product_intake_review ?? null
+    const review = message.message_context?.product_intake_review ?? null
     if (isResolvedProductIntakeReview(review)) {
       for (const sourceCard of sourceCards.values()) {
         if (!intakeOfferMatchesReview(sourceCard.intakeOffer, review)) continue
@@ -109,8 +109,8 @@ export function buildProductIntakeOfferStateByMessageId(
   const offerMessages: Array<{ messageId: string; offer: ProductIntakeOffer }> = []
   for (const message of messages) {
     if (message.role !== "assistant") continue
-    if (message.rag_context?.product_lookup_clarification) continue
-    const offer = message.rag_context?.product_intake_offer
+    if (message.message_context?.product_lookup_clarification) continue
+    const offer = message.message_context?.product_intake_offer
     if (!offer) continue
     offerMessages.push({ messageId: message.id, offer })
   }
@@ -125,7 +125,7 @@ export function buildProductIntakeOfferStateByMessageId(
   if (states.size === 0) return states
 
   for (const message of messages) {
-    const review = message.rag_context?.product_intake_review ?? null
+    const review = message.message_context?.product_intake_review ?? null
     if (!isResolvedProductIntakeReview(review)) continue
     for (const { messageId, offer } of offerMessages) {
       const state = states.get(messageId)
@@ -146,7 +146,7 @@ export function hasPendingProductIntakeReview(messages: Message[]): boolean {
 
   const clarificationStates = buildProductLookupClarificationStateByMessageId(messages)
   for (const message of messages) {
-    const clarification = message.rag_context?.product_lookup_clarification
+    const clarification = message.message_context?.product_lookup_clarification
     if (!clarification || message.role !== "assistant") continue
     const offer = clarification.none_action.product_intake_offer
     if (offerSubmittedStatus(offer) !== "pending_review") continue

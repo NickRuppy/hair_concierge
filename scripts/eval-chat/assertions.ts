@@ -25,20 +25,6 @@ export function runMetadataAssertions(
     })
   }
 
-  if (expected.retrieval_mode !== undefined) {
-    const actual = done.retrieval_mode as string | undefined
-    const allowed = Array.isArray(expected.retrieval_mode)
-      ? expected.retrieval_mode
-      : [expected.retrieval_mode]
-    results.push({
-      tier: "metadata",
-      name: "retrieval_mode",
-      passed: actual !== undefined && allowed.includes(actual),
-      expected: allowed.join(" | "),
-      actual: actual ?? "(missing)",
-    })
-  }
-
   if (expected.response_mode !== undefined) {
     const actual = done.response_mode as string | undefined
     const allowed = Array.isArray(expected.response_mode)
@@ -88,28 +74,6 @@ export function runMetadataAssertions(
         actual: actual.join(", ") || "(empty)",
       })
     }
-  }
-
-  if (expected.source_count_min !== undefined) {
-    const actual = sse.sources.length
-    results.push({
-      tier: "metadata",
-      name: "source_count_min",
-      passed: actual >= expected.source_count_min,
-      expected: `>= ${expected.source_count_min}`,
-      actual: String(actual),
-    })
-  }
-
-  if (expected.source_count_max !== undefined) {
-    const actual = sse.sources.length
-    results.push({
-      tier: "metadata",
-      name: "source_count_max",
-      passed: actual <= expected.source_count_max,
-      expected: `<= ${expected.source_count_max}`,
-      actual: String(actual),
-    })
   }
 
   if (expected.product_count_min !== undefined) {
@@ -175,17 +139,6 @@ export function runContentAssertions(
       severity: "soft",
       expected: ">=3 German markers",
       actual: `${germanHits.length} markers (${germanHits.slice(0, 5).join(", ")})`,
-    })
-  }
-
-  if (expected.citations_present) {
-    const hasCitation = /\[\d+\]/.test(content)
-    results.push({
-      tier: "content",
-      name: "citations_present",
-      passed: hasCitation,
-      expected: "contains [N] citation",
-      actual: hasCitation ? "found" : "none found",
     })
   }
 

@@ -32,6 +32,12 @@ import {
   mergeActiveProductContexts,
   type AgentV2ActiveProductContext,
 } from "@/lib/agent-v2/resolved-product-selection-adapter"
+import {
+  buildMessageContextWriteColumns,
+  readPersistedMessageContext,
+  type PersistedMessageContextColumns,
+} from "@/lib/chat-runtime/message-context"
+import type { MessageContext } from "@/lib/types"
 
 type ProductIntakeRouteSource = "onboarding" | "chat"
 
@@ -156,10 +162,9 @@ export function createProductIntakePostHandler(
   }
 }
 
-type OfferSubmissionMessageRow = {
+type OfferSubmissionMessageRow = PersistedMessageContextColumns & {
   id: string
   conversation_id: string
-  rag_context: Record<string, unknown> | null
 }
 
 async function persistChatProductIntakeOfferSubmission(params: {
@@ -173,7 +178,8 @@ async function persistChatProductIntakeOfferSubmission(params: {
   const offerId = params.input.offer_id ?? null
   if (!conversationId || !messageId || !offerId) return
 
-  const submittedStatus = params.result.status === "matched" ? "matched" : "pending_review"
+  const submittedStatus: "matched" | "pending_review" =
+    params.result.status === "matched" ? "matched" : "pending_review"
   const submissionId = params.result.submission?.id ?? null
   if (submittedStatus === "pending_review" && !submissionId) return
 
@@ -188,14 +194,14 @@ async function persistChatProductIntakeOfferSubmission(params: {
 
     const { data } = await params.admin
       .from("messages")
-      .select("id, conversation_id, rag_context")
+      .select("id, conversation_id, message_context, rag_context")
       .eq("id", messageId)
       .eq("conversation_id", conversationId)
       .maybeSingle()
     const message = data as OfferSubmissionMessageRow | null
     if (!message) return
 
-    const rag = (message.rag_context ?? {}) as {
+    const context = (readPersistedMessageContext(message) ?? {}) as MessageContext & {
       product_intake_offer?: { id?: string } & Record<string, unknown>
       product_lookup_clarification?: {
         none_action?: { product_intake_offer?: { id?: string } & Record<string, unknown> }
@@ -206,18 +212,18 @@ async function persistChatProductIntakeOfferSubmission(params: {
       submitted_status: submittedStatus,
     }
 
-    let nextRag: Record<string, unknown> | null = null
-    if (rag.product_intake_offer?.id === offerId) {
-      nextRag = {
-        ...rag,
-        product_intake_offer: { ...rag.product_intake_offer, ...submissionFields },
+    let nextContext: MessageContext | null = null
+    if (context.product_intake_offer?.id === offerId) {
+      nextContext = {
+        ...context,
+        product_intake_offer: { ...context.product_intake_offer, ...submissionFields },
       }
     } else if (
-      rag.product_lookup_clarification?.none_action?.product_intake_offer?.id === offerId
+      context.product_lookup_clarification?.none_action?.product_intake_offer?.id === offerId
     ) {
-      const clarification = rag.product_lookup_clarification
-      nextRag = {
-        ...rag,
+      const clarification = context.product_lookup_clarification
+      nextContext = {
+        ...context,
         product_lookup_clarification: {
           ...clarification,
           none_action: {
@@ -230,11 +236,11 @@ async function persistChatProductIntakeOfferSubmission(params: {
         },
       }
     }
-    if (!nextRag) return
+    if (!nextContext) return
 
     const { error } = await params.admin
       .from("messages")
-      .update({ rag_context: nextRag })
+      .update(buildMessageContextWriteColumns(nextContext))
       .eq("id", messageId)
       .eq("conversation_id", conversationId)
     if (error) {

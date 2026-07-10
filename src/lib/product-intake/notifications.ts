@@ -16,7 +16,8 @@ import {
   type AgentV2ActiveProductContext,
 } from "@/lib/agent-v2/resolved-product-selection-adapter"
 import { hasVerifiedProductSpecs } from "@/lib/product-intake/spec-readiness"
-import type { MessageRagContext, ProductIntakeOffer, ProductSubmission } from "@/lib/types"
+import { buildMessageContextWriteColumns } from "@/lib/chat-runtime/message-context"
+import type { MessageContext, ProductIntakeOffer, ProductSubmission } from "@/lib/types"
 
 const ONBOARDING_REVIEW_CONVERSATION_TITLE = "Produktprüfung"
 
@@ -46,7 +47,7 @@ export type ProductIntakeNotificationResult =
   | { sent: true; conversationId: string; messageId: string }
   | { sent: false; reason: "already_sent" | "no_message_needed" }
 
-export type ProductIntakeReviewRagContext = Partial<MessageRagContext> & {
+export type ProductIntakeReviewMessageContext = Partial<MessageContext> & {
   product_intake_review: {
     submission_id: string
     status: ProductSubmissionForNotification["status"]
@@ -139,10 +140,10 @@ export function buildProductIntakeReviewMessage(
   return null
 }
 
-export function buildProductIntakeReviewRagContext(
+export function buildProductIntakeReviewMessageContext(
   submission: ProductSubmissionForNotification,
-): ProductIntakeReviewRagContext {
-  const context: ProductIntakeReviewRagContext = {
+): ProductIntakeReviewMessageContext {
+  const context: ProductIntakeReviewMessageContext = {
     product_intake_review: {
       submission_id: submission.id,
       status: submission.status,
@@ -350,26 +351,31 @@ async function existingProductIntakeReviewMessageId(params: {
   submissionId: string
   status: ProductSubmissionForNotification["status"]
 }): Promise<string | null> {
-  const { data, error } = await params.supabase
-    .from("messages")
-    .select("id")
-    .eq("conversation_id", params.conversationId)
-    .eq("role", "assistant")
-    .contains("rag_context", {
-      product_intake_review: {
-        submission_id: params.submissionId,
-        status: params.status,
-      },
-    })
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle()
-
-  if (error && error.code !== "PGRST116") {
-    throw new Error(`load existing product intake notification: ${error.message}`)
+  const expectedContext = {
+    product_intake_review: {
+      submission_id: params.submissionId,
+      status: params.status,
+    },
   }
 
-  return data?.id ?? null
+  for (const column of ["message_context", "rag_context"] as const) {
+    const { data, error } = await params.supabase
+      .from("messages")
+      .select("id")
+      .eq("conversation_id", params.conversationId)
+      .eq("role", "assistant")
+      .contains(column, expectedContext)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (error && error.code !== "PGRST116") {
+      throw new Error(`load existing product intake notification: ${error.message}`)
+    }
+    if (data?.id) return data.id
+  }
+
+  return null
 }
 
 async function markNotificationSent(params: {
@@ -480,6 +486,7 @@ export async function sendProductIntakeReviewNotification(
     }
 
     const messageId = productIntakeReviewMessageId(submission)
+    const messageContext = buildProductIntakeReviewMessageContext(submission)
     const { data: message, error: messageError } = await supabase
       .from("messages")
       .insert({
@@ -487,7 +494,7 @@ export async function sendProductIntakeReviewNotification(
         conversation_id: conversationId,
         role: "assistant",
         content,
-        rag_context: buildProductIntakeReviewRagContext(submission),
+        ...buildMessageContextWriteColumns(messageContext),
       })
       .select("id")
       .single()

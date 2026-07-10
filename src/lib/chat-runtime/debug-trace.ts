@@ -11,14 +11,11 @@ import type {
   ChatCategoryDecision,
   ChatMatchedProductTrace,
   ChatPromptSnapshot,
-  ChatRetrievedChunkTrace,
   ChatTraceLatencyBreakdown,
   ChatTurnTrace,
   ConversationStatePersistenceTrace,
   ConversationTurnStateTransition,
-  CitationSource,
   ClassificationResult,
-  ContentChunk,
   HairProfile,
   LangfusePromptReference,
   Product,
@@ -28,31 +25,12 @@ import type {
   RoutinePlan,
   RouterDecision,
 } from "@/lib/types"
-import { summarizeAgentV2ConversationState } from "@/lib/agent-v2/production/persisted-session-state"
 
-const CHAT_TURN_TRACE_VERSION = 2
+const CHAT_TURN_TRACE_VERSION = 3
 const CONTENT_PREVIEW_LIMIT = 240
 const SUMMARY_ITEM_LIMIT = 3
 
 type AppAgenticToolLoopTrace = NonNullable<ChatTurnTrace["agentic_tool_loop"]>
-
-export interface RetrievedChunk extends ContentChunk {
-  similarity: number
-  weighted_similarity: number
-  retrieval_path?: "dense" | "lexical" | "hybrid"
-  dense_score?: number
-  lexical_score?: number
-  fused_score?: number
-}
-
-export interface RetrieveContextDebug {
-  subqueries: string[]
-  source_types: string[] | null
-  metadata_filter: Record<string, string> | null
-  candidate_count_before_rerank: number
-  reranked_count: number
-  fallback_used: boolean
-}
 
 export interface PipelineTraceDraft {
   request_id: string
@@ -68,7 +46,6 @@ export interface PipelineTraceDraft {
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
-  retrieval: ChatTurnTrace["retrieval"]
   decision_context: {
     should_plan_routine: boolean
     routine_plan: RoutinePlan | null
@@ -128,26 +105,6 @@ function compactRecordIds(values: unknown): string[] {
         .filter(Boolean),
     ),
   )
-}
-
-function summarizeAgentV2TransitionState(
-  transition: ConversationTurnStateTransition,
-): Record<string, unknown> | null {
-  const nextState = transition.next_state
-  if (
-    !isRecord(nextState) ||
-    nextState.version !== 2 ||
-    nextState.engine !== "agent_v2_care_balance"
-  ) {
-    return null
-  }
-
-  return {
-    ...summarizeAgentV2ConversationState(
-      nextState as Parameters<typeof summarizeAgentV2ConversationState>[0],
-    ),
-    changed_fields: transition.changed_fields,
-  }
 }
 
 function summarizeInput(input: Record<string, unknown>): string | null {
@@ -421,21 +378,6 @@ export function projectAgenticToolLoopTraceForApp(params: {
   }
 }
 
-export function buildRetrievedChunkTrace(chunks: RetrievedChunk[]): ChatRetrievedChunkTrace[] {
-  return chunks.map((chunk) => ({
-    chunk_id: chunk.id,
-    source_type: chunk.source_type,
-    source_name: chunk.source_name,
-    retrieval_path: chunk.retrieval_path,
-    weighted_similarity: chunk.weighted_similarity,
-    similarity: chunk.similarity,
-    dense_score: chunk.dense_score,
-    lexical_score: chunk.lexical_score,
-    fused_score: chunk.fused_score,
-    content_preview: toContentPreview(chunk.content),
-  }))
-}
-
 export function buildMatchedProductTrace(products: Product[]): ChatMatchedProductTrace[] {
   return products.map((product) => ({
     id: product.id,
@@ -531,9 +473,6 @@ export function buildPipelineTraceDraft(params: {
   clarification_questions?: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
-  retrieval_debug: RetrieveContextDebug
-  retrieval_count: number
-  retrieved_chunks: RetrievedChunk[]
   should_plan_routine: boolean
   routine_plan?: RoutinePlan
   category_decision?: ChatCategoryDecision
@@ -561,9 +500,6 @@ export function buildPipelineTraceDraft(params: {
     clarification_questions,
     hair_profile_snapshot,
     memory_context,
-    retrieval_debug,
-    retrieval_count,
-    retrieved_chunks,
     should_plan_routine,
     routine_plan,
     category_decision,
@@ -595,17 +531,6 @@ export function buildPipelineTraceDraft(params: {
     clarification_questions: clarification_questions ?? [],
     hair_profile_snapshot,
     memory_context,
-    retrieval: {
-      requested_count: retrieval_count,
-      source_types: retrieval_debug.source_types,
-      metadata_filter: retrieval_debug.metadata_filter,
-      subqueries: retrieval_debug.subqueries,
-      candidate_count_before_rerank: retrieval_debug.candidate_count_before_rerank,
-      reranked_count: retrieval_debug.reranked_count,
-      fallback_used: retrieval_debug.fallback_used,
-      final_context_count: retrieved_chunks.length,
-      chunks: buildRetrievedChunkTrace(retrieved_chunks),
-    },
     decision_context: {
       should_plan_routine,
       routine_plan: routine_plan ?? null,
@@ -630,7 +555,6 @@ export function finalizeChatTurnTrace(
   draft: PipelineTraceDraft,
   params: {
     assistant_content: string
-    sources: CitationSource[]
     product_count: number
     status: ChatTurnTrace["status"]
     error?: string | null
@@ -642,7 +566,6 @@ export function finalizeChatTurnTrace(
 ): ChatTurnTrace {
   const {
     assistant_content,
-    sources,
     product_count,
     status,
     error,
@@ -671,7 +594,6 @@ export function finalizeChatTurnTrace(
     clarification_questions: draft.clarification_questions,
     hair_profile_snapshot: draft.hair_profile_snapshot,
     memory_context: draft.memory_context,
-    retrieval: draft.retrieval,
     decision_context: draft.decision_context,
     prompt_refs: draft.prompt_refs,
     prompt: draft.prompt,
@@ -681,7 +603,6 @@ export function finalizeChatTurnTrace(
     ...(draft.agent_v2_trace ? { agent_v2_trace: draft.agent_v2_trace } : {}),
     response: {
       assistant_content,
-      sources,
       product_count,
     },
     latencies_ms: {
@@ -690,66 +611,5 @@ export function finalizeChatTurnTrace(
       ...(total_ms !== undefined ? { total_ms } : {}),
     },
     error: error ?? null,
-  }
-}
-
-export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<string, unknown> {
-  const toolLoopTrace = draft.agentic_tool_loop ?? null
-  const agentV2VisibleFailure = Boolean(draft.agent_v2_trace?.failure_stage)
-  const engineVariant = toolLoopTrace ? "tool_loop" : (draft.engine_variant ?? null)
-
-  return {
-    request_id: draft.request_id,
-    intent: draft.intent,
-    product_category: draft.product_category,
-    retrieval_mode: draft.router_decision.retrieval_mode,
-    response_mode: draft.router_decision.response_mode,
-    response_composer_path: draft.response_composition.path,
-    engine_variant: engineVariant,
-    clarification_questions: draft.clarification_questions,
-    policy_overrides: draft.router_decision.policy_overrides,
-    subqueries: draft.retrieval.subqueries,
-    metadata_filter: draft.retrieval.metadata_filter,
-    final_context_count: draft.retrieval.final_context_count,
-    matched_products: draft.decision_context.matched_products.map((product) => ({
-      id: product.id,
-      name: product.name,
-      score: product.score,
-    })),
-    tool_loop_model_step_count: toolLoopTrace?.model_steps.length ?? null,
-    tool_loop_total_llm_calls: toolLoopTrace?.model_steps.length ?? null,
-    tool_loop_tool_calls: toolLoopTrace?.tool_calls.map((call) => call.name) ?? [],
-    tool_loop_blocked_reasons: toolLoopTrace?.blocked_tool_calls.map((call) => call.reason) ?? [],
-    loaded_guidance_ids: toolLoopTrace?.loaded_guidance_ids ?? [],
-    agent_v2_loaded_guidance_ids: draft.agent_v2_trace?.loaded_guidance_package_ids ?? [],
-    agent_v2_tool_calls: draft.agent_v2_trace?.tool_calls.map((call) => call.name) ?? [],
-    agent_v2_blocked_reasons:
-      draft.agent_v2_trace?.blocked_tool_calls.map((call) => call.reason) ?? [],
-    agent_v2_failure_stage: draft.agent_v2_trace?.failure_stage ?? null,
-    agent_v2_visible_failure: agentV2VisibleFailure,
-    agent_v2_latency_ms: draft.agent_v2_trace
-      ? {
-          runtime: draft.latencies_ms.agent_runtime_ms ?? null,
-          turn_gate: draft.latencies_ms.agent_turn_gate_ms ?? null,
-          model: draft.latencies_ms.agent_model_ms ?? null,
-          tools: draft.latencies_ms.agent_tool_ms ?? null,
-          model_steps: draft.agent_v2_trace.model_steps.length,
-          tool_calls: draft.agent_v2_trace.tool_calls.length,
-        }
-      : null,
-    agent_v2_state: summarizeAgentV2TransitionState(draft.conversation_state),
-    repair_count: toolLoopTrace?.repair_attempts.length ?? 0,
-    failure_stage: toolLoopTrace?.failure_stage ?? null,
-    visible_failure: toolLoopTrace?.visible_failure ?? agentV2VisibleFailure,
-    agentic_tool_loop: toolLoopTrace
-      ? {
-          model_step_count: toolLoopTrace.model_steps.length,
-          tool_call_count: toolLoopTrace.tool_calls.length,
-          blocked_tool_call_count: toolLoopTrace.blocked_tool_calls.length,
-          guardrails: toolLoopTrace.guardrails,
-          latency_ms: toolLoopTrace.latency_ms ?? null,
-          token_usage: toolLoopTrace.token_usage ?? null,
-        }
-      : null,
   }
 }
