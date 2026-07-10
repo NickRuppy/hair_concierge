@@ -102,6 +102,7 @@ test-screenshots*/
 /clawpatch-report.md
 /clawpatch-summary.md
 *.claude-code-review*.md
+/claude-code-review.md
 
 # Affiliate link research artefacts (regenerated; safe to delete)
 !/data/affiliate-research/

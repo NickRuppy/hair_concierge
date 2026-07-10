@@ -79,18 +79,27 @@ If the task is about matching or preserving current internal recommendation logi
 
 ## Multi-Model Orchestration
 
-The main session is the orchestrator (intended: Fable 5). It decomposes work into small, independent, specifiable units and routes each to the cheapest model that can do it well — it plans, routes, integrates, and reviews rather than doing execution volume itself.
+When Codex is the driver, the main session owns product intent, architecture, decomposition, worktree and write-scope decisions, integration, final verification, and the user-facing handoff.
 
-- **Sonnet** — default execution tier: mechanical/multi-file edits, boilerplate, well-scoped tasks with clear acceptance criteria, test-fixing to a known oracle.
-- **Opus** — judgment tier: ambiguous scope, German UI copy, UX/taste calls, tricky deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/`.
-- Bias toward Sonnet; escalate to Opus only when the task needs judgment. Split only genuinely independent units — dispatched agents do not share the orchestrator's context, so each brief must be self-contained.
+Use the configured global internal agent roles when available:
 
-**Codex (GPT) — reviewer & second-opinion lane:**
+- **`fast_explorer`** — read-only code-path mapping, repository searches, test or log analysis, and parallel evidence gathering.
+- **`routine_worker`** — mechanical or well-specified multi-file edits, boilerplate, focused refactors, and test-fixing to a known oracle.
+- **`judgment_worker`** — German UI copy, UX and taste calls, ambiguous implementation details, and tricky deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, and `src/lib/quiz/`; the main session owns the test-first design and the worker implements to green.
 
-- Invoke the `codex:codex-rescue` agent, never the `/codex:rescue` skill (it stalls silently).
-- Do not pin a model — it inherits the global Codex default (`~/.codex/config.toml`, currently gpt-5.6-sol), so it tracks the newest. Add `--effort high` for these deeper passes.
-- Use for: whole-branch review before push, plan review on non-trivial plans, and any "stuck / want an independent second opinion" moment. Review and second-opinion runs are read-only (no `--write`).
-- Always inspect Codex output before accepting it; do not blindly trust it.
+If a personal role is unavailable, use the closest built-in explorer or worker role, or keep the work in the main session. Do not fail a task solely because a personal agent profile is missing.
+
+Split only genuinely independent, specifiable units. Keep tightly coupled logic in one unit, give parallel writers disjoint file scopes, and make every brief self-contained with acceptance checks and expected evidence.
+
+**Claude — reviewer and second-opinion lane:**
+
+- Use `claude-plan-review` automatically for every non-trivial implementation plan, every meaningful whole-branch review before push, and whenever Codex is stuck or wants an independent judgment.
+- Treat Claude as a review-only advisory lane: every invocation must explicitly instruct it not to edit files. Write transient code-review output outside the repo unless the artifact is intentionally retained.
+- A session invoked as a reviewer is terminal: review and return the verdict; do not dispatch the other model for another review.
+- Codex must inspect the report, verify findings locally, reject false positives, and retain the final decision.
+- Do not invoke Claude for trivial fixes, routine exploration, or every individual subagent result.
+
+After delegated implementation, the main session reviews the full diff and runs `npm run ci:verify` or the relevant focused checks. Before push, run the Claude branch review, address verified findings, and recheck the final diff. Never treat a worker or Claude report as sufficient verification by itself.
 
 ## Plan Mode
 
@@ -114,6 +123,7 @@ For trivial tasks (single file, <20 lines changed), skip the options table and p
 - All UI text is in German
 - Vocabulary: `hair_texture` = pattern (straight/wavy/curly/coily), `thickness` = diameter (fine/normal/coarse)
 - No over-engineering — only build what's requested, no speculative abstractions
+- Use TDD (test-first) for deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, and `src/lib/quiz/`
 - Keep recommendation logic as deterministic as the evidence allows
 - Do not present weak evidence as a hard rule
 - Separate cosmetic hair-care guidance from medically adjacent scalp or hair-loss guidance

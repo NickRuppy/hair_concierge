@@ -23,27 +23,28 @@ Before invoking `executing-plans` or `subagent-driven-development`, always invok
 
 ## Multi-Model Orchestration
 
-The main session (Fable 5) is the orchestrator: it decomposes work into small, independent, specifiable units and dispatches each to the cheapest model that can do it well. Fable stays lean — it plans, routes, integrates, and reviews; it does not personally do execution volume.
+The main interactive session (intended: Fable 5) is the orchestrator: it decomposes work into small, independent, specifiable units and dispatches each to the cheapest model that can do it well. The main session stays lean — it plans, routes, integrates, and reviews; it does not personally do execution volume.
 
 **Execution routing (Agent tool, `model` override):**
 - **Sonnet** — default execution tier: mechanical/multi-file edits, boilerplate, well-scoped tasks with clear acceptance criteria, test-fixing to a known oracle.
-- **Opus** — judgment tier: ambiguous scope, German UI copy, UX/taste calls, tricky deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/` (Fable owns the test-first design; Opus implements to green).
+- **Opus** — judgment tier: ambiguous scope, German UI copy, UX/taste calls, tricky deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/` (the main session owns the test-first design; Opus implements to green).
 - Bias toward Sonnet; escalate to Opus only when the task needs judgment.
 
 **Decomposition discipline:**
-- Split only genuinely independent, specifiable units — dispatched subagents do NOT share Fable's conversation context, so each brief must be self-contained.
+- Split only genuinely independent, specifiable units — dispatched subagents do NOT share the main session's conversation context, so each brief must be self-contained.
 - Do not shatter tightly-coupled work into context-starved subagents; keep coupled logic in one unit.
 - Use `superpowers:dispatching-parallel-agents` for 2+ independent tasks and `subagent-driven-development` when executing a written plan. Run `branch-gate` first (mandatory).
 
-**Fable does these itself — never delegated:**
+**The main session does these itself — never delegated:**
 - Architecture, task decomposition, routing, final review/integration.
-- Edits to `.claude/*` and `CLAUDE*.md` (subagents are hard-blocked there).
+- Edits to `.claude/*`, `CLAUDE*.md`, and `AGENTS.md`.
 
 **Codex (GPT) — reviewer & second-opinion lane:**
 - Use the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`), never the `/codex:rescue` skill (it stalls silently).
-- Do not pin a model — it inherits your global Codex default (`~/.codex/config.toml`, currently gpt-5.6-sol), so it always tracks the newest. Add `--effort high` for these deeper passes.
+- Do not pin a model — it inherits the global Codex default from `~/.codex/config.toml`, so it tracks the configured default. Add `--effort xhigh` for these deeper passes.
 - Use for: whole-branch review before push (see "Finishing a Feature Branch"), plan review on non-trivial plans, and any "stuck / want an independent second opinion" moment.
-- Review and second-opinion runs are read-only (no `--write`).
+- Every review brief must explicitly say: `read-only, review only, do not edit files`; never pass `--write`.
+- A session invoked as a reviewer is terminal: review and return the verdict; do not dispatch the other model for another review.
 
 **Verify every delegated result — never rubber-stamp.** Read the full diff, run `npm run ci:verify` or the relevant tests, drive the affected flow. Reject false positives; keep only what checks out.
 
@@ -68,7 +69,7 @@ The main session (Fable 5) is the orchestrator: it decomposes work into small, i
 When all tasks on a worktree/feature branch are complete, follow this order before pushing:
 
 1. **Verify** — `npm run ci:verify` passes (typecheck + lint + build)
-2. **Codex review** — Invoke the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`) on the full branch diff (`git diff main...HEAD`). Do NOT use the `/codex:rescue` skill — it has been observed stalling silently. The agent invocation runs cleanly. This step catches integration-level issues (wrong API flags, outdated library patterns, cross-file problems) that per-task reviews miss.
+2. **Codex review** — Invoke the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`) on the full branch diff (`git diff main...HEAD`) with an explicit `read-only, review only, do not edit files` brief and no `--write`. Do NOT use the `/codex:rescue` skill — it has been observed stalling silently. This step catches integration-level issues (wrong API flags, outdated library patterns, cross-file problems) that per-task reviews miss.
 3. **Fix findings** — Address any real issues Codex found. Skip false positives.
 4. **Push + PR** — Only now push and create the PR. The PR should be the clean artifact, not the iteration ground.
 
