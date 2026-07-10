@@ -50,6 +50,9 @@ is unavailable rather than improvising the workflow.
   values that will be written, not prose explanations or display labels.
 - When a worker is blocked, explain the blocker, the current worker lock/slot
   state, and the next concrete action.
+- Start stuck-worker work as operational inspection. Add `diagnosing-bugs` only
+  after evidence identifies a reproducible code defect. Retry, requeue, cancel,
+  or lock-clearing actions require explicit approval.
 
 ## Default Workflow
 
@@ -60,18 +63,27 @@ is unavailable rather than improvising the workflow.
    - `product_submissions` status when DB access is available
    - `product_intake_research_jobs` / worker status when relevant
    - local package state for legacy package flow
-4. Classify the lane:
+4. Classify exactly one operating mode:
+   - queue triage
    - new submission research
    - brand identity review
-   - raw image search or replacement
-   - image processing / magenta QA
+   - image search, replacement, processing, or magenta QA
    - category property rework
    - publish preflight
    - final handoff
    - worker/job debugging
-5. Apply the runbook contract for that lane.
+5. Apply the runbook contract for that operating mode.
 6. Report status in Nick-facing terms: what happened, what is ready, what is
    blocked, and what exact next click or command is safe.
+
+For recurring queue-triage automation runs:
+
+- begin with `products:intake:queue` and `products:intake:research-queue`
+- remain non-mutating and keep publish/apply actions human-gated
+- compare against the automation's previous state and report only new items,
+  state changes, newly aged blockers, and exact later dry-run/apply commands
+- do not duplicate source, image, payload, or approval policy in the automation
+  prompt; those rules live in the canonical runbook
 
 ## Research Contract Checklist
 

@@ -1,211 +1,123 @@
 ---
 name: plan-hardening-loop
-description: Use for Hair Concierge whenever the user mentions creating, hardening, reviewing, or executing an implementation plan; when they ask to be grilled before a plan; or when a plan should be reviewed with Claude and revised until it has a clean implementation handoff.
+description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups for any user-facing change, obtain a counterpart-model review, or align the designed user journey before implementation. For user-facing work, this skill ends only after mockup review and explicit user-journey sign-off; every plan ends at an approved implementation handoff. Use implementation-loop for execution.
 ---
 
 # Plan Hardening Loop
 
-## Purpose
+Turn fuzzy intent or an existing plan into one chosen, evidence-grounded implementation handoff.
 
-Turn fuzzy intent or an existing plan into a clean, reviewed implementation handoff with fewer manual prompts from the user.
+## Boundary
 
-This skill is a loop packaged as a skill:
+- This skill owns discovery, options, decisions, user-facing mockups, plan writing, counterpart review, user-journey sign-off, and revision.
+- It does not implement the plan. Handoff execution to `implementation-loop`.
+- Keep external evidence, internal product logic, and reconciliation separate as defined in `AGENTS.md`.
+- Do not use it for a tiny non-user-facing change that does not need a durable plan. Any user-facing change still uses the mockup and journey gates even when the eventual code diff is small.
 
-- The skill is the reusable Codex workflow.
-- The loop is the procedure inside it: grill, compare options, plan, review, revise, and repeat until ready or blocked on a real decision.
+## 1. Establish the planning contract
 
-## Trigger
-
-Use this skill when the user asks to:
-
-- create a plan, write a plan, harden a plan, or review a plan
-- "grill me" before planning
-- run Claude on a plan and incorporate findings
-- make a plan ready for subagent execution or implementation handoff
-- implement a written plan, start subagent-driven implementation, or continue from a finalized plan
-
-Do not use it for tiny implementation changes that do not need a written plan.
-
-## Operating Rules
-
-- Keep external evidence, internal product logic, and reconciliation lanes separate according to `AGENTS.md`.
-- Inspect relevant code/docs before asking questions when local context can answer them.
-- When the kickoff prompt is rough, run the intake interview before starting the autonomous loop.
-- Before implementing a written plan, establish an implementation goal contract before editing files.
-- Ask plainly for factual details.
-- Present 2-3 options only for meaningful forks: architecture, UX direction, data ownership, rollout, verification, risk posture, or scope boundary.
-- Explain tradeoffs in simple language. Avoid abstract labels that hide the practical cost.
-- Prefer comparing elegant architectures at similar scope over comparing "tiny vs medium vs huge" by default.
-- Recommend one option when evidence is strong, and say why in plain language.
-- Stop for the user only when initial loop terms are missing, or when a product decision, risk acceptance, or scope choice cannot be made from local context.
-- Do not let Claude review output automatically rewrite product intent. Codex owns judgment and must classify findings.
-
-## Step 1: Intake Interview
-
-Before starting a more autonomous loop, make sure the loop is set off on the right terms.
-
-If the user's kickoff already includes a clear goal, constraints, and done-when criteria, summarize them and continue. If any are missing or fuzzy, interview the user before planning.
-
-Ask one question at a time, in this order:
-
-1. Goal: what should be different when this is done?
-2. Context: which files, flows, users, examples, or current pain matter?
-3. Constraints: what must stay unchanged, what risks matter, and what conventions apply?
-4. Non-goals: what should this explicitly not include?
-5. Done when: what evidence proves the loop is ready for implementation handoff?
-
-Use short, simple questions. Offer a recommended default when the likely answer is visible from local context, but do not invent product intent.
-
-After intake, restate the loop contract:
+Inspect the relevant repository context first. Then establish:
 
 ```text
-Goal: ...
-Constraints: ...
-Non-goals: ...
-Done when: ...
+Outcome: what will be different
+Constraints: what must remain true
+Non-goals: what is excluded
+Done when: evidence required for an implementation-ready plan
 ```
 
-Ask for confirmation only if the contract changes scope or contains a meaningful assumption. Otherwise continue into the grill.
+Ask only for missing information that local context cannot answer. Acknowledge the contract and continue without seeking ceremonial confirmation unless an assumption changes scope.
 
-## Step 2: Align And Grill
+Completion criterion: outcome, constraints, non-goals, and done-when evidence are concrete enough to reject an unsuitable approach.
 
-Use `plan-grill` behavior:
+## 2. Grill the consequential decisions
 
-1. Identify the user goal, context, constraints, non-goals, and "done when".
-2. Ask one high-leverage question at a time.
-3. After every 2-4 substantive questions, checkpoint settled decisions, remaining risks, and likely next step.
-4. For each meaningful fork, present 2-3 options before asking the user to choose.
+Use one high-leverage question at a time. For architecture, UX, data ownership, rollout, verification, risk, or scope forks, present 2-3 similarly scoped options:
 
-Option comparisons should use this shape:
-
-| Option | Plain meaning | Why it is elegant | Tradeoff | Best when |
+| Option | Plain meaning | What gets easier | What gets harder | Best when |
 | --- | --- | --- | --- | --- |
-| A: Name | What this means in normal language | Boundary, data flow, UX, or maintenance strength | The real cost or risk | When this condition is true |
-| B: Name | ... | ... | ... | ... |
 
-Then add:
+Recommend one option when the evidence supports it. After every 2-4 substantive decisions, checkpoint what is settled, what remains open, and the likely direction.
 
-```text
-My recommendation: <option>. <One or two plain-language sentences explaining why.>
-```
+Completion criterion: every consequential fork has one chosen direction or one explicit unresolved user decision.
 
-## Step 3: Visual Options For UI Work
+## 3. Make every user-facing change visible
 
-When a decision is frontend, visual, or UX-facing, do not ask the user to choose from prose alone if layout, hierarchy, copy density, interaction shape, or emotional tone matters.
+For any user-facing work, create at least one reviewable mockup during planning and show it to the user before finalizing the plan. Do this even for apparently small copy, hierarchy, spacing, state, or interaction changes; put the proposal in context instead of asking the user to imagine it from prose.
 
-Create 2-3 lightweight HTML mockups before asking for a decision. Use repo-local scratch space such as `.tmp-previews/` or the existing brainstorming preview convention. Mockups may be static, but they must make the choice visible enough for the user to compare.
+Choose the lightest artifact that makes the decision real:
 
-Use mockups for:
+- annotated current/proposed screenshot for a small change to an existing surface
+- wireframe for information hierarchy or a multi-step flow
+- lightweight HTML prototype for layout, responsive behavior, or interaction
+- 2-3 comparable variants when a meaningful visual or interaction fork remains
 
-- onboarding and quiz screens
-- result, offer, paywall, and checkout-adjacent surfaces
-- chat UX, prompt cards, feedback UI, and response presentation
-- emails or share artifacts where hierarchy and copy density matter
+Ground mockups in the actual product surface when one exists. Inspect and capture the current surface first, then annotate that screenshot or recreate the proposed state as rendered lightweight HTML. For copy-only changes, show the before/after wording inside the real component layout at a representative viewport. A Markdown quote, ASCII sketch, detached copy sample, or prose description does not count as a mockup for an existing surface.
 
-Do not create mockups for purely backend, data, or test-architecture choices.
+Use realistic content and German UI copy. Show mobile and desktop when the experience materially differs, and include loading, empty, error, confirmation, or recovery states when they affect comprehension or trust.
 
-## Step 4: Write Or Update The Plan
+Mockups are planning artifacts, not production implementation. Keep them in repo-local preview/scratch space unless there is a reason to retain them. Present them to the user, incorporate feedback, and record the selected mockup or resolved direction in the plan. Purely backend work may skip mockups only when the plan explicitly states that no user-facing surface, copy, timing, or feedback changes.
 
-When the direction is chosen:
+Completion criterion: the user has seen the relevant experience, mockup feedback is reflected in the chosen direction, and mockup review is recorded as confirmed for user-facing work.
 
-1. Use the repo's plan conventions from `AGENTS.md`.
-2. Put implementation plans in `plans/` unless the user or existing artifact uses a more specific accepted location.
-3. Include source context, chosen direction, explicit non-goals, target file map, task checklist, verification, review gates, and handoff instructions.
-4. Plan one chosen path only. Do not preserve rejected options as parallel implementation tracks.
-5. Make assumptions and deferred decisions visible.
+## 4. Write or update the plan
 
-If the plan already exists, patch it instead of rewriting from scratch unless it is structurally unusable.
+Read `references/plan-format.md`, then create or patch the plan in `plans/`. Preserve only the chosen path; do not leave rejected options as parallel implementation tracks.
 
-## Step 5: Claude Review Loop
+Completion criterion: the plan contains concrete files or repository surfaces, scope boundaries, ordered tasks, automated and manual verification, review gates, and an execution handoff.
 
-Use `claude-plan-review` for second-opinion review when available.
+## 5. Run one counterpart review lane
 
-After Claude returns:
+Select the counterpart reviewer according to `AGENTS.md`. The reviewer is advisory and read-only. A reviewer session must not invoke another reviewer.
 
-1. Read the generated review.
-2. Classify each material finding:
-   - `accepted`: plan should change
-   - `rejected`: finding is not supported by local evidence or conflicts with product intent
-   - `deferred`: valid but out of scope for this plan
-   - `needs user decision`: product/risk choice Codex should not make alone
-3. Patch accepted findings into the plan.
-4. Record rejected/deferred findings briefly in the plan or handoff only when future implementers need the context.
-5. Ask the user only for `needs user decision` findings.
+Maintain a findings ledger for material findings:
 
-Rerun Claude only when:
+| ID | Type | Evidence | Decision | Plan change | Revalidation |
+| --- | --- | --- | --- | --- | --- |
 
-- a blocker finding caused material plan changes
-- the review found multiple concrete implementation traps
-- the user asks for another pass
+Classify `Type` as `defect`, `tradeoff`, or `scope/product decision`. Classify `Decision` as `accepted`, `rejected`, `deferred`, or `needs user decision`.
 
-Do not rerun Claude just to get a nicer approval sentence after small wording changes.
+- Accept technical defects only after verifying them against the repository.
+- Never silently accept a product, scope, architecture, or risk tradeoff on the user's behalf.
+- Rerun the counterpart only after material blocker-driven changes, multiple concrete implementation traps, or an explicit user request. Do not rerun for a cleaner approval sentence.
 
-## Step 6: Clean Handoff
+Completion criterion: every material finding is classified, supported or rejected by evidence, and reflected in the plan or an explicit open decision.
 
-The loop is complete when:
+## 6. Confirm the designed user journey
 
-- the chosen direction is explicit
-- blocking review findings are fixed or converted into explicit user decisions
-- the plan has concrete file paths, verification, and review gates
-- remaining risks are named without hiding them
-- the next execution path is clear
+After the plan and counterpart findings are reconciled, translate the chosen design back into the experience the user will actually have. Add or update the plan's **Designed user journey** section, then present the same journey to the user for explicit confirmation.
 
-End with:
+Describe the journey from the user's perspective, not as an implementation checklist:
+
+1. actor and entry condition
+2. ordered user-visible steps, decisions, and system responses
+3. important loading, empty, error, fallback, and recovery states
+4. meaningful variants such as entitlement, device, prior state, or user choice
+5. completion state and what the user sees or can do next
+
+Link the reviewed mockups or screenshots for every user-facing change and ensure the narrated journey matches them. Keep invisible backend work outside the journey unless it changes timing, feedback, trust, or available actions. For a feature with no end-user surface, present the equivalent operator or integration journey and state explicitly that no end-user journey changes.
+
+Ask whether this journey exactly matches the user's intent. A general approval given before this walkthrough does not count as journey sign-off. Do not hand off to implementation while sign-off is pending.
+
+If the user corrects the journey:
+
+- update the journey, plan tasks, acceptance criteria, and verification together
+- return to counterpart review only when the correction materially changes architecture, data flow, scope, risk, or earlier review assumptions
+- present the revised journey again and obtain explicit confirmation
+
+Completion criterion: the plan records the exact confirmed journey and marks user-journey sign-off as confirmed; no implementation-relevant journey assumption remains implicit.
+
+## 7. Hand off cleanly
+
+The loop is done when the chosen direction is explicit, blockers are resolved or exposed as user decisions, required mockups have been reviewed, the designed user journey has explicit sign-off, the plan is executable, and verification is checkable.
+
+Report:
 
 - plan path
-- review file path, if any
-- accepted/rejected/deferred findings summary
-- unresolved decisions or risks
-- recommended next skill or command
-- whether to use a worktree, Goal mode, subagents, or sequential execution
+- review artifact path, if intentionally retained
+- accepted, rejected, deferred, and decision-required findings
+- mockup review status and selected artifact or direction
+- user-journey sign-off status and any corrections incorporated
+- residual risks
+- recommended `implementation-loop` kickoff
 
-## Goal Mode Guidance
-
-Use Goal mode for execution after the plan is hardened, not for early brainstorming.
-
-Before any plan implementation edits, create or restate an implementation goal contract. A short user message such as "good, implement", "go", or "do subagent-driven implementation" after plan approval is not enough by itself; treat it as permission to start the implementation kickoff, then anchor the work.
-
-Good goal shape:
-
-```text
-/goal Implement <plan-path> in a repo-local worktree. Keep the plan checklist updated, preserve unrelated changes, run the listed verification, run autoreview after checks, and stop before commit/push/PR for explicit approval.
-```
-
-If Goal mode is available, set this as the active goal before edits. If the current surface cannot set a formal goal, print the contract under `Implementation Goal Contract` and follow it as the controlling objective.
-
-The implementation kickoff must include:
-
-- plan path and current branch/worktree
-- whether a formal goal is active, or the fallback contract text
-- branch-gate decision and dirty-state classification
-- execution mode: sequential, subagent-driven, or mixed
-- subagent write scopes, if any
-- required final checks from the plan
-- explicit stop line before staging, committing, pushing, PR creation, merge, deploy, or cleanup
-
-If the goal is still fuzzy, continue the hardening loop instead of starting Goal mode.
-
-## Orchestrator Guidance
-
-For large initiatives, recommend one orchestrator thread. The orchestrator owns decisions, plan status, review findings, branches/worktrees, verification state, and final handoff.
-
-The orchestrator may spawn subagents in the same working session for bounded tasks, or ask the user to create separate Codex threads for longer independent streams. Prefer subagents for read-heavy exploration, review lenses, and disjoint implementation slices. Avoid defaulting to subagents for small or tightly coupled work.
-
-Subagent prompts should define:
-
-- one concrete question or owned file slice
-- whether the subagent may edit files
-- what summary to return
-- what evidence or file references are required
-
-## User Testing And Quality Suite Follow-up
-
-If the plan affects user-facing behavior, recommend a separate quality loop when appropriate:
-
-- browser or Chrome-based simulated user review
-- Computer Use only when full desktop interaction is required
-- fixed chat/recommendation prompt set
-- rubric-based pass/review/fail report
-- regression comparison before shipping broad answer-behavior changes
-
-Do not bundle the full prompt quality suite into this planning loop unless the user's task is specifically to build that suite.
+Do not create a formal Goal merely because the plan is ready. Goal selection belongs to `implementation-loop` and remains opt-in.
