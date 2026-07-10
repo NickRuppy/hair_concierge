@@ -3,18 +3,11 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { format } from "date-fns"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import type {
-  Message,
-  CitationSource,
-  Product,
-  HairProfile,
-  ProductLookupSelectionContext,
-} from "@/lib/types"
+import type { Message, Product, HairProfile, ProductLookupSelectionContext } from "@/lib/types"
 import type { Components } from "react-markdown"
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { CitationBadge } from "./citation-badge"
 import { ProductPopover } from "./product-popover"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { ProductCard } from "./product-card"
@@ -25,66 +18,6 @@ import type {
   ProductIntakeOfferState,
   ProductLookupClarificationState,
 } from "@/lib/chat/product-lookup-selection-ui"
-
-/**
- * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
- * in order of first appearance in the text, and remaps sources to match.
- */
-function renumberCitations(
-  content: string,
-  sources: CitationSource[],
-): { content: string; sources: CitationSource[] } {
-  if (sources.length === 0) return { content, sources }
-
-  const validIndices = new Set(sources.map((s) => s.index))
-  const sourceByOldIndex = new Map(sources.map((s) => [s.index, s]))
-
-  // Collect first-appearance order of valid citation indices
-  const seen = new Set<number>()
-  const appearanceOrder: number[] = []
-  const regex = /\[(\d+)\]/g
-  let match: RegExpExecArray | null
-  while ((match = regex.exec(content)) !== null) {
-    const idx = parseInt(match[1], 10)
-    if (validIndices.has(idx) && !seen.has(idx)) {
-      seen.add(idx)
-      appearanceOrder.push(idx)
-    }
-  }
-
-  if (appearanceOrder.length === 0) return { content, sources }
-
-  // Check if already in order
-  const isAlreadyOrdered = appearanceOrder.every((idx, i) => idx === i + 1)
-  if (isAlreadyOrdered && appearanceOrder.length === sources.length) {
-    return { content, sources }
-  }
-
-  // Build old -> new mapping
-  const oldToNew = new Map<number, number>()
-  appearanceOrder.forEach((oldIdx, i) => oldToNew.set(oldIdx, i + 1))
-
-  // Replace citations in content
-  const renumberedContent = content.replace(/\[(\d+)\]/g, (full, d) => {
-    const oldIdx = parseInt(d, 10)
-    const newIdx = oldToNew.get(oldIdx)
-    return newIdx !== undefined ? `[${newIdx}]` : full
-  })
-
-  // Remap referenced sources, then append unreferenced ones
-  const remappedSources: CitationSource[] = appearanceOrder.map((oldIdx, i) => ({
-    ...sourceByOldIndex.get(oldIdx)!,
-    index: i + 1,
-  }))
-  let nextIndex = remappedSources.length + 1
-  for (const s of sources) {
-    if (!oldToNew.has(s.index)) {
-      remappedSources.push({ ...s, index: nextIndex++ })
-    }
-  }
-
-  return { content: renumberedContent, sources: remappedSources }
-}
 
 interface ChatMessageProps {
   message: Message
@@ -99,34 +32,6 @@ interface ChatMessageProps {
   productLookupClarificationState?: ProductLookupClarificationState | null
   productIntakeOfferState?: ProductIntakeOfferState | null
   onProductIntakeSubmitted?: (patch: ProductIntakeSubmissionPatch) => void
-}
-
-/**
- * Splits a text string on [N] markers and interleaves CitationBadge components
- * for any N that exists in the sourceMap.
- */
-function renderWithCitations(text: string, sourceMap: Map<number, CitationSource>): ReactNode[] {
-  const parts = text.split(/\[(\d+)\]/g)
-  const result: ReactNode[] = []
-
-  for (let i = 0; i < parts.length; i++) {
-    if (i % 2 === 0) {
-      // Regular text segment
-      if (parts[i]) result.push(parts[i])
-    } else {
-      // Captured digit — check if it's a known source
-      const idx = parseInt(parts[i], 10)
-      const source = sourceMap.get(idx)
-      if (source) {
-        result.push(<CitationBadge key={`cite-${i}`} source={source} />)
-      } else {
-        // Unknown index — render as plain text
-        result.push(`[${parts[i]}]`)
-      }
-    }
-  }
-
-  return result
 }
 
 /**
@@ -202,26 +107,23 @@ function renderWithProductMentions(
 }
 
 /**
- * Processes React children, replacing string segments that contain [N] citation
- * markers with CitationBadge components, then product mentions.
+ * Processes React children and wraps product mentions.
  * Custom markdown components call this at their own boundary, so React elements
  * are left alone to avoid re-processing product mention buttons inside bold or
  * italic text.
  */
 function processChildren(
   children: ReactNode,
-  sourceMap: Map<number, CitationSource>,
   productMap: Map<string, Product>,
   hairProfile: HairProfile | null,
   onProductClick?: (product: Product) => void,
 ): ReactNode {
   if (typeof children === "string") {
-    const cited = renderWithCitations(children, sourceMap)
-    return renderWithProductMentions(cited, productMap, hairProfile, onProductClick)
+    return renderWithProductMentions([children], productMap, hairProfile, onProductClick)
   }
   if (Array.isArray(children)) {
     return children.map((child, i) => {
-      const processed = processChildren(child, sourceMap, productMap, hairProfile, onProductClick)
+      const processed = processChildren(child, productMap, hairProfile, onProductClick)
       // Wrap arrays in a span for valid React keys
       if (Array.isArray(processed)) {
         return <span key={i}>{processed}</span>
@@ -254,16 +156,10 @@ export function ChatMessage({
 }: ChatMessageProps) {
   const isUser = message.role === "user"
 
-  const { content: renumberedContent, sources } = useMemo(
-    () => renumberCitations(message.content ?? "", message.rag_context?.sources ?? []),
-    [message.content, message.rag_context?.sources],
-  )
   const displayContent = useMemo(
-    () => (isUser ? renumberedContent : normalizeAssistantMarkdown(renumberedContent)),
-    [isUser, renumberedContent],
+    () => (isUser ? (message.content ?? "") : normalizeAssistantMarkdown(message.content ?? "")),
+    [isUser, message.content],
   )
-
-  const sourceMap = new Map(sources.map((s) => [s.index, s]))
 
   // Build product name -> Product map for inline mentions
   const products: Product[] = message.product_recommendations ?? []
@@ -298,14 +194,12 @@ export function ChatMessage({
     })
   }
 
-  const hasEnhancements = sources.length > 0 || productMap.size > 0
+  const hasEnhancements = productMap.size > 0
 
   const renderInline = (children: ReactNode) =>
-    hasEnhancements
-      ? processChildren(children, sourceMap, productMap, hairProfile, onProductClick)
-      : children
+    hasEnhancements ? processChildren(children, productMap, hairProfile, onProductClick) : children
 
-  // Build custom markdown components that inject citation badges + product mentions
+  // Build custom markdown components that inject product mentions.
   const markdownComponents: Components = {
     p({ children }) {
       return <p className="mb-3 whitespace-pre-line last:mb-0">{renderInline(children)}</p>
@@ -366,35 +260,18 @@ export function ChatMessage({
           </div>
         )}
 
-        {/* Sources footer */}
-        {sources.length > 0 && (
-          <details className="type-caption text-muted-foreground px-1">
-            <summary className="cursor-pointer hover:text-foreground transition-colors">
-              {sources.length} {sources.length === 1 ? "Quelle" : "Quellen"}
-            </summary>
-            <ul className="mt-1.5 space-y-0.5 pl-4 list-disc">
-              {sources.map((s) => (
-                <li key={s.index}>
-                  [{s.index}] {s.label}
-                  {s.source_name ? ` \u2013 ${s.source_name}` : ""}
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
-
-        {message.rag_context?.product_intake_offer &&
-        !message.rag_context?.product_lookup_clarification &&
+        {message.message_context?.product_intake_offer &&
+        !message.message_context?.product_lookup_clarification &&
         !isUser ? (
           <ProductIntakeCard
-            offer={message.rag_context.product_intake_offer}
+            offer={message.message_context.product_intake_offer}
             conversationId={message.conversation_id}
             sourceMessageId={message.id}
             persistedState={productIntakeOfferState}
             onSubmitted={(result) =>
               onProductIntakeSubmitted?.({
                 messageId: message.id,
-                offerId: message.rag_context?.product_intake_offer?.id ?? "",
+                offerId: message.message_context?.product_intake_offer?.id ?? "",
                 submissionId: result.submissionId,
                 status: result.status,
               })
@@ -402,9 +279,9 @@ export function ChatMessage({
           />
         ) : null}
 
-        {message.rag_context?.product_lookup_clarification && !isUser ? (
+        {message.message_context?.product_lookup_clarification && !isUser ? (
           <ProductLookupClarificationCard
-            clarification={message.rag_context.product_lookup_clarification}
+            clarification={message.message_context.product_lookup_clarification}
             conversationId={message.conversation_id}
             assistantMessageId={message.id}
             selectionDisabled={isStreamingMessage}
@@ -417,7 +294,7 @@ export function ChatMessage({
               onProductIntakeSubmitted?.({
                 messageId: message.id,
                 offerId:
-                  message.rag_context?.product_lookup_clarification?.none_action
+                  message.message_context?.product_lookup_clarification?.none_action
                     .product_intake_offer.id ?? "",
                 submissionId: result.submissionId,
                 status: result.status,
@@ -429,7 +306,7 @@ export function ChatMessage({
         {/* Product recommendation cards */}
         {products.length > 0 &&
           onProductClick &&
-          !message.rag_context?.product_lookup_clarification && (
+          !message.message_context?.product_lookup_clarification && (
             <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5 pt-1">
               {visibleProducts.map((p, i) => (
                 <div

@@ -612,7 +612,7 @@ async function main() {
   }
 
   console.log("=".repeat(60))
-  console.log("RAG Markdown Ingestion Pipeline")
+  console.log("Knowledge Base Markdown Ingestion Pipeline")
   console.log(dryRun ? "(DRY RUN - no embedding or storage)" : "")
   if (skipContext) console.log("(SKIP CONTEXT - no contextual prefix generation)")
   console.log("=".repeat(60))

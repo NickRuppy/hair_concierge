@@ -5,6 +5,7 @@ import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
 import type { Product } from "@/lib/types"
+import { normalizeMessageContextRows } from "@/lib/chat-runtime/message-context"
 
 type MessageWithProductRecommendations = {
   product_recommendations?: Product[] | null
@@ -82,7 +83,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
 
-  const messagesWithProductLines = await attachProductLineNamesToMessages(messages || [])
+  const normalizedMessages = normalizeMessageContextRows(messages || []) as Array<
+    MessageWithProductRecommendations & Record<string, unknown>
+  >
+  const messagesWithProductLines = await attachProductLineNamesToMessages(normalizedMessages)
 
   return NextResponse.json({ conversation, messages: messagesWithProductLines })
 }

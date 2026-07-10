@@ -48,7 +48,6 @@ export interface FailedTurnDebugArtifact {
   langfuse_trace_url: string | null
   done_data: Record<string, unknown> | null
   products_count: number
-  sources_count: number
   server: EvalServerInfo
   trace_available: boolean
   trace_error: string | null
@@ -204,7 +203,6 @@ export function buildFailedTurnDebugArtifact(params: {
     langfuse_trace_url: params.sseResult.langfuse_trace_url,
     done_data: params.sseResult.done_data,
     products_count: params.sseResult.products.length,
-    sources_count: params.sseResult.sources.length,
     server: params.serverInfo,
     trace_available: Boolean(trace),
     trace_error: params.traceError ?? null,

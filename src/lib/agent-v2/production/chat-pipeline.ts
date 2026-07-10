@@ -103,7 +103,6 @@ import type {
   ChatPromptSnapshot,
   ClassificationResult,
   ConversationTurnStateTransition,
-  EnrichedCitationSource,
   HairProfile,
   IntentType,
   LangfusePromptReference,
@@ -143,14 +142,10 @@ export interface PipelineResult {
   conversationId: string
   intent: IntentType
   matchedProducts: Product[]
-  sources: EnrichedCitationSource[]
   routerDecision: RouterDecision
   conversationStateTransition: ConversationTurnStateTransition
   categoryDecision?: ChatCategoryDecision
   engineTrace?: import("@/lib/types").RecommendationEngineTrace
-  retrievalSummary: {
-    final_context_count: number
-  }
   debugTrace: PipelineTraceDraft
   visibleFailure?: boolean
   answerMode: AgentV2AnswerMode
@@ -520,7 +515,7 @@ function resolveApprovedIntakeReviewContexts(
   const approvedProductIdsBySubmissionId = new Map<string, string>()
   for (const message of history) {
     if (message.role !== "assistant") continue
-    const review = message.rag_context?.product_intake_review
+    const review = message.message_context?.product_intake_review
     if (!review?.submission_id || !review.approved_product_id) continue
     if (review.status !== "approved" && review.status !== "matched_existing") continue
     approvedProductIdsBySubmissionId.set(review.submission_id, review.approved_product_id)
@@ -1617,16 +1612,6 @@ export async function runAgentV2ProductionPipeline(
         : [],
     hair_profile_snapshot: userContext.profile,
     memory_context: memoryContext.promptContext,
-    retrieval_debug: {
-      source_types: [],
-      metadata_filter: null,
-      subqueries: [],
-      candidate_count_before_rerank: 0,
-      reranked_count: 0,
-      fallback_used: false,
-    },
-    retrieval_count: 0,
-    retrieved_chunks: [],
     should_plan_routine: answer.answer_mode === "routine",
     category_decision: exposedCategoryDecision,
     engine_trace: exposedEngineTrace,
@@ -1658,7 +1643,6 @@ export async function runAgentV2ProductionPipeline(
       history_load_ms: historyLoadMs,
       router_ms: 0,
       conversation_create_ms: 0,
-      retrieval_ms: 0,
       product_matching_ms: 0,
       prompt_build_ms: 0,
       stream_setup_ms: 0,
@@ -1674,11 +1658,7 @@ export async function runAgentV2ProductionPipeline(
     conversationId,
     intent,
     matchedProducts,
-    sources: [],
     conversationStateTransition,
-    retrievalSummary: {
-      final_context_count: 0,
-    },
     routerDecision,
     categoryDecision: exposedCategoryDecision,
     engineTrace: exposedEngineTrace,

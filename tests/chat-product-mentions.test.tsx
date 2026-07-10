@@ -54,7 +54,7 @@ function createAssistantMessage(content: string, products: Product[]): Message {
     role: "assistant",
     content,
     product_recommendations: products,
-    rag_context: null,
+    message_context: null,
     token_usage: null,
     langfuse_trace_id: null,
     langfuse_trace_url: null,
@@ -288,10 +288,21 @@ test("assistant inline numbered steps render as a real ordered list", () => {
   assert.match(html, /<strong[^>]*>Leave-in:/)
 })
 
+test("assistant bracketed numbers stay plain text without citation UI", () => {
+  const html = renderToStaticMarkup(
+    <ChatMessage
+      message={createAssistantMessage("Nutze an Schritt [1] nur wenig Produkt.", [])}
+      hairProfile={null}
+    />,
+  )
+
+  assert.match(html, /Schritt \[1\]/)
+  assert.doesNotMatch(html, /<details|Quelle|citation/i)
+})
+
 test("assistant product lookup clarification renders an enabled structured selection action", () => {
   const message = createAssistantMessage("Meinst du dieses Produkt?", [])
-  message.rag_context = {
-    sources: [],
+  message.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
 
@@ -306,8 +317,7 @@ test("assistant product lookup clarification renders an enabled structured selec
 
 test("assistant product lookup clarification disables selection on the streaming message", () => {
   const message = createAssistantMessage("Meinst du dieses Produkt?", [])
-  message.rag_context = {
-    sources: [],
+  message.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
 
@@ -322,8 +332,7 @@ test("assistant product lookup clarification disables selection on the streaming
 test("assistant product lookup clarification locks after a later matching selection", () => {
   const clarificationMessage = createAssistantMessage("Meinst du dieses Produkt?", [])
   clarificationMessage.id = "message-clarification-1"
-  clarificationMessage.rag_context = {
-    sources: [],
+  clarificationMessage.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
 
@@ -332,8 +341,7 @@ test("assistant product lookup clarification locks after a later matching select
     [],
   )
   selectionMessage.id = "message-selection-1"
-  selectionMessage.rag_context = {
-    sources: [],
+  selectionMessage.message_context = {
     product_lookup_selection: {
       source: "product_lookup_clarification",
       clarification_id: "clarification-1",
@@ -491,8 +499,7 @@ test("assistant product lookup clarification renders locked submitted intake sta
 test("product lookup clarification state helper resolves intake reviews by structured identity", () => {
   const clarificationMessage = createAssistantMessage("Meinst du dieses Produkt?", [])
   clarificationMessage.id = "message-clarification-1"
-  clarificationMessage.rag_context = {
-    sources: [],
+  clarificationMessage.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
 
@@ -501,8 +508,7 @@ test("product lookup clarification state helper resolves intake reviews by struc
     [],
   )
   reviewMessage.id = "message-review-1"
-  reviewMessage.rag_context = {
-    sources: [],
+  reviewMessage.message_context = {
     product_intake_review: {
       submission_id: "submission-syoss-intense-volume",
       status: "approved",
@@ -529,8 +535,7 @@ test("product intake offer state helper marks submitted offers and resolves revi
     [],
   )
   offerMessage.id = "message-offer-1"
-  offerMessage.rag_context = {
-    sources: [],
+  offerMessage.message_context = {
     product_intake_offer: createProductIntakeOffer({
       submission_id: "submission-1",
       submitted_status: "pending_review",
@@ -547,8 +552,7 @@ test("product intake offer state helper marks submitted offers and resolves revi
     [],
   )
   reviewMessage.id = "message-review-1"
-  reviewMessage.rag_context = {
-    sources: [],
+  reviewMessage.message_context = {
     product_intake_review: {
       submission_id: "submission-1",
       status: "approved",
@@ -570,8 +574,7 @@ test("unsubmitted product intake offers stay editable and do not trigger review 
     [],
   )
   offerMessage.id = "message-offer-1"
-  offerMessage.rag_context = {
-    sources: [],
+  offerMessage.message_context = {
     product_intake_offer: createProductIntakeOffer(),
   }
 
@@ -586,8 +589,7 @@ test("successful intake submission patches client message state so review pollin
     [],
   )
   offerMessage.id = "message-offer-1"
-  offerMessage.rag_context = {
-    sources: [],
+  offerMessage.message_context = {
     product_intake_offer: createProductIntakeOffer(),
   }
 
@@ -600,7 +602,7 @@ test("successful intake submission patches client message state so review pollin
     status: "pending_review",
   })
 
-  const patchedOffer = patched[0]?.rag_context?.product_intake_offer
+  const patchedOffer = patched[0]?.message_context?.product_intake_offer
   assert.equal(patchedOffer?.submission_id, "submission-1")
   assert.equal(patchedOffer?.submitted_status, "pending_review")
   assert.equal(hasPendingProductIntakeReview(patched), true)
@@ -610,13 +612,12 @@ test("successful intake submission patches client message state so review pollin
 test("intake submission patch reaches offers nested in clarification cards", () => {
   const clarificationMessage = createAssistantMessage("Meinst du dieses Produkt?", [])
   clarificationMessage.id = "message-clarification-1"
-  clarificationMessage.rag_context = {
-    sources: [],
+  clarificationMessage.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
   const nestedOfferId =
-    clarificationMessage.rag_context.product_lookup_clarification?.none_action.product_intake_offer
-      .id
+    clarificationMessage.message_context.product_lookup_clarification?.none_action
+      .product_intake_offer.id
 
   const patched = applyProductIntakeSubmissionToMessages([clarificationMessage], {
     messageId: "message-clarification-1",
@@ -626,7 +627,7 @@ test("intake submission patch reaches offers nested in clarification cards", () 
   })
 
   const nested =
-    patched[0]?.rag_context?.product_lookup_clarification?.none_action.product_intake_offer
+    patched[0]?.message_context?.product_lookup_clarification?.none_action.product_intake_offer
   assert.equal(nested?.submission_id, "submission-2")
   assert.equal(nested?.submitted_status, "pending_review")
   assert.equal(hasPendingProductIntakeReview(patched), true)
@@ -635,8 +636,7 @@ test("intake submission patch reaches offers nested in clarification cards", () 
 test("needs-more-info repair offers with a submission id stay editable", () => {
   const offerMessage = createAssistantMessage("Wir brauchen noch eine Ergänzung.", [])
   offerMessage.id = "message-offer-repair"
-  offerMessage.rag_context = {
-    sources: [],
+  offerMessage.message_context = {
     product_intake_offer: createProductIntakeOffer({
       reason: "needs_more_info",
       submission_id: "submission-repair-1",
@@ -708,8 +708,7 @@ test("assistant product lookup clarification suppresses recommendation cards", (
   const message = createAssistantMessage("Meinst du dieses Produkt?", [
     createProduct("Balea Professional Ultimate Volume"),
   ])
-  message.rag_context = {
-    sources: [],
+  message.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
 
@@ -802,8 +801,7 @@ test("matched product intake submitted state renders compact saved copy", () => 
 
 test("product selection helper detects already streamed selection messages", () => {
   const message = createAssistantMessage("Alles klar, ich bewerte Syoss Intense Curls.", [])
-  message.rag_context = {
-    sources: [],
+  message.message_context = {
     product_lookup_selection: {
       source: "product_lookup_clarification",
       clarification_id: "clarification-1",
@@ -836,8 +834,7 @@ test("product selection helper detects already streamed selection messages", () 
 test("targeted product selection stream events do not mutate the source clarification message", () => {
   const clarificationMessage = createAssistantMessage("Welche genaue Variante meinst du?", [])
   clarificationMessage.id = "message-clarification-1"
-  clarificationMessage.rag_context = {
-    sources: [],
+  clarificationMessage.message_context = {
     product_lookup_clarification: createProductLookupClarification(),
   }
   const selectionPlaceholder = createAssistantMessage("", [])

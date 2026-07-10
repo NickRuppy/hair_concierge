@@ -10,7 +10,6 @@ import {
 import {
   INTENT_CLASSIFICATION_PROMPT,
   MEMORY_EXTRACTION_JSON_PROMPT,
-  SYSTEM_PROMPT,
   TITLE_GENERATION_PROMPT,
 } from "@/lib/chat-runtime/prompts"
 import { getLangfuseClient, getLangfusePromptLabel } from "./client"
@@ -19,10 +18,6 @@ const DEFAULT_CACHE_TTL_SECONDS = 60
 const DEFAULT_FETCH_TIMEOUT_MS = 3000
 
 export const LANGFUSE_PROMPTS = {
-  chatSystem: {
-    name: "chaarlie-chat-system",
-    fallback: SYSTEM_PROMPT,
-  },
   intentClassifier: {
     name: "chaarlie-intent-classifier",
     fallback: INTENT_CLASSIFICATION_PROMPT,

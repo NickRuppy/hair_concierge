@@ -1,5 +1,9 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { Message } from "@/lib/types"
+import {
+  normalizeMessageContextRows,
+  type PersistedMessageContextColumns,
+} from "@/lib/chat-runtime/message-context"
 
 type ConversationHistoryQueryResult = {
   data: Message[] | null
@@ -98,7 +102,11 @@ export async function loadAgentV2ProductionConversationHistory(
     throw new Error("Failed to load AgentV2 production conversation history.")
   }
 
-  return ((data as Message[]) ?? []).slice().reverse()
+  return normalizeMessageContextRows(
+    (data as Array<Message & PersistedMessageContextColumns>) ?? [],
+  )
+    .slice()
+    .reverse() as Message[]
 }
 
 export async function verifyAgentV2ProductionConversationOwnership(

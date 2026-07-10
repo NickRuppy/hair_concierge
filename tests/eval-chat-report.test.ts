@@ -11,7 +11,6 @@ const emptySseResult: SSEResult = {
   langfuse_trace_url: null,
   content: "",
   done_data: null,
-  sources: [],
   products: [],
   error: null,
   latency_ms: 0,

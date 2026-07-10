@@ -28,8 +28,6 @@ import {
   summarizeAgentV2ConversationState,
   type AgentV2ConversationStateV2,
 } from "../src/lib/agent-v2/production/persisted-session-state"
-import { buildRetrievalDebugEventData } from "../src/lib/chat-runtime/debug-trace"
-
 type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
 
 const verifyConversationOwnership = async ({
@@ -112,7 +110,7 @@ function createMessage(index: number): Message {
     role: index % 2 === 0 ? "assistant" : "user",
     content: `Message ${index}`,
     product_recommendations: null,
-    rag_context: null,
+    message_context: null,
     token_usage: null,
     langfuse_trace_id: null,
     langfuse_trace_url: null,
@@ -375,6 +373,54 @@ test("AgentV2 production conversation history loads the latest ten messages chro
       "Message 12",
     ],
   )
+})
+
+test("AgentV2 production conversation history normalizes legacy-only message context", async () => {
+  const legacyMessage = {
+    ...createMessage(2),
+    content: "Das Produkt wurde geprueft [1].",
+    message_context: null,
+    rag_context: {
+      product_intake_review: {
+        submission_id: "submission-1",
+        status: "approved",
+        approved_product_id: "product-1",
+      },
+      sources: [{ index: 1 }],
+    },
+  }
+  const fakeClient = {
+    from() {
+      return {
+        select() {
+          return {
+            eq() {
+              return {
+                order() {
+                  return {
+                    async limit() {
+                      return { data: [legacyMessage], error: null }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  const [message] = await loadAgentV2ProductionConversationHistory("conversation-1", fakeClient)
+
+  assert.equal(message.content, "Das Produkt wurde geprueft.")
+  assert.deepEqual(message.message_context?.product_intake_review, {
+    submission_id: "submission-1",
+    status: "approved",
+    approved_product_id: "product-1",
+  })
+  assert.equal("rag_context" in message, false)
+  assert.equal("sources" in (message.message_context ?? {}), false)
 })
 
 test("AgentV2 production conversation history checks ownership before loading admin-scoped messages", async () => {
@@ -843,7 +889,7 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
             role: "user",
             content: "Sensitive recent context",
             product_recommendations: null,
-            rag_context: null,
+            message_context: null,
             token_usage: null,
             langfuse_trace_id: null,
             langfuse_trace_url: null,
@@ -916,43 +962,11 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   assert.equal(result.debugTrace.user_message, "[agent_v2_user_message chars=22]")
   assert.equal(JSON.stringify(result.debugTrace.prompt).includes("Welches Shampoo passt?"), false)
   assert.equal(JSON.stringify(result.debugTrace.prompt).includes("Sensitive recent context"), false)
-  const debugEvent = buildRetrievalDebugEventData(result.debugTrace)
-  assert.equal(debugEvent.agent_v2_visible_failure, false)
-  assert.deepEqual(debugEvent.agent_v2_latency_ms, {
-    runtime: result.debugTrace.latencies_ms.agent_runtime_ms,
-    turn_gate: null,
-    model: 7,
-    tools: 1,
-    model_steps: 1,
-    tool_calls: 1,
-  })
-  assert.deepEqual(debugEvent.agent_v2_state, {
-    version: 2,
-    engine: "agent_v2_care_balance",
-    routine_thread: {
-      active: false,
-      current_layer: null,
-      visible_step_count: 0,
-    },
-    prior_product_projection_count: 1,
-    active_product_context_count: 0,
-    active_resolved_product: {
-      product_id: null,
-      category: null,
-    },
-    session_memory_count: 0,
-    changed_fields: ["agent_v2"],
-  })
-  assert.equal(JSON.stringify(debugEvent).includes("prior_selected_product_projections"), false)
-  const failedDebugEvent = buildRetrievalDebugEventData({
-    ...result.debugTrace,
-    agent_v2_trace: {
-      ...result.debugTrace.agent_v2_trace!,
-      failure_stage: "repair_failed",
-    },
-  })
-  assert.equal(failedDebugEvent.agent_v2_visible_failure, true)
-  assert.equal(failedDebugEvent.visible_failure, true)
+  assert.equal(result.debugTrace.agent_v2_trace?.failure_stage, null)
+  assert.equal(
+    JSON.stringify(result.debugTrace.agent_v2_trace).includes("prior_selected_product_projections"),
+    false,
+  )
 })
 
 test("AgentV2 select-products state stays tied to the overlapping tool call result", async () => {
@@ -1631,8 +1645,6 @@ test("/api/chat persists visible boundary turns while skipping AgentV2 state and
           stream: createTextStream(boundaryAnswer),
           intent: "general_chat",
           matchedProducts: [],
-          sources: [],
-          retrievalSummary: { final_context_count: 0 },
           routerDecision,
           conversationStateTransition: debugTrace.conversation_state,
           categoryDecision: undefined,
@@ -1641,13 +1653,12 @@ test("/api/chat persists visible boundary turns while skipping AgentV2 state and
           visibleFailure: false,
           answerMode: "domain_boundary",
         }),
-        buildAssistantDecisionContext: () => null,
+        buildAssistantMessageContext: () => null,
         buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
         extractConversationMemory: (...args: unknown[]) => {
           memoryExtractionCalls.push(args)
           return Promise.resolve()
         },
-        buildRetrievalDebugEventData: () => ({ route_debug: true }),
         finalizeChatTurnTrace: (
           trace: Record<string, unknown>,
           params: Record<string, unknown>,
@@ -1962,7 +1973,7 @@ test("AgentV2 production pipeline treats any runtime failure stage as visible fa
   assert.equal(result.engineTrace, undefined)
   const nextState = result.conversationStateTransition.next_state as AgentV2ConversationStateV2
   assert.deepEqual(nextState.agent_v2.prior_selected_product_projections, [])
-  assert.equal(buildRetrievalDebugEventData(result.debugTrace).agent_v2_visible_failure, true)
+  assert.equal(result.debugTrace.agent_v2_trace?.failure_stage, "repair_failed")
 })
 
 test("AgentV2 product cards do not fall back to unrelated current-turn products for prior-only ids", () => {
@@ -2419,7 +2430,7 @@ test("AgentV2 production pipeline resolves pending intake context from approved 
             id: "m1",
             role: "user",
             content: "ich nutze den NEQI Conditioner Diamond Glass, passt der zu mir?",
-            rag_context: null,
+            message_context: null,
             created_at: "2026-07-05T19:27:13.000Z",
           },
           {
@@ -2428,7 +2439,7 @@ test("AgentV2 production pipeline resolves pending intake context from approved 
             role: "assistant",
             content:
               "Ich habe **NEQI Diamond Glass Conditioner** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein.",
-            rag_context: null,
+            message_context: null,
             created_at: "2026-07-05T19:27:14.000Z",
           },
           {
@@ -2437,8 +2448,7 @@ test("AgentV2 production pipeline resolves pending intake context from approved 
             role: "assistant",
             content:
               "Gute Nachrichten: Wir haben **NEQI Diamond Glass Conditioner** geprüft und in deiner Routine verknüpft.",
-            rag_context: {
-              sources: [],
+            message_context: {
               product_intake_review: {
                 submission_id: "sub-1",
                 status: "approved",

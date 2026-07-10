@@ -22,7 +22,7 @@ import {
 import {
   buildAgentV2ProductIntakeReviewStateTransition,
   buildProductIntakeReviewMessage,
-  buildProductIntakeReviewRagContext,
+  buildProductIntakeReviewMessageContext,
 } from "../src/lib/product-intake/notifications"
 import {
   createDefaultAgentV2ConversationState,
@@ -1092,7 +1092,7 @@ test("review notifications include actionable missing-info and rejection reasons
 })
 
 test("needs-more-info notifications include a prefilled follow-up intake offer", () => {
-  const context = buildProductIntakeReviewRagContext(
+  const context = buildProductIntakeReviewMessageContext(
     notificationSubmission({
       status: "needs_more_info",
       approved_product_id: null,
@@ -1121,7 +1121,7 @@ test("needs-more-info notifications include a prefilled follow-up intake offer",
 })
 
 test("needs-more-info notifications ignore malformed missing fields", () => {
-  const context = buildProductIntakeReviewRagContext(
+  const context = buildProductIntakeReviewMessageContext(
     notificationSubmission({
       status: "needs_more_info",
       approved_product_id: null,

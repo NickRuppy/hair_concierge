@@ -173,38 +173,7 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     expect(decision.policy_overrides).toEqual([])
   })
 
-  test("5. SSE done event shape includes router fields", async ({ page }) => {
-    // Verify the SSE event shape by checking the deployed endpoint responds with
-    // the expected event types (requires auth — skip if not available)
-    const response = await page.goto("/auth", { waitUntil: "networkidle" })
-    // This test validates the event type union at compile time
-    type SSEEventType =
-      | "conversation_id"
-      | "content_delta"
-      | "product_recommendations"
-      | "sources"
-      | "confidence"
-      | "retrieval_debug"
-      | "done"
-      | "error"
-
-    const validTypes: SSEEventType[] = [
-      "conversation_id",
-      "content_delta",
-      "product_recommendations",
-      "sources",
-      "confidence",
-      "retrieval_debug",
-      "done",
-      "error",
-    ]
-
-    expect(validTypes).toContain("confidence")
-    expect(validTypes).toContain("retrieval_debug")
-    expect(validTypes.length).toBe(8)
-  })
-
-  test("6. Router constants are within expected ranges", async () => {
+  test("5. Router constants are within expected ranges", async () => {
     // Validate that the router constants are sensible
     const ROUTER_CONFIDENCE_THRESHOLD = 0.72
     const ROUTER_MIN_SLOTS_PRODUCT = 2
@@ -226,7 +195,7 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     expect(ROUTER_SLOT_KEYS.length).toBe(5)
   })
 
-  test("7. Clarification question templates are German and non-empty", async () => {
+  test("6. Clarification question templates are German and non-empty", async () => {
     // Verify question templates exist and are in German
     const questions: Record<string, string> = {
       problem: "Was genau ist dein Anliegen? Beschreib mir mal, was dich an deinen Haaren stört.",
@@ -244,7 +213,7 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     }
   })
 
-  test("8. Router policy rules — vague message triggers clarification (contract)", async () => {
+  test("7. Router policy rules — vague message triggers clarification (contract)", async () => {
     // Contract test: a vague message with low slot fill should trigger clarification
     const vagueClassification = {
       intent: "product_recommendation" as const,
@@ -275,7 +244,7 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     expect(vagueClassification.needs_clarification).toBe(true)
   })
 
-  test("9. Router policy rules — detailed message skips clarification (contract)", async () => {
+  test("8. Router policy rules — detailed message skips clarification (contract)", async () => {
     // Contract test: a detailed message with rich context should NOT trigger clarification
     const detailedClassification = {
       intent: "product_recommendation" as const,

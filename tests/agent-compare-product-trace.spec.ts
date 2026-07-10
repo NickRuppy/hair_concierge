@@ -602,24 +602,6 @@ test("judgment route accepts newer leave-in and mask supported claim fields", as
     assert.deepEqual(await maskResponse.json(), { ok: true })
   }))
 
-test("real-user current comparison is marked ephemeral in debug output", async () => {
-  const { buildCurrentDebugLines } = await import("../src/lib/agent/compare/current-disabled")
-
-  const lines = buildCurrentDebugLines(
-    {
-      sources: [],
-      matchedProducts: [],
-      routerDecision: {
-        retrieval_mode: "hybrid",
-        response_mode: "answer_direct",
-      },
-    } as never,
-    { ephemeral: true },
-  )
-
-  assert.ok(lines.includes("ephemeral: yes"))
-})
-
 test("compare runner projects full CareBalance context for product traces", async () => {
   const {
     buildRoutineToolInputForCompare,

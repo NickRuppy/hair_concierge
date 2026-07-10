@@ -1423,14 +1423,14 @@ test("chat route persists pending product context after product intake submissio
   assert.equal(transition.next_state?.agent_v2?.active_resolved_product_context, null)
 })
 
-test("chat route persists submission linkage into the offer message rag context", async () => {
+test("chat route upgrades a legacy offer row with atomic dual-written submission linkage", async () => {
   const fake = createFakeRepository({ conversationIds: [CONVERSATION_ID] })
   const MESSAGE_ID = "0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0"
   const messageRow = {
     id: MESSAGE_ID,
     conversation_id: CONVERSATION_ID,
+    message_context: null,
     rag_context: {
-      sources: [],
       product_intake_offer: {
         id: "offer-1",
         source: "chat",
@@ -1511,11 +1511,12 @@ test("chat route persists submission linkage into the offer message rag context"
 
   assert.equal(response.status, 202)
   assert.equal(messageUpdates.length, 1)
-  const updatedRag = messageUpdates[0]?.rag_context as {
+  const updatedContext = messageUpdates[0]?.message_context as {
     product_intake_offer?: { submission_id?: string; submitted_status?: string }
   }
-  assert.equal(updatedRag?.product_intake_offer?.submission_id, body.submission.id)
-  assert.equal(updatedRag?.product_intake_offer?.submitted_status, "pending_review")
+  assert.equal(updatedContext?.product_intake_offer?.submission_id, body.submission.id)
+  assert.equal(updatedContext?.product_intake_offer?.submitted_status, "pending_review")
+  assert.deepEqual(messageUpdates[0]?.rag_context, messageUpdates[0]?.message_context)
 })
 
 test("route handler returns controlled client error for wrong-user upload paths", async () => {

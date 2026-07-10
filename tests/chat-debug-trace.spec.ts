@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test"
 import {
   buildPipelineTraceDraft,
-  buildRetrievalDebugEventData,
   finalizeChatTurnTrace,
   projectAgenticToolLoopTraceForApp,
   summarizeEngineTraceForLangfuse,
@@ -13,7 +12,6 @@ import {
 } from "../src/lib/recommendation-engine/chat"
 import { summarizeAgentV2TraceForLangfuse } from "../src/lib/agent-v2/production/langfuse-observability"
 import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
-import type { RetrievedChunk } from "../src/lib/chat-runtime/debug-trace"
 import type {
   AgenticToolLoopTrace,
   ChatPromptSnapshot,
@@ -331,26 +329,6 @@ function createRouterDecision(overrides: Partial<RouterDecision> = {}): RouterDe
   }
 }
 
-function createRetrievedChunk(overrides: Partial<RetrievedChunk> = {}): RetrievedChunk {
-  return {
-    id: "chunk-1",
-    source_type: "book",
-    source_name: "Routine Kapitel",
-    chunk_index: 0,
-    content: "OWC ist eine Wash-Day-Technik zum Schutz der Laengen vor der Waesche.",
-    metadata: { topic: "owc" },
-    token_count: 20,
-    created_at: "2026-04-10T00:00:00.000Z",
-    similarity: 0.81,
-    weighted_similarity: 0.88,
-    retrieval_path: "hybrid",
-    dense_score: 0.79,
-    lexical_score: 12,
-    fused_score: 0.45,
-    ...overrides,
-  }
-}
-
 function createProduct(overrides: Partial<Product> = {}): Product {
   return {
     id: "product-1",
@@ -511,7 +489,7 @@ function createConversationStateTransition(): ConversationStateTransition {
 }
 
 test.describe("Chat debug trace", () => {
-  test("builds a draft with retrieval and matching details", () => {
+  test("builds a draft with matching details and no retrieval artifact", () => {
     const draft = buildPipelineTraceDraft({
       request_id: "req-1",
       started_at: "2026-04-10T10:00:00.000Z",
@@ -526,16 +504,6 @@ test.describe("Chat debug trace", () => {
       clarification_questions: [],
       hair_profile_snapshot: createProfile(),
       memory_context: "Nutzer mochte leichte Produkte.",
-      retrieval_debug: {
-        subqueries: ["OWC", "Frizz in Wellen"],
-        source_types: ["book", "community_qa"],
-        metadata_filter: { thickness: "fine" },
-        candidate_count_before_rerank: 8,
-        reranked_count: 5,
-        fallback_used: false,
-      },
-      retrieval_count: 5,
-      retrieved_chunks: [createRetrievedChunk()],
       should_plan_routine: true,
       routine_plan: createRoutinePlan(),
       matched_products: [createProduct()],
@@ -562,8 +530,7 @@ test.describe("Chat debug trace", () => {
       },
     })
 
-    expect(draft.retrieval.subqueries).toEqual(["OWC", "Frizz in Wellen"])
-    expect(draft.retrieval.chunks[0].content_preview).toContain("Wash-Day-Technik")
+    expect("retrieval" in draft).toBe(false)
     expect(draft.decision_context.matched_products[0].top_reasons).toContain(
       "leicht genug fuer feines Haar",
     )
@@ -586,7 +553,7 @@ test.describe("Chat debug trace", () => {
     ])
   })
 
-  test("finalizes the trace and exposes a compact retrieval debug payload", () => {
+  test("finalizes a source-free trace and exposes compact chat debug metadata", () => {
     const profile = createProfile()
     const engineTrace = buildRecommendationEngineTrace({
       runtime: buildRecommendationEngineRuntimeForChat({
@@ -612,16 +579,6 @@ test.describe("Chat debug trace", () => {
       clarification_questions: ["Wie oft waeschst du aktuell?"],
       hair_profile_snapshot: profile,
       memory_context: null,
-      retrieval_debug: {
-        subqueries: ["CWC", "OWC"],
-        source_types: ["book"],
-        metadata_filter: null,
-        candidate_count_before_rerank: 4,
-        reranked_count: 4,
-        fallback_used: false,
-      },
-      retrieval_count: 3,
-      retrieved_chunks: [createRetrievedChunk()],
       should_plan_routine: true,
       routine_plan: createRoutinePlan(),
       engine_trace: engineTrace,
@@ -651,27 +608,17 @@ test.describe("Chat debug trace", () => {
 
     const trace = finalizeChatTurnTrace(draft, {
       assistant_content: "OWC passt hier eher als gezielter Wash-Day-Schutz.",
-      sources: [
-        {
-          index: 1,
-          source_type: "book",
-          label: "Fachbuch",
-          source_name: "Routine Kapitel",
-          snippet: "OWC ist eine Wash-Day-Technik...",
-        },
-      ],
       product_count: 0,
       status: "completed",
       stream_read_ms: 120,
       total_ms: 240,
     })
 
-    const debugEvent = buildRetrievalDebugEventData(draft)
-
     expect(trace.status).toBe("completed")
-    expect(trace.trace_version).toBe(2)
+    expect(trace.trace_version).toBe(3)
     expect(trace.latencies_ms.total_ms).toBe(240)
-    expect(trace.response.sources).toHaveLength(1)
+    expect("sources" in trace.response).toBe(false)
+    expect("retrieval" in trace).toBe(false)
     expect(trace.response_composition).toEqual(legacyResponseComposition)
     expect(trace.conversation_state).toMatchObject({
       previous_state: expect.objectContaining({ active_topic: null }),
@@ -705,14 +652,6 @@ test.describe("Chat debug trace", () => {
         differences: expect.any(Array),
       }),
     )
-    expect(debugEvent).toMatchObject({
-      request_id: "req-2",
-      engine_variant: null,
-      retrieval_mode: "hybrid",
-      response_composer_path: "legacy_synthesizer",
-      clarification_questions: ["Wie oft waeschst du aktuell?"],
-      final_context_count: 1,
-    })
     expect(summarizeEngineTraceForLangfuse(engineTrace)).toMatchObject({
       requested_category: "routine",
       damage: expect.objectContaining({
@@ -745,16 +684,6 @@ test.describe("Chat debug trace", () => {
       clarification_questions: [],
       hair_profile_snapshot: createProfile(),
       memory_context: null,
-      retrieval_debug: {
-        subqueries: [],
-        source_types: [],
-        metadata_filter: null,
-        candidate_count_before_rerank: 0,
-        reranked_count: 0,
-        fallback_used: false,
-      },
-      retrieval_count: 0,
-      retrieved_chunks: [],
       should_plan_routine: true,
       routine_plan: createRoutinePlan(),
       matched_products: [],
@@ -783,18 +712,12 @@ test.describe("Chat debug trace", () => {
 
     const trace = finalizeChatTurnTrace(draft, {
       assistant_content: "Dann halten wir den ersten Waschtag bewusst simpel.",
-      sources: [],
       product_count: 0,
       status: "completed",
       total_ms: 180,
     })
-    const debugEvent = buildRetrievalDebugEventData(draft)
-
     expect(draft.response_composition).toEqual(agentResponseComposition)
     expect(trace.response_composition).toEqual(agentResponseComposition)
-    expect(debugEvent).toMatchObject({
-      response_composer_path: "agent_final_render",
-    })
   })
 
   test("projects runtime tool-loop traces into sanitized app trace summaries", () => {
@@ -970,16 +893,6 @@ test.describe("Chat debug trace", () => {
       clarification_questions: [],
       hair_profile_snapshot: createProfile(),
       memory_context: null,
-      retrieval_debug: {
-        subqueries: [],
-        source_types: [],
-        metadata_filter: null,
-        candidate_count_before_rerank: 0,
-        reranked_count: 0,
-        fallback_used: false,
-      },
-      retrieval_count: 0,
-      retrieved_chunks: [],
       should_plan_routine: false,
       matched_products: [createProduct({ category: "shampoo", name: "Mild Shampoo" })],
       classification_prompt_ref: {
@@ -1008,33 +921,13 @@ test.describe("Chat debug trace", () => {
 
     const trace = finalizeChatTurnTrace(draft, {
       assistant_content: "Nimm hier das mildere Shampoo.",
-      sources: [],
       product_count: 1,
       status: "completed",
       total_ms: 360,
     })
-    const debugEvent = buildRetrievalDebugEventData(draft)
-
     expect(trace.engine_variant).toBe("tool_loop")
     expect(trace.agentic_tool_loop).toEqual(agenticTrace)
     expect(trace.conversation_state.updated_by_engine).toBe("tool_loop")
-    expect(debugEvent).toMatchObject({
-      engine_variant: "tool_loop",
-      tool_loop_model_step_count: 2,
-      tool_loop_total_llm_calls: 2,
-      tool_loop_tool_calls: ["select_products", "submit_final_answer"],
-      tool_loop_blocked_reasons: ["not_exposed_in_v1"],
-      loaded_guidance_ids: ["topic:shampoo"],
-      repair_count: 0,
-      failure_stage: null,
-      visible_failure: false,
-      agentic_tool_loop: {
-        model_step_count: 2,
-        tool_call_count: 2,
-        blocked_tool_call_count: 1,
-      },
-    })
-    expect(JSON.stringify(debugEvent)).not.toContain("System prompt snapshot")
   })
 
   test("summarizes AgentV2 trace for Langfuse root output without raw context", () => {

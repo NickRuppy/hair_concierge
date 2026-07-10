@@ -6,6 +6,11 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { randomUUID } from "node:crypto"
+import {
+  normalizeMessageContextRow,
+  type PersistedMessageContextColumns,
+} from "@/lib/chat-runtime/message-context"
+import type { MessageContext } from "@/lib/types"
 import type { EvalConversationTurnTraceRow } from "./debug-artifacts"
 import type { SSEResult, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
@@ -376,7 +381,6 @@ export async function sendMessage(
         langfuse_trace_url: null,
         content: "",
         done_data: null,
-        sources: [],
         products: [],
         error: null,
         latency_ms: 0,
@@ -410,9 +414,6 @@ export async function sendMessage(
                 break
               case "product_recommendations":
                 result.products = event.data
-                break
-              case "sources":
-                result.sources = event.data
                 break
               case "assistant_message":
                 result.assistant_message_id = event.data?.id ?? null
@@ -460,7 +461,6 @@ export async function sendMessage(
       langfuse_trace_url: null,
       content: "",
       done_data: null,
-      sources: [],
       products: [],
       error: `HTTP ${response.status} (${contentType}): ${text.slice(0, 500)}`,
       latency_ms: Date.now() - start,
@@ -474,7 +474,6 @@ export async function sendMessage(
     langfuse_trace_url: null,
     content: "",
     done_data: null,
-    sources: [],
     products: [],
     error: "Request failed after retries",
     latency_ms: Date.now() - start,
@@ -490,7 +489,7 @@ export async function fetchLatestAssistantMessage(
   id: string
   content: string | null
   product_recommendations: unknown[] | null
-  rag_context: { sources?: unknown[]; category_decision?: unknown } | null
+  message_context: MessageContext | null
   langfuse_trace_id: string | null
   langfuse_trace_url: string | null
   user_feedback_score: number | null
@@ -498,14 +497,16 @@ export async function fetchLatestAssistantMessage(
   const { data } = await admin
     .from("messages")
     .select(
-      "id, content, product_recommendations, rag_context, langfuse_trace_id, langfuse_trace_url, user_feedback_score",
+      "id, content, product_recommendations, message_context, rag_context, langfuse_trace_id, langfuse_trace_url, user_feedback_score",
     )
     .eq("conversation_id", conversationId)
     .eq("role", "assistant")
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle()
-  return data
+  if (!data) return null
+
+  return normalizeMessageContextRow(data as typeof data & PersistedMessageContextColumns)
 }
 
 export async function fetchConversationTurnTrace(

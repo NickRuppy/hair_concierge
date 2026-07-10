@@ -219,9 +219,7 @@ export const SCENARIOS: EvalScenario[] = [
     turns: [
       {
         message: "Wie oft sollte ich meine Haare waschen?",
-        metadata: {
-          retrieval_mode: ["agent_v2_responses", "faq", "hybrid"],
-        },
+        metadata: {},
         content: {
           must_be_german: true,
           min_length: 100,
@@ -280,7 +278,7 @@ export const SCENARIOS: EvalScenario[] = [
         },
         judge: {
           expected_behavior:
-            "Should either discuss bond repair/bond builder given the severe damage profile, or ask targeted follow-up questions. Must NOT be in router clarification mode (needs_clarification must be false). If answering directly, should cite sources.",
+            "Should either discuss bond repair/bond builder given the severe damage profile, or ask targeted follow-up questions. Must NOT be in router clarification mode (needs_clarification must be false).",
         },
       },
     ],

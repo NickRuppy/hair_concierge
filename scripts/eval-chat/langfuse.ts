@@ -40,7 +40,6 @@ interface EvalExperimentItem {
     judge_score: number | null
     rubric: QualityRubricResult | null
     latency_ms: number
-    source_count: number
     product_count: number
   }
   output: {
@@ -114,7 +113,6 @@ function buildItems(
           judge_score: turnResult.judge_result?.score ?? null,
           rubric: turnResult.quality_rubric,
           latency_ms: turnResult.sse_result.latency_ms,
-          source_count: turnResult.sse_result.sources.length,
           product_count: turnResult.sse_result.products.length,
         },
         output: {

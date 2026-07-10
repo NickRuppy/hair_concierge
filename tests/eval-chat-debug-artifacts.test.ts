@@ -22,7 +22,6 @@ const sseResult: SSEResult = {
     response_mode: "clarify_only",
     policy_overrides: ["agent_v2", "visible_failure"],
   },
-  sources: [],
   products: [],
   error: null,
   latency_ms: 1234,
