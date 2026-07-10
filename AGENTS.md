@@ -77,6 +77,21 @@ When a category or spec change needs both research and implementation logic, use
 
 If the task is about matching or preserving current internal recommendation logic, do not route it through `hair-care-expert` unless the user explicitly wants a second opinion.
 
+## Multi-Model Orchestration
+
+The main session is the orchestrator (intended: Fable 5). It decomposes work into small, independent, specifiable units and routes each to the cheapest model that can do it well — it plans, routes, integrates, and reviews rather than doing execution volume itself.
+
+- **Sonnet** — default execution tier: mechanical/multi-file edits, boilerplate, well-scoped tasks with clear acceptance criteria, test-fixing to a known oracle.
+- **Opus** — judgment tier: ambiguous scope, German UI copy, UX/taste calls, tricky deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/`.
+- Bias toward Sonnet; escalate to Opus only when the task needs judgment. Split only genuinely independent units — dispatched agents do not share the orchestrator's context, so each brief must be self-contained.
+
+**Codex (GPT) — reviewer & second-opinion lane:**
+
+- Invoke the `codex:codex-rescue` agent, never the `/codex:rescue` skill (it stalls silently).
+- Do not pin a model — it inherits the global Codex default (`~/.codex/config.toml`, currently gpt-5.6-sol), so it tracks the newest. Add `--effort high` for these deeper passes.
+- Use for: whole-branch review before push, plan review on non-trivial plans, and any "stuck / want an independent second opinion" moment. Review and second-opinion runs are read-only (no `--write`).
+- Always inspect Codex output before accepting it; do not blindly trust it.
+
 ## Plan Mode
 
 When entering plan mode for any task:
