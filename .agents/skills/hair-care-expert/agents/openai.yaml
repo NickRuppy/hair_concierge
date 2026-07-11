@@ -1,0 +1,6 @@
+interface:
+  display_name: "Hair Care Expert"
+  short_description: "Research evidence-sensitive hair-care guidance"
+  default_prompt: "Use $hair-care-expert to research this hair-care question from current external evidence."
+policy:
+  allow_implicit_invocation: true

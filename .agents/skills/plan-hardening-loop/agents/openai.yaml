@@ -1,6 +1,6 @@
 interface:
   display_name: "Plan Hardening Loop"
-  short_description: "Grill, review, and harden plans"
-  default_prompt: "Use $plan-hardening-loop to turn this idea or plan into a reviewed implementation handoff."
+  short_description: "Grill plans, show mockups, confirm journeys"
+  default_prompt: "Use $plan-hardening-loop to turn this idea into a reviewed plan, show me mockups for every user-facing change, walk me through the designed user journey, and stop until I explicitly confirm both."
 policy:
   allow_implicit_invocation: true

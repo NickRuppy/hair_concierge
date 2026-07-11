@@ -1,0 +1,6 @@
+interface:
+  display_name: "Category Recommendation"
+  short_description: "Design one deterministic product-category flow"
+  default_prompt: "Use $category-specific-recommendation to design or revise this product-category recommendation flow."
+policy:
+  allow_implicit_invocation: true

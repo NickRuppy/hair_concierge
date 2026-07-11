@@ -15,7 +15,19 @@ When entering plan mode for any task:
 
 3. **Then plan** — Only after the user picks an approach, write the detailed plan file with implementation steps, file paths, and verification criteria. Do not include specs from rejected approaches.
 
-For trivial tasks (single file, <20 lines changed), skip the options table and plan directly.
+For trivial non-user-facing tasks (single file, <20 lines changed), skip the options table and plan directly. User-facing work still requires the mockup and journey gates below even when the eventual code diff is small.
+
+## User-Facing Planning Gates
+
+Before any user-facing implementation:
+
+1. Inspect the current product surface and create at least one reviewable mockup during planning. Use an annotated current/proposed screenshot for a small existing-surface change, a wireframe for a new flow, or rendered lightweight HTML for layout and interaction. For copy-only work, show the before/after copy inside the real component layout. Markdown, ASCII, detached copy samples, and prose-only descriptions do not count as mockups for an existing surface.
+2. Show 2-3 variants for a meaningful visual fork, use realistic German copy, and include responsive or critical loading/error/recovery states when they materially affect the experience.
+3. Present the mockup to Nick, incorporate feedback, and record mockup review as confirmed in the implementation plan.
+4. Translate the final design into a concrete user journey: entry state, ordered user actions and system responses, meaningful variants, error/recovery states, and completion.
+5. Walk Nick through that journey and obtain explicit sign-off. Earlier general plan approval does not satisfy the mockup or journey gate.
+
+Do not invoke `executing-plans` or `subagent-driven-development` while mockup review or user-journey sign-off is missing or pending. Purely backend work may skip mockups only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
 
 ## Branch Gate
 
