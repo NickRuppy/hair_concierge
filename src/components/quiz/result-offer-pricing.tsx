@@ -15,6 +15,8 @@ import {
 } from "@/components/checkout/active-subscription-dialog"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { createFunnelEventId } from "@/lib/funnel/client"
+import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -33,11 +35,14 @@ function getPlanDetail(plan: ReturnType<typeof getStripePricingPlan>): string {
 export function ResultOfferPricing({
   leadId,
   onCheckoutOpen,
+  offerTracking,
 }: {
   leadId: string | null
   onCheckoutOpen?: () => void
+  offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   const checkoutRef = useRef<HTMLDivElement | null>(null)
+  const offerTrackedRef = useRef(false)
   const stripePromiseRef = useRef<Promise<Stripe | null> | null>(null)
   const [selectedInterval, setSelectedInterval] =
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
@@ -79,11 +84,15 @@ export function ResultOfferPricing({
   }, [getStripePromise])
 
   useEffect(() => {
+    if (!offerTrackedRef.current) {
+      offerTrackedRef.current = true
+      trackAppEvent("offer_viewed", { leadId: leadId ?? undefined, ...offerTracking })
+    }
     trackAppEvent("pricing_viewed", {
       leadId: leadId ?? undefined,
       source: "quiz_result_offer_pricing",
     })
-  }, [leadId])
+  }, [leadId, offerTracking])
 
   function choosePlan(interval: BillingInterval) {
     setSelectedInterval(interval)
@@ -114,12 +123,15 @@ export function ResultOfferPricing({
     }
 
     setCheckoutError(null)
+    const funnelEventId = createFunnelEventId()
     const response = await fetch("/api/stripe/create-checkout-session", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         interval: checkoutInterval,
         leadId,
+        source: "quiz_result_offer",
+        funnelEventId,
       }),
     })
 
@@ -146,20 +158,25 @@ export function ResultOfferPricing({
       leadId: leadId ?? undefined,
       provider: "stripe",
       source: "quiz_result_offer",
+      funnelEventId,
     })
 
     return data.client_secret
   }, [checkoutInterval, leadId])
 
-  const handlePayPalCheckoutStarted = useCallback(() => {
-    if (!checkoutInterval) return
-    trackAppEvent("checkout_started", {
-      interval: checkoutInterval,
-      leadId: leadId ?? undefined,
-      provider: "paypal",
-      source: "quiz_result_offer",
-    })
-  }, [checkoutInterval, leadId])
+  const handlePayPalCheckoutStarted = useCallback(
+    (funnelEventId: string) => {
+      if (!checkoutInterval) return
+      trackAppEvent("checkout_started", {
+        interval: checkoutInterval,
+        leadId: leadId ?? undefined,
+        provider: "paypal",
+        source: "quiz_result_offer",
+        funnelEventId,
+      })
+    },
+    [checkoutInterval, leadId],
+  )
 
   return (
     <div className="space-y-4">

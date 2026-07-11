@@ -3,11 +3,17 @@ import type { BillingInterval } from "@/lib/stripe/intervals"
 export type AnalyticsValue = string | number | boolean | null | string[] | number[] | boolean[]
 export type AnalyticsPayload = Record<string, AnalyticsValue | undefined>
 
+export type FunnelAnalyticsEnvelope = {
+  funnelEventId?: string | null
+  funnelSessionId?: string | null
+  funnelPackageKey?: string | null
+}
+
 export type AppEventMap = {
   chat_product_recommendation_shown: {
     productCount: number
   }
-  checkout_started: {
+  checkout_started: FunnelAnalyticsEnvelope & {
     interval?: BillingInterval | null
     leadId?: string | null
     provider: "stripe" | "paypal"
@@ -17,7 +23,8 @@ export type AppEventMap = {
   onboarding_completed: {
     userId: string
   }
-  pricing_viewed: {
+  offer_viewed: FunnelAnalyticsEnvelope & { leadId?: string | null }
+  pricing_viewed: FunnelAnalyticsEnvelope & {
     leadId?: string | null
     source: "pricing_page" | "quiz_result_offer_pricing"
   }
@@ -29,7 +36,7 @@ export type AppEventMap = {
     paymentMethodType?: string
     value: number
   }
-  quiz_completed: {
+  quiz_completed: FunnelAnalyticsEnvelope & {
     hairLength?: string
     hairTexture?: string
     leadId?: string | null
@@ -40,11 +47,11 @@ export type AppEventMap = {
   quiz_goals_selected: {
     count: number
   }
-  quiz_lead_captured: {
+  quiz_lead_captured: FunnelAnalyticsEnvelope & {
     leadId: string
     marketingConsent: boolean
   }
-  quiz_started: {
+  quiz_started: FunnelAnalyticsEnvelope & {
     stepName: string
     stepNumber: number
   }

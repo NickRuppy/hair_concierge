@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto"
 import type { BillingAnalyticsDeliveryInput, BillingAnalyticsDeliveryResult } from "./types"
+import { isFunnelMetaCustomDataEnabled } from "@/lib/funnel/flags"
 
 const DEFAULT_META_CAPI_API_VERSION = "v24.0"
 const DEFAULT_TIMEOUT_MS = 1500
@@ -40,6 +41,10 @@ function metaEventId(input: BillingAnalyticsDeliveryInput) {
 
 function customData(input: BillingAnalyticsDeliveryInput) {
   const { event } = input
+  const funnelPackageKey =
+    isFunnelMetaCustomDataEnabled() && typeof event.payload.funnel_package_key === "string"
+      ? event.payload.funnel_package_key
+      : undefined
   return {
     currency: typeof event.payload.currency === "string" ? event.payload.currency : undefined,
     value: typeof event.payload.value === "number" ? event.payload.value : undefined,
@@ -51,6 +56,7 @@ function customData(input: BillingAnalyticsDeliveryInput) {
         : undefined,
     interval: typeof event.payload.interval === "string" ? event.payload.interval : undefined,
     canonical_event_name: event.event_name,
+    funnel_package_key: funnelPackageKey,
   }
 }
 

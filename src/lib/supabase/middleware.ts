@@ -49,18 +49,22 @@ export async function updateSession(request: NextRequest) {
 
   const isPublicMarketingRoute =
     pathname === "/" ||
-    ["/agb", "/datenschutz", "/impressum", "/kontakt", "/pricing", "/widerruf"].some(
-      (route) => pathname === route || pathname.startsWith(`${route}/`),
+    ["/agb", "/datenschutz", "/impressum", "/kontakt", "/lp", "/pricing", "/widerruf"].some(
+      (route) => pathMatchesRoutePrefix(pathname, route),
     )
   const fastPublicRoutes = [
     "/api/stripe",
     "/api/paypal",
+    "/api/funnel",
     "/api/auth/send-magic-link",
     "/api/auth/send-setup-link",
     "/api/auth/set-checkout-password",
     "/welcome",
   ]
-  if (isPublicMarketingRoute || fastPublicRoutes.some((route) => pathname.startsWith(route))) {
+  if (
+    isPublicMarketingRoute ||
+    fastPublicRoutes.some((route) => pathMatchesRoutePrefix(pathname, route))
+  ) {
     return supabaseResponse
   }
 
@@ -102,6 +106,8 @@ export async function updateSession(request: NextRequest) {
     "/auth/confirm",
     "/quiz",
     "/api/quiz",
+    "/api/funnel",
+    "/lp",
     "/result",
     "/api/og",
     "/opengraph-image",
@@ -128,7 +134,8 @@ export async function updateSession(request: NextRequest) {
     "/api/auth/send-setup-link",
     "/api/auth/set-checkout-password",
   ]
-  const isPublicRoute = pathname === "/" || publicRoutes.some((route) => pathname.startsWith(route))
+  const isPublicRoute =
+    pathname === "/" || publicRoutes.some((route) => pathMatchesRoutePrefix(pathname, route))
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()

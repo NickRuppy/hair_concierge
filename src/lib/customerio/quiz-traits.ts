@@ -78,6 +78,8 @@ export function buildCustomerIoQuizLeadSync({
   marketingConsent,
   name,
   quizAnswers,
+  funnelSessionId,
+  funnelPackageKey,
 }: {
   createdAt: string
   email: string
@@ -85,6 +87,8 @@ export function buildCustomerIoQuizLeadSync({
   marketingConsent: boolean
   name: string
   quizAnswers: QuizAnswers
+  funnelSessionId?: string | null
+  funnelPackageKey?: string | null
 }) {
   const normalizedEmail = normalizeEmail(email)
   const answers = canonicalizeQuizAnswers(quizAnswers)
@@ -92,6 +96,8 @@ export function buildCustomerIoQuizLeadSync({
     email: normalizedEmail,
     first_name: firstName(name),
     lead_id: leadId,
+    funnel_session_id: funnelSessionId,
+    funnel_package_key: funnelPackageKey,
     marketing_consent: marketingConsent,
     consent_timestamp: marketingConsent ? createdAt : undefined,
     quiz_completed_at: createdAt,
@@ -127,6 +133,8 @@ export function buildCustomerIoQuizLeadSync({
     eventProperties: {
       source: "quiz_lead_api",
       lead_id: leadId,
+      funnel_session_id: funnelSessionId,
+      funnel_package_key: funnelPackageKey,
       marketing_consent: marketingConsent,
     },
     shouldIdentify: true,

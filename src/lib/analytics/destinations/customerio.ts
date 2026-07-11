@@ -1,5 +1,5 @@
 import { trackCustomerIoEvent, type CustomerIoProperties } from "@/lib/customerio-tracking"
-import type { AppEventMap, AppEventName } from "../events"
+import type { AppEventMap, AppEventName, FunnelAnalyticsEnvelope } from "../events"
 
 function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
   switch (eventName) {
@@ -78,9 +78,13 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
 
 export const customerIoDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
-    return trackCustomerIoEvent(
-      eventName,
-      toCustomerIoPayload(eventName, payload) as CustomerIoProperties,
-    )
+    const mapped = toCustomerIoPayload(eventName, payload) as CustomerIoProperties
+    const funnel = payload as FunnelAnalyticsEnvelope
+    return trackCustomerIoEvent(eventName as Parameters<typeof trackCustomerIoEvent>[0], {
+      ...mapped,
+      ...(funnel.funnelEventId ? { funnel_event_id: funnel.funnelEventId } : {}),
+      ...(funnel.funnelSessionId ? { funnel_session_id: funnel.funnelSessionId } : {}),
+      ...(funnel.funnelPackageKey ? { funnel_package_key: funnel.funnelPackageKey } : {}),
+    })
   },
 }

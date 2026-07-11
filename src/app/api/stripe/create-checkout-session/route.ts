@@ -5,6 +5,13 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { captureCheckoutException } from "@/lib/observability/checkout"
+import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
+import {
+  recordFunnelEvent,
+  resolveFunnelCookieContext,
+  resolveFunnelContextForLead,
+  resolvePendingFunnelTouchValue,
+} from "@/lib/funnel/server"
 import { getStripe, PRICE_IDS } from "@/lib/stripe/client"
 import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -16,6 +23,8 @@ const BodySchema = z.object({
   // Accept null too — the client sends `leadId: null` when there's no ?lead=
   // in the URL (resubscribe path). `.optional()` alone rejects null.
   leadId: z.string().uuid().nullable().optional(),
+  source: z.enum(["pricing_page", "quiz_result_offer"]).default("pricing_page"),
+  funnelEventId: z.string().uuid().optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -23,7 +32,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
-  const { interval, leadId } = parsed.data
+  const { interval, leadId, source, funnelEventId } = parsed.data
 
   const priceId = PRICE_IDS[interval as BillingInterval]
   if (!priceId) {
@@ -140,6 +149,15 @@ export async function POST(req: NextRequest) {
 
     const origin = req.nextUrl.origin
     const stripe = getStripe()
+    const funnelContext =
+      (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
+      (await resolveFunnelContextForLead(resolvedLeadId))
+    const funnelTouch = funnelContext
+      ? await resolvePendingFunnelTouchValue(
+          cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+          funnelContext,
+        )
+      : null
 
     const params = buildStripeCheckoutSessionParams({
       origin,
@@ -147,10 +165,35 @@ export async function POST(req: NextRequest) {
       customerId,
       customerEmail,
       leadId: resolvedLeadId,
+      funnelSessionId: funnelContext?.sessionId,
+      funnelPackageKey: funnelContext?.packageKey,
     })
     const session = await stripe.checkout.sessions.create(params)
 
-    return NextResponse.json({ client_secret: session.client_secret })
+    const funnelRecorded = funnelContext
+      ? await recordFunnelEvent({
+          context: funnelContext,
+          eventId: funnelEventId ?? crypto.randomUUID(),
+          milestone: "checkout_started",
+          leadId: resolvedLeadId,
+          userId: user?.id,
+          checkoutProvider: "stripe",
+          checkoutReference: session.id,
+          touch: funnelTouch,
+          properties: { source, interval },
+        })
+          .then(() => true)
+          .catch((error) => {
+            console.warn("[funnel] Stripe checkout tracking failed", error)
+            return false
+          })
+      : false
+
+    const response = NextResponse.json({ client_secret: session.client_secret })
+    if (funnelTouch && funnelRecorded) {
+      response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+    }
+    return response
   } catch (error) {
     captureCheckoutException(error, {
       provider: "stripe",

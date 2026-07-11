@@ -36,6 +36,7 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
+import { recordFunnelPurchaseFromSession } from "@/lib/funnel/server"
 
 export type PayPalWebhookEvent = {
   id?: string
@@ -76,6 +77,7 @@ type PayPalActivationOutcome =
       kind: "active"
       billingRow: BillingSubscriptionRow
       firstPurchase: boolean
+      funnelMetadata: Record<string, unknown> | null
     }
 
 const MUTATING_EVENTS = new Set([
@@ -283,7 +285,12 @@ async function activateOrRefreshSubscription(
     subscription.id,
   )
   if (!billingRow) return { kind: "none" }
-  return { kind: "active", billingRow, firstPurchase: !existing }
+  return {
+    kind: "active",
+    billingRow,
+    firstPurchase: !existing,
+    funnelMetadata: boundIntent?.metadata ?? null,
+  }
 }
 
 async function updateExistingSubscription(
@@ -336,12 +343,15 @@ async function recordPayPalSuccessfulPayment(
   const currency = payPalEventCurrency(event)
 
   if (outcome.firstPurchase) {
+    const purchaseEventKey = billingAnalyticsEventKey({
+      provider: "paypal",
+      eventName: "purchase_completed",
+      sourceObjectId: billingRow.provider_subscription_id,
+    })
+    const funnelSessionId = stringMetadata(outcome.funnelMetadata, "funnel_session_id")
+    const funnelPackageKey = stringMetadata(outcome.funnelMetadata, "funnel_package_key")
     await recordPayPalBillingAnalytics(deps, {
-      eventKey: billingAnalyticsEventKey({
-        provider: "paypal",
-        eventName: "purchase_completed",
-        sourceObjectId: billingRow.provider_subscription_id,
-      }),
+      eventKey: purchaseEventKey,
       eventName: "purchase_completed",
       billingRow,
       event,
@@ -351,8 +361,18 @@ async function recordPayPalSuccessfulPayment(
         value: amount,
         currency,
         payment_event_type: eventType,
+        funnel_session_id: funnelSessionId,
+        funnel_package_key: funnelPackageKey,
       },
     })
+    await recordFunnelPurchaseFromSession({
+      sessionId: funnelSessionId,
+      packageKey: funnelPackageKey,
+      eventId: purchaseEventKey,
+      provider: "paypal",
+      reference: billingRow.provider_subscription_id,
+      userId: billingRow.user_id,
+    }).catch((error) => console.warn("[funnel] PayPal purchase tracking failed", error))
     await recordPayPalBillingAnalytics(deps, {
       eventKey: billingAnalyticsEventKey({
         provider: "paypal",
@@ -387,6 +407,11 @@ async function recordPayPalSuccessfulPayment(
       },
     })
   }
+}
+
+function stringMetadata(metadata: Record<string, unknown> | null, key: string) {
+  const value = metadata?.[key]
+  return typeof value === "string" && value ? value : undefined
 }
 
 async function recordPayPalLifecycleEvent(

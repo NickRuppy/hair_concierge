@@ -10,6 +10,14 @@ import {
 } from "@/lib/paypal/checkout-intents"
 import type { BillingInterval } from "@/lib/billing/types"
 import { getPayPalPlanId } from "@/lib/paypal/plans"
+import { cookies } from "next/headers"
+import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
+import {
+  recordFunnelEvent,
+  resolveFunnelCookieContext,
+  resolveFunnelContextForLead,
+  resolvePendingFunnelTouchValue,
+} from "@/lib/funnel/server"
 
 export const runtime = "nodejs"
 
@@ -17,6 +25,7 @@ const BodySchema = z.object({
   interval: z.enum(["month", "quarter", "year"]),
   leadId: z.string().uuid().nullable().optional(),
   source: z.enum(["pricing_page", "quiz_result_offer"]),
+  funnelEventId: z.string().uuid().optional(),
 })
 
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"
@@ -31,7 +40,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
 
-  const { interval, leadId, source } = parsed.data
+  const { interval, leadId, source, funnelEventId } = parsed.data
   let planId: string
   try {
     planId = getPayPalPlanId(interval)
@@ -85,15 +94,54 @@ export async function POST(request: Request) {
       if (conflict) return conflict
     }
 
+    const cookieStore = await cookies()
+    const funnelContext =
+      (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
+      (await resolveFunnelContextForLead(resolvedLeadId))
+    const funnelTouch = funnelContext
+      ? await resolvePendingFunnelTouchValue(
+          cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+          funnelContext,
+        )
+      : null
     const intent = await createPayPalCheckoutIntent(admin, {
       interval: interval as BillingInterval,
       source: source as PayPalCheckoutSource,
       leadId: resolvedLeadId,
       email,
       userId: user?.id ?? null,
+      metadata: funnelContext
+        ? {
+            funnel_session_id: funnelContext.sessionId,
+            funnel_package_key: funnelContext.packageKey,
+          }
+        : {},
     })
 
-    return NextResponse.json({ token: intent.token, planId })
+    const funnelRecorded = funnelContext
+      ? await recordFunnelEvent({
+          context: funnelContext,
+          eventId: funnelEventId ?? crypto.randomUUID(),
+          milestone: "checkout_started",
+          leadId: resolvedLeadId,
+          userId: user?.id,
+          checkoutProvider: "paypal",
+          checkoutReference: intent.token,
+          touch: funnelTouch,
+          properties: { source, interval },
+        })
+          .then(() => true)
+          .catch((error) => {
+            console.warn("[funnel] PayPal checkout tracking failed", error)
+            return false
+          })
+      : false
+
+    const response = NextResponse.json({ token: intent.token, planId })
+    if (funnelTouch && funnelRecorded) {
+      response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+    }
+    return response
   } catch (error) {
     captureCheckoutException(error, {
       provider: "paypal",

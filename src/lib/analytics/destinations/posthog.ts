@@ -1,5 +1,10 @@
 import { posthog } from "@/providers/posthog-provider"
-import type { AnalyticsPayload, AppEventMap, AppEventName } from "../events"
+import type {
+  AnalyticsPayload,
+  AppEventMap,
+  AppEventName,
+  FunnelAnalyticsEnvelope,
+} from "../events"
 
 function cleanAnalyticsPayload(payload: AnalyticsPayload) {
   return Object.fromEntries(
@@ -56,7 +61,17 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
 
 export const postHogDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
-    posthog.capture(eventName, cleanAnalyticsPayload(toPostHogPayload(eventName, payload)))
+    const funnel = payload as FunnelAnalyticsEnvelope
+    const mapped = cleanAnalyticsPayload(toPostHogPayload(eventName, payload))
+    delete mapped.funnelEventId
+    delete mapped.funnelSessionId
+    delete mapped.funnelPackageKey
+    posthog.capture(eventName, {
+      ...mapped,
+      ...(funnel.funnelEventId ? { $insert_id: funnel.funnelEventId } : {}),
+      ...(funnel.funnelSessionId ? { funnel_session_id: funnel.funnelSessionId } : {}),
+      ...(funnel.funnelPackageKey ? { funnel_package_key: funnel.funnelPackageKey } : {}),
+    })
     return true
   },
 }

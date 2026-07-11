@@ -13,6 +13,8 @@ export async function syncQuizLeadToCustomerIo({
   marketingConsent,
   name,
   quizAnswers,
+  funnelSessionId,
+  funnelPackageKey,
 }: {
   createdAt: string
   email: string
@@ -20,6 +22,8 @@ export async function syncQuizLeadToCustomerIo({
   marketingConsent: boolean
   name: string
   quizAnswers: QuizAnswers
+  funnelSessionId?: string | null
+  funnelPackageKey?: string | null
 }) {
   const sync = buildCustomerIoQuizLeadSync({
     createdAt,
@@ -28,6 +32,8 @@ export async function syncQuizLeadToCustomerIo({
     marketingConsent,
     name,
     quizAnswers,
+    funnelSessionId,
+    funnelPackageKey,
   })
 
   if (!sync.shouldIdentify) return {}

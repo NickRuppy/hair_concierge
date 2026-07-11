@@ -6,6 +6,7 @@ import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultTransformationCard } from "@/components/quiz/quiz-result-transformation-card"
 import { QuizResultLeverRows } from "@/components/quiz/quiz-result-lever-rows"
 import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
+import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
 const FEATURE_IMAGES = {
@@ -408,18 +409,26 @@ export function QuizResultOfferPage({
   leadId,
   onCheckoutOpen,
   focusRoutine = false,
+  offerTracking,
 }: {
   name: string
   narrative: QuizResultNarrative
   leadId: string | null
   onCheckoutOpen?: () => void
   focusRoutine?: boolean
+  offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   return (
     <QuizResultOfferPageShell
       name={name}
       narrative={narrative}
-      pricingSlot={<ResultOfferPricing leadId={leadId} onCheckoutOpen={onCheckoutOpen} />}
+      pricingSlot={
+        <ResultOfferPricing
+          leadId={leadId}
+          offerTracking={offerTracking}
+          onCheckoutOpen={onCheckoutOpen}
+        />
+      }
       focusRoutine={focusRoutine}
     />
   )

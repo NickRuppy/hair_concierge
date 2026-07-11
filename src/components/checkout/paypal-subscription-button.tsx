@@ -7,6 +7,7 @@ import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
+import { createFunnelEventId } from "@/lib/funnel/client"
 import {
   ActiveSubscriptionDialog,
   checkoutAccessAlreadyExistsError,
@@ -39,7 +40,7 @@ export function PayPalSubscriptionButton({
 }: {
   interval: BillingInterval
   leadId?: string | null
-  onCheckoutStarted: () => void
+  onCheckoutStarted: (funnelEventId: string) => void
   source: PayPalCheckoutSource
 }) {
   const [error, setError] = useState<string | null>(null)
@@ -82,7 +83,7 @@ export function PayPalSubscriptionButton({
           ) => {
             setError(null)
             suppressNextPayPalErrorRef.current = false
-            onCheckoutStarted()
+            const funnelEventId = createFunnelEventId()
             addCheckoutBreadcrumb({
               provider: "paypal",
               stage: "paypal_create_subscription",
@@ -91,7 +92,13 @@ export function PayPalSubscriptionButton({
               leadId,
             })
             try {
-              const intent = await createSubscriptionIntent({ interval, leadId, source })
+              const intent = await createSubscriptionIntent({
+                interval,
+                leadId,
+                source,
+                funnelEventId,
+              })
+              onCheckoutStarted(funnelEventId)
               intentTokenRef.current = intent.token
               return actions.subscription.create({
                 plan_id: intent.planId,
@@ -225,15 +232,17 @@ async function createSubscriptionIntent({
   interval,
   leadId,
   source,
+  funnelEventId,
 }: {
   interval: BillingInterval
   leadId?: string | null
   source: PayPalCheckoutSource
+  funnelEventId: string
 }): Promise<{ token: string; planId: string }> {
   const response = await fetch("/api/paypal/create-subscription-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ interval, leadId: leadId ?? null, source }),
+    body: JSON.stringify({ interval, leadId: leadId ?? null, source, funnelEventId }),
   })
   const body = await response.json().catch(() => ({}))
   if (!response.ok) {

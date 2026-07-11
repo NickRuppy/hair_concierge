@@ -12,6 +12,7 @@ import {
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
 import { posthog } from "../src/providers/posthog-provider"
+import { grantMetaPixelConsent, initMetaPixel } from "../src/lib/meta-pixel"
 
 type DestinationCall = {
   destination: "customerio" | "meta" | "posthog"
@@ -194,10 +195,13 @@ test("quiz completed analytics payload includes hair length when present", () =>
       thickness: "fine",
     })
 
+    const funnelEventId = (calls[0].payload as { funnelEventId?: string }).funnelEventId
+    assert.equal(typeof funnelEventId, "string")
     assert.deepEqual(
       calls.map((call) => call.payload),
       [
         {
+          funnelEventId,
           hairLength: "medium",
           hairTexture: "wavy",
           leadId: "lead-123",
@@ -206,6 +210,7 @@ test("quiz completed analytics payload includes hair length when present", () =>
           thickness: "fine",
         },
         {
+          funnelEventId,
           hairLength: "medium",
           hairTexture: "wavy",
           leadId: "lead-123",
@@ -214,6 +219,7 @@ test("quiz completed analytics payload includes hair length when present", () =>
           thickness: "fine",
         },
         {
+          funnelEventId,
           hairLength: "medium",
           hairTexture: "wavy",
           leadId: "lead-123",
@@ -356,4 +362,39 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
     ],
     ["consent", "revoke"],
   ])
+})
+
+test("Meta adapter gates package keys and never sends funnel session IDs", () => {
+  const previous = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+  const calls: unknown[][][] = []
+
+  try {
+    for (const enabled of [undefined, "true"]) {
+      if (enabled) process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = enabled
+      else delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+
+      const dom = createMetaDom()
+      withGlobalBrowser(dom.win, dom.doc, () => {
+        initMetaPixel({ win: dom.win, doc: dom.doc })
+        grantMetaPixelConsent({ win: dom.win })
+        metaDestination.track("checkout_started", {
+          provider: "stripe",
+          source: "pricing_page",
+          funnelEventId: "30000000-0000-4000-8000-000000000003",
+          funnelPackageKey: "scalp_check_placeholder",
+          funnelSessionId: "20000000-0000-4000-8000-000000000002",
+        })
+      })
+      calls.push(dom.win.fbq?.queue ?? [])
+    }
+  } finally {
+    if (previous === undefined) delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previous
+  }
+
+  const disabledPayload = calls[0][2][2] as Record<string, unknown>
+  const enabledPayload = calls[1][2][2] as Record<string, unknown>
+  assert.equal(disabledPayload.funnel_package_key, undefined)
+  assert.equal(enabledPayload.funnel_package_key, "scalp_check_placeholder")
+  assert.equal(JSON.stringify(calls).includes("20000000-0000-4000-8000-000000000002"), false)
 })

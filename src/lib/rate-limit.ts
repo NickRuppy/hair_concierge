@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 
-interface RateLimitConfig {
+export interface RateLimitConfig {
   prefix: string
   limit: number
   windowMs: number
@@ -14,10 +14,17 @@ export async function checkRateLimit(
   identifier: string,
   config: RateLimitConfig,
 ): Promise<{ allowed: boolean; error?: string }> {
-  const key = `${config.prefix}:${identifier.trim().toLowerCase()}`
   const supabase = createAdminClient()
+  return checkRateLimitWithRpc(identifier, config, (args) => supabase.rpc("check_rate_limit", args))
+}
 
-  const { data, error } = await supabase.rpc("check_rate_limit", {
+export async function checkRateLimitWithRpc(
+  identifier: string,
+  config: RateLimitConfig,
+  rpc: (args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: unknown }>,
+): Promise<{ allowed: boolean; error?: string }> {
+  const key = `${config.prefix}:${identifier.trim().toLowerCase()}`
+  const { data, error } = await rpc({
     p_key: key,
     p_limit: config.limit,
     p_window_ms: config.windowMs,
@@ -41,6 +48,12 @@ export const QUIZ_LEAD_RATE_LIMIT: RateLimitConfig = {
   prefix: "quiz-lead",
   limit: 20,
   windowMs: 3_600_000,
+}
+
+export const FUNNEL_EVENT_RATE_LIMIT: RateLimitConfig = {
+  prefix: "funnel-event",
+  limit: 60,
+  windowMs: 60_000,
 }
 
 // 3 sends per 5 minutes per Stripe session_id (conservative — most users send 1)

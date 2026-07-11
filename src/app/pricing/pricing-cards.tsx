@@ -13,6 +13,7 @@ import {
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { createFunnelEventId } from "@/lib/funnel/client"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { getStripePricingPlan, STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
@@ -96,12 +97,15 @@ export function PricingCards({
       leadId,
     })
     try {
+      const funnelEventId = createFunnelEventId()
       const res = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           interval: selectedInterval,
           ...(leadId ? { leadId } : {}),
+          source: "pricing_page",
+          funnelEventId,
         }),
       })
       if (!res.ok) {
@@ -144,6 +148,7 @@ export function PricingCards({
         leadId: leadId ?? undefined,
         provider: "stripe",
         source: "pricing_page",
+        funnelEventId,
       })
       return data.client_secret
     } catch (error) {
@@ -165,15 +170,19 @@ export function PricingCards({
     }
   }, [selectedInterval, leadId])
 
-  const handlePayPalCheckoutStarted = useCallback(() => {
-    if (!selectedInterval) return
-    trackAppEvent("checkout_started", {
-      interval: selectedInterval,
-      leadId: leadId ?? undefined,
-      provider: "paypal",
-      source: "pricing_page",
-    })
-  }, [selectedInterval, leadId])
+  const handlePayPalCheckoutStarted = useCallback(
+    (funnelEventId: string) => {
+      if (!selectedInterval) return
+      trackAppEvent("checkout_started", {
+        interval: selectedInterval,
+        leadId: leadId ?? undefined,
+        provider: "paypal",
+        source: "pricing_page",
+        funnelEventId,
+      })
+    },
+    [selectedInterval, leadId],
+  )
 
   return (
     <div className="space-y-8">

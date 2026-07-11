@@ -121,9 +121,5 @@ test("Stripe lead-derived duplicate conflicts do not expose hidden lead emails",
   assert.ok(stripeRouteSource.includes("options.includeEmail === false ? {} : { email }"))
   assert.ok(stripeRouteSource.includes("let resolvedLeadId: string | null = null"))
   assert.ok(stripeRouteSource.includes("leadId: resolvedLeadId"))
-  assert.ok(
-    stripeCheckoutSessionParamsSource.includes(
-      "metadata: leadId ? { lead_id: leadId } : undefined",
-    ),
-  )
+  assert.ok(stripeCheckoutSessionParamsSource.includes("...(leadId ? { lead_id: leadId } : {})"))
 })
