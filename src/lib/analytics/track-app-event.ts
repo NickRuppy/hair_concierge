@@ -3,6 +3,7 @@ import { metaDestination } from "./destinations/meta"
 import { postHogDestination } from "./destinations/posthog"
 import type { AppEventMap, AppEventName } from "./events"
 import { eventRoutes } from "./routes"
+import { recordBrowserFunnelMilestone } from "@/lib/funnel/client"
 
 type DestinationName = "customerio" | "meta" | "posthog"
 
@@ -25,7 +26,12 @@ function dispatchSafely(destination: DestinationName, dispatch: () => unknown) {
 
 export function trackAppEvent<E extends AppEventName>(eventName: E, payload: AppEventMap[E]): void {
   const route = eventRoutes[eventName]
-  const clean = cleanPayload(payload)
+  const milestone = toFunnelMilestone(eventName)
+  const suppliedEventId = (payload as { funnelEventId?: string | null }).funnelEventId ?? undefined
+  const envelope = milestone
+    ? recordBrowserFunnelMilestone(milestone, undefined, suppliedEventId, !suppliedEventId)
+    : null
+  const clean = cleanPayload({ ...envelope, ...payload } as AppEventMap[E])
 
   if (route.posthog) {
     dispatchSafely("posthog", () => postHogDestination.track(eventName, clean as AppEventMap[E]))
@@ -39,5 +45,19 @@ export function trackAppEvent<E extends AppEventName>(eventName: E, payload: App
 
   if (route.meta) {
     dispatchSafely("meta", () => metaDestination.track(eventName, clean as AppEventMap[E]))
+  }
+}
+
+function toFunnelMilestone(eventName: AppEventName) {
+  switch (eventName) {
+    case "quiz_started":
+    case "quiz_completed":
+    case "offer_viewed":
+    case "checkout_started":
+      return eventName
+    case "quiz_lead_captured":
+      return "lead_captured" as const
+    default:
+      return null
   }
 }

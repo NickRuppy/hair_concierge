@@ -7,6 +7,7 @@ import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
 
 type ResultPageFocusTarget = "unlock-plan" | "pricing" | null
 
@@ -17,6 +18,7 @@ export function ResultPageClient({
   focusRoutine,
   focusTarget = null,
   hasAccess,
+  offerTracking = null,
 }: {
   leadId: string
   name: string
@@ -24,6 +26,7 @@ export function ResultPageClient({
   focusRoutine: boolean
   focusTarget?: ResultPageFocusTarget
   hasAccess: boolean
+  offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
   const cta = getQuizResultCta({ canGoStraightToRoutine: hasAccess })
@@ -56,6 +59,7 @@ export function ResultPageClient({
       narrative={narrative}
       leadId={leadId}
       focusRoutine={focusRoutine}
+      offerTracking={offerTracking}
     />
   )
 }

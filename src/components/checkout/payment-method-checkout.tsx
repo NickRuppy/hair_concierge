@@ -45,7 +45,7 @@ export function PaymentMethodCheckout({
   interval: BillingInterval
   leadId?: string | null
   onChangePlan: () => void
-  onPayPalCheckoutStarted: () => void
+  onPayPalCheckoutStarted: (funnelEventId: string) => void
   onRetry: () => void
   planLabel: string
   source: "pricing_page" | "quiz_result_offer"

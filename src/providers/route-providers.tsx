@@ -6,6 +6,7 @@ import { CustomerIoProvider } from "@/providers/customerio-provider"
 import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
+import { FunnelContextBootstrap } from "@/providers/funnel-context-bootstrap"
 
 export function AppRouteProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function AppRouteProviders({ children }: { children: React.ReactNode }) {
       <AuthProvider>
         <CustomerIoProvider>
           <PostHogClientProvider>
+            <FunnelContextBootstrap />
             <ToastProvider>
               {children}
               <LazyFeedbackWidget />
@@ -29,6 +31,7 @@ export function PublicFlowProviders({ children }: { children: React.ReactNode })
     <MetaPixelProvider>
       <CustomerIoProvider>
         <PostHogClientProvider>
+          <FunnelContextBootstrap />
           <ToastProvider>{children}</ToastProvider>
         </PostHogClientProvider>
       </CustomerIoProvider>
@@ -42,6 +45,7 @@ export function PublicAuthFlowProviders({ children }: { children: React.ReactNod
       <AuthProvider>
         <CustomerIoProvider>
           <PostHogClientProvider>
+            <FunnelContextBootstrap />
             <ToastProvider>{children}</ToastProvider>
           </PostHogClientProvider>
         </CustomerIoProvider>
@@ -54,7 +58,9 @@ export function LandingTracking() {
   return (
     <MetaPixelProvider>
       <CustomerIoProvider>
-        <PostHogClientProvider>{null}</PostHogClientProvider>
+        <PostHogClientProvider>
+          <FunnelContextBootstrap landing />
+        </PostHogClientProvider>
       </CustomerIoProvider>
     </MetaPixelProvider>
   )

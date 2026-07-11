@@ -102,6 +102,56 @@ test("Meta CAPI adapter hashes user data and uses Stripe checkout session as Pur
   assert.equal(payload.custom_data.currency, "EUR")
 })
 
+test("Meta CAPI only includes package key behind its flag and never includes session id", async () => {
+  const bodies: Record<string, any>[] = []
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body ?? "{}")))
+    return new Response("{}", { status: 200 })
+  }) as typeof fetch
+
+  const funnelEvent = event({
+    payload: {
+      checkout_session_id: "cs_test_123",
+      funnel_package_key: "scalp_check_placeholder",
+      funnel_session_id: "20000000-0000-4000-8000-000000000002",
+    },
+  })
+
+  try {
+    for (const flags of [
+      { server: undefined, browser: undefined },
+      { server: undefined, browser: "true" },
+      { server: "true", browser: undefined },
+    ]) {
+      await withEnv(
+        {
+          FUNNEL_META_CUSTOM_DATA_ENABLED: flags.server,
+          NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED: flags.browser,
+          META_CAPI_ACCESS_TOKEN: "token",
+          META_PIXEL_ID: "pixel-123",
+        },
+        () =>
+          deliverBillingAnalyticsToMeta({
+            event: funnelEvent,
+            profile: { id: "user-123", email: "buyer@example.com" },
+            supabase,
+          }),
+      )
+    }
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(bodies[0].data[0].custom_data.funnel_package_key, undefined)
+  assert.equal(bodies[1].data[0].custom_data.funnel_package_key, undefined)
+  assert.equal(bodies[2].data[0].custom_data.funnel_package_key, "scalp_check_placeholder")
+  for (const body of bodies) {
+    assert.equal(body.data[0].custom_data.funnel_session_id, undefined)
+    assert.equal(JSON.stringify(body).includes("20000000-0000-4000-8000-000000000002"), false)
+  }
+})
+
 test("PostHog server adapter captures canonical billing event with user id distinct_id", async () => {
   const calls: Array<{ url: string; body: Record<string, any> }> = []
   const originalFetch = globalThis.fetch

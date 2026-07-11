@@ -11,6 +11,7 @@ import { Icon } from "@/components/ui/icon"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+import { createFunnelEventId } from "@/lib/funnel/client"
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -51,6 +52,7 @@ export function QuizLeadCapture() {
     setError("")
 
     try {
+      const funnelEventId = createFunnelEventId()
       const res = await fetch("/api/quiz/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,6 +61,7 @@ export function QuizLeadCapture() {
           email: lead.email.trim().toLowerCase(),
           marketingConsent: accepted,
           quizAnswers: canonicalizeQuizAnswers(answers),
+          funnelEventId,
         }),
       })
 
@@ -69,6 +72,7 @@ export function QuizLeadCapture() {
       trackAppEvent("quiz_lead_captured", {
         leadId: data.leadId,
         marketingConsent: accepted,
+        funnelEventId,
       })
       goNext()
     } catch {

@@ -5,9 +5,17 @@ import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
 import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
+import { cookies } from "next/headers"
+import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
+import {
+  recordFunnelEvent,
+  resolveFunnelCookieContext,
+  resolvePendingFunnelTouchValue,
+} from "@/lib/funnel/server"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
@@ -23,11 +31,25 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
+    const funnelEventId =
+      typeof body?.funnelEventId === "string" && UUID_PATTERN.test(body.funnelEventId)
+        ? body.funnelEventId
+        : crypto.randomUUID()
     const parsed = leadSchema.parse(body)
     const email = normalizeEmail(parsed.email)
     const quizAnswers = canonicalizeQuizAnswers(parsed.quizAnswers)
 
     const supabase = createAdminClient()
+    const cookieStore = await cookies()
+    const funnelContext = await resolveFunnelCookieContext(
+      cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+    )
+    const funnelTouch = funnelContext
+      ? await resolvePendingFunnelTouchValue(
+          cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+          funnelContext,
+        )
+      : null
     const recentThreshold = new Date(Date.now() - DEDUPE_WINDOW_MS).toISOString()
 
     const { data: recentLeads, error: recentLeadsError } = await supabase
@@ -71,10 +93,27 @@ export async function POST(request: Request) {
           marketingConsent: parsed.marketingConsent,
           name: parsed.name,
           quizAnswers,
+          funnelSessionId: funnelContext?.sessionId,
+          funnelPackageKey: funnelContext?.packageKey,
         }),
       )
 
-      return NextResponse.json({ leadId: existingLead.id })
+      const funnelRecorded = funnelContext
+        ? await recordFunnelEvent({
+            context: funnelContext,
+            eventId: funnelEventId,
+            milestone: "lead_captured",
+            leadId: existingLead.id,
+            touch: funnelTouch,
+          })
+            .then(() => true)
+            .catch((error) => {
+              console.warn("[funnel] lead attachment failed", error)
+              return false
+            })
+        : false
+
+      return leadResponse(existingLead.id, Boolean(funnelTouch) && funnelRecorded)
     }
 
     const { data, error } = await supabase
@@ -102,12 +141,35 @@ export async function POST(request: Request) {
         marketingConsent: parsed.marketingConsent,
         name: parsed.name,
         quizAnswers,
+        funnelSessionId: funnelContext?.sessionId,
+        funnelPackageKey: funnelContext?.packageKey,
       }),
     )
 
-    return NextResponse.json({ leadId: data.id })
+    const funnelRecorded = funnelContext
+      ? await recordFunnelEvent({
+          context: funnelContext,
+          eventId: funnelEventId,
+          milestone: "lead_captured",
+          leadId: data.id,
+          touch: funnelTouch,
+        })
+          .then(() => true)
+          .catch((error) => {
+            console.warn("[funnel] lead attachment failed", error)
+            return false
+          })
+      : false
+
+    return leadResponse(data.id, Boolean(funnelTouch) && funnelRecorded)
   } catch (err) {
     console.error("Lead API error:", err)
     return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
   }
+}
+
+function leadResponse(leadId: string, clearTouch: boolean) {
+  const response = NextResponse.json({ leadId })
+  if (clearTouch) response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+  return response
 }

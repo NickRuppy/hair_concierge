@@ -6,6 +6,8 @@ type BuildStripeCheckoutSessionParamsInput = {
   customerId?: string
   customerEmail?: string
   leadId?: string | null
+  funnelSessionId?: string | null
+  funnelPackageKey?: string | null
 }
 
 export function buildStripeCheckoutSessionParams({
@@ -14,6 +16,8 @@ export function buildStripeCheckoutSessionParams({
   customerId,
   customerEmail,
   leadId,
+  funnelSessionId,
+  funnelPackageKey,
 }: BuildStripeCheckoutSessionParamsInput): Stripe.Checkout.SessionCreateParams {
   return {
     mode: "subscription",
@@ -31,6 +35,13 @@ export function buildStripeCheckoutSessionParams({
       },
     },
     excluded_payment_method_types: ["sepa_debit"],
-    metadata: leadId ? { lead_id: leadId } : undefined,
+    metadata:
+      leadId || funnelSessionId || funnelPackageKey
+        ? {
+            ...(leadId ? { lead_id: leadId } : {}),
+            ...(funnelSessionId ? { funnel_session_id: funnelSessionId } : {}),
+            ...(funnelPackageKey ? { funnel_package_key: funnelPackageKey } : {}),
+          }
+        : undefined,
   }
 }

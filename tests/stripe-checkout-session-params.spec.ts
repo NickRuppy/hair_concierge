@@ -24,6 +24,34 @@ test("preserves lead metadata without applying launch discounts", () => {
   assert.equal("discounts" in params, false)
 })
 
+test("preserves funnel metadata with and without a lead", () => {
+  const withLead = buildStripeCheckoutSessionParams({
+    origin: "https://chaarlie.example",
+    priceId: "price_month",
+    customerEmail: "lead@example.com",
+    leadId: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
+    funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    funnelPackageKey: "scalp_check_placeholder",
+  })
+  assert.deepEqual(withLead.metadata, {
+    lead_id: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
+    funnel_session_id: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    funnel_package_key: "scalp_check_placeholder",
+  })
+
+  const withoutLead = buildStripeCheckoutSessionParams({
+    origin: "https://chaarlie.example",
+    priceId: "price_month",
+    customerEmail: "lead@example.com",
+    funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    funnelPackageKey: "default_organic",
+  })
+  assert.deepEqual(withoutLead.metadata, {
+    funnel_session_id: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    funnel_package_key: "default_organic",
+  })
+})
+
 test("passes customer for customerId input without customer_email", () => {
   const params = buildStripeCheckoutSessionParams({
     origin: "https://chaarlie.example",

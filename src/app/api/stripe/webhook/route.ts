@@ -42,6 +42,7 @@ import {
   type CustomerIoLifecycleEvent,
 } from "@/lib/customerio/stripe-lifecycle"
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
+import { recordFunnelPurchaseFromSession } from "@/lib/funnel/server"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 
@@ -109,13 +110,16 @@ async function recordStripeCheckoutAnalytics(input: {
   const value = amountFromMinorUnits(session.amount_total)
   const currency = normalizedCurrency(session.currency)
   const planId = planIdForInterval(interval)
+  const funnelSessionId = session.metadata?.funnel_session_id
+  const funnelPackageKey = session.metadata?.funnel_package_key
+  const purchaseEventKey = billingAnalyticsEventKey({
+    provider: "stripe",
+    eventName: "purchase_completed",
+    sourceObjectId: session.id,
+  })
 
   await recordStripeBillingAnalytics(supabase, defer, {
-    eventKey: billingAnalyticsEventKey({
-      provider: "stripe",
-      eventName: "purchase_completed",
-      sourceObjectId: session.id,
-    }),
+    eventKey: purchaseEventKey,
     eventName: "purchase_completed",
     userId: activation.userId,
     providerCustomerId: activation.stripeCustomerId,
@@ -131,8 +135,19 @@ async function recordStripeCheckoutAnalytics(input: {
       interval,
       plan_id: planId,
       subscription_status: activation.subscriptionStatus,
+      funnel_session_id: funnelSessionId,
+      funnel_package_key: funnelPackageKey,
     },
   })
+
+  await recordFunnelPurchaseFromSession({
+    sessionId: funnelSessionId,
+    packageKey: funnelPackageKey,
+    eventId: purchaseEventKey,
+    provider: "stripe",
+    reference: session.id,
+    userId: activation.userId,
+  }).catch((error) => console.warn("[funnel] Stripe purchase tracking failed", error))
 
   await recordStripeBillingAnalytics(supabase, defer, {
     eventKey: billingAnalyticsEventKey({

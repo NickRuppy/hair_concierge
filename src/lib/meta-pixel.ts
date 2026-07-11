@@ -1,4 +1,5 @@
 import type { CookieConsent } from "@/lib/cookie-consent"
+import { isFunnelMetaBrowserCustomDataEnabled } from "@/lib/funnel/flags"
 
 const DEFAULT_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "988892550357504"
 const META_SCRIPT_ID = "meta-pixel-script"
@@ -289,7 +290,7 @@ function dispatchMetaEvent(
 export function trackMetaCustomEvent(
   eventName: string,
   properties?: MetaEventProperties,
-  options: Pick<BrowserTargets, "win"> = {},
+  options: Pick<BrowserTargets, "win"> & Pick<MetaDispatchOptions, "eventID"> = {},
 ) {
   const win =
     options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
@@ -297,7 +298,11 @@ export function trackMetaCustomEvent(
 
   const cleanProperties = sanitizeProperties(properties)
   if (cleanProperties && Object.keys(cleanProperties).length > 0) {
-    win.fbq("trackCustom", eventName, cleanProperties)
+    if (options.eventID) {
+      win.fbq("trackCustom", eventName, cleanProperties, { eventID: options.eventID })
+    } else {
+      win.fbq("trackCustom", eventName, cleanProperties)
+    }
   } else {
     win.fbq("trackCustom", eventName)
   }
@@ -308,11 +313,27 @@ export function trackMetaPageView(options: Pick<BrowserTargets, "win"> = {}) {
   return trackMetaEvent("PageView", undefined, options)
 }
 
-export function trackMetaQuizStarted(stepName: string, stepNumber: number) {
-  return trackMetaCustomEvent("QuizStarted", {
-    step_name: stepName,
-    step_number: stepNumber,
-  })
+function funnelPackageProperties(packageKey?: string | null): MetaEventProperties {
+  return isFunnelMetaBrowserCustomDataEnabled() && packageKey
+    ? { funnel_package_key: packageKey }
+    : {}
+}
+
+export function trackMetaQuizStarted(
+  stepName: string,
+  stepNumber: number,
+  eventID?: string | null,
+  packageKey?: string | null,
+) {
+  return trackMetaCustomEvent(
+    "QuizStarted",
+    {
+      step_name: stepName,
+      step_number: stepNumber,
+      ...funnelPackageProperties(packageKey),
+    },
+    { eventID: eventID ?? undefined },
+  )
 }
 
 export function trackMetaQuizStepViewed(stepName: string, stepNumber: number) {
@@ -322,37 +343,67 @@ export function trackMetaQuizStepViewed(stepName: string, stepNumber: number) {
   })
 }
 
-export function trackMetaQuizCompleted() {
+export function trackMetaQuizCompleted(eventID?: string | null, packageKey?: string | null) {
   const properties = {
     content_name: "quiz",
     funnel_step: "quiz_completed",
+    ...funnelPackageProperties(packageKey),
   }
-  const standardTracked = trackMetaEvent("CompleteRegistration", properties)
-  const customTracked = trackMetaCustomEvent("QuizCompleted", properties)
+  const standardTracked = trackMetaEvent("CompleteRegistration", properties, {
+    eventID: eventID ?? undefined,
+  })
+  const customTracked = trackMetaCustomEvent("QuizCompleted", properties, {
+    eventID: eventID ?? undefined,
+  })
   return standardTracked || customTracked
 }
 
-export function trackMetaLeadCaptured(marketingConsent: boolean) {
-  return trackMetaEvent("Lead", {
-    content_name: "quiz_lead_capture",
-    marketing_consent: marketingConsent,
-  })
+export function trackMetaLeadCaptured(
+  marketingConsent: boolean,
+  eventID?: string | null,
+  packageKey?: string | null,
+) {
+  return trackMetaEvent(
+    "Lead",
+    {
+      content_name: "quiz_lead_capture",
+      marketing_consent: marketingConsent,
+      ...funnelPackageProperties(packageKey),
+    },
+    { eventID: eventID ?? undefined },
+  )
 }
 
-export function trackMetaPricingViewed(source: "pricing_page" | "quiz_result_offer_pricing") {
-  return trackMetaEvent("ViewContent", {
-    content_name: source,
-  })
+export function trackMetaPricingViewed(
+  source: "pricing_page" | "quiz_result_offer_pricing",
+  eventID?: string | null,
+  packageKey?: string | null,
+) {
+  return trackMetaEvent(
+    "ViewContent",
+    {
+      content_name: source,
+      ...funnelPackageProperties(packageKey),
+    },
+    { eventID: eventID ?? undefined },
+  )
 }
 
 export function trackMetaCheckoutStarted(
   source: "pricing_page" | "quiz_result_offer",
   interval: string | null,
+  eventID?: string | null,
+  packageKey?: string | null,
 ) {
-  return trackMetaEvent("InitiateCheckout", {
-    content_name: source,
-    interval,
-  })
+  return trackMetaEvent(
+    "InitiateCheckout",
+    {
+      content_name: source,
+      interval,
+      ...funnelPackageProperties(packageKey),
+    },
+    { eventID: eventID ?? undefined },
+  )
 }
 
 export function trackMetaSubscriptionConfirmed(
