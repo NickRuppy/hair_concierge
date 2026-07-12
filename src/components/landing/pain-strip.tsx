@@ -21,8 +21,8 @@ export function PainStrip() {
             </p>
           ))}
           <p className="mt-4 max-w-[520px] text-[15px] text-white">
-            Alle drei haben dieselbe Ursache: Produkte, die nicht zu deinem Haar passen. Deshalb
-            beginnt Chaarlie mit einer Analyse — nicht mit einer Empfehlung.
+            Unpassende Produkte oder Routinen können zu solchen Problemen beitragen. Deshalb beginnt
+            Chaarlie mit deinen Angaben — nicht mit einer pauschalen Empfehlung.
           </p>
         </div>
       </div>

@@ -8,8 +8,8 @@ export function FinalCta() {
           className="mx-auto mb-3.5 font-header font-medium leading-[1.2] text-white"
           style={{ fontSize: "clamp(28px, 4vw, 40px)" }}
         >
-          Bereit, herauszufinden, was deine Haare{" "}
-          <em className="font-medium italic text-[var(--brand-plum-light)]">wirklich</em> brauchen?
+          Bereit für eine Pflege, die besser zu deinen{" "}
+          <em className="font-medium italic text-[var(--brand-plum-light)]">Haaren passt?</em>
         </h2>
         <p
           className="mx-auto mb-8 max-w-[520px] text-[17px]"

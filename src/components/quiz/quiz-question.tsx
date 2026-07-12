@@ -109,7 +109,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
 
       {/* Title */}
       <div className="mb-2 flex items-baseline gap-2">
-        <h2 className="font-header text-3xl leading-tight text-foreground">{question.title}</h2>
+        <h1 className="font-header text-3xl leading-tight text-foreground">{question.title}</h1>
         {infoTip && (
           <InfoTip
             title={infoTip.title}

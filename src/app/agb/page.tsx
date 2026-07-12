@@ -1,8 +1,8 @@
+import type { Metadata } from "next"
 import Link from "next/link"
+import { LEGAL_PAGE_METADATA } from "@/lib/seo/site-identity"
 
-export const metadata = {
-  title: "Allgemeine Geschäftsbedingungen (AGB)",
-}
+export const metadata: Metadata = LEGAL_PAGE_METADATA.agb
 
 export default function AgbPage() {
   return (
@@ -127,9 +127,9 @@ export default function AgbPage() {
           <section>
             <h2 className="mb-2 text-base font-medium text-foreground">§ 9 Geistiges Eigentum</h2>
             <p>
-              Alle Inhalte der App (Diagnosen, Routinen, Produktempfehlungen) sind urheberrechtlich
-              geschützt. Der Nutzer erhält ein einfaches, nicht übertragbares Nutzungsrecht für die
-              Dauer des Abonnements.
+              Alle Inhalte der App (Auswertungen, Routinen, Produktempfehlungen) sind
+              urheberrechtlich geschützt. Der Nutzer erhält ein einfaches, nicht übertragbares
+              Nutzungsrecht für die Dauer des Abonnements.
             </p>
           </section>
 

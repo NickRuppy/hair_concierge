@@ -23,8 +23,13 @@ test("sends unauthenticated app routes to login even without returning cookie", 
   )
 })
 
-test("keeps first-time non-app protected routes on the quiz funnel", () => {
-  assert.equal(getUnauthenticatedRedirectTarget("/unknown-private", "", false), "/quiz")
+test("keeps first-time protected routes outside the app prefixes on the quiz funnel", () => {
+  assert.equal(getUnauthenticatedRedirectTarget("/api/billing/access", "", false), "/quiz")
+})
+
+test("matches auth-first routes on segment boundaries", () => {
+  assert.equal(getUnauthenticatedRedirectTarget("/chatty", "", false), "/quiz")
+  assert.equal(getUnauthenticatedRedirectTarget("/api/routines", "", false), "/quiz")
 })
 
 test("preserves session-expired copy for known returning users", () => {

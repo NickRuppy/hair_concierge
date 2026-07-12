@@ -53,9 +53,8 @@ export default async function OgImage() {
             color: "#2A1845",
           }}
         >
-          In 2 Minuten weißt du, was deine Haare&nbsp;
-          <span style={{ color: "#6B50A0", display: "flex" }}>wirklich</span>
-          &nbsp;brauchen.
+          In 2 Minuten verstehst du besser, welche Pflege zu deinen&nbsp;
+          <span style={{ color: "#6B50A0", display: "flex" }}>Haaren passt.</span>
         </div>
         <div
           style={{
@@ -149,7 +148,7 @@ export default async function OgImage() {
                 marginBottom: "10px",
               }}
             >
-              IN 4 WOCHEN
+              MÖGLICHES PFLEGEZIEL
             </span>
             <span
               style={{
@@ -159,7 +158,7 @@ export default async function OgImage() {
                 color: "#1F4D33",
               }}
             >
-              mehr Elastizität
+              mehr Geschmeidigkeit
             </span>
           </div>
         </div>
