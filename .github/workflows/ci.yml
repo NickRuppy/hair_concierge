@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Enforce fork contributor paths
@@ -104,7 +104,7 @@ jobs:
       security_scan: ${{ steps.changes.outputs.security_scan }}
       full_ci: ${{ steps.changes.outputs.full_ci }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Detect changed paths
@@ -120,7 +120,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -143,7 +143,7 @@ jobs:
     timeout-minutes: 15
     needs: [detect-ci-scope, quality-core]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -183,7 +183,7 @@ jobs:
     timeout-minutes: 15
     needs: [detect-ci-scope, quality-core]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -217,7 +217,7 @@ jobs:
     timeout-minutes: 10
     needs: [detect-ci-scope, quality-core]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
