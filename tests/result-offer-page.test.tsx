@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { QuizResultOfferPageShell } from "../src/components/quiz/quiz-result-offer-page"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
 
-test("result offer page shell renders the unified diagnostic offer sections and live pricing copy", () => {
+test("result offer page shell renders the unified offer sections and live pricing copy", () => {
   const narrative = buildQuizResultNarrative({
     structure: "wavy",
     thickness: "normal",
@@ -44,6 +44,19 @@ test("result offer page shell renders the unified diagnostic offer sections and 
   assert.match(html, /Ohne vs\. mit Chaarlie/i)
   assert.match(html, />Ohne</i)
   assert.match(html, />Chaarlie</i)
+  assert.match(html, /500\+ erfasste Haarpflegeprodukte/i)
+  assert.match(html, /Nachvollziehbar ausgewählt/i)
+  assert.match(html, /Pflegefortschritt/i)
+  assert.match(html, /Nach 4 Wochen prüfen/i)
+  assert.match(html, /Produktauswahl/i)
+  assert.match(html, /Gezielter auswählen/i)
+  assert.match(html, /persönlicher digitaler Haarpflege-Berater/i)
+  assert.match(html, /Angebot läuft ab in/i)
+  assert.match(html, /Danach zum regulären Preis/i)
+  assert.doesNotMatch(
+    html,
+    /Geld für falsche Produkte|Hunderte €|Nie wieder|Kein Risiko|Danach gilt der normale Preis/i,
+  )
   // No residual Haarmony brand mentions
   assert.doesNotMatch(html, /Haarmony/i)
   assert.match(html, /Monatlich/i)

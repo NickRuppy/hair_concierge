@@ -3,6 +3,11 @@ import { NextResponse, type NextRequest } from "next/server"
 import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
 import { findCurrentManualAccessGrant } from "@/lib/billing/subscriptions"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
+import {
+  classifyRoute,
+  pathMatchesRoutePrefix,
+  type RouteEnvironment,
+} from "@/lib/auth/route-classification"
 
 const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/chat", "/routine"]
 const SUB_REQUIRED_PREFIXES = [
@@ -13,10 +18,30 @@ const SUB_REQUIRED_PREFIXES = [
   "/routine",
   "/api/routine",
 ]
-
-export function pathMatchesRoutePrefix(pathname: string, prefix: string) {
-  return pathname === prefix || pathname.startsWith(`${prefix}/`)
-}
+const ROUTES_WITHOUT_AUTH_LOOKUP = [
+  "/",
+  "/agb",
+  "/datenschutz",
+  "/icon",
+  "/impressum",
+  "/kontakt",
+  "/lp",
+  "/methodik",
+  "/opengraph-image",
+  "/pricing",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/twitter-image",
+  "/widerruf",
+  "/api/og",
+  "/api/funnel",
+  "/api/stripe",
+  "/api/paypal",
+  "/api/auth/send-magic-link",
+  "/api/auth/send-setup-link",
+  "/api/auth/set-checkout-password",
+  "/welcome",
+]
 
 export function isAuthenticatedAppRoutePath(pathname: string) {
   return AUTHENTICATED_APP_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
@@ -26,13 +51,25 @@ export function requiresSubscriptionPath(pathname: string) {
   return SUB_REQUIRED_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
 }
 
+export function isAdminRoutePath(pathname: string) {
+  return (
+    pathMatchesRoutePrefix(pathname, "/admin") || pathMatchesRoutePrefix(pathname, "/api/admin")
+  )
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
 
   const { pathname } = request.nextUrl
-  if (pathname === "/offer") {
+  const routeEnvironment: RouteEnvironment = {
+    nodeEnv: process.env.NODE_ENV,
+    localDevLoginEnabled: process.env.LOCAL_DEV_LOGIN_ENABLED === "1",
+  }
+  const routeClassification = classifyRoute(pathname, routeEnvironment)
+
+  if (routeClassification === "legacy") {
     const url = request.nextUrl.clone()
     const leadId = url.searchParams.get("lead_id") ?? url.searchParams.get("lead")
 
@@ -47,24 +84,11 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  const isPublicMarketingRoute =
-    pathname === "/" ||
-    ["/agb", "/datenschutz", "/impressum", "/kontakt", "/lp", "/pricing", "/widerruf"].some(
-      (route) => pathMatchesRoutePrefix(pathname, route),
-    )
-  const fastPublicRoutes = [
-    "/api/stripe",
-    "/api/paypal",
-    "/api/funnel",
-    "/api/auth/send-magic-link",
-    "/api/auth/send-setup-link",
-    "/api/auth/set-checkout-password",
-    "/welcome",
-  ]
-  if (
-    isPublicMarketingRoute ||
-    fastPublicRoutes.some((route) => pathMatchesRoutePrefix(pathname, route))
-  ) {
+  if (routeClassification === "unknown") {
+    return supabaseResponse
+  }
+
+  if (ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))) {
     return supabaseResponse
   }
 
@@ -99,43 +123,7 @@ export async function updateSession(request: NextRequest) {
   const needsAuthenticatedAppRouting =
     pathname === "/auth" || pathname === "/quiz" || isAuthenticatedAppRoutePath(pathname)
 
-  // Public routes that don't need auth
-  const publicRoutes = [
-    "/auth",
-    "/api/auth/callback",
-    "/auth/confirm",
-    "/quiz",
-    "/api/quiz",
-    "/api/funnel",
-    "/lp",
-    "/result",
-    "/api/og",
-    "/opengraph-image",
-    "/twitter-image",
-    "/datenschutz",
-    "/impressum",
-    "/agb",
-    "/widerruf",
-    "/kontakt",
-    "/pricing",
-    "/welcome",
-    "/api/stripe",
-    "/api/paypal",
-    ...(process.env.NODE_ENV === "development"
-      ? ["/labs", "/api/labs", "/api/debug/build-info"]
-      : []),
-    ...(process.env.NODE_ENV === "development" && process.env.LOCAL_DEV_LOGIN_ENABLED === "1"
-      ? ["/api/dev/login"]
-      : []),
-    // /welcome calls these to dispatch setup / login-link emails before the
-    // user has signed into Supabase (they're only identified by the Stripe
-    // session_id in the request body; the route itself verifies).
-    "/api/auth/send-magic-link",
-    "/api/auth/send-setup-link",
-    "/api/auth/set-checkout-password",
-  ]
-  const isPublicRoute =
-    pathname === "/" || publicRoutes.some((route) => pathMatchesRoutePrefix(pathname, route))
+  const isPublicRoute = routeClassification === "public" || routeClassification === "development"
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
@@ -266,7 +254,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Admin route protection
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+  if (isAdminRoutePath(pathname)) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("is_admin")

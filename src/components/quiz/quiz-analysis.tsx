@@ -5,8 +5,8 @@ import { useQuizStore } from "@/lib/quiz/store"
 import { Loader2, Check } from "lucide-react"
 
 const steps = [
-  "Haarstruktur wird analysiert ...",
-  "Protein-Feuchtigkeits-Balance wird berechnet ...",
+  "Deine Angaben zur Haarstruktur werden ausgewertet ...",
+  "Deine Pflegebedürfnisse werden eingeordnet ...",
   "Dein persönliches Profil wird erstellt ...",
 ]
 

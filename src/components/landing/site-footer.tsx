@@ -22,7 +22,8 @@ export function SiteFooter() {
               <Wordmark />
             </Link>
             <p className="mt-3 max-w-[280px] text-sm leading-relaxed text-muted-foreground">
-              Wissenschaftliche Haaranalyse, persönlich abgestimmt. Ein Produkt der Haarmony LLC.
+              Strukturierte Haarpflege-Auswertung auf Basis deiner Angaben. Ein Produkt der Haarmony
+              LLC.
             </p>
           </div>
 
@@ -32,6 +33,11 @@ export function SiteFooter() {
               <li>
                 <Link href="/quiz" prefetch={false} className={linkClass}>
                   Haaranalyse starten
+                </Link>
+              </li>
+              <li>
+                <Link href="/methodik" className={linkClass}>
+                  Methodik
                 </Link>
               </li>
             </ul>

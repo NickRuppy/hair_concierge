@@ -18,9 +18,9 @@ const items: Item[] = [
       <>
         Mit Marke und Größe — und{" "}
         <span className="font-semibold text-[#2D9F5E]">
-          immer einer günstigen Drogerie-Alternative
+          wenn verfügbar, einer günstigeren Drogerie-Alternative
         </span>
-        . Wir verkaufen nichts und sind keinem Hersteller verpflichtet.
+        . Chaarlie verkauft keine eigenen Haarpflegeprodukte. Kauflinks können Affiliate-Links sein.
       </>
     ),
   },
@@ -29,7 +29,7 @@ const items: Item[] = [
 const honesty = [
   "Keine eigenen Produkte",
   "Keinem Hersteller verpflichtet",
-  "Daten nur für deine Analyse",
+  "Transparente Datennutzung",
 ] as const
 
 export function WhatYouGet() {
@@ -38,7 +38,7 @@ export function WhatYouGet() {
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow={`Das bekommst du — sofort nach den ${QUIZ_TOTAL_QUESTIONS} Fragen`}
-          title="Keine Produkt-Werbung. Eine Diagnose."
+          title="Keine eigenen Produkte. Eine persönliche Auswertung."
         />
 
         <div className="mt-7 grid gap-3.5 md:grid-cols-3">

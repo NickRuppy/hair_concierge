@@ -21,24 +21,25 @@ const items: FaqItem[] = [
   {
     question: "Wie lange dauert es, bis ich Ergebnisse sehe?",
     answer:
-      "Dein Haarprofil und die Routine bekommst du sofort. Sichtbare Veränderungen im Haar zeigen sich in der Regel nach 2 bis 4 Wochen konsequenter Anwendung.",
+      "Dein Haarprofil und die Routine bekommst du sofort. Ob und wann du Veränderungen bemerkst, hängt von deinem Haar, den gewählten Produkten und der konsequenten Anwendung ab.",
   },
   {
     question: "Sind die empfohlenen Produkte teuer?",
     answer:
-      "Wir empfehlen Produkte für jeden Preisbereich. Für jedes Salon-Produkt gibt es eine Drogerie-Alternative, die ähnlich gut funktioniert. Du entscheidest, was zu deinem Budget passt.",
+      "Wir berücksichtigen unterschiedliche Preisbereiche. Wenn eine sinnvolle günstigere Alternative verfügbar ist, zeigen wir sie dir und erklären die wichtigsten Unterschiede.",
   },
   {
     question: "Wer steht hinter Chaarlie?",
     answer:
-      "Ein kleines, unabhängiges Team. Wir verkaufen keine eigenen Produkte und sind keinem Hersteller verpflichtet — unsere Empfehlungen richten sich nur nach deinem Haar.",
+      "Hinter Chaarlie steht ein kleines Team der Haarmony LLC. Wir verkaufen keine eigenen Haarpflegeprodukte. Empfehlungen basieren auf deinen Angaben und unseren Produktdaten; Kauflinks können Affiliate-Links sein.",
   },
   {
     question: "Was passiert mit meinen Daten?",
     answer: (
       <>
-        Deine Antworten werden ausschließlich verwendet, um deine persönliche Analyse und Routine zu
-        erstellen. Wir verkaufen keine Daten an Dritte. Details findest du in unserer{" "}
+        Deine Antworten nutzen wir für deine persönliche Auswertung und Routine sowie dafür,
+        Chaarlie sicher bereitzustellen und zu verbessern. Wir verkaufen deine Daten nicht. Details
+        findest du in unserer{" "}
         <Link href="/datenschutz" className="underline hover:text-[var(--brand-plum-darkest)]">
           Datenschutzerklärung
         </Link>

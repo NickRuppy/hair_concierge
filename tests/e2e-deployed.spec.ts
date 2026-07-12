@@ -9,7 +9,7 @@ test.describe("Deployed App E2E Tests", () => {
     // / is now the marketing landing — should NOT redirect
     expect(page.url()).toMatch(/\/$/)
     // Hero H1 signature copy
-    await expect(page.locator("h1").first()).toContainText("In 2 Minuten weißt du", {
+    await expect(page.locator("h1").first()).toContainText("In 2 Minuten verstehst du besser", {
       timeout: 15000,
     })
     // Header CTA links to /quiz

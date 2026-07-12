@@ -1,8 +1,8 @@
+import type { Metadata } from "next"
 import Link from "next/link"
+import { LEGAL_PAGE_METADATA } from "@/lib/seo/site-identity"
 
-export const metadata = {
-  title: "Datenschutzerklärung",
-}
+export const metadata: Metadata = LEGAL_PAGE_METADATA.datenschutz
 
 export default function DatenschutzPage() {
   return (
@@ -67,7 +67,7 @@ export default function DatenschutzPage() {
               <strong className="text-foreground">b) Beim Quiz / der Haaranalyse:</strong> Deine
               Antworten zu Haarstruktur, Kopfhaut, Pflegegewohnheiten und Zielen sowie deine
               E-Mail-Adresse, sofern du sie angibst. Diese Daten verwenden wir, um dir deine
-              persönliche Diagnose und Routine zu erstellen (Rechtsgrundlage: Art. 6 Abs. 1 lit. b
+              persönliche Auswertung und Routine zu erstellen (Rechtsgrundlage: Art. 6 Abs. 1 lit. b
               DSGVO, Vertragserfüllung).
             </p>
             <p className="mt-2">

@@ -24,7 +24,20 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 ]
 
-const nextConfig: NextConfig = {
+const noindexRoutes = [
+  "/admin/:path*",
+  "/auth/:path*",
+  "/chat/:path*",
+  "/labs/:path*",
+  "/onboarding/:path*",
+  "/pricing/:path*",
+  "/profile/:path*",
+  "/result/:path*",
+  "/routine/:path*",
+  "/welcome/:path*",
+]
+
+export const nextConfig: NextConfig = {
   // Keep Turbopack scoped to this repo even when a parent folder has another lockfile.
   turbopack: {
     root: process.cwd(),
@@ -47,7 +60,13 @@ const nextConfig: NextConfig = {
     "/api/chat": ["./data/agent-guidance/**/*", "./data/agent-v2/guidance/**/*"],
   },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }]
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      ...noindexRoutes.map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      })),
+    ]
   },
 }
 

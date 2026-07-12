@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { LazyCookieConsent } from "@/components/cookie-consent/lazy-cookie-consent"
+import { ROOT_METADATA } from "@/lib/seo/site-identity"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -32,27 +33,7 @@ export const viewport: Viewport = {
   themeColor: "#FDFBF9",
 }
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://chaarlie.de"),
-  title: "Chaarlie — Dein persönlicher Haarpflege-Berater",
-  description:
-    "Kostenlose Haaranalyse in 2 Minuten. Dein Haarprofil, deine Routine und konkrete Produkte — ehrlich, ohne Anmeldung.",
-  openGraph: {
-    title: "Weißt du, was deine Haare wirklich brauchen?",
-    description:
-      "Kostenlose Haaranalyse in 2 Minuten. Dein Haarprofil, deine Routine und konkrete Produkte — ehrlich, ohne Anmeldung.",
-    url: "/",
-    siteName: "Chaarlie",
-    locale: "de_DE",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Weißt du, was deine Haare wirklich brauchen?",
-    description:
-      "Kostenlose Haaranalyse in 2 Minuten. Dein Haarprofil, deine Routine und konkrete Produkte — ehrlich, ohne Anmeldung.",
-  },
-}
+export const metadata: Metadata = ROOT_METADATA
 
 export default function RootLayout({
   children,

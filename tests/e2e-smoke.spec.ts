@@ -8,7 +8,7 @@ test.describe("Core user flows — smoke test @ci", () => {
     expect(response?.ok() || response?.status() === 304).toBeTruthy()
     // Hero H1 is the marketing landing's signature copy
     const heroHeading = page.locator("h1").first()
-    await expect(heroHeading).toContainText("In 2 Minuten weißt du")
+    await expect(heroHeading).toContainText("In 2 Minuten verstehst du besser")
     // The header CTA should link to /quiz (multiple CTAs share this name — take the header's)
     const quizCta = page.getByRole("link", { name: "Haaranalyse starten" }).first()
     await expect(quizCta).toHaveAttribute("href", "/quiz")

@@ -239,7 +239,7 @@ export function ResultOfferPricing({
         {selectedPlan.ctaLabel}
       </Button>
       <p className="text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
-        14 Tage Geld-zurück-Garantie · Kein Risiko
+        14 Tage Geld-zurück-Garantie · Details in den Bedingungen
       </p>
 
       <div ref={checkoutRef}>

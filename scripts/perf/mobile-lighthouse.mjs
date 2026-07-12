@@ -6,7 +6,7 @@ import path from "node:path"
 import process from "node:process"
 
 const baseUrl = (process.env.LH_BASE_URL || "https://chaarlie.de").replace(/\/$/, "")
-const paths = (process.env.LH_PATHS || "/,/quiz,/pricing,/auth")
+const paths = (process.env.LH_PATHS || "/,/quiz,/methodik")
   .split(",")
   .map((value) => value.trim())
   .filter(Boolean)
@@ -19,11 +19,17 @@ const thresholds = {
   lcpMs: Number(process.env.LH_LCP_MS || 2500),
   cls: Number(process.env.LH_CLS || 0.1),
   tbtMs: Number(process.env.LH_TBT_MS || 300),
+  seoScore: Number(process.env.LH_SEO_SCORE || 0.9),
 }
 
 function slugForPath(value) {
   if (value === "/") return "home"
-  return value.replace(/^\/+/, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "page"
+  return (
+    value
+      .replace(/^\/+/, "")
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/^-|-$/g, "") || "page"
+  )
 }
 
 function pageUrl(pagePath) {
@@ -42,22 +48,23 @@ function run(command, args) {
   }
 }
 
-function readMetric(reportPath, auditId) {
-  const report = JSON.parse(readFileSync(reportPath, "utf8"))
-  return Number(report.audits?.[auditId]?.numericValue ?? Number.NaN)
-}
-
 function evaluate(reportPath, targetUrl) {
-  const lcp = readMetric(reportPath, "largest-contentful-paint")
-  const cls = readMetric(reportPath, "cumulative-layout-shift")
-  const tbt = readMetric(reportPath, "total-blocking-time")
+  const report = JSON.parse(readFileSync(reportPath, "utf8"))
+  const metric = (auditId) => Number(report.audits?.[auditId]?.numericValue ?? Number.NaN)
+  const lcp = metric("largest-contentful-paint")
+  const cls = metric("cumulative-layout-shift")
+  const tbt = metric("total-blocking-time")
+  const seo = Number(report.categories?.seo?.score ?? Number.NaN)
   const failures = []
 
   if (!Number.isFinite(lcp) || lcp > thresholds.lcpMs) failures.push(`LCP ${Math.round(lcp)}ms`)
   if (!Number.isFinite(cls) || cls > thresholds.cls) failures.push(`CLS ${cls.toFixed(3)}`)
   if (!Number.isFinite(tbt) || tbt > thresholds.tbtMs) failures.push(`TBT ${Math.round(tbt)}ms`)
+  if (!Number.isFinite(seo) || seo < thresholds.seoScore) {
+    failures.push(`SEO ${Number.isFinite(seo) ? Math.round(seo * 100) : "missing"}`)
+  }
 
-  const summary = `${targetUrl}: LCP ${Math.round(lcp)}ms, CLS ${cls.toFixed(3)}, TBT ${Math.round(tbt)}ms`
+  const summary = `${targetUrl}: LCP ${Math.round(lcp)}ms, CLS ${cls.toFixed(3)}, TBT ${Math.round(tbt)}ms, SEO ${Math.round(seo * 100)}`
   if (failures.length > 0) {
     console.error(`FAIL ${summary} (${failures.join(", ")})`)
     return false
@@ -72,7 +79,7 @@ function lighthouseArgs(targetUrl, outputBase) {
     "--yes",
     lighthousePackage,
     targetUrl,
-    "--only-categories=performance",
+    "--only-categories=performance,seo",
     "--form-factor=mobile",
     "--screenEmulation.mobile=true",
     "--throttling-method=simulate",

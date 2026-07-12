@@ -25,10 +25,10 @@ const FEATURES = [
     imageAlt: "KI Haar-Berater",
   },
   {
-    kicker: "500+ geprüfte Produkte",
-    title: "Das richtige Shampoo. Der richtige Conditioner. Sofort.",
-    body: "Chaarlie sagt dir genau, welche Produkte zu deiner Situation passen und warum.",
-    benefit: "Nie wieder Fehlkäufe. Jedes Produkt hat einen Grund.",
+    kicker: "500+ erfasste Haarpflegeprodukte",
+    title: "Passende Produkte. Nachvollziehbar ausgewählt.",
+    body: "Chaarlie gleicht Produkte mit deinen Angaben ab und erklärt dir, warum sie zu deiner Situation passen können.",
+    benefit: "Weniger Rätselraten. Jede Auswahl hat einen nachvollziehbaren Grund.",
     imageUrl: FEATURE_IMAGES.products,
     imageAlt: "Produktempfehlungen",
   },
@@ -47,8 +47,8 @@ const COMPARISON_ROWS = [
   ["Passende Produkte", "Rätselraten", "500+ mit Namen"],
   ["Persönliche Routine", "Trial & Error", "Sofort"],
   ["Beratung bei Fragen", "Teurer Salon", "Jederzeit"],
-  ["Sichtbares Ergebnis", "Monate?", "4 Wochen"],
-  ["Geld für falsche Produkte", "Hunderte €", "0 €"],
+  ["Pflegefortschritt", "Schwer einzuordnen", "Nach 4 Wochen prüfen"],
+  ["Produktauswahl", "Versuch & Irrtum", "Gezielter auswählen"],
 ] as const
 
 function firstName(name: string): string {
@@ -272,7 +272,7 @@ export function QuizResultOfferPageShell({
             Was Chaarlie für dich tut
           </p>
           <h2 className="text-center font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
-            Dein persönlicher Haar-Experte. Immer dabei.
+            Dein persönlicher digitaler Haarpflege-Berater.
           </h2>
           {FEATURES.map((feature) => (
             <article
@@ -363,7 +363,7 @@ export function QuizResultOfferPageShell({
               className="flex items-center justify-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-coral)]"
               valueClassName="block font-sans text-[32px] font-bold leading-none text-[var(--brand-plum-darkest)]"
             />
-            <p className="mt-2 text-[12px] text-muted-foreground">Danach gilt der normale Preis</p>
+            <p className="mt-2 text-[12px] text-muted-foreground">Danach zum regulären Preis</p>
           </div>
           {pricingSlot ?? <StaticPricingPreview />}
           <article className="mt-7 rounded-[14px] border border-border bg-white p-6 text-center">

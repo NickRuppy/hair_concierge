@@ -1,8 +1,8 @@
+import type { Metadata } from "next"
 import Link from "next/link"
+import { LEGAL_PAGE_METADATA } from "@/lib/seo/site-identity"
 
-export const metadata = {
-  title: "Kontakt",
-}
+export const metadata: Metadata = LEGAL_PAGE_METADATA.kontakt
 
 export default function KontaktPage() {
   return (

@@ -10,6 +10,39 @@ test("allows unauthenticated marketing pages through the proxy without auth look
   assert.equal(response.headers.get("location"), null)
 })
 
+test("allows crawl resources through without auth lookup", async () => {
+  for (const pathname of [
+    "/robots.txt",
+    "/sitemap.xml",
+    "/opengraph-image",
+    "/twitter-image",
+    "/api/og/result/example",
+  ]) {
+    const response = await updateSession(new NextRequest(`https://chaarlie.de${pathname}`))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  }
+})
+
+test("allows acquisition landing pages and funnel tracking through without auth lookup", async () => {
+  for (const pathname of ["/lp/campaign-example", "/api/funnel/session"]) {
+    const response = await updateSession(new NextRequest(`https://chaarlie.de${pathname}`))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  }
+})
+
+test("passes unknown pages and APIs to Next.js without auth lookup", async () => {
+  for (const pathname of ["/does-not-exist-seo-check", "/api/does-not-exist-seo-check"]) {
+    const response = await updateSession(new NextRequest(`https://chaarlie.de${pathname}`))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  }
+})
+
 test("allows unauthenticated PayPal checkout API calls through the proxy", async () => {
   const response = await updateSession(
     new NextRequest("https://chaarlie.de/api/paypal/create-subscription-intent", {

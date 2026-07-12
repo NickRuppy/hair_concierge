@@ -16,11 +16,11 @@ export function Hero() {
             Kostenlose 2-Minuten-Haaranalyse
           </p>
           <h1 className="mb-4 font-header text-[clamp(31px,8vw,54px)] font-medium leading-[1.1] text-[var(--brand-plum-darkest)]">
-            In 2 Minuten weißt du, was deine Haare{" "}
-            <em className="font-medium italic text-[var(--brand-plum)]">wirklich</em> brauchen.
+            In 2 Minuten verstehst du besser, welche Pflege zu deinen{" "}
+            <em className="font-medium italic text-[var(--brand-plum)]">Haaren passt.</em>
           </h1>
           <p className="mb-6 max-w-[480px] text-[17px] text-muted-foreground">
-            Ehrliche Analyse statt Marketing — dein{" "}
+            Persönliche Auswertung statt pauschaler Empfehlungen — dein{" "}
             <b className="font-semibold text-[var(--brand-plum-darkest)]">Haarprofil</b>, deine{" "}
             <b className="font-semibold text-[var(--brand-plum-darkest)]">Routine</b>, deine{" "}
             <b className="font-semibold text-[var(--brand-plum-darkest)]">Produkte</b>.

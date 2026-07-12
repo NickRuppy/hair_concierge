@@ -1,3 +1,5 @@
+import { pathMatchesRoutePrefix } from "@/lib/auth/route-classification"
+
 const AUTH_FIRST_PREFIXES = [
   "/chat",
   "/routine",
@@ -13,9 +15,7 @@ const AUTH_FIRST_PREFIXES = [
 ]
 
 function isAuthFirstRoute(pathname: string): boolean {
-  return AUTH_FIRST_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  )
+  return AUTH_FIRST_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
 }
 
 export function getUnauthenticatedRedirectTarget(
