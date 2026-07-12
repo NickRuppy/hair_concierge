@@ -49,7 +49,7 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
   if (!isFunnelAttributionEnabled() || !leadId) return null
   const { data } = await createAdminClient()
     .from("funnel_sessions")
-    .select("id, visitor_id, package_key, first_seen_at")
+    .select("id, visitor_id, package_key, offer_variant, first_seen_at")
     .eq("lead_id", leadId)
     .order("first_seen_at", { ascending: false })
     .limit(1)
@@ -59,6 +59,7 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
     visitorId: data.visitor_id,
     sessionId: data.id,
     packageKey: data.package_key,
+    offerVariant: data.offer_variant,
     issuedAt: Date.parse(data.first_seen_at),
   }
 }
