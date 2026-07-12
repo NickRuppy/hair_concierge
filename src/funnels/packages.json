@@ -1,0 +1,18 @@
+[
+  {
+    "key": "default_organic",
+    "slug": null,
+    "channel": "organic",
+    "status": "active",
+    "landingVariant": "default",
+    "offerVariant": "default"
+  },
+  {
+    "key": "scalp_check_placeholder",
+    "slug": "scalp-check",
+    "channel": "meta",
+    "status": "placeholder",
+    "landingVariant": "default",
+    "offerVariant": "default"
+  }
+]

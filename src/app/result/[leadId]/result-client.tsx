@@ -2,8 +2,9 @@
 
 import { useEffect } from "react"
 
-import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
+import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
+import { renderOfferVariant } from "@/funnels/offers/registry"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -19,6 +20,7 @@ export function ResultPageClient({
   focusTarget = null,
   hasAccess,
   offerTracking = null,
+  offerVariant = "default",
 }: {
   leadId: string
   name: string
@@ -27,6 +29,7 @@ export function ResultPageClient({
   focusTarget?: ResultPageFocusTarget
   hasAccess: boolean
   offerTracking?: FunnelAnalyticsEnvelope | null
+  offerVariant?: string
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
   const cta = getQuizResultCta({ canGoStraightToRoutine: hasAccess })
@@ -53,13 +56,12 @@ export function ResultPageClient({
     )
   }
 
-  return (
-    <QuizResultOfferPage
-      name={name}
-      narrative={narrative}
-      leadId={leadId}
-      focusRoutine={focusRoutine}
-      offerTracking={offerTracking}
-    />
-  )
+  const offer = renderOfferVariant(offerVariant, {
+    name,
+    narrative,
+    focusRoutine,
+    pricingSlot: <ResultOfferPricing leadId={leadId} offerTracking={offerTracking} />,
+  })
+  if (!offer) throw new Error(`Unknown funnel offer variant: ${offerVariant}`)
+  return offer
 }

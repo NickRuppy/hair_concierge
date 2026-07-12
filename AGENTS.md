@@ -38,6 +38,10 @@ Use to redesign, specify, or implement one product category at a time: explicit 
 
 Use for product-intake research, review-center operations, image work, rework, worker debugging, publish preflight, and guarded final handoff. `docs/product-intake-research-ops.md` is the source of truth; automation prompts must not restate its policy. For a stuck worker, start with `product-intake` alone to inspect job, queue, and lock state; add `diagnosing-bugs` only after evidence identifies a reproducible code defect. Keep diagnosis read-only; retry, requeue, cancel, or clear a lock only with explicit approval.
 
+### `funnel-variant-creator`
+
+Use for campaign-matched landing and offer packages, the shared funnel generator, and bounded fork-based draft PRs. Contributors edit only `src/funnels/**`, `public/images/funnels/**`, and `docs/funnel-briefs/**`. Landing tracking stays route-owned, and offer variants render the shared pricing slot exactly once. Tracking, cookies, analytics, checkout, payment IDs, migrations, workflows, activation, and merge remain owner-controlled. Fork CI skips live-secret checks visibly; never work around that with `pull_request_target` or production credentials.
+
 ## Planning decisions
 
 For non-trivial plans, present 2-3 similarly scoped approaches only for meaningful product, architecture, UX, data, rollout, verification, risk, or scope forks. Explain what gets easier, what gets harder, and the residual risk. Let the user choose when local evidence cannot settle the fork.

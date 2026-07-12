@@ -6,6 +6,8 @@ import {
   getFunnelPackageByKey,
   getFunnelPackageBySlug,
   resolveDefaultFunnelPackage,
+  resolveOfferVariantForSession,
+  validateFunnelPackages,
 } from "../src/lib/funnel/packages"
 
 test("resolves the default organic package", () => {
@@ -22,4 +24,28 @@ test("resolves the placeholder campaign package by slug", () => {
 test("unknown package keys and slugs do not fall back silently", () => {
   assert.equal(getFunnelPackageByKey("unknown"), null)
   assert.equal(getFunnelPackageBySlug("unknown"), null)
+})
+
+test("structured package definitions reject duplicate keys and slugs", () => {
+  const base = resolveDefaultFunnelPackage()
+  assert.throws(() => validateFunnelPackages([base, { ...base }]), /Duplicate funnel package key/)
+  assert.throws(
+    () =>
+      validateFunnelPackages([
+        base,
+        { ...base, key: "another_package", slug: "same-slug" },
+        { ...base, key: "third_package", slug: "same-slug" },
+      ]),
+    /Duplicate funnel package slug/,
+  )
+})
+
+test("stored session offer variant wins over the current package mapping", () => {
+  assert.equal(
+    resolveOfferVariantForSession({
+      packageKey: "default_organic",
+      offerVariant: "historical-offer",
+    }),
+    "historical-offer",
+  )
 })

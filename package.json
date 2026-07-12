@@ -31,6 +31,8 @@
     "worktree:new": "node scripts/worktree-new.mjs",
     "worktree:list": "git worktree list",
     "worktree:prune": "git worktree prune",
+    "funnel:new": "node scripts/funnels/new-package.mjs",
+    "funnel:check": "node scripts/funnels/new-package.mjs --check",
     "test:extract": "tsx scripts/extract-qa-fixtures.ts",
     "test:comparelab:extract": "tsx scripts/extract-comparelab-prompts.ts",
     "test:qa": "playwright test qa-validation",

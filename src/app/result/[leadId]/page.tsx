@@ -9,8 +9,10 @@ import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { recordFunnelEvent } from "@/lib/funnel/server"
+import { recordFunnelEvent, resolveFunnelContextForLead } from "@/lib/funnel/server"
 import { isFunnelAttributionEnabled } from "@/lib/funnel/flags"
+import { resolveOfferVariantForSession } from "@/lib/funnel/packages"
+import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 
 export const dynamic = "force-dynamic"
 
@@ -48,32 +50,19 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   return data as LeadResultRow | null
 }
 
-async function recordLeadOfferView(leadId: string) {
-  if (!isFunnelAttributionEnabled()) return null
-  const { data } = await createAdminClient()
-    .from("funnel_sessions")
-    .select("id, visitor_id, package_key, first_seen_at")
-    .eq("lead_id", leadId)
-    .order("first_seen_at", { ascending: false })
-    .limit(1)
-    .maybeSingle()
-  if (!data) return null
+async function recordLeadOfferView(leadId: string, context: FunnelCookieContext | null) {
+  if (!isFunnelAttributionEnabled() || !context) return null
   const eventId = crypto.randomUUID()
   await recordFunnelEvent({
-    context: {
-      visitorId: data.visitor_id,
-      sessionId: data.id,
-      packageKey: data.package_key,
-      issuedAt: Date.parse(data.first_seen_at),
-    },
+    context,
     eventId,
     milestone: "offer_viewed",
     leadId,
   }).catch((error) => console.warn("[funnel] result offer tracking failed", error))
   return {
     funnelEventId: eventId,
-    funnelSessionId: data.id,
-    funnelPackageKey: data.package_key,
+    funnelSessionId: context.sessionId,
+    funnelPackageKey: context.packageKey,
   }
 }
 
@@ -117,7 +106,9 @@ export default async function ResultPage({ params, searchParams }: Props) {
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
-  const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId)
+  const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
+  const offerVariant = resolveOfferVariantForSession(funnelContext)
+  const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
   const quizAnswers = lead ? parseQuizAnswers(lead.quiz_answers) : null
 
   if (!lead || !quizAnswers) {
@@ -133,6 +124,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       focusTarget={focusTarget}
       hasAccess={hasAccess}
       offerTracking={offerTracking}
+      offerVariant={offerVariant}
     />
   )
 }

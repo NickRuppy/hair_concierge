@@ -22,6 +22,78 @@ env:
   HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' }}
 
 jobs:
+  funnel-contributor-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Enforce fork contributor paths
+        env:
+          IS_FORK_PR: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ "$IS_FORK_PR" != "true" ]; then
+            echo "Owner-controlled change; contributor path restriction not required."
+            exit 0
+          fi
+
+          invalid_paths=""
+          while IFS=$'\t' read -r change_status changed_path; do
+            case "$changed_path" in
+              src/funnels/packages.json|src/funnels/landing/registry.generated.ts|src/funnels/offers/registry.generated.ts) ;;
+              src/funnels/landing/*.tsx|src/funnels/offers/*.tsx)
+                if [ "$change_status" != "A" ]; then
+                  invalid_paths="${invalid_paths}${change_status} ${changed_path} (existing variants are owner-controlled)\n"
+                fi
+                ;;
+              public/images/funnels/*|docs/funnel-briefs/*) ;;
+              *) invalid_paths="${invalid_paths}${changed_path}\n" ;;
+            esac
+          done < <(git diff --name-status --no-renames "$BASE_SHA...$HEAD_SHA")
+
+          if [ -n "$invalid_paths" ]; then
+            printf "Fork funnel PRs may only change approved contributor paths:\n%b" "$invalid_paths"
+            exit 1
+          fi
+
+          node <<'NODE'
+          const { execFileSync } = require("node:child_process")
+          const { readFileSync } = require("node:fs")
+
+          const base = JSON.parse(
+            execFileSync("git", ["show", `${process.env.BASE_SHA}:src/funnels/packages.json`], {
+              encoding: "utf8",
+            }),
+          )
+          const proposed = JSON.parse(readFileSync("src/funnels/packages.json", "utf8"))
+          const proposedByKey = new Map(proposed.map((item) => [item.key, item]))
+          const immutableFields = ["key", "slug", "channel", "landingVariant", "offerVariant"]
+          const errors = []
+
+          for (const existing of base) {
+            const next = proposedByKey.get(existing.key)
+            if (!next) {
+              errors.push(`Existing package removed: ${existing.key}`)
+              continue
+            }
+            for (const field of immutableFields) {
+              if (next[field] !== existing[field]) {
+                errors.push(`Existing package ${existing.key} changed immutable field ${field}`)
+              }
+            }
+          }
+
+          if (errors.length > 0) {
+            console.error(errors.join("\n"))
+            process.exit(1)
+          }
+          NODE
+
+          echo "Fork funnel PR stays within approved contributor paths."
+
   detect-ci-scope:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -61,6 +133,8 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+      - name: Check funnel registries
+        run: npm run funnel:check
       - name: Run deterministic contract tests
         run: npm run test:contracts
 
