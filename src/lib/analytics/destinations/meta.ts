@@ -8,23 +8,39 @@ import {
   trackMetaQuizStepViewed,
   trackMetaSubscriptionConfirmed,
 } from "@/lib/meta-pixel"
+import { bootstrapFunnelContext, getCurrentFunnelContext } from "@/lib/funnel/client"
 import type { AppEventMap, AppEventName } from "../events"
+
+function trackWithFunnelPackage(
+  packageKey: string | null | undefined,
+  track: (resolvedPackageKey?: string) => boolean,
+) {
+  const resolvedPackageKey = packageKey ?? getCurrentFunnelContext()?.funnelPackageKey
+  if (resolvedPackageKey) return track(resolvedPackageKey)
+
+  void bootstrapFunnelContext().then((context) => track(context?.funnelPackageKey))
+  return true
+}
 
 export const metaDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
     switch (eventName) {
       case "checkout_started": {
         const data = payload as AppEventMap["checkout_started"]
-        return trackMetaCheckoutStarted(
-          data.source,
-          data.interval ?? null,
-          data.funnelEventId,
-          data.funnelPackageKey,
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaCheckoutStarted(
+            data.source,
+            data.interval ?? null,
+            data.funnelEventId,
+            packageKey,
+          ),
         )
       }
       case "pricing_viewed": {
         const data = payload as AppEventMap["pricing_viewed"]
-        return trackMetaPricingViewed(data.source, data.funnelEventId, data.funnelPackageKey)
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaPricingViewed(data.source, data.funnelEventId, packageKey),
+        )
       }
       case "purchase_completed": {
         const data = payload as AppEventMap["purchase_completed"]
@@ -40,23 +56,20 @@ export const metaDestination = {
       }
       case "quiz_completed": {
         const data = payload as AppEventMap["quiz_completed"]
-        return trackMetaQuizCompleted(data.funnelEventId, data.funnelPackageKey)
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaQuizCompleted(data.funnelEventId, packageKey),
+        )
       }
       case "quiz_lead_captured": {
         const data = payload as AppEventMap["quiz_lead_captured"]
-        return trackMetaLeadCaptured(
-          data.marketingConsent,
-          data.funnelEventId,
-          data.funnelPackageKey,
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaLeadCaptured(data.marketingConsent, data.funnelEventId, packageKey),
         )
       }
       case "quiz_started": {
         const data = payload as AppEventMap["quiz_started"]
-        return trackMetaQuizStarted(
-          data.stepName,
-          data.stepNumber,
-          data.funnelEventId,
-          data.funnelPackageKey,
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaQuizStarted(data.stepName, data.stepNumber, data.funnelEventId, packageKey),
         )
       }
       case "quiz_step_viewed": {

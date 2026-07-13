@@ -110,10 +110,15 @@ test("result offer preloads Stripe only after the offer component mounts", () =>
 
 test("result offer pricing view keeps the active funnel package with its own event id", () => {
   const source = read("src/components/quiz/result-offer-pricing.tsx")
+  const publicPricingSource = read("src/app/pricing/pricing-cards.tsx")
 
-  assert.match(source, /const pricingTracking = offerTracking \?\? getCurrentFunnelContext\(\)/)
+  assert.match(source, /else void bootstrapFunnelContext\(\)\.then\(trackPricingView\)/)
   assert.match(
     source,
-    /trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId: createFunnelEventId\(\),[\s\S]*funnelSessionId: pricingTracking\?\.funnelSessionId,[\s\S]*funnelPackageKey: pricingTracking\?\.funnelPackageKey/,
+    /trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,[\s\S]*funnelSessionId: context\?\.funnelSessionId,[\s\S]*funnelPackageKey: context\?\.funnelPackageKey/,
+  )
+  assert.match(
+    publicPricingSource,
+    /bootstrapFunnelContext\(\)\.then\(\(context\) =>[\s\S]*trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,[\s\S]*funnelPackageKey: context\?\.funnelPackageKey/,
   )
 })

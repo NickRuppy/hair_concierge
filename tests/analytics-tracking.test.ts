@@ -101,6 +101,30 @@ function withGlobalBrowser<T>(win: Window, doc: Document, fn: () => T) {
   }
 }
 
+async function withGlobalBrowserAsync<T>(win: Window, doc: Document, fn: () => Promise<T>) {
+  const originalWindow = Object.getOwnPropertyDescriptor(globalThis, "window")
+  const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document")
+
+  Object.defineProperty(globalThis, "window", { configurable: true, value: win })
+  Object.defineProperty(globalThis, "document", { configurable: true, value: doc })
+
+  try {
+    return await fn()
+  } finally {
+    if (originalWindow) {
+      Object.defineProperty(globalThis, "window", originalWindow)
+    } else {
+      Reflect.deleteProperty(globalThis, "window")
+    }
+
+    if (originalDocument) {
+      Object.defineProperty(globalThis, "document", originalDocument)
+    } else {
+      Reflect.deleteProperty(globalThis, "document")
+    }
+  }
+}
+
 test("quiz step views route to PostHog, Customer.io, and Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("quiz_step_viewed", {
@@ -425,4 +449,45 @@ test("Meta adapter gates package keys and never sends funnel session IDs", () =>
   assert.equal(disabledPayload.funnel_package_key, undefined)
   assert.equal(enabledPayload.funnel_package_key, "scalp_check_placeholder")
   assert.equal(JSON.stringify(calls).includes("20000000-0000-4000-8000-000000000002"), false)
+})
+
+test("Meta waits for the sticky funnel package before dispatching an early quiz start", async () => {
+  const previousFlag = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+  const originalFetch = globalThis.fetch
+  const dom = createMetaDom()
+
+  try {
+    process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = "true"
+    globalThis.fetch = (async () =>
+      new Response(
+        JSON.stringify({
+          funnelPackageKey: "default_organic",
+          funnelSessionId: "20000000-0000-4000-8000-000000000002",
+        }),
+        { headers: { "Content-Type": "application/json" }, status: 200 },
+      )) as typeof fetch
+
+    await withGlobalBrowserAsync(dom.win, dom.doc, async () => {
+      assert.equal(
+        metaDestination.track("quiz_started", {
+          funnelEventId: "30000000-0000-4000-8000-000000000003",
+          stepName: "hair_texture",
+          stepNumber: 1,
+        }),
+        true,
+      )
+
+      await new Promise((resolve) => setTimeout(resolve, 0))
+      initMetaPixel({ win: dom.win, doc: dom.doc })
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+    if (previousFlag === undefined) delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previousFlag
+  }
+
+  const quizStartedPayload = dom.win.fbq?.queue?.find(
+    (call) => call[1] === "QuizStarted",
+  )?.[2] as Record<string, unknown>
+  assert.equal(quizStartedPayload.funnel_package_key, "default_organic")
 })
