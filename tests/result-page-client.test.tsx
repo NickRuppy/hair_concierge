@@ -29,3 +29,22 @@ test("result page client sends manually granted users to onboarding instead of t
   assert.match(html, /href="\/onboarding\?lead=11111111-1111-4111-8111-111111111111"/)
   assert.doesNotMatch(html, /Angebot:/i)
 })
+
+test("result page client passes persisted quiz answers into the default product-led offer", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      quizAnswers={{ ...quizAnswers, density: "medium", scalp_type: "ausgeglichen" }}
+      focusRoutine={false}
+      focusTarget="unlock-plan"
+      hasAccess={false}
+    />,
+  )
+
+  assert.match(html, /Deine Analyse ist der Anfang/i)
+  assert.match(html, /Shampoo · Beispiel/i)
+  assert.match(html, /Conditioner · Beispiel/i)
+  assert.match(html, /id="unlock-plan"/i)
+  assert.match(html, /id="pricing"/i)
+})

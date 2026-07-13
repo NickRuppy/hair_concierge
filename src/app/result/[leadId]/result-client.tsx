@@ -59,6 +59,7 @@ export function ResultPageClient({
   const offer = renderOfferVariant(offerVariant, {
     name,
     narrative,
+    quizAnswers,
     focusRoutine,
     pricingSlot: <ResultOfferPricing leadId={leadId} offerTracking={offerTracking} />,
   })
