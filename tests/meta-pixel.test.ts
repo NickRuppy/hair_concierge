@@ -4,8 +4,6 @@ import test from "node:test"
 import {
   initMetaPixel,
   isMetaPixelReady,
-  grantMetaPixelConsent,
-  revokeMetaPixelConsent,
   trackMetaCustomEvent,
   trackMetaEvent,
   trackMetaPageView,
@@ -34,7 +32,9 @@ function createMetaDom(options: { storageThrows?: boolean } = {}) {
 
   return {
     calls,
+    doc,
     insertedScripts,
+    storage,
     win: {
       sessionStorage: {
         getItem: (key: string) => {
@@ -46,8 +46,7 @@ function createMetaDom(options: { storageThrows?: boolean } = {}) {
           storage.set(key, value)
         },
       },
-    } as unknown as Window & { fbq?: (...args: unknown[]) => void },
-    doc,
+    } as unknown as Window & { fbq?: ((...args: unknown[]) => void) & { queue?: unknown[][] } },
   }
 }
 
@@ -56,9 +55,7 @@ test("initMetaPixel injects fbevents and initializes the configured pixel once",
 
   assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
   assert.equal(isMetaPixelReady({ win: dom.win }), true)
-
-  const fbq = dom.win.fbq as ((...args: unknown[]) => void) & { queue?: unknown[][] }
-  assert.deepEqual(fbq.queue, [["init", "988892550357504"]])
+  assert.deepEqual(dom.win.fbq?.queue, [["init", "988892550357504"]])
 
   dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
   initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
@@ -69,127 +66,71 @@ test("initMetaPixel injects fbevents and initializes the configured pixel once",
   assert.deepEqual(dom.calls, [])
 })
 
-test("track helpers dispatch standard, custom, and page view events after initialization", () => {
+test("page, standard, and custom events queue before readiness and flush in FIFO order", () => {
+  const dom = createMetaDom()
+
+  assert.equal(trackMetaPageView({ win: dom.win }), true)
+  assert.equal(
+    trackMetaEvent("Lead", { content_name: "quiz" }, { eventID: "lead-1", win: dom.win }),
+    true,
+  )
+  assert.equal(
+    trackMetaCustomEvent("QuizStarted", { step: 1 }, { eventID: "quiz-1", win: dom.win }),
+    true,
+  )
+
+  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
+  assert.deepEqual(dom.win.fbq?.queue, [
+    ["init", "988892550357504"],
+    ["track", "PageView"],
+    ["track", "Lead", { content_name: "quiz" }, { eventID: "lead-1" }],
+    ["trackCustom", "QuizStarted", { step: 1 }, { eventID: "quiz-1" }],
+  ])
+})
+
+test("events dispatch immediately after initialization without consent commands", () => {
   const dom = createMetaDom()
   initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
-
   dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-  grantMetaPixelConsent({ win: dom.win })
 
   assert.equal(trackMetaPageView({ win: dom.win }), true)
   assert.equal(trackMetaEvent("Lead", { content_name: "quiz" }, { win: dom.win }), true)
   assert.equal(trackMetaCustomEvent("QuizStarted", { step: 1 }, { win: dom.win }), true)
 
   assert.deepEqual(dom.calls, [
-    ["consent", "grant"],
     ["track", "PageView"],
     ["track", "Lead", { content_name: "quiz" }],
     ["trackCustom", "QuizStarted", { step: 1 }],
   ])
 })
 
-test("standard events tracked before init and consent flush after both are ready", () => {
+test("subscription queues once and writes its marker only after actual dispatch", () => {
   const dom = createMetaDom()
-
-  assert.equal(
-    trackMetaEvent("ViewContent", { content_name: "pricing_page" }, { win: dom.win }),
-    true,
-  )
-  assert.deepEqual(dom.calls, [])
-
-  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-
-  assert.deepEqual(dom.calls, [])
-  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
-
-  assert.deepEqual(dom.calls, [
-    ["consent", "grant"],
-    ["track", "ViewContent", { content_name: "pricing_page" }],
-  ])
-})
-
-test("meta tracking stops after consent revoke and resumes after consent grant", () => {
-  const dom = createMetaDom()
-  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-
-  grantMetaPixelConsent({ win: dom.win })
-  assert.equal(trackMetaEvent("Lead", { content_name: "first" }, { win: dom.win }), true)
-
-  assert.equal(revokeMetaPixelConsent({ win: dom.win }), true)
-  assert.equal(trackMetaEvent("Lead", { content_name: "revoked" }, { win: dom.win }), false)
-
-  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
-  assert.equal(trackMetaEvent("Lead", { content_name: "second" }, { win: dom.win }), true)
-
-  assert.deepEqual(dom.calls, [
-    ["consent", "grant"],
-    ["track", "Lead", { content_name: "first" }],
-    ["consent", "revoke"],
-    ["consent", "grant"],
-    ["track", "Lead", { content_name: "second" }],
-  ])
-})
-
-test("queued standard events are discarded after explicit consent revoke", () => {
-  const dom = createMetaDom()
-
-  assert.equal(
-    trackMetaEvent("ViewContent", { content_name: "pricing_page" }, { win: dom.win }),
-    true,
-  )
-  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-
-  assert.equal(revokeMetaPixelConsent({ win: dom.win }), true)
-  assert.equal(trackMetaEvent("Lead", { content_name: "after_revoke" }, { win: dom.win }), false)
-  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
-
-  assert.deepEqual(dom.calls, [
-    ["consent", "revoke"],
-    ["consent", "grant"],
-  ])
-})
-
-test("subscription confirmation does not queue or dedupe before consent is usable", () => {
-  const dom = createMetaDom()
-
-  assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), false)
-  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-  assert.equal(grantMetaPixelConsent({ win: dom.win }), true)
+  const storageKey = "chaarlie_meta_subscribe_tracked:cs_pending_subscription"
 
   assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), true)
   assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), false)
+  assert.equal(dom.storage.get(storageKey), undefined)
 
-  assert.deepEqual(dom.calls, [
-    ["consent", "grant"],
+  assert.equal(initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc }), true)
+  assert.equal(dom.storage.get(storageKey), "1")
+  assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), false)
+  assert.deepEqual(dom.win.fbq?.queue, [
+    ["init", "988892550357504"],
     ["track", "Subscribe", { content_name: "premium_subscription" }],
   ])
 })
 
-test("meta tracking does nothing without a pixel id or initialized fbq", () => {
+test("purchase immediately initializes Meta and flushes Subscribe before Purchase", () => {
   const dom = createMetaDom()
 
-  assert.equal(initMetaPixel({ pixelId: "", win: dom.win, doc: dom.doc }), false)
-  assert.equal(trackMetaEvent("Lead", undefined), false)
-  assert.equal(trackMetaCustomEvent("QuizStarted", undefined, { win: dom.win }), false)
-  assert.equal(trackMetaPageView(), false)
-  assert.equal(dom.insertedScripts.length, 0)
-})
-
-test("purchase tracking fires with value metadata and event id even without consent", () => {
-  const dom = createMetaDom()
-  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-
+  assert.equal(trackMetaSubscriptionConfirmed("cs_checkout", { win: dom.win }), true)
   assert.equal(
     trackMetaPurchaseConfirmed(
       {
         contentId: "premium_quarter",
         currency: "EUR",
-        eventId: "cs_test_purchase",
+        eventId: "cs_checkout",
         interval: "quarter",
         paymentMethodType: "card",
         value: 34.99,
@@ -199,8 +140,9 @@ test("purchase tracking fires with value metadata and event id even without cons
     true,
   )
 
-  assert.deepEqual(dom.calls, [
-    ["consent", "grant"],
+  assert.deepEqual(dom.win.fbq?.queue, [
+    ["init", "988892550357504"],
+    ["track", "Subscribe", { content_name: "premium_subscription" }],
     [
       "track",
       "Purchase",
@@ -213,17 +155,15 @@ test("purchase tracking fires with value metadata and event id even without cons
         subscription_interval: "quarter",
         value: 34.99,
       },
-      { eventID: "cs_test_purchase" },
+      { eventID: "cs_checkout" },
     ],
-    ["consent", "revoke"],
   ])
+  assert.equal(dom.storage.get("chaarlie_meta_subscribe_tracked:cs_checkout"), "1")
+  assert.equal(dom.storage.get("chaarlie_meta_purchase_tracked:cs_checkout"), "1")
 })
 
-test("purchase tracking dedupes the same checkout session in browser storage", () => {
+test("purchase tracking dedupes the same checkout session", () => {
   const dom = createMetaDom()
-  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-
   const purchase = {
     contentId: "premium_month",
     currency: "EUR",
@@ -234,15 +174,11 @@ test("purchase tracking dedupes the same checkout session in browser storage", (
 
   assert.equal(trackMetaPurchaseConfirmed(purchase, { doc: dom.doc, win: dom.win }), true)
   assert.equal(trackMetaPurchaseConfirmed(purchase, { doc: dom.doc, win: dom.win }), false)
-
-  assert.equal(dom.calls.filter((call) => call[1] === "Purchase").length, 1)
+  assert.equal(dom.win.fbq?.queue?.filter((call) => call[1] === "Purchase").length, 1)
 })
 
-test("subscription and purchase tracking remain best-effort when session storage throws", () => {
+test("tracking remains best effort when session storage throws", () => {
   const dom = createMetaDom({ storageThrows: true })
-  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
-  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
-  grantMetaPixelConsent({ win: dom.win })
 
   assert.equal(trackMetaSubscriptionConfirmed("cs_storage_blocked", { win: dom.win }), true)
   assert.equal(
@@ -259,6 +195,16 @@ test("subscription and purchase tracking remain best-effort when session storage
     true,
   )
 
-  assert.equal(dom.calls.filter((call) => call[1] === "Subscribe").length, 1)
-  assert.equal(dom.calls.filter((call) => call[1] === "Purchase").length, 1)
+  assert.equal(dom.win.fbq?.queue?.filter((call) => call[1] === "Subscribe").length, 1)
+  assert.equal(dom.win.fbq?.queue?.filter((call) => call[1] === "Purchase").length, 1)
+})
+
+test("initialization requires a pixel id and browser targets", () => {
+  const dom = createMetaDom()
+
+  assert.equal(initMetaPixel({ pixelId: "", win: dom.win, doc: dom.doc }), false)
+  assert.equal(trackMetaEvent("Lead", undefined), false)
+  assert.equal(trackMetaCustomEvent("QuizStarted", undefined), false)
+  assert.equal(trackMetaPageView(), false)
+  assert.equal(dom.insertedScripts.length, 0)
 })

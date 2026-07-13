@@ -2,8 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  canUseCustomerIoBrowserTracking,
   clearCustomerIoBrowserClient,
+  disableCustomerIoBrowserClient,
   identifyCustomerIoUser,
   resetCustomerIoBrowserClient,
   setCustomerIoBrowserClient,
@@ -24,17 +24,10 @@ function createCustomerIoClient() {
   }
 }
 
-test("browser tracking requires a write key and analytics consent", () => {
-  assert.equal(canUseCustomerIoBrowserTracking(null, "write-key"), false)
-  assert.equal(canUseCustomerIoBrowserTracking({ analytics: false }, "write-key"), false)
-  assert.equal(canUseCustomerIoBrowserTracking({ analytics: true }, ""), false)
-  assert.equal(canUseCustomerIoBrowserTracking({ analytics: true }, "write-key"), true)
-})
-
-test("browser helpers dispatch page, identify, and track calls with clean payloads", () => {
+test("browser helpers queue before readiness and flush clean payloads in order", () => {
   const { calls, client } = createCustomerIoClient()
 
-  setCustomerIoBrowserClient(client)
+  clearCustomerIoBrowserClient()
 
   assert.equal(trackCustomerIoPage("/quiz?step=goals", { referrer: undefined }), true)
   assert.equal(
@@ -54,6 +47,9 @@ test("browser helpers dispatch page, identify, and track calls with clean payloa
     true,
   )
   assert.equal(resetCustomerIoBrowserClient(), true)
+  assert.deepEqual(calls, [])
+
+  setCustomerIoBrowserClient(client)
 
   assert.deepEqual(calls, [
     ["page", null, "/quiz?step=goals", {}],
@@ -65,11 +61,14 @@ test("browser helpers dispatch page, identify, and track calls with clean payloa
   clearCustomerIoBrowserClient()
 })
 
-test("browser helpers do nothing until a client is installed", () => {
+test("browser helpers stop accepting calls after loader failure disables the runtime", () => {
   clearCustomerIoBrowserClient()
+  disableCustomerIoBrowserClient()
 
   assert.equal(trackCustomerIoPage("/quiz"), false)
   assert.equal(identifyCustomerIoUser("user-123"), false)
   assert.equal(resetCustomerIoBrowserClient(), false)
   assert.equal(trackCustomerIoEvent("quiz_started"), false)
+
+  clearCustomerIoBrowserClient()
 })

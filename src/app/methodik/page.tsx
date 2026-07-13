@@ -214,7 +214,7 @@ export function MethodikContent() {
 
 export default function MethodikPage() {
   return (
-    <EditorialShell>
+    <EditorialShell bootstrapFunnelContext>
       <MethodikContent />
     </EditorialShell>
   )

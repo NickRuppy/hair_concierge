@@ -1,4 +1,4 @@
-import { posthog } from "@/providers/posthog-provider"
+import { posthog } from "@/lib/analytics/runtime/posthog"
 import type {
   AnalyticsPayload,
   AppEventMap,

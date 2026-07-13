@@ -1,0 +1,54 @@
+All grounding complete. Writing the verdict report.
+
+**Verdict:** Approve with revisions — the architecture is sound and unusually well-grounded, but the plan contains one factually wrong premise (legal pages) and two unresolved consent-behavior ambiguities that a fresh subagent would have to guess at. Fix those before handoff.
+
+---
+
+**Lean shape**
+
+- **Irreducible goal:** Public pages (methodik, landing, quiz, offer) stop shipping vendor + auth JavaScript in the first-load bundle; events are still captured from t=0 and delivered once per event after SDKs load; no consent, contract, or funnel behavior changes.
+- **Cut or defer:**
+  - **Legal pages workstream — cut entirely.** The plan's premise is wrong: `datenschutz`, `impressum`, `agb`, `widerruf`, and `kontakt` import no providers, no `EditorialShell`, and no funnel bootstrap (`src/app/datenschutz/page.tsx:1-3` and siblings; root layout at `src/app/layout.tsx:43-52` mounts only `LazyCookieConsent`). They already ship zero tracking. Only **methodik** (via `src/components/editorial/editorial-shell.tsx:5,10` → `LandingTracking`) and `not-found.tsx` carry the heavy graph. "Retain lightweight first-party funnel continuity" on legal pages would *add* a `/api/funnel/session` fetch to pages that have never made one — a new behavior nobody decided (see Tradeoff 3).
+  - **Meta queue work — already exists.** `src/lib/meta-pixel.ts:67-185` implements bounded queue-until-ready with flush-on-consent-grant (`grantMetaPixelConsent` → `flushQueuedMetaEvents`, `meta-pixel.ts:214-222`). The plan correctly says "retain"; the new PostHog/Customer.io queues should copy this in-repo shape rather than invent a new one.
+  - **Customer.io dynamic-import — gate on Phase 0 attribution.** `AnalyticsBrowser.load({ cdnURL, … })` (`src/providers/customerio-provider.tsx:72-75`) already CDN-defers the heavy analytics core; the npm wrapper's first-load contribution may be modest. Phase 0 should attribute bytes per vendor before the queue treatment is built for all three.
+- **Hard tradeoff the plan is avoiding:** PostHog consent. "Dynamically import `posthog-js` only after analytics consent/current policy" (plan line 65) tries to have it both ways — see Blocker 2.
+
+**Prior art**
+
+- **Stub-and-queue until SDK ready:** matches the canonical analytics.js/fbq snippet pattern, and matches the repo's own Meta implementation — OK. Missing invariant: **queue disposition on consent-grant** differs per destination today (Meta flushes queued events on grant, `meta-pixel.ts:214-222`; Customer.io *drops* pre-install events, `src/lib/customerio-tracking.ts:85-88`). The plan's verification matrix ("Consent granted during the page: loader starts once, then flushes") silently unifies to Meta's behavior — see Blocker 3.
+- **Idempotency on flush replay:** PostHog funnel events carry `$insert_id` (`src/lib/analytics/destinations/posthog.ts:71`) and Meta purchase/checkout use `eventID` — OK. Customer.io's `funnel_event_id` is a plain property, not a dedupe key, so flush-once discipline is the only guard there; the plan's "queued events flush once and in order" gate plus loader-failure tests cover it — OK.
+- **Typed event map + central routing:** already exists (`src/lib/analytics/events.ts`, `routes.ts`); plan preserves it — OK.
+
+**Blockers** (a faithful executor produces wrong or undecided behavior)
+
+1. **Phase 1's legal-pages scope is built on a false premise** — `src/app/datenschutz/page.tsx:1-3` (and the other four legal pages) import nothing tracking-related; there is no vendor code to remove and no funnel continuity to "retain." Fix: re-scope Phase 1 to methodik/`EditorialShell` and explicitly state legal pages are already compliant with the target boundary.
+2. **PostHog consent instruction is self-contradictory.** PostHog initializes unconditionally at module scope with no consent gate (`src/providers/posthog-provider.tsx:12-19`), unlike Customer.io (`customerio-provider.tsx:80-91`) and Meta (`meta-pixel-provider.tsx:36-47`). Plan line 65 says load "only after analytics consent/current policy" while the constraint says "preserve consent gating exactly as implemented today." These pick opposite behaviors. Fix: pin one reading (see Tradeoff 1).
+3. **Consent-grant flush changes Customer.io's event matrix vs the plan's own gate.** Today Customer.io drops events fired before consent (`customerio-tracking.ts:85-88`); the verification matrix's "consent granted during the page → flush" would deliver those events, contradicting the Phase 2 gate "landing sends the same destination event matrix and payloads as baseline." Fix: specify per-destination grant behavior (see Tradeoff 2).
+
+**High-confidence issues** (correctness, not preference)
+
+- **The synchronous `posthog` re-export has consumers the plan never enumerates.** `posthog-provider.tsx:77` exports the instance; consumers are `destinations/posthog.ts:1`, `funnel-context-bootstrap.tsx:5,14` (`posthog.register`), and `src/components/feedback/feedback-widget.tsx:11,105-129` (`posthog.get_session_id()` + `posthog.capture("feedback_submitted")`). Once `posthog-js` is dynamically imported, `get_session_id()` can return undefined for early feedback submissions, silently regressing `beta_feedback.posthog_session_id` and session-replay deep-links. Phase 2's file list must include the feedback widget and define the queued-proxy contract for all three consumers.
+- **The Supabase import chain is the unnamed bundle weight.** `posthog-provider.tsx:6` and `customerio-provider.tsx:17` statically import `useAuth` → `auth-provider.tsx:3-4` imports the sign-out server action and `@/lib/supabase/client` → `supabase-js` ships on landing, methodik, result, and pricing even though those compositions don't mount `AuthProvider` (they work only because `AuthContext` has a non-null default, `auth-provider.tsx:17-23`). Hitting the 25% landing reduction almost certainly requires breaking this chain; the plan only gestures at "authenticated identification" in Phase 1. Name it as an explicit Phase 2 task.
+- **The load-bearing regression test is a source-regex suite that Phases 1–2 will break by design.** `tests/acquisition-funnel-tracking.test.ts:9-38` asserts on `readFileSync` + `assert.match` against the exact JSX of `route-providers.tsx` and the layouts. It cannot detect a silently dropped queued event, and it will fail on any restructuring regardless of behavior. Phase 0 item 4 is therefore not "refine" but "build": extend the runtime spy pattern already in `tests/analytics-tracking.test.ts:23-30` to cover queue/flush/ordering/loader-failure, and plan to rewrite the source-regex assertions.
+- **Phase 2's blast radius is global, so Phase 3 is verification, not extension.** Phase 2 edits shared modules (`track-app-event.ts`, the three destinations, the three providers) that quiz/offer/auth/welcome import through the same compositions (`route-providers.tsx:11-67`). The moment Phase 2 lands, every surface has the new runtime. The current framing ("prove on landing before applying to conversion steps") could push an implementer to fork a landing-only runtime — which task 3.1 itself forbids. State plainly that Phase 3 verifies surfaces already changed by Phase 2.
+
+**Smaller / nice-to-haves**
+
+- Phase 0/4 should name the repo's own measurement commands: `npm run perf:mobile` (`scripts/perf/mobile-lighthouse.mjs`, override `LH_BASE_URL` to localhost; note it defaults to production chaarlie.de, runs once per path — median-of-3 needs a wrapper — and its default `LH_LCP_MS=2500` will print FAIL against the plan's <3000ms bar) and the `next build` per-route first-load JS table (no bundle analyzer is configured).
+- Task 2.5 ("register funnel context before flushing") will make early PostHog events *richer* than baseline — today `posthog.register` races the first captures (`funnel-context-bootstrap.tsx:12-18`). Tell the Phase 2 verifier to expect this diff or to preserve exact timing.
+- `routes.ts:19` routes `purchase_completed` to `customerio: false`, yet `destinations/customerio.ts:32-42` still maps it — dead code. Don't let Phase 3's "verify purchase at each destination" chase a Customer.io purchase event that is intentionally unrouted.
+- No post-deploy observability step: add a production event-volume check after ship (PostHog via `scripts/posthog/investigate-ingestion.ts`, plus the Sentry check your local ship workflow already mandates). Local baselines can't catch a destination that silently under-delivers in production. Rollback story (git revert + redeploy — no runtime kill-switch) is acceptable for client-only code but should be stated.
+- `/lp/[slug]` campaign pages return `<Home />` (`src/app/lp/[slug]/page.tsx`), so landing changes cover them automatically — worth one line so the verifier includes a campaign URL.
+
+**Tradeoffs — decisions the owner must make** (the plan currently chooses these silently)
+
+1. **PostHog consent (Blocker 2):** (a) preserve today's always-load — perf goal met, coverage unchanged, but the known TTDSG § 25 gap stays open; or (b) gate the dynamic import on analytics consent — resolves the recorded compliance backlog item, but reduces tracking coverage, which the plan's Goal forbids. Pick one explicitly.
+2. **Customer.io queue on consent-grant (Blocker 3):** flush queued pre-consent events (consistent with Meta, more delivered events than today) or drop them (today's behavior, per-destination divergence in the unified queue). Either is defensible; the phase gate must match the choice.
+3. **Legal pages (Blocker 1):** leave them with zero tracking (current state, leanest) or add first-party funnel continuity (new `/api/funnel/session` calls on privacy/imprint pages — a product and privacy-optics decision, not a refactor).
+4. **Customer.io dynamic-import scope:** if Phase 0 attribution shows its wrapper is a small share of first-load JS, skip its queue work and keep the current consent-gated load. Decide from the Phase 0 numbers rather than defaulting to symmetric treatment of all three vendors.
+
+**Bottom line**
+
+The plan is the right shape — queue-at-facade with per-destination readiness matches both canonical practice and the repo's existing Meta implementation, contracts are correctly identified, and phase gating with baseline measurement is disciplined. But as written it would send a fresh subagent to "fix" legal pages that are already clean, leave the PostHog consent question to a coin flip, and silently change Customer.io's consent-grant semantics against the plan's own acceptance gate. Resolve the three blockers (all are wording/decision fixes, not redesigns), add the feedback-widget/`posthog` re-export and Supabase-chain tasks to Phase 2, and re-frame Phase 3 as verification — then it's ready to execute.
+
+Want me to draft the specific wording changes for the three blocker sections so you can paste them into the plan after making the calls in the tradeoff list?

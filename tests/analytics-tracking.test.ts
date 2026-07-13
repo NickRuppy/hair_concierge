@@ -11,8 +11,8 @@ import {
   clearCustomerIoBrowserClient,
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
-import { posthog } from "../src/providers/posthog-provider"
-import { grantMetaPixelConsent, initMetaPixel } from "../src/lib/meta-pixel"
+import { posthog } from "../src/lib/analytics/runtime/posthog"
+import { initMetaPixel } from "../src/lib/meta-pixel"
 
 type DestinationCall = {
   destination: "customerio" | "meta" | "posthog"
@@ -345,7 +345,6 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
 
   assert.deepEqual(dom.win.fbq?.queue, [
     ["init", "988892550357504"],
-    ["consent", "grant"],
     [
       "track",
       "Purchase",
@@ -360,7 +359,6 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
       },
       { eventID: "cs_test_purchase" },
     ],
-    ["consent", "revoke"],
   ])
 })
 
@@ -376,7 +374,6 @@ test("Meta adapter gates package keys and never sends funnel session IDs", () =>
       const dom = createMetaDom()
       withGlobalBrowser(dom.win, dom.doc, () => {
         initMetaPixel({ win: dom.win, doc: dom.doc })
-        grantMetaPixelConsent({ win: dom.win })
         metaDestination.track("checkout_started", {
           provider: "stripe",
           source: "pricing_page",
@@ -392,8 +389,8 @@ test("Meta adapter gates package keys and never sends funnel session IDs", () =>
     else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previous
   }
 
-  const disabledPayload = calls[0][2][2] as Record<string, unknown>
-  const enabledPayload = calls[1][2][2] as Record<string, unknown>
+  const disabledPayload = calls[0][1][2] as Record<string, unknown>
+  const enabledPayload = calls[1][1][2] as Record<string, unknown>
   assert.equal(disabledPayload.funnel_package_key, undefined)
   assert.equal(enabledPayload.funnel_package_key, "scalp_check_placeholder")
   assert.equal(JSON.stringify(calls).includes("20000000-0000-4000-8000-000000000002"), false)

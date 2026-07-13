@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { renderLandingVariant } from "@/funnels/landing/registry"
 import { getFunnelPackageBySlug } from "@/lib/funnel/packages"
-import { LandingTracking } from "@/providers/route-providers"
+import { LandingTracking } from "@/providers/tracking-providers"
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },

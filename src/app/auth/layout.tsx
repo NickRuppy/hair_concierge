@@ -1,4 +1,4 @@
-import { PublicFlowProviders } from "@/providers/route-providers"
+import { PublicFlowProviders } from "@/providers/tracking-providers"
 import { PRIVATE_PAGE_METADATA } from "@/lib/seo/site-identity"
 
 export const dynamic = "force-dynamic"

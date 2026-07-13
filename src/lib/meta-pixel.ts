@@ -1,4 +1,3 @@
-import type { CookieConsent } from "@/lib/cookie-consent"
 import { isFunnelMetaBrowserCustomDataEnabled } from "@/lib/funnel/flags"
 
 const DEFAULT_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "988892550357504"
@@ -39,17 +38,13 @@ type BrowserTargets = {
 
 type MetaTrackOptions = BrowserTargets & {
   eventID?: string
-  queueWhenPending?: boolean
-}
-
-type MetaDispatchOptions = MetaTrackOptions & {
-  bypassConsent?: boolean
-  queueWhenPending?: boolean
+  onDispatched?: () => void
 }
 
 type QueuedMetaEvent = {
-  eventName: MetaStandardEvent
-  options: Pick<MetaDispatchOptions, "eventID">
+  eventName: string
+  kind: "custom" | "standard"
+  options: Pick<MetaTrackOptions, "eventID" | "onDispatched">
   properties?: MetaEventProperties
 }
 
@@ -63,8 +58,8 @@ export type MetaPurchasePayload = {
 }
 
 const initializedPixelsByWindow = new WeakMap<object, Set<string>>()
-const enabledWindows = new WeakMap<object, boolean>()
 const queuedEventsByWindow = new WeakMap<object, QueuedMetaEvent[]>()
+const pendingSubscriptionsByWindow = new WeakMap<object, Set<string>>()
 
 function getBrowserTargets(options: BrowserTargets = {}) {
   const win =
@@ -115,10 +110,6 @@ function installFbq(win: MetaWindow, doc: Document) {
   doc.head.appendChild(script)
 }
 
-export function canUseMetaPixel(consent: CookieConsent | null | undefined) {
-  return Boolean(DEFAULT_PIXEL_ID && consent?.marketing === true)
-}
-
 export function initMetaPixel(options: BrowserTargets = {}) {
   const { doc, pixelId, win } = getBrowserTargets(options)
   if (!pixelId || !win || !doc) return false
@@ -143,46 +134,43 @@ export function isMetaPixelReady(options: Pick<BrowserTargets, "win"> = {}) {
   return Boolean(initializedPixelsByWindow.get(win)?.size)
 }
 
-function isMetaPixelEnabled(win: MetaWindow) {
-  return enabledWindows.get(win) === true
-}
-
-function hasExplicitMetaPixelRevoke(win: MetaWindow) {
-  return enabledWindows.get(win) === false
-}
-
 function queueMetaEvent(
   win: MetaWindow,
-  eventName: MetaStandardEvent,
+  kind: QueuedMetaEvent["kind"],
+  eventName: string,
   properties?: MetaEventProperties,
-  options: MetaDispatchOptions = {},
+  options: MetaTrackOptions = {},
 ) {
   const queuedEvents = queuedEventsByWindow.get(win) ?? []
   queuedEvents.push({
     eventName,
-    options: { eventID: options.eventID },
+    kind,
+    options: { eventID: options.eventID, onDispatched: options.onDispatched },
     properties,
   })
   queuedEventsByWindow.set(win, queuedEvents)
 }
 
 function flushQueuedMetaEvents(win: MetaWindow) {
-  if (!win.fbq || !isMetaPixelReady({ win }) || !isMetaPixelEnabled(win)) return
+  if (!win.fbq || !isMetaPixelReady({ win })) return
 
   const queuedEvents = queuedEventsByWindow.get(win)
   if (!queuedEvents?.length) return
 
   queuedEventsByWindow.delete(win)
   for (const queuedEvent of queuedEvents) {
-    dispatchMetaEvent(queuedEvent.eventName, queuedEvent.properties, {
-      ...queuedEvent.options,
-      win,
-    })
+    if (queuedEvent.kind === "custom") {
+      dispatchMetaCustomEvent(queuedEvent.eventName, queuedEvent.properties, {
+        ...queuedEvent.options,
+        win,
+      })
+    } else {
+      dispatchMetaEvent(queuedEvent.eventName as MetaStandardEvent, queuedEvent.properties, {
+        ...queuedEvent.options,
+        win,
+      })
+    }
   }
-}
-
-function clearQueuedMetaEvents(win: MetaWindow) {
-  queuedEventsByWindow.delete(win)
 }
 
 function getBrowserSessionStorage(win: MetaWindow | undefined) {
@@ -211,28 +199,6 @@ function safeStorageSet(storage: Storage | undefined, key: string, value: string
   }
 }
 
-export function grantMetaPixelConsent(options: Pick<BrowserTargets, "win"> = {}) {
-  const win =
-    options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
-  if (!win?.fbq || !isMetaPixelReady({ win })) return false
-
-  enabledWindows.set(win, true)
-  win.fbq("consent", "grant")
-  flushQueuedMetaEvents(win)
-  return true
-}
-
-export function revokeMetaPixelConsent(options: Pick<BrowserTargets, "win"> = {}) {
-  const win =
-    options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
-  if (!win?.fbq) return false
-
-  enabledWindows.set(win, false)
-  clearQueuedMetaEvents(win)
-  win.fbq("consent", "revoke")
-  return true
-}
-
 export function trackMetaEvent(
   eventName: MetaStandardEvent,
   properties?: MetaEventProperties,
@@ -244,29 +210,18 @@ export function trackMetaEvent(
 function dispatchMetaEvent(
   eventName: MetaStandardEvent,
   properties?: MetaEventProperties,
-  options: MetaDispatchOptions = {},
+  options: MetaTrackOptions = {},
 ) {
   const win =
     options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
-  const shouldQueue = options.queueWhenPending !== false
   if (!win) return false
-  if (!options.bypassConsent && hasExplicitMetaPixelRevoke(win)) return false
   if (!win.fbq || !isMetaPixelReady({ win })) {
-    if (!options.bypassConsent && shouldQueue) queueMetaEvent(win, eventName, properties, options)
-    return !options.bypassConsent && shouldQueue
-  }
-  if (!options.bypassConsent && !isMetaPixelEnabled(win)) {
-    if (shouldQueue) queueMetaEvent(win, eventName, properties, options)
-    return shouldQueue
+    queueMetaEvent(win, "standard", eventName, properties, options)
+    return true
   }
 
   const cleanProperties = sanitizeProperties(properties)
   const eventOptions = options.eventID ? { eventID: options.eventID } : undefined
-  const wasEnabled = isMetaPixelEnabled(win)
-
-  if (options.bypassConsent && !wasEnabled) {
-    win.fbq("consent", "grant")
-  }
 
   if (cleanProperties && Object.keys(cleanProperties).length > 0) {
     if (eventOptions) {
@@ -280,32 +235,45 @@ function dispatchMetaEvent(
     win.fbq("track", eventName)
   }
 
-  if (options.bypassConsent && !wasEnabled) {
-    win.fbq("consent", "revoke")
-  }
-
+  options.onDispatched?.()
   return true
 }
 
 export function trackMetaCustomEvent(
   eventName: string,
   properties?: MetaEventProperties,
-  options: Pick<BrowserTargets, "win"> & Pick<MetaDispatchOptions, "eventID"> = {},
+  options: Pick<BrowserTargets, "win"> & Pick<MetaTrackOptions, "eventID" | "onDispatched"> = {},
+) {
+  return dispatchMetaCustomEvent(eventName, properties, options)
+}
+
+function dispatchMetaCustomEvent(
+  eventName: string,
+  properties?: MetaEventProperties,
+  options: Pick<BrowserTargets, "win"> & Pick<MetaTrackOptions, "eventID" | "onDispatched"> = {},
 ) {
   const win =
     options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
-  if (!win?.fbq || !isMetaPixelReady({ win }) || !isMetaPixelEnabled(win)) return false
+  if (!win) return false
+  if (!win.fbq || !isMetaPixelReady({ win })) {
+    queueMetaEvent(win, "custom", eventName, properties, options)
+    return true
+  }
 
   const cleanProperties = sanitizeProperties(properties)
+  const eventOptions = options.eventID ? { eventID: options.eventID } : undefined
   if (cleanProperties && Object.keys(cleanProperties).length > 0) {
-    if (options.eventID) {
-      win.fbq("trackCustom", eventName, cleanProperties, { eventID: options.eventID })
+    if (eventOptions) {
+      win.fbq("trackCustom", eventName, cleanProperties, eventOptions)
     } else {
       win.fbq("trackCustom", eventName, cleanProperties)
     }
+  } else if (eventOptions) {
+    win.fbq("trackCustom", eventName, {}, eventOptions)
   } else {
     win.fbq("trackCustom", eventName)
   }
+  options.onDispatched?.()
   return true
 }
 
@@ -411,25 +379,37 @@ export function trackMetaSubscriptionConfirmed(
   options: Pick<BrowserTargets, "win"> = {},
 ) {
   let storageKey: string | null = null
-  const storage = getBrowserSessionStorage(
-    options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow)),
-  )
+  const win =
+    options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
+  const storage = getBrowserSessionStorage(win)
   if (storage) {
     storageKey = `${SUBSCRIPTION_TRACKED_STORAGE_PREFIX}${sessionId}`
     if (safeStorageGet(storage, storageKey) === "1") return false
   }
+
+  const pendingSubscriptions = win
+    ? (pendingSubscriptionsByWindow.get(win) ?? new Set<string>())
+    : null
+  if (storageKey && pendingSubscriptions?.has(storageKey)) return false
+  if (win && pendingSubscriptions) pendingSubscriptionsByWindow.set(win, pendingSubscriptions)
+  if (storageKey) pendingSubscriptions?.add(storageKey)
 
   const tracked = trackMetaEvent(
     "Subscribe",
     {
       content_name: "premium_subscription",
     },
-    { ...options, queueWhenPending: false },
+    {
+      ...options,
+      onDispatched: () => {
+        if (!storageKey) return
+        pendingSubscriptions?.delete(storageKey)
+        safeStorageSet(storage, storageKey, "1")
+      },
+    },
   )
 
-  if (tracked && storageKey) {
-    safeStorageSet(storage, storageKey, "1")
-  }
+  if (!tracked && storageKey) pendingSubscriptions?.delete(storageKey)
 
   return tracked
 }
@@ -463,14 +443,12 @@ export function trackMetaPurchaseConfirmed(
     },
     {
       ...options,
-      bypassConsent: true,
       eventID: purchase.eventId,
+      onDispatched: () => {
+        if (storageKey) safeStorageSet(storage, storageKey, "1")
+      },
     },
   )
-
-  if (tracked && storageKey) {
-    safeStorageSet(storage, storageKey, "1")
-  }
 
   return tracked
 }
