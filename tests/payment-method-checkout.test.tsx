@@ -190,6 +190,7 @@ test("Customer.io checkout-started payload includes the selected payment provide
   try {
     assert.equal(
       customerIoDestination.track("checkout_started", {
+        funnelPackageKey: "default_organic",
         interval: "quarter",
         leadId: "lead-123",
         provider: "paypal",
@@ -202,6 +203,7 @@ test("Customer.io checkout-started payload includes the selected payment provide
       [
         "checkout_started",
         {
+          funnel_package_key: "default_organic",
           interval: "quarter",
           lead_id: "lead-123",
           provider: "paypal",

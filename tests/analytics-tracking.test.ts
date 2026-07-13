@@ -289,7 +289,7 @@ test("destination failures are isolated and do not throw from the facade", () =>
   }
 })
 
-test("PostHog adapter strips undefined mapped properties", () => {
+test("PostHog adapter strips undefined properties and sends the funnel package key", () => {
   const originalCapture = posthog.capture
   const calls: unknown[][] = []
   posthog.capture = ((...args: unknown[]) => {
@@ -298,13 +298,23 @@ test("PostHog adapter strips undefined mapped properties", () => {
 
   try {
     postHogDestination.track("quiz_completed", {
+      funnelPackageKey: "default_organic",
       hairTexture: "wavy",
       scalpCondition: undefined,
       scalpType: null,
       thickness: undefined,
     })
 
-    assert.deepEqual(calls, [["quiz_completed", { structure: "wavy", scalp_type: null }]])
+    assert.deepEqual(calls, [
+      [
+        "quiz_completed",
+        {
+          funnel_package_key: "default_organic",
+          structure: "wavy",
+          scalp_type: null,
+        },
+      ],
+    ])
   } finally {
     posthog.capture = originalCapture
   }
