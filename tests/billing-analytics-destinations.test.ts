@@ -102,6 +102,39 @@ test("Meta CAPI adapter hashes user data and uses Stripe checkout session as Pur
   assert.equal(payload.custom_data.currency, "EUR")
 })
 
+test("Meta CAPI reuses the Stripe checkout session for Subscribe deduplication", async () => {
+  const bodies: Record<string, any>[] = []
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body ?? "{}")))
+    return new Response("{}", { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv(
+      {
+        META_CAPI_ACCESS_TOKEN: "token",
+        META_PIXEL_ID: "pixel-123",
+      },
+      () =>
+        deliverBillingAnalyticsToMeta({
+          event: event({
+            event_key: "stripe:subscription_started:sub_123",
+            event_name: "subscription_started",
+            source_object_id: "sub_123",
+          }),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        }),
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(bodies[0].data[0].event_name, "Subscribe")
+  assert.equal(bodies[0].data[0].event_id, "cs_test_123")
+})
+
 test("Meta CAPI only includes package key behind its flag and never includes session id", async () => {
   const bodies: Record<string, any>[] = []
   const originalFetch = globalThis.fetch

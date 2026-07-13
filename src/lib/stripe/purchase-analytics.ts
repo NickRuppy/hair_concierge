@@ -31,6 +31,7 @@ function planIdForInterval(interval: BillingInterval) {
 
 export type CheckoutPurchaseAnalytics = {
   currency: string
+  funnelPackageKey?: string
   interval: BillingInterval
   paymentMethodType?: string
   planId: string
@@ -64,6 +65,7 @@ export async function buildCheckoutPurchaseAnalytics(
 
   return {
     currency: session.currency.toUpperCase(),
+    funnelPackageKey: session.metadata?.funnel_package_key || undefined,
     interval,
     planId: planIdForInterval(interval),
     paymentMethodType: selectedPaymentMethodTypeFromSubscription(subscription),

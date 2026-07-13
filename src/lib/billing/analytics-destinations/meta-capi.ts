@@ -28,7 +28,8 @@ function normalizedEmail(email: string | null | undefined) {
 function metaEventId(input: BillingAnalyticsDeliveryInput) {
   if (
     input.event.provider === "stripe" &&
-    input.event.event_name === "purchase_completed" &&
+    (input.event.event_name === "purchase_completed" ||
+      input.event.event_name === "subscription_started") &&
     typeof input.event.payload.checkout_session_id === "string"
   ) {
     return input.event.payload.checkout_session_id

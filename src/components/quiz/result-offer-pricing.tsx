@@ -15,7 +15,7 @@ import {
 } from "@/components/checkout/active-subscription-dialog"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import { createFunnelEventId } from "@/lib/funnel/client"
+import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
 import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
@@ -88,9 +88,14 @@ export function ResultOfferPricing({
       offerTrackedRef.current = true
       trackAppEvent("offer_viewed", { leadId: leadId ?? undefined, ...offerTracking })
     }
+    const funnelEventId = createFunnelEventId()
+    const context: FunnelAnalyticsEnvelope | null = offerTracking ?? getCurrentFunnelContext()
     trackAppEvent("pricing_viewed", {
       leadId: leadId ?? undefined,
       source: "quiz_result_offer_pricing",
+      funnelEventId,
+      funnelSessionId: context?.funnelSessionId,
+      funnelPackageKey: context?.funnelPackageKey,
     })
   }, [leadId, offerTracking])
 

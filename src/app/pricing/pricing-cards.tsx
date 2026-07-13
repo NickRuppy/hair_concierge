@@ -13,7 +13,7 @@ import {
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import { createFunnelEventId } from "@/lib/funnel/client"
+import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { getStripePricingPlan, STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
@@ -46,9 +46,14 @@ export function PricingCards({
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
 
   useEffect(() => {
+    const context = getCurrentFunnelContext()
+    const funnelEventId = createFunnelEventId()
     trackAppEvent("pricing_viewed", {
       leadId: leadId ?? undefined,
       source: "pricing_page",
+      funnelEventId,
+      funnelSessionId: context?.funnelSessionId,
+      funnelPackageKey: context?.funnelPackageKey,
     })
   }, [leadId])
 

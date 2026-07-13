@@ -101,6 +101,30 @@ function withGlobalBrowser<T>(win: Window, doc: Document, fn: () => T) {
   }
 }
 
+async function withGlobalBrowserAsync<T>(win: Window, doc: Document, fn: () => Promise<T>) {
+  const originalWindow = Object.getOwnPropertyDescriptor(globalThis, "window")
+  const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document")
+
+  Object.defineProperty(globalThis, "window", { configurable: true, value: win })
+  Object.defineProperty(globalThis, "document", { configurable: true, value: doc })
+
+  try {
+    return await fn()
+  } finally {
+    if (originalWindow) {
+      Object.defineProperty(globalThis, "window", originalWindow)
+    } else {
+      Reflect.deleteProperty(globalThis, "window")
+    }
+
+    if (originalDocument) {
+      Object.defineProperty(globalThis, "document", originalDocument)
+    } else {
+      Reflect.deleteProperty(globalThis, "document")
+    }
+  }
+}
+
 test("quiz step views route to PostHog, Customer.io, and Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("quiz_step_viewed", {
@@ -265,7 +289,7 @@ test("destination failures are isolated and do not throw from the facade", () =>
   }
 })
 
-test("PostHog adapter strips undefined mapped properties", () => {
+test("PostHog adapter strips undefined properties and sends the funnel package key", () => {
   const originalCapture = posthog.capture
   const calls: unknown[][] = []
   posthog.capture = ((...args: unknown[]) => {
@@ -274,13 +298,23 @@ test("PostHog adapter strips undefined mapped properties", () => {
 
   try {
     postHogDestination.track("quiz_completed", {
+      funnelPackageKey: "default_organic",
       hairTexture: "wavy",
       scalpCondition: undefined,
       scalpType: null,
       thickness: undefined,
     })
 
-    assert.deepEqual(calls, [["quiz_completed", { structure: "wavy", scalp_type: null }]])
+    assert.deepEqual(calls, [
+      [
+        "quiz_completed",
+        {
+          funnel_package_key: "default_organic",
+          structure: "wavy",
+          scalp_type: null,
+        },
+      ],
+    ])
   } finally {
     posthog.capture = originalCapture
   }
@@ -362,6 +396,37 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
   ])
 })
 
+test("Meta purchase includes the package key behind the browser custom-data flag", () => {
+  const previous = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+  const dom = createMetaDom()
+
+  try {
+    process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = "true"
+    withGlobalBrowser(dom.win, dom.doc, () => {
+      assert.equal(
+        metaDestination.track("purchase_completed", {
+          checkoutSessionId: "cs_test_package_purchase",
+          currency: "eur",
+          funnelPackageKey: "scalp_check_placeholder",
+          interval: "month",
+          planId: "premium_month",
+          value: 14.99,
+        }),
+        true,
+      )
+    })
+  } finally {
+    if (previous === undefined) delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previous
+  }
+
+  const purchasePayload = dom.win.fbq?.queue?.find((call) => call[1] === "Purchase")?.[2] as Record<
+    string,
+    unknown
+  >
+  assert.equal(purchasePayload.funnel_package_key, "scalp_check_placeholder")
+})
+
 test("Meta adapter gates package keys and never sends funnel session IDs", () => {
   const previous = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
   const calls: unknown[][][] = []
@@ -394,4 +459,83 @@ test("Meta adapter gates package keys and never sends funnel session IDs", () =>
   assert.equal(disabledPayload.funnel_package_key, undefined)
   assert.equal(enabledPayload.funnel_package_key, "scalp_check_placeholder")
   assert.equal(JSON.stringify(calls).includes("20000000-0000-4000-8000-000000000002"), false)
+})
+
+test("Meta preserves early quiz event order while waiting for the sticky funnel package", async () => {
+  const previousFlag = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+  const originalFetch = globalThis.fetch
+  const dom = createMetaDom()
+  let resolveFetch: ((response: Response) => void) | undefined
+
+  try {
+    process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = "true"
+    globalThis.fetch = (() =>
+      new Promise<Response>((resolve) => {
+        resolveFetch = resolve
+      })) as typeof fetch
+
+    await withGlobalBrowserAsync(dom.win, dom.doc, async () => {
+      assert.equal(
+        metaDestination.track("quiz_started", {
+          funnelEventId: "30000000-0000-4000-8000-000000000003",
+          stepName: "hair_texture",
+          stepNumber: 1,
+        }),
+        true,
+      )
+      assert.equal(
+        metaDestination.track("quiz_step_viewed", {
+          stepName: "hair_texture",
+          stepNumber: 1,
+        }),
+        true,
+      )
+      assert.equal(
+        metaDestination.track("pricing_viewed", {
+          funnelEventId: "30000000-0000-4000-8000-000000000004",
+          funnelPackageKey: "default_organic",
+          source: "pricing_page",
+        }),
+        true,
+      )
+
+      initMetaPixel({ win: dom.win, doc: dom.doc })
+      const dispatched: unknown[][] = []
+      dom.win.fbq = (...args: unknown[]) => {
+        dispatched.push(args)
+        if (args[1] === "QuizStarted") throw new Error("synthetic Meta dispatch failure")
+      }
+
+      resolveFetch?.(
+        new Response(
+          JSON.stringify({
+            funnelPackageKey: "default_organic",
+            funnelSessionId: "20000000-0000-4000-8000-000000000002",
+          }),
+          { headers: { "Content-Type": "application/json" }, status: 200 },
+        ),
+      )
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
+      const quizStartedPayload = dispatched.find(
+        (call) => call[1] === "QuizStarted",
+      )?.[2] as Record<string, unknown>
+      assert.equal(quizStartedPayload.funnel_package_key, "default_organic")
+      assert.deepEqual(
+        dispatched
+          .filter(
+            (call) =>
+              call[1] === "QuizStarted" ||
+              call[1] === "QuizStepViewed" ||
+              call[1] === "ViewContent",
+          )
+          .map((call) => call[1]),
+        ["QuizStarted", "QuizStepViewed", "ViewContent"],
+      )
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+    if (previousFlag === undefined) delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previousFlag
+  }
 })
