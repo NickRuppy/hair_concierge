@@ -28,7 +28,7 @@ export type AppEventMap = {
     leadId?: string | null
     source: "pricing_page" | "quiz_result_offer_pricing"
   }
-  purchase_completed: {
+  purchase_completed: FunnelAnalyticsEnvelope & {
     checkoutSessionId: string
     currency: string
     interval: string

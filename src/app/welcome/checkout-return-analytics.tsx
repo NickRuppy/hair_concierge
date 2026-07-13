@@ -37,6 +37,7 @@ export function CheckoutReturnAnalytics({
         trackAppEvent("purchase_completed", {
           checkoutSessionId: sessionId,
           currency: purchase.currency.toUpperCase(),
+          funnelPackageKey: purchase.funnelPackageKey,
           interval: purchase.interval,
           paymentMethodType: purchase.paymentMethodType,
           planId: purchase.planId,

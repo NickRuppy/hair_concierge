@@ -32,6 +32,7 @@ export const metaDestination = {
           contentId: data.planId,
           currency: data.currency,
           eventId: data.checkoutSessionId,
+          funnelPackageKey: data.funnelPackageKey,
           interval: data.interval,
           paymentMethodType: data.paymentMethodType,
           value: data.value,

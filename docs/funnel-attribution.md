@@ -14,9 +14,20 @@ landing and offer variant snapshots. Do not rename a key after traffic has been 
 - `FUNNEL_ATTRIBUTION_ENABLED=true` enables signed cookies and Supabase recording. It defaults off.
 - `FUNNEL_COOKIE_SIGNING_SECRET` is required when attribution is enabled. Use a long random secret.
 - `FUNNEL_META_CUSTOM_DATA_ENABLED=true` allows only `funnel_package_key` into Meta custom data. It
-  defaults off and should be enabled only after validation in Meta Test Events. Set the matching
-  `NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED=true` only when the consent-gated browser Pixel events
-  should include the same package key.
+  defaults off. Set the matching `NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED=true` so browser Pixel
+  events include the same package key. The public flag must be configured before a fresh production
+  build because Next.js inlines it at build time.
+- `META_CAPI_ACCESS_TOKEN` authenticates server-side Meta CAPI delivery and must remain a Vercel
+  server secret.
+- `META_PIXEL_ID` and `NEXT_PUBLIC_META_PIXEL_ID` must identify the same Meta dataset. Browser/server
+  Purchase deduplication cannot work when the two channels send to different datasets.
+
+On funnel and public-flow routes that mount `MetaPixelProvider`, the production Meta Pixel currently
+initializes and tracks from the first page view regardless of the cookie-banner choice. Legal,
+contact, and other routes without that provider remain tracking-free. The banner and stored consent
+remain in place for other integrations. This is an explicit production-test behavior, not a statement
+that the setup satisfies German/EU consent requirements; reverting it requires a code rollback and
+redeploy.
 
 The database migration and code can be deployed while attribution remains disabled. Before enabling
 the master flag in production, confirm the German privacy/legal classification of the pre-consent,
@@ -30,8 +41,10 @@ verified event-ID idempotency, repeated occurrences, first-touch immutability, m
 and three package journeys linked by one visitor ID; both transactions left zero test rows.
 
 Vercel production has `FUNNEL_ATTRIBUTION_ENABLED=true` and a dedicated signing secret configured.
-The configuration takes effect when the matching application code is deployed. Both Meta package-key
-flags remain off until Meta Test Events credentials are available.
+The configuration takes effect when the matching application code is deployed. As of 2026-07-13,
+both Meta package-key flags and matching browser/server Pixel IDs are configured for production; a
+Chaarlie-only `META_CAPI_ACCESS_TOKEN` is stored as a server secret. A fresh production build is still
+required to inline the public values.
 
 ## Milestones
 

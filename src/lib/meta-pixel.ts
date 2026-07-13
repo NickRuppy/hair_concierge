@@ -52,6 +52,7 @@ export type MetaPurchasePayload = {
   contentId: string
   currency: string
   eventId: string
+  funnelPackageKey?: string | null
   interval: string
   paymentMethodType?: string
   value: number
@@ -437,6 +438,7 @@ export function trackMetaPurchaseConfirmed(
       content_name: "premium_subscription",
       content_type: "product",
       currency: purchase.currency.toUpperCase(),
+      ...funnelPackageProperties(purchase.funnelPackageKey),
       payment_method_type: purchase.paymentMethodType,
       subscription_interval: purchase.interval,
       value: purchase.value,

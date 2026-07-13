@@ -31,6 +31,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
       amount_total: 3499,
       currency: "eur",
       id: "cs_test_123",
+      metadata: { funnel_package_key: "scalp_check_placeholder" },
       payment_method_types: ["card", "sepa_debit"],
       subscription: "sub_123",
     } as any,
@@ -39,6 +40,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
 
   assert.deepEqual(result, {
     currency: "EUR",
+    funnelPackageKey: "scalp_check_placeholder",
     interval: "quarter",
     paymentMethodType: "card",
     planId: "premium_quarter",

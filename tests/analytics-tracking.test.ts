@@ -362,6 +362,34 @@ test("Meta adapter builds purchase payload from app-owned checkout fields", () =
   ])
 })
 
+test("Meta purchase includes the package key behind the browser custom-data flag", () => {
+  const previous = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+  const dom = createMetaDom()
+
+  try {
+    process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = "true"
+    withGlobalBrowser(dom.win, dom.doc, () => {
+      assert.equal(
+        metaDestination.track("purchase_completed", {
+          checkoutSessionId: "cs_test_package_purchase",
+          currency: "eur",
+          funnelPackageKey: "scalp_check_placeholder",
+          interval: "month",
+          planId: "premium_month",
+          value: 14.99,
+        }),
+        true,
+      )
+    })
+  } finally {
+    if (previous === undefined) delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previous
+  }
+
+  const purchasePayload = dom.win.fbq?.queue?.[2]?.[2] as Record<string, unknown>
+  assert.equal(purchasePayload.funnel_package_key, "scalp_check_placeholder")
+})
+
 test("Meta adapter gates package keys and never sends funnel session IDs", () => {
   const previous = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
   const calls: unknown[][][] = []
