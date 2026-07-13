@@ -1,6 +1,8 @@
 import {
   compareProductFrequencies,
   isProductFrequencyAtLeast,
+  type ScalpCondition,
+  type ScalpType,
   type ProductFrequency,
 } from "@/lib/vocabulary"
 import type {
@@ -52,39 +54,63 @@ function getCurrentShampooFrequency(profile: NormalizedProfile): ProductFrequenc
   )
 }
 
-function deriveBaseBand(profile: NormalizedProfile): {
+export function deriveBaseShampooCadenceBand(input: {
+  scalpType: ScalpType | null
+  scalpCondition: ScalpCondition | null
+  hasDandruffConcern?: boolean
+}): {
   band: ShampooCadenceBand | null
   reasonCode: string
 } {
-  if (profile.scalpCondition === "dandruff") {
+  if (input.scalpCondition === "dandruff") {
     return { band: "high", reasonCode: "base_scalp_condition_dandruff" }
   }
 
-  if (profile.scalpCondition === "irritated") {
+  if (input.scalpCondition === "irritated") {
     return { band: "medium", reasonCode: "base_scalp_condition_irritated" }
   }
 
-  if (profile.scalpCondition === "dry_flakes") {
+  if (input.scalpCondition === "dry_flakes") {
     return { band: "low", reasonCode: "base_scalp_condition_dry_flakes" }
   }
 
-  if (profile.concerns.includes("dandruff")) {
+  if (input.hasDandruffConcern) {
     return { band: "high", reasonCode: "base_concern_dandruff" }
   }
 
-  if (profile.scalpType === "oily") {
+  if (input.scalpType === "oily") {
     return { band: "high", reasonCode: "base_scalp_type_oily" }
   }
 
-  if (profile.scalpType === "balanced") {
+  if (input.scalpType === "balanced") {
     return { band: "medium", reasonCode: "base_scalp_type_balanced" }
   }
 
-  if (profile.scalpType === "dry") {
+  if (input.scalpType === "dry") {
     return { band: "low", reasonCode: "base_scalp_type_dry" }
   }
 
   return { band: null, reasonCode: "base_scalp_state_unknown" }
+}
+
+export function deriveBaseShampooCadenceTarget(input: {
+  scalpType: ScalpType | null
+  scalpCondition: ScalpCondition | null
+  hasDandruffConcern?: boolean
+}): ShampooCadenceTarget | null {
+  const { band } = deriveBaseShampooCadenceBand(input)
+  return band ? TARGETS_BY_BAND[band] : null
+}
+
+function deriveBaseBand(profile: NormalizedProfile): {
+  band: ShampooCadenceBand | null
+  reasonCode: string
+} {
+  return deriveBaseShampooCadenceBand({
+    scalpType: profile.scalpType,
+    scalpCondition: profile.scalpCondition,
+    hasDandruffConcern: profile.concerns.includes("dandruff"),
+  })
 }
 
 function hasFiberConcern(profile: NormalizedProfile): boolean {

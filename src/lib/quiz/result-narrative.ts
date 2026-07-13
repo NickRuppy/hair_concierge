@@ -1,12 +1,10 @@
-import type { ChemicalTreatment, Goal, HairTexture } from "@/lib/vocabulary"
-import { GOALS } from "@/lib/vocabulary"
-import { getOrderedGoals } from "@/lib/onboarding/goal-flow"
+import type { ChemicalTreatment, Goal } from "@/lib/vocabulary"
 import { getChemicalTreatmentDamageWeight } from "@/lib/profile/chemical-treatment"
 
-import { QUIZ_CONCERN_VALUES, canonicalizeQuizAnswers } from "./normalization"
+import { canonicalizeQuizAnswers } from "./normalization"
+import { resolveQuizNeed, type QuizConcern, type QuizNeedLane } from "./need-lane"
 import type { QuizAnswers } from "./types"
 
-type QuizConcern = (typeof QUIZ_CONCERN_VALUES)[number]
 export type QuizResultIconKey =
   | "droplet"
   | "shield"
@@ -245,48 +243,6 @@ const GOAL_COPY: Record<Goal, QuizResultRowCopy & { intro: string; scope: QuizRe
   },
 }
 
-const CONCERN_TO_GOAL_PRIORITY: Record<QuizConcern, Goal[]> = {
-  frizz: ["less_frizz", "moisture", "shine"],
-  dryness: ["moisture", "healthier_hair", "shine"],
-  breakage: ["anti_breakage", "strengthen", "healthier_hair"],
-  split_ends: ["less_split_ends", "healthier_hair", "strengthen"],
-  tangling: ["less_frizz", "moisture", "healthier_hair"],
-  hair_damage: ["healthier_hair", "strengthen", "anti_breakage"],
-}
-
-const BASE_CONCERN_SCORES: Record<QuizConcern, number> = {
-  breakage: 60,
-  dryness: 50,
-  hair_damage: 40,
-  tangling: 30,
-  split_ends: 20,
-  frizz: 10,
-}
-
-function isHairTexture(value: QuizAnswers["structure"]): value is HairTexture {
-  return value === "straight" || value === "wavy" || value === "curly" || value === "coily"
-}
-
-function hasQuizColorOrBleachTreatment(answers: QuizAnswers): boolean {
-  return (
-    answers.treatment?.some(
-      (treatment) => treatment === "gefaerbt" || treatment === "blondiert",
-    ) === true
-  )
-}
-
-function hasQuizShapeChangingTreatment(answers: QuizAnswers): boolean {
-  return (
-    answers.treatment?.some(
-      (treatment) => treatment === "dauerwelle" || treatment === "chemisch_geglaettet",
-    ) === true
-  )
-}
-
-function hasQuizPermTreatment(answers: QuizAnswers): boolean {
-  return answers.treatment?.includes("dauerwelle") === true
-}
-
 function getQuizChemicalStressWeight(answers: QuizAnswers): number {
   const treatmentMap: Record<string, ChemicalTreatment> = {
     natur: "natural",
@@ -303,64 +259,12 @@ function getQuizChemicalStressWeight(answers: QuizAnswers): number {
   return getChemicalTreatmentDamageWeight(canonicalTreatments)
 }
 
-function hasQuizShapeTreatmentDamageContext(
-  answers: QuizAnswers,
-  primaryConcern: QuizConcern | null,
-): boolean {
-  return (
-    answers.fingertest === "rau" ||
-    primaryConcern === "breakage" ||
-    primaryConcern === "hair_damage" ||
-    answers.concerns?.includes("breakage") === true ||
-    answers.concerns?.includes("hair_damage") === true ||
-    answers.pulltest === "snaps" ||
-    answers.pulltest === "stretches_stays"
-  )
-}
-
 function scoreToBucket(score: number): SeverityBucket {
   if (score >= 8) return "very_high"
   if (score >= 5) return "high"
   if (score >= 3) return "medium"
   if (score >= 1) return "low"
   return "very_low"
-}
-
-function scoreConcern(concern: QuizConcern, answers: QuizAnswers): number {
-  let score = BASE_CONCERN_SCORES[concern]
-
-  if (answers.pulltest === "snaps" && (concern === "breakage" || concern === "dryness")) {
-    score += 25
-  }
-
-  if (
-    answers.pulltest === "stretches_stays" &&
-    (concern === "breakage" || concern === "hair_damage")
-  ) {
-    score += 25
-  }
-
-  if (
-    answers.fingertest === "rau" &&
-    (concern === "hair_damage" || concern === "tangling" || concern === "split_ends")
-  ) {
-    score += 15
-  }
-
-  if (answers.fingertest === "rau" && concern === "frizz") {
-    score += 5
-  }
-
-  const chemicalStressWeight = getQuizChemicalStressWeight(answers)
-  if (chemicalStressWeight > 0) {
-    if (concern === "hair_damage" || concern === "breakage") {
-      score += chemicalStressWeight >= 4 ? 20 : 15
-    } else if (concern === "split_ends") {
-      score += chemicalStressWeight >= 4 ? 15 : 10
-    }
-  }
-
-  return score
 }
 
 function buildHairFeelScores(
@@ -518,61 +422,6 @@ function buildHairFeelRow(
   }
 }
 
-function resolvePrimaryConcern(answers: QuizAnswers): QuizConcern | null {
-  const concerns = (answers.concerns ?? []).filter((concern): concern is QuizConcern =>
-    QUIZ_CONCERN_VALUES.includes(concern as QuizConcern),
-  )
-
-  if (concerns.length === 0) {
-    return null
-  }
-
-  return (
-    [...concerns].sort((left, right) => {
-      const scoreDelta = scoreConcern(right, answers) - scoreConcern(left, answers)
-      if (scoreDelta !== 0) {
-        return scoreDelta
-      }
-
-      return QUIZ_CONCERN_VALUES.indexOf(left) - QUIZ_CONCERN_VALUES.indexOf(right)
-    })[0] ?? null
-  )
-}
-
-function getOrderedSelectedGoals(answers: QuizAnswers): Goal[] {
-  const selectedGoals = new Set(
-    (answers.goals ?? []).filter((goal): goal is Goal => GOALS.includes(goal as Goal)),
-  )
-
-  if (selectedGoals.size === 0) {
-    return []
-  }
-
-  if (isHairTexture(answers.structure)) {
-    return getOrderedGoals(answers.structure).filter((goal) => selectedGoals.has(goal))
-  }
-
-  return GOALS.filter((goal) => selectedGoals.has(goal))
-}
-
-function resolvePrimaryGoal(answers: QuizAnswers, primaryConcern: QuizConcern | null): Goal | null {
-  const selectedGoals = getOrderedSelectedGoals(answers)
-
-  if (selectedGoals.length === 0) {
-    return null
-  }
-
-  if (primaryConcern) {
-    for (const goal of CONCERN_TO_GOAL_PRIORITY[primaryConcern]) {
-      if (selectedGoals.includes(goal)) {
-        return goal
-      }
-    }
-  }
-
-  return selectedGoals[0] ?? null
-}
-
 function buildIntro(
   answers: QuizAnswers,
   primaryConcern: QuizConcern | null,
@@ -592,15 +441,14 @@ function buildIntro(
   return "Wir sehen schon, was dein Haar gerade noch ausbremst und in welche Richtung wir dein Haar jetzt weiterentwickeln."
 }
 
-function buildHeroHeadline(answers: QuizAnswers): string {
-  if (answers.pulltest === "stretches_stays") {
-    return "Dein Haar braucht mehr Protein als Feuchtigkeit."
-  }
-
-  if (answers.pulltest === "snaps") {
-    return "Dein Haar braucht mehr Feuchtigkeit als Protein."
-  }
-
+function buildHeroHeadline(lane: QuizNeedLane): string {
+  if (lane === "bond_repair") return "Deine Längen brauchen gezielteren Schutz."
+  if (lane === "protein") return "Mehr Struktur kann deine Längen jetzt gezielt unterstützen."
+  if (lane === "deep_moisture") return "Mehr Feuchtigkeit kann deine Längen gezielt unterstützen."
+  if (lane === "surface_support")
+    return "Die passende Pflege kann deine Längen spürbar ruhiger machen."
+  if (lane === "ends_protection") return "Mit gezieltem Spitzenschutz ist noch viel möglich."
+  if (lane === "scalp_focus") return "Eine passende Pflegebasis beginnt bei deiner Kopfhaut."
   return "Deine Balance ist näher dran, als es sich gerade anfühlt."
 }
 
@@ -881,16 +729,9 @@ function buildNeedsSection(
   answers: QuizAnswers,
   primaryConcern: QuizConcern | null,
   primaryGoal: Goal | null,
+  lane: QuizNeedLane,
 ): QuizResultNeedsSection {
-  const hasScalpSignals =
-    answers.scalp_condition === "schuppen" ||
-    answers.scalp_condition === "trockene_schuppen" ||
-    answers.scalp_condition === "gereizt" ||
-    answers.scalp_type === "fettig" ||
-    answers.scalp_type === "trocken" ||
-    primaryGoal === "healthy_scalp"
-
-  const scalpAllowed = primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)
+  const scalpAllowed = lane === "scalp_focus"
 
   if (
     scalpAllowed &&
@@ -902,10 +743,10 @@ function buildNeedsSection(
       mainLeverWhy:
         "Wenn die Kopfhaut aus dem Gleichgewicht ist, bleibt sie leichter gereizt und Schuppen kommen schneller wieder.",
       mainLeverProducts:
-        "Am meisten erreichen wir hier mit einem passenden Anti-Schuppen-Shampoo; zusätzlich kann ein beruhigendes Kopfhautserum helfen, die Kopfhaut zwischen den Haarwäschen ruhiger zu halten.",
+        "Am meisten erreichen wir hier mit einem passenden Anti-Schuppen-Shampoo; ein Conditioner pflegt die Längen passend dazu, ohne eine weitere Kopfhautbehandlung zu versprechen.",
       products: [
         { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
-        { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+        { name: "Passender Conditioner", description: "Pflegt die Längen passend zur Haarwäsche." },
       ],
     }
   }
@@ -952,15 +793,7 @@ function buildNeedsSection(
     }
   }
 
-  // Severe bond damage (concern-driven, preserves today's "any severity signal" routing).
-  const hasSeveritySignal =
-    primaryConcern === "breakage" ||
-    primaryConcern === "hair_damage" ||
-    hasQuizColorOrBleachTreatment(answers) ||
-    (hasQuizShapeChangingTreatment(answers) &&
-      hasQuizShapeTreatmentDamageContext(answers, primaryConcern))
-
-  if (hasSeveritySignal) {
+  if (lane === "bond_repair") {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Mehr Stabilität in die Längen bringen",
@@ -975,8 +808,7 @@ function buildNeedsSection(
     }
   }
 
-  // Protein-needs (moderate) — fires when pulltest=stretches_stays without severity signals.
-  if (answers.pulltest === "stretches_stays") {
+  if (lane === "protein") {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Überdehnten Längen wieder Struktur geben",
@@ -994,8 +826,7 @@ function buildNeedsSection(
     }
   }
 
-  // Moisture-needs — fires when pulltest=snaps.
-  if (answers.pulltest === "snaps") {
+  if (lane === "deep_moisture") {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Den Längen mehr Feuchtigkeit zurückgeben",
@@ -1019,10 +850,14 @@ function buildNeedsSection(
   // Curl definition — fires when curl is the user's clean goal and there's no concern to address first.
   const hasTexture =
     answers.structure === "wavy" || answers.structure === "curly" || answers.structure === "coily"
-  const hasDefinitionShapeContext =
-    hasTexture || (primaryGoal === "curl_definition" && hasQuizPermTreatment(answers))
+  const hasDefinitionShapeContext = hasTexture
 
-  if (primaryGoal === "curl_definition" && hasDefinitionShapeContext && !primaryConcern) {
+  if (
+    lane === "surface_support" &&
+    primaryGoal === "curl_definition" &&
+    hasDefinitionShapeContext &&
+    !primaryConcern
+  ) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Wellen und Locken besser definieren",
@@ -1038,7 +873,7 @@ function buildNeedsSection(
   }
 
   // Shine — fires when shine is the user's clean goal and there's no concern to address first.
-  if (primaryGoal === "shine" && !primaryConcern) {
+  if (lane === "ends_protection" && primaryGoal === "shine" && !primaryConcern) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Mehr Glanz in die Längen bringen",
@@ -1053,14 +888,7 @@ function buildNeedsSection(
     }
   }
 
-  const needsSurfaceSupport =
-    primaryConcern === "frizz" ||
-    primaryConcern === "dryness" ||
-    primaryConcern === "tangling" ||
-    primaryGoal === "less_frizz" ||
-    primaryGoal === "moisture"
-
-  if (needsSurfaceSupport) {
+  if (lane === "surface_support") {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Mehr Schutz für Oberfläche und Längen aufbauen",
@@ -1075,7 +903,7 @@ function buildNeedsSection(
     }
   }
 
-  if (primaryConcern === "split_ends" || primaryGoal === "less_split_ends") {
+  if (lane === "ends_protection") {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Die Spitzen gezielt schützen",
@@ -1106,18 +934,17 @@ function buildNeedsSection(
 
 export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNarrative {
   const answers = canonicalizeQuizAnswers(rawAnswers)
-  const primaryConcern = resolvePrimaryConcern(answers)
-  const primaryGoal = resolvePrimaryGoal(answers, primaryConcern)
+  const { lane, primaryConcern, primaryGoal } = resolveQuizNeed(answers)
 
   const hairFeelRow = buildHairFeelRow(answers, primaryConcern, primaryGoal)
   const frictionRow = buildFrictionRow(answers, primaryConcern, primaryGoal)
   const outcomeRow = buildOutcomeRow(primaryGoal)
 
   return {
-    heroHeadline: buildHeroHeadline(answers),
+    heroHeadline: buildHeroHeadline(lane),
     intro: buildIntro(answers, primaryConcern, primaryGoal),
     rows: [hairFeelRow, frictionRow, outcomeRow],
-    needs: buildNeedsSection(answers, primaryConcern, primaryGoal),
+    needs: buildNeedsSection(answers, primaryConcern, primaryGoal, lane),
     cta: {
       lead: "Als Nächstes: dein persönlicher Plan",
       label: "MEINE ROUTINE STARTEN",

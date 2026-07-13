@@ -6,6 +6,7 @@ import type { FunnelOfferVariantProps } from "@/funnels/types"
 export default function DefaultOfferVariant({
   name,
   narrative,
+  quizAnswers,
   pricingSlot,
   focusRoutine = false,
 }: FunnelOfferVariantProps) {
@@ -13,6 +14,7 @@ export default function DefaultOfferVariant({
     <QuizResultOfferPageShell
       name={name}
       narrative={narrative}
+      quizAnswers={quizAnswers}
       pricingSlot={pricingSlot}
       focusRoutine={focusRoutine}
     />

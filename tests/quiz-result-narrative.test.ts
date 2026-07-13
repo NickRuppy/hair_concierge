@@ -145,10 +145,11 @@ test("no-concern fallback can become scalp-led when scalp is the strongest real 
   assert.equal(narrative.rows[2]?.tickAfter, "beruhigt")
   assert.match(narrative.needs.mainLeverWhy, /Schuppen/i)
   assert.match(narrative.needs.mainLeverProducts, /Anti-Schuppen-Shampoo/i)
-  assert.match(narrative.needs.mainLeverProducts, /Kopfhautserum/i)
+  assert.doesNotMatch(narrative.needs.mainLeverProducts, /Kopfhautserum/i)
+  assert.match(narrative.needs.mainLeverProducts, /Conditioner/i)
   assert.deepEqual(narrative.needs.products, [
     { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
-    { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+    { name: "Passender Conditioner", description: "Pflegt die Längen passend zur Haarwäsche." },
   ])
 })
 
@@ -301,7 +302,7 @@ test("scalp branch explains the main lever with product-specific follow-through"
 
   assert.equal(
     narrative.needs.mainLeverProducts,
-    "Am meisten erreichen wir hier mit einem passenden Anti-Schuppen-Shampoo; zusätzlich kann ein beruhigendes Kopfhautserum helfen, die Kopfhaut zwischen den Haarwäschen ruhiger zu halten.",
+    "Am meisten erreichen wir hier mit einem passenden Anti-Schuppen-Shampoo; ein Conditioner pflegt die Längen passend dazu, ohne eine weitere Kopfhautbehandlung zu versprechen.",
   )
 })
 
@@ -390,7 +391,10 @@ test("hero headline maps overextended pull test to protein-led result", () => {
     goals: ["strengthen"],
   })
 
-  assert.equal(narrative.heroHeadline, "Dein Haar braucht mehr Protein als Feuchtigkeit.")
+  assert.equal(
+    narrative.heroHeadline,
+    "Mehr Struktur kann deine Längen jetzt gezielt unterstützen.",
+  )
 })
 
 test("hero headline maps snapping pull test to moisture-led result", () => {
@@ -402,7 +406,7 @@ test("hero headline maps snapping pull test to moisture-led result", () => {
     goals: ["moisture"],
   })
 
-  assert.equal(narrative.heroHeadline, "Dein Haar braucht mehr Feuchtigkeit als Protein.")
+  assert.equal(narrative.heroHeadline, "Mehr Feuchtigkeit kann deine Längen gezielt unterstützen.")
 })
 
 test("hero headline has a balanced fallback", () => {
@@ -414,7 +418,10 @@ test("hero headline has a balanced fallback", () => {
     goals: ["less_frizz"],
   })
 
-  assert.equal(narrative.heroHeadline, "Deine Balance ist näher dran, als es sich gerade anfühlt.")
+  assert.equal(
+    narrative.heroHeadline,
+    "Die passende Pflege kann deine Längen spürbar ruhiger machen.",
+  )
 })
 
 test("fixed row labels and CTA copy stay compact", () => {
@@ -574,7 +581,7 @@ test("curl-definition branch fires when primaryGoal=curl_definition and structur
   ])
 })
 
-test("curl-definition branch supports straight natural texture when a perm is selected", () => {
+test("curl-definition does not claim a curl-specific product for straight recorded texture", () => {
   const narrative = buildQuizResultNarrative({
     structure: "straight",
     thickness: "normal",
@@ -585,8 +592,8 @@ test("curl-definition branch supports straight natural texture when a perm is se
     goals: ["curl_definition"],
   })
 
-  assert.equal(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
-  assert.match(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
+  assert.equal(narrative.needs.mainLeverTitle, "Mehr Schutz für Oberfläche und Längen aufbauen")
+  assert.doesNotMatch(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
 })
 
 test("chemical straightening does not unlock curl-definition narrative for straight natural texture", () => {

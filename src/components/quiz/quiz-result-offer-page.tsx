@@ -1,55 +1,16 @@
 import type { ReactNode } from "react"
 import { Check, LockKeyhole, MessageCircle, ShieldCheck } from "lucide-react"
 
-import { ResultOfferCountdown } from "@/components/quiz/result-offer-countdown"
+import { OfferFaq } from "@/components/quiz/offer-faq"
+import { OfferPreviewRoutine } from "@/components/quiz/offer-preview-routine"
+import { OfferProductStory } from "@/components/quiz/offer-product-story"
+import { OfferTimeline } from "@/components/quiz/offer-timeline"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
-import { QuizResultTransformationCard } from "@/components/quiz/quiz-result-transformation-card"
-import { QuizResultLeverRows } from "@/components/quiz/quiz-result-lever-rows"
-import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
+import { buildQuizOfferPreview } from "@/lib/quiz/offer-preview"
+import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
+import type { QuizAnswers } from "@/lib/quiz/types"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
-
-const FEATURE_IMAGES = {
-  advisor: "/images/offer/advisor.jpg",
-  products: "/images/offer/products.jpg",
-  routine: "/images/offer/routine.jpg",
-} as const
-
-const FEATURES = [
-  {
-    kicker: "Dein KI Haar-Berater",
-    title: "Frag alles. Bekomm sofort Antworten.",
-    body: "Dein persönlicher Berater kennt dein Haar und erklärt dir, welche Pflege gerade sinnvoll ist.",
-    benefit: "Kompetente Antworten, wann immer du sie brauchst.",
-    imageUrl: FEATURE_IMAGES.advisor,
-    imageAlt: "KI Haar-Berater",
-  },
-  {
-    kicker: "500+ erfasste Haarpflegeprodukte",
-    title: "Passende Produkte. Nachvollziehbar ausgewählt.",
-    body: "Chaarlie gleicht Produkte mit deinen Angaben ab und erklärt dir, warum sie zu deiner Situation passen können.",
-    benefit: "Weniger Rätselraten. Jede Auswahl hat einen nachvollziehbaren Grund.",
-    imageUrl: FEATURE_IMAGES.products,
-    imageAlt: "Produktempfehlungen",
-  },
-  {
-    kicker: "Deine Routine",
-    title: "Ein klarer Plan. Was. Wann. Wie oft.",
-    body: "Chaarlie baut dir eine Routine, die so einfach wie möglich ist und zu deinem Alltag passt.",
-    benefit: "Du weißt jeden Tag genau, was zu tun ist.",
-    imageUrl: FEATURE_IMAGES.routine,
-    imageAlt: "Haarpflege Planer",
-  },
-] as const
-
-const COMPARISON_ROWS = [
-  ["Protein/Feuchtigkeit-Analyse", "—", "Ja"],
-  ["Passende Produkte", "Rätselraten", "500+ mit Namen"],
-  ["Persönliche Routine", "Trial & Error", "Sofort"],
-  ["Beratung bei Fragen", "Teurer Salon", "Jederzeit"],
-  ["Pflegefortschritt", "Schwer einzuordnen", "Nach 4 Wochen prüfen"],
-  ["Produktauswahl", "Versuch & Irrtum", "Gezielter auswählen"],
-] as const
 
 function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? ""
@@ -145,257 +106,147 @@ function StaticPricingPreview() {
 export function QuizResultOfferPageShell({
   name,
   narrative,
+  quizAnswers,
   pricingSlot,
   focusRoutine = false,
 }: {
   name: string
   narrative: QuizResultNarrative
+  quizAnswers: QuizAnswers
   pricingSlot?: ReactNode
   focusRoutine?: boolean
 }) {
   const displayName = firstName(name)
+  const preview = buildQuizOfferPreview(quizAnswers)
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="fixed inset-x-0 top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[520px] items-center justify-between gap-3 px-5 py-2.5">
-          <ResultOfferCountdown
-            className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.07em] text-[var(--text-caption)]"
-            valueClassName="font-sans text-[14px] font-bold text-[var(--brand-coral-dark)]"
-            label="Angebot:"
-          />
+        <div className="mx-auto flex max-w-[560px] items-center justify-between gap-3 px-5 py-2.5">
+          <div>
+            <strong className="font-header text-[18px] font-medium text-[var(--brand-plum-darkest)]">
+              chaarlie
+            </strong>
+            <span className="block font-mono text-[8px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-plum)]">
+              Dein Ergebnis ist da
+            </span>
+          </div>
           <a
             href="#pricing"
             className="rounded-[12px] bg-[var(--brand-coral)] px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)]"
           >
-            Jetzt sichern
+            Chaarlie starten
           </a>
         </div>
       </div>
 
-      <main className="mx-auto w-full max-w-[520px] px-5">
-        <section className="pb-7 pt-[72px] text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#2D9F5E]/25 bg-[#2D9F5E]/10 px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#2D9F5E]">
-            <Check className="size-3.5" />
-            Analyse fertig
+      <main className="mx-auto w-full max-w-[560px] px-5">
+        <section className="pb-9 pt-[84px]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#2D9F5E]/25 bg-[#2D9F5E]/10 px-3.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-[#2D9F5E]">
+            <Check className="size-3.5" aria-hidden="true" />
+            Quiz ausgewertet
           </span>
-          <p className="mb-2 mt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
+          <p className="mb-2 mt-5 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
             {displayName
-              ? `${displayName}, hier findest du dein Ergebnis`
-              : "Hier findest du dein Ergebnis."}
+              ? `${displayName}, wir kennen jetzt die Bedürfnisse deiner Haare`
+              : "Wir kennen jetzt die Bedürfnisse deiner Haare"}
           </p>
-          <h1 className="font-header text-[clamp(24px,7vw,34px)] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
-            So können sich deine Haare in 4 Wochen anfühlen.
+          <h1 className="font-header text-[clamp(32px,9vw,46px)] font-medium leading-[1.08] text-[var(--brand-plum-darkest)]">
+            Deine Analyse ist der Anfang. Chaarlie macht sie anwendbar.
           </h1>
+          <p className="mt-5 text-[16px] leading-[1.65] text-muted-foreground">
+            {narrative.intro} Jetzt wird daraus eine persönliche Routine mit konkreten Produkten –
+            plus ein Begleiter für alle Fragen danach.
+          </p>
         </section>
 
-        <section className="space-y-4 border-t border-border py-8">
-          <QuizResultTransformationCard rows={narrative.rows} />
+        <OfferPreviewRoutine preview={preview} />
 
-          <article className="rounded-[16px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
-            <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-              {narrative.needs.title}
-            </p>
-            <h2 className="font-header text-[25px] font-medium leading-[1.2] text-[var(--brand-plum-darkest)]">
-              {narrative.needs.mainLeverTitle}
-            </h2>
-            <p className="mt-4 text-[14.5px] leading-[1.65] text-[var(--brand-plum-darkest)]">
-              {narrative.needs.mainLeverWhy}
-            </p>
-            <div className="mt-5">
-              <QuizResultLeverRows products={narrative.needs.products} />
+        <section id="unlock-plan" className="scroll-mt-[76px] border-t border-border py-9">
+          <article className="relative min-h-[300px] overflow-hidden rounded-[20px] border border-[var(--brand-plum-light)] bg-white shadow-[0_14px_45px_-36px_rgba(var(--brand-plum-rgb),0.7)]">
+            <div aria-hidden="true" className="space-y-3 p-7 blur-[6px]">
+              {["w-5/6", "w-2/3", "w-full", "w-3/4", "w-1/2"].map((width) => (
+                <div
+                  key={width}
+                  className={`h-4 ${width} rounded-full bg-[var(--brand-plum-ice)]`}
+                />
+              ))}
             </div>
-          </article>
-        </section>
-
-        <section id="unlock-plan" className="scroll-mt-[72px] border-t border-border py-8">
-          <article className="relative min-h-[248px] overflow-hidden rounded-[16px] border border-border bg-white shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
-            <div className="space-y-2 p-6 blur-[5px]">
-              <div className="h-3 w-3/4 rounded-full bg-[var(--brand-plum-ice)]" />
-              <div className="h-3 w-1/2 rounded-full bg-[var(--brand-plum-ice)]" />
-              <div className="h-3 w-5/6 rounded-full bg-[var(--brand-plum-ice)]" />
-              <div className="h-3 w-2/5 rounded-full bg-[var(--brand-plum-ice)]" />
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 p-6 text-center">
-              <LockKeyhole className="mb-2 size-9 text-[var(--brand-plum)]" />
-              <h2 className="font-header text-[22px] font-medium text-[var(--brand-plum-darkest)]">
-                {focusRoutine
-                  ? "Der nächste Schritt: deine aktuelle Routine"
-                  : "Dein vollständiger 30-Tage-Plan ist fertig"}
-              </h2>
-              <p className="mt-2 max-w-[300px] text-[13px] leading-relaxed text-muted-foreground">
-                {focusRoutine
-                  ? "Damit Chaarlie später gezielt Produkte, Reihenfolge und Anwendung empfehlen kann."
-                  : "Mit konkreten Produkten für deine Situation"}
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/72 p-7 text-center backdrop-blur-[1px]">
+              <LockKeyhole className="mb-3 size-9 text-[var(--brand-plum)]" aria-hidden="true" />
+              <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-[var(--brand-plum)]">
+                Nach dem Start
               </p>
-              <p className="mt-2 text-[12px] italic text-muted-foreground">
-                Ausgearbeitet von Chaarlie.
+              <h2 className="mt-2 font-header text-[27px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
+                {focusRoutine
+                  ? "Weiter mit deiner vollständigen Routine."
+                  : "Chaarlie finalisiert deinen persönlichen Plan."}
+              </h2>
+              <p className="mt-3 max-w-[380px] text-[13px] leading-relaxed text-muted-foreground">
+                Du ergänzt deine aktuellen Produkte. Chaarlie prüft, was bleiben kann, schließt
+                Lücken und erklärt Reihenfolge, Menge und Anwendung.
               </p>
               <a
                 href="#pricing"
-                className="mt-4 rounded-[12px] bg-[var(--brand-coral)] px-8 py-3 text-[13px] font-bold text-white"
+                className="mt-5 rounded-[12px] bg-[var(--brand-coral)] px-8 py-3 text-[13px] font-bold text-white"
               >
-                Plan freischalten
+                Vollständige Routine freischalten
               </a>
             </div>
           </article>
         </section>
 
-        <section className="border-t border-border py-8">
-          <div className="rounded-[16px] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-5">
-            <p className="mb-2 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-              Warum diese Empfehlung?
-            </p>
-            <h2 className="font-header text-[23px] font-medium leading-[1.2] text-[var(--brand-plum-darkest)]">
-              Chaarlie bewertet erst dein Haar, dann die Produkte.
-            </h2>
-            <p className="mt-3 text-[14px] leading-[1.6] text-muted-foreground">
-              Jede Routine wird aus deinem Profil, deinen Zielen und deinen aktuellen Gewohnheiten
-              abgeleitet. So bleibt klar, warum ein Produkt passt und wann eine einfachere
-              Alternative reicht.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {["Analyse zuerst", "Konkrete Gründe", "Keine eigenen Produkte"].map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full border border-[var(--brand-plum-light)] bg-white px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.06em] text-[var(--brand-plum)]"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
+        <OfferProductStory />
+        <OfferTimeline />
 
-        <section className="space-y-3 border-t border-border py-8">
-          <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
-            Was Chaarlie für dich tut
-          </p>
-          <h2 className="text-center font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
-            Dein persönlicher digitaler Haarpflege-Berater.
-          </h2>
-          {FEATURES.map((feature) => (
-            <article
-              key={feature.kicker}
-              className="overflow-hidden rounded-[14px] border border-border bg-white"
-            >
-              <div className="h-[240px] overflow-hidden bg-[var(--brand-plum-ice)]">
-                {/* eslint-disable-next-line @next/next/no-img-element -- renderToStaticMarkup tests do not load Next image remote config. */}
-                <img
-                  src={feature.imageUrl}
-                  alt={feature.imageAlt}
-                  className="h-full w-full object-cover object-top"
-                />
-              </div>
-              <div className="p-5">
-                <p className="mb-2 font-mono text-[9px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-plum)]">
-                  {feature.kicker}
-                </p>
-                <h3 className="text-[17px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-[14px] leading-[1.55] text-muted-foreground">
-                  {feature.body}
-                </p>
-                <p className="mt-4 border-t border-border pt-3 font-header text-[13px] italic leading-snug text-[var(--brand-plum)]">
-                  {feature.benefit}
-                </p>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        <section className="border-t border-border py-8">
-          <h2 className="mb-4 text-center font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
-            Ohne vs. mit Chaarlie
-          </h2>
-          <table className="w-full overflow-hidden rounded-[12px] border border-border bg-white text-[13px]">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-3 py-3 text-left font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                  Vergleich
-                </th>
-                <th className="px-3 py-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--text-caption)]">
-                  Ohne
-                </th>
-                <th className="bg-[var(--brand-plum-ice)]/70 px-3 py-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-                  Chaarlie
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {COMPARISON_ROWS.map(([label, without, withChaarlie]) => (
-                <tr key={label} className="border-t border-border first:border-t-0">
-                  <td className="px-3 py-3 text-left text-muted-foreground">{label}</td>
-                  <td className="px-3 py-3 text-center text-[var(--text-caption)]">{without}</td>
-                  <td className="bg-[var(--brand-plum-ice)]/70 px-3 py-3 text-center font-bold text-[var(--brand-plum)]">
-                    {withChaarlie}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        <section id="pricing" className="scroll-mt-[72px] border-t border-border py-8">
+        <section id="pricing" className="scroll-mt-[76px] border-t border-border py-9">
           {focusRoutine ? (
-            <p className="mb-3 rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-center text-[12px] font-bold text-[var(--brand-plum)]">
+            <p className="mb-4 rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-center text-[12px] font-bold text-[var(--brand-plum)]">
               Weiter mit deiner Routine
             </p>
           ) : null}
           <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
-            Dein Plan ist fertig
+            Dein persönlicher Haarpflege-Begleiter
           </p>
-          <h2 className="mt-2 text-center font-header text-[34px] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
-            Starte Chaarlie
+          <h2 className="mt-2 text-center font-header text-[36px] font-medium leading-[1.12] text-[var(--brand-plum-darkest)]">
+            Starte mit Chaarlie.
           </h2>
-          <p className="mx-auto mt-3 max-w-[36ch] text-center text-[16px] leading-[1.6] text-muted-foreground">
-            Deine Auswertung zeigt, was möglich ist. Dein Plan zeigt dir wie.
+          <p className="mx-auto mt-3 max-w-[40ch] text-center text-[14px] leading-[1.6] text-muted-foreground">
+            Routine, konkrete Produkthilfe und persönliche Fragen sind in jeder Laufzeit enthalten.
           </p>
-          {focusRoutine ? (
-            <p className="mx-auto mt-3 max-w-[36ch] text-center text-[13px] leading-[1.55] text-muted-foreground">
-              Wir schauen uns an, was du aktuell verwendest, damit Chaarlie gezielter empfehlen
-              kann.
-            </p>
-          ) : null}
-          <div className="my-5 rounded-[14px] border border-[rgba(var(--brand-coral-rgb),0.14)] bg-[var(--brand-coral-light)] p-5 text-center">
-            <ResultOfferCountdown
-              className="flex items-center justify-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-coral)]"
-              valueClassName="block font-sans text-[32px] font-bold leading-none text-[var(--brand-plum-darkest)]"
-            />
-            <p className="mt-2 text-[12px] text-muted-foreground">Danach zum regulären Preis</p>
-          </div>
-          {pricingSlot ?? <StaticPricingPreview />}
-          <article className="mt-7 rounded-[14px] border border-border bg-white p-6 text-center">
-            <ShieldCheck aria-hidden="true" className="mx-auto size-9 text-[var(--brand-coral)]" />
+          <div className="mt-6">{pricingSlot ?? <StaticPricingPreview />}</div>
+          <article className="mt-7 rounded-[16px] border border-border bg-white p-6 text-center">
+            <ShieldCheck aria-hidden="true" className="mx-auto size-8 text-[var(--brand-coral)]" />
             <GuaranteeBadge />
             <h3 className="font-header text-[22px] font-medium text-[var(--brand-plum-darkest)]">
-              Geld-zurück-Garantie
+              14 Tage Geld-zurück-Garantie
             </h3>
             <p className="mt-2 text-[13px] leading-[1.6] text-muted-foreground">
-              Sollte der Plan nicht zu dir passen, bekommst du innerhalb von 14 Tagen nach dem Kauf
+              Sollte Chaarlie nicht zu dir passen, bekommst du innerhalb von 14 Tagen nach dem Kauf
               dein Geld zurück.
             </p>
           </article>
         </section>
 
-        <section className="border-t border-border pb-20 pt-8 text-center">
-          <MessageCircle className="mx-auto mb-3 size-8 text-[var(--brand-plum)]" />
-          <h2 className="font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
-            {focusRoutine
-              ? "Mach mit deiner Routine weiter."
-              : "Dein Haar wartet nicht. Starte jetzt."}
+        <OfferFaq />
+
+        <section className="border-t border-border pb-20 pt-9 text-center">
+          <MessageCircle
+            className="mx-auto mb-3 size-8 text-[var(--brand-plum)]"
+            aria-hidden="true"
+          />
+          <h2 className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
+            Aus deiner Analyse wird ein Plan, den du wirklich nutzen kannst.
           </h2>
-          <p className="mx-auto mt-3 max-w-[36ch] text-[14px] leading-[1.6] text-muted-foreground">
-            {focusRoutine
-              ? "Deine Haaranalyse ist fertig. Jetzt verstehen wir deine aktuelle Pflege-Routine."
-              : "Dein persönlicher Plan ist fertig. Hol dir jetzt das Sonderangebot."}
+          <p className="mx-auto mt-3 max-w-[38ch] text-[14px] leading-[1.6] text-muted-foreground">
+            Starte deine Routine und behalte Chaarlie als geduldigen Begleiter für Produkte,
+            Anwendung und alle Fragen danach.
           </p>
           <a
             href="#pricing"
             className="mt-5 flex min-h-[54px] w-full items-center justify-center rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)]"
           >
-            Mein Angebot sichern
+            Chaarlie starten
           </a>
         </section>
       </main>
@@ -406,6 +257,7 @@ export function QuizResultOfferPageShell({
 export function QuizResultOfferPage({
   name,
   narrative,
+  quizAnswers,
   leadId,
   onCheckoutOpen,
   focusRoutine = false,
@@ -413,6 +265,7 @@ export function QuizResultOfferPage({
 }: {
   name: string
   narrative: QuizResultNarrative
+  quizAnswers: QuizAnswers
   leadId: string | null
   onCheckoutOpen?: () => void
   focusRoutine?: boolean
@@ -422,6 +275,8 @@ export function QuizResultOfferPage({
     <QuizResultOfferPageShell
       name={name}
       narrative={narrative}
+      quizAnswers={quizAnswers}
+      focusRoutine={focusRoutine}
       pricingSlot={
         <ResultOfferPricing
           leadId={leadId}
@@ -429,7 +284,6 @@ export function QuizResultOfferPage({
           onCheckoutOpen={onCheckoutOpen}
         />
       }
-      focusRoutine={focusRoutine}
     />
   )
 }

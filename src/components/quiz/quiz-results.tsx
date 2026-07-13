@@ -190,6 +190,7 @@ export function QuizResults() {
       <QuizResultOfferPage
         name={lead.name}
         narrative={narrative}
+        quizAnswers={answers}
         leadId={leadId}
         onCheckoutOpen={captureQuizCompleted}
       />

@@ -17,6 +17,7 @@ import { buildResetAssessment } from "@/lib/recommendation-engine/assessments/re
 import { emptyRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 import { isProductFrequencyAtLeast, type ProductFrequency } from "@/lib/vocabulary"
+import type { HairDensity, HairThickness } from "@/lib/vocabulary"
 
 export interface BuildupResetNeed {
   level: "none" | "low" | "moderate" | "high"
@@ -44,21 +45,28 @@ export function isFrequencyAtLeast(
   return isProductFrequencyAtLeast(frequencyBand, threshold)
 }
 
-export function deriveTargetWeight(profile: NormalizedProfile): CanonicalWeight | null {
-  if (!profile.thickness || !profile.density) return null
+export function deriveTargetWeightFromHair(
+  thickness: HairThickness | null,
+  density: HairDensity | null,
+): CanonicalWeight | null {
+  if (!thickness || !density) return null
 
-  if (profile.thickness === "fine") {
-    return profile.density === "low" ? "light" : "medium"
+  if (thickness === "fine") {
+    return density === "low" ? "light" : "medium"
   }
 
-  if (profile.thickness === "normal") {
-    if (profile.density === "low") return "light"
-    if (profile.density === "medium") return "medium"
+  if (thickness === "normal") {
+    if (density === "low") return "light"
+    if (density === "medium") return "medium"
     return "rich"
   }
 
-  if (profile.density === "low") return "medium"
+  if (density === "low") return "medium"
   return "rich"
+}
+
+export function deriveTargetWeight(profile: NormalizedProfile): CanonicalWeight | null {
+  return deriveTargetWeightFromHair(profile.thickness, profile.density)
 }
 
 export function deriveBalanceTarget(damage: DamageAssessment): CanonicalBalanceTarget | null {

@@ -4,61 +4,48 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { QuizResultOfferPageShell } from "../src/components/quiz/quiz-result-offer-page"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
+import type { QuizAnswers } from "../src/lib/quiz/types"
 
-test("result offer page shell renders the unified offer sections and live pricing copy", () => {
-  const narrative = buildQuizResultNarrative({
-    structure: "wavy",
-    thickness: "normal",
-    fingertest: "rau",
-    pulltest: "stretches_stays",
-    concerns: ["breakage"],
-    goals: ["strengthen"],
-  })
+const quizAnswers: QuizAnswers = {
+  structure: "wavy",
+  thickness: "normal",
+  density: "medium",
+  fingertest: "leicht_uneben",
+  pulltest: "stretches_stays",
+  scalp_type: "ausgeglichen",
+  has_scalp_issue: false,
+  concerns: ["breakage"],
+  treatment: ["natur"],
+  goals: ["strengthen"],
+}
 
-  const html = renderToStaticMarkup(<QuizResultOfferPageShell name="Sarah" narrative={narrative} />)
-
-  assert.match(html, /Angebot:/i)
-  assert.match(html, /Sarah, hier findest du dein Ergebnis/i)
-  // New fixed hero
-  assert.match(html, /So können sich deine Haare in 4 Wochen anfühlen\./i)
-  // Transformation card
-  assert.match(html, /Heute/)
-  assert.match(html, /In 4 Wochen/)
-  // Lever block
-  assert.match(html, /Was dein Haar jetzt braucht/i)
-  assert.match(html, /Primärer Hebel/)
-  assert.match(html, /Sekundärer Hebel/)
-  // Old per-row label chips gone
-  assert.doesNotMatch(html, /Haargefühl/i)
-  assert.doesNotMatch(html, /Worauf wir hinarbeiten/i)
-  assert.match(html, /Dein vollständiger 30-Tage-Plan ist fertig/i)
-  assert.match(html, /id="unlock-plan"/i)
-  assert.match(html, /Ausgearbeitet von Chaarlie\./i)
-  assert.match(html, /Warum diese Empfehlung\?/i)
-  assert.match(html, /Chaarlie bewertet erst dein Haar, dann die Produkte\./i)
-  assert.doesNotMatch(html, /Tom/i)
-  assert.match(html, /Was Chaarlie für dich tut/i)
-  assert.match(html, /KI Haar-Berater/i)
-  assert.match(html, /Produktempfehlungen/i)
-  assert.match(html, /Haarpflege Planer/i)
-  assert.match(html, /Ohne vs\. mit Chaarlie/i)
-  assert.match(html, />Ohne</i)
-  assert.match(html, />Chaarlie</i)
-  assert.match(html, /500\+ erfasste Haarpflegeprodukte/i)
-  assert.match(html, /Nachvollziehbar ausgewählt/i)
-  assert.match(html, /Pflegefortschritt/i)
-  assert.match(html, /Nach 4 Wochen prüfen/i)
-  assert.match(html, /Produktauswahl/i)
-  assert.match(html, /Gezielter auswählen/i)
-  assert.match(html, /persönlicher digitaler Haarpflege-Berater/i)
-  assert.match(html, /Angebot läuft ab in/i)
-  assert.match(html, /Danach zum regulären Preis/i)
-  assert.doesNotMatch(
-    html,
-    /Geld für falsche Produkte|Hunderte €|Nie wieder|Kein Risiko|Danach gilt der normale Preis/i,
+test("result offer page renders the product-led hierarchy, routine preview, and existing pricing", () => {
+  const narrative = buildQuizResultNarrative(quizAnswers)
+  const html = renderToStaticMarkup(
+    <QuizResultOfferPageShell name="Sarah" narrative={narrative} quizAnswers={quizAnswers} />,
   )
-  // No residual Haarmony brand mentions
-  assert.doesNotMatch(html, /Haarmony/i)
+
+  assert.match(html, /Sarah, wir kennen jetzt die Bedürfnisse deiner Haare/i)
+  assert.match(html, /Deine Analyse ist der Anfang\. Chaarlie macht sie anwendbar\./i)
+  assert.match(html, /Das wissen wir schon aus deinem Quiz/i)
+  assert.match(html, /Daraus ergibt sich deine Mini-Routine/i)
+  assert.match(html, /Shampoo · Beispiel/i)
+  assert.match(html, /Conditioner · Beispiel/i)
+  assert.match(html, /Dein nächster Pflegeschritt/i)
+  assert.match(html, /Protein-Maske/i)
+  assert.equal((html.match(/data-testid="locked-routine-placeholder"/g) ?? []).length, 2)
+  assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen/i)
+  assert.match(html, /noch nicht deine finalen Produktempfehlungen/i)
+  assert.match(html, /id="unlock-plan"/i)
+  assert.match(html, /Chaarlie finalisiert deinen persönlichen Plan/i)
+  assert.match(html, /Das kaufst du – nicht nur ein Quiz-Ergebnis/i)
+  assert.match(html, /Antworten, wenn die nächste Frage kommt/i)
+  assert.match(html, /Was, wann und in welcher Reihenfolge/i)
+  assert.match(html, /Warum Chaarlie ein Abo ist/i)
+  assert.match(html, /500\+/i)
+  assert.match(html, /erfasste Produkte/i)
+  assert.match(html, /keine eigene Produktlinie/i)
+  assert.match(html, /id="pricing"/i)
   assert.match(html, /Monatlich/i)
   assert.match(html, /€14,99/i)
   assert.match(html, /Quartal/i)
@@ -66,30 +53,27 @@ test("result offer page shell renders the unified offer sections and live pricin
   assert.match(html, /Beliebteste Wahl/i)
   assert.match(html, /Jährlich/i)
   assert.match(html, /€99,99/i)
-  assert.doesNotMatch(html, /€7,49|€17,49|€49,99/i)
-  assert.match(html, /Jetzt starten — €34,99 im Quartal/i)
   assert.match(html, /14 Tage Geld-zurück-Garantie/i)
-  assert.match(html, /Mein Angebot sichern/i)
-  assert.doesNotMatch(html, /ERGEBNIS TEILEN|WHATSAPP|ALS BILD SPEICHERN/i)
+  assert.match(html, /Was passiert direkt nach der Zahlung/i)
+  assert.match(html, /Sind die Produkte auf dieser Seite schon meine finalen Empfehlungen/i)
+  assert.doesNotMatch(html, /Angebot läuft ab|Danach zum regulären Preis|In 4 Wochen|30-Tage-Plan/i)
+  assert.doesNotMatch(html, /Kopfhautserum|Dry.Shampoo|Haarmony|>Tom</i)
 })
 
-test("result offer page shell gates routine-return copy behind focusRoutine", () => {
-  const narrative = buildQuizResultNarrative({
-    structure: "wavy",
-    thickness: "normal",
-    fingertest: "rau",
-    pulltest: "stretches_stays",
-    concerns: ["breakage"],
-    goals: ["strengthen"],
-  })
-
+test("result offer page preserves legacy routine-return context and both fixed-header anchors", () => {
+  const narrative = buildQuizResultNarrative(quizAnswers)
   const html = renderToStaticMarkup(
-    <QuizResultOfferPageShell name="Sarah" narrative={narrative} focusRoutine />,
+    <QuizResultOfferPageShell
+      name="Sarah"
+      narrative={narrative}
+      quizAnswers={quizAnswers}
+      focusRoutine
+    />,
   )
 
+  assert.match(html, /Weiter mit deiner vollständigen Routine/i)
   assert.match(html, /Weiter mit deiner Routine/i)
-  assert.match(html, /Der nächste Schritt: deine aktuelle Routine/i)
-  assert.match(html, /was du aktuell verwendest/i)
-  assert.match(html, /Mach mit deiner Routine weiter\./i)
-  assert.doesNotMatch(html, /Dein vollständiger 30-Tage-Plan ist fertig/i)
+  assert.match(html, /id="unlock-plan"[^>]*scroll-mt-\[76px\]/i)
+  assert.match(html, /id="pricing"[^>]*scroll-mt-\[76px\]/i)
+  assert.doesNotMatch(html, /Angebot:/i)
 })
