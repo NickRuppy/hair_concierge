@@ -386,7 +386,10 @@ test("Meta purchase includes the package key behind the browser custom-data flag
     else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previous
   }
 
-  const purchasePayload = dom.win.fbq?.queue?.[2]?.[2] as Record<string, unknown>
+  const purchasePayload = dom.win.fbq?.queue?.find((call) => call[1] === "Purchase")?.[2] as Record<
+    string,
+    unknown
+  >
   assert.equal(purchasePayload.funnel_package_key, "scalp_check_placeholder")
 })
 

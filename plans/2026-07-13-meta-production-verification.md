@@ -4,24 +4,34 @@
 
 Make the existing Meta tracking path usable for the current closed-cohort production test:
 
-- load the browser Pixel and send `PageView` from the first visit regardless of the cookie-banner choice;
+- queue browser events from the first visit regardless of the cookie-banner choice, then initialize
+  the Pixel after first paint and flush them in order;
 - include the coherent funnel package key on supported browser and server Meta events;
 - prove the Stripe `Purchase` browser event and Meta CAPI event use the same Stripe Checkout Session ID for deduplication.
 
 ## Chosen Direction
 
-The Meta Pixel provider initializes unconditionally. It no longer reads or reacts to the marketing-consent value. The existing cookie banner and consent storage remain unchanged for other integrations.
+The Meta provider queues route events immediately. The shared analytics runtime initializes the Pixel
+unconditionally after first paint and flushes queued events in FIFO order. Neither layer reads or
+reacts to the marketing-consent value. The existing cookie banner and consent storage remain
+unchanged.
 
 This is an explicit product decision for the current production test, despite the known German/EU consent risk. It is not represented as legal compliance and does not introduce a fake consent state or a special test-traffic marker.
 
 ## Scope
 
-1. Simplify `src/providers/meta-pixel-provider.tsx` so route page views call `initMetaPixel()` and then `grantMetaPixelConsent()` unconditionally before tracking. Preserve page-view deduplication. The grant call remains necessary because the existing Meta helper layer uses it to enable standard and custom event dispatch internally.
-2. Add a focused provider contract test proving the provider no longer imports `@/lib/cookie-consent` or listens for `COOKIE_CONSENT_CHANGE_EVENT`, while requiring the unconditional init-then-grant sequence. The required Meta helper call is not treated as cookie-banner consent coupling.
-3. Preserve `src/lib/meta-pixel.ts` consent helpers for compatibility with existing tests/callers; do not rewrite purchase deduplication or event wrappers.
+1. Preserve `src/providers/meta-pixel-provider.tsx` route page-view deduplication and let events queue
+   before runtime readiness. Keep SDK initialization in `AnalyticsRuntimeCoordinator` after first
+   paint.
+2. Preserve the post-paint runtime contract tests while proving the Meta path has no cookie-consent
+   imports or marketing-consent gate.
+3. Keep the queue-based `src/lib/meta-pixel.ts` runtime and extend only the package-key and Purchase
+   deduplication payloads required for attribution.
 4. Update `docs/funnel-attribution.md` to state the actual production Pixel behavior and package-key configuration.
 5. Configure production Meta package-key flags, and inspect/configure the existing CAPI environment without exposing secrets. Set `NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED=true` before triggering the fresh production build because public environment values are inlined at build time; the server flag remains runtime configuration.
-6. Deploy the reviewed change, verify `PageView` and a funnel event in Meta, then verify Stripe Purchase browser/server deduplication. Stop before submitting a real payment for explicit confirmation.
+6. Deploy the reviewed change, verify the non-payment funnel in Meta and Supabase, and create a Stripe
+   checkout without submitting payment. Leave browser/server Purchase deduplication for the owner's
+   controlled purchase.
 
 ## Non-Goals
 
@@ -39,7 +49,8 @@ This is an explicit product decision for the current production test, despite th
 - Typecheck and lint pass for the changed surface; build passes before production deployment.
 - Production browser requests show the correct Pixel ID, `PageView`, and `funnel_package_key` where supported, independent of the banner choice.
 - The Pixel ID in browser network requests equals the CAPI `META_PIXEL_ID`; browser/server deduplication is invalid if the destinations differ.
-- Meta Test Events or Events Manager shows the Stripe browser and server `Purchase` events sharing one event ID and being deduplicated.
+- A controlled owner purchase remains the final check that Meta receives browser and server
+  `Purchase` with the same Stripe Checkout Session ID and deduplicates them.
 
 ## Review And Stop Gates
 

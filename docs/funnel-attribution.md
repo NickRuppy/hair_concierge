@@ -22,12 +22,12 @@ landing and offer variant snapshots. Do not rename a key after traffic has been 
 - `META_PIXEL_ID` and `NEXT_PUBLIC_META_PIXEL_ID` must identify the same Meta dataset. Browser/server
   Purchase deduplication cannot work when the two channels send to different datasets.
 
-On funnel and public-flow routes that mount `MetaPixelProvider`, the production Meta Pixel currently
-initializes and tracks from the first page view regardless of the cookie-banner choice. Legal,
-contact, and other routes without that provider remain tracking-free. The banner and stored consent
-remain in place for other integrations. This is an explicit production-test behavior, not a statement
-that the setup satisfies German/EU consent requirements; reverting it requires a code rollback and
-redeploy.
+On funnel and public-flow routes that mount `MetaPixelProvider`, Meta events are queued from the first
+page view regardless of the cookie-banner choice. The analytics runtime initializes the Pixel after
+first paint and flushes the queue in order. Legal, contact, and other routes without those tracking
+providers remain tracking-free. The banner and stored consent remain in place, but do not gate this
+Meta path. This is an explicit production-test behavior, not a statement that the setup satisfies
+German/EU consent requirements; reverting it requires a code rollback and redeploy.
 
 The database migration and code can be deployed while attribution remains disabled. Before enabling
 the master flag in production, confirm the German privacy/legal classification of the pre-consent,
@@ -43,8 +43,8 @@ and three package journeys linked by one visitor ID; both transactions left zero
 Vercel production has `FUNNEL_ATTRIBUTION_ENABLED=true` and a dedicated signing secret configured.
 The configuration takes effect when the matching application code is deployed. As of 2026-07-13,
 both Meta package-key flags and matching browser/server Pixel IDs are configured for production; a
-Chaarlie-only `META_CAPI_ACCESS_TOKEN` is stored as a server secret. A fresh production build is still
-required to inline the public values.
+Chaarlie-only `META_CAPI_ACCESS_TOKEN` is stored as a server secret. Each production deployment must
+be built after those public values are configured so Next.js can inline them.
 
 ## Milestones
 
