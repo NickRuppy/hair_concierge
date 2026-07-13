@@ -1,8 +1,6 @@
-import type { CookieConsent } from "@/lib/cookie-consent"
+import { createBoundedFifo } from "@/lib/analytics/runtime/bounded-fifo"
 
 export const CUSTOMERIO_EU_CDN_URL = "https://cdp-eu.customer.io"
-
-const DEFAULT_WRITE_KEY = process.env.NEXT_PUBLIC_CUSTOMERIO_WRITE_KEY ?? ""
 
 type CustomerIoValue = string | number | boolean | null | string[] | number[] | boolean[]
 export type CustomerIoProperties = Record<string, CustomerIoValue | undefined>
@@ -32,15 +30,6 @@ export type CustomerIoBrowserClient = {
   track: (eventName: string, properties?: Record<string, CustomerIoValue>) => unknown
 }
 
-let browserClient: CustomerIoBrowserClient | null = null
-
-export function canUseCustomerIoBrowserTracking(
-  consent: Pick<CookieConsent, "analytics"> | null | undefined,
-  writeKey = DEFAULT_WRITE_KEY,
-) {
-  return Boolean(writeKey && consent?.analytics === true)
-}
-
 export function cleanCustomerIoProperties(properties?: CustomerIoProperties) {
   if (!properties) return {}
 
@@ -49,41 +38,127 @@ export function cleanCustomerIoProperties(properties?: CustomerIoProperties) {
   ) as Record<string, CustomerIoValue>
 }
 
+type CustomerIoOperation =
+  | { type: "identify"; userId: string; traits: Record<string, CustomerIoValue> }
+  | { type: "page"; path: string; properties: Record<string, CustomerIoValue> }
+  | { type: "reset" }
+  | { type: "track"; eventName: string; properties: Record<string, CustomerIoValue> }
+
+export function createCustomerIoTracker({
+  queueLimit = 100,
+  warn = (message: string) => {
+    if (process.env.NODE_ENV !== "production") console.warn(message)
+  },
+}: {
+  queueLimit?: number
+  warn?: (message: string) => void
+} = {}) {
+  const queue = createBoundedFifo<CustomerIoOperation>({
+    label: "Customer.io",
+    limit: queueLimit,
+    warn,
+  })
+  let client: CustomerIoBrowserClient | null = null
+  let disabled = false
+
+  const dispatch = (operation: CustomerIoOperation) => {
+    if (!client) return false
+    switch (operation.type) {
+      case "identify":
+        client.identify(operation.userId, operation.traits)
+        break
+      case "page":
+        client.page(null, operation.path, operation.properties)
+        break
+      case "reset":
+        client.reset()
+        break
+      case "track":
+        client.track(operation.eventName, operation.properties)
+        break
+    }
+    return true
+  }
+
+  const enqueueOrDispatch = (operation: CustomerIoOperation) => {
+    if (disabled) return false
+    if (client) return dispatch(operation)
+    queue.push(operation)
+    return true
+  }
+
+  return {
+    clear() {
+      client = null
+      disabled = false
+      queue.clear()
+    },
+    disable() {
+      client = null
+      disabled = true
+      queue.clear()
+    },
+    identify(userId: string, traits?: CustomerIoProperties) {
+      return enqueueOrDispatch({
+        type: "identify",
+        userId,
+        traits: cleanCustomerIoProperties(traits),
+      })
+    },
+    page(path: string, properties?: CustomerIoProperties) {
+      return enqueueOrDispatch({
+        type: "page",
+        path,
+        properties: cleanCustomerIoProperties(properties),
+      })
+    },
+    reset() {
+      return enqueueOrDispatch({ type: "reset" })
+    },
+    setClient(nextClient: CustomerIoBrowserClient) {
+      client = nextClient
+      disabled = false
+      for (const operation of queue.drain()) dispatch(operation)
+    },
+    track(eventName: string, properties?: CustomerIoProperties) {
+      return enqueueOrDispatch({
+        type: "track",
+        eventName,
+        properties: cleanCustomerIoProperties(properties),
+      })
+    },
+  }
+}
+
+const browserTracker = createCustomerIoTracker()
+
 export function setCustomerIoBrowserClient(client: CustomerIoBrowserClient) {
-  browserClient = client
+  browserTracker.setClient(client)
 }
 
 export function clearCustomerIoBrowserClient() {
-  browserClient = null
+  browserTracker.clear()
+}
+
+export function disableCustomerIoBrowserClient() {
+  browserTracker.disable()
 }
 
 export function resetCustomerIoBrowserClient() {
-  if (!browserClient) return false
-
-  browserClient.reset()
-  return true
+  return browserTracker.reset()
 }
 
 export function trackCustomerIoPage(path: string, properties?: CustomerIoProperties) {
-  if (!browserClient) return false
-
-  browserClient.page(null, path, cleanCustomerIoProperties(properties))
-  return true
+  return browserTracker.page(path, properties)
 }
 
 export function identifyCustomerIoUser(userId: string, traits?: CustomerIoProperties) {
-  if (!browserClient) return false
-
-  browserClient.identify(userId, cleanCustomerIoProperties(traits))
-  return true
+  return browserTracker.identify(userId, traits)
 }
 
 export function trackCustomerIoEvent(
   eventName: CustomerIoEventName,
   properties?: CustomerIoProperties,
 ) {
-  if (!browserClient) return false
-
-  browserClient.track(eventName, cleanCustomerIoProperties(properties))
-  return true
+  return browserTracker.track(eventName, properties)
 }

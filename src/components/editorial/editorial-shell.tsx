@@ -2,12 +2,18 @@ import type { ReactNode } from "react"
 
 import { LandingHeader } from "@/components/landing/landing-header"
 import { SiteFooter } from "@/components/landing/site-footer"
-import { LandingTracking } from "@/providers/route-providers"
+import { PublicFunnelContextBootstrap } from "@/providers/public-funnel-context-bootstrap"
 
-export function EditorialShell({ children }: { children: ReactNode }) {
+export function EditorialShell({
+  children,
+  bootstrapFunnelContext = false,
+}: {
+  children: ReactNode
+  bootstrapFunnelContext?: boolean
+}) {
   return (
     <>
-      <LandingTracking />
+      {bootstrapFunnelContext ? <PublicFunnelContextBootstrap /> : null}
       <LandingHeader />
       <div className="flex min-h-[calc(100vh-64px)] flex-col">
         <main id="main-content" className="flex-1">

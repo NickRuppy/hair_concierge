@@ -7,16 +7,22 @@ function read(path: string) {
 }
 
 test("acquisition funnel keeps Meta, Customer.io, and PostHog tracking from landing through checkout success", () => {
+  const trackingProviders = read("src/providers/tracking-providers.tsx")
   const routeProviders = read("src/providers/route-providers.tsx")
-  assert.match(routeProviders, /function LandingTracking\(\)/)
-  assert.match(routeProviders, /function PublicFlowProviders\(/)
+  assert.match(trackingProviders, /function LandingTracking\(\)/)
+  assert.match(trackingProviders, /function PublicFlowProviders\(/)
   assert.match(routeProviders, /function PublicAuthFlowProviders\(/)
-  assert.match(routeProviders, /<MetaPixelProvider>/)
-  assert.match(routeProviders, /<CustomerIoProvider>/)
-  assert.match(routeProviders, /<PostHogClientProvider>/)
+  assert.match(trackingProviders, /<MetaPixelProvider>/)
+  assert.match(trackingProviders, /<CustomerIoProvider>/)
+  assert.match(trackingProviders, /<PostHogClientProvider>/)
+  assert.match(trackingProviders, /<AnalyticsRuntimeCoordinator \/>/)
+  assert.doesNotMatch(trackingProviders, /auth-provider|useAuth|supabase/i)
+  assert.match(routeProviders, /<CustomerIoIdentify \/>/)
+  assert.match(routeProviders, /<PostHogIdentify \/>/)
 
   const landing = read("src/app/page.tsx")
   assert.match(landing, /<LandingTracking \/>/)
+  assert.match(landing, /@\/providers\/tracking-providers/)
   const campaignLanding = read("src/app/lp/[slug]/page.tsx")
   assert.match(campaignLanding, /getFunnelPackageBySlug/)
   assert.match(campaignLanding, /renderLandingVariant\(funnelPackage\.landingVariant\)/)
@@ -29,6 +35,7 @@ test("acquisition funnel keeps Meta, Customer.io, and PostHog tracking from land
     "src/app/result/layout.tsx",
   ]) {
     assert.match(read(path), /<PublicFlowProviders>{children}<\/PublicFlowProviders>/, path)
+    assert.match(read(path), /@\/providers\/tracking-providers/, path)
   }
 
   assert.match(
@@ -37,6 +44,39 @@ test("acquisition funnel keeps Meta, Customer.io, and PostHog tracking from land
   )
   assert.match(read("src/app/quiz/layout.tsx"), /<QuizShell>{children}<\/QuizShell>/)
   assert.match(read("src/app/quiz/quiz-shell.tsx"), /<AppRouteProviders>/)
+})
+
+test("public editorial context is isolated from the acquisition provider graph", () => {
+  const shell = read("src/components/editorial/editorial-shell.tsx")
+  const bootstrap = read("src/providers/public-funnel-context-bootstrap.tsx")
+
+  assert.doesNotMatch(shell, /route-providers|LandingTracking/)
+  assert.match(shell, /@\/providers\/public-funnel-context-bootstrap/)
+  assert.match(bootstrap, /@\/lib\/funnel\/client/)
+  assert.doesNotMatch(bootstrap, /posthog|customerio|meta-pixel|useAuth|supabase/i)
+})
+
+test("vendor SDKs stay behind post-paint dynamic import boundaries without consent gates", () => {
+  const coordinator = read("src/providers/analytics-runtime-coordinator.tsx")
+  const customerIoRuntime = read("src/lib/analytics/runtime/customerio.ts")
+  const postHogRuntime = read("src/lib/analytics/runtime/posthog.ts")
+  const trackingSources = [
+    coordinator,
+    customerIoRuntime,
+    postHogRuntime,
+    read("src/providers/customerio-provider.tsx"),
+    read("src/providers/meta-pixel-provider.tsx"),
+    read("src/providers/posthog-provider.tsx"),
+    read("src/lib/customerio-tracking.ts"),
+    read("src/lib/meta-pixel.ts"),
+  ].join("\n")
+
+  assert.match(coordinator, /scheduleAfterFirstPaint/)
+  assert.match(customerIoRuntime, /import\("@customerio\/cdp-analytics-browser"\)/)
+  assert.match(postHogRuntime, /import\("posthog-js"\)/)
+  assert.doesNotMatch(customerIoRuntime, /from "@customerio\/cdp-analytics-browser"/)
+  assert.doesNotMatch(postHogRuntime, /from "posthog-js"/)
+  assert.doesNotMatch(trackingSources, /cookie-consent|COOKIE_CONSENT|loadConsent/)
 })
 
 test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {

@@ -39,12 +39,28 @@ test("the Methodik shell is discoverable without exposing a premature Ratgeber",
   const shellSource = readFileSync("src/components/editorial/editorial-shell.tsx", "utf8")
   const footerHtml = renderToStaticMarkup(<SiteFooter />)
 
-  assert.match(shellSource, /<LandingTracking \/>/)
   assert.match(shellSource, /<LandingHeader \/>/)
   assert.match(shellSource, /<main /)
   assert.match(shellSource, /<SiteFooter \/>/)
   assert.match(footerHtml, /href="\/methodik"/)
   assert.doesNotMatch(footerHtml, /href="\/ratgeber"/)
+})
+
+test("Methodik bootstraps first-party funnel context without editorial vendor tracking", () => {
+  const methodikSource = readFileSync("src/app/methodik/page.tsx", "utf8")
+  const shellSource = readFileSync("src/components/editorial/editorial-shell.tsx", "utf8")
+  const bootstrapSource = readFileSync("src/providers/public-funnel-context-bootstrap.tsx", "utf8")
+
+  assert.match(methodikSource, /<EditorialShell bootstrapFunnelContext>/)
+  assert.match(shellSource, /bootstrapFunnelContext = false/)
+  assert.match(shellSource, /<PublicFunnelContextBootstrap \/>/)
+  assert.doesNotMatch(shellSource, /LandingTracking|route-providers/)
+  assert.match(bootstrapSource, /import \{ bootstrapFunnelContext \} from "@\/lib\/funnel\/client"/)
+  assert.match(
+    bootstrapSource,
+    /useEffect\(\(\) => \{\s*void bootstrapFunnelContext\(\)\s*\}, \[\]\)/,
+  )
+  assert.doesNotMatch(bootstrapSource, /posthog|auth|provider|recordBrowserFunnelMilestone/i)
 })
 
 test("unknown routes render a branded German recovery page", () => {
@@ -54,6 +70,13 @@ test("unknown routes render a branded German recovery page", () => {
   assert.match(html, /href="\/"/)
   assert.match(html, /href="\/quiz"/)
   assert.doesNotMatch(html, /This page could not be found/)
+})
+
+test("unknown routes keep the default tracking-free editorial shell", () => {
+  const notFoundSource = readFileSync("src/app/not-found.tsx", "utf8")
+
+  assert.match(notFoundSource, /<EditorialShell>/)
+  assert.doesNotMatch(notFoundSource, /bootstrapFunnelContext|funnel\/session|LandingTracking/)
 })
 
 test("approved public copy uses serious, non-medical product framing", () => {

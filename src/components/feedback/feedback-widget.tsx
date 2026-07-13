@@ -8,7 +8,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
-import { posthog } from "@/providers/posthog-provider"
+import { posthog } from "@/lib/analytics/runtime/posthog"
 import { cn } from "@/lib/utils"
 
 const MAX_LENGTH = 4000

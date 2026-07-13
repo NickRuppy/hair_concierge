@@ -2,66 +2,34 @@
 
 import { LazyFeedbackWidget } from "@/components/feedback/lazy-feedback-widget"
 import { AuthProvider } from "@/providers/auth-provider"
-import { CustomerIoProvider } from "@/providers/customerio-provider"
-import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
-import { PostHogClientProvider } from "@/providers/posthog-provider"
+import { CustomerIoIdentify } from "@/providers/customerio-identify"
+import { PostHogIdentify } from "@/providers/posthog-identify"
+import { TrackingProviders } from "@/providers/tracking-providers"
 import { ToastProvider } from "@/providers/toast-provider"
-import { FunnelContextBootstrap } from "@/providers/funnel-context-bootstrap"
 
 export function AppRouteProviders({ children }: { children: React.ReactNode }) {
   return (
-    <MetaPixelProvider>
+    <TrackingProviders>
       <AuthProvider>
-        <CustomerIoProvider>
-          <PostHogClientProvider>
-            <FunnelContextBootstrap />
-            <ToastProvider>
-              {children}
-              <LazyFeedbackWidget />
-            </ToastProvider>
-          </PostHogClientProvider>
-        </CustomerIoProvider>
+        <CustomerIoIdentify />
+        <PostHogIdentify />
+        <ToastProvider>
+          {children}
+          <LazyFeedbackWidget />
+        </ToastProvider>
       </AuthProvider>
-    </MetaPixelProvider>
-  )
-}
-
-export function PublicFlowProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <MetaPixelProvider>
-      <CustomerIoProvider>
-        <PostHogClientProvider>
-          <FunnelContextBootstrap />
-          <ToastProvider>{children}</ToastProvider>
-        </PostHogClientProvider>
-      </CustomerIoProvider>
-    </MetaPixelProvider>
+    </TrackingProviders>
   )
 }
 
 export function PublicAuthFlowProviders({ children }: { children: React.ReactNode }) {
   return (
-    <MetaPixelProvider>
+    <TrackingProviders>
       <AuthProvider>
-        <CustomerIoProvider>
-          <PostHogClientProvider>
-            <FunnelContextBootstrap />
-            <ToastProvider>{children}</ToastProvider>
-          </PostHogClientProvider>
-        </CustomerIoProvider>
+        <CustomerIoIdentify />
+        <PostHogIdentify />
+        <ToastProvider>{children}</ToastProvider>
       </AuthProvider>
-    </MetaPixelProvider>
-  )
-}
-
-export function LandingTracking() {
-  return (
-    <MetaPixelProvider>
-      <CustomerIoProvider>
-        <PostHogClientProvider>
-          <FunnelContextBootstrap landing />
-        </PostHogClientProvider>
-      </CustomerIoProvider>
-    </MetaPixelProvider>
+    </TrackingProviders>
   )
 }
