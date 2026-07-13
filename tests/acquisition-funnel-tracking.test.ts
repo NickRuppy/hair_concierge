@@ -112,13 +112,23 @@ test("result offer pricing view keeps the active funnel package with its own eve
   const source = read("src/components/quiz/result-offer-pricing.tsx")
   const publicPricingSource = read("src/app/pricing/pricing-cards.tsx")
 
-  assert.match(source, /else void bootstrapFunnelContext\(\)\.then\(trackPricingView\)/)
+  assert.doesNotMatch(source, /bootstrapFunnelContext\(\)\.then/)
   assert.match(
     source,
-    /trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,[\s\S]*funnelSessionId: context\?\.funnelSessionId,[\s\S]*funnelPackageKey: context\?\.funnelPackageKey/,
+    /const context: FunnelAnalyticsEnvelope \| null = offerTracking \?\? getCurrentFunnelContext\(\)[\s\S]*trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,[\s\S]*funnelSessionId: context\?\.funnelSessionId,[\s\S]*funnelPackageKey: context\?\.funnelPackageKey/,
   )
+  assert.doesNotMatch(publicPricingSource, /bootstrapFunnelContext\(\)\.then/)
   assert.match(
     publicPricingSource,
-    /bootstrapFunnelContext\(\)\.then\(\(context\) =>[\s\S]*trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,[\s\S]*funnelPackageKey: context\?\.funnelPackageKey/,
+    /const context = getCurrentFunnelContext\(\)[\s\S]*trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,[\s\S]*funnelPackageKey: context\?\.funnelPackageKey/,
+  )
+})
+
+test("checkout return only emits browser Subscribe when it can share Stripe's event id", () => {
+  const source = read("src/app/welcome/checkout-return-analytics.tsx")
+
+  assert.match(
+    source,
+    /if \(!sessionId\.startsWith\("paypal:"\)\) \{[\s\S]*trackAppEvent\("subscription_started", \{[\s\S]*checkoutSessionId: sessionId/,
   )
 })

@@ -46,12 +46,12 @@ type CustomerIoOperation =
 
 export function createCustomerIoTracker({
   queueLimit = 100,
-  warn = (message: string) => {
-    if (process.env.NODE_ENV !== "production") console.warn(message)
+  warn = (message: string, error?: unknown) => {
+    if (process.env.NODE_ENV !== "production") console.warn(message, error)
   },
 }: {
   queueLimit?: number
-  warn?: (message: string) => void
+  warn?: (message: string, error?: unknown) => void
 } = {}) {
   const queue = createBoundedFifo<CustomerIoOperation>({
     label: "Customer.io",
@@ -80,9 +80,18 @@ export function createCustomerIoTracker({
     return true
   }
 
+  const dispatchSafely = (operation: CustomerIoOperation) => {
+    try {
+      return dispatch(operation)
+    } catch (error) {
+      warn("[analytics] Customer.io dispatch failed", error)
+      return false
+    }
+  }
+
   const enqueueOrDispatch = (operation: CustomerIoOperation) => {
     if (disabled) return false
-    if (client) return dispatch(operation)
+    if (client) return dispatchSafely(operation)
     queue.push(operation)
     return true
   }
@@ -118,7 +127,7 @@ export function createCustomerIoTracker({
     setClient(nextClient: CustomerIoBrowserClient) {
       client = nextClient
       disabled = false
-      for (const operation of queue.drain()) dispatch(operation)
+      for (const operation of queue.drain()) dispatchSafely(operation)
     },
     track(eventName: string, properties?: CustomerIoProperties) {
       return enqueueOrDispatch({

@@ -11,14 +11,54 @@ import {
 import { bootstrapFunnelContext, getCurrentFunnelContext } from "@/lib/funnel/client"
 import type { AppEventMap, AppEventName } from "../events"
 
+const FUNNEL_CONTEXT_WAIT_MS = 500
+
+type PendingPackageTrack = (resolvedPackageKey?: string) => boolean
+
+let pendingPackageTracks: PendingPackageTrack[] = []
+let packageFlushScheduled = false
+
+function schedulePackageFlush() {
+  if (packageFlushScheduled) return
+  packageFlushScheduled = true
+
+  let flushed = false
+  const flush = (packageKey?: string) => {
+    if (flushed) return
+    flushed = true
+    packageFlushScheduled = false
+    const tracks = pendingPackageTracks
+    pendingPackageTracks = []
+    for (const track of tracks) {
+      try {
+        track(packageKey)
+      } catch (error) {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[analytics] queued Meta event failed", error)
+        }
+      }
+    }
+  }
+
+  const timeout = globalThis.setTimeout(
+    () => flush(getCurrentFunnelContext()?.funnelPackageKey),
+    FUNNEL_CONTEXT_WAIT_MS,
+  )
+  void bootstrapFunnelContext().then((context) => {
+    globalThis.clearTimeout(timeout)
+    flush(context?.funnelPackageKey)
+  })
+}
+
 function trackWithFunnelPackage(
   packageKey: string | null | undefined,
   track: (resolvedPackageKey?: string) => boolean,
 ) {
   const resolvedPackageKey = packageKey ?? getCurrentFunnelContext()?.funnelPackageKey
-  if (resolvedPackageKey) return track(resolvedPackageKey)
+  if (resolvedPackageKey && !packageFlushScheduled) return track(resolvedPackageKey)
 
-  void bootstrapFunnelContext().then((context) => track(context?.funnelPackageKey))
+  pendingPackageTracks.push((fallbackPackageKey) => track(resolvedPackageKey ?? fallbackPackageKey))
+  schedulePackageFlush()
   return true
 }
 
@@ -74,7 +114,9 @@ export const metaDestination = {
       }
       case "quiz_step_viewed": {
         const data = payload as AppEventMap["quiz_step_viewed"]
-        return trackMetaQuizStepViewed(data.stepName, data.stepNumber)
+        return trackWithFunnelPackage(undefined, () =>
+          trackMetaQuizStepViewed(data.stepName, data.stepNumber),
+        )
       }
       case "subscription_started": {
         const data = payload as AppEventMap["subscription_started"]

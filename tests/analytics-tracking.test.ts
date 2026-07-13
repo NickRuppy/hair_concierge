@@ -451,21 +451,18 @@ test("Meta adapter gates package keys and never sends funnel session IDs", () =>
   assert.equal(JSON.stringify(calls).includes("20000000-0000-4000-8000-000000000002"), false)
 })
 
-test("Meta waits for the sticky funnel package before dispatching an early quiz start", async () => {
+test("Meta preserves early quiz event order while waiting for the sticky funnel package", async () => {
   const previousFlag = process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
   const originalFetch = globalThis.fetch
   const dom = createMetaDom()
+  let resolveFetch: ((response: Response) => void) | undefined
 
   try {
     process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = "true"
-    globalThis.fetch = (async () =>
-      new Response(
-        JSON.stringify({
-          funnelPackageKey: "default_organic",
-          funnelSessionId: "20000000-0000-4000-8000-000000000002",
-        }),
-        { headers: { "Content-Type": "application/json" }, status: 200 },
-      )) as typeof fetch
+    globalThis.fetch = (() =>
+      new Promise<Response>((resolve) => {
+        resolveFetch = resolve
+      })) as typeof fetch
 
     await withGlobalBrowserAsync(dom.win, dom.doc, async () => {
       assert.equal(
@@ -476,18 +473,59 @@ test("Meta waits for the sticky funnel package before dispatching an early quiz 
         }),
         true,
       )
+      assert.equal(
+        metaDestination.track("quiz_step_viewed", {
+          stepName: "hair_texture",
+          stepNumber: 1,
+        }),
+        true,
+      )
+      assert.equal(
+        metaDestination.track("pricing_viewed", {
+          funnelEventId: "30000000-0000-4000-8000-000000000004",
+          funnelPackageKey: "default_organic",
+          source: "pricing_page",
+        }),
+        true,
+      )
 
-      await new Promise((resolve) => setTimeout(resolve, 0))
       initMetaPixel({ win: dom.win, doc: dom.doc })
+      const dispatched: unknown[][] = []
+      dom.win.fbq = (...args: unknown[]) => {
+        dispatched.push(args)
+        if (args[1] === "QuizStarted") throw new Error("synthetic Meta dispatch failure")
+      }
+
+      resolveFetch?.(
+        new Response(
+          JSON.stringify({
+            funnelPackageKey: "default_organic",
+            funnelSessionId: "20000000-0000-4000-8000-000000000002",
+          }),
+          { headers: { "Content-Type": "application/json" }, status: 200 },
+        ),
+      )
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
+      const quizStartedPayload = dispatched.find(
+        (call) => call[1] === "QuizStarted",
+      )?.[2] as Record<string, unknown>
+      assert.equal(quizStartedPayload.funnel_package_key, "default_organic")
+      assert.deepEqual(
+        dispatched
+          .filter(
+            (call) =>
+              call[1] === "QuizStarted" ||
+              call[1] === "QuizStepViewed" ||
+              call[1] === "ViewContent",
+          )
+          .map((call) => call[1]),
+        ["QuizStarted", "QuizStepViewed", "ViewContent"],
+      )
     })
   } finally {
     globalThis.fetch = originalFetch
     if (previousFlag === undefined) delete process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED
     else process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED = previousFlag
   }
-
-  const quizStartedPayload = dom.win.fbq?.queue?.find(
-    (call) => call[1] === "QuizStarted",
-  )?.[2] as Record<string, unknown>
-  assert.equal(quizStartedPayload.funnel_package_key, "default_organic")
 })

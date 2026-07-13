@@ -30,9 +30,11 @@ export function CheckoutReturnAnalytics({
         stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
         paypalTokenPresent: sessionId.startsWith("paypal:"),
       })
-      trackAppEvent("subscription_started", {
-        checkoutSessionId: sessionId,
-      })
+      if (!sessionId.startsWith("paypal:")) {
+        trackAppEvent("subscription_started", {
+          checkoutSessionId: sessionId,
+        })
+      }
       if (purchase) {
         trackAppEvent("purchase_completed", {
           checkoutSessionId: sessionId,

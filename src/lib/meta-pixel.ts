@@ -402,6 +402,7 @@ export function trackMetaSubscriptionConfirmed(
     },
     {
       ...options,
+      eventID: sessionId,
       onDispatched: () => {
         if (!storageKey) return
         pendingSubscriptions?.delete(storageKey)

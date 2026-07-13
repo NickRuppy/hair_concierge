@@ -1,5 +1,83 @@
 import { trackCustomerIoEvent, type CustomerIoProperties } from "@/lib/customerio-tracking"
+import {
+  bootstrapFunnelContext,
+  getCurrentFunnelContext,
+  type CurrentFunnelContext,
+} from "@/lib/funnel/client"
 import type { AppEventMap, AppEventName, FunnelAnalyticsEnvelope } from "../events"
+
+const FUNNEL_CONTEXT_WAIT_MS = 500
+const FUNNEL_CONTEXT_EVENTS = new Set<AppEventName>([
+  "checkout_started",
+  "pricing_viewed",
+  "quiz_completed",
+  "quiz_started",
+  "quiz_step_viewed",
+])
+
+type PendingCustomerIoTrack = (context: CurrentFunnelContext | null) => boolean
+
+let pendingFunnelTracks: PendingCustomerIoTrack[] = []
+let funnelFlushScheduled = false
+
+function scheduleFunnelFlush() {
+  if (funnelFlushScheduled) return
+  funnelFlushScheduled = true
+
+  let flushed = false
+  const flush = (context: CurrentFunnelContext | null) => {
+    if (flushed) return
+    flushed = true
+    funnelFlushScheduled = false
+    const tracks = pendingFunnelTracks
+    pendingFunnelTracks = []
+    for (const track of tracks) {
+      try {
+        track(context)
+      } catch (error) {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[analytics] queued Customer.io event failed", error)
+        }
+      }
+    }
+  }
+
+  const timeout = globalThis.setTimeout(
+    () => flush(getCurrentFunnelContext()),
+    FUNNEL_CONTEXT_WAIT_MS,
+  )
+  void bootstrapFunnelContext().then((context) => {
+    globalThis.clearTimeout(timeout)
+    flush(context)
+  })
+}
+
+function trackWithFunnelContext(
+  eventName: AppEventName,
+  properties: CustomerIoProperties,
+  funnel: FunnelAnalyticsEnvelope,
+) {
+  const currentContext = getCurrentFunnelContext()
+  const resolvedPackageKey = funnel.funnelPackageKey ?? currentContext?.funnelPackageKey
+  const resolvedSessionId = funnel.funnelSessionId ?? currentContext?.funnelSessionId
+  const track = (fallbackContext: CurrentFunnelContext | null) =>
+    trackCustomerIoEvent(eventName as Parameters<typeof trackCustomerIoEvent>[0], {
+      ...properties,
+      ...(funnel.funnelEventId ? { funnel_event_id: funnel.funnelEventId } : {}),
+      ...((resolvedSessionId ?? fallbackContext?.funnelSessionId)
+        ? { funnel_session_id: resolvedSessionId ?? fallbackContext?.funnelSessionId }
+        : {}),
+      ...((resolvedPackageKey ?? fallbackContext?.funnelPackageKey)
+        ? { funnel_package_key: resolvedPackageKey ?? fallbackContext?.funnelPackageKey }
+        : {}),
+    })
+
+  if (resolvedPackageKey && !funnelFlushScheduled) return track(currentContext)
+
+  pendingFunnelTracks.push(track)
+  scheduleFunnelFlush()
+  return true
+}
 
 function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
   switch (eventName) {
@@ -80,6 +158,9 @@ export const customerIoDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
     const mapped = toCustomerIoPayload(eventName, payload) as CustomerIoProperties
     const funnel = payload as FunnelAnalyticsEnvelope
+    if (FUNNEL_CONTEXT_EVENTS.has(eventName)) {
+      return trackWithFunnelContext(eventName, mapped, funnel)
+    }
     return trackCustomerIoEvent(eventName as Parameters<typeof trackCustomerIoEvent>[0], {
       ...mapped,
       ...(funnel.funnelEventId ? { funnel_event_id: funnel.funnelEventId } : {}),

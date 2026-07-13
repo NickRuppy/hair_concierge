@@ -117,7 +117,12 @@ test("subscription queues once and writes its marker only after actual dispatch"
   assert.equal(trackMetaSubscriptionConfirmed("cs_pending_subscription", { win: dom.win }), false)
   assert.deepEqual(dom.win.fbq?.queue, [
     ["init", "988892550357504"],
-    ["track", "Subscribe", { content_name: "premium_subscription" }],
+    [
+      "track",
+      "Subscribe",
+      { content_name: "premium_subscription" },
+      { eventID: "cs_pending_subscription" },
+    ],
   ])
 })
 
@@ -142,7 +147,7 @@ test("purchase immediately initializes Meta and flushes Subscribe before Purchas
 
   assert.deepEqual(dom.win.fbq?.queue, [
     ["init", "988892550357504"],
-    ["track", "Subscribe", { content_name: "premium_subscription" }],
+    ["track", "Subscribe", { content_name: "premium_subscription" }, { eventID: "cs_checkout" }],
     [
       "track",
       "Purchase",
