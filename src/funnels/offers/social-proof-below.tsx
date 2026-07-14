@@ -398,7 +398,10 @@ export default function FunnelSocialProofBelowOfferVariant({
               Wieso jetzt mit Chaarlie starten?
             </h2>
             <div className="mt-5 space-y-4 text-[14.5px] leading-[1.7] text-muted-foreground">
-              <p>Kurz und ehrlich von uns beiden:</p>
+              <p className="font-header text-[16px] font-medium text-[var(--brand-plum-darkest)]">
+                {displayName ? `Liebe ${displayName},` : "Liebe Leserin,"}
+              </p>
+              <p>kurz und ehrlich von uns beiden:</p>
               <p>
                 Die meisten Menschen finden{" "}
                 <strong className="text-[var(--brand-plum-darkest)]">nie</strong> heraus, was ihr
