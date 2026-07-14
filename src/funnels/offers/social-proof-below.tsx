@@ -130,7 +130,7 @@ export default function FunnelSocialProofBelowOfferVariant({
             href="#pricing"
             className="rounded-[12px] bg-[var(--brand-coral)] px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)]"
           >
-            Chaarlie starten
+            Routine freischalten
           </a>
         </div>
       </div>
@@ -284,10 +284,10 @@ export default function FunnelSocialProofBelowOfferVariant({
             </p>
           ) : null}
           <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
-            Dein persönlicher Haarpflege-Begleiter
+            Deine Pflegebasis steht
           </p>
           <h2 className="mt-2 text-center font-header text-[36px] font-medium leading-[1.12] text-[var(--brand-plum-darkest)]">
-            Starte mit Chaarlie.
+            Schalte deine vollständige Routine frei.
           </h2>
           <p className="mx-auto mt-3 max-w-[40ch] text-center text-[14px] leading-[1.6] text-muted-foreground">
             Die Basis kennst du schon. Das schaltest du frei:
@@ -307,7 +307,12 @@ export default function FunnelSocialProofBelowOfferVariant({
             ))}
           </ul>
 
-          <div className="mt-6">{pricingSlot}</div>
+          <p className="mx-auto mt-6 max-w-[420px] rounded-[12px] bg-[var(--brand-plum-ice)] px-4 py-3 text-center text-[12.5px] leading-[1.55] text-[var(--brand-plum-darkest)]">
+            Zum Vergleich: Ein einziger Fehlkauf im Drogerieregal kostet oft mehr als ein Monat
+            Chaarlie.
+          </p>
+
+          <div className="mt-5">{pricingSlot}</div>
 
           <article className="mt-7 rounded-[16px] border border-border bg-white p-6 text-center">
             <ShieldCheck aria-hidden="true" className="mx-auto size-8 text-[var(--brand-coral)]" />
@@ -340,7 +345,7 @@ export default function FunnelSocialProofBelowOfferVariant({
             href="#pricing"
             className="mt-5 flex min-h-[54px] w-full items-center justify-center rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)]"
           >
-            Chaarlie starten
+            Meine Routine freischalten
           </a>
         </section>
       </main>
