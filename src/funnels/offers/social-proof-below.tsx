@@ -128,17 +128,18 @@ function PreviewWithCompactLocks({ preview }: { preview: QuizOfferPreview }) {
               </p>
               <div className="mx-auto mt-2 h-2 w-4/5 rounded-full bg-[var(--brand-plum-ice)] blur-[2px]" />
             </article>
-            {[0, 1].map((index) => (
+            {["Maske & Öle", "Tools"].map((label) => (
               <article
-                key={index}
-                aria-hidden="true"
-                className="rounded-[14px] border border-border bg-white p-3 text-center opacity-[0.82]"
+                key={label}
+                className="rounded-[14px] border border-border bg-white p-3 text-center opacity-[0.92]"
               >
                 <span className="mx-auto grid size-7 place-items-center rounded-full border border-[var(--brand-plum-light)] bg-white text-[var(--brand-plum)]">
-                  <LockKeyhole className="size-3.5" />
+                  <LockKeyhole className="size-3.5" aria-hidden="true" />
                 </span>
-                <div className="mx-auto mt-2.5 h-2.5 w-4/5 rounded-full bg-[var(--brand-plum-light)] blur-[3px]" />
-                <div className="mx-auto mt-2 h-2 w-3/5 rounded-full bg-[var(--brand-plum-ice)] blur-[2px]" />
+                <p className="mt-2 text-[11.5px] font-bold leading-tight text-[var(--brand-plum-darkest)]">
+                  {label}
+                </p>
+                <div className="mx-auto mt-2 h-2 w-4/5 rounded-full bg-[var(--brand-plum-ice)] blur-[2px]" />
               </article>
             ))}
           </div>
@@ -298,13 +299,11 @@ export default function FunnelSocialProofBelowOfferVariant({
                 Nach dem Freischalten
               </p>
               <h2 className="mt-2 font-header text-[27px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
-                {focusRoutine
-                  ? "Weiter mit deiner vollständigen Routine."
-                  : "Deine vollständige Routine wartet schon auf dich."}
+                {focusRoutine ? "Weiter mit deiner vollständigen Routine." : "Triff Chaarlie."}
               </h2>
               <p className="mt-3 max-w-[380px] text-[13px] leading-relaxed text-muted-foreground">
-                Alle Bausteine aufeinander abgestimmt: was, wann, wie oft. Dazu dein Haar-Berater
-                für jede Frage, die danach kommt.
+                Chaarlie ist dein persönlicher Haar-Experte als App: Er macht deine Routine
+                komplett, kennt die passenden Produkte und beantwortet jede Frage zu deinem Haar.
               </p>
               <a
                 href="#pricing"
@@ -322,7 +321,7 @@ export default function FunnelSocialProofBelowOfferVariant({
             Dein Zugang
           </p>
           <h2 className="mt-2 text-center font-header text-[32px] font-medium leading-[1.12] text-[var(--brand-plum-darkest)]">
-            Das alles bekommst du in Chaarlie.
+            Das ist in Chaarlie enthalten.
           </h2>
           <p className="mx-auto mt-3 max-w-[40ch] text-center text-[14px] leading-[1.6] text-muted-foreground">
             Keine Liste zum Abheften. Deine Routine lebt in der App, und du kannst jederzeit alles
@@ -398,31 +397,61 @@ export default function FunnelSocialProofBelowOfferVariant({
             <h2 className="mt-2 font-header text-[28px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
               Wieso jetzt mit Chaarlie starten?
             </h2>
-            <div className="mt-4 space-y-3.5 text-[14px] leading-[1.7] text-muted-foreground">
+            <div className="mt-5 space-y-4 text-[14.5px] leading-[1.7] text-muted-foreground">
+              <p>Kurz und ehrlich von uns beiden:</p>
               <p>
-                Die meisten Menschen finden nie heraus, was ihr Haar wirklich braucht. Sie pflegen
-                jahrelang daran vorbei, und Schäden, die sich über Jahre aufbauen, lassen sich
-                irgendwann kaum noch reparieren. Dann hilft oft nur noch abschneiden und von vorn
-                anfangen.
+                Die meisten Menschen finden{" "}
+                <strong className="text-[var(--brand-plum-darkest)]">nie</strong> heraus, was ihr
+                Haar wirklich braucht.
               </p>
               <p>
-                Dazu kommt das Geld: In unseren Haar-Auswertungen sehen wir immer wieder, dass viele
-                300 bis 470 Euro im Jahr für Produkte ausgeben, von denen die meisten nicht zu ihrem
-                Haar passen. Genau dafür haben wir Chaarlie gebaut. Du weißt, was bei dir wirkt,
-                bevor du kaufst, sparst dadurch schnell 30 Euro und mehr im Monat, und kannst die
-                Empfehlungen genauso für deine Familie nutzen.
+                Sie pflegen jahrelang daran vorbei. Und Schäden, die sich über Jahre aufbauen,
+                lassen sich irgendwann kaum noch reparieren.{" "}
+                <strong className="text-[var(--brand-plum-darkest)]">
+                  Dann hilft oft nur noch abschneiden.
+                </strong>
               </p>
               <p>
+                Dazu kommt das Geld: In unseren Haar-Auswertungen sehen wir immer wieder, dass viele{" "}
+                <strong className="text-[var(--brand-plum-darkest)]">
+                  300 bis 470 Euro im Jahr
+                </strong>{" "}
+                für Produkte ausgeben, von denen die meisten nicht zu ihrem Haar passen.
+              </p>
+              <p>Genau dafür haben wir Chaarlie gebaut.</p>
+              <p>
+                Du weißt, was bei dir wirkt, bevor du kaufst. Viele sparen damit{" "}
+                <strong className="text-[var(--brand-plum-darkest)]">
+                  30 Euro und mehr im Monat
+                </strong>
+                , und die Empfehlungen kannst du genauso für deine Familie nutzen.
+              </p>
+              <p className="font-header text-[15.5px] italic text-[var(--brand-plum-darkest)]">
                 Am Ende geht es um mehr als Produkte: eine gesunde Kopfhaut, Haare, die sich wieder
                 gut anfühlen, und das gute Gefühl, es zu wissen statt zu raten.
               </p>
             </div>
-            <p className="mt-5 font-header text-[18px] font-medium text-[var(--brand-plum-darkest)]">
-              Nick &amp; Jonas
-            </p>
-            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-plum)]">
-              Gründer von Chaarlie
-            </p>
+            <div className="mt-6 flex items-center gap-3.5 border-t border-[var(--brand-plum-light)] pt-5">
+              <div className="flex -space-x-2.5">
+                {/* Platzhalter: echte Gründer-Fotos hier einsetzen (public/images/funnels/social-proof-below/founder-*.jpg) */}
+                {["N", "J"].map((initial) => (
+                  <span
+                    key={initial}
+                    className="grid size-11 place-items-center rounded-full border-2 border-white bg-[var(--brand-plum)] font-header text-[16px] font-medium text-white"
+                  >
+                    {initial}
+                  </span>
+                ))}
+              </div>
+              <div>
+                <p className="font-header text-[18px] font-medium leading-tight text-[var(--brand-plum-darkest)]">
+                  Nick &amp; Jonas
+                </p>
+                <p className="mt-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-plum)]">
+                  Gründer von Chaarlie
+                </p>
+              </div>
+            </div>
           </article>
         </section>
 
