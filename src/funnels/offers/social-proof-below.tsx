@@ -309,21 +309,6 @@ export default function FunnelSocialProofBelowOfferVariant({
                 Chaarlie ist dein persönlicher Haar-Experte als App: Er macht deine Routine
                 komplett, kennt die passenden Produkte und beantwortet jede Frage zu deinem Haar.
               </p>
-              <ul className="mt-4 space-y-1.5 text-left">
-                {[
-                  "Kennt dein Haarprofil",
-                  "Rund um die Uhr verfügbar",
-                  "Begleitet dich jeden Tag",
-                ].map((point) => (
-                  <li
-                    key={point}
-                    className="flex items-center gap-2 text-[12.5px] font-semibold text-[var(--brand-plum-darkest)]"
-                  >
-                    <Check aria-hidden="true" className="size-3.5 shrink-0 text-[#2D9F5E]" />
-                    {point}
-                  </li>
-                ))}
-              </ul>
               <a
                 href="#pricing"
                 className="mt-5 rounded-[12px] bg-[var(--brand-coral)] px-8 py-3 text-[13px] font-bold text-white"
