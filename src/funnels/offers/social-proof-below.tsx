@@ -187,22 +187,22 @@ const TESTIMONIALS = [
 const APP_FEATURES = [
   {
     eyebrow: "Deine Routine",
-    title: "Deine Routine. Jeden Tag. In der App.",
-    copy: "Was, wann, wie oft: deine Routine wohnt in Chaarlie und passt sich an, wenn dein Haar sich verändert.",
+    title: "Nie wieder raten, was heute dran ist.",
+    copy: "Kennst du das? Man nimmt sich eine Routine vor und nach zwei Wochen ist sie weg. Chaarlie sagt dir jeden Tag, was dran ist, trackt deinen Rhythmus und feiert mit dir, wenn du drin bleibst.",
     image: `${IMAGE_BASE}/app-routine.png`,
-    alt: "Chaarlie App: die persönliche Routine",
+    alt: "Chaarlie App: die persönliche Routine mit Waschrhythmus-Tracking",
   },
   {
     eyebrow: "Deine Produkte",
-    title: "Jedes Produkt mit Preis, Anwendung und Grund.",
-    copy: "Aus über 500 geprüften Produkten. Wenn etwas nicht passt oder zu teuer ist, schlägt Chaarlie dir eine Alternative vor.",
+    title: "Schluss mit Fehlkäufen im Drogerieregal.",
+    copy: "Nie wieder vor dem Regal stehen und hoffen. Du siehst zu jedem Produkt Preis, Anwendung und warum es zu deinem Haar passt, abgeglichen mit Daten aus über 4.000 Haar-Auswertungen.",
     image: `${IMAGE_BASE}/app-products.png`,
     alt: "Chaarlie App: Produktempfehlungen mit Preis und Begründung",
   },
   {
     eyebrow: "Dein Haar-Berater",
-    title: "Fragen beim Umsetzen? Sofort beantwortet.",
-    copy: "Chaarlie kennt dein Profil und deine Routine und erklärt dir, was gerade sinnvoll ist.",
+    title: "Keine widersprüchlichen Google-Tipps mehr.",
+    copy: "Schuppen, Frizz, Spliss: Statt stundenlang zu suchen, fragst du einfach Chaarlie. Er kennt dein Profil und antwortet sofort. Rund um die Uhr, so oft du willst.",
     image: `${IMAGE_BASE}/app-home.png`,
     alt: "Chaarlie App: der Chat mit dem Haar-Berater",
   },
@@ -520,8 +520,8 @@ export default function FunnelSocialProofBelowOfferVariant({
             Deine Routine ist fertig. Hol sie dir.
           </h2>
           <p className="mx-auto mt-3 max-w-[38ch] text-[14px] leading-[1.6] text-muted-foreground">
-            Die Basis ist geschenkt, der Rest wartet. Schalte deine vollständige Routine frei und
-            behalte Chaarlie für jede Frage danach.
+            Deine Analyse steht, deine Basis kennst du. Ab hier wird es Woche für Woche besser, mit
+            einem Begleiter, der dein Haar wirklich kennt.
           </p>
           <a
             href="#pricing"
@@ -529,6 +529,10 @@ export default function FunnelSocialProofBelowOfferVariant({
           >
             Meine Routine freischalten
           </a>
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground">
+            <ShieldCheck aria-hidden="true" className="size-4 text-[#2D9F5E]" />
+            Völlig risikofrei: 14 Tage Geld-zurück, jederzeit kündbar.
+          </p>
         </section>
       </main>
     </div>
