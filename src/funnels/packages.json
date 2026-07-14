@@ -14,5 +14,13 @@
     "status": "placeholder",
     "landingVariant": "default",
     "offerVariant": "default"
+  },
+  {
+    "key": "social_proof_below",
+    "slug": "routine-b",
+    "channel": "meta",
+    "status": "placeholder",
+    "landingVariant": "default",
+    "offerVariant": "social-proof-below"
   }
 ]
