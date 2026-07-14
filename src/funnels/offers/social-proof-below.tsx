@@ -78,8 +78,8 @@ function PreviewWithCompactLocks({ preview }: { preview: QuizOfferPreview }) {
       </div>
 
       <p className="mt-5 text-[12px] leading-relaxed text-muted-foreground">
-        Mit konkreten Beispielen aus unserer Produktdatenbank. Das sind noch nicht deine finalen
-        Produktempfehlungen.
+        Ein konkretes Shampoo und ein konkreter Conditioner, die zu deiner Haarsituation passen und
+        die du direkt testen kannst.
       </p>
 
       <div className="mt-4 space-y-3">
