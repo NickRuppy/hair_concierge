@@ -271,8 +271,12 @@ export default function FunnelSocialProofBelowOfferVariant({
               : "Wir kennen jetzt die Bedürfnisse deiner Haare"}
           </p>
           <h1 className="font-header text-[clamp(32px,9vw,46px)] font-medium leading-[1.08] text-[var(--brand-plum-darkest)]">
-            Dein Haar kann sich in 4 Wochen anders anfühlen. Hier ist dein Weg dahin.
+            So erreichst du geschmeidiges und glänzendes Haar in{" "}
+            <em className="font-bold italic">4 Wochen</em>.
           </h1>
+          <p className="mt-2.5 font-header text-[19px] font-medium text-[var(--brand-plum)]">
+            Hier ist dein Weg dahin.
+          </p>
           <p className="mt-5 text-[16px] leading-[1.65] text-muted-foreground">
             {narrative.intro} Jetzt wird daraus eine persönliche Routine mit konkreten Produkten,
             plus ein Begleiter für alle Fragen danach.
@@ -305,6 +309,21 @@ export default function FunnelSocialProofBelowOfferVariant({
                 Chaarlie ist dein persönlicher Haar-Experte als App: Er macht deine Routine
                 komplett, kennt die passenden Produkte und beantwortet jede Frage zu deinem Haar.
               </p>
+              <ul className="mt-4 space-y-1.5 text-left">
+                {[
+                  "Kennt dein Haarprofil",
+                  "Rund um die Uhr verfügbar",
+                  "Begleitet dich jeden Tag",
+                ].map((point) => (
+                  <li
+                    key={point}
+                    className="flex items-center gap-2 text-[12.5px] font-semibold text-[var(--brand-plum-darkest)]"
+                  >
+                    <Check aria-hidden="true" className="size-3.5 shrink-0 text-[#2D9F5E]" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
               <a
                 href="#pricing"
                 className="mt-5 rounded-[12px] bg-[var(--brand-coral)] px-8 py-3 text-[13px] font-bold text-white"
@@ -324,8 +343,7 @@ export default function FunnelSocialProofBelowOfferVariant({
             Das ist in Chaarlie enthalten.
           </h2>
           <p className="mx-auto mt-3 max-w-[40ch] text-center text-[14px] leading-[1.6] text-muted-foreground">
-            Keine Liste zum Abheften. Deine Routine lebt in der App, und du kannst jederzeit alles
-            fragen.
+            Deine Routine, deine Produkte und dein Berater: alles an einem Ort, immer dabei.
           </p>
 
           <div className="mt-7 space-y-5">
