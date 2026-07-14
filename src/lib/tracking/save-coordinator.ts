@@ -51,6 +51,7 @@ export class TrackerSaveCoordinator<TPayload> {
   private readonly states = new Map<string, TrackerSaveState>()
   private readonly pending = new Map<string, PendingEntry<TPayload>>()
   private readonly failed = new Map<string, FailedEntry<TPayload>>()
+  private readonly dispatchedKeys = new Set<string>()
   private readonly idleWaiters = new Set<() => void>()
   private timer: ReturnType<typeof setTimeout> | null = null
   private inFlight: PendingEntry<TPayload> | null = null
@@ -129,6 +130,10 @@ export class TrackerSaveCoordinator<TPayload> {
     return this.pending.size > 0 || this.inFlight !== null
   }
 
+  hasDispatched(key: string): boolean {
+    return this.dispatchedKeys.has(key)
+  }
+
   flush(): Promise<void> {
     this.assertActive()
     if (this.timer) {
@@ -180,6 +185,7 @@ export class TrackerSaveCoordinator<TPayload> {
 
     this.pending.delete(next.key)
     this.inFlight = next
+    this.dispatchedKeys.add(next.key)
     this.emitIfCurrent(next, "saving", null)
 
     let error: unknown = null

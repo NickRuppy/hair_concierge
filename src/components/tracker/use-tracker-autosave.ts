@@ -45,6 +45,15 @@ async function parseError(response: Response): Promise<string> {
   return "Konnte nicht gespeichert werden."
 }
 
+export function getPricingRedirectTarget(
+  response: Pick<Response, "redirected" | "url">,
+): string | null {
+  if (!response.redirected) return null
+  const url = new URL(response.url, window.location.origin)
+  if (url.origin !== window.location.origin || url.pathname !== "/pricing") return null
+  return `${url.pathname}${url.search}`
+}
+
 export function useTrackerAutosave(options: {
   onQueueIdle?: () => void
   onPersisted?: (result: {
@@ -108,7 +117,15 @@ export function useTrackerAutosave(options: {
             clientRevision: context.revision,
           }),
         })
+        const pricingRedirect = getPricingRedirectTarget(response)
+        if (pricingRedirect) {
+          window.location.assign(pricingRedirect)
+          throw new TrackerRequestError("Zugang erforderlich.", 403)
+        }
         if (!response.ok) {
+          if (response.status === 403) {
+            window.location.assign("/pricing?reason=resubscribe")
+          }
           throw new TrackerRequestError(await parseError(response), response.status)
         }
         const body = (await response.json()) as {
@@ -174,6 +191,11 @@ export function useTrackerAutosave(options: {
     [coordinator],
   )
 
+  const hasDispatched = useCallback(
+    (loggedOn: string) => coordinator?.hasDispatched(loggedOn) ?? false,
+    [coordinator],
+  )
+
   const flush = useCallback(() => coordinator?.flush() ?? Promise.resolve(), [coordinator])
 
   const getState = useCallback(
@@ -193,6 +215,7 @@ export function useTrackerAutosave(options: {
     ready: coordinator !== null,
     queueSave,
     discardPending,
+    hasDispatched,
     retry,
     flush,
     getState,

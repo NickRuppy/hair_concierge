@@ -6,11 +6,14 @@ import { createTrackerApiHandlers } from "../src/lib/tracking/api-handlers"
 type Row = Record<string, unknown>
 
 interface FakeState {
-  user: { id: string } | null
+  user: { id: string; email?: string } | null
   tables: Record<string, Row[]>
   writes: Array<{ table: string; op: string; payload: unknown }>
   errors?: Record<string, string>
   rpcCalls: Array<{ functionName: string; args: Record<string, unknown> }>
+  access?: "paid" | "manual" | "legacy" | "expired" | "error"
+  authCalls?: number
+  adminCalls?: number
 }
 
 function createFakeClient(state: FakeState) {
@@ -83,7 +86,10 @@ function createFakeClient(state: FakeState) {
   }
   return {
     auth: {
-      getUser: async () => ({ data: { user: state.user }, error: null }),
+      getUser: async () => {
+        state.authCalls = (state.authCalls ?? 0) + 1
+        return { data: { user: state.user }, error: null }
+      },
     },
     from: (table: string) => builder(table),
     rpc: async (functionName: string, args: Record<string, unknown>) => {
@@ -159,7 +165,20 @@ function createFakeClient(state: FakeState) {
 
 function makeDeps(state: FakeState) {
   return {
-    createClient: async () => createFakeClient(state) as never,
+    createAuthClient: async () => createFakeClient(state) as never,
+    createAdminClient: () => {
+      state.adminCalls = (state.adminCalls ?? 0) + 1
+      return createFakeClient(state) as never
+    },
+    hasCurrentAppAccess: async (
+      _client: unknown,
+      lookup: { userId: string; email?: string | null },
+    ) => {
+      assert.equal(lookup.userId, state.user?.id)
+      if (state.access === "error") throw new Error("access unavailable")
+      if (state.access === "manual") assert.equal(lookup.email, state.user?.email)
+      return state.access !== "expired"
+    },
     loadRoutineArtifactData: async () =>
       ({
         runtime: {
@@ -222,7 +241,7 @@ const CLIENT_SESSION_ID = "44444444-4444-4444-8444-444444444444"
 
 function baseState(): FakeState {
   return {
-    user: { id: "user-1" },
+    user: { id: "user-1", email: "user@example.test" },
     tables: {
       routine_logs: [],
       routine_log_products: [],
@@ -255,6 +274,36 @@ test("getTracker: 401 without user", async () => {
   const handlers = createTrackerApiHandlers(makeDeps(state))
   const result = await handlers.getTracker({ tz: "Europe/Berlin" })
   assert.equal(result.status, 401)
+})
+
+for (const access of ["paid", "manual", "legacy"] as const) {
+  test(`getTracker: permits current ${access} access`, async () => {
+    const state = baseState()
+    state.access = access
+    const result = await createTrackerApiHandlers(makeDeps(state)).getTracker({
+      tz: "Europe/Berlin",
+    })
+    assert.equal(result.status, 200)
+    assert.equal(state.authCalls, 1)
+    assert.equal(state.adminCalls, 1)
+  })
+}
+
+test("tracker handlers fail closed for expired or unavailable access", async () => {
+  const expired = baseState()
+  expired.access = "expired"
+  assert.equal(
+    (await createTrackerApiHandlers(makeDeps(expired)).getTracker({ tz: "Europe/Berlin" })).status,
+    403,
+  )
+
+  const unavailable = baseState()
+  unavailable.access = "error"
+  assert.equal(
+    (await createTrackerApiHandlers(makeDeps(unavailable)).getTracker({ tz: "Europe/Berlin" }))
+      .status,
+    503,
+  )
 })
 
 test("getTracker: rejects an invalid IANA timezone with 400", async () => {
@@ -384,6 +433,7 @@ test("putLog: valid wash day upserts log and replaces products", async () => {
   assert.equal(result.status, 200)
   assert.equal(state.rpcCalls.length, 1)
   assert.equal(state.rpcCalls[0].functionName, "replace_routine_log")
+  assert.equal(state.rpcCalls[0].args.p_user_id, "user-1")
   assert.deepEqual(result.body.day, {
     loggedOn: "2026-07-07",
     dayType: "wash",
@@ -592,6 +642,27 @@ test("dismissNudge: upserts dismissal with 30-day cooldown", async () => {
   assert.equal(write.op, "upsert")
   const payload = write.payload as { reappear_at: string }
   assert.equal(payload.reappear_at, "2026-08-06T12:00:00.000Z")
+  assert.equal(state.adminCalls, 1)
+})
+
+test("tracker admin reads remain scoped to the authenticated user", async () => {
+  const state = baseState()
+  state.tables.routine_logs = [
+    { id: "owned", user_id: "user-1", logged_on: "2026-07-07", day_type: "wash", deleted_at: null },
+    {
+      id: "foreign",
+      user_id: "user-2",
+      logged_on: "2026-07-07",
+      day_type: "wash",
+      deleted_at: null,
+    },
+  ]
+  const result = await createTrackerApiHandlers(makeDeps(state)).getTracker({ tz: "Europe/Berlin" })
+  assert.equal(result.status, 200)
+  assert.deepEqual(
+    (result.body.days as Array<{ loggedOn: string }>).map((day) => day.loggedOn),
+    ["2026-07-07"],
+  )
 })
 
 test("getTracker: unlocked gate computes nudges from logs", async () => {

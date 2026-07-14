@@ -20,6 +20,25 @@ const BottomSheetContext = React.createContext<BottomSheetContextValue>({
   titleId: "",
 })
 
+function getTabbableElements(panel: HTMLElement): HTMLElement[] {
+  return Array.from(
+    panel.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((element) => {
+    const style = window.getComputedStyle(element)
+    return (
+      element.tabIndex >= 0 &&
+      !element.matches(":disabled") &&
+      !element.closest('[aria-disabled="true"]') &&
+      !element.closest("[inert]") &&
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      element.getClientRects().length > 0
+    )
+  })
+}
+
 // --- BottomSheet ---
 
 interface BottomSheetProps {
@@ -151,9 +170,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         const panel = panelRef.current
         if (!panel) return
 
-        const focusable = panel.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        )
+        const focusable = getTabbableElements(panel)
         if (focusable.length === 0) return
 
         const first = focusable[0]
@@ -262,6 +279,18 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       [onOpenChange],
     )
 
+    const handlePointerCancel = React.useCallback((event: React.PointerEvent) => {
+      const pending = pendingDrag.current
+      if (!draggingRef.current && (!pending || pending.pointerId !== event.pointerId)) {
+        return
+      }
+      pendingDrag.current = null
+      draggingRef.current = false
+      dragYRef.current = 0
+      setDragging(false)
+      setDragY(0)
+    }, [])
+
     if (!mounted || !visible) return null
 
     return createPortal(
@@ -297,6 +326,8 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onLostPointerCapture={handlePointerCancel}
         >
           {/* Drag handle */}
           <div

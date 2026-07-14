@@ -6,7 +6,10 @@ import { CalendarPlus, CheckCircle2, ChevronRight, PencilLine, RotateCcw } from 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { LogDayCard, type ShelfItem } from "@/components/tracker/log-day-card"
-import { useTrackerAutosave } from "@/components/tracker/use-tracker-autosave"
+import {
+  getPricingRedirectTarget,
+  useTrackerAutosave,
+} from "@/components/tracker/use-tracker-autosave"
 import {
   NudgeCard,
   RhythmBand,
@@ -44,6 +47,8 @@ interface TrackerApiBody {
   shelf: ShelfItem[]
   today: string
 }
+
+type TrackerNudge = TrackerApiBody["nudges"][number]
 
 type LoadState = "loading" | "ready" | "error"
 
@@ -85,6 +90,7 @@ export function TrackerPageClient() {
   const [prefillDates, setPrefillDates] = useState<Set<string>>(new Set())
   const [undo, setUndo] = useState<{ date: string; day: TrackerLogDay } | null>(null)
   const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const latestValidDaysRef = useRef(new Map<string, TrackerLogDay>())
   const needsServerRefreshRef = useRef(false)
   const refreshGenerationRef = useRef(0)
   const timezone = useMemo(
@@ -99,6 +105,11 @@ export function TrackerPageClient() {
         const response = await fetch(`/api/tracker?tz=${encodeURIComponent(timezone)}`, {
           cache: "no-store",
         })
+        const pricingRedirect = getPricingRedirectTarget(response)
+        if (pricingRedirect) {
+          window.location.assign(pricingRedirect)
+          return
+        }
         if (!response.ok) throw new Error(String(response.status))
         const body = (await response.json()) as TrackerApiBody
         if (generation !== refreshGenerationRef.current) return
@@ -125,6 +136,8 @@ export function TrackerPageClient() {
 
   const handlePersisted = useCallback(
     (result: { kind: "save" | "delete"; loggedOn: string; day: TrackerLogDay | null }) => {
+      if (result.day) latestValidDaysRef.current.set(result.loggedOn, result.day)
+      else latestValidDaysRef.current.delete(result.loggedOn)
       setData((previous) => {
         if (!previous) return previous
         const nextDays = result.day
@@ -194,6 +207,7 @@ export function TrackerPageClient() {
       })
       setDraftsByDate((previous) => ({ ...previous, [day.loggedOn]: draft }))
       if (day.dayType !== "custom" || isValidCustomActivityName(day.customActivityName)) {
+        latestValidDaysRef.current.set(day.loggedOn, draft)
         queueDay(draft)
       } else {
         autosave.discardPending(day.loggedOn)
@@ -281,14 +295,25 @@ export function TrackerPageClient() {
         selectedDay?.dayType === "custom" &&
         !isValidCustomActivityName(selectedDay.customActivityName)
       ) {
-        if (selectedDate) setDraftsByDate((previous) => withoutKey(previous, selectedDate))
-        void autosave.flush().then(() => refresh())
+        const latestValidDay = selectedDate
+          ? (latestValidDaysRef.current.get(selectedDate) ?? confirmedDay)
+          : null
+        if (selectedDate) {
+          setDraftsByDate((previous) => withoutKey(previous, selectedDate))
+          if (latestValidDay) {
+            latestValidDaysRef.current.set(selectedDate, latestValidDay)
+            queueDay(latestValidDay)
+          } else if (autosave.hasDispatched(selectedDate)) {
+            autosave.queueSave({ kind: "delete", loggedOn: selectedDate, timezone })
+          }
+        }
+        void autosave.flush()
       } else {
         void autosave.flush()
       }
       setSheetOpen(false)
     },
-    [autosave, refresh, selectedDate, selectedDay],
+    [autosave, confirmedDay, queueDay, selectedDate, selectedDay, timezone],
   )
 
   const handleDone = useCallback(async () => {
@@ -311,6 +336,7 @@ export function TrackerPageClient() {
     undoTimerRef.current = setTimeout(() => setUndo(null), UNDO_DURATION_MS)
     setDeletedDates((previous) => new Set(previous).add(selectedDate))
     setDraftsByDate((previous) => withoutKey(previous, selectedDate))
+    latestValidDaysRef.current.delete(selectedDate)
     autosave.queueSave({ kind: "delete", loggedOn: selectedDate, timezone })
     setSheetOpen(false)
   }, [autosave, selectedDate, selectedDay, timezone])
@@ -336,21 +362,53 @@ export function TrackerPageClient() {
     [autosave],
   )
 
-  const dismissNudge = useCallback(async (category: string, direction: "increase" | "decrease") => {
-    setData((previous) =>
-      previous
-        ? {
-            ...previous,
-            nudges: previous.nudges.filter((nudge) => nudge.category !== category),
+  const dismissNudge = useCallback(
+    async (category: string, direction: "increase" | "decrease") => {
+      const dismissedIndex = data?.nudges.findIndex((nudge) => nudge.category === category) ?? -1
+      const dismissedNudge: TrackerNudge | null =
+        dismissedIndex >= 0 ? (data?.nudges[dismissedIndex] ?? null) : null
+      const restoreNudge = () => {
+        if (!dismissedNudge) return
+        setData((previous) => {
+          if (!previous || previous.nudges.some((nudge) => nudge.category === category)) {
+            return previous
           }
-        : previous,
-    )
-    await fetch("/api/tracker/dismiss-nudge", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ category, direction }),
-    })
-  }, [])
+          const nudges = [...previous.nudges]
+          nudges.splice(Math.min(dismissedIndex, nudges.length), 0, dismissedNudge)
+          return { ...previous, nudges }
+        })
+      }
+
+      setData((previous) =>
+        previous
+          ? {
+              ...previous,
+              nudges: previous.nudges.filter((nudge) => nudge.category !== category),
+            }
+          : previous,
+      )
+
+      try {
+        const response = await fetch("/api/tracker/dismiss-nudge", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ category, direction }),
+        })
+        const pricingRedirect = getPricingRedirectTarget(response)
+        if (pricingRedirect) {
+          window.location.assign(pricingRedirect)
+          return
+        }
+        if (!response.ok) {
+          restoreNudge()
+          if (response.status === 403) window.location.assign("/pricing?reason=resubscribe")
+        }
+      } catch {
+        restoreNudge()
+      }
+    },
+    [data?.nudges],
+  )
 
   if (state === "loading") {
     return (

@@ -393,6 +393,15 @@ test.describe.serial("@ci tracker page regressions", () => {
     await page.getByRole("button", { name: /Eigene Aktivität/ }).click()
     await expect(page.locator("#custom-activity-error")).toHaveText("Bitte gib einen Namen ein.")
     await expect(page.getByRole("button", { name: "Fertig" })).toBeDisabled()
+    const lastEnabledControl = page.getByRole("link", {
+      name: /Produkte kannst du in deinem Profil verwalten/,
+    })
+    await lastEnabledControl.focus()
+    await expect(lastEnabledControl).toBeFocused()
+    await page.keyboard.press("Tab")
+    await expect(page.getByRole("button", { name: "Schließen" })).toBeFocused()
+    await page.keyboard.press("Shift+Tab")
+    await expect(lastEnabledControl).toBeFocused()
     await page.getByLabel("Wie nennst du diese Aktivität?").fill("Sauna")
     await expect(page.getByRole("button", { name: "Fertig" })).toBeEnabled()
     await expect(
@@ -415,7 +424,68 @@ test.describe.serial("@ci tracker page regressions", () => {
     await page.getByLabel("Wie nennst du diese Aktivität?").fill("")
     await page.getByRole("button", { name: "Schließen" }).click()
     await expect(page.getByRole("dialog", { name: "Routine eintragen" })).toBeHidden()
-    await expect(trigger).toBeFocused()
+    await expect(trigger).toBeVisible()
+  })
+
+  test("invalid custom dismissal restores an in-flight valid save at a newer revision", async ({
+    page,
+  }) => {
+    const fixture = trackerFixture()
+    const writes: Array<{ method: string; body: Record<string, unknown> }> = []
+    let releaseFirstWrite!: () => void
+    const firstWrite = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve
+    })
+    let firstWriteStarted!: () => void
+    const started = new Promise<void>((resolve) => {
+      firstWriteStarted = resolve
+    })
+    await installTrackerFixture(page, fixture, async (request) => {
+      writes.push(request)
+      if (writes.length === 1) {
+        firstWriteStarted()
+        await firstWrite
+      }
+      return {}
+    })
+    await openTracker(page)
+    await openSheet(page)
+    await page.getByRole("button", { name: /Haare gewaschen/ }).click()
+    await started
+    await page.getByRole("button", { name: /Eigene Aktivität/ }).click()
+    await page.getByRole("button", { name: "Schließen" }).click()
+    releaseFirstWrite()
+
+    await expect.poll(() => writes.length).toBe(2)
+    expect(writes.map((write) => write.method)).toEqual(["PUT", "PUT"])
+    expect(writes.map((write) => write.body.dayType)).toEqual(["wash", "wash"])
+    expect(writes.map((write) => write.body.clientRevision)).toEqual([1, 3])
+  })
+
+  test("direct empty custom dismissal on an empty day makes no mutation", async ({ page }) => {
+    const fixture = trackerFixture()
+    const writes: Array<{ method: string; body: Record<string, unknown> }> = []
+    await installTrackerFixture(page, fixture, async (request) => {
+      writes.push(request)
+      return {}
+    })
+    await openTracker(page)
+    await openSheet(page)
+    await page.getByRole("button", { name: /Eigene Aktivität/ }).click()
+    await page.getByRole("button", { name: "Schließen" }).click()
+    await page.waitForTimeout(650)
+
+    expect(writes).toEqual([])
+  })
+
+  test("a 403 autosave response redirects to resubscription pricing", async ({ page }) => {
+    const fixture = trackerFixture()
+    await installTrackerFixture(page, fixture, async () => ({ status: 403 }))
+    await openTracker(page)
+    await openSheet(page)
+    await page.getByRole("button", { name: /Keine Haarpflege/ }).click()
+
+    await page.waitForURL(/\/pricing\?reason=resubscribe/)
   })
 
   test("date selection pre-fills the same activity, keeps product order stable, and serializes rapid writes", async ({
@@ -554,6 +624,41 @@ test.describe.serial("@ci tracker page regressions", () => {
     await expect(page.getByText("Veralteter Hinweis")).toBeHidden()
   })
 
+  test("failed nudge dismissal restores the card and direct 403 redirects to pricing", async ({
+    page,
+  }) => {
+    const fixture = trackerFixture()
+    await installTrackerFixture(page, fixture, undefined, () => ({
+      ...trackerBody(fixture),
+      gate: { unlocked: true, daysRemaining: 0, loggedDayCount: 10 },
+      nudges: [
+        {
+          category: "mask",
+          direction: "increase" as const,
+          message: "Nutze deine Maske etwas häufiger.",
+        },
+      ],
+    }))
+    let dismissStatus = 500
+    await page.route("**/api/tracker/dismiss-nudge", async (route) => {
+      await route.fulfill({
+        status: dismissStatus,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Nicht gespeichert." }),
+      })
+    })
+    await openTracker(page)
+
+    const nudge = page.getByText("Nutze deine Maske etwas häufiger.")
+    await expect(nudge).toBeVisible()
+    await page.getByRole("button", { name: "Ausblenden" }).click()
+    await expect(nudge).toBeVisible()
+
+    dismissStatus = 403
+    await page.getByRole("button", { name: "Ausblenden" }).click()
+    await page.waitForURL(/\/pricing\?reason=resubscribe$/)
+  })
+
   test("fixture save failures expose retry, deletion undo restores the entry, drag closes, and reduced motion removes travel", async ({
     page,
   }) => {
@@ -609,6 +714,59 @@ test.describe.serial("@ci tracker page regressions", () => {
     await expect(panel).toHaveAttribute("data-dragging", "true")
     await page.mouse.up()
     await expect(page.getByRole("dialog", { name: "Routine eintragen" })).toBeHidden()
+
+    await openSheet(page)
+    const reopenedPanel = page.locator(".bottom-sheet-panel")
+    const reopenedHandle = page.locator("[data-bottom-sheet-handle]")
+    await expect
+      .poll(() =>
+        reopenedPanel.evaluate(
+          (element) => Math.abs(element.getBoundingClientRect().bottom - window.innerHeight) <= 1,
+        ),
+      )
+      .toBe(true)
+    const reopenedBox = await reopenedHandle.boundingBox()
+    if (!reopenedBox) throw new Error("Bottom-sheet drag handle is not visible")
+    await page.mouse.move(
+      reopenedBox.x + reopenedBox.width / 2,
+      reopenedBox.y + reopenedBox.height / 2,
+    )
+    await page.mouse.down()
+    await page.mouse.move(reopenedBox.x + reopenedBox.width / 2, reopenedBox.y + 50, { steps: 3 })
+    await expect(reopenedPanel).toHaveAttribute("data-dragging", "true")
+    await reopenedPanel.dispatchEvent("pointercancel", { pointerId: 1 })
+    await expect(reopenedPanel).toHaveAttribute("data-dragging", "false")
+    await expect.poll(() => reopenedPanel.evaluate((element) => element.style.transform)).toBe("")
+    await expect(page.getByRole("dialog", { name: "Routine eintragen" })).toBeVisible()
+    await page.mouse.up()
+
+    await page.getByRole("button", { name: "Schließen" }).click()
+    await expect(page.getByRole("dialog", { name: "Routine eintragen" })).toBeHidden()
+    await openSheet(page)
+    const recapturedPanel = page.locator(".bottom-sheet-panel")
+    const recapturedHandle = page.locator("[data-bottom-sheet-handle]")
+    await expect
+      .poll(() =>
+        recapturedPanel.evaluate(
+          (element) => Math.abs(element.getBoundingClientRect().bottom - window.innerHeight) <= 1,
+        ),
+      )
+      .toBe(true)
+    const recapturedBox = await recapturedHandle.boundingBox()
+    if (!recapturedBox) throw new Error("Bottom-sheet drag handle is not visible")
+    await page.mouse.move(
+      recapturedBox.x + recapturedBox.width / 2,
+      recapturedBox.y + recapturedBox.height / 2,
+    )
+    await page.mouse.down()
+    await page.mouse.move(recapturedBox.x + recapturedBox.width / 2, recapturedBox.y + 50, {
+      steps: 3,
+    })
+    await expect(recapturedPanel).toHaveAttribute("data-dragging", "true")
+    await recapturedPanel.dispatchEvent("lostpointercapture", { pointerId: 1 })
+    await expect(recapturedPanel).toHaveAttribute("data-dragging", "false")
+    await expect.poll(() => recapturedPanel.evaluate((element) => element.style.transform)).toBe("")
+    await page.mouse.up()
   })
 
   test("shared bottom sheet keeps the existing routine drawer open-close behavior and timing", async ({

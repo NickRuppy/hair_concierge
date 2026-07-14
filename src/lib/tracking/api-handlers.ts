@@ -18,7 +18,7 @@ export interface ApiResult {
   body: Record<string, unknown>
 }
 
-type AuthUser = { id: string }
+type AuthUser = { id: string; email?: string | null }
 
 type SupabaseishClient = {
   auth: { getUser(): Promise<{ data: { user: AuthUser | null } }> }
@@ -33,7 +33,12 @@ type SupabaseishClient = {
 type SupabaseReadError = { message?: string } | null
 
 export interface TrackerApiDeps {
-  createClient(): Promise<SupabaseishClient>
+  createAuthClient(): Promise<SupabaseishClient>
+  createAdminClient(): SupabaseishClient
+  hasCurrentAppAccess(
+    client: SupabaseishClient,
+    lookup: { userId: string; email?: string | null },
+  ): Promise<boolean>
   loadRoutineArtifactData(args: {
     userId: string
   }): Promise<Pick<RoutineArtifactData, "runtime" | "usageRows">>
@@ -164,6 +169,18 @@ async function requireUser(client: SupabaseishClient): Promise<ApiResult | AuthU
 export function createTrackerApiHandlers(deps: TrackerApiDeps) {
   const now = deps.now ?? (() => new Date())
 
+  async function requireCurrentAccess(user: AuthUser): Promise<ApiResult | SupabaseishClient> {
+    const admin = deps.createAdminClient()
+    try {
+      if (!(await deps.hasCurrentAppAccess(admin, { userId: user.id, email: user.email }))) {
+        return json({ error: "Nicht erlaubt." }, 403)
+      }
+    } catch {
+      return json({ error: "Zugriff konnte nicht geprüft werden." }, 503)
+    }
+    return admin
+  }
+
   async function loadDays(
     client: SupabaseishClient,
     userId: string,
@@ -228,9 +245,11 @@ export function createTrackerApiHandlers(deps: TrackerApiDeps) {
 
   return {
     async getTracker(params: { tz: string }): Promise<ApiResult> {
-      const client = await deps.createClient()
-      const user = await requireUser(client)
+      const authClient = await deps.createAuthClient()
+      const user = await requireUser(authClient)
       if ("status" in user) return user
+      const client = await requireCurrentAccess(user)
+      if ("status" in client) return client
 
       let today: string
       try {
@@ -382,9 +401,11 @@ export function createTrackerApiHandlers(deps: TrackerApiDeps) {
         return json({ error: "Ungültiges Datum." }, 400)
       }
 
-      const client = await deps.createClient()
-      const user = await requireUser(client)
+      const authClient = await deps.createAuthClient()
+      const user = await requireUser(authClient)
       if ("status" in user) return user
+      const client = await requireCurrentAccess(user)
+      if ("status" in client) return client
 
       const today = todayInTimezone(parsed.data.timezone, now())
       const earliest = shiftDate(today, -BACKFILL_DAYS)
@@ -396,6 +417,7 @@ export function createTrackerApiHandlers(deps: TrackerApiDeps) {
       }
 
       const { data, error } = await client.rpc("replace_routine_log", {
+        p_user_id: user.id,
         p_logged_on: parsed.data.loggedOn,
         p_timezone: parsed.data.timezone,
         p_day_type: parsed.data.dayType,
@@ -421,15 +443,18 @@ export function createTrackerApiHandlers(deps: TrackerApiDeps) {
       }
       if (!isValidCalendarDate(parsed.data.loggedOn))
         return json({ error: "Ungültiges Datum." }, 400)
-      const client = await deps.createClient()
-      const user = await requireUser(client)
+      const authClient = await deps.createAuthClient()
+      const user = await requireUser(authClient)
       if ("status" in user) return user
+      const client = await requireCurrentAccess(user)
+      if ("status" in client) return client
       const today = todayInTimezone(parsed.data.timezone, now())
       const earliest = shiftDate(today, -BACKFILL_DAYS)
       if (parsed.data.loggedOn > today || parsed.data.loggedOn < earliest) {
         return json({ error: "Nur die letzten 7 Tage können bearbeitet werden." }, 400)
       }
       const { data, error } = await client.rpc("delete_routine_log", {
+        p_user_id: user.id,
         p_logged_on: parsed.data.loggedOn,
         p_timezone: parsed.data.timezone,
         p_client_session_id: parsed.data.clientSessionId,
@@ -442,9 +467,11 @@ export function createTrackerApiHandlers(deps: TrackerApiDeps) {
       const parsed = dismissSchema.safeParse(payload)
       if (!parsed.success) return json({ error: "Ungültige Daten." }, 400)
 
-      const client = await deps.createClient()
-      const user = await requireUser(client)
+      const authClient = await deps.createAuthClient()
+      const user = await requireUser(authClient)
       if ("status" in user) return user
+      const client = await requireCurrentAccess(user)
+      if ("status" in client) return client
 
       const nowDate = now()
       const { error } = await client.from("tracker_nudge_dismissals").upsert(

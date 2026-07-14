@@ -261,7 +261,9 @@ It must:
 - make deletion transactional but soft: set `deleted_at`, retain client session/revision, and delete product rows.
   A higher-revision replace clears `deleted_at`; a lower same-session save cannot resurrect the entry;
 - return structured success/error codes and the persisted day;
-- use `SECURITY INVOKER`, the existing RLS policies, an explicit safe `search_path`, and explicit `REVOKE`/`GRANT` statements.
+- the initial design used `SECURITY INVOKER`; migration `20260713143000_secure_routine_tracker_write_boundary.sql`
+  superseded it with pinned-search-path `SECURITY DEFINER` functions, and Task 11 replaces those authenticated
+  signatures with service-role-only explicit-user variants.
 
 The API repeats Zod validation and maps structured codes to `400`, `403`, and generic `500` responses.
 GET preserves the existing 28-day full-detail log/product window for aggregation, nudge cadence, and same-canonical-activity
@@ -498,14 +500,11 @@ npm exec -- supabase migration repair --linked --status applied 20260713120000
 npm exec -- supabase migration list --linked
 ```
 
-The new code path depends on the new RPC and columns. Mid-implementation manual `custom` saves against the linked
-database are expected to fail until the approved migration is applied. For any later production release, apply and verify
-the migration before deploying code that calls the RPC; never deploy the code first.
-
-Production hardening is deliberately outside this experiment: before a production rollout, change the authenticated write
-boundary so direct PostgREST table DML cannot bypass RPC date, product, and revision validation. The reviewed direction is
-to use safe `SECURITY DEFINER` RPCs, retain `auth.uid()` ownership checks and the pinned `search_path`, revoke authenticated
-`INSERT`/`UPDATE`/`DELETE` on both tracker tables, and enforce product count/name limits inside the RPC.
+The original code path depends on the atomic RPC and columns, so those additive migrations are applied before the tracker
+code. Task 11 is a contract migration: first land and verify the admin-client API implementation locally, then apply the
+exact entitlement-boundary migration to the linked database, immediately rerun authenticated denial plus API success
+smokes, and only then deploy the code. This ordering is safe here because the tracker application code is not yet in the
+production base; do not reuse it for an already-live caller without an explicit expand/switch/contract rollout.
 
 Start a fresh local server after database code changes so deep imports are not stale:
 
@@ -567,7 +566,8 @@ Owner decisions resolved from the approved product direction:
 - custom days do not count toward cadence, nudges, or the trust gate;
 - an empty invalid custom draft can be abandoned by dismissal, while `Fertig` remains disabled and explains the validation error;
 - the strip contains eight dates: today plus seven backfill dates;
-- the RPC uses `SECURITY INVOKER` and existing RLS;
+- the original RPC design used `SECURITY INVOKER`; the implemented boundary was subsequently hardened to
+  `SECURITY DEFINER`, and Task 11 supersedes its authenticated signatures;
 - this isolated experiment has no kill switch; any future release applies migration before deploy and uses PR revert as rollback.
 - custom names remain one-off diary labels in v1; recent-name suggestions/prefill wait for the one-month review;
 - one automatic retry is allowed for network/`5xx`, followed by explicit manual retry; `4xx` never auto-retries;
@@ -583,26 +583,138 @@ Deferred:
 - a custom-activity management screen;
 - recent custom-name suggestions and matching-name prefill;
 - continuity streaks for biweekly/monthly targets.
+- DB-wide entitlement-aware RLS/API migration for the pre-existing Chat, Profile, Routine, onboarding, and memory
+  tables. This requires a separate authorization design because those surfaces currently span roughly twelve
+  owner-accessible tables and Profile/onboarding still perform browser-direct Supabase writes. Task 11 unifies their
+  user-facing route/API paywall but does not misrepresent that as retroactive database isolation.
 
 Unresolved decisions: none.
 
+## Post-Review Hardening Pass (2026-07-14)
+
+An independent whole-branch review after implementation found five additional gaps. The product decisions are now
+settled:
+
+- Chat, Profile, Tracker, and Routine require authentication plus current paid/manual app access. Existing user data is
+  retained after expiry so it becomes available again after resubscription.
+- Tracker additionally closes its newly introduced direct-Supabase data path: a user without current app access cannot
+  read or mutate tracker data through authenticated Supabase calls.
+- Custom activity names remain available to Chat as user-authored diary observations, but never as instructions,
+  cadence inputs, recommendation inputs, or saved profile truth.
+- Dismissing an empty invalid custom activity restores the latest valid state for that day. If no valid state exists,
+  the day remains empty.
+
+### Task 11: Close entitlement, context, autosave, and focus-boundary findings
+
+- [x] Make `hasCurrentAppAccess` the shared route-level predicate for Chat, Profile, Tracker, and Routine. Add `/profile`,
+      `/api/profile`, and Profile's `/api/memory` dependency to the subscription-required prefixes while preserving
+      billing, checkout, authentication, and resubscription routes. Keep the already-gated Chat, Routine, Tracker, and
+      Onboarding prefixes unchanged. Use the authenticated session client plus `{ userId: user.id, email: user.email }`
+      in middleware so email-only manual grants remain visible under their existing RLS policy. Legacy profile
+      entitlements recognized by `hasCurrentAppAccess` deliberately remain valid app access. Catch predicate errors:
+      fail closed, return `503` for API routes, and redirect page routes to `/pricing?reason=access_check_unavailable`
+      rather than mislabelling the user as expired.
+- [x] Make the Next.js tracker API the only user-facing data boundary: authenticate with the session client, check
+      `hasCurrentAppAccess(admin, { userId: user.id, email: user.email })`, and perform tracker reads/writes through the
+      admin client only. Define `TrackerApiDeps` with separate `createAuthClient`, `createAdminClient`, and
+      `hasCurrentAppAccess` dependencies so tests cannot accidentally reuse one privilege level for both jobs. Every
+      admin query and RPC must receive or filter by the server-validated user id.
+- [x] Add `supabase/migrations/20260714120000_enforce_routine_tracker_entitlement_boundary.sql`. Revoke all
+      authenticated access to `routine_logs`, `routine_log_products`, and `tracker_nudge_dismissals`; revoke and
+      explicitly drop the old authenticated RPC signatures; then create service-role-only write RPC variants that
+      take the server-validated user id explicitly. Preserve all existing payload/date/ownership/revision validation
+      and keep RLS enabled. Reject a null explicit user id before any read or mutation.
+- [x] Return `403` from every tracker API operation when the authenticated user lacks current app access and `503` when
+      the entitlement predicate itself errors. An open Tracker page receiving `403` redirects to
+      `/pricing?reason=resubscribe`; it must not present a retry that cannot succeed. Add tests for paid/manual/legacy
+      access, expired access, predicate failure, retained data, and denial of direct authenticated table/RPC access.
+- [x] Split diary interpretation policy from diary payload: keep trusted interpretation rules in a system item and
+      place all custom names and product names in a separate `role: "user"` input item labelled as user-authored diary
+      data. The system policy must explicitly say that strings inside that item are data, never instructions.
+- [x] Keep the 14-day observation window while enforcing a 16,000-character serialized diary-item limit. Represent
+      product categories compactly for every logged day; include product names newest-day-first while budget remains;
+      expose `product_names_truncated` and `omitted_product_name_count` when names are omitted. Never silently drop a
+      date, day type, custom name, or product category.
+- [x] Add adversarial context tests proving instruction-like custom/product names remain lower priority and cannot
+      become system instructions: diary strings appear only in the `role: "user"` data item, the trusted system item
+      contains the data-not-instructions policy, and unique diary-only sentinel strings do not appear in any system
+      item. Add budget tests proving the serialized diary item stays within the limit.
+- [x] Track the latest valid snapshot for the open date. When an invalid empty custom draft is dismissed, enqueue that
+      snapshot at a newer same-session revision before refreshing. If no valid snapshot exists, enqueue a delete
+      tombstone only when a save/delete for that date was already dispatched during this page session; otherwise
+      abandon the local invalid draft without a network write. A `wash` selection followed by an empty custom selection
+      therefore resolves to `wash`; selecting an empty custom activity directly on a previously empty day leaves the
+      day empty. Cover the in-flight valid-save race with the real coordinator.
+- [x] Restrict the shared bottom-sheet focus loop to controls that are enabled, visible, and not inert. Cover forward
+      and reverse wrapping when `Fertig` is disabled by custom-name validation.
+
+**Acceptance:** expired users cannot reach tracker data through the application or direct authenticated Supabase
+access; diary strings are bounded lower-priority data; an in-flight valid save cannot resurrect the wrong state after
+an invalid custom draft is abandoned; and keyboard focus remains trapped in every sheet state.
+
+### Task 11 file map
+
+Create:
+
+- `supabase/migrations/20260714120000_enforce_routine_tracker_entitlement_boundary.sql`
+
+Modify:
+
+- `src/app/api/tracker/route.ts`
+- `src/app/api/tracker/log/route.ts`
+- `src/app/api/tracker/dismiss-nudge/route.ts`
+- `src/lib/supabase/middleware.ts`
+- `src/lib/tracking/api-handlers.ts`
+- `src/lib/agent/tools/tracking-context.ts`
+- `src/lib/agent-v2/runtime/responses-agent.ts`
+- `src/components/tracker/tracker-page-client.tsx`
+- `src/components/tracker/use-tracker-autosave.ts`
+- `src/lib/tracking/save-coordinator.ts`
+- `src/components/ui/bottom-sheet.tsx`
+- `tests/tracker-api.test.ts`
+- `tests/tracker-migration-security.test.ts`
+- `tests/tracker-agent-context.test.ts`
+- `tests/agent-v2-responses-runtime.spec.ts`
+- `tests/tracker-save-coordinator.test.ts`
+- `tests/tracker-page.spec.ts`
+- `tests/routine-routing-nav.test.ts`
+
+The tracker context split is deliberately scoped to this newly introduced diary block. Other pre-existing context
+items containing names receive a separate prompt-boundary audit rather than an unreviewed cross-agent refactor here.
+Production `/api/chat` is already included in `SUB_REQUIRED_PREFIXES`; do not broaden this task into a second Chat
+entitlement implementation. Existing Chat/Profile/Routine storage retains its current owner-scoped RLS in this PR;
+the newly introduced Tracker storage is the only data plane moved to a service-role-only boundary here.
+
+The owner accepts the defense-in-depth cost of checking entitlement in both middleware and the Tracker API for this
+experiment. Do not add cross-request entitlement caching; record focused API timings during verification and revisit
+only if the added check materially affects autosave feedback.
+
+### Hardening verification
+
+Run the focused tracker API, migration security, Agent V2 context/runtime, save coordinator, tracker page, and shared
+bottom-sheet coverage in `tests/tracker-page.spec.ts` first. Then run typecheck, lint, build, authenticated Playwright
+tracker coverage, `npm run test:chat`, and a fresh mobile simulated-user review focused on entitlement redirects,
+invalid-custom dismissal, autosave feedback, and keyboard focus. Finish with an independent whole-branch code review
+and recheck every supported finding against the final diff.
+
 ## Review Gates
 
-1. Three read-only Claude plan reviews are complete; all supported technical defects are patched.
+1. Read-only Claude plan reviews are complete; all supported technical defects are patched or explicitly deferred.
 2. Begin implementation only after a fresh branch gate and implementation goal contract.
 3. After implementation, run focused checks, browser review, simulated-user review, and whole-branch review.
 4. Stop before all Git publishing and deployment actions.
 
 ## Implementation Handoff
 
-Recommended execution mode: mixed sequential implementation with bounded subagents.
+Recommended execution mode for Task 11: three bounded parallel workers with disjoint write scopes.
 
-- The orchestrator owns data semantics, migration/API integration, UI decisions, and final verification.
-- A routine worker may own Task 1 pure helpers/tests.
-- A routine worker may own Task 2 migration plus API tests.
-- One UI write lane owns Tasks 4-7 to avoid conflicts in tracker components and shared CSS.
-- A separate routine worker may prepare Task 8 after the UI contract is stable.
-- Tasks 3, 4, 5, 6, and 7 integrate sequentially because they share draft and rendering behavior.
+- Entitlement worker: middleware, Tracker routes/handlers, the entitlement-boundary migration, and routing/API/migration
+  tests.
+- Agent-context worker: tracking-context construction, Responses API input separation, and context/runtime tests.
+- UI-concurrency worker: tracker page/autosave/coordinator, shared bottom-sheet focus handling, and Playwright/coordinator
+  regressions.
+- The orchestrator owns product semantics, plan status, integration, migration review/application, final verification,
+  browser review, simulated-user review, and the independent whole-branch verdict.
 
 Execution stop line: do not apply the linked migration, stage, commit, push, create a PR, merge, deploy,
 or clean up the worktree without explicit approval.

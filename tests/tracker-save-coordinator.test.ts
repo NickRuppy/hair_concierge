@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { getPricingRedirectTarget } from "../src/components/tracker/use-tracker-autosave"
 import { TrackerSaveCoordinator, type TrackerSaveState } from "../src/lib/tracking/save-coordinator"
 
 interface Payload {
@@ -21,6 +22,33 @@ function deferred<T = void>() {
 function nextTurn(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 5))
 }
+
+test("recognizes a same-origin followed pricing redirect", () => {
+  const previousWindow = globalThis.window
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: { location: { origin: "http://localhost:3223" } },
+  })
+  try {
+    assert.equal(
+      getPricingRedirectTarget({
+        redirected: true,
+        url: "http://localhost:3223/pricing?reason=resubscribe",
+      }),
+      "/pricing?reason=resubscribe",
+    )
+    assert.equal(
+      getPricingRedirectTarget({ redirected: true, url: "https://example.com/pricing" }),
+      null,
+    )
+    assert.equal(
+      getPricingRedirectTarget({ redirected: false, url: "http://localhost:3223/pricing" }),
+      null,
+    )
+  } finally {
+    Object.defineProperty(globalThis, "window", { configurable: true, value: previousWindow })
+  }
+})
 
 test("coalesces rapid updates and never runs more than one save", async () => {
   const calls: Array<{ payload: Payload; revision: number }> = []
@@ -193,16 +221,16 @@ test("flush bypasses the trailing debounce and idle fires once", async () => {
   assert.equal(idleCalls, 1)
 })
 
-test("superseding an invalid local draft cancels a queued save and ignores an older response", async () => {
+test("dismissing an invalid custom draft restores the latest valid snapshot after an in-flight save", async () => {
   const gate = deferred()
-  const calls: Payload[] = []
+  const calls: Array<{ payload: Payload; revision: number }> = []
   const states: string[] = []
   const coordinator = new TrackerSaveCoordinator<Payload>({
     keyOf: (payload) => payload.date,
     debounceMs: 0,
-    save: async (payload) => {
-      calls.push(payload)
-      await gate.promise
+    save: async (payload, context) => {
+      calls.push({ payload, revision: context.revision })
+      if (calls.length === 1) await gate.promise
     },
     onStateChange: (_key, state) => states.push(state.status),
   })
@@ -210,12 +238,42 @@ test("superseding an invalid local draft cancels a queued save and ignores an ol
   coordinator.queueSave({ date: "2026-07-07", value: "wash" })
   await nextTurn()
   coordinator.supersede("2026-07-07")
+  coordinator.queueSave({ date: "2026-07-07", value: "wash" })
   gate.resolve()
   await coordinator.flush()
 
-  assert.equal(calls.length, 1)
-  assert.equal(coordinator.getState("2026-07-07").status, "idle")
-  assert.equal(states.includes("saved"), false)
+  assert.deepEqual(calls, [
+    { payload: { date: "2026-07-07", value: "wash" }, revision: 1 },
+    { payload: { date: "2026-07-07", value: "wash" }, revision: 3 },
+  ])
+  assert.equal(coordinator.getState("2026-07-07").status, "saved")
+  assert.equal(states.at(-1), "saved")
+})
+
+test("a dispatched date can receive a higher-revision tombstone when no valid snapshot remains", async () => {
+  const gate = deferred()
+  const calls: Array<{ payload: Payload; revision: number }> = []
+  const coordinator = new TrackerSaveCoordinator<Payload>({
+    keyOf: (payload) => payload.date,
+    debounceMs: 0,
+    save: async (payload, context) => {
+      calls.push({ payload, revision: context.revision })
+      if (calls.length === 1) await gate.promise
+    },
+  })
+
+  coordinator.queueSave({ date: "2026-07-07", value: "transient" })
+  await nextTurn()
+  assert.equal(coordinator.hasDispatched("2026-07-07"), true)
+  coordinator.supersede("2026-07-07")
+  coordinator.queueSave({ date: "2026-07-07", value: "delete" })
+  gate.resolve()
+  await coordinator.flush()
+
+  assert.deepEqual(calls, [
+    { payload: { date: "2026-07-07", value: "transient" }, revision: 1 },
+    { payload: { date: "2026-07-07", value: "delete" }, revision: 3 },
+  ])
 })
 
 test("superseding during retry backoff prevents the obsolete retry", async () => {

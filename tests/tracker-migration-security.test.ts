@@ -18,6 +18,10 @@ const payloadHardeningMigration = readFileSync(
   "supabase/migrations/20260713150000_harden_routine_tracker_rpc_payloads.sql",
   "utf8",
 )
+const entitlementBoundaryMigration = readFileSync(
+  "supabase/migrations/20260714120000_enforce_routine_tracker_entitlement_boundary.sql",
+  "utf8",
+)
 
 test("fresh tracker schema allows authenticated reads but no direct log mutations", () => {
   assert.match(initialMigration, /GRANT SELECT ON TABLE public\.routine_logs TO authenticated;/)
@@ -105,5 +109,47 @@ test("delete_routine_log writes an absent-row tombstone before applying revision
     replaceFunction.indexOf("v_log.client_session_id = p_client_session_id") <
       replaceFunction.indexOf("deleted_at = NULL"),
     "a delayed lower revision must return stale before it can restore a tombstone",
+  )
+})
+
+test("entitlement boundary revokes direct tracker access and replaces RPC signatures", () => {
+  for (const table of ["routine_logs", "routine_log_products", "tracker_nudge_dismissals"]) {
+    assert.match(
+      entitlementBoundaryMigration,
+      new RegExp(`REVOKE ALL ON TABLE public\\.${table} FROM authenticated;`),
+    )
+  }
+  assert.match(
+    entitlementBoundaryMigration,
+    /DROP FUNCTION IF EXISTS public\.replace_routine_log\(date, text, text, text, jsonb, uuid, bigint\);/,
+  )
+  assert.match(
+    entitlementBoundaryMigration,
+    /DROP FUNCTION IF EXISTS public\.delete_routine_log\(date, text, uuid, bigint\);/,
+  )
+  assert.match(
+    entitlementBoundaryMigration,
+    /CREATE FUNCTION public\.replace_routine_log\(\s*p_user_id uuid,/,
+  )
+  assert.match(
+    entitlementBoundaryMigration,
+    /CREATE FUNCTION public\.delete_routine_log\(p_user_id uuid,/,
+  )
+  assert.equal(
+    (entitlementBoundaryMigration.match(/server_boundary_user_required/g) ?? []).length,
+    2,
+  )
+  assert.doesNotMatch(entitlementBoundaryMigration, /auth\.uid\(\)/)
+  assert.match(
+    entitlementBoundaryMigration,
+    /GRANT EXECUTE ON FUNCTION public\.replace_routine_log\(uuid, date, text, text, text, jsonb, uuid, bigint\) TO service_role;/,
+  )
+  assert.match(
+    entitlementBoundaryMigration,
+    /GRANT EXECUTE ON FUNCTION public\.delete_routine_log\(uuid, date, text, uuid, bigint\) TO service_role;/,
+  )
+  assert.match(
+    entitlementBoundaryMigration,
+    /REVOKE ALL ON FUNCTION public\.replace_routine_log\(uuid, date, text, text, text, jsonb, uuid, bigint\) FROM PUBLIC, anon, authenticated;/,
   )
 })

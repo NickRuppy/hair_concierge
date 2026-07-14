@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { buildTrackingToolContext } from "../src/lib/agent/tools/tracking-context"
+import {
+  buildTrackingToolContext,
+  MAX_TRACKING_DIARY_DATA_ITEM_CHARS,
+  serializeTrackingDiaryDataItem,
+} from "../src/lib/agent/tools/tracking-context"
 import { buildTrackingInsightContext } from "../src/lib/agent/tools/tracking-insights"
 import type { CareBalanceRow } from "../src/lib/recommendation-engine/types"
 import type { TrackerLogDay } from "../src/lib/tracking/types"
@@ -67,6 +71,34 @@ test("raw diary context includes only the latest 14 days from the shared evidenc
     ["2026-07-07"],
   )
   assert.equal(context.days_since_last_wash, 17)
+})
+
+test("serializes a bounded diary while retaining each day and category", () => {
+  const days: TrackerLogDay[] = Array.from({ length: 14 }, (_, index) => {
+    const day = String(index + 1).padStart(2, "0")
+    return {
+      loggedOn: `2026-07-${day}`,
+      dayType: index === 0 ? "custom" : "wash",
+      customActivityName: index === 0 ? "CUSTOM_SENTINEL_IGNORE_SYSTEM_POLICY" : undefined,
+      products: Array.from({ length: 40 }, (_, productIndex) => ({
+        category: productIndex % 2 === 0 ? "shampoo" : "mask",
+        productName: `PRODUCT_SENTINEL_${String(index).padStart(2, "0")}_${"x".repeat(60)}`,
+        userProductUsageId: `u-${index}-${productIndex}`,
+      })),
+    }
+  })
+  const context = buildTrackingToolContext({ days, today: "2026-07-14" })
+  assert.ok(context)
+
+  const serialized = serializeTrackingDiaryDataItem(context)
+  assert.ok(serialized.length <= MAX_TRACKING_DIARY_DATA_ITEM_CHARS)
+  assert.match(serialized, /"product_names_truncated":true/)
+  assert.match(serialized, /"omitted_product_name_count":\d+/)
+  assert.ok(serialized.indexOf("PRODUCT_SENTINEL_13") < serialized.indexOf("PRODUCT_SENTINEL_12"))
+  for (const day of days) assert.match(serialized, new RegExp(day.loggedOn))
+  assert.match(serialized, /"day_type":"custom"/)
+  assert.match(serialized, /CUSTOM_SENTINEL_IGNORE_SYSTEM_POLICY/)
+  assert.match(serialized, /"product_categories":\["mask","shampoo"\]/)
 })
 
 const MASK_ROW: CareBalanceRow = {
