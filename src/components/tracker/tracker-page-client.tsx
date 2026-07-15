@@ -401,7 +401,9 @@ export function TrackerPageClient() {
         }
         if (!response.ok) {
           restoreNudge()
-          if (response.status === 403) window.location.assign("/pricing?reason=resubscribe")
+          if (response.status === 403) {
+            window.location.assign("/reactivate?reason=expired&next=%2Ftracker")
+          }
         }
       } catch {
         restoreNudge()
