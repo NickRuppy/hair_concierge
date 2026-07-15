@@ -198,6 +198,15 @@ async function openSheet(page: Page) {
   await expect(page.getByRole("dialog", { name: "Routine eintragen" })).toBeVisible()
 }
 
+async function stubReactivationDestination(page: Page) {
+  await page.route("**/reactivate?*", async (route) => {
+    await route.fulfill({
+      contentType: "text/html",
+      body: "<!doctype html><title>Membership reactivation</title>",
+    })
+  })
+}
+
 async function selectYesterday(page: Page) {
   await page.getByRole("tablist", { name: "Letzte acht Tage" }).getByRole("tab").nth(6).click()
 }
@@ -478,14 +487,15 @@ test.describe.serial("@ci tracker page regressions", () => {
     expect(writes).toEqual([])
   })
 
-  test("a 403 autosave response redirects to resubscription pricing", async ({ page }) => {
+  test("a 403 autosave response redirects to membership reactivation", async ({ page }) => {
     const fixture = trackerFixture()
+    await stubReactivationDestination(page)
     await installTrackerFixture(page, fixture, async () => ({ status: 403 }))
     await openTracker(page)
     await openSheet(page)
     await page.getByRole("button", { name: /Keine Haarpflege/ }).click()
 
-    await page.waitForURL(/\/pricing\?reason=resubscribe/)
+    await page.waitForURL(/\/reactivate\?reason=expired&next=%2Ftracker$/)
   })
 
   test("date selection pre-fills the same activity, keeps product order stable, and serializes rapid writes", async ({
@@ -624,10 +634,11 @@ test.describe.serial("@ci tracker page regressions", () => {
     await expect(page.getByText("Veralteter Hinweis")).toBeHidden()
   })
 
-  test("failed nudge dismissal restores the card and direct 403 redirects to pricing", async ({
+  test("failed nudge dismissal restores the card and direct 403 redirects to reactivation", async ({
     page,
   }) => {
     const fixture = trackerFixture()
+    await stubReactivationDestination(page)
     await installTrackerFixture(page, fixture, undefined, () => ({
       ...trackerBody(fixture),
       gate: { unlocked: true, daysRemaining: 0, loggedDayCount: 10 },
@@ -656,7 +667,7 @@ test.describe.serial("@ci tracker page regressions", () => {
 
     dismissStatus = 403
     await page.getByRole("button", { name: "Ausblenden" }).click()
-    await page.waitForURL(/\/pricing\?reason=resubscribe$/)
+    await page.waitForURL(/\/reactivate\?reason=expired&next=%2Ftracker$/)
   })
 
   test("fixture save failures expose retry, deletion undo restores the entry, drag closes, and reduced motion removes travel", async ({

@@ -124,7 +124,7 @@ export function useTrackerAutosave(options: {
         }
         if (!response.ok) {
           if (response.status === 403) {
-            window.location.assign("/pricing?reason=resubscribe")
+            window.location.assign("/reactivate?reason=expired&next=%2Ftracker")
           }
           throw new TrackerRequestError(await parseError(response), response.status)
         }

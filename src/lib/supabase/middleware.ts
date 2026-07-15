@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server"
 import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
+import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import {
   classifyRoute,
   pathMatchesRoutePrefix,
@@ -173,18 +174,31 @@ export async function updateSession(request: NextRequest) {
     } catch (error) {
       console.warn("[billing] app access check failed", error)
       if (pathMatchesRoutePrefix(pathname, "/api")) {
-        return NextResponse.json({ error: "Zugriff konnte nicht geprüft werden." }, { status: 503 })
+        return NextResponse.json({ error: "access_check_unavailable" }, { status: 503 })
       }
       const url = request.nextUrl.clone()
-      url.pathname = "/pricing"
+      const next = sanitizeReactivationReturnDestination(
+        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+      )
+      url.pathname = "/reactivate"
+      url.search = ""
       url.searchParams.set("reason", "access_check_unavailable")
+      url.searchParams.set("next", next)
       return redirectWithSupabaseCookies(url, supabaseResponse)
     }
 
     if (!active) {
+      if (pathMatchesRoutePrefix(pathname, "/api")) {
+        return NextResponse.json({ error: "subscription_required" }, { status: 403 })
+      }
       const url = request.nextUrl.clone()
-      url.pathname = "/pricing"
-      url.searchParams.set("reason", "resubscribe")
+      const next = sanitizeReactivationReturnDestination(
+        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+      )
+      url.pathname = "/reactivate"
+      url.search = ""
+      url.searchParams.set("reason", "expired")
+      url.searchParams.set("next", next)
       return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }

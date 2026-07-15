@@ -70,8 +70,11 @@ export default async function OfferPageLab({
 
   return (
     <AppValueStackOfferVariant
+      entryContext="quiz_completion"
+      leadId={null}
       name="Lea"
       narrative={narrative}
+      offerVariant="app-value-stack"
       quizAnswers={REVIEW_ANSWERS}
       pricingSlot={<StaticPricingPreview />}
     />

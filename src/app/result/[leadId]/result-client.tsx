@@ -57,8 +57,12 @@ export function ResultPageClient({
   }
 
   const offer = renderOfferVariant(offerVariant, {
+    entryContext: focusRoutine ? "routine_return" : "saved_result",
+    leadId,
     name,
     narrative,
+    offerTracking,
+    offerVariant,
     quizAnswers,
     focusRoutine,
     pricingSlot: <ResultOfferPricing leadId={leadId} offerTracking={offerTracking} />,

@@ -3,6 +3,7 @@ import { Star } from "lucide-react"
 
 const APP_STORIES = [
   {
+    trackingId: "product_story_routine",
     label: "Deine Routine",
     headline: "Deine Routine auf einen Blick.",
     body: "Produkte, Reihenfolge und Anwendung – klar an einem Ort.",
@@ -10,6 +11,7 @@ const APP_STORIES = [
     imageAlt: "Chaarlie Routine mit Produkten und klarer Reihenfolge",
   },
   {
+    trackingId: "product_story_chat",
     label: "Dein Haar-Berater",
     headline: "Frag Chaarlie zu deinem Haar.",
     body: "Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich verändert.",
@@ -17,6 +19,7 @@ const APP_STORIES = [
     imageAlt: "Chaarlie Chat mit einer persönlichen Haarpflegefrage",
   },
   {
+    trackingId: "product_story_products",
     label: "Deine Empfehlungen",
     headline: "Frag nach Produkten, die zu dir passen.",
     body: "Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.",
@@ -100,6 +103,7 @@ export function AppValueStackProof() {
           {APP_STORIES.map((story) => (
             <article
               key={story.label}
+              data-offer-section={story.trackingId}
               className="space-y-5 rounded-[24px] border border-border bg-white px-5 py-7 text-center shadow-[0_16px_48px_-38px_rgba(var(--brand-plum-rgb),0.65)] sm:px-7"
             >
               <div className="mx-auto max-w-[42ch]">

@@ -75,66 +75,70 @@ export function AppValueStackRoutine({ preview }: { preview: QuizOfferPreview })
 
   return (
     <section className="border-t border-border py-9">
-      <h2 className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
-        Deine Pflegebasis
-      </h2>
-      <p className="mt-3 text-[14px] leading-[1.65] text-muted-foreground">
-        Diese drei Punkte bestimmen, womit deine Routine startet.
-      </p>
+      <div data-offer-section="personalized_analysis">
+        <h2 className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
+          Deine Pflegebasis
+        </h2>
+        <p className="mt-3 text-[14px] leading-[1.65] text-muted-foreground">
+          Diese drei Punkte bestimmen, womit deine Routine startet.
+        </p>
 
-      <div className="mt-6 overflow-hidden rounded-[18px] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)]/55">
-        <ol>
-          {preview.signals.map((signal, index) => (
-            <li
-              key={`${signal.label}-${index}`}
-              data-testid="app-value-stack-signal"
-              className="flex gap-3 border-b border-[var(--brand-plum-light)] px-4 py-3.5"
-            >
-              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-white text-[12px] font-bold text-[var(--brand-plum)]">
-                {index + 1}
-              </span>
-              <span>
-                <strong className="block text-[13px] text-[var(--brand-plum-darkest)]">
-                  {signal.label}
-                </strong>
-                <span className="mt-0.5 block text-[12px] leading-relaxed text-muted-foreground">
-                  {signal.conclusion}
+        <div className="mt-6 overflow-hidden rounded-[18px] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)]/55">
+          <ol>
+            {preview.signals.map((signal, index) => (
+              <li
+                key={`${signal.label}-${index}`}
+                data-testid="app-value-stack-signal"
+                className="flex gap-3 border-b border-[var(--brand-plum-light)] px-4 py-3.5"
+              >
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-white text-[12px] font-bold text-[var(--brand-plum)]">
+                  {index + 1}
                 </span>
-              </span>
-            </li>
-          ))}
-        </ol>
-        <div className="flex items-center justify-center gap-2 bg-white/75 px-4 py-3 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-          <ArrowDown aria-hidden="true" className="size-3.5" />
-          Daraus entsteht dein Start
+                <span>
+                  <strong className="block text-[13px] text-[var(--brand-plum-darkest)]">
+                    {signal.label}
+                  </strong>
+                  <span className="mt-0.5 block text-[12px] leading-relaxed text-muted-foreground">
+                    {signal.conclusion}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+          <div className="flex items-center justify-center gap-2 bg-white/75 px-4 py-3 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
+            <ArrowDown aria-hidden="true" className="size-3.5" />
+            Daraus entsteht dein Start
+          </div>
         </div>
+
+        <p className="mt-4 text-center text-[12px] leading-relaxed text-muted-foreground">
+          Mit konkreten Beispielen aus unserer Produktdatenbank. Das sind noch nicht deine finalen
+          Produktempfehlungen.
+        </p>
       </div>
 
-      <p className="mt-4 text-center text-[12px] leading-relaxed text-muted-foreground">
-        Mit konkreten Beispielen aus unserer Produktdatenbank. Das sind noch nicht deine finalen
-        Produktempfehlungen.
-      </p>
-
-      <div className="mt-4 space-y-3">
+      <div data-offer-section="mini_routine" className="mt-4 space-y-3">
         {foundationProducts.map((product) => (
           <FoundationProductCard key={product.key} product={product} />
         ))}
       </div>
 
-      <div
-        className="mt-4 grid grid-cols-3 gap-2.5"
-        aria-describedby="app-value-stack-lock-explanation"
-      >
-        <LockedRoutineCell label={firstLockedLabel} />
-        <LockedRoutineCell label={secondLockedLabel} />
-        <LockedRoutineCell label="Tools" />
+      <div data-offer-section="locked_routine">
+        <div
+          className="mt-4 grid grid-cols-3 gap-2.5"
+          aria-describedby="app-value-stack-lock-explanation"
+        >
+          <LockedRoutineCell label={firstLockedLabel} />
+          <LockedRoutineCell label={secondLockedLabel} />
+          <LockedRoutineCell label="Tools" />
+        </div>
+        <p
+          id="app-value-stack-lock-explanation"
+          className="mt-3 text-[12px] leading-relaxed text-muted-foreground"
+        >
+          Diese Bausteine gehören zu deiner vollständigen Routine.
+        </p>
       </div>
-      <p
-        id="app-value-stack-lock-explanation"
-        className="mt-3 text-[12px] leading-relaxed text-muted-foreground"
-      >
-        Diese Bausteine gehören zu deiner vollständigen Routine.
-      </p>
     </section>
   )
 }

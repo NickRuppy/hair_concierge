@@ -2,8 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
+import { OfferPreviewRoutine } from "../src/components/quiz/offer-preview-routine"
 import { QuizResultOfferPageShell } from "../src/components/quiz/quiz-result-offer-page"
 import AppValueStackOfferVariant from "../src/funnels/offers/app-value-stack"
+import { buildQuizOfferPreview } from "../src/lib/quiz/offer-preview"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 
@@ -59,6 +61,27 @@ test("result offer page renders the product-led hierarchy, routine preview, and 
   assert.match(html, /Sind die Produkte auf dieser Seite schon meine finalen Empfehlungen/i)
   assert.doesNotMatch(html, /Angebot läuft ab|Danach zum regulären Preis|In 4 Wochen|30-Tage-Plan/i)
   assert.doesNotMatch(html, /Kopfhautserum|Dry.Shampoo|Haarmony|>Tom</i)
+
+  const sectionIds = Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1])
+  assert.deepEqual(sectionIds, [
+    "personalized_analysis",
+    "mini_routine",
+    "locked_routine",
+    "unlock_explanation",
+    "product_story_chat",
+    "product_story_routine",
+    "product_story_products",
+    "subscription_explanation",
+    "pricing",
+    "guarantee",
+    "faq",
+    "final_cta",
+  ])
+  assert.deepEqual(
+    new Set(Array.from(html.matchAll(/data-offer-cta="([^"]+)"/g), (match) => match[1])),
+    new Set(["sticky_header", "locked_plan", "final"]),
+  )
+  assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 6)
 })
 
 test("result offer page preserves legacy routine-return context and both fixed-header anchors", () => {
@@ -79,12 +102,37 @@ test("result offer page preserves legacy routine-return context and both fixed-h
   assert.doesNotMatch(html, /Angebot:/i)
 })
 
+test("routine preview keeps a generic locked continuation when no third category is justified", () => {
+  const preview = buildQuizOfferPreview({
+    ...quizAnswers,
+    concerns: [],
+    fingertest: "glatt",
+    goals: [],
+    pulltest: "stretches_bounces",
+  })
+  const html = renderToStaticMarkup(<OfferPreviewRoutine preview={preview} />)
+
+  assert.equal(preview.lane, "base")
+  assert.equal(preview.needs.extra, null)
+  assert.match(html, /data-offer-section="locked_routine"/)
+  assert.match(html, /Dein vollständiger Plan/i)
+  assert.match(html, /Deine weiteren Pflegeschritte/i)
+  assert.equal((html.match(/data-testid="locked-routine-placeholder"/g) ?? []).length, 2)
+  assert.match(html, /Shampoo · Beispiel/i)
+  assert.match(html, /Conditioner · Beispiel/i)
+  assert.doesNotMatch(html, /Dein nächster Pflegeschritt/i)
+  assert.doesNotMatch(html, /Protein-Maske|Feuchtigkeitsmaske|Leave-in|Haaröl|Bondbuilder/i)
+})
+
 test("app value stack renders the approved quiz-to-product-to-pricing hierarchy", () => {
   const narrative = buildQuizResultNarrative(quizAnswers)
   const html = renderToStaticMarkup(
     <AppValueStackOfferVariant
+      entryContext="quiz_completion"
+      leadId={null}
       name="Sarah Beispiel"
       narrative={narrative}
+      offerVariant="app-value-stack"
       quizAnswers={quizAnswers}
       pricingSlot={<div data-testid="pricing-slot">pricing-slot-marker</div>}
     />,
@@ -130,6 +178,25 @@ test("app value stack renders the approved quiz-to-product-to-pricing hierarchy"
   assert.match(html, /id="unlock-plan"[^>]*scroll-mt-\[76px\]/i)
   assert.match(html, /id="pricing"[^>]*scroll-mt-\[76px\]/i)
 
+  const sectionIds = Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1])
+  assert.deepEqual(sectionIds, [
+    "personalized_analysis",
+    "mini_routine",
+    "locked_routine",
+    "unlock_explanation",
+    "product_story_routine",
+    "product_story_chat",
+    "product_story_products",
+    "pricing",
+    "faq",
+    "final_cta",
+  ])
+  assert.deepEqual(
+    new Set(Array.from(html.matchAll(/data-offer-cta="([^"]+)"/g), (match) => match[1])),
+    new Set(["sticky_header", "locked_plan", "final"]),
+  )
+  assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 6)
+
   assert.doesNotMatch(visibleText, /Wort der Gründer|Founder|Gründerbrief/i)
   assert.doesNotMatch(visibleText, /4\.000 (?:Produkte|Empfehlungen|Checks|Analysen)/i)
   assert.doesNotMatch(visibleText, /heute dran|Tracking|Streak|nie wieder|sofort|rund um die Uhr/i)
@@ -140,8 +207,11 @@ test("app value stack keeps routine-return context without duplicating checkout"
   const narrative = buildQuizResultNarrative(quizAnswers)
   const html = renderToStaticMarkup(
     <AppValueStackOfferVariant
+      entryContext="routine_return"
+      leadId={null}
       name="Sarah"
       narrative={narrative}
+      offerVariant="app-value-stack"
       quizAnswers={quizAnswers}
       pricingSlot={<div>pricing-slot-marker</div>}
       focusRoutine
