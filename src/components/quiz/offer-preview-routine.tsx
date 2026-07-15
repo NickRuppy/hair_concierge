@@ -2,7 +2,7 @@ import { ArrowDown, Check, LockKeyhole } from "lucide-react"
 
 import type { OfferPreviewCategory, QuizOfferPreview } from "@/lib/quiz/offer-preview-types"
 
-const CATEGORY_TITLES: Record<OfferPreviewCategory, string> = {
+export const OFFER_PREVIEW_CATEGORY_TITLES: Record<OfferPreviewCategory, string> = {
   shampoo: "Shampoo",
   conditioner: "Conditioner",
   protein_mask: "Protein-Maske",
@@ -115,7 +115,7 @@ export function OfferPreviewRoutine({
               </p>
               <h3 className="mt-1.5 text-[17px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
                 {lockedProduct
-                  ? CATEGORY_TITLES[lockedProduct.category]
+                  ? OFFER_PREVIEW_CATEGORY_TITLES[lockedProduct.category]
                   : "Deine weiteren Pflegeschritte"}
               </h3>
             </div>
