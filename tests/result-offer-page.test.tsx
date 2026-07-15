@@ -2,7 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
+import { OfferPreviewRoutine } from "../src/components/quiz/offer-preview-routine"
 import { QuizResultOfferPageShell } from "../src/components/quiz/quiz-result-offer-page"
+import { buildQuizOfferPreview } from "../src/lib/quiz/offer-preview"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 
@@ -58,6 +60,27 @@ test("result offer page renders the product-led hierarchy, routine preview, and 
   assert.match(html, /Sind die Produkte auf dieser Seite schon meine finalen Empfehlungen/i)
   assert.doesNotMatch(html, /Angebot läuft ab|Danach zum regulären Preis|In 4 Wochen|30-Tage-Plan/i)
   assert.doesNotMatch(html, /Kopfhautserum|Dry.Shampoo|Haarmony|>Tom</i)
+
+  const sectionIds = Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1])
+  assert.deepEqual(sectionIds, [
+    "personalized_analysis",
+    "mini_routine",
+    "locked_routine",
+    "unlock_explanation",
+    "product_story_chat",
+    "product_story_routine",
+    "product_story_products",
+    "subscription_explanation",
+    "pricing",
+    "guarantee",
+    "faq",
+    "final_cta",
+  ])
+  assert.deepEqual(
+    new Set(Array.from(html.matchAll(/data-offer-cta="([^"]+)"/g), (match) => match[1])),
+    new Set(["sticky_header", "locked_plan", "final"]),
+  )
+  assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 6)
 })
 
 test("result offer page preserves legacy routine-return context and both fixed-header anchors", () => {
@@ -76,4 +99,26 @@ test("result offer page preserves legacy routine-return context and both fixed-h
   assert.match(html, /id="unlock-plan"[^>]*scroll-mt-\[76px\]/i)
   assert.match(html, /id="pricing"[^>]*scroll-mt-\[76px\]/i)
   assert.doesNotMatch(html, /Angebot:/i)
+})
+
+test("routine preview keeps a generic locked continuation when no third category is justified", () => {
+  const preview = buildQuizOfferPreview({
+    ...quizAnswers,
+    concerns: [],
+    fingertest: "glatt",
+    goals: [],
+    pulltest: "stretches_bounces",
+  })
+  const html = renderToStaticMarkup(<OfferPreviewRoutine preview={preview} />)
+
+  assert.equal(preview.lane, "base")
+  assert.equal(preview.needs.extra, null)
+  assert.match(html, /data-offer-section="locked_routine"/)
+  assert.match(html, /Dein vollständiger Plan/i)
+  assert.match(html, /Deine weiteren Pflegeschritte/i)
+  assert.equal((html.match(/data-testid="locked-routine-placeholder"/g) ?? []).length, 2)
+  assert.match(html, /Shampoo · Beispiel/i)
+  assert.match(html, /Conditioner · Beispiel/i)
+  assert.doesNotMatch(html, /Dein nächster Pflegeschritt/i)
+  assert.doesNotMatch(html, /Protein-Maske|Feuchtigkeitsmaske|Leave-in|Haaröl|Bondbuilder/i)
 })
