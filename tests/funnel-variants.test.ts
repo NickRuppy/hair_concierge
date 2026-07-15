@@ -34,6 +34,15 @@ test("every package references registered landing and offer variants", () => {
   }
 })
 
+test("app value stack is registered once alongside the historical default offer", () => {
+  assert.ok("app-value-stack" in OFFER_VARIANTS)
+  assert.ok("default" in OFFER_VARIANTS)
+  assert.equal(
+    Object.keys(OFFER_VARIANTS).filter((variant) => variant === "app-value-stack").length,
+    1,
+  )
+})
+
 test("landing route owns tracking outside contributor variants", () => {
   assert.match(landingRouteSource, /<LandingTracking \/>/)
   assert.match(landingRouteSource, /renderLandingVariant\(funnelPackage\.landingVariant\)/)
