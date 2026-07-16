@@ -100,6 +100,7 @@ function createSupabaseStub(seed?: {
     interval: row.interval ?? "month",
     current_period_end: row.current_period_end ?? futureIso(),
     cancel_at_period_end: row.cancel_at_period_end ?? false,
+    cancel_scheduled_at: row.cancel_scheduled_at ?? null,
     cancelled_at: row.cancelled_at ?? null,
     metadata: row.metadata ?? {},
     created_at: row.created_at ?? new Date().toISOString(),
@@ -401,6 +402,7 @@ test("upsertBillingSubscription scopes uniqueness by provider and provider subsc
 
 test("upsertBillingSubscription preserves optional fields during partial status updates", async () => {
   const periodEnd = futureIso()
+  const cancelScheduledAt = new Date(Date.now() + 43_200_000).toISOString()
   const { supabase, billing } = createSupabaseStub({
     billing: [
       {
@@ -413,6 +415,7 @@ test("upsertBillingSubscription preserves optional fields during partial status 
         interval: "quarter",
         current_period_end: periodEnd,
         cancel_at_period_end: false,
+        cancel_scheduled_at: cancelScheduledAt,
         metadata: { plan_id: "P-quarter" },
       },
     ],
@@ -432,7 +435,18 @@ test("upsertBillingSubscription preserves optional fields during partial status 
   assert.equal(billing[0].provider_customer_id, "payer-1")
   assert.equal(billing[0].interval, "quarter")
   assert.equal(billing[0].current_period_end, periodEnd)
+  assert.equal(billing[0].cancel_scheduled_at, cancelScheduledAt)
   assert.deepEqual(billing[0].metadata, { plan_id: "P-quarter" })
+
+  await upsertBillingSubscription(supabase, {
+    user_id: "user-1",
+    provider: "paypal",
+    provider_subscription_id: "I-123",
+    provider_status: "ACTIVE",
+    entitlement_status: "active",
+    cancel_scheduled_at: null,
+  })
+  assert.equal(billing[0].cancel_scheduled_at, null)
 })
 
 test("hasCurrentManualAccess only allows unrevoked and unexpired grants", () => {
@@ -1993,6 +2007,7 @@ test("PayPal CANCELLED maps to provider cancellation without immediate paid-thro
   assert.equal(row.provider_status, "CANCELLED")
   assert.equal(row.entitlement_status, "canceled")
   assert.equal(row.cancel_at_period_end, true)
+  assert.equal(row.cancel_scheduled_at, periodEnd)
   assert.equal(row.current_period_end, periodEnd)
 })
 

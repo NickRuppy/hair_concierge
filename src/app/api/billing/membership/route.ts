@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
@@ -28,7 +28,7 @@ export async function GET() {
     const admin = createAdminClient()
     const subscription = await findVisibleBillingSubscriptionForUser(admin, user.id)
     if (subscription) {
-      await reconcileStalePayPalPlanChanges(admin, subscription)
+      await reconcileStalePayPalPlanChanges(admin, subscription, { deps: { defer: after } })
       const operation = await findOpenPlanChange(admin, subscription.id)
       return NextResponse.json({
         state: buildMembershipManagementState({ subscription, operation }),

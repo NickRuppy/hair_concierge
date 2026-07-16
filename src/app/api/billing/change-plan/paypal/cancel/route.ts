@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
@@ -71,7 +71,9 @@ export async function GET(request: Request) {
         status: "scheduled",
       })
       await mergePendingPlanChangeMetadata(admin, subscription, scheduled).catch(() => undefined)
-      await recordPlanChangePhase(admin, scheduled, "approved").catch(() => undefined)
+      await recordPlanChangePhase(admin, scheduled, "approved", { defer: after }).catch(
+        () => undefined,
+      )
       return NextResponse.redirect(`${siteUrl}/profile?plan-change=scheduled#mitgliedschaft`)
     } catch (error) {
       const definitelyNotApplied =
@@ -97,7 +99,7 @@ export async function GET(request: Request) {
       status: "failed",
       failureCode: "buyer_cancelled_approval",
     })
-    await recordPlanChangePhase(admin, failed, "failed")
+    await recordPlanChangePhase(admin, failed, "failed", { defer: after }).catch(() => undefined)
     try {
       await clearPendingPlanChangeMetadata(admin, subscription)
     } catch (error) {

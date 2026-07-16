@@ -146,6 +146,7 @@ export async function handlePayPalWebhookEvent(
               subscription: outcome.billingRow,
               observedInterval: providerInterval,
               occurredAt: event.create_time ?? new Date().toISOString(),
+              deps: { defer: deps.defer },
             })
             if (applied) {
               await mirrorBillingSubscriptionToProfile(
@@ -365,6 +366,9 @@ async function updateExistingSubscription(
     ),
     current_period_end:
       subscription.billing_info?.next_billing_time ?? existing.current_period_end ?? null,
+    ...(patch.cancel_at_period_end === true && patch.cancel_scheduled_at === undefined
+      ? { cancel_scheduled_at: existing.current_period_end }
+      : {}),
     ...patch,
   }
   const billingRow = await upsertBillingSubscription(deps.supabase, input)

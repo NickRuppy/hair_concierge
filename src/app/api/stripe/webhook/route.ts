@@ -396,11 +396,14 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       })
       const result = await handleSubscriptionUpdated(subscription, {
         supabase,
+        defer,
       })
       if (!result.matchedCurrentSubscription) break
       const customerId = stripeId(subscription.customer)
       const eventName =
-        subscription.cancel_at_period_end || subscription.status === "canceled"
+        subscription.cancel_at_period_end ||
+        subscription.cancel_at != null ||
+        subscription.status === "canceled"
           ? "subscription_cancelled"
           : "subscription_updated"
       if (customerId && result.profileId && recordBillingAnalytics) {
@@ -419,7 +422,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
           occurredAt: timestamp,
           payload: {
             subscription_status: subscription.status,
-            cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+            cancel_at_period_end: Boolean(
+              subscription.cancel_at_period_end || subscription.cancel_at != null,
+            ),
+            cancel_scheduled_at:
+              typeof subscription.cancel_at === "number"
+                ? new Date(subscription.cancel_at * 1000).toISOString()
+                : subscription.cancel_at_period_end
+                  ? subscription.items.data[0]?.current_period_end
+                    ? new Date(subscription.items.data[0].current_period_end * 1000).toISOString()
+                    : null
+                  : null,
           },
         })
       }

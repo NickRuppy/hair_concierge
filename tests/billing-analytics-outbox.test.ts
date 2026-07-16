@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   createBillingAnalyticsEvent,
   dispatchBillingAnalyticsDue,
+  dispatchBillingAnalyticsDueWithStats,
   dispatchBillingAnalyticsEvent,
 } from "../src/lib/billing/analytics-outbox"
 import type {
@@ -12,10 +13,11 @@ import type {
   SupabaseBillingClient,
 } from "../src/lib/billing/types"
 
-function createSupabaseStub() {
+function createSupabaseStub(options: { profileLookupErrors?: number } = {}) {
   const outbox: BillingAnalyticsOutboxRow[] = []
   const deliveries: BillingAnalyticsDeliveryRow[] = []
   const profiles = [{ id: "user-123", email: "buyer@example.com" }]
+  const selections: Array<{ table: string; columns: string | undefined }> = []
 
   function rowsForTable(table: string): Record<string, unknown>[] {
     if (table === "billing_analytics_outbox") return outbox as unknown as Record<string, unknown>[]
@@ -40,7 +42,8 @@ function createSupabaseStub() {
     }
 
     const builder = {
-      select() {
+      select(columns?: string) {
+        selections.push({ table, columns })
         selectedRows = applyFilters(rowsForTable(table))
         return builder
       },
@@ -191,10 +194,16 @@ function createSupabaseStub() {
           maybeSingle: updateBuilder.maybeSingle,
         }
       },
-      maybeSingle: async () => ({
-        data: applySelection()[0] ?? null,
-        error: null,
-      }),
+      maybeSingle: async () => {
+        if (table === "profiles" && (options.profileLookupErrors ?? 0) > 0) {
+          options.profileLookupErrors = (options.profileLookupErrors ?? 0) - 1
+          return { data: null, error: new Error("profile lookup exploded") }
+        }
+        return {
+          data: applySelection()[0] ?? null,
+          error: null,
+        }
+      },
       single: async () => ({
         data: applySelection()[0] ?? null,
         error: null,
@@ -210,9 +219,33 @@ function createSupabaseStub() {
   return {
     deliveries,
     outbox,
+    selections,
     supabase: { from: makeQuery } as unknown as SupabaseBillingClient,
   }
 }
+
+test("billing analytics profile projection only selects real profile columns", async () => {
+  const { selections, supabase } = createSupabaseStub()
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:subscription_updated:sub_123:profile-projection",
+      eventName: "subscription_updated",
+      userId: "user-123",
+      provider: "stripe",
+      sourceObjectId: "sub_123",
+      occurredAt: "2026-07-16T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["customerio"] },
+  )
+
+  await dispatchBillingAnalyticsEvent(supabase, event, ["customerio"])
+
+  const profileSelection = selections.find((selection) => selection.table === "profiles")
+  assert.ok(profileSelection?.columns)
+  assert.doesNotMatch(profileSelection.columns, /cancel_at_period_end/)
+})
 
 test("billing analytics outbox creates canonical event and idempotent destination rows", async () => {
   const { deliveries, outbox, supabase } = createSupabaseStub()
@@ -275,6 +308,67 @@ test("billing analytics dispatch records failed delivery attempts without throwi
   assert.deepEqual(
     deliveries.map((delivery) => delivery.processing_started_at),
     [null, null, null],
+  )
+})
+
+test("billing analytics immediate dispatch isolates a throwing profile lookup and continues", async () => {
+  const { deliveries, supabase } = createSupabaseStub({ profileLookupErrors: 1 })
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:subscription_updated:profile-poison",
+      eventName: "subscription_updated",
+      userId: "user-123",
+      provider: "stripe",
+      providerSubscriptionId: "sub_profile_poison",
+      occurredAt: "2026-07-16T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["customerio", "posthog"] },
+  )
+
+  await dispatchBillingAnalyticsEvent(supabase, event, ["customerio", "posthog"], {
+    deliver: async () => ({ ok: true }),
+  })
+
+  assert.deepEqual(
+    deliveries.map(({ status, attempts, last_error }) => ({ status, attempts, last_error })),
+    [
+      { status: "failed", attempts: 1, last_error: "profile lookup exploded" },
+      { status: "delivered", attempts: 1, last_error: null },
+    ],
+  )
+})
+
+test("billing analytics immediate dispatch isolates a throwing destination and continues", async () => {
+  const { deliveries, supabase } = createSupabaseStub()
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:subscription_updated:destination-poison",
+      eventName: "subscription_updated",
+      userId: "user-123",
+      provider: "stripe",
+      providerSubscriptionId: "sub_destination_poison",
+      occurredAt: "2026-07-16T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["customerio", "posthog"] },
+  )
+
+  await dispatchBillingAnalyticsEvent(supabase, event, ["customerio", "posthog"], {
+    deliver: async (destination) => {
+      if (destination === "customerio") throw new Error("destination exploded")
+      return { ok: true }
+    },
+  })
+
+  assert.deepEqual(
+    deliveries.map(({ status, attempts, last_error }) => ({ status, attempts, last_error })),
+    [
+      { status: "failed", attempts: 1, last_error: "destination exploded" },
+      { status: "delivered", attempts: 1, last_error: null },
+    ],
   )
 })
 
@@ -358,4 +452,107 @@ test("billing analytics due dispatch resolves event keys before paging deliverie
   assert.equal(processed, 1)
   assert.equal(deliveries[0].status, "pending")
   assert.equal(deliveries[3].status, "failed")
+})
+
+test("billing analytics due batch continues after a destination throws", async () => {
+  const { deliveries, supabase } = createSupabaseStub()
+  await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:subscription_updated:due-poison",
+      eventName: "subscription_updated",
+      userId: "user-123",
+      provider: "stripe",
+      providerSubscriptionId: "sub_due_poison",
+      occurredAt: "2026-07-16T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["customerio", "posthog"] },
+  )
+
+  const processed = await dispatchBillingAnalyticsDue(supabase, {
+    limit: 10,
+    dependencies: {
+      deliver: async (destination) => {
+        if (destination === "customerio") throw new Error("due destination exploded")
+        return { ok: true }
+      },
+    },
+  })
+
+  assert.equal(processed, 2)
+  assert.deepEqual(
+    deliveries.map(({ status, attempts, last_error }) => ({ status, attempts, last_error })),
+    [
+      { status: "failed", attempts: 1, last_error: "due destination exploded" },
+      { status: "delivered", attempts: 1, last_error: null },
+    ],
+  )
+})
+
+test("billing analytics due stats distinguish delivered and failed vendor results", async () => {
+  const { supabase } = createSupabaseStub()
+  await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:subscription_updated:due-stats",
+      eventName: "subscription_updated",
+      userId: "user-123",
+      provider: "stripe",
+      providerSubscriptionId: "sub_due_stats",
+      occurredAt: "2026-07-16T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["customerio", "posthog"] },
+  )
+
+  const stats = await dispatchBillingAnalyticsDueWithStats(supabase, {
+    limit: 10,
+    dependencies: {
+      deliver: async (destination) =>
+        destination === "customerio"
+          ? { ok: false, error: "vendor rejected delivery" }
+          : { ok: true },
+    },
+  })
+
+  assert.deepEqual(stats, { processed: 2, delivered: 1, failed: 1 })
+})
+
+test("billing analytics due dispatch retires a stale poison delivery after five attempts", async () => {
+  const { deliveries, supabase } = createSupabaseStub()
+  await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:subscription_updated:stale-poison",
+      eventName: "subscription_updated",
+      userId: "user-123",
+      provider: "stripe",
+      providerSubscriptionId: "sub_stale_poison",
+      occurredAt: "2026-07-16T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["customerio", "posthog"] },
+  )
+  deliveries[0].status = "processing"
+  deliveries[0].attempts = 4
+  deliveries[0].processing_started_at = new Date(Date.now() - 16 * 60_000).toISOString()
+
+  const processed = await dispatchBillingAnalyticsDue(supabase, {
+    destination: "customerio",
+    limit: 10,
+    dependencies: {
+      deliver: async () => {
+        throw new Error("still poisoned")
+      },
+    },
+  })
+
+  assert.equal(processed, 1)
+  assert.equal(deliveries[0].status, "failed_permanent")
+  assert.equal(deliveries[0].attempts, 5)
+  assert.equal(deliveries[0].processing_started_at, null)
+  assert.equal(deliveries[0].next_attempt_at, null)
+  assert.equal(deliveries[0].last_error, "still poisoned")
+  assert.equal(deliveries[1].status, "pending")
 })

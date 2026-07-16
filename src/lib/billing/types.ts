@@ -39,6 +39,7 @@ export interface BillingSubscriptionRow {
   interval: BillingInterval | null
   current_period_end: string | null
   cancel_at_period_end: boolean
+  cancel_scheduled_at: string | null
   cancelled_at: string | null
   metadata: Record<string, unknown>
   created_at: string
@@ -123,6 +124,7 @@ export type BillingSubscriptionInput = {
   interval?: BillingInterval | null
   current_period_end?: string | null
   cancel_at_period_end?: boolean
+  cancel_scheduled_at?: string | null
   cancelled_at?: string | null
   metadata?: Record<string, unknown>
 }

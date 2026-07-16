@@ -23,6 +23,7 @@ type StalePlanChangeDeps = {
   mergeMetadata?: typeof mergePendingPlanChangeMetadata
   clearMetadata?: typeof clearPendingPlanChangeMetadata
   recordPhase?: typeof recordPlanChangePhase
+  defer?: (work: () => void | Promise<void>) => void
 }
 
 export async function reconcileStalePayPalPlanChanges(
@@ -83,9 +84,9 @@ export async function reconcileStalePayPalPlanChanges(
         subscription,
         advanced,
       ).catch(() => undefined)
-      await (deps.recordPhase ?? recordPlanChangePhase)(supabase, advanced, "approved").catch(
-        () => undefined,
-      )
+      await (deps.recordPhase ?? recordPlanChangePhase)(supabase, advanced, "approved", {
+        defer: deps.defer,
+      }).catch(() => undefined)
     } else if (advanced.status === "failed") {
       await (deps.clearMetadata ?? clearPendingPlanChangeMetadata)(supabase, subscription).catch(
         () => undefined,

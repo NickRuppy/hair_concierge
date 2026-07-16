@@ -34,6 +34,7 @@ function createSupabaseStub(options: {
     interval: row.interval ?? "month",
     current_period_end: row.current_period_end ?? futureIso(),
     cancel_at_period_end: row.cancel_at_period_end ?? false,
+    cancel_scheduled_at: row.cancel_scheduled_at ?? null,
     cancelled_at: row.cancelled_at ?? null,
     metadata: row.metadata ?? {},
     created_at: row.created_at ?? new Date().toISOString(),
@@ -213,6 +214,7 @@ test("PayPal cancellation calls PayPal and keeps future paid-through access acti
   assert.equal(billing[0].provider_status, "CANCELLED")
   assert.equal(billing[0].entitlement_status, "canceled")
   assert.equal(billing[0].cancel_at_period_end, true)
+  assert.equal(billing[0].cancel_scheduled_at, periodEnd)
   assert.equal(billing[0].cancelled_at, "2026-05-27T10:00:00.000Z")
   assert.equal(profiles["user-1"].subscription_status, "active")
   assert.equal(profiles["user-1"].subscription_tier_id, "tier-premium")

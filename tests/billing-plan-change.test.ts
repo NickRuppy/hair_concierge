@@ -39,6 +39,7 @@ function subscription(patch: Partial<BillingSubscriptionRow> = {}): BillingSubsc
     interval: "month",
     current_period_end: "2026-08-14T12:00:00.000Z",
     cancel_at_period_end: false,
+    cancel_scheduled_at: null,
     cancelled_at: null,
     metadata: { preserved: true },
     created_at: "2026-07-14T12:00:00.000Z",
@@ -89,6 +90,21 @@ test("membership management read model exposes switching only for manageable ren
       subscription: subscription({ cancel_at_period_end: true }),
     }).kind,
     "canceled_at_period_end",
+  )
+  assert.deepEqual(
+    buildMembershipManagementState({
+      subscription: subscription({
+        cancel_at_period_end: true,
+        cancel_scheduled_at: "2026-08-01T12:00:00.000Z",
+      }),
+    }),
+    {
+      kind: "canceled_at_period_end",
+      provider: "stripe",
+      currentInterval: "month",
+      renewalAt: "2026-08-01T12:00:00.000Z",
+      cancelAtPeriodEnd: true,
+    },
   )
   assert.equal(
     buildMembershipManagementState({ subscription: null, manualGrantEnd: null }).kind,
@@ -221,8 +237,11 @@ test("stale PayPal approvals adopt confirmed targets and keep incomplete approva
   for (const scenario of scenarios) {
     let advancedStatus: string | null = null
     const phases: string[] = []
+    let observedDefer: unknown = null
+    const defer = () => undefined
     const result = await reconcileStalePayPalPlanChanges({} as never, paypalSubscription, {
       deps: {
+        defer,
         findStale: async () => [staleOperation],
         verifyApproved: async () => {
           if (scenario.verifyError) throw scenario.verifyError
@@ -235,8 +254,9 @@ test("stale PayPal approvals adopt confirmed targets and keep incomplete approva
         findByOperationId: async () => null,
         mergeMetadata: async () => undefined,
         clearMetadata: async () => undefined,
-        recordPhase: async (_client, _operation, phase) => {
+        recordPhase: async (_client, _operation, phase, options) => {
           phases.push(phase)
+          observedDefer = options?.defer
         },
       },
     })
@@ -244,6 +264,7 @@ test("stale PayPal approvals adopt confirmed targets and keep incomplete approva
     assert.equal(advancedStatus, scenario.name === "approved" ? "scheduled" : null, scenario.name)
     assert.equal(result[0]?.status, scenario.expectedStatus, scenario.name)
     assert.deepEqual(phases, scenario.name === "approved" ? ["approved"] : [], scenario.name)
+    assert.equal(observedDefer, scenario.name === "approved" ? defer : null, scenario.name)
   }
 })
 
@@ -272,6 +293,7 @@ test("plan-change ledger and routes enforce the locked safety boundaries", () =>
   const command = readFileSync("src/app/api/billing/change-plan/route.ts", "utf8")
   const profile = readFileSync("src/app/profile/page.tsx", "utf8")
   const analytics = readFileSync("src/lib/billing/plan-change.ts", "utf8")
+  const stripeWebhook = readFileSync("src/lib/stripe/webhook-handlers.ts", "utf8")
   const paypalWebhook = readFileSync("src/lib/paypal/webhook-handlers.ts", "utf8")
   const paypalReturn = readFileSync(
     "src/app/api/billing/change-plan/paypal/return/route.ts",
@@ -282,8 +304,12 @@ test("plan-change ledger and routes enforce the locked safety boundaries", () =>
   assert.match(migration, /EXCEPTION WHEN unique_violation/)
   assert.match(migration, /p_status IN \('failed', 'reconciling'\)/)
   assert.match(command, /operationId: z\.string\(\)\.uuid\(\)/)
+  assert.match(command, /const cookieStore = await cookies\(\)/)
+  assert.match(command, /await auth\.auth\.getUser\(\)/)
+  assert.match(command, /return handleChangePlan\(request, \{/)
   assert.match(command, /scheduleStripePlanChange/)
-  assert.match(command, /operation\.status === "reconciling"[\s\S]*reconcileStripePlanChange/)
+  assert.match(command, /reconcileStripe: reconcileStripePlanChange/)
+  assert.match(command, /operation\.status === "reconciling"[\s\S]*deps\.reconcileStripe/)
   assert.match(command, /initiatePayPalPlanChange/)
   assert.match(command, /effectiveAt: scheduled\.effectiveAt/)
   assert.match(command, /effectiveAt: revision\.effectiveAt/)
@@ -292,9 +318,45 @@ test("plan-change ledger and routes enforce the locked safety boundaries", () =>
   assert.doesNotMatch(profile, /findVisibleBillingSubscriptionForUser/)
   assert.match(profile, /ProfilePlanSwitcher/)
   assert.match(analytics, /destinations: \["customerio", "posthog"\]/)
+  assert.match(analytics, /occurredAt: options\.occurredAt \?\? planChangePhaseOccurredAt/)
+  assert.match(analytics, /defer: options\.defer/)
   assert.match(paypalWebhook, /eventType === "PAYMENT\.SALE\.COMPLETED"/)
   assert.match(paypalWebhook, /applyPlanChangeAtRenewal/)
+  assert.match(paypalWebhook, /deps: \{ defer: deps\.defer \}/)
+  assert.match(stripeWebhook, /deps: \{ defer: deps\.defer \}/)
   assert.match(paypalReturn, /paypal_revision_not_applied[\s\S]*plan-change=pending#mitgliedschaft/)
+})
+
+test("the initial plan-change route attempts the provider before requested analytics", () => {
+  const command = readFileSync("src/app/api/billing/change-plan/route.ts", "utf8")
+  const pendingProviderBranch = command.indexOf('if (operation.status !== "pending_provider")')
+  const stripeMutation = command.indexOf("deps.scheduleStripe({", pendingProviderBranch)
+  const scheduledSideEffects = command.indexOf(
+    "recordScheduledPlanChangeSideEffects(",
+    stripeMutation,
+  )
+
+  assert.notEqual(pendingProviderBranch, -1)
+  assert.match(command, /scheduleStripe: scheduleStripePlanChange/)
+  assert.notEqual(stripeMutation, -1)
+  assert.notEqual(scheduledSideEffects, -1)
+  assert.doesNotMatch(
+    command.slice(pendingProviderBranch, stripeMutation),
+    /recordPlanChangePhase|recordPlanChangePhasesSafely/,
+  )
+  assert.ok(scheduledSideEffects > stripeMutation)
+})
+
+test("cancellation timestamp migration is additive and safely backfills known period ends", () => {
+  const migration = readFileSync(
+    "supabase/migrations/20260716120000_add_billing_cancel_scheduled_at.sql",
+    "utf8",
+  )
+  assert.match(migration, /ADD COLUMN IF NOT EXISTS cancel_scheduled_at timestamptz/)
+  assert.match(migration, /SET cancel_scheduled_at = current_period_end/)
+  assert.match(migration, /cancel_at_period_end = true/)
+  assert.match(migration, /current_period_end IS NOT NULL/)
+  assert.match(migration, /cancel_scheduled_at IS NULL/)
 })
 
 test("billing coordination functions remain service-role only", () => {
@@ -352,6 +414,8 @@ function stripePrice(
 }
 
 function createStripePlanChangeFake(input?: {
+  cancelAtPeriodEnd?: boolean
+  cancelAt?: number | null
   schedule?: string | null
   scheduleMetadata?: Record<string, string>
   scheduleStatus?: Stripe.SubscriptionSchedule.Status
@@ -374,7 +438,8 @@ function createStripePlanChangeFake(input?: {
         return {
           id: "sub_123",
           status: "active",
-          cancel_at_period_end: false,
+          cancel_at_period_end: input?.cancelAtPeriodEnd ?? false,
+          cancel_at: input?.cancelAt ?? null,
           schedule: input?.schedule ?? null,
           discounts: input?.discounts ?? [],
           items: {
@@ -426,6 +491,37 @@ function createStripePlanChangeFake(input?: {
   }
   return { stripe: fake as unknown as Stripe, calls }
 }
+
+test("Stripe rejects either live cancellation signal before schedule mutation", async () => {
+  for (const scenario of [
+    { cancelAtPeriodEnd: true, cancelAt: null },
+    { cancelAtPeriodEnd: false, cancelAt: 1_722_678_400 },
+  ]) {
+    const { stripe, calls } = createStripePlanChangeFake(scenario)
+    await assert.rejects(
+      scheduleStripePlanChange({
+        stripe,
+        subscriptionId: "sub_123",
+        currentInterval: "month",
+        targetInterval: "year",
+        operationId: "operation-cancelled",
+        configuredTargetPriceId: "price_year",
+      }),
+      (error: unknown) =>
+        error instanceof Error &&
+        "code" in error &&
+        (error as { code?: string }).code === "stripe_cancellation_scheduled",
+    )
+    assert.equal(
+      calls.some((call) => call.name === "schedule.create"),
+      false,
+    )
+    assert.equal(
+      calls.some((call) => call.name === "schedule.update"),
+      false,
+    )
+  }
+})
 
 test("Stripe schedules current service through period end and target service without proration", async () => {
   const { stripe, calls } = createStripePlanChangeFake()
@@ -965,6 +1061,8 @@ test("renewal application changes interval, clears only pending metadata, advanc
   const { supabase, calls } = createRenewalSupabaseFake(updated)
   let advancedInput: Record<string, unknown> | null = null
   let recordedPhase: string | null = null
+  let recordedDefer: unknown = null
+  const defer = () => undefined
   const result = await applyPlanChangeAtRenewal(supabase as never, {
     subscription: current,
     observedInterval: "year",
@@ -975,8 +1073,10 @@ test("renewal application changes interval, clears only pending metadata, advanc
         advancedInput = input
         return operation({ status: "applied", applied_at: "2026-08-14T12:00:01.000Z" })
       },
-      recordAppliedPhase: async (_client, _operation, phase) => {
+      defer,
+      recordAppliedPhase: async (_client, _operation, phase, options) => {
         recordedPhase = phase
+        recordedDefer = options?.defer
       },
     },
   })
@@ -994,6 +1094,32 @@ test("renewal application changes interval, clears only pending metadata, advanc
     status: "applied",
   })
   assert.equal(recordedPhase, "applied")
+  assert.equal(recordedDefer, defer)
+})
+
+test("renewal application stays successful when applied analytics fail", async () => {
+  const current = subscription({
+    metadata: { preserved: true, pending_plan_change: { operation_id: "op" } },
+  })
+  const updated = subscription({ interval: "year", metadata: { preserved: true } })
+  const { supabase } = createRenewalSupabaseFake(updated)
+
+  const result = await applyPlanChangeAtRenewal(supabase as never, {
+    subscription: current,
+    observedInterval: "year",
+    occurredAt: "2026-08-14T12:00:01.000Z",
+    deps: {
+      findOperation: async () => operation(),
+      advanceOperation: async () =>
+        operation({ status: "applied", applied_at: "2026-08-14T12:00:01.000Z" }),
+      recordAppliedPhase: async () => {
+        throw new Error("analytics unavailable")
+      },
+    },
+  })
+
+  assert.equal(result?.subscription.interval, "year")
+  assert.equal(result?.operation.status, "applied")
 })
 
 test("billing upsert merges incoming metadata without deleting unrelated provider state", async () => {

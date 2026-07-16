@@ -13,7 +13,9 @@ import {
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
 
 export type HandlerDeps = CheckoutActivationDeps
-type SubscriptionUpdateDeps = Pick<HandlerDeps, "supabase">
+type SubscriptionUpdateDeps = Pick<HandlerDeps, "supabase"> & {
+  defer?: (work: () => void | Promise<void>) => void
+}
 type SubscriptionLifecycleResult = {
   matchedCurrentSubscription: boolean
   profileId?: string
@@ -226,6 +228,7 @@ interface UpdatedSub {
   status: string
   current_period_end?: number
   cancel_at_period_end?: boolean
+  cancel_at?: number | null
   items: {
     data: Array<{
       current_period_end?: number
@@ -266,6 +269,13 @@ export async function handleSubscriptionUpdated(
     ? stripeEntitlementStatus(s.status)
     : "canceled"
 
+  const periodEnd = subPeriodEndIso(s)
+  const cancelScheduledAt =
+    typeof s.cancel_at === "number"
+      ? new Date(s.cancel_at * 1000).toISOString()
+      : s.cancel_at_period_end
+        ? periodEnd
+        : null
   const billingRow = await upsertBillingSubscription(deps.supabase, {
     user_id: profile.id,
     provider: "stripe",
@@ -274,13 +284,15 @@ export async function handleSubscriptionUpdated(
     provider_status: s.status,
     entitlement_status: entitlementStatus,
     interval,
-    current_period_end: subPeriodEndIso(s),
-    cancel_at_period_end: s.cancel_at_period_end ?? false,
+    current_period_end: periodEnd,
+    cancel_at_period_end: Boolean(s.cancel_at_period_end || s.cancel_at != null),
+    cancel_scheduled_at: cancelScheduledAt,
   })
   await applyPlanChangeAtRenewal(deps.supabase, {
     subscription: billingRow,
     observedInterval: interval,
     occurredAt: new Date().toISOString(),
+    deps: { defer: deps.defer },
   })
   return { matchedCurrentSubscription, profileId: profile.id }
 }

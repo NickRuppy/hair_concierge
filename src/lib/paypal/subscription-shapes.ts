@@ -96,6 +96,7 @@ export function toBillingSubscriptionInputFromPayPal(
     interval,
     current_period_end: paidThrough,
     cancel_at_period_end: isProviderCancellation && Boolean(paidThrough),
+    cancel_scheduled_at: isProviderCancellation ? paidThrough : null,
     cancelled_at: isProviderCancellation ? new Date().toISOString() : null,
     metadata: {
       plan_id: subscription.plan_id ?? null,

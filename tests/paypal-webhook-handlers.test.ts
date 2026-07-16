@@ -56,6 +56,7 @@ function createSupabaseStub(seed?: {
     interval: row.interval ?? "month",
     current_period_end: row.current_period_end ?? futureIso(),
     cancel_at_period_end: row.cancel_at_period_end ?? false,
+    cancel_scheduled_at: row.cancel_scheduled_at ?? null,
     cancelled_at: row.cancelled_at ?? null,
     metadata: row.metadata ?? {},
     created_at: row.created_at ?? new Date().toISOString(),
@@ -416,9 +417,16 @@ test("BILLING.SUBSCRIPTION.PAYMENT.FAILED sets past_due and keeps access", async
 })
 
 test("BILLING.SUBSCRIPTION.CANCELLED keeps future paid-through access", async () => {
-  const periodEnd = futureIso(10)
+  const localPeriodEnd = futureIso(10)
+  const providerPeriodEnd = futureIso(20)
   const { supabase, billing, profiles } = createSupabaseStub({
-    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    billing: [
+      {
+        user_id: "user-1",
+        provider_subscription_id: "I-active",
+        current_period_end: localPeriodEnd,
+      },
+    ],
     profiles: { "user-1": { id: "user-1", subscription_status: "active" } },
   })
 
@@ -426,11 +434,12 @@ test("BILLING.SUBSCRIPTION.CANCELLED keeps future paid-through access", async ()
     supabase,
     premiumTierId: "tier-premium",
     freeTierId: "tier-free",
-    retrievePayPalSubscription: async () => subscription("CANCELLED", periodEnd),
+    retrievePayPalSubscription: async () => subscription("CANCELLED", providerPeriodEnd),
   })
 
   assert.equal(billing[0].entitlement_status, "canceled")
   assert.equal(billing[0].cancel_at_period_end, true)
+  assert.equal(billing[0].cancel_scheduled_at, localPeriodEnd)
   assert.equal(profiles["user-1"].subscription_status, "active")
   assert.equal(profiles["user-1"].subscription_tier_id, "tier-premium")
 })

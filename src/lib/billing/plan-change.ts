@@ -56,6 +56,7 @@ export function buildMembershipManagementState(input: {
     return {
       kind: "canceled_at_period_end",
       ...shared,
+      renewalAt: subscription.cancel_scheduled_at ?? subscription.current_period_end,
       cancelAtPeriodEnd: true,
     }
   }
@@ -290,6 +291,7 @@ export async function applyPlanChangeAtRenewal(
       findOperation?: typeof findOpenPlanChange
       advanceOperation?: typeof advancePlanChange
       recordAppliedPhase?: typeof recordPlanChangePhase
+      defer?: (work: () => void | Promise<void>) => void
     }
   },
 ): Promise<{ subscription: BillingSubscriptionRow; operation: BillingPlanChangeRow } | null> {
@@ -321,7 +323,16 @@ export async function applyPlanChangeAtRenewal(
     expectedStatus: operation.status,
     status: "applied",
   })
-  await (input.deps?.recordAppliedPhase ?? recordPlanChangePhase)(supabase, applied, "applied")
+  try {
+    await (input.deps?.recordAppliedPhase ?? recordPlanChangePhase)(supabase, applied, "applied", {
+      defer: input.deps?.defer,
+    })
+  } catch (error) {
+    console.error("[billing:plan-change] applied analytics failed", {
+      operationId: applied.operation_id,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  }
   return { subscription: data as BillingSubscriptionRow, operation: applied }
 }
 
@@ -329,6 +340,10 @@ export async function recordPlanChangePhase(
   supabase: SupabaseClient,
   operation: BillingPlanChangeRow,
   phase: "requested" | "approved" | "failed" | "applied",
+  options: {
+    occurredAt?: string
+    defer?: (work: () => void | Promise<void>) => void
+  } = {},
 ) {
   await recordBillingAnalyticsEvent(
     supabase,
@@ -338,7 +353,7 @@ export async function recordPlanChangePhase(
       userId: operation.user_id,
       provider: operation.provider,
       sourceObjectId: operation.billing_subscription_id,
-      occurredAt: new Date().toISOString(),
+      occurredAt: options.occurredAt ?? planChangePhaseOccurredAt(operation, phase),
       payload: {
         change_phase: phase,
         current_interval: operation.current_interval,
@@ -347,8 +362,18 @@ export async function recordPlanChangePhase(
         operation_id: operation.operation_id,
       },
     },
-    { destinations: ["customerio", "posthog"] },
+    { destinations: ["customerio", "posthog"], defer: options.defer },
   )
+}
+
+function planChangePhaseOccurredAt(
+  operation: BillingPlanChangeRow,
+  phase: "requested" | "approved" | "failed" | "applied",
+) {
+  if (phase === "requested") return operation.created_at
+  if (phase === "approved") return operation.approved_at ?? operation.created_at
+  if (phase === "applied") return operation.applied_at ?? operation.updated_at
+  return operation.updated_at
 }
 
 export function intervalLabel(interval: BillingInterval) {
