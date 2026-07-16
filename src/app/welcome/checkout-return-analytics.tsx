@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useRef } from "react"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { trackMetaPageView } from "@/lib/meta-pixel"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 
@@ -23,6 +24,8 @@ export function CheckoutReturnAnalytics({
     trackedRef.current = true
 
     try {
+      window.history.replaceState(window.history.state, "", "/welcome")
+      trackMetaPageView()
       addCheckoutBreadcrumb({
         provider: sessionId.startsWith("paypal:") ? "paypal" : "stripe",
         stage: "checkout_return",
