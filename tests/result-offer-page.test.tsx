@@ -180,6 +180,7 @@ test("app value stack renders the approved quiz-to-product-to-pricing hierarchy"
 
   const sectionIds = Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1])
   assert.deepEqual(sectionIds, [
+    "hero",
     "personalized_analysis",
     "mini_routine",
     "locked_routine",
@@ -187,6 +188,7 @@ test("app value stack renders the approved quiz-to-product-to-pricing hierarchy"
     "product_story_routine",
     "product_story_chat",
     "product_story_products",
+    "testimonials",
     "pricing",
     "faq",
     "final_cta",

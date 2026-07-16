@@ -4,6 +4,9 @@ import type { QuizNeedLane, QuizConcern } from "./need-lane"
 import type { QuizResultNarrative } from "./result-narrative"
 
 export const APP_VALUE_STACK_CTA_LABEL = "Mit Chaarlie starten"
+export const APP_VALUE_STACK_BRIDGE_HEADLINE = "Deine Routine ist erst der Anfang."
+export const APP_VALUE_STACK_BRIDGE_BODY =
+  "Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an."
 
 export type AppValueStackStoryTrackingId = Extract<
   OfferSectionId,

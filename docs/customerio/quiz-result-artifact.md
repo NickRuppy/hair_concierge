@@ -28,6 +28,8 @@ lead_id
 first_name
 headline
 intro
+app_bridge_headline
+app_bridge_body
 signals[]              { label, conclusion }
 foundation_products[] { category_label, name, note, image_url, cadence_label, cadence_qualifier }
 app_stories[]          { label, headline, body }
@@ -35,7 +37,7 @@ cta_label
 result_url
 ```
 
-The template must use `trigger.result_url` for both links. It must not reconstruct the result URL from `lead_id`. User- or data-derived values use Customer.io's `xml_escape` filter in the HTML fragment. Do not use its misleadingly named `escape` filter here: Customer.io URL-encodes spaces and punctuation with it. The plain-text alternative uses the already-controlled trigger values without HTML escaping so names, ampersands, and the attributed result URL do not turn into literal entities such as `&amp;`. Product images are optional: all product meaning remains in live text when an image is missing, blocked, or unsupported.
+`app_bridge_headline` and `app_bridge_body` are shared offer/email copy supplied by the application; the email must not maintain independent bridge wording. The template must use `trigger.result_url` for both links. It must not reconstruct the result URL from `lead_id`. User- or data-derived values use Customer.io's `xml_escape` filter in the HTML fragment. Do not use its misleadingly named `escape` filter here: Customer.io URL-encodes spaces and punctuation with it. The plain-text alternative uses the already-controlled trigger values without HTML escaping so names, ampersands, and the attributed result URL do not turn into literal entities such as `&amp;`. Product images are optional: all product meaning remains in live text when an image is missing, blocked, or unsupported.
 
 During the first deployment, the application also sends the legacy `rows`, `main_lever_title`, `main_lever_why`, and `routine_levers` fields so active template `40` remains rollback-compatible. The refreshed template does not render those fields. Remove the transport shim in a separate cleanup after the rollback window closes.
 
@@ -61,7 +63,7 @@ Mit Chaarlie starten
 
 ## Safe operator flow
 
-All commands are dry-run/read-only unless `--apply` is supplied. A preview performs `cio auth status`, reads the current `templates.update` schema, reads the selected template, validates the generated PUT locally through `cio --dry-run`, and prints changed fields and body checksums. It does not update Customer.io or send a message.
+All commands are dry-run/read-only unless `--apply` is supplied. A preview performs `cio auth status`, reads the current `templates.update` schema, reads the selected template, validates the generated PUT locally through `cio --dry-run`, and prints changed fields and body checksums. The schema check compares the nested `template` property set against the reviewed writable and intentionally omitted allowlists; any added optional mutable field, removed reviewed field, or unavailable nested schema stops preview and apply with a schema-drift error until an operator reviews the replacement semantics. It does not update Customer.io or send a message.
 
 The wrapper pins `@customerio/cli@0.0.19` through `npx --yes`. The previously installed `cio 0.0.5` recursively decoded JSON newline escapes and could not safely transport a real multiline `body_plain`. Version `0.0.19` provides `--argjson`; the wrapper binds the merged template from a JSON file into a small jq-style request program. Do not replace that path with the old `--json @request.json` form or flatten the text alternative.
 
@@ -73,7 +75,7 @@ npm run customerio:quiz-result-email -- \
   --template-id 41
 ```
 
-Customer.io's template update is a full replacement, not a content-only patch. The tool therefore reads the selected template and merges every confirmed writable field before replacing subject, preheader, HTML, and plain text. It preserves the target's name, layout, sender/reply identities, editor, template engine, preprocessor, headers, and other writable metadata. It intentionally omits GET-only fields and the empty live `request_method`, which conflicts with the PUT schema enum. Preview and apply also verify the transactional message's draft/active state, the message-template pairing, and the required legal content in layout `1`. Immediately before a PUT, the tool re-reads the target and aborts if any writable field changed after preview.
+Customer.io's template update is a full replacement, not a content-only patch. The tool therefore reads the selected template and merges every confirmed writable field before replacing subject, preheader, HTML, and plain text. It preserves the target's name, layout, sender/reply identities, editor, template engine, preprocessor, headers, and other writable metadata. It intentionally omits GET-only response fields plus the reviewed update fields `deleted`, `newsletter_id`, `request_method`, `short_link_domain_id`, `webhook_config_id`, and `weight`; these are destructive, invalid for the live email value, or belong to another message mode. A newly introduced update field is not silently discarded: the schema guard blocks until it is classified as preserved or intentionally omitted. Preview and apply also verify the transactional message's draft/active state, the message-template pairing, and the required legal content in layout `1`. Immediately before a PUT, the tool re-reads the target and aborts if any writable field changed after preview.
 
 Apply to the inactive draft only after reviewing the preview:
 

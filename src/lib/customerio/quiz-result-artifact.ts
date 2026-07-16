@@ -1,4 +1,6 @@
 import {
+  APP_VALUE_STACK_BRIDGE_BODY,
+  APP_VALUE_STACK_BRIDGE_HEADLINE,
   APP_VALUE_STACK_CTA_LABEL,
   APP_VALUE_STACK_STORIES,
   buildAppValueStackHeroCopy,
@@ -83,6 +85,8 @@ export function buildQuizResultArtifactEmailPayload(
         headline: story.headline,
         body: story.body,
       })),
+      app_bridge_headline: APP_VALUE_STACK_BRIDGE_HEADLINE,
+      app_bridge_body: APP_VALUE_STACK_BRIDGE_BODY,
       rows: narrative.rows.map((row) => ({
         label: row.label,
         scope: row.scope,

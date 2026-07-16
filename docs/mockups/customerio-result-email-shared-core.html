@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Illustrative review fixture only. The canonical deployable sources live in docs/customerio/. -->
 <html lang="de">
   <head>
     <meta charset="utf-8" />
@@ -26,7 +27,10 @@
         margin: 0;
         background: var(--page);
         color: var(--copy);
-        font: 15px/1.6 Arial, Helvetica, sans-serif;
+        font:
+          15px/1.6 Arial,
+          Helvetica,
+          sans-serif;
       }
 
       button,
@@ -90,7 +94,10 @@
       .brand {
         margin: 0;
         color: var(--ink);
-        font: 700 26px/1.2 Georgia, "Times New Roman", serif;
+        font:
+          700 26px/1.2 Georgia,
+          "Times New Roman",
+          serif;
         text-align: center;
       }
 
@@ -145,8 +152,7 @@
         text-transform: uppercase;
       }
 
-      .signals,
-      .stories {
+      .signals {
         display: grid;
         gap: 12px;
         margin-top: 16px;
@@ -171,8 +177,7 @@
       }
 
       .signal p,
-      .product p,
-      .story p {
+      .product p {
         margin: 3px 0;
       }
 
@@ -214,9 +219,44 @@
         font-size: 13px;
       }
 
-      .story {
-        padding: 15px 0;
+      .capabilities {
+        width: 100%;
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-spacing: 0;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .capability + .capability td {
         border-top: 1px solid var(--line);
+      }
+
+      .capability-marker {
+        width: 44px;
+        padding: 18px 0 17px 18px;
+        vertical-align: top;
+      }
+
+      .check {
+        display: block;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #edf6f1;
+        color: var(--green);
+        font-weight: 700;
+        line-height: 26px;
+        text-align: center;
+      }
+
+      .capability-copy {
+        padding: 17px 18px 17px 12px;
+        vertical-align: top;
+      }
+
+      .capability-copy p {
+        margin: 3px 0 0;
       }
 
       .cta-block {
@@ -252,7 +292,12 @@
         padding: 24px;
         white-space: pre-wrap;
         overflow-wrap: anywhere;
-        font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font:
+          14px/1.6 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
       }
 
       .shell[data-mode="images-off"] .product-image {
@@ -298,7 +343,10 @@
       <aside class="inbox-context" aria-label="Betreff und Preheader">
         <p><strong>Betreff:</strong> Sarah, deine Haaranalyse ist fertig</p>
         <p><strong>Fallback:</strong> Deine Haaranalyse ist fertig</p>
-        <p><strong>Preheader:</strong> Entdecke, womit deine Pflege beginnt und wie Chaarlie dich im Alltag begleitet.</p>
+        <p>
+          <strong>Preheader:</strong> Entdecke, womit deine Pflege beginnt und wie Chaarlie dich im
+          Alltag begleitet.
+        </p>
       </aside>
 
       <article class="email" aria-label="Freigegebene HTML-E-Mail">
@@ -309,21 +357,45 @@
           </header>
 
           <p>Hi Sarah,</p>
-          <p>dein Quiz ist ausgewertet. Hier ist dein persönlicher Startpunkt – direkt aus deinen Antworten.</p>
+          <p>
+            dein Quiz ist ausgewertet. Hier ist dein persönlicher Startpunkt – direkt aus deinen
+            Antworten.
+          </p>
 
           <section class="section">
             <span class="status">Quiz ausgewertet</span>
             <h1>Sarah, dein 4-Wochen-Weg zu mehr Kraft &amp; Belastbarkeit.</h1>
-            <p>Haarbruch ist dein wichtigster Pflegefokus. Deine Pflegebasis verbindet deshalb ausgewogene Basispflege mit gezielter Strukturunterstützung.</p>
+            <p>
+              Haarbruch ist dein wichtigster Pflegefokus. Deine Pflegebasis verbindet deshalb
+              ausgewogene Basispflege mit gezielter Strukturunterstützung.
+            </p>
           </section>
 
           <section class="section">
             <h2>Deine Pflegebasis</h2>
             <p>Diese drei Punkte bestimmen, womit deine Routine startet.</p>
             <div class="signals">
-              <div class="signal"><span class="number">1</span><div><strong>Ausgeglichene Kopfhaut</strong><p>Eine ausgewogene Reinigung reicht als Basis. 2x/Woche.</p></div></div>
-              <div class="signal"><span class="number">2</span><div><strong>Mittlere Haarstärke</strong><p>Ein Conditioner mit Protein-Fokus ist der passende Ausgangspunkt.</p></div></div>
-              <div class="signal"><span class="number">3</span><div><strong>Dehntest plus Reparatur-Signal</strong><p>Eine Protein-Maske ergänzt den Conditioner in Abständen.</p></div></div>
+              <div class="signal">
+                <span class="number">1</span>
+                <div>
+                  <strong>Ausgeglichene Kopfhaut</strong>
+                  <p>Eine ausgewogene Reinigung reicht als Basis. 2x/Woche.</p>
+                </div>
+              </div>
+              <div class="signal">
+                <span class="number">2</span>
+                <div>
+                  <strong>Mittlere Haarstärke</strong>
+                  <p>Ein Conditioner mit Protein-Fokus ist der passende Ausgangspunkt.</p>
+                </div>
+              </div>
+              <div class="signal">
+                <span class="number">3</span>
+                <div>
+                  <strong>Dehntest plus Reparatur-Signal</strong>
+                  <p>Eine Protein-Maske ergänzt den Conditioner in Abständen.</p>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -332,38 +404,84 @@
             <div class="products">
               <article class="product">
                 <div class="product-image" aria-label="Optionales Produktbild">Optionales Bild</div>
-                <div><span class="label">Shampoo · Beispiel</span><h3>Neqi Moisture Mystery</h3><p>Ein mildes Beispiel, passend zur abgeleiteten Reinigungsrichtung.</p><p class="fine-print"><strong>2x/Woche</strong> · Startpunkt aus deinem Quiz</p></div>
+                <div>
+                  <span class="label">Shampoo · Beispiel</span>
+                  <h3>Neqi Moisture Mystery</h3>
+                  <p>Ein mildes Beispiel, passend zur abgeleiteten Reinigungsrichtung.</p>
+                  <p class="fine-print"><strong>2x/Woche</strong> · Startpunkt aus deinem Quiz</p>
+                </div>
               </article>
               <article class="product">
                 <div class="product-image" aria-label="Optionales Produktbild">Optionales Bild</div>
-                <div><span class="label">Conditioner · Beispiel</span><h3>Neqi Repair Reveal Conditioner</h3><p>Struktur-Fokus mit mittlerem Pflegegewicht als Beispiel.</p><p class="fine-print"><strong>Bei jeder Haarwäsche</strong> · 2x/Woche</p></div>
+                <div>
+                  <span class="label">Conditioner · Beispiel</span>
+                  <h3>Neqi Repair Reveal Conditioner</h3>
+                  <p>Struktur-Fokus mit mittlerem Pflegegewicht als Beispiel.</p>
+                  <p class="fine-print"><strong>Bei jeder Haarwäsche</strong> · 2x/Woche</p>
+                </div>
               </article>
             </div>
-            <p class="fine-print">Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine finalen Produktempfehlungen.</p>
+            <p class="fine-print">
+              Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine finalen
+              Produktempfehlungen.
+            </p>
           </section>
 
           <section class="section">
             <h2>Deine Routine ist erst der Anfang.</h2>
             <p>Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.</p>
-            <div class="stories">
-              <article class="story"><span class="label">Deine Routine</span><h3>Deine Routine auf einen Blick.</h3><p>Produkte, Reihenfolge und Anwendung – klar an einem Ort.</p></article>
-              <article class="story"><span class="label">Dein Haar-Berater</span><h3>Frag Chaarlie zu deinem Haar.</h3><p>Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich verändert.</p></article>
-              <article class="story"><span class="label">Deine Empfehlungen</span><h3>Frag nach Produkten, die zu dir passen.</h3><p>Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.</p></article>
-            </div>
+            <table
+              class="capabilities"
+              role="presentation"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+            >
+              <tr class="capability">
+                <td class="capability-marker"><span class="check" aria-hidden="true">✓</span></td>
+                <td class="capability-copy">
+                  <strong>Deine Routine auf einen Blick.</strong>
+                  <p>Produkte, Reihenfolge und Anwendung – klar an einem Ort.</p>
+                </td>
+              </tr>
+              <tr class="capability">
+                <td class="capability-marker"><span class="check" aria-hidden="true">✓</span></td>
+                <td class="capability-copy">
+                  <strong>Frag Chaarlie zu deinem Haar.</strong>
+                  <p>
+                    Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich
+                    verändert.
+                  </p>
+                </td>
+              </tr>
+              <tr class="capability">
+                <td class="capability-marker"><span class="check" aria-hidden="true">✓</span></td>
+                <td class="capability-copy">
+                  <strong>Frag nach Produkten, die zu dir passen.</strong>
+                  <p>Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.</p>
+                </td>
+              </tr>
+            </table>
           </section>
 
           <section class="section cta-block">
             <a class="cta" href="#result">Mit Chaarlie starten</a>
             <p class="fine-print">Oder öffne deinen persönlichen Ergebnis-Link:</p>
-            <a class="raw-link" href="#result">https://chaarlie.de/result/deine-id?focus=unlock-plan&amp;entry=result_email</a>
+            <a class="raw-link" href="#result"
+              >https://chaarlie.de/result/deine-id?focus=unlock-plan&amp;entry=result_email</a
+            >
           </section>
 
           <p>Liebe Grüße,<br />Chaarlie</p>
-          <footer class="footer">Chaarlie · info@chaarlie.de<br />Haarmony LLC · Dover, Delaware<br />Abmelden · Impressum · Datenschutz</footer>
+          <footer class="footer">
+            Chaarlie · info@chaarlie.de<br />Haarmony LLC · Dover, Delaware<br />Abmelden ·
+            Impressum · Datenschutz
+          </footer>
         </div>
       </article>
 
-      <pre class="plain" aria-label="Freigegebene Textversion">CHAARLIE — DEINE HAARANALYSE
+      <pre class="plain" aria-label="Freigegebene Textversion">
+CHAARLIE — DEINE HAARANALYSE
 
 Hi Sarah,
 
@@ -400,6 +518,8 @@ Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine fi
 
 DEINE ROUTINE IST ERST DER ANFANG.
 
+Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.
+
 Deine Routine auf einen Blick.
 Produkte, Reihenfolge und Anwendung – klar an einem Ort.
 
@@ -417,22 +537,23 @@ Chaarlie
 
 Chaarlie · info@chaarlie.de
 Haarmony LLC · Dover, Delaware
-Impressum · Datenschutz</pre>
+Impressum · Datenschutz</pre
+      >
     </main>
 
     <script>
-      const shell = document.querySelector(".shell");
-      const buttons = Array.from(document.querySelectorAll(".controls button[data-mode]"));
+      const shell = document.querySelector(".shell")
+      const buttons = Array.from(document.querySelectorAll(".controls button[data-mode]"))
 
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
-          const mode = button.dataset.mode;
-          shell.dataset.mode = mode;
+          const mode = button.dataset.mode
+          shell.dataset.mode = mode
           buttons.forEach((candidate) => {
-            candidate.setAttribute("aria-pressed", String(candidate === button));
-          });
-        });
-      });
+            candidate.setAttribute("aria-pressed", String(candidate === button))
+          })
+        })
+      })
     </script>
   </body>
 </html>

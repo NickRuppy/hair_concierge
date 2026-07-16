@@ -120,7 +120,11 @@ export function AppValueStackProof() {
         </div>
       </section>
 
-      <section className="border-t border-border py-10" data-testid="app-value-stack-testimonials">
+      <section
+        className="border-t border-border py-10"
+        data-offer-section="testimonials"
+        data-testid="app-value-stack-testimonials"
+      >
         <div className="rounded-[28px] bg-[var(--brand-plum-ice)]/70 px-5 py-8 text-center sm:px-8 sm:py-10">
           <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
             Echte Erfahrungen

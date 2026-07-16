@@ -62,6 +62,20 @@ const WRITABLE_TEMPLATE_KEYS = [
   "recipient_environment_id",
 ] as const
 
+// These fields are exposed as mutable by templates.update, but are intentionally
+// excluded from this transactional-email full replacement. They are destructive
+// or belong to newsletter, webhook, short-link, or weighted-variant behavior.
+// `request_method` is also omitted because the live email template returns an
+// empty value that is invalid against the update enum.
+const REVIEWED_OMITTED_TEMPLATE_UPDATE_KEYS = [
+  "deleted",
+  "newsletter_id",
+  "request_method",
+  "short_link_domain_id",
+  "webhook_config_id",
+  "weight",
+] as const
+
 type WritableTemplateKey = (typeof WRITABLE_TEMPLATE_KEYS)[number]
 type RemoteTemplate = Record<string, unknown> & {
   id: number
@@ -81,6 +95,20 @@ type RemoteLayout = {
   id: number
   body: string
   archived?: boolean
+}
+
+export type CustomerIoTemplateUpdateSchema = {
+  http_method?: string
+  path?: string
+  request_body_required?: boolean
+  request_body_schema?: {
+    required?: string[]
+    properties?: {
+      template?: {
+        properties?: Record<string, unknown>
+      }
+    }
+  }
 }
 
 export type CanonicalTemplateSources = {
@@ -313,6 +341,38 @@ export function assertWritableSnapshotUnchanged(
   }
 }
 
+export function assertExpectedTemplateUpdateSchema(schema: CustomerIoTemplateUpdateSchema): void {
+  if (
+    schema.http_method !== "PUT" ||
+    schema.path !== "/v1/environments/{environment_id}/templates/{template_id}" ||
+    schema.request_body_required !== true ||
+    !schema.request_body_schema?.required?.includes("template")
+  ) {
+    throw new Error("Customer.io templates.update schema no longer matches the expected full PUT")
+  }
+
+  const templateProperties = schema.request_body_schema.properties?.template?.properties
+  if (!templateProperties) {
+    throw new Error("Customer.io template schema drift: nested template properties are unavailable")
+  }
+
+  const actualKeys = Object.keys(templateProperties)
+  const reviewedKeys = new Set<string>([
+    ...WRITABLE_TEMPLATE_KEYS,
+    ...REVIEWED_OMITTED_TEMPLATE_UPDATE_KEYS,
+  ])
+  const unreviewedKeys = actualKeys.filter((key) => !reviewedKeys.has(key)).sort()
+  const missingKeys = [...reviewedKeys].filter((key) => !(key in templateProperties)).sort()
+
+  if (unreviewedKeys.length > 0 || missingKeys.length > 0) {
+    const details = [
+      unreviewedKeys.length > 0 ? `unreviewed mutable fields: ${unreviewedKeys.join(", ")}` : null,
+      missingKeys.length > 0 ? `missing reviewed fields: ${missingKeys.join(", ")}` : null,
+    ].filter(Boolean)
+    throw new Error(`Customer.io template schema drift: ${details.join("; ")}`)
+  }
+}
+
 function assertPreflight(): void {
   const auth = parseJson<{
     status?: string
@@ -328,20 +388,11 @@ function assertPreflight(): void {
   ) {
     throw new Error("Customer.io must be authenticated against the verified EU management API")
   }
-  const schema = parseJson<{
-    http_method?: string
-    path?: string
-    request_body_required?: boolean
-    request_body_schema?: { required?: string[] }
-  }>(runCio(["schema", "templates.update"]), "templates.update schema")
-  if (
-    schema.http_method !== "PUT" ||
-    schema.path !== "/v1/environments/{environment_id}/templates/{template_id}" ||
-    schema.request_body_required !== true ||
-    !schema.request_body_schema?.required?.includes("template")
-  ) {
-    throw new Error("Customer.io templates.update schema no longer matches the expected full PUT")
-  }
+  const schema = parseJson<CustomerIoTemplateUpdateSchema>(
+    runCio(["schema", "templates.update"]),
+    "templates.update schema",
+  )
+  assertExpectedTemplateUpdateSchema(schema)
 }
 
 function validateUpdateRequest(

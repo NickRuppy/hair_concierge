@@ -7,9 +7,9 @@
 **Implementation base:** rechecked against fresh `origin/main` at `d869f81`; the intervening commit only added the `$bug` workflow and did not touch result, offer, analytics, or Customer.io code
 **Live Customer.io reference:** EU workspace `219516`; active transactional message `7` / template `40`; inactive copy `8` / template `41`
 
-**Implementation receipt:** The application payload, shared copy, email HTML/plain-text sources, return attribution, guarded operator workflow, documentation, and regression tests are implemented in the isolated task worktree. Focused tests, read-only previews of both live targets, a 320px rendered-email check, and `npm run ci:verify` pass. No Customer.io template was changed and no message was sent; the release gates below remain intentionally pending.
+**Implementation receipt:** The application payload, shared copy, email HTML/plain-text sources, return attribution, guarded operator workflow, documentation, and regression tests are implemented in the isolated task worktree. Focused tests, a 320px rendered-email check, and `npm run ci:verify` pass. On 2026-07-16, the approved grouped-checklist revision was applied to inactive Customer.io draft `8/41`, verified by post-write read-back, and sent once through the Customer.io test endpoint to the owner-controlled alias `nickrupprechter+201@gmail.com`. Active production template `7/40` remains unchanged, and activation remains an explicit pending release gate.
 
-**Visual and journey sign-off:** The owner reviewed the mockup in HTML, images-blocked, and plain-text modes during this planning session. The durable approved artifact is `docs/mockups/customerio-result-email-shared-core.html`. The approved direction is rich HTML with optional product thumbnails, no app screenshots, the three Chaarlie capabilities explained in text, and a full text-only alternative. The owner also confirmed the recovery journey: quiz completion shows the personalized offer first; the triggered email repeats its core information and returns a user who closed the window to the same personalized offer page.
+**Visual and journey sign-off:** The owner reviewed the mockup in HTML, images-blocked, and plain-text modes during this planning session. The durable approved artifact is `docs/mockups/customerio-result-email-shared-core.html`. The approved direction is rich HTML with optional product thumbnails, no app screenshots, the three Chaarlie capabilities explained as one calm bordered checklist with small green check markers and no per-story labels, and a full text-only alternative. The owner also confirmed the recovery journey: quiz completion shows the personalized offer first; the triggered email repeats its core information and returns a user who closed the window to the same personalized offer page.
 
 **Independent plan review:** Claude Code reviewed this plan read-only twice on 2026-07-16. Accepted findings are incorporated below, including sanitized hero input, mandatory rollout compatibility fields and tests, a separate operator guide, exact test paths, stable story tracking IDs, an external-schema preflight, a durable mockup, a reproducible active-package gate, and explicit observational measurement.
 
@@ -84,7 +84,7 @@ This is a content-consistency and recovery-quality change, not a controlled conv
 4. The same two non-suggested foundation product examples with category, name, note, and cadence.
 5. Honest disclosure: these are examples from the product database, not final product recommendations.
 6. Compact `Deine Routine ist erst der Anfang.` bridge.
-7. The three shared Chaarlie capability stories as text only:
+7. The three shared Chaarlie capability stories as one grouped checklist with a single section heading and intro, no per-story labels, and one decorative green check marker per row:
    - `Deine Routine auf einen Blick.` — products, order, and application;
    - `Frag Chaarlie zu deinem Haar.` — profile-aware help;
    - `Frag nach Produkten, die zu dir passen.` — price, application, and rationale.
@@ -156,6 +156,8 @@ intro
 signals[]              { label, conclusion }
 foundation_products[] { category_label, name, note, image_url, cadence_label, cadence_qualifier }
 app_stories[]          { label, headline, body }
+app_bridge_headline
+app_bridge_body
 cta_label
 result_url
 ```
@@ -210,7 +212,7 @@ Rewrite `docs/customerio/quiz-result-artifact-template.html` as the exact canoni
 - Render the three signals in document order.
 - Render the two product examples with a narrow optional image cell and a full live-text cell.
 - Give images explicit width/height, `display:block`, useful `alt`, and no informational text baked into the image.
-- Render the app stories as simple text rows/cards; do not include the web screenshots.
+- Render the app stories as one bordered, table-based checklist in natural order. Use shared `trigger.app_bridge_headline` and `trigger.app_bridge_body` for the single `24px` section heading and `15px` intro, place a small decorative green check marker beside each row, render each story headline in bold and body in regular-weight `15px` Arial, and omit the story labels and web screenshots.
 - Render `trigger.cta_label` as the button text and `trigger.result_url` as both the button target and a visible copyable link.
 - Include a bulletproof, functional link even if button styling is stripped. Rounded corners are not an acceptance requirement.
 - Set the approved preheader in both Customer.io's `preheader_text` field and a matching hidden preheader block. Their visible text must match exactly; the hidden block may append standard invisible padding entities after that text for inbox-preview control.
@@ -282,7 +284,7 @@ Add `tests/customerio-quiz-result-template.test.ts` to read the canonical templa
 - HTML has no document wrapper or duplicate unsubscribe/footer;
 - product text and CTA exist outside `<img>` elements;
 - every `<img>` has non-empty `alt`, width, and height;
-- HTML and plain text both contain the three app-story headlines, CTA, and `trigger.result_url`;
+- HTML and plain text both contain the three app-story headlines, CTA, and `trigger.result_url`; the HTML additionally proves the grouped checklist hierarchy, check markers, two-size typography, and absence of per-story labels or `<h3>` elements;
 - the plain text has real newlines and no pipe-separator serialization;
 - the generated update request exactly matches the canonical files and approved subject/preheader.
 

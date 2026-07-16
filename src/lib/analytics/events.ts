@@ -30,6 +30,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
 }
 
 export type OfferSectionId =
+  | "hero"
   | "personalized_analysis"
   | "mini_routine"
   | "locked_routine"
@@ -37,6 +38,7 @@ export type OfferSectionId =
   | "product_story_chat"
   | "product_story_routine"
   | "product_story_products"
+  | "testimonials"
   | "subscription_explanation"
   | "pricing"
   | "guarantee"
@@ -116,7 +118,7 @@ export type AppEventMap = {
     destination: string
     interactionIndex: number
     selectedInterval?: BillingInterval
-    sourceSection: "hero" | OfferSectionId
+    sourceSection: OfferSectionId
   }
   offer_faq_opened: OfferAnalyticsContext & {
     faqId: string

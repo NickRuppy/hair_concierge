@@ -79,7 +79,8 @@
                 color: #2a1845;
               "
             >
-              Hi{% if trigger.first_name != blank %} {{ trigger.first_name | xml_escape }}{% endif %},
+              Hi{% if trigger.first_name != blank %} {{ trigger.first_name | xml_escape }}{% endif
+              %},
             </p>
             <p
               style="
@@ -393,6 +394,7 @@
             </table>
           </td>
         </tr>
+        <!-- capabilities:start -->
         <tr>
           <td style="padding: 28px 16px 0">
             <table
@@ -415,67 +417,102 @@
                       color: #2a1845;
                     "
                   >
-                    Deine Routine ist erst der Anfang.
+                    {{ trigger.app_bridge_headline | xml_escape }}
                   </h2>
                   <p
                     style="
                       margin: 0;
                       font-family: Arial, &quot;Helvetica Neue&quot;, sans-serif;
-                      font-size: 14px;
+                      font-size: 15px;
                       line-height: 1.6;
                       color: #4b4750;
                     "
                   >
-                    Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.
+                    {{ trigger.app_bridge_body | xml_escape }}
                   </p>
                 </td>
               </tr>
-              {% for story in trigger.app_stories %}
               <tr>
-                <td style="padding: 15px 0; border-top: 1px solid #e9e0ed">
-                  <p
-                    style="
-                      margin: 0 0 4px;
-                      font-family: Arial, &quot;Helvetica Neue&quot;, sans-serif;
-                      font-size: 10px;
-                      line-height: 1.4;
-                      font-weight: 700;
-                      letter-spacing: 1px;
-                      text-transform: uppercase;
-                      color: #72569c;
-                    "
+                <td style="padding: 18px 0 0">
+                  <table
+                    role="presentation"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    width="100%"
+                    style="width: 100%; border: 1px solid #e9e0ed; border-radius: 14px"
                   >
-                    {{ story.label | xml_escape }}
-                  </p>
-                  <h3
-                    style="
-                      margin: 0 0 5px;
-                      font-family: Georgia, &quot;Times New Roman&quot;, serif;
-                      font-size: 18px;
-                      line-height: 1.3;
-                      font-weight: 700;
-                      color: #2a1845;
-                    "
-                  >
-                    {{ story.headline | xml_escape }}
-                  </h3>
-                  <p
-                    style="
-                      margin: 0;
-                      font-family: Arial, &quot;Helvetica Neue&quot;, sans-serif;
-                      font-size: 14px;
-                      line-height: 1.6;
-                      color: #4b4750;
-                    "
-                  >
-                    {{ story.body | xml_escape }}
-                  </p>
+                    {% for story in trigger.app_stories %}
+                    <tr>
+                      <td
+                        width="44"
+                        valign="top"
+                        style="
+                          width: 44px;
+                          padding: 18px 0 17px 18px;
+                          {% unless forloop.first %}border-top: 1px solid #e9e0ed;{% endunless %}
+                        "
+                      >
+                        <p
+                          aria-hidden="true"
+                          style="
+                            display: block;
+                            margin: 0;
+                            width: 26px;
+                            height: 26px;
+                            line-height: 26px;
+                            text-align: center;
+                            border-radius: 50%;
+                            background-color: #edf6f1;
+                            color: #2d7952;
+                            font-family: Arial, &quot;Helvetica Neue&quot;, sans-serif;
+                            font-size: 15px;
+                            font-weight: 700;
+                          "
+                        >
+                          ✓
+                        </p>
+                      </td>
+                      <td
+                        valign="top"
+                        style="
+                          padding: 17px 18px 17px 12px;
+                          {% unless forloop.first %}border-top: 1px solid #e9e0ed;{% endunless %}
+                        "
+                      >
+                        <p
+                          style="
+                            margin: 0 0 3px;
+                            font-family: Arial, &quot;Helvetica Neue&quot;, sans-serif;
+                            font-size: 15px;
+                            line-height: 1.45;
+                            font-weight: 700;
+                            color: #2a1845;
+                          "
+                        >
+                          {{ story.headline | xml_escape }}
+                        </p>
+                        <p
+                          style="
+                            margin: 0;
+                            font-family: Arial, &quot;Helvetica Neue&quot;, sans-serif;
+                            font-size: 15px;
+                            line-height: 1.55;
+                            color: #4b4750;
+                          "
+                        >
+                          {{ story.body | xml_escape }}
+                        </p>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </table>
                 </td>
               </tr>
-              {% endfor %}
             </table>
           </td>
         </tr>
+        <!-- capabilities:end -->
         <tr>
           <td align="center" style="padding: 28px 16px 8px">
             <a

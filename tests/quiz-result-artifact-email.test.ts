@@ -8,6 +8,8 @@ import {
   buildQuizResultArtifactEmailPayload,
 } from "../src/lib/customerio/quiz-result-artifact"
 import {
+  APP_VALUE_STACK_BRIDGE_BODY,
+  APP_VALUE_STACK_BRIDGE_HEADLINE,
   APP_VALUE_STACK_CTA_LABEL,
   APP_VALUE_STACK_STORIES,
   buildAppValueStackHeroCopy,
@@ -87,6 +89,8 @@ test("builds Customer.io message data from the shared offer-page content", () =>
       payload.messageData.app_stories,
       APP_VALUE_STACK_STORIES.map(({ label, headline, body }) => ({ label, headline, body })),
     )
+    assert.equal(payload.messageData.app_bridge_headline, APP_VALUE_STACK_BRIDGE_HEADLINE)
+    assert.equal(payload.messageData.app_bridge_body, APP_VALUE_STACK_BRIDGE_BODY)
     assert.equal(Array.isArray(payload.messageData.rows), true)
     assert.equal(Array.isArray(payload.messageData.routine_levers), true)
   } finally {

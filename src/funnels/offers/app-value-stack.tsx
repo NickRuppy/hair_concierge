@@ -8,6 +8,8 @@ import { OfferFaq } from "@/components/quiz/offer-faq"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import {
+  APP_VALUE_STACK_BRIDGE_BODY,
+  APP_VALUE_STACK_BRIDGE_HEADLINE,
   APP_VALUE_STACK_CTA_LABEL,
   buildAppValueStackHeroCopy,
 } from "@/lib/quiz/app-value-stack-copy"
@@ -62,7 +64,7 @@ export default function AppValueStackOfferVariant({
         </div>
 
         <main className="mx-auto w-full max-w-[560px] px-5">
-          <section className="pb-9 pt-[84px]">
+          <section className="pb-9 pt-[84px]" data-offer-section="hero">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#2D9F5E]/25 bg-[#2D9F5E]/10 px-3.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-[#2D9F5E]">
               <Check aria-hidden="true" className="size-3.5" />
               Quiz ausgewertet
@@ -93,10 +95,10 @@ export default function AppValueStackOfferVariant({
                 Nach dem Freischalten
               </p>
               <h2 className="mt-2 font-header text-[28px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
-                Deine Routine ist erst der Anfang.
+                {APP_VALUE_STACK_BRIDGE_HEADLINE}
               </h2>
               <p className="mx-auto mt-3 max-w-[40ch] text-[14px] leading-[1.6] text-muted-foreground">
-                Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.
+                {APP_VALUE_STACK_BRIDGE_BODY}
               </p>
               <a
                 data-offer-cta="locked_plan"

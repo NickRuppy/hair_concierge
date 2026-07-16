@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url"
 import {
   CUSTOMERIO_QUIZ_RESULT_EMAIL_CONFIG,
   assertExpectedLayout,
+  assertExpectedTemplateUpdateSchema,
   assertReadBack,
   assertTargetIdentity,
   assertTargetMessage,
@@ -53,8 +54,55 @@ const remoteTemplate = {
   created: 123,
 }
 
+const currentTemplateUpdateSchema = {
+  http_method: "PUT",
+  path: "/v1/environments/{environment_id}/templates/{template_id}",
+  request_body_required: true,
+  request_body_schema: {
+    required: ["template"],
+    properties: {
+      template: {
+        properties: Object.fromEntries(
+          [
+            "bcc",
+            "body",
+            "body_amp",
+            "body_json",
+            "body_plain",
+            "cc",
+            "deleted",
+            "editor",
+            "fake_bcc",
+            "from_identity_id",
+            "headers",
+            "image_url",
+            "language",
+            "layout_id",
+            "name",
+            "newsletter_id",
+            "preheader_text",
+            "preprocessor",
+            "recipient",
+            "recipient_environment_id",
+            "reply_to_identity_id",
+            "request_method",
+            "short_link_domain_id",
+            "subject",
+            "template_engine",
+            "template_type",
+            "test_group_id",
+            "url",
+            "webhook_config_id",
+            "weight",
+            "whatsapp",
+          ].map((key) => [key, { nullable: true }]),
+        ),
+      },
+    },
+  },
+}
+
 test("canonical HTML is an email-safe fragment under layout 1", () => {
-  const normalizedHtml = html.replace(/\s+/g, " ")
   assert.doesNotMatch(html, /<!doctype|<html\b|<head\b|<body\b|<style\b/i)
   assert.doesNotMatch(
     html,
@@ -64,9 +112,14 @@ test("canonical HTML is an email-safe fragment under layout 1", () => {
   assert.match(html, /max-width:\s*600px/)
   assert.match(html, /padding:\s*24px 4px/)
   assert.match(html, /word-break:\s*break-word/)
-  assert.match(
-    normalizedHtml,
-    /Entdecke, womit deine Pflege beginnt und wie Chaarlie dich im Alltag begleitet\./,
+  const hiddenPreheader = html.match(/<div[\s\S]*?display:\s*none[\s\S]*?>([\s\S]*?)<\/div>/)?.[1]
+  assert.ok(hiddenPreheader)
+  assert.equal(
+    hiddenPreheader
+      .replace(/&#(?:8199|65279);/g, "")
+      .replace(/\s+/g, " ")
+      .trim(),
+    CUSTOMERIO_QUIZ_RESULT_EMAIL_CONFIG.preheader,
   )
   assert.doesNotMatch(html, /\| escape/)
   for (const expression of html.matchAll(/\{\{\s*([^}]+)\s*\}\}/g)) {
@@ -80,6 +133,8 @@ test("canonical templates render the current trigger contract and no retired off
     "trigger.first_name",
     "trigger.headline",
     "trigger.intro",
+    "trigger.app_bridge_headline",
+    "trigger.app_bridge_body",
     "trigger.signals",
     "signal.label",
     "signal.conclusion",
@@ -91,7 +146,6 @@ test("canonical templates render the current trigger contract and no retired off
     "product.cadence_label",
     "product.cadence_qualifier",
     "trigger.app_stories",
-    "story.label",
     "story.headline",
     "story.body",
     "trigger.cta_label",
@@ -105,6 +159,8 @@ test("canonical templates render the current trigger contract and no retired off
     assert.doesNotMatch(source, /trigger\.(rows|main_lever|routine_levers)/)
     assert.doesNotMatch(source, /launch|rabatt|discount|testimonial|screenshot|garantie|dringend/i)
     assert.doesNotMatch(source, /https:\/\/chaarlie\.de\/result\//)
+    assert.match(source, /trigger\.app_bridge_headline/)
+    assert.match(source, /trigger\.app_bridge_body/)
     assert.match(source, /trigger\.app_stories/)
     assert.match(source, /story\.headline/)
     assert.match(source, /story\.body/)
@@ -136,6 +192,35 @@ test("product meaning and both result links survive missing images", () => {
     assert.ok(width)
     assert.equal(height, width)
   }
+})
+
+test("capability section uses the approved grouped checklist hierarchy", () => {
+  const capabilityMatch = html.match(
+    /<!-- capabilities:start -->([\s\S]*?)<!-- capabilities:end -->/,
+  )
+  assert.ok(capabilityMatch)
+  const capabilityBlock = capabilityMatch[1]
+
+  assert.match(capabilityBlock, /\{\{ trigger\.app_bridge_headline \| xml_escape \}\}/)
+  assert.match(capabilityBlock, /\{\{ trigger\.app_bridge_body \| xml_escape \}\}/)
+  assert.match(capabilityBlock, /role="presentation"/)
+  assert.match(capabilityBlock, /border:\s*1px solid #e9e0ed/)
+  assert.match(capabilityBlock, /\{% for story in trigger\.app_stories %\}/)
+  assert.match(capabilityBlock, /width="44"/)
+  assert.match(capabilityBlock, /background-color:\s*#edf6f1/)
+  assert.match(capabilityBlock, /color:\s*#2d7952/)
+  assert.match(capabilityBlock, /aria-hidden="true"/)
+  assert.match(capabilityBlock, /✓/)
+  assert.match(capabilityBlock, /\{\{ story\.headline \| xml_escape \}\}/)
+  assert.match(capabilityBlock, /\{\{ story\.body \| xml_escape \}\}/)
+  assert.match(capabilityBlock, /unless forloop\.first/)
+  assert.doesNotMatch(capabilityBlock, /story\.label|<h3\b|text-transform|letter-spacing/)
+  assert.doesNotMatch(html, /story\.label/)
+
+  const fontSizes = [
+    ...new Set([...capabilityBlock.matchAll(/font-size:\s*(\d+)px/g)].map((match) => match[1])),
+  ].sort()
+  assert.deepEqual(fontSizes, ["15", "24"])
 })
 
 test("plain-text alternative is complete, multiline, and legally self-contained", () => {
@@ -218,6 +303,19 @@ test("operator preflight guards message state, pairing, and legal layout content
   assert.throws(
     () => assertExpectedLayout([{ id: 1, archived: false, body: "{{ content }}" }]),
     /required footer content/,
+  )
+})
+
+test("operator fails closed when templates.update adds an unreviewed optional field", () => {
+  assert.doesNotThrow(() => assertExpectedTemplateUpdateSchema(currentTemplateUpdateSchema))
+
+  const driftedSchema = structuredClone(currentTemplateUpdateSchema)
+  driftedSchema.request_body_schema.properties.template.properties.optional_delivery_mode = {
+    nullable: true,
+  }
+  assert.throws(
+    () => assertExpectedTemplateUpdateSchema(driftedSchema),
+    /template schema drift: unreviewed mutable fields: optional_delivery_mode/,
   )
 })
 

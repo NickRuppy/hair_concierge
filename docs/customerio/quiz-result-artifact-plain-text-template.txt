@@ -22,9 +22,9 @@ DEINE PFLEGEBASIS
 
 {% endfor %}Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine finalen Produktempfehlungen.
 
-DEINE ROUTINE IST ERST DER ANFANG.
+{{ trigger.app_bridge_headline }}
 
-Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.
+{{ trigger.app_bridge_body }}
 
 {% for story in trigger.app_stories %}{{ story.label }}
 {{ story.headline }}
