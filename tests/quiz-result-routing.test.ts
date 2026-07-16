@@ -1,7 +1,13 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import { getQuizResultRedirectPath } from "../src/components/quiz/quiz-results"
+
+const resultPageSource = readFileSync(
+  new URL("../src/app/result/[leadId]/page.tsx", import.meta.url),
+  "utf8",
+)
 
 test("no-access quiz results redirect to the canonical result route", () => {
   assert.equal(
@@ -55,4 +61,9 @@ test("active subscribers keep the direct routine path", () => {
     }),
     null,
   )
+})
+
+test("result email links retain unlock focus and receive a dedicated offer entry context", () => {
+  assert.match(resultPageSource, /sp\.focus === "unlock-plan" \? "unlock-plan"/)
+  assert.match(resultPageSource, /sp\.entry === "result_email"\s*\? "result_email"/)
 })

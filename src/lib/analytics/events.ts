@@ -9,7 +9,11 @@ export type FunnelAnalyticsEnvelope = {
   funnelPackageKey?: string | null
 }
 
-export type OfferEntryContext = "quiz_completion" | "saved_result" | "routine_return"
+export type OfferEntryContext =
+  | "quiz_completion"
+  | "saved_result"
+  | "routine_return"
+  | "result_email"
 export type CheckoutContext = "membership_reactivation"
 
 export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {

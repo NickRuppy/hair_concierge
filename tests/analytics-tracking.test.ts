@@ -485,7 +485,7 @@ test("PostHog pricing view keeps offer diagnostics alongside historical pricing 
   try {
     postHogDestination.track("pricing_viewed", {
       availableIntervals: ["month", "quarter", "year"],
-      entryContext: "saved_result",
+      entryContext: "result_email",
       focusRoutine: false,
       funnelEventId: "30000000-0000-4000-8000-000000000097",
       leadId: "10000000-0000-4000-8000-000000000097",
@@ -508,7 +508,7 @@ test("PostHog pricing view keeps offer diagnostics alongside historical pricing 
       {
         $insert_id: "30000000-0000-4000-8000-000000000097",
         available_intervals: ["month", "quarter", "year"],
-        entry_context: "saved_result",
+        entry_context: "result_email",
         focus_routine: false,
         leadId: "10000000-0000-4000-8000-000000000097",
         lead_id: "10000000-0000-4000-8000-000000000097",

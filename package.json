@@ -88,6 +88,7 @@
     "perf:mobile": "node scripts/perf/mobile-lighthouse.mjs",
     "paypal:create-resources": "tsx scripts/paypal/create-resources.ts",
     "paypal:validate-plans": "tsx scripts/paypal/validate-plans.ts",
+    "customerio:quiz-result-email": "tsx scripts/customerio-quiz-result-email.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
