@@ -1,4 +1,8 @@
 import { createBoundedFifo } from "@/lib/analytics/runtime/bounded-fifo"
+import {
+  buildSafeAnalyticsPageContext,
+  type SafeAnalyticsPageContext,
+} from "@/lib/analytics/page-url"
 
 export const CUSTOMERIO_EU_CDN_URL = "https://cdp-eu.customer.io"
 
@@ -20,14 +24,39 @@ export type CustomerIoEventName =
   | "subscription_started"
 
 export type CustomerIoBrowserClient = {
-  identify: (userId: string, traits?: Record<string, CustomerIoValue>) => unknown
+  identify: (
+    userId: string,
+    traits?: Record<string, CustomerIoValue>,
+    options?: CustomerIoCallOptions,
+  ) => unknown
   page: (
-    category: string | null,
-    name: string | null,
+    category: string | undefined,
+    name: string | undefined,
     properties?: Record<string, CustomerIoValue>,
+    options?: CustomerIoCallOptions,
   ) => unknown
   reset: () => unknown
-  track: (eventName: string, properties?: Record<string, CustomerIoValue>) => unknown
+  track: (
+    eventName: string,
+    properties?: Record<string, CustomerIoValue>,
+    options?: CustomerIoCallOptions,
+  ) => unknown
+}
+
+type CustomerIoCallOptions = {
+  context: { page: SafeAnalyticsPageContext }
+}
+
+function readSafeBrowserPageContext(): SafeAnalyticsPageContext | undefined {
+  if (typeof window === "undefined" || typeof document === "undefined") return undefined
+
+  return buildSafeAnalyticsPageContext({
+    href: window.location.href,
+    pathname: window.location.pathname,
+    referrer: document.referrer,
+    search: window.location.search,
+    title: document.title,
+  })
 }
 
 export function cleanCustomerIoProperties(properties?: CustomerIoProperties) {
@@ -39,17 +68,34 @@ export function cleanCustomerIoProperties(properties?: CustomerIoProperties) {
 }
 
 type CustomerIoOperation =
-  | { type: "identify"; userId: string; traits: Record<string, CustomerIoValue> }
-  | { type: "page"; path: string; properties: Record<string, CustomerIoValue> }
+  | {
+      type: "identify"
+      pageContext?: SafeAnalyticsPageContext
+      userId: string
+      traits: Record<string, CustomerIoValue>
+    }
+  | {
+      type: "page"
+      pageContext?: SafeAnalyticsPageContext
+      path: string
+      properties: Record<string, CustomerIoValue>
+    }
   | { type: "reset" }
-  | { type: "track"; eventName: string; properties: Record<string, CustomerIoValue> }
+  | {
+      type: "track"
+      eventName: string
+      pageContext?: SafeAnalyticsPageContext
+      properties: Record<string, CustomerIoValue>
+    }
 
 export function createCustomerIoTracker({
+  getPageContext = readSafeBrowserPageContext,
   queueLimit = 100,
   warn = (message: string, error?: unknown) => {
     if (process.env.NODE_ENV !== "production") console.warn(message, error)
   },
 }: {
+  getPageContext?: () => SafeAnalyticsPageContext | undefined
   queueLimit?: number
   warn?: (message: string, error?: unknown) => void
 } = {}) {
@@ -63,18 +109,36 @@ export function createCustomerIoTracker({
 
   const dispatch = (operation: CustomerIoOperation) => {
     if (!client) return false
+    const options =
+      operation.type === "reset"
+        ? undefined
+        : operation.pageContext
+          ? { context: { page: operation.pageContext } }
+          : undefined
     switch (operation.type) {
       case "identify":
-        client.identify(operation.userId, operation.traits)
+        if (options) client.identify(operation.userId, operation.traits, options)
+        else client.identify(operation.userId, operation.traits)
         break
       case "page":
-        client.page(null, operation.path, operation.properties)
+        // The SDK treats an explicit null category as the properties object and shifts properties into options.
+        if (operation.pageContext && options) {
+          client.page(
+            undefined,
+            operation.path,
+            { ...operation.properties, ...operation.pageContext },
+            options,
+          )
+        } else {
+          client.page(undefined, operation.path, operation.properties)
+        }
         break
       case "reset":
         client.reset()
         break
       case "track":
-        client.track(operation.eventName, operation.properties)
+        if (options) client.track(operation.eventName, operation.properties, options)
+        else client.track(operation.eventName, operation.properties)
         break
     }
     return true
@@ -110,6 +174,7 @@ export function createCustomerIoTracker({
     identify(userId: string, traits?: CustomerIoProperties) {
       return enqueueOrDispatch({
         type: "identify",
+        pageContext: getPageContext(),
         userId,
         traits: cleanCustomerIoProperties(traits),
       })
@@ -117,6 +182,7 @@ export function createCustomerIoTracker({
     page(path: string, properties?: CustomerIoProperties) {
       return enqueueOrDispatch({
         type: "page",
+        pageContext: getPageContext(),
         path,
         properties: cleanCustomerIoProperties(properties),
       })
@@ -133,6 +199,7 @@ export function createCustomerIoTracker({
       return enqueueOrDispatch({
         type: "track",
         eventName,
+        pageContext: getPageContext(),
         properties: cleanCustomerIoProperties(properties),
       })
     },

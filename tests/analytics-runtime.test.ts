@@ -2,10 +2,17 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { createBoundedFifo } from "../src/lib/analytics/runtime/bounded-fifo"
-import { createCustomerIoRuntime } from "../src/lib/analytics/runtime/customerio"
-import { createCustomerIoTracker } from "../src/lib/customerio-tracking"
+import {
+  createCustomerIoBrowserLoader,
+  createCustomerIoRuntime,
+} from "../src/lib/analytics/runtime/customerio"
+import {
+  createCustomerIoTracker,
+  type CustomerIoBrowserClient,
+} from "../src/lib/customerio-tracking"
 import {
   createPostHogRuntime,
+  sanitizePostHogProperties,
   type PostHogRuntimeClient,
 } from "../src/lib/analytics/runtime/posthog"
 import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
@@ -126,6 +133,33 @@ test("PostHog loader failure is isolated and stops accepting new calls", async (
   assert.equal(runtime.posthog.capture("quiz_completed"), false)
 })
 
+test("PostHog removes sensitive queries and fragments from automatic URL properties", () => {
+  assert.deepEqual(
+    sanitizePostHogProperties({
+      $current_url: "https://chaarlie.de/auth/update-password?code=recovery-code#access_token=x",
+      $referrer: "https://chaarlie.de/welcome?session_id=stripe-session&token=paypal-token",
+      $session_entry_referrer: "https://chaarlie.de/welcome?session_id=first-stripe-session",
+      $session_entry_url: "https://chaarlie.de/auth/update-password?code=first-recovery-code",
+      $set_once: {
+        $initial_current_url:
+          "https://chaarlie.de/result/lead-123?entry=quiz_completion&focus=routine&email=x",
+      },
+      offer_revision: "product_led_v2",
+    }),
+    {
+      $current_url: "https://chaarlie.de/auth/update-password",
+      $referrer: "https://chaarlie.de/welcome",
+      $session_entry_referrer: "https://chaarlie.de/welcome",
+      $session_entry_url: "https://chaarlie.de/auth/update-password",
+      $set_once: {
+        $initial_current_url:
+          "https://chaarlie.de/result/lead-123?entry=quiz_completion&focus=routine",
+      },
+      offer_revision: "product_led_v2",
+    },
+  )
+})
+
 test("Customer.io bridges page, identify, track, and reset in FIFO order", () => {
   const calls: unknown[][] = []
   const tracker = createCustomerIoTracker({ queueLimit: 10 })
@@ -143,10 +177,66 @@ test("Customer.io bridges page, identify, track, and reset in FIFO order", () =>
   })
 
   assert.deepEqual(calls, [
-    ["page", null, "/quiz", {}],
+    ["page", undefined, "/quiz", {}],
     ["identify", "user-1", { email: "test@example.com" }],
     ["track", "quiz_started", { step_number: 2 }],
     ["reset"],
+  ])
+})
+
+test("Customer.io browser loader unwraps the SDK tuple before flushing queued calls", async () => {
+  const calls: unknown[][] = []
+  const tracker = createCustomerIoTracker({ queueLimit: 10 })
+  const client: CustomerIoBrowserClient = {
+    identify: (...args) => calls.push(["identify", ...args]),
+    page: (...args) => calls.push(["page", ...args]),
+    reset: () => calls.push(["reset"]),
+    track: (...args) => calls.push(["track", ...args]),
+  }
+  const context = { source: "fake-sdk" }
+  const settings: unknown[] = []
+  const loadResult: PromiseLike<[CustomerIoBrowserClient, typeof context]> = {
+    then(onFulfilled, onRejected) {
+      return Promise.resolve([client, context] as [CustomerIoBrowserClient, typeof context]).then(
+        onFulfilled,
+        onRejected,
+      )
+    },
+  }
+
+  tracker.page("/result/lead-123?entry=quiz_completion", {
+    entry_context: "quiz_completion",
+  })
+  tracker.track("pricing_viewed", { lead_id: "lead-123" })
+
+  const loadClient = createCustomerIoBrowserLoader({
+    browserAvailable: () => true,
+    cdnURL: "https://cdp-eu.customer.io",
+    importSdk: async () => ({
+      AnalyticsBrowser: {
+        load(nextSettings) {
+          settings.push(nextSettings)
+          return loadResult
+        },
+      },
+    }),
+    writeKey: "write-key",
+  })
+  const runtime = createCustomerIoRuntime({
+    loadClient,
+    onReady: (nextClient) => tracker.setClient(nextClient),
+  })
+
+  assert.equal(await runtime.start(), true)
+  assert.deepEqual(settings, [{ cdnURL: "https://cdp-eu.customer.io", writeKey: "write-key" }])
+  assert.deepEqual(calls, [
+    [
+      "page",
+      undefined,
+      "/result/lead-123?entry=quiz_completion",
+      { entry_context: "quiz_completion" },
+    ],
+    ["track", "pricing_viewed", { lead_id: "lead-123" }],
   ])
 })
 

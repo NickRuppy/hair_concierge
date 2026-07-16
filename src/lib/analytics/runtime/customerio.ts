@@ -15,6 +15,37 @@ type CustomerIoRuntimeOptions = {
   warn?: (message: string, error: unknown) => void
 }
 
+type CustomerIoBrowserSdk = {
+  AnalyticsBrowser: {
+    load: (settings: {
+      cdnURL: string
+      writeKey: string
+    }) => PromiseLike<[CustomerIoBrowserClient, unknown]>
+  }
+}
+
+type CustomerIoBrowserLoaderOptions = {
+  browserAvailable: () => boolean
+  cdnURL: string
+  importSdk: () => Promise<CustomerIoBrowserSdk>
+  writeKey: string
+}
+
+export function createCustomerIoBrowserLoader({
+  browserAvailable,
+  cdnURL,
+  importSdk,
+  writeKey,
+}: CustomerIoBrowserLoaderOptions) {
+  return async (): Promise<CustomerIoBrowserClient | null> => {
+    if (!writeKey || !browserAvailable()) return null
+
+    const { AnalyticsBrowser } = await importSdk()
+    const [client] = await AnalyticsBrowser.load({ cdnURL, writeKey })
+    return client
+  }
+}
+
 export function createCustomerIoRuntime({
   loadClient,
   onReady = setCustomerIoBrowserClient,
@@ -51,17 +82,12 @@ export function createCustomerIoRuntime({
 }
 
 const runtime = createCustomerIoRuntime({
-  loadClient: async () => {
-    if (!CUSTOMERIO_WRITE_KEY || typeof window === "undefined") {
-      return null
-    }
-
-    const { AnalyticsBrowser } = await import("@customerio/cdp-analytics-browser")
-    return AnalyticsBrowser.load({
-      cdnURL: CUSTOMERIO_CDN_URL,
-      writeKey: CUSTOMERIO_WRITE_KEY,
-    }) as CustomerIoBrowserClient
-  },
+  loadClient: createCustomerIoBrowserLoader({
+    browserAvailable: () => typeof window !== "undefined",
+    cdnURL: CUSTOMERIO_CDN_URL,
+    importSdk: () => import("@customerio/cdp-analytics-browser"),
+    writeKey: CUSTOMERIO_WRITE_KEY,
+  }),
 })
 
 export function startCustomerIoBrowserTracking() {
