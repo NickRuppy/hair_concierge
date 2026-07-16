@@ -16,6 +16,10 @@ plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) 
 - `request-code-review` is the single local review router. Do not separately stack `code-reviewer`, thermo review, and other general review skills unless it delegates those lenses.
 - `ship-it` owns explicitly authorized publication branches. “Ship it” means commit, push, and draft PR; cleanup, merge, deployment, and production writes each require separate authorization.
 
+### `bug`
+
+Use only when Nick explicitly invokes `$bug` with a screenshot, message, example response, log, or symptom. It owns sanitized intake, Linear canonicalization, evidence-led diagnosis, proportional research, and the five-decision brief. Invocation authorizes Linear maintenance plus read-only investigation, not containment or code/publication changes. After decisions, hand off to the existing core workflow.
+
 ### Goal versus loop
 
 - A **Goal** is the durable outcome that should remain stable across turns.
