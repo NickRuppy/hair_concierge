@@ -72,7 +72,7 @@ async function loadVisibleBillingByUserId(userIds: string[]) {
   const { data, error } = await admin
     .from("billing_subscriptions")
     .select(
-      "id, user_id, provider, provider_customer_id, provider_subscriber_email, provider_subscription_id, provider_status, entitlement_status, interval, current_period_end, cancel_at_period_end, cancelled_at, metadata, created_at, updated_at",
+      "id, user_id, provider, provider_customer_id, provider_subscriber_email, provider_subscription_id, provider_status, entitlement_status, interval, current_period_end, cancel_at_period_end, cancel_scheduled_at, cancelled_at, metadata, created_at, updated_at",
     )
     .in("user_id", userIds)
     .in("entitlement_status", ["active", "past_due", "canceled"])

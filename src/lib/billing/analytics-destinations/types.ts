@@ -8,7 +8,6 @@ export type BillingAnalyticsProfile = {
   subscription_interval?: string | null
   subscription_status?: string | null
   current_period_end?: string | null
-  cancel_at_period_end?: boolean | null
 }
 
 export type BillingAnalyticsDeliveryInput = {

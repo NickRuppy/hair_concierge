@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
@@ -82,8 +82,10 @@ export async function GET(request: Request) {
       status: "reconciling",
       failureCode: "paypal_post_approval_verification_failed",
     })
-    await mergePendingPlanChangeMetadata(admin, subscription, reconciling)
-    await recordPlanChangePhase(admin, reconciling, "approved")
+    await mergePendingPlanChangeMetadata(admin, subscription, reconciling).catch(() => undefined)
+    await recordPlanChangePhase(admin, reconciling, "approved", { defer: after }).catch(
+      () => undefined,
+    )
     console.error("[billing:plan-change] PayPal approval requires reconciliation", {
       operationId,
       error: error instanceof Error ? error.message : String(error),
@@ -98,7 +100,6 @@ export async function GET(request: Request) {
   })
   try {
     await mergePendingPlanChangeMetadata(admin, subscription, scheduled)
-    await recordPlanChangePhase(admin, scheduled, "approved")
   } catch (error) {
     // Provider approval and the atomic ledger are authoritative. A failure in
     // mirrored metadata or analytics must not tell the buyer the change failed.
@@ -107,6 +108,12 @@ export async function GET(request: Request) {
       error: error instanceof Error ? error.message : String(error),
     })
   }
+  await recordPlanChangePhase(admin, scheduled, "approved", { defer: after }).catch((error) => {
+    console.error("[billing:plan-change] PayPal approved analytics failed", {
+      operationId,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  })
   return NextResponse.redirect(`${siteUrl}/profile?plan-change=scheduled#mitgliedschaft`)
 }
 

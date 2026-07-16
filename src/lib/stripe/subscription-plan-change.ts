@@ -86,7 +86,7 @@ async function ensureStripePlanChangeSchedule(
       `Stripe subscription status ${subscription.status} is not manageable`,
     )
   }
-  if (subscription.cancel_at_period_end) {
+  if (subscription.cancel_at_period_end || subscription.cancel_at !== null) {
     throw new StripePlanChangeConflictError(
       "stripe_cancellation_scheduled",
       "Stripe subscription is scheduled to cancel",

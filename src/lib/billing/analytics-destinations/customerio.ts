@@ -43,7 +43,7 @@ function customerIoTraits(input: BillingAnalyticsDeliveryInput) {
     cancel_at_period_end:
       typeof event.payload.cancel_at_period_end === "boolean"
         ? event.payload.cancel_at_period_end
-        : (profile?.cancel_at_period_end ?? undefined),
+        : undefined,
     subscription_started_at:
       event.event_name === "subscription_started" ? event.occurred_at : undefined,
     subscription_cancelled_at: isCancelled ? event.occurred_at : undefined,

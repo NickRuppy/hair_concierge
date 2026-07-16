@@ -33,7 +33,12 @@ export async function upsertBillingSubscription(
     input.provider,
     input.provider_subscription_id,
   )
-  const { provider_subscriber_email, metadata: inputMetadata, ...subscriptionInput } = input
+  const {
+    provider_subscriber_email,
+    cancel_scheduled_at,
+    metadata: inputMetadata,
+    ...subscriptionInput
+  } = input
   const row = {
     provider_customer_id: existing?.provider_customer_id ?? null,
     provider_subscriber_email:
@@ -43,6 +48,10 @@ export async function upsertBillingSubscription(
     interval: existing?.interval ?? null,
     current_period_end: existing?.current_period_end ?? null,
     cancel_at_period_end: existing?.cancel_at_period_end ?? false,
+    cancel_scheduled_at:
+      cancel_scheduled_at !== undefined
+        ? cancel_scheduled_at
+        : (existing?.cancel_scheduled_at ?? null),
     cancelled_at: existing?.cancelled_at ?? null,
     metadata: {
       ...(existing?.metadata ?? {}),
@@ -111,7 +120,7 @@ export async function findVisibleBillingSubscriptionForUser(
   const { data, error } = await supabase
     .from("billing_subscriptions")
     .select(
-      "id, user_id, provider, provider_customer_id, provider_subscriber_email, provider_subscription_id, provider_status, entitlement_status, interval, current_period_end, cancel_at_period_end, cancelled_at, metadata, created_at, updated_at",
+      "id, user_id, provider, provider_customer_id, provider_subscriber_email, provider_subscription_id, provider_status, entitlement_status, interval, current_period_end, cancel_at_period_end, cancel_scheduled_at, cancelled_at, metadata, created_at, updated_at",
     )
     .eq("user_id", userId)
     .in("entitlement_status", ["active", "past_due", "canceled"])

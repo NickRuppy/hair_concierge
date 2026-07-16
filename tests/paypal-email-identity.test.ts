@@ -48,6 +48,7 @@ function createBillingRow(
     interval: row.interval ?? "month",
     current_period_end: row.current_period_end ?? futureIso(),
     cancel_at_period_end: row.cancel_at_period_end ?? false,
+    cancel_scheduled_at: row.cancel_scheduled_at ?? null,
     cancelled_at: row.cancelled_at ?? null,
     metadata: row.metadata ?? {},
     created_at: row.created_at ?? new Date().toISOString(),

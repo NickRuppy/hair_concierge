@@ -87,6 +87,7 @@ async function markPayPalSubscriptionCanceled(
     interval: current.interval,
     current_period_end: current.current_period_end,
     cancel_at_period_end: true,
+    cancel_scheduled_at: current.current_period_end,
     cancelled_at: (now ?? (() => new Date()))().toISOString(),
     metadata: current.metadata,
   })

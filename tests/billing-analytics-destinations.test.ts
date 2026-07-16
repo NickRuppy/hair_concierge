@@ -320,3 +320,33 @@ test("Customer.io adapter preserves paid-through access on cancelled subscriptio
   assert.equal(calls[0].body.traits.is_customer, true)
   assert.equal(calls[0].body.traits.subscription_cancelled_at, "2026-07-08T10:00:00.000Z")
 })
+
+test("Customer.io cancellation trait comes from the event rather than a profile fallback", async () => {
+  const calls: Array<{ body: Record<string, any> }> = []
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    calls.push({ body: JSON.parse(String(init?.body ?? "{}")) })
+    return new Response("ok", { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv({ CUSTOMERIO_SERVER_WRITE_KEY: "cio-key" }, () =>
+      deliverBillingAnalyticsToCustomerIo({
+        event: event({
+          event_key: "stripe:subscription_updated:sub_123:requested",
+          event_name: "subscription_updated",
+          payload: { change_phase: "requested" },
+        }),
+        profile: {
+          id: "user-123",
+          email: "buyer@example.com",
+        },
+        supabase,
+      }),
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(calls[0].body.traits.cancel_at_period_end, undefined)
+})

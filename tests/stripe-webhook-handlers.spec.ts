@@ -253,7 +253,7 @@ test("checkout.session.completed on existing email reuses the user", async () =>
 })
 
 test("subscription.updated keeps status=active when cancel_at_period_end flips", async () => {
-  const { deps, profiles } = stubDeps()
+  const { billing, deps, profiles } = stubDeps()
   profiles["u"] = {
     id: "u",
     email: "x@y",
@@ -279,7 +279,46 @@ test("subscription.updated keeps status=active when cancel_at_period_end flips",
   const result = await handleSubscriptionUpdated(sub, deps)
   expect((profiles["u"] as any).subscription_status).toBe("active")
   expect((profiles["u"] as any).current_period_end).toBeTruthy()
+  expect(billing[0].cancel_at_period_end).toBe(true)
+  expect(billing[0].cancel_scheduled_at).toBe(new Date(1_900_000_000 * 1000).toISOString())
   expect(result.matchedCurrentSubscription).toBe(true)
+})
+
+test("subscription.updated prefers cancel_at and clears normalized cancellation on resumption", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "x@y",
+    stripe_customer_id: "cus_X",
+    stripe_subscription_id: "sub_X",
+    subscription_status: "active",
+    subscription_interval: "month",
+  }
+  const cancelAt = 1_850_000_000
+  const base = {
+    id: "sub_X",
+    customer: "cus_X",
+    status: "active",
+    items: {
+      data: [
+        {
+          price: { interval: "month", interval_count: 1 },
+          current_period_end: 1_900_000_000,
+        },
+      ],
+    },
+  } as any
+
+  await handleSubscriptionUpdated(
+    { ...base, cancel_at_period_end: false, cancel_at: cancelAt },
+    deps,
+  )
+  expect(billing[0].cancel_at_period_end).toBe(true)
+  expect(billing[0].cancel_scheduled_at).toBe(new Date(cancelAt * 1000).toISOString())
+
+  await handleSubscriptionUpdated({ ...base, cancel_at_period_end: false, cancel_at: null }, deps)
+  expect(billing[0].cancel_at_period_end).toBe(false)
+  expect(billing[0].cancel_scheduled_at).toBeNull()
 })
 
 test("subscription.updated does not overwrite a newer active subscription", async () => {

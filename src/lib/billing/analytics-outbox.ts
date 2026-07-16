@@ -43,7 +43,27 @@ type DispatchBillingAnalyticsOptions = {
   destination?: BillingAnalyticsDestination
   eventKey?: string
   limit?: number
+  dependencies?: Partial<DispatchBillingAnalyticsDependencies>
 }
+
+type DispatchBillingAnalyticsDependencies = {
+  findProfile: (
+    supabase: SupabaseBillingClient,
+    userId: string,
+  ) => Promise<BillingAnalyticsProfile | null>
+  deliver: (
+    destination: BillingAnalyticsDestination,
+    input: BillingAnalyticsDeliveryInput,
+  ) => Promise<BillingAnalyticsDeliveryResult>
+}
+
+export type BillingAnalyticsDueStats = {
+  processed: number
+  delivered: number
+  failed: number
+}
+
+type DispatchDeliveryOutcome = "skipped" | "delivered" | "failed"
 
 export async function createBillingAnalyticsEvent(
   supabase: SupabaseBillingClient,
@@ -93,8 +113,15 @@ export async function dispatchBillingAnalyticsDue(
   supabase: SupabaseBillingClient,
   options: DispatchBillingAnalyticsOptions = {},
 ) {
+  return (await dispatchBillingAnalyticsDueWithStats(supabase, options)).processed
+}
+
+export async function dispatchBillingAnalyticsDueWithStats(
+  supabase: SupabaseBillingClient,
+  options: DispatchBillingAnalyticsOptions = {},
+): Promise<BillingAnalyticsDueStats> {
   const event = options.eventKey ? await findOutboxEventByKey(supabase, options.eventKey) : null
-  if (options.eventKey && !event) return 0
+  if (options.eventKey && !event) return { processed: 0, delivered: 0, failed: 0 }
 
   const now = new Date().toISOString()
   const staleProcessingCutoff = new Date(
@@ -118,20 +145,24 @@ export async function dispatchBillingAnalyticsDue(
 
   const deliveries = (data as BillingAnalyticsDeliveryRow[] | null) ?? []
 
-  let processed = 0
+  const stats: BillingAnalyticsDueStats = { processed: 0, delivered: 0, failed: 0 }
   for (const delivery of deliveries) {
     const event = await findOutboxEventById(supabase, delivery.outbox_id)
     if (!event) continue
-    if (await dispatchDelivery(supabase, event, delivery)) processed += 1
+    const outcome = await dispatchDelivery(supabase, event, delivery, options.dependencies)
+    if (outcome === "skipped") continue
+    stats.processed += 1
+    stats[outcome] += 1
   }
 
-  return processed
+  return stats
 }
 
 export async function dispatchBillingAnalyticsEvent(
   supabase: SupabaseBillingClient,
   event: BillingAnalyticsOutboxRow,
   destinations: BillingAnalyticsDestination[] = DESTINATIONS,
+  dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ) {
   const { data, error } = await supabase
     .from("billing_analytics_deliveries")
@@ -145,7 +176,7 @@ export async function dispatchBillingAnalyticsEvent(
   )
 
   for (const delivery of deliveries) {
-    await dispatchDelivery(supabase, event, delivery)
+    await dispatchDelivery(supabase, event, delivery, dependencies)
   }
 }
 
@@ -198,21 +229,32 @@ async function dispatchDelivery(
   supabase: SupabaseBillingClient,
   event: BillingAnalyticsOutboxRow,
   delivery: BillingAnalyticsDeliveryRow,
-) {
+  dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
+): Promise<DispatchDeliveryOutcome> {
   const claimed = await claimDeliveryForDispatch(supabase, delivery)
-  if (!claimed) return false
+  if (!claimed) return "skipped"
 
-  const profile = await findBillingAnalyticsProfile(supabase, event.user_id)
-  const input: BillingAnalyticsDeliveryInput = { event, profile, supabase }
-  const result = await deliverToDestination(claimed.destination, input)
+  let result: BillingAnalyticsDeliveryResult
+  try {
+    const findProfile = dependencies.findProfile ?? findBillingAnalyticsProfile
+    const deliver = dependencies.deliver ?? deliverToDestination
+    const profile = await findProfile(supabase, event.user_id)
+    const input: BillingAnalyticsDeliveryInput = { event, profile, supabase }
+    result = await deliver(claimed.destination, input)
+  } catch (error) {
+    result = {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    }
+  }
 
   if (result.ok) {
     await markDeliveryDelivered(supabase, claimed, result)
-    return true
+    return "delivered"
   }
 
   await markDeliveryFailed(supabase, claimed, result)
-  return true
+  return "failed"
 }
 
 function deliverToDestination(
@@ -338,7 +380,7 @@ async function findBillingAnalyticsProfile(
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id,email,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status,current_period_end,cancel_at_period_end",
+      "id,email,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status,current_period_end",
     )
     .eq("id", userId)
     .maybeSingle()
