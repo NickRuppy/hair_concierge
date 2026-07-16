@@ -131,7 +131,7 @@ async function withGlobalBrowserAsync<T>(win: Window, doc: Document, fn: () => P
   }
 }
 
-test("quiz step views route to PostHog, Customer.io, and Meta", () => {
+test("quiz step views stay in PostHog and Customer.io but out of Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("quiz_step_viewed", {
       stepName: "hair_texture",
@@ -140,7 +140,32 @@ test("quiz step views route to PostHog, Customer.io, and Meta", () => {
 
     assert.deepEqual(
       calls.map((call) => call.destination),
-      ["posthog", "customerio", "meta"],
+      ["posthog", "customerio"],
+    )
+  })
+})
+
+test("offer engagement routes to PostHog but not browser Customer.io or Meta", () => {
+  withDestinationSpies((calls) => {
+    trackAppEvent("offer_engaged", {
+      entryContext: "quiz_completion",
+      focusRoutine: false,
+      funnelEventId: "30000000-0000-4000-8000-000000000091",
+      funnelPackageKey: "default_organic",
+      funnelSessionId: "20000000-0000-4000-8000-000000000091",
+      leadId: "10000000-0000-4000-8000-000000000091",
+      needLane: "moisture",
+      offerRevision: "product_led_v2",
+      offerVariant: "default",
+      offerViewId: "40000000-0000-4000-8000-000000000091",
+      distinctSectionCount: 3,
+      reason: "section_depth",
+      sourceSection: "mini_routine",
+    })
+
+    assert.deepEqual(
+      calls.map((call) => call.destination),
+      ["posthog"],
     )
   })
 })
@@ -282,7 +307,7 @@ test("destination failures are isolated and do not throw from the facade", () =>
   }) as typeof metaDestination.track
 
   try {
-    trackAppEvent("quiz_step_viewed", {
+    trackAppEvent("quiz_started", {
       stepName: "hair_texture",
       stepNumber: 2,
     })
@@ -393,6 +418,56 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
         section_index: 1,
         shampoo_module_id: "shampoo-balanced-normal",
         suggested_category: "leave_in",
+      },
+    ],
+  ])
+})
+
+test("PostHog offer engagement keeps the reason and stable offer context", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("offer_engaged", {
+      entryContext: "quiz_completion",
+      focusRoutine: false,
+      funnelEventId: "30000000-0000-4000-8000-000000000092",
+      funnelPackageKey: "default_organic",
+      funnelSessionId: "20000000-0000-4000-8000-000000000092",
+      leadId: "10000000-0000-4000-8000-000000000092",
+      needLane: "moisture",
+      offerRevision: "product_led_v2",
+      offerVariant: "default",
+      offerViewId: "40000000-0000-4000-8000-000000000092",
+      distinctSectionCount: 1,
+      reason: "faq_opened",
+      sourceSection: "faq",
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "offer_engaged",
+      {
+        $insert_id: "30000000-0000-4000-8000-000000000092",
+        distinct_section_count: 1,
+        entry_context: "quiz_completion",
+        focus_routine: false,
+        funnel_package_key: "default_organic",
+        funnel_session_id: "20000000-0000-4000-8000-000000000092",
+        lead_id: "10000000-0000-4000-8000-000000000092",
+        need_lane: "moisture",
+        offer_revision: "product_led_v2",
+        offer_variant: "default",
+        offer_view_id: "40000000-0000-4000-8000-000000000092",
+        reason: "faq_opened",
+        source_section: "faq",
       },
     ],
   ])

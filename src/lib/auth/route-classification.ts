@@ -35,6 +35,7 @@ const PUBLIC_ROUTE_PREFIXES = [
 ]
 
 const PUBLIC_API_EXACT_ROUTES = [
+  "/api/analytics/offer-engaged",
   "/api/auth/callback",
   "/api/auth/send-magic-link",
   "/api/auth/send-setup-link",

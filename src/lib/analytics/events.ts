@@ -52,6 +52,8 @@ export type OfferCtaId =
   | "change_plan"
   | "final"
 
+export type OfferEngagementReason = "cta_clicked" | "faq_opened" | "section_depth"
+
 export type CheckoutFailureStage =
   | "configuration"
   | "duplicate_access"
@@ -119,6 +121,11 @@ export type AppEventMap = {
     interactionIndex: number
     selectedInterval?: BillingInterval
     sourceSection: OfferSectionId
+  }
+  offer_engaged: OfferAnalyticsContext & {
+    distinctSectionCount: number
+    reason: OfferEngagementReason
+    sourceSection?: OfferSectionId
   }
   offer_faq_opened: OfferAnalyticsContext & {
     faqId: string

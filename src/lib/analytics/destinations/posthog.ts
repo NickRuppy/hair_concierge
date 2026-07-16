@@ -128,6 +128,15 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         source_section: data.sourceSection,
       }
     }
+    case "offer_engaged": {
+      const data = payload as AppEventMap["offer_engaged"]
+      return {
+        ...offerContextProperties(data),
+        distinct_section_count: data.distinctSectionCount,
+        reason: data.reason,
+        source_section: data.sourceSection,
+      }
+    }
     case "offer_faq_opened": {
       const data = payload as AppEventMap["offer_faq_opened"]
       return {

@@ -14,6 +14,8 @@ export const eventRoutes = {
   onboarding_completed: { customerio: true, meta: false, posthog: true },
   offer_checkout_opened: { customerio: false, meta: false, posthog: true },
   offer_cta_clicked: { customerio: false, meta: false, posthog: true },
+  // Customer.io delivery uses the server-side lead lookup in /api/analytics/offer-engaged.
+  offer_engaged: { customerio: false, meta: false, posthog: true },
   offer_faq_opened: { customerio: false, meta: false, posthog: true },
   offer_payment_method_selected: { customerio: false, meta: false, posthog: true },
   offer_plan_selected: { customerio: false, meta: false, posthog: true },
@@ -25,6 +27,6 @@ export const eventRoutes = {
   quiz_goals_selected: { customerio: true, meta: false, posthog: true },
   quiz_lead_captured: { customerio: false, meta: true, posthog: true },
   quiz_started: { customerio: true, meta: true, posthog: true },
-  quiz_step_viewed: { customerio: true, meta: true, posthog: true },
+  quiz_step_viewed: { customerio: true, meta: false, posthog: true },
   subscription_started: { customerio: false, meta: true, posthog: false },
 } satisfies Record<AppEventName, AppEventRoute>
