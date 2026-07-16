@@ -35,7 +35,7 @@ cta_label
 result_url
 ```
 
-The template must use `trigger.result_url` for both links. It must not reconstruct the result URL from `lead_id`. User- or data-derived values are HTML-escaped in the HTML fragment. The plain-text alternative uses the already-controlled trigger values without HTML escaping so names, ampersands, and the attributed result URL do not turn into literal entities such as `&amp;`. Product images are optional: all product meaning remains in live text when an image is missing, blocked, or unsupported.
+The template must use `trigger.result_url` for both links. It must not reconstruct the result URL from `lead_id`. User- or data-derived values use Customer.io's `xml_escape` filter in the HTML fragment. Do not use its misleadingly named `escape` filter here: Customer.io URL-encodes spaces and punctuation with it. The plain-text alternative uses the already-controlled trigger values without HTML escaping so names, ampersands, and the attributed result URL do not turn into literal entities such as `&amp;`. Product images are optional: all product meaning remains in live text when an image is missing, blocked, or unsupported.
 
 During the first deployment, the application also sends the legacy `rows`, `main_lever_title`, `main_lever_why`, and `routine_levers` fields so active template `40` remains rollback-compatible. The refreshed template does not render those fields. Remove the transport shim in a separate cleanup after the rollback window closes.
 

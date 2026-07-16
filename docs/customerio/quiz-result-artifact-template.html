@@ -79,7 +79,7 @@
                 color: #2a1845;
               "
             >
-              Hi{% if trigger.first_name != blank %} {{ trigger.first_name | escape }}{% endif %},
+              Hi{% if trigger.first_name != blank %} {{ trigger.first_name | xml_escape }}{% endif %},
             </p>
             <p
               style="
@@ -135,7 +135,7 @@
                       color: #2a1845;
                     "
                   >
-                    {{ trigger.headline | escape }}
+                    {{ trigger.headline | xml_escape }}
                   </h1>
                   <p
                     style="
@@ -146,7 +146,7 @@
                       color: #3a3835;
                     "
                   >
-                    {{ trigger.intro | escape }}
+                    {{ trigger.intro | xml_escape }}
                   </p>
                 </td>
               </tr>
@@ -232,7 +232,7 @@
                             color: #2a1845;
                           "
                         >
-                          {{ signal.label | escape }}
+                          {{ signal.label | xml_escape }}
                         </p>
                         <p
                           style="
@@ -243,7 +243,7 @@
                             color: #4b4750;
                           "
                         >
-                          {{ signal.conclusion | escape }}
+                          {{ signal.conclusion | xml_escape }}
                         </p>
                       </td>
                     </tr>
@@ -300,8 +300,8 @@
                         style="width: 92px; padding: 14px 0 14px 14px; background-color: #f3efe8"
                       >
                         <img
-                          src="{{ product.image_url | escape }}"
-                          alt="{{ product.name | escape }}"
+                          src="{{ product.image_url | xml_escape }}"
+                          alt="{{ product.name | xml_escape }}"
                           width="76"
                           height="76"
                           style="
@@ -329,7 +329,7 @@
                             color: #72569c;
                           "
                         >
-                          {{ product.category_label | escape }}
+                          {{ product.category_label | xml_escape }}
                         </p>
                         <h3
                           style="
@@ -342,7 +342,7 @@
                             word-break: break-word;
                           "
                         >
-                          {{ product.name | escape }}
+                          {{ product.name | xml_escape }}
                         </h3>
                         <p
                           style="
@@ -353,7 +353,7 @@
                             color: #4b4750;
                           "
                         >
-                          {{ product.note | escape }}
+                          {{ product.note | xml_escape }}
                         </p>
                         <p
                           style="
@@ -364,9 +364,9 @@
                             color: #716b76;
                           "
                         >
-                          <strong>{{ product.cadence_label | escape }}</strong>{% if
+                          <strong>{{ product.cadence_label | xml_escape }}</strong>{% if
                           product.cadence_qualifier != blank %} · {{ product.cadence_qualifier |
-                          escape }}{% endif %}
+                          xml_escape }}{% endif %}
                         </p>
                       </td>
                     </tr>
@@ -445,7 +445,7 @@
                       color: #72569c;
                     "
                   >
-                    {{ story.label | escape }}
+                    {{ story.label | xml_escape }}
                   </p>
                   <h3
                     style="
@@ -457,7 +457,7 @@
                       color: #2a1845;
                     "
                   >
-                    {{ story.headline | escape }}
+                    {{ story.headline | xml_escape }}
                   </h3>
                   <p
                     style="
@@ -468,7 +468,7 @@
                       color: #4b4750;
                     "
                   >
-                    {{ story.body | escape }}
+                    {{ story.body | xml_escape }}
                   </p>
                 </td>
               </tr>
@@ -479,7 +479,7 @@
         <tr>
           <td align="center" style="padding: 28px 16px 8px">
             <a
-              href="{{ trigger.result_url | escape }}"
+              href="{{ trigger.result_url | xml_escape }}"
               target="_blank"
               style="
                 display: inline-block;
@@ -493,7 +493,7 @@
                 text-decoration: none;
                 border-radius: 8px;
               "
-              >{{ trigger.cta_label | escape }}</a
+              >{{ trigger.cta_label | xml_escape }}</a
             >
           </td>
         </tr>
@@ -520,10 +520,10 @@
               "
             >
               <a
-                href="{{ trigger.result_url | escape }}"
+                href="{{ trigger.result_url | xml_escape }}"
                 target="_blank"
                 style="color: #5b3d86; text-decoration: underline"
-                >{{ trigger.result_url | escape }}</a
+                >{{ trigger.result_url | xml_escape }}</a
               >
             </p>
           </td>

@@ -68,6 +68,11 @@ test("canonical HTML is an email-safe fragment under layout 1", () => {
     normalizedHtml,
     /Entdecke, womit deine Pflege beginnt und wie Chaarlie dich im Alltag begleitet\./,
   )
+  assert.doesNotMatch(html, /\| escape/)
+  for (const expression of html.matchAll(/\{\{\s*([^}]+)\s*\}\}/g)) {
+    if (expression[1].includes("forloop.index")) continue
+    assert.match(expression[1], /\|\s+xml_escape/, expression[0])
+  }
 })
 
 test("canonical templates render the current trigger contract and no retired offer", () => {

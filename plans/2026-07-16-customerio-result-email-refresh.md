@@ -165,7 +165,7 @@ Acceptance constraints:
 - exactly three signals;
 - exactly the two non-suggested foundation products;
 - no raw free-text quiz answer;
-- all user/data-derived values escaped in HTML contexts; sanitized values remain unescaped in non-HTML subject/plain-text contexts so apostrophes, ampersands, and URLs do not become literal entities;
+- all user/data-derived values use Customer.io's `xml_escape` filter in HTML contexts; its `escape` filter is forbidden because it URL-encodes displayed copy. Sanitized values remain unescaped in non-HTML subject/plain-text contexts so apostrophes, ampersands, and URLs do not become literal entities;
 - the email hero uses the sanitized first name, while ordinary valid names still produce the exact same hero copy as the offer page;
 - no email-specific calculation or independently authored personalization;
 - the product disclaimer remains static template copy, not computed data.
