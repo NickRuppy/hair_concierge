@@ -66,6 +66,7 @@ test("classifies every current public page and route handler", () => {
     "/twitter-image",
     "/welcome",
     "/widerruf",
+    "/api/analytics/offer-engaged",
     "/api/auth/callback",
     "/api/auth/send-magic-link",
     "/api/auth/send-setup-link",
