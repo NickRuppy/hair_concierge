@@ -62,7 +62,7 @@ export default function AppValueStackOfferVariant({
         </div>
 
         <main className="mx-auto w-full max-w-[560px] px-5">
-          <section className="pb-9 pt-[84px]">
+          <section className="pb-9 pt-[84px]" data-offer-section="hero">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#2D9F5E]/25 bg-[#2D9F5E]/10 px-3.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-[#2D9F5E]">
               <Check aria-hidden="true" className="size-3.5" />
               Quiz ausgewertet

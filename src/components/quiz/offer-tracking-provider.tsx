@@ -23,7 +23,7 @@ import type {
 import { createFunnelEventId } from "@/lib/funnel/client"
 import type { QuizOfferPreview } from "@/lib/quiz/offer-preview-types"
 
-export const OFFER_REVISION = "product_led_v1"
+export const OFFER_REVISION = "product_led_v2"
 export const OFFER_PRICING_REVISION = "pricing_v1"
 
 const OfferTrackingContext = createContext<OfferAnalyticsContext | null>(null)
@@ -125,7 +125,7 @@ export function OfferTrackingProvider({
       const target = event.target.closest<HTMLElement>("[data-offer-cta]")
       if (!target || !root.contains(target)) return
       const ctaId = target.dataset.offerCta as OfferCtaId | undefined
-      const sourceSection = target.dataset.offerSourceSection as "hero" | OfferSectionId | undefined
+      const sourceSection = target.dataset.offerSourceSection as OfferSectionId | undefined
       const destination = target.dataset.offerDestination
       if (!ctaId || !sourceSection || !destination) return
 

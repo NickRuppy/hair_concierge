@@ -74,6 +74,9 @@ test("vendor SDKs stay behind post-paint dynamic import boundaries without conse
   assert.match(coordinator, /scheduleAfterFirstPaint/)
   assert.match(customerIoRuntime, /import\("@customerio\/cdp-analytics-browser"\)/)
   assert.match(postHogRuntime, /import\("posthog-js"\)/)
+  assert.match(postHogRuntime, /advanced_disable_flags: true/)
+  assert.match(postHogRuntime, /before_send:/)
+  assert.doesNotMatch(postHogRuntime, /sanitize_properties:/)
   assert.doesNotMatch(customerIoRuntime, /from "@customerio\/cdp-analytics-browser"/)
   assert.doesNotMatch(postHogRuntime, /from "posthog-js"/)
   assert.doesNotMatch(trackingSources, /cookie-consent|COOKIE_CONSENT|loadConsent/)
@@ -134,6 +137,18 @@ test("offer and profile reactivation pricing views keep funnel attribution with 
 
 test("checkout return only emits browser Subscribe when it can share Stripe's event id", () => {
   const source = read("src/app/welcome/checkout-return-analytics.tsx")
+
+  assert.ok(
+    source.indexOf('window.history.replaceState(window.history.state, "", "/welcome")') <
+      source.indexOf('trackAppEvent("subscription_started"'),
+  )
+  assert.ok(
+    source.indexOf('window.history.replaceState(window.history.state, "", "/welcome")') <
+      source.indexOf("trackMetaPageView()"),
+  )
+  assert.ok(
+    source.indexOf("trackMetaPageView()") < source.indexOf('trackAppEvent("subscription_started"'),
+  )
 
   assert.match(
     source,

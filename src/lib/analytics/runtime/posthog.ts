@@ -1,5 +1,6 @@
 import { createBoundedFifo } from "./bounded-fifo"
 import type { CurrentFunnelContext } from "@/lib/funnel/client"
+import { sanitizeAnalyticsUrl } from "@/lib/analytics/page-url"
 
 type PostHogProperties = Record<string, unknown>
 
@@ -136,6 +137,34 @@ export function createPostHogRuntime({
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com"
+const POSTHOG_URL_PROPERTY_KEYS = new Set([
+  "$current_url",
+  "$initial_current_url",
+  "$initial_referrer",
+  "$referrer",
+  "$session_entry_referrer",
+  "$session_entry_url",
+])
+
+export function sanitizePostHogProperties(properties: PostHogProperties) {
+  const sanitized = { ...properties }
+
+  for (const [key, value] of Object.entries(sanitized)) {
+    if (POSTHOG_URL_PROPERTY_KEYS.has(key) && typeof value === "string") {
+      sanitized[key] = sanitizeAnalyticsUrl(value)
+      continue
+    }
+    if ((key === "$set" || key === "$set_once") && isPropertyRecord(value)) {
+      sanitized[key] = sanitizePostHogProperties(value)
+    }
+  }
+
+  return sanitized
+}
+
+function isPropertyRecord(value: unknown): value is PostHogProperties {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value)
+}
 
 async function loadPostHogClient(): Promise<PostHogRuntimeClient | null> {
   if (!POSTHOG_KEY || typeof window === "undefined") return null
@@ -143,8 +172,18 @@ async function loadPostHogClient(): Promise<PostHogRuntimeClient | null> {
   const posthogModule = await import("posthog-js")
   const client = posthogModule.default
   client.init(POSTHOG_KEY, {
+    advanced_disable_flags: true,
     api_host: POSTHOG_HOST,
     autocapture: false,
+    before_send: (event) =>
+      event
+        ? {
+            ...event,
+            properties: sanitizePostHogProperties(
+              event.properties ?? {},
+            ) as typeof event.properties,
+          }
+        : null,
     capture_pageview: false,
     persistence: "localStorage+cookie",
   })
