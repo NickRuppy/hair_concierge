@@ -1,0 +1,559 @@
+<!doctype html>
+<!-- Illustrative review fixture only. The canonical deployable sources live in docs/customerio/. -->
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Ergebnis-E-Mail – freigegebener Shared-Core-Mockup</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --page: #f1ecf7;
+        --paper: #ffffff;
+        --ink: #2a1845;
+        --copy: #4b4750;
+        --muted: #716b76;
+        --line: #e9e0ed;
+        --soft: #f6f2fa;
+        --coral: #d4616a;
+        --green: #2d8a57;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--page);
+        color: var(--copy);
+        font:
+          15px/1.6 Arial,
+          Helvetica,
+          sans-serif;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(100% - 24px, 680px);
+        margin: 24px auto 48px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+
+      .controls button {
+        border: 1px solid #cfc3d6;
+        border-radius: 999px;
+        background: var(--paper);
+        color: var(--ink);
+        cursor: pointer;
+        padding: 8px 14px;
+      }
+
+      .controls button[aria-pressed="true"] {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .inbox-context,
+      .email,
+      .plain {
+        border: 1px solid var(--line);
+        background: var(--paper);
+      }
+
+      .inbox-context {
+        margin-bottom: 12px;
+        padding: 14px 18px;
+      }
+
+      .inbox-context p {
+        margin: 3px 0;
+      }
+
+      .email {
+        overflow: hidden;
+        border-radius: 20px;
+      }
+
+      .email-inner {
+        padding: 28px 36px 34px;
+      }
+
+      .brand {
+        margin: 0;
+        color: var(--ink);
+        font:
+          700 26px/1.2 Georgia,
+          "Times New Roman",
+          serif;
+        text-align: center;
+      }
+
+      .kicker {
+        margin: 8px 0 0;
+        color: #8f7bb2;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        line-height: 1.2;
+      }
+
+      h1 {
+        margin: 14px 0 12px;
+        font-size: 31px;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 25px;
+      }
+
+      h3 {
+        margin: 0 0 5px;
+        font-size: 18px;
+      }
+
+      .section {
+        margin-top: 26px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+
+      .status {
+        display: inline-block;
+        border-radius: 999px;
+        background: #e9f5ee;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 5px 10px;
+        text-transform: uppercase;
+      }
+
+      .signals {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .signal {
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 11px;
+        align-items: start;
+      }
+
+      .number {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--soft);
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .signal p,
+      .product p {
+        margin: 3px 0;
+      }
+
+      .products {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .product {
+        display: grid;
+        grid-template-columns: 76px 1fr;
+        gap: 14px;
+        align-items: center;
+        border: 1px solid var(--line);
+        padding: 14px;
+      }
+
+      .product-image {
+        display: grid;
+        min-height: 82px;
+        place-items: center;
+        background: #f3efe8;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .label {
+        color: #72569c;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .fine-print {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .capabilities {
+        width: 100%;
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-spacing: 0;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .capability + .capability td {
+        border-top: 1px solid var(--line);
+      }
+
+      .capability-marker {
+        width: 44px;
+        padding: 18px 0 17px 18px;
+        vertical-align: top;
+      }
+
+      .check {
+        display: block;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #edf6f1;
+        color: var(--green);
+        font-weight: 700;
+        line-height: 26px;
+        text-align: center;
+      }
+
+      .capability-copy {
+        padding: 17px 18px 17px 12px;
+        vertical-align: top;
+      }
+
+      .capability-copy p {
+        margin: 3px 0 0;
+      }
+
+      .cta-block {
+        text-align: center;
+      }
+
+      .cta {
+        display: inline-block;
+        border-radius: 9px;
+        background: var(--coral);
+        color: var(--paper);
+        font-weight: 700;
+        padding: 14px 26px;
+        text-decoration: none;
+      }
+
+      .raw-link {
+        overflow-wrap: anywhere;
+      }
+
+      .footer {
+        margin-top: 26px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .plain {
+        display: none;
+        margin: 0;
+        padding: 24px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font:
+          14px/1.6 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+      }
+
+      .shell[data-mode="images-off"] .product-image {
+        display: none;
+      }
+
+      .shell[data-mode="images-off"] .product {
+        grid-template-columns: 1fr;
+      }
+
+      .shell[data-mode="plain"] .inbox-context,
+      .shell[data-mode="plain"] .email {
+        display: none;
+      }
+
+      .shell[data-mode="plain"] .plain {
+        display: block;
+      }
+
+      @media (max-width: 520px) {
+        .email-inner {
+          padding: 24px 20px 28px;
+        }
+
+        h1 {
+          font-size: 27px;
+        }
+
+        .product {
+          grid-template-columns: 62px 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell" data-mode="html">
+      <div class="controls" role="group" aria-label="Vorschaumodus">
+        <button type="button" data-mode="html" aria-pressed="true">HTML</button>
+        <button type="button" data-mode="images-off" aria-pressed="false">Bilder blockiert</button>
+        <button type="button" data-mode="plain" aria-pressed="false">Nur Text</button>
+      </div>
+
+      <aside class="inbox-context" aria-label="Betreff und Preheader">
+        <p><strong>Betreff:</strong> Sarah, deine Haaranalyse ist fertig</p>
+        <p><strong>Fallback:</strong> Deine Haaranalyse ist fertig</p>
+        <p>
+          <strong>Preheader:</strong> Entdecke, womit deine Pflege beginnt und wie Chaarlie dich im
+          Alltag begleitet.
+        </p>
+      </aside>
+
+      <article class="email" aria-label="Freigegebene HTML-E-Mail">
+        <div class="email-inner">
+          <header>
+            <p class="brand">chaarlie</p>
+            <p class="kicker">Deine Haaranalyse</p>
+          </header>
+
+          <p>Hi Sarah,</p>
+          <p>
+            dein Quiz ist ausgewertet. Hier ist dein persönlicher Startpunkt – direkt aus deinen
+            Antworten.
+          </p>
+
+          <section class="section">
+            <span class="status">Quiz ausgewertet</span>
+            <h1>Sarah, dein 4-Wochen-Weg zu mehr Kraft &amp; Belastbarkeit.</h1>
+            <p>
+              Haarbruch ist dein wichtigster Pflegefokus. Deine Pflegebasis verbindet deshalb
+              ausgewogene Basispflege mit gezielter Strukturunterstützung.
+            </p>
+          </section>
+
+          <section class="section">
+            <h2>Deine Pflegebasis</h2>
+            <p>Diese drei Punkte bestimmen, womit deine Routine startet.</p>
+            <div class="signals">
+              <div class="signal">
+                <span class="number">1</span>
+                <div>
+                  <strong>Ausgeglichene Kopfhaut</strong>
+                  <p>Eine ausgewogene Reinigung reicht als Basis. 2x/Woche.</p>
+                </div>
+              </div>
+              <div class="signal">
+                <span class="number">2</span>
+                <div>
+                  <strong>Mittlere Haarstärke</strong>
+                  <p>Ein Conditioner mit Protein-Fokus ist der passende Ausgangspunkt.</p>
+                </div>
+              </div>
+              <div class="signal">
+                <span class="number">3</span>
+                <div>
+                  <strong>Dehntest plus Reparatur-Signal</strong>
+                  <p>Eine Protein-Maske ergänzt den Conditioner in Abständen.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2>Daraus entsteht dein Start</h2>
+            <div class="products">
+              <article class="product">
+                <div class="product-image" aria-label="Optionales Produktbild">Optionales Bild</div>
+                <div>
+                  <span class="label">Shampoo · Beispiel</span>
+                  <h3>Neqi Moisture Mystery</h3>
+                  <p>Ein mildes Beispiel, passend zur abgeleiteten Reinigungsrichtung.</p>
+                  <p class="fine-print"><strong>2x/Woche</strong> · Startpunkt aus deinem Quiz</p>
+                </div>
+              </article>
+              <article class="product">
+                <div class="product-image" aria-label="Optionales Produktbild">Optionales Bild</div>
+                <div>
+                  <span class="label">Conditioner · Beispiel</span>
+                  <h3>Neqi Repair Reveal Conditioner</h3>
+                  <p>Struktur-Fokus mit mittlerem Pflegegewicht als Beispiel.</p>
+                  <p class="fine-print"><strong>Bei jeder Haarwäsche</strong> · 2x/Woche</p>
+                </div>
+              </article>
+            </div>
+            <p class="fine-print">
+              Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine finalen
+              Produktempfehlungen.
+            </p>
+          </section>
+
+          <section class="section">
+            <h2>Deine Routine ist erst der Anfang.</h2>
+            <p>Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.</p>
+            <table
+              class="capabilities"
+              role="presentation"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+            >
+              <tr class="capability">
+                <td class="capability-marker"><span class="check" aria-hidden="true">✓</span></td>
+                <td class="capability-copy">
+                  <strong>Deine Routine auf einen Blick.</strong>
+                  <p>Produkte, Reihenfolge und Anwendung – klar an einem Ort.</p>
+                </td>
+              </tr>
+              <tr class="capability">
+                <td class="capability-marker"><span class="check" aria-hidden="true">✓</span></td>
+                <td class="capability-copy">
+                  <strong>Frag Chaarlie zu deinem Haar.</strong>
+                  <p>
+                    Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich
+                    verändert.
+                  </p>
+                </td>
+              </tr>
+              <tr class="capability">
+                <td class="capability-marker"><span class="check" aria-hidden="true">✓</span></td>
+                <td class="capability-copy">
+                  <strong>Frag nach Produkten, die zu dir passen.</strong>
+                  <p>Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.</p>
+                </td>
+              </tr>
+            </table>
+          </section>
+
+          <section class="section cta-block">
+            <a class="cta" href="#result">Mit Chaarlie starten</a>
+            <p class="fine-print">Oder öffne deinen persönlichen Ergebnis-Link:</p>
+            <a class="raw-link" href="#result"
+              >https://chaarlie.de/result/deine-id?focus=unlock-plan&amp;entry=result_email</a
+            >
+          </section>
+
+          <p>Liebe Grüße,<br />Chaarlie</p>
+          <footer class="footer">
+            Chaarlie · info@chaarlie.de<br />Haarmony LLC · Dover, Delaware<br />Abmelden ·
+            Impressum · Datenschutz
+          </footer>
+        </div>
+      </article>
+
+      <pre class="plain" aria-label="Freigegebene Textversion">
+CHAARLIE — DEINE HAARANALYSE
+
+Hi Sarah,
+
+dein Quiz ist ausgewertet. Hier ist dein persönlicher Startpunkt – direkt aus deinen Antworten.
+
+Sarah, dein 4-Wochen-Weg zu mehr Kraft &amp; Belastbarkeit.
+
+Haarbruch ist dein wichtigster Pflegefokus. Deine Pflegebasis verbindet deshalb ausgewogene Basispflege mit gezielter Strukturunterstützung.
+
+DEINE PFLEGEBASIS
+
+1. Ausgeglichene Kopfhaut
+Eine ausgewogene Reinigung reicht als Basis. 2x/Woche.
+
+2. Mittlere Haarstärke
+Ein Conditioner mit Protein-Fokus ist der passende Ausgangspunkt.
+
+3. Dehntest plus Reparatur-Signal
+Eine Protein-Maske ergänzt den Conditioner in Abständen.
+
+DARAUS ENTSTEHT DEIN START
+
+Shampoo · Beispiel
+Neqi Moisture Mystery
+Ein mildes Beispiel, passend zur abgeleiteten Reinigungsrichtung.
+2x/Woche · Startpunkt aus deinem Quiz
+
+Conditioner · Beispiel
+Neqi Repair Reveal Conditioner
+Struktur-Fokus mit mittlerem Pflegegewicht als Beispiel.
+Bei jeder Haarwäsche · 2x/Woche
+
+Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine finalen Produktempfehlungen.
+
+DEINE ROUTINE IST ERST DER ANFANG.
+
+Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.
+
+Deine Routine auf einen Blick.
+Produkte, Reihenfolge und Anwendung – klar an einem Ort.
+
+Frag Chaarlie zu deinem Haar.
+Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich verändert.
+
+Frag nach Produkten, die zu dir passen.
+Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.
+
+MIT CHAARLIE STARTEN
+https://chaarlie.de/result/deine-id?focus=unlock-plan&amp;entry=result_email
+
+Liebe Grüße,
+Chaarlie
+
+Chaarlie · info@chaarlie.de
+Haarmony LLC · Dover, Delaware
+Impressum · Datenschutz</pre
+      >
+    </main>
+
+    <script>
+      const shell = document.querySelector(".shell")
+      const buttons = Array.from(document.querySelectorAll(".controls button[data-mode]"))
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const mode = button.dataset.mode
+          shell.dataset.mode = mode
+          buttons.forEach((candidate) => {
+            candidate.setAttribute("aria-pressed", String(candidate === button))
+          })
+        })
+      })
+    </script>
+  </body>
+</html>

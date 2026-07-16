@@ -173,7 +173,7 @@ test("app value stack renders the approved quiz-to-product-to-pricing hierarchy"
   assert.match(html, /Aus deiner Pflegebasis wird eine Routine, die im Alltag funktioniert/i)
   assert.equal((html.match(/pricing-slot-marker/g) ?? []).length, 1)
   assert.match(html, /Was passiert direkt nach der Zahlung/i)
-  assert.equal((html.match(/Routine freischalten/g) ?? []).length, 3)
+  assert.equal((html.match(/Mit Chaarlie starten/g) ?? []).length, 3)
   assert.match(html, /14 Tage Geld-zurück · zum Laufzeitende kündbar/i)
   assert.match(html, /id="unlock-plan"[^>]*scroll-mt-\[76px\]/i)
   assert.match(html, /id="pricing"[^>]*scroll-mt-\[76px\]/i)

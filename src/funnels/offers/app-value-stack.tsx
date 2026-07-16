@@ -8,6 +8,8 @@ import { OfferFaq } from "@/components/quiz/offer-faq"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import {
+  APP_VALUE_STACK_BRIDGE_BODY,
+  APP_VALUE_STACK_BRIDGE_HEADLINE,
   APP_VALUE_STACK_CTA_LABEL,
   buildAppValueStackHeroCopy,
 } from "@/lib/quiz/app-value-stack-copy"
@@ -93,10 +95,10 @@ export default function AppValueStackOfferVariant({
                 Nach dem Freischalten
               </p>
               <h2 className="mt-2 font-header text-[28px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
-                Deine Routine ist erst der Anfang.
+                {APP_VALUE_STACK_BRIDGE_HEADLINE}
               </h2>
               <p className="mx-auto mt-3 max-w-[40ch] text-[14px] leading-[1.6] text-muted-foreground">
-                Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.
+                {APP_VALUE_STACK_BRIDGE_BODY}
               </p>
               <a
                 data-offer-cta="locked_plan"

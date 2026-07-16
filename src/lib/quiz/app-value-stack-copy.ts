@@ -1,7 +1,45 @@
+import type { OfferSectionId } from "@/lib/analytics/events"
+
 import type { QuizNeedLane, QuizConcern } from "./need-lane"
 import type { QuizResultNarrative } from "./result-narrative"
 
-export const APP_VALUE_STACK_CTA_LABEL = "Routine freischalten"
+export const APP_VALUE_STACK_CTA_LABEL = "Mit Chaarlie starten"
+export const APP_VALUE_STACK_BRIDGE_HEADLINE = "Deine Routine ist erst der Anfang."
+export const APP_VALUE_STACK_BRIDGE_BODY =
+  "Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an."
+
+export type AppValueStackStoryTrackingId = Extract<
+  OfferSectionId,
+  "product_story_routine" | "product_story_chat" | "product_story_products"
+>
+
+export type AppValueStackStory = {
+  readonly trackingId: AppValueStackStoryTrackingId
+  readonly label: string
+  readonly headline: string
+  readonly body: string
+}
+
+export const APP_VALUE_STACK_STORIES = [
+  {
+    trackingId: "product_story_routine",
+    label: "Deine Routine",
+    headline: "Deine Routine auf einen Blick.",
+    body: "Produkte, Reihenfolge und Anwendung – klar an einem Ort.",
+  },
+  {
+    trackingId: "product_story_chat",
+    label: "Dein Haar-Berater",
+    headline: "Frag Chaarlie zu deinem Haar.",
+    body: "Chaarlie kennt dein Haarprofil und hilft dir, wenn etwas unklar ist oder sich verändert.",
+  },
+  {
+    trackingId: "product_story_products",
+    label: "Deine Empfehlungen",
+    headline: "Frag nach Produkten, die zu dir passen.",
+    body: "Du bekommst Preis, Anwendung und eine verständliche Begründung direkt dazu.",
+  },
+] as const satisfies readonly AppValueStackStory[]
 
 const CONCERN_LEADS: Record<QuizConcern, string> = {
   frizz: "Frizz ist dein wichtigster Pflegefokus.",

@@ -3,12 +3,37 @@ import test from "node:test"
 
 import type { QuizNeedLane, QuizConcern } from "../src/lib/quiz/need-lane"
 import {
+  APP_VALUE_STACK_BRIDGE_BODY,
+  APP_VALUE_STACK_BRIDGE_HEADLINE,
+  APP_VALUE_STACK_CTA_LABEL,
+  APP_VALUE_STACK_STORIES,
   buildAppValueStackHeroCopy,
   type AppValueStackHeroCopy,
 } from "../src/lib/quiz/app-value-stack-copy"
 import type { QuizResultNarrative } from "../src/lib/quiz/result-narrative"
 
 const OUTCOME = "mehr Geschmeidigkeit & Kontrolle"
+
+test("exports the approved shared CTA and stable story contract", () => {
+  assert.equal(APP_VALUE_STACK_CTA_LABEL, "Mit Chaarlie starten")
+  assert.equal(APP_VALUE_STACK_BRIDGE_HEADLINE, "Deine Routine ist erst der Anfang.")
+  assert.equal(
+    APP_VALUE_STACK_BRIDGE_BODY,
+    "Chaarlie begleitet dich bei der Anwendung und passt deine Pflege mit dir an.",
+  )
+  assert.deepEqual(
+    APP_VALUE_STACK_STORIES.map((story) => story.trackingId),
+    ["product_story_routine", "product_story_chat", "product_story_products"],
+  )
+  assert.deepEqual(
+    APP_VALUE_STACK_STORIES.map((story) => story.headline),
+    [
+      "Deine Routine auf einen Blick.",
+      "Frag Chaarlie zu deinem Haar.",
+      "Frag nach Produkten, die zu dir passen.",
+    ],
+  )
+})
 
 function makeNarrative(primaryConcern: QuizConcern | null): QuizResultNarrative {
   return {

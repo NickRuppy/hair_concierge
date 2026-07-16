@@ -1,1 +1,43 @@
-Hi{% if trigger.first_name != blank %} {{ trigger.first_name | escape }}{% endif %},  |  vielen Dank, dass du dir die Zeit genommen hast, das Quiz auszufüllen.  |  Hier ist deine persönliche Auswertung, direkt auf deinen Antworten basierend.  |  {{ trigger.headline | default: "So kommen wir deinem Haarziel näher" | escape }}  |  {{ trigger.intro | default: "" | escape }}  |  Dein Ergebnis:  |  {% for row in trigger.rows %}Heute: {{ row.before | escape }} / In 4 Wochen: {{ row.after | escape }}. {% endfor %}  |  {% if trigger.main_lever_title != blank %}Dein größter Hebel: {{ trigger.main_lever_title | escape }}. {% if trigger.main_lever_why != blank %}{{ trigger.main_lever_why | escape }}{% endif %}{% endif %}  |  {% if trigger.routine_levers != blank %}Deine Routine-Hebel: {% for lever in trigger.routine_levers %}{{ lever.name | escape }}{% if lever.description != blank %}: {{ lever.description | escape }}{% endif %}. {% endfor %}{% endif %}  |  Dein vollständiger Routinen-Plan.  |  Schalte deinen kompletten Plan mit Chaarlie frei und starte direkt mit deiner persönlichen Routine: {{ trigger.result_url }}  |  Liebe Grüße, Chaarlie  |  Chaarlie · info@chaarlie.de · Haarmony LLC · 1111B S Governors Ave #84075 · Dover, DE 19904, USA · Impressum: https://chaarlie.de/impressum · Datenschutz: https://chaarlie.de/datenschutz
+CHAARLIE — DEINE HAARANALYSE
+
+Hi{% if trigger.first_name != blank %} {{ trigger.first_name }}{% endif %},
+
+dein Quiz ist ausgewertet. Hier ist dein persönlicher Startpunkt – direkt aus deinen Antworten.
+
+{{ trigger.headline }}
+
+{{ trigger.intro }}
+
+DEINE PFLEGEBASIS
+
+{% for signal in trigger.signals %}{{ forloop.index }}. {{ signal.label }}
+{{ signal.conclusion }}
+
+{% endfor %}DARAUS ENTSTEHT DEIN START
+
+{% for product in trigger.foundation_products %}{{ product.category_label }}
+{{ product.name }}
+{{ product.note }}
+{{ product.cadence_label }}{% if product.cadence_qualifier != blank %} · {{ product.cadence_qualifier }}{% endif %}
+
+{% endfor %}Das sind konkrete Beispiele aus unserer Produktdatenbank – noch nicht deine finalen Produktempfehlungen.
+
+{{ trigger.app_bridge_headline }}
+
+{{ trigger.app_bridge_body }}
+
+{% for story in trigger.app_stories %}{{ story.label }}
+{{ story.headline }}
+{{ story.body }}
+
+{% endfor %}{{ trigger.cta_label }}
+{{ trigger.result_url }}
+
+Liebe Grüße,
+Chaarlie
+
+Chaarlie · info@chaarlie.de
+Haarmony LLC · 1111B S Governors Ave # 84075 · Dover, DE 19904, USA
+Abmelden: {% unsubscribe_url %}
+Impressum: https://chaarlie.de/impressum
+Datenschutz: https://chaarlie.de/datenschutz

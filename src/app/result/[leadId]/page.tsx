@@ -107,7 +107,9 @@ export default async function ResultPage({ params, searchParams }: Props) {
     ? "routine_return"
     : sp.entry === "quiz_completion"
       ? "quiz_completion"
-      : "saved_result"
+      : sp.entry === "result_email"
+        ? "result_email"
+        : "saved_result"
   const [lead, hasAccess] = await Promise.all([
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
