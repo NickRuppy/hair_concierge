@@ -240,6 +240,8 @@ test("facade strips undefined payload values once before destination dispatch", 
 })
 
 test("quiz completed analytics payload includes hair length when present", () => {
+  assert.equal(eventRoutes.quiz_completed.meta, false)
+
   withDestinationSpies((calls) => {
     trackAppEvent("quiz_completed", {
       hairLength: "medium",
@@ -273,16 +275,11 @@ test("quiz completed analytics payload includes hair length when present", () =>
           scalpType: "trocken",
           thickness: "fine",
         },
-        {
-          funnelEventId,
-          hairLength: "medium",
-          hairTexture: "wavy",
-          leadId: "lead-123",
-          scalpCondition: "gereizt",
-          scalpType: "trocken",
-          thickness: "fine",
-        },
       ],
+    )
+    assert.deepEqual(
+      calls.map((call) => call.destination),
+      ["posthog", "customerio"],
     )
   })
 })

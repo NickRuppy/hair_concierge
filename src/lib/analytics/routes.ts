@@ -23,7 +23,7 @@ export const eventRoutes = {
   offer_viewed: { customerio: false, meta: false, posthog: true },
   pricing_viewed: { customerio: true, meta: true, posthog: true },
   purchase_completed: { customerio: false, meta: true, posthog: false },
-  quiz_completed: { customerio: true, meta: true, posthog: true },
+  quiz_completed: { customerio: true, meta: false, posthog: true },
   quiz_goals_selected: { customerio: true, meta: false, posthog: true },
   quiz_lead_captured: { customerio: false, meta: true, posthog: true },
   quiz_started: { customerio: true, meta: true, posthog: true },

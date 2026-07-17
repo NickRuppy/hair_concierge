@@ -7,6 +7,7 @@ import {
   trackMetaCustomEvent,
   trackMetaEvent,
   trackMetaPageView,
+  trackMetaOfferViewed,
   trackMetaPurchaseConfirmed,
   trackMetaSubscriptionConfirmed,
 } from "../src/lib/meta-pixel"
@@ -101,6 +102,27 @@ test("events dispatch immediately after initialization without consent commands"
     ["track", "PageView"],
     ["track", "Lead", { content_name: "quiz" }],
     ["trackCustom", "QuizStarted", { step: 1 }],
+  ])
+})
+
+test("offer view uses its unique content name and caller-provided dedupe id", () => {
+  const dom = createMetaDom()
+  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+
+  assert.equal(
+    trackMetaOfferViewed("80000000-0000-8000-8000-000000000093", "default_organic", {
+      win: dom.win,
+    }),
+    true,
+  )
+  assert.deepEqual(dom.calls, [
+    [
+      "track",
+      "ViewContent",
+      { content_name: "quiz_result_offer_view" },
+      { eventID: "80000000-0000-8000-8000-000000000093" },
+    ],
   ])
 })
 
