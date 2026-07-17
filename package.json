@@ -29,6 +29,7 @@
     "clawpatch:revalidate": "clawpatch revalidate",
     "clawpatch:summary": "node scripts/ci/clawpatch-summary.mjs",
     "worktree:new": "node scripts/worktree-new.mjs",
+    "worktree:finish": "node scripts/worktree-finish.mjs",
     "worktree:list": "git worktree list",
     "worktree:prune": "git worktree prune",
     "funnel:new": "node scripts/funnels/new-package.mjs",

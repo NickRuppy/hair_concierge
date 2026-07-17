@@ -14,7 +14,15 @@ plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) 
 - `implementation-loop` owns execution of an approved plan or clearly bounded non-trivial change. It invokes `ready-check` and `request-code-review` before its review-ready handoff; do not rerun them as separate top-level phases on unchanged content.
 - `ready-check` owns repository and user-flow verification.
 - `request-code-review` is the single local review router. Do not separately stack `code-reviewer`, thermo review, and other general review skills unless it delegates those lenses.
-- `ship-it` owns explicitly authorized publication branches. “Ship it” means commit, push, and draft PR; cleanup, merge, deployment, and production writes each require separate authorization.
+- `ship-it` owns explicitly authorized publication branches. “Ship it” means commit, push, and draft PR. A later “merge it” is separate authorization for verified-head squash merge plus guarded cleanup of that exact task; deployment and production writes remain separate.
+
+### Merge and finish
+
+- **“Merge it”** means refresh final PR, check, review, migration, and content-fingerprint state; refuse bypasses; squash-merge with `gh pr merge <number> --squash --match-head-commit <reviewed-head-sha>`; verify the merged PR and merge SHA; then run `npm run worktree:finish -- --pr <number>` followed by the same command with `--apply` when its dry run passes.
+- Run `worktree:finish` only from the primary root checkout on `main`. It may update a clean root with a fast-forward and clean only the exact merged task’s remote branch, unlocked clean worktree, metadata, and local branch. Never use it to stash, reset, rebase, force-remove, or infer ownership.
+- If cleanup refuses after the merge, preserve the remaining artifacts and report the exact blocker. The completed merge is not authorization to repair dirty or ambiguous state.
+- **“Merge but keep the worktree until <condition>”** is a rare retention path. Merge with the same reviewed-head guard, lock the local worktree using `git worktree lock --reason`, keep its local branch, record the release condition, and delete the merged remote branch only when no dependent PR or collaborator still needs it. Do not invoke `worktree:finish` until the retention condition is satisfied and the worktree is unlocked.
+- The final receipt names the PR, reviewed head SHA, merge SHA, root status, deleted artifacts, and intentional leftovers. Merge never implies deployment or production writes.
 
 ### `bug`
 
