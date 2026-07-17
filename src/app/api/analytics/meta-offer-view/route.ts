@@ -8,6 +8,7 @@ import {
   type MetaConversionDeliveryResult,
   type MetaRequestData,
 } from "@/lib/analytics/meta-capi"
+import { deriveMetaOfferViewEventIdForLead } from "@/lib/analytics/meta-offer-view-id"
 import { META_OFFER_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
 import { checkRateLimit, type RateLimitConfig } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -57,6 +58,7 @@ export type MetaOfferViewRouteDependencies = {
   enabled: boolean
   checkRateLimit: (identifier: string, config: RateLimitConfig) => Promise<RateLimitResult>
   deliver: (input: MetaOfferViewInput) => Promise<MetaOfferViewDeliveryResult>
+  deriveEventId?: (leadId: string) => Promise<string>
 }
 
 export type MetaOfferViewDeliveryDependencies = {
@@ -160,6 +162,16 @@ export async function handleMetaOfferViewRequest(
 
   if (!dependencies.enabled) {
     return { body: { ok: true, skipped: true }, status: 202 }
+  }
+
+  const expectedEventId = await (dependencies.deriveEventId ?? deriveMetaOfferViewEventIdForLead)(
+    parsed.data.leadId,
+  ).catch(() => null)
+  if (!expectedEventId) {
+    return { body: { error: "service_unavailable" }, status: 503 }
+  }
+  if (parsed.data.metaEventId !== expectedEventId) {
+    return { body: { error: "invalid_payload" }, status: 400 }
   }
 
   const ipRateLimit = rateLimitResult(

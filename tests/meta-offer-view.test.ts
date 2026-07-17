@@ -6,11 +6,19 @@ import {
   handleMetaOfferViewRequest,
   type MetaOfferViewRouteDependencies,
 } from "../src/app/api/analytics/meta-offer-view/route"
+import { deriveMetaOfferViewEventIdForLead } from "../src/lib/analytics/meta-offer-view-id"
 
 const payload = {
   entryContext: "quiz_completion" as const,
   leadId: "10000000-0000-4000-8000-000000000001",
   metaEventId: "30000000-0000-4000-8000-000000000001",
+}
+
+async function canonicalPayload() {
+  return {
+    ...payload,
+    metaEventId: await deriveMetaOfferViewEventIdForLead(payload.leadId),
+  }
 }
 
 function request(body: unknown, headers: Record<string, string> = {}) {
@@ -39,8 +47,9 @@ test("Meta offer endpoint validates, limits, and passes only request-bound deliv
       return { ok: true }
     },
   }
+  const canonical = await canonicalPayload()
   const result = await handleMetaOfferViewRequest(
-    request(payload, {
+    request(canonical, {
       cookie: "_fbp=fb.1.1720000000000.123456; _fbc=fb.1.1720000000000.click-123",
       "user-agent": "ExampleBrowser/1.0",
     }),
@@ -54,7 +63,7 @@ test("Meta offer endpoint validates, limits, and passes only request-bound deliv
   ])
   assert.deepEqual(deliveries, [
     {
-      ...payload,
+      ...canonical,
       clientIpAddress: "203.0.113.7",
       clientUserAgent: "ExampleBrowser/1.0",
       fbc: "fb.1.1720000000000.click-123",
@@ -98,26 +107,47 @@ test("Meta offer endpoint rejects forged context, unknown keys, and malformed ID
   }
 })
 
-test("Meta offer endpoint accepts the deterministic UUID-v8 event ID used by the client", async () => {
-  let deliveredEventId: string | undefined
+test("Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery", async () => {
+  let checks = 0
+  let deliveries = 0
   const result = await handleMetaOfferViewRequest(
     request({ ...payload, metaEventId: "30000000-0000-8000-8000-000000000001" }),
     {
       enabled: true,
-      checkRateLimit: async () => ({ allowed: true }),
-      deliver: async (input) => {
-        deliveredEventId = input.metaEventId
+      checkRateLimit: async () => {
+        checks += 1
+        return { allowed: true }
+      },
+      deliver: async () => {
+        deliveries += 1
         return { ok: true }
       },
     },
   )
 
+  assert.deepEqual(result, { body: { error: "invalid_payload" }, status: 400 })
+  assert.equal(checks, 0)
+  assert.equal(deliveries, 0)
+})
+
+test("Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client", async () => {
+  let deliveredEventId: string | undefined
+  const canonical = await canonicalPayload()
+  const result = await handleMetaOfferViewRequest(request(canonical), {
+    enabled: true,
+    checkRateLimit: async () => ({ allowed: true }),
+    deliver: async (input) => {
+      deliveredEventId = input.metaEventId
+      return { ok: true }
+    },
+  })
+
   assert.deepEqual(result, { body: { ok: true }, status: 202 })
-  assert.equal(deliveredEventId, "30000000-0000-8000-8000-000000000001")
+  assert.equal(deliveredEventId, canonical.metaEventId)
 })
 
 test("Meta offer endpoint rejects missing server-owned lead evidence", async () => {
-  const result = await handleMetaOfferViewRequest(request(payload), {
+  const result = await handleMetaOfferViewRequest(request(await canonicalPayload()), {
     enabled: true,
     checkRateLimit: async () => ({ allowed: true }),
     deliver: async () => ({ ok: false, reason: "lead_not_eligible" }),
@@ -194,7 +224,7 @@ test("Meta offer endpoint bounds streamed bodies before rate limiting", async ()
 })
 
 test("Meta offer endpoint isolates delivery failures from its validated request contract", async () => {
-  const result = await handleMetaOfferViewRequest(request(payload), {
+  const result = await handleMetaOfferViewRequest(request(await canonicalPayload()), {
     enabled: true,
     checkRateLimit: async () => ({ allowed: true }),
     deliver: async () => ({ ok: false, reason: "delivery_failed" }),

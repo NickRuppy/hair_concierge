@@ -32,7 +32,7 @@ Meta uses a smaller conversion funnel than the internal analytics model:
 | Page load | `PageView` | Pixel only | none |
 | Quiz start | `QuizStarted` | Pixel only | existing funnel event ID |
 | Persisted quiz and email | `Lead` | Pixel plus default-off first-party CAPI | browser-supplied `funnelEventId` |
-| First rendered quiz-completion offer | `ViewContent` with `content_name=quiz_result_offer_view` | Pixel plus default-off first-party CAPI | deterministic Meta-only UUID derived from stable lead/funnel/offer identity |
+| First rendered quiz-completion offer | `ViewContent` with `content_name=quiz_result_offer_view` | Pixel plus default-off first-party CAPI | deterministic Meta-only UUID derived from the persisted lead ID |
 | Checkout start | `InitiateCheckout` | Pixel only | checkout attempt ID |
 | Paid activation | `Purchase` and `Subscribe` | existing billing delivery | provider-stable billing ID |
 
@@ -42,7 +42,7 @@ Create the Meta custom conversion **Offer Page Viewed** from source event `ViewC
 
 ### Offer-view deduplication
 
-The browser claim is stored once per stable lead/funnel/offer identity in `localStorage` and fails closed when storage is unavailable. Pixel and the same-domain `/api/analytics/meta-offer-view` request use the same privacy-safe deterministic UUID. Reloads and later tabs normally stop at the browser claim; exactly simultaneous tabs derive the same ID so Meta can still deduplicate the copies.
+The browser claim is stored once per stable lead/funnel/offer identity in `localStorage` and fails closed when storage is unavailable. Pixel and the same-domain `/api/analytics/meta-offer-view` request use the same privacy-safe deterministic UUID derived from the persisted lead ID. The server recomputes that ID and rejects arbitrary UUIDs before rate limiting or delivery. Reloads, later tabs, and repeated funnel contexts for the same lead therefore converge on one Meta event ID.
 
 The endpoint accepts no email or name from the browser. It validates the IDs and entry context, applies IP and lead rate limits, requires recent persisted quiz evidence, loads matching data server-side, and uses the aggregate source URL `https://chaarlie.de/result` rather than a lead-bearing result path.
 

@@ -71,12 +71,24 @@ test("Meta offer view fails closed when local storage is unavailable", () => {
 test("Meta offer view derives one UUID-shaped id from stable identity", async () => {
   const first = await deriveMetaOfferViewEventId(identity)
   const second = await deriveMetaOfferViewEventId(identity)
+  const sameLeadOtherFunnel = await deriveMetaOfferViewEventId({
+    ...identity,
+    funnelSessionId: "20000000-0000-4000-8000-000000000094",
+    offerRevision: "product_led_v3",
+    offerVariant: "alternate",
+  })
+  const sameLeadUppercase = await deriveMetaOfferViewEventId({
+    ...identity,
+    leadId: identity.leadId.toUpperCase(),
+  })
   const other = await deriveMetaOfferViewEventId({
     ...identity,
     leadId: "10000000-0000-4000-8000-000000000094",
   })
 
   assert.equal(first, second)
+  assert.equal(first, sameLeadOtherFunnel)
+  assert.equal(first, sameLeadUppercase)
   assert.notEqual(first, other)
   assert.match(first, /^[0-9a-f]{8}-[0-9a-f]{4}-8[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)
   assert.equal(first.includes(identity.leadId), false)

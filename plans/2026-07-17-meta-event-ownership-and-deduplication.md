@@ -26,7 +26,7 @@ Use the Meta Pixel for anonymous navigation and intent. Use matching Pixel+CAPI 
 | Page load | `PageView` | Pixel only | none |
 | Quiz start | `QuizStarted` | Pixel only | existing funnel event ID if retained |
 | Successful quiz/email submission | `Lead` | Pixel + direct first-party CAPI | existing `funnelEventId` |
-| First offer view after quiz completion | `ViewContent`, `content_name=quiz_result_offer_view` | Pixel + direct first-party CAPI | privacy-safe deterministic `metaEventId` derived from stable lead/funnel identity and shared with the same-domain CAPI request |
+| First offer view after quiz completion | `ViewContent`, `content_name=quiz_result_offer_view` | Pixel + direct first-party CAPI | privacy-safe deterministic `metaEventId` derived from the persisted lead ID and shared with the same-domain CAPI request |
 | Checkout start | `InitiateCheckout` | Pixel only | existing checkout attempt event ID |
 | Successful initial payment | `Purchase` | Pixel + billing CAPI | Stripe Checkout Session ID or `paypal:<subscription_id>` |
 | Successful subscription activation | `Subscribe` | Pixel + billing CAPI | same provider-stable activation ID |
@@ -81,7 +81,7 @@ Execution is split into two review units:
 - `src/lib/analytics/page-url.ts`
   - add a new verified-domain aggregate-offer-URL export that never exposes the lead ID embedded in `/result/<leadId>`; do not alter the existing helper used by other destinations.
 - `src/components/quiz/offer-tracking-provider.tsx`
-  - derive one explicit privacy-safe deterministic browser `metaEventId` from the stable lead/funnel/offer identity, separate from the internal `funnelEventId`;
+  - derive one explicit privacy-safe deterministic browser `metaEventId` from the persisted lead ID, separate from the internal `funnelEventId`, and verify it server-side;
   - claim the conversion once per stable lead/funnel session before sending either copy;
   - send the Pixel event and call the same-domain CAPI endpoint with that identical `metaEventId` only after the claim succeeds.
 - `src/lib/analytics/offer-engagement.ts`
@@ -122,7 +122,7 @@ There are no end-user surface changes.
    - the server sends `Lead` with the same event name and ID plus available matching data;
    - Meta deduplicates the pair into one Lead;
    - if the server CAPI call fails, the quiz still succeeds and the Pixel remains the fallback.
-3. Chaarlie opens the canonical offer route with `entry=quiz_completion`. Once the offer is successfully rendered, the browser claims the primary conversion once for that stable lead/funnel session and derives one privacy-safe deterministic `metaEventId`:
+3. Chaarlie opens the canonical offer route with `entry=quiz_completion`. Once the offer is successfully rendered, the browser claims the primary conversion once for that stable lead/funnel session and derives one privacy-safe deterministic `metaEventId` from the persisted lead ID:
    - the browser sends `ViewContent` with `content_name=quiz_result_offer_view` and that ID;
    - the browser calls Chaarlie's same-domain endpoint, which sends CAPI with the same event and ID;
    - Meta deduplicates the pair into one Offer Page Viewed conversion.
@@ -185,7 +185,7 @@ Completion criterion: focused tests fail for the current incorrect behavior and 
 - Remove `CompleteRegistration` from the Meta event type union once no caller remains.
 - Before removal, prove no active ad set, audience, or custom conversion depends on either event; otherwise stop for a paid-delivery decision.
 - Add browser and default-off server CAPI `Lead` using the successful lead-save `funnelEventId`, but send the server copy only when the browser request supplied that valid UUID.
-- Add `ViewContent(content_name=quiz_result_offer_view)` only on the dedicated quiz-completion path. After a stable `localStorage` claim succeeds, derive one privacy-safe deterministic `metaEventId` from the stable lead/funnel/offer identity, pass it to both Pixel and the same-domain offer-view endpoint, and use it as the CAPI `event_id`.
+- Add `ViewContent(content_name=quiz_result_offer_view)` only on the dedicated quiz-completion path. After a stable `localStorage` claim succeeds, derive one privacy-safe deterministic `metaEventId` from the persisted lead ID, pass it to both Pixel and the same-domain offer-view endpoint, verify it server-side, and use it as the CAPI `event_id`.
 - Keep the internal `funnelEventId` and Meta-only `metaEventId` explicitly separate; never call either an ambiguous offer-view ID.
 - The offer-view endpoint validates the UUID, verifies recent server-owned quiz/funnel evidence for that lead, loads matching data by lead ID, rate-limits abuse, and no-ops while `META_CAPI_OFFER_VIEW_ENABLED=false`.
 - The result page's server render never sends CAPI. The browser/funnel claim gates both browser and endpoint calls, so remounts, reloads, and second tabs cannot create server-only copies.
