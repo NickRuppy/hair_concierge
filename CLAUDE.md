@@ -6,10 +6,10 @@ When entering plan mode for any task:
 
 1. **Options first** — Before writing a detailed plan, present 2-3 distinct implementation approaches as a comparison table:
 
-   | Approach | Complexity | Effort | Tradeoffs | Best when... |
-   |----------|-----------|--------|-----------|--------------|
-   | A: Name  | Low/Med/High | ~X hrs | Pro / Con | condition |
-   | B: Name  | ...       | ...    | ...       | ...          |
+   | Approach | Complexity   | Effort | Tradeoffs | Best when... |
+   | -------- | ------------ | ------ | --------- | ------------ |
+   | A: Name  | Low/Med/High | ~X hrs | Pro / Con | condition    |
+   | B: Name  | ...          | ...    | ...       | ...          |
 
 2. **Let the user choose** — Use `AskUserQuestion` with the approaches as options. Include a short recommendation if one approach is clearly better.
 
@@ -38,20 +38,24 @@ Before invoking `executing-plans` or `subagent-driven-development`, always invok
 The main interactive session (intended: Fable 5) is the orchestrator: it decomposes work into small, independent, specifiable units and dispatches each to the cheapest model that can do it well. The main session stays lean — it plans, routes, integrates, and reviews; it does not personally do execution volume.
 
 **Execution routing (Agent tool, `model` override):**
+
 - **Sonnet** — default execution tier: mechanical/multi-file edits, boilerplate, well-scoped tasks with clear acceptance criteria, test-fixing to a known oracle.
 - **Opus** — judgment tier: ambiguous scope, German UI copy, UX/taste calls, tricky deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/` (the main session owns the test-first design; Opus implements to green).
 - Bias toward Sonnet; escalate to Opus only when the task needs judgment.
 
 **Decomposition discipline:**
+
 - Split only genuinely independent, specifiable units — dispatched subagents do NOT share the main session's conversation context, so each brief must be self-contained.
 - Do not shatter tightly-coupled work into context-starved subagents; keep coupled logic in one unit.
 - Use `superpowers:dispatching-parallel-agents` for 2+ independent tasks and `subagent-driven-development` when executing a written plan. Run `branch-gate` first (mandatory).
 
 **The main session does these itself — never delegated:**
+
 - Architecture, task decomposition, routing, final review/integration.
 - Edits to `.claude/*`, `CLAUDE*.md`, and `AGENTS.md`.
 
 **Codex (GPT) — reviewer & second-opinion lane:**
+
 - Use the `codex:codex-rescue` agent (via the Agent tool with `subagent_type: "codex:codex-rescue"`), never the `/codex:rescue` skill (it stalls silently).
 - Do not pin a model — it inherits the global Codex default from `~/.codex/config.toml`, so it tracks the configured default. Add `--effort xhigh` for these deeper passes.
 - Use for: whole-branch review before push (see "Finishing a Feature Branch"), plan review on non-trivial plans, and any "stuck / want an independent second opinion" moment.
@@ -88,12 +92,22 @@ When all tasks on a worktree/feature branch are complete, follow this order befo
 ## Ship Workflow
 
 Standard finish command: use the `/ship` agent when implementation is done.
+
 - Runs: type check → build → simplify → review → **confirm with user** → commit & push
 - Pre-commit hooks catch lint/type errors on every commit
 - CI runs on every PR as a required check before merge
 - PRs use squash-merge to keep main history clean
 - Override confirmation with `--yes` flag when needed
 - Before calling `/ship`, verify your changes work end-to-end (run the app, test the flow manually or via Playwright)
+
+`/ship` remains publish-only. After it returns a PR, a later explicit **“merge it”** authorizes verified-head squash merge plus guarded cleanup of that exact task:
+
+1. Refresh final PR, check, review, migration, and content-fingerprint state. Refuse admin bypasses and merge only the reviewed head with `gh pr merge <number> --squash --match-head-commit <reviewed-head-sha>`.
+2. Verify GitHub reports the PR merged and record the merge SHA.
+3. From the primary root checkout on `main`, run `npm run worktree:finish -- --pr <number>`; when the dry run passes, run it again with `--apply` without asking for another confirmation.
+4. Report root sync, remote branch, worktree, local branch, and any preserved blocker. Deployment and production writes remain separate.
+
+**“Merge but keep the worktree until <condition>”** is the rare opt-out: perform the same verified-head merge, lock the retained worktree with `git worktree lock --reason`, retain its local branch, and record the release condition. Delete the remote branch only when no dependent PR or collaborator needs it. Do not run the finisher until the worktree is intentionally released and unlocked.
 
 ## Session Start
 

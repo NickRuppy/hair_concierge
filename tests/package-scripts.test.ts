@@ -46,6 +46,13 @@ test("mobile performance script is exposed", () => {
   assert.equal(existsSync("scripts/perf/mobile-lighthouse.mjs"), true)
 })
 
+test("merged task cleanup is exposed through the guarded finisher", () => {
+  const script = packageJson.scripts?.["worktree:finish"] ?? ""
+
+  assert.match(script, /node scripts\/worktree-finish\.mjs/)
+  assert.equal(existsSync("scripts/worktree-finish.mjs"), true)
+})
+
 test("prepare skips Husky when dev dependencies are omitted", () => {
   const script = packageJson.scripts?.prepare ?? ""
 
