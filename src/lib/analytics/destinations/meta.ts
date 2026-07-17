@@ -3,7 +3,6 @@ import {
   trackMetaLeadCaptured,
   trackMetaPricingViewed,
   trackMetaPurchaseConfirmed,
-  trackMetaQuizCompleted,
   trackMetaQuizStarted,
   trackMetaQuizStepViewed,
   trackMetaSubscriptionConfirmed,
@@ -98,12 +97,6 @@ export const metaDestination = {
           paymentMethodType: data.paymentMethodType,
           value: data.value,
         })
-      }
-      case "quiz_completed": {
-        const data = payload as AppEventMap["quiz_completed"]
-        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
-          trackMetaQuizCompleted(data.funnelEventId, packageKey),
-        )
       }
       case "quiz_lead_captured": {
         const data = payload as AppEventMap["quiz_lead_captured"]

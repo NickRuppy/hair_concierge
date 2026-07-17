@@ -4,6 +4,7 @@ import test from "node:test"
 import { buildCustomerIoPagePath } from "../src/providers/customerio-provider"
 import {
   hasSensitiveBrowserAnalyticsLocation,
+  META_OFFER_EVENT_SOURCE_URL,
   sanitizeAnalyticsUrl,
 } from "../src/lib/analytics/page-url"
 
@@ -86,4 +87,9 @@ test("Meta page tracking recognizes credential-bearing browser locations", () =>
     hasSensitiveBrowserAnalyticsLocation(new URLSearchParams({ utm_campaign: "launch" })),
     false,
   )
+})
+
+test("Meta offer CAPI uses a verified aggregate URL without the lead identifier", () => {
+  assert.equal(META_OFFER_EVENT_SOURCE_URL, "https://chaarlie.de/result")
+  assert.equal(META_OFFER_EVENT_SOURCE_URL.includes("lead-123"), false)
 })

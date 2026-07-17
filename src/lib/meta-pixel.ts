@@ -15,7 +15,6 @@ export type MetaStandardEvent =
   | "InitiateCheckout"
   | "Purchase"
   | "Subscribe"
-  | "CompleteRegistration"
   | "ViewContent"
 
 type Fbq = ((command: string, ...args: unknown[]) => void) & {
@@ -324,21 +323,6 @@ export function trackMetaQuizStepViewed(stepName: string, stepNumber: number) {
   })
 }
 
-export function trackMetaQuizCompleted(eventID?: string | null, packageKey?: string | null) {
-  const properties = {
-    content_name: "quiz",
-    funnel_step: "quiz_completed",
-    ...funnelPackageProperties(packageKey),
-  }
-  const standardTracked = trackMetaEvent("CompleteRegistration", properties, {
-    eventID: eventID ?? undefined,
-  })
-  const customTracked = trackMetaCustomEvent("QuizCompleted", properties, {
-    eventID: eventID ?? undefined,
-  })
-  return standardTracked || customTracked
-}
-
 export function trackMetaLeadCaptured(
   marketingConsent: boolean,
   eventID?: string | null,
@@ -367,6 +351,21 @@ export function trackMetaPricingViewed(
       ...funnelPackageProperties(packageKey),
     },
     { eventID: eventID ?? undefined },
+  )
+}
+
+export function trackMetaOfferViewed(
+  eventID: string,
+  packageKey?: string | null,
+  options: Pick<BrowserTargets, "win"> = {},
+) {
+  return trackMetaEvent(
+    "ViewContent",
+    {
+      content_name: "quiz_result_offer_view",
+      ...funnelPackageProperties(packageKey),
+    },
+    { ...options, eventID },
   )
 }
 

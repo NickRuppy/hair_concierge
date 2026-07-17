@@ -1,5 +1,8 @@
 type SearchParamsLike = { toString(): string } | null
 
+export const META_QUIZ_EVENT_SOURCE_URL = "https://chaarlie.de/quiz"
+export const META_OFFER_EVENT_SOURCE_URL = "https://chaarlie.de/result"
+
 const SAFE_RESULT_QUERY_VALUES = {
   entry: new Set(["quiz_completion"]),
   focus: new Set(["routine", "unlock-plan"]),

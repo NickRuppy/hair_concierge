@@ -15,6 +15,7 @@ import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { canTrackOfferEngagement, claimOfferEngagement } from "@/lib/analytics/offer-engagement"
 import { observeOnceEngaged } from "@/lib/analytics/observe-once-engaged"
 import { buildOfferViewedPayload } from "@/lib/analytics/offer-viewed-payload"
+import { trackMetaOfferViewOnce } from "@/lib/analytics/meta-offer-view-client"
 import { sendCustomerIoOfferEngagement } from "@/lib/customerio/offer-engagement-client"
 import { COOKIE_CONSENT_CHANGE_EVENT, loadConsent, type CookieConsent } from "@/lib/cookie-consent"
 import type {
@@ -154,6 +155,24 @@ export function OfferTrackingProvider({
     offerTrackedRef.current = true
     trackAppEvent("offer_viewed", buildOfferViewedPayload(context, offerTracking?.funnelEventId))
   }, [context, offerTracking?.funnelEventId])
+
+  useEffect(() => {
+    if (entryContext !== "quiz_completion" || !leadId) return
+    void trackMetaOfferViewOnce({
+      entryContext,
+      funnelPackageKey: offerTracking?.funnelPackageKey,
+      funnelSessionId: offerTracking?.funnelSessionId,
+      leadId,
+      offerRevision: OFFER_REVISION,
+      offerVariant,
+    })
+  }, [
+    entryContext,
+    leadId,
+    offerTracking?.funnelPackageKey,
+    offerTracking?.funnelSessionId,
+    offerVariant,
+  ])
 
   useEffect(() => {
     const root = rootRef.current
