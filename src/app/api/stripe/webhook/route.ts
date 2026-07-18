@@ -26,9 +26,11 @@ import {
   planIdForInterval,
 } from "@/lib/billing/analytics-events"
 import {
+  BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
   recordBillingAnalyticsEvent,
   type BillingAnalyticsEventInput,
 } from "@/lib/billing/analytics-outbox"
+import type { BillingAnalyticsDestination } from "@/lib/billing/types"
 import {
   identifyCustomerIoServerPerson,
   logCustomerIoServerResult,
@@ -42,7 +44,7 @@ import {
   type CustomerIoLifecycleEvent,
 } from "@/lib/customerio/stripe-lifecycle"
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
-import { recordFunnelPurchaseFromSession } from "@/lib/funnel/server"
+import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 
@@ -91,8 +93,13 @@ async function recordStripeBillingAnalytics(
   supabase: SupabaseClient,
   defer: (work: () => void | Promise<void>) => void,
   input: Omit<BillingAnalyticsEventInput, "provider">,
+  destinations?: BillingAnalyticsDestination[],
 ) {
-  await recordBillingAnalyticsEvent(supabase, { ...input, provider: "stripe" }, { defer })
+  await recordBillingAnalyticsEvent(
+    supabase,
+    { ...input, provider: "stripe" },
+    { defer, destinations },
+  )
 }
 
 async function recordStripeCheckoutAnalytics(input: {
@@ -117,37 +124,43 @@ async function recordStripeCheckoutAnalytics(input: {
     eventName: "purchase_completed",
     sourceObjectId: session.id,
   })
+  const purchaseDestinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
+  if (
+    isFunnelAttributionEnabled() &&
+    isBillingFunnelDeliveryEnabled() &&
+    funnelSessionId &&
+    funnelPackageKey
+  ) {
+    purchaseDestinations.push("funnel")
+  }
 
-  await recordStripeBillingAnalytics(supabase, defer, {
-    eventKey: purchaseEventKey,
-    eventName: "purchase_completed",
-    userId: activation.userId,
-    providerCustomerId: activation.stripeCustomerId,
-    providerSubscriptionId: activation.stripeSubscriptionId,
-    sourceEventId: eventId,
-    sourceObjectId: session.id,
-    occurredAt: timestamp,
-    payload: {
-      checkout_session_id: session.id,
-      meta_event_id: session.id,
-      value,
-      currency,
-      interval,
-      plan_id: planId,
-      subscription_status: activation.subscriptionStatus,
-      funnel_session_id: funnelSessionId,
-      funnel_package_key: funnelPackageKey,
+  await recordStripeBillingAnalytics(
+    supabase,
+    defer,
+    {
+      eventKey: purchaseEventKey,
+      eventName: "purchase_completed",
+      userId: activation.userId,
+      providerCustomerId: activation.stripeCustomerId,
+      providerSubscriptionId: activation.stripeSubscriptionId,
+      sourceEventId: eventId,
+      sourceObjectId: session.id,
+      occurredAt: timestamp,
+      payload: {
+        checkout_session_id: session.id,
+        checkout_reference: session.id,
+        meta_event_id: session.id,
+        value,
+        currency,
+        interval,
+        plan_id: planId,
+        subscription_status: activation.subscriptionStatus,
+        funnel_session_id: funnelSessionId,
+        funnel_package_key: funnelPackageKey,
+      },
     },
-  })
-
-  await recordFunnelPurchaseFromSession({
-    sessionId: funnelSessionId,
-    packageKey: funnelPackageKey,
-    eventId: purchaseEventKey,
-    provider: "stripe",
-    reference: session.id,
-    userId: activation.userId,
-  }).catch((error) => console.warn("[funnel] Stripe purchase tracking failed", error))
+    purchaseDestinations,
+  )
 
   await recordStripeBillingAnalytics(supabase, defer, {
     eventKey: billingAnalyticsEventKey({

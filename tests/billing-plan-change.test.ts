@@ -320,7 +320,7 @@ test("plan-change ledger and routes enforce the locked safety boundaries", () =>
   assert.match(analytics, /destinations: \["customerio", "posthog"\]/)
   assert.match(analytics, /occurredAt: options\.occurredAt \?\? planChangePhaseOccurredAt/)
   assert.match(analytics, /defer: options\.defer/)
-  assert.match(paypalWebhook, /eventType === "PAYMENT\.SALE\.COMPLETED"/)
+  assert.match(paypalWebhook, /case "PAYMENT\.SALE\.COMPLETED":/)
   assert.match(paypalWebhook, /applyPlanChangeAtRenewal/)
   assert.match(paypalWebhook, /deps: \{ defer: deps\.defer \}/)
   assert.match(stripeWebhook, /deps: \{ defer: deps\.defer \}/)

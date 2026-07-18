@@ -19,6 +19,7 @@ function createSupabaseStub(seed?: {
   billing?: Partial<BillingSubscriptionRow>[]
   profiles?: Record<string, Record<string, unknown>>
   paypalIntents?: Array<Record<string, unknown>>
+  analyticsOutbox?: Array<Record<string, unknown>>
 }) {
   const calls: Array<Record<string, unknown>> = []
   const webhookEvents = new Set<string>()
@@ -44,6 +45,8 @@ function createSupabaseStub(seed?: {
     string,
     { id: string; email: string; app_metadata?: Record<string, unknown> }
   > = {}
+  const analyticsOutbox = [...(seed?.analyticsOutbox ?? [])]
+  const analyticsDeliveries: Array<Record<string, unknown>> = []
   const billing: BillingSubscriptionRow[] = (seed?.billing ?? []).map((row, index) => ({
     id: row.id ?? `billing-${index + 1}`,
     user_id: row.user_id ?? "user-1",
@@ -67,6 +70,8 @@ function createSupabaseStub(seed?: {
     if (table === "billing_subscriptions") return billing
     if (table === "profiles") return Object.values(profiles)
     if (table === "paypal_checkout_intents") return paypalIntents
+    if (table === "billing_analytics_outbox") return analyticsOutbox
+    if (table === "billing_analytics_deliveries") return analyticsDeliveries
     return []
   }
 
@@ -132,8 +137,30 @@ function createSupabaseStub(seed?: {
         const { data: rows } = await resolveRows()
         return { data: rows[0] ?? null, error: null }
       },
-      upsert(row: Record<string, unknown>) {
+      upsert(
+        row: Record<string, unknown> | Array<Record<string, unknown>>,
+        _options?: Record<string, unknown>,
+      ) {
         calls.push({ table, op: "upsert", row })
+        if (table === "billing_analytics_deliveries" && Array.isArray(row)) {
+          for (const delivery of row) {
+            const duplicate = analyticsDeliveries.some(
+              (candidate) =>
+                candidate.outbox_id === delivery.outbox_id &&
+                candidate.destination === delivery.destination,
+            )
+            if (!duplicate) {
+              analyticsDeliveries.push({
+                id: `delivery-${analyticsDeliveries.length + 1}`,
+                status: "pending",
+                attempts: 0,
+                ...delivery,
+              })
+            }
+          }
+          return { error: null }
+        }
+        if (Array.isArray(row)) throw new Error(`Unexpected array upsert for ${table}`)
         if (table === "billing_subscriptions") {
           const existing = billing.find(
             (candidate) =>
@@ -175,6 +202,37 @@ function createSupabaseStub(seed?: {
       },
       insert(row: Record<string, unknown>) {
         calls.push({ table, op: "insert", row })
+        if (table === "billing_analytics_outbox") {
+          const duplicate = analyticsOutbox.find(
+            (candidate) => candidate.event_key === row.event_key,
+          )
+          const inserted = duplicate
+            ? null
+            : {
+                id: `outbox-${analyticsOutbox.length + 1}`,
+                created_at: new Date().toISOString(),
+                ...row,
+              }
+          if (inserted) analyticsOutbox.push(inserted)
+          const response = duplicate
+            ? {
+                data: null,
+                error: { code: "23505", message: "duplicate event_key" },
+              }
+            : { data: inserted, error: null }
+          const insertBuilder = {
+            select() {
+              return insertBuilder
+            },
+            async single() {
+              return response
+            },
+          }
+          return insertBuilder
+        }
+        if (table !== "billing_webhook_events") {
+          throw new Error(`Unexpected insert into ${table}`)
+        }
         const key = `${row.provider}:${row.provider_event_id}`
         if (webhookEvents.has(key)) {
           return Promise.resolve({
@@ -220,6 +278,8 @@ function createSupabaseStub(seed?: {
 
   return {
     calls,
+    analyticsOutbox,
+    analyticsDeliveries,
     billing,
     paypalIntents,
     profiles,
@@ -675,12 +735,396 @@ test("activation refresh keeps the stored interval for legacy PayPal plan ids", 
   assert.equal(profiles["user-1"].subscription_interval, "year")
 })
 
+test("browser-first existing billing row still records the first purchase from its bound intent", async () => {
+  const createdAt = new Date(Date.now() - 60_000).toISOString()
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+    paypalIntents: [checkoutIntent({ created_at: createdAt, status: "activated" })],
+  })
+
+  await handlePayPalWebhookEvent(paymentEvent("WH-browser-first", "PAYMENT.SALE.COMPLETED"), {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  })
+
+  assert.deepEqual(analyticsOutbox.map((row) => row.event_name).sort(), [
+    "purchase_completed",
+    "subscription_started",
+  ])
+  const purchase = analyticsOutbox.find((row) => row.event_name === "purchase_completed")!
+  assert.equal(purchase.source_object_id, "SALE-WH-browser-first")
+  assert.equal((purchase.payload as Record<string, unknown>).checkout_reference, "I-active")
+})
+
+test("attributed PayPal initial purchase enqueues funnel only when both delivery flags are enabled", async () => {
+  const previousAttribution = process.env.FUNNEL_ATTRIBUTION_ENABLED
+  const previousDelivery = process.env.BILLING_FUNNEL_DELIVERY_ENABLED
+  async function run(attribution: boolean, delivery: boolean) {
+    process.env.FUNNEL_ATTRIBUTION_ENABLED = String(attribution)
+    process.env.BILLING_FUNNEL_DELIVERY_ENABLED = String(delivery)
+    const { supabase, analyticsDeliveries } = createSupabaseStub({
+      billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+      profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+      paypalIntents: [
+        checkoutIntent({
+          metadata: {
+            funnel_session_id: "20000000-0000-4000-8000-000000000002",
+            funnel_package_key: "default_organic",
+          },
+        }),
+      ],
+    })
+    await handlePayPalWebhookEvent(
+      paymentEvent(`WH-funnel-${attribution}-${delivery}`, "PAYMENT.SALE.COMPLETED"),
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+        recordBillingAnalytics: true,
+        defer: () => undefined,
+      },
+    )
+    return analyticsDeliveries.filter((row) => row.destination === "funnel")
+  }
+
+  try {
+    assert.equal((await run(true, false)).length, 0)
+    assert.equal((await run(false, true)).length, 0)
+    assert.equal((await run(true, true)).length, 1)
+  } finally {
+    if (previousAttribution === undefined) delete process.env.FUNNEL_ATTRIBUTION_ENABLED
+    else process.env.FUNNEL_ATTRIBUTION_ENABLED = previousAttribution
+    if (previousDelivery === undefined) delete process.env.BILLING_FUNNEL_DELIVERY_ENABLED
+    else process.env.BILLING_FUNNEL_DELIVERY_ENABLED = previousDelivery
+  }
+})
+
+test("activation is entitlement-only and the later sale records the initial purchase", async () => {
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    paypalIntents: [checkoutIntent({ provider_subscription_id: null, status: "created" })],
+  })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  }
+
+  await handlePayPalWebhookEvent(
+    event("WH-activation-first", "BILLING.SUBSCRIPTION.ACTIVATED"),
+    deps,
+  )
+  assert.equal(analyticsOutbox.length, 0)
+
+  await handlePayPalWebhookEvent(paymentEvent("WH-activation-sale", "PAYMENT.SALE.COMPLETED"), deps)
+  assert.deepEqual(analyticsOutbox.map((row) => row.event_name).sort(), [
+    "purchase_completed",
+    "subscription_started",
+  ])
+})
+
+test("sale-first ACTIVE activation records an initial purchase", async () => {
+  const { supabase, analyticsOutbox, billing } = createSupabaseStub({
+    paypalIntents: [checkoutIntent({ provider_subscription_id: null, status: "created" })],
+  })
+
+  await handlePayPalWebhookEvent(paymentEvent("WH-sale-first", "PAYMENT.SALE.COMPLETED"), {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  })
+
+  assert.equal(billing.length, 1)
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "purchase_completed").length, 1)
+})
+
+test("sale-first APPROVED releases its claim and an ACTIVE retry completes", async () => {
+  const { supabase, analyticsOutbox, calls } = createSupabaseStub({
+    paypalIntents: [checkoutIntent({ provider_subscription_id: null, status: "created" })],
+  })
+  let providerStatus = "APPROVED"
+  const sale = paymentEvent("WH-approved-retry", "PAYMENT.SALE.COMPLETED")
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => subscription(providerStatus, futureIso()),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  }
+
+  await assert.rejects(() => handlePayPalWebhookEvent(sale, deps), /is not active yet/)
+  assert.equal(
+    calls.some((call) => call.table === "billing_webhook_events" && call.op === "delete"),
+    true,
+  )
+  providerStatus = "ACTIVE"
+  await handlePayPalWebhookEvent(sale, deps)
+
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "purchase_completed").length, 1)
+})
+
+test("same-sale purchase retry repairs the idempotent initial fan-out", async () => {
+  const sale = paymentEvent("WH-same-sale", "PAYMENT.SALE.COMPLETED")
+  const { supabase, analyticsOutbox, analyticsDeliveries } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+    paypalIntents: [checkoutIntent()],
+    analyticsOutbox: [
+      analyticsEvent(
+        "paypal:purchase_completed:I-active",
+        "purchase_completed",
+        "SALE-WH-same-sale",
+      ),
+    ],
+  })
+
+  await handlePayPalWebhookEvent(sale, {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  })
+
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "purchase_completed").length, 1)
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "subscription_started").length, 1)
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "payment_completed").length, 0)
+  assert.equal(analyticsDeliveries.length, 6)
+  assert.equal(
+    new Set(analyticsDeliveries.map((row) => `${row.outbox_id}:${row.destination}`)).size,
+    6,
+  )
+})
+
+test("an existing purchase forces a different sale to renewal despite an eligible intent", async () => {
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+    paypalIntents: [checkoutIntent()],
+    analyticsOutbox: [
+      analyticsEvent("paypal:purchase_completed:I-active", "purchase_completed", "SALE-FIRST"),
+    ],
+  })
+
+  await handlePayPalWebhookEvent(paymentEvent("WH-renewal", "PAYMENT.SALE.COMPLETED"), {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => ({
+      ...subscription("ACTIVE", futureIso()),
+      custom_id: "token-active",
+    }),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  })
+
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "payment_completed").length, 1)
+})
+
+test("an already-recorded same-sale payment is a forward-only historical no-op", async () => {
+  const saleId = "SALE-WH-historical"
+  const { supabase, analyticsOutbox, analyticsDeliveries } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+    paypalIntents: [],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+
+  await handlePayPalWebhookEvent(paymentEvent("WH-historical", "PAYMENT.SALE.COMPLETED"), {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    retrievePayPalSubscription: async () => ({
+      ...subscription("ACTIVE", futureIso()),
+      custom_id: undefined,
+    }),
+    recordBillingAnalytics: true,
+    defer: () => undefined,
+  })
+
+  assert.equal(analyticsOutbox.length, 1)
+  assert.equal(analyticsOutbox[0].event_name, "payment_completed")
+  assert.equal(analyticsDeliveries.length, 0)
+})
+
+test("legacy missing and expired intents classify later sales as renewals", async () => {
+  for (const paypalIntents of [
+    [],
+    [checkoutIntent({ status: "expired", expires_at: pastIso() })],
+  ]) {
+    const { supabase, analyticsOutbox } = createSupabaseStub({
+      billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+      profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+      paypalIntents,
+    })
+    await handlePayPalWebhookEvent(
+      paymentEvent(`WH-legacy-${paypalIntents.length}`, "PAYMENT.SALE.COMPLETED"),
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => ({
+          ...subscription("ACTIVE", futureIso()),
+          custom_id: paypalIntents.length ? "token-active" : undefined,
+        }),
+        recordBillingAnalytics: true,
+        defer: () => undefined,
+      },
+    )
+    assert.equal(analyticsOutbox[0].event_name, "payment_completed")
+  }
+})
+
+test("malformed sale data grants entitlement but releases the claim before a corrected retry", async () => {
+  const { supabase, calls, billing } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
+  })
+  const malformed: PayPalWebhookEvent = {
+    id: "WH-malformed",
+    event_type: "PAYMENT.SALE.COMPLETED",
+    resource: { billing_agreement_id: "I-active" },
+  }
+
+  await assert.rejects(
+    () =>
+      handlePayPalWebhookEvent(malformed, {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+        recordBillingAnalytics: true,
+        defer: () => undefined,
+      }),
+    /missing sale id/,
+  )
+  assert.equal(
+    calls.some((call) => call.table === "billing_webhook_events" && call.op === "delete"),
+    true,
+  )
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(
+    calls.some((call) => call.table === "billing_plan_changes"),
+    false,
+  )
+
+  const corrected = await handlePayPalWebhookEvent(
+    paymentEvent("WH-malformed", "PAYMENT.SALE.COMPLETED"),
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => ({
+        ...subscription("ACTIVE", futureIso()),
+        custom_id: undefined,
+      }),
+      recordBillingAnalytics: true,
+      defer: () => undefined,
+    },
+  )
+  assert.deepEqual(corrected, { handled: true })
+
+  await assert.rejects(
+    () =>
+      handlePayPalWebhookEvent(
+        {
+          ...paymentEvent("WH-invalid-time", "PAYMENT.SALE.COMPLETED"),
+          create_time: "not-a-time",
+        },
+        {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+          recordBillingAnalytics: true,
+          defer: () => undefined,
+        },
+      ),
+    /invalid create_time/,
+  )
+})
+
+test("quarantined reactivation sale is acknowledged without purchase analytics", async () => {
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    paypalIntents: [checkoutIntent({ status: "duplicate", duplicate_reason: "reservation_race" })],
+  })
+
+  const result = await handlePayPalWebhookEvent(
+    paymentEvent("WH-quarantined-sale", "PAYMENT.SALE.COMPLETED"),
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+      cancelPayPalSubscription: async () => undefined,
+      recordBillingAnalytics: true,
+      defer: () => undefined,
+    },
+  )
+
+  assert.deepEqual(result, { handled: true })
+  assert.equal(analyticsOutbox.length, 0)
+})
+
+function checkoutIntent(patch: Record<string, unknown> = {}) {
+  return {
+    id: "intent-1",
+    token: "token-active",
+    interval: "month",
+    source: "pricing_page",
+    status: "approved",
+    provider_subscription_id: "I-active",
+    lead_id: null,
+    email: "paypal@example.com",
+    user_id: null,
+    expires_at: futureIso(),
+    created_at: new Date(Date.now() - 60_000).toISOString(),
+    updated_at: new Date().toISOString(),
+    metadata: {},
+    ...patch,
+  }
+}
+
+function analyticsEvent(eventKey: string, eventName: string, sourceObjectId: string) {
+  return {
+    id: `outbox-seeded-${eventName}`,
+    event_key: eventKey,
+    event_name: eventName,
+    user_id: "user-1",
+    provider: "paypal",
+    provider_subscription_id: "I-active",
+    source_object_id: sourceObjectId,
+    occurred_at: new Date().toISOString(),
+    payload: {},
+  }
+}
+
 function event(id: string, eventType: string): PayPalWebhookEvent {
   return { id, event_type: eventType, resource: { id: "I-active" } }
 }
 
 function paymentEvent(id: string, eventType: string): PayPalWebhookEvent {
-  return { id, event_type: eventType, resource: { billing_agreement_id: "I-active" } }
+  return {
+    id,
+    event_type: eventType,
+    create_time: new Date().toISOString(),
+    resource: { id: `SALE-${id}`, billing_agreement_id: "I-active" },
+  }
 }
 
 function subscription(status: string, nextBillingTime: string | null): PayPalSubscription {

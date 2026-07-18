@@ -8,7 +8,12 @@ import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 export const runtime = "nodejs"
 export const maxDuration = 60
 
-const ANALYTICS_DESTINATIONS: BillingAnalyticsDestination[] = ["customerio", "posthog", "meta"]
+const ANALYTICS_DESTINATIONS: BillingAnalyticsDestination[] = [
+  "customerio",
+  "posthog",
+  "meta",
+  "funnel",
+]
 
 type ReconcileDeps = {
   supabase: SupabaseClient

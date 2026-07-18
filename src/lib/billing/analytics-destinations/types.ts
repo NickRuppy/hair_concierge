@@ -1,4 +1,4 @@
-import type { BillingAnalyticsOutboxRow, SupabaseBillingClient } from "@/lib/billing/types"
+import type { BillingAnalyticsOutboxRow, SupabaseBillingAnalyticsClient } from "@/lib/billing/types"
 
 export type BillingAnalyticsProfile = {
   id: string
@@ -13,7 +13,7 @@ export type BillingAnalyticsProfile = {
 export type BillingAnalyticsDeliveryInput = {
   event: BillingAnalyticsOutboxRow
   profile: BillingAnalyticsProfile | null
-  supabase: SupabaseBillingClient
+  supabase: SupabaseBillingAnalyticsClient
 }
 
 export type BillingAnalyticsDeliveryResult = {
@@ -22,4 +22,5 @@ export type BillingAnalyticsDeliveryResult = {
   status?: number
   error?: string
   providerRequestId?: string
+  permanent?: boolean
 }

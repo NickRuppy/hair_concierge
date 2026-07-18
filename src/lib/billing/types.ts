@@ -10,7 +10,7 @@ export type BillingPlanChangeStatus =
   | "reconciling"
   | "applied"
   | "failed"
-export type BillingAnalyticsDestination = "customerio" | "meta" | "posthog"
+export type BillingAnalyticsDestination = "customerio" | "meta" | "posthog" | "funnel"
 export type BillingAnalyticsDeliveryStatus =
   | "pending"
   | "processing"
@@ -161,3 +161,4 @@ export interface BillingAnalyticsDeliveryRow {
 }
 
 export type SupabaseBillingClient = Pick<SupabaseClient, "from">
+export type SupabaseBillingAnalyticsClient = Pick<SupabaseClient, "from" | "rpc">

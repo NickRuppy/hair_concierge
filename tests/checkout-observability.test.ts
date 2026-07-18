@@ -39,6 +39,19 @@ test("buildCheckoutSentryPayload keeps searchable checkout tags without raw PayP
   assert.equal(JSON.stringify(payload).includes("secret-token"), false)
 })
 
+test("buildCheckoutSentryPayload includes sanitized PayPal webhook identifiers", () => {
+  const payload = buildCheckoutSentryPayload({
+    provider: "paypal",
+    stage: "paypal_webhook_ingestion",
+    paypalEventId: "WH-123",
+    paypalEventType: "PAYMENT.SALE.COMPLETED",
+  })
+
+  assert.equal(payload.tags["checkout.stage"], "paypal_webhook_ingestion")
+  assert.equal(payload.context.paypal_event_id, "WH-123")
+  assert.equal(payload.context.paypal_event_type, "PAYMENT.SALE.COMPLETED")
+})
+
 test("buildCheckoutSentryPayload redacts raw Stripe checkout session ids", () => {
   const payload = buildCheckoutSentryPayload({
     provider: "stripe",

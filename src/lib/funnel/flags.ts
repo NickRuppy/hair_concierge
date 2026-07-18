@@ -2,6 +2,10 @@ export function isFunnelAttributionEnabled() {
   return process.env.FUNNEL_ATTRIBUTION_ENABLED === "true"
 }
 
+export function isBillingFunnelDeliveryEnabled() {
+  return process.env.BILLING_FUNNEL_DELIVERY_ENABLED === "true"
+}
+
 export function isFunnelMetaCustomDataEnabled() {
   return process.env.FUNNEL_META_CUSTOM_DATA_ENABLED === "true"
 }
