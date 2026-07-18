@@ -4,6 +4,7 @@ import { paypalRequest } from "@/lib/paypal/client"
 import { handlePayPalWebhookEvent } from "@/lib/paypal/webhook-handlers"
 import { getBillingTierIds } from "@/lib/billing/tier-ids"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
+import { captureCheckoutException } from "@/lib/observability/checkout"
 
 export const runtime = "nodejs"
 
@@ -55,11 +56,18 @@ export async function POST(request: Request) {
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown"
+    const paypalEvent = payPalEventIdentity(event)
+    captureCheckoutException(err, {
+      provider: "paypal",
+      stage: "paypal_webhook_ingestion",
+      paypalEventId: paypalEvent.id ?? null,
+      paypalEventType: paypalEvent.event_type ?? null,
+    })
     console.error("[paypal:webhook] handler error:", err)
     return new NextResponse(`handler error: ${message}`, { status: 500 })
   }
 
-  const paypalEvent = event as { id?: string; event_type?: string }
+  const paypalEvent = payPalEventIdentity(event)
   console.info("[paypal:webhook] handled", {
     eventId: paypalEvent.id,
     type: paypalEvent.event_type,
@@ -67,6 +75,10 @@ export async function POST(request: Request) {
   })
 
   return NextResponse.json({ received: true })
+}
+
+function payPalEventIdentity(event: unknown): { id?: string; event_type?: string } {
+  return event && typeof event === "object" ? (event as { id?: string; event_type?: string }) : {}
 }
 
 async function verifyPayPalWebhookSignature(

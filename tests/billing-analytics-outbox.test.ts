@@ -10,7 +10,7 @@ import {
 import type {
   BillingAnalyticsDeliveryRow,
   BillingAnalyticsOutboxRow,
-  SupabaseBillingClient,
+  SupabaseBillingAnalyticsClient,
 } from "../src/lib/billing/types"
 
 function createSupabaseStub(options: { profileLookupErrors?: number } = {}) {
@@ -220,7 +220,10 @@ function createSupabaseStub(options: { profileLookupErrors?: number } = {}) {
     deliveries,
     outbox,
     selections,
-    supabase: { from: makeQuery } as unknown as SupabaseBillingClient,
+    supabase: {
+      from: makeQuery,
+      rpc: async () => ({ data: null, error: null }),
+    } as unknown as SupabaseBillingAnalyticsClient,
   }
 }
 
@@ -555,4 +558,75 @@ test("billing analytics due dispatch retires a stale poison delivery after five 
   assert.equal(deliveries[0].next_attempt_at, null)
   assert.equal(deliveries[0].last_error, "still poisoned")
   assert.equal(deliveries[1].status, "pending")
+})
+
+test("queued funnel delivery bypasses profile lookup and still runs after enqueue flags turn off", async () => {
+  const { deliveries, selections, supabase } = createSupabaseStub()
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:purchase_completed:cs_funnel",
+      eventName: "purchase_completed",
+      userId: "user-123",
+      provider: "stripe",
+      sourceObjectId: "cs_funnel",
+      occurredAt: "2026-07-18T10:00:00.000Z",
+      payload: { funnel_session_id: "session-1" },
+    },
+    { dispatch: false, destinations: ["funnel"] },
+  )
+  const previousAttribution = process.env.FUNNEL_ATTRIBUTION_ENABLED
+  const previousDelivery = process.env.BILLING_FUNNEL_DELIVERY_ENABLED
+  process.env.FUNNEL_ATTRIBUTION_ENABLED = "false"
+  process.env.BILLING_FUNNEL_DELIVERY_ENABLED = "false"
+
+  try {
+    await dispatchBillingAnalyticsEvent(supabase, event, ["funnel"], {
+      findProfile: async () => {
+        throw new Error("funnel must not load profile")
+      },
+      deliver: async (destination, input) => {
+        assert.equal(destination, "funnel")
+        assert.equal(input.profile, null)
+        return { ok: true }
+      },
+    })
+
+    assert.equal(deliveries[0].status, "delivered")
+    assert.equal(
+      selections.some((selection) => selection.table === "profiles"),
+      false,
+    )
+  } finally {
+    if (previousAttribution === undefined) delete process.env.FUNNEL_ATTRIBUTION_ENABLED
+    else process.env.FUNNEL_ATTRIBUTION_ENABLED = previousAttribution
+    if (previousDelivery === undefined) delete process.env.BILLING_FUNNEL_DELIVERY_ENABLED
+    else process.env.BILLING_FUNNEL_DELIVERY_ENABLED = previousDelivery
+  }
+})
+
+test("permanent delivery results stop after the first attempt", async () => {
+  const { deliveries, supabase } = createSupabaseStub()
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:purchase_completed:invalid-funnel",
+      eventName: "purchase_completed",
+      userId: "user-123",
+      provider: "stripe",
+      sourceObjectId: "invalid-funnel",
+      occurredAt: "2026-07-18T10:00:00.000Z",
+      payload: {},
+    },
+    { dispatch: false, destinations: ["funnel"] },
+  )
+
+  await dispatchBillingAnalyticsEvent(supabase, event, ["funnel"], {
+    deliver: async () => ({ ok: false, permanent: true, error: "invalid funnel data" }),
+  })
+
+  assert.equal(deliveries[0].status, "failed_permanent")
+  assert.equal(deliveries[0].attempts, 1)
+  assert.equal(deliveries[0].next_attempt_at, null)
+  assert.equal(deliveries[0].last_error, "invalid funnel data")
 })

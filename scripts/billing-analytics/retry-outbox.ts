@@ -11,7 +11,12 @@ function argValue(name: string) {
 function destinationArg(): BillingAnalyticsDestination | undefined {
   const destination = argValue("--destination")
   if (!destination) return undefined
-  if (destination === "customerio" || destination === "meta" || destination === "posthog") {
+  if (
+    destination === "customerio" ||
+    destination === "meta" ||
+    destination === "posthog" ||
+    destination === "funnel"
+  ) {
     return destination
   }
   throw new Error(`Invalid --destination ${destination}`)

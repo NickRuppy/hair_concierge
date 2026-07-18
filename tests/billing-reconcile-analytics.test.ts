@@ -67,6 +67,7 @@ test("billing reconcile drains all destinations with a limit of ten when enabled
     { destination: "customerio", limit: 10 },
     { destination: "posthog", limit: 10 },
     { destination: "meta", limit: 10 },
+    { destination: "funnel", limit: 10 },
   ])
   assert.deepEqual(response.body, {
     downgraded: 2,
@@ -74,6 +75,7 @@ test("billing reconcile drains all destinations with a limit of ten when enabled
       customerio: { processed: 3, delivered: 2, failed: 1 },
       posthog: { processed: 2, delivered: 2, failed: 0 },
       meta: { processed: 1, delivered: 0, failed: 1 },
+      funnel: { processed: 1, delivered: 0, failed: 1 },
     },
   })
 })
@@ -93,13 +95,14 @@ test("billing reconcile isolates one analytics destination rejection", async () 
     }),
   )
 
-  assert.deepEqual(completed.sort(), ["customerio", "meta"])
+  assert.deepEqual(completed.sort(), ["customerio", "funnel", "meta"])
   assert.deepEqual(response.body, {
     downgraded: 2,
     analyticsRetry: {
       customerio: { processed: 4, delivered: 3, failed: 1 },
       posthog: { processed: 0, delivered: 0, failed: 0, error: "posthog unavailable" },
       meta: { processed: 4, delivered: 3, failed: 1 },
+      funnel: { processed: 4, delivered: 3, failed: 1 },
     },
   })
 })

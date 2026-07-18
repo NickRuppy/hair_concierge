@@ -12,6 +12,7 @@ type CheckoutStage =
   | "paypal_create_subscription"
   | "paypal_approve_subscription"
   | "paypal_activation_status_poll"
+  | "paypal_webhook_ingestion"
   | "checkout_return"
   | "checkout_password_activation"
   | "checkout_magic_link_activation"
@@ -29,6 +30,8 @@ export interface CheckoutSentryDetails {
   stripeCustomerId?: string | null
   stripeSubscriptionId?: string | null
   paypalSubscriptionId?: string | null
+  paypalEventId?: string | null
+  paypalEventType?: string | null
   paypalTokenPresent?: boolean
   status?: number | string
   reason?: string | null
@@ -111,6 +114,8 @@ export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): Chec
   addOptional(context, "stripe_customer_id", details.stripeCustomerId)
   addOptional(context, "stripe_subscription_id", details.stripeSubscriptionId)
   addOptional(context, "paypal_subscription_id", details.paypalSubscriptionId)
+  addOptional(context, "paypal_event_id", details.paypalEventId)
+  addOptional(context, "paypal_event_type", details.paypalEventType)
   addOptional(context, "paypal_token_present", details.paypalTokenPresent)
   addOptional(context, "status", details.status)
   addOptional(context, "reason", details.reason)

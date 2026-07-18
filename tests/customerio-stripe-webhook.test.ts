@@ -371,6 +371,54 @@ test("production checkout analytics uses outbox instead of duplicate direct Cust
     billingAnalyticsOutbox.map((row) => row.event_name),
     ["purchase_completed", "subscription_started"],
   )
+  assert.equal(billingAnalyticsOutbox[0].payload.checkout_reference, "cs_outbox")
+})
+
+test("attributed Stripe purchase enqueues funnel only when both delivery flags are enabled", async () => {
+  async function run(flags: { attribution: string; delivery: string }) {
+    const { billingAnalyticsDeliveries, deps } = stubDeps()
+    const deferred: Array<() => void | Promise<void>> = []
+    await withEnv("FUNNEL_ATTRIBUTION_ENABLED", flags.attribution, () =>
+      withEnv("BILLING_FUNNEL_DELIVERY_ENABLED", flags.delivery, () =>
+        handleStripeWebhookEvent(
+          {
+            id: `evt_checkout_funnel_${flags.attribution}_${flags.delivery}`,
+            type: "checkout.session.completed",
+            created: 1_800_000_000,
+            data: {
+              object: {
+                id: "cs_funnel",
+                amount_total: 1499,
+                currency: "eur",
+                status: "complete",
+                payment_status: "paid",
+                customer: "cus_funnel",
+                customer_details: { email: "funnel@example.com" },
+                subscription: "sub_123",
+                metadata: {
+                  funnel_session_id: "20000000-0000-4000-8000-000000000002",
+                  funnel_package_key: "default_organic",
+                },
+              },
+            },
+          } as any,
+          {
+            defer: (work) => deferred.push(work),
+            getPremiumTierId: async () => "tier_premium",
+            linkQuizToProfile: async () => {},
+            recordBillingAnalytics: true,
+            stripe: deps.stripe,
+            supabase: deps.supabase,
+          },
+        ),
+      ),
+    )
+    return billingAnalyticsDeliveries.filter((row) => row.destination === "funnel")
+  }
+
+  assert.equal((await run({ attribution: "true", delivery: "false" })).length, 0)
+  assert.equal((await run({ attribution: "false", delivery: "true" })).length, 0)
+  assert.equal((await run({ attribution: "true", delivery: "true" })).length, 1)
 })
 
 test("webhook event activates non-SEPA async payment success", async () => {

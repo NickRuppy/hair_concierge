@@ -4,9 +4,10 @@ import type {
   BillingAnalyticsEventName,
   BillingAnalyticsOutboxRow,
   BillingProvider,
-  SupabaseBillingClient,
+  SupabaseBillingAnalyticsClient,
 } from "@/lib/billing/types"
 import { deliverBillingAnalyticsToCustomerIo } from "./analytics-destinations/customerio"
+import { deliverBillingAnalyticsToFunnel } from "./analytics-destinations/funnel"
 import { deliverBillingAnalyticsToMeta } from "./analytics-destinations/meta-capi"
 import { deliverBillingAnalyticsToPostHog } from "./analytics-destinations/posthog-server"
 import type {
@@ -15,7 +16,11 @@ import type {
   BillingAnalyticsProfile,
 } from "./analytics-destinations/types"
 
-const DESTINATIONS: BillingAnalyticsDestination[] = ["customerio", "meta", "posthog"]
+export const BILLING_ANALYTICS_EXTERNAL_DESTINATIONS: BillingAnalyticsDestination[] = [
+  "customerio",
+  "meta",
+  "posthog",
+]
 const MAX_DELIVERY_ATTEMPTS = 5
 const STALE_PROCESSING_MINUTES = 15
 
@@ -48,7 +53,7 @@ type DispatchBillingAnalyticsOptions = {
 
 type DispatchBillingAnalyticsDependencies = {
   findProfile: (
-    supabase: SupabaseBillingClient,
+    supabase: SupabaseBillingAnalyticsClient,
     userId: string,
   ) => Promise<BillingAnalyticsProfile | null>
   deliver: (
@@ -66,22 +71,30 @@ export type BillingAnalyticsDueStats = {
 type DispatchDeliveryOutcome = "skipped" | "delivered" | "failed"
 
 export async function createBillingAnalyticsEvent(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
   options: CreateBillingAnalyticsEventOptions = {},
 ): Promise<BillingAnalyticsOutboxRow> {
   const event = await insertOrFindOutboxEvent(supabase, input)
-  await ensureDeliveryRows(supabase, event.id, options.destinations ?? DESTINATIONS)
+  await ensureDeliveryRows(
+    supabase,
+    event.id,
+    options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
+  )
 
   if (options.dispatch !== false) {
-    await dispatchBillingAnalyticsEvent(supabase, event, options.destinations ?? DESTINATIONS)
+    await dispatchBillingAnalyticsEvent(
+      supabase,
+      event,
+      options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
+    )
   }
 
   return event
 }
 
 export async function recordBillingAnalyticsEvent(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
   options: CreateBillingAnalyticsEventOptions & { defer?: DeferWork } = {},
 ): Promise<BillingAnalyticsOutboxRow> {
@@ -110,17 +123,19 @@ export async function recordBillingAnalyticsEvent(
 }
 
 export async function dispatchBillingAnalyticsDue(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   options: DispatchBillingAnalyticsOptions = {},
 ) {
   return (await dispatchBillingAnalyticsDueWithStats(supabase, options)).processed
 }
 
 export async function dispatchBillingAnalyticsDueWithStats(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   options: DispatchBillingAnalyticsOptions = {},
 ): Promise<BillingAnalyticsDueStats> {
-  const event = options.eventKey ? await findOutboxEventByKey(supabase, options.eventKey) : null
+  const event = options.eventKey
+    ? await findBillingAnalyticsEventByKey(supabase, options.eventKey)
+    : null
   if (options.eventKey && !event) return { processed: 0, delivered: 0, failed: 0 }
 
   const now = new Date().toISOString()
@@ -159,9 +174,9 @@ export async function dispatchBillingAnalyticsDueWithStats(
 }
 
 export async function dispatchBillingAnalyticsEvent(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   event: BillingAnalyticsOutboxRow,
-  destinations: BillingAnalyticsDestination[] = DESTINATIONS,
+  destinations: BillingAnalyticsDestination[] = BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ) {
   const { data, error } = await supabase
@@ -181,7 +196,7 @@ export async function dispatchBillingAnalyticsEvent(
 }
 
 async function insertOrFindOutboxEvent(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
 ): Promise<BillingAnalyticsOutboxRow> {
   const now = new Date().toISOString()
@@ -204,13 +219,13 @@ async function insertOrFindOutboxEvent(
   if (!insert.error) return insert.data as BillingAnalyticsOutboxRow
   if (!isDuplicateKeyError(insert.error)) throw insert.error
 
-  const existing = await findOutboxEventByKey(supabase, input.eventKey)
+  const existing = await findBillingAnalyticsEventByKey(supabase, input.eventKey)
   if (!existing) throw insert.error
   return existing
 }
 
 async function ensureDeliveryRows(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   outboxId: string,
   destinations: BillingAnalyticsDestination[],
 ) {
@@ -226,7 +241,7 @@ async function ensureDeliveryRows(
 }
 
 async function dispatchDelivery(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   event: BillingAnalyticsOutboxRow,
   delivery: BillingAnalyticsDeliveryRow,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
@@ -238,7 +253,8 @@ async function dispatchDelivery(
   try {
     const findProfile = dependencies.findProfile ?? findBillingAnalyticsProfile
     const deliver = dependencies.deliver ?? deliverToDestination
-    const profile = await findProfile(supabase, event.user_id)
+    const profile =
+      claimed.destination === "funnel" ? null : await findProfile(supabase, event.user_id)
     const input: BillingAnalyticsDeliveryInput = { event, profile, supabase }
     result = await deliver(claimed.destination, input)
   } catch (error) {
@@ -268,11 +284,13 @@ function deliverToDestination(
       return deliverBillingAnalyticsToMeta(input)
     case "posthog":
       return deliverBillingAnalyticsToPostHog(input)
+    case "funnel":
+      return deliverBillingAnalyticsToFunnel(input)
   }
 }
 
 async function claimDeliveryForDispatch(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   delivery: BillingAnalyticsDeliveryRow,
 ): Promise<BillingAnalyticsDeliveryRow | null> {
   const now = new Date().toISOString()
@@ -300,7 +318,7 @@ async function claimDeliveryForDispatch(
 }
 
 async function markDeliveryDelivered(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   delivery: BillingAnalyticsDeliveryRow,
   result: BillingAnalyticsDeliveryResult,
 ) {
@@ -322,12 +340,12 @@ async function markDeliveryDelivered(
 }
 
 async function markDeliveryFailed(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   delivery: BillingAnalyticsDeliveryRow,
   result: BillingAnalyticsDeliveryResult,
 ) {
   const attempts = delivery.attempts + 1
-  const permanent = attempts >= MAX_DELIVERY_ATTEMPTS
+  const permanent = result.permanent === true || attempts >= MAX_DELIVERY_ATTEMPTS
   const { error } = await supabase
     .from("billing_analytics_deliveries")
     .update({
@@ -345,8 +363,8 @@ async function markDeliveryFailed(
   if (error) throw error
 }
 
-async function findOutboxEventByKey(
-  supabase: SupabaseBillingClient,
+export async function findBillingAnalyticsEventByKey(
+  supabase: SupabaseBillingAnalyticsClient,
   eventKey: string,
 ): Promise<BillingAnalyticsOutboxRow | null> {
   const { data, error } = await supabase
@@ -360,7 +378,7 @@ async function findOutboxEventByKey(
 }
 
 async function findOutboxEventById(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   id: string,
 ): Promise<BillingAnalyticsOutboxRow | null> {
   const { data, error } = await supabase
@@ -374,7 +392,7 @@ async function findOutboxEventById(
 }
 
 async function findBillingAnalyticsProfile(
-  supabase: SupabaseBillingClient,
+  supabase: SupabaseBillingAnalyticsClient,
   userId: string,
 ): Promise<BillingAnalyticsProfile | null> {
   const { data, error } = await supabase

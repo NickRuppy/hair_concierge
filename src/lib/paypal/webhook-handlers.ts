@@ -3,7 +3,11 @@ import {
   billingAnalyticsEventKey,
   billingSubscriptionPayload,
 } from "@/lib/billing/analytics-events"
-import { recordBillingAnalyticsEvent } from "@/lib/billing/analytics-outbox"
+import {
+  BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
+  findBillingAnalyticsEventByKey,
+  recordBillingAnalyticsEvent,
+} from "@/lib/billing/analytics-outbox"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
@@ -13,6 +17,7 @@ import {
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
 import type {
   BillingAnalyticsEventName,
+  BillingAnalyticsDestination,
   BillingInterval,
   BillingSubscriptionInput,
   BillingSubscriptionRow,
@@ -22,10 +27,12 @@ import {
   findPayPalCheckoutIntentByProviderSubscriptionId,
   findPayPalCheckoutIntentByToken,
   isPayPalCheckoutIntentExpired,
+  isPayPalCheckoutIntentEligibleForInitialPayment,
   markPayPalCheckoutIntentActivated,
   markPayPalCheckoutIntentDuplicate,
   markPayPalCheckoutIntentExpired,
   PayPalCheckoutIntentBindingError,
+  type PayPalCheckoutIntentRow,
 } from "@/lib/paypal/checkout-intents"
 import {
   ensurePayPalCheckoutAccount,
@@ -38,7 +45,7 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
-import { recordFunnelPurchaseFromSession } from "@/lib/funnel/server"
+import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 
 export type PayPalWebhookEvent = {
   id?: string
@@ -74,13 +81,16 @@ export type PayPalWebhookResult =
   | { handled: false; skipped?: false }
 
 type PayPalActivationOutcome =
-  | { kind: "none" }
+  | { kind: "none"; reason: "duplicate" | "expired" | "quarantined" }
+  | { kind: "pending" }
   | {
       kind: "active"
       billingRow: BillingSubscriptionRow
-      firstPurchase: boolean
+      checkoutIntent: PayPalCheckoutIntentRow | null
       funnelMetadata: Record<string, unknown> | null
     }
+
+type PayPalPaymentClassification = "initial" | "renewal" | "historical_noop"
 
 const MUTATING_EVENTS = new Set([
   "BILLING.SUBSCRIPTION.ACTIVATED",
@@ -136,31 +146,37 @@ export async function handlePayPalWebhookEvent(
     const subscription = await retrieve(subscriptionId)
 
     switch (eventType) {
-      case "BILLING.SUBSCRIPTION.ACTIVATED":
+      case "BILLING.SUBSCRIPTION.ACTIVATED": {
+        await activateOrRefreshSubscription(subscription, deps)
+        return { handled: true }
+      }
       case "PAYMENT.SALE.COMPLETED": {
         let outcome = await activateOrRefreshSubscription(subscription, deps)
-        if (eventType === "PAYMENT.SALE.COMPLETED" && outcome.kind === "active") {
-          const providerInterval = getPayPalIntervalForPlanId(subscription.plan_id)
-          if (providerInterval) {
-            const applied = await applyPlanChangeAtRenewal(deps.supabase, {
-              subscription: outcome.billingRow,
-              observedInterval: providerInterval,
-              occurredAt: event.create_time ?? new Date().toISOString(),
-              deps: { defer: deps.defer },
-            })
-            if (applied) {
-              await mirrorBillingSubscriptionToProfile(
-                deps.supabase,
-                applied.subscription,
-                deps.premiumTierId,
-                { freeTierId: deps.freeTierId },
-              )
-              outcome = { ...outcome, billingRow: applied.subscription }
-            }
+        if (outcome.kind === "pending") {
+          throw new Error(`PayPal subscription ${subscriptionId} is not active yet`)
+        }
+        if (outcome.kind === "none") return { handled: true }
+        const sale = assertValidPayPalSaleEvent(event)
+        const providerInterval = getPayPalIntervalForPlanId(subscription.plan_id)
+        if (providerInterval) {
+          const applied = await applyPlanChangeAtRenewal(deps.supabase, {
+            subscription: outcome.billingRow,
+            observedInterval: providerInterval,
+            occurredAt: sale.occurredAt,
+            deps: { defer: deps.defer },
+          })
+          if (applied) {
+            await mirrorBillingSubscriptionToProfile(
+              deps.supabase,
+              applied.subscription,
+              deps.premiumTierId,
+              { freeTierId: deps.freeTierId },
+            )
+            outcome = { ...outcome, billingRow: applied.subscription }
           }
         }
         if (deps.recordBillingAnalytics) {
-          await recordPayPalSuccessfulPayment(event, deps, outcome, eventType)
+          await recordPayPalSuccessfulPayment(event, deps, outcome, sale)
         }
         return { handled: true }
       }
@@ -231,7 +247,7 @@ async function activateOrRefreshSubscription(
       supabase: deps.supabase,
       token: intent.token,
     })
-    return { kind: "none" }
+    return { kind: "none", reason: "quarantined" }
   }
   if (!existing && !intent) {
     throw new Error(`PayPal subscription ${subscription.id} has no checkout intent or local row`)
@@ -240,7 +256,7 @@ async function activateOrRefreshSubscription(
     await markPayPalCheckoutIntentExpired(deps.supabase, intent.token)
     const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
     await cancel(subscription.id, "PayPal checkout intent expired before activation")
-    return { kind: "none" }
+    return { kind: "none", reason: "expired" }
   }
 
   let boundIntent = intent
@@ -259,7 +275,7 @@ async function activateOrRefreshSubscription(
           subscription.id,
           "Duplicate PayPal subscription reused an existing Chaarlie checkout token",
         )
-        return { kind: "none" }
+        return { kind: "none", reason: "duplicate" }
       }
       throw error
     }
@@ -270,7 +286,7 @@ async function activateOrRefreshSubscription(
         subscription.id,
         "Duplicate PayPal subscription reused an existing Chaarlie checkout token",
       )
-      return { kind: "none" }
+      return { kind: "none", reason: "duplicate" }
     }
     boundIntent = null
   }
@@ -294,7 +310,7 @@ async function activateOrRefreshSubscription(
         supabase: deps.supabase,
         token: boundIntent.token,
       })
-      return { kind: "none" }
+      return { kind: "none", reason: "duplicate" }
     }
   }
 
@@ -308,18 +324,30 @@ async function activateOrRefreshSubscription(
     linkQuizToProfile: deps.linkQuizToProfile,
   })
 
-  if (activation.status === "pending" || activation.status === "duplicate") return { kind: "none" }
-  if (boundIntent) await markPayPalCheckoutIntentActivated(deps.supabase, boundIntent.token)
+  if (activation.status === "pending") return { kind: "pending" }
+  if (activation.status === "duplicate") return { kind: "none", reason: "duplicate" }
+  if (
+    boundIntent &&
+    (["created", "approved", "activated"] as PayPalCheckoutIntentRow["status"][]).includes(
+      boundIntent.status,
+    )
+  ) {
+    await markPayPalCheckoutIntentActivated(deps.supabase, boundIntent.token)
+  }
   const billingRow = await findBillingSubscriptionByProviderId(
     deps.supabase,
     "paypal",
     subscription.id,
   )
-  if (!billingRow) return { kind: "none" }
+  if (!billingRow) {
+    throw new Error(
+      `PayPal subscription ${subscription.id} activation did not create a billing row`,
+    )
+  }
   return {
     kind: "active",
     billingRow,
-    firstPurchase: !existing,
+    checkoutIntent: boundIntent,
     funnelMetadata: boundIntent?.metadata ?? null,
   }
 }
@@ -382,14 +410,26 @@ async function recordPayPalSuccessfulPayment(
   event: PayPalWebhookEvent,
   deps: PayPalWebhookDeps,
   outcome: PayPalActivationOutcome,
-  eventType: string,
+  sale: PayPalSaleIdentity,
 ) {
   if (outcome.kind !== "active") return
   const billingRow = outcome.billingRow
+  const saleId = sale.saleId
   const amount = payPalEventAmount(event)
   const currency = payPalEventCurrency(event)
+  const classification = await classifyPayPalSuccessfulPayment(event, deps, outcome, saleId)
 
-  if (outcome.firstPurchase) {
+  console.info("[paypal:webhook] payment classified", {
+    eventId: event.id,
+    subscriptionId: billingRow.provider_subscription_id,
+    saleId,
+    classification,
+    intentStatus: outcome.checkoutIntent?.status ?? "missing",
+  })
+
+  if (classification === "historical_noop") return
+
+  if (classification === "initial") {
     const purchaseEventKey = billingAnalyticsEventKey({
       provider: "paypal",
       eventName: "purchase_completed",
@@ -397,29 +437,32 @@ async function recordPayPalSuccessfulPayment(
     })
     const funnelSessionId = stringMetadata(outcome.funnelMetadata, "funnel_session_id")
     const funnelPackageKey = stringMetadata(outcome.funnelMetadata, "funnel_package_key")
+    const purchaseDestinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
+    if (
+      isFunnelAttributionEnabled() &&
+      isBillingFunnelDeliveryEnabled() &&
+      funnelSessionId &&
+      funnelPackageKey
+    ) {
+      purchaseDestinations.push("funnel")
+    }
     await recordPayPalBillingAnalytics(deps, {
       eventKey: purchaseEventKey,
       eventName: "purchase_completed",
       billingRow,
       event,
-      sourceObjectId: event.resource?.id ?? billingRow.provider_subscription_id,
+      sourceObjectId: saleId,
       payload: {
         ...billingSubscriptionPayload(billingRow),
         value: amount,
         currency,
-        payment_event_type: eventType,
+        payment_event_type: event.event_type,
+        checkout_reference: billingRow.provider_subscription_id,
         funnel_session_id: funnelSessionId,
         funnel_package_key: funnelPackageKey,
       },
+      destinations: purchaseDestinations,
     })
-    await recordFunnelPurchaseFromSession({
-      sessionId: funnelSessionId,
-      packageKey: funnelPackageKey,
-      eventId: purchaseEventKey,
-      provider: "paypal",
-      reference: billingRow.provider_subscription_id,
-      userId: billingRow.user_id,
-    }).catch((error) => console.warn("[funnel] PayPal purchase tracking failed", error))
     await recordPayPalBillingAnalytics(deps, {
       eventKey: billingAnalyticsEventKey({
         provider: "paypal",
@@ -430,30 +473,79 @@ async function recordPayPalSuccessfulPayment(
       billingRow,
       event,
       sourceObjectId: billingRow.provider_subscription_id,
-      payload: billingSubscriptionPayload(billingRow, { payment_event_type: eventType }),
+      payload: billingSubscriptionPayload(billingRow, {
+        payment_event_type: event.event_type,
+      }),
     })
     return
   }
 
-  if (eventType === "PAYMENT.SALE.COMPLETED") {
-    await recordPayPalBillingAnalytics(deps, {
-      eventKey: billingAnalyticsEventKey({
-        provider: "paypal",
-        eventName: "payment_completed",
-        sourceObjectId: event.resource?.id ?? event.id ?? billingRow.provider_subscription_id,
-      }),
+  await recordPayPalBillingAnalytics(deps, {
+    eventKey: billingAnalyticsEventKey({
+      provider: "paypal",
       eventName: "payment_completed",
-      billingRow,
-      event,
-      sourceObjectId: event.resource?.id ?? event.id ?? billingRow.provider_subscription_id,
-      payload: {
-        ...billingSubscriptionPayload(billingRow),
-        value: amount,
-        currency,
-        payment_event_type: eventType,
-      },
-    })
+      sourceObjectId: saleId,
+    }),
+    eventName: "payment_completed",
+    billingRow,
+    event,
+    sourceObjectId: saleId,
+    payload: {
+      ...billingSubscriptionPayload(billingRow),
+      value: amount,
+      currency,
+      payment_event_type: event.event_type,
+    },
+  })
+}
+
+async function classifyPayPalSuccessfulPayment(
+  event: PayPalWebhookEvent,
+  deps: PayPalWebhookDeps,
+  outcome: Extract<PayPalActivationOutcome, { kind: "active" }>,
+  saleId: string,
+): Promise<PayPalPaymentClassification> {
+  const subscriptionId = outcome.billingRow.provider_subscription_id
+  const purchaseEventKey = billingAnalyticsEventKey({
+    provider: "paypal",
+    eventName: "purchase_completed",
+    sourceObjectId: subscriptionId,
+  })
+  const existingPurchase = await findBillingAnalyticsEventByKey(deps.supabase, purchaseEventKey)
+  if (existingPurchase) {
+    return existingPurchase.source_object_id === saleId ? "initial" : "renewal"
   }
+
+  const paymentEventKey = billingAnalyticsEventKey({
+    provider: "paypal",
+    eventName: "payment_completed",
+    sourceObjectId: saleId,
+  })
+  const existingPayment = await findBillingAnalyticsEventByKey(deps.supabase, paymentEventKey)
+  if (existingPayment?.source_object_id === saleId) return "historical_noop"
+
+  if (
+    outcome.checkoutIntent &&
+    isPayPalCheckoutIntentEligibleForInitialPayment(outcome.checkoutIntent, {
+      providerSubscriptionId: subscriptionId,
+      eventCreatedAt: event.create_time!,
+    })
+  ) {
+    return "initial"
+  }
+
+  return "renewal"
+}
+
+type PayPalSaleIdentity = { saleId: string; occurredAt: string }
+
+function assertValidPayPalSaleEvent(event: PayPalWebhookEvent): PayPalSaleIdentity {
+  const saleId = event.resource?.id?.trim()
+  if (!saleId) throw new Error("PayPal sale webhook is missing sale id")
+  if (!event.create_time || !Number.isFinite(Date.parse(event.create_time))) {
+    throw new Error("PayPal sale webhook has invalid create_time")
+  }
+  return { saleId, occurredAt: event.create_time }
 }
 
 function stringMetadata(metadata: Record<string, unknown> | null, key: string) {
@@ -532,6 +624,7 @@ async function recordPayPalBillingAnalytics(
     event: PayPalWebhookEvent
     sourceObjectId: string
     payload: Record<string, unknown>
+    destinations?: BillingAnalyticsDestination[]
   },
 ) {
   await recordBillingAnalyticsEvent(
@@ -548,7 +641,7 @@ async function recordPayPalBillingAnalytics(
       occurredAt: payPalEventTimestamp(input.event),
       payload: input.payload,
     },
-    { defer: deps.defer },
+    { defer: deps.defer, destinations: input.destinations },
   )
 }
 

@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server"
+import type { SupabaseBillingAnalyticsClient } from "@/lib/billing/types"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   decodeFunnelContext,
@@ -96,6 +97,7 @@ export async function recordFunnelEvent(input: {
   userId?: string | null
   checkoutProvider?: string | null
   checkoutReference?: string | null
+  occurredAt?: string
   properties?: Record<string, unknown>
 }) {
   return recordFunnelEventWithRpc(
@@ -120,6 +122,7 @@ export async function recordFunnelEventWithRpc(
     userId?: string | null
     checkoutProvider?: string | null
     checkoutReference?: string | null
+    occurredAt?: string
     properties?: Record<string, unknown>
   },
 ) {
@@ -136,7 +139,7 @@ export async function recordFunnelEventWithRpc(
     p_landing_variant: funnelPackage.landingVariant,
     p_offer_variant: funnelPackage.offerVariant,
     p_event_name: input.milestone,
-    p_occurred_at: new Date().toISOString(),
+    p_occurred_at: input.occurredAt ?? new Date().toISOString(),
     p_entry_path: input.touch?.entryPath ?? null,
     p_entry_url: null,
     p_referrer: input.touch?.referrer ?? null,
@@ -152,35 +155,69 @@ export async function recordFunnelEventWithRpc(
   return data
 }
 
-export async function recordFunnelPurchaseFromSession(input: {
-  sessionId?: string | null
-  packageKey?: string | null
-  eventId: string
-  provider: "stripe" | "paypal"
-  reference: string
-  userId?: string | null
-}) {
-  if (!isFunnelAttributionEnabled() || !input.sessionId) return null
-  const { data, error } = await createAdminClient()
+export type FunnelPurchaseRecordResult =
+  | { ok: true; data: unknown }
+  | { ok: false; kind: "permanent" | "transient"; error: string }
+
+export async function recordFunnelPurchaseFromSession(
+  supabase: SupabaseBillingAnalyticsClient,
+  input: {
+    sessionId: string
+    packageKey?: string | null
+    eventId: string
+    provider: "stripe" | "paypal"
+    reference: string
+    userId?: string | null
+    occurredAt: string
+  },
+): Promise<FunnelPurchaseRecordResult> {
+  const { data, error } = await supabase
     .from("funnel_sessions")
     .select("visitor_id, package_key, first_seen_at")
     .eq("id", input.sessionId)
     .maybeSingle()
-  if (error || !data) return null
-  if (input.packageKey && data.package_key !== input.packageKey) return null
-  return recordFunnelEvent({
-    context: {
-      visitorId: data.visitor_id,
-      sessionId: input.sessionId,
-      packageKey: data.package_key,
-      issuedAt: Date.parse(data.first_seen_at),
-    },
-    eventId: input.eventId,
-    milestone: "purchase_completed",
-    userId: input.userId,
-    checkoutProvider: input.provider,
-    checkoutReference: input.reference,
-  })
+  if (error) return { ok: false, kind: "transient", error: errorMessage(error) }
+  if (!data) return { ok: false, kind: "permanent", error: "Funnel session does not exist" }
+  if (input.packageKey && data.package_key !== input.packageKey) {
+    return { ok: false, kind: "permanent", error: "Funnel session package mismatch" }
+  }
+  if (!getFunnelPackageByKey(data.package_key)) {
+    return { ok: false, kind: "permanent", error: "Funnel session package is unknown" }
+  }
+  const issuedAt = Date.parse(data.first_seen_at)
+  if (!Number.isFinite(issuedAt)) {
+    return { ok: false, kind: "permanent", error: "Funnel session first_seen_at is invalid" }
+  }
+
+  try {
+    const rpcData = await recordFunnelEventWithRpc(
+      async (args) => {
+        const result = await supabase.rpc("record_funnel_event", args)
+        return { data: result.data, error: result.error }
+      },
+      {
+        context: {
+          visitorId: data.visitor_id,
+          sessionId: input.sessionId,
+          packageKey: data.package_key,
+          issuedAt,
+        },
+        eventId: input.eventId,
+        milestone: "purchase_completed",
+        userId: input.userId,
+        checkoutProvider: input.provider,
+        checkoutReference: input.reference,
+        occurredAt: input.occurredAt,
+      },
+    )
+    return { ok: true, data: rpcData }
+  } catch (rpcError) {
+    return { ok: false, kind: "transient", error: errorMessage(rpcError) }
+  }
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error)
 }
 
 function touchToJson(touch?: FunnelTouch | null) {

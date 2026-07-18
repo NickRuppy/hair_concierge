@@ -46,6 +46,7 @@ export interface CreatePayPalReactivationCheckoutIntentInput extends CreatePayPa
 export type PayPalCheckoutIntentClient = Pick<SupabaseClient, "from">
 
 const PAYPAL_CHECKOUT_INTENT_TTL_HOURS = 24
+const PAYPAL_INITIAL_PAYMENT_CLOCK_TOLERANCE_MS = 5 * 60 * 1000
 
 export class PayPalCheckoutIntentBindingError extends Error {
   constructor(
@@ -252,6 +253,37 @@ export function isPayPalCheckoutIntentExpired(
 ): boolean {
   const expiresAt = Date.parse(intent.expires_at)
   return !Number.isFinite(expiresAt) || expiresAt <= now.getTime()
+}
+
+export function isPayPalCheckoutIntentEligibleForInitialPayment(
+  intent: Pick<
+    PayPalCheckoutIntentRow,
+    "status" | "provider_subscription_id" | "created_at" | "expires_at"
+  >,
+  input: { providerSubscriptionId: string; eventCreatedAt: string },
+): boolean {
+  if (
+    !(["created", "approved", "activated"] as PayPalCheckoutIntentStatus[]).includes(intent.status)
+  ) {
+    return false
+  }
+  if (intent.provider_subscription_id !== input.providerSubscriptionId) return false
+
+  const eventCreatedAt = Date.parse(input.eventCreatedAt)
+  const intentCreatedAt = Date.parse(intent.created_at)
+  const intentExpiresAt = Date.parse(intent.expires_at)
+  if (
+    !Number.isFinite(eventCreatedAt) ||
+    !Number.isFinite(intentCreatedAt) ||
+    !Number.isFinite(intentExpiresAt)
+  ) {
+    return false
+  }
+
+  return (
+    eventCreatedAt >= intentCreatedAt - PAYPAL_INITIAL_PAYMENT_CLOCK_TOLERANCE_MS &&
+    eventCreatedAt <= intentExpiresAt
+  )
 }
 
 function isUniqueViolation(error: unknown): boolean {

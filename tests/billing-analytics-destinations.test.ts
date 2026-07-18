@@ -3,11 +3,18 @@ import { createHash } from "node:crypto"
 import test from "node:test"
 
 import { deliverBillingAnalyticsToCustomerIo } from "../src/lib/billing/analytics-destinations/customerio"
+import { deliverBillingAnalyticsToFunnel } from "../src/lib/billing/analytics-destinations/funnel"
 import { deliverBillingAnalyticsToMeta } from "../src/lib/billing/analytics-destinations/meta-capi"
 import { deliverBillingAnalyticsToPostHog } from "../src/lib/billing/analytics-destinations/posthog-server"
-import type { BillingAnalyticsOutboxRow, SupabaseBillingClient } from "../src/lib/billing/types"
+import type {
+  BillingAnalyticsOutboxRow,
+  SupabaseBillingAnalyticsClient,
+} from "../src/lib/billing/types"
 
-const supabase = { from: () => ({}) } as unknown as SupabaseBillingClient
+const supabase = {
+  from: () => ({}),
+  rpc: async () => ({ data: null, error: null }),
+} as unknown as SupabaseBillingAnalyticsClient
 
 function sha256(value: string) {
   return createHash("sha256").update(value).digest("hex")
@@ -35,6 +42,45 @@ function event(overrides: Partial<BillingAnalyticsOutboxRow> = {}): BillingAnaly
     created_at: "2026-07-08T10:00:00.000Z",
     updated_at: "2026-07-08T10:00:00.000Z",
     ...overrides,
+  }
+}
+
+function funnelClient(options: {
+  row?: Record<string, unknown> | null
+  queryError?: unknown
+  rpcError?: unknown
+}) {
+  let rpcArgs: Record<string, unknown> | null = null
+  const builder = {
+    select() {
+      return builder
+    },
+    eq() {
+      return builder
+    },
+    async maybeSingle() {
+      return {
+        data:
+          options.row === undefined
+            ? {
+                visitor_id: "10000000-0000-4000-8000-000000000001",
+                package_key: "default_organic",
+                first_seen_at: "2026-07-08T09:00:00.000Z",
+              }
+            : options.row,
+        error: options.queryError ?? null,
+      }
+    },
+  }
+  return {
+    client: {
+      from: () => builder,
+      rpc: async (_name: string, args: Record<string, unknown>) => {
+        rpcArgs = args
+        return { data: [{ inserted: true }], error: options.rpcError ?? null }
+      },
+    } as unknown as SupabaseBillingAnalyticsClient,
+    rpcArgs: () => rpcArgs,
   }
 }
 
@@ -349,4 +395,141 @@ test("Customer.io cancellation trait comes from the event rather than a profile 
   }
 
   assert.equal(calls[0].body.traits.cancel_at_period_end, undefined)
+})
+
+test("funnel adapter maps the outbox identity, provider time, and preferred Stripe reference", async () => {
+  const { client, rpcArgs } = funnelClient({})
+  const result = await deliverBillingAnalyticsToFunnel({
+    event: event({
+      payload: {
+        checkout_reference: "cs_preferred",
+        checkout_session_id: "cs_fallback",
+        funnel_session_id: "20000000-0000-4000-8000-000000000002",
+        funnel_package_key: "default_organic",
+      },
+    }),
+    profile: null,
+    supabase: client,
+  })
+
+  assert.deepEqual(result, { ok: true })
+  assert.equal(rpcArgs()?.p_event_id, "stripe:purchase_completed:cs_test_123")
+  assert.equal(rpcArgs()?.p_occurred_at, "2026-07-08T10:00:00.000Z")
+  assert.equal(rpcArgs()?.p_checkout_provider, "stripe")
+  assert.equal(rpcArgs()?.p_checkout_reference, "cs_preferred")
+  assert.equal(rpcArgs()?.p_user_id, "user-123")
+})
+
+test("funnel adapter falls back to canonical provider references for older purchase events", async () => {
+  const stripe = funnelClient({})
+  const paypal = funnelClient({})
+  const payload = {
+    funnel_session_id: "20000000-0000-4000-8000-000000000002",
+    funnel_package_key: "default_organic",
+  }
+
+  await deliverBillingAnalyticsToFunnel({
+    event: event({ payload, source_object_id: "cs_canonical" }),
+    profile: null,
+    supabase: stripe.client,
+  })
+  await deliverBillingAnalyticsToFunnel({
+    event: event({
+      provider: "paypal",
+      provider_subscription_id: "I-canonical",
+      source_object_id: "SALE-1",
+      payload,
+    }),
+    profile: null,
+    supabase: paypal.client,
+  })
+
+  assert.equal(stripe.rpcArgs()?.p_checkout_reference, "cs_canonical")
+  assert.equal(paypal.rpcArgs()?.p_checkout_reference, "I-canonical")
+})
+
+test("funnel adapter classifies invalid session data as permanent", async () => {
+  const cases = [
+    { row: null, error: "does not exist" },
+    {
+      row: {
+        visitor_id: "visitor",
+        package_key: "scalp_check_placeholder",
+        first_seen_at: "2026-07-08T09:00:00.000Z",
+      },
+      error: "package mismatch",
+    },
+    {
+      row: {
+        visitor_id: "visitor",
+        package_key: "unknown_package",
+        first_seen_at: "2026-07-08T09:00:00.000Z",
+      },
+      error: "package is unknown",
+      packageKey: "unknown_package",
+    },
+    {
+      row: {
+        visitor_id: "visitor",
+        package_key: "default_organic",
+        first_seen_at: "not-a-time",
+      },
+      error: "first_seen_at is invalid",
+    },
+  ]
+
+  for (const testCase of cases) {
+    const { client } = funnelClient({ row: testCase.row })
+    const result = await deliverBillingAnalyticsToFunnel({
+      event: event({
+        payload: {
+          checkout_reference: "cs_123",
+          funnel_session_id: "session-1",
+          funnel_package_key: testCase.packageKey ?? "default_organic",
+        },
+      }),
+      profile: null,
+      supabase: client,
+    })
+    assert.equal(result.ok, false)
+    assert.equal(result.permanent, true)
+    assert.match(result.error ?? "", new RegExp(testCase.error))
+  }
+})
+
+test("funnel adapter keeps session query and RPC errors transient", async () => {
+  for (const client of [
+    funnelClient({ queryError: new Error("query unavailable") }).client,
+    funnelClient({ rpcError: new Error("rpc unavailable") }).client,
+  ]) {
+    const result = await deliverBillingAnalyticsToFunnel({
+      event: event({
+        payload: {
+          checkout_reference: "cs_123",
+          funnel_session_id: "session-1",
+          funnel_package_key: "default_organic",
+        },
+      }),
+      profile: null,
+      supabase: client,
+    })
+    assert.equal(result.ok, false)
+    assert.notEqual(result.permanent, true)
+  }
+})
+
+test("funnel adapter rejects non-purchases and missing session metadata permanently", async () => {
+  const { client } = funnelClient({})
+  for (const invalidEvent of [
+    event({ event_name: "payment_completed" }),
+    event({ payload: { checkout_reference: "cs_123" } }),
+  ]) {
+    const result = await deliverBillingAnalyticsToFunnel({
+      event: invalidEvent,
+      profile: null,
+      supabase: client,
+    })
+    assert.equal(result.ok, false)
+    assert.equal(result.permanent, true)
+  }
 })
