@@ -24,6 +24,7 @@ const SUB_REQUIRED_PREFIXES = [
   "/tracker",
   "/api/tracker",
 ]
+const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = ["/api/billing/reconcile"]
 const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/",
   "/agb",
@@ -94,7 +95,10 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse
   }
 
-  if (ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))) {
+  if (
+    SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
+    ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))
+  ) {
     return supabaseResponse
   }
 

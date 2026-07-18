@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import { NextRequest, NextResponse } from "next/server"
 import { redirectWithSupabaseCookies, updateSession } from "../src/lib/supabase/middleware"
@@ -63,6 +64,20 @@ test("allows unauthenticated PayPal webhook calls through the proxy", async () =
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get("location"), null)
+})
+
+test("lets every configured cron reach route-level auth without a session lookup", async () => {
+  const vercelConfig = JSON.parse(
+    readFileSync(new URL("../vercel.json", import.meta.url), "utf8"),
+  ) as { crons?: Array<{ path: string }> }
+  assert.ok(vercelConfig.crons?.length)
+
+  for (const cron of vercelConfig.crons) {
+    const response = await updateSession(new NextRequest(`https://chaarlie.de${cron.path}`))
+
+    assert.equal(response.status, 200, cron.path)
+    assert.equal(response.headers.get("location"), null, cron.path)
+  }
 })
 
 test("redirects legacy offer links to the combined result offer with the quiz lead id", async () => {
