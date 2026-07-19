@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto"
 import type { BillingAnalyticsDeliveryInput, BillingAnalyticsDeliveryResult } from "./types"
 import { isFunnelMetaCustomDataEnabled } from "@/lib/funnel/flags"
+import { META_CHECKOUT_RETURN_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
 
 const DEFAULT_META_CAPI_API_VERSION = "v24.0"
 const DEFAULT_TIMEOUT_MS = 1500
@@ -61,6 +62,30 @@ function customData(input: BillingAnalyticsDeliveryInput) {
   }
 }
 
+function eventSource(eventName: BillingAnalyticsDeliveryInput["event"]["event_name"]) {
+  if (eventName === "purchase_completed" || eventName === "subscription_started") {
+    return {
+      action_source: "website" as const,
+      event_source_url: META_CHECKOUT_RETURN_EVENT_SOURCE_URL,
+    }
+  }
+
+  return { action_source: "system_generated" as const }
+}
+
+function metaTraceId(responseBody: unknown) {
+  if (!responseBody || typeof responseBody !== "object" || Array.isArray(responseBody)) {
+    return undefined
+  }
+
+  const body = responseBody as Record<string, unknown>
+  if (typeof body.fbtrace_id === "string") return body.fbtrace_id
+  if (!body.error || typeof body.error !== "object" || Array.isArray(body.error)) return undefined
+
+  const error = body.error as Record<string, unknown>
+  return typeof error.fbtrace_id === "string" ? error.fbtrace_id : undefined
+}
+
 export async function deliverBillingAnalyticsToMeta(
   input: BillingAnalyticsDeliveryInput,
 ): Promise<BillingAnalyticsDeliveryResult> {
@@ -80,7 +105,7 @@ export async function deliverBillingAnalyticsToMeta(
       {
         event_name: META_EVENT_NAMES[input.event.event_name],
         event_time: Math.floor(new Date(input.event.occurred_at).getTime() / 1000),
-        action_source: "website",
+        ...eventSource(input.event.event_name),
         event_id: metaEventId(input),
         user_data: userData,
         custom_data: Object.fromEntries(
@@ -107,13 +132,61 @@ export async function deliverBillingAnalyticsToMeta(
       signal: controller.signal,
     })
     const text = await response.text().catch(() => "")
+    const headerTraceId = response.headers.get("x-fb-trace-id") ?? undefined
     if (!response.ok) {
-      return { ok: false, status: response.status, error: `${response.status} ${text}`.trim() }
+      let bodyTraceId: string | undefined
+      try {
+        bodyTraceId = metaTraceId(JSON.parse(text) as unknown)
+      } catch {
+        // Meta may return an HTML or otherwise unreadable error body.
+      }
+      return {
+        ok: false,
+        status: response.status,
+        error: "Meta CAPI request failed",
+        providerRequestId: headerTraceId ?? bodyTraceId,
+      }
     }
+
+    let parsedBody: unknown
+    try {
+      parsedBody = JSON.parse(text) as unknown
+    } catch {
+      return {
+        ok: false,
+        status: response.status,
+        error: "Meta CAPI returned an unreadable success response",
+        providerRequestId: headerTraceId,
+      }
+    }
+    if (!parsedBody || typeof parsedBody !== "object" || Array.isArray(parsedBody)) {
+      return {
+        ok: false,
+        status: response.status,
+        error: "Meta CAPI returned an unreadable success response",
+        providerRequestId: headerTraceId,
+      }
+    }
+    const responseBody = parsedBody as Record<string, unknown>
+
+    const providerRequestId = headerTraceId ?? metaTraceId(responseBody)
+    if (responseBody.events_received !== 1) {
+      const received =
+        typeof responseBody.events_received === "number"
+          ? responseBody.events_received
+          : "an unknown number of"
+      return {
+        ok: false,
+        status: response.status,
+        error: `Meta CAPI received ${received} events instead of 1`,
+        providerRequestId,
+      }
+    }
+
     return {
       ok: true,
       status: response.status,
-      providerRequestId: response.headers.get("x-fb-trace-id") ?? undefined,
+      providerRequestId,
     }
   } catch (error) {
     return {

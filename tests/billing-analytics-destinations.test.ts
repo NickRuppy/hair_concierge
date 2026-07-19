@@ -108,7 +108,7 @@ test("Meta CAPI adapter hashes user data and uses Stripe checkout session as Pur
       url: String(url),
       body: JSON.parse(String(init?.body ?? "{}")),
     })
-    return new Response("{}", {
+    return new Response(JSON.stringify({ events_received: 1 }), {
       status: 200,
       headers: { "x-fb-trace-id": "trace-123" },
     })
@@ -141,6 +141,7 @@ test("Meta CAPI adapter hashes user data and uses Stripe checkout session as Pur
   const payload = calls[0].body.data[0]
   assert.equal(payload.event_name, "Purchase")
   assert.equal(payload.action_source, "website")
+  assert.equal(payload.event_source_url, "https://chaarlie.de/welcome")
   assert.equal(payload.event_id, "cs_test_123")
   assert.equal(payload.user_data.em, sha256("buyer@example.com"))
   assert.equal(payload.user_data.external_id, sha256("user-123"))
@@ -153,7 +154,7 @@ test("Meta CAPI reuses the Stripe checkout session for Subscribe deduplication",
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
     bodies.push(JSON.parse(String(init?.body ?? "{}")))
-    return new Response("{}", { status: 200 })
+    return new Response(JSON.stringify({ events_received: 1 }), { status: 200 })
   }) as typeof fetch
 
   try {
@@ -178,7 +179,162 @@ test("Meta CAPI reuses the Stripe checkout session for Subscribe deduplication",
   }
 
   assert.equal(bodies[0].data[0].event_name, "Subscribe")
+  assert.equal(bodies[0].data[0].action_source, "website")
+  assert.equal(bodies[0].data[0].event_source_url, "https://chaarlie.de/welcome")
   assert.equal(bodies[0].data[0].event_id, "cs_test_123")
+})
+
+test("Meta CAPI marks provider-driven billing events as system generated", async () => {
+  const bodies: Record<string, any>[] = []
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body ?? "{}")))
+    return new Response(JSON.stringify({ events_received: 1 }), { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv(
+      {
+        META_CAPI_ACCESS_TOKEN: "token",
+        META_PIXEL_ID: "pixel-123",
+      },
+      () =>
+        deliverBillingAnalyticsToMeta({
+          event: event({
+            event_key: "paypal:payment_completed:sale-123",
+            event_name: "payment_completed",
+            provider: "paypal",
+            provider_customer_id: "payer-123",
+            provider_subscription_id: "I-123",
+            source_object_id: "sale-123",
+          }),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        }),
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(bodies[0].data[0].action_source, "system_generated")
+  assert.equal(bodies[0].data[0].event_source_url, undefined)
+})
+
+test("Meta CAPI requires an explicit event receipt before marking delivery successful", async () => {
+  const responses = [
+    JSON.stringify({ events_received: 0, fbtrace_id: "body-trace-zero" }),
+    "not-json",
+    "null",
+  ]
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => new Response(responses.shift(), { status: 200 })) as typeof fetch
+
+  try {
+    await withEnv(
+      {
+        META_CAPI_ACCESS_TOKEN: "token",
+        META_PIXEL_ID: "pixel-123",
+      },
+      async () => {
+        const zeroEvents = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
+        const unreadable = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
+        const nonObject = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
+
+        assert.equal(zeroEvents.ok, false)
+        assert.equal(zeroEvents.providerRequestId, "body-trace-zero")
+        assert.match(zeroEvents.error ?? "", /received 0 events/i)
+        assert.equal(unreadable.ok, false)
+        assert.match(unreadable.error ?? "", /unreadable success response/i)
+        assert.equal(nonObject.ok, false)
+        assert.match(nonObject.error ?? "", /unreadable success response/i)
+      },
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test("Meta CAPI preserves trace ids without persisting response body details", async () => {
+  const responses = [
+    new Response(JSON.stringify({ events_received: 1, fbtrace_id: "body-trace-success" }), {
+      status: 200,
+    }),
+    new Response("sensitive echoed request", {
+      status: 400,
+      headers: { "x-fb-trace-id": "header-trace-failure" },
+    }),
+    new Response(
+      JSON.stringify({
+        error: {
+          message: "sensitive rejected payload detail",
+          fbtrace_id: "body-trace-failure",
+        },
+      }),
+      { status: 400 },
+    ),
+  ]
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = (async () => responses.shift() as Response) as typeof fetch
+
+  try {
+    await withEnv(
+      {
+        META_CAPI_ACCESS_TOKEN: "token",
+        META_PIXEL_ID: "pixel-123",
+      },
+      async () => {
+        const success = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
+        const failure = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
+        const bodyTraceFailure = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
+
+        assert.equal(success.ok, true)
+        assert.equal(success.providerRequestId, "body-trace-success")
+        assert.deepEqual(failure, {
+          ok: false,
+          status: 400,
+          error: "Meta CAPI request failed",
+          providerRequestId: "header-trace-failure",
+        })
+        assert.equal(JSON.stringify(failure).includes("sensitive echoed request"), false)
+        assert.deepEqual(bodyTraceFailure, {
+          ok: false,
+          status: 400,
+          error: "Meta CAPI request failed",
+          providerRequestId: "body-trace-failure",
+        })
+        assert.equal(
+          JSON.stringify(bodyTraceFailure).includes("sensitive rejected payload detail"),
+          false,
+        )
+      },
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test("Meta CAPI only includes package key behind its flag and never includes session id", async () => {
@@ -186,7 +342,7 @@ test("Meta CAPI only includes package key behind its flag and never includes ses
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
     bodies.push(JSON.parse(String(init?.body ?? "{}")))
-    return new Response("{}", { status: 200 })
+    return new Response(JSON.stringify({ events_received: 1 }), { status: 200 })
   }) as typeof fetch
 
   const funnelEvent = event({
