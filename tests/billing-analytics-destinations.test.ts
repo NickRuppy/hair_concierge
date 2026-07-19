@@ -275,6 +275,15 @@ test("Meta CAPI preserves trace ids without persisting response body details", a
       status: 400,
       headers: { "x-fb-trace-id": "header-trace-failure" },
     }),
+    new Response(
+      JSON.stringify({
+        error: {
+          message: "sensitive rejected payload detail",
+          fbtrace_id: "body-trace-failure",
+        },
+      }),
+      { status: 400 },
+    ),
   ]
   const originalFetch = globalThis.fetch
   globalThis.fetch = (async () => responses.shift() as Response) as typeof fetch
@@ -296,6 +305,11 @@ test("Meta CAPI preserves trace ids without persisting response body details", a
           profile: { id: "user-123", email: "buyer@example.com" },
           supabase,
         })
+        const bodyTraceFailure = await deliverBillingAnalyticsToMeta({
+          event: event(),
+          profile: { id: "user-123", email: "buyer@example.com" },
+          supabase,
+        })
 
         assert.equal(success.ok, true)
         assert.equal(success.providerRequestId, "body-trace-success")
@@ -306,6 +320,16 @@ test("Meta CAPI preserves trace ids without persisting response body details", a
           providerRequestId: "header-trace-failure",
         })
         assert.equal(JSON.stringify(failure).includes("sensitive echoed request"), false)
+        assert.deepEqual(bodyTraceFailure, {
+          ok: false,
+          status: 400,
+          error: "Meta CAPI request failed",
+          providerRequestId: "body-trace-failure",
+        })
+        assert.equal(
+          JSON.stringify(bodyTraceFailure).includes("sensitive rejected payload detail"),
+          false,
+        )
       },
     )
   } finally {

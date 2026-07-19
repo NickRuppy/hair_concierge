@@ -73,6 +73,19 @@ function eventSource(eventName: BillingAnalyticsDeliveryInput["event"]["event_na
   return { action_source: "system_generated" as const }
 }
 
+function metaTraceId(responseBody: unknown) {
+  if (!responseBody || typeof responseBody !== "object" || Array.isArray(responseBody)) {
+    return undefined
+  }
+
+  const body = responseBody as Record<string, unknown>
+  if (typeof body.fbtrace_id === "string") return body.fbtrace_id
+  if (!body.error || typeof body.error !== "object" || Array.isArray(body.error)) return undefined
+
+  const error = body.error as Record<string, unknown>
+  return typeof error.fbtrace_id === "string" ? error.fbtrace_id : undefined
+}
+
 export async function deliverBillingAnalyticsToMeta(
   input: BillingAnalyticsDeliveryInput,
 ): Promise<BillingAnalyticsDeliveryResult> {
@@ -121,11 +134,17 @@ export async function deliverBillingAnalyticsToMeta(
     const text = await response.text().catch(() => "")
     const headerTraceId = response.headers.get("x-fb-trace-id") ?? undefined
     if (!response.ok) {
+      let bodyTraceId: string | undefined
+      try {
+        bodyTraceId = metaTraceId(JSON.parse(text) as unknown)
+      } catch {
+        // Meta may return an HTML or otherwise unreadable error body.
+      }
       return {
         ok: false,
         status: response.status,
         error: "Meta CAPI request failed",
-        providerRequestId: headerTraceId,
+        providerRequestId: headerTraceId ?? bodyTraceId,
       }
     }
 
@@ -150,9 +169,7 @@ export async function deliverBillingAnalyticsToMeta(
     }
     const responseBody = parsedBody as Record<string, unknown>
 
-    const providerRequestId =
-      headerTraceId ??
-      (typeof responseBody.fbtrace_id === "string" ? responseBody.fbtrace_id : undefined)
+    const providerRequestId = headerTraceId ?? metaTraceId(responseBody)
     if (responseBody.events_received !== 1) {
       const received =
         typeof responseBody.events_received === "number"
