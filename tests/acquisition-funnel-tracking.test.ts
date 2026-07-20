@@ -101,14 +101,16 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
   }
 })
 
-test("result offer preloads Stripe only after the offer component mounts", () => {
+test("shared offer loader warms Stripe only after a guided support or pricing component mounts", () => {
   const source = read("src/components/quiz/result-offer-pricing.tsx")
-  const moduleScope = source.slice(0, source.indexOf("export function ResultOfferPricing"))
+  const loaderSource = read("src/lib/stripe/offer-client-loader.ts")
+  const supportSource = read("src/components/quiz/guided-story-support.tsx")
 
-  assert.match(source, /from "@stripe\/stripe-js\/pure"/)
-  assert.doesNotMatch(moduleScope, /const stripePromise\s*=/)
-  assert.doesNotMatch(moduleScope, /loadStripe\(/)
+  assert.match(loaderSource, /from "@stripe\/stripe-js\/pure"/)
+  assert.match(source, /getOfferStripePromise/)
   assert.match(source, /useEffect\(\(\) => \{\s*getStripePromise\(\)/)
+  assert.match(supportSource, /useEffect\(\(\) => \{\s*warmOfferStripe\(\)/)
+  assert.doesNotMatch(supportSource, /ResultOfferPricing|pricingSlot/)
 })
 
 test("offer and profile reactivation pricing views keep funnel attribution with fresh event ids", () => {

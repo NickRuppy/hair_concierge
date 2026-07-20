@@ -26,10 +26,18 @@ import type {
   OfferSectionId,
 } from "@/lib/analytics/events"
 import { createFunnelEventId } from "@/lib/funnel/client"
-import type { QuizOfferPreview } from "@/lib/quiz/offer-preview-types"
+import { resolveOfferSectionIndex } from "@/lib/analytics/offer-section-order"
 
 export const OFFER_REVISION = "product_led_v2"
+export const GUIDED_STORY_OFFER_REVISION = "guided_story_v1"
 export const OFFER_PRICING_REVISION = "pricing_v1"
+
+export interface OfferTrackingIdentity {
+  conditionerModuleId: string | null
+  needLane: string
+  shampooModuleId: string | null
+  suggestedCategory: string | null
+}
 
 const OfferTrackingContext = createContext<OfferAnalyticsContext | null>(null)
 
@@ -49,7 +57,9 @@ export function OfferTrackingProvider({
   leadId,
   offerTracking,
   offerVariant,
-  preview,
+  trackingIdentity,
+  offerRevision = OFFER_REVISION,
+  revealGeneration = 0,
 }: {
   children: ReactNode
   entryContext: OfferEntryContext
@@ -57,20 +67,19 @@ export function OfferTrackingProvider({
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
-  preview: QuizOfferPreview
+  trackingIdentity: OfferTrackingIdentity
+  offerRevision?: string
+  revealGeneration?: number
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const offerTrackedRef = useRef(false)
   const offerEngagedRef = useRef(false)
   const pendingOfferEngagementRef = useRef<PendingOfferEngagement | null>(null)
   const viewedSectionsRef = useRef(new Set<OfferSectionId>())
+  const openedFaqsRef = useRef(new Set<string>())
   const ctaInteractionIndexRef = useRef(0)
   const [offerViewId] = useState(createFunnelEventId)
-  const shampooModuleId =
-    preview.products.find((product) => product.category === "shampoo")?.key ?? null
-  const conditionerModuleId =
-    preview.products.find((product) => product.category === "conditioner")?.key ?? null
-  const suggestedCategory = preview.needs.extra?.category ?? null
+  const { conditionerModuleId, needLane, shampooModuleId, suggestedCategory } = trackingIdentity
 
   const context = useMemo<OfferAnalyticsContext>(
     () => ({
@@ -80,8 +89,8 @@ export function OfferTrackingProvider({
       funnelPackageKey: offerTracking?.funnelPackageKey,
       funnelSessionId: offerTracking?.funnelSessionId,
       leadId,
-      needLane: preview.lane,
-      offerRevision: OFFER_REVISION,
+      needLane,
+      offerRevision,
       offerVariant,
       offerViewId,
       shampooModuleId,
@@ -96,7 +105,8 @@ export function OfferTrackingProvider({
       leadId,
       offerVariant,
       offerViewId,
-      preview.lane,
+      needLane,
+      offerRevision,
       shampooModuleId,
       suggestedCategory,
     ],
@@ -163,7 +173,7 @@ export function OfferTrackingProvider({
       funnelPackageKey: offerTracking?.funnelPackageKey,
       funnelSessionId: offerTracking?.funnelSessionId,
       leadId,
-      offerRevision: OFFER_REVISION,
+      offerRevision,
       offerVariant,
     })
   }, [
@@ -171,6 +181,7 @@ export function OfferTrackingProvider({
     leadId,
     offerTracking?.funnelPackageKey,
     offerTracking?.funnelSessionId,
+    offerRevision,
     offerVariant,
   ])
 
@@ -179,16 +190,16 @@ export function OfferTrackingProvider({
     if (!root) return
 
     const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-offer-section]")).map(
-      (element, sectionIndex) =>
+      (element) =>
         observeOnceEngaged(element, () => {
           const sectionId = element.dataset.offerSection as OfferSectionId | undefined
-          if (!sectionId) return
+          if (!sectionId || viewedSectionsRef.current.has(sectionId)) return
           viewedSectionsRef.current.add(sectionId)
           trackAppEvent("offer_section_viewed", {
             ...context,
             funnelEventId: createFunnelEventId(),
             sectionId,
-            sectionIndex,
+            sectionIndex: resolveOfferSectionIndex(offerVariant, sectionId),
           })
           if (viewedSectionsRef.current.size >= 3) {
             trackOfferEngagement("section_depth", sectionId)
@@ -197,7 +208,7 @@ export function OfferTrackingProvider({
     )
 
     return () => cleanups.forEach((cleanup) => cleanup())
-  }, [context, trackOfferEngagement])
+  }, [context, offerVariant, revealGeneration, trackOfferEngagement])
 
   useEffect(() => {
     const root = rootRef.current
@@ -237,13 +248,12 @@ export function OfferTrackingProvider({
     const root = rootRef.current
     if (!root) return
 
-    const openedFaqs = new Set<string>()
     const details = Array.from(root.querySelectorAll<HTMLDetailsElement>("details[data-offer-faq]"))
     const cleanups = details.map((detail, faqIndex) => {
       const handleToggle = () => {
         const faqId = detail.dataset.offerFaq
-        if (!detail.open || !faqId || openedFaqs.has(faqId)) return
-        openedFaqs.add(faqId)
+        if (!detail.open || !faqId || openedFaqsRef.current.has(faqId)) return
+        openedFaqsRef.current.add(faqId)
         trackOfferEngagement("faq_opened", "faq")
         trackAppEvent("offer_faq_opened", {
           ...context,
@@ -257,7 +267,7 @@ export function OfferTrackingProvider({
     })
 
     return () => cleanups.forEach((cleanup) => cleanup())
-  }, [context, trackOfferEngagement])
+  }, [context, revealGeneration, trackOfferEngagement])
 
   return (
     <OfferTrackingContext.Provider value={context}>

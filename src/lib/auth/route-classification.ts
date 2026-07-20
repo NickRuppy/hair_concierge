@@ -3,6 +3,7 @@ export type RouteClassification = "public" | "protected" | "legacy" | "developme
 export type RouteEnvironment = {
   nodeEnv: string | undefined
   localDevLoginEnabled: boolean
+  vercelEnv?: string | undefined
 }
 
 const PUBLIC_EXACT_ROUTES = [
@@ -66,6 +67,7 @@ const PROTECTED_ROUTE_PREFIXES = [
 const DEVELOPMENT_ROUTE_PREFIXES = ["/labs", "/api/labs"]
 const DEVELOPMENT_EXACT_ROUTES = ["/api/debug/build-info"]
 const LOCAL_LOGIN_ROUTE = "/api/dev/login"
+const OFFER_PAGE_REVIEW_ROUTE = "/labs/offer-page"
 
 export function pathMatchesRoutePrefix(pathname: string, prefix: string) {
   return pathname === prefix || pathname.startsWith(`${prefix}/`)
@@ -84,6 +86,7 @@ export function classifyRoute(
   }
 
   const isDevelopment = environment.nodeEnv === "development"
+  const isVercelPreview = environment.vercelEnv === "preview"
   const isLocalLoginRoute = pathname === LOCAL_LOGIN_ROUTE
   const isStandardDevelopmentRoute =
     DEVELOPMENT_EXACT_ROUTES.includes(pathname) ||
@@ -91,6 +94,10 @@ export function classifyRoute(
 
   if (isLocalLoginRoute) {
     return isDevelopment && environment.localDevLoginEnabled ? "development" : "protected"
+  }
+
+  if (pathname === OFFER_PAGE_REVIEW_ROUTE && isVercelPreview) {
+    return "development"
   }
 
   if (isStandardDevelopmentRoute) {

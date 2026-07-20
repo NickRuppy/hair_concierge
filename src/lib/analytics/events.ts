@@ -47,6 +47,9 @@ export type OfferSectionId =
 
 export type OfferCtaId =
   | "sticky_header"
+  | "analysis_continue"
+  | "routine_continue"
+  | "support_continue"
   | "locked_plan"
   | "pricing_primary"
   | "change_plan"
