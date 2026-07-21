@@ -91,7 +91,7 @@ function ProductCard({
           id={popoverId}
           role="dialog"
           aria-label={`${copy.categoryLabel}: Warum dieses Beispiel passt`}
-          className="absolute left-0 top-[calc(100%+8px)] z-20 w-[min(22rem,calc(100vw-2rem))] rounded-[14px] border border-[var(--brand-plum-light)] bg-white p-4 text-[13px] leading-relaxed text-[var(--brand-plum-darkest)] shadow-[0_18px_52px_-28px_rgba(var(--brand-plum-rgb),0.65)]"
+          className="absolute left-0 top-[calc(100%+8px)] z-20 w-[min(22rem,calc(100vw-2rem))] origin-top rounded-[14px] border border-[var(--brand-plum-light)] bg-white p-4 text-[13px] leading-relaxed text-[var(--brand-plum-darkest)] shadow-[0_18px_52px_-28px_rgba(var(--brand-plum-rgb),0.65)] motion-safe:animate-[guided-story-popover-in_150ms_ease-out_both]"
           data-guided-story-popover
         >
           <button
@@ -140,13 +140,27 @@ function LockedTeaser({
         aria-controls={active ? popoverId : undefined}
         aria-expanded={active}
         aria-haspopup="dialog"
-        className="flex min-h-[96px] w-full min-w-0 flex-col justify-between rounded-[16px] border border-[var(--brand-plum-light)] bg-white p-3.5 text-left transition-colors hover:border-[var(--brand-plum)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+        className="relative flex min-h-[112px] w-full min-w-0 flex-col justify-between overflow-hidden rounded-[16px] border border-[var(--brand-plum-light)] bg-white p-3.5 text-left transition-colors hover:border-[var(--brand-plum)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
         onClick={onOpen}
       >
-        <span className="grid size-8 place-items-center self-end rounded-full bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-3.5 top-3.5 flex select-none items-center gap-2.5 opacity-70 blur-[5px]"
+        >
+          <span className="size-9 shrink-0 rounded-[10px] bg-gradient-to-b from-[var(--brand-plum-ice)] to-[var(--brand-plum-light)]" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] font-semibold leading-snug text-[var(--brand-plum-darkest)]">
+              Empfohlener Schritt
+            </span>
+            <span className="mt-0.5 block text-[10px] leading-snug text-muted-foreground">
+              Produkt & Anwendung
+            </span>
+          </span>
+        </span>
+        <span className="relative grid size-8 place-items-center self-end rounded-full bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
           <LockKeyhole className="size-3.5" aria-hidden="true" />
         </span>
-        <span className="mt-3 break-words text-[12px] font-semibold leading-snug text-[var(--brand-plum-darkest)] [overflow-wrap:anywhere]">
+        <span className="relative mt-3 break-words text-[12px] font-semibold leading-snug text-[var(--brand-plum-darkest)] [overflow-wrap:anywhere]">
           {label}
         </span>
       </button>
@@ -157,7 +171,7 @@ function LockedTeaser({
           role="dialog"
           aria-label={`${label}: gesperrter Routineteil`}
           className={cn(
-            "absolute top-[calc(100%+8px)] z-20 w-[min(21rem,calc(100vw-2rem))] rounded-[14px] border border-[var(--brand-plum-light)] bg-white p-4 text-[13px] leading-relaxed text-[var(--brand-plum-darkest)] shadow-[0_18px_52px_-28px_rgba(var(--brand-plum-rgb),0.65)]",
+            "absolute top-[calc(100%+8px)] z-20 w-[min(21rem,calc(100vw-2rem))] origin-top rounded-[14px] border border-[var(--brand-plum-light)] bg-white p-4 text-[13px] leading-relaxed text-[var(--brand-plum-darkest)] shadow-[0_18px_52px_-28px_rgba(var(--brand-plum-rgb),0.65)] motion-safe:animate-[guided-story-popover-in_150ms_ease-out_both]",
             align === "right" ? "right-0" : "left-0",
           )}
           data-guided-story-popover
@@ -172,7 +186,7 @@ function LockedTeaser({
           </button>
           <p className="pr-7">{popover}</p>
           <Button
-            className="mt-3"
+            className="mt-3 bg-[var(--brand-coral)] text-white hover:bg-[var(--brand-coral-dark)]"
             data-offer-cta="locked_plan"
             data-offer-destination="pricing"
             data-offer-source-section="locked_routine"
@@ -333,7 +347,7 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
           {copy.handoff}
         </p>
         <Button
-          className="mt-3"
+          className="mt-3 bg-[var(--brand-coral)] text-white hover:bg-[var(--brand-coral-dark)]"
           data-offer-cta="routine_continue"
           data-offer-destination="guided-story-support"
           data-offer-source-section="mini_routine"

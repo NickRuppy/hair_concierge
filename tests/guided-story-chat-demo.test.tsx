@@ -26,9 +26,11 @@ test("reveals once automatically and immediately for reduced motion without any 
     "utf8",
   )
 
-  assert.equal(GUIDED_STORY_CHAT_REVEAL_DELAY_MS, 650)
+  assert.equal(GUIDED_STORY_CHAT_REVEAL_DELAY_MS, 1100)
   assert.match(source, /prefers-reduced-motion: reduce/)
   assert.match(source, /setAnswerVisible\(true\)/)
   assert.match(source, /window\.setTimeout/)
+  assert.match(source, /guided-story-chat-answer-in_300ms/)
+  assert.match(source, /guided-story-typing_0\.9s/)
   assert.doesNotMatch(source, /setInterval|fetch\(|useChat|agent-v2|AgentV2/)
 })

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 import type { GuidedStoryChatExchange } from "@/lib/quiz/guided-story-chat"
 
-export const GUIDED_STORY_CHAT_REVEAL_DELAY_MS = 650
+export const GUIDED_STORY_CHAT_REVEAL_DELAY_MS = 1100
 
 export function GuidedStoryChatDemo({ exchange }: { exchange: GuidedStoryChatExchange }) {
   const [answerVisible, setAnswerVisible] = useState(false)
@@ -46,7 +46,7 @@ export function GuidedStoryChatDemo({ exchange }: { exchange: GuidedStoryChatExc
         <div aria-live="polite" aria-atomic="true" className="min-h-[94px]">
           {answerVisible ? (
             <div
-              className="max-w-[92%] rounded-[16px_16px_16px_4px] border border-border bg-white px-4 py-3 text-[13px] leading-[1.6] text-[var(--brand-plum-darkest)] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-300"
+              className="max-w-[92%] rounded-[16px_16px_16px_4px] border border-border bg-white px-4 py-3 text-[13px] leading-[1.6] text-[var(--brand-plum-darkest)] motion-safe:animate-[guided-story-chat-answer-in_300ms_ease-out_both]"
               data-guided-story-chat-answer
             >
               {exchange.answer}
@@ -61,8 +61,8 @@ export function GuidedStoryChatDemo({ exchange }: { exchange: GuidedStoryChatExc
                 <span
                   key={dot}
                   aria-hidden="true"
-                  className="size-1.5 rounded-full bg-[var(--brand-plum-light)] motion-safe:animate-pulse"
-                  style={{ animationDelay: `${dot * 120}ms` }}
+                  className="size-1.5 rounded-full bg-[var(--brand-plum-light)] motion-safe:animate-[guided-story-typing_0.9s_ease-in-out_infinite]"
+                  style={{ animationDelay: `${dot * 140}ms` }}
                 />
               ))}
             </div>

@@ -109,6 +109,7 @@ test("keeps popover behavior local with Escape, outside-dismiss, and focus resto
   assert.match(source, /document\.addEventListener\("pointerdown"/)
   assert.match(source, /focus\(\)/)
   assert.match(source, /calc\(100vw-2rem\)/)
+  assert.equal(occurrences(source, "guided-story-popover-in_150ms"), 2)
   assert.equal(occurrences(source, "closePopover({ restoreFocus: false })"), 3)
   assert.equal(occurrences(source, "Mit Chaarlie starten"), 0)
   assert.match(source, /copy\.lockedCtaLabel/)
