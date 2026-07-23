@@ -205,7 +205,9 @@ test("preserves environment-conditional development routes", () => {
   assert.equal(classifyRoute("/api/dev/login", development), "protected")
   assert.equal(classifyRoute("/api/dev/login", production), "protected")
   assert.equal(classifyRoute("/labs/offer-page", vercelPreview), "development")
+  assert.equal(classifyRoute("/labs/portrait", vercelPreview), "development")
   assert.equal(classifyRoute("/labs/app-proof", vercelPreview), "protected")
+  assert.equal(classifyRoute("/labs/portrait", production), "protected")
 })
 
 test("classifies the exact legacy offer route", () => {

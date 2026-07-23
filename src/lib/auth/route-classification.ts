@@ -67,7 +67,7 @@ const PROTECTED_ROUTE_PREFIXES = [
 const DEVELOPMENT_ROUTE_PREFIXES = ["/labs", "/api/labs"]
 const DEVELOPMENT_EXACT_ROUTES = ["/api/debug/build-info"]
 const LOCAL_LOGIN_ROUTE = "/api/dev/login"
-const OFFER_PAGE_REVIEW_ROUTE = "/labs/offer-page"
+const VERCEL_PREVIEW_DEVELOPMENT_ROUTES = ["/labs/offer-page", "/labs/portrait"]
 
 export function pathMatchesRoutePrefix(pathname: string, prefix: string) {
   return pathname === prefix || pathname.startsWith(`${prefix}/`)
@@ -96,7 +96,7 @@ export function classifyRoute(
     return isDevelopment && environment.localDevLoginEnabled ? "development" : "protected"
   }
 
-  if (pathname === OFFER_PAGE_REVIEW_ROUTE && isVercelPreview) {
+  if (VERCEL_PREVIEW_DEVELOPMENT_ROUTES.includes(pathname) && isVercelPreview) {
     return "development"
   }
 

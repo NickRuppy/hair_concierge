@@ -12,7 +12,6 @@ export type PortraitLength = HairLength
 export type PortraitHairPattern = (typeof QUIZ_STRUCTURE_VALUES)[number]
 export type PortraitDensity = (typeof QUIZ_DENSITY_VALUES)[number]
 export type PortraitTreatmentState = "none" | "perm" | "straightened" | "natural_fallback"
-export type PortraitMarkerPreset = PortraitLength | "generic"
 
 export interface PersonalizedPortraitConfig {
   kind: "personalized"
@@ -21,19 +20,16 @@ export interface PersonalizedPortraitConfig {
   treatedLengthPattern: PortraitHairPattern
   density: PortraitDensity
   treatmentState: PortraitTreatmentState
-  markerPreset: PortraitLength
 }
 
 export interface GenericPortraitConfig {
   kind: "generic"
-  markerPreset: "generic"
 }
 
 export type PortraitConfig = PersonalizedPortraitConfig | GenericPortraitConfig
 
 const GENERIC_PORTRAIT_CONFIG: GenericPortraitConfig = {
   kind: "generic",
-  markerPreset: "generic",
 }
 
 function isAllowedValue<T extends readonly string[]>(
@@ -95,6 +91,5 @@ export function derivePortraitConfig(rawAnswers: QuizAnswers): PortraitConfig {
     treatedLengthPattern: resolveTreatedPattern(answers.structure, treatmentState),
     density: answers.density,
     treatmentState,
-    markerPreset: answers.hair_length,
   }
 }

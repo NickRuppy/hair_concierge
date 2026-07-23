@@ -1,22 +1,22 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
+import {
+  GENERIC_PORTRAIT_ASSET,
+  PORTRAIT_BODY_VIEW_BOX,
+  PORTRAIT_MARKER_KEYS,
+  PORTRAIT_SHARED_BODY_PATHS,
+  resolveHairPortraitAsset,
+  type HairPortraitAsset,
+  type PortraitMarkerPoint,
+} from "@/lib/quiz/hair-portrait-assets"
 import { derivePortraitConfig, type PortraitConfig } from "@/lib/quiz/portrait-config"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { GuidedStoryPriority } from "@/lib/quiz/guided-story-priorities"
 import type { GuidedStoryPriorityFamily } from "@/lib/quiz/guided-story-copy"
-import {
-  PORTRAIT_STATIC_PATHS,
-  PORTRAIT_VIEW_BOX,
-  PORTRAIT_VIEW_BOX_HEIGHT,
-  PORTRAIT_VIEW_BOX_WIDTH,
-  buildPortraitStrandPaths,
-  getDensitySlots,
-  getPortraitLengthPreset,
-  isTreatedLengthState,
-} from "./hair-portrait-art"
 
 type PortraitPriorityTuple = readonly [
   GuidedStoryPriority,
@@ -55,21 +55,16 @@ const PATTERN_LABELS = {
   coily: "coily",
 } as const
 
-const DENSITY_LABELS = {
-  low: "niedriger Dichte",
-  medium: "mittlerer Dichte",
-  high: "hoher Dichte",
-} as const
-
 const TREATMENT_COPY = {
-  none: "Ansatz und Längen folgen derselben natürlichen Struktur.",
-  perm: "Naturansatz, dauergewellte Längen.",
-  straightened: "Naturansatz, geglättete Längen.",
+  none: "Das Portrait zeigt deine natürliche Haarstruktur.",
+  perm: "Das Portrait zeigt die dauergewellte Struktur vereinfacht als lockiges Haar.",
+  straightened: "Das Portrait zeigt die geglättete Struktur vereinfacht als glattes Haar.",
   natural_fallback:
-    "Bei widersprüchlichen Formbehandlungen zeigt das Portrait die natürliche Struktur.",
+    "Bei widersprüchlichen Formbehandlungen zeigt das Portrait deine natürliche Struktur.",
 } as const
 
-const MARKER_KEYS = ["scalp", "lengths", "ends"] as const
+const PORTRAIT_CENTER: PortraitMarkerPoint = { x: 50, y: 50 }
+const LEADER_LENGTH = 7
 const LEGACY_MARKER_LABELS = ["Basis", "Pflege", "Routine"] as const
 const FAMILY_MARKER_LABELS: Record<GuidedStoryPriorityFamily, string> = {
   scalp_flakes: "Kopfhaut",
@@ -83,10 +78,113 @@ const FAMILY_MARKER_LABELS: Record<GuidedStoryPriorityFamily, string> = {
   color_protection: "Farbschutz",
 }
 
-function getButtonPositionStyle(point: { x: number; y: number }): { left: string; top: string } {
+export type PortraitImageState = "selected" | "generic" | "hidden"
+export type PortraitImageFailure = {
+  selectedSrc: string
+  state: PortraitImageState
+}
+
+export function getNextPortraitImageState(currentState: PortraitImageState): PortraitImageState {
+  if (currentState === "selected") return "generic"
+  return "hidden"
+}
+
+function getImageStateForSelected(
+  currentFailure: PortraitImageFailure,
+  selectedSrc: string,
+): PortraitImageState {
+  return currentFailure.selectedSrc === selectedSrc ? currentFailure.state : "selected"
+}
+
+function getCurrentPortraitImageSrc(
+  selectedSrc: string,
+  imageState: PortraitImageState,
+): string | null {
+  if (imageState === "hidden") return null
+  if (imageState === "generic") return GENERIC_PORTRAIT_ASSET.src
+  return selectedSrc
+}
+
+export function normalizePortraitImageSrcForComparison(
+  src: string,
+  currentOrigin = typeof window === "undefined" ? "" : window.location.origin,
+): string {
+  if (src.startsWith("/")) return src
+
+  try {
+    const url = new URL(src)
+
+    if (currentOrigin && url.origin === currentOrigin) {
+      return url.pathname
+    }
+  } catch {
+    return src
+  }
+
+  return src
+}
+
+export function getNextPortraitImageFailure(
+  currentFailure: PortraitImageFailure,
+  params: {
+    selectedSrc: string
+    failedSrc: string
+    renderedSrc: string
+    currentOrigin?: string
+  },
+): PortraitImageFailure {
+  const currentState = getImageStateForSelected(currentFailure, params.selectedSrc)
+  const currentRenderedSrc = getCurrentPortraitImageSrc(params.selectedSrc, currentState)
+  const failedSrc = normalizePortraitImageSrcForComparison(params.failedSrc, params.currentOrigin)
+  const renderedSrc = normalizePortraitImageSrcForComparison(
+    params.renderedSrc,
+    params.currentOrigin,
+  )
+  const expectedRenderedSrc = currentRenderedSrc
+    ? normalizePortraitImageSrcForComparison(currentRenderedSrc, params.currentOrigin)
+    : null
+
+  if (failedSrc !== renderedSrc || failedSrc !== expectedRenderedSrc) {
+    return currentFailure
+  }
+
+  if (failedSrc === GENERIC_PORTRAIT_ASSET.src) {
+    return {
+      selectedSrc: params.selectedSrc,
+      state: "hidden",
+    }
+  }
+
   return {
-    left: `${(point.x / PORTRAIT_VIEW_BOX_WIDTH) * 100}%`,
-    top: `${(point.y / PORTRAIT_VIEW_BOX_HEIGHT) * 100}%`,
+    selectedSrc: params.selectedSrc,
+    state: getNextPortraitImageState(currentState),
+  }
+}
+
+function getRenderedAsset(params: {
+  selectedAsset: HairPortraitAsset
+  imageState: PortraitImageState
+}): HairPortraitAsset | null {
+  if (params.imageState === "hidden") return null
+  if (params.imageState === "generic") return GENERIC_PORTRAIT_ASSET
+  return params.selectedAsset
+}
+
+function getButtonPositionStyle(point: PortraitMarkerPoint): { left: string; top: string } {
+  return {
+    left: `${point.x}%`,
+    top: `${point.y}%`,
+  }
+}
+
+function getLeaderLineEnd(point: PortraitMarkerPoint): PortraitMarkerPoint {
+  const dx = PORTRAIT_CENTER.x - point.x
+  const dy = PORTRAIT_CENTER.y - point.y
+  const distance = Math.hypot(dx, dy) || 1
+
+  return {
+    x: point.x + (dx / distance) * LEADER_LENGTH,
+    y: point.y + (dy / distance) * LEADER_LENGTH,
   }
 }
 
@@ -99,7 +197,7 @@ function getSummary(config: PortraitConfig): string {
     return "Symbolische Darstellung auf Basis der verfügbaren Antworten."
   }
 
-  return `Symbolische Darstellung aus deinen Angaben: ${LENGTH_LABELS[config.length]}, ${PATTERN_LABELS[config.naturalRootPattern]} Haar mit ${DENSITY_LABELS[config.density]}.`
+  return `Symbolische Darstellung aus deinen Angaben: ${LENGTH_LABELS[config.length]}, ${PATTERN_LABELS[config.treatedLengthPattern]} Haar.`
 }
 
 function getTreatmentCopy(config: PortraitConfig): string {
@@ -120,37 +218,30 @@ function getMarkerLabel(priority: GuidedStoryPriority, index: 0 | 1 | 2): string
 
 export function HairPortrait(props: HairPortraitProps) {
   const config = getPortraitConfig(props)
+  const selectedAsset = resolveHairPortraitAsset(config)
+  const [imageFailure, setImageFailure] = useState<PortraitImageFailure>({
+    selectedSrc: "",
+    state: "selected",
+  })
+  const imageRef = useRef<HTMLImageElement | null>(null)
   const selectedButtonRef = useRef<HTMLButtonElement | null>(null)
   const pendingUserFocusRef = useRef(false)
   const selectedIndex = props.selectedIndex
-  const markerPreset = getPortraitLengthPreset(config.markerPreset)
-  const slots =
-    config.kind === "generic" ? getDensitySlots("medium") : getDensitySlots(config.density)
-  const strandConfig =
-    config.kind === "generic"
-      ? {
-          length: "generic" as const,
-          naturalPattern: "wavy" as const,
-          treatedPattern: "wavy" as const,
-          treated: false,
-        }
-      : {
-          length: config.length,
-          naturalPattern: config.naturalRootPattern,
-          treatedPattern: config.treatedLengthPattern,
-          treated: isTreatedLengthState(config.treatmentState),
-        }
-  const strands = slots.map((slot, index) => ({
-    id: `${strandConfig.length}-${index}`,
-    slot,
-    paths: buildPortraitStrandPaths({
-      length: strandConfig.length,
-      naturalPattern: strandConfig.naturalPattern,
-      treatedPattern: strandConfig.treatedPattern,
-      slot,
-      index,
-    }),
-  }))
+  const imageState = getImageStateForSelected(imageFailure, selectedAsset.src)
+  const renderedAsset = getRenderedAsset({ selectedAsset, imageState })
+
+  function handleImageFailure(failedSrc: string) {
+    const renderedSrc = renderedAsset?.src
+    if (!renderedSrc) return
+
+    setImageFailure((currentFailure) =>
+      getNextPortraitImageFailure(currentFailure, {
+        selectedSrc: selectedAsset.src,
+        failedSrc,
+        renderedSrc,
+      }),
+    )
+  }
 
   useEffect(() => {
     if (!pendingUserFocusRef.current) return
@@ -158,81 +249,114 @@ export function HairPortrait(props: HairPortraitProps) {
     selectedButtonRef.current?.focus()
   }, [selectedIndex])
 
+  useEffect(() => {
+    const image = imageRef.current
+    const renderedSrc = renderedAsset?.src
+
+    if (
+      image?.complete &&
+      image.naturalWidth === 0 &&
+      renderedSrc &&
+      normalizePortraitImageSrcForComparison(image.getAttribute("src") ?? "") ===
+        normalizePortraitImageSrcForComparison(renderedSrc)
+    ) {
+      const failedSelectedSrc = selectedAsset.src
+      const failedRenderedSrc = renderedSrc
+      queueMicrotask(() => {
+        setImageFailure((currentFailure) =>
+          getNextPortraitImageFailure(currentFailure, {
+            selectedSrc: failedSelectedSrc,
+            failedSrc: failedRenderedSrc,
+            renderedSrc: failedRenderedSrc,
+          }),
+        )
+      })
+    }
+  }, [renderedAsset?.src, selectedAsset.src])
+
   return (
-    <section
-      className="mx-auto w-full max-w-[32rem]"
-      style={
-        {
-          "--portrait-hair-stroke": "#1f2933",
-          "--portrait-treatment-stroke": "#5f6f7f",
-          "--portrait-guide-stroke": "#c6b8aa",
-        } as React.CSSProperties
-      }
-    >
+    <section className="mx-auto w-full max-w-[32rem]">
       <p className="sr-only">{getSummary(config)}</p>
       <p className="sr-only">{getTreatmentCopy(config)}</p>
 
-      <div className="relative mx-auto w-full min-w-0 overflow-visible">
+      <div
+        className="isolate relative mx-auto aspect-square w-full min-w-0 overflow-visible"
+        data-portrait-layer="wrapper"
+      >
+        {renderedAsset && !renderedAsset.ownBody ? (
+          <svg
+            aria-hidden="true"
+            className="absolute inset-0 z-0 h-full w-full overflow-visible"
+            data-portrait-layer="body"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox={PORTRAIT_BODY_VIEW_BOX}
+          >
+            {PORTRAIT_SHARED_BODY_PATHS.map((path) => (
+              <path
+                className="fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]"
+                d={path}
+                key={path}
+              />
+            ))}
+          </svg>
+        ) : null}
+
+        {renderedAsset ? (
+          <Image
+            alt=""
+            className="relative z-10 block h-auto w-full"
+            data-portrait-layer="image"
+            height={720}
+            onError={() => {
+              handleImageFailure(renderedAsset.src)
+            }}
+            priority
+            ref={imageRef}
+            src={renderedAsset.src}
+            unoptimized
+            width={720}
+          />
+        ) : null}
+
         <svg
           aria-hidden="true"
-          className="block h-auto w-full overflow-visible"
+          className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
+          data-portrait-layer="leaders"
           preserveAspectRatio="xMidYMid meet"
-          viewBox={PORTRAIT_VIEW_BOX}
+          viewBox="0 0 100 100"
         >
-          <path
-            className="fill-none stroke-[var(--portrait-guide-stroke)] stroke-[2] [stroke-linecap:round] [stroke-linejoin:round]"
-            d={PORTRAIT_STATIC_PATHS.shoulders}
-          />
-          <path
-            className="fill-none stroke-[var(--portrait-guide-stroke)] stroke-[2] [stroke-linecap:round] [stroke-linejoin:round]"
-            d={PORTRAIT_STATIC_PATHS.nape}
-          />
-          <path
-            className="fill-none stroke-[var(--portrait-guide-stroke)] stroke-[2] [stroke-linecap:round] [stroke-linejoin:round]"
-            d={PORTRAIT_STATIC_PATHS.rearHead}
-          />
-
-          {strands.map((strand) => (
-            <g
-              className="fill-none stroke-[var(--portrait-hair-stroke)] stroke-[2.35] [stroke-linecap:round] [stroke-linejoin:round]"
-              data-portrait-strand={strand.id}
-              key={strand.id}
-            >
-              <path d={strand.paths.root} />
-              <path
-                className={cn(strandConfig.treated && "stroke-[var(--portrait-treatment-stroke)]")}
-                d={strand.paths.length}
-              />
-            </g>
-          ))}
-
-          <g aria-hidden="true">
-            {MARKER_KEYS.map((key) => {
-              const anchor = markerPreset.markers[key]
-              return (
-                <g key={key}>
-                  <path
-                    className="fill-none stroke-[var(--portrait-guide-stroke)] stroke-[1.5]"
-                    d={`M ${anchor.button.x} ${anchor.button.y} L ${anchor.lineEnd.x} ${anchor.lineEnd.y}`}
-                  />
-                  <circle
-                    className="fill-white stroke-[#1f2933] stroke-[3]"
-                    cx={anchor.button.x}
-                    cy={anchor.button.y}
-                    r="10"
-                  />
-                </g>
-              )
-            })}
-          </g>
+          {PORTRAIT_MARKER_KEYS.map((key) => {
+            const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
+            const lineEnd = getLeaderLineEnd(marker)
+            return (
+              <g key={key}>
+                <path
+                  className="fill-none stroke-[#8f84a8] stroke-[0.55] [stroke-linecap:round]"
+                  d={`M ${marker.x} ${marker.y} L ${lineEnd.x.toFixed(2)} ${lineEnd.y.toFixed(2)}`}
+                />
+                <circle
+                  className="fill-white stroke-[#1f2933] stroke-[0.9]"
+                  cx={marker.x}
+                  cy={marker.y}
+                  r="3.2"
+                />
+              </g>
+            )
+          })}
         </svg>
 
-        <div aria-label="Analysemarker im Haarportrait" className="absolute inset-0" role="group">
-          {MARKER_KEYS.map((key, index) => {
+        <div
+          aria-label="Analysemarker im Haarportrait"
+          className="absolute inset-0 z-30"
+          data-portrait-layer="markers"
+          role="group"
+        >
+          {PORTRAIT_MARKER_KEYS.map((key, index) => {
             const priority = props.priorities[index]
             const selected = index === selectedIndex
             const markerIndex = index as 0 | 1 | 2
             const markerLabel = getMarkerLabel(priority, markerIndex)
+            const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
             return (
               <button
                 aria-label={`Marker ${index + 1}: ${priority.title}`}
@@ -249,7 +373,7 @@ export function HairPortrait(props: HairPortraitProps) {
                   props.onSelect(markerIndex)
                 }}
                 ref={selected ? selectedButtonRef : undefined}
-                style={getButtonPositionStyle(markerPreset.markers[key].button)}
+                style={getButtonPositionStyle(marker)}
                 type="button"
               >
                 {markerLabel}

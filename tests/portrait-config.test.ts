@@ -42,7 +42,6 @@ test("derivePortraitConfig covers every required length, structure, and density 
         assert.equal(config.treatedLengthPattern, structure)
         assert.equal(config.density, density)
         assert.equal(config.treatmentState, "none")
-        assert.equal(config.markerPreset, hair_length)
       }
     }
   }
@@ -101,11 +100,7 @@ test("missing or invalid required portrait axes return the explicit generic conf
   ]
 
   for (const [label, answers] of cases) {
-    assert.deepEqual(
-      derivePortraitConfig(answers),
-      { kind: "generic", markerPreset: "generic" },
-      label,
-    )
+    assert.deepEqual(derivePortraitConfig(answers), { kind: "generic" }, label)
   }
 })
 
