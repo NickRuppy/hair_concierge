@@ -1,7 +1,6 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { loadStripe } from "@stripe/stripe-js/pure"
 import type { Stripe } from "@stripe/stripe-js"
 
 import {
@@ -27,6 +26,7 @@ import {
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
 import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
+import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -78,7 +78,6 @@ export function ResultOfferPricing({
   const checkoutAttemptController = checkoutAttemptControllerRef.current
   const paymentSelectionIndexRef = useRef(0)
   const planSelectionIndexRef = useRef(0)
-  const stripePromiseRef = useRef<Promise<Stripe | null> | null>(null)
   const offerContext = useOfferTrackingContext()
   const [selectedInterval, setSelectedInterval] =
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
@@ -91,22 +90,7 @@ export function ResultOfferPricing({
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
 
   const getStripePromise = useCallback(() => {
-    if (!stripePublishableKey) {
-      stripePromiseRef.current = unloadedStripePromise
-      return unloadedStripePromise
-    }
-
-    if (!stripePromiseRef.current) {
-      const promise = loadStripe(stripePublishableKey)
-      promise.catch(() => {
-        if (stripePromiseRef.current === promise) {
-          stripePromiseRef.current = null
-        }
-      })
-      stripePromiseRef.current = promise
-    }
-
-    return stripePromiseRef.current
+    return getOfferStripePromise()
   }, [])
 
   const ensureStripePromise = useCallback(() => {

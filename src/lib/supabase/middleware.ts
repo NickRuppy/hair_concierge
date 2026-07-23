@@ -73,6 +73,7 @@ export async function updateSession(request: NextRequest) {
   const routeEnvironment: RouteEnvironment = {
     nodeEnv: process.env.NODE_ENV,
     localDevLoginEnabled: process.env.LOCAL_DEV_LOGIN_ENABLED === "1",
+    vercelEnv: process.env.VERCEL_ENV,
   }
   const routeClassification = classifyRoute(pathname, routeEnvironment)
 

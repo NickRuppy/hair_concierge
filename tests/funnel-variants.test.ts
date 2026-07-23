@@ -38,11 +38,16 @@ test("every package references registered landing and offer variants", () => {
   }
 })
 
-test("app value stack is registered once alongside the historical default offer", () => {
+test("guided story is registered while the historical offers remain available for rollback", () => {
   assert.ok("app-value-stack" in OFFER_VARIANTS)
   assert.ok("default" in OFFER_VARIANTS)
+  assert.ok("guided-story" in OFFER_VARIANTS)
   assert.equal(
     Object.keys(OFFER_VARIANTS).filter((variant) => variant === "app-value-stack").length,
+    1,
+  )
+  assert.equal(
+    Object.keys(OFFER_VARIANTS).filter((variant) => variant === "guided-story").length,
     1,
   )
 })

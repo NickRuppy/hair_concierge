@@ -43,7 +43,14 @@ export default function AppValueStackOfferVariant({
       leadId={leadId}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
-      preview={preview}
+      trackingIdentity={{
+        conditionerModuleId:
+          preview.products.find((product) => product.category === "conditioner")?.key ?? null,
+        needLane: preview.lane,
+        shampooModuleId:
+          preview.products.find((product) => product.category === "shampoo")?.key ?? null,
+        suggestedCategory: preview.needs.extra?.category ?? null,
+      }}
     >
       <div className="min-h-screen bg-background text-foreground">
         <div className="fixed inset-x-0 top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">

@@ -38,6 +38,9 @@ const noindexRoutes = [
 ]
 
 export const nextConfig: NextConfig = {
+  // Dev pages opened via 127.0.0.1 otherwise fail to hydrate: Next blocks
+  // /_next dev resources for non-localhost origins.
+  allowedDevOrigins: ["127.0.0.1"],
   // Keep Turbopack scoped to this repo even when a parent folder has another lockfile.
   turbopack: {
     root: process.cwd(),

@@ -5,7 +5,7 @@
     "channel": "organic",
     "status": "active",
     "landingVariant": "default",
-    "offerVariant": "app-value-stack"
+    "offerVariant": "guided-story"
   },
   {
     "key": "scalp_check_placeholder",
@@ -21,6 +21,6 @@
     "channel": "meta",
     "status": "active",
     "landingVariant": "default",
-    "offerVariant": "app-value-stack"
+    "offerVariant": "guided-story"
   }
 ]

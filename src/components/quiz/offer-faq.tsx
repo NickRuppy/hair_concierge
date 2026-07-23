@@ -37,7 +37,20 @@ const FAQS = [
   },
 ] as const
 
-export function OfferFaq() {
+export type OfferFaqId = (typeof FAQS)[number]["id"]
+
+export const GUIDED_STORY_FAQ_IDS = [
+  "after_payment",
+  "example_products",
+  "not_just_chatbot",
+  "cancellation",
+] as const satisfies readonly OfferFaqId[]
+
+export function OfferFaq({ faqIds }: { faqIds?: readonly OfferFaqId[] } = {}) {
+  const selectedFaqs = faqIds
+    ? faqIds.map((id) => FAQS.find((faq) => faq.id === id)).filter((faq) => faq !== undefined)
+    : FAQS
+
   return (
     <section data-offer-section="faq" className="border-t border-border py-9">
       <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
@@ -47,7 +60,7 @@ export function OfferFaq() {
         Was du wissen solltest.
       </h2>
       <div className="mt-5 divide-y divide-border rounded-[18px] border border-border bg-white px-5">
-        {FAQS.map(({ id, question, answer }) => (
+        {selectedFaqs.map(({ id, question, answer }) => (
           <details key={id} data-offer-faq={id} className="group py-4 first:pt-5 last:pb-5">
             <summary className="cursor-pointer list-none pr-7 text-[14px] font-bold leading-snug text-[var(--brand-plum-darkest)] marker:hidden">
               {question}

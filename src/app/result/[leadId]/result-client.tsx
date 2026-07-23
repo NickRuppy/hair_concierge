@@ -6,11 +6,10 @@ import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 import { renderOfferVariant } from "@/funnels/offers/registry"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
+import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
-
-type ResultPageFocusTarget = "unlock-plan" | "pricing" | null
 
 export function ResultPageClient({
   leadId,
@@ -28,7 +27,7 @@ export function ResultPageClient({
   quizAnswers: QuizAnswers
   entryContext?: OfferEntryContext
   focusRoutine: boolean
-  focusTarget?: ResultPageFocusTarget
+  focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
@@ -38,12 +37,12 @@ export function ResultPageClient({
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
 
   useEffect(() => {
-    if (!focusTarget) return
+    if (!focusTarget || offerVariant === "guided-story") return
 
     window.requestAnimationFrame(() => {
       document.getElementById(focusTarget)?.scrollIntoView({ behavior: "smooth", block: "start" })
     })
-  }, [focusTarget])
+  }, [focusTarget, offerVariant])
 
   if (hasAccess) {
     return (
@@ -68,6 +67,7 @@ export function ResultPageClient({
     offerVariant,
     quizAnswers,
     focusRoutine,
+    focusTarget,
     pricingSlot: <ResultOfferPricing leadId={leadId} offerTracking={offerTracking} />,
   })
   if (!offer) throw new Error(`Unknown funnel offer variant: ${offerVariant}`)
