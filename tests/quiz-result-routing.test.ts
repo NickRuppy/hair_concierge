@@ -64,6 +64,8 @@ test("active subscribers keep the direct routine path", () => {
 })
 
 test("result email links retain unlock focus and receive a dedicated offer entry context", () => {
-  assert.match(resultPageSource, /sp\.focus === "unlock-plan" \? "unlock-plan"/)
-  assert.match(resultPageSource, /sp\.entry === "result_email"\s*\? "result_email"/)
+  assert.match(resultPageSource, /const focus = getQuizResultSearchParamValue\(sp\.focus\)/)
+  assert.match(resultPageSource, /focus === "unlock-plan" \? "unlock-plan"/)
+  assert.match(resultPageSource, /const entry = getQuizResultSearchParamValue\(sp\.entry\)/)
+  assert.match(resultPageSource, /entry === "result_email"\s*\? "result_email"/)
 })

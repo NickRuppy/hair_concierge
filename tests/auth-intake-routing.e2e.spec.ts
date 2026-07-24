@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test"
+import { test, expect, type Page } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -13,6 +13,15 @@ if (!supabaseUrl || !serviceRoleKey) {
 const admin = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
+
+async function hideCookieBanner(page: Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      "chaarlie_cookie_consent_v1",
+      JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+    )
+  })
+}
 
 test.describe.serial("Authenticated intake routing", () => {
   const email = `playwright-intake-${Date.now()}@hairconscierge.test`
@@ -88,6 +97,7 @@ test.describe.serial("Authenticated intake routing", () => {
   })
 
   test("login routes quizless users to /quiz instead of /onboarding", async ({ page }) => {
+    await hideCookieBanner(page)
     const visitedUrls: string[] = []
     page.on("framenavigated", (frame) => {
       if (frame === page.mainFrame()) {
@@ -112,10 +122,11 @@ test.describe.serial("Authenticated intake routing", () => {
 
     expect(visitedPathnames.at(-1)).toBe("/quiz")
     expect(visitedPathnames).not.toContain("/onboarding")
-    await expect(page.getByRole("button", { name: /Quiz starten/i })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Wellig", exact: true })).toBeVisible()
   })
 
   test("signed-in quiz completion skips auth and lands in onboarding", async ({ page }) => {
+    await hideCookieBanner(page)
     await page.goto("/auth", { waitUntil: "networkidle" })
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)
@@ -126,37 +137,33 @@ test.describe.serial("Authenticated intake routing", () => {
       waitUntil: "domcontentloaded",
     })
     await page.waitForLoadState("networkidle")
+    await page.goto("/quiz?mode=retake&returnTo=%2Fprofile", {
+      waitUntil: "networkidle",
+    })
 
-    await page.getByRole("button", { name: /Quiz starten/i }).click()
-    await page.getByText("Wellig").first().click()
-    await page.getByText("Mittel").first().click()
-    await page.getByText("Mittlere Dichte").click()
-    await page.getByText("Mittellang").click()
-    await page.getByText("Leicht uneben").click()
-    await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
+    await page.getByRole("button", { name: "Wellig", exact: true }).click()
+    await page.getByRole("button", { name: "Mittel", exact: true }).click()
+    await page.getByRole("button", { name: "Mittlere Dichte", exact: true }).click()
+    await page.getByRole("button", { name: "Mittellang", exact: true }).click()
+    await page.getByRole("button", { name: "Leicht uneben", exact: true }).click()
+    await page.getByRole("button", { name: "Dehnt sich, bleibt ausgeleiert", exact: true }).click()
 
     await expect(
       page.getByRole("heading", { name: /Sind deine Haare chemisch behandelt/i }),
     ).toBeVisible()
-    await page
-      .locator(".quiz-card")
-      .filter({ has: page.getByText(/Gefärbt\s*\/\s*Getönt/i) })
-      .click()
+    await page.getByRole("button", { name: "Gefärbt / getönt", exact: true }).click()
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-    await page
-      .locator(".quiz-card")
-      .filter({ has: page.getByText(/^Trocken$/) })
-      .click()
+    await page.getByRole("button", { name: "Trocken", exact: true }).click()
     await expect(
       page.getByRole("heading", {
         name: /Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen/i,
       }),
     ).toBeVisible()
-    await page.getByRole("button", { name: "NEIN" }).click()
+    await page.getByRole("button", { name: "Nein", exact: true }).click()
 
     await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
-    await page.getByText("Trockenheit").click()
+    await page.getByRole("button", { name: "Trockenheit", exact: true }).click()
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
     await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible({
@@ -166,20 +173,58 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
     await page.getByPlaceholder("Dein Vorname").fill("Playwright Intake")
-    await page.getByRole("button", { name: /^Weiter$/i }).click()
+    await page.getByRole("button", { name: /Weiter zum Ergebnis/i }).click()
 
     await page.getByPlaceholder("name@beispiel.de").fill(email)
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
     await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
-    await expect(page.getByText(/DEIN PROFIL WIRD ERSTELLT/i)).toBeVisible({
+    await expect(page.getByText("Deine Angaben sind gespeichert", { exact: true })).toBeVisible({
       timeout: 45_000,
     })
-    await expect(page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i })).toBeVisible({
-      timeout: 45_000,
+    await expect(
+      page.getByText("Playwright Intake, wir stellen deine Haaranalyse zusammen.", { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText("Wir verbinden deine Angaben zu Haar, Zielen und Problemen.", {
+        exact: true,
+      }),
+    ).toBeVisible()
+
+    const latestLeadBeforeReveal = await fetchLatestLead()
+    expect(latestLeadBeforeReveal?.id).toBeTruthy()
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Playwright Intake, deine Haaranalyse ist bereit.",
+        exact: true,
+      }),
+    ).toBeVisible({ timeout: 45_000 })
+    await expect(
+      page.getByText("Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich.", {
+        exact: true,
+      }),
+    ).toBeVisible()
+    const revealAnalysis = page.getByRole("button", {
+      name: "Meine Haaranalyse ansehen",
+      exact: true,
     })
-    await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
+    await expect(revealAnalysis).toBeVisible()
+
+    expect(new URL(page.url()).pathname).toBe("/quiz")
+    await page.waitForTimeout(500)
+    expect(new URL(page.url()).pathname).toBe("/quiz")
+
+    await revealAnalysis.click()
+    await page.waitForURL((url) => url.pathname === `/result/${latestLeadBeforeReveal!.id}`, {
+      timeout: 15_000,
+    })
+    const resultUrl = new URL(page.url())
+    expect(resultUrl.searchParams.get("entry")).toBe("quiz_completion")
+    expect(resultUrl.searchParams.get("mode")).toBe("retake")
+    expect(resultUrl.searchParams.get("returnTo")).toBe("/profile")
+
     await expect(
       page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
     ).toBeVisible({ timeout: 15_000 })
@@ -195,6 +240,7 @@ test.describe.serial("Authenticated intake routing", () => {
     const onboardingUrl = new URL(page.url())
     expect(onboardingUrl.pathname).toBe("/onboarding")
     expect(onboardingUrl.searchParams.get("lead")).toBeTruthy()
+    expect(onboardingUrl.searchParams.get("returnTo")).toBe("/profile")
 
     await expect(page.getByRole("button", { name: /LOS GEHT/i })).toBeVisible({
       timeout: 15_000,

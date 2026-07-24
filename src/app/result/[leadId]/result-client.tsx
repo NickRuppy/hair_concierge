@@ -7,6 +7,7 @@ import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 import { renderOfferVariant } from "@/funnels/offers/registry"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
+import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
@@ -19,6 +20,7 @@ export function ResultPageClient({
   focusRoutine,
   focusTarget = null,
   hasAccess,
+  returnTo = null,
   offerTracking = null,
   offerVariant = "default",
 }: {
@@ -29,6 +31,7 @@ export function ResultPageClient({
   focusRoutine: boolean
   focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
+  returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
 }) {
@@ -51,7 +54,7 @@ export function ResultPageClient({
         narrative={{ ...narrative, cta }}
         primaryAction={{
           label: cta.label,
-          href: `/onboarding?lead=${encodeURIComponent(leadId)}`,
+          href: buildQuizResultOnboardingPath({ leadId, returnTo }),
         }}
         secondaryAction={null}
       />

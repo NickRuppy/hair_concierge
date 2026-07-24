@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Loader2 } from "lucide-react"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { useQuizStore } from "@/lib/quiz/store"
@@ -49,6 +50,28 @@ export function getQuizResultRedirectPath({
   return `/result/${encodeURIComponent(leadId)}?entry=quiz_completion`
 }
 
+function LegacyQuizResultLoading({ name }: { name: string }) {
+  const normalizedName = name.trim()
+
+  return (
+    <div
+      aria-live="polite"
+      className="mx-auto flex min-h-[420px] w-full max-w-[520px] flex-col items-center justify-center px-5 text-center"
+      role="status"
+    >
+      <Loader2
+        aria-hidden="true"
+        className="h-7 w-7 animate-spin text-[var(--brand-plum)] motion-reduce:animate-none"
+      />
+      <p className="mt-4 font-header text-[26px] text-[var(--brand-plum-darkest)]">
+        {normalizedName
+          ? `${normalizedName}, deine Haaranalyse wird geöffnet.`
+          : "Deine Haaranalyse wird geöffnet."}
+      </p>
+    </div>
+  )
+}
+
 function getSafeReturnToPath(value: string | null): string | null {
   if (!value) return null
 
@@ -64,6 +87,8 @@ function getSafeReturnToPath(value: string | null): string | null {
 }
 
 export function QuizResults() {
+  // Legacy-only compatibility for an explicitly restored step 11. The normal
+  // completion flow stays on step 10 and navigates directly to /result/[leadId].
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, loading } = useAuth()
@@ -206,21 +231,7 @@ export function QuizResults() {
 
   if (!canGoStraightToRoutine) {
     if (loading || isCheckingSignedInSubscription) {
-      return (
-        <div
-          aria-live="polite"
-          className="mx-auto flex min-h-[420px] w-full max-w-[520px] flex-col items-center justify-center px-5 text-center"
-          role="status"
-        >
-          <div className="mb-4 size-10 animate-spin rounded-full border-2 border-[var(--brand-plum-ice)] border-t-[var(--brand-plum)]" />
-          <p className="font-header text-[24px] font-medium text-[var(--brand-plum-darkest)]">
-            Wir prüfen deinen Zugang
-          </p>
-          <p className="mt-2 max-w-[34ch] text-sm leading-relaxed text-muted-foreground">
-            Einen Moment bitte. Danach zeigen wir dir direkt den richtigen nächsten Schritt.
-          </p>
-        </div>
-      )
+      return <LegacyQuizResultLoading name={lead.name} />
     }
 
     if (!leadId) {
@@ -243,21 +254,7 @@ export function QuizResults() {
       )
     }
 
-    return (
-      <div
-        aria-live="polite"
-        className="mx-auto flex min-h-[420px] w-full max-w-[520px] flex-col items-center justify-center px-5 text-center"
-        role="status"
-      >
-        <div className="mb-4 size-10 animate-spin rounded-full border-2 border-[var(--brand-plum-ice)] border-t-[var(--brand-plum)]" />
-        <p className="font-header text-[24px] font-medium text-[var(--brand-plum-darkest)]">
-          Dein Ergebnis wird geöffnet
-        </p>
-        <p className="mt-2 max-w-[34ch] text-sm leading-relaxed text-muted-foreground">
-          Einen Moment bitte.
-        </p>
-      </div>
-    )
+    return <LegacyQuizResultLoading name={lead.name} />
   }
 
   return (
