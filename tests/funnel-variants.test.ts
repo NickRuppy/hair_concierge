@@ -72,7 +72,8 @@ test("result route selects the historical offer variant stored on the funnel ses
 })
 
 test("result route keeps fresh quiz completions distinct from saved-result visits", () => {
-  assert.match(resultPageSource, /sp\.entry === "quiz_completion"/)
+  assert.match(resultPageSource, /const entry = getQuizResultSearchParamValue\(sp\.entry\)/)
+  assert.match(resultPageSource, /entry === "quiz_completion"/)
   assert.match(resultPageSource, /entryContext=\{entryContext\}/)
   assert.match(resultClientSource, /entryContext \?\? \(focusRoutine \? "routine_return"/)
   assert.match(resultClientSource, /entryContext: resolvedEntryContext/)
