@@ -36,6 +36,7 @@ export type OfferSectionId =
   | "locked_routine"
   | "unlock_explanation"
   | "product_story_chat"
+  | "product_story_chat_answer"
   | "product_story_routine"
   | "product_story_products"
   | "testimonials"
@@ -56,6 +57,9 @@ export type OfferCtaId =
   | "final"
 
 export type OfferEngagementReason = "cta_clicked" | "faq_opened" | "section_depth"
+
+export type OfferChapterId = "analysis" | "routine" | "support" | "pricing"
+export type OfferDetailType = "analysis_marker" | "routine_product" | "locked_routine_card"
 
 export type CheckoutFailureStage =
   | "configuration"
@@ -112,6 +116,11 @@ export type AppEventMap = {
   onboarding_completed: {
     userId: string
   }
+  offer_chapter_revealed: OfferAnalyticsContext & {
+    chapterId: OfferChapterId
+    chapterIndex: 1 | 2 | 3 | 4
+    revealGeneration: number
+  }
   offer_checkout_opened: OfferAnalyticsContext &
     OfferCommerceProperties & {
       availableProviders: string[]
@@ -125,6 +134,13 @@ export type AppEventMap = {
     selectedInterval?: BillingInterval
     sourceSection: OfferSectionId
   }
+  offer_detail_opened: OfferAnalyticsContext & {
+    detailId: string
+    detailIndex: number
+    detailInteractionIndex: number
+    detailType: OfferDetailType
+    sourceSection: OfferSectionId
+  }
   offer_engaged: OfferAnalyticsContext & {
     distinctSectionCount: number
     reason: OfferEngagementReason
@@ -133,6 +149,7 @@ export type AppEventMap = {
   offer_faq_opened: OfferAnalyticsContext & {
     faqId: string
     faqIndex: number
+    openIndex?: number
   }
   offer_payment_method_selected: OfferAnalyticsContext &
     OfferCommerceProperties & {

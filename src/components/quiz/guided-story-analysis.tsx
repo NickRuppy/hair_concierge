@@ -3,6 +3,7 @@
 import { useState } from "react"
 
 import { HairPortrait } from "@/components/quiz/hair-portrait"
+import { useOfferTrackingActions } from "@/components/quiz/offer-tracking-provider"
 import { Button } from "@/components/ui/button"
 import type { QuizGuidedStoryPreview } from "@/lib/quiz/guided-story-preview"
 import type { GuidedStoryPriority } from "@/lib/quiz/guided-story-priorities"
@@ -23,6 +24,7 @@ export function GuidedStoryAnalysis({
   quizAnswers: QuizAnswers
 }) {
   const [selectedIndex, setSelectedIndex] = useState<PriorityIndex>(0)
+  const { trackDetailOpened } = useOfferTrackingActions()
   const priorities = preview.priorities as PriorityTuple
   const selected = priorities[selectedIndex]
   const firstName = name.trim().split(/\s+/)[0]?.slice(0, 60) ?? ""
@@ -48,7 +50,15 @@ export function GuidedStoryAnalysis({
           priorities={priorities}
           rawAnswers={quizAnswers}
           selectedIndex={selectedIndex}
-          onSelect={setSelectedIndex}
+          onSelect={(index) => {
+            setSelectedIndex(index)
+            trackDetailOpened({
+              detailId: `priority_${index + 1}`,
+              detailIndex: index + 1,
+              detailType: "analysis_marker",
+              sourceSection: "personalized_analysis",
+            })
+          }}
         />
 
         <article

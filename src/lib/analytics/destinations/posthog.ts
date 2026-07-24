@@ -38,7 +38,11 @@ function commerceProperties(data: Partial<OfferCommerceProperties>) {
   }
 }
 
-function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
+function assertNever(value: never): never {
+  throw new Error(`Unhandled PostHog analytics event: ${value}`)
+}
+
+function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEventName]) {
   switch (eventName) {
     case "checkout_start_failed": {
       const data = payload as AppEventMap["checkout_start_failed"]
@@ -67,6 +71,8 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         value: data.value,
       }
     }
+    case "first_chat_message":
+      return payload
     case "purchase_completed": {
       const data = payload as AppEventMap["purchase_completed"]
       return {
@@ -91,6 +97,8 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
       const data = payload as AppEventMap["quiz_lead_captured"]
       return { marketing_consent: data.marketingConsent }
     }
+    case "quiz_goals_selected":
+      return payload
     case "quiz_started":
     case "quiz_step_viewed": {
       const data = payload as AppEventMap["quiz_started" | "quiz_step_viewed"]
@@ -117,6 +125,15 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         open_index: data.openIndex,
       }
     }
+    case "offer_chapter_revealed": {
+      const data = payload as AppEventMap["offer_chapter_revealed"]
+      return {
+        ...offerContextProperties(data),
+        chapter_id: data.chapterId,
+        chapter_index: data.chapterIndex,
+        reveal_generation: data.revealGeneration,
+      }
+    }
     case "offer_cta_clicked": {
       const data = payload as AppEventMap["offer_cta_clicked"]
       return {
@@ -125,6 +142,17 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         destination: data.destination,
         interaction_index: data.interactionIndex,
         selected_interval: data.selectedInterval,
+        source_section: data.sourceSection,
+      }
+    }
+    case "offer_detail_opened": {
+      const data = payload as AppEventMap["offer_detail_opened"]
+      return {
+        ...offerContextProperties(data),
+        detail_id: data.detailId,
+        detail_index: data.detailIndex,
+        detail_interaction_index: data.detailInteractionIndex,
+        detail_type: data.detailType,
         source_section: data.sourceSection,
       }
     }
@@ -143,6 +171,7 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         ...offerContextProperties(data),
         faq_id: data.faqId,
         faq_index: data.faqIndex,
+        open_index: data.openIndex,
       }
     }
     case "offer_payment_method_selected": {
@@ -195,8 +224,10 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         source: data.source,
       }
     }
+    case "subscription_started":
+      return payload
     default:
-      return payload as AnalyticsPayload
+      return assertNever(eventName)
   }
 }
 

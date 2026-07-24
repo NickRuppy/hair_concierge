@@ -348,11 +348,36 @@ test("PostHog adapter strips undefined properties and sends the funnel package k
   }
 })
 
+test("PostHog keeps explicit legacy passthrough event payloads byte-equivalent", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("first_chat_message", {})
+    postHogDestination.track("quiz_goals_selected", { count: 3 })
+    postHogDestination.track("subscription_started", { checkoutSessionId: "cs_test_123" })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    ["first_chat_message", {}],
+    ["quiz_goals_selected", { count: 3 }],
+    ["subscription_started", { checkoutSessionId: "cs_test_123" }],
+  ])
+})
+
 test("offer diagnostics route only to PostHog with stable snake_case context", () => {
   const diagnosticEvents = [
     "checkout_start_failed",
+    "offer_chapter_revealed",
     "offer_checkout_opened",
     "offer_cta_clicked",
+    "offer_detail_opened",
     "offer_faq_opened",
     "offer_payment_method_selected",
     "offer_plan_selected",
@@ -415,6 +440,96 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
         section_index: 1,
         shampoo_module_id: "shampoo-balanced-normal",
         suggested_category: "leave_in",
+      },
+    ],
+  ])
+})
+
+test("guided-story chapter and detail diagnostics map exact snake_case properties", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  const context = {
+    entryContext: "quiz_completion" as const,
+    focusRoutine: false,
+    needLane: "moisture",
+    offerRevision: "guided_story_v1",
+    offerVariant: "guided-story",
+    offerViewId: "40000000-0000-4000-8000-000000000100",
+  }
+
+  try {
+    postHogDestination.track("offer_chapter_revealed", {
+      ...context,
+      chapterId: "routine",
+      chapterIndex: 2,
+      revealGeneration: 3,
+    })
+    postHogDestination.track("offer_detail_opened", {
+      ...context,
+      detailId: "further_care",
+      detailIndex: 1,
+      detailInteractionIndex: 2,
+      detailType: "locked_routine_card",
+      sourceSection: "locked_routine",
+    })
+    postHogDestination.track("offer_faq_opened", {
+      ...context,
+      faqId: "faq-1",
+      faqIndex: 0,
+      openIndex: 1,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "offer_chapter_revealed",
+      {
+        chapter_id: "routine",
+        chapter_index: 2,
+        entry_context: "quiz_completion",
+        focus_routine: false,
+        need_lane: "moisture",
+        offer_revision: "guided_story_v1",
+        offer_variant: "guided-story",
+        offer_view_id: "40000000-0000-4000-8000-000000000100",
+        reveal_generation: 3,
+      },
+    ],
+    [
+      "offer_detail_opened",
+      {
+        detail_id: "further_care",
+        detail_index: 1,
+        detail_interaction_index: 2,
+        detail_type: "locked_routine_card",
+        entry_context: "quiz_completion",
+        focus_routine: false,
+        need_lane: "moisture",
+        offer_revision: "guided_story_v1",
+        offer_variant: "guided-story",
+        offer_view_id: "40000000-0000-4000-8000-000000000100",
+        source_section: "locked_routine",
+      },
+    ],
+    [
+      "offer_faq_opened",
+      {
+        entry_context: "quiz_completion",
+        faq_id: "faq-1",
+        faq_index: 0,
+        focus_routine: false,
+        need_lane: "moisture",
+        offer_revision: "guided_story_v1",
+        offer_variant: "guided-story",
+        offer_view_id: "40000000-0000-4000-8000-000000000100",
+        open_index: 1,
       },
     ],
   ])

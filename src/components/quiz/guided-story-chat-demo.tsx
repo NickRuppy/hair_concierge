@@ -1,14 +1,17 @@
 "use client"
 
 import { Sparkles } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
+import { useOfferTrackingActions } from "@/components/quiz/offer-tracking-provider"
 import type { GuidedStoryChatExchange } from "@/lib/quiz/guided-story-chat"
 
 export const GUIDED_STORY_CHAT_REVEAL_DELAY_MS = 1100
 
 export function GuidedStoryChatDemo({ exchange }: { exchange: GuidedStoryChatExchange }) {
   const [answerVisible, setAnswerVisible] = useState(false)
+  const answerRef = useRef<HTMLDivElement | null>(null)
+  const { observeOfferSection } = useOfferTrackingActions()
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -18,6 +21,12 @@ export function GuidedStoryChatDemo({ exchange }: { exchange: GuidedStoryChatExc
     )
     return () => window.clearTimeout(timer)
   }, [exchange.id])
+
+  useEffect(() => {
+    const answer = answerRef.current
+    if (!answer || !answerVisible) return
+    return observeOfferSection("product_story_chat_answer", answer)
+  }, [answerVisible, observeOfferSection])
 
   return (
     <article
@@ -46,6 +55,7 @@ export function GuidedStoryChatDemo({ exchange }: { exchange: GuidedStoryChatExc
         <div aria-live="polite" aria-atomic="true" className="min-h-[94px]">
           {answerVisible ? (
             <div
+              ref={answerRef}
               className="max-w-[92%] rounded-[16px_16px_16px_4px] border border-border bg-white px-4 py-3 text-[13px] leading-[1.6] text-[var(--brand-plum-darkest)] motion-safe:animate-[guided-story-chat-answer-in_300ms_ease-out_both]"
               data-guided-story-chat-answer
             >

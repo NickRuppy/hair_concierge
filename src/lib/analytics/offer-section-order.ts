@@ -39,6 +39,7 @@ const GUIDED_STORY_SECTION_ORDER = [
   "testimonials",
   "pricing",
   "faq",
+  "product_story_chat_answer",
 ] as const satisfies readonly OfferSectionId[]
 
 export function resolveOfferSectionIndex(offerVariant: string, sectionId: OfferSectionId): number {
