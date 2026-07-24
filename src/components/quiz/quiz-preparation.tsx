@@ -116,7 +116,6 @@ export function QuizPreparation() {
   const [checkedAccessKey, setCheckedAccessKey] = useState<string | null>(null)
   const quizCompletedLeadRef = useRef<string | null>(null)
   const resultArtifactLeadRef = useRef<string | null>(null)
-  const prefetchedResultPathRef = useRef<string | null>(null)
   const profileHasAccess = isSubscriptionActive(profile)
   const accessCheckKey = getPreparationAccessCheckKey({
     authLoading,
@@ -194,13 +193,6 @@ export function QuizPreparation() {
       keepalive: true,
     }).catch(() => {})
   }, [accessSettled, leadId])
-
-  useEffect(() => {
-    if (!resultPath || prefetchedResultPathRef.current === resultPath) return
-
-    prefetchedResultPathRef.current = resultPath
-    router.prefetch(resultPath)
-  }, [resultPath, router])
 
   if (!leadId) {
     return (
