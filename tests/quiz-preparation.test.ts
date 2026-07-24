@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -10,6 +11,15 @@ import {
   schedulePreparationAccessCheck,
   shouldTriggerPreparationResultArtifact,
 } from "../src/components/quiz/quiz-preparation"
+
+const preparationSource = readFileSync(
+  new URL("../src/components/quiz/quiz-preparation.tsx", import.meta.url),
+  "utf8",
+)
+
+test("preparation does not prefetch the result route before the reveal action", () => {
+  assert.doesNotMatch(preparationSource, /router\.prefetch\(/)
+})
 
 test("preparation waits for a lead and the client auth session", () => {
   assert.equal(
