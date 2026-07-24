@@ -37,6 +37,7 @@ export default function GuidedStoryOfferVariant({
       offerRevision={GUIDED_STORY_OFFER_REVISION}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      revealedThrough={flow.revealedThrough}
       revealGeneration={flow.revealGeneration}
       trackingIdentity={{
         conditionerModuleId: preview.analytics.conditionerModuleId,

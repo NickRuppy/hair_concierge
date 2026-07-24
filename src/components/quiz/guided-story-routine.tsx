@@ -4,6 +4,7 @@ import { Info, LockKeyhole, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { useOfferTrackingActions } from "@/components/quiz/offer-tracking-provider"
 import { cn } from "@/lib/utils"
 import {
   resolveGuidedStoryRoutineCopy,
@@ -204,6 +205,7 @@ function LockedTeaser({
 export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStoryRoutineProps) {
   const copy = resolveGuidedStoryRoutineCopy(preview)
   const [activePopover, setActivePopover] = useState<ActivePopover>(null)
+  const { trackDetailOpened } = useOfferTrackingActions()
   const containerRef = useRef<HTMLElement | null>(null)
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const lastTriggerKey = useRef<string | null>(null)
@@ -219,14 +221,28 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
     }
   }
 
-  function openProduct(productKey: string) {
-    lastTriggerKey.current = `product:${productKey}`
-    setActivePopover({ type: "product", key: productKey })
+  function openProduct(product: OfferPreviewProductCard) {
+    const productIndex =
+      preview.products.findIndex((candidate) => candidate.key === product.key) + 1
+    lastTriggerKey.current = `product:${product.key}`
+    setActivePopover({ type: "product", key: product.key })
+    trackDetailOpened({
+      detailId: product.category,
+      detailIndex: productIndex,
+      detailType: "routine_product",
+      sourceSection: "mini_routine",
+    })
   }
 
   function openLocked(teaserKey: "further-care" | "tools") {
     lastTriggerKey.current = `locked:${teaserKey}`
     setActivePopover({ type: "locked", key: teaserKey })
+    trackDetailOpened({
+      detailId: teaserKey === "further-care" ? "further_care" : "tools",
+      detailIndex: teaserKey === "further-care" ? 1 : 2,
+      detailType: "locked_routine_card",
+      sourceSection: "locked_routine",
+    })
   }
 
   useEffect(() => {
@@ -264,19 +280,20 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
       ref={containerRef}
       id="unlock-plan"
       className="scroll-mt-5 border-t border-border py-9"
-      data-offer-section="mini_routine"
     >
-      <h2
-        id="guided-story-chapter-2-heading"
-        tabIndex={-1}
-        className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)] outline-none"
-      >
-        {copy.continuation}
-      </h2>
-      <h3 className="mt-5 text-[15px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
-        {copy.basisTitle}
-      </h3>
-      <p className="mt-3 text-[14px] leading-[1.65] text-muted-foreground">{copy.basisIntro}</p>
+      <div data-offer-section="mini_routine">
+        <h2
+          id="guided-story-chapter-2-heading"
+          tabIndex={-1}
+          className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)] outline-none"
+        >
+          {copy.continuation}
+        </h2>
+        <h3 className="mt-5 text-[15px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
+          {copy.basisTitle}
+        </h3>
+        <p className="mt-3 text-[14px] leading-[1.65] text-muted-foreground">{copy.basisIntro}</p>
+      </div>
 
       <div className="mt-5 space-y-3">
         {foundationProducts.map((product) => {
@@ -289,7 +306,7 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
               copy={productCopy}
               product={product}
               onClose={closePopover}
-              onOpen={() => openProduct(product.key)}
+              onOpen={() => openProduct(product)}
               setTriggerRef={(node) => {
                 triggerRefs.current[`product:${product.key}`] = node
               }}
@@ -311,7 +328,7 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
               copy={copyByProduct.get(targetedProduct.key)!}
               product={targetedProduct}
               onClose={closePopover}
-              onOpen={() => openProduct(targetedProduct.key)}
+              onOpen={() => openProduct(targetedProduct)}
               setTriggerRef={(node) => {
                 triggerRefs.current[`product:${targetedProduct.key}`] = node
               }}

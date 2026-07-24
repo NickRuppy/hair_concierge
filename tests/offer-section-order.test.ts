@@ -8,6 +8,7 @@ test("guided-story keeps stable contiguous indices across gated reveals", () => 
   assert.equal(resolveOfferSectionIndex("guided-story", "product_story_chat"), 3)
   assert.equal(resolveOfferSectionIndex("guided-story", "pricing"), 6)
   assert.equal(resolveOfferSectionIndex("guided-story", "faq"), 7)
+  assert.equal(resolveOfferSectionIndex("guided-story", "product_story_chat_answer"), 8)
 })
 
 test("incumbent variants preserve their existing DOM-order section indices", () => {
@@ -22,6 +23,6 @@ test("incumbent variants preserve their existing DOM-order section indices", () 
 })
 
 test("unknown section combinations sort after a variant's declared sections", () => {
-  assert.equal(resolveOfferSectionIndex("guided-story", "final_cta"), 8)
+  assert.equal(resolveOfferSectionIndex("guided-story", "final_cta"), 9)
   assert.equal(resolveOfferSectionIndex("app-value-stack", "guarantee"), 12)
 })

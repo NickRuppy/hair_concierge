@@ -14,6 +14,11 @@ import {
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { canTrackOfferEngagement, claimOfferEngagement } from "@/lib/analytics/offer-engagement"
 import { observeOnceEngaged } from "@/lib/analytics/observe-once-engaged"
+import {
+  claimOfferChapterReveals,
+  isOfferEngagementDepthSection,
+  resolveOfferFaqOpenClaim,
+} from "@/lib/analytics/offer-tracking-claims"
 import { buildOfferViewedPayload } from "@/lib/analytics/offer-viewed-payload"
 import { trackMetaOfferViewOnce } from "@/lib/analytics/meta-offer-view-client"
 import { sendCustomerIoOfferEngagement } from "@/lib/customerio/offer-engagement-client"
@@ -21,7 +26,9 @@ import { COOKIE_CONSENT_CHANGE_EVENT, loadConsent, type CookieConsent } from "@/
 import type {
   FunnelAnalyticsEnvelope,
   OfferAnalyticsContext,
+  OfferChapterId,
   OfferCtaId,
+  OfferDetailType,
   OfferEntryContext,
   OfferSectionId,
 } from "@/lib/analytics/events"
@@ -41,6 +48,21 @@ export interface OfferTrackingIdentity {
 
 const OfferTrackingContext = createContext<OfferAnalyticsContext | null>(null)
 
+type OfferTrackingActions = {
+  observeOfferSection: (sectionId: OfferSectionId, element: HTMLElement) => () => void
+  trackDetailOpened: (detail: {
+    detailId: string
+    detailIndex: number
+    detailType: OfferDetailType
+    sourceSection: OfferSectionId
+  }) => void
+}
+
+const OfferTrackingActionsContext = createContext<OfferTrackingActions>({
+  observeOfferSection: () => () => {},
+  trackDetailOpened: () => {},
+})
+
 type PendingOfferEngagement = {
   reason: "cta_clicked" | "faq_opened" | "section_depth"
   sourceSection?: OfferSectionId
@@ -48,6 +70,10 @@ type PendingOfferEngagement = {
 
 export function useOfferTrackingContext() {
   return useContext(OfferTrackingContext)
+}
+
+export function useOfferTrackingActions() {
+  return useContext(OfferTrackingActionsContext)
 }
 
 export function OfferTrackingProvider({
@@ -59,6 +85,7 @@ export function OfferTrackingProvider({
   offerVariant,
   trackingIdentity,
   offerRevision = OFFER_REVISION,
+  revealedThrough,
   revealGeneration = 0,
 }: {
   children: ReactNode
@@ -69,6 +96,7 @@ export function OfferTrackingProvider({
   offerVariant: string
   trackingIdentity: OfferTrackingIdentity
   offerRevision?: string
+  revealedThrough?: 1 | 2 | 3 | 4
   revealGeneration?: number
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -77,7 +105,10 @@ export function OfferTrackingProvider({
   const pendingOfferEngagementRef = useRef<PendingOfferEngagement | null>(null)
   const viewedSectionsRef = useRef(new Set<OfferSectionId>())
   const openedFaqsRef = useRef(new Set<string>())
+  const revealedChaptersRef = useRef(new Set<OfferChapterId>())
   const ctaInteractionIndexRef = useRef(0)
+  const detailInteractionIndexRef = useRef(0)
+  const faqOpenIndexRef = useRef(0)
   const [offerViewId] = useState(createFunnelEventId)
   const { conditionerModuleId, needLane, shampooModuleId, suggestedCategory } = trackingIdentity
 
@@ -131,7 +162,8 @@ export function OfferTrackingProvider({
     const pending = pendingOfferEngagementRef.current
     const payload = {
       ...context,
-      distinctSectionCount: viewedSectionsRef.current.size,
+      distinctSectionCount: [...viewedSectionsRef.current].filter(isOfferEngagementDepthSection)
+        .length,
       funnelEventId: createFunnelEventId(),
       reason: pending.reason,
       sourceSection: pending.sourceSection,
@@ -167,6 +199,23 @@ export function OfferTrackingProvider({
   }, [context, offerTracking?.funnelEventId])
 
   useEffect(() => {
+    if (revealedThrough === undefined) return
+    const chapters = claimOfferChapterReveals(
+      revealedChaptersRef.current,
+      revealedThrough,
+      revealGeneration,
+    )
+    for (const chapter of chapters) {
+      revealedChaptersRef.current.add(chapter.chapterId)
+      trackAppEvent("offer_chapter_revealed", {
+        ...context,
+        ...chapter,
+        funnelEventId: createFunnelEventId(),
+      })
+    }
+  }, [context, revealGeneration, revealedThrough])
+
+  useEffect(() => {
     if (entryContext !== "quiz_completion" || !leadId) return
     void trackMetaOfferViewOnce({
       entryContext,
@@ -185,30 +234,71 @@ export function OfferTrackingProvider({
     offerVariant,
   ])
 
+  const emitOfferSectionViewed = useCallback(
+    (sectionId: OfferSectionId) => {
+      if (viewedSectionsRef.current.has(sectionId)) return
+      viewedSectionsRef.current.add(sectionId)
+      trackAppEvent("offer_section_viewed", {
+        ...context,
+        funnelEventId: createFunnelEventId(),
+        sectionId,
+        sectionIndex: resolveOfferSectionIndex(offerVariant, sectionId),
+      })
+      if (
+        isOfferEngagementDepthSection(sectionId) &&
+        [...viewedSectionsRef.current].filter(isOfferEngagementDepthSection).length >= 3
+      ) {
+        trackOfferEngagement("section_depth", sectionId)
+      }
+    },
+    [context, offerVariant, trackOfferEngagement],
+  )
+
+  const observeOfferSection = useCallback(
+    (sectionId: OfferSectionId, element: HTMLElement) =>
+      observeOnceEngaged(element, () => emitOfferSectionViewed(sectionId)),
+    [emitOfferSectionViewed],
+  )
+
+  const trackDetailOpened = useCallback(
+    ({
+      detailId,
+      detailIndex,
+      detailType,
+      sourceSection,
+    }: Parameters<OfferTrackingActions["trackDetailOpened"]>[0]) => {
+      detailInteractionIndexRef.current += 1
+      trackAppEvent("offer_detail_opened", {
+        ...context,
+        detailId,
+        detailIndex,
+        detailInteractionIndex: detailInteractionIndexRef.current,
+        detailType,
+        funnelEventId: createFunnelEventId(),
+        sourceSection,
+      })
+    },
+    [context],
+  )
+
+  const actions = useMemo<OfferTrackingActions>(
+    () => ({ observeOfferSection, trackDetailOpened }),
+    [observeOfferSection, trackDetailOpened],
+  )
+
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
 
-    const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-offer-section]")).map(
-      (element) =>
-        observeOnceEngaged(element, () => {
-          const sectionId = element.dataset.offerSection as OfferSectionId | undefined
-          if (!sectionId || viewedSectionsRef.current.has(sectionId)) return
-          viewedSectionsRef.current.add(sectionId)
-          trackAppEvent("offer_section_viewed", {
-            ...context,
-            funnelEventId: createFunnelEventId(),
-            sectionId,
-            sectionIndex: resolveOfferSectionIndex(offerVariant, sectionId),
-          })
-          if (viewedSectionsRef.current.size >= 3) {
-            trackOfferEngagement("section_depth", sectionId)
-          }
-        }),
+    const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-offer-section]")).flatMap(
+      (element) => {
+        const sectionId = element.dataset.offerSection as OfferSectionId | undefined
+        return sectionId ? [observeOfferSection(sectionId, element)] : []
+      },
     )
 
     return () => cleanups.forEach((cleanup) => cleanup())
-  }, [context, offerVariant, revealGeneration, trackOfferEngagement])
+  }, [observeOfferSection, revealGeneration])
 
   useEffect(() => {
     const root = rootRef.current
@@ -252,14 +342,23 @@ export function OfferTrackingProvider({
     const cleanups = details.map((detail, faqIndex) => {
       const handleToggle = () => {
         const faqId = detail.dataset.offerFaq
-        if (!detail.open || !faqId || openedFaqsRef.current.has(faqId)) return
+        if (!detail.open || !faqId) return
+        const previouslyOpened = openedFaqsRef.current.has(faqId)
+        const faqOpenClaim = resolveOfferFaqOpenClaim(
+          offerVariant,
+          previouslyOpened,
+          faqOpenIndexRef.current,
+        )
+        if (!faqOpenClaim) return
         openedFaqsRef.current.add(faqId)
         trackOfferEngagement("faq_opened", "faq")
+        faqOpenIndexRef.current = faqOpenClaim.nextOpenIndex
         trackAppEvent("offer_faq_opened", {
           ...context,
           faqId,
           faqIndex,
           funnelEventId: createFunnelEventId(),
+          openIndex: faqOpenClaim.openIndex,
         })
       }
       detail.addEventListener("toggle", handleToggle)
@@ -267,11 +366,13 @@ export function OfferTrackingProvider({
     })
 
     return () => cleanups.forEach((cleanup) => cleanup())
-  }, [context, revealGeneration, trackOfferEngagement])
+  }, [context, offerVariant, revealGeneration, trackOfferEngagement])
 
   return (
     <OfferTrackingContext.Provider value={context}>
-      <div ref={rootRef}>{children}</div>
+      <OfferTrackingActionsContext.Provider value={actions}>
+        <div ref={rootRef}>{children}</div>
+      </OfferTrackingActionsContext.Provider>
     </OfferTrackingContext.Provider>
   )
 }
