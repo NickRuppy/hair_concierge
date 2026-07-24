@@ -30,6 +30,24 @@ test("result page client sends manually granted users to onboarding instead of t
   assert.doesNotMatch(html, /Angebot:/i)
 })
 
+test("result page client preserves a validated retake destination for entitled users", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      quizAnswers={quizAnswers}
+      focusRoutine={false}
+      hasAccess
+      returnTo="/profile?section=routine"
+    />,
+  )
+
+  assert.match(
+    html,
+    /href="\/onboarding\?lead=11111111-1111-4111-8111-111111111111&amp;returnTo=%2Fprofile%3Fsection%3Droutine"/,
+  )
+})
+
 test("result page client passes persisted quiz answers into the default product-led offer", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient

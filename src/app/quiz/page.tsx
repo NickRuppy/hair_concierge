@@ -9,7 +9,7 @@ import { QuizQuestion } from "@/components/quiz/quiz-question"
 import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
 import { QuizConcernsQuestion } from "@/components/quiz/quiz-concerns-question"
 import { QuizLeadCapture } from "@/components/quiz/quiz-lead-capture"
-import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
+import { QuizPreparation } from "@/components/quiz/quiz-preparation"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
@@ -131,8 +131,10 @@ export default function QuizPage() {
     case 9:
       return <QuizLeadCapture />
     case 10:
-      return <QuizAnalysis />
+      return <QuizPreparation />
     case 11:
+      // Legacy compatibility only. New completions navigate from step 10
+      // directly to the canonical result route.
       return <QuizResults />
     case 12:
       return <QuizGoals />
