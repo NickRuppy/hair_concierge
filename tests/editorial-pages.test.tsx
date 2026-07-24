@@ -86,6 +86,7 @@ test("approved public copy uses serious, non-medical product framing", () => {
   const footerSource = readFileSync("src/components/landing/site-footer.tsx", "utf8")
   const faqSource = readFileSync("src/components/landing/faq.tsx", "utf8")
   const analysisSource = readFileSync("src/components/quiz/quiz-analysis.tsx", "utf8")
+  const resultsSource = readFileSync("src/components/quiz/quiz-results.tsx", "utf8")
   const pricingSource = readFileSync("src/components/quiz/result-offer-pricing.tsx", "utf8")
   const planSelectorSource = readFileSync(
     "src/components/checkout/subscription-plan-selector.tsx",
@@ -101,7 +102,26 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.match(valueSource, /Transparente Datennutzung/)
   assert.match(footerSource, /Strukturierte Haarpflege-Auswertung auf Basis deiner Angaben/)
   assert.match(faqSource, /Chaarlie sicher bereitzustellen und zu verbessern/)
-  assert.match(analysisSource, /Deine Pflegebedürfnisse werden eingeordnet/)
+  assert.match(analysisSource, /Deine Angaben sind gespeichert/)
+  assert.match(analysisSource, /wir stellen deine Haaranalyse zusammen\./)
+  assert.match(analysisSource, /Wir verbinden deine Angaben zu Haar, Zielen und Problemen\./)
+  assert.match(
+    analysisSource,
+    /QUIZ_ANALYSIS_STEPS\s*=\s*\[\s*"Deine wichtigsten Haar-Themen werden priorisiert",\s*"Passende Produkte und Routine-Schritte werden zusammengestellt",\s*"Deine persönliche Begleitung mit Chaarlie wird vorbereitet",\s*\]\s*as const/,
+  )
+  assert.match(analysisSource, /deine Haaranalyse ist bereit\./)
+  assert.match(
+    analysisSource,
+    /Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich\./,
+  )
+  assert.match(analysisSource, /Meine Haaranalyse ansehen/)
+  assert.doesNotMatch(analysisSource, /DEIN PROFIL WIRD ERSTELLT/)
+  assert.doesNotMatch(analysisSource, /Deine Angaben zur Haarstruktur werden ausgewertet/)
+  assert.doesNotMatch(analysisSource, /Deine Pflegebedürfnisse werden eingeordnet/)
+  assert.doesNotMatch(analysisSource, /Dein persönliches Profil wird erstellt/)
+  assert.doesNotMatch(analysisSource, /MEIN HAARPROFIL ANSEHEN/)
+  assert.doesNotMatch(resultsSource, /Wir prüfen deinen Zugang/)
+  assert.doesNotMatch(resultsSource, /Dein Ergebnis wird geöffnet/)
   assert.match(planSelectorSource, /Details in den Bedingungen/)
   assert.match(socialImageSource, /MÖGLICHES PFLEGEZIEL/)
   assert.match(privacySource, /persönliche Auswertung und Routine/)

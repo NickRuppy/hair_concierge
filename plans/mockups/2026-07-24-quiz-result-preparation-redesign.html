@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quiz-Ergebnis vorbereiten · visuelle Richtungen</title>
+    <style>
+      :root {
+        --ink: #2b1844;
+        --muted: #756f73;
+        --cream: #f7f4ef;
+        --card: #fffdfb;
+        --plum: #65499c;
+        --plum-soft: #f0eafa;
+        --coral: #d9616d;
+        --green: #2d9f5e;
+        --line: #e2dcd6;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--cream);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      main {
+        width: min(1120px, calc(100% - 28px));
+        margin: 30px auto 60px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+      }
+
+      h1 {
+        max-width: 780px;
+        font-size: clamp(34px, 5vw, 58px);
+        line-height: 1.02;
+      }
+
+      .intro {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .decision {
+        margin-top: 22px;
+        padding: 15px 18px;
+        border: 1px solid #cdbde8;
+        border-radius: 16px;
+        background: var(--plum-soft);
+        line-height: 1.5;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        margin-top: 30px;
+      }
+
+      .option {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      .option.recommended {
+        border: 2px solid var(--plum);
+        background: #fff;
+        box-shadow: 0 20px 54px rgba(43, 24, 68, 0.1);
+      }
+
+      .option-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .option-head h2 {
+        font-size: 27px;
+      }
+
+      .tag {
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: var(--muted);
+        background: #eeeae6;
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .recommended .tag {
+        color: var(--plum);
+        background: var(--plum-soft);
+      }
+
+      .option-copy {
+        min-height: 48px;
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .state-switch {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .state-switch button {
+        min-height: 38px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        background: white;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .state-switch button.active {
+        border-color: var(--plum);
+        color: white;
+        background: var(--plum);
+      }
+
+      .phone {
+        position: relative;
+        min-height: 650px;
+        overflow: hidden;
+        padding: 24px 22px;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        background: var(--card);
+      }
+
+      .brand {
+        margin-bottom: 26px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .saved {
+        display: flex;
+        width: fit-content;
+        align-items: center;
+        gap: 7px;
+        margin: 0 auto 18px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: var(--green);
+        background: #eaf7ef;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .phone h3 {
+        font-size: 31px;
+        line-height: 1.08;
+        text-align: center;
+      }
+
+      .subtitle {
+        max-width: 36ch;
+        margin: 11px auto 22px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      .portrait-stage {
+        position: relative;
+        display: grid;
+        width: 190px;
+        height: 190px;
+        margin: 4px auto 18px;
+        place-items: center;
+        overflow: hidden;
+        border: 1px solid #d8ccec;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0 57%, transparent 58%),
+          conic-gradient(var(--plum) var(--progress, 78%), #e9e1f4 0);
+      }
+
+      .portrait-stage::after {
+        position: absolute;
+        inset: 8px;
+        border: 1px solid #ece5f3;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .portrait-stage img {
+        position: relative;
+        z-index: 1;
+        width: 145px;
+        height: 160px;
+        object-fit: contain;
+        object-position: center bottom;
+        transition:
+          filter 180ms ease,
+          opacity 180ms ease;
+      }
+
+      .loading .portrait-stage img {
+        filter: blur(2px);
+        opacity: 0.58;
+      }
+
+      .ready .portrait-stage {
+        --progress: 100%;
+      }
+
+      .steps {
+        display: grid;
+        gap: 10px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        color: var(--muted);
+        background: white;
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .icon {
+        display: grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        border-radius: 50%;
+        color: white;
+        background: var(--plum);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .loading .step:last-child .icon {
+        border: 3px solid var(--plum-soft);
+        border-top-color: var(--plum);
+        color: transparent;
+        background: transparent;
+      }
+
+      .ready-copy,
+      .ready-button,
+      .loading-copy {
+        display: none;
+      }
+
+      .loading .loading-copy,
+      .ready .ready-copy,
+      .ready .ready-button {
+        display: block;
+      }
+
+      .ready-button {
+        width: 100%;
+        min-height: 54px;
+        margin-top: 18px;
+        border: 0;
+        border-radius: 14px;
+        color: white;
+        background: var(--coral);
+        box-shadow: 0 8px 18px rgba(217, 97, 109, 0.22);
+        font-weight: 850;
+        cursor: pointer;
+      }
+
+      .editorial-visual {
+        display: grid;
+        min-height: 210px;
+        margin: 16px 0 22px;
+        place-items: center;
+        border: 1px solid #d8ccec;
+        border-radius: 22px;
+        background:
+          linear-gradient(135deg, rgba(240, 234, 250, 0.9), rgba(255, 253, 251, 0.9)), white;
+      }
+
+      .monogram {
+        display: grid;
+        width: 92px;
+        height: 92px;
+        place-items: center;
+        border: 1px solid #cdbde8;
+        border-radius: 28px;
+        color: var(--plum);
+        background: white;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 42px;
+      }
+
+      .note {
+        margin-top: 26px;
+        padding: 17px 19px;
+        border: 1px dashed #bfb5ac;
+        border-radius: 18px;
+        color: var(--muted);
+        background: #fffaf6;
+        line-height: 1.55;
+      }
+
+      .note strong {
+        color: var(--ink);
+      }
+
+      @media (max-width: 820px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 520px) {
+        main {
+          width: min(100% - 16px, 480px);
+          margin-top: 18px;
+        }
+        .option {
+          padding: 12px;
+          border-radius: 22px;
+        }
+        .phone {
+          min-height: 610px;
+          border-radius: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Quiz → Ergebnis · zweite Iteration</p>
+      <h1>Das Ergebnis wird hier wirklich vorbereitet – und erst auf deinen Klick geöffnet.</h1>
+      <p class="intro">
+        Der Quiz-Shell-Wechsel entfällt vollständig. Während dieser einen Seite laufen
+        Zugangsprüfung, Ergebnis-Vorbereitung und Vorladen der persönlichen Angebotsseite. Erst wenn
+        alles bereit ist, erscheint der Button.
+      </p>
+      <div class="decision">
+        <strong>Interaktion für beide Richtungen:</strong> Wähle in jeder Karte
+        <em>Wird vorbereitet</em> oder <em>Ist bereit</em>. Der Klick auf den finalen Button führt
+        direkt zur bereits vorbereiteten Haaranalyse – ohne weiteren Zwischenzustand.
+      </div>
+
+      <section class="options">
+        <article class="option recommended">
+          <div class="option-head">
+            <h2>A · Persönlicher Reveal</h2>
+            <span class="tag">Empfehlung</span>
+          </div>
+          <p class="option-copy">
+            Verbindet den Lademoment sichtbar mit dem personalisierten Portrait und der neuen
+            Analyse. Fühlt sich am stärksten wie ein echter Ergebnisaufbau an.
+          </p>
+          <div class="state-switch" data-switch="portrait">
+            <button class="active" data-state="loading">Wird vorbereitet</button>
+            <button data-state="ready">Ist bereit</button>
+          </div>
+          <div class="phone loading" data-card="portrait">
+            <div class="brand">chaarlie</div>
+            <div class="saved">✓ Deine Angaben sind gespeichert</div>
+            <h3>
+              <span class="loading-copy">Mia, wir stellen deine Haaranalyse zusammen.</span>
+              <span class="ready-copy">Mia, deine Haaranalyse ist bereit.</span>
+            </h3>
+            <p class="subtitle">
+              <span class="loading-copy"
+                >Wir verbinden deine Angaben zu Haar, Zielen und Problemen.</span
+              >
+              <span class="ready-copy"
+                >Deine wichtigsten Prioritäten und Routine-Bausteine warten auf dich.</span
+              >
+            </p>
+            <div class="portrait-stage">
+              <img
+                src="../../public/images/quiz/hair-portrait/wavy-long.webp"
+                alt="Personalisierte Haar-Silhouette"
+              />
+            </div>
+            <div class="steps">
+              <div class="step">
+                <span class="icon">✓</span
+                ><span>Deine wichtigsten Haar-Themen werden priorisiert</span>
+              </div>
+              <div class="step">
+                <span class="icon">✓</span
+                ><span>Passende Produkte und Routine-Schritte werden zusammengestellt</span>
+              </div>
+              <div class="step">
+                <span class="icon">✓</span
+                ><span>Deine persönliche Begleitung mit Chaarlie wird vorbereitet</span>
+              </div>
+            </div>
+            <button class="ready-button">Meine Haaranalyse ansehen</button>
+          </div>
+        </article>
+
+        <article class="option">
+          <div class="option-head">
+            <h2>B · Ruhiger Editorial-Moment</h2>
+            <span class="tag">Reduzierter</span>
+          </div>
+          <p class="option-copy">
+            Weniger visuell, stärker auf Klarheit und Ruhe. Sicherer umzusetzen, aber weniger eng
+            mit dem neuen Portrait-Erlebnis verbunden.
+          </p>
+          <div class="state-switch" data-switch="editorial">
+            <button class="active" data-state="loading">Wird vorbereitet</button>
+            <button data-state="ready">Ist bereit</button>
+          </div>
+          <div class="phone loading" data-card="editorial">
+            <div class="brand">chaarlie</div>
+            <div class="saved">✓ Deine Angaben sind gespeichert</div>
+            <h3>
+              <span class="loading-copy">Mia, deine persönliche Auswertung entsteht.</span>
+              <span class="ready-copy">Deine persönliche Auswertung ist bereit.</span>
+            </h3>
+            <p class="subtitle">
+              <span class="loading-copy"
+                >Einen kurzen Moment – wir bringen deine Angaben in eine klare Reihenfolge.</span
+              >
+              <span class="ready-copy"
+                >Starte jetzt mit den Themen, die für dein Haar am meisten verändern.</span
+              >
+            </p>
+            <div class="editorial-visual"><div class="monogram">C</div></div>
+            <div class="steps">
+              <div class="step">
+                <span class="icon">✓</span><span>Wichtigste Haar-Themen priorisiert</span>
+              </div>
+              <div class="step">
+                <span class="icon">✓</span><span>Produkte und Routine zusammengestellt</span>
+              </div>
+              <div class="step">
+                <span class="icon">✓</span><span>Chaarlie-Begleitung vorbereitet</span>
+              </div>
+            </div>
+            <button class="ready-button">Meine Haaranalyse ansehen</button>
+          </div>
+        </article>
+      </section>
+
+      <div class="note">
+        <strong>Wichtig:</strong> Der Button ist kein zweites Lade-Gate. Er erscheint erst, wenn das
+        Ziel feststeht und die Ergebnisroute vorgeladen wurde. Bei einem Fehler bleibt dieselbe
+        Seite stehen und bietet einen klaren erneuten Versuch an. Das Portrait ist im Mockup ein
+        festes Beispiel; in der Umsetzung wird dasselbe personalisierte Portrait wie auf der
+        Ergebnisseite anhand der Quiz-Antworten gewählt.
+      </div>
+    </main>
+
+    <script>
+      document.querySelectorAll("[data-switch]").forEach((switcher) => {
+        const card = document.querySelector(`[data-card="${switcher.dataset.switch}"]`)
+        switcher.addEventListener("click", (event) => {
+          const button = event.target.closest("button[data-state]")
+          if (!button || !card) return
+          switcher.querySelectorAll("button").forEach((item) => item.classList.remove("active"))
+          button.classList.add("active")
+          card.classList.toggle("loading", button.dataset.state === "loading")
+          card.classList.toggle("ready", button.dataset.state === "ready")
+        })
+      })
+    </script>
+  </body>
+</html>

@@ -6,6 +6,10 @@ import { createServerClient } from "@supabase/ssr"
 import { ResultPageClient } from "./result-client"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
+import {
+  getQuizResultSearchParamValue,
+  resolveQuizResultRetakeReturnTo,
+} from "@/lib/quiz/result-navigation"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -26,7 +30,12 @@ export const metadata: Metadata = {
 
 interface Props {
   params: Promise<{ leadId: string }>
-  searchParams: Promise<{ entry?: string; focus?: string }>
+  searchParams: Promise<{
+    entry?: string | string[]
+    focus?: string | string[]
+    mode?: string | string[]
+    returnTo?: string | string[]
+  }>
 }
 
 interface LeadResultRow {
@@ -101,13 +110,16 @@ async function getAuthenticatedResultAccess(): Promise<boolean> {
 
 export default async function ResultPage({ params, searchParams }: Props) {
   const [{ leadId }, sp] = await Promise.all([params, searchParams])
-  const focusRoutine = sp.focus === "routine"
-  const focusTarget = sp.focus === "unlock-plan" ? "unlock-plan" : focusRoutine ? "pricing" : null
+  const focus = getQuizResultSearchParamValue(sp.focus)
+  const entry = getQuizResultSearchParamValue(sp.entry)
+  const focusRoutine = focus === "routine"
+  const focusTarget = focus === "unlock-plan" ? "unlock-plan" : focusRoutine ? "pricing" : null
+  const returnTo = resolveQuizResultRetakeReturnTo(sp.mode, sp.returnTo)
   const entryContext: OfferEntryContext = focusRoutine
     ? "routine_return"
-    : sp.entry === "quiz_completion"
+    : entry === "quiz_completion"
       ? "quiz_completion"
-      : sp.entry === "result_email"
+      : entry === "result_email"
         ? "result_email"
         : "saved_result"
   const [lead, hasAccess] = await Promise.all([
@@ -132,6 +144,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       focusRoutine={focusRoutine}
       focusTarget={focusTarget}
       hasAccess={hasAccess}
+      returnTo={returnTo}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
     />

@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 import {
@@ -24,7 +24,7 @@ type PortraitPriorityTuple = readonly [
   GuidedStoryPriority,
 ]
 
-type HairPortraitConfigSource =
+export type HairPortraitConfigSource =
   | {
       config: PortraitConfig
       rawAnswers?: never
@@ -38,6 +38,10 @@ export type HairPortraitProps = HairPortraitConfigSource & {
   priorities: PortraitPriorityTuple
   selectedIndex: 0 | 1 | 2
   onSelect: (index: 0 | 1 | 2) => void
+}
+
+export type HairPortraitArtworkProps = HairPortraitConfigSource & {
+  className?: string
 }
 
 const LENGTH_LABELS = {
@@ -216,17 +220,25 @@ function getMarkerLabel(priority: GuidedStoryPriority, index: 0 | 1 | 2): string
   return FAMILY_MARKER_LABELS[priority.family]
 }
 
-export function HairPortrait(props: HairPortraitProps) {
-  const config = getPortraitConfig(props)
+type PortraitArtworkCompositionProps = {
+  afterArtwork?: ReactNode
+  className?: string
+  config: PortraitConfig
+  renderOverlay?: (renderedAsset: HairPortraitAsset | null) => ReactNode
+}
+
+function PortraitArtworkComposition({
+  afterArtwork,
+  className,
+  config,
+  renderOverlay,
+}: PortraitArtworkCompositionProps) {
   const selectedAsset = resolveHairPortraitAsset(config)
   const [imageFailure, setImageFailure] = useState<PortraitImageFailure>({
     selectedSrc: "",
     state: "selected",
   })
   const imageRef = useRef<HTMLImageElement | null>(null)
-  const selectedButtonRef = useRef<HTMLButtonElement | null>(null)
-  const pendingUserFocusRef = useRef(false)
-  const selectedIndex = props.selectedIndex
   const imageState = getImageStateForSelected(imageFailure, selectedAsset.src)
   const renderedAsset = getRenderedAsset({ selectedAsset, imageState })
 
@@ -242,12 +254,6 @@ export function HairPortrait(props: HairPortraitProps) {
       }),
     )
   }
-
-  useEffect(() => {
-    if (!pendingUserFocusRef.current) return
-    pendingUserFocusRef.current = false
-    selectedButtonRef.current?.focus()
-  }, [selectedIndex])
 
   useEffect(() => {
     const image = imageRef.current
@@ -275,7 +281,7 @@ export function HairPortrait(props: HairPortraitProps) {
   }, [renderedAsset?.src, selectedAsset.src])
 
   return (
-    <section className="mx-auto w-full max-w-[32rem]">
+    <section className={cn("mx-auto w-full max-w-[32rem]", className)}>
       <p className="sr-only">{getSummary(config)}</p>
       <p className="sr-only">{getTreatmentCopy(config)}</p>
 
@@ -318,78 +324,111 @@ export function HairPortrait(props: HairPortraitProps) {
           />
         ) : null}
 
-        <svg
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
-          data-portrait-layer="leaders"
-          preserveAspectRatio="xMidYMid meet"
-          viewBox="0 0 100 100"
-        >
-          {PORTRAIT_MARKER_KEYS.map((key) => {
-            const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
-            const lineEnd = getLeaderLineEnd(marker)
-            return (
-              <g key={key}>
-                <path
-                  className="fill-none stroke-[#8f84a8] stroke-[0.55] [stroke-linecap:round]"
-                  d={`M ${marker.x} ${marker.y} L ${lineEnd.x.toFixed(2)} ${lineEnd.y.toFixed(2)}`}
-                />
-                <circle
-                  className="fill-white stroke-[#1f2933] stroke-[0.9]"
-                  cx={marker.x}
-                  cy={marker.y}
-                  r="3.2"
-                />
-              </g>
-            )
-          })}
-        </svg>
-
-        <div
-          aria-label="Analysemarker im Haarportrait"
-          className="absolute inset-0 z-30"
-          data-portrait-layer="markers"
-          role="group"
-        >
-          {PORTRAIT_MARKER_KEYS.map((key, index) => {
-            const priority = props.priorities[index]
-            const selected = index === selectedIndex
-            const markerIndex = index as 0 | 1 | 2
-            const markerLabel = getMarkerLabel(priority, markerIndex)
-            const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
-            return (
-              <button
-                aria-label={`Marker ${index + 1}: ${priority.title}`}
-                aria-pressed={selected}
-                className={cn(
-                  "absolute grid min-h-[44px] min-w-[44px] max-w-[6.75rem] -translate-x-1/2 -translate-y-1/2 place-items-center whitespace-nowrap rounded-full border border-[#1f2933]/20 bg-white/90 px-2 text-[11px] font-semibold leading-none text-[#1f2933] shadow-sm outline-none",
-                  "focus-visible:ring-2 focus-visible:ring-[#1f2933] focus-visible:ring-offset-2",
-                  selected && "ring-2 ring-[#1f2933] ring-offset-2",
-                )}
-                data-portrait-marker={key}
-                key={key}
-                onClick={() => {
-                  pendingUserFocusRef.current = true
-                  props.onSelect(markerIndex)
-                }}
-                ref={selected ? selectedButtonRef : undefined}
-                style={getButtonPositionStyle(marker)}
-                type="button"
-              >
-                {markerLabel}
-              </button>
-            )
-          })}
-        </div>
+        {renderOverlay?.(renderedAsset)}
       </div>
 
-      <ol className="sr-only">
-        {props.priorities.map((priority, index) => (
-          <li key={priority.variantId}>
-            Marker {index + 1}: {priority.title}
-          </li>
-        ))}
-      </ol>
+      {afterArtwork}
     </section>
+  )
+}
+
+export function HairPortraitArtwork(props: HairPortraitArtworkProps) {
+  return (
+    <PortraitArtworkComposition className={props.className} config={getPortraitConfig(props)} />
+  )
+}
+
+export function HairPortrait(props: HairPortraitProps) {
+  const config = getPortraitConfig(props)
+  const selectedButtonRef = useRef<HTMLButtonElement | null>(null)
+  const pendingUserFocusRef = useRef(false)
+  const selectedIndex = props.selectedIndex
+
+  useEffect(() => {
+    if (!pendingUserFocusRef.current) return
+    pendingUserFocusRef.current = false
+    selectedButtonRef.current?.focus()
+  }, [selectedIndex])
+
+  return (
+    <PortraitArtworkComposition
+      afterArtwork={
+        <ol className="sr-only">
+          {props.priorities.map((priority, index) => (
+            <li key={priority.variantId}>
+              Marker {index + 1}: {priority.title}
+            </li>
+          ))}
+        </ol>
+      }
+      config={config}
+      renderOverlay={(renderedAsset) => (
+        <>
+          <svg
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
+            data-portrait-layer="leaders"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox="0 0 100 100"
+          >
+            {PORTRAIT_MARKER_KEYS.map((key) => {
+              const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
+              const lineEnd = getLeaderLineEnd(marker)
+              return (
+                <g key={key}>
+                  <path
+                    className="fill-none stroke-[#8f84a8] stroke-[0.55] [stroke-linecap:round]"
+                    d={`M ${marker.x} ${marker.y} L ${lineEnd.x.toFixed(2)} ${lineEnd.y.toFixed(2)}`}
+                  />
+                  <circle
+                    className="fill-white stroke-[#1f2933] stroke-[0.9]"
+                    cx={marker.x}
+                    cy={marker.y}
+                    r="3.2"
+                  />
+                </g>
+              )
+            })}
+          </svg>
+
+          <div
+            aria-label="Analysemarker im Haarportrait"
+            className="absolute inset-0 z-30"
+            data-portrait-layer="markers"
+            role="group"
+          >
+            {PORTRAIT_MARKER_KEYS.map((key, index) => {
+              const priority = props.priorities[index]
+              const selected = index === selectedIndex
+              const markerIndex = index as 0 | 1 | 2
+              const markerLabel = getMarkerLabel(priority, markerIndex)
+              const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
+              return (
+                <button
+                  aria-label={`Marker ${index + 1}: ${priority.title}`}
+                  aria-pressed={selected}
+                  className={cn(
+                    "absolute grid min-h-[44px] min-w-[44px] max-w-[6.75rem] -translate-x-1/2 -translate-y-1/2 place-items-center whitespace-nowrap rounded-full border border-[#1f2933]/20 bg-white/90 px-2 text-[11px] font-semibold leading-none text-[#1f2933] shadow-sm outline-none",
+                    "focus-visible:ring-2 focus-visible:ring-[#1f2933] focus-visible:ring-offset-2",
+                    selected && "ring-2 ring-[#1f2933] ring-offset-2",
+                  )}
+                  data-portrait-marker={key}
+                  key={key}
+                  onClick={() => {
+                    pendingUserFocusRef.current = true
+                    props.onSelect(markerIndex)
+                  }}
+                  ref={selected ? selectedButtonRef : undefined}
+                  style={getButtonPositionStyle(marker)}
+                  type="button"
+                >
+                  {markerLabel}
+                </button>
+              )
+            })}
+          </div>
+        </>
+      )}
+    />
   )
 }

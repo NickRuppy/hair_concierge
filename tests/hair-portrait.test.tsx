@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import {
   HairPortrait,
+  HairPortraitArtwork,
   getNextPortraitImageFailure,
   getNextPortraitImageState,
   normalizePortraitImageSrcForComparison,
@@ -50,6 +51,50 @@ const priorities: [GuidedStoryPriority, GuidedStoryPriority, GuidedStoryPriority
     isCentral: false,
   },
 ]
+
+test("HairPortraitArtwork renders the complete selected portrait without analysis controls", () => {
+  const config = derivePortraitConfig({
+    structure: "coily",
+    density: "medium",
+    hair_length: "short",
+    treatment: ["natur"],
+  })
+  const html = renderToStaticMarkup(
+    <HairPortraitArtwork className="preparation-portrait" config={config} />,
+  )
+
+  const bodyIndex = html.indexOf('data-portrait-layer="body"')
+  const imageIndex = html.indexOf('data-portrait-layer="image"')
+
+  assert.match(html, /class="mx-auto w-full max-w-\[32rem\] preparation-portrait"/)
+  assert.ok(bodyIndex > -1, "hair-only assets must receive the shared body layer")
+  assert.ok(bodyIndex < imageIndex, "body must sit below image")
+  assert.match(html, /src="\/images\/quiz\/hair-portrait\/coily-short\.webp"/)
+  assert.match(html, /Symbolische Darstellung aus deinen Angaben: kurzes, coily Haar\./)
+  assert.match(html, /Das Portrait zeigt deine natürliche Haarstruktur\./)
+  assert.doesNotMatch(
+    html,
+    /data-portrait-layer="leaders"|data-portrait-layer="markers"|data-portrait-marker=|type="button"|role="group"/,
+  )
+  assert.doesNotMatch(html, /Bruchstellen zuerst|Mehr Feuchtigkeit|Ruhigere Oberfläche/)
+})
+
+test("HairPortraitArtwork accepts raw answers and omits the shared body for ownBody assets", () => {
+  const html = renderToStaticMarkup(
+    <HairPortraitArtwork
+      rawAnswers={{
+        structure: "straight",
+        density: "low",
+        hair_length: "very_short",
+        treatment: ["natur"],
+      }}
+    />,
+  )
+
+  assert.match(html, /src="\/images\/quiz\/hair-portrait\/straight-very-short\.webp"/)
+  assert.doesNotMatch(html, /data-portrait-layer="body"/)
+  assert.doesNotMatch(html, /data-portrait-layer="leaders"|data-portrait-layer="markers"/)
+})
 
 test("HairPortrait renders the selected generated portrait as a decorative priority image", () => {
   const config = derivePortraitConfig({
