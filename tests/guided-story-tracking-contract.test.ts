@@ -73,7 +73,9 @@ test("guided-story reports its displayed identity and dedicated revision", () =>
     "utf8",
   )
 
-  assert.match(source, /offerRevision=\{GUIDED_STORY_OFFER_REVISION\}/)
+  assert.match(source, /GUIDED_STORY_EXPERIMENT_OFFER_REVISION = "guided_story_experiment_v1"/)
+  assert.match(source, /usesExperimentBaseline[\s\S]*GUIDED_STORY_EXPERIMENT_OFFER_REVISION/)
+  assert.match(source, /: GUIDED_STORY_OFFER_REVISION/)
   assert.match(source, /preview\.analytics\.needLane/)
   assert.match(source, /preview\.analytics\.shampooModuleId/)
   assert.match(source, /preview\.analytics\.conditionerModuleId/)

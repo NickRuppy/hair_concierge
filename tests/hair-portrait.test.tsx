@@ -204,6 +204,33 @@ test("HairPortrait renders three native marker buttons with accessible selected 
   assert.match(html, /style="left:50%;top:18%"/)
 })
 
+test("HairPortrait exposes potential labels and percentages in each marker's accessible name", () => {
+  const config = derivePortraitConfig({
+    structure: "curly",
+    density: "medium",
+    hair_length: "long",
+    treatment: ["natur"],
+  })
+  const html = renderToStaticMarkup(
+    <HairPortrait
+      config={config}
+      markerScores={[
+        { label: "Stabilität", value: 65 },
+        { label: "Feuchtigkeit", value: 45 },
+        { label: "Oberfläche", value: 60 },
+      ]}
+      priorities={priorities}
+      selectedIndex={0}
+      onSelect={() => {}}
+    />,
+  )
+
+  assert.match(html, /aria-label="Marker 1: Stabilität, 65 Prozent\./)
+  assert.match(html, /aria-label="Marker 2: Feuchtigkeit, 45 Prozent\./)
+  assert.match(html, /aria-label="Marker 3: Oberfläche, 60 Prozent\./)
+  assert.equal((html.match(/max-w-\[8\.75rem\]/g) ?? []).length, 3)
+})
+
 test("HairPortrait keeps complete copy in the non-visual equivalent only", () => {
   const config = derivePortraitConfig({
     structure: "wavy",

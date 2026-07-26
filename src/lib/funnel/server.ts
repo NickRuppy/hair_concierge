@@ -9,8 +9,15 @@ import {
   type FunnelCookieContext,
   type FunnelTouch,
 } from "./cookie"
-import { isFunnelAttributionEnabled } from "./flags"
-import { getFunnelPackageByKey } from "./packages"
+import { isFunnelAttributionEnabled, isGuidedStoryOfferExperimentEnabled } from "./flags"
+import { getFunnelPackageByKey, resolveOfferVariantForSession } from "./packages"
+import {
+  GUIDED_STORY_OFFER_EXPERIMENT,
+  assignGuidedStoryExperimentVariant,
+  isGuidedStoryExperimentVariant,
+  isGuidedStoryFamilyVariant,
+} from "./offer-experiment"
+import { captureOfferExperimentAssignmentFailure } from "@/lib/observability/offer-experiment"
 
 export const FUNNEL_MILESTONES = [
   "landing_viewed",
@@ -50,7 +57,7 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
   if (!isFunnelAttributionEnabled() || !leadId) return null
   const { data } = await createAdminClient()
     .from("funnel_sessions")
-    .select("id, visitor_id, package_key, offer_variant, first_seen_at")
+    .select("id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at")
     .eq("lead_id", leadId)
     .order("first_seen_at", { ascending: false })
     .limit(1)
@@ -61,7 +68,107 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
     sessionId: data.id,
     packageKey: data.package_key,
     offerVariant: data.offer_variant,
+    offerViewedAt: data.offer_viewed_at,
     issuedAt: Date.parse(data.first_seen_at),
+  }
+}
+
+type OfferExperimentSession = {
+  sessionId: string
+  packageKey: string
+  offerVariant: string | null
+  offerViewedAt: string | null
+}
+
+type OfferExperimentAssignmentClient = {
+  from(table: "funnel_sessions"): {
+    update(values: { offer_variant: string }): {
+      eq(
+        column: "id",
+        value: string,
+      ): {
+        is(
+          column: "offer_viewed_at",
+          value: null,
+        ): {
+          eq(
+            column: "offer_variant",
+            value: string,
+          ): {
+            select(columns: "offer_variant"): {
+              maybeSingle(): PromiseLike<{
+                data: { offer_variant: string | null } | null
+                error: unknown
+              }>
+            }
+          }
+        }
+      }
+    }
+    select(columns: "offer_variant"): {
+      eq(
+        column: "id",
+        value: string,
+      ): {
+        maybeSingle(): PromiseLike<{
+          data: { offer_variant: string | null } | null
+          error: unknown
+        }>
+      }
+    }
+  }
+}
+
+export async function resolveGuidedStoryOfferExperiment(input: {
+  leadId: string
+  session: OfferExperimentSession | null
+  enabled?: boolean
+  client?: OfferExperimentAssignmentClient
+  captureFailure?: typeof captureOfferExperimentAssignmentFailure
+}): Promise<string> {
+  const { leadId, session } = input
+  const enabled = input.enabled ?? isGuidedStoryOfferExperimentEnabled()
+  const fallback = GUIDED_STORY_OFFER_EXPERIMENT.baseVariant
+  const resolvedVariant = resolveOfferVariantForSession(session)
+
+  if (!isGuidedStoryFamilyVariant(resolvedVariant)) return resolvedVariant
+  if (!enabled) return fallback
+  if (isGuidedStoryExperimentVariant(session?.offerVariant)) return session.offerVariant
+  if (!session) return assignGuidedStoryExperimentVariant(leadId)
+  if (session.offerViewedAt || resolvedVariant !== fallback) return resolvedVariant
+
+  const intendedVariant = assignGuidedStoryExperimentVariant(session.sessionId)
+  const client = input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
+  const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
+
+  try {
+    const { data, error } = await client
+      .from("funnel_sessions")
+      .update({ offer_variant: intendedVariant })
+      .eq("id", session.sessionId)
+      .is("offer_viewed_at", null)
+      .eq("offer_variant", fallback)
+      .select("offer_variant")
+      .maybeSingle()
+    if (error) throw error
+    if (data?.offer_variant) return data.offer_variant
+
+    const readBack = await client
+      .from("funnel_sessions")
+      .select("offer_variant")
+      .eq("id", session.sessionId)
+      .maybeSingle()
+    if (readBack.error) throw readBack.error
+    return readBack.data?.offer_variant ?? fallback
+  } catch (error) {
+    captureFailure(error, {
+      experimentId: GUIDED_STORY_OFFER_EXPERIMENT.id,
+      revision: GUIDED_STORY_OFFER_EXPERIMENT.revision,
+      intendedVariant,
+      fallbackVariant: fallback,
+      packageKey: session.packageKey,
+    })
+    return fallback
   }
 }
 

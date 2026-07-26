@@ -1,4 +1,5 @@
 import type { OfferChapterId, OfferSectionId } from "./events"
+import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
 
 export type OfferChapterRevealClaim = {
   chapterId: OfferChapterId
@@ -34,7 +35,7 @@ export function resolveOfferFaqOpenClaim(
   previouslyOpened: boolean,
   currentOpenIndex: number,
 ): OfferFaqOpenClaim | null {
-  const tracksEveryOpen = offerVariant === "guided-story"
+  const tracksEveryOpen = isGuidedStoryFamilyVariant(offerVariant)
   if (!tracksEveryOpen && previouslyOpened) return null
   const nextOpenIndex = tracksEveryOpen ? currentOpenIndex + 1 : currentOpenIndex
   return {

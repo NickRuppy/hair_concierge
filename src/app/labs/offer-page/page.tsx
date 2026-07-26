@@ -3,6 +3,9 @@ import { notFound } from "next/navigation"
 import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
 import AppValueStackOfferVariant from "@/funnels/offers/app-value-stack"
 import GuidedStoryOfferVariant from "@/funnels/offers/guided-story"
+import GuidedStoryFounderLetterOfferVariant from "@/funnels/offers/guided-story-founder-letter"
+import GuidedStoryLockedOfferVariant from "@/funnels/offers/guided-story-locked"
+import GuidedStoryPotentialOfferVariant from "@/funnels/offers/guided-story-potential"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
 import { APP_VALUE_STACK_CTA_LABEL } from "@/lib/quiz/app-value-stack-copy"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
@@ -69,16 +72,30 @@ export default async function OfferPageLab({
     )
   }
 
-  if (variant === "guided-story") {
+  if (
+    variant === "guided-story" ||
+    variant === "guided-story-locked" ||
+    variant === "guided-story-founder-letter" ||
+    variant === "guided-story-potential"
+  ) {
+    const GuidedStoryVariant =
+      variant === "guided-story-locked"
+        ? GuidedStoryLockedOfferVariant
+        : variant === "guided-story-founder-letter"
+          ? GuidedStoryFounderLetterOfferVariant
+          : variant === "guided-story-potential"
+            ? GuidedStoryPotentialOfferVariant
+            : GuidedStoryOfferVariant
+
     return (
-      <GuidedStoryOfferVariant
+      <GuidedStoryVariant
         entryContext={params.focus === "routine" ? "routine_return" : "quiz_completion"}
         focusRoutine={params.focus === "routine"}
         focusTarget={params.focus === "unlock-plan" ? "unlock-plan" : null}
         leadId={null}
         name="Lea"
         narrative={narrative}
-        offerVariant="guided-story"
+        offerVariant={variant}
         quizAnswers={REVIEW_ANSWERS}
         pricingSlot={<StaticPricingPreview />}
       />

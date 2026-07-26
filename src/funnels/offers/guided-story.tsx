@@ -2,6 +2,7 @@
 
 import { Check, ShieldCheck } from "lucide-react"
 
+import { FounderLetter } from "@/components/quiz/founder-letter"
 import { GuidedStoryAnalysis } from "@/components/quiz/guided-story-analysis"
 import { GuidedStoryRoutine } from "@/components/quiz/guided-story-routine"
 import { GuidedStorySupport } from "@/components/quiz/guided-story-support"
@@ -12,21 +13,51 @@ import {
 } from "@/components/quiz/offer-tracking-provider"
 import { useGuidedStoryFlow } from "@/components/quiz/use-guided-story-flow"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
+import { formatDisplayFirstName } from "@/lib/quiz/display-name"
 import { buildQuizGuidedStoryPreview } from "@/lib/quiz/guided-story-preview"
 
-export default function GuidedStoryOfferVariant({
+export const GUIDED_STORY_EXPERIMENT_OFFER_REVISION = "guided_story_experiment_v1"
+
+type GuidedStoryExperimentMode = "rollback" | "locked" | "founder-letter" | "potential"
+type GuidedStoryPotentialResult = {
+  overall: number
+  dimensions: readonly [
+    { label: string; value: number },
+    { label: string; value: number },
+    { label: string; value: number },
+  ]
+}
+
+type GuidedStoryOfferShellProps = FunnelOfferVariantProps & {
+  experimentMode?: GuidedStoryExperimentMode
+  getHairPotential?: (input: {
+    preview: ReturnType<typeof buildQuizGuidedStoryPreview>
+    quizAnswers: FunnelOfferVariantProps["quizAnswers"]
+  }) => GuidedStoryPotentialResult | null
+}
+
+export function GuidedStoryOfferShell({
   entryContext,
+  experimentMode = "rollback",
   focusRoutine = false,
   focusTarget = null,
+  getHairPotential,
   leadId,
   name,
   offerTracking,
   offerVariant,
   pricingSlot,
   quizAnswers,
-}: FunnelOfferVariantProps) {
+}: GuidedStoryOfferShellProps) {
   const preview = buildQuizGuidedStoryPreview(quizAnswers)
   const flow = useGuidedStoryFlow({ focusRoutine, focusTarget })
+  const firstName = formatDisplayFirstName(name)
+  const usesExperimentBaseline = experimentMode !== "rollback"
+  const lockTargetedRecommendation = experimentMode === "locked"
+  const hairPotential =
+    experimentMode === "potential" && getHairPotential
+      ? getHairPotential({ preview, quizAnswers })
+      : null
 
   return (
     <OfferTrackingProvider
@@ -34,7 +65,11 @@ export default function GuidedStoryOfferVariant({
       entryContext={entryContext}
       focusRoutine={focusRoutine}
       leadId={leadId}
-      offerRevision={GUIDED_STORY_OFFER_REVISION}
+      offerRevision={
+        usesExperimentBaseline
+          ? GUIDED_STORY_EXPERIMENT_OFFER_REVISION
+          : GUIDED_STORY_OFFER_REVISION
+      }
       offerTracking={offerTracking}
       offerVariant={offerVariant}
       revealedThrough={flow.revealedThrough}
@@ -43,7 +78,7 @@ export default function GuidedStoryOfferVariant({
         conditionerModuleId: preview.analytics.conditionerModuleId,
         needLane: preview.analytics.needLane,
         shampooModuleId: preview.analytics.shampooModuleId,
-        suggestedCategory: preview.analytics.suggestedCategory,
+        suggestedCategory: lockTargetedRecommendation ? null : preview.analytics.suggestedCategory,
       }}
     >
       <div className="min-h-screen bg-background text-foreground">
@@ -60,6 +95,7 @@ export default function GuidedStoryOfferVariant({
 
         <main className="mx-auto w-full max-w-[560px] px-5 pt-14">
           <GuidedStoryAnalysis
+            hairPotential={hairPotential}
             name={name}
             onContinue={() => flow.reveal(2)}
             preview={preview}
@@ -67,15 +103,28 @@ export default function GuidedStoryOfferVariant({
           />
 
           {flow.isRevealed(2) ? (
-            <GuidedStoryRoutine
-              onContinue={() => flow.reveal(3)}
-              onStart={() => flow.reveal(4)}
-              preview={preview}
-            />
+            <>
+              {experimentMode === "founder-letter" ? <FounderLetter firstName={firstName} /> : null}
+              <GuidedStoryRoutine
+                anchorId={experimentMode === "founder-letter" ? "guided-story-routine" : undefined}
+                firstName={usesExperimentBaseline ? firstName : undefined}
+                headingId={
+                  experimentMode === "founder-letter" ? "guided-story-routine-heading" : undefined
+                }
+                lockTargetedRecommendation={lockTargetedRecommendation}
+                onContinue={() => flow.reveal(3)}
+                onStart={() => flow.reveal(4)}
+                preview={preview}
+              />
+            </>
           ) : null}
 
           {flow.isRevealed(3) ? (
-            <GuidedStorySupport onContinue={() => flow.reveal(4)} preview={preview} />
+            <GuidedStorySupport
+              firstName={usesExperimentBaseline ? firstName : undefined}
+              onContinue={() => flow.reveal(4)}
+              preview={preview}
+            />
           ) : null}
 
           {flow.isRevealed(4) ? (
@@ -120,4 +169,8 @@ export default function GuidedStoryOfferVariant({
       </div>
     </OfferTrackingProvider>
   )
+}
+
+export default function GuidedStoryOfferVariant(props: FunnelOfferVariantProps) {
+  return <GuidedStoryOfferShell {...props} />
 }

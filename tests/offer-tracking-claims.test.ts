@@ -33,6 +33,13 @@ test("guided-story assigns a one-based index to every FAQ open", () => {
   })
 })
 
+test("guided-story experiment arms preserve repeat FAQ-open claims", () => {
+  assert.deepEqual(resolveOfferFaqOpenClaim("guided-story-locked", true, 3), {
+    nextOpenIndex: 4,
+    openIndex: 4,
+  })
+})
+
 test("other variants remain once-per-ID without adding an open index", () => {
   assert.deepEqual(resolveOfferFaqOpenClaim("default", false, 0), {
     nextOpenIndex: 0,

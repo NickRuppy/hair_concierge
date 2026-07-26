@@ -5,19 +5,30 @@ import { useState } from "react"
 import { HairPortrait } from "@/components/quiz/hair-portrait"
 import { useOfferTrackingActions } from "@/components/quiz/offer-tracking-provider"
 import { Button } from "@/components/ui/button"
+import { formatDisplayFirstName } from "@/lib/quiz/display-name"
 import type { QuizGuidedStoryPreview } from "@/lib/quiz/guided-story-preview"
 import type { GuidedStoryPriority } from "@/lib/quiz/guided-story-priorities"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
 type PriorityIndex = 0 | 1 | 2
 type PriorityTuple = [GuidedStoryPriority, GuidedStoryPriority, GuidedStoryPriority]
+type HairPotentialDimension = {
+  label: string
+  value: number
+}
+export type GuidedStoryAnalysisHairPotential = {
+  overall: number
+  dimensions: readonly [HairPotentialDimension, HairPotentialDimension, HairPotentialDimension]
+}
 
 export function GuidedStoryAnalysis({
+  hairPotential,
   name,
   onContinue,
   preview,
   quizAnswers,
 }: {
+  hairPotential?: GuidedStoryAnalysisHairPotential | null
   name: string
   onContinue: () => void
   preview: QuizGuidedStoryPreview
@@ -27,7 +38,7 @@ export function GuidedStoryAnalysis({
   const { trackDetailOpened } = useOfferTrackingActions()
   const priorities = preview.priorities as PriorityTuple
   const selected = priorities[selectedIndex]
-  const firstName = name.trim().split(/\s+/)[0]?.slice(0, 60) ?? ""
+  const firstName = formatDisplayFirstName(name)
 
   return (
     <section className="pb-10 pt-8" data-offer-section="personalized_analysis">
@@ -46,7 +57,21 @@ export function GuidedStoryAnalysis({
       </p>
 
       <div className="mt-6 rounded-[22px] border border-border bg-white px-3 py-5 shadow-[0_18px_48px_-38px_rgba(var(--brand-plum-rgb),0.5)] sm:px-5">
+        {hairPotential ? (
+          <div className="mb-3 text-center">
+            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
+              Dein Haarpotenzial
+            </p>
+            <h2 className="mt-1 font-header text-[28px] font-medium leading-[1.12] text-[var(--brand-plum-darkest)]">
+              Was dein Haar erreichen kann
+            </h2>
+            <p className="mt-1 text-[14px] font-bold text-[var(--brand-plum)]">
+              {hairPotential.overall}% erreicht
+            </p>
+          </div>
+        ) : null}
         <HairPortrait
+          markerScores={hairPotential?.dimensions}
           priorities={priorities}
           rawAnswers={quizAnswers}
           selectedIndex={selectedIndex}

@@ -11,6 +11,13 @@ test("guided-story keeps stable contiguous indices across gated reveals", () => 
   assert.equal(resolveOfferSectionIndex("guided-story", "product_story_chat_answer"), 8)
 })
 
+test("every guided-story experiment arm shares the guided behavior and founder letter has its slot", () => {
+  assert.equal(resolveOfferSectionIndex("guided-story-locked", "pricing"), 6)
+  assert.equal(resolveOfferSectionIndex("guided-story-potential", "faq"), 7)
+  assert.equal(resolveOfferSectionIndex("guided-story-founder-letter", "founder_letter"), 1)
+  assert.equal(resolveOfferSectionIndex("guided-story-founder-letter", "mini_routine"), 2)
+})
+
 test("incumbent variants preserve their existing DOM-order section indices", () => {
   assert.equal(resolveOfferSectionIndex("app-value-stack", "product_story_routine"), 5)
   assert.equal(resolveOfferSectionIndex("app-value-stack", "product_story_chat"), 6)

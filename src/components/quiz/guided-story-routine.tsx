@@ -17,11 +17,15 @@ interface GuidedStoryRoutineProps {
   preview: QuizGuidedStoryPreview
   onContinue: () => void
   onStart: () => void
+  anchorId?: string
+  headingId?: string
+  lockTargetedRecommendation?: boolean
+  firstName?: string
 }
 
 type ActivePopover =
   | { type: "product"; key: string }
-  | { type: "locked"; key: "further-care" | "tools" }
+  | { type: "locked"; key: "targeted-recommendation" | "further-care" | "tools" }
   | null
 
 function cadenceLabel(product: OfferPreviewProductCard) {
@@ -113,7 +117,9 @@ function ProductCard({
 function LockedTeaser({
   active,
   align,
+  className,
   label,
+  supportingLine,
   onClose,
   onOpen,
   onStart,
@@ -123,7 +129,9 @@ function LockedTeaser({
 }: {
   active: boolean
   align: "left" | "right"
+  className?: string
   label: string
+  supportingLine?: string
   onClose: () => void
   onOpen: () => void
   onStart: () => void
@@ -141,7 +149,10 @@ function LockedTeaser({
         aria-controls={active ? popoverId : undefined}
         aria-expanded={active}
         aria-haspopup="dialog"
-        className="relative flex min-h-[112px] w-full min-w-0 flex-col justify-between overflow-hidden rounded-[16px] border border-[var(--brand-plum-light)] bg-white p-3.5 text-left transition-colors hover:border-[var(--brand-plum)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+        className={cn(
+          "relative flex min-h-[112px] w-full min-w-0 flex-col justify-between overflow-hidden rounded-[16px] border border-[var(--brand-plum-light)] bg-white p-3.5 text-left transition-colors hover:border-[var(--brand-plum)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2",
+          className,
+        )}
         onClick={onOpen}
       >
         <span
@@ -163,6 +174,11 @@ function LockedTeaser({
         </span>
         <span className="relative mt-3 break-words text-[12px] font-semibold leading-snug text-[var(--brand-plum-darkest)] [overflow-wrap:anywhere]">
           {label}
+          {supportingLine ? (
+            <span className="mt-1 block text-[11.5px] font-medium leading-snug text-muted-foreground">
+              {supportingLine}
+            </span>
+          ) : null}
         </span>
       </button>
 
@@ -202,7 +218,15 @@ function LockedTeaser({
   )
 }
 
-export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStoryRoutineProps) {
+export function GuidedStoryRoutine({
+  preview,
+  onContinue,
+  onStart,
+  anchorId = "unlock-plan",
+  headingId = "guided-story-chapter-2-heading",
+  lockTargetedRecommendation = false,
+  firstName,
+}: GuidedStoryRoutineProps) {
   const copy = resolveGuidedStoryRoutineCopy(preview)
   const [activePopover, setActivePopover] = useState<ActivePopover>(null)
   const { trackDetailOpened } = useOfferTrackingActions()
@@ -234,12 +258,27 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
     })
   }
 
-  function openLocked(teaserKey: "further-care" | "tools") {
+  function openLocked(teaserKey: "targeted-recommendation" | "further-care" | "tools") {
     lastTriggerKey.current = `locked:${teaserKey}`
     setActivePopover({ type: "locked", key: teaserKey })
+    const hasTargetedLock = lockTargetedRecommendation && Boolean(targetedProduct)
     trackDetailOpened({
-      detailId: teaserKey === "further-care" ? "further_care" : "tools",
-      detailIndex: teaserKey === "further-care" ? 1 : 2,
+      detailId:
+        teaserKey === "targeted-recommendation"
+          ? "personal_recommendation"
+          : teaserKey === "further-care"
+            ? "further_care"
+            : "tools",
+      detailIndex:
+        teaserKey === "targeted-recommendation"
+          ? 1
+          : teaserKey === "further-care"
+            ? hasTargetedLock
+              ? 2
+              : 1
+            : hasTargetedLock
+              ? 3
+              : 2,
       detailType: "locked_routine_card",
       sourceSection: "locked_routine",
     })
@@ -276,19 +315,26 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
   }, [activePopover])
 
   return (
-    <section
-      ref={containerRef}
-      id="unlock-plan"
-      className="scroll-mt-5 border-t border-border py-9"
-    >
+    <section ref={containerRef} id={anchorId} className="scroll-mt-5 border-t border-border py-9">
       <div data-offer-section="mini_routine">
         <h2
-          id="guided-story-chapter-2-heading"
+          id={headingId}
           tabIndex={-1}
           className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)] outline-none"
         >
-          {copy.continuation}
+          {firstName !== undefined
+            ? firstName
+              ? `${firstName}s Routine`
+              : "Deine Routine"
+            : copy.continuation}
         </h2>
+        {firstName !== undefined ? (
+          <p className="mt-3 text-[14px] leading-[1.65] text-muted-foreground">
+            {firstName
+              ? "So setzt sie bei deinen drei wichtigsten Themen an."
+              : "So setzt deine Routine bei deinen drei wichtigsten Themen an."}
+          </p>
+        ) : null}
         <h3 className="mt-5 text-[15px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
           {copy.basisTitle}
         </h3>
@@ -318,21 +364,45 @@ export function GuidedStoryRoutine({ preview, onContinue, onStart }: GuidedStory
       {targetedProduct ? (
         <div className="mt-6">
           <h3 className="text-[15px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
-            {copy.targetedTitle}
+            {lockTargetedRecommendation ? "Deine gezielte Ergänzung" : copy.targetedTitle}
           </h3>
           <div className="mt-3">
-            <ProductCard
-              active={
-                activePopover?.type === "product" && activePopover.key === targetedProduct.key
-              }
-              copy={copyByProduct.get(targetedProduct.key)!}
-              product={targetedProduct}
-              onClose={closePopover}
-              onOpen={() => openProduct(targetedProduct)}
-              setTriggerRef={(node) => {
-                triggerRefs.current[`product:${targetedProduct.key}`] = node
-              }}
-            />
+            {lockTargetedRecommendation ? (
+              <LockedTeaser
+                active={
+                  activePopover?.type === "locked" &&
+                  activePopover.key === "targeted-recommendation"
+                }
+                align="left"
+                className="min-h-[132px]"
+                label="Deine persönliche Empfehlung"
+                supportingLine="Produkt & Anwendung mit Chaarlie ansehen"
+                popover={copy.lockedPopover}
+                ctaLabel={copy.lockedCtaLabel}
+                onClose={closePopover}
+                onOpen={() => openLocked("targeted-recommendation")}
+                onStart={() => {
+                  closePopover({ restoreFocus: false })
+                  onStart()
+                }}
+                setTriggerRef={(node) => {
+                  triggerRefs.current["locked:targeted-recommendation"] = node
+                }}
+              />
+            ) : (
+              <ProductCard
+                active={
+                  activePopover?.type === "product" && activePopover.key === targetedProduct.key
+                }
+                copy={copyByProduct.get(targetedProduct.key)!}
+                product={targetedProduct}
+                onClose={closePopover}
+                onOpen={() => openProduct(targetedProduct)}
+                setTriggerRef={(node) => {
+                  triggerRefs.current[`product:${targetedProduct.key}`] = node
+                }}
+              />
+            )}
           </div>
         </div>
       ) : null}
