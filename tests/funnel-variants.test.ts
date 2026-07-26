@@ -42,6 +42,9 @@ test("guided story is registered while the historical offers remain available fo
   assert.ok("app-value-stack" in OFFER_VARIANTS)
   assert.ok("default" in OFFER_VARIANTS)
   assert.ok("guided-story" in OFFER_VARIANTS)
+  assert.ok("guided-story-founder-letter" in OFFER_VARIANTS)
+  assert.ok("guided-story-locked" in OFFER_VARIANTS)
+  assert.ok("guided-story-potential" in OFFER_VARIANTS)
   assert.equal(
     Object.keys(OFFER_VARIANTS).filter((variant) => variant === "app-value-stack").length,
     1,
@@ -49,6 +52,10 @@ test("guided story is registered while the historical offers remain available fo
   assert.equal(
     Object.keys(OFFER_VARIANTS).filter((variant) => variant === "guided-story").length,
     1,
+  )
+  assert.equal(
+    Object.keys(OFFER_VARIANTS).filter((variant) => variant.startsWith("guided-story-")).length,
+    3,
   )
 })
 
@@ -65,10 +72,15 @@ test("result client injects one shared pricing slot into the selected offer", ()
   assert.doesNotMatch(resultClientSource, /QuizResultOfferPage\b/)
 })
 
-test("result route selects the historical offer variant stored on the funnel session", () => {
-  assert.match(funnelServerSource, /package_key, offer_variant, first_seen_at/)
+test("result route resolves the persisted experiment winner before recording an offer view", () => {
+  assert.match(funnelServerSource, /package_key, offer_variant, offer_viewed_at, first_seen_at/)
   assert.match(funnelServerSource, /offerVariant: data\.offer_variant/)
-  assert.match(resultPageSource, /resolveOfferVariantForSession\(funnelContext\)/)
+  assert.match(resultPageSource, /resolveGuidedStoryOfferExperiment/)
+  assert.match(resultPageSource, /await recordLeadOfferView\(leadId, funnelContext\)/)
+  assert.ok(
+    resultPageSource.indexOf("resolveGuidedStoryOfferExperiment") <
+      resultPageSource.indexOf("await recordLeadOfferView(leadId, funnelContext)"),
+  )
 })
 
 test("result route keeps fresh quiz completions distinct from saved-result visits", () => {

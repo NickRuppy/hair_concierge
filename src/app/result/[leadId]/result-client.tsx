@@ -11,6 +11,7 @@ import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
+import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
 
 export function ResultPageClient({
   leadId,
@@ -40,7 +41,7 @@ export function ResultPageClient({
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
 
   useEffect(() => {
-    if (!focusTarget || offerVariant === "guided-story") return
+    if (!focusTarget || isGuidedStoryFamilyVariant(offerVariant)) return
 
     window.requestAnimationFrame(() => {
       document.getElementById(focusTarget)?.scrollIntoView({ behavior: "smooth", block: "start" })

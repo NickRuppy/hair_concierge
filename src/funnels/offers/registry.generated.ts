@@ -4,9 +4,15 @@
 import OfferVariant0 from "./app-value-stack"
 import OfferVariant1 from "./default"
 import OfferVariant2 from "./guided-story"
+import OfferVariant3 from "./guided-story-founder-letter"
+import OfferVariant4 from "./guided-story-locked"
+import OfferVariant5 from "./guided-story-potential"
 
 export const OFFER_VARIANTS = {
   "app-value-stack": OfferVariant0,
   default: OfferVariant1,
   "guided-story": OfferVariant2,
+  "guided-story-founder-letter": OfferVariant3,
+  "guided-story-locked": OfferVariant4,
+  "guided-story-potential": OfferVariant5,
 } as const

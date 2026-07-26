@@ -24,9 +24,11 @@ const TESTIMONIALS = [
 ] as const
 
 export function GuidedStorySupport({
+  firstName,
   onContinue,
   preview,
 }: {
+  firstName?: string
   onContinue: () => void
   preview: QuizGuidedStoryPreview
 }) {
@@ -43,7 +45,11 @@ export function GuidedStorySupport({
         tabIndex={-1}
         className="font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)] outline-none"
       >
-        Deine Routine steht. Doch im Alltag dranzubleiben, ist nicht immer leicht.
+        {firstName !== undefined
+          ? firstName
+            ? `${firstName}, deine Routine steht. Jetzt hilft dir Chaarlie, sie im Alltag umzusetzen.`
+            : "Deine Routine steht. Jetzt hilft dir Chaarlie, sie im Alltag umzusetzen."
+          : "Deine Routine steht. Doch im Alltag dranzubleiben, ist nicht immer leicht."}
       </h2>
       <p className="mt-4 text-[15px] leading-[1.65] text-muted-foreground">
         Chaarlie hilft dir dabei: mit Antworten auf deine Fragen und einem Tagebuch, mit dem du

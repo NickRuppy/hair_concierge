@@ -53,3 +53,56 @@ test("uses the approved generic fallback without inventing a name or trait", () 
   assert.doesNotMatch(html, /mittellanges|welliges Haar|hoher Dichte/)
   assert.equal((html.match(/data-analysis-block=/g) ?? []).length, 2)
 })
+
+test("renders Haarpotenzial only when a scorer result is available", () => {
+  const quizAnswers: QuizAnswers = {
+    structure: "wavy",
+    thickness: "normal",
+    density: "medium",
+    hair_length: "long",
+    fingertest: "rau",
+    pulltest: "snaps",
+    scalp_type: "trocken",
+    has_scalp_issue: false,
+    concerns: ["breakage", "dryness", "frizz"],
+    treatment: ["blondiert"],
+    goals: ["anti_breakage", "moisture", "less_frizz"],
+  }
+  const preview = buildQuizGuidedStoryPreview(quizAnswers)
+  const html = renderToStaticMarkup(
+    <GuidedStoryAnalysis
+      hairPotential={{
+        overall: 57,
+        dimensions: [
+          { label: "Stabilität", value: 65 },
+          { label: "Feuchtigkeit", value: 45 },
+          { label: "Oberfläche", value: 60 },
+        ],
+      }}
+      name="Lea"
+      preview={preview}
+      quizAnswers={quizAnswers}
+      onContinue={() => {}}
+    />,
+  )
+
+  assert.match(html, /Dein Haarpotenzial/)
+  assert.match(html, /Was dein Haar erreichen kann/)
+  assert.match(html, /57% erreicht/)
+  assert.match(html, /Stabilität/)
+  assert.match(html, /65%/)
+  assert.match(html, /Feuchtigkeit/)
+  assert.match(html, /45%/)
+  assert.doesNotMatch(html, /Aus deinen Quizantworten/)
+
+  const fallbackHtml = renderToStaticMarkup(
+    <GuidedStoryAnalysis
+      hairPotential={null}
+      name="Lea"
+      preview={preview}
+      quizAnswers={quizAnswers}
+      onContinue={() => {}}
+    />,
+  )
+  assert.doesNotMatch(fallbackHtml, /Dein Haarpotenzial|% erreicht/)
+})

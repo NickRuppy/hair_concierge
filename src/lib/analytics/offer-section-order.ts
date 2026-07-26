@@ -1,4 +1,5 @@
 import type { OfferSectionId } from "./events"
+import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
 
 const DEFAULT_SECTION_ORDER = [
   "personalized_analysis",
@@ -42,13 +43,27 @@ const GUIDED_STORY_SECTION_ORDER = [
   "product_story_chat_answer",
 ] as const satisfies readonly OfferSectionId[]
 
+const GUIDED_STORY_FOUNDER_LETTER_SECTION_ORDER = [
+  "personalized_analysis",
+  "founder_letter",
+  "mini_routine",
+  "locked_routine",
+  "product_story_chat",
+  "product_story_routine",
+  "testimonials",
+  "pricing",
+  "faq",
+  "product_story_chat_answer",
+] as const satisfies readonly OfferSectionId[]
+
 export function resolveOfferSectionIndex(offerVariant: string, sectionId: OfferSectionId): number {
-  const order: readonly OfferSectionId[] =
-    offerVariant === "guided-story"
-      ? GUIDED_STORY_SECTION_ORDER
-      : offerVariant === "app-value-stack"
-        ? APP_VALUE_STACK_SECTION_ORDER
-        : DEFAULT_SECTION_ORDER
+  const order: readonly OfferSectionId[] = isGuidedStoryFamilyVariant(offerVariant)
+    ? offerVariant === "guided-story-founder-letter"
+      ? GUIDED_STORY_FOUNDER_LETTER_SECTION_ORDER
+      : GUIDED_STORY_SECTION_ORDER
+    : offerVariant === "app-value-stack"
+      ? APP_VALUE_STACK_SECTION_ORDER
+      : DEFAULT_SECTION_ORDER
   const index = order.indexOf(sectionId)
   return index >= 0 ? index : order.length
 }

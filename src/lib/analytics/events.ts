@@ -32,6 +32,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
 export type OfferSectionId =
   | "hero"
   | "personalized_analysis"
+  | "founder_letter"
   | "mini_routine"
   | "locked_routine"
   | "unlock_explanation"

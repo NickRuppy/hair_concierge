@@ -16,7 +16,7 @@ import {
 import { derivePortraitConfig, type PortraitConfig } from "@/lib/quiz/portrait-config"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { GuidedStoryPriority } from "@/lib/quiz/guided-story-priorities"
-import type { GuidedStoryPriorityFamily } from "@/lib/quiz/guided-story-copy"
+import { GUIDED_STORY_PRIORITY_LABELS } from "@/lib/quiz/guided-story-priority-identity"
 
 type PortraitPriorityTuple = readonly [
   GuidedStoryPriority,
@@ -35,6 +35,11 @@ export type HairPortraitConfigSource =
     }
 
 export type HairPortraitProps = HairPortraitConfigSource & {
+  markerScores?: readonly [
+    { label: string; value: number },
+    { label: string; value: number },
+    { label: string; value: number },
+  ]
   priorities: PortraitPriorityTuple
   selectedIndex: 0 | 1 | 2
   onSelect: (index: 0 | 1 | 2) => void
@@ -70,17 +75,6 @@ const TREATMENT_COPY = {
 const PORTRAIT_CENTER: PortraitMarkerPoint = { x: 50, y: 50 }
 const LEADER_LENGTH = 7
 const LEGACY_MARKER_LABELS = ["Basis", "Pflege", "Routine"] as const
-const FAMILY_MARKER_LABELS: Record<GuidedStoryPriorityFamily, string> = {
-  scalp_flakes: "Kopfhaut",
-  scalp_comfort: "Kopfhaut",
-  strength_damage: "Stabilität",
-  moisture_dryness: "Feuchtigkeit",
-  surface_manageability: "Oberfläche",
-  ends_protection: "Spitzen",
-  definition: "Definition",
-  volume_weight: "Fülle",
-  color_protection: "Farbschutz",
-}
 
 export type PortraitImageState = "selected" | "generic" | "hidden"
 export type PortraitImageFailure = {
@@ -217,7 +211,7 @@ function getMarkerLabel(priority: GuidedStoryPriority, index: 0 | 1 | 2): string
     return LEGACY_MARKER_LABELS[index]
   }
 
-  return FAMILY_MARKER_LABELS[priority.family]
+  return GUIDED_STORY_PRIORITY_LABELS[priority.family]
 }
 
 type PortraitArtworkCompositionProps = {
@@ -401,14 +395,22 @@ export function HairPortrait(props: HairPortraitProps) {
               const priority = props.priorities[index]
               const selected = index === selectedIndex
               const markerIndex = index as 0 | 1 | 2
-              const markerLabel = getMarkerLabel(priority, markerIndex)
+              const score = props.markerScores?.[markerIndex]
+              const markerLabel = score?.label ?? getMarkerLabel(priority, markerIndex)
               const marker = (renderedAsset ?? GENERIC_PORTRAIT_ASSET).markers[key]
               return (
                 <button
-                  aria-label={`Marker ${index + 1}: ${priority.title}`}
+                  aria-label={
+                    score
+                      ? `Marker ${index + 1}: ${markerLabel}, ${score.value} Prozent. ${priority.title}`
+                      : `Marker ${index + 1}: ${priority.title}`
+                  }
                   aria-pressed={selected}
                   className={cn(
-                    "absolute grid min-h-[44px] min-w-[44px] max-w-[6.75rem] -translate-x-1/2 -translate-y-1/2 place-items-center whitespace-nowrap rounded-full border border-[#1f2933]/20 bg-white/90 px-2 text-[11px] font-semibold leading-none text-[#1f2933] shadow-sm outline-none",
+                    "absolute min-h-[44px] min-w-[44px] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border border-[#1f2933]/20 bg-white/90 text-[11px] font-semibold leading-none text-[#1f2933] shadow-sm outline-none",
+                    score
+                      ? "flex max-w-[8.75rem] items-center justify-center gap-1 px-[5px]"
+                      : "grid max-w-[6.75rem] place-items-center px-2",
                     "focus-visible:ring-2 focus-visible:ring-[#1f2933] focus-visible:ring-offset-2",
                     selected && "ring-2 ring-[#1f2933] ring-offset-2",
                   )}
@@ -422,7 +424,18 @@ export function HairPortrait(props: HairPortraitProps) {
                   style={getButtonPositionStyle(marker)}
                   type="button"
                 >
-                  {markerLabel}
+                  {score ? (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="size-1.5 shrink-0 rounded-full bg-[var(--brand-plum)]"
+                      />
+                      <span>{markerLabel}</span>
+                      <span>{score.value}%</span>
+                    </>
+                  ) : (
+                    markerLabel
+                  )}
                 </button>
               )
             })}

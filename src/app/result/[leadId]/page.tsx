@@ -13,9 +13,12 @@ import {
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { recordFunnelEvent, resolveFunnelContextForLead } from "@/lib/funnel/server"
+import {
+  recordFunnelEvent,
+  resolveFunnelContextForLead,
+  resolveGuidedStoryOfferExperiment,
+} from "@/lib/funnel/server"
 import { isFunnelAttributionEnabled } from "@/lib/funnel/flags"
-import { resolveOfferVariantForSession } from "@/lib/funnel/packages"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
 
@@ -126,14 +129,27 @@ export default async function ResultPage({ params, searchParams }: Props) {
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
-  const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
-  const offerVariant = resolveOfferVariantForSession(funnelContext)
-  const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
   const quizAnswers = lead ? parseQuizAnswers(lead.quiz_answers) : null
 
   if (!lead || !quizAnswers) {
     notFound()
   }
+
+  const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
+  const offerVariant = hasAccess
+    ? "default"
+    : await resolveGuidedStoryOfferExperiment({
+        leadId,
+        session: funnelContext
+          ? {
+              sessionId: funnelContext.sessionId,
+              packageKey: funnelContext.packageKey,
+              offerVariant: funnelContext.offerVariant ?? null,
+              offerViewedAt: funnelContext.offerViewedAt ?? null,
+            }
+          : null,
+      })
+  const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
 
   return (
     <ResultPageClient

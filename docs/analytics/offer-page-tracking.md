@@ -66,6 +66,45 @@ Rollback is split by behavior:
 - revert the browser semantic change to restore `CompleteRegistration`/`QuizCompleted` or remove `quiz_result_offer_view`—the server flags do not control Pixel events;
 - do not change an active campaign optimization event as part of either cutover or rollback.
 
+## Guided-story three-way offer experiment
+
+The `guided_story_offer_v2` experiment compares three sticky server-assigned offer variants:
+
+- `guided-story-locked`
+- `guided-story-founder-letter`
+- `guided-story-potential`
+
+`GUIDED_STORY_OFFER_EXPERIMENT_ENABLED=true` allows new, unviewed `guided-story` funnel sessions to
+enter the experiment. The flag is default-off. With the flag disabled, the result renders the
+unchanged `guided-story` rollback without rewriting stored assignments.
+
+Assignment is deterministic from the experiment ID, revision, and funnel session ID. A lead ID is
+used only when no funnel session exists. The assignment is independent of campaign, ad, package,
+device, and quiz properties. For eligible sessions, the server conditionally persists the arm in
+`funnel_sessions.offer_variant` before recording `offer_viewed`; a concurrent winner is read back
+and rendered. This session column is the only first-party arm authority.
+
+If assignment persistence fails, the server captures the original exception through the redacted
+offer-experiment Sentry boundary, renders and tracks `guided-story`, and leaves the journey outside
+the three experiment arms. The Sentry payload contains fixed experiment, stage, arm, fallback, and
+package tags only—never names, email addresses, quiz answers, or raw lead/session IDs.
+
+The experiment arms use offer revision `guided_story_experiment_v1`. PostHog receives the actual
+`offer_variant` through the existing common offer context. The Potential arm does not send its
+three percentages in the first release. Potential-arm journeys with incomplete or unsupported
+legacy quiz data remain assigned to that arm but render without percentages; count those journeys
+as treatment-delivery context when interpreting the arm rather than silently reclassifying them.
+
+Meta behavior is intentionally identical across arms. Do not add an arm parameter, arm-specific
+event name, or arm-specific `content_name`. Keep the standard path
+`ViewContent(content_name=quiz_result_offer_view)` → `InitiateCheckout` → authoritative `Purchase`
+and `Subscribe`, with the active campaign optimization event unchanged.
+
+The primary experiment KPI is unique funnel sessions with a later `purchase_completed` divided by
+unique funnel sessions with `offer_viewed`, grouped by the durable session `offer_variant`.
+Lead-fallback journeys without a funnel session are excluded from that denominator and counted
+separately. Report raw counts, rates, and uncertainty; do not automatically declare a winner.
+
 ## Stable dimensions
 
 Offer diagnostics include one `offerViewId` per mounted view, one `checkoutAttemptId` per checkout UI open, a unique event ID per interaction, the offer variant and semantic revision, entry context, routine-return state, deterministic need lane and suggested category, selected shampoo and conditioner module IDs, and the existing funnel session/package attribution when available.
@@ -123,7 +162,13 @@ The delayed chat answer is an `offer_section_viewed` with `section_id=product_st
 
 Guided-story preserves historical known `section_index` values and appends `product_story_chat_answer` at index 8. Therefore index is insertion/history order, not visual order; dashboards must use this explicit visual ID order: `personalized_analysis`, `mini_routine`, `locked_routine`, `product_story_chat`, `product_story_chat_answer`, `product_story_routine`, `testimonials`, `pricing`, `faq`.
 
-For guided-story only, `offer_faq_opened` emits on every deliberate open with existing `faq_id`, zero-based `faq_index`, and one-based per-view `open_index`; closes and incidental UI mechanics do not emit. Other variants remain once per FAQ ID per offer view.
+For the finite guided-story family (`guided-story` plus the three experiment arms),
+`offer_faq_opened` emits on every deliberate open with existing `faq_id`, zero-based `faq_index`,
+and one-based per-view `open_index`; closes and incidental UI mechanics do not emit. Other variants
+remain once per FAQ ID per offer view.
+
+The Founder Letter arm inserts `founder_letter` between `personalized_analysis` and `mini_routine`.
+The other two experiment arms retain the existing guided-story section order.
 
 ## KPI definitions
 
