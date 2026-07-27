@@ -283,6 +283,12 @@ test.describe("@ci offer payment overlay", () => {
     )
     await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
+
+    await expect(applePayWrapper).toHaveCSS("visibility", "hidden")
+    const pendingApplePayBox = await applePayWrapper.boundingBox()
+    expect(pendingApplePayBox).not.toBeNull()
+    expect(pendingApplePayBox!.height).toBeGreaterThanOrEqual(52)
 
     await expect(checkout.getByTestId("apple-pay-row")).toBeVisible()
     const paymentRows = await checkout

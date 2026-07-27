@@ -50,6 +50,15 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   assert.equal(hasApplePayMethod({ availablePaymentMethods: undefined }), false)
   assert.equal(hasApplePayMethod({ availablePaymentMethods: applePayAvailable }), true)
   assert.equal(getApplePayAvailability({ availablePaymentMethods: undefined }), "unavailable")
+  assert.equal(
+    getApplePayAvailability({
+      availablePaymentMethods: {
+        ...applePayAvailable,
+        applePay: false,
+      },
+    }),
+    "unavailable",
+  )
   assert.equal(getApplePayAvailability({ availablePaymentMethods: applePayAvailable }), "available")
   assert.equal(getChangedApplePayAvailability({ paymentMethods: undefined }), "unavailable")
   assert.equal(

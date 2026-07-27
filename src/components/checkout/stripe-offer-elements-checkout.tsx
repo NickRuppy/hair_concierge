@@ -88,8 +88,7 @@ export function hasApplePayMethod(
 export function getApplePayAvailability(
   event: Pick<StripeExpressCheckoutElementReadyEvent, "availablePaymentMethods"> | null | undefined,
 ): ApplePayAvailability {
-  if (!event?.availablePaymentMethods) return "unavailable"
-  return event.availablePaymentMethods.applePay ? "available" : "unavailable"
+  return event?.availablePaymentMethods?.applePay ? "available" : "unavailable"
 }
 
 export function getChangedApplePayAvailability(
@@ -320,18 +319,25 @@ export function StripeOfferElementsCheckoutContent({
   }
 
   const showPaymentDivider = state.applePayReady || Boolean(secondaryPaymentMethod)
+  const applePayPending = applePayAvailability === "pending"
+  const applePayUnavailable = applePayAvailability === "unavailable"
 
   return (
     <div className="relative grid gap-3">
-      {/* Stripe can publish wallet eligibility after onReady, so this element must stay mounted. */}
+      {/* Stripe's documented hidden mount preserves measurable geometry while wallets are
+          evaluated. Unavailable Express Checkout stays out of flow without collapsing to 0px. */}
       <div
         aria-hidden={!state.applePayReady}
-        className={`${state.applePayReady ? "" : "absolute inset-x-0 h-0 overflow-hidden"} ${
-          lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""
-        }`}
+        className={`${
+          applePayPending
+            ? "invisible min-h-[52px]"
+            : applePayUnavailable
+              ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
+              : ""
+        } ${lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""}`}
+        data-offer-apple-pay-availability={applePayAvailability}
         data-offer-payment-element="apple_pay"
         data-offer-payment-step={state.applePayReady ? "apple_pay" : undefined}
-        inert={!state.applePayReady}
       >
         {renderExpressCheckoutElement ? (
           renderExpressCheckoutElement({
