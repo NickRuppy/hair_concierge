@@ -9,6 +9,8 @@ import {
   getApplePayAvailability,
   getStripeOfferElementsErrorMessage,
   hasApplePayMethod,
+  isWalletDebugEnabled,
+  normalizeWalletDebugMethods,
   stripeOfferExpressCheckoutOptions,
 } from "../src/components/checkout/stripe-offer-elements-checkout"
 
@@ -121,4 +123,35 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   })
   assert.equal(stripeOfferExpressCheckoutOptions.buttonType?.applePay, "subscribe")
   assert.match(getStripeOfferElementsErrorMessage(), /Zahlung konnte nicht bestätigt werden/)
+})
+
+test("wallet diagnostics stay query-gated and retain only availability booleans", () => {
+  assert.equal(isWalletDebugEnabled("?wallet_debug=1"), true)
+  assert.equal(isWalletDebugEnabled("?lead=abc&wallet_debug=1"), true)
+  assert.equal(isWalletDebugEnabled("?wallet_debug=true"), false)
+  assert.equal(isWalletDebugEnabled(""), false)
+
+  assert.deepEqual(
+    normalizeWalletDebugMethods({
+      applePay: true,
+      googlePay: false,
+    }),
+    {
+      applePay: true,
+      googlePay: false,
+    },
+  )
+  assert.deepEqual(
+    normalizeWalletDebugMethods({
+      applePay: { available: true, ignored: "do-not-copy" },
+      link: { available: false },
+      paypal: null,
+    }),
+    {
+      applePay: true,
+      link: false,
+      paypal: false,
+    },
+  )
+  assert.equal(normalizeWalletDebugMethods(undefined), null)
 })
