@@ -170,6 +170,125 @@ test("offer engagement routes to PostHog but not browser Customer.io or Meta", (
   })
 })
 
+test("overlay checkout opening routes to Meta while its provider starts stay diagnostic-only", () => {
+  const offerPayload = {
+    availableProviders: ["stripe", "paypal"],
+    checkoutAttemptId: "50000000-0000-4000-8000-000000000092",
+    checkoutPresentation: "overlay" as const,
+    currency: "EUR",
+    entryContext: "quiz_completion" as const,
+    focusRoutine: false,
+    funnelEventId: "30000000-0000-4000-8000-000000000092",
+    funnelPackageKey: "default_organic",
+    interval: "quarter" as const,
+    needLane: "moisture",
+    offerRevision: "product_led_v1",
+    offerVariant: "default",
+    offerViewId: "40000000-0000-4000-8000-000000000092",
+    openIndex: 1,
+    planId: "premium_quarter",
+    value: 34.99,
+  }
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("offer_checkout_opened", offerPayload)
+    assert.deepEqual(
+      calls.map((call) => call.destination),
+      ["posthog", "meta"],
+    )
+  })
+
+  const dom = createMetaDom()
+  withGlobalBrowser(dom.win, dom.doc, () => {
+    initMetaPixel({ win: dom.win, doc: dom.doc })
+    assert.equal(metaDestination.track("offer_checkout_opened", offerPayload), true)
+    assert.equal(
+      metaDestination.track("checkout_started", {
+        ...offerPayload,
+        checkoutStartTrigger: "automatic_mount",
+        provider: "stripe",
+        source: "quiz_result_offer",
+      }),
+      false,
+    )
+    assert.equal(
+      metaDestination.track("checkout_started", {
+        ...offerPayload,
+        checkoutStartTrigger: "explicit_provider_action",
+        provider: "paypal",
+        source: "quiz_result_offer",
+      }),
+      false,
+    )
+  })
+
+  const checkoutEvents = dom.win.fbq?.queue?.filter((call) => call[1] === "InitiateCheckout") ?? []
+  assert.deepEqual(checkoutEvents, [
+    [
+      "track",
+      "InitiateCheckout",
+      {
+        content_ids: ["premium_quarter"],
+        content_name: "quiz_result_offer",
+        currency: "EUR",
+        interval: "quarter",
+        value: 34.99,
+      },
+      { eventID: "50000000-0000-4000-8000-000000000092" },
+    ],
+  ])
+})
+
+test("Meta checkout routing preserves inline and offer-external checkout starts", () => {
+  const dom = createMetaDom()
+  withGlobalBrowser(dom.win, dom.doc, () => {
+    initMetaPixel({ win: dom.win, doc: dom.doc })
+    assert.equal(
+      metaDestination.track("offer_checkout_opened", {
+        availableProviders: ["stripe"],
+        checkoutAttemptId: "50000000-0000-4000-8000-000000000093",
+        checkoutPresentation: "inline",
+        currency: "EUR",
+        entryContext: "quiz_completion",
+        focusRoutine: false,
+        funnelPackageKey: "default_organic",
+        interval: "quarter",
+        needLane: "moisture",
+        offerRevision: "product_led_v1",
+        offerVariant: "default",
+        offerViewId: "40000000-0000-4000-8000-000000000093",
+        openIndex: 1,
+        planId: "premium_quarter",
+        value: 34.99,
+      }),
+      false,
+    )
+    assert.equal(
+      metaDestination.track("checkout_started", {
+        checkoutPresentation: "inline",
+        currency: "EUR",
+        funnelPackageKey: "default_organic",
+        interval: "quarter",
+        planId: "premium_quarter",
+        provider: "stripe",
+        source: "quiz_result_offer",
+        value: 34.99,
+      }),
+      true,
+    )
+    assert.equal(
+      metaDestination.track("checkout_started", {
+        funnelPackageKey: "membership_reactivation",
+        provider: "stripe",
+        source: "pricing_page",
+      }),
+      true,
+    )
+  })
+
+  assert.equal(dom.win.fbq?.queue?.filter((call) => call[1] === "InitiateCheckout").length, 2)
+})
+
 test("purchase completion browser event routes to Meta only", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("purchase_completed", {
@@ -375,7 +494,6 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
   const diagnosticEvents = [
     "checkout_start_failed",
     "offer_chapter_revealed",
-    "offer_checkout_opened",
     "offer_cta_clicked",
     "offer_detail_opened",
     "offer_faq_opened",
@@ -391,6 +509,12 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
       posthog: true,
     })
   }
+
+  assert.deepEqual(eventRoutes.offer_checkout_opened, {
+    customerio: false,
+    meta: true,
+    posthog: true,
+  })
 
   const originalCapture = posthog.capture
   const calls: unknown[][] = []
@@ -784,6 +908,8 @@ test("PostHog checkout start keeps offer context and commerce metadata", () => {
   try {
     postHogDestination.track("checkout_started", {
       checkoutAttemptId: "50000000-0000-4000-8000-000000000095",
+      checkoutPresentation: "overlay",
+      checkoutStartTrigger: "automatic_mount",
       currency: "EUR",
       entryContext: "quiz_completion",
       focusRoutine: false,
@@ -811,6 +937,8 @@ test("PostHog checkout start keeps offer context and commerce metadata", () => {
       {
         $insert_id: "30000000-0000-4000-8000-000000000095",
         checkout_attempt_id: "50000000-0000-4000-8000-000000000095",
+        checkout_presentation: "overlay",
+        checkout_start_trigger: "automatic_mount",
         currency: "EUR",
         entry_context: "quiz_completion",
         focus_routine: false,
@@ -875,6 +1003,53 @@ test("profile reactivation context reaches PostHog and Customer.io", () => {
   assert.equal(
     (customerIoCalls[0]?.[1] as Record<string, unknown>)?.checkout_context,
     "membership_reactivation",
+  )
+})
+
+test("checkout presentation and start trigger reach PostHog and Customer.io", () => {
+  const postHogCalls: unknown[][] = []
+  const customerIoCalls: unknown[][] = []
+  const originalCapture = posthog.capture
+  posthog.capture = ((...args: unknown[]) => {
+    postHogCalls.push(args)
+    return true
+  }) as typeof posthog.capture
+  setCustomerIoBrowserClient({
+    identify: () => undefined,
+    page: () => undefined,
+    reset: () => undefined,
+    track: (...args: unknown[]) => customerIoCalls.push(args),
+  })
+
+  const payload = {
+    checkoutAttemptId: "50000000-0000-4000-8000-000000000097",
+    checkoutPresentation: "overlay" as const,
+    checkoutStartTrigger: "automatic_mount" as const,
+    funnelPackageKey: "default_organic",
+    provider: "stripe" as const,
+    source: "quiz_result_offer" as const,
+  }
+
+  try {
+    postHogDestination.track("checkout_started", payload)
+    customerIoDestination.track("checkout_started", payload)
+  } finally {
+    posthog.capture = originalCapture
+    clearCustomerIoBrowserClient()
+  }
+
+  assert.equal((postHogCalls[0]?.[1] as Record<string, unknown>)?.checkout_presentation, "overlay")
+  assert.equal(
+    (postHogCalls[0]?.[1] as Record<string, unknown>)?.checkout_start_trigger,
+    "automatic_mount",
+  )
+  assert.equal(
+    (customerIoCalls[0]?.[1] as Record<string, unknown>)?.checkout_presentation,
+    "overlay",
+  )
+  assert.equal(
+    (customerIoCalls[0]?.[1] as Record<string, unknown>)?.checkout_start_trigger,
+    "automatic_mount",
   )
 })
 

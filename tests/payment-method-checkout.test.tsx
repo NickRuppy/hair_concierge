@@ -16,7 +16,10 @@ import {
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
 
-function renderCheckout(paypalEnabled: boolean) {
+function renderCheckout(
+  paypalEnabled: boolean,
+  presentation: "default" | "offer-overlay" = "default",
+) {
   const previousPayPalEnabled = process.env.NEXT_PUBLIC_PAYPAL_ENABLED
   const previousPayPalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
   const previousPayPalPlanId = process.env.NEXT_PUBLIC_PAYPAL_PLAN_ID_QUARTERLY
@@ -36,6 +39,7 @@ function renderCheckout(paypalEnabled: boolean) {
         onPayPalCheckoutStarted={() => undefined}
         onRetry={() => undefined}
         planLabel="Jetzt starten — €34,99 im Quartal"
+        presentation={presentation}
         source="quiz_result_offer"
         stripe={Promise.resolve(null)}
       />,
@@ -89,6 +93,22 @@ test("PayPal disabled checkout preserves the immediate Stripe checkout surface",
   assert.doesNotMatch(html, /Karte \/ SEPA/)
   assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
   assert.match(html, /min-h-\[560px\]/)
+})
+
+test("offer overlay presentation renders PayPal first and opens card checkout by default", () => {
+  const html = renderCheckout(true, "offer-overlay")
+  const paypalIndex = html.indexOf("PayPal")
+  const cardIndex = html.indexOf("Karte &amp; weitere")
+
+  assert.ok(paypalIndex > -1)
+  assert.ok(cardIndex > -1)
+  assert.ok(paypalIndex < cardIndex)
+  assert.match(html, /min-h-\[560px\]/)
+  assert.match(html, /Sicher bezahlen/)
+  assert.doesNotMatch(html, /Jetzt starten — €34,99 im Quartal/)
+  assert.doesNotMatch(html, /aria-expanded="false"/)
+  assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
+  assert.doesNotMatch(html, /mt-5 rounded-\[16px\] border border-border bg-white p-4/)
 })
 
 test("PayPal script rejection reports once without coupling the card fallback", () => {

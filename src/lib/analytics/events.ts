@@ -15,6 +15,8 @@ export type OfferEntryContext =
   | "routine_return"
   | "result_email"
 export type CheckoutContext = "membership_reactivation"
+export type CheckoutPresentation = "inline" | "overlay"
+export type CheckoutStartTrigger = "automatic_mount" | "explicit_provider_action"
 
 export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   conditionerModuleId?: string | null
@@ -105,6 +107,8 @@ export type AppEventMap = {
     Partial<OfferAnalyticsContext> & {
       checkoutAttemptId?: string
       checkoutContext?: CheckoutContext
+      checkoutPresentation?: CheckoutPresentation
+      checkoutStartTrigger?: CheckoutStartTrigger
       currency?: string
       interval?: BillingInterval | null
       leadId?: string | null
@@ -126,6 +130,7 @@ export type AppEventMap = {
     OfferCommerceProperties & {
       availableProviders: string[]
       checkoutAttemptId: string
+      checkoutPresentation: CheckoutPresentation
       openIndex: number
     }
   offer_cta_clicked: OfferAnalyticsContext & {

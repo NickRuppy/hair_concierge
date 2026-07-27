@@ -13,7 +13,7 @@ export const eventRoutes = {
   first_chat_message: { customerio: true, meta: false, posthog: true },
   onboarding_completed: { customerio: true, meta: false, posthog: true },
   offer_chapter_revealed: { customerio: false, meta: false, posthog: true },
-  offer_checkout_opened: { customerio: false, meta: false, posthog: true },
+  offer_checkout_opened: { customerio: false, meta: true, posthog: true },
   offer_cta_clicked: { customerio: false, meta: false, posthog: true },
   offer_detail_opened: { customerio: false, meta: false, posthog: true },
   // Customer.io delivery uses the server-side lead lookup in /api/analytics/offer-engaged.

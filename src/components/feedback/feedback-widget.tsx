@@ -4,7 +4,7 @@ import * as React from "react"
 import { Check, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
@@ -212,7 +212,9 @@ export function FeedbackWidget() {
               <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(140_45%_92%)] text-[hsl(140_50%_35%)]">
                 <Check className="h-7 w-7" strokeWidth={2.5} />
               </div>
-              <h2 className="font-display text-xl font-semibold">Danke!</h2>
+              <DialogTitle className="font-display text-xl font-semibold leading-normal">
+                Danke!
+              </DialogTitle>
               <p className="mt-1 text-sm text-muted-foreground">
                 Wir lesen&apos;s. Wenn du willst, schreib uns nochmal — jede Nachricht zählt.
               </p>
@@ -220,7 +222,9 @@ export function FeedbackWidget() {
           ) : (
             <>
               <div>
-                <h2 className="font-display text-xl font-semibold">Etwas stimmt nicht?</h2>
+                <DialogTitle className="font-display text-xl font-semibold leading-normal">
+                  Etwas stimmt nicht?
+                </DialogTitle>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Sag uns kurz Bescheid — wir lesen jede Nachricht.
                 </p>

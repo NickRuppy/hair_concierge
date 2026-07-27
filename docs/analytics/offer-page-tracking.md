@@ -17,13 +17,13 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | CTA intent           | `offer_cta_clicked`             | A tracked offer CTA was clicked                                             | PostHog                                                                                |
 | Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                           | Existing PostHog, Customer.io, and Meta routes                                         |
 | Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                       | PostHog                                                                                |
-| Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                 | PostHog                                                                                |
+| Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                 | PostHog; Meta `InitiateCheckout` for the overlay only                                  |
 | Payment choice       | `offer_payment_method_selected` | PayPal was attempted or the card checkout was explicitly revealed           | PostHog                                                                                |
 | Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout         | PostHog                                                                                |
-| Checkout initialized | `checkout_started`              | Stripe created a session or PayPal created an intent                        | Existing PostHog, Customer.io, Meta, and first-party funnel routes                     |
+| Checkout initialized | `checkout_started`              | Stripe created a session or PayPal created an intent                        | Existing PostHog, Customer.io, Meta for inline/external checkout, and first-party funnel routes |
 | Purchase             | `purchase_completed`            | Authoritative server-side paid conversion                                   | Existing billing analytics/outbox routes                                               |
 
-`checkout_started` is deliberately later than `offer_checkout_opened`: opening the UI expresses intent, while checkout start requires a successful provider session or intent.
+`checkout_started` is deliberately later than `offer_checkout_opened`: opening the UI expresses intent, while checkout start requires a successful provider session or intent. Both events carry `checkoutPresentation` (`inline` or `overlay`). `checkout_started` also carries `checkoutStartTrigger`: `automatic_mount` for the default-mounted Stripe session and `explicit_provider_action` for an explicit provider action such as PayPal.
 
 ## Meta conversion contract
 
@@ -35,12 +35,18 @@ Meta uses a smaller conversion funnel than the internal analytics model:
 | Quiz start | `QuizStarted` | Pixel only | existing funnel event ID |
 | Persisted quiz and email | `Lead` | Pixel plus default-off first-party CAPI | browser-supplied `funnelEventId` |
 | First rendered quiz-completion offer | `ViewContent` with `content_name=quiz_result_offer_view` | Pixel plus default-off first-party CAPI | deterministic Meta-only UUID derived from the persisted lead ID |
-| Checkout start | `InitiateCheckout` | Pixel only | checkout attempt ID |
+| Overlay checkout entry | `InitiateCheckout` | Pixel only from `offer_checkout_opened` | checkout attempt ID |
 | Paid activation | `Purchase` and `Subscribe` | existing billing delivery | provider-stable billing ID |
 
 `quiz_completed` remains an internal PostHog, Customer.io, and first-party funnel milestone. It does not emit Meta `CompleteRegistration` or custom `QuizCompleted` events. Ordinary `offer_viewed` also remains internal; the dedicated Meta offer conversion is emitted only for `entryContext=quiz_completion`.
 
-Create the Meta custom conversion **Offer Page Viewed** from source event `ViewContent` with the exact rule `content_name equals quiz_result_offer_view`. Both parts are required: checkout already uses `InitiateCheckout(content_name=quiz_result_offer)`, and pricing visibility uses `ViewContent(content_name=quiz_result_offer_pricing)`.
+Create the Meta custom conversion **Offer Page Viewed** from source event `ViewContent` with the exact rule `content_name equals quiz_result_offer_view`. Both parts are required: the overlay checkout-entry action uses `InitiateCheckout(content_name=quiz_result_offer)`, and pricing visibility uses `ViewContent(content_name=quiz_result_offer_pricing)`.
+
+For the overlay, one explicit `Jetzt starten` action emits `offer_checkout_opened` and owns Meta `InitiateCheckout`, using its stable `checkoutAttemptId` as the Meta event ID. Provider-session `checkout_started` events remain available to PostHog and Customer.io but are suppressed from Meta only when `checkoutPresentation=overlay`. Inline fallback and checkout surfaces outside this offer retain their existing Meta delivery.
+
+The overlay is strictly default-off and renders only when
+`NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED=true`; otherwise the existing inline checkout and its
+current Meta routing remain unchanged.
 
 ### Offer-view deduplication
 

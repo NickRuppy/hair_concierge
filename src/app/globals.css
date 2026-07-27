@@ -459,6 +459,37 @@
   --bottom-sheet-exit-easing: cubic-bezier(0.4, 0, 1, 1);
 }
 
+.checkout-payment-sheet-motion {
+  --bottom-sheet-enter-duration: 320ms;
+  --bottom-sheet-exit-duration: 220ms;
+  --bottom-sheet-backdrop-enter-duration: 220ms;
+  --bottom-sheet-backdrop-exit-duration: 180ms;
+  --bottom-sheet-enter-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --bottom-sheet-exit-easing: cubic-bezier(0.4, 0, 1, 1);
+}
+
+@keyframes checkoutPaymentDesktopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes checkoutPaymentDesktopOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
 @keyframes trackerDayContentIn {
   from {
     opacity: 0;
@@ -536,6 +567,16 @@
 .bottom-sheet-panel[data-dragging="true"] {
   animation: none;
   transition: none;
+}
+
+@media (min-width: 640px) {
+  .checkout-payment-sheet-motion .bottom-sheet-panel[data-state="open"] {
+    animation-name: checkoutPaymentDesktopIn;
+  }
+
+  .checkout-payment-sheet-motion .bottom-sheet-panel[data-state="closed"] {
+    animation-name: checkoutPaymentDesktopOut;
+  }
 }
 
 /* Sidebar slide animations */
@@ -714,6 +755,14 @@
   .bottom-sheet-backdrop[data-state="closed"],
   .bottom-sheet-panel[data-state="closed"] {
     animation-duration: 1ms;
+    animation-name: bottomSheetFadeOut;
+  }
+
+  .checkout-payment-sheet-motion .bottom-sheet-panel[data-state="open"] {
+    animation-name: bottomSheetFadeIn;
+  }
+
+  .checkout-payment-sheet-motion .bottom-sheet-panel[data-state="closed"] {
     animation-name: bottomSheetFadeOut;
   }
 

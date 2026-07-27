@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 
 import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
+import { OfferPaymentOverlayLab } from "@/components/checkout/offer-payment-overlay-lab"
 import AppValueStackOfferVariant from "@/funnels/offers/app-value-stack"
 import GuidedStoryOfferVariant from "@/funnels/offers/guided-story"
 import GuidedStoryFounderLetterOfferVariant from "@/funnels/offers/guided-story-founder-letter"
@@ -60,6 +61,10 @@ export default async function OfferPageLab({
   const params = await searchParams
   const variant = params.variant ?? "app-value-stack"
   const narrative = buildQuizResultNarrative(REVIEW_ANSWERS)
+
+  if (variant === "payment-overlay") {
+    return <OfferPaymentOverlayLab />
+  }
 
   if (variant === "default") {
     return (
