@@ -144,6 +144,13 @@ test("locked recommendation hides targeted product identity while keeping founda
     html,
     /Bond-Pflege · Vorschlag|Proteinmaske · Vorschlag|Feuchtigkeitsmaske · Vorschlag|Leave-in · Vorschlag|Haaröl · Vorschlag/,
   )
+  assert.equal(occurrences(html, 'data-offer-section="locked_routine"'), 1)
+  assert.ok(
+    html.indexOf('data-offer-section="locked_routine"') <
+      html.indexOf("Deine persönliche Empfehlung"),
+  )
+  assert.ok(html.indexOf('data-offer-section="locked_routine"') < html.indexOf("Weitere Pflege"))
+  assert.ok(html.indexOf('data-offer-section="locked_routine"') < html.indexOf("Tools"))
 })
 
 test("uses semantic native buttons and no nested interactive product wrappers", () => {

@@ -236,6 +236,7 @@ export function GuidedStoryRoutine({
 
   const foundationProducts = preview.products.filter((product) => !product.suggested)
   const targetedProduct = preview.products.find((product) => product.suggested)
+  const hasTargetedLock = lockTargetedRecommendation && Boolean(targetedProduct)
   const copyByProduct = new Map(copy.products.map((productCopy) => [productCopy.key, productCopy]))
 
   function closePopover({ restoreFocus = true }: { restoreFocus?: boolean } = {}) {
@@ -261,7 +262,6 @@ export function GuidedStoryRoutine({
   function openLocked(teaserKey: "targeted-recommendation" | "further-care" | "tools") {
     lastTriggerKey.current = `locked:${teaserKey}`
     setActivePopover({ type: "locked", key: teaserKey })
-    const hasTargetedLock = lockTargetedRecommendation && Boolean(targetedProduct)
     trackDetailOpened({
       detailId:
         teaserKey === "targeted-recommendation"
@@ -361,72 +361,77 @@ export function GuidedStoryRoutine({
         })}
       </div>
 
-      {targetedProduct ? (
-        <div className="mt-6">
-          <h3 className="text-[15px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
-            {lockTargetedRecommendation ? "Deine gezielte Ergänzung" : copy.targetedTitle}
-          </h3>
-          <div className="mt-3">
-            {lockTargetedRecommendation ? (
-              <LockedTeaser
-                active={
-                  activePopover?.type === "locked" &&
-                  activePopover.key === "targeted-recommendation"
-                }
-                align="left"
-                className="min-h-[132px]"
-                label="Deine persönliche Empfehlung"
-                supportingLine="Produkt & Anwendung mit Chaarlie ansehen"
-                popover={copy.lockedPopover}
-                ctaLabel={copy.lockedCtaLabel}
-                onClose={closePopover}
-                onOpen={() => openLocked("targeted-recommendation")}
-                onStart={() => {
-                  closePopover({ restoreFocus: false })
-                  onStart()
-                }}
-                setTriggerRef={(node) => {
-                  triggerRefs.current["locked:targeted-recommendation"] = node
-                }}
-              />
-            ) : (
-              <ProductCard
-                active={
-                  activePopover?.type === "product" && activePopover.key === targetedProduct.key
-                }
-                copy={copyByProduct.get(targetedProduct.key)!}
-                product={targetedProduct}
-                onClose={closePopover}
-                onOpen={() => openProduct(targetedProduct)}
-                setTriggerRef={(node) => {
-                  triggerRefs.current[`product:${targetedProduct.key}`] = node
-                }}
-              />
-            )}
+      <div data-offer-section={hasTargetedLock ? "locked_routine" : undefined}>
+        {targetedProduct ? (
+          <div className="mt-6">
+            <h3 className="text-[15px] font-bold leading-snug text-[var(--brand-plum-darkest)]">
+              {lockTargetedRecommendation ? "Deine gezielte Ergänzung" : copy.targetedTitle}
+            </h3>
+            <div className="mt-3">
+              {lockTargetedRecommendation ? (
+                <LockedTeaser
+                  active={
+                    activePopover?.type === "locked" &&
+                    activePopover.key === "targeted-recommendation"
+                  }
+                  align="left"
+                  className="min-h-[132px]"
+                  label="Deine persönliche Empfehlung"
+                  supportingLine="Produkt & Anwendung mit Chaarlie ansehen"
+                  popover={copy.lockedPopover}
+                  ctaLabel={copy.lockedCtaLabel}
+                  onClose={closePopover}
+                  onOpen={() => openLocked("targeted-recommendation")}
+                  onStart={() => {
+                    closePopover({ restoreFocus: false })
+                    onStart()
+                  }}
+                  setTriggerRef={(node) => {
+                    triggerRefs.current["locked:targeted-recommendation"] = node
+                  }}
+                />
+              ) : (
+                <ProductCard
+                  active={
+                    activePopover?.type === "product" && activePopover.key === targetedProduct.key
+                  }
+                  copy={copyByProduct.get(targetedProduct.key)!}
+                  product={targetedProduct}
+                  onClose={closePopover}
+                  onOpen={() => openProduct(targetedProduct)}
+                  setTriggerRef={(node) => {
+                    triggerRefs.current[`product:${targetedProduct.key}`] = node
+                  }}
+                />
+              )}
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
 
-      <div className="mt-5 grid grid-cols-2 gap-2.5" data-offer-section="locked_routine">
-        {copy.lockedTeasers.map((teaser, index) => (
-          <LockedTeaser
-            key={teaser.key}
-            active={activePopover?.type === "locked" && activePopover.key === teaser.key}
-            align={index === 0 ? "left" : "right"}
-            label={teaser.label}
-            popover={copy.lockedPopover}
-            ctaLabel={copy.lockedCtaLabel}
-            onClose={closePopover}
-            onOpen={() => openLocked(teaser.key)}
-            onStart={() => {
-              closePopover({ restoreFocus: false })
-              onStart()
-            }}
-            setTriggerRef={(node) => {
-              triggerRefs.current[`locked:${teaser.key}`] = node
-            }}
-          />
-        ))}
+        <div
+          className="mt-5 grid grid-cols-2 gap-2.5"
+          data-offer-section={hasTargetedLock ? undefined : "locked_routine"}
+        >
+          {copy.lockedTeasers.map((teaser, index) => (
+            <LockedTeaser
+              key={teaser.key}
+              active={activePopover?.type === "locked" && activePopover.key === teaser.key}
+              align={index === 0 ? "left" : "right"}
+              label={teaser.label}
+              popover={copy.lockedPopover}
+              ctaLabel={copy.lockedCtaLabel}
+              onClose={closePopover}
+              onOpen={() => openLocked(teaser.key)}
+              onStart={() => {
+                closePopover({ restoreFocus: false })
+                onStart()
+              }}
+              setTriggerRef={(node) => {
+                triggerRefs.current[`locked:${teaser.key}`] = node
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="mt-7 rounded-[16px] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)]/55 p-4">
