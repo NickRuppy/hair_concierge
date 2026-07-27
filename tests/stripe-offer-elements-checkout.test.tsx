@@ -79,7 +79,7 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   )
 
   assert.deepEqual(stripeOfferExpressCheckoutOptions.paymentMethods, {
-    applePay: "auto",
+    applePay: "always",
     googlePay: "never",
     link: "never",
     paypal: "never",
