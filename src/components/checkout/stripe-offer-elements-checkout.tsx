@@ -11,6 +11,7 @@ import type {
   Stripe,
   StripeCheckoutExpressCheckoutElementOptions,
   StripeCheckoutSession,
+  StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
   StripeExpressCheckoutElementConfirmEvent,
   StripeExpressCheckoutElementReadyEvent,
 } from "@stripe/stripe-js"
@@ -38,6 +39,9 @@ export type StripeOfferCheckoutResult =
       }
     }
 export type StripeOfferExpressRendererProps = {
+  onAvailablePaymentMethodsChange: (
+    event: StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
+  ) => void
   onConfirm: (event: StripeExpressCheckoutElementConfirmEvent) => void
   onReady: (event: StripeExpressCheckoutElementReadyEvent) => void
   options: StripeCheckoutExpressCheckoutElementOptions
@@ -86,6 +90,16 @@ export function getApplePayAvailability(
 ): ApplePayAvailability {
   if (!event?.availablePaymentMethods) return "unavailable"
   return event.availablePaymentMethods.applePay ? "available" : "unavailable"
+}
+
+export function getChangedApplePayAvailability(
+  event:
+    | Pick<StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent, "paymentMethods">
+    | null
+    | undefined,
+): ApplePayAvailability {
+  if (!event?.paymentMethods) return "unavailable"
+  return event.paymentMethods.applePay?.available ? "available" : "unavailable"
 }
 
 export function formatCheckoutTotal(session: Pick<StripeCheckoutSession, "total"> | null) {
@@ -223,6 +237,20 @@ export function StripeOfferElementsCheckoutContent({
     session: checkout,
   })
 
+  const handleExpressCheckoutReady = useCallback(
+    (event: StripeExpressCheckoutElementReadyEvent) => {
+      setApplePayAvailability(getApplePayAvailability(event))
+    },
+    [],
+  )
+
+  const handleAvailablePaymentMethodsChange = useCallback(
+    (event: StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent) => {
+      setApplePayAvailability(getChangedApplePayAvailability(event))
+    },
+    [],
+  )
+
   const confirmCheckout = useCallback(
     async (
       paymentMethodType: StripeOfferPaymentMethodType,
@@ -291,38 +319,36 @@ export function StripeOfferElementsCheckoutContent({
     )
   }
 
-  const renderApplePayElement = applePayAvailability !== "unavailable"
   const showPaymentDivider = state.applePayReady || Boolean(secondaryPaymentMethod)
 
   return (
-    <div className="grid gap-3">
-      {renderApplePayElement ? (
-        <div
-          aria-hidden={!state.applePayReady}
-          className={`${state.applePayReady ? "" : "h-0 overflow-hidden"} ${
-            lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""
-          }`}
-          data-offer-payment-step="apple_pay"
-        >
-          {renderExpressCheckoutElement ? (
-            renderExpressCheckoutElement({
-              onConfirm: (event) => void confirmCheckout("apple_pay", event),
-              onReady: (event) => {
-                setApplePayAvailability(getApplePayAvailability(event))
-              },
-              options: stripeOfferExpressCheckoutOptions,
-            })
-          ) : (
-            <ExpressCheckoutElement
-              onConfirm={(event) => void confirmCheckout("apple_pay", event)}
-              onReady={(event) => {
-                setApplePayAvailability(getApplePayAvailability(event))
-              }}
-              options={stripeOfferExpressCheckoutOptions}
-            />
-          )}
-        </div>
-      ) : null}
+    <div className="relative grid gap-3">
+      {/* Stripe can publish wallet eligibility after onReady, so this element must stay mounted. */}
+      <div
+        aria-hidden={!state.applePayReady}
+        className={`${state.applePayReady ? "" : "absolute inset-x-0 h-0 overflow-hidden"} ${
+          lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""
+        }`}
+        data-offer-payment-element="apple_pay"
+        data-offer-payment-step={state.applePayReady ? "apple_pay" : undefined}
+        inert={!state.applePayReady}
+      >
+        {renderExpressCheckoutElement ? (
+          renderExpressCheckoutElement({
+            onAvailablePaymentMethodsChange: handleAvailablePaymentMethodsChange,
+            onConfirm: (event) => void confirmCheckout("apple_pay", event),
+            onReady: handleExpressCheckoutReady,
+            options: stripeOfferExpressCheckoutOptions,
+          })
+        ) : (
+          <ExpressCheckoutElement
+            onAvailablePaymentMethodsChange={handleAvailablePaymentMethodsChange}
+            onConfirm={(event) => void confirmCheckout("apple_pay", event)}
+            onReady={handleExpressCheckoutReady}
+            options={stripeOfferExpressCheckoutOptions}
+          />
+        )}
+      </div>
 
       {secondaryPaymentMethod}
 

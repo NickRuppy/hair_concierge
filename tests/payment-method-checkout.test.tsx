@@ -116,7 +116,7 @@ test("offer overlay presentation renders PayPal first and opens card checkout by
 test("offer overlay express path renders withdrawal link and direct fallback without reveal click", () => {
   const html = renderCheckout(true, "offer-overlay", true)
   const noticeIndex = html.indexOf("Es gilt das gesetzliche 14-tägige Widerrufsrecht.")
-  const appleIndex = html.indexOf('data-offer-payment-step="apple_pay"')
+  const appleIndex = html.indexOf('data-offer-payment-element="apple_pay"')
   const paypalIndex = html.indexOf('data-offer-payment-step="paypal"')
   const cardIndex = html.indexOf("Karte &amp; weitere")
 
