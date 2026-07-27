@@ -160,6 +160,7 @@ export type AppEventMap = {
   offer_payment_method_selected: OfferAnalyticsContext &
     OfferCommerceProperties & {
       checkoutAttemptId: string
+      paymentMethodType?: "apple_pay" | "payment_element"
       provider: "stripe" | "paypal"
       selectionIndex: number
     }

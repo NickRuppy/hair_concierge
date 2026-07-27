@@ -8,35 +8,37 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 
 ## Event flow
 
-| Stage                | Event                           | Meaning                                                                     | Destination                                                                            |
-| -------------------- | ------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Offer arrival        | `offer_viewed`                  | One mounted offer view                                                      | PostHog and first-party funnel; persisted-result views reuse the server-recorded event |
-| Chapter available    | `offer_chapter_revealed`        | A guided-story chapter newly mounted                                        | PostHog only                                                                           |
-| Content reach        | `offer_section_viewed`          | A section was at least 25% visible continuously for 750 ms in a visible tab | PostHog                                                                                |
-| Detail exploration   | `offer_detail_opened`           | A deliberate guided-story analysis, product, or locked-card interaction     | PostHog only                                                                           |
-| CTA intent           | `offer_cta_clicked`             | A tracked offer CTA was clicked                                             | PostHog                                                                                |
-| Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                           | Existing PostHog, Customer.io, and Meta routes                                         |
-| Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                       | PostHog                                                                                |
-| Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                 | PostHog; Meta `InitiateCheckout` for the overlay only                                  |
-| Payment choice       | `offer_payment_method_selected` | PayPal was attempted or the card checkout was explicitly revealed           | PostHog                                                                                |
-| Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout         | PostHog                                                                                |
-| Checkout initialized | `checkout_started`              | Stripe created a session or PayPal created an intent                        | Existing PostHog, Customer.io, Meta for inline/external checkout, and first-party funnel routes |
-| Purchase             | `purchase_completed`            | Authoritative server-side paid conversion                                   | Existing billing analytics/outbox routes                                               |
+| Stage                | Event                           | Meaning                                                                                        | Destination                                                                                     |
+| -------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Offer arrival        | `offer_viewed`                  | One mounted offer view                                                                         | PostHog and first-party funnel; persisted-result views reuse the server-recorded event          |
+| Chapter available    | `offer_chapter_revealed`        | A guided-story chapter newly mounted                                                           | PostHog only                                                                                    |
+| Content reach        | `offer_section_viewed`          | A section was at least 25% visible continuously for 750 ms in a visible tab                    | PostHog                                                                                         |
+| Detail exploration   | `offer_detail_opened`           | A deliberate guided-story analysis, product, or locked-card interaction                        | PostHog only                                                                                    |
+| CTA intent           | `offer_cta_clicked`             | A tracked offer CTA was clicked                                                                | PostHog                                                                                         |
+| Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                                              | Existing PostHog, Customer.io, and Meta routes                                                  |
+| Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                                          | PostHog                                                                                         |
+| Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                                    | PostHog; Meta `InitiateCheckout` for the overlay only                                           |
+| Payment choice       | `offer_payment_method_selected` | A provider was explicitly selected; Stripe records `apple_pay` or `payment_element` when known | PostHog                                                                                         |
+| Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout                            | PostHog                                                                                         |
+| Checkout initialized | `checkout_started`              | Stripe created a session or PayPal created an intent                                           | Existing PostHog, Customer.io, Meta for inline/external checkout, and first-party funnel routes |
+| Purchase             | `purchase_completed`            | Authoritative server-side paid conversion                                                      | Existing billing analytics/outbox routes                                                        |
 
 `checkout_started` is deliberately later than `offer_checkout_opened`: opening the UI expresses intent, while checkout start requires a successful provider session or intent. Both events carry `checkoutPresentation` (`inline` or `overlay`). `checkout_started` also carries `checkoutStartTrigger`: `automatic_mount` for the default-mounted Stripe session and `explicit_provider_action` for an explicit provider action such as PayPal.
+
+Apple Pay availability, Express Checkout mounting, and Payment Element initialization do not count as a payment choice. In the flagged offer-overlay Elements path, `offer_payment_method_selected` retains `provider=stripe` and adds `paymentMethodType=apple_pay` for a real Apple Pay interaction or `payment_element` for the fallback submit path.
 
 ## Meta conversion contract
 
 Meta uses a smaller conversion funnel than the internal analytics model:
 
-| Milestone | Meta event | Delivery | Event ID |
-| --- | --- | --- | --- |
-| Page load | `PageView` | Pixel only | none |
-| Quiz start | `QuizStarted` | Pixel only | existing funnel event ID |
-| Persisted quiz and email | `Lead` | Pixel plus default-off first-party CAPI | browser-supplied `funnelEventId` |
+| Milestone                            | Meta event                                               | Delivery                                | Event ID                                                        |
+| ------------------------------------ | -------------------------------------------------------- | --------------------------------------- | --------------------------------------------------------------- |
+| Page load                            | `PageView`                                               | Pixel only                              | none                                                            |
+| Quiz start                           | `QuizStarted`                                            | Pixel only                              | existing funnel event ID                                        |
+| Persisted quiz and email             | `Lead`                                                   | Pixel plus default-off first-party CAPI | browser-supplied `funnelEventId`                                |
 | First rendered quiz-completion offer | `ViewContent` with `content_name=quiz_result_offer_view` | Pixel plus default-off first-party CAPI | deterministic Meta-only UUID derived from the persisted lead ID |
-| Overlay checkout entry | `InitiateCheckout` | Pixel only from `offer_checkout_opened` | checkout attempt ID |
-| Paid activation | `Purchase` and `Subscribe` | existing billing delivery | provider-stable billing ID |
+| Overlay checkout entry               | `InitiateCheckout`                                       | Pixel only from `offer_checkout_opened` | checkout attempt ID                                             |
+| Paid activation                      | `Purchase` and `Subscribe`                               | existing billing delivery               | provider-stable billing ID                                      |
 
 `quiz_completed` remains an internal PostHog, Customer.io, and first-party funnel milestone. It does not emit Meta `CompleteRegistration` or custom `QuizCompleted` events. Ordinary `offer_viewed` also remains internal; the dedicated Meta offer conversion is emitted only for `entryContext=quiz_completion`.
 
@@ -47,6 +49,11 @@ For the overlay, one explicit `Jetzt starten` action emits `offer_checkout_opene
 The overlay is strictly default-off and renders only when
 `NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED=true`; otherwise the existing inline checkout and its
 current Meta routing remain unchanged.
+
+The Elements/Apple Pay path is a second default-off gate: it is active only when both
+`NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED=true` and
+`NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED=true`. With either flag off, the client sends the
+unchanged Checkout Session request and keeps the existing payment presentation and event behavior.
 
 ### Offer-view deduplication
 

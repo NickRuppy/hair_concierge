@@ -60,6 +60,7 @@ export function PayPalSubscriptionButton({
   checkoutContext,
   interval,
   leadId,
+  onCheckoutCancelled,
   onCheckoutFailed,
   onCheckoutStarted,
   onPaymentMethodSelected,
@@ -70,9 +71,10 @@ export function PayPalSubscriptionButton({
   checkoutContext?: CheckoutContext
   interval: BillingInterval
   leadId?: string | null
+  onCheckoutCancelled?: () => void
   onCheckoutFailed?: (failure: CheckoutFailure) => void
   onCheckoutStarted: (funnelEventId: string) => void
-  onPaymentMethodSelected?: (provider: "stripe" | "paypal") => void
+  onPaymentMethodSelected?: (provider: "stripe" | "paypal") => boolean | void
   returnDestination?: string
   source: PayPalCheckoutSource
 }) {
@@ -126,7 +128,10 @@ export function PayPalSubscriptionButton({
           ) => {
             setError(null)
             suppressNextPayPalErrorRef.current = false
-            onPaymentMethodSelected?.("paypal")
+            if (onPaymentMethodSelected?.("paypal") === false) {
+              suppressNextPayPalErrorRef.current = true
+              throw new Error("another payment provider is already active")
+            }
             const funnelEventId = createFunnelEventId()
             addCheckoutBreadcrumb({
               provider: "paypal",
@@ -289,6 +294,9 @@ export function PayPalSubscriptionButton({
               paypalTokenPresent: true,
             })
             window.location.assign(buildPayPalWelcomeUrl(token))
+          }}
+          onCancel={() => {
+            onCheckoutCancelled?.()
           }}
           onError={(err) => {
             if (suppressNextPayPalErrorRef.current) {

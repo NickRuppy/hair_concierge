@@ -9,6 +9,11 @@ import { LockKeyhole } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { CheckoutContext, CheckoutFailureStage } from "@/lib/analytics/events"
 import type { BillingInterval } from "@/lib/stripe/intervals"
+import {
+  StripeOfferElementsCheckout,
+  type StripeOfferPaymentMethodType,
+  type StripeOfferProvider,
+} from "./stripe-offer-elements-checkout"
 
 export type CheckoutFailure = {
   errorCode: string
@@ -67,12 +72,15 @@ export function PaymentMethodCheckout({
   onPayPalCheckoutFailed,
   onPayPalCheckoutStarted,
   onPaymentMethodSelected,
+  onProviderLockClaim,
+  onProviderLockRelease,
   onRetry,
   planLabel,
   presentation = "default",
   returnDestination,
   source,
   stripe,
+  expressElementsEnabled = false,
 }: {
   cardCheckoutMinHeightClassName?: "min-h-[560px]" | "min-h-[600px]"
   checkoutAttemptId?: string
@@ -86,16 +94,23 @@ export function PaymentMethodCheckout({
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
-  onPaymentMethodSelected?: (provider: "stripe" | "paypal") => void
+  onPaymentMethodSelected?: (
+    provider: "stripe" | "paypal",
+    paymentMethodType?: StripeOfferPaymentMethodType,
+  ) => void
+  onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
+  onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   planLabel: string
   presentation?: "default" | "offer-overlay"
   returnDestination?: string
   source: "pricing_page" | "quiz_result_offer"
   stripe: Promise<Stripe | null>
+  expressElementsEnabled?: boolean
 }) {
   const paypalEnabled = isPayPalCheckoutEnabled()
   const isOfferOverlay = presentation === "offer-overlay"
+  const useOfferElementsCheckout = isOfferOverlay && expressElementsEnabled
   const [{ cardCheckoutOpen }, dispatchPaymentMethod] = useReducer(
     paymentMethodCheckoutReducer,
     paypalEnabled,
@@ -114,6 +129,34 @@ export function PaymentMethodCheckout({
       : lockedProvider === "stripe"
         ? "Dein Karten-Checkout läuft bereits. Bitte führe ihn hier fort."
         : null
+  const paypalCheckout = showPayPalCheckout ? (
+    <div data-offer-payment-step={useOfferElementsCheckout ? "paypal" : undefined}>
+      <DynamicPayPalSubscriptionButton
+        checkoutAttemptId={checkoutAttemptId}
+        checkoutContext={checkoutContext}
+        interval={interval}
+        leadId={leadId}
+        onCheckoutFailed={(failure) => {
+          onProviderLockRelease?.("paypal")
+          onPayPalCheckoutFailed?.(failure)
+        }}
+        onCheckoutCancelled={() => {
+          onProviderLockRelease?.("paypal")
+        }}
+        onCheckoutStarted={onPayPalCheckoutStarted}
+        onPaymentMethodSelected={(provider) => {
+          if (onProviderLockClaim?.("paypal") === false) return false
+          onPaymentMethodSelected?.(provider)
+          return true
+        }}
+        returnDestination={returnDestination}
+        source={source}
+      />
+      <p className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
+        PayPal öffnet sich zur Bestätigung. Danach aktivieren wir dein Konto.
+      </p>
+    </div>
+  ) : null
 
   const checkoutContent = (
     <>
@@ -147,79 +190,18 @@ export function PaymentMethodCheckout({
         </p>
       ) : null}
 
-      {showPayPalCheckout ? (
-        <div className="grid gap-3">
-          <div>
-            <DynamicPayPalSubscriptionButton
-              checkoutAttemptId={checkoutAttemptId}
-              checkoutContext={checkoutContext}
-              interval={interval}
-              leadId={leadId}
-              onCheckoutFailed={onPayPalCheckoutFailed}
-              onCheckoutStarted={onPayPalCheckoutStarted}
-              onPaymentMethodSelected={onPaymentMethodSelected}
-              returnDestination={returnDestination}
-              source={source}
-            />
-            <p className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
-              PayPal öffnet sich zur Bestätigung. Danach aktivieren wir dein Konto.
-            </p>
-          </div>
+      {useOfferElementsCheckout ? (
+        <>
+          <p className="text-[12px] leading-relaxed text-[var(--text-caption)]">
+            Es gilt das gesetzliche 14-tägige Widerrufsrecht.{" "}
+            <a
+              href="/widerruf"
+              className="whitespace-nowrap font-bold text-[var(--brand-plum)] underline"
+            >
+              Details ansehen
+            </a>
+          </p>
 
-          {lockedProvider === null ? (
-            <>
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
-                <span className="h-px bg-border" aria-hidden="true" />
-                <span>oder</span>
-                <span className="h-px bg-border" aria-hidden="true" />
-              </div>
-
-              <div>
-                {isOfferOverlay && cardCheckoutOpen ? (
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <strong className="text-[14px] text-[var(--brand-plum-darkest)]">
-                      Karte & weitere
-                    </strong>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--brand-plum)]">
-                      <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
-                      Sicher bezahlen
-                    </span>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    aria-controls="card-checkout"
-                    aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
-                    aria-expanded={cardCheckoutOpen}
-                    onClick={() => {
-                      if (!cardCheckoutOpen) onPaymentMethodSelected?.("stripe")
-                      dispatchPaymentMethod("reveal_card")
-                    }}
-                    className={`min-h-[52px] w-full rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${
-                      cardCheckoutOpen
-                        ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
-                        : "border-border hover:border-[var(--brand-plum-light)]"
-                    }`}
-                  >
-                    Karte & weitere
-                  </button>
-                )}
-                {!cardCheckoutOpen ? (
-                  <p
-                    id="payment-method-helper"
-                    className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]"
-                  >
-                    Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten.
-                  </p>
-                ) : null}
-              </div>
-            </>
-          ) : null}
-        </div>
-      ) : null}
-
-      {showCardCheckout ? (
-        <div id="card-checkout" className={paypalEnabled ? "mt-3" : undefined}>
           {checkoutError ? (
             <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
               <p className="mb-3 text-sm text-destructive">{checkoutError}</p>
@@ -233,18 +215,106 @@ export function PaymentMethodCheckout({
               </Button>
             </div>
           ) : (
-            <div className={cardCheckoutMinHeightClassName}>
-              <EmbeddedCheckoutProvider
-                key={checkoutKey}
-                stripe={stripe}
-                options={{ fetchClientSecret }}
-              >
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
-            </div>
+            <StripeOfferElementsCheckout
+              checkoutKey={checkoutKey}
+              fetchClientSecret={fetchClientSecret}
+              lockedProvider={lockedProvider}
+              onPaymentMethodSelected={onPaymentMethodSelected}
+              onProviderLockClaim={onProviderLockClaim}
+              onProviderLockRelease={onProviderLockRelease}
+              onRetry={onRetry}
+              secondaryPaymentMethod={paypalCheckout}
+              stripe={stripe}
+            />
           )}
-        </div>
-      ) : null}
+        </>
+      ) : (
+        <>
+          {paypalCheckout ? (
+            <div className="grid gap-3">
+              {paypalCheckout}
+
+              {lockedProvider === null ? (
+                <>
+                  <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
+                    <span className="h-px bg-border" aria-hidden="true" />
+                    <span>oder</span>
+                    <span className="h-px bg-border" aria-hidden="true" />
+                  </div>
+
+                  <div>
+                    {isOfferOverlay && cardCheckoutOpen ? (
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <strong className="text-[14px] text-[var(--brand-plum-darkest)]">
+                          Karte & weitere
+                        </strong>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--brand-plum)]">
+                          <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
+                          Sicher bezahlen
+                        </span>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        aria-controls="card-checkout"
+                        aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
+                        aria-expanded={cardCheckoutOpen}
+                        onClick={() => {
+                          if (!cardCheckoutOpen) onPaymentMethodSelected?.("stripe")
+                          dispatchPaymentMethod("reveal_card")
+                        }}
+                        className={`min-h-[52px] w-full rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${
+                          cardCheckoutOpen
+                            ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
+                            : "border-border hover:border-[var(--brand-plum-light)]"
+                        }`}
+                      >
+                        Karte & weitere
+                      </button>
+                    )}
+                    {!cardCheckoutOpen ? (
+                      <p
+                        id="payment-method-helper"
+                        className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]"
+                      >
+                        Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten.
+                      </p>
+                    ) : null}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          ) : null}
+
+          {showCardCheckout ? (
+            <div id="card-checkout" className={paypalEnabled ? "mt-3" : undefined}>
+              {checkoutError ? (
+                <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
+                  <p className="mb-3 text-sm text-destructive">{checkoutError}</p>
+                  <Button
+                    type="button"
+                    variant="unstyled"
+                    onClick={onRetry}
+                    className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
+                  >
+                    Erneut versuchen
+                  </Button>
+                </div>
+              ) : (
+                <div className={cardCheckoutMinHeightClassName}>
+                  <EmbeddedCheckoutProvider
+                    key={checkoutKey}
+                    stripe={stripe}
+                    options={{ fetchClientSecret }}
+                  >
+                    <EmbeddedCheckout />
+                  </EmbeddedCheckoutProvider>
+                </div>
+              )}
+            </div>
+          ) : null}
+        </>
+      )}
     </>
   )
 

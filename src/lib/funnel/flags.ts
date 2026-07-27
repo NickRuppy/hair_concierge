@@ -21,3 +21,7 @@ export function isFunnelMetaBrowserCustomDataEnabled() {
 export function isOfferPaymentOverlayEnabled() {
   return process.env.NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED === "true"
 }
+
+export function isStripeExpressCheckoutEnabled() {
+  return process.env.NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED === "true"
+}
