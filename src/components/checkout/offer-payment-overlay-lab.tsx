@@ -73,6 +73,14 @@ function LabExpressCheckoutElement({
 
     if (!applePayAvailable || applePayAvailabilityDelayMs === null) {
       setVisible(applePayAvailable)
+      if (applePayAvailable) {
+        onAvailablePaymentMethodsChange({
+          elementType: "expressCheckout",
+          paymentMethods: {
+            applePay: { available: true },
+          },
+        } satisfies StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent)
+      }
       return
     }
 
@@ -337,7 +345,7 @@ function OfferPaymentOverlayLabContent() {
     const params = new URLSearchParams(window.location.search)
     const initialApplePayState = params.get("apple")
     setApplePayAvailable(initialApplePayState !== "unavailable")
-    setApplePayAvailabilityDelayMs(initialApplePayState === "delayed" ? 150 : null)
+    setApplePayAvailabilityDelayMs(initialApplePayState === "delayed" ? 500 : null)
     const initialConfirmBehavior = params.get("confirm")
     setConfirmBehavior(
       initialConfirmBehavior === "reject" || initialConfirmBehavior === "blocked"
