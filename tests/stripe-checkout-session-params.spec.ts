@@ -15,7 +15,7 @@ test("excludes only SEPA Direct Debit from new Stripe Checkout Sessions", () => 
   assert.deepEqual(params.custom_text, {
     terms_of_service_acceptance: {
       message:
-        "Ich stimme zu, dass der Zugriff auf das Abo sofort beginnt und ich damit mein 14-tägiges Widerrufsrecht verliere (§ 356 Abs. 4 BGB).",
+        "Ich akzeptiere die AGB. Mein gesetzliches 14-tägiges Widerrufsrecht bleibt unberührt: https://chaarlie.de/widerruf.",
     },
   })
 })
