@@ -58,7 +58,7 @@ export const stripeOfferExpressCheckoutOptions: StripeCheckoutExpressCheckoutEle
   },
   paymentMethodOrder: ["applePay"],
   paymentMethods: {
-    applePay: "auto",
+    applePay: "always",
     googlePay: "never",
     link: "never",
     paypal: "never",
