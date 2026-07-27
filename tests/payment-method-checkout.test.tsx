@@ -19,6 +19,7 @@ import {
 function renderCheckout(
   paypalEnabled: boolean,
   presentation: "default" | "offer-overlay" = "default",
+  expressElementsEnabled = false,
 ) {
   const previousPayPalEnabled = process.env.NEXT_PUBLIC_PAYPAL_ENABLED
   const previousPayPalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
@@ -40,6 +41,7 @@ function renderCheckout(
         onRetry={() => undefined}
         planLabel="Jetzt starten — €34,99 im Quartal"
         presentation={presentation}
+        expressElementsEnabled={expressElementsEnabled}
         source="quiz_result_offer"
         stripe={Promise.resolve(null)}
       />,
@@ -111,6 +113,26 @@ test("offer overlay presentation renders PayPal first and opens card checkout by
   assert.doesNotMatch(html, /mt-5 rounded-\[16px\] border border-border bg-white p-4/)
 })
 
+test("offer overlay express path renders withdrawal link and direct fallback without reveal click", () => {
+  const html = renderCheckout(true, "offer-overlay", true)
+  const noticeIndex = html.indexOf("Es gilt das gesetzliche 14-tägige Widerrufsrecht.")
+  const appleIndex = html.indexOf('data-offer-payment-step="apple_pay"')
+  const paypalIndex = html.indexOf('data-offer-payment-step="paypal"')
+  const cardIndex = html.indexOf("Karte &amp; weitere")
+
+  assert.match(html, /Es gilt das gesetzliche 14-tägige Widerrufsrecht\./)
+  assert.match(html, /href="\/widerruf"/)
+  assert.ok(noticeIndex > -1)
+  assert.ok(appleIndex > noticeIndex)
+  assert.ok(paypalIndex > -1)
+  assert.ok(paypalIndex > appleIndex)
+  assert.ok(cardIndex > -1)
+  assert.ok(cardIndex > paypalIndex)
+  assert.doesNotMatch(html, /aria-expanded="false"/)
+  assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
+  assert.doesNotMatch(html, /min-h-\[560px\]|min-h-\[600px\]/)
+})
+
 test("PayPal script rejection reports once without coupling the card fallback", () => {
   const reported = { current: false }
   const failures: unknown[] = []
@@ -175,6 +197,9 @@ test("PayPal plan IDs are resolved by the server intent route", () => {
   assert.match(buttonSource, /create-subscription-intent/)
   assert.match(buttonSource, /shipping_preference: "NO_SHIPPING"/)
   assert.match(buttonSource, /errorCode: "paypal_approval_network_error"/)
+  assert.match(buttonSource, /onCancel=\{\(\) =>/)
+  assert.match(buttonSource, /onCheckoutCancelled\?\.\(\)/)
+  assert.match(buttonSource, /another payment provider is already active/)
   assert.match(buttonSource, /usePayPalScriptReducer/)
   assert.match(buttonSource, /<PayPalScriptFailureObserver/)
   assert.match(buttonSource, /reportPayPalScriptFailureOnce\(reportedRef, isRejected/)

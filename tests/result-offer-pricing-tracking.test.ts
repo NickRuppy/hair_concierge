@@ -3,6 +3,10 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import { observeOnceVisible } from "../src/lib/analytics/observe-once-visible"
+import {
+  claimOfferProviderLock,
+  releaseOfferProviderLock,
+} from "../src/components/quiz/result-offer-pricing"
 import { STRIPE_PRICING_PLANS } from "../src/lib/stripe/pricing-plans"
 
 const pricingSource = readFileSync(
@@ -55,9 +59,27 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /if \(!nextAttempt\.isNew\)/)
   assert.match(pricingSource, /const nextCheckoutAttemptId = nextAttempt\.checkoutAttemptId/)
   assert.match(pricingSource, /checkoutAttemptId: nextCheckoutAttemptId/)
-  assert.match(pricingSource, /checkoutAttemptId,\s*\n\s*\}\),/)
+  assert.match(
+    pricingSource,
+    /checkoutAttemptId,\s*\n\s*(?:\.\.\.\(expressElementsEnabled[\s\S]*?\),\s*\n\s*)?\}\),/,
+  )
   assert.match(pricingSource, /checkoutStartTrigger: "automatic_mount"/)
   assert.match(pricingSource, /checkoutStartTrigger: "explicit_provider_action"/)
+  assert.match(pricingSource, /isStripeExpressCheckoutEnabled/)
+  assert.match(
+    pricingSource,
+    /const expressElementsEnabled = paymentOverlayEnabled && isStripeExpressCheckoutEnabled\(\)/,
+  )
+  assert.match(
+    pricingSource,
+    /expressElementsEnabled \? \{ presentation: "offer_overlay_elements" \} : \{\}/,
+  )
+  assert.match(pricingSource, /expressElementsEnabled=\{expressElementsEnabled\}/)
+  assert.match(pricingSource, /lockedProvider=\{expressElementsEnabled \? lockedProvider : null\}/)
+  assert.match(pricingSource, /onProviderLockClaim=\{expressElementsEnabled/)
+  assert.match(pricingSource, /onProviderLockRelease=\{expressElementsEnabled/)
+  assert.match(pricingSource, /paymentMethodType\?: "apple_pay" \| "payment_element"/)
+  assert.match(pricingSource, /resetOfferProviderLock\(\)/)
   assert.match(pricingSource, /checkoutAttemptController\.claimFailure\(/)
   assert.match(pricingSource, /checkoutAttemptController\.retry\(\)/)
   assert.match(pricingSource, /checkoutAttemptController\.close\(\)/)
@@ -68,6 +90,27 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
     /if \(!stripePublishableKey && \(paymentOverlayEnabled \|\| !paypalEnabled\)\) \{[\s\S]*?attemptId: nextCheckoutAttemptId,[\s\S]*?errorCode: "stripe_publishable_key_missing"/,
   )
   assert.match(pricingSource, /if \(!paymentOverlayEnabled\) scrollInlineCheckoutIntoView\(\)/)
+})
+
+test("offer provider lock rejects a competing same-frame payment claim", () => {
+  const stripeClaim = claimOfferProviderLock(null, "stripe")
+  assert.deepEqual(stripeClaim, { accepted: true, provider: "stripe" })
+  assert.deepEqual(claimOfferProviderLock(stripeClaim.provider, "paypal"), {
+    accepted: false,
+    provider: "stripe",
+  })
+  assert.deepEqual(releaseOfferProviderLock(stripeClaim.provider, "paypal"), {
+    accepted: false,
+    provider: "stripe",
+  })
+  assert.deepEqual(releaseOfferProviderLock(stripeClaim.provider, "stripe"), {
+    accepted: true,
+    provider: null,
+  })
+  assert.deepEqual(claimOfferProviderLock(null, "paypal"), {
+    accepted: true,
+    provider: "paypal",
+  })
 })
 
 test("pricing visibility waits for intersection and fires exactly once", () => {

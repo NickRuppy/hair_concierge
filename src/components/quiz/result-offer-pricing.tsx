@@ -26,7 +26,7 @@ import {
   type CheckoutAttemptController,
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
-import { isOfferPaymentOverlayEnabled } from "@/lib/funnel/flags"
+import { isOfferPaymentOverlayEnabled, isStripeExpressCheckoutEnabled } from "@/lib/funnel/flags"
 import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -39,6 +39,25 @@ import {
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const unloadedStripePromise = Promise.resolve(null)
 const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
+type LockedCheckoutProvider = "stripe" | "paypal"
+
+export function claimOfferProviderLock(
+  current: LockedCheckoutProvider | null,
+  requested: LockedCheckoutProvider,
+) {
+  if (current !== null && current !== requested) {
+    return { accepted: false, provider: current } as const
+  }
+  return { accepted: true, provider: requested } as const
+}
+
+export function releaseOfferProviderLock(
+  current: LockedCheckoutProvider | null,
+  owner: LockedCheckoutProvider,
+) {
+  if (current !== owner) return { accepted: false, provider: current } as const
+  return { accepted: true, provider: null } as const
+}
 
 function trackStripeJsAvailability(
   stripePromise: Promise<Stripe | null>,
@@ -79,6 +98,7 @@ export function ResultOfferPricing({
   const checkoutAttemptControllerRef = useRef<CheckoutAttemptController | null>(null)
   checkoutAttemptControllerRef.current ??= createCheckoutAttemptController(createFunnelEventId)
   const checkoutAttemptController = checkoutAttemptControllerRef.current
+  const lockedProviderRef = useRef<LockedCheckoutProvider | null>(null)
   const paymentSelectionIndexRef = useRef(0)
   const planSelectionIndexRef = useRef(0)
   const offerContext = useOfferTrackingContext()
@@ -86,12 +106,35 @@ export function ResultOfferPricing({
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
   const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
+  const [lockedProvider, setLockedProvider] = useState<LockedCheckoutProvider | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [checkoutStripePromise, setCheckoutStripePromise] =
     useState<Promise<Stripe | null>>(unloadedStripePromise)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const paymentOverlayEnabled = isOfferPaymentOverlayEnabled()
+  const expressElementsEnabled = paymentOverlayEnabled && isStripeExpressCheckoutEnabled()
+
+  const resetOfferProviderLock = useCallback(() => {
+    lockedProviderRef.current = null
+    setLockedProvider(null)
+  }, [])
+
+  const claimOfferProvider = useCallback((provider: LockedCheckoutProvider) => {
+    const nextLock = claimOfferProviderLock(lockedProviderRef.current, provider)
+    if (!nextLock.accepted) return false
+    lockedProviderRef.current = nextLock.provider
+    setLockedProvider(nextLock.provider)
+    return nextLock.accepted
+  }, [])
+
+  const releaseOfferProvider = useCallback((provider: LockedCheckoutProvider) => {
+    const nextLock = releaseOfferProviderLock(lockedProviderRef.current, provider)
+    if (!nextLock.accepted) return false
+    lockedProviderRef.current = nextLock.provider
+    setLockedProvider(nextLock.provider)
+    return nextLock.accepted
+  }, [])
 
   const getStripePromise = useCallback(() => {
     return getOfferStripePromise()
@@ -175,6 +218,7 @@ export function ResultOfferPricing({
   )
 
   function choosePlan(interval: BillingInterval) {
+    if (lockedProviderRef.current !== null) return
     if (offerContext) {
       const plan = getStripePricingPlan(interval)
       planSelectionIndexRef.current += 1
@@ -193,6 +237,7 @@ export function ResultOfferPricing({
     setSelectedInterval(interval)
     checkoutReturnFocusRef.current = null
     checkoutAttemptController.close()
+    resetOfferProviderLock()
     setCheckoutInterval(null)
     setCheckoutAttemptId(null)
     setCheckoutError(null)
@@ -204,6 +249,7 @@ export function ResultOfferPricing({
         null)
       : null
     checkoutAttemptController.close()
+    resetOfferProviderLock()
     setCheckoutAttemptId(null)
     setCheckoutInterval(null)
     setCheckoutError(null)
@@ -311,6 +357,7 @@ export function ResultOfferPricing({
           source: "quiz_result_offer",
           funnelEventId,
           checkoutAttemptId,
+          ...(expressElementsEnabled ? { presentation: "offer_overlay_elements" } : {}),
         }),
       })
     } catch (error) {
@@ -401,12 +448,19 @@ export function ResultOfferPricing({
     setCheckoutError,
     setDuplicateDialogOpen,
     setDuplicateEmail,
+    expressElementsEnabled,
     paymentOverlayEnabled,
   ])
 
   const handlePayPalCheckoutStarted = useCallback(
     (funnelEventId: string) => {
       if (!checkoutInterval || !checkoutAttemptId) return
+      if (
+        expressElementsEnabled &&
+        lockedProviderRef.current !== null &&
+        lockedProviderRef.current !== "paypal"
+      )
+        return
       const plan = getStripePricingPlan(checkoutInterval)
       trackAppEvent("checkout_started", {
         ...(offerContext ?? {}),
@@ -423,12 +477,21 @@ export function ResultOfferPricing({
         value: plan.amount,
       })
     },
-    [checkoutAttemptId, checkoutInterval, leadId, offerContext, paymentOverlayEnabled],
+    [
+      checkoutAttemptId,
+      checkoutInterval,
+      leadId,
+      offerContext,
+      paymentOverlayEnabled,
+      expressElementsEnabled,
+    ],
   )
 
   const handlePaymentMethodSelected = useCallback(
-    (provider: "stripe" | "paypal") => {
-      if (!checkoutInterval || !checkoutAttemptId || !offerContext) return
+    (provider: "stripe" | "paypal", paymentMethodType?: "apple_pay" | "payment_element") => {
+      if (!checkoutInterval || !checkoutAttemptId) return
+      if (lockedProviderRef.current && lockedProviderRef.current !== provider) return
+      if (!offerContext) return
       const plan = getStripePricingPlan(checkoutInterval)
       paymentSelectionIndexRef.current += 1
       trackAppEvent("offer_payment_method_selected", {
@@ -437,6 +500,7 @@ export function ResultOfferPricing({
         currency: plan.currency,
         funnelEventId: createFunnelEventId(),
         interval: checkoutInterval,
+        paymentMethodType,
         planId: plan.analyticsId,
         provider,
         selectionIndex: paymentSelectionIndexRef.current,
@@ -488,14 +552,19 @@ export function ResultOfferPricing({
       checkoutAttemptId={checkoutAttemptId ?? undefined}
       checkoutError={checkoutError}
       checkoutKey={`${checkoutInterval}:${checkoutAttemptId ?? "pending"}`}
+      expressElementsEnabled={expressElementsEnabled}
       fetchClientSecret={fetchClientSecret}
       interval={checkoutInterval}
       leadId={leadId}
+      lockedProvider={expressElementsEnabled ? lockedProvider : null}
       onChangePlan={() => closeCheckout()}
       onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
       onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
       onPaymentMethodSelected={handlePaymentMethodSelected}
+      onProviderLockClaim={expressElementsEnabled ? claimOfferProvider : undefined}
+      onProviderLockRelease={expressElementsEnabled ? releaseOfferProvider : undefined}
       onRetry={() => {
+        resetOfferProviderLock()
         if (!stripePublishableKey) {
           setCheckoutError(checkoutStartError)
           return

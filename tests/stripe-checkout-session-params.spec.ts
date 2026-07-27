@@ -10,6 +10,28 @@ test("excludes only SEPA Direct Debit from new Stripe Checkout Sessions", () => 
   })
 
   assert.deepEqual(params.excluded_payment_method_types, ["sepa_debit"])
+  assert.equal(params.ui_mode, "embedded_page")
+  assert.deepEqual(params.consent_collection, { terms_of_service: "required" })
+  assert.deepEqual(params.custom_text, {
+    terms_of_service_acceptance: {
+      message:
+        "Ich stimme zu, dass der Zugriff auf das Abo sofort beginnt und ich damit mein 14-tägiges Widerrufsrecht verliere (§ 356 Abs. 4 BGB).",
+    },
+  })
+})
+
+test("builds the offer-only Checkout Elements session without embedded consent text", () => {
+  const params = buildStripeCheckoutSessionParams({
+    origin: "https://chaarlie.example",
+    priceId: "price_month",
+    customerEmail: "lead@example.com",
+    presentation: "elements",
+  })
+
+  assert.equal(params.ui_mode, "elements")
+  assert.deepEqual(params.excluded_payment_method_types, ["sepa_debit", "paypal"])
+  assert.equal("consent_collection" in params, false)
+  assert.equal("custom_text" in params, false)
 })
 
 test("preserves lead metadata without applying launch discounts", () => {

@@ -29,20 +29,59 @@ import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return
 
 export const runtime = "nodejs"
 
-const BodySchema = z.object({
-  interval: z.enum(["month", "quarter", "year"]),
-  // Accept null too — the client sends `leadId: null` when there's no ?lead=
-  // in the URL (resubscribe path). `.optional()` alone rejects null.
-  leadId: z.string().uuid().nullable().optional(),
-  source: z.enum(["pricing_page", "quiz_result_offer"]).default("pricing_page"),
-  funnelEventId: z.string().uuid().optional(),
-  checkoutAttemptId: z.string().uuid().optional(),
-  checkoutContext: z.literal("membership_reactivation").optional(),
-  returnDestination: z.string().max(500).optional(),
-})
+export const StripeCheckoutSessionRequestSchema = z
+  .object({
+    interval: z.enum(["month", "quarter", "year"]),
+    // Accept null too — the client sends `leadId: null` when there's no ?lead=
+    // in the URL (resubscribe path). `.optional()` alone rejects null.
+    leadId: z.string().uuid().nullable().optional(),
+    source: z.enum(["pricing_page", "quiz_result_offer"]).default("pricing_page"),
+    funnelEventId: z.string().uuid().optional(),
+    checkoutAttemptId: z.string().uuid().optional(),
+    checkoutContext: z.literal("membership_reactivation").optional(),
+    returnDestination: z.string().max(500).optional(),
+    presentation: z.literal("offer_overlay_elements").optional(),
+  })
+  .strict()
+  .superRefine(({ checkoutContext, presentation, returnDestination, source }, context) => {
+    if (presentation === "offer_overlay_elements" && source !== "quiz_result_offer") {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "offer Elements presentation requires quiz_result_offer source",
+        path: ["presentation"],
+      })
+    }
+    if (
+      presentation === "offer_overlay_elements" &&
+      (checkoutContext === "membership_reactivation" || returnDestination !== undefined)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "offer Elements presentation cannot be used for reactivation",
+        path: ["presentation"],
+      })
+    }
+  })
+
+export function isOfferElementsCheckoutEnabled(
+  environment: {
+    NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED?: string
+    NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED?: string
+  } = {
+    NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED:
+      process.env.NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED,
+    NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED:
+      process.env.NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED,
+  },
+) {
+  return (
+    environment.NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED === "true" &&
+    environment.NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED === "true"
+  )
+}
 
 export async function POST(req: NextRequest) {
-  const parsed = BodySchema.safeParse(await req.json().catch(() => null))
+  const parsed = StripeCheckoutSessionRequestSchema.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
@@ -54,7 +93,11 @@ export async function POST(req: NextRequest) {
     checkoutAttemptId,
     checkoutContext,
     returnDestination: rawReturnDestination,
+    presentation,
   } = parsed.data
+  if (presentation === "offer_overlay_elements" && !isOfferElementsCheckoutEnabled()) {
+    return NextResponse.json({ error: "bad request" }, { status: 400 })
+  }
   const analyticsPlan = getStripePricingPlan(interval)
 
   const priceId = PRICE_IDS[interval as BillingInterval]
@@ -264,6 +307,7 @@ export async function POST(req: NextRequest) {
       checkoutContext,
       returnDestination: reactivationReservation?.return_destination,
       reactivationReservationId: reactivationReservation?.id,
+      presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
     })
     const session = await stripe.checkout.sessions.create(
       params,

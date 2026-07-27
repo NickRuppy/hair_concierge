@@ -569,6 +569,60 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
   ])
 })
 
+test("PostHog retains the Stripe payment method dimension for offer checkout choices", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("offer_payment_method_selected", {
+      checkoutAttemptId: "50000000-0000-4000-8000-000000000093",
+      currency: "EUR",
+      entryContext: "quiz_completion",
+      focusRoutine: false,
+      funnelEventId: "30000000-0000-4000-8000-000000000093",
+      interval: "quarter",
+      needLane: "moisture",
+      offerRevision: "product_led_v1",
+      offerVariant: "default",
+      offerViewId: "40000000-0000-4000-8000-000000000093",
+      paymentMethodType: "apple_pay",
+      planId: "premium_quarter",
+      provider: "stripe",
+      selectionIndex: 1,
+      value: 34.99,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "offer_payment_method_selected",
+      {
+        $insert_id: "30000000-0000-4000-8000-000000000093",
+        checkout_attempt_id: "50000000-0000-4000-8000-000000000093",
+        currency: "EUR",
+        entry_context: "quiz_completion",
+        focus_routine: false,
+        interval: "quarter",
+        need_lane: "moisture",
+        offer_revision: "product_led_v1",
+        offer_variant: "default",
+        offer_view_id: "40000000-0000-4000-8000-000000000093",
+        payment_method_type: "apple_pay",
+        plan_id: "premium_quarter",
+        provider: "stripe",
+        selection_index: 1,
+        value: 34.99,
+      },
+    ],
+  ])
+})
+
 test("guided-story chapter and detail diagnostics map exact snake_case properties", () => {
   const originalCapture = posthog.capture
   const calls: unknown[][] = []

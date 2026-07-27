@@ -172,6 +172,135 @@ test.describe("@ci offer payment overlay", () => {
     await expect(page.getByTestId("last-outcome")).toContainText("Planänderung bestätigt")
   })
 
+  test("eligible Apple Pay is first, cancellation keeps its attempt stable, and confirmation locks providers", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    const { checkout } = await openCheckoutAtNonzeroScroll(page)
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+
+    await expect(checkout.getByTestId("apple-pay-row")).toBeVisible()
+    await expect(checkout.getByRole("button", { name: "Apple Pay", exact: true })).toBeVisible()
+    await expect(checkout.getByTestId("paypal-button")).toBeVisible()
+    await expect(checkout.getByText("Karte & weitere")).toBeVisible()
+    await expect(checkout.getByRole("link", { name: "Details ansehen" })).toHaveAttribute(
+      "href",
+      "/widerruf",
+    )
+    await expect(checkout.getByRole("checkbox")).toHaveCount(0)
+
+    const order = await checkout
+      .locator("[data-offer-payment-step]")
+      .evaluateAll((elements) =>
+        elements.map((element) => element.getAttribute("data-offer-payment-step")),
+      )
+    expect(order).toEqual(["apple_pay", "paypal", "payment_element"])
+    await expect(diagnostic).toHaveAttribute("data-checkout-attempt-id", "lab-checkout-attempt-1")
+    await expect(diagnostic).toHaveAttribute("data-initiate-checkout-count", "1")
+
+    await checkout.getByRole("button", { name: "Apple Pay abbrechen simulieren" }).click()
+    await expect(diagnostic).toHaveAttribute("data-apple-cancel-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-checkout-attempt-id", "lab-checkout-attempt-1")
+    await expect(diagnostic).toHaveAttribute("data-initiate-checkout-count", "1")
+    await expect(checkout).toBeVisible()
+
+    await checkout.getByRole("button", { name: "Apple Pay", exact: true }).dblclick()
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await expect(checkout.getByTestId("paypal-button")).toBeDisabled()
+    await expect(
+      checkout.locator('[data-offer-payment-step="payment_element"]').getByRole("button"),
+    ).toBeDisabled()
+
+    await checkout.getByRole("button", { name: "Verspäteten PayPal-Abbruch simulieren" }).click()
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
+  })
+
+  test("a guarded wallet confirmation notifies Stripe and leaves providers unlocked", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&confirm=blocked`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+
+    await checkout.getByRole("button", { name: "Apple Pay", exact: true }).click()
+
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "0")
+    await expect(diagnostic).toHaveAttribute("data-payment-failed-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "unlocked")
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+  })
+
+  test("unavailable Apple Pay has no row or gap and leaves PayPal first on desktop", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto(`${labPath}&apple=unavailable`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout).toBeVisible()
+    await waitForMotion(page)
+
+    await expect(checkout.getByTestId("apple-pay-row")).toHaveCount(0)
+    const paypal = checkout.getByTestId("paypal-button")
+    await expect(paypal).toBeVisible()
+    await expect(checkout.getByText("Karte & weitere")).toBeVisible()
+    const paymentRows = await checkout
+      .locator("[data-offer-payment-step]")
+      .evaluateAll((elements) =>
+        elements.map((element) => element.getAttribute("data-offer-payment-step")),
+      )
+    expect(paymentRows).toEqual(["paypal", "payment_element"])
+  })
+
+  test("fallback confirmation locks duplicate submission once", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    const { checkout } = await openCheckoutAtNonzeroScroll(page)
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+
+    await checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }).dblclick()
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await expect(checkout.getByRole("button", { name: "Apple Pay", exact: true })).toBeDisabled()
+    await expect(checkout.getByTestId("paypal-button")).toBeDisabled()
+  })
+
+  test("a rejected Stripe confirmation shows recovery and releases its provider lock", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto(`${labPath}&confirm=reject`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+
+    await checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }).click()
+
+    await expect(checkout.getByRole("alert")).toContainText(
+      "Die Zahlung konnte nicht bestätigt werden.",
+    )
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "unlocked")
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+    await expect(
+      checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }),
+    ).toBeEnabled()
+  })
+
   test("desktop modal is centered and a nested dialog retains the page lock", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
     const { checkout, scrollBefore } = await openCheckoutAtNonzeroScroll(page)

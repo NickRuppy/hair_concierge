@@ -183,6 +183,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         ...offerContextProperties(data),
         ...commerceProperties(data),
         checkout_attempt_id: data.checkoutAttemptId,
+        payment_method_type: data.paymentMethodType,
         provider: data.provider,
         selection_index: data.selectionIndex,
       }
