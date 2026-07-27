@@ -189,6 +189,7 @@ test.describe("@ci offer payment overlay", () => {
     const checkoutRoot = page.locator(".bottom-sheet-root")
     await expect(duplicateDialog).toBeVisible()
     await expect(checkoutRoot).toHaveAttribute("inert", "")
+    await expect(duplicateDialog.getByRole("button", { name: "Schließen" }).first()).toBeFocused()
 
     await page.keyboard.press("Escape")
     await expect(duplicateDialog).toBeHidden()
