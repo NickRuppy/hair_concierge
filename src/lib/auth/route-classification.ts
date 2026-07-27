@@ -1,6 +1,7 @@
 export type RouteClassification = "public" | "protected" | "legacy" | "development" | "unknown"
 
 export type RouteEnvironment = {
+  ciOfferPageLabEnabled?: boolean
   nodeEnv: string | undefined
   localDevLoginEnabled: boolean
   vercelEnv?: string | undefined
@@ -87,6 +88,8 @@ export function classifyRoute(
 
   const isDevelopment = environment.nodeEnv === "development"
   const isVercelPreview = environment.vercelEnv === "preview"
+  const isCiOfferPageLab =
+    pathname === "/labs/offer-page" && environment.ciOfferPageLabEnabled === true
   const isLocalLoginRoute = pathname === LOCAL_LOGIN_ROUTE
   const isStandardDevelopmentRoute =
     DEVELOPMENT_EXACT_ROUTES.includes(pathname) ||
@@ -96,7 +99,10 @@ export function classifyRoute(
     return isDevelopment && environment.localDevLoginEnabled ? "development" : "protected"
   }
 
-  if (VERCEL_PREVIEW_DEVELOPMENT_ROUTES.includes(pathname) && isVercelPreview) {
+  if (
+    (VERCEL_PREVIEW_DEVELOPMENT_ROUTES.includes(pathname) && isVercelPreview) ||
+    isCiOfferPageLab
+  ) {
     return "development"
   }
 

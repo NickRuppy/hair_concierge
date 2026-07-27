@@ -4,6 +4,7 @@ import { useReducer } from "react"
 import dynamic from "next/dynamic"
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
+import { LockKeyhole } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import type { CheckoutContext, CheckoutFailureStage } from "@/lib/analytics/events"
@@ -37,8 +38,9 @@ export type PaymentMethodCheckoutState = {
 
 export function createPaymentMethodCheckoutState(
   paypalEnabled: boolean,
+  options: { defaultCardCheckoutOpen?: boolean } = {},
 ): PaymentMethodCheckoutState {
-  return { cardCheckoutOpen: !paypalEnabled }
+  return { cardCheckoutOpen: options.defaultCardCheckoutOpen === true || !paypalEnabled }
 }
 
 export function paymentMethodCheckoutReducer(
@@ -67,6 +69,7 @@ export function PaymentMethodCheckout({
   onPaymentMethodSelected,
   onRetry,
   planLabel,
+  presentation = "default",
   returnDestination,
   source,
   stripe,
@@ -86,15 +89,20 @@ export function PaymentMethodCheckout({
   onPaymentMethodSelected?: (provider: "stripe" | "paypal") => void
   onRetry: () => void
   planLabel: string
+  presentation?: "default" | "offer-overlay"
   returnDestination?: string
   source: "pricing_page" | "quiz_result_offer"
   stripe: Promise<Stripe | null>
 }) {
   const paypalEnabled = isPayPalCheckoutEnabled()
+  const isOfferOverlay = presentation === "offer-overlay"
   const [{ cardCheckoutOpen }, dispatchPaymentMethod] = useReducer(
     paymentMethodCheckoutReducer,
     paypalEnabled,
-    createPaymentMethodCheckoutState,
+    (enabled) =>
+      createPaymentMethodCheckoutState(enabled, {
+        defaultCardCheckoutOpen: isOfferOverlay,
+      }),
   )
   const showPayPalCheckout = paypalEnabled && lockedProvider !== "stripe"
   const showCardCheckout =
@@ -107,27 +115,31 @@ export function PaymentMethodCheckout({
         ? "Dein Karten-Checkout läuft bereits. Bitte führe ihn hier fort."
         : null
 
-  return (
-    <div className="mt-5 rounded-[16px] border border-border bg-white p-4 shadow-[0_16px_40px_-28px_rgba(var(--brand-plum-rgb),0.45)]">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <p className="text-[13px] font-bold text-[var(--brand-plum-darkest)]">Sicher bezahlen</p>
-          <p className="text-[12px] text-muted-foreground">{planLabel}</p>
+  const checkoutContent = (
+    <>
+      {!isOfferOverlay ? (
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[13px] font-bold text-[var(--brand-plum-darkest)]">
+              Sicher bezahlen
+            </p>
+            <p className="text-[12px] text-muted-foreground">{planLabel}</p>
+          </div>
+          <Button
+            type="button"
+            variant="unstyled"
+            onClick={onChangePlan}
+            disabled={lockedProvider !== null}
+            data-offer-cta={source === "quiz_result_offer" ? "change_plan" : undefined}
+            data-offer-destination={source === "quiz_result_offer" ? "pricing" : undefined}
+            data-offer-selected-interval={source === "quiz_result_offer" ? interval : undefined}
+            data-offer-source-section={source === "quiz_result_offer" ? "pricing" : undefined}
+            className="min-h-10 rounded-[10px] bg-[var(--brand-plum-ice)] px-3 text-[12px] font-bold text-[var(--brand-plum)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Plan ändern
+          </Button>
         </div>
-        <Button
-          type="button"
-          variant="unstyled"
-          onClick={onChangePlan}
-          disabled={lockedProvider !== null}
-          data-offer-cta={source === "quiz_result_offer" ? "change_plan" : undefined}
-          data-offer-destination={source === "quiz_result_offer" ? "pricing" : undefined}
-          data-offer-selected-interval={source === "quiz_result_offer" ? interval : undefined}
-          data-offer-source-section={source === "quiz_result_offer" ? "pricing" : undefined}
-          className="min-h-10 rounded-[10px] bg-[var(--brand-plum-ice)] px-3 text-[12px] font-bold text-[var(--brand-plum)] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Plan ändern
-        </Button>
-      </div>
+      ) : null}
 
       {providerLockCopy ? (
         <p className="mb-3 rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-[12px] font-semibold leading-relaxed text-[var(--brand-plum-darkest)]">
@@ -163,23 +175,35 @@ export function PaymentMethodCheckout({
               </div>
 
               <div>
-                <button
-                  type="button"
-                  aria-controls="card-checkout"
-                  aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
-                  aria-expanded={cardCheckoutOpen}
-                  onClick={() => {
-                    if (!cardCheckoutOpen) onPaymentMethodSelected?.("stripe")
-                    dispatchPaymentMethod("reveal_card")
-                  }}
-                  className={`min-h-[52px] w-full rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${
-                    cardCheckoutOpen
-                      ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
-                      : "border-border hover:border-[var(--brand-plum-light)]"
-                  }`}
-                >
-                  Karte & weitere
-                </button>
+                {isOfferOverlay && cardCheckoutOpen ? (
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <strong className="text-[14px] text-[var(--brand-plum-darkest)]">
+                      Karte & weitere
+                    </strong>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--brand-plum)]">
+                      <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
+                      Sicher bezahlen
+                    </span>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    aria-controls="card-checkout"
+                    aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
+                    aria-expanded={cardCheckoutOpen}
+                    onClick={() => {
+                      if (!cardCheckoutOpen) onPaymentMethodSelected?.("stripe")
+                      dispatchPaymentMethod("reveal_card")
+                    }}
+                    className={`min-h-[52px] w-full rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${
+                      cardCheckoutOpen
+                        ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
+                        : "border-border hover:border-[var(--brand-plum-light)]"
+                    }`}
+                  >
+                    Karte & weitere
+                  </button>
+                )}
                 {!cardCheckoutOpen ? (
                   <p
                     id="payment-method-helper"
@@ -221,6 +245,16 @@ export function PaymentMethodCheckout({
           )}
         </div>
       ) : null}
+    </>
+  )
+
+  if (isOfferOverlay) {
+    return <div className="grid gap-3">{checkoutContent}</div>
+  }
+
+  return (
+    <div className="mt-5 rounded-[16px] border border-border bg-white p-4 shadow-[0_16px_40px_-28px_rgba(var(--brand-plum-rgb),0.45)]">
+      {checkoutContent}
     </div>
   )
 }

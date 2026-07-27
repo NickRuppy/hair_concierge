@@ -66,6 +66,7 @@ export const metaDestination = {
     switch (eventName) {
       case "checkout_started": {
         const data = payload as AppEventMap["checkout_started"]
+        if (data.checkoutPresentation === "overlay") return false
         return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
           trackMetaCheckoutStarted(
             data.source,
@@ -76,6 +77,23 @@ export const metaDestination = {
               value: data.value,
             },
             data.funnelEventId,
+            packageKey,
+          ),
+        )
+      }
+      case "offer_checkout_opened": {
+        const data = payload as AppEventMap["offer_checkout_opened"]
+        if (data.checkoutPresentation !== "overlay") return false
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaCheckoutStarted(
+            "quiz_result_offer",
+            data.interval,
+            {
+              currency: data.currency,
+              planId: data.planId,
+              value: data.value,
+            },
+            data.checkoutAttemptId,
             packageKey,
           ),
         )

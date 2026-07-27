@@ -17,3 +17,7 @@ export function isFunnelMetaCustomDataEnabled() {
 export function isFunnelMetaBrowserCustomDataEnabled() {
   return process.env.NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED === "true"
 }
+
+export function isOfferPaymentOverlayEnabled() {
+  return process.env.NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED === "true"
+}

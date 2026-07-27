@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { COOKIE_CONSENT_OPEN_SETTINGS_EVENT, loadConsent, saveConsent } from "@/lib/cookie-consent"
@@ -122,7 +122,9 @@ export function CookieConsent() {
         <DialogContent>
           <div className="space-y-4">
             <div>
-              <h3 className="font-header text-2xl text-foreground">Cookie-Einstellungen</h3>
+              <DialogTitle className="font-header text-2xl font-normal leading-normal text-foreground">
+                Cookie-Einstellungen
+              </DialogTitle>
               <p className="mt-1 text-sm text-muted-foreground">
                 Entscheide selbst, welche Cookies du zulassen möchtest. Deine Auswahl gilt nur für
                 diese Website.

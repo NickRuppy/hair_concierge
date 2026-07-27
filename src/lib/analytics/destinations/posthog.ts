@@ -62,6 +62,8 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         ...offerContextProperties(data),
         checkout_attempt_id: data.checkoutAttemptId,
         checkout_context: data.checkoutContext,
+        checkout_presentation: data.checkoutPresentation,
+        checkout_start_trigger: data.checkoutStartTrigger,
         currency: data.currency,
         interval: data.interval,
         leadId: data.leadId,
@@ -122,6 +124,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         ...commerceProperties(data),
         available_providers: data.availableProviders,
         checkout_attempt_id: data.checkoutAttemptId,
+        checkout_presentation: data.checkoutPresentation,
         open_index: data.openIndex,
       }
     }

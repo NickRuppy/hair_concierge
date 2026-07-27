@@ -89,6 +89,8 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
       const data = payload as AppEventMap["checkout_started"]
       return {
         checkout_context: data.checkoutContext,
+        checkout_presentation: data.checkoutPresentation,
+        checkout_start_trigger: data.checkoutStartTrigger,
         currency: data.currency,
         interval: data.interval,
         lead_id: data.leadId,

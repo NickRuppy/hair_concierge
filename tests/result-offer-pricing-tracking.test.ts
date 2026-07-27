@@ -43,6 +43,7 @@ test("visibility-based pricing tracking preserves funnel attribution metadata", 
 test("offer pricing tracks plan, checkout, payment-method, and sanitized failure diagnostics", () => {
   assert.match(pricingSource, /trackAppEvent\("offer_plan_selected"/)
   assert.match(pricingSource, /trackAppEvent\("offer_checkout_opened"/)
+  assert.match(pricingSource, /checkoutPresentation:/)
   assert.match(pricingSource, /trackAppEvent\("offer_payment_method_selected"/)
   assert.match(pricingSource, /trackAppEvent\("checkout_start_failed"/)
   assert.match(pricingSource, /errorCode: "stripe_session_request_failed"/)
@@ -55,6 +56,8 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /const nextCheckoutAttemptId = nextAttempt\.checkoutAttemptId/)
   assert.match(pricingSource, /checkoutAttemptId: nextCheckoutAttemptId/)
   assert.match(pricingSource, /checkoutAttemptId,\s*\n\s*\}\),/)
+  assert.match(pricingSource, /checkoutStartTrigger: "automatic_mount"/)
+  assert.match(pricingSource, /checkoutStartTrigger: "explicit_provider_action"/)
   assert.match(pricingSource, /checkoutAttemptController\.claimFailure\(/)
   assert.match(pricingSource, /checkoutAttemptController\.retry\(\)/)
   assert.match(pricingSource, /checkoutAttemptController\.close\(\)/)
@@ -62,8 +65,9 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /setCheckoutAttemptId\(nextCheckoutAttemptId\)/)
   assert.match(
     pricingSource,
-    /if \(!stripePublishableKey && !isPayPalCheckoutEnabled\(\)\) \{[\s\S]*?attemptId: nextCheckoutAttemptId,[\s\S]*?errorCode: "stripe_publishable_key_missing"/,
+    /if \(!stripePublishableKey && \(paymentOverlayEnabled \|\| !paypalEnabled\)\) \{[\s\S]*?attemptId: nextCheckoutAttemptId,[\s\S]*?errorCode: "stripe_publishable_key_missing"/,
   )
+  assert.match(pricingSource, /if \(!paymentOverlayEnabled\) scrollInlineCheckoutIntoView\(\)/)
 })
 
 test("pricing visibility waits for intersection and fires exactly once", () => {

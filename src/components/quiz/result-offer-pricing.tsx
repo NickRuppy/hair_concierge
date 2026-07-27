@@ -8,6 +8,7 @@ import {
   PaymentMethodCheckout,
   type CheckoutFailure,
 } from "@/components/checkout/payment-method-checkout"
+import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
 import {
   ActiveSubscriptionDialog,
   isCheckoutAccessAlreadyExistsResponse,
@@ -25,6 +26,7 @@ import {
   type CheckoutAttemptController,
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
+import { isOfferPaymentOverlayEnabled } from "@/lib/funnel/flags"
 import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -70,7 +72,8 @@ export function ResultOfferPricing({
   offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   const pricingRef = useRef<HTMLDivElement | null>(null)
-  const checkoutRef = useRef<HTMLDivElement | null>(null)
+  const inlineCheckoutRef = useRef<HTMLDivElement | null>(null)
+  const checkoutReturnFocusRef = useRef<HTMLElement | null>(null)
   const pricingTrackedRef = useRef(false)
   const checkoutOpenIndexRef = useRef(0)
   const checkoutAttemptControllerRef = useRef<CheckoutAttemptController | null>(null)
@@ -88,6 +91,7 @@ export function ResultOfferPricing({
     useState<Promise<Stripe | null>>(unloadedStripePromise)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
+  const paymentOverlayEnabled = isOfferPaymentOverlayEnabled()
 
   const getStripePromise = useCallback(() => {
     return getOfferStripePromise()
@@ -187,34 +191,50 @@ export function ResultOfferPricing({
       })
     }
     setSelectedInterval(interval)
+    checkoutReturnFocusRef.current = null
     checkoutAttemptController.close()
     setCheckoutInterval(null)
     setCheckoutAttemptId(null)
     setCheckoutError(null)
   }
 
+  function closeCheckout({ focusPlan = false }: { focusPlan?: boolean } = {}) {
+    checkoutReturnFocusRef.current = focusPlan
+      ? (pricingRef.current?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]') ??
+        null)
+      : null
+    checkoutAttemptController.close()
+    setCheckoutAttemptId(null)
+    setCheckoutInterval(null)
+    setCheckoutError(null)
+  }
+
+  function scrollInlineCheckoutIntoView() {
+    window.requestAnimationFrame(() => {
+      inlineCheckoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    })
+  }
+
   function openCheckout() {
     const nextAttempt = checkoutAttemptController.open()
     if (!nextAttempt.isNew) {
-      window.requestAnimationFrame(() => {
-        checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-      })
+      if (!paymentOverlayEnabled) scrollInlineCheckoutIntoView()
       return
     }
 
     const plan = getStripePricingPlan(selectedInterval)
     const nextCheckoutAttemptId = nextAttempt.checkoutAttemptId
+    const paypalEnabled = isPayPalCheckoutEnabled()
     if (offerContext) {
       checkoutOpenIndexRef.current += 1
       trackAppEvent("offer_checkout_opened", {
         ...offerContext,
         availableProviders: [
           ...(stripePublishableKey ? ["stripe"] : []),
-          ...(isPayPalCheckoutEnabled() && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
-            ? ["paypal"]
-            : []),
+          ...(paypalEnabled && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim() ? ["paypal"] : []),
         ],
         checkoutAttemptId: nextCheckoutAttemptId,
+        checkoutPresentation: paymentOverlayEnabled ? "overlay" : "inline",
         currency: plan.currency,
         funnelEventId: createFunnelEventId(),
         interval: selectedInterval,
@@ -224,7 +244,7 @@ export function ResultOfferPricing({
       })
     }
     const stripePromise = ensureStripePromise()
-    if (stripePublishableKey && offerContext && !isPayPalCheckoutEnabled()) {
+    if (stripePublishableKey && offerContext && (paymentOverlayEnabled || !paypalEnabled)) {
       trackStripeJsAvailability(stripePromise, (failure) =>
         trackCheckoutFailure({
           attemptId: nextCheckoutAttemptId,
@@ -234,7 +254,7 @@ export function ResultOfferPricing({
         }),
       )
     }
-    if (!stripePublishableKey && !isPayPalCheckoutEnabled()) {
+    if (!stripePublishableKey && (paymentOverlayEnabled || !paypalEnabled)) {
       trackCheckoutFailure({
         attemptId: nextCheckoutAttemptId,
         failure: {
@@ -247,14 +267,14 @@ export function ResultOfferPricing({
       })
     }
     setCheckoutError(
-      !isPayPalCheckoutEnabled() && !stripePublishableKey ? checkoutStartError : null,
+      !stripePublishableKey && (paymentOverlayEnabled || !paypalEnabled)
+        ? checkoutStartError
+        : null,
     )
     onCheckoutOpen?.()
     setCheckoutAttemptId(nextCheckoutAttemptId)
     setCheckoutInterval(selectedInterval)
-    window.requestAnimationFrame(() => {
-      checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-    })
+    if (!paymentOverlayEnabled) scrollInlineCheckoutIntoView()
   }
 
   const fetchClientSecret = useCallback(async () => {
@@ -359,6 +379,8 @@ export function ResultOfferPricing({
     trackAppEvent("checkout_started", {
       ...(offerContext ?? {}),
       checkoutAttemptId,
+      checkoutPresentation: paymentOverlayEnabled ? "overlay" : "inline",
+      checkoutStartTrigger: "automatic_mount",
       interval: checkoutInterval,
       leadId: leadId ?? undefined,
       provider: "stripe",
@@ -379,6 +401,7 @@ export function ResultOfferPricing({
     setCheckoutError,
     setDuplicateDialogOpen,
     setDuplicateEmail,
+    paymentOverlayEnabled,
   ])
 
   const handlePayPalCheckoutStarted = useCallback(
@@ -388,6 +411,8 @@ export function ResultOfferPricing({
       trackAppEvent("checkout_started", {
         ...(offerContext ?? {}),
         checkoutAttemptId,
+        checkoutPresentation: paymentOverlayEnabled ? "overlay" : "inline",
+        checkoutStartTrigger: "explicit_provider_action",
         currency: plan.currency,
         interval: checkoutInterval,
         leadId: leadId ?? undefined,
@@ -398,7 +423,7 @@ export function ResultOfferPricing({
         value: plan.amount,
       })
     },
-    [checkoutAttemptId, checkoutInterval, leadId, offerContext],
+    [checkoutAttemptId, checkoutInterval, leadId, offerContext, paymentOverlayEnabled],
   )
 
   const handlePaymentMethodSelected = useCallback(
@@ -457,6 +482,40 @@ export function ResultOfferPricing({
     [checkoutAttemptId, checkoutInterval, trackCheckoutFailure],
   )
 
+  const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval)
+  const paymentCheckout = checkoutInterval ? (
+    <PaymentMethodCheckout
+      checkoutAttemptId={checkoutAttemptId ?? undefined}
+      checkoutError={checkoutError}
+      checkoutKey={`${checkoutInterval}:${checkoutAttemptId ?? "pending"}`}
+      fetchClientSecret={fetchClientSecret}
+      interval={checkoutInterval}
+      leadId={leadId}
+      onChangePlan={() => closeCheckout()}
+      onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
+      onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
+      onPaymentMethodSelected={handlePaymentMethodSelected}
+      onRetry={() => {
+        if (!stripePublishableKey) {
+          setCheckoutError(checkoutStartError)
+          return
+        }
+
+        const retryCheckoutAttemptId = checkoutAttemptController.retry()
+        if (!retryCheckoutAttemptId) return
+        const interval = checkoutInterval
+        setCheckoutAttemptId(retryCheckoutAttemptId)
+        setCheckoutError(null)
+        setCheckoutInterval(null)
+        window.setTimeout(() => setCheckoutInterval(interval), 0)
+      }}
+      planLabel={activePlan.ctaLabel}
+      presentation={paymentOverlayEnabled ? "offer-overlay" : "default"}
+      source="quiz_result_offer"
+      stripe={checkoutStripePromise}
+    />
+  ) : null
+
   return (
     <div ref={pricingRef} className="space-y-4">
       <ActiveSubscriptionDialog
@@ -471,43 +530,20 @@ export function ResultOfferPricing({
         selectedInterval={selectedInterval}
       />
 
-      <div ref={checkoutRef}>
-        {checkoutInterval ? (
-          <PaymentMethodCheckout
-            checkoutAttemptId={checkoutAttemptId ?? undefined}
-            checkoutError={checkoutError}
-            checkoutKey={`${checkoutInterval}:${checkoutAttemptId ?? "pending"}`}
-            fetchClientSecret={fetchClientSecret}
-            interval={checkoutInterval}
-            leadId={leadId}
-            onChangePlan={() => {
-              checkoutAttemptController.close()
-              setCheckoutAttemptId(null)
-              setCheckoutInterval(null)
-            }}
-            onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
-            onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
-            onPaymentMethodSelected={handlePaymentMethodSelected}
-            onRetry={() => {
-              if (!stripePublishableKey) {
-                setCheckoutError(checkoutStartError)
-                return
-              }
-
-              const retryCheckoutAttemptId = checkoutAttemptController.retry()
-              if (!retryCheckoutAttemptId) return
-              const interval = checkoutInterval
-              setCheckoutAttemptId(retryCheckoutAttemptId)
-              setCheckoutError(null)
-              setCheckoutInterval(null)
-              window.setTimeout(() => setCheckoutInterval(interval), 0)
-            }}
-            planLabel={getStripePricingPlan(checkoutInterval).ctaLabel}
-            source="quiz_result_offer"
-            stripe={checkoutStripePromise}
-          />
-        ) : null}
-      </div>
+      {paymentOverlayEnabled ? (
+        <OfferPaymentOverlay
+          onConfirmedAbort={() => closeCheckout()}
+          onConfirmedPlanChange={() => closeCheckout({ focusPlan: true })}
+          open={checkoutInterval !== null}
+          planName={activePlan.name}
+          priceLabel={`${activePlan.price.replace(/^€/, "")} €`}
+          restoreFocusRef={checkoutReturnFocusRef}
+        >
+          {paymentCheckout}
+        </OfferPaymentOverlay>
+      ) : (
+        <div ref={inlineCheckoutRef}>{paymentCheckout}</div>
+      )}
     </div>
   )
 }
