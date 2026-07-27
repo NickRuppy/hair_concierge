@@ -57,7 +57,7 @@ test("experiment flag is disabled unless it is exactly true", () => {
   }
 })
 
-test("stored arms stay sticky while enabled and the disabled switch renders rollback", async () => {
+test("stored viewed arms stay sticky after the assignment switch is disabled", async () => {
   const experimentVariant = await resolveGuidedStoryOfferExperiment({
     leadId: "lead-1",
     enabled: true,
@@ -70,7 +70,7 @@ test("stored arms stay sticky while enabled and the disabled switch renders roll
   })
   assert.equal(experimentVariant, "guided-story-potential")
 
-  const disabledRollback = await resolveGuidedStoryOfferExperiment({
+  const disabledVariant = await resolveGuidedStoryOfferExperiment({
     leadId: "lead-1",
     enabled: false,
     session: {
@@ -80,7 +80,145 @@ test("stored arms stay sticky while enabled and the disabled switch renders roll
       offerViewedAt: "2026-07-26T10:00:00.000Z",
     },
   })
-  assert.equal(disabledRollback, "guided-story")
+  assert.equal(disabledVariant, "guided-story-potential")
+})
+
+test("the disabled switch atomically resets an unviewed stored arm before rollback", async () => {
+  let updateValue: unknown = null
+  let offerViewedAtGuard: unknown = "unset"
+  let storedVariantGuard: unknown = null
+  const client = {
+    from: () => ({
+      update: (values: Record<string, unknown>) => ({
+        eq: () => ({
+          is: (column: string, value: null) => {
+            offerViewedAtGuard = column === "offer_viewed_at" ? value : "wrong-column"
+            return {
+              eq: (guardColumn: string, guardValue: string) => {
+                updateValue = values.offer_variant
+                storedVariantGuard = guardColumn === "offer_variant" ? guardValue : "wrong-column"
+                return {
+                  select: () => ({
+                    maybeSingle: async () => ({
+                      data: { offer_variant: values.offer_variant },
+                      error: null,
+                    }),
+                  }),
+                }
+              },
+            }
+          },
+        }),
+      }),
+      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),
+    }),
+  }
+
+  const variant = await resolveGuidedStoryOfferExperiment({
+    leadId: "lead-1",
+    enabled: false,
+    client: client as never,
+    session: {
+      sessionId: "session-1",
+      packageKey: "default_organic",
+      offerVariant: "guided-story-potential",
+      offerViewedAt: null,
+    },
+  })
+
+  assert.equal(variant, "guided-story")
+  assert.equal(updateValue, "guided-story")
+  assert.equal(offerViewedAtGuard, null)
+  assert.equal(storedVariantGuard, "guided-story-potential")
+})
+
+test("the disabled switch preserves a concurrent experiment winner after the guarded reset loses", async () => {
+  let readBack = false
+  const client = {
+    from: () => ({
+      update: () => ({
+        eq: () => ({
+          is: () => ({
+            eq: () => ({
+              select: () => ({
+                maybeSingle: async () => ({
+                  data: null,
+                  error: null,
+                }),
+              }),
+            }),
+          }),
+        }),
+      }),
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => {
+            readBack = true
+            return {
+              data: { offer_variant: "guided-story-founder-letter" },
+              error: null,
+            }
+          },
+        }),
+      }),
+    }),
+  }
+
+  const variant = await resolveGuidedStoryOfferExperiment({
+    leadId: "lead-1",
+    enabled: false,
+    client: client as never,
+    session: {
+      sessionId: "session-1",
+      packageKey: "default_organic",
+      offerVariant: "guided-story-potential",
+      offerViewedAt: null,
+    },
+  })
+
+  assert.equal(variant, "guided-story-founder-letter")
+  assert.equal(readBack, true)
+})
+
+test("the disabled switch preserves the stored arm when rollback persistence fails", async () => {
+  let captured = 0
+  const client = {
+    from: () => ({
+      update: () => ({
+        eq: () => ({
+          is: () => ({
+            eq: () => ({
+              select: () => ({
+                maybeSingle: async () => ({
+                  data: null,
+                  error: new Error("database unavailable"),
+                }),
+              }),
+            }),
+          }),
+        }),
+      }),
+      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),
+    }),
+  }
+
+  const variant = await resolveGuidedStoryOfferExperiment({
+    leadId: "lead-1",
+    enabled: false,
+    client: client as never,
+    captureFailure: () => {
+      captured += 1
+    },
+    session: {
+      sessionId: "session-1",
+      packageKey: "default_organic",
+      offerVariant: "guided-story-potential",
+      offerViewedAt: null,
+    },
+  })
+
+  assert.equal(variant, "guided-story-potential")
+  assert.equal(captured, 1)
 })
 
 test("the experiment resolver preserves non-guided package offers while disabled", async () => {

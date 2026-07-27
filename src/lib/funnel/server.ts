@@ -132,7 +132,45 @@ export async function resolveGuidedStoryOfferExperiment(input: {
   const resolvedVariant = resolveOfferVariantForSession(session)
 
   if (!isGuidedStoryFamilyVariant(resolvedVariant)) return resolvedVariant
-  if (!enabled) return fallback
+  if (!enabled) {
+    if (!isGuidedStoryExperimentVariant(session?.offerVariant)) return fallback
+    if (session.offerViewedAt) return session.offerVariant
+
+    const storedVariant = session.offerVariant
+    const client =
+      input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
+    const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
+
+    try {
+      const { data, error } = await client
+        .from("funnel_sessions")
+        .update({ offer_variant: fallback })
+        .eq("id", session.sessionId)
+        .is("offer_viewed_at", null)
+        .eq("offer_variant", storedVariant)
+        .select("offer_variant")
+        .maybeSingle()
+      if (error) throw error
+      if (data?.offer_variant) return data.offer_variant
+
+      const readBack = await client
+        .from("funnel_sessions")
+        .select("offer_variant")
+        .eq("id", session.sessionId)
+        .maybeSingle()
+      if (readBack.error) throw readBack.error
+      return readBack.data?.offer_variant ?? storedVariant
+    } catch (error) {
+      captureFailure(error, {
+        experimentId: GUIDED_STORY_OFFER_EXPERIMENT.id,
+        revision: GUIDED_STORY_OFFER_EXPERIMENT.revision,
+        intendedVariant: fallback,
+        fallbackVariant: storedVariant,
+        packageKey: session.packageKey,
+      })
+      return storedVariant
+    }
+  }
   if (isGuidedStoryExperimentVariant(session?.offerVariant)) return session.offerVariant
   if (!session) return assignGuidedStoryExperimentVariant(leadId)
   if (session.offerViewedAt || resolvedVariant !== fallback) return resolvedVariant
