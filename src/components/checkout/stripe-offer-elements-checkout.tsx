@@ -14,6 +14,7 @@ import type {
   StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
   StripeExpressCheckoutElementConfirmEvent,
   StripeExpressCheckoutElementReadyEvent,
+  StripePaymentElementAvailablePaymentMethodsChangeEvent,
 } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,17 @@ type StripeOfferConfirmResult = { type: "success" } | { type: "error"; error: { 
 type StripeOfferExpressElement = {
   on: (event: "cancel", handler: () => void) => unknown
   off: (event: "cancel", handler: () => void) => unknown
+}
+type WalletDebugMethods =
+  | Record<string, boolean | { available?: boolean; [key: string]: unknown } | null | undefined>
+  | null
+  | undefined
+type WalletDebugEntry = {
+  sequence: number
+  elapsedMs: number
+  event: string
+  methods?: Record<string, boolean> | null
+  detail?: string
 }
 export type StripeOfferCheckoutResult =
   | { type: "loading" }
@@ -132,6 +144,23 @@ export function getStripeOfferElementsErrorMessage(message?: string | null) {
   return "Die Zahlung konnte nicht bestätigt werden. Bitte prüfe deine Angaben und versuche es erneut."
 }
 
+export function isWalletDebugEnabled(search: string) {
+  return new URLSearchParams(search).get("wallet_debug") === "1"
+}
+
+export function normalizeWalletDebugMethods(
+  methods: WalletDebugMethods,
+): Record<string, boolean> | null {
+  if (!methods) return null
+
+  return Object.fromEntries(
+    Object.entries(methods).map(([method, availability]) => [
+      method,
+      typeof availability === "boolean" ? availability : availability?.available === true,
+    ]),
+  )
+}
+
 function StripeOfferElementsCheckoutBody({
   lockedProvider,
   onPaymentMethodSelected,
@@ -193,8 +222,42 @@ export function StripeOfferElementsCheckoutContent({
   const [applePayAvailability, setApplePayAvailability] = useState<ApplePayAvailability>("pending")
   const [confirming, setConfirming] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const debugEnabledRef = useRef(
+    typeof window !== "undefined" && isWalletDebugEnabled(window.location.search),
+  )
+  const debugStartedAtRef = useRef(Date.now())
+  const debugSequenceRef = useRef(0)
+  const [debugEnabled, setDebugEnabled] = useState(false)
+  const [debugEntries, setDebugEntries] = useState<WalletDebugEntry[]>([])
+  const [debugCopied, setDebugCopied] = useState(false)
   const confirmingRef = useRef(false)
   const lockOwnerRef = useRef<StripeOfferProvider | null>(null)
+
+  const recordWalletDebugEvent = useCallback(
+    (event: string, methods?: WalletDebugMethods, detail?: string) => {
+      if (!debugEnabledRef.current) return
+
+      const entry: WalletDebugEntry = {
+        sequence: ++debugSequenceRef.current,
+        elapsedMs: Date.now() - debugStartedAtRef.current,
+        event,
+        ...(methods === undefined ? {} : { methods: normalizeWalletDebugMethods(methods) }),
+        ...(detail ? { detail } : {}),
+      }
+      setDebugEntries((current) => [...current.slice(-29), entry])
+    },
+    [],
+  )
+
+  useEffect(() => {
+    if (!debugEnabledRef.current) return
+    setDebugEnabled(true)
+    recordWalletDebugEvent("checkout_component_mounted")
+  }, [recordWalletDebugEvent])
+
+  useEffect(() => {
+    recordWalletDebugEvent("checkout_state", undefined, checkoutResult.type)
+  }, [checkoutResult.type, recordWalletDebugEvent])
 
   const claimStripe = useCallback(
     (paymentMethodType: StripeOfferPaymentMethodType) => {
@@ -238,17 +301,52 @@ export function StripeOfferElementsCheckoutContent({
 
   const handleExpressCheckoutReady = useCallback(
     (event: StripeExpressCheckoutElementReadyEvent) => {
+      recordWalletDebugEvent("express_ready", event.availablePaymentMethods)
       setApplePayAvailability(getApplePayAvailability(event))
     },
-    [],
+    [recordWalletDebugEvent],
   )
 
   const handleAvailablePaymentMethodsChange = useCallback(
     (event: StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent) => {
+      recordWalletDebugEvent("express_methods_changed", event.paymentMethods)
       setApplePayAvailability(getChangedApplePayAvailability(event))
     },
-    [],
+    [recordWalletDebugEvent],
   )
+
+  const handlePaymentMethodsChange = useCallback(
+    (event: StripePaymentElementAvailablePaymentMethodsChangeEvent) => {
+      recordWalletDebugEvent("payment_methods_changed", event.paymentMethods)
+    },
+    [recordWalletDebugEvent],
+  )
+
+  const copyWalletDebugTrace = useCallback(() => {
+    const trace = JSON.stringify(debugEntries, null, 2)
+    const markCopied = () => {
+      setDebugCopied(true)
+      window.setTimeout(() => setDebugCopied(false), 1500)
+    }
+    const copyWithSelectionFallback = () => {
+      const textarea = document.createElement("textarea")
+      textarea.value = trace
+      textarea.style.position = "fixed"
+      textarea.style.opacity = "0"
+      document.body.appendChild(textarea)
+      textarea.select()
+      const copied = document.execCommand("copy")
+      textarea.remove()
+      if (copied) markCopied()
+    }
+
+    if (!navigator.clipboard) {
+      copyWithSelectionFallback()
+      return
+    }
+
+    void navigator.clipboard.writeText(trace).then(markCopied).catch(copyWithSelectionFallback)
+  }, [debugEntries])
 
   const confirmCheckout = useCallback(
     async (
@@ -324,6 +422,27 @@ export function StripeOfferElementsCheckoutContent({
 
   return (
     <div className="relative grid gap-3">
+      {debugEnabled ? (
+        <details className="fixed inset-x-2 bottom-[max(8px,env(safe-area-inset-bottom))] z-[100] max-h-[44svh] overflow-auto rounded-xl bg-black/95 p-3 text-left font-mono text-[11px] leading-4 text-white shadow-2xl">
+          <summary className="cursor-pointer font-sans text-xs font-bold">
+            Wallet-Debug · Express {applePayAvailability} · {debugEntries.length} Events
+          </summary>
+          <div className="mt-2 flex items-center gap-2">
+            <button
+              type="button"
+              className="rounded bg-white px-2 py-1 font-sans text-xs font-bold text-black"
+              onClick={copyWalletDebugTrace}
+            >
+              {debugCopied ? "Kopiert" : "Trace kopieren"}
+            </button>
+            <span className="font-sans text-[10px] text-white/70">Keine Zahlungsdaten</span>
+          </div>
+          <pre className="mt-2 whitespace-pre-wrap break-all">
+            {debugEntries.map((entry) => JSON.stringify(entry)).join("\n")}
+          </pre>
+        </details>
+      ) : null}
+
       {/* Stripe's documented hidden mount preserves measurable geometry while wallets are
           evaluated. Unavailable Express Checkout stays out of flow without collapsing to 0px. */}
       <div
@@ -350,6 +469,13 @@ export function StripeOfferElementsCheckoutContent({
           <ExpressCheckoutElement
             onAvailablePaymentMethodsChange={handleAvailablePaymentMethodsChange}
             onConfirm={(event) => void confirmCheckout("apple_pay", event)}
+            onLoadError={(event) =>
+              recordWalletDebugEvent(
+                "express_load_error",
+                undefined,
+                event.error.code ?? event.error.type,
+              )
+            }
             onReady={handleExpressCheckoutReady}
             options={stripeOfferExpressCheckoutOptions}
           />
@@ -376,7 +502,20 @@ export function StripeOfferElementsCheckoutContent({
             {state.totalLabel}
           </span>
         </div>
-        {paymentElement ?? <PaymentElement />}
+        {paymentElement ?? (
+          <PaymentElement
+            onAvailablePaymentMethodsChange={handlePaymentMethodsChange}
+            onLoadError={(event) =>
+              recordWalletDebugEvent(
+                "payment_load_error",
+                undefined,
+                event.error.code ?? event.error.type,
+              )
+            }
+            onLoaderStart={() => recordWalletDebugEvent("payment_loader_started")}
+            onReady={() => recordWalletDebugEvent("payment_ready")}
+          />
+        )}
 
         {state.errorMessage ? (
           <p
