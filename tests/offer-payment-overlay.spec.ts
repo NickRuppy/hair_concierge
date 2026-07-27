@@ -255,12 +255,42 @@ test.describe("@ci offer payment overlay", () => {
     const paypal = checkout.getByTestId("paypal-button")
     await expect(paypal).toBeVisible()
     await expect(checkout.getByText("Karte & weitere")).toBeVisible()
+    const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
+    const paymentFlow = applePayWrapper.locator("..")
+    const [paymentFlowBox, paypalRowBox] = await Promise.all([
+      paymentFlow.boundingBox(),
+      checkout.getByTestId("paypal-row").boundingBox(),
+    ])
+    expect(paymentFlowBox).not.toBeNull()
+    expect(paypalRowBox).not.toBeNull()
+    expect(Math.abs(paypalRowBox!.y - paymentFlowBox!.y)).toBeLessThan(1)
     const paymentRows = await checkout
       .locator("[data-offer-payment-step]")
       .evaluateAll((elements) =>
         elements.map((element) => element.getAttribute("data-offer-payment-step")),
       )
     expect(paymentRows).toEqual(["paypal", "payment_element"])
+  })
+
+  test("Apple Pay becomes the first prominent option when availability arrives after readiness", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&apple=delayed`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+    await expect(checkout.getByTestId("apple-pay-row")).toBeVisible()
+    const paymentRows = await checkout
+      .locator("[data-offer-payment-step]")
+      .evaluateAll((elements) =>
+        elements.map((element) => element.getAttribute("data-offer-payment-step")),
+      )
+    expect(paymentRows).toEqual(["apple_pay", "paypal", "payment_element"])
   })
 
   test("fallback confirmation locks duplicate submission once", async ({ page }) => {

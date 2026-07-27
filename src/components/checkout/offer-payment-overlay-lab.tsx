@@ -12,10 +12,14 @@ import {
 } from "@/components/checkout/stripe-offer-elements-checkout"
 import { Button } from "@/components/ui/button"
 import { ToastProvider, useToast } from "@/providers/toast-provider"
-import type { StripeExpressCheckoutElementConfirmEvent } from "@stripe/stripe-js"
+import type {
+  StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
+  StripeExpressCheckoutElementConfirmEvent,
+} from "@stripe/stripe-js"
 
 type PaymentFixtureProps = {
   applePayAvailable: boolean
+  applePayAvailabilityDelayMs: number | null
   checkoutAttemptId: string
   confirmBehavior: "success" | "reject" | "blocked"
   initiateCheckoutCount: number
@@ -27,6 +31,7 @@ const labCheckoutTotal = {
   balanceAppliedToNextInvoice: false,
   discount: labZeroAmount,
   shippingRate: labZeroAmount,
+  surcharge: labZeroAmount,
   subtotal: { amount: "34,99 €", minorUnitsAmount: 3499 },
   taxExclusive: labZeroAmount,
   taxInclusive: labZeroAmount,
@@ -35,32 +40,56 @@ const labCheckoutTotal = {
 
 function LabExpressCheckoutElement({
   applePayAvailable,
+  applePayAvailabilityDelayMs,
   disabled,
   onCancel,
+  onAvailablePaymentMethodsChange,
   onConfirm,
   onPaymentFailed,
   onReady,
 }: StripeOfferExpressRendererProps & {
   applePayAvailable: boolean
+  applePayAvailabilityDelayMs: number | null
   disabled: boolean
   onCancel: () => void
   onPaymentFailed: () => void
 }) {
+  const [visible, setVisible] = React.useState(
+    applePayAvailable && applePayAvailabilityDelayMs === null,
+  )
+
   React.useEffect(() => {
     onReady({
       elementType: "expressCheckout",
       availablePaymentMethods: {
         amazonPay: false,
-        applePay: applePayAvailable,
+        applePay: applePayAvailable && applePayAvailabilityDelayMs === null,
         googlePay: false,
         klarna: false,
         link: false,
         paypal: false,
       },
     })
-  }, [applePayAvailable, onReady])
 
-  if (!applePayAvailable) return null
+    if (!applePayAvailable || applePayAvailabilityDelayMs === null) {
+      setVisible(applePayAvailable)
+      return
+    }
+
+    const timeout = window.setTimeout(() => {
+      setVisible(true)
+      onAvailablePaymentMethodsChange({
+        elementType: "expressCheckout",
+        paymentMethods: {
+          applePay: { available: true },
+        },
+      } satisfies StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent)
+    }, applePayAvailabilityDelayMs)
+
+    return () => window.clearTimeout(timeout)
+  }, [applePayAvailabilityDelayMs, applePayAvailable, onAvailablePaymentMethodsChange, onReady])
+
+  if (!visible) return null
 
   return (
     <section
@@ -93,6 +122,7 @@ function LabExpressCheckoutElement({
 
 function PaymentFixture({
   applePayAvailable,
+  applePayAvailabilityDelayMs,
   checkoutAttemptId,
   confirmBehavior,
   initiateCheckoutCount,
@@ -236,6 +266,7 @@ function PaymentFixture({
           <LabExpressCheckoutElement
             {...props}
             applePayAvailable={applePayAvailable}
+            applePayAvailabilityDelayMs={applePayAvailabilityDelayMs}
             disabled={providerLock !== null}
             onCancel={() => {
               setAppleCancelCount((count) => count + 1)
@@ -291,6 +322,9 @@ function OfferPaymentOverlayLabContent() {
   const [open, setOpen] = React.useState(false)
   const [lastOutcome, setLastOutcome] = React.useState("Noch nicht geöffnet")
   const [applePayAvailable, setApplePayAvailable] = React.useState(true)
+  const [applePayAvailabilityDelayMs, setApplePayAvailabilityDelayMs] = React.useState<
+    number | null
+  >(null)
   const [confirmBehavior, setConfirmBehavior] = React.useState<"success" | "reject" | "blocked">(
     "success",
   )
@@ -303,6 +337,7 @@ function OfferPaymentOverlayLabContent() {
     const params = new URLSearchParams(window.location.search)
     const initialApplePayState = params.get("apple")
     setApplePayAvailable(initialApplePayState !== "unavailable")
+    setApplePayAvailabilityDelayMs(initialApplePayState === "delayed" ? 150 : null)
     const initialConfirmBehavior = params.get("confirm")
     setConfirmBehavior(
       initialConfirmBehavior === "reject" || initialConfirmBehavior === "blocked"
@@ -314,6 +349,7 @@ function OfferPaymentOverlayLabContent() {
 
   const setApplePayAvailability = (available: boolean) => {
     setApplePayAvailable(available)
+    setApplePayAvailabilityDelayMs(null)
     const url = new URL(window.location.href)
     if (available) url.searchParams.delete("apple")
     else url.searchParams.set("apple", "unavailable")
@@ -411,6 +447,7 @@ function OfferPaymentOverlayLabContent() {
       >
         <PaymentFixture
           applePayAvailable={applePayAvailable}
+          applePayAvailabilityDelayMs={applePayAvailabilityDelayMs}
           checkoutAttemptId={checkoutAttemptId}
           confirmBehavior={confirmBehavior}
           initiateCheckoutCount={initiateCheckoutCount}

@@ -5,6 +5,7 @@ import type { StripeCheckoutSession } from "@stripe/stripe-js"
 import {
   createStripeOfferElementsState,
   formatCheckoutTotal,
+  getChangedApplePayAvailability,
   getApplePayAvailability,
   getStripeOfferElementsErrorMessage,
   hasApplePayMethod,
@@ -22,6 +23,7 @@ const sessionTotal = {
     balanceAppliedToNextInvoice: false,
     discount: zeroAmount,
     shippingRate: zeroAmount,
+    surcharge: zeroAmount,
     subtotal: {
       amount: "34,99 €",
       minorUnitsAmount: 3499,
@@ -49,6 +51,23 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   assert.equal(hasApplePayMethod({ availablePaymentMethods: applePayAvailable }), true)
   assert.equal(getApplePayAvailability({ availablePaymentMethods: undefined }), "unavailable")
   assert.equal(getApplePayAvailability({ availablePaymentMethods: applePayAvailable }), "available")
+  assert.equal(getChangedApplePayAvailability({ paymentMethods: undefined }), "unavailable")
+  assert.equal(
+    getChangedApplePayAvailability({
+      paymentMethods: {
+        applePay: { available: true },
+      },
+    }),
+    "available",
+  )
+  assert.equal(
+    getChangedApplePayAvailability({
+      paymentMethods: {
+        applePay: { available: false },
+      },
+    }),
+    "unavailable",
+  )
   assert.equal(formatCheckoutTotal(sessionTotal), "34,99 €")
   assert.equal(formatCheckoutTotal(null), "Wird berechnet")
 
