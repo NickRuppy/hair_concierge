@@ -70,7 +70,7 @@ export const stripeOfferExpressCheckoutOptions: StripeCheckoutExpressCheckoutEle
   layout: {
     maxColumns: 1,
     maxRows: 1,
-    overflow: "never",
+    overflow: "auto",
   },
   paymentMethodOrder: ["applePay"],
   paymentMethods: {
