@@ -10,6 +10,7 @@ import {
   getStripeOfferElementsErrorMessage,
   hasApplePayMethod,
   isWalletDebugEnabled,
+  isWalletExpressDomProbeEnabled,
   isWalletPaymentEligibilityProbeEnabled,
   normalizeWalletDebugMethods,
   reconcilePaymentElementApplePayAvailability,
@@ -140,6 +141,14 @@ test("wallet diagnostics stay query-gated and retain only availability booleans"
   )
   assert.equal(isWalletPaymentEligibilityProbeEnabled("?wallet_probe=payment_eligibility"), false)
   assert.equal(isWalletPaymentEligibilityProbeEnabled("?wallet_debug=1"), false)
+  assert.equal(
+    isWalletExpressDomProbeEnabled(
+      "?entry=quiz_completion&wallet_debug=1&wallet_probe=express_dom",
+    ),
+    true,
+  )
+  assert.equal(isWalletExpressDomProbeEnabled("?wallet_probe=express_dom"), false)
+  assert.equal(isWalletExpressDomProbeEnabled("?wallet_debug=1"), false)
 
   assert.deepEqual(
     normalizeWalletDebugMethods({

@@ -153,6 +153,35 @@ export function isWalletPaymentEligibilityProbeEnabled(search: string) {
   return params.get("wallet_debug") === "1" && params.get("wallet_probe") === "payment_eligibility"
 }
 
+export function isWalletExpressDomProbeEnabled(search: string) {
+  const params = new URLSearchParams(search)
+  return params.get("wallet_debug") === "1" && params.get("wallet_probe") === "express_dom"
+}
+
+function describeWalletExpressDom(host: HTMLElement | null) {
+  if (!host) return "host=missing"
+
+  const hostRect = host.getBoundingClientRect()
+  const mountNode = host.firstElementChild
+  const mountRect = mountNode?.getBoundingClientRect()
+  const iframe = host.querySelector("iframe")
+  const iframeRect = iframe?.getBoundingClientRect()
+  const style = window.getComputedStyle(host)
+  const dimensions = (rect?: DOMRect) =>
+    rect ? `${Math.round(rect.width)}x${Math.round(rect.height)}` : "missing"
+
+  return [
+    "probe=forced_visible",
+    `host=${dimensions(hostRect)}`,
+    `probe_display=${style.display}`,
+    `probe_visibility=${style.visibility}`,
+    `children=${host.childElementCount}`,
+    `mount=${dimensions(mountRect)}`,
+    `iframes=${host.querySelectorAll("iframe").length}`,
+    `iframe=${dimensions(iframeRect)}`,
+  ].join(";")
+}
+
 export function normalizeWalletDebugMethods(
   methods: WalletDebugMethods,
 ): Record<string, boolean> | null {
@@ -244,6 +273,9 @@ export function StripeOfferElementsCheckoutContent({
   const paymentEligibilityProbeEnabledRef = useRef(
     typeof window !== "undefined" && isWalletPaymentEligibilityProbeEnabled(window.location.search),
   )
+  const expressDomProbeEnabledRef = useRef(
+    typeof window !== "undefined" && isWalletExpressDomProbeEnabled(window.location.search),
+  )
   const debugStartedAtRef = useRef(Date.now())
   const debugSequenceRef = useRef(0)
   const [debugEnabled, setDebugEnabled] = useState(false)
@@ -251,6 +283,7 @@ export function StripeOfferElementsCheckoutContent({
   const [debugCopied, setDebugCopied] = useState(false)
   const confirmingRef = useRef(false)
   const lockOwnerRef = useRef<StripeOfferProvider | null>(null)
+  const expressHostRef = useRef<HTMLDivElement>(null)
 
   const recordWalletDebugEvent = useCallback(
     (event: string, methods?: WalletDebugMethods, detail?: string) => {
@@ -277,6 +310,43 @@ export function StripeOfferElementsCheckoutContent({
   useEffect(() => {
     recordWalletDebugEvent("checkout_state", undefined, checkoutResult.type)
   }, [checkoutResult.type, recordWalletDebugEvent])
+
+  const recordExpressDomSnapshot = useCallback(
+    (label: string) => {
+      if (!expressDomProbeEnabledRef.current) return
+      recordWalletDebugEvent(
+        "express_dom_snapshot",
+        undefined,
+        `${label};${describeWalletExpressDom(expressHostRef.current)}`,
+      )
+    },
+    [recordWalletDebugEvent],
+  )
+
+  useEffect(() => {
+    if (!expressDomProbeEnabledRef.current || !expressHostRef.current) return
+
+    let mutationRecorded = false
+    const observer = new MutationObserver(() => {
+      if (mutationRecorded) return
+      mutationRecorded = true
+      observer.disconnect()
+      recordExpressDomSnapshot("first_mutation")
+    })
+    observer.observe(expressHostRef.current, { childList: true, subtree: true })
+
+    const timers = [
+      window.setTimeout(() => recordExpressDomSnapshot("component_after_0ms"), 0),
+      window.setTimeout(() => recordExpressDomSnapshot("component_after_250ms"), 250),
+      window.setTimeout(() => recordExpressDomSnapshot("component_after_1500ms"), 1500),
+      window.setTimeout(() => recordExpressDomSnapshot("component_after_3500ms"), 3500),
+    ]
+
+    return () => {
+      observer.disconnect()
+      timers.forEach((timer) => window.clearTimeout(timer))
+    }
+  }, [recordExpressDomSnapshot])
 
   const claimStripe = useCallback(
     (paymentMethodType: StripeOfferPaymentMethodType) => {
@@ -338,20 +408,27 @@ export function StripeOfferElementsCheckoutContent({
   const handlePaymentMethodsChange = useCallback(
     (event: StripePaymentElementAvailablePaymentMethodsChangeEvent) => {
       recordWalletDebugEvent("payment_methods_changed", event.paymentMethods)
-      if (!paymentEligibilityProbeEnabledRef.current) return
-
-      if (event.paymentMethods?.applePay?.available === true) {
+      const applePayAvailable = event.paymentMethods?.applePay?.available === true
+      if (
+        applePayAvailable &&
+        (paymentEligibilityProbeEnabledRef.current || expressDomProbeEnabledRef.current)
+      ) {
         recordWalletDebugEvent(
           "express_probe_from_payment",
           event.paymentMethods,
           "apple_pay_available",
         )
       }
+      if (applePayAvailable && expressDomProbeEnabledRef.current) {
+        window.setTimeout(() => recordExpressDomSnapshot("payment_apple_pay_available"), 0)
+      }
+      if (!paymentEligibilityProbeEnabledRef.current) return
+
       setApplePayAvailability((current) =>
         reconcilePaymentElementApplePayAvailability(current, event),
       )
     },
-    [recordWalletDebugEvent],
+    [recordExpressDomSnapshot, recordWalletDebugEvent],
   )
 
   const copyWalletDebugTrace = useCallback(() => {
@@ -451,6 +528,7 @@ export function StripeOfferElementsCheckoutContent({
   const showPaymentDivider = state.applePayReady || Boolean(secondaryPaymentMethod)
   const applePayPending = applePayAvailability === "pending"
   const applePayUnavailable = applePayAvailability === "unavailable"
+  const expressDomProbeEnabled = expressDomProbeEnabledRef.current
 
   return (
     <div className="relative grid gap-3">
@@ -459,6 +537,7 @@ export function StripeOfferElementsCheckoutContent({
           <summary className="cursor-pointer font-sans text-xs font-bold">
             Wallet-Debug · Express {applePayAvailability} · {debugEntries.length} Events
             {paymentEligibilityProbeEnabledRef.current ? " · Probe aktiv" : ""}
+            {expressDomProbeEnabled ? " · DOM-Probe aktiv" : ""}
           </summary>
           <div className="mt-2 flex items-center gap-2">
             <button
@@ -479,13 +558,16 @@ export function StripeOfferElementsCheckoutContent({
       {/* Stripe's documented hidden mount preserves measurable geometry while wallets are
           evaluated. Unavailable Express Checkout stays out of flow without collapsing to 0px. */}
       <div
-        aria-hidden={!state.applePayReady}
+        ref={expressHostRef}
+        aria-hidden={!state.applePayReady && !expressDomProbeEnabled}
         className={`${
-          applePayPending
-            ? "invisible min-h-[52px]"
-            : applePayUnavailable
-              ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
-              : ""
+          expressDomProbeEnabled
+            ? "min-h-[52px]"
+            : applePayPending
+              ? "invisible min-h-[52px]"
+              : applePayUnavailable
+                ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
+                : ""
         } ${lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""}`}
         data-offer-apple-pay-availability={applePayAvailability}
         data-offer-payment-element="apple_pay"

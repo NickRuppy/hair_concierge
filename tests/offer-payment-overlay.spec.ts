@@ -299,6 +299,28 @@ test.describe("@ci offer payment overlay", () => {
     expect(paymentRows).toEqual(["apple_pay", "paypal", "payment_element"])
   })
 
+  test("query-gated Express DOM probe mounts visibly and records geometry", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&apple=unavailable&wallet_debug=1&wallet_probe=express_dom`, {
+      waitUntil: "domcontentloaded",
+    })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
+
+    await expect(applePayWrapper).toHaveCSS("visibility", "visible")
+    const debugSummary = checkout.getByText(/DOM-Probe aktiv/)
+    await expect(debugSummary).toBeVisible()
+    await debugSummary.click()
+    await expect(checkout.getByText(/express_dom_snapshot/)).toBeVisible()
+    await expect(checkout.getByText(/probe=forced_visible/)).toBeVisible()
+    await expect(checkout.getByText(/host=\d+x\d+/)).toBeVisible()
+  })
+
   test("fallback confirmation locks duplicate submission once", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
     const { checkout } = await openCheckoutAtNonzeroScroll(page)
