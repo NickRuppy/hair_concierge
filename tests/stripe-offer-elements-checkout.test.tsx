@@ -122,8 +122,14 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   assert.deepEqual(stripeOfferExpressCheckoutOptions.layout, {
     maxColumns: 1,
     maxRows: 1,
-    overflow: "never",
+    overflow: "auto",
   })
+  assert.equal(
+    stripeOfferExpressCheckoutOptions.layout?.overflow !== "never" ||
+      stripeOfferExpressCheckoutOptions.layout?.maxRows === 0,
+    true,
+    "Stripe only accepts overflow=never when maxRows=0",
+  )
   assert.equal(stripeOfferExpressCheckoutOptions.buttonType?.applePay, "subscribe")
   assert.match(getStripeOfferElementsErrorMessage(), /Zahlung konnte nicht bestätigt werden/)
 })
