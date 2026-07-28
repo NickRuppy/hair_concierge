@@ -252,6 +252,7 @@ test.describe("@ci offer payment overlay", () => {
     await waitForMotion(page)
 
     await expect(checkout.getByTestId("apple-pay-row")).toHaveCount(0)
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0)
     const paypal = checkout.getByTestId("paypal-button")
     await expect(paypal).toBeVisible()
     await expect(checkout.getByText("Karte & weitere")).toBeVisible()
@@ -272,10 +273,46 @@ test.describe("@ci offer payment overlay", () => {
     expect(paymentRows).toEqual(["paypal", "payment_element"])
   })
 
+  test("an Apple-capable browser accepts Stripe's unavailable result without a false delay", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "ApplePaySession", {
+        configurable: true,
+        value: { canMakePayments: () => true },
+      })
+    })
+    await page.goto(`${labPath}&apple=unavailable`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
+
+    await expect(applePayWrapper).toHaveAttribute(
+      "data-offer-apple-pay-availability",
+      "unavailable",
+    )
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0)
+    await expect(
+      checkout.getByRole("status", { name: "Apple Pay ist derzeit nicht verfügbar" }),
+    ).toHaveCount(0)
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+  })
+
   test("Apple Pay becomes the first prominent option when availability arrives after readiness", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "ApplePaySession", {
+        configurable: true,
+        value: { canMakePayments: () => true },
+      })
+    })
     await page.goto(`${labPath}&apple=delayed`, { waitUntil: "domcontentloaded" })
     await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
       "data-payment-overlay-lab-ready",
@@ -285,18 +322,240 @@ test.describe("@ci offer payment overlay", () => {
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
 
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toBeVisible()
     await expect(applePayWrapper).toHaveCSS("visibility", "hidden")
     const pendingApplePayBox = await applePayWrapper.boundingBox()
+    const paypalRow = checkout.getByTestId("paypal-row")
+    const pendingPayPalOffset = await paypalRow.evaluate((element) => {
+      const parent = element.parentElement
+      if (!parent) return null
+      return element.getBoundingClientRect().top - parent.getBoundingClientRect().top
+    })
     expect(pendingApplePayBox).not.toBeNull()
+    expect(pendingPayPalOffset).not.toBeNull()
     expect(pendingApplePayBox!.height).toBeGreaterThanOrEqual(52)
 
     await expect(checkout.getByTestId("apple-pay-row")).toBeVisible()
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0)
+    const readyPayPalOffset = await paypalRow.evaluate((element) => {
+      const parent = element.parentElement
+      if (!parent) return null
+      return element.getBoundingClientRect().top - parent.getBoundingClientRect().top
+    })
+    expect(readyPayPalOffset).not.toBeNull()
+    expect(readyPayPalOffset!).toBeCloseTo(pendingPayPalOffset!, 0)
     const paymentRows = await checkout
       .locator("[data-offer-payment-step]")
       .evaluateAll((elements) =>
         elements.map((element) => element.getAttribute("data-offer-payment-step")),
       )
     expect(paymentRows).toEqual(["apple_pay", "paypal", "payment_element"])
+  })
+
+  test("a temporary Apple Pay availability loss can recover within the same checkout", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&apple=flapping`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
+
+    await expect(applePayWrapper).toHaveAttribute(
+      "data-offer-apple-pay-availability",
+      "unavailable",
+    )
+    await expect(checkout.getByRole("button", { name: "Apple Pay", exact: true })).toBeVisible()
+    await expect(applePayWrapper).toHaveAttribute("data-offer-apple-pay-availability", "available")
+  })
+
+  test("a silent Apple Pay iframe stops loading and leaves the fallback methods usable", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "ApplePaySession", {
+        configurable: true,
+        value: { canMakePayments: () => true },
+      })
+    })
+    await page.goto(`${labPath}&apple=silent`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const paypalRow = checkout.getByTestId("paypal-row")
+
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toBeVisible()
+    const pendingPayPalOffset = await paypalRow.evaluate((element) => {
+      const parent = element.parentElement
+      if (!parent) return null
+      return element.getBoundingClientRect().top - parent.getBoundingClientRect().top
+    })
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0, {
+      timeout: 7_000,
+    })
+    await expect(
+      checkout.getByRole("status", { name: "Apple Pay ist derzeit nicht verfügbar" }),
+    ).toBeVisible()
+    const failedPayPalOffset = await paypalRow.evaluate((element) => {
+      const parent = element.parentElement
+      if (!parent) return null
+      return element.getBoundingClientRect().top - parent.getBoundingClientRect().top
+    })
+    expect(pendingPayPalOffset).not.toBeNull()
+    expect(failedPayPalOffset).not.toBeNull()
+    expect(failedPayPalOffset!).toBeCloseTo(pendingPayPalOffset!, 0)
+    await expect(checkout.getByTestId("apple-pay-row")).toHaveCount(0)
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+    await expect(
+      checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }),
+    ).toBeEnabled()
+  })
+
+  test("a late Apple Pay response cannot reinsert the row after the timeout", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "ApplePaySession", {
+        configurable: true,
+        value: { canMakePayments: () => true },
+      })
+    })
+    await page.goto(`${labPath}&apple=late`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const applePayWrapper = checkout.locator('[data-offer-payment-element="apple_pay"]')
+
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toBeVisible()
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0, {
+      timeout: 7_000,
+    })
+    await expect(applePayWrapper).toHaveAttribute("data-offer-apple-pay-availability", "failed")
+    await page.waitForTimeout(1_000)
+    await expect(applePayWrapper).toHaveAttribute("data-offer-apple-pay-availability", "failed")
+    await expect(checkout.getByTestId("apple-pay-row")).toBeHidden()
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+  })
+
+  test("an Apple Pay load error removes the placeholder and keeps fallbacks usable", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "ApplePaySession", {
+        configurable: true,
+        value: { canMakePayments: () => true },
+      })
+    })
+    await page.goto(`${labPath}&apple=load-error`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0)
+    await expect(
+      checkout.getByRole("status", { name: "Apple Pay ist derzeit nicht verfügbar" }),
+    ).toBeVisible()
+    await expect(checkout.getByTestId("apple-pay-row")).toHaveCount(0)
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+  })
+
+  test("a stalled checkout session cannot leave the Apple Pay loader spinning forever", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&apple=checkout-loading`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toBeVisible()
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toHaveCount(0, {
+      timeout: 12_000,
+    })
+    await expect(
+      checkout.getByRole("button", {
+        name: "Zahlungsoptionen konnten nicht geladen werden. Erneut versuchen",
+      }),
+    ).toBeVisible()
+    await checkout
+      .getByRole("button", {
+        name: "Zahlungsoptionen konnten nicht geladen werden. Erneut versuchen",
+      })
+      .click()
+    await expect(
+      checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }),
+    ).toBeEnabled()
+    await expect(checkout.getByRole("button", { name: "Apple Pay", exact: true })).toBeVisible()
+  })
+
+  test("a stalled Stripe checkout cannot reset an active PayPal provider lock", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&apple=checkout-loading`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await checkout.getByTestId("paypal-button").click()
+
+    await expect(
+      checkout.getByRole("status", {
+        name: "Zahlungsoptionen konnten nicht geladen werden",
+      }),
+    ).toBeVisible({ timeout: 12_000 })
+    await expect(
+      checkout.getByRole("button", {
+        name: "Zahlungsoptionen konnten nicht geladen werden. Erneut versuchen",
+      }),
+    ).toHaveCount(0)
+    await expect(checkout.getByTestId("checkout-attempt-diagnostic")).toHaveAttribute(
+      "data-provider-lock",
+      "paypal",
+    )
+  })
+
+  test("a late checkout success does not restart the absolute Apple Pay loading deadline", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "ApplePaySession", {
+        configurable: true,
+        value: { canMakePayments: () => true },
+      })
+    })
+    await page.goto(`${labPath}&apple=slow-checkout`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+    await expect(checkout.getByRole("status", { name: "Apple Pay wird geladen" })).toBeVisible()
+    await expect(
+      checkout.getByRole("status", { name: "Apple Pay ist derzeit nicht verfügbar" }),
+    ).toBeVisible({ timeout: 11_500 })
   })
 
   test("query-gated Express DOM probe mounts visibly and records geometry", async ({ page }) => {

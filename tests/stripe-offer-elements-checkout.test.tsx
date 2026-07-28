@@ -14,6 +14,7 @@ import {
   isWalletPaymentEligibilityProbeEnabled,
   normalizeWalletDebugMethods,
   reconcilePaymentElementApplePayAvailability,
+  stripeOfferCheckoutAppearance,
   stripeOfferExpressCheckoutOptions,
 } from "../src/components/checkout/stripe-offer-elements-checkout"
 
@@ -82,6 +83,14 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
     }),
     "unavailable",
   )
+  assert.equal(
+    getChangedApplePayAvailability({
+      paymentMethods: {
+        paypal: { available: true },
+      },
+    }),
+    "unavailable",
+  )
   assert.equal(formatCheckoutTotal(sessionTotal), "34,99 €")
   assert.equal(formatCheckoutTotal(null), "Wird berechnet")
 
@@ -130,7 +139,8 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
     true,
     "Stripe only accepts overflow=never when maxRows=0",
   )
-  assert.equal(stripeOfferExpressCheckoutOptions.buttonType?.applePay, "subscribe")
+  assert.equal(stripeOfferExpressCheckoutOptions.buttonType?.applePay, "plain")
+  assert.equal(stripeOfferCheckoutAppearance.variables?.buttonExpressCheckoutBorderRadius, "26px")
   assert.match(getStripeOfferElementsErrorMessage(), /Zahlung konnte nicht bestätigt werden/)
 })
 
@@ -193,7 +203,7 @@ test("Payment Element availability does not hide Apple Pay before its later avai
     },
   }
 
-  let availability: "pending" | "available" | "unavailable" = "pending"
+  let availability: "pending" | "available" | "unavailable" | "failed" = "pending"
   availability = reconcilePaymentElementApplePayAvailability(availability, applePayUnavailable)
   assert.equal(availability, "pending")
 
