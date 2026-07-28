@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dein 30-Tage-Haarplan — einmalig 29,99 € — Chaarlie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pm:#6B50A0; --pm2:#8A6FC4; --pd:#2A1845; --pi:#F2EEFA; --pil:#F2EEFA;
+  --co:#D4616A;
+  --bg:#FDFBF9; --card:#FFFFFF; --bdr:#E8E4DE;
+  --tb:#3A3835; --ts:#6A6560; --tm:#9A9892;
+  --red:#D4616A; --redl:#FDEEF0; --ok:#0F6E56;
+  --fd:'Playfair Display',serif; --fb:'Plus Jakarta Sans',sans-serif; --fm:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--fb);background:#F4F0EC;color:var(--tb);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.app{max-width:460px;margin:0 auto;min-height:100vh;background:var(--bg);box-shadow:0 0 60px -20px rgba(42,24,69,.18)}
+
+/* sticky timer bar */
+.top{position:sticky;top:0;z-index:50;background:rgba(253,251,249,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px}
+.top .tl{font-size:12.5px;color:var(--tb)}
+.top .tl b{color:var(--co)}
+.top .tval{font-family:var(--fm);font-weight:500;font-size:20px;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--pd)}
+.pill{background:var(--co);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.03em;padding:11px 16px;border-radius:999px;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 6px 18px -6px rgba(212,97,106,.55)}
+
+.sec{padding:34px 20px}
+h2{font-family:var(--fd);font-size:25px;font-weight:500;line-height:1.22;text-align:center;color:var(--pd);margin-bottom:8px;text-wrap:balance}
+h2 .hl{color:var(--co);font-style:italic}
+.sub{text-align:center;font-size:14px;color:var(--ts)}
+
+/* hero */
+.chip{display:flex;align-items:center;gap:8px;justify-content:center;margin:16px auto 0;width:fit-content;max-width:100%;background:var(--pi);border:1px solid #E4DCF3;border-radius:999px;padding:10px 18px;font-family:var(--fm);font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--pm);text-align:center}
+.heromock{width:100%;max-width:340px;margin:18px auto 0;display:block;border-radius:22px}
+
+/* now vs goal */
+.ng{background:var(--card);border-radius:20px;box-shadow:0 14px 40px -18px rgba(42,24,69,.18);overflow:hidden;margin-top:8px}
+.ng .heads{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.ng .heads span{background:var(--pil);border-radius:12px;text-align:center;font-weight:700;font-size:15px;padding:11px 6px}
+.ng .heads .g{color:var(--pm)}
+.ngphotos{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:2px 12px 12px}
+.ngphotos img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:block}
+.symb{text-align:right;font-size:10px;color:var(--tm);padding:6px 14px 0}
+.ngrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px;border-top:1px solid var(--bdr)}
+.ngrow .cell b{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
+.bar{display:flex;gap:5px}
+.bar i{height:8px;border-radius:4px;flex:1;background:#ECEAF1}
+.bar i.r{background:var(--co)}
+.bar i.p{background:linear-gradient(90deg,var(--pm),var(--pm2))}
+.ngrow .lab{font-size:13px;margin-top:7px;color:var(--ts)}
+.ngrow .cell.g .lab{color:var(--pm);font-weight:600}
+
+/* highlights */
+.hi{list-style:none;display:flex;flex-direction:column;margin-top:10px}
+.hi li{display:flex;gap:12px;align-items:flex-start;padding:13px 4px;font-size:14.5px;line-height:1.55;border-bottom:1px solid var(--bdr)}
+.hi li:last-child{border-bottom:none}
+.hi .c{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--pm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px}
+.hi b{color:var(--tb)}
+
+/* methodology box */
+.meth{background:var(--pi);border-radius:20px;padding:24px 18px;text-align:center;margin-top:6px}
+.meth h3{font-family:var(--fd);color:var(--pd);font-size:19px;font-weight:500;line-height:1.35;margin-bottom:16px}
+.meth .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.meth .m{background:#fff;border-radius:12px;padding:14px 10px;font-size:12.5px;line-height:1.4;color:var(--ts)}
+.meth .m b{display:block;font-size:13.5px;color:var(--tb);margin-bottom:2px}
+
+/* before after list */
+.balist{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.bacard{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 8px 26px -14px rgba(42,24,69,.14)}
+.bacard .row{display:flex;gap:11px;align-items:center;font-size:14.5px}
+.bacard .row + .row{margin-top:10px}
+.icx{flex-shrink:0;width:24px;height:24px;border-radius:7px;background:#ECEAF1;color:#A5A1B2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.icc{flex-shrink:0;width:24px;height:24px;border-radius:7px;background:var(--pm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.bacard .neg{color:var(--ts)}
+.bacard .neg em{font-family:var(--fd);font-style:italic}
+.bacard .pos{color:var(--pm);font-weight:700}
+
+/* plan ready + chips */
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px}
+.chips .ch{background:#EFEDF5;border-radius:14px;padding:13px 14px;font-size:12px;color:var(--ts)}
+.chips .ch b{display:block;font-size:13.5px;color:var(--tb);margin-top:2px;line-height:1.35}
+
+/* SKUs */
+.sku{position:relative;background:var(--card);border:2px solid transparent;border-radius:18px;padding:18px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 30px -16px rgba(42,24,69,.16);cursor:pointer}
+.sku.sel{border-color:var(--pm)}
+.sku .pop{position:absolute;top:-12px;left:0;right:0;background:linear-gradient(100deg,var(--pm),var(--pm2));color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:5px 0;border-radius:10px 10px 0 0}
+.sku.sel.haspop{padding-top:26px}
+.sku .radio{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:2px solid #D5D2DE;display:flex;align-items:center;justify-content:center}
+.sku.sel .radio{border-color:var(--pm);background:var(--pm)}
+.sku.sel .radio::after{content:"✓";color:#fff;font-size:13px;font-weight:700}
+.sku .info{flex:1}
+.sku .n{display:block;font-family:var(--fm);font-weight:500;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--pd)}
+.sku.dim .n{color:#8C8899}
+.sku .pr{display:block;font-size:13px;color:var(--ts);margin-top:2px}
+.sku .pr s{color:var(--tm);margin-right:5px}
+.sku .day{flex-shrink:0;background:var(--pil);border-radius:12px;padding:9px 12px;text-align:center}
+.sku .day s{display:block;font-size:11px;color:var(--tm)}
+.sku .day b{font-family:var(--fd);font-size:20px;font-weight:600;color:var(--pd)}
+.sku .day span{display:block;font-size:11px;color:var(--ts)}
+
+.legal{font-size:11.5px;color:var(--tm);line-height:1.6;text-align:center;margin:16px 0}
+.legal a{color:var(--ts)}
+.cta{display:block;width:100%;background:var(--co);color:#fff;font-weight:700;font-size:15.5px;text-align:center;padding:17px 22px;border-radius:14px;border:none;cursor:pointer;font-family:inherit;box-shadow:0 6px 22px -6px rgba(212,97,106,.55)}
+.cta:active{transform:translateY(1px)}
+.paychips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.paychips .pc{background:var(--pil);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--tb)}
+.paychips .pc .ic{width:24px;height:24px;border-radius:50%;background:var(--pm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+
+/* stats */
+.stat{background:var(--card);border-radius:20px;padding:22px 16px;text-align:center;box-shadow:0 10px 30px -16px rgba(42,24,69,.14)}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.statgrid .stat:last-child{grid-column:1 / -1;display:flex;align-items:center;gap:16px;text-align:left}
+.ring{width:104px;height:104px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--rc) calc(var(--rv)*1%), #ECEAF1 0)}
+.ring::after{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}
+.ring b{position:relative;z-index:2;font-size:20px;font-weight:800;line-height:1.1}
+.ring span{position:relative;z-index:2;display:block;font-size:9px;line-height:1.25;color:var(--tm)}
+.ring .in{position:relative;z-index:2;text-align:center;padding:0 15px}
+.stat p{font-size:13.5px;line-height:1.55;color:var(--ts)}
+.stat p b{color:var(--tb)}
+
+/* guarantee */
+.guar{background:var(--card);border-radius:20px;padding:28px 22px;text-align:center;box-shadow:0 10px 30px -16px rgba(42,24,69,.14)}
+.guar h3{font-family:var(--fd);font-size:22px;font-weight:500;color:var(--pd);margin-bottom:12px}
+.guar p{font-size:13.5px;color:var(--ts);line-height:1.7}
+.guar .badge{width:74px;height:74px;margin:18px auto 0;border-radius:50%;background:var(--pm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px}
+
+/* reviews */
+.rev{background:var(--card);border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 8px 26px -14px rgba(42,24,69,.12)}
+.rev .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.rev .stars{color:#F5A623;font-size:14px;letter-spacing:2px}
+.rev .date{font-size:11.5px;color:var(--tm)}
+.rev .who{font-size:12px;color:var(--ts);margin-bottom:8px}
+.rev .rt{font-weight:700;font-size:14.5px;margin-bottom:5px}
+.rev .rb{font-size:13.5px;color:var(--ts);line-height:1.6}
+
+/* faq */
+.faq{background:var(--card);border-radius:16px;margin-bottom:12px;box-shadow:0 8px 26px -14px rgba(42,24,69,.1);overflow:hidden}
+.faq summary{padding:17px 18px;font-weight:700;font-size:14.5px;color:var(--pm);list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:19px;color:var(--pm)}
+.faq[open] summary::after{content:"\2212"}
+.faq .b{padding:0 18px 16px;font-size:13.5px;color:var(--ts);line-height:1.65}
+
+.foot{padding:26px 20px 46px;text-align:center;font-size:11.5px;color:var(--tm)}
+.foot a{color:var(--ts)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sticky timer bar -->
+  <div class="top">
+    <div class="tl">Dein Plan ist fertig &middot; <b>einmalig 29,99 &euro;, kein Abo</b></div>
+    <button class="pill" data-checkout>Plan holen</button>
+  </div>
+
+  <!-- HERO: Plan gefunden + echtes App-Mockup -->
+  <section class="sec" style="padding-bottom:10px">
+    <h2 style="font-size:28px">Wir haben deinen perfekten <span class="hl">Haarplan</span> gefunden!</h2>
+    <div class="chip">&#128203; Dein Wellig-Haar Anti-Frizz &amp; Glanz-Plan</div>
+    <img class="heromock" src="hero-phone.jpg" alt="Dein Haarplan in der Chaarlie App, Produkte werden nach dem Start freigeschaltet">
+    <p class="sub" style="margin-top:12px">Deine Routine steht. Deine Produkte sind gefunden.<br><b style="color:var(--pd)">Unten schaltest du beides frei.</b></p>
+  </section>
+
+  <!-- NOW VS GOAL -->
+  <section class="sec" style="padding-top:14px">
+    <div class="ng">
+      <div class="heads"><span>Heute</span><span class="g">Dein Ziel</span></div>
+      <div class="ngphotos">
+        <img src="ba-heute.jpg" alt="Trockenes, krauses Haar ohne Glanz">
+        <img src="ba-ziel.jpg" alt="Weiches, gl&auml;nzendes, gepflegtes Haar">
+      </div>
+      <div class="ngrow">
+        <div class="cell"><b>Frizz</b><div class="bar"><i class="r"></i><i class="r"></i><i class="r"></i><i></i></div><div class="lab">St&auml;ndig</div></div>
+        <div class="cell g"><b>Frizz</b><div class="bar"><i class="p"></i><i></i><i></i><i></i></div><div class="lab">Kaum noch</div></div>
+      </div>
+      <div class="ngrow">
+        <div class="cell"><b>Glanz</b><div class="bar"><i class="r"></i><i></i><i></i><i></i></div><div class="lab">Stumpf</div></div>
+        <div class="cell g"><b>Glanz</b><div class="bar"><i class="p"></i><i class="p"></i><i class="p"></i><i></i></div><div class="lab">Sichtbar</div></div>
+      </div>
+      <div class="ngrow">
+        <div class="cell"><b>Haargef&uuml;hl</b><div class="bar"><i class="r"></i><i class="r"></i><i></i><i></i></div><div class="lab">Trocken &amp; stumpf</div></div>
+        <div class="cell g"><b>Haargef&uuml;hl</b><div class="bar"><i class="p"></i><i class="p"></i><i class="p"></i><i></i></div><div class="lab">Weich &amp; geschmeidig</div></div>
+      </div>
+      <div class="ngrow">
+        <div class="cell"><b>Deine Haare</b><div class="bar"><i class="r"></i><i></i><i></i><i></i></div><div class="lab">Versteckt im Dutt</div></div>
+        <div class="cell g"><b>Deine Haare</b><div class="bar"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></div><div class="lab">Offen getragen</div></div>
+      </div>
+    </div>
+    <p class="symb">Symbolbild</p>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section class="sec" style="padding-top:6px">
+    <h2>Die Highlights deines Plans</h2>
+    <ul class="hi">
+      <li><span class="c">&#10003;</span><span><b>Versteh endlich, was deine Haare wirklich brauchen</b>, statt weiter zu raten</span></li>
+      <li><span class="c">&#10003;</span><span><b>Eine klare Routine ohne Produktchaos</b>: wenige Produkte, feste Reihenfolge, kein R&auml;tselraten mehr im Bad</span></li>
+      <li><span class="c">&#10003;</span><span>Schluss mit <em>&bdquo;Ich wei&szlig; nie, welche Produkte zu mir passen&ldquo;</em>: <b>ehrliche Empfehlungen</b> aus der Drogerie, mit Preis und dem Grund, warum sie passen</span></li>
+      <li><span class="c">&#10003;</span><span><b>Fahr dir durch die Haare und sie f&uuml;hlen sich weich an</b>, nicht trocken, strohig und glanzlos</span></li>
+      <li><span class="c">&#10003;</span><span><b>Deine Kopfhaut wird mitgedacht statt ignoriert</b>: ob fettig, trocken oder schuppig, dein Plan f&auml;ngt genau da an</span></li>
+      <li><span class="c">&#10003;</span><span><b>Trag deine Haare wieder offen</b> und h&ouml;r wieder <em>&bdquo;Was hast du mit deinen Haaren gemacht?&ldquo;</em> als Kompliment</span></li>
+      <li><span class="c">&#10003;</span><span>F&uuml;hl dich <b>selbstbewusst mit deinen Haaren</b>: bei der Arbeit, auf Fotos, an Tagen, an denen es z&auml;hlt</span></li>
+    </ul>
+  </section>
+
+  <!-- METHODOLOGY -->
+  <section class="sec" style="padding-top:0">
+    <div class="meth">
+      <h3>Dein Plan basiert auf echter Haar-Diagnostik:</h3>
+      <div class="grid">
+        <div class="m"><b>Zugtest</b>Struktur &amp; Elastizit&auml;t</div>
+        <div class="m"><b>Oberfl&auml;chentest</b>Haaroberfl&auml;che &amp; Glanz</div>
+        <div class="m"><b>Kopfhaut-Check</b>Typ &amp; Zustand</div>
+        <div class="m"><b>&Uuml;ber 1.000 Produkte</b>analysiert &amp; gepr&uuml;ft</div>
+      </div>
+      <p style="font-size:12.5px;color:var(--ts);margin-top:14px">Entwickelt gemeinsam mit Friseurmeistern.</p>
+    </div>
+  </section>
+
+  <!-- BEFORE AND AFTER LIST -->
+  <section class="sec" style="padding-top:0">
+    <h2>Vorher und <span class="hl">nachher</span> mit Chaarlie</h2>
+    <p class="sub">So beschreiben es Frauen in unserer Umfrage:</p>
+    <div class="balist">
+      <div class="bacard">
+        <div class="row"><span class="icx">&#10005;</span><span class="neg"><em>&bdquo;Ich wei&szlig; nie, welche Produkte wirklich zu mir passen.&ldquo;</em></span></div>
+        <div class="row"><span class="icc">&#10003;</span><span class="pos">Empfehlungen mit Grund, abgestimmt auf deine Auswertung</span></div>
+      </div>
+      <div class="bacard">
+        <div class="row"><span class="icx">&#10005;</span><span class="neg"><em>&bdquo;Meine Haare sind trocken, strohig oder glanzlos.&ldquo;</em></span></div>
+        <div class="row"><span class="icc">&#10003;</span><span class="pos">Weich, geschmeidig, mit Glanz, den man sieht</span></div>
+      </div>
+      <div class="bacard">
+        <div class="row"><span class="icx">&#10005;</span><span class="neg"><em>&bdquo;Meine Kopfhaut macht Probleme: fettig, trocken, schuppig.&ldquo;</em></span></div>
+        <div class="row"><span class="icc">&#10003;</span><span class="pos">Eine Routine, die bei der Kopfhaut anf&auml;ngt</span></div>
+      </div>
+      <div class="bacard">
+        <div class="row"><span class="icx">&#10005;</span><span class="neg">Haare im Dutt oder Zopf verstecken</span></div>
+        <div class="row"><span class="icc">&#10003;</span><span class="pos">Haare offen tragen, mit gutem Gef&uuml;hl</span></div>
+      </div>
+      <div class="bacard">
+        <div class="row"><span class="icx">&#10005;</span><span class="neg">Neidisch auf die Haare der anderen</span></div>
+        <div class="row"><span class="icc">&#10003;</span><span class="pos">Stolz auf deine eigenen Haare</span></div>
+      </div>
+      <div class="bacard">
+        <div class="row"><span class="icx">&#10005;</span><span class="neg">Geld f&uuml;r Produkte, die dich entt&auml;uschen</span></div>
+        <div class="row"><span class="icc">&#10003;</span><span class="pos">Eine minimalistische Routine, die wirklich zu dir passt</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN READY + SKUs -->
+  <section class="sec" id="pricing">
+    <h2>Schalte deinen <span class="hl">30-Tage-Haarplan</span> frei</h2>
+    <div class="chips">
+      <div class="ch">Dein Ziel<b>Sch&ouml;nere Haare in 30 Tagen</b></div>
+      <div class="ch">Dein Weg<b>Routine + passende Produkte</b></div>
+    </div>
+
+    <div class="sku sel haspop" style="cursor:default">
+      <span class="pop">Einmalzahlung &middot; Kein Abo</span>
+      <span class="radio"></span>
+      <span class="info"><span class="n">Dein 30-Tage-Plan</span><span class="pr"><b style="font-size:17px;color:var(--pd)">29,99 &euro;</b> einmalig</span></span>
+      <span class="day"><b>1,00&euro;</b><span>pro Tag</span></span>
+    </div>
+
+    <p class="legal">Einmalige Zahlung, <b>keine automatische Verl&auml;ngerung</b>. Dein Zugang endet nach 30 Tagen von selbst. Ob du danach weitermachst, entscheidest du aktiv in der App. Details in den <a href="#">AGB</a>.</p>
+
+    <button class="cta" data-checkout>Meinen Plan freischalten</button>
+
+    <div class="paychips">
+      <div class="pc"><span class="ic">&#128274;</span>Sicher bezahlen</div>
+      <div class="pc"><span class="ic">&#8634;</span>14 Tage Geld zur&uuml;ck</div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF STATS -->
+  <section class="sec" style="padding-top:6px">
+    <h2>Wir haben <span class="hl">&uuml;ber 4.000 Frauen</span> gefragt, was sie an ihren Haaren wirklich besch&auml;ftigt</h2>
+    <div class="statgrid">
+      <div class="stat">
+        <div class="ring" style="--rv:82;--rc:#6B50A0"><span class="in"><b>82%</b><span>der Befragten</span></span></div>
+        <p>wollen <b>endlich verstehen, was ihre Haare wirklich brauchen</b></p>
+      </div>
+      <div class="stat">
+        <div class="ring" style="--rv:73;--rc:#2D9F5E"><span class="in"><b>73%</b><span>der Befragten</span></span></div>
+        <p>w&uuml;nschen sich <b>eine klare Routine ohne Produktchaos</b></p>
+      </div>
+      <div class="stat">
+        <div class="ring" style="--rv:63;--rc:#D4616A"><span class="in"><b>63%</b><span>der Befragten</span></span></div>
+        <p>sagen: <b>&bdquo;Ich wei&szlig; nie, welche Produkte wirklich zu mir passen&ldquo;</b></p>
+      </div>
+    </div>
+    <p class="cta-note" style="margin-top:12px;font-size:10.5px">Quelle: eigene Umfrage, 4.024 Antworten &middot; Mehrfachauswahl m&ouml;glich</p>
+  </section>
+
+  <!-- GUARANTEE -->
+  <section class="sec" style="padding-top:6px">
+    <div class="guar">
+      <h3>14-Tage-Geld-zur&uuml;ck-Garantie</h3>
+      <p>Wir machen bewusst keine Versprechen, denn jede Haarsituation ist individuell. Aber wir sind &uuml;berzeugt von dem, was Chaarlie kann. Deshalb tragen wir das Risiko: Wenn dir Chaarlie in den ersten 14 Tagen nicht weiterhilft, schreib uns eine Nachricht und du bekommst dein Geld zur&uuml;ck.</p>
+      <div class="badge">&#10003;</div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="sec" style="padding-top:6px">
+    <h2>Kundinnen <span class="hl">lieben ihren Plan</span></h2>
+    <p class="sub" style="margin-bottom:16px">Echte Stimmen aus der Chaarlie Beta</p>
+
+    <div class="rev">
+      <div class="head"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="date">Chaarlie Beta</span></div>
+      <div class="who">Kim</div>
+      <div class="rt">Endlich verstehe ich meine Haare</div>
+      <div class="rb">&bdquo;Der Fragebogen ist echt gut und leicht verst&auml;ndlich. Im Chat hat das Antworten super geklappt. Auch die Produktempfehlung fand ich gut.&ldquo;</div>
+    </div>
+    <div class="rev">
+      <div class="head"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="date">Chaarlie Beta</span></div>
+      <div class="who">Kerstin</div>
+      <div class="rt">Fragen stellen, echte Antworten bekommen</div>
+      <div class="rb">&bdquo;Ich finde die Interaktion sehr gut: meine Fragen stellen zu k&ouml;nnen und dann die ben&ouml;tigten Antworten zu bekommen.&ldquo;</div>
+    </div>
+    <div class="rev">
+      <div class="head"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="date">Chaarlie Beta</span></div>
+      <div class="who">Sarah</div>
+      <div class="rt">Nie wieder googeln vorm Regal</div>
+      <div class="rb">&bdquo;Dass bei den Produkten der Preis und die Anwendung dabeistehen, ein Foto und warum er es empfiehlt. So muss ich nicht erst googeln.&ldquo;</div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="sec" style="padding-top:6px">
+    <h2>H&auml;ufige Fragen</h2>
+    <div style="margin-top:14px">
+      <details class="faq"><summary>Funktioniert der Plan f&uuml;r mich pers&ouml;nlich?</summary><div class="b">Dein Plan wird aus deinen Quiz-Antworten gebaut: Haartyp, Kopfhaut, Struktur und deine Ziele. Du bekommst keine Standard-Tipps, sondern deine Routine mit Produkten, die zu genau deiner Haarsituation passen. Und wenn sich dein Haar ver&auml;ndert, passt sich dein Plan an.</div></details>
+      <details class="faq"><summary>Was bekomme ich genau?</summary><div class="b">Deine fertige Haarroutine (was, wie oft, in welcher Reihenfolge), deine passenden Produktempfehlungen aus der Drogerie mit Preis und Begr&uuml;ndung, den Chaarlie-Chat f&uuml;r alle Fragen und dein Haar-Tagebuch zum Dranbleiben.</div></details>
+      <details class="faq"><summary>Was passiert nach dem Kauf?</summary><div class="b">Du bekommst sofort Zugang zu Chaarlie mit deinem pers&ouml;nlichen Plan. Zus&auml;tzlich schicken wir dir eine E-Mail mit deinen Zugangsdaten, damit du jederzeit reinkommst.</div></details>
+      <details class="faq"><summary>Ich habe noch Produkte zu Hause, die ich aufbrauchen will?</summary><div class="b">Perfekt, wegwerfen musst du nichts. Chaarlie pr&uuml;ft, was von deinen vorhandenen Produkten zu deinem Haar passt, baut Passendes direkt in deine Routine ein und sagt dir erst dann, was du sinnvoll ersetzt, wenn etwas leer ist.</div></details>
+      <details class="faq"><summary>Ist das ein Abo?</summary><div class="b">Nein. Du zahlst einmalig 29,99 &euro; und bekommst 30 Tage vollen Zugang zu Chaarlie mit deinem Plan, deinen Produktempfehlungen, dem Chat und dem Tagebuch. Es verl&auml;ngert sich nichts automatisch und du musst nichts k&uuml;ndigen. Dazu kommt die 14-Tage-Geld-zur&uuml;ck-Garantie.</div></details>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="sec" style="padding-top:0;padding-bottom:46px">
+    <h2>Wir finden deine Routine und <span class="hl">deine passenden Produkte</span></h2>
+    <p class="sub" style="margin-bottom:20px">Dein Plan zu sch&ouml;neren Haaren in 30 Tagen.</p>
+    <button class="cta" data-checkout>Jetzt starten</button>
+  </section>
+
+  <div class="foot">Chaarlie &middot; <a href="#">Impressum</a> &middot; <a href="#">Datenschutz</a> &middot; <a href="#">AGB</a></div>
+</div>
+
+<script>
+(function(){
+  /* SKU-Auswahl */
+  var skus = document.querySelectorAll('[data-sku]');
+  skus.forEach(function(sku){
+    sku.addEventListener('click', function(){
+      skus.forEach(function(x){ x.classList.remove('sel'); x.classList.add('dim'); });
+      sku.classList.add('sel'); sku.classList.remove('dim');
+    });
+  });
+
+  /* Checkout-Platzhalter */
+  document.querySelectorAll('[data-checkout]').forEach(function(b){
+    b.addEventListener('click', function(){
+      alert('Platzhalter Checkout\n\nDein 30-Tage-Plan: 29,99 € einmalig, kein Abo\n\nHier den echten Stripe-Link einsetzen.');
+    });
+  });
+})();
+</script>
+</body>
+</html>
