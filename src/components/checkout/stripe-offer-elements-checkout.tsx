@@ -148,6 +148,11 @@ export function isWalletDebugEnabled(search: string) {
   return new URLSearchParams(search).get("wallet_debug") === "1"
 }
 
+export function isWalletPaymentEligibilityProbeEnabled(search: string) {
+  const params = new URLSearchParams(search)
+  return params.get("wallet_debug") === "1" && params.get("wallet_probe") === "payment_eligibility"
+}
+
 export function normalizeWalletDebugMethods(
   methods: WalletDebugMethods,
 ): Record<string, boolean> | null {
@@ -159,6 +164,17 @@ export function normalizeWalletDebugMethods(
       typeof availability === "boolean" ? availability : availability?.available === true,
     ]),
   )
+}
+
+export function reconcilePaymentElementApplePayAvailability(
+  current: ApplePayAvailability,
+  event: Pick<StripePaymentElementAvailablePaymentMethodsChangeEvent, "paymentMethods">,
+): ApplePayAvailability {
+  if (current !== "pending" || event.paymentMethods?.applePay?.available !== true) {
+    return current
+  }
+
+  return "available"
 }
 
 function StripeOfferElementsCheckoutBody({
@@ -225,6 +241,9 @@ export function StripeOfferElementsCheckoutContent({
   const debugEnabledRef = useRef(
     typeof window !== "undefined" && isWalletDebugEnabled(window.location.search),
   )
+  const paymentEligibilityProbeEnabledRef = useRef(
+    typeof window !== "undefined" && isWalletPaymentEligibilityProbeEnabled(window.location.search),
+  )
   const debugStartedAtRef = useRef(Date.now())
   const debugSequenceRef = useRef(0)
   const [debugEnabled, setDebugEnabled] = useState(false)
@@ -279,6 +298,7 @@ export function StripeOfferElementsCheckoutContent({
   useEffect(() => {
     if (!checkout) return
     const element = checkout.getExpressCheckoutElement()
+    recordWalletDebugEvent("express_instance", undefined, element ? "present" : "missing")
     if (!element) return
     const handleCancel = () => {
       confirmingRef.current = false
@@ -289,7 +309,7 @@ export function StripeOfferElementsCheckoutContent({
     return () => {
       element.off("cancel", handleCancel)
     }
-  }, [checkout, releaseStripe])
+  }, [checkout, recordWalletDebugEvent, releaseStripe])
 
   const state = createStripeOfferElementsState({
     applePayAvailable: applePayAvailability === "available",
@@ -318,6 +338,18 @@ export function StripeOfferElementsCheckoutContent({
   const handlePaymentMethodsChange = useCallback(
     (event: StripePaymentElementAvailablePaymentMethodsChangeEvent) => {
       recordWalletDebugEvent("payment_methods_changed", event.paymentMethods)
+      if (!paymentEligibilityProbeEnabledRef.current) return
+
+      if (event.paymentMethods?.applePay?.available === true) {
+        recordWalletDebugEvent(
+          "express_probe_from_payment",
+          event.paymentMethods,
+          "apple_pay_available",
+        )
+      }
+      setApplePayAvailability((current) =>
+        reconcilePaymentElementApplePayAvailability(current, event),
+      )
     },
     [recordWalletDebugEvent],
   )
@@ -426,6 +458,7 @@ export function StripeOfferElementsCheckoutContent({
         <details className="fixed inset-x-2 bottom-[max(8px,env(safe-area-inset-bottom))] z-[100] max-h-[44svh] overflow-auto rounded-xl bg-black/95 p-3 text-left font-mono text-[11px] leading-4 text-white shadow-2xl">
           <summary className="cursor-pointer font-sans text-xs font-bold">
             Wallet-Debug · Express {applePayAvailability} · {debugEntries.length} Events
+            {paymentEligibilityProbeEnabledRef.current ? " · Probe aktiv" : ""}
           </summary>
           <div className="mt-2 flex items-center gap-2">
             <button
