@@ -10,7 +10,9 @@ import {
   getStripeOfferElementsErrorMessage,
   hasApplePayMethod,
   isWalletDebugEnabled,
+  isWalletPaymentEligibilityProbeEnabled,
   normalizeWalletDebugMethods,
+  reconcilePaymentElementApplePayAvailability,
   stripeOfferExpressCheckoutOptions,
 } from "../src/components/checkout/stripe-offer-elements-checkout"
 
@@ -130,6 +132,14 @@ test("wallet diagnostics stay query-gated and retain only availability booleans"
   assert.equal(isWalletDebugEnabled("?lead=abc&wallet_debug=1"), true)
   assert.equal(isWalletDebugEnabled("?wallet_debug=true"), false)
   assert.equal(isWalletDebugEnabled(""), false)
+  assert.equal(
+    isWalletPaymentEligibilityProbeEnabled(
+      "?entry=quiz_completion&wallet_debug=1&wallet_probe=payment_eligibility",
+    ),
+    true,
+  )
+  assert.equal(isWalletPaymentEligibilityProbeEnabled("?wallet_probe=payment_eligibility"), false)
+  assert.equal(isWalletPaymentEligibilityProbeEnabled("?wallet_debug=1"), false)
 
   assert.deepEqual(
     normalizeWalletDebugMethods({
@@ -154,4 +164,37 @@ test("wallet diagnostics stay query-gated and retain only availability booleans"
     },
   )
   assert.equal(normalizeWalletDebugMethods(undefined), null)
+})
+
+test("Payment Element availability does not hide Apple Pay before its later available event", () => {
+  const applePayUnavailable = {
+    paymentMethods: {
+      applePay: { available: false },
+    },
+  }
+  const applePayAvailable = {
+    paymentMethods: {
+      applePay: { available: true },
+    },
+  }
+
+  let availability: "pending" | "available" | "unavailable" = "pending"
+  availability = reconcilePaymentElementApplePayAvailability(availability, applePayUnavailable)
+  assert.equal(availability, "pending")
+
+  availability = reconcilePaymentElementApplePayAvailability(availability, applePayAvailable)
+  assert.equal(availability, "available")
+
+  assert.equal(
+    reconcilePaymentElementApplePayAvailability("available", applePayUnavailable),
+    "available",
+  )
+  assert.equal(
+    reconcilePaymentElementApplePayAvailability("unavailable", applePayAvailable),
+    "unavailable",
+  )
+  assert.equal(
+    reconcilePaymentElementApplePayAvailability("pending", { paymentMethods: undefined }),
+    "pending",
+  )
 })
