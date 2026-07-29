@@ -108,6 +108,9 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(quiz, /SECTION_LABELS/)
   assert.match(quiz, /SECTION_LABELS\.map/)
   assert.match(quiz, /currentSectionIndex/)
+  assert.match(quiz, /data-layout="progress-track-with-dots"/)
+  assert.match(quiz, /data-layout="progress-dot-overlay"/)
+  assert.match(quiz, /absolute inset-0 grid grid-cols-5/)
   // R003: the section/checkpoint progress stays free of numbers. The preparation
   // LoadingScreen bar intentionally shows a live percentage (Nick, 2026-07-29).
   assert.doesNotMatch(quiz, /Schritt \d+ von|SECTION_LABELS[\s\S]{0,400}Math\.round/)
@@ -131,6 +134,10 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(data, /visualLayout: "thumbnail"/)
   assert.match(quiz, /visualLayout: "grid"/)
   assert.match(quiz, /grid-cols-2 auto-rows-fr/)
+  assert.match(quiz, /config\.options\.map\(\(option, optionIndex\) =>/)
+  assert.match(quiz, /priority=\{config\.field === "texture" && optionIndex === 0\}/)
+  assert.match(quiz, /fetchPriority=\{priority \? "high" : "auto"\}/)
+  assert.match(quiz, /\? "\(max-width: 640px\) 45vw, 320px"/)
   assert.match(quiz, /ausgewählt · Weiter/)
   assert.match(quiz, /min-h-\[calc\(100dvh-84px\)\]/)
   assert.match(quiz, /max-height:700px/)
@@ -153,6 +160,17 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.doesNotMatch(data, /value: "unknown", label: "Ich bin mir nicht sicher"/)
   assert.doesNotMatch(quiz + data, /washCadence|heatExposure|heatProtection|weeklyTime/)
   assert.doesNotMatch(quiz + data, /ABKLÄRUNG|hasPersonalPlanSafetySignal|safetySignals/)
+})
+
+test("personal-plan email capture supports one semantic keyboard and CTA submit path", () => {
+  const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+
+  assert.match(quiz, /<form[\s\S]{0,160}noValidate/)
+  assert.match(quiz, /onSubmit=\{\(event\) => \{[\s\S]{0,160}event\.preventDefault\(\)/)
+  assert.match(quiz, /onSubmit=\{\(event\) => \{[\s\S]{0,220}continueToConsent\(\)/)
+  assert.match(quiz, /enterKeyHint="go"/)
+  assert.match(quiz, /type="submit"[\s\S]{0,120}>[\s\S]{0,80}Weiter zu meiner Auswertung/)
+  assert.doesNotMatch(quiz, /onClick=\{continueToConsent\}/)
 })
 
 test("personal-plan provisional production assets exist under the public funnel path", () => {
