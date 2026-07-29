@@ -36,6 +36,19 @@ test("resolves the placeholder campaign package by slug", () => {
   assert.equal(funnelPackage?.status, "placeholder")
 })
 
+test("resolves the gated personal-plan quiz placeholder package by slug", () => {
+  const funnelPackage = getFunnelPackageBySlug("haarplan")
+
+  assert.deepEqual(funnelPackage, {
+    key: "meta_personal_plan_v1",
+    slug: "haarplan",
+    channel: "meta",
+    status: "placeholder",
+    landingVariant: "personal-plan-quiz",
+    offerVariant: "personal-plan-v1",
+  })
+})
+
 test("unknown package keys and slugs do not fall back silently", () => {
   assert.equal(getFunnelPackageByKey("unknown"), null)
   assert.equal(getFunnelPackageBySlug("unknown"), null)

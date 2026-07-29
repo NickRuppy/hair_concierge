@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 
 import {
@@ -231,4 +232,22 @@ test("Meta offer endpoint isolates delivery failures from its validated request 
   })
 
   assert.deepEqual(result, { body: { error: "delivery_failed" }, status: 503 })
+})
+
+test("Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan", async () => {
+  const source = await readFile(
+    new URL("../src/app/api/analytics/meta-offer-view/route.ts", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /\.eq\("id", leadId\)\s*\.in\("quiz_kind", \["legacy", "personal_plan"\]\)\s*\.gte\("created_at", createdAfter\)/,
+  )
+  assert.match(source, /\.select\("email, name, quiz_answers, quiz_kind"\)/)
+  assert.match(source, /data\.quiz_kind === "legacy"[\s\S]*Object\.keys\(answers\)\.length === 0/)
+  assert.match(
+    source,
+    /data\.quiz_kind === "personal_plan"[\s\S]*\.from\("personal_plan_prepared_artifacts"\)[\s\S]*\.eq\("lead_id", leadId\)[\s\S]*\.eq\("status", "attached"\)/,
+  )
 })

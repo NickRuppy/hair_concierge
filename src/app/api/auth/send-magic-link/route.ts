@@ -22,6 +22,7 @@ import {
   type PayPalCheckoutAccountResult,
 } from "@/lib/paypal/checkout-activation"
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
+import { resolveCheckoutFirstTimeDestination } from "@/lib/billing/checkout-success-redirect"
 
 export const runtime = "nodejs"
 
@@ -121,6 +122,11 @@ export async function handleSendMagicLink(
 
   try {
     const account = await ensureActiveCheckoutAccount(parsed.target, deps)
+    const next = await resolveCheckoutFirstTimeDestination(
+      deps.supabase,
+      account.leadId,
+      account.checkoutContext,
+    )
 
     const claimed = await (deps.claimCheckoutActivation ?? claimCheckoutActivation)(
       deps.supabase,
@@ -135,7 +141,7 @@ export async function handleSendMagicLink(
     const { error } = await deps.supabase.auth.signInWithOtp({
       email: account.email,
       options: {
-        emailRedirectTo: `${deps.siteUrl}/auth/confirm?next=/onboarding`,
+        emailRedirectTo: `${deps.siteUrl}/auth/confirm?next=${encodeURIComponent(next)}`,
         shouldCreateUser: false,
       },
     })
@@ -168,7 +174,7 @@ export async function handleSendMagicLink(
       })
     }
 
-    return { status: 200, body: { ok: true, email: account.email } }
+    return { status: 200, body: { ok: true, email: account.email, next } }
   } catch (err) {
     if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
       return {

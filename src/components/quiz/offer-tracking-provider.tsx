@@ -40,10 +40,10 @@ export const GUIDED_STORY_OFFER_REVISION = "guided_story_v1"
 export const OFFER_PRICING_REVISION = "pricing_v1"
 
 export interface OfferTrackingIdentity {
-  conditionerModuleId: string | null
-  needLane: string
-  shampooModuleId: string | null
-  suggestedCategory: string | null
+  conditionerModuleId?: string | null
+  needLane?: string | null
+  shampooModuleId?: string | null
+  suggestedCategory?: string | null
 }
 
 const OfferTrackingContext = createContext<OfferAnalyticsContext | null>(null)

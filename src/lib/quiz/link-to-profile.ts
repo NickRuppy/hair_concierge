@@ -1,6 +1,16 @@
 import { createAdminClient } from "@/lib/supabase/admin"
+import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers } from "./normalization"
+
+export function canLinkDirectQuizLead(
+  lead: { email: string; userId: string | null },
+  account: { email?: string; userId: string },
+): boolean {
+  if (lead.userId) return lead.userId === account.userId
+  if (!account.email) return false
+  return lead.email.trim().toLowerCase() === account.email.trim().toLowerCase()
+}
 
 export function resolveProfileDensityFromQuizAnswers(answers: QuizAnswers): string | undefined {
   if (answers.density) return answers.density
@@ -77,6 +87,29 @@ export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<st
   return profileData
 }
 
+export function buildProfileDataFromPersonalPlanCanonicalProfile(
+  canonicalProfile: unknown,
+): Record<string, unknown> {
+  if (!isRecord(canonicalProfile)) {
+    throw new Error("personal plan has invalid canonical diagnostics")
+  }
+  const answers = normalizeStoredQuizAnswers(canonicalProfile)
+  if (!answers) {
+    throw new Error("personal plan has invalid canonical diagnostics")
+  }
+
+  const profileData = buildProfileDataFromQuizAnswers(answers)
+  if (Array.isArray(answers.goals) && answers.goals.length > 0) {
+    profileData.goals = [...answers.goals]
+  }
+
+  if (!hasCompletedQuizDiagnostics(profileData)) {
+    throw new Error("personal plan has incomplete canonical diagnostics")
+  }
+
+  return profileData
+}
+
 /**
  * After a user authenticates, link their quiz lead data to their profile.
  *
@@ -98,6 +131,8 @@ export async function linkQuizToProfile(
   // --- Find the lead ---
   let lead: {
     id: string
+    email: string
+    quiz_kind: "legacy" | "personal_plan"
     quiz_answers: QuizAnswers | Record<string, unknown> | null
     user_id: string | null
   } | null = null
@@ -106,7 +141,7 @@ export async function linkQuizToProfile(
   if (leadId) {
     const { data, error } = await admin
       .from("leads")
-      .select("id, quiz_answers, user_id")
+      .select("id, email, quiz_kind, quiz_answers, user_id")
       .eq("id", leadId)
       .single()
 
@@ -114,8 +149,13 @@ export async function linkQuizToProfile(
       throw new Error(`Lead lookup by id failed: ${error.message}`)
     }
 
-    // Allow re-linking if the lead already belongs to this user (partial-link recovery)
-    if (data && (data.user_id === null || data.user_id === userId)) {
+    if (
+      data &&
+      !canLinkDirectQuizLead({ email: data.email, userId: data.user_id }, { email, userId })
+    ) {
+      console.warn("[linkQuizToProfile] direct lead does not match account; trying email fallback")
+    } else if (data && (data.quiz_kind === "legacy" || data.quiz_kind === "personal_plan")) {
+      // Allow same-user retries so an interrupted profile projection can recover.
       lead = data
     }
   }
@@ -124,8 +164,9 @@ export async function linkQuizToProfile(
   if (!lead && email) {
     const { data, error } = await admin
       .from("leads")
-      .select("id, quiz_answers, user_id")
+      .select("id, email, quiz_kind, quiz_answers, user_id")
       .eq("email", email.toLowerCase())
+      .eq("quiz_kind", "legacy")
       .is("user_id", null)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -134,7 +175,7 @@ export async function linkQuizToProfile(
     if (error && error.code !== "PGRST116") {
       throw new Error(`Lead lookup by email failed: ${error.message}`)
     }
-    lead = data
+    lead = data?.quiz_kind === "legacy" ? data : null
   }
 
   // No matching lead — user didn't come from quiz
@@ -143,22 +184,18 @@ export async function linkQuizToProfile(
     return
   }
 
-  const answers = normalizeStoredQuizAnswers(lead.quiz_answers)
-  if (!answers) {
-    console.log("[linkQuizToProfile] lead has no quiz_answers, skipping")
+  const { profileData, incomingGoals } =
+    lead.quiz_kind === "personal_plan"
+      ? await preparePersonalPlanProfileProjection(admin, lead.id, userId)
+      : prepareLegacyProfileProjection(lead.quiz_answers)
+
+  if (!profileData) {
+    console.log("[linkQuizToProfile] lead has no usable quiz diagnostics, skipping")
     return
   }
 
-  console.log("[linkQuizToProfile] found lead", lead.id, "with answers:", Object.keys(answers))
-
-  // --- Map quiz answers to hair_profiles columns ---
-  const profileData: Record<string, unknown> = {
-    user_id: userId,
-    ...buildProfileDataFromQuizAnswers(answers),
-  }
-
-  const incomingGoals =
-    Array.isArray(answers.goals) && answers.goals.length > 0 ? (answers.goals as string[]) : null
+  profileData.user_id = userId
+  delete profileData.goals
 
   // --- Check if hair_profiles row already exists ---
   const { data: existing, error: fetchErr } = await admin
@@ -216,4 +253,54 @@ export async function linkQuizToProfile(
   }
 
   console.log("[linkQuizToProfile] done — lead", lead.id, "linked to user", userId)
+}
+
+function prepareLegacyProfileProjection(quizAnswers: unknown): {
+  profileData: Record<string, unknown> | null
+  incomingGoals: string[] | null
+} {
+  const answers = isRecord(quizAnswers) ? normalizeStoredQuizAnswers(quizAnswers) : null
+  if (!answers) return { profileData: null, incomingGoals: null }
+
+  console.log("[linkQuizToProfile] legacy answers:", Object.keys(answers))
+  return {
+    profileData: buildProfileDataFromQuizAnswers(answers),
+    incomingGoals:
+      Array.isArray(answers.goals) && answers.goals.length > 0 ? (answers.goals as string[]) : null,
+  }
+}
+
+async function preparePersonalPlanProfileProjection(
+  admin: ReturnType<typeof createAdminClient>,
+  leadId: string,
+  userId: string,
+): Promise<{
+  profileData: Record<string, unknown>
+  incomingGoals: string[] | null
+}> {
+  const { data, error } = await admin.rpc("link_personal_plan_artifact_to_user", {
+    p_lead_id: leadId,
+    p_user_id: userId,
+  })
+
+  if (error) {
+    throw new Error(`personal plan artifact link failed: ${error.message}`)
+  }
+
+  const result = Array.isArray(data) ? data[0] : data
+  if (!isRecord(result) || !("canonical_profile" in result)) {
+    throw new Error("personal plan artifact link returned no canonical diagnostics")
+  }
+
+  const profileData = buildProfileDataFromPersonalPlanCanonicalProfile(result.canonical_profile)
+  const incomingGoals =
+    Array.isArray(profileData.goals) && profileData.goals.length > 0
+      ? (profileData.goals as string[])
+      : null
+
+  return { profileData, incomingGoals }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
 }

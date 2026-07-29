@@ -6,6 +6,7 @@ import type { CustomerIoTransactionalEmailPayload } from "./transactional"
 
 export interface ResultArtifactLead {
   id: string
+  quiz_kind: "legacy" | "personal_plan"
   name: string | null
   email: string | null
   quiz_answers: Parameters<typeof normalizeStoredQuizAnswers>[0]
@@ -66,6 +67,10 @@ export async function handleResultArtifactEmail({
   const lead = await store.claimLead(leadId)
 
   if (!lead) {
+    return { sent: false, skipped: true }
+  }
+
+  if (lead.quiz_kind !== "legacy") {
     return { sent: false, skipped: true }
   }
 

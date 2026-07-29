@@ -45,6 +45,7 @@ test("guided story is registered while the historical offers remain available fo
   assert.ok("guided-story-founder-letter" in OFFER_VARIANTS)
   assert.ok("guided-story-locked" in OFFER_VARIANTS)
   assert.ok("guided-story-potential" in OFFER_VARIANTS)
+  assert.ok("personal-plan-v1" in OFFER_VARIANTS)
   assert.equal(
     Object.keys(OFFER_VARIANTS).filter((variant) => variant === "app-value-stack").length,
     1,
@@ -88,7 +89,7 @@ test("result route keeps fresh quiz completions distinct from saved-result visit
   assert.match(resultPageSource, /entry === "quiz_completion"/)
   assert.match(resultPageSource, /entryContext=\{entryContext\}/)
   assert.match(resultClientSource, /entryContext \?\? \(focusRoutine \? "routine_return"/)
-  assert.match(resultClientSource, /entryContext: resolvedEntryContext/)
+  assert.match(resultClientSource, /entryContext=\{resolvedEntryContext\}/)
 })
 
 test("quiz completion hands no-access results to the canonical result route", () => {

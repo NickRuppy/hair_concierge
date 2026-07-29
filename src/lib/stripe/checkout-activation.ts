@@ -40,6 +40,8 @@ export interface CheckoutAccountResult {
   userId: string
   email: string
   canSetInitialPassword: boolean
+  leadId?: string
+  checkoutContext?: string
   subscriptionInterval?: string
   stripeCustomerId?: string
   stripeSubscriptionId?: string
@@ -188,6 +190,8 @@ export async function ensureCheckoutAccount(
     userId,
     email: valid.email,
     canSetInitialPassword,
+    leadId: session.metadata?.lead_id || undefined,
+    checkoutContext: session.metadata?.checkout_context || undefined,
     subscriptionInterval: interval,
     stripeCustomerId: valid.customerId,
     stripeSubscriptionId: sub.id,

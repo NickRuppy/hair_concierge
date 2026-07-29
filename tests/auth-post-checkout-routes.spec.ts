@@ -416,6 +416,55 @@ test("password activation fallback links quiz metadata when fulfilling checkout"
   })
 })
 
+test("password activation returns the server-resolved personal-plan transition", async () => {
+  const { calls, supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("cs_test_password"),
+    provider: "email",
+  })
+  supabase.from = (table: string) => {
+    expect(table).toBe("leads")
+    return {
+      select() {
+        return {
+          eq() {
+            return {
+              async maybeSingle() {
+                return { data: { quiz_kind: "personal_plan" }, error: null }
+              },
+            }
+          },
+        }
+      },
+    } as any
+  }
+
+  const { deps } = stubDeps({
+    supabase,
+    getPremiumTierId: async () => "tier-premium",
+    ensureCheckoutAccount: async () => ({
+      userId: "user-test",
+      email: "stripe@example.com",
+      canSetInitialPassword: true,
+      leadId: "lead-v2",
+    }),
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough", next: "/onboarding" },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 200,
+    body: {
+      ok: true,
+      email: "stripe@example.com",
+      next: "/plan-bereit?lead=lead-v2",
+    },
+  })
+  expect(calls.some(([op]) => op === "updateUserById")).toBe(true)
+})
+
 test("send magic link derives email from checkout activation and consumes matching password marker", async () => {
   const calls: any[] = []
   const supabase = {
@@ -496,7 +545,7 @@ test("send magic link derives email from checkout activation and consumes matchi
   expect(otpCall?.[1]).toMatchObject({
     email: "stripe-owned@example.com",
     options: {
-      emailRedirectTo: "https://hair.example/auth/confirm?next=/onboarding",
+      emailRedirectTo: "https://hair.example/auth/confirm?next=%2Fonboarding",
       shouldCreateUser: false,
     },
   })
@@ -508,6 +557,68 @@ test("send magic link derives email from checkout activation and consumes matchi
     activation_method: "passwordless",
     checkout_activation_session_hash: null,
     passwordless_login_sent_at: "2026-05-04T12:00:00.000Z",
+  })
+})
+
+test("magic-link activation derives the personal-plan destination server-side", async () => {
+  const otpCalls: any[] = []
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("cs_magic_v2"),
+    provider: "email",
+  })
+  supabase.auth.signInWithOtp = async (args: Record<string, unknown>) => {
+    otpCalls.push(args)
+    return { data: {}, error: null }
+  }
+  supabase.from = (table: string) => {
+    expect(table).toBe("leads")
+    return {
+      select() {
+        return {
+          eq() {
+            return {
+              async maybeSingle() {
+                return { data: { quiz_kind: "personal_plan" }, error: null }
+              },
+            }
+          },
+        }
+      },
+    } as any
+  }
+
+  const response = await handleSendMagicLink(
+    { session_id: "cs_magic_v2", next: "/onboarding" },
+    {
+      stripe: {} as any,
+      supabase,
+      siteUrl: "https://hair.example",
+      checkRateLimit: async () => ({ allowed: true }),
+      getPremiumTierId: async () => "tier-premium",
+      verifyCheckoutSessionForActivation: async () =>
+        checkoutSession({
+          id: "cs_magic_v2",
+          customer_details: { email: "v2@example.com" },
+        }),
+      ensureCheckoutAccount: async () => ({
+        userId: "user-v2",
+        email: "v2@example.com",
+        canSetInitialPassword: true,
+        leadId: "lead-v2",
+      }),
+      claimCheckoutActivation: async () => true,
+      releaseCheckoutActivationClaim: async () => {},
+    },
+  )
+
+  expect(response).toMatchObject({
+    status: 200,
+    body: { ok: true, next: "/plan-bereit?lead=lead-v2" },
+  })
+  expect(otpCalls[0]).toMatchObject({
+    options: {
+      emailRedirectTo: "https://hair.example/auth/confirm?next=%2Fplan-bereit%3Flead%3Dlead-v2",
+    },
   })
 })
 

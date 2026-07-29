@@ -85,10 +85,12 @@ export function ResultOfferPricing({
   leadId,
   onCheckoutOpen,
   offerTracking,
+  openCheckoutRequestId,
 }: {
   leadId: string | null
   onCheckoutOpen?: () => void
   offerTracking?: FunnelAnalyticsEnvelope | null
+  openCheckoutRequestId?: number
 }) {
   const pricingRef = useRef<HTMLDivElement | null>(null)
   const inlineCheckoutRef = useRef<HTMLDivElement | null>(null)
@@ -322,6 +324,13 @@ export function ResultOfferPricing({
     setCheckoutInterval(selectedInterval)
     if (!paymentOverlayEnabled) scrollInlineCheckoutIntoView()
   }
+
+  useEffect(() => {
+    if (!openCheckoutRequestId) return
+    openCheckout()
+    // `openCheckoutRequestId` is an imperative request token owned by the parent offer shell.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCheckoutRequestId])
 
   const fetchClientSecret = useCallback(async () => {
     if (!checkoutInterval || !checkoutAttemptId) {

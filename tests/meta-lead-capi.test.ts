@@ -64,6 +64,28 @@ test("Lead CAPI schedules the exact browser id after persistence", async () => {
   ])
 })
 
+test("Lead CAPI accepts the personal-plan landing as its event source", async () => {
+  const callbacks: Array<() => Promise<void>> = []
+  const deliveries: unknown[] = []
+  enqueueMetaLead(
+    { ...input, eventSourceUrl: "https://chaarlie.de/lp/haarplan" },
+    {
+      enabled: true,
+      schedule: (callback) => callbacks.push(callback),
+      deliver: async (conversion) => {
+        deliveries.push(conversion)
+        return { ok: true, status: 200 }
+      },
+    },
+  )
+
+  await callbacks[0]?.()
+  assert.equal(
+    (deliveries[0] as { eventSourceUrl?: string } | undefined)?.eventSourceUrl,
+    "https://chaarlie.de/lp/haarplan",
+  )
+})
+
 test("Lead CAPI failures log only a fixed label and provider status", async () => {
   const callbacks: Array<() => Promise<void>> = []
   const warnings: unknown[][] = []
