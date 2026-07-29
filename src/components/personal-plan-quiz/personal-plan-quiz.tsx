@@ -92,6 +92,7 @@ import {
   getConcernOptions,
   getGoalOptions,
   getLengthOptions,
+  getProfileSummaryImage,
   type QuizIconKey,
   type QuizOption,
   type QuizQuestionConfig,
@@ -1214,6 +1215,7 @@ function ProfileSummaryScreen({
   onContinue: () => void
 }) {
   const rows = derivePersonalPlanProfileSummary(answers)
+  const profileImage = getProfileSummaryImage(answers.texture, answers.hairLength)
 
   return (
     <section className="mx-auto w-full max-w-[40rem]">
@@ -1241,13 +1243,22 @@ function ProfileSummaryScreen({
           </span>
         </div>
 
-        {/* Body: the portrait leads into four compact, scannable profile metrics. */}
+        {/* Body: the personalised photo leads into four compact profile metrics. */}
         <div
           className="grid gap-2 p-2.5 sm:gap-4 sm:p-5 [@media(max-height:700px)]:gap-1.5 [@media(max-height:700px)]:p-2"
           data-layout="profile-summary-2x2"
         >
-          <div className="mx-auto w-20 rounded-[1rem] bg-[var(--brand-plum-ice)] p-1.5 sm:w-24 sm:rounded-[1.25rem] sm:p-2 [@media(max-height:700px)]:w-16 [@media(max-height:700px)]:p-1">
-            <HairPortraitFigure length={answers.hairLength} texture={answers.texture} />
+          <div
+            className="relative aspect-[2/1] w-full overflow-hidden rounded-[1rem] bg-[var(--brand-plum-ice)] sm:rounded-[1.25rem] [@media(max-height:700px)]:h-[5.5rem] [@media(max-height:700px)]:aspect-auto [@media(max-height:500px)]:h-14"
+            data-layout="profile-summary-image"
+          >
+            <Image
+              alt="Persönliche Darstellung deines Haarprofils"
+              className="object-cover object-center"
+              fill
+              sizes="(max-width: 640px) calc(100vw - 3.5rem), 600px"
+              src={profileImage}
+            />
           </div>
           <dl className="grid grid-cols-2 gap-1.5 sm:gap-3">
             {rows.map((row) => (

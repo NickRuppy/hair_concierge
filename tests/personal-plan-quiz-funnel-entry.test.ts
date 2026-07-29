@@ -143,6 +143,9 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(quiz, /data-layout="midpoint-fit"/)
   assert.match(quiz, /data-layout="reframe-copy-image-closing"/)
   assert.match(quiz, /data-layout="profile-summary-2x2"/)
+  assert.match(quiz, /data-layout="profile-summary-image"/)
+  assert.match(quiz, /getProfileSummaryImage\(answers\.texture, answers\.hairLength\)/)
+  assert.match(quiz, /aspect-\[2\/1\]/)
   assert.match(quiz, /grid grid-cols-2 gap-1\.5/)
   assert.match(quiz, /objectPosition: "50% 8%"/)
   assert.match(data, /contextImage: `\$\{PERSONAL_PLAN_ASSET_BASE\}\/recognition-mirror\.webp`/)
@@ -167,5 +170,17 @@ test("personal-plan provisional production assets exist under the public funnel 
     "thickness-coarse.webp",
   ]) {
     assert.equal(existsSync(`public/images/funnels/personal-plan-quiz/${asset}`), true, asset)
+  }
+})
+
+test("personal-plan profile summary has a complete texture and length image matrix", () => {
+  const textures = ["straight", "wavy", "curly", "coily"]
+  const lengths = ["very-short", "short", "medium", "long", "very-long"]
+
+  for (const texture of textures) {
+    for (const length of lengths) {
+      const asset = `public/images/funnels/personal-plan-quiz/profile-summary/${texture}-${length}.webp`
+      assert.equal(existsSync(asset), true, asset)
+    }
   }
 })

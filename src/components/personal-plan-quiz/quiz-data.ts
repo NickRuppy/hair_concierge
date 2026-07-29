@@ -96,9 +96,9 @@ export type QuizQuestionConfig = {
 }
 
 export const PERSONAL_PLAN_ASSET_BASE = "/images/funnels/personal-plan-quiz"
-export const HAIR_PORTRAIT_ASSET_BASE = "/images/quiz/hair-portrait"
+const PROFILE_SUMMARY_IMAGE_BASE = `${PERSONAL_PLAN_ASSET_BASE}/profile-summary`
 
-const LENGTH_PORTRAIT_SLUGS: Record<NonNullable<PersonalPlanQuizAnswers["hairLength"]>, string> = {
+const LENGTH_IMAGE_SLUGS: Record<NonNullable<PersonalPlanQuizAnswers["hairLength"]>, string> = {
   very_short: "very-short",
   short: "short",
   medium: "medium",
@@ -107,15 +107,16 @@ const LENGTH_PORTRAIT_SLUGS: Record<NonNullable<PersonalPlanQuizAnswers["hairLen
 }
 
 /**
- * Returns the hair-portrait asset path for a texture + length pair, falling back
- * to the generic portrait when either input is missing.
+ * Returns the approved profile-summary photo for a texture + length pair. The
+ * fallback is only defensive: both answers are collected before this screen.
  */
-export function getHairPortrait(
+export function getProfileSummaryImage(
   texture: PersonalPlanQuizAnswers["texture"],
   length: PersonalPlanQuizAnswers["hairLength"],
 ): string {
-  if (!texture || !length) return `${HAIR_PORTRAIT_ASSET_BASE}/generic.webp`
-  return `${HAIR_PORTRAIT_ASSET_BASE}/${texture}-${LENGTH_PORTRAIT_SLUGS[length]}.webp`
+  const resolvedTexture = texture ?? "wavy"
+  const resolvedLength = length ?? "medium"
+  return `${PROFILE_SUMMARY_IMAGE_BASE}/${resolvedTexture}-${LENGTH_IMAGE_SLUGS[resolvedLength]}.webp`
 }
 
 const LENGTH_LABELS: Array<{
