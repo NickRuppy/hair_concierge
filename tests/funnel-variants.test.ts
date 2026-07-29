@@ -45,6 +45,7 @@ test("guided story is registered while the historical offers remain available fo
   assert.ok("guided-story-founder-letter" in OFFER_VARIANTS)
   assert.ok("guided-story-locked" in OFFER_VARIANTS)
   assert.ok("guided-story-potential" in OFFER_VARIANTS)
+  assert.ok("personal-plan-v1" in OFFER_VARIANTS)
   assert.equal(
     Object.keys(OFFER_VARIANTS).filter((variant) => variant === "app-value-stack").length,
     1,

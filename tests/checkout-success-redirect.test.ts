@@ -59,7 +59,7 @@ test("checkout destination is derived from the server-side lead kind", async () 
 
   assert.equal(
     await resolveCheckoutFirstTimeDestination(supabase as never, "lead-v2"),
-    "/plan-bereit",
+    "/plan-bereit?lead=lead-v2",
   )
   assert.deepEqual(calls, [
     ["from", "leads"],

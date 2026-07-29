@@ -62,6 +62,7 @@ import {
   clearPersonalPlanQuizDraft,
   derivePersonalPlanConflictPrompt,
   derivePersonalPlanProfileSummary,
+  getPersonalPlanQuizAnswersKey,
   getNextPersonalPlanQuizScreen,
   getOptionIntensity,
   getPersonalPlanQuizSectionId,
@@ -145,7 +146,6 @@ const ICONS: Record<QuizIconKey, LucideIcon> = {
   flame: FlameKindling,
   scale: Scale,
   "sun-dim": SunDim,
-  help: HelpCircle,
   permed: TreatmentPermedIcon,
   straightened: TreatmentStraightenedIcon,
   "circle-check": CircleCheck,
@@ -220,7 +220,7 @@ function getBrowserSessionStorage(): Storage | null {
 }
 
 function getAnswersKey(answers: PersonalPlanQuizAnswers): string {
-  return JSON.stringify(answers)
+  return getPersonalPlanQuizAnswersKey(answers)
 }
 
 function loadPreparedPlanClaim(
@@ -1178,9 +1178,9 @@ function ProfileSummaryScreen({
         </div>
       </div>
 
-      <div className="mt-5 flex items-start gap-3 rounded-2xl border border-[#b7d9bd] bg-[#edf8ef] p-4">
-        <CircleCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#47744e]" />
-        <p className="text-sm leading-6 text-[#315d39]">
+      <div className="mt-5 flex items-start gap-3 rounded-2xl border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-4">
+        <CircleCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-plum)]" />
+        <p className="text-sm leading-6 text-[var(--brand-plum-darkest)]">
           Dein Profil zeigt klare Ansatzpunkte. Der vollständige Plan kann daraus Pflegebedarf,
           Reihenfolge, Produkte und Alltagsschritte ableiten.
         </p>
@@ -1438,9 +1438,9 @@ function LoadingScreen({
 
         {phase === "done" ? (
           preparation.status === "ready" ? (
-            <div className="mt-5 rounded-[2rem] border border-[#b7d9bd] bg-[#edf8ef] p-5 text-center">
-              <CircleCheck className="mx-auto h-9 w-9 text-[#47744e]" />
-              <p className="mt-3 text-xl font-semibold text-[#315d39]">
+            <div className="mt-5 rounded-[2rem] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-5 text-center">
+              <CircleCheck className="mx-auto h-9 w-9 text-[var(--brand-plum)]" />
+              <p className="mt-3 text-xl font-semibold text-[var(--brand-plum-darkest)]">
                 Deine persönliche Auswertung ist bereit.
               </p>
               <Button className="mt-5 h-12 w-full text-base" onClick={onContinue} variant="cta">
@@ -1579,6 +1579,11 @@ function EmailCapture({
       if (typeof leadId !== "string" || !leadId) {
         throw new Error("Save succeeded without a lead id")
       }
+      trackAppEvent("quiz_lead_captured", {
+        leadId,
+        marketingConsent,
+        funnelEventId: funnelEventIdRef.current,
+      })
       onSaved(leadId)
     } catch {
       setError(
@@ -1592,7 +1597,7 @@ function EmailCapture({
 
   return (
     <section className="mx-auto w-full max-w-[40rem]">
-      <div className="rounded-full bg-[#e7f3e9] px-4 py-2 text-center text-sm font-semibold text-[#3f7048]">
+      <div className="rounded-full bg-[var(--brand-plum-ice)] px-4 py-2 text-center text-sm font-semibold text-[var(--brand-plum)]">
         Deine persönliche Auswertung ist bereit.
       </div>
       {step === "email" ? (
@@ -1731,6 +1736,7 @@ export function PersonalPlanQuiz() {
   })
   const autoAdvanceTimer = useRef<number | null>(null)
   const quizStartedRef = useRef(false)
+  const quizCompletedRef = useRef(false)
   const preparationRequestRef = useRef<{ answersKey: string; promise: Promise<void> } | null>(null)
   const latestAnswersKeyRef = useRef(getAnswersKey(answers))
 
@@ -1907,6 +1913,20 @@ export function PersonalPlanQuiz() {
     window.scrollTo(0, 0)
   }
 
+  function completeQuizAndContinue() {
+    if (!quizCompletedRef.current) {
+      quizCompletedRef.current = true
+      trackAppEvent("quiz_completed", {
+        hairLength: answers.hairLength,
+        hairTexture: answers.texture,
+        scalpCondition: answers.scalpConcerns?.join(",") || null,
+        scalpType: answers.scalpOiliness,
+        thickness: answers.thickness,
+      })
+    }
+    goNext()
+  }
+
   function scheduleNext(answerSnapshot = answers) {
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current)
     autoAdvanceTimer.current = window.setTimeout(() => goNext(answerSnapshot), AUTO_ADVANCE_MS)
@@ -1934,7 +1954,15 @@ export function PersonalPlanQuiz() {
   function selectSingle(config: QuizQuestionConfig, value: string) {
     if (config.field === "texture" && !quizStartedRef.current) {
       quizStartedRef.current = true
-      recordBrowserFunnelMilestone("quiz_started")
+      const funnelEventId = createFunnelEventId()
+      const funnel = recordBrowserFunnelMilestone("quiz_started", undefined, funnelEventId)
+      trackAppEvent("quiz_started", {
+        stepName: "personal_plan_texture",
+        stepNumber: 1,
+        funnelEventId,
+        funnelPackageKey: funnel.funnelPackageKey,
+        funnelSessionId: funnel.funnelSessionId,
+      })
     }
     const next = withSingleAnswer(answers, config.field, value)
     setAnswers(next)
@@ -2163,7 +2191,7 @@ export function PersonalPlanQuiz() {
       return (
         <LoadingScreen
           ephemeral={ephemeral}
-          onContinue={() => goNext()}
+          onContinue={completeQuizAndContinue}
           onEphemeral={setEphemeral}
           onRetryPreparation={() => void preparePersonalPlan(true)}
           preparation={preparedPlan}
@@ -2218,7 +2246,7 @@ export function PersonalPlanQuiz() {
             if (storage) clearPersonalPlanQuizDraft(storage)
             const sessionStorage = getBrowserSessionStorage()
             if (sessionStorage) clearPreparedPlanClaim(sessionStorage)
-            router.push(`/result/${leadId}?entry=quiz_completion`)
+            router.push(`/result/${leadId}/reveal`)
           }}
         />
       )

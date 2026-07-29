@@ -28,7 +28,7 @@ test("personal-plan offer placeholder remains local and gated", () => {
   assert.doesNotMatch(offer, /fetch\(|axios|supabase|\bcheckout\b|\/api\//i)
 })
 
-test("personal-plan quiz prepares the plan, saves V2 answers, and uses the canonical result route", () => {
+test("personal-plan quiz prepares the plan, saves V2 answers, and enters the result reveal", () => {
   const landing = read("src/funnels/landing/personal-plan-quiz.tsx")
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
   const api = read("src/app/api/quiz/personal-plan-lead/route.ts")
@@ -45,7 +45,7 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and uses the canon
   assert.match(quiz, /response\.status === 409/)
   assert.match(quiz, /setPreparedPlan\(\{ status: "idle", claim: null, error: null \}\)/)
   assert.match(quiz, /response\.json\(\)/)
-  assert.match(quiz, /router\.push\(`\/result\/\$\{leadId\}\?entry=quiz_completion`\)/)
+  assert.match(quiz, /router\.push\(`\/result\/\$\{leadId\}\/reveal`\)/)
   assert.doesNotMatch(quiz, /router\.prefetch/)
   assert.match(quiz, /clearPersonalPlanQuizDraft/)
   assert.match(quiz, /Deine Auswertung konnte gerade nicht gespeichert werden/)
@@ -53,15 +53,41 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and uses the canon
   assert.match(api, /status: 404/)
 })
 
+test("personal-plan result reveal owns future pacing but not offer-view tracking", () => {
+  const page = read("src/app/result/[leadId]/reveal/page.tsx")
+  const reveal = read("src/app/result/[leadId]/reveal/personal-plan-result-reveal.tsx")
+
+  assert.match(page, /robots:[\s\S]*index: false,[\s\S]*follow: false/)
+  assert.match(page, /export const dynamic = "force-dynamic"/)
+  assert.match(page, /\.from\("leads"\)/)
+  assert.match(page, /\.eq\("quiz_kind", "personal_plan"\)/)
+  assert.match(page, /if \(error \|\| !data\) notFound\(\)/)
+  assert.match(page, /\.from\("personal_plan_prepared_artifacts"\)/)
+  assert.match(page, /\.eq\("status", "attached"\)/)
+  assert.match(page, /if \(artifactError \|\| !artifact\)/)
+  assert.match(reveal, /buildPersonalPlanResultRevealMessages/)
+  assert.match(reveal, /schedulePersonalPlanResultReveal/)
+  assert.match(reveal, /claimPersonalPlanResultRevealCompletion/)
+  assert.match(reveal, /Überspringen/)
+  assert.match(reveal, /Deine Auswertung wird geöffnet/)
+  assert.match(reveal, /trackAppEvent\("personal_plan_result_reveal_step_viewed"/)
+  assert.match(reveal, /trackAppEvent\("personal_plan_result_reveal_completed"/)
+  assert.match(reveal, /router\.replace\(resultPath\)/)
+  assert.doesNotMatch(page + reveal, /offer_viewed/)
+})
+
 test("personal-plan quiz uses approved consent and milestone ownership", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
 
-  assert.match(quiz, /recordBrowserFunnelMilestone\("quiz_started"\)/)
+  assert.match(quiz, /recordBrowserFunnelMilestone\(\s*"quiz_started"/)
   assert.match(quiz, /quizStartedRef\.current = true/)
   assert.match(quiz, /Ja, weiter zu meiner Auswertung/)
   assert.match(quiz, /Nein, nur meine Auswertung schicken/)
-  assert.doesNotMatch(quiz, /trackAppEvent\("quiz_started"/)
-  assert.doesNotMatch(quiz, /quiz_lead_captured/)
+  assert.match(quiz, /trackAppEvent\("quiz_started"/)
+  assert.match(quiz, /stepName: "personal_plan_texture"/)
+  assert.match(quiz, /trackAppEvent\("quiz_completed"/)
+  assert.match(quiz, /trackAppEvent\("quiz_lead_captured"/)
+  assert.match(quiz, /funnelEventId: funnelEventIdRef\.current/)
 })
 
 test("personal-plan quiz tracks semantic screen views without answer payloads", () => {
@@ -101,8 +127,11 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(quiz, /Sehr wichtig/)
   assert.match(quiz, /rounded-b-none rounded-t-2xl/)
   assert.match(quiz, /window\.scrollTo\(0, 0\)/)
+  assert.doesNotMatch(quiz, /bg-\[#edf8ef\]|bg-\[#e7f3e9\] px-4 py-2/)
   assert.match(data, /visualLayout: "thumbnail"/)
   assert.match(data, /contextImage: `\$\{PERSONAL_PLAN_ASSET_BASE\}\/recognition-mirror\.webp`/)
+  assert.match(data, /an einem einzelnen ausgefallenen Haar/)
+  assert.doesNotMatch(data, /value: "unknown", label: "Ich bin mir nicht sicher"/)
   assert.doesNotMatch(quiz + data, /washCadence|heatExposure|heatProtection|weeklyTime/)
   assert.doesNotMatch(quiz + data, /ABKLÄRUNG|hasPersonalPlanSafetySignal|safetySignals/)
 })

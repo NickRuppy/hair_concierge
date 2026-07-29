@@ -35,7 +35,7 @@ const durableAnswersSchema = z
     currentConcerns: stringArray(PERSONAL_PLAN_QUIZ_CONCERNS),
     hairLength: z.enum(["very_short", "short", "medium", "long", "very_long"]),
     hairSurface: z.enum(["smooth", "slightly_uneven", "rough"]),
-    elasticResponse: z.enum(["stretches_bounces", "stretches_stays", "snaps", "unknown"]),
+    elasticResponse: z.enum(["stretches_bounces", "stretches_stays", "snaps"]),
     chemicalTreatments: stringArray(
       ["natural", "colored", "lightened", "permed", "chemically_straightened"],
       1,

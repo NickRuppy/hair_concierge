@@ -113,7 +113,6 @@ export default async function OfferPageLab({
         entryContext="saved_result"
         leadId="11111111-1111-4111-8111-111111111111"
         model={PERSONAL_PLAN_REVIEW_MODEL}
-        name="Lea"
       />
     )
   }

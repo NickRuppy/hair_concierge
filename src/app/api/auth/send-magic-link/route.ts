@@ -141,7 +141,7 @@ export async function handleSendMagicLink(
     const { error } = await deps.supabase.auth.signInWithOtp({
       email: account.email,
       options: {
-        emailRedirectTo: `${deps.siteUrl}/auth/confirm?next=${next}`,
+        emailRedirectTo: `${deps.siteUrl}/auth/confirm?next=${encodeURIComponent(next)}`,
         shouldCreateUser: false,
       },
     })

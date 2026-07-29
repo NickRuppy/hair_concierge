@@ -10,7 +10,10 @@ import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
-import type { CheckoutFirstTimeDestination } from "@/lib/billing/checkout-success-redirect"
+import {
+  isCheckoutFirstTimeDestination,
+  type CheckoutFirstTimeDestination,
+} from "@/lib/billing/checkout-success-redirect"
 
 interface WelcomeClientProps {
   analyticsId?: string
@@ -203,10 +206,9 @@ export function WelcomeClient({
         return
       }
 
-      const resolvedNext =
-        body.next === "/plan-bereit" || body.next === "/onboarding"
-          ? body.next
-          : activationRedirectTo
+      const resolvedNext = isCheckoutFirstTimeDestination(body.next)
+        ? body.next
+        : activationRedirectTo
       router.replace(resolvedNext)
     } catch (err) {
       setMessage(normalizeError(err))

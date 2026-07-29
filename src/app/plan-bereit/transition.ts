@@ -1,7 +1,7 @@
 export const PERSONAL_PLAN_READY_MESSAGES = [
-  "Heute startest du mit deinem persönlichen Haarplan.",
-  "In einer Woche kennst du deine Routine ganz genau.",
-  "In vier Wochen sieht dein Haar sichtbar schöner und gesünder aus.",
+  "Deine Zahlung ist bestätigt.",
+  "Dein persönlicher Haarplan ist vorbereitet.",
+  "Jetzt verfeinerst du ihn mit deinen Produkten.",
 ] as const
 
 export const PERSONAL_PLAN_READY_MESSAGE_MS = 2_200

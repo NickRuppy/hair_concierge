@@ -189,6 +189,50 @@ test("personal-plan quiz screen views stay PostHog-only and contain only stable 
   ])
 })
 
+test("personal-plan result reveal events stay PostHog-only with stable progress fields", () => {
+  const payload = {
+    daysFromStart: 7,
+    leadId: "10000000-0000-4000-8000-000000000092",
+    stepIndex: 2,
+  }
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("personal_plan_result_reveal_step_viewed", payload)
+
+    assert.deepEqual(calls, [
+      {
+        destination: "posthog",
+        eventName: "personal_plan_result_reveal_step_viewed",
+        payload,
+      },
+    ])
+  })
+
+  const originalCapture = posthog.capture
+  const postHogCalls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    postHogCalls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("personal_plan_result_reveal_step_viewed", payload)
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(postHogCalls, [
+    [
+      "personal_plan_result_reveal_step_viewed",
+      {
+        days_from_start: 7,
+        lead_id: "10000000-0000-4000-8000-000000000092",
+        step_index: 2,
+      },
+    ],
+  ])
+})
+
 test("offer engagement routes to PostHog but not browser Customer.io or Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("offer_engaged", {

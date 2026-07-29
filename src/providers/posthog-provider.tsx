@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation"
 import { Suspense, useEffect } from "react"
-import { buildSafeAnalyticsPath } from "@/lib/analytics/page-url"
+import { buildSafeAnalyticsPath, shouldTrackAnalyticsPageView } from "@/lib/analytics/page-url"
 import { posthog } from "@/lib/analytics/runtime/posthog"
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
@@ -12,7 +12,7 @@ function PostHogPageView() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    if (!POSTHOG_KEY) return
+    if (!POSTHOG_KEY || !shouldTrackAnalyticsPageView(pathname)) return
     const url = window.origin + buildSafeAnalyticsPath(pathname, searchParams)
     posthog.capture("$pageview", { $current_url: url })
   }, [pathname, searchParams])

@@ -128,8 +128,8 @@ function profileLine(answers: QuizAnswers): string {
     normal: "mittelstarkes",
     coarse: "kräftiges",
   }[answers.thickness ?? ""]
-  if (texture && thickness) return `Basierend auf deiner Analyse für ${texture}, ${thickness} Haar`
-  return "Basierend auf deiner persönlichen Haaranalyse"
+  if (texture && thickness) return `Für ${texture}, ${thickness} Haar`
+  return "Für dein persönliches Haarprofil"
 }
 
 function todayLabel(segments: PersonalPlanVisibleSegments): string {

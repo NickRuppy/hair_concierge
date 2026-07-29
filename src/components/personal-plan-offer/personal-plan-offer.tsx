@@ -61,6 +61,61 @@ function displayDiagnosticSummary(summary: string): string {
   return summary
 }
 
+function displayProfileLine(profileLine?: string): string {
+  const value = profileLine?.trim().replace(/\.$/, "")
+  if (!value || value === "Basierend auf deiner Haaranalyse") {
+    return "Für dein persönliches Haarprofil."
+  }
+  if (value === "Basierend auf deiner persönlichen Haaranalyse") {
+    return "Für dein persönliches Haarprofil."
+  }
+  const personalized = value.match(/^Basierend auf deiner Analyse für (.+)$/)
+  return `${personalized ? `Für ${personalized[1]}` : value}.`
+}
+
+function BeforeAfterFigure() {
+  return (
+    <figure className="mt-5 overflow-hidden rounded-[1.75rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white shadow-[0_24px_54px_-42px_rgba(var(--brand-plum-rgb),0.7)]">
+      <div className="relative grid grid-cols-2 gap-3 bg-white p-3 sm:gap-4 sm:p-4">
+        {[
+          ["Heute", "left center", "bg-white/92 text-[var(--brand-plum-darkest)]"],
+          ["Dein Ziel", "right center", "bg-white/92 text-[#255f40]"],
+        ].map(([label, position, labelClass]) => (
+          <div className="relative aspect-[2/3] overflow-hidden rounded-[1.15rem]" key={label}>
+            <div
+              aria-label={
+                label === "Heute" ? "Symbolische heutige Haarsituation" : "Symbolisches Haarziel"
+              }
+              className="absolute inset-0 bg-no-repeat"
+              role="img"
+              style={{
+                backgroundImage:
+                  "url('/images/funnels/personal-plan-offer/before-after-generic.webp')",
+                backgroundPosition: position,
+                backgroundSize: "200% 100%",
+              }}
+            />
+            <span
+              className={`absolute left-3 top-3 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm ${labelClass}`}
+            >
+              {label}
+            </span>
+          </div>
+        ))}
+        <span
+          aria-hidden="true"
+          className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[6px] border-white bg-[var(--brand-plum)] text-white shadow-lg"
+        >
+          <ArrowRight className="h-5 w-5" strokeWidth={2.25} />
+        </span>
+      </div>
+      <figcaption className="border-t border-[rgba(var(--brand-plum-rgb),0.08)] px-4 py-2.5 text-center text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">
+        Symbolbild · Ergebnisse sind individuell
+      </figcaption>
+    </figure>
+  )
+}
+
 function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
   return (
     <article className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 shadow-[0_16px_44px_-36px_rgba(var(--brand-plum-rgb),0.55)]">
@@ -74,8 +129,8 @@ function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
           </p>
           <Segments count={row.todaySegments} tone="today" />
         </div>
-        <div className="rounded-2xl bg-[#eef7f1] p-4">
-          <p className="mb-2 text-sm font-semibold text-[#397353]">
+        <div className="rounded-2xl bg-[var(--brand-plum-ice)] p-4">
+          <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">
             {SPECTRUM_LABELS[row.potentialSegments]}
           </p>
           <Segments count={row.potentialSegments} tone="goal" />
@@ -92,21 +147,15 @@ export function PersonalPlanOffer({
   entryContext,
   leadId,
   model,
-  name,
   offerTracking,
 }: {
   entryContext: OfferEntryContext
   leadId: string
   model: PersonalPlanOfferModel
-  name: string
   offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
-  const displayName = name?.trim() ? `${name.trim()}, ` : ""
-  const heroTitle = displayName
-    ? `${displayName}dein Haarplan ist bereit.`
-    : "Dein Haarplan ist bereit."
 
   return (
     <OfferTrackingProvider
@@ -143,75 +192,30 @@ export function PersonalPlanOffer({
         </div>
 
         <section
-          className="mx-auto max-w-4xl px-4 pb-8 pt-12 text-center sm:pb-10 sm:pt-16"
+          className="mx-auto max-w-4xl px-4 pb-6 pt-7 text-center sm:pb-8 sm:pt-10"
           data-offer-section="hero"
         >
-          <h1 className="mx-auto max-w-[15ch] font-serif text-5xl leading-[0.98] tracking-[-0.04em] sm:text-6xl">
-            {heroTitle}
+          <h1 className="mx-auto max-w-[15ch] font-serif text-[2.7rem] leading-[0.98] tracking-[-0.04em] sm:text-6xl">
+            Dein Haarplan ist bereit.
           </h1>
-          <p className="mx-auto mt-5 max-w-[34rem] text-lg leading-8 text-[rgba(var(--brand-plum-rgb),0.72)]">
-            {model.profileLine ?? "Basierend auf deiner Haaranalyse"}. Mit klaren Schritten für
-            Reinigung, Pflege, Styling und passende Produkte.
+          <p className="mx-auto mt-3 max-w-[34rem] text-base leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-lg">
+            {displayProfileLine(model.profileLine)}
           </p>
+          <BeforeAfterFigure />
         </section>
 
         <section
-          className="border-y border-[rgba(var(--brand-plum-rgb),0.08)] bg-white/55 px-4 py-10 sm:py-14"
+          className="border-y border-[rgba(var(--brand-plum-rgb),0.08)] bg-white/55 px-4 py-7 sm:py-10"
           data-offer-section="personal_plan_diagnosis"
         >
           <div className="mx-auto max-w-4xl">
             <p className="text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
               Deine Ausgangslage
             </p>
-            <h2 className="mt-3 w-full text-center font-serif text-4xl leading-tight tracking-[-0.035em]">
+            <h2 className="mt-1.5 w-full text-center font-serif text-3xl leading-tight tracking-[-0.035em] sm:text-4xl">
               Dein Haar hat viel Potenzial.
             </h2>
-
-            <figure className="mt-7 overflow-hidden rounded-[1.75rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white shadow-[0_24px_54px_-42px_rgba(var(--brand-plum-rgb),0.7)]">
-              <div className="relative grid grid-cols-2 gap-3 bg-white p-3 sm:gap-4 sm:p-4">
-                {[
-                  ["Heute", "left center", "bg-white/92 text-[var(--brand-plum-darkest)]"],
-                  ["Dein Ziel", "right center", "bg-white/92 text-[#255f40]"],
-                ].map(([label, position, labelClass]) => (
-                  <div
-                    className="relative aspect-[2/3] overflow-hidden rounded-[1.15rem]"
-                    key={label}
-                  >
-                    <div
-                      aria-label={
-                        label === "Heute"
-                          ? "Symbolische heutige Haarsituation"
-                          : "Symbolisches Haarziel"
-                      }
-                      className="absolute inset-0 bg-no-repeat"
-                      role="img"
-                      style={{
-                        backgroundImage:
-                          "url('/images/funnels/personal-plan-offer/before-after-generic.webp')",
-                        backgroundPosition: position,
-                        backgroundSize: "200% 100%",
-                      }}
-                    />
-                    <span
-                      className={`absolute left-3 top-3 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm ${labelClass}`}
-                    >
-                      {label}
-                    </span>
-                  </div>
-                ))}
-                <span
-                  aria-hidden="true"
-                  className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[6px] border-white bg-[var(--brand-plum)] text-white shadow-lg"
-                >
-                  <ArrowRight className="h-5 w-5" strokeWidth={2.25} />
-                </span>
-              </div>
-              <figcaption className="border-t border-[rgba(var(--brand-plum-rgb),0.08)] px-4 py-3 text-center text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">
-                Symbolbild · Ergebnisse sind individuell
-              </figcaption>
-            </figure>
-
-            <div className="mt-6 space-y-4">
+            <div className="mt-5 space-y-4">
               {model.diagnosticRows.map((row) => (
                 <DiagnosticRow key={row.id} row={row} />
               ))}
@@ -229,12 +233,14 @@ export function PersonalPlanOffer({
           className="mx-auto max-w-4xl px-4 py-10 sm:py-14"
           data-offer-section="personal_plan_complete_plan"
         >
-          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-            Was du freischaltest
-          </p>
-          <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-            Dein kompletter Haarpflegeplan – nicht nur ein Quiz-Ergebnis.
-          </h2>
+          <div className="text-center">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+              Was du freischaltest
+            </p>
+            <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
+              Dein kompletter Haarpflegeplan – nicht nur ein Quiz-Ergebnis.
+            </h2>
+          </div>
           <div className="mt-7 grid gap-3 sm:grid-cols-2">
             {[
               "Welche Produkte zu Kopfhaut, Textur, Dicke und Zustand passen.",
@@ -260,15 +266,17 @@ export function PersonalPlanOffer({
           data-offer-section="personal_plan_method"
         >
           <div className="mx-auto max-w-4xl">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              So entsteht dein Plan
-            </p>
-            <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Vier Signale. Eine klare Empfehlung.
-            </h2>
-            <p className="mt-4 max-w-[38rem] text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
-              Wir verbinden, was dein Haar zeigt, mit der Pflege, die im Alltag funktioniert.
-            </p>
+            <div className="text-center">
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+                So entsteht dein Plan
+              </p>
+              <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
+                Vier Signale. Eine klare Empfehlung.
+              </h2>
+              <p className="mx-auto mt-4 max-w-[38rem] text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
+                Wir verbinden, was dein Haar zeigt, mit der Pflege, die im Alltag funktioniert.
+              </p>
+            </div>
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               {[
                 ["01", "Zugtest", "Struktur & Elastizität"],
@@ -311,12 +319,14 @@ export function PersonalPlanOffer({
           data-offer-section="pricing"
           id="pricing"
         >
-          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-            Plan freischalten
-          </p>
-          <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-            Starte mit deinem persönlichen Plan.
-          </h2>
+          <div className="text-center">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+              Plan freischalten
+            </p>
+            <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
+              Starte mit deinem persönlichen Plan.
+            </h2>
+          </div>
           <div className="mt-7">
             <ResultOfferPricing
               leadId={leadId}
@@ -400,7 +410,9 @@ export function PersonalPlanOffer({
         </section>
 
         <section className="mx-auto max-w-4xl px-4 pb-24 pt-4" data-offer-section="faq">
-          <h2 className="font-serif text-4xl leading-tight tracking-[-0.035em]">Häufige Fragen</h2>
+          <h2 className="text-center font-serif text-4xl leading-tight tracking-[-0.035em]">
+            Häufige Fragen
+          </h2>
           <div className="mt-6 space-y-3">
             {[
               [

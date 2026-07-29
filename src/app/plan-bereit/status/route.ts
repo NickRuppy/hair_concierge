@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { z } from "zod"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -8,15 +9,20 @@ import { loadPersonalPlanReadiness } from "../readiness"
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
-export async function GET() {
-  return resolveStatus(false)
+export async function GET(request: Request) {
+  return resolveStatus(request, false)
 }
 
-export async function POST() {
-  return resolveStatus(true)
+export async function POST(request: Request) {
+  return resolveStatus(request, true)
 }
 
-async function resolveStatus(retryLink: boolean) {
+async function resolveStatus(request: Request, retryLink: boolean) {
+  const leadResult = z.string().uuid().safeParse(new URL(request.url).searchParams.get("lead"))
+  if (!leadResult.success) {
+    return NextResponse.json({ status: "invalid_lead" }, { status: 400 })
+  }
+  const leadId = leadResult.data
   const supabase = await createClient()
   const {
     data: { user },
@@ -32,10 +38,10 @@ async function resolveStatus(retryLink: boolean) {
   }
 
   try {
-    let readiness = await loadPersonalPlanReadiness(admin, user.id, user.email)
+    let readiness = await loadPersonalPlanReadiness(admin, user.id, user.email, leadId)
     if (retryLink && readiness.leadId && !readiness.ready) {
       await linkQuizToProfile(user.id, user.email, readiness.leadId)
-      readiness = await loadPersonalPlanReadiness(admin, user.id, user.email)
+      readiness = await loadPersonalPlanReadiness(admin, user.id, user.email, leadId)
     }
 
     return NextResponse.json(
@@ -45,8 +51,8 @@ async function resolveStatus(retryLink: boolean) {
   } catch (error) {
     console.error("[plan-bereit] readiness failed", error)
     return NextResponse.json(
-      { status: "pending" },
-      { headers: { "Cache-Control": "private, no-store" } },
+      { status: "error" },
+      { headers: { "Cache-Control": "private, no-store" }, status: 500 },
     )
   }
 }

@@ -13,7 +13,7 @@ import {
 
 type ReadinessPhase = "checking" | "ready" | "timeout" | "error"
 
-export function PersonalPlanReadyClient() {
+export function PersonalPlanReadyClient({ leadId }: { leadId: string }) {
   const [storyIndex, setStoryIndex] = useState(0)
   const [storyComplete, setStoryComplete] = useState(false)
   const [readiness, setReadiness] = useState<ReadinessPhase>("checking")
@@ -43,8 +43,8 @@ export function PersonalPlanReadyClient() {
     async function poll() {
       attempts += 1
       try {
-        const response = await fetch("/plan-bereit/status", {
-          method: retryKey > 0 && attempts === 1 ? "POST" : "GET",
+        const response = await fetch(`/plan-bereit/status?lead=${encodeURIComponent(leadId)}`, {
+          method: attempts === 1 ? "POST" : "GET",
           headers: { Accept: "application/json" },
           cache: "no-store",
         })
@@ -52,10 +52,14 @@ export function PersonalPlanReadyClient() {
         if (cancelled) return
 
         if (response.status === 401) {
-          window.location.assign("/auth?next=%2Fplan-bereit")
+          window.location.assign(`/auth?next=${encodeURIComponent(`/plan-bereit?lead=${leadId}`)}`)
           return
         }
         if (response.status === 403) {
+          setReadiness("error")
+          return
+        }
+        if (!response.ok || body.status === "error") {
           setReadiness("error")
           return
         }
@@ -79,7 +83,7 @@ export function PersonalPlanReadyClient() {
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [retryKey])
+  }, [leadId, retryKey])
 
   const canContinue = storyComplete && readiness === "ready"
   const waitingForPlan = storyComplete && readiness === "checking"
@@ -105,12 +109,14 @@ export function PersonalPlanReadyClient() {
             <div className="w-full space-y-7">
               <div className="space-y-3">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#88466c]">
-                  Alles vorbereitet
+                  Dein Plan ist vorbereitet
                 </p>
-                <h1 className="font-header text-4xl leading-tight">Dein Plan ist bereit</h1>
+                <h1 className="font-header text-4xl leading-tight">
+                  Verfeinere ihn jetzt mit deinen Produkten.
+                </h1>
                 <p className="mx-auto max-w-sm text-base leading-7 text-[#6d6069]">
-                  Ergänze jetzt noch deine aktuellen Produkte und Gewohnheiten, damit dein Haarplan
-                  genau zu deinem Alltag passt.
+                  Ergänze die Produkte, die du bereits verwendest. Danach siehst du deinen
+                  vollständigen Haarplan in deiner Routine.
                 </p>
               </div>
 
@@ -118,7 +124,7 @@ export function PersonalPlanReadyClient() {
                 href="/onboarding?returnTo=%2Froutine"
                 className="inline-flex min-h-14 w-full items-center justify-center rounded-full bg-[#88466c] px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#743b5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88466c] focus-visible:ring-offset-2"
               >
-                Meinen Plan verfeinern
+                Plan mit Produkten verfeinern
               </Link>
             </div>
           ) : (

@@ -459,7 +459,7 @@ test("password activation returns the server-resolved personal-plan transition",
     body: {
       ok: true,
       email: "stripe@example.com",
-      next: "/plan-bereit",
+      next: "/plan-bereit?lead=lead-v2",
     },
   })
   expect(calls.some(([op]) => op === "updateUserById")).toBe(true)
@@ -545,7 +545,7 @@ test("send magic link derives email from checkout activation and consumes matchi
   expect(otpCall?.[1]).toMatchObject({
     email: "stripe-owned@example.com",
     options: {
-      emailRedirectTo: "https://hair.example/auth/confirm?next=/onboarding",
+      emailRedirectTo: "https://hair.example/auth/confirm?next=%2Fonboarding",
       shouldCreateUser: false,
     },
   })
@@ -613,11 +613,11 @@ test("magic-link activation derives the personal-plan destination server-side", 
 
   expect(response).toMatchObject({
     status: 200,
-    body: { ok: true, next: "/plan-bereit" },
+    body: { ok: true, next: "/plan-bereit?lead=lead-v2" },
   })
   expect(otpCalls[0]).toMatchObject({
     options: {
-      emailRedirectTo: "https://hair.example/auth/confirm?next=/plan-bereit",
+      emailRedirectTo: "https://hair.example/auth/confirm?next=%2Fplan-bereit%3Flead%3Dlead-v2",
     },
   })
 })

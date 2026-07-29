@@ -204,6 +204,15 @@ export type AppEventMap = {
     screenId: string
     sectionId: string
   }
+  personal_plan_result_reveal_completed: {
+    leadId: string
+    stepCount: number
+  }
+  personal_plan_result_reveal_step_viewed: {
+    daysFromStart: number
+    leadId: string
+    stepIndex: number
+  }
   quiz_completed: FunnelAnalyticsEnvelope & {
     hairLength?: string
     hairTexture?: string

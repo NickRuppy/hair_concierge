@@ -24,6 +24,8 @@ export const eventRoutes = {
   offer_section_viewed: { customerio: false, meta: false, posthog: true },
   offer_viewed: { customerio: false, meta: false, posthog: true },
   personal_plan_quiz_screen_viewed: { customerio: false, meta: false, posthog: true },
+  personal_plan_result_reveal_completed: { customerio: false, meta: false, posthog: true },
+  personal_plan_result_reveal_step_viewed: { customerio: false, meta: false, posthog: true },
   pricing_viewed: { customerio: true, meta: true, posthog: true },
   purchase_completed: { customerio: false, meta: true, posthog: false },
   quiz_completed: { customerio: true, meta: false, posthog: true },

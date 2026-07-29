@@ -208,10 +208,7 @@ export function adaptPersonalPlanAnswersForOffer(
   const primaryScalpConcern = SCALP_CONCERN_PRIORITY.find((concern) =>
     answers.scalpConcerns?.includes(concern),
   )
-  const pulltest =
-    answers.elasticResponse === "unknown" || !answers.elasticResponse
-      ? "stretches_bounces"
-      : answers.elasticResponse
+  const pulltest = answers.elasticResponse ?? "stretches_bounces"
 
   return {
     answers: {
@@ -229,7 +226,7 @@ export function adaptPersonalPlanAnswersForOffer(
       goals: retainGoals(answers, retainedConcerns),
     },
     fallbackMetadata: {
-      elasticityFallback: answers.elasticResponse === "unknown" || !answers.elasticResponse,
+      elasticityFallback: !answers.elasticResponse,
       scalpFallback: scalp.fallback,
     },
   }

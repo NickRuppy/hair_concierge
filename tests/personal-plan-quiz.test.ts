@@ -7,6 +7,7 @@ import {
   derivePersonalPlanConflictPrompt,
   derivePersonalPlanProfileSummary,
   getNextPersonalPlanQuizScreen,
+  getPersonalPlanQuizAnswersKey,
   getPersonalPlanLoadingProgress,
   getPersonalPlanQuizSectionId,
   loadPersonalPlanQuizDraft,
@@ -121,6 +122,66 @@ test("draft preserves an explicit no-concerns answer across reloads", () => {
   )
 
   assert.deepEqual(loadPersonalPlanQuizDraft(storage)?.answers.currentConcerns, [])
+})
+
+test("prepared-plan answer keys survive the draft's canonical field ordering", () => {
+  const liveAnswers = {
+    texture: "wavy",
+    currentConcerns: ["frizz_flyaways", "dry_dull_lengths"],
+    goals: ["shine", "moisture"],
+    density: "low",
+    blockers: ["product_fit", "conflicting_tips"],
+  } as const
+  const storage = new MemoryStorage()
+
+  savePersonalPlanQuizDraft(
+    {
+      screen: "email_capture",
+      history: ["texture", "current_problems", "email_capture"],
+      answers: {
+        ...liveAnswers,
+        currentConcerns: [...liveAnswers.currentConcerns],
+        goals: [...liveAnswers.goals],
+        blockers: [...liveAnswers.blockers],
+      },
+    },
+    storage,
+  )
+
+  const restored = loadPersonalPlanQuizDraft(storage)
+  assert.ok(restored)
+  assert.equal(
+    getPersonalPlanQuizAnswersKey(liveAnswers),
+    getPersonalPlanQuizAnswersKey(restored.answers),
+  )
+})
+
+test("stale elasticity opt-outs return the user to the required test", () => {
+  const storage = new MemoryStorage()
+  storage.setItem(
+    PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
+    JSON.stringify({
+      version: 3,
+      screen: "midpoint_profile",
+      history: ["hair_length", "hair_surface", "elastic_response", "midpoint_profile"],
+      answers: {
+        texture: "wavy",
+        hairLength: "medium",
+        hairSurface: "smooth",
+        elasticResponse: "unknown",
+      },
+    }),
+  )
+
+  assert.deepEqual(loadPersonalPlanQuizDraft(storage), {
+    screen: "elastic_response",
+    history: ["hair_length", "hair_surface"],
+    answers: {
+      texture: "wavy",
+      hairLength: "medium",
+      hairSurface: "smooth",
+    },
+  })
 })
 
 test("draft excludes lead PII and all conversion-only answers", () => {

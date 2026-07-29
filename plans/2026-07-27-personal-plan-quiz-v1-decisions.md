@@ -1,6 +1,6 @@
 # Personal Plan Quiz V1 — Implementation Decisions
 
-Status: implementation in progress
+Status: historical implementation log; later refinement and offer-integration plans supersede temporary decisions where noted
 
 Source plan:
 

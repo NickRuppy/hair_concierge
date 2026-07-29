@@ -3,6 +3,15 @@ import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers } from "./normalization"
 
+export function canLinkDirectQuizLead(
+  lead: { email: string; userId: string | null },
+  account: { email?: string; userId: string },
+): boolean {
+  if (lead.userId) return lead.userId === account.userId
+  if (!account.email) return false
+  return lead.email.trim().toLowerCase() === account.email.trim().toLowerCase()
+}
+
 export function resolveProfileDensityFromQuizAnswers(answers: QuizAnswers): string | undefined {
   if (answers.density) return answers.density
 
@@ -122,6 +131,7 @@ export async function linkQuizToProfile(
   // --- Find the lead ---
   let lead: {
     id: string
+    email: string
     quiz_kind: "legacy" | "personal_plan"
     quiz_answers: QuizAnswers | Record<string, unknown> | null
     user_id: string | null
@@ -131,7 +141,7 @@ export async function linkQuizToProfile(
   if (leadId) {
     const { data, error } = await admin
       .from("leads")
-      .select("id, quiz_kind, quiz_answers, user_id")
+      .select("id, email, quiz_kind, quiz_answers, user_id")
       .eq("id", leadId)
       .single()
 
@@ -139,12 +149,13 @@ export async function linkQuizToProfile(
       throw new Error(`Lead lookup by id failed: ${error.message}`)
     }
 
-    if (data?.user_id && data.user_id !== userId) {
-      throw new Error("Quiz lead is already linked to another user")
-    }
-
-    // Allow same-user retries so an interrupted profile projection can recover.
-    if (data && (data.quiz_kind === "legacy" || data.quiz_kind === "personal_plan")) {
+    if (
+      data &&
+      !canLinkDirectQuizLead({ email: data.email, userId: data.user_id }, { email, userId })
+    ) {
+      console.warn("[linkQuizToProfile] direct lead does not match account; trying email fallback")
+    } else if (data && (data.quiz_kind === "legacy" || data.quiz_kind === "personal_plan")) {
+      // Allow same-user retries so an interrupted profile projection can recover.
       lead = data
     }
   }
@@ -153,7 +164,7 @@ export async function linkQuizToProfile(
   if (!lead && email) {
     const { data, error } = await admin
       .from("leads")
-      .select("id, quiz_kind, quiz_answers, user_id")
+      .select("id, email, quiz_kind, quiz_answers, user_id")
       .eq("email", email.toLowerCase())
       .eq("quiz_kind", "legacy")
       .is("user_id", null)

@@ -1,8 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
+import { canLinkDirectQuizLead } from "@/lib/quiz/link-to-profile"
 
 type PersonalPlanLead = {
+  email: string
   id: string
+  quiz_kind: string
   user_id: string | null
 }
 
@@ -15,10 +18,40 @@ export async function findPersonalPlanLead(
   supabase: SupabaseClient,
   userId: string,
   email?: string | null,
+  leadId?: string | null,
 ): Promise<PersonalPlanLead | null> {
+  if (leadId) {
+    const exact = await supabase
+      .from("leads")
+      .select("id, email, quiz_kind, user_id")
+      .eq("id", leadId)
+      .eq("quiz_kind", "personal_plan")
+      .maybeSingle()
+
+    if (exact.error) {
+      throw new Error(`personal plan exact lead lookup failed: ${exact.error.message}`)
+    }
+    if (
+      exact.data &&
+      canLinkDirectQuizLead(
+        {
+          email: (exact.data as PersonalPlanLead).email,
+          userId: (exact.data as PersonalPlanLead).user_id,
+        },
+        {
+          email: email ?? undefined,
+          userId,
+        },
+      )
+    ) {
+      return exact.data as PersonalPlanLead
+    }
+    return null
+  }
+
   const owned = await supabase
     .from("leads")
-    .select("id, user_id")
+    .select("id, email, quiz_kind, user_id")
     .eq("quiz_kind", "personal_plan")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
@@ -29,30 +62,16 @@ export async function findPersonalPlanLead(
     throw new Error(`personal plan lead lookup failed: ${owned.error.message}`)
   }
   if (owned.data) return owned.data as PersonalPlanLead
-  if (!email) return null
-
-  const unlinked = await supabase
-    .from("leads")
-    .select("id, user_id")
-    .eq("quiz_kind", "personal_plan")
-    .eq("email", email.toLowerCase())
-    .is("user_id", null)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle()
-
-  if (unlinked.error) {
-    throw new Error(`personal plan lead recovery lookup failed: ${unlinked.error.message}`)
-  }
-  return (unlinked.data as PersonalPlanLead | null) ?? null
+  return null
 }
 
 export async function loadPersonalPlanReadiness(
   supabase: SupabaseClient,
   userId: string,
   email?: string | null,
+  leadId?: string | null,
 ): Promise<PersonalPlanReadiness> {
-  const lead = await findPersonalPlanLead(supabase, userId, email)
+  const lead = await findPersonalPlanLead(supabase, userId, email, leadId)
   if (!lead) return { ready: false, leadId: null }
 
   const [artifact, profile] = await Promise.all([

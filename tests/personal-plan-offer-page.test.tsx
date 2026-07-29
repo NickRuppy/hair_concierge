@@ -39,7 +39,7 @@ const publicOfferModel: PersonalPlanOfferModel = {
   ],
   planFitStatement: "Dein Haar braucht keine kompliziertere Pflege. Es braucht eine klare Routine.",
   planTitle: "Plan für ruhige Längen und klaren Glanz",
-  profileLine: "Glatt · normal · empfindliche Kopfhaut",
+  profileLine: "Basierend auf deiner Analyse für glattes, mittelstarkes Haar",
 }
 
 test("personal plan offer renders approved hierarchy without personalized product details", () => {
@@ -56,7 +56,10 @@ test("personal plan offer renders approved hierarchy without personalized produc
     />,
   )
 
-  assert.match(html, /Lea, dein Haarplan ist bereit/i)
+  assert.match(html, /Dein Haarplan ist bereit/i)
+  assert.doesNotMatch(html, /Lea, dein Haarplan/i)
+  assert.match(html, /Für glattes, mittelstarkes Haar\./i)
+  assert.doesNotMatch(html, /Mit klaren Schritten für Reinigung/i)
   assert.doesNotMatch(html, /Persönlicher Haarpflegeplan|perfekten Haarplan/i)
   assert.doesNotMatch(html, /Plan für ruhige Längen und klaren Glanz/i)
   assert.doesNotMatch(
@@ -66,6 +69,10 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.doesNotMatch(html, /🔒|GESPERRT/i)
   assert.match(html, /Symbolische heutige Haarsituation/i)
   assert.match(html, /Symbolisches Haarziel/i)
+  assert.ok(
+    html.indexOf("Symbolische heutige Haarsituation") < html.indexOf("Deine Ausgangslage"),
+    "the transformation image should precede the diagnosis introduction",
+  )
   assert.match(html, /Oberfläche &amp; Glanz/i)
   assert.match(html, /Feuchtigkeit &amp; Pflegebalance/i)
   assert.match(html, /Routine-Sicherheit/i)
@@ -78,6 +85,7 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /Gute Basis/i)
   assert.match(html, /Optimal/i)
   assert.doesNotMatch(html, />Stark<|diese Stärke/i)
+  assert.doesNotMatch(html, /bg-\[#eef7f1\]/i)
   assert.doesNotMatch(html, /unruhig|wechselhaft|ruhig &amp; glänzend/i)
   assert.match(html, /Dein kompletter Haarpflegeplan/i)
   assert.match(html, /before-after-generic\.webp/i)
@@ -117,6 +125,16 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /data-offer-section="personal_plan_complete_plan"/)
   assert.match(html, /data-offer-section="personal_plan_method"/)
   assert.match(html, /data-offer-section="personal_plan_survey"/)
+  assert.match(html, /data-offer-section="personal_plan_complete_plan"><div class="text-center">/)
+  assert.match(
+    html,
+    /data-offer-section="personal_plan_method"><div class="mx-auto max-w-4xl"><div class="text-center">/,
+  )
+  assert.match(html, /data-offer-section="pricing" id="pricing"><div class="text-center">/)
+  assert.match(
+    html,
+    /class="text-center font-serif text-4xl leading-tight tracking-\[-0\.035em\]">Häufige Fragen/,
+  )
   assert.equal((html.match(/data-offer-cta="sticky_header"/g) ?? []).length, 1)
   assert.equal((html.match(/data-offer-cta="final"/g) ?? []).length, 1)
   assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen|Kopfhautserum|Dry\.Shampoo/i)

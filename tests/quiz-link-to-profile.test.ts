@@ -1,9 +1,10 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import * as linkToProfile from "../src/lib/quiz/link-to-profile"
 
-const { resolveProfileDensityFromQuizAnswers } = linkToProfile
+const { canLinkDirectQuizLead, resolveProfileDensityFromQuizAnswers } = linkToProfile
 
 test("linking uses the explicit quiz density when present", () => {
   assert.equal(resolveProfileDensityFromQuizAnswers({ density: "high" }), "high")
@@ -96,5 +97,56 @@ test("personal-plan projection rejects incomplete canonical diagnostics", () => 
         thickness: "normal",
       }),
     /incomplete canonical diagnostics/,
+  )
+})
+
+test("a mismatched direct lead falls back to the authenticated email instead of blocking linking", () => {
+  const source = readFileSync(
+    new URL("../src/lib/quiz/link-to-profile.ts", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /direct lead does not match account; trying email fallback/)
+  assert.doesNotMatch(source, /throw new Error\("Quiz lead is already linked to another user"\)/)
+})
+
+test("an unlinked direct lead must match the authenticated account email", () => {
+  assert.equal(
+    canLinkDirectQuizLead(
+      { email: "plan@example.com", userId: null },
+      { email: "PLAN@example.com", userId: "user-1" },
+    ),
+    true,
+  )
+  assert.equal(
+    canLinkDirectQuizLead(
+      { email: "victim@example.com", userId: null },
+      { email: "attacker@example.com", userId: "user-1" },
+    ),
+    false,
+  )
+  assert.equal(
+    canLinkDirectQuizLead(
+      { email: "plan@example.com", userId: null },
+      { email: undefined, userId: "user-1" },
+    ),
+    false,
+  )
+})
+
+test("a direct lead already owned by the current user remains retryable", () => {
+  assert.equal(
+    canLinkDirectQuizLead(
+      { email: "old@example.com", userId: "user-1" },
+      { email: "new@example.com", userId: "user-1" },
+    ),
+    true,
+  )
+  assert.equal(
+    canLinkDirectQuizLead(
+      { email: "plan@example.com", userId: "user-2" },
+      { email: "plan@example.com", userId: "user-1" },
+    ),
+    false,
   )
 })

@@ -39,7 +39,7 @@ export type PersonalPlanQuizAnswers = {
   currentConcerns?: PersonalPlanQuizConcern[]
   hairLength?: "very_short" | "short" | "medium" | "long" | "very_long"
   hairSurface?: "smooth" | "slightly_uneven" | "rough"
-  elasticResponse?: "stretches_bounces" | "stretches_stays" | "snaps" | "unknown"
+  elasticResponse?: "stretches_bounces" | "stretches_stays" | "snaps"
   chemicalTreatments?: Array<
     "natural" | "colored" | "lightened" | "permed" | "chemically_straightened"
   >

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -9,11 +10,11 @@ import {
   personalPlanStoryIndexAt,
 } from "../src/app/plan-bereit/transition"
 
-test("the future-pacing story uses the three reviewed German messages", () => {
+test("the post-payment story confirms purchase, preparation, and product refinement", () => {
   assert.deepEqual(PERSONAL_PLAN_READY_MESSAGES, [
-    "Heute startest du mit deinem persönlichen Haarplan.",
-    "In einer Woche kennst du deine Routine ganz genau.",
-    "In vier Wochen sieht dein Haar sichtbar schöner und gesünder aus.",
+    "Deine Zahlung ist bestätigt.",
+    "Dein persönlicher Haarplan ist vorbereitet.",
+    "Jetzt verfeinerst du ihn mit deinen Produkten.",
   ])
 })
 
@@ -30,4 +31,30 @@ test("story progression exposes each message before completion", () => {
   assert.equal(personalPlanStoryIndexAt(2_200), 1)
   assert.equal(personalPlanStoryIndexAt(4_400), 2)
   assert.equal(personalPlanStoryIndexAt(6_600), 2)
+})
+
+test("readiness failures surface a recoverable error instead of polling forever", () => {
+  const route = readFileSync(
+    new URL("../src/app/plan-bereit/status/route.ts", import.meta.url),
+    "utf8",
+  )
+  const client = readFileSync(
+    new URL("../src/app/plan-bereit/personal-plan-ready-client.tsx", import.meta.url),
+    "utf8",
+  )
+  const readiness = readFileSync(
+    new URL("../src/app/plan-bereit/readiness.ts", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(route, /\{ status: "error" \}/)
+  assert.match(route, /status: 500/)
+  assert.doesNotMatch(route, /catch \(error\)[\s\S]*\{ status: "pending" \}/)
+  assert.match(client, /!response\.ok \|\| body\.status === "error"/)
+  assert.match(client, /method: attempts === 1 \? "POST" : "GET"/)
+  assert.match(client, /\/plan-bereit\/status\?lead=/)
+  assert.match(route, /loadPersonalPlanReadiness\(admin, user\.id, user\.email, leadId\)/)
+  assert.match(readiness, /\.eq\("id", leadId\)/)
+  assert.match(readiness, /canLinkDirectQuizLead/)
+  assert.doesNotMatch(readiness, /\.eq\("email", email\.toLowerCase\(\)\)/)
 })

@@ -27,7 +27,6 @@ export type QuizIconKey =
   | "flame"
   | "scale"
   | "sun-dim"
-  | "help"
   | "permed"
   | "straightened"
   // Semantic icons for categorical routine/context questions (no ranking implied).
@@ -522,14 +521,13 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   elastic_response: {
     field: "elasticResponse",
-    title: "Was passiert, wenn du ein einzelnes Haar ganz vorsichtig dehnst?",
+    title: "Was passiert, wenn du ein ausgefallenes Haar ganz vorsichtig dehnst?",
     helper:
-      "Nur sanft testen. Wenn es sich unangenehm anfühlt, wähle einfach „Ich bin mir nicht sicher“.",
+      "Teste nur sanft an einem einzelnen ausgefallenen Haar und wähle die Beobachtung, die am ehesten passt.",
     options: [
       { value: "stretches_bounces", label: "Es dehnt sich etwas und geht zurück", icon: "refresh" },
       { value: "stretches_stays", label: "Es bleibt gedehnt", icon: "move" },
       { value: "snaps", label: "Es reißt schnell", icon: "zap" },
-      { value: "unknown", label: "Ich bin mir nicht sicher", icon: "help" },
     ],
   },
   chemical_treatments: {

@@ -206,9 +206,10 @@ export async function POST(request: Request) {
     deliver: (input) =>
       deliverMetaOfferView(input, {
         findEligibleLead: async (leadId, createdAfter) => {
-          const { data, error } = await createAdminClient()
+          const admin = createAdminClient()
+          const { data, error } = await admin
             .from("leads")
-            .select("email, name, quiz_kind")
+            .select("email, name, quiz_answers, quiz_kind")
             .eq("id", leadId)
             .in("quiz_kind", ["legacy", "personal_plan"])
             .gte("created_at", createdAfter)
@@ -217,6 +218,30 @@ export async function POST(request: Request) {
           if (error) throw error
           if (!data) {
             return null
+          }
+
+          if (data.quiz_kind === "legacy") {
+            const answers = data.quiz_answers
+            if (
+              !answers ||
+              typeof answers !== "object" ||
+              Array.isArray(answers) ||
+              Object.keys(answers).length === 0
+            ) {
+              return null
+            }
+          }
+
+          if (data.quiz_kind === "personal_plan") {
+            const { data: artifact, error: artifactError } = await admin
+              .from("personal_plan_prepared_artifacts")
+              .select("id")
+              .eq("lead_id", leadId)
+              .eq("status", "attached")
+              .maybeSingle()
+
+            if (artifactError) throw artifactError
+            if (!artifact) return null
           }
 
           return {

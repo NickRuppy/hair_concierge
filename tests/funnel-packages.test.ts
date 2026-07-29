@@ -45,7 +45,7 @@ test("resolves the gated personal-plan quiz placeholder package by slug", () => 
     channel: "meta",
     status: "placeholder",
     landingVariant: "personal-plan-quiz",
-    offerVariant: "default",
+    offerVariant: "personal-plan-v1",
   })
 })
 

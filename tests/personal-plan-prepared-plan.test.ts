@@ -44,7 +44,7 @@ const completeAnswers: CompleteAnswers = {
   ],
   hairLength: "long",
   hairSurface: "rough",
-  elasticResponse: "unknown",
+  elasticResponse: "stretches_bounces",
   chemicalTreatments: ["lightened"],
   scalpOiliness: "balanced",
   scalpConcerns: ["irritated"],
@@ -54,7 +54,7 @@ const completeAnswers: CompleteAnswers = {
   meaningfulMoment: "everyday",
 }
 
-test("V2 adapter uses the fixed taxonomy, diagnostic priority, and recorded elasticity fallback", () => {
+test("V2 adapter uses the fixed taxonomy, diagnostic priority, and required elasticity answer", () => {
   const adapted = adaptPersonalPlanAnswersForOffer(completeAnswers)
 
   assert.deepEqual(adapted.answers, {
@@ -72,7 +72,7 @@ test("V2 adapter uses the fixed taxonomy, diagnostic priority, and recorded elas
     goals: ["moisture", "healthy_scalp", "curl_definition", "less_split_ends", "anti_breakage"],
   })
   assert.deepEqual(adapted.fallbackMetadata, {
-    elasticityFallback: true,
+    elasticityFallback: false,
     scalpFallback: false,
   })
 })

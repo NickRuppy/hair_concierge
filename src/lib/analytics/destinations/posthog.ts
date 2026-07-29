@@ -221,6 +221,21 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         leadId: data.leadId,
       }
     }
+    case "personal_plan_result_reveal_completed": {
+      const data = payload as AppEventMap["personal_plan_result_reveal_completed"]
+      return {
+        lead_id: data.leadId,
+        step_count: data.stepCount,
+      }
+    }
+    case "personal_plan_result_reveal_step_viewed": {
+      const data = payload as AppEventMap["personal_plan_result_reveal_step_viewed"]
+      return {
+        days_from_start: data.daysFromStart,
+        lead_id: data.leadId,
+        step_index: data.stepIndex,
+      }
+    }
     case "pricing_viewed": {
       const data = payload as AppEventMap["pricing_viewed"]
       return {

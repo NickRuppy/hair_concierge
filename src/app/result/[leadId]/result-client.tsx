@@ -62,7 +62,6 @@ export function ResultPageClient({
         entryContext={resolvedEntryContext}
         leadId={leadId}
         model={personalPlanOffer}
-        name={name}
         offerTracking={offerTracking}
       />
     )

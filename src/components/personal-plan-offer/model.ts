@@ -108,5 +108,5 @@ export const PERSONAL_PLAN_OFFER_FALLBACK_MODEL: PersonalPlanOfferModel = {
   planFitStatement:
     "Dein Haar braucht keine kompliziertere Pflege. Es braucht eine klare Routine, die zu Textur, Kopfhaut und Alltag passt.",
   planTitle: "Dein persönlicher Haarpflegeplan",
-  profileLine: "Basierend auf deiner Haaranalyse",
+  profileLine: "Für dein persönliches Haarprofil",
 }

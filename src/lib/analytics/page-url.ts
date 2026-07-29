@@ -1,6 +1,7 @@
 type SearchParamsLike = { toString(): string } | null
 
 export const META_QUIZ_EVENT_SOURCE_URL = "https://chaarlie.de/quiz"
+export const META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL = "https://chaarlie.de/lp/haarplan"
 export const META_OFFER_EVENT_SOURCE_URL = "https://chaarlie.de/result"
 export const META_CHECKOUT_RETURN_EVENT_SOURCE_URL = "https://chaarlie.de/welcome"
 
@@ -27,6 +28,10 @@ export type SafeAnalyticsPageContext = {
   search: string
   title: string
   url: string
+}
+
+export function shouldTrackAnalyticsPageView(pathname: string) {
+  return !/^\/result\/[^/]+\/reveal\/?$/.test(pathname)
 }
 
 export function buildSafeAnalyticsPath(pathname: string, searchParams: SearchParamsLike) {

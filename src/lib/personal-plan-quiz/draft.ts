@@ -38,7 +38,7 @@ export function sanitizePersonalPlanQuizAnswers(value: unknown): PersonalPlanQui
     adaptationConfidence: ["yes", "partly", "no"],
     hairLength: ["very_short", "short", "medium", "long", "very_long"],
     hairSurface: ["smooth", "slightly_uneven", "rough"],
-    elasticResponse: ["stretches_bounces", "stretches_stays", "snaps", "unknown"],
+    elasticResponse: ["stretches_bounces", "stretches_stays", "snaps"],
     scalpOiliness: ["oily", "balanced", "dry"],
     previousAttempts: [
       "nothing_reliably_worked",
@@ -104,6 +104,10 @@ export function sanitizePersonalPlanQuizAnswers(value: unknown): PersonalPlanQui
   return answers
 }
 
+export function getPersonalPlanQuizAnswersKey(value: unknown): string {
+  return JSON.stringify(sanitizePersonalPlanQuizAnswers(value))
+}
+
 export function savePersonalPlanQuizDraft(
   draft: PersonalPlanQuizDraft,
   storage: StorageLike,
@@ -144,11 +148,26 @@ export function loadPersonalPlanQuizDraft(storage: StorageLike): PersonalPlanQui
             typeof item === "string" && screenSet.has(item),
         )
       : []
-    return {
-      screen: draft.screen as PersonalPlanQuizScreenId,
-      history,
-      answers: sanitizePersonalPlanQuizAnswers(draft.answers),
+    const answers = sanitizePersonalPlanQuizAnswers(draft.answers)
+    const rawAnswers =
+      draft.answers && typeof draft.answers === "object" && !Array.isArray(draft.answers)
+        ? (draft.answers as Record<string, unknown>)
+        : {}
+    const screen = draft.screen as PersonalPlanQuizScreenId
+    const elasticScreenIndex = PERSONAL_PLAN_QUIZ_SCREEN_IDS.indexOf("elastic_response")
+    const currentScreenIndex = PERSONAL_PLAN_QUIZ_SCREEN_IDS.indexOf(screen)
+    const hasStaleElasticityOptOut = rawAnswers.elasticResponse === "unknown"
+
+    if (hasStaleElasticityOptOut && currentScreenIndex >= elasticScreenIndex) {
+      const elasticHistoryIndex = history.indexOf("elastic_response")
+      return {
+        screen: "elastic_response",
+        history: elasticHistoryIndex === -1 ? history : history.slice(0, elasticHistoryIndex),
+        answers,
+      }
     }
+
+    return { screen, history, answers }
   } catch {
     return null
   }

@@ -197,6 +197,7 @@ export type MetaLeadEnqueueInput = {
   browserEventId: string | null
   eventTime: string
   email: string
+  eventSourceUrl?: string
   leadId: string
   name: string
   requestData: MetaRequestData
@@ -210,7 +211,15 @@ export type MetaLeadEnqueueDependencies = {
 }
 
 export function enqueueMetaLead(
-  { browserEventId, eventTime, email, leadId, name, requestData }: MetaLeadEnqueueInput,
+  {
+    browserEventId,
+    eventTime,
+    email,
+    eventSourceUrl,
+    leadId,
+    name,
+    requestData,
+  }: MetaLeadEnqueueInput,
   dependencies: MetaLeadEnqueueDependencies = {},
 ) {
   const enabled = dependencies.enabled ?? isMetaLeadCapiEnabled()
@@ -221,7 +230,7 @@ export function enqueueMetaLead(
     const conversion: MetaConversionInput = {
       eventName: "Lead",
       eventId: browserEventId,
-      eventSourceUrl: META_QUIZ_EVENT_SOURCE_URL,
+      eventSourceUrl: eventSourceUrl ?? META_QUIZ_EVENT_SOURCE_URL,
       eventTime: new Date(eventTime),
       user: {
         email,

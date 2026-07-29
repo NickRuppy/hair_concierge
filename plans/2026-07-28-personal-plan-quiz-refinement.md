@@ -1,9 +1,9 @@
 # Personal Plan Quiz V1 — Refinement Plan
 
-Status: discovery and decision alignment in progress
+Status: implemented; the later offer-integration plan supersedes the placeholder-result portions of this document
 Mockup review: approved by Nick on 2026-07-28
 Designed-user-journey sign-off: approved by Nick on 2026-07-28
-Implementation authorization: not yet requested
+Implementation authorization: granted and implemented
 
 ## Outcome and source context
 

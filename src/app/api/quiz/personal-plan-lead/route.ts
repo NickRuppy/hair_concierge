@@ -2,6 +2,9 @@ import { after, NextResponse } from "next/server"
 import { cookies } from "next/headers"
 
 import { syncPersonalPlanLeadToCustomerIo } from "@/lib/personal-plan-quiz/customerio"
+import { enqueueMetaLead } from "@/app/api/quiz/lead/route"
+import { metaRequestData, resolveBrowserFunnelEventId } from "@/lib/analytics/meta-capi"
+import { META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
 import {
   canonicalizePersonalPlanAnswers,
   hashPersonalPlanAnswers,
@@ -47,8 +50,10 @@ export async function POST(request: Request) {
   }
 
   try {
+    const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
     const parsed = parseResult.data
     const email = normalizePersonalPlanEmail(parsed.email)
+    const metaUserRequestData = metaRequestData(request)
     const quizAnswers = canonicalizePersonalPlanAnswers(parsed.answers)
     const answerHash = hashPersonalPlanAnswers(quizAnswers)
     const supabase = createAdminClient()
@@ -88,10 +93,19 @@ export async function POST(request: Request) {
         marketingConsent: parsed.marketingConsent,
       }),
     )
+    enqueueMetaLead({
+      browserEventId,
+      email,
+      eventSourceUrl: META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL,
+      eventTime: createdAt,
+      leadId,
+      name: "",
+      requestData: metaUserRequestData,
+    })
     const attributionAttached = funnelContext
       ? await recordFunnelEvent({
           context: funnelContext,
-          eventId: parsed.funnelEventId ?? crypto.randomUUID(),
+          eventId: funnelEventId,
           milestone: "lead_captured",
           leadId,
           touch: funnelTouch,

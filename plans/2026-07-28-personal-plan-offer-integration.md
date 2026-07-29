@@ -4,7 +4,7 @@ Status: approved for implementation
 Mockup review: confirmed by Nick on 2026-07-28
 Designed-user-journey sign-off: confirmed by Nick on 2026-07-28
 Implementation authorization: granted, subject to the required journey sign-off
-Publication authorization: not granted
+Publication authorization: draft PR granted on 2026-07-29; merge and deployment remain separate
 
 ## Outcome and source context
 

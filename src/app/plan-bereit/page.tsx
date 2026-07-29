@@ -7,14 +7,23 @@ import { PersonalPlanReadyClient } from "./personal-plan-ready-client"
 
 export const dynamic = "force-dynamic"
 
-export default async function PersonalPlanReadyPage() {
+export default async function PersonalPlanReadyPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lead?: string | string[] }>
+}) {
+  const sp = await searchParams
+  const requestedLeadId = typeof sp.lead === "string" ? sp.lead : null
+  const readyPath = requestedLeadId
+    ? `/plan-bereit?lead=${encodeURIComponent(requestedLeadId)}`
+    : "/plan-bereit"
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect("/auth?next=%2Fplan-bereit")
+    redirect(`/auth?next=${encodeURIComponent(readyPath)}`)
   }
 
   const admin = createAdminClient()
@@ -23,10 +32,10 @@ export default async function PersonalPlanReadyPage() {
     redirect("/pricing")
   }
 
-  const lead = await findPersonalPlanLead(admin, user.id, user.email)
+  const lead = await findPersonalPlanLead(admin, user.id, user.email, requestedLeadId)
   if (!lead) {
     redirect("/onboarding")
   }
 
-  return <PersonalPlanReadyClient />
+  return <PersonalPlanReadyClient leadId={lead.id} />
 }
