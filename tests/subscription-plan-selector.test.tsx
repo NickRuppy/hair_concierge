@@ -32,22 +32,41 @@ test("quiz-result selector displays the three reference prices as comparison pri
   )
 })
 
+test("quiz-result selector highlights the minimum discount above the plans", () => {
+  const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
+
+  assert.equal((html.match(/JETZT MIND\. 20 % RABATT SICHERN/g) ?? []).length, 1)
+  assert.equal((html.match(/Jetzt mindestens 20 Prozent Rabatt sichern/g) ?? []).length, 1)
+})
+
+test("quiz-result reference prices use the approved readable styling", () => {
+  const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
+
+  assert.equal(
+    (html.match(/class="text-\[14px\] font-medium leading-none text-muted-foreground"/g) ?? [])
+      .length,
+    3,
+  )
+})
+
 test("selector without reference prices does not render comparison prices", () => {
   const html = renderSelector()
 
   assert.doesNotMatch(html, /<s[\s>]/)
   assert.doesNotMatch(html, /Vergleichspreis/)
+  assert.doesNotMatch(html, /JETZT MIND\. 20 % RABATT SICHERN/)
+  assert.doesNotMatch(html, /Jetzt mindestens 20 Prozent Rabatt sichern/)
   for (const amount of Object.values(QUIZ_RESULT_REFERENCE_PRICES)) {
     assert.doesNotMatch(html, new RegExp(formatQuizResultReferencePrice(amount)))
   }
 })
 
-test("each quiz-result reference price remains above its current checkout price", () => {
+test("each quiz-result reference price keeps the advertised minimum 20 percent discount", () => {
   for (const [interval, referencePrice] of Object.entries(QUIZ_RESULT_REFERENCE_PRICES)) {
-    assert.ok(
-      referencePrice > getStripePricingPlan(interval as BillingInterval).amount,
-      `${interval} reference price must exceed its current checkout price`,
-    )
+    const checkoutPrice = getStripePricingPlan(interval as BillingInterval).amount
+    const discount = (referencePrice - checkoutPrice) / referencePrice
+
+    assert.ok(discount >= 0.2, `${interval} discount must remain at or above 20 percent`)
   }
 })
 
