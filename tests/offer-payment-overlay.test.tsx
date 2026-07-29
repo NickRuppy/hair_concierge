@@ -70,6 +70,29 @@ test("offer payment overlay keeps payment children mounted and inert under confi
   assert.match(source, /Zahlung abbrechen/)
 })
 
+test("offer payment overlay can keep prepared payment content mounted while closed", () => {
+  const overlaySource = readFileSync(
+    new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),
+    "utf8",
+  )
+  const bottomSheetSource = readFileSync(
+    new URL("../src/components/ui/bottom-sheet.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(overlaySource, /keepMounted\?: boolean/)
+  assert.match(overlaySource, /keepMounted=\{keepMounted\}/)
+  assert.match(bottomSheetSource, /keepMounted\?: boolean/)
+  assert.match(bottomSheetSource, /if \(!mounted \|\| \(!visible && !keepMounted\)\) return null/)
+  assert.match(bottomSheetSource, /!visible && "pointer-events-none invisible"/)
+  assert.match(bottomSheetSource, /role=\{modalActive \? "dialog" : undefined\}/)
+  assert.match(bottomSheetSource, /inert=\{!modalActive\}/)
+  assert.match(bottomSheetSource, /if \(!visible \|\| !rootElement\) return/)
+  assert.match(bottomSheetSource, /if \(!visible && previousFocusRef\.current\)/)
+  assert.match(bottomSheetSource, /data-state=\{visible && !closing \? "open" : "closed"\}/)
+  assert.doesNotMatch(bottomSheetSource, /aria-hidden=\{!modalActive/)
+})
+
 test("offer payment overlay requests z-110 sheet layering through the current BottomSheet seam", () => {
   const source = readFileSync(
     new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),

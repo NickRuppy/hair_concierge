@@ -45,6 +45,7 @@ export type OfferPaymentOverlayProps = {
   onConfirmedPlanChange: () => void
   onDismissRequest?: (reason: OfferPaymentOverlayDismissalReason) => void
   onContinuePayment?: () => void
+  keepMounted?: boolean
   planChangeDisabled?: boolean
   restoreFocusRef?: React.RefObject<HTMLElement | null>
 }
@@ -74,6 +75,7 @@ export function OfferPaymentOverlay({
   onConfirmedPlanChange,
   onContinuePayment,
   onDismissRequest,
+  keepMounted = false,
   planChangeDisabled = false,
   restoreFocusRef,
 }: OfferPaymentOverlayProps) {
@@ -169,6 +171,7 @@ export function OfferPaymentOverlay({
         disableDrag={isDesktop}
         header={header}
         initialFocusRef={checkoutSurfaceRef}
+        keepMounted={keepMounted}
         modalPriority={MODAL_LAYER_PRIORITIES.checkoutOverlay}
         restoreFocusRef={restoreFocusRef}
         rootClassName="checkout-payment-sheet-motion z-[110] [&_.bottom-sheet-backdrop]:bg-[rgba(31,23,34,0.56)]"

@@ -580,6 +580,78 @@ test.describe("@ci offer payment overlay", () => {
     await expect(checkout.getByText(/host=\d+x\d+/)).toBeVisible()
   })
 
+  test("query-gated prewarm keeps the stateful payment child mounted without an inactive modal", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&lifecycle=prewarm`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+
+    const paymentChild = page.getByTestId("prewarmed-payment-child")
+    await expect(paymentChild).toBeAttached()
+    await expect(paymentChild).toBeHidden()
+    const identityBeforeOpen = await paymentChild.getAttribute("data-payment-child-mount-id")
+    const mountCountBeforeOpen = await paymentChild.getAttribute("data-payment-child-mount-count")
+    expect(identityBeforeOpen).toBeTruthy()
+    expect(mountCountBeforeOpen).toBeTruthy()
+
+    const inactiveState = await paymentChild.evaluate((child) => {
+      const panel = child.closest("[data-bottom-sheet-panel]")
+      const root = child.closest(".bottom-sheet-root")
+      const background = document
+        .querySelector('[data-testid="offer-page-background"]')
+        ?.closest("main")
+      return {
+        backdropPresent: Boolean(root?.querySelector(".bottom-sheet-backdrop")),
+        bodyPosition: document.body.style.position,
+        panelInert: panel?.hasAttribute("inert"),
+        panelRole: panel?.getAttribute("role"),
+        rootAriaHidden: root?.getAttribute("aria-hidden"),
+        rootVisibility: root ? getComputedStyle(root).visibility : null,
+        backgroundAriaHidden: background?.getAttribute("aria-hidden"),
+        backgroundInert: background?.hasAttribute("inert"),
+        childContainsFocus: child.contains(document.activeElement),
+      }
+    })
+    expect(inactiveState).toEqual({
+      backdropPresent: false,
+      bodyPosition: "",
+      panelInert: true,
+      panelRole: null,
+      rootAriaHidden: null,
+      rootVisibility: "hidden",
+      backgroundAriaHidden: null,
+      backgroundInert: false,
+      childContainsFocus: false,
+    })
+
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout).toBeVisible()
+    await expect(paymentChild).toHaveAttribute("data-payment-child-mount-id", identityBeforeOpen!)
+    await expect(paymentChild).toHaveAttribute(
+      "data-payment-child-mount-count",
+      mountCountBeforeOpen!,
+    )
+    const paymentOrder = await checkout
+      .locator("[data-offer-payment-step]")
+      .evaluateAll((steps) => steps.map((step) => step.getAttribute("data-offer-payment-step")))
+    expect(paymentOrder.slice(0, 2)).toEqual(["apple_pay", "paypal"])
+
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
+    await expect(checkout).toHaveCount(0)
+    await expect(paymentChild).toBeHidden()
+    await expect(paymentChild).toHaveAttribute("data-payment-child-mount-id", identityBeforeOpen!)
+    await expect(paymentChild).toHaveAttribute(
+      "data-payment-child-mount-count",
+      mountCountBeforeOpen!,
+    )
+  })
+
   test("fallback confirmation locks duplicate submission once", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
     const { checkout } = await openCheckoutAtNonzeroScroll(page)

@@ -22,6 +22,7 @@ export type CheckoutActivationErrorCode =
   | "checkout_session_customer_missing"
   | "checkout_session_subscription_missing"
   | "checkout_session_unpaid"
+  | "checkout_preparation_unclaimed"
   | "checkout_subscription_inactive"
   | "checkout_subscription_expired"
   | "checkout_user_race_unresolved"
@@ -105,6 +106,7 @@ export async function verifyCheckoutSessionForActivation(
   )
   assertCheckoutSessionShape(session)
   assertCheckoutPaymentAuthorized(session)
+  assertCheckoutPreparationClaimed(session)
   return session
 }
 
@@ -116,6 +118,7 @@ export async function ensureCheckoutAccount(
   const valid = assertCheckoutSessionShape(session)
   const sessionHash = checkoutSessionHash(valid.id).slice(0, 12)
   assertCheckoutPaymentAuthorized(session)
+  assertCheckoutPreparationClaimed(session)
   const sub = await retrieveCheckoutSubscription(deps.stripe, valid.subscriptionId)
   assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
 
@@ -344,6 +347,31 @@ function assertCheckoutPaymentAuthorized(session: Stripe.Checkout.Session) {
     "checkout_session_unpaid",
     "checkout session payment is not paid",
   )
+}
+
+function assertCheckoutPreparationClaimed(session: Stripe.Checkout.Session) {
+  const metadata = session.metadata
+  if (!metadata || !Object.keys(metadata).some((key) => key.startsWith("checkout_preparation_"))) {
+    return
+  }
+
+  if (
+    metadata.checkout_preparation_status === "claimed" &&
+    isUuid(metadata.checkout_preparation_id) &&
+    isUuid(metadata.checkout_attempt_id) &&
+    isUuid(metadata.checkout_funnel_event_id)
+  ) {
+    return
+  }
+
+  throw new CheckoutActivationError(
+    "checkout_preparation_unclaimed",
+    "prepared checkout session must be claimed before activation",
+  )
+}
+
+function isUuid(value: string | undefined): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value ?? "")
 }
 
 async function findExistingProfile(

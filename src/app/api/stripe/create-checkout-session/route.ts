@@ -26,6 +26,12 @@ import {
   type MembershipReactivationCheckoutReservation,
 } from "@/lib/reactivation/checkout-reservations"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
+import { createHash, randomBytes, timingSafeEqual } from "node:crypto"
+import type Stripe from "stripe"
+
+const PREPARED_CHECKOUT_MINIMUM_TTL_SECONDS = 30 * 60
+const PREPARED_CHECKOUT_EXPIRY_MARGIN_SECONDS = 60
+export const PREPARED_SESSION_UNAVAILABLE = "prepared_checkout_unavailable"
 
 export const runtime = "nodejs"
 
@@ -41,27 +47,99 @@ export const StripeCheckoutSessionRequestSchema = z
     checkoutContext: z.literal("membership_reactivation").optional(),
     returnDestination: z.string().max(500).optional(),
     presentation: z.literal("offer_overlay_elements").optional(),
+    action: z.enum(["create", "prepare", "claim"]).default("create"),
+    preparationId: z.string().uuid().optional(),
+    preparationToken: z.string().min(32).max(256).optional(),
+    preparedSessionId: z.string().startsWith("cs_").optional(),
   })
   .strict()
-  .superRefine(({ checkoutContext, presentation, returnDestination, source }, context) => {
-    if (presentation === "offer_overlay_elements" && source !== "quiz_result_offer") {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "offer Elements presentation requires quiz_result_offer source",
-        path: ["presentation"],
-      })
-    }
-    if (
-      presentation === "offer_overlay_elements" &&
-      (checkoutContext === "membership_reactivation" || returnDestination !== undefined)
-    ) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "offer Elements presentation cannot be used for reactivation",
-        path: ["presentation"],
-      })
-    }
-  })
+  .superRefine(
+    (
+      {
+        action,
+        checkoutAttemptId,
+        checkoutContext,
+        funnelEventId,
+        preparationId,
+        preparationToken,
+        preparedSessionId,
+        presentation,
+        returnDestination,
+        source,
+      },
+      context,
+    ) => {
+      if (presentation === "offer_overlay_elements" && source !== "quiz_result_offer") {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "offer Elements presentation requires quiz_result_offer source",
+          path: ["presentation"],
+        })
+      }
+      if (
+        presentation === "offer_overlay_elements" &&
+        (checkoutContext === "membership_reactivation" || returnDestination !== undefined)
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "offer Elements presentation cannot be used for reactivation",
+          path: ["presentation"],
+        })
+      }
+      if (action === "prepare") {
+        if (presentation !== "offer_overlay_elements" || source !== "quiz_result_offer") {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "prepared checkout is limited to the offer Elements presentation",
+            path: ["action"],
+          })
+        }
+        if (!preparationId) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "prepared checkout requires a preparation id",
+            path: ["preparationId"],
+          })
+        }
+        if (checkoutAttemptId || funnelEventId || checkoutContext || returnDestination) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "prepared checkout cannot claim an attempt or reactivation",
+            path: ["action"],
+          })
+        }
+      }
+      if (action === "claim") {
+        if (presentation !== "offer_overlay_elements" || source !== "quiz_result_offer") {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "prepared checkout claims are limited to the offer Elements presentation",
+            path: ["action"],
+          })
+        }
+        if (
+          !preparationId ||
+          !preparationToken ||
+          !preparedSessionId ||
+          !checkoutAttemptId ||
+          !funnelEventId
+        ) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "prepared checkout claim is incomplete",
+            path: ["action"],
+          })
+        }
+        if (checkoutContext || returnDestination) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "prepared checkout claims cannot reactivate memberships",
+            path: ["action"],
+          })
+        }
+      }
+    },
+  )
 
 export function isOfferElementsCheckoutEnabled(
   environment: {
@@ -80,6 +158,27 @@ export function isOfferElementsCheckoutEnabled(
   )
 }
 
+export function isOfferCheckoutPrewarmEnabled(
+  environment: { NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED?: string } = {
+    NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED:
+      process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED,
+  },
+) {
+  return environment.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED === "true"
+}
+
+export function shouldRecordFunnelForCheckoutAction(action: "create" | "prepare" | "claim") {
+  return action !== "prepare"
+}
+
+export function preparedCheckoutExpiresAt(nowSeconds = Math.floor(Date.now() / 1000)) {
+  // Stripe rejects Checkout Session expiries at its exact 30-minute floor when request latency
+  // advances the server clock. Keep the user-facing lifetime short while retaining a safe margin.
+  return (
+    nowSeconds + PREPARED_CHECKOUT_MINIMUM_TTL_SECONDS + PREPARED_CHECKOUT_EXPIRY_MARGIN_SECONDS
+  )
+}
+
 export async function POST(req: NextRequest) {
   const parsed = StripeCheckoutSessionRequestSchema.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {
@@ -92,12 +191,20 @@ export async function POST(req: NextRequest) {
     funnelEventId,
     checkoutAttemptId,
     checkoutContext,
+    action,
+    preparationId,
+    preparationToken,
+    preparedSessionId,
     returnDestination: rawReturnDestination,
     presentation,
   } = parsed.data
   if (presentation === "offer_overlay_elements" && !isOfferElementsCheckoutEnabled()) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
+  if (action !== "create" && !isOfferCheckoutPrewarmEnabled()) {
+    return NextResponse.json({ error: "not found" }, { status: 404 })
+  }
+  const isPreparation = action === "prepare"
   const analyticsPlan = getStripePricingPlan(interval)
 
   const priceId = PRICE_IDS[interval as BillingInterval]
@@ -156,13 +263,17 @@ export async function POST(req: NextRequest) {
         authenticatedUserId,
         user.email,
       )
-      if (conflictResponse) return conflictResponse
+      if (conflictResponse) {
+        return isPreparation ? preparedCheckoutUnavailable() : conflictResponse
+      }
       if (user?.email) {
         const emailConflictResponse = await createStripeCheckoutEmailAccessConflictResponse(
           adminSupabase,
           user.email,
         )
-        if (emailConflictResponse) return emailConflictResponse
+        if (emailConflictResponse) {
+          return isPreparation ? preparedCheckoutUnavailable() : emailConflictResponse
+        }
       }
 
       if (checkoutContext === "membership_reactivation" && checkoutAttemptId) {
@@ -213,7 +324,9 @@ export async function POST(req: NextRequest) {
           status: 500,
           reason: "lead_lookup_failed",
         })
-        return NextResponse.json({ error: "lead lookup failed" }, { status: 500 })
+        return isPreparation
+          ? preparedCheckoutUnavailable()
+          : NextResponse.json({ error: "lead lookup failed" }, { status: 500 })
       }
       customerEmail = data?.email ?? undefined
       if (customerEmail) {
@@ -223,7 +336,9 @@ export async function POST(req: NextRequest) {
           customerEmail,
           { includeEmail: false },
         )
-        if (conflictResponse) return conflictResponse
+        if (conflictResponse) {
+          return isPreparation ? preparedCheckoutUnavailable() : conflictResponse
+        }
       }
     }
 
@@ -242,12 +357,36 @@ export async function POST(req: NextRequest) {
           customerEmail = user.email
         }
       } else {
-        return NextResponse.json({ error: "identity required" }, { status: 400 })
+        return isPreparation
+          ? preparedCheckoutUnavailable()
+          : NextResponse.json({ error: "identity required" }, { status: 400 })
       }
     }
 
     const origin = req.nextUrl.origin
     const stripe = getStripe()
+
+    if (action === "claim") {
+      return claimPreparedCheckoutSession({
+        stripe,
+        interval,
+        priceId,
+        source,
+        presentation,
+        leadId: resolvedLeadId,
+        userId: authenticatedUserId,
+        customerId,
+        customerEmail,
+        preparationId: preparationId!,
+        preparationToken: preparationToken!,
+        preparedSessionId: preparedSessionId!,
+        checkoutAttemptId: checkoutAttemptId!,
+        funnelEventId: funnelEventId!,
+        analyticsPlan,
+        cookieStore,
+        userIdForFunnel: user?.id,
+      })
+    }
 
     if (reactivationReservation?.provider_reference) {
       const providerReference = reactivationReservation.provider_reference
@@ -286,9 +425,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "reactivation_checkout_unavailable" }, { status: 409 })
       }
     }
-    const funnelContext =
-      (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
-      (await resolveFunnelContextForLead(resolvedLeadId))
+    const funnelContext = !shouldRecordFunnelForCheckoutAction(action)
+      ? null
+      : ((await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
+        (await resolveFunnelContextForLead(resolvedLeadId)))
     const funnelTouch = funnelContext
       ? await resolvePendingFunnelTouchValue(
           cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -296,6 +436,23 @@ export async function POST(req: NextRequest) {
         )
       : null
 
+    const preparationTokenForResponse = isPreparation ? createPreparedCheckoutToken() : null
+    const preparedMetadata = isPreparation
+      ? buildPreparedCheckoutMetadata({
+          preparationId: preparationId!,
+          preparationTokenHash: hashPreparedCheckoutToken(preparationTokenForResponse!),
+          interval,
+          priceId,
+          source,
+          presentation,
+          identityHash: createPreparedCheckoutIdentityHash({
+            authenticatedUserId,
+            resolvedLeadId,
+            customerId,
+            customerEmail,
+          }),
+        })
+      : undefined
     const params = buildStripeCheckoutSessionParams({
       origin,
       priceId,
@@ -308,12 +465,20 @@ export async function POST(req: NextRequest) {
       returnDestination: reactivationReservation?.return_destination,
       reactivationReservationId: reactivationReservation?.id,
       presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
+      ...(isPreparation
+        ? {
+            expiresAt: preparedCheckoutExpiresAt(),
+            metadata: preparedMetadata,
+          }
+        : {}),
     })
     const session = await stripe.checkout.sessions.create(
       params,
       reactivationReservation
         ? { idempotencyKey: `membership-reactivation:${reactivationReservation.id}` }
-        : undefined,
+        : isPreparation
+          ? { idempotencyKey: `offer-elements-preparation:${preparationId}` }
+          : undefined,
     )
     if (reactivationReservation) {
       await bindMembershipReactivationProviderReference(
@@ -321,6 +486,29 @@ export async function POST(req: NextRequest) {
         reactivationReservation.id,
         session.id,
       )
+    }
+
+    if (isPreparation) {
+      if (!session.client_secret || !preparationTokenForResponse) {
+        throw new Error("prepared Stripe checkout session has no client secret")
+      }
+      // Stripe can replay the idempotent Session for the same preparation ID.
+      // Never hand back a fresh token that cannot claim that existing Session.
+      if (
+        !hasMatchingToken(
+          session.metadata?.checkout_preparation_token_hash,
+          preparationTokenForResponse,
+        )
+      ) {
+        return preparedCheckoutUnavailable()
+      }
+      return NextResponse.json({
+        status: "prepared",
+        client_secret: session.client_secret,
+        session_id: session.id,
+        preparation_token: preparationTokenForResponse,
+        expires_at: session.expires_at,
+      })
     }
 
     const funnelRecorded = funnelContext
@@ -371,6 +559,327 @@ function isDefinitivelyMissingStripeResource(error: unknown) {
   if (!error || typeof error !== "object") return false
   const candidate = error as { code?: unknown; statusCode?: unknown }
   return candidate.code === "resource_missing" || candidate.statusCode === 404
+}
+
+export function preparedCheckoutUnavailablePayload() {
+  return { status: "unavailable" as const, reason: PREPARED_SESSION_UNAVAILABLE }
+}
+
+function preparedCheckoutUnavailable() {
+  // Clients deliberately receive one outcome for identity, expiry, and token failures.
+  // Detailed causes are safe to add to server-only diagnostics without becoming an oracle.
+  return NextResponse.json(preparedCheckoutUnavailablePayload())
+}
+
+function createPreparedCheckoutToken() {
+  return randomBytes(32).toString("base64url")
+}
+
+export function hashPreparedCheckoutToken(token: string) {
+  return createHash("sha256").update(token).digest("hex")
+}
+
+function createPreparedCheckoutIdentityHash(input: {
+  authenticatedUserId?: string
+  resolvedLeadId?: string | null
+  customerId?: string
+  customerEmail?: string
+}) {
+  const identity = input.authenticatedUserId
+    ? `user:${input.authenticatedUserId}`
+    : input.resolvedLeadId
+      ? `lead:${input.resolvedLeadId}`
+      : input.customerId
+        ? `customer:${input.customerId}`
+        : `email:${input.customerEmail?.trim().toLowerCase() ?? ""}`
+  return createHash("sha256").update(identity).digest("hex")
+}
+
+function buildPreparedCheckoutMetadata(input: {
+  preparationId: string
+  preparationTokenHash: string
+  interval: "month" | "quarter" | "year"
+  priceId: string
+  source: "pricing_page" | "quiz_result_offer"
+  presentation?: "offer_overlay_elements"
+  identityHash: string
+}) {
+  return {
+    checkout_preparation_id: input.preparationId,
+    checkout_preparation_token_hash: input.preparationTokenHash,
+    checkout_preparation_status: "prepared",
+    checkout_preparation_interval: input.interval,
+    checkout_preparation_price_id: input.priceId,
+    checkout_preparation_source: input.source,
+    checkout_preparation_presentation: input.presentation ?? "",
+    checkout_preparation_identity_hash: input.identityHash,
+  }
+}
+
+function hasMatchingToken(expectedHash: string | undefined, token: string) {
+  if (!expectedHash || !/^[a-f0-9]{64}$/.test(expectedHash)) return false
+  const expected = Buffer.from(expectedHash, "hex")
+  const actual = Buffer.from(hashPreparedCheckoutToken(token), "hex")
+  return expected.length === actual.length && timingSafeEqual(expected, actual)
+}
+
+export function validatePreparedCheckoutClaim(input: {
+  metadata: Record<string, string>
+  sessionStatus: string | null
+  expiresAt: number
+  nowSeconds: number
+  lineItemPriceId?: string
+  preparationId: string
+  preparationToken: string
+  interval: "month" | "quarter" | "year"
+  priceId: string
+  source: "pricing_page" | "quiz_result_offer"
+  presentation?: "offer_overlay_elements"
+  identityHash: string
+  checkoutAttemptId: string
+  funnelEventId: string
+}): { ok: true; alreadyClaimed: boolean } | { ok: false; reason: "invalid" | "stale" } {
+  const expected = {
+    checkout_preparation_id: input.preparationId,
+    checkout_preparation_interval: input.interval,
+    checkout_preparation_price_id: input.priceId,
+    checkout_preparation_source: input.source,
+    checkout_preparation_presentation: input.presentation ?? "",
+    checkout_preparation_identity_hash: input.identityHash,
+  }
+  const metadataMatches = Object.entries(expected).every(
+    ([key, value]) => input.metadata[key] === value,
+  )
+  if (
+    input.sessionStatus !== "open" ||
+    input.expiresAt <= input.nowSeconds ||
+    !metadataMatches ||
+    input.lineItemPriceId !== input.priceId
+  ) {
+    return { ok: false, reason: "stale" }
+  }
+  if (!hasMatchingToken(input.metadata.checkout_preparation_token_hash, input.preparationToken)) {
+    return { ok: false, reason: "invalid" }
+  }
+  if (input.metadata.checkout_preparation_status === "claimed") {
+    if (
+      input.metadata.checkout_attempt_id !== input.checkoutAttemptId ||
+      input.metadata.checkout_funnel_event_id !== input.funnelEventId
+    ) {
+      return { ok: false, reason: "invalid" }
+    }
+    return { ok: true, alreadyClaimed: true }
+  }
+  if (input.metadata.checkout_preparation_status !== "prepared") {
+    return { ok: false, reason: "stale" }
+  }
+  return { ok: true, alreadyClaimed: false }
+}
+
+export function hasMatchingPreparedCheckoutClaim(
+  metadata: Record<string, string>,
+  checkoutAttemptId: string,
+  funnelEventId: string,
+) {
+  return (
+    metadata.checkout_preparation_status === "claimed" &&
+    metadata.checkout_attempt_id === checkoutAttemptId &&
+    metadata.checkout_funnel_event_id === funnelEventId
+  )
+}
+
+export function preparedCheckoutClaimIdempotencyKey(preparationId: string) {
+  return `offer-elements-claim:${preparationId}`
+}
+
+async function claimPreparedCheckoutSession(input: {
+  stripe: Stripe
+  interval: "month" | "quarter" | "year"
+  priceId: string
+  source: "pricing_page" | "quiz_result_offer"
+  presentation?: "offer_overlay_elements"
+  leadId: string | null
+  userId?: string
+  customerId?: string
+  customerEmail?: string
+  preparationId: string
+  preparationToken: string
+  preparedSessionId: string
+  checkoutAttemptId: string
+  funnelEventId: string
+  analyticsPlan: ReturnType<typeof getStripePricingPlan>
+  cookieStore: Awaited<ReturnType<typeof cookies>>
+  userIdForFunnel?: string
+}) {
+  let session: Stripe.Checkout.Session
+  try {
+    session = await input.stripe.checkout.sessions.retrieve(input.preparedSessionId, {
+      expand: ["line_items"],
+    })
+  } catch (error) {
+    if (isDefinitivelyMissingStripeResource(error)) return preparedCheckoutUnavailable()
+    throw error
+  }
+
+  const metadata = session.metadata ?? {}
+  const identityHash = createPreparedCheckoutIdentityHash({
+    authenticatedUserId: input.userId,
+    resolvedLeadId: input.leadId,
+    customerId: input.customerId,
+    customerEmail: input.customerEmail,
+  })
+  const lineItemPrice = session.line_items?.data[0]?.price
+  const resolvedLineItemPrice =
+    typeof lineItemPrice === "string" ? lineItemPrice : lineItemPrice?.id
+  const validation = validatePreparedCheckoutClaim({
+    metadata,
+    sessionStatus: session.status,
+    expiresAt: session.expires_at,
+    nowSeconds: Math.floor(Date.now() / 1000),
+    lineItemPriceId: resolvedLineItemPrice,
+    preparationId: input.preparationId,
+    preparationToken: input.preparationToken,
+    interval: input.interval,
+    priceId: input.priceId,
+    source: input.source,
+    presentation: input.presentation,
+    identityHash,
+    checkoutAttemptId: input.checkoutAttemptId,
+    funnelEventId: input.funnelEventId,
+  })
+  if (!validation.ok) return preparedCheckoutUnavailable()
+
+  if (validation.alreadyClaimed) {
+    const funnelResult = await recordPreparedCheckoutStarted({
+      interval: input.interval,
+      source: input.source,
+      leadId: input.leadId,
+      userId: input.userIdForFunnel,
+      checkoutAttemptId: input.checkoutAttemptId,
+      funnelEventId: input.funnelEventId,
+      sessionId: session.id,
+      analyticsPlan: input.analyticsPlan,
+      cookieStore: input.cookieStore,
+    })
+    const response = NextResponse.json({
+      client_secret: session.client_secret,
+      session_id: session.id,
+      status: "claimed",
+    })
+    if (funnelResult.consumeTouch) {
+      response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+    }
+    return response
+  }
+  if (!session.client_secret) {
+    return preparedCheckoutUnavailable()
+  }
+
+  const funnelContextForMetadata =
+    (await resolveFunnelCookieContext(input.cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
+    (await resolveFunnelContextForLead(input.leadId))
+  let claimedSession: Stripe.Checkout.Session
+  try {
+    claimedSession = await input.stripe.checkout.sessions.update(
+      session.id,
+      {
+        metadata: {
+          ...metadata,
+          checkout_preparation_status: "claimed",
+          checkout_attempt_id: input.checkoutAttemptId,
+          checkout_funnel_event_id: input.funnelEventId,
+          ...(funnelContextForMetadata
+            ? {
+                funnel_session_id: funnelContextForMetadata.sessionId,
+                funnel_package_key: funnelContextForMetadata.packageKey,
+              }
+            : {}),
+        },
+      },
+      { idempotencyKey: preparedCheckoutClaimIdempotencyKey(input.preparationId) },
+    )
+  } catch (error) {
+    console.warn("[stripe] prepared checkout claim update unavailable", {
+      preparationId: input.preparationId,
+      error: error instanceof Error ? error.message : "unknown",
+    })
+    return preparedCheckoutUnavailable()
+  }
+  if (
+    !hasMatchingPreparedCheckoutClaim(
+      claimedSession.metadata ?? {},
+      input.checkoutAttemptId,
+      input.funnelEventId,
+    )
+  ) {
+    return preparedCheckoutUnavailable()
+  }
+  const funnelResult = await recordPreparedCheckoutStarted({
+    interval: input.interval,
+    source: input.source,
+    leadId: input.leadId,
+    userId: input.userIdForFunnel,
+    checkoutAttemptId: input.checkoutAttemptId,
+    funnelEventId: input.funnelEventId,
+    sessionId: session.id,
+    analyticsPlan: input.analyticsPlan,
+    cookieStore: input.cookieStore,
+  })
+
+  const response = NextResponse.json({
+    client_secret: session.client_secret,
+    session_id: session.id,
+    status: "claimed",
+  })
+  if (funnelResult.consumeTouch) {
+    response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+  }
+  return response
+}
+
+async function recordPreparedCheckoutStarted(input: {
+  interval: "month" | "quarter" | "year"
+  source: "pricing_page" | "quiz_result_offer"
+  leadId: string | null
+  userId?: string
+  checkoutAttemptId: string
+  funnelEventId: string
+  sessionId: string
+  analyticsPlan: ReturnType<typeof getStripePricingPlan>
+  cookieStore: Awaited<ReturnType<typeof cookies>>
+}) {
+  const funnelContext =
+    (await resolveFunnelCookieContext(input.cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
+    (await resolveFunnelContextForLead(input.leadId))
+  if (!funnelContext) return { consumeTouch: false }
+  const funnelTouch = await resolvePendingFunnelTouchValue(
+    input.cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+    funnelContext,
+  )
+  const funnelRecorded = await recordFunnelEvent({
+    context: funnelContext,
+    eventId: input.funnelEventId,
+    milestone: "checkout_started",
+    leadId: input.leadId,
+    userId: input.userId,
+    checkoutProvider: "stripe",
+    checkoutReference: input.sessionId,
+    touch: funnelTouch,
+    properties: {
+      source: input.source,
+      interval: input.interval,
+      checkout_attempt_id: input.checkoutAttemptId,
+      currency: input.analyticsPlan.currency,
+      plan_id: input.analyticsPlan.analyticsId,
+      value: input.analyticsPlan.amount,
+    },
+  })
+    .then(() => true)
+    .catch((error) => {
+      console.warn("[funnel] prepared Stripe checkout claim tracking failed", error)
+      return false
+    })
+  return { consumeTouch: Boolean(funnelTouch && funnelRecorded) }
 }
 
 export async function createStripeCheckoutEmailAccessConflictResponse(

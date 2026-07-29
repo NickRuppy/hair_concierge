@@ -28,9 +28,12 @@ type PaymentFixtureProps = {
   confirmBehavior: "success" | "reject" | "blocked"
   checkoutLoadingReleaseDelayMs: number | null
   initiateCheckoutCount: number
+  lifecycleProbe: boolean
 }
 
 const labZeroAmount = { amount: "0,00 €", minorUnitsAmount: 0 }
+let labPaymentFixtureMountCount = 0
+
 const labCheckoutTotal = {
   appliedBalance: labZeroAmount,
   balanceAppliedToNextInvoice: false,
@@ -195,7 +198,15 @@ function PaymentFixture({
   confirmBehavior,
   checkoutLoadingReleaseDelayMs,
   initiateCheckoutCount,
+  lifecycleProbe,
 }: PaymentFixtureProps) {
+  const [mountIdentity] = React.useState(() => {
+    labPaymentFixtureMountCount += 1
+    return {
+      id: `lab-payment-fixture-${labPaymentFixtureMountCount}`,
+      count: labPaymentFixtureMountCount,
+    }
+  })
   const [duplicateDialogOpen, setDuplicateDialogOpen] = React.useState(false)
   const [providerLock, setProviderLock] = React.useState<StripeOfferProvider | null>(null)
   const [appleCancelCount, setAppleCancelCount] = React.useState(0)
@@ -317,7 +328,12 @@ function PaymentFixture({
   )
 
   return (
-    <div className="space-y-4" data-testid="payment-fixture">
+    <div
+      className="space-y-4"
+      data-testid={lifecycleProbe ? "prewarmed-payment-child" : "payment-fixture"}
+      data-payment-child-mount-id={lifecycleProbe ? mountIdentity.id : undefined}
+      data-payment-child-mount-count={lifecycleProbe ? mountIdentity.count : undefined}
+    >
       <div
         data-testid="checkout-attempt-diagnostic"
         data-checkout-attempt-id={checkoutAttemptId}
@@ -429,6 +445,7 @@ function OfferPaymentOverlayLabContent() {
   const [checkoutLoadingReleaseDelayMs, setCheckoutLoadingReleaseDelayMs] = React.useState<
     number | null
   >(null)
+  const [prewarmedLifecycle, setPrewarmedLifecycle] = React.useState(false)
   const [confirmBehavior, setConfirmBehavior] = React.useState<"success" | "reject" | "blocked">(
     "success",
   )
@@ -451,6 +468,7 @@ function OfferPaymentOverlayLabContent() {
       initialApplePayState === "checkout-loading" || initialApplePayState === "slow-checkout",
     )
     setCheckoutLoadingReleaseDelayMs(initialApplePayState === "slow-checkout" ? 8_000 : null)
+    setPrewarmedLifecycle(params.get("lifecycle") === "prewarm")
     const initialConfirmBehavior = params.get("confirm")
     setConfirmBehavior(
       initialConfirmBehavior === "reject" || initialConfirmBehavior === "blocked"
@@ -551,6 +569,7 @@ function OfferPaymentOverlayLabContent() {
 
       <OfferPaymentOverlay
         open={open}
+        keepMounted={prewarmedLifecycle}
         planName="Quartal"
         priceLabel="34,99 €"
         onConfirmedAbort={() => {
@@ -574,6 +593,7 @@ function OfferPaymentOverlayLabContent() {
           confirmBehavior={confirmBehavior}
           checkoutLoadingReleaseDelayMs={checkoutLoadingReleaseDelayMs}
           initiateCheckoutCount={initiateCheckoutCount}
+          lifecycleProbe={prewarmedLifecycle}
         />
       </OfferPaymentOverlay>
     </main>

@@ -45,6 +45,7 @@ import {
 } from "@/lib/customerio/stripe-lifecycle"
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
+import { captureCheckoutException } from "@/lib/observability/checkout"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 
@@ -265,6 +266,7 @@ type StripeWebhookEventDeps = {
   getPremiumTierId?: (supabase: SupabaseClient) => Promise<string>
   linkQuizToProfile?: typeof defaultLinkQuizToProfile
   recordBillingAnalytics?: boolean
+  captureCheckoutException?: typeof captureCheckoutException
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event, deps: StripeWebhookEventDeps) {
@@ -276,6 +278,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     getPremiumTierId: resolvePremiumTierId = getPremiumTierId,
     linkQuizToProfile = defaultLinkQuizToProfile,
     recordBillingAnalytics = false,
+    captureCheckoutException: captureCheckout = captureCheckoutException,
   } = deps
   const timestamp = stripeEventTimestamp(event)
 
@@ -297,6 +300,26 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
           console.info("[stripe] checkout.session.completed not activated", {
             checkoutSessionId: session.id,
             paymentStatus: session.payment_status,
+          })
+          break
+        }
+        if (
+          err instanceof CheckoutActivationError &&
+          err.code === "checkout_preparation_unclaimed"
+        ) {
+          captureCheckout(err, {
+            provider: "stripe",
+            stage: "stripe_webhook_activation",
+            stripeSessionId: session.id,
+            stripeCustomerId: stripeId(session.customer),
+            stripeSubscriptionId: stripeId(session.subscription),
+            status: session.payment_status,
+            reason: "checkout_preparation_unclaimed",
+          })
+          console.error("[stripe] checkout.session.completed not activated", {
+            checkoutSessionId: session.id,
+            paymentStatus: session.payment_status,
+            reason: "checkout_preparation_unclaimed",
           })
           break
         }

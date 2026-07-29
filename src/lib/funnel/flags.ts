@@ -26,6 +26,10 @@ export function isStripeExpressCheckoutEnabled() {
   return process.env.NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED === "true"
 }
 
+export function isOfferCheckoutPrewarmEnabled() {
+  return process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED === "true"
+}
+
 export function isPersonalPlanQuizV1Enabled() {
   return process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED === "true"
 }

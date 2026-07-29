@@ -8,6 +8,7 @@ type CheckoutStage =
   | "stripe_checkout_session_create"
   | "stripe_embedded_checkout_client_secret"
   | "stripe_embedded_checkout_load"
+  | "stripe_webhook_activation"
   | "paypal_create_subscription_intent"
   | "paypal_create_subscription"
   | "paypal_approve_subscription"

@@ -107,6 +107,15 @@ export type AppEventMap = {
       provider: "stripe" | "paypal"
       retryable: boolean
     }
+  // Technical prewarm telemetry only. This intentionally carries no funnel,
+  // checkout-attempt, customer, or marketing attribution identifiers.
+  checkout_prepared: {
+    interval: BillingInterval
+    planId: string
+    preparationDurationMs: number
+    preparationId: string
+    walletAvailable: boolean
+  }
   checkout_started: FunnelAnalyticsEnvelope &
     Partial<OfferAnalyticsContext> & {
       checkoutAttemptId?: string

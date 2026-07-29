@@ -1,5 +1,7 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
+import { renderToStaticMarkup } from "react-dom/server"
 import type { StripeCheckoutSession } from "@stripe/stripe-js"
 
 import {
@@ -14,6 +16,7 @@ import {
   isWalletPaymentEligibilityProbeEnabled,
   normalizeWalletDebugMethods,
   reconcilePaymentElementApplePayAvailability,
+  StripeOfferElementsCheckoutContent,
   stripeOfferCheckoutAppearance,
   stripeOfferExpressCheckoutOptions,
 } from "../src/components/checkout/stripe-offer-elements-checkout"
@@ -42,6 +45,11 @@ const sessionTotal = {
     },
   },
 } satisfies Pick<StripeCheckoutSession, "total">
+
+const stripeOfferElementsSource = readFileSync(
+  new URL("../src/components/checkout/stripe-offer-elements-checkout.tsx", import.meta.url),
+  "utf8",
+)
 
 const applePayAvailable = {
   amazonPay: false,
@@ -222,4 +230,76 @@ test("Payment Element availability does not hide Apple Pay before its later avai
     reconcilePaymentElementApplePayAvailability("pending", { paymentMethods: undefined }),
     "pending",
   )
+})
+
+test("prewarmed offer Elements mount Express first and defer card methods until visible", () => {
+  assert.match(stripeOfferElementsSource, /clientSecret\?: string \| null/)
+  assert.match(
+    stripeOfferElementsSource,
+    /clientSecret \? Promise\.resolve\(clientSecret\) : fetchClientSecret\(\)/,
+  )
+  assert.match(stripeOfferElementsSource, /paymentElementEnabled = true/)
+  assert.match(
+    stripeOfferElementsSource,
+    /showPaymentElement = paymentElementEnabled && !holdPaymentChoices/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /holdPaymentChoicesUntilResolved &&\s*visible === true &&\s*!applePayFailed/,
+  )
+  assert.match(stripeOfferElementsSource, /holdPaymentChoicesUntilResolved/)
+  assert.match(
+    stripeOfferElementsSource,
+    /applePayLoadingDeadlineRef\.current = Date\.now\(\) \+ APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS/,
+  )
+  assert.match(stripeOfferElementsSource, /Zahlungsoptionen werden vorbereitet/)
+  assert.match(
+    stripeOfferElementsSource,
+    /invisible absolute inset-x-0 top-0 h-\[52px\] overflow-hidden/,
+  )
+  assert.match(stripeOfferElementsSource, /onBeforeConfirm/)
+  assert.match(
+    stripeOfferElementsSource,
+    /await \(onBeforeConfirm\?\.\(\) \?\? Promise\.resolve\(true\)\)/,
+  )
+  assert.match(stripeOfferElementsSource, /onApplePayAvailabilityResolved/)
+  assert.match(
+    stripeOfferElementsSource,
+    /showSecondaryPaymentMethod =\s*\n\s*visible === true && !holdPaymentChoices/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /applePayFailed && !holdPaymentChoices && !expressDomProbeEnabled/,
+  )
+})
+
+test("failed Apple Pay resolution releases held payment choices in rendered checkout markup", () => {
+  const renderState = (initialApplePayAvailability: "pending" | "failed") =>
+    renderToStaticMarkup(
+      <StripeOfferElementsCheckoutContent
+        checkoutResult={{ type: "loading" }}
+        holdPaymentChoicesUntilResolved
+        initialApplePayAvailability={initialApplePayAvailability}
+        onRetry={() => {}}
+        paymentElement={<div data-testid="payment-element">Card fields</div>}
+        renderExpressCheckoutElement={() => <div data-testid="express-element" />}
+        secondaryPaymentMethod={<div data-testid="secondary-payment-method">PayPal</div>}
+        visible
+      />,
+    )
+
+  const heldHtml = renderState("pending")
+  assert.match(heldHtml, /aria-label="Zahlungsoptionen werden vorbereitet"/)
+  assert.doesNotMatch(heldHtml, /data-testid="secondary-payment-method"/)
+  assert.doesNotMatch(heldHtml, /data-testid="payment-element"/)
+
+  const failedHtml = renderState("failed")
+  assert.doesNotMatch(failedHtml, /aria-label="Zahlungsoptionen werden vorbereitet"/)
+  assert.match(
+    failedHtml,
+    /aria-label="Zahlungsoptionen konnten nicht geladen werden\. Erneut versuchen"/,
+  )
+  assert.match(failedHtml, /data-testid="secondary-payment-method"/)
+  assert.match(failedHtml, /data-testid="payment-element"/)
+  assert.match(failedHtml, /data-offer-payment-step="payment_element"/)
 })
