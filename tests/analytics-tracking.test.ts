@@ -422,6 +422,40 @@ test("browser quiz lead capture does not route to Customer.io", () => {
   })
 })
 
+test("quiz lead capture keeps its lead and funnel join identifiers in PostHog", () => {
+  const originalCapture = posthog.capture
+  const postHogCalls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    postHogCalls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("quiz_lead_captured", {
+      funnelEventId: "event-lead-123",
+      funnelPackageKey: "meta_personal_plan_v1",
+      funnelSessionId: "session-lead-123",
+      leadId: "lead-123",
+      marketingConsent: false,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(postHogCalls, [
+    [
+      "quiz_lead_captured",
+      {
+        $insert_id: "event-lead-123",
+        funnel_package_key: "meta_personal_plan_v1",
+        funnel_session_id: "session-lead-123",
+        lead_id: "lead-123",
+        marketing_consent: false,
+      },
+    ],
+  ])
+})
+
 test("non-funnel lifecycle and engagement events stay out of Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("first_chat_message", {})
