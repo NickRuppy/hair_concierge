@@ -160,10 +160,10 @@ export function PersonalPlanOffer({
           data-offer-section="personal_plan_diagnosis"
         >
           <div className="mx-auto max-w-4xl">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+            <p className="text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
               Deine Ausgangslage
             </p>
-            <h2 className="mt-3 max-w-[14ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
+            <h2 className="mt-3 w-full text-center font-serif text-4xl leading-tight tracking-[-0.035em]">
               Dein Haar hat viel Potenzial.
             </h2>
 
