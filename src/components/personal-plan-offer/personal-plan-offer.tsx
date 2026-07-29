@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowDown, ArrowRight } from "lucide-react"
 
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
@@ -292,11 +292,14 @@ export function PersonalPlanOffer({
                 </div>
               ))}
             </div>
-            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[var(--brand-plum)] p-5 text-white">
-              <span aria-hidden="true" className="text-xl">
-                ↓
+            <div className="mt-4 flex flex-col items-center gap-3 rounded-2xl bg-[var(--brand-plum)] px-5 py-6 text-center text-white">
+              <span
+                aria-hidden="true"
+                className="grid h-9 w-9 place-items-center rounded-full bg-white/15"
+              >
+                <ArrowDown className="h-5 w-5" strokeWidth={2.25} />
               </span>
-              <p className="font-semibold leading-7">
+              <p className="max-w-[34rem] font-semibold leading-7">
                 Daraus entstehen deine Produktauswahl, Reihenfolge und Anwendung.
               </p>
             </div>
