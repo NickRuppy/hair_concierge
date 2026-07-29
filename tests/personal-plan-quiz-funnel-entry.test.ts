@@ -80,7 +80,10 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   const data = read("src/components/personal-plan-quiz/quiz-data.ts")
 
   assert.match(quiz, /SECTION_LABELS/)
-  assert.doesNotMatch(quiz, /Math\.round\(progress\)|%<\/span>|tabular-nums/)
+  // R003: the section/checkpoint progress stays free of numbers. The preparation
+  // LoadingScreen bar intentionally shows a live percentage (Nick, 2026-07-29).
+  assert.doesNotMatch(quiz, /Schritt \d+ von|SECTION_LABELS[\s\S]{0,400}Math\.round/)
+  assert.match(quiz, /Math\.round\(progress\)/)
   assert.match(quiz, /config\.multi \? \(/)
   assert.match(data, /Feuchtigkeit ohne Beschweren/)
   assert.match(data, /Weniger Haarbruch und bessere Längenretention/)

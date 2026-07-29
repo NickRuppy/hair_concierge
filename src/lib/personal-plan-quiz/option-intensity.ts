@@ -39,6 +39,15 @@ const INTENSITY_RANKS: Record<string, Record<string, number>> = {
     partly: 2,
     yes: 3,
   },
+  // "How would you describe your current routine?" — a clearer, more established
+  // routine reads strongest; "no fixed routine" reads weakest. The option list is
+  // ordered most→least clarity, so pip counts descend 4-3-2-1 top-to-bottom.
+  routineClarity: {
+    none: 1,
+    trial_and_error: 2,
+    partial: 3,
+    clear: 4,
+  },
   // "How did your previous attempts go?" — more unmet struggle = stronger need.
   previousAttempts: {
     mostly_works: 1,

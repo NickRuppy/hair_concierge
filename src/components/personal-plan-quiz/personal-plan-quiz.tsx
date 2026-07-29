@@ -34,7 +34,6 @@ import {
   PartyPopper,
   PenLine,
   Pipette,
-  Quote,
   RefreshCw,
   Scale,
   ShieldCheck,
@@ -502,13 +501,13 @@ function OptionCard({
         onClick={onClick}
         type="button"
       >
-        <span className="relative aspect-square w-[5.5rem] shrink-0 self-stretch overflow-hidden bg-[var(--brand-plum-ice)]">
+        <span className="relative aspect-square w-[7.5rem] shrink-0 self-stretch overflow-hidden bg-[var(--brand-plum-ice)]">
           <Image
             alt={option.imageAlt ?? ""}
             className="object-cover object-center transition duration-300 group-hover:scale-[1.03]"
             fill
             priority={priority}
-            sizes="88px"
+            sizes="120px"
             src={option.image}
           />
         </span>
@@ -694,7 +693,7 @@ function QuestionScreen({
         </p>
       ) : null}
       {config.contextImage ? (
-        <div className="relative mx-auto mt-6 h-44 w-full overflow-hidden rounded-[1.75rem] bg-[var(--brand-plum-ice)] shadow-[0_20px_60px_-45px_rgba(70,41,59,0.65)]">
+        <div className="relative mx-auto mt-6 h-44 w-full overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)]">
           <Image
             alt={config.contextImageAlt ?? ""}
             className="object-cover"
@@ -821,7 +820,7 @@ function ContextPanelLayout({
         </h1>
         {subtitle}
       </div>
-      <div className="relative mt-6 h-44 overflow-hidden rounded-[1.75rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:col-start-2 sm:row-span-2 sm:mt-0 sm:h-full sm:min-h-full sm:self-stretch">
+      <div className="relative mt-6 h-44 overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:col-start-2 sm:row-span-2 sm:mt-0 sm:h-full sm:min-h-full sm:self-stretch">
         <Image
           alt={imageAlt ?? ""}
           className="object-cover"
@@ -843,7 +842,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         Deine Antworten werden zu einem echten Haarprofil.
       </h1>
 
-      <div className="relative mx-auto mt-6 h-48 w-full overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:h-56">
+      <div className="relative mx-auto mt-6 h-44 w-full overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:h-56">
         <Image
           alt="Drei lachende Frauen"
           className="object-cover"
@@ -863,13 +862,9 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         </p>
       </div>
 
-      <blockquote className="relative mx-auto mt-8 max-w-md rounded-[2rem] border border-[var(--brand-plum-light)] bg-white px-6 pb-6 pt-9 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)]">
-        <Quote
-          aria-hidden="true"
-          className="absolute left-1/2 top-5 h-7 w-7 -translate-x-1/2 fill-[var(--brand-plum-light)] text-[var(--brand-plum-light)]"
-        />
+      <blockquote className="mx-auto mt-8 max-w-md rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-6 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)]">
         <p className="text-lg italic leading-8 text-[var(--brand-plum-darkest)]">
-          {EARLY_PROOF_TESTIMONIAL.quote}
+          {`„${EARLY_PROOF_TESTIMONIAL.quote}“`}
         </p>
         <footer className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
           {EARLY_PROOF_TESTIMONIAL.source}
@@ -897,7 +892,7 @@ function AnalysisBridgeScreen({
       eyebrow="Du bist hier genau richtig."
       image={`${PERSONAL_PLAN_ASSET_BASE}/texture-${answers.texture ?? "wavy"}.webp`}
       subtitle={
-        <p className="mt-4 text-base leading-7 text-[var(--text-sub)]">
+        <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
           Die nächsten einfachen Beobachtungen zeigen, welche Pflege {texture.possessive} wirklich
           braucht – ohne Rätselraten und ohne dass du alles perfekt wissen musst.
         </p>
@@ -923,7 +918,7 @@ const MIDPOINT_DENSITY_LABELS = {
   medium: "Mittlere Dichte",
   high: "Viele Haare",
 }
-const MIDPOINT_REVEAL_MS = 1150
+const MIDPOINT_REVEAL_MS = 850
 
 function MidpointProfileScreen({
   answers,
@@ -951,9 +946,9 @@ function MidpointProfileScreen({
     rows.forEach((_, index) => {
       timers.push(window.setTimeout(() => setRevealed(index + 1), MIDPOINT_REVEAL_MS * (index + 1)))
     })
-    const readyAt = MIDPOINT_REVEAL_MS * rows.length + 1500
+    const readyAt = MIDPOINT_REVEAL_MS * rows.length + 1200
     timers.push(window.setTimeout(() => setReady(true), readyAt))
-    timers.push(window.setTimeout(onContinue, readyAt + 900))
+    timers.push(window.setTimeout(onContinue, readyAt + 750))
     return () => timers.forEach((timer) => window.clearTimeout(timer))
   }, [onContinue, rows])
 
@@ -1009,6 +1004,19 @@ function capitalizeFirst(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
+// Per-admission-screen banner photo. Every consecutive pair of admission beats
+// (recurrence → optional conflict → practical-cost → emotional-relevance) uses a
+// different file, so no image repeats across adjacent screens on any path.
+const ADMISSION_DEFAULT_IMAGE = { file: "examining-ends.webp", position: "50% 35%" }
+const ADMISSION_IMAGES: Partial<
+  Record<PersonalPlanQuizScreenId, { file: string; position: string }>
+> = {
+  admission_recurrence: ADMISSION_DEFAULT_IMAGE,
+  admission_conflict: { file: "returning-concern.webp", position: "50% 26%" },
+  admission_practical_cost: { file: "invested-products.webp", position: "50% 30%" },
+  admission_emotional_relevance: { file: "feelgood-hair.webp", position: "50% 34%" },
+}
+
 function AdmissionScreen({
   screen,
   answers,
@@ -1055,18 +1063,15 @@ function AdmissionScreen({
               options: EMOTIONAL_OPTIONS,
             }
 
-  // The recurrence beat asks whether a concern keeps returning, so it gets the
-  // "examining ends" asset; the other admissions keep the returning-concern photo.
-  const isRecurrence = screen === "admission_recurrence"
+  // Each admission beat gets a distinct photo so no two consecutively shown
+  // screens repeat an image, whether or not the conflict beat is skipped:
+  // recurrence → (conflict) → practical-cost → emotional-relevance.
+  const admissionImage = ADMISSION_IMAGES[screen] ?? ADMISSION_DEFAULT_IMAGE
 
   return (
     <ContextPanelLayout
-      image={
-        isRecurrence
-          ? `${PERSONAL_PLAN_ASSET_BASE}/examining-ends.webp`
-          : `${PERSONAL_PLAN_ASSET_BASE}/returning-concern.webp`
-      }
-      imagePosition={isRecurrence ? "50% 35%" : "50% 26%"}
+      image={`${PERSONAL_PLAN_ASSET_BASE}/${admissionImage.file}`}
+      imagePosition={admissionImage.position}
       title={content.title}
     >
       <div className="grid gap-3">
@@ -1223,7 +1228,7 @@ function DailyTimeScreen({
   )
 }
 
-const LOADING_RUN_MS = 2800
+const LOADING_RUN_MS = 3200
 
 function CommitmentOverlay({
   stageIndex,
@@ -1246,7 +1251,7 @@ function CommitmentOverlay({
     <div
       aria-labelledby="ppq-commit-title"
       aria-modal="true"
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 flex items-start justify-center px-5 pt-[11vh]"
+      className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center px-5"
       role="dialog"
     >
       <div
@@ -1381,14 +1386,23 @@ function LoadingScreen({
           Wir bereiten deinen persönlichen Haarpflegeplan vor.
         </h1>
         <div className="mt-7 rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-5 shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)]">
-          <p className="text-sm font-semibold text-[var(--brand-plum)]">
-            {phase === "done"
-              ? "Deine Auswertung ist bereit"
-              : PERSONAL_PLAN_LOADING_STAGES[stageIndex].label}
-          </p>
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-sm font-semibold text-[var(--brand-plum)]">
+              {phase === "done"
+                ? "Deine Auswertung ist bereit"
+                : PERSONAL_PLAN_LOADING_STAGES[stageIndex].label}
+            </p>
+            {/* Live percentage for the preparation bar only — the quiz's section
+                progress stays number-free per the journey decision. */}
+            <span className="font-mono text-xs font-bold tabular-nums text-[var(--brand-plum)]">
+              {Math.round(progress)} %
+            </span>
+          </div>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--brand-plum-light)]">
+            {/* Solid fill: the previous plum→plum-light gradient faded into the
+                track color, making the moving edge invisible. */}
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[var(--brand-plum)] to-[var(--brand-plum-light)]"
+              className="h-full rounded-full bg-[var(--brand-plum)]"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -1466,13 +1480,13 @@ function LoadingScreen({
           )
         ) : null}
 
-        <blockquote className="mt-5 rounded-2xl border border-[var(--brand-plum-light)] bg-white/70 px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--text-caption)]">
-            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].role}
+        <blockquote className="mt-5 rounded-2xl border border-[var(--brand-plum-light)] bg-white/70 px-5 py-4 text-center">
+          <p className="text-sm italic leading-6 text-[var(--text-sub)]">
+            „{PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].quote}“
           </p>
-          <p className="mt-1.5 text-sm leading-6 text-[var(--text-sub)]">
-            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].quote}
-          </p>
+          <footer className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-plum)]">
+            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].source}
+          </footer>
         </blockquote>
       </section>
       {phase === "commit" ? (

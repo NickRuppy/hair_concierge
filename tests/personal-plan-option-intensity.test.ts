@@ -36,9 +36,17 @@ test("previous-attempt scale ranks the strongest unmet need highest", () => {
   assert.deepEqual(getOptionIntensity("previousAttempts", "mostly_works"), { pips: 1, max: 4 })
 })
 
+test("routine clarity ranks an established routine highest and no routine lowest", () => {
+  // Options are listed most→least clarity, so pips descend 4-3-2-1 top-to-bottom.
+  assert.deepEqual(getOptionIntensity("routineClarity", "clear"), { pips: 4, max: 4 })
+  assert.deepEqual(getOptionIntensity("routineClarity", "partial"), { pips: 3, max: 4 })
+  assert.deepEqual(getOptionIntensity("routineClarity", "trial_and_error"), { pips: 2, max: 4 })
+  assert.deepEqual(getOptionIntensity("routineClarity", "none"), { pips: 1, max: 4 })
+})
+
 test("non-ramp framing questions do not receive diagnostic pips", () => {
-  assert.equal(getOptionIntensity("routineClarity", "none"), null)
   assert.equal(getOptionIntensity("meaningfulMoment", "special_occasions"), null)
+  assert.equal(getOptionIntensity("routineStyle", "simple_reliable"), null)
 })
 
 test("daily time commitment ramps upward", () => {

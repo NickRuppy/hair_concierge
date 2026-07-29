@@ -442,6 +442,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   routine_clarity: {
     field: "routineClarity",
     title: "Wie würdest du deine aktuelle Haarpflege beschreiben?",
+    scale: true,
     options: [
       {
         value: "clear",
@@ -473,6 +474,8 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   adaptation_confidence: {
     field: "adaptationConfidence",
     title: "Weißt du, was du ändern solltest, wenn das Ergebnis nicht passt?",
+    contextImage: `${PERSONAL_PLAN_ASSET_BASE}/uncertain-products.webp`,
+    contextObjectPosition: "50% 30%",
     scale: true,
     options: [
       { value: "yes", label: "Ja, meistens" },
@@ -709,16 +712,19 @@ export const DAILY_TIME_OPTIONS: QuizOption[] = [
 export const PREPARATION_TESTIMONIALS = [
   {
     role: "Verstehen",
+    source: "M. · Chaarlie-Kundin",
     quote:
       "Ich hatte schon so viele Tipps ausprobiert. Durch Chaarlie habe ich zum ersten Mal verstanden, was meine Haare wirklich brauchen.",
   },
   {
     role: "Personalisieren",
+    source: "S. · Chaarlie-Kundin",
     quote:
       "Mein Haarpflegeplan fühlt sich wirklich auf meine Haare abgestimmt an – nicht wie eine allgemeine Routine, die für alle gleich ist.",
   },
   {
     role: "Umsetzen",
+    source: "J. · Chaarlie-Kundin",
     quote:
       "Endlich weiß ich, welche Schritte für meine Haare wichtig sind und in welcher Reihenfolge. Das macht meine Haarpflege so viel einfacher.",
   },
