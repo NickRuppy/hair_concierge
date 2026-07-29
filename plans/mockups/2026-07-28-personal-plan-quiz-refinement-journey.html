@@ -1534,19 +1534,24 @@
               ? domains.filter((domain) => domain.startsWith(typedDomain.toLowerCase())).slice(0, 3)
               : []
             emailInput.classList.toggle("suggesting", matches.length > 0)
-            emailSuggestions.innerHTML = matches
-              .map(
-                (domain) => `
-                  <button class="email-suggestion" data-email-suggestion="${localPart}@${domain}">
-                    <span>${localPart}@</span><strong>${domain}</strong>
-                  </button>
-                `,
-              )
-              .join("")
+            const suggestionButtons = matches.map((domain) => {
+              const button = document.createElement("button")
+              button.className = "email-suggestion"
+              button.dataset.emailSuggestion = `${localPart}@${domain}`
+
+              const localPartLabel = document.createElement("span")
+              localPartLabel.textContent = `${localPart}@`
+              const domainLabel = document.createElement("strong")
+              domainLabel.textContent = domain
+
+              button.append(localPartLabel, domainLabel)
+              return button
+            })
+            emailSuggestions.replaceChildren(...suggestionButtons)
             emailSuggestions.querySelectorAll("[data-email-suggestion]").forEach((button) => {
               button.addEventListener("click", () => {
                 emailInput.value = button.dataset.emailSuggestion
-                emailSuggestions.innerHTML = ""
+                emailSuggestions.replaceChildren()
                 emailInput.classList.remove("suggesting")
                 emailInput.focus()
               })
