@@ -311,13 +311,42 @@ function ScreenHeader({
         </span>
       </div>
       <div className="mx-auto mt-2 max-w-[44rem]" aria-label="Fortschritt">
-        <div className="relative h-1.5 overflow-hidden rounded-full bg-[var(--brand-plum-light)]">
+        <div className="relative h-2" data-layout="progress-track-with-dots">
+          <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-[var(--brand-plum-light)]">
+            <div
+              className="h-full rounded-full bg-[var(--brand-plum)] transition-[width] duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
           <div
-            className="h-full rounded-full bg-[var(--brand-plum)] transition-[width] duration-500 ease-out"
-            style={{ width: `${progress}%` }}
-          />
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 grid grid-cols-5 gap-1"
+            data-layout="progress-dot-overlay"
+          >
+            {SECTION_LABELS.map((section, index) => {
+              const state =
+                index < currentSectionIndex
+                  ? "done"
+                  : index === currentSectionIndex
+                    ? "current"
+                    : "todo"
+              return (
+                <span className="flex items-center justify-center" key={section.id}>
+                  <span
+                    className={cn(
+                      "h-2 w-2 rounded-full ring-2 ring-[hsl(var(--background))] transition-[background-color,box-shadow] duration-300 ease-out",
+                      state === "done" && "bg-[var(--brand-plum)]",
+                      state === "current" &&
+                        "bg-[var(--brand-plum)] shadow-[0_0_0_3px_rgba(var(--brand-plum-rgb),0.14)]",
+                      state === "todo" && "bg-[var(--brand-plum-light)]",
+                    )}
+                  />
+                </span>
+              )
+            })}
+          </div>
         </div>
-        <ol className="mt-1.5 grid grid-cols-5 gap-1">
+        <ol className="mt-1 grid grid-cols-5 gap-1">
           {SECTION_LABELS.map((section, index) => {
             const state =
               index < currentSectionIndex
@@ -326,17 +355,7 @@ function ScreenHeader({
                   ? "current"
                   : "todo"
             return (
-              <li className="flex flex-col items-center gap-1" key={section.id}>
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "h-2 w-2 rounded-full ring-2 ring-[hsl(var(--background))]",
-                    state === "done" && "bg-[var(--brand-plum)]",
-                    state === "current" &&
-                      "bg-[var(--brand-plum)] shadow-[0_0_0_3px_rgba(var(--brand-plum-rgb),0.14)]",
-                    state === "todo" && "bg-[var(--brand-plum-light)]",
-                  )}
-                />
+              <li className="flex items-center justify-center" key={section.id}>
                 <span
                   className={cn(
                     "text-[8px] font-semibold uppercase tracking-[0.04em] sm:text-[9px]",
@@ -512,6 +531,7 @@ function OptionCard({
             alt={option.imageAlt ?? ""}
             className="object-cover object-center transition duration-300 group-hover:scale-[1.03]"
             fill
+            fetchPriority={priority ? "high" : "auto"}
             priority={priority}
             sizes="120px"
             src={option.image}
@@ -600,6 +620,7 @@ function OptionCard({
                   : "object-cover object-top",
             )}
             fill
+            fetchPriority={priority ? "high" : "auto"}
             priority={priority}
             sizes={
               visualLayout === "grid"
@@ -765,7 +786,7 @@ function QuestionScreen({
           config.visual && !config.visualLayout && "grid-cols-1 auto-rows-fr sm:grid-cols-2",
         )}
       >
-        {config.options.map((option) => {
+        {config.options.map((option, optionIndex) => {
           const showOtherInput =
             otherTextTriggerValue !== undefined &&
             option.value === otherTextTriggerValue &&
@@ -778,7 +799,7 @@ function QuestionScreen({
                 multi={config.multi}
                 onClick={() => onSelect(option.value)}
                 option={option}
-                priority={config.field === "texture"}
+                priority={config.field === "texture" && optionIndex === 0}
                 selected={selected.includes(option.value)}
                 visualLayout={config.visualLayout}
               />
@@ -1695,7 +1716,13 @@ function EmailCapture({
         Deine persönliche Auswertung ist bereit.
       </div>
       {step === "email" ? (
-        <>
+        <form
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault()
+            continueToConsent()
+          }}
+        >
           <h1 className="mt-6 text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
             Wohin dürfen wir deine persönliche Auswertung senden?
           </h1>
@@ -1717,6 +1744,7 @@ function EmailCapture({
                 suggestions.length ? "rounded-b-none rounded-t-2xl" : "rounded-2xl",
               )}
               id="personal-plan-email"
+              enterKeyHint="go"
               onChange={(event) => {
                 setEmail(event.target.value)
                 setError("")
@@ -1748,10 +1776,10 @@ function EmailCapture({
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
             Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.
           </p>
-          <Button className="mt-7 h-12 w-full text-base" variant="cta" onClick={continueToConsent}>
+          <Button className="mt-7 h-12 w-full text-base" type="submit" variant="cta">
             Weiter zu meiner Auswertung
           </Button>
-        </>
+        </form>
       ) : (
         <>
           <h1 className="mt-6 text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
