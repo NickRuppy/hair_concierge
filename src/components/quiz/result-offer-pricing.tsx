@@ -14,6 +14,7 @@ import {
   isCheckoutAccessAlreadyExistsResponse,
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
+import type { QuizResultReferencePrices } from "@/components/checkout/plan-reference-prices"
 import { SubscriptionPlanSelector } from "@/components/checkout/subscription-plan-selector"
 import {
   OFFER_PRICING_REVISION,
@@ -86,11 +87,13 @@ export function ResultOfferPricing({
   onCheckoutOpen,
   offerTracking,
   openCheckoutRequestId,
+  referencePrices,
 }: {
   leadId: string | null
   onCheckoutOpen?: () => void
   offerTracking?: FunnelAnalyticsEnvelope | null
   openCheckoutRequestId?: number
+  referencePrices?: QuizResultReferencePrices
 }) {
   const pricingRef = useRef<HTMLDivElement | null>(null)
   const inlineCheckoutRef = useRef<HTMLDivElement | null>(null)
@@ -605,6 +608,7 @@ export function ResultOfferPricing({
         offerTracking
         onContinue={openCheckout}
         onSelect={choosePlan}
+        referencePrices={referencePrices}
         selectedInterval={selectedInterval}
       />
 

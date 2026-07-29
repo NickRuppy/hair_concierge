@@ -1,6 +1,10 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import {
+  formatQuizResultReferencePrice,
+  type QuizResultReferencePrices,
+} from "@/components/checkout/plan-reference-prices"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -17,12 +21,14 @@ export function SubscriptionPlanSelector({
   offerTracking = false,
   onContinue,
   onSelect,
+  referencePrices,
   selectedInterval,
 }: {
   actionLabel?: string
   offerTracking?: boolean
   onContinue: () => void
   onSelect: (interval: BillingInterval) => void
+  referencePrices?: QuizResultReferencePrices
   selectedInterval: BillingInterval
 }) {
   const selectedPlan = getStripePricingPlan(selectedInterval)
@@ -66,8 +72,16 @@ export function SubscriptionPlanSelector({
                   {[plan.price, getPlanDetail(plan)].filter(Boolean).join(" · ")}
                 </span>
               </span>
-              <span className="shrink-0 text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]">
-                {plan.price}
+              <span className="flex shrink-0 flex-col items-end gap-1">
+                {referencePrices ? (
+                  <span className="text-[11px] leading-none text-muted-foreground">
+                    <span className="sr-only">Vergleichspreis </span>
+                    <s>{formatQuizResultReferencePrice(referencePrices[plan.interval])}</s>
+                  </span>
+                ) : null}
+                <span className="text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]">
+                  {plan.price}
+                </span>
               </span>
             </button>
           )

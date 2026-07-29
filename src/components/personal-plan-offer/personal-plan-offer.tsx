@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowDown, ArrowRight } from "lucide-react"
 
+import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
@@ -332,6 +333,7 @@ export function PersonalPlanOffer({
               leadId={leadId}
               offerTracking={offerTracking}
               openCheckoutRequestId={checkoutOpenRequest}
+              referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
             />
           </div>
         </section>
