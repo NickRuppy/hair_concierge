@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 
+import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 import {
@@ -145,7 +146,13 @@ function LegacyResultPageClient({
     quizAnswers,
     focusRoutine,
     focusTarget,
-    pricingSlot: <ResultOfferPricing leadId={leadId} offerTracking={offerTracking} />,
+    pricingSlot: (
+      <ResultOfferPricing
+        leadId={leadId}
+        offerTracking={offerTracking}
+        referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
+      />
+    ),
   })
   if (!offer) throw new Error(`Unknown funnel offer variant: ${offerVariant}`)
   return offer

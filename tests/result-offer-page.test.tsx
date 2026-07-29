@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { OfferPreviewRoutine } from "../src/components/quiz/offer-preview-routine"
 import { QuizResultOfferPageShell } from "../src/components/quiz/quiz-result-offer-page"
+import { ResultPageClient } from "../src/app/result/[leadId]/result-client"
 import AppValueStackOfferVariant from "../src/funnels/offers/app-value-stack"
 import { buildQuizOfferPreview } from "../src/lib/quiz/offer-preview"
 import { buildQuizResultNarrative } from "../src/lib/quiz/result-narrative"
@@ -82,6 +83,27 @@ test("result offer page renders the product-led hierarchy, routine preview, and 
     new Set(["sticky_header", "locked_plan", "final"]),
   )
   assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 6)
+})
+
+test("legacy production result client renders quiz-result reference prices", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Sarah"
+      quizAnswers={quizAnswers}
+    />,
+  )
+
+  for (const [referencePrice, currentPrice] of [
+    ["€19,99", "€14,99"],
+    ["€44,49", "€34,99"],
+    ["€149,99", "€99,99"],
+  ]) {
+    assert.match(html, new RegExp(`<s[^>]*>${referencePrice}</s>[\\s\\S]*${currentPrice}`))
+  }
 })
 
 test("result offer page preserves legacy routine-return context and both fixed-header anchors", () => {
