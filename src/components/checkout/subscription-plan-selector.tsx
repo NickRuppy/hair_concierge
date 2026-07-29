@@ -35,6 +35,12 @@ export function SubscriptionPlanSelector({
 
   return (
     <>
+      {referencePrices ? (
+        <p className="mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]">
+          <span aria-hidden="true">JETZT MIND. 20 % RABATT SICHERN</span>
+          <span className="sr-only">Jetzt mindestens 20 Prozent Rabatt sichern</span>
+        </p>
+      ) : null}
       <div className="grid gap-2.5">
         {STRIPE_PRICING_PLANS.map((plan) => {
           const isSelected = plan.interval === selectedInterval
@@ -74,7 +80,7 @@ export function SubscriptionPlanSelector({
               </span>
               <span className="flex shrink-0 flex-col items-end gap-1">
                 {referencePrices ? (
-                  <span className="text-[11px] leading-none text-muted-foreground">
+                  <span className="text-[14px] font-medium leading-none text-muted-foreground">
                     <span className="sr-only">Vergleichspreis </span>
                     <s>{formatQuizResultReferencePrice(referencePrices[plan.interval])}</s>
                   </span>
