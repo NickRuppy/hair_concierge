@@ -2,12 +2,11 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
-import { RoutineCard } from "@/components/routine/routine-card"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
-import type { RoutineUiCard } from "@/lib/routines/types"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
 
 const testimonials = [
@@ -35,91 +34,6 @@ const SPECTRUM_LABELS: Record<1 | 2 | 3, string> = {
   2: "Gute Basis",
   3: "Optimal",
 }
-
-const EXAMPLE_PRODUCT_IMAGES = {
-  shampoo:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/ead1333b-6839-464d-b272-673d39bb95a4/02-ead1333b-6839-464d-b272-673d39bb95a4-balea-balea-aqua-hyaluron-f41a5b48efe1.webp",
-  conditioner:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/2a159694-6799-4be7-a0aa-572757c94801/31-2a159694-6799-4be7-a0aa-572757c94801-langhaarmadchen-langhaarmadchen-lovely-long-d30fd7fd3ec3.webp",
-  leaveIn:
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/0b21f996-bb42-4b10-89bd-4881c4346d53/22-0b21f996-bb42-4b10-89bd-4881c4346d53-isana-isana-feuchtigkeits-leave-in-hyaluron-ba1624f6c1eb.webp",
-} as const
-
-function exampleRoutineCard({
-  category,
-  categoryLabel,
-  frequency,
-  id,
-  imageUrl,
-  productName,
-}: {
-  category: string
-  categoryLabel: string
-  frequency: "weekly_1x" | "weekly_2x"
-  id: string
-  imageUrl: string
-  productName: string
-}): RoutineUiCard {
-  return {
-    id,
-    kind: "verified_matches",
-    tone: "green",
-    category,
-    categoryLabel,
-    productName,
-    currentFrequency: frequency,
-    frequencyTarget: {
-      minFrequency: frequency,
-      maxFrequency: frequency,
-      preferredFrequency: frequency,
-      delta: "in_range",
-    },
-    careBalanceRow: null,
-    usageRow: null,
-    product: {
-      id,
-      name: productName,
-      brand: null,
-      category,
-      affiliate_link: null,
-      image_url: imageUrl,
-      price_eur: null,
-      currency: "EUR",
-      is_active: true,
-    },
-    pendingSubmission: null,
-    hasProductDrawer: false,
-    isLegacyTextOnly: false,
-    isTopProposal: false,
-  }
-}
-
-const EXAMPLE_ROUTINE_CARDS = [
-  exampleRoutineCard({
-    category: "shampoo",
-    categoryLabel: "Shampoo",
-    frequency: "weekly_2x",
-    id: "example-shampoo",
-    imageUrl: EXAMPLE_PRODUCT_IMAGES.shampoo,
-    productName: "Dein passendes Shampoo",
-  }),
-  exampleRoutineCard({
-    category: "conditioner",
-    categoryLabel: "Conditioner",
-    frequency: "weekly_2x",
-    id: "example-conditioner",
-    imageUrl: EXAMPLE_PRODUCT_IMAGES.conditioner,
-    productName: "Dein passender Conditioner",
-  }),
-  exampleRoutineCard({
-    category: "leave_in",
-    categoryLabel: "Leave-in",
-    frequency: "weekly_1x",
-    id: "example-leave-in",
-    imageUrl: EXAMPLE_PRODUCT_IMAGES.leaveIn,
-    productName: "Dein passendes Leave-in",
-  }),
-] satisfies RoutineUiCard[]
 
 function Segments({ count, tone }: { count: 1 | 2 | 3; tone: "today" | "goal" }) {
   return (
@@ -171,55 +85,6 @@ function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
         {displayDiagnosticSummary(row.summary)}
       </p>
     </article>
-  )
-}
-
-function GenericPlanPreview() {
-  return (
-    <div
-      aria-label="Beispielansicht eines generischen Haarplans"
-      className="mx-auto mt-8 max-w-[27rem] overflow-hidden rounded-[2rem] border border-[rgba(var(--brand-plum-rgb),0.12)] bg-[#fbfaf8] text-left shadow-[0_30px_70px_-48px_rgba(var(--brand-plum-rgb),0.75)]"
-    >
-      <div className="flex items-center justify-between border-b border-[rgba(var(--brand-plum-rgb),0.08)] px-5 py-4">
-        <span className="font-header text-[1.35rem] font-medium text-[var(--brand-plum-darkest)]">
-          <span className="mr-1.5 text-[var(--brand-plum)]">Ⅲ</span>
-          chaarlie
-        </span>
-        <span className="rounded-full bg-[rgba(var(--brand-plum-rgb),0.08)] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.1em] text-[var(--brand-plum-darkest)]">
-          Beispielansicht
-        </span>
-      </div>
-      <div className="p-5">
-        <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[var(--brand-plum)]">
-          Routine
-        </p>
-        <h3 className="mt-2 font-header text-[1.7rem] font-medium leading-tight text-[var(--brand-plum-darkest)]">
-          Deine Haarpflege
-        </h3>
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          Deine Produkte in der richtigen Reihenfolge.
-        </p>
-        <div className="mt-5 space-y-3">
-          {EXAMPLE_ROUTINE_CARDS.map((card) => (
-            <RoutineCard
-              card={card}
-              key={card.id}
-              onDismissSuggestion={() => undefined}
-              onTap={() => undefined}
-              readOnly
-            />
-          ))}
-        </div>
-        <div className="mt-4 rounded-[1.1rem] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-4">
-          <p className="text-xs font-semibold text-[var(--brand-plum-darkest)]">
-            Deine Reihenfolge
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            1. Shampoo · 2. Conditioner · 3. Leave-in
-          </p>
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -278,7 +143,7 @@ export function PersonalPlanOffer({
         </div>
 
         <section
-          className="mx-auto max-w-4xl px-4 pb-10 pt-12 text-center sm:pb-14 sm:pt-16"
+          className="mx-auto max-w-4xl px-4 pb-8 pt-12 text-center sm:pb-10 sm:pt-16"
           data-offer-section="hero"
         >
           <h1 className="mx-auto max-w-[15ch] font-serif text-5xl leading-[0.98] tracking-[-0.04em] sm:text-6xl">
@@ -288,7 +153,6 @@ export function PersonalPlanOffer({
             {model.profileLine ?? "Basierend auf deiner Haaranalyse"}. Mit klaren Schritten für
             Reinigung, Pflege, Styling und passende Produkte.
           </p>
-          <GenericPlanPreview />
         </section>
 
         <section
@@ -337,9 +201,9 @@ export function PersonalPlanOffer({
                 ))}
                 <span
                   aria-hidden="true"
-                  className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-[var(--brand-plum)] text-lg font-bold text-white shadow-lg"
+                  className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[6px] border-white bg-[var(--brand-plum)] text-white shadow-lg"
                 >
-                  →
+                  <ArrowRight className="h-5 w-5" strokeWidth={2.25} />
                 </span>
               </div>
               <figcaption className="border-t border-[rgba(var(--brand-plum-rgb),0.08)] px-4 py-3 text-center text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">

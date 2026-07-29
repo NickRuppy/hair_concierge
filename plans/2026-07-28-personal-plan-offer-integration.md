@@ -529,10 +529,13 @@ Feedback incorporated:
 - no urgency timer, temporary discount, or one-time option;
 - preserve current prices and quarterly default;
 - sticky CTA opens the current payment overlay;
-- one generic, unlocked example plan rather than personalized products before
-  payment;
+- preserve the generic, unlocked example plan in commit `07537cc` for a later
+  offer test, but omit it from the first shipping version so the hero leads
+  directly into the before/after diagnosis;
 - one compact symbolic before/after pair with a visible split, direction, and
   the short labels `Heute` and `Dein Ziel`;
+- center the directional arrow as an icon inside an evenly padded circular
+  control rather than relying on the font metrics of a text arrow;
 - three dynamic diagnostic rows using the existing score computation, mapped
   to thirds and without an overall score, using one fixed vocabulary across all
   dimensions: `Viel Potenzial`, `Gute Basis`, `Optimal`;

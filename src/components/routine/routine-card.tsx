@@ -27,7 +27,6 @@ type RoutineCardProps = {
   busy?: boolean
   onTap: (card: RoutineUiCard) => void
   onDismissSuggestion: (card: RoutineUiCard) => void
-  readOnly?: boolean
 }
 
 function CardTile({ card }: { card: RoutineUiCard }) {
@@ -122,27 +121,21 @@ function CardAction({ visual }: { visual: RoutineCardVisual }) {
   )
 }
 
-export function RoutineCard({
-  card,
-  busy,
-  onTap,
-  onDismissSuggestion,
-  readOnly = false,
-}: RoutineCardProps) {
+export function RoutineCard({ card, busy, onTap, onDismissSuggestion }: RoutineCardProps) {
   const visual = getRoutineCardVisual(card)
   const frequencyLine = routineCardFrequencyLine(card)
   const ballIndex = routineCardBallIndex(card)
 
   return (
     <article
-      role={readOnly ? undefined : "button"}
-      tabIndex={readOnly ? undefined : 0}
+      role="button"
+      tabIndex={0}
       aria-label={`${card.categoryLabel}: ${routineCardTitle(card)}`}
       onClick={() => {
-        if (!busy && !readOnly) onTap(card)
+        if (!busy) onTap(card)
       }}
       onKeyDown={(event) => {
-        if (busy || readOnly) return
+        if (busy) return
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault()
           onTap(card)
@@ -151,12 +144,11 @@ export function RoutineCard({
       className={cn(
         "relative grid min-w-0 cursor-pointer grid-cols-[88px_1fr_auto] items-center gap-3.5 rounded-[20px] border p-3.5 transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         visual.cardClassName,
-        readOnly && "cursor-default",
         busy && "pointer-events-none opacity-70",
       )}
       style={visual.cardStyle}
     >
-      {card.kind === "suggestion" && !readOnly && (
+      {card.kind === "suggestion" && (
         <button
           type="button"
           aria-label="Vorschlag ausblenden"

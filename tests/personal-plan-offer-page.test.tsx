@@ -59,15 +59,13 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /Lea, dein Haarplan ist bereit/i)
   assert.doesNotMatch(html, /Persönlicher Haarpflegeplan|perfekten Haarplan/i)
   assert.doesNotMatch(html, /Plan für ruhige Längen und klaren Glanz/i)
-  assert.match(html, /Beispielansicht/i)
-  assert.match(html, /Deine Haarpflege/i)
-  assert.match(html, /Dein passendes Shampoo/i)
-  assert.match(html, /Dein passender Conditioner/i)
-  assert.match(html, /Dein passendes Leave-in/i)
-  assert.match(html, /Deine Reihenfolge/i)
-  assert.doesNotMatch(html, /role="button"[^>]+aria-label="Shampoo: Dein passendes Shampoo"/i)
-  assert.doesNotMatch(html, /ca\. 15 Minuten|Sanfte Reinigung|Leichte Pflege/i)
+  assert.doesNotMatch(
+    html,
+    /Beispielansicht|Deine Haarpflege|Dein passendes Shampoo|Dein passender Conditioner|Dein passendes Leave-in|Deine Reihenfolge/i,
+  )
   assert.doesNotMatch(html, /🔒|GESPERRT/i)
+  assert.match(html, /Symbolische heutige Haarsituation/i)
+  assert.match(html, /Symbolisches Haarziel/i)
   assert.match(html, /Oberfläche &amp; Glanz/i)
   assert.match(html, /Feuchtigkeit &amp; Pflegebalance/i)
   assert.match(html, /Routine-Sicherheit/i)
