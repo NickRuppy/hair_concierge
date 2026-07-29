@@ -2,6 +2,8 @@ import { notFound } from "next/navigation"
 
 import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
 import { OfferPaymentOverlayLab } from "@/components/checkout/offer-payment-overlay-lab"
+import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-plan-offer"
+import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import AppValueStackOfferVariant from "@/funnels/offers/app-value-stack"
 import GuidedStoryOfferVariant from "@/funnels/offers/guided-story"
 import GuidedStoryFounderLetterOfferVariant from "@/funnels/offers/guided-story-founder-letter"
@@ -24,6 +26,45 @@ const REVIEW_ANSWERS: QuizAnswers = {
   concerns: ["frizz", "dryness"],
   treatment: ["natur"],
   goals: ["less_frizz", "moisture", "shine"],
+}
+
+const PERSONAL_PLAN_REVIEW_MODEL: PersonalPlanOfferModel = {
+  planTitle: "Dein persönlicher Plan für gesundes, schönes welliges Haar",
+  profileLine: "Basierend auf deiner Analyse für welliges, mittelstarkes Haar",
+  planFitStatement:
+    "Ein klarer Plan statt widersprüchlicher Tipps: Du bekommst eine feste Reihenfolge, die zu deinem Haar passt und im Alltag leicht nachvollziehbar bleibt.",
+  diagnosticRows: [
+    {
+      id: "surface_manageability",
+      title: "Oberfläche & Kämmbarkeit",
+      todayLabel: "viel Potenzial",
+      potentialLabel: "starke Basis",
+      todaySegments: 1,
+      potentialSegments: 3,
+      summary:
+        "Dein Plan bringt Pflege und Styling in eine Reihenfolge, die Frizz und Reibung reduziert.",
+    },
+    {
+      id: "moisture_dryness",
+      title: "Feuchtigkeit & Geschmeidigkeit",
+      todayLabel: "gute Basis",
+      potentialLabel: "starke Basis",
+      todaySegments: 2,
+      potentialSegments: 3,
+      summary:
+        "Dein Plan stimmt Pflegeintensität und Rhythmus auf geschmeidigere, ausgeglichenere Längen ab.",
+    },
+    {
+      id: "definition",
+      title: "Form & Definition",
+      todayLabel: "gute Basis",
+      potentialLabel: "starke Basis",
+      todaySegments: 2,
+      potentialSegments: 3,
+      summary:
+        "Dein Plan verbindet Pflege und Styling so, dass deine natürliche Struktur klarer zur Geltung kommt.",
+    },
+  ],
 }
 
 function StaticPricingPreview() {
@@ -64,6 +105,17 @@ export default async function OfferPageLab({
 
   if (variant === "payment-overlay") {
     return <OfferPaymentOverlayLab />
+  }
+
+  if (variant === "personal-plan") {
+    return (
+      <PersonalPlanOffer
+        entryContext="saved_result"
+        leadId="11111111-1111-4111-8111-111111111111"
+        model={PERSONAL_PLAN_REVIEW_MODEL}
+        name="Lea"
+      />
+    )
   }
 
   if (variant === "default") {

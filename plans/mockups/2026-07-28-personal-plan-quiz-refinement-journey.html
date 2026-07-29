@@ -1,0 +1,1585 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Persönlicher Haarpflegeplan · Refinement Mockup</title>
+    <style>
+      @font-face {
+        font-family: "Playfair";
+        src: url("../../public/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Jakarta";
+        src: url("../../public/fonts/PlusJakartaSans-Regular.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      :root {
+        --plum-950: #2a1845;
+        --plum-800: #3d2a62;
+        --plum-600: #6b50a0;
+        --plum-300: #c8b8e0;
+        --plum-100: #f2eefa;
+        --coral: #d4616a;
+        --coral-dark: #c0555d;
+        --coral-100: #fdeef0;
+        --ink: #3a3835;
+        --muted: #6a6560;
+        --line: #e6e0da;
+        --cream: #faf8f5;
+        --white: #ffffff;
+        --green: #2f7a4c;
+        --green-100: #edf7f0;
+        --shadow: 0 24px 70px rgba(42, 24, 69, 0.13);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 8% 0%, rgba(212, 97, 106, 0.09), transparent 30rem),
+          radial-gradient(circle at 95% 100%, rgba(107, 80, 160, 0.12), transparent 36rem), #f1eeea;
+        color: var(--ink);
+        font-family: "Jakarta", Arial, sans-serif;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .review-shell {
+        display: grid;
+        grid-template-columns: minmax(260px, 320px) minmax(420px, 1fr) minmax(260px, 340px);
+        min-height: 100vh;
+      }
+
+      .rail {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        padding: 28px 22px;
+        background: rgba(250, 248, 245, 0.9);
+        backdrop-filter: blur(18px);
+      }
+
+      .rail.left {
+        border-right: 1px solid rgba(42, 24, 69, 0.08);
+      }
+
+      .rail.right {
+        border-left: 1px solid rgba(42, 24, 69, 0.08);
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--plum-600);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .rail h1 {
+        margin: 0;
+        color: var(--plum-950);
+        font-family: "Playfair", Georgia, serif;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.12;
+      }
+
+      .rail-intro {
+        margin: 12px 0 22px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .screen-nav {
+        display: grid;
+        gap: 7px;
+      }
+
+      .screen-nav button {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--muted);
+        text-align: left;
+      }
+
+      .screen-nav button:hover {
+        background: var(--white);
+      }
+
+      .screen-nav button.active {
+        border-color: var(--plum-300);
+        background: var(--white);
+        color: var(--plum-950);
+        box-shadow: 0 12px 30px rgba(42, 24, 69, 0.07);
+      }
+
+      .screen-nav .num {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum-100);
+        color: var(--plum-600);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .screen-nav .label {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+
+      .canvas {
+        display: grid;
+        min-height: 100vh;
+        place-items: center;
+        padding: 38px;
+      }
+
+      .phone {
+        position: relative;
+        display: flex;
+        width: min(430px, 100%);
+        height: min(880px, calc(100vh - 76px));
+        min-height: 720px;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(42, 24, 69, 0.12);
+        border-radius: 34px;
+        background: var(--cream);
+        box-shadow: var(--shadow);
+      }
+
+      .phone-header {
+        position: relative;
+        z-index: 5;
+        flex: 0 0 auto;
+        padding: 17px 19px 13px;
+        border-bottom: 1px solid rgba(42, 24, 69, 0.07);
+        background: rgba(250, 248, 245, 0.95);
+        backdrop-filter: blur(14px);
+      }
+
+      .header-line {
+        display: grid;
+        grid-template-columns: 40px 1fr 40px;
+        align-items: center;
+      }
+
+      .back {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: var(--white);
+        color: var(--plum-950);
+        font-size: 20px;
+      }
+
+      .back.hidden {
+        visibility: hidden;
+      }
+
+      .brand {
+        color: var(--plum-950);
+        font-family: "Playfair", Georgia, serif;
+        font-size: 24px;
+        text-align: center;
+      }
+
+      .stage-dot {
+        justify-self: end;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--coral);
+      }
+
+      .progress {
+        position: relative;
+        height: 18px;
+        margin-top: 11px;
+      }
+
+      .progress-track,
+      .progress-value {
+        position: absolute;
+        top: 8px;
+        left: 4px;
+        right: 4px;
+        height: 3px;
+        border-radius: 99px;
+      }
+
+      .progress-track {
+        background: #e3dce9;
+      }
+
+      .progress-value {
+        right: auto;
+        width: calc((100% - 8px) * var(--progress));
+        background: var(--plum-600);
+        transition: width 350ms ease;
+      }
+
+      .checkpoints {
+        position: absolute;
+        inset: 0 1px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .checkpoints span {
+        width: 12px;
+        height: 12px;
+        border: 3px solid #e3dce9;
+        border-radius: 50%;
+        background: var(--cream);
+      }
+
+      .checkpoints span.done {
+        border-color: var(--plum-600);
+        background: var(--plum-600);
+      }
+
+      .checkpoints span.current {
+        border-color: var(--plum-600);
+        background: var(--white);
+        box-shadow: 0 0 0 3px rgba(107, 80, 160, 0.14);
+      }
+
+      .phone-main {
+        flex: 1 1 auto;
+        overflow: auto;
+        scroll-behavior: smooth;
+      }
+
+      .screen {
+        min-height: 100%;
+        padding: 28px 22px 30px;
+        animation: enter 260ms ease both;
+      }
+
+      @keyframes enter {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+      }
+
+      .screen h2 {
+        margin: 0;
+        color: var(--plum-950);
+        font-family: "Playfair", Georgia, serif;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.2;
+      }
+
+      .screen h3 {
+        margin: 16px 0 0;
+        color: var(--plum-950);
+        font-family: "Playfair", Georgia, serif;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1.25;
+      }
+
+      .sub {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .promise {
+        margin: 0 0 20px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .promise h2 {
+        font-size: 26px;
+      }
+
+      .promise .sub {
+        color: var(--plum-800);
+        font-size: 15px;
+      }
+
+      .option-grid {
+        display: grid;
+        gap: 11px;
+        margin-top: 20px;
+      }
+
+      .option-grid.two {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .option {
+        position: relative;
+        overflow: hidden;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: var(--white);
+        color: var(--ink);
+        text-align: left;
+        transition:
+          transform 160ms ease,
+          border-color 160ms ease,
+          box-shadow 160ms ease;
+      }
+
+      .option:hover {
+        transform: translateY(-1px);
+        border-color: var(--plum-300);
+      }
+
+      .option.selected {
+        border-color: var(--plum-600);
+        box-shadow: 0 0 0 2px rgba(107, 80, 160, 0.13);
+      }
+
+      .option-copy {
+        display: grid;
+        grid-template-columns: 1fr 22px;
+        gap: 8px;
+        align-items: center;
+        padding: 12px 13px;
+      }
+
+      .option-title {
+        display: block;
+        color: var(--plum-950);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
+      .option-desc {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .select-ring {
+        display: grid;
+        width: 20px;
+        height: 20px;
+        place-items: center;
+        border: 1px solid #cfc6d2;
+        border-radius: 50%;
+        color: transparent;
+        font-size: 12px;
+      }
+
+      .selected .select-ring {
+        border-color: var(--plum-600);
+        background: var(--plum-600);
+        color: var(--white);
+      }
+
+      .photo {
+        background-color: #e9dfd4;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      .texture-photo {
+        aspect-ratio: 1.18 / 1;
+        background-image: url("assets/personal-plan-refinement/texture-contact-sheet.jpg");
+        background-size: 200% 200%;
+      }
+
+      .texture-straight {
+        background-position: 0 0;
+      }
+
+      .texture-wavy {
+        background-position: 100% 0;
+      }
+
+      .texture-curly {
+        background-position: 0 100%;
+      }
+
+      .texture-coily {
+        background-position: 100% 100%;
+      }
+
+      .thickness-option {
+        display: grid;
+        grid-template-columns: 138px 1fr;
+        min-height: 116px;
+      }
+
+      .thickness-photo {
+        min-height: 116px;
+        background-image: url("assets/personal-plan-refinement/thickness-contact-sheet.jpg");
+        background-size: 100% 300%;
+      }
+
+      .thickness-fine {
+        background-position: 50% 0;
+      }
+
+      .thickness-medium {
+        background-position: 50% 50%;
+      }
+
+      .thickness-coarse {
+        background-position: 50% 100%;
+      }
+
+      .thickness-option .option-copy {
+        padding: 15px;
+      }
+
+      .context-photo {
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        margin-top: 18px;
+        border-radius: 17px;
+        background-image: url("assets/personal-plan-refinement/recognition-mirror.jpg");
+        background-position: 50% 32%;
+        background-size: cover;
+      }
+
+      .returning-photo {
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        margin-top: 18px;
+        border-radius: 17px;
+        background-image: url("assets/personal-plan-refinement/returning-concern.jpg");
+        background-position: 50% 35%;
+        background-size: cover;
+      }
+
+      .daily-photo {
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        margin-top: 18px;
+        border-radius: 17px;
+        background-image: url("assets/personal-plan-refinement/daily-commitment.jpg");
+        background-position: 50% 28%;
+        background-size: cover;
+      }
+
+      .goal-portrait {
+        aspect-ratio: 2.1 / 1;
+        margin-top: 18px;
+        border-radius: 17px;
+        background-image: url("assets/personal-plan-refinement/texture-contact-sheet.jpg");
+        background-position: 100% 3%;
+        background-size: 200% 200%;
+      }
+
+      .text-option {
+        min-height: 74px;
+      }
+
+      .text-option .option-copy {
+        min-height: 74px;
+      }
+
+      .primary {
+        display: flex;
+        width: 100%;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        padding: 12px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--coral);
+        color: var(--white);
+        font-weight: 700;
+        box-shadow: 0 12px 26px rgba(212, 97, 106, 0.24);
+      }
+
+      .primary:hover {
+        background: var(--coral-dark);
+      }
+
+      .secondary-link {
+        display: block;
+        width: 100%;
+        margin-top: 13px;
+        border: 0;
+        background: transparent;
+        color: var(--plum-600);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .proof-card,
+      .soft-card,
+      .positive-card {
+        margin-top: 19px;
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .proof-card {
+        border: 1px solid var(--plum-300);
+        background: var(--white);
+      }
+
+      .proof-stat {
+        color: var(--plum-600);
+        font-family: "Playfair", Georgia, serif;
+        font-size: 40px;
+        line-height: 1;
+      }
+
+      .proof-copy {
+        margin: 8px 0 0;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .quote {
+        margin: 15px 0 0;
+        padding-top: 15px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .quote cite {
+        display: block;
+        margin-top: 8px;
+        color: var(--plum-800);
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      .soft-card {
+        background: var(--plum-100);
+      }
+
+      .soft-card strong {
+        color: var(--plum-950);
+      }
+
+      .profile-build {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        gap: 15px;
+        align-items: center;
+        margin-top: 20px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--white);
+      }
+
+      .profile-thumb {
+        aspect-ratio: 1 / 1.15;
+        border-radius: 14px;
+        background-image: url("assets/personal-plan-refinement/texture-contact-sheet.jpg");
+        background-position: 100% 2%;
+        background-size: 200% 200%;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 10px;
+      }
+
+      .chip {
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: var(--plum-100);
+        color: var(--plum-800);
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .instruction {
+        margin-top: 18px;
+        padding: 13px 14px;
+        border-left: 3px solid var(--coral);
+        border-radius: 0 12px 12px 0;
+        background: var(--coral-100);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .reframe-photo {
+        aspect-ratio: 16 / 10;
+        margin-top: 19px;
+        border-radius: 18px;
+        background-image: url("assets/personal-plan-refinement/causal-reframe.jpg");
+        background-position: center;
+        background-size: cover;
+      }
+
+      .reframe-heading span {
+        display: block;
+      }
+
+      .reframe-heading span + span {
+        margin-top: 7px;
+        color: var(--plum-600);
+      }
+
+      .reframe-copy {
+        display: grid;
+        gap: 9px;
+        margin-top: 14px;
+      }
+
+      .reframe-copy p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .positive-card {
+        border: 1px solid #b9dfc4;
+        background: var(--green-100);
+        color: #255f3b;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .positive-card strong {
+        display: block;
+        color: #255f3b;
+        font-size: 14px;
+      }
+
+      .positive-card span {
+        display: block;
+        margin-top: 5px;
+      }
+
+      .moment-option {
+        min-height: 64px;
+      }
+
+      .profile-card {
+        overflow: hidden;
+        margin-top: 20px;
+        border: 1px solid var(--plum-300);
+        border-radius: 20px;
+        background: var(--white);
+        box-shadow: 0 18px 48px rgba(42, 24, 69, 0.11);
+      }
+
+      .profile-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        background: var(--plum-100);
+      }
+
+      .profile-card-head span:first-child {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .potential {
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: #dcf2e3;
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+      }
+
+      .profile-card-body {
+        display: grid;
+        grid-template-columns: 1fr 112px;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .profile-rows {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+      }
+
+      .profile-rows dt {
+        color: #8d838b;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .profile-rows dd {
+        margin: 3px 0 0;
+        color: var(--plum-950);
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .profile-card-photo {
+        min-height: 190px;
+        border-radius: 14px;
+        background-image: url("assets/personal-plan-refinement/texture-contact-sheet.jpg");
+        background-position: 100% 1%;
+        background-size: 200% 200%;
+      }
+
+      .loading-panel {
+        position: relative;
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 20px;
+        background: linear-gradient(150deg, var(--plum-950), var(--plum-600));
+        color: var(--white);
+        overflow: hidden;
+      }
+
+      .loading-panel::after {
+        content: "";
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        top: -80px;
+        right: -65px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.09);
+      }
+
+      .loading-title {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .stage-line {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+        margin-top: 13px;
+      }
+
+      .stage-line span {
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.24);
+      }
+
+      .stage-line span.active,
+      .stage-line span.done {
+        background: var(--white);
+      }
+
+      .background-quote {
+        margin-top: 13px;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .commitment {
+        position: relative;
+        z-index: 2;
+        margin: -7px 10px 0;
+        padding: 17px;
+        border-radius: 18px;
+        background: var(--white);
+        box-shadow: 0 18px 48px rgba(42, 24, 69, 0.22);
+      }
+
+      .commitment h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .commitment .option-grid {
+        margin-top: 14px;
+      }
+
+      .field-label {
+        display: block;
+        margin-top: 22px;
+        color: var(--plum-950);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .email-field {
+        width: 100%;
+        height: 50px;
+        margin-top: 8px;
+        padding: 0 14px;
+        border: 1px solid var(--plum-300);
+        border-radius: 13px;
+        background: var(--white);
+        color: var(--ink);
+        outline: none;
+      }
+
+      .email-field:focus {
+        border-color: var(--plum-600);
+        box-shadow: 0 0 0 3px rgba(107, 80, 160, 0.12);
+      }
+
+      .email-field.suggesting {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .email-suggestions {
+        overflow: hidden;
+        border: 1px solid var(--plum-300);
+        border-top: 0;
+        border-radius: 0 0 13px 13px;
+        background: var(--white);
+        box-shadow: 0 12px 28px rgba(42, 24, 69, 0.1);
+      }
+
+      .email-suggestions:empty {
+        display: none;
+      }
+
+      .email-suggestion {
+        display: block;
+        width: 100%;
+        padding: 11px 14px;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: var(--white);
+        color: var(--muted);
+        font-size: 12px;
+        text-align: left;
+      }
+
+      .email-suggestion:first-child {
+        border-top: 0;
+      }
+
+      .email-suggestion:hover {
+        background: var(--plum-100);
+      }
+
+      .email-suggestion strong {
+        color: var(--plum-950);
+      }
+
+      .lock-note {
+        margin-top: 15px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      .note-card {
+        padding: 16px;
+        border: 1px solid rgba(42, 24, 69, 0.08);
+        border-radius: 15px;
+        background: var(--white);
+      }
+
+      .note-card + .note-card {
+        margin-top: 12px;
+      }
+
+      .note-card h3 {
+        margin: 0;
+        color: var(--plum-950);
+        font-size: 13px;
+      }
+
+      .note-card p,
+      .note-card li {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .note-card p {
+        margin: 8px 0 0;
+      }
+
+      .note-card ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+
+      .state-tag {
+        display: inline-flex;
+        margin-bottom: 10px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: var(--plum-100);
+        color: var(--plum-600);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .bottom-review-nav {
+        display: none;
+      }
+
+      @media (max-width: 1080px) {
+        .review-shell {
+          grid-template-columns: minmax(230px, 280px) 1fr;
+        }
+
+        .rail.right {
+          display: none;
+        }
+      }
+
+      @media (max-width: 760px) {
+        body {
+          background: var(--cream);
+        }
+
+        .review-shell {
+          display: block;
+        }
+
+        .rail.left {
+          display: none;
+        }
+
+        .canvas {
+          display: block;
+          min-height: 100vh;
+          padding: 0;
+        }
+
+        .phone {
+          width: 100%;
+          height: 100vh;
+          min-height: 0;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        .screen {
+          padding-bottom: 100px;
+        }
+
+        .bottom-review-nav {
+          position: fixed;
+          z-index: 20;
+          right: 12px;
+          bottom: 12px;
+          left: 12px;
+          display: grid;
+          grid-template-columns: 44px 1fr 44px;
+          gap: 9px;
+          align-items: center;
+          padding: 8px;
+          border: 1px solid rgba(42, 24, 69, 0.12);
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.92);
+          box-shadow: 0 18px 50px rgba(42, 24, 69, 0.19);
+          backdrop-filter: blur(16px);
+        }
+
+        .bottom-review-nav button {
+          width: 44px;
+          height: 40px;
+          border: 0;
+          border-radius: 11px;
+          background: var(--plum-100);
+          color: var(--plum-600);
+          font-size: 18px;
+        }
+
+        .bottom-review-nav span {
+          color: var(--plum-950);
+          font-size: 11px;
+          font-weight: 700;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-shell">
+      <aside class="rail left">
+        <p class="eyebrow">Journey refinement</p>
+        <h1>Persönlicher Haarpflegeplan</h1>
+        <p class="rail-intro">
+          Representative mobile states for the full acquisition journey. Select a state or use the
+          mockup controls inside the phone.
+        </p>
+        <nav class="screen-nav" id="screenNav" aria-label="Mockup screens"></nav>
+      </aside>
+
+      <main class="canvas">
+        <div class="phone">
+          <header class="phone-header">
+            <div class="header-line">
+              <button class="back" id="backButton" aria-label="Zurück">‹</button>
+              <div class="brand">chaarlie</div>
+              <span class="stage-dot" aria-hidden="true"></span>
+            </div>
+            <div class="progress" aria-label="Fortschritt">
+              <div class="progress-track"></div>
+              <div class="progress-value" id="progressValue"></div>
+              <div class="checkpoints" id="checkpoints"></div>
+            </div>
+          </header>
+          <div class="phone-main" id="phoneMain"></div>
+        </div>
+      </main>
+
+      <aside class="rail right">
+        <span class="state-tag" id="stateTag">Review state</span>
+        <div class="note-card">
+          <h3 id="noteTitle">What this validates</h3>
+          <p id="noteBody"></p>
+        </div>
+        <div class="note-card">
+          <h3>Locked system</h3>
+          <ul>
+            <li>Chaarlie typography and brand tokens</li>
+            <li>Checkpoint progress without numbers</li>
+            <li>Auto-advance only for simple single-select</li>
+            <li>Photography carries meaning; abstract answers stay explicit</li>
+            <li>Consistent card geometry by question type</li>
+          </ul>
+        </div>
+        <div class="note-card">
+          <h3>Mockup boundary</h3>
+          <p>
+            Generated photographs are planning-grade concept assets. Final production sets still
+            require controlled asset QA, attribution where applicable, and responsive compression.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="bottom-review-nav">
+      <button id="mobilePrev" aria-label="Vorheriger Mockup-Status">‹</button>
+      <span id="mobileLabel"></span>
+      <button id="mobileNext" aria-label="Nächster Mockup-Status">›</button>
+    </div>
+
+    <script>
+      const screens = [
+        {
+          id: "texture",
+          label: "1 · Einstieg & Textur",
+          phase: 0,
+          note: "The paid-ad landing page is the first real question. It establishes the promise without a duration claim. One tap selects and automatically advances.",
+          html: `
+            <section class="screen">
+              <div class="promise">
+                <h2>Persönliche Haaranalyse für deinen Haarpflegeplan</h2>
+                <p class="sub">Um dich wohlzufühlen mit gesundem und schönem Haar.</p>
+              </div>
+              <h3>Welche Haarstruktur haben die meisten deiner Haare?</h3>
+              <div class="option-grid two">
+                ${textureOption("straight", "Glatt", "Die Strähne hängt glatt herunter")}
+                ${textureOption("wavy", "Wellig", "Bildet eine S-Kurve")}
+                ${textureOption("curly", "Lockig", "Formt eine deutliche 3D-Locke")}
+                ${textureOption("coily", "Kraus", "Enge Windungen")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "thickness",
+          label: "2 · Dicke & Dichte",
+          phase: 0,
+          note: "Thickness uses three larger stacked cards. The comparison is visual and explicit, while the geometry remains identical across all three options.",
+          html: `
+            <section class="screen">
+              <h2>Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?</h2>
+              <p class="sub">Vergleiche ein einzelnes Haar mit einem Nähfaden.</p>
+              <div class="option-grid">
+                ${thicknessOption("fine", "Fein", "Kaum spürbar – dünner als ein Nähfaden")}
+                ${thicknessOption("medium", "Mittel", "Spürbar – ähnlich wie ein Nähfaden")}
+                ${thicknessOption("coarse", "Dick", "Deutlich spürbar – dicker als ein Nähfaden")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "proof",
+          label: "3 · Früher Beweis",
+          phase: 1,
+          note: "Proof arrives early, after the first small investment. It rewards progress and gives the following goal questions more credibility without interrupting for long.",
+          html: `
+            <section class="screen">
+              <h2>Du bist deinem passenden Haarpflegeplan schon einen Schritt näher.</h2>
+              <div class="proof-card">
+                <div class="proof-stat">4.000+</div>
+                <p class="proof-copy">Antworten aus unserer Haarpflege-Umfrage fließen in die Entwicklung unserer Analyse ein.</p>
+                <blockquote class="quote">
+                  „Zum ersten Mal verstehe ich, warum einzelne Tipps bei mir nie zuverlässig funktioniert haben.“
+                  <cite>Prototypischer Proof – vor Launch ersetzen</cite>
+                </blockquote>
+              </div>
+              <button class="primary next-screen">Weiter</button>
+            </section>
+          `,
+        },
+        {
+          id: "goals",
+          label: "4 · Ziele",
+          phase: 1,
+          note: "Goals are unrestricted multi-select. Because the concepts are abstract, one contextual texture-specific image supports the page while equal text cards keep every option precise.",
+          html: `
+            <section class="screen">
+              <h2>Was wünschst du dir für dein welliges Haar?</h2>
+              <p class="sub">Wähle alles aus, was dir wichtig ist.</p>
+              <div class="goal-portrait photo" role="img" aria-label="Welliges Haar"></div>
+              <div class="option-grid two multi-grid">
+                ${textOption("Feuchtigkeit ohne Beschweren")}
+                ${textOption("Weniger Frizz")}
+                ${textOption("Mehr Glanz")}
+                ${textOption("Mehr Wellen-Definition")}
+                ${textOption("Mehr Volumen am Ansatz")}
+                ${textOption("Weniger Haarbruch & Spliss")}
+                ${textOption("Ausgeglichene Kopfhaut")}
+                ${textOption("Leichteres Styling")}
+              </div>
+              <button class="primary next-screen">Weiter</button>
+            </section>
+          `,
+        },
+        {
+          id: "recognition",
+          label: "5 · Aktuelle Situation",
+          phase: 1,
+          note: "The recognition block is emotionally alive without turning every answer into a photograph. A single editorial scene establishes the feeling; response cards remain unambiguous.",
+          html: `
+            <section class="screen">
+              <h2>Wie zuverlässig bekommst du bei deinem welligen Haar das Ergebnis, das du dir wünschst?</h2>
+              <div class="context-photo photo" role="img" aria-label="Frau betrachtet ihr Haar im Spiegel"></div>
+              <div class="option-grid">
+                ${textOption("Meistens", "", "text-option")}
+                ${textOption("Manchmal", "", "text-option")}
+                ${textOption("Selten", "", "text-option")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "analysis-bridge",
+          label: "6 · Analyse-Brücke",
+          phase: 2,
+          note: "This transition follows RiseGuide’s positive “You’re in the right place” pattern. It rewards the user and explains why the factual observations follow without adding a right-or-wrong disclaimer.",
+          html: `
+            <section class="screen">
+              <h2>Du bist hier genau richtig.</h2>
+              <p class="sub">Deine bisherigen Antworten zeigen bereits, was dir wichtig ist. Jetzt schauen wir uns noch ein paar einfache Merkmale deines welligen Haares an – damit dein Plan wirklich zu dir passt.</p>
+              <div class="profile-build">
+                <div class="profile-thumb photo" role="img" aria-label="Ausgewähltes welliges Haar"></div>
+                <div>
+                  <strong>Dein Profil nimmt Form an</strong>
+                  <div class="chips">
+                    <span class="chip">Wellig</span>
+                    <span class="chip">Fein</span>
+                    <span class="chip">Mittlere Dichte</span>
+                  </div>
+                </div>
+              </div>
+              <button class="primary next-screen">Haaranalyse fortsetzen</button>
+            </section>
+          `,
+        },
+        {
+          id: "factual",
+          label: "7 · Faktische Analyse",
+          phase: 2,
+          note: "Effortful questions keep the same card language and add one short physical instruction. The midpoint animation will separate Part A from Part B in the full flow.",
+          html: `
+            <section class="screen">
+              <h2>Wie fühlt sich die Oberfläche deines Haares an?</h2>
+              <div class="instruction"><strong>Kurzer Test:</strong> Streiche vorsichtig mit zwei Fingern an einer einzelnen Strähne entlang.</div>
+              <div class="option-grid">
+                ${textOption("Glatt", "Meine Finger gleiten gleichmäßig über die Strähne.")}
+                ${textOption("Leicht uneben", "Ich spüre kleine Unebenheiten.")}
+                ${textOption("Rau", "Die Oberfläche fühlt sich deutlich rau an.")}
+                ${textOption("Ich bin mir nicht sicher", "Wir berücksichtigen das in deiner Auswertung.")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "admission",
+          label: "8 · Wiedererkennung",
+          phase: 2,
+          note: "After the factual work, the funnel returns to self-recognition. The question reuses selected problems in one short sentence, and a distinct second editorial scene prevents visual repetition.",
+          html: `
+            <section class="screen">
+              <h2>Kommen Frizz oder trockene Längen bei dir immer wieder zurück?</h2>
+              <div class="returning-photo photo" role="img" aria-label="Frau betrachtet die Spitzen ihres welligen Haares"></div>
+              <div class="option-grid">
+                ${textOption("Oft")}
+                ${textOption("Manchmal")}
+                ${textOption("Eher nicht")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "reframe",
+          label: "9 · Positiver Reframe",
+          phase: 3,
+          note: "The RiseGuide comparison uses a short two-part diagnosis followed by a positive “it becomes simple” close. This version mirrors that hierarchy while keeping Chaarlie’s more professional tone.",
+          html: `
+            <section class="screen">
+              <h2 class="reframe-heading">
+                <span>Dein Haar ist nicht das Problem.</span>
+                <span>Dir fehlt nur der richtige Plan.</span>
+              </h2>
+              <div class="reframe-photo photo" role="img" aria-label="Von unübersichtlicher Produktauswahl zu einem klaren Haarpflegeplan"></div>
+              <div class="reframe-copy">
+                <p>Jedes Haar ist einzigartig. Die passende Pflege zu finden, ist deshalb nicht immer einfach.</p>
+                <p>Du machst nichts falsch – bisher fehlte nur eine Routine, in der Produkte, Reihenfolge und Anwendung wirklich zusammenpassen.</p>
+              </div>
+              <div class="positive-card">
+                <strong>Mit dem richtigen Plan wird es einfach.</strong>
+                <span>Du weißt Schritt für Schritt, was dein Haar braucht – und was du tun kannst.</span>
+              </div>
+              <button class="primary next-screen">Weiter</button>
+            </section>
+          `,
+        },
+        {
+          id: "future",
+          label: "10 · Gewünschte Zukunft",
+          phase: 3,
+          note: "The future section closes the narrative with aspiration. Meaningful moment remains single-select to create one vivid personal context rather than a generic wish list.",
+          html: `
+            <section class="screen">
+              <h2>In welchem Moment möchtest du dich mit deinem Haar besonders wohlfühlen?</h2>
+              <p class="sub">Wähle den Moment, der dir spontan am wichtigsten ist.</p>
+              <div class="goal-portrait photo" role="img" aria-label="Natürlich gepflegtes welliges Haar"></div>
+              <div class="option-grid">
+                ${textOption("Im Alltag – einfach für mich selbst", "", "moment-option")}
+                ${textOption("Bei der Arbeit oder wichtigen Terminen", "", "moment-option")}
+                ${textOption("Beim Treffen mit Freunden oder Familie", "", "moment-option")}
+                ${textOption("Beim Ausgehen, Feiern oder bei Dates", "", "moment-option")}
+                ${textOption("Bei besonderen Anlässen oder auf Fotos", "", "moment-option")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "profile",
+          label: "11 · Positives Profil",
+          phase: 3,
+          note: "The receipt recognizes the person without revealing the paid routine or products. It stays encouraging and specific enough to feel earned.",
+          html: `
+            <section class="screen">
+              <h2>Zusammenfassung deines Haarprofils</h2>
+              <div class="profile-card">
+                <div class="profile-card-head">
+                  <span>Deine Ausgangslage</span>
+                  <span class="potential">VIEL POTENZIAL</span>
+                </div>
+                <div class="profile-card-body">
+                  <dl class="profile-rows">
+                    <div><dt>Haarprofil</dt><dd>Wellig · fein · mittlere Dichte</dd></div>
+                    <div><dt>Pflegefokus</dt><dd>Feuchtigkeit, Definition & weniger Frizz</dd></div>
+                    <div><dt>Kopfhaut</dt><dd>Ausgeglichen</dd></div>
+                    <div><dt>Plan-Stil</dt><dd>Einfach & verlässlich</dd></div>
+                  </dl>
+                  <div class="profile-card-photo photo" role="img" aria-label="Beispielhaftes welliges Haarprofil"></div>
+                </div>
+              </div>
+              <div class="positive-card"><strong>Dein Profil zeigt klare Ansatzpunkte.</strong><br />Darauf kann dein persönlicher Haarpflegeplan jetzt aufbauen.</div>
+              <button class="primary next-screen">Meinen Plan vorbereiten</button>
+            </section>
+          `,
+        },
+        {
+          id: "daily",
+          label: "12 · Zeit-Commitment",
+          phase: 4,
+          note: "RiseGuide asks for 5, 10, 15, or 20+ minutes per day. Chaarlie adopts the easier daily mental model while keeping the answer conversion-only and non-persisted.",
+          html: `
+            <section class="screen">
+              <h2>Wie viel Zeit möchtest du dir an einem normalen Tag für dein Haar nehmen?</h2>
+              <p class="sub">Dein Plan zeigt dir immer, was empfohlen und was optional ist.</p>
+              <div class="daily-photo photo" role="img" aria-label="Kurze, alltagstaugliche Haarpflege"></div>
+              <div class="option-grid">
+                ${textOption("5 Minuten pro Tag")}
+                ${textOption("10 Minuten pro Tag")}
+                ${textOption("15 Minuten pro Tag")}
+                ${textOption("20+ Minuten pro Tag")}
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "loading",
+          label: "13 · Vorbereitung",
+          phase: 4,
+          note: "Three monotonic preparation stages contain one commitment each. A testimonial stays visible in the background, supporting progress without becoming the primary interaction.",
+          html: `
+            <section class="screen">
+              <h2>Wir erstellen gerade deinen persönlichen Haarpflegeplan.</h2>
+              <div class="loading-panel">
+                <p class="loading-title">1 · Wir verstehen dein welliges Haar</p>
+                <div class="stage-line"><span class="active"></span><span></span><span></span></div>
+                <div class="background-quote">„Ich hatte schon so viele Tipps ausprobiert. Durch Chaarlie habe ich zum ersten Mal verstanden, was meine Haare wirklich brauchen.“</div>
+              </div>
+              <div class="commitment">
+                <h3>Möchtest du verstehen, warum deine bisherige Pflege nicht zuverlässig funktioniert?</h3>
+                <div class="option-grid">
+                  ${textOption("Ja, das möchte ich verstehen")}
+                  ${textOption("Mir reicht eine klare Empfehlung")}
+                </div>
+              </div>
+            </section>
+          `,
+        },
+        {
+          id: "email",
+          label: "14 · E-Mail",
+          phase: 4,
+          note: "Email is the only required contact field. Provider suggestions reduce typing friction. The non-numeric promise is retained through the final capture.",
+          html: `
+            <section class="screen">
+              <h2>Wohin dürfen wir deine persönliche Auswertung schicken?</h2>
+              <p class="sub">Du kannst sie später wieder öffnen und deinen Haarpflegeplan nach dem Kauf weiter verfeinern.</p>
+              <label class="field-label" for="email">Deine E-Mail-Adresse</label>
+              <input class="email-field suggesting" id="email" type="email" value="nick@g" aria-label="E-Mail-Adresse" autocomplete="off" />
+              <div class="email-suggestions" id="emailSuggestions" aria-label="Vervollständigungsvorschläge"></div>
+              <button class="primary next-screen">Weiter zu meiner Auswertung</button>
+              <p class="lock-note">Deine Angaben werden sicher gespeichert und ausschließlich für deine Auswertung verwendet.</p>
+            </section>
+          `,
+        },
+        {
+          id: "consent",
+          label: "15 · Marketing-Wahl",
+          phase: 4,
+          note: "The existing same-shell consent pattern is preserved. Acceptance and rejection are equally valid save-and-continue paths; there is no checkbox or second rejection screen.",
+          html: `
+            <section class="screen">
+              <h2>Dürfen wir dir Haarpflege-Tipps schicken?</h2>
+              <p class="sub">Erhalte gelegentlich passende Tipps und Neuigkeiten von Chaarlie. Du kannst dich jederzeit wieder abmelden.</p>
+              <div class="soft-card">
+                <strong>Deine persönliche Auswertung erhältst du in jedem Fall.</strong>
+                <p class="sub">Diese Auswahl verändert deinen Haarpflegeplan nicht.</p>
+              </div>
+              <button class="primary">Ja, weiter zu meiner Auswertung</button>
+              <button class="secondary-link">Nein, nur meine Auswertung schicken</button>
+              <p class="lock-note">Beide Optionen speichern deine Analyse und führen zur vorläufigen Angebotsseite.</p>
+            </section>
+          `,
+        },
+      ]
+
+      let current = 0
+
+      function textureOption(id, label, desc) {
+        return `
+          <button class="option single-auto" data-id="${id}">
+            <div class="texture-photo texture-${id} photo" role="img" aria-label="${label}es Haar"></div>
+            <span class="option-copy">
+              <span><span class="option-title">${label}</span><span class="option-desc">${desc}</span></span>
+              <span class="select-ring">✓</span>
+            </span>
+          </button>
+        `
+      }
+
+      function thicknessOption(id, label, desc) {
+        return `
+          <button class="option thickness-option single-auto" data-id="${id}">
+            <div class="thickness-photo thickness-${id} photo" role="img" aria-label="${label}es einzelnes Haar"></div>
+            <span class="option-copy">
+              <span><span class="option-title">${label}</span><span class="option-desc">${desc}</span></span>
+              <span class="select-ring">✓</span>
+            </span>
+          </button>
+        `
+      }
+
+      function textOption(label, desc = "", extra = "") {
+        return `
+          <button class="option text-option ${extra}">
+            <span class="option-copy">
+              <span><span class="option-title">${label}</span>${desc ? `<span class="option-desc">${desc}</span>` : ""}</span>
+              <span class="select-ring">✓</span>
+            </span>
+          </button>
+        `
+      }
+
+      function renderNav() {
+        const nav = document.getElementById("screenNav")
+        nav.innerHTML = screens
+          .map(
+            (screen, index) => `
+              <button data-index="${index}" class="${index === current ? "active" : ""}">
+                <span class="num">${String(index + 1).padStart(2, "0")}</span>
+                <span class="label">${screen.label}</span>
+              </button>
+            `,
+          )
+          .join("")
+        nav.querySelectorAll("button").forEach((button) => {
+          button.addEventListener("click", () => setScreen(Number(button.dataset.index)))
+        })
+        nav.querySelector(".active")?.scrollIntoView({ block: "nearest" })
+      }
+
+      function renderProgress() {
+        const screen = screens[current]
+        const progress = current / (screens.length - 1)
+        document.getElementById("progressValue").style.setProperty("--progress", progress)
+        const checkpoints = document.getElementById("checkpoints")
+        checkpoints.innerHTML = [0, 1, 2, 3, 4]
+          .map((phase) => {
+            const state = phase < screen.phase ? "done" : phase === screen.phase ? "current" : ""
+            return `<span class="${state}"></span>`
+          })
+          .join("")
+      }
+
+      function bindInteractions() {
+        const main = document.getElementById("phoneMain")
+
+        main.querySelectorAll(".option").forEach((option) => {
+          option.addEventListener("click", () => {
+            if (option.closest(".multi-grid")) {
+              option.classList.toggle("selected")
+              return
+            }
+            option.parentElement
+              ?.querySelectorAll(".option")
+              .forEach((sibling) => sibling.classList.remove("selected"))
+            option.classList.add("selected")
+            if (
+              option.classList.contains("single-auto") ||
+              (option.classList.contains("text-option") && !option.closest(".commitment"))
+            ) {
+              window.setTimeout(() => setScreen(Math.min(current + 1, screens.length - 1)), 330)
+            }
+          })
+        })
+
+        main.querySelectorAll(".next-screen").forEach((button) => {
+          button.addEventListener("click", () =>
+            setScreen(Math.min(current + 1, screens.length - 1)),
+          )
+        })
+
+        const emailInput = main.querySelector("#email")
+        const emailSuggestions = main.querySelector("#emailSuggestions")
+        if (emailInput && emailSuggestions) {
+          const domains = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
+          const updateSuggestions = () => {
+            const [localPart = "", typedDomain = ""] = emailInput.value.split("@")
+            const matches = localPart
+              ? domains.filter((domain) => domain.startsWith(typedDomain.toLowerCase())).slice(0, 3)
+              : []
+            emailInput.classList.toggle("suggesting", matches.length > 0)
+            emailSuggestions.innerHTML = matches
+              .map(
+                (domain) => `
+                  <button class="email-suggestion" data-email-suggestion="${localPart}@${domain}">
+                    <span>${localPart}@</span><strong>${domain}</strong>
+                  </button>
+                `,
+              )
+              .join("")
+            emailSuggestions.querySelectorAll("[data-email-suggestion]").forEach((button) => {
+              button.addEventListener("click", () => {
+                emailInput.value = button.dataset.emailSuggestion
+                emailSuggestions.innerHTML = ""
+                emailInput.classList.remove("suggesting")
+                emailInput.focus()
+              })
+            })
+          }
+          emailInput.addEventListener("input", updateSuggestions)
+          updateSuggestions()
+        }
+      }
+
+      function render() {
+        const screen = screens[current]
+        const main = document.getElementById("phoneMain")
+        main.innerHTML = screen.html
+        main.scrollTop = 0
+        document.getElementById("backButton").classList.toggle("hidden", current === 0)
+        document.getElementById("stateTag").textContent = screen.label
+        document.getElementById("noteBody").textContent = screen.note
+        document.getElementById("mobileLabel").textContent = screen.label
+        renderProgress()
+        renderNav()
+        bindInteractions()
+      }
+
+      function setScreen(index) {
+        current = Math.max(0, Math.min(index, screens.length - 1))
+        render()
+      }
+
+      document.getElementById("backButton").addEventListener("click", () => setScreen(current - 1))
+      document.getElementById("mobilePrev").addEventListener("click", () => setScreen(current - 1))
+      document.getElementById("mobileNext").addEventListener("click", () => setScreen(current + 1))
+      render()
+    </script>
+  </body>
+</html>

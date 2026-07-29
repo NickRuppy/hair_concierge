@@ -4,6 +4,10 @@ import type { CustomerIoServerProperties, CustomerIoServerResult } from "./serve
 
 const offerSectionIds = [
   "hero",
+  "personal_plan_diagnosis",
+  "personal_plan_complete_plan",
+  "personal_plan_method",
+  "personal_plan_survey",
   "personalized_analysis",
   "mini_routine",
   "locked_routine",
@@ -21,6 +25,7 @@ const offerSectionIds = [
 
 const optionalShortText = z.string().trim().max(160).nullable().optional()
 const optionalUuid = z.string().uuid().nullable().optional()
+const optionalNeedLane = z.string().trim().min(1).max(80).nullable().optional()
 
 export const customerIoOfferEngagementSchema = z
   .object({
@@ -33,7 +38,7 @@ export const customerIoOfferEngagementSchema = z
     funnelPackageKey: optionalShortText,
     funnelSessionId: optionalUuid,
     leadId: z.string().uuid(),
-    needLane: z.string().trim().min(1).max(80),
+    needLane: optionalNeedLane,
     offerRevision: z.string().trim().min(1).max(80),
     offerVariant: z.string().trim().min(1).max(80),
     offerViewId: z.string().uuid(),

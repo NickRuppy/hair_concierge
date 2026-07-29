@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 
 import {
@@ -92,6 +93,39 @@ test("Customer.io offer engagement rejects missing analytics consent", () => {
       analyticsConsent: false,
     }).success,
     false,
+  )
+})
+
+test("personal-plan offer engagement accepts its section ids without a legacy need lane", async () => {
+  const deliveries: unknown[] = []
+  const dependencies: OfferEngagementRouteDependencies = {
+    checkRateLimit: async () => ({ allowed: true }),
+    deliver: async (input) => {
+      deliveries.push(input)
+      return { ok: true }
+    },
+  }
+  const result = await handleOfferEngagementRequest(
+    new Request("https://chaarlie.de/api/analytics/offer-engaged", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...eventPayload(),
+        analyticsConsent: true,
+        needLane: null,
+        offerVariant: "personal-plan-v1",
+        sourceSection: "personal_plan_complete_plan",
+      }),
+    }),
+    dependencies,
+  )
+
+  assert.deepEqual(result, { body: { ok: true }, status: 202 })
+  assert.equal(deliveries.length, 1)
+  assert.equal((deliveries[0] as { needLane: unknown }).needLane, null)
+  assert.equal(
+    (deliveries[0] as { sourceSection: unknown }).sourceSection,
+    "personal_plan_complete_plan",
   )
 })
 
@@ -322,4 +356,18 @@ test("offer engagement endpoint bounds actual bytes without trusting Content-Len
   assert.deepEqual(missingHeader, { body: { error: "payload_too_large" }, status: 413 })
   assert.deepEqual(forgedHeader, { body: { error: "payload_too_large" }, status: 413 })
   assert.equal(rateLimitChecks, 0)
+})
+
+test("offer engagement lookup accepts legacy and personal-plan leads without reading answers", async () => {
+  const source = await readFile(
+    new URL("../src/app/api/analytics/offer-engaged/route.ts", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /\.eq\("id", leadId\)\s*\.in\("quiz_kind", \["legacy", "personal_plan"\]\)\s*\.maybeSingle\(\)/,
+  )
+  assert.match(source, /\.select\("email"\)/)
+  assert.doesNotMatch(source, /\.select\([^)]*quiz_answers/)
 })

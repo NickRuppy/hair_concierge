@@ -24,6 +24,7 @@ export interface PayPalCheckoutActivationDeps {
   accountEmail?: string | null
   interval?: BillingInterval
   leadId?: string | null
+  checkoutContext?: string | null
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
   profileLinkMode?: "await" | "defer" | "skip"
   defer?: (work: () => void | Promise<void>) => void
@@ -58,6 +59,8 @@ export type PayPalCheckoutAccountResult =
       email: string
       providerSubscriberEmail: string | null
       canSetInitialPassword: boolean
+      leadId?: string | null
+      checkoutContext?: string | null
     }
   | { status: "pending" }
   | { status: "duplicate" }
@@ -115,6 +118,10 @@ export async function ensurePayPalCheckoutAccountForToken(
     accountEmail: intent.email ?? null,
     interval: intent.interval,
     leadId: intent.lead_id,
+    checkoutContext:
+      typeof intent.metadata.checkout_context === "string"
+        ? intent.metadata.checkout_context
+        : null,
   })
   if (result.status === "active") {
     await markPayPalCheckoutIntentActivated(deps.supabase, token)
@@ -180,6 +187,8 @@ export async function ensurePayPalCheckoutAccount(
     email: accountEmail,
     providerSubscriberEmail: billingRow.provider_subscriber_email,
     canSetInitialPassword,
+    leadId: deps.leadId ?? null,
+    checkoutContext: deps.checkoutContext ?? null,
   }
 }
 

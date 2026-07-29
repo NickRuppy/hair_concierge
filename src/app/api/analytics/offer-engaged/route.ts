@@ -134,6 +134,7 @@ export async function POST(request: Request) {
             .from("leads")
             .select("email")
             .eq("id", leadId)
+            .in("quiz_kind", ["legacy", "personal_plan"])
             .maybeSingle()
           if (error) throw error
           return typeof data?.email === "string" ? data.email : null

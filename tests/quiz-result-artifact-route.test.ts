@@ -70,6 +70,7 @@ test("claims, sends, and marks the result artifact email sent", async () => {
   const sends: CustomerIoTransactionalEmailPayload[] = []
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
     quiz_answers: completeAnswers,
@@ -89,6 +90,7 @@ test("does not claim or mutate when Customer.io transactional config is missing"
   let claimCount = 0
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
     quiz_answers: completeAnswers,
@@ -114,11 +116,30 @@ test("does not claim or mutate when Customer.io transactional config is missing"
   assert.deepEqual(store.failures, [])
 })
 
+test("skips personal-plan rows before parsing or sending a legacy result email", async () => {
+  const sends: CustomerIoTransactionalEmailPayload[] = []
+  const store = createStore({
+    id: leadId,
+    quiz_kind: "personal_plan",
+    name: "",
+    email: "plan@example.com",
+    quiz_answers: { kind: "personal_plan", version: 2, answers: {} },
+    artifact_email_status: null,
+  })
+
+  const response = await handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends))
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(response.body, { sent: false, skipped: true })
+  assert.equal(sends.length, 0)
+})
+
 test("skips when the result artifact email was already sent or is sending", async () => {
   for (const status of ["sent", "sending"] as const) {
     const sends: CustomerIoTransactionalEmailPayload[] = []
     const store = createStore({
       id: leadId,
+      quiz_kind: "legacy",
       name: "Lea Beispiel",
       email: "lea@example.com",
       quiz_answers: completeAnswers,
@@ -137,6 +158,7 @@ test("skips a failed result artifact email until manual retry resets it", async 
   const sends: CustomerIoTransactionalEmailPayload[] = []
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
     quiz_answers: completeAnswers,
@@ -155,6 +177,7 @@ test("sends with a blank first name fallback", async () => {
   const sends: CustomerIoTransactionalEmailPayload[] = []
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: null,
     email: "lea@example.com",
     quiz_answers: completeAnswers,
@@ -174,6 +197,7 @@ test("two calls only send once with an atomic store claim", async () => {
   const sends: CustomerIoTransactionalEmailPayload[] = []
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
     quiz_answers: completeAnswers,
@@ -199,6 +223,7 @@ test("two calls only send once with an atomic store claim", async () => {
 test("send failure marks failed and redacts secret-ish tokens", async () => {
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
     quiz_answers: completeAnswers,
@@ -227,6 +252,7 @@ test("incomplete quiz answers fail before sending", async () => {
   const sends: CustomerIoTransactionalEmailPayload[] = []
   const store = createStore({
     id: leadId,
+    quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
     quiz_answers: { structure: "wavy" },

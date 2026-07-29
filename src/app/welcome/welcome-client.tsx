@@ -10,6 +10,7 @@ import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
+import type { CheckoutFirstTimeDestination } from "@/lib/billing/checkout-success-redirect"
 
 interface WelcomeClientProps {
   analyticsId?: string
@@ -20,6 +21,7 @@ interface WelcomeClientProps {
   sessionId?: string
   activationSource: CheckoutActivationSource
   mode?: "activation" | "pending" | "duplicate"
+  activationRedirectTo?: CheckoutFirstTimeDestination
 }
 
 type CheckoutActivationSource =
@@ -46,11 +48,15 @@ export function WelcomeClient({
   sessionId,
   activationSource,
   mode = "activation",
+  activationRedirectTo = "/onboarding",
 }: WelcomeClientProps) {
   const router = useRouter()
   const supabase = createClient()
   const analyticsId = providedAnalyticsId ?? sessionId ?? activationSourceId(activationSource)
-  const requestBody = useMemo(() => activationRequestBody(activationSource), [activationSource])
+  const requestBody = useMemo(
+    () => activationRequestBody(activationSource, activationRedirectTo),
+    [activationRedirectTo, activationSource],
+  )
   const paypalActivationToken =
     activationSource.provider === "paypal" ? activationSource.token : null
   const showProviderSubscriberEmail =
@@ -197,7 +203,11 @@ export function WelcomeClient({
         return
       }
 
-      router.replace("/onboarding")
+      const resolvedNext =
+        body.next === "/plan-bereit" || body.next === "/onboarding"
+          ? body.next
+          : activationRedirectTo
+      router.replace(resolvedNext)
     } catch (err) {
       setMessage(normalizeError(err))
     } finally {
@@ -464,11 +474,14 @@ export function WelcomeClient({
   )
 }
 
-function activationRequestBody(source: CheckoutActivationSource): Record<string, string> {
+function activationRequestBody(
+  source: CheckoutActivationSource,
+  next: CheckoutFirstTimeDestination,
+): Record<string, string> {
   if (source.provider === "paypal") {
-    return { provider: "paypal", token: source.token }
+    return { provider: "paypal", token: source.token, next }
   }
-  return { session_id: source.sessionId }
+  return { session_id: source.sessionId, next }
 }
 
 function activationSourceId(source: CheckoutActivationSource): string {

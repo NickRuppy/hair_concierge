@@ -62,6 +62,7 @@ export async function POST(request: Request) {
     const { data: recentLeads, error: recentLeadsError } = await supabase
       .from("leads")
       .select("id, quiz_answers, marketing_consent, status")
+      .eq("quiz_kind", "legacy")
       .eq("email", email)
       .gte("created_at", recentThreshold)
       .order("created_at", { ascending: false })

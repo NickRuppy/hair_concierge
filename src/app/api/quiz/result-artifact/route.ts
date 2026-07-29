@@ -161,7 +161,8 @@ function createSupabaseResultArtifactStore(supabase: SupabaseClient): ResultArti
         })
         .eq("id", leadId)
         .is("artifact_email_status", null)
-        .select("id, name, email, quiz_answers, artifact_email_status")
+        .eq("quiz_kind", "legacy")
+        .select("id, quiz_kind, name, email, quiz_answers, artifact_email_status")
         .maybeSingle()
 
       if (error) {

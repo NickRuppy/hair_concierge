@@ -139,7 +139,7 @@ const HairLengthMedium = createHairLengthIcon(12.8, "HairLengthMedium")
 const HairLengthLong = createHairLengthIcon(16.2, "HairLengthLong")
 const HairLengthVeryLong = createHairLengthIcon(19.6, "HairLengthVeryLong")
 
-const TreatmentPermedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
+export const TreatmentPermedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
   (
     {
       color = "currentColor",
@@ -186,7 +186,7 @@ const TreatmentPermedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
 )
 TreatmentPermedIcon.displayName = "TreatmentPermedIcon"
 
-const TreatmentStraightenedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
+export const TreatmentStraightenedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
   (
     {
       color = "currentColor",

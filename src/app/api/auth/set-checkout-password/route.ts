@@ -23,6 +23,7 @@ import {
   type PayPalCheckoutAccountResult,
 } from "@/lib/paypal/checkout-activation"
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
+import { resolveCheckoutFirstTimeDestination } from "@/lib/billing/checkout-success-redirect"
 
 export const runtime = "nodejs"
 
@@ -129,6 +130,11 @@ export async function handleSetCheckoutPassword(
 
   try {
     const account = await ensureActiveCheckoutAccount(target, deps)
+    const next = await resolveCheckoutFirstTimeDestination(
+      deps.supabase,
+      account.leadId,
+      account.checkoutContext,
+    )
 
     if (!account.canSetInitialPassword) {
       return { status: 409, body: { error: EXISTING_ACCOUNT_ERROR } }
@@ -175,7 +181,7 @@ export async function handleSetCheckoutPassword(
       return { status: 500, body: { error: SERVER_ERROR } }
     }
 
-    return { status: 200, body: { ok: true, email: account.email } }
+    return { status: 200, body: { ok: true, email: account.email, next } }
   } catch (err) {
     if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
       return {

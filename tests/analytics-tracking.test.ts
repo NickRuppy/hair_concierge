@@ -145,6 +145,50 @@ test("quiz step views stay in PostHog and Customer.io but out of Meta", () => {
   })
 })
 
+test("personal-plan quiz screen views stay PostHog-only and contain only stable identifiers", () => {
+  const payload = {
+    quizVersion: "v2" as const,
+    screenId: "admission_practical_cost",
+    sectionId: "analysis",
+  }
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("personal_plan_quiz_screen_viewed", payload)
+
+    assert.deepEqual(calls, [
+      {
+        destination: "posthog",
+        eventName: "personal_plan_quiz_screen_viewed",
+        payload,
+      },
+    ])
+  })
+
+  const originalCapture = posthog.capture
+  const postHogCalls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    postHogCalls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("personal_plan_quiz_screen_viewed", payload)
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(postHogCalls, [
+    [
+      "personal_plan_quiz_screen_viewed",
+      {
+        quiz_version: "v2",
+        screen_id: "admission_practical_cost",
+        section_id: "analysis",
+      },
+    ],
+  ])
+})
+
 test("offer engagement routes to PostHog but not browser Customer.io or Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("offer_engaged", {

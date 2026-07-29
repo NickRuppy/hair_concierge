@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Persönlicher Haarplan · Offer-Mockup</title>
+    <style>
+      :root {
+        --paper: #fcfaf7;
+        --card: #ffffff;
+        --ink: #2a1845;
+        --muted: #786d78;
+        --plum: #865174;
+        --plum-soft: #f3eaf0;
+        --plum-line: #dfced9;
+        --coral: #d96869;
+        --green: #2d8f5b;
+        --green-soft: #e9f5ed;
+        --rose-soft: #fbebeb;
+        --line: #e9e0e4;
+        --shadow: 0 22px 54px -40px rgba(42, 24, 69, 0.55);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 80% 0%, rgba(134, 81, 116, 0.08), transparent 30rem),
+          var(--paper);
+        color: var(--ink);
+        font-family:
+          "Plus Jakarta Sans",
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      h1,
+      h2,
+      h3,
+      .wordmark {
+        font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+        font-weight: 500;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(100%, 560px);
+        margin: 0 auto;
+        border-inline: 1px solid rgba(42, 24, 69, 0.05);
+        background: rgba(252, 250, 247, 0.93);
+        min-height: 100vh;
+      }
+
+      .sticky {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 64px;
+        padding: 10px 18px;
+        border-bottom: 1px solid rgba(42, 24, 69, 0.08);
+        background: rgba(252, 250, 247, 0.93);
+        backdrop-filter: blur(14px);
+      }
+
+      .wordmark {
+        font-size: 22px;
+        letter-spacing: -0.03em;
+      }
+
+      .sticky-cta,
+      .cta {
+        border: 0;
+        border-radius: 999px;
+        background: var(--plum);
+        color: #fff;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .sticky-cta {
+        padding: 11px 17px;
+        font-size: 13px;
+      }
+
+      .section {
+        padding: 34px 20px;
+      }
+
+      .section + .section {
+        border-top: 1px solid rgba(42, 24, 69, 0.06);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--plum);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        font-weight: 750;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(38px, 10vw, 50px);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 33px;
+        line-height: 1.08;
+        letter-spacing: -0.035em;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.15;
+      }
+
+      p {
+        line-height: 1.62;
+      }
+
+      .sub {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .accent {
+        color: var(--coral);
+      }
+
+      .plan-chip {
+        display: inline-flex;
+        margin-top: 18px;
+        padding: 8px 12px;
+        border: 1px solid var(--plum-line);
+        border-radius: 999px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .phone-preview {
+        position: relative;
+        width: min(88%, 330px);
+        margin: 26px auto 0;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: #fbfaf8;
+        box-shadow: var(--shadow);
+      }
+
+      .phone-notch {
+        width: 90px;
+        height: 18px;
+        margin: -7px auto 12px;
+        border-radius: 0 0 12px 12px;
+        background: #2d2430;
+      }
+
+      .mini-kicker {
+        color: var(--plum);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .mini-title {
+        margin: 5px 0 12px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 19px;
+        line-height: 1.08;
+      }
+
+      .locked-row {
+        display: grid;
+        grid-template-columns: 62px 1fr 16px;
+        align-items: center;
+        gap: 9px;
+        margin-top: 8px;
+        padding: 10px;
+        border: 1px solid rgba(110, 170, 110, 0.22);
+        border-radius: 14px;
+        background: rgba(110, 170, 110, 0.1);
+      }
+
+      .locked-icon {
+        width: 62px;
+        height: 68px;
+        object-fit: contain;
+        border-radius: 11px;
+        background: #f3efe8;
+      }
+
+      .locked-copy strong {
+        display: block;
+        font-size: 10px;
+      }
+
+      .locked-copy small {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 8px;
+      }
+
+      .routine-order {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid var(--plum-line);
+        border-radius: 13px;
+        background: var(--plum-soft);
+        color: var(--muted);
+        font-size: 8px;
+      }
+
+      .blur-line {
+        height: 6px;
+        margin-top: 5px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #cfc5cd 0 70%, #ede7eb 70%);
+        filter: blur(1.8px);
+      }
+
+      .lock {
+        color: var(--plum);
+        font-size: 9px;
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .unlock-copy {
+        margin: 16px auto 0;
+        max-width: 34ch;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .unlock-copy strong {
+        color: var(--plum);
+      }
+
+      .comparison {
+        margin-top: 22px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+      }
+
+      .photos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+        background: var(--line);
+      }
+
+      .photo {
+        position: relative;
+        aspect-ratio: 1 / 0.86;
+        overflow: hidden;
+        background: #e8dde1;
+      }
+
+      .photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-label {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.88);
+        color: var(--ink);
+        font-size: 10px;
+        font-weight: 800;
+        backdrop-filter: blur(8px);
+      }
+
+      .photo.goal .photo-label {
+        background: rgba(233, 245, 237, 0.93);
+        color: #226b45;
+      }
+
+      .symbolic {
+        margin: 8px 12px 0;
+        color: #928690;
+        font-size: 10px;
+        text-align: right;
+      }
+
+      .dimensions {
+        padding: 4px 14px 16px;
+      }
+
+      .dimension {
+        padding: 18px 2px;
+        border-top: 1px solid var(--line);
+      }
+
+      .dimension:first-child {
+        border-top: 0;
+      }
+
+      .dimension-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 11px;
+      }
+
+      .dimension-title strong {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 21px;
+        font-weight: 500;
+      }
+
+      .dimension-title span {
+        color: var(--plum);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .before-after {
+        display: grid;
+        grid-template-columns: 1fr 24px 1fr;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .state {
+        min-width: 0;
+      }
+
+      .state-label {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .state.goal .state-label {
+        color: var(--green);
+      }
+
+      .segments {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        margin: 7px 0;
+      }
+
+      .segment {
+        height: 7px;
+        border-radius: 999px;
+        background: #e9e2e6;
+      }
+
+      .state.today .segment.filled {
+        background: var(--coral);
+      }
+
+      .state.goal .segment.filled {
+        background: var(--green);
+      }
+
+      .state p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .state.goal p {
+        color: #35684c;
+      }
+
+      .arrow {
+        color: var(--plum);
+        font-size: 19px;
+        text-align: center;
+      }
+
+      .fit-card {
+        margin-top: 16px;
+        padding: 18px;
+        border-radius: 20px;
+        background: var(--plum-soft);
+      }
+
+      .fit-card strong {
+        display: block;
+        margin-bottom: 5px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 20px;
+      }
+
+      .fit-card p {
+        margin: 0;
+        color: #675363;
+        font-size: 13px;
+      }
+
+      .feature-list {
+        display: grid;
+        gap: 11px;
+        margin: 22px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .feature {
+        display: grid;
+        grid-template-columns: 27px 1fr;
+        gap: 10px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--card);
+      }
+
+      .check {
+        display: grid;
+        place-items: center;
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .feature p {
+        margin: 0;
+        font-size: 13px;
+      }
+
+      .method {
+        padding: 22px;
+        border-radius: 22px;
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .method h2 {
+        font-size: 28px;
+      }
+
+      .method-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .method-item {
+        padding: 13px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .method-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+      }
+
+      .method-item span {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 10px;
+        line-height: 1.35;
+      }
+
+      .pricing-intro {
+        text-align: center;
+      }
+
+      .pricing-intro .sub {
+        max-width: 36ch;
+        margin-inline: auto;
+      }
+
+      .plan-option {
+        position: relative;
+        display: grid;
+        grid-template-columns: 24px 1fr auto;
+        gap: 11px;
+        align-items: center;
+        margin-top: 12px;
+        padding: 17px 15px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: #fff;
+      }
+
+      .plan-option.selected {
+        margin-top: 26px;
+        border: 2px solid var(--plum);
+        background: var(--plum-soft);
+      }
+
+      .popular {
+        position: absolute;
+        right: 13px;
+        top: 0;
+        transform: translateY(-50%);
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: var(--plum);
+        color: #fff;
+        font-size: 8px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .radio {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #c5b8c2;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .selected .radio {
+        border: 6px solid var(--plum);
+      }
+
+      .plan-name strong,
+      .plan-price strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .plan-name span,
+      .plan-price span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .plan-price {
+        text-align: right;
+      }
+
+      .addons {
+        margin-top: 15px;
+        padding: 13px 15px;
+        border-radius: 15px;
+        background: #f2f0ed;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      .addons strong {
+        color: var(--ink);
+      }
+
+      .legal {
+        color: var(--muted);
+        font-size: 10px;
+        text-align: center;
+      }
+
+      .cta {
+        display: block;
+        width: 100%;
+        margin-top: 18px;
+        padding: 15px 18px;
+        font-size: 15px;
+      }
+
+      .trust-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 13px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 9px;
+        margin-top: 20px;
+      }
+
+      .stat {
+        padding: 15px 8px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: #fff;
+        text-align: center;
+      }
+
+      .stat strong {
+        display: block;
+        color: var(--plum);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 25px;
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 9px;
+        line-height: 1.35;
+      }
+
+      .source {
+        margin: 11px 0 0;
+        color: #948894;
+        font-size: 9px;
+        text-align: center;
+      }
+
+      .guarantee {
+        padding: 22px;
+        border: 1px solid #cce8d6;
+        border-radius: 22px;
+        background: var(--green-soft);
+      }
+
+      .guarantee p {
+        margin: 9px 0 0;
+        color: #35684c;
+        font-size: 12px;
+      }
+
+      .reviews {
+        display: grid;
+        gap: 11px;
+        margin-top: 20px;
+      }
+
+      .review {
+        padding: 17px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+      }
+
+      .stars {
+        color: #d6a62e;
+        letter-spacing: 0.08em;
+      }
+
+      .review strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+
+      .review blockquote {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 14px;
+        font-style: italic;
+        line-height: 1.5;
+      }
+
+      details {
+        border-bottom: 1px solid var(--line);
+      }
+
+      summary {
+        padding: 17px 0;
+        font-size: 13px;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      details p {
+        margin: -5px 0 17px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .final {
+        padding-bottom: 54px;
+        text-align: center;
+      }
+
+      .footer {
+        padding: 18px;
+        border-top: 1px solid var(--line);
+        color: #948894;
+        font-size: 9px;
+        text-align: center;
+      }
+
+      .decision-note {
+        margin: 16px 20px 30px;
+        padding: 14px 16px;
+        border: 1px dashed var(--plum-line);
+        border-radius: 14px;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.5;
+      }
+
+      @media (min-width: 760px) {
+        body {
+          padding: 28px 0;
+        }
+
+        .shell {
+          overflow: hidden;
+          border: 1px solid rgba(42, 24, 69, 0.08);
+          border-radius: 30px;
+          box-shadow: 0 30px 90px -60px rgba(42, 24, 69, 0.7);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="sticky">
+        <div class="wordmark">chaarlie</div>
+        <a class="sticky-cta" href="#pricing">Plan sichern</a>
+      </header>
+
+      <section class="section">
+        <h1>Dein <span class="accent">Haarplan</span> ist bereit.</h1>
+        <p class="sub">
+          Basierend auf deiner Analyse für welliges, mittelstarkes Haar. Mit klaren Schritten für
+          Reinigung, Pflege, Styling und passende Produkte.
+        </p>
+
+        <div class="phone-preview" aria-label="Beispielansicht eines generischen Haarplans">
+          <div class="mini-kicker">Beispielansicht · Routine</div>
+          <div class="mini-title">Deine Haarpflege</div>
+          <div class="locked-row">
+            <img
+              class="locked-icon"
+              src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/ead1333b-6839-464d-b272-673d39bb95a4/02-ead1333b-6839-464d-b272-673d39bb95a4-balea-balea-aqua-hyaluron-f41a5b48efe1.webp"
+              alt=""
+            />
+            <div class="locked-copy">
+              <strong>Dein passendes Shampoo</strong><small>Shampoo · 2×/Woche</small>
+            </div>
+            <span>›</span>
+          </div>
+          <div class="locked-row">
+            <img
+              class="locked-icon"
+              src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/2a159694-6799-4be7-a0aa-572757c94801/31-2a159694-6799-4be7-a0aa-572757c94801-langhaarmadchen-langhaarmadchen-lovely-long-d30fd7fd3ec3.webp"
+              alt=""
+            />
+            <div class="locked-copy">
+              <strong>Dein passender Conditioner</strong><small>Conditioner · 2×/Woche</small>
+            </div>
+            <span>›</span>
+          </div>
+          <div class="locked-row">
+            <img
+              class="locked-icon"
+              src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/0b21f996-bb42-4b10-89bd-4881c4346d53/22-0b21f996-bb42-4b10-89bd-4881c4346d53-isana-isana-feuchtigkeits-leave-in-hyaluron-ba1624f6c1eb.webp"
+              alt=""
+            />
+            <div class="locked-copy">
+              <strong>Dein passendes Leave-in</strong><small>Leave-in · 1×/Woche</small>
+            </div>
+            <span>›</span>
+          </div>
+          <div class="routine-order">
+            <strong>Deine Reihenfolge</strong><br />
+            1. Shampoo · 2. Conditioner · 3. Leave-in
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Heute und dein Potenzial</p>
+        <h2>Diese drei Bereiche machen bei dir den Unterschied.</h2>
+        <p class="sub">
+          Die Reihenfolge und Ausgangslage werden aus deinen Quiz-Antworten berechnet.
+        </p>
+
+        <div class="comparison">
+          <div class="photos">
+            <div class="photo">
+              <img
+                src="https://raw.githubusercontent.com/jonaseidenschink/hair_concierge/funnel/minimal-offer-pages/docs/funnel-briefs/minimal-offer/ba-heute.jpg"
+                alt="Symbolische heutige Haarsituation"
+              />
+              <span class="photo-label">Heute</span>
+            </div>
+            <div class="photo goal">
+              <img
+                src="https://raw.githubusercontent.com/jonaseidenschink/hair_concierge/funnel/minimal-offer-pages/docs/funnel-briefs/minimal-offer/ba-ziel.jpg"
+                alt="Symbolisches Haarziel"
+              />
+              <span class="photo-label">Dein Ziel</span>
+            </div>
+          </div>
+          <p class="symbolic">Symbolbild · Ergebnisse sind individuell</p>
+
+          <div class="dimensions">
+            <article class="dimension">
+              <div class="dimension-title">
+                <strong>Oberfläche</strong>
+                <span>Priorität 1</span>
+              </div>
+              <div class="before-after">
+                <div class="state today">
+                  <div class="segments">
+                    <span class="segment filled"></span><span class="segment"></span
+                    ><span class="segment"></span>
+                  </div>
+                  <p>Viel Potenzial</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="state goal">
+                  <div class="segments">
+                    <span class="segment filled"></span><span class="segment filled"></span
+                    ><span class="segment filled"></span>
+                  </div>
+                  <p>Optimal</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="dimension">
+              <div class="dimension-title">
+                <strong>Feuchtigkeit</strong>
+                <span>Priorität 2</span>
+              </div>
+              <div class="before-after">
+                <div class="state today">
+                  <div class="segments">
+                    <span class="segment filled"></span><span class="segment"></span
+                    ><span class="segment"></span>
+                  </div>
+                  <p>Viel Potenzial</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="state goal">
+                  <div class="segments">
+                    <span class="segment filled"></span><span class="segment filled"></span
+                    ><span class="segment filled"></span>
+                  </div>
+                  <p>Optimal</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="dimension">
+              <div class="dimension-title">
+                <strong>Kopfhaut</strong>
+                <span>Bereits optimal</span>
+              </div>
+              <div class="before-after">
+                <div class="state today">
+                  <div class="segments">
+                    <span class="segment filled"></span><span class="segment filled"></span
+                    ><span class="segment filled"></span>
+                  </div>
+                  <p>Optimal</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="state goal">
+                  <div class="segments">
+                    <span class="segment filled"></span><span class="segment filled"></span
+                    ><span class="segment filled"></span>
+                  </div>
+                  <p>Optimal</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="fit-card">
+          <strong>Dein Plan bringt Klarheit in deine Pflege.</strong>
+          <p>
+            Statt weiter zwischen Tipps und Produkten zu wechseln, bekommst du eine klare
+            Reihenfolge, die zu deinem Haar und deinem Alltag passt.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Dein vollständiger Plan</p>
+        <h2>Alles, was du für deine nächsten 30 Tage brauchst.</h2>
+        <ul class="feature-list">
+          <li class="feature">
+            <span class="check">✓</span>
+            <p>
+              <strong>Eine vollständige Routine:</strong> wenige klare Schritte in der richtigen
+              Reihenfolge.
+            </p>
+          </li>
+          <li class="feature">
+            <span class="check">✓</span>
+            <p>
+              <strong>Passende Produkte:</strong> Shampoo, Conditioner und gezielte Ergänzungen mit
+              Begründung.
+            </p>
+          </li>
+          <li class="feature">
+            <span class="check">✓</span>
+            <p>
+              <strong>Tools &amp; Styling:</strong> abgestimmt auf deine Haarstruktur und deine
+              Ziele.
+            </p>
+          </li>
+          <li class="feature">
+            <span class="check">✓</span>
+            <p>
+              <strong>Anwendung und Häufigkeit:</strong> damit du nicht nur weißt, was, sondern auch
+              wie.
+            </p>
+          </li>
+          <li class="feature">
+            <span class="check">✓</span>
+            <p><strong>Weniger Produktchaos:</strong> verstehen, was dein Haar wirklich braucht.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <div class="method">
+          <p class="eyebrow" style="color: #dcb9cc">So entsteht dein Plan</p>
+          <h2>Vier Signale. Eine klare Empfehlung.</h2>
+          <p>Wir verbinden, was dein Haar zeigt, mit der Pflege, die im Alltag funktioniert.</p>
+          <div class="method-grid">
+            <div class="method-item">
+              <strong>Zugtest</strong><span>Struktur &amp; Elastizität</span>
+            </div>
+            <div class="method-item">
+              <strong>Oberflächentest</strong><span>Haaroberfläche &amp; Glanz</span>
+            </div>
+            <div class="method-item">
+              <strong>Kopfhaut-Check</strong><span>Typ &amp; Zustand</span>
+            </div>
+            <div class="method-item">
+              <strong>Produktabgleich</strong><span>Passende Pflege aus unserer Datenbank</span>
+            </div>
+          </div>
+          <p><strong>Daraus entstehen deine Produktauswahl, Reihenfolge und Anwendung.</strong></p>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="pricing-intro">
+          <p class="eyebrow">Dein Plan ist bereit</p>
+          <h2>Schalte deinen <span class="accent">30-Tage-Haarplan</span> frei.</h2>
+          <p class="sub">Dein Plan zu schöneren Haaren in 30 Tagen.</p>
+        </div>
+
+        <div class="plan-option">
+          <span class="radio"></span>
+          <div class="plan-name">
+            <strong>Monatlich</strong><span>Jederzeit zum Laufzeitende kündbar</span>
+          </div>
+          <div class="plan-price"><strong>14,99 €</strong><span>pro Monat</span></div>
+        </div>
+        <div class="plan-option selected">
+          <span class="popular">Beliebteste Wahl</span>
+          <span class="radio"></span>
+          <div class="plan-name"><strong>Quartal</strong><span>Alle drei Monate</span></div>
+          <div class="plan-price"><strong>34,99 €</strong><span>ca. 11,66 €/Monat</span></div>
+        </div>
+        <div class="plan-option">
+          <span class="radio"></span>
+          <div class="plan-name"><strong>Jährlich</strong><span>Einmal pro Jahr</span></div>
+          <div class="plan-price"><strong>99,99 €</strong><span>ca. 8,33 €/Monat</span></div>
+        </div>
+
+        <div class="addons">
+          <strong>Zusätzlich enthalten:</strong> Chaarlie-Chat und Haartagebuch als Unterstützung zu
+          deinem Plan.
+        </div>
+        <p class="legal">
+          Automatische Verlängerung in der gewählten Laufzeit. Kündbar zum Laufzeitende. Details in
+          den AGB.
+        </p>
+        <button class="cta">Meinen Plan sichern</button>
+        <div class="trust-row">
+          <span>🔒 Sicher bezahlen</span><span>↻ 14 Tage Geld zurück</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Was Frauen wirklich beschäftigt</p>
+        <h2>Über 4.000 Frauen haben uns geantwortet.</h2>
+        <div class="stats">
+          <div class="stat">
+            <strong>82%</strong><span>wollen verstehen, was ihr Haar wirklich braucht</span>
+          </div>
+          <div class="stat">
+            <strong>73%</strong><span>wünschen sich eine klare Routine ohne Produktchaos</span>
+          </div>
+          <div class="stat">
+            <strong>63%</strong><span>wissen nicht, welche Produkte wirklich passen</span>
+          </div>
+        </div>
+        <p class="source">Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich</p>
+      </section>
+
+      <section class="section">
+        <div class="guarantee">
+          <h3>14-Tage-Geld-zurück-Garantie</h3>
+          <p>
+            Jede Haarsituation ist individuell. Wenn dir Chaarlie in den ersten 14 Tagen nicht
+            weiterhilft, schreib uns und du bekommst dein Geld zurück.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Stimmen aus der Beta</p>
+        <h2>Kundinnen lieben ihren Plan.</h2>
+        <div class="reviews">
+          <article class="review">
+            <span class="stars">★★★★★</span><strong>Kim · Endlich verstehe ich meine Haare</strong>
+            <blockquote>
+              „Der Fragebogen ist echt gut und leicht verständlich. Auch die Produktempfehlung fand
+              ich gut.“
+            </blockquote>
+          </article>
+          <article class="review">
+            <span class="stars">★★★★★</span><strong>Kerstin · Echte Antworten bekommen</strong>
+            <blockquote>
+              „Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die
+              benötigten Antworten zu bekommen.“
+            </blockquote>
+          </article>
+          <article class="review">
+            <span class="stars">★★★★★</span><strong>Sarah · Nie wieder googeln vorm Regal</strong>
+            <blockquote>
+              „Bei den Produkten stehen Preis, Anwendung und der Grund dabei, warum sie empfohlen
+              werden.“
+            </blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Häufige Fragen</p>
+        <h2>Das möchtest du vielleicht noch wissen.</h2>
+        <details>
+          <summary>Warum reicht nicht einfach ein neues Shampoo?</summary>
+          <p>
+            Ein einzelnes Produkt kann nur einen Teil beeinflussen. Dein Plan verbindet Reinigung,
+            Pflege, Styling und Anwendung, damit die Schritte zu deinem Haar und zueinander passen.
+          </p>
+        </details>
+        <details>
+          <summary>Ist der Plan wirklich auf mein Haar abgestimmt?</summary>
+          <p>
+            Deine Haarstruktur, Dicke, Dichte, Länge, Oberfläche, Elastizität, Kopfhaut und Ziele
+            bestimmen, wie dein Plan aufgebaut wird.
+          </p>
+        </details>
+        <details>
+          <summary>Was bekomme ich genau?</summary>
+          <p>
+            Deine vollständige Haarroutine, passende Produktempfehlungen, Tools und Styling sowie
+            genaue Anwendung und Häufigkeit. Chat und Haartagebuch sind zusätzlich enthalten.
+          </p>
+        </details>
+        <details>
+          <summary>Kann ich meine bisherigen Produkte weiterverwenden?</summary>
+          <p>
+            Ja. Im anschließenden Onboarding gibst du an, was du bereits nutzt. Passende Produkte
+            können in deinen Plan übernommen werden.
+          </p>
+        </details>
+        <details>
+          <summary>Was passiert direkt nach dem Kauf?</summary>
+          <p>
+            Du ergänzt noch deine vorhandenen Produkte und Gewohnheiten. Danach wird dein
+            vollständiger Plan im Routinebereich geöffnet.
+          </p>
+        </details>
+      </section>
+
+      <section class="section final">
+        <h2>Deine Routine und deine passenden Produkte sind bereit.</h2>
+        <p class="sub">Dein Plan zu schöneren Haaren in 30 Tagen.</p>
+        <button class="cta">Jetzt starten</button>
+      </section>
+
+      <div class="decision-note">
+        Planungs-Mockup: Der obere CTA öffnet in der Umsetzung direkt den Zahlungsdialog mit dem
+        Quartalsplan. Produkte und Routine bleiben bis zur Zahlung serverseitig gesperrt. Die hier
+        gezeigten Diagnosedimensionen sind ein Beispielprofil; im Produkt werden sie aus dem Quiz
+        priorisiert und auf Drittel skaliert.
+      </div>
+
+      <footer class="footer">Chaarlie · Impressum · Datenschutz · AGB</footer>
+    </main>
+  </body>
+</html>

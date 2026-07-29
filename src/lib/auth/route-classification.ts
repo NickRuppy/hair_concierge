@@ -49,6 +49,7 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/admin",
   "/chat",
   "/onboarding",
+  "/plan-bereit",
   "/profile",
   "/reactivate",
   "/routine",

@@ -56,14 +56,30 @@ const GUIDED_STORY_FOUNDER_LETTER_SECTION_ORDER = [
   "product_story_chat_answer",
 ] as const satisfies readonly OfferSectionId[]
 
+const PERSONAL_PLAN_SECTION_ORDER = [
+  "hero",
+  "personal_plan_diagnosis",
+  "personal_plan_complete_plan",
+  "personal_plan_method",
+  "pricing",
+  "personal_plan_survey",
+  "testimonials",
+  "guarantee",
+  "faq",
+  "final_cta",
+] as const satisfies readonly OfferSectionId[]
+
 export function resolveOfferSectionIndex(offerVariant: string, sectionId: OfferSectionId): number {
-  const order: readonly OfferSectionId[] = isGuidedStoryFamilyVariant(offerVariant)
-    ? offerVariant === "guided-story-founder-letter"
-      ? GUIDED_STORY_FOUNDER_LETTER_SECTION_ORDER
-      : GUIDED_STORY_SECTION_ORDER
-    : offerVariant === "app-value-stack"
-      ? APP_VALUE_STACK_SECTION_ORDER
-      : DEFAULT_SECTION_ORDER
+  const order: readonly OfferSectionId[] =
+    offerVariant === "personal-plan-v1"
+      ? PERSONAL_PLAN_SECTION_ORDER
+      : isGuidedStoryFamilyVariant(offerVariant)
+        ? offerVariant === "guided-story-founder-letter"
+          ? GUIDED_STORY_FOUNDER_LETTER_SECTION_ORDER
+          : GUIDED_STORY_SECTION_ORDER
+        : offerVariant === "app-value-stack"
+          ? APP_VALUE_STACK_SECTION_ORDER
+          : DEFAULT_SECTION_ORDER
   const index = order.indexOf(sectionId)
   return index >= 0 ? index : order.length
 }

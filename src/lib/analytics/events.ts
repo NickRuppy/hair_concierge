@@ -23,7 +23,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   entryContext: OfferEntryContext
   focusRoutine: boolean
   leadId?: string | null
-  needLane: string
+  needLane?: string | null
   offerRevision: string
   offerVariant: string
   offerViewId: string
@@ -34,6 +34,10 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
 export type OfferSectionId =
   | "hero"
   | "personalized_analysis"
+  | "personal_plan_diagnosis"
+  | "personal_plan_complete_plan"
+  | "personal_plan_method"
+  | "personal_plan_survey"
   | "founder_letter"
   | "mini_routine"
   | "locked_routine"
@@ -194,6 +198,11 @@ export type AppEventMap = {
     planId: string
     paymentMethodType?: string
     value: number
+  }
+  personal_plan_quiz_screen_viewed: {
+    quizVersion: "v2"
+    screenId: string
+    sectionId: string
   }
   quiz_completed: FunnelAnalyticsEnvelope & {
     hairLength?: string

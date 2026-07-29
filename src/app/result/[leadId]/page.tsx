@@ -4,6 +4,8 @@ import { notFound } from "next/navigation"
 import { createServerClient } from "@supabase/ssr"
 
 import { ResultPageClient } from "./result-client"
+import { parsePersonalPlanOfferModel } from "@/components/personal-plan-offer/model"
+import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import {
@@ -44,6 +46,7 @@ interface Props {
 interface LeadResultRow {
   id: string
   name: string
+  quiz_kind: "legacy" | "personal_plan"
   quiz_answers: unknown
 }
 
@@ -51,7 +54,7 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   const supabase = createAdminClient()
   const { data, error } = await supabase
     .from("leads")
-    .select("id, name, quiz_answers")
+    .select("id, name, quiz_kind, quiz_answers")
     .eq("id", leadId)
     .maybeSingle()
 
@@ -61,6 +64,27 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   }
 
   return data as LeadResultRow | null
+}
+
+async function getPersonalPlanPublicOfferModel(
+  leadId: string,
+): Promise<PersonalPlanOfferModel | null> {
+  const supabase = createAdminClient()
+  const { data, error } = await supabase
+    .from("personal_plan_prepared_artifacts")
+    .select("public_offer_model")
+    .eq("lead_id", leadId)
+    .eq("status", "attached")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) {
+    console.warn("[result-page] failed to load personal plan artifact", error)
+    return null
+  }
+
+  return parsePersonalPlanOfferModel(data?.public_offer_model ?? null)
 }
 
 async function recordLeadOfferView(leadId: string, context: FunnelCookieContext | null) {
@@ -129,33 +153,40 @@ export default async function ResultPage({ params, searchParams }: Props) {
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
-  const quizAnswers = lead ? parseQuizAnswers(lead.quiz_answers) : null
+  const quizAnswers = lead?.quiz_kind === "legacy" ? parseQuizAnswers(lead.quiz_answers) : null
+  const personalPlanOffer =
+    lead?.quiz_kind === "personal_plan" ? await getPersonalPlanPublicOfferModel(lead.id) : null
 
-  if (!lead || !quizAnswers) {
+  if (!lead || (lead.quiz_kind === "legacy" && !quizAnswers)) {
     notFound()
   }
 
   const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
-  const offerVariant = hasAccess
-    ? "default"
-    : await resolveGuidedStoryOfferExperiment({
-        leadId,
-        session: funnelContext
-          ? {
-              sessionId: funnelContext.sessionId,
-              packageKey: funnelContext.packageKey,
-              offerVariant: funnelContext.offerVariant ?? null,
-              offerViewedAt: funnelContext.offerViewedAt ?? null,
-            }
-          : null,
-      })
+  const offerVariant =
+    lead.quiz_kind === "personal_plan"
+      ? "personal-plan-v1"
+      : hasAccess
+        ? "default"
+        : await resolveGuidedStoryOfferExperiment({
+            leadId,
+            session: funnelContext
+              ? {
+                  sessionId: funnelContext.sessionId,
+                  packageKey: funnelContext.packageKey,
+                  offerVariant: funnelContext.offerVariant ?? null,
+                  offerViewedAt: funnelContext.offerViewedAt ?? null,
+                }
+              : null,
+          })
   const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
 
   return (
     <ResultPageClient
       leadId={lead.id}
       name={lead.name}
+      personalPlanOffer={personalPlanOffer as PersonalPlanOfferModel | null}
       quizAnswers={quizAnswers}
+      quizKind={lead.quiz_kind}
       entryContext={entryContext}
       focusRoutine={focusRoutine}
       focusTarget={focusTarget}

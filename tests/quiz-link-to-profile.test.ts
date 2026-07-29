@@ -55,3 +55,46 @@ test("profile update data maps expanded quiz treatment values to canonical profi
     ["permed", "chemically_straightened"],
   )
 })
+
+test("personal-plan canonical diagnostics project every required onboarding field", () => {
+  assert.deepEqual(
+    linkToProfile.buildProfileDataFromPersonalPlanCanonicalProfile({
+      structure: "curly",
+      thickness: "fine",
+      density: "high",
+      hair_length: "long",
+      fingertest: "leicht_uneben",
+      pulltest: "stretches_stays",
+      scalp_type: "trocken",
+      has_scalp_issue: true,
+      scalp_condition: "gereizt",
+      concerns: ["dryness", "frizz"],
+      treatment: ["gefaerbt"],
+      goals: ["less_frizz", "moisture"],
+    }),
+    {
+      hair_texture: "curly",
+      thickness: "fine",
+      density: "high",
+      hair_length: "long",
+      cuticle_condition: "slightly_rough",
+      protein_moisture_balance: "stretches_stays",
+      scalp_type: "dry",
+      scalp_condition: "irritated",
+      concerns: ["dryness", "frizz"],
+      chemical_treatment: ["colored"],
+      goals: ["less_frizz", "moisture"],
+    },
+  )
+})
+
+test("personal-plan projection rejects incomplete canonical diagnostics", () => {
+  assert.throws(
+    () =>
+      linkToProfile.buildProfileDataFromPersonalPlanCanonicalProfile({
+        structure: "straight",
+        thickness: "normal",
+      }),
+    /incomplete canonical diagnostics/,
+  )
+})

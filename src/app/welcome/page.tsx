@@ -9,7 +9,11 @@ import {
   PayPalCheckoutActivationError,
 } from "@/lib/paypal/checkout-activation"
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
-import { getAuthenticatedCheckoutSuccessRedirect } from "@/lib/billing/checkout-success-redirect"
+import {
+  getAuthenticatedCheckoutSuccessRedirect,
+  resolveCheckoutFirstTimeDestination,
+  type CheckoutFirstTimeDestination,
+} from "@/lib/billing/checkout-success-redirect"
 import { findPayPalCheckoutIntentByToken } from "@/lib/paypal/checkout-intents"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/checkout-reservations"
@@ -59,6 +63,12 @@ async function renderStripeWelcome(session_id: string) {
 
   const email = session.customer_details?.email
   if (!email) redirect("/")
+  const admin = createAdminClient()
+  const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
+    admin,
+    session.metadata?.lead_id,
+    session.metadata?.checkout_context,
+  )
   const purchaseAnalytics = await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
     console.error("[welcome] purchase analytics unavailable:", err)
     captureCheckoutException(err, {
@@ -76,7 +86,6 @@ async function renderStripeWelcome(session_id: string) {
     data: { user },
   } = await supabase.auth.getUser()
   if (user?.email?.toLowerCase() === email.toLowerCase()) {
-    const admin = createAdminClient()
     await ensureCheckoutAccount(session, {
       supabase: admin,
       stripe,
@@ -103,6 +112,7 @@ async function renderStripeWelcome(session_id: string) {
       supabase,
       user.id,
       returnDestination,
+      firstTimeDestination,
     )
     return (
       <WelcomeClient
@@ -110,6 +120,7 @@ async function renderStripeWelcome(session_id: string) {
         email={email}
         purchase={purchaseAnalytics}
         redirectTo={redirectTo}
+        activationRedirectTo={firstTimeDestination}
         sessionId={session_id}
       />
     )
@@ -120,6 +131,7 @@ async function renderStripeWelcome(session_id: string) {
       activationSource={{ provider: "stripe", sessionId: session_id }}
       email={email}
       purchase={purchaseAnalytics}
+      activationRedirectTo={firstTimeDestination}
       sessionId={session_id}
     />
   )
@@ -169,13 +181,21 @@ async function renderPayPalWelcome(token: string | undefined) {
     )
   }
 
+  const intent = await findPayPalCheckoutIntentByToken(admin, token)
+  const checkoutContext =
+    typeof intent?.metadata?.checkout_context === "string" ? intent.metadata.checkout_context : null
+  const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
+    admin,
+    intent?.lead_id,
+    checkoutContext,
+  )
+
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   if (user?.email?.toLowerCase() === activation.email.toLowerCase()) {
-    const intent = await findPayPalCheckoutIntentByToken(admin, token)
     const returnDestination =
       intent?.metadata?.checkout_context === "membership_reactivation"
         ? sanitizeReactivationReturnDestination(
@@ -200,6 +220,7 @@ async function renderPayPalWelcome(token: string | undefined) {
       supabase,
       user.id,
       returnDestination,
+      firstTimeDestination,
     )
     return (
       <WelcomeClient
@@ -209,6 +230,7 @@ async function renderPayPalWelcome(token: string | undefined) {
         providerSubscriberEmail={activation.providerSubscriberEmail}
         purchase={null}
         redirectTo={redirectTo}
+        activationRedirectTo={firstTimeDestination}
       />
     )
   }
@@ -220,6 +242,7 @@ async function renderPayPalWelcome(token: string | undefined) {
       email={activation.email}
       providerSubscriberEmail={activation.providerSubscriberEmail}
       purchase={null}
+      activationRedirectTo={firstTimeDestination}
     />
   )
 }
@@ -228,6 +251,7 @@ async function resolveAuthenticatedCheckoutRedirect(
   supabase: Awaited<ReturnType<typeof createClient>>,
   userId: string,
   reactivationReturnDestination: string | null,
+  firstTimeDestination: CheckoutFirstTimeDestination,
 ) {
   const { data, error } = await supabase
     .from("profiles")
@@ -243,6 +267,7 @@ async function resolveAuthenticatedCheckoutRedirect(
   return getAuthenticatedCheckoutSuccessRedirect(
     data?.onboarding_completed,
     reactivationReturnDestination,
+    firstTimeDestination,
   )
 }
 

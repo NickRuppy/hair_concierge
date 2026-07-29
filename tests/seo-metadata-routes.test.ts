@@ -117,6 +117,7 @@ test("classifies every current protected page and API route", () => {
     "/chat",
     "/chat/example",
     "/onboarding",
+    "/plan-bereit",
     "/profile",
     "/profile/edit/goals",
     "/routine",
@@ -153,6 +154,7 @@ test("classifies every current protected page and API route", () => {
     "/api/tracker",
     "/api/tracker/dismiss-nudge",
     "/api/tracker/log",
+    "/plan-bereit/status",
     "/tracker",
   ]
 

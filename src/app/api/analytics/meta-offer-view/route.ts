@@ -208,20 +208,14 @@ export async function POST(request: Request) {
         findEligibleLead: async (leadId, createdAfter) => {
           const { data, error } = await createAdminClient()
             .from("leads")
-            .select("email, name, quiz_answers")
+            .select("email, name, quiz_kind")
             .eq("id", leadId)
+            .in("quiz_kind", ["legacy", "personal_plan"])
             .gte("created_at", createdAfter)
             .maybeSingle()
 
           if (error) throw error
-          const quizAnswers = data?.quiz_answers
-          if (
-            !data ||
-            !quizAnswers ||
-            typeof quizAnswers !== "object" ||
-            Array.isArray(quizAnswers) ||
-            Object.keys(quizAnswers).length === 0
-          ) {
+          if (!data) {
             return null
           }
 
