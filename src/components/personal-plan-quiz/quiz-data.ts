@@ -384,7 +384,7 @@ export function getConcernOptions(texture: PersonalPlanQuizAnswers["texture"]): 
 export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQuestionConfig>> = {
   thickness: {
     field: "thickness",
-    title: "Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?",
+    title: "Wie dick ist ein einzelnes Haar?",
     helper: "Wenn du unsicher bist: Reibe eine trockene Strähne zwischen zwei Fingern.",
     visual: true,
     visualLayout: "thumbnail",
@@ -440,7 +440,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   routine_clarity: {
     field: "routineClarity",
-    title: "Wie würdest du deine aktuelle Haarpflege beschreiben?",
+    title: "Wie klar ist deine aktuelle Haarpflege?",
     scale: true,
     options: [
       {
@@ -460,7 +460,8 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   result_reliability: {
     field: "resultReliability",
-    title: "Wie zuverlässig bekommst du nach dem Waschen und Stylen dein gewünschtes Ergebnis?",
+    title: "Wie oft gelingt dein Wunschergebnis?",
+    helper: "Denk dabei ans Waschen und Stylen.",
     contextImage: `${PERSONAL_PLAN_ASSET_BASE}/recognition-mirror.webp`,
     contextObjectPosition: "50% 32%",
     scale: true,
@@ -472,7 +473,8 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   adaptation_confidence: {
     field: "adaptationConfidence",
-    title: "Weißt du, was du ändern solltest, wenn das Ergebnis nicht passt?",
+    title: "Weißt du, was du dann ändern musst?",
+    helper: "Wenn das Ergebnis nach Waschen oder Styling nicht passt.",
     contextImage: `${PERSONAL_PLAN_ASSET_BASE}/uncertain-products.webp`,
     contextObjectPosition: "50% 30%",
     scale: true,
@@ -521,7 +523,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   elastic_response: {
     field: "elasticResponse",
-    title: "Was passiert, wenn du ein ausgefallenes Haar ganz vorsichtig dehnst?",
+    title: "Wie reagiert dein Haar beim Dehnen?",
     helper:
       "Teste nur sanft an einem einzelnen ausgefallenen Haar und wähle die Beobachtung, die am ehesten passt.",
     options: [
@@ -598,7 +600,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   previous_attempts: {
     field: "previousAttempts",
-    title: "Wie verliefen deine bisherigen Versuche, eine passende Haarpflege zu finden?",
+    title: "Was hat dir bisher geholfen?",
     scale: true,
     options: [
       {
@@ -612,7 +614,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   blockers: {
     field: "blockers",
-    title: "Was hat es dir bisher schwer gemacht, eine passende Routine zu finden?",
+    title: "Was macht eine passende Routine schwierig?",
     multi: true,
     options: [
       {
@@ -655,7 +657,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   routine_style: {
     field: "routineStyle",
-    title: "Wie soll sich deine Haarpflege in Zukunft anfühlen?",
+    title: "Wie soll sich deine Haarpflege anfühlen?",
     options: [
       {
         value: "simple_reliable",
@@ -685,7 +687,7 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   meaningful_moment: {
     field: "meaningfulMoment",
-    title: "In welchem Moment möchtest du dich mit deinem Haar besonders wohlfühlen?",
+    title: "Wann möchtest du dich besonders wohlfühlen?",
     options: [
       { value: "everyday", label: "Im Alltag, einfach für mich selbst", icon: "coffee" },
       { value: "work", label: "Bei der Arbeit oder wichtigen Terminen", icon: "briefcase" },

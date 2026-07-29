@@ -88,6 +88,10 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.doesNotMatch(html, /bg-\[#eef7f1\]/i)
   assert.doesNotMatch(html, /unruhig|wechselhaft|ruhig &amp; glänzend/i)
   assert.match(html, /Dein kompletter Haarpflegeplan/i)
+  assert.match(html, /Produkte passend zu Kopfhaut, Textur und Zustand/i)
+  assert.match(html, /Reihenfolge für Reinigung, Pflege und Styling/i)
+  assert.match(html, /Klare Häufigkeit für jeden Schritt/i)
+  assert.match(html, /Chat und Haartagebuch bei neuen Fragen/i)
   assert.match(html, /before-after-generic\.webp/i)
   assert.match(html, /Zugtest/i)
   assert.match(html, /Struktur &amp; Elastizität/i)
@@ -116,6 +120,7 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /Kim · Endlich verstehe ich meine Haare/i)
   assert.match(html, /Kerstin · Echte Antworten bekommen/i)
   assert.match(html, /Sarah · Nie wieder googeln vorm Regal/i)
+  assert.match(html, /Das sagen Kundinnen über Chaarlie/i)
   assert.match(html, /14 Tage Geld-zurück-Garantie/i)
   assert.match(html, /Dein Plan zu schöneren Haaren in 30 Tagen/i)
   assert.match(html, /Warum reicht nicht einfach ein neues Shampoo/i)
@@ -134,13 +139,23 @@ test("personal plan offer renders approved hierarchy without personalized produc
     html,
     /data-offer-section="personal_plan_method"><div class="mx-auto max-w-4xl"><div class="text-center">/,
   )
-  assert.match(html, /data-offer-section="pricing" id="pricing"><div class="text-center">/)
   assert.match(
     html,
-    /class="text-center font-serif text-4xl leading-tight tracking-\[-0\.035em\]">Häufige Fragen/,
+    /data-offer-section="pricing" id="pricing" tabindex="-1"><div class="text-center">/,
+  )
+  assert.match(
+    html,
+    /class="text-center font-serif text-\[2rem\] leading-tight tracking-\[-0\.035em\] sm:text-4xl">Häufige Fragen/,
   )
   assert.equal((html.match(/data-offer-cta="sticky_header"/g) ?? []).length, 1)
   assert.equal((html.match(/data-offer-cta="final"/g) ?? []).length, 1)
+  assert.match(
+    html,
+    /data-offer-cta="sticky_header" data-offer-destination="pricing"[^>]*>Pläne ansehen</,
+  )
+  assert.match(html, /data-offer-cta="final" data-offer-destination="checkout"/)
+  assert.match(html, /mt-3 grid grid-cols-2 gap-2/)
+  assert.match(html, /background-size:200% auto/i)
   assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen|Kopfhautserum|Dry\.Shampoo/i)
   assert.doesNotMatch(html, /conditionerModuleId|shampooModuleId|suggestedCategory|needLane/)
 })
