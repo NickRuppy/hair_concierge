@@ -105,7 +105,10 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "quiz_lead_captured": {
       const data = payload as AppEventMap["quiz_lead_captured"]
-      return { marketing_consent: data.marketingConsent }
+      return {
+        lead_id: data.leadId,
+        marketing_consent: data.marketingConsent,
+      }
     }
     case "quiz_goals_selected":
       return payload
