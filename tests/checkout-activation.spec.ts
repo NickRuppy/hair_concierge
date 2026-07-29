@@ -19,6 +19,16 @@ function checkoutSession(overrides: Record<string, unknown> = {}) {
   } as any
 }
 
+function claimedPreparationMetadata(overrides: Record<string, string> = {}) {
+  return {
+    checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+    checkout_preparation_status: "claimed",
+    checkout_attempt_id: "65b32f4a-6f32-4c0d-b311-84beab8e0fc3",
+    checkout_funnel_event_id: "6f6cf50f-51e4-4318-a17e-c13a1eb669c4",
+    ...overrides,
+  }
+}
+
 function sessionHash(sessionId: string) {
   return createHash("sha256").update(sessionId).digest("hex")
 }
@@ -556,6 +566,48 @@ test("ensureCheckoutAccount rejects expired checkout subscriptions", async () =>
   expect(Object.values(profiles)).toHaveLength(0)
 })
 
+test("@ci ensureCheckoutAccount rejects an unclaimed prepared checkout before activation", async () => {
+  const { deps, calls, profiles } = stubDeps()
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({
+        metadata: {
+          ...claimedPreparationMetadata(),
+          checkout_preparation_status: "prepared",
+        },
+      }),
+      deps,
+    ),
+  ).rejects.toMatchObject({ code: "checkout_preparation_unclaimed" })
+
+  expect(calls).toHaveLength(0)
+  expect(Object.values(profiles)).toHaveLength(0)
+})
+
+test("@ci ensureCheckoutAccount activates a claimed prepared checkout with valid identifiers", async () => {
+  const { deps, profiles } = stubDeps()
+
+  await expect(
+    ensureCheckoutAccount(checkoutSession({ metadata: claimedPreparationMetadata() }), deps),
+  ).resolves.toMatchObject({ userId: "user-1", canSetInitialPassword: true })
+
+  expect(profiles["user-1"].subscription_status).toBe("active")
+})
+
+test("@ci ensureCheckoutAccount rejects a claimed prepared checkout with an invalid identifier", async () => {
+  const { deps } = stubDeps()
+
+  await expect(
+    ensureCheckoutAccount(
+      checkoutSession({
+        metadata: claimedPreparationMetadata({ checkout_attempt_id: "attempt-not-a-uuid" }),
+      }),
+      deps,
+    ),
+  ).rejects.toMatchObject({ code: "checkout_preparation_unclaimed" })
+})
+
 test("verifyCheckoutSessionForActivation returns complete paid sessions", async () => {
   const stripe = {
     checkout: {
@@ -571,6 +623,28 @@ test("verifyCheckoutSessionForActivation returns complete paid sessions", async 
     id: "cs_valid",
     customer_details: { email: "new@example.com" },
   })
+})
+
+test("@ci verifyCheckoutSessionForActivation rejects an unclaimed prepared checkout", async () => {
+  const stripe = {
+    checkout: {
+      sessions: {
+        async retrieve(id: string) {
+          return checkoutSession({
+            id,
+            metadata: {
+              ...claimedPreparationMetadata(),
+              checkout_preparation_status: "prepared",
+            },
+          })
+        },
+      },
+    },
+  } as any
+
+  await expect(
+    verifyCheckoutSessionForActivation("cs_unclaimed_prepared", stripe),
+  ).rejects.toMatchObject({ code: "checkout_preparation_unclaimed" })
 })
 
 test("verifyCheckoutSessionForActivation accepts complete sessions with no payment required", async () => {

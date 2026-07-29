@@ -219,6 +219,11 @@ export function reconcilePaymentElementApplePayAvailability(
 }
 
 function StripeOfferElementsCheckoutBody({
+  holdPaymentChoicesUntilResolved,
+  onBeforeConfirm,
+  onApplePayAvailabilityResolved,
+  paymentElementEnabled,
+  visible,
   lockedProvider,
   onPaymentMethodSelected,
   onProviderLockClaim,
@@ -226,57 +231,81 @@ function StripeOfferElementsCheckoutBody({
   onRetry,
   secondaryPaymentMethod,
 }: {
+  holdPaymentChoicesUntilResolved?: boolean
   lockedProvider?: StripeOfferProvider | null
+  onBeforeConfirm?: () => Promise<boolean>
+  onApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
+  paymentElementEnabled?: boolean
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   secondaryPaymentMethod?: ReactNode
+  visible?: boolean
 }) {
   const checkoutResult = useCheckoutElements()
 
   return (
     <StripeOfferElementsCheckoutContent
       checkoutResult={checkoutResult}
+      holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
       lockedProvider={lockedProvider}
+      onBeforeConfirm={onBeforeConfirm}
+      onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
       onPaymentMethodSelected={onPaymentMethodSelected}
+      paymentElementEnabled={paymentElementEnabled}
       onProviderLockClaim={onProviderLockClaim}
       onProviderLockRelease={onProviderLockRelease}
       onRetry={onRetry}
       secondaryPaymentMethod={secondaryPaymentMethod}
+      visible={visible}
     />
   )
 }
 
 export function StripeOfferElementsCheckoutContent({
   checkoutResult,
+  holdPaymentChoicesUntilResolved = false,
+  initialApplePayAvailability = "pending",
   lockedProvider,
+  onBeforeConfirm,
+  onApplePayAvailabilityResolved,
   onPaymentMethodSelected,
+  paymentElementEnabled = true,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
   paymentElement,
   renderExpressCheckoutElement,
   secondaryPaymentMethod,
+  visible = true,
 }: {
   checkoutResult: StripeOfferCheckoutResult
+  holdPaymentChoicesUntilResolved?: boolean
+  initialApplePayAvailability?: ApplePayAvailability
   lockedProvider?: StripeOfferProvider | null
+  onBeforeConfirm?: () => Promise<boolean>
+  onApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
+  paymentElementEnabled?: boolean
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   paymentElement?: ReactNode
   renderExpressCheckoutElement?: (props: StripeOfferExpressRendererProps) => ReactNode
   secondaryPaymentMethod?: ReactNode
+  visible?: boolean
 }) {
   const checkout = checkoutResult.type === "success" ? checkoutResult.checkout : null
-  const [applePayAvailability, setApplePayAvailability] = useState<ApplePayAvailability>("pending")
+  const [applePayAvailability, setApplePayAvailability] = useState<ApplePayAvailability>(
+    initialApplePayAvailability,
+  )
   const [confirming, setConfirming] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const debugEnabledRef = useRef(
@@ -300,6 +329,7 @@ export function StripeOfferElementsCheckoutContent({
   const applePayLoadingDeadlineRef = useRef(Date.now() + APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS)
   const applePayInitialResponseReceivedRef = useRef(false)
   const applePayAvailabilityClosedRef = useRef(false)
+  const reportedApplePayAvailabilityRef = useRef(false)
 
   const clearApplePayInitialResponseTimer = useCallback(() => {
     if (applePayInitialResponseTimerRef.current === null) return
@@ -313,8 +343,12 @@ export function StripeOfferElementsCheckoutContent({
       applePayInitialResponseReceivedRef.current = true
       if (applePayAvailabilityClosedRef.current) return
       setApplePayAvailability(availability)
+      if (!reportedApplePayAvailabilityRef.current) {
+        reportedApplePayAvailabilityRef.current = true
+        onApplePayAvailabilityResolved?.(availability === "available")
+      }
     },
-    [clearApplePayInitialResponseTimer],
+    [clearApplePayInitialResponseTimer, onApplePayAvailabilityResolved],
   )
 
   const closeApplePayAvailability = useCallback(
@@ -323,8 +357,12 @@ export function StripeOfferElementsCheckoutContent({
       applePayInitialResponseReceivedRef.current = true
       applePayAvailabilityClosedRef.current = true
       setApplePayAvailability(availability)
+      if (!reportedApplePayAvailabilityRef.current) {
+        reportedApplePayAvailabilityRef.current = true
+        onApplePayAvailabilityResolved?.(false)
+      }
     },
-    [clearApplePayInitialResponseTimer],
+    [clearApplePayInitialResponseTimer, onApplePayAvailabilityResolved],
   )
 
   const recordWalletDebugEvent = useCallback(
@@ -345,6 +383,18 @@ export function StripeOfferElementsCheckoutContent({
 
   useEffect(() => {
     if (
+      !visible ||
+      applePayInitialResponseReceivedRef.current ||
+      applePayAvailabilityClosedRef.current
+    ) {
+      return
+    }
+    applePayLoadingDeadlineRef.current = Date.now() + APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS
+  }, [visible])
+
+  useEffect(() => {
+    if (
+      !visible ||
       checkoutResult.type === "error" ||
       applePayInitialResponseReceivedRef.current ||
       applePayAvailabilityClosedRef.current
@@ -371,6 +421,7 @@ export function StripeOfferElementsCheckoutContent({
     clearApplePayInitialResponseTimer,
     closeApplePayAvailability,
     recordWalletDebugEvent,
+    visible,
   ])
 
   useEffect(() => {
@@ -571,6 +622,15 @@ export function StripeOfferElementsCheckoutContent({
       let shouldRelease = false
 
       try {
+        const beforeConfirmAccepted = await (onBeforeConfirm?.() ?? Promise.resolve(true))
+        if (!beforeConfirmAccepted) {
+          shouldRelease = true
+          const message = getStripeOfferElementsErrorMessage()
+          setErrorMessage(message)
+          expressCheckoutConfirmEvent?.paymentFailed({ message })
+          return
+        }
+
         const result = await checkout.confirm(
           expressCheckoutConfirmEvent ? { expressCheckoutConfirmEvent } : undefined,
         )
@@ -594,7 +654,7 @@ export function StripeOfferElementsCheckoutContent({
         }
       }
     },
-    [checkout, claimStripe, releaseStripe],
+    [checkout, claimStripe, onBeforeConfirm, releaseStripe],
   )
 
   if (checkoutResult.type === "error") {
@@ -615,11 +675,20 @@ export function StripeOfferElementsCheckoutContent({
     )
   }
 
-  const showPaymentDivider = state.applePayReady || Boolean(secondaryPaymentMethod)
   const applePayPending = applePayAvailability === "pending"
   const applePayFailed = applePayAvailability === "failed"
   const applePayUnavailable = applePayAvailability === "unavailable"
   const expressDomProbeEnabled = expressDomProbeEnabledRef.current
+  const holdPaymentChoices =
+    holdPaymentChoicesUntilResolved &&
+    visible === true &&
+    !applePayFailed &&
+    (checkoutResult.type === "loading" || applePayPending)
+  const showSecondaryPaymentMethod =
+    visible === true && !holdPaymentChoices && Boolean(secondaryPaymentMethod)
+  const showPaymentElement = paymentElementEnabled && !holdPaymentChoices
+  const showResolvedPaymentDivider =
+    showPaymentElement && (state.applePayReady || showSecondaryPaymentMethod)
 
   return (
     <div className="relative grid gap-3">
@@ -646,9 +715,23 @@ export function StripeOfferElementsCheckoutContent({
         </details>
       ) : null}
 
+      {holdPaymentChoices && !expressDomProbeEnabled ? (
+        <div
+          aria-label="Zahlungsoptionen werden vorbereitet"
+          className="flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-black/[0.06] bg-black/[0.055] text-[13px] font-semibold text-[var(--text-caption)]"
+          role="status"
+        >
+          <span
+            aria-hidden="true"
+            className="size-4 animate-spin rounded-full border-2 border-black/15 border-t-black/50 motion-reduce:animate-none"
+          />
+          <span>Zahlungsoptionen werden vorbereitet …</span>
+        </div>
+      ) : null}
+
       {/* Stripe's documented hidden mount preserves measurable geometry while wallets are
           evaluated. Unavailable Express Checkout stays out of flow without collapsing to 0px. */}
-      {applePayPending && !expressDomProbeEnabled ? (
+      {applePayPending && !holdPaymentChoices && !expressDomProbeEnabled ? (
         <div
           aria-label="Apple Pay wird geladen"
           className="pointer-events-none absolute inset-x-0 top-0 z-10 flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-black/[0.06] bg-black/[0.055] text-[13px] font-semibold text-[var(--text-caption)]"
@@ -661,7 +744,7 @@ export function StripeOfferElementsCheckoutContent({
           <span>Apple Pay wird geladen …</span>
         </div>
       ) : null}
-      {applePayFailed && !expressDomProbeEnabled ? (
+      {applePayFailed && !holdPaymentChoices && !expressDomProbeEnabled ? (
         checkoutResult.type === "loading" ? (
           lockedProvider === "paypal" ? (
             <div
@@ -698,11 +781,13 @@ export function StripeOfferElementsCheckoutContent({
         className={`${
           expressDomProbeEnabled
             ? "min-h-[52px]"
-            : applePayPending || applePayFailed
-              ? "invisible min-h-[52px]"
-              : applePayUnavailable
-                ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
-                : ""
+            : holdPaymentChoices
+              ? "invisible absolute inset-x-0 top-0 h-[52px] overflow-hidden"
+              : applePayPending || applePayFailed
+                ? "invisible min-h-[52px]"
+                : applePayUnavailable
+                  ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
+                  : ""
         } ${lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""}`}
         data-offer-apple-pay-availability={applePayAvailability}
         data-offer-payment-element="apple_pay"
@@ -727,9 +812,9 @@ export function StripeOfferElementsCheckoutContent({
         )}
       </div>
 
-      {secondaryPaymentMethod}
+      {showSecondaryPaymentMethod ? secondaryPaymentMethod : null}
 
-      {showPaymentDivider ? (
+      {showResolvedPaymentDivider ? (
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
           <span className="h-px bg-border" aria-hidden="true" />
           <span>oder</span>
@@ -737,100 +822,131 @@ export function StripeOfferElementsCheckoutContent({
         </div>
       ) : null}
 
-      <div
-        className="grid gap-3 rounded-[16px] border border-border bg-white p-4 shadow-sm"
-        data-offer-payment-step="payment_element"
-      >
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <strong className="text-[14px] text-[var(--brand-plum-darkest)]">Karte & weitere</strong>
-          <span className="text-[12px] font-bold text-[var(--brand-plum-darkest)]">
-            {state.totalLabel}
-          </span>
-        </div>
-        {paymentElement ?? (
-          <PaymentElement
-            onAvailablePaymentMethodsChange={handlePaymentMethodsChange}
-            onLoadError={(event) =>
-              recordWalletDebugEvent(
-                "payment_load_error",
-                undefined,
-                event.error.code ?? event.error.type,
-              )
-            }
-            onLoaderStart={() => recordWalletDebugEvent("payment_loader_started")}
-            onReady={() => recordWalletDebugEvent("payment_ready")}
-          />
-        )}
-
-        {state.errorMessage ? (
-          <p
-            className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
-            role="alert"
-          >
-            {state.errorMessage}
-          </p>
-        ) : null}
-
-        <Button
-          type="button"
-          variant="unstyled"
-          disabled={!state.canSubmit || lockedProvider === "paypal"}
-          onClick={() => void confirmCheckout("payment_element")}
-          className="min-h-[52px] rounded-full bg-[var(--brand-plum)] px-5 text-[15px] font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
+      {showPaymentElement ? (
+        <div
+          className="grid gap-3 rounded-[16px] border border-border bg-white p-4 shadow-sm"
+          data-offer-payment-step="payment_element"
         >
-          {state.confirming
-            ? "Zahlung wird bestätigt ..."
-            : `Kostenpflichtig abonnieren · ${state.totalLabel}`}
-        </Button>
-      </div>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <strong className="text-[14px] text-[var(--brand-plum-darkest)]">
+              Karte & weitere
+            </strong>
+            <span className="text-[12px] font-bold text-[var(--brand-plum-darkest)]">
+              {state.totalLabel}
+            </span>
+          </div>
+          {paymentElement ?? (
+            <PaymentElement
+              onAvailablePaymentMethodsChange={handlePaymentMethodsChange}
+              onLoadError={(event) =>
+                recordWalletDebugEvent(
+                  "payment_load_error",
+                  undefined,
+                  event.error.code ?? event.error.type,
+                )
+              }
+              onLoaderStart={() => recordWalletDebugEvent("payment_loader_started")}
+              onReady={() => recordWalletDebugEvent("payment_ready")}
+            />
+          )}
+
+          {state.errorMessage ? (
+            <p
+              className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
+              role="alert"
+            >
+              {state.errorMessage}
+            </p>
+          ) : null}
+
+          <Button
+            type="button"
+            variant="unstyled"
+            disabled={!state.canSubmit || lockedProvider === "paypal"}
+            onClick={() => void confirmCheckout("payment_element")}
+            className="min-h-[52px] rounded-full bg-[var(--brand-plum)] px-5 text-[15px] font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {state.confirming
+              ? "Zahlung wird bestätigt ..."
+              : `Kostenpflichtig abonnieren · ${state.totalLabel}`}
+          </Button>
+        </div>
+      ) : state.errorMessage ? (
+        <p
+          className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          role="alert"
+        >
+          {state.errorMessage}
+        </p>
+      ) : null}
     </div>
   )
 }
 
 export function StripeOfferElementsCheckout({
   checkoutKey,
+  clientSecret,
   fetchClientSecret,
+  holdPaymentChoicesUntilResolved = false,
   lockedProvider = null,
+  onBeforeConfirm,
+  onApplePayAvailabilityResolved,
   onPaymentMethodSelected,
+  paymentElementEnabled = true,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
   secondaryPaymentMethod,
   stripe,
+  visible = true,
 }: {
   checkoutKey: string
+  clientSecret?: string | null
   fetchClientSecret: () => Promise<string>
+  holdPaymentChoicesUntilResolved?: boolean
   lockedProvider?: StripeOfferProvider | null
+  onBeforeConfirm?: () => Promise<boolean>
+  onApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
+  paymentElementEnabled?: boolean
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   secondaryPaymentMethod?: ReactNode
   stripe: Promise<Stripe | null>
+  visible?: boolean
 }) {
-  const clientSecret = useMemo(() => fetchClientSecret(), [fetchClientSecret])
+  const clientSecretPromise = useMemo(
+    () => (clientSecret ? Promise.resolve(clientSecret) : fetchClientSecret()),
+    [clientSecret, fetchClientSecret],
+  )
 
   return (
     <CheckoutElementsProvider
       key={checkoutKey}
       stripe={stripe}
       options={{
-        clientSecret,
+        clientSecret: clientSecretPromise,
         elementsOptions: {
           appearance: stripeOfferCheckoutAppearance,
         },
       }}
     >
       <StripeOfferElementsCheckoutBody
+        holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
         lockedProvider={lockedProvider}
+        onBeforeConfirm={onBeforeConfirm}
+        onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
         onPaymentMethodSelected={onPaymentMethodSelected}
+        paymentElementEnabled={paymentElementEnabled}
         onProviderLockClaim={onProviderLockClaim}
         onProviderLockRelease={onProviderLockRelease}
         onRetry={onRetry}
         secondaryPaymentMethod={secondaryPaymentMethod}
+        visible={visible}
       />
     </CheckoutElementsProvider>
   )

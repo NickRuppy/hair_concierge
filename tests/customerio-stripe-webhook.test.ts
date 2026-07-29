@@ -620,6 +620,68 @@ test("webhook event acknowledges unpaid checkout completion without granting acc
   assert.equal(deferred.length, 0)
 })
 
+test("webhook terminally acknowledges an unclaimed prepared checkout after capturing it", async () => {
+  const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  const captured: Array<{ error: unknown; details: Record<string, unknown> }> = []
+  const originalConsoleError = console.error
+  console.error = (() => {}) as typeof console.error
+
+  try {
+    await assert.doesNotReject(
+      handleStripeWebhookEvent(
+        {
+          id: "evt_checkout_prepared_unclaimed",
+          type: "checkout.session.completed",
+          created: 1_800_000_000,
+          data: {
+            object: {
+              id: "cs_prepared_unclaimed",
+              status: "complete",
+              payment_status: "paid",
+              customer: "cus_prepared_unclaimed",
+              customer_details: { email: "prepared@example.com" },
+              subscription: "sub_prepared_unclaimed",
+              metadata: {
+                checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+                checkout_preparation_status: "prepared",
+              },
+            },
+          },
+        } as any,
+        {
+          captureCheckoutException(error, details) {
+            captured.push({ error, details: details as unknown as Record<string, unknown> })
+          },
+          defer: (work) => deferred.push(work),
+          getPremiumTierId: async () => "tier_premium",
+          linkQuizToProfile: async () => {},
+          stripe: deps.stripe,
+          supabase: deps.supabase,
+        },
+      ),
+    )
+  } finally {
+    console.error = originalConsoleError
+  }
+
+  assert.deepEqual(Object.values(profiles), [])
+  assert.deepEqual(billing, [])
+  assert.deepEqual(canceledSubscriptions, [])
+  assert.equal(deferred.length, 0)
+  assert.equal(captured.length, 1)
+  assert.match(String((captured[0]?.error as Error).message), /claimed before activation/)
+  assert.deepEqual(captured[0]?.details, {
+    provider: "stripe",
+    stage: "stripe_webhook_activation",
+    stripeSessionId: "cs_prepared_unclaimed",
+    stripeCustomerId: "cus_prepared_unclaimed",
+    stripeSubscriptionId: "sub_prepared_unclaimed",
+    status: "paid",
+    reason: "checkout_preparation_unclaimed",
+  })
+})
+
 test("webhook event handles checkout.session.async_payment_failed without Customer.io purchase work", async () => {
   const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
   const deferred: Array<() => void | Promise<void>> = []

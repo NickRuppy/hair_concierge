@@ -12,6 +12,8 @@ type BuildStripeCheckoutSessionParamsInput = {
   checkoutContext?: "membership_reactivation" | null
   returnDestination?: string | null
   reactivationReservationId?: string | null
+  expiresAt?: number
+  metadata?: Record<string, string>
 }
 
 export function buildStripeCheckoutSessionParams({
@@ -26,6 +28,8 @@ export function buildStripeCheckoutSessionParams({
   checkoutContext,
   returnDestination,
   reactivationReservationId,
+  expiresAt,
+  metadata: extraMetadata,
 }: BuildStripeCheckoutSessionParamsInput): Stripe.Checkout.SessionCreateParams {
   const isElementsPresentation = presentation === "elements"
 
@@ -36,6 +40,7 @@ export function buildStripeCheckoutSessionParams({
     // Pass customer OR customer_email — never both (Stripe rejects that combination)
     ...(customerId ? { customer: customerId } : { customer_email: customerEmail }),
     return_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
+    ...(expiresAt ? { expires_at: expiresAt } : {}),
     automatic_tax: { enabled: true },
     ...(isElementsPresentation
       ? { excluded_payment_method_types: ["sepa_debit", "paypal"] }
@@ -55,7 +60,8 @@ export function buildStripeCheckoutSessionParams({
       funnelPackageKey ||
       checkoutContext ||
       returnDestination ||
-      reactivationReservationId
+      reactivationReservationId ||
+      extraMetadata
         ? {
             ...(leadId ? { lead_id: leadId } : {}),
             ...(funnelSessionId ? { funnel_session_id: funnelSessionId } : {}),
@@ -65,6 +71,7 @@ export function buildStripeCheckoutSessionParams({
             ...(reactivationReservationId
               ? { reactivation_reservation_id: reactivationReservationId }
               : {}),
+            ...extraMetadata,
           }
         : undefined,
   }

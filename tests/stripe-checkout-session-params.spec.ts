@@ -109,3 +109,27 @@ test("keeps the embedded Checkout return URL on the welcome page", () => {
     "https://chaarlie.example/welcome?session_id={CHECKOUT_SESSION_ID}",
   )
 })
+
+test("adds only hashed, short-lived preparation metadata to an Elements Session", () => {
+  const params = buildStripeCheckoutSessionParams({
+    origin: "https://chaarlie.example",
+    priceId: "price_month",
+    customerEmail: "lead@example.com",
+    presentation: "elements",
+    expiresAt: 1_800_000_000,
+    metadata: {
+      checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+      checkout_preparation_token_hash:
+        "6b8d3a953ef1f24455d1c7cc26ecf1f638ad59b2bce90373136a7c4487413f4a",
+      checkout_preparation_status: "prepared",
+    },
+  })
+
+  assert.equal(params.expires_at, 1_800_000_000)
+  assert.deepEqual(params.metadata, {
+    checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+    checkout_preparation_token_hash:
+      "6b8d3a953ef1f24455d1c7cc26ecf1f638ad59b2bce90373136a7c4487413f4a",
+    checkout_preparation_status: "prepared",
+  })
+})

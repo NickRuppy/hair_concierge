@@ -145,6 +145,40 @@ test("quiz step views stay in PostHog and Customer.io but out of Meta", () => {
   })
 })
 
+test("checkout preparation is technical PostHog telemetry without a browser funnel write", () => {
+  const originalFetch = globalThis.fetch
+  const funnelWrites: Array<{ body?: BodyInit | null; method?: string; url: string }> = []
+  globalThis.fetch = ((input: string | URL | Request, init?: RequestInit) => {
+    funnelWrites.push({ body: init?.body, method: init?.method, url: String(input) })
+    return Promise.resolve({ ok: true, json: async () => ({}) } as Response)
+  }) as typeof fetch
+
+  const payload = {
+    interval: "quarter" as const,
+    planId: "premium_quarter",
+    preparationDurationMs: 3810,
+    preparationId: "prepared_opaque_123",
+    walletAvailable: true,
+  }
+
+  try {
+    withDestinationSpies((calls) => {
+      trackAppEvent("checkout_prepared", payload)
+
+      assert.deepEqual(calls, [
+        {
+          destination: "posthog",
+          eventName: "checkout_prepared",
+          payload,
+        },
+      ])
+    })
+    assert.deepEqual(funnelWrites, [])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test("personal-plan quiz screen views stay PostHog-only and contain only stable identifiers", () => {
   const payload = {
     quizVersion: "v2" as const,
@@ -404,6 +438,29 @@ test("browser revenue return events only route to Meta", () => {
   assert.equal(eventRoutes.subscription_started.meta, true)
 })
 
+test("checkout preparation stays out of business checkout and provider-selection routes", () => {
+  assert.deepEqual(eventRoutes.checkout_prepared, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
+  assert.deepEqual(eventRoutes.checkout_started, {
+    customerio: true,
+    meta: true,
+    posthog: true,
+  })
+  assert.deepEqual(eventRoutes.offer_checkout_opened, {
+    customerio: false,
+    meta: true,
+    posthog: true,
+  })
+  assert.deepEqual(eventRoutes.offer_payment_method_selected, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
+})
+
 test("browser quiz lead capture does not route to Customer.io", () => {
   assert.equal(eventRoutes.quiz_lead_captured.customerio, false)
   assert.equal(eventRoutes.quiz_lead_captured.posthog, true)
@@ -609,6 +666,40 @@ test("PostHog keeps explicit legacy passthrough event payloads byte-equivalent",
     ["first_chat_message", {}],
     ["quiz_goals_selected", { count: 3 }],
     ["subscription_started", { checkoutSessionId: "cs_test_123" }],
+  ])
+})
+
+test("PostHog checkout preparation maps only opaque performance diagnostics", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("checkout_prepared", {
+      interval: "quarter",
+      planId: "premium_quarter",
+      preparationDurationMs: 3810,
+      preparationId: "prepared_opaque_123",
+      walletAvailable: true,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "checkout_prepared",
+      {
+        interval: "quarter",
+        plan_id: "premium_quarter",
+        preparation_duration_ms: 3810,
+        preparation_id: "prepared_opaque_123",
+        wallet_available: true,
+      },
+    ],
   ])
 })
 

@@ -64,22 +64,28 @@ export function PaymentMethodCheckout({
   checkoutContext,
   checkoutError = null,
   checkoutKey,
+  clientSecret,
   fetchClientSecret,
+  holdPaymentChoicesUntilResolved = false,
   interval,
   leadId,
   lockedProvider = null,
+  onBeforeStripeConfirm,
   onChangePlan,
   onPayPalCheckoutFailed,
   onPayPalCheckoutStarted,
+  onPreparedApplePayAvailabilityResolved,
   onPaymentMethodSelected,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
   planLabel,
+  paymentElementEnabled = true,
   presentation = "default",
   returnDestination,
   source,
   stripe,
+  visible = true,
   expressElementsEnabled = false,
 }: {
   cardCheckoutMinHeightClassName?: "min-h-[560px]" | "min-h-[600px]"
@@ -87,13 +93,17 @@ export function PaymentMethodCheckout({
   checkoutContext?: CheckoutContext
   checkoutError?: string | null
   checkoutKey: string
+  clientSecret?: string | null
   fetchClientSecret: () => Promise<string>
+  holdPaymentChoicesUntilResolved?: boolean
   interval: BillingInterval
   leadId?: string | null
   lockedProvider?: "stripe" | "paypal" | null
+  onBeforeStripeConfirm?: () => Promise<boolean>
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
+  onPreparedApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: "stripe" | "paypal",
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -102,10 +112,12 @@ export function PaymentMethodCheckout({
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   planLabel: string
+  paymentElementEnabled?: boolean
   presentation?: "default" | "offer-overlay"
   returnDestination?: string
   source: "pricing_page" | "quiz_result_offer"
   stripe: Promise<Stripe | null>
+  visible?: boolean
   expressElementsEnabled?: boolean
 }) {
   const paypalEnabled = isPayPalCheckoutEnabled()
@@ -217,14 +229,20 @@ export function PaymentMethodCheckout({
           ) : (
             <StripeOfferElementsCheckout
               checkoutKey={checkoutKey}
+              clientSecret={clientSecret}
               fetchClientSecret={fetchClientSecret}
+              holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
               lockedProvider={lockedProvider}
+              onBeforeConfirm={onBeforeStripeConfirm}
+              onApplePayAvailabilityResolved={onPreparedApplePayAvailabilityResolved}
               onPaymentMethodSelected={onPaymentMethodSelected}
+              paymentElementEnabled={paymentElementEnabled}
               onProviderLockClaim={onProviderLockClaim}
               onProviderLockRelease={onProviderLockRelease}
               onRetry={onRetry}
               secondaryPaymentMethod={paypalCheckout}
               stripe={stripe}
+              visible={visible}
             />
           )}
         </>

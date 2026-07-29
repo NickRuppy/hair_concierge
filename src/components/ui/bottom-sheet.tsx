@@ -59,6 +59,7 @@ interface BottomSheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
   disableDrag?: boolean
   header?: React.ReactNode
   initialFocusRef?: React.RefObject<HTMLElement | null>
+  keepMounted?: boolean
   modalPriority?: number
   restoreFocusRef?: React.RefObject<HTMLElement | null>
   rootClassName?: string
@@ -75,6 +76,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       footer,
       header,
       initialFocusRef,
+      keepMounted = false,
       modalPriority = MODAL_LAYER_PRIORITIES.bottomSheet,
       restoreFocusRef,
       rootClassName,
@@ -141,6 +143,8 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       draggingRef.current = false
     }, [])
 
+    const modalActive = visible && !closing
+
     React.useEffect(() => {
       if (!visible || !rootElement) return
 
@@ -179,14 +183,14 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
 
     // Focus management: move focus only when this sheet is the active layer.
     React.useEffect(() => {
-      if (visible && !closing && !hasCapturedFocusRef.current) {
+      if (modalActive && !hasCapturedFocusRef.current) {
         previousFocusRef.current = document.activeElement as HTMLElement
         hasCapturedFocusRef.current = true
       }
-    }, [visible, closing])
+    }, [modalActive])
 
     React.useEffect(() => {
-      if (visible && !closing && isTopLayer) {
+      if (modalActive && isTopLayer) {
         requestAnimationFrame(() => {
           const target =
             initialFocusRef?.current ??
@@ -196,7 +200,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
           focusModalElement(target)
         })
       }
-    }, [initialFocusRef, isTopLayer, rootElement, visible, closing])
+    }, [initialFocusRef, isTopLayer, modalActive, rootElement])
 
     React.useEffect(() => {
       if (!visible && previousFocusRef.current) {
@@ -209,11 +213,11 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         previousFocusRef.current = null
         hasCapturedFocusRef.current = false
       }
-    }, [restoreFocusRef, visible, closing])
+    }, [restoreFocusRef, visible])
 
     // Focus trap: keep Tab/Shift+Tab within the panel
     React.useEffect(() => {
-      if (!visible || closing || !isTopLayer) return
+      if (!modalActive || !isTopLayer) return
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key !== "Tab") return
@@ -237,7 +241,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
 
       document.addEventListener("keydown", handleKeyDown)
       return () => document.removeEventListener("keydown", handleKeyDown)
-    }, [visible, closing, isTopLayer])
+    }, [modalActive, isTopLayer])
 
     // Escape key
     React.useEffect(() => {
@@ -246,11 +250,11 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         e.preventDefault()
         onOpenChange(false)
       }
-      if (visible && !closing) {
+      if (modalActive) {
         document.addEventListener("keydown", handleEscape)
       }
       return () => document.removeEventListener("keydown", handleEscape)
-    }, [visible, closing, isTopLayer, onOpenChange])
+    }, [modalActive, isTopLayer, onOpenChange])
 
     // Drag handlers
     const handlePointerDown = React.useCallback(
@@ -341,33 +345,40 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       setDragY(0)
     }, [])
 
-    if (!mounted || !visible) return null
+    if (!mounted || (!visible && !keepMounted)) return null
 
     return createPortal(
       <div
         ref={setRootElement}
-        className={cn("bottom-sheet-root fixed inset-0 z-50", rootClassName)}
+        className={cn(
+          "bottom-sheet-root fixed inset-0 z-50",
+          !visible && "pointer-events-none invisible",
+          rootClassName,
+        )}
       >
         {/* Backdrop */}
-        <div
-          className={cn(
-            "bottom-sheet-backdrop fixed inset-0 bg-black/20",
-            dragging && "pointer-events-none",
-          )}
-          data-state={closing ? "closed" : "open"}
-          onClick={() => {
-            if (isTopLayer) onOpenChange(false)
-          }}
-        />
+        {visible ? (
+          <div
+            className={cn(
+              "bottom-sheet-backdrop fixed inset-0 bg-black/20",
+              dragging && "pointer-events-none",
+            )}
+            data-state={visible && !closing ? "open" : "closed"}
+            onClick={() => {
+              if (isTopLayer) onOpenChange(false)
+            }}
+          />
+        ) : null}
         {/* Panel */}
         <div
           ref={mergedRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
+          role={modalActive ? "dialog" : undefined}
+          aria-modal={modalActive ? "true" : undefined}
+          aria-labelledby={modalActive ? titleId : undefined}
+          inert={!modalActive}
           data-bottom-sheet-panel
           data-dragging={dragging ? "true" : "false"}
-          data-state={closing ? "closed" : "open"}
+          data-state={visible && !closing ? "open" : "closed"}
           className={cn(
             "bottom-sheet-panel fixed inset-x-0 bottom-0 z-50 flex max-h-[60vh] touch-pan-y flex-col rounded-t-2xl bg-background shadow-[0_-4px_32px_rgba(0,0,0,0.3)]",
             disableDrag && "touch-auto",

@@ -56,6 +56,16 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         retryable: data.retryable,
       }
     }
+    case "checkout_prepared": {
+      const data = payload as AppEventMap["checkout_prepared"]
+      return {
+        interval: data.interval,
+        plan_id: data.planId,
+        preparation_duration_ms: data.preparationDurationMs,
+        preparation_id: data.preparationId,
+        wallet_available: data.walletAvailable,
+      }
+    }
     case "checkout_started": {
       const data = payload as AppEventMap["checkout_started"]
       return {
