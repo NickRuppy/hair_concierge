@@ -76,13 +76,16 @@ function displayProfileLine(profileLine?: string): string {
 
 function BeforeAfterFigure() {
   return (
-    <figure className="mt-5 overflow-hidden rounded-[1.75rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white shadow-[0_24px_54px_-42px_rgba(var(--brand-plum-rgb),0.7)]">
-      <div className="relative grid grid-cols-2 gap-3 bg-white p-3 sm:gap-4 sm:p-4">
+    <figure className="mt-4 overflow-hidden rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white shadow-[0_24px_54px_-42px_rgba(var(--brand-plum-rgb),0.7)] sm:mt-5 sm:rounded-[1.75rem] [@media(min-width:640px)_and_(max-height:700px)]:col-start-2 [@media(min-width:640px)_and_(max-height:700px)]:row-span-2 [@media(min-width:640px)_and_(max-height:700px)]:row-start-1 [@media(min-width:640px)_and_(max-height:700px)]:mt-0">
+      <div className="relative grid grid-cols-2 gap-2 bg-white p-2 sm:gap-4 sm:p-4">
         {[
           ["Heute", "left center", "bg-white/92 text-[var(--brand-plum-darkest)]"],
           ["Dein Ziel", "right center", "bg-white/92 text-[#255f40]"],
         ].map(([label, position, labelClass]) => (
-          <div className="relative aspect-[2/3] overflow-hidden rounded-[1.15rem]" key={label}>
+          <div
+            className="relative aspect-[3/4] overflow-hidden rounded-[1rem] sm:aspect-[2/3] sm:rounded-[1.15rem] [@media(min-width:640px)_and_(max-height:700px)]:aspect-[16/9]"
+            key={label}
+          >
             <div
               aria-label={
                 label === "Heute" ? "Symbolische heutige Haarsituation" : "Symbolisches Haarziel"
@@ -93,11 +96,11 @@ function BeforeAfterFigure() {
                 backgroundImage:
                   "url('/images/funnels/personal-plan-offer/before-after-generic.webp')",
                 backgroundPosition: position,
-                backgroundSize: "200% 100%",
+                backgroundSize: "200% auto",
               }}
             />
             <span
-              className={`absolute left-3 top-3 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm ${labelClass}`}
+              className={`absolute left-2 top-2 rounded-full px-2.5 py-1 text-[11px] font-bold shadow-sm sm:left-3 sm:top-3 sm:px-3 sm:py-1.5 sm:text-xs ${labelClass}`}
             >
               {label}
             </span>
@@ -105,7 +108,7 @@ function BeforeAfterFigure() {
         ))}
         <span
           aria-hidden="true"
-          className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[6px] border-white bg-[var(--brand-plum)] text-white shadow-lg"
+          className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-[var(--brand-plum)] text-white shadow-lg sm:h-12 sm:w-12 sm:border-[6px]"
         >
           <ArrowRight className="h-5 w-5" strokeWidth={2.25} />
         </span>
@@ -119,25 +122,25 @@ function BeforeAfterFigure() {
 
 function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
   return (
-    <article className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 shadow-[0_16px_44px_-36px_rgba(var(--brand-plum-rgb),0.55)]">
-      <h3 className="font-serif text-[1.45rem] leading-tight text-[var(--brand-plum-darkest)]">
+    <article className="rounded-[1.25rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-4 shadow-[0_16px_44px_-36px_rgba(var(--brand-plum-rgb),0.55)] sm:rounded-[1.5rem] sm:p-5">
+      <h3 className="font-serif text-[1.2rem] leading-tight text-[var(--brand-plum-darkest)] sm:text-[1.45rem]">
         {row.title}
       </h3>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl bg-[rgba(var(--brand-plum-rgb),0.055)] p-4">
-          <p className="mb-2 text-sm font-semibold text-[rgba(var(--brand-plum-rgb),0.70)]">
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:gap-3">
+        <div className="rounded-xl bg-[rgba(var(--brand-plum-rgb),0.055)] p-3 sm:rounded-2xl sm:p-4">
+          <p className="mb-2 text-xs font-semibold leading-tight text-[rgba(var(--brand-plum-rgb),0.70)] sm:text-sm">
             {SPECTRUM_LABELS[row.todaySegments]}
           </p>
           <Segments count={row.todaySegments} tone="today" />
         </div>
-        <div className="rounded-2xl bg-[var(--brand-plum-ice)] p-4">
-          <p className="mb-2 text-sm font-semibold text-[var(--brand-plum)]">
+        <div className="rounded-xl bg-[var(--brand-plum-ice)] p-3 sm:rounded-2xl sm:p-4">
+          <p className="mb-2 text-xs font-semibold leading-tight text-[var(--brand-plum)] sm:text-sm">
             {SPECTRUM_LABELS[row.potentialSegments]}
           </p>
           <Segments count={row.potentialSegments} tone="goal" />
         </div>
       </div>
-      <p className="mt-4 text-[0.95rem] leading-7 text-[rgba(var(--brand-plum-rgb),0.75)]">
+      <p className="mt-3 text-[0.9rem] leading-6 text-[rgba(var(--brand-plum-rgb),0.75)] sm:mt-4 sm:text-[0.95rem] sm:leading-7">
         {displayDiagnosticSummary(row.summary)}
       </p>
     </article>
@@ -157,6 +160,12 @@ export function PersonalPlanOffer({
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
+  const scrollToPricing = () => {
+    const pricing = document.getElementById("pricing")
+    if (!pricing) return
+    pricing.scrollIntoView({ behavior: "smooth", block: "start" })
+    window.setTimeout(() => pricing.focus({ preventScroll: true }), 450)
+  }
 
   return (
     <OfferTrackingProvider
@@ -182,48 +191,48 @@ export function PersonalPlanOffer({
             <button
               className="rounded-full bg-[var(--brand-plum)] px-5 py-2.5 text-sm font-bold text-white shadow-[0_10px_28px_-18px_rgba(var(--brand-plum-rgb),0.85)]"
               data-offer-cta="sticky_header"
-              data-offer-destination="checkout"
+              data-offer-destination="pricing"
               data-offer-source-section="hero"
-              onClick={openCheckout}
+              onClick={scrollToPricing}
               type="button"
             >
-              Plan sichern
+              Pläne ansehen
             </button>
           </div>
         </div>
 
         <section
-          className="mx-auto max-w-4xl px-4 pb-6 pt-7 text-center sm:pb-8 sm:pt-10"
+          className="mx-auto max-w-4xl px-4 pb-5 pt-5 text-center sm:pb-8 sm:pt-10 [@media(min-width:640px)_and_(max-height:700px)]:grid [@media(min-width:640px)_and_(max-height:700px)]:grid-cols-[0.8fr_1.2fr] [@media(min-width:640px)_and_(max-height:700px)]:items-center [@media(min-width:640px)_and_(max-height:700px)]:gap-x-6 [@media(min-width:640px)_and_(max-height:700px)]:pb-5 [@media(min-width:640px)_and_(max-height:700px)]:pt-5 [@media(min-width:640px)_and_(max-height:700px)]:text-left"
           data-offer-section="hero"
         >
-          <h1 className="mx-auto max-w-[15ch] font-serif text-[2.7rem] leading-[0.98] tracking-[-0.04em] sm:text-6xl">
+          <h1 className="mx-auto max-w-[15ch] font-serif text-[2.25rem] leading-[0.98] tracking-[-0.04em] sm:text-6xl [@media(min-width:640px)_and_(max-height:700px)]:mx-0 [@media(min-width:640px)_and_(max-height:700px)]:self-end [@media(min-width:640px)_and_(max-height:700px)]:text-[2.25rem]">
             Dein Haarplan ist bereit.
           </h1>
-          <p className="mx-auto mt-3 max-w-[34rem] text-base leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-lg">
+          <p className="mx-auto mt-3 max-w-[34rem] text-base leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-lg [@media(min-width:640px)_and_(max-height:700px)]:mx-0 [@media(min-width:640px)_and_(max-height:700px)]:mt-2 [@media(min-width:640px)_and_(max-height:700px)]:self-start [@media(min-width:640px)_and_(max-height:700px)]:text-base">
             {displayProfileLine(model.profileLine)}
           </p>
           <BeforeAfterFigure />
         </section>
 
         <section
-          className="border-y border-[rgba(var(--brand-plum-rgb),0.08)] bg-white/55 px-4 py-7 sm:py-10"
+          className="border-y border-[rgba(var(--brand-plum-rgb),0.08)] bg-white/55 px-4 py-6 sm:py-10"
           data-offer-section="personal_plan_diagnosis"
         >
           <div className="mx-auto max-w-4xl">
             <p className="text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
               Deine Ausgangslage
             </p>
-            <h2 className="mt-1.5 w-full text-center font-serif text-3xl leading-tight tracking-[-0.035em] sm:text-4xl">
+            <h2 className="mt-1.5 w-full text-center font-serif text-[1.875rem] leading-tight tracking-[-0.035em] sm:text-4xl">
               Dein Haar hat viel Potenzial.
             </h2>
-            <div className="mt-5 space-y-4">
+            <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
               {model.diagnosticRows.map((row) => (
                 <DiagnosticRow key={row.id} row={row} />
               ))}
             </div>
 
-            <div className="mt-5 rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-[rgba(var(--brand-plum-rgb),0.08)] p-5">
-              <p className="text-lg font-semibold leading-8 text-[var(--brand-plum-darkest)]">
+            <div className="mt-4 rounded-[1.25rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-[rgba(var(--brand-plum-rgb),0.08)] p-4 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
+              <p className="text-base font-semibold leading-7 text-[var(--brand-plum-darkest)] sm:text-lg sm:leading-8">
                 {model.planFitStatement}
               </p>
             </div>
@@ -231,32 +240,32 @@ export function PersonalPlanOffer({
         </section>
 
         <section
-          className="mx-auto max-w-4xl px-4 py-10 sm:py-14"
+          className="mx-auto max-w-4xl px-4 py-7 sm:py-14"
           data-offer-section="personal_plan_complete_plan"
         >
           <div className="text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
               Was du freischaltest
             </p>
-            <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Dein kompletter Haarpflegeplan – nicht nur ein Quiz-Ergebnis.
+            <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] tracking-[-0.035em] sm:mt-3 sm:max-w-[24ch] sm:text-4xl sm:leading-tight">
+              Dein kompletter Haarpflegeplan.
             </h2>
           </div>
-          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-7 sm:gap-3">
             {[
-              "Welche Produkte zu Kopfhaut, Textur, Dicke und Zustand passen.",
-              "In welcher Reihenfolge du Reinigung, Pflege und Styling nutzt.",
-              "Wie oft du die einzelnen Schritte wirklich brauchst.",
-              "Wie du Chat und Haartagebuch ergänzend nutzt, wenn neue Fragen entstehen.",
+              "Produkte passend zu Kopfhaut, Textur und Zustand.",
+              "Reihenfolge für Reinigung, Pflege und Styling.",
+              "Klare Häufigkeit für jeden Schritt.",
+              "Chat und Haartagebuch bei neuen Fragen.",
             ].map((item) => (
               <div
-                className="rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5"
+                className="rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-3.5 sm:p-5"
                 key={item}
               >
-                <span className="mb-3 grid h-9 w-9 place-items-center rounded-full bg-[#e9f5ed] text-[#2d8f5b]">
+                <span className="mb-2 grid h-8 w-8 place-items-center rounded-full bg-[#e9f5ed] text-[#2d8f5b] sm:mb-3 sm:h-9 sm:w-9">
                   ✓
                 </span>
-                <p className="text-base font-semibold leading-7">{item}</p>
+                <p className="text-sm font-semibold leading-5 sm:text-base sm:leading-7">{item}</p>
               </div>
             ))}
           </div>
@@ -316,9 +325,10 @@ export function PersonalPlanOffer({
         </section>
 
         <section
-          className="mx-auto max-w-4xl px-4 py-10 sm:py-14"
+          className="mx-auto max-w-4xl scroll-mt-16 px-4 py-10 sm:py-14"
           data-offer-section="pricing"
           id="pricing"
+          tabIndex={-1}
         >
           <div className="text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
@@ -374,13 +384,13 @@ export function PersonalPlanOffer({
           </div>
         </section>
 
-        <section className="px-4 py-10 sm:py-14" data-offer-section="testimonials">
+        <section className="px-4 py-7 sm:py-14" data-offer-section="testimonials">
           <div className="mx-auto max-w-4xl text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
               Stimmen aus der Beta
             </p>
             <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Kundinnen lieben ihren Plan.
+              Das sagen Kundinnen über Chaarlie.
             </h2>
             <div className="mt-7 grid items-stretch gap-3 md:grid-cols-3">
               {testimonials.map((testimonial) => (
@@ -399,20 +409,25 @@ export function PersonalPlanOffer({
           </div>
         </section>
 
-        <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14" data-offer-section="guarantee">
-          <div className="rounded-[1.75rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-6 text-center">
-            <p className="text-sm font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+        <section
+          className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
+          data-offer-section="guarantee"
+        >
+          <div className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 text-center sm:rounded-[1.75rem] sm:p-6">
+            <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)] sm:text-sm">
               Ohne Risiko
             </p>
-            <h2 className="mt-2 font-serif text-4xl leading-tight">14 Tage Geld-zurück-Garantie</h2>
-            <p className="mx-auto mt-4 max-w-[34rem] text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
+            <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
+              14 Tage Geld-zurück-Garantie
+            </h2>
+            <p className="mx-auto mt-3 max-w-[34rem] text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:mt-4 sm:text-base sm:leading-7">
               Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.
             </p>
           </div>
         </section>
 
-        <section className="mx-auto max-w-4xl px-4 pb-24 pt-4" data-offer-section="faq">
-          <h2 className="text-center font-serif text-4xl leading-tight tracking-[-0.035em]">
+        <section className="mx-auto max-w-4xl px-4 pb-24 pt-1" data-offer-section="faq">
+          <h2 className="text-center font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">
             Häufige Fragen
           </h2>
           <div className="mt-6 space-y-3">

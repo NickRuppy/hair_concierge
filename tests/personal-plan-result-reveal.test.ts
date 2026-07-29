@@ -34,8 +34,8 @@ test("result reveal uses dynamic one-week and four-week dates with certain outco
 })
 
 test("result reveal exposes all three messages before navigating", () => {
-  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS, 1_500)
-  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS, 4_500)
+  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS, 2_400)
+  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS, 7_200)
 
   const tasks: Array<{ callback: () => void; delayMs: number; handle: number }> = []
   const cancelled: number[] = []
@@ -59,7 +59,7 @@ test("result reveal exposes all three messages before navigating", () => {
 
   assert.deepEqual(
     tasks.map(({ delayMs }) => delayMs),
-    [1_500, 3_000, 4_500],
+    [2_400, 4_800, 7_200],
   )
   tasks.forEach(({ callback }) => callback())
   assert.deepEqual(viewedSteps, [1, 2])

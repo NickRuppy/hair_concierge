@@ -92,6 +92,7 @@ import {
   getConcernOptions,
   getGoalOptions,
   getLengthOptions,
+  getProfileSummaryImage,
   type QuizIconKey,
   type QuizOption,
   type QuizQuestionConfig,
@@ -282,15 +283,17 @@ function ScreenHeader({
 }) {
   const currentSection = getPersonalPlanQuizSectionId(screen)
   const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
+  const currentSectionLabel =
+    SECTION_LABELS.find((section) => section.id === currentSection)?.label ?? "Profil"
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-3 pt-4 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur">
       <div className="mx-auto flex max-w-[44rem] items-center justify-between">
         <button
           aria-label="Zurück"
           aria-hidden={!canGoBack}
           className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-full bg-white text-[var(--brand-plum-darkest)] shadow-sm ring-1 ring-black/5 transition hover:bg-[var(--brand-plum-ice)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+            "flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--brand-plum-darkest)] shadow-sm ring-1 ring-black/5 transition hover:bg-[var(--brand-plum-ice)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] sm:h-11 sm:w-11",
             !canGoBack && "pointer-events-none opacity-0",
           )}
           disabled={!canGoBack}
@@ -303,16 +306,18 @@ function ScreenHeader({
         <span className="font-header text-xl font-medium text-[var(--brand-plum-darkest)]">
           chaarlie
         </span>
-        <span className="w-11" aria-hidden="true" />
+        <span className="w-10 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum)] sm:w-20">
+          {currentSectionLabel}
+        </span>
       </div>
-      <div className="mx-auto mt-4 max-w-[44rem]" aria-label="Fortschritt">
+      <div className="mx-auto mt-2 max-w-[44rem]" aria-label="Fortschritt">
         <div className="relative h-1.5 overflow-hidden rounded-full bg-[var(--brand-plum-light)]">
           <div
             className="h-full rounded-full bg-[var(--brand-plum)] transition-[width] duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <ol className="mt-3 grid grid-cols-5 gap-2">
+        <ol className="mt-1.5 grid grid-cols-5 gap-1">
           {SECTION_LABELS.map((section, index) => {
             const state =
               index < currentSectionIndex
@@ -323,17 +328,18 @@ function ScreenHeader({
             return (
               <li className="flex flex-col items-center gap-1" key={section.id}>
                 <span
+                  aria-hidden="true"
                   className={cn(
-                    "flex h-3 w-3 rounded-full ring-2 ring-[hsl(var(--background))]",
+                    "h-2 w-2 rounded-full ring-2 ring-[hsl(var(--background))]",
                     state === "done" && "bg-[var(--brand-plum)]",
                     state === "current" &&
-                      "bg-[var(--brand-plum)] shadow-[0_0_0_4px_rgba(var(--brand-plum-rgb),0.16)]",
+                      "bg-[var(--brand-plum)] shadow-[0_0_0_3px_rgba(var(--brand-plum-rgb),0.14)]",
                     state === "todo" && "bg-[var(--brand-plum-light)]",
                   )}
                 />
                 <span
                   className={cn(
-                    "text-[10px] font-semibold uppercase tracking-[0.08em]",
+                    "text-[8px] font-semibold uppercase tracking-[0.04em] sm:text-[9px]",
                     state === "todo"
                       ? "text-[var(--text-caption)]"
                       : "text-[var(--brand-plum-darkest)]",
@@ -547,7 +553,7 @@ function OptionCard({
       aria-pressed={selected}
       className={cn(
         "group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
-        hasMedia ? "min-h-36" : "px-4 py-4",
+        hasMedia ? "min-h-0" : "px-4 py-4",
         selected
           ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
           : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
@@ -559,8 +565,14 @@ function OptionCard({
       type="button"
     >
       {option.portrait ? (
-        <div className="w-full shrink-0 bg-[var(--brand-plum-ice)]">
+        <div
+          className={cn(
+            "w-full shrink-0 bg-[var(--brand-plum-ice)]",
+            visualLayout === "grid" && "h-36 sm:h-auto [@media(max-height:700px)]:h-28",
+          )}
+        >
           <HairPortraitFigure
+            className={visualLayout === "grid" ? "h-full" : undefined}
             length={option.portrait.length}
             padded
             texture={option.portrait.texture}
@@ -570,18 +582,30 @@ function OptionCard({
         <div
           className={cn(
             "relative w-full shrink-0 overflow-hidden bg-[var(--brand-plum-ice)]",
-            visualLayout === "stacked" ? "h-28" : "aspect-square",
+            visualLayout === "stacked"
+              ? "h-28"
+              : visualLayout === "grid"
+                ? "h-36 sm:aspect-[4/3] sm:h-auto [@media(max-height:700px)]:h-28"
+                : "aspect-square",
           )}
         >
           <Image
             alt={option.imageAlt ?? ""}
             className={cn(
               "transition duration-300 group-hover:scale-[1.02]",
-              visualLayout === "stacked" ? "object-contain" : "object-cover object-top",
+              visualLayout === "stacked"
+                ? "object-contain"
+                : visualLayout === "grid"
+                  ? "object-cover object-[center_38%]"
+                  : "object-cover object-top",
             )}
             fill
             priority={priority}
-            sizes="(max-width: 640px) 90vw, 320px"
+            sizes={
+              visualLayout === "grid"
+                ? "(max-width: 640px) 45vw, 320px"
+                : "(max-width: 640px) 90vw, 320px"
+            }
             src={option.image}
           />
         </div>
@@ -591,6 +615,8 @@ function OptionCard({
           "flex flex-1 gap-3",
           hasMedia ? "items-start p-4" : "items-center",
           visualLayout === "stacked" && "px-4 py-3",
+          visualLayout === "grid" &&
+            "h-11 flex-none items-end px-3 pb-2 pt-1 sm:h-auto sm:min-h-24 sm:items-start sm:p-4 [@media(max-height:700px)]:h-10 [@media(max-height:700px)]:min-h-0 [@media(max-height:700px)]:items-end [@media(max-height:700px)]:px-2.5 [@media(max-height:700px)]:pb-1.5 [@media(max-height:700px)]:pt-1",
         )}
       >
         {Icon ? (
@@ -600,12 +626,22 @@ function OptionCard({
         ) : showPips ? (
           <IntensityPips intensity={intensity} />
         ) : null}
-        <span className={cn("min-w-0 flex-1", hasMedia && option.description && "min-h-[2.75rem]")}>
+        <span
+          className={cn(
+            "min-w-0 flex-1",
+            hasMedia && option.description && visualLayout !== "grid" && "min-h-[2.75rem]",
+          )}
+        >
           <span className="block text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]">
             {option.label}
           </span>
           {option.description ? (
-            <span className="mt-1 block text-sm leading-5 text-[var(--text-sub)]">
+            <span
+              className={cn(
+                "mt-1 text-sm leading-5 text-[var(--text-sub)]",
+                visualLayout === "grid" ? "hidden sm:block" : "block",
+              )}
+            >
               {option.description}
             </span>
           ) : null}
@@ -623,6 +659,19 @@ function OptionCard({
         </span>
       </div>
     </button>
+  )
+}
+
+function MobileBottomAction({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "fixed inset-x-0 bottom-0 z-40 border-t border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_-24px_rgba(var(--brand-plum-rgb),0.45)] backdrop-blur [@media(min-width:640px)_and_(min-height:701px)]:static [@media(min-width:640px)_and_(min-height:701px)]:mt-7 [@media(min-width:640px)_and_(min-height:701px)]:border-0 [@media(min-width:640px)_and_(min-height:701px)]:bg-transparent [@media(min-width:640px)_and_(min-height:701px)]:p-0 [@media(min-width:640px)_and_(min-height:701px)]:shadow-none [@media(min-width:640px)_and_(min-height:701px)]:backdrop-blur-none",
+        className,
+      )}
+    >
+      <div className="mx-auto w-full max-w-[40rem]">{children}</div>
+    </div>
   )
 }
 
@@ -660,7 +709,7 @@ function QuestionScreen({
     <section className="mx-auto w-full max-w-[40rem]">
       {intro ? (
         <div className="mb-8 text-center">
-          <h1 className="text-balance font-header text-[2.25rem] font-medium leading-[1.08] text-[var(--brand-plum-darkest)] sm:text-[2.8rem]">
+          <h1 className="text-balance font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.8rem] [@media(max-height:700px)]:text-[1.625rem]">
             {intro.title}
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-base leading-7 text-[var(--text-sub)]">
@@ -674,13 +723,13 @@ function QuestionScreen({
         </p>
       ) : null}
       {intro ? (
-        <h2 className="text-balance text-center font-header text-[1.8rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.1rem]">
+        <h2 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.1rem] [@media(max-height:700px)]:text-[1.625rem]">
           {config.title}
         </h2>
       ) : (
         <h1
           className={cn(
-            "text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]",
+            "text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.4rem] [@media(max-height:700px)]:text-[1.625rem]",
             config.eyebrow && "mt-2",
           )}
         >
@@ -693,11 +742,12 @@ function QuestionScreen({
         </p>
       ) : null}
       {config.contextImage ? (
-        <div className="relative mx-auto mt-6 h-44 w-full overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)]">
+        <div className="relative mx-auto mt-5 h-36 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:mt-6 sm:h-44 [@media(max-height:700px)]:h-28">
           <Image
             alt={config.contextImageAlt ?? ""}
             className="object-cover"
             fill
+            priority
             sizes="(max-width: 640px) 92vw, 640px"
             src={config.contextImage}
             style={
@@ -710,11 +760,9 @@ function QuestionScreen({
       ) : null}
       <div
         className={cn(
-          "mt-7 grid gap-3",
-          config.visual &&
-            config.visualLayout !== "stacked" &&
-            config.visualLayout !== "thumbnail" &&
-            "grid-cols-1 auto-rows-fr sm:grid-cols-2",
+          "mt-5 grid gap-3 sm:mt-7",
+          config.visualLayout === "grid" && "grid-cols-2 auto-rows-fr",
+          config.visual && !config.visualLayout && "grid-cols-1 auto-rows-fr sm:grid-cols-2",
         )}
       >
         {config.options.map((option) => {
@@ -768,17 +816,17 @@ function QuestionScreen({
         </p>
       ) : null}
       {config.multi ? (
-        <div className="mt-7">
+        <MobileBottomAction>
           <Button
             className="h-12 w-full text-base"
             variant="cta"
             disabled={!canContinue}
             onClick={onContinue}
           >
-            Weiter
+            {selected.length > 0 ? `${selected.length} ausgewählt · Weiter` : "Weiter"}
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
-        </div>
+        </MobileBottomAction>
       ) : null}
     </section>
   )
@@ -796,6 +844,7 @@ function ContextPanelLayout({
   image,
   imageAlt,
   imagePosition,
+  imageVariant = "banner",
   children,
 }: {
   eyebrow?: string
@@ -805,32 +854,44 @@ function ContextPanelLayout({
   imageAlt?: string
   /** Per-image object-position so the banner crop keeps the subject in frame. */
   imagePosition?: string
+  /** Square portraits keep their native framing instead of adding banner side-fill. */
+  imageVariant?: "banner" | "portrait"
   children: ReactNode
 }) {
   return (
-    <section className="mx-auto w-full max-w-[44rem] sm:grid sm:grid-cols-[1fr_17rem] sm:gap-6">
-      <div className="text-center sm:col-start-1 sm:row-start-1 sm:text-left">
+    <section className="mx-auto w-full max-w-[44rem] sm:grid sm:grid-cols-[1fr_17rem] sm:gap-6 [@media(max-height:700px)]:block">
+      <div className="text-center sm:col-start-1 sm:row-start-1 sm:text-left [@media(max-height:700px)]:text-center">
         {eyebrow ? (
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="mt-3 text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
+        <h1 className="mt-2 text-balance font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:mt-3 sm:text-[2.4rem] [@media(max-height:700px)]:mt-2 [@media(max-height:700px)]:text-[1.625rem]">
           {title}
         </h1>
         {subtitle}
       </div>
-      <div className="relative mt-6 h-44 overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:col-start-2 sm:row-span-2 sm:mt-0 sm:h-full sm:min-h-full sm:self-stretch">
+      <div
+        className={cn(
+          "relative mt-5 overflow-hidden rounded-[1.5rem] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:col-start-2 sm:row-span-2 sm:mt-0 sm:h-full sm:min-h-full sm:self-stretch [@media(max-height:700px)]:mt-5 [@media(max-height:700px)]:min-h-0",
+          imageVariant === "portrait"
+            ? "mx-auto aspect-square h-auto w-full max-w-[17rem] bg-[var(--brand-plum-ice)] [@media(max-height:700px)]:max-w-[13rem]"
+            : "h-36 bg-[var(--brand-plum-ice)] [@media(max-height:700px)]:h-28",
+        )}
+      >
         <Image
           alt={imageAlt ?? ""}
           className="object-cover"
           fill
+          priority
           sizes="(max-width: 640px) 92vw, 272px"
           src={image}
           style={imagePosition ? { objectPosition: imagePosition } : undefined}
         />
       </div>
-      <div className="mt-6 sm:col-start-1 sm:row-start-2 sm:mt-0">{children}</div>
+      <div className="mt-5 sm:col-start-1 sm:row-start-2 sm:mt-0 [@media(max-height:700px)]:mt-5">
+        {children}
+      </div>
     </section>
   )
 }
@@ -838,23 +899,24 @@ function ContextPanelLayout({
 function ProofScreen({ onContinue }: { onContinue: () => void }) {
   return (
     <section className="mx-auto w-full max-w-[40rem] text-center">
-      <h1 className="text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
+      <h1 className="text-balance font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.4rem] [@media(max-height:700px)]:text-[1.625rem]">
         Deine Antworten werden zu einem echten Haarprofil.
       </h1>
 
-      <div className="relative mx-auto mt-6 h-44 w-full overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:h-56">
+      <div className="relative mx-auto mt-5 h-36 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:mt-6 sm:h-56 [@media(max-height:700px)]:h-28">
         <Image
           alt="Drei lachende Frauen"
           className="object-cover"
           fill
+          priority
           sizes="(max-width: 640px) 92vw, 640px"
           src={`${PERSONAL_PLAN_ASSET_BASE}/proof-community.webp`}
           style={{ objectPosition: "50% 32%" }}
         />
       </div>
 
-      <div className="mt-8 flex flex-col items-center">
-        <span className="font-header text-[3.5rem] font-medium leading-none text-[var(--brand-plum)] sm:text-[4.25rem]">
+      <div className="mt-5 flex flex-col items-center sm:mt-8">
+        <span className="font-header text-[2.75rem] font-medium leading-none text-[var(--brand-plum)] sm:text-[4.25rem]">
           4.000+
         </span>
         <p className="mx-auto mt-3 max-w-md text-base leading-7 text-[var(--text-sub)]">
@@ -862,8 +924,8 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         </p>
       </div>
 
-      <blockquote className="mx-auto mt-8 max-w-md rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-6 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)]">
-        <p className="text-lg italic leading-8 text-[var(--brand-plum-darkest)]">
+      <blockquote className="mx-auto mt-5 max-w-md rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white p-4 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)] sm:mt-8 sm:rounded-[2rem] sm:p-6">
+        <p className="text-base italic leading-7 text-[var(--brand-plum-darkest)] sm:text-lg sm:leading-8">
           {`„${EARLY_PROOF_TESTIMONIAL.quote}“`}
         </p>
         <footer className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
@@ -871,9 +933,11 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         </footer>
       </blockquote>
 
-      <Button className="mt-8 h-12 w-full text-base" variant="cta" onClick={onContinue}>
-        Weiter
-      </Button>
+      <MobileBottomAction>
+        <Button className="h-12 w-full text-base" variant="cta" onClick={onContinue}>
+          Weiter
+        </Button>
+      </MobileBottomAction>
     </section>
   )
 }
@@ -891,6 +955,7 @@ function AnalysisBridgeScreen({
     <ContextPanelLayout
       eyebrow="Du bist hier genau richtig."
       image={`${PERSONAL_PLAN_ASSET_BASE}/texture-${answers.texture ?? "wavy"}.webp`}
+      imageVariant="portrait"
       subtitle={
         <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
           Die nächsten einfachen Beobachtungen zeigen, welche Pflege {texture.possessive} wirklich
@@ -899,9 +964,11 @@ function AnalysisBridgeScreen({
       }
       title="Jetzt machen wir dein Profil genauer."
     >
-      <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
-        Haaranalyse fortsetzen
-      </Button>
+      <MobileBottomAction>
+        <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
+          Haaranalyse fortsetzen
+        </Button>
+      </MobileBottomAction>
     </ContextPanelLayout>
   )
 }
@@ -918,7 +985,9 @@ const MIDPOINT_DENSITY_LABELS = {
   medium: "Mittlere Dichte",
   high: "Viele Haare",
 }
-const MIDPOINT_REVEAL_MS = 850
+const MIDPOINT_REVEAL_MS = 350
+const MIDPOINT_CHECK_DELAY_MS = 500
+const MIDPOINT_HOLD_MS = 2400
 
 function MidpointProfileScreen({
   answers,
@@ -946,32 +1015,35 @@ function MidpointProfileScreen({
     rows.forEach((_, index) => {
       timers.push(window.setTimeout(() => setRevealed(index + 1), MIDPOINT_REVEAL_MS * (index + 1)))
     })
-    const readyAt = MIDPOINT_REVEAL_MS * rows.length + 1200
+    const readyAt = MIDPOINT_REVEAL_MS * rows.length + MIDPOINT_CHECK_DELAY_MS
     timers.push(window.setTimeout(() => setReady(true), readyAt))
-    timers.push(window.setTimeout(onContinue, readyAt + 750))
+    timers.push(window.setTimeout(onContinue, readyAt + MIDPOINT_HOLD_MS))
     return () => timers.forEach((timer) => window.clearTimeout(timer))
   }, [onContinue, rows])
 
   return (
-    <section className="mx-auto flex w-full max-w-[30rem] flex-col items-center text-center">
+    <section
+      className="mx-auto flex w-full max-w-[30rem] flex-col items-center text-center"
+      data-layout="midpoint-fit"
+    >
       <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-plum)]">
         Deine Analyse
       </p>
-      <h1 className="mt-3 text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
+      <h1 className="mt-1.5 text-balance font-header text-[1.75rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.25rem] [@media(max-height:700px)]:text-[1.625rem]">
         Dein Profil nimmt Form an.
       </h1>
-      <p className="mt-3 max-w-sm text-base leading-7 text-[var(--text-sub)]">
+      <p className="mt-2 max-w-sm text-[15px] leading-6 text-[var(--text-sub)] [@media(max-height:700px)]:text-sm [@media(max-height:700px)]:leading-5">
         Wir verbinden deine Angaben Schritt für Schritt zu einem klareren Bild.
       </p>
 
       {/* Standard quiz card language (rounded-[2rem] plum-ice) so the portrait
           feels composed within the same visual system as every other screen. */}
-      <div className="mt-8 w-full max-w-[17rem] rounded-[2rem] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-5 shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)]">
-        <div className="relative mx-auto w-52">
+      <div className="mt-4 w-full max-w-[12rem] rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-3 shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] [@media(max-height:700px)]:max-w-[9rem] [@media(max-height:700px)]:p-2">
+        <div className="relative mx-auto w-full">
           <HairPortraitFigure length={answers.hairLength} texture={answers.texture} />
           <span
             className={cn(
-              "absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-[#47744e] text-white shadow-lg transition-all duration-500",
+              "absolute bottom-1.5 right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-[#47744e] text-white shadow-lg transition-all duration-500",
               ready ? "scale-100 opacity-100" : "scale-75 opacity-0",
             )}
           >
@@ -980,11 +1052,11 @@ function MidpointProfileScreen({
         </div>
       </div>
 
-      <dl className="mt-8 w-full max-w-sm space-y-3">
+      <dl className="mt-4 w-full max-w-sm space-y-2 [@media(max-height:700px)]:mt-3">
         {rows.map((row, index) => (
           <div
             className={cn(
-              "flex items-center justify-between gap-4 rounded-2xl border border-[var(--brand-plum-light)] bg-white px-5 py-3.5 text-left shadow-[0_18px_44px_-38px_rgba(70,41,59,0.6)] transition-all duration-500 ease-out",
+              "flex items-center justify-between gap-4 rounded-xl border border-[var(--brand-plum-light)] bg-white px-4 py-2.5 text-left shadow-[0_18px_44px_-38px_rgba(70,41,59,0.6)] transition-all duration-500 ease-out [@media(max-height:700px)]:py-2",
               revealed > index ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
             )}
             key={row.label}
@@ -992,7 +1064,9 @@ function MidpointProfileScreen({
             <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--text-caption)]">
               {row.label}
             </dt>
-            <dd className="text-lg font-semibold text-[var(--brand-plum-darkest)]">{row.value}</dd>
+            <dd className="text-base font-semibold text-[var(--brand-plum-darkest)]">
+              {row.value}
+            </dd>
           </div>
         ))}
       </dl>
@@ -1032,33 +1106,33 @@ function AdmissionScreen({
   const firstConcernLabel = getConcernOptions(answers.texture)
     .filter((option) => answers.currentConcerns?.includes(option.value as never))
     .map((option) => option.midSentenceLabel ?? option.label)[0]
-  // "das" keeps the subject grammatical for every concern label (Kommt … zurück?).
-  const recurrenceTitle = firstConcernLabel
-    ? `${capitalizeFirst(firstConcernLabel)} – kommt das bei dir immer wieder zurück?`
-    : "Kommen deine aktuellen Themen immer wieder zurück?"
-
   const content =
     screen === "admission_recurrence"
       ? {
-          title: recurrenceTitle,
+          title: "Kommt das immer wieder?",
+          subtitle: firstConcernLabel
+            ? `${capitalizeFirst(firstConcernLabel)} beschäftigt dich wiederholt.`
+            : "Deine aktuellen Haarthemen kehren wieder.",
           selected: ephemeral.admissionRecurrence,
           options: ADMISSION_OPTIONS,
         }
       : screen === "admission_conflict" && conflictPrompt
         ? {
-            title: conflictPrompt.question,
+            title: "Trifft dieses Pflege-Dilemma auf dich zu?",
+            subtitle: conflictPrompt.question,
             selected: ephemeral.admissionConflict,
             options: conflictPrompt.options,
           }
         : screen === "admission_practical_cost"
           ? {
-              title:
-                "Hast du schon Zeit oder Geld investiert, ohne verlässlich bessere Ergebnisse zu sehen?",
+              title: "Hat dich Haarpflege schon Zeit oder Geld gekostet?",
+              subtitle: undefined,
               selected: ephemeral.admissionPracticalCost,
               options: PRACTICAL_COST_OPTIONS,
             }
           : {
-              title: "Wie wichtig ist es dir, dich mit deinem Haar wirklich wohlzufühlen?",
+              title: "Wie wichtig ist dir dein Haargefühl?",
+              subtitle: undefined,
               selected: ephemeral.admissionEmotionalRelevance,
               options: EMOTIONAL_OPTIONS,
             }
@@ -1072,6 +1146,11 @@ function AdmissionScreen({
     <ContextPanelLayout
       image={`${PERSONAL_PLAN_ASSET_BASE}/${admissionImage.file}`}
       imagePosition={admissionImage.position}
+      subtitle={
+        content.subtitle ? (
+          <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">{content.subtitle}</p>
+        ) : undefined
+      }
       title={content.title}
     >
       <div className="grid gap-3">
@@ -1091,34 +1170,39 @@ function AdmissionScreen({
 
 function ReframeScreen({ onContinue }: { onContinue: () => void }) {
   return (
-    <section className="mx-auto grid w-full max-w-[44rem] gap-6 sm:grid-cols-[1fr_17rem] sm:items-center">
-      <div className="relative mx-auto aspect-[9/14] w-full max-w-[18rem] overflow-hidden rounded-[2rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:order-last sm:mx-0 sm:aspect-auto sm:min-h-[24rem] sm:max-w-none">
+    <section
+      className="mx-auto flex w-full max-w-[44rem] flex-col gap-4 sm:grid sm:grid-cols-[1fr_17rem] sm:items-center sm:gap-x-6 sm:gap-y-5 [@media(max-height:700px)]:flex"
+      data-layout="reframe-copy-image-closing"
+    >
+      <div className="order-2 relative mx-auto h-40 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:mx-0 sm:h-auto sm:min-h-[24rem] sm:max-w-none sm:rounded-[2rem] [@media(max-height:700px)]:h-32 [@media(max-height:700px)]:min-h-0">
         <Image
           alt=""
           className="object-cover"
           fill
+          priority
           sizes="(max-width: 640px) 90vw, 272px"
           src={`${PERSONAL_PLAN_ASSET_BASE}/causal-reframe.webp`}
+          style={{ objectPosition: "50% 8%" }}
         />
       </div>
-      <div className="text-center sm:order-first sm:text-left">
-        <h1 className="text-balance font-header text-[2.25rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.8rem]">
-          Dein Haar ist nicht das Problem.
-          <span className="mt-2 block text-[var(--brand-plum)]">
-            Dir fehlt nur der richtige Plan.
-          </span>
+      <div className="order-1 text-center sm:col-start-1 sm:row-start-1 sm:text-left [@media(max-height:700px)]:text-center">
+        <h1 className="text-balance font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.8rem] [@media(max-height:700px)]:text-[1.625rem]">
+          Dein Haar braucht nur{" "}
+          <span className="text-[var(--brand-plum)]">den richtigen Plan.</span>
         </h1>
-        <p className="mt-5 text-base leading-7 text-[var(--text-sub)]">
+        <p className="mt-4 text-[15px] leading-6 text-[var(--text-sub)] sm:mt-5 sm:text-base sm:leading-7">
           Passen Produkte, Reihenfolge und Anwendung nicht zusammen, wirkt Pflege schnell zufällig.
           Dein Plan verbindet diese Punkte.
         </p>
-        <p className="mt-5 text-lg font-semibold text-[var(--brand-plum-darkest)]">
-          Mit dem richtigen Plan wird es einfach.
-        </p>
-        <Button className="mt-8 h-12 w-full text-base" onClick={onContinue} variant="cta">
+      </div>
+      <p className="order-3 text-center text-base font-semibold text-[var(--brand-plum-darkest)] sm:col-start-1 sm:row-start-2 sm:text-left sm:text-lg [@media(max-height:700px)]:text-center">
+        Mit dem richtigen Plan wird es einfach.
+      </p>
+      <MobileBottomAction className="order-4 sm:col-start-1">
+        <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
           Weiter
         </Button>
-      </div>
+      </MobileBottomAction>
     </section>
   )
 }
@@ -1131,45 +1215,61 @@ function ProfileSummaryScreen({
   onContinue: () => void
 }) {
   const rows = derivePersonalPlanProfileSummary(answers)
+  const profileImage = getProfileSummaryImage(answers.texture, answers.hairLength)
 
   return (
     <section className="mx-auto w-full max-w-[40rem]">
       <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
         Viel Potenzial
       </p>
-      <h1 className="mt-3 text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
+      <h1 className="mt-2 text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:mt-3 sm:text-[2.4rem] [@media(max-height:700px)]:mt-2 [@media(max-height:700px)]:text-[1.625rem]">
         Dein Haarprofil ist bereit für einen persönlichen Plan.
       </h1>
 
-      <div className="mt-8 overflow-hidden rounded-[2rem] border border-[var(--brand-plum-light)] bg-white shadow-[0_28px_80px_-48px_rgba(70,41,59,0.7)]">
+      <div className="mt-4 overflow-hidden rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white shadow-[0_28px_80px_-48px_rgba(70,41,59,0.7)] sm:mt-8 sm:rounded-[2rem]">
         {/* Header band: what this is + a confident, badge-led verdict. */}
-        <div className="flex items-center justify-between gap-4 border-b border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-6 py-4">
+        <div className="flex items-center justify-between gap-2.5 border-b border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-4">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-plum)]">
+            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--brand-plum)] sm:text-[10px] sm:tracking-[0.14em]">
               Deine Ausgangslage
             </p>
-            <p className="mt-1 font-header text-lg font-medium leading-tight text-[var(--brand-plum-darkest)]">
+            <p className="mt-0.5 font-header text-base font-medium leading-tight text-[var(--brand-plum-darkest)] sm:mt-1 sm:text-lg">
               Persönliches Haarprofil
             </p>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#dff1e2] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-[#2f6b3c] ring-1 ring-[#b7d9bd]">
-            <Sparkles className="h-3.5 w-3.5" />
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#dff1e2] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-[#2f6b3c] ring-1 ring-[#b7d9bd] sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs sm:tracking-[0.08em]">
+            <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             Viel Potenzial
           </span>
         </div>
 
-        {/* Body: portrait leads on mobile, sits beside the read-out on ≥sm. */}
-        <div className="grid gap-6 p-6 sm:grid-cols-[1fr_10rem] sm:items-start sm:gap-7">
-          <div className="order-first mx-auto w-36 rounded-[1.5rem] bg-[var(--brand-plum-ice)] p-3 sm:order-none sm:col-start-2 sm:row-start-1 sm:w-full">
-            <HairPortraitFigure length={answers.hairLength} texture={answers.texture} />
+        {/* Body: the personalised photo leads into four compact profile metrics. */}
+        <div
+          className="grid gap-2 p-2.5 sm:gap-4 sm:p-5 [@media(max-height:700px)]:gap-1.5 [@media(max-height:700px)]:p-2"
+          data-layout="profile-summary-2x2"
+        >
+          <div
+            className="relative aspect-[2/1] w-full overflow-hidden rounded-[1rem] bg-[var(--brand-plum-ice)] sm:rounded-[1.25rem] [@media(max-height:700px)]:h-[5.5rem] [@media(max-height:700px)]:aspect-auto [@media(max-height:500px)]:h-14"
+            data-layout="profile-summary-image"
+          >
+            <Image
+              alt="Persönliche Darstellung deines Haarprofils"
+              className="object-cover object-center"
+              fill
+              sizes="(max-width: 640px) calc(100vw - 3.5rem), 600px"
+              src={profileImage}
+            />
           </div>
-          <dl className="divide-y divide-[var(--brand-plum-light)] sm:col-start-1 sm:row-start-1">
+          <dl className="grid grid-cols-2 gap-1.5 sm:gap-3">
             {rows.map((row) => (
-              <div className="flex flex-col gap-1 py-3.5 first:pt-0 last:pb-0" key={row.label}>
-                <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--text-caption)]">
+              <div
+                className="min-w-0 rounded-lg border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-2 py-2 sm:rounded-xl sm:px-3 sm:py-2.5 [@media(max-height:700px)]:px-2 [@media(max-height:700px)]:py-1.5"
+                key={row.label}
+              >
+                <dt className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--text-caption)] sm:text-[10px] sm:tracking-[0.14em]">
                   {row.label}
                 </dt>
-                <dd className="text-[15px] font-semibold leading-6 text-[var(--brand-plum-darkest)]">
+                <dd className="mt-0.5 text-xs font-semibold leading-4 text-[var(--brand-plum-darkest)] sm:mt-1 sm:text-sm sm:leading-5">
                   {row.value}
                 </dd>
               </div>
@@ -1178,21 +1278,15 @@ function ProfileSummaryScreen({
         </div>
       </div>
 
-      <div className="mt-5 flex items-start gap-3 rounded-2xl border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-4">
-        <CircleCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-plum)]" />
-        <p className="text-sm leading-6 text-[var(--brand-plum-darkest)]">
-          Dein Profil zeigt klare Ansatzpunkte. Der vollständige Plan kann daraus Pflegebedarf,
-          Reihenfolge, Produkte und Alltagsschritte ableiten.
-        </p>
-      </div>
-
-      <p className="mt-3 text-center text-xs leading-5 text-[var(--text-caption)]">
+      <p className="mt-3 text-center text-[11px] leading-4 text-[var(--text-caption)] sm:text-xs sm:leading-5">
         Der Plan unterstützt kosmetische Haarpflege. Starke, plötzliche oder anhaltende Beschwerden
         sollten medizinisch oder dermatologisch eingeordnet werden.
       </p>
-      <Button className="mt-7 h-12 w-full text-base" variant="cta" onClick={onContinue}>
-        Meinen Plan vorbereiten
-      </Button>
+      <MobileBottomAction>
+        <Button className="h-12 w-full text-base" variant="cta" onClick={onContinue}>
+          Meinen Plan vorbereiten
+        </Button>
+      </MobileBottomAction>
     </section>
   )
 }
@@ -1209,7 +1303,7 @@ function DailyTimeScreen({
       eyebrow="Dein Alltag"
       image={`${PERSONAL_PLAN_ASSET_BASE}/daily-commitment.webp`}
       imagePosition="50% 20%"
-      title="Wie viel Zeit möchtest du dir an einem normalen Tag für dein Haar nehmen?"
+      title="Wie viel Zeit möchtest du täglich einplanen?"
     >
       <div className="grid gap-3">
         {DAILY_TIME_OPTIONS.map((option) => (
@@ -2045,22 +2139,14 @@ export function PersonalPlanQuiz() {
 
   function renderScreen() {
     if (screen === "texture") {
-      return renderQuestion(
-        {
-          field: "texture",
-          title: "Welche Haarstruktur haben die meisten deiner Haare?",
-          helper: "Wähle das Bild, das deinem natürlichen Haar am nächsten kommt.",
-          options: TEXTURE_OPTIONS,
-          visual: true,
-        },
-        undefined,
-        {
-          intro: {
-            title: "Persönliche Haaranalyse für deinen Haarpflegeplan",
-            body: "Um dich wohlzufühlen mit gesundem und schönem Haar.",
-          },
-        },
-      )
+      return renderQuestion({
+        field: "texture",
+        title: "Welche Haarstruktur hast du?",
+        helper: "Wähle das Bild, das deinem natürlichen Haar am nächsten kommt.",
+        options: TEXTURE_OPTIONS,
+        visual: true,
+        visualLayout: "grid",
+      })
     }
     if (screen === "early_proof") return <ProofScreen onContinue={() => goNext()} />
     if (screen === "goals") {
@@ -2078,11 +2164,10 @@ export function PersonalPlanQuiz() {
       )
     }
     if (screen === "current_problems") {
-      const texture = TEXTURE_COPY[answers.texture ?? "wavy"]
       return renderQuestion(
         {
           field: "currentConcerns",
-          title: `Was beschäftigt dich bei ${texture.dative} im Moment?`,
+          title: "Was beschäftigt dich gerade?",
           helper: "Wähle alles aus, was immer wieder eine Rolle spielt.",
           options: getConcernOptions(answers.texture),
           multi: true,
@@ -2115,6 +2200,7 @@ export function PersonalPlanQuiz() {
         ...base,
         options: getLengthOptions(answers.texture),
         visual: true,
+        visualLayout: "grid",
       })
     }
     if (screen === "scalp_concerns") {
@@ -2285,7 +2371,7 @@ export function PersonalPlanQuiz() {
         progress={progress}
         screen={screen}
       />
-      <main className="flex min-h-[calc(100vh-88px)] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-8 sm:items-center sm:px-6 sm:py-12">
+      <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4">
         {renderScreen()}
       </main>
     </div>
