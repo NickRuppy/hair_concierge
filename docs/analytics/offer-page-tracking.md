@@ -18,7 +18,7 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                                              | Existing PostHog, Customer.io, and Meta routes                                                  |
 | Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                                          | PostHog                                                                                         |
 | Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                                    | PostHog; Meta `InitiateCheckout` for the overlay only                                           |
-| Payment option reach | `offer_payment_option_viewed`   | One ready payment option was at least 50% visible for 750 ms in the open overlay                | PostHog only                                                                                    |
+| Payment option reach | `offer_payment_option_viewed`   | One ready payment option was at least 50% visible for 750 ms in the open overlay               | PostHog only                                                                                    |
 | Payment choice       | `offer_payment_method_selected` | A provider was explicitly selected; Stripe records `apple_pay` or `payment_element` when known | PostHog                                                                                         |
 | Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout                            | PostHog                                                                                         |
 | Checkout initialized | `checkout_started`              | Stripe created a session or PayPal created an intent                                           | Existing PostHog, Customer.io, Meta for inline/external checkout, and first-party funnel routes |
@@ -307,6 +307,69 @@ For a guarded partial or complete restore, use the captured backup with
 `--restore=/absolute/outside-repo/posthog-personal-plan-v2.before.json`. The
 operator skips insights already at the reviewed before-state, restores only
 those at the expected v2 state, and aborts on any third state.
+
+### Personal-plan offer revision 3
+
+The pricing-order refinement changes only the personal-plan page hierarchy. It
+keeps the v2 copy, section set, commercial identifiers, payment behavior, and
+event names, while changing `offer_revision` to `personal_plan_v3`.
+
+The v3 visual order and zero-based indices are:
+
+| Index | Section ID                    |
+| ----: | ----------------------------- |
+|     0 | `hero`                        |
+|     1 | `personal_plan_diagnosis`     |
+|     2 | `pricing`                     |
+|     3 | `personal_plan_complete_plan` |
+|     4 | `personal_plan_method`        |
+|     5 | `personal_plan_before_after`  |
+|     6 | `personal_plan_survey`        |
+|     7 | `testimonials`                |
+|     8 | `guarantee`                   |
+|     9 | `faq`                         |
+|    10 | `final_cta`                   |
+
+The generic three-section `offer_engaged` rule is unchanged. In a normal
+top-to-bottom v3 journey it can therefore qualify when pricing becomes the
+third genuinely viewed section. A result-email focus or other non-linear entry
+does not imply views of skipped sections; it qualifies only after three
+eligible sections have actually met the normal visibility rule.
+
+The v2 dashboard declarations and operator remain frozen historical artifacts.
+The v3 cutover covers these reviewed resources:
+
+- dashboard `859068`: insights `5235347`, `5235348`, `5235350`, `5245339`,
+  and `5250265`;
+- dashboard `858662`: insight `5233190`;
+- dashboard `825839`: insights `5235351` and `5033903` are fingerprinted but
+  intentionally unchanged.
+
+Run the v3 operator without arguments for a GET-only dry run:
+
+```bash
+npm run posthog:personal-plan-offer-v3:dashboards
+```
+
+Only after the product deployment, a verified v3 event, and separate
+production-write authorization, apply the dashboard migration with an
+absolute backup path outside the repository:
+
+```bash
+npm run posthog:personal-plan-offer-v3:dashboards -- \
+  --apply \
+  --confirm-project=126788 \
+  --backup=/absolute/outside-repo/posthog-personal-plan-v3.before.json \
+  --annotation-at=<production-ISO-timestamp> \
+  --deployment-sha=<deployed-git-sha>
+```
+
+Restore uses the captured v3 backup plus `--apply`,
+`--confirm-project=126788`, and `--restore=<absolute-backup-path>`. Both apply
+and restore reject any unreviewed third state. The operator preserves each
+live insight's presentation object, patches only `description` and `query`,
+re-reads every write, and never changes the two intentionally unchanged
+resources.
 
 ## KPI definitions
 

@@ -59,10 +59,10 @@ const GUIDED_STORY_FOUNDER_LETTER_SECTION_ORDER = [
 const PERSONAL_PLAN_SECTION_ORDER = [
   "hero",
   "personal_plan_diagnosis",
+  "pricing",
   "personal_plan_complete_plan",
   "personal_plan_method",
   "personal_plan_before_after",
-  "pricing",
   "personal_plan_survey",
   "testimonials",
   "guarantee",

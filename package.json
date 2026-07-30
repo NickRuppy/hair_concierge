@@ -90,6 +90,7 @@
     "paypal:create-resources": "tsx scripts/paypal/create-resources.ts",
     "paypal:validate-plans": "tsx scripts/paypal/validate-plans.ts",
     "posthog:personal-plan-offer-v2:dashboards": "tsx scripts/posthog/update-personal-plan-offer-v2-dashboards.ts",
+    "posthog:personal-plan-offer-v3:dashboards": "tsx scripts/posthog/update-personal-plan-offer-v3-dashboards.ts",
     "customerio:quiz-result-email": "tsx scripts/customerio-quiz-result-email.ts",
     "customerio:personal-plan-result-email": "tsx scripts/customerio-personal-plan-result-email.ts",
     "billing:analytics:retry": "tsx scripts/billing-analytics/retry-outbox.ts",

@@ -29,7 +29,7 @@ const testimonials = [
   },
 ]
 
-const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v2"
+const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v3"
 
 const planHighlights = [
   {
@@ -313,6 +313,30 @@ export function PersonalPlanOffer({
         </section>
 
         <section
+          className="mx-auto max-w-4xl scroll-mt-16 px-4 py-10 sm:py-14"
+          data-offer-section="pricing"
+          id="pricing"
+          tabIndex={-1}
+        >
+          <div className="text-center">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+              Plan freischalten
+            </p>
+            <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
+              Starte mit deinem persönlichen Plan.
+            </h2>
+          </div>
+          <div className="mt-7">
+            <ResultOfferPricing
+              leadId={leadId}
+              offerTracking={offerTracking}
+              openCheckoutRequestId={checkoutOpenRequest}
+              referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
+            />
+          </div>
+        </section>
+
+        <section
           className="mx-auto max-w-4xl scroll-mt-16 px-4 py-7 sm:py-14"
           data-offer-section="personal_plan_complete_plan"
           id="personal_plan_complete_plan"
@@ -431,30 +455,6 @@ export function PersonalPlanOffer({
                 </p>
               </article>
             ))}
-          </div>
-        </section>
-
-        <section
-          className="mx-auto max-w-4xl scroll-mt-16 px-4 py-10 sm:py-14"
-          data-offer-section="pricing"
-          id="pricing"
-          tabIndex={-1}
-        >
-          <div className="text-center">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              Plan freischalten
-            </p>
-            <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Starte mit deinem persönlichen Plan.
-            </h2>
-          </div>
-          <div className="mt-7">
-            <ResultOfferPricing
-              leadId={leadId}
-              offerTracking={offerTracking}
-              openCheckoutRequestId={checkoutOpenRequest}
-              referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
-            />
           </div>
         </section>
 

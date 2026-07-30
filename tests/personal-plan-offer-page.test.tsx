@@ -183,12 +183,21 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /conic-gradient\(#563882 82%/i)
   assert.match(html, /conic-gradient\(#7657a2 73%/i)
   assert.match(html, /conic-gradient\(#9a7cbd 63%/i)
-  assert.ok(
-    html.indexOf('data-offer-section="personal_plan_method"') <
-      html.indexOf('data-offer-section="personal_plan_before_after"') &&
-      html.indexOf('data-offer-section="personal_plan_before_after"') <
-        html.indexOf('data-offer-section="pricing"'),
-    "the new before/after section should sit between method and pricing",
+  assert.deepEqual(
+    Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1]),
+    [
+      "hero",
+      "personal_plan_diagnosis",
+      "pricing",
+      "personal_plan_complete_plan",
+      "personal_plan_method",
+      "personal_plan_before_after",
+      "personal_plan_survey",
+      "testimonials",
+      "guarantee",
+      "faq",
+      "final_cta",
+    ],
   )
   assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen|Kopfhautserum|Dry\.Shampoo/i)
   assert.doesNotMatch(html, /conditionerModuleId|shampooModuleId|suggestedCategory|needLane/)
@@ -270,7 +279,7 @@ test("personal plan analytics use their own revision label", () => {
     "utf8",
   )
 
-  assert.match(offerSource, /const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v2"/)
+  assert.match(offerSource, /const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v3"/)
   assert.match(offerSource, /offerRevision=\{PERSONAL_PLAN_OFFER_REVISION\}/)
   assert.doesNotMatch(offerSource, /GUIDED_STORY_OFFER_REVISION/)
 })
