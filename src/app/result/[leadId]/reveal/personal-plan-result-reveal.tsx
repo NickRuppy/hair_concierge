@@ -9,6 +9,7 @@ import {
   claimPersonalPlanResultRevealCompletion,
   schedulePersonalPlanResultReveal,
 } from "@/lib/quiz/personal-plan-result-reveal"
+import { requestPersonalPlanResultArtifactEmail } from "@/lib/personal-plan-quiz/result-email-client"
 
 export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string; leadId: string }) {
   const router = useRouter()
@@ -18,6 +19,12 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
   const trackedStepsRef = useRef(new Set<number>())
   const completedRef = useRef(false)
   const resultPath = `/result/${leadId}?entry=quiz_completion`
+
+  useEffect(() => {
+    void requestPersonalPlanResultArtifactEmail(leadId).catch((error) => {
+      console.warn("[personal-plan-result-artifact] request failed", error)
+    })
+  }, [leadId])
 
   const openResult = useCallback(() => {
     if (!claimPersonalPlanResultRevealCompletion(completedRef)) return

@@ -32,11 +32,17 @@ export type PersonalPlanDiagnosticRow = {
   summary: string
 }
 
+export type PersonalPlanPrimaryMessage = {
+  kind: "concern" | "goal" | "positive"
+  label: string
+}
+
 export type PersonalPlanPublicOfferModel = {
   modelVersion: "personal_plan_offer_v1"
   planTitle: string
   profileLine: string
   diagnosticRows: [PersonalPlanDiagnosticRow, PersonalPlanDiagnosticRow, PersonalPlanDiagnosticRow]
+  primaryMessage: PersonalPlanPrimaryMessage
   planFitStatement: string
 }
 
@@ -240,6 +246,34 @@ const SCOREABLE_POSITIVE_FALLBACKS: readonly GuidedStoryPriority[] = [
   },
 ]
 
+const PERSONAL_PLAN_EMAIL_PRIORITY_LABELS: Readonly<Record<string, string>> = {
+  "surface_manageability.frizz": "Frizz und viele abstehende Haare",
+}
+
+type PersonalPlanPrimaryMessagePriority = {
+  isFallback?: boolean
+  matchedConcerns: readonly unknown[]
+  tier: GuidedStoryPriority["tier"]
+  title: string
+  variantId: string
+}
+
+export function derivePersonalPlanPrimaryMessage(
+  priority: PersonalPlanPrimaryMessagePriority,
+): PersonalPlanPrimaryMessage {
+  const kind =
+    priority.tier === "positive" || priority.isFallback
+      ? "positive"
+      : priority.tier === 1 || priority.tier === 2 || priority.matchedConcerns.length > 0
+        ? "concern"
+        : "goal"
+
+  return {
+    kind,
+    label: PERSONAL_PLAN_EMAIL_PRIORITY_LABELS[priority.variantId] ?? priority.title,
+  }
+}
+
 function replaceUnscoreableLegacyFallbacks(
   ranked: readonly GuidedStoryPriority[],
 ): GuidedStoryPriority[] {
@@ -279,6 +313,10 @@ export function buildPersonalPlanPreparedArtifact(
       summary: potentialSummary(dimension.family, maintenance),
     }
   }) as PersonalPlanPublicOfferModel["diagnosticRows"]
+  const centralPriority = priorities.find((priority) => priority.isCentral) ?? priorities[0]
+  if (!centralPriority) {
+    throw new Error("Personal-plan answers could not produce a central priority")
+  }
 
   return {
     modelVersion: "personal_plan_prepared_v1",
@@ -294,6 +332,7 @@ export function buildPersonalPlanPreparedArtifact(
       planTitle: planTitle(adapted.answers),
       profileLine: profileLine(adapted.answers),
       diagnosticRows,
+      primaryMessage: derivePersonalPlanPrimaryMessage(centralPriority),
       planFitStatement: planFitStatement(envelope.answers),
     },
     lockedPlan: {
