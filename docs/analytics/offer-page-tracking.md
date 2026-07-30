@@ -183,6 +183,116 @@ remain once per FAQ ID per offer view.
 The Founder Letter arm inserts `founder_letter` between `personalized_analysis` and `mini_routine`.
 The other two experiment arms retain the existing guided-story section order.
 
+### Personal-plan offer revision 2
+
+The approved personal-plan refocus is a semantic page revision, not a new
+commercial offer. It keeps:
+
+- `offer_variant=personal-plan-v1`;
+- `funnel_package=meta_personal_plan_v1`;
+- all price, checkout, billing, and Meta conversion identities.
+
+It changes `offer_revision` from `personal_plan_v1` to
+`personal_plan_v2` and adds one visual section. The v2 section order and
+zero-based indices are:
+
+| Index | Section ID                    |
+| ----: | ----------------------------- |
+|     0 | `hero`                        |
+|     1 | `personal_plan_diagnosis`     |
+|     2 | `personal_plan_complete_plan` |
+|     3 | `personal_plan_method`        |
+|     4 | `personal_plan_before_after`  |
+|     5 | `pricing`                     |
+|     6 | `personal_plan_survey`        |
+|     7 | `testimonials`                |
+|     8 | `guarantee`                   |
+|     9 | `faq`                         |
+|    10 | `final_cta`                   |
+
+`personal_plan_before_after` emits only `offer_section_viewed` under the normal
+25%-visible/750-ms-visible-tab rule. It has no new CTA or detail event. The
+personal-plan `offer_engaged` depth threshold still qualifies after the first
+three sections (`hero`, `personal_plan_diagnosis`, and
+`personal_plan_complete_plan`), so the new section at index 4 does not delay the
+normal Customer.io handoff. Keep the new ID in the closed Customer.io section
+schema for parity with the typed analytics contract.
+
+The same-tab `offer_engaged` session-storage key includes `offer_revision`.
+A tab that spans the v1-to-v2 cutover can therefore qualify once again after
+reload; this is not a durable cross-session deduplication mechanism. Before
+deployment, inspect every active Customer.io consumer of `offer_engaged`; if
+any consumer sends customer-facing communication, add a revision-aware
+exclusion or equivalent deduplication so the page revision does not resend that
+communication.
+
+The persistent Meta offer-view guard is also revision-scoped. A returning
+eligible result can emit the v2 view again, while its lead-derived Meta
+`event_id` remains unchanged across the revision and preserves the existing
+deduplication identity.
+
+#### PostHog dashboard cutover
+
+The product deployment and dashboard writes are separate release actions:
+
+1. Deploy the v2 product code and record its production timestamp and SHA.
+2. Complete one authorized fresh result journey and verify a
+   `personal_plan_v2` `offer_section_viewed` for
+   `personal_plan_before_after` at index 4.
+3. Re-run the guarded dashboard migration in dry-run mode. It must fingerprint
+   the current insight definitions and stop if they have drifted.
+4. With explicit production-write authorization, apply the migration, re-read
+   the affected insights, and add a deployment annotation.
+
+The affected production resources are:
+
+- dashboard `859068`, **Persönlicher Haarplan — Offer-Seite: Views & Klicks**
+  - insights `5235347`, `5235348`, `5235350`, `5235351`, and `5245339` move
+    their explicit revision filter to v2;
+  - insight `5235348` inserts `personal_plan_before_after` between method and
+    pricing, shifts later display numbers, and describes 11 visual sections.
+- dashboard `858662`, **Persönlicher Haarplan — Funnel & Quiz-Drop-off**
+  - insight `5233190` moves to v2 and inserts the new section in its ordered
+    predecessor calculations;
+  - insights `5233182` and `5233189` remain revision-agnostic.
+- dashboard `825839`, **Quiz Result & Checkout — Letzte 24 Stunden**
+  - insight `5033903` groups reach by `offer_variant`, `offer_revision`, and
+    `section_id`;
+  - its denominator must match the same variant and revision, and its ordering
+    must use variant, revision, and the minimum observed section index. This
+    prevents mixed v1/v2 traffic from diluting reach or misordering the shifted
+    indices.
+
+Capture the before-state before any PATCH. If only a query is wrong, restore
+that insight without rolling back the product. If the product revision is
+rolled back, redeploy the previous release, restore any already-migrated insight
+definitions, and add a rollback annotation. Preserve recorded v1/v2 event rows
+as historical truth.
+
+Use the task-scoped operator in dry-run mode by default:
+
+```bash
+npm run posthog:personal-plan-offer-v2:dashboards
+```
+
+After the separately authorized production deployment and first verified v2
+event, apply with an absolute backup path outside the repository:
+
+```bash
+npm run posthog:personal-plan-offer-v2:dashboards -- \
+  --apply \
+  --confirm-project=126788 \
+  --backup=/absolute/outside-repo/posthog-personal-plan-v2.before.json \
+  --annotation-at=<production-ISO-timestamp> \
+  --deployment-sha=<deployed-git-sha>
+```
+
+For a guarded partial or complete restore, use the captured backup with
+`--apply`, `--confirm-project=126788`, and
+`--restore=/absolute/outside-repo/posthog-personal-plan-v2.before.json`. The
+operator skips insights already at the reviewed before-state, restores only
+those at the expected v2 state, and aborts on any third state.
+
 ## KPI definitions
 
 Use the durable funnel session for anonymous-to-paid conversion, unique people for identified-user reporting, and unique `offerViewId` values for within-page diagnostics. Build every rate from an ordered cohort: the denominator event must occur first, and the numerator must match the same funnel session, offer view, or checkout attempt as stated below.

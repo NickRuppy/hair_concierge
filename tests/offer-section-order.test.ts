@@ -29,6 +29,26 @@ test("incumbent variants preserve their existing DOM-order section indices", () 
   assert.equal(resolveOfferSectionIndex("default", "final_cta"), 11)
 })
 
+test("personal-plan keeps the v2 visual order with before/after before pricing", () => {
+  const personalPlanOrder = [
+    "hero",
+    "personal_plan_diagnosis",
+    "personal_plan_complete_plan",
+    "personal_plan_method",
+    "personal_plan_before_after",
+    "pricing",
+    "personal_plan_survey",
+    "testimonials",
+    "guarantee",
+    "faq",
+    "final_cta",
+  ] as const
+
+  for (const [index, sectionId] of personalPlanOrder.entries()) {
+    assert.equal(resolveOfferSectionIndex("personal-plan-v1", sectionId), index)
+  }
+})
+
 test("unknown section combinations sort after a variant's declared sections", () => {
   assert.equal(resolveOfferSectionIndex("guided-story", "final_cta"), 9)
   assert.equal(resolveOfferSectionIndex("app-value-stack", "guarantee"), 12)
