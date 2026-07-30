@@ -131,6 +131,7 @@ test("offer overlay express path renders withdrawal link and direct fallback wit
   assert.doesNotMatch(html, /aria-expanded="false"/)
   assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
   assert.doesNotMatch(html, /min-h-\[560px\]|min-h-\[600px\]/)
+  assert.match(html, /data-offer-payment-option="paypal"/)
 })
 
 test("PayPal script rejection reports once without coupling the card fallback", () => {
@@ -203,6 +204,8 @@ test("PayPal plan IDs are resolved by the server intent route", () => {
   assert.match(buttonSource, /usePayPalScriptReducer/)
   assert.match(buttonSource, /<PayPalScriptFailureObserver/)
   assert.match(buttonSource, /reportPayPalScriptFailureOnce\(reportedRef, isRejected/)
+  assert.match(buttonSource, /onInit=\{\(\) =>/)
+  assert.match(buttonSource, /onReady\?\.\(\)/)
   assert.match(buttonSource, /checkoutAttemptId,/)
 
   const routeSource = readFileSync(

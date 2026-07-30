@@ -21,8 +21,10 @@ import {
   useOfferTrackingContext,
 } from "@/components/quiz/offer-tracking-provider"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { claimOfferPaymentOptionView } from "@/lib/analytics/offer-payment-option-view"
 import { observeOnceVisible } from "@/lib/analytics/observe-once-visible"
 import {
+  claimCheckoutOpenRequest,
   createCheckoutAttemptController,
   type CheckoutAttemptController,
 } from "@/lib/analytics/checkout-attempt"
@@ -32,7 +34,11 @@ import {
   isOfferPaymentOverlayEnabled,
   isStripeExpressCheckoutEnabled,
 } from "@/lib/funnel/flags"
-import type { FunnelAnalyticsEnvelope } from "@/lib/analytics/events"
+import type {
+  FunnelAnalyticsEnvelope,
+  OfferPaymentOption,
+  OfferPaymentOptionProvider,
+} from "@/lib/analytics/events"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
@@ -214,8 +220,10 @@ export function ResultOfferPricing({
   const checkoutAttemptControllerRef = useRef<CheckoutAttemptController | null>(null)
   checkoutAttemptControllerRef.current ??= createCheckoutAttemptController(createFunnelEventId)
   const checkoutAttemptController = checkoutAttemptControllerRef.current
+  const handledCheckoutOpenRequestsRef = useRef(new Set<number>())
   const lockedProviderRef = useRef<LockedCheckoutProvider | null>(null)
   const paymentSelectionIndexRef = useRef(0)
+  const paymentOptionViewsRef = useRef(new Set<string>())
   const planSelectionIndexRef = useRef(0)
   const prewarmGenerationRef = useRef(0)
   const prewarmAttemptedKeysRef = useRef(new Set<string>())
@@ -737,7 +745,9 @@ export function ResultOfferPricing({
   }
 
   useEffect(() => {
-    if (!openCheckoutRequestId) return
+    if (!claimCheckoutOpenRequest(handledCheckoutOpenRequestsRef.current, openCheckoutRequestId)) {
+      return
+    }
     openCheckout()
     // `openCheckoutRequestId` is an imperative request token owned by the parent offer shell.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -953,6 +963,28 @@ export function ResultOfferPricing({
     [checkoutAttemptId, checkoutInterval, getStripePromise, offerContext, trackCheckoutFailure],
   )
 
+  const handlePaymentOptionViewed = useCallback(
+    (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => {
+      if (!checkoutInterval || !checkoutAttemptId || !offerContext) return
+      if (!claimOfferPaymentOptionView(paymentOptionViewsRef.current, checkoutAttemptId, option)) {
+        return
+      }
+      const plan = getStripePricingPlan(checkoutInterval)
+      trackAppEvent("offer_payment_option_viewed", {
+        ...offerContext,
+        checkoutAttemptId,
+        currency: plan.currency,
+        funnelEventId: createFunnelEventId(),
+        interval: checkoutInterval,
+        option,
+        planId: plan.analyticsId,
+        provider,
+        value: plan.amount,
+      })
+    },
+    [checkoutAttemptId, checkoutInterval, offerContext],
+  )
+
   const handlePayPalCheckoutFailed = useCallback(
     (failure: CheckoutFailure) => {
       if (!checkoutInterval || !checkoutAttemptId) return
@@ -1017,6 +1049,7 @@ export function ResultOfferPricing({
       onChangePlan={() => closeCheckout()}
       onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
       onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
+      onPaymentOptionViewed={handlePaymentOptionViewed}
       onPreparedApplePayAvailabilityResolved={handlePreparedApplePayAvailabilityResolved}
       onPaymentMethodSelected={handlePaymentMethodSelected}
       paymentElementEnabled={checkoutInterval !== null}

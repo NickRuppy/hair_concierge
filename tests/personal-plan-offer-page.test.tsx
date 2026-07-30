@@ -4,6 +4,7 @@ import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { ResultPageClient } from "../src/app/result/[leadId]/result-client"
+import { scrollToPersonalPlanPricing } from "../src/components/personal-plan-offer/personal-plan-offer"
 import { parsePersonalPlanOfferModel } from "../src/components/personal-plan-offer/model"
 import type { PersonalPlanOfferModel } from "../src/components/personal-plan-offer/types"
 
@@ -235,8 +236,32 @@ test("pricing exposes a narrow external checkout request seam", () => {
     "utf8",
   )
   assert.match(pricingSource, /openCheckoutRequestId\?: number/)
-  assert.match(pricingSource, /if \(!openCheckoutRequestId\) return/)
+  assert.match(pricingSource, /claimCheckoutOpenRequest\(/)
+  assert.match(pricingSource, /handledCheckoutOpenRequestsRef/)
   assert.match(pricingSource, /openCheckout\(\)/)
+})
+
+test("sticky header only scrolls and focuses pricing", () => {
+  const calls: unknown[][] = []
+  let scheduled: (() => void) | undefined
+  const pricing = {
+    focus: (...args: unknown[]) => calls.push(["focus", ...args]),
+    scrollIntoView: (...args: unknown[]) => calls.push(["scroll", ...args]),
+  }
+
+  assert.equal(
+    scrollToPersonalPlanPricing(pricing, (callback, delay) => {
+      calls.push(["schedule", delay])
+      scheduled = callback
+    }),
+    true,
+  )
+  assert.deepEqual(calls, [
+    ["scroll", { behavior: "smooth", block: "start" }],
+    ["schedule", 450],
+  ])
+  scheduled?.()
+  assert.deepEqual(calls.at(-1), ["focus", { preventScroll: true }])
 })
 
 test("personal plan analytics use their own revision label", () => {

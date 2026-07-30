@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtemp, rm } from "node:fs/promises"
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
@@ -11,6 +11,7 @@ import {
   transformInsight,
   type Insight as MigrationInsight,
 } from "../scripts/posthog/update-personal-plan-offer-v2-dashboards"
+import { personalPlanOfferDashboard } from "../scripts/analytics/personal-plan-offer-dashboard"
 
 type Insight = {
   id: number
@@ -38,36 +39,106 @@ function fingerprintMap(items: MigrationInsight[]) {
 
 function mockPostHog(initial: Insight[]) {
   const state = new Map(initial.map((item) => [item.id, structuredClone(item)]))
+  const tiles: Insight[] = []
   const methods: string[] = []
   const bodies: Record<string, unknown>[] = []
   const fetch = async (input: string, init?: RequestInit) => {
     const method = init?.method ?? "GET"
     methods.push(method)
     const id = Number(input.match(/insights\/(\d+)\//)?.[1])
+    if (input.includes("/dashboards/859068/"))
+      return {
+        ok: true,
+        status: 200,
+        text: async () =>
+          JSON.stringify({ id: 859068, tiles: tiles.map((insight) => ({ insight })) }),
+      }
+    if (input.includes("/insights/?search="))
+      return {
+        ok: true,
+        status: 200,
+        text: async () =>
+          JSON.stringify({
+            results: [...state.values()].filter(
+              (item) => item.name === personalPlanOfferDashboard.insights.o6.title,
+            ),
+          }),
+      }
+    if (method === "POST" && input.endsWith("/insights/")) {
+      const body = JSON.parse(String(init?.body)) as Insight
+      const created = { ...body, id: 999999 } as Insight
+      state.set(created.id, created)
+      tiles.push(created)
+      return { ok: true, status: 200, text: async () => JSON.stringify(created) }
+    }
     if (method === "GET")
       return { ok: true, status: 200, text: async () => JSON.stringify(state.get(id)) }
     if (method === "PATCH") {
       const body = JSON.parse(String(init?.body)) as {
         description: string
         query: Insight["query"]
+        dashboards?: number[]
       }
       bodies.push(body)
       const current = state.get(id)!
+      if (body.dashboards?.includes(859068)) tiles.push(current)
       state.set(id, { ...current, description: body.description, query: body.query })
       return { ok: true, status: 200, text: async () => JSON.stringify(state.get(id)) }
     }
     return { ok: true, status: 200, text: async () => JSON.stringify({}) }
   }
-  return { state, methods, bodies, fetch }
+  return { state, methods, bodies, fetch, tiles }
 }
 
-test("generic revision transforms replace only the semantic revision", () => {
+test("O1 target uses the declarative v2 revision", () => {
   const result = transformInsight(
     insight(5235347, "where properties.offer_revision = 'personal_plan_v1'") as never,
   ) as Insight
   assert.match(result.query.source.query as string, /personal_plan_v2/)
-  assert.doesNotMatch(result.query.source.query as string, /personal_plan_v1/)
-  assert.equal(result.description, "personal_plan_v2")
+  assert.doesNotMatch(result.query.source.query as string, /offer_revision = 'personal_plan_v1'/)
+  assert.match(result.description ?? "", /personal_plan_v2/)
+})
+
+test("the existing FAQ/detail tile remains byte-for-byte unchanged", () => {
+  const current = insight(5235351, "where properties.offer_revision = 'personal_plan_v1'") as never
+  assert.deepEqual(transformInsight(current), current)
+})
+
+test("offer targets use the strict declarative v2 session and checkout contract", () => {
+  const targets = [
+    [5235347, personalPlanOfferDashboard.insights.o1],
+    [5235348, personalPlanOfferDashboard.insights.o2],
+    [5235350, personalPlanOfferDashboard.insights.o3],
+    [5245339, personalPlanOfferDashboard.insights.o5],
+  ] as const
+  for (const [id, spec] of targets) {
+    const result = transformInsight(insight(id, "select distinct_id") as never) as Insight
+    const query = result.query.source.query as string
+    assert.equal(query, spec.query)
+    assert.match(query, /funnel_package_key = 'meta_personal_plan_v1'/)
+    assert.match(query, /offer_variant = 'personal-plan-v1'/)
+    assert.match(query, /offer_revision = 'personal_plan_v2'/)
+    assert.match(query, /INNER JOIN eligible ON/)
+    assert.doesNotMatch(query, /distinct_id/)
+  }
+  const o1 = (transformInsight(insight(5235347, "select 1") as never) as Insight).query.source
+    .query as string
+  const o5 = (transformInsight(insight(5245339, "select 1") as never) as Insight).query.source
+    .query as string
+  assert.match(o1, /destination = 'checkout'/)
+  assert.match(o5, /destination = 'checkout'/)
+  assert.match(o1, /offer_payment_option_viewed/)
+  assert.match(o5, /offer_payment_option_viewed/)
+  for (const query of [o1, o5]) {
+    assert.match(query, /min\(timestamp\) AS offer_viewed_at/)
+    assert.match(query, /timestamp >= eligible\.offer_viewed_at/)
+  }
+  assert.match(o5, /outcome_events\.timestamp >= click_sessions\.checkout_intent_at/)
+  assert.match(
+    (transformInsight(insight(5235348, "select 1") as never) as Insight).query.source
+      .query as string,
+    /15 Zahlungsart gewählt/,
+  )
 })
 
 test("O2 inserts the before/after step and shifts checkout stages", () => {
@@ -179,7 +250,39 @@ test("dry-run GETs every insight and never PATCHes or POSTs", async () => {
     transform,
   })
   assert.equal(result.mode, "dry-run")
-  assert.deepEqual(posthog.methods, Array(insightIds.length).fill("GET"))
+  assert.deepEqual(posthog.methods, Array(insightIds.length + 2).fill("GET"))
+  assert.equal(
+    posthog.methods.some((method) => method === "PATCH" || method === "POST"),
+    false,
+  )
+})
+
+test("O6 discovery is idempotent when the matching tile is already attached", async () => {
+  const initial = compactInsights()
+  const posthog = mockPostHog(initial)
+  const o6: Insight = {
+    id: 999999,
+    name: personalPlanOfferDashboard.insights.o6.title,
+    description: personalPlanOfferDashboard.insights.o6.description,
+    query: {
+      source: { query: personalPlanOfferDashboard.insights.o6.query },
+    },
+  }
+  posthog.state.set(o6.id, o6)
+  posthog.tiles.push(o6)
+  const result = await runMigration([], {
+    fetch: posthog.fetch,
+    output: () => {},
+    beforeFingerprints: fingerprintMap(initial),
+    afterFingerprints: fingerprintMap(initial),
+    transform: (item) => item,
+  })
+  assert.equal(result.mode, "dry-run")
+  assert.equal(result.attributionQuality, "already-attached")
+  assert.equal(
+    posthog.methods.filter((method) => method === "POST" || method === "PATCH").length,
+    0,
+  )
 })
 
 test("unknown before fingerprint aborts before any PATCH", async () => {
@@ -193,7 +296,7 @@ test("unknown before fingerprint aborts before any PATCH", async () => {
       afterFingerprints: {},
       transform: (item) => item,
     }),
-    /drifted from reviewed before-state/,
+    /neither reviewed before-state nor expected after-state/,
   )
   assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
 })
@@ -217,6 +320,148 @@ test("unknown target fingerprint aborts before any PATCH", async () => {
       transform,
     }),
     /target drifted from reviewed after-state/,
+  )
+  assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+})
+
+test("apply resumes a mixed reviewed before/after state by patching only pending insights", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  const directory = await mkdtemp(join(tmpdir(), "posthog-resume-test-"))
+  const backup = join(directory, "before.json")
+  try {
+    await runMigration(["--apply", "--confirm-project=126788", `--backup=${backup}`], {
+      fetch: posthog.fetch,
+      output: () => {},
+      token: "test",
+      cwd: "/repo",
+      beforeFingerprints: fingerprintMap(initial),
+      afterFingerprints: fingerprintMap(target),
+      transform,
+    })
+    const originalBackup = await readFile(backup, "utf8")
+    posthog.state.set(initial[1].id, structuredClone(initial[1]))
+    posthog.state.set(initial[2].id, structuredClone(initial[2]))
+    posthog.methods.length = 0
+    const result = await runMigration(
+      ["--apply", "--confirm-project=126788", `--backup=${backup}`],
+      {
+        fetch: posthog.fetch,
+        output: () => {},
+        token: "test",
+        cwd: "/repo",
+        beforeFingerprints: fingerprintMap(initial),
+        afterFingerprints: fingerprintMap(target),
+        transform,
+      },
+    )
+    assert.equal(result.mode, "apply")
+    assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 2)
+    assert.equal(await readFile(backup, "utf8"), originalBackup)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("fully applied insights need no backup or PATCH, while O6 is still ensured", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(target as Insight[])
+  const result = await runMigration(["--apply", "--confirm-project=126788"], {
+    fetch: posthog.fetch,
+    output: () => {},
+    token: "test",
+    cwd: "/repo",
+    beforeFingerprints: fingerprintMap(initial),
+    afterFingerprints: fingerprintMap(target),
+    transform,
+  })
+  assert.equal(result.mode, "apply")
+  assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+  assert.equal(posthog.methods.filter((method) => method === "POST").length, 1)
+})
+
+test("partial retry without the original backup refuses before any PATCH", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  posthog.state.set(initial[0].id, structuredClone(target[0]) as Insight)
+  const directory = await mkdtemp(join(tmpdir(), "posthog-missing-backup-test-"))
+  try {
+    await assert.rejects(
+      runMigration(
+        [
+          "--apply",
+          "--confirm-project=126788",
+          `--backup=${join(directory, "missing-before.json")}`,
+        ],
+        {
+          fetch: posthog.fetch,
+          output: () => {},
+          token: "test",
+          cwd: "/repo",
+          beforeFingerprints: fingerprintMap(initial),
+          afterFingerprints: fingerprintMap(target),
+          transform,
+        },
+      ),
+      /original reviewed all-before backup/,
+    )
+    assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("an invalid existing backup is never overwritten", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  const directory = await mkdtemp(join(tmpdir(), "posthog-invalid-backup-test-"))
+  const backup = join(directory, "before.json")
+  try {
+    await writeFile(backup, "not a backup")
+    await assert.rejects(
+      runMigration(["--apply", "--confirm-project=126788", `--backup=${backup}`], {
+        fetch: posthog.fetch,
+        output: () => {},
+        token: "test",
+        cwd: "/repo",
+        beforeFingerprints: fingerprintMap(initial),
+        afterFingerprints: fingerprintMap(target),
+        transform,
+      }),
+    )
+    assert.equal(await readFile(backup, "utf8"), "not a backup")
+    assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("a mixed state with an unknown insight refuses before any PATCH", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  posthog.state.set(initial[0].id, structuredClone(target[0]) as Insight)
+  posthog.state.set(initial[1].id, { ...initial[1], description: "unknown" })
+  await assert.rejects(
+    runMigration(["--apply", "--confirm-project=126788", "--backup=/tmp/before.json"], {
+      fetch: posthog.fetch,
+      output: () => {},
+      token: "test",
+      cwd: "/repo",
+      beforeFingerprints: fingerprintMap(initial),
+      afterFingerprints: fingerprintMap(target),
+      transform,
+    }),
+    /neither reviewed before-state nor expected after-state/,
   )
   assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
 })
@@ -262,6 +507,9 @@ test("apply requires an outside backup, patches description/query only, and rere
     )
     assert.equal(result.mode, "apply")
     assert.equal(posthog.methods.filter((method) => method === "PATCH").length, insightIds.length)
+    assert.equal(posthog.methods.filter((method) => method === "POST").length, 1)
+    assert.equal(posthog.tiles.length, 1)
+    assert.equal(posthog.tiles[0].name, personalPlanOfferDashboard.insights.o6.title)
     for (const body of posthog.bodies)
       assert.deepEqual(Object.keys(body).sort(), ["description", "query"])
     const perPatchVerification = posthog.methods.slice(insightIds.length, insightIds.length * 3)

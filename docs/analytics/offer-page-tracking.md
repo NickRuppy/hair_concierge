@@ -14,10 +14,11 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | Chapter available    | `offer_chapter_revealed`        | A guided-story chapter newly mounted                                                           | PostHog only                                                                                    |
 | Content reach        | `offer_section_viewed`          | A section was at least 25% visible continuously for 750 ms in a visible tab                    | PostHog                                                                                         |
 | Detail exploration   | `offer_detail_opened`           | A deliberate guided-story analysis, product, or locked-card interaction                        | PostHog only                                                                                    |
-| CTA intent           | `offer_cta_clicked`             | A tracked offer CTA was clicked                                                                | PostHog                                                                                         |
+| CTA action           | `offer_cta_clicked`             | A tracked offer CTA was clicked; `destination` distinguishes navigation from checkout intent   | PostHog                                                                                         |
 | Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                                              | Existing PostHog, Customer.io, and Meta routes                                                  |
 | Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                                          | PostHog                                                                                         |
 | Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                                    | PostHog; Meta `InitiateCheckout` for the overlay only                                           |
+| Payment option reach | `offer_payment_option_viewed`   | One ready payment option was at least 50% visible for 750 ms in the open overlay                | PostHog only                                                                                    |
 | Payment choice       | `offer_payment_method_selected` | A provider was explicitly selected; Stripe records `apple_pay` or `payment_element` when known | PostHog                                                                                         |
 | Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout                            | PostHog                                                                                         |
 | Checkout initialized | `checkout_started`              | Stripe created a session or PayPal created an intent                                           | Existing PostHog, Customer.io, Meta for inline/external checkout, and first-party funnel routes |
@@ -26,6 +27,13 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 `checkout_started` is deliberately later than `offer_checkout_opened`: opening the UI expresses intent, while checkout start requires a successful provider session or intent. Both events carry `checkoutPresentation` (`inline` or `overlay`). `checkout_started` also carries `checkoutStartTrigger`: `automatic_mount` for the default-mounted Stripe session and `explicit_provider_action` for an explicit provider action such as PayPal.
 
 Apple Pay availability, Express Checkout mounting, and Payment Element initialization do not count as a payment choice. In the flagged offer-overlay Elements path, `offer_payment_method_selected` retains `provider=stripe` and adds `paymentMethodType=apple_pay` for a real Apple Pay interaction or `payment_element` for the fallback submit path.
+
+`offer_payment_option_viewed` is the exposure signal between initialization and interaction. It
+emits at most once per `checkoutAttemptId` and option (`apple_pay`, `paypal`, or
+`card_and_more`) after that provider reports readiness and the option remains at least 50% visible
+for 750 ms in a visible tab. Hidden prewarm, unavailable wallets, failed provider loads, rerenders,
+and options outside the open overlay do not emit. The event carries the common offer and commerce
+context plus `checkoutAttemptId`, `provider`, and `option`.
 
 ## Meta conversion contract
 
@@ -162,6 +170,13 @@ In visual order:
 The hero is represented by `offer_viewed` and is not duplicated as a section event.
 
 Stable CTA IDs are `sticky_header`, `locked_plan`, `pricing_primary`, `change_plan`, and `final`. FAQ IDs are semantic identifiers rather than question copy, so copy edits do not fragment reporting.
+
+CTA reporting must use `destination`, not the generic event name, as the intent contract:
+
+- `destination=pricing` is navigation. For the personal-plan offer, `sticky_header` is a pricing
+  jump and must be reported separately from checkout intent.
+- `destination=checkout` is checkout intent. The current personal-plan placements are
+  `pricing_primary` and `final`.
 
 ### Guided-story additions
 
@@ -301,8 +316,11 @@ Use the durable funnel session for anonymous-to-paid conversion, unique people f
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Paid conversion         | Unique funnel sessions with `offer_viewed` and a later `purchase_completed` / unique funnel sessions with `offer_viewed`                                                                   |
 | Checkout initialization | Unique funnel sessions with `offer_viewed` and a later `checkout_started` where `source = quiz_result_offer` / unique funnel sessions with `offer_viewed`                                  |
+| Checkout-intent CTA     | Unique eligible funnel sessions with `offer_cta_clicked` and `destination = checkout`; report placements separately                                                                        |
+| Sticky pricing jump     | Unique eligible funnel sessions with `cta_id = sticky_header` and `destination = pricing`; report later pricing reach separately                                                           |
 | Checkout UI intent      | Unique offer views with `pricing_viewed` and a later `offer_checkout_opened` / unique offer views with `pricing_viewed`                                                                    |
 | Checkout start success  | Unique opened `checkoutAttemptId` values with a later `checkout_started` where `source = quiz_result_offer` / unique opened `checkoutAttemptId` values                                     |
+| Payment option reach    | Unique opened `checkoutAttemptId` and option pairs with a later `offer_payment_option_viewed` / unique opened attempts                                                                     |
 | Section reach           | Unique offer views with `offer_viewed` and a later view of the section / unique offer views with `offer_viewed`                                                                            |
 | CTA CTR by placement    | Unique offer views with the placement click / unique offer views with its source-section view or that placement click; use `offer_viewed` as exposure for hero or sticky-header placements |
 | Checkout error reach    | Unique opened `checkoutAttemptId` values with a later `checkout_start_failed` / unique opened `checkoutAttemptId` values                                                                   |

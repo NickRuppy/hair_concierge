@@ -62,6 +62,7 @@ export function PayPalSubscriptionButton({
   leadId,
   onCheckoutCancelled,
   onCheckoutFailed,
+  onReady,
   onCheckoutStarted,
   onPaymentMethodSelected,
   returnDestination,
@@ -73,6 +74,7 @@ export function PayPalSubscriptionButton({
   leadId?: string | null
   onCheckoutCancelled?: () => void
   onCheckoutFailed?: (failure: CheckoutFailure) => void
+  onReady?: () => void
   onCheckoutStarted: (funnelEventId: string) => void
   onPaymentMethodSelected?: (provider: "stripe" | "paypal") => boolean | void
   returnDestination?: string
@@ -122,6 +124,9 @@ export function PayPalSubscriptionButton({
         <PayPalButtons
           className="w-full"
           fundingSource={FUNDING.PAYPAL}
+          onInit={() => {
+            onReady?.()
+          }}
           createSubscription={async (
             _data: Record<string, unknown>,
             actions: CreateSubscriptionActions,

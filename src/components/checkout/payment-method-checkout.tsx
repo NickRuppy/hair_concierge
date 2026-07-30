@@ -1,6 +1,6 @@
 "use client"
 
-import { useReducer } from "react"
+import { useReducer, useState } from "react"
 import dynamic from "next/dynamic"
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
@@ -8,7 +8,9 @@ import { LockKeyhole } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import type { CheckoutContext, CheckoutFailureStage } from "@/lib/analytics/events"
+import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
 import type { BillingInterval } from "@/lib/stripe/intervals"
+import { PaymentOptionExposure } from "./payment-option-exposure"
 import {
   StripeOfferElementsCheckout,
   type StripeOfferPaymentMethodType,
@@ -74,6 +76,7 @@ export function PaymentMethodCheckout({
   onChangePlan,
   onPayPalCheckoutFailed,
   onPayPalCheckoutStarted,
+  onPaymentOptionViewed,
   onPreparedApplePayAvailabilityResolved,
   onPaymentMethodSelected,
   onProviderLockClaim,
@@ -103,6 +106,7 @@ export function PaymentMethodCheckout({
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
+  onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onPreparedApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: "stripe" | "paypal",
@@ -131,6 +135,7 @@ export function PaymentMethodCheckout({
         defaultCardCheckoutOpen: isOfferOverlay,
       }),
   )
+  const [paypalReadyForCheckoutKey, setPayPalReadyForCheckoutKey] = useState<string | null>(null)
   const showPayPalCheckout = paypalEnabled && lockedProvider !== "stripe"
   const showCardCheckout =
     lockedProvider !== "paypal" &&
@@ -143,27 +148,41 @@ export function PaymentMethodCheckout({
         : null
   const paypalCheckout = showPayPalCheckout ? (
     <div data-offer-payment-step={useOfferElementsCheckout ? "paypal" : undefined}>
-      <DynamicPayPalSubscriptionButton
+      <PaymentOptionExposure
         checkoutAttemptId={checkoutAttemptId}
-        checkoutContext={checkoutContext}
-        interval={interval}
-        leadId={leadId}
-        onCheckoutFailed={(failure) => {
-          onProviderLockRelease?.("paypal")
-          onPayPalCheckoutFailed?.(failure)
-        }}
-        onCheckoutCancelled={() => {
-          onProviderLockRelease?.("paypal")
-        }}
-        onCheckoutStarted={onPayPalCheckoutStarted}
-        onPaymentMethodSelected={(provider) => {
-          if (onProviderLockClaim?.("paypal") === false) return false
-          onPaymentMethodSelected?.(provider)
-          return true
-        }}
-        returnDestination={returnDestination}
-        source={source}
-      />
+        onViewed={onPaymentOptionViewed}
+        option="paypal"
+        provider="paypal"
+        providerReady={paypalReadyForCheckoutKey === checkoutKey}
+        visible={visible}
+      >
+        <DynamicPayPalSubscriptionButton
+          key={`paypal:${checkoutKey}`}
+          checkoutAttemptId={checkoutAttemptId}
+          checkoutContext={checkoutContext}
+          interval={interval}
+          leadId={leadId}
+          onCheckoutFailed={(failure) => {
+            setPayPalReadyForCheckoutKey((readyCheckoutKey) =>
+              readyCheckoutKey === checkoutKey ? null : readyCheckoutKey,
+            )
+            onProviderLockRelease?.("paypal")
+            onPayPalCheckoutFailed?.(failure)
+          }}
+          onCheckoutCancelled={() => {
+            onProviderLockRelease?.("paypal")
+          }}
+          onCheckoutStarted={onPayPalCheckoutStarted}
+          onPaymentMethodSelected={(provider) => {
+            if (onProviderLockClaim?.("paypal") === false) return false
+            onPaymentMethodSelected?.(provider)
+            return true
+          }}
+          onReady={() => setPayPalReadyForCheckoutKey(checkoutKey)}
+          returnDestination={returnDestination}
+          source={source}
+        />
+      </PaymentOptionExposure>
       <p className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
         PayPal öffnet sich zur Bestätigung. Danach aktivieren wir dein Konto.
       </p>
@@ -228,6 +247,7 @@ export function PaymentMethodCheckout({
             </div>
           ) : (
             <StripeOfferElementsCheckout
+              checkoutAttemptId={checkoutAttemptId}
               checkoutKey={checkoutKey}
               clientSecret={clientSecret}
               fetchClientSecret={fetchClientSecret}
@@ -236,6 +256,7 @@ export function PaymentMethodCheckout({
               onBeforeConfirm={onBeforeStripeConfirm}
               onApplePayAvailabilityResolved={onPreparedApplePayAvailabilityResolved}
               onPaymentMethodSelected={onPaymentMethodSelected}
+              onPaymentOptionViewed={onPaymentOptionViewed}
               paymentElementEnabled={paymentElementEnabled}
               onProviderLockClaim={onProviderLockClaim}
               onProviderLockRelease={onProviderLockRelease}

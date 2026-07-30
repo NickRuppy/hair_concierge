@@ -70,6 +70,21 @@ test("offer payment overlay keeps payment children mounted and inert under confi
   assert.match(source, /Zahlung abbrechen/)
 })
 
+test("offer payment overlay pauses payment-option exposure while confirmation occludes checkout", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),
+    "utf8",
+  )
+  const exposureSource = readFileSync(
+    new URL("../src/components/checkout/payment-option-exposure.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /PaymentOptionExposureVisibilityGate/)
+  assert.match(source, /visible=\{!confirmationOpen\}/)
+  assert.match(exposureSource, /visible: visible && checkoutSurfaceVisible/)
+})
+
 test("offer payment overlay can keep prepared payment content mounted while closed", () => {
   const overlaySource = readFileSync(
     new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),

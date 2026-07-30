@@ -209,6 +209,16 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         selection_index: data.selectionIndex,
       }
     }
+    case "offer_payment_option_viewed": {
+      const data = payload as AppEventMap["offer_payment_option_viewed"]
+      return {
+        ...offerContextProperties(data),
+        ...commerceProperties(data),
+        checkout_attempt_id: data.checkoutAttemptId,
+        option: data.option,
+        provider: data.provider,
+      }
+    }
     case "offer_plan_selected": {
       const data = payload as AppEventMap["offer_plan_selected"]
       return {

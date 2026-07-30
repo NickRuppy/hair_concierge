@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { MODAL_LAYER_PRIORITIES } from "@/lib/ui/modal-layer-manager"
 import { cn } from "@/lib/utils"
+import { PaymentOptionExposureVisibilityGate } from "./payment-option-exposure"
 
 export type OfferPaymentOverlayDismissalReason = "close" | "plan_change"
 
@@ -192,7 +193,9 @@ export function OfferPaymentOverlay({
             confirmationOpen && "pointer-events-none opacity-50",
           )}
         >
-          {children}
+          <PaymentOptionExposureVisibilityGate visible={!confirmationOpen}>
+            {children}
+          </PaymentOptionExposureVisibilityGate>
         </div>
 
         {confirmationOpen ? (

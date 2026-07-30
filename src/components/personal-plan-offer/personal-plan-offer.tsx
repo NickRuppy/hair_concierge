@@ -83,6 +83,19 @@ const surveyStats = [
   ["63%", "wissen nicht, welche Produkte wirklich passen", "#9a7cbd"],
 ] as const
 
+export function scrollToPersonalPlanPricing(
+  pricing: Pick<HTMLElement, "focus" | "scrollIntoView"> | null = document.getElementById(
+    "pricing",
+  ),
+  schedule: (callback: () => void, delay: number) => unknown = (callback, delay) =>
+    window.setTimeout(callback, delay),
+) {
+  if (!pricing) return false
+  pricing.scrollIntoView({ behavior: "smooth", block: "start" })
+  schedule(() => pricing.focus({ preventScroll: true }), 450)
+  return true
+}
+
 const SPECTRUM_LABELS: Record<1 | 2 | 3, string> = {
   1: "Viel Potenzial",
   2: "Gute Basis",
@@ -215,7 +228,6 @@ export function PersonalPlanOffer({
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
-
   useEffect(() => {
     if (!focusTarget) return
 
@@ -226,12 +238,7 @@ export function PersonalPlanOffer({
     })
   }, [focusTarget])
 
-  const scrollToPricing = () => {
-    const pricing = document.getElementById("pricing")
-    if (!pricing) return
-    pricing.scrollIntoView({ behavior: "smooth", block: "start" })
-    window.setTimeout(() => pricing.focus({ preventScroll: true }), 450)
-  }
+  const scrollToPricing = () => scrollToPersonalPlanPricing()
 
   return (
     <OfferTrackingProvider

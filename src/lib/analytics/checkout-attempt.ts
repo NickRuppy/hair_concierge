@@ -5,6 +5,12 @@ export type CheckoutAttemptOpenResult = {
   isNew: boolean
 }
 
+export function claimCheckoutOpenRequest(seen: Set<number>, requestId?: number) {
+  if (!requestId || seen.has(requestId)) return false
+  seen.add(requestId)
+  return true
+}
+
 export function createCheckoutAttemptController(
   createId: () => string = () => crypto.randomUUID(),
 ) {
