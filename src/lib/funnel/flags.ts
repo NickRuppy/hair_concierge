@@ -30,6 +30,14 @@ export function isOfferCheckoutPrewarmEnabled() {
   return process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED === "true"
 }
 
+export function isOfferCheckoutEarlyPrewarmEnabled() {
+  return process.env.NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED === "true"
+}
+
+export function isOfferCheckoutResolvedOpenEnabled() {
+  return process.env.NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED === "true"
+}
+
 export function isPersonalPlanQuizV1Enabled() {
   return process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED === "true"
 }

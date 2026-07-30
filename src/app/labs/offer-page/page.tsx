@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation"
 
 import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
-import { OfferPaymentOverlayLab } from "@/components/checkout/offer-payment-overlay-lab"
+import {
+  OfferPaymentOverlayLab,
+  OfferPaymentPrewarmLab,
+} from "@/components/checkout/offer-payment-overlay-lab"
 import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-plan-offer"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import AppValueStackOfferVariant from "@/funnels/offers/app-value-stack"
@@ -95,7 +98,7 @@ function StaticPricingPreview() {
 export default async function OfferPageLab({
   searchParams,
 }: {
-  searchParams: Promise<{ focus?: string; variant?: string }>
+  searchParams: Promise<{ focus?: string; scenario?: string; variant?: string }>
 }) {
   if (!isOfferPageLabEnabled(process.env)) notFound()
 
@@ -105,6 +108,10 @@ export default async function OfferPageLab({
 
   if (variant === "payment-overlay") {
     return <OfferPaymentOverlayLab />
+  }
+
+  if (variant === "payment-prewarm") {
+    return <OfferPaymentPrewarmLab scenario={params.scenario} />
   }
 
   if (variant === "personal-plan") {

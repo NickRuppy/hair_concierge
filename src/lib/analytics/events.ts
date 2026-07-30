@@ -78,6 +78,15 @@ export type CheckoutFailureStage =
   | "provider_session"
   | "provider_approval"
 
+export type CheckoutPreparationOutcome =
+  | "prepared"
+  | "prepared_unusable"
+  | "wallet_unavailable_or_error"
+  | "prepare_failure"
+  | "timeout_prepared"
+  | "timeout_cold"
+  | "prewarm_silent"
+
 export function claimCheckoutFailure(
   seen: Set<string>,
   checkoutAttemptId: string,
@@ -114,10 +123,17 @@ export type AppEventMap = {
   // checkout-attempt, customer, or marketing attribution identifiers.
   checkout_prepared: {
     interval: BillingInterval
+    pageMountToWalletReadyMs: number
     planId: string
     preparationDurationMs: number
     preparationId: string
     walletAvailable: boolean
+  }
+  // Technical resolved-open/prewarm telemetry only. This intentionally carries
+  // no funnel, checkout-attempt, customer, or marketing attribution identifiers.
+  checkout_preparation_outcome: {
+    outcome: CheckoutPreparationOutcome
+    waitDurationMs: number
   }
   checkout_started: FunnelAnalyticsEnvelope &
     Partial<OfferAnalyticsContext> & {

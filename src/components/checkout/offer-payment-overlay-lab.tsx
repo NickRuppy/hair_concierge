@@ -5,6 +5,10 @@ import * as React from "react"
 import { ActiveSubscriptionDialog } from "@/components/checkout/active-subscription-dialog"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
 import {
+  ResultOfferPricing,
+  type ResultOfferPricingCheckoutLifecycleFixture,
+} from "@/components/quiz/result-offer-pricing"
+import {
   StripeOfferElementsCheckoutContent,
   type StripeOfferCheckoutResult,
   type StripeOfferExpressRendererProps,
@@ -604,6 +608,197 @@ export function OfferPaymentOverlayLab() {
   return (
     <ToastProvider>
       <OfferPaymentOverlayLabContent />
+    </ToastProvider>
+  )
+}
+
+type PrewarmScenario =
+  | "ready"
+  | "fast"
+  | "unavailable"
+  | "failure"
+  | "timeout-wallet"
+  | "timeout-cold"
+  | "plan-change"
+
+const prewarmScenarios = new Set<PrewarmScenario>([
+  "ready",
+  "fast",
+  "unavailable",
+  "failure",
+  "timeout-wallet",
+  "timeout-cold",
+  "plan-change",
+])
+
+function getPrewarmScenario(value: string | undefined): PrewarmScenario {
+  return value && prewarmScenarios.has(value as PrewarmScenario)
+    ? (value as PrewarmScenario)
+    : "ready"
+}
+
+function getFixturePrepareDelayMs(scenario: PrewarmScenario) {
+  if (scenario === "timeout-cold") return 60_000
+  return 0
+}
+
+function getFixtureWalletResult(scenario: PrewarmScenario): {
+  available: boolean
+  delayMs: number
+} {
+  if (scenario === "unavailable") return { available: false, delayMs: 0 }
+  if (scenario === "timeout-wallet") return { available: true, delayMs: 6_500 }
+  return { available: true, delayMs: scenario === "fast" ? 25 : 0 }
+}
+
+function PrewarmPaymentFixture({
+  onWalletResolved,
+  scenario,
+  input,
+}: {
+  onWalletResolved: () => void
+  scenario: PrewarmScenario
+  input: Parameters<ResultOfferPricingCheckoutLifecycleFixture["renderPaymentCheckout"]>[0]
+}) {
+  const availabilityCallbackRef = React.useRef(input.onApplePayAvailabilityResolved)
+  const walletResolvedCallbackRef = React.useRef(onWalletResolved)
+
+  React.useEffect(() => {
+    availabilityCallbackRef.current = input.onApplePayAvailabilityResolved
+    walletResolvedCallbackRef.current = onWalletResolved
+  }, [input.onApplePayAvailabilityResolved, onWalletResolved])
+
+  React.useEffect(() => {
+    if (!input.preparationId) return
+    const wallet = getFixtureWalletResult(scenario)
+    const timer = window.setTimeout(() => {
+      availabilityCallbackRef.current(wallet.available)
+      walletResolvedCallbackRef.current()
+    }, wallet.delayMs)
+    return () => window.clearTimeout(timer)
+  }, [input.preparationId, scenario])
+
+  if (!input.visible) {
+    return <div aria-hidden="true" data-testid="prewarm-payment-hidden" />
+  }
+
+  return (
+    <section
+      data-testid="prewarm-payment-checkout"
+      data-checkout-attempt-id={input.checkoutAttemptId ?? "none"}
+      data-preparation-id={input.preparationId ?? "cold"}
+      data-suppress-express-wallet={String(input.suppressExpressWallet)}
+    >
+      {input.suppressExpressWallet ? null : (
+        <div data-testid="prewarm-apple-pay" data-offer-payment-step="apple_pay">
+          Apple Pay
+        </div>
+      )}
+      <div data-testid="prewarm-paypal" data-offer-payment-step="paypal">
+        PayPal
+      </div>
+      <label>
+        Karte
+        <input data-testid="prewarm-card" />
+      </label>
+    </section>
+  )
+}
+
+function OfferPaymentPrewarmLabContent({ scenario: scenarioInput }: { scenario?: string }) {
+  const scenario = getPrewarmScenario(scenarioInput)
+  const [prepareCount, setPrepareCount] = React.useState(0)
+  const [claimCount, setClaimCount] = React.useState(0)
+  const [opened, setOpened] = React.useState(false)
+  const [checkoutRequestId, setCheckoutRequestId] = React.useState(0)
+  const [checkoutWaiting, setCheckoutWaiting] = React.useState(false)
+  const [walletResolved, setWalletResolved] = React.useState(false)
+  const resolveManualPreparationsRef = React.useRef<Array<() => void>>([])
+  const fixture = React.useMemo<ResultOfferPricingCheckoutLifecycleFixture>(
+    () => ({
+      prepare: async ({ interval, preparationId }) => {
+        setPrepareCount((count) => count + 1)
+        if (scenario === "failure") throw new Error("fixture preparation failure")
+        if (scenario === "fast") {
+          await new Promise<void>((resolve) => resolveManualPreparationsRef.current.push(resolve))
+        }
+        const delayMs = getFixturePrepareDelayMs(scenario)
+        if (delayMs) await new Promise((resolve) => window.setTimeout(resolve, delayMs))
+        return {
+          status: "prepared",
+          client_secret: `fixture-secret-${interval}-${preparationId}`,
+          session_id: `fixture-session-${interval}-${preparationId}`,
+          preparation_token: `fixture-token-${preparationId}`,
+          expires_at: Math.floor(Date.now() / 1_000) + 3_600,
+        }
+      },
+      claim: async () => {
+        setClaimCount((count) => count + 1)
+        return true
+      },
+      renderPaymentCheckout: (input) => (
+        <PrewarmPaymentFixture
+          input={input}
+          onWalletResolved={() => setWalletResolved(true)}
+          scenario={scenario}
+        />
+      ),
+    }),
+    [scenario],
+  )
+
+  return (
+    <main className="min-h-screen bg-[#f7f3f7] px-5 py-10" data-testid="payment-prewarm-lab">
+      <div className="mx-auto max-w-[560px] space-y-6" data-testid="prewarm-page-background">
+        <button type="button" data-testid="prewarm-background-focus">
+          Hintergrundfokus
+        </button>
+        <button
+          type="button"
+          data-testid="prewarm-final-cta"
+          aria-disabled={checkoutWaiting || undefined}
+          onClick={() => {
+            if (!checkoutWaiting) setCheckoutRequestId((requestId) => requestId + 1)
+          }}
+        >
+          {checkoutWaiting ? "Zahlungsoptionen werden vorbereitet …" : "Plan sichern"}
+        </button>
+        {scenario === "fast" ? (
+          <button
+            type="button"
+            data-testid="prewarm-resolve-preparation"
+            onClick={() => {
+              const resolvers = resolveManualPreparationsRef.current.splice(0)
+              resolvers.forEach((resolve) => resolve())
+            }}
+          >
+            Vorbereitung fortsetzen
+          </button>
+        ) : null}
+        <div
+          data-testid="prewarm-diagnostic"
+          data-scenario={scenario}
+          data-prepare-count={prepareCount}
+          data-claim-count={claimCount}
+          data-opened={String(opened)}
+          data-wallet-resolved={String(walletResolved)}
+        />
+        <ResultOfferPricing
+          checkoutLifecycleFixture={fixture}
+          leadId={null}
+          onCheckoutOpen={() => setOpened(true)}
+          onCheckoutWaitingChange={setCheckoutWaiting}
+          openCheckoutRequestId={checkoutRequestId}
+        />
+      </div>
+    </main>
+  )
+}
+
+export function OfferPaymentPrewarmLab({ scenario }: { scenario?: string }) {
+  return (
+    <ToastProvider>
+      <OfferPaymentPrewarmLabContent scenario={scenario} />
     </ToastProvider>
   )
 }

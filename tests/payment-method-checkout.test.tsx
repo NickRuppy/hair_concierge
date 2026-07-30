@@ -20,6 +20,7 @@ function renderCheckout(
   paypalEnabled: boolean,
   presentation: "default" | "offer-overlay" = "default",
   expressElementsEnabled = false,
+  suppressExpressWallet = false,
 ) {
   const previousPayPalEnabled = process.env.NEXT_PUBLIC_PAYPAL_ENABLED
   const previousPayPalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
@@ -42,6 +43,7 @@ function renderCheckout(
         planLabel="Jetzt starten — €34,99 im Quartal"
         presentation={presentation}
         expressElementsEnabled={expressElementsEnabled}
+        suppressExpressWallet={suppressExpressWallet}
         source="quiz_result_offer"
         stripe={Promise.resolve(null)}
       />,
@@ -132,6 +134,18 @@ test("offer overlay express path renders withdrawal link and direct fallback wit
   assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
   assert.doesNotMatch(html, /min-h-\[560px\]|min-h-\[600px\]/)
   assert.match(html, /data-offer-payment-option="paypal"/)
+})
+
+test("offer overlay wallet-suppressed path keeps PayPal and card checkout without Express", () => {
+  const html = renderCheckout(true, "offer-overlay", true, true)
+
+  assert.match(html, /data-offer-payment-step="paypal"/)
+  assert.match(html, /data-offer-payment-step="payment_element"/)
+  assert.match(html, /Karte &amp; weitere/)
+  assert.doesNotMatch(html, /data-offer-payment-element="apple_pay"/)
+  assert.doesNotMatch(html, /Apple Pay wird geladen/)
+  assert.doesNotMatch(html, /Apple Pay ist derzeit nicht verfügbar/)
+  assert.doesNotMatch(html, /Zahlungsoptionen konnten nicht geladen werden/)
 })
 
 test("PayPal script rejection reports once without coupling the card fallback", () => {

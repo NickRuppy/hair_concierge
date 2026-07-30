@@ -11,9 +11,20 @@ import {
 import type { BillingInterval } from "../src/lib/stripe/intervals"
 import { getStripePricingPlan } from "../src/lib/stripe/pricing-plans"
 
-function renderSelector(referencePrices?: typeof QUIZ_RESULT_REFERENCE_PRICES) {
+function renderSelector(
+  referencePrices?: typeof QUIZ_RESULT_REFERENCE_PRICES,
+  {
+    busy = false,
+    busyLabel,
+  }: {
+    busy?: boolean
+    busyLabel?: string
+  } = {},
+) {
   return renderToStaticMarkup(
     <SubscriptionPlanSelector
+      busy={busy}
+      busyLabel={busyLabel}
       onContinue={() => undefined}
       onSelect={() => undefined}
       referencePrices={referencePrices}
@@ -21,6 +32,27 @@ function renderSelector(referencePrices?: typeof QUIZ_RESULT_REFERENCE_PRICES) {
     />,
   )
 }
+
+test("busy selector keeps the CTA focusable while disabling plan changes", () => {
+  const html = renderSelector(undefined, {
+    busy: true,
+    busyLabel: "Zahlungsoptionen werden vorbereitet …",
+  })
+
+  assert.equal((html.match(/disabled=""/g) ?? []).length, 3)
+  assert.match(html, /aria-disabled="true"/)
+  assert.match(html, /role="status"/)
+  assert.match(html, /Zahlungsoptionen werden vorbereitet …/)
+  assert.doesNotMatch(html, /Jetzt starten — €34,99 im Quartal/)
+})
+
+test("idle selector keeps the selected plan action label", () => {
+  const html = renderSelector()
+
+  assert.match(html, />Jetzt starten — €34,99 im Quartal</)
+  assert.doesNotMatch(html, /disabled=""/)
+  assert.doesNotMatch(html, /aria-disabled="true"/)
+})
 
 test("quiz-result selector displays the three reference prices as comparison prices", () => {
   const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)

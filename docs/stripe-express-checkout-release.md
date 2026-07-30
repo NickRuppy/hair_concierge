@@ -13,6 +13,19 @@ perform Stripe Dashboard changes, enable flags, or make production calls.
   overlay without reverting code. Verify that rollback in the target
   environment before activation.
 
+### Offer checkout early-prewarm matrix
+
+All offer checkout prewarm flags are strict build-time flags: only the literal value `"true"` enables a behavior. Changing one requires a redeploy; it is not an instant runtime rollback.
+
+| Base `NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED` | Early `NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED` | Resolved-open `NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED` | Behavior |
+| --- | --- | --- | --- |
+| off | any | any | No speculative preparation; existing synchronous cold checkout path. |
+| on | off | any | Existing CTA-visibility prewarm timing; no early-prewarm resolved-open gate. |
+| on | on | off | Prepare at first visible result-page mount; CTA opens through the existing ungated path. |
+| on | on | on | Prepare at first visible result-page mount and wait at a fast CTA tap until wallet readiness, preparation failure/unavailability, or the five-second fallback deadline. |
+
+`NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED=true` without early prewarm intentionally short-circuits to the shipped ungated behavior. For the narrowest rollback of a dead CTA or duplicate-attempt regression, set the resolved-open flag to anything other than the exact literal `"true"` and redeploy. Disable early prewarm to restore CTA-visibility timing; disable the base prewarm flag to remove the whole speculative preparation path.
+
 ## Stripe environment preflight
 
 Complete these separately in Stripe test mode and Stripe live mode:

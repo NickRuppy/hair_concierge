@@ -18,6 +18,8 @@ function getPlanDetail(plan: ReturnType<typeof getStripePricingPlan>): string {
 
 export function SubscriptionPlanSelector({
   actionLabel,
+  busy = false,
+  busyLabel,
   offerTracking = false,
   onContinue,
   onSelect,
@@ -25,6 +27,8 @@ export function SubscriptionPlanSelector({
   selectedInterval,
 }: {
   actionLabel?: string
+  busy?: boolean
+  busyLabel?: string
   offerTracking?: boolean
   onContinue: () => void
   onSelect: (interval: BillingInterval) => void
@@ -48,6 +52,8 @@ export function SubscriptionPlanSelector({
             <button
               key={plan.interval}
               type="button"
+              disabled={busy}
+              aria-busy={busy || undefined}
               onClick={() => onSelect(plan.interval)}
               aria-pressed={isSelected}
               className={`relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors ${
@@ -96,16 +102,33 @@ export function SubscriptionPlanSelector({
 
       <Button
         type="button"
+        aria-disabled={busy || undefined}
+        aria-busy={busy || undefined}
         variant="unstyled"
-        onClick={onContinue}
+        onClick={() => {
+          if (!busy) onContinue()
+        }}
         data-offer-cta={offerTracking ? "pricing_primary" : undefined}
         data-offer-destination={offerTracking ? "checkout" : undefined}
         data-offer-selected-interval={offerTracking ? selectedInterval : undefined}
         data-offer-source-section={offerTracking ? "pricing" : undefined}
-        className="mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5"
+        className="mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80"
       >
-        {actionLabel ?? selectedPlan.ctaLabel}
+        {busy ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin rounded-full border-2 border-white/35 border-t-white motion-reduce:animate-none"
+            />
+            <span>{busyLabel ?? actionLabel ?? selectedPlan.ctaLabel}</span>
+          </span>
+        ) : (
+          (actionLabel ?? selectedPlan.ctaLabel)
+        )}
       </Button>
+      <span className="sr-only" role="status" aria-live="polite">
+        {busy ? (busyLabel ?? "Zahlungsoptionen werden vorbereitet …") : ""}
+      </span>
       <p className="mt-4 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
         14 Tage Geld-zurück-Garantie · Details in den Bedingungen
       </p>

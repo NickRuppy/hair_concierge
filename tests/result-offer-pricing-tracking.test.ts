@@ -7,12 +7,19 @@ import {
   canConfirmPreparedOfferCheckout,
   canUseApplePayCapabilitySignal,
   claimOfferProviderLock,
+  getOfferCheckoutPrewarmDelayMs,
   isCurrentOfferCheckoutPreparationGeneration,
   isOfferCheckoutPrewarmPageRequestLimitReached,
   readPreparedOfferCheckoutResponse,
   releaseOfferProviderLock,
+  shouldStartOfferCheckoutPrewarm,
+  shouldUseOfferCheckoutResolvedOpenGate,
 } from "../src/components/quiz/result-offer-pricing"
-import { isOfferCheckoutPrewarmEnabled } from "../src/lib/funnel/flags"
+import {
+  isOfferCheckoutEarlyPrewarmEnabled,
+  isOfferCheckoutPrewarmEnabled,
+  isOfferCheckoutResolvedOpenEnabled,
+} from "../src/lib/funnel/flags"
 import { STRIPE_PRICING_PLANS } from "../src/lib/stripe/pricing-plans"
 
 const pricingSource = readFileSync(
@@ -62,7 +69,7 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /errorCode: "stripe_js_load_failed"/)
   assert.doesNotMatch(pricingSource, /errorCode: error\.message/)
   assert.match(planSelectorSource, /data-offer-cta=\{offerTracking \? "pricing_primary"/)
-  assert.match(pricingSource, /<SubscriptionPlanSelector\s*offerTracking/)
+  assert.match(pricingSource, /<SubscriptionPlanSelector[\s\S]*?offerTracking/)
   assert.match(pricingSource, /const nextAttempt = checkoutAttemptController\.open\(\)/)
   assert.match(pricingSource, /if \(!nextAttempt\.isNew\)/)
   assert.match(pricingSource, /const nextCheckoutAttemptId = nextAttempt\.checkoutAttemptId/)
@@ -76,7 +83,7 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /isStripeExpressCheckoutEnabled/)
   assert.match(
     pricingSource,
-    /const expressElementsEnabled = paymentOverlayEnabled && isStripeExpressCheckoutEnabled\(\)/,
+    /Boolean\(checkoutLifecycleFixture\) \|\| isStripeExpressCheckoutEnabled\(\)/,
   )
   assert.match(
     pricingSource,
@@ -124,6 +131,8 @@ test("offer provider lock rejects a competing same-frame payment claim", () => {
 
 test("Apple Pay prewarm is gated by native wallet capability and a strict public flag", () => {
   const previous = process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED
+  const previousEarly = process.env.NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED
+  const previousResolved = process.env.NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED
 
   try {
     delete process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED
@@ -134,11 +143,30 @@ test("Apple Pay prewarm is gated by native wallet capability and a strict public
 
     process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED = "true"
     assert.equal(isOfferCheckoutPrewarmEnabled(), true)
+
+    delete process.env.NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED
+    delete process.env.NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED
+    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), false)
+    assert.equal(isOfferCheckoutResolvedOpenEnabled(), false)
+    process.env.NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED = "true"
+    process.env.NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED = "true"
+    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), true)
+    assert.equal(isOfferCheckoutResolvedOpenEnabled(), true)
   } finally {
     if (previous === undefined) {
       delete process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED
     } else {
       process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED = previous
+    }
+    if (previousEarly === undefined) {
+      delete process.env.NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED
+    } else {
+      process.env.NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED = previousEarly
+    }
+    if (previousResolved === undefined) {
+      delete process.env.NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED
+    } else {
+      process.env.NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED = previousResolved
     }
   }
 
@@ -236,22 +264,76 @@ test("prepared checkout responses require the canonical fields and a numeric exp
   )
 })
 
-test("prewarm hold and timing are tied to an actual usable preparation request", () => {
+test("prewarm timing starts immediately only for the early path and retains legacy rollback", () => {
   assert.match(
     pricingSource,
     /holdPaymentChoicesUntilResolved=\{Boolean\(preparedCheckoutForRender\)\}/,
   )
   assert.doesNotMatch(pricingSource, /holdPaymentChoicesUntilResolved=\{checkoutPrewarmEnabled\}/)
+  assert.equal(
+    shouldStartOfferCheckoutPrewarm({
+      earlyPrewarmEnabled: true,
+      pricingCtaVisible: false,
+    }),
+    true,
+  )
+  assert.equal(
+    shouldStartOfferCheckoutPrewarm({
+      earlyPrewarmEnabled: false,
+      pricingCtaVisible: false,
+    }),
+    false,
+  )
+  assert.equal(
+    getOfferCheckoutPrewarmDelayMs({
+      earlyPrewarmEnabled: true,
+      planChanged: false,
+    }),
+    0,
+  )
+  assert.equal(
+    getOfferCheckoutPrewarmDelayMs({
+      earlyPrewarmEnabled: true,
+      planChanged: true,
+    }),
+    400,
+  )
+  assert.equal(
+    getOfferCheckoutPrewarmDelayMs({
+      earlyPrewarmEnabled: false,
+      planChanged: false,
+    }),
+    400,
+  )
+  assert.equal(
+    shouldUseOfferCheckoutResolvedOpenGate({
+      prewarmEnabled: true,
+      earlyPrewarmEnabled: false,
+      resolvedOpenEnabled: true,
+    }),
+    false,
+  )
+  assert.equal(
+    shouldUseOfferCheckoutResolvedOpenGate({
+      prewarmEnabled: true,
+      earlyPrewarmEnabled: true,
+      resolvedOpenEnabled: true,
+    }),
+    true,
+  )
+  assert.match(pricingSource, /document\.addEventListener\("visibilitychange"/)
+  assert.match(pricingSource, /document\.removeEventListener\("visibilitychange"/)
+  assert.match(pricingSource, /prewarmAttemptedKeysRef\.current\.has\(requestKey\)/)
+  assert.match(pricingSource, /prewarmAttemptedKeysRef\.current\.add\(requestKey\)/)
+  assert.match(pricingSource, /prewarmFailedKeysRef\.current\.add\(requestKey\)/)
   assert.match(
     pricingSource,
-    /const timer = window\.setTimeout\(\(\) => \{[\s\S]*?startedAt: Date\.now\(\),/,
+    /const preparationAlreadyFailed = prewarmFailedKeysRef\.current\.has\(requestKey\)/,
   )
   assert.doesNotMatch(
     pricingSource,
-    /const startedAt = Date\.now\(\)[\s\S]*?const timer = window\.setTimeout/,
+    /const preparationAlreadyFailed = prewarmAttemptedKeysRef\.current\.has\(requestKey\)/,
   )
-  assert.match(pricingSource, /prewarmAttemptedKeysRef\.current\.has\(requestKey\)/)
-  assert.match(pricingSource, /prewarmAttemptedKeysRef\.current\.add\(requestKey\)/)
   assert.match(
     pricingSource,
     /prewarmAttemptedKeysRef\.current\.delete\(`\$\{selectedInterval\}:\$\{leadId \?\? "anonymous"\}`\)/,
@@ -272,11 +354,11 @@ test("prewarm caps actual prepare requests at four for the page lifetime", () =>
   )
   assert.match(
     pricingSource,
-    /ensureStripePromise\(\)\s*\n\s*prewarmActualRequestCountRef\.current \+= 1\s*\n\s*const response = await fetch\("\/api\/stripe\/create-checkout-session"/,
+    /prewarmActualRequestCountRef\.current \+= 1[\s\S]*?ensureStripePromise\(\)[\s\S]*?const response = await fetch\("\/api\/stripe\/create-checkout-session"/,
   )
   assert.match(
     pricingSource,
-    /prewarmAttemptedKeysRef\.current\.add\(requestKey\)\s*\n\s*const promise = prepareOfferCheckout/,
+    /prewarmAttemptedKeysRef\.current\.add\(requestKey\)[\s\S]*?const promise = prepareOfferCheckout/,
   )
   assert.doesNotMatch(pricingSource, /prewarmActualRequestCountRef\.current = 0/)
 })
@@ -286,7 +368,7 @@ test("late preparation responses cannot enter a checkout after its generation is
   assert.equal(isCurrentOfferCheckoutPreparationGeneration(4, 3), false)
 
   const openCheckoutSource = pricingSource.match(
-    /function openCheckout\(\) \{[\s\S]*?\n  \}\n\n  useEffect/,
+    /function openCheckoutNow\([\s\S]*?\n  \}\n\n  async function openCheckout/,
   )?.[0]
   assert.ok(openCheckoutSource)
   const captureIndex = openCheckoutSource.indexOf("const matchingPreparation")
@@ -302,6 +384,67 @@ test("late preparation responses cannot enter a checkout after its generation is
   assert.match(
     pricingSource,
     /isCurrentOfferCheckoutPreparationGeneration\(prewarmGenerationRef\.current, generation\)/,
+  )
+})
+
+test("resolved-open waiting stays outside the real checkout-attempt boundary", () => {
+  const actualOpenSource = pricingSource.match(
+    /function openCheckoutNow\([\s\S]*?\n  \}\n\n  async function openCheckout/,
+  )?.[0]
+  const gatedOpenSource = pricingSource.match(
+    /async function openCheckout\(\) \{[\s\S]*?\n  \}\n\n  useEffect/,
+  )?.[0]
+
+  assert.ok(actualOpenSource)
+  assert.ok(gatedOpenSource)
+  assert.match(actualOpenSource, /checkoutAttemptController\.open\(\)/)
+  assert.match(actualOpenSource, /trackAppEvent\("offer_checkout_opened"/)
+  assert.doesNotMatch(gatedOpenSource, /checkoutAttemptController\.open\(\)/)
+  assert.doesNotMatch(gatedOpenSource, /trackAppEvent\("offer_checkout_opened"/)
+  assert.match(gatedOpenSource, /updateCheckoutWaiting\(true\)/)
+  assert.match(gatedOpenSource, /offerCheckoutResolvedOpenTimeoutMs/)
+  assert.match(gatedOpenSource, /openCheckoutNow\(/)
+  assert.match(gatedOpenSource, /if \(settled\) return/)
+  assert.doesNotMatch(
+    gatedOpenSource,
+    /if \(settled \|\| checkoutGateTokenRef\.current !== token\) return/,
+  )
+  assert.match(pricingSource, /suppressExpressWallet=\{suppressExpressWallet\}/)
+  assert.match(pricingSource, /busy=\{checkoutWaiting\}/)
+  assert.match(pricingSource, /busyLabel="Zahlungsoptionen werden vorbereitet …"/)
+})
+
+test("fast taps await the same preparation and mirror one-shot wallet readiness in refs", () => {
+  assert.match(pricingSource, /promise: Promise<PreparedOfferCheckout \| null>/)
+  assert.match(
+    pricingSource,
+    /prewarmRequestRef\.current = \{ generation, key: requestKey, promise \}/,
+  )
+  assert.match(pricingSource, /const inFlightRequest =/)
+  assert.match(pricingSource, /void inFlightRequest\.promise/)
+  assert.match(
+    pricingSource,
+    /preparedWalletAvailabilityRef\.current = \{\s*available: walletAvailable,\s*preparationId,/,
+  )
+  assert.match(pricingSource, /currentPreparation\.preparationId !== preparationId/)
+  assert.match(
+    pricingSource,
+    /preparedWalletAvailabilityRef\.current\?\.preparationId === preparationId/,
+  )
+  assert.match(pricingSource, /fencedWalletPreparationIdsRef\.current\.has\(preparationId\)/)
+  assert.match(
+    pricingSource,
+    /fencedWalletPreparationIdsRef\.current\.add\(usablePreparation\.preparationId\)/,
+  )
+  assert.match(
+    pricingSource,
+    /handlePreparedApplePayAvailabilityResolved\(\s*preparedCheckoutForRender\?\.preparationId \?\? null,/,
+  )
+  assert.match(pricingSource, /checkoutGateWaiterRef\.current\?\.resolve/)
+  assert.match(pricingSource, /pageMountToWalletReadyMs:/)
+  assert.match(
+    pricingSource,
+    /return \(\) => \{[\s\S]*?prewarmGenerationRef\.current \+= 1[\s\S]*?prewarmRequestRef\.current = null/,
   )
 })
 
@@ -354,11 +497,11 @@ test("prepared Checkout Elements confirms only after its identity-matched claim 
   )
 })
 
-test("hidden prewarm records a single availability timeout without closing the prepared checkout", () => {
+test("hidden prewarm timeout is telemetry-only and does not latch wallet unavailability", () => {
   assert.match(pricingSource, /const offerCheckoutPrewarmAvailabilityTimeoutMs = 10_000/)
   assert.match(
     pricingSource,
-    /window\.setTimeout\(\(\) => \{\s*recordPreparedApplePayAvailability\(preparedCheckout, false\)/,
+    /trackAppEvent\("checkout_preparation_outcome", \{\s*outcome: "prewarm_silent"/,
   )
   assert.match(
     pricingSource,
@@ -369,11 +512,12 @@ test("hidden prewarm records a single availability timeout without closing the p
     /preparedWalletTelemetryTrackedRef\.current\.add\(preparation\.preparationId\)/,
   )
   const timeoutEffect = pricingSource.match(
-    /const timer = window\.setTimeout\(\(\) => \{\s*recordPreparedApplePayAvailability\(preparedCheckout, false\)\s*\}, offerCheckoutPrewarmAvailabilityTimeoutMs\)\s*\n\s*return \(\) => window\.clearTimeout\(timer\)/,
+    /const timer = window\.setTimeout\(\(\) => \{[\s\S]*?outcome: "prewarm_silent"[\s\S]*?\}, offerCheckoutPrewarmAvailabilityTimeoutMs\)/,
   )?.[0]
   assert.ok(timeoutEffect)
   assert.doesNotMatch(timeoutEffect, /setPreparedCheckout\(null\)/)
   assert.doesNotMatch(timeoutEffect, /setActivePreparedCheckout\(null\)/)
+  assert.doesNotMatch(timeoutEffect, /recordPreparedApplePayAvailability/)
 })
 
 test("pricing visibility waits for intersection and fires exactly once", () => {

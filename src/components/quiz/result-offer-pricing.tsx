@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import type { Stripe } from "@stripe/stripe-js"
 
 import {
@@ -30,7 +30,9 @@ import {
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
 import {
+  isOfferCheckoutEarlyPrewarmEnabled,
   isOfferCheckoutPrewarmEnabled,
+  isOfferCheckoutResolvedOpenEnabled,
   isOfferPaymentOverlayEnabled,
   isStripeExpressCheckoutEnabled,
 } from "@/lib/funnel/flags"
@@ -46,6 +48,12 @@ import {
   STRIPE_PRICING_PLANS,
   getStripePricingPlan,
 } from "@/lib/stripe/pricing-plans"
+import {
+  IDLE_OFFER_CHECKOUT_READY_GATE,
+  reduceOfferCheckoutReadyGate,
+  type OfferCheckoutReadyGateEvent,
+  type OfferCheckoutReadyGateState,
+} from "@/lib/stripe/offer-checkout-ready-gate"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const unloadedStripePromise = Promise.resolve(null)
@@ -53,6 +61,7 @@ const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuch
 const offerCheckoutPrewarmDebounceMs = 400
 const offerCheckoutPrewarmAvailabilityTimeoutMs = 10_000
 const offerCheckoutPrewarmPageRequestLimit = 4
+const offerCheckoutResolvedOpenTimeoutMs = 5_000
 type LockedCheckoutProvider = "stripe" | "paypal"
 type ApplePayCapabilityWindow = Window & {
   ApplePaySession?: {
@@ -78,13 +87,47 @@ type PreparedOfferCheckoutClaim = {
   preparationId: string
   promise: Promise<boolean>
 }
+type PreparedWalletAvailability = {
+  available: boolean
+  preparationId: string
+}
+type CheckoutGateTerminal =
+  | { type: "available" }
+  | { type: "unavailable" }
+  | { type: "failure" }
+  | { type: "timeout" }
+type CheckoutGateWaiter = {
+  resolve: (terminal: CheckoutGateTerminal) => void
+  token: number
+}
 
-type PreparedOfferCheckoutResponse = {
+export type PreparedOfferCheckoutResponse = {
   status?: string
   client_secret?: unknown
   session_id?: unknown
   preparation_token?: unknown
   expires_at?: unknown
+}
+
+export type ResultOfferPricingCheckoutLifecycleFixture = {
+  claim: (input: {
+    attemptId: string
+    interval: BillingInterval
+    preparationId: string
+  }) => Promise<boolean>
+  prepare: (input: {
+    interval: BillingInterval
+    preparationId: string
+  }) => Promise<PreparedOfferCheckoutResponse>
+  renderPaymentCheckout: (input: {
+    checkoutAttemptId: string | null
+    checkoutKey: string
+    interval: BillingInterval
+    onApplePayAvailabilityResolved: (available: boolean) => void
+    preparationId: string | null
+    suppressExpressWallet: boolean
+    visible: boolean
+  }) => ReactNode
 }
 
 export function canUseApplePayCapabilitySignal(win: ApplePayCapabilityWindow | undefined) {
@@ -104,6 +147,38 @@ export function isCurrentOfferCheckoutPreparationGeneration(
 
 export function isOfferCheckoutPrewarmPageRequestLimitReached(actualRequestCount: number) {
   return actualRequestCount >= offerCheckoutPrewarmPageRequestLimit
+}
+
+export function shouldStartOfferCheckoutPrewarm({
+  earlyPrewarmEnabled,
+  pricingCtaVisible,
+}: {
+  earlyPrewarmEnabled: boolean
+  pricingCtaVisible: boolean
+}) {
+  return earlyPrewarmEnabled || pricingCtaVisible
+}
+
+export function getOfferCheckoutPrewarmDelayMs({
+  earlyPrewarmEnabled,
+  planChanged,
+}: {
+  earlyPrewarmEnabled: boolean
+  planChanged: boolean
+}) {
+  return earlyPrewarmEnabled && !planChanged ? 0 : offerCheckoutPrewarmDebounceMs
+}
+
+export function shouldUseOfferCheckoutResolvedOpenGate({
+  earlyPrewarmEnabled,
+  prewarmEnabled,
+  resolvedOpenEnabled,
+}: {
+  earlyPrewarmEnabled: boolean
+  prewarmEnabled: boolean
+  resolvedOpenEnabled: boolean
+}) {
+  return prewarmEnabled && earlyPrewarmEnabled && resolvedOpenEnabled
 }
 
 export async function canConfirmPreparedOfferCheckout(
@@ -199,14 +274,18 @@ function trackStripeJsAvailability(
 }
 
 export function ResultOfferPricing({
+  checkoutLifecycleFixture,
   leadId,
   onCheckoutOpen,
+  onCheckoutWaitingChange,
   offerTracking,
   openCheckoutRequestId,
   referencePrices,
 }: {
+  checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
   leadId: string | null
   onCheckoutOpen?: () => void
+  onCheckoutWaitingChange?: (waiting: boolean) => void
   offerTracking?: FunnelAnalyticsEnvelope | null
   openCheckoutRequestId?: number
   referencePrices?: QuizResultReferencePrices
@@ -225,13 +304,27 @@ export function ResultOfferPricing({
   const paymentSelectionIndexRef = useRef(0)
   const paymentOptionViewsRef = useRef(new Set<string>())
   const planSelectionIndexRef = useRef(0)
+  const pageMountedAtRef = useRef(Date.now())
   const prewarmGenerationRef = useRef(0)
   const prewarmAttemptedKeysRef = useRef(new Set<string>())
+  const prewarmFailedKeysRef = useRef(new Set<string>())
   const prewarmActualRequestCountRef = useRef(0)
-  const prewarmRequestRef = useRef<{ key: string; promise: Promise<void> } | null>(null)
+  const prewarmRequestRef = useRef<{
+    generation: number
+    key: string
+    promise: Promise<PreparedOfferCheckout | null>
+  } | null>(null)
   const prewarmSuppressedUntilPlanChangeRef = useRef(false)
+  const prewarmPlanChangePendingRef = useRef(false)
   const preparedClaimRef = useRef<PreparedOfferCheckoutClaim | null>(null)
+  const preparedCheckoutRef = useRef<PreparedOfferCheckout | null>(null)
+  const preparedWalletAvailabilityRef = useRef<PreparedWalletAvailability | null>(null)
+  const fencedWalletPreparationIdsRef = useRef(new Set<string>())
   const preparedWalletTelemetryTrackedRef = useRef(new Set<string>())
+  const checkoutGateRef = useRef<OfferCheckoutReadyGateState>(IDLE_OFFER_CHECKOUT_READY_GATE)
+  const checkoutGateWaiterRef = useRef<CheckoutGateWaiter | null>(null)
+  const checkoutGateTokenRef = useRef(0)
+  const checkoutWaitingRef = useRef(false)
   const offerContext = useOfferTrackingContext()
   const [selectedInterval, setSelectedInterval] =
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
@@ -244,13 +337,50 @@ export function ResultOfferPricing({
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [pricingCtaVisible, setPricingCtaVisible] = useState(false)
+  const [checkoutWaiting, setCheckoutWaiting] = useState(false)
+  const [suppressExpressWallet, setSuppressExpressWallet] = useState(false)
   const [preparedCheckout, setPreparedCheckout] = useState<PreparedOfferCheckout | null>(null)
   const [activePreparedCheckout, setActivePreparedCheckout] =
     useState<ActivePreparedOfferCheckout | null>(null)
-  const paymentOverlayEnabled = isOfferPaymentOverlayEnabled()
-  const expressElementsEnabled = paymentOverlayEnabled && isStripeExpressCheckoutEnabled()
+  const paymentOverlayEnabled = Boolean(checkoutLifecycleFixture) || isOfferPaymentOverlayEnabled()
+  const expressElementsEnabled =
+    paymentOverlayEnabled && (Boolean(checkoutLifecycleFixture) || isStripeExpressCheckoutEnabled())
   const checkoutPrewarmEnabled =
-    expressElementsEnabled && isOfferCheckoutPrewarmEnabled() && Boolean(stripePublishableKey)
+    expressElementsEnabled &&
+    (Boolean(checkoutLifecycleFixture) ||
+      (isOfferCheckoutPrewarmEnabled() && Boolean(stripePublishableKey)))
+  const earlyPrewarmEnabled =
+    checkoutPrewarmEnabled &&
+    (Boolean(checkoutLifecycleFixture) || isOfferCheckoutEarlyPrewarmEnabled())
+  const resolvedOpenEnabled = shouldUseOfferCheckoutResolvedOpenGate({
+    earlyPrewarmEnabled,
+    prewarmEnabled: checkoutPrewarmEnabled,
+    resolvedOpenEnabled: Boolean(checkoutLifecycleFixture) || isOfferCheckoutResolvedOpenEnabled(),
+  })
+
+  const updateCheckoutWaiting = useCallback(
+    (waiting: boolean) => {
+      checkoutWaitingRef.current = waiting
+      setCheckoutWaiting(waiting)
+      onCheckoutWaitingChange?.(waiting)
+    },
+    [onCheckoutWaitingChange],
+  )
+
+  const updatePreparedCheckout = useCallback((preparation: PreparedOfferCheckout | null) => {
+    preparedCheckoutRef.current = preparation
+    if (!preparation) preparedWalletAvailabilityRef.current = null
+    setPreparedCheckout(preparation)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      checkoutGateTokenRef.current += 1
+      checkoutGateWaiterRef.current = null
+      prewarmGenerationRef.current += 1
+      prewarmRequestRef.current = null
+    }
+  }, [])
 
   const resetOfferProviderLock = useCallback(() => {
     lockedProviderRef.current = null
@@ -316,12 +446,12 @@ export function ResultOfferPricing({
   }, [leadId, offerContext, offerTracking, selectedInterval])
 
   useEffect(() => {
-    if (!checkoutPrewarmEnabled) return
+    if (!checkoutPrewarmEnabled || earlyPrewarmEnabled) return
     const ctaElement = pricingCtaRef.current
     if (!ctaElement || pricingCtaVisible) return
 
     return observeOnceVisible(ctaElement, () => setPricingCtaVisible(true))
-  }, [checkoutPrewarmEnabled, pricingCtaVisible])
+  }, [checkoutPrewarmEnabled, earlyPrewarmEnabled, pricingCtaVisible])
 
   const trackCheckoutFailure = useCallback(
     ({
@@ -375,60 +505,78 @@ export function ResultOfferPricing({
       preparationId: string
       requestKey: string
       startedAt: number
-    }) => {
+    }): Promise<PreparedOfferCheckout | null> => {
       try {
-        ensureStripePromise()
         prewarmActualRequestCountRef.current += 1
-        const response = await fetch("/api/stripe/create-checkout-session", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            action: "prepare",
+        let data: PreparedOfferCheckoutResponse
+        if (checkoutLifecycleFixture) {
+          data = await checkoutLifecycleFixture.prepare({
             interval,
-            leadId,
-            source: "quiz_result_offer",
-            presentation: "offer_overlay_elements",
             preparationId,
-          }),
-        })
-        if (!response.ok) return
+          })
+        } else {
+          ensureStripePromise()
+          const response = await fetch("/api/stripe/create-checkout-session", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              action: "prepare",
+              interval,
+              leadId,
+              source: "quiz_result_offer",
+              presentation: "offer_overlay_elements",
+              preparationId,
+            }),
+          })
+          if (!response.ok) return null
 
-        const data = (await response.json().catch(() => ({}))) as PreparedOfferCheckoutResponse
+          data = (await response.json().catch(() => ({}))) as PreparedOfferCheckoutResponse
+        }
         const prepared = readPreparedOfferCheckoutResponse(data)
         if (
           !prepared ||
           !isCurrentOfferCheckoutPreparationGeneration(prewarmGenerationRef.current, generation)
         )
-          return
+          return null
 
-        setPreparedCheckout({
+        const nextPreparation: PreparedOfferCheckout = {
           ...prepared,
           checkoutKey: `prepared:${interval}:${prepared.sessionId}:${preparationId}`,
           interval,
           preparationId,
           preparationStartedAt: startedAt,
           walletTelemetryTracked: false,
-        })
+        }
+        preparedWalletAvailabilityRef.current = null
+        preparedCheckoutRef.current = nextPreparation
+        setPreparedCheckout(nextPreparation)
+        return nextPreparation
+      } catch {
+        return null
       } finally {
-        if (prewarmRequestRef.current?.key === requestKey) {
+        if (
+          prewarmRequestRef.current?.key === requestKey &&
+          prewarmRequestRef.current.generation === generation
+        ) {
           prewarmRequestRef.current = null
         }
       }
     },
-    [ensureStripePromise, leadId],
+    [checkoutLifecycleFixture, ensureStripePromise, leadId],
   )
 
   useEffect(() => {
     if (
       !checkoutPrewarmEnabled ||
-      !pricingCtaVisible ||
+      !shouldStartOfferCheckoutPrewarm({
+        earlyPrewarmEnabled,
+        pricingCtaVisible,
+      }) ||
       checkoutInterval !== null ||
       prewarmSuppressedUntilPlanChangeRef.current
     )
       return
     if (typeof window === "undefined" || typeof document === "undefined") return
-    if (document.visibilityState !== "visible") return
-    if (!canUseApplePayCapabilitySignal(window as ApplePayCapabilityWindow)) return
     if (isPreparedOfferCheckoutUsable(preparedCheckout, selectedInterval)) return
 
     const requestKey = `${selectedInterval}:${leadId ?? "anonymous"}`
@@ -436,16 +584,23 @@ export function ResultOfferPricing({
     if (isOfferCheckoutPrewarmPageRequestLimitReached(prewarmActualRequestCountRef.current)) return
     if (prewarmRequestRef.current?.key === requestKey) return
 
-    const generation = ++prewarmGenerationRef.current
     const interval = selectedInterval
-    const preparationId = createOfferCheckoutPreparationId()
-    const timer = window.setTimeout(() => {
+    let timer: number | null = null
+    let listeningForVisible = false
+
+    const startRequest = () => {
       if (document.visibilityState !== "visible") return
       if (!canUseApplePayCapabilitySignal(window as ApplePayCapabilityWindow)) return
       if (prewarmAttemptedKeysRef.current.has(requestKey)) return
       if (isOfferCheckoutPrewarmPageRequestLimitReached(prewarmActualRequestCountRef.current))
         return
+      if (prewarmRequestRef.current?.key === requestKey) return
+
+      const generation = ++prewarmGenerationRef.current
+      const preparationId = createOfferCheckoutPreparationId()
       prewarmAttemptedKeysRef.current.add(requestKey)
+      prewarmFailedKeysRef.current.delete(requestKey)
+      prewarmPlanChangePendingRef.current = false
       const promise = prepareOfferCheckout({
         generation,
         interval,
@@ -453,13 +608,53 @@ export function ResultOfferPricing({
         requestKey,
         startedAt: Date.now(),
       })
-      prewarmRequestRef.current = { key: requestKey, promise }
-    }, offerCheckoutPrewarmDebounceMs)
+      void promise.then((preparation) => {
+        if (
+          !preparation &&
+          isCurrentOfferCheckoutPreparationGeneration(prewarmGenerationRef.current, generation)
+        ) {
+          prewarmFailedKeysRef.current.add(requestKey)
+        }
+      })
+      prewarmRequestRef.current = { generation, key: requestKey, promise }
+    }
 
-    return () => window.clearTimeout(timer)
+    const scheduleRequest = () => {
+      const delayMs = getOfferCheckoutPrewarmDelayMs({
+        earlyPrewarmEnabled,
+        planChanged: prewarmPlanChangePendingRef.current,
+      })
+      if (delayMs === 0) {
+        startRequest()
+        return
+      }
+      timer = window.setTimeout(startRequest, delayMs)
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      listeningForVisible = false
+      scheduleRequest()
+    }
+
+    if (document.visibilityState === "visible") {
+      scheduleRequest()
+    } else if (earlyPrewarmEnabled) {
+      listeningForVisible = true
+      document.addEventListener("visibilitychange", handleVisibilityChange)
+    }
+
+    return () => {
+      if (timer !== null) window.clearTimeout(timer)
+      if (listeningForVisible) {
+        document.removeEventListener("visibilitychange", handleVisibilityChange)
+      }
+    }
   }, [
     checkoutInterval,
     checkoutPrewarmEnabled,
+    earlyPrewarmEnabled,
     leadId,
     prepareOfferCheckout,
     preparedCheckout,
@@ -483,33 +678,45 @@ export function ResultOfferPricing({
       }
 
       const funnelEventId = createFunnelEventId()
-      const promise = fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          action: "claim",
-          interval,
-          leadId,
-          source: "quiz_result_offer",
-          presentation: "offer_overlay_elements",
-          preparationId: preparation.preparationId,
-          preparationToken: preparation.preparationToken,
-          preparedSessionId: preparation.sessionId,
-          checkoutAttemptId: attemptId,
-          funnelEventId,
-        }),
-      })
-        .then(async (response) => {
-          if (!response.ok) return false
-          const data = (await response.json().catch(() => ({}))) as {
-            status?: unknown
-            client_secret?: unknown
-            session_id?: unknown
-          }
-          const claimed =
-            data.status === "claimed" &&
-            data.client_secret === preparation.clientSecret &&
-            data.session_id === preparation.sessionId
+      const promise = (async () => {
+        if (checkoutLifecycleFixture) {
+          return checkoutLifecycleFixture.claim({
+            attemptId,
+            interval,
+            preparationId: preparation.preparationId,
+          })
+        }
+
+        const response = await fetch("/api/stripe/create-checkout-session", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            action: "claim",
+            interval,
+            leadId,
+            source: "quiz_result_offer",
+            presentation: "offer_overlay_elements",
+            preparationId: preparation.preparationId,
+            preparationToken: preparation.preparationToken,
+            preparedSessionId: preparation.sessionId,
+            checkoutAttemptId: attemptId,
+            funnelEventId,
+          }),
+        })
+        if (!response.ok) return false
+        const data = (await response.json().catch(() => ({}))) as {
+          status?: unknown
+          client_secret?: unknown
+          session_id?: unknown
+        }
+        return (
+          data.status === "claimed" &&
+          data.client_secret === preparation.clientSecret &&
+          data.session_id === preparation.sessionId
+        )
+      })()
+        .catch(() => false)
+        .then((claimed) => {
           if (claimed) {
             const plan = getStripePricingPlan(interval)
             trackAppEvent("checkout_started", {
@@ -527,12 +734,8 @@ export function ResultOfferPricing({
               value: plan.amount,
             })
           }
-          return claimed
-        })
-        .catch(() => false)
-        .then((claimed) => {
           if (!claimed) {
-            setPreparedCheckout(null)
+            updatePreparedCheckout(null)
             setActivePreparedCheckout((current) =>
               current?.preparationId === preparation.preparationId ? null : current,
             )
@@ -547,7 +750,7 @@ export function ResultOfferPricing({
       }
       return promise
     },
-    [leadId, offerContext, paymentOverlayEnabled],
+    [checkoutLifecycleFixture, leadId, offerContext, paymentOverlayEnabled, updatePreparedCheckout],
   )
 
   const recordPreparedApplePayAvailability = useCallback(
@@ -561,6 +764,7 @@ export function ResultOfferPricing({
       const plan = getStripePricingPlan(preparation.interval)
       trackAppEvent("checkout_prepared", {
         interval: preparation.interval,
+        pageMountToWalletReadyMs: Math.max(0, Date.now() - pageMountedAtRef.current),
         planId: plan.analyticsId,
         preparationDurationMs: Math.max(0, Date.now() - preparation.preparationStartedAt),
         preparationId: preparation.preparationId,
@@ -568,7 +772,11 @@ export function ResultOfferPricing({
       })
       setPreparedCheckout((current) =>
         current?.preparationId === preparation.preparationId
-          ? { ...current, walletTelemetryTracked: true }
+          ? (() => {
+              const updated = { ...current, walletTelemetryTracked: true }
+              preparedCheckoutRef.current = updated
+              return updated
+            })()
           : current,
       )
     },
@@ -576,11 +784,27 @@ export function ResultOfferPricing({
   )
 
   const handlePreparedApplePayAvailabilityResolved = useCallback(
-    (walletAvailable: boolean) => {
-      if (!preparedCheckout) return
-      recordPreparedApplePayAvailability(preparedCheckout, walletAvailable)
+    (preparationId: string | null, walletAvailable: boolean) => {
+      const currentPreparation = preparedCheckoutRef.current
+      if (
+        !preparationId ||
+        !currentPreparation ||
+        currentPreparation.preparationId !== preparationId ||
+        fencedWalletPreparationIdsRef.current.has(preparationId) ||
+        !isPreparedOfferCheckoutUsable(currentPreparation, currentPreparation.interval)
+      )
+        return
+      if (preparedWalletAvailabilityRef.current?.preparationId === preparationId) return
+      preparedWalletAvailabilityRef.current = {
+        available: walletAvailable,
+        preparationId,
+      }
+      recordPreparedApplePayAvailability(currentPreparation, walletAvailable)
+      checkoutGateWaiterRef.current?.resolve({
+        type: walletAvailable ? "available" : "unavailable",
+      })
     },
-    [preparedCheckout, recordPreparedApplePayAvailability],
+    [recordPreparedApplePayAvailability],
   )
 
   useEffect(() => {
@@ -593,20 +817,29 @@ export function ResultOfferPricing({
       return
 
     const timer = window.setTimeout(() => {
-      recordPreparedApplePayAvailability(preparedCheckout, false)
+      trackAppEvent("checkout_preparation_outcome", {
+        outcome: "prewarm_silent",
+        waitDurationMs: offerCheckoutPrewarmAvailabilityTimeoutMs,
+      })
     }, offerCheckoutPrewarmAvailabilityTimeoutMs)
     return () => window.clearTimeout(timer)
-  }, [
-    checkoutInterval,
-    checkoutPrewarmEnabled,
-    preparedCheckout,
-    recordPreparedApplePayAvailability,
-  ])
+  }, [checkoutInterval, checkoutPrewarmEnabled, preparedCheckout])
+
+  function resetCheckoutGate() {
+    checkoutGateTokenRef.current += 1
+    checkoutGateWaiterRef.current = null
+    checkoutGateRef.current = reduceOfferCheckoutReadyGate(checkoutGateRef.current, {
+      type: "reset",
+    })
+    updateCheckoutWaiting(false)
+  }
 
   function choosePlan(interval: BillingInterval) {
     if (lockedProviderRef.current !== null) return
     if (interval !== selectedInterval) {
       prewarmAttemptedKeysRef.current.delete(`${selectedInterval}:${leadId ?? "anonymous"}`)
+      prewarmFailedKeysRef.current.delete(`${selectedInterval}:${leadId ?? "anonymous"}`)
+      prewarmPlanChangePendingRef.current = true
     }
     if (offerContext) {
       const plan = getStripePricingPlan(interval)
@@ -628,8 +861,10 @@ export function ResultOfferPricing({
     prewarmGenerationRef.current += 1
     prewarmRequestRef.current = null
     preparedClaimRef.current = null
-    setPreparedCheckout(null)
+    updatePreparedCheckout(null)
     setActivePreparedCheckout(null)
+    setSuppressExpressWallet(false)
+    resetCheckoutGate()
     checkoutReturnFocusRef.current = null
     checkoutAttemptController.close()
     resetOfferProviderLock()
@@ -648,8 +883,10 @@ export function ResultOfferPricing({
     prewarmGenerationRef.current += 1
     prewarmRequestRef.current = null
     preparedClaimRef.current = null
-    setPreparedCheckout(null)
+    updatePreparedCheckout(null)
     setActivePreparedCheckout(null)
+    setSuppressExpressWallet(false)
+    resetCheckoutGate()
     resetOfferProviderLock()
     setCheckoutAttemptId(null)
     setCheckoutInterval(null)
@@ -662,7 +899,36 @@ export function ResultOfferPricing({
     })
   }
 
-  function openCheckout() {
+  function getCurrentUsablePreparedCheckout() {
+    const currentPreparation = preparedCheckoutRef.current
+    return isPreparedOfferCheckoutUsable(currentPreparation, selectedInterval)
+      ? currentPreparation
+      : null
+  }
+
+  function trackCheckoutPreparationOutcome(
+    outcome:
+      | "prepared"
+      | "prepared_unusable"
+      | "wallet_unavailable_or_error"
+      | "prepare_failure"
+      | "timeout_prepared"
+      | "timeout_cold",
+    startedAt: number,
+  ) {
+    trackAppEvent("checkout_preparation_outcome", {
+      outcome,
+      waitDurationMs: Math.max(0, Date.now() - startedAt),
+    })
+  }
+
+  function openCheckoutNow({
+    preparation,
+    suppressWallet,
+  }: {
+    preparation: PreparedOfferCheckout | null
+    suppressWallet: boolean
+  }) {
     const nextAttempt = checkoutAttemptController.open()
     if (!nextAttempt.isNew) {
       if (!paymentOverlayEnabled) scrollInlineCheckoutIntoView()
@@ -670,8 +936,8 @@ export function ResultOfferPricing({
     }
 
     const matchingPreparation =
-      checkoutPrewarmEnabled && isPreparedOfferCheckoutUsable(preparedCheckout, selectedInterval)
-        ? preparedCheckout
+      checkoutPrewarmEnabled && isPreparedOfferCheckoutUsable(preparation, selectedInterval)
+        ? preparation
         : null
     prewarmGenerationRef.current += 1
     prewarmRequestRef.current = null
@@ -681,7 +947,8 @@ export function ResultOfferPricing({
         ? { ...matchingPreparation, attemptId: nextAttempt.checkoutAttemptId }
         : null,
     )
-    if (!matchingPreparation) setPreparedCheckout(null)
+    if (!matchingPreparation) updatePreparedCheckout(null)
+    setSuppressExpressWallet(suppressWallet)
 
     const plan = getStripePricingPlan(selectedInterval)
     const nextCheckoutAttemptId = nextAttempt.checkoutAttemptId
@@ -744,11 +1011,155 @@ export function ResultOfferPricing({
     if (!paymentOverlayEnabled) scrollInlineCheckoutIntoView()
   }
 
+  async function openCheckout() {
+    if (checkoutWaitingRef.current) return
+    if (checkoutInterval !== null) {
+      openCheckoutNow({
+        preparation: activePreparedCheckout,
+        suppressWallet: suppressExpressWallet,
+      })
+      return
+    }
+
+    const requestKey = `${selectedInterval}:${leadId ?? "anonymous"}`
+    const matchingPreparation = getCurrentUsablePreparedCheckout()
+    const walletAvailability =
+      matchingPreparation &&
+      preparedWalletAvailabilityRef.current?.preparationId === matchingPreparation.preparationId
+        ? preparedWalletAvailabilityRef.current.available
+        : null
+
+    if (!resolvedOpenEnabled) {
+      openCheckoutNow({ preparation: matchingPreparation, suppressWallet: false })
+      return
+    }
+
+    if (walletAvailability === true) {
+      trackCheckoutPreparationOutcome("prepared", Date.now())
+      openCheckoutNow({ preparation: matchingPreparation, suppressWallet: false })
+      return
+    }
+    if (walletAvailability === false) {
+      trackCheckoutPreparationOutcome("wallet_unavailable_or_error", Date.now())
+      openCheckoutNow({ preparation: matchingPreparation, suppressWallet: true })
+      return
+    }
+
+    const inFlightRequest =
+      prewarmRequestRef.current?.key === requestKey ? prewarmRequestRef.current : null
+    if (!matchingPreparation && !inFlightRequest) {
+      const preparationAlreadyFailed = prewarmFailedKeysRef.current.has(requestKey)
+      if (preparationAlreadyFailed) {
+        trackCheckoutPreparationOutcome("prepare_failure", Date.now())
+      }
+      openCheckoutNow({
+        preparation: null,
+        suppressWallet: preparationAlreadyFailed,
+      })
+      return
+    }
+
+    const waitingState = reduceOfferCheckoutReadyGate(checkoutGateRef.current, {
+      type: "request",
+    })
+    if (waitingState.status !== "waiting") return
+    checkoutGateRef.current = waitingState
+    const token = ++checkoutGateTokenRef.current
+    const startedAt = Date.now()
+    updateCheckoutWaiting(true)
+
+    try {
+      const terminal = await new Promise<CheckoutGateTerminal>((resolve) => {
+        let settled = false
+        const finish = (result: CheckoutGateTerminal) => {
+          if (settled) return
+          settled = true
+          window.clearTimeout(timeout)
+          if (checkoutGateWaiterRef.current?.token === token) {
+            checkoutGateWaiterRef.current = null
+          }
+          resolve(result)
+        }
+        const timeout = window.setTimeout(
+          () => finish({ type: "timeout" }),
+          offerCheckoutResolvedOpenTimeoutMs,
+        )
+        checkoutGateWaiterRef.current = { resolve: finish, token }
+
+        const currentAvailability = preparedWalletAvailabilityRef.current
+        const currentPreparation = getCurrentUsablePreparedCheckout()
+        if (
+          currentPreparation &&
+          currentAvailability?.preparationId === currentPreparation.preparationId
+        ) {
+          finish({ type: currentAvailability.available ? "available" : "unavailable" })
+          return
+        }
+
+        if (inFlightRequest) {
+          void inFlightRequest.promise
+            .then((preparation) => {
+              if (!preparation) {
+                finish({ type: "failure" })
+                return
+              }
+              const availability = preparedWalletAvailabilityRef.current
+              if (availability?.preparationId === preparation.preparationId) {
+                finish({ type: availability.available ? "available" : "unavailable" })
+              }
+            })
+            .catch(() => finish({ type: "failure" }))
+        }
+      })
+
+      if (checkoutGateTokenRef.current !== token) return
+      const usablePreparation = getCurrentUsablePreparedCheckout()
+      const event: OfferCheckoutReadyGateEvent = {
+        type: terminal.type,
+        preparedCheckoutUsable: Boolean(usablePreparation),
+      }
+      const committedState = reduceOfferCheckoutReadyGate(checkoutGateRef.current, event)
+      checkoutGateRef.current = committedState
+
+      if (committedState.status === "open_prepared") {
+        trackCheckoutPreparationOutcome("prepared", startedAt)
+        openCheckoutNow({ preparation: usablePreparation, suppressWallet: false })
+        return
+      }
+      if (committedState.status !== "open_fallback") return
+
+      const preparation = committedState.fallback === "prepared" ? usablePreparation : null
+      if (usablePreparation) {
+        fencedWalletPreparationIdsRef.current.add(usablePreparation.preparationId)
+      }
+      const outcome =
+        committedState.reason === "prepared_unusable"
+          ? "prepared_unusable"
+          : terminal.type === "timeout"
+            ? preparation
+              ? "timeout_prepared"
+              : "timeout_cold"
+            : terminal.type === "failure"
+              ? "prepare_failure"
+              : "wallet_unavailable_or_error"
+      trackCheckoutPreparationOutcome(outcome, startedAt)
+      openCheckoutNow({ preparation, suppressWallet: true })
+    } finally {
+      if (checkoutGateTokenRef.current === token) {
+        checkoutGateWaiterRef.current = null
+        checkoutGateRef.current = reduceOfferCheckoutReadyGate(checkoutGateRef.current, {
+          type: "reset",
+        })
+        updateCheckoutWaiting(false)
+      }
+    }
+  }
+
   useEffect(() => {
     if (!claimCheckoutOpenRequest(handledCheckoutOpenRequestsRef.current, openCheckoutRequestId)) {
       return
     }
-    openCheckout()
+    void openCheckout()
     // `openCheckoutRequestId` is an imperative request token owned by the parent offer shell.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCheckoutRequestId])
@@ -1030,57 +1441,83 @@ export function ResultOfferPricing({
         : null
   const paymentCheckoutInterval = checkoutInterval ?? preparedCheckoutForRender?.interval ?? null
   const paymentCheckout = paymentCheckoutInterval ? (
-    <PaymentMethodCheckout
-      checkoutAttemptId={checkoutAttemptId ?? undefined}
-      checkoutError={checkoutError}
-      checkoutKey={
-        preparedCheckoutForRender
+    checkoutLifecycleFixture ? (
+      checkoutLifecycleFixture.renderPaymentCheckout({
+        checkoutAttemptId,
+        checkoutKey: preparedCheckoutForRender
           ? preparedCheckoutForRender.checkoutKey
-          : `${paymentCheckoutInterval}:${checkoutAttemptId ?? "pending"}`
-      }
-      clientSecret={preparedCheckoutForRender?.clientSecret}
-      expressElementsEnabled={expressElementsEnabled}
-      fetchClientSecret={fetchClientSecret}
-      holdPaymentChoicesUntilResolved={Boolean(preparedCheckoutForRender)}
-      interval={paymentCheckoutInterval}
-      leadId={leadId}
-      lockedProvider={expressElementsEnabled ? lockedProvider : null}
-      onBeforeStripeConfirm={handleBeforeStripeConfirm}
-      onChangePlan={() => closeCheckout()}
-      onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
-      onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
-      onPaymentOptionViewed={handlePaymentOptionViewed}
-      onPreparedApplePayAvailabilityResolved={handlePreparedApplePayAvailabilityResolved}
-      onPaymentMethodSelected={handlePaymentMethodSelected}
-      paymentElementEnabled={checkoutInterval !== null}
-      onProviderLockClaim={expressElementsEnabled ? claimOfferProvider : undefined}
-      onProviderLockRelease={expressElementsEnabled ? releaseOfferProvider : undefined}
-      onRetry={() => {
-        resetOfferProviderLock()
-        if (!stripePublishableKey) {
-          setCheckoutError(checkoutStartError)
-          return
+          : `${paymentCheckoutInterval}:${checkoutAttemptId ?? "pending"}`,
+        interval: paymentCheckoutInterval,
+        onApplePayAvailabilityResolved: (available) =>
+          handlePreparedApplePayAvailabilityResolved(
+            preparedCheckoutForRender?.preparationId ?? null,
+            available,
+          ),
+        preparationId: preparedCheckoutForRender?.preparationId ?? null,
+        suppressExpressWallet,
+        visible: checkoutInterval !== null,
+      })
+    ) : (
+      <PaymentMethodCheckout
+        checkoutAttemptId={checkoutAttemptId ?? undefined}
+        checkoutError={checkoutError}
+        checkoutKey={
+          preparedCheckoutForRender
+            ? preparedCheckoutForRender.checkoutKey
+            : `${paymentCheckoutInterval}:${checkoutAttemptId ?? "pending"}`
         }
+        clientSecret={preparedCheckoutForRender?.clientSecret}
+        expressElementsEnabled={expressElementsEnabled}
+        fetchClientSecret={fetchClientSecret}
+        holdPaymentChoicesUntilResolved={Boolean(preparedCheckoutForRender)}
+        interval={paymentCheckoutInterval}
+        leadId={leadId}
+        lockedProvider={expressElementsEnabled ? lockedProvider : null}
+        onBeforeStripeConfirm={handleBeforeStripeConfirm}
+        onChangePlan={() => closeCheckout()}
+        onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
+        onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
+        onPaymentOptionViewed={handlePaymentOptionViewed}
+        onPreparedApplePayAvailabilityResolved={(available) =>
+          handlePreparedApplePayAvailabilityResolved(
+            preparedCheckoutForRender?.preparationId ?? null,
+            available,
+          )
+        }
+        onPaymentMethodSelected={handlePaymentMethodSelected}
+        paymentElementEnabled={checkoutInterval !== null}
+        onProviderLockClaim={expressElementsEnabled ? claimOfferProvider : undefined}
+        onProviderLockRelease={expressElementsEnabled ? releaseOfferProvider : undefined}
+        onRetry={() => {
+          resetOfferProviderLock()
+          if (!stripePublishableKey) {
+            setCheckoutError(checkoutStartError)
+            return
+          }
 
-        const retryCheckoutAttemptId = checkoutAttemptController.retry()
-        if (!retryCheckoutAttemptId) return
-        const interval = checkoutInterval
-        prewarmGenerationRef.current += 1
-        prewarmRequestRef.current = null
-        preparedClaimRef.current = null
-        setPreparedCheckout(null)
-        setActivePreparedCheckout(null)
-        setCheckoutAttemptId(retryCheckoutAttemptId)
-        setCheckoutError(null)
-        setCheckoutInterval(null)
-        window.setTimeout(() => setCheckoutInterval(interval), 0)
-      }}
-      planLabel={activePlan.ctaLabel}
-      presentation={paymentOverlayEnabled ? "offer-overlay" : "default"}
-      source="quiz_result_offer"
-      stripe={checkoutStripePromise}
-      visible={checkoutInterval !== null}
-    />
+          const retryCheckoutAttemptId = checkoutAttemptController.retry()
+          if (!retryCheckoutAttemptId) return
+          const interval = checkoutInterval
+          prewarmGenerationRef.current += 1
+          prewarmRequestRef.current = null
+          preparedClaimRef.current = null
+          updatePreparedCheckout(null)
+          setActivePreparedCheckout(null)
+          setSuppressExpressWallet(false)
+          resetCheckoutGate()
+          setCheckoutAttemptId(retryCheckoutAttemptId)
+          setCheckoutError(null)
+          setCheckoutInterval(null)
+          window.setTimeout(() => setCheckoutInterval(interval), 0)
+        }}
+        planLabel={activePlan.ctaLabel}
+        presentation={paymentOverlayEnabled ? "offer-overlay" : "default"}
+        source="quiz_result_offer"
+        stripe={checkoutStripePromise}
+        suppressExpressWallet={suppressExpressWallet}
+        visible={checkoutInterval !== null}
+      />
+    )
   ) : null
 
   return (
@@ -1092,6 +1529,8 @@ export function ResultOfferPricing({
       />
       <div ref={pricingCtaRef}>
         <SubscriptionPlanSelector
+          busy={checkoutWaiting}
+          busyLabel="Zahlungsoptionen werden vorbereitet …"
           offerTracking
           onContinue={openCheckout}
           onSelect={choosePlan}

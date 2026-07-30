@@ -294,7 +294,7 @@ test("prewarmed offer Elements mount Express first and defer card methods until 
   assert.match(stripeOfferElementsSource, /setPaymentElementReady\(false\)/)
   assert.match(
     stripeOfferElementsSource,
-    /applePayFailed && !holdPaymentChoices && !expressDomProbeEnabled/,
+    /applePayFailed\s*&&\s*!holdPaymentChoices\s*&&\s*!expressDomProbeEnabled/,
   )
 })
 
@@ -331,6 +331,41 @@ test("injected card and more test seam can model a ready provider without changi
     stripeOfferElementsSource,
     /paymentElementReadyOverride \?\? paymentElementReadyFromProvider/,
   )
+})
+
+test("wallet-suppressed offer Elements keep the fallback checkout clear of Express lifecycle UI", () => {
+  let expressRenderCount = 0
+  const html = renderToStaticMarkup(
+    <StripeOfferElementsCheckoutContent
+      checkoutResult={{ type: "loading" }}
+      holdPaymentChoicesUntilResolved
+      initialApplePayAvailability="failed"
+      onApplePayAvailabilityResolved={() => assert.fail("wallet callback must not fire")}
+      onRetry={() => {}}
+      paymentElement={<div data-testid="payment-element">Card fields</div>}
+      renderExpressCheckoutElement={() => {
+        expressRenderCount += 1
+        return <div data-testid="express-element" />
+      }}
+      secondaryPaymentMethod={<div data-testid="secondary-payment-method">PayPal</div>}
+      suppressExpressWallet
+      visible
+    />,
+  )
+
+  assert.equal(expressRenderCount, 0)
+  assert.match(html, /data-testid="secondary-payment-method"/)
+  assert.match(html, /data-testid="payment-element"/)
+  assert.match(html, /data-offer-payment-step="payment_element"/)
+  assert.doesNotMatch(html, /data-testid="express-element"/)
+  assert.doesNotMatch(html, /data-offer-payment-element="apple_pay"/)
+  assert.doesNotMatch(html, /Zahlungsoptionen werden vorbereitet/)
+  assert.doesNotMatch(html, /Apple Pay wird geladen/)
+  assert.doesNotMatch(html, /Apple Pay ist derzeit nicht verfügbar/)
+  assert.doesNotMatch(html, /Zahlungsoptionen konnten nicht geladen werden/)
+
+  assert.match(stripeOfferElementsSource, /if \(\s*suppressExpressWallet \|\|\s*!visible \|\|/)
+  assert.match(stripeOfferElementsSource, /if \(suppressExpressWallet\) return/)
 })
 
 test("failed Apple Pay resolution releases held payment choices in rendered checkout markup", () => {
