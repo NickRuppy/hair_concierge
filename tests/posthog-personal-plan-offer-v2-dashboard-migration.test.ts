@@ -17,7 +17,7 @@ type Insight = {
   id: number
   name: string
   description?: string
-  query: { source: { query: string } }
+  query: { kind?: string; source: { kind?: string; query: string } }
 }
 
 function insight(id: number, query: string): Insight {
@@ -382,6 +382,8 @@ test("fully applied insights need no backup or PATCH, while O6 is still ensured"
   assert.equal(result.mode, "apply")
   assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
   assert.equal(posthog.methods.filter((method) => method === "POST").length, 1)
+  assert.equal(posthog.tiles[0]?.query.kind, "DataTableNode")
+  assert.equal(posthog.tiles[0]?.query.source.kind, "HogQLQuery")
 })
 
 test("partial retry without the original backup refuses before any PATCH", async () => {
