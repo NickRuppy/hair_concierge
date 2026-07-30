@@ -13,6 +13,7 @@ import {
 import {
   createPostHogRuntime,
   sanitizePostHogProperties,
+  sanitizePostHogSessionRecordingRequest,
   type PostHogRuntimeClient,
 } from "../src/lib/analytics/runtime/posthog"
 import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
@@ -156,6 +157,19 @@ test("PostHog removes sensitive queries and fragments from automatic URL propert
           "https://chaarlie.de/result/lead-123?entry=quiz_completion&focus=routine",
       },
       offer_revision: "product_led_v2",
+    },
+  )
+})
+
+test("PostHog removes sensitive queries from session replay URLs", () => {
+  assert.deepEqual(
+    sanitizePostHogSessionRecordingRequest({
+      entryType: "resource",
+      name: "https://chaarlie.de/auth/update-password?code=recovery-code#access_token=x",
+    }),
+    {
+      entryType: "resource",
+      name: "https://chaarlie.de/auth/update-password",
     },
   )
 })

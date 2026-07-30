@@ -162,6 +162,13 @@ export function sanitizePostHogProperties(properties: PostHogProperties) {
   return sanitized
 }
 
+export function sanitizePostHogSessionRecordingRequest<T extends { name: string }>(request: T) {
+  return {
+    ...request,
+    name: sanitizeAnalyticsUrl(request.name),
+  }
+}
+
 function isPropertyRecord(value: unknown): value is PostHogProperties {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
 }
@@ -172,7 +179,8 @@ async function loadPostHogClient(): Promise<PostHogRuntimeClient | null> {
   const posthogModule = await import("posthog-js")
   const client = posthogModule.default
   client.init(POSTHOG_KEY, {
-    advanced_disable_flags: true,
+    advanced_disable_feature_flags: true,
+    advanced_disable_feature_flags_on_first_load: true,
     api_host: POSTHOG_HOST,
     autocapture: false,
     before_send: (event) =>
@@ -186,6 +194,12 @@ async function loadPostHogClient(): Promise<PostHogRuntimeClient | null> {
         : null,
     capture_pageview: false,
     persistence: "localStorage+cookie",
+    session_recording: {
+      maskAllInputs: true,
+      maskCapturedNetworkRequestFn: sanitizePostHogSessionRecordingRequest,
+      recordBody: false,
+      recordHeaders: false,
+    },
   })
   return client as unknown as PostHogRuntimeClient
 }
