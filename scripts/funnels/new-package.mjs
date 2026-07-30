@@ -10,15 +10,19 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const PROPERTY_KEY_PATTERN = /^[a-z_$][a-z0-9_$]*$/i
 const CHANNELS = new Set(["organic", "meta", "internal"])
 const STATUSES = new Set(["active", "placeholder", "archived"])
-const ARGUMENT_NAMES = new Set(["key", "slug", "landing", "offer", "channel", "status"])
+const ARGUMENT_NAMES = new Set(["key", "slug", "landing", "quiz", "offer", "channel", "status"])
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url))
 const defaultRoot = path.resolve(scriptDirectory, "../..")
 
 function usage() {
   return `Usage:
-  npm run funnel:new -- --key <package_key> --slug <landing-slug> --landing <variant> --offer <variant> [--channel meta] [--status placeholder]
-  npm run funnel:check`
+  npm run funnel:new -- --key <package_key> --slug <landing-slug> --landing <variant> --quiz <registered-quiz-variant> --offer <variant> [--channel meta] [--status placeholder]
+  npm run funnel:check
+
+Registered quiz variants:
+  legacy-quiz-v1 (quiz kind: legacy; shared /quiz delivery; default landing)
+  personal-plan-quiz-v1 (quiz kind: personal_plan; embedded personal-plan-quiz landing)`
 }
 
 export function parseFunnelArgs(argv) {
@@ -39,6 +43,7 @@ export function parseFunnelArgs(argv) {
     key: values.key,
     slug: values.slug,
     landingVariant: values.landing,
+    quizVariant: values.quiz,
     offerVariant: values.offer,
     channel: values.channel ?? "meta",
     status: values.status ?? "placeholder",
@@ -50,6 +55,7 @@ function assertPackageInput(input) {
     key: input.key,
     slug: input.slug,
     landing: input.landingVariant,
+    quiz: input.quizVariant,
     offer: input.offerVariant,
   })) {
     if (!value) throw new Error(`Missing required --${name}`)
@@ -109,11 +115,74 @@ function funnelPaths(rootDir) {
   const funnelDirectory = path.join(rootDir, "src/funnels")
   return {
     packages: path.join(funnelDirectory, "packages.json"),
+    quizRegistry: path.join(funnelDirectory, "quizzes/registry.json"),
     landingDirectory: path.join(funnelDirectory, "landing"),
     landingRegistry: path.join(funnelDirectory, "landing/registry.generated.ts"),
     offerDirectory: path.join(funnelDirectory, "offers"),
     offerRegistry: path.join(funnelDirectory, "offers/registry.generated.ts"),
   }
+}
+
+function readQuizVariants(quizRegistryPath) {
+  const quizVariants = JSON.parse(readFileSync(quizRegistryPath, "utf8"))
+  if (!Array.isArray(quizVariants)) {
+    throw new Error("src/funnels/quizzes/registry.json must contain a list")
+  }
+  const ids = new Set()
+  for (const quizVariant of quizVariants) {
+    if (!quizVariant || typeof quizVariant !== "object") {
+      throw new Error("Quiz variant registry entries must be objects")
+    }
+    if (typeof quizVariant.id !== "string" || !SLUG_PATTERN.test(quizVariant.id)) {
+      throw new Error(`Invalid quiz variant ID: ${String(quizVariant.id)}`)
+    }
+    if (ids.has(quizVariant.id)) throw new Error(`Duplicate quiz variant ID: ${quizVariant.id}`)
+    ids.add(quizVariant.id)
+    if (!["legacy", "personal_plan"].includes(quizVariant.quizKind)) {
+      throw new Error(`Unsupported quiz kind: ${String(quizVariant.quizKind)}`)
+    }
+    if (
+      !Array.isArray(quizVariant.landingVariants) ||
+      quizVariant.landingVariants.length === 0 ||
+      quizVariant.landingVariants.some((landingVariant) =>
+        typeof landingVariant !== "string" || !SLUG_PATTERN.test(landingVariant),
+      )
+    ) {
+      throw new Error(`Invalid landing variants for quiz variant: ${quizVariant.id}`)
+    }
+    if (!quizVariant.delivery || typeof quizVariant.delivery !== "object") {
+      throw new Error(`Invalid quiz delivery seam for quiz variant: ${quizVariant.id}`)
+    }
+    if (quizVariant.delivery.kind === "route" && quizVariant.delivery.route === "/quiz") continue
+    if (
+      quizVariant.delivery.kind === "embedded" &&
+      typeof quizVariant.delivery.landingVariant === "string" &&
+      quizVariant.landingVariants.includes(quizVariant.delivery.landingVariant)
+    ) {
+      continue
+    }
+    throw new Error(`Invalid quiz delivery seam for quiz variant: ${quizVariant.id}`)
+  }
+  return quizVariants
+}
+
+function assertRegisteredQuizVariant(input, quizVariants) {
+  const quizVariant = quizVariants.find((item) => item.id === input.quizVariant)
+  if (!quizVariant) throw new Error(`Unknown quiz variant: ${input.quizVariant}`)
+  const isEmbeddedLanding = quizVariants.some(
+    (candidate) =>
+      candidate.delivery.kind === "embedded" && candidate.delivery.landingVariant === input.landingVariant,
+  )
+  const isCompatible =
+    quizVariant.delivery.kind === "route"
+      ? !isEmbeddedLanding
+      : quizVariant.landingVariants.includes(input.landingVariant)
+  if (!isCompatible) {
+    throw new Error(
+      `Quiz variant ${input.quizVariant} is not compatible with landing variant ${input.landingVariant}`,
+    )
+  }
+  return quizVariant
 }
 
 function readPackages(packagePath) {
@@ -136,6 +205,7 @@ export function checkFunnelFiles(rootDir = defaultRoot) {
   const paths = funnelPaths(rootDir)
   const expected = expectedFunnelRegistries(rootDir)
   const packages = readPackages(paths.packages)
+  const quizVariants = readQuizVariants(paths.quizRegistry)
   const errors = []
 
   if (readFileSync(paths.landingRegistry, "utf8") !== expected.landingSource) {
@@ -148,6 +218,11 @@ export function checkFunnelFiles(rootDir = defaultRoot) {
   for (const funnelPackage of packages) {
     if (!expected.landingIds.includes(funnelPackage.landingVariant)) {
       errors.push(`${funnelPackage.key} references missing landing ${funnelPackage.landingVariant}`)
+    }
+    try {
+      assertRegisteredQuizVariant(funnelPackage, quizVariants)
+    } catch (error) {
+      errors.push(error instanceof Error ? `${funnelPackage.key}: ${error.message}` : `${funnelPackage.key}: invalid quiz variant`)
     }
     if (!expected.offerIds.includes(funnelPackage.offerVariant)) {
       errors.push(`${funnelPackage.key} references missing offer ${funnelPackage.offerVariant}`)
@@ -170,6 +245,8 @@ export function createFunnelPackage(input, rootDir = defaultRoot) {
   assertPackageInput(input)
   const paths = funnelPaths(rootDir)
   const packages = readPackages(paths.packages)
+  const quizVariants = readQuizVariants(paths.quizRegistry)
+  const quizVariant = assertRegisteredQuizVariant(input, quizVariants)
   if (packages.some((item) => item.key === input.key)) {
     throw new Error(`Package key already exists: ${input.key}`)
   }
@@ -198,13 +275,20 @@ export function createFunnelPackage(input, rootDir = defaultRoot) {
     channel: input.channel,
     status: input.status,
     landingVariant: input.landingVariant,
+    quizVariant: input.quizVariant,
     offerVariant: input.offerVariant,
   })
   writeFileSync(paths.packages, `${JSON.stringify(packages, null, 2)}\n`)
   writeFunnelRegistries(rootDir)
   checkFunnelFiles(rootDir)
 
-  return { created, packageKey: input.key, slug: input.slug }
+  return {
+    created,
+    packageKey: input.key,
+    slug: input.slug,
+    quizVariant: input.quizVariant,
+    quizKind: quizVariant.quizKind,
+  }
 }
 
 export function main(argv = process.argv.slice(2), rootDir = defaultRoot) {
@@ -227,6 +311,7 @@ export function main(argv = process.argv.slice(2), rootDir = defaultRoot) {
   }
   const result = createFunnelPackage(input, rootDir)
   console.log(`Created funnel package ${result.packageKey} at /lp/${result.slug}`)
+  console.log(`Quiz variant: ${result.quizVariant} (quiz kind: ${result.quizKind})`)
   if (result.created.length > 0) console.log(`Created variants:\n- ${result.created.join("\n- ")}`)
 }
 

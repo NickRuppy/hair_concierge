@@ -25,6 +25,7 @@ npm run funnel:new -- \
   --key scalp_offer_b \
   --slug scalp-offer-b \
   --landing default \
+  --quiz legacy-quiz-v1 \
   --offer scalp-offer-b \
   --channel meta
 ```
@@ -40,7 +41,9 @@ wrapper around the current production experience. Edit only:
 
 The files named `registry.generated.ts` are generated. Do not edit them manually.
 
-Once a package exists upstream, its key, slug, channel, landing variant, offer variant, and component
+Each package must select an owner-registered quiz variant compatible with its landing. `legacy-quiz-v1` delivers the shared `legacy` quiz at `/quiz` for the default landing family, including generator-created shared-quiz landing wrappers; it cannot use an explicitly embedded quiz landing. `personal-plan-quiz-v1` embeds the `personal_plan` quiz through the exact `personal-plan-quiz` landing. The owner-controlled quiz registry and all quiz code are outside contributor scope.
+
+Once a package exists upstream, its key, slug, channel, landing variant, quiz variant, offer variant, and component
 files are owner-controlled. Create new variant files and a new package for every new combination;
 only the package status may change in a fork PR. Historical variants stay available for at least the
 90-day attribution window so returning leads remain in their original lane.
