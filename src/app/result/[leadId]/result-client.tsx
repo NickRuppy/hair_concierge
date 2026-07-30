@@ -17,6 +17,7 @@ import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
 import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
 
@@ -24,6 +25,7 @@ export function ResultPageClient({
   leadId,
   name,
   personalPlanOffer = null,
+  personalPlanFocusTarget = null,
   quizAnswers,
   quizKind = "legacy",
   entryContext,
@@ -37,6 +39,7 @@ export function ResultPageClient({
   leadId: string
   name: string
   personalPlanOffer?: PersonalPlanOfferModel | null
+  personalPlanFocusTarget?: PersonalPlanOfferFocusTarget | null
   quizAnswers: QuizAnswers | null
   quizKind?: "legacy" | "personal_plan"
   entryContext?: OfferEntryContext
@@ -61,6 +64,7 @@ export function ResultPageClient({
     return (
       <PersonalPlanOffer
         entryContext={resolvedEntryContext}
+        focusTarget={personalPlanFocusTarget}
         leadId={leadId}
         model={personalPlanOffer}
         offerTracking={offerTracking}

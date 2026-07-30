@@ -4,6 +4,7 @@ import {
   derivePersonalPlanPrimaryMessage,
   type PersonalPlanPrimaryMessage,
 } from "@/lib/personal-plan-quiz/prepared-plan"
+import { PERSONAL_PLAN_OFFER_HIGHLIGHTS_FOCUS } from "@/lib/personal-plan-quiz/offer-focus"
 
 import type { CustomerIoTransactionalEmailPayload } from "./transactional"
 
@@ -52,7 +53,8 @@ export interface PersonalPlanResultArtifactEmailInput {
 function resultUrl(siteUrl: string, leadId: string): string {
   const url = new URL(`/result/${encodeURIComponent(leadId)}`, siteUrl)
   url.searchParams.set("entry", "result_email")
-  url.hash = "pricing"
+  url.searchParams.set("focus", PERSONAL_PLAN_OFFER_HIGHLIGHTS_FOCUS)
+  url.hash = PERSONAL_PLAN_OFFER_HIGHLIGHTS_FOCUS
   return url.toString()
 }
 

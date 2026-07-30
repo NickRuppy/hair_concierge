@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowDown, ArrowRight } from "lucide-react"
 
@@ -8,6 +8,7 @@ import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-referen
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
+import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
 
 const testimonials = [
@@ -214,17 +215,29 @@ function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
 
 export function PersonalPlanOffer({
   entryContext,
+  focusTarget = null,
   leadId,
   model,
   offerTracking,
 }: {
   entryContext: OfferEntryContext
+  focusTarget?: PersonalPlanOfferFocusTarget | null
   leadId: string
   model: PersonalPlanOfferModel
   offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
+  useEffect(() => {
+    if (!focusTarget) return
+
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(focusTarget)
+      target?.scrollIntoView({ block: "start" })
+      target?.focus({ preventScroll: true })
+    })
+  }, [focusTarget])
+
   const scrollToPricing = () => scrollToPersonalPlanPricing()
 
   return (
@@ -300,8 +313,10 @@ export function PersonalPlanOffer({
         </section>
 
         <section
-          className="mx-auto max-w-4xl px-4 py-7 sm:py-14"
+          className="mx-auto max-w-4xl scroll-mt-16 px-4 py-7 sm:py-14"
           data-offer-section="personal_plan_complete_plan"
+          id="personal_plan_complete_plan"
+          tabIndex={-1}
         >
           <div className="text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">

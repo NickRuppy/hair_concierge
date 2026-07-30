@@ -13,6 +13,7 @@ import {
   resolveQuizResultRetakeReturnTo,
 } from "@/lib/quiz/result-navigation"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import { resolvePersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
@@ -141,6 +142,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const entry = getQuizResultSearchParamValue(sp.entry)
   const focusRoutine = focus === "routine"
   const focusTarget = focus === "unlock-plan" ? "unlock-plan" : focusRoutine ? "pricing" : null
+  const personalPlanFocusTarget = resolvePersonalPlanOfferFocusTarget(focus)
   const returnTo = resolveQuizResultRetakeReturnTo(sp.mode, sp.returnTo)
   const entryContext: OfferEntryContext = focusRoutine
     ? "routine_return"
@@ -185,6 +187,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       leadId={lead.id}
       name={lead.name}
       personalPlanOffer={personalPlanOffer as PersonalPlanOfferModel | null}
+      personalPlanFocusTarget={personalPlanFocusTarget}
       quizAnswers={quizAnswers}
       quizKind={lead.quiz_kind}
       entryContext={entryContext}

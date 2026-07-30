@@ -69,7 +69,7 @@ result_url
 The CTA is:
 
 ```text
-https://chaarlie.de/result/<leadId>?entry=result_email#pricing
+https://chaarlie.de/result/<leadId>?entry=result_email&focus=personal_plan_complete_plan#personal_plan_complete_plan
 ```
 
 `entry=result_email` preserves the existing result-entry attribution. Customer.io link tracking is
@@ -113,7 +113,7 @@ validation, backup and final read-back.
 5. Complete a real personal-plan quiz with an explicitly approved QA recipient.
 6. Verify the lead has `artifact_email_status = sent`, inspect the delivered rich email, inspect
    images-blocked/plain-text behavior, click the CTA, and confirm `entry=result_email` plus the
-   `#pricing` landing.
+   `personal_plan_complete_plan` focus plus fragment fallback.
 
 Never activate message `9` before the production application is configured and deployed. Never
 change or deactivate legacy message `7` as part of this release.

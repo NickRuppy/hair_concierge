@@ -37,7 +37,7 @@ const trigger = {
     "Ein klarer Plan statt widersprüchlicher Tipps: Du bekommst eine feste Reihenfolge, die zu deinem Haar passt und im Alltag leicht nachvollziehbar bleibt.",
   cta_label: "Meinen Plan freischalten",
   result_url:
-    "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?entry=result_email#pricing",
+    "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?entry=result_email&focus=personal_plan_complete_plan#personal_plan_complete_plan",
 }
 
 function escapeXml(value) {
