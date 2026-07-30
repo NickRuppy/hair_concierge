@@ -1,0 +1,96 @@
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+  Wir haben dein Haarprofil analysiert. Dein persönlicher Plan wartet auf dich.&#8199;&#65279;
+</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background-color:#f6f0f7;">
+  <tr>
+    <td align="center" style="padding:12px 8px 28px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-radius:24px;overflow:hidden;">
+        <tr>
+          <td align="center" style="padding:14px 20px 12px;border-bottom:1px solid #eee7f0;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.1;font-weight:700;color:#35164f;">
+            chaarlie
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 24px 8px;font-family:Arial,Helvetica,sans-serif;color:#332d36;">
+            <p style="margin:0 0 6px;font-size:16px;line-height:1.5;">Hallo,</p>
+            <h1 style="margin:0 0 10px;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.08;letter-spacing:-0.5px;color:#35164f;">Dein persönlicher Haarplan ist bereit.</h1>
+            <p style="margin:0;font-size:16px;line-height:1.5;">Wir haben dein Haarprofil analysiert und deinen persönlichen Plan vorbereitet.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 24px 0;">
+            <img src="{{ trigger.comparison_image_url | xml_escape }}" alt="Symbolischer Vergleich deiner heutigen Haarsituation mit deinem Haarziel" width="552" style="display:block;width:100%;max-width:552px;height:auto;border:0;border-radius:18px;">
+            <p style="margin:8px 0 0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.4;color:#7e7182;">Symbolbild · Ergebnisse sind individuell</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:18px 24px 0;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background-color:#f6f0f8;border-left:4px solid #7f4ca5;border-radius:0 14px 14px 0;">
+              <tr>
+                <td style="padding:16px 16px 15px;font-family:Arial,Helvetica,sans-serif;color:#332d36;">
+                  {% if trigger.primary_message.kind == "concern" %}
+                  <p style="margin:0 0 4px;font-size:14px;line-height:1.4;">Das beschäftigt dich gerade besonders:</p>
+                  {% elsif trigger.primary_message.kind == "goal" %}
+                  <p style="margin:0 0 4px;font-size:14px;line-height:1.4;">Darauf möchtest du hinarbeiten:</p>
+                  {% else %}
+                  <p style="margin:0 0 4px;font-size:14px;line-height:1.4;">Das ist deine gute Ausgangsbasis:</p>
+                  {% endif %}
+                  <p style="margin:0;font-size:19px;line-height:1.3;font-weight:700;color:#754092;">{{ trigger.primary_message.label | xml_escape }}</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 24px 0;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background-color:#6d3d8f;border-radius:16px;">
+              <tr>
+                <td style="padding:18px 18px;font-family:Arial,Helvetica,sans-serif;color:#ffffff;">
+                  <p style="margin:0;font-size:20px;line-height:1.35;font-weight:700;">Nicht deine Haare sind das Problem. Der richtige Plan hat bisher gefehlt.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:26px 24px 0;font-family:Arial,Helvetica,sans-serif;color:#332d36;">
+            <h2 style="margin:0 0 6px;font-family:Georgia,'Times New Roman',serif;font-size:25px;line-height:1.2;color:#35164f;">Das haben wir bei dir erkannt</h2>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.5;color:#746b77;">{{ trigger.profile_line | xml_escape }}</p>
+            {% for row in trigger.diagnostic_rows %}
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;margin-bottom:10px;border:1px solid #eee7f0;border-radius:14px;">
+              <tr>
+                <td style="padding:14px 15px;font-family:Arial,Helvetica,sans-serif;color:#332d36;">
+                  <p style="margin:0 0 4px;font-size:17px;line-height:1.3;font-weight:700;color:#35164f;">{{ row.title | xml_escape }}</p>
+                  <p style="margin:0 0 7px;font-size:12px;line-height:1.4;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#8a609f;">Heute: {{ row.today_label | xml_escape }}</p>
+                  <p style="margin:0;font-size:14px;line-height:1.5;">{{ row.summary | xml_escape }}</p>
+                </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 24px 0;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background-color:#fbf8fc;border-radius:14px;">
+              <tr>
+                <td style="padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#4d4351;">{{ trigger.plan_fit_statement | xml_escape }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 24px 0;font-family:Arial,Helvetica,sans-serif;color:#332d36;">
+            <h2 style="margin:0 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:25px;line-height:1.2;color:#35164f;">Dein Haar verdient einen Plan, der wirklich zu dir passt.</h2>
+            <p style="margin:0;font-size:16px;line-height:1.55;">Schalte deinen persönlichen Plan frei, prüfe die Produkte, die du bereits verwendest, und starte mit der Routine, die dich Schritt für Schritt zu gesundem, schönem Haar bringt.</p>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:22px 24px 30px;">
+            <a href="{{ trigger.result_url | xml_escape }}" style="display:block;width:auto;border-radius:14px;background-color:#ef6f61;padding:16px 20px;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.2;font-weight:700;text-align:center;text-decoration:none;color:#ffffff;">{{ trigger.cta_label | xml_escape }}</a>
+            <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.45;color:#7e7182;">Falls der Button nicht funktioniert: <a href="{{ trigger.result_url | xml_escape }}" style="color:#6d3d8f;text-decoration:underline;">Plan im Browser öffnen</a></p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

@@ -148,6 +148,21 @@ test("prepared artifact contains three public dimensions but keeps products and 
   assert.equal("frequency" in artifact.publicOfferModel, false)
 })
 
+test("prepared artifact derives the email statement from the same central priority as chart row one", () => {
+  const artifact = buildPersonalPlanPreparedArtifact(
+    canonicalizePersonalPlanAnswers({
+      ...completeAnswers,
+      blockersOtherText: "<b>raw free text must never reach the email</b>",
+    }),
+  )
+
+  assert.equal(artifact.priorities[0].isCentral, true)
+  assert.equal(artifact.publicOfferModel.diagnosticRows[0].id, artifact.priorities[0].family)
+  assert.equal(artifact.publicOfferModel.primaryMessage.kind, "concern")
+  assert.equal(artifact.publicOfferModel.primaryMessage.label, artifact.priorities[0].title)
+  assert.doesNotMatch(JSON.stringify(artifact.publicOfferModel.primaryMessage), /raw free text|<b>/)
+})
+
 test("straight, wavy, curly, and coily complete profiles all prepare deterministic plans", () => {
   const textures: CompleteAnswers["texture"][] = ["straight", "wavy", "curly", "coily"]
   for (const texture of textures) {

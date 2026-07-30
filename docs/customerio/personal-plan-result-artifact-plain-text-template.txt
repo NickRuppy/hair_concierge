@@ -1,0 +1,42 @@
+Hallo,
+
+DEIN PERSÖNLICHER HAARPLAN IST BEREIT.
+
+Wir haben dein Haarprofil analysiert und deinen persönlichen Plan vorbereitet.
+
+Symbolischer Vergleich: von deiner heutigen Haarsituation zu deinem Haarziel.
+Ergebnisse sind individuell.
+
+{% if trigger.primary_message.kind == "concern" %}Das beschäftigt dich gerade besonders:
+{% elsif trigger.primary_message.kind == "goal" %}Darauf möchtest du hinarbeiten:
+{% else %}Das ist deine gute Ausgangsbasis:
+{% endif %}{{ trigger.primary_message.label }}
+
+NICHT DEINE HAARE SIND DAS PROBLEM.
+Der richtige Plan hat bisher gefehlt.
+
+DAS HABEN WIR BEI DIR ERKANNT
+{{ trigger.profile_line }}
+
+{% for row in trigger.diagnostic_rows %}{{ row.title }}
+Heute: {{ row.today_label }}
+{{ row.summary }}
+
+{% endfor %}WARUM DIESER PLAN ZU DIR PASST
+{{ trigger.plan_fit_statement }}
+
+DEIN HAAR VERDIENT EINEN PLAN, DER WIRKLICH ZU DIR PASST.
+
+Schalte deinen persönlichen Plan frei, prüfe die Produkte, die du bereits verwendest, und starte mit der Routine, die dich Schritt für Schritt zu gesundem, schönem Haar bringt.
+
+{{ trigger.cta_label }}
+{{ trigger.result_url }}
+
+Liebe Grüße,
+Chaarlie
+
+Chaarlie · info@chaarlie.de
+Haarmony LLC · 1111B S Governors Ave # 84075 · Dover, DE 19904, USA
+Abmelden: {% unsubscribe_url %}
+Impressum: https://chaarlie.de/impressum
+Datenschutz: https://chaarlie.de/datenschutz

@@ -68,6 +68,7 @@ const WRITABLE_TEMPLATE_KEYS = [
 // `request_method` is also omitted because the live email template returns an
 // empty value that is invalid against the update enum.
 const REVIEWED_OMITTED_TEMPLATE_UPDATE_KEYS = [
+  "app_id",
   "deleted",
   "newsletter_id",
   "request_method",

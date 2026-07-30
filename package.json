@@ -90,6 +90,7 @@
     "paypal:create-resources": "tsx scripts/paypal/create-resources.ts",
     "paypal:validate-plans": "tsx scripts/paypal/validate-plans.ts",
     "customerio:quiz-result-email": "tsx scripts/customerio-quiz-result-email.ts",
+    "customerio:personal-plan-result-email": "tsx scripts/customerio-personal-plan-result-email.ts",
     "billing:analytics:retry": "tsx scripts/billing-analytics/retry-outbox.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",

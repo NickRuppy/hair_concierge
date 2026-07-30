@@ -64,6 +64,7 @@ const currentTemplateUpdateSchema = {
       template: {
         properties: Object.fromEntries(
           [
+            "app_id",
             "bcc",
             "body",
             "body_amp",
