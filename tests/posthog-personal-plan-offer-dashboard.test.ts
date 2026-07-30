@@ -3,7 +3,7 @@ import test from "node:test"
 
 import { personalPlanOfferDashboard } from "../scripts/analytics/personal-plan-offer-dashboard"
 
-const { o1, o2, o3, o4, o5 } = personalPlanOfferDashboard.insights
+const { o1, o2, o3, o5, o6 } = personalPlanOfferDashboard.insights
 const authoritativeInsights = [o1, o2, o3, o5]
 
 test("authoritative insights share a strict, exact Personal Plan offer cohort", () => {
@@ -11,7 +11,7 @@ test("authoritative insights share a strict, exact Personal Plan offer cohort", 
     assert.match(insight.query, /properties\.funnel_package_key = 'meta_personal_plan_v1'/)
     assert.match(insight.query, /event = 'offer_viewed'/)
     assert.match(insight.query, /properties\.offer_variant = 'personal-plan-v1'/)
-    assert.match(insight.query, /properties\.offer_revision = 'personal_plan_v1'/)
+    assert.match(insight.query, /properties\.offer_revision = 'personal_plan_v2'/)
     assert.match(
       insight.query,
       /notEmpty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/,
@@ -42,7 +42,8 @@ test("reach and checkout-intent diagnostics use actual payment-option exposure",
   for (const insight of [o1, o2, o5]) {
     assert.match(insight.query, /offer_payment_option_viewed/)
   }
-  assert.match(o2.query, /13 Zahlungsoption gesehen/)
+  assert.match(o2.query, /05 Vorher und nachher/)
+  assert.match(o2.query, /15 Zahlungsart gewählt/)
   assert.match(o2.description, /mindestens 50 % für 750 ms sichtbar/)
   assert.match(o5.query, /zahlungsoption_gesehen/)
 })
@@ -51,7 +52,7 @@ test("downstream outcome sets remain bounded to eligible package and revision ev
   for (const insight of [o1, o5]) {
     assert.match(
       insight.query,
-      /event = 'purchase_completed' OR \(properties\.offer_revision = 'personal_plan_v1' AND properties\.offer_variant = 'personal-plan-v1'\)/,
+      /event = 'purchase_completed' OR \(properties\.offer_revision = 'personal_plan_v2' AND properties\.offer_variant = 'personal-plan-v1'\)/,
     )
     assert.match(insight.query, /properties\.funnel_package_key = 'meta_personal_plan_v1'/)
     assert.match(insight.query, /IN \(SELECT session_id FROM eligible\)/)
@@ -67,22 +68,22 @@ test("purchase visibility keeps the historical revision exception while retainin
 })
 
 test("attribution quality reports missing required offer context outside conversion denominators", () => {
-  assert.match(o4.title, /Attributionsqualität/)
-  assert.match(o4.query, /event = 'offer_viewed'/)
-  assert.match(o4.query, /properties\.offer_variant = 'personal-plan-v1'/)
-  assert.match(o4.query, /properties\.offer_revision = 'personal_plan_v1'/)
-  assert.match(o4.query, /missing_funnel_session_id/)
-  assert.match(o4.query, /missing_funnel_package_key/)
-  assert.match(o4.query, /attribution_fehlend/)
-  assert.match(o4.query, /empty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/)
-  assert.match(o4.query, /empty\(ifNull\(toString\(properties\.funnel_package_key\), ''\)\)/)
-  assert.match(o4.query, /funnel_package_key = 'meta_personal_plan_v1'/)
-  assert.doesNotMatch(o4.query, /IN \(SELECT session_id FROM eligible\)/)
-  assert.doesNotMatch(o4.query, /distinct_id/)
-  assert.equal(o4.id, null)
-  assert.equal(o4.key, "attribution-quality")
-  assert.match(o4.query, /metrics AS \(/)
-  assert.match(o4.query, /1 AS sort,\n  '01 Attribution vollständig'/)
-  assert.match(o4.query, /4 AS sort,\n  '04 Fehlender funnel_package_key'/)
-  assert.match(o4.query, /SELECT kennzahl, ereignisse, anteil_prozent FROM metrics ORDER BY sort/)
+  assert.match(o6.title, /^O6 · Attributionsqualität/)
+  assert.match(o6.query, /event = 'offer_viewed'/)
+  assert.match(o6.query, /properties\.offer_variant = 'personal-plan-v1'/)
+  assert.match(o6.query, /properties\.offer_revision = 'personal_plan_v2'/)
+  assert.match(o6.query, /missing_funnel_session_id/)
+  assert.match(o6.query, /missing_funnel_package_key/)
+  assert.match(o6.query, /attribution_fehlend/)
+  assert.match(o6.query, /empty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/)
+  assert.match(o6.query, /empty\(ifNull\(toString\(properties\.funnel_package_key\), ''\)\)/)
+  assert.match(o6.query, /funnel_package_key = 'meta_personal_plan_v1'/)
+  assert.doesNotMatch(o6.query, /IN \(SELECT session_id FROM eligible\)/)
+  assert.doesNotMatch(o6.query, /distinct_id/)
+  assert.equal(o6.id, null)
+  assert.equal(o6.key, "attribution-quality")
+  assert.match(o6.query, /metrics AS \(/)
+  assert.match(o6.query, /1 AS sort,\n  '01 Attribution vollständig'/)
+  assert.match(o6.query, /4 AS sort,\n  '04 Fehlender funnel_package_key'/)
+  assert.match(o6.query, /SELECT kennzahl, ereignisse, anteil_prozent FROM metrics ORDER BY sort/)
 })

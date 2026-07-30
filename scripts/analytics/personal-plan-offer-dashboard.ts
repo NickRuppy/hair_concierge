@@ -1,7 +1,7 @@
 const dashboardId = 859068
 const funnelPackageKey = "meta_personal_plan_v1"
 const offerVariant = "personal-plan-v1"
-const offerRevision = "personal_plan_v1"
+const offerRevision = "personal_plan_v2"
 
 export const personalPlanOfferDashboard = {
   dashboardId,
@@ -13,7 +13,7 @@ export const personalPlanOfferDashboard = {
       id: "V3KfxqzL",
       title: "O1 · Offer-Funnel — Checkout-Intent bis Kauf (7 Tage)",
       description:
-        "Zentrale Stufen für personal_plan_v1. CTA zählt nur destination=checkout; der Sticky-Pricing-Sprung ist separat in O3. Zahlungsoption gesehen basiert auf tatsächlicher Sichtbarkeit.",
+        "Zentrale Stufen für personal_plan_v2. CTA zählt nur destination=checkout; der Sticky-Pricing-Sprung ist separat in O3. Zahlungsoption gesehen basiert auf tatsächlicher Sichtbarkeit.",
       query: `WITH eligible AS (
   SELECT DISTINCT toString(properties.funnel_session_id) AS session_id
   FROM events
@@ -21,24 +21,24 @@ export const personalPlanOfferDashboard = {
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_viewed'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
 ),
 per_session AS (
   SELECT
     toString(properties.funnel_session_id) AS session_id,
-    max(if(event = 'offer_viewed' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS offer_viewed,
-    max(if(event = 'offer_section_viewed' AND properties.section_id = 'pricing' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS pricing_viewed,
-    max(if(event = 'offer_cta_clicked' AND properties.destination = 'checkout' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_intent_clicked,
-    max(if(event = 'offer_checkout_opened' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_opened,
-    max(if(event = 'checkout_started' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_started,
-    max(if(event = 'offer_payment_option_viewed' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS payment_option_viewed,
+    max(if(event = 'offer_viewed' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS offer_viewed,
+    max(if(event = 'offer_section_viewed' AND properties.section_id = 'pricing' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS pricing_viewed,
+    max(if(event = 'offer_cta_clicked' AND properties.destination = 'checkout' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_intent_clicked,
+    max(if(event = 'offer_checkout_opened' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_opened,
+    max(if(event = 'checkout_started' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_started,
+    max(if(event = 'offer_payment_option_viewed' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS payment_option_viewed,
     max(if(event = 'purchase_completed', 1, 0)) AS purchase_completed
   FROM events
   WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event IN ('offer_viewed', 'offer_section_viewed', 'offer_cta_clicked', 'offer_checkout_opened', 'checkout_started', 'offer_payment_option_viewed', 'purchase_completed')
-    AND (event = 'purchase_completed' OR (properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1'))
+    AND (event = 'purchase_completed' OR (properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1'))
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
     AND toString(properties.funnel_session_id) IN (SELECT session_id FROM eligible)
   GROUP BY session_id
@@ -58,7 +58,7 @@ SELECT stufe, sessions AS eindeutige_sessions FROM stages ORDER BY sort`,
       id: "FZTnxYOx",
       title: "O2 · Offer-Reichweite bis Zahlungsoption (7 Tage)",
       description:
-        "01–10: Abschnitt mindestens 25 % für 750 ms sichtbar. 11: Checkout geöffnet. 12: Anbieter initialisiert. 13: bereite Zahlungsoption mindestens 50 % für 750 ms sichtbar. 14: echte Zahlungsart-Interaktion.",
+        "01–11: Abschnitt mindestens 25 % für 750 ms sichtbar. 12: Checkout geöffnet. 13: Anbieter initialisiert. 14: bereite Zahlungsoption mindestens 50 % für 750 ms sichtbar. 15: echte Zahlungsart-Interaktion.",
       query: `WITH eligible AS (
   SELECT DISTINCT toString(properties.funnel_session_id) AS session_id
   FROM events
@@ -66,7 +66,7 @@ SELECT stufe, sessions AS eindeutige_sessions FROM stages ORDER BY sort`,
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_viewed'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
 ),
 journey_events AS (
@@ -78,7 +78,7 @@ journey_events AS (
   WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND event IN ('offer_viewed', 'offer_section_viewed', 'offer_checkout_opened', 'checkout_started', 'offer_payment_option_viewed', 'offer_payment_method_selected')
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
     AND toString(properties.funnel_session_id) IN (SELECT session_id FROM eligible)
@@ -88,16 +88,17 @@ steps AS (
   UNION ALL SELECT 2, '02 Persönliche Diagnose', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_diagnosis') FROM journey_events
   UNION ALL SELECT 3, '03 Vollständiger Plan', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_complete_plan') FROM journey_events
   UNION ALL SELECT 4, '04 So funktioniert der Plan', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_method') FROM journey_events
-  UNION ALL SELECT 5, '05 Preis & Mitgliedschaft', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'pricing') FROM journey_events
-  UNION ALL SELECT 6, '06 Umfrage-Beleg', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_survey') FROM journey_events
-  UNION ALL SELECT 7, '07 Erfahrungen', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'testimonials') FROM journey_events
-  UNION ALL SELECT 8, '08 Garantie', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'guarantee') FROM journey_events
-  UNION ALL SELECT 9, '09 FAQ', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'faq') FROM journey_events
-  UNION ALL SELECT 10, '10 Finaler CTA', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'final_cta') FROM journey_events
-  UNION ALL SELECT 11, '11 Checkout geöffnet', uniqIf(session_id, event = 'offer_checkout_opened') FROM journey_events
-  UNION ALL SELECT 12, '12 Anbieter initialisiert', uniqIf(session_id, event = 'checkout_started') FROM journey_events
-  UNION ALL SELECT 13, '13 Zahlungsoption gesehen', uniqIf(session_id, event = 'offer_payment_option_viewed') FROM journey_events
-  UNION ALL SELECT 14, '14 Zahlungsart gewählt', uniqIf(session_id, event = 'offer_payment_method_selected') FROM journey_events
+  UNION ALL SELECT 5, '05 Vorher und nachher', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_before_after') FROM journey_events
+  UNION ALL SELECT 6, '06 Preis & Mitgliedschaft', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'pricing') FROM journey_events
+  UNION ALL SELECT 7, '07 Umfrage-Beleg', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_survey') FROM journey_events
+  UNION ALL SELECT 8, '08 Erfahrungen', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'testimonials') FROM journey_events
+  UNION ALL SELECT 9, '09 Garantie', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'guarantee') FROM journey_events
+  UNION ALL SELECT 10, '10 FAQ', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'faq') FROM journey_events
+  UNION ALL SELECT 11, '11 Finaler CTA', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'final_cta') FROM journey_events
+  UNION ALL SELECT 12, '12 Checkout geöffnet', uniqIf(session_id, event = 'offer_checkout_opened') FROM journey_events
+  UNION ALL SELECT 13, '13 Anbieter initialisiert', uniqIf(session_id, event = 'checkout_started') FROM journey_events
+  UNION ALL SELECT 14, '14 Zahlungsoption gesehen', uniqIf(session_id, event = 'offer_payment_option_viewed') FROM journey_events
+  UNION ALL SELECT 15, '15 Zahlungsart gewählt', uniqIf(session_id, event = 'offer_payment_method_selected') FROM journey_events
 )
 SELECT abschnitt, sessions AS eindeutige_sessions FROM steps ORDER BY sort`,
     },
@@ -113,7 +114,7 @@ SELECT abschnitt, sessions AS eindeutige_sessions FROM steps ORDER BY sort`,
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_viewed'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
 ),
 placements AS (
@@ -132,7 +133,7 @@ exposure_rows AS (
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_section_viewed'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
     AND toString(properties.funnel_session_id) IN (SELECT session_id FROM eligible)
   UNION ALL
@@ -144,7 +145,7 @@ exposure_rows AS (
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_cta_clicked'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND toString(properties.source_section) != 'hero'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
     AND toString(properties.funnel_session_id) IN (SELECT session_id FROM eligible)
@@ -165,7 +166,7 @@ clicks AS (
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_cta_clicked'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND toString(properties.cta_id) IN ('sticky_header', 'pricing_primary', 'final')
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
     AND toString(properties.funnel_session_id) IN (SELECT session_id FROM eligible)
@@ -183,12 +184,12 @@ LEFT JOIN clicks ON placements.cta_id = clicks.cta_id AND placements.destination
 LEFT JOIN section_views ON placements.source_section = section_views.section_id
 ORDER BY placements.sort`,
     },
-    o4: {
+    o6: {
       id: null,
       key: "attribution-quality",
-      title: "O4 · Attributionsqualität — Offer-Aufrufe (7 Tage)",
+      title: "O6 · Attributionsqualität — Offer-Aufrufe (7 Tage)",
       description:
-        "Datenqualitäts-Warnung für personal-plan-v1. Unvollständige Offer-Aufrufe werden gezählt, aber nie als Funnel-Session oder Conversion-Denominator verwendet.",
+        "Datenqualitäts-Warnung für personal_plan_v2. Unvollständige Offer-Aufrufe werden gezählt, aber nie als Funnel-Session oder Conversion-Denominator verwendet.",
       query: `WITH offer_views AS (
   SELECT
     count() AS offer_viewed_events,
@@ -200,7 +201,7 @@ ORDER BY placements.sort`,
   WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
     AND event = 'offer_viewed'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
 ),
 metrics AS (
 SELECT
@@ -245,7 +246,7 @@ SELECT kennzahl, ereignisse, anteil_prozent FROM metrics ORDER BY sort`,
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_viewed'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
 ),
 placements AS (
@@ -261,7 +262,7 @@ click_sessions AS (
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event = 'offer_cta_clicked'
     AND properties.offer_variant = 'personal-plan-v1'
-    AND properties.offer_revision = 'personal_plan_v1'
+    AND properties.offer_revision = 'personal_plan_v2'
     AND properties.destination = 'checkout'
     AND toString(properties.cta_id) IN ('pricing_primary', 'final')
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
@@ -270,16 +271,16 @@ click_sessions AS (
 outcomes AS (
   SELECT
     toString(properties.funnel_session_id) AS session_id,
-    max(if(event = 'offer_checkout_opened' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_geoeffnet,
-    max(if(event = 'checkout_started' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS anbieter_initialisiert,
-    max(if(event = 'offer_payment_option_viewed' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS zahlungsoption_gesehen,
-    max(if(event = 'offer_payment_method_selected' AND properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS zahlungsart_gewaehlt,
+    max(if(event = 'offer_checkout_opened' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS checkout_geoeffnet,
+    max(if(event = 'checkout_started' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS anbieter_initialisiert,
+    max(if(event = 'offer_payment_option_viewed' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS zahlungsoption_gesehen,
+    max(if(event = 'offer_payment_method_selected' AND properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1', 1, 0)) AS zahlungsart_gewaehlt,
     max(if(event = 'purchase_completed', 1, 0)) AS kauf_abgeschlossen
   FROM events
   WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
     AND properties.funnel_package_key = 'meta_personal_plan_v1'
     AND event IN ('offer_checkout_opened', 'checkout_started', 'offer_payment_option_viewed', 'offer_payment_method_selected', 'purchase_completed')
-    AND (event = 'purchase_completed' OR (properties.offer_revision = 'personal_plan_v1' AND properties.offer_variant = 'personal-plan-v1'))
+    AND (event = 'purchase_completed' OR (properties.offer_revision = 'personal_plan_v2' AND properties.offer_variant = 'personal-plan-v1'))
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
     AND toString(properties.funnel_session_id) IN (SELECT session_id FROM eligible)
   GROUP BY session_id

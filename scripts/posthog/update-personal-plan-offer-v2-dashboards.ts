@@ -7,10 +7,14 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
 import { dirname, isAbsolute, relative, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import { personalPlanOfferDashboard } from "../analytics/personal-plan-offer-dashboard"
+
 const projectId = "126788"
 const apiOrigin = "https://eu.posthog.com"
 const v1 = "personal_plan_v1"
 const v2 = "personal_plan_v2"
+const dashboardId = personalPlanOfferDashboard.dashboardId
+const attributionQuality = personalPlanOfferDashboard.insights.o6
 export const insightIds = [5235347, 5235348, 5235350, 5235351, 5245339, 5233190, 5033903] as const
 type InsightId = (typeof insightIds)[number]
 export type Insight = {
@@ -19,6 +23,7 @@ export type Insight = {
   description?: string | null
   query: Record<string, unknown>
 }
+type Dashboard = { id: number; tiles?: unknown[] }
 type FetchLike = (
   input: string,
   init?: RequestInit,
@@ -35,20 +40,20 @@ export type MigrationDependencies = {
 }
 
 const beforeFingerprints: Record<InsightId, string> = {
-  5235347: "7609e92419ce22e2b5d3d982373da9c431fcfd78df341f39267be0f0cc1dff61",
-  5235348: "870fd1d14aa89068d02bb17a13b91862d387788bd036e10d2279be52e4f1f505",
-  5235350: "b20db918a185d02f6b991c6389a3f93480614b7d567257747c5e167818d348f5",
-  5235351: "f705f1f28ea37aa1df3d666450d0870bc41c850024dfee26613a1f7618db52e8",
-  5245339: "7b33c46d9e91c8e7418de9c95c9953d7545c68ea6f9901eb9626b5848c300028",
-  5233190: "79b9d5342abc1c8d1675bd53e58ab4e09272107aded332ea1dc3000b7025b1c0",
-  5033903: "1a28e9855d5cd223648d1c629ac48beb2d0f93ec565d4a185eb5467fa727177e",
-}
-const afterFingerprints: Record<InsightId, string> = {
   5235347: "da214dfa1b0a8fb804643f53d7f6d58eb694a088c4ff63ee0db944a44813eaa1",
   5235348: "cb6a32a32172c8c6e4e2a8b181c195ebe6784bf76fbfd2525d78b2432fefa2c8",
   5235350: "6630dd5af3e0cc8d6719b4afd274bc63304c62666bc6c0b6494932b9ec7cc085",
   5235351: "fa3617da312d4f3a2d19c016063874462955ba925ae66e819121c3bcd74f2299",
   5245339: "eeec112eae3a348eba217d2ba90fe4220f114252c404460780f1dac1025a3412",
+  5233190: "3b3b10a9ecda4a42f3b72e7c873ca9a4ee26ecce3b4ca7668675eb1cb830c752",
+  5033903: "2966b30b4a90dca7c7b1e5025ef29956bc8e65482ce1c09cbf8d1941204318e9",
+}
+const afterFingerprints: Record<InsightId, string> = {
+  5235347: "1c0285084a1a31d8a2253c8684402165ee9e2b73bf558f2e235454425a267d56",
+  5235348: "42f3d3eaa5e65cfc1c9f027f8e791b9a90b8445e4f69777841c48116d690563b",
+  5235350: "fc4fc1c30111027231c8975363e993facaa9df8c7dd8e5e02d818b9de1a64beb",
+  5235351: "fa3617da312d4f3a2d19c016063874462955ba925ae66e819121c3bcd74f2299",
+  5245339: "653084a7b1552e020420886ab4340d7f393f87143386b722ca8b7fe49808fa97",
   5233190: "3b3b10a9ecda4a42f3b72e7c873ca9a4ee26ecce3b4ca7668675eb1cb830c752",
   5033903: "2966b30b4a90dca7c7b1e5025ef29956bc8e65482ce1c09cbf8d1941204318e9",
 }
@@ -78,12 +83,16 @@ function withQuery(i: Insight, query: string, description = i.description ?? "")
 }
 function replaceRevision(i: Insight) {
   const query = queryOf(i)
+  if (query.includes(v2)) return clone(i)
   if (!query.includes(v1)) throw new Error(`Insight ${i.id} is missing ${v1}.`)
   return withQuery(
     i,
     query.replace(/personal_plan_v1/g, v2),
     (i.description ?? "").replace(/personal_plan_v1/g, v2),
   )
+}
+function withDashboardQuery(i: Insight, insight: { query: string; description: string }) {
+  return withQuery(i, insight.query, insight.description)
 }
 function replaceBlock(query: string, oldBlock: string, newBlock: string, id: number) {
   if (!query.includes(oldBlock))
@@ -120,6 +129,7 @@ function transformO2(i: Insight) {
   )
 }
 function transformB2(i: Insight) {
+  if (queryOf(i).includes("personal_plan_before_after")) return clone(i)
   const current = replaceRevision(i)
   const oldCounts = `    uniqIf(session_id, section_id = 'pricing') AS o5,
     uniqIf(session_id, section_id = 'personal_plan_survey') AS o6,
@@ -198,12 +208,15 @@ ORDER BY section_views.offer_variant, section_views.offer_revision, section_view
 export function transformInsight(i: Insight): Insight {
   switch (i.id as InsightId) {
     case 5235347:
-    case 5235350:
-    case 5235351:
-    case 5245339:
-      return replaceRevision(i)
+      return withDashboardQuery(i, personalPlanOfferDashboard.insights.o1)
     case 5235348:
-      return transformO2(i)
+      return withDashboardQuery(i, personalPlanOfferDashboard.insights.o2)
+    case 5235350:
+      return withDashboardQuery(i, personalPlanOfferDashboard.insights.o3)
+    case 5245339:
+      return withDashboardQuery(i, personalPlanOfferDashboard.insights.o5)
+    case 5235351:
+      return clone(i)
     case 5233190:
       return transformB2(i)
     case 5033903:
@@ -220,6 +233,27 @@ function parseInsight(value: unknown, id: number): Insight {
 }
 function url(id: number) {
   return `${apiOrigin}/api/projects/${projectId}/insights/${id}/`
+}
+function dashboardUrl() {
+  return `${apiOrigin}/api/projects/${projectId}/dashboards/${dashboardId}/`
+}
+function attributionQuery() {
+  return { kind: "InsightVizNode", source: { kind: "HogQLQuery", query: attributionQuality.query } }
+}
+function isAttributionQuality(value: unknown): value is Insight {
+  const insight = value as Insight
+  return (
+    Boolean(insight) &&
+    typeof insight.id === "number" &&
+    insight.name === attributionQuality.title &&
+    insight.description === attributionQuality.description &&
+    queryOf(insight) === attributionQuality.query
+  )
+}
+function dashboardAttributionInsights(dashboard: Dashboard) {
+  return (dashboard.tiles ?? [])
+    .map((tile) => (tile as { insight?: unknown }).insight)
+    .filter(isAttributionQuality)
 }
 async function request(
   deps: MigrationDependencies,
@@ -239,6 +273,61 @@ async function request(
 }
 async function fetchInsights(deps: MigrationDependencies) {
   return Promise.all(insightIds.map(async (id) => parseInsight(await request(deps, url(id)), id)))
+}
+async function fetchDashboard(deps: MigrationDependencies) {
+  const dashboard = (await request(deps, dashboardUrl())) as Dashboard
+  if (!dashboard || dashboard.id !== dashboardId || !Array.isArray(dashboard.tiles))
+    throw new Error(`Dashboard ${dashboardId} response is incomplete or mismatched.`)
+  return dashboard
+}
+async function findAttributionQuality(deps: MigrationDependencies) {
+  const response = (await request(
+    deps,
+    `${apiOrigin}/api/projects/${projectId}/insights/?search=${encodeURIComponent(attributionQuality.title)}`,
+  )) as { results?: unknown[] }
+  if (!Array.isArray(response.results))
+    throw new Error("Attribution-quality insight search failed.")
+  const matches = response.results.filter(isAttributionQuality)
+  if (matches.length > 1)
+    throw new Error("More than one matching O6 attribution-quality insight exists.")
+  return matches[0]
+}
+async function ensureAttributionQuality(deps: MigrationDependencies, apply: boolean) {
+  const dashboard = await fetchDashboard(deps)
+  const attached = dashboardAttributionInsights(dashboard)
+  if (attached.length > 1)
+    throw new Error("Dashboard has more than one matching O6 attribution-quality tile.")
+  if (attached.length === 1) return { action: "already-attached" as const, insight: attached[0] }
+  const existing = await findAttributionQuality(deps)
+  if (!apply) return { action: existing ? ("attach" as const) : ("create" as const) }
+  let insight: Insight
+  if (existing) {
+    insight = parseInsight(
+      await request(deps, url(existing.id), {
+        method: "PATCH",
+        body: JSON.stringify({ dashboards: [dashboardId] }),
+      }),
+      existing.id,
+    )
+  } else {
+    const created = await request(deps, `${apiOrigin}/api/projects/${projectId}/insights/`, {
+      method: "POST",
+      body: JSON.stringify({
+        name: attributionQuality.title,
+        description: attributionQuality.description,
+        query: attributionQuery(),
+        dashboards: [dashboardId],
+      }),
+    })
+    if (!isAttributionQuality(created))
+      throw new Error("Created O6 insight did not match its declarative spec.")
+    insight = created
+  }
+  const verified = await fetchDashboard(deps)
+  const matches = dashboardAttributionInsights(verified)
+  if (matches.length !== 1 || matches[0].id !== insight.id)
+    throw new Error("O6 attribution-quality tile was not attached exactly once.")
+  return { action: existing ? ("attached" as const) : ("created" as const), insight }
 }
 function assertBefore(insights: Insight[], expectedFingerprints: Record<number, string>) {
   for (const i of insights) {
@@ -395,10 +484,11 @@ export async function runMigration(argv: string[], overrides: Partial<MigrationD
       `insight ${i.id}: ${fingerprintInsight(current.find((x) => x.id === i.id)!)} -> ${fingerprintInsight(i)}`,
     )
   if (!options.apply) {
+    const quality = await ensureAttributionQuality(deps, false)
     deps.output(
-      `dry run only: ${insightIds.length} insights validated; no PostHog write performed.`,
+      `dry run only: ${insightIds.length} insights validated; O6 attribution-quality tile would ${quality.action}; no PostHog write performed.`,
     )
-    return { mode: "dry-run" as const, target }
+    return { mode: "dry-run" as const, target, attributionQuality: quality.action }
   }
   if (!options.backup)
     throw new Error("--apply requires --backup=/absolute/path/outside-the-repository.json.")
@@ -410,8 +500,9 @@ export async function runMigration(argv: string[], overrides: Partial<MigrationD
   for (const i of reread)
     if (fingerprintInsight(i) !== fingerprintInsight(target.find((x) => x.id === i.id)!))
       throw new Error(`Final post-patch verification failed for insight ${i.id}.`)
+  const quality = await ensureAttributionQuality(deps, true)
   if (options.annotationAt) await annotate(deps, options.annotationAt, options.deploymentSha!)
-  deps.output(`applied and re-read ${insightIds.length} PostHog insights.`)
+  deps.output(`applied and re-read ${insightIds.length} PostHog insights; O6 ${quality.action}.`)
   return { mode: "apply" as const, backupPath }
 }
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]))
