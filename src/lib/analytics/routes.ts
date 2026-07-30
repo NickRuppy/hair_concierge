@@ -21,6 +21,7 @@ export const eventRoutes = {
   offer_engaged: { customerio: false, meta: false, posthog: true },
   offer_faq_opened: { customerio: false, meta: false, posthog: true },
   offer_payment_method_selected: { customerio: false, meta: false, posthog: true },
+  offer_payment_option_viewed: { customerio: false, meta: false, posthog: true },
   offer_plan_selected: { customerio: false, meta: false, posthog: true },
   offer_section_viewed: { customerio: false, meta: false, posthog: true },
   offer_viewed: { customerio: false, meta: false, posthog: true },

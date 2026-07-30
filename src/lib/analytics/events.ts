@@ -17,6 +17,8 @@ export type OfferEntryContext =
 export type CheckoutContext = "membership_reactivation"
 export type CheckoutPresentation = "inline" | "overlay"
 export type CheckoutStartTrigger = "automatic_mount" | "explicit_provider_action"
+export type OfferPaymentOption = "apple_pay" | "paypal" | "card_and_more"
+export type OfferPaymentOptionProvider = "stripe" | "paypal"
 
 export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   conditionerModuleId?: string | null
@@ -176,6 +178,12 @@ export type AppEventMap = {
       paymentMethodType?: "apple_pay" | "payment_element"
       provider: "stripe" | "paypal"
       selectionIndex: number
+    }
+  offer_payment_option_viewed: OfferAnalyticsContext &
+    OfferCommerceProperties & {
+      checkoutAttemptId: string
+      option: OfferPaymentOption
+      provider: OfferPaymentOptionProvider
     }
   offer_plan_selected: OfferAnalyticsContext &
     OfferCommerceProperties & {

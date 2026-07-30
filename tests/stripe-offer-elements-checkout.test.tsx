@@ -232,6 +232,23 @@ test("Payment Element availability does not hide Apple Pay before its later avai
   )
 })
 
+test("Apple Pay availability changes and failures remove it from the exposure gate", () => {
+  assert.equal(getApplePayAvailability({ availablePaymentMethods: applePayAvailable }), "available")
+  assert.equal(
+    getChangedApplePayAvailability({
+      paymentMethods: { applePay: { available: false } },
+    }),
+    "unavailable",
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /const availability = getChangedApplePayAvailability\(event\)[\s\S]*?resolveApplePayAvailability\(availability\)/,
+  )
+  assert.match(stripeOfferElementsSource, /closeApplePayAvailability\("failed"\)/)
+  assert.match(stripeOfferElementsSource, /available=\{state\.applePayReady\}/)
+  assert.match(stripeOfferElementsSource, /providerReady=\{state\.applePayReady\}/)
+})
+
 test("prewarmed offer Elements mount Express first and defer card methods until visible", () => {
   assert.match(stripeOfferElementsSource, /clientSecret\?: string \| null/)
   assert.match(
@@ -267,9 +284,52 @@ test("prewarmed offer Elements mount Express first and defer card methods until 
     stripeOfferElementsSource,
     /showSecondaryPaymentMethod =\s*\n\s*visible === true && !holdPaymentChoices/,
   )
+  assert.match(stripeOfferElementsSource, /option="apple_pay"/)
+  assert.match(stripeOfferElementsSource, /providerReady=\{state\.applePayReady\}/)
+  assert.match(stripeOfferElementsSource, /option="card_and_more"/)
+  assert.match(stripeOfferElementsSource, /available=\{paymentElementReady\}/)
+  assert.match(stripeOfferElementsSource, /providerReady=\{paymentElementReady\}/)
+  assert.match(stripeOfferElementsSource, /visible=\{visible\}/)
+  assert.match(stripeOfferElementsSource, /setPaymentElementReady\(true\)/)
+  assert.match(stripeOfferElementsSource, /setPaymentElementReady\(false\)/)
   assert.match(
     stripeOfferElementsSource,
     /applePayFailed && !holdPaymentChoices && !expressDomProbeEnabled/,
+  )
+})
+
+test("injected card and more test seam can model a ready provider without changing production readiness", () => {
+  const readyHtml = renderToStaticMarkup(
+    <StripeOfferElementsCheckoutContent
+      checkoutAttemptId="attempt-1"
+      checkoutResult={{ type: "loading" }}
+      onRetry={() => {}}
+      paymentElement={<div data-testid="payment-element">Card fields</div>}
+      paymentElementReady
+      renderExpressCheckoutElement={() => <div data-testid="express-element" />}
+      visible
+    />,
+  )
+  const hiddenHtml = renderToStaticMarkup(
+    <StripeOfferElementsCheckoutContent
+      checkoutAttemptId="attempt-1"
+      checkoutResult={{ type: "loading" }}
+      onRetry={() => {}}
+      paymentElement={<div data-testid="payment-element">Card fields</div>}
+      paymentElementReady
+      renderExpressCheckoutElement={() => <div data-testid="express-element" />}
+      visible={false}
+    />,
+  )
+
+  assert.match(readyHtml, /data-offer-payment-option="card_and_more"/)
+  assert.match(readyHtml, /data-testid="payment-element"/)
+  assert.match(hiddenHtml, /data-offer-payment-option="card_and_more"/)
+  assert.match(hiddenHtml, /data-testid="payment-element"/)
+  assert.match(stripeOfferElementsSource, /paymentElementReady: paymentElementReadyOverride/)
+  assert.match(
+    stripeOfferElementsSource,
+    /paymentElementReadyOverride \?\? paymentElementReadyFromProvider/,
   )
 })
 

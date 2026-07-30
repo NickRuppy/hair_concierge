@@ -10,6 +10,15 @@ type VisibilityDocument = Pick<
 
 type TimerHandle = ReturnType<typeof setTimeout>
 
+export type ObserveOnceEngagedOptions = {
+  documentTarget?: VisibilityDocument
+  dwellMs?: number
+  Observer?: ObserverConstructor
+  threshold?: number
+  setTimer?: typeof setTimeout
+  clearTimer?: typeof clearTimeout
+}
+
 export function observeOnceEngaged(
   element: Element,
   onEngaged: () => void,
@@ -20,14 +29,7 @@ export function observeOnceEngaged(
     threshold = 0.25,
     setTimer = setTimeout,
     clearTimer = clearTimeout,
-  }: {
-    documentTarget?: VisibilityDocument
-    dwellMs?: number
-    Observer?: ObserverConstructor
-    threshold?: number
-    setTimer?: typeof setTimeout
-    clearTimer?: typeof clearTimeout
-  } = {},
+  }: ObserveOnceEngagedOptions = {},
 ): () => void {
   if (!Observer || !documentTarget) return () => undefined
 

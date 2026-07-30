@@ -55,6 +55,8 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /trackAppEvent\("offer_checkout_opened"/)
   assert.match(pricingSource, /checkoutPresentation:/)
   assert.match(pricingSource, /trackAppEvent\("offer_payment_method_selected"/)
+  assert.match(pricingSource, /trackAppEvent\("offer_payment_option_viewed"/)
+  assert.match(pricingSource, /claimOfferPaymentOptionView\(/)
   assert.match(pricingSource, /trackAppEvent\("checkout_start_failed"/)
   assert.match(pricingSource, /errorCode: "stripe_session_request_failed"/)
   assert.match(pricingSource, /errorCode: "stripe_js_load_failed"/)
@@ -91,6 +93,7 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /checkoutAttemptController\.close\(\)/)
   assert.match(pricingSource, /setCheckoutAttemptId\(null\)/)
   assert.match(pricingSource, /setCheckoutAttemptId\(nextCheckoutAttemptId\)/)
+  assert.match(pricingSource, /onPaymentOptionViewed=\{handlePaymentOptionViewed\}/)
   assert.match(
     pricingSource,
     /if \(!stripePublishableKey && \(paymentOverlayEnabled \|\| !paypalEnabled\)\) \{[\s\S]*?attemptId: nextCheckoutAttemptId,[\s\S]*?errorCode: "stripe_publishable_key_missing"/,

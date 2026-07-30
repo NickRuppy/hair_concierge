@@ -459,6 +459,11 @@ test("checkout preparation stays out of business checkout and provider-selection
     meta: false,
     posthog: true,
   })
+  assert.deepEqual(eventRoutes.offer_payment_option_viewed, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
 })
 
 test("browser quiz lead capture does not route to Customer.io", () => {
@@ -711,6 +716,7 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
     "offer_detail_opened",
     "offer_faq_opened",
     "offer_payment_method_selected",
+    "offer_payment_option_viewed",
     "offer_plan_selected",
     "offer_section_viewed",
   ] as const
@@ -777,6 +783,60 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
         section_index: 1,
         shampoo_module_id: "shampoo-balanced-normal",
         suggested_category: "leave_in",
+      },
+    ],
+  ])
+})
+
+test("PostHog retains truthful payment option exposure context", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("offer_payment_option_viewed", {
+      checkoutAttemptId: "50000000-0000-4000-8000-000000000094",
+      currency: "EUR",
+      entryContext: "quiz_completion",
+      focusRoutine: false,
+      funnelEventId: "30000000-0000-4000-8000-000000000094",
+      funnelPackageKey: "meta_personal_plan_v1",
+      funnelSessionId: "20000000-0000-4000-8000-000000000094",
+      interval: "quarter",
+      offerRevision: "personal_plan_v1",
+      offerVariant: "personal-plan-v1",
+      offerViewId: "40000000-0000-4000-8000-000000000094",
+      option: "card_and_more",
+      planId: "premium_quarter",
+      provider: "stripe",
+      value: 34.99,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "offer_payment_option_viewed",
+      {
+        $insert_id: "30000000-0000-4000-8000-000000000094",
+        checkout_attempt_id: "50000000-0000-4000-8000-000000000094",
+        currency: "EUR",
+        entry_context: "quiz_completion",
+        focus_routine: false,
+        funnel_package_key: "meta_personal_plan_v1",
+        funnel_session_id: "20000000-0000-4000-8000-000000000094",
+        interval: "quarter",
+        offer_revision: "personal_plan_v1",
+        offer_variant: "personal-plan-v1",
+        offer_view_id: "40000000-0000-4000-8000-000000000094",
+        option: "card_and_more",
+        plan_id: "premium_quarter",
+        provider: "stripe",
+        value: 34.99,
       },
     ],
   ])
