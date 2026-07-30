@@ -119,11 +119,15 @@ test("B2 updates aliases and predecessor formulas after the inserted section", (
   )
 })
 
-test("generic reach keeps denominators correlated by offer variant and revision", () => {
+test("generic reach joins section views to earlier in-window offer views", () => {
   const result = transformInsight(insight(5033903, "old query") as never) as Insight
   const query = result.query.source.query as string
-  assert.match(query, /GROUP BY offer_variant, offer_revision, abschnitt/)
-  assert.match(query, /LEFT JOIN offer_views USING \(offer_variant, offer_revision\)/)
+  assert.match(
+    query,
+    /INNER JOIN offer_views ON toString\(section_events\.properties\.offer_view_id\) = offer_views\.offer_view_id/,
+  )
+  assert.match(query, /section_events\.timestamp >= offer_views\.offer_viewed_at/)
+  assert.match(query, /LEFT JOIN offer_totals USING \(offer_variant, offer_revision\)/)
   assert.match(query, /ORDER BY section_views.offer_variant, section_views.offer_revision/)
 })
 
@@ -162,12 +166,17 @@ test("deployment annotations require an explicit deployed Git SHA", async () => 
 test("dry-run GETs every insight and never PATCHes or POSTs", async () => {
   const initial = compactInsights()
   const posthog = mockPostHog(initial)
+  const transform = (item: MigrationInsight): MigrationInsight => ({
+    ...item,
+    description: "v2",
+  })
+  const target = initial.map(transform)
   const result = await runMigration([], {
     fetch: posthog.fetch,
     output: () => {},
     beforeFingerprints: fingerprintMap(initial),
-    afterFingerprints: {},
-    transform: (item) => ({ ...item, description: "v2" }),
+    afterFingerprints: fingerprintMap(target),
+    transform,
   })
   assert.equal(result.mode, "dry-run")
   assert.deepEqual(posthog.methods, Array(insightIds.length).fill("GET"))
@@ -185,6 +194,29 @@ test("unknown before fingerprint aborts before any PATCH", async () => {
       transform: (item) => item,
     }),
     /drifted from reviewed before-state/,
+  )
+  assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+})
+
+test("unknown target fingerprint aborts before any PATCH", async () => {
+  const initial = compactInsights()
+  const posthog = mockPostHog(initial)
+  const transform = (item: MigrationInsight): MigrationInsight => ({
+    ...item,
+    description: "v2",
+  })
+  const target = initial.map(transform)
+  await assert.rejects(
+    runMigration(["--apply", "--confirm-project=126788", "--backup=/tmp/before.json"], {
+      fetch: posthog.fetch,
+      output: () => {},
+      token: "test",
+      cwd: "/repo",
+      beforeFingerprints: fingerprintMap(initial),
+      afterFingerprints: { ...fingerprintMap(target), [5235347]: "unexpected" },
+      transform,
+    }),
+    /target drifted from reviewed after-state/,
   )
   assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
 })

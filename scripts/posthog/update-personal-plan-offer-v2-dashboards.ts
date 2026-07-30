@@ -50,7 +50,7 @@ const afterFingerprints: Record<InsightId, string> = {
   5235351: "fa3617da312d4f3a2d19c016063874462955ba925ae66e819121c3bcd74f2299",
   5245339: "eeec112eae3a348eba217d2ba90fe4220f114252c404460780f1dac1025a3412",
   5233190: "3b3b10a9ecda4a42f3b72e7c873ca9a4ee26ecce3b4ca7668675eb1cb830c752",
-  5033903: "bcc2d16b13bf4239c41815ae71ba3accba423294e73e50f98e794da7c2e963fd",
+  5033903: "2966b30b4a90dca7c7b1e5025ef29956bc8e65482ce1c09cbf8d1941204318e9",
 }
 
 const canonical = (i: Insight) => ({
@@ -171,20 +171,28 @@ function transformB2(i: Insight) {
 function transformReach(i: Insight) {
   return withQuery(
     i,
-    `WITH section_views AS (
-  SELECT toString(properties.offer_variant) AS offer_variant, toString(properties.offer_revision) AS offer_revision, toString(properties.section_id) AS abschnitt, uniq(properties.offer_view_id) AS eindeutige_aufrufe, min(toInt(properties.section_index)) AS erster_section_index
-  FROM events WHERE timestamp >= now() - INTERVAL 24 HOUR AND event = 'offer_section_viewed'
+    `WITH offer_views AS (
+  SELECT toString(properties.offer_variant) AS offer_variant, toString(properties.offer_revision) AS offer_revision, toString(properties.offer_view_id) AS offer_view_id, min(timestamp) AS offer_viewed_at
+  FROM events
+  WHERE timestamp >= now() - INTERVAL 24 HOUR AND event = 'offer_viewed'
+  GROUP BY offer_variant, offer_revision, offer_view_id
+),
+section_views AS (
+  SELECT offer_views.offer_variant, offer_views.offer_revision, toString(section_events.properties.section_id) AS abschnitt, uniq(offer_views.offer_view_id) AS eindeutige_aufrufe, min(toInt(section_events.properties.section_index)) AS erster_section_index
+  FROM events AS section_events
+  INNER JOIN offer_views ON toString(section_events.properties.offer_view_id) = offer_views.offer_view_id AND toString(section_events.properties.offer_variant) = offer_views.offer_variant AND toString(section_events.properties.offer_revision) = offer_views.offer_revision
+  WHERE section_events.timestamp >= now() - INTERVAL 24 HOUR AND section_events.event = 'offer_section_viewed' AND section_events.timestamp >= offer_views.offer_viewed_at
   GROUP BY offer_variant, offer_revision, abschnitt
 ),
-offer_views AS (
-  SELECT toString(properties.offer_variant) AS offer_variant, toString(properties.offer_revision) AS offer_revision, uniq(properties.offer_view_id) AS offer_aufrufe
-  FROM events WHERE timestamp >= now() - INTERVAL 24 HOUR AND event = 'offer_viewed'
+offer_totals AS (
+  SELECT offer_variant, offer_revision, uniq(offer_view_id) AS offer_aufrufe
+  FROM offer_views
   GROUP BY offer_variant, offer_revision
 )
-SELECT section_views.offer_variant, section_views.offer_revision, section_views.abschnitt, section_views.eindeutige_aufrufe, round(100 * section_views.eindeutige_aufrufe / nullIf(offer_views.offer_aufrufe, 0), 1) AS reichweite_prozent
-FROM section_views LEFT JOIN offer_views USING (offer_variant, offer_revision)
+SELECT section_views.offer_variant, section_views.offer_revision, section_views.abschnitt, section_views.eindeutige_aufrufe, round(100 * section_views.eindeutige_aufrufe / nullIf(offer_totals.offer_aufrufe, 0), 1) AS reichweite_prozent
+FROM section_views LEFT JOIN offer_totals USING (offer_variant, offer_revision)
 ORDER BY section_views.offer_variant, section_views.offer_revision, section_views.erster_section_index ASC`,
-    "Eindeutige Offer-Aufrufe je Variante, Revision und Abschnitt sowie Anteil an den passenden Offer-Aufrufen im rollierenden 24-Stunden-Fenster.",
+    "Eindeutige Offer-Aufrufe je Variante, Revision und Abschnitt sowie Anteil an passenden, früheren Offer-Aufrufen im rollierenden 24-Stunden-Fenster.",
   )
 }
 export function transformInsight(i: Insight): Insight {
@@ -329,8 +337,8 @@ export async function runMigration(argv: string[], overrides: Partial<MigrationD
     cwd: overrides.cwd ?? process.cwd(),
     now: overrides.now ?? (() => new Date()),
   }
-  const expectedBefore = overrides.beforeFingerprints ?? beforeFingerprints
-  const expectedAfter = overrides.afterFingerprints ?? afterFingerprints
+  const expectedBefore: Record<number, string> = overrides.beforeFingerprints ?? beforeFingerprints
+  const expectedAfter: Record<number, string> = overrides.afterFingerprints ?? afterFingerprints
   const transform = overrides.transform ?? transformInsight
   const writing = options.apply || Boolean(options.restore)
   if (writing && options.confirm !== projectId)
@@ -374,6 +382,14 @@ export async function runMigration(argv: string[], overrides: Partial<MigrationD
   }
   assertBefore(current, expectedBefore)
   const target = current.map(transform)
+  for (const i of target) {
+    const actual = fingerprintInsight(i)
+    const expected = expectedAfter[i.id]
+    if (actual !== expected)
+      throw new Error(
+        `Insight ${i.id} target drifted from reviewed after-state (expected ${expected}, got ${actual}). Refusing to patch.`,
+      )
+  }
   for (const i of target)
     deps.output(
       `insight ${i.id}: ${fingerprintInsight(current.find((x) => x.id === i.id)!)} -> ${fingerprintInsight(i)}`,
