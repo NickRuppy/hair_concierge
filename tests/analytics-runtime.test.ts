@@ -14,6 +14,7 @@ import {
   createPostHogRuntime,
   sanitizePostHogProperties,
   sanitizePostHogSessionRecordingRequest,
+  shouldMaskPostHogSessionRecordingInputs,
   type PostHogRuntimeClient,
 } from "../src/lib/analytics/runtime/posthog"
 import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
@@ -172,6 +173,13 @@ test("PostHog removes sensitive queries from session replay URLs", () => {
       name: "https://chaarlie.de/auth/update-password",
     },
   )
+})
+
+test("PostHog masks replay inputs unless unmasking is explicitly enabled", () => {
+  assert.equal(shouldMaskPostHogSessionRecordingInputs(undefined), true)
+  assert.equal(shouldMaskPostHogSessionRecordingInputs("false"), true)
+  assert.equal(shouldMaskPostHogSessionRecordingInputs("TRUE"), true)
+  assert.equal(shouldMaskPostHogSessionRecordingInputs("true"), false)
 })
 
 test("Customer.io bridges page, identify, track, and reset in FIFO order", () => {

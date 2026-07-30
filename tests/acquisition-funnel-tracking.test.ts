@@ -79,6 +79,11 @@ test("vendor SDKs stay behind post-paint dynamic import boundaries without conse
   assert.match(postHogRuntime, /advanced_disable_feature_flags_on_first_load: true/)
   assert.match(postHogRuntime, /before_send:/)
   assert.match(postHogRuntime, /maskCapturedNetworkRequestFn:/)
+  assert.match(postHogRuntime, /NEXT_PUBLIC_POSTHOG_UNMASK_INPUTS/)
+  assert.match(
+    postHogRuntime,
+    /maskInputOptions:\s*\{\s*email: true,\s*password: true,\s*tel: true/,
+  )
   assert.match(postHogRuntime, /recordBody: false/)
   assert.match(postHogRuntime, /recordHeaders: false/)
   assert.doesNotMatch(postHogRuntime, /sanitize_properties:/)

@@ -169,6 +169,10 @@ export function sanitizePostHogSessionRecordingRequest<T extends { name: string 
   }
 }
 
+export function shouldMaskPostHogSessionRecordingInputs(unmaskInputs: string | undefined) {
+  return unmaskInputs !== "true"
+}
+
 function isPropertyRecord(value: unknown): value is PostHogProperties {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
 }
@@ -195,8 +199,15 @@ async function loadPostHogClient(): Promise<PostHogRuntimeClient | null> {
     capture_pageview: false,
     persistence: "localStorage+cookie",
     session_recording: {
-      maskAllInputs: true,
+      maskAllInputs: shouldMaskPostHogSessionRecordingInputs(
+        process.env.NEXT_PUBLIC_POSTHOG_UNMASK_INPUTS,
+      ),
       maskCapturedNetworkRequestFn: sanitizePostHogSessionRecordingRequest,
+      maskInputOptions: {
+        email: true,
+        password: true,
+        tel: true,
+      },
       recordBody: false,
       recordHeaders: false,
     },
