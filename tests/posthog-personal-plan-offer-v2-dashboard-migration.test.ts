@@ -141,6 +141,69 @@ test("offer targets use the strict declarative v2 session and checkout contract"
   )
 })
 
+test("O3 presents pricing navigation and checkout intent as click-rate bars", () => {
+  const base = insight(5235350, "select 1")
+  const current = {
+    ...base,
+    query: { ...base.query, futureEnvelopeField: { preserved: true } },
+  } as never
+  const result = transformInsight(current) as MigrationInsight
+  assert.deepEqual(result.query.futureEnvelopeField, { preserved: true })
+  assert.equal(result.query.display, "ActionsBar")
+  assert.deepEqual(result.query.chartSettings, {
+    xAxis: { column: "aktion" },
+    yAxis: [
+      {
+        column: "klickrate_prozent",
+        settings: { formatting: { prefix: "", suffix: "%" } },
+      },
+    ],
+    showLegend: false,
+    showNullsAsZero: true,
+    showValuesOnSeries: true,
+  })
+})
+
+test("O5 presents every checkout and payment stage, including option exposure", () => {
+  const current = insight(5245339, "select 1") as never
+  const result = transformInsight(current) as MigrationInsight
+  assert.equal(result.query.display, "ActionsBar")
+  const chartSettings = result.query.chartSettings as {
+    xAxis: { column: string }
+    yAxis: Array<{ column: string; settings: { display: { label: string } } }>
+    showLegend: boolean
+    showNullsAsZero: boolean
+    showValuesOnSeries: boolean
+  }
+  assert.equal(chartSettings.xAxis.column, "platzierung")
+  assert.equal(chartSettings.showLegend, true)
+  assert.equal(chartSettings.showNullsAsZero, true)
+  assert.equal(chartSettings.showValuesOnSeries, true)
+  assert.deepEqual(
+    chartSettings.yAxis.map(({ column }) => column),
+    [
+      "eindeutige_klicker",
+      "checkout_geoeffnet",
+      "anbieter_initialisiert",
+      "zahlungsoption_gesehen",
+      "zahlungsart_gewaehlt",
+      "kauf_abgeschlossen",
+    ],
+  )
+  assert.deepEqual(
+    chartSettings.yAxis.map(({ settings }) => settings.display.label),
+    [
+      "CTA geklickt",
+      "Checkout geöffnet",
+      "Anbieter initialisiert",
+      "Zahlungsoption gesehen",
+      "Zahlungsart gewählt",
+      "Kauf abgeschlossen",
+    ],
+  )
+  assert.equal(JSON.stringify(result.query.tableSettings).includes("zahlungsoption_gesehen"), true)
+})
+
 test("O2 inserts the before/after step and shifts checkout stages", () => {
   const query = `personal_plan_v1
   UNION ALL SELECT 5, '05 Preis & Mitgliedschaft', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'pricing') FROM journey_events
