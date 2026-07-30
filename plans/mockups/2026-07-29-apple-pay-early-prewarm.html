@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Apple Pay früher vorbereiten – Zustands-Mockup</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --plum: #33133c;
+        --purple: #74449a;
+        --coral: #d45f63;
+        --paper: #fffdfb;
+        --canvas: #f2edf1;
+        --line: #e5dfe4;
+        --muted: #746b72;
+        --paypal: #ffc439;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--plum);
+        background: var(--canvas);
+      }
+      button {
+        font: inherit;
+      }
+      .page {
+        width: min(1080px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 28px 0 56px;
+      }
+      .eyebrow {
+        margin: 0 0 7px;
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(26px, 5vw, 40px);
+        line-height: 1.08;
+      }
+      .lede {
+        max-width: 760px;
+        margin: 12px 0 20px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+      .controls button {
+        min-height: 40px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--plum);
+        background: white;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      .controls button[aria-pressed="true"] {
+        color: white;
+        border-color: var(--purple);
+        background: var(--purple);
+      }
+      .stage {
+        position: relative;
+        min-height: 760px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: linear-gradient(150deg, #e8e0e7, #faf7f9);
+        box-shadow: 0 22px 65px rgba(45, 18, 49, 0.13);
+      }
+      .phone {
+        position: relative;
+        width: min(430px, 100%);
+        min-height: 760px;
+        margin: 0 auto;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      .site-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 72px;
+        padding: 0 22px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      .brand {
+        font-family: Georgia, serif;
+        font-size: 30px;
+        letter-spacing: -0.04em;
+      }
+      .site-head span:last-child {
+        color: var(--purple);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+      }
+      .offer {
+        padding: 30px 22px 44px;
+      }
+      .offer h2 {
+        margin: 0 0 8px;
+        font-size: 25px;
+      }
+      .offer > p {
+        margin: 0 0 22px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .plan {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 82px;
+        margin-bottom: 11px;
+        padding: 14px;
+        border: 1.5px solid var(--plum);
+        border-radius: 14px;
+        background: #f8f1f7;
+      }
+      .radio {
+        width: 18px;
+        height: 18px;
+        margin-right: 12px;
+        border: 5px solid var(--plum);
+        border-radius: 50%;
+        background: white;
+      }
+      .plan strong {
+        display: block;
+        font-size: 15px;
+      }
+      .plan small {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+      }
+      .price {
+        margin-left: auto;
+        font-size: 17px;
+        font-weight: 800;
+      }
+      .badge {
+        position: absolute;
+        top: -10px;
+        right: 12px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        color: white;
+        background: var(--plum);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .secondary-plan {
+        opacity: 0.7;
+        border-color: var(--line);
+        background: white;
+      }
+      .secondary-plan .radio {
+        border: 2px solid #c7bdc5;
+      }
+      .cta {
+        display: flex;
+        width: 100%;
+        min-height: 54px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 16px;
+        border: 0;
+        border-radius: 12px;
+        color: white;
+        background: var(--coral);
+        font-weight: 800;
+      }
+      .cta[aria-busy="true"] {
+        cursor: wait;
+        background: #bf5559;
+      }
+      .spinner {
+        display: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.38);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      [data-state="pending"] .spinner {
+        display: block;
+      }
+      .guarantee {
+        margin-top: 13px;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: center;
+      }
+      .scrim,
+      .drawer {
+        display: none;
+      }
+      [data-state="ready"] .scrim,
+      [data-state="fallback"] .scrim,
+      [data-state="timeout"] .scrim {
+        position: absolute;
+        inset: 0;
+        display: block;
+        background: rgba(40, 29, 38, 0.52);
+      }
+      [data-state="ready"] .drawer,
+      [data-state="fallback"] .drawer,
+      [data-state="timeout"] .drawer {
+        position: absolute;
+        inset: 122px 0 0;
+        display: block;
+        padding: 26px 22px 38px;
+        border-radius: 30px 30px 0 0;
+        background: var(--paper);
+        box-shadow: 0 -16px 45px rgba(35, 17, 35, 0.18);
+      }
+      .handle {
+        width: 48px;
+        height: 5px;
+        margin: -12px auto 20px;
+        border-radius: 99px;
+        background: #d7d2d5;
+      }
+      .drawer-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .drawer-head h3 {
+        margin: 0 0 7px;
+        font-size: 22px;
+      }
+      .drawer-head p {
+        margin: 0;
+        font-weight: 750;
+      }
+      .close {
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        color: var(--plum);
+        background: white;
+        font-size: 27px;
+      }
+      .withdrawal {
+        margin: 18px 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .wallet,
+      .paypal {
+        display: grid;
+        width: 100%;
+        min-height: 54px;
+        place-items: center;
+        border: 0;
+        border-radius: 999px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+      .wallet {
+        color: white;
+        background: black;
+      }
+      .wallet span::before {
+        content: "●";
+        margin-right: 7px;
+        font-size: 16px;
+      }
+      .paypal {
+        margin-top: 11px;
+        color: #083b90;
+        background: var(--paypal);
+        font-style: italic;
+      }
+      .divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 11px;
+        align-items: center;
+        margin: 18px 0;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        height: 1px;
+        background: var(--line);
+      }
+      .fallback {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+        font-weight: 800;
+      }
+      [data-state="fallback"] .wallet,
+      [data-state="timeout"] .wallet {
+        display: none;
+      }
+      .note {
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .state-note {
+        padding: 13px 16px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        background: white;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .state-note strong {
+        color: var(--plum);
+      }
+      .final-entry {
+        width: min(760px, calc(100% - 32px));
+        margin: 22px auto 0;
+        padding: 24px;
+        border-radius: 22px;
+        color: white;
+        background: var(--plum);
+        text-align: center;
+      }
+      .final-entry h2 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 27px;
+      }
+      .final-entry p {
+        margin: 9px 0 17px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+      }
+      .final-cta {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 999px;
+        color: var(--plum);
+        background: white;
+        font-weight: 800;
+      }
+      .final-cta .spinner {
+        border-color: rgba(51, 19, 60, 0.25);
+        border-top-color: var(--plum);
+      }
+      .final-entry[data-pending="true"] .spinner {
+        display: block;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 520px) {
+        .page {
+          width: 100%;
+          padding: 0;
+        }
+        .intro,
+        .controls {
+          margin-left: 16px;
+          margin-right: 16px;
+        }
+        .intro {
+          padding-top: 20px;
+        }
+        .stage {
+          min-height: 720px;
+          border-inline: 0;
+          border-radius: 0;
+        }
+        .phone {
+          min-height: 720px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="intro">
+        <p class="eyebrow">Entscheidungs-Mockup · Mobile</p>
+        <h1>Apple Pay vor dem Öffnen fertig laden</h1>
+        <p class="lede">
+          Der Normalfall bleibt optisch unverändert. Nur wenn jemand ungewöhnlich schnell tippt,
+          wartet der CTA kurz; der Drawer öffnet erst mit vollständig aufgelösten Zahlungsoptionen.
+        </p>
+      </div>
+
+      <div class="controls" aria-label="Mockup-Zustand">
+        <button type="button" data-set-state="default" aria-pressed="true">
+          1 · Bereit im Hintergrund
+        </button>
+        <button type="button" data-set-state="pending" aria-pressed="false">
+          2 · Sehr schneller Tap
+        </button>
+        <button type="button" data-set-state="ready" aria-pressed="false">3 · Drawer bereit</button>
+        <button type="button" data-set-state="fallback" aria-pressed="false">
+          4 · Apple Pay nicht verfügbar
+        </button>
+        <button type="button" data-set-state="timeout" aria-pressed="false">
+          5 · 5-s-Fallback
+        </button>
+      </div>
+
+      <section class="stage" id="stage" data-state="default">
+        <div class="phone">
+          <header class="site-head">
+            <span class="brand">chaarlie</span>
+            <span>DEINE HAARANALYSE</span>
+          </header>
+          <div class="offer">
+            <h2>Dein persönlicher Plan</h2>
+            <p>Wähle, wie du Chaarlie nutzen möchtest.</p>
+            <div class="plan">
+              <span class="badge">Ausgewählt</span>
+              <span class="radio" aria-hidden="true"></span>
+              <span><strong>Quartal</strong><small>11,66 € / Monat</small></span>
+              <span class="price">34,99 €</span>
+            </div>
+            <div class="plan secondary-plan">
+              <span class="radio" aria-hidden="true"></span>
+              <span><strong>Jährlich</strong><small>Beste Ersparnis</small></span>
+              <span class="price">99,99 €</span>
+            </div>
+            <button class="cta" id="cta" type="button">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="cta-label">Jetzt starten — €34,99 im Quartal</span>
+            </button>
+            <div class="guarantee">14 Tage Geld-zurück-Garantie · Details in den Bedingungen</div>
+          </div>
+
+          <div class="scrim" aria-hidden="true"></div>
+          <aside class="drawer" aria-label="Zahlungsdrawer">
+            <div class="handle"></div>
+            <div class="drawer-head">
+              <div>
+                <h3>Sicher bezahlen</h3>
+                <p>Quartal · 34,99 € · <u>Plan ändern</u></p>
+              </div>
+              <button class="close" type="button" aria-label="Schließen">×</button>
+            </div>
+            <p class="withdrawal">
+              Es gilt das gesetzliche 14-tägige Widerrufsrecht. <u>Details ansehen</u>
+            </p>
+            <button class="wallet" type="button"><span>Pay</span></button>
+            <button class="paypal" type="button">PayPal</button>
+            <div class="divider">oder</div>
+            <div class="fallback">Karte &amp; weitere</div>
+            <p class="note">
+              Wenn Stripe Apple Pay als nicht verfügbar auflöst, entfällt die schwarze Zeile
+              vollständig; PayPal und Karte bleiben sofort nutzbar.
+            </p>
+          </aside>
+        </div>
+        <div class="state-note" id="state-note">
+          <strong>Normalfall:</strong> Stripe und das echte Apple-Pay-Element werden direkt beim
+          Laden der Ergebnisseite im Hintergrund vorbereitet. Der sichtbare CTA bleibt unverändert.
+        </div>
+      </section>
+      <section class="final-entry" id="final-entry" data-pending="false">
+        <h2>Dein Plan zu schöneren Haaren in 30 Tagen.</h2>
+        <p>Zweiter Checkout-Einstieg am Ende derselben Angebotsseite.</p>
+        <button class="final-cta" id="final-cta" type="button">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="final-cta-label">Plan sichern</span>
+        </button>
+      </section>
+    </main>
+
+    <script>
+      const stage = document.getElementById("stage")
+      const cta = document.getElementById("cta")
+      const label = cta.querySelector(".cta-label")
+      const finalEntry = document.getElementById("final-entry")
+      const finalCta = document.getElementById("final-cta")
+      const finalLabel = finalCta.querySelector(".final-cta-label")
+      const note = document.getElementById("state-note")
+      const controls = [...document.querySelectorAll("[data-set-state]")]
+      const notes = {
+        default:
+          "<strong>Normalfall:</strong> Stripe und das echte Apple-Pay-Element werden direkt beim Laden der Ergebnisseite im Hintergrund vorbereitet. Der sichtbare CTA bleibt unverändert.",
+        pending:
+          "<strong>Nur bei einem sehr schnellen Tap:</strong> Der Drawer bleibt geschlossen. Der ausgelöste CTA zeigt „Zahlungsoptionen werden vorbereitet …“ und verhindert einen zweiten Start. Sobald Stripe antwortet, öffnet der Drawer automatisch.",
+        ready:
+          "<strong>Bereit:</strong> Der Drawer öffnet erst, wenn Apple Pay und PayPal gemeinsam dargestellt werden können. Es gibt keinen grauen Wallet-Platzhalter im Drawer.",
+        fallback:
+          "<strong>Fallback:</strong> Meldet Stripe Apple Pay als nicht verfügbar oder scheitert die Vorbereitung, öffnet der Drawer ohne Wallet-Lücke direkt mit PayPal und Karte.",
+        timeout:
+          "<strong>5-Sekunden-Fallback:</strong> Bleibt Stripe nach dem Tap still, wird die Wallet-Vorbereitung für diesen Versuch beendet. Der Drawer öffnet ohne Apple-Pay-Lücke mit PayPal und Karte; der CTA ist wieder normal.",
+      }
+
+      function setState(state) {
+        stage.dataset.state = state
+        const pending = state === "pending"
+        cta.setAttribute("aria-busy", String(pending))
+        cta.disabled = pending
+        label.textContent = pending
+          ? "Zahlungsoptionen werden vorbereitet …"
+          : "Jetzt starten — €34,99 im Quartal"
+        finalEntry.dataset.pending = String(pending)
+        finalCta.setAttribute("aria-busy", String(pending))
+        finalCta.disabled = pending
+        finalLabel.textContent = pending ? "Zahlungsoptionen werden vorbereitet …" : "Plan sichern"
+        note.innerHTML = notes[state]
+        controls.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.setState === state))
+        })
+      }
+
+      controls.forEach((button) => {
+        button.addEventListener("click", () => setState(button.dataset.setState))
+      })
+      cta.addEventListener("click", () => setState("pending"))
+      finalCta.addEventListener("click", () => setState("pending"))
+    </script>
+  </body>
+</html>

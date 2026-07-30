@@ -90,6 +90,7 @@ export function PaymentMethodCheckout({
   stripe,
   visible = true,
   expressElementsEnabled = false,
+  suppressExpressWallet = false,
 }: {
   cardCheckoutMinHeightClassName?: "min-h-[560px]" | "min-h-[600px]"
   checkoutAttemptId?: string
@@ -123,6 +124,7 @@ export function PaymentMethodCheckout({
   stripe: Promise<Stripe | null>
   visible?: boolean
   expressElementsEnabled?: boolean
+  suppressExpressWallet?: boolean
 }) {
   const paypalEnabled = isPayPalCheckoutEnabled()
   const isOfferOverlay = presentation === "offer-overlay"
@@ -252,6 +254,7 @@ export function PaymentMethodCheckout({
               clientSecret={clientSecret}
               fetchClientSecret={fetchClientSecret}
               holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
+              suppressExpressWallet={suppressExpressWallet}
               lockedProvider={lockedProvider}
               onBeforeConfirm={onBeforeStripeConfirm}
               onApplePayAvailabilityResolved={onPreparedApplePayAvailabilityResolved}

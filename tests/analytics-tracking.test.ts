@@ -12,6 +12,10 @@ import {
 import { eventRoutes } from "../src/lib/analytics/routes"
 import { trackAppEvent } from "../src/lib/analytics/track-app-event"
 import {
+  isOfferCheckoutEarlyPrewarmEnabled,
+  isOfferCheckoutResolvedOpenEnabled,
+} from "../src/lib/funnel/flags"
+import {
   clearCustomerIoBrowserClient,
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
@@ -155,6 +159,7 @@ test("checkout preparation is technical PostHog telemetry without a browser funn
 
   const payload = {
     interval: "quarter" as const,
+    pageMountToWalletReadyMs: 4620,
     planId: "premium_quarter",
     preparationDurationMs: 3810,
     preparationId: "prepared_opaque_123",
@@ -176,6 +181,35 @@ test("checkout preparation is technical PostHog telemetry without a browser funn
     assert.deepEqual(funnelWrites, [])
   } finally {
     globalThis.fetch = originalFetch
+  }
+})
+
+test("early-prewarm and resolved-open flags are strict default-off readers", () => {
+  const earlyKey = "NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED"
+  const resolvedKey = "NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED"
+  const originalEarly = process.env[earlyKey]
+  const originalResolved = process.env[resolvedKey]
+
+  try {
+    delete process.env[earlyKey]
+    delete process.env[resolvedKey]
+    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), false)
+    assert.equal(isOfferCheckoutResolvedOpenEnabled(), false)
+
+    process.env[earlyKey] = "true\n"
+    process.env[resolvedKey] = "TRUE"
+    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), false)
+    assert.equal(isOfferCheckoutResolvedOpenEnabled(), false)
+
+    process.env[earlyKey] = "true"
+    process.env[resolvedKey] = "true"
+    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), true)
+    assert.equal(isOfferCheckoutResolvedOpenEnabled(), true)
+  } finally {
+    if (originalEarly === undefined) delete process.env[earlyKey]
+    else process.env[earlyKey] = originalEarly
+    if (originalResolved === undefined) delete process.env[resolvedKey]
+    else process.env[resolvedKey] = originalResolved
   }
 })
 
@@ -438,8 +472,13 @@ test("browser revenue return events only route to Meta", () => {
   assert.equal(eventRoutes.subscription_started.meta, true)
 })
 
-test("checkout preparation stays out of business checkout and provider-selection routes", () => {
+test("checkout preparation telemetry stays out of business checkout and provider-selection routes", () => {
   assert.deepEqual(eventRoutes.checkout_prepared, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
+  assert.deepEqual(eventRoutes.checkout_preparation_outcome, {
     customerio: false,
     meta: false,
     posthog: true,
@@ -685,6 +724,7 @@ test("PostHog checkout preparation maps only opaque performance diagnostics", ()
   try {
     postHogDestination.track("checkout_prepared", {
       interval: "quarter",
+      pageMountToWalletReadyMs: 4620,
       planId: "premium_quarter",
       preparationDurationMs: 3810,
       preparationId: "prepared_opaque_123",
@@ -699,10 +739,51 @@ test("PostHog checkout preparation maps only opaque performance diagnostics", ()
       "checkout_prepared",
       {
         interval: "quarter",
+        page_mount_to_wallet_ready_ms: 4620,
         plan_id: "premium_quarter",
         preparation_duration_ms: 3810,
         preparation_id: "prepared_opaque_123",
         wallet_available: true,
+      },
+    ],
+  ])
+})
+
+test("PostHog checkout preparation outcomes remain technical and map wait duration", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  const payload = {
+    outcome: "prepared_unusable" as const,
+    waitDurationMs: 5000,
+  }
+
+  try {
+    withDestinationSpies((destinationCalls) => {
+      trackAppEvent("checkout_preparation_outcome", payload)
+      assert.deepEqual(destinationCalls, [
+        {
+          destination: "posthog",
+          eventName: "checkout_preparation_outcome",
+          payload,
+        },
+      ])
+    })
+    postHogDestination.track("checkout_preparation_outcome", payload)
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "checkout_preparation_outcome",
+      {
+        outcome: "prepared_unusable",
+        wait_duration_ms: 5000,
       },
     ],
   ])

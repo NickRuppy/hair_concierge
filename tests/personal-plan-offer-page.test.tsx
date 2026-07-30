@@ -273,6 +273,20 @@ test("sticky header only scrolls and focuses pricing", () => {
   assert.deepEqual(calls.at(-1), ["focus", { preventScroll: true }])
 })
 
+test("personal plan offer keeps its waiting checkout CTA focusable and guarded", () => {
+  const offerSource = readFileSync(
+    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(offerSource, /const \[checkoutWaiting, setCheckoutWaiting\] = useState\(false\)/)
+  assert.match(offerSource, /onCheckoutWaitingChange=\{setCheckoutWaiting\}/)
+  assert.match(offerSource, /aria-disabled=\{checkoutWaiting \|\| undefined\}/)
+  assert.match(offerSource, /if \(!checkoutWaiting\) openCheckout\(\)/)
+  assert.match(offerSource, /role="status"/)
+  assert.match(offerSource, /Zahlungsoptionen werden vorbereitet …/)
+})
+
 test("personal plan analytics use their own revision label", () => {
   const offerSource = readFileSync(
     new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),

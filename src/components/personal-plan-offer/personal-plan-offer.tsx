@@ -227,6 +227,7 @@ export function PersonalPlanOffer({
   offerTracking?: FunnelAnalyticsEnvelope | null
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
+  const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
     if (!focusTarget) return
@@ -330,6 +331,7 @@ export function PersonalPlanOffer({
             <ResultOfferPricing
               leadId={leadId}
               offerTracking={offerTracking}
+              onCheckoutWaitingChange={setCheckoutWaiting}
               openCheckoutRequestId={checkoutOpenRequest}
               referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
             />
@@ -590,11 +592,28 @@ export function PersonalPlanOffer({
               data-offer-cta="final"
               data-offer-destination="checkout"
               data-offer-source-section="final_cta"
-              onClick={openCheckout}
+              aria-disabled={checkoutWaiting || undefined}
+              aria-busy={checkoutWaiting || undefined}
+              onClick={() => {
+                if (!checkoutWaiting) openCheckout()
+              }}
               type="button"
             >
-              Plan sichern
+              {checkoutWaiting ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin rounded-full border-2 border-[var(--brand-plum-darkest)]/30 border-t-[var(--brand-plum-darkest)] motion-reduce:animate-none"
+                  />
+                  <span>Zahlungsoptionen werden vorbereitet …</span>
+                </span>
+              ) : (
+                "Plan sichern"
+              )}
             </button>
+            <span className="sr-only" role="status" aria-live="polite">
+              {checkoutWaiting ? "Zahlungsoptionen werden vorbereitet …" : ""}
+            </span>
           </div>
         </section>
       </main>
