@@ -7,6 +7,7 @@ const offerSectionIds = [
   "personal_plan_diagnosis",
   "personal_plan_complete_plan",
   "personal_plan_method",
+  "personal_plan_before_after",
   "personal_plan_survey",
   "personalized_analysis",
   "mini_routine",

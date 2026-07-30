@@ -61,6 +61,7 @@ const PERSONAL_PLAN_SECTION_ORDER = [
   "personal_plan_diagnosis",
   "personal_plan_complete_plan",
   "personal_plan_method",
+  "personal_plan_before_after",
   "pricing",
   "personal_plan_survey",
   "testimonials",

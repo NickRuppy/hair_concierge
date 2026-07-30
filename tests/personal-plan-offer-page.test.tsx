@@ -55,6 +55,7 @@ test("personal plan offer renders approved hierarchy without personalized produc
       quizKind="personal_plan"
     />,
   )
+  const visibleText = html.replace(/<[^>]*>/g, "")
 
   assert.match(html, /Dein Haarplan ist bereit/i)
   assert.doesNotMatch(html, /Lea, dein Haarplan/i)
@@ -87,11 +88,20 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.doesNotMatch(html, />Stark<|diese Stärke/i)
   assert.doesNotMatch(html, /bg-\[#eef7f1\]/i)
   assert.doesNotMatch(html, /unruhig|wechselhaft|ruhig &amp; glänzend/i)
-  assert.match(html, /Dein kompletter Haarpflegeplan/i)
-  assert.match(html, /Produkte passend zu Kopfhaut, Textur und Zustand/i)
-  assert.match(html, /Reihenfolge für Reinigung, Pflege und Styling/i)
-  assert.match(html, /Klare Häufigkeit für jeden Schritt/i)
-  assert.match(html, /Chat und Haartagebuch bei neuen Fragen/i)
+  assert.match(html, /Die Highlights deines Plans/i)
+  assert.match(
+    visibleText,
+    /Versteh endlich, was deine Haare wirklich brauchen – statt weiter zu raten/i,
+  )
+  assert.match(
+    visibleText,
+    /Eine klare Routine ohne Produktchaos: wenige Produkte, feste Reihenfolge/i,
+  )
+  assert.match(
+    visibleText,
+    /Fahr dir durch die Haare und sie fühlen sich weich an – nicht trocken und strohig/i,
+  )
+  assert.match(visibleText, /Trag deine Haare wieder offen – mit einem richtig guten Gefühl/i)
   assert.match(html, /before-after-generic\.webp/i)
   assert.match(html, /Zugtest/i)
   assert.match(html, /Struktur &amp; Elastizität/i)
@@ -99,9 +109,19 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /Haaroberfläche &amp; Glanz/i)
   assert.match(html, /Kopfhaut-Check/i)
   assert.match(html, /Typ &amp; Zustand/i)
-  assert.match(html, /Produktabgleich/i)
-  assert.match(html, /Passende Pflege aus unserer Datenbank/i)
+  assert.match(html, /Dein Plan basiert auf echter Haar-Diagnostik/i)
+  assert.match(html, /Über 1.000 Produkte/i)
+  assert.match(html, /analysiert &amp; geprüft/i)
+  assert.match(html, /Entwickelt gemeinsam mit Friseurmeistern/i)
   assert.match(html, /Daraus entstehen deine Produktauswahl, Reihenfolge und Anwendung/i)
+  assert.match(html, /Vorher und[\s\S]*nachher[\s\S]*mit Chaarlie/i)
+  assert.match(html, /So beschreiben es Frauen in unserer Umfrage/i)
+  assert.match(html, /Ich weiß nie, welche Produkte wirklich zu mir passen/i)
+  assert.match(html, /Empfehlungen mit Grund, abgestimmt auf deine Auswertung/i)
+  assert.match(html, /Meine Haare sind trocken, strohig oder glanzlos/i)
+  assert.match(html, /Weich, geschmeidig, mit Glanz, den man sieht/i)
+  assert.match(html, /Haare im Dutt oder Zopf verstecken/i)
+  assert.match(html, /Haare offen tragen, mit gutem Gefühl/i)
   assert.match(html, /Monatlich/i)
   assert.match(html, /<s[^>]*>€19,99<\/s>[\s\S]*€14,99/)
   assert.match(html, /€14,99/i)
@@ -133,12 +153,8 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /data-offer-section="personal_plan_diagnosis"/)
   assert.match(html, /data-offer-section="personal_plan_complete_plan"/)
   assert.match(html, /data-offer-section="personal_plan_method"/)
+  assert.match(html, /data-offer-section="personal_plan_before_after"/)
   assert.match(html, /data-offer-section="personal_plan_survey"/)
-  assert.match(html, /data-offer-section="personal_plan_complete_plan"><div class="text-center">/)
-  assert.match(
-    html,
-    /data-offer-section="personal_plan_method"><div class="mx-auto max-w-4xl"><div class="text-center">/,
-  )
   assert.match(
     html,
     /data-offer-section="pricing" id="pricing" tabindex="-1"><div class="text-center">/,
@@ -156,6 +172,16 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /data-offer-cta="final" data-offer-destination="checkout"/)
   assert.match(html, /mt-3 grid grid-cols-2 gap-2/)
   assert.match(html, /background-size:200% auto/i)
+  assert.match(html, /conic-gradient\(#563882 82%/i)
+  assert.match(html, /conic-gradient\(#7657a2 73%/i)
+  assert.match(html, /conic-gradient\(#9a7cbd 63%/i)
+  assert.ok(
+    html.indexOf('data-offer-section="personal_plan_method"') <
+      html.indexOf('data-offer-section="personal_plan_before_after"') &&
+      html.indexOf('data-offer-section="personal_plan_before_after"') <
+        html.indexOf('data-offer-section="pricing"'),
+    "the new before/after section should sit between method and pricing",
+  )
   assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen|Kopfhautserum|Dry\.Shampoo/i)
   assert.doesNotMatch(html, /conditionerModuleId|shampooModuleId|suggestedCategory|needLane/)
 })
@@ -212,7 +238,7 @@ test("personal plan analytics use their own revision label", () => {
     "utf8",
   )
 
-  assert.match(offerSource, /const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v1"/)
+  assert.match(offerSource, /const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v2"/)
   assert.match(offerSource, /offerRevision=\{PERSONAL_PLAN_OFFER_REVISION\}/)
   assert.doesNotMatch(offerSource, /GUIDED_STORY_OFFER_REVISION/)
 })

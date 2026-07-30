@@ -28,7 +28,59 @@ const testimonials = [
   },
 ]
 
-const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v1"
+const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v2"
+
+const planHighlights = [
+  {
+    emphasis: "Versteh endlich",
+    prefix: "",
+    remainder: ", was deine Haare wirklich brauchen",
+    suffix: " – statt weiter zu raten.",
+  },
+  {
+    emphasis: "Eine klare Routine",
+    prefix: "",
+    remainder: " ohne Produktchaos:",
+    suffix: " wenige Produkte, feste Reihenfolge.",
+  },
+  {
+    emphasis: "weich",
+    prefix: "Fahr dir durch die Haare und sie fühlen sich ",
+    remainder: "",
+    suffix: " an – nicht trocken und strohig.",
+  },
+  {
+    emphasis: "offen",
+    prefix: "Trag deine Haare wieder ",
+    remainder: "",
+    suffix: " – mit einem richtig guten Gefühl.",
+  },
+]
+
+const diagnosticMethods = [
+  ["Zugtest", "Struktur & Elastizität"],
+  ["Oberflächentest", "Haaroberfläche & Glanz"],
+  ["Kopfhaut-Check", "Typ & Zustand"],
+  ["Über 1.000 Produkte", "analysiert & geprüft"],
+] as const
+
+const beforeAfterContrasts = [
+  [
+    "„Ich weiß nie, welche Produkte wirklich zu mir passen.“",
+    "Empfehlungen mit Grund, abgestimmt auf deine Auswertung",
+  ],
+  [
+    "„Meine Haare sind trocken, strohig oder glanzlos.“",
+    "Weich, geschmeidig, mit Glanz, den man sieht",
+  ],
+  ["Haare im Dutt oder Zopf verstecken", "Haare offen tragen, mit gutem Gefühl"],
+] as const
+
+const surveyStats = [
+  ["82%", "wollen verstehen, was ihr Haar wirklich braucht", "#563882"],
+  ["73%", "wünschen sich eine klare Routine ohne Produktchaos", "#7657a2"],
+  ["63%", "wissen nicht, welche Produkte wirklich passen", "#9a7cbd"],
+] as const
 
 const SPECTRUM_LABELS: Record<1 | 2 | 3, string> = {
   1: "Viel Potenzial",
@@ -248,24 +300,31 @@ export function PersonalPlanOffer({
               Was du freischaltest
             </p>
             <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] tracking-[-0.035em] sm:mt-3 sm:max-w-[24ch] sm:text-4xl sm:leading-tight">
-              Dein kompletter Haarpflegeplan.
+              Die Highlights deines Plans
             </h2>
           </div>
-          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-7 sm:gap-3">
-            {[
-              "Produkte passend zu Kopfhaut, Textur und Zustand.",
-              "Reihenfolge für Reinigung, Pflege und Styling.",
-              "Klare Häufigkeit für jeden Schritt.",
-              "Chat und Haartagebuch bei neuen Fragen.",
-            ].map((item) => (
+          <div className="mt-5 grid gap-2 sm:mt-7 sm:grid-cols-2 sm:gap-3">
+            {planHighlights.map((item) => (
               <div
-                className="rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-3.5 sm:p-5"
-                key={item}
+                className="grid grid-cols-[30px_1fr] items-start gap-3 rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-3 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)] sm:p-4"
+                key={item.emphasis}
               >
-                <span className="mb-2 grid h-8 w-8 place-items-center rounded-full bg-[#e9f5ed] text-[#2d8f5b] sm:mb-3 sm:h-9 sm:w-9">
+                <span
+                  aria-hidden="true"
+                  className="grid h-[30px] w-[30px] place-items-center rounded-full bg-[#eee8f6] text-sm font-black text-[#6b50a0]"
+                >
                   ✓
                 </span>
-                <p className="text-sm font-semibold leading-5 sm:text-base sm:leading-7">{item}</p>
+                <p className="mt-px text-[13px] font-semibold leading-[1.42] sm:text-sm">
+                  <strong className="font-extrabold">
+                    {item.prefix}
+                    <span className="text-[#5a3c8d] shadow-[inset_0_-0.46em_rgba(107,80,160,0.13)]">
+                      {item.emphasis}
+                    </span>
+                    {item.remainder}
+                  </strong>
+                  {item.suffix}
+                </p>
               </div>
             ))}
           </div>
@@ -276,51 +335,79 @@ export function PersonalPlanOffer({
           data-offer-section="personal_plan_method"
         >
           <div className="mx-auto max-w-4xl">
-            <div className="text-center">
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-                So entsteht dein Plan
-              </p>
-              <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-                Vier Signale. Eine klare Empfehlung.
+            <div className="rounded-[1.25rem] border border-[rgba(var(--brand-plum-rgb),0.09)] bg-white p-[18px] text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.60)]">
+              <h2 className="mx-auto max-w-[24ch] font-serif text-[1.375rem] leading-[1.13] tracking-[-0.025em] sm:text-4xl sm:leading-tight">
+                Dein Plan basiert auf echter Haar-Diagnostik:
               </h2>
-              <p className="mx-auto mt-4 max-w-[38rem] text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
-                Wir verbinden, was dein Haar zeigt, mit der Pflege, die im Alltag funktioniert.
-              </p>
-            </div>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              {[
-                ["01", "Zugtest", "Struktur & Elastizität"],
-                ["02", "Oberflächentest", "Haaroberfläche & Glanz"],
-                ["03", "Kopfhaut-Check", "Typ & Zustand"],
-                ["04", "Produktabgleich", "Passende Pflege aus unserer Datenbank"],
-              ].map(([number, title, description]) => (
-                <div
-                  className="flex items-start gap-4 rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.6)]"
-                  key={title}
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[rgba(var(--brand-plum-rgb),0.09)] text-xs font-bold text-[var(--brand-plum-darkest)]">
-                    {number}
-                  </span>
-                  <span>
-                    <strong className="block text-base">{title}</strong>
-                    <span className="mt-1 block text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.68)]">
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {diagnosticMethods.map(([title, description]) => (
+                  <div
+                    className="flex min-h-[75px] flex-col items-center justify-center rounded-xl bg-[#f1ecf6] p-3 text-center"
+                    key={title}
+                  >
+                    <strong className="block text-xs sm:text-sm">{title}</strong>
+                    <span className="mt-1 block text-[11px] leading-[1.35] text-[rgba(var(--brand-plum-rgb),0.68)] sm:text-xs">
                       {description}
                     </span>
-                  </span>
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-center text-[11px] text-[rgba(var(--brand-plum-rgb),0.58)] sm:text-xs">
+                Entwickelt gemeinsam mit Friseurmeistern.
+              </p>
             </div>
-            <div className="mt-4 flex flex-col items-center gap-3 rounded-2xl bg-[var(--brand-plum)] px-5 py-6 text-center text-white">
+            <div className="mt-3 flex flex-col items-center gap-2 rounded-2xl bg-[var(--brand-plum)] px-4 py-3.5 text-center text-white">
               <span
                 aria-hidden="true"
-                className="grid h-9 w-9 place-items-center rounded-full bg-white/15"
+                className="grid h-[30px] w-[30px] place-items-center rounded-full bg-white/15"
               >
-                <ArrowDown className="h-5 w-5" strokeWidth={2.25} />
+                <ArrowDown className="h-[17px] w-[17px]" strokeWidth={2.25} />
               </span>
-              <p className="max-w-[34rem] font-semibold leading-7">
+              <p className="max-w-[34rem] text-xs font-bold leading-[1.42] sm:text-sm">
                 Daraus entstehen deine Produktauswahl, Reihenfolge und Anwendung.
               </p>
             </div>
+          </div>
+        </section>
+
+        <section
+          className="mx-auto max-w-4xl px-4 py-7 sm:py-14"
+          data-offer-section="personal_plan_before_after"
+        >
+          <div className="text-center">
+            <h2 className="font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">
+              Vorher und <span className="text-[#6b50a0]">nachher</span> mit Chaarlie
+            </h2>
+            <p className="mt-3 text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
+              So beschreiben es Frauen in unserer Umfrage:
+            </p>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3 sm:mt-7">
+            {beforeAfterContrasts.map(([before, after]) => (
+              <article
+                className="overflow-hidden rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+                key={before}
+              >
+                <p className="flex items-start gap-3 bg-[#f7f4f9] px-4 py-4 text-left text-sm italic leading-6 text-[rgba(var(--brand-plum-rgb),0.63)]">
+                  <span
+                    aria-hidden="true"
+                    className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#ebe7ee] text-sm font-bold text-[#aaa2ad]"
+                  >
+                    ×
+                  </span>
+                  <span>{before}</span>
+                </p>
+                <p className="flex items-start gap-3 border-t border-[rgba(var(--brand-plum-rgb),0.07)] px-4 py-4 text-left text-sm font-bold leading-6 text-[#6b50a0]">
+                  <span
+                    aria-hidden="true"
+                    className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#6b50a0] text-sm text-white"
+                  >
+                    ✓
+                  </span>
+                  <span>{after}</span>
+                </p>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -359,20 +446,23 @@ export function PersonalPlanOffer({
             <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
               Über 4.000 Frauen haben uns geantwortet.
             </h2>
-            <div className="mt-7 grid items-stretch gap-3 sm:grid-cols-3">
-              {[
-                ["82%", "wollen verstehen, was ihr Haar wirklich braucht"],
-                ["73%", "wünschen sich eine klare Routine ohne Produktchaos"],
-                ["63%", "wissen nicht, welche Produkte wirklich passen"],
-              ].map(([value, label]) => (
+            <div className="mt-7 grid items-stretch gap-3 md:grid-cols-3">
+              {surveyStats.map(([value, label, ringColor]) => (
                 <div
-                  className="flex h-full flex-col justify-center rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+                  className="flex min-h-[92px] items-center gap-3.5 rounded-[1.25rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white py-2.5 pl-3 pr-4 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
                   key={value}
                 >
-                  <strong className="block font-serif text-5xl leading-none text-[var(--brand-plum-darkest)]">
-                    {value}
-                  </strong>
-                  <span className="mt-3 block text-sm font-semibold leading-6 text-[rgba(var(--brand-plum-rgb),0.72)]">
+                  <span
+                    className="grid h-[66px] w-[66px] shrink-0 place-items-center rounded-full p-[7px]"
+                    style={{
+                      background: `conic-gradient(${ringColor} ${value.slice(0, -1)}%, rgba(var(--brand-plum-rgb),0.10) 0)`,
+                    }}
+                  >
+                    <strong className="grid h-full w-full place-items-center rounded-full bg-white font-serif text-[19px] font-medium leading-none text-[var(--brand-plum-darkest)]">
+                      {value}
+                    </strong>
+                  </span>
+                  <span className="block text-[12.5px] font-semibold leading-[1.45] text-[rgba(var(--brand-plum-rgb),0.72)]">
                     {label}
                   </span>
                 </div>
