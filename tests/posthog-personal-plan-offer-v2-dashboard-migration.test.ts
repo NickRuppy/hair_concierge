@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtemp, rm } from "node:fs/promises"
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
@@ -291,7 +291,7 @@ test("unknown before fingerprint aborts before any PATCH", async () => {
       afterFingerprints: {},
       transform: (item) => item,
     }),
-    /drifted from reviewed before-state/,
+    /neither reviewed before-state nor expected after-state/,
   )
   assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
 })
@@ -315,6 +315,148 @@ test("unknown target fingerprint aborts before any PATCH", async () => {
       transform,
     }),
     /target drifted from reviewed after-state/,
+  )
+  assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+})
+
+test("apply resumes a mixed reviewed before/after state by patching only pending insights", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  const directory = await mkdtemp(join(tmpdir(), "posthog-resume-test-"))
+  const backup = join(directory, "before.json")
+  try {
+    await runMigration(["--apply", "--confirm-project=126788", `--backup=${backup}`], {
+      fetch: posthog.fetch,
+      output: () => {},
+      token: "test",
+      cwd: "/repo",
+      beforeFingerprints: fingerprintMap(initial),
+      afterFingerprints: fingerprintMap(target),
+      transform,
+    })
+    const originalBackup = await readFile(backup, "utf8")
+    posthog.state.set(initial[1].id, structuredClone(initial[1]))
+    posthog.state.set(initial[2].id, structuredClone(initial[2]))
+    posthog.methods.length = 0
+    const result = await runMigration(
+      ["--apply", "--confirm-project=126788", `--backup=${backup}`],
+      {
+        fetch: posthog.fetch,
+        output: () => {},
+        token: "test",
+        cwd: "/repo",
+        beforeFingerprints: fingerprintMap(initial),
+        afterFingerprints: fingerprintMap(target),
+        transform,
+      },
+    )
+    assert.equal(result.mode, "apply")
+    assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 2)
+    assert.equal(await readFile(backup, "utf8"), originalBackup)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("fully applied insights need no backup or PATCH, while O6 is still ensured", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(target as Insight[])
+  const result = await runMigration(["--apply", "--confirm-project=126788"], {
+    fetch: posthog.fetch,
+    output: () => {},
+    token: "test",
+    cwd: "/repo",
+    beforeFingerprints: fingerprintMap(initial),
+    afterFingerprints: fingerprintMap(target),
+    transform,
+  })
+  assert.equal(result.mode, "apply")
+  assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+  assert.equal(posthog.methods.filter((method) => method === "POST").length, 1)
+})
+
+test("partial retry without the original backup refuses before any PATCH", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  posthog.state.set(initial[0].id, structuredClone(target[0]) as Insight)
+  const directory = await mkdtemp(join(tmpdir(), "posthog-missing-backup-test-"))
+  try {
+    await assert.rejects(
+      runMigration(
+        [
+          "--apply",
+          "--confirm-project=126788",
+          `--backup=${join(directory, "missing-before.json")}`,
+        ],
+        {
+          fetch: posthog.fetch,
+          output: () => {},
+          token: "test",
+          cwd: "/repo",
+          beforeFingerprints: fingerprintMap(initial),
+          afterFingerprints: fingerprintMap(target),
+          transform,
+        },
+      ),
+      /original reviewed all-before backup/,
+    )
+    assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("an invalid existing backup is never overwritten", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  const directory = await mkdtemp(join(tmpdir(), "posthog-invalid-backup-test-"))
+  const backup = join(directory, "before.json")
+  try {
+    await writeFile(backup, "not a backup")
+    await assert.rejects(
+      runMigration(["--apply", "--confirm-project=126788", `--backup=${backup}`], {
+        fetch: posthog.fetch,
+        output: () => {},
+        token: "test",
+        cwd: "/repo",
+        beforeFingerprints: fingerprintMap(initial),
+        afterFingerprints: fingerprintMap(target),
+        transform,
+      }),
+    )
+    assert.equal(await readFile(backup, "utf8"), "not a backup")
+    assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("a mixed state with an unknown insight refuses before any PATCH", async () => {
+  const initial = compactInsights()
+  const transform = (item: MigrationInsight): MigrationInsight => ({ ...item, description: "v2" })
+  const target = initial.map(transform)
+  const posthog = mockPostHog(initial)
+  posthog.state.set(initial[0].id, structuredClone(target[0]) as Insight)
+  posthog.state.set(initial[1].id, { ...initial[1], description: "unknown" })
+  await assert.rejects(
+    runMigration(["--apply", "--confirm-project=126788", "--backup=/tmp/before.json"], {
+      fetch: posthog.fetch,
+      output: () => {},
+      token: "test",
+      cwd: "/repo",
+      beforeFingerprints: fingerprintMap(initial),
+      afterFingerprints: fingerprintMap(target),
+      transform,
+    }),
+    /neither reviewed before-state nor expected after-state/,
   )
   assert.equal(posthog.methods.filter((method) => method === "PATCH").length, 0)
 })

@@ -385,6 +385,35 @@ async function restoreFile(path: string) {
     throw new Error("Restore backup must contain exactly the seven approved insights.")
   return insights
 }
+async function backupForApply(
+  path: string,
+  current: Insight[],
+  expectedBefore: Record<number, string>,
+  expectedAfter: Record<number, string>,
+  deps: MigrationDependencies,
+) {
+  const backupPath = outsideRepo(path, deps.cwd!)
+  try {
+    const backup = await restoreFile(backupPath)
+    assertBefore(backup, expectedBefore)
+    deps.output(`reusing reviewed all-before backup at ${backupPath}`)
+    return backupPath
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error
+  }
+  for (const insight of current) {
+    if (
+      expectedBefore[insight.id] !== expectedAfter[insight.id] &&
+      fingerprintInsight(insight) !== expectedBefore[insight.id]
+    )
+      throw new Error(
+        "Partial apply needs the original reviewed all-before backup; refusing to create a mixed backup.",
+      )
+  }
+  await writeBackup(backupPath, current, deps.now!())
+  deps.output(`wrote narrow all-before backup to ${backupPath}`)
+  return backupPath
+}
 async function patchAndVerify(
   deps: MigrationDependencies,
   insight: Insight,
@@ -469,40 +498,57 @@ export async function runMigration(argv: string[], overrides: Partial<MigrationD
     )
     return { mode: "restore" as const }
   }
-  assertBefore(current, expectedBefore)
-  const target = current.map(transform)
-  for (const i of target) {
+  const target: Insight[] = []
+  const toPatch: Insight[] = []
+  for (const i of current) {
     const actual = fingerprintInsight(i)
-    const expected = expectedAfter[i.id]
-    if (actual !== expected)
+    if (actual === expectedAfter[i.id]) {
+      target.push(i)
+      deps.output(`insight ${i.id}: already applied (${actual})`)
+      continue
+    }
+    if (actual !== expectedBefore[i.id])
       throw new Error(
-        `Insight ${i.id} target drifted from reviewed after-state (expected ${expected}, got ${actual}). Refusing to patch.`,
+        `Insight ${i.id} is neither reviewed before-state nor expected after-state (got ${actual}). Refusing to patch.`,
       )
+    const next = transform(i)
+    const expected = expectedAfter[i.id]
+    if (fingerprintInsight(next) !== expected)
+      throw new Error(
+        `Insight ${i.id} target drifted from reviewed after-state (expected ${expected}, got ${fingerprintInsight(next)}). Refusing to patch.`,
+      )
+    target.push(next)
+    toPatch.push(next)
+    deps.output(`insight ${i.id}: ${actual} -> ${expected}`)
   }
-  for (const i of target)
-    deps.output(
-      `insight ${i.id}: ${fingerprintInsight(current.find((x) => x.id === i.id)!)} -> ${fingerprintInsight(i)}`,
-    )
   if (!options.apply) {
     const quality = await ensureAttributionQuality(deps, false)
     deps.output(
-      `dry run only: ${insightIds.length} insights validated; O6 attribution-quality tile would ${quality.action}; no PostHog write performed.`,
+      `dry run only: ${toPatch.length} insights pending, ${insightIds.length - toPatch.length} already applied; O6 attribution-quality tile would ${quality.action}; no PostHog write performed.`,
     )
-    return { mode: "dry-run" as const, target, attributionQuality: quality.action }
+    return {
+      mode: "dry-run" as const,
+      target,
+      pending: toPatch.length,
+      attributionQuality: quality.action,
+    }
   }
-  if (!options.backup)
+  if (toPatch.length > 0 && !options.backup)
     throw new Error("--apply requires --backup=/absolute/path/outside-the-repository.json.")
-  const backupPath = outsideRepo(options.backup, deps.cwd!)
-  await writeBackup(backupPath, current, deps.now!())
-  deps.output(`wrote narrow before-state backup to ${backupPath}`)
-  await patchAll(deps, target)
+  const backupPath =
+    toPatch.length > 0
+      ? await backupForApply(options.backup!, current, expectedBefore, expectedAfter, deps)
+      : undefined
+  await patchAll(deps, toPatch)
   const reread = await fetchInsights(deps)
   for (const i of reread)
     if (fingerprintInsight(i) !== fingerprintInsight(target.find((x) => x.id === i.id)!))
       throw new Error(`Final post-patch verification failed for insight ${i.id}.`)
   const quality = await ensureAttributionQuality(deps, true)
   if (options.annotationAt) await annotate(deps, options.annotationAt, options.deploymentSha!)
-  deps.output(`applied and re-read ${insightIds.length} PostHog insights; O6 ${quality.action}.`)
+  deps.output(
+    `applied ${toPatch.length} pending insights and re-read ${insightIds.length}; O6 ${quality.action}.`,
+  )
   return { mode: "apply" as const, backupPath }
 }
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]))
