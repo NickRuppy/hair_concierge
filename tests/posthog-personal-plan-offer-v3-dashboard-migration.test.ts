@@ -117,6 +117,30 @@ test("write confirmation and annotation SHA guards reject before API calls", asy
     }),
     /--deployment-sha/,
   )
+  await assert.rejects(
+    runMigration(
+      [
+        "--apply",
+        "--confirm-project=126788",
+        "--annotation-at=not-a-timestamp",
+        "--deployment-sha=abcdef1",
+      ],
+      { fetch, output: () => {}, token: "test" },
+    ),
+    /--annotation-at must be ISO-8601/,
+  )
+  await assert.rejects(
+    runMigration(
+      [
+        "--apply",
+        "--confirm-project=126788",
+        "--annotation-at=2026-07-30T12:00:00Z",
+        "--deployment-sha=not-a-sha",
+      ],
+      { fetch, output: () => {}, token: "test" },
+    ),
+    /--deployment-sha must be a 7–40 character Git SHA/,
+  )
   assert.equal(calls, 0)
 })
 

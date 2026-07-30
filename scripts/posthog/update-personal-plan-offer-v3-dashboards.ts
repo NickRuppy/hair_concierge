@@ -350,11 +350,15 @@ async function patchAndVerify(
   deps.output(`patched and verified insight ${insight.id}`)
 }
 
-async function annotate(deps: MigrationDependencies, at: string, deploymentSha: string) {
+function assertValidAnnotation(at: string, deploymentSha: string) {
   if (Number.isNaN(Date.parse(at))) throw new Error("--annotation-at must be ISO-8601.")
   if (!/^[0-9a-f]{7,40}$/i.test(deploymentSha)) {
     throw new Error("--deployment-sha must be a 7–40 character Git SHA.")
   }
+}
+
+async function annotate(deps: MigrationDependencies, at: string, deploymentSha: string) {
+  assertValidAnnotation(at, deploymentSha)
   await request(deps, `${apiOrigin}/api/projects/${projectId}/annotations/`, {
     method: "POST",
     body: JSON.stringify({
@@ -391,6 +395,9 @@ export async function runMigration(argv: string[], overrides: Partial<MigrationD
   }
   if (options.deploymentSha && !options.annotationAt) {
     throw new Error("--deployment-sha requires --annotation-at=<ISO-8601>.")
+  }
+  if (options.annotationAt && options.deploymentSha) {
+    assertValidAnnotation(options.annotationAt, options.deploymentSha)
   }
 
   const current = await fetchInsights(deps)
