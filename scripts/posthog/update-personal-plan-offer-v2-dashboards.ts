@@ -238,7 +238,7 @@ function dashboardUrl() {
   return `${apiOrigin}/api/projects/${projectId}/dashboards/${dashboardId}/`
 }
 function attributionQuery() {
-  return { kind: "InsightVizNode", source: { kind: "HogQLQuery", query: attributionQuality.query } }
+  return { kind: "DataTableNode", source: { kind: "HogQLQuery", query: attributionQuality.query } }
 }
 function isAttributionQuality(value: unknown): value is Insight {
   const insight = value as Insight
