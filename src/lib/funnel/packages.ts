@@ -1,4 +1,5 @@
 import packageDefinitions from "@/funnels/packages.json"
+import { assertLandingCompatibleQuizVariant } from "@/funnels/quizzes/registry"
 
 export type FunnelPackage = {
   key: string
@@ -6,6 +7,7 @@ export type FunnelPackage = {
   channel: "organic" | "meta" | "internal"
   status: "active" | "placeholder" | "archived"
   landingVariant: string
+  quizVariant: string
   offerVariant: string
 }
 
@@ -50,6 +52,10 @@ export function validateFunnelPackages(value: unknown): readonly FunnelPackage[]
     if (!SLUG_PATTERN.test(funnelPackage.landingVariant)) {
       throw new Error(`Invalid landing variant: ${funnelPackage.landingVariant}`)
     }
+    if (!SLUG_PATTERN.test(funnelPackage.quizVariant)) {
+      throw new Error(`Invalid quiz variant: ${funnelPackage.quizVariant}`)
+    }
+    assertLandingCompatibleQuizVariant(funnelPackage.quizVariant, funnelPackage.landingVariant)
     if (!SLUG_PATTERN.test(funnelPackage.offerVariant)) {
       throw new Error(`Invalid offer variant: ${funnelPackage.offerVariant}`)
     }

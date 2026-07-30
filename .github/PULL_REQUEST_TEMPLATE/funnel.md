@@ -8,6 +8,7 @@
 - Landing URL: `/lp/`
 - Channel:
 - Landing variant:
+- Quiz variant:
 - Offer variant:
 - Hypothesis:
 - Primary KPI:

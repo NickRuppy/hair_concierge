@@ -5,6 +5,7 @@ import test from "node:test"
 import { LANDING_VARIANTS } from "../src/funnels/landing/registry.generated"
 import { OFFER_VARIANTS } from "../src/funnels/offers/registry.generated"
 import { FUNNEL_PACKAGES } from "../src/lib/funnel/packages"
+import { getQuizVariant, isLandingCompatibleQuizVariant } from "../src/funnels/quizzes/registry"
 
 const landingRouteSource = readFileSync(
   new URL("../src/app/lp/[slug]/page.tsx", import.meta.url),
@@ -31,9 +32,15 @@ const quizResultsSource = readFileSync(
   "utf8",
 )
 
-test("every package references registered landing and offer variants", () => {
+test("every package references registered landing, quiz, and offer variants", () => {
   for (const funnelPackage of FUNNEL_PACKAGES) {
     assert.ok(funnelPackage.landingVariant in LANDING_VARIANTS, funnelPackage.key)
+    const quizVariant = getQuizVariant(funnelPackage.quizVariant)
+    assert.ok(quizVariant, funnelPackage.key)
+    assert.ok(
+      isLandingCompatibleQuizVariant(quizVariant, funnelPackage.landingVariant),
+      funnelPackage.key,
+    )
     assert.ok(funnelPackage.offerVariant in OFFER_VARIANTS, funnelPackage.key)
   }
 })

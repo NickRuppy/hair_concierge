@@ -2,12 +2,29 @@
 
 ## Package URLs
 
-Funnel packages are defined in `src/lib/funnel/packages.ts`. The homepage always uses
-`default_organic`; campaign packages use `/lp/<slug>`. UTM parameters and `fbclid` describe the
-traffic source but never select a package.
+Funnel packages are declared in `src/funnels/packages.json` and validated by
+`src/lib/funnel/packages.ts`. The homepage always uses `default_organic`; campaign packages use
+`/lp/<slug>`. UTM parameters and `fbclid` describe the traffic source but never select a package.
 
 To add a package, add one registry entry with a stable English `key` and `slug`, then set its
-landing and offer variant snapshots. Do not rename a key after traffic has been recorded.
+landing, registered quiz, and offer variant snapshots. Do not rename a key or remap a package after
+traffic has been recorded; create a new package for a new combination.
+
+## Identity model
+
+| Field | Meaning | Ownership and mutation |
+| --- | --- | --- |
+| `funnel_package_key` | One coherent landing + quiz + offer combination | Package registry; immutable after traffic |
+| `landing_variant` | Assigned landing experience | Snapshotted once on `funnel_sessions` |
+| `quiz_variant` | Assigned quiz experience | Owner-controlled quiz registry; snapshotted once |
+| `offer_variant` | Assigned offer experience or approved pre-view offer arm | Snapshotted once, except the existing compare-and-set experiment before first offer view |
+| `quiz_kind` | Persistence/parser family for stored answers | Quiz registry and lead persistence; several variants may share one kind |
+| `offer_revision` | Browser-event semantics for fine-grained offer analytics | Event-level only; never the canonical journey or purchase-attribution key |
+| UTM and click-ID fields | Acquisition source and creative metadata | Immutable first-touch data; never selects product behavior |
+
+`quiz_variant` records the assigned lane. `quiz_started` remains the evidence that a visitor actually
+entered that quiz. The signed browser cookie continues to carry only visitor, session, and package
+identity.
 
 ## Runtime Flags
 
@@ -60,6 +77,18 @@ The session summary records the first occurrence of:
 
 `funnel_events` keeps every genuine occurrence. Browser event IDs are reused across Supabase,
 PostHog, Customer.io, and Meta. Confirmed purchases reuse the existing billing event key.
+
+Stripe and PayPal metadata stays deliberately compact:
+
+```text
+funnel_session_id + funnel_package_key
+```
+
+When PostHog receives `purchase_completed`, the server resolves the canonical landing, quiz, and
+offer snapshot from `funnel_sessions`. A matching row is marked `funnel_attribution_status=resolved`.
+Missing session metadata is marked `missing`; an unknown session or provider/package mismatch is
+marked `invalid` without promoting the provider value to canonical `funnel_package_key`. Transient
+database failures remain retryable and do not emit an incomplete resolved purchase event.
 
 ## Starter Report
 

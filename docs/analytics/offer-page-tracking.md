@@ -336,4 +336,8 @@ Never attach exception messages, names, email addresses, raw quiz answers, provi
 - Fine-grained PostHog diagnostics, including guided-story chapter and detail events, retain the existing ungated production behavior. `offer_engaged` remains the consent-gated exception. The separate global consent/compliance issue is known and unchanged; this specification makes no compliance claim.
 - The repository's current analytics loading and consent behavior is unchanged by this specification.
 - At the instrumentation deployment boundary, annotate existing dashboard `825839`: `mini_routine` changes from a chapter wrapper to its entry block, so users who scroll past that entry in under 750 ms may no longer trigger the three-section `offer_engaged`/Customer.io depth path; guided-story FAQ counts change from once-per-question to every open; and `distinct_section_count` continues to exclude the delayed chat-answer subsection. Do not use `offer_revision` as a schema-version substitute.
+- `offer_revision` describes how to interpret fine-grained browser offer events. It is not the
+  canonical offer identity and must not be used to join a confirmed purchase. Offer purchases join
+  through `funnel_session_id`; PostHog resolves `funnel_package_key`, `landing_variant`,
+  `quiz_variant`, and `offer_variant` from the immutable Supabase session snapshot.
 - Browser vendor SDKs stay disabled on `localhost`, `127.0.0.1`, and local IPv6 by default. Set `NEXT_PUBLIC_ENABLE_LOCAL_VENDOR_ANALYTICS=true` only when local vendor delivery is intentional; this does not disable first-party `/api/funnel/session` behavior.

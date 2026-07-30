@@ -5,6 +5,7 @@
     "channel": "organic",
     "status": "active",
     "landingVariant": "default",
+    "quizVariant": "legacy-quiz-v1",
     "offerVariant": "guided-story"
   },
   {
@@ -13,6 +14,7 @@
     "channel": "meta",
     "status": "placeholder",
     "landingVariant": "default",
+    "quizVariant": "legacy-quiz-v1",
     "offerVariant": "default"
   },
   {
@@ -21,6 +23,7 @@
     "channel": "meta",
     "status": "active",
     "landingVariant": "default",
+    "quizVariant": "legacy-quiz-v1",
     "offerVariant": "guided-story"
   },
   {
@@ -29,6 +32,7 @@
     "channel": "meta",
     "status": "placeholder",
     "landingVariant": "personal-plan-quiz",
+    "quizVariant": "personal-plan-quiz-v1",
     "offerVariant": "personal-plan-v1"
   }
 ]
