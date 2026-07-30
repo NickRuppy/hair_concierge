@@ -96,7 +96,7 @@ test("Customer.io offer engagement rejects missing analytics consent", () => {
   )
 })
 
-test("personal-plan offer engagement accepts its section ids without a legacy need lane", async () => {
+test("personal-plan offer engagement accepts its v2 before/after section without a legacy need lane", async () => {
   const deliveries: unknown[] = []
   const dependencies: OfferEngagementRouteDependencies = {
     checkRateLimit: async () => ({ allowed: true }),
@@ -114,7 +114,7 @@ test("personal-plan offer engagement accepts its section ids without a legacy ne
         analyticsConsent: true,
         needLane: null,
         offerVariant: "personal-plan-v1",
-        sourceSection: "personal_plan_complete_plan",
+        sourceSection: "personal_plan_before_after",
       }),
     }),
     dependencies,
@@ -125,7 +125,7 @@ test("personal-plan offer engagement accepts its section ids without a legacy ne
   assert.equal((deliveries[0] as { needLane: unknown }).needLane, null)
   assert.equal(
     (deliveries[0] as { sourceSection: unknown }).sourceSection,
-    "personal_plan_complete_plan",
+    "personal_plan_before_after",
   )
 })
 

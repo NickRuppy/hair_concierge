@@ -39,6 +39,7 @@ export type OfferSectionId =
   | "personal_plan_diagnosis"
   | "personal_plan_complete_plan"
   | "personal_plan_method"
+  | "personal_plan_before_after"
   | "personal_plan_survey"
   | "founder_letter"
   | "mini_routine"
