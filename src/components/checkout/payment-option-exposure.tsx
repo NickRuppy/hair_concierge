@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useEffect, useRef } from "react"
+import { createContext, type ReactNode, useContext, useEffect, useRef } from "react"
 
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
 import {
@@ -8,6 +8,28 @@ import {
   isOfferPaymentOptionViewEligible,
   observeOfferPaymentOptionView,
 } from "@/lib/analytics/offer-payment-option-view"
+
+/**
+ * An open checkout can be temporarily covered by a confirmation dialog while
+ * its providers stay mounted. Treat that covered state exactly like a hidden
+ * checkout: an in-flight dwell timer must be cleaned up, and it may only be
+ * armed again after the checkout surface is exposed to the customer.
+ */
+const PaymentOptionExposureVisibilityContext = createContext(true)
+
+export function PaymentOptionExposureVisibilityGate({
+  children,
+  visible,
+}: {
+  children: ReactNode
+  visible: boolean
+}) {
+  return (
+    <PaymentOptionExposureVisibilityContext.Provider value={visible}>
+      {children}
+    </PaymentOptionExposureVisibilityContext.Provider>
+  )
+}
 
 export function PaymentOptionExposure({
   available = true,
@@ -32,11 +54,12 @@ export function PaymentOptionExposure({
 }) {
   const elementRef = useRef<HTMLDivElement | null>(null)
   const viewedRef = useRef(new Set<string>())
+  const checkoutSurfaceVisible = useContext(PaymentOptionExposureVisibilityContext)
   const eligible = isOfferPaymentOptionViewEligible({
     available,
     checkoutAttemptId,
     providerReady,
-    visible,
+    visible: visible && checkoutSurfaceVisible,
   })
 
   useEffect(() => {

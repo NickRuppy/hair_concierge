@@ -118,6 +118,83 @@ test("payment option exposure requires continuous 50% visibility for 750 ms", ()
   assert.ok(disconnected >= 1)
 })
 
+test("payment option exposure cancels pending dwell while checkout is occluded and re-arms after it is visible", () => {
+  const element = {} as Element
+  const observerCallbacks: IntersectionObserverCallback[] = []
+  const timers = new Map<number, () => void>()
+  let timerId = 0
+  let tracked = 0
+  let cleared = 0
+  const documentTarget = {
+    visibilityState: "visible" as DocumentVisibilityState,
+    addEventListener() {},
+    removeEventListener() {},
+  }
+
+  class FakeObserver {
+    constructor(callback: IntersectionObserverCallback) {
+      observerCallbacks.push(callback)
+    }
+    observe() {}
+    disconnect() {}
+  }
+
+  const options = {
+    documentTarget,
+    Observer: FakeObserver,
+    setTimer: ((callback: TimerHandler) => {
+      const id = ++timerId
+      timers.set(id, callback as () => void)
+      return id
+    }) as typeof setTimeout,
+    clearTimer: ((id: number) => {
+      cleared += 1
+      timers.delete(id)
+    }) as typeof clearTimeout,
+  }
+  const markVisible = (callback: IntersectionObserverCallback) =>
+    callback(
+      [
+        {
+          intersectionRatio: OFFER_PAYMENT_OPTION_VIEW_THRESHOLD,
+          isIntersecting: true,
+          target: element,
+        } as IntersectionObserverEntry,
+      ],
+      {} as IntersectionObserver,
+    )
+
+  const stopOccludedObservation = observeOfferPaymentOptionView(
+    element,
+    () => {
+      tracked += 1
+    },
+    options,
+  )
+  markVisible(observerCallbacks[0])
+  assert.equal(timers.size, 1, "ready+visible begins the dwell timer")
+
+  // The overlay's visibility gate removes this observer when its confirmation
+  // dialog covers checkout. The cancelled callback therefore cannot emit.
+  stopOccludedObservation()
+  assert.equal(cleared, 1)
+  assert.equal(timers.size, 0)
+  assert.equal(tracked, 0)
+
+  const stopRestoredObservation = observeOfferPaymentOptionView(
+    element,
+    () => {
+      tracked += 1
+    },
+    options,
+  )
+  markVisible(observerCallbacks[1])
+  assert.equal(timers.size, 1, "dwell restarts only after checkout is visible again")
+  for (const callback of timers.values()) callback()
+  assert.equal(tracked, 1)
+  stopRestoredObservation()
+})
+
 test("payment option exposure dedupes by checkout attempt and option", () => {
   const seen = new Set<string>()
 

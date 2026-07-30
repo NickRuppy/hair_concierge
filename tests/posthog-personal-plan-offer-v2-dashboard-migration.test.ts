@@ -118,7 +118,7 @@ test("offer targets use the strict declarative v2 session and checkout contract"
     assert.match(query, /funnel_package_key = 'meta_personal_plan_v1'/)
     assert.match(query, /offer_variant = 'personal-plan-v1'/)
     assert.match(query, /offer_revision = 'personal_plan_v2'/)
-    assert.match(query, /IN \(SELECT session_id FROM eligible\)/)
+    assert.match(query, /INNER JOIN eligible ON/)
     assert.doesNotMatch(query, /distinct_id/)
   }
   const o1 = (transformInsight(insight(5235347, "select 1") as never) as Insight).query.source
@@ -129,6 +129,11 @@ test("offer targets use the strict declarative v2 session and checkout contract"
   assert.match(o5, /destination = 'checkout'/)
   assert.match(o1, /offer_payment_option_viewed/)
   assert.match(o5, /offer_payment_option_viewed/)
+  for (const query of [o1, o5]) {
+    assert.match(query, /min\(timestamp\) AS offer_viewed_at/)
+    assert.match(query, /timestamp >= eligible\.offer_viewed_at/)
+  }
+  assert.match(o5, /outcome_events\.timestamp >= click_sessions\.checkout_intent_at/)
   assert.match(
     (transformInsight(insight(5235348, "select 1") as never) as Insight).query.source
       .query as string,
