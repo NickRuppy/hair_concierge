@@ -52,6 +52,7 @@ test("record helper maps signed context and touch into the atomic RPC contract",
   assert.equal(result, data)
   const rpcArgs = captured as unknown as Record<string, unknown>
   assert.equal(rpcArgs.p_package_key, "scalp_check_placeholder")
+  assert.equal(rpcArgs.p_quiz_variant, "legacy-quiz-v1")
   assert.equal(rpcArgs.p_landing_slug, "scalp-check")
   assert.equal(rpcArgs.p_checkout_provider, "paypal")
   assert.equal(rpcArgs.p_checkout_reference, "intent-123")

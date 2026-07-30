@@ -16,7 +16,7 @@ Collect before editing:
 - stable English package key and landing slug;
 - channel and campaign/audience;
 - hypothesis and primary KPI;
-- landing variant ID and offer variant ID;
+- landing variant ID, registered quiz variant ID, and offer variant ID;
 - approved German copy and visual assets;
 - whether either variant is reused;
 - whether pricing changes are requested.
@@ -28,7 +28,7 @@ Pricing or payment-ID changes are a handoff to Nick, not contributor scope.
 Start from a fork branch named `funnel/<package-key>`, then run:
 
 ```bash
-npm run funnel:new -- --key <snake_case> --slug <kebab-case> --landing <kebab-case> --offer <kebab-case> --channel meta
+npm run funnel:new -- --key <snake_case> --slug <kebab-case> --landing <kebab-case> --quiz <registered-quiz-variant> --offer <kebab-case> --channel meta
 ```
 
 Edit only:
@@ -39,12 +39,12 @@ Edit only:
 - `public/images/funnels/**`
 - `docs/funnel-briefs/**`
 
-Never hand-edit generated registries. Never alter tracking, cookies, quiz routing, Stripe, PayPal,
+Never hand-edit generated registries. `src/funnels/quizzes/registry.json` and quiz routing are owner-controlled; a package must select a registered quiz variant compatible with its landing. Never generate or alter quiz code, tracking, cookies, Stripe, PayPal,
 price/plan IDs, analytics destinations, migrations, workflow files, or environment configuration.
 Landing variants must not mount tracking. Offer variants must render the supplied `pricingSlot`
 exactly once.
 
-Existing package identities and component files are owner-controlled. Add new variant files and a new
+Existing package identities, quiz variants, and component files are owner-controlled. Add new variant files and a new
 package for a new combination; only its status may change. Status is metadata, not a route switch.
 
 ## Verify And Hand Off

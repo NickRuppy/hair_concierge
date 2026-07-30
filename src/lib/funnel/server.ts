@@ -283,6 +283,7 @@ export async function recordFunnelEventWithRpc(
     p_channel: funnelPackage.channel,
     p_landing_variant: funnelPackage.landingVariant,
     p_offer_variant: funnelPackage.offerVariant,
+    p_quiz_variant: funnelPackage.quizVariant,
     p_event_name: input.milestone,
     p_occurred_at: input.occurredAt ?? new Date().toISOString(),
     p_entry_path: input.touch?.entryPath ?? null,

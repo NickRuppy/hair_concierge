@@ -84,6 +84,52 @@ function funnelClient(options: {
   }
 }
 
+function posthogFunnelClient(options: {
+  row?: Record<string, unknown> | null
+  queryError?: unknown
+}) {
+  let selectedColumns: string | null = null
+  let selectedSessionId: string | null = null
+  let fromCalls = 0
+  const builder = {
+    select(columns: string) {
+      selectedColumns = columns
+      return builder
+    },
+    eq(_column: string, value: string) {
+      selectedSessionId = value
+      return builder
+    },
+    async maybeSingle() {
+      return {
+        data:
+          options.row === undefined
+            ? {
+                id: "20000000-0000-4000-8000-000000000002",
+                package_key: "meta_personal_plan_v1",
+                landing_variant: "personal-plan-quiz",
+                quiz_variant: "personal-plan-quiz-v1",
+                offer_variant: "personal-plan-v1",
+              }
+            : options.row,
+        error: options.queryError ?? null,
+      }
+    },
+  }
+  return {
+    client: {
+      from: () => {
+        fromCalls += 1
+        return builder
+      },
+      rpc: async () => ({ data: null, error: null }),
+    } as unknown as SupabaseBillingAnalyticsClient,
+    fromCalls: () => fromCalls,
+    selectedColumns: () => selectedColumns,
+    selectedSessionId: () => selectedSessionId,
+  }
+}
+
 async function withEnv<T>(values: Record<string, string | undefined>, fn: () => Promise<T>) {
   const previous = Object.fromEntries(Object.keys(values).map((key) => [key, process.env[key]]))
   for (const [key, value] of Object.entries(values)) {
@@ -387,9 +433,10 @@ test("Meta CAPI only includes package key behind its flag and never includes ses
   }
 })
 
-test("PostHog server adapter captures canonical billing event with user id distinct_id", async () => {
+test("PostHog server adapter resolves canonical funnel experience for a purchase", async () => {
   const calls: Array<{ url: string; body: Record<string, any> }> = []
   const originalFetch = globalThis.fetch
+  const funnel = posthogFunnelClient({})
   globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
     calls.push({
       url: String(url),
@@ -406,9 +453,19 @@ test("PostHog server adapter captures canonical billing event with user id disti
       },
       async () => {
         const result = await deliverBillingAnalyticsToPostHog({
-          event: event(),
+          event: event({
+            payload: {
+              checkout_session_id: "cs_test_123",
+              currency: "EUR",
+              funnel_package_key: "meta_personal_plan_v1",
+              funnel_session_id: "20000000-0000-4000-8000-000000000002",
+              interval: "month",
+              subscription_status: "active",
+              value: 14.99,
+            },
+          }),
           profile: { id: "user-123", email: "buyer@example.com" },
-          supabase,
+          supabase: funnel.client,
         })
 
         assert.equal(result.ok, true)
@@ -424,6 +481,163 @@ test("PostHog server adapter captures canonical billing event with user id disti
   assert.equal(calls[0].body.distinct_id, "user-123")
   assert.equal(calls[0].body.event, "purchase_completed")
   assert.equal(calls[0].body.properties.event_key, "stripe:purchase_completed:cs_test_123")
+  assert.equal(calls[0].body.properties.funnel_attribution_status, "resolved")
+  assert.equal(calls[0].body.properties.funnel_package_key, "meta_personal_plan_v1")
+  assert.equal(calls[0].body.properties.landing_variant, "personal-plan-quiz")
+  assert.equal(calls[0].body.properties.quiz_variant, "personal-plan-quiz-v1")
+  assert.equal(calls[0].body.properties.offer_variant, "personal-plan-v1")
+  assert.equal(calls[0].body.properties.offer_revision, undefined)
+  assert.equal(funnel.fromCalls(), 1)
+  assert.equal(
+    funnel.selectedColumns(),
+    "id, package_key, landing_variant, quiz_variant, offer_variant",
+  )
+  assert.equal(funnel.selectedSessionId(), "20000000-0000-4000-8000-000000000002")
+})
+
+test("PostHog purchase marks missing funnel attribution without querying Supabase", async () => {
+  const calls: Array<{ body: Record<string, any> }> = []
+  const originalFetch = globalThis.fetch
+  const funnel = posthogFunnelClient({})
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    calls.push({ body: JSON.parse(String(init?.body ?? "{}")) })
+    return new Response("ok", { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv({ POSTHOG_PROJECT_API_KEY: "ph-key" }, async () => {
+      const result = await deliverBillingAnalyticsToPostHog({
+        event: event({
+          payload: {
+            funnel_package_key: "meta_personal_plan_v1",
+            value: 14.99,
+          },
+        }),
+        profile: { id: "user-123", email: "buyer@example.com" },
+        supabase: funnel.client,
+      })
+      assert.equal(result.ok, true)
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(funnel.fromCalls(), 0)
+  assert.equal(calls[0].body.properties.funnel_attribution_status, "missing")
+  assert.equal(calls[0].body.properties.funnel_package_key, undefined)
+  assert.equal(calls[0].body.properties.reported_funnel_package_key, "meta_personal_plan_v1")
+  assert.equal(calls[0].body.properties.landing_variant, undefined)
+  assert.equal(calls[0].body.properties.quiz_variant, undefined)
+  assert.equal(calls[0].body.properties.offer_variant, undefined)
+})
+
+test("PostHog purchase rejects a provider package mismatch as non-canonical", async () => {
+  const calls: Array<{ body: Record<string, any> }> = []
+  const originalFetch = globalThis.fetch
+  const funnel = posthogFunnelClient({
+    row: {
+      id: "20000000-0000-4000-8000-000000000002",
+      package_key: "default_organic",
+      landing_variant: "default",
+      quiz_variant: "legacy-quiz-v1",
+      offer_variant: "guided-story",
+    },
+  })
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    calls.push({ body: JSON.parse(String(init?.body ?? "{}")) })
+    return new Response("ok", { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv({ POSTHOG_PROJECT_API_KEY: "ph-key" }, async () => {
+      const result = await deliverBillingAnalyticsToPostHog({
+        event: event({
+          payload: {
+            funnel_package_key: "meta_personal_plan_v1",
+            funnel_session_id: "20000000-0000-4000-8000-000000000002",
+            value: 14.99,
+          },
+        }),
+        profile: { id: "user-123", email: "buyer@example.com" },
+        supabase: funnel.client,
+      })
+      assert.equal(result.ok, true)
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(calls[0].body.properties.funnel_attribution_status, "invalid")
+  assert.equal(calls[0].body.properties.funnel_package_key, undefined)
+  assert.equal(calls[0].body.properties.reported_funnel_package_key, "meta_personal_plan_v1")
+  assert.equal(calls[0].body.properties.landing_variant, undefined)
+  assert.equal(calls[0].body.properties.quiz_variant, undefined)
+  assert.equal(calls[0].body.properties.offer_variant, undefined)
+})
+
+test("PostHog purchase marks an unknown referenced funnel session invalid", async () => {
+  const calls: Array<{ body: Record<string, any> }> = []
+  const originalFetch = globalThis.fetch
+  const funnel = posthogFunnelClient({ row: null })
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    calls.push({ body: JSON.parse(String(init?.body ?? "{}")) })
+    return new Response("ok", { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv({ POSTHOG_PROJECT_API_KEY: "ph-key" }, async () => {
+      const result = await deliverBillingAnalyticsToPostHog({
+        event: event({
+          payload: {
+            funnel_package_key: "meta_personal_plan_v1",
+            funnel_session_id: "20000000-0000-4000-8000-000000000002",
+          },
+        }),
+        profile: { id: "user-123", email: "buyer@example.com" },
+        supabase: funnel.client,
+      })
+      assert.equal(result.ok, true)
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(calls[0].body.properties.funnel_attribution_status, "invalid")
+  assert.equal(calls[0].body.properties.funnel_attribution_issue, "session_not_found")
+  assert.equal(calls[0].body.properties.funnel_package_key, undefined)
+  assert.equal(calls[0].body.properties.reported_funnel_package_key, "meta_personal_plan_v1")
+})
+
+test("PostHog purchase leaves transient funnel lookup failures retryable", async () => {
+  const originalFetch = globalThis.fetch
+  let fetchCalls = 0
+  const funnel = posthogFunnelClient({ queryError: new Error("database unavailable") })
+  globalThis.fetch = (async () => {
+    fetchCalls += 1
+    return new Response("ok", { status: 200 })
+  }) as typeof fetch
+
+  try {
+    await withEnv({ POSTHOG_PROJECT_API_KEY: "ph-key" }, async () => {
+      const result = await deliverBillingAnalyticsToPostHog({
+        event: event({
+          payload: {
+            funnel_package_key: "meta_personal_plan_v1",
+            funnel_session_id: "20000000-0000-4000-8000-000000000002",
+          },
+        }),
+        profile: { id: "user-123", email: "buyer@example.com" },
+        supabase: funnel.client,
+      })
+      assert.equal(result.ok, false)
+      assert.equal(result.permanent, undefined)
+      assert.match(result.error ?? "", /database unavailable/)
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+
+  assert.equal(fetchCalls, 0)
 })
 
 test("Customer.io adapter sends canonical event and transition-safe Stripe traits", async () => {

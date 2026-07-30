@@ -44,6 +44,9 @@ jobs:
           while IFS=$'\t' read -r change_status changed_path; do
             case "$changed_path" in
               src/funnels/packages.json|src/funnels/landing/registry.generated.ts|src/funnels/offers/registry.generated.ts) ;;
+              src/funnels/quizzes/*)
+                invalid_paths="${invalid_paths}${changed_path} (quiz variants are owner-controlled)\n"
+                ;;
               src/funnels/landing/*.tsx|src/funnels/offers/*.tsx)
                 if [ "$change_status" != "A" ]; then
                   invalid_paths="${invalid_paths}${change_status} ${changed_path} (existing variants are owner-controlled)\n"
@@ -70,7 +73,7 @@ jobs:
           )
           const proposed = JSON.parse(readFileSync("src/funnels/packages.json", "utf8"))
           const proposedByKey = new Map(proposed.map((item) => [item.key, item]))
-          const immutableFields = ["key", "slug", "channel", "landingVariant", "offerVariant"]
+          const immutableFields = ["key", "slug", "channel", "landingVariant", "quizVariant", "offerVariant"]
           const errors = []
 
           for (const existing of base) {

@@ -21,6 +21,23 @@ test("accepts a bounded browser milestone payload", () => {
   )
 })
 
+test("does not accept a browser-supplied quiz variant", () => {
+  assert.deepEqual(
+    parseFunnelEventPayload(
+      JSON.stringify({
+        eventId,
+        milestone: "quiz_started",
+        quizVariant: "untrusted-override",
+        properties: { step: 1 },
+      }),
+    ),
+    {
+      ok: true,
+      value: { eventId, milestone: "quiz_started", properties: { step: 1 } },
+    },
+  )
+})
+
 test("rejects malformed IDs and server-confirmed milestones", () => {
   assert.deepEqual(parseFunnelEventPayload("not json"), {
     ok: false,

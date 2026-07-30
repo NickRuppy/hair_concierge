@@ -13,6 +13,7 @@ test("CODEOWNERS keeps production approval with Nick", () => {
 test("draft PR template makes fork limitations and funnel proof explicit", () => {
   const template = source(".github/PULL_REQUEST_TEMPLATE/funnel.md")
   assert.match(template, /Package key:/)
+  assert.match(template, /Quiz variant:/)
   assert.match(template, /Vercel preview authorized/)
   assert.match(template, /fork PRs do not receive production secrets/)
   assert.match(template, /Final production approval and merge remain with @NickRuppy/)
@@ -26,10 +27,11 @@ test("CI keeps fork scope bounded without privileged pull_request_target", () =>
   assert.match(ci, /git diff --name-status --no-renames "\$BASE_SHA\.\.\.\$HEAD_SHA"/)
   assert.match(ci, /existing variants are owner-controlled/)
   assert.match(ci, /src\/funnels\/packages\.json/)
+  assert.match(ci, /src\/funnels\/quizzes\/\*/)
   assert.match(ci, /public\/images\/funnels\/\*\|docs\/funnel-briefs\/\*/)
   assert.match(
     ci,
-    /immutableFields = \["key", "slug", "channel", "landingVariant", "offerVariant"\]/,
+    /immutableFields = \["key", "slug", "channel", "landingVariant", "quizVariant", "offerVariant"\]/,
   )
   assert.match(ci, /run: npm run funnel:check/)
   assert.doesNotMatch(`${ci}\n${security}\n${clawpatch}`, /pull_request_target/)
