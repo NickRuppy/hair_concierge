@@ -51,6 +51,7 @@ test("personal plan offer renders approved hierarchy without personalized produc
       leadId="11111111-1111-4111-8111-111111111111"
       name="Lea"
       personalPlanOffer={publicOfferModel}
+      personalPlanFocusTarget="personal_plan_complete_plan"
       quizAnswers={null}
       quizKind="personal_plan"
     />,
@@ -152,7 +153,12 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 5)
   assert.doesNotMatch(html, /Ist Chat oder Haartagebuch Teil davon/i)
   assert.match(html, /data-offer-section="personal_plan_diagnosis"/)
-  assert.match(html, /data-offer-section="personal_plan_complete_plan"/)
+  const completePlanSection = html.match(
+    /<section[^>]*data-offer-section="personal_plan_complete_plan"[^>]*>/,
+  )?.[0]
+  assert.ok(completePlanSection)
+  assert.match(completePlanSection, /id="personal_plan_complete_plan"/)
+  assert.match(completePlanSection, /tabindex="-1"/)
   assert.match(html, /data-offer-section="personal_plan_method"/)
   assert.match(html, /data-offer-section="personal_plan_before_after"/)
   assert.match(html, /data-offer-section="personal_plan_survey"/)

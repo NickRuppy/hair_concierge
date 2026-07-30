@@ -72,7 +72,7 @@ test("builds the hard-paywall payload from only the stored public analysis", () 
     )
     assert.equal(
       payload.messageData.result_url,
-      `https://chaarlie.de/result/${leadId}?entry=result_email#pricing`,
+      `https://chaarlie.de/result/${leadId}?entry=result_email&focus=personal_plan_complete_plan#personal_plan_complete_plan`,
     )
     assert.deepEqual(payload.messageData.primary_message, artifact.publicOfferModel.primaryMessage)
     assert.deepEqual(
