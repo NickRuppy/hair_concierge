@@ -51,9 +51,9 @@ const beforeFingerprints: Record<InsightId, string> = {
 const afterFingerprints: Record<InsightId, string> = {
   5235347: "ebda5c6befb8a0c7b0ef0fcecbc91e78abf6196e4e156dc8539b1bba1fd001c5",
   5235348: "cda49b0068e29b8f7cfe19d3248a2d95262bef9a05e3ed56ab55d006df2ed0e8",
-  5235350: "973bb4e6210171130ac6b1affaec164bcbc12a2e35d0efdea3aa8390db98654e",
+  5235350: "9232b84b840b5a468569a98310e9abf9ce881ac02167d60d44cd5786b447d007",
   5235351: "fa3617da312d4f3a2d19c016063874462955ba925ae66e819121c3bcd74f2299",
-  5245339: "8cd646aee0d559c4386952b0dca9913e8d7ea6fdf27ae83675d0cb74146cc072",
+  5245339: "9d5483c10d0f5c98583d1f453acac3a3018a89ff638e89a0536aa0491c0133f4",
   5233190: "3b3b10a9ecda4a42f3b72e7c873ca9a4ee26ecce3b4ca7668675eb1cb830c752",
   5033903: "2966b30b4a90dca7c7b1e5025ef29956bc8e65482ce1c09cbf8d1941204318e9",
 }
@@ -93,6 +93,72 @@ function replaceRevision(i: Insight) {
 }
 function withDashboardQuery(i: Insight, insight: { query: string; description: string }) {
   return withQuery(i, insight.query, insight.description)
+}
+function withPresentation(i: Insight, presentation: Record<string, unknown>) {
+  const next = clone(i)
+  const { kind, source, display, chartSettings, tableSettings, ...additionalEnvelope } = next.query
+  next.query = {
+    kind,
+    source,
+    ...additionalEnvelope,
+    display: presentation.display ?? display,
+    chartSettings: presentation.chartSettings ?? chartSettings,
+    tableSettings: presentation.tableSettings ?? tableSettings,
+  }
+  return next
+}
+function withO3Presentation(i: Insight) {
+  return withPresentation(i, {
+    display: "ActionsBar",
+    chartSettings: {
+      xAxis: { column: "aktion" },
+      yAxis: [
+        {
+          column: "klickrate_prozent",
+          settings: { formatting: { prefix: "", suffix: "%" } },
+        },
+      ],
+      showLegend: false,
+      showNullsAsZero: true,
+      showValuesOnSeries: true,
+    },
+  })
+}
+function withO5Presentation(i: Insight) {
+  const metricColumns = [
+    ["eindeutige_klicker", "CTA geklickt"],
+    ["checkout_geoeffnet", "Checkout geöffnet"],
+    ["anbieter_initialisiert", "Anbieter initialisiert"],
+    ["zahlungsoption_gesehen", "Zahlungsoption gesehen"],
+    ["zahlungsart_gewaehlt", "Zahlungsart gewählt"],
+    ["kauf_abgeschlossen", "Kauf abgeschlossen"],
+  ] as const
+  const yAxis = metricColumns.map(([column, label]) => ({
+    column,
+    settings: {
+      display: { label },
+      formatting: { prefix: "", suffix: "" },
+    },
+  }))
+  return withPresentation(i, {
+    display: "ActionsBar",
+    chartSettings: {
+      xAxis: { column: "platzierung" },
+      yAxis,
+      showLegend: true,
+      showNullsAsZero: true,
+      showValuesOnSeries: true,
+    },
+    tableSettings: {
+      columns: [
+        {
+          column: "platzierung",
+          settings: { formatting: { prefix: "", suffix: "" } },
+        },
+        ...yAxis,
+      ],
+    },
+  })
 }
 function replaceBlock(query: string, oldBlock: string, newBlock: string, id: number) {
   if (!query.includes(oldBlock))
@@ -212,9 +278,9 @@ export function transformInsight(i: Insight): Insight {
     case 5235348:
       return withDashboardQuery(i, personalPlanOfferDashboard.insights.o2)
     case 5235350:
-      return withDashboardQuery(i, personalPlanOfferDashboard.insights.o3)
+      return withO3Presentation(withDashboardQuery(i, personalPlanOfferDashboard.insights.o3))
     case 5245339:
-      return withDashboardQuery(i, personalPlanOfferDashboard.insights.o5)
+      return withO5Presentation(withDashboardQuery(i, personalPlanOfferDashboard.insights.o5))
     case 5235351:
       return clone(i)
     case 5233190:
