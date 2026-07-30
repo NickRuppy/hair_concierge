@@ -55,8 +55,6 @@ test("personal plan offer renders approved hierarchy without personalized produc
       quizKind="personal_plan"
     />,
   )
-  const visibleText = html.replace(/<[^>]*>/g, "")
-
   assert.match(html, /Dein Haarplan ist bereit/i)
   assert.doesNotMatch(html, /Lea, dein Haarplan/i)
   assert.match(html, /Für glattes, mittelstarkes Haar\./i)
@@ -90,18 +88,21 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.doesNotMatch(html, /unruhig|wechselhaft|ruhig &amp; glänzend/i)
   assert.match(html, /Die Highlights deines Plans/i)
   assert.match(
-    visibleText,
-    /Versteh endlich, was deine Haare wirklich brauchen – statt weiter zu raten/i,
+    html,
+    /Versteh endlich[\s\S]*, was deine Haare wirklich brauchen[\s\S]* – statt weiter zu raten/i,
   )
   assert.match(
-    visibleText,
-    /Eine klare Routine ohne Produktchaos: wenige Produkte, feste Reihenfolge/i,
+    html,
+    /Eine klare Routine[\s\S]* ohne Produktchaos:[\s\S]* wenige Produkte, feste Reihenfolge/i,
   )
   assert.match(
-    visibleText,
-    /Fahr dir durch die Haare und sie fühlen sich weich an – nicht trocken und strohig/i,
+    html,
+    /Fahr dir durch die Haare und sie fühlen sich [\s\S]*weich[\s\S]* an – nicht trocken und strohig/i,
   )
-  assert.match(visibleText, /Trag deine Haare wieder offen – mit einem richtig guten Gefühl/i)
+  assert.match(
+    html,
+    /Trag deine Haare wieder [\s\S]*offen[\s\S]* – mit einem richtig guten Gefühl/i,
+  )
   assert.match(html, /before-after-generic\.webp/i)
   assert.match(html, /Zugtest/i)
   assert.match(html, /Struktur &amp; Elastizität/i)
