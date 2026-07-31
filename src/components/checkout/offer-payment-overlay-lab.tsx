@@ -615,6 +615,7 @@ type PrewarmScenario =
   | "fast"
   | "unavailable"
   | "failure"
+  | "expired"
   | "timeout-wallet"
   | "timeout-cold"
   | "plan-change"
@@ -624,6 +625,7 @@ const prewarmScenarios = new Set<PrewarmScenario>([
   "fast",
   "unavailable",
   "failure",
+  "expired",
   "timeout-wallet",
   "timeout-cold",
   "plan-change",
@@ -637,6 +639,7 @@ function getPrewarmScenario(value: string | undefined): PrewarmScenario {
 
 function getFixturePrepareDelayMs(scenario: PrewarmScenario) {
   if (scenario === "timeout-cold") return 60_000
+  if (scenario === "expired") return 250
   return 0
 }
 
@@ -703,8 +706,95 @@ function PrewarmPaymentFixture({
   )
 }
 
+type OneTimePrewarmFixtureInput = React.ComponentProps<
+  NonNullable<ResultOfferPricingCheckoutLifecycleFixture["oneTimePaymentCheckoutComponent"]>
+>
+
+function OneTimePrewarmPaymentFixture({
+  input,
+  onPrepare,
+  onWalletResolved,
+  scenario,
+}: {
+  input: OneTimePrewarmFixtureInput
+  onPrepare: () => void
+  onWalletResolved: () => void
+  scenario: PrewarmScenario
+}) {
+  const refreshRequestId = input.stripePreparationRefreshRequestId
+  const inputRef = React.useRef(input)
+  const onPrepareRef = React.useRef(onPrepare)
+  const onWalletResolvedRef = React.useRef(onWalletResolved)
+
+  React.useEffect(() => {
+    inputRef.current = input
+    onPrepareRef.current = onPrepare
+    onWalletResolvedRef.current = onWalletResolved
+  }, [input, onPrepare, onWalletResolved])
+
+  React.useEffect(() => {
+    let walletTimer: number | null = null
+    let preparationResultTimer: number | null = null
+    const preparationStartTimer = window.setTimeout(() => {
+      onPrepareRef.current()
+      inputRef.current.onStripePreparationStateChange("preparing")
+      if (scenario === "failure") {
+        inputRef.current.onStripePreparationStateChange("failed")
+        return
+      }
+
+      const wallet = getFixtureWalletResult(scenario)
+      preparationResultTimer = window.setTimeout(() => {
+        const expiresAt =
+          scenario === "expired" && refreshRequestId === 0
+            ? Math.floor(Date.now() / 1000) - 1
+            : Math.floor(Date.now() / 1000) + 60 * 30
+        inputRef.current.onStripePreparationStateChange("prepared", expiresAt)
+        walletTimer = window.setTimeout(() => {
+          inputRef.current.onApplePayAvailabilityResolved(wallet.available)
+          onWalletResolvedRef.current()
+        }, wallet.delayMs)
+      }, getFixturePrepareDelayMs(scenario))
+    }, 0)
+    return () => {
+      window.clearTimeout(preparationStartTimer)
+      if (preparationResultTimer !== null) window.clearTimeout(preparationResultTimer)
+      if (walletTimer !== null) window.clearTimeout(walletTimer)
+    }
+  }, [refreshRequestId, scenario])
+
+  if (!input.visible) {
+    return <div aria-hidden="true" data-testid="prewarm-payment-hidden" />
+  }
+
+  return (
+    <section
+      data-testid="prewarm-payment-checkout"
+      data-checkout-attempt-id={input.checkoutAttemptId ?? "none"}
+      data-preparation-id="one-time"
+      data-suppress-express-wallet={String(input.suppressExpressWallet)}
+    >
+      {input.suppressExpressWallet ? null : (
+        <div data-testid="prewarm-apple-pay" data-offer-payment-step="apple_pay">
+          Apple Pay
+        </div>
+      )}
+      <div data-testid="prewarm-paypal" data-offer-payment-step="paypal">
+        PayPal
+      </div>
+      <label>
+        Karte
+        <input data-testid="prewarm-card" />
+      </label>
+    </section>
+  )
+}
+
 function OfferPaymentPrewarmLabContent({ scenario: scenarioInput }: { scenario?: string }) {
-  const scenario = getPrewarmScenario(scenarioInput)
+  const oneTime = scenarioInput?.startsWith("one-time-") === true
+  const scenario = getPrewarmScenario(
+    oneTime ? scenarioInput?.slice("one-time-".length) : scenarioInput,
+  )
   const [prepareCount, setPrepareCount] = React.useState(0)
   const [claimCount, setClaimCount] = React.useState(0)
   const [opened, setOpened] = React.useState(false)
@@ -737,6 +827,14 @@ function OfferPaymentPrewarmLabContent({ scenario: scenarioInput }: { scenario?:
       renderPaymentCheckout: (input) => (
         <PrewarmPaymentFixture
           input={input}
+          onWalletResolved={() => setWalletResolved(true)}
+          scenario={scenario}
+        />
+      ),
+      oneTimePaymentCheckoutComponent: (input) => (
+        <OneTimePrewarmPaymentFixture
+          input={input}
+          onPrepare={() => setPrepareCount((count) => count + 1)}
           onWalletResolved={() => setWalletResolved(true)}
           scenario={scenario}
         />
@@ -780,12 +878,14 @@ function OfferPaymentPrewarmLabContent({ scenario: scenarioInput }: { scenario?:
           data-claim-count={claimCount}
           data-opened={String(opened)}
           data-wallet-resolved={String(walletResolved)}
+          data-offer-kind={oneTime ? "one_time" : "membership"}
         />
         <ResultOfferPricing
           checkoutLifecycleFixture={fixture}
           leadId={null}
           onCheckoutOpen={() => setOpened(true)}
           onCheckoutWaitingChange={setCheckoutWaiting}
+          offerVariant={oneTime ? "personal-plan-one-time-v1" : undefined}
           openCheckoutRequestId={checkoutRequestId}
         />
       </div>

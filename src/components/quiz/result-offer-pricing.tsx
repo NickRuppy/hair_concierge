@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react"
 import type { Stripe } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
@@ -11,7 +11,10 @@ import {
   type CheckoutFailure,
 } from "@/components/checkout/payment-method-checkout"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
-import { PersonalPlanOneTimeCheckout } from "@/components/checkout/personal-plan-one-time-checkout"
+import {
+  PersonalPlanOneTimeCheckout,
+  type PersonalPlanOneTimeStripePreparationState,
+} from "@/components/checkout/personal-plan-one-time-checkout"
 import {
   ActiveSubscriptionDialog,
   isCheckoutAccessAlreadyExistsResponse,
@@ -154,6 +157,17 @@ export type ResultOfferPricingCheckoutLifecycleFixture = {
     suppressExpressWallet: boolean
     visible: boolean
   }) => ReactNode
+  oneTimePaymentCheckoutComponent?: ComponentType<{
+    checkoutAttemptId: string | null
+    onApplePayAvailabilityResolved: (available: boolean) => void
+    onStripePreparationStateChange: (
+      state: PersonalPlanOneTimeStripePreparationState,
+      expiresAt?: number,
+    ) => void
+    stripePreparationRefreshRequestId: number
+    suppressExpressWallet: boolean
+    visible: boolean
+  }>
 }
 
 export function canUseApplePayCapabilitySignal(win: ApplePayCapabilityWindow | undefined) {
@@ -340,9 +354,11 @@ export function ResultOfferPricing(props: {
     return (
       <PersonalPlanOneTimePricing
         leadId={props.leadId}
+        checkoutLifecycleFixture={props.checkoutLifecycleFixture}
         funnelSessionId={offerContext?.funnelSessionId}
         onCheckoutOpen={props.onCheckoutOpen}
         onCheckoutSummaryChange={props.onCheckoutSummaryChange}
+        onCheckoutWaitingChange={props.onCheckoutWaitingChange}
         onPricingReached={props.onPricingReached}
         openCheckoutRequestId={props.openCheckoutRequestId}
       />
@@ -366,17 +382,21 @@ export function ResultOfferPricing(props: {
 }
 
 function PersonalPlanOneTimePricing({
+  checkoutLifecycleFixture,
   funnelSessionId,
   leadId,
   onCheckoutOpen,
   onCheckoutSummaryChange,
+  onCheckoutWaitingChange,
   onPricingReached,
   openCheckoutRequestId,
 }: {
+  checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
   funnelSessionId: string | null | undefined
   leadId: string | null
   onCheckoutOpen?: () => void
   onCheckoutSummaryChange?: (summary: ResultOfferPricingCheckoutSummary) => void
+  onCheckoutWaitingChange?: (waiting: boolean) => void
   onPricingReached?: () => void
   openCheckoutRequestId?: number
 }) {
@@ -385,9 +405,74 @@ function PersonalPlanOneTimePricing({
   const checkoutOpenIndexRef = useRef(0)
   const checkoutOpenRef = useRef(false)
   const handledCheckoutOpenRequestsRef = useRef(new Set<number>())
+  const checkoutWaitingRef = useRef(false)
+  const checkoutWaitStartedAtRef = useRef<number | null>(null)
+  const checkoutWaitTimerRef = useRef<number | null>(null)
+  const stripePreparationExpiresAtRef = useRef<number | null>(null)
+  const stripePreparationStateRef = useRef<PersonalPlanOneTimeStripePreparationState>("idle")
+  const walletAvailabilityRef = useRef<boolean | null>(null)
+  const walletAvailabilityFencedRef = useRef(false)
   const offerContext = useOfferTrackingContext()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
+  const [checkoutWaiting, setCheckoutWaiting] = useState(false)
+  const [oneTimePrewarmEligible, setOneTimePrewarmEligible] = useState(false)
+  const [stripePreparationRefreshRequestId, setStripePreparationRefreshRequestId] = useState(0)
+  const [suppressExpressWallet, setSuppressExpressWallet] = useState(false)
+  const OneTimePaymentCheckoutFixture = checkoutLifecycleFixture?.oneTimePaymentCheckoutComponent
+  const oneTimePrewarmEnabled =
+    Boolean(OneTimePaymentCheckoutFixture) ||
+    (Boolean(stripePublishableKey) &&
+      isOfferPaymentOverlayEnabled() &&
+      isStripeExpressCheckoutEnabled() &&
+      isOfferCheckoutPrewarmEnabled() &&
+      isOfferCheckoutEarlyPrewarmEnabled())
+  const oneTimeResolvedOpenEnabled =
+    oneTimePrewarmEnabled &&
+    (Boolean(OneTimePaymentCheckoutFixture) || isOfferCheckoutResolvedOpenEnabled())
+  const oneTimePrewarmAuthorized =
+    Boolean(OneTimePaymentCheckoutFixture) || Boolean(leadId && funnelSessionId)
+
+  const updateCheckoutWaiting = useCallback(
+    (waiting: boolean) => {
+      checkoutWaitingRef.current = waiting
+      setCheckoutWaiting(waiting)
+      onCheckoutWaitingChange?.(waiting)
+    },
+    [onCheckoutWaitingChange],
+  )
+
+  const clearCheckoutWaitTimer = useCallback(() => {
+    if (checkoutWaitTimerRef.current === null) return
+    window.clearTimeout(checkoutWaitTimerRef.current)
+    checkoutWaitTimerRef.current = null
+  }, [])
+
+  useEffect(() => {
+    if (!oneTimePrewarmEnabled || !oneTimePrewarmAuthorized || typeof window === "undefined") return
+    if (!canUseApplePayCapabilitySignal(window as ApplePayCapabilityWindow)) return
+    const enablePrewarm = () => {
+      if (document.visibilityState !== "visible") return
+      document.removeEventListener("visibilitychange", enablePrewarm)
+      // Eligibility is static for this page visit. Mounting the hidden checkout here
+      // mirrors the membership offer without creating a checkout-attempt event.
+      setOneTimePrewarmEligible(true)
+    }
+    if (document.visibilityState === "visible") {
+      enablePrewarm()
+      return
+    }
+    document.addEventListener("visibilitychange", enablePrewarm)
+    return () => document.removeEventListener("visibilitychange", enablePrewarm)
+  }, [oneTimePrewarmAuthorized, oneTimePrewarmEnabled])
+
+  useEffect(() => {
+    return () => {
+      if (checkoutWaitTimerRef.current !== null) {
+        window.clearTimeout(checkoutWaitTimerRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     onCheckoutSummaryChange?.(getPersonalPlanOneTimeCheckoutSummary())
@@ -416,31 +501,154 @@ function PersonalPlanOneTimePricing({
     })
   }, [leadId, offerContext, onCheckoutSummaryChange, onPricingReached])
 
+  const openOneTimeCheckoutNow = useCallback(
+    (suppressWallet: boolean) => {
+      if (checkoutOpenRef.current) return
+      checkoutOpenRef.current = true
+      clearCheckoutWaitTimer()
+      checkoutWaitStartedAtRef.current = null
+      updateCheckoutWaiting(false)
+      const nextCheckoutAttemptId = createFunnelEventId()
+      checkoutOpenIndexRef.current += 1
+      if (offerContext) {
+        trackAppEvent("offer_checkout_opened", {
+          ...offerContext,
+          ...personalPlanOneTimeCommerce,
+          availableProviders: [
+            ...(stripePublishableKey ? ["stripe"] : []),
+            ...(isPayPalCheckoutEnabled() && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
+              ? ["paypal"]
+              : []),
+          ],
+          checkoutAttemptId: nextCheckoutAttemptId,
+          checkoutPresentation: "overlay",
+          funnelEventId: createFunnelEventId(),
+          openIndex: checkoutOpenIndexRef.current,
+        })
+      }
+      setSuppressExpressWallet(suppressWallet)
+      setCheckoutAttemptId(nextCheckoutAttemptId)
+      setCheckoutOpen(true)
+      onCheckoutOpen?.()
+    },
+    [clearCheckoutWaitTimer, offerContext, onCheckoutOpen, updateCheckoutWaiting],
+  )
+
   const openCheckout = useCallback(() => {
-    if (checkoutOpenRef.current) return
-    checkoutOpenRef.current = true
-    const nextCheckoutAttemptId = createFunnelEventId()
-    checkoutOpenIndexRef.current += 1
-    if (offerContext) {
-      trackAppEvent("offer_checkout_opened", {
-        ...offerContext,
-        ...personalPlanOneTimeCommerce,
-        availableProviders: [
-          ...(stripePublishableKey ? ["stripe"] : []),
-          ...(isPayPalCheckoutEnabled() && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
-            ? ["paypal"]
-            : []),
-        ],
-        checkoutAttemptId: nextCheckoutAttemptId,
-        checkoutPresentation: "overlay",
-        funnelEventId: createFunnelEventId(),
-        openIndex: checkoutOpenIndexRef.current,
-      })
+    if (checkoutOpenRef.current || checkoutWaitingRef.current) return
+
+    if (!oneTimeResolvedOpenEnabled || !oneTimePrewarmEligible) {
+      openOneTimeCheckoutNow(false)
+      return
     }
-    setCheckoutAttemptId(nextCheckoutAttemptId)
-    setCheckoutOpen(true)
-    onCheckoutOpen?.()
-  }, [offerContext, onCheckoutOpen])
+
+    if (
+      stripePreparationExpiresAtRef.current !== null &&
+      stripePreparationExpiresAtRef.current <= Math.floor(Date.now() / 1000)
+    ) {
+      stripePreparationExpiresAtRef.current = null
+      stripePreparationStateRef.current = "preparing"
+      walletAvailabilityRef.current = null
+      walletAvailabilityFencedRef.current = false
+      setSuppressExpressWallet(false)
+      setStripePreparationRefreshRequestId((requestId) => requestId + 1)
+    }
+
+    if (walletAvailabilityFencedRef.current) {
+      openOneTimeCheckoutNow(true)
+      return
+    }
+
+    if (walletAvailabilityRef.current !== null) {
+      trackAppEvent("checkout_preparation_outcome", {
+        outcome: walletAvailabilityRef.current ? "prepared" : "wallet_unavailable_or_error",
+        waitDurationMs: 0,
+      })
+      openOneTimeCheckoutNow(!walletAvailabilityRef.current)
+      return
+    }
+
+    if (stripePreparationStateRef.current === "failed") {
+      trackAppEvent("checkout_preparation_outcome", {
+        outcome: "prepare_failure",
+        waitDurationMs: 0,
+      })
+      openOneTimeCheckoutNow(true)
+      return
+    }
+
+    const startedAt = Date.now()
+    checkoutWaitStartedAtRef.current = startedAt
+    updateCheckoutWaiting(true)
+    checkoutWaitTimerRef.current = window.setTimeout(() => {
+      checkoutWaitTimerRef.current = null
+      const preparationReady = stripePreparationStateRef.current === "prepared"
+      walletAvailabilityFencedRef.current = true
+      trackAppEvent("checkout_preparation_outcome", {
+        outcome: preparationReady ? "timeout_prepared" : "timeout_cold",
+        waitDurationMs: Math.max(0, Date.now() - startedAt),
+      })
+      openOneTimeCheckoutNow(true)
+    }, offerCheckoutResolvedOpenTimeoutMs)
+  }, [
+    oneTimePrewarmEligible,
+    oneTimeResolvedOpenEnabled,
+    openOneTimeCheckoutNow,
+    updateCheckoutWaiting,
+  ])
+
+  const handleStripePreparationStateChange = useCallback(
+    (state: PersonalPlanOneTimeStripePreparationState, expiresAt?: number) => {
+      stripePreparationStateRef.current = state
+      if (state === "preparing") {
+        stripePreparationExpiresAtRef.current = null
+        walletAvailabilityRef.current = null
+        walletAvailabilityFencedRef.current = false
+        setSuppressExpressWallet(false)
+        return
+      }
+      if (state === "prepared") {
+        stripePreparationExpiresAtRef.current = expiresAt ?? null
+        return
+      }
+      stripePreparationExpiresAtRef.current = null
+      if (state !== "failed" || !checkoutWaitingRef.current) return
+
+      const startedAt = checkoutWaitStartedAtRef.current ?? Date.now()
+      trackAppEvent("checkout_preparation_outcome", {
+        outcome: "prepare_failure",
+        waitDurationMs: Math.max(0, Date.now() - startedAt),
+      })
+      openOneTimeCheckoutNow(true)
+    },
+    [openOneTimeCheckoutNow],
+  )
+
+  const handleApplePayAvailabilityResolved = useCallback(
+    (available: boolean) => {
+      if (walletAvailabilityFencedRef.current) return
+      walletAvailabilityRef.current = available
+      if (!checkoutWaitingRef.current) return
+
+      const startedAt = checkoutWaitStartedAtRef.current ?? Date.now()
+      trackAppEvent("checkout_preparation_outcome", {
+        outcome: available ? "prepared" : "wallet_unavailable_or_error",
+        waitDurationMs: Math.max(0, Date.now() - startedAt),
+      })
+      openOneTimeCheckoutNow(!available)
+    },
+    [openOneTimeCheckoutNow],
+  )
+
+  const closeCheckout = useCallback(() => {
+    checkoutOpenRef.current = false
+    clearCheckoutWaitTimer()
+    checkoutWaitStartedAtRef.current = null
+    updateCheckoutWaiting(false)
+    setSuppressExpressWallet(false)
+    setCheckoutOpen(false)
+    setCheckoutAttemptId(null)
+  }, [clearCheckoutWaitTimer, updateCheckoutWaiting])
 
   useEffect(() => {
     if (!claimCheckoutOpenRequest(handledCheckoutOpenRequestsRef.current, openCheckoutRequestId)) {
@@ -450,12 +658,6 @@ function PersonalPlanOneTimePricing({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     openCheckout()
   }, [openCheckout, openCheckoutRequestId])
-
-  const closeCheckout = useCallback(() => {
-    checkoutOpenRef.current = false
-    setCheckoutOpen(false)
-    setCheckoutAttemptId(null)
-  }, [])
 
   return (
     <div ref={pricingRef} className="space-y-4" data-personal-plan-pricing-mode="one_time">
@@ -487,29 +689,49 @@ function PersonalPlanOneTimePricing({
       <Button
         type="button"
         variant="unstyled"
+        disabled={checkoutWaiting}
         onClick={openCheckout}
-        className="min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)]"
+        className="min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] disabled:cursor-wait disabled:opacity-70"
       >
-        Haarplan für €29,99 freischalten
+        {checkoutWaiting
+          ? "Zahlungsoptionen werden vorbereitet …"
+          : "Haarplan für €29,99 freischalten"}
       </Button>
       <p className="text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
         Einmalzahlung · Kein Abo
       </p>
 
       <OfferPaymentOverlay
+        keepMounted={oneTimePrewarmEligible}
         open={checkoutOpen}
         onConfirmedAbort={closeCheckout}
         onConfirmedPlanChange={closeCheckout}
         planName="Persönlicher Haarplan"
         priceLabel="29,99 €"
       >
-        {checkoutAttemptId ? (
-          <PersonalPlanOneTimeCheckout
-            checkoutAttemptId={checkoutAttemptId}
-            funnelSessionId={funnelSessionId}
-            leadId={leadId}
-            onClose={closeCheckout}
-          />
+        {checkoutOpen || oneTimePrewarmEligible ? (
+          OneTimePaymentCheckoutFixture ? (
+            <OneTimePaymentCheckoutFixture
+              checkoutAttemptId={checkoutAttemptId}
+              onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
+              onStripePreparationStateChange={handleStripePreparationStateChange}
+              stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
+              suppressExpressWallet={suppressExpressWallet}
+              visible={checkoutOpen}
+            />
+          ) : (
+            <PersonalPlanOneTimeCheckout
+              checkoutAttemptId={checkoutAttemptId}
+              funnelSessionId={funnelSessionId}
+              leadId={leadId}
+              onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
+              onClose={closeCheckout}
+              onStripePreparationStateChange={handleStripePreparationStateChange}
+              stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
+              suppressExpressWallet={suppressExpressWallet}
+              visible={checkoutOpen}
+            />
+          )
         ) : null}
       </OfferPaymentOverlay>
     </div>
