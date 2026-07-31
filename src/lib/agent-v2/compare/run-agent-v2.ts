@@ -906,8 +906,8 @@ export async function runAgentV2ComparisonForUser(
   return {
     system: options.includeCareBalanceContext ? "agent_v2_care_balance" : "agent_v2",
     display_label: options.includeCareBalanceContext
-      ? "AgentV2 GPT-5.4-mini + CareBalance"
-      : "AgentV2 GPT-5.4-mini",
+      ? "AgentV2 GPT-5.6 Luna + CareBalance"
+      : "AgentV2 GPT-5.6 Luna",
     answer: String(finalResult.final_answer.payload.user_facing_answer_de ?? ""),
     latency_ms: Math.round(performance.now() - startedAt),
     debug_lines: [

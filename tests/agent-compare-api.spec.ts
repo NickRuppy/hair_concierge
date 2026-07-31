@@ -179,7 +179,7 @@ test("handleAgentCompareRequest defaults to AgentV2 CareBalance production path"
     assert.equal(body.toolLoopVariant, "guidance_tool")
     assert.equal(body.results.length, 1)
     assert.equal(body.results[0].system, "agent_v2_care_balance")
-    assert.equal(body.results[0].display_label, "AgentV2 GPT-5.4-mini + CareBalance")
+    assert.equal(body.results[0].display_label, "AgentV2 GPT-5.6 Luna + CareBalance")
   }))
 
 test("handleAgentCompareRequest supports blinded multi-turn classic vs tool-loop runs", async () =>
@@ -451,8 +451,8 @@ test("handleAgentCompareRequest compares AgentV2 baseline with AgentV2 CareBalan
         entry.display_label,
       ]),
       [
-        ["agent_v2", "AgentV2 GPT-5.4-mini"],
-        ["agent_v2_care_balance", "AgentV2 GPT-5.4-mini + CareBalance"],
+        ["agent_v2", "AgentV2 GPT-5.6 Luna"],
+        ["agent_v2_care_balance", "AgentV2 GPT-5.6 Luna + CareBalance"],
       ],
     )
     assert.equal(body.results[1].care_balance_trace.mode, "production_decision_context")
@@ -508,7 +508,7 @@ test("handleAgentCompareRequest can run AgentV2 CareBalance as the only compare 
         entry.system,
         entry.display_label,
       ]),
-      [["agent_v2_care_balance", "AgentV2 GPT-5.4-mini + CareBalance"]],
+      [["agent_v2_care_balance", "AgentV2 GPT-5.6 Luna + CareBalance"]],
     )
   }))
 

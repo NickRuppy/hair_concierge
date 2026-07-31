@@ -5,7 +5,7 @@ import {
   type AgentV2TextVerbosity,
 } from "@/lib/agent-v2/contracts"
 
-export const DEFAULT_AGENT_V2_MODEL = "gpt-5.4-mini-2026-03-17"
+export const DEFAULT_AGENT_V2_MODEL = "gpt-5.6-luna"
 
 export interface AgentV2ModelPolicy {
   endpoint: "responses"

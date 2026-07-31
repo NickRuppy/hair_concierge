@@ -43,7 +43,7 @@ type AgentCompareRunMode =
   | "classic_vs_tool_loop"
 
 const RUN_MODE_OPTIONS: Array<{ value: AgentCompareRunMode; label: string }> = [
-  { value: "agent_v2_care_balance", label: "AgentV2 GPT-5.4-mini + CareBalance" },
+  { value: "agent_v2_care_balance", label: "AgentV2 GPT-5.6 Luna + CareBalance" },
   { value: "agent_v2_vs_care_balance", label: "Debug: AgentV2 vs CareBalance" },
   { value: "classic_vs_tool_loop", label: "Debug: Classic vs Legacy Tool-Loop" },
 ]
@@ -57,8 +57,8 @@ function resolveCompareSystemsForMode(mode: AgentCompareRunMode): CompareSystemI
 function formatCompareSystemLabel(system: CompareSystemInput): string {
   if (system === "classic" || system === "current") return "Classic"
   if (system === "tool_loop" || system === "agent") return "Legacy Tool-Loop"
-  if (system === "agent_v2_care_balance") return "AgentV2 GPT-5.4-mini + CareBalance"
-  return "AgentV2 GPT-5.4-mini"
+  if (system === "agent_v2_care_balance") return "AgentV2 GPT-5.6 Luna + CareBalance"
+  return "AgentV2 GPT-5.6 Luna"
 }
 
 const REASON_OPTIONS: Array<AgentCompareJudgmentDraft["primary_reason"]> = [
@@ -1458,9 +1458,9 @@ export function AgentCompareLab() {
 
           <p className="text-xs text-muted-foreground">
             {runMode === "agent_v2_care_balance"
-              ? "Testet den Produktionspfad AgentV2 GPT-5.4-mini + CareBalance mit Profil, Routine und Memory des Testnutzers."
+              ? "Testet den Produktionspfad AgentV2 GPT-5.6 Luna + CareBalance mit Profil, Routine und Memory des Testnutzers."
               : comparesAgentV2CareBalance
-                ? "Debug-Modus: vergleicht AgentV2 GPT-5.4-mini ohne CareBalance mit dem Produktionspfad AgentV2 GPT-5.4-mini + CareBalance."
+                ? "Debug-Modus: vergleicht AgentV2 GPT-5.6 Luna ohne CareBalance mit dem Produktionspfad AgentV2 GPT-5.6 Luna + CareBalance."
                 : comparesLegacyToolLoop
                   ? "Legacy-Modus: vergleicht Classic mit dem aelteren Tool-Loop-Runner."
                   : "Debug-Modus."}
