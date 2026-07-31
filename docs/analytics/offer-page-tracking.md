@@ -371,6 +371,26 @@ The v3 cutover covers these reviewed resources:
 - dashboard `825839`: insights `5235351` and `5033903` are fingerprinted but
   intentionally unchanged.
 
+The Personal Plan operator dashboard deliberately separates three scopes:
+
+1. The primary business funnel and checkout path use the immutable
+   `funnel_package_key` plus `funnel_session_id`, span page revisions and offer arms, and exclude
+   internal QA. They answer how the Personal Plan journey performs; `offer_revision` is not their
+   purchase identity.
+2. Current-page reach and CTA diagnostics require `offer_revision=personal_plan_v3`, accept the
+   base, membership, and one-time Personal Plan variants, and exclude internal QA. They answer what
+   users saw and did on the current page structure.
+3. The pricing-experiment overview contains only the membership and one-time assigned arms. The
+   current runtime emits them on v3, but the overview stays arm/session scoped across page revisions
+   because `offer_revision` is not purchase identity. It reports raw session and purchase counts
+   alongside conversion, and keeps pricing navigation, checkout intent, checkout opening, provider
+   initialization, and payment-option visibility as separate stages. The historical
+   `personal-plan-v1` base is never an experiment denominator.
+
+The tracking-quality tile owns missing or unexpected identity combinations instead of silently
+dropping them from diagnostics. Keep the legacy raw package key `meta_personal_plan_v1` for audit and
+historical joins, but label the journey **Personal Plan** in titles and descriptions.
+
 Run the v3 operator without arguments for a GET-only dry run:
 
 ```bash
