@@ -7,9 +7,10 @@
 ## Core workflow
 
 ```text
-plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) -> ship-it
+worktree:new -> plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) -> ship-it -> merge -> worktree:finish
 ```
 
+- Start persistent planning in the task worktree. Keep the chosen plan and durable mockups with the PR; archive or discard transient review artifacts explicitly.
 - `plan-hardening-loop` owns non-trivial planning, meaningful option comparison, user-facing mockups, counterpart plan review, revision, and a final designed-user-journey walkthrough. For user-facing work it stops only after Nick has reviewed the mockup and explicitly confirmed the journey.
 - `implementation-loop` owns execution of an approved plan or clearly bounded non-trivial change. It invokes `ready-check` and `request-code-review` before its review-ready handoff; do not rerun them as separate top-level phases on unchanged content.
 - `ready-check` owns repository and user-flow verification.
@@ -18,7 +19,7 @@ plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) 
 
 ### Merge and finish
 
-- **“Merge it”** means refresh the final PR and verify its author, reviewed head SHA, required checks, review state, migrations, content fingerprints, and unresolved conversations before merging that exact task.
+- **“Merge it”** means refresh the final PR and verify its author, reviewed head SHA, required checks, review state, migrations, content fingerprints, unresolved conversations, artifact disposition, and task-worktree status before merging that exact task.
 - For a PR authored by `NickRuppy`, Nick’s explicit **“merge it”** authorizes `gh pr merge <number> --admin --squash --match-head-commit <reviewed-head-sha>` solely to bypass the impossible self-approval requirement. Never use that bypass while another required gate is pending or failing.
 - For a PR authored by anyone else, never use an admin bypass. Require an approving review from `NickRuppy`, then squash-merge with `gh pr merge <number> --squash --match-head-commit <reviewed-head-sha>`.
 - After either merge path, verify the merged PR and merge SHA; then run `npm run worktree:finish -- --pr <number>` followed by the same command with `--apply` when its dry run passes.
@@ -67,7 +68,7 @@ Before implementing a user-facing plan, record the reviewed mockup and incorpora
 
 ## Orchestration
 
-The main session owns user intent, product and architecture decisions, decomposition, worktree and write-scope decisions, integration, final verification, and the user-facing handoff.
+The main session owns user intent, product and architecture decisions, decomposition, worktree and write-scope decisions, integration, final verification, artifact disposition, and the user-facing handoff.
 
 Delegate only bounded, independently executable work when parallelism materially helps or when noisy exploration would harm the main context. Prefer:
 
@@ -101,12 +102,14 @@ The reviewer is read-only and terminal: it returns a verdict and must not invoke
 ## Git workflow
 
 - Default to repo-local worktrees for implementation, fixes, and parallel investigations.
-- Keep the root checkout as the stable base; do not switch it in place unless the user explicitly asks.
-- Create `.worktrees/<slug>` on `codex/<slug>` from fresh `origin/main` when available.
+- Keep the root checkout on a clean `main`; `worktree:new` fetches and fast-forwards it before creating a task.
+- Create or reuse `.worktrees/<slug>` on `codex/<slug>` before writing a persistent plan or implementation change.
 - Use `npm run worktree:new -- <slug>` and `npm run dev:worktree`.
 
 ## Working outputs
 
-- Put implementation plans in `plans/`.
+- Put the chosen implementation plan in the task worktree under `plans/` and include it in the PR.
+- Keep durable mockups with the PR. Store transient reviewer output outside the repository, then archive or discard it explicitly.
 - Put reusable project docs in `docs/`.
 - Only add to `questions-for-domain-review.md` when internal domain review is genuinely required and external evidence or repository context cannot resolve the question.
+- Keep workflow instructions and receipts concise; link to the owning rule instead of repeating it.

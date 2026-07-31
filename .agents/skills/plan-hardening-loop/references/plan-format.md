@@ -12,11 +12,12 @@ Use the smallest durable plan that makes implementation and verification unambig
 6. **Mockup evidence** — for user-facing work, link the annotated screenshot, wireframe, HTML prototype, or compared variants; name the selected direction, feedback incorporated, and mockup-review status. For backend-only work, state why no mockup is required.
 7. **Ordered tasks** — each task ends with a checkable completion criterion and names tests or fixtures to add or change.
 8. **Verification** — separate automated checks, manual/browser checks, migration or live-state checks, and evidence-sensitive review. Derive user-facing acceptance checks from the designed journey and reviewed mockup.
-9. **Review and handoff** — identify branch/worktree expectations, review gates, rollout risks, explicit mockup-review and user-journey sign-off status, and the stop point before external publication.
+9. **Review and handoff** — identify branch/worktree expectations, review gates, rollout risks, sign-off status, artifact disposition, and the stop point before publication.
 
 ## Rules
 
-- Put implementation plans in `plans/`.
+- Put the chosen plan in the task worktree under `plans/` and include it in the PR.
+- Classify every task-owned artifact as `commit`, `archive`, or `discard`; leave none unresolved at handoff.
 - Keep external evidence distinct from current internal recommendation behavior unless reconciliation was explicitly requested.
 - Avoid speculative abstractions, placeholder tasks, and alternatives that were already rejected.
 - Mark mockup review as `pending` for every user-facing change until Nick has seen the relevant artifact and its feedback is incorporated. For an existing surface, require an annotated current/proposed screenshot or rendered prototype in the real layout; do not treat Markdown, ASCII, detached copy samples, or prose-only visual descriptions as mockups.

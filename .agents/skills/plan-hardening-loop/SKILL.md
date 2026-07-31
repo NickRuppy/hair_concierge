@@ -27,6 +27,8 @@ Done when: evidence required for an implementation-ready plan
 
 Ask only for missing information that local context cannot answer. Acknowledge the contract and continue without seeking ceremonial confirmation unless an assumption changes scope.
 
+Before writing a persistent plan or mockup, use `branch-gate` and create or reuse the task worktree. Keep all durable task artifacts there.
+
 Completion criterion: outcome, constraints, non-goals, and done-when evidence are concrete enough to reject an unsuitable approach.
 
 ## 2. Grill the consequential decisions
@@ -34,7 +36,7 @@ Completion criterion: outcome, constraints, non-goals, and done-when evidence ar
 Use one high-leverage question at a time. For architecture, UX, data ownership, rollout, verification, risk, or scope forks, present 2-3 similarly scoped options:
 
 | Option | Plain meaning | What gets easier | What gets harder | Best when |
-| --- | --- | --- | --- | --- |
+| ------ | ------------- | ---------------- | ---------------- | --------- |
 
 Recommend one option when the evidence supports it. After every 2-4 substantive decisions, checkpoint what is settled, what remains open, and the likely direction.
 
@@ -55,24 +57,24 @@ Ground mockups in the actual product surface when one exists. Inspect and captur
 
 Use realistic content and German UI copy. Show mobile and desktop when the experience materially differs, and include loading, empty, error, confirmation, or recovery states when they affect comprehension or trust.
 
-Mockups are planning artifacts, not production implementation. Keep them in repo-local preview/scratch space unless there is a reason to retain them. Present them to the user, incorporate feedback, and record the selected mockup or resolved direction in the plan. Purely backend work may skip mockups only when the plan explicitly states that no user-facing surface, copy, timing, or feedback changes.
+Mockups are planning artifacts, not production implementation. Keep durable ones in the task worktree and transient previews outside the repository. Present them to the user, incorporate feedback, and record the selected direction in the plan. Purely backend work may skip mockups only when the plan explicitly states that no user-facing surface, copy, timing, or feedback changes.
 
 Completion criterion: the user has seen the relevant experience, mockup feedback is reflected in the chosen direction, and mockup review is recorded as confirmed for user-facing work.
 
 ## 4. Write or update the plan
 
-Read `references/plan-format.md`, then create or patch the plan in `plans/`. Preserve only the chosen path; do not leave rejected options as parallel implementation tracks.
+Read `references/plan-format.md`, then create or patch the plan under `plans/` in the task worktree. Preserve only the chosen path.
 
 Completion criterion: the plan contains concrete files or repository surfaces, scope boundaries, ordered tasks, automated and manual verification, review gates, and an execution handoff.
 
 ## 5. Run one counterpart review lane
 
-Select the counterpart reviewer according to `AGENTS.md`. The reviewer is advisory and read-only. A reviewer session must not invoke another reviewer.
+Select the counterpart reviewer according to `AGENTS.md`. The reviewer is advisory and read-only. Keep its transient output outside the repository unless the plan intentionally retains it.
 
 Maintain a findings ledger for material findings:
 
-| ID | Type | Evidence | Decision | Plan change | Revalidation |
-| --- | --- | --- | --- | --- | --- |
+| ID  | Type | Evidence | Decision | Plan change | Revalidation |
+| --- | ---- | -------- | -------- | ----------- | ------------ |
 
 Classify `Type` as `defect`, `tradeoff`, or `scope/product decision`. Classify `Decision` as `accepted`, `rejected`, `deferred`, or `needs user decision`.
 
@@ -118,6 +120,7 @@ Report:
 - mockup review status and selected artifact or direction
 - user-journey sign-off status and any corrections incorporated
 - residual risks
+- artifact disposition: commit, archive, or discard
 - recommended `implementation-loop` kickoff
 
 Do not create a formal Goal merely because the plan is ready. Goal selection belongs to `implementation-loop` and remains opt-in.
