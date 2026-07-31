@@ -54,6 +54,31 @@ test("one-time payment providers preload independently while consent gates final
   assert.match(paypalSource, /funnelSessionId/)
 })
 
+test("one-time Apple Pay prewarms before the drawer opens without creating checkout analytics", () => {
+  assert.match(pricingSource, /const oneTimePrewarmEnabled =/)
+  assert.match(pricingSource, /canUseApplePayCapabilitySignal/)
+  assert.match(pricingSource, /document\.visibilityState !== "visible"/)
+  assert.match(pricingSource, /oneTimePrewarmAuthorized/)
+  assert.match(pricingSource, /keepMounted=\{oneTimePrewarmEligible\}/)
+  assert.match(pricingSource, /visible=\{checkoutOpen\}/)
+  assert.match(pricingSource, /onStripePreparationStateChange/)
+  assert.match(pricingSource, /onApplePayAvailabilityResolved/)
+  assert.match(pricingSource, /Zahlungsoptionen werden vorbereitet/)
+
+  const openCheckout = pricingSource.slice(
+    pricingSource.indexOf("const openOneTimeCheckoutNow"),
+    pricingSource.indexOf("const closeCheckout"),
+  )
+  assert.match(openCheckout, /const nextCheckoutAttemptId = createFunnelEventId\(\)/)
+  assert.match(openCheckout, /trackAppEvent\("offer_checkout_opened"/)
+
+  assert.match(checkoutSource, /checkoutAttemptId: string \| null/)
+  assert.match(checkoutSource, /onStripePreparationStateChangeRef/)
+  assert.match(checkoutSource, /visible: boolean/)
+  assert.match(checkoutSource, /visible=\{visible\}/)
+  assert.match(checkoutSource, /if \(!checkoutAttemptId \|\| !offerContext/)
+})
+
 test("one-time pricing preserves the offer-to-provider analytics journey", () => {
   assert.match(pricingSource, /trackAppEvent\("pricing_viewed"/)
   assert.match(pricingSource, /trackAppEvent\("offer_checkout_opened"/)
