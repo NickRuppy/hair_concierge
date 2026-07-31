@@ -40,7 +40,7 @@ Completion criterion: the controlling outcome is stable, authorization is clear,
 
 ## 2. Establish a safe branch
 
-Use `branch-gate`. Default to a repo-local worktree on `codex/<slug>` from fresh `origin/main`, preserve unrelated state, and record the plan path and execution mode.
+Use `branch-gate`. Reuse the planning worktree; if no persistent planning artifact exists, create a repo-local worktree on `codex/<slug>` from fresh `origin/main`. Preserve unrelated state and record the plan path and execution mode.
 
 Choose sequential execution for tightly coupled work, bounded delegation for independent scopes, or mixed execution when both apply. Keep product decisions, architecture, integration, and readiness in the main session.
 
@@ -57,7 +57,7 @@ Follow the plan in dependency order. For each slice:
 
 Return to planning only when evidence reveals a product decision, material architecture change, scope expansion, or risk acceptance that the approved plan did not settle.
 
-Completion criterion: every in-scope plan item is implemented or explicitly blocked, with no unrelated edits absorbed.
+Completion criterion: every in-scope plan item is implemented or explicitly blocked, with no unrelated edits absorbed and every task-owned artifact classified as commit, archive, or discard.
 
 ## 4. Verify the final tree
 
@@ -69,6 +69,7 @@ Create a verification receipt containing:
 - the canonical content fingerprint from `ready-check`
 - commands and outcomes
 - manual or browser evidence
+- artifact disposition and unresolved task-owned files
 - skipped checks and residual risk
 
 Completion criterion: the receipt matches the exact content proposed for review.
@@ -83,6 +84,6 @@ Completion criterion: no blocking verified findings remain and verification/revi
 
 ## 6. Hand off
 
-Report outcome, changed behavior, verification, review findings, residual risk, branch/worktree, and the next authorized action. Stop before commit, push, PR, merge, deploy, production write, or cleanup unless the user explicitly authorized that action.
+Report outcome, changed behavior, verification, review findings, artifact disposition, residual risk, branch/worktree, and the next authorized action. Stop before commit, push, PR, merge, deploy, production write, or cleanup unless the user explicitly authorized that action.
 
 Use `ship-it` only after the user asks to publish the verified branch.

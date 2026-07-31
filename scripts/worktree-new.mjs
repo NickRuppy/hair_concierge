@@ -67,35 +67,62 @@ function getRepoRoot(worktreeRoot) {
   return worktreeRoot;
 }
 
-function detectBaseRef(repoRoot) {
-  const remoteHead = git(
-    ["symbolic-ref", "--quiet", "refs/remotes/origin/HEAD"],
-    { cwd: repoRoot, capture: true, allowFailure: true }
-  );
+function preparePrimaryRoot(repoRoot) {
+  const fetch = git(["fetch", "origin", "--prune"], {
+    cwd: repoRoot,
+    capture: true,
+    allowFailure: true,
+  });
 
-  if (remoteHead.status === 0) {
-    return remoteHead.stdout.trim().replace(/^refs\/remotes\//, "");
+  if (fetch.status !== 0) {
+    throw new Error("Cannot update primary root: origin/main is unavailable.");
+  }
+
+  const branch = git(["branch", "--show-current"], {
+    cwd: repoRoot,
+    capture: true,
+  }).stdout.trim();
+
+  if (branch !== "main") {
+    throw new Error(
+      `Primary root must be on main, not ${branch || "a detached HEAD"}.`
+    );
+  }
+
+  const status = git(["status", "--porcelain=v1", "--untracked-files=all"], {
+    cwd: repoRoot,
+    capture: true,
+  }).stdout.trim();
+
+  if (status) {
+    throw new Error(
+      `Primary root main must be clean before creating a worktree.\n${status}`
+    );
   }
 
   const originMain = git(
     ["show-ref", "--verify", "--quiet", "refs/remotes/origin/main"],
-    { cwd: repoRoot, allowFailure: true }
+    {
+      cwd: repoRoot,
+      allowFailure: true,
+    }
   );
 
-  if (originMain.status === 0) {
-    return "origin/main";
+  if (originMain.status !== 0) {
+    throw new Error("Cannot update primary root: origin/main is unavailable.");
   }
 
-  const main = git(["show-ref", "--verify", "--quiet", "refs/heads/main"], {
+  const update = git(["merge", "--ff-only", "origin/main"], {
     cwd: repoRoot,
+    capture: true,
     allowFailure: true,
   });
 
-  if (main.status === 0) {
-    return "main";
+  if (update.status !== 0) {
+    throw new Error(
+      "Primary root main must fast-forward cleanly to origin/main."
+    );
   }
-
-  return "HEAD";
 }
 
 function ensureBranchAvailable(repoRoot, branchName) {
@@ -238,7 +265,8 @@ function main() {
 
   const worktreeRoot = getGitTopLevel();
   const repoRoot = getRepoRoot(worktreeRoot);
-  const baseRef = options.baseRef || detectBaseRef(repoRoot);
+  preparePrimaryRoot(repoRoot);
+  const baseRef = options.baseRef || "origin/main";
   const branchName = `${BRANCH_PREFIX}${options.slug}`;
   const worktreePath = path.join(repoRoot, ".worktrees", options.slug);
   const configRoot = existsSync(path.join(worktreeRoot, ".worktreeinclude"))
