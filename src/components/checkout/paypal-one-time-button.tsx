@@ -8,20 +8,26 @@ import { createFunnelEventId } from "@/lib/funnel/client"
 
 export function PayPalOneTimeButton({
   checkoutAttemptId,
+  consentAccepted,
   funnelSessionId,
   leadId,
   onCheckoutStarted,
   onDuplicateAccess,
   onPaymentMethodSelected,
+  onProviderConflict,
   onReady,
+  onConsentRequired,
 }: {
   checkoutAttemptId: string
+  consentAccepted: boolean
   funnelSessionId: string
   leadId: string
   onCheckoutStarted?: (funnelEventId: string) => void
   onDuplicateAccess?: () => void
   onPaymentMethodSelected?: () => void
+  onProviderConflict?: () => void
   onReady?: () => void
+  onConsentRequired?: () => void
 }) {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -40,6 +46,10 @@ export function PayPalOneTimeButton({
           fundingSource={FUNDING.PAYPAL}
           createOrder={async () => {
             setError(null)
+            if (!consentAccepted) {
+              onConsentRequired?.()
+              throw new Error("one-time checkout consent required")
+            }
             setBusy(true)
             const funnelEventId = createFunnelEventId()
             onPaymentMethodSelected?.()
@@ -57,11 +67,13 @@ export function PayPalOneTimeButton({
               }),
             })
             const body = (await response.json().catch(() => ({}))) as {
+              error?: unknown
               orderId?: unknown
               token?: unknown
             }
             if (response.status === 409) {
-              onDuplicateAccess?.()
+              if (body.error === "checkout_access_already_exists") onDuplicateAccess?.()
+              else onProviderConflict?.()
               setBusy(false)
               throw new Error("checkout access already exists")
             }
@@ -107,7 +119,8 @@ export function PayPalOneTimeButton({
             setBusy(false)
             if (
               paypalError instanceof Error &&
-              paypalError.message === "checkout access already exists"
+              (paypalError.message === "checkout access already exists" ||
+                paypalError.message === "one-time checkout consent required")
             )
               return
             setError("PayPal-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.")

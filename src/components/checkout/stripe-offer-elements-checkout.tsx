@@ -32,6 +32,7 @@ export type StripePaymentElementAvailablePaymentMethodsChangeEvent =
 const APPLE_PAY_INITIAL_RESPONSE_TIMEOUT_MS = 5_000
 const APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS = 10_000
 type StripeOfferConfirmResult = { type: "success" } | { type: "error"; error: { message: string } }
+export type StripeOfferBeforeConfirmResult = boolean | { allowed: boolean; errorMessage?: string }
 type StripeOfferExpressElement = {
   on: (event: "cancel", handler: () => void) => unknown
   off: (event: "cancel", handler: () => void) => unknown
@@ -245,7 +246,7 @@ function StripeOfferElementsCheckoutBody({
   holdPaymentChoicesUntilResolved?: boolean
   suppressExpressWallet?: boolean
   lockedProvider?: StripeOfferProvider | null
-  onBeforeConfirm?: () => Promise<boolean>
+  onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
@@ -312,7 +313,7 @@ export function StripeOfferElementsCheckoutContent({
   suppressExpressWallet?: boolean
   initialApplePayAvailability?: ApplePayAvailability
   lockedProvider?: StripeOfferProvider | null
-  onBeforeConfirm?: () => Promise<boolean>
+  onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
@@ -625,10 +626,17 @@ export function StripeOfferElementsCheckoutContent({
       let shouldRelease = false
 
       try {
-        const beforeConfirmAccepted = await (onBeforeConfirm?.() ?? Promise.resolve(true))
+        const beforeConfirmResult = await (onBeforeConfirm?.() ?? Promise.resolve(true))
+        const beforeConfirmAccepted =
+          typeof beforeConfirmResult === "boolean"
+            ? beforeConfirmResult
+            : beforeConfirmResult.allowed
         if (!beforeConfirmAccepted) {
           shouldRelease = true
-          const message = getStripeOfferElementsErrorMessage()
+          const message =
+            typeof beforeConfirmResult === "object" && beforeConfirmResult.errorMessage
+              ? beforeConfirmResult.errorMessage
+              : getStripeOfferElementsErrorMessage()
           setErrorMessage(message)
           expressCheckoutConfirmEvent?.paymentFailed({ message })
           return
@@ -662,18 +670,21 @@ export function StripeOfferElementsCheckoutContent({
 
   if (checkoutResult.type === "error") {
     return (
-      <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
-        <p className="mb-3 text-sm text-destructive" role="alert">
-          {getStripeOfferElementsErrorMessage(checkoutResult.error.message)}
-        </p>
-        <Button
-          type="button"
-          variant="unstyled"
-          onClick={onRetry}
-          className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
-        >
-          Erneut versuchen
-        </Button>
+      <div className="grid gap-3">
+        <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
+          <p className="mb-3 text-sm text-destructive" role="alert">
+            {getStripeOfferElementsErrorMessage(checkoutResult.error.message)}
+          </p>
+          <Button
+            type="button"
+            variant="unstyled"
+            onClick={onRetry}
+            className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
+          >
+            Erneut versuchen
+          </Button>
+        </div>
+        {visible && secondaryPaymentMethod ? secondaryPaymentMethod : null}
       </div>
     )
   }
@@ -950,7 +961,7 @@ export function StripeOfferElementsCheckout({
   holdPaymentChoicesUntilResolved?: boolean
   suppressExpressWallet?: boolean
   lockedProvider?: StripeOfferProvider | null
-  onBeforeConfirm?: () => Promise<boolean>
+  onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
