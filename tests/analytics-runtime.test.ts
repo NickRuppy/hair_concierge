@@ -13,6 +13,8 @@ import {
 import {
   createPostHogRuntime,
   sanitizePostHogProperties,
+  sanitizePostHogSessionRecordingRequest,
+  shouldMaskPostHogSessionRecordingInputs,
   type PostHogRuntimeClient,
 } from "../src/lib/analytics/runtime/posthog"
 import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
@@ -158,6 +160,26 @@ test("PostHog removes sensitive queries and fragments from automatic URL propert
       offer_revision: "product_led_v2",
     },
   )
+})
+
+test("PostHog removes sensitive queries from session replay URLs", () => {
+  assert.deepEqual(
+    sanitizePostHogSessionRecordingRequest({
+      entryType: "resource",
+      name: "https://chaarlie.de/auth/update-password?code=recovery-code#access_token=x",
+    }),
+    {
+      entryType: "resource",
+      name: "https://chaarlie.de/auth/update-password",
+    },
+  )
+})
+
+test("PostHog masks replay inputs unless unmasking is explicitly enabled", () => {
+  assert.equal(shouldMaskPostHogSessionRecordingInputs(undefined), true)
+  assert.equal(shouldMaskPostHogSessionRecordingInputs("false"), true)
+  assert.equal(shouldMaskPostHogSessionRecordingInputs("TRUE"), true)
+  assert.equal(shouldMaskPostHogSessionRecordingInputs("true"), false)
 })
 
 test("Customer.io bridges page, identify, track, and reset in FIFO order", () => {
