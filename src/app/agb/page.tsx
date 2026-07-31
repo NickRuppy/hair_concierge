@@ -11,7 +11,7 @@ export default function AgbPage() {
         <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
           Letzte Aktualisierung: Mai 2026
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+        <h1 className="break-words text-3xl font-semibold tracking-tight text-foreground max-[359px]:text-2xl">
           Allgemeine Geschäftsbedingungen (AGB)
         </h1>
 

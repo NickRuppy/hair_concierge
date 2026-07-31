@@ -189,7 +189,7 @@ export function OfferPaymentOverlay({
           inert={confirmationOpen}
           aria-hidden={confirmationOpen ? "true" : undefined}
           className={cn(
-            "min-h-0 flex-1 overflow-y-auto px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 outline-none sm:px-7 sm:py-5",
+            "min-h-0 min-w-0 flex-1 overflow-y-auto px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 outline-none sm:px-7 sm:py-5",
             confirmationOpen && "pointer-events-none opacity-50",
           )}
         >

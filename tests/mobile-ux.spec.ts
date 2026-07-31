@@ -69,6 +69,126 @@ function expectBoxInsideViewport(
   expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height)
 }
 
+const containmentViewports = [
+  { name: "320x568", width: 320, height: 568 },
+  { name: "360x800", width: 360, height: 800 },
+  { name: "375x812", width: 375, height: 812 },
+  { name: "390x844", width: 390, height: 844 },
+]
+
+const personalPlanDraft = {
+  version: 3,
+  screen: "email_capture",
+  history: ["texture", "daily_time", "plan_loading"],
+  answers: { texture: "wavy", hairLength: "medium", goals: ["moisture"] },
+}
+
+const preparedPlanClaim = {
+  artifactId: "mobile-layout-artifact",
+  claimToken: "mobile-layout-claim",
+  answersKey: JSON.stringify(personalPlanDraft.answers),
+  expiresAt: "2099-01-01T00:00:00.000Z",
+}
+
+test.describe("@ci mobile layout containment", () => {
+  for (const viewport of containmentViewports) {
+    test(`personal-plan completion header is contained at ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize(viewport)
+      await page.addInitScript(
+        ({ draft, claim }) => {
+          window.localStorage.setItem("chaarlie:personal-plan-quiz-draft:v3", JSON.stringify(draft))
+          window.sessionStorage.setItem(
+            "chaarlie:personal-plan-quiz-prepared:v1",
+            JSON.stringify(claim),
+          )
+        },
+        { draft: personalPlanDraft, claim: preparedPlanClaim },
+      )
+
+      await page.goto(`${baseUrl}/lp/haarplan`, { waitUntil: "networkidle" })
+      const header = page.locator("header").first()
+      const logo = header.getByText("chaarlie", { exact: true })
+      const sectionLabel = header.getByText("Ergebnis", { exact: true }).first()
+
+      await expect(logo).toBeVisible()
+      await expect(sectionLabel).toBeVisible()
+
+      const geometry = await page.evaluate(() => {
+        const header = document.querySelector("header")
+        const logo = Array.from(header?.querySelectorAll("span") ?? []).find(
+          (element) => element.textContent === "chaarlie",
+        )
+        const sectionLabel = Array.from(header?.querySelectorAll("span") ?? []).find(
+          (element) => element.textContent === "Ergebnis",
+        )
+        const rect = (element: Element | undefined | null) => element?.getBoundingClientRect()
+        const headerRect = rect(header)
+        const logoRect = rect(logo)
+        const sectionLabelRect = rect(sectionLabel)
+
+        return {
+          document: {
+            scrollWidth: document.documentElement.scrollWidth,
+            clientWidth: document.documentElement.clientWidth,
+          },
+          header: headerRect && { left: headerRect.left, right: headerRect.right },
+          logo: logoRect && { left: logoRect.left, right: logoRect.right },
+          sectionLabel: sectionLabelRect && {
+            left: sectionLabelRect.left,
+            right: sectionLabelRect.right,
+          },
+        }
+      })
+
+      expect(geometry.document.scrollWidth).toBeLessThanOrEqual(geometry.document.clientWidth)
+      expect(geometry.header).not.toBeNull()
+      expect(geometry.logo).not.toBeNull()
+      expect(geometry.sectionLabel).not.toBeNull()
+      expect(geometry.logo!.left + geometry.logo!.right).toBeCloseTo(
+        geometry.document.clientWidth,
+        0,
+      )
+      expect(geometry.sectionLabel!.right).toBeLessThanOrEqual(geometry.document.clientWidth - 16)
+    })
+
+    for (const route of ["/agb", "/datenschutz", "/methodik"]) {
+      test(`${route} headings are contained at ${viewport.name}`, async ({ page }) => {
+        await page.setViewportSize(viewport)
+        await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" })
+
+        const geometry = await page.evaluate(() => {
+          const heading = document.querySelector("h1")
+          const rect = heading?.getBoundingClientRect()
+          return {
+            scrollWidth: document.documentElement.scrollWidth,
+            clientWidth: document.documentElement.clientWidth,
+            heading: heading &&
+              rect && {
+                left: rect.left,
+                right: rect.right,
+                fontSize: getComputedStyle(heading).fontSize,
+              },
+          }
+        })
+
+        expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth)
+        expect(geometry.heading).not.toBeNull()
+        expect(geometry.heading!.left).toBeGreaterThanOrEqual(0)
+        expect(geometry.heading!.right).toBeLessThanOrEqual(geometry.clientWidth)
+        expect(geometry.heading!.fontSize).toBe(
+          viewport.width < 360
+            ? route === "/methodik"
+              ? "30px"
+              : "24px"
+            : route === "/methodik"
+              ? "36px"
+              : "30px",
+        )
+      })
+    }
+  }
+})
+
 const mobileViewports = [
   { name: "small", label: "375x667", viewport: { width: 375, height: 667 } },
   { name: "regular", label: "390x844", viewport: { width: 390, height: 844 } },

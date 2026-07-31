@@ -16,7 +16,7 @@ export function MethodikContent() {
         <p className="mb-3 font-mono text-xs font-semibold uppercase text-[var(--brand-coral-deep)]">
           Methodik und Transparenz
         </p>
-        <h1 className="font-header text-4xl font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-5xl">
+        <h1 className="break-words font-header text-4xl font-medium leading-tight text-[var(--brand-plum-darkest)] max-[359px]:text-3xl sm:text-5xl">
           So kommt Chaarlie zu einer Pflegeeinschätzung
         </h1>
         <p className="mt-5 text-lg leading-8 text-[var(--text-sub)]">

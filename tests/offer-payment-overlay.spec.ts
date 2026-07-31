@@ -27,7 +27,108 @@ async function openCheckoutAtNonzeroScroll(page: Page) {
   return { checkout, scrollBefore }
 }
 
+async function expectMobilePaymentContainment(page: Page, appleState?: "load-error") {
+  await page.goto(appleState ? `${labPath}&apple=${appleState}` : labPath, {
+    waitUntil: "domcontentloaded",
+  })
+  await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+    "data-payment-overlay-lab-ready",
+    "true",
+  )
+  await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+  const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+  await expect(checkout).toBeVisible()
+  await waitForMotion(page)
+
+  if (appleState === "load-error") {
+    await expect(
+      checkout.getByRole("status", { name: "Apple Pay ist derzeit nicht verfügbar" }),
+    ).toBeVisible()
+  } else {
+    await expect(checkout.getByTestId("apple-pay-row")).toBeVisible()
+  }
+
+  const geometry = await page.evaluate(() => {
+    const documentElement = document.documentElement
+    const scrollSurface = document.querySelector<HTMLElement>("[data-offer-payment-scroll-surface]")
+    const dialog = scrollSurface?.closest<HTMLElement>('[role="dialog"]')
+    const paymentRows = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-offer-payment-step]"),
+    )
+    const paymentCard = document.querySelector<HTMLElement>(
+      '[data-offer-payment-step="payment_element"]',
+    )
+    const cta = Array.from(document.querySelectorAll<HTMLButtonElement>("button")).find((button) =>
+      button.textContent?.includes("Kostenpflichtig abonnieren"),
+    )
+    const surfaceRect = scrollSurface?.getBoundingClientRect()
+    const edges = (element: HTMLElement | undefined | null) => {
+      const rect = element?.getBoundingClientRect()
+      return rect && surfaceRect
+        ? { left: rect.left - surfaceRect.left, right: surfaceRect.right - rect.right }
+        : null
+    }
+
+    return {
+      document: {
+        clientWidth: documentElement.clientWidth,
+        scrollWidth: documentElement.scrollWidth,
+      },
+      dialog: dialog ? { clientWidth: dialog.clientWidth, scrollWidth: dialog.scrollWidth } : null,
+      scrollSurface: scrollSurface
+        ? { clientWidth: scrollSurface.clientWidth, scrollWidth: scrollSurface.scrollWidth }
+        : null,
+      paymentRows: paymentRows.map((row) => ({
+        clientWidth: row.clientWidth,
+        scrollWidth: row.scrollWidth,
+        edges: edges(row),
+      })),
+      paymentCard: paymentCard
+        ? {
+            clientWidth: paymentCard.clientWidth,
+            scrollWidth: paymentCard.scrollWidth,
+            edges: edges(paymentCard),
+          }
+        : null,
+      cta: cta
+        ? { clientWidth: cta.clientWidth, scrollWidth: cta.scrollWidth, edges: edges(cta) }
+        : null,
+    }
+  })
+
+  expect(geometry.document.scrollWidth).toBeLessThanOrEqual(geometry.document.clientWidth)
+  expect(geometry.dialog?.scrollWidth).toBeLessThanOrEqual(geometry.dialog?.clientWidth ?? 0)
+  expect(geometry.scrollSurface?.scrollWidth).toBeLessThanOrEqual(
+    geometry.scrollSurface?.clientWidth ?? 0,
+  )
+  expect(geometry.paymentRows).not.toHaveLength(0)
+  for (const row of geometry.paymentRows) {
+    expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth)
+    expect(row.edges?.left).toBeGreaterThanOrEqual(-0.5)
+    expect(row.edges?.right).toBeGreaterThanOrEqual(-0.5)
+  }
+  for (const element of [geometry.paymentCard, geometry.cta]) {
+    expect(element).not.toBeNull()
+    expect(element!.scrollWidth).toBeLessThanOrEqual(element!.clientWidth)
+    expect(element!.edges?.left).toBeGreaterThanOrEqual(-0.5)
+    expect(element!.edges?.right).toBeGreaterThanOrEqual(-0.5)
+  }
+}
+
 test.describe("@ci offer payment overlay", () => {
+  test("payment content stays contained in the mobile viewport matrix", async ({ page }) => {
+    for (const viewport of [
+      { width: 320, height: 568 },
+      { width: 360, height: 800 },
+      { width: 375, height: 812 },
+      { width: 390, height: 844 },
+    ]) {
+      await page.setViewportSize(viewport)
+      await expectMobilePaymentContainment(page)
+      await expectMobilePaymentContainment(page, "load-error")
+    }
+  })
+
   test("existing cookie settings dialog preserves exact nonzero scroll", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto(labPath, { waitUntil: "domcontentloaded" })
