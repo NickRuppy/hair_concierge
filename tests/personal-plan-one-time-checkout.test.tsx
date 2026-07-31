@@ -75,6 +75,18 @@ test("one-time pricing preserves the offer-to-provider analytics journey", () =>
   assert.match(paypalSource, /onCheckoutStarted\?\.\(funnelEventId\)/)
 })
 
+test("one-time pricing ignores duplicate checkout-open requests until the attempt closes", () => {
+  assert.match(pricingSource, /const checkoutOpenRef = useRef\(false\)/)
+  assert.match(
+    pricingSource,
+    /const openCheckout = useCallback\(\(\) => \{\s*if \(checkoutOpenRef\.current\) return\s*checkoutOpenRef\.current = true/,
+  )
+  assert.match(
+    pricingSource,
+    /const closeCheckout = useCallback\(\(\) => \{\s*checkoutOpenRef\.current = false/,
+  )
+})
+
 test("offer lab can force the personal-plan pricing arm for browser-only verification", () => {
   assert.match(offerLabSource, /pricingArm\?: string/)
   assert.match(offerLabSource, /pricingArm === "one_time"/)

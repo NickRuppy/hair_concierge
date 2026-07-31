@@ -383,6 +383,7 @@ function PersonalPlanOneTimePricing({
   const pricingRef = useRef<HTMLDivElement | null>(null)
   const pricingTrackedRef = useRef(false)
   const checkoutOpenIndexRef = useRef(0)
+  const checkoutOpenRef = useRef(false)
   const handledCheckoutOpenRequestsRef = useRef(new Set<number>())
   const offerContext = useOfferTrackingContext()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
@@ -416,6 +417,8 @@ function PersonalPlanOneTimePricing({
   }, [leadId, offerContext, onCheckoutSummaryChange, onPricingReached])
 
   const openCheckout = useCallback(() => {
+    if (checkoutOpenRef.current) return
+    checkoutOpenRef.current = true
     const nextCheckoutAttemptId = createFunnelEventId()
     checkoutOpenIndexRef.current += 1
     if (offerContext) {
@@ -449,6 +452,7 @@ function PersonalPlanOneTimePricing({
   }, [openCheckout, openCheckoutRequestId])
 
   const closeCheckout = useCallback(() => {
+    checkoutOpenRef.current = false
     setCheckoutOpen(false)
     setCheckoutAttemptId(null)
   }, [])
