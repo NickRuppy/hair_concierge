@@ -217,6 +217,26 @@ test("Express Checkout returns its confirmation promise and keeps ordinary card 
   )
 })
 
+test("Express Checkout bypasses only Payment Element readiness and traces every retained guard", () => {
+  assert.match(stripeOfferElementsSource, /!expressCheckoutConfirmEvent && !checkout\.canConfirm/)
+  assert.match(stripeOfferElementsSource, /"checkout_unavailable"/)
+  assert.match(stripeOfferElementsSource, /"confirmation_in_flight"/)
+  assert.match(stripeOfferElementsSource, /"prepared_checkout_not_synchronized"/)
+  assert.match(stripeOfferElementsSource, /"payment_element_not_confirmable"/)
+  assert.match(
+    stripeOfferElementsSource,
+    /recordWalletDebugEvent\("express_confirm_rejected", undefined, reason\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /const rejectConfirmation = \(reason: string\) => \{[\s\S]*?expressCheckoutConfirmEvent\?\.paymentFailed/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(!claimStripe\(paymentMethodType\)\) \{\s*rejectConfirmation\("provider_locked"\)/,
+  )
+})
+
 test("Express Checkout failures preserve bounded provider errors and classify unknown exceptions safely", () => {
   assert.equal(
     getStripeExpressCheckoutExceptionReason(

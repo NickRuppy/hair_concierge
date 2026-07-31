@@ -919,27 +919,33 @@ export function StripeOfferElementsCheckoutContent({
       if (expressCheckoutConfirmEvent) {
         recordWalletDebugEvent("express_confirm_entered")
       }
-      if (
-        !checkout ||
-        confirmingRef.current ||
-        !checkout.canConfirm ||
-        preparedCheckoutSyncPending
-      ) {
-        recordExpressConfirm(
-          "failed",
-          preparedCheckoutSyncPending ? "prepared_checkout_not_synchronized" : "not_confirmable",
-        )
+      const rejectConfirmation = (reason: string) => {
+        recordExpressConfirm("failed", reason)
+        if (expressCheckoutConfirmEvent) {
+          recordWalletDebugEvent("express_confirm_rejected", undefined, reason)
+        }
         expressCheckoutConfirmEvent?.paymentFailed({
           message: getStripeOfferElementsErrorMessage(),
         })
+      }
+      if (!checkout) {
+        rejectConfirmation("checkout_unavailable")
+        return
+      }
+      const confirmationGuardFailureReason = confirmingRef.current
+        ? "confirmation_in_flight"
+        : preparedCheckoutSyncPending
+          ? "prepared_checkout_not_synchronized"
+          : !expressCheckoutConfirmEvent && !checkout.canConfirm
+            ? "payment_element_not_confirmable"
+            : null
+      if (confirmationGuardFailureReason) {
+        rejectConfirmation(confirmationGuardFailureReason)
         return
       }
       markFirstPaymentEngagement()
       if (!claimStripe(paymentMethodType)) {
-        recordExpressConfirm("failed", "provider_locked")
-        expressCheckoutConfirmEvent?.paymentFailed({
-          message: getStripeOfferElementsErrorMessage(),
-        })
+        rejectConfirmation("provider_locked")
         return
       }
 
