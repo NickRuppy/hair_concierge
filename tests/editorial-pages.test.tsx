@@ -138,3 +138,20 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.doesNotMatch(privacySource, /persönliche Diagnose und Routine/)
   assert.doesNotMatch(termsSource, /Diagnosen, Routinen, Produktempfehlungen/)
 })
+
+test("legal pages distinguish the one-time personal plan from memberships", () => {
+  const termsSource = readFileSync("src/app/agb/page.tsx", "utf8")
+  const withdrawalSource = readFileSync("src/app/widerruf/page.tsx", "utf8")
+  const privacySource = readFileSync("src/app/datenschutz/page.tsx", "utf8")
+
+  assert.match(termsSource, /Einmalkauf persönlicher Haarplan/)
+  assert.match(termsSource, /kein Abonnement und keine automatische Verlängerung/)
+  assert.match(termsSource, /für Mitgliedschaften angebotenen freiwilligen\s+Geld-zurück-Garantie/)
+  assert.match(termsSource, /Beim Einmalkauf des\s+persönlichen Haarplans/)
+  assert.match(
+    withdrawalSource,
+    /Eine freiwillige\s+Geld-zurück-Garantie wird für diesen Einmalkauf nicht zugesagt/,
+  )
+  assert.match(privacySource, /Mitgliedschaft oder eines Einmalkaufs/)
+  assert.match(privacySource, /Mitgliedschaften und Einmalkäufe/)
+})

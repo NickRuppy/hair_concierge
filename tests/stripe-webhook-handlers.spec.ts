@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test"
 import {
   handleCheckoutSessionCompleted,
+  handleOneTimeChargeDisputeCreated,
+  handleOneTimeChargeRefunded,
   handleCheckoutSessionAsyncPaymentSucceeded,
   handleCheckoutSessionAsyncPaymentFailed,
   handleChargeDisputeCreated,
@@ -9,6 +11,52 @@ import {
   handleInvoicePaymentFailed,
   type HandlerDeps,
 } from "../src/lib/stripe/webhook-handlers"
+
+function oneTimePurchaseDeps(purchase: any) {
+  const rows = purchase ? [purchase] : []
+  const supabase = {
+    from() {
+      const filters: Array<[string, unknown]> = []
+      const builder: any = {
+        select() {
+          return builder
+        },
+        eq(key: string, value: unknown) {
+          filters.push([key, value])
+          return builder
+        },
+        async maybeSingle() {
+          return {
+            data: rows.find((row) => filters.every(([key, value]) => row[key] === value)) ?? null,
+            error: null,
+          }
+        },
+        update(patch: any) {
+          const updateFilters: Array<[string, unknown]> = []
+          const updateBuilder: any = {
+            eq(key: string, value: unknown) {
+              updateFilters.push([key, value])
+              return updateBuilder
+            },
+            select() {
+              return updateBuilder
+            },
+            async single() {
+              const row = rows.find((candidate) =>
+                updateFilters.every(([key, value]) => candidate[key] === value),
+              )
+              if (row) Object.assign(row, patch)
+              return { data: row, error: null }
+            },
+          }
+          return updateBuilder
+        },
+      }
+      return builder
+    },
+  } as any
+  return { supabase, rows }
+}
 
 function stubDeps() {
   const calls: any[] = []
@@ -250,6 +298,78 @@ test("checkout.session.completed on existing email reuses the user", async () =>
 
   expect(calls.some(([op]) => op === "createUser")).toBe(false)
   expect((profiles["user-existing"] as any).subscription_status).toBe("active")
+})
+
+test("one-time charge refunds accumulate without revoking until the full purchase is refunded", async () => {
+  const { rows, supabase } = oneTimePurchaseDeps({
+    id: "once-1",
+    provider: "stripe",
+    provider_transaction_id: "pi_once",
+    amount_minor: 2999,
+    refunded_amount_minor: 0,
+    status: "paid",
+    metadata: {},
+  })
+  expect(
+    await handleOneTimeChargeRefunded(
+      { id: "ch_once", payment_intent: "pi_once", amount_refunded: 1000 } as any,
+      { supabase },
+    ),
+  ).toMatchObject({
+    purchase: { status: "paid", refunded_amount_minor: 1000 },
+    refundedDeltaMinor: 1000,
+  })
+  expect(rows[0]).toMatchObject({ status: "paid", refunded_amount_minor: 1000 })
+  await handleOneTimeChargeRefunded(
+    { id: "ch_once", payment_intent: "pi_once", amount_refunded: 2999 } as any,
+    { supabase },
+  )
+  expect(rows[0]).toMatchObject({ status: "refunded", refunded_amount_minor: 2999 })
+})
+
+test("an early one-time refund is retried until the purchase row exists", async () => {
+  const { supabase } = oneTimePurchaseDeps(null)
+  await expect(
+    handleOneTimeChargeRefunded(
+      {
+        id: "ch_early_refund",
+        payment_intent: "pi_early_refund",
+        amount_refunded: 2999,
+        metadata: { product_kind: "personal_plan_once" },
+      } as any,
+      { supabase },
+    ),
+  ).rejects.toThrow("is not ready for refund")
+})
+
+test("one-time dispute marks only the one-time purchase and does not cancel subscriptions", async () => {
+  const { rows, supabase } = oneTimePurchaseDeps({
+    id: "once-2",
+    provider: "stripe",
+    provider_transaction_id: "pi_dispute",
+    amount_minor: 2999,
+    refunded_amount_minor: 0,
+    status: "paid",
+    metadata: {},
+  })
+  const marked = await handleOneTimeChargeDisputeCreated(
+    { id: "dp_once", charge: "ch_dispute" } as any,
+    {
+      supabase,
+      stripe: {
+        charges: {
+          async retrieve() {
+            return { id: "ch_dispute", payment_intent: "pi_dispute" }
+          },
+        },
+      } as any,
+    },
+  )
+  expect(marked).toBe(true)
+  expect(rows[0]).toMatchObject({
+    status: "disputed",
+    metadata: { stripe_charge_id: "ch_dispute", stripe_dispute_id: "dp_once" },
+  })
 })
 
 test("subscription.updated keeps status=active when cancel_at_period_end flips", async () => {

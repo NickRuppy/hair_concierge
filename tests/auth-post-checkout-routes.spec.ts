@@ -328,6 +328,37 @@ test("does not trust client email when verifying or updating checkout activation
   expect(ensuredEmail).toBe("stripe-owned@example.com")
 })
 
+test("password activation uses the verified Stripe one-time account path", async () => {
+  let oneTimeCalls = 0
+  let subscriptionCalls = 0
+  const { deps } = stubDeps({
+    verifyCheckoutSessionForActivation: async () =>
+      checkoutSession({ metadata: { product_kind: "personal_plan_once" } }),
+    ensureCheckoutAccount: async () => {
+      subscriptionCalls += 1
+      throw new Error("subscription activation must not run")
+    },
+    ensureOneTimeCheckoutAccount: async () => {
+      oneTimeCalls += 1
+      return {
+        userId: "user-once",
+        email: "stripe@example.com",
+        canSetInitialPassword: true,
+        paymentIntentId: "pi-once",
+      }
+    },
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response.status).toBe(200)
+  expect(oneTimeCalls).toBe(1)
+  expect(subscriptionCalls).toBe(0)
+})
+
 test("password activation accepts PayPal intent tokens and uses provider-owned email", async () => {
   let rateLimitIdentifier: string | undefined
   let ensuredToken: string | undefined
@@ -558,6 +589,130 @@ test("send magic link derives email from checkout activation and consumes matchi
     checkout_activation_session_hash: null,
     passwordless_login_sent_at: "2026-05-04T12:00:00.000Z",
   })
+})
+
+test("magic-link activation uses the verified Stripe one-time account path", async () => {
+  const otpCalls: any[] = []
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("cs_once_magic"),
+    provider: "email",
+  })
+  supabase.auth.signInWithOtp = async (args: Record<string, unknown>) => {
+    otpCalls.push(args)
+    return { data: {}, error: null }
+  }
+  let oneTimeCalls = 0
+  let subscriptionCalls = 0
+
+  const response = await handleSendMagicLink(
+    { session_id: "cs_once_magic" },
+    {
+      stripe: {} as any,
+      supabase,
+      siteUrl: "https://hair.example",
+      checkRateLimit: async () => ({ allowed: true }),
+      verifyCheckoutSessionForActivation: async () =>
+        checkoutSession({ id: "cs_once_magic", metadata: { product_kind: "personal_plan_once" } }),
+      ensureCheckoutAccount: async () => {
+        subscriptionCalls += 1
+        throw new Error("subscription activation must not run")
+      },
+      ensureOneTimeCheckoutAccount: async () => {
+        oneTimeCalls += 1
+        return {
+          userId: "user-once",
+          email: "once@example.com",
+          canSetInitialPassword: true,
+          paymentIntentId: "pi-once",
+        }
+      },
+      claimCheckoutActivation: async () => true,
+      releaseCheckoutActivationClaim: async () => {},
+    },
+  )
+
+  expect(response.status).toBe(200)
+  expect(oneTimeCalls).toBe(1)
+  expect(subscriptionCalls).toBe(0)
+  expect(otpCalls[0]).toMatchObject({ email: "once@example.com" })
+})
+
+test("PayPal one-time auth recovery uses the canonical order activation, not subscriptions", async () => {
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("paypal:I-once"),
+    provider: "email",
+  })
+  const { deps } = stubDeps({
+    supabase,
+    ensurePayPalCheckoutAccountForToken: async () => {
+      throw new Error("subscription activation must not run")
+    },
+    recoverPayPalOrderActivation: async () => ({
+      status: "active",
+      intent: {} as any,
+      account: {
+        status: "active",
+        userId: "user-paypal-once",
+        email: "paypal-once@example.com",
+        providerSubscriberEmail: null,
+        canSetInitialPassword: true,
+      },
+    }),
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { provider: "paypal", purchase: "one_time", token: "I-once", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 200,
+    body: { ok: true, email: "paypal-once@example.com" },
+  })
+})
+
+test("PayPal one-time magic-link recovery uses the canonical order activation", async () => {
+  const otpCalls: any[] = []
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("paypal:I-once-magic"),
+    provider: "email",
+  })
+  supabase.auth.signInWithOtp = async (args: Record<string, unknown>) => {
+    otpCalls.push(args)
+    return { data: {}, error: null }
+  }
+
+  const response = await handleSendMagicLink(
+    { provider: "paypal", purchase: "one_time", token: "I-once-magic" },
+    {
+      stripe: {} as any,
+      supabase,
+      siteUrl: "https://hair.example",
+      checkRateLimit: async () => ({ allowed: true }),
+      verifyCheckoutSessionForActivation: async () => {
+        throw new Error("Stripe verification must not run")
+      },
+      ensureCheckoutAccount: async () => {
+        throw new Error("subscription activation must not run")
+      },
+      recoverPayPalOrderActivation: async () => ({
+        status: "active",
+        intent: {} as any,
+        account: {
+          status: "active",
+          userId: "user-paypal-once",
+          email: "paypal-once@example.com",
+          providerSubscriberEmail: null,
+          canSetInitialPassword: true,
+        },
+      }),
+      claimCheckoutActivation: async () => true,
+      releaseCheckoutActivationClaim: async () => {},
+    },
+  )
+
+  expect(response.status).toBe(200)
+  expect(otpCalls[0]).toMatchObject({ email: "paypal-once@example.com" })
 })
 
 test("magic-link activation derives the personal-plan destination server-side", async () => {

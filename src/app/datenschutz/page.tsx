@@ -77,9 +77,11 @@ export default function DatenschutzPage() {
               personalisierten Dienstes (Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO).
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">d) Bei Kauf eines Abonnements:</strong> Name,
-              E-Mail-Adresse, Rechnungsadresse, Zahlungsdaten. Diese verarbeiten wir zur Abwicklung
-              des Vertrags (Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO).
+              <strong className="text-foreground">
+                d) Bei Kauf einer Mitgliedschaft oder eines Einmalkaufs:
+              </strong>{" "}
+              Name, E-Mail-Adresse, Rechnungsadresse und Zahlungsdaten. Diese verarbeiten wir zur
+              Abwicklung des Vertrags (Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO).
             </p>
             <p className="mt-2">
               <strong className="text-foreground">e) Nutzungsdaten:</strong> Seitenaufrufe,
@@ -132,13 +134,15 @@ export default function DatenschutzPage() {
               </div>
               <div>
                 <p className="font-medium text-foreground">Stripe Payments Europe Ltd. (Irland)</p>
-                <p>Zahlungsabwicklung für Abonnements.</p>
+                <p>Zahlungsabwicklung für Mitgliedschaften und Einmalkäufe.</p>
               </div>
               <div>
                 <p className="font-medium text-foreground">
                   PayPal (Europe) S.à r.l. et Cie, S.C.A. (Luxemburg)
                 </p>
-                <p>Zahlungsabwicklung für Abonnements bei Auswahl von PayPal.</p>
+                <p>
+                  Zahlungsabwicklung für Mitgliedschaften und Einmalkäufe bei Auswahl von PayPal.
+                </p>
               </div>
               <div>
                 <p className="font-medium text-foreground">Customer.io (USA)</p>

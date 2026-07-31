@@ -2,7 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { personalPlanOfferDashboard } from "../scripts/analytics/personal-plan-offer-dashboard"
-import { personalPlanOfferV3Dashboard } from "../scripts/analytics/personal-plan-offer-v3-dashboard"
+import * as pricingExperimentDashboardModule from "../scripts/analytics/personal-plan-offer-v3-dashboard"
+
+const { personalPlanOfferV3Dashboard } = pricingExperimentDashboardModule
 
 test("v3 dashboard declaration keeps the applied v2 declaration intact", () => {
   assert.equal(personalPlanOfferDashboard.offerRevision, "personal_plan_v2")
@@ -52,4 +54,23 @@ test("v3 offer reach follows the approved visual order and keeps checkout stages
       `${orderedSteps[index - 1]} should precede ${orderedSteps[index]}`,
     )
   }
+})
+
+test("pricing experiment compares only assigned arms and excludes internal QA", () => {
+  const experiment = pricingExperimentDashboardModule.personalPlanPricingExperimentDashboard
+  const insights = Object.values(experiment.insights)
+
+  for (const insight of insights) {
+    assert.match(insight.query, /personal-plan-membership-v1/)
+    assert.match(insight.query, /personal-plan-one-time-v1/)
+    assert.match(insight.query, /personal_plan_v3/)
+    assert.match(insight.query, /is_internal_test/)
+    assert.match(insight.query, /NOT IN \('true', '1'\)/)
+    assert.doesNotMatch(insight.query, /personal-plan-v1'\)/)
+  }
+
+  const journey = experiment.insights.armJourney.query
+  assert.match(journey, /properties\.destination = 'checkout'/)
+  assert.match(journey, /offer_checkout_opened/)
+  assert.match(journey, /checkout_started/)
 })

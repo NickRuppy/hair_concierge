@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { createServerClient } from "@supabase/ssr"
 
 import { ResultPageClient } from "./result-client"
@@ -18,8 +18,10 @@ import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   recordFunnelEvent,
+  assignPersonalPlanOneTimeQa,
   resolveFunnelContextForLead,
   resolveGuidedStoryOfferExperiment,
+  resolvePersonalPlanPricingExperiment,
 } from "@/lib/funnel/server"
 import { isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
@@ -41,6 +43,7 @@ interface Props {
     focus?: string | string[]
     mode?: string | string[]
     returnTo?: string | string[]
+    qa?: string | string[]
   }>
 }
 
@@ -140,6 +143,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const [{ leadId }, sp] = await Promise.all([params, searchParams])
   const focus = getQuizResultSearchParamValue(sp.focus)
   const entry = getQuizResultSearchParamValue(sp.entry)
+  const qaToken = getQuizResultSearchParamValue(sp.qa)
   const focusRoutine = focus === "routine"
   const focusTarget = focus === "unlock-plan" ? "unlock-plan" : focusRoutine ? "pricing" : null
   const personalPlanFocusTarget = resolvePersonalPlanOfferFocusTarget(focus)
@@ -164,9 +168,35 @@ export default async function ResultPage({ params, searchParams }: Props) {
   }
 
   const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
+  const personalPlanSession = funnelContext
+    ? {
+        sessionId: funnelContext.sessionId,
+        packageKey: funnelContext.packageKey,
+        offerVariant: funnelContext.offerVariant ?? null,
+        offerViewedAt: funnelContext.offerViewedAt ?? null,
+        checkoutStartedAt: funnelContext.checkoutStartedAt ?? null,
+        isInternalTest: funnelContext.isInternalTest ?? false,
+      }
+    : null
+  if (lead.quiz_kind === "personal_plan" && qaToken) {
+    const assigned = await assignPersonalPlanOneTimeQa({
+      leadId,
+      session: personalPlanSession,
+      token: qaToken,
+    })
+    if (assigned)
+      redirect(
+        cleanResultUrl(leadId, {
+          entry: entry ?? undefined,
+          focus: focus ?? undefined,
+          mode: sp.mode,
+          returnTo: sp.returnTo,
+        }),
+      )
+  }
   const offerVariant =
     lead.quiz_kind === "personal_plan"
-      ? "personal-plan-v1"
+      ? await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
       : hasAccess
         ? "default"
         : await resolveGuidedStoryOfferExperiment({
@@ -194,9 +224,30 @@ export default async function ResultPage({ params, searchParams }: Props) {
       focusRoutine={focusRoutine}
       focusTarget={focusTarget}
       hasAccess={hasAccess}
+      isInternalTest={personalPlanSession?.isInternalTest ?? false}
       returnTo={returnTo}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
     />
   )
+}
+
+function cleanResultUrl(
+  leadId: string,
+  values: {
+    entry: string | undefined
+    focus: string | undefined
+    mode: string | string[] | undefined
+    returnTo: string | string[] | undefined
+  },
+): string {
+  const search = new URLSearchParams()
+  if (values.entry) search.set("entry", values.entry)
+  if (values.focus) search.set("focus", values.focus)
+  const mode = getQuizResultSearchParamValue(values.mode)
+  const returnTo = getQuizResultSearchParamValue(values.returnTo)
+  if (mode) search.set("mode", mode)
+  if (returnTo) search.set("returnTo", returnTo)
+  const query = search.toString()
+  return `/result/${encodeURIComponent(leadId)}${query ? `?${query}` : ""}`
 }

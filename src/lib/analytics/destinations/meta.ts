@@ -87,7 +87,7 @@ export const metaDestination = {
         return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
           trackMetaCheckoutStarted(
             "quiz_result_offer",
-            data.interval,
+            "interval" in data ? data.interval : null,
             {
               currency: data.currency,
               planId: data.planId,

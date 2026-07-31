@@ -13,13 +13,11 @@ import {
   type StripeOfferCheckoutResult,
   type StripeOfferExpressRendererProps,
   type StripeOfferProvider,
+  type StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
 } from "@/components/checkout/stripe-offer-elements-checkout"
 import { Button } from "@/components/ui/button"
 import { ToastProvider, useToast } from "@/providers/toast-provider"
-import type {
-  StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
-  StripeExpressCheckoutElementConfirmEvent,
-} from "@stripe/stripe-js"
+import type { StripeExpressCheckoutElementConfirmEvent } from "@stripe/stripe-js"
 
 type PaymentFixtureProps = {
   applePayAvailable: boolean
@@ -43,8 +41,8 @@ const labCheckoutTotal = {
   balanceAppliedToNextInvoice: false,
   discount: labZeroAmount,
   shippingRate: labZeroAmount,
-  surcharge: labZeroAmount,
   subtotal: { amount: "34,99 €", minorUnitsAmount: 3499 },
+  surcharge: labZeroAmount,
   taxExclusive: labZeroAmount,
   taxInclusive: labZeroAmount,
   total: { amount: "34,99 €", minorUnitsAmount: 3499 },

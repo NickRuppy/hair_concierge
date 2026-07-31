@@ -22,6 +22,10 @@ export default function WiderrufPage() {
               Du hast das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu
               widerrufen. Die Widerrufsfrist beträgt 14 Tage ab dem Tag des Vertragsschlusses.
             </p>
+            <p className="mt-2">
+              Dies gilt auch für den einmalig bezahlten persönlichen Haarplan. Eine freiwillige
+              Geld-zurück-Garantie wird für diesen Einmalkauf nicht zugesagt.
+            </p>
             <p className="mt-2">Um dein Widerrufsrecht auszuüben, musst du uns:</p>
             <address className="mt-2 not-italic">
               Haarmony LLC

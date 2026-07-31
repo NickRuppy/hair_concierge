@@ -5,6 +5,7 @@ import type {
   BillingSubscriptionRow,
   SupabaseBillingClient,
 } from "./types"
+import { findCurrentOneTimePurchaseForUser } from "./purchases"
 
 type LegacyProfileSubscription = {
   id: string
@@ -143,6 +144,11 @@ export async function assertCanStartCheckout(
     throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
   }
 
+  const purchase = await findCurrentOneTimePurchaseForUser(supabase, userId)
+  if (purchase) {
+    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+  }
+
   const manualGrant = await findCurrentManualAccessGrant(supabase, { userId }, now)
   if (manualGrant) {
     throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
@@ -192,6 +198,9 @@ export async function hasCurrentAppAccess(
 ): Promise<boolean> {
   const current = await findCurrentBillingSubscriptionForUser(supabase, lookup.userId, now)
   if (current) return true
+
+  const purchase = await findCurrentOneTimePurchaseForUser(supabase, lookup.userId)
+  if (purchase) return true
 
   const manualGrant = await findCurrentManualAccessGrant(supabase, lookup, now)
   if (manualGrant) return true

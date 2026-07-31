@@ -2,6 +2,17 @@ import { createHash } from "node:crypto"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { upsertBillingSubscription } from "@/lib/billing/subscriptions"
+import { upsertOneTimePurchase } from "@/lib/billing/purchases"
+import {
+  findPersonalPlanOneTimeConsentByStripeCheckoutSessionId,
+  recordPersonalPlanOneTimeConfirmation,
+} from "@/lib/billing/personal-plan-one-time-consents"
+import { sendPersonalPlanOneTimeConfirmation } from "@/lib/customerio/personal-plan-one-time-confirmation"
+import {
+  getPersonalPlanOnceStripePriceId,
+  PERSONAL_PLAN_ONCE_KIND,
+  PERSONAL_PLAN_ONCE_PRODUCT,
+} from "@/lib/billing/offer-products"
 import { intervalFromPrice } from "./intervals"
 
 export interface CheckoutActivationDeps {
@@ -12,6 +23,7 @@ export interface CheckoutActivationDeps {
   profileLinkMode?: "await" | "defer" | "skip"
   defer?: (work: () => void | Promise<void>) => void
   now?: () => Date
+  sendOneTimeConfirmation?: typeof sendPersonalPlanOneTimeConfirmation
 }
 
 export type CheckoutActivationErrorCode =
@@ -26,6 +38,10 @@ export type CheckoutActivationErrorCode =
   | "checkout_subscription_inactive"
   | "checkout_subscription_expired"
   | "checkout_user_race_unresolved"
+  | "checkout_one_time_invalid"
+  | "checkout_one_time_payment_intent_missing"
+  | "checkout_one_time_consent_missing"
+  | "checkout_one_time_confirmation_failed"
 
 export class CheckoutActivationError extends Error {
   code: CheckoutActivationErrorCode
@@ -48,6 +64,13 @@ export interface CheckoutAccountResult {
   stripeSubscriptionId?: string
   subscriptionStatus?: string
 }
+
+export interface OneTimeCheckoutAccountResult extends CheckoutAccountResult {
+  paymentIntentId: string
+  chargeId?: string
+}
+
+export type OneTimeCheckoutActivationDeps = CheckoutActivationDeps
 
 interface ProfileRow {
   id: string
@@ -102,8 +125,14 @@ export async function verifyCheckoutSessionForActivation(
 
   const stripeClient = stripe ?? (await import("./client")).getStripe()
   const session = await measureCheckoutStep("stripe.checkout.sessions.retrieve", () =>
-    stripeClient.checkout.sessions.retrieve(sessionId),
+    stripeClient.checkout.sessions.retrieve(sessionId, {
+      expand: ["line_items.data.price", "payment_intent.latest_charge"],
+    }),
   )
+  if (session.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND) {
+    assertOneTimeCheckoutSession(session as OneTimeSession)
+    return session
+  }
   assertCheckoutSessionShape(session)
   assertCheckoutPaymentAuthorized(session)
   assertCheckoutPreparationClaimed(session)
@@ -200,6 +229,153 @@ export async function ensureCheckoutAccount(
     stripeSubscriptionId: sub.id,
     subscriptionStatus: sub.status ?? "active",
   }
+}
+
+/** Activates the one-time personal-plan entitlement without touching subscription state. */
+export async function ensureOneTimeCheckoutAccount(
+  session: Stripe.Checkout.Session,
+  deps: OneTimeCheckoutActivationDeps,
+): Promise<OneTimeCheckoutAccountResult> {
+  const verified = await retrieveOneTimeCheckoutSession(session, deps.stripe)
+  const valid = assertOneTimeCheckoutSession(verified)
+  const existingProfile = await findExistingProfile(deps, valid.email, valid.customerId)
+  const created = existingProfile
+    ? { userId: existingProfile.id, created: false }
+    : await createCheckoutUser(deps, valid.email, valid.id, valid.customerId)
+  const userId = created.userId
+  const canSetInitialPassword = created.created
+    ? true
+    : await canSetPasswordForCheckoutSession(deps, userId, valid.id)
+
+  const consent = await findPersonalPlanOneTimeConsentByStripeCheckoutSessionId(
+    deps.supabase,
+    valid.id,
+  )
+  if (!consent) {
+    throw new CheckoutActivationError(
+      "checkout_one_time_consent_missing",
+      "one-time checkout consent is missing",
+    )
+  }
+  if (consent.confirmation_status !== "sent" && consent.confirmation_status !== "delivered") {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+    try {
+      const confirmation = await (
+        deps.sendOneTimeConfirmation ?? sendPersonalPlanOneTimeConfirmation
+      )({
+        email: valid.email,
+        consent: {
+          text: consent.consent_text,
+          version: consent.copy_version,
+          acceptedAt: consent.accepted_at,
+        },
+        payment: { provider: "stripe", reference: valid.id },
+        supportUrl: new URL("/kontakt", siteUrl).toString(),
+        withdrawalUrl: new URL("/widerruf", siteUrl).toString(),
+        resultUrl: verified.metadata?.lead_id
+          ? new URL(`/result/${encodeURIComponent(verified.metadata.lead_id)}`, siteUrl).toString()
+          : undefined,
+      })
+      await recordPersonalPlanOneTimeConfirmation(deps.supabase, consent.id, {
+        provider: "stripe",
+        reference: confirmation.confirmationReference,
+        status: "sent",
+      })
+    } catch {
+      await recordPersonalPlanOneTimeConfirmation(deps.supabase, consent.id, {
+        provider: "stripe",
+        reference: `stripe:${valid.id}:confirmation_failed`,
+        status: "failed",
+      }).catch(() => {})
+      throw new CheckoutActivationError(
+        "checkout_one_time_confirmation_failed",
+        "one-time checkout confirmation could not be sent",
+      )
+    }
+  }
+
+  await upsertOneTimeProfile(deps, userId, valid.email, valid.customerId)
+  await upsertOneTimePurchase(deps.supabase, {
+    user_id: userId,
+    provider: "stripe",
+    provider_transaction_id: valid.paymentIntentId,
+    provider_customer_id: valid.customerId,
+    provider_order_id: valid.id,
+    amount_minor: PERSONAL_PLAN_ONCE_PRODUCT.amountMinor,
+    currency: "eur",
+    status: "paid",
+    paid_at: new Date((verified.created ?? Math.floor(Date.now() / 1000)) * 1000).toISOString(),
+    metadata: {
+      checkout_session_id: valid.id,
+      ...(valid.chargeId ? { stripe_charge_id: valid.chargeId } : {}),
+    },
+  })
+  await linkCheckoutQuizProfile(verified, deps, userId, valid.email)
+  return {
+    userId,
+    email: valid.email,
+    canSetInitialPassword,
+    leadId: verified.metadata?.lead_id || undefined,
+    checkoutContext: verified.metadata?.checkout_context || undefined,
+    stripeCustomerId: valid.customerId,
+    paymentIntentId: valid.paymentIntentId,
+    chargeId: valid.chargeId,
+  }
+}
+
+type OneTimeSession = Stripe.Checkout.Session & {
+  payment_intent?: string | { id?: string; latest_charge?: string | { id?: string } | null } | null
+  line_items?: { data?: Array<{ price?: { id?: string } | null }> } | null
+}
+
+async function retrieveOneTimeCheckoutSession(session: Stripe.Checkout.Session, stripe: Stripe) {
+  if (!session.id)
+    throw new CheckoutActivationError("checkout_session_missing_id", "checkout session has no id")
+  return (await stripe.checkout.sessions.retrieve(session.id, {
+    expand: ["line_items.data.price", "payment_intent.latest_charge"],
+  })) as OneTimeSession
+}
+
+function assertOneTimeCheckoutSession(session: OneTimeSession) {
+  const email = session.customer_details?.email
+  const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id
+  const paymentIntentId = stripeObjectId(session.payment_intent)
+  const chargeId =
+    typeof session.payment_intent === "object"
+      ? stripeObjectId(session.payment_intent?.latest_charge)
+      : null
+  const expectedPriceId = getPersonalPlanOnceStripePriceId()
+  const lineItemPriceIds =
+    session.line_items?.data?.map((item) => item.price?.id).filter(Boolean) ?? []
+  if (
+    session.metadata?.product_kind !== PERSONAL_PLAN_ONCE_KIND ||
+    session.mode !== "payment" ||
+    session.status !== "complete" ||
+    session.payment_status !== "paid" ||
+    session.amount_total !== PERSONAL_PLAN_ONCE_PRODUCT.amountMinor ||
+    session.currency?.toLowerCase() !== "eur" ||
+    !expectedPriceId ||
+    lineItemPriceIds.length !== 1 ||
+    lineItemPriceIds[0] !== expectedPriceId ||
+    !email ||
+    !customerId
+  ) {
+    throw new CheckoutActivationError(
+      "checkout_one_time_invalid",
+      "one-time checkout session failed validation",
+    )
+  }
+  if (!paymentIntentId) {
+    throw new CheckoutActivationError(
+      "checkout_one_time_payment_intent_missing",
+      "one-time checkout session has no payment intent",
+    )
+  }
+  return { id: session.id!, email, customerId, paymentIntentId, chargeId: chargeId ?? undefined }
+}
+
+function stripeObjectId(value: string | { id?: string } | null | undefined): string | null {
+  return typeof value === "string" ? value : (value?.id ?? null)
 }
 
 async function measureCheckoutStep<T>(label: string, work: () => Promise<T>): Promise<T> {
@@ -417,6 +593,18 @@ async function upsertSubscriptionProfile(
   if (error) {
     throw new Error(`profile upsert failed: ${error.message}`)
   }
+}
+
+async function upsertOneTimeProfile(
+  deps: CheckoutActivationDeps,
+  userId: string,
+  email: string,
+  customerId: string,
+) {
+  const { error } = await deps.supabase
+    .from("profiles")
+    .upsert({ id: userId, email, stripe_customer_id: customerId }, { onConflict: "id" })
+  if (error) throw new Error(`profile upsert failed: ${error.message}`)
 }
 
 async function createCheckoutUser(

@@ -110,6 +110,7 @@ function posthogFunnelClient(options: {
                 landing_variant: "personal-plan-quiz",
                 quiz_variant: "personal-plan-quiz-v1",
                 offer_variant: "personal-plan-v1",
+                is_internal_test: true,
               }
             : options.row,
         error: options.queryError ?? null,
@@ -486,11 +487,12 @@ test("PostHog server adapter resolves canonical funnel experience for a purchase
   assert.equal(calls[0].body.properties.landing_variant, "personal-plan-quiz")
   assert.equal(calls[0].body.properties.quiz_variant, "personal-plan-quiz-v1")
   assert.equal(calls[0].body.properties.offer_variant, "personal-plan-v1")
+  assert.equal(calls[0].body.properties.is_internal_test, true)
   assert.equal(calls[0].body.properties.offer_revision, undefined)
   assert.equal(funnel.fromCalls(), 1)
   assert.equal(
     funnel.selectedColumns(),
-    "id, package_key, landing_variant, quiz_variant, offer_variant",
+    "id, package_key, landing_variant, quiz_variant, offer_variant, is_internal_test",
   )
   assert.equal(funnel.selectedSessionId(), "20000000-0000-4000-8000-000000000002")
 })

@@ -14,6 +14,7 @@ import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import {
   CheckoutActivationError,
   ensureCheckoutAccount,
+  ensureOneTimeCheckoutAccount,
   verifyCheckoutSessionForActivation,
 } from "@/lib/stripe/checkout-activation"
 import {
@@ -24,6 +25,7 @@ import {
 } from "@/lib/paypal/checkout-activation"
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
 import { resolveCheckoutFirstTimeDestination } from "@/lib/billing/checkout-success-redirect"
+import { recoverPayPalOrderActivation } from "@/lib/paypal/order-activation"
 
 export const runtime = "nodejs"
 
@@ -56,7 +58,9 @@ export interface SetCheckoutPasswordDeps {
     stripe?: Stripe,
   ) => Promise<Stripe.Checkout.Session>
   ensureCheckoutAccount: typeof ensureCheckoutAccount
+  ensureOneTimeCheckoutAccount?: typeof ensureOneTimeCheckoutAccount
   ensurePayPalCheckoutAccountForToken?: typeof ensurePayPalCheckoutAccountForToken
+  recoverPayPalOrderActivation?: typeof recoverPayPalOrderActivation
   claimCheckoutActivation?: typeof claimCheckoutActivation
   releaseCheckoutActivationClaim?: typeof releaseCheckoutActivationClaim
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -72,7 +76,7 @@ type RouteResult = {
 
 type CheckoutActivationTarget =
   | { provider: "stripe"; sessionId: string; activationId: string }
-  | { provider: "paypal"; token: string; activationId: string }
+  | { provider: "paypal"; token: string; activationId: string; purchaseKind?: "one_time" }
 
 export async function POST(request: Request) {
   let body: unknown
@@ -236,12 +240,29 @@ async function ensureActiveCheckoutAccount(
 
   if (target.provider === "stripe") {
     const session = await deps.verifyCheckoutSessionForActivation(target.sessionId, deps.stripe)
+    if (session.metadata?.product_kind === "personal_plan_once") {
+      return (deps.ensureOneTimeCheckoutAccount ?? ensureOneTimeCheckoutAccount)(session, {
+        supabase: deps.supabase,
+        stripe: deps.stripe,
+        premiumTierId,
+        linkQuizToProfile: deps.linkQuizToProfile,
+      })
+    }
     return deps.ensureCheckoutAccount(session, {
       supabase: deps.supabase,
       stripe: deps.stripe,
       premiumTierId,
       linkQuizToProfile: deps.linkQuizToProfile,
     })
+  }
+
+  if (target.purchaseKind === "one_time") {
+    return (
+      await (deps.recoverPayPalOrderActivation ?? recoverPayPalOrderActivation)(target.token, {
+        supabase: deps.supabase,
+        linkQuizToProfile: deps.linkQuizToProfile,
+      })
+    ).account
   }
 
   const ensurePayPal =
@@ -288,10 +309,12 @@ function parseActivationTarget(body: Record<string, unknown>): CheckoutActivatio
   if (body.provider === "paypal") {
     const token = body.token
     if (typeof token !== "string" || token.trim() === "") return null
+    const purchaseKind = body.purchase === "one_time" ? "one_time" : undefined
     return {
       provider: "paypal",
       token: token.trim(),
       activationId: paypalCheckoutActivationId(token.trim()),
+      purchaseKind,
     }
   }
 

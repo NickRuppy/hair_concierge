@@ -7,6 +7,9 @@ import {
 } from "@/lib/stripe/checkout-activation"
 import {
   handleCheckoutSessionCompleted,
+  handleOneTimeCheckoutSessionCompleted,
+  handleOneTimeChargeDisputeCreated,
+  handleOneTimeChargeRefunded,
   handleCheckoutSessionExpired,
   handleCheckoutSessionAsyncPaymentSucceeded,
   handleCheckoutSessionAsyncPaymentFailed,
@@ -16,6 +19,7 @@ import {
   handleInvoicePaymentFailed,
   findProfileByStripeCustomerId,
 } from "@/lib/stripe/webhook-handlers"
+import { PERSONAL_PLAN_ONCE_KIND } from "@/lib/billing/offer-products"
 import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import { linkQuizToProfile as defaultLinkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import type Stripe from "stripe"
@@ -285,6 +289,62 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as unknown as Stripe.Checkout.Session
+      if (
+        session.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND &&
+        session.mode === "payment"
+      ) {
+        const activation = await handleOneTimeCheckoutSessionCompleted(session, {
+          supabase,
+          stripe,
+          premiumTierId: "",
+          linkQuizToProfile,
+          profileLinkMode: "defer",
+          defer,
+        })
+        if (recordBillingAnalytics) {
+          const destinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
+          if (
+            isFunnelAttributionEnabled() &&
+            isBillingFunnelDeliveryEnabled() &&
+            session.metadata?.funnel_session_id &&
+            session.metadata?.funnel_package_key
+          ) {
+            destinations.push("funnel")
+          }
+          await recordStripeBillingAnalytics(
+            supabase,
+            defer,
+            {
+              eventKey: billingAnalyticsEventKey({
+                provider: "stripe",
+                eventName: "purchase_completed",
+                sourceObjectId: session.id,
+              }),
+              eventName: "purchase_completed",
+              userId: activation.userId,
+              providerCustomerId: activation.stripeCustomerId ?? null,
+              providerSubscriptionId: null,
+              sourceEventId: event.id,
+              sourceObjectId: session.id,
+              occurredAt: timestamp,
+              payload: {
+                checkout_session_id: session.id,
+                checkout_reference: session.id,
+                meta_event_id: session.id,
+                value: 29.99,
+                currency: "EUR",
+                interval: "one_time",
+                plan_id: PERSONAL_PLAN_ONCE_KIND,
+                has_paid_access: true,
+                funnel_session_id: session.metadata?.funnel_session_id,
+                funnel_package_key: session.metadata?.funnel_package_key,
+              },
+            },
+            destinations,
+          )
+        }
+        break
+      }
       let activation
       try {
         activation = await handleCheckoutSessionCompleted(session, {
@@ -415,6 +475,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "charge.dispute.created": {
       const dispute = event.data.object as unknown as Stripe.Dispute
+      if (await handleOneTimeChargeDisputeCreated(dispute, { supabase, stripe })) break
       await handleChargeDisputeCreated(dispute, {
         supabase,
         stripe,
@@ -633,6 +694,32 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "charge.refunded": {
       const charge = event.data.object as unknown as Stripe.Charge
+      const oneTimeRefund = await handleOneTimeChargeRefunded(charge, { supabase })
+      if (oneTimeRefund) {
+        if (recordBillingAnalytics)
+          await recordStripeBillingAnalytics(supabase, defer, {
+            eventKey: billingAnalyticsEventKey({
+              provider: "stripe",
+              eventName: "refund_completed",
+              sourceObjectId: `${charge.id}:${event.id}`,
+            }),
+            eventName: "refund_completed",
+            userId: oneTimeRefund.purchase.user_id,
+            providerCustomerId: oneTimeRefund.purchase.provider_customer_id,
+            providerSubscriptionId: null,
+            sourceEventId: event.id,
+            sourceObjectId: charge.id,
+            occurredAt: timestamp,
+            payload: {
+              value: amountFromMinorUnits(oneTimeRefund.refundedDeltaMinor),
+              currency: normalizedCurrency(charge.currency),
+              interval: "one_time",
+              plan_id: oneTimeRefund.purchase.product_kind,
+              has_paid_access: oneTimeRefund.purchase.status === "paid",
+            },
+          })
+        break
+      }
       const customerId = stripeChargeCustomerId(charge)
       if (!customerId) {
         console.warn("[stripe] charge.refunded missing customer", { chargeId: charge.id })

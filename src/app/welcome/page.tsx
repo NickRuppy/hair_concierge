@@ -21,9 +21,11 @@ import { getStripe } from "@/lib/stripe/client"
 import {
   CheckoutActivationError,
   ensureCheckoutAccount,
+  ensureOneTimeCheckoutAccount,
   verifyCheckoutSessionForActivation,
 } from "@/lib/stripe/checkout-activation"
 import { buildCheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
+import { recoverPayPalOrderActivation } from "@/lib/paypal/order-activation"
 import { WelcomeClient } from "./welcome-client"
 
 export const dynamic = "force-dynamic"
@@ -31,10 +33,16 @@ export const dynamic = "force-dynamic"
 export default async function WelcomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ provider?: string; session_id?: string; token?: string }>
+  searchParams: Promise<{
+    provider?: string
+    purchase?: string
+    session_id?: string
+    token?: string
+  }>
 }) {
-  const { provider, session_id, token } = await searchParams
+  const { provider, purchase, session_id, token } = await searchParams
   if (provider === "paypal") {
+    if (purchase === "one_time") return renderPayPalOneTimeWelcome(token)
     return renderPayPalWelcome(token)
   }
 
@@ -63,30 +71,33 @@ async function renderStripeWelcome(session_id: string) {
 
   const email = session.customer_details?.email
   if (!email) redirect("/")
+  const isOneTimePurchase = session.metadata?.product_kind === "personal_plan_once"
   const admin = createAdminClient()
   const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
     admin,
     session.metadata?.lead_id,
     session.metadata?.checkout_context,
   )
-  const purchaseAnalytics = await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
-    console.error("[welcome] purchase analytics unavailable:", err)
-    captureCheckoutException(err, {
-      provider: "stripe",
-      stage: "checkout_return",
-      source: "welcome",
-      stripeSessionId: session_id,
-      reason: "purchase_analytics_unavailable",
-    })
-    return null
-  })
+  const purchaseAnalytics = isOneTimePurchase
+    ? null
+    : await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
+        console.error("[welcome] purchase analytics unavailable:", err)
+        captureCheckoutException(err, {
+          provider: "stripe",
+          stage: "checkout_return",
+          source: "welcome",
+          stripeSessionId: session_id,
+          reason: "purchase_analytics_unavailable",
+        })
+        return null
+      })
 
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
   if (user?.email?.toLowerCase() === email.toLowerCase()) {
-    await ensureCheckoutAccount(session, {
+    await (isOneTimePurchase ? ensureOneTimeCheckoutAccount : ensureCheckoutAccount)(session, {
       supabase: admin,
       stripe,
       premiumTierId: await getPremiumTierId(admin),
@@ -116,7 +127,11 @@ async function renderStripeWelcome(session_id: string) {
     )
     return (
       <WelcomeClient
-        activationSource={{ provider: "stripe", sessionId: session_id }}
+        activationSource={{
+          provider: "stripe",
+          sessionId: session_id,
+          purchaseKind: isOneTimePurchase ? "one_time" : undefined,
+        }}
         email={email}
         purchase={purchaseAnalytics}
         redirectTo={redirectTo}
@@ -128,11 +143,77 @@ async function renderStripeWelcome(session_id: string) {
 
   return (
     <WelcomeClient
-      activationSource={{ provider: "stripe", sessionId: session_id }}
+      activationSource={{
+        provider: "stripe",
+        sessionId: session_id,
+        purchaseKind: isOneTimePurchase ? "one_time" : undefined,
+      }}
       email={email}
       purchase={purchaseAnalytics}
       activationRedirectTo={firstTimeDestination}
       sessionId={session_id}
+    />
+  )
+}
+
+async function renderPayPalOneTimeWelcome(token: string | undefined) {
+  if (!token) redirect("/")
+
+  const admin = createAdminClient()
+  const activation = await recoverPayPalOrderActivation(token, {
+    supabase: admin,
+    linkQuizToProfile,
+  }).catch((err) => {
+    if (err instanceof PayPalCheckoutActivationError) {
+      captureCheckoutException(err, {
+        provider: "paypal",
+        stage: "checkout_return",
+        source: "welcome",
+        paypalTokenPresent: true,
+        reason: err.code,
+      })
+      redirect("/pricing")
+    }
+    throw err
+  })
+  const account = activation.account
+  const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
+    admin,
+    account.leadId,
+    account.checkoutContext,
+  )
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  const source = { provider: "paypal" as const, token, purchaseKind: "one_time" as const }
+
+  if (user?.email?.toLowerCase() === account.email.toLowerCase()) {
+    const redirectTo = await resolveAuthenticatedCheckoutRedirect(
+      supabase,
+      user.id,
+      null,
+      firstTimeDestination,
+    )
+    return (
+      <WelcomeClient
+        activationSource={source}
+        analyticsId={paypalCheckoutAnalyticsId(token)}
+        email={account.email}
+        purchase={null}
+        redirectTo={redirectTo}
+        activationRedirectTo={firstTimeDestination}
+      />
+    )
+  }
+
+  return (
+    <WelcomeClient
+      activationSource={source}
+      analyticsId={paypalCheckoutAnalyticsId(token)}
+      email={account.email}
+      purchase={null}
+      activationRedirectTo={firstTimeDestination}
     />
   )
 }

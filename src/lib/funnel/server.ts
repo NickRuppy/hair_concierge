@@ -9,7 +9,12 @@ import {
   type FunnelCookieContext,
   type FunnelTouch,
 } from "./cookie"
-import { isFunnelAttributionEnabled, isGuidedStoryOfferExperimentEnabled } from "./flags"
+import {
+  isFunnelAttributionEnabled,
+  isGuidedStoryOfferExperimentEnabled,
+  isPersonalPlanOneTimeQaEnabled,
+  isPersonalPlanPricingExperimentEnabled,
+} from "./flags"
 import { getFunnelPackageByKey, resolveOfferVariantForSession } from "./packages"
 import {
   GUIDED_STORY_OFFER_EXPERIMENT,
@@ -18,6 +23,12 @@ import {
   isGuidedStoryFamilyVariant,
 } from "./offer-experiment"
 import { captureOfferExperimentAssignmentFailure } from "@/lib/observability/offer-experiment"
+import {
+  PERSONAL_PLAN_PRICING_EXPERIMENT,
+  assignPersonalPlanPricingExperimentVariant,
+  isPersonalPlanPricingExperimentVariant,
+} from "./personal-plan-pricing-experiment"
+import { verifyPersonalPlanOneTimeQaToken } from "./personal-plan-pricing-qa-token"
 
 export const FUNNEL_MILESTONES = [
   "landing_viewed",
@@ -57,7 +68,9 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
   if (!isFunnelAttributionEnabled() || !leadId) return null
   const { data } = await createAdminClient()
     .from("funnel_sessions")
-    .select("id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at")
+    .select(
+      "id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, checkout_started_at, is_internal_test",
+    )
     .eq("lead_id", leadId)
     .order("first_seen_at", { ascending: false })
     .limit(1)
@@ -69,6 +82,8 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
     packageKey: data.package_key,
     offerVariant: data.offer_variant,
     offerViewedAt: data.offer_viewed_at,
+    checkoutStartedAt: data.checkout_started_at,
+    isInternalTest: data.is_internal_test,
     issuedAt: Date.parse(data.first_seen_at),
   }
 }
@@ -78,6 +93,8 @@ type OfferExperimentSession = {
   packageKey: string
   offerVariant: string | null
   offerViewedAt: string | null
+  checkoutStartedAt?: string | null
+  isInternalTest?: boolean | null
 }
 
 type OfferExperimentAssignmentClient = {
@@ -116,6 +133,209 @@ type OfferExperimentAssignmentClient = {
         }>
       }
     }
+  }
+}
+
+export async function resolvePersonalPlanPricingExperiment(input: {
+  session: OfferExperimentSession | null
+  enabled?: boolean
+  client?: OfferExperimentAssignmentClient
+  captureFailure?: typeof captureOfferExperimentAssignmentFailure
+}): Promise<string> {
+  const fallback = PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant
+  const { session } = input
+  if (!session || session.packageKey !== PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey)
+    return fallback
+
+  const stored = session.offerVariant
+  if (isPersonalPlanPricingExperimentVariant(stored)) {
+    if (session.offerViewedAt || session.checkoutStartedAt || session.isInternalTest) return stored
+    if (input.enabled ?? isPersonalPlanPricingExperimentEnabled()) return stored
+    return resetPersonalPlanArm(session, fallback, input)
+  }
+  if (stored !== null && stored !== PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant) return fallback
+  if (!(input.enabled ?? isPersonalPlanPricingExperimentEnabled()) || session.offerViewedAt)
+    return fallback
+
+  const intendedVariant = assignPersonalPlanPricingExperimentVariant(session.sessionId)
+  const client = input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
+  const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
+  try {
+    const { data, error } = await client
+      .from("funnel_sessions")
+      .update({ offer_variant: intendedVariant })
+      .eq("id", session.sessionId)
+      .is("offer_viewed_at", null)
+      .eq("offer_variant", stored ?? PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)
+      .select("offer_variant")
+      .maybeSingle()
+    if (error) throw error
+    if (isPersonalPlanPricingExperimentVariant(data?.offer_variant)) return data.offer_variant
+
+    const readBack = await client
+      .from("funnel_sessions")
+      .select("offer_variant")
+      .eq("id", session.sessionId)
+      .maybeSingle()
+    if (readBack.error) throw readBack.error
+    return isPersonalPlanPricingExperimentVariant(readBack.data?.offer_variant)
+      ? readBack.data.offer_variant
+      : fallback
+  } catch (error) {
+    captureFailure(error, {
+      experimentId: PERSONAL_PLAN_PRICING_EXPERIMENT.id,
+      revision: PERSONAL_PLAN_PRICING_EXPERIMENT.revision,
+      intendedVariant,
+      fallbackVariant: fallback,
+      packageKey: session.packageKey,
+    })
+    return fallback
+  }
+}
+
+async function resetPersonalPlanArm(
+  session: OfferExperimentSession,
+  fallback: string,
+  input: {
+    client?: OfferExperimentAssignmentClient
+    captureFailure?: typeof captureOfferExperimentAssignmentFailure
+  },
+): Promise<string> {
+  const client = input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
+  const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
+  try {
+    const { data, error } = await client
+      .from("funnel_sessions")
+      .update({ offer_variant: fallback })
+      .eq("id", session.sessionId)
+      .is("offer_viewed_at", null)
+      .eq("offer_variant", session.offerVariant ?? PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)
+      .select("offer_variant")
+      .maybeSingle()
+    if (error) throw error
+    if (
+      data?.offer_variant === PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant ||
+      isPersonalPlanPricingExperimentVariant(data?.offer_variant)
+    )
+      return data.offer_variant
+
+    const readBack = await client
+      .from("funnel_sessions")
+      .select("offer_variant")
+      .eq("id", session.sessionId)
+      .maybeSingle()
+    if (readBack.error) throw readBack.error
+    if (
+      readBack.data?.offer_variant === PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant ||
+      isPersonalPlanPricingExperimentVariant(readBack.data?.offer_variant)
+    )
+      return readBack.data.offer_variant
+    return fallback
+  } catch (error) {
+    captureFailure(error, {
+      experimentId: PERSONAL_PLAN_PRICING_EXPERIMENT.id,
+      revision: PERSONAL_PLAN_PRICING_EXPERIMENT.revision,
+      intendedVariant: fallback,
+      fallbackVariant: fallback,
+      packageKey: session.packageKey,
+    })
+    return fallback
+  }
+}
+
+export async function assignPersonalPlanOneTimeQa(input: {
+  leadId: string
+  session: OfferExperimentSession | null
+  token: string | undefined
+  enabled?: boolean
+  secret?: string
+  now?: number
+  rpc?: (args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: unknown }>
+}): Promise<boolean> {
+  if (!(input.enabled ?? isPersonalPlanOneTimeQaEnabled()) || !input.session) return false
+  const claims = verifyPersonalPlanOneTimeQaToken(
+    input.token,
+    input.secret ?? process.env.PERSONAL_PLAN_ONE_TIME_QA_SIGNING_SECRET,
+    input.now,
+  )
+  if (
+    !claims ||
+    claims.leadId !== input.leadId ||
+    claims.sessionId !== input.session.sessionId ||
+    claims.packageKey !== input.session.packageKey
+  )
+    return false
+  try {
+    const rpc =
+      input.rpc ?? ((args) => createAdminClient().rpc("assign_personal_plan_one_time_qa", args))
+    const { data, error } = await rpc({
+      p_lead_id: claims.leadId,
+      p_session_id: claims.sessionId,
+      p_package_key: claims.packageKey,
+      p_arm: claims.arm,
+    })
+    return !error && data === true
+  } catch {
+    return false
+  }
+}
+
+export type PersonalPlanOneTimeCheckoutAuthorization = {
+  sessionId: string
+  leadId: string
+  packageKey: "meta_personal_plan_v1"
+  offerVariant: "personal-plan-one-time-v1"
+  isInternalTest: boolean
+}
+
+type PersonalPlanOneTimeCheckoutSession = {
+  id: string
+  lead_id: string | null
+  package_key: string
+  offer_variant: string | null
+  offer_viewed_at: string | null
+  is_internal_test: boolean
+}
+
+export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
+  leadId: string
+  funnelSessionId?: string | null
+  fetchSession?: () => PromiseLike<{
+    data: PersonalPlanOneTimeCheckoutSession | null
+    error: unknown
+  }>
+}): Promise<PersonalPlanOneTimeCheckoutAuthorization> {
+  const fetchSession =
+    input.fetchSession ??
+    (() => {
+      let query = createAdminClient()
+        .from("funnel_sessions")
+        .select("id, lead_id, package_key, offer_variant, offer_viewed_at, is_internal_test")
+        .eq("lead_id", input.leadId)
+        .eq("package_key", PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey)
+        .eq("offer_variant", "personal-plan-one-time-v1")
+        .order("first_seen_at", { ascending: false })
+        .limit(1)
+      if (input.funnelSessionId) query = query.eq("id", input.funnelSessionId)
+      return query.maybeSingle()
+    })
+  const { data, error } = await fetchSession()
+  if (
+    error ||
+    !data ||
+    data.id !== (input.funnelSessionId ?? data.id) ||
+    data.lead_id !== input.leadId ||
+    data.package_key !== PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey ||
+    data.offer_variant !== "personal-plan-one-time-v1" ||
+    !data.offer_viewed_at
+  )
+    throw new Error("Personal-plan one-time checkout is not authorized")
+  return {
+    sessionId: data.id,
+    leadId: input.leadId,
+    packageKey: PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey,
+    offerVariant: "personal-plan-one-time-v1",
+    isInternalTest: data.is_internal_test,
   }
 }
 

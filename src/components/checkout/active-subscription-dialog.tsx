@@ -15,6 +15,7 @@ import {
 export type ActiveSubscriptionDialogProps = {
   open: boolean
   email?: string | null
+  accessKind?: "membership" | "one_time"
   onOpenChange: (open: boolean) => void
 }
 
@@ -38,20 +39,24 @@ export function readCheckoutAccessAlreadyExistsEmail(body: unknown): string | nu
 export function ActiveSubscriptionDialog({
   open,
   email,
+  accessKind = "membership",
   onOpenChange,
 }: ActiveSubscriptionDialogProps) {
   const normalizedEmail = email?.trim() || null
   const loginHref = normalizedEmail ? `/auth?email=${encodeURIComponent(normalizedEmail)}` : "/auth"
+  const oneTime = accessKind === "one_time"
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="mx-4 max-w-md rounded-[8px]">
         <DialogHeader>
-          <DialogTitle>Aktives Abo gefunden</DialogTitle>
+          <DialogTitle>{oneTime ? "Aktiver Zugang gefunden" : "Aktives Abo gefunden"}</DialogTitle>
           <DialogDescription>
-            {normalizedEmail
-              ? "Für diese Chaarlie-E-Mail gibt es bereits ein aktives Abo."
-              : "Für dieses Konto gibt es bereits ein aktives Abo."}
+            {oneTime
+              ? "Für dieses Konto gibt es bereits Zugang zu deinem Haarplan."
+              : normalizedEmail
+                ? "Für diese Chaarlie-E-Mail gibt es bereits ein aktives Abo."
+                : "Für dieses Konto gibt es bereits ein aktives Abo."}
           </DialogDescription>
         </DialogHeader>
 
@@ -62,9 +67,11 @@ export function ActiveSubscriptionDialog({
         ) : null}
 
         <p className="text-sm leading-6 text-muted-foreground">
-          {normalizedEmail
-            ? "Bitte melde dich mit dieser E-Mail an, um dein Abo zu nutzen."
-            : "Bitte melde dich an, um dein Abo zu nutzen."}
+          {oneTime
+            ? "Bitte melde dich an, um deinen Zugang zu nutzen."
+            : normalizedEmail
+              ? "Bitte melde dich mit dieser E-Mail an, um dein Abo zu nutzen."
+              : "Bitte melde dich an, um dein Abo zu nutzen."}
         </p>
 
         <DialogFooter>

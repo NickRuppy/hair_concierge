@@ -12,10 +12,8 @@ import type {
   StripeCheckoutElementsOptions,
   StripeCheckoutExpressCheckoutElementOptions,
   StripeCheckoutSession,
-  StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
   StripeExpressCheckoutElementConfirmEvent,
   StripeExpressCheckoutElementReadyEvent,
-  StripePaymentElementAvailablePaymentMethodsChangeEvent,
 } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
@@ -25,6 +23,12 @@ import { PaymentOptionExposure } from "./payment-option-exposure"
 export type StripeOfferPaymentMethodType = "apple_pay" | "payment_element"
 export type StripeOfferProvider = "stripe" | "paypal"
 type ApplePayAvailability = "pending" | "available" | "unavailable" | "failed"
+export type StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent = {
+  elementType?: "expressCheckout"
+  paymentMethods?: Record<string, { available?: boolean } | undefined>
+}
+export type StripePaymentElementAvailablePaymentMethodsChangeEvent =
+  StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent
 const APPLE_PAY_INITIAL_RESPONSE_TIMEOUT_MS = 5_000
 const APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS = 10_000
 type StripeOfferConfirmResult = { type: "success" } | { type: "error"; error: { message: string } }
@@ -93,7 +97,7 @@ export const stripeOfferCheckoutAppearance: NonNullable<
   StripeCheckoutElementsOptions["appearance"]
 > = {
   variables: {
-    buttonExpressCheckoutBorderRadius: "26px",
+    borderRadius: "26px",
   },
 }
 
@@ -227,6 +231,7 @@ function StripeOfferElementsCheckoutBody({
   onBeforeConfirm,
   onApplePayAvailabilityResolved,
   paymentElementEnabled,
+  paymentButtonLabel,
   visible,
   lockedProvider,
   onPaymentMethodSelected,
@@ -248,6 +253,7 @@ function StripeOfferElementsCheckoutBody({
   ) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   paymentElementEnabled?: boolean
+  paymentButtonLabel?: string
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
@@ -268,6 +274,7 @@ function StripeOfferElementsCheckoutBody({
       onPaymentMethodSelected={onPaymentMethodSelected}
       onPaymentOptionViewed={onPaymentOptionViewed}
       paymentElementEnabled={paymentElementEnabled}
+      paymentButtonLabel={paymentButtonLabel}
       onProviderLockClaim={onProviderLockClaim}
       onProviderLockRelease={onProviderLockRelease}
       onRetry={onRetry}
@@ -289,6 +296,7 @@ export function StripeOfferElementsCheckoutContent({
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   paymentElementEnabled = true,
+  paymentButtonLabel,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
@@ -312,6 +320,7 @@ export function StripeOfferElementsCheckoutContent({
   ) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   paymentElementEnabled?: boolean
+  paymentButtonLabel?: string
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
@@ -547,6 +556,8 @@ export function StripeOfferElementsCheckoutContent({
     [recordWalletDebugEvent, resolveApplePayAvailability],
   )
 
+  // The Checkout Elements SDK reports wallet availability from `onReady`. Keep this
+  // compatibility callback solely for the interactive checkout lab's injected renderer.
   const handleAvailablePaymentMethodsChange = useCallback(
     (event: StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent) => {
       recordWalletDebugEvent("express_methods_changed", event.paymentMethods)
@@ -562,41 +573,6 @@ export function StripeOfferElementsCheckoutContent({
       closeApplePayAvailability("failed")
     },
     [closeApplePayAvailability, recordWalletDebugEvent],
-  )
-
-  const handlePaymentMethodsChange = useCallback(
-    (event: StripePaymentElementAvailablePaymentMethodsChangeEvent) => {
-      recordWalletDebugEvent("payment_methods_changed", event.paymentMethods)
-      const applePayAvailable = event.paymentMethods?.applePay?.available === true
-      if (
-        applePayAvailable &&
-        (paymentEligibilityProbeEnabledRef.current || expressDomProbeEnabledRef.current)
-      ) {
-        recordWalletDebugEvent(
-          "express_probe_from_payment",
-          event.paymentMethods,
-          "apple_pay_available",
-        )
-      }
-      if (applePayAvailable && expressDomProbeEnabledRef.current) {
-        window.setTimeout(() => recordExpressDomSnapshot("payment_apple_pay_available"), 0)
-      }
-      if (!paymentEligibilityProbeEnabledRef.current) return
-
-      const nextAvailability = reconcilePaymentElementApplePayAvailability(
-        applePayAvailability,
-        event,
-      )
-      if (nextAvailability !== applePayAvailability) {
-        resolveApplePayAvailability(nextAvailability)
-      }
-    },
-    [
-      applePayAvailability,
-      recordExpressDomSnapshot,
-      recordWalletDebugEvent,
-      resolveApplePayAvailability,
-    ],
   )
 
   const copyWalletDebugTrace = useCallback(() => {
@@ -852,7 +828,6 @@ export function StripeOfferElementsCheckoutContent({
               })
             ) : (
               <ExpressCheckoutElement
-                onAvailablePaymentMethodsChange={handleAvailablePaymentMethodsChange}
                 onConfirm={(event) => void confirmCheckout("apple_pay", event)}
                 onLoadError={handleExpressCheckoutLoadError}
                 onReady={handleExpressCheckoutReady}
@@ -897,7 +872,6 @@ export function StripeOfferElementsCheckoutContent({
             </div>
             {paymentElement ?? (
               <PaymentElement
-                onAvailablePaymentMethodsChange={handlePaymentMethodsChange}
                 onLoadError={(event) => {
                   setPaymentElementReady(false)
                   recordWalletDebugEvent(
@@ -932,7 +906,7 @@ export function StripeOfferElementsCheckoutContent({
             >
               {state.confirming
                 ? "Zahlung wird bestätigt ..."
-                : `Kostenpflichtig abonnieren · ${state.totalLabel}`}
+                : (paymentButtonLabel ?? `Kostenpflichtig abonnieren · ${state.totalLabel}`)}
             </Button>
           </div>
         </PaymentOptionExposure>
@@ -961,6 +935,7 @@ export function StripeOfferElementsCheckout({
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   paymentElementEnabled = true,
+  paymentButtonLabel,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
@@ -983,6 +958,7 @@ export function StripeOfferElementsCheckout({
   ) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   paymentElementEnabled?: boolean
+  paymentButtonLabel?: string
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
@@ -1016,6 +992,7 @@ export function StripeOfferElementsCheckout({
         onPaymentMethodSelected={onPaymentMethodSelected}
         onPaymentOptionViewed={onPaymentOptionViewed}
         paymentElementEnabled={paymentElementEnabled}
+        paymentButtonLabel={paymentButtonLabel}
         onProviderLockClaim={onProviderLockClaim}
         onProviderLockRelease={onProviderLockRelease}
         onRetry={onRetry}

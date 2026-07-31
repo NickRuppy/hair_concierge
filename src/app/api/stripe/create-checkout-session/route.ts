@@ -8,14 +8,25 @@ import { captureCheckoutException } from "@/lib/observability/checkout"
 import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import {
   recordFunnelEvent,
+  assertPersonalPlanOneTimeCheckoutAuthorized,
   resolveFunnelCookieContext,
   resolveFunnelContextForLead,
   resolvePendingFunnelTouchValue,
 } from "@/lib/funnel/server"
+import {
+  bindPersonalPlanOneTimeConsentProviderReference,
+  createPersonalPlanOneTimeCheckoutConsent,
+  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
+} from "@/lib/billing/personal-plan-one-time-consents"
 import { getStripe, PRICE_IDS } from "@/lib/stripe/client"
 import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { getStripePricingPlan } from "@/lib/stripe/pricing-plans"
+import {
+  getPersonalPlanOnceStripePriceId,
+  PERSONAL_PLAN_ONCE_KIND,
+  PERSONAL_PLAN_ONCE_PRODUCT,
+} from "@/lib/billing/offer-products"
 import {
   acquireMembershipReactivationCheckout,
   bindMembershipReactivationProviderReference,
@@ -37,7 +48,11 @@ export const runtime = "nodejs"
 
 export const StripeCheckoutSessionRequestSchema = z
   .object({
-    interval: z.enum(["month", "quarter", "year"]),
+    interval: z.enum(["month", "quarter", "year"]).optional(),
+    purchaseKind: z.literal(PERSONAL_PLAN_ONCE_KIND).optional(),
+    consentAccepted: z.literal(true).optional(),
+    consentCopyVersion: z.string().optional(),
+    funnelSessionId: z.string().uuid().optional(),
     // Accept null too — the client sends `leadId: null` when there's no ?lead=
     // in the URL (resubscribe path). `.optional()` alone rejects null.
     leadId: z.string().uuid().nullable().optional(),
@@ -59,16 +74,54 @@ export const StripeCheckoutSessionRequestSchema = z
         action,
         checkoutAttemptId,
         checkoutContext,
+        consentAccepted,
+        consentCopyVersion,
         funnelEventId,
+        funnelSessionId,
+        interval,
         preparationId,
         preparationToken,
         preparedSessionId,
         presentation,
+        purchaseKind,
         returnDestination,
         source,
       },
       context,
     ) => {
+      if (purchaseKind === PERSONAL_PLAN_ONCE_KIND) {
+        if (interval !== undefined) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "one-time checkout cannot include a subscription interval",
+            path: ["interval"],
+          })
+        }
+        if (
+          source !== "quiz_result_offer" ||
+          presentation !== "offer_overlay_elements" ||
+          action !== "create" ||
+          !checkoutAttemptId ||
+          !funnelEventId ||
+          !funnelSessionId ||
+          consentAccepted !== true ||
+          consentCopyVersion !== PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION ||
+          checkoutContext ||
+          returnDestination
+        ) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "invalid one-time personal-plan checkout contract",
+            path: ["purchaseKind"],
+          })
+        }
+      } else if (!interval) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "subscription checkout requires an interval",
+          path: ["interval"],
+        })
+      }
       if (presentation === "offer_overlay_elements" && source !== "quiz_result_offer") {
         context.addIssue({
           code: z.ZodIssueCode.custom,
@@ -171,6 +224,14 @@ export function shouldRecordFunnelForCheckoutAction(action: "create" | "prepare"
   return action !== "prepare"
 }
 
+export function reusableOneTimeStripeSessionClientSecret(
+  session: Pick<Stripe.Checkout.Session, "client_secret" | "status">,
+): string | null {
+  return session.status === "open" && typeof session.client_secret === "string"
+    ? session.client_secret
+    : null
+}
+
 export function preparedCheckoutExpiresAt(nowSeconds = Math.floor(Date.now() / 1000)) {
   // Stripe rejects Checkout Session expiries at its exact 30-minute floor when request latency
   // advances the server clock. Keep the user-facing lifetime short while retaining a safe margin.
@@ -186,6 +247,8 @@ export async function POST(req: NextRequest) {
   }
   const {
     interval,
+    purchaseKind,
+    funnelSessionId,
     leadId,
     source,
     funnelEventId,
@@ -198,6 +261,7 @@ export async function POST(req: NextRequest) {
     returnDestination: rawReturnDestination,
     presentation,
   } = parsed.data
+  const isOneTimePurchase = purchaseKind === PERSONAL_PLAN_ONCE_KIND
   if (presentation === "offer_overlay_elements" && !isOfferElementsCheckoutEnabled()) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
@@ -205,15 +269,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "not found" }, { status: 404 })
   }
   const isPreparation = action === "prepare"
-  const analyticsPlan = getStripePricingPlan(interval)
+  const subscriptionInterval = interval as BillingInterval
+  const commerceInterval = isOneTimePurchase ? "one_time" : subscriptionInterval
+  const analyticsPlan = isOneTimePurchase
+    ? PERSONAL_PLAN_ONCE_PRODUCT
+    : getStripePricingPlan(subscriptionInterval)
 
-  const priceId = PRICE_IDS[interval as BillingInterval]
+  const priceId = isOneTimePurchase
+    ? getPersonalPlanOnceStripePriceId()
+    : PRICE_IDS[subscriptionInterval]
   if (!priceId) {
     captureCheckoutException(new Error("Stripe price not configured"), {
       provider: "stripe",
       stage: "stripe_checkout_session_create",
       source: "pricing_page",
-      interval,
+      interval: commerceInterval as never,
       leadId,
       status: 500,
       reason: "price_not_configured",
@@ -249,6 +319,53 @@ export async function POST(req: NextRequest) {
       return adminSupabase
     }
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
+    let oneTimeConsentId: string | null = null
+
+    if (isOneTimePurchase) {
+      // Re-fetches the persisted arm; browser fields only select this guarded path.
+      const authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({
+        leadId: leadId!,
+        funnelSessionId,
+      })
+      try {
+        const consent = await createPersonalPlanOneTimeCheckoutConsent(getAdminSupabase(), {
+          leadId: authorization.leadId,
+          funnelSessionId: authorization.sessionId,
+          offerVariant: authorization.offerVariant,
+          userId: authenticatedUserId ?? null,
+        })
+        oneTimeConsentId = consent.id
+      } catch (error) {
+        // A retry must recover the immutable evidence/session, never create a second consent.
+        const { data: existing, error: lookupError } = await getAdminSupabase()
+          .from("personal_plan_one_time_checkout_consents")
+          .select("id, stripe_checkout_session_id, paypal_order_id")
+          .eq("lead_id", authorization.leadId)
+          .eq("funnel_session_id", authorization.sessionId)
+          .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
+          .maybeSingle()
+        if (lookupError || !existing) throw error
+        if (existing.paypal_order_id) {
+          return NextResponse.json({ error: "payment provider already selected" }, { status: 409 })
+        }
+        if (existing.stripe_checkout_session_id) {
+          const existingSession = await getStripe().checkout.sessions.retrieve(
+            existing.stripe_checkout_session_id,
+          )
+          const reusableClientSecret = reusableOneTimeStripeSessionClientSecret(existingSession)
+          if (reusableClientSecret) {
+            return NextResponse.json({ client_secret: reusableClientSecret })
+          }
+          if (existingSession.status === "complete") {
+            return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+          }
+          if (existingSession.status !== "expired") {
+            throw new Error("Existing one-time Stripe Session is not reusable")
+          }
+        }
+        oneTimeConsentId = existing.id
+      }
+    }
 
     if (checkoutContext === "membership_reactivation") {
       if (!authenticatedUserId || !checkoutAttemptId || leadId) {
@@ -282,7 +399,7 @@ export async function POST(req: NextRequest) {
           reactivationReservation = await acquireMembershipReactivationCheckout(adminSupabase, {
             userId: authenticatedUserId,
             checkoutAttemptId,
-            interval: interval as BillingInterval,
+            interval: subscriptionInterval,
             returnDestination,
           })
           reactivationReservation = await claimMembershipReactivationProvider(
@@ -319,7 +436,7 @@ export async function POST(req: NextRequest) {
           provider: "stripe",
           stage: "stripe_checkout_session_create",
           source: "pricing_page",
-          interval,
+          interval: commerceInterval as never,
           leadId,
           status: 500,
           reason: "lead_lookup_failed",
@@ -369,7 +486,7 @@ export async function POST(req: NextRequest) {
     if (action === "claim") {
       return claimPreparedCheckoutSession({
         stripe,
-        interval,
+        interval: subscriptionInterval,
         priceId,
         source,
         presentation,
@@ -382,7 +499,7 @@ export async function POST(req: NextRequest) {
         preparedSessionId: preparedSessionId!,
         checkoutAttemptId: checkoutAttemptId!,
         funnelEventId: funnelEventId!,
-        analyticsPlan,
+        analyticsPlan: getStripePricingPlan(subscriptionInterval),
         cookieStore,
         userIdForFunnel: user?.id,
       })
@@ -419,7 +536,7 @@ export async function POST(req: NextRequest) {
           provider: "stripe",
           stage: "stripe_checkout_session_create",
           source,
-          interval,
+          interval: commerceInterval as never,
           reason: "reactivation_session_reconciliation_required",
         })
         return NextResponse.json({ error: "reactivation_checkout_unavailable" }, { status: 409 })
@@ -441,7 +558,7 @@ export async function POST(req: NextRequest) {
       ? buildPreparedCheckoutMetadata({
           preparationId: preparationId!,
           preparationTokenHash: hashPreparedCheckoutToken(preparationTokenForResponse!),
-          interval,
+          interval: subscriptionInterval,
           priceId,
           source,
           presentation,
@@ -454,6 +571,7 @@ export async function POST(req: NextRequest) {
         })
       : undefined
     const params = buildStripeCheckoutSessionParams({
+      checkoutKind: isOneTimePurchase ? PERSONAL_PLAN_ONCE_KIND : "subscription",
       origin,
       priceId,
       customerId,
@@ -465,6 +583,14 @@ export async function POST(req: NextRequest) {
       returnDestination: reactivationReservation?.return_destination,
       reactivationReservationId: reactivationReservation?.id,
       presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
+      ...(!isPreparation && (checkoutAttemptId || oneTimeConsentId)
+        ? {
+            metadata: {
+              ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
+              ...(oneTimeConsentId ? { personal_plan_once_consent_id: oneTimeConsentId } : {}),
+            },
+          }
+        : {}),
       ...(isPreparation
         ? {
             expiresAt: preparedCheckoutExpiresAt(),
@@ -478,7 +604,9 @@ export async function POST(req: NextRequest) {
         ? { idempotencyKey: `membership-reactivation:${reactivationReservation.id}` }
         : isPreparation
           ? { idempotencyKey: `offer-elements-preparation:${preparationId}` }
-          : undefined,
+          : isOneTimePurchase
+            ? { idempotencyKey: `personal-plan-once:${checkoutAttemptId}` }
+            : undefined,
     )
     if (reactivationReservation) {
       await bindMembershipReactivationProviderReference(
@@ -486,6 +614,11 @@ export async function POST(req: NextRequest) {
         reactivationReservation.id,
         session.id,
       )
+    }
+    if (oneTimeConsentId) {
+      await bindPersonalPlanOneTimeConsentProviderReference(getAdminSupabase(), oneTimeConsentId, {
+        stripeCheckoutSessionId: session.id,
+      })
     }
 
     if (isPreparation) {
@@ -523,7 +656,7 @@ export async function POST(req: NextRequest) {
           touch: funnelTouch,
           properties: {
             source,
-            interval,
+            interval: commerceInterval as never,
             ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
             ...(checkoutContext ? { checkout_context: checkoutContext } : {}),
             currency: analyticsPlan.currency,
@@ -548,7 +681,7 @@ export async function POST(req: NextRequest) {
       provider: "stripe",
       stage: "stripe_checkout_session_create",
       source: "pricing_page",
-      interval,
+      interval: commerceInterval as never,
       leadId,
     })
     throw error

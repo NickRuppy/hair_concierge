@@ -46,6 +46,19 @@ import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
+import {
+  findOneTimePurchaseByProviderTransactionId,
+  updateOneTimePurchaseStatus,
+} from "@/lib/billing/purchases"
+import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
+import { recoverPayPalOrderActivation } from "@/lib/paypal/order-activation"
+import {
+  findPayPalOrderIntentByProviderReference,
+  findPayPalOrderIntentByToken as findPayPalOrderIntentByTokenV2,
+  PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT,
+  PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY,
+  type PayPalOrderIntentRow,
+} from "@/lib/paypal/order-intents"
 
 export type PayPalWebhookEvent = {
   id?: string
@@ -53,6 +66,7 @@ export type PayPalWebhookEvent = {
   create_time?: string
   resource?: {
     id?: string
+    custom_id?: string
     billing_agreement_id?: string
     subscription_id?: string
     amount?: {
@@ -60,6 +74,22 @@ export type PayPalWebhookEvent = {
       value?: string
       currency?: string
       currency_code?: string
+    }
+    status?: string
+    supplementary_data?: {
+      related_ids?: {
+        capture_id?: string
+        order_id?: string
+      }
+    }
+    disputed_transactions?: Array<{
+      seller_transaction_id?: string
+      transaction_info?: {
+        seller_transaction_id?: string
+      }
+    }>
+    dispute_outcome?: {
+      outcome_code?: string
     }
   }
 }
@@ -107,6 +137,22 @@ const KNOWN_LOG_ONLY_EVENTS = new Set([
   "PAYMENT.SALE.REFUNDED",
   "PAYMENT.SALE.REVERSED",
 ])
+const ORDER_CAPTURE_EVENTS = new Set([
+  "PAYMENT.CAPTURE.COMPLETED",
+  "PAYMENT.CAPTURE.REFUNDED",
+  "PAYMENT.CAPTURE.REVERSED",
+])
+const DISPUTE_EVENTS = new Set([
+  "CUSTOMER.DISPUTE.CREATED",
+  "CUSTOMER.DISPUTE.UPDATED",
+  "CUSTOMER.DISPUTE.RESOLVED",
+])
+const MERCHANT_FAVOR_DISPUTE_OUTCOMES = new Set([
+  "RESOLVED_SELLER_FAVOUR",
+  "RESOLVED_WITH_PAYOUT",
+  "CANCELED_BY_BUYER",
+  "DENIED",
+])
 
 export async function handlePayPalWebhookEvent(
   event: PayPalWebhookEvent,
@@ -123,6 +169,14 @@ export async function handlePayPalWebhookEvent(
   if (!claimed) return { handled: true, skipped: true }
 
   try {
+    if (ORDER_CAPTURE_EVENTS.has(eventType)) {
+      await reconcilePayPalOrderCaptureEvent(event, deps)
+      return { handled: true }
+    }
+    if (DISPUTE_EVENTS.has(eventType)) {
+      const handled = await reconcilePayPalOneTimeDisputeEvent(event, deps)
+      return handled ? { handled: true } : { handled: false }
+    }
     if (
       deps.recordBillingAnalytics &&
       (eventType === "PAYMENT.SALE.REFUNDED" || eventType === "PAYMENT.SALE.REVERSED")
@@ -222,6 +276,209 @@ export async function handlePayPalWebhookEvent(
   } catch (error) {
     await releaseWebhookEventClaim(deps.supabase, "paypal", eventId)
     throw error
+  }
+}
+
+async function reconcilePayPalOneTimeDisputeEvent(
+  event: PayPalWebhookEvent,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  const captureIds = payPalDisputeCaptureIdsForWebhook(event)
+  if (captureIds.length === 0) {
+    console.warn("[paypal:webhook] dispute has no seller transaction id", {
+      eventId: event.id,
+      eventType: event.event_type,
+    })
+    return false
+  }
+
+  let handled = false
+  for (const captureId of captureIds) {
+    const purchase = await findOneTimePurchaseByProviderTransactionId(
+      deps.supabase,
+      "paypal",
+      captureId,
+    )
+    if (!purchase) continue
+    handled = true
+    const outcome = event.resource?.dispute_outcome?.outcome_code?.trim()
+    const restored =
+      event.event_type === "CUSTOMER.DISPUTE.RESOLVED" &&
+      Boolean(outcome && MERCHANT_FAVOR_DISPUTE_OUTCOMES.has(outcome))
+    const terminalStatus =
+      purchase.status === "refunded" || purchase.status === "reversed" ? purchase.status : null
+    await updateOneTimePurchaseStatus(deps.supabase, purchase, {
+      status: terminalStatus ?? (restored ? "paid" : "disputed"),
+      metadata: {
+        ...purchase.metadata,
+        paypal_dispute_event_type: event.event_type,
+        paypal_dispute_id: event.resource?.id ?? null,
+        paypal_dispute_outcome: outcome ?? null,
+      },
+    })
+  }
+  return handled
+}
+
+async function reconcilePayPalOrderCaptureEvent(
+  event: PayPalWebhookEvent,
+  deps: PayPalWebhookDeps,
+) {
+  const isCompleted = event.event_type === "PAYMENT.CAPTURE.COMPLETED"
+  const captureId = payPalCaptureIdForWebhook(event)
+  if (!captureId) throw new Error("PayPal capture webhook is missing capture id")
+  if (isCompleted) assertValidPayPalOneTimeCaptureEvent(event)
+  let purchase = await findOneTimePurchaseByProviderTransactionId(
+    deps.supabase,
+    "paypal",
+    captureId,
+  )
+  if (!purchase && isCompleted) {
+    const token = event.resource?.custom_id?.trim()
+    const orderId = event.resource?.supplementary_data?.related_ids?.order_id?.trim()
+    const intent = token
+      ? await findPayPalOrderIntentByTokenV2(deps.supabase, token)
+      : await findPayPalOrderIntentByProviderReference(deps.supabase, { orderId })
+    if (intent) {
+      validatePayPalCaptureCompletedWebhook(event, intent, captureId)
+      await recoverPayPalOrderActivation(intent.token, {
+        supabase: deps.supabase,
+        linkQuizToProfile: deps.linkQuizToProfile,
+      })
+      purchase = await findOneTimePurchaseByProviderTransactionId(
+        deps.supabase,
+        "paypal",
+        captureId,
+      )
+    }
+  }
+  if (!purchase) {
+    if (!isCompleted) {
+      throw new Error(`PayPal capture ${captureId} has no one-time purchase to reconcile`)
+    }
+    return
+  }
+  if (isCompleted && deps.recordBillingAnalytics) {
+    const intent = await findPayPalOrderIntentByProviderReference(deps.supabase, {
+      orderId: purchase.provider_order_id ?? undefined,
+    })
+    const funnelSessionId = stringMetadata(intent?.metadata ?? null, "funnel_session_id")
+    const funnelPackageKey = stringMetadata(intent?.metadata ?? null, "funnel_package_key")
+    const destinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
+    if (
+      isFunnelAttributionEnabled() &&
+      isBillingFunnelDeliveryEnabled() &&
+      funnelSessionId &&
+      funnelPackageKey
+    ) {
+      destinations.push("funnel")
+    }
+    await recordBillingAnalyticsEvent(
+      deps.supabase,
+      {
+        eventKey: billingAnalyticsEventKey({
+          provider: "paypal",
+          eventName: "purchase_completed",
+          sourceObjectId: captureId,
+        }),
+        eventName: "purchase_completed",
+        userId: purchase.user_id,
+        provider: "paypal",
+        providerCustomerId: null,
+        providerSubscriptionId: null,
+        sourceEventId: event.id,
+        sourceObjectId: captureId,
+        occurredAt: payPalEventTimestamp(event),
+        payload: {
+          checkout_reference: captureId,
+          paypal_capture_id: captureId,
+          paypal_order_id: purchase.provider_order_id,
+          value: purchase.amount_minor / 100,
+          currency: purchase.currency.toUpperCase(),
+          interval: "one_time",
+          plan_id: purchase.product_kind,
+          has_paid_access: true,
+          funnel_session_id: funnelSessionId,
+          funnel_package_key: funnelPackageKey,
+        },
+      },
+      { defer: deps.defer, destinations },
+    )
+  }
+  if (event.event_type === "PAYMENT.CAPTURE.REVERSED") {
+    await updateOneTimePurchaseStatus(deps.supabase, purchase, { status: "reversed" })
+    return
+  }
+  if (event.event_type === "PAYMENT.CAPTURE.REFUNDED") {
+    const raw = event.resource?.amount?.value ?? event.resource?.amount?.total
+    const refund =
+      raw && Number.isFinite(Number(raw)) ? Math.round(Number(raw) * 100) : purchase.amount_minor
+    const cumulative = Math.min(purchase.amount_minor, purchase.refunded_amount_minor + refund)
+    await updateOneTimePurchaseStatus(deps.supabase, purchase, {
+      status: cumulative >= purchase.amount_minor ? "refunded" : "paid",
+      refunded_amount_minor: cumulative,
+      refunded_at: new Date().toISOString(),
+    })
+  }
+}
+
+export function payPalCaptureIdForWebhook(event: PayPalWebhookEvent): string | null {
+  const value =
+    event.event_type === "PAYMENT.CAPTURE.COMPLETED"
+      ? event.resource?.id
+      : event.resource?.supplementary_data?.related_ids?.capture_id
+  return value?.trim() || null
+}
+
+export function payPalDisputeCaptureIdsForWebhook(event: PayPalWebhookEvent): string[] {
+  return [
+    ...new Set(
+      (event.resource?.disputed_transactions ?? [])
+        .map(
+          (transaction) =>
+            transaction.seller_transaction_id ??
+            transaction.transaction_info?.seller_transaction_id,
+        )
+        .map((value) => value?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  ]
+}
+
+export function validatePayPalCaptureCompletedWebhook(
+  event: PayPalWebhookEvent,
+  intent: PayPalOrderIntentRow,
+  captureId: string,
+) {
+  const resource = event.resource
+  const amount = resource?.amount
+  const eventOrderId = resource?.supplementary_data?.related_ids?.order_id?.trim()
+  const eventToken = resource?.custom_id?.trim()
+  const currency = (amount?.currency_code ?? amount?.currency)?.trim().toUpperCase()
+  const value = amount?.value ?? amount?.total
+
+  if (
+    event.event_type !== "PAYMENT.CAPTURE.COMPLETED" ||
+    resource?.id?.trim() !== captureId ||
+    resource?.status !== "COMPLETED" ||
+    currency !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY ||
+    value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT ||
+    (eventOrderId && intent.provider_order_id && eventOrderId !== intent.provider_order_id) ||
+    (eventToken && eventToken !== intent.token)
+  ) {
+    throw new Error("PayPal one-time capture webhook failed validation")
+  }
+}
+
+export function assertValidPayPalOneTimeCaptureEvent(event: PayPalWebhookEvent): void {
+  const amount = event.resource?.amount
+  const value = amount?.value ?? amount?.total
+  const currency = amount?.currency_code ?? amount?.currency
+  if (
+    value !== PERSONAL_PLAN_ONCE_PRODUCT.amount.toFixed(2) ||
+    currency?.toUpperCase() !== PERSONAL_PLAN_ONCE_PRODUCT.currency
+  ) {
+    throw new Error("PayPal one-time capture amount or currency does not match the offer")
   }
 }
 

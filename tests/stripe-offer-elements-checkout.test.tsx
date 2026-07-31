@@ -32,11 +32,11 @@ const sessionTotal = {
     balanceAppliedToNextInvoice: false,
     discount: zeroAmount,
     shippingRate: zeroAmount,
-    surcharge: zeroAmount,
     subtotal: {
       amount: "34,99 €",
       minorUnitsAmount: 3499,
     },
+    surcharge: zeroAmount,
     taxExclusive: zeroAmount,
     taxInclusive: zeroAmount,
     total: {
@@ -148,7 +148,7 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
     "Stripe only accepts overflow=never when maxRows=0",
   )
   assert.equal(stripeOfferExpressCheckoutOptions.buttonType?.applePay, "plain")
-  assert.equal(stripeOfferCheckoutAppearance.variables?.buttonExpressCheckoutBorderRadius, "26px")
+  assert.equal(stripeOfferCheckoutAppearance.variables?.borderRadius, "26px")
   assert.match(getStripeOfferElementsErrorMessage(), /Zahlung konnte nicht bestätigt werden/)
 })
 

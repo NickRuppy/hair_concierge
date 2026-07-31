@@ -91,11 +91,13 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
         checkout_context: data.checkoutContext,
         checkout_presentation: data.checkoutPresentation,
         checkout_start_trigger: data.checkoutStartTrigger,
+        commerce_kind: data.commerceKind,
         currency: data.currency,
         interval: data.interval,
         lead_id: data.leadId,
         plan_id: data.planId,
         provider: data.provider,
+        purchase_kind: data.purchaseKind,
         source: data.source,
         value: data.value,
       }
@@ -110,8 +112,13 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
       const data = payload as AppEventMap["pricing_viewed"]
       return {
         checkout_context: data.checkoutContext,
+        commerce_kind: data.commerceKind,
+        currency: data.currency,
         lead_id: data.leadId,
+        plan_id: data.planId,
+        purchase_kind: data.purchaseKind,
         source: data.source,
+        value: data.value,
       }
     }
     case "purchase_completed": {

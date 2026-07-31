@@ -185,6 +185,25 @@ CTA reporting must use `destination`, not the generic event name, as the intent 
 - `destination=checkout` is checkout intent. The current personal-plan placements are
   `pricing_primary` and `final`.
 
+### Personal-plan pricing experiment
+
+The personal-plan pricing experiment has exactly two reportable arms:
+`personal-plan-membership-v1` and `personal-plan-one-time-v1`, both with
+`offer_revision=personal_plan_v3`. The legacy `personal-plan-v1` cohort remains a historical
+base metric and is never part of an experiment denominator. Every experiment query must exclude
+internal QA using a boolean/string-safe predicate for `is_internal_test` (for example,
+`lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')`).
+
+The primary rate is unique eligible `funnel_session_id` values with a later
+`purchase_completed`, divided by unique eligible `offer_viewed` sessions, grouped by arm. Report
+raw counts alongside the rate. Keep `destination=pricing` navigation, `destination=checkout`
+intent, `offer_checkout_opened`, and `checkout_started` as separate journey stages; provider
+initialization is not payment-option exposure.
+
+One-time commerce carries `commerce_kind=one_time` and `purchase_kind=personal_plan_once` with
+the server-owned plan ID, currency and value. It never carries a subscription interval and never
+uses a provider subscription identifier for an order, capture or payment ID.
+
 ### Guided-story additions
 
 `offer_chapter_revealed` is PostHog-only and carries the common offer context plus `chapter_id` (`analysis`, `routine`, `support`, or `pricing`), `chapter_index` (1–4), and `reveal_generation`. Generation `0` is the initial result render; each successful later high-water-mark increase uses the existing increasing generation. If one transition mounts several chapters, emit one event per chapter in `chapter_index` order with the same generation. Provider-owned claims suppress gated-remount duplicates; a no-op reveal emits nothing.

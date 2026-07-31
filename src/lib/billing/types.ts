@@ -2,6 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 export type BillingProvider = "stripe" | "paypal"
 export type BillingInterval = "month" | "quarter" | "year"
+export type BillingOneTimeProductKind = "personal_plan_once"
+export type BillingOneTimePurchaseStatus = "paid" | "refunded" | "reversed" | "disputed"
 export type BillingEntitlementStatus = "active" | "past_due" | "canceled" | "incomplete"
 export type BillingPlanChangeStatus =
   | "pending_provider"
@@ -44,6 +46,40 @@ export interface BillingSubscriptionRow {
   metadata: Record<string, unknown>
   created_at: string
   updated_at: string
+}
+
+export interface BillingOneTimePurchaseRow {
+  id: string
+  user_id: string
+  provider: BillingProvider
+  product_kind: BillingOneTimeProductKind
+  provider_transaction_id: string
+  provider_customer_id: string | null
+  provider_order_id: string | null
+  amount_minor: number
+  currency: string
+  refunded_amount_minor: number
+  status: BillingOneTimePurchaseStatus
+  paid_at: string
+  refunded_at: string | null
+  metadata: Record<string, unknown>
+  created_at: string
+  updated_at: string
+}
+
+export type BillingOneTimePurchaseInput = {
+  user_id: string
+  provider: BillingProvider
+  provider_transaction_id: string
+  amount_minor: number
+  currency: string
+  status: BillingOneTimePurchaseStatus
+  paid_at: string
+  provider_customer_id?: string | null
+  provider_order_id?: string | null
+  refunded_amount_minor?: number
+  refunded_at?: string | null
+  metadata?: Record<string, unknown>
 }
 
 export interface BillingPlanChangeRow {

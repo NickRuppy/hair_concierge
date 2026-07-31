@@ -1,6 +1,7 @@
 import type Stripe from "stripe"
 
 type BuildStripeCheckoutSessionParamsInput = {
+  checkoutKind?: "subscription" | "personal_plan_once"
   origin: string
   priceId: string
   presentation?: "embedded_page" | "elements"
@@ -17,6 +18,7 @@ type BuildStripeCheckoutSessionParamsInput = {
 }
 
 export function buildStripeCheckoutSessionParams({
+  checkoutKind = "subscription",
   origin,
   priceId,
   presentation = "embedded_page",
@@ -32,9 +34,10 @@ export function buildStripeCheckoutSessionParams({
   metadata: extraMetadata,
 }: BuildStripeCheckoutSessionParamsInput): Stripe.Checkout.SessionCreateParams {
   const isElementsPresentation = presentation === "elements"
+  const isOneTimePurchase = checkoutKind === "personal_plan_once"
 
   return {
-    mode: "subscription",
+    mode: isOneTimePurchase ? "payment" : "subscription",
     ui_mode: presentation,
     line_items: [{ price: priceId, quantity: 1 }],
     // Pass customer OR customer_email — never both (Stripe rejects that combination)
@@ -42,6 +45,18 @@ export function buildStripeCheckoutSessionParams({
     return_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
     ...(expiresAt ? { expires_at: expiresAt } : {}),
     automatic_tax: { enabled: true },
+    ...(isOneTimePurchase
+      ? {
+          payment_intent_data: {
+            metadata: {
+              product_kind: "personal_plan_once",
+              ...(extraMetadata?.checkout_attempt_id
+                ? { checkout_attempt_id: extraMetadata.checkout_attempt_id }
+                : {}),
+            },
+          },
+        }
+      : {}),
     ...(isElementsPresentation
       ? { excluded_payment_method_types: ["sepa_debit", "paypal"] }
       : {
@@ -61,6 +76,7 @@ export function buildStripeCheckoutSessionParams({
       checkoutContext ||
       returnDestination ||
       reactivationReservationId ||
+      isOneTimePurchase ||
       extraMetadata
         ? {
             ...(leadId ? { lead_id: leadId } : {}),
@@ -71,6 +87,7 @@ export function buildStripeCheckoutSessionParams({
             ...(reactivationReservationId
               ? { reactivation_reservation_id: reactivationReservationId }
               : {}),
+            ...(isOneTimePurchase ? { product_kind: "personal_plan_once" } : {}),
             ...extraMetadata,
           }
         : undefined,
