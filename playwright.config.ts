@@ -30,5 +30,10 @@ export default defineConfig({
       name: "chromium",
       use: { browserName: "chromium" },
     },
+    {
+      name: "webkit-mobile-action",
+      testMatch: "personal-plan-mobile-action.spec.ts",
+      use: { browserName: "webkit" },
+    },
   ],
 })

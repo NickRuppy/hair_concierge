@@ -2,12 +2,14 @@
 
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { createPortal } from "react-dom"
 import {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
   type RefObject,
@@ -114,6 +116,9 @@ const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud
 const AUTO_ADVANCE_MS = 260
 const PREPARED_PLAN_SESSION_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
 const SCREEN_EXIT_MS = 200
+const subscribeToClientReady = () => () => {}
+const getClientReadySnapshot = () => true
+const getServerReadySnapshot = () => false
 
 type PersonalPlanOutgoingLayer = {
   direction: PersonalPlanQuizTransitionDirection
@@ -740,15 +745,35 @@ function OptionCard({
 }
 
 function MobileBottomAction({ children, className }: { children: ReactNode; className?: string }) {
+  const mounted = useSyncExternalStore(
+    subscribeToClientReady,
+    getClientReadySnapshot,
+    getServerReadySnapshot,
+  )
+
   return (
-    <div
-      className={cn(
-        "fixed inset-x-0 bottom-0 z-40 border-t border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_-24px_rgba(var(--brand-plum-rgb),0.45)] backdrop-blur [@media(min-width:640px)_and_(min-height:701px)]:static [@media(min-width:640px)_and_(min-height:701px)]:mt-7 [@media(min-width:640px)_and_(min-height:701px)]:border-0 [@media(min-width:640px)_and_(min-height:701px)]:bg-transparent [@media(min-width:640px)_and_(min-height:701px)]:p-0 [@media(min-width:640px)_and_(min-height:701px)]:shadow-none [@media(min-width:640px)_and_(min-height:701px)]:backdrop-blur-none",
-        className,
-      )}
-    >
-      <div className="mx-auto w-full max-w-[40rem]">{children}</div>
-    </div>
+    <>
+      <div
+        className={cn(
+          "hidden [@media(min-width:640px)_and_(min-height:701px)]:mt-7 [@media(min-width:640px)_and_(min-height:701px)]:block",
+          className,
+        )}
+        data-personal-plan-bottom-action="inline"
+      >
+        <div className="mx-auto w-full max-w-[40rem]">{children}</div>
+      </div>
+      {mounted
+        ? createPortal(
+            <div
+              className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_-24px_rgba(var(--brand-plum-rgb),0.45)] backdrop-blur [@media(min-width:640px)_and_(min-height:701px)]:hidden"
+              data-personal-plan-bottom-action="viewport"
+            >
+              <div className="mx-auto w-full max-w-[40rem]">{children}</div>
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
   )
 }
 
