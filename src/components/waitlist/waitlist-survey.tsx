@@ -1,9 +1,27 @@
 "use client"
 
 import Script from "next/script"
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 
 import { WAITLIST_EMAIL_STORAGE_KEY } from "@/lib/waitlist/config"
+
+// sessionStorage aendert sich waehrend dieser Seite nicht, also gibt subscribe
+// nur eine No-op-Abmeldefunktion zurueck.
+function subscribe() {
+  return () => {}
+}
+
+function readEmail() {
+  try {
+    return window.sessionStorage.getItem(WAITLIST_EMAIL_STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+function readEmailOnServer() {
+  return null
+}
 
 /**
  * Typeform-Embed. Das Skript liest die data-tf-* Attribute und rendert das
@@ -12,25 +30,14 @@ import { WAITLIST_EMAIL_STORAGE_KEY } from "@/lib/waitlist/config"
  *
  * Die E-Mail kommt aus dem sessionStorage und wird als Hidden Field
  * durchgereicht, damit sich Antworten dem Customer.io-Profil zuordnen lassen.
+ * useSyncExternalStore statt useEffect: der Wert steht damit direkt nach der
+ * Hydration am DOM, also bevor das Embed-Skript den Container einliest, und es
+ * gibt keine Abweichung zwischen Server- und Client-Render.
  * Ist das Hidden Field im Typeform (noch) nicht angelegt, ignoriert Typeform den
  * Wert stillschweigend, der Embed funktioniert trotzdem.
  */
 export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
-  const [email, setEmail] = useState<string | null>(null)
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    try {
-      setEmail(window.sessionStorage.getItem(WAITLIST_EMAIL_STORAGE_KEY))
-    } catch {
-      setEmail(null)
-    }
-    // Erst rendern, wenn der Storage gelesen wurde. Sonst startet das Typeform-
-    // Skript ohne Hidden Field und der Wert kaeme nie an.
-    setReady(true)
-  }, [])
-
-  if (!ready) return <div style={{ minHeight: 520 }} aria-hidden />
+  const email = useSyncExternalStore(subscribe, readEmail, readEmailOnServer)
 
   return (
     <>
