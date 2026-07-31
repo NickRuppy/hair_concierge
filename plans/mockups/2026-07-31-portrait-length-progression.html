@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Haarlängen-Abstände</title>
+    <style>
+      @font-face {
+        font-family: "Jakarta";
+        src: url("../../public/fonts/PlusJakartaSans-Regular.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Playfair";
+        src: url("../../public/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      :root {
+        --ink: #2f2148;
+        --muted: #756d78;
+        --plum: #68459a;
+        --plum-light: #cbbce0;
+        --ice: #f0ecf4;
+        --cream: #f7f4f0;
+        --green: #267351;
+        --red: #b64c5e;
+        --line: rgba(47, 33, 72, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 0 0, rgba(104, 69, 154, 0.11), transparent 32rem), var(--cream);
+        color: var(--ink);
+        font-family: "Jakarta", Arial, sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 34px 0 52px;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 24px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 720px;
+        margin: 0;
+        font-family: "Playfair", Georgia, serif;
+        font-size: clamp(34px, 5vw, 58px);
+        font-weight: 400;
+        line-height: 1.03;
+      }
+
+      .intro {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .tabs button,
+      .target-tabs button {
+        padding: 9px 14px;
+        border: 1px solid var(--plum-light);
+        border-radius: 999px;
+        background: white;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .tabs button[aria-pressed="true"],
+      .target-tabs button[aria-pressed="true"] {
+        border-color: var(--plum);
+        background: var(--plum);
+        color: white;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 24px;
+        align-items: end;
+        margin-bottom: 20px;
+      }
+
+      .controls .tabs {
+        margin: 0;
+      }
+
+      .target-control {
+        display: grid;
+        gap: 6px;
+      }
+
+      .target-label {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .target-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .panel {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: 0 22px 55px rgba(47, 33, 72, 0.09);
+      }
+
+      .panel-head {
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .panel-head h2 {
+        margin: 0 0 4px;
+        font-size: 17px;
+      }
+
+      .panel-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .status {
+        flex: none;
+        padding: 5px 8px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .status.problem {
+        background: #fcebee;
+        color: var(--red);
+      }
+
+      .status.target {
+        background: #e8f5ee;
+        color: var(--green);
+      }
+
+      .phone {
+        width: min(430px, calc(100% - 36px));
+        margin: 20px auto 26px;
+        padding: 20px 14px 16px;
+        border: 1px solid rgba(47, 33, 72, 0.1);
+        border-radius: 24px;
+        background: #faf8f5;
+      }
+
+      .question-kicker {
+        margin: 0 0 4px;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+      }
+
+      .phone h3 {
+        margin: 0;
+        font-family: "Playfair", Georgia, serif;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 1.15;
+      }
+
+      .helper {
+        margin: 7px 0 15px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--plum-light);
+        border-radius: 18px;
+        background: white;
+      }
+
+      .art {
+        position: relative;
+        height: 136px;
+        overflow: hidden;
+        background: var(--ice);
+      }
+
+      .art svg,
+      .art img {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .art img {
+        z-index: 2;
+        object-fit: contain;
+        transform: translateY(calc(var(--ty) * 1px)) scaleY(var(--sy));
+        transform-origin: top center;
+      }
+
+      .current .art img {
+        transform: none;
+      }
+
+      .hem {
+        position: absolute;
+        z-index: 3;
+        right: 7px;
+        left: 7px;
+        top: calc(var(--hem) / 720 * 100%);
+        border-top: 1px dashed rgba(38, 115, 81, 0.55);
+      }
+
+      .current .hem {
+        top: calc(var(--current-hem) / 720 * 100%);
+        border-color: rgba(182, 76, 94, 0.58);
+      }
+
+      .hem::after {
+        position: absolute;
+        right: 1px;
+        top: -14px;
+        padding: 1px 4px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.82);
+        color: var(--green);
+        content: attr(data-label);
+        font-size: 8px;
+        font-weight: 800;
+      }
+
+      .current .hem::after {
+        color: var(--red);
+      }
+
+      .card-copy {
+        display: flex;
+        min-height: 52px;
+        gap: 8px;
+        align-items: center;
+        padding: 9px 10px;
+      }
+
+      .card-copy strong {
+        min-width: 0;
+        flex: 1;
+        font-size: 13px;
+      }
+
+      .radio {
+        width: 21px;
+        height: 21px;
+        flex: none;
+        border: 1px solid var(--plum-light);
+        border-radius: 50%;
+      }
+
+      .delta {
+        display: block;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 600;
+      }
+
+      .very-long {
+        grid-column: 1 / 2;
+      }
+
+      .metrics {
+        margin-top: 22px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: white;
+      }
+
+      .metrics-head {
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .metrics-head h2 {
+        margin: 0 0 4px;
+        font-size: 16px;
+      }
+
+      .metrics-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .bad {
+        color: var(--red);
+        font-weight: 800;
+      }
+
+      .good {
+        color: var(--green);
+        font-weight: 800;
+      }
+
+      .note {
+        margin: 14px 2px 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      @media (max-width: 840px) {
+        header,
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+
+        header {
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .shell {
+          width: min(100% - 18px, 430px);
+          padding-top: 22px;
+        }
+
+        .panel-head {
+          padding: 15px;
+        }
+
+        .phone {
+          width: calc(100% - 18px);
+          margin: 9px auto 14px;
+          padding: 16px 9px 11px;
+        }
+
+        .art {
+          height: 126px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <div>
+          <p class="eyebrow">Quiz · Bildabstände</p>
+          <h1>Fünf Längen, klar unterscheidbare Sprünge</h1>
+        </div>
+        <p class="intro" data-target-intro>
+          Links stehen die heute ausgelieferten Portraits. Rechts ist die empfohlene Zielgeometrie:
+          dieselben fünf anatomischen Stufen enden bei 416, 480, 544, 608 und 672&nbsp;px auf der
+          720-px-Fläche.
+        </p>
+      </header>
+
+      <div class="controls">
+        <nav class="tabs" aria-label="Haarstruktur wählen"></nav>
+        <div class="target-control">
+          <span class="target-label">Zielmodell</span>
+          <nav class="target-tabs" aria-label="Zielmodell wählen">
+            <button type="button" data-target-mode="uniform" aria-pressed="true">
+              A · Einheitlich
+            </button>
+            <button type="button" data-target-mode="targeted" aria-pressed="false">
+              B · Behutsam
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <section class="comparison">
+        <article class="panel current">
+          <div class="panel-head">
+            <div>
+              <h2>Heute</h2>
+              <p>Live-Dateien inklusive Funnel-Overrides</p>
+            </div>
+            <span class="status problem">unruhig</span>
+          </div>
+          <div class="phone">
+            <p class="question-kicker">DEIN HAAR</p>
+            <h3>Wie lang ist dein Haar?</h3>
+            <p class="helper">Wähle die Länge, die deinem Haar am nächsten kommt.</p>
+            <div class="cards" data-cards="current"></div>
+          </div>
+        </article>
+
+        <article class="panel proposed">
+          <div class="panel-head">
+            <div>
+              <h2>Empfohlene Staffelung</h2>
+              <p data-target-description>Alle vier Texturen nutzen dieselben fünf Landmarken</p>
+            </div>
+            <span class="status target" data-target-status>64 px je Schritt</span>
+          </div>
+          <div class="phone">
+            <p class="question-kicker">DEIN HAAR</p>
+            <h3>Wie lang ist dein Haar?</h3>
+            <p class="helper">Wähle die Länge, die deinem Haar am nächsten kommt.</p>
+            <div class="cards" data-cards="proposed"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        <div class="metrics-head">
+          <h2>Gemessene Sprünge</h2>
+          <p>Unterste Zeile mit mindestens 18 deckenden Haarfüllpixeln; 720-px-Quelle.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Struktur</th>
+                <th>Sehr kurz → Kurz</th>
+                <th>Kurz → Mittellang</th>
+                <th>Mittellang → Lang</th>
+                <th>Lang → Sehr lang</th>
+                <th>Ziel</th>
+              </tr>
+            </thead>
+            <tbody data-metrics></tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="note">
+        Die gestrichelte Linie markiert jeweils das gemessene Haarende. Die rechte Seite deformiert
+        die heutigen Bilder nur zur schnellen Abstandsprüfung. Bei der Umsetzung bleiben Lockenform,
+        Liniengewicht, Kopfgröße und Breite erhalten; die fünf Assets werden einzeln auf die
+        bestätigten Landmarken gesetzt.
+      </p>
+    </main>
+
+    <script>
+      const lengths = [
+        { key: "very-short", label: "Sehr kurz" },
+        { key: "short", label: "Kurz" },
+        { key: "medium", label: "Mittellang" },
+        { key: "long", label: "Lang" },
+        { key: "very-long", label: "Sehr lang" },
+      ]
+
+      const data = {
+        straight: {
+          label: "Glatt",
+          top: [53, 59, 54, 44, 47],
+          bottom: [439, 466, 515, 575, 674],
+        },
+        wavy: {
+          label: "Wellig",
+          top: [63, 62, 63, 57, 49],
+          bottom: [415, 457, 504, 612, 659],
+        },
+        curly: {
+          label: "Lockig",
+          top: [56, 65, 56, 59, 20],
+          bottom: [413, 503, 559, 581, 697],
+        },
+        coily: {
+          label: "Kraus",
+          top: [106, 64, 58, 49, 25],
+          bottom: [416, 495, 574, 651, 694],
+        },
+      }
+
+      const ownBody = new Set(["straight-very-short", "wavy-very-short", "curly-very-short"])
+      const overrides = new Set(["curly-very-long", "coily-very-long"])
+      const proposedSourceBounds = {
+        "curly-very-long": { top: 34, bottom: 682 },
+        "coily-very-long": { top: 41, bottom: 677 },
+      }
+      const uniformTargets = [416, 480, 544, 608, 672]
+      const targetedTargets = {
+        straight: [439, 466, 515, 575, 674],
+        wavy: [415, 457, 504, 612, 659],
+        curly: [413, 503, 559, 622, 682],
+        coily: [416, 495, 574, 626, 677],
+      }
+      let selected = "curly"
+      let targetMode = "uniform"
+
+      function targetFor(texture, index) {
+        return targetMode === "uniform" ? uniformTargets[index] : targetedTargets[texture][index]
+      }
+
+      function imageSource(texture, length, mode) {
+        const key = `${texture}-${length}`
+        return mode === "current" && overrides.has(key)
+          ? `../../public/images/funnels/personal-plan-quiz/portrait-${key}.webp`
+          : `../../public/images/quiz/hair-portrait/${key}.webp`
+      }
+
+      function bodySvg(key) {
+        if (ownBody.has(key)) return ""
+        return `
+          <svg aria-hidden="true" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
+            <g fill="none" stroke="#8f84a8" stroke-width="7" stroke-linecap="round">
+              <path d="M448 560 C446 610 438 652 424 684"/>
+              <path d="M576 560 C578 610 586 652 600 684"/>
+              <path d="M424 684 C330 704 240 736 186 780 C160 802 140 836 128 880"/>
+              <path d="M600 684 C694 704 784 736 838 780 C864 802 884 836 896 880"/>
+            </g>
+          </svg>`
+      }
+
+      function card(texture, length, index, mode) {
+        const key = `${texture}-${length.key}`
+        const top = data[texture].top[index]
+        const bottom = data[texture].bottom[index]
+        const target = targetFor(texture, index)
+        const proposalBounds = proposedSourceBounds[key] ?? { top, bottom }
+        const sourceTop = mode === "proposed" ? proposalBounds.top : top
+        const sourceBottom = mode === "proposed" ? proposalBounds.bottom : bottom
+        const sy = (target - sourceTop) / (sourceBottom - sourceTop)
+        const ty = sourceTop * (1 - sy)
+        const delta = index === 0 ? null : bottom - data[texture].bottom[index - 1]
+        const targetDelta = index === 0 ? null : target - targetFor(texture, index - 1)
+        const secondary =
+          mode === "current"
+            ? index === 0
+              ? `${bottom} px`
+              : `+${delta} px`
+            : index === 0
+              ? `${target} px`
+              : `+${targetDelta} px`
+
+        return `
+          <div class="card ${length.key === "very-long" ? "very-long" : ""}"
+               style="--sy:${sy.toFixed(5)};--ty:${ty.toFixed(2)};--hem:${target};--current-hem:${bottom}">
+            <div class="art">
+              ${bodySvg(key)}
+              <img alt="" src="${imageSource(texture, length.key, mode)}" />
+              <span class="hem" data-label="${mode === "current" ? bottom : target} px"></span>
+            </div>
+            <div class="card-copy">
+              <strong>${length.label}<span class="delta">${secondary}</span></strong>
+              <span class="radio" aria-hidden="true"></span>
+            </div>
+          </div>`
+      }
+
+      function renderTabs() {
+        document.querySelector(".tabs").innerHTML = Object.entries(data)
+          .map(
+            ([key, value]) =>
+              `<button type="button" data-texture="${key}" aria-pressed="${key === selected}">${value.label}</button>`,
+          )
+          .join("")
+
+        document.querySelectorAll("[data-texture]").forEach((button) => {
+          button.addEventListener("click", () => {
+            selected = button.dataset.texture
+            render()
+          })
+        })
+      }
+
+      function renderTargetTabs() {
+        document.querySelectorAll("[data-target-mode]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.targetMode === targetMode))
+          button.onclick = () => {
+            targetMode = button.dataset.targetMode
+            render()
+          }
+        })
+
+        document.querySelector("[data-target-status]").textContent =
+          targetMode === "uniform" ? "64 px je Schritt" : "2 Asset-Korrekturen"
+        document.querySelector("[data-target-description]").textContent =
+          targetMode === "uniform"
+            ? "Alle vier Texturen nutzen dieselben fünf Landmarken"
+            : "Bestehende Staffelung bleibt; nur unklare Übergänge werden repariert"
+        document.querySelector("[data-target-intro]").textContent =
+          targetMode === "uniform"
+            ? "Links stehen die heute ausgelieferten Portraits. Rechts nutzt jede Textur dieselben fünf Zielpunkte bei 416, 480, 544, 608 und 672 px."
+            : "Links stehen die heute ausgelieferten Portraits. Rechts bleiben die früher freigegebenen Reihen erhalten; nur die kollabierten lockigen und krausen Übergänge werden klar getrennt."
+      }
+
+      function renderCards() {
+        document.querySelectorAll("[data-cards]").forEach((container) => {
+          const mode = container.dataset.cards
+          container.innerHTML = lengths
+            .map((length, index) => card(selected, length, index, mode))
+            .join("")
+        })
+      }
+
+      function renderMetrics() {
+        document.querySelector("[data-metrics]").innerHTML = Object.entries(data)
+          .map(([key, value]) => {
+            const gaps = value.bottom.slice(1).map((point, index) => point - value.bottom[index])
+            const targetGaps = targetedTargets[key]
+              .slice(1)
+              .map((point, index) => point - targetedTargets[key][index])
+            const targetCopy =
+              targetMode === "uniform" ? "64 / 64 / 64 / 64 px" : `${targetGaps.join(" / ")} px`
+            return `
+              <tr>
+                <td><strong>${value.label}</strong></td>
+                ${gaps.map((gap) => `<td class="${gap < 40 || gap > 88 ? "bad" : ""}">${gap} px</td>`).join("")}
+                <td class="good">${targetCopy}</td>
+              </tr>`
+          })
+          .join("")
+      }
+
+      function render() {
+        renderTabs()
+        renderTargetTabs()
+        renderCards()
+        renderMetrics()
+      }
+
+      render()
+    </script>
+  </body>
+</html>
