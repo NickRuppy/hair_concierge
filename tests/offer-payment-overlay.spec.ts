@@ -360,7 +360,7 @@ test.describe("@ci offer payment overlay", () => {
     await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
   })
 
-  test("a guarded wallet confirmation notifies Stripe and leaves providers unlocked", async ({
+  test("wallet confirmation bypasses card readiness while card submission stays disabled", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
@@ -372,13 +372,20 @@ test.describe("@ci offer payment overlay", () => {
     await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+    const cardButton = checkout
+      .locator('[data-offer-payment-step="payment_element"]')
+      .getByRole("button")
+
+    await expect(cardButton).toBeDisabled()
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
 
     await checkout.getByRole("button", { name: "Apple Pay", exact: true }).click()
 
-    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "0")
-    await expect(diagnostic).toHaveAttribute("data-payment-failed-count", "1")
-    await expect(diagnostic).toHaveAttribute("data-provider-lock", "unlocked")
-    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-payment-failed-count", "0")
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
+    await expect(checkout.getByTestId("paypal-button")).toBeDisabled()
+    await expect(cardButton).toBeDisabled()
   })
 
   test("unavailable Apple Pay has no row or gap and leaves PayPal first on desktop", async ({
