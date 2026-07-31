@@ -6,6 +6,7 @@ import {
   clearPersonalPlanQuizDraft,
   derivePersonalPlanConflictPrompt,
   derivePersonalPlanProfileSummary,
+  getPersonalPlanQuizTransitionDirection,
   getNextPersonalPlanQuizScreen,
   getPersonalPlanQuizAnswersKey,
   getPersonalPlanLoadingProgress,
@@ -13,6 +14,11 @@ import {
   loadPersonalPlanQuizDraft,
   savePersonalPlanQuizDraft,
 } from "../src/lib/personal-plan-quiz"
+
+test("quiz transition direction follows the navigation action, not screen order", () => {
+  assert.equal(getPersonalPlanQuizTransitionDirection("advance"), "forward")
+  assert.equal(getPersonalPlanQuizTransitionDirection("return"), "back")
+})
 
 class MemoryStorage implements Pick<Storage, "getItem" | "setItem" | "removeItem"> {
   private data = new Map<string, string>()

@@ -30,12 +30,12 @@ async function completeQuizToConcerns(page: Page) {
     await startButton.click()
   }
 
-  await page.getByText("Wellig").first().click()
-  await page.getByText("Mittel").first().click()
-  await page.getByText("Mittlere Dichte").click()
-  await page.getByText("Mittellang").click()
-  await page.getByText("Leicht uneben").click()
-  await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
+  await page.getByRole("button", { name: "Wellig", exact: true }).click()
+  await page.getByRole("button", { name: "Mittel", exact: true }).click()
+  await page.getByRole("button", { name: "Mittlere Dichte", exact: true }).click()
+  await page.getByRole("button", { name: "Mittellang", exact: true }).click()
+  await page.getByRole("button", { name: "Leicht uneben", exact: true }).click()
+  await page.getByRole("button", { name: "Dehnt sich, bleibt ausgeleiert", exact: true }).click()
 
   await page.locator(".quiz-card", { hasText: "Naturhaar" }).click()
   await page.locator(".quiz-card", { hasText: "Gefärbt / getönt" }).click()
@@ -55,6 +55,67 @@ async function quizScrollPaneTop(page: Page) {
     const panes = Array.from(document.querySelectorAll<HTMLElement>(".overflow-y-auto"))
     const pane = panes.find((element) => element.scrollHeight > element.clientHeight)
     return Math.max(pane?.scrollTop ?? 0, window.scrollY)
+  })
+}
+
+type PersonalPlanOverlapSnapshot = {
+  ariaHidden: string | null
+  direction: string | null
+  duplicateIds: string[]
+  exposedHeadings: number
+  inert: boolean
+}
+
+async function armPersonalPlanOverlapCapture(page: Page) {
+  await page.evaluate(() => {
+    const quizWindow = window as Window & {
+      __personalPlanOverlap?: Promise<PersonalPlanOverlapSnapshot | null>
+    }
+    quizWindow.__personalPlanOverlap = new Promise((resolve) => {
+      let settled = false
+      let timeoutId = 0
+      let observer: MutationObserver
+      const settle = (snapshot: PersonalPlanOverlapSnapshot | null) => {
+        if (settled) return
+        settled = true
+        window.clearTimeout(timeoutId)
+        observer.disconnect()
+        resolve(snapshot)
+      }
+      timeoutId = window.setTimeout(() => settle(null), 1_000)
+      observer = new MutationObserver(() => {
+        const outgoing = document.querySelector<HTMLElement>(
+          '[data-personal-plan-transition-layer="outgoing"]',
+        )
+        if (!outgoing) return
+        const ids = Array.from(
+          document.querySelectorAll<HTMLElement>("[id]"),
+          (element) => element.id,
+        )
+        settle({
+          direction:
+            document
+              .querySelector('[data-personal-plan-transition-layer="active"]')
+              ?.getAttribute("data-personal-plan-transition-direction") ?? null,
+          duplicateIds: ids.filter((id, index) => ids.indexOf(id) !== index),
+          inert: outgoing.hasAttribute("inert"),
+          ariaHidden: outgoing.getAttribute("aria-hidden"),
+          exposedHeadings: Array.from(document.querySelectorAll("h1, h2")).filter(
+            (heading) => !heading.closest('[aria-hidden="true"]'),
+          ).length,
+        })
+      })
+      observer.observe(document.documentElement, { childList: true, subtree: true })
+    })
+  })
+}
+
+async function readPersonalPlanOverlapCapture(page: Page) {
+  return page.evaluate(() => {
+    const quizWindow = window as Window & {
+      __personalPlanOverlap?: Promise<PersonalPlanOverlapSnapshot | null>
+    }
+    return quizWindow.__personalPlanOverlap
   })
 }
 
@@ -189,6 +250,61 @@ test.describe("@ci mobile layout containment", () => {
   }
 })
 
+test.describe("@ci personal-plan quiz motion", () => {
+  test("screen overlap is directional, inert, identity-safe, and reduced-motion aware", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.emulateMedia({ reducedMotion: "no-preference" })
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        "chaarlie_cookie_consent_v1",
+        JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+      )
+      window.localStorage.removeItem("chaarlie:personal-plan-quiz-draft:v3")
+    })
+    await page.goto(`${baseUrl}/lp/haarplan`, { waitUntil: "domcontentloaded" })
+    await expect(
+      page.locator("[data-personal-plan-client-ready]"),
+      "quiz hydration",
+    ).toHaveAttribute("data-personal-plan-client-ready", "true")
+
+    await armPersonalPlanOverlapCapture(page)
+    await page.getByRole("button", { name: /Wellig/i }).click()
+    const forwardOverlap = await readPersonalPlanOverlapCapture(page)
+    expect(forwardOverlap).toEqual({
+      direction: "forward",
+      duplicateIds: [],
+      inert: true,
+      ariaHidden: "true",
+      exposedHeadings: 1,
+    })
+    await expect(
+      page.getByRole("heading", { name: "Wie dick ist ein einzelnes Haar?" }),
+    ).toBeVisible()
+
+    await armPersonalPlanOverlapCapture(page)
+    await page.getByRole("button", { name: "Zurück" }).click()
+    const backOverlap = await readPersonalPlanOverlapCapture(page)
+    expect(backOverlap?.direction).toBe("back")
+    await expect(page.getByRole("heading", { name: "Welche Haarstruktur hast du?" })).toBeVisible()
+
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
+    await armPersonalPlanOverlapCapture(page)
+    await page.getByRole("button", { name: /Wellig/i }).click()
+    await expect(
+      page.getByRole("heading", { name: "Wie dick ist ein einzelnes Haar?" }),
+    ).toBeVisible()
+    const reducedMotionOverlap = await readPersonalPlanOverlapCapture(page)
+    expect(reducedMotionOverlap).toBeNull()
+    await expect(page.locator('[data-personal-plan-transition-layer="active"]')).toHaveCSS(
+      "animation-name",
+      "none",
+    )
+  })
+})
+
 const mobileViewports = [
   { name: "small", label: "375x667", viewport: { width: 375, height: 667 } },
   { name: "regular", label: "390x844", viewport: { width: 390, height: 844 } },
@@ -314,8 +430,8 @@ for (const mobileViewport of mobileViewports) {
       })
       await expect.poll(() => quizScrollPaneTop(page)).toBeGreaterThan(0)
 
-      await page.getByText("Trockenheit").click()
-      await page.getByText("Frizz").click()
+      await page.getByRole("button", { name: "Trockenheit", exact: true }).click()
+      await page.getByRole("button", { name: "Frizz", exact: true }).click()
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       const goalsHeading = page.getByRole("heading", { name: /Deine Haarziele/i })
@@ -334,6 +450,12 @@ for (const mobileViewport of mobileViewports) {
     test("chat keeps long input, product cards, and feedback controls inside mobile bounds", async ({
       page,
     }) => {
+      await page.addInitScript(() => {
+        window.localStorage.setItem(
+          "chaarlie_cookie_consent_v1",
+          JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+        )
+      })
       await page.route("**/api/chat", async (route) => {
         if (route.request().method() === "GET") {
           await route.fulfill({
@@ -410,13 +532,15 @@ for (const mobileViewport of mobileViewports) {
       await expect(productCard).toBeVisible()
       expectBoxInsideViewport(await productCard.boundingBox(), viewport!)
 
-      const reasonText = page.getByText(
-        "Leicht genug für feines Haar mit sehr langer Begründung ohne Layoutbruch",
+      const productName = page.getByText(
+        "Ultra Lightweight Frizz Control Leave-in Conditioner With Long Name",
+        { exact: true },
       )
-      await expect(reasonText).toBeVisible()
+      await expect(productName).toBeVisible()
+      expectBoxInsideViewport(await productName.boundingBox(), viewport!)
       await expect
         .poll(async () =>
-          reasonText.evaluate((element) => element.scrollWidth <= element.clientWidth),
+          productCard.evaluate((element) => element.scrollWidth <= element.clientWidth),
         )
         .toBe(true)
 

@@ -177,6 +177,9 @@ test("personal plan offer renders approved hierarchy without personalized produc
     html,
     /data-offer-cta="sticky_header" data-offer-destination="pricing"[^>]*>Angebot ansehen</,
   )
+  assert.match(html, /data-offer-sticky-state="before_pricing"/)
+  assert.match(html, /data-offer-sticky-cta/)
+  assert.doesNotMatch(html, /data-offer-selected-interval="one_time"/)
   assert.match(html, /data-offer-cta="final" data-offer-destination="checkout"/)
   assert.match(html, /mt-3 grid grid-cols-2 gap-2/)
   assert.match(html, /background-size:200% auto/i)
@@ -201,6 +204,48 @@ test("personal plan offer renders approved hierarchy without personalized produc
   )
   assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen|Kopfhautserum|Dry\.Shampoo/i)
   assert.doesNotMatch(html, /conditionerModuleId|shampooModuleId|suggestedCategory|needLane/)
+})
+
+test("sticky offer CTA morph preserves pricing navigation before checkout intent", () => {
+  const offerSource = readFileSync(
+    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(offerSource, /const \[pricingReached, setPricingReached\] = useState\(false\)/)
+  assert.match(offerSource, /const handlePricingReached = useCallback/)
+  assert.match(offerSource, /onPricingReached=\{handlePricingReached\}/)
+  assert.match(offerSource, /onCheckoutSummaryChange=\{setCheckoutSummary\}/)
+  assert.match(offerSource, /pricingReached \? "checkout" : "pricing"/)
+  assert.match(offerSource, /pricingReached \? openCheckout : scrollToPricing/)
+  assert.match(offerSource, /h-11 w-36 sm:w-40/)
+  assert.match(
+    offerSource,
+    /data-offer-sticky-state=\{pricingReached \? "after_pricing" : "before_pricing"\}/,
+  )
+  assert.match(offerSource, /checkoutSummary\.commerceKind === "membership"/)
+  assert.match(offerSource, /data-offer-selected-interval=\{stickySelectedInterval\}/)
+  assert.match(offerSource, /pricingReached && checkoutWaiting \? undefined : "sticky_header"/)
+})
+
+test("personal plan FAQ stays native while exposing measured-height motion hooks", () => {
+  const offerSource = readFileSync(
+    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(offerSource, /function AnimatedPersonalPlanFaqItem/)
+  assert.match(offerSource, /<details/)
+  assert.match(offerSource, /<summary/)
+  assert.match(offerSource, /data-offer-faq=\{faqId\}/)
+  assert.match(offerSource, /data-offer-faq-state=\{isOpen \? "open" : "closed"\}/)
+  assert.match(offerSource, /data-offer-faq-chevron/)
+  assert.match(offerSource, /isOpen \? "rotate-180" : "rotate-0"/)
+  assert.match(offerSource, /scrollHeight/)
+  assert.match(offerSource, /prefers-reduced-motion: reduce/)
+  assert.match(offerSource, /onClick=\{handleSummaryClick\}/)
+  assert.match(offerSource, /event\.preventDefault\(\)/)
+  assert.doesNotMatch(offerSource, /onKeyDown=/)
 })
 
 test("one-time personal plan removes the membership guarantee from the shared offer", () => {

@@ -1,0 +1,716 @@
+<div id="quiz-motion-demo">
+  <div class="viz-controls qmd-controls">
+    <label class="form-label" for="qmd-moment">
+      Stil-Moment
+      <select class="form-select" id="qmd-moment">
+        <option value="question">Fragenwechsel</option>
+        <option value="multi">Mehrfachauswahl</option>
+        <option value="bridge">Abschnittsbrücke</option>
+        <option value="profile">Profil entsteht</option>
+        <option value="plan">Planwahl</option>
+      </select>
+    </label>
+    <label class="form-check form-switch" for="qmd-reduce">
+      <input class="form-check-input" id="qmd-reduce" type="checkbox">
+      <span class="form-check-label">Bewegung reduzieren</span>
+    </label>
+    <button class="btn" id="qmd-replay" type="button">
+      <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+      Neu abspielen
+    </button>
+  </div>
+
+  <p class="text-small text-muted qmd-note" id="qmd-note" aria-live="polite"></p>
+
+  <div class="qmd-stage">
+    <section class="card qmd-phone" aria-label="Interaktive Vorschau des mobilen Quiz-Stylings">
+      <header class="qmd-header">
+        <button class="btn btn-ghost qmd-back" type="button" aria-label="Zurück">
+          <i data-lucide="arrow-left" aria-hidden="true"></i>
+        </button>
+        <span class="qmd-brand">chaarlie</span>
+        <span class="qmd-chapter" id="qmd-chapter">Analyse</span>
+      </header>
+      <div class="qmd-progress" aria-label="Fortschritt">
+        <span class="qmd-progress-track"><span class="qmd-progress-fill" id="qmd-progress-fill"></span></span>
+        <span class="qmd-progress-labels" aria-hidden="true">
+          <span>Profil</span><span>Ziele</span><span>Analyse</span><span>Plan</span><span>Ergebnis</span>
+        </span>
+      </div>
+      <main class="qmd-screen" id="qmd-screen"></main>
+      <footer class="qmd-footer" id="qmd-footer"></footer>
+    </section>
+  </div>
+</div>
+
+<style>
+  #quiz-motion-demo {
+    --qmd-plum: var(--viz-series-1);
+    --qmd-coral: var(--viz-series-2);
+    --qmd-paper: color-mix(in srgb, var(--card) 94%, var(--qmd-plum) 6%);
+    --qmd-soft: color-mix(in srgb, var(--card) 88%, var(--qmd-plum) 12%);
+    --qmd-line: color-mix(in srgb, var(--border) 72%, var(--qmd-plum) 28%);
+    color: var(--foreground);
+    width: 100%;
+  }
+
+  #quiz-motion-demo .qmd-controls {
+    align-items: end;
+    margin-bottom: 8px;
+  }
+
+  #quiz-motion-demo .qmd-controls .form-label {
+    min-width: min(230px, 100%);
+  }
+
+  #quiz-motion-demo .qmd-note {
+    min-height: 1.4em;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+
+  #quiz-motion-demo .qmd-stage {
+    display: grid;
+    place-items: start center;
+    width: 100%;
+  }
+
+  #quiz-motion-demo .qmd-phone {
+    display: grid;
+    grid-template-rows: auto auto minmax(440px, auto) auto;
+    width: min(100%, 410px);
+    min-height: 650px;
+    overflow: hidden;
+    padding: 0;
+    background: var(--qmd-paper);
+  }
+
+  #quiz-motion-demo .qmd-header {
+    display: grid;
+    grid-template-columns: 48px 1fr 70px;
+    align-items: center;
+    min-height: 58px;
+    padding: 6px 12px 0;
+  }
+
+  #quiz-motion-demo .qmd-back {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  #quiz-motion-demo .qmd-brand {
+    justify-self: center;
+    font-family: ui-serif, Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  #quiz-motion-demo .qmd-chapter {
+    justify-self: end;
+    color: var(--qmd-plum);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #quiz-motion-demo .qmd-progress {
+    padding: 0 16px 10px;
+  }
+
+  #quiz-motion-demo .qmd-progress-track {
+    display: block;
+    height: 5px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--qmd-soft);
+  }
+
+  #quiz-motion-demo .qmd-progress-fill {
+    display: block;
+    width: 52%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--qmd-plum);
+    transition: width 420ms cubic-bezier(.22, .8, .2, 1);
+  }
+
+  #quiz-motion-demo .qmd-progress-labels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-top: 6px;
+    color: var(--muted-foreground);
+    font-size: 0.62rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  #quiz-motion-demo .qmd-screen {
+    position: relative;
+    padding: 18px 16px 24px;
+  }
+
+  #quiz-motion-demo .qmd-eyebrow {
+    margin: 0 0 6px;
+    color: var(--qmd-plum);
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  #quiz-motion-demo .qmd-title {
+    margin: 0;
+    font-family: ui-serif, Georgia, serif;
+    font-size: clamp(1.7rem, 7vw, 2.05rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.04;
+    text-align: center;
+  }
+
+  #quiz-motion-demo .qmd-copy {
+    margin: 10px auto 20px;
+    max-width: 34ch;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+
+  #quiz-motion-demo .qmd-options {
+    display: grid;
+    gap: 11px;
+  }
+
+  #quiz-motion-demo .qmd-option {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 28px;
+    align-items: center;
+    width: 100%;
+    min-height: 68px;
+    padding: 11px 13px;
+    border-color: var(--qmd-line);
+    border-radius: 18px;
+    text-align: left;
+    white-space: normal;
+    transform: translateZ(0);
+    transition:
+      transform 100ms ease-out,
+      background-color 160ms ease-out,
+      border-color 160ms ease-out,
+      box-shadow 160ms ease-out;
+  }
+
+  #quiz-motion-demo .qmd-option:active {
+    transform: scale(.985);
+  }
+
+  #quiz-motion-demo .qmd-option[aria-pressed="true"] {
+    border-color: var(--qmd-plum);
+    background: color-mix(in srgb, var(--card) 82%, var(--qmd-plum) 18%);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--qmd-plum) 28%, transparent);
+    color: var(--card-foreground);
+  }
+
+  #quiz-motion-demo .qmd-option-icon {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--qmd-soft);
+    color: var(--qmd-plum);
+  }
+
+  #quiz-motion-demo .qmd-option-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  #quiz-motion-demo .qmd-option-copy strong {
+    font-weight: 500;
+  }
+
+  #quiz-motion-demo .qmd-option-copy small {
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+  }
+
+  #quiz-motion-demo .qmd-check {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    justify-self: end;
+    border: 1px solid var(--qmd-line);
+    border-radius: 50%;
+    color: transparent;
+    transform: scale(.82);
+    transition:
+      transform 180ms cubic-bezier(.2, 1.4, .4, 1),
+      background-color 140ms ease-out,
+      color 140ms ease-out;
+  }
+
+  #quiz-motion-demo .qmd-option[aria-pressed="true"] .qmd-check {
+    border-color: var(--qmd-plum);
+    background: var(--qmd-plum);
+    color: var(--primary-foreground);
+    transform: scale(1);
+  }
+
+  #quiz-motion-demo .qmd-footer {
+    min-height: 74px;
+    padding: 10px 16px 14px;
+    border-top: 1px solid var(--border);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+  }
+
+  #quiz-motion-demo .qmd-primary {
+    min-height: 50px;
+    border-radius: 16px;
+    white-space: normal;
+    transition:
+      transform 100ms ease-out,
+      opacity 160ms ease-out;
+  }
+
+  #quiz-motion-demo .qmd-primary:active {
+    transform: scale(.985);
+  }
+
+  #quiz-motion-demo .qmd-enter {
+    animation: qmd-screen-in 200ms cubic-bezier(.22, .8, .2, 1) both;
+  }
+
+  #quiz-motion-demo .qmd-exit {
+    animation: qmd-screen-out 160ms ease-in both;
+  }
+
+  #quiz-motion-demo .qmd-bump {
+    animation: qmd-bump 180ms cubic-bezier(.2, 1.35, .4, 1);
+  }
+
+  #quiz-motion-demo .qmd-bridge-visual {
+    position: relative;
+    display: grid;
+    width: 100%;
+    min-height: 180px;
+    place-items: center;
+    margin: 18px 0 20px;
+    overflow: hidden;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at 26% 34%, color-mix(in srgb, var(--qmd-coral) 28%, transparent) 0 16%, transparent 17%),
+      radial-gradient(circle at 68% 30%, color-mix(in srgb, var(--qmd-plum) 25%, transparent) 0 20%, transparent 21%),
+      linear-gradient(145deg, var(--qmd-soft), color-mix(in srgb, var(--card) 76%, var(--qmd-coral) 24%));
+  }
+
+  #quiz-motion-demo .qmd-bridge-ring {
+    display: grid;
+    width: 96px;
+    height: 96px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--qmd-plum) 55%, transparent);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    color: var(--qmd-plum);
+    animation: qmd-bridge-ring 480ms cubic-bezier(.2, 1.2, .4, 1) both;
+  }
+
+  #quiz-motion-demo .qmd-profile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  #quiz-motion-demo .qmd-profile-item {
+    display: grid;
+    gap: 4px;
+    min-height: 84px;
+    align-content: center;
+    padding: 12px;
+    border-bottom: 2px solid var(--qmd-line);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: qmd-profile-in 260ms cubic-bezier(.22, .8, .2, 1) forwards;
+  }
+
+  #quiz-motion-demo .qmd-profile-item small {
+    color: var(--muted-foreground);
+  }
+
+  #quiz-motion-demo .qmd-profile-item strong {
+    color: var(--qmd-plum);
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+
+  #quiz-motion-demo .qmd-profile-item:nth-child(2) { animation-delay: 70ms; }
+  #quiz-motion-demo .qmd-profile-item:nth-child(3) { animation-delay: 140ms; }
+  #quiz-motion-demo .qmd-profile-item:nth-child(4) { animation-delay: 210ms; }
+
+  #quiz-motion-demo .qmd-plan-options {
+    display: grid;
+    gap: 9px;
+    margin-top: 16px;
+  }
+
+  #quiz-motion-demo .qmd-plan {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    min-height: 61px;
+    gap: 10px;
+    padding: 10px 12px;
+    border-color: var(--qmd-line);
+    border-radius: 16px;
+    text-align: left;
+    white-space: normal;
+    transition:
+      transform 100ms ease-out,
+      background-color 180ms ease-out,
+      border-color 180ms ease-out;
+  }
+
+  #quiz-motion-demo .qmd-plan:active {
+    transform: scale(.985);
+  }
+
+  #quiz-motion-demo .qmd-plan[aria-pressed="true"] {
+    border-color: var(--qmd-plum);
+    background: color-mix(in srgb, var(--card) 84%, var(--qmd-plum) 16%);
+  }
+
+  #quiz-motion-demo .qmd-radio {
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    border: 1px solid var(--qmd-line);
+    border-radius: 50%;
+  }
+
+  #quiz-motion-demo .qmd-plan[aria-pressed="true"] .qmd-radio::after {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--qmd-plum);
+    content: "";
+    animation: qmd-radio-in 180ms cubic-bezier(.2, 1.4, .4, 1);
+  }
+
+  #quiz-motion-demo .qmd-plan-name {
+    display: grid;
+  }
+
+  #quiz-motion-demo .qmd-plan-name strong {
+    font-weight: 500;
+  }
+
+  #quiz-motion-demo .qmd-plan-name small {
+    color: var(--muted-foreground);
+  }
+
+  #quiz-motion-demo .qmd-price {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  #quiz-motion-demo.qmd-reduced *,
+  #quiz-motion-demo.qmd-reduced *::before,
+  #quiz-motion-demo.qmd-reduced *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+
+  @keyframes qmd-screen-in {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes qmd-screen-out {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-8px); }
+  }
+
+  @keyframes qmd-bump {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.025); }
+  }
+
+  @keyframes qmd-bridge-ring {
+    from { opacity: 0; transform: scale(.86); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes qmd-profile-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes qmd-radio-in {
+    from { transform: scale(.35); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #quiz-motion-demo *,
+    #quiz-motion-demo *::before,
+    #quiz-motion-demo *::after {
+      animation-duration: 1ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 1ms !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    #quiz-motion-demo .qmd-phone {
+      min-height: 620px;
+    }
+
+    #quiz-motion-demo .qmd-screen {
+      padding-inline: 13px;
+    }
+
+    #quiz-motion-demo .qmd-title {
+      font-size: 1.72rem;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById("quiz-motion-demo");
+    const momentSelect = root.querySelector("#qmd-moment");
+    const reduceToggle = root.querySelector("#qmd-reduce");
+    const replayButton = root.querySelector("#qmd-replay");
+    const screen = root.querySelector("#qmd-screen");
+    const footer = root.querySelector("#qmd-footer");
+    const note = root.querySelector("#qmd-note");
+    const chapter = root.querySelector("#qmd-chapter");
+    const progress = root.querySelector("#qmd-progress-fill");
+
+    const notes = {
+      question: "200 ms · Auswahl bestätigt, dann wechselt nur der Inhalt — Header und Fortschritt bleiben ruhig.",
+      multi: "Sofortige Auswahl · Der CTA zählt mit und reagiert einmal kurz, ohne dauerhaft zu pulsieren.",
+      bridge: "Einmaliger 480-ms-Payoff · Abschnittswechsel fühlt sich bewusst an, ohne künstliche Wartezeit.",
+      profile: "Vier Felder in 70-ms-Abständen · Personalisierung wird sichtbar zusammengesetzt und stoppt danach.",
+      plan: "180 ms · Auswahlring, Preis und CTA aktualisieren sich ohne Layoutsprung."
+    };
+
+    const icons = {
+      smooth: "sparkles",
+      uneven: "waves",
+      rough: "wind",
+      moisture: "droplets",
+      frizz: "cloud",
+      definition: "align-center",
+      shine: "sun"
+    };
+
+    function icon(name) {
+      return `<i data-lucide="${name}" aria-hidden="true"></i>`;
+    }
+
+    function option(label, detail, key, multi = false) {
+      return `
+        <button class="btn qmd-option" type="button" aria-pressed="false" data-option="${key}" data-multi="${multi}">
+          <span class="qmd-option-icon">${icon(icons[key] || "circle")}</span>
+          <span class="qmd-option-copy"><strong>${label}</strong>${detail ? `<small>${detail}</small>` : ""}</span>
+          <span class="qmd-check">${icon("check")}</span>
+        </button>
+      `;
+    }
+
+    function primary(label, disabled = false) {
+      return `<button class="btn btn-primary btn-block qmd-primary" type="button" ${disabled ? "disabled" : ""}>${label} ${icon("arrow-right")}</button>`;
+    }
+
+    function activateIcons() {
+      if (window.lucide) window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+    }
+
+    function setFrame(name, progressWidth, chapterName) {
+      note.textContent = notes[name];
+      progress.style.width = progressWidth;
+      chapter.textContent = chapterName;
+      screen.classList.remove("qmd-exit", "qmd-enter");
+      void screen.offsetWidth;
+      screen.classList.add("qmd-enter");
+    }
+
+    function renderQuestion(second = false) {
+      setFrame("question", second ? "58%" : "52%", "Analyse");
+      screen.innerHTML = second
+        ? `
+          <p class="qmd-eyebrow">Deine Analyse</p>
+          <h2 class="qmd-title">Wie reagiert dein Haar beim Dehnen?</h2>
+          <p class="qmd-copy">Teste nur sanft an einem einzelnen ausgefallenen Haar.</p>
+          <div class="qmd-options">
+            ${option("Es dehnt sich etwas und geht zurück", "", "smooth")}
+            ${option("Es bleibt gedehnt", "", "uneven")}
+            ${option("Es reißt schnell", "", "rough")}
+          </div>
+        `
+        : `
+          <p class="qmd-eyebrow">Deine Analyse</p>
+          <h2 class="qmd-title">Wie fühlt sich deine Haaroberfläche an?</h2>
+          <p class="qmd-copy">Streiche vorsichtig an einer einzelnen trockenen Strähne entlang.</p>
+          <div class="qmd-options">
+            ${option("Glatt", "Die Strähne gleitet gleichmäßig.", "smooth")}
+            ${option("Leicht uneben", "Du spürst kleine Unebenheiten.", "uneven")}
+            ${option("Rau", "Die Strähne fühlt sich trocken oder rau an.", "rough")}
+          </div>
+        `;
+      footer.innerHTML = "";
+      screen.querySelectorAll("[data-option]").forEach((button) => {
+        button.addEventListener("click", () => {
+          screen.querySelectorAll("[data-option]").forEach((peer) => peer.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          if (!second) {
+            window.setTimeout(() => {
+              screen.classList.remove("qmd-enter");
+              screen.classList.add("qmd-exit");
+              window.setTimeout(() => renderQuestion(true), root.classList.contains("qmd-reduced") ? 1 : 160);
+            }, root.classList.contains("qmd-reduced") ? 1 : 300);
+          }
+        });
+      });
+      activateIcons();
+    }
+
+    function renderMulti() {
+      setFrame("multi", "38%", "Ziele");
+      screen.innerHTML = `
+        <h2 class="qmd-title">Was wünschst du dir für deine Wellen?</h2>
+        <p class="qmd-copy">Wähle alles aus, was dir wichtig ist.</p>
+        <div class="qmd-options">
+          ${option("Feuchtigkeit ohne Beschweren", "", "moisture", true)}
+          ${option("Weniger Frizz", "", "frizz", true)}
+          ${option("Mehr Wellen-Definition", "", "definition", true)}
+          ${option("Mehr Glanz", "", "shine", true)}
+        </div>
+      `;
+      footer.innerHTML = primary("Weiter", true);
+      const cta = footer.querySelector("button");
+      screen.querySelectorAll("[data-option]").forEach((button) => {
+        button.addEventListener("click", () => {
+          button.setAttribute("aria-pressed", button.getAttribute("aria-pressed") === "true" ? "false" : "true");
+          const count = screen.querySelectorAll('[data-option][aria-pressed="true"]').length;
+          cta.disabled = count === 0;
+          cta.innerHTML = count === 0 ? `Weiter ${icon("arrow-right")}` : `${count} ausgewählt · Weiter ${icon("arrow-right")}`;
+          cta.classList.remove("qmd-bump");
+          void cta.offsetWidth;
+          cta.classList.add("qmd-bump");
+          activateIcons();
+        });
+      });
+      activateIcons();
+    }
+
+    function renderBridge() {
+      setFrame("bridge", "42%", "Ziele");
+      screen.innerHTML = `
+        <p class="qmd-eyebrow">Dein Profil wird genauer</p>
+        <h2 class="qmd-title">Deine Antworten werden zu einem echten Haarprofil.</h2>
+        <div class="qmd-bridge-visual" role="img" aria-label="Symbolische Verbindung deiner Antworten">
+          <span class="qmd-bridge-ring">${icon("sparkles")}</span>
+        </div>
+        <p class="qmd-copy">Als Nächstes verbinden wir deine Ziele mit einfachen Beobachtungen deiner Haare.</p>
+      `;
+      footer.innerHTML = primary("Haaranalyse fortsetzen");
+      activateIcons();
+    }
+
+    function renderProfile() {
+      setFrame("profile", "64%", "Analyse");
+      screen.innerHTML = `
+        <p class="qmd-eyebrow">Deine Analyse</p>
+        <h2 class="qmd-title">Dein Profil nimmt Form an.</h2>
+        <p class="qmd-copy">Wir verbinden deine Angaben Schritt für Schritt zu einem klareren Bild.</p>
+        <div class="qmd-profile" aria-label="Persönliches Haarprofil">
+          <div class="qmd-profile-item"><small>Struktur</small><strong>Wellig</strong></div>
+          <div class="qmd-profile-item"><small>Dicke</small><strong>Mittel</strong></div>
+          <div class="qmd-profile-item"><small>Dichte</small><strong>Mittlere Dichte</strong></div>
+          <div class="qmd-profile-item"><small>Schwerpunkt</small><strong>Feuchtigkeit & Frizz</strong></div>
+        </div>
+      `;
+      footer.innerHTML = primary("Weiter");
+      activateIcons();
+    }
+
+    const plans = {
+      month: { label: "Monatlich", detail: "Flexibel kündbar", price: "14,99 €", cta: "Monat · 14,99 € → Zahlung" },
+      quarter: { label: "Quartal", detail: "Beliebteste Wahl", price: "34,99 €", cta: "Quartal · 34,99 € → Zahlung" },
+      year: { label: "Jährlich", detail: "Bester Monatswert", price: "99,99 €", cta: "Jahr · 99,99 € → Zahlung" }
+    };
+
+    function planOption(key, selected) {
+      const plan = plans[key];
+      return `
+        <button class="btn qmd-plan" type="button" aria-pressed="${selected}" data-plan="${key}">
+          <span class="qmd-radio" aria-hidden="true"></span>
+          <span class="qmd-plan-name"><strong>${plan.label}</strong><small>${plan.detail}</small></span>
+          <span class="qmd-price">${plan.price}</span>
+        </button>
+      `;
+    }
+
+    function updatePlan(key) {
+      screen.querySelectorAll("[data-plan]").forEach((button) => {
+        button.setAttribute("aria-pressed", button.dataset.plan === key ? "true" : "false");
+      });
+      const cta = footer.querySelector("button");
+      cta.innerHTML = `${plans[key].cta} ${icon("arrow-right")}`;
+      cta.classList.remove("qmd-bump");
+      void cta.offsetWidth;
+      cta.classList.add("qmd-bump");
+      activateIcons();
+    }
+
+    function renderPlan() {
+      setFrame("plan", "86%", "Ergebnis");
+      screen.innerHTML = `
+        <p class="qmd-eyebrow">Plan freischalten</p>
+        <h2 class="qmd-title">Wähle den Zugang, der zu dir passt.</h2>
+        <p class="qmd-copy">Der Inhalt bleibt gleich. Du entscheidest nur über die Laufzeit.</p>
+        <div class="qmd-plan-options">
+          ${planOption("month", false)}
+          ${planOption("quarter", true)}
+          ${planOption("year", false)}
+        </div>
+      `;
+      footer.innerHTML = primary(plans.quarter.cta);
+      screen.querySelectorAll("[data-plan]").forEach((button) => {
+        button.addEventListener("click", () => updatePlan(button.dataset.plan));
+      });
+      activateIcons();
+    }
+
+    function renderCurrent() {
+      const value = momentSelect.value;
+      if (value === "question") renderQuestion(false);
+      if (value === "multi") renderMulti();
+      if (value === "bridge") renderBridge();
+      if (value === "profile") renderProfile();
+      if (value === "plan") renderPlan();
+    }
+
+    momentSelect.addEventListener("change", renderCurrent);
+    replayButton.addEventListener("click", renderCurrent);
+    reduceToggle.addEventListener("change", () => {
+      root.classList.toggle("qmd-reduced", reduceToggle.checked);
+      renderCurrent();
+    });
+
+    renderCurrent();
+  })();
+</script>

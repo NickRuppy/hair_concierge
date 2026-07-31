@@ -1,0 +1,952 @@
+<div id="quiz-motion-expanded">
+  <div class="viz-controls qme-controls">
+    <label class="form-label" for="qme-moment">
+      Ergänzung
+      <select class="form-select" id="qme-moment">
+        <option value="navigation">Vorwärts & zurück</option>
+        <option value="milestone">Abschnittsmeilenstein</option>
+        <option value="offer">Kontext-CTA im Angebot</option>
+        <option value="secondary">FAQ & Checkout-Ausgang</option>
+      </select>
+    </label>
+    <label class="form-check form-switch" for="qme-reduce">
+      <input class="form-check-input" id="qme-reduce" type="checkbox">
+      <span class="form-check-label">Bewegung reduzieren</span>
+    </label>
+    <button class="btn" id="qme-replay" type="button">
+      <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+      Neu abspielen
+    </button>
+  </div>
+
+  <p class="text-small text-muted qme-note" id="qme-note" aria-live="polite"></p>
+
+  <div class="qme-stage">
+    <section class="card qme-phone" aria-label="Interaktive Vorschau zusätzlicher mobiler Styling-Momente">
+      <header class="qme-header">
+        <button class="btn btn-ghost qme-back" id="qme-back" type="button" aria-label="Zurück">
+          <i data-lucide="arrow-left" aria-hidden="true"></i>
+        </button>
+        <span class="qme-brand">chaarlie</span>
+        <span class="qme-chapter" id="qme-chapter">Analyse</span>
+      </header>
+      <div class="qme-progress" aria-label="Fortschritt">
+        <span class="qme-progress-line">
+          <span class="qme-progress-fill" id="qme-progress-fill"></span>
+          <span class="qme-milestone" id="qme-milestone" aria-hidden="true"></span>
+        </span>
+        <span class="qme-progress-labels" aria-hidden="true">
+          <span>Profil</span><span>Ziele</span><span>Analyse</span><span>Plan</span><span>Ergebnis</span>
+        </span>
+      </div>
+      <main class="qme-screen" id="qme-screen"></main>
+      <footer class="qme-footer" id="qme-footer"></footer>
+      <div class="qme-overlay" id="qme-overlay" hidden></div>
+    </section>
+  </div>
+</div>
+
+<style>
+  #quiz-motion-expanded {
+    --qme-plum: var(--viz-series-1);
+    --qme-coral: var(--viz-series-2);
+    --qme-paper: color-mix(in srgb, var(--card) 94%, var(--qme-plum) 6%);
+    --qme-soft: color-mix(in srgb, var(--card) 88%, var(--qme-plum) 12%);
+    --qme-line: color-mix(in srgb, var(--border) 72%, var(--qme-plum) 28%);
+    width: 100%;
+    color: var(--foreground);
+  }
+
+  #quiz-motion-expanded .qme-controls {
+    align-items: end;
+    margin-bottom: 8px;
+  }
+
+  #quiz-motion-expanded .qme-controls .form-label {
+    min-width: min(230px, 100%);
+  }
+
+  #quiz-motion-expanded .qme-note {
+    min-height: 1.4em;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+
+  #quiz-motion-expanded .qme-stage {
+    display: grid;
+    width: 100%;
+    place-items: start center;
+  }
+
+  #quiz-motion-expanded .qme-phone {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto minmax(440px, auto) auto;
+    width: min(100%, 410px);
+    min-height: 650px;
+    overflow: hidden;
+    padding: 0;
+    background: var(--qme-paper);
+  }
+
+  #quiz-motion-expanded .qme-header {
+    display: grid;
+    grid-template-columns: 48px 1fr 70px;
+    align-items: center;
+    min-height: 58px;
+    padding: 6px 12px 0;
+  }
+
+  #quiz-motion-expanded .qme-back {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  #quiz-motion-expanded .qme-back:disabled {
+    opacity: .35;
+  }
+
+  #quiz-motion-expanded .qme-brand {
+    justify-self: center;
+    font-family: ui-serif, Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  #quiz-motion-expanded .qme-chapter {
+    justify-self: end;
+    color: var(--qme-plum);
+    font-size: .72rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #quiz-motion-expanded .qme-progress {
+    padding: 0 16px 10px;
+  }
+
+  #quiz-motion-expanded .qme-progress-line {
+    position: relative;
+    display: block;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--qme-soft);
+  }
+
+  #quiz-motion-expanded .qme-progress-fill {
+    display: block;
+    width: 52%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--qme-plum);
+    transition: width 380ms cubic-bezier(.22, .8, .2, 1);
+  }
+
+  #quiz-motion-expanded .qme-milestone {
+    position: absolute;
+    top: 50%;
+    left: 52%;
+    width: 11px;
+    height: 11px;
+    border: 2px solid var(--qme-paper);
+    border-radius: 50%;
+    background: var(--qme-plum);
+    transform: translate(-50%, -50%);
+    transition: left 380ms cubic-bezier(.22, .8, .2, 1);
+  }
+
+  #quiz-motion-expanded .qme-milestone.is-settling {
+    animation: qme-marker-settle 360ms cubic-bezier(.2, 1.5, .4, 1);
+  }
+
+  #quiz-motion-expanded .qme-progress-labels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-top: 6px;
+    color: var(--muted-foreground);
+    font-size: .62rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  #quiz-motion-expanded .qme-screen {
+    position: relative;
+    padding: 18px 16px 24px;
+  }
+
+  #quiz-motion-expanded .qme-eyebrow {
+    margin: 0 0 6px;
+    color: var(--qme-plum);
+    font-size: .74rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  #quiz-motion-expanded .qme-title {
+    margin: 0;
+    font-family: ui-serif, Georgia, serif;
+    font-size: clamp(1.7rem, 7vw, 2.05rem);
+    font-weight: 500;
+    letter-spacing: -.025em;
+    line-height: 1.04;
+    text-align: center;
+  }
+
+  #quiz-motion-expanded .qme-copy {
+    max-width: 34ch;
+    margin: 10px auto 20px;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+
+  #quiz-motion-expanded .qme-options,
+  #quiz-motion-expanded .qme-plans {
+    display: grid;
+    gap: 10px;
+  }
+
+  #quiz-motion-expanded .qme-option {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 28px;
+    align-items: center;
+    width: 100%;
+    min-height: 68px;
+    padding: 11px 13px;
+    border-color: var(--qme-line);
+    border-radius: 18px;
+    text-align: left;
+    white-space: normal;
+    transition:
+      transform 100ms ease-out,
+      background-color 160ms ease-out,
+      border-color 160ms ease-out,
+      box-shadow 160ms ease-out;
+  }
+
+  #quiz-motion-expanded .qme-option:active,
+  #quiz-motion-expanded .qme-plan:active {
+    transform: scale(.985);
+  }
+
+  #quiz-motion-expanded .qme-option[aria-pressed="true"] {
+    border-color: var(--qme-plum);
+    background: color-mix(in srgb, var(--card) 82%, var(--qme-plum) 18%);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--qme-plum) 28%, transparent);
+    color: var(--card-foreground);
+  }
+
+  #quiz-motion-expanded .qme-option-icon {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--qme-soft);
+    color: var(--qme-plum);
+  }
+
+  #quiz-motion-expanded .qme-option-copy {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  #quiz-motion-expanded .qme-option-copy strong {
+    font-weight: 500;
+  }
+
+  #quiz-motion-expanded .qme-option-copy small {
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+  }
+
+  #quiz-motion-expanded .qme-check {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    justify-self: end;
+    border: 1px solid var(--qme-line);
+    border-radius: 50%;
+    color: transparent;
+    transform: scale(.82);
+    transition:
+      transform 180ms cubic-bezier(.2, 1.4, .4, 1),
+      background-color 140ms ease-out,
+      color 140ms ease-out;
+  }
+
+  #quiz-motion-expanded .qme-option[aria-pressed="true"] .qme-check {
+    border-color: var(--qme-plum);
+    background: var(--qme-plum);
+    color: var(--primary-foreground);
+    transform: scale(1);
+  }
+
+  #quiz-motion-expanded .qme-footer {
+    z-index: 3;
+    min-height: 74px;
+    padding: 10px 16px 14px;
+    border-top: 1px solid var(--border);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+  }
+
+  #quiz-motion-expanded .qme-primary {
+    min-height: 50px;
+    border-radius: 16px;
+    white-space: normal;
+    transition:
+      transform 100ms ease-out,
+      opacity 160ms ease-out;
+  }
+
+  #quiz-motion-expanded .qme-primary:active {
+    transform: scale(.985);
+  }
+
+  #quiz-motion-expanded .qme-enter-forward {
+    animation: qme-in-forward 200ms cubic-bezier(.22, .8, .2, 1) both;
+  }
+
+  #quiz-motion-expanded .qme-exit-forward {
+    animation: qme-out-forward 160ms ease-in both;
+  }
+
+  #quiz-motion-expanded .qme-enter-back {
+    animation: qme-in-back 200ms cubic-bezier(.22, .8, .2, 1) both;
+  }
+
+  #quiz-motion-expanded .qme-exit-back {
+    animation: qme-out-back 160ms ease-in both;
+  }
+
+  #quiz-motion-expanded .qme-bump {
+    animation: qme-bump 180ms cubic-bezier(.2, 1.35, .4, 1);
+  }
+
+  #quiz-motion-expanded .qme-milestone-visual {
+    display: grid;
+    min-height: 210px;
+    place-items: center;
+    margin: 18px 0;
+    overflow: hidden;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at 24% 30%, color-mix(in srgb, var(--qme-coral) 28%, transparent) 0 16%, transparent 17%),
+      radial-gradient(circle at 74% 35%, color-mix(in srgb, var(--qme-plum) 25%, transparent) 0 20%, transparent 21%),
+      linear-gradient(145deg, var(--qme-soft), color-mix(in srgb, var(--card) 76%, var(--qme-coral) 24%));
+  }
+
+  #quiz-motion-expanded .qme-milestone-ring {
+    display: grid;
+    width: 106px;
+    height: 106px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--qme-plum) 55%, transparent);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    color: var(--qme-plum);
+    animation: qme-ring-in 440ms cubic-bezier(.2, 1.2, .4, 1) both;
+  }
+
+  #quiz-motion-expanded .qme-mini-result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 18px 0 20px;
+  }
+
+  #quiz-motion-expanded .qme-result-line {
+    display: grid;
+    gap: 3px;
+    padding: 10px 0;
+    border-bottom: 2px solid var(--qme-line);
+  }
+
+  #quiz-motion-expanded .qme-result-line small {
+    color: var(--muted-foreground);
+  }
+
+  #quiz-motion-expanded .qme-result-line strong {
+    color: var(--qme-plum);
+    font-weight: 500;
+  }
+
+  #quiz-motion-expanded .qme-plan {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    min-height: 61px;
+    gap: 10px;
+    padding: 10px 12px;
+    border-color: var(--qme-line);
+    border-radius: 16px;
+    text-align: left;
+    white-space: normal;
+    transition:
+      transform 100ms ease-out,
+      background-color 180ms ease-out,
+      border-color 180ms ease-out;
+  }
+
+  #quiz-motion-expanded .qme-plan[aria-pressed="true"] {
+    border-color: var(--qme-plum);
+    background: color-mix(in srgb, var(--card) 84%, var(--qme-plum) 16%);
+  }
+
+  #quiz-motion-expanded .qme-radio {
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    border: 1px solid var(--qme-line);
+    border-radius: 50%;
+  }
+
+  #quiz-motion-expanded .qme-plan[aria-pressed="true"] .qme-radio::after {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--qme-plum);
+    content: "";
+    animation: qme-radio-in 180ms cubic-bezier(.2, 1.4, .4, 1);
+  }
+
+  #quiz-motion-expanded .qme-plan-name {
+    display: grid;
+  }
+
+  #quiz-motion-expanded .qme-plan-name strong {
+    font-weight: 500;
+  }
+
+  #quiz-motion-expanded .qme-plan-name small {
+    color: var(--muted-foreground);
+  }
+
+  #quiz-motion-expanded .qme-price {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  #quiz-motion-expanded .qme-faq {
+    display: grid;
+    gap: 0;
+    margin-top: 16px;
+    border-block: 1px solid var(--qme-line);
+  }
+
+  #quiz-motion-expanded .qme-faq-button {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    align-items: center;
+    width: 100%;
+    padding: 14px 2px;
+    text-align: left;
+    white-space: normal;
+  }
+
+  #quiz-motion-expanded .qme-faq-button span {
+    font-weight: 500;
+  }
+
+  #quiz-motion-expanded .qme-faq-button svg {
+    transition: transform 190ms ease-out;
+  }
+
+  #quiz-motion-expanded .qme-faq-button[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+
+  #quiz-motion-expanded .qme-faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 210ms cubic-bezier(.22, .8, .2, 1);
+  }
+
+  #quiz-motion-expanded .qme-faq-answer > div {
+    overflow: hidden;
+  }
+
+  #quiz-motion-expanded .qme-faq-answer p {
+    margin: 0;
+    padding: 0 2px 14px;
+    color: var(--muted-foreground);
+  }
+
+  #quiz-motion-expanded .qme-faq-answer.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  #quiz-motion-expanded .qme-overlay {
+    position: absolute;
+    z-index: 8;
+    inset: 0;
+    display: grid;
+    align-items: end;
+    background: color-mix(in srgb, var(--foreground) 30%, transparent);
+    animation: qme-fade-in 160ms ease-out both;
+  }
+
+  #quiz-motion-expanded .qme-overlay[hidden] {
+    display: none;
+  }
+
+  #quiz-motion-expanded .qme-sheet {
+    display: grid;
+    gap: 14px;
+    padding: 18px 16px 20px;
+    border-radius: 26px 26px 0 0;
+    background: var(--card);
+    color: var(--card-foreground);
+    animation: qme-sheet-in 240ms cubic-bezier(.22, .8, .2, 1) both;
+  }
+
+  #quiz-motion-expanded .qme-sheet-head {
+    display: grid;
+    grid-template-columns: 1fr 42px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #quiz-motion-expanded .qme-sheet-head h3 {
+    margin: 0;
+    font-family: ui-serif, Georgia, serif;
+    font-weight: 500;
+  }
+
+  #quiz-motion-expanded .qme-sheet-close {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  #quiz-motion-expanded .qme-confirm {
+    display: grid;
+    gap: 12px;
+    animation: qme-confirm-in 180ms ease-out both;
+  }
+
+  #quiz-motion-expanded .qme-confirm p {
+    margin: 0;
+    color: var(--muted-foreground);
+  }
+
+  #quiz-motion-expanded .qme-confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  #quiz-motion-expanded.qme-reduced *,
+  #quiz-motion-expanded.qme-reduced *::before,
+  #quiz-motion-expanded.qme-reduced *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+
+  @keyframes qme-in-forward {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes qme-out-forward {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-8px); }
+  }
+
+  @keyframes qme-in-back {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes qme-out-back {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(8px); }
+  }
+
+  @keyframes qme-marker-settle {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.55); }
+  }
+
+  @keyframes qme-ring-in {
+    from { opacity: 0; transform: scale(.84); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes qme-bump {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.025); }
+  }
+
+  @keyframes qme-radio-in {
+    from { opacity: 0; transform: scale(.35); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes qme-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes qme-sheet-in {
+    from { transform: translateY(16px); opacity: .6; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes qme-confirm-in {
+    from { transform: translateY(6px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #quiz-motion-expanded *,
+    #quiz-motion-expanded *::before,
+    #quiz-motion-expanded *::after {
+      animation-duration: 1ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 1ms !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    #quiz-motion-expanded .qme-phone {
+      min-height: 620px;
+    }
+
+    #quiz-motion-expanded .qme-screen {
+      padding-inline: 13px;
+    }
+
+    #quiz-motion-expanded .qme-title {
+      font-size: 1.72rem;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById("quiz-motion-expanded");
+    const momentSelect = root.querySelector("#qme-moment");
+    const reduceToggle = root.querySelector("#qme-reduce");
+    const replayButton = root.querySelector("#qme-replay");
+    const backButton = root.querySelector("#qme-back");
+    const screen = root.querySelector("#qme-screen");
+    const footer = root.querySelector("#qme-footer");
+    const note = root.querySelector("#qme-note");
+    const chapter = root.querySelector("#qme-chapter");
+    const progress = root.querySelector("#qme-progress-fill");
+    const milestone = root.querySelector("#qme-milestone");
+    const overlay = root.querySelector("#qme-overlay");
+
+    let navigationStep = 0;
+    let offerReached = false;
+
+    const notes = {
+      navigation: "Vorwärts bewegt sich der Inhalt nach links; Zurück kehrt die Richtung um. Der feste Rahmen bleibt ruhig.",
+      milestone: "Der Abschnittsmarker füllt, vergrößert sich einmal und setzt sich wieder — kein dauerhaftes Pulsieren.",
+      offer: "Beim Erreichen der Preise wechselt der Sticky-CTA vom Wegweiser zum gewählten Plan inklusive Preis.",
+      secondary: "FAQ-Höhe und Pfeil bewegen sich ruhig. Checkout warnt nur, wenn tatsächlich Eingaben vorhanden sind."
+    };
+
+    function icon(name) {
+      return `<i data-lucide="${name}" aria-hidden="true"></i>`;
+    }
+
+    function activateIcons() {
+      if (window.lucide) window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+    }
+
+    function setBase(name, width, markerLeft, chapterName) {
+      note.textContent = notes[name];
+      progress.style.width = width;
+      milestone.style.left = markerLeft;
+      chapter.textContent = chapterName;
+      screen.className = "qme-screen";
+      overlay.hidden = true;
+    }
+
+    function option(label, detail, key, iconName) {
+      return `
+        <button class="btn qme-option" type="button" aria-pressed="false" data-option="${key}">
+          <span class="qme-option-icon">${icon(iconName)}</span>
+          <span class="qme-option-copy"><strong>${label}</strong><small>${detail}</small></span>
+          <span class="qme-check">${icon("check")}</span>
+        </button>
+      `;
+    }
+
+    function primary(label, id = "") {
+      return `<button class="btn btn-primary btn-block qme-primary" ${id ? `id="${id}"` : ""} type="button">${label} ${icon("arrow-right")}</button>`;
+    }
+
+    function animateScreen(direction, renderNext) {
+      screen.className = `qme-screen qme-exit-${direction}`;
+      window.setTimeout(() => {
+        renderNext();
+        screen.className = `qme-screen qme-enter-${direction}`;
+      }, root.classList.contains("qme-reduced") ? 1 : 160);
+    }
+
+    function bindSingleSelect(onSelected) {
+      screen.querySelectorAll("[data-option]").forEach((button) => {
+        button.addEventListener("click", () => {
+          screen.querySelectorAll("[data-option]").forEach((peer) => peer.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          window.setTimeout(onSelected, root.classList.contains("qme-reduced") ? 1 : 280);
+        });
+      });
+    }
+
+    function renderNavigationStep(step, direction = "forward") {
+      navigationStep = step;
+      setBase("navigation", step === 0 ? "52%" : "58%", step === 0 ? "52%" : "58%", "Analyse");
+      backButton.disabled = step === 0;
+      screen.innerHTML = step === 0
+        ? `
+          <p class="qme-eyebrow">Deine Analyse</p>
+          <h2 class="qme-title">Wie fühlt sich deine Haaroberfläche an?</h2>
+          <p class="qme-copy">Streiche vorsichtig an einer einzelnen trockenen Strähne entlang.</p>
+          <div class="qme-options">
+            ${option("Glatt", "Die Strähne gleitet gleichmäßig.", "smooth", "sparkles")}
+            ${option("Leicht uneben", "Du spürst kleine Unebenheiten.", "uneven", "waves")}
+            ${option("Rau", "Die Strähne fühlt sich trocken oder rau an.", "rough", "wind")}
+          </div>
+        `
+        : `
+          <p class="qme-eyebrow">Deine Analyse</p>
+          <h2 class="qme-title">Wie reagiert dein Haar beim Dehnen?</h2>
+          <p class="qme-copy">Teste nur sanft an einem einzelnen ausgefallenen Haar.</p>
+          <div class="qme-options">
+            ${option("Es dehnt sich etwas und geht zurück", "Elastisch und belastbar.", "elastic", "move-horizontal")}
+            ${option("Es bleibt gedehnt", "Braucht mehr Stabilität.", "stretched", "minus")}
+            ${option("Es reißt schnell", "Reagiert empfindlich.", "breaks", "scissors")}
+          </div>
+        `;
+      footer.innerHTML = "";
+      bindSingleSelect(() => {
+        if (step === 0) animateScreen("forward", () => renderNavigationStep(1, "forward"));
+      });
+      activateIcons();
+    }
+
+    function renderMilestone(completed = false) {
+      setBase("milestone", completed ? "60%" : "40%", completed ? "60%" : "40%", completed ? "Analyse" : "Ziele");
+      backButton.disabled = false;
+      screen.innerHTML = completed
+        ? `
+          <p class="qme-eyebrow">Ziele abgeschlossen</p>
+          <h2 class="qme-title">Jetzt machen wir dein Profil genauer.</h2>
+          <div class="qme-milestone-visual" role="img" aria-label="Abgeschlossener Quiz-Abschnitt">
+            <span class="qme-milestone-ring">${icon("sparkles")}</span>
+          </div>
+          <p class="qme-copy">Die nächsten Beobachtungen verbinden deine Ziele mit deinem Haarprofil.</p>
+        `
+        : `
+          <p class="qme-eyebrow">Letzte Frage in Ziele</p>
+          <h2 class="qme-title">Was beschäftigt dich gerade?</h2>
+          <p class="qme-copy">Deine Auswahl ist vollständig. Der nächste Abschnitt beginnt gleich.</p>
+          <div class="qme-options">
+            ${option("Trockene oder raue Längen", "Wiederkehrender Schwerpunkt.", "dry", "droplets")}
+            ${option("Weniger Frizz", "Mehr Ruhe in den Längen.", "frizz", "cloud")}
+          </div>
+        `;
+      footer.innerHTML = primary(completed ? "Haaranalyse fortsetzen" : "2 ausgewählt · Weiter", "qme-milestone-next");
+      footer.querySelector("#qme-milestone-next").addEventListener("click", () => {
+        if (completed) return;
+        milestone.classList.remove("is-settling");
+        void milestone.offsetWidth;
+        milestone.classList.add("is-settling");
+        animateScreen("forward", () => renderMilestone(true));
+      });
+      activateIcons();
+    }
+
+    const plans = {
+      month: { label: "Monatlich", detail: "Flexibel kündbar", price: "14,99 €", cta: "Monat · 14,99 € → Zahlung" },
+      quarter: { label: "Quartal", detail: "Beliebteste Wahl", price: "34,99 €", cta: "Quartal · 34,99 € → Zahlung" },
+      year: { label: "Jährlich", detail: "Bester Monatswert", price: "99,99 €", cta: "Jahr · 99,99 € → Zahlung" }
+    };
+
+    function planOption(key, selected) {
+      const plan = plans[key];
+      return `
+        <button class="btn qme-plan" type="button" aria-pressed="${selected}" data-plan="${key}">
+          <span class="qme-radio" aria-hidden="true"></span>
+          <span class="qme-plan-name"><strong>${plan.label}</strong><small>${plan.detail}</small></span>
+          <span class="qme-price">${plan.price}</span>
+        </button>
+      `;
+    }
+
+    function updateOfferPlan(key) {
+      screen.querySelectorAll("[data-plan]").forEach((button) => {
+        button.setAttribute("aria-pressed", button.dataset.plan === key ? "true" : "false");
+      });
+      const cta = footer.querySelector("button");
+      cta.innerHTML = `${plans[key].cta} ${icon("arrow-right")}`;
+      cta.classList.remove("qme-bump");
+      void cta.offsetWidth;
+      cta.classList.add("qme-bump");
+      activateIcons();
+    }
+
+    function renderOffer(reached = false) {
+      offerReached = reached;
+      setBase("offer", "86%", "86%", "Ergebnis");
+      backButton.disabled = true;
+      screen.innerHTML = reached
+        ? `
+          <p class="qme-eyebrow">Plan freischalten</p>
+          <h2 class="qme-title">Wähle den Zugang, der zu dir passt.</h2>
+          <p class="qme-copy">Der Inhalt bleibt gleich. Du entscheidest nur über die Laufzeit.</p>
+          <div class="qme-plans">
+            ${planOption("month", false)}
+            ${planOption("quarter", true)}
+            ${planOption("year", false)}
+          </div>
+        `
+        : `
+          <p class="qme-eyebrow">Deine persönliche Auswertung</p>
+          <h2 class="qme-title">Deine Wellen brauchen Balance statt mehr Produkte.</h2>
+          <div class="qme-mini-result">
+            <span class="qme-result-line"><small>Struktur</small><strong>Wellig</strong></span>
+            <span class="qme-result-line"><small>Schwerpunkt</small><strong>Feuchtigkeit</strong></span>
+            <span class="qme-result-line"><small>Alltag</small><strong>Einfach</strong></span>
+            <span class="qme-result-line"><small>Ziel</small><strong>Weniger Frizz</strong></span>
+          </div>
+          <p class="qme-copy">Der Sticky-CTA bleibt zunächst ein Wegweiser. Erst bei der Preiswahl wird er zur Kaufaktion.</p>
+        `;
+      footer.innerHTML = primary(reached ? plans.quarter.cta : "Pläne ansehen", "qme-offer-cta");
+      if (reached) {
+        screen.querySelectorAll("[data-plan]").forEach((button) => {
+          button.addEventListener("click", () => updateOfferPlan(button.dataset.plan));
+        });
+      } else {
+        footer.querySelector("#qme-offer-cta").addEventListener("click", () => {
+          animateScreen("forward", () => renderOffer(true));
+        });
+      }
+      activateIcons();
+    }
+
+    function faqItem(question, answer, id) {
+      return `
+        <div>
+          <button class="btn btn-ghost qme-faq-button" type="button" aria-expanded="false" aria-controls="${id}" data-faq>
+            <span>${question}</span>${icon("chevron-down")}
+          </button>
+          <div class="qme-faq-answer" id="${id}"><div><p>${answer}</p></div></div>
+        </div>
+      `;
+    }
+
+    function closeOverlay() {
+      overlay.hidden = true;
+      overlay.innerHTML = "";
+    }
+
+    function showCheckout() {
+      overlay.hidden = false;
+      overlay.innerHTML = `
+        <section class="qme-sheet" role="dialog" aria-modal="true" aria-labelledby="qme-sheet-title">
+          <div class="qme-sheet-head">
+            <h3 id="qme-sheet-title">Sicher bezahlen</h3>
+            <button class="btn btn-ghost qme-sheet-close" type="button" aria-label="Zahlung schließen">${icon("x")}</button>
+          </div>
+          <p class="text-small text-muted">Quartal · 34,99 € · anschließend 34,99 € alle 3 Monate</p>
+          <label class="form-label" for="qme-card">
+            Kartennummer
+            <input class="form-control" id="qme-card" inputmode="numeric" placeholder="1234 1234 1234 1234">
+          </label>
+          ${primary("Zahlungspflichtig abonnieren")}
+        </section>
+      `;
+      const close = overlay.querySelector(".qme-sheet-close");
+      const field = overlay.querySelector("#qme-card");
+      close.addEventListener("click", () => {
+        if (!field.value.trim()) {
+          closeOverlay();
+          return;
+        }
+        const sheet = overlay.querySelector(".qme-sheet");
+        sheet.innerHTML = `
+          <div class="qme-confirm">
+            <h3>Zahlung abbrechen?</h3>
+            <p>Deine Eingabe wird verworfen.</p>
+            <div class="qme-confirm-actions">
+              <button class="btn" type="button" data-stay>Weiter bezahlen</button>
+              <button class="btn btn-primary" type="button" data-abort>Zahlung abbrechen</button>
+            </div>
+          </div>
+        `;
+        sheet.querySelector("[data-stay]").addEventListener("click", showCheckout);
+        sheet.querySelector("[data-abort]").addEventListener("click", closeOverlay);
+      });
+      activateIcons();
+    }
+
+    function renderSecondary() {
+      setBase("secondary", "86%", "86%", "Ergebnis");
+      backButton.disabled = true;
+      screen.innerHTML = `
+        <p class="qme-eyebrow">Noch Fragen?</p>
+        <h2 class="qme-title">Klarheit ohne visuelles Theater.</h2>
+        <p class="qme-copy">Öffne eine Frage oder teste den Checkout-Ausgang.</p>
+        <div class="qme-faq">
+          ${faqItem("Was ist in meinem Plan enthalten?", "Produkte, Reihenfolge, Anwendung und Häufigkeit — passend zu deinem Profil.", "qme-faq-a")}
+          ${faqItem("Kann ich später kündigen?", "Ja. Die Laufzeit und der nächste Preis bleiben jederzeit sichtbar.", "qme-faq-b")}
+        </div>
+      `;
+      footer.innerHTML = primary("Zahlung öffnen", "qme-open-payment");
+      screen.querySelectorAll("[data-faq]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const answer = root.querySelector(`#${button.getAttribute("aria-controls")}`);
+          const open = button.getAttribute("aria-expanded") === "true";
+          button.setAttribute("aria-expanded", open ? "false" : "true");
+          answer.classList.toggle("is-open", !open);
+        });
+      });
+      footer.querySelector("#qme-open-payment").addEventListener("click", showCheckout);
+      activateIcons();
+    }
+
+    function renderCurrent() {
+      overlay.hidden = true;
+      overlay.innerHTML = "";
+      if (momentSelect.value === "navigation") renderNavigationStep(0);
+      if (momentSelect.value === "milestone") renderMilestone(false);
+      if (momentSelect.value === "offer") renderOffer(false);
+      if (momentSelect.value === "secondary") renderSecondary();
+    }
+
+    backButton.addEventListener("click", () => {
+      if (momentSelect.value === "navigation" && navigationStep === 1) {
+        animateScreen("back", () => renderNavigationStep(0, "back"));
+      }
+      if (momentSelect.value === "offer" && offerReached) {
+        animateScreen("back", () => renderOffer(false));
+      }
+    });
+
+    momentSelect.addEventListener("change", renderCurrent);
+    replayButton.addEventListener("click", renderCurrent);
+    reduceToggle.addEventListener("change", () => {
+      root.classList.toggle("qme-reduced", reduceToggle.checked);
+      renderCurrent();
+    });
+
+    renderCurrent();
+  })();
+</script>
