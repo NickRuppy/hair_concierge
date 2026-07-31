@@ -24,7 +24,7 @@ export const LAUNCH_CLOSE_LABEL = "Dienstag, 11. August, 23:59 Uhr"
  * Umfrage nach dem Opt-in. Solange die ID leer ist, blendet die Danke-Seite den
  * Umfrage-Schritt aus und zeigt direkt WhatsApp bzw. den Abschluss.
  */
-export const WAITLIST_SURVEY_ID = process.env.NEXT_PUBLIC_WAITLIST_SURVEY_ID ?? "j1X1toe9"
+export const WAITLIST_SURVEY_ID = process.env.NEXT_PUBLIC_WAITLIST_SURVEY_ID ?? "DP6saz3M"
 
 /**
  * Invite-Link der WhatsApp-Gruppe. Leer = Schritt wird ausgeblendet, die Seite
