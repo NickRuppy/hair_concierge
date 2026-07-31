@@ -26,6 +26,27 @@ traffic has been recorded; create a new package for a new combination.
 entered that quiz. The signed browser cookie continues to carry only visitor, session, and package
 identity.
 
+### Minimal versioning rules
+
+Keep acquisition, journey identity, commercial variants, and browser diagnostics separate:
+
+- Create a new `funnel_package_key` only when the coherent landing + quiz + offer combination
+  changes and existing sessions must remain on the previous combination. A campaign, channel, copy
+  edit, or page-layout revision does not create a package.
+- Create a new `offer_variant` only for a meaningfully different offer experience or a deliberately
+  assigned experiment arm. Retire temporary experiment assignment after a winner is chosen; do not
+  reuse an old arm name for different commercial terms.
+- Bump `offer_revision` only when fine-grained browser events would otherwise be interpreted
+  incorrectly, such as a tracked section being added, removed, renamed, or reordered where order is
+  part of the metric. Copy, styling, and untracked layout changes do not require a revision.
+- Keep event names and stable IDs such as `section_id`, `cta_id`, and `destination` consistent across
+  revisions whenever their meaning is unchanged. Prefer those IDs over numeric positions so routine
+  page changes do not force new analytics versions.
+
+Historical raw identifiers remain immutable. Operator-facing dashboards may give an awkward legacy
+key such as `meta_personal_plan_v1` the human label **Personal Plan**, but must not rename or backfill
+recorded sessions merely to improve presentation.
+
 ## Runtime Flags
 
 - `FUNNEL_ATTRIBUTION_ENABLED=true` enables signed cookies and Supabase recording. It defaults off.

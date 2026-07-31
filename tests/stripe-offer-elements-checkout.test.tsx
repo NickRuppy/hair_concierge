@@ -398,3 +398,16 @@ test("failed Apple Pay resolution releases held payment choices in rendered chec
   assert.match(failedHtml, /data-testid="payment-element"/)
   assert.match(failedHtml, /data-offer-payment-step="payment_element"/)
 })
+
+test("a Stripe preparation error keeps the independent secondary provider visible", () => {
+  const markup = renderToStaticMarkup(
+    <StripeOfferElementsCheckoutContent
+      checkoutResult={{ type: "error", error: { message: "Stripe unavailable" } }}
+      onRetry={() => {}}
+      secondaryPaymentMethod={<button type="button">PayPal</button>}
+    />,
+  )
+
+  assert.match(markup, /Die Zahlung konnte nicht bestätigt werden/)
+  assert.match(markup, />PayPal</)
+})

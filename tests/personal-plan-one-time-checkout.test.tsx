@@ -30,18 +30,29 @@ test("one-time pricing renders only the approved personal-plan offer", () => {
   assert.match(pricingSource, /Analyse deiner aktuellen Pflege/)
 })
 
-test("one-time payments remain visibly disabled until canonical consent is accepted", () => {
+test("one-time payment providers preload independently while consent gates final payment", () => {
   assert.match(checkoutSource, /personal-plan-one-time-consent-copy/)
   assert.match(checkoutSource, /checked=\{accepted\}/)
-  assert.match(checkoutSource, /disabled[\s\S]{0,220} Pay/)
-  assert.match(checkoutSource, /disabled[\s\S]{0,220}PayPal/)
-  assert.match(checkoutSource, /disabled[\s\S]{0,260}Zahlungspflichtig bestellen — €29,99/)
-  assert.match(checkoutSource, /\{accepted && canStartPayment \? \(/)
+  assert.doesNotMatch(checkoutSource, /Zahlungsarten erst nach Einwilligung verfügbar/)
+  assert.doesNotMatch(checkoutSource, /disabled[\s\S]{0,220} Pay/)
+  assert.match(checkoutSource, /action: "prepare"/)
+  assert.match(checkoutSource, /action: "claim"/)
+  assert.match(checkoutSource, /body\.status !== "prepared" && body\.status !== "recovered"/)
+  assert.match(checkoutSource, /setStripeProviderLocked\(body\.provider_locked === "stripe"\)/)
+  assert.match(
+    checkoutSource,
+    /preparation\.claimFunnelEventId \?\? createFunnelEventId\(\)[\s\S]*preparation\.claimFunnelEventId = funnelEventId/,
+  )
+  assert.match(checkoutSource, /onBeforeConfirm=\{handleBeforeStripeConfirm\}/)
+  assert.match(checkoutSource, /consentAccepted=\{accepted\}/)
+  assert.match(checkoutSource, /\{canStartPayment \? \(/)
   assert.match(checkoutSource, /stripeSelected \? \(/)
-  assert.match(checkoutSource, /Mit Apple Pay oder Karte bezahlen/)
+  assert.match(checkoutSource, /Mit Karte bezahlen/)
   assert.match(checkoutSource, /consentAccepted: true/)
   assert.match(checkoutSource, /consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION/)
   assert.match(checkoutSource, /funnelSessionId/)
+  assert.match(paypalSource, /consentAccepted: boolean/)
+  assert.match(paypalSource, /if \(!consentAccepted\)/)
   assert.match(paypalSource, /consentAccepted: true/)
   assert.match(paypalSource, /consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION/)
   assert.match(paypalSource, /funnelSessionId/)
@@ -73,14 +84,18 @@ test("offer lab can force the personal-plan pricing arm for browser-only verific
 })
 
 test("provider initialization is recorded only after a usable provider response", () => {
-  const stripeFetchClientSecret = checkoutSource.slice(
+  const stripePreparation = checkoutSource.slice(
     checkoutSource.indexOf("const fetchClientSecret"),
-    checkoutSource.indexOf("return body.client_secret"),
+    checkoutSource.indexOf("const handleBeforeStripeConfirm"),
   )
-  assert.doesNotMatch(stripeFetchClientSecret, /setError\(null\)/)
+  const stripeClaim = checkoutSource.slice(
+    checkoutSource.indexOf("const handleBeforeStripeConfirm"),
+    checkoutSource.indexOf("return ("),
+  )
+  assert.doesNotMatch(stripePreparation, /trackCheckoutStarted\("stripe"/)
   assert.match(
-    checkoutSource,
-    /const funnelEventId = createFunnelEventId\(\)[\s\S]*funnelEventId,[\s\S]*typeof body\.client_secret !== "string"[\s\S]*throw new Error\("one-time Stripe session creation failed"\)[\s\S]*trackCheckoutStarted\("stripe", "explicit_provider_action", funnelEventId\)/,
+    stripeClaim,
+    /const funnelEventId = preparation\.claimFunnelEventId \?\? createFunnelEventId\(\)[\s\S]*funnelEventId,[\s\S]*body\.status !== "claimed"[\s\S]*return false[\s\S]*trackCheckoutStarted\("stripe", "explicit_provider_action", funnelEventId\)/,
   )
   assert.match(
     paypalSource,

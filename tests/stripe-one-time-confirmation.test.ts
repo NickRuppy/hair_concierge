@@ -70,7 +70,12 @@ function fixture() {
     supabase: {
       from: table,
       auth: {
-        admin: { createUser: async () => ({ data: { user: { id: "user-1" } }, error: null }) },
+        admin: {
+          createUser: async () => {
+            calls.push("create-user")
+            return { data: { user: { id: "user-1" } }, error: null }
+          },
+        },
       },
     },
     stripe: { checkout: { sessions: { retrieve: async () => session } } },
@@ -120,6 +125,22 @@ test("a sent confirmation is not sent again during activation retry", async () =
   }
   await ensureOneTimeCheckoutAccount(state.session, state.deps)
   assert.equal(state.purchases.length, 1)
+})
+
+test("an unclaimed prepared one-time session is rejected before account creation", async () => {
+  const state = fixture()
+  state.session.metadata = {
+    ...state.session.metadata,
+    checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+    checkout_preparation_status: "prepared",
+  }
+
+  await assert.rejects(
+    () => ensureOneTimeCheckoutAccount(state.session, state.deps),
+    (error: unknown) =>
+      error instanceof CheckoutActivationError && error.code === "checkout_preparation_unclaimed",
+  )
+  assert.equal(state.calls.includes("create-user"), false)
 })
 
 test.after(() => {

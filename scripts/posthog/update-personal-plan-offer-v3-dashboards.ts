@@ -31,15 +31,61 @@ const beforeFingerprints: Record<number, string> = {
 }
 
 const afterFingerprints: Record<number, string> = {
-  5235347: "ac286ef7110840401e671f6ae90ad277db05169e2a0b0a2a92e4c60a2f0c98b2",
-  5235348: "859b322f2827b229ecbee55ec8c3c2c5e8c9141ea4df5d9e646eed5763d3774b",
-  5235350: "2ffa42e29db2873ee9b08f99852cf966842f09c1339ad94f181c7e6d7139f764",
-  5245339: "44eefaadeb5eb922cab493833a4c57d8c36d15f6d26711f11a63395e4806a518",
-  5250265: "765de913630880497e4aa1d933f14f6aa0b39d35df8cb273a838b2b8caf6d2e6",
-  5233190: "7ad5e03a871e8fcd3fc0e1f34ea76ed6c6ca504c5a2ea1c5bda27032da462aab",
+  5235347: "630ca8e80913f6da5a762c4092539100a6115863d363b5b95ecb832f7f2fdefe",
+  5235348: "866ab07772b0008d823306a51727d50b0dea43bf86e55503ca192c600bcda121",
+  5235350: "f1df6063b185d5b43ace91852bd5baafa565fe70dea0fa164b6ac49a0d42e066",
+  5245339: "d26ebbdf76e9c4e1eb3aa4ef1d3380171520ac12f512d63a73836c9d4175c950",
+  5250265: "5e132debf3be6e55ffc75086f9784aa00d518b9b2f7c170034831e9f53734955",
+  5233190: "55bf01036312ab9df32ab1407c592f334b1cc02286c7c3e83f83fb23461cf357",
   5235351: beforeFingerprints[5235351],
   5033903: beforeFingerprints[5033903],
 }
+
+const b2V2Prelude = `WITH section_events AS (
+  SELECT
+    coalesce(nullIf(toString(properties.funnel_session_id), ''), toString(distinct_id)) AS session_id,
+    toString(properties.section_id) AS section_id
+  FROM events
+  WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
+    AND properties.funnel_package_key = 'meta_personal_plan_v2'
+    AND event = 'offer_section_viewed'
+    AND properties.offer_revision = 'personal_plan_v2'
+),
+eligible AS (
+  SELECT DISTINCT coalesce(nullIf(toString(properties.funnel_session_id), ''), toString(distinct_id)) AS session_id
+  FROM events
+  WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
+    AND properties.funnel_package_key = 'meta_personal_plan_v2'
+    AND event = 'offer_viewed'
+    AND properties.offer_revision = 'personal_plan_v2'
+),
+counts AS (`
+
+const b2V3Prelude = `WITH section_events AS (
+  SELECT
+    toString(properties.funnel_session_id) AS session_id,
+    toString(properties.section_id) AS section_id
+  FROM events
+  WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
+    AND properties.funnel_package_key = 'meta_personal_plan_v1'
+    AND event = 'offer_section_viewed'
+    AND properties.offer_revision = 'personal_plan_v3'
+    AND properties.offer_variant IN ('personal-plan-v1', 'personal-plan-membership-v1', 'personal-plan-one-time-v1')
+    AND lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')
+    AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
+),
+eligible AS (
+  SELECT DISTINCT toString(properties.funnel_session_id) AS session_id
+  FROM events
+  WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
+    AND properties.funnel_package_key = 'meta_personal_plan_v1'
+    AND event = 'offer_viewed'
+    AND properties.offer_revision = 'personal_plan_v3'
+    AND properties.offer_variant IN ('personal-plan-v1', 'personal-plan-membership-v1', 'personal-plan-one-time-v1')
+    AND lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')
+    AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
+),
+counts AS (`
 
 export type Insight = {
   id: number
@@ -180,7 +226,12 @@ function transformB2(insight: Insight) {
   return withQuery(
     insight,
     replaceExact(
-      replaceExact(query.replaceAll(v2, v3), b2V2Counts, b2V3Counts, insight.id),
+      replaceExact(
+        replaceExact(query, b2V2Prelude, b2V3Prelude, insight.id),
+        b2V2Counts,
+        b2V3Counts,
+        insight.id,
+      ),
       b2V2Steps,
       b2V3Steps,
       insight.id,

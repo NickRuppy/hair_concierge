@@ -14,10 +14,11 @@ import {
 } from "../scripts/posthog/update-personal-plan-offer-v3-dashboards"
 
 function fixtureBlocks(source: string) {
+  const prelude = source.match(/const b2V2Prelude = `([\s\S]*?)`\n\nconst b2V3Prelude/)?.[1]
   const counts = source.match(/const b2V2Counts = `([\s\S]*?)`\n\nconst b2V3Counts/)?.[1]
   const steps = source.match(/const b2V2Steps = `([\s\S]*?)`\n\nconst b2V3Steps/)?.[1]
-  if (!counts || !steps) throw new Error("Could not extract B2 fixture blocks.")
-  return { counts, steps }
+  if (!prelude || !counts || !steps) throw new Error("Could not extract B2 fixture blocks.")
+  return { prelude, counts, steps }
 }
 
 const scriptSource = readFileSync(
@@ -29,11 +30,7 @@ const b2 = fixtureBlocks(scriptSource)
 function resource(id: number): Insight {
   const query =
     id === 5233190
-      ? "WITH counts AS (\n" +
-        b2.counts +
-        "\n), steps AS (\n" +
-        b2.steps +
-        "\n)\nSELECT * FROM steps\n-- personal_plan_v2"
+      ? b2.prelude + "\n" + b2.counts + "\n), steps AS (\n" + b2.steps + "\n)\nSELECT * FROM steps"
       : "SELECT " + id + " -- personal_plan_v2"
   return {
     id,
@@ -79,6 +76,14 @@ test("pure transforms move pricing to B2 stage 3 and leave O4/reach unchanged", 
   assert.match(query, /\x27pricing\x27 AS section_id, o3 AS sessions, o2 AS vorherige_sessions/)
   assert.match(query, /04 Vollständiger Plan/)
   assert.match(query, /personal_plan_v3/)
+  assert.match(query, /funnel_package_key = 'meta_personal_plan_v1'/)
+  assert.doesNotMatch(query, /meta_personal_plan_v2/)
+  assert.doesNotMatch(query, /distinct_id/)
+  assert.match(query, /personal-plan-membership-v1/)
+  assert.match(query, /personal-plan-one-time-v1/)
+  assert.match(query, /is_internal_test/)
+  assert.match(query, /NOT IN \('true', '1'\)/)
+  assert.match(query, /notEmpty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/)
   for (const id of [5235351, 5033903]) {
     const current = before.find((item) => item.id === id)!
     assert.deepEqual(transformInsight(current), current)

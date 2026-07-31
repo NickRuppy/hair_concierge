@@ -43,6 +43,10 @@ import type Stripe from "stripe"
 const PREPARED_CHECKOUT_MINIMUM_TTL_SECONDS = 30 * 60
 const PREPARED_CHECKOUT_EXPIRY_MARGIN_SECONDS = 60
 export const PREPARED_SESSION_UNAVAILABLE = "prepared_checkout_unavailable"
+type CheckoutCommerceInterval = BillingInterval | "one_time"
+type CheckoutAnalyticsPlan =
+  | ReturnType<typeof getStripePricingPlan>
+  | typeof PERSONAL_PLAN_ONCE_PRODUCT
 
 export const runtime = "nodejs"
 
@@ -97,15 +101,40 @@ export const StripeCheckoutSessionRequestSchema = z
             path: ["interval"],
           })
         }
+        const hasCanonicalConsent =
+          consentAccepted === true &&
+          consentCopyVersion === PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION
+        const hasValidActionContract =
+          action === "prepare"
+            ? Boolean(
+                preparationId &&
+                !checkoutAttemptId &&
+                !funnelEventId &&
+                consentAccepted === undefined &&
+                consentCopyVersion === undefined,
+              )
+            : action === "claim"
+              ? Boolean(
+                  preparationId &&
+                  preparationToken &&
+                  preparedSessionId &&
+                  checkoutAttemptId &&
+                  funnelEventId &&
+                  hasCanonicalConsent,
+                )
+              : Boolean(
+                  checkoutAttemptId &&
+                  funnelEventId &&
+                  hasCanonicalConsent &&
+                  !preparationId &&
+                  !preparationToken &&
+                  !preparedSessionId,
+                )
         if (
           source !== "quiz_result_offer" ||
           presentation !== "offer_overlay_elements" ||
-          action !== "create" ||
-          !checkoutAttemptId ||
-          !funnelEventId ||
           !funnelSessionId ||
-          consentAccepted !== true ||
-          consentCopyVersion !== PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION ||
+          !hasValidActionContract ||
           checkoutContext ||
           returnDestination
         ) {
@@ -232,6 +261,20 @@ export function reusableOneTimeStripeSessionClientSecret(
     : null
 }
 
+export function classifyOneTimeStripeSessionRecovery(
+  session: Pick<Stripe.Checkout.Session, "client_secret" | "status">,
+):
+  | { type: "reuse"; clientSecret: string }
+  | { type: "replace" }
+  | { type: "complete" }
+  | { type: "invalid" } {
+  const clientSecret = reusableOneTimeStripeSessionClientSecret(session)
+  if (clientSecret) return { type: "reuse", clientSecret }
+  if (session.status === "expired") return { type: "replace" }
+  if (session.status === "complete") return { type: "complete" }
+  return { type: "invalid" }
+}
+
 export function preparedCheckoutExpiresAt(nowSeconds = Math.floor(Date.now() / 1000)) {
   // Stripe rejects Checkout Session expiries at its exact 30-minute floor when request latency
   // advances the server clock. Keep the user-facing lifetime short while retaining a safe margin.
@@ -320,6 +363,7 @@ export async function POST(req: NextRequest) {
     }
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
     let oneTimeConsentId: string | null = null
+    let oneTimeProviderLocked: "stripe" | null = null
 
     if (isOneTimePurchase) {
       // Re-fetches the persisted arm; browser fields only select this guarded path.
@@ -327,16 +371,7 @@ export async function POST(req: NextRequest) {
         leadId: leadId!,
         funnelSessionId,
       })
-      try {
-        const consent = await createPersonalPlanOneTimeCheckoutConsent(getAdminSupabase(), {
-          leadId: authorization.leadId,
-          funnelSessionId: authorization.sessionId,
-          offerVariant: authorization.offerVariant,
-          userId: authenticatedUserId ?? null,
-        })
-        oneTimeConsentId = consent.id
-      } catch (error) {
-        // A retry must recover the immutable evidence/session, never create a second consent.
+      if (isPreparation) {
         const { data: existing, error: lookupError } = await getAdminSupabase()
           .from("personal_plan_one_time_checkout_consents")
           .select("id, stripe_checkout_session_id, paypal_order_id")
@@ -344,26 +379,100 @@ export async function POST(req: NextRequest) {
           .eq("funnel_session_id", authorization.sessionId)
           .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
           .maybeSingle()
-        if (lookupError || !existing) throw error
-        if (existing.paypal_order_id) {
+        if (lookupError) throw lookupError
+        if (existing?.paypal_order_id) {
           return NextResponse.json({ error: "payment provider already selected" }, { status: 409 })
         }
-        if (existing.stripe_checkout_session_id) {
+        if (existing?.stripe_checkout_session_id) {
+          oneTimeProviderLocked = "stripe"
           const existingSession = await getStripe().checkout.sessions.retrieve(
             existing.stripe_checkout_session_id,
           )
-          const reusableClientSecret = reusableOneTimeStripeSessionClientSecret(existingSession)
-          if (reusableClientSecret) {
-            return NextResponse.json({ client_secret: reusableClientSecret })
+          const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
+          if (recovery.type === "reuse") {
+            return NextResponse.json({
+              status: "recovered",
+              client_secret: recovery.clientSecret,
+              session_id: existingSession.id,
+              expires_at: existingSession.expires_at,
+              provider_locked: "stripe",
+            })
           }
-          if (existingSession.status === "complete") {
+          if (recovery.type === "complete") {
             return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
           }
-          if (existingSession.status !== "expired") {
-            throw new Error("Existing one-time Stripe Session is not reusable")
+          if (recovery.type !== "replace") {
+            throw new Error("Existing one-time Stripe Session is not recoverable")
           }
         }
-        oneTimeConsentId = existing.id
+      } else {
+        try {
+          const consent = await createPersonalPlanOneTimeCheckoutConsent(getAdminSupabase(), {
+            leadId: authorization.leadId,
+            funnelSessionId: authorization.sessionId,
+            offerVariant: authorization.offerVariant,
+            userId: authenticatedUserId ?? null,
+          })
+          oneTimeConsentId = consent.id
+        } catch (error) {
+          // A retry must recover the immutable evidence/session, never create a second consent.
+          const { data: existing, error: lookupError } = await getAdminSupabase()
+            .from("personal_plan_one_time_checkout_consents")
+            .select("id, stripe_checkout_session_id, paypal_order_id")
+            .eq("lead_id", authorization.leadId)
+            .eq("funnel_session_id", authorization.sessionId)
+            .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
+            .maybeSingle()
+          if (lookupError || !existing) throw error
+          if (existing.paypal_order_id) {
+            return NextResponse.json(
+              { error: "payment provider already selected" },
+              { status: 409 },
+            )
+          }
+          if (existing.stripe_checkout_session_id) {
+            if (action === "claim") {
+              if (existing.stripe_checkout_session_id === preparedSessionId) {
+                oneTimeConsentId = existing.id
+              } else {
+                const existingSession = await getStripe().checkout.sessions.retrieve(
+                  existing.stripe_checkout_session_id,
+                )
+                const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
+                if (recovery.type === "complete") {
+                  return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+                }
+                if (recovery.type !== "replace") {
+                  return NextResponse.json(
+                    { error: "payment provider already selected" },
+                    { status: 409 },
+                  )
+                }
+                oneTimeConsentId = existing.id
+              }
+            } else if (action === "create") {
+              const existingSession = await getStripe().checkout.sessions.retrieve(
+                existing.stripe_checkout_session_id,
+              )
+              const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
+              if (recovery.type === "reuse") {
+                return NextResponse.json({ client_secret: recovery.clientSecret })
+              }
+              if (recovery.type === "complete") {
+                return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+              }
+              if (recovery.type !== "replace") {
+                throw new Error("Existing one-time Stripe Session is not reusable")
+              }
+            } else {
+              return NextResponse.json(
+                { error: "payment provider already selected" },
+                { status: 409 },
+              )
+            }
+          }
+          oneTimeConsentId = existing.id
+        }
       }
     }
 
@@ -486,7 +595,7 @@ export async function POST(req: NextRequest) {
     if (action === "claim") {
       return claimPreparedCheckoutSession({
         stripe,
-        interval: subscriptionInterval,
+        interval: commerceInterval,
         priceId,
         source,
         presentation,
@@ -499,7 +608,9 @@ export async function POST(req: NextRequest) {
         preparedSessionId: preparedSessionId!,
         checkoutAttemptId: checkoutAttemptId!,
         funnelEventId: funnelEventId!,
-        analyticsPlan: getStripePricingPlan(subscriptionInterval),
+        analyticsPlan,
+        oneTimeConsentId,
+        adminSupabase: isOneTimePurchase ? getAdminSupabase() : undefined,
         cookieStore,
         userIdForFunnel: user?.id,
       })
@@ -558,7 +669,7 @@ export async function POST(req: NextRequest) {
       ? buildPreparedCheckoutMetadata({
           preparationId: preparationId!,
           preparationTokenHash: hashPreparedCheckoutToken(preparationTokenForResponse!),
-          interval: subscriptionInterval,
+          interval: commerceInterval,
           priceId,
           source,
           presentation,
@@ -641,6 +752,7 @@ export async function POST(req: NextRequest) {
         session_id: session.id,
         preparation_token: preparationTokenForResponse,
         expires_at: session.expires_at,
+        ...(oneTimeProviderLocked ? { provider_locked: oneTimeProviderLocked } : {}),
       })
     }
 
@@ -731,7 +843,7 @@ function createPreparedCheckoutIdentityHash(input: {
 function buildPreparedCheckoutMetadata(input: {
   preparationId: string
   preparationTokenHash: string
-  interval: "month" | "quarter" | "year"
+  interval: CheckoutCommerceInterval
   priceId: string
   source: "pricing_page" | "quiz_result_offer"
   presentation?: "offer_overlay_elements"
@@ -764,13 +876,14 @@ export function validatePreparedCheckoutClaim(input: {
   lineItemPriceId?: string
   preparationId: string
   preparationToken: string
-  interval: "month" | "quarter" | "year"
+  interval: CheckoutCommerceInterval
   priceId: string
   source: "pricing_page" | "quiz_result_offer"
   presentation?: "offer_overlay_elements"
   identityHash: string
   checkoutAttemptId: string
   funnelEventId: string
+  oneTimeConsentId?: string | null
 }): { ok: true; alreadyClaimed: boolean } | { ok: false; reason: "invalid" | "stale" } {
   const expected = {
     checkout_preparation_id: input.preparationId,
@@ -797,7 +910,9 @@ export function validatePreparedCheckoutClaim(input: {
   if (input.metadata.checkout_preparation_status === "claimed") {
     if (
       input.metadata.checkout_attempt_id !== input.checkoutAttemptId ||
-      input.metadata.checkout_funnel_event_id !== input.funnelEventId
+      input.metadata.checkout_funnel_event_id !== input.funnelEventId ||
+      (input.oneTimeConsentId &&
+        input.metadata.personal_plan_once_consent_id !== input.oneTimeConsentId)
     ) {
       return { ok: false, reason: "invalid" }
     }
@@ -813,11 +928,13 @@ export function hasMatchingPreparedCheckoutClaim(
   metadata: Record<string, string>,
   checkoutAttemptId: string,
   funnelEventId: string,
+  oneTimeConsentId?: string | null,
 ) {
   return (
     metadata.checkout_preparation_status === "claimed" &&
     metadata.checkout_attempt_id === checkoutAttemptId &&
-    metadata.checkout_funnel_event_id === funnelEventId
+    metadata.checkout_funnel_event_id === funnelEventId &&
+    (!oneTimeConsentId || metadata.personal_plan_once_consent_id === oneTimeConsentId)
   )
 }
 
@@ -827,7 +944,7 @@ export function preparedCheckoutClaimIdempotencyKey(preparationId: string) {
 
 async function claimPreparedCheckoutSession(input: {
   stripe: Stripe
-  interval: "month" | "quarter" | "year"
+  interval: CheckoutCommerceInterval
   priceId: string
   source: "pricing_page" | "quiz_result_offer"
   presentation?: "offer_overlay_elements"
@@ -840,9 +957,11 @@ async function claimPreparedCheckoutSession(input: {
   preparedSessionId: string
   checkoutAttemptId: string
   funnelEventId: string
-  analyticsPlan: ReturnType<typeof getStripePricingPlan>
+  analyticsPlan: CheckoutAnalyticsPlan
   cookieStore: Awaited<ReturnType<typeof cookies>>
   userIdForFunnel?: string
+  oneTimeConsentId?: string | null
+  adminSupabase?: ReturnType<typeof createBillingAdminClient>
 }) {
   let session: Stripe.Checkout.Session
   try {
@@ -879,10 +998,18 @@ async function claimPreparedCheckoutSession(input: {
     identityHash,
     checkoutAttemptId: input.checkoutAttemptId,
     funnelEventId: input.funnelEventId,
+    oneTimeConsentId: input.oneTimeConsentId,
   })
   if (!validation.ok) return preparedCheckoutUnavailable()
 
   if (validation.alreadyClaimed) {
+    if (input.oneTimeConsentId && input.adminSupabase) {
+      await bindPersonalPlanOneTimeConsentProviderReference(
+        input.adminSupabase,
+        input.oneTimeConsentId,
+        { stripeCheckoutSessionId: session.id },
+      )
+    }
     const funnelResult = await recordPreparedCheckoutStarted({
       interval: input.interval,
       source: input.source,
@@ -921,6 +1048,9 @@ async function claimPreparedCheckoutSession(input: {
           checkout_preparation_status: "claimed",
           checkout_attempt_id: input.checkoutAttemptId,
           checkout_funnel_event_id: input.funnelEventId,
+          ...(input.oneTimeConsentId
+            ? { personal_plan_once_consent_id: input.oneTimeConsentId }
+            : {}),
           ...(funnelContextForMetadata
             ? {
                 funnel_session_id: funnelContextForMetadata.sessionId,
@@ -943,9 +1073,17 @@ async function claimPreparedCheckoutSession(input: {
       claimedSession.metadata ?? {},
       input.checkoutAttemptId,
       input.funnelEventId,
+      input.oneTimeConsentId,
     )
   ) {
     return preparedCheckoutUnavailable()
+  }
+  if (input.oneTimeConsentId && input.adminSupabase) {
+    await bindPersonalPlanOneTimeConsentProviderReference(
+      input.adminSupabase,
+      input.oneTimeConsentId,
+      { stripeCheckoutSessionId: session.id },
+    )
   }
   const funnelResult = await recordPreparedCheckoutStarted({
     interval: input.interval,
@@ -971,14 +1109,14 @@ async function claimPreparedCheckoutSession(input: {
 }
 
 async function recordPreparedCheckoutStarted(input: {
-  interval: "month" | "quarter" | "year"
+  interval: CheckoutCommerceInterval
   source: "pricing_page" | "quiz_result_offer"
   leadId: string | null
   userId?: string
   checkoutAttemptId: string
   funnelEventId: string
   sessionId: string
-  analyticsPlan: ReturnType<typeof getStripePricingPlan>
+  analyticsPlan: CheckoutAnalyticsPlan
   cookieStore: Awaited<ReturnType<typeof cookies>>
 }) {
   const funnelContext =

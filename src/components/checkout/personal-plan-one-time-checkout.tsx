@@ -28,6 +28,15 @@ const personalPlanOneTimeCommerce = {
   value: PERSONAL_PLAN_ONCE_PRODUCT.amount,
 } as const
 
+type PreparedOneTimeStripeCheckout = {
+  claimFunnelEventId?: string
+  claimed: boolean
+  clientSecret: string
+  expiresAt: number
+  preparationToken: string | null
+  sessionId: string
+}
+
 export function PersonalPlanOneTimeCheckout({
   checkoutAttemptId,
   funnelSessionId,
@@ -43,12 +52,16 @@ export function PersonalPlanOneTimeCheckout({
   const checkoutStartedProvidersRef = useRef(new Set<string>())
   const paymentOptionViewsRef = useRef(new Set<string>())
   const paymentSelectionIndexRef = useRef(0)
+  const consentInputRef = useRef<HTMLInputElement>(null)
+  const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [paypalReady, setPaypalReady] = useState(false)
+  const [stripeProviderLocked, setStripeProviderLocked] = useState(false)
   const [stripeSelected, setStripeSelected] = useState(false)
-  const canStartPayment = accepted && Boolean(leadId && funnelSessionId)
+  const [stripePreparationId, setStripePreparationId] = useState(createFunnelEventId)
+  const canStartPayment = Boolean(leadId && funnelSessionId)
 
   const trackCheckoutStarted = useCallback(
     (
@@ -110,37 +123,140 @@ export function PersonalPlanOneTimeCheckout({
     [checkoutAttemptId, offerContext],
   )
 
+  const requestConsent = useCallback(() => {
+    setError("Bitte bestätige zuerst die Einwilligung oben.")
+    consentInputRef.current?.focus()
+  }, [])
+
   const fetchClientSecret = useCallback(async () => {
-    if (!leadId || !funnelSessionId || !accepted)
-      throw new Error("one-time checkout is not authorized")
-    const funnelEventId = createFunnelEventId()
+    if (!leadId || !funnelSessionId) throw new Error("one-time checkout is not authorized")
     const response = await fetch("/api/stripe/create-checkout-session", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
+        action: "prepare",
+        purchaseKind: "personal_plan_once",
+        leadId,
+        funnelSessionId,
+        preparationId: stripePreparationId,
+        source: "quiz_result_offer",
+        presentation: "offer_overlay_elements",
+      }),
+    })
+    const body = (await response.json().catch(() => ({}))) as {
+      client_secret?: unknown
+      expires_at?: unknown
+      preparation_token?: unknown
+      provider_locked?: unknown
+      session_id?: unknown
+      status?: unknown
+    }
+    if (
+      !response.ok ||
+      (body.status !== "prepared" && body.status !== "recovered") ||
+      typeof body.client_secret !== "string" ||
+      typeof body.expires_at !== "number" ||
+      (body.status === "prepared" && typeof body.preparation_token !== "string") ||
+      typeof body.session_id !== "string"
+    ) {
+      setError(checkoutStartError)
+      throw new Error("one-time Stripe session preparation failed")
+    }
+    preparedStripeCheckoutRef.current = {
+      claimed: body.status === "recovered",
+      clientSecret: body.client_secret,
+      expiresAt: body.expires_at,
+      preparationToken: typeof body.preparation_token === "string" ? body.preparation_token : null,
+      sessionId: body.session_id,
+    }
+    setStripeProviderLocked(body.provider_locked === "stripe")
+    return body.client_secret
+  }, [funnelSessionId, leadId, stripePreparationId])
+
+  const handleBeforeStripeConfirm = useCallback(async () => {
+    if (!accepted) {
+      consentInputRef.current?.focus()
+      return { allowed: false, errorMessage: "Bitte bestätige zuerst die Einwilligung oben." }
+    }
+    const preparation = preparedStripeCheckoutRef.current
+    if (!leadId || !funnelSessionId || !preparation) {
+      setError(checkoutStartError)
+      return false
+    }
+    if (preparation.expiresAt <= Math.floor(Date.now() / 1000)) {
+      preparedStripeCheckoutRef.current = null
+      setError("Die Zahlungsarten werden neu geladen. Bitte versuche es gleich noch einmal.")
+      setStripePreparationId(createFunnelEventId())
+      return false
+    }
+    if (preparation.claimed) return true
+    if (!preparation.preparationToken) {
+      setError(checkoutStartError)
+      return false
+    }
+
+    setError(null)
+    const funnelEventId = preparation.claimFunnelEventId ?? createFunnelEventId()
+    preparation.claimFunnelEventId = funnelEventId
+    const response = await fetch("/api/stripe/create-checkout-session", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        action: "claim",
         purchaseKind: "personal_plan_once",
         consentAccepted: true,
         consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
         leadId,
         funnelSessionId,
+        preparationId: stripePreparationId,
+        preparationToken: preparation.preparationToken,
+        preparedSessionId: preparation.sessionId,
         checkoutAttemptId,
         funnelEventId,
         source: "quiz_result_offer",
         presentation: "offer_overlay_elements",
       }),
     })
-    const body = (await response.json().catch(() => ({}))) as { client_secret?: unknown }
+    const body = (await response.json().catch(() => ({}))) as {
+      client_secret?: unknown
+      error?: unknown
+      session_id?: unknown
+      status?: unknown
+    }
     if (response.status === 409) {
-      setDuplicateDialogOpen(true)
-      throw new Error("checkout access already exists")
+      if (
+        body.error === "checkout_access_already_exists" ||
+        body.error === "checkout already completed"
+      )
+        setDuplicateDialogOpen(true)
+      else setError("Eine andere Zahlungsart wurde bereits gestartet.")
+      return false
     }
-    if (!response.ok || typeof body.client_secret !== "string") {
+    if (
+      !response.ok ||
+      body.status !== "claimed" ||
+      body.client_secret !== preparation.clientSecret ||
+      body.session_id !== preparation.sessionId
+    ) {
+      if (body.status === "unavailable") {
+        preparedStripeCheckoutRef.current = null
+        setStripePreparationId(createFunnelEventId())
+      }
       setError(checkoutStartError)
-      throw new Error("one-time Stripe session creation failed")
+      return false
     }
+    preparation.claimed = true
+    setStripeProviderLocked(true)
     trackCheckoutStarted("stripe", "explicit_provider_action", funnelEventId)
-    return body.client_secret
-  }, [accepted, checkoutAttemptId, funnelSessionId, leadId, trackCheckoutStarted])
+    return true
+  }, [
+    accepted,
+    checkoutAttemptId,
+    funnelSessionId,
+    leadId,
+    stripePreparationId,
+    trackCheckoutStarted,
+  ])
 
   return (
     <div className="grid gap-4">
@@ -151,118 +267,87 @@ export function PersonalPlanOneTimeCheckout({
       />
       <label className="flex cursor-pointer items-start gap-3 rounded-[14px] border border-border bg-white p-4 text-sm leading-5 text-[var(--brand-plum-darkest)]">
         <input
+          ref={consentInputRef}
           checked={accepted}
           className="mt-0.5 size-4 shrink-0 accent-[var(--brand-plum)]"
-          onChange={(event) => setAccepted(event.target.checked)}
+          onChange={(event) => {
+            setAccepted(event.target.checked)
+            if (event.target.checked) setError(null)
+          }}
           type="checkbox"
         />
         <span>{PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT}</span>
       </label>
 
-      {!leadId || !funnelSessionId ? (
+      {canStartPayment ? (
+        <StripeOfferElementsCheckout
+          checkoutAttemptId={checkoutAttemptId}
+          checkoutKey={`personal-plan-once:${stripePreparationId}`}
+          fetchClientSecret={fetchClientSecret}
+          onBeforeConfirm={handleBeforeStripeConfirm}
+          onPaymentMethodSelected={handlePaymentMethodSelected}
+          onPaymentOptionViewed={handlePaymentOptionViewed}
+          onRetry={() => {
+            preparedStripeCheckoutRef.current = null
+            setError(null)
+            setStripePreparationId(createFunnelEventId())
+          }}
+          paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
+          paymentElementEnabled={stripeSelected}
+          secondaryPaymentMethod={
+            (process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" && !stripeProviderLocked) ||
+            !stripeSelected ? (
+              <div className="grid gap-3">
+                {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" && !stripeProviderLocked ? (
+                  <PaymentOptionExposure
+                    checkoutAttemptId={checkoutAttemptId}
+                    onViewed={handlePaymentOptionViewed}
+                    option="paypal"
+                    provider="paypal"
+                    providerReady={paypalReady}
+                    visible
+                  >
+                    <PayPalOneTimeButton
+                      checkoutAttemptId={checkoutAttemptId}
+                      consentAccepted={accepted}
+                      funnelSessionId={funnelSessionId!}
+                      leadId={leadId!}
+                      onCheckoutStarted={(funnelEventId) =>
+                        trackCheckoutStarted("paypal", "explicit_provider_action", funnelEventId)
+                      }
+                      onDuplicateAccess={() => setDuplicateDialogOpen(true)}
+                      onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
+                      onProviderConflict={() =>
+                        setError("Eine andere Zahlungsart wurde bereits gestartet.")
+                      }
+                      onReady={() => setPaypalReady(true)}
+                      onConsentRequired={requestConsent}
+                    />
+                  </PaymentOptionExposure>
+                ) : null}
+                {!stripeSelected ? (
+                  <Button
+                    onClick={() => {
+                      setError(null)
+                      setStripeSelected(true)
+                    }}
+                    type="button"
+                  >
+                    Mit Karte bezahlen
+                  </Button>
+                ) : null}
+              </div>
+            ) : undefined
+          }
+          stripe={getOfferStripePromise()}
+        />
+      ) : (
         <p
           className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
           role="alert"
         >
           {checkoutStartError}
         </p>
-      ) : null}
-
-      {accepted && canStartPayment ? (
-        stripeSelected ? (
-          <StripeOfferElementsCheckout
-            checkoutAttemptId={checkoutAttemptId}
-            checkoutKey={`personal-plan-once:${checkoutAttemptId}`}
-            fetchClientSecret={fetchClientSecret}
-            onPaymentMethodSelected={handlePaymentMethodSelected}
-            onPaymentOptionViewed={handlePaymentOptionViewed}
-            onRetry={() => setError(null)}
-            paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
-            stripe={getOfferStripePromise()}
-          />
-        ) : (
-          <div className="grid gap-3">
-            {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
-              <PaymentOptionExposure
-                checkoutAttemptId={checkoutAttemptId}
-                onViewed={handlePaymentOptionViewed}
-                option="paypal"
-                provider="paypal"
-                providerReady={paypalReady}
-                visible
-              >
-                <PayPalOneTimeButton
-                  checkoutAttemptId={checkoutAttemptId}
-                  funnelSessionId={funnelSessionId!}
-                  leadId={leadId!}
-                  onCheckoutStarted={(funnelEventId) =>
-                    trackCheckoutStarted("paypal", "explicit_provider_action", funnelEventId)
-                  }
-                  onDuplicateAccess={() => setDuplicateDialogOpen(true)}
-                  onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
-                  onReady={() => setPaypalReady(true)}
-                />
-              </PaymentOptionExposure>
-            ) : null}
-            {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
-              <>
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
-                  <span className="h-px bg-border" aria-hidden="true" />
-                  <span>oder</span>
-                  <span className="h-px bg-border" aria-hidden="true" />
-                </div>
-              </>
-            ) : null}
-            <Button
-              onClick={() => {
-                setError(null)
-                setStripeSelected(true)
-              }}
-              type="button"
-            >
-              Mit Apple Pay oder Karte bezahlen
-            </Button>
-          </div>
-        )
-      ) : (
-        <div
-          aria-describedby="personal-plan-one-time-payment-gate"
-          aria-label="Zahlungsarten erst nach Einwilligung verfügbar"
-          className="grid gap-3"
-        >
-          <button
-            type="button"
-            disabled
-            className="min-h-[52px] w-full rounded-full bg-black px-5 text-[15px] font-bold text-white opacity-45"
-          >
-             Pay
-          </button>
-          <button
-            type="button"
-            disabled
-            className="min-h-[52px] w-full rounded-full bg-[#ffc439] px-5 text-[15px] font-black text-[#003087] opacity-45"
-          >
-            PayPal
-          </button>
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
-            <span className="h-px bg-border" aria-hidden="true" />
-            <span>oder mit Karte</span>
-            <span className="h-px bg-border" aria-hidden="true" />
-          </div>
-          <button
-            type="button"
-            disabled
-            className="min-h-[52px] w-full rounded-full bg-[var(--brand-plum)] px-5 text-[15px] font-black text-white opacity-45"
-          >
-            Zahlungspflichtig bestellen — €29,99
-          </button>
-          <p
-            id="personal-plan-one-time-payment-gate"
-            className="text-center text-xs leading-5 text-muted-foreground"
-          >
-            Bitte bestätige die Einwilligung, um Apple Pay, PayPal oder Karte zu nutzen.
-          </p>
-        </div>
       )}
 
       {error ? (
