@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mobile Layout-Containment – Current / Proposed</title>
+    <style>
+      :root {
+        --plum: #6d48ad;
+        --plum-dark: #26133d;
+        --plum-light: #d9c8ee;
+        --paper: #fbfaf8;
+        --muted: #746d75;
+        --coral: #d46873;
+        --line: #e3dfe4;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f2eef3;
+        color: var(--plum-dark);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 64px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 1.02;
+      }
+
+      .lede {
+        max-width: 760px;
+        margin: 0 0 32px;
+        color: #5f5861;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .section {
+        margin-top: 32px;
+      }
+
+      .section-title {
+        margin: 0 0 4px;
+        font-size: 19px;
+      }
+
+      .section-note {
+        margin: 0 0 14px;
+        color: #6e6670;
+        font-size: 14px;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .case {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #ded7e1;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 16px 34px rgba(38, 19, 61, 0.08);
+      }
+
+      .case-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 46px;
+        padding: 10px 14px;
+        border-bottom: 1px solid #ece8ed;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .case-label strong {
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .case-label span {
+        color: #6f6871;
+        font-weight: 600;
+      }
+
+      .bad strong {
+        color: #a64050;
+      }
+
+      .good strong {
+        color: #3d7653;
+      }
+
+      .phone-stage {
+        padding: 18px;
+        background:
+          linear-gradient(135deg, rgba(109, 72, 173, 0.05), rgba(212, 104, 115, 0.04)), #faf8fa;
+      }
+
+      .phone {
+        position: relative;
+        width: 320px;
+        max-width: 100%;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #d9d3da;
+        border-radius: 24px;
+        background: var(--paper);
+        box-shadow: 0 10px 24px rgba(38, 19, 61, 0.12);
+      }
+
+      .status {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 18px 8px;
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .quiz-header {
+        padding: 8px 16px 9px;
+        border-bottom: 1px solid var(--plum-light);
+        background: rgba(251, 250, 248, 0.96);
+      }
+
+      .quiz-row.current {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .quiz-row.proposed {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr) 72px;
+        align-items: center;
+      }
+
+      .back {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border: 0;
+        border-radius: 999px;
+        background: white;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, 0.1);
+        color: var(--plum-dark);
+        font-size: 24px;
+      }
+
+      .logo {
+        justify-self: center;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .section-label {
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-align: right;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .quiz-row.current .section-label {
+        width: 40px;
+      }
+
+      .progress {
+        position: relative;
+        height: 6px;
+        margin-top: 9px;
+        border-radius: 999px;
+        background: var(--plum-light);
+      }
+
+      .progress::before {
+        position: absolute;
+        inset: 0 7% 0 0;
+        border-radius: inherit;
+        background: var(--plum);
+        content: "";
+      }
+
+      .dots {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        margin-top: -8px;
+      }
+
+      .dots span {
+        justify-self: center;
+        width: 10px;
+        height: 10px;
+        border: 2px solid var(--paper);
+        border-radius: 50%;
+        background: var(--plum);
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        margin-top: 3px;
+        font-size: 7px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .quiz-body {
+        min-height: 132px;
+        padding: 22px 20px;
+        text-align: center;
+      }
+
+      .quiz-body h3 {
+        margin: 0 0 12px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 25px;
+        line-height: 1.12;
+      }
+
+      .quiz-body p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .cut-marker {
+        position: absolute;
+        top: 36px;
+        right: 0;
+        width: 16px;
+        height: 51px;
+        border-left: 2px dashed #c84258;
+        background: linear-gradient(90deg, rgba(200, 66, 88, 0.08), rgba(200, 66, 88, 0.22));
+      }
+
+      .annotation {
+        position: absolute;
+        z-index: 3;
+        padding: 5px 7px;
+        border-radius: 7px;
+        background: #a64050;
+        color: white;
+        font-size: 9px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .annotation.header-note {
+        top: 89px;
+        right: 7px;
+      }
+
+      .annotation.fit-note {
+        top: 88px;
+        right: 9px;
+        background: #3d7653;
+      }
+
+      .checkout {
+        padding-bottom: 16px;
+        background: var(--paper);
+      }
+
+      .sheet-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 20px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .sheet-head strong {
+        font-size: 14px;
+      }
+
+      .sheet-head button {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: white;
+        color: var(--plum-dark);
+      }
+
+      .checkout-scroll {
+        padding: 14px 20px 0;
+      }
+
+      .pay-stack {
+        display: grid;
+        gap: 9px;
+      }
+
+      .wallet {
+        display: grid;
+        min-height: 44px;
+        place-items: center;
+        border-radius: 999px;
+        color: white;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .apple {
+        background: black;
+      }
+
+      .paypal {
+        background: #ffc439;
+        color: #15386c;
+      }
+
+      .divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .divider span:first-child,
+      .divider span:last-child {
+        height: 1px;
+        background: var(--line);
+      }
+
+      .card-pay {
+        min-width: 0;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+      }
+
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .field {
+        height: 36px;
+        margin-bottom: 8px;
+        border: 1px solid #d2ccd4;
+        border-radius: 8px;
+        background: #fbfbfb;
+      }
+
+      .cta {
+        display: grid;
+        min-height: 48px;
+        place-items: center;
+        margin-top: 10px;
+        border-radius: 999px;
+        background: var(--plum);
+        color: white;
+        font-size: 13px;
+        font-weight: 900;
+        line-height: 1.15;
+        text-align: center;
+      }
+
+      .checkout-current .pay-stack {
+        width: 303px;
+      }
+
+      .checkout-proposed .pay-stack {
+        min-width: 0;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .checkout-current .overflow-mask {
+        position: absolute;
+        top: 58px;
+        right: 0;
+        bottom: 0;
+        width: 19px;
+        border-left: 2px dashed #c84258;
+        background: linear-gradient(90deg, rgba(200, 66, 88, 0.04), rgba(200, 66, 88, 0.2));
+      }
+
+      .checkout-current .annotation {
+        top: 112px;
+        right: 5px;
+      }
+
+      .checkout-proposed .annotation {
+        top: 112px;
+        right: 6px;
+        background: #3d7653;
+      }
+
+      .editorial {
+        min-height: 280px;
+        padding: 22px 20px;
+        background: var(--paper);
+      }
+
+      .editorial h2 {
+        margin: 0 0 18px;
+        font-size: 30px;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+      }
+
+      .editorial .method {
+        margin-top: 30px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 36px;
+        font-weight: 500;
+      }
+
+      .editorial p {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .editorial-current h2,
+      .editorial-current .method {
+        white-space: nowrap;
+      }
+
+      .editorial-proposed h2 {
+        font-size: 26px;
+        overflow-wrap: anywhere;
+      }
+
+      .editorial-proposed .method {
+        font-size: 32px;
+        overflow-wrap: anywhere;
+      }
+
+      .editorial-current .overflow-mask {
+        position: absolute;
+        top: 38px;
+        right: 0;
+        width: 18px;
+        height: 150px;
+        border-left: 2px dashed #c84258;
+        background: linear-gradient(90deg, rgba(200, 66, 88, 0.06), rgba(200, 66, 88, 0.2));
+      }
+
+      .editorial-current .annotation {
+        top: 42px;
+        right: 5px;
+      }
+
+      .editorial-proposed .annotation {
+        top: 42px;
+        right: 6px;
+        background: #3d7653;
+      }
+
+      .decision {
+        margin-top: 24px;
+        padding: 16px 18px;
+        border: 1px solid #d5c8e2;
+        border-radius: 16px;
+        background: #f9f5fd;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .decision strong {
+        color: var(--plum);
+      }
+
+      @media (max-width: 760px) {
+        main {
+          width: min(100% - 20px, 540px);
+          padding-top: 24px;
+        }
+
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Mobile Layout-Containment</h1>
+      <p class="lede">
+        Reviewmockup für 320&nbsp;px Breite. Die vorgeschlagene Richtung ändert keine Inhalte,
+        Zahlungslogik oder Navigation – nur die Breitenregeln an den drei reproduzierten Engstellen.
+      </p>
+
+      <section class="section">
+        <h2 class="section-title">1 · QuizFlow-Kopfzeile</h2>
+        <p class="section-note">
+          Die Marke bleibt geometrisch zentriert; links und rechts entstehen symmetrische
+          72-px-Bereiche mit Reserve um „Ergebnis“.
+        </p>
+        <div class="comparison">
+          <article class="case bad">
+            <div class="case-label">
+              <strong>Aktuell</strong>
+              <span>„Ergebnis“ in 40 px</span>
+            </div>
+            <div class="phone-stage">
+              <div class="phone">
+                <div class="status"><span>10:09</span><span>●●● Wi-Fi 21%</span></div>
+                <div class="quiz-header">
+                  <div class="quiz-row current">
+                    <button class="back" aria-label="Zurück">←</button>
+                    <span class="logo">chaarlie</span>
+                    <span class="section-label">Ergebnis</span>
+                  </div>
+                  <div class="progress"></div>
+                  <div class="dots">
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="steps">
+                    <span>Profil</span><span>Ziele</span><span>Analyse</span><span>Plan</span
+                    ><span>Ergebnis</span>
+                  </div>
+                </div>
+                <div class="quiz-body">
+                  <h3>Wir bereiten deinen persönlichen Haarpflegeplan vor.</h3>
+                  <p>Deine Antworten werden ausgewertet.</p>
+                </div>
+                <div class="cut-marker"></div>
+                <div class="annotation header-note">rechts abgeschnitten</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="case good">
+            <div class="case-label">
+              <strong>Vorgeschlagen</strong>
+              <span>72 / flexibel / 72 px</span>
+            </div>
+            <div class="phone-stage">
+              <div class="phone">
+                <div class="status"><span>10:09</span><span>●●● Wi-Fi 21%</span></div>
+                <div class="quiz-header">
+                  <div class="quiz-row proposed">
+                    <button class="back" aria-label="Zurück">←</button>
+                    <span class="logo">chaarlie</span>
+                    <span class="section-label">Ergebnis</span>
+                  </div>
+                  <div class="progress"></div>
+                  <div class="dots">
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="steps">
+                    <span>Profil</span><span>Ziele</span><span>Analyse</span><span>Plan</span
+                    ><span>Ergebnis</span>
+                  </div>
+                </div>
+                <div class="quiz-body">
+                  <h3>Wir bereiten deinen persönlichen Haarpflegeplan vor.</h3>
+                  <p>Deine Antworten werden ausgewertet.</p>
+                </div>
+                <div class="annotation fit-note">vollständig + zentriert</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">2 · Offer-Zahlungsbereich</h2>
+        <p class="section-note">
+          Jede Zahlungszeile darf auf die verfügbare Sheetbreite schrumpfen; der Pflicht-CTA darf
+          auf sehr schmalen Geräten sauber umbrechen.
+        </p>
+        <div class="comparison">
+          <article class="case bad">
+            <div class="case-label">
+              <strong>Aktuell</strong>
+              <span>303 px Inhalt in 280 px</span>
+            </div>
+            <div class="phone-stage">
+              <div class="phone checkout checkout-current">
+                <div class="sheet-head"><strong>Sicher bezahlen</strong><button>×</button></div>
+                <div class="checkout-scroll">
+                  <div class="pay-stack">
+                    <div class="wallet apple"> Pay</div>
+                    <div class="wallet paypal">PayPal</div>
+                    <div class="divider"><span></span><b>oder</b><span></span></div>
+                    <div class="card-pay">
+                      <div class="card-head">
+                        <span>Karte &amp; weitere</span><span>34,99 €</span>
+                      </div>
+                      <div class="field"></div>
+                      <div class="field"></div>
+                      <div class="cta">Kostenpflichtig abonnieren · 34,99 €</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="overflow-mask"></div>
+                <div class="annotation">ca. 23 px außerhalb</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="case good">
+            <div class="case-label">
+              <strong>Vorgeschlagen</strong>
+              <span>minmax(0, 1fr) + min-width: 0</span>
+            </div>
+            <div class="phone-stage">
+              <div class="phone checkout checkout-proposed">
+                <div class="sheet-head"><strong>Sicher bezahlen</strong><button>×</button></div>
+                <div class="checkout-scroll">
+                  <div class="pay-stack">
+                    <div class="wallet apple"> Pay</div>
+                    <div class="wallet paypal">PayPal</div>
+                    <div class="divider"><span></span><b>oder</b><span></span></div>
+                    <div class="card-pay">
+                      <div class="card-head">
+                        <span>Karte &amp; weitere</span><span>34,99 €</span>
+                      </div>
+                      <div class="field"></div>
+                      <div class="field"></div>
+                      <div class="cta">Kostenpflichtig abonnieren · 34,99 €</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="annotation">alles im 320-px-Viewport</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">3 · Lange Seitentitel</h2>
+        <p class="section-note">
+          Nur unter 360 px wird die Schrift moderat kleiner; lange deutsche Wörter erhalten einen
+          sicheren Umbruch. Ab 360 px bleibt die bestehende Typografie.
+        </p>
+        <div class="comparison">
+          <article class="case bad">
+            <div class="case-label">
+              <strong>Aktuell</strong>
+              <span>AGB / Datenschutz / Methodik</span>
+            </div>
+            <div class="phone-stage">
+              <div class="phone editorial editorial-current">
+                <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
+                <h2 class="method">So kommt Chaarlie zu einer Pflegeeinschätzung</h2>
+                <p>Die langen Wörter laufen bei 320 px über den Inhaltsbereich hinaus.</p>
+                <div class="overflow-mask"></div>
+                <div class="annotation">Text überläuft</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="case good">
+            <div class="case-label">
+              <strong>Vorgeschlagen</strong>
+              <span>schmale Stufe + sicherer Umbruch</span>
+            </div>
+            <div class="phone-stage">
+              <div class="phone editorial editorial-proposed">
+                <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
+                <h2 class="method">So kommt Chaarlie zu einer Pflegeeinschätzung</h2>
+                <p>Kein Seitenscrollen; die normale Größe greift wieder ab 360 px.</p>
+                <div class="annotation">lesbar + vollständig</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="decision">
+        <strong>Gewählte Richtung:</strong> lokale Containment-Regeln an den drei bestätigten
+        Engstellen. Keine globale CSS-Regel, kein Redesign und keine Änderung an Checkout, Tracking,
+        Preisen oder Textinhalten.
+      </div>
+    </main>
+  </body>
+</html>

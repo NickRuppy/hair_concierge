@@ -288,7 +288,7 @@ function ScreenHeader({
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur">
-      <div className="mx-auto flex max-w-[44rem] items-center justify-between">
+      <div className="mx-auto grid max-w-[44rem] grid-cols-[4.5rem_minmax(0,1fr)_4.5rem] items-center">
         <button
           aria-label="Zurück"
           aria-hidden={!canGoBack}
@@ -303,10 +303,10 @@ function ScreenHeader({
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <span className="font-header text-xl font-medium text-[var(--brand-plum-darkest)]">
+        <span className="justify-self-center font-header text-xl font-medium text-[var(--brand-plum-darkest)]">
           chaarlie
         </span>
-        <span className="w-10 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum)] sm:w-20">
+        <span className="w-full whitespace-nowrap text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
           {currentSectionLabel}
         </span>
       </div>

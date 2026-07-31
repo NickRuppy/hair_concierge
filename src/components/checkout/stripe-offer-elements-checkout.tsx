@@ -719,7 +719,7 @@ export function StripeOfferElementsCheckoutContent({
     showPaymentElement && (state.applePayReady || showSecondaryPaymentMethod)
 
   return (
-    <div className="relative grid gap-3">
+    <div className="relative grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">
       {debugEnabled ? (
         <details className="fixed inset-x-2 bottom-[max(8px,env(safe-area-inset-bottom))] z-[100] max-h-[44svh] overflow-auto rounded-xl bg-black/95 p-3 text-left font-mono text-[11px] leading-4 text-white shadow-2xl">
           <summary className="cursor-pointer font-sans text-xs font-bold">
@@ -866,7 +866,7 @@ export function StripeOfferElementsCheckoutContent({
       {showSecondaryPaymentMethod ? secondaryPaymentMethod : null}
 
       {showResolvedPaymentDivider ? (
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
+        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
           <span className="h-px bg-border" aria-hidden="true" />
           <span>oder</span>
           <span className="h-px bg-border" aria-hidden="true" />
@@ -884,7 +884,7 @@ export function StripeOfferElementsCheckoutContent({
           visible={visible}
         >
           <div
-            className="grid gap-3 rounded-[16px] border border-border bg-white p-4 shadow-sm"
+            className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 rounded-[16px] border border-border bg-white p-4 shadow-sm"
             data-offer-payment-step="payment_element"
           >
             <div className="mb-3 flex items-center justify-between gap-3">
@@ -928,7 +928,7 @@ export function StripeOfferElementsCheckoutContent({
               variant="unstyled"
               disabled={!state.canSubmit || lockedProvider === "paypal"}
               onClick={() => void confirmCheckout("payment_element")}
-              className="min-h-[52px] rounded-full bg-[var(--brand-plum)] px-5 text-[15px] font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-[52px] w-full whitespace-normal rounded-full bg-[var(--brand-plum)] px-5 text-center text-[15px] font-black leading-tight text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {state.confirming
                 ? "Zahlung wird bestätigt ..."
