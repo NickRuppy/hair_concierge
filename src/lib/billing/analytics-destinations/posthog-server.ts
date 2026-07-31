@@ -13,6 +13,7 @@ function withoutUnresolvedFunnelProperties(payload: Record<string, unknown>) {
   delete properties.funnel_attribution_issue
   delete properties.funnel_attribution_status
   delete properties.funnel_package_key
+  delete properties.is_internal_test
   delete properties.landing_variant
   delete properties.offer_variant
   delete properties.quiz_variant
@@ -37,6 +38,7 @@ function purchaseFunnelProperties(
       funnel_attribution_status: "resolved",
       funnel_package_key: attribution.snapshot.packageKey,
       funnel_session_id: attribution.snapshot.sessionId,
+      is_internal_test: attribution.snapshot.isInternalTest,
       landing_variant: attribution.snapshot.landingVariant,
       offer_variant: attribution.snapshot.offerVariant,
       quiz_variant: attribution.snapshot.quizVariant,

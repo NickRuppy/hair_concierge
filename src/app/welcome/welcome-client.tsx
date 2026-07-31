@@ -28,8 +28,8 @@ interface WelcomeClientProps {
 }
 
 type CheckoutActivationSource =
-  | { provider: "stripe"; sessionId: string }
-  | { provider: "paypal"; token: string }
+  | { provider: "stripe"; sessionId: string; purchaseKind?: "one_time" }
+  | { provider: "paypal"; token: string; purchaseKind?: "one_time" }
 
 type LoadingState = "password" | "magic_link" | null
 type ScreenState = { view: "choice" } | { view: "sent" }
@@ -62,6 +62,7 @@ export function WelcomeClient({
   )
   const paypalActivationToken =
     activationSource.provider === "paypal" ? activationSource.token : null
+  const isOneTimePurchase = activationSource.purchaseKind === "one_time"
   const showProviderSubscriberEmail =
     Boolean(providerSubscriberEmail?.trim()) &&
     providerSubscriberEmail?.trim().toLowerCase() !== email?.trim().toLowerCase()
@@ -293,10 +294,13 @@ export function WelcomeClient({
             <Mail className="h-6 w-6 text-primary" />
           </div>
           <div className="space-y-2">
-            <h1 className="font-header text-3xl text-foreground">Abo bereits aktiv</h1>
+            <h1 className="font-header text-3xl text-foreground">
+              {isOneTimePurchase ? "Zugang bereits vorhanden" : "Abo bereits aktiv"}
+            </h1>
             <p className="text-base text-muted-foreground">
-              Für diese E-Mail gibt es bereits ein aktives Abo. Wir haben die neue PayPal-Zahlung
-              gestoppt. Bitte melde dich mit deinem bestehenden Konto an.
+              {isOneTimePurchase
+                ? "Für diese E-Mail ist bereits ein Zugang vorhanden. Bitte melde dich mit deinem bestehenden Konto an."
+                : "Für diese E-Mail gibt es bereits ein aktives Abo. Wir haben die neue PayPal-Zahlung gestoppt. Bitte melde dich mit deinem bestehenden Konto an."}
             </p>
           </div>
         </div>
@@ -337,7 +341,9 @@ export function WelcomeClient({
             </div>
             <div className="space-y-2">
               <p className="text-sm font-medium text-primary">Zahlung erfolgreich</p>
-              <h1 className="font-header text-3xl text-foreground sm:text-4xl">Konto aktivieren</h1>
+              <h1 className="font-header text-3xl text-foreground sm:text-4xl">
+                {isOneTimePurchase ? "Zugang einrichten" : "Konto aktivieren"}
+              </h1>
               <p className="text-base text-muted-foreground">
                 Wähle, wie du dich bei Chaarlie anmelden möchtest.
               </p>
@@ -481,7 +487,12 @@ function activationRequestBody(
   next: CheckoutFirstTimeDestination,
 ): Record<string, string> {
   if (source.provider === "paypal") {
-    return { provider: "paypal", token: source.token, next }
+    return {
+      provider: "paypal",
+      token: source.token,
+      ...(source.purchaseKind === "one_time" ? { purchase: "one_time" } : {}),
+      next,
+    }
   }
   return { session_id: source.sessionId, next }
 }

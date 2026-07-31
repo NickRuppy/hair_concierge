@@ -5,8 +5,8 @@ import type {
   AppEventName,
   FunnelAnalyticsEnvelope,
   OfferAnalyticsContext,
-  OfferCommerceProperties,
 } from "../events"
+import type { BillingInterval } from "@/lib/stripe/intervals"
 
 function cleanAnalyticsPayload(payload: AnalyticsPayload) {
   return Object.fromEntries(
@@ -19,6 +19,7 @@ function offerContextProperties(data: Partial<OfferAnalyticsContext>) {
     conditioner_module_id: data.conditionerModuleId,
     entry_context: data.entryContext,
     focus_routine: data.focusRoutine,
+    is_internal_test: data.isInternalTest,
     lead_id: data.leadId,
     need_lane: data.needLane,
     offer_revision: data.offerRevision,
@@ -29,11 +30,20 @@ function offerContextProperties(data: Partial<OfferAnalyticsContext>) {
   }
 }
 
-function commerceProperties(data: Partial<OfferCommerceProperties>) {
+function commerceProperties(data: {
+  commerceKind?: "membership" | "one_time"
+  currency?: string
+  interval?: BillingInterval | null
+  planId?: string
+  purchaseKind?: "personal_plan_once"
+  value?: number
+}) {
   return {
+    commerce_kind: data.commerceKind,
     currency: data.currency,
-    interval: data.interval,
+    interval: "interval" in data ? data.interval : undefined,
     plan_id: data.planId,
+    purchase_kind: "purchaseKind" in data ? data.purchaseKind : undefined,
     value: data.value,
   }
 }
@@ -78,17 +88,14 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["checkout_started"]
       return {
         ...offerContextProperties(data),
+        ...commerceProperties(data),
         checkout_attempt_id: data.checkoutAttemptId,
         checkout_context: data.checkoutContext,
         checkout_presentation: data.checkoutPresentation,
         checkout_start_trigger: data.checkoutStartTrigger,
-        currency: data.currency,
-        interval: data.interval,
         leadId: data.leadId,
-        plan_id: data.planId,
         provider: data.provider,
         source: data.source,
-        value: data.value,
       }
     }
     case "first_chat_message":
@@ -275,6 +282,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["pricing_viewed"]
       return {
         ...offerContextProperties(data),
+        ...commerceProperties(data),
         available_intervals: data.availableIntervals,
         checkout_context: data.checkoutContext,
         leadId: data.leadId,

@@ -6,6 +6,7 @@ export type FunnelExperienceSnapshot = {
   landingVariant: string
   quizVariant: string
   offerVariant: string
+  isInternalTest: boolean
 }
 
 export type PurchaseFunnelAttribution =
@@ -24,6 +25,7 @@ type FunnelExperienceRow = {
   landing_variant: string
   quiz_variant: string
   offer_variant: string
+  is_internal_test: boolean
 }
 
 function payloadString(payload: Record<string, unknown>, key: string) {
@@ -45,7 +47,7 @@ export async function resolvePurchaseFunnelAttribution(
 
   const { data, error } = await supabase
     .from("funnel_sessions")
-    .select("id, package_key, landing_variant, quiz_variant, offer_variant")
+    .select("id, package_key, landing_variant, quiz_variant, offer_variant, is_internal_test")
     .eq("id", sessionId)
     .maybeSingle()
 
@@ -75,6 +77,7 @@ export async function resolvePurchaseFunnelAttribution(
       landingVariant: row.landing_variant,
       quizVariant: row.quiz_variant,
       offerVariant: row.offer_variant,
+      isInternalTest: row.is_internal_test,
     },
   }
 }

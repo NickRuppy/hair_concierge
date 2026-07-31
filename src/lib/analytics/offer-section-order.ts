@@ -1,5 +1,6 @@
 import type { OfferSectionId } from "./events"
 import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
+import { isPersonalPlanPricingExperimentVariant } from "@/lib/funnel/personal-plan-pricing-experiment"
 
 const DEFAULT_SECTION_ORDER = [
   "personalized_analysis",
@@ -72,7 +73,7 @@ const PERSONAL_PLAN_SECTION_ORDER = [
 
 export function resolveOfferSectionIndex(offerVariant: string, sectionId: OfferSectionId): number {
   const order: readonly OfferSectionId[] =
-    offerVariant === "personal-plan-v1"
+    offerVariant === "personal-plan-v1" || isPersonalPlanPricingExperimentVariant(offerVariant)
       ? PERSONAL_PLAN_SECTION_ORDER
       : isGuidedStoryFamilyVariant(offerVariant)
         ? offerVariant === "guided-story-founder-letter"

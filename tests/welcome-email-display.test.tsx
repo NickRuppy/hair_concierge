@@ -44,3 +44,13 @@ test("welcome only shows PayPal-E-Mail when it differs from Chaarlie email", () 
   )
   assert.match(welcomeClientSource, /PayPal-E-Mail/)
 })
+
+test("one-time welcome recovery selects the order activator and neutral access copy", () => {
+  assert.match(welcomePageSource, /purchase === "one_time"/)
+  assert.match(welcomePageSource, /renderPayPalOneTimeWelcome/)
+  assert.match(welcomePageSource, /recoverPayPalOrderActivation/)
+  assert.match(welcomePageSource, /ensureOneTimeCheckoutAccount/)
+  assert.match(welcomeClientSource, /Zugang einrichten/)
+  assert.match(welcomeClientSource, /Zugang bereits vorhanden/)
+  assert.match(welcomeClientSource, /purchase: "one_time"/)
+})

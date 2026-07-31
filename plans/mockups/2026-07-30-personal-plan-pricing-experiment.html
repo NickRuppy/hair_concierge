@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Zwei exklusive Preisvarianten</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #2a1845;
+        --muted: #755f7d;
+        --plum: #6b50a0;
+        --plum-ice: #f2eefa;
+        --coral: #d4616a;
+        --coral-dark: #c0555d;
+        --cream: #fcfaf7;
+        --line: rgba(61, 42, 98, 0.14);
+        --shadow: 0 32px 90px -55px rgba(62, 24, 54, 0.75);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 15% 8%, rgba(212, 97, 106, 0.11), transparent 24rem), #eee9e8;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .review-shell {
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      .review-header {
+        display: flex;
+        max-width: 1180px;
+        margin: 0 auto 18px;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .eyebrow {
+        margin: 0 0 6px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .review-header h1 {
+        max-width: 760px;
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(28px, 4vw, 46px);
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        line-height: 1.02;
+      }
+
+      .review-header p:last-child {
+        max-width: 760px;
+        margin: 10px 0 0;
+        color: #5f5364;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .controls {
+        display: grid;
+        flex: 0 0 auto;
+        gap: 8px;
+      }
+
+      .control-group {
+        display: flex;
+        padding: 4px;
+        border: 1px solid rgba(44, 22, 56, 0.1);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 12px 30px -24px rgba(44, 22, 56, 0.65);
+      }
+
+      .control-group button {
+        min-height: 38px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: #64566a;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .control-group button[aria-pressed="true"] {
+        background: var(--ink);
+        color: white;
+      }
+
+      .stage {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      .device {
+        width: min(100%, 940px);
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid rgba(44, 22, 56, 0.12);
+        border-radius: 28px;
+        background: white;
+        box-shadow: var(--shadow);
+        transition:
+          width 180ms ease,
+          border-radius 180ms ease;
+      }
+
+      .device.mobile {
+        width: min(100%, 390px);
+        border: 8px solid #241d25;
+        border-radius: 38px;
+      }
+
+      .browser-bar {
+        display: flex;
+        height: 38px;
+        align-items: center;
+        gap: 6px;
+        padding: 0 14px;
+        border-bottom: 1px solid rgba(44, 22, 56, 0.08);
+        background: #f7f4f5;
+      }
+
+      .browser-bar span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d6ced4;
+      }
+
+      .offer-page {
+        position: relative;
+        min-height: 760px;
+        background: var(--cream);
+      }
+
+      .brand-bar {
+        display: flex;
+        min-height: 64px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px clamp(18px, 5vw, 42px);
+        border-bottom: 1px solid rgba(86, 39, 75, 0.09);
+        background: rgba(252, 250, 247, 0.96);
+      }
+
+      .logo {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .brand-bar button {
+        min-height: 40px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--plum);
+        color: white;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .context {
+        max-width: 660px;
+        margin: 0 auto;
+        padding: 56px 22px 22px;
+        text-align: center;
+      }
+
+      .context-label {
+        margin: 0;
+        color: rgba(86, 39, 75, 0.62);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .context h2 {
+        max-width: 540px;
+        margin: 8px auto 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(30px, 5vw, 42px);
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        line-height: 1.06;
+      }
+
+      .context > p:last-child {
+        max-width: 520px;
+        margin: 12px auto 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .pricing {
+        max-width: 620px;
+        margin: 0 auto;
+        padding: 14px 22px 64px;
+      }
+
+      .pricing[hidden] {
+        display: none;
+      }
+
+      .promo {
+        width: fit-content;
+        min-height: 30px;
+        margin: 0 auto 16px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--plum-ice);
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+
+      .section-heading {
+        margin: 0 0 12px;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 850;
+      }
+
+      .section-note {
+        margin: -5px 0 12px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .plans {
+        display: grid;
+        gap: 10px;
+      }
+
+      .plan {
+        display: grid;
+        min-height: 84px;
+        grid-template-columns: 22px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 15px 16px;
+        border: 1.5px solid var(--line);
+        border-radius: 16px;
+        background: white;
+        color: var(--ink);
+        cursor: pointer;
+        text-align: left;
+      }
+
+      .plan[aria-pressed="true"] {
+        border-color: var(--plum);
+        background: var(--plum-ice);
+      }
+
+      .radio {
+        display: grid;
+        width: 20px;
+        height: 20px;
+        place-items: center;
+        border: 1.5px solid rgba(86, 39, 75, 0.28);
+        border-radius: 50%;
+        background: white;
+      }
+
+      .plan[aria-pressed="true"] .radio {
+        border-color: var(--plum);
+      }
+
+      .plan[aria-pressed="true"] .radio::after {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--plum);
+        content: "";
+      }
+
+      .plan-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 7px;
+        font-size: 15px;
+        font-weight: 850;
+      }
+
+      .plan-detail {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 650;
+        line-height: 1.35;
+      }
+
+      .badge {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--plum);
+        color: white;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+      }
+
+      .price {
+        min-width: 94px;
+        text-align: right;
+      }
+
+      .reference {
+        display: block;
+        color: #9a899e;
+        font-size: 11px;
+        text-decoration: line-through;
+      }
+
+      .actual,
+      .one-time-price {
+        display: block;
+        margin-top: 2px;
+        font-size: 17px;
+        font-weight: 900;
+      }
+
+      .one-time-card {
+        display: grid;
+        gap: 14px;
+        padding: 18px;
+        border: 1.5px solid var(--line);
+        border-radius: 16px;
+        background: white;
+      }
+
+      .one-time-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .one-time-includes {
+        display: grid;
+        gap: 9px;
+        margin: 0;
+        padding: 14px 0 0;
+        border-top: 1px solid var(--line);
+        list-style: none;
+      }
+
+      .one-time-includes li {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr);
+        align-items: start;
+        gap: 8px;
+        color: #5f5262;
+        font-size: 12.5px;
+        font-weight: 650;
+        line-height: 1.4;
+      }
+
+      .include-check {
+        display: grid;
+        width: 17px;
+        height: 17px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum-ice);
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 900;
+      }
+
+      .primary {
+        width: 100%;
+        min-height: 54px;
+        margin-top: 16px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 14px;
+        background: var(--coral);
+        color: white;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 900;
+        box-shadow: 0 18px 32px -22px rgba(212, 97, 106, 0.95);
+      }
+
+      .primary:hover {
+        background: var(--coral-dark);
+      }
+
+      .guarantee {
+        margin: 10px 0 0;
+        color: #807284;
+        font-size: 11px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(35, 20, 37, 0.53);
+        backdrop-filter: blur(3px);
+      }
+
+      .overlay.open {
+        display: flex;
+      }
+
+      .checkout {
+        position: relative;
+        width: min(100%, 560px);
+        max-height: calc(100% - 30px);
+        overflow: auto;
+        padding: 24px;
+        border-radius: 24px;
+        background: white;
+        box-shadow: 0 36px 100px -32px rgba(25, 8, 23, 0.9);
+      }
+
+      .checkout h3 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 27px;
+        font-weight: 500;
+      }
+
+      .close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 50%;
+        background: #f3eff2;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 20px;
+      }
+
+      .summary {
+        display: flex;
+        margin-top: 16px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--cream);
+      }
+
+      .summary-label {
+        font-size: 14px;
+        font-weight: 850;
+      }
+
+      .summary-sub {
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .summary-price {
+        font-size: 18px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .pay-button {
+        display: grid;
+        width: 100%;
+        min-height: 48px;
+        margin-top: 12px;
+        place-items: center;
+        border: 0;
+        border-radius: 9px;
+        font-size: 16px;
+        font-weight: 850;
+      }
+
+      .pay-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.42;
+      }
+
+      .immediate-consent {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr);
+        gap: 10px;
+        margin-top: 14px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--cream);
+        color: #665a69;
+        cursor: pointer;
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .immediate-consent[hidden] {
+        display: none;
+      }
+
+      .immediate-consent input {
+        width: 17px;
+        height: 17px;
+        margin: 1px 0 0;
+        accent-color: var(--plum);
+      }
+
+      .consent-copy {
+        display: grid;
+        gap: 4px;
+      }
+
+      .apple {
+        background: black;
+        color: white;
+      }
+
+      .paypal {
+        background: #ffc439;
+        color: #123b73;
+        font-style: italic;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 15px 0;
+        color: #948698;
+        font-size: 11px;
+      }
+
+      .divider::before,
+      .divider::after {
+        height: 1px;
+        flex: 1;
+        background: var(--line);
+        content: "";
+      }
+
+      .field {
+        height: 48px;
+        margin-top: 9px;
+        padding: 14px;
+        border: 1px solid rgba(44, 22, 56, 0.18);
+        border-radius: 9px;
+        color: #9a8e9c;
+        font-size: 12px;
+      }
+
+      .purchase {
+        background: var(--plum);
+        color: white;
+      }
+
+      .legal {
+        margin: 12px 0 0;
+        color: #7e7181;
+        font-size: 10px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .device.mobile .browser-bar {
+        display: none;
+      }
+
+      .device.mobile .brand-bar {
+        min-height: 56px;
+        padding: 10px 14px;
+      }
+
+      .device.mobile .context {
+        padding: 32px 14px 16px;
+      }
+
+      .device.mobile .context h2 {
+        font-size: 30px;
+      }
+
+      .device.mobile .pricing {
+        padding: 10px 12px 52px;
+      }
+
+      .device.mobile .plan {
+        grid-template-columns: 18px minmax(0, 1fr) auto;
+        min-height: 78px;
+        gap: 8px;
+        padding: 12px 10px;
+      }
+
+      .device.mobile .plan-title {
+        gap: 5px;
+        font-size: 13px;
+      }
+
+      .device.mobile .plan-detail,
+      .device.mobile .section-note {
+        font-size: 10.5px;
+      }
+
+      .device.mobile .badge {
+        padding: 3px 6px;
+        font-size: 8px;
+      }
+
+      .device.mobile .price {
+        min-width: 64px;
+      }
+
+      .device.mobile .reference {
+        font-size: 9px;
+      }
+
+      .device.mobile .actual,
+      .device.mobile .one-time-price {
+        font-size: 14px;
+      }
+
+      .device.mobile .one-time-card {
+        gap: 12px;
+        padding: 14px;
+      }
+
+      .device.mobile .one-time-card-header {
+        gap: 10px;
+      }
+
+      .device.mobile .one-time-includes {
+        gap: 8px;
+        padding-top: 12px;
+      }
+
+      .device.mobile .one-time-includes li {
+        font-size: 11px;
+      }
+
+      .device.mobile #oneTimeCheckoutButton {
+        padding: 0 10px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .device.mobile .overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .device.mobile .checkout {
+        width: 100%;
+        max-height: 90%;
+        padding: 22px 16px 18px;
+        border-radius: 24px 24px 0 0;
+      }
+
+      @media (max-width: 760px) {
+        .review-shell {
+          padding: 14px;
+        }
+
+        .review-header {
+          display: block;
+        }
+
+        .controls {
+          width: fit-content;
+          margin-top: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-shell">
+      <header class="review-header">
+        <div>
+          <p class="eyebrow">Neuer persönlicher Plan · Offer-Test</p>
+          <h1>Zwei identische Offer-Seiten. Jeweils nur eine Preislogik.</h1>
+          <p>
+            Die Umschalter gehören nur zum Review-Mockup. Ein echter Besucher sieht entweder die
+            bestehende Mitgliedschaftsseite oder die Einmalzahlungsseite – niemals beide Optionen
+            zusammen.
+          </p>
+        </div>
+        <div class="controls">
+          <div class="control-group" aria-label="Offer-Variante wählen">
+            <button data-variant="membership" aria-pressed="true">Mitgliedschaft</button>
+            <button data-variant="one_time" aria-pressed="false">Einmalig €29,99</button>
+          </div>
+          <div class="control-group" aria-label="Gerät wählen">
+            <button data-view="desktop" aria-pressed="true">Desktop</button>
+            <button data-view="mobile" aria-pressed="false">Mobil</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="stage">
+        <div class="device" id="device">
+          <div class="browser-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="offer-page">
+            <header class="brand-bar">
+              <div class="logo">chaarlie</div>
+              <button type="button">Angebot ansehen</button>
+            </header>
+
+            <section class="context">
+              <p class="context-label">Plan freischalten</p>
+              <h2>Starte mit deinem persönlichen Plan.</h2>
+              <p>
+                Wir erstellen deinen persönlichen Haarplan mit passenden Produkten, Reihenfolge,
+                Anwendung und Häufigkeit.
+              </p>
+            </section>
+
+            <section class="pricing" id="membershipPricing" aria-label="Mitgliedschaft wählen">
+              <div class="promo">JETZT MIND. 20 % RABATT SICHERN</div>
+              <p class="section-heading">Mitgliedschaft wählen</p>
+              <p class="section-note">
+                Mit der Mitgliedschaft erhältst du fortlaufende Unterstützung und Anpassungen deines
+                Plans.
+              </p>
+              <div class="plans">
+                <button class="plan" data-plan="month" aria-pressed="false">
+                  <span class="radio" aria-hidden="true"></span>
+                  <span>
+                    <span class="plan-title">Monatlich</span>
+                    <span class="plan-detail">€14,99 / Monat</span>
+                  </span>
+                  <span class="price">
+                    <span class="reference">€19,99</span>
+                    <span class="actual">€14,99</span>
+                  </span>
+                </button>
+
+                <button class="plan" data-plan="quarter" aria-pressed="true">
+                  <span class="radio" aria-hidden="true"></span>
+                  <span>
+                    <span class="plan-title">
+                      Quartal <span class="badge">Beliebteste Wahl</span>
+                    </span>
+                    <span class="plan-detail">~€11,66 / Monat · 22 % sparen</span>
+                  </span>
+                  <span class="price">
+                    <span class="reference">€44,49</span>
+                    <span class="actual">€34,99</span>
+                  </span>
+                </button>
+
+                <button class="plan" data-plan="year" aria-pressed="false">
+                  <span class="radio" aria-hidden="true"></span>
+                  <span>
+                    <span class="plan-title">Jährlich</span>
+                    <span class="plan-detail">~€8,33 / Monat · 44 % sparen</span>
+                  </span>
+                  <span class="price">
+                    <span class="reference">€149,99</span>
+                    <span class="actual">€99,99</span>
+                  </span>
+                </button>
+              </div>
+              <button class="primary" id="membershipCheckoutButton" type="button">
+                Jetzt starten — €34,99 im Quartal
+              </button>
+              <p class="guarantee">14 Tage Geld-zurück-Garantie · Details in den Bedingungen</p>
+            </section>
+
+            <section
+              class="pricing"
+              id="oneTimePricing"
+              aria-label="Persönlichen Haarplan einmalig kaufen"
+              hidden
+            >
+              <p class="section-heading">Einmalige Erstellung</p>
+              <div class="one-time-card">
+                <div class="one-time-card-header">
+                  <div class="plan-title">Persönlicher Haarplan</div>
+                  <div class="one-time-price">€29,99</div>
+                </div>
+                <ul class="one-time-includes" aria-label="Im Haarplan enthalten">
+                  <li>
+                    <span class="include-check" aria-hidden="true">✓</span>
+                    <span>Auf dein Haar, deine Ziele und Bedürfnisse abgestimmt</span>
+                  </li>
+                  <li>
+                    <span class="include-check" aria-hidden="true">✓</span>
+                    <span>Komplette Routine mit passenden Produkten</span>
+                  </li>
+                  <li>
+                    <span class="include-check" aria-hidden="true">✓</span>
+                    <span>Analyse deiner aktuellen Pflege</span>
+                  </li>
+                </ul>
+              </div>
+              <button class="primary" id="oneTimeCheckoutButton" type="button">
+                Haarplan für €29,99 freischalten
+              </button>
+              <p class="guarantee">Einmalzahlung · Kein Abo</p>
+            </section>
+
+            <div
+              class="overlay"
+              id="overlay"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="checkoutTitle"
+            >
+              <section class="checkout">
+                <button class="close" id="closeOverlay" aria-label="Zahlung schließen">×</button>
+                <p class="eyebrow">Sicher bezahlen</p>
+                <h3 id="checkoutTitle">Zahlung abschließen</h3>
+                <div class="summary">
+                  <div>
+                    <div class="summary-label" id="summaryLabel"></div>
+                    <div class="summary-sub" id="summarySub"></div>
+                  </div>
+                  <div class="summary-price" id="summaryPrice"></div>
+                </div>
+                <label class="immediate-consent" id="immediateConsent" hidden>
+                  <input id="immediateConsentInput" type="checkbox" />
+                  <span class="consent-copy">
+                    <span
+                      >Ich verlange ausdrücklich die sofortige Erstellung meines Haarplans.</span
+                    >
+                    <span>
+                      Mir ist bekannt, dass mein Widerrufsrecht nach vollständiger Erstellung und
+                      Bereitstellung erlischt.
+                    </span>
+                  </span>
+                </label>
+                <button class="pay-button apple" data-payment-action type="button"> Pay</button>
+                <button class="pay-button paypal" data-payment-action type="button">PayPal</button>
+                <div class="divider">oder mit Karte</div>
+                <div class="field">Kartennummer</div>
+                <div class="field">MM / JJ &nbsp;&nbsp;&nbsp; CVC</div>
+                <button
+                  class="pay-button purchase"
+                  id="purchaseButton"
+                  data-payment-action
+                  type="button"
+                ></button>
+                <p class="legal" id="legal"></p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const device = document.querySelector("#device")
+      const membershipPricing = document.querySelector("#membershipPricing")
+      const oneTimePricing = document.querySelector("#oneTimePricing")
+      const overlay = document.querySelector("#overlay")
+      const planButtons = document.querySelectorAll("[data-plan]")
+      const immediateConsent = document.querySelector("#immediateConsent")
+      const immediateConsentInput = document.querySelector("#immediateConsentInput")
+      const paymentActionButtons = document.querySelectorAll("[data-payment-action]")
+
+      const checkoutState = {
+        month: {
+          label: "Monatsplan",
+          sub: "Wiederkehrend · monatlich",
+          price: "€14,99",
+          cta: "Jetzt starten — €14,99 im Monat",
+          purchase: "Zahlungspflichtig abonnieren — €14,99",
+          requiresImmediateConsent: false,
+          legal:
+            "Abonnement zu €14,99 pro Monat. 14 Tage Geld-zurück-Garantie. Details in den AGB und der Widerrufsbelehrung.",
+        },
+        quarter: {
+          label: "Quartalsplan",
+          sub: "Wiederkehrend · alle 3 Monate",
+          price: "€34,99",
+          cta: "Jetzt starten — €34,99 im Quartal",
+          purchase: "Zahlungspflichtig abonnieren — €34,99",
+          requiresImmediateConsent: false,
+          legal:
+            "Abonnement zu €34,99 alle drei Monate. 14 Tage Geld-zurück-Garantie. Details in den AGB und der Widerrufsbelehrung.",
+        },
+        year: {
+          label: "Jahresplan",
+          sub: "Wiederkehrend · jährlich",
+          price: "€99,99",
+          cta: "Jetzt starten — €99,99 im Jahr",
+          purchase: "Zahlungspflichtig abonnieren — €99,99",
+          requiresImmediateConsent: false,
+          legal:
+            "Abonnement zu €99,99 pro Jahr. 14 Tage Geld-zurück-Garantie. Details in den AGB und der Widerrufsbelehrung.",
+        },
+        one_time: {
+          label: "Persönlicher Haarplan",
+          sub: "Einmalige Erstellung · Kein Abo",
+          price: "€29,99",
+          purchase: "Zahlungspflichtig bestellen — €29,99",
+          requiresImmediateConsent: true,
+          legal:
+            "Einmalige Erstellung eines persönlichen Haarplans für €29,99. Kein Abonnement. Bitte beachte die Hinweise zum Widerrufsrecht.",
+        },
+      }
+
+      function setPressed(group, selected) {
+        document.querySelectorAll(group).forEach((button) => {
+          button.setAttribute("aria-pressed", String(button === selected))
+        })
+      }
+
+      function openCheckout(key) {
+        const state = checkoutState[key]
+        document.querySelector("#summaryLabel").textContent = state.label
+        document.querySelector("#summarySub").textContent = state.sub
+        document.querySelector("#summaryPrice").textContent = state.price
+        document.querySelector("#purchaseButton").textContent = state.purchase
+        document.querySelector("#legal").textContent = state.legal
+        immediateConsent.hidden = !state.requiresImmediateConsent
+        immediateConsentInput.checked = false
+        paymentActionButtons.forEach((button) => {
+          button.disabled = state.requiresImmediateConsent
+        })
+        overlay.classList.add("open")
+      }
+
+      immediateConsentInput.addEventListener("change", () => {
+        paymentActionButtons.forEach((button) => {
+          button.disabled = !immediateConsentInput.checked
+        })
+      })
+
+      document.querySelectorAll("[data-variant]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const oneTime = button.dataset.variant === "one_time"
+          membershipPricing.hidden = oneTime
+          oneTimePricing.hidden = !oneTime
+          setPressed("[data-variant]", button)
+          overlay.classList.remove("open")
+        })
+      })
+
+      document.querySelectorAll("[data-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          device.classList.toggle("mobile", button.dataset.view === "mobile")
+          setPressed("[data-view]", button)
+        })
+      })
+
+      planButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setPressed("[data-plan]", button)
+          document.querySelector("#membershipCheckoutButton").textContent =
+            checkoutState[button.dataset.plan].cta
+        })
+      })
+
+      document.querySelector("#membershipCheckoutButton").addEventListener("click", () => {
+        const selected = document.querySelector('[data-plan][aria-pressed="true"]')
+        openCheckout(selected.dataset.plan)
+      })
+      document
+        .querySelector("#oneTimeCheckoutButton")
+        .addEventListener("click", () => openCheckout("one_time"))
+      document.querySelector("#closeOverlay").addEventListener("click", () => {
+        overlay.classList.remove("open")
+      })
+      overlay.addEventListener("click", (event) => {
+        if (event.target === overlay) overlay.classList.remove("open")
+      })
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") overlay.classList.remove("open")
+      })
+    </script>
+  </body>
+</html>

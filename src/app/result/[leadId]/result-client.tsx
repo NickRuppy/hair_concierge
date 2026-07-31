@@ -32,6 +32,7 @@ export function ResultPageClient({
   focusRoutine,
   focusTarget = null,
   hasAccess,
+  isInternalTest = false,
   returnTo = null,
   offerTracking = null,
   offerVariant = "default",
@@ -46,6 +47,7 @@ export function ResultPageClient({
   focusRoutine: boolean
   focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
+  isInternalTest?: boolean
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
@@ -65,9 +67,11 @@ export function ResultPageClient({
       <PersonalPlanOffer
         entryContext={resolvedEntryContext}
         focusTarget={personalPlanFocusTarget}
+        isInternalTest={isInternalTest}
         leadId={leadId}
         model={personalPlanOffer}
         offerTracking={offerTracking}
+        offerVariant={offerVariant}
       />
     )
   }

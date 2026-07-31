@@ -3,12 +3,15 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import type { Stripe } from "@stripe/stripe-js"
 
+import { Button } from "@/components/ui/button"
+
 import {
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
   type CheckoutFailure,
 } from "@/components/checkout/payment-method-checkout"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
+import { PersonalPlanOneTimeCheckout } from "@/components/checkout/personal-plan-one-time-checkout"
 import {
   ActiveSubscriptionDialog,
   isCheckoutAccessAlreadyExistsResponse,
@@ -42,6 +45,7 @@ import type {
   OfferPaymentOptionProvider,
 } from "@/lib/analytics/events"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
+import { resolvePersonalPlanPricingMode } from "@/lib/funnel/personal-plan-pricing-experiment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -54,10 +58,18 @@ import {
   type OfferCheckoutReadyGateEvent,
   type OfferCheckoutReadyGateState,
 } from "@/lib/stripe/offer-checkout-ready-gate"
+import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const unloadedStripePromise = Promise.resolve(null)
 const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
+const personalPlanOneTimeCommerce = {
+  commerceKind: "one_time",
+  currency: PERSONAL_PLAN_ONCE_PRODUCT.currency,
+  planId: PERSONAL_PLAN_ONCE_PRODUCT.analyticsId,
+  purchaseKind: "personal_plan_once",
+  value: PERSONAL_PLAN_ONCE_PRODUCT.amount,
+} as const
 const offerCheckoutPrewarmDebounceMs = 400
 const offerCheckoutPrewarmAvailabilityTimeoutMs = 10_000
 const offerCheckoutPrewarmPageRequestLimit = 4
@@ -273,7 +285,171 @@ function trackStripeJsAvailability(
     })
 }
 
-export function ResultOfferPricing({
+export function ResultOfferPricing(props: {
+  checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
+  leadId: string | null
+  onCheckoutOpen?: () => void
+  onCheckoutWaitingChange?: (waiting: boolean) => void
+  offerTracking?: FunnelAnalyticsEnvelope | null
+  offerVariant?: string
+  openCheckoutRequestId?: number
+  referencePrices?: QuizResultReferencePrices
+}) {
+  const offerContext = useOfferTrackingContext()
+  const offerVariant = props.offerVariant ?? offerContext?.offerVariant ?? "personal-plan-v1"
+
+  if (resolvePersonalPlanPricingMode(offerVariant) === "one_time") {
+    return (
+      <PersonalPlanOneTimePricing
+        leadId={props.leadId}
+        funnelSessionId={offerContext?.funnelSessionId}
+        onCheckoutOpen={props.onCheckoutOpen}
+        openCheckoutRequestId={props.openCheckoutRequestId}
+      />
+    )
+  }
+
+  return <MembershipResultOfferPricing {...props} />
+}
+
+function PersonalPlanOneTimePricing({
+  funnelSessionId,
+  leadId,
+  onCheckoutOpen,
+  openCheckoutRequestId,
+}: {
+  funnelSessionId: string | null | undefined
+  leadId: string | null
+  onCheckoutOpen?: () => void
+  openCheckoutRequestId?: number
+}) {
+  const pricingRef = useRef<HTMLDivElement | null>(null)
+  const pricingTrackedRef = useRef(false)
+  const checkoutOpenIndexRef = useRef(0)
+  const handledCheckoutOpenRequestsRef = useRef(new Set<number>())
+  const offerContext = useOfferTrackingContext()
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const pricingElement = pricingRef.current
+    if (!pricingElement || pricingTrackedRef.current) return
+
+    return observeOnceVisible(pricingElement, () => {
+      if (pricingTrackedRef.current) return
+      pricingTrackedRef.current = true
+      const fallbackContext = getCurrentFunnelContext()
+      trackAppEvent("pricing_viewed", {
+        ...(offerContext ?? {}),
+        ...personalPlanOneTimeCommerce,
+        funnelEventId: createFunnelEventId(),
+        funnelPackageKey: offerContext?.funnelPackageKey ?? fallbackContext?.funnelPackageKey,
+        funnelSessionId: offerContext?.funnelSessionId ?? fallbackContext?.funnelSessionId,
+        leadId: leadId ?? undefined,
+        pricingRevision: OFFER_PRICING_REVISION,
+        source: "quiz_result_offer_pricing",
+      })
+    })
+  }, [leadId, offerContext])
+
+  const openCheckout = useCallback(() => {
+    const nextCheckoutAttemptId = createFunnelEventId()
+    checkoutOpenIndexRef.current += 1
+    if (offerContext) {
+      trackAppEvent("offer_checkout_opened", {
+        ...offerContext,
+        ...personalPlanOneTimeCommerce,
+        availableProviders: [
+          ...(stripePublishableKey ? ["stripe"] : []),
+          ...(isPayPalCheckoutEnabled() && process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
+            ? ["paypal"]
+            : []),
+        ],
+        checkoutAttemptId: nextCheckoutAttemptId,
+        checkoutPresentation: "overlay",
+        funnelEventId: createFunnelEventId(),
+        openIndex: checkoutOpenIndexRef.current,
+      })
+    }
+    setCheckoutAttemptId(nextCheckoutAttemptId)
+    setCheckoutOpen(true)
+    onCheckoutOpen?.()
+  }, [offerContext, onCheckoutOpen])
+
+  useEffect(() => {
+    if (!claimCheckoutOpenRequest(handledCheckoutOpenRequestsRef.current, openCheckoutRequestId)) {
+      return
+    }
+    // `openCheckoutRequestId` is an imperative request token owned by the parent offer shell.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    openCheckout()
+  }, [openCheckout, openCheckoutRequestId])
+
+  const closeCheckout = useCallback(() => {
+    setCheckoutOpen(false)
+    setCheckoutAttemptId(null)
+  }, [])
+
+  return (
+    <div ref={pricingRef} className="space-y-4" data-personal-plan-pricing-mode="one_time">
+      <p className="text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+        Einmalige Erstellung
+      </p>
+      <div className="rounded-[16px] border border-[var(--brand-plum)] bg-white p-5 shadow-[0_16px_40px_-28px_rgba(var(--brand-plum-rgb),0.45)] sm:p-6">
+        <div className="flex items-baseline justify-between gap-4">
+          <h3 className="text-[17px] font-bold text-[var(--brand-plum-darkest)]">
+            Persönlicher Haarplan
+          </h3>
+          <strong className="text-[22px] text-[var(--brand-plum-darkest)]">€29,99</strong>
+        </div>
+        <ul className="mt-5 grid gap-3 text-sm leading-5 text-[var(--brand-plum-darkest)]">
+          {[
+            "Auf dein Haar, deine Ziele und Bedürfnisse abgestimmt",
+            "Komplette Routine mit passenden Produkten",
+            "Analyse deiner aktuellen Pflege",
+          ].map((item) => (
+            <li className="flex gap-3" key={item}>
+              <span aria-hidden="true" className="font-bold text-[var(--brand-plum)]">
+                ✓
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <Button
+        type="button"
+        variant="unstyled"
+        onClick={openCheckout}
+        className="min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)]"
+      >
+        Haarplan für €29,99 freischalten
+      </Button>
+      <p className="text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
+        Einmalzahlung · Kein Abo
+      </p>
+
+      <OfferPaymentOverlay
+        open={checkoutOpen}
+        onConfirmedAbort={closeCheckout}
+        onConfirmedPlanChange={closeCheckout}
+        planName="Persönlicher Haarplan"
+        priceLabel="29,99 €"
+      >
+        {checkoutAttemptId ? (
+          <PersonalPlanOneTimeCheckout
+            checkoutAttemptId={checkoutAttemptId}
+            funnelSessionId={funnelSessionId}
+            leadId={leadId}
+            onClose={closeCheckout}
+          />
+        ) : null}
+      </OfferPaymentOverlay>
+    </div>
+  )
+}
+
+function MembershipResultOfferPricing({
   checkoutLifecycleFixture,
   leadId,
   onCheckoutOpen,
@@ -287,6 +463,7 @@ export function ResultOfferPricing({
   onCheckoutOpen?: () => void
   onCheckoutWaitingChange?: (waiting: boolean) => void
   offerTracking?: FunnelAnalyticsEnvelope | null
+  offerVariant?: string
   openCheckoutRequestId?: number
   referencePrices?: QuizResultReferencePrices
 }) {

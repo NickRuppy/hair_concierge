@@ -66,6 +66,10 @@ export default function AgbPage() {
                 <strong className="text-foreground">Jahresplan:</strong> 99,99 € pro Jahr
                 (entspricht ca. 8,33 € / Monat), jährliche Abrechnung
               </li>
+              <li>
+                <strong className="text-foreground">Einmalkauf persönlicher Haarplan:</strong>{" "}
+                einmalige Zahlung; kein Abonnement und keine automatische Verlängerung
+              </li>
             </ul>
             <p className="mt-2">
               Aktions- oder Einführungsrabatte können den ersten Abrechnungsbetrag reduzieren; die
@@ -78,16 +82,19 @@ export default function AgbPage() {
               § 5 Laufzeit und Kündigung
             </h2>
             <p>
-              Alle Pläne sind Abonnements mit automatischer Verlängerung. Sie verlängern sich
-              jeweils um die gewählte Laufzeit (1 Monat, 3 Monate oder 12 Monate), sofern sie nicht
-              vor Ablauf der jeweiligen Abrechnungsperiode gekündigt werden. Die Kündigung kann
-              jederzeit über das Konto des Nutzers oder formlos per E-Mail an{" "}
+              Die Monats-, Quartals- und Jahrespläne sind Abonnements mit automatischer
+              Verlängerung. Sie verlängern sich jeweils um die gewählte Laufzeit (1 Monat, 3 Monate
+              oder 12 Monate), sofern sie nicht vor Ablauf der jeweiligen Abrechnungsperiode
+              gekündigt werden. Die Kündigung kann jederzeit über das Konto des Nutzers oder formlos
+              per E-Mail an{" "}
               <a href="mailto:info@chaarlie.de" className="text-foreground underline">
                 info@chaarlie.de
               </a>{" "}
               erfolgen. Die Kündigung wird zum Ende der laufenden Abrechnungsperiode wirksam;
               bereits gezahlte Beträge werden nicht anteilig erstattet, vorbehaltlich des
-              gesetzlichen Widerrufsrechts und der freiwilligen Geld-zurück-Garantie.
+              gesetzlichen Widerrufsrechts und der für Mitgliedschaften angebotenen freiwilligen
+              Geld-zurück-Garantie. Der Einmalkauf des persönlichen Haarplans ist kein Abonnement,
+              hat keine Laufzeit und ist nicht kündbar.
             </p>
           </section>
 
@@ -128,8 +135,10 @@ export default function AgbPage() {
             <h2 className="mb-2 text-base font-medium text-foreground">§ 9 Geistiges Eigentum</h2>
             <p>
               Alle Inhalte der App (Auswertungen, Routinen, Produktempfehlungen) sind
-              urheberrechtlich geschützt. Der Nutzer erhält ein einfaches, nicht übertragbares
-              Nutzungsrecht für die Dauer des Abonnements.
+              urheberrechtlich geschützt. Für Mitgliedschaften erhält der Nutzer ein einfaches,
+              nicht übertragbares Nutzungsrecht für die Dauer des Abonnements. Beim Einmalkauf des
+              persönlichen Haarplans richtet sich der Zugang nach dem im Checkout beschriebenen
+              Leistungsumfang.
             </p>
           </section>
 

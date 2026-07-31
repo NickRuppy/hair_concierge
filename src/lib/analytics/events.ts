@@ -24,6 +24,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   conditionerModuleId?: string | null
   entryContext: OfferEntryContext
   focusRoutine: boolean
+  isInternalTest?: boolean
   leadId?: string | null
   needLane?: string | null
   offerRevision: string
@@ -100,12 +101,26 @@ export function claimCheckoutFailure(
   return true
 }
 
-export type OfferCommerceProperties = {
+type MembershipCommerceProperties = {
+  commerceKind?: "membership"
   currency: string
   interval: BillingInterval
   planId: string
   value: number
 }
+
+/** A one-time personal plan is deliberately not a BillingInterval. */
+export type OneTimePersonalPlanCommerceProperties = {
+  commerceKind: "one_time"
+  currency: string
+  planId: "personal_plan_once"
+  purchaseKind: "personal_plan_once"
+  value: number
+}
+
+export type OfferCommerceProperties =
+  | MembershipCommerceProperties
+  | OneTimePersonalPlanCommerceProperties
 
 export type AppEventMap = {
   chat_product_recommendation_shown: {
@@ -141,11 +156,13 @@ export type AppEventMap = {
       checkoutContext?: CheckoutContext
       checkoutPresentation?: CheckoutPresentation
       checkoutStartTrigger?: CheckoutStartTrigger
+      commerceKind?: "membership" | "one_time"
       currency?: string
       interval?: BillingInterval | null
       leadId?: string | null
       planId?: string
       provider: "stripe" | "paypal"
+      purchaseKind?: "personal_plan_once"
       source: "pricing_page" | "quiz_result_offer"
       value?: number
     }
@@ -217,13 +234,18 @@ export type AppEventMap = {
     Partial<OfferAnalyticsContext> & {
       availableIntervals?: string[]
       checkoutContext?: CheckoutContext
+      commerceKind?: "membership" | "one_time"
+      currency?: string
       leadId?: string | null
       offerRevision?: string
       offerVariant?: string
       offerViewId?: string
+      planId?: string
       pricingRevision?: string
+      purchaseKind?: "personal_plan_once"
       selectedInterval?: BillingInterval
       source: "pricing_page" | "quiz_result_offer_pricing"
+      value?: number
     }
   purchase_completed: FunnelAnalyticsEnvelope & {
     checkoutSessionId: string

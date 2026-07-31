@@ -34,6 +34,33 @@ test("builds the offer-only Checkout Elements session without embedded consent t
   assert.equal("custom_text" in params, false)
 })
 
+test("builds a one-time personal-plan payment session without subscription semantics", () => {
+  const params = buildStripeCheckoutSessionParams({
+    checkoutKind: "personal_plan_once",
+    origin: "https://chaarlie.example",
+    priceId: "price_personal_plan_once",
+    customerEmail: "lead@example.com",
+    leadId: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
+    presentation: "elements",
+    metadata: {
+      checkout_attempt_id: "e32f2c05-9083-4474-9334-346684de6b7e",
+    },
+  })
+
+  assert.equal(params.mode, "payment")
+  assert.deepEqual(params.line_items, [{ price: "price_personal_plan_once", quantity: 1 }])
+  assert.deepEqual(params.metadata, {
+    lead_id: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
+    product_kind: "personal_plan_once",
+    checkout_attempt_id: "e32f2c05-9083-4474-9334-346684de6b7e",
+  })
+  assert.deepEqual(params.payment_intent_data?.metadata, {
+    product_kind: "personal_plan_once",
+    checkout_attempt_id: "e32f2c05-9083-4474-9334-346684de6b7e",
+  })
+  assert.equal("subscription_data" in params, false)
+})
+
 test("preserves lead metadata without applying launch discounts", () => {
   const params = buildStripeCheckoutSessionParams({
     origin: "https://chaarlie.example",

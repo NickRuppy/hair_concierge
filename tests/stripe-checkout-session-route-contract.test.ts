@@ -64,6 +64,47 @@ test("accepts the allowlisted Elements presentation only for quiz-result offers"
   assert.equal(parsed.success, true)
 })
 
+test("accepts only the narrow one-time personal-plan request contract", () => {
+  const validOneTime = StripeCheckoutSessionRequestSchema.safeParse({
+    purchaseKind: "personal_plan_once",
+    leadId: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
+    source: "quiz_result_offer",
+    presentation: "offer_overlay_elements",
+    checkoutAttemptId,
+    funnelEventId,
+    funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    consentAccepted: true,
+    consentCopyVersion: "2026-07-31",
+  })
+  const withSubscriptionInterval = StripeCheckoutSessionRequestSchema.safeParse({
+    purchaseKind: "personal_plan_once",
+    interval: "month",
+    leadId: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
+    source: "quiz_result_offer",
+    presentation: "offer_overlay_elements",
+    checkoutAttemptId,
+    funnelEventId,
+  })
+  const withoutAttempt = StripeCheckoutSessionRequestSchema.safeParse({
+    purchaseKind: "personal_plan_once",
+    source: "quiz_result_offer",
+    presentation: "offer_overlay_elements",
+  })
+  const browserAmount = StripeCheckoutSessionRequestSchema.safeParse({
+    purchaseKind: "personal_plan_once",
+    source: "quiz_result_offer",
+    presentation: "offer_overlay_elements",
+    checkoutAttemptId,
+    funnelEventId,
+    amount: 1,
+  })
+
+  assert.equal(validOneTime.success, true)
+  assert.equal(withSubscriptionInterval.success, false)
+  assert.equal(withoutAttempt.success, false)
+  assert.equal(browserAmount.success, false)
+})
+
 test("rejects generic UI modes and non-offer Elements presentation requests", () => {
   const rawUiMode = StripeCheckoutSessionRequestSchema.safeParse({
     ...validRequest,

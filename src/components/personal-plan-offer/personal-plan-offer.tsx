@@ -216,18 +216,23 @@ function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
 export function PersonalPlanOffer({
   entryContext,
   focusTarget = null,
+  isInternalTest = false,
   leadId,
   model,
   offerTracking,
+  offerVariant = "personal-plan-v1",
 }: {
   entryContext: OfferEntryContext
   focusTarget?: PersonalPlanOfferFocusTarget | null
+  isInternalTest?: boolean
   leadId: string
   model: PersonalPlanOfferModel
   offerTracking?: FunnelAnalyticsEnvelope | null
+  offerVariant?: string
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
+  const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
     if (!focusTarget) return
@@ -245,10 +250,11 @@ export function PersonalPlanOffer({
     <OfferTrackingProvider
       entryContext={entryContext}
       focusRoutine={false}
+      isInternalTest={isInternalTest}
       leadId={leadId}
       offerRevision={PERSONAL_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
-      offerVariant="personal-plan-v1"
+      offerVariant={offerVariant}
       trackingIdentity={{
         conditionerModuleId: null,
         needLane: null,
@@ -270,7 +276,7 @@ export function PersonalPlanOffer({
               onClick={scrollToPricing}
               type="button"
             >
-              Pläne ansehen
+              Angebot ansehen
             </button>
           </div>
         </div>
@@ -331,6 +337,7 @@ export function PersonalPlanOffer({
             <ResultOfferPricing
               leadId={leadId}
               offerTracking={offerTracking}
+              offerVariant={offerVariant}
               onCheckoutWaitingChange={setCheckoutWaiting}
               openCheckoutRequestId={checkoutOpenRequest}
               referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
@@ -524,22 +531,24 @@ export function PersonalPlanOffer({
           </div>
         </section>
 
-        <section
-          className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
-          data-offer-section="guarantee"
-        >
-          <div className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 text-center sm:rounded-[1.75rem] sm:p-6">
-            <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)] sm:text-sm">
-              Ohne Risiko
-            </p>
-            <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
-              14 Tage Geld-zurück-Garantie
-            </h2>
-            <p className="mx-auto mt-3 max-w-[34rem] text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:mt-4 sm:text-base sm:leading-7">
-              Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.
-            </p>
-          </div>
-        </section>
+        {!isOneTimeOffer ? (
+          <section
+            className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
+            data-offer-section="guarantee"
+          >
+            <div className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 text-center sm:rounded-[1.75rem] sm:p-6">
+              <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)] sm:text-sm">
+                Ohne Risiko
+              </p>
+              <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
+                14 Tage Geld-zurück-Garantie
+              </h2>
+              <p className="mx-auto mt-3 max-w-[34rem] text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:mt-4 sm:text-base sm:leading-7">
+                Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.
+              </p>
+            </div>
+          </section>
+        ) : null}
 
         <section className="mx-auto max-w-4xl px-4 pb-24 pt-1" data-offer-section="faq">
           <h2 className="text-center font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">

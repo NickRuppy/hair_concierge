@@ -881,6 +881,7 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
       funnelEventId: "30000000-0000-4000-8000-000000000099",
       funnelPackageKey: "default_organic",
       funnelSessionId: "20000000-0000-4000-8000-000000000099",
+      isInternalTest: true,
       leadId: "10000000-0000-4000-8000-000000000099",
       needLane: "moisture",
       offerRevision: "product_led_v1",
@@ -905,6 +906,7 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
         focus_routine: false,
         funnel_package_key: "default_organic",
         funnel_session_id: "20000000-0000-4000-8000-000000000099",
+        is_internal_test: true,
         lead_id: "10000000-0000-4000-8000-000000000099",
         need_lane: "moisture",
         offer_revision: "product_led_v1",
@@ -968,6 +970,129 @@ test("PostHog retains truthful payment option exposure context", () => {
         plan_id: "premium_quarter",
         provider: "stripe",
         value: 34.99,
+      },
+    ],
+  ])
+})
+
+test("PostHog represents a one-time personal plan without a billing interval", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("offer_payment_option_viewed", {
+      checkoutAttemptId: "50000000-0000-4000-8000-000000000095",
+      commerceKind: "one_time",
+      currency: "EUR",
+      entryContext: "quiz_completion",
+      focusRoutine: false,
+      offerRevision: "personal_plan_v3",
+      offerVariant: "personal-plan-one-time-v1",
+      offerViewId: "40000000-0000-4000-8000-000000000095",
+      option: "paypal",
+      planId: "personal_plan_once",
+      provider: "paypal",
+      purchaseKind: "personal_plan_once",
+      value: 29.99,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "offer_payment_option_viewed",
+      {
+        checkout_attempt_id: "50000000-0000-4000-8000-000000000095",
+        commerce_kind: "one_time",
+        currency: "EUR",
+        entry_context: "quiz_completion",
+        focus_routine: false,
+        offer_revision: "personal_plan_v3",
+        offer_variant: "personal-plan-one-time-v1",
+        offer_view_id: "40000000-0000-4000-8000-000000000095",
+        option: "paypal",
+        plan_id: "personal_plan_once",
+        provider: "paypal",
+        purchase_kind: "personal_plan_once",
+        value: 29.99,
+      },
+    ],
+  ])
+})
+
+test("PostHog keeps one-time commerce identity on pricing and provider initialization", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("pricing_viewed", {
+      commerceKind: "one_time",
+      currency: "EUR",
+      funnelEventId: "30000000-0000-4000-8000-000000000096",
+      funnelSessionId: "20000000-0000-4000-8000-000000000096",
+      planId: "personal_plan_once",
+      pricingRevision: "pricing_v1",
+      purchaseKind: "personal_plan_once",
+      source: "quiz_result_offer_pricing",
+      value: 29.99,
+    })
+    postHogDestination.track("checkout_started", {
+      checkoutAttemptId: "50000000-0000-4000-8000-000000000096",
+      checkoutPresentation: "overlay",
+      checkoutStartTrigger: "automatic_mount",
+      commerceKind: "one_time",
+      currency: "EUR",
+      funnelEventId: "30000000-0000-4000-8000-000000000097",
+      funnelSessionId: "20000000-0000-4000-8000-000000000096",
+      planId: "personal_plan_once",
+      provider: "stripe",
+      purchaseKind: "personal_plan_once",
+      source: "quiz_result_offer",
+      value: 29.99,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "pricing_viewed",
+      {
+        $insert_id: "30000000-0000-4000-8000-000000000096",
+        commerce_kind: "one_time",
+        currency: "EUR",
+        funnel_session_id: "20000000-0000-4000-8000-000000000096",
+        plan_id: "personal_plan_once",
+        pricing_revision: "pricing_v1",
+        purchase_kind: "personal_plan_once",
+        source: "quiz_result_offer_pricing",
+        value: 29.99,
+      },
+    ],
+    [
+      "checkout_started",
+      {
+        $insert_id: "30000000-0000-4000-8000-000000000097",
+        checkout_attempt_id: "50000000-0000-4000-8000-000000000096",
+        checkout_presentation: "overlay",
+        checkout_start_trigger: "automatic_mount",
+        commerce_kind: "one_time",
+        currency: "EUR",
+        funnel_session_id: "20000000-0000-4000-8000-000000000096",
+        plan_id: "personal_plan_once",
+        provider: "stripe",
+        purchase_kind: "personal_plan_once",
+        source: "quiz_result_offer",
+        value: 29.99,
       },
     ],
   ])

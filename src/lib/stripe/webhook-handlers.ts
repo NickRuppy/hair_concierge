@@ -1,7 +1,12 @@
 import type Stripe from "stripe"
-import type { CheckoutAccountResult, CheckoutActivationDeps } from "./checkout-activation"
+import type {
+  CheckoutAccountResult,
+  CheckoutActivationDeps,
+  OneTimeCheckoutActivationDeps,
+} from "./checkout-activation"
 import {
   ensureCheckoutAccount,
+  ensureOneTimeCheckoutAccount,
   stripeEntitlementStatus,
   subPeriodEndIso,
 } from "./checkout-activation"
@@ -10,6 +15,10 @@ import {
   findBillingSubscriptionByProviderId,
   upsertBillingSubscription,
 } from "@/lib/billing/subscriptions"
+import {
+  findOneTimePurchaseByProviderTransactionId,
+  updateOneTimePurchaseStatus,
+} from "@/lib/billing/purchases"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
 
 export type HandlerDeps = CheckoutActivationDeps
@@ -110,6 +119,67 @@ export async function handleCheckoutSessionCompleted(
   deps: HandlerDeps,
 ): Promise<CheckoutAccountResult> {
   return ensureCheckoutAccount(session, deps)
+}
+
+export async function handleOneTimeCheckoutSessionCompleted(
+  session: Stripe.Checkout.Session,
+  deps: OneTimeCheckoutActivationDeps,
+) {
+  return ensureOneTimeCheckoutAccount(session, deps)
+}
+
+export async function handleOneTimeChargeRefunded(
+  charge: Stripe.Charge,
+  deps: Pick<HandlerDeps, "supabase">,
+): Promise<boolean> {
+  const paymentIntentId = stripeObjectId(charge.payment_intent)
+  if (!paymentIntentId) return false
+  const purchase = await findOneTimePurchaseByProviderTransactionId(
+    deps.supabase,
+    "stripe",
+    paymentIntentId,
+  )
+  if (!purchase) {
+    if (charge.metadata?.product_kind === "personal_plan_once") {
+      throw new Error(`One-time Stripe purchase ${paymentIntentId} is not ready for refund`)
+    }
+    return false
+  }
+  const refundedAmount = Math.max(purchase.refunded_amount_minor, charge.amount_refunded ?? 0)
+  await updateOneTimePurchaseStatus(deps.supabase, purchase, {
+    status: refundedAmount >= purchase.amount_minor ? "refunded" : "paid",
+    refunded_amount_minor: refundedAmount,
+    refunded_at: new Date().toISOString(),
+    metadata: { ...purchase.metadata, stripe_charge_id: charge.id },
+  })
+  return true
+}
+
+export async function handleOneTimeChargeDisputeCreated(
+  dispute: Stripe.Dispute,
+  deps: Pick<HandlerDeps, "supabase" | "stripe">,
+): Promise<boolean> {
+  const chargeId = stripeObjectId(dispute.charge)
+  if (!chargeId) return false
+  const charge = await deps.stripe.charges.retrieve(chargeId)
+  const paymentIntentId = stripeObjectId(charge.payment_intent)
+  if (!paymentIntentId) return false
+  const purchase = await findOneTimePurchaseByProviderTransactionId(
+    deps.supabase,
+    "stripe",
+    paymentIntentId,
+  )
+  if (!purchase) {
+    if (charge.metadata?.product_kind === "personal_plan_once") {
+      throw new Error(`One-time Stripe purchase ${paymentIntentId} is not ready for dispute`)
+    }
+    return false
+  }
+  await updateOneTimePurchaseStatus(deps.supabase, purchase, {
+    status: "disputed",
+    metadata: { ...purchase.metadata, stripe_charge_id: chargeId, stripe_dispute_id: dispute.id },
+  })
+  return true
 }
 
 export async function handleCheckoutSessionExpired(

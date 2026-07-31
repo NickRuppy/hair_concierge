@@ -6,6 +6,14 @@ export function isGuidedStoryOfferExperimentEnabled() {
   return process.env.GUIDED_STORY_OFFER_EXPERIMENT_ENABLED === "true"
 }
 
+export function isPersonalPlanPricingExperimentEnabled() {
+  return process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED === "true"
+}
+
+export function isPersonalPlanOneTimeQaEnabled() {
+  return process.env.PERSONAL_PLAN_ONE_TIME_QA_ENABLED === "true"
+}
+
 export function isBillingFunnelDeliveryEnabled() {
   return process.env.BILLING_FUNNEL_DELIVERY_ENABLED === "true"
 }

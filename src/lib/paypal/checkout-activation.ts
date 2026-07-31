@@ -41,6 +41,10 @@ export type PayPalCheckoutActivationErrorCode =
   | "paypal_checkout_intent_missing"
   | "paypal_checkout_intent_expired"
   | "paypal_existing_access"
+  | "paypal_order_intent_missing"
+  | "paypal_order_intent_expired"
+  | "paypal_order_capture_incomplete"
+  | "paypal_order_confirmation_failed"
 
 export class PayPalCheckoutActivationError extends Error {
   code: PayPalCheckoutActivationErrorCode
@@ -68,6 +72,31 @@ export type PayPalCheckoutAccountResult =
 type ProfileRow = {
   id: string
   email?: string | null
+}
+
+export async function ensurePayPalOneTimePurchaseAccount(
+  deps: PayPalCheckoutActivationDeps,
+  input: { email: string; activationKey: string; leadId?: string | null },
+): Promise<Extract<PayPalCheckoutAccountResult, { status: "active" }>> {
+  const email = input.email.trim().toLowerCase()
+  const existing = await findProfileByEmail(deps, email)
+  const created = existing ? null : await createPayPalCheckoutUser(deps, email, input.activationKey)
+  const userId = existing?.id ?? created!.userId
+  const canSetInitialPassword = existing
+    ? await canSetPasswordForPayPalSubscription(deps, userId, input.activationKey)
+    : created!.created
+  await upsertSubscriptionProfile(deps, userId, { email })
+  if (deps.linkQuizToProfile && input.leadId)
+    await deps.linkQuizToProfile(userId, email, input.leadId)
+  return {
+    status: "active",
+    userId,
+    email,
+    providerSubscriberEmail: null,
+    canSetInitialPassword,
+    leadId: input.leadId ?? null,
+    checkoutContext: null,
+  }
 }
 
 export async function verifyPayPalSubscriptionForActivation(

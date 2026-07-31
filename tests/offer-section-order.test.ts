@@ -49,6 +49,14 @@ test("personal-plan keeps the v3 visual order with pricing directly after diagno
   }
 })
 
+test("personal-plan pricing treatment arms keep the same section order", () => {
+  for (const variant of ["personal-plan-membership-v1", "personal-plan-one-time-v1"]) {
+    assert.equal(resolveOfferSectionIndex(variant, "hero"), 0)
+    assert.equal(resolveOfferSectionIndex(variant, "pricing"), 2)
+    assert.equal(resolveOfferSectionIndex(variant, "final_cta"), 10)
+  }
+})
+
 test("unknown section combinations sort after a variant's declared sections", () => {
   assert.equal(resolveOfferSectionIndex("guided-story", "final_cta"), 9)
   assert.equal(resolveOfferSectionIndex("app-value-stack", "guarantee"), 12)

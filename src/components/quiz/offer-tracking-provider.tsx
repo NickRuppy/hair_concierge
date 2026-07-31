@@ -80,6 +80,7 @@ export function OfferTrackingProvider({
   children,
   entryContext,
   focusRoutine,
+  isInternalTest = false,
   leadId,
   offerTracking,
   offerVariant,
@@ -91,6 +92,7 @@ export function OfferTrackingProvider({
   children: ReactNode
   entryContext: OfferEntryContext
   focusRoutine: boolean
+  isInternalTest?: boolean
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
@@ -119,6 +121,7 @@ export function OfferTrackingProvider({
       focusRoutine,
       funnelPackageKey: offerTracking?.funnelPackageKey,
       funnelSessionId: offerTracking?.funnelSessionId,
+      isInternalTest,
       leadId,
       needLane,
       offerRevision,
@@ -133,6 +136,7 @@ export function OfferTrackingProvider({
       focusRoutine,
       offerTracking?.funnelPackageKey,
       offerTracking?.funnelSessionId,
+      isInternalTest,
       leadId,
       offerVariant,
       offerViewId,

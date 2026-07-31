@@ -175,7 +175,7 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.equal((html.match(/data-offer-cta="final"/g) ?? []).length, 1)
   assert.match(
     html,
-    /data-offer-cta="sticky_header" data-offer-destination="pricing"[^>]*>Pläne ansehen</,
+    /data-offer-cta="sticky_header" data-offer-destination="pricing"[^>]*>Angebot ansehen</,
   )
   assert.match(html, /data-offer-cta="final" data-offer-destination="checkout"/)
   assert.match(html, /mt-3 grid grid-cols-2 gap-2/)
@@ -201,6 +201,26 @@ test("personal plan offer renders approved hierarchy without personalized produc
   )
   assert.doesNotMatch(html, /Neqi Peptide Power|Alle 2–3 Haarwäschen|Kopfhautserum|Dry\.Shampoo/i)
   assert.doesNotMatch(html, /conditionerModuleId|shampooModuleId|suggestedCategory|needLane/)
+})
+
+test("one-time personal plan removes the membership guarantee from the shared offer", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      offerVariant="personal-plan-one-time-v1"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  assert.match(html, /Einmalige Erstellung/i)
+  assert.match(html, /Einmalzahlung · Kein Abo/i)
+  assert.doesNotMatch(html, /14 Tage Geld-zurück-Garantie|data-offer-section="guarantee"/i)
 })
 
 test("personal plan result shows recovery instead of falling through to legacy offer", () => {
