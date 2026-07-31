@@ -136,6 +136,31 @@ test("offer overlay express path renders withdrawal link and direct fallback wit
   assert.match(html, /data-offer-payment-option="paypal"/)
 })
 
+test("offer overlay threads prepared-session synchronization into Stripe Checkout Elements", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /onPreparedCheckoutActivate/)
+  assert.match(source, /onPreparedCheckoutSyncFailed/)
+  assert.match(source, /onPreparedCheckoutSyncSucceeded/)
+  assert.match(source, /preparedCheckoutId=\{clientSecret \? preparedCheckoutId : undefined\}/)
+  assert.doesNotMatch(source, /preparedCheckoutId=\{clientSecret \? checkoutKey : undefined\}/)
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutActivate=\{onPreparedCheckoutActivate\}/,
+  )
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutSyncFailed=\{onPreparedCheckoutSyncFailed\}/,
+  )
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutSyncSucceeded=\{onPreparedCheckoutSyncSucceeded\}/,
+  )
+})
+
 test("offer overlay wallet-suppressed path keeps PayPal and card checkout without Express", () => {
   const html = renderCheckout(true, "offer-overlay", true, true)
 

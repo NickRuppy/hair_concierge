@@ -79,6 +79,10 @@ export function PaymentMethodCheckout({
   onFirstPaymentEngagement,
   onPaymentOptionViewed,
   onPreparedApplePayAvailabilityResolved,
+  onPreparedCheckoutActivate,
+  onPreparedCheckoutSyncFailed,
+  onPreparedCheckoutSyncSucceeded,
+  preparedCheckoutId,
   onPaymentMethodSelected,
   onProviderLockClaim,
   onProviderLockRelease,
@@ -111,6 +115,16 @@ export function PaymentMethodCheckout({
   onFirstPaymentEngagement?: () => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onPreparedApplePayAvailabilityResolved?: (available: boolean) => void
+  onPreparedCheckoutActivate?: Parameters<
+    typeof StripeOfferElementsCheckout
+  >[0]["onPreparedCheckoutActivate"]
+  onPreparedCheckoutSyncFailed?: Parameters<
+    typeof StripeOfferElementsCheckout
+  >[0]["onPreparedCheckoutSyncFailed"]
+  onPreparedCheckoutSyncSucceeded?: Parameters<
+    typeof StripeOfferElementsCheckout
+  >[0]["onPreparedCheckoutSyncSucceeded"]
+  preparedCheckoutId?: string
   onPaymentMethodSelected?: (
     provider: "stripe" | "paypal",
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -257,11 +271,15 @@ export function PaymentMethodCheckout({
               clientSecret={clientSecret}
               fetchClientSecret={fetchClientSecret}
               holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
+              preparedCheckoutId={clientSecret ? preparedCheckoutId : undefined}
               suppressExpressWallet={suppressExpressWallet}
               lockedProvider={lockedProvider}
               onBeforeConfirm={onBeforeStripeConfirm}
               onApplePayAvailabilityResolved={onPreparedApplePayAvailabilityResolved}
               onFirstPaymentEngagement={onFirstPaymentEngagement}
+              onPreparedCheckoutActivate={onPreparedCheckoutActivate}
+              onPreparedCheckoutSyncFailed={onPreparedCheckoutSyncFailed}
+              onPreparedCheckoutSyncSucceeded={onPreparedCheckoutSyncSucceeded}
               onPaymentMethodSelected={onPaymentMethodSelected}
               onPaymentOptionViewed={onPaymentOptionViewed}
               paymentElementEnabled={paymentElementEnabled}
