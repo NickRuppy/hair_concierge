@@ -403,10 +403,10 @@ review artifact for output quality:
     temporary `AGENT_V2_MODEL` rollback override.
   - Production default coverage is transitive through the shared policy
     function rather than a second production-pipeline assertion.
-- Task-owned code/test files are intended for a later authorized commit.
-  Planning/review artifacts remain in the root checkout for publication
-  packaging. Live audit scripts and results remain ignored local evidence and
-  are not intended as PR content.
+- Task-owned code, tests, and this durable migration plan are published in
+  PR #278. Transient review reports remain outside the repository. Live audit
+  scripts and results remain ignored local evidence and are not intended as
+  PR content.
 
 ### Residual risks
 
