@@ -25,6 +25,17 @@ function stringList(value: unknown, allowed: readonly string[]): string[] | unde
   return canonical.length ? canonical : undefined
 }
 
+function nonNegativeSafeInteger(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : undefined
+}
+
+function uuidValue(value: unknown): string | undefined {
+  return typeof value === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+    ? value
+    : undefined
+}
+
 export function sanitizePersonalPlanQuizAnswers(value: unknown): PersonalPlanQuizAnswers {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {}
   const input = value as Record<string, unknown>
@@ -113,6 +124,9 @@ export function savePersonalPlanQuizDraft(
   storage: StorageLike,
 ): void {
   const history = draft.history.filter((screen) => screenSet.has(screen))
+  const serverDraftId = uuidValue(draft.serverDraftId)
+  const serverRevision = nonNegativeSafeInteger(draft.serverRevision)
+  const browserGeneration = nonNegativeSafeInteger(draft.browserGeneration)
   try {
     storage.setItem(
       PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
@@ -121,6 +135,9 @@ export function savePersonalPlanQuizDraft(
         screen: draft.screen,
         history,
         answers: sanitizePersonalPlanQuizAnswers(draft.answers),
+        ...(serverDraftId ? { serverDraftId } : {}),
+        ...(serverRevision !== undefined ? { serverRevision } : {}),
+        ...(browserGeneration !== undefined ? { browserGeneration } : {}),
       }),
     )
   } catch {
@@ -149,6 +166,9 @@ export function loadPersonalPlanQuizDraft(storage: StorageLike): PersonalPlanQui
         )
       : []
     const answers = sanitizePersonalPlanQuizAnswers(draft.answers)
+    const serverDraftId = uuidValue(draft.serverDraftId)
+    const serverRevision = nonNegativeSafeInteger(draft.serverRevision)
+    const browserGeneration = nonNegativeSafeInteger(draft.browserGeneration)
     const rawAnswers =
       draft.answers && typeof draft.answers === "object" && !Array.isArray(draft.answers)
         ? (draft.answers as Record<string, unknown>)
@@ -164,10 +184,20 @@ export function loadPersonalPlanQuizDraft(storage: StorageLike): PersonalPlanQui
         screen: "elastic_response",
         history: elasticHistoryIndex === -1 ? history : history.slice(0, elasticHistoryIndex),
         answers,
+        ...(serverDraftId ? { serverDraftId } : {}),
+        ...(serverRevision !== undefined ? { serverRevision } : {}),
+        ...(browserGeneration !== undefined ? { browserGeneration } : {}),
       }
     }
 
-    return { screen, history, answers }
+    return {
+      screen,
+      history,
+      answers,
+      ...(serverDraftId ? { serverDraftId } : {}),
+      ...(serverRevision !== undefined ? { serverRevision } : {}),
+      ...(browserGeneration !== undefined ? { browserGeneration } : {}),
+    }
   } catch {
     return null
   }

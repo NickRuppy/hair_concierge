@@ -94,8 +94,13 @@ interface CheckoutSentrySink {
   withScope(callback: (scope: CheckoutScopeLike) => void): void
 }
 
-const CHECKOUT_SECRET_QUERY_KEYS = new Set(["session_id", "token"])
-const CHECKOUT_SECRET_FIELD_KEYS = new Set(["session_id", "token", "stripe_session_id"])
+const CHECKOUT_SECRET_QUERY_KEYS = new Set(["resume_token", "session_id", "token"])
+const CHECKOUT_SECRET_FIELD_KEYS = new Set([
+  "resume_token",
+  "session_id",
+  "token",
+  "stripe_session_id",
+])
 const REDACTED_VALUE = "[Filtered]"
 
 export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): CheckoutSentryPayload {
@@ -368,7 +373,7 @@ function isLikelyUrl(value: string): boolean {
 }
 
 function hasCheckoutSecretQuery(value: string): boolean {
-  return /[?&](session_id|token)=/i.test(value)
+  return /[?&](resume_token|session_id|token)=/i.test(value)
 }
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {

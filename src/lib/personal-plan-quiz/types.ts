@@ -83,6 +83,21 @@ export type PersonalPlanQuizDraft = {
   screen: PersonalPlanQuizScreenId
   history: PersonalPlanQuizScreenId[]
   answers: PersonalPlanQuizAnswers
+  serverDraftId?: string
+  serverRevision?: number
+  browserGeneration?: number
+}
+
+export type PersonalPlanQuizServerSnapshot = {
+  draftId: string
+  draft: PersonalPlanQuizDraft
+  revision: number
+  browserGeneration: number
+}
+
+export type PersonalPlanQuizResumeBootstrap = {
+  enabled: boolean
+  snapshot: PersonalPlanQuizServerSnapshot | null
 }
 
 export const PERSONAL_PLAN_QUIZ_SCREEN_IDS = [

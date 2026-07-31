@@ -187,6 +187,36 @@ test("scrubSentryBreadcrumb removes checkout activation secrets from breadcrumb 
   })
 })
 
+test("scrubSentryEvent removes resume tokens from every supported Sentry surface", () => {
+  const token = "opaque-resume-credential"
+  const event = scrubSentryEvent({
+    request: {
+      url: `https://chaarlie.example/lp/haarplan?resume_token=${token}&keep=yes`,
+      query_string: { resume_token: token, keep: "yes" },
+    },
+    breadcrumbs: [
+      {
+        message: `Navigated to /lp/haarplan?resume_token=${token}`,
+        data: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` },
+      },
+    ],
+    contexts: { resume: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` } },
+    extra: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` },
+    spans: [
+      {
+        description: `GET /api/quiz/personal-plan-draft/resume?resume_token=${token}`,
+        data: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` },
+      },
+    ],
+  })
+
+  const serialized = JSON.stringify(event)
+  assert.equal(serialized.includes(token), false)
+  assert.equal(serialized.includes("[Filtered]"), true)
+  assert.equal(event.request?.url?.includes("resume_token=%5BFiltered%5D"), true)
+  assert.deepEqual(event.request?.query_string, { resume_token: "[Filtered]", keep: "yes" })
+})
+
 test("buildCheckoutSentryPayload tags checkout rate-limit source", () => {
   const payload = buildCheckoutSentryPayload({
     provider: "stripe",
