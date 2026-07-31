@@ -12,6 +12,10 @@ const offerViewports = [
 async function openPersonalPlanLab(page: Page, pricingArm: "membership" | "one_time") {
   await page.goto(`${labPath}&pricingArm=${pricingArm}`, { waitUntil: "domcontentloaded" })
   await expect(page.getByRole("heading", { name: "Dein Haarplan ist bereit." })).toBeVisible()
+  await expect(page.locator("[data-personal-plan-offer-client-ready]")).toHaveAttribute(
+    "data-personal-plan-offer-client-ready",
+    "true",
+  )
 }
 
 async function revealPricing(page: Page) {

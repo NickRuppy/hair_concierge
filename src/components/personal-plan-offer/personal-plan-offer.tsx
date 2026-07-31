@@ -416,6 +416,7 @@ export function PersonalPlanOffer({
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
+  const [clientReady, setClientReady] = useState(false)
   const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
   const [pricingReached, setPricingReached] = useState(false)
   const [checkoutSummary, setCheckoutSummary] = useState<ResultOfferPricingCheckoutSummary>(() =>
@@ -424,6 +425,10 @@ export function PersonalPlanOffer({
       : getMembershipCheckoutSummary("quarter"),
   )
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setClientReady(true))
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
   useEffect(() => {
     if (!focusTarget) return
 
@@ -459,7 +464,10 @@ export function PersonalPlanOffer({
         suggestedCategory: null,
       }}
     >
-      <main className="min-h-screen bg-[#fcfaf7] text-[var(--brand-plum-darkest)]">
+      <main
+        className="min-h-screen bg-[#fcfaf7] text-[var(--brand-plum-darkest)]"
+        data-personal-plan-offer-client-ready={clientReady ? "true" : "false"}
+      >
         <div className="sticky top-0 z-30 border-b border-[rgba(var(--brand-plum-rgb),0.10)] bg-[#fcfaf7]/95 backdrop-blur">
           <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-3">
             <Link href="/lp/haarplan" className="font-serif text-2xl font-semibold tracking-tight">
