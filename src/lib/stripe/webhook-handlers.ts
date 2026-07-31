@@ -19,6 +19,7 @@ import {
   findOneTimePurchaseByProviderTransactionId,
   updateOneTimePurchaseStatus,
 } from "@/lib/billing/purchases"
+import type { BillingOneTimePurchaseRow } from "@/lib/billing/types"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
 
 export type HandlerDeps = CheckoutActivationDeps
@@ -131,9 +132,12 @@ export async function handleOneTimeCheckoutSessionCompleted(
 export async function handleOneTimeChargeRefunded(
   charge: Stripe.Charge,
   deps: Pick<HandlerDeps, "supabase">,
-): Promise<boolean> {
+): Promise<{
+  purchase: BillingOneTimePurchaseRow
+  refundedDeltaMinor: number
+} | null> {
   const paymentIntentId = stripeObjectId(charge.payment_intent)
-  if (!paymentIntentId) return false
+  if (!paymentIntentId) return null
   const purchase = await findOneTimePurchaseByProviderTransactionId(
     deps.supabase,
     "stripe",
@@ -143,16 +147,20 @@ export async function handleOneTimeChargeRefunded(
     if (charge.metadata?.product_kind === "personal_plan_once") {
       throw new Error(`One-time Stripe purchase ${paymentIntentId} is not ready for refund`)
     }
-    return false
+    return null
   }
-  const refundedAmount = Math.max(purchase.refunded_amount_minor, charge.amount_refunded ?? 0)
-  await updateOneTimePurchaseStatus(deps.supabase, purchase, {
+  const previousRefundedAmount = purchase.refunded_amount_minor
+  const refundedAmount = Math.max(previousRefundedAmount, charge.amount_refunded ?? 0)
+  const updatedPurchase = await updateOneTimePurchaseStatus(deps.supabase, purchase, {
     status: refundedAmount >= purchase.amount_minor ? "refunded" : "paid",
     refunded_amount_minor: refundedAmount,
     refunded_at: new Date().toISOString(),
     metadata: { ...purchase.metadata, stripe_charge_id: charge.id },
   })
-  return true
+  return {
+    purchase: updatedPurchase,
+    refundedDeltaMinor: Math.max(0, refundedAmount - previousRefundedAmount),
+  }
 }
 
 export async function handleOneTimeChargeDisputeCreated(

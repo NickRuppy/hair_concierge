@@ -84,7 +84,10 @@ export async function upsertOneTimePurchase(
 
 export async function updateOneTimePurchaseStatus(
   supabase: SupabaseBillingClient,
-  purchase: Pick<BillingOneTimePurchaseRow, "id" | "amount_minor" | "refunded_amount_minor">,
+  purchase: Pick<
+    BillingOneTimePurchaseRow,
+    "id" | "amount_minor" | "refunded_amount_minor" | "refunded_at"
+  >,
   input: {
     status: BillingOneTimePurchaseStatus
     refunded_amount_minor?: number
@@ -100,7 +103,7 @@ export async function updateOneTimePurchaseStatus(
     .update({
       status,
       refunded_amount_minor: refundedAmount,
-      refunded_at: input.refunded_at ?? null,
+      refunded_at: input.refunded_at === undefined ? purchase.refunded_at : input.refunded_at,
       metadata: input.metadata,
       updated_at: new Date().toISOString(),
     })

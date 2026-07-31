@@ -694,7 +694,32 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "charge.refunded": {
       const charge = event.data.object as unknown as Stripe.Charge
-      if (await handleOneTimeChargeRefunded(charge, { supabase })) break
+      const oneTimeRefund = await handleOneTimeChargeRefunded(charge, { supabase })
+      if (oneTimeRefund) {
+        if (recordBillingAnalytics)
+          await recordStripeBillingAnalytics(supabase, defer, {
+            eventKey: billingAnalyticsEventKey({
+              provider: "stripe",
+              eventName: "refund_completed",
+              sourceObjectId: `${charge.id}:${event.id}`,
+            }),
+            eventName: "refund_completed",
+            userId: oneTimeRefund.purchase.user_id,
+            providerCustomerId: oneTimeRefund.purchase.provider_customer_id,
+            providerSubscriptionId: null,
+            sourceEventId: event.id,
+            sourceObjectId: charge.id,
+            occurredAt: timestamp,
+            payload: {
+              value: amountFromMinorUnits(oneTimeRefund.refundedDeltaMinor),
+              currency: normalizedCurrency(charge.currency),
+              interval: "one_time",
+              plan_id: oneTimeRefund.purchase.product_kind,
+              has_paid_access: oneTimeRefund.purchase.status === "paid",
+            },
+          })
+        break
+      }
       const customerId = stripeChargeCustomerId(charge)
       if (!customerId) {
         console.warn("[stripe] charge.refunded missing customer", { chargeId: charge.id })

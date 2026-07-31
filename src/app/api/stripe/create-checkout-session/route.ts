@@ -224,6 +224,14 @@ export function shouldRecordFunnelForCheckoutAction(action: "create" | "prepare"
   return action !== "prepare"
 }
 
+export function reusableOneTimeStripeSessionClientSecret(
+  session: Pick<Stripe.Checkout.Session, "client_secret" | "status">,
+): string | null {
+  return session.status === "open" && typeof session.client_secret === "string"
+    ? session.client_secret
+    : null
+}
+
 export function preparedCheckoutExpiresAt(nowSeconds = Math.floor(Date.now() / 1000)) {
   // Stripe rejects Checkout Session expiries at its exact 30-minute floor when request latency
   // advances the server clock. Keep the user-facing lifetime short while retaining a safe margin.
@@ -331,18 +339,28 @@ export async function POST(req: NextRequest) {
         // A retry must recover the immutable evidence/session, never create a second consent.
         const { data: existing, error: lookupError } = await getAdminSupabase()
           .from("personal_plan_one_time_checkout_consents")
-          .select("id, stripe_checkout_session_id")
+          .select("id, stripe_checkout_session_id, paypal_order_id")
           .eq("lead_id", authorization.leadId)
           .eq("funnel_session_id", authorization.sessionId)
           .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
           .maybeSingle()
         if (lookupError || !existing) throw error
+        if (existing.paypal_order_id) {
+          return NextResponse.json({ error: "payment provider already selected" }, { status: 409 })
+        }
         if (existing.stripe_checkout_session_id) {
           const existingSession = await getStripe().checkout.sessions.retrieve(
             existing.stripe_checkout_session_id,
           )
-          if (existingSession.client_secret) {
-            return NextResponse.json({ client_secret: existingSession.client_secret })
+          const reusableClientSecret = reusableOneTimeStripeSessionClientSecret(existingSession)
+          if (reusableClientSecret) {
+            return NextResponse.json({ client_secret: reusableClientSecret })
+          }
+          if (existingSession.status === "complete") {
+            return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+          }
+          if (existingSession.status !== "expired") {
+            throw new Error("Existing one-time Stripe Session is not reusable")
           }
         }
         oneTimeConsentId = existing.id

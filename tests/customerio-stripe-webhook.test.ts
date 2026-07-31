@@ -17,6 +17,7 @@ function stubDeps() {
   const billing: any[] = []
   const billingAnalyticsOutbox: any[] = []
   const billingAnalyticsDeliveries: any[] = []
+  const oneTimePurchases: any[] = []
   const canceledSubscriptions: string[] = []
   const subscriptionPaymentMethods: Record<string, { id: string; type?: string }> = {
     sub_123: { id: "pm_card", type: "card" },
@@ -74,6 +75,10 @@ function stubDeps() {
                 return builder
               },
               async maybeSingle() {
+                const row = applyUpdate()[0]
+                return { data: row ?? null, error: null }
+              },
+              async single() {
                 const row = applyUpdate()[0]
                 return { data: row ?? null, error: null }
               },
@@ -146,6 +151,7 @@ function stubDeps() {
           if (table === "billing_subscriptions") return billing
           if (table === "billing_analytics_outbox") return billingAnalyticsOutbox
           if (table === "billing_analytics_deliveries") return billingAnalyticsDeliveries
+          if (table === "billing_one_time_purchases") return oneTimePurchases
           return []
         }
 
@@ -188,6 +194,7 @@ function stubDeps() {
     billingAnalyticsOutbox,
     canceledSubscriptions,
     deps,
+    oneTimePurchases,
     profiles,
     subscriptionPaymentMethods,
   }
@@ -372,6 +379,65 @@ test("production checkout analytics uses outbox instead of duplicate direct Cust
     ["purchase_completed", "subscription_started"],
   )
   assert.equal(billingAnalyticsOutbox[0].payload.checkout_reference, "cs_outbox")
+})
+
+test("one-time Stripe refunds record the refunded delta in the billing analytics outbox", async () => {
+  const { billingAnalyticsOutbox, deps, oneTimePurchases } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  oneTimePurchases.push({
+    id: "purchase_once_refund",
+    user_id: "user_once_refund",
+    product_kind: "personal_plan_once",
+    provider: "stripe",
+    provider_customer_id: "cus_once_refund",
+    provider_transaction_id: "pi_once_refund",
+    provider_order_id: "cs_once_refund",
+    amount_minor: 2999,
+    currency: "eur",
+    status: "paid",
+    refunded_amount_minor: 0,
+    refunded_at: null,
+    paid_at: "2027-01-15T08:00:00.000Z",
+    metadata: {},
+  })
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_once_refund",
+      type: "charge.refunded",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "ch_once_refund",
+          amount_refunded: 1000,
+          currency: "eur",
+          customer: "cus_once_refund",
+          payment_intent: "pi_once_refund",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      recordBillingAnalytics: true,
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.equal(oneTimePurchases[0].status, "paid")
+  assert.equal(oneTimePurchases[0].refunded_amount_minor, 1000)
+  assert.equal(deferred.length, 1)
+  assert.deepEqual(
+    billingAnalyticsOutbox.map((row) => row.event_name),
+    ["refund_completed"],
+  )
+  assert.deepEqual(billingAnalyticsOutbox[0].payload, {
+    value: 10,
+    currency: "EUR",
+    interval: "one_time",
+    plan_id: "personal_plan_once",
+    has_paid_access: true,
+  })
 })
 
 test("attributed Stripe purchase enqueues funnel only when both delivery flags are enabled", async () => {

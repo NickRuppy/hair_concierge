@@ -47,6 +47,7 @@ export function PersonalPlanOneTimeCheckout({
   const [error, setError] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [paypalReady, setPaypalReady] = useState(false)
+  const [stripeSelected, setStripeSelected] = useState(false)
   const canStartPayment = accepted && Boolean(leadId && funnelSessionId)
 
   const trackCheckoutStarted = useCallback(
@@ -137,7 +138,7 @@ export function PersonalPlanOneTimeCheckout({
       setError(checkoutStartError)
       throw new Error("one-time Stripe session creation failed")
     }
-    trackCheckoutStarted("stripe", "automatic_mount", funnelEventId)
+    trackCheckoutStarted("stripe", "explicit_provider_action", funnelEventId)
     return body.client_secret
   }, [accepted, checkoutAttemptId, funnelSessionId, leadId, trackCheckoutStarted])
 
@@ -168,7 +169,7 @@ export function PersonalPlanOneTimeCheckout({
       ) : null}
 
       {accepted && canStartPayment ? (
-        <>
+        stripeSelected ? (
           <StripeOfferElementsCheckout
             checkoutAttemptId={checkoutAttemptId}
             checkoutKey={`personal-plan-once:${checkoutAttemptId}`}
@@ -179,13 +180,9 @@ export function PersonalPlanOneTimeCheckout({
             paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
             stripe={getOfferStripePromise()}
           />
-          {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
-            <>
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
-                <span className="h-px bg-border" aria-hidden="true" />
-                <span>oder</span>
-                <span className="h-px bg-border" aria-hidden="true" />
-              </div>
+        ) : (
+          <div className="grid gap-3">
+            {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
               <PaymentOptionExposure
                 checkoutAttemptId={checkoutAttemptId}
                 onViewed={handlePaymentOptionViewed}
@@ -206,9 +203,27 @@ export function PersonalPlanOneTimeCheckout({
                   onReady={() => setPaypalReady(true)}
                 />
               </PaymentOptionExposure>
-            </>
-          ) : null}
-        </>
+            ) : null}
+            {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
+              <>
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[11px] font-bold uppercase text-[var(--text-caption)]">
+                  <span className="h-px bg-border" aria-hidden="true" />
+                  <span>oder</span>
+                  <span className="h-px bg-border" aria-hidden="true" />
+                </div>
+              </>
+            ) : null}
+            <Button
+              onClick={() => {
+                setError(null)
+                setStripeSelected(true)
+              }}
+              type="button"
+            >
+              Mit Apple Pay oder Karte bezahlen
+            </Button>
+          </div>
+        )
       ) : (
         <div
           aria-describedby="personal-plan-one-time-payment-gate"

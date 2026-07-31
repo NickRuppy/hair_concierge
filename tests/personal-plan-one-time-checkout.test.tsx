@@ -33,6 +33,8 @@ test("one-time payments remain visibly disabled until canonical consent is accep
   assert.match(checkoutSource, /disabled[\s\S]{0,220}PayPal/)
   assert.match(checkoutSource, /disabled[\s\S]{0,260}Zahlungspflichtig bestellen — €29,99/)
   assert.match(checkoutSource, /\{accepted && canStartPayment \? \(/)
+  assert.match(checkoutSource, /stripeSelected \? \(/)
+  assert.match(checkoutSource, /Mit Apple Pay oder Karte bezahlen/)
   assert.match(checkoutSource, /consentAccepted: true/)
   assert.match(checkoutSource, /consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION/)
   assert.match(checkoutSource, /funnelSessionId/)
@@ -66,7 +68,7 @@ test("provider initialization is recorded only after a usable provider response"
   assert.doesNotMatch(stripeFetchClientSecret, /setError\(null\)/)
   assert.match(
     checkoutSource,
-    /const funnelEventId = createFunnelEventId\(\)[\s\S]*funnelEventId,[\s\S]*typeof body\.client_secret !== "string"[\s\S]*throw new Error\("one-time Stripe session creation failed"\)[\s\S]*trackCheckoutStarted\("stripe", "automatic_mount", funnelEventId\)/,
+    /const funnelEventId = createFunnelEventId\(\)[\s\S]*funnelEventId,[\s\S]*typeof body\.client_secret !== "string"[\s\S]*throw new Error\("one-time Stripe session creation failed"\)[\s\S]*trackCheckoutStarted\("stripe", "explicit_provider_action", funnelEventId\)/,
   )
   assert.match(
     paypalSource,

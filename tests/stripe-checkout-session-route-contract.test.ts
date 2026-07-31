@@ -8,6 +8,7 @@ import {
   preparedCheckoutClaimIdempotencyKey,
   preparedCheckoutExpiresAt,
   preparedCheckoutUnavailablePayload,
+  reusableOneTimeStripeSessionClientSecret,
   shouldRecordFunnelForCheckoutAction,
   StripeCheckoutSessionRequestSchema,
   validatePreparedCheckoutClaim,
@@ -155,6 +156,37 @@ test("preparation never owns a checkout-start funnel event or touch consumption"
   assert.equal(shouldRecordFunnelForCheckoutAction("prepare"), false)
   assert.equal(shouldRecordFunnelForCheckoutAction("create"), true)
   assert.equal(shouldRecordFunnelForCheckoutAction("claim"), true)
+})
+
+test("one-time checkout reuses only an open Stripe Session with a client secret", () => {
+  assert.equal(
+    reusableOneTimeStripeSessionClientSecret({
+      status: "open",
+      client_secret: "cs_secret_reusable",
+    }),
+    "cs_secret_reusable",
+  )
+  assert.equal(
+    reusableOneTimeStripeSessionClientSecret({
+      status: "expired",
+      client_secret: "cs_secret_expired",
+    }),
+    null,
+  )
+  assert.equal(
+    reusableOneTimeStripeSessionClientSecret({
+      status: "complete",
+      client_secret: "cs_secret_complete",
+    }),
+    null,
+  )
+  assert.equal(
+    reusableOneTimeStripeSessionClientSecret({
+      status: "open",
+      client_secret: null,
+    }),
+    null,
+  )
 })
 
 test("prepared Sessions leave a safe margin above Stripe's 30-minute expiry minimum", () => {

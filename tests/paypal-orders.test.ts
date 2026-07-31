@@ -12,9 +12,12 @@ import {
 } from "../src/lib/paypal/order-activation"
 import {
   assertValidPayPalOneTimeCaptureEvent,
+  handlePayPalWebhookEvent,
   payPalCaptureIdForWebhook,
+  payPalDisputeCaptureIdsForWebhook,
   validatePayPalCaptureCompletedWebhook,
 } from "../src/lib/paypal/webhook-handlers"
+import { personalPlanOneTimeConsentBlocksPayPalOrder } from "../src/app/api/paypal/create-order-intent/route"
 import { readFile } from "node:fs/promises"
 
 const intent: PayPalOrderIntentRow = {
@@ -74,6 +77,17 @@ test("uses separate stable idempotency keys for PayPal create and capture", () =
   assert.equal(
     paypalOrderRequestId(intent.token, "capture"),
     `personal-plan-once:capture:${intent.token}`,
+  )
+})
+
+test("PayPal order creation stops before the provider call when Stripe already owns the consent", () => {
+  assert.equal(
+    personalPlanOneTimeConsentBlocksPayPalOrder({ stripe_checkout_session_id: "cs_once" }),
+    true,
+  )
+  assert.equal(
+    personalPlanOneTimeConsentBlocksPayPalOrder({ stripe_checkout_session_id: null }),
+    false,
   )
 })
 
@@ -202,6 +216,132 @@ test("resolves refund and reversal webhooks through their related capture, not r
   )
 })
 
+test("resolves PayPal disputes through seller transaction ids", () => {
+  assert.deepEqual(
+    payPalDisputeCaptureIdsForWebhook({
+      id: "PP-D-1",
+      event_type: "CUSTOMER.DISPUTE.CREATED",
+      resource: {
+        disputed_transactions: [
+          { seller_transaction_id: "CAPTURE-1" },
+          { transaction_info: { seller_transaction_id: "CAPTURE-2" } },
+          { seller_transaction_id: "CAPTURE-1" },
+        ],
+      },
+    }),
+    ["CAPTURE-1", "CAPTURE-2"],
+  )
+})
+
+test("PayPal dispute lifecycle revokes and restores a one-time entitlement", async () => {
+  const purchase: Record<string, any> = {
+    id: "purchase-1",
+    user_id: "user-1",
+    provider: "paypal",
+    product_kind: "personal_plan_once",
+    provider_transaction_id: "CAPTURE-1",
+    provider_customer_id: null,
+    provider_order_id: "ORDER-1",
+    amount_minor: 2999,
+    currency: "eur",
+    refunded_amount_minor: 0,
+    status: "paid",
+    paid_at: "2026-07-31T10:00:00.000Z",
+    refunded_at: null,
+    metadata: {},
+    created_at: "2026-07-31T10:00:00.000Z",
+    updated_at: "2026-07-31T10:00:00.000Z",
+  }
+  const supabase = oneTimePayPalWebhookSupabase(purchase)
+  const deps = {
+    supabase: supabase as never,
+    premiumTierId: "premium",
+    freeTierId: "free",
+  }
+
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      {
+        id: "WH-DISPUTE-CREATED",
+        event_type: "CUSTOMER.DISPUTE.CREATED",
+        resource: {
+          id: "PP-D-1",
+          disputed_transactions: [{ seller_transaction_id: "CAPTURE-1" }],
+        },
+      },
+      deps,
+    ),
+    { handled: true },
+  )
+  assert.equal(purchase.status, "disputed")
+
+  await handlePayPalWebhookEvent(
+    {
+      id: "WH-DISPUTE-RESOLVED",
+      event_type: "CUSTOMER.DISPUTE.RESOLVED",
+      resource: {
+        id: "PP-D-1",
+        disputed_transactions: [{ seller_transaction_id: "CAPTURE-1" }],
+        dispute_outcome: { outcome_code: "RESOLVED_SELLER_FAVOUR" },
+      },
+    },
+    deps,
+  )
+  assert.equal(purchase.status, "paid")
+  assert.deepEqual(purchase.metadata, {
+    paypal_dispute_event_type: "CUSTOMER.DISPUTE.RESOLVED",
+    paypal_dispute_id: "PP-D-1",
+    paypal_dispute_outcome: "RESOLVED_SELLER_FAVOUR",
+  })
+
+  purchase.status = "refunded"
+  purchase.refunded_amount_minor = 2999
+  purchase.refunded_at = "2026-08-01T10:00:00.000Z"
+  await handlePayPalWebhookEvent(
+    {
+      id: "WH-DISPUTE-RESOLVED-AFTER-REFUND",
+      event_type: "CUSTOMER.DISPUTE.RESOLVED",
+      resource: {
+        id: "PP-D-1",
+        disputed_transactions: [{ seller_transaction_id: "CAPTURE-1" }],
+        dispute_outcome: { outcome_code: "RESOLVED_SELLER_FAVOUR" },
+      },
+    },
+    deps,
+  )
+  assert.equal(purchase.status, "refunded")
+  assert.equal(purchase.refunded_at, "2026-08-01T10:00:00.000Z")
+})
+
+test("unmatched PayPal dispute payloads are acknowledged without a retry loop", async () => {
+  const purchase = {
+    id: "purchase-unrelated",
+    provider: "paypal",
+    provider_transaction_id: "CAPTURE-OTHER",
+  }
+  const originalWarn = console.warn
+  console.warn = () => {}
+  try {
+    assert.deepEqual(
+      await handlePayPalWebhookEvent(
+        {
+          id: "WH-DISPUTE-WITHOUT-TRANSACTION",
+          event_type: "CUSTOMER.DISPUTE.UPDATED",
+          resource: { id: "PP-D-UNRELATED" },
+        },
+        {
+          supabase: oneTimePayPalWebhookSupabase(purchase) as never,
+          premiumTierId: "premium",
+          freeTierId: "free",
+        },
+      ),
+      { handled: false },
+    )
+  } finally {
+    console.warn = originalWarn
+  }
+})
+
 test("rejects completed capture webhooks with an unexpected amount or currency", () => {
   assert.doesNotThrow(() =>
     assertValidPayPalOneTimeCaptureEvent({
@@ -283,3 +423,54 @@ test("activation preserves sent confirmation evidence and records a failed send 
   assert.match(source, /status: "failed"/)
   assert.match(source, /paypal_order_confirmation_failed/)
 })
+
+function oneTimePayPalWebhookSupabase(purchase: Record<string, any>) {
+  return {
+    from(table: string) {
+      if (table === "billing_webhook_events") {
+        return {
+          async insert() {
+            return { error: null }
+          },
+        }
+      }
+      assert.equal(table, "billing_one_time_purchases")
+      const filters: Array<[string, unknown]> = []
+      const builder: any = {
+        select() {
+          return builder
+        },
+        eq(column: string, value: unknown) {
+          filters.push([column, value])
+          return builder
+        },
+        async maybeSingle() {
+          return {
+            data: filters.every(([column, value]) => purchase[column] === value) ? purchase : null,
+            error: null,
+          }
+        },
+        update(patch: Record<string, unknown>) {
+          const updateFilters: Array<[string, unknown]> = []
+          const updateBuilder: any = {
+            eq(column: string, value: unknown) {
+              updateFilters.push([column, value])
+              return updateBuilder
+            },
+            select() {
+              return updateBuilder
+            },
+            async single() {
+              if (updateFilters.every(([column, value]) => purchase[column] === value)) {
+                Object.assign(purchase, patch)
+              }
+              return { data: purchase, error: null }
+            },
+          }
+          return updateBuilder
+        },
+      }
+      return builder
+    },
+  }
+}

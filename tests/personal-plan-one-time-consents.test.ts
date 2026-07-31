@@ -191,6 +191,20 @@ test("migration makes accepted evidence immutable and requires confirmation befo
   )
 })
 
+test("follow-up migration permits expired Stripe recovery and generation after confirmation send", () => {
+  const migration = readFileSync(
+    new URL(
+      "../supabase/migrations/20260731123000_harden_personal_plan_one_time_recovery.sql",
+      import.meta.url,
+    ),
+    "utf8",
+  )
+  assert.match(migration, /expired Stripe Checkout Session may be replaced/)
+  assert.match(migration, /NEW\.stripe_checkout_session_id IS NULL/)
+  assert.match(migration, /confirmation_status IN \('sent', 'delivered'\)/)
+  assert.match(migration, /personal_plan_one_time_generation_requires_confirmation_sent/)
+})
+
 function consentLookupSupabase(
   row: typeof consent | null,
   lookups?: Array<[string, string]>,

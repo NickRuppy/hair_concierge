@@ -82,6 +82,15 @@ export type PayPalWebhookEvent = {
         order_id?: string
       }
     }
+    disputed_transactions?: Array<{
+      seller_transaction_id?: string
+      transaction_info?: {
+        seller_transaction_id?: string
+      }
+    }>
+    dispute_outcome?: {
+      outcome_code?: string
+    }
   }
 }
 
@@ -133,6 +142,17 @@ const ORDER_CAPTURE_EVENTS = new Set([
   "PAYMENT.CAPTURE.REFUNDED",
   "PAYMENT.CAPTURE.REVERSED",
 ])
+const DISPUTE_EVENTS = new Set([
+  "CUSTOMER.DISPUTE.CREATED",
+  "CUSTOMER.DISPUTE.UPDATED",
+  "CUSTOMER.DISPUTE.RESOLVED",
+])
+const MERCHANT_FAVOR_DISPUTE_OUTCOMES = new Set([
+  "RESOLVED_SELLER_FAVOUR",
+  "RESOLVED_WITH_PAYOUT",
+  "CANCELED_BY_BUYER",
+  "DENIED",
+])
 
 export async function handlePayPalWebhookEvent(
   event: PayPalWebhookEvent,
@@ -152,6 +172,10 @@ export async function handlePayPalWebhookEvent(
     if (ORDER_CAPTURE_EVENTS.has(eventType)) {
       await reconcilePayPalOrderCaptureEvent(event, deps)
       return { handled: true }
+    }
+    if (DISPUTE_EVENTS.has(eventType)) {
+      const handled = await reconcilePayPalOneTimeDisputeEvent(event, deps)
+      return handled ? { handled: true } : { handled: false }
     }
     if (
       deps.recordBillingAnalytics &&
@@ -253,6 +277,47 @@ export async function handlePayPalWebhookEvent(
     await releaseWebhookEventClaim(deps.supabase, "paypal", eventId)
     throw error
   }
+}
+
+async function reconcilePayPalOneTimeDisputeEvent(
+  event: PayPalWebhookEvent,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  const captureIds = payPalDisputeCaptureIdsForWebhook(event)
+  if (captureIds.length === 0) {
+    console.warn("[paypal:webhook] dispute has no seller transaction id", {
+      eventId: event.id,
+      eventType: event.event_type,
+    })
+    return false
+  }
+
+  let handled = false
+  for (const captureId of captureIds) {
+    const purchase = await findOneTimePurchaseByProviderTransactionId(
+      deps.supabase,
+      "paypal",
+      captureId,
+    )
+    if (!purchase) continue
+    handled = true
+    const outcome = event.resource?.dispute_outcome?.outcome_code?.trim()
+    const restored =
+      event.event_type === "CUSTOMER.DISPUTE.RESOLVED" &&
+      Boolean(outcome && MERCHANT_FAVOR_DISPUTE_OUTCOMES.has(outcome))
+    const terminalStatus =
+      purchase.status === "refunded" || purchase.status === "reversed" ? purchase.status : null
+    await updateOneTimePurchaseStatus(deps.supabase, purchase, {
+      status: terminalStatus ?? (restored ? "paid" : "disputed"),
+      metadata: {
+        ...purchase.metadata,
+        paypal_dispute_event_type: event.event_type,
+        paypal_dispute_id: event.resource?.id ?? null,
+        paypal_dispute_outcome: outcome ?? null,
+      },
+    })
+  }
+  return handled
 }
 
 async function reconcilePayPalOrderCaptureEvent(
@@ -363,6 +428,21 @@ export function payPalCaptureIdForWebhook(event: PayPalWebhookEvent): string | n
       ? event.resource?.id
       : event.resource?.supplementary_data?.related_ids?.capture_id
   return value?.trim() || null
+}
+
+export function payPalDisputeCaptureIdsForWebhook(event: PayPalWebhookEvent): string[] {
+  return [
+    ...new Set(
+      (event.resource?.disputed_transactions ?? [])
+        .map(
+          (transaction) =>
+            transaction.seller_transaction_id ??
+            transaction.transaction_info?.seller_transaction_id,
+        )
+        .map((value) => value?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  ]
 }
 
 export function validatePayPalCaptureCompletedWebhook(

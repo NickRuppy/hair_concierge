@@ -11,6 +11,7 @@ import {
   bindPersonalPlanOneTimeConsentProviderReference,
   findPersonalPlanOneTimeConsentByLeadSession,
   PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
+  type PersonalPlanOneTimeCheckoutConsentRow,
 } from "@/lib/billing/personal-plan-one-time-consents"
 import {
   recordFunnelEvent,
@@ -38,6 +39,12 @@ const PayPalOrderIntentRequestSchema = z
   })
   .strict()
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"
+
+export function personalPlanOneTimeConsentBlocksPayPalOrder(
+  consent: Pick<PersonalPlanOneTimeCheckoutConsentRow, "stripe_checkout_session_id">,
+): boolean {
+  return Boolean(consent.stripe_checkout_session_id)
+}
 
 export async function POST(request: Request) {
   if (process.env.NEXT_PUBLIC_PAYPAL_ENABLED !== "true") {
@@ -113,6 +120,9 @@ export async function POST(request: Request) {
       })
       if (!consent) throw error
     }
+  }
+  if (personalPlanOneTimeConsentBlocksPayPalOrder(consent)) {
+    return NextResponse.json({ error: "payment provider already selected" }, { status: 409 })
   }
   const intent = await createPayPalOrderIntent(admin, {
     checkoutAttemptId: parsed.data.checkoutAttemptId,

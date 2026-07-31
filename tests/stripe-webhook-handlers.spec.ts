@@ -315,7 +315,10 @@ test("one-time charge refunds accumulate without revoking until the full purchas
       { id: "ch_once", payment_intent: "pi_once", amount_refunded: 1000 } as any,
       { supabase },
     ),
-  ).toBe(true)
+  ).toMatchObject({
+    purchase: { status: "paid", refunded_amount_minor: 1000 },
+    refundedDeltaMinor: 1000,
+  })
   expect(rows[0]).toMatchObject({ status: "paid", refunded_amount_minor: 1000 })
   await handleOneTimeChargeRefunded(
     { id: "ch_once", payment_intent: "pi_once", amount_refunded: 2999 } as any,

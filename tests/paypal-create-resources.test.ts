@@ -51,6 +51,8 @@ test("buildPayPalWebhookPayload subscribes to the subscription events we handle"
     payload.event_types.map((event) => event.name),
     DEFAULT_PAYPAL_WEBHOOK_EVENTS,
   )
+  assert.equal(DEFAULT_PAYPAL_WEBHOOK_EVENTS.includes("CUSTOMER.DISPUTE.CREATED"), true)
+  assert.equal(DEFAULT_PAYPAL_WEBHOOK_EVENTS.includes("CUSTOMER.DISPUTE.RESOLVED"), true)
 })
 
 test("formatPayPalSetupEnv prints the env vars needed by checkout and validation", () => {
