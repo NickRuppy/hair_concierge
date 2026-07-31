@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS,
   PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
+  buildPersonalPlanResultRevealCompletion,
   buildPersonalPlanResultRevealMessages,
   claimPersonalPlanResultRevealCompletion,
   schedulePersonalPlanResultReveal,
@@ -34,8 +35,8 @@ test("result reveal uses dynamic one-week and four-week dates with certain outco
 })
 
 test("result reveal exposes all three messages before navigating", () => {
-  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS, 2_400)
-  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS, 7_200)
+  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS, 2_040)
+  assert.equal(PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS, 6_120)
 
   const tasks: Array<{ callback: () => void; delayMs: number; handle: number }> = []
   const cancelled: number[] = []
@@ -59,13 +60,106 @@ test("result reveal exposes all three messages before navigating", () => {
 
   assert.deepEqual(
     tasks.map(({ delayMs }) => delayMs),
-    [2_400, 4_800, 7_200],
+    [2_040, 4_080, 6_120],
   )
   tasks.forEach(({ callback }) => callback())
   assert.deepEqual(viewedSteps, [1, 2])
   assert.equal(completions, 1)
   cleanup()
   assert.deepEqual(cancelled, [1, 2, 3])
+})
+
+test("result reveal completion records exact trigger and configured timing", () => {
+  assert.deepEqual(
+    buildPersonalPlanResultRevealCompletion({
+      completionTrigger: "skip_button",
+      elapsedMs: 2_039.6,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
+      stepCount: 3,
+      visibleStep: 1,
+    }),
+    {
+      completionTrigger: "skip_button",
+      elapsedMs: 2_040,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: 6_120,
+      stepCount: 3,
+      visibleStep: 1,
+    },
+  )
+
+  assert.deepEqual(
+    buildPersonalPlanResultRevealCompletion({
+      completionTrigger: "timer",
+      elapsedMs: 6_121.2,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
+      stepCount: 3,
+      visibleStep: 3,
+    }),
+    {
+      completionTrigger: "timer",
+      elapsedMs: 6_121,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: 6_120,
+      stepCount: 3,
+      visibleStep: 3,
+    },
+  )
+})
+
+test("result reveal completion normalizes numeric boundaries", () => {
+  assert.deepEqual(
+    buildPersonalPlanResultRevealCompletion({
+      completionTrigger: "skip_button",
+      elapsedMs: -10,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: 6_119.7,
+      stepCount: 3.4,
+      visibleStep: 99,
+    }),
+    {
+      completionTrigger: "skip_button",
+      elapsedMs: 0,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: 6_120,
+      stepCount: 3,
+      visibleStep: 3,
+    },
+  )
+
+  assert.deepEqual(
+    buildPersonalPlanResultRevealCompletion({
+      completionTrigger: "timer",
+      elapsedMs: Number.NaN,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: Number.POSITIVE_INFINITY,
+      stepCount: Number.NaN,
+      visibleStep: Number.NaN,
+    }),
+    {
+      completionTrigger: "timer",
+      elapsedMs: 0,
+      leadId: "10000000-0000-4000-8000-000000000092",
+      scheduledDurationMs: 0,
+      stepCount: 1,
+      visibleStep: 1,
+    },
+  )
+
+  assert.throws(
+    () =>
+      buildPersonalPlanResultRevealCompletion({
+        completionTrigger: "skip_button",
+        elapsedMs: 0,
+        leadId: " ",
+        scheduledDurationMs: PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
+        stepCount: 3,
+        visibleStep: 1,
+      }),
+    /requires a lead ID/,
+  )
 })
 
 test("result reveal completion can only be claimed once", () => {

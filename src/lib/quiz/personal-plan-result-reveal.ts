@@ -13,8 +13,42 @@ const GERMAN_MONTHS = [
   "Dezember",
 ] as const
 
-export const PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS = 2_400
+export const PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS = 2_040
 export const PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS = PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS * 3
+
+export type PersonalPlanResultRevealCompletionTrigger = "skip_button" | "timer"
+
+export function buildPersonalPlanResultRevealCompletion({
+  completionTrigger,
+  elapsedMs,
+  leadId,
+  scheduledDurationMs,
+  stepCount,
+  visibleStep,
+}: {
+  completionTrigger: PersonalPlanResultRevealCompletionTrigger
+  elapsedMs: number
+  leadId: string
+  scheduledDurationMs: number
+  stepCount: number
+  visibleStep: number
+}) {
+  if (!leadId.trim()) throw new Error("Personal-plan result reveal completion requires a lead ID.")
+
+  const normalizedStepCount = Math.max(1, Math.round(Number.isFinite(stepCount) ? stepCount : 1))
+  const normalizeDuration = (value: number) =>
+    Math.max(0, Math.round(Number.isFinite(value) ? value : 0))
+  const normalizedVisibleStep = Math.round(Number.isFinite(visibleStep) ? visibleStep : 1)
+
+  return {
+    completionTrigger,
+    elapsedMs: normalizeDuration(elapsedMs),
+    leadId,
+    scheduledDurationMs: normalizeDuration(scheduledDurationMs),
+    stepCount: normalizedStepCount,
+    visibleStep: Math.min(normalizedStepCount, Math.max(1, normalizedVisibleStep)),
+  }
+}
 
 type RevealTimer = {
   cancel: (handle: number) => void

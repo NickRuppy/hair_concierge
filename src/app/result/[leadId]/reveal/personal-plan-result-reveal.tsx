@@ -5,8 +5,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import {
+  PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
+  buildPersonalPlanResultRevealCompletion,
   buildPersonalPlanResultRevealMessages,
   claimPersonalPlanResultRevealCompletion,
+  type PersonalPlanResultRevealCompletionTrigger,
   schedulePersonalPlanResultReveal,
 } from "@/lib/quiz/personal-plan-result-reveal"
 import { requestPersonalPlanResultArtifactEmail } from "@/lib/personal-plan-quiz/result-email-client"
@@ -18,6 +21,7 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
   const [navigating, setNavigating] = useState(false)
   const trackedStepsRef = useRef(new Set<number>())
   const completedRef = useRef(false)
+  const revealStartedAtRef = useRef<number | null>(null)
   const resultPath = `/result/${leadId}?entry=quiz_completion`
 
   useEffect(() => {
@@ -26,19 +30,31 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
     })
   }, [leadId])
 
-  const openResult = useCallback(() => {
-    if (!claimPersonalPlanResultRevealCompletion(completedRef)) return
-    setNavigating(true)
-    trackAppEvent("personal_plan_result_reveal_completed", {
-      leadId,
-      stepCount: messages.length,
-    })
-    window.requestAnimationFrame(() => router.replace(resultPath))
-  }, [leadId, messages.length, resultPath, router])
+  const openResult = useCallback(
+    (completionTrigger: PersonalPlanResultRevealCompletionTrigger, visibleStep: number) => {
+      if (!claimPersonalPlanResultRevealCompletion(completedRef)) return
+      const completedAt = performance.now()
+      setNavigating(true)
+      trackAppEvent(
+        "personal_plan_result_reveal_completed",
+        buildPersonalPlanResultRevealCompletion({
+          completionTrigger,
+          elapsedMs: completedAt - (revealStartedAtRef.current ?? completedAt),
+          leadId,
+          scheduledDurationMs: PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
+          stepCount: messages.length,
+          visibleStep,
+        }),
+      )
+      window.requestAnimationFrame(() => router.replace(resultPath))
+    },
+    [leadId, messages.length, resultPath, router],
+  )
 
   useEffect(() => {
     if (trackedStepsRef.current.has(storyIndex)) return
     trackedStepsRef.current.add(storyIndex)
+    revealStartedAtRef.current ??= performance.now()
     trackAppEvent("personal_plan_result_reveal_step_viewed", {
       daysFromStart: messages[storyIndex].daysFromStart,
       leadId,
@@ -49,7 +65,7 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
   useEffect(() => {
     return schedulePersonalPlanResultReveal({
       messageCount: messages.length,
-      onComplete: openResult,
+      onComplete: () => openResult("timer", messages.length),
       onStep: setStoryIndex,
       timer: {
         cancel: (handle) => window.clearTimeout(handle),
@@ -66,7 +82,7 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
       />
       <button
         className="absolute right-5 top-5 z-10 rounded-full px-3 py-2 text-sm font-semibold text-[rgba(var(--brand-plum-rgb),0.70)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
-        onClick={openResult}
+        onClick={() => openResult("skip_button", storyIndex + 1)}
         type="button"
       >
         Überspringen

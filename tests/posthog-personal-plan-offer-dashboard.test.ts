@@ -3,7 +3,7 @@ import test from "node:test"
 
 import { personalPlanOfferDashboard } from "../scripts/analytics/personal-plan-offer-dashboard"
 
-const { o1, o2, o3, o5, o6 } = personalPlanOfferDashboard.insights
+const { o1, o2, o3, o5, o6, o7 } = personalPlanOfferDashboard.insights
 const authoritativeInsights = [o1, o2, o3, o5]
 
 test("authoritative insights share a strict, exact Personal Plan offer cohort", () => {
@@ -106,4 +106,35 @@ test("attribution quality reports missing required offer context outside convers
     /countIf\(empty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\) OR ifNull\(toString\(properties\.funnel_package_key\), ''\) != 'meta_personal_plan_v1'\) AS attribution_fehlend/,
   )
   assert.match(o6.query, /SELECT kennzahl, ereignisse, anteil_prozent FROM metrics ORDER BY sort/)
+})
+
+test("result reveal Skip insight separates exact triggers from legacy inference per lead", () => {
+  assert.equal(o7.id, null)
+  assert.equal(o7.key, "result-reveal-skip")
+  assert.equal(o7.title, "O7 · Ergebnis-Reveal — Überspringen (7 Tage)")
+  assert.match(o7.description, /alle Produktions-Reveals auf chaarlie\.de/i)
+  assert.match(o7.description, /exakte Skip-Rate/)
+  assert.match(o7.description, /Explizit übersprungen.*Automatisch weiter/)
+  assert.match(o7.description, /historische Daten.*getrennt/i)
+
+  assert.match(o7.query, /event = 'personal_plan_result_reveal_completed'/)
+  assert.match(o7.query, /event = 'personal_plan_result_reveal_step_viewed'/)
+  assert.match(o7.query, /properties\.\$host = 'chaarlie\.de'/)
+  assert.match(o7.query, /toString\(properties\.lead_id\) AS lead_id/)
+  assert.match(o7.query, /GROUP BY lead_id/)
+  assert.match(o7.query, /LEFT JOIN step_max USING \(lead_id\)/)
+  assert.match(o7.query, /max\(toInt\(properties\.step_index\)\) AS max_step/)
+  assert.match(o7.query, /explicit_count > 0 AND explicit_trigger = 'skip_button'/)
+  assert.match(o7.query, /explicit_count > 0 AND explicit_trigger = 'timer'/)
+  assert.match(o7.query, /explicit_count = 0 AND max_step < 3/)
+  assert.doesNotMatch(o7.query, /ifNull\(max_step,\s*0\)\s*<\s*3/)
+  assert.match(o7.query, /'Historisch nicht unterscheidbar'/)
+  assert.match(o7.query, /uniqExact\(lead_id\) AS eindeutige_leads/)
+  assert.match(o7.query, /\{filters\.dateRange\.from\}/)
+  assert.match(o7.query, /\{filters\.dateRange\.to\}/)
+  assert.doesNotMatch(o7.query, /funnel_package_key|offer_revision|offer_variant/)
+
+  assert.equal(o7.presentation.display, "ActionsBar")
+  assert.equal(o7.presentation.chartSettings.xAxis.column, "abschlussart")
+  assert.equal(o7.presentation.chartSettings.yAxis[0].column, "eindeutige_leads")
 })

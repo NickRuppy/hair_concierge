@@ -1,0 +1,37 @@
+Grounding complete. Here's my verdict.
+
+---
+
+**Verdict:** Approve with revisions — the shape, sequencing, and prior art are right, but two verification claims can't be honestly met as written, and the plan reinvents an in-repo mechanism it should copy. Fix before subagent handoff.
+
+**Lean shape**
+- **Irreducible goal:** (1) reveal 15% faster (`2_400 → 2_040 ms`); (2) exact skip-vs-timer trigger on the *existing* completion event; (3) one guarded PostHog O7 tile that keeps exact-new and legacy-inferred rows visibly separate.
+- **Cut / narrow / reuse:**
+  - **Reuse, don't reinvent, the O6 create-or-attach flow.** `scripts/posthog/update-personal-plan-offer-v2-dashboards.ts:349-397` already does exactly what Task 5 specifies: search by exact title, refuse >1 match in *both* search results (`:356-358`) and dashboard tiles (`:363-365`), dry-run → `{create|attach}` (`:368`), PATCH `{dashboards:[id]}` to attach / POST create-with-`dashboards` (`:370-390`), then re-read and verify attached exactly once (`:392-395`). The plan's new file + new test largely duplicate this. Cite it as the template.
+  - `scheduled_duration_ms` is a build-time constant (`PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS`, `personal-plan-result-reveal.ts:17`), not a measurement. Riding it on every event is one-more-field unless the tile needs to separate pre/post-speedup cohorts. Owner call.
+- **Hard tradeoff the plan avoids:** *how the trigger / visible-step / elapsed wiring is actually verified.* This repo has no runtime component-test harness, and the plan never confronts it (see Blockers).
+
+**Prior art**
+- **Multi-destination client analytics router** — matches canonical shape: typed event map (`events.ts:241`), per-destination adapters, per-destination routing table (`routes.ts:30` = PostHog-only, verified), idempotency guard (`claimPersonalPlanResultRevealCompletion`). Extending the existing event instead of adding a second button-only event is the correct call (avoids event-drift). ✅
+- **Dashboard-tile addition** — canonical = search-exact / refuse-dup / dry-run / verify-membership. **Prior art exists in-repo (O6).** Missing invariants the plan doesn't mention but the O6/v3 scripts enforce: `--confirm-project=126788` write guard, `POSTHOG_PERSONAL_API_KEY` token, `apiOrigin=https://eu.posthog.com`, and dependency-injected `fetch`/`output` (this is *how* the existing mutation tests run without network). Adopt these or Task 5's test coverage isn't reproducible.
+- **Timing constant change** — trivial, test-first sequencing (Task 1) is correct.
+
+**Blockers** (false contracts for a subagent — will pass vacuously, proving nothing)
+1. **Task 3's completion criterion is unmeetable with the repo's tooling.** There is no jsdom / testing-library / vitest (confirmed absent in `package.json`); `.test.tsx` files use only `renderToStaticMarkup` (no effects, no click handlers, no timers — e.g. `tests/result-offer-page.test.tsx:3`), pure reducers, and **source-regex** (`tests/personal-plan-quiz-funnel-entry.test.ts:56-77` `read()` + `assert.match`). So "focused component/source tests prove both trigger paths, configured duration, visible step, and exactly-once behavior" degrades to string-matching that proves none of the runtime behavior. **Fix:** extract a pure `buildPersonalPlanResultRevealCompletion({ trigger, visibleStep, elapsedMs, scheduledDurationMs, stepCount, leadId })` into `src/lib/quiz/personal-plan-result-reveal.ts` (TDD-mandated dir) and unit-test the trigger→property mapping + step/elapsed shaping there; keep the component a thin wire that reads refs. **Add this helper to the Target map** — it currently scopes that file to the timing constant only (`plan:102-104`).
+2. **The actual analytics wiring is never exercised end-to-end.** Manual/browser verification (`plan:267-273`) replays the **mockup HTML**, not the real `/result/[leadId]/reveal` route, and there is no Playwright test on that route (`grep /reveal tests/*.spec.ts` → none). Skip-vs-timer → `completion_trigger` rests entirely on code review. **Decision the owner must make:** (a) add a Playwright test driving a seeded reveal route and asserting the captured event; (b) add a jsdom interaction test (new dev-dep — weigh against "no over-engineering"); or (c) explicitly accept pure-helper unit tests + source-regex + review as sufficient and *state so in the plan*. It currently picks nothing silently.
+
+**High-confidence issues** (correctness, not preference)
+- **Blind-replace trap:** `MIDPOINT_HOLD_MS = 2400` (`src/components/personal-plan-quiz/personal-plan-quiz.tsx:1011`) is an unrelated constant guarded by `personal-plan-quiz-funnel-entry.test.ts:146`. Task 1 must edit only the reveal constant definition (`personal-plan-result-reveal.ts:16`), never a repo-wide `2400→2040`. The reveal literal is `2_400` (underscored) which helps, but call the trap out.
+- **O7 host predicate has zero code prior art.** No query in the repo filters on `$host`; the tile relies on PostHog-JS auto-attaching `$host` to custom `capture()` events, and `before_send` sanitizes `$current_url` but **not** `$host` (`runtime/posthog.ts:140-147,178-188`). Plausible (the audit already filtered to `chaarlie.de`), but the plan must name the exact property (`properties.$host`) and treat the reconciliation guard (`plan:283-284`) as **mandatory** — it's the only thing that catches a wrong property name, since exact categories are empty until deploy.
+- **O7 legacy classification under-specifies a join.** `personal_plan_result_reveal_completed` carries no visible-step, so "maximum viewed step below 3" (`plan:68-69`) must be a per-`lead_id` join to `personal_plan_result_reveal_step_viewed` taking `max(step_index)`. Task 4's contract test must assert that join and mutual exclusivity, or the tile silently mislabels. Group by `lead_id` (not `distinct_id`) is correct and consistent with the existing guard `assert.doesNotMatch(insight.query, /distinct_id/)` (`tests/posthog-personal-plan-offer-dashboard.test.ts:23`).
+
+**Smaller / nice-to-haves**
+- Confirm O7 is out-of-band from the v3 fingerprint set (`update-personal-plan-offer-v3-dashboards.ts` `resourceIds`/`afterFingerprints`) — as a new create it should be, but "carry O7 forward" (`plan:123-125`) must not trip the "neither before nor after state" guard.
+- New script: mirror the v2/v3 dependency-injection shape (`MigrationDependencies` with injected `fetch`/`output`/`token`) so its tests run offline.
+
+**Gate status (not a defect, but blocks execution):** mockup review and user-journey sign-off are both `pending` (`plan:182-183,298-299`). Per CLAUDE.md, `implementation-loop` cannot start until both are confirmed — independent of the fixes above.
+
+**Bottom line**
+Ship it after: (1) re-scoping Task 3 to a pure, unit-tested payload helper so the "exactly-once + trigger" contract is actually proven, not regex-matched; (2) deciding and stating how the wiring is exercised end-to-end; (3) citing the O6 create/attach flow as the Task 5 template plus its `--confirm-project`/token/injected-fetch guards; and (4) pinning the `$host` property name and the per-lead join in Task 4. The timing change and the typed-contract extension are sound and correctly sequenced — the risk is entirely in verification integrity and one avoidable reinvention, not in the design.
+
+Want me to spec the pure `buildPersonalPlanResultRevealCompletion` helper + its test oracle so Task 3 becomes genuinely testable within the existing toolchain?
