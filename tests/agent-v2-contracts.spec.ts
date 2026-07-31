@@ -585,10 +585,10 @@ test("AgentV2TerminalAnswerSchema rejects unsupported answer modes", () => {
   assert.equal(result.success, false)
 })
 
-test("AgentV2 model policy defaults to GPT-5.4-mini Responses", () => {
+test("AgentV2 model policy defaults to GPT-5.6 Luna Responses", () => {
   const policy = getAgentV2ModelPolicy({})
   assert.equal(policy.endpoint, "responses")
-  assert.equal(DEFAULT_AGENT_V2_MODEL, "gpt-5.4-mini-2026-03-17")
+  assert.equal(DEFAULT_AGENT_V2_MODEL, "gpt-5.6-luna")
   assert.equal(policy.model, DEFAULT_AGENT_V2_MODEL)
   assert.equal(policy.reasoning_effort, "low")
   assert.equal(policy.text_verbosity, "low")

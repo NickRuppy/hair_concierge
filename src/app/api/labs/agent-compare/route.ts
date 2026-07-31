@@ -227,8 +227,8 @@ export async function handleAgentCompareRequest(
                 : system === "tool_loop"
                   ? "Legacy Tool-Loop"
                   : system === "agent_v2_care_balance"
-                    ? "AgentV2 GPT-5.4-mini + CareBalance"
-                    : "AgentV2 GPT-5.4-mini",
+                    ? "AgentV2 GPT-5.6 Luna + CareBalance"
+                    : "AgentV2 GPT-5.6 Luna",
               error,
             ),
           ),
@@ -248,8 +248,8 @@ export async function handleAgentCompareRequest(
             : entry.system === "tool_loop"
               ? "Legacy Tool-Loop"
               : entry.system === "agent_v2_care_balance"
-                ? "AgentV2 GPT-5.4-mini + CareBalance"
-                : "AgentV2 GPT-5.4-mini",
+                ? "AgentV2 GPT-5.6 Luna + CareBalance"
+                : "AgentV2 GPT-5.6 Luna",
       ),
     )
 
