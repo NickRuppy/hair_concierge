@@ -112,6 +112,20 @@ type CheckoutGateWaiter = {
   resolve: (terminal: CheckoutGateTerminal) => void
   token: number
 }
+export type ResultOfferPricingCheckoutSummary =
+  | {
+      commerceKind: "membership"
+      interval: BillingInterval
+      planName: string
+      priceLabel: string
+      stickyLine: string
+    }
+  | {
+      commerceKind: "one_time"
+      planName: string
+      priceLabel: string
+      stickyLine: string
+    }
 
 export type PreparedOfferCheckoutResponse = {
   status?: string
@@ -147,6 +161,28 @@ export function canUseApplePayCapabilitySignal(win: ApplePayCapabilityWindow | u
     return win?.ApplePaySession?.canMakePayments?.() === true
   } catch {
     return false
+  }
+}
+
+export function getMembershipCheckoutSummary(
+  interval: BillingInterval,
+): ResultOfferPricingCheckoutSummary {
+  const plan = getStripePricingPlan(interval)
+  return {
+    commerceKind: "membership",
+    interval,
+    planName: plan.name,
+    priceLabel: plan.price,
+    stickyLine: `${plan.name} · ${plan.price}`,
+  }
+}
+
+export function getPersonalPlanOneTimeCheckoutSummary(): ResultOfferPricingCheckoutSummary {
+  return {
+    commerceKind: "one_time",
+    planName: "Haarplan",
+    priceLabel: "29,99 €",
+    stickyLine: "Haarplan · 29,99 €",
   }
 }
 
@@ -289,7 +325,9 @@ export function ResultOfferPricing(props: {
   checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
   leadId: string | null
   onCheckoutOpen?: () => void
+  onCheckoutSummaryChange?: (summary: ResultOfferPricingCheckoutSummary) => void
   onCheckoutWaitingChange?: (waiting: boolean) => void
+  onPricingReached?: () => void
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   openCheckoutRequestId?: number
@@ -304,23 +342,42 @@ export function ResultOfferPricing(props: {
         leadId={props.leadId}
         funnelSessionId={offerContext?.funnelSessionId}
         onCheckoutOpen={props.onCheckoutOpen}
+        onCheckoutSummaryChange={props.onCheckoutSummaryChange}
+        onPricingReached={props.onPricingReached}
         openCheckoutRequestId={props.openCheckoutRequestId}
       />
     )
   }
 
-  return <MembershipResultOfferPricing {...props} />
+  return (
+    <MembershipResultOfferPricing
+      checkoutLifecycleFixture={props.checkoutLifecycleFixture}
+      leadId={props.leadId}
+      onCheckoutOpen={props.onCheckoutOpen}
+      onCheckoutSummaryChange={props.onCheckoutSummaryChange}
+      onCheckoutWaitingChange={props.onCheckoutWaitingChange}
+      onPricingReached={props.onPricingReached}
+      offerTracking={props.offerTracking}
+      offerVariant={props.offerVariant}
+      openCheckoutRequestId={props.openCheckoutRequestId}
+      referencePrices={props.referencePrices}
+    />
+  )
 }
 
 function PersonalPlanOneTimePricing({
   funnelSessionId,
   leadId,
   onCheckoutOpen,
+  onCheckoutSummaryChange,
+  onPricingReached,
   openCheckoutRequestId,
 }: {
   funnelSessionId: string | null | undefined
   leadId: string | null
   onCheckoutOpen?: () => void
+  onCheckoutSummaryChange?: (summary: ResultOfferPricingCheckoutSummary) => void
+  onPricingReached?: () => void
   openCheckoutRequestId?: number
 }) {
   const pricingRef = useRef<HTMLDivElement | null>(null)
@@ -330,6 +387,10 @@ function PersonalPlanOneTimePricing({
   const offerContext = useOfferTrackingContext()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
+
+  useEffect(() => {
+    onCheckoutSummaryChange?.(getPersonalPlanOneTimeCheckoutSummary())
+  }, [onCheckoutSummaryChange])
 
   useEffect(() => {
     const pricingElement = pricingRef.current
@@ -349,8 +410,10 @@ function PersonalPlanOneTimePricing({
         pricingRevision: OFFER_PRICING_REVISION,
         source: "quiz_result_offer_pricing",
       })
+      onPricingReached?.()
+      onCheckoutSummaryChange?.(getPersonalPlanOneTimeCheckoutSummary())
     })
-  }, [leadId, offerContext])
+  }, [leadId, offerContext, onCheckoutSummaryChange, onPricingReached])
 
   const openCheckout = useCallback(() => {
     const nextCheckoutAttemptId = createFunnelEventId()
@@ -453,7 +516,9 @@ function MembershipResultOfferPricing({
   checkoutLifecycleFixture,
   leadId,
   onCheckoutOpen,
+  onCheckoutSummaryChange,
   onCheckoutWaitingChange,
+  onPricingReached,
   offerTracking,
   openCheckoutRequestId,
   referencePrices,
@@ -461,7 +526,9 @@ function MembershipResultOfferPricing({
   checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
   leadId: string | null
   onCheckoutOpen?: () => void
+  onCheckoutSummaryChange?: (summary: ResultOfferPricingCheckoutSummary) => void
   onCheckoutWaitingChange?: (waiting: boolean) => void
+  onPricingReached?: () => void
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   openCheckoutRequestId?: number
@@ -551,6 +618,10 @@ function MembershipResultOfferPricing({
   }, [])
 
   useEffect(() => {
+    onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval))
+  }, [onCheckoutSummaryChange, selectedInterval])
+
+  useEffect(() => {
     return () => {
       checkoutGateTokenRef.current += 1
       checkoutGateWaiterRef.current = null
@@ -617,10 +688,19 @@ function MembershipResultOfferPricing({
         funnelSessionId: offerContext?.funnelSessionId ?? context?.funnelSessionId,
         funnelPackageKey: offerContext?.funnelPackageKey ?? context?.funnelPackageKey,
       })
+      onPricingReached?.()
+      onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval))
     }
 
     return observeOnceVisible(pricingElement, trackPricingViewed)
-  }, [leadId, offerContext, offerTracking, selectedInterval])
+  }, [
+    leadId,
+    offerContext,
+    offerTracking,
+    onCheckoutSummaryChange,
+    onPricingReached,
+    selectedInterval,
+  ])
 
   useEffect(() => {
     if (!checkoutPrewarmEnabled || earlyPrewarmEnabled) return

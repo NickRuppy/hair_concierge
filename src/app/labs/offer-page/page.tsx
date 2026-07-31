@@ -98,7 +98,12 @@ function StaticPricingPreview() {
 export default async function OfferPageLab({
   searchParams,
 }: {
-  searchParams: Promise<{ focus?: string; scenario?: string; variant?: string }>
+  searchParams: Promise<{
+    focus?: string
+    pricingArm?: string
+    scenario?: string
+    variant?: string
+  }>
 }) {
   if (!isOfferPageLabEnabled(process.env)) notFound()
 
@@ -115,11 +120,18 @@ export default async function OfferPageLab({
   }
 
   if (variant === "personal-plan") {
+    const personalPlanOfferVariant =
+      params.pricingArm === "one_time"
+        ? "personal-plan-one-time-v1"
+        : params.pricingArm === "membership"
+          ? "personal-plan-v1"
+          : undefined
     return (
       <PersonalPlanOffer
         entryContext="saved_result"
         leadId="11111111-1111-4111-8111-111111111111"
         model={PERSONAL_PLAN_REVIEW_MODEL}
+        offerVariant={personalPlanOfferVariant}
       />
     )
   }

@@ -7,6 +7,8 @@ import {
   canConfirmPreparedOfferCheckout,
   canUseApplePayCapabilitySignal,
   claimOfferProviderLock,
+  getMembershipCheckoutSummary,
+  getPersonalPlanOneTimeCheckoutSummary,
   getOfferCheckoutPrewarmDelayMs,
   isCurrentOfferCheckoutPreparationGeneration,
   isOfferCheckoutPrewarmPageRequestLimitReached,
@@ -55,6 +57,50 @@ test("visibility-based pricing tracking preserves funnel attribution metadata", 
   assert.match(pricingSource, /pricingRevision: OFFER_PRICING_REVISION/)
   assert.match(pricingSource, /availableIntervals: STRIPE_PRICING_PLANS/)
   assert.match(pricingSource, /trackAppEvent\("pricing_viewed", \{\s*\.\.\.offerContext,/)
+})
+
+test("pricing visibility uses existing observers for pricing-reached and checkout summaries", () => {
+  assert.match(pricingSource, /onPricingReached\?: \(\) => void/)
+  assert.match(
+    pricingSource,
+    /onCheckoutSummaryChange\?: \(summary: ResultOfferPricingCheckoutSummary\) => void/,
+  )
+  assert.match(pricingSource, /onCheckoutSummaryChange=\{props\.onCheckoutSummaryChange\}/)
+  assert.match(pricingSource, /onPricingReached=\{props\.onPricingReached\}/)
+  assert.match(pricingSource, /onPricingReached\?\.\(\)/)
+  assert.match(
+    pricingSource,
+    /onCheckoutSummaryChange\?\.\(getPersonalPlanOneTimeCheckoutSummary\(\)\)/,
+  )
+  assert.match(
+    pricingSource,
+    /onCheckoutSummaryChange\?\.\(getMembershipCheckoutSummary\(selectedInterval\)\)/,
+  )
+  assert.equal((pricingSource.match(/observeOnceVisible\(pricingElement/g) ?? []).length, 2)
+  assert.doesNotMatch(pricingSource, /new IntersectionObserver[\s\S]*onPricingReached/)
+})
+
+test("variant-aware checkout summaries distinguish membership intervals from one-time purchase", () => {
+  assert.deepEqual(getMembershipCheckoutSummary("month"), {
+    commerceKind: "membership",
+    interval: "month",
+    planName: "Monatlich",
+    priceLabel: "€14,99",
+    stickyLine: "Monatlich · €14,99",
+  })
+  assert.deepEqual(getMembershipCheckoutSummary("quarter"), {
+    commerceKind: "membership",
+    interval: "quarter",
+    planName: "Quartal",
+    priceLabel: "€34,99",
+    stickyLine: "Quartal · €34,99",
+  })
+  assert.deepEqual(getPersonalPlanOneTimeCheckoutSummary(), {
+    commerceKind: "one_time",
+    planName: "Haarplan",
+    priceLabel: "29,99 €",
+    stickyLine: "Haarplan · 29,99 €",
+  })
 })
 
 test("offer pricing tracks plan, checkout, payment-method, and sanitized failure diagnostics", () => {

@@ -1,12 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
 import Link from "next/link"
-import { ArrowDown, ArrowRight } from "lucide-react"
+import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react"
 
 import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
-import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
+import {
+  getMembershipCheckoutSummary,
+  getPersonalPlanOneTimeCheckoutSummary,
+  ResultOfferPricing,
+  type ResultOfferPricingCheckoutSummary,
+} from "@/components/quiz/result-offer-pricing"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
@@ -81,6 +86,29 @@ const surveyStats = [
   ["82%", "wollen verstehen, was ihr Haar wirklich braucht", "#563882"],
   ["73%", "wünschen sich eine klare Routine ohne Produktchaos", "#7657a2"],
   ["63%", "wissen nicht, welche Produkte wirklich passen", "#9a7cbd"],
+] as const
+
+const personalPlanFaqItems = [
+  [
+    "Warum reicht nicht einfach ein neues Shampoo?",
+    "Ein einzelnes Produkt kann nur einen Teil beeinflussen. Dein Plan verbindet Reinigung, Pflege, Styling und Anwendung, damit die Schritte zu deinem Haar und zueinander passen.",
+  ],
+  [
+    "Ist der Plan wirklich auf mein Haar abgestimmt?",
+    "Deine Haarstruktur, Dicke, Dichte, Länge, Oberfläche, Elastizität, Kopfhaut und Ziele bestimmen, wie dein Plan aufgebaut wird.",
+  ],
+  [
+    "Was bekomme ich genau?",
+    "Eine vollständige Routine mit passenden Produkten, der richtigen Reihenfolge sowie klarer Anwendung und Häufigkeit. Chat und Haartagebuch sind ergänzend enthalten.",
+  ],
+  [
+    "Kann ich meine bisherigen Produkte weiterverwenden?",
+    "Ja. Im anschließenden Onboarding gibst du an, was du bereits nutzt. Passende Produkte können in deinen Plan übernommen werden.",
+  ],
+  [
+    "Was passiert direkt nach dem Kauf?",
+    "Du ergänzt noch deine vorhandenen Produkte und Gewohnheiten. Danach wird dein vollständiger Plan im Routinebereich geöffnet.",
+  ],
 ] as const
 
 export function scrollToPersonalPlanPricing(
@@ -213,6 +241,162 @@ function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
   )
 }
 
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  )
+}
+
+function AnimatedPersonalPlanFaqItem({
+  answer,
+  faqId,
+  question,
+}: {
+  answer: string
+  faqId: string
+  question: string
+}) {
+  const detailsRef = useRef<HTMLDetailsElement | null>(null)
+  const closedHeightRef = useRef<number | null>(null)
+  const closeTimerRef = useRef<number | null>(null)
+  const frameRef = useRef<number | null>(null)
+  const isOpenRef = useRef(false)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    const restoredOpen = detailsRef.current?.open ?? false
+    isOpenRef.current = restoredOpen
+    if (restoredOpen) {
+      frameRef.current = window.requestAnimationFrame(() => {
+        setIsOpen(detailsRef.current?.open ?? false)
+        frameRef.current = null
+      })
+    }
+    return () => {
+      if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current)
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current)
+    }
+  }, [])
+
+  function cancelPendingMotion() {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+    if (frameRef.current !== null) {
+      window.cancelAnimationFrame(frameRef.current)
+      frameRef.current = null
+    }
+  }
+
+  function setInstant(open: boolean) {
+    const details = detailsRef.current
+    if (!details) return
+    cancelPendingMotion()
+    details.style.height = ""
+    details.style.overflow = ""
+    details.style.transition = ""
+    details.open = open
+    isOpenRef.current = open
+    setIsOpen(open)
+  }
+
+  function animateOpen(details: HTMLDetailsElement) {
+    const startHeight = details.getBoundingClientRect().height
+    if (!details.open) closedHeightRef.current = startHeight
+    details.open = true
+    isOpenRef.current = true
+    setIsOpen(true)
+    details.style.overflow = "hidden"
+    details.style.height = `${startHeight}px`
+    details.style.transition = "height 180ms ease"
+    frameRef.current = window.requestAnimationFrame(() => {
+      details.style.height = `${details.scrollHeight}px`
+      closeTimerRef.current = window.setTimeout(() => {
+        details.style.height = ""
+        details.style.overflow = ""
+        details.style.transition = ""
+        closeTimerRef.current = null
+      }, 190)
+    })
+  }
+
+  function animateClose(details: HTMLDetailsElement) {
+    const summary = details.querySelector("summary")
+    const startHeight = details.getBoundingClientRect().height
+    const styles = window.getComputedStyle(details)
+    const measuredClosedHeight = summary
+      ? summary.getBoundingClientRect().height +
+        Number.parseFloat(styles.paddingTop) +
+        Number.parseFloat(styles.paddingBottom) +
+        Number.parseFloat(styles.borderTopWidth) +
+        Number.parseFloat(styles.borderBottomWidth)
+      : startHeight
+    const endHeight = closedHeightRef.current ?? measuredClosedHeight
+    isOpenRef.current = false
+    setIsOpen(false)
+    details.style.overflow = "hidden"
+    details.style.height = `${startHeight}px`
+    details.style.transition = "height 180ms ease"
+    frameRef.current = window.requestAnimationFrame(() => {
+      details.style.height = `${endHeight}px`
+      closeTimerRef.current = window.setTimeout(() => {
+        details.open = false
+        details.style.height = ""
+        details.style.overflow = ""
+        details.style.transition = ""
+        closeTimerRef.current = null
+      }, 190)
+    })
+  }
+
+  function toggleFaq() {
+    const details = detailsRef.current
+    if (!details) return
+    if (prefersReducedMotion()) {
+      setInstant(!isOpenRef.current)
+      return
+    }
+    cancelPendingMotion()
+    if (!isOpenRef.current) {
+      animateOpen(details)
+    } else {
+      animateClose(details)
+    }
+  }
+
+  function handleSummaryClick(event: MouseEvent<HTMLElement>) {
+    event.preventDefault()
+    toggleFaq()
+  }
+
+  return (
+    <details
+      className="personal-plan-faq-item rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5"
+      data-offer-faq={faqId}
+      data-offer-faq-state={isOpen ? "open" : "closed"}
+      ref={detailsRef}
+      suppressHydrationWarning
+    >
+      <summary
+        className="flex cursor-pointer list-none items-center justify-between gap-3 font-bold [&::-webkit-details-marker]:hidden"
+        onClick={handleSummaryClick}
+      >
+        <span>{question}</span>
+        <ChevronDown
+          aria-hidden="true"
+          className={`personal-plan-faq-chevron h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
+          data-offer-faq-chevron=""
+          strokeWidth={2.25}
+        />
+      </summary>
+      <p className="mt-3 text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">{answer}</p>
+    </details>
+  )
+}
+
 export function PersonalPlanOffer({
   entryContext,
   focusTarget = null,
@@ -233,6 +417,12 @@ export function PersonalPlanOffer({
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
+  const [pricingReached, setPricingReached] = useState(false)
+  const [checkoutSummary, setCheckoutSummary] = useState<ResultOfferPricingCheckoutSummary>(() =>
+    isOneTimeOffer
+      ? getPersonalPlanOneTimeCheckoutSummary()
+      : getMembershipCheckoutSummary("quarter"),
+  )
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
     if (!focusTarget) return
@@ -245,6 +435,13 @@ export function PersonalPlanOffer({
   }, [focusTarget])
 
   const scrollToPricing = () => scrollToPersonalPlanPricing()
+  const stickySelectedInterval =
+    pricingReached && checkoutSummary.commerceKind === "membership"
+      ? checkoutSummary.interval
+      : undefined
+  const stickyDestination = pricingReached ? "checkout" : "pricing"
+  const stickyAction = pricingReached ? openCheckout : scrollToPricing
+  const handlePricingReached = useCallback(() => setPricingReached(true), [])
 
   return (
     <OfferTrackingProvider
@@ -269,14 +466,37 @@ export function PersonalPlanOffer({
               chaarlie
             </Link>
             <button
-              className="rounded-full bg-[var(--brand-plum)] px-5 py-2.5 text-sm font-bold text-white shadow-[0_10px_28px_-18px_rgba(var(--brand-plum-rgb),0.85)]"
-              data-offer-cta="sticky_header"
-              data-offer-destination="pricing"
+              aria-busy={pricingReached && checkoutWaiting ? true : undefined}
+              aria-disabled={pricingReached && checkoutWaiting ? true : undefined}
+              className="personal-plan-sticky-cta flex h-11 w-36 sm:w-40 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--brand-plum)] px-3 text-center text-sm font-bold leading-tight text-white shadow-[0_10px_28px_-18px_rgba(var(--brand-plum-rgb),0.85)]"
+              data-offer-cta={pricingReached && checkoutWaiting ? undefined : "sticky_header"}
+              data-offer-destination={stickyDestination}
+              data-offer-selected-interval={stickySelectedInterval}
               data-offer-source-section="hero"
-              onClick={scrollToPricing}
+              data-offer-sticky-cta=""
+              data-offer-sticky-state={pricingReached ? "after_pricing" : "before_pricing"}
+              onClick={() => {
+                if (pricingReached && checkoutWaiting) return
+                stickyAction()
+              }}
               type="button"
             >
-              Angebot ansehen
+              {pricingReached ? (
+                <span
+                  key={
+                    checkoutSummary.commerceKind === "membership"
+                      ? checkoutSummary.interval
+                      : checkoutSummary.commerceKind
+                  }
+                  className="personal-plan-sticky-summary grid gap-0.5"
+                  data-offer-sticky-summary=""
+                >
+                  <span className="text-[11px] leading-none">{checkoutSummary.stickyLine}</span>
+                  <span className="text-[13px] leading-none">Zur Zahlung</span>
+                </span>
+              ) : (
+                "Angebot ansehen"
+              )}
             </button>
           </div>
         </div>
@@ -339,6 +559,8 @@ export function PersonalPlanOffer({
               offerTracking={offerTracking}
               offerVariant={offerVariant}
               onCheckoutWaitingChange={setCheckoutWaiting}
+              onCheckoutSummaryChange={setCheckoutSummary}
+              onPricingReached={handlePricingReached}
               openCheckoutRequestId={checkoutOpenRequest}
               referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
             />
@@ -555,38 +777,13 @@ export function PersonalPlanOffer({
             Häufige Fragen
           </h2>
           <div className="mt-6 space-y-3">
-            {[
-              [
-                "Warum reicht nicht einfach ein neues Shampoo?",
-                "Ein einzelnes Produkt kann nur einen Teil beeinflussen. Dein Plan verbindet Reinigung, Pflege, Styling und Anwendung, damit die Schritte zu deinem Haar und zueinander passen.",
-              ],
-              [
-                "Ist der Plan wirklich auf mein Haar abgestimmt?",
-                "Deine Haarstruktur, Dicke, Dichte, Länge, Oberfläche, Elastizität, Kopfhaut und Ziele bestimmen, wie dein Plan aufgebaut wird.",
-              ],
-              [
-                "Was bekomme ich genau?",
-                "Eine vollständige Routine mit passenden Produkten, der richtigen Reihenfolge sowie klarer Anwendung und Häufigkeit. Chat und Haartagebuch sind ergänzend enthalten.",
-              ],
-              [
-                "Kann ich meine bisherigen Produkte weiterverwenden?",
-                "Ja. Im anschließenden Onboarding gibst du an, was du bereits nutzt. Passende Produkte können in deinen Plan übernommen werden.",
-              ],
-              [
-                "Was passiert direkt nach dem Kauf?",
-                "Du ergänzt noch deine vorhandenen Produkte und Gewohnheiten. Danach wird dein vollständiger Plan im Routinebereich geöffnet.",
-              ],
-            ].map(([question, answer], index) => (
-              <details
-                className="rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5"
-                data-offer-faq={`personal-plan-${index + 1}`}
+            {personalPlanFaqItems.map(([question, answer], index) => (
+              <AnimatedPersonalPlanFaqItem
+                answer={answer}
+                faqId={`personal-plan-${index + 1}`}
                 key={question}
-              >
-                <summary className="cursor-pointer font-bold">{question}</summary>
-                <p className="mt-3 text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
-                  {answer}
-                </p>
-              </details>
+                question={question}
+              />
             ))}
           </div>
           <div

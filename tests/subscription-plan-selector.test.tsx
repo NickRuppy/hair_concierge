@@ -43,7 +43,7 @@ test("busy selector keeps the CTA focusable while disabling plan changes", () =>
   assert.match(html, /aria-disabled="true"/)
   assert.match(html, /role="status"/)
   assert.match(html, /Zahlungsoptionen werden vorbereitet …/)
-  assert.doesNotMatch(html, /Jetzt starten — €34,99 im Quartal/)
+  assert.doesNotMatch(html, />Jetzt starten — €34,99 im Quartal</)
 })
 
 test("idle selector keeps the selected plan action label", () => {
@@ -52,6 +52,24 @@ test("idle selector keeps the selected plan action label", () => {
   assert.match(html, />Jetzt starten — €34,99 im Quartal</)
   assert.doesNotMatch(html, /disabled=""/)
   assert.doesNotMatch(html, /aria-disabled="true"/)
+})
+
+test("selector exposes stable motion hooks without changing selected plan layout", () => {
+  const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
+  const selectorSource = readFileSync(
+    new URL("../src/components/checkout/subscription-plan-selector.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.equal((html.match(/data-offer-plan-card=/g) ?? []).length, 3)
+  assert.equal((html.match(/data-offer-plan-selected="true"/g) ?? []).length, 1)
+  assert.equal((html.match(/data-offer-plan-radio=/g) ?? []).length, 3)
+  assert.equal((html.match(/data-offer-plan-price=/g) ?? []).length, 3)
+  assert.match(html, /data-offer-selected-price="€34,99"/)
+  assert.match(html, /data-offer-cta-label="Jetzt starten — €34,99 im Quartal"/)
+  assert.match(html, /data-offer-plan-cta-content/)
+  assert.match(selectorSource, /key=\{busy \? "busy" : selectedInterval\}/)
+  assert.match(selectorSource, /personal-plan-pricing-cta-content/)
 })
 
 test("quiz-result selector displays the three reference prices as comparison prices", () => {

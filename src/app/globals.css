@@ -745,6 +745,196 @@
   background: rgba(var(--brand-plum-rgb), 0.35);
 }
 
+@keyframes personalPlanScreenEnterForward {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes personalPlanScreenEnterBack {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes personalPlanScreenExitForward {
+  to {
+    opacity: 0;
+    transform: translateX(-7px);
+  }
+}
+
+@keyframes personalPlanScreenExitBack {
+  to {
+    opacity: 0;
+    transform: translateX(7px);
+  }
+}
+
+@keyframes personalPlanSelectionSettle {
+  45% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes personalPlanCountChange {
+  45% {
+    opacity: 0.72;
+    transform: translateY(-1px) scale(1.025);
+  }
+}
+
+@keyframes personalPlanMilestoneSettle {
+  45% {
+    box-shadow: 0 0 0 5px rgba(var(--brand-plum-rgb), 0.14);
+    transform: scale(1.18);
+  }
+}
+
+@keyframes personalPlanPayoffSettle {
+  from {
+    opacity: 0.84;
+    transform: translateY(5px) scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes personalPlanProfileRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes personalPlanPricingSelect {
+  from {
+    box-shadow: 0 0 0 0 rgba(var(--brand-plum-rgb), 0);
+    transform: scale(0.995);
+  }
+  to {
+    box-shadow: 0 12px 28px -24px rgba(var(--brand-plum-rgb), 0.75);
+    transform: scale(1);
+  }
+}
+
+@keyframes personalPlanPricingContentIn {
+  from {
+    opacity: 0.7;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.personal-plan-screen-enter[data-personal-plan-transition-direction="forward"] {
+  animation: personalPlanScreenEnterForward 200ms ease-out both;
+}
+
+.personal-plan-screen-enter[data-personal-plan-transition-direction="back"] {
+  animation: personalPlanScreenEnterBack 200ms ease-out both;
+}
+
+.personal-plan-screen-exit[data-personal-plan-transition-direction="forward"] {
+  animation: personalPlanScreenExitForward 160ms ease-out both;
+}
+
+.personal-plan-screen-exit[data-personal-plan-transition-direction="back"] {
+  animation: personalPlanScreenExitBack 160ms ease-out both;
+}
+
+.personal-plan-option-card {
+  transition-property: background-color, border-color, box-shadow, transform;
+}
+
+.personal-plan-option-card:active {
+  transform: scale(0.985);
+  transition-duration: 100ms;
+}
+
+.personal-plan-option-card[aria-pressed="true"] .personal-plan-option-check {
+  animation: personalPlanSelectionSettle 180ms ease-out both;
+}
+
+.personal-plan-multi-count {
+  animation: personalPlanCountChange 180ms ease-out both;
+}
+
+.personal-plan-section-settle {
+  animation: personalPlanMilestoneSettle 360ms ease-out both;
+}
+
+.personal-plan-analysis-settle {
+  animation: personalPlanPayoffSettle 440ms ease-out both;
+}
+
+.personal-plan-profile-row {
+  animation: personalPlanProfileRowIn 440ms ease-out both;
+  animation-delay: calc(var(--personal-plan-row-index) * 70ms);
+}
+
+[data-offer-plan-card] {
+  transition-property: background-color, border-color, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+[data-offer-plan-card][data-offer-plan-selected="true"] {
+  animation: personalPlanPricingSelect 220ms ease-out both;
+}
+
+[data-offer-plan-radio] {
+  transition:
+    background-color 180ms ease-out,
+    border-color 180ms ease-out,
+    transform 180ms ease-out;
+}
+
+[data-offer-plan-card][data-offer-plan-selected="true"] [data-offer-plan-radio] {
+  transform: scale(1.08);
+}
+
+[data-offer-plan-price][data-offer-plan-price-selected="true"],
+.personal-plan-pricing-cta-content,
+.personal-plan-sticky-summary {
+  animation: personalPlanPricingContentIn 180ms ease-out both;
+}
+
+.personal-plan-sticky-cta {
+  transition:
+    background-color 180ms ease-out,
+    box-shadow 180ms ease-out;
+}
+
+.personal-plan-faq-item {
+  transition:
+    border-color 180ms ease-out,
+    box-shadow 180ms ease-out;
+}
+
+.personal-plan-faq-item[data-offer-faq-state="open"] {
+  border-color: rgba(var(--brand-plum-rgb), 0.22);
+  box-shadow: 0 16px 36px -32px rgba(var(--brand-plum-rgb), 0.65);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bottom-sheet-backdrop[data-state="open"],
   .bottom-sheet-panel[data-state="open"] {
@@ -804,6 +994,38 @@
     background: none !important;
     color: hsl(var(--muted-foreground));
     -webkit-text-fill-color: currentColor;
+  }
+
+  .personal-plan-screen-enter,
+  .personal-plan-screen-exit,
+  .personal-plan-option-check,
+  .personal-plan-multi-count,
+  .personal-plan-section-settle,
+  .personal-plan-analysis-settle,
+  .personal-plan-profile-row {
+    animation: none !important;
+  }
+
+  [data-offer-plan-card],
+  [data-offer-plan-radio],
+  .personal-plan-sticky-cta,
+  .personal-plan-faq-item,
+  .personal-plan-faq-chevron {
+    transition: none !important;
+  }
+
+  [data-offer-plan-card][data-offer-plan-selected="true"],
+  [data-offer-plan-price][data-offer-plan-price-selected="true"],
+  .personal-plan-pricing-cta-content,
+  .personal-plan-sticky-summary {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .personal-plan-option-card,
+  .personal-plan-option-card:active {
+    transform: none !important;
+    transition: none !important;
   }
 }
 
