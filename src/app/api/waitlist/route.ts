@@ -20,10 +20,29 @@ const waitlistSchema = z
 
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") ?? "unknown"
-  const rateCheck = await checkRateLimit(ip, WAITLIST_RATE_LIMIT)
+
+  // checkRateLimit wirft, wenn der Supabase-Admin-Client nicht konfiguriert ist.
+  // Ohne diesen Fang antwortet die Route mit einem leeren 500er, und der Eintrag
+  // geht kommentarlos verloren. Bewusst fail-closed: kein Rate-Limit heisst nicht
+  // "durchwinken".
+  let rateCheck: Awaited<ReturnType<typeof checkRateLimit>>
+  try {
+    rateCheck = await checkRateLimit(ip, WAITLIST_RATE_LIMIT)
+  } catch (error) {
+    console.error("[waitlist] rate limit unavailable", error)
+    rateCheck = { allowed: false, error: "service_unavailable" }
+  }
+
   if (!rateCheck.allowed) {
-    const status = rateCheck.error === "service_unavailable" ? 503 : 429
-    return NextResponse.json({ error: "Zu viele Anfragen" }, { status })
+    const unavailable = rateCheck.error === "service_unavailable"
+    return NextResponse.json(
+      {
+        error: unavailable
+          ? "Eintrag ist gerade nicht möglich. Bitte versuch es in einem Moment nochmal."
+          : "Zu viele Anfragen",
+      },
+      { status: unavailable ? 503 : 429 },
+    )
   }
 
   let parsed: z.infer<typeof waitlistSchema>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useState } from "react"
+import { useId, useState } from "react"
 
 import { WAITLIST_EMAIL_STORAGE_KEY } from "@/lib/waitlist/config"
 
@@ -11,6 +11,9 @@ const inputClass =
 
 export function WaitlistForm() {
   const router = useRouter()
+  // Das Formular steht zweimal auf der Opt-in-Seite. Feste IDs waeren doppelt
+  // vergeben und wuerden die Label-Zuordnung kaputt machen.
+  const fieldId = useId()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -55,11 +58,11 @@ export function WaitlistForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3" noValidate>
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="waitlist-name" className="sr-only">
+        <label htmlFor={`${fieldId}-name`} className="sr-only">
           Vorname
         </label>
         <input
-          id="waitlist-name"
+          id={`${fieldId}-name`}
           name="name"
           type="text"
           autoComplete="given-name"
@@ -74,11 +77,11 @@ export function WaitlistForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="waitlist-email" className="sr-only">
+        <label htmlFor={`${fieldId}-email`} className="sr-only">
           E-Mail-Adresse
         </label>
         <input
-          id="waitlist-email"
+          id={`${fieldId}-email`}
           name="email"
           type="email"
           autoComplete="email"
