@@ -148,6 +148,7 @@ jobs:
     env:
       CI_OFFER_PAGE_LAB_ENABLED: "true"
       NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true"
+      NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
       PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
     steps:
       - uses: actions/checkout@v6
