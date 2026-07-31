@@ -27,7 +27,7 @@ type PaymentFixtureProps = {
   applePayFlapping: boolean
   applePaySilent: boolean
   checkoutAttemptId: string
-  confirmBehavior: "success" | "reject" | "blocked"
+  confirmBehavior: "success" | "reject" | "blocked" | "deferred"
   checkoutLoadingReleaseDelayMs: number | null
   initiateCheckoutCount: number
   lifecycleProbe: boolean
@@ -58,6 +58,7 @@ function LabExpressCheckoutElement({
   disabled,
   onAvailablePaymentMethodsChange,
   onConfirm,
+  onConfirmReturn,
   onLoadError,
   onPaymentFailed,
   onReady,
@@ -68,6 +69,7 @@ function LabExpressCheckoutElement({
   applePayFlapping: boolean
   applePaySilent: boolean
   disabled: boolean
+  onConfirmReturn: (value: unknown) => void
   onPaymentFailed: () => void
 }) {
   const [visible, setVisible] = React.useState(
@@ -177,11 +179,12 @@ function LabExpressCheckoutElement({
         type="button"
         aria-label="Apple Pay"
         disabled={disabled}
-        onClick={() =>
-          onConfirm({
+        onClick={() => {
+          const confirmReturn: unknown = onConfirm({
             paymentFailed: onPaymentFailed,
           } as StripeExpressCheckoutElementConfirmEvent)
-        }
+          onConfirmReturn(confirmReturn)
+        }}
         className="min-h-[52px] w-full rounded-full bg-black px-4 text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-60"
       >
         <span className="text-xl font-semibold tracking-tight">Pay</span>
@@ -216,10 +219,14 @@ function PaymentFixture({
   const [appleCancelCount, setAppleCancelCount] = React.useState(0)
   const [confirmationCount, setConfirmationCount] = React.useState(0)
   const [paymentFailedCount, setPaymentFailedCount] = React.useState(0)
+  const [applePayConfirmReturn, setApplePayConfirmReturn] = React.useState<
+    "unobserved" | "thenable_pending" | "thenable_settled" | "not_thenable"
+  >("unobserved")
   const [checkoutLoadingReleased, setCheckoutLoadingReleased] = React.useState(false)
   const [checkoutRetryCount, setCheckoutRetryCount] = React.useState(0)
   const providerLockRef = React.useRef<StripeOfferProvider | null>(null)
   const cancelHandlerRef = React.useRef<(() => void) | null>(null)
+  const deferredConfirmResolverRef = React.useRef<(() => void) | null>(null)
   const { toast } = useToast()
   const effectiveCheckoutLoading = checkoutLoading && !checkoutLoadingReleased
 
@@ -276,6 +283,11 @@ function PaymentFixture({
         },
         confirm: async () => {
           setConfirmationCount((count) => count + 1)
+          if (confirmBehavior === "deferred") {
+            await new Promise<void>((resolve) => {
+              deferredConfirmResolverRef.current = resolve
+            })
+          }
           if (confirmBehavior === "reject") {
             throw new Error("synthetic Stripe rejection")
           }
@@ -352,6 +364,7 @@ function PaymentFixture({
         data-apple-cancel-count={appleCancelCount}
         data-confirmation-count={confirmationCount}
         data-payment-failed-count={paymentFailedCount}
+        data-apple-pay-confirm-return={applePayConfirmReturn}
         data-provider-lock={providerLock ?? "unlocked"}
         className="sr-only"
       />
@@ -386,6 +399,22 @@ function PaymentFixture({
             applePayLoadError={applePayLoadError}
             applePaySilent={applePaySilent || effectiveCheckoutLoading}
             disabled={providerLock !== null}
+            onConfirmReturn={(value) => {
+              const isThenable =
+                value !== null &&
+                (typeof value === "object" || typeof value === "function") &&
+                typeof (value as { then?: unknown }).then === "function"
+              if (!isThenable) {
+                setApplePayConfirmReturn("not_thenable")
+                return
+              }
+
+              setApplePayConfirmReturn("thenable_pending")
+              void Promise.resolve(value).then(
+                () => setApplePayConfirmReturn("thenable_settled"),
+                () => setApplePayConfirmReturn("thenable_settled"),
+              )
+            }}
             onPaymentFailed={() => setPaymentFailedCount((count) => count + 1)}
           />
         )}
@@ -409,6 +438,18 @@ function PaymentFixture({
         className="w-full rounded-[10px] border border-dashed border-muted-foreground px-4 py-3 text-sm font-bold text-muted-foreground"
       >
         Verspäteten PayPal-Abbruch simulieren
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          const resolve = deferredConfirmResolverRef.current
+          deferredConfirmResolverRef.current = null
+          resolve?.()
+        }}
+        className="w-full rounded-[10px] border border-dashed border-muted-foreground px-4 py-3 text-sm font-bold text-muted-foreground"
+      >
+        Stripe-Bestätigung abschließen simulieren
       </button>
 
       <button
@@ -459,9 +500,9 @@ function OfferPaymentOverlayLabContent() {
     number | null
   >(null)
   const [prewarmedLifecycle, setPrewarmedLifecycle] = React.useState(false)
-  const [confirmBehavior, setConfirmBehavior] = React.useState<"success" | "reject" | "blocked">(
-    "success",
-  )
+  const [confirmBehavior, setConfirmBehavior] = React.useState<
+    "success" | "reject" | "blocked" | "deferred"
+  >("success")
   const [initiateCheckoutCount, setInitiateCheckoutCount] = React.useState(0)
   const checkoutAttemptId = "lab-checkout-attempt-1"
   const selectedPlanRef = React.useRef<HTMLElement | null>(null)
@@ -487,7 +528,9 @@ function OfferPaymentOverlayLabContent() {
     setPrewarmedLifecycle(params.get("lifecycle") === "prewarm")
     const initialConfirmBehavior = params.get("confirm")
     setConfirmBehavior(
-      initialConfirmBehavior === "reject" || initialConfirmBehavior === "blocked"
+      initialConfirmBehavior === "reject" ||
+        initialConfirmBehavior === "blocked" ||
+        initialConfirmBehavior === "deferred"
         ? initialConfirmBehavior
         : "success",
     )
