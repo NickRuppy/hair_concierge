@@ -14,6 +14,7 @@ import type {
   StripeCheckoutSession,
   StripeExpressCheckoutElementConfirmEvent,
   StripeExpressCheckoutElementReadyEvent,
+  StripePaymentElementChangeEvent,
 } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
@@ -231,6 +232,7 @@ function StripeOfferElementsCheckoutBody({
   suppressExpressWallet,
   onBeforeConfirm,
   onApplePayAvailabilityResolved,
+  onFirstPaymentEngagement,
   paymentElementEnabled,
   paymentButtonLabel,
   visible,
@@ -248,6 +250,7 @@ function StripeOfferElementsCheckoutBody({
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onApplePayAvailabilityResolved?: (available: boolean) => void
+  onFirstPaymentEngagement?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -272,6 +275,7 @@ function StripeOfferElementsCheckoutBody({
       lockedProvider={lockedProvider}
       onBeforeConfirm={onBeforeConfirm}
       onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
+      onFirstPaymentEngagement={onFirstPaymentEngagement}
       onPaymentMethodSelected={onPaymentMethodSelected}
       onPaymentOptionViewed={onPaymentOptionViewed}
       paymentElementEnabled={paymentElementEnabled}
@@ -294,6 +298,7 @@ export function StripeOfferElementsCheckoutContent({
   lockedProvider,
   onBeforeConfirm,
   onApplePayAvailabilityResolved,
+  onFirstPaymentEngagement,
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   paymentElementEnabled = true,
@@ -315,6 +320,7 @@ export function StripeOfferElementsCheckoutContent({
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onApplePayAvailabilityResolved?: (available: boolean) => void
+  onFirstPaymentEngagement?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -355,6 +361,7 @@ export function StripeOfferElementsCheckoutContent({
   const [debugEntries, setDebugEntries] = useState<WalletDebugEntry[]>([])
   const [debugCopied, setDebugCopied] = useState(false)
   const confirmingRef = useRef(false)
+  const firstPaymentEngagementRef = useRef(false)
   const lockOwnerRef = useRef<StripeOfferProvider | null>(null)
   const expressHostRef = useRef<HTMLDivElement>(null)
   const applePayInitialResponseTimerRef = useRef<number | null>(null)
@@ -519,6 +526,16 @@ export function StripeOfferElementsCheckoutContent({
     [lockedProvider, onPaymentMethodSelected, onProviderLockClaim],
   )
 
+  const markFirstPaymentEngagement = useCallback(() => {
+    if (firstPaymentEngagementRef.current || !onFirstPaymentEngagement) return
+    firstPaymentEngagementRef.current = true
+    onFirstPaymentEngagement()
+  }, [onFirstPaymentEngagement])
+
+  useEffect(() => {
+    firstPaymentEngagementRef.current = false
+  }, [checkoutAttemptId])
+
   const releaseStripe = useCallback(() => {
     if (lockOwnerRef.current !== "stripe") return
     lockOwnerRef.current = null
@@ -613,6 +630,7 @@ export function StripeOfferElementsCheckoutContent({
         })
         return
       }
+      markFirstPaymentEngagement()
       if (!claimStripe(paymentMethodType)) {
         expressCheckoutConfirmEvent?.paymentFailed({
           message: getStripeOfferElementsErrorMessage(),
@@ -665,7 +683,7 @@ export function StripeOfferElementsCheckoutContent({
         }
       }
     },
-    [checkout, claimStripe, onBeforeConfirm, releaseStripe],
+    [checkout, claimStripe, markFirstPaymentEngagement, onBeforeConfirm, releaseStripe],
   )
 
   if (checkoutResult.type === "error") {
@@ -883,6 +901,9 @@ export function StripeOfferElementsCheckoutContent({
             </div>
             {paymentElement ?? (
               <PaymentElement
+                onChange={(event: StripePaymentElementChangeEvent) => {
+                  if (!event.empty) markFirstPaymentEngagement()
+                }}
                 onLoadError={(event) => {
                   setPaymentElementReady(false)
                   recordWalletDebugEvent(
@@ -943,6 +964,7 @@ export function StripeOfferElementsCheckout({
   lockedProvider = null,
   onBeforeConfirm,
   onApplePayAvailabilityResolved,
+  onFirstPaymentEngagement,
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   paymentElementEnabled = true,
@@ -963,6 +985,7 @@ export function StripeOfferElementsCheckout({
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onApplePayAvailabilityResolved?: (available: boolean) => void
+  onFirstPaymentEngagement?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -1000,6 +1023,7 @@ export function StripeOfferElementsCheckout({
         lockedProvider={lockedProvider}
         onBeforeConfirm={onBeforeConfirm}
         onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
+        onFirstPaymentEngagement={onFirstPaymentEngagement}
         onPaymentMethodSelected={onPaymentMethodSelected}
         onPaymentOptionViewed={onPaymentOptionViewed}
         paymentElementEnabled={paymentElementEnabled}

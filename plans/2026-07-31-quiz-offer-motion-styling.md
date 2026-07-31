@@ -348,3 +348,10 @@ Live-state and payment safety:
   - `npm run ci:verify`: passed typecheck, lint, and production build with four pre-existing unrelated warnings and no errors;
   - mandatory Chromium command: 48 passed across the specified quiz, offer-motion, and payment-overlay specs.
 - The exact-tree readiness and review receipts are reported in the implementation handoff; transient test traces and counterpart-review output are not retained in the repository.
+
+## Slice B implementation amendment
+
+- Nick explicitly asked to begin Slice B immediately after Slice A was shipped for review, before Slice A merged, so Slice B initially shipped as a stacked draft against the republished Slice A head `90cfdb63ba51e8fa926fe061c7dc871ec789e4b7`.
+- After Slice A merged in PR #280, Slice B was rebased onto its merge commit `f02ed787493a5c07a5208021b267b13f54850803`. When the one-time Apple Pay prewarm follow-up merged as PR #285 during final review, Slice B was reconciled again onto refreshed `main` at `2adfc05e6fee419d71b1905a5a98f796a3681ed6` and kept as a one-commit payment-safety delta.
+- The real personal-plan lab now supplies a synthetic lab-only funnel identity so both one-time consent and provider-choice states can be exercised without a real payment. Both pricing arms explicitly suppress technical provider prewarm for that synthetic identity; a browser oracle enables Apple Pay capability and verifies that neither arm issues a preparation request. Dismissal-oracle provider requests are intercepted, and no provider payment is submitted.
+- Final post-reconciliation verification passed the full Node suite, `npm run ci:verify`, all 52 mandatory Chromium cases, and all 14 additional one-time/membership prewarm lifecycle cases. The requested read-only Claude Opus 5/high whole-branch review and its final delta refresh are reconciled in the exact-tree review receipt.

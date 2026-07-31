@@ -44,7 +44,8 @@ export function PersonalPlanOneTimeCheckout({
   funnelSessionId,
   leadId,
   onApplePayAvailabilityResolved,
-  onClose,
+  onFirstPaymentEngagement,
+  onRequestClose,
   onStripePreparationStateChange,
   stripePreparationRefreshRequestId,
   suppressExpressWallet = false,
@@ -54,7 +55,8 @@ export function PersonalPlanOneTimeCheckout({
   funnelSessionId: string | null | undefined
   leadId: string | null
   onApplePayAvailabilityResolved?: (available: boolean) => void
-  onClose: () => void
+  onFirstPaymentEngagement?: () => void
+  onRequestClose: () => void
   onStripePreparationStateChange?: (
     state: PersonalPlanOneTimeStripePreparationState,
     expiresAt?: number,
@@ -72,6 +74,7 @@ export function PersonalPlanOneTimeCheckout({
   const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
   const visibleRef = useRef(visible)
   const wasVisibleRef = useRef(visible)
+  const firstEngagementRef = useRef(false)
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
@@ -104,6 +107,7 @@ export function PersonalPlanOneTimeCheckout({
     checkoutStartedProvidersRef.current.clear()
     paymentOptionViewsRef.current.clear()
     paymentSelectionIndexRef.current = 0
+    firstEngagementRef.current = false
   }, [checkoutAttemptId])
 
   useEffect(() => {
@@ -120,6 +124,12 @@ export function PersonalPlanOneTimeCheckout({
     setPaypalReady(false)
     setStripeSelected(false)
   }, [visible])
+
+  const markFirstEngagement = useCallback(() => {
+    if (firstEngagementRef.current) return
+    firstEngagementRef.current = true
+    onFirstPaymentEngagement?.()
+  }, [onFirstPaymentEngagement])
 
   const trackCheckoutStarted = useCallback(
     (
@@ -147,7 +157,9 @@ export function PersonalPlanOneTimeCheckout({
 
   const handlePaymentMethodSelected = useCallback(
     (provider: "stripe" | "paypal", paymentMethodType?: "apple_pay" | "payment_element") => {
-      if (!checkoutAttemptId || !offerContext) return
+      if (!checkoutAttemptId) return
+      markFirstEngagement()
+      if (!offerContext) return
       paymentSelectionIndexRef.current += 1
       trackAppEvent("offer_payment_method_selected", {
         ...offerContext,
@@ -159,7 +171,7 @@ export function PersonalPlanOneTimeCheckout({
         selectionIndex: paymentSelectionIndexRef.current,
       })
     },
-    [checkoutAttemptId, offerContext],
+    [checkoutAttemptId, markFirstEngagement, offerContext],
   )
 
   const handlePaymentOptionViewed = useCallback(
@@ -341,6 +353,7 @@ export function PersonalPlanOneTimeCheckout({
           checked={accepted}
           className="mt-0.5 size-4 shrink-0 accent-[var(--brand-plum)]"
           onChange={(event) => {
+            markFirstEngagement()
             setAccepted(event.target.checked)
             if (event.target.checked) setError(null)
           }}
@@ -356,6 +369,7 @@ export function PersonalPlanOneTimeCheckout({
           fetchClientSecret={fetchClientSecret}
           onBeforeConfirm={handleBeforeStripeConfirm}
           onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
+          onFirstPaymentEngagement={markFirstEngagement}
           onPaymentMethodSelected={handlePaymentMethodSelected}
           onPaymentOptionViewed={handlePaymentOptionViewed}
           onRetry={() => {
@@ -402,6 +416,7 @@ export function PersonalPlanOneTimeCheckout({
                 {!stripeSelected ? (
                   <Button
                     onClick={() => {
+                      markFirstEngagement()
                       setError(null)
                       setStripeSelected(true)
                     }}
@@ -431,7 +446,7 @@ export function PersonalPlanOneTimeCheckout({
           {error}
         </p>
       ) : null}
-      <Button type="button" variant="outline" onClick={onClose}>
+      <Button type="button" variant="outline" onClick={onRequestClose}>
         Zahlung schließen
       </Button>
     </div>

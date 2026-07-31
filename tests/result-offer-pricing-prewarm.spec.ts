@@ -106,8 +106,8 @@ test.describe("@ci result offer pricing prewarm lifecycle", () => {
     await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true", { timeout: 8_000 })
 
     await page.getByRole("button", { name: "Zahlung schließen" }).click()
-    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
     await expect(drawer(page)).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
     await cta.click()
     await expect(drawer(page)).toBeVisible({ timeout: 1_000 })
     await expect(page.getByTestId("prewarm-apple-pay")).toHaveCount(0)
@@ -165,8 +165,8 @@ test.describe("@ci result offer pricing prewarm lifecycle", () => {
     await cta.click()
     await expect(drawer(page)).toBeVisible()
     await page.getByRole("button", { name: "Zahlung schließen" }).click()
-    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
     await expect(drawer(page)).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
 
     await cta.click()
     await expect(drawer(page)).toBeVisible()

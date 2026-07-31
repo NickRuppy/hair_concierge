@@ -103,6 +103,36 @@ test("variant-aware checkout summaries distinguish membership intervals from one
   })
 })
 
+test("checkout engagement is attempt-scoped across both pricing arms", () => {
+  assert.equal(
+    (
+      pricingSource.match(/const \[checkoutEngaged, setCheckoutEngaged\] = useState\(false\)/g) ??
+      []
+    ).length,
+    2,
+  )
+  assert.equal(
+    (
+      pricingSource.match(
+        /const markCheckoutEngaged = useCallback\(\(\) => setCheckoutEngaged\(true\), \[\]\)/g,
+      ) ?? []
+    ).length,
+    2,
+  )
+  assert.match(
+    pricingSource,
+    /<PersonalPlanOneTimeCheckout[\s\S]*?onFirstPaymentEngagement=\{markCheckoutEngaged\}[\s\S]*?onRequestClose=\{\(\) => requestDismissal\("close"\)\}/,
+  )
+  assert.match(
+    pricingSource,
+    /<PaymentMethodCheckout[\s\S]*?onFirstPaymentEngagement=\{markCheckoutEngaged\}/,
+  )
+  assert.match(pricingSource, /checkoutEngaged=\{checkoutEngaged\}/)
+  assert.match(pricingSource, /checkoutEngaged=\{checkoutEngaged \|\| !expressElementsEnabled\}/)
+  assert.match(pricingSource, /onFirstPaymentEngagement: markCheckoutEngaged/)
+  assert.ok((pricingSource.match(/setCheckoutEngaged\(false\)/g) ?? []).length >= 6)
+})
+
 test("offer pricing tracks plan, checkout, payment-method, and sanitized failure diagnostics", () => {
   assert.match(pricingSource, /trackAppEvent\("offer_plan_selected"/)
   assert.match(pricingSource, /trackAppEvent\("offer_checkout_opened"/)

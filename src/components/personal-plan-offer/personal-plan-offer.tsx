@@ -398,6 +398,7 @@ function AnimatedPersonalPlanFaqItem({
 }
 
 export function PersonalPlanOffer({
+  disableCheckoutPrewarm = false,
   entryContext,
   focusTarget = null,
   isInternalTest = false,
@@ -406,6 +407,7 @@ export function PersonalPlanOffer({
   offerTracking,
   offerVariant = "personal-plan-v1",
 }: {
+  disableCheckoutPrewarm?: boolean
   entryContext: OfferEntryContext
   focusTarget?: PersonalPlanOfferFocusTarget | null
   isInternalTest?: boolean
@@ -564,6 +566,7 @@ export function PersonalPlanOffer({
           </div>
           <div className="mt-7">
             <ResultOfferPricing
+              disableCheckoutPrewarm={disableCheckoutPrewarm}
               leadId={leadId}
               offerTracking={offerTracking}
               offerVariant={offerVariant}

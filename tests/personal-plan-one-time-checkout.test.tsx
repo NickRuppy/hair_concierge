@@ -18,6 +18,10 @@ const offerLabSource = readFileSync(
   new URL("../src/app/labs/offer-page/page.tsx", import.meta.url),
   "utf8",
 )
+const personalPlanOfferSource = readFileSync(
+  new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+  "utf8",
+)
 
 test("one-time pricing renders only the approved personal-plan offer", () => {
   assert.match(pricingSource, /resolvePersonalPlanPricingMode\(offerVariant\) === "one_time"/)
@@ -127,6 +131,22 @@ test("offer lab can force the personal-plan pricing arm for browser-only verific
   assert.match(offerLabSource, /personal-plan-v1/)
 })
 
+test("personal-plan lab keeps synthetic checkout identity from auto-prewarming providers", () => {
+  assert.match(
+    offerLabSource,
+    /<PersonalPlanOffer[\s\S]*disableCheckoutPrewarm[\s\S]*isInternalTest[\s\S]*offerTracking=/,
+  )
+  assert.match(
+    personalPlanOfferSource,
+    /<ResultOfferPricing[\s\S]*disableCheckoutPrewarm=\{disableCheckoutPrewarm\}/,
+  )
+  assert.match(pricingSource, /const oneTimePrewarmEnabled =\s*!disableCheckoutPrewarm &&/)
+  assert.match(
+    pricingSource,
+    /const checkoutPrewarmEnabled =\s*!disableCheckoutPrewarm &&\s*expressElementsEnabled/,
+  )
+})
+
 test("provider initialization is recorded only after a usable provider response", () => {
   const stripePreparation = checkoutSource.slice(
     checkoutSource.indexOf("const fetchClientSecret"),
@@ -144,5 +164,61 @@ test("provider initialization is recorded only after a usable provider response"
   assert.match(
     paypalSource,
     /const funnelEventId = createFunnelEventId\(\)[\s\S]*funnelEventId,[\s\S]*typeof body\.token !== "string"[\s\S]*throw new Error\("PayPal order creation failed"\)[\s\S]*onCheckoutStarted\?\.\(funnelEventId\)[\s\S]*return body\.orderId/,
+  )
+})
+
+test("one-time checkout marks a real first interaction and routes its nested close through policy", () => {
+  assert.match(checkoutSource, /onFirstPaymentEngagement\?: \(\) => void/)
+  assert.match(checkoutSource, /onRequestClose: \(\) => void/)
+  assert.match(checkoutSource, /const firstEngagementRef = useRef\(false\)/)
+  assert.match(
+    checkoutSource,
+    /const markFirstEngagement = useCallback\(\(\) => \{[\s\S]*firstEngagementRef\.current = true[\s\S]*onFirstPaymentEngagement\?\.\(\)/,
+  )
+  assert.match(
+    checkoutSource,
+    /onChange=\{\(event\) => \{[\s\S]*markFirstEngagement\(\)[\s\S]*setAccepted\(event\.target\.checked\)/,
+  )
+  assert.match(
+    checkoutSource,
+    /onClick=\{\(\) => \{[\s\S]*markFirstEngagement\(\)[\s\S]*setStripeSelected\(true\)/,
+  )
+  assert.match(
+    checkoutSource,
+    /const handlePaymentMethodSelected = useCallback\([\s\S]*markFirstEngagement\(\)/,
+  )
+  assert.match(
+    checkoutSource,
+    /<Button type="button" variant="outline" onClick=\{onRequestClose\}>/,
+  )
+
+  const paymentOptionExposure = checkoutSource.slice(
+    checkoutSource.indexOf("const handlePaymentOptionViewed"),
+    checkoutSource.indexOf("const fetchClientSecret"),
+  )
+  assert.doesNotMatch(paymentOptionExposure, /markFirstEngagement/)
+})
+
+test("one-time checkout keeps each payment attempt isolated", () => {
+  assert.match(pricingSource, /const checkoutOpenRef = useRef\(false\)/)
+  assert.match(
+    pricingSource,
+    /const openOneTimeCheckoutNow = useCallback\(\s*\(suppressWallet: boolean\) => \{\s*if \(checkoutOpenRef\.current\) return\s*checkoutOpenRef\.current = true/,
+  )
+  assert.match(
+    pricingSource,
+    /const openCheckout = useCallback\(\(\) => \{\s*if \(checkoutOpenRef\.current \|\| checkoutWaitingRef\.current\) return/,
+  )
+  assert.match(
+    pricingSource,
+    /const closeCheckout = useCallback\(\(\) => \{\s*checkoutOpenRef\.current = false/,
+  )
+  assert.match(
+    checkoutSource,
+    /checkoutStartedProvidersRef\.current\.clear\(\)[\s\S]*firstEngagementRef\.current = false[\s\S]*\}, \[checkoutAttemptId\]\)/,
+  )
+  assert.match(
+    pricingSource,
+    /setCheckoutEngaged\(false\)\s*setCheckoutAttemptId\(nextCheckoutAttemptId\)/,
   )
 })

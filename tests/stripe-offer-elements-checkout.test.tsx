@@ -152,6 +152,45 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   assert.match(getStripeOfferElementsErrorMessage(), /Zahlung konnte nicht bestätigt werden/)
 })
 
+test("first payment engagement ignores readiness, marks non-empty Payment Element input once, and precedes Stripe confirmation", () => {
+  assert.match(stripeOfferElementsSource, /onFirstPaymentEngagement\?: \(\) => void/)
+  assert.match(stripeOfferElementsSource, /const firstPaymentEngagementRef = useRef\(false\)/)
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(firstPaymentEngagementRef\.current \|\| !onFirstPaymentEngagement\) return/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /useEffect\(\(\) => \{\s*firstPaymentEngagementRef\.current = false\s*\}, \[checkoutAttemptId\]\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onChange=\{\(event(?:: StripePaymentElementChangeEvent)?\) => \{\s*if \(!event\.empty\) markFirstPaymentEngagement\(\)/,
+  )
+
+  const confirmCheckoutStart = stripeOfferElementsSource.indexOf(
+    "const confirmCheckout = useCallback",
+  )
+  const firstEngagementInConfirm = stripeOfferElementsSource.indexOf(
+    "markFirstPaymentEngagement()",
+    confirmCheckoutStart,
+  )
+  const claimStripeInConfirm = stripeOfferElementsSource.indexOf(
+    "claimStripe(paymentMethodType)",
+    confirmCheckoutStart,
+  )
+  assert.ok(firstEngagementInConfirm > confirmCheckoutStart)
+  assert.ok(claimStripeInConfirm > firstEngagementInConfirm)
+
+  const paymentReadyStart = stripeOfferElementsSource.indexOf("onReady={() => {")
+  const paymentReadyEnd = stripeOfferElementsSource.indexOf("}}", paymentReadyStart)
+  assert.ok(paymentReadyStart > -1)
+  assert.doesNotMatch(
+    stripeOfferElementsSource.slice(paymentReadyStart, paymentReadyEnd),
+    /markFirstPaymentEngagement/,
+  )
+})
+
 test("wallet diagnostics stay query-gated and retain only availability booleans", () => {
   assert.equal(isWalletDebugEnabled("?wallet_debug=1"), true)
   assert.equal(isWalletDebugEnabled("?lead=abc&wallet_debug=1"), true)
