@@ -132,3 +132,13 @@ test("refuses root main history that cannot fast-forward", (t) => {
   assert.match(result.stderr, /must fast-forward cleanly/)
   assert.equal(existsSync(join(fixture.primary, ".worktrees", "diverged-root")), false)
 })
+
+test("ignores unavailable remotes unrelated to origin", (t) => {
+  const fixture = createFixture(t)
+  git(fixture.primary, ["remote", "add", "unavailable", join(fixture.primary, "..", "missing.git")])
+
+  const result = runNew(fixture.primary, "origin-only")
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
+})

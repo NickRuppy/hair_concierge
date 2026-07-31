@@ -68,7 +68,15 @@ function getRepoRoot(worktreeRoot) {
 }
 
 function preparePrimaryRoot(repoRoot) {
-  git(["fetch", "--all", "--prune"], { cwd: repoRoot });
+  const fetch = git(["fetch", "origin", "--prune"], {
+    cwd: repoRoot,
+    capture: true,
+    allowFailure: true,
+  });
+
+  if (fetch.status !== 0) {
+    throw new Error("Cannot update primary root: origin/main is unavailable.");
+  }
 
   const branch = git(["branch", "--show-current"], {
     cwd: repoRoot,
