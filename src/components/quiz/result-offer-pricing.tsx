@@ -152,6 +152,7 @@ export type ResultOfferPricingCheckoutLifecycleFixture = {
     checkoutAttemptId: string | null
     checkoutKey: string
     interval: BillingInterval
+    onFirstPaymentEngagement: () => void
     onApplePayAvailabilityResolved: (available: boolean) => void
     preparationId: string | null
     suppressExpressWallet: boolean
@@ -159,6 +160,7 @@ export type ResultOfferPricingCheckoutLifecycleFixture = {
   }) => ReactNode
   oneTimePaymentCheckoutComponent?: ComponentType<{
     checkoutAttemptId: string | null
+    onFirstPaymentEngagement: () => void
     onApplePayAvailabilityResolved: (available: boolean) => void
     onStripePreparationStateChange: (
       state: PersonalPlanOneTimeStripePreparationState,
@@ -337,6 +339,7 @@ function trackStripeJsAvailability(
 
 export function ResultOfferPricing(props: {
   checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
+  disableCheckoutPrewarm?: boolean
   leadId: string | null
   onCheckoutOpen?: () => void
   onCheckoutSummaryChange?: (summary: ResultOfferPricingCheckoutSummary) => void
@@ -353,6 +356,7 @@ export function ResultOfferPricing(props: {
   if (resolvePersonalPlanPricingMode(offerVariant) === "one_time") {
     return (
       <PersonalPlanOneTimePricing
+        disableCheckoutPrewarm={props.disableCheckoutPrewarm ?? false}
         leadId={props.leadId}
         checkoutLifecycleFixture={props.checkoutLifecycleFixture}
         funnelSessionId={offerContext?.funnelSessionId}
@@ -368,6 +372,7 @@ export function ResultOfferPricing(props: {
   return (
     <MembershipResultOfferPricing
       checkoutLifecycleFixture={props.checkoutLifecycleFixture}
+      disableCheckoutPrewarm={props.disableCheckoutPrewarm ?? false}
       leadId={props.leadId}
       onCheckoutOpen={props.onCheckoutOpen}
       onCheckoutSummaryChange={props.onCheckoutSummaryChange}
@@ -383,6 +388,7 @@ export function ResultOfferPricing(props: {
 
 function PersonalPlanOneTimePricing({
   checkoutLifecycleFixture,
+  disableCheckoutPrewarm,
   funnelSessionId,
   leadId,
   onCheckoutOpen,
@@ -392,6 +398,7 @@ function PersonalPlanOneTimePricing({
   openCheckoutRequestId,
 }: {
   checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
+  disableCheckoutPrewarm: boolean
   funnelSessionId: string | null | undefined
   leadId: string | null
   onCheckoutOpen?: () => void
@@ -415,18 +422,21 @@ function PersonalPlanOneTimePricing({
   const offerContext = useOfferTrackingContext()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
+  const [checkoutEngaged, setCheckoutEngaged] = useState(false)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const [oneTimePrewarmEligible, setOneTimePrewarmEligible] = useState(false)
   const [stripePreparationRefreshRequestId, setStripePreparationRefreshRequestId] = useState(0)
   const [suppressExpressWallet, setSuppressExpressWallet] = useState(false)
   const OneTimePaymentCheckoutFixture = checkoutLifecycleFixture?.oneTimePaymentCheckoutComponent
+  // Lab callers disable the fixture path too so synthetic identities cannot start provider work.
   const oneTimePrewarmEnabled =
-    Boolean(OneTimePaymentCheckoutFixture) ||
-    (Boolean(stripePublishableKey) &&
-      isOfferPaymentOverlayEnabled() &&
-      isStripeExpressCheckoutEnabled() &&
-      isOfferCheckoutPrewarmEnabled() &&
-      isOfferCheckoutEarlyPrewarmEnabled())
+    !disableCheckoutPrewarm &&
+    (Boolean(OneTimePaymentCheckoutFixture) ||
+      (Boolean(stripePublishableKey) &&
+        isOfferPaymentOverlayEnabled() &&
+        isStripeExpressCheckoutEnabled() &&
+        isOfferCheckoutPrewarmEnabled() &&
+        isOfferCheckoutEarlyPrewarmEnabled()))
   const oneTimeResolvedOpenEnabled =
     oneTimePrewarmEnabled &&
     (Boolean(OneTimePaymentCheckoutFixture) || isOfferCheckoutResolvedOpenEnabled())
@@ -473,6 +483,8 @@ function PersonalPlanOneTimePricing({
       }
     }
   }, [])
+
+  const markCheckoutEngaged = useCallback(() => setCheckoutEngaged(true), [])
 
   useEffect(() => {
     onCheckoutSummaryChange?.(getPersonalPlanOneTimeCheckoutSummary())
@@ -527,6 +539,7 @@ function PersonalPlanOneTimePricing({
         })
       }
       setSuppressExpressWallet(suppressWallet)
+      setCheckoutEngaged(false)
       setCheckoutAttemptId(nextCheckoutAttemptId)
       setCheckoutOpen(true)
       onCheckoutOpen?.()
@@ -567,7 +580,6 @@ function PersonalPlanOneTimePricing({
       openOneTimeCheckoutNow(!walletAvailabilityRef.current)
       return
     }
-
     if (stripePreparationStateRef.current === "failed") {
       trackAppEvent("checkout_preparation_outcome", {
         outcome: "prepare_failure",
@@ -646,6 +658,7 @@ function PersonalPlanOneTimePricing({
     checkoutWaitStartedAtRef.current = null
     updateCheckoutWaiting(false)
     setSuppressExpressWallet(false)
+    setCheckoutEngaged(false)
     setCheckoutOpen(false)
     setCheckoutAttemptId(null)
   }, [clearCheckoutWaitTimer, updateCheckoutWaiting])
@@ -660,7 +673,12 @@ function PersonalPlanOneTimePricing({
   }, [openCheckout, openCheckoutRequestId])
 
   return (
-    <div ref={pricingRef} className="space-y-4" data-personal-plan-pricing-mode="one_time">
+    <div
+      ref={pricingRef}
+      className="space-y-4"
+      data-checkout-prewarm-disabled={disableCheckoutPrewarm || undefined}
+      data-personal-plan-pricing-mode="one_time"
+    >
       <p className="text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
         Einmalige Erstellung
       </p>
@@ -702,6 +720,7 @@ function PersonalPlanOneTimePricing({
       </p>
 
       <OfferPaymentOverlay
+        checkoutEngaged={checkoutEngaged}
         keepMounted={oneTimePrewarmEligible}
         open={checkoutOpen}
         onConfirmedAbort={closeCheckout}
@@ -709,30 +728,34 @@ function PersonalPlanOneTimePricing({
         planName="Persönlicher Haarplan"
         priceLabel="29,99 €"
       >
-        {checkoutOpen || oneTimePrewarmEligible ? (
-          OneTimePaymentCheckoutFixture ? (
-            <OneTimePaymentCheckoutFixture
-              checkoutAttemptId={checkoutAttemptId}
-              onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
-              onStripePreparationStateChange={handleStripePreparationStateChange}
-              stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
-              suppressExpressWallet={suppressExpressWallet}
-              visible={checkoutOpen}
-            />
-          ) : (
-            <PersonalPlanOneTimeCheckout
-              checkoutAttemptId={checkoutAttemptId}
-              funnelSessionId={funnelSessionId}
-              leadId={leadId}
-              onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
-              onClose={closeCheckout}
-              onStripePreparationStateChange={handleStripePreparationStateChange}
-              stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
-              suppressExpressWallet={suppressExpressWallet}
-              visible={checkoutOpen}
-            />
-          )
-        ) : null}
+        {({ requestDismissal }) =>
+          checkoutOpen || oneTimePrewarmEligible ? (
+            OneTimePaymentCheckoutFixture ? (
+              <OneTimePaymentCheckoutFixture
+                checkoutAttemptId={checkoutAttemptId}
+                onFirstPaymentEngagement={markCheckoutEngaged}
+                onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
+                onStripePreparationStateChange={handleStripePreparationStateChange}
+                stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
+                suppressExpressWallet={suppressExpressWallet}
+                visible={checkoutOpen}
+              />
+            ) : (
+              <PersonalPlanOneTimeCheckout
+                checkoutAttemptId={checkoutAttemptId}
+                funnelSessionId={funnelSessionId}
+                leadId={leadId}
+                onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
+                onFirstPaymentEngagement={markCheckoutEngaged}
+                onRequestClose={() => requestDismissal("close")}
+                onStripePreparationStateChange={handleStripePreparationStateChange}
+                stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
+                suppressExpressWallet={suppressExpressWallet}
+                visible={checkoutOpen}
+              />
+            )
+          ) : null
+        }
       </OfferPaymentOverlay>
     </div>
   )
@@ -740,6 +763,7 @@ function PersonalPlanOneTimePricing({
 
 function MembershipResultOfferPricing({
   checkoutLifecycleFixture,
+  disableCheckoutPrewarm,
   leadId,
   onCheckoutOpen,
   onCheckoutSummaryChange,
@@ -750,6 +774,7 @@ function MembershipResultOfferPricing({
   referencePrices,
 }: {
   checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
+  disableCheckoutPrewarm: boolean
   leadId: string | null
   onCheckoutOpen?: () => void
   onCheckoutSummaryChange?: (summary: ResultOfferPricingCheckoutSummary) => void
@@ -808,6 +833,7 @@ function MembershipResultOfferPricing({
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [pricingCtaVisible, setPricingCtaVisible] = useState(false)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
+  const [checkoutEngaged, setCheckoutEngaged] = useState(false)
   const [suppressExpressWallet, setSuppressExpressWallet] = useState(false)
   const [preparedCheckout, setPreparedCheckout] = useState<PreparedOfferCheckout | null>(null)
   const [activePreparedCheckout, setActivePreparedCheckout] =
@@ -816,6 +842,7 @@ function MembershipResultOfferPricing({
   const expressElementsEnabled =
     paymentOverlayEnabled && (Boolean(checkoutLifecycleFixture) || isStripeExpressCheckoutEnabled())
   const checkoutPrewarmEnabled =
+    !disableCheckoutPrewarm &&
     expressElementsEnabled &&
     (Boolean(checkoutLifecycleFixture) ||
       (isOfferCheckoutPrewarmEnabled() && Boolean(stripePublishableKey)))
@@ -836,6 +863,8 @@ function MembershipResultOfferPricing({
     },
     [onCheckoutWaitingChange],
   )
+
+  const markCheckoutEngaged = useCallback(() => setCheckoutEngaged(true), [])
 
   const updatePreparedCheckout = useCallback((preparation: PreparedOfferCheckout | null) => {
     preparedCheckoutRef.current = preparation
@@ -1353,6 +1382,7 @@ function MembershipResultOfferPricing({
     resetOfferProviderLock()
     setCheckoutInterval(null)
     setCheckoutAttemptId(null)
+    setCheckoutEngaged(false)
     setCheckoutError(null)
   }
 
@@ -1373,6 +1403,7 @@ function MembershipResultOfferPricing({
     resetOfferProviderLock()
     setCheckoutAttemptId(null)
     setCheckoutInterval(null)
+    setCheckoutEngaged(false)
     setCheckoutError(null)
   }
 
@@ -1417,6 +1448,8 @@ function MembershipResultOfferPricing({
       if (!paymentOverlayEnabled) scrollInlineCheckoutIntoView()
       return
     }
+
+    setCheckoutEngaged(false)
 
     const matchingPreparation =
       checkoutPrewarmEnabled && isPreparedOfferCheckoutUsable(preparation, selectedInterval)
@@ -1931,6 +1964,7 @@ function MembershipResultOfferPricing({
           ? preparedCheckoutForRender.checkoutKey
           : `${paymentCheckoutInterval}:${checkoutAttemptId ?? "pending"}`,
         interval: paymentCheckoutInterval,
+        onFirstPaymentEngagement: markCheckoutEngaged,
         onApplePayAvailabilityResolved: (available) =>
           handlePreparedApplePayAvailabilityResolved(
             preparedCheckoutForRender?.preparationId ?? null,
@@ -1958,6 +1992,7 @@ function MembershipResultOfferPricing({
         lockedProvider={expressElementsEnabled ? lockedProvider : null}
         onBeforeStripeConfirm={handleBeforeStripeConfirm}
         onChangePlan={() => closeCheckout()}
+        onFirstPaymentEngagement={markCheckoutEngaged}
         onPayPalCheckoutFailed={handlePayPalCheckoutFailed}
         onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
         onPaymentOptionViewed={handlePaymentOptionViewed}
@@ -1980,6 +2015,7 @@ function MembershipResultOfferPricing({
 
           const retryCheckoutAttemptId = checkoutAttemptController.retry()
           if (!retryCheckoutAttemptId) return
+          setCheckoutEngaged(false)
           const interval = checkoutInterval
           prewarmGenerationRef.current += 1
           prewarmRequestRef.current = null
@@ -2004,7 +2040,11 @@ function MembershipResultOfferPricing({
   ) : null
 
   return (
-    <div ref={pricingRef} className="space-y-4">
+    <div
+      ref={pricingRef}
+      className="space-y-4"
+      data-checkout-prewarm-disabled={disableCheckoutPrewarm || undefined}
+    >
       <ActiveSubscriptionDialog
         email={duplicateEmail}
         onOpenChange={setDuplicateDialogOpen}
@@ -2024,6 +2064,7 @@ function MembershipResultOfferPricing({
 
       {paymentOverlayEnabled ? (
         <OfferPaymentOverlay
+          checkoutEngaged={checkoutEngaged || !expressElementsEnabled}
           onConfirmedAbort={() => closeCheckout()}
           onConfirmedPlanChange={() => closeCheckout({ focusPlan: true })}
           keepMounted={checkoutPrewarmEnabled && paymentCheckout !== null}

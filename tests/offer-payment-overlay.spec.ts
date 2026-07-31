@@ -116,6 +116,49 @@ async function expectMobilePaymentContainment(page: Page, appleState?: "load-err
 }
 
 test.describe("@ci offer payment overlay", () => {
+  test("pristine dismissal is immediate while entered card input stays protected until confirmed", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&dismissal=pristine`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+
+    const trigger = page.getByRole("button", { name: "Ja, jetzt starten" })
+    await trigger.click()
+    let checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout).toBeVisible()
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    await expect(checkout).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+
+    await trigger.click()
+    checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const cardNumber = checkout.getByPlaceholder("1234 1234 1234 1234")
+    await cardNumber.fill("4242")
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
+    await expect(confirmation).toBeVisible()
+
+    await page.getByRole("button", { name: "Weiter bezahlen" }).click()
+    await expect(confirmation).toBeHidden()
+    await expect(cardNumber).toHaveValue("4242")
+
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
+    await expect(checkout).toBeHidden()
+
+    await trigger.click()
+    checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout.getByPlaceholder("1234 1234 1234 1234")).toHaveValue("")
+    await checkout.getByRole("button", { name: "Plan ändern" }).click()
+    await expect(checkout).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+    await expect(page.getByTestId("last-outcome")).toContainText("Planänderung bestätigt")
+  })
+
   test("payment content stays contained in the mobile viewport matrix", async ({ page }) => {
     for (const viewport of [
       { width: 320, height: 568 },

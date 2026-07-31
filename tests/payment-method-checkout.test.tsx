@@ -194,6 +194,43 @@ test("Stripe payment helper copy is only shown before the embedded checkout expa
   assert.match(source, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
 })
 
+test("first payment engagement follows provider-lock claims and legacy card reveal", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+  assert.match(source, /onFirstPaymentEngagement\?: \(\) => void/)
+  assert.match(source, /onFirstPaymentEngagement=\{onFirstPaymentEngagement\}/)
+
+  const paypalSelectionStart = source.indexOf("onPaymentMethodSelected={(provider) =>")
+  const paypalLockClaim = source.indexOf('onProviderLockClaim?.("paypal")', paypalSelectionStart)
+  const paypalEngagement = source.indexOf("onFirstPaymentEngagement?.()", paypalSelectionStart)
+  const paypalSelection = source.indexOf(
+    "onPaymentMethodSelected?.(provider)",
+    paypalSelectionStart,
+  )
+  assert.ok(paypalSelectionStart > -1)
+  assert.ok(paypalLockClaim > paypalSelectionStart)
+  assert.ok(paypalEngagement > paypalLockClaim)
+  assert.ok(paypalSelection > paypalEngagement)
+
+  const paypalReadyStart = source.indexOf("onReady={() =>", paypalSelectionStart)
+  const paypalReadyEnd = source.indexOf("returnDestination=", paypalReadyStart)
+  assert.ok(paypalReadyStart > paypalSelection)
+  assert.ok(paypalReadyEnd > paypalReadyStart)
+  assert.doesNotMatch(source.slice(paypalReadyStart, paypalReadyEnd), /onFirstPaymentEngagement/)
+
+  const legacyCardReveal = source.indexOf("if (!cardCheckoutOpen)")
+  const legacyCardEngagement = source.indexOf("onFirstPaymentEngagement?.()", legacyCardReveal)
+  const legacyCardSelection = source.indexOf(
+    'onPaymentMethodSelected?.("stripe")',
+    legacyCardReveal,
+  )
+  assert.ok(legacyCardReveal > -1)
+  assert.ok(legacyCardEngagement > legacyCardReveal)
+  assert.ok(legacyCardSelection > legacyCardEngagement)
+})
+
 test("PayPal approval redirects to the provider-aware welcome URL", () => {
   assert.equal(
     buildPayPalWelcomeUrl("paypal-token-123"),

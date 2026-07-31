@@ -76,6 +76,7 @@ export function PaymentMethodCheckout({
   onChangePlan,
   onPayPalCheckoutFailed,
   onPayPalCheckoutStarted,
+  onFirstPaymentEngagement,
   onPaymentOptionViewed,
   onPreparedApplePayAvailabilityResolved,
   onPaymentMethodSelected,
@@ -107,6 +108,7 @@ export function PaymentMethodCheckout({
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
+  onFirstPaymentEngagement?: () => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onPreparedApplePayAvailabilityResolved?: (available: boolean) => void
   onPaymentMethodSelected?: (
@@ -177,6 +179,7 @@ export function PaymentMethodCheckout({
           onCheckoutStarted={onPayPalCheckoutStarted}
           onPaymentMethodSelected={(provider) => {
             if (onProviderLockClaim?.("paypal") === false) return false
+            onFirstPaymentEngagement?.()
             onPaymentMethodSelected?.(provider)
             return true
           }}
@@ -258,6 +261,7 @@ export function PaymentMethodCheckout({
               lockedProvider={lockedProvider}
               onBeforeConfirm={onBeforeStripeConfirm}
               onApplePayAvailabilityResolved={onPreparedApplePayAvailabilityResolved}
+              onFirstPaymentEngagement={onFirstPaymentEngagement}
               onPaymentMethodSelected={onPaymentMethodSelected}
               onPaymentOptionViewed={onPaymentOptionViewed}
               paymentElementEnabled={paymentElementEnabled}
@@ -302,7 +306,10 @@ export function PaymentMethodCheckout({
                         aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
                         aria-expanded={cardCheckoutOpen}
                         onClick={() => {
-                          if (!cardCheckoutOpen) onPaymentMethodSelected?.("stripe")
+                          if (!cardCheckoutOpen) {
+                            onFirstPaymentEngagement?.()
+                            onPaymentMethodSelected?.("stripe")
+                          }
                           dispatchPaymentMethod("reveal_card")
                         }}
                         className={`min-h-[52px] w-full rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${

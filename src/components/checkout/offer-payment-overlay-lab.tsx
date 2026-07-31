@@ -31,6 +31,7 @@ type PaymentFixtureProps = {
   checkoutLoadingReleaseDelayMs: number | null
   initiateCheckoutCount: number
   lifecycleProbe: boolean
+  onFirstPaymentEngagement: () => void
 }
 
 const labZeroAmount = { amount: "0,00 €", minorUnitsAmount: 0 }
@@ -201,6 +202,7 @@ function PaymentFixture({
   checkoutLoadingReleaseDelayMs,
   initiateCheckoutCount,
   lifecycleProbe,
+  onFirstPaymentEngagement,
 }: PaymentFixtureProps) {
   const [mountIdentity] = React.useState(() => {
     labPaymentFixtureMountCount += 1
@@ -290,7 +292,9 @@ function PaymentFixture({
         type="button"
         data-testid="paypal-button"
         disabled={providerLock !== null}
-        onClick={() => claimProvider("paypal")}
+        onClick={() => {
+          if (claimProvider("paypal")) onFirstPaymentEngagement()
+        }}
         className="min-h-12 w-full rounded-full bg-[#ffc439] px-4 text-sm font-extrabold text-[#111]"
       >
         PayPal
@@ -306,6 +310,7 @@ function PaymentFixture({
         <input
           className="mt-1 min-h-11 w-full rounded-[10px] border border-border bg-white px-3 text-sm text-foreground"
           inputMode="numeric"
+          onChange={onFirstPaymentEngagement}
           placeholder="1234 1234 1234 1234"
         />
       </label>
@@ -360,6 +365,7 @@ function PaymentFixture({
         key={`checkout-retry-${checkoutRetryCount}`}
         checkoutResult={checkoutResult}
         lockedProvider={providerLock}
+        onFirstPaymentEngagement={onFirstPaymentEngagement}
         onProviderLockClaim={claimProvider}
         onProviderLockRelease={releaseProvider}
         onRetry={() => {
@@ -435,6 +441,7 @@ function PaymentFixture({
 function OfferPaymentOverlayLabContent() {
   const [ready, setReady] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [checkoutEngaged, setCheckoutEngaged] = React.useState(true)
   const [lastOutcome, setLastOutcome] = React.useState("Noch nicht geöffnet")
   const [applePayAvailable, setApplePayAvailable] = React.useState(true)
   const [applePayAvailabilityDelayMs, setApplePayAvailabilityDelayMs] = React.useState<
@@ -455,9 +462,12 @@ function OfferPaymentOverlayLabContent() {
   const checkoutAttemptId = "lab-checkout-attempt-1"
   const selectedPlanRef = React.useRef<HTMLElement | null>(null)
   const checkoutReturnFocusRef = React.useRef<HTMLElement | null>(null)
+  const pristineDismissalModeRef = React.useRef(false)
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search)
+    pristineDismissalModeRef.current = params.get("dismissal") === "pristine"
+    setCheckoutEngaged(!pristineDismissalModeRef.current)
     const initialApplePayState = params.get("apple")
     setApplePayAvailable(initialApplePayState !== "unavailable")
     setApplePayAvailabilityDelayMs(
@@ -496,6 +506,7 @@ function OfferPaymentOverlayLabContent() {
 
   const closeWithOutcome = (outcome: string) => {
     setLastOutcome(outcome)
+    setCheckoutEngaged(false)
     setOpen(false)
   }
 
@@ -555,6 +566,7 @@ function OfferPaymentOverlayLabContent() {
             onClick={() => {
               setLastOutcome("Zahlung geöffnet")
               checkoutReturnFocusRef.current = null
+              setCheckoutEngaged(!pristineDismissalModeRef.current)
               setInitiateCheckoutCount((count) => count + 1)
               setOpen(true)
             }}
@@ -570,6 +582,7 @@ function OfferPaymentOverlayLabContent() {
       </div>
 
       <OfferPaymentOverlay
+        checkoutEngaged={checkoutEngaged}
         open={open}
         keepMounted={prewarmedLifecycle}
         planName="Quartal"
@@ -596,6 +609,7 @@ function OfferPaymentOverlayLabContent() {
           checkoutLoadingReleaseDelayMs={checkoutLoadingReleaseDelayMs}
           initiateCheckoutCount={initiateCheckoutCount}
           lifecycleProbe={prewarmedLifecycle}
+          onFirstPaymentEngagement={() => setCheckoutEngaged(true)}
         />
       </OfferPaymentOverlay>
     </main>
@@ -700,7 +714,7 @@ function PrewarmPaymentFixture({
       </div>
       <label>
         Karte
-        <input data-testid="prewarm-card" />
+        <input data-testid="prewarm-card" onChange={input.onFirstPaymentEngagement} />
       </label>
     </section>
   )
@@ -784,7 +798,7 @@ function OneTimePrewarmPaymentFixture({
       </div>
       <label>
         Karte
-        <input data-testid="prewarm-card" />
+        <input data-testid="prewarm-card" onChange={input.onFirstPaymentEngagement} />
       </label>
     </section>
   )
