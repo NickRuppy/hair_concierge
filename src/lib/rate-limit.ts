@@ -50,6 +50,12 @@ export const QUIZ_LEAD_RATE_LIMIT: RateLimitConfig = {
   windowMs: 3_600_000,
 }
 
+export const WAITLIST_RATE_LIMIT: RateLimitConfig = {
+  prefix: "waitlist",
+  limit: 20,
+  windowMs: 3_600_000,
+}
+
 export const FUNNEL_EVENT_RATE_LIMIT: RateLimitConfig = {
   prefix: "funnel-event",
   limit: 60,
