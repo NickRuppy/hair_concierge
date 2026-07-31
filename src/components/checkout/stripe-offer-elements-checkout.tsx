@@ -19,7 +19,7 @@ import type {
 
 import { Button } from "@/components/ui/button"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
-import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
+import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import { PaymentOptionExposure } from "./payment-option-exposure"
 
 export type StripeOfferPaymentMethodType = "apple_pay" | "payment_element"
@@ -85,7 +85,7 @@ export type StripeOfferExpressRendererProps = {
   onAvailablePaymentMethodsChange: (
     event: StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
   ) => void
-  onConfirm: (event: StripeExpressCheckoutElementConfirmEvent) => void
+  onConfirm: (event: StripeExpressCheckoutElementConfirmEvent) => Promise<void>
   onLoadError: (event: { error: { code?: string | null; type: string } }) => void
   onReady: (event: StripeExpressCheckoutElementReadyEvent) => void
   options: StripeCheckoutExpressCheckoutElementOptions
@@ -113,6 +113,29 @@ export const stripeOfferExpressCheckoutOptions: StripeCheckoutExpressCheckoutEle
     amazonPay: "never",
     klarna: "never",
   },
+}
+
+export function getStripeExpressCheckoutExceptionReason(
+  error: unknown,
+): "confirm_event_invalid" | "exception" {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : error !== null &&
+            typeof error === "object" &&
+            "message" in error &&
+            typeof error.message === "string"
+          ? error.message
+          : ""
+  const normalized = message.toLowerCase()
+  return normalized.includes("confirm method must be called within the confirm event") ||
+    (normalized.includes("confirm") &&
+      normalized.includes("event") &&
+      normalized.includes("must be called"))
+    ? "confirm_event_invalid"
+    : "exception"
 }
 
 export const stripeOfferCheckoutAppearance: NonNullable<
@@ -956,13 +979,34 @@ export function StripeOfferElementsCheckoutContent({
         shouldRelease = true
         recordExpressConfirm("failed", "confirm_error")
         recordWalletDebugEvent("checkout_confirm_failed", undefined, "confirm_error")
+        if (expressCheckoutConfirmEvent) {
+          captureCheckoutException(result.error, {
+            provider: "stripe",
+            stage: "stripe_express_checkout_confirm",
+            source: "quiz_result_offer",
+            checkoutAttemptId,
+            status: "failed",
+            reason: "confirm_error",
+          })
+        }
         const message = getStripeOfferElementsErrorMessage(result.error.message)
         setErrorMessage(message)
         expressCheckoutConfirmEvent?.paymentFailed({ message })
-      } catch {
+      } catch (error) {
         shouldRelease = true
-        recordExpressConfirm("failed", "exception")
-        recordWalletDebugEvent("checkout_confirm_failed", undefined, "exception")
+        const reason = getStripeExpressCheckoutExceptionReason(error)
+        recordExpressConfirm("failed", reason)
+        recordWalletDebugEvent("checkout_confirm_failed", undefined, reason)
+        if (expressCheckoutConfirmEvent) {
+          captureCheckoutException(new Error("Stripe Express Checkout confirmation failed"), {
+            provider: "stripe",
+            stage: "stripe_express_checkout_confirm",
+            source: "quiz_result_offer",
+            checkoutAttemptId,
+            status: "failed",
+            reason,
+          })
+        }
         const message = getStripeOfferElementsErrorMessage()
         setErrorMessage(message)
         expressCheckoutConfirmEvent?.paymentFailed({ message })
@@ -1152,14 +1196,14 @@ export function StripeOfferElementsCheckoutContent({
             {renderExpressCheckoutElement ? (
               renderExpressCheckoutElement({
                 onAvailablePaymentMethodsChange: handleAvailablePaymentMethodsChange,
-                onConfirm: (event) => void confirmCheckout("apple_pay", event),
+                onConfirm: (event) => confirmCheckout("apple_pay", event),
                 onLoadError: handleExpressCheckoutLoadError,
                 onReady: handleExpressCheckoutReady,
                 options: stripeOfferExpressCheckoutOptions,
               })
             ) : (
               <ExpressCheckoutElement
-                onConfirm={(event) => void confirmCheckout("apple_pay", event)}
+                onConfirm={(event) => confirmCheckout("apple_pay", event)}
                 onLoadError={handleExpressCheckoutLoadError}
                 onReady={handleExpressCheckoutReady}
                 options={stripeOfferExpressCheckoutOptions}

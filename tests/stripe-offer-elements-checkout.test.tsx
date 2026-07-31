@@ -10,6 +10,7 @@ import {
   formatCheckoutTotal,
   getChangedApplePayAvailability,
   getApplePayAvailability,
+  getStripeExpressCheckoutExceptionReason,
   getStripeOfferElementsErrorMessage,
   hasApplePayMethod,
   isWalletDebugEnabled,
@@ -191,6 +192,66 @@ test("first payment engagement ignores readiness, marks non-empty Payment Elemen
     stripeOfferElementsSource.slice(paymentReadyStart, paymentReadyEnd),
     /markFirstPaymentEngagement/,
   )
+})
+
+test("Express Checkout returns its confirmation promise and keeps ordinary card submission fire-and-forget", () => {
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirm: \(event: StripeExpressCheckoutElementConfirmEvent\) => Promise<void>/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirm: \(event\) => confirmCheckout\("apple_pay", event\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirm=\{\(event\) => confirmCheckout\("apple_pay", event\)\}/,
+  )
+  assert.doesNotMatch(
+    stripeOfferElementsSource,
+    /onConfirm(?::|=\{)\s*\(event\)[\s\S]*?void confirmCheckout\("apple_pay", event\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onClick=\{\(\) => void confirmCheckout\("payment_element"\)\}/,
+  )
+})
+
+test("Express Checkout failures preserve bounded provider errors and classify unknown exceptions safely", () => {
+  assert.equal(
+    getStripeExpressCheckoutExceptionReason(
+      new Error("The confirm method must be called within the confirm event emitted by Stripe"),
+    ),
+    "confirm_event_invalid",
+  )
+  assert.equal(
+    getStripeExpressCheckoutExceptionReason({
+      message: "The confirm method must be called within the confirm event emitted by Stripe",
+    }),
+    "confirm_event_invalid",
+  )
+  assert.equal(
+    getStripeExpressCheckoutExceptionReason(new Error("network unavailable")),
+    "exception",
+  )
+  const hostileThrownValue = {
+    client_secret: "secret",
+    email: "person@example.com",
+    address: { line1: "Private street" },
+    payment_method: { id: "pm_secret" },
+  }
+  const hostileReason = getStripeExpressCheckoutExceptionReason(hostileThrownValue)
+  assert.equal(hostileReason, "exception")
+  assert.equal(JSON.stringify(hostileReason).includes("secret"), false)
+  assert.equal(JSON.stringify(hostileReason).includes("person@example.com"), false)
+
+  assert.match(stripeOfferElementsSource, /captureCheckoutException\(result\.error,/)
+  assert.match(
+    stripeOfferElementsSource,
+    /captureCheckoutException\(new Error\("Stripe Express Checkout confirmation failed"\),/,
+  )
+  assert.doesNotMatch(stripeOfferElementsSource, /captureCheckoutException\(error,/)
+  assert.match(stripeOfferElementsSource, /const message = getStripeOfferElementsErrorMessage\(\)/)
 })
 
 test("prepared checkout synchronization runs the claim inside Stripe's server-update boundary", async () => {

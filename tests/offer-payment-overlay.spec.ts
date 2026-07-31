@@ -808,6 +808,27 @@ test.describe("@ci offer payment overlay", () => {
     await expect(checkout.getByTestId("paypal-button")).toBeDisabled()
   })
 
+  test("Apple Pay Express onConfirm returns the checkout promise", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&confirm=deferred`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+
+    await checkout.getByRole("button", { name: "Apple Pay", exact: true }).click()
+
+    await expect(diagnostic).toHaveAttribute("data-apple-pay-confirm-return", "thenable_pending")
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await checkout
+      .getByRole("button", { name: "Stripe-Bestätigung abschließen simulieren" })
+      .click()
+    await expect(diagnostic).toHaveAttribute("data-apple-pay-confirm-return", "thenable_settled")
+  })
+
   test("a rejected Stripe confirmation shows recovery and releases its provider lock", async ({
     page,
   }) => {

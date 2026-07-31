@@ -2,10 +2,63 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   buildCheckoutSentryPayload,
+  captureCheckoutException,
   getCheckoutRateLimitReason,
   scrubSentryBreadcrumb,
   scrubSentryEvent,
 } from "../src/lib/observability/checkout"
+
+test("captureCheckoutException preserves only bounded Express Checkout error context", () => {
+  const providerError = { message: "payment confirmation failed", code: "payment_failed" }
+  const tags: Record<string, string> = {}
+  let context: Record<string, unknown> | null = null
+  let captured: unknown = null
+
+  captureCheckoutException(
+    providerError,
+    {
+      provider: "stripe",
+      stage: "stripe_express_checkout_confirm",
+      source: "quiz_result_offer",
+      checkoutAttemptId: "attempt-123",
+      status: "failed",
+      reason: "confirm_error",
+    },
+    {
+      addBreadcrumb: () => undefined,
+      captureException: (error) => {
+        captured = error
+      },
+      withScope: (callback) =>
+        callback({
+          setContext: (_name, value) => {
+            context = value
+          },
+          setTag: (key, value) => {
+            tags[key] = value
+          },
+        }),
+    },
+  )
+
+  assert.equal(captured, providerError)
+  assert.deepEqual(tags, {
+    "checkout.provider": "stripe",
+    "checkout.stage": "stripe_express_checkout_confirm",
+    "checkout.source": "quiz_result_offer",
+    "checkout.status": "failed",
+    "checkout.reason": "confirm_error",
+  })
+  assert.deepEqual(context, {
+    provider: "stripe",
+    stage: "stripe_express_checkout_confirm",
+    source: "quiz_result_offer",
+    checkout_attempt_id: "attempt-123",
+    status: "failed",
+    reason: "confirm_error",
+  })
+  assert.equal(JSON.stringify({ tags, context }).includes("client_secret"), false)
+})
 
 test("buildCheckoutSentryPayload keeps searchable checkout tags without raw PayPal token", () => {
   const payload = buildCheckoutSentryPayload({
