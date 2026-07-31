@@ -337,6 +337,7 @@ async function retrieveOneTimeCheckoutSession(session: Stripe.Checkout.Session, 
 }
 
 function assertOneTimeCheckoutSession(session: OneTimeSession) {
+  assertCheckoutPreparationClaimed(session)
   const email = session.customer_details?.email
   const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id
   const paymentIntentId = stripeObjectId(session.payment_intent)

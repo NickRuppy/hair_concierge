@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
+  classifyOneTimeStripeSessionRecovery,
   hashPreparedCheckoutToken,
   hasMatchingPreparedCheckoutClaim,
   isOfferCheckoutPrewarmEnabled,
@@ -66,16 +67,44 @@ test("accepts the allowlisted Elements presentation only for quiz-result offers"
 })
 
 test("accepts only the narrow one-time personal-plan request contract", () => {
-  const validOneTime = StripeCheckoutSessionRequestSchema.safeParse({
-    purchaseKind: "personal_plan_once",
+  const oneTimeBase = {
+    purchaseKind: "personal_plan_once" as const,
     leadId: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
-    source: "quiz_result_offer",
-    presentation: "offer_overlay_elements",
+    funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    source: "quiz_result_offer" as const,
+    presentation: "offer_overlay_elements" as const,
+  }
+  const validOneTime = StripeCheckoutSessionRequestSchema.safeParse({
+    ...oneTimeBase,
     checkoutAttemptId,
     funnelEventId,
-    funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
     consentAccepted: true,
     consentCopyVersion: "2026-07-31",
+  })
+  const validPreparation = StripeCheckoutSessionRequestSchema.safeParse({
+    ...oneTimeBase,
+    action: "prepare",
+    preparationId,
+  })
+  const validClaim = StripeCheckoutSessionRequestSchema.safeParse({
+    ...oneTimeBase,
+    action: "claim",
+    preparationId,
+    preparationToken,
+    preparedSessionId: "cs_test_personal_plan_once",
+    checkoutAttemptId,
+    funnelEventId,
+    consentAccepted: true,
+    consentCopyVersion: "2026-07-31",
+  })
+  const claimWithoutConsent = StripeCheckoutSessionRequestSchema.safeParse({
+    ...oneTimeBase,
+    action: "claim",
+    preparationId,
+    preparationToken,
+    preparedSessionId: "cs_test_personal_plan_once",
+    checkoutAttemptId,
+    funnelEventId,
   })
   const withSubscriptionInterval = StripeCheckoutSessionRequestSchema.safeParse({
     purchaseKind: "personal_plan_once",
@@ -101,6 +130,9 @@ test("accepts only the narrow one-time personal-plan request contract", () => {
   })
 
   assert.equal(validOneTime.success, true)
+  assert.equal(validPreparation.success, true)
+  assert.equal(validClaim.success, true)
+  assert.equal(claimWithoutConsent.success, false)
   assert.equal(withSubscriptionInterval.success, false)
   assert.equal(withoutAttempt.success, false)
   assert.equal(browserAmount.success, false)
@@ -172,6 +204,24 @@ test("one-time checkout reuses only an open Stripe Session with a client secret"
       client_secret: "cs_secret_expired",
     }),
     null,
+  )
+  assert.deepEqual(
+    classifyOneTimeStripeSessionRecovery({
+      status: "open",
+      client_secret: "cs_secret_reusable",
+    }),
+    { type: "reuse", clientSecret: "cs_secret_reusable" },
+  )
+  assert.deepEqual(
+    classifyOneTimeStripeSessionRecovery({
+      status: "expired",
+      client_secret: "cs_secret_expired",
+    }),
+    { type: "replace" },
+  )
+  assert.deepEqual(
+    classifyOneTimeStripeSessionRecovery({ status: "complete", client_secret: null }),
+    { type: "complete" },
   )
   assert.equal(
     reusableOneTimeStripeSessionClientSecret({
@@ -339,6 +389,24 @@ test("claim updates are serialized by preparation id and only accept returned ma
     `offer-elements-claim:${preparationId}`,
   )
   assert.equal(hasMatchingPreparedCheckoutClaim(metadata, checkoutAttemptId, funnelEventId), true)
+  assert.equal(
+    hasMatchingPreparedCheckoutClaim(
+      { ...metadata, personal_plan_once_consent_id: "consent-1" },
+      checkoutAttemptId,
+      funnelEventId,
+      "consent-1",
+    ),
+    true,
+  )
+  assert.equal(
+    hasMatchingPreparedCheckoutClaim(
+      { ...metadata, personal_plan_once_consent_id: "consent-2" },
+      checkoutAttemptId,
+      funnelEventId,
+      "consent-1",
+    ),
+    false,
+  )
   assert.equal(
     hasMatchingPreparedCheckoutClaim(
       metadata,
