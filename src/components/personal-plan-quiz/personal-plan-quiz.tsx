@@ -476,27 +476,9 @@ function personalPlanPortraitConfig(
 }
 
 /**
- * Renders the hair illustration with the shared neck/shoulder body outline behind
- * it (except for very-short assets that already bake in their own body), so every
- * portrait surface in the quiz shows a consistent, un-clipped figure.
+ * Renders the canonical hair asset with the shared neck/shoulder outline behind it,
+ * except for very-short portraits that already include their own body.
  */
-/**
- * Personal-plan-only portrait overrides. The shared hair-portrait library reuses
- * near-identical art for curly/coily "long" vs "very long", so this funnel swaps
- * in two clearly-longer, style-matched assets for those two cells. They are
- * 720×720 transparent webp with no baked body, so the shared SVG body outline
- * still layers behind them exactly like the library's floating-hair assets.
- */
-const PERSONAL_PLAN_PORTRAIT_OVERRIDES: Partial<
-  Record<
-    `${NonNullable<PersonalPlanQuizAnswers["texture"]>}-${NonNullable<PersonalPlanQuizAnswers["hairLength"]>}`,
-    string
-  >
-> = {
-  "curly-very_long": `${PERSONAL_PLAN_ASSET_BASE}/portrait-curly-very-long.webp`,
-  "coily-very_long": `${PERSONAL_PLAN_ASSET_BASE}/portrait-coily-very-long.webp`,
-}
-
 function HairPortraitFigure({
   texture,
   length,
@@ -509,15 +491,10 @@ function HairPortraitFigure({
   padded?: boolean
 }) {
   const asset = resolveHairPortraitAsset(personalPlanPortraitConfig(texture, length))
-  const override =
-    texture && length ? PERSONAL_PLAN_PORTRAIT_OVERRIDES[`${texture}-${length}`] : undefined
-  const src = override ?? asset.src
-  // Overrides are always floating-hair (no baked body), so the shared outline shows.
-  const ownBody = override ? false : asset.ownBody
 
   return (
     <div className={cn("relative aspect-square w-full", padded && "p-2", className)}>
-      {!ownBody ? (
+      {!asset.ownBody ? (
         <svg
           aria-hidden="true"
           className="absolute inset-0 h-full w-full overflow-visible"
@@ -537,7 +514,7 @@ function HairPortraitFigure({
         alt=""
         className="relative block h-full w-full object-contain"
         height={720}
-        src={src}
+        src={asset.src}
         unoptimized
         width={720}
       />

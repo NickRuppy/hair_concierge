@@ -4,7 +4,8 @@
 import { readdirSync } from "node:fs"
 import { join, resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
-import sharp from "sharp"
+
+import { measureHairFill } from "./measure-hair-fill.mjs"
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(scriptDir, "../..")
@@ -31,34 +32,24 @@ const assetDir = assetFlag === -1 ? defaultAssets : resolve(args[assetFlag + 1])
 const files = readdirSync(assetDir)
   .filter((file) => file.endsWith(".webp"))
   .sort()
-if (files.length !== 21) {
+if (assetFlag === -1 && files.length !== 21) {
   throw new Error(`Expected exactly 21 .webp portraits in ${assetDir}, found ${files.length}.`)
 }
+if (files.length === 0) throw new Error(`No .webp portraits found in ${assetDir}.`)
 
 const percent = (value, total) => ((value / total) * 100).toFixed(1)
 
 for (const file of files) {
-  const image = sharp(join(assetDir, file))
-  const { width, height } = await image.metadata()
-  if (!width || !height) throw new Error(`Could not read dimensions for ${file}.`)
-  const raw = await image.ensureAlpha().raw().toBuffer()
-  let minX = width
-  let minY = height
-  let maxX = -1
-  let maxY = -1
-
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (raw[(y * width + x) * 4 + 3] === 0) continue
-      minX = Math.min(minX, x)
-      minY = Math.min(minY, y)
-      maxX = Math.max(maxX, x)
-      maxY = Math.max(maxY, y)
-    }
-  }
-
-  if (maxX === -1) throw new Error(`${file} contains no visible alpha.`)
-  const bounds = `${minX},${minY}–${maxX},${maxY}`
-  const percentages = `${percent(minX, width)}%,${percent(minY, height)}%–${percent(maxX + 1, width)}%,${percent(maxY + 1, height)}%`
-  console.log(`${file}\t${width}×${height}\talpha ${bounds}\t${percentages}`)
+  const measurement = await measureHairFill(join(assetDir, file))
+  const { width, height, top, bottom, maxWidth, alphaBottom } = measurement
+  console.log(
+    [
+      file,
+      `${width}×${height}`,
+      `hair ${top}–${bottom}`,
+      `${percent(top, height)}%–${percent(bottom + 1, height)}%`,
+      `max-width ${maxWidth}`,
+      `alpha-bottom ${alphaBottom}`,
+    ].join("\t"),
+  )
 }

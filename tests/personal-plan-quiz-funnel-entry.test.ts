@@ -171,6 +171,22 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.doesNotMatch(quiz + data, /ABKLÄRUNG|hasPersonalPlanSafetySignal|safetySignals/)
 })
 
+test("personal-plan length portraits always use the canonical shared asset resolver", () => {
+  const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+
+  assert.match(quiz, /resolveHairPortraitAsset\(personalPlanPortraitConfig\(texture, length\)\)/)
+  assert.match(quiz, /src=\{asset\.src\}/)
+  assert.doesNotMatch(quiz, /PERSONAL_PLAN_PORTRAIT_OVERRIDES/)
+  assert.equal(
+    existsSync("public/images/funnels/personal-plan-quiz/portrait-curly-very-long.webp"),
+    false,
+  )
+  assert.equal(
+    existsSync("public/images/funnels/personal-plan-quiz/portrait-coily-very-long.webp"),
+    false,
+  )
+})
+
 test("personal-plan email capture supports one semantic keyboard and CTA submit path", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
 
