@@ -64,7 +64,11 @@ test.describe("@ci personal plan offer motion hooks", () => {
       const repeatingMotion = await page.evaluate(() =>
         document
           .getAnimations()
-          .filter((animation) => animation.playState === "running")
+          .filter(
+            (animation) =>
+              animation.playState === "running" &&
+              animation.effect?.getTiming().iterations === Number.POSITIVE_INFINITY,
+          )
           .map((animation) => animation.effect?.getTiming().iterations),
       )
       expect(repeatingMotion).toEqual([])
@@ -79,6 +83,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
 
     const stickyCta = page.locator("[data-offer-sticky-cta]")
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "pricing")
+    await expect(stickyCta).toHaveAttribute("data-offer-source-section", "hero")
     await expect(stickyCta).toHaveAttribute("data-offer-sticky-state", "before_pricing")
     await expect(stickyCta).toHaveText("Angebot ansehen")
     const beforeBox = await stickyCta.boundingBox()
@@ -90,6 +95,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await expect(stickyCta).toHaveAttribute("data-offer-sticky-state", "after_pricing")
 
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "checkout")
+    await expect(stickyCta).toHaveAttribute("data-offer-source-section", "pricing")
     await expect(stickyCta).toHaveAttribute("data-offer-selected-interval", "quarter")
     await expect(stickyCta).toContainText("Quartal · €34,99")
     await expect(stickyCta).toContainText("Zur Zahlung")
@@ -114,8 +120,10 @@ test.describe("@ci personal plan offer motion hooks", () => {
 
     const stickyCta = page.locator("[data-offer-sticky-cta]")
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "pricing")
+    await expect(stickyCta).toHaveAttribute("data-offer-source-section", "hero")
     await revealPricing(page)
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "checkout")
+    await expect(stickyCta).toHaveAttribute("data-offer-source-section", "pricing")
     await expect(stickyCta).not.toHaveAttribute("data-offer-selected-interval")
     await expect(stickyCta).toContainText("Haarplan · 29,99 €")
     await expect(stickyCta).toContainText("Zur Zahlung")

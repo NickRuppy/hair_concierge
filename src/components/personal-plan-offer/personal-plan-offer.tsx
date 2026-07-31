@@ -445,6 +445,7 @@ export function PersonalPlanOffer({
       ? checkoutSummary.interval
       : undefined
   const stickyDestination = pricingReached ? "checkout" : "pricing"
+  const stickySourceSection = pricingReached ? "pricing" : "hero"
   const stickyAction = pricingReached ? openCheckout : scrollToPricing
   const handlePricingReached = useCallback(() => setPricingReached(true), [])
 
@@ -480,7 +481,7 @@ export function PersonalPlanOffer({
               data-offer-cta={pricingReached && checkoutWaiting ? undefined : "sticky_header"}
               data-offer-destination={stickyDestination}
               data-offer-selected-interval={stickySelectedInterval}
-              data-offer-source-section="hero"
+              data-offer-source-section={stickySourceSection}
               data-offer-sticky-cta=""
               data-offer-sticky-state={pricingReached ? "after_pricing" : "before_pricing"}
               onClick={() => {

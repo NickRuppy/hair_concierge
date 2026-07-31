@@ -69,10 +69,21 @@ type PersonalPlanOverlapSnapshot = {
 async function armPersonalPlanOverlapCapture(page: Page) {
   await page.evaluate(() => {
     const quizWindow = window as Window & {
-      __personalPlanOverlap?: Promise<PersonalPlanOverlapSnapshot>
+      __personalPlanOverlap?: Promise<PersonalPlanOverlapSnapshot | null>
     }
     quizWindow.__personalPlanOverlap = new Promise((resolve) => {
-      const observer = new MutationObserver(() => {
+      let settled = false
+      let timeoutId = 0
+      let observer: MutationObserver
+      const settle = (snapshot: PersonalPlanOverlapSnapshot | null) => {
+        if (settled) return
+        settled = true
+        window.clearTimeout(timeoutId)
+        observer.disconnect()
+        resolve(snapshot)
+      }
+      timeoutId = window.setTimeout(() => settle(null), 1_000)
+      observer = new MutationObserver(() => {
         const outgoing = document.querySelector<HTMLElement>(
           '[data-personal-plan-transition-layer="outgoing"]',
         )
@@ -81,8 +92,7 @@ async function armPersonalPlanOverlapCapture(page: Page) {
           document.querySelectorAll<HTMLElement>("[id]"),
           (element) => element.id,
         )
-        observer.disconnect()
-        resolve({
+        settle({
           direction:
             document
               .querySelector('[data-personal-plan-transition-layer="active"]')
@@ -103,7 +113,7 @@ async function armPersonalPlanOverlapCapture(page: Page) {
 async function readPersonalPlanOverlapCapture(page: Page) {
   return page.evaluate(() => {
     const quizWindow = window as Window & {
-      __personalPlanOverlap?: Promise<PersonalPlanOverlapSnapshot>
+      __personalPlanOverlap?: Promise<PersonalPlanOverlapSnapshot | null>
     }
     return quizWindow.__personalPlanOverlap
   })
@@ -280,13 +290,16 @@ test.describe("@ci personal-plan quiz motion", () => {
     await expect(page.getByRole("heading", { name: "Welche Haarstruktur hast du?" })).toBeVisible()
 
     await page.emulateMedia({ reducedMotion: "reduce" })
+    await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
+    await armPersonalPlanOverlapCapture(page)
     await page.getByRole("button", { name: /Wellig/i }).click()
     await expect(
       page.getByRole("heading", { name: "Wie dick ist ein einzelnes Haar?" }),
     ).toBeVisible()
-    await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
+    const reducedMotionOverlap = await readPersonalPlanOverlapCapture(page)
+    expect(reducedMotionOverlap).toBeNull()
     await expect(page.locator('[data-personal-plan-transition-layer="active"]')).toHaveCSS(
-      "transform",
+      "animation-name",
       "none",
     )
   })
@@ -519,6 +532,12 @@ for (const mobileViewport of mobileViewports) {
       await expect(productCard).toBeVisible()
       expectBoxInsideViewport(await productCard.boundingBox(), viewport!)
 
+      const productName = page.getByText(
+        "Ultra Lightweight Frizz Control Leave-in Conditioner With Long Name",
+        { exact: true },
+      )
+      await expect(productName).toBeVisible()
+      expectBoxInsideViewport(await productName.boundingBox(), viewport!)
       await expect
         .poll(async () =>
           productCard.evaluate((element) => element.scrollWidth <= element.clientWidth),
