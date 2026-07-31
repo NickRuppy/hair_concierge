@@ -56,6 +56,30 @@ export const FUNNEL_EVENT_RATE_LIMIT: RateLimitConfig = {
   windowMs: 60_000,
 }
 
+export const PERSONAL_PLAN_QUIZ_DRAFT_IP_RATE_LIMIT: RateLimitConfig = {
+  prefix: "personal-plan-quiz-draft-ip",
+  limit: 120,
+  windowMs: 60_000,
+}
+
+export const PERSONAL_PLAN_QUIZ_DRAFT_WRITE_RATE_LIMIT: RateLimitConfig = {
+  prefix: "personal-plan-quiz-draft-write",
+  limit: 120,
+  windowMs: 60_000,
+}
+
+export const PERSONAL_PLAN_QUIZ_DRAFT_RESUME_IP_RATE_LIMIT: RateLimitConfig = {
+  prefix: "personal-plan-quiz-draft-resume-ip",
+  limit: 30,
+  windowMs: 60_000,
+}
+
+export const PERSONAL_PLAN_QUIZ_DRAFT_CREDENTIAL_RATE_LIMIT: RateLimitConfig = {
+  prefix: "personal-plan-quiz-draft-credential",
+  limit: 12,
+  windowMs: 60_000,
+}
+
 // 3 sends per 5 minutes per Stripe session_id (conservative — most users send 1)
 export const SEND_AUTH_LINK_RATE_LIMIT: RateLimitConfig = {
   prefix: "send-auth-link",

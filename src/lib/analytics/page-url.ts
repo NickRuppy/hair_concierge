@@ -17,6 +17,7 @@ const SENSITIVE_BROWSER_QUERY_KEYS = new Set([
   "next",
   "redirect_to",
   "refresh_token",
+  "resume_token",
   "session_id",
   "token",
   "token_hash",

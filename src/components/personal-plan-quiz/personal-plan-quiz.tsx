@@ -78,12 +78,22 @@ import {
   getOptionIntensity,
   getPersonalPlanQuizSectionId,
   getPersonalPlanQuizTransitionDirection,
+  choosePersonalPlanQuizResumeDraft,
+  createPersonalPlanQuizServerDraftSession,
+  hasPersonalPlanQuizDurableAnswer,
   loadPersonalPlanQuizDraft,
+  pushPersonalPlanQuizHistoryState,
   savePersonalPlanQuizDraft,
+  shouldFlushPersonalPlanQuizDraftOnPageHide,
+  stripPersonalPlanQuizResumeTokenFromCurrentUrl,
+  withPersonalPlanQuizServerMetadata,
   type OptionIntensity,
   type PersonalPlanQuizAnswers,
+  type PersonalPlanQuizDraft,
   type PersonalPlanQuizEphemeralState,
+  type PersonalPlanQuizResumeBootstrap,
   type PersonalPlanQuizScreenId,
+  type PersonalPlanQuizServerDraftSession,
   type PersonalPlanQuizTransitionDirection,
 } from "@/lib/personal-plan-quiz"
 import {
@@ -300,6 +310,24 @@ function getBrowserSessionStorage(): Storage | null {
 
 function getAnswersKey(answers: PersonalPlanQuizAnswers): string {
   return getPersonalPlanQuizAnswersKey(answers)
+}
+
+function getSettledSectionIndicesForRestoredJourney(
+  history: PersonalPlanQuizScreenId[],
+  screen: PersonalPlanQuizScreenId,
+): ReadonlySet<number> {
+  const settled = new Set<number>()
+  const journey = [...history, screen]
+  for (let index = 0; index < journey.length - 1; index += 1) {
+    const currentSection = getPersonalPlanQuizSectionId(journey[index])
+    const nextSection = getPersonalPlanQuizSectionId(journey[index + 1])
+    const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
+    const nextSectionIndex = SECTION_LABELS.findIndex((section) => section.id === nextSection)
+    if (currentSectionIndex >= 0 && nextSectionIndex > currentSectionIndex) {
+      settled.add(currentSectionIndex)
+    }
+  }
+  return settled
 }
 
 function loadPreparedPlanClaim(
@@ -1725,7 +1753,7 @@ function EmailCapture({
 }: {
   answers: PersonalPlanQuizAnswers
   onPreparedPlanRejected: () => void
-  onSaved: (leadId: string) => void
+  onSaved: (leadId: string) => void | Promise<void>
   preparedPlan: PreparedPlanClaim
 }) {
   const [email, setEmail] = useState("")
@@ -1791,7 +1819,7 @@ function EmailCapture({
         marketingConsent,
         funnelEventId: funnelEventIdRef.current,
       })
-      onSaved(leadId)
+      await onSaved(leadId)
     } catch {
       setError(
         "Deine Auswertung konnte gerade nicht gespeichert werden. Bitte versuche es noch einmal.",
@@ -1936,11 +1964,34 @@ function withSingleAnswer(
   return { ...answers, [field]: value } as PersonalPlanQuizAnswers
 }
 
-export function PersonalPlanQuiz() {
+const DISABLED_PERSONAL_PLAN_RESUME_BOOTSTRAP: PersonalPlanQuizResumeBootstrap = {
+  enabled: false,
+  snapshot: null,
+}
+
+export function PersonalPlanQuiz({
+  resume = DISABLED_PERSONAL_PLAN_RESUME_BOOTSTRAP,
+}: {
+  resume?: PersonalPlanQuizResumeBootstrap
+}) {
   const router = useRouter()
-  const [screen, setScreen] = useState<PersonalPlanQuizScreenId>("texture")
-  const [history, setHistory] = useState<PersonalPlanQuizScreenId[]>([])
-  const [answers, setAnswers] = useState<PersonalPlanQuizAnswers>({})
+  const initialServerDraft =
+    resume.enabled && resume.snapshot
+      ? withPersonalPlanQuizServerMetadata(resume.snapshot.draft, {
+          draftId: resume.snapshot.draftId,
+          revision: resume.snapshot.revision,
+          browserGeneration: resume.snapshot.browserGeneration,
+        })
+      : null
+  const [screen, setScreen] = useState<PersonalPlanQuizScreenId>(
+    () => initialServerDraft?.screen ?? "texture",
+  )
+  const [history, setHistory] = useState<PersonalPlanQuizScreenId[]>(
+    () => initialServerDraft?.history ?? [],
+  )
+  const [answers, setAnswers] = useState<PersonalPlanQuizAnswers>(
+    () => initialServerDraft?.answers ?? {},
+  )
   const [ephemeral, setEphemeral] = useState<PersonalPlanQuizEphemeralState>({})
   const [draftReady, setDraftReady] = useState(false)
   const [preparedPlan, setPreparedPlan] = useState<PreparedPlanState>({
@@ -1949,27 +2000,77 @@ export function PersonalPlanQuiz() {
     error: null,
   })
   const [outgoingLayer, setOutgoingLayer] = useState<PersonalPlanOutgoingLayer | null>(null)
-  const [settledSectionIndices, setSettledSectionIndices] = useState<ReadonlySet<number>>(
-    () => new Set(),
+  const [settledSectionIndices, setSettledSectionIndices] = useState<ReadonlySet<number>>(() =>
+    initialServerDraft
+      ? getSettledSectionIndicesForRestoredJourney(
+          initialServerDraft.history,
+          initialServerDraft.screen,
+        )
+      : new Set(),
   )
   const prefersReducedMotion = usePrefersReducedMotion()
   const outgoingLayerIdRef = useRef(0)
   const transitionActiveLayerRef = useRef<HTMLDivElement | null>(null)
-  const settledSectionIndicesRef = useRef(new Set<number>())
+  const settledSectionIndicesRef = useRef(new Set(settledSectionIndices))
   const autoAdvanceTimer = useRef<number | null>(null)
   const quizStartedRef = useRef(false)
   const quizCompletedRef = useRef(false)
   const preparationRequestRef = useRef<{ answersKey: string; promise: Promise<void> } | null>(null)
   const latestAnswersKeyRef = useRef(getAnswersKey(answers))
+  const latestDraftRef = useRef<PersonalPlanQuizDraft>({
+    screen,
+    history,
+    answers,
+    ...(initialServerDraft?.serverDraftId
+      ? { serverDraftId: initialServerDraft.serverDraftId }
+      : {}),
+    ...(initialServerDraft?.serverRevision !== undefined
+      ? { serverRevision: initialServerDraft.serverRevision }
+      : {}),
+    ...(initialServerDraft?.browserGeneration !== undefined
+      ? { browserGeneration: initialServerDraft.browserGeneration }
+      : {}),
+  })
+  const resumeBootstrapRef = useRef(resume)
+  const serverDraftSessionRef = useRef<PersonalPlanQuizServerDraftSession | null>(null)
+
+  function getServerDraftSession() {
+    serverDraftSessionRef.current =
+      serverDraftSessionRef.current ??
+      createPersonalPlanQuizServerDraftSession({
+        bootstrap: resumeBootstrapRef.current,
+        onMetadata: (metadata) => {
+          latestDraftRef.current = withPersonalPlanQuizServerMetadata(
+            latestDraftRef.current,
+            metadata,
+          )
+          const storage = getBrowserDraftStorage()
+          if (storage) savePersonalPlanQuizDraft(latestDraftRef.current, storage)
+        },
+      })
+    return serverDraftSessionRef.current
+  }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       const storage = getBrowserDraftStorage()
-      const draft = storage ? loadPersonalPlanQuizDraft(storage) : null
+      const localDraft = storage ? loadPersonalPlanQuizDraft(storage) : null
+      const serverSnapshot = resumeBootstrapRef.current.enabled
+        ? resumeBootstrapRef.current.snapshot
+        : null
+      const restored = choosePersonalPlanQuizResumeDraft(localDraft, serverSnapshot)
+      const draft = restored.draft
       if (draft) {
+        latestDraftRef.current = draft
         setScreen(draft.screen)
         setHistory(draft.history)
         setAnswers(draft.answers)
+        const restoredSections = getSettledSectionIndicesForRestoredJourney(
+          draft.history,
+          draft.screen,
+        )
+        settledSectionIndicesRef.current = new Set(restoredSections)
+        setSettledSectionIndices(restoredSections)
         const sessionStorage = getBrowserSessionStorage()
         const claim = sessionStorage ? loadPreparedPlanClaim(sessionStorage, draft.answers) : null
         if (claim) {
@@ -1978,7 +2079,10 @@ export function PersonalPlanQuiz() {
         // Seed one browser history entry per restorable step so the system
         // back gesture maps onto the in-app back navigation after a reload.
         for (let index = 0; index < draft.history.length; index += 1) {
-          window.history.pushState({ ppq: index }, "")
+          pushPersonalPlanQuizHistoryState({ ppq: index })
+        }
+        if (storage && restored.source === "server") {
+          savePersonalPlanQuizDraft(draft, storage)
         }
       }
       setDraftReady(true)
@@ -1997,8 +2101,30 @@ export function PersonalPlanQuiz() {
 
   useEffect(() => {
     if (!draftReady) return
+    const serverDraftSession = getServerDraftSession()
+    const metadata = serverDraftSession.getMetadata()
+    const draft = withPersonalPlanQuizServerMetadata({ screen, history, answers }, metadata)
+    latestDraftRef.current = draft
     const storage = getBrowserDraftStorage()
-    if (storage) savePersonalPlanQuizDraft({ screen, history, answers }, storage)
+    if (storage) savePersonalPlanQuizDraft(draft, storage)
+    if (hasPersonalPlanQuizDurableAnswer(answers)) {
+      serverDraftSession.queueSave(draft)
+    }
+  }, [answers, draftReady, history, screen])
+
+  useEffect(() => {
+    if (!draftReady) return
+    const onPageHide = (event: PageTransitionEvent) => {
+      if (!shouldFlushPersonalPlanQuizDraftOnPageHide(event)) return
+      if (!hasPersonalPlanQuizDurableAnswer(answers)) return
+      const serverDraftSession = getServerDraftSession()
+      const metadata = serverDraftSession.getMetadata()
+      serverDraftSession.flushKeepalive(
+        withPersonalPlanQuizServerMetadata({ screen, history, answers }, metadata),
+      )
+    }
+    window.addEventListener("pagehide", onPageHide)
+    return () => window.removeEventListener("pagehide", onPageHide)
   }, [answers, draftReady, history, screen])
 
   const answersKey = useMemo(() => getAnswersKey(answers), [answers])
@@ -2180,7 +2306,7 @@ export function PersonalPlanQuiz() {
     setScreen(next)
     // Add a browser history entry so the system back button steps back in-app
     // instead of leaving the funnel.
-    window.history.pushState({ ppq: next }, "")
+    pushPersonalPlanQuizHistoryState({ ppq: next })
     window.scrollTo(0, 0)
   }
 
@@ -2506,6 +2632,8 @@ export function PersonalPlanQuiz() {
             setPreparedPlan({ status: "idle", claim: null, error: null })
           }}
           onSaved={(leadId) => {
+            stripPersonalPlanQuizResumeTokenFromCurrentUrl()
+            void getServerDraftSession().revoke()
             const storage = getBrowserDraftStorage()
             if (storage) clearPersonalPlanQuizDraft(storage)
             const sessionStorage = getBrowserSessionStorage()

@@ -69,7 +69,10 @@ test("guided story is registered while the historical offers remain available fo
 
 test("landing route owns tracking outside contributor variants", () => {
   assert.match(landingRouteSource, /<LandingTracking \/>/)
-  assert.match(landingRouteSource, /renderLandingVariant\(funnelPackage\.landingVariant\)/)
+  assert.match(
+    landingRouteSource,
+    /renderLandingVariant\(funnelPackage\.landingVariant,\s*\{\s*personalPlanQuizResume,\s*\}\)/,
+  )
   assert.doesNotMatch(defaultLandingSource, /LandingTracking/)
 })
 
