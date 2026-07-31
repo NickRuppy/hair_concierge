@@ -633,7 +633,7 @@ function OptionCard({
       ) : null}
       <div
         className={cn(
-          "flex flex-1 gap-3",
+          "flex w-full flex-1 gap-3",
           hasMedia ? "items-start p-4" : "items-center",
           visualLayout === "stacked" && "px-4 py-3",
           visualLayout === "grid" &&
