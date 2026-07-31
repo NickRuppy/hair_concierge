@@ -8,6 +8,8 @@ type CheckoutStage =
   | "stripe_checkout_session_create"
   | "stripe_embedded_checkout_client_secret"
   | "stripe_embedded_checkout_load"
+  | "stripe_express_checkout_confirm"
+  | "stripe_prepared_checkout_sync"
   | "stripe_webhook_activation"
   | "paypal_create_subscription_intent"
   | "paypal_create_subscription"
@@ -27,6 +29,9 @@ export interface CheckoutSentryDetails {
   source?: CheckoutSource
   interval?: CheckoutInterval
   leadId?: string | null
+  checkoutAttemptId?: string | null
+  preparationId?: string | null
+  durationMs?: number
   stripeSessionId?: string | null
   stripeCustomerId?: string | null
   stripeSubscriptionId?: string | null
@@ -116,6 +121,9 @@ export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): Chec
   addOptional(context, "source", details.source)
   addOptional(context, "interval", details.interval)
   addOptional(context, "lead_id", details.leadId)
+  addOptional(context, "checkout_attempt_id", details.checkoutAttemptId)
+  addOptional(context, "preparation_id", details.preparationId)
+  addOptional(context, "duration_ms", details.durationMs)
   addOptional(context, "stripe_session_id", details.stripeSessionId ? REDACTED_VALUE : null)
   addOptional(context, "stripe_customer_id", details.stripeCustomerId)
   addOptional(context, "stripe_subscription_id", details.stripeSubscriptionId)

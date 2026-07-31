@@ -11,6 +11,10 @@ import {
   type CheckoutFailure,
 } from "@/components/checkout/payment-method-checkout"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
+import type {
+  PreparedCheckoutActivationResult,
+  PreparedCheckoutSyncResult,
+} from "@/components/checkout/stripe-offer-elements-checkout"
 import {
   PersonalPlanOneTimeCheckout,
   type PersonalPlanOneTimeStripePreparationState,
@@ -99,8 +103,10 @@ type ActivePreparedOfferCheckout = PreparedOfferCheckout & {
 }
 type PreparedOfferCheckoutClaim = {
   attemptId: string
+  funnelEventId: string
   preparationId: string
-  promise: Promise<boolean>
+  promise: Promise<PreparedCheckoutActivationResult>
+  tracked: boolean
 }
 type PreparedWalletAvailability = {
   available: boolean
@@ -154,6 +160,9 @@ export type ResultOfferPricingCheckoutLifecycleFixture = {
     interval: BillingInterval
     onFirstPaymentEngagement: () => void
     onApplePayAvailabilityResolved: (available: boolean) => void
+    onPreparedCheckoutActivate?: (signal: AbortSignal) => Promise<PreparedCheckoutActivationResult>
+    onPreparedCheckoutSyncFailed?: (failure: PreparedCheckoutSyncResult) => void
+    onPreparedCheckoutSyncSucceeded?: () => void
     preparationId: string | null
     suppressExpressWallet: boolean
     visible: boolean
@@ -257,7 +266,7 @@ export async function canConfirmPreparedOfferCheckout(
   ) {
     return false
   }
-  return claim.promise
+  return claim.promise.then((result) => result.activated)
 }
 
 function createOfferCheckoutPreparationId() {
@@ -1184,6 +1193,7 @@ function MembershipResultOfferPricing({
         attemptId: string
         interval: BillingInterval
       },
+      signal: AbortSignal,
     ) => {
       if (preparedClaimRef.current?.preparationId === preparation.preparationId) {
         return preparedClaimRef.current.promise
@@ -1192,16 +1202,21 @@ function MembershipResultOfferPricing({
       const funnelEventId = createFunnelEventId()
       const promise = (async () => {
         if (checkoutLifecycleFixture) {
-          return checkoutLifecycleFixture.claim({
+          const activated = await checkoutLifecycleFixture.claim({
             attemptId,
             interval,
             preparationId: preparation.preparationId,
           })
+          return {
+            activated,
+            response: new Response(null, { status: activated ? 200 : 409 }),
+          }
         }
 
         const response = await fetch("/api/stripe/create-checkout-session", {
           method: "POST",
           headers: { "content-type": "application/json" },
+          signal,
           body: JSON.stringify({
             action: "claim",
             interval,
@@ -1215,54 +1230,37 @@ function MembershipResultOfferPricing({
             funnelEventId,
           }),
         })
-        if (!response.ok) return false
-        const data = (await response.json().catch(() => ({}))) as {
+        if (!response.ok) return { activated: false, response }
+        const data = (await response
+          .clone()
+          .json()
+          .catch(() => ({}))) as {
           status?: unknown
           client_secret?: unknown
           session_id?: unknown
         }
-        return (
-          data.status === "claimed" &&
-          data.client_secret === preparation.clientSecret &&
-          data.session_id === preparation.sessionId
-        )
-      })()
-        .catch(() => false)
-        .then((claimed) => {
-          if (claimed) {
-            const plan = getStripePricingPlan(interval)
-            trackAppEvent("checkout_started", {
-              ...(offerContext ?? {}),
-              checkoutAttemptId: attemptId,
-              checkoutPresentation: paymentOverlayEnabled ? "overlay" : "inline",
-              checkoutStartTrigger: "automatic_mount",
-              interval,
-              leadId: leadId ?? undefined,
-              provider: "stripe",
-              source: "quiz_result_offer",
-              funnelEventId,
-              currency: plan.currency,
-              planId: plan.analyticsId,
-              value: plan.amount,
-            })
-          }
-          if (!claimed) {
-            updatePreparedCheckout(null)
-            setActivePreparedCheckout((current) =>
-              current?.preparationId === preparation.preparationId ? null : current,
-            )
-          }
-          return claimed
-        })
+        return {
+          activated:
+            data.status === "claimed" &&
+            data.client_secret === preparation.clientSecret &&
+            data.session_id === preparation.sessionId,
+          response,
+        }
+      })().catch(() => ({
+        activated: false,
+        response: new Response(null, { status: 503 }),
+      }))
 
       preparedClaimRef.current = {
         attemptId,
+        funnelEventId,
         preparationId: preparation.preparationId,
         promise,
+        tracked: false,
       }
       return promise
     },
-    [checkoutLifecycleFixture, leadId, offerContext, paymentOverlayEnabled, updatePreparedCheckout],
+    [checkoutLifecycleFixture, leadId],
   )
 
   const recordPreparedApplePayAvailability = useCallback(
@@ -1488,12 +1486,6 @@ function MembershipResultOfferPricing({
       })
     }
     const stripePromise = ensureStripePromise()
-    if (matchingPreparation) {
-      claimPreparedCheckout(matchingPreparation, {
-        attemptId: nextCheckoutAttemptId,
-        interval: selectedInterval,
-      })
-    }
     if (stripePublishableKey && offerContext && (paymentOverlayEnabled || !paypalEnabled)) {
       trackStripeJsAvailability(stripePromise, (failure) =>
         trackCheckoutFailure({
@@ -1948,6 +1940,91 @@ function MembershipResultOfferPricing({
     return false
   }, [activePreparedCheckout, checkoutAttemptId, checkoutInterval, trackCheckoutFailure])
 
+  const handlePreparedStripeCheckoutActivate = useCallback(
+    (signal: AbortSignal) => {
+      if (!activePreparedCheckout) {
+        return Promise.resolve({
+          activated: false,
+          response: new Response(null, { status: 409 }),
+        })
+      }
+      return claimPreparedCheckout(
+        activePreparedCheckout,
+        {
+          attemptId: activePreparedCheckout.attemptId,
+          interval: activePreparedCheckout.interval,
+        },
+        signal,
+      )
+    },
+    [activePreparedCheckout, claimPreparedCheckout],
+  )
+
+  const handlePreparedStripeCheckoutSyncSucceeded = useCallback(() => {
+    const active = activePreparedCheckout
+    const claim = preparedClaimRef.current
+    if (
+      !active ||
+      !claim ||
+      claim.tracked ||
+      claim.attemptId !== active.attemptId ||
+      claim.preparationId !== active.preparationId
+    ) {
+      return
+    }
+    claim.tracked = true
+    const plan = getStripePricingPlan(active.interval)
+    trackAppEvent("checkout_started", {
+      ...(offerContext ?? {}),
+      checkoutAttemptId: active.attemptId,
+      checkoutPresentation: paymentOverlayEnabled ? "overlay" : "inline",
+      checkoutStartTrigger: "automatic_mount",
+      interval: active.interval,
+      leadId: leadId ?? undefined,
+      provider: "stripe",
+      source: "quiz_result_offer",
+      funnelEventId: claim.funnelEventId,
+      currency: plan.currency,
+      planId: plan.analyticsId,
+      value: plan.amount,
+    })
+  }, [activePreparedCheckout, leadId, offerContext, paymentOverlayEnabled])
+
+  const handlePreparedStripeCheckoutSyncFailed = useCallback(
+    (failure: PreparedCheckoutSyncResult) => {
+      if (failure.status !== "failed") return
+      const failedPreparationId =
+        activePreparedCheckout?.preparationId ?? preparedClaimRef.current?.preparationId ?? null
+      preparedClaimRef.current = null
+      updatePreparedCheckout(null)
+      if (failedPreparationId) {
+        setActivePreparedCheckout((current) =>
+          current?.preparationId === failedPreparationId ? null : current,
+        )
+      }
+      setSuppressExpressWallet(false)
+      if (checkoutInterval && checkoutAttemptId) {
+        trackCheckoutFailure({
+          attemptId: checkoutAttemptId,
+          failure: {
+            errorCode: `prepared_checkout_sync_${failure.reason}`,
+            failureStage: "provider_session",
+            retryable: true,
+          },
+          interval: checkoutInterval,
+          provider: "stripe",
+        })
+      }
+    },
+    [
+      activePreparedCheckout,
+      checkoutAttemptId,
+      checkoutInterval,
+      trackCheckoutFailure,
+      updatePreparedCheckout,
+    ],
+  )
+
   const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval)
   const preparedCheckoutForRender =
     checkoutInterval !== null
@@ -1956,6 +2033,10 @@ function MembershipResultOfferPricing({
         ? preparedCheckout
         : null
   const paymentCheckoutInterval = checkoutInterval ?? preparedCheckoutForRender?.interval ?? null
+  const onPreparedCheckoutActivate =
+    checkoutInterval !== null && activePreparedCheckout
+      ? handlePreparedStripeCheckoutActivate
+      : undefined
   const paymentCheckout = paymentCheckoutInterval ? (
     checkoutLifecycleFixture ? (
       checkoutLifecycleFixture.renderPaymentCheckout({
@@ -1970,6 +2051,9 @@ function MembershipResultOfferPricing({
             preparedCheckoutForRender?.preparationId ?? null,
             available,
           ),
+        onPreparedCheckoutActivate,
+        onPreparedCheckoutSyncFailed: handlePreparedStripeCheckoutSyncFailed,
+        onPreparedCheckoutSyncSucceeded: handlePreparedStripeCheckoutSyncSucceeded,
         preparationId: preparedCheckoutForRender?.preparationId ?? null,
         suppressExpressWallet,
         visible: checkoutInterval !== null,
@@ -2002,6 +2086,10 @@ function MembershipResultOfferPricing({
             available,
           )
         }
+        onPreparedCheckoutActivate={onPreparedCheckoutActivate}
+        onPreparedCheckoutSyncFailed={handlePreparedStripeCheckoutSyncFailed}
+        onPreparedCheckoutSyncSucceeded={handlePreparedStripeCheckoutSyncSucceeded}
+        preparedCheckoutId={preparedCheckoutForRender?.preparationId}
         onPaymentMethodSelected={handlePaymentMethodSelected}
         paymentElementEnabled={checkoutInterval !== null}
         onProviderLockClaim={expressElementsEnabled ? claimOfferProvider : undefined}

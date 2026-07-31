@@ -270,6 +270,10 @@ function PaymentFixture({
         canConfirm: confirmBehavior !== "blocked",
         total: labCheckoutTotal,
         getExpressCheckoutElement: () => expressElement,
+        runServerUpdate: async (update) => {
+          await update()
+          return { type: "success" }
+        },
         confirm: async () => {
           setConfirmationCount((count) => count + 1)
           if (confirmBehavior === "reject") {
@@ -633,6 +637,11 @@ type PrewarmScenario =
   | "timeout-wallet"
   | "timeout-cold"
   | "plan-change"
+  | "claim-slow"
+  | "claim-failure"
+  | "client-loading"
+  | "sync-failure"
+  | "sync-key-change"
 
 const prewarmScenarios = new Set<PrewarmScenario>([
   "ready",
@@ -643,6 +652,11 @@ const prewarmScenarios = new Set<PrewarmScenario>([
   "timeout-wallet",
   "timeout-cold",
   "plan-change",
+  "claim-slow",
+  "claim-failure",
+  "client-loading",
+  "sync-failure",
+  "sync-key-change",
 ])
 
 function getPrewarmScenario(value: string | undefined): PrewarmScenario {
@@ -677,6 +691,48 @@ function PrewarmPaymentFixture({
 }) {
   const availabilityCallbackRef = React.useRef(input.onApplePayAvailabilityResolved)
   const walletResolvedCallbackRef = React.useRef(onWalletResolved)
+  const onPreparedCheckoutActivate = input.onPreparedCheckoutActivate
+  const onPreparedCheckoutSyncFailed = input.onPreparedCheckoutSyncFailed
+  const onPreparedCheckoutSyncSucceeded = input.onPreparedCheckoutSyncSucceeded
+  const [effectivePreparationId, setEffectivePreparationId] = React.useState(input.preparationId)
+  const [runServerUpdateCount, setRunServerUpdateCount] = React.useState(0)
+  const runServerUpdateCountRef = React.useRef(0)
+  const wallet = getFixtureWalletResult(scenario)
+
+  const checkoutResult = React.useMemo<StripeOfferCheckoutResult>(() => {
+    if (scenario === "client-loading" && input.preparationId) {
+      return { type: "loading" }
+    }
+
+    return {
+      type: "success",
+      checkout: {
+        canConfirm: true,
+        confirm: async () => ({ type: "success" }),
+        getExpressCheckoutElement: () => null,
+        runServerUpdate: async (update) => {
+          runServerUpdateCountRef.current += 1
+          const updateIndex = runServerUpdateCountRef.current
+          setRunServerUpdateCount(updateIndex)
+          try {
+            const response = await update()
+            if (!(response instanceof Response)) {
+              return { type: "error", error: { message: "fixture response missing" } }
+            }
+          } catch {
+            return { type: "error", error: { message: "fixture activation failed" } }
+          }
+          if (scenario === "sync-key-change" && updateIndex === 1) {
+            await new Promise((resolve) => window.setTimeout(resolve, 250))
+          }
+          return scenario === "sync-failure"
+            ? { type: "error", error: { message: "fixture update failed" } }
+            : { type: "success" }
+        },
+        total: labCheckoutTotal,
+      },
+    }
+  }, [input.preparationId, scenario])
 
   React.useEffect(() => {
     availabilityCallbackRef.current = input.onApplePayAvailabilityResolved
@@ -684,14 +740,28 @@ function PrewarmPaymentFixture({
   }, [input.onApplePayAvailabilityResolved, onWalletResolved])
 
   React.useEffect(() => {
+    setEffectivePreparationId(input.preparationId)
+    runServerUpdateCountRef.current = 0
+    setRunServerUpdateCount(0)
+  }, [input.preparationId])
+
+  React.useEffect(() => {
     if (!input.preparationId) return
-    const wallet = getFixtureWalletResult(scenario)
     const timer = window.setTimeout(() => {
       availabilityCallbackRef.current(wallet.available)
       walletResolvedCallbackRef.current()
     }, wallet.delayMs)
     return () => window.clearTimeout(timer)
-  }, [input.preparationId, scenario])
+  }, [input.preparationId, wallet.available, wallet.delayMs])
+
+  React.useEffect(() => {
+    if (scenario !== "sync-key-change" || !input.visible || !input.preparationId) return
+    const timer = window.setTimeout(
+      () => setEffectivePreparationId(`${input.preparationId}-next`),
+      50,
+    )
+    return () => window.clearTimeout(timer)
+  }, [input.preparationId, input.visible, scenario])
 
   if (!input.visible) {
     return <div aria-hidden="true" data-testid="prewarm-payment-hidden" />
@@ -701,21 +771,42 @@ function PrewarmPaymentFixture({
     <section
       data-testid="prewarm-payment-checkout"
       data-checkout-attempt-id={input.checkoutAttemptId ?? "none"}
-      data-preparation-id={input.preparationId ?? "cold"}
+      data-preparation-id={effectivePreparationId ?? "cold"}
+      data-run-server-update-count={runServerUpdateCount}
       data-suppress-express-wallet={String(input.suppressExpressWallet)}
     >
-      {input.suppressExpressWallet ? null : (
-        <div data-testid="prewarm-apple-pay" data-offer-payment-step="apple_pay">
-          Apple Pay
-        </div>
-      )}
-      <div data-testid="prewarm-paypal" data-offer-payment-step="paypal">
-        PayPal
-      </div>
-      <label>
-        Karte
-        <input data-testid="prewarm-card" onChange={input.onFirstPaymentEngagement} />
-      </label>
+      <StripeOfferElementsCheckoutContent
+        checkoutAttemptId={input.checkoutAttemptId ?? undefined}
+        checkoutResult={checkoutResult}
+        initialApplePayAvailability={wallet.available ? "available" : "unavailable"}
+        onFirstPaymentEngagement={input.onFirstPaymentEngagement}
+        onPreparedCheckoutActivate={onPreparedCheckoutActivate}
+        onPreparedCheckoutSyncFailed={onPreparedCheckoutSyncFailed}
+        onPreparedCheckoutSyncSucceeded={onPreparedCheckoutSyncSucceeded}
+        onRetry={() => undefined}
+        paymentElement={
+          <label>
+            Karte
+            <input data-testid="prewarm-card" onChange={input.onFirstPaymentEngagement} />
+          </label>
+        }
+        paymentElementReady
+        preparedCheckoutId={effectivePreparationId ?? undefined}
+        renderExpressCheckoutElement={() =>
+          wallet.available ? (
+            <div data-testid="prewarm-apple-pay" data-offer-payment-step="apple_pay">
+              Apple Pay
+            </div>
+          ) : null
+        }
+        secondaryPaymentMethod={
+          <div data-testid="prewarm-paypal" data-offer-payment-step="paypal">
+            PayPal
+          </div>
+        }
+        suppressExpressWallet={input.suppressExpressWallet}
+        visible
+      />
     </section>
   )
 }
@@ -836,7 +927,10 @@ function OfferPaymentPrewarmLabContent({ scenario: scenarioInput }: { scenario?:
       },
       claim: async () => {
         setClaimCount((count) => count + 1)
-        return true
+        if (scenario === "claim-slow") {
+          await new Promise((resolve) => window.setTimeout(resolve, 400))
+        }
+        return scenario !== "claim-failure"
       },
       renderPaymentCheckout: (input) => (
         <PrewarmPaymentFixture

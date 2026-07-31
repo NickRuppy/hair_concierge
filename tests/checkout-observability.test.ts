@@ -64,6 +64,24 @@ test("buildCheckoutSentryPayload redacts raw Stripe checkout session ids", () =>
   assert.equal(JSON.stringify(payload).includes("cs_test_secret"), false)
 })
 
+test("buildCheckoutSentryPayload keeps prepared-session sync diagnostics sanitized", () => {
+  const payload = buildCheckoutSentryPayload({
+    provider: "stripe",
+    stage: "stripe_prepared_checkout_sync",
+    source: "quiz_result_offer",
+    checkoutAttemptId: "attempt-123",
+    preparationId: "preparation-123",
+    durationMs: 421,
+    status: "succeeded",
+  })
+
+  assert.equal(payload.context.checkout_attempt_id, "attempt-123")
+  assert.equal(payload.context.preparation_id, "preparation-123")
+  assert.equal(payload.context.duration_ms, 421)
+  assert.equal(payload.tags["checkout.status"], "succeeded")
+  assert.equal(JSON.stringify(payload).includes("client_secret"), false)
+})
+
 test("scrubSentryEvent removes checkout activation secrets from request urls", () => {
   const event = scrubSentryEvent({
     request: {
