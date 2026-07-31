@@ -59,6 +59,8 @@ test("one-time Apple Pay prewarms before the drawer opens without creating check
   assert.match(pricingSource, /canUseApplePayCapabilitySignal/)
   assert.match(pricingSource, /document\.visibilityState !== "visible"/)
   assert.match(pricingSource, /oneTimePrewarmAuthorized/)
+  assert.match(pricingSource, /stripePreparationExpiresAtRef/)
+  assert.match(pricingSource, /stripePreparationRefreshRequestId/)
   assert.match(pricingSource, /keepMounted=\{oneTimePrewarmEligible\}/)
   assert.match(pricingSource, /visible=\{checkoutOpen\}/)
   assert.match(pricingSource, /onStripePreparationStateChange/)
@@ -74,6 +76,7 @@ test("one-time Apple Pay prewarms before the drawer opens without creating check
 
   assert.match(checkoutSource, /checkoutAttemptId: string \| null/)
   assert.match(checkoutSource, /onStripePreparationStateChangeRef/)
+  assert.match(checkoutSource, /if \(visibleRef\.current\) setError\(checkoutStartError\)/)
   assert.match(checkoutSource, /visible: boolean/)
   assert.match(checkoutSource, /visible=\{visible\}/)
   assert.match(checkoutSource, /if \(!checkoutAttemptId \|\| !offerContext/)

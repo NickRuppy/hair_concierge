@@ -615,6 +615,7 @@ type PrewarmScenario =
   | "fast"
   | "unavailable"
   | "failure"
+  | "expired"
   | "timeout-wallet"
   | "timeout-cold"
   | "plan-change"
@@ -624,6 +625,7 @@ const prewarmScenarios = new Set<PrewarmScenario>([
   "fast",
   "unavailable",
   "failure",
+  "expired",
   "timeout-wallet",
   "timeout-cold",
   "plan-change",
@@ -637,6 +639,7 @@ function getPrewarmScenario(value: string | undefined): PrewarmScenario {
 
 function getFixturePrepareDelayMs(scenario: PrewarmScenario) {
   if (scenario === "timeout-cold") return 60_000
+  if (scenario === "expired") return 250
   return 0
 }
 
@@ -718,6 +721,7 @@ function OneTimePrewarmPaymentFixture({
   onWalletResolved: () => void
   scenario: PrewarmScenario
 }) {
+  const refreshRequestId = input.stripePreparationRefreshRequestId
   const inputRef = React.useRef(input)
   const onPrepareRef = React.useRef(onPrepare)
   const onWalletResolvedRef = React.useRef(onWalletResolved)
@@ -741,7 +745,11 @@ function OneTimePrewarmPaymentFixture({
 
       const wallet = getFixtureWalletResult(scenario)
       preparationResultTimer = window.setTimeout(() => {
-        inputRef.current.onStripePreparationStateChange("prepared")
+        const expiresAt =
+          scenario === "expired" && refreshRequestId === 0
+            ? Math.floor(Date.now() / 1000) - 1
+            : Math.floor(Date.now() / 1000) + 60 * 30
+        inputRef.current.onStripePreparationStateChange("prepared", expiresAt)
         walletTimer = window.setTimeout(() => {
           inputRef.current.onApplePayAvailabilityResolved(wallet.available)
           onWalletResolvedRef.current()
@@ -753,7 +761,7 @@ function OneTimePrewarmPaymentFixture({
       if (preparationResultTimer !== null) window.clearTimeout(preparationResultTimer)
       if (walletTimer !== null) window.clearTimeout(walletTimer)
     }
-  }, [scenario])
+  }, [refreshRequestId, scenario])
 
   if (!input.visible) {
     return <div aria-hidden="true" data-testid="prewarm-payment-hidden" />

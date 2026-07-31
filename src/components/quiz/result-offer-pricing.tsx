@@ -146,7 +146,11 @@ export type ResultOfferPricingCheckoutLifecycleFixture = {
   oneTimePaymentCheckoutComponent?: ComponentType<{
     checkoutAttemptId: string | null
     onApplePayAvailabilityResolved: (available: boolean) => void
-    onStripePreparationStateChange: (state: PersonalPlanOneTimeStripePreparationState) => void
+    onStripePreparationStateChange: (
+      state: PersonalPlanOneTimeStripePreparationState,
+      expiresAt?: number,
+    ) => void
+    stripePreparationRefreshRequestId: number
     suppressExpressWallet: boolean
     visible: boolean
   }>
@@ -346,6 +350,7 @@ function PersonalPlanOneTimePricing({
   const checkoutWaitingRef = useRef(false)
   const checkoutWaitStartedAtRef = useRef<number | null>(null)
   const checkoutWaitTimerRef = useRef<number | null>(null)
+  const stripePreparationExpiresAtRef = useRef<number | null>(null)
   const stripePreparationStateRef = useRef<PersonalPlanOneTimeStripePreparationState>("idle")
   const walletAvailabilityRef = useRef<boolean | null>(null)
   const walletAvailabilityFencedRef = useRef(false)
@@ -354,6 +359,7 @@ function PersonalPlanOneTimePricing({
   const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const [oneTimePrewarmEligible, setOneTimePrewarmEligible] = useState(false)
+  const [stripePreparationRefreshRequestId, setStripePreparationRefreshRequestId] = useState(0)
   const [suppressExpressWallet, setSuppressExpressWallet] = useState(false)
   const OneTimePaymentCheckoutFixture = checkoutLifecycleFixture?.oneTimePaymentCheckoutComponent
   const oneTimePrewarmEnabled =
@@ -470,6 +476,18 @@ function PersonalPlanOneTimePricing({
       return
     }
 
+    if (
+      stripePreparationExpiresAtRef.current !== null &&
+      stripePreparationExpiresAtRef.current <= Math.floor(Date.now() / 1000)
+    ) {
+      stripePreparationExpiresAtRef.current = null
+      stripePreparationStateRef.current = "preparing"
+      walletAvailabilityRef.current = null
+      walletAvailabilityFencedRef.current = false
+      setSuppressExpressWallet(false)
+      setStripePreparationRefreshRequestId((requestId) => requestId + 1)
+    }
+
     if (walletAvailabilityFencedRef.current) {
       openOneTimeCheckoutNow(true)
       return
@@ -515,14 +533,20 @@ function PersonalPlanOneTimePricing({
   ])
 
   const handleStripePreparationStateChange = useCallback(
-    (state: PersonalPlanOneTimeStripePreparationState) => {
+    (state: PersonalPlanOneTimeStripePreparationState, expiresAt?: number) => {
       stripePreparationStateRef.current = state
       if (state === "preparing") {
+        stripePreparationExpiresAtRef.current = null
         walletAvailabilityRef.current = null
         walletAvailabilityFencedRef.current = false
         setSuppressExpressWallet(false)
         return
       }
+      if (state === "prepared") {
+        stripePreparationExpiresAtRef.current = expiresAt ?? null
+        return
+      }
+      stripePreparationExpiresAtRef.current = null
       if (state !== "failed" || !checkoutWaitingRef.current) return
 
       const startedAt = checkoutWaitStartedAtRef.current ?? Date.now()
@@ -625,6 +649,7 @@ function PersonalPlanOneTimePricing({
               checkoutAttemptId={checkoutAttemptId}
               onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
               onStripePreparationStateChange={handleStripePreparationStateChange}
+              stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
               suppressExpressWallet={suppressExpressWallet}
               visible={checkoutOpen}
             />
@@ -636,6 +661,7 @@ function PersonalPlanOneTimePricing({
               onApplePayAvailabilityResolved={handleApplePayAvailabilityResolved}
               onClose={closeCheckout}
               onStripePreparationStateChange={handleStripePreparationStateChange}
+              stripePreparationRefreshRequestId={stripePreparationRefreshRequestId}
               suppressExpressWallet={suppressExpressWallet}
               visible={checkoutOpen}
             />

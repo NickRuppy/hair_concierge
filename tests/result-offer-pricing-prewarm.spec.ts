@@ -125,6 +125,25 @@ test.describe("@ci result offer pricing prewarm lifecycle", () => {
     await expect(page.getByTestId("prewarm-apple-pay")).toHaveCount(0)
   })
 
+  test("refreshes an expired one-time preparation before opening checkout", async ({ page }) => {
+    await openLab(page, "one-time-expired")
+    const diagnostic = page.getByTestId("prewarm-diagnostic")
+    const cta = page
+      .locator('[data-personal-plan-pricing-mode="one_time"]')
+      .getByRole("button")
+      .first()
+    await expect(diagnostic).toHaveAttribute("data-prepare-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true")
+
+    await cta.click()
+    await expect(cta).toBeDisabled()
+    await expect(drawer(page)).toBeHidden()
+    await expect(diagnostic).toHaveAttribute("data-prepare-count", "2")
+    await expect(drawer(page)).toBeVisible()
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeVisible()
+    await expect(page.getByTestId("prewarm-paypal")).toBeVisible()
+  })
+
   test("opens the prepared wallet and PayPal path when readiness precedes the tap", async ({
     page,
   }) => {

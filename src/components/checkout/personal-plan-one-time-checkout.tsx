@@ -46,6 +46,7 @@ export function PersonalPlanOneTimeCheckout({
   onApplePayAvailabilityResolved,
   onClose,
   onStripePreparationStateChange,
+  stripePreparationRefreshRequestId,
   suppressExpressWallet = false,
   visible,
 }: {
@@ -54,7 +55,11 @@ export function PersonalPlanOneTimeCheckout({
   leadId: string | null
   onApplePayAvailabilityResolved?: (available: boolean) => void
   onClose: () => void
-  onStripePreparationStateChange?: (state: PersonalPlanOneTimeStripePreparationState) => void
+  onStripePreparationStateChange?: (
+    state: PersonalPlanOneTimeStripePreparationState,
+    expiresAt?: number,
+  ) => void
+  stripePreparationRefreshRequestId: number
   suppressExpressWallet?: boolean
   visible: boolean
 }) {
@@ -65,6 +70,7 @@ export function PersonalPlanOneTimeCheckout({
   const consentInputRef = useRef<HTMLInputElement>(null)
   const onStripePreparationStateChangeRef = useRef(onStripePreparationStateChange)
   const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
+  const visibleRef = useRef(visible)
   const wasVisibleRef = useRef(visible)
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -80,11 +86,19 @@ export function PersonalPlanOneTimeCheckout({
   }, [onStripePreparationStateChange])
 
   const reportStripePreparationState = useCallback(
-    (state: PersonalPlanOneTimeStripePreparationState) => {
-      onStripePreparationStateChangeRef.current?.(state)
+    (state: PersonalPlanOneTimeStripePreparationState, expiresAt?: number) => {
+      onStripePreparationStateChangeRef.current?.(state, expiresAt)
     },
     [],
   )
+
+  useEffect(() => {
+    if (stripePreparationRefreshRequestId === 0) return
+    preparedStripeCheckoutRef.current = null
+    setError(null)
+    reportStripePreparationState("preparing")
+    setStripePreparationId(createFunnelEventId())
+  }, [reportStripePreparationState, stripePreparationRefreshRequestId])
 
   useEffect(() => {
     checkoutStartedProvidersRef.current.clear()
@@ -95,6 +109,7 @@ export function PersonalPlanOneTimeCheckout({
   useEffect(() => {
     const wasVisible = wasVisibleRef.current
     wasVisibleRef.current = visible
+    visibleRef.current = visible
     if (!wasVisible || visible) return
 
     // A confirmed close starts a fresh user interaction without discarding the
@@ -217,10 +232,10 @@ export function PersonalPlanOneTimeCheckout({
         sessionId: body.session_id,
       }
       setStripeProviderLocked(body.provider_locked === "stripe")
-      reportStripePreparationState("prepared")
+      reportStripePreparationState("prepared", body.expires_at)
       return body.client_secret
     } catch (error) {
-      setError(checkoutStartError)
+      if (visibleRef.current) setError(checkoutStartError)
       reportStripePreparationState("failed")
       throw error
     }
