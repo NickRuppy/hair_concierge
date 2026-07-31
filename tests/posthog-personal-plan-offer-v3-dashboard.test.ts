@@ -10,11 +10,20 @@ test("v3 dashboard declaration keeps the applied v2 declaration intact", () => {
   assert.match(personalPlanOfferDashboard.insights.o2.query, /06 Preis & Mitgliedschaft/)
 
   assert.equal(personalPlanOfferV3Dashboard.offerRevision, "personal_plan_v3")
-  for (const insight of Object.values(personalPlanOfferV3Dashboard.insights)) {
+  const revisionScopedInsights = Object.entries(personalPlanOfferV3Dashboard.insights)
+    .filter(([key]) => key !== "o7")
+    .map(([, insight]) => insight)
+  for (const insight of revisionScopedInsights) {
     assert.match(insight.query, /personal_plan_v3/)
     assert.doesNotMatch(insight.query, /personal_plan_v2/)
     assert.doesNotMatch(insight.description, /personal_plan_v2/)
   }
+
+  assert.strictEqual(
+    personalPlanOfferV3Dashboard.insights.o7,
+    personalPlanOfferDashboard.insights.o7,
+  )
+  assert.doesNotMatch(personalPlanOfferV3Dashboard.insights.o7.query, /personal_plan_v[23]/)
 })
 
 test("v3 offer reach follows the approved visual order and keeps checkout stages", () => {

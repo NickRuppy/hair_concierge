@@ -239,8 +239,12 @@ export type AppEventMap = {
     sectionId: string
   }
   personal_plan_result_reveal_completed: {
+    completionTrigger: "skip_button" | "timer"
+    elapsedMs: number
     leadId: string
+    scheduledDurationMs: number
     stepCount: number
+    visibleStep: number
   }
   personal_plan_result_reveal_step_viewed: {
     daysFromStart: number

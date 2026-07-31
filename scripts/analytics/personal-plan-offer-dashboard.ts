@@ -251,6 +251,100 @@ FROM offer_views
 )
 SELECT kennzahl, ereignisse, anteil_prozent FROM metrics ORDER BY sort`,
     },
+    o7: {
+      id: null,
+      key: "result-reveal-skip",
+      title: "O7 · Ergebnis-Reveal — Überspringen (7 Tage)",
+      description:
+        "Alle Produktions-Reveals auf chaarlie.de, unabhängig vom Offer-Kohort. Die exakte Skip-Rate ist „Explizit übersprungen“ geteilt durch „Explizit übersprungen“ plus „Automatisch weiter“ und gilt nur für neue trigger-markierte Abschlüsse. Historische Daten bleiben als Mindestwert beziehungsweise nicht unterscheidbar getrennt.",
+      query: `WITH completions AS (
+  SELECT
+    toString(properties.lead_id) AS lead_id,
+    argMaxIf(
+      toString(properties.completion_trigger),
+      timestamp,
+      toString(properties.completion_trigger) IN ('skip_button', 'timer')
+    ) AS explicit_trigger,
+    countIf(toString(properties.completion_trigger) IN ('skip_button', 'timer')) AS explicit_count
+  FROM events
+  WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
+    AND event = 'personal_plan_result_reveal_completed'
+    AND properties.$host = 'chaarlie.de'
+    AND notEmpty(ifNull(toString(properties.lead_id), ''))
+  GROUP BY lead_id
+),
+step_max AS (
+  SELECT
+    toString(properties.lead_id) AS lead_id,
+    max(toInt(properties.step_index)) AS max_step
+  FROM events
+  WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
+    AND event = 'personal_plan_result_reveal_step_viewed'
+    AND properties.$host = 'chaarlie.de'
+    AND notEmpty(ifNull(toString(properties.lead_id), ''))
+  GROUP BY lead_id
+),
+classified AS (
+  SELECT
+    completions.lead_id AS lead_id,
+    multiIf(
+      explicit_count > 0 AND explicit_trigger = 'skip_button', 'Explizit übersprungen',
+      explicit_count > 0 AND explicit_trigger = 'timer', 'Automatisch weiter',
+      explicit_count = 0 AND max_step < 3, 'Historischer Mindestwert Skip',
+      'Historisch nicht unterscheidbar'
+    ) AS abschlussart
+  FROM completions
+  LEFT JOIN step_max USING (lead_id)
+),
+categories AS (
+  SELECT 1 AS sort, 'Explizit übersprungen' AS abschlussart
+  UNION ALL SELECT 2, 'Automatisch weiter'
+  UNION ALL SELECT 3, 'Historischer Mindestwert Skip'
+  UNION ALL SELECT 4, 'Historisch nicht unterscheidbar'
+),
+counts AS (
+  SELECT abschlussart, uniqExact(lead_id) AS eindeutige_leads
+  FROM classified
+  GROUP BY abschlussart
+),
+totals AS (
+  SELECT
+    sum(eindeutige_leads) AS alle_leads,
+    sumIf(
+      eindeutige_leads,
+      abschlussart IN ('Explizit übersprungen', 'Automatisch weiter')
+    ) AS exakte_leads
+  FROM counts
+)
+SELECT
+  categories.abschlussart,
+  coalesce(counts.eindeutige_leads, 0) AS eindeutige_leads,
+  round(100 * coalesce(counts.eindeutige_leads, 0) / nullIf(totals.alle_leads, 0), 1) AS anteil_aller_leads_prozent,
+  if(
+    categories.abschlussart = 'Explizit übersprungen',
+    round(100 * coalesce(counts.eindeutige_leads, 0) / nullIf(totals.exakte_leads, 0), 1),
+    NULL
+  ) AS exakte_skip_rate_prozent
+FROM categories
+LEFT JOIN counts USING (abschlussart)
+CROSS JOIN totals
+ORDER BY categories.sort`,
+      presentation: {
+        display: "ActionsBar",
+        chartSettings: {
+          xAxis: { column: "abschlussart" },
+          yAxis: [
+            {
+              column: "eindeutige_leads",
+              settings: { display: { label: "Eindeutige Leads" } },
+            },
+          ],
+          showLegend: false,
+          showNullsAsZero: true,
+          showValuesOnSeries: true,
+        },
+      },
+    },
     o5: {
       id: "C0LRRevQ",
       title: "O5 · Checkout-Intent bis Zahlungsoption (7 Tage)",

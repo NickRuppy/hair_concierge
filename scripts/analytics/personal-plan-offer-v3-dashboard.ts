@@ -67,5 +67,6 @@ export const personalPlanOfferV3Dashboard = {
     o3: revision3Insight(personalPlanOfferDashboard.insights.o3),
     o5: revision3Insight(personalPlanOfferDashboard.insights.o5),
     o6: revision3Insight(personalPlanOfferDashboard.insights.o6),
+    o7: personalPlanOfferDashboard.insights.o7,
   },
 } as const

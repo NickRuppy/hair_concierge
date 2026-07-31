@@ -301,6 +301,56 @@ test("personal-plan result reveal events stay PostHog-only with stable progress 
   ])
 })
 
+test("personal-plan result reveal completion stays PostHog-only with exact trigger fields", () => {
+  const payload = {
+    completionTrigger: "skip_button" as const,
+    elapsedMs: 2_040,
+    leadId: "10000000-0000-4000-8000-000000000092",
+    scheduledDurationMs: 6_120,
+    stepCount: 3,
+    visibleStep: 1,
+  }
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("personal_plan_result_reveal_completed", payload)
+
+    assert.deepEqual(calls, [
+      {
+        destination: "posthog",
+        eventName: "personal_plan_result_reveal_completed",
+        payload,
+      },
+    ])
+  })
+
+  const originalCapture = posthog.capture
+  const postHogCalls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    postHogCalls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("personal_plan_result_reveal_completed", payload)
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(postHogCalls, [
+    [
+      "personal_plan_result_reveal_completed",
+      {
+        completion_trigger: "skip_button",
+        elapsed_ms: 2_040,
+        lead_id: "10000000-0000-4000-8000-000000000092",
+        scheduled_duration_ms: 6_120,
+        step_count: 3,
+        visible_step: 1,
+      },
+    ],
+  ])
+})
+
 test("offer engagement routes to PostHog but not browser Customer.io or Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("offer_engaged", {

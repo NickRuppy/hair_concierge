@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quiz-Ergebnis-Reveal · Timingvergleich</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f4efe9;
+        --surface: #fcfaf7;
+        --ink: #321f31;
+        --plum: #6f476e;
+        --plum-soft: #eadfeb;
+        --coral: #b84f58;
+        --line: rgba(50, 31, 49, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      header,
+      .controls,
+      .comparison,
+      .notes {
+        width: min(1180px, calc(100% - 32px));
+        margin-inline: auto;
+      }
+
+      header {
+        padding: 34px 0 18px;
+      }
+
+      .eyebrow,
+      .timing,
+      .annotation {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        color: var(--plum);
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 8px 0 6px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(32px, 5vw, 54px);
+        font-weight: 500;
+        letter-spacing: -0.04em;
+      }
+
+      header p,
+      .notes p {
+        max-width: 760px;
+        margin: 0;
+        color: rgba(50, 31, 49, 0.72);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 0 18px;
+      }
+
+      .controls button {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: white;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 11px 16px;
+      }
+
+      .controls button.primary {
+        border-color: var(--plum);
+        background: var(--plum);
+        color: white;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        align-items: start;
+      }
+
+      .variant {
+        min-width: 0;
+      }
+
+      .variant-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 10px;
+      }
+
+      .variant-heading h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .timing {
+        color: var(--plum);
+        white-space: nowrap;
+      }
+
+      .phone {
+        position: relative;
+        min-height: 650px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 34px;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(111, 71, 110, 0.09), transparent 42%),
+          var(--surface);
+        box-shadow: 0 20px 50px rgba(50, 31, 49, 0.09);
+      }
+
+      .skip {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 2;
+        border: 0;
+        background: transparent;
+        color: rgba(111, 71, 110, 0.7);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 8px 12px;
+      }
+
+      .message-wrap {
+        display: grid;
+        min-height: 650px;
+        place-items: center;
+        padding: 70px 28px;
+        text-align: center;
+      }
+
+      .message {
+        max-width: 480px;
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(39px, 4.5vw, 56px);
+        font-weight: 500;
+        line-height: 1.06;
+        letter-spacing: -0.04em;
+      }
+
+      .message.animating {
+        animation: reveal 600ms ease-out both;
+      }
+
+      .highlight {
+        display: inline;
+        white-space: nowrap;
+        color: var(--coral);
+        background: linear-gradient(
+          to bottom,
+          transparent 72%,
+          rgba(184, 79, 88, 0.16) 72%
+        );
+      }
+
+      @keyframes reveal {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        margin-top: 12px;
+      }
+
+      .segment {
+        height: 7px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(111, 71, 110, 0.15);
+      }
+
+      .segment::after {
+        display: block;
+        width: 0;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--plum);
+        content: "";
+      }
+
+      .segment.running::after {
+        animation: progress var(--duration) linear forwards;
+      }
+
+      .segment.done::after {
+        width: 100%;
+      }
+
+      @keyframes progress {
+        to {
+          width: 100%;
+        }
+      }
+
+      .annotation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: rgba(50, 31, 49, 0.58);
+      }
+
+      .delta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        border-radius: 999px;
+        background: #e6f1e7;
+        color: #32623b;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 8px 11px;
+      }
+
+      .notes {
+        padding: 30px 0 54px;
+      }
+
+      .notes h2 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+
+      .notes ul {
+        margin: 12px 0 0;
+        padding-left: 22px;
+        color: rgba(50, 31, 49, 0.74);
+        line-height: 1.65;
+      }
+
+      @media (max-width: 760px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+
+        .phone,
+        .message-wrap {
+          min-height: 600px;
+        }
+
+        .message {
+          font-size: 43px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .message.animating {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">Review-Mockup · Ergebnis-Reveal</div>
+      <h1>Gleiche Geschichte, 15 % schneller</h1>
+      <p>
+        Der Vorschlag verändert weder Text, Reihenfolge noch den sichtbaren
+        „Überspringen“-Ausgang. Nur das Intervall pro Botschaft sinkt von 2,40 auf 2,04
+        Sekunden.
+      </p>
+    </header>
+
+    <div class="controls">
+      <button class="primary" data-play="both">Beide abspielen</button>
+      <button data-play="current">Nur aktuell</button>
+      <button data-play="proposal">Nur Vorschlag</button>
+    </div>
+
+    <main class="comparison">
+      <section class="variant">
+        <div class="variant-heading">
+          <h2>Aktuell</h2>
+          <div class="timing">2,40 s · 7,20 s gesamt</div>
+        </div>
+        <div class="phone" data-variant="current" data-step-ms="2400">
+          <button class="skip" type="button">Überspringen</button>
+          <div class="message-wrap">
+            <p class="message"></p>
+          </div>
+        </div>
+        <div class="timeline" data-timeline="current"></div>
+        <div class="annotation"><span>Start</span><span>Ergebnis öffnet</span></div>
+      </section>
+
+      <section class="variant">
+        <div class="variant-heading">
+          <h2>Vorschlag</h2>
+          <div class="timing">2,04 s · 6,12 s gesamt</div>
+        </div>
+        <div class="phone" data-variant="proposal" data-step-ms="2040">
+          <button class="skip" type="button">Überspringen</button>
+          <div class="message-wrap">
+            <p class="message"></p>
+          </div>
+        </div>
+        <div class="timeline" data-timeline="proposal"></div>
+        <div class="annotation"><span>Start</span><span>Ergebnis öffnet</span></div>
+        <div class="delta">−1,08 Sekunden · −15 %</div>
+      </section>
+    </main>
+
+    <section class="notes">
+      <h2>Was bewusst gleich bleibt</h2>
+      <p>
+        Dies ist ein Timingvergleich im echten Layout, keine neue visuelle Richtung.
+      </p>
+      <ul>
+        <li>Drei Aussagen und dieselbe Reihenfolge</li>
+        <li>„Überspringen“ bleibt jederzeit oben rechts erreichbar</li>
+        <li>600-ms-Einblendung und Reduced-Motion-Verhalten bleiben unverändert</li>
+        <li>Nach der dritten Aussage öffnet sich dieselbe Ergebnis-/Angebotsseite</li>
+      </ul>
+    </section>
+
+    <script>
+      const messages = [
+        ["", "Heute", " startest du mit deinem persönlichen Haarplan."],
+        ["Ab ", "6. August", " kennst du deine Routine ganz genau."],
+        ["Bis ", "27. August", " wird dein Haar gesünder und schöner aussehen."],
+      ]
+
+      const timers = new Map()
+
+      function renderMessage(phone, index, navigating = false) {
+        const message = phone.querySelector(".message")
+        message.classList.remove("animating")
+        void message.offsetWidth
+        if (navigating) {
+          message.textContent = "Deine Auswertung wird geöffnet …"
+        } else {
+          const [before, highlight, after] = messages[index]
+          message.innerHTML = `${before}<span class="highlight">${highlight}</span>${after}`
+        }
+        message.classList.add("animating")
+      }
+
+      function buildTimeline(name, stepMs) {
+        const timeline = document.querySelector(`[data-timeline="${name}"]`)
+        timeline.replaceChildren(
+          ...messages.map(() => {
+            const segment = document.createElement("div")
+            segment.className = "segment"
+            segment.style.setProperty("--duration", `${stepMs}ms`)
+            return segment
+          }),
+        )
+      }
+
+      function stop(name) {
+        for (const handle of timers.get(name) || []) window.clearTimeout(handle)
+        timers.set(name, [])
+      }
+
+      function play(name) {
+        const phone = document.querySelector(`[data-variant="${name}"]`)
+        const stepMs = Number(phone.dataset.stepMs)
+        const segments = [...document.querySelectorAll(`[data-timeline="${name}"] .segment`)]
+        stop(name)
+        segments.forEach((segment) => (segment.className = "segment"))
+        renderMessage(phone, 0)
+        segments[0].classList.add("running")
+
+        const handles = []
+        for (let index = 1; index < messages.length; index += 1) {
+          handles.push(
+            window.setTimeout(() => {
+              segments[index - 1].className = "segment done"
+              segments[index].classList.add("running")
+              renderMessage(phone, index)
+            }, stepMs * index),
+          )
+        }
+        handles.push(
+          window.setTimeout(() => {
+            segments.at(-1).className = "segment done"
+            renderMessage(phone, 0, true)
+          }, stepMs * messages.length),
+        )
+        timers.set(name, handles)
+      }
+
+      for (const phone of document.querySelectorAll("[data-variant]")) {
+        const name = phone.dataset.variant
+        buildTimeline(name, Number(phone.dataset.stepMs))
+        phone.querySelector(".skip").addEventListener("click", () => {
+          stop(name)
+          const segments = document.querySelectorAll(`[data-timeline="${name}"] .segment`)
+          segments.forEach((segment) => (segment.className = "segment"))
+          renderMessage(phone, 0, true)
+        })
+      }
+
+      for (const button of document.querySelectorAll("[data-play]")) {
+        button.addEventListener("click", () => {
+          const target = button.dataset.play
+          if (target === "both") {
+            play("current")
+            play("proposal")
+          } else {
+            play(target)
+          }
+        })
+      }
+
+      play("current")
+      play("proposal")
+    </script>
+  </body>
+</html>
