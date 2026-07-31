@@ -36,6 +36,7 @@ export function SubscriptionPlanSelector({
   selectedInterval: BillingInterval
 }) {
   const selectedPlan = getStripePricingPlan(selectedInterval)
+  const selectedActionLabel = actionLabel ?? selectedPlan.ctaLabel
 
   return (
     <>
@@ -56,6 +57,8 @@ export function SubscriptionPlanSelector({
               aria-busy={busy || undefined}
               onClick={() => onSelect(plan.interval)}
               aria-pressed={isSelected}
+              data-offer-plan-card={plan.interval}
+              data-offer-plan-selected={isSelected ? "true" : "false"}
               className={`relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors ${
                 isSelected
                   ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
@@ -68,6 +71,7 @@ export function SubscriptionPlanSelector({
                 </span>
               )}
               <span
+                data-offer-plan-radio={plan.interval}
                 className={`grid size-[18px] shrink-0 place-items-center rounded-full border-2 ${
                   isSelected
                     ? "border-[var(--brand-plum)] bg-[var(--brand-plum)]"
@@ -92,7 +96,12 @@ export function SubscriptionPlanSelector({
                   </span>
                 ) : null}
                 <span className="text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]">
-                  {plan.price}
+                  <span
+                    data-offer-plan-price={plan.interval}
+                    data-offer-plan-price-selected={isSelected ? "true" : "false"}
+                  >
+                    {plan.price}
+                  </span>
                 </span>
               </span>
             </button>
@@ -111,20 +120,28 @@ export function SubscriptionPlanSelector({
         data-offer-cta={offerTracking ? "pricing_primary" : undefined}
         data-offer-destination={offerTracking ? "checkout" : undefined}
         data-offer-selected-interval={offerTracking ? selectedInterval : undefined}
+        data-offer-selected-price={selectedPlan.price}
         data-offer-source-section={offerTracking ? "pricing" : undefined}
+        data-offer-cta-label={selectedActionLabel}
         className="mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80"
       >
-        {busy ? (
-          <span className="inline-flex items-center justify-center gap-2">
-            <span
-              aria-hidden="true"
-              className="size-4 animate-spin rounded-full border-2 border-white/35 border-t-white motion-reduce:animate-none"
-            />
-            <span>{busyLabel ?? actionLabel ?? selectedPlan.ctaLabel}</span>
-          </span>
-        ) : (
-          (actionLabel ?? selectedPlan.ctaLabel)
-        )}
+        <span
+          key={busy ? "busy" : selectedInterval}
+          className="personal-plan-pricing-cta-content block"
+          data-offer-plan-cta-content=""
+        >
+          {busy ? (
+            <span className="inline-flex items-center justify-center gap-2">
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin rounded-full border-2 border-white/35 border-t-white motion-reduce:animate-none"
+              />
+              <span>{busyLabel ?? selectedActionLabel}</span>
+            </span>
+          ) : (
+            selectedActionLabel
+          )}
+        </span>
       </Button>
       <span className="sr-only" role="status" aria-live="polite">
         {busy ? (busyLabel ?? "Zahlungsoptionen werden vorbereitet …") : ""}

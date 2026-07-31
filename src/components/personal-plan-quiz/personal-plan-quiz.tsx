@@ -2,7 +2,16 @@
 
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type RefObject,
+} from "react"
 import {
   Activity,
   ArrowLeft,
@@ -66,12 +75,14 @@ import {
   getNextPersonalPlanQuizScreen,
   getOptionIntensity,
   getPersonalPlanQuizSectionId,
+  getPersonalPlanQuizTransitionDirection,
   loadPersonalPlanQuizDraft,
   savePersonalPlanQuizDraft,
   type OptionIntensity,
   type PersonalPlanQuizAnswers,
   type PersonalPlanQuizEphemeralState,
   type PersonalPlanQuizScreenId,
+  type PersonalPlanQuizTransitionDirection,
 } from "@/lib/personal-plan-quiz"
 import {
   PORTRAIT_BODY_VIEW_BOX,
@@ -102,6 +113,68 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
 const AUTO_ADVANCE_MS = 260
 const PREPARED_PLAN_SESSION_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
+const SCREEN_EXIT_MS = 200
+
+type PersonalPlanOutgoingLayer = {
+  direction: PersonalPlanQuizTransitionDirection
+  html: string
+  id: number
+}
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const update = () => setReduced(query.matches)
+    update()
+    query.addEventListener("change", update)
+    return () => query.removeEventListener("change", update)
+  }, [])
+
+  return reduced
+}
+
+function PersonalPlanScreenTransition({
+  activeLayerRef,
+  children,
+  onOutgoingComplete,
+  outgoing,
+}: {
+  activeLayerRef: RefObject<HTMLDivElement | null>
+  children: ReactNode
+  onOutgoingComplete: (id: number) => void
+  outgoing: PersonalPlanOutgoingLayer | null
+}) {
+  useEffect(() => {
+    if (!outgoing) return
+    const timer = window.setTimeout(() => onOutgoingComplete(outgoing.id), SCREEN_EXIT_MS)
+    return () => window.clearTimeout(timer)
+  }, [onOutgoingComplete, outgoing])
+
+  return (
+    <div className="relative grid w-full" data-personal-plan-transition-root>
+      <div
+        ref={activeLayerRef}
+        className={cn("col-start-1 row-start-1 w-full", outgoing && "personal-plan-screen-enter")}
+        data-personal-plan-transition-direction={outgoing?.direction}
+        data-personal-plan-transition-layer="active"
+      >
+        {children}
+      </div>
+      {outgoing ? (
+        <div
+          aria-hidden="true"
+          className="personal-plan-screen-exit pointer-events-none absolute inset-x-0 top-0 w-full select-none"
+          data-personal-plan-transition-direction={outgoing.direction}
+          data-personal-plan-transition-layer="outgoing"
+          dangerouslySetInnerHTML={{ __html: outgoing.html }}
+          inert
+        />
+      ) : null}
+    </div>
+  )
+}
 
 type PreparedPlanClaim = {
   artifactId: string
@@ -275,11 +348,13 @@ function ScreenHeader({
   onBack,
   progress,
   screen,
+  settledSectionIndices,
 }: {
   canGoBack: boolean
   onBack: () => void
   progress: number
   screen: PersonalPlanQuizScreenId
+  settledSectionIndices: ReadonlySet<number>
 }) {
   const currentSection = getPersonalPlanQuizSectionId(screen)
   const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
@@ -333,8 +408,12 @@ function ScreenHeader({
               return (
                 <span className="flex items-center justify-center" key={section.id}>
                   <span
+                    data-personal-plan-section-settled={
+                      settledSectionIndices.has(index) ? "true" : undefined
+                    }
                     className={cn(
                       "h-2 w-2 rounded-full ring-2 ring-[hsl(var(--background))] transition-[background-color,box-shadow] duration-300 ease-out",
+                      settledSectionIndices.has(index) && "personal-plan-section-settle",
                       state === "done" && "bg-[var(--brand-plum)]",
                       state === "current" &&
                         "bg-[var(--brand-plum)] shadow-[0_0_0_3px_rgba(var(--brand-plum-rgb),0.14)]",
@@ -495,7 +574,7 @@ function OptionCard({
       <button
         aria-pressed={selected}
         className={cn(
-          "group relative flex w-full items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+          "personal-plan-option-card group relative flex w-full items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
           selected
             ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
             : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
@@ -527,7 +606,7 @@ function OptionCard({
           </span>
           <span
             className={cn(
-              "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
+              "personal-plan-option-check flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
               selected
                 ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-white"
                 : "border-[var(--brand-plum-light)] bg-white text-transparent",
@@ -549,7 +628,7 @@ function OptionCard({
     <button
       aria-pressed={selected}
       className={cn(
-        "group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+        "personal-plan-option-card group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
         hasMedia ? "min-h-0" : "px-4 py-4",
         selected
           ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
@@ -646,7 +725,7 @@ function OptionCard({
         </span>
         <span
           className={cn(
-            "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center border",
+            "personal-plan-option-check mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center border",
             multi ? "rounded-[6px]" : "rounded-full",
             selected
               ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-white"
@@ -821,7 +900,9 @@ function QuestionScreen({
             disabled={!canContinue}
             onClick={onContinue}
           >
-            {selected.length > 0 ? `${selected.length} ausgewählt · Weiter` : "Weiter"}
+            <span className="personal-plan-multi-count" key={selected.length}>
+              {selected.length > 0 ? `${selected.length} ausgewählt · Weiter` : "Weiter"}
+            </span>
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </MobileBottomAction>
@@ -836,6 +917,7 @@ function QuestionScreen({
  * photo moves into a full-height side panel.
  */
 function ContextPanelLayout({
+  className,
   eyebrow,
   title,
   subtitle,
@@ -845,6 +927,7 @@ function ContextPanelLayout({
   imageVariant = "banner",
   children,
 }: {
+  className?: string
   eyebrow?: string
   title: ReactNode
   subtitle?: ReactNode
@@ -857,7 +940,12 @@ function ContextPanelLayout({
   children: ReactNode
 }) {
   return (
-    <section className="mx-auto w-full max-w-[44rem] sm:grid sm:grid-cols-[1fr_17rem] sm:gap-6 [@media(max-height:700px)]:block">
+    <section
+      className={cn(
+        "mx-auto w-full max-w-[44rem] sm:grid sm:grid-cols-[1fr_17rem] sm:gap-6 [@media(max-height:700px)]:block",
+        className,
+      )}
+    >
       <div className="text-center sm:col-start-1 sm:row-start-1 sm:text-left [@media(max-height:700px)]:text-center">
         {eyebrow ? (
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
@@ -951,6 +1039,7 @@ function AnalysisBridgeScreen({
 
   return (
     <ContextPanelLayout
+      className="personal-plan-analysis-settle"
       eyebrow="Du bist hier genau richtig."
       image={`${PERSONAL_PLAN_ASSET_BASE}/texture-${answers.texture ?? "wavy"}.webp`}
       imageVariant="portrait"
@@ -1259,10 +1348,11 @@ function ProfileSummaryScreen({
             />
           </div>
           <dl className="grid grid-cols-2 gap-1.5 sm:gap-3">
-            {rows.map((row) => (
+            {rows.map((row, index) => (
               <div
-                className="min-w-0 rounded-lg border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-2 py-2 sm:rounded-xl sm:px-3 sm:py-2.5 [@media(max-height:700px)]:px-2 [@media(max-height:700px)]:py-1.5"
+                className="personal-plan-profile-row min-w-0 rounded-lg border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-2 py-2 sm:rounded-xl sm:px-3 sm:py-2.5 [@media(max-height:700px)]:px-2 [@media(max-height:700px)]:py-1.5"
                 key={row.label}
+                style={{ "--personal-plan-row-index": index } as CSSProperties}
               >
                 <dt className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--text-caption)] sm:text-[10px] sm:tracking-[0.14em]">
                   {row.label}
@@ -1833,6 +1923,14 @@ export function PersonalPlanQuiz() {
     claim: null,
     error: null,
   })
+  const [outgoingLayer, setOutgoingLayer] = useState<PersonalPlanOutgoingLayer | null>(null)
+  const [settledSectionIndices, setSettledSectionIndices] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  )
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const outgoingLayerIdRef = useRef(0)
+  const transitionActiveLayerRef = useRef<HTMLDivElement | null>(null)
+  const settledSectionIndicesRef = useRef(new Set<number>())
   const autoAdvanceTimer = useRef<number | null>(null)
   const quizStartedRef = useRef(false)
   const quizCompletedRef = useRef(false)
@@ -2001,9 +2099,58 @@ export function PersonalPlanQuiz() {
     return Math.max(4, ((index + 1) / PERSONAL_PLAN_QUIZ_SCREEN_IDS.length) * 100)
   }, [screen])
 
+  const completeOutgoingLayer = useCallback((id: number) => {
+    setOutgoingLayer((current) => (current?.id === id ? null : current))
+  }, [])
+
+  function beginScreenTransition(action: "advance" | "return") {
+    const direction = getPersonalPlanQuizTransitionDirection(action)
+    const activeLayer = transitionActiveLayerRef.current
+    if (!prefersReducedMotion && activeLayer) {
+      const snapshot = activeLayer.cloneNode(true) as HTMLDivElement
+      // The visual snapshot has no React lifecycle or event handlers. Remove all
+      // identity/relationship attributes before it overlaps the live screen.
+      snapshot
+        .querySelectorAll<HTMLElement>("[id]")
+        .forEach((element) => element.removeAttribute("id"))
+      snapshot
+        .querySelectorAll<HTMLElement>(
+          "[for], [name], [aria-labelledby], [aria-describedby], [autofocus]",
+        )
+        .forEach((element) => {
+          element.removeAttribute("for")
+          element.removeAttribute("name")
+          element.removeAttribute("aria-labelledby")
+          element.removeAttribute("aria-describedby")
+          element.removeAttribute("autofocus")
+        })
+      outgoingLayerIdRef.current += 1
+      setOutgoingLayer({
+        direction,
+        html: snapshot.innerHTML,
+        id: outgoingLayerIdRef.current,
+      })
+    } else {
+      setOutgoingLayer(null)
+    }
+    return direction
+  }
+
+  function settleCompletedSection(next: PersonalPlanQuizScreenId) {
+    const currentSection = getPersonalPlanQuizSectionId(screen)
+    const nextSection = getPersonalPlanQuizSectionId(next)
+    const currentIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
+    const nextIndex = SECTION_LABELS.findIndex((section) => section.id === nextSection)
+    if (nextIndex <= currentIndex || settledSectionIndicesRef.current.has(currentIndex)) return
+    settledSectionIndicesRef.current.add(currentIndex)
+    setSettledSectionIndices(new Set(settledSectionIndicesRef.current))
+  }
+
   function goNext(answerSnapshot = answers) {
     const next = getNextPersonalPlanQuizScreen(screen, answerSnapshot)
     if (!next) return
+    beginScreenTransition("advance")
+    settleCompletedSection(next)
     setHistory((current) => appendPersonalPlanQuizHistory(current, screen))
     setScreen(next)
     // Add a browser history entry so the system back button steps back in-app
@@ -2035,6 +2182,7 @@ export function PersonalPlanQuiz() {
     const previous = history.at(-1)
     if (!previous) return
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current)
+    beginScreenTransition("return")
     setHistory((current) => current.slice(0, -1))
     setScreen(previous)
     window.scrollTo(0, 0)
@@ -2369,15 +2517,25 @@ export function PersonalPlanQuiz() {
   }
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))]">
+    <div
+      className="min-h-screen bg-[hsl(var(--background))]"
+      data-personal-plan-client-ready={draftReady ? "true" : "false"}
+    >
       <ScreenHeader
         canGoBack={history.length > 0}
         onBack={handleHeaderBack}
         progress={progress}
         screen={screen}
+        settledSectionIndices={settledSectionIndices}
       />
       <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4">
-        {renderScreen()}
+        <PersonalPlanScreenTransition
+          activeLayerRef={transitionActiveLayerRef}
+          onOutgoingComplete={completeOutgoingLayer}
+          outgoing={outgoingLayer}
+        >
+          {renderScreen()}
+        </PersonalPlanScreenTransition>
       </main>
     </div>
   )

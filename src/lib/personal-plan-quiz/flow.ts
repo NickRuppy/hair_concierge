@@ -1,5 +1,13 @@
 import type { PersonalPlanQuizAnswers, PersonalPlanQuizScreenId } from "./types"
 
+export type PersonalPlanQuizTransitionDirection = "forward" | "back"
+
+export function getPersonalPlanQuizTransitionDirection(
+  action: "advance" | "return",
+): PersonalPlanQuizTransitionDirection {
+  return action === "return" ? "back" : "forward"
+}
+
 export type PersonalPlanConflictPrompt = {
   id:
     | "oily_roots_dry_lengths"
