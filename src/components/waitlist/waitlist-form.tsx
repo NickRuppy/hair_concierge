@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useState } from "react"
 
+import { WAITLIST_EMAIL_STORAGE_KEY } from "@/lib/waitlist/config"
+
 const inputClass =
   "w-full rounded-[10px] border border-border bg-card px-4 py-3.5 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
 
@@ -33,6 +35,14 @@ export function WaitlistForm() {
         setError(payload?.error ?? "Das hat gerade nicht geklappt. Bitte versuch es nochmal.")
         setPending(false)
         return
+      }
+
+      // Die E-Mail wandert bewusst ueber sessionStorage und nicht als Query-Parameter
+      // zur Umfrage: personenbezogene Daten gehoeren nicht in eine URL.
+      try {
+        window.sessionStorage.setItem(WAITLIST_EMAIL_STORAGE_KEY, email.trim().toLowerCase())
+      } catch {
+        // Privater Modus o.ae. Die Umfrage funktioniert auch ohne Zuordnung.
       }
 
       router.push("/warteliste/umfrage")

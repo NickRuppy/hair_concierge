@@ -24,13 +24,19 @@ export const LAUNCH_CLOSE_LABEL = "Dienstag, 11. August, 23:59 Uhr"
  * Umfrage nach dem Opt-in. Solange die ID leer ist, blendet die Danke-Seite den
  * Umfrage-Schritt aus und zeigt direkt WhatsApp bzw. den Abschluss.
  */
-export const WAITLIST_SURVEY_ID = process.env.NEXT_PUBLIC_WAITLIST_SURVEY_ID ?? ""
+export const WAITLIST_SURVEY_ID = process.env.NEXT_PUBLIC_WAITLIST_SURVEY_ID ?? "j1X1toe9"
 
 /**
  * Invite-Link der WhatsApp-Gruppe. Leer = Schritt wird ausgeblendet, die Seite
  * bleibt vollstaendig funktionsfaehig.
  */
 export const WAITLIST_WHATSAPP_URL = process.env.NEXT_PUBLIC_WAITLIST_WHATSAPP_URL ?? ""
+
+/**
+ * sessionStorage-Schluessel, unter dem die E-Mail vom Opt-in zur Umfrage
+ * weitergereicht wird. Bewusst kein Query-Parameter.
+ */
+export const WAITLIST_EMAIL_STORAGE_KEY = "chaarlie_waitlist_email"
 
 /** Obergrenze der Gruendungs-Kohorte, wird in der Copy als Verknappung genutzt. */
 export const FOUNDING_COHORT_SIZE = 300
