@@ -53,8 +53,8 @@ export function SubscriptionPlanSelector({
             </>
           ) : (
             <>
-              <span aria-hidden="true">Regulärer Vergleichspreis</span>
-              <span className="sr-only">Regulärer Vergleichspreis</span>
+              <span aria-hidden="true">JETZT MIND. 20 % RABATT SICHERN</span>
+              <span className="sr-only">Jetzt mindestens 20 Prozent Rabatt sichern</span>
             </>
           )}
         </p>

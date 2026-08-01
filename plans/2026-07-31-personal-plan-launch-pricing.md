@@ -590,3 +590,10 @@ executable against validated live provider resources.
   - finding F2 remains unchanged and explicitly deferred by Nick;
   - no provider call, subscriber mutation, production write, deployment, or
     flag activation was performed; publication remained separately gated.
+- Final merge-gate correction after refreshing onto `main`:
+  - preserve the existing result and Personal Plan membership comparison prices
+    and discount badge while the launch flag is off, so a dark deployment does
+    not change the live conversion surface or its measurement baseline;
+  - keep the approved launch references and launch copy while the flag is on,
+    and keep flag-off reactivation free of comparison references as planned;
+  - the focused four-file regression set passes 41/41 and typecheck passes.

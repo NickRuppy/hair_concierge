@@ -586,7 +586,8 @@ export function PersonalPlanOffer({
               pricingCatalog={resolvedPricingCatalog}
               referencePrices={
                 pricingCatalogWasProvided
-                  ? getSubscriptionPlanReferencePrices(resolvedPricingCatalog)
+                  ? (getSubscriptionPlanReferencePrices(resolvedPricingCatalog) ??
+                    QUIZ_RESULT_REFERENCE_PRICES)
                   : QUIZ_RESULT_REFERENCE_PRICES
               }
             />

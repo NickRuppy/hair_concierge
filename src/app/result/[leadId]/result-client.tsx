@@ -176,7 +176,7 @@ function LegacyResultPageClient({
         pricingCatalog={pricingCatalog}
         referencePrices={
           pricingCatalogWasProvided
-            ? getSubscriptionPlanReferencePrices(pricingCatalog)
+            ? (getSubscriptionPlanReferencePrices(pricingCatalog) ?? QUIZ_RESULT_REFERENCE_PRICES)
             : QUIZ_RESULT_REFERENCE_PRICES
         }
       />

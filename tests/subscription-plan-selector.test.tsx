@@ -89,12 +89,12 @@ test("quiz-result selector displays the three reference prices as comparison pri
   )
 })
 
-test("quiz-result selector uses neutral comparison copy for standard references", () => {
+test("flag-off quiz-result selector preserves the existing discount copy", () => {
   const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
 
-  assert.equal((html.match(/Regulärer Vergleichspreis/g) ?? []).length, 2)
-  assert.doesNotMatch(html, /JETZT MIND\. 20 % RABATT SICHERN/)
-  assert.doesNotMatch(html, /Jetzt mindestens 20 Prozent Rabatt sichern/)
+  assert.match(html, /JETZT MIND\. 20 % RABATT SICHERN/)
+  assert.match(html, /Jetzt mindestens 20 Prozent Rabatt sichern/)
+  assert.doesNotMatch(html, /Regulärer Vergleichspreis/)
 })
 
 test("quiz-result reference prices use the approved readable styling", () => {
