@@ -54,7 +54,8 @@ type PaymentIntegrityRuntimeDeps = {
 
 const DIGEST_CONTEXT = "payment-integrity-provider-reference-v1"
 const STRIPE_PAGE_SIZE = 100
-const PROVIDER_REQUEST_TIMEOUT_MS = 5_000
+const PROVIDER_REQUEST_TIMEOUT_MS = 10_000
+const PAYPAL_PROVIDER_CONCURRENCY = 4
 const ACTIVE_ENTITLEMENT_STATUSES = new Set(["active", "past_due"])
 const TERMINAL_ONE_TIME_PURCHASE_STATUSES = new Set(["paid", "refunded", "reversed", "disputed"])
 
@@ -428,17 +429,14 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
     let incomplete = false
 
     const subscriptionRows = await this.listSubscriptionIntentRows(window)
-    for (const row of subscriptionRows.slice(0, window.limit)) {
-      if (Date.now() >= window.deadlineAt.getTime()) {
-        incomplete = true
-        break
-      }
-      try {
-        const candidate = await this.candidateFromSubscriptionIntent(row, window.deadlineAt)
-        if (candidate) candidates.push(candidate)
-      } catch {
-        incomplete = true
-      }
+    const subscriptionScan = await mapProviderRowsWithConcurrency(
+      subscriptionRows.slice(0, window.limit),
+      window.deadlineAt,
+      (row) => this.candidateFromSubscriptionIntent(row, window.deadlineAt),
+    )
+    incomplete ||= subscriptionScan.incomplete
+    for (const candidate of subscriptionScan.results) {
+      if (candidate) candidates.push(candidate)
     }
 
     if (candidates.length < window.limit && Date.now() < window.deadlineAt.getTime()) {
@@ -447,17 +445,14 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
         ...window,
         limit: renewalCapacity,
       })
-      for (const row of renewalRows.slice(0, renewalCapacity)) {
-        if (Date.now() >= window.deadlineAt.getTime()) {
-          incomplete = true
-          break
-        }
-        try {
-          const renewalCandidates = await this.candidatesFromSubscriptionTransactions(row, window)
-          candidates.push(...renewalCandidates.slice(0, window.limit - candidates.length))
-        } catch {
-          incomplete = true
-        }
+      const renewalScan = await mapProviderRowsWithConcurrency(
+        renewalRows.slice(0, renewalCapacity),
+        window.deadlineAt,
+        (row) => this.candidatesFromSubscriptionTransactions(row, window),
+      )
+      incomplete ||= renewalScan.incomplete
+      for (const renewalCandidates of renewalScan.results) {
+        candidates.push(...renewalCandidates.slice(0, window.limit - candidates.length))
       }
       incomplete ||= renewalRows.length > renewalCapacity
     } else {
@@ -470,17 +465,14 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
         ...window,
         limit: orderCapacity,
       })
-      for (const row of orderRows.slice(0, orderCapacity)) {
-        if (Date.now() >= window.deadlineAt.getTime()) {
-          incomplete = true
-          break
-        }
-        try {
-          const candidate = await this.candidateFromOrderIntent(row, window.deadlineAt)
-          if (candidate) candidates.push(candidate)
-        } catch {
-          incomplete = true
-        }
+      const orderScan = await mapProviderRowsWithConcurrency(
+        orderRows.slice(0, orderCapacity),
+        window.deadlineAt,
+        (row) => this.candidateFromOrderIntent(row, window.deadlineAt),
+      )
+      incomplete ||= orderScan.incomplete
+      for (const candidate of orderScan.results) {
+        if (candidate) candidates.push(candidate)
       }
       incomplete ||= orderRows.length > orderCapacity
     } else {
@@ -549,7 +541,10 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
     const subscriptionId = stringValue(row.provider_subscription_id)
     if (!subscriptionId) return null
     const subscription = (await withProviderTimeout(
-      this.deps.paypalRequest(`/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}`),
+      (signal) =>
+        this.deps.paypalRequest(`/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}`, {
+          signal,
+        }),
       deadlineAt,
     )) as Record<string, unknown>
     const outcome = paypalSubscriptionOutcome(subscription)
@@ -588,9 +583,11 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
     const subscriptionId = stringValue(row.provider_subscription_id)
     if (!subscriptionId) return []
     const response = (await withProviderTimeout(
-      this.deps.paypalRequest(
-        `/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}/transactions?start_time=${encodeURIComponent(window.lookbackStartedAt.toISOString())}&end_time=${encodeURIComponent(window.now.toISOString())}`,
-      ),
+      (signal) =>
+        this.deps.paypalRequest(
+          `/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}/transactions?start_time=${encodeURIComponent(window.lookbackStartedAt.toISOString())}&end_time=${encodeURIComponent(window.now.toISOString())}`,
+          { signal },
+        ),
       window.deadlineAt,
     )) as Record<string, unknown>
     const transactions = Array.isArray(response.transactions) ? response.transactions : []
@@ -642,7 +639,10 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
     if (!providerReference) return null
     const order = orderId
       ? ((await withProviderTimeout(
-          this.deps.paypalRequest(`/v2/checkout/orders/${encodeURIComponent(orderId)}`),
+          (signal) =>
+            this.deps.paypalRequest(`/v2/checkout/orders/${encodeURIComponent(orderId)}`, {
+              signal,
+            }),
           deadlineAt,
         )) as Record<string, unknown>)
       : null
@@ -1008,24 +1008,76 @@ function dateOrNow(value: unknown): Date {
   return Number.isFinite(ms) ? new Date(ms) : new Date()
 }
 
-async function withProviderTimeout<T>(work: Promise<T>, deadlineAt: Date): Promise<T> {
+async function withProviderTimeout<T>(
+  work: Promise<T> | ((signal: AbortSignal) => Promise<T>),
+  deadlineAt: Date,
+): Promise<T> {
   const timeoutMs = Math.max(
     1,
     Math.min(PROVIDER_REQUEST_TIMEOUT_MS, deadlineAt.getTime() - Date.now()),
   )
+  const controller = new AbortController()
   let timeout: NodeJS.Timeout | null = null
   try {
+    const pending = typeof work === "function" ? work(controller.signal) : work
     return await Promise.race([
-      work,
+      pending,
       new Promise<never>((_, reject) => {
-        timeout = setTimeout(
-          () => reject(new Error("payment_integrity_provider_timeout")),
-          timeoutMs,
-        )
+        timeout = setTimeout(() => {
+          controller.abort()
+          reject(new Error("payment_integrity_provider_timeout"))
+        }, timeoutMs)
       }),
     ])
   } finally {
     if (timeout) clearTimeout(timeout)
+  }
+}
+
+async function mapProviderRowsWithConcurrency<T, R>(
+  rows: T[],
+  deadlineAt: Date,
+  worker: (row: T) => Promise<R>,
+): Promise<{ results: R[]; incomplete: boolean }> {
+  if (rows.length === 0) return { results: [], incomplete: false }
+
+  const results: Array<R | undefined> = new Array(rows.length)
+  let incomplete = false
+
+  try {
+    results[0] = await worker(rows[0])
+  } catch {
+    incomplete = true
+  }
+
+  let nextIndex = 1
+
+  const runWorker = async () => {
+    while (Date.now() < deadlineAt.getTime()) {
+      const index = nextIndex
+      nextIndex += 1
+      if (index >= rows.length) return
+
+      try {
+        results[index] = await worker(rows[index])
+      } catch {
+        incomplete = true
+      }
+    }
+    incomplete = true
+  }
+
+  const remaining = rows.length - nextIndex
+  if (remaining > 0) {
+    await Promise.all(
+      Array.from({ length: Math.min(PAYPAL_PROVIDER_CONCURRENCY, remaining) }, () => runWorker()),
+    )
+  }
+
+  if (results.some((result) => result === undefined)) incomplete = true
+  return {
+    results: results.filter((result): result is R => result !== undefined),
+    incomplete,
   }
 }
 

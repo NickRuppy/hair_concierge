@@ -17,8 +17,9 @@ import type { getStripe } from "@/lib/stripe/client"
 import type { processStripeOneTimeFulfillmentJob } from "@/lib/stripe/checkout-activation"
 import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import {
-  capturePaymentIntegrityCheckIn,
   emptyPaymentIntegrityCounters,
+  flushPaymentMonitorTelemetry,
+  ignorePaymentIntegrityCheckIn,
   runPaymentIntegrityBranch,
   safeBearerTokenMatches,
   type RunPaymentIntegrity,
@@ -50,6 +51,7 @@ type ReconcileDeps = {
   oneTimeFulfillmentRuntime?: OneTimeFulfillmentRuntime
   runPaymentIntegrity?: RunPaymentIntegrity
   captureCheckIn?: Parameters<typeof runPaymentIntegrityBranch>[0]["captureCheckIn"]
+  flushTelemetry?: Parameters<typeof runPaymentIntegrityBranch>[0]["flushTelemetry"]
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
   clock?: () => number
 }
@@ -108,14 +110,18 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
         monitorSlug: "payment-integrity-daily",
         deadlineMs: PAYMENT_INTEGRITY_DAILY_DEADLINE_MS,
         runPaymentIntegrity: deps.runPaymentIntegrity,
-        captureCheckIn: deps.captureCheckIn ?? capturePaymentIntegrityCheckIn,
+        captureCheckIn: deps.captureCheckIn ?? ignorePaymentIntegrityCheckIn,
+        flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
         reportMonitorFailure: deps.reportMonitorFailure,
         now: () => now,
         clock: deps.clock,
       })
     : Promise.resolve({
         ok: false,
-        summary: { status: "error" as const, counters: emptyPaymentIntegrityCounters() },
+        summary: {
+          status: "error" as const,
+          counters: emptyPaymentIntegrityCounters(),
+        },
       })
   const entitlement = runEntitlementBranch(deps, now)
   const oneTimeFulfillment =

@@ -5,14 +5,27 @@ import { fileURLToPath } from "node:url"
 const execFileAsync = promisify(execFile)
 
 export const KEYCHAIN_SERVICE_NAME = "com.chaarlie.payment-monitor.trigger-secret"
-export const REQUEST_TIMEOUT_MS = 10_000
+export const REQUEST_TIMEOUT_MS = 50_000
 export const PRODUCTION_MONITOR_ENDPOINT = "https://chaarlie.de/api/billing/payment-monitor"
 
+const MONITOR_PROVIDERS = new Set(["stripe", "paypal", "unknown"])
+const MONITOR_FAILURE_REASONS = new Set([
+  "provider_error",
+  "local_lookup_error",
+  "incomplete_pagination",
+  "candidate_cap",
+  "deadline_exhausted",
+  "missing_identity",
+  "invalid_candidate",
+])
+const MONITOR_ERROR_FAMILIES = new Set(["provider_unavailable", "timeout", "unknown"])
+
 class MonitorTriggerError extends Error {
-  constructor(category, status) {
+  constructor(category, status, failures = []) {
     super(category)
     this.category = category
     this.status = status
+    this.failures = failures
   }
 }
 
@@ -20,9 +33,14 @@ function validStatus(status) {
   return Number.isInteger(status) && status >= 100 && status <= 599 ? status : undefined
 }
 
-function logResult(logger, category, status) {
+function logResult(logger, category, status, failures = []) {
   const statusPart = validStatus(status) ? ` status=${status}` : ""
-  logger(`${new Date().toISOString()} ${category}${statusPart}`)
+  const failurePart = failures.length
+    ? ` failures=${failures
+        .map((failure) => `${failure.provider}:${failure.reason}:${failure.errorFamily}`)
+        .join(",")}`
+    : ""
+  logger(`${new Date().toISOString()} ${category}${statusPart}${failurePart}`)
 }
 
 export function parseEndpoint(argv) {
@@ -100,7 +118,10 @@ export async function runPaymentMonitor({
     throw new MonitorTriggerError("network_failure")
   }
 
-  if (!response.ok) throw new MonitorTriggerError("http_failure", validStatus(response.status))
+  if (!response.ok) {
+    const failures = await readMonitorFailures(response)
+    throw new MonitorTriggerError("http_failure", validStatus(response.status), failures)
+  }
   return { status: validStatus(response.status) ?? 200 }
 }
 
@@ -119,8 +140,31 @@ export async function main(argv = process.argv.slice(2), dependencies = {}) {
   } catch (error) {
     const category = error instanceof MonitorTriggerError ? error.category : "network_failure"
     const status = error instanceof MonitorTriggerError ? error.status : undefined
-    logResult(logger, category, status)
+    const failures = error instanceof MonitorTriggerError ? error.failures : []
+    logResult(logger, category, status, failures)
     return 1
+  }
+}
+
+async function readMonitorFailures(response) {
+  try {
+    const body = await response.json()
+    const failures = body?.paymentIntegrity?.failures
+    if (!Array.isArray(failures)) return []
+
+    return failures.slice(0, 20).flatMap((failure) => {
+      if (!failure || typeof failure !== "object") return []
+      const { provider, reason, errorFamily } = failure
+      if (
+        !MONITOR_PROVIDERS.has(provider) ||
+        !MONITOR_FAILURE_REASONS.has(reason) ||
+        !MONITOR_ERROR_FAMILIES.has(errorFamily)
+      )
+        return []
+      return [{ provider, reason, errorFamily }]
+    })
+  } catch {
+    return []
   }
 }
 

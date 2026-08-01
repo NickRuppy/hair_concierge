@@ -400,6 +400,13 @@ test("billing reconcile isolates integrity failure and marks the daily check-in 
     paymentIntegrity: {
       status: "error",
       counters: emptyPaymentIntegrityCounters(),
+      failures: [
+        {
+          provider: "unknown",
+          reason: "provider_error",
+          errorFamily: "unknown",
+        },
+      ],
     },
     analyticsRetry: {
       customerio: { processed: 1, delivered: 1, failed: 0 },

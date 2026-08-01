@@ -9,7 +9,7 @@ import {
 import { DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP } from "../src/lib/billing/payment-integrity"
 
 const now = new Date("2026-08-01T12:00:00.000Z")
-const deadlineAt = new Date(Date.now() + 30_000)
+const futureDeadline = () => new Date(Date.now() + 30_000)
 const twoHoursAgo = Math.floor(new Date("2026-08-01T10:00:00.000Z").getTime() / 1000)
 
 test("provider references are represented only by a server-keyed HMAC digest", () => {
@@ -73,7 +73,7 @@ test("Stripe provider discovery paginates within the bounded window and maps str
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(stripeCalls.length, 2)
   assert.equal(stripeCalls[0]?.created && typeof stripeCalls[0].created === "object", true)
@@ -117,7 +117,7 @@ test("Stripe marks the provider incomplete when checkout sessions consume the ca
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(invoiceCalls, 0)
   assert.equal(result.status, "monitor_failed")
@@ -156,7 +156,7 @@ test("Stripe one-time success maps only to a paid one-time purchase row", async 
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.deepEqual(
     result.findings.map((finding) => finding.invariant),
@@ -193,7 +193,7 @@ test("Stripe one-time historical success with a terminal refunded local row is a
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
@@ -225,7 +225,7 @@ test("Stripe invoice reconciliation reads modern parent subscription references"
     supabase: fakeSupabase(),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.deepEqual(
     result.findings.map((finding) => finding.invariant),
@@ -265,7 +265,7 @@ test("subscription success with retained canceled-at-period-end access is reconc
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
@@ -301,7 +301,7 @@ test("subscription success with a local past_due entitlement is reconciled", asy
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
@@ -341,7 +341,7 @@ test("subscription-level failed provider states are skipped instead of conflicti
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
@@ -383,7 +383,7 @@ test("Stripe invoice-level failures are not converted into retained-access integ
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
@@ -418,7 +418,7 @@ test("PayPal scans local intent rows, reads provider truth individually, and kee
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.deepEqual(paypalPaths, ["/v1/billing/subscriptions/I-RAW-ACTIVE"])
   assert.equal(result.findings[0]?.isInternalTest, true)
@@ -459,7 +459,7 @@ test("PayPal order success uses checkoutAttemptId and provider-order local looku
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.counters.candidatesChecked, 1)
   assert.equal(result.counters.findings, 0)
@@ -500,7 +500,7 @@ test("PayPal renewal scan is bounded by local subscriptions and recent subscript
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(paypalPaths.length, 1)
   assert.match(paypalPaths[0] ?? "", /\/v1\/billing\/subscriptions\/I-LOCAL-RENEWAL\/transactions/)
@@ -510,6 +510,91 @@ test("PayPal renewal scan is bounded by local subscriptions and recent subscript
   )
   assert.equal(JSON.stringify(result).includes("I-LOCAL-RENEWAL"), false)
   assert.equal(JSON.stringify(result).includes("TXN-RAW-RENEWAL"), false)
+})
+
+test("PayPal provider lookups use bounded concurrency instead of serial round trips", async () => {
+  let active = 0
+  let maxActive = 0
+  let calls = 0
+  let firstResolved = false
+  let overlappedBeforeFirstResolved = false
+  const rows = Array.from({ length: 8 }, (_, index) => ({
+    provider: "paypal",
+    provider_subscription_id: `I-CONCURRENT-${index}`,
+    user_id: `user_concurrent_${index}`,
+    provider_status: "ACTIVE",
+    entitlement_status: "active",
+    current_period_end: null,
+    metadata: {},
+    updated_at: "2026-07-01T00:00:00.000Z",
+  }))
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: false, paypalLive: true },
+    stripe: fakeStripe(),
+    paypalRequest: async () => {
+      calls += 1
+      if (calls > 1 && !firstResolved) overlappedBeforeFirstResolved = true
+      active += 1
+      maxActive = Math.max(maxActive, active)
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      active -= 1
+      if (calls === 1) firstResolved = true
+      return { transactions: [] }
+    },
+    supabase: fakeSupabase({ billing_subscriptions: rows }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.status, "completed")
+  assert.equal(calls, rows.length)
+  assert.equal(maxActive, 4)
+  assert.equal(overlappedBeforeFirstResolved, false)
+})
+
+test("PayPal provider timeout aborts the underlying request before any further fanout", async () => {
+  let active = 0
+  let maxActive = 0
+  let aborted = 0
+  const rows = Array.from({ length: 8 }, (_, index) => ({
+    provider: "paypal",
+    provider_subscription_id: `I-TIMEOUT-${index}`,
+    user_id: `user_timeout_${index}`,
+    provider_status: "ACTIVE",
+    entitlement_status: "active",
+    current_period_end: null,
+    metadata: {},
+    updated_at: "2026-07-01T00:00:00.000Z",
+  }))
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: false, paypalLive: true },
+    stripe: fakeStripe(),
+    paypalRequest: async (_path, init) => {
+      active += 1
+      maxActive = Math.max(maxActive, active)
+      return new Promise((_resolve, reject) => {
+        init?.signal?.addEventListener(
+          "abort",
+          () => {
+            active -= 1
+            aborted += 1
+            reject(new Error("aborted"))
+          },
+          { once: true },
+        )
+      })
+    },
+    supabase: fakeSupabase({ billing_subscriptions: rows }),
+  })
+
+  const result = await runner({ now, deadlineAt: new Date(Date.now() + 50) })
+
+  assert.equal(result.status, "monitor_failed")
+  assert.equal(active, 0)
+  assert.equal(aborted, 1)
+  assert.equal(maxActive, 1)
 })
 
 test("PayPal marks the provider incomplete when subscription intents consume the cap before renewal and order scans", async () => {
@@ -541,7 +626,7 @@ test("PayPal marks the provider incomplete when subscription intents consume the
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "monitor_failed")
   assert.equal(result.counters.incompleteProviders, 1)
@@ -579,7 +664,7 @@ test("PayPal failed renewal transactions are not converted into retained-access 
     }),
   })
 
-  const result = await runner({ now, deadlineAt })
+  const result = await runner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
@@ -705,7 +790,7 @@ test("digest secret fallback prefers service role over the rotatable monitor tri
       supabase: fakeSupabase(),
     })
 
-    const result = await runner({ now, deadlineAt })
+    const result = await runner({ now, deadlineAt: futureDeadline() })
 
     assert.equal(
       result.findings[0]?.providerReferenceDigest,
@@ -733,7 +818,7 @@ test("provider and local lookup failures are contained as sanitized monitor fail
     paypalRequest: async () => ({}),
     supabase: fakeSupabase(),
   })
-  const providerResult = await providerRunner({ now, deadlineAt })
+  const providerResult = await providerRunner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(providerResult.counters.providerErrors, 1)
   assert.equal(providerResult.monitorFailures[0]?.reason, "provider_error")
@@ -759,7 +844,7 @@ test("provider and local lookup failures are contained as sanitized monitor fail
       errors: { billing_subscriptions: new Error("raw local lookup provider id sub_local_error") },
     }),
   })
-  const localResult = await localRunner({ now, deadlineAt })
+  const localResult = await localRunner({ now, deadlineAt: futureDeadline() })
 
   assert.equal(localResult.counters.localLookupErrors, 1)
   assert.equal(localResult.monitorFailures[0]?.reason, "local_lookup_error")

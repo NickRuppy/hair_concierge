@@ -41,6 +41,7 @@ type PaymentMonitorDeps = {
   runPaymentIntegrity: RunPaymentIntegrity
   checkRateLimit?: (identifier: string) => Promise<RateLimitResult> | RateLimitResult
   captureCheckIn?: (checkIn: PaymentIntegrityCheckIn) => unknown
+  flushTelemetry?: () => Promise<unknown>
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
   now?: () => Date
   clock?: () => number
@@ -49,6 +50,7 @@ type PaymentMonitorDeps = {
 type PaymentIntegritySummary = {
   status: PaymentIntegrityResult["status"] | "error"
   counters: PaymentIntegrityCounters
+  failures?: Array<Pick<PaymentIntegrityMonitorFailure, "provider" | "reason" | "errorFamily">>
 }
 
 type PaymentMonitorRouteResult = {
@@ -94,7 +96,8 @@ export async function handlePaymentMonitor(
     monitorSlug: "payment-integrity-local",
     deadlineMs: PAYMENT_MONITOR_DEADLINE_MS,
     runPaymentIntegrity: deps.runPaymentIntegrity,
-    captureCheckIn: deps.captureCheckIn ?? capturePaymentIntegrityCheckIn,
+    captureCheckIn: deps.captureCheckIn ?? ignorePaymentIntegrityCheckIn,
+    flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
     reportMonitorFailure: deps.reportMonitorFailure,
     now: deps.now,
     clock: deps.clock,
@@ -129,6 +132,7 @@ export async function runPaymentIntegrityBranch(options: {
   deadlineMs: number
   runPaymentIntegrity: RunPaymentIntegrity
   captureCheckIn: (checkIn: PaymentIntegrityCheckIn) => unknown
+  flushTelemetry?: () => Promise<unknown>
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
   now?: () => Date
   clock?: () => number
@@ -153,13 +157,17 @@ export async function runPaymentIntegrityBranch(options: {
       checkInId,
       duration: Math.max(0, (clock() - startedAt) / 1_000),
     })
+    if (!ok && options.flushTelemetry) await safeFlushTelemetry(options.flushTelemetry)
     return { ok, summary: summarizePaymentIntegrity(result) }
   } catch {
-    safeReportMonitorFailure(options.reportMonitorFailure ?? reportPaymentMonitorFailure, {
+    const failure: PaymentIntegrityMonitorFailure = {
       signal: "payment_monitor_failed",
       provider: "unknown",
       reason: "provider_error",
       errorFamily: "unknown",
+    }
+    safeReportMonitorFailure(options.reportMonitorFailure ?? reportPaymentMonitorFailure, {
+      ...failure,
     })
     safeCaptureCheckIn(options.captureCheckIn, {
       monitorSlug: options.monitorSlug,
@@ -167,8 +175,28 @@ export async function runPaymentIntegrityBranch(options: {
       checkInId,
       duration: Math.max(0, (clock() - startedAt) / 1_000),
     })
-    return { ok: false, summary: { status: "error", counters: emptyPaymentIntegrityCounters() } }
+    if (options.flushTelemetry) await safeFlushTelemetry(options.flushTelemetry)
+    return {
+      ok: false,
+      summary: {
+        status: "error",
+        counters: emptyPaymentIntegrityCounters(),
+        failures: summarizeMonitorFailures([failure]),
+      },
+    }
   }
+}
+
+async function safeFlushTelemetry(flush: () => Promise<unknown>): Promise<void> {
+  try {
+    await flush()
+  } catch {
+    // A telemetry outage must not replace the monitor result.
+  }
+}
+
+export function flushPaymentMonitorTelemetry(): Promise<boolean> {
+  return Sentry.flush(2_000)
 }
 
 function safeReportMonitorFailure(
@@ -209,10 +237,32 @@ function reportPaymentMonitorFailure(failure: PaymentIntegrityMonitorFailure) {
 }
 
 export function summarizePaymentIntegrity(result: PaymentIntegrityResult): PaymentIntegritySummary {
+  const failures = summarizeMonitorFailures(result.monitorFailures)
   return {
     status: result.status,
     counters: result.counters,
+    ...(failures.length > 0 ? { failures } : {}),
   }
+}
+
+function summarizeMonitorFailures(failures: PaymentIntegrityMonitorFailure[]) {
+  const providers = new Set(["stripe", "paypal", "unknown"])
+  const reasons = new Set([
+    "provider_error",
+    "local_lookup_error",
+    "incomplete_pagination",
+    "candidate_cap",
+    "deadline_exhausted",
+    "missing_identity",
+    "invalid_candidate",
+  ])
+  const errorFamilies = new Set(["provider_unavailable", "timeout", "unknown"])
+
+  return failures.flatMap(({ provider, reason, errorFamily }) => {
+    if (!providers.has(provider) || !reasons.has(reason) || !errorFamilies.has(errorFamily))
+      return []
+    return [{ provider, reason, errorFamily }]
+  })
 }
 
 export function emptyPaymentIntegrityCounters(): PaymentIntegrityCounters {
@@ -289,9 +339,7 @@ function safeCaptureCheckIn(
   }
 }
 
-export function capturePaymentIntegrityCheckIn(checkIn: PaymentIntegrityCheckIn) {
-  return Sentry.captureCheckIn(checkIn as Parameters<typeof Sentry.captureCheckIn>[0])
-}
+export function ignorePaymentIntegrityCheckIn() {}
 
 function toNextResponse(result: PaymentMonitorRouteResult) {
   return NextResponse.json(result.body, { status: result.status })

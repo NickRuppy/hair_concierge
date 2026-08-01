@@ -5,6 +5,7 @@ import {
   KEYCHAIN_SERVICE_NAME,
   main,
   PRODUCTION_MONITOR_ENDPOINT,
+  REQUEST_TIMEOUT_MS,
   runPaymentMonitor,
 } from "../scripts/billing/trigger-payment-monitor.mjs"
 
@@ -18,6 +19,10 @@ function loggerOutput() {
     logger: (message: string) => output.push(message),
   }
 }
+
+test("local trigger encloses the server monitor deadline", () => {
+  assert.equal(REQUEST_TIMEOUT_MS, 50_000)
+})
 
 test("runs the HTTPS monitor with a Keychain secret that never enters argv or logs", async () => {
   let keychainArgs: string[] | undefined
@@ -143,6 +148,42 @@ test("returns a nonzero, secret-free result for Keychain, network, and HTTP fail
     assert.match(output[0], new RegExp(` ${scenario.expected}$`))
     assert.equal(output.join("\n").includes(secret), false)
   }
+})
+
+test("logs only privacy-safe monitor failure categories from the authenticated endpoint", async () => {
+  const { logger, output } = loggerOutput()
+  const exitCode = await main(["--endpoint", endpoint], {
+    getKeychainSecret: async () => secret,
+    fetch: async () =>
+      Response.json(
+        {
+          paymentIntegrity: {
+            status: "monitor_failed",
+            counters: { findings: 0 },
+            failures: [
+              {
+                provider: "stripe",
+                reason: "provider_error",
+                errorFamily: "provider_unavailable",
+                rawProviderReference: "must-not-leak",
+              },
+            ],
+            customerEmail: "must-not-leak@example.com",
+          },
+        },
+        { status: 500 },
+      ),
+    logger,
+  })
+
+  assert.equal(exitCode, 1)
+  assert.match(
+    output[0],
+    / http_failure status=500 failures=stripe:provider_error:provider_unavailable$/,
+  )
+  assert.equal(output.join("\n").includes("must-not-leak"), false)
+  assert.equal(output.join("\n").includes("@"), false)
+  assert.equal(output.join("\n").includes(secret), false)
 })
 
 test("requires the endpoint argument and does not place a Keychain value in process arguments", async () => {
