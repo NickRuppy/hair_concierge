@@ -65,6 +65,7 @@ import { Button } from "@/components/ui/button"
 import { TreatmentPermedIcon, TreatmentStraightenedIcon } from "@/components/ui/icon"
 import { Input } from "@/components/ui/input"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { suggestEmailCorrection } from "@/lib/email-deliverability-shared"
 import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
 import {
   PERSONAL_PLAN_LOADING_STAGES,
@@ -1741,6 +1742,14 @@ function getEmailSuggestions(email: string) {
   if (!value) return []
   const [localPart, typedDomain = ""] = value.split("@")
   if (!localPart) return []
+
+  // Erst pruefen, ob die Domain einer bekannten sehr aehnlich ist. Das faengt
+  // fertig getippte Vertipper wie "gmail.vom" oder "gmx.den", bei denen die
+  // Praefix-Suche unten nichts findet. Diese Faelle waren die Hauptursache
+  // der Bounces.
+  const correction = suggestEmailCorrection(value)
+  if (correction) return [correction]
+
   const matches = EMAIL_PROVIDERS.filter((provider) =>
     typedDomain ? provider.startsWith(typedDomain) : true,
   )

@@ -1,6 +1,7 @@
 import { after, NextResponse } from "next/server"
 import { cookies } from "next/headers"
 
+import { checkEmailDeliverability } from "@/lib/email-deliverability"
 import { dispatchCustomerIoProfileSyncForLead } from "@/lib/personal-plan-quiz/customerio-outbox"
 import { enqueueMetaLead } from "@/app/api/quiz/lead/route"
 import { metaRequestData, resolveBrowserFunnelEventId } from "@/lib/analytics/meta-capi"
@@ -53,6 +54,26 @@ export async function POST(request: Request) {
     const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
     const parsed = parseResult.data
     const email = normalizePersonalPlanEmail(parsed.email)
+
+    // Zustellbarkeit pruefen, bevor der Lead gespeichert wird. Tippfehler in
+    // der Domain ("gmail.vom", "gmx.den") waren die Hauptursache fuer eine
+    // Bounce-Quote von rund 4,6 Prozent, die Gmail den Absender in den
+    // Spam-Ordner sortieren laesst. Bei DNS-Problemen laesst die Pruefung
+    // bewusst durch, sie darf nie Leads blockieren.
+    const deliverability = await checkEmailDeliverability(email)
+    if (!deliverability.ok) {
+      return NextResponse.json(
+        {
+          error:
+            deliverability.reason === "disposable"
+              ? "Bitte gib eine dauerhafte E-Mail-Adresse ein."
+              : "Diese E-Mail-Adresse konnten wir nicht erreichen. Bitte pruefe die Schreibweise.",
+          reason: deliverability.reason,
+          suggestion: deliverability.suggestion,
+        },
+        { status: 422 },
+      )
+    }
     const metaUserRequestData = metaRequestData(request)
     const quizAnswers = canonicalizePersonalPlanAnswers(parsed.answers)
     const answerHash = hashPersonalPlanAnswers(quizAnswers)
