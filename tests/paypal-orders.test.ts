@@ -3,6 +3,7 @@ import test from "node:test"
 
 import {
   buildPayPalPersonalPlanOrder,
+  createPayPalOrderIntent,
   paypalOrderRequestId,
   type PayPalOrderIntentRow,
 } from "../src/lib/paypal/order-intents"
@@ -92,6 +93,60 @@ test("uses separate stable idempotency keys for PayPal create and capture", () =
     paypalOrderRequestId(intent.token, "capture"),
     `personal-plan-once:capture:${intent.token}`,
   )
+})
+
+test("reuses the consent-linked PayPal intent when a later checkout attempt hits the consent uniqueness guard", async () => {
+  const existing = {
+    ...intent,
+    provider_order_id: null,
+    checkout_attempt_id: "11111111-1111-4111-8111-111111111111",
+  }
+  let filterColumn = ""
+  const query = {
+    insert() {
+      return this
+    },
+    select() {
+      return this
+    },
+    eq(column: string) {
+      filterColumn = column
+      return this
+    },
+    async maybeSingle() {
+      return {
+        data: filterColumn === "consent_id" ? existing : null,
+        error: null,
+      }
+    },
+    async single() {
+      return {
+        data: null,
+        error: {
+          code: "23505",
+          message:
+            'duplicate key value violates unique constraint "paypal_order_intents_consent_id_key"',
+        },
+      }
+    },
+  }
+  const supabase = {
+    from(table: string) {
+      assert.equal(table, "paypal_order_intents")
+      return query
+    },
+  }
+
+  const recovered = await createPayPalOrderIntent(supabase as never, {
+    checkoutAttemptId: "22222222-2222-4222-8222-222222222222",
+    funnelSessionId: existing.funnel_session_id,
+    consentId: existing.consent_id,
+    leadId: existing.lead_id,
+    email: existing.email!,
+  })
+
+  assert.equal(recovered.id, existing.id)
+  assert.equal(recovered.checkout_attempt_id, existing.checkout_attempt_id)
 })
 
 test("PayPal order creation stops before the provider call when Stripe already owns the consent", () => {

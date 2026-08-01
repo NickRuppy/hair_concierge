@@ -133,6 +133,13 @@ export async function createPayPalOrderIntent(
         input.checkoutAttemptId,
       )
       if (raced) return raced
+      const existingForConsent = await findPayPalOrderIntentByConsentId(supabase, input.consentId)
+      if (
+        existingForConsent?.status === "created" &&
+        !isPayPalOrderIntentExpired(existingForConsent, now)
+      ) {
+        return existingForConsent
+      }
     }
     throw error
   }
@@ -147,6 +154,19 @@ export async function findPayPalOrderIntentByCheckoutAttemptId(
     .from("paypal_order_intents")
     .select("*")
     .eq("checkout_attempt_id", checkoutAttemptId)
+    .maybeSingle()
+  if (error) throw error
+  return data as PayPalOrderIntentRow | null
+}
+
+async function findPayPalOrderIntentByConsentId(
+  supabase: PayPalOrderIntentClient,
+  consentId: string,
+) {
+  const { data, error } = await supabase
+    .from("paypal_order_intents")
+    .select("*")
+    .eq("consent_id", consentId)
     .maybeSingle()
   if (error) throw error
   return data as PayPalOrderIntentRow | null
