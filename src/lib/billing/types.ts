@@ -5,6 +5,13 @@ export type BillingProvider = "stripe" | "paypal"
 export type BillingInterval = "month" | "quarter" | "year"
 export type BillingOneTimeProductKind = "personal_plan_once"
 export type BillingOneTimePurchaseStatus = "paid" | "refunded" | "reversed" | "disputed"
+export type OneTimeAccessState = "none" | "paid_pending" | "active" | "revoked"
+export type PersonalPlanOneTimeFulfillmentJobStatus =
+  | "pending"
+  | "processing"
+  | "completed"
+  | "failed"
+  | "failed_permanent"
 export type BillingEntitlementStatus = "active" | "past_due" | "canceled" | "incomplete"
 export type BillingPlanChangeStatus =
   | "pending_provider"
@@ -51,7 +58,8 @@ export interface BillingSubscriptionRow {
 
 export interface BillingOneTimePurchaseRow {
   id: string
-  user_id: string
+  user_id: string | null
+  consent_id: string
   provider: BillingProvider
   product_kind: BillingOneTimeProductKind
   provider_transaction_id: string
@@ -69,7 +77,8 @@ export interface BillingOneTimePurchaseRow {
 }
 
 export type BillingOneTimePurchaseInput = {
-  user_id: string
+  user_id?: string | null
+  consent_id: string
   provider: BillingProvider
   provider_transaction_id: string
   amount_minor: number
@@ -81,6 +90,23 @@ export type BillingOneTimePurchaseInput = {
   refunded_amount_minor?: number
   refunded_at?: string | null
   metadata?: Record<string, unknown>
+}
+
+export interface PersonalPlanOneTimeFulfillmentJobRow {
+  id: string
+  purchase_id: string
+  consent_id: string
+  status: PersonalPlanOneTimeFulfillmentJobStatus
+  attempts: number
+  next_attempt_at: string | null
+  processing_started_at: string | null
+  last_error: string | null
+  delivery_provider: string | null
+  delivery_reference: string | null
+  canonical_content_sha256: string | null
+  delivered_at: string | null
+  created_at: string
+  updated_at: string
 }
 
 export interface BillingPlanChangeRow {

@@ -191,6 +191,20 @@ test("migration makes accepted evidence immutable and requires confirmation befo
   )
 })
 
+test("recovery migration fixes consent binding to null-to-user only with same-user no-op", () => {
+  const migration = readFileSync(
+    new URL(
+      "../supabase/migrations/20260731125000_one_time_payment_recovery_state.sql",
+      import.meta.url,
+    ),
+    "utf8",
+  )
+  assert.match(migration, /OLD\.user_id IS NULL AND NEW\.user_id IS NOT NULL/)
+  assert.doesNotMatch(migration, /OLD\.user_id IS NOT NULL AND NEW\.user_id IS NULL/)
+  assert.match(migration, /one-time consent already belongs to another user/)
+  assert.match(migration, /one-time purchase already belongs to another user/)
+})
+
 test("follow-up migration permits expired Stripe recovery and generation after confirmation send", () => {
   const migration = readFileSync(
     new URL(

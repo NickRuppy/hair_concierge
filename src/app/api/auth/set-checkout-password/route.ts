@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -42,6 +42,7 @@ const INVALID_SESSION_ERROR =
   "Checkout konnte nicht bestätigt werden. Bitte öffne den Link aus deiner Bestellbestätigung erneut."
 const INCOMPLETE_PAYMENT_ERROR =
   "Deine Zahlung ist noch nicht abgeschlossen. Bitte schließe den Checkout zuerst ab."
+const ACTIVATION_PENDING_ERROR = "Deine Zahlung ist bestätigt. Wir schließen deinen Zugang noch ab."
 const SERVER_ERROR = "Passwort konnte nicht gesetzt werden. Bitte versuche es später erneut."
 
 type RateLimitResult = { allowed: boolean; error?: string }
@@ -67,6 +68,7 @@ export interface SetCheckoutPasswordDeps {
   getPremiumTierId?: (supabase: SupabaseClient) => Promise<string>
   captureCheckoutException?: typeof captureCheckoutException
   now?: () => Date
+  defer?: (work: () => void | Promise<void>) => void
 }
 
 type RouteResult = {
@@ -187,6 +189,13 @@ export async function handleSetCheckoutPassword(
 
     return { status: 200, body: { ok: true, email: account.email, next } }
   } catch (err) {
+    if (err instanceof CheckoutActivationPendingError) {
+      return {
+        status: 409,
+        body: { code: "activation_pending", error: ACTIVATION_PENDING_ERROR },
+      }
+    }
+
     if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
       return {
         status: isPaymentIncompleteError(err.code) ? 403 : 400,
@@ -218,6 +227,7 @@ async function createSetCheckoutPasswordDeps(): Promise<SetCheckoutPasswordDeps>
     ensureCheckoutAccount,
     ensurePayPalCheckoutAccountForToken,
     linkQuizToProfile,
+    defer: after,
   }
 }
 
@@ -241,12 +251,18 @@ async function ensureActiveCheckoutAccount(
   if (target.provider === "stripe") {
     const session = await deps.verifyCheckoutSessionForActivation(target.sessionId, deps.stripe)
     if (session.metadata?.product_kind === "personal_plan_once") {
-      return (deps.ensureOneTimeCheckoutAccount ?? ensureOneTimeCheckoutAccount)(session, {
-        supabase: deps.supabase,
-        stripe: deps.stripe,
-        premiumTierId,
-        linkQuizToProfile: deps.linkQuizToProfile,
-      })
+      const account = await (deps.ensureOneTimeCheckoutAccount ?? ensureOneTimeCheckoutAccount)(
+        session,
+        {
+          supabase: deps.supabase,
+          stripe: deps.stripe,
+          premiumTierId,
+          linkQuizToProfile: deps.linkQuizToProfile,
+          defer: deps.defer,
+        },
+      )
+      if (account.state !== "active") throw new CheckoutActivationPendingError()
+      return account
     }
     return deps.ensureCheckoutAccount(session, {
       supabase: deps.supabase,
@@ -257,12 +273,16 @@ async function ensureActiveCheckoutAccount(
   }
 
   if (target.purchaseKind === "one_time") {
-    return (
-      await (deps.recoverPayPalOrderActivation ?? recoverPayPalOrderActivation)(target.token, {
+    const activation = await (deps.recoverPayPalOrderActivation ?? recoverPayPalOrderActivation)(
+      target.token,
+      {
         supabase: deps.supabase,
         linkQuizToProfile: deps.linkQuizToProfile,
-      })
-    ).account
+        defer: deps.defer,
+      },
+    )
+    if (activation.status !== "active") throw new CheckoutActivationPendingError()
+    return activation.account
   }
 
   const ensurePayPal =
@@ -333,6 +353,13 @@ function isPaymentIncompleteError(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+class CheckoutActivationPendingError extends Error {
+  constructor() {
+    super("Checkout activation is paid but pending")
+    this.name = "CheckoutActivationPendingError"
+  }
 }
 
 function checkoutActivationTargetSentryDetails(

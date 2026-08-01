@@ -1,9 +1,18 @@
+import { createHash } from "node:crypto"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
-import { upsertOneTimePurchase } from "@/lib/billing/purchases"
 import {
-  recordPersonalPlanOneTimeConfirmation,
+  activateVerifiedOneTimePayment,
+  OneTimeActivationError,
+  processPersonalPlanOneTimeFulfillmentJob,
+  type OneTimeActivationDependencies,
+  type OneTimeActivationResult,
+  type VerifiedOneTimePayment,
+} from "@/lib/billing/personal-plan-one-time-activation"
+import { findOneTimePurchaseByProviderTransactionId } from "@/lib/billing/purchases"
+import {
+  bindPersonalPlanOneTimeConsentProviderReference,
   type PersonalPlanOneTimeCheckoutConsentRow,
 } from "@/lib/billing/personal-plan-one-time-consents"
 import { sendPersonalPlanOneTimeConfirmation } from "@/lib/customerio/personal-plan-one-time-confirmation"
@@ -14,6 +23,7 @@ import {
 } from "./checkout-activation"
 import {
   captureProviderPayPalOrder,
+  findPayPalOrderIntentByProviderReference,
   findPayPalOrderIntentByToken,
   isPayPalOrderIntentExpired,
   markPayPalOrderIntentCaptured,
@@ -21,22 +31,78 @@ import {
   PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY,
   type PayPalOrderIntentRow,
 } from "./order-intents"
+import type { PersonalPlanOneTimeFulfillmentJobRow } from "@/lib/billing/types"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
+import { capturePaymentFailure } from "@/lib/observability/payment"
 
 type CapturedPayPalOrder = Awaited<ReturnType<typeof captureProviderPayPalOrder>>
+export const PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER = "personal_plan_prepared_artifacts"
+export type VerifiedPayPalCapture = {
+  captureId: string
+  orderId: string
+  paidAt: string
+}
+type PayPalOrderLookupResponse = CapturedPayPalOrder & {
+  id?: string
+  status?: string
+  purchase_units?: Array<{
+    custom_id?: string
+    payee?: { merchant_id?: string }
+    amount?: { currency_code?: string; value?: string }
+    payments?: {
+      captures?: Array<{
+        id?: string
+        status?: string
+        create_time?: string
+        amount?: { currency_code?: string; value?: string }
+      }>
+    }
+  }>
+}
 
 export type PayPalOrderActivationDeps = {
   supabase: SupabaseClient
   captureOrder?: typeof captureProviderPayPalOrder
+  retrieveOrder?: typeof retrieveProviderPayPalOrder
   ensureAccount?: typeof ensurePayPalOneTimePurchaseAccount
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
   now?: () => Date
   sendConfirmation?: typeof sendPersonalPlanOneTimeConfirmation
+  finalizeLockedPlan?: OneTimeActivationDependencies["finalizeLockedPlan"]
+  siteUrl?: string
+  defer?: (work: () => void | Promise<void>) => void
+  capturePaymentFailure?: typeof capturePaymentFailure
 }
 
-export type PayPalOrderActivationResult = {
-  status: "active"
+type ActivePayPalCheckoutAccount = Extract<PayPalCheckoutAccountResult, { status: "active" }>
+
+type PayPalOrderActivationBase = {
   intent: PayPalOrderIntentRow
-  account: Extract<PayPalCheckoutAccountResult, { status: "active" }>
+  activation?: OneTimeActivationResult
+}
+
+export type PayPalOrderActivationResult =
+  | (PayPalOrderActivationBase & {
+      status: "active"
+      state?: "active"
+      account: ActivePayPalCheckoutAccount
+    })
+  | (PayPalOrderActivationBase & {
+      status: Exclude<OneTimeActivationResult["state"], "active">
+      state?: Exclude<OneTimeActivationResult["state"], "active">
+      account?: ActivePayPalCheckoutAccount | null
+    })
+
+export type PayPalOneTimeRecoveryVerification = {
+  payment: VerifiedOneTimePayment
+  intent: PayPalOrderIntentRow
+  consent: PersonalPlanOneTimeCheckoutConsentRow
+  existingPurchase: Awaited<ReturnType<typeof findOneTimePurchaseByProviderTransactionId>>
+  accountContext: {
+    activationKey: string
+    email: string
+    leadId: string
+  }
 }
 
 export async function captureAndActivatePayPalOrder(
@@ -50,7 +116,6 @@ export async function captureAndActivatePayPalOrder(
       "PayPal order intent is missing",
     )
   }
-  const purchaseEmail = intent.email
   if (isPayPalOrderIntentExpired(intent, (deps.now ?? (() => new Date()))())) {
     throw new PayPalCheckoutActivationError(
       "paypal_order_intent_expired",
@@ -58,19 +123,104 @@ export async function captureAndActivatePayPalOrder(
     )
   }
 
-  let captureId = intent.provider_capture_id
-  if (!captureId) {
-    const order = await (deps.captureOrder ?? captureProviderPayPalOrder)(
-      intent.provider_order_id,
-      intent.token,
+  let verifiedCapture: VerifiedPayPalCapture
+  if (intent.provider_capture_id) {
+    const existingPurchase = await findOneTimePurchaseByProviderTransactionId(
+      deps.supabase,
+      "paypal",
+      intent.provider_capture_id,
     )
-    captureId = validateCapturedPayPalOrder(order, intent)
-    intent = await markPayPalOrderIntentCaptured(deps.supabase, token, captureId)
+    if (existingPurchase) {
+      verifiedCapture = {
+        captureId: intent.provider_capture_id,
+        orderId: intent.provider_order_id,
+        paidAt: existingPurchase.paid_at,
+      }
+    } else {
+      let order: CapturedPayPalOrder
+      try {
+        order = await (deps.retrieveOrder ?? retrieveProviderPayPalOrder)(intent.provider_order_id)
+      } catch (error) {
+        reportPayPalOrderFailure(deps, intent, {
+          signal: "customer_payment_error_observed",
+          boundary: "provider_outcome",
+          errorFamily: "provider_unavailable",
+          truth: "unknown",
+        })
+        throw error
+      }
+      try {
+        verifiedCapture = validateCapturedPayPalOrder(order, intent, undefined, {
+          expectedCaptureId: intent.provider_capture_id,
+        })
+      } catch (error) {
+        reportPayPalOrderFailure(deps, intent, {
+          signal: "customer_payment_error_observed",
+          boundary: "provider_outcome",
+          errorFamily: "processing",
+          truth: "unknown",
+        })
+        throw error
+      }
+    }
+  } else {
+    let order: CapturedPayPalOrder
+    try {
+      order = await (deps.captureOrder ?? captureProviderPayPalOrder)(
+        intent.provider_order_id,
+        intent.token,
+      )
+    } catch (error) {
+      reportPayPalOrderFailure(
+        deps,
+        intent,
+        isPayPalCaptureRejected(error)
+          ? {
+              signal: "provider_payment_failed",
+              boundary: "provider_outcome",
+              errorFamily: "processing",
+              truth: "failed",
+            }
+          : {
+              signal: "customer_payment_error_observed",
+              boundary: "provider_outcome",
+              errorFamily: "provider_unavailable",
+              truth: "unknown",
+            },
+      )
+      throw error
+    }
+    try {
+      verifiedCapture = validateCapturedPayPalOrder(order, intent)
+    } catch (error) {
+      reportPayPalOrderFailure(deps, intent, {
+        signal: "customer_payment_error_observed",
+        boundary: "provider_outcome",
+        errorFamily: "processing",
+        truth: "unknown",
+      })
+      throw error
+    }
   }
-  if (!captureId) {
+
+  if (!intent.provider_capture_id) {
+    intent =
+      (await tryMarkPayPalOrderIntentCaptured(deps.supabase, token, verifiedCapture.captureId)) ??
+      intent
+  }
+  const result = await activateVerifiedPayPalOrderIntent(intent, verifiedCapture, deps)
+  return { ...result, intent }
+}
+
+export async function activateVerifiedPayPalOrderIntent(
+  intent: PayPalOrderIntentRow,
+  capture: VerifiedPayPalCapture,
+  deps: PayPalOrderActivationDeps,
+): Promise<PayPalOrderActivationResult> {
+  if (!intent.email) {
     throw new PayPalCheckoutActivationError(
-      "paypal_order_capture_incomplete",
-      "PayPal order capture is missing",
+      "paypal_order_intent_missing",
+      "PayPal order intent is missing an email",
     )
   }
 
@@ -79,104 +229,588 @@ export async function captureAndActivatePayPalOrder(
     .select("*")
     .eq("id", intent.consent_id)
     .single()
-  if (consentError || !consent)
+  if (consentError || !consent) {
+    reportPayPalOrderFailure(deps, intent, {
+      signal: "customer_payment_error_observed",
+      boundary: "billing",
+      errorFamily: "billing_state",
+      truth: "succeeded",
+    })
     throw new PayPalCheckoutActivationError(
       "paypal_order_intent_missing",
       "PayPal order consent is missing",
     )
+  }
   const canonicalConsent = consent as PersonalPlanOneTimeCheckoutConsentRow
-  if (
-    canonicalConsent.confirmation_status !== "sent" &&
-    canonicalConsent.confirmation_status !== "delivered"
-  ) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-    try {
-      const confirmation = await (deps.sendConfirmation ?? sendPersonalPlanOneTimeConfirmation)({
-        email: purchaseEmail,
-        consent: {
-          text: canonicalConsent.consent_text,
-          version: canonicalConsent.copy_version,
-          acceptedAt: canonicalConsent.accepted_at,
+
+  let account: ActivePayPalCheckoutAccount | null = null
+  let activation: OneTimeActivationResult
+  try {
+    activation = await activateVerifiedOneTimePayment(
+      payPalVerifiedPaymentFromCapture(capture, intent, canonicalConsent),
+      {
+        supabase: deps.supabase,
+        postPurchasePersisted: async () =>
+          bindPayPalConsentProviderReference(deps.supabase, canonicalConsent.id, capture),
+        sendConfirmation: deps.sendConfirmation,
+        finalizeLockedPlan:
+          deps.finalizeLockedPlan ??
+          ((context) => finalizeLockedPersonalPlanFromPreparedArtifact(deps.supabase, context)),
+        siteUrl: deps.siteUrl,
+        defer: deps.defer,
+        now: deps.now,
+        ensureAccount: async (payment) => {
+          account = await (deps.ensureAccount ?? ensurePayPalOneTimePurchaseAccount)(
+            {
+              supabase: deps.supabase,
+              premiumTierId: "",
+            },
+            {
+              email: payment.email,
+              activationKey: intent.token,
+              leadId: canonicalConsent.lead_id,
+            },
+          )
+          return { userId: account.userId }
         },
-        payment: { provider: "paypal", reference: captureId },
-        supportUrl: new URL("/kontakt", siteUrl).toString(),
-        withdrawalUrl: new URL("/widerruf", siteUrl).toString(),
-        resultUrl: intent.lead_id
-          ? new URL(`/result/${encodeURIComponent(intent.lead_id)}`, siteUrl).toString()
+        linkQuizToProfile: deps.linkQuizToProfile
+          ? async ({ userId, payment, consent }) => {
+              await deps.linkQuizToProfile?.(userId, payment.email, consent.lead_id)
+            }
           : undefined,
-      })
-      await recordPersonalPlanOneTimeConfirmation(deps.supabase, intent.consent_id, {
-        provider: "paypal",
-        reference: confirmation.confirmationReference,
-        status: "sent",
-      })
-    } catch {
-      await recordPersonalPlanOneTimeConfirmation(deps.supabase, intent.consent_id, {
-        provider: "paypal",
-        reference: `paypal:${captureId}:confirmation_failed`,
-        status: "failed",
-      }).catch(() => {})
-      throw new PayPalCheckoutActivationError(
-        "paypal_order_confirmation_failed",
-        "PayPal one-time confirmation could not be sent",
-      )
-    }
+      },
+    )
+  } catch (error) {
+    reportPayPalOrderFailure(deps, intent, {
+      signal: "customer_payment_error_observed",
+      boundary: "entitlement",
+      errorFamily: "entitlement_state",
+      truth: "succeeded",
+    })
+    throw error
   }
 
-  const account = await (deps.ensureAccount ?? ensurePayPalOneTimePurchaseAccount)(
-    {
-      supabase: deps.supabase,
-      premiumTierId: "",
-      linkQuizToProfile: deps.linkQuizToProfile,
-    },
-    {
-      email: purchaseEmail,
-      activationKey: token,
-      leadId: intent.lead_id,
-    },
-  )
-  await upsertOneTimePurchase(deps.supabase, {
-    user_id: account.userId,
-    provider: "paypal",
-    provider_transaction_id: captureId,
-    provider_order_id: intent.provider_order_id,
-    amount_minor: PERSONAL_PLAN_ONCE_PRODUCT.amountMinor,
-    currency: "eur",
-    status: "paid",
-    paid_at: (deps.now ?? (() => new Date()))().toISOString(),
-    metadata: { paypal_order_intent_token: token },
-  })
-
-  return { status: "active", intent, account }
+  if (activation.state === "active") {
+    const activeAccount =
+      account ??
+      (await loadActivePayPalOneTimeAccountFromReplay(deps.supabase, {
+        userId: activation.purchase.user_id,
+        email: intent.email,
+        leadId: canonicalConsent.lead_id,
+      }))
+    return {
+      status: "active",
+      state: "active",
+      intent,
+      account: activeAccount,
+      activation,
+    }
+  }
+  return {
+    status: activation.state,
+    state: activation.state,
+    intent,
+    account: null,
+    activation,
+  }
 }
 
 export async function recoverPayPalOrderActivation(token: string, deps: PayPalOrderActivationDeps) {
-  return captureAndActivatePayPalOrder(token, deps)
+  const verification = await verifyPayPalOneTimePaymentForRecovery({
+    supabase: deps.supabase,
+    token,
+    retrieveOrder: deps.retrieveOrder,
+  })
+  const intent = verification.intent.provider_capture_id
+    ? verification.intent
+    : ((await tryMarkPayPalOrderIntentCaptured(
+        deps.supabase,
+        token,
+        verification.payment.providerTransactionId,
+      )) ?? verification.intent)
+  const result = await activateVerifiedPayPalOrderIntent(
+    intent,
+    {
+      captureId: verification.payment.providerTransactionId,
+      orderId: verification.payment.providerOrderId,
+      paidAt: verification.payment.paidAt,
+    },
+    deps,
+  )
+  return { ...result, intent }
+}
+
+function reportPayPalOrderFailure(
+  deps: PayPalOrderActivationDeps,
+  intent: PayPalOrderIntentRow,
+  failure: {
+    signal: "provider_payment_failed" | "customer_payment_error_observed"
+    boundary: "provider_outcome" | "billing" | "entitlement"
+    errorFamily: "processing" | "provider_unavailable" | "billing_state" | "entitlement_state"
+    truth: "failed" | "succeeded" | "unknown"
+  },
+) {
+  const report = deps.capturePaymentFailure ?? capturePaymentFailure
+  const runtime = resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
+  try {
+    report({
+      ...failure,
+      provider: "paypal",
+      commerceKind: "one_time",
+      origin: "provider_api",
+      method: "paypal",
+      live: runtime.paypalLive,
+      isInternalTest: intent.metadata?.is_internal_test === true,
+      retryable: "true",
+      checkoutAttemptId: intent.checkout_attempt_id,
+      leadId: intent.lead_id,
+      providerReferencePresent: Boolean(intent.provider_order_id),
+    })
+  } catch {
+    // Observability must not alter provider capture or activation behavior.
+  }
+}
+
+function isPayPalCaptureRejected(error: unknown) {
+  if (!error || typeof error !== "object" || !("status" in error)) return false
+  return error.status === 422
+}
+
+export async function processPayPalOneTimeFulfillmentJob(
+  job: PersonalPlanOneTimeFulfillmentJobRow,
+  deps: PayPalOrderActivationDeps,
+): Promise<OneTimeActivationResult> {
+  return processPersonalPlanOneTimeFulfillmentJob(job, {
+    supabase: deps.supabase,
+    postPurchasePersisted: async ({ payment, consent }) =>
+      bindPayPalConsentProviderReference(deps.supabase, consent.id, {
+        orderId: payment.providerOrderId,
+        captureId: payment.providerTransactionId,
+      }),
+    ensureAccount: async (payment, { consent, purchase }) => {
+      const intent = await loadPayPalIntentForPurchase(deps.supabase, purchase, consent)
+      const account = await (deps.ensureAccount ?? ensurePayPalOneTimePurchaseAccount)(
+        {
+          supabase: deps.supabase,
+          premiumTierId: "",
+        },
+        {
+          email: payment.email,
+          activationKey: intent.token,
+          leadId: consent.lead_id,
+        },
+      )
+      return { userId: account.userId }
+    },
+    linkQuizToProfile: deps.linkQuizToProfile
+      ? async ({ userId, payment, consent }) => {
+          await deps.linkQuizToProfile?.(userId, payment.email, consent.lead_id)
+        }
+      : undefined,
+    sendConfirmation: deps.sendConfirmation,
+    finalizeLockedPlan:
+      deps.finalizeLockedPlan ??
+      ((context) => finalizeLockedPersonalPlanFromPreparedArtifact(deps.supabase, context)),
+    siteUrl: deps.siteUrl,
+    now: deps.now,
+    resolveVerifiedPaymentForRetry: async ({ purchase, consent }) => {
+      try {
+        const verification = await verifyPayPalOneTimePaymentForRecovery({
+          supabase: deps.supabase,
+          orderId: purchase.provider_order_id,
+          captureId: purchase.provider_transaction_id,
+          retrieveOrder: deps.retrieveOrder,
+        })
+        if (verification.consent.id !== consent.id) {
+          throw new PayPalCheckoutActivationError(
+            "paypal_order_intent_missing",
+            "PayPal one-time fulfillment job consent mismatch",
+          )
+        }
+        return verification.payment
+      } catch (error) {
+        throw payPalRetryVerificationError(error)
+      }
+    },
+  })
+}
+
+function payPalRetryVerificationError(error: unknown): unknown {
+  if (error instanceof OneTimeActivationError) return error
+  if (!(error instanceof PayPalCheckoutActivationError)) return error
+  return new OneTimeActivationError(
+    `paypal_${error.code}`,
+    error.message,
+    isRetryablePayPalOneTimeVerificationError(error),
+  )
+}
+
+function isRetryablePayPalOneTimeVerificationError(error: PayPalCheckoutActivationError) {
+  return error.code === "paypal_order_capture_incomplete" && /not complete/i.test(error.message)
+}
+
+function bindPayPalConsentProviderReference(
+  supabase: SupabaseClient,
+  consentId: string,
+  capture: Pick<VerifiedPayPalCapture, "orderId" | "captureId">,
+) {
+  return bindPersonalPlanOneTimeConsentProviderReference(supabase, consentId, {
+    paypalOrderId: capture.orderId,
+    paypalCaptureId: capture.captureId,
+  })
+}
+
+export async function verifyPayPalOneTimePaymentForRecovery(input: {
+  supabase: SupabaseClient
+  token?: string | null
+  orderId?: string | null
+  captureId?: string | null
+  retrieveOrder?: typeof retrieveProviderPayPalOrder
+}): Promise<PayPalOneTimeRecoveryVerification> {
+  const intent = await loadPayPalIntentForRecovery(input.supabase, input)
+  if (!intent.email) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_intent_missing",
+      "PayPal one-time recovery intent is missing an email",
+    )
+  }
+  const providerOrderId = input.orderId?.trim() || intent.provider_order_id
+  const expectedCaptureId = input.captureId?.trim() || intent.provider_capture_id
+  if (!providerOrderId) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal one-time recovery is missing provider references",
+    )
+  }
+
+  const { data: consent, error: consentError } = await input.supabase
+    .from("personal_plan_one_time_checkout_consents")
+    .select("*")
+    .eq("id", intent.consent_id)
+    .single()
+  if (consentError || !consent) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_intent_missing",
+      "PayPal one-time recovery consent is missing",
+    )
+  }
+
+  const canonicalIntent = { ...intent, provider_order_id: providerOrderId }
+  const order = await (input.retrieveOrder ?? retrieveProviderPayPalOrder)(providerOrderId)
+  const capture = expectedCaptureId
+    ? validateCapturedPayPalOrder(order, canonicalIntent, undefined, {
+        expectedCaptureId,
+      })
+    : validateSingleCompletedPayPalOrderCapture(order, canonicalIntent)
+  const existingPurchase = await findOneTimePurchaseByProviderTransactionId(
+    input.supabase,
+    "paypal",
+    capture.captureId,
+  )
+  return {
+    payment: payPalVerifiedPaymentFromCapture(
+      capture,
+      canonicalIntent,
+      consent as PersonalPlanOneTimeCheckoutConsentRow,
+    ),
+    intent: canonicalIntent,
+    consent: consent as PersonalPlanOneTimeCheckoutConsentRow,
+    existingPurchase,
+    accountContext: {
+      activationKey: intent.token,
+      email: intent.email,
+      leadId: (consent as PersonalPlanOneTimeCheckoutConsentRow).lead_id,
+    },
+  }
 }
 
 export function validateCapturedPayPalOrder(
   order: CapturedPayPalOrder,
   intent: PayPalOrderIntentRow,
   expectedMerchantId = process.env.PAYPAL_MERCHANT_ID,
-) {
+  options: { expectedCaptureId?: string | null } = {},
+): VerifiedPayPalCapture {
+  const rawOrder = order as { id?: unknown }
   const purchaseUnit = order.purchase_units?.[0]
-  const capture = purchaseUnit?.payments?.captures?.[0]
+  const captures = purchaseUnit?.payments?.captures ?? []
+  const capture =
+    options.expectedCaptureId != null
+      ? captures.find((candidate) => candidate.id?.trim() === options.expectedCaptureId)
+      : captures[0]
+  const orderId = typeof rawOrder.id === "string" ? rawOrder.id.trim() : ""
+  const captureId = typeof capture?.id === "string" ? capture.id.trim() : ""
+  const captureCreatedAt =
+    typeof (capture as { create_time?: unknown } | undefined)?.create_time === "string"
+      ? (capture as { create_time: string }).create_time.trim()
+      : ""
   if (
     !expectedMerchantId?.trim() ||
-    order.status !== "COMPLETED" ||
+    !orderId ||
+    orderId !== intent.provider_order_id ||
     purchaseUnit?.custom_id !== intent.token ||
     purchaseUnit?.payee?.merchant_id !== expectedMerchantId.trim() ||
     purchaseUnit?.amount?.currency_code !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY ||
-    purchaseUnit?.amount?.value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT ||
-    capture?.status !== "COMPLETED" ||
-    capture?.amount?.currency_code !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY ||
-    capture?.amount?.value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT ||
-    !capture.id
+    purchaseUnit?.amount?.value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT
   ) {
     throw new PayPalCheckoutActivationError(
       "paypal_order_capture_incomplete",
       "PayPal order capture failed validation",
     )
   }
-  return capture.id
+  if (options.expectedCaptureId != null && captures.length > 0 && !capture) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal order capture failed validation",
+    )
+  }
+  if (order.status !== "COMPLETED" || !capture || capture.status !== "COMPLETED") {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal order capture is not complete",
+    )
+  }
+  if (
+    capture?.amount?.currency_code !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY ||
+    capture?.amount?.value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT ||
+    !captureId ||
+    (options.expectedCaptureId != null && captureId !== options.expectedCaptureId) ||
+    !Number.isFinite(Date.parse(captureCreatedAt))
+  ) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal order capture failed validation",
+    )
+  }
+  return { captureId, orderId, paidAt: captureCreatedAt }
+}
+
+function validateSingleCompletedPayPalOrderCapture(
+  order: CapturedPayPalOrder,
+  intent: PayPalOrderIntentRow,
+): VerifiedPayPalCapture {
+  const completedCaptures = (order.purchase_units?.[0]?.payments?.captures ?? []).filter(
+    (capture) => capture.status === "COMPLETED" && typeof capture.id === "string",
+  )
+  if (completedCaptures.length !== 1) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal order capture is not complete",
+    )
+  }
+  return validateCapturedPayPalOrder(order, intent, undefined, {
+    expectedCaptureId: completedCaptures[0]?.id,
+  })
+}
+
+export function verifiedPayPalCaptureFromWebhook(
+  event: {
+    create_time?: string
+    resource?: {
+      id?: string
+      create_time?: string
+      supplementary_data?: { related_ids?: { order_id?: string } }
+    }
+  },
+  captureId: string,
+): VerifiedPayPalCapture {
+  const orderId = event.resource?.supplementary_data?.related_ids?.order_id?.trim() ?? ""
+  const paidAt = event.resource?.create_time?.trim() || event.create_time?.trim() || ""
+  if (!captureId.trim() || !orderId || !Number.isFinite(Date.parse(paidAt))) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal capture webhook is missing stable payment references",
+    )
+  }
+  return { captureId: captureId.trim(), orderId, paidAt }
+}
+
+function payPalVerifiedPaymentFromCapture(
+  capture: VerifiedPayPalCapture,
+  intent: PayPalOrderIntentRow,
+  consent: PersonalPlanOneTimeCheckoutConsentRow,
+): VerifiedOneTimePayment {
+  if (!intent.email) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_intent_missing",
+      "PayPal one-time payment intent is missing an email",
+    )
+  }
+  return {
+    provider: "paypal",
+    providerTransactionId: capture.captureId,
+    providerOrderId: capture.orderId,
+    providerCustomerId: null,
+    consentId: consent.id,
+    email: intent.email,
+    amountMinor: PERSONAL_PLAN_ONCE_PRODUCT.amountMinor,
+    currency: "eur",
+    paidAt: capture.paidAt,
+    providerEvidence: {
+      paypal_order_id: capture.orderId,
+      paypal_capture_id: capture.captureId,
+      paypal_order_intent_token_hash: tokenHash(intent.token),
+    },
+  }
+}
+
+async function loadPayPalIntentForPurchase(
+  supabase: SupabaseClient,
+  purchase: { provider: string; provider_order_id: string | null; provider_transaction_id: string },
+  consent: PersonalPlanOneTimeCheckoutConsentRow,
+): Promise<PayPalOrderIntentRow> {
+  if (
+    purchase.provider !== "paypal" ||
+    !purchase.provider_order_id ||
+    purchase.provider_transaction_id.trim() === ""
+  ) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_capture_incomplete",
+      "PayPal one-time fulfillment job is missing provider references",
+    )
+  }
+  const intent = await findPayPalOrderIntentByProviderReference(supabase, {
+    captureId: purchase.provider_transaction_id,
+    orderId: purchase.provider_order_id,
+  })
+  if (!intent || intent.consent_id !== consent.id || !intent.email) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_intent_missing",
+      "PayPal one-time fulfillment job is missing its order intent",
+    )
+  }
+  return intent
+}
+
+async function loadPayPalIntentForRecovery(
+  supabase: SupabaseClient,
+  input: { token?: string | null; orderId?: string | null; captureId?: string | null },
+): Promise<PayPalOrderIntentRow> {
+  const token = input.token?.trim()
+  const intent = token
+    ? await findPayPalOrderIntentByToken(supabase, token)
+    : await findPayPalOrderIntentByProviderReference(supabase, {
+        orderId: input.orderId?.trim() || undefined,
+        captureId: input.captureId?.trim() || undefined,
+      })
+  if (!intent) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_order_intent_missing",
+      "PayPal one-time recovery intent is missing",
+    )
+  }
+  return intent
+}
+
+async function loadActivePayPalOneTimeAccountFromReplay(
+  supabase: SupabaseClient,
+  input: { userId: string | null; email: string; leadId: string },
+): Promise<ActivePayPalCheckoutAccount> {
+  if (!input.userId) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_user_race_unresolved",
+      "PayPal one-time activation is active but has no bound user",
+    )
+  }
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, email")
+    .eq("id", input.userId)
+    .maybeSingle()
+  if (error) throw new Error(`profile lookup failed: ${error.message}`)
+
+  const profileEmail =
+    typeof (data as { email?: unknown } | null)?.email === "string"
+      ? (data as { email: string }).email.trim().toLowerCase()
+      : ""
+  return {
+    status: "active",
+    userId: input.userId,
+    email: profileEmail || input.email.trim().toLowerCase(),
+    providerSubscriberEmail: null,
+    canSetInitialPassword: false,
+    leadId: input.leadId,
+    checkoutContext: null,
+  }
+}
+
+export async function retrieveProviderPayPalOrder(
+  orderId: string,
+): Promise<PayPalOrderLookupResponse> {
+  const { paypalRequest } = await import("./client")
+  return paypalRequest<PayPalOrderLookupResponse>(
+    `/v2/checkout/orders/${encodeURIComponent(orderId)}`,
+    {
+      method: "GET",
+    },
+  )
+}
+
+export async function finalizeLockedPersonalPlanFromPreparedArtifact(
+  supabase: SupabaseClient,
+  context: Parameters<NonNullable<OneTimeActivationDependencies["finalizeLockedPlan"]>>[0],
+) {
+  if (!context.purchase.user_id) {
+    throw new Error("one-time purchase must be bound before plan finalization")
+  }
+  // This is intentionally separate from linkQuizToProfile: that generic
+  // projection can no-op without withholding a paid customer's artifact.
+  const { data, error } = await supabase.rpc("link_personal_plan_artifact_to_user", {
+    p_lead_id: context.consent.lead_id,
+    p_user_id: context.purchase.user_id,
+  })
+  if (error) throw new Error(`prepared locked plan binding failed: ${error.message}`)
+  const artifact = Array.isArray(data) ? data[0] : data
+  const lockedPlan = (artifact as { locked_plan?: unknown } | null)?.locked_plan
+  const artifactId = (artifact as { artifact_id?: unknown } | null)?.artifact_id
+  if (typeof artifactId !== "string" || !hasMeaningfulLockedPlan(lockedPlan)) {
+    throw new Error("attached personal plan artifact is missing locked_plan")
+  }
+  return {
+    lockedPlan,
+    deliveryProvider: PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER,
+    deliveryReference: artifactId,
+  }
+}
+
+function hasMeaningfulLockedPlan(value: unknown): boolean {
+  if (value === null || value === undefined) return false
+  if (typeof value === "string") return value.trim().length > 0
+  if (Array.isArray(value)) return value.length > 0
+  if (typeof value === "object") return Object.keys(value).length > 0
+  return true
+}
+
+function tokenHash(token: string) {
+  return `sha256:${createHash("sha256").update(token).digest("hex")}`
+}
+
+export async function tryMarkPayPalOrderIntentCaptured(
+  supabase: SupabaseClient,
+  token: string,
+  captureId: string,
+): Promise<PayPalOrderIntentRow | null> {
+  try {
+    return await markPayPalOrderIntentCaptured(supabase, token, captureId)
+  } catch (error) {
+    console.warn("[paypal:one-time] captured payment persisted but intent update failed", {
+      reason: sanitizedIntentUpdateFailureReason(error),
+    })
+    return null
+  }
+}
+
+function sanitizedIntentUpdateFailureReason(error: unknown): string {
+  if (
+    error &&
+    typeof error === "object" &&
+    "code" in error &&
+    typeof (error as { code?: unknown }).code === "string"
+  ) {
+    return `supabase:${(error as { code: string }).code}`
+  }
+  return error instanceof Error ? error.name : "unknown"
 }

@@ -6,6 +6,7 @@ import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { captureCheckoutException } from "@/lib/observability/checkout"
 import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
+import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import {
   recordFunnelEvent,
   assertPersonalPlanOneTimeCheckoutAuthorized,
@@ -88,6 +89,7 @@ export const StripeCheckoutSessionRequestSchema = z
         funnelEventId,
         funnelSessionId,
         interval,
+        leadId,
         preparationId,
         preparationToken,
         preparedSessionId,
@@ -127,17 +129,11 @@ export const StripeCheckoutSessionRequestSchema = z
                   funnelEventId &&
                   hasCanonicalConsent,
                 )
-              : Boolean(
-                  checkoutAttemptId &&
-                  funnelEventId &&
-                  hasCanonicalConsent &&
-                  !preparationId &&
-                  !preparationToken &&
-                  !preparedSessionId,
-                )
+              : false
         if (
           source !== "quiz_result_offer" ||
           presentation !== "offer_overlay_elements" ||
+          !leadId ||
           !funnelSessionId ||
           !hasValidActionContract ||
           checkoutContext ||
@@ -349,6 +345,7 @@ export async function POST(req: NextRequest) {
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
     let oneTimeConsentId: string | null = null
     let oneTimeProviderLocked: "stripe" | null = null
+    let checkoutIsInternalTest: boolean | undefined
 
     if (isOneTimePurchase) {
       // Re-fetches the persisted arm; browser fields only select this guarded path.
@@ -356,6 +353,7 @@ export async function POST(req: NextRequest) {
         leadId: leadId!,
         funnelSessionId,
       })
+      checkoutIsInternalTest = authorization.isInternalTest
       if (isPreparation) {
         const { data: existing, error: lookupError } = await getAdminSupabase()
           .from("personal_plan_one_time_checkout_consents")
@@ -595,6 +593,7 @@ export async function POST(req: NextRequest) {
         funnelEventId: funnelEventId!,
         oneTimeConsentId,
         adminSupabase: isOneTimePurchase ? getAdminSupabase() : undefined,
+        funnelSessionId: isOneTimePurchase ? funnelSessionId : undefined,
         cookieStore,
         userIdForFunnel: user?.id,
       })
@@ -676,6 +675,14 @@ export async function POST(req: NextRequest) {
           funnelContext,
         )
       : null
+    if (
+      checkoutIsInternalTest === undefined &&
+      funnelContext &&
+      "isInternalTest" in funnelContext &&
+      typeof funnelContext.isInternalTest === "boolean"
+    ) {
+      checkoutIsInternalTest = funnelContext.isInternalTest
+    }
 
     const preparationTokenForResponse = isPreparation ? createPreparedCheckoutToken() : null
     const preparedMetadata = isPreparation
@@ -708,7 +715,11 @@ export async function POST(req: NextRequest) {
       returnDestination: reactivationReservation?.return_destination,
       reactivationReservationId: reactivationReservation?.id,
       presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
-      ...(!isPreparation && (checkoutAttemptId || oneTimeConsentId || !isOneTimePurchase)
+      ...(!isPreparation &&
+      (checkoutAttemptId ||
+        oneTimeConsentId ||
+        !isOneTimePurchase ||
+        checkoutIsInternalTest !== undefined)
         ? {
             metadata: {
               ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
@@ -716,13 +727,21 @@ export async function POST(req: NextRequest) {
               ...(!isOneTimePurchase
                 ? { pricing_catalog: pricingCatalog, stripe_price_id: priceId }
                 : {}),
+              ...(checkoutIsInternalTest !== undefined
+                ? { is_internal_test: String(checkoutIsInternalTest) }
+                : {}),
             },
           }
         : {}),
       ...(isPreparation
         ? {
             expiresAt: preparedCheckoutExpiresAt(),
-            metadata: preparedMetadata,
+            metadata: {
+              ...preparedMetadata,
+              ...(checkoutIsInternalTest !== undefined
+                ? { is_internal_test: String(checkoutIsInternalTest) }
+                : {}),
+            },
           }
         : {}),
     })
@@ -962,6 +981,169 @@ export function preparedCheckoutClaimIdempotencyKey(preparationId: string) {
   return `offer-elements-claim:${preparationId}`
 }
 
+type OneTimeConsentAttributionRow = {
+  id: string
+  lead_id: string
+  funnel_session_id: string
+  product_kind: string
+  offer_variant: string
+}
+
+type OneTimeConsentFunnelSessionRow = {
+  id: string
+  lead_id: string | null
+  visitor_id: string
+  package_key: string
+  offer_variant: string
+  first_seen_at: string
+}
+
+type OneTimeConsentFunnelContext = FunnelCookieContext & {
+  leadId: string
+  offerVariant: "personal-plan-one-time-v1"
+}
+
+export function resolveOneTimeConsentFunnelContext(input: {
+  consentId: string
+  expectedLeadId: string | null
+  expectedFunnelSessionId: string | null
+  consent: OneTimeConsentAttributionRow | null
+  funnelSession: OneTimeConsentFunnelSessionRow | null
+}): OneTimeConsentFunnelContext | null {
+  const { consent, funnelSession } = input
+  if (
+    !consent ||
+    !funnelSession ||
+    consent.id !== input.consentId ||
+    consent.product_kind !== PERSONAL_PLAN_ONCE_KIND ||
+    consent.offer_variant !== "personal-plan-one-time-v1" ||
+    (input.expectedLeadId !== null && consent.lead_id !== input.expectedLeadId) ||
+    (input.expectedFunnelSessionId !== null &&
+      consent.funnel_session_id !== input.expectedFunnelSessionId) ||
+    funnelSession.id !== consent.funnel_session_id ||
+    funnelSession.lead_id !== consent.lead_id ||
+    funnelSession.offer_variant !== consent.offer_variant
+  ) {
+    return null
+  }
+
+  const issuedAt = Date.parse(funnelSession.first_seen_at)
+  if (!Number.isFinite(issuedAt)) return null
+  return {
+    visitorId: funnelSession.visitor_id,
+    sessionId: funnelSession.id,
+    packageKey: funnelSession.package_key,
+    issuedAt,
+    leadId: consent.lead_id,
+    offerVariant: consent.offer_variant,
+  }
+}
+
+export function canonicalOneTimeClaimMetadata(context: OneTimeConsentFunnelContext) {
+  return {
+    lead_id: context.leadId,
+    funnel_session_id: context.sessionId,
+    funnel_package_key: context.packageKey,
+    offer_variant: context.offerVariant,
+  }
+}
+
+export function hasCanonicalOneTimeClaimMetadata(
+  metadata: Record<string, string>,
+  context: OneTimeConsentFunnelContext,
+) {
+  return Object.entries(canonicalOneTimeClaimMetadata(context)).every(
+    ([key, value]) => metadata[key] === value,
+  )
+}
+
+export function canonicalOneTimeClaimMetadataPatch(
+  metadata: Record<string, string>,
+  context: OneTimeConsentFunnelContext,
+): Record<string, string> | null {
+  const patch: Record<string, string> = {}
+  for (const [key, value] of Object.entries(canonicalOneTimeClaimMetadata(context))) {
+    if (metadata[key] === undefined) {
+      patch[key] = value
+    } else if (metadata[key] !== value) {
+      return null
+    }
+  }
+  return patch
+}
+
+export function validatePreparedCheckoutCanonicalMetadataRepair(input: {
+  metadata: Record<string, string>
+  sessionStatus: string | null
+  lineItemPriceId?: string
+  preparationId: string
+  preparationToken: string
+  interval: CheckoutCommerceInterval
+  priceId: string
+  source: "pricing_page" | "quiz_result_offer"
+  presentation?: "offer_overlay_elements"
+  identityHash: string
+  checkoutAttemptId: string
+  funnelEventId: string
+  oneTimeConsentId: string
+  context: OneTimeConsentFunnelContext
+}): { ok: true; patch: Record<string, string> } | { ok: false } {
+  const expected = {
+    checkout_preparation_id: input.preparationId,
+    checkout_preparation_interval: input.interval,
+    checkout_preparation_price_id: input.priceId,
+    checkout_preparation_source: input.source,
+    checkout_preparation_presentation: input.presentation ?? "",
+    checkout_preparation_identity_hash: input.identityHash,
+    checkout_preparation_status: "claimed",
+    checkout_attempt_id: input.checkoutAttemptId,
+    checkout_funnel_event_id: input.funnelEventId,
+    personal_plan_once_consent_id: input.oneTimeConsentId,
+  }
+  const metadataMatches = Object.entries(expected).every(
+    ([key, value]) => input.metadata[key] === value,
+  )
+  if (
+    input.sessionStatus !== "complete" ||
+    input.lineItemPriceId !== input.priceId ||
+    !metadataMatches ||
+    !hasMatchingToken(input.metadata.checkout_preparation_token_hash, input.preparationToken)
+  ) {
+    return { ok: false }
+  }
+  const patch = canonicalOneTimeClaimMetadataPatch(input.metadata, input.context)
+  return patch ? { ok: true, patch } : { ok: false }
+}
+
+async function loadOneTimeConsentFunnelContext(input: {
+  adminSupabase: ReturnType<typeof createBillingAdminClient>
+  consentId: string
+  expectedLeadId: string | null
+  expectedFunnelSessionId: string | null
+}): Promise<OneTimeConsentFunnelContext | null> {
+  const { data: consent, error: consentError } = await input.adminSupabase
+    .from("personal_plan_one_time_checkout_consents")
+    .select("id, lead_id, funnel_session_id, product_kind, offer_variant")
+    .eq("id", input.consentId)
+    .maybeSingle()
+  if (consentError || !consent) return null
+
+  const { data: funnelSession, error: funnelSessionError } = await input.adminSupabase
+    .from("funnel_sessions")
+    .select("id, lead_id, visitor_id, package_key, offer_variant, first_seen_at")
+    .eq("id", consent.funnel_session_id)
+    .maybeSingle()
+  if (funnelSessionError) return null
+
+  return resolveOneTimeConsentFunnelContext({
+    consentId: input.consentId,
+    expectedLeadId: input.expectedLeadId,
+    expectedFunnelSessionId: input.expectedFunnelSessionId,
+    consent,
+    funnelSession,
+  })
+}
+
 export function resolvePreparedCheckoutPricing(input: {
   isOneTimePurchase: boolean
   lineItemPriceId?: string
@@ -1030,6 +1212,7 @@ async function claimPreparedCheckoutSession(input: {
   userIdForFunnel?: string
   oneTimeConsentId?: string | null
   adminSupabase?: ReturnType<typeof createBillingAdminClient>
+  funnelSessionId?: string | null
 }) {
   let session: Stripe.Checkout.Session
   try {
@@ -1058,6 +1241,16 @@ async function claimPreparedCheckoutSession(input: {
     requestedInterval: input.requestedInterval,
   })
   if (!preparedPricing) return preparedCheckoutUnavailable()
+  const oneTimeConsentFunnelContext =
+    input.oneTimeConsentId && input.adminSupabase
+      ? await loadOneTimeConsentFunnelContext({
+          adminSupabase: input.adminSupabase,
+          consentId: input.oneTimeConsentId,
+          expectedLeadId: input.leadId,
+          expectedFunnelSessionId: input.funnelSessionId ?? null,
+        })
+      : undefined
+  if (input.oneTimeConsentId && !oneTimeConsentFunnelContext) return preparedCheckoutUnavailable()
   const validation = validatePreparedCheckoutClaim({
     metadata,
     sessionStatus: session.status,
@@ -1075,9 +1268,63 @@ async function claimPreparedCheckoutSession(input: {
     funnelEventId: input.funnelEventId,
     oneTimeConsentId: input.oneTimeConsentId,
   })
-  if (!validation.ok) return preparedCheckoutUnavailable()
+  if (!validation.ok) {
+    if (input.oneTimeConsentId && oneTimeConsentFunnelContext) {
+      const repairValidation = validatePreparedCheckoutCanonicalMetadataRepair({
+        metadata,
+        sessionStatus: session.status,
+        lineItemPriceId: resolvedLineItemPrice,
+        preparationId: input.preparationId,
+        preparationToken: input.preparationToken,
+        interval: preparedPricing.interval,
+        priceId: preparedPricing.priceId,
+        source: input.source,
+        presentation: input.presentation,
+        identityHash,
+        checkoutAttemptId: input.checkoutAttemptId,
+        funnelEventId: input.funnelEventId,
+        oneTimeConsentId: input.oneTimeConsentId,
+        context: oneTimeConsentFunnelContext,
+      })
+      if (repairValidation.ok) {
+        const repaired = await repairCanonicalOneTimeClaimMetadata({
+          stripe: input.stripe,
+          sessionId: session.id,
+          preparationId: input.preparationId,
+          metadata,
+          patch: repairValidation.patch,
+        })
+        if (!repaired || !hasCanonicalOneTimeClaimMetadata(repaired, oneTimeConsentFunnelContext)) {
+          return preparedCheckoutUnavailable()
+        }
+        if (input.adminSupabase) {
+          await bindPersonalPlanOneTimeConsentProviderReference(
+            input.adminSupabase,
+            input.oneTimeConsentId,
+            { stripeCheckoutSessionId: session.id },
+          )
+        }
+        return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+      }
+    }
+    return preparedCheckoutUnavailable()
+  }
 
   if (validation.alreadyClaimed) {
+    if (oneTimeConsentFunnelContext) {
+      const patch = canonicalOneTimeClaimMetadataPatch(metadata, oneTimeConsentFunnelContext)
+      if (!patch) return preparedCheckoutUnavailable()
+      const repaired = await repairCanonicalOneTimeClaimMetadata({
+        stripe: input.stripe,
+        sessionId: session.id,
+        preparationId: input.preparationId,
+        metadata,
+        patch,
+      })
+      if (!repaired || !hasCanonicalOneTimeClaimMetadata(repaired, oneTimeConsentFunnelContext)) {
+        return preparedCheckoutUnavailable()
+      }
+    }
     if (input.oneTimeConsentId && input.adminSupabase) {
       await bindPersonalPlanOneTimeConsentProviderReference(
         input.adminSupabase,
@@ -1096,6 +1343,7 @@ async function claimPreparedCheckoutSession(input: {
       analyticsPlan: preparedPricing.analyticsPlan,
       pricingCatalog: preparedPricing.pricingCatalog,
       cookieStore: input.cookieStore,
+      funnelContext: oneTimeConsentFunnelContext ?? undefined,
     })
     const response = NextResponse.json({
       client_secret: session.client_secret,
@@ -1112,6 +1360,7 @@ async function claimPreparedCheckoutSession(input: {
   }
 
   const funnelContextForMetadata =
+    oneTimeConsentFunnelContext ??
     (await resolveFunnelCookieContext(input.cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
     (await resolveFunnelContextForLead(input.leadId))
   let claimedSession: Stripe.Checkout.Session
@@ -1127,12 +1376,18 @@ async function claimPreparedCheckoutSession(input: {
           ...(input.oneTimeConsentId
             ? { personal_plan_once_consent_id: input.oneTimeConsentId }
             : {}),
-          ...(funnelContextForMetadata
-            ? {
-                funnel_session_id: funnelContextForMetadata.sessionId,
-                funnel_package_key: funnelContextForMetadata.packageKey,
-              }
-            : {}),
+          ...(oneTimeConsentFunnelContext
+            ? canonicalOneTimeClaimMetadata(oneTimeConsentFunnelContext)
+            : funnelContextForMetadata
+              ? {
+                  funnel_session_id: funnelContextForMetadata.sessionId,
+                  funnel_package_key: funnelContextForMetadata.packageKey,
+                  ...("isInternalTest" in funnelContextForMetadata &&
+                  typeof funnelContextForMetadata.isInternalTest === "boolean"
+                    ? { is_internal_test: String(funnelContextForMetadata.isInternalTest) }
+                    : {}),
+                }
+              : {}),
         },
       },
       { idempotencyKey: preparedCheckoutClaimIdempotencyKey(input.preparationId) },
@@ -1150,7 +1405,9 @@ async function claimPreparedCheckoutSession(input: {
       input.checkoutAttemptId,
       input.funnelEventId,
       input.oneTimeConsentId,
-    )
+    ) ||
+    (oneTimeConsentFunnelContext &&
+      !hasCanonicalOneTimeClaimMetadata(claimedSession.metadata ?? {}, oneTimeConsentFunnelContext))
   ) {
     return preparedCheckoutUnavailable()
   }
@@ -1172,6 +1429,7 @@ async function claimPreparedCheckoutSession(input: {
     analyticsPlan: preparedPricing.analyticsPlan,
     pricingCatalog: preparedPricing.pricingCatalog,
     cookieStore: input.cookieStore,
+    funnelContext: oneTimeConsentFunnelContext ?? undefined,
   })
 
   const response = NextResponse.json({
@@ -1185,6 +1443,35 @@ async function claimPreparedCheckoutSession(input: {
   return response
 }
 
+async function repairCanonicalOneTimeClaimMetadata(input: {
+  stripe: Stripe
+  sessionId: string
+  preparationId: string
+  metadata: Record<string, string>
+  patch: Record<string, string>
+}): Promise<Record<string, string> | null> {
+  if (Object.keys(input.patch).length === 0) return input.metadata
+  try {
+    const updatedSession = await input.stripe.checkout.sessions.update(
+      input.sessionId,
+      {
+        metadata: {
+          ...input.metadata,
+          ...input.patch,
+        },
+      },
+      { idempotencyKey: `${preparedCheckoutClaimIdempotencyKey(input.preparationId)}:canonical` },
+    )
+    return updatedSession.metadata ?? null
+  } catch (error) {
+    console.warn("[stripe] prepared checkout canonical metadata repair unavailable", {
+      preparationId: input.preparationId,
+      error: error instanceof Error ? error.message : "unknown",
+    })
+    return null
+  }
+}
+
 async function recordPreparedCheckoutStarted(input: {
   interval: CheckoutCommerceInterval
   source: "pricing_page" | "quiz_result_offer"
@@ -1196,8 +1483,10 @@ async function recordPreparedCheckoutStarted(input: {
   analyticsPlan: CheckoutAnalyticsPlan
   pricingCatalog?: SubscriptionPricingCatalog
   cookieStore: Awaited<ReturnType<typeof cookies>>
+  funnelContext?: FunnelCookieContext
 }) {
   const funnelContext =
+    input.funnelContext ??
     (await resolveFunnelCookieContext(input.cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
     (await resolveFunnelContextForLead(input.leadId))
   if (!funnelContext) return { consumeTouch: false }

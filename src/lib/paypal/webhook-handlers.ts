@@ -50,13 +50,13 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
+import { capturePaymentFailure } from "@/lib/observability/payment"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import {
   findOneTimePurchaseByProviderTransactionId,
   updateOneTimePurchaseStatus,
 } from "@/lib/billing/purchases"
-import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
-import { recoverPayPalOrderActivation } from "@/lib/paypal/order-activation"
 import {
   findPayPalOrderIntentByProviderReference,
   findPayPalOrderIntentByToken as findPayPalOrderIntentByTokenV2,
@@ -64,6 +64,15 @@ import {
   PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY,
   type PayPalOrderIntentRow,
 } from "@/lib/paypal/order-intents"
+import {
+  activateVerifiedPayPalOrderIntent,
+  retrieveProviderPayPalOrder,
+  type VerifiedPayPalCapture,
+  tryMarkPayPalOrderIntentCaptured,
+  validateCapturedPayPalOrder,
+  verifiedPayPalCaptureFromWebhook,
+} from "@/lib/paypal/order-activation"
+import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 
 export type PayPalWebhookEvent = {
   id?: string
@@ -72,8 +81,10 @@ export type PayPalWebhookEvent = {
   resource?: {
     id?: string
     custom_id?: string
+    create_time?: string
     billing_agreement_id?: string
     subscription_id?: string
+    payee?: { merchant_id?: string }
     amount?: {
       total?: string
       value?: string
@@ -108,6 +119,13 @@ export interface PayPalWebhookDeps {
   defer?: (work: () => void | Promise<void>) => void
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
   recordBillingAnalytics?: boolean
+  sendOneTimeConfirmation?: Parameters<
+    typeof activateVerifiedPayPalOrderIntent
+  >[2]["sendConfirmation"]
+  finalizeOneTimeLockedPlan?: Parameters<
+    typeof activateVerifiedPayPalOrderIntent
+  >[2]["finalizeLockedPlan"]
+  capturePaymentFailure?: typeof capturePaymentFailure
 }
 
 export type PayPalWebhookResult =
@@ -241,6 +259,23 @@ export async function handlePayPalWebhookEvent(
       }
       case "BILLING.SUBSCRIPTION.PAYMENT.FAILED":
       case "BILLING.SUBSCRIPTION.SUSPENDED": {
+        const checkoutIntent = await findPayPalCheckoutIntentByProviderSubscriptionId(
+          deps.supabase,
+          subscriptionId,
+        ).catch(() => null)
+        reportPayPalWebhookPaymentFailure(deps, {
+          signal: "provider_payment_failed",
+          provider: "paypal",
+          boundary: "webhook",
+          errorFamily: "declined",
+          commerceKind: "subscription",
+          origin: "webhook",
+          method: "paypal",
+          truth: "failed",
+          live: paymentRuntime().paypalLive,
+          isInternalTest: checkoutIntent?.metadata?.is_internal_test === true,
+          providerReferencePresent: Boolean(eventId),
+        })
         const billingRow = await updateExistingSubscription(subscription, deps, {
           provider_status: subscription.status ?? "SUSPENDED",
           entitlement_status: "past_due",
@@ -346,10 +381,22 @@ async function reconcilePayPalOrderCaptureEvent(
       : await findPayPalOrderIntentByProviderReference(deps.supabase, { orderId })
     if (intent) {
       validatePayPalCaptureCompletedWebhook(event, intent, captureId)
-      await recoverPayPalOrderActivation(intent.token, {
+      const verifiedCapture = await verifiedPayPalWebhookCaptureWithMerchantCheck(
+        event,
+        intent,
+        captureId,
+      )
+      await activateVerifiedPayPalOrderIntent(intent, verifiedCapture, {
         supabase: deps.supabase,
         linkQuizToProfile: deps.linkQuizToProfile,
+        sendConfirmation: deps.sendOneTimeConfirmation,
+        finalizeLockedPlan: deps.finalizeOneTimeLockedPlan,
+        defer: deps.defer,
+        capturePaymentFailure: deps.capturePaymentFailure,
       })
+      if (!intent.provider_capture_id) {
+        await tryMarkPayPalOrderIntentCaptured(deps.supabase, intent.token, captureId)
+      }
       purchase = await findOneTimePurchaseByProviderTransactionId(
         deps.supabase,
         "paypal",
@@ -362,53 +409,6 @@ async function reconcilePayPalOrderCaptureEvent(
       throw new Error(`PayPal capture ${captureId} has no one-time purchase to reconcile`)
     }
     return
-  }
-  if (isCompleted && deps.recordBillingAnalytics) {
-    const intent = await findPayPalOrderIntentByProviderReference(deps.supabase, {
-      orderId: purchase.provider_order_id ?? undefined,
-    })
-    const funnelSessionId = stringMetadata(intent?.metadata ?? null, "funnel_session_id")
-    const funnelPackageKey = stringMetadata(intent?.metadata ?? null, "funnel_package_key")
-    const destinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
-    if (
-      isFunnelAttributionEnabled() &&
-      isBillingFunnelDeliveryEnabled() &&
-      funnelSessionId &&
-      funnelPackageKey
-    ) {
-      destinations.push("funnel")
-    }
-    await recordBillingAnalyticsEvent(
-      deps.supabase,
-      {
-        eventKey: billingAnalyticsEventKey({
-          provider: "paypal",
-          eventName: "purchase_completed",
-          sourceObjectId: captureId,
-        }),
-        eventName: "purchase_completed",
-        userId: purchase.user_id,
-        provider: "paypal",
-        providerCustomerId: null,
-        providerSubscriptionId: null,
-        sourceEventId: event.id,
-        sourceObjectId: captureId,
-        occurredAt: payPalEventTimestamp(event),
-        payload: {
-          checkout_reference: captureId,
-          paypal_capture_id: captureId,
-          paypal_order_id: purchase.provider_order_id,
-          value: purchase.amount_minor / 100,
-          currency: purchase.currency.toUpperCase(),
-          interval: "one_time",
-          plan_id: purchase.product_kind,
-          has_paid_access: true,
-          funnel_session_id: funnelSessionId,
-          funnel_package_key: funnelPackageKey,
-        },
-      },
-      { defer: deps.defer, destinations },
-    )
   }
   if (event.event_type === "PAYMENT.CAPTURE.REVERSED") {
     await updateOneTimePurchaseStatus(deps.supabase, purchase, { status: "reversed" })
@@ -424,6 +424,26 @@ async function reconcilePayPalOrderCaptureEvent(
       refunded_amount_minor: cumulative,
       refunded_at: new Date().toISOString(),
     })
+  }
+}
+
+function paymentRuntime() {
+  return resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
+}
+
+function reportPayPalWebhookPaymentFailure(
+  deps: PayPalWebhookDeps,
+  failure: Parameters<typeof capturePaymentFailure>[0],
+) {
+  try {
+    const report = deps.capturePaymentFailure ?? capturePaymentFailure
+    report(failure)
+  } catch {
+    // Observability must not alter webhook reconciliation behavior.
   }
 }
 
@@ -454,25 +474,45 @@ export function validatePayPalCaptureCompletedWebhook(
   event: PayPalWebhookEvent,
   intent: PayPalOrderIntentRow,
   captureId: string,
+  expectedMerchantId = process.env.PAYPAL_MERCHANT_ID,
 ) {
   const resource = event.resource
   const amount = resource?.amount
   const eventOrderId = resource?.supplementary_data?.related_ids?.order_id?.trim()
   const eventToken = resource?.custom_id?.trim()
+  const eventMerchantId = resource?.payee?.merchant_id?.trim()
   const currency = (amount?.currency_code ?? amount?.currency)?.trim().toUpperCase()
   const value = amount?.value ?? amount?.total
 
   if (
+    !expectedMerchantId?.trim() ||
     event.event_type !== "PAYMENT.CAPTURE.COMPLETED" ||
     resource?.id?.trim() !== captureId ||
     resource?.status !== "COMPLETED" ||
     currency !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY ||
     value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT ||
-    (eventOrderId && intent.provider_order_id && eventOrderId !== intent.provider_order_id) ||
-    (eventToken && eventToken !== intent.token)
+    !eventOrderId ||
+    !intent.provider_order_id ||
+    eventOrderId !== intent.provider_order_id ||
+    !eventToken ||
+    eventToken !== intent.token ||
+    (eventMerchantId && eventMerchantId !== expectedMerchantId.trim())
   ) {
     throw new Error("PayPal one-time capture webhook failed validation")
   }
+}
+
+async function verifiedPayPalWebhookCaptureWithMerchantCheck(
+  event: PayPalWebhookEvent,
+  intent: PayPalOrderIntentRow,
+  captureId: string,
+): Promise<VerifiedPayPalCapture> {
+  if (event.resource?.payee?.merchant_id?.trim()) {
+    return verifiedPayPalCaptureFromWebhook(event, captureId)
+  }
+
+  const order = await retrieveProviderPayPalOrder(intent.provider_order_id!)
+  return validateCapturedPayPalOrder(order, intent, undefined, { expectedCaptureId: captureId })
 }
 
 export function assertValidPayPalOneTimeCaptureEvent(event: PayPalWebhookEvent): void {

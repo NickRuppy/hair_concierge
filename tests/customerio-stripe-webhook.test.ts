@@ -751,6 +751,7 @@ test("webhook terminally acknowledges an unclaimed prepared checkout after captu
 test("webhook event handles checkout.session.async_payment_failed without Customer.io purchase work", async () => {
   const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
   const deferred: Array<() => void | Promise<void>> = []
+  const reported: Array<Record<string, unknown>> = []
   profiles.user_async_failed = {
     id: "user_async_failed",
     email: "async-failed@example.com",
@@ -771,12 +772,16 @@ test("webhook event handles checkout.session.async_payment_failed without Custom
           id: "cs_async_failed",
           customer: "cus_async_failed",
           subscription: "sub_async_failed",
+          metadata: { is_internal_test: "true" },
         },
       },
     } as any,
     {
       defer: (work) => deferred.push(work),
       getFreeTierId: async () => "tier_free",
+      capturePaymentFailure(details: Record<string, unknown>) {
+        reported.push(details)
+      },
       stripe: deps.stripe,
       supabase: deps.supabase,
     },
@@ -792,6 +797,121 @@ test("webhook event handles checkout.session.async_payment_failed without Custom
   assert.deepEqual(billing[0].metadata, { reason: "async_payment_failed" })
   assert.deepEqual(canceledSubscriptions, ["sub_async_failed"])
   assert.equal(deferred.length, 0)
+  assert.deepEqual(reported, [
+    {
+      signal: "provider_payment_failed",
+      provider: "stripe",
+      boundary: "webhook",
+      errorFamily: "declined",
+      commerceKind: "subscription",
+      origin: "webhook",
+      method: "unknown",
+      truth: "failed",
+      live: false,
+      isInternalTest: true,
+      providerReferencePresent: true,
+    },
+  ])
+})
+
+test("Stripe invoice failure reports once without exposing an invoice reference", async () => {
+  const { deps } = stubDeps()
+  const reported: Array<Record<string, unknown>> = []
+
+  await withEnv("VERCEL_ENV", "production", () =>
+    withEnv("STRIPE_SECRET_KEY", "sk_live_test", async () => {
+      await handleStripeWebhookEvent(
+        {
+          id: "evt_invoice_failed",
+          type: "invoice.payment_failed",
+          data: {
+            object: {
+              id: "in_failed",
+              parent: { subscription_details: { metadata: { is_internal_test: "true" } } },
+            },
+          },
+        } as any,
+        {
+          capturePaymentFailure(details: Record<string, unknown>) {
+            reported.push(details)
+          },
+          stripe: deps.stripe,
+          supabase: deps.supabase,
+        },
+      )
+    }),
+  )
+
+  assert.equal(reported.length, 1)
+  assert.equal(reported[0].signal, "provider_payment_failed")
+  assert.equal(reported[0].providerReferencePresent, true)
+  assert.equal(reported[0].live, true)
+  assert.equal(reported[0].isInternalTest, true)
+  assert.equal(JSON.stringify(reported).includes("in_failed"), false)
+})
+
+test("Stripe payment-intent failure emits provider truth with internal QA classification", async () => {
+  const { deps } = stubDeps()
+  const reported: Array<Record<string, unknown>> = []
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_payment_intent_failed",
+      type: "payment_intent.payment_failed",
+      data: {
+        object: {
+          id: "pi_failed",
+          metadata: { product_kind: "personal_plan_once", is_internal_test: "true" },
+        },
+      },
+    } as any,
+    {
+      capturePaymentFailure(details: Record<string, unknown>) {
+        reported.push(details)
+      },
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.deepEqual(reported, [
+    {
+      signal: "provider_payment_failed",
+      provider: "stripe",
+      boundary: "provider_outcome",
+      errorFamily: "declined",
+      commerceKind: "one_time",
+      origin: "webhook",
+      method: "unknown",
+      truth: "failed",
+      live: false,
+      isInternalTest: true,
+      providerReferencePresent: true,
+    },
+  ])
+  assert.equal(JSON.stringify(reported).includes("pi_failed"), false)
+})
+
+test("Stripe subscription payment-intent failure defers to invoice failure without double reporting", async () => {
+  const { deps } = stubDeps()
+  const reported: Array<Record<string, unknown>> = []
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_subscription_pi_failed",
+      type: "payment_intent.payment_failed",
+      data: { object: { id: "pi_subscription_failed", metadata: {}, invoice: "in_failed" } },
+    } as any,
+    {
+      capturePaymentFailure(details: Record<string, unknown>) {
+        reported.push(details)
+      },
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.deepEqual(reported, [])
 })
 
 test("stale subscription deletion does not send Customer.io cancellation for a newer active subscription", async () => {

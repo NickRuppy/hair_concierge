@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Einmalkauf – Aktivierung und Dashboard</title>
+    <style>
+      :root {
+        --ink: #1f2825;
+        --muted: #68736f;
+        --line: #dfe5e2;
+        --paper: #fbfcfb;
+        --soft: #f1f5f3;
+        --brand: #28584b;
+        --brand-soft: #e6f0ec;
+        --blue: #1d4ed8;
+        --amber: #a15c05;
+        --amber-soft: #fff6e6;
+        --shadow: 0 18px 60px rgba(26, 45, 38, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 18% 0%, rgba(204, 224, 216, 0.62), transparent 34rem), #eef2f0;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .page {
+        max-width: 1460px;
+        margin: 0 auto;
+        padding: 40px 30px 64px;
+      }
+
+      .intro {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 26px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--brand);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-bottom: 9px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(34px, 4vw, 58px);
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        line-height: 1.03;
+      }
+
+      .intro-copy {
+        max-width: 720px;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .sample-note {
+        flex: 0 0 auto;
+        border: 1px solid #d6ddd9;
+        border-radius: 999px;
+        padding: 9px 13px;
+        color: #5f6865;
+        background: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 390px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+      }
+
+      .phone-shell {
+        border: 1px solid rgba(42, 57, 52, 0.15);
+        border-radius: 34px;
+        padding: 10px;
+        background: #151c1a;
+        box-shadow: var(--shadow);
+      }
+
+      .phone {
+        min-height: 742px;
+        overflow: hidden;
+        border-radius: 26px;
+        background: #fcfdfc;
+      }
+
+      .phone-top {
+        display: flex;
+        justify-content: center;
+        padding: 13px 20px 11px;
+        border-bottom: 1px solid #eef1ef;
+        color: #24312c;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 23px;
+      }
+
+      .phone-content {
+        padding: 42px 27px 30px;
+      }
+
+      .status-icon {
+        display: grid;
+        width: 56px;
+        height: 56px;
+        place-items: center;
+        margin-bottom: 25px;
+        border-radius: 50%;
+        color: var(--brand);
+        background: var(--brand-soft);
+        font-size: 26px;
+        font-weight: 800;
+      }
+
+      .pill {
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        margin-bottom: 13px;
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: var(--brand);
+        background: var(--brand-soft);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--brand);
+      }
+
+      .phone h2 {
+        margin-bottom: 13px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 35px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.07;
+      }
+
+      .lead {
+        margin-bottom: 28px;
+        color: #65706c;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .steps {
+        margin: 0 0 24px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .step {
+        position: relative;
+        display: grid;
+        grid-template-columns: 27px 1fr;
+        gap: 12px;
+        align-items: center;
+        min-height: 46px;
+        color: #4c5652;
+        font-size: 14px;
+        font-weight: 650;
+      }
+
+      .step:not(:last-child)::after {
+        position: absolute;
+        top: 33px;
+        bottom: -9px;
+        left: 12px;
+        width: 2px;
+        background: #dbe4e0;
+        content: "";
+      }
+
+      .step-mark {
+        z-index: 1;
+        display: grid;
+        width: 25px;
+        height: 25px;
+        place-items: center;
+        border: 2px solid #cad5d0;
+        border-radius: 50%;
+        color: #84908b;
+        background: #fcfdfc;
+        font-size: 12px;
+      }
+
+      .step.done .step-mark {
+        border-color: var(--brand);
+        color: white;
+        background: var(--brand);
+      }
+
+      .step.active .step-mark {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 5px var(--brand-soft);
+      }
+
+      .calm-note {
+        margin-bottom: 14px;
+        border: 1px solid #e2e7e4;
+        border-radius: 13px;
+        padding: 13px 14px;
+        color: #65706c;
+        background: #f6f8f7;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .timeout {
+        border: 1px solid #efdbb8;
+        border-radius: 15px;
+        padding: 15px;
+        background: var(--amber-soft);
+      }
+
+      .timeout-label {
+        margin-bottom: 6px;
+        color: var(--amber);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .timeout p {
+        margin-bottom: 13px;
+        color: #715c3c;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        border: 1px solid var(--brand);
+        border-radius: 9px;
+        padding: 9px 11px;
+        color: white;
+        background: var(--brand);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .button.secondary {
+        color: var(--brand);
+        background: transparent;
+      }
+
+      .dashboard {
+        overflow: hidden;
+        border: 1px solid #d9dfdc;
+        border-radius: 20px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      .dashboard-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: center;
+        padding: 22px 24px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .dashboard-title {
+        margin-bottom: 4px;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+      }
+
+      .dashboard-subtitle {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+      }
+
+      .filter {
+        border: 1px solid #d9dfdc;
+        border-radius: 8px;
+        padding: 8px 10px;
+        color: #45504c;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .dashboard-body {
+        padding: 19px;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 11px;
+        margin-bottom: 13px;
+      }
+
+      .metric,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: #fff;
+      }
+
+      .metric {
+        min-height: 103px;
+        padding: 14px;
+      }
+
+      .metric-label {
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .metric-value {
+        margin-bottom: 3px;
+        font-size: 26px;
+        font-weight: 850;
+        letter-spacing: -0.035em;
+      }
+
+      .metric-foot {
+        color: #8a9490;
+        font-size: 10px;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 13px;
+      }
+
+      .panel {
+        padding: 17px;
+      }
+
+      .panel h3 {
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .panel-subtitle {
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .funnel-row {
+        display: grid;
+        grid-template-columns: 142px minmax(80px, 1fr) 42px;
+        gap: 9px;
+        align-items: center;
+        margin: 9px 0;
+        color: #59635f;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .bar-track {
+        height: 18px;
+        overflow: hidden;
+        border-radius: 5px;
+        background: #edf1ef;
+      }
+
+      .bar {
+        height: 100%;
+        min-width: 3px;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--blue), #5e87e8);
+      }
+
+      .chart {
+        position: relative;
+        height: 176px;
+        margin-top: 22px;
+        border-bottom: 1px solid #dfe5e2;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 43px,
+          #eef1ef 44px
+        );
+      }
+
+      .chart svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .legend {
+        display: flex;
+        gap: 14px;
+        margin-top: 11px;
+        color: #65706c;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .legend span::before {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background: var(--blue);
+        content: "";
+      }
+
+      .legend span:nth-child(2)::before {
+        background: var(--brand);
+      }
+
+      .legend span:nth-child(3)::before {
+        background: #c27718;
+      }
+
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 13px;
+        margin-top: 13px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 10px;
+      }
+
+      th,
+      td {
+        padding: 9px 5px;
+        border-bottom: 1px solid #edf0ef;
+        text-align: left;
+      }
+
+      th {
+        color: #7a8580;
+        font-weight: 800;
+      }
+
+      .ok {
+        color: var(--brand);
+        font-weight: 800;
+      }
+
+      .warn {
+        color: var(--amber);
+        font-weight: 800;
+      }
+
+      @media (max-width: 1100px) {
+        .grid {
+          grid-template-columns: 350px minmax(0, 1fr);
+        }
+
+        .metrics {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .dashboard-grid,
+        .bottom-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .page {
+          padding: 26px 16px 42px;
+        }
+
+        .intro {
+          display: block;
+        }
+
+        .sample-note {
+          display: inline-block;
+          margin-top: 15px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .phone-shell {
+          max-width: 390px;
+          margin: 0 auto;
+        }
+
+        .metrics {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-top {
+          align-items: start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 510px) {
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .funnel-row {
+          grid-template-columns: 114px minmax(60px, 1fr) 32px;
+        }
+
+        .dashboard-body {
+          padding: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="intro">
+        <div>
+          <p class="eyebrow">Planungs-Mockup · Einmalkauf</p>
+          <h1>Sicherer Zustand nach einer echten Zahlung</h1>
+          <p class="intro-copy">
+            Links sieht der Käufer, dass die Zahlung erfasst ist und kein zweiter Kauf nötig ist.
+            Rechts bekommt das Team einen eigenen öffentlichen Einmalkauf-Funnel mit getrennten
+            Qualitätswarnungen.
+          </p>
+        </div>
+        <div class="sample-note">Alle Dashboard-Zahlen sind illustrativ</div>
+      </header>
+
+      <section class="grid">
+        <div class="phone-shell" aria-label="Mobiler Aktivierungszustand nach Zahlung">
+          <div class="phone">
+            <div class="phone-top">Chaarlie</div>
+            <div class="phone-content">
+              <div class="status-icon">✓</div>
+              <div class="pill"><span class="pill-dot"></span>Zahlung bestätigt</div>
+              <h2>Wir schließen deinen Zugang ab</h2>
+              <p class="lead">
+                Deine Zahlung ist sicher erfasst. Wir senden dir gleich die Bestätigung und öffnen
+                anschließend deinen persönlichen Haarplan.
+              </p>
+
+              <ol class="steps">
+                <li class="step done">
+                  <span class="step-mark">✓</span>
+                  <span>Zahlung über Stripe bestätigt</span>
+                </li>
+                <li class="step active">
+                  <span class="step-mark"></span>
+                  <span>Bestätigung wird versendet</span>
+                </li>
+                <li class="step">
+                  <span class="step-mark"></span>
+                  <span>Zugang wird freigeschaltet</span>
+                </li>
+              </ol>
+
+              <div class="calm-note">
+                Bitte schließe diese Seite nicht. Das dauert normalerweise nur wenige Sekunden.
+              </div>
+
+              <div class="timeout">
+                <div class="timeout-label">Falls es länger dauert</div>
+                <p>
+                  Deine Zahlung ist sicher erfasst – du wirst nicht erneut belastet. Wir senden dir
+                  eine E-Mail, sobald dein Zugang bereit ist.
+                </p>
+                <div class="buttons">
+                  <button class="button" type="button">Status erneut prüfen</button>
+                  <button class="button secondary" type="button">Support kontaktieren</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard" aria-label="PostHog-Dashboard für den Einmalkauf">
+          <div class="dashboard-top">
+            <div>
+              <div class="dashboard-title">
+                Persönlicher Haarplan — Einmalkauf: Funnel &amp; Umsatz
+              </div>
+              <p class="dashboard-subtitle">
+                Öffentliche Sessions · Einmalkauf-Variante · serverseitig bestätigte Käufe
+              </p>
+            </div>
+            <div class="filters">
+              <button class="filter" type="button">Letzte 7 Tage</button>
+              <button class="filter" type="button">Intern ausgeschlossen</button>
+            </div>
+          </div>
+
+          <div class="dashboard-body">
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-label">Offer-Sessions</div>
+                <div class="metric-value">184</div>
+                <div class="metric-foot">eindeutig, öffentlich</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Checkout geöffnet</div>
+                <div class="metric-value">31</div>
+                <div class="metric-foot">16,8 % der Offers</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Bezahlte Käufe</div>
+                <div class="metric-value">7</div>
+                <div class="metric-foot">DB + Provider verknüpft</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Conversion</div>
+                <div class="metric-value">3,8 %</div>
+                <div class="metric-foot">Offer → Kauf</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Bruttoumsatz</div>
+                <div class="metric-value">209,93 €</div>
+                <div class="metric-foot">erfasste Zahlungen</div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              <section class="panel">
+                <h3>Einmalkauf-Funnel</h3>
+                <p class="panel-subtitle">Eindeutige, kanonisch zugeordnete Funnel-Sessions</p>
+                <div class="funnel-row">
+                  <span>Offer gesehen</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 100%"></span
+                  ></span>
+                  <strong>184</strong>
+                </div>
+                <div class="funnel-row">
+                  <span>Pricing gesehen</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 76%"></span
+                  ></span>
+                  <strong>140</strong>
+                </div>
+                <div class="funnel-row">
+                  <span>Checkout-Intent</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 25%"></span
+                  ></span>
+                  <strong>46</strong>
+                </div>
+                <div class="funnel-row">
+                  <span>Checkout geöffnet</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 17%"></span
+                  ></span>
+                  <strong>31</strong>
+                </div>
+                <div class="funnel-row">
+                  <span>Anbieter bereit</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 15%"></span
+                  ></span>
+                  <strong>27</strong>
+                </div>
+                <div class="funnel-row">
+                  <span>Zahlungsart gewählt</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 8%"></span
+                  ></span>
+                  <strong>14</strong>
+                </div>
+                <div class="funnel-row">
+                  <span>Kauf abgeschlossen</span>
+                  <span class="bar-track"
+                    ><span class="bar" style="display: block; width: 4%"></span
+                  ></span>
+                  <strong>7</strong>
+                </div>
+              </section>
+
+              <section class="panel">
+                <h3>Verlauf</h3>
+                <p class="panel-subtitle">Sessions, Checkout-Starts und bestätigte Käufe pro Tag</p>
+                <div class="chart">
+                  <svg
+                    viewBox="0 0 430 176"
+                    preserveAspectRatio="none"
+                    role="img"
+                    aria-label="Illustrativer Linienverlauf"
+                  >
+                    <polyline
+                      points="0,120 70,100 140,116 210,76 280,90 350,48 430,61"
+                      fill="none"
+                      stroke="#1d4ed8"
+                      stroke-width="3"
+                    />
+                    <polyline
+                      points="0,154 70,146 140,151 210,132 280,139 350,116 430,120"
+                      fill="none"
+                      stroke="#28584b"
+                      stroke-width="3"
+                    />
+                    <polyline
+                      points="0,171 70,168 140,169 210,163 280,166 350,154 430,157"
+                      fill="none"
+                      stroke="#c27718"
+                      stroke-width="3"
+                    />
+                  </svg>
+                </div>
+                <div class="legend"><span>Offer</span><span>Checkout</span><span>Käufe</span></div>
+              </section>
+            </div>
+
+            <div class="bottom-grid">
+              <section class="panel">
+                <h3>Anbieter</h3>
+                <p class="panel-subtitle">Nur kanonische Käufe</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Anbieter</th>
+                      <th>Käufe</th>
+                      <th>Umsatz</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Stripe</td>
+                      <td>5</td>
+                      <td>149,95 €</td>
+                    </tr>
+                    <tr>
+                      <td>PayPal</td>
+                      <td>2</td>
+                      <td>59,98 €</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <section class="panel">
+                <h3>Datenqualität &amp; Aktivierung</h3>
+                <p class="panel-subtitle">
+                  Öffentliche Kennzahlen und operative Lücken bleiben getrennt
+                </p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Prüfung</th>
+                      <th>Status</th>
+                      <th>Anzahl</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Interne QA aus öffentlichen Zahlen entfernt</td>
+                      <td class="ok">OK</td>
+                      <td>12</td>
+                    </tr>
+                    <tr>
+                      <td>Kanonische Funnel-Zuordnung fehlt</td>
+                      <td class="ok">OK</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                      <td>Zahlung ohne Purchase-Event</td>
+                      <td class="warn">Prüfen</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>Kauf wartet auf Bestätigung/Zugang</td>
+                      <td class="ok">OK</td>
+                      <td>0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

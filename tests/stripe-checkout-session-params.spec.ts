@@ -58,6 +58,7 @@ test("builds a one-time personal-plan payment session without subscription seman
     product_kind: "personal_plan_once",
     checkout_attempt_id: "e32f2c05-9083-4474-9334-346684de6b7e",
   })
+  assert.equal(params.customer_creation, "always")
   assert.equal("subscription_data" in params, false)
 })
 
@@ -101,6 +102,29 @@ test("preserves funnel metadata with and without a lead", () => {
   })
 })
 
+test("propagates authoritative internal-test metadata to later provider objects", () => {
+  const subscription = buildStripeCheckoutSessionParams({
+    origin: "https://chaarlie.example",
+    priceId: "price_month",
+    customerEmail: "qa@example.com",
+    metadata: { is_internal_test: "true" },
+  })
+  assert.deepEqual(subscription.metadata, { is_internal_test: "true" })
+  assert.deepEqual(subscription.subscription_data?.metadata, { is_internal_test: "true" })
+
+  const oneTime = buildStripeCheckoutSessionParams({
+    checkoutKind: "personal_plan_once",
+    origin: "https://chaarlie.example",
+    priceId: "price_once",
+    customerEmail: "qa@example.com",
+    metadata: { is_internal_test: "true" },
+  })
+  assert.deepEqual(oneTime.payment_intent_data?.metadata, {
+    product_kind: "personal_plan_once",
+    is_internal_test: "true",
+  })
+})
+
 test("passes customer for customerId input without customer_email", () => {
   const params = buildStripeCheckoutSessionParams({
     origin: "https://chaarlie.example",
@@ -111,6 +135,29 @@ test("passes customer for customerId input without customer_email", () => {
 
   assert.equal(params.customer, "cus_123")
   assert.equal("customer_email" in params, false)
+})
+
+test("creates a Customer for one-time email Checkout but not when one already exists", () => {
+  const withEmail = buildStripeCheckoutSessionParams({
+    checkoutKind: "personal_plan_once",
+    origin: "https://chaarlie.example",
+    priceId: "price_personal_plan_once",
+    customerEmail: "customer@example.com",
+  })
+  const withCustomer = buildStripeCheckoutSessionParams({
+    checkoutKind: "personal_plan_once",
+    origin: "https://chaarlie.example",
+    priceId: "price_personal_plan_once",
+    customerId: "cus_123",
+    customerEmail: "customer@example.com",
+  })
+
+  assert.equal(withEmail.customer_creation, "always")
+  assert.equal(withEmail.customer_email, "customer@example.com")
+  assert.equal("customer" in withEmail, false)
+  assert.equal("customer_creation" in withCustomer, false)
+  assert.equal(withCustomer.customer, "cus_123")
+  assert.equal("customer_email" in withCustomer, false)
 })
 
 test("passes customer_email when no customerId is available", () => {

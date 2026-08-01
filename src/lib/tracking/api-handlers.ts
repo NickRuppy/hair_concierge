@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import type { OneTimeAccessState } from "@/lib/billing/types"
 import type { RoutineArtifactData } from "@/lib/routines/types"
 import { normalizeProductFrequency, PRODUCT_FREQUENCY_METADATA } from "@/lib/vocabulary/frequencies"
 
@@ -39,6 +40,10 @@ export interface TrackerApiDeps {
     client: SupabaseishClient,
     lookup: { userId: string; email?: string | null },
   ): Promise<boolean>
+  resolveOneTimeAccessState?(
+    client: SupabaseishClient,
+    lookup: { userId: string },
+  ): Promise<OneTimeAccessState>
   loadRoutineArtifactData(args: {
     userId: string
   }): Promise<Pick<RoutineArtifactData, "runtime" | "usageRows">>
@@ -173,6 +178,12 @@ export function createTrackerApiHandlers(deps: TrackerApiDeps) {
     const admin = deps.createAdminClient()
     try {
       if (!(await deps.hasCurrentAppAccess(admin, { userId: user.id, email: user.email }))) {
+        const oneTimeAccessState = await deps.resolveOneTimeAccessState?.(admin, {
+          userId: user.id,
+        })
+        if (oneTimeAccessState === "paid_pending") {
+          return json({ error: "activation_pending" }, 409)
+        }
         return json({ error: "Nicht erlaubt." }, 403)
       }
     } catch {

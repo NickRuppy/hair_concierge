@@ -1,7 +1,9 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
+import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
+import type { OneTimeAccessState } from "@/lib/billing/types"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import {
@@ -25,6 +27,9 @@ const SUB_REQUIRED_PREFIXES = [
   "/api/tracker",
 ]
 const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = ["/api/billing/reconcile"]
+const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
+  "/api/billing/one-time-activation-status",
+]
 const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/",
   "/agb",
@@ -100,6 +105,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
+    UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
     ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))
   ) {
     return supabaseResponse
@@ -176,8 +182,12 @@ export async function updateSession(request: NextRequest) {
 
   if (needsSub) {
     let active: boolean
+    let oneTimeAccessState: OneTimeAccessState
     try {
-      active = await hasCurrentAppAccess(supabase, { userId: user.id, email: user.email })
+      ;[active, oneTimeAccessState] = await Promise.all([
+        hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }),
+        resolveOneTimeAccessState(supabase, user.id),
+      ])
     } catch (error) {
       console.warn("[billing] app access check failed", error)
       if (pathMatchesRoutePrefix(pathname, "/api")) {
@@ -192,6 +202,22 @@ export async function updateSession(request: NextRequest) {
       url.searchParams.set("reason", "access_check_unavailable")
       url.searchParams.set("next", next)
       return redirectWithSupabaseCookies(url, supabaseResponse)
+    }
+
+    if (!active && oneTimeAccessState === "paid_pending") {
+      if (pathMatchesRoutePrefix(pathname, "/api")) {
+        return NextResponse.json({ error: "activation_pending" }, { status: 409 })
+      }
+      if (pathname !== "/plan-bereit") {
+        const url = request.nextUrl.clone()
+        url.pathname = "/plan-bereit"
+        url.search = ""
+        const leadId = request.nextUrl.searchParams.get("lead")
+        if (leadId) {
+          url.searchParams.set("lead", leadId)
+        }
+        return redirectWithSupabaseCookies(url, supabaseResponse)
+      }
     }
 
     if (!active) {
