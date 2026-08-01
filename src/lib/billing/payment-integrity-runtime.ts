@@ -272,7 +272,6 @@ class StripePaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
       const page = (await withProviderTimeout(
         this.deps.stripe.invoices.list({
           created: stripeCreatedRange(window),
-          expand: ["data.parent.subscription_details.subscription"],
           limit: Math.min(STRIPE_PAGE_SIZE, remaining),
           ...(startingAfter ? { starting_after: startingAfter } : {}),
         }),
