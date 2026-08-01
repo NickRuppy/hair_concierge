@@ -476,9 +476,11 @@ test("one-time checkout authorization uses only the canonical stored session", a
   const canonical = {
     id: sessionId,
     lead_id: leadId,
+    visitor_id: "50000000-0000-4000-8000-000000000005",
     package_key: "meta_personal_plan_v1",
     offer_variant: "personal-plan-one-time-v1",
     offer_viewed_at: "2026-07-31T10:00:00Z",
+    first_seen_at: "2026-07-31T09:30:00Z",
     is_internal_test: true,
   }
   assert.deepEqual(
@@ -490,8 +492,10 @@ test("one-time checkout authorization uses only the canonical stored session", a
     {
       sessionId,
       leadId,
+      visitorId: "50000000-0000-4000-8000-000000000005",
       packageKey: "meta_personal_plan_v1",
       offerVariant: "personal-plan-one-time-v1",
+      issuedAt: Date.parse("2026-07-31T09:30:00Z"),
       isInternalTest: true,
     },
   )

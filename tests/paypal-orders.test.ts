@@ -76,6 +76,13 @@ test("builds one fixed PayPal digital-goods order without a Billing Plan", () =>
   assert.equal("plan_id" in payload, false)
 })
 
+test("one-time PayPal order creation fails closed without a merchant identifier", () => {
+  assert.throws(
+    () => buildPayPalPersonalPlanOrder(intent.token, ""),
+    /PAYPAL_MERCHANT_ID is not set/,
+  )
+})
+
 test("uses separate stable idempotency keys for PayPal create and capture", () => {
   assert.equal(
     paypalOrderRequestId(intent.token, "create"),

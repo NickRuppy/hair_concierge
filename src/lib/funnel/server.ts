@@ -283,17 +283,21 @@ export async function assignPersonalPlanOneTimeQa(input: {
 export type PersonalPlanOneTimeCheckoutAuthorization = {
   sessionId: string
   leadId: string
+  visitorId: string
   packageKey: "meta_personal_plan_v1"
   offerVariant: "personal-plan-one-time-v1"
+  issuedAt: number
   isInternalTest: boolean
 }
 
 type PersonalPlanOneTimeCheckoutSession = {
   id: string
   lead_id: string | null
+  visitor_id: string
   package_key: string
   offer_variant: string | null
   offer_viewed_at: string | null
+  first_seen_at: string
   is_internal_test: boolean
 }
 
@@ -310,7 +314,9 @@ export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
     (() => {
       let query = createAdminClient()
         .from("funnel_sessions")
-        .select("id, lead_id, package_key, offer_variant, offer_viewed_at, is_internal_test")
+        .select(
+          "id, lead_id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, is_internal_test",
+        )
         .eq("lead_id", input.leadId)
         .eq("package_key", PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey)
         .eq("offer_variant", "personal-plan-one-time-v1")
@@ -327,14 +333,18 @@ export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
     data.lead_id !== input.leadId ||
     data.package_key !== PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey ||
     data.offer_variant !== "personal-plan-one-time-v1" ||
-    !data.offer_viewed_at
+    !data.offer_viewed_at ||
+    !data.visitor_id ||
+    !Number.isFinite(Date.parse(data.first_seen_at))
   )
     throw new Error("Personal-plan one-time checkout is not authorized")
   return {
     sessionId: data.id,
     leadId: input.leadId,
+    visitorId: data.visitor_id,
     packageKey: PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey,
     offerVariant: "personal-plan-one-time-v1",
+    issuedAt: Date.parse(data.first_seen_at),
     isInternalTest: data.is_internal_test,
   }
 }
