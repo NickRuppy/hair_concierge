@@ -1,5 +1,3 @@
-import type { HairPotentialResult, HairPotentialValue } from "@/lib/quiz/hair-potential"
-import { calculateHairPotential } from "@/lib/quiz/hair-potential"
 import {
   buildGuidedStoryProductCards,
   deriveGuidedStoryNeedProfile,
@@ -18,6 +16,11 @@ import {
   adaptPersonalPlanAnswersForOffer,
   type PersonalPlanFallbackMetadata,
 } from "./offer-adapter"
+import {
+  buildPersonalPlanAssessmentRows,
+  type PersonalPlanExplanationPart,
+} from "./assessment-copy"
+import { assessPersonalPlanHair, type HairAssessment } from "./hair-assessment"
 import type { PersonalPlanQuizSubmissionEnvelope } from "./types"
 
 export type PersonalPlanVisibleSegments = 1 | 2 | 3
@@ -30,6 +33,7 @@ export type PersonalPlanDiagnosticRow = {
   todaySegments: PersonalPlanVisibleSegments
   potentialSegments: 3
   summary: string
+  explanationParts: PersonalPlanExplanationPart[]
 }
 
 export type PersonalPlanPrimaryMessage = {
@@ -38,7 +42,7 @@ export type PersonalPlanPrimaryMessage = {
 }
 
 export type PersonalPlanPublicOfferModel = {
-  modelVersion: "personal_plan_offer_v1"
+  modelVersion: "personal_plan_offer_v2"
   planTitle: string
   profileLine: string
   diagnosticRows: [PersonalPlanDiagnosticRow, PersonalPlanDiagnosticRow, PersonalPlanDiagnosticRow]
@@ -70,17 +74,9 @@ export type PersonalPlanPreparedArtifact = {
   canonicalProfile: PersonalPlanCanonicalProfile
   fallbackMetadata: PersonalPlanFallbackMetadata
   priorities: ReturnType<typeof rankGuidedStoryPriorities>
-  diagnosticScores: HairPotentialResult
+  diagnosticScores: HairAssessment
   publicOfferModel: PersonalPlanPublicOfferModel
   lockedPlan: PersonalPlanLockedPlan
-}
-
-export function personalPlanScoreToSegments(
-  score: HairPotentialValue,
-): PersonalPlanVisibleSegments {
-  if (score <= 60) return 1
-  if (score <= 80) return 2
-  return 3
 }
 
 function planTitle(answers: QuizAnswers): string {
@@ -136,41 +132,6 @@ function profileLine(answers: QuizAnswers): string {
   }[answers.thickness ?? ""]
   if (texture && thickness) return `Für ${texture}, ${thickness} Haar`
   return "Für dein persönliches Haarprofil"
-}
-
-function todayLabel(segments: PersonalPlanVisibleSegments): string {
-  if (segments === 1) return "viel Potenzial"
-  if (segments === 2) return "gute Basis"
-  return "optimal"
-}
-
-function potentialSummary(family: string, maintenance: boolean): string {
-  if (maintenance) {
-    return "Dein Plan hilft dir, diese gute Ausgangslage zuverlässig zu erhalten."
-  }
-  const copy: Record<string, string> = {
-    scalp_flakes:
-      "Dein Plan stimmt Reinigung und Pflegerhythmus auf eine ruhigere, ausgeglichenere Kopfhaut ab.",
-    scalp_comfort:
-      "Dein Plan reduziert unnötige Reize und bringt mehr Klarheit in deine Kopfhautpflege.",
-    strength_damage:
-      "Dein Plan verbindet Schutz, Pflege und Anwendung so, dass deine Längen stabiler werden können.",
-    moisture_dryness:
-      "Dein Plan stimmt Pflegeintensität und Rhythmus auf geschmeidigere, ausgeglichenere Längen ab.",
-    surface_manageability:
-      "Dein Plan bringt Pflege und Styling in eine Reihenfolge, die Frizz und Reibung reduziert.",
-    ends_protection:
-      "Dein Plan gibt Längen und Spitzen gezielten Schutz, ohne die Routine unnötig zu verlängern.",
-    definition:
-      "Dein Plan verbindet Pflege und Styling so, dass deine natürliche Struktur klarer zur Geltung kommt.",
-    volume_weight:
-      "Dein Plan balanciert Pflege und Styling so, dass dein Haar weder platt noch unnötig aufgebauscht wirkt.",
-    color_protection:
-      "Dein Plan berücksichtigt behandelte Längen und hilft, Glanz und Haargefühl länger zu erhalten.",
-  }
-  return (
-    copy[family] ?? "Dein Plan ordnet die passenden Pflegeschritte für eine verlässlichere Routine."
-  )
 }
 
 function toolsStyling(answers: PersonalPlanQuizSubmissionEnvelope["answers"]) {
@@ -294,25 +255,10 @@ export function buildPersonalPlanPreparedArtifact(
 ): PersonalPlanPreparedArtifact {
   const adapted = adaptPersonalPlanAnswersForOffer(envelope.answers)
   const priorities = replaceUnscoreableLegacyFallbacks(rankGuidedStoryPriorities(adapted.answers))
-  const potential = calculateHairPotential(adapted.answers, priorities)
-  if (!potential) {
-    throw new Error("Personal-plan answers could not produce a complete diagnostic model")
-  }
+  const assessment = assessPersonalPlanHair(envelope.answers)
   const needs = deriveGuidedStoryNeedProfile(adapted.answers, priorities)
   const products = buildGuidedStoryProductCards(adapted.answers, priorities)
-  const diagnosticRows = potential.dimensions.map((dimension) => {
-    const todaySegments = personalPlanScoreToSegments(dimension.value)
-    const maintenance = todaySegments === 3
-    return {
-      id: dimension.family,
-      title: dimension.label,
-      todayLabel: todayLabel(todaySegments),
-      potentialLabel: "optimal",
-      todaySegments,
-      potentialSegments: 3 as const,
-      summary: potentialSummary(dimension.family, maintenance),
-    }
-  }) as PersonalPlanPublicOfferModel["diagnosticRows"]
+  const diagnosticRows = buildPersonalPlanAssessmentRows(assessment, envelope.answers)
   const centralPriority = priorities.find((priority) => priority.isCentral) ?? priorities[0]
   if (!centralPriority) {
     throw new Error("Personal-plan answers could not produce a central priority")
@@ -326,9 +272,9 @@ export function buildPersonalPlanPreparedArtifact(
     },
     fallbackMetadata: adapted.fallbackMetadata,
     priorities,
-    diagnosticScores: potential,
+    diagnosticScores: assessment,
     publicOfferModel: {
-      modelVersion: "personal_plan_offer_v1",
+      modelVersion: "personal_plan_offer_v2",
       planTitle: planTitle(adapted.answers),
       profileLine: profileLine(adapted.answers),
       diagnosticRows,

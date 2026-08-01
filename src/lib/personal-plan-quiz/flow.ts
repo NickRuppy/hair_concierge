@@ -39,7 +39,7 @@ function hasDrynessNeed(answers: PersonalPlanQuizAnswers): boolean {
   return (
     answers.goals?.some((goal) => goal === "moisture" || goal === "frizz_surface") === true ||
     answers.currentConcerns?.some(
-      (concern) => concern === "dry_dull_lengths" || concern === "frizz_flyaways",
+      (concern) => concern === "dry_lengths" || concern === "frizz_flyaways",
     ) === true ||
     answers.hairSurface === "rough"
   )
@@ -87,7 +87,9 @@ export function derivePersonalPlanConflictPrompt(
     answers.chemicalTreatments?.some((treatment) => treatment !== "natural") === true
   const hasStrengthNeed =
     answers.goals?.includes("strength_ends") ||
-    answers.currentConcerns?.includes("breakage_or_split_ends") ||
+    answers.currentConcerns?.some(
+      (concern) => concern === "breakage" || concern === "split_ends",
+    ) ||
     answers.elasticResponse === "snaps"
   if (hasTreatment && hasStrengthNeed) {
     return {

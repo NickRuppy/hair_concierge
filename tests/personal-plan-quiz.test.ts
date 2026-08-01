@@ -70,7 +70,7 @@ test("conflicting-needs prompt is shown only for a supported trade-off", () => {
   assert.equal(
     derivePersonalPlanConflictPrompt({
       scalpOiliness: "oily",
-      currentConcerns: ["dry_dull_lengths"],
+      currentConcerns: ["dry_lengths"],
     })?.id,
     "oily_roots_dry_lengths",
   )
@@ -133,7 +133,8 @@ test("draft preserves an explicit no-concerns answer across reloads", () => {
 test("prepared-plan answer keys survive the draft's canonical field ordering", () => {
   const liveAnswers = {
     texture: "wavy",
-    currentConcerns: ["frizz_flyaways", "dry_dull_lengths"],
+    currentConcerns: ["frizz_flyaways", "dry_lengths"],
+    concernRecurrence: { concernId: "dry_lengths", frequency: "sometimes" },
     goals: ["shine", "moisture"],
     density: "low",
     blockers: ["product_fit", "conflicting_tips"],
@@ -167,7 +168,7 @@ test("stale elasticity opt-outs return the user to the required test", () => {
   storage.setItem(
     PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
     JSON.stringify({
-      version: 3,
+      version: 4,
       screen: "midpoint_profile",
       history: ["hair_length", "hair_surface", "elastic_response", "midpoint_profile"],
       answers: {
@@ -188,6 +189,37 @@ test("stale elasticity opt-outs return the user to the required test", () => {
       hairSurface: "smooth",
     },
   })
+})
+
+test("v4 drafts preserve exact concern recurrence and reject the retired v3 schema", () => {
+  const storage = new MemoryStorage()
+  savePersonalPlanQuizDraft(
+    {
+      screen: "admission_recurrence",
+      history: ["current_problems", "admission_recurrence"],
+      answers: {
+        currentConcerns: ["breakage", "split_ends"],
+        concernRecurrence: { concernId: "breakage", frequency: "often" },
+      },
+    },
+    storage,
+  )
+
+  assert.deepEqual(loadPersonalPlanQuizDraft(storage)?.answers.concernRecurrence, {
+    concernId: "breakage",
+    frequency: "often",
+  })
+
+  storage.setItem(
+    PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
+    JSON.stringify({
+      version: 3,
+      screen: "admission_recurrence",
+      history: ["current_problems", "admission_recurrence"],
+      answers: { currentConcerns: ["breakage_or_split_ends"] },
+    }),
+  )
+  assert.equal(loadPersonalPlanQuizDraft(storage), null)
 })
 
 test("draft excludes lead PII and all conversion-only answers", () => {
@@ -311,7 +343,7 @@ test("materially different profiles produce recognizably different positive rece
     thickness: "normal",
     density: "medium",
     goals: ["moisture", "scalp_balance"],
-    currentConcerns: ["dry_dull_lengths", "scalp_imbalance"],
+    currentConcerns: ["dry_lengths"],
     scalpOiliness: "balanced",
     scalpConcerns: ["irritated"],
     routineStyle: "intentional_caring",

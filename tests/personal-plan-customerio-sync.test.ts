@@ -5,11 +5,12 @@ import {
   buildPersonalPlanCustomerIoTraits,
   syncPersonalPlanLeadToCustomerIo,
 } from "../src/lib/personal-plan-quiz/customerio"
+import { parsePersonalPlanProfileSyncEnvelope } from "../src/lib/personal-plan-quiz/customerio-outbox"
 import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-plan-quiz/types"
 
 const quizAnswers: PersonalPlanQuizSubmissionEnvelope = {
   kind: "personal_plan",
-  version: 2,
+  version: 3,
   answers: {
     texture: "wavy",
     thickness: "fine",
@@ -18,7 +19,7 @@ const quizAnswers: PersonalPlanQuizSubmissionEnvelope = {
     routineClarity: "partial",
     resultReliability: "sometimes",
     adaptationConfidence: "partly",
-    currentConcerns: ["dry_dull_lengths", "frizz_flyaways"],
+    currentConcerns: ["dry_lengths", "frizz_flyaways"],
     hairLength: "medium",
     hairSurface: "slightly_uneven",
     elasticResponse: "stretches_stays",
@@ -33,6 +34,60 @@ const quizAnswers: PersonalPlanQuizSubmissionEnvelope = {
   },
 }
 
+test("historical profile parsing is total over malformed v2 concern data", () => {
+  assert.doesNotThrow(() =>
+    parsePersonalPlanProfileSyncEnvelope({
+      ...quizAnswers,
+      version: 2,
+      answers: { ...quizAnswers.answers, currentConcerns: "dry_dull_lengths" },
+    }),
+  )
+  assert.equal(
+    parsePersonalPlanProfileSyncEnvelope({
+      ...quizAnswers,
+      version: 2,
+      answers: { ...quizAnswers.answers, currentConcerns: "dry_dull_lengths" },
+    }),
+    null,
+  )
+})
+
+test("historical profile parsing preserves the exact v2 concern vocabulary and labels", () => {
+  const legacy = parsePersonalPlanProfileSyncEnvelope({
+    ...quizAnswers,
+    version: 2,
+    answers: {
+      ...quizAnswers.answers,
+      currentConcerns: ["dry_dull_lengths", "breakage_or_split_ends", "scalp_imbalance"],
+    },
+  })
+  assert.ok(legacy)
+  assert.equal(legacy.version, 2)
+  assert.deepEqual(legacy.answers.currentConcerns, [
+    "dry_dull_lengths",
+    "breakage_or_split_ends",
+    "scalp_imbalance",
+  ])
+
+  const traits = buildPersonalPlanCustomerIoTraits({
+    createdAt: "2026-08-01T10:00:00.000Z",
+    email: "legacy@example.com",
+    leadId: "lead-v2",
+    marketingConsent: true,
+    quizAnswers: legacy,
+  })
+  assert.deepEqual(traits.personal_plan_concerns, [
+    "dry_dull_lengths",
+    "breakage_or_split_ends",
+    "scalp_imbalance",
+  ])
+  assert.deepEqual(traits.personal_plan_concern_labels, [
+    "Trockene oder raue Längen",
+    "Haarbruch oder Spliss",
+    "Kopfhaut gerät schnell aus dem Gleichgewicht",
+  ])
+})
+
 test("personal-plan traits keep shared primitives canonical and namespace divergent answers", () => {
   const traits = buildPersonalPlanCustomerIoTraits({
     createdAt: "2026-08-01T10:00:00.000Z",
@@ -44,7 +99,7 @@ test("personal-plan traits keep shared primitives canonical and namespace diverg
     funnelPackageKey: "meta_personal_plan_v1",
   })
 
-  assert.equal(traits.personal_plan_profile_version, 2)
+  assert.equal(traits.personal_plan_profile_version, 3)
   assert.equal(traits.hair_texture, "wavy")
   assert.equal(traits.thickness, "fine")
   assert.equal(traits.density, "medium")
@@ -56,7 +111,7 @@ test("personal-plan traits keep shared primitives canonical and namespace diverg
     "Gereizte Kopfhaut",
   ])
   assert.deepEqual(traits.personal_plan_chemical_treatments, ["colored"])
-  assert.deepEqual(traits.personal_plan_concerns, ["dry_dull_lengths", "frizz_flyaways"])
+  assert.deepEqual(traits.personal_plan_concerns, ["dry_lengths", "frizz_flyaways"])
   assert.deepEqual(traits.personal_plan_goals, ["moisture", "shine"])
   assert.equal(traits.funnel_session_id, "session-123")
   assert.equal(traits.funnel_package_key, "meta_personal_plan_v1")

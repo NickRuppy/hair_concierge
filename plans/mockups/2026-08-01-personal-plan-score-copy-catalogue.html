@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Vollständiger Erklärungskatalog</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --plum: #563882;
+        --plum-dark: #2f183f;
+        --plum-muted: #766483;
+        --plum-ice: #f3eef8;
+        --green: #2f7d52;
+        --green-ice: #edf7f1;
+        --amber: #8a5f17;
+        --amber-ice: #fff7e7;
+        --blue: #365f83;
+        --blue-ice: #edf5fb;
+        --paper: #fcfaf7;
+        --line: rgba(86, 56, 130, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eee9f0;
+        color: var(--plum-dark);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      main {
+        width: min(100%, 1040px);
+        margin: 0 auto;
+        padding: 32px 18px 64px;
+        background: var(--paper);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin: 0;
+        font-size: clamp(38px, 7vw, 64px);
+        line-height: 0.98;
+        letter-spacing: -1.7px;
+      }
+
+      .lede {
+        max-width: 760px;
+        margin: 18px 0 0;
+        color: var(--plum-muted);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+
+      .rules {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .rule {
+        padding: 17px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+        color: var(--plum-muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .rule strong {
+        color: var(--plum-dark);
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        border-radius: 999px;
+        padding: 5px 9px;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+      }
+
+      .direct {
+        background: var(--plum-ice);
+        color: var(--plum);
+      }
+
+      .observe {
+        background: var(--blue-ice);
+        color: var(--blue);
+      }
+
+      .support {
+        background: var(--amber-ice);
+        color: var(--amber);
+      }
+
+      .positive {
+        background: var(--green-ice);
+        color: var(--green);
+      }
+
+      .context {
+        background: #f0edf2;
+        color: #6e6174;
+      }
+
+      .dimension {
+        margin-top: 24px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: white;
+        box-shadow: 0 20px 54px -48px rgba(47, 24, 63, 0.7);
+      }
+
+      .dimension-heading {
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+      }
+
+      .number {
+        display: grid;
+        flex: 0 0 38px;
+        height: 38px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum);
+        color: white;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.05;
+      }
+
+      .dimension-note {
+        margin: 7px 0 0;
+        color: #9b8ca3;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .variants {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .variant {
+        min-width: 0;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fdfcfd;
+      }
+
+      .variant p {
+        margin: 10px 0 0;
+        color: var(--plum-muted);
+        font-size: 14px;
+        line-height: 1.52;
+      }
+
+      .variant strong,
+      .preview strong {
+        color: #674b7d;
+        font-weight: 900;
+      }
+
+      .preview {
+        margin-top: 12px;
+        padding: 17px;
+        border-radius: 17px;
+        background: var(--plum-ice);
+      }
+
+      .preview h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .preview p {
+        margin: 8px 0 0;
+        color: #674b7d;
+        font-size: 15px;
+        line-height: 1.52;
+      }
+
+      .excluded {
+        margin-top: 24px;
+        padding: 20px;
+        border-radius: 20px;
+        background: #f0edf1;
+        color: var(--plum-muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .excluded h2 {
+        color: var(--plum-dark);
+        font-size: 24px;
+      }
+
+      @media (max-width: 720px) {
+        main {
+          padding: 26px 14px 52px;
+        }
+
+        .rules,
+        .variants {
+          grid-template-columns: 1fr;
+        }
+
+        .dimension {
+          padding: 18px 15px;
+        }
+
+        h2 {
+          font-size: 27px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="tag direct">Review-Katalog · vollständig</p>
+      <h1>Alle möglichen Score-Erklärungen</h1>
+      <p class="lede">
+        Jede sichtbare Erklärung besteht aus genau einem Anker und höchstens zwei passenden
+        Verstärkern. Der Katalog zeigt alle Bausteine, die konkreten Kopfhaut-Kombinationen und je
+        Dimension eine zusammengesetzte Angebotskarte.
+      </p>
+
+      <section class="rules">
+        <div class="rule">
+          <strong>Jeder Satz muss einen Erkenntniswert haben.</strong> Er erklärt einen
+          Zusammenhang, eine nützliche Unterscheidung oder eine konkrete Folge. Eine bloße
+          Umformulierung entfällt.
+        </div>
+        <div class="rule">
+          <strong>Verstärker müssen ihren Platz verdienen.</strong> Sie erklären Ursache und
+          Relevanz in vorsichtiger Sprache. Ziele und Häufigkeit erscheinen hier nicht.
+        </div>
+        <div class="rule">
+          <strong>Keine System- oder Methodensprache.</strong> Die Karte erklärt weder den Score
+          noch unsere Sicherheit oder Testgüte. Diese Grenzen bleiben in der internen Methodik.
+        </div>
+        <div class="rule">
+          <strong>Maximal zwei Sätze und drei Fakten.</strong> Ein Fakt hat nur einen Besitzer;
+          generische Platzhalter wie „weiteres Signal“ sind nicht veröffentlichungsfähig.
+        </div>
+      </section>
+
+      <div class="legend" aria-label="Legende">
+        <span class="tag direct">Direkter Anker · 1/3</span>
+        <span class="tag observe">Beobachtung · 2/3</span>
+        <span class="tag support">Verstärker · +0,5</span>
+        <span class="tag context">Neutraler Kontext · ±0</span>
+        <span class="tag positive">Positive Basis · 3/3</span>
+      </div>
+
+      <section class="dimension" id="scalp">
+        <div class="dimension-heading">
+          <span class="number">01</span>
+          <div>
+            <h2>Kopfhaut-Balance</h2>
+            <p class="dimension-note">
+              Kosmetisch, nicht diagnostisch; Kombinationen erhalten einen konkreten gemeinsamen
+              Zusammenhang statt eines generischen Zusatzsatzes.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Fettig</span>
+            <p>
+              <strong>Fettige Kopfhaut</strong> braucht gründliche Reinigung, aber nicht automatisch
+              stärkere Entfettung: Talg soll sich lösen, ohne die Kopfhaut unnötig zu reizen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Trocken</span>
+            <p>
+              <strong>Trockene Kopfhaut</strong> spannt oder fühlt sich rau an. Dann passt milde
+              Reinigung besser als zusätzliche Entfettung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Fettige Schuppen</span>
+            <p>
+              <strong>Fettige Schuppen</strong> verbinden haftende Flocken mit viel Talg. Hier
+              müssen Reinigung und Verträglichkeit gleichzeitig funktionieren.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Trockene Schuppen</span>
+            <p>
+              <strong>Trockene Schuppen</strong> gehen oft mit kleinen, rieselnden Flocken und
+              Spannungsgefühl einher. Dann passt milde Reinigung besser als starke Entfettung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Gereizt</span>
+            <p>
+              Bei <strong>Jucken, Rötung oder Brennen</strong> zählt Verträglichkeit stärker als
+              eine möglichst intensive Reinigung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Fettig + fettige Schuppen</span>
+            <p>
+              <strong>Fettige Kopfhaut und fettige Schuppen</strong> bedeuten: Talg und haftende
+              Flocken lösen, ohne durch unnötig aggressive Reinigung zusätzliche Reizung zu
+              riskieren.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Trocken + trockene Schuppen</span>
+            <p>
+              <strong>Trockene Kopfhaut und trockene Schuppen</strong> weisen in dieselbe Richtung:
+              milde Reinigung statt zusätzlicher Entfettung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Fettig + trockene Schuppen</span>
+            <p>
+              <strong>Fettige Kopfhaut mit trockenen Schuppen</strong> braucht Balance: Talg am
+              Ansatz lösen, ohne trockene Stellen zusätzlich zu entfetten.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Trocken + fettige Schuppen</span>
+            <p>
+              <strong>Trockene Kopfhaut mit fettigen Schuppen</strong> ist ein gemischtes Bild:
+              haftende Flocken lösen und gleichzeitig den Kopfhautkomfort schützen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Beide Schuppenarten</span>
+            <p>
+              <strong>Fettige und trockene Schuppen gleichzeitig</strong> brauchen Balance: haftende
+              Flocken lösen, ohne trockene Bereiche zusätzlich zu entfetten.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Mit Reizung</span>
+            <p>
+              Kommt noch <strong>Jucken, Rötung oder Brennen</strong> dazu, wird Verträglichkeit zur
+              entscheidenden Grenze – nicht einfach „mehr“ Reinigung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag positive">Ausgeglichen</span>
+            <p>
+              Du beschreibst deine Kopfhaut als <strong>ausgeglichen</strong> und nennst keine
+              weiteren Beschwerden. Hier geht es vor allem darum, diese Balance zu erhalten.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel mit zwei Signalen</h3>
+          <p>
+            <strong>Trockene Kopfhaut</strong> und <strong>trockene Schuppen</strong> weisen in
+            dieselbe Richtung: milde Reinigung statt zusätzlicher Entfettung.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="moisture">
+        <div class="dimension-heading">
+          <span class="number">02</span>
+          <div>
+            <h2>Feuchtigkeit &amp; Geschmeidigkeit</h2>
+            <p class="dimension-note">
+              Ein direkter Trockenheitsanker plus höchstens zwei Verstärker.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Trocken / strohig</span>
+            <p>
+              <strong>Trockene oder strohige Längen</strong> bewegen sich weniger geschmeidig
+              gegeneinander; dadurch fällt Reibung beim Kämmen stärker ins Gewicht.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Raue Oberfläche</span>
+            <p>
+              Eine <strong>raue Haaroberfläche</strong> erhöht die Reibung zwischen den Fasern und
+              kann das trockene, strohige Gefühl verstärken.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Blondiert</span>
+            <p>
+              <strong>Blondierung</strong> kann die Haarfaser poröser machen; dann verliert sie
+              leichter Glätte und fühlt sich schneller trocken an.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Dauergewellt</span>
+            <p>
+              Eine <strong>Dauerwelle</strong> formt die Haarfaser chemisch um und kann ihre
+              Geschmeidigkeit zusätzlich beanspruchen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Chemisch geglättet</span>
+            <p>
+              <strong>Chemische Glättung</strong> verändert die Haarfaser und kann ihre
+              Geschmeidigkeit zusätzlich beanspruchen.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel wie in der Angebotskarte</h3>
+          <p>
+            <strong>Trockene oder strohige Längen</strong> fühlen sich weniger geschmeidig an.
+            <strong>Blondierung</strong> kann die Haarfaser poröser machen, sodass sie leichter
+            Glätte verliert.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="surface">
+        <div class="dimension-heading">
+          <span class="number">03</span>
+          <div>
+            <h2>Oberfläche &amp; Frizz</h2>
+            <p class="dimension-note">
+              Frizz oder Rauigkeit sind direkte Anker; „leicht uneben“ bleibt bewusst moderat.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Frizz</span>
+            <p>
+              <strong>Frizz oder abstehende Haare</strong> sind nicht automatisch Haarbruch: Sie
+              zeigen, dass einzelne Fasern weniger gleichmäßig in der Gesamtform liegen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Rau</span>
+            <p>
+              Eine <strong>raue Haaroberfläche</strong> erhöht die Reibung zwischen den Fasern und
+              kann dadurch Frizz und Verknotung verstärken.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag observe">Leicht uneben</span>
+            <p>
+              Eine <strong>leicht unebene Haaroberfläche</strong> erzeugt etwas mehr Reibung
+              zwischen den Fasern, auch wenn sich die Längen noch nicht deutlich rau anfühlen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag positive">Glatt</span>
+            <p>
+              Du beschreibst deine Haaroberfläche als <strong>glatt</strong>. Hier geht es vor allem
+              darum, dieses ruhige Haargefühl zu erhalten.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel mit direktem Anker</h3>
+          <p>
+            <strong>Frizz oder abstehende Haare</strong> liegen weniger gleichmäßig in der
+            Gesamtform. Eine <strong>raue Oberfläche</strong> erhöht zusätzlich die Reibung zwischen
+            den Fasern.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="shine">
+        <div class="dimension-heading">
+          <span class="number">04</span>
+          <div>
+            <h2>Glanz</h2>
+            <p class="dimension-note">
+              Glanz und Oberfläche bleiben intern getrennt, erscheinen aber normalerweise nicht
+              gemeinsam.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Wenig Glanz</span>
+            <p>
+              <strong>Wenig Glanz</strong> beschreibt den sichtbaren Lichtreflex – nicht automatisch
+              Trockenheit oder eine raue Oberfläche.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag context">Oberfläche glatt</span>
+            <p>
+              Du nennst <strong>wenig Glanz</strong>, obwohl sich dein Haar
+              <strong>glatt</strong> anfühlt. Das ist kein Widerspruch: Glätte beschreibt das
+              Haargefühl, Glanz den sichtbaren Lichtreflex.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Raue Oberfläche</span>
+            <p>
+              Eine <strong>raue Haaroberfläche</strong> kann Licht ungleichmäßiger zurückwerfen und
+              den matten Eindruck verstärken.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel mit glatter Oberfläche</h3>
+          <p>
+            Du nennst <strong>wenig Glanz</strong>, obwohl sich dein Haar
+            <strong>glatt</strong> anfühlt. Das ist kein Widerspruch: Glätte beschreibt das
+            Haargefühl, Glanz den sichtbaren Lichtreflex.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="breakage">
+        <div class="dimension-heading">
+          <span class="number">05</span>
+          <div>
+            <h2>Haarbruch &amp; Stabilität / Stabilität</h2>
+            <p class="dimension-note">
+              Gemeldeter Haarbruch bleibt getrennt von Spliss; die Dehnreaktion kann die
+              Stabilitätszeile allein aktivieren, erscheint neben Spliss aber nur bei zusätzlich
+              gemeldetem Haarbruch. Ohne gemeldeten Haarbruch lautet der öffentliche Titel nur
+              „Stabilität“.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Haarbruch</span>
+            <p>
+              <strong>Haarbruch in den Längen</strong> unterscheidet sich von Spliss: Die Faser
+              reißt bereits oberhalb der Spitzen. Reine Spitzenpflege reicht deshalb nicht aus.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag observe">Reißt schnell</span>
+            <p>
+              Beim sanften Dehnen ist dein Haar <strong>schnell gerissen</strong> – ein Hinweis
+              darauf, dass es Zug aktuell weniger gut standhält.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag observe">Bleibt gedehnt</span>
+            <p>
+              Beim sanften Dehnen <strong>blieb dein Haar gedehnt</strong>. Das spricht dafür, dass
+              es sich unter Zug aktuell weniger gut zurückformt.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Blondiert</span>
+            <p>
+              <strong>Blondierung</strong> kann die Haarfaser poröser und mechanisch weniger
+              belastbar machen. Bei Haarbruch wird Schutz vor zusätzlichem Zug und Reibung dadurch
+              wichtiger.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Dauergewellt</span>
+            <p>
+              Eine <strong>Dauerwelle</strong> verändert Bindungen in der Haarfaser und kann ihre
+              Stabilität zusätzlich beanspruchen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Chemisch geglättet</span>
+            <p>
+              <strong>Chemische Glättung</strong> verändert Bindungen in der Haarfaser und kann ihre
+              Stabilität zusätzlich beanspruchen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag positive">Geht zurück</span>
+            <p>
+              Dein Haar ging nach sanftem Dehnen <strong>wieder in seine Form zurück</strong>. Das
+              spricht für eine aktuell flexible Ausgangslage.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel mit direktem Anker und Verstärker</h3>
+          <p>
+            <strong>Haarbruch in den Längen</strong> beginnt oberhalb der Spitzen und braucht mehr
+            als reine Spitzenpflege. <strong>Blondierung</strong> kann die Faser zusätzlich poröser
+            und weniger belastbar machen.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="split-ends">
+        <div class="dimension-heading">
+          <span class="number">06</span>
+          <div>
+            <h2>Spliss &amp; Spitzen</h2>
+            <p class="dimension-note">
+              Nur sichtbar gespaltene oder ausgefranste Spitzen aktivieren diese Dimension.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Spliss</span>
+            <p>
+              Bei <strong>sichtbar gespaltenen Spitzen</strong> ist das Haarende bereits längs
+              aufgefasert. Pflege kann es glatter wirken lassen, aber nicht dauerhaft wieder
+              verbinden.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Lang / sehr lang</span>
+            <p>
+              Bei <strong>langen oder sehr langen Haaren</strong> sind die Spitzen älter und länger
+              alltäglicher Reibung ausgesetzt – deshalb verdienen sie zusätzlichen Schutz.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Blondiert</span>
+            <p>
+              <strong>Blondierung</strong> kann die Haarfaser poröser und empfindlicher machen.
+              Bereits gespaltene Spitzen können dadurch leichter weiter auffasern.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Dauergewellt</span>
+            <p>
+              Eine <strong>Dauerwelle</strong> kann die Haarfaser zusätzlich beanspruchen – bei
+              sichtbarem Spliss sollten die Spitzen besonders schonend behandelt werden.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Chemisch geglättet</span>
+            <p>
+              <strong>Chemische Glättung</strong> kann die Haarfaser zusätzlich beanspruchen – bei
+              sichtbarem Spliss sollten die Spitzen besonders schonend behandelt werden.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel mit Längen-Kontext</h3>
+          <p>
+            <strong>Sichtbar gespaltene Spitzen</strong> sind bereits längs aufgefasert. Bei
+            <strong>langen Haaren</strong> sind diese älteren Enden zusätzlich länger alltäglicher
+            Reibung ausgesetzt.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="manageability">
+        <div class="dimension-heading">
+          <span class="number">07</span>
+          <div>
+            <h2>Kämmbarkeit &amp; Verknotung</h2>
+            <p class="dimension-note">
+              Verknotung ist der direkte Anker; Oberfläche und Länge erklären, warum sie verstärkt
+              sein kann.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Verknotung</span>
+            <p>
+              <strong>Schnelles Verknoten</strong> bedeutet beim Entwirren mehr Zug auf die Längen –
+              nicht nur mehr Zeit vor dem Spiegel.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Raue Oberfläche</span>
+            <p>
+              Eine <strong>raue Haaroberfläche</strong> kann die Reibung zwischen den Fasern erhöhen
+              und Knoten begünstigen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Lang / sehr lang</span>
+            <p>
+              Bei <strong>langen oder sehr langen Haaren</strong> kreuzen sich mehr Fasern; dadurch
+              entstehen mehr Stellen, an denen sie sich verhaken können.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel mit drei Fakten</h3>
+          <p>
+            <strong>Schnelles Verknoten</strong> bringt beim Entwirren mehr Zug auf die Längen. Eine
+            <strong>raue Oberfläche</strong> erhöht die Reibung; <strong>lange Haare</strong> bieten
+            mehr Stellen zum Verhaken.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="definition">
+        <div class="dimension-heading">
+          <span class="number">08</span>
+          <div>
+            <h2>Form &amp; Definition</h2>
+            <p class="dimension-note">
+              Die Erklärung unterscheidet Definition von „einfach mehr Pflege“ und passt sich der
+              Haarstruktur an.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Glatt</span>
+            <p>
+              Dein Haar <strong>verliert schnell Form und Halt</strong>. Mehr Pflege allein löst das
+              nicht: Entscheidend ist Styling-Halt, ohne die Längen zu beschweren.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Wellig</span>
+            <p>
+              Deine <strong>Wellen verlieren schnell ihre Form</strong>. Mehr Pflege allein löst das
+              nicht: Geschmeidigkeit, Leichtigkeit und Styling-Halt müssen zusammenpassen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Lockig</span>
+            <p>
+              Deine <strong>Locken verlieren schnell Definition</strong>. Entscheidend ist nicht
+              einfach mehr Pflege, sondern Bündelung und Halt, ohne die Locken zu beschweren.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Kraus</span>
+            <p>
+              Die <strong>Definition deiner Coils hält nicht</strong>. Entscheidend ist nicht
+              einfach mehr Pflege, sondern Bündelung und Halt, ohne die Coils zu beschweren.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Frizz</span>
+            <p>
+              <strong>Frizz oder abstehende Haare</strong> unterbrechen klare Konturen und lassen
+              vorhandene Wellen, Locken oder Coils weniger definiert wirken.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel für welliges Haar</h3>
+          <p>
+            Deine <strong>Wellen verlieren schnell ihre Form</strong>.
+            <strong>Frizz oder abstehende Haare</strong> unterbrechen zusätzlich klare Konturen –
+            deshalb müssen Leichtigkeit und Halt zusammenpassen.
+          </p>
+        </article>
+      </section>
+
+      <section class="dimension" id="volume">
+        <div class="dimension-heading">
+          <span class="number">09</span>
+          <div>
+            <h2>Volumen &amp; Leichtigkeit</h2>
+            <p class="dimension-note">
+              Die direkte Formulierung passt sich der Haarstruktur an; Pflegegewicht ist der einzige
+              Verstärker.
+            </p>
+          </div>
+        </div>
+        <div class="variants">
+          <article class="variant">
+            <span class="tag direct">Glatt</span>
+            <p>
+              <strong>Plattes oder beschwertes Haar</strong> braucht nicht automatisch weniger
+              Pflege, sondern eine leichtere Dosierung und Verteilung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Wellig</span>
+            <p>
+              <strong>Flacher Ansatz und beschwerte Längen</strong> sind zwei Hebel: Volumen am
+              Ansatz und Pflegegewicht in den Längen.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Lockig</span>
+            <p>
+              <strong>Ungleichmäßige Form oder ungleichmäßiges Volumen</strong> bedeuten nicht
+              automatisch geringe Haardichte: Auch Pflegegewicht und Definition beeinflussen die
+              sichtbare Verteilung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag direct">Kraus</span>
+            <p>
+              <strong>Ungleichmäßig verteilte Form oder Volumen</strong> bedeuten nicht automatisch
+              geringe Haardichte: Auch Pflegegewicht und Definition beeinflussen die sichtbare
+              Verteilung.
+            </p>
+          </article>
+          <article class="variant">
+            <span class="tag support">Pflege beschwert</span>
+            <p>
+              Du hast angegeben, dass <strong>Pflege dein Haar schnell beschwert</strong>. Das
+              erklärt, warum mehr Pflege nicht automatisch mehr Volumen bedeutet.
+            </p>
+          </article>
+        </div>
+        <article class="preview">
+          <h3>Beispiel für welliges Haar</h3>
+          <p>
+            Ein <strong>flacher Ansatz</strong> und <strong>Pflege, die schnell beschwert</strong>,
+            betreffen zwei Hebel: Volumen am Ansatz und Produktgewicht in den Längen.
+          </p>
+        </article>
+      </section>
+
+      <section class="excluded">
+        <h2>Bewusst nicht als Erklärung verwendet</h2>
+        <p>
+          Ziele, Häufigkeit, Textur, Dicke, Dichte, gefärbt/getönt ohne Aufhellung, Kosten,
+          emotionale Wichtigkeit und Freitext verändern keine sichtbaren Segmente. Sie erscheinen
+          deshalb nicht in diesen Erklärungen. Dasselbe gilt für einen Verstärker, der bereits einer
+          anderen sichtbaren Zeile gehört.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

@@ -12,17 +12,22 @@ export const PERSONAL_PLAN_QUIZ_GOALS = [
 export type PersonalPlanQuizGoal = (typeof PERSONAL_PLAN_QUIZ_GOALS)[number]
 
 export const PERSONAL_PLAN_QUIZ_CONCERNS = [
-  "dry_dull_lengths",
+  "dry_lengths",
   "frizz_flyaways",
   "low_shine",
   "lost_shape",
   "low_volume_or_weighed_down",
-  "breakage_or_split_ends",
+  "breakage",
+  "split_ends",
   "tangling",
-  "scalp_imbalance",
 ] as const
 
 export type PersonalPlanQuizConcern = (typeof PERSONAL_PLAN_QUIZ_CONCERNS)[number]
+
+export type PersonalPlanQuizConcernRecurrence = {
+  concernId: PersonalPlanQuizConcern
+  frequency: "often" | "sometimes" | "rather_not"
+}
 
 /**
  * Durable V2 answers only. Conversion admissions, the daily-time commitment,
@@ -37,6 +42,7 @@ export type PersonalPlanQuizAnswers = {
   resultReliability?: "mostly" | "sometimes" | "rarely"
   adaptationConfidence?: "yes" | "partly" | "no"
   currentConcerns?: PersonalPlanQuizConcern[]
+  concernRecurrence?: PersonalPlanQuizConcernRecurrence
   hairLength?: "very_short" | "short" | "medium" | "long" | "very_long"
   hairSurface?: "smooth" | "slightly_uneven" | "rough"
   elasticResponse?: "stretches_bounces" | "stretches_stays" | "snaps"
@@ -71,7 +77,6 @@ export type PersonalPlanQuizAnswers = {
 }
 
 export type PersonalPlanQuizEphemeralState = {
-  admissionRecurrence?: "often" | "sometimes" | "rather_not"
   admissionConflict?: "often" | "sometimes" | "rather_not"
   admissionPracticalCost?: "often" | "sometimes" | "rather_not"
   admissionEmotionalRelevance?: "very" | "somewhat" | "less"
@@ -135,7 +140,7 @@ export const PERSONAL_PLAN_QUIZ_SCREEN_IDS = [
 
 export type PersonalPlanQuizScreenId = (typeof PERSONAL_PLAN_QUIZ_SCREEN_IDS)[number]
 
-export const PERSONAL_PLAN_QUIZ_VERSION = 2 as const
+export const PERSONAL_PLAN_QUIZ_VERSION = 3 as const
 export const PERSONAL_PLAN_QUIZ_KIND = "personal_plan" as const
 
 export type PersonalPlanQuizSubmissionEnvelope = {

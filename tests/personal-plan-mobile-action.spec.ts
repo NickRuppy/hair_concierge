@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test"
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 
 const analysisDraft = {
-  version: 3,
+  version: 4,
   screen: "analysis_bridge",
   history: [
     "texture",
@@ -20,7 +20,7 @@ const analysisDraft = {
 }
 
 const earlyProofDraft = {
-  version: 3,
+  version: 4,
   screen: "early_proof",
   history: ["texture", "thickness", "density"],
   answers: { texture: "wavy", thickness: "normal", density: "medium" },
@@ -35,7 +35,7 @@ type ActionGeometry = {
 
 async function seedDraft(page: Page, draft: typeof analysisDraft | typeof earlyProofDraft) {
   await page.addInitScript((value) => {
-    window.localStorage.setItem("chaarlie:personal-plan-quiz-draft:v3", JSON.stringify(value))
+    window.localStorage.setItem("chaarlie:personal-plan-quiz-draft:v4", JSON.stringify(value))
     window.localStorage.setItem(
       "chaarlie_cookie_consent_v1",
       JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),

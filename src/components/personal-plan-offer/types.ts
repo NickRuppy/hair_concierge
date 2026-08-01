@@ -6,6 +6,7 @@ export type PersonalPlanDiagnosticDimension = {
   todaySegments: 1 | 2 | 3
   potentialSegments: 1 | 2 | 3
   summary: string
+  explanationParts?: Array<{ kind: "text" | "answer"; text: string }>
 }
 
 export type PersonalPlanOfferModel = {

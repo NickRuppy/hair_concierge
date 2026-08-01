@@ -28,7 +28,8 @@ const request = {
     routineClarity: "partial",
     resultReliability: "sometimes",
     adaptationConfidence: "partly",
-    currentConcerns: ["low_shine", "frizz_flyaways"],
+    currentConcerns: ["low_shine", "frizz_flyaways", "breakage", "split_ends"],
+    concernRecurrence: { concernId: "breakage", frequency: "often" },
     hairLength: "medium",
     hairSurface: "slightly_uneven",
     elasticResponse: "stretches_stays",
@@ -49,14 +50,41 @@ test("personal-plan persistence accepts only the complete durable envelope and c
   assert.equal(normalizePersonalPlanEmail(parsed.email), "plan@example.com")
   assert.deepEqual(envelope, {
     kind: "personal_plan",
-    version: 2,
+    version: 3,
     answers: {
       ...request.answers,
       goals: ["moisture", "shine"],
-      currentConcerns: ["frizz_flyaways", "low_shine"],
+      currentConcerns: ["breakage", "frizz_flyaways", "low_shine", "split_ends"],
+      concernRecurrence: { concernId: "breakage", frequency: "often" },
       blockers: ["conflicting_tips", "product_fit"],
     },
   })
+})
+
+test("personal-plan persistence accepts split concerns and binds recurrence to a selected concern", () => {
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({ answers: request.answers }).success,
+    true,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: {
+        ...request.answers,
+        concernRecurrence: { concernId: "dry_lengths", frequency: "sometimes" },
+      },
+    }).success,
+    false,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: {
+        ...request.answers,
+        currentConcerns: ["breakage_or_split_ends"],
+        concernRecurrence: undefined,
+      },
+    }).success,
+    false,
+  )
 })
 
 test("personal-plan persistence rejects ephemeral commitments and duplicate scalp concerns", () => {
@@ -228,7 +256,7 @@ test("personal-plan Customer.io sync identifies the approved structured profile 
     assert.equal(traits.lead_id, "lead-123")
     assert.equal(traits.quiz_kind, "personal_plan")
     assert.equal(traits.marketing_consent, false)
-    assert.equal(traits.personal_plan_profile_version, 2)
+    assert.equal(traits.personal_plan_profile_version, 3)
     assert.deepEqual(traits.personal_plan_goals, ["moisture", "shine"])
     assert.equal("plan_expires_at" in traits, false)
     assert.equal("blockers_other_text" in traits, false)

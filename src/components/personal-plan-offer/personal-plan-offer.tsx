@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
+import { Fragment, useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
 import Link from "next/link"
 import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react"
 
@@ -239,7 +239,20 @@ function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
         </div>
       </div>
       <p className="mt-3 text-[0.9rem] leading-6 text-[rgba(var(--brand-plum-rgb),0.75)] sm:mt-4 sm:text-[0.95rem] sm:leading-7">
-        {displayDiagnosticSummary(row.summary)}
+        {row.explanationParts?.length
+          ? row.explanationParts.map((part, index) =>
+              part.kind === "answer" ? (
+                <strong
+                  key={`${part.kind}-${index}`}
+                  className="font-bold text-[rgba(var(--brand-plum-rgb),0.88)]"
+                >
+                  {part.text}
+                </strong>
+              ) : (
+                <Fragment key={`${part.kind}-${index}`}>{part.text}</Fragment>
+              ),
+            )
+          : displayDiagnosticSummary(row.summary)}
       </p>
     </article>
   )
@@ -543,17 +556,26 @@ export function PersonalPlanOffer({
               Deine Ausgangslage
             </p>
             <h2 className="mt-1.5 w-full text-center font-serif text-[1.875rem] leading-tight tracking-[-0.035em] sm:text-4xl">
-              Dein Haar hat viel Potenzial.
+              In deinem Haar steckt viel Potenzial.
             </h2>
+            <p className="mx-auto mt-2 max-w-2xl text-center text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.68)] sm:text-base">
+              Deine Antworten zeigen, wie wir deine Ausgangslage einordnen.
+            </p>
             <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
               {model.diagnosticRows.map((row) => (
                 <DiagnosticRow key={row.id} row={row} />
               ))}
             </div>
 
-            <div className="mt-4 rounded-[1.25rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-[rgba(var(--brand-plum-rgb),0.08)] p-4 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
-              <p className="text-base font-semibold leading-7 text-[var(--brand-plum-darkest)] sm:text-lg sm:leading-8">
-                {model.planFitStatement}
+            <div className="mt-4 rounded-[1.25rem] border border-emerald-100 bg-emerald-50 p-4 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-emerald-700">
+                Das Gute
+              </p>
+              <h3 className="mt-1 font-serif text-xl text-[var(--brand-plum-darkest)] sm:text-2xl">
+                Hier können wir gezielt ansetzen.
+              </h3>
+              <p className="mt-1 text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-base">
+                Dein Plan baut genau auf diesen Punkten auf.
               </p>
             </div>
           </div>

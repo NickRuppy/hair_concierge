@@ -17,6 +17,7 @@ function parseDiagnosticDimension(value: unknown): PersonalPlanDiagnosticDimensi
   const summary = value.summary
   const todaySegments = value.todaySegments
   const potentialSegments = value.potentialSegments
+  const rawExplanationParts = value.explanationParts ?? value.explanation_parts
   if (
     typeof id !== "string" ||
     typeof title !== "string" ||
@@ -28,6 +29,21 @@ function parseDiagnosticDimension(value: unknown): PersonalPlanDiagnosticDimensi
   ) {
     return null
   }
+  const explanationParts = Array.isArray(rawExplanationParts)
+    ? rawExplanationParts.every(
+        (part) =>
+          isRecord(part) &&
+          (part.kind === "text" || part.kind === "answer") &&
+          typeof part.text === "string" &&
+          part.text.length > 0 &&
+          part.text.length <= 300,
+      )
+      ? rawExplanationParts.map((part) => ({
+          kind: (part as Record<string, unknown>).kind as "text" | "answer",
+          text: (part as Record<string, unknown>).text as string,
+        }))
+      : undefined
+    : undefined
   return {
     id,
     potentialLabel,
@@ -36,6 +52,7 @@ function parseDiagnosticDimension(value: unknown): PersonalPlanDiagnosticDimensi
     title,
     todayLabel,
     todaySegments,
+    ...(explanationParts?.length ? { explanationParts } : {}),
   }
 }
 

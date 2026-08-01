@@ -9,9 +9,11 @@ import { pathToFileURL } from "node:url"
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
-import { personalPlanPrepareRequestSchema } from "@/lib/personal-plan-quiz/persistence"
-import { dispatchCustomerIoProfileSyncForLead } from "@/lib/personal-plan-quiz/customerio-outbox"
-import { PERSONAL_PLAN_QUIZ_KIND, PERSONAL_PLAN_QUIZ_VERSION } from "@/lib/personal-plan-quiz/types"
+import {
+  dispatchCustomerIoProfileSyncForLead,
+  parsePersonalPlanProfileSyncEnvelope,
+} from "@/lib/personal-plan-quiz/customerio-outbox"
+import { PERSONAL_PLAN_QUIZ_KIND } from "@/lib/personal-plan-quiz/types"
 
 const TEST_EMAIL_PATTERNS = [
   "nickrupprechter",
@@ -128,13 +130,7 @@ export async function runPersonalPlanCustomerIoBackfill(input: {
 }
 
 function isSupportedEnvelope(value: unknown) {
-  if (!value || typeof value !== "object") return false
-  const candidate = value as { kind?: unknown; version?: unknown; answers?: unknown }
-  return (
-    candidate.kind === PERSONAL_PLAN_QUIZ_KIND &&
-    candidate.version === PERSONAL_PLAN_QUIZ_VERSION &&
-    personalPlanPrepareRequestSchema.safeParse({ answers: candidate.answers }).success
-  )
+  return Boolean(parsePersonalPlanProfileSyncEnvelope(value))
 }
 
 function isTestEmail(email: string) {

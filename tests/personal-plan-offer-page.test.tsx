@@ -15,6 +15,10 @@ const publicOfferModel: PersonalPlanOfferModel = {
       potentialLabel: "ruhig & glänzend",
       potentialSegments: 3,
       summary: "Dein Plan bringt Pflege und Styling in eine klare Reihenfolge.",
+      explanationParts: [
+        { kind: "answer", text: "Wenig Glanz" },
+        { kind: "text", text: " beschreibt den sichtbaren Lichtreflex." },
+      ],
       title: "Oberfläche & Glanz",
       todayLabel: "unruhig",
       todaySegments: 1,
@@ -75,6 +79,11 @@ test("personal plan offer renders approved hierarchy without personalized produc
     "the transformation image should precede the diagnosis introduction",
   )
   assert.match(html, /Oberfläche &amp; Glanz/i)
+  assert.match(html, /<strong[^>]*>Wenig Glanz<\/strong> beschreibt den sichtbaren Lichtreflex/i)
+  assert.match(html, /In deinem Haar steckt viel Potenzial/i)
+  assert.match(html, /Deine Antworten zeigen, wie wir deine Ausgangslage einordnen/i)
+  assert.match(html, /Das Gute/i)
+  assert.match(html, /Hier können wir gezielt ansetzen/i)
   assert.match(html, /Feuchtigkeit &amp; Pflegebalance/i)
   assert.match(html, /Routine-Sicherheit/i)
   assert.match(html, /Heute/i)
@@ -302,6 +311,16 @@ test("personal plan public model parser accepts raw artifact model only", () => 
     }),
     null,
   )
+})
+
+test("malformed optional explanation parts fall back to the safe summary", () => {
+  const malformed = structuredClone(publicOfferModel) as unknown as Record<string, unknown>
+  const rows = malformed.diagnosticRows as Array<Record<string, unknown>>
+  rows[0].explanationParts = [{ kind: "html", text: "<img src=x onerror=alert(1)>" }]
+  const parsed = parsePersonalPlanOfferModel(malformed)
+  assert.ok(parsed)
+  assert.equal(parsed.diagnosticRows[0].explanationParts, undefined)
+  assert.equal(parsed.diagnosticRows[0].summary, publicOfferModel.diagnosticRows[0].summary)
 })
 
 test("pricing exposes a narrow external checkout request seam", () => {

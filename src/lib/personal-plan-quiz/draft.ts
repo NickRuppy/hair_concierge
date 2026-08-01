@@ -7,8 +7,8 @@ import {
   type PersonalPlanQuizScreenId,
 } from "./types"
 
-export const PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY = "chaarlie:personal-plan-quiz-draft:v3"
-const DRAFT_VERSION = 3
+export const PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY = "chaarlie:personal-plan-quiz-draft:v4"
+const DRAFT_VERSION = 4
 
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">
 
@@ -92,6 +92,26 @@ export function sanitizePersonalPlanQuizAnswers(value: unknown): PersonalPlanQui
   if (Array.isArray(input.currentConcerns)) {
     const currentConcerns = stringList(input.currentConcerns, PERSONAL_PLAN_QUIZ_CONCERNS)
     answers.currentConcerns = (currentConcerns ?? []) as PersonalPlanQuizAnswers["currentConcerns"]
+  }
+
+  if (
+    input.concernRecurrence &&
+    typeof input.concernRecurrence === "object" &&
+    !Array.isArray(input.concernRecurrence)
+  ) {
+    const recurrence = input.concernRecurrence as Record<string, unknown>
+    const concernId = stringValue(recurrence.concernId, PERSONAL_PLAN_QUIZ_CONCERNS)
+    const frequency = stringValue(recurrence.frequency, ["often", "sometimes", "rather_not"])
+    if (concernId && frequency && answers.currentConcerns?.includes(concernId as never)) {
+      answers.concernRecurrence = {
+        concernId: concernId as NonNullable<
+          PersonalPlanQuizAnswers["concernRecurrence"]
+        >["concernId"],
+        frequency: frequency as NonNullable<
+          PersonalPlanQuizAnswers["concernRecurrence"]
+        >["frequency"],
+      }
+    }
   }
 
   if (Array.isArray(input.scalpConcerns)) {

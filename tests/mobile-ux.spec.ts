@@ -138,7 +138,7 @@ const containmentViewports = [
 ]
 
 const personalPlanDraft = {
-  version: 3,
+  version: 4,
   screen: "email_capture",
   history: ["texture", "daily_time", "plan_loading"],
   answers: { texture: "wavy", hairLength: "medium", goals: ["moisture"] },
@@ -157,7 +157,7 @@ test.describe("@ci mobile layout containment", () => {
       await page.setViewportSize(viewport)
       await page.addInitScript(
         ({ draft, claim }) => {
-          window.localStorage.setItem("chaarlie:personal-plan-quiz-draft:v3", JSON.stringify(draft))
+          window.localStorage.setItem("chaarlie:personal-plan-quiz-draft:v4", JSON.stringify(draft))
           window.sessionStorage.setItem(
             "chaarlie:personal-plan-quiz-prepared:v1",
             JSON.stringify(claim),
@@ -261,7 +261,7 @@ test.describe("@ci personal-plan quiz motion", () => {
         "chaarlie_cookie_consent_v1",
         JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
       )
-      window.localStorage.removeItem("chaarlie:personal-plan-quiz-draft:v3")
+      window.localStorage.removeItem("chaarlie:personal-plan-quiz-draft:v4")
     })
     await page.goto(`${baseUrl}/lp/haarplan`, { waitUntil: "domcontentloaded" })
     await expect(

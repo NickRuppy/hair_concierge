@@ -1243,9 +1243,11 @@ function AdmissionScreen({
   onSelect: (value: string) => void
 }) {
   const conflictPrompt = derivePersonalPlanConflictPrompt(answers)
-  const firstConcernLabel = getConcernOptions(answers.texture)
-    .filter((option) => answers.currentConcerns?.includes(option.value as never))
-    .map((option) => option.midSentenceLabel ?? option.label)[0]
+  const firstConcern = getConcernOptions(answers.texture).find((option) =>
+    answers.currentConcerns?.includes(option.value as never),
+  )
+  const firstConcernLabel = firstConcern?.midSentenceLabel ?? firstConcern?.label
+  const concernRecurrence = answers.concernRecurrence
   const content =
     screen === "admission_recurrence"
       ? {
@@ -1253,7 +1255,10 @@ function AdmissionScreen({
           subtitle: firstConcernLabel
             ? `${capitalizeFirst(firstConcernLabel)} beschäftigt dich wiederholt.`
             : "Deine aktuellen Haarthemen kehren wieder.",
-          selected: ephemeral.admissionRecurrence,
+          selected:
+            concernRecurrence && concernRecurrence.concernId === firstConcern?.value
+              ? concernRecurrence.frequency
+              : undefined,
           options: ADMISSION_OPTIONS,
         }
       : screen === "admission_conflict" && conflictPrompt
@@ -2380,6 +2385,7 @@ export function PersonalPlanQuiz({
     }
     setAnswers((existing) => {
       const updated = { ...existing, [config.field]: next } as PersonalPlanQuizAnswers
+      if (config.field === "currentConcerns") delete updated.concernRecurrence
       // Drop the free-text detail when "Etwas anderes" is no longer selected.
       if (config.field === "blockers" && !next.includes("other")) {
         delete updated.blockersOtherText
@@ -2430,15 +2436,33 @@ export function PersonalPlanQuiz({
   function selectAdmission(
     field: keyof Pick<
       PersonalPlanQuizEphemeralState,
-      | "admissionRecurrence"
-      | "admissionConflict"
-      | "admissionPracticalCost"
-      | "admissionEmotionalRelevance"
+      "admissionConflict" | "admissionPracticalCost" | "admissionEmotionalRelevance"
     >,
     value: string,
   ) {
     setEphemeral((current) => ({ ...current, [field]: value }))
     scheduleNext(answers)
+  }
+
+  function selectConcernRecurrence(value: string) {
+    const concernId = getConcernOptions(answers.texture).find((option) =>
+      answers.currentConcerns?.includes(option.value as never),
+    )?.value
+    if (!concernId) {
+      scheduleNext(answers)
+      return
+    }
+    const next = {
+      ...answers,
+      concernRecurrence: {
+        concernId: concernId as NonNullable<
+          PersonalPlanQuizAnswers["concernRecurrence"]
+        >["concernId"],
+        frequency: value as NonNullable<PersonalPlanQuizAnswers["concernRecurrence"]>["frequency"],
+      },
+    }
+    setAnswers(next)
+    scheduleNext(next)
   }
 
   function renderScreen() {
@@ -2484,7 +2508,7 @@ export function PersonalPlanQuiz({
             description: "Aktuell beschäftigt mich nichts davon.",
           },
           onEmpty: () => {
-            const next = { ...answers, currentConcerns: [] }
+            const next = { ...answers, currentConcerns: [], concernRecurrence: undefined }
             setAnswers(next)
             goNext(next)
           },
@@ -2527,7 +2551,7 @@ export function PersonalPlanQuiz({
         <AdmissionScreen
           answers={answers}
           ephemeral={ephemeral}
-          onSelect={(value) => selectAdmission("admissionRecurrence", value)}
+          onSelect={selectConcernRecurrence}
           screen={screen}
         />
       )

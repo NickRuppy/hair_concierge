@@ -17,7 +17,7 @@ import {
 
 export const PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY = "resume_token"
 export const PERSONAL_PLAN_QUIZ_DRAFT_COOKIE = "chaarlie_personal_plan_quiz_draft"
-export const PERSONAL_PLAN_QUIZ_DRAFT_VERSION = 3 as const
+export const PERSONAL_PLAN_QUIZ_DRAFT_VERSION = 4 as const
 export const PERSONAL_PLAN_QUIZ_DRAFT_MAX_BODY_BYTES = 16_384
 export const PERSONAL_PLAN_QUIZ_DRAFT_SLIDING_TTL_SECONDS = 24 * 60 * 60
 export const PERSONAL_PLAN_QUIZ_DRAFT_ABSOLUTE_TTL_SECONDS = 7 * 24 * 60 * 60
@@ -50,6 +50,13 @@ const partialDurableAnswersSchema = z
     resultReliability: z.enum(["mostly", "sometimes", "rarely"]).optional(),
     adaptationConfidence: z.enum(["yes", "partly", "no"]).optional(),
     currentConcerns: uniqueEnumArray(PERSONAL_PLAN_QUIZ_CONCERNS).optional(),
+    concernRecurrence: z
+      .object({
+        concernId: z.enum(PERSONAL_PLAN_QUIZ_CONCERNS),
+        frequency: z.enum(["often", "sometimes", "rather_not"]),
+      })
+      .strict()
+      .optional(),
     hairLength: z.enum(["very_short", "short", "medium", "long", "very_long"]).optional(),
     hairSurface: z.enum(["smooth", "slightly_uneven", "rough"]).optional(),
     elasticResponse: z.enum(["stretches_bounces", "stretches_stays", "snaps"]).optional(),
@@ -94,6 +101,18 @@ const partialDurableAnswersSchema = z
     blockersOtherText: z.string().trim().min(1).max(280).optional(),
   })
   .strict()
+  .superRefine((answers, context) => {
+    if (
+      answers.concernRecurrence &&
+      !answers.currentConcerns?.includes(answers.concernRecurrence.concernId)
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["concernRecurrence", "concernId"],
+        message: "recurrence concern must be selected",
+      })
+    }
+  })
 
 const draftEnvelopeSchema = z
   .object({
@@ -142,6 +161,30 @@ export function parsePersonalPlanQuizServerDraft(value: unknown): {
     expectedRevision: parsed.data.expectedRevision,
     ...(parsed.data.allowRevisionCatchup === true ? { allowRevisionCatchup: true } : {}),
   }
+}
+
+/**
+ * Stored v3 drafts had no version field. They are intentionally restarted instead of
+ * guessing how a retired combined concern should map into the v4 taxonomy, while their
+ * server revision is retained so the next save can replace the row normally.
+ */
+export function parseStoredPersonalPlanQuizServerDraft(
+  value: unknown,
+): PersonalPlanQuizDraft | null {
+  const parsed = parsePersonalPlanQuizServerDraft(value)
+  if (parsed) return parsed.draft
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null
+  const legacy = value as Record<string, unknown>
+  if (
+    "version" in legacy ||
+    !screenSet.has(String(legacy.screen)) ||
+    !Array.isArray(legacy.history) ||
+    !legacy.answers ||
+    typeof legacy.answers !== "object" ||
+    Array.isArray(legacy.answers)
+  )
+    return null
+  return { screen: "texture", history: [], answers: {} }
 }
 
 export function createPersonalPlanQuizResumeCredential() {
@@ -246,9 +289,9 @@ async function readSnapshotState(cookieValue?: string): Promise<{
     })
     if (error || !Array.isArray(data) || data.length !== 1) return null
     const row = data[0] as Record<string, unknown>
-    const parsed = parsePersonalPlanQuizServerDraft({ version: 3, ...(row.draft as object) })
+    const draft = parseStoredPersonalPlanQuizServerDraft(row.draft)
     if (
-      !parsed ||
+      !draft ||
       typeof row.revision !== "number" ||
       typeof row.browser_generation !== "number" ||
       typeof row.resume_token_hash !== "string"
@@ -257,7 +300,7 @@ async function readSnapshotState(cookieValue?: string): Promise<{
     return {
       snapshot: {
         draftId: cookie.draftId,
-        draft: parsed.draft,
+        draft,
         revision: row.revision,
         browserGeneration: row.browser_generation,
       },
