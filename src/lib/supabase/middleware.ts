@@ -26,7 +26,10 @@ const SUB_REQUIRED_PREFIXES = [
   "/tracker",
   "/api/tracker",
 ]
-const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = ["/api/billing/reconcile"]
+const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
+  "/api/billing/reconcile",
+  "/api/billing/payment-monitor",
+]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/one-time-activation-status",
 ]
