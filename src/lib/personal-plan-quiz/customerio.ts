@@ -139,9 +139,11 @@ export async function syncPersonalPlanLeadToCustomerIo({
       marketing_consent: marketingConsent,
       consent_timestamp: marketingConsent ? createdAt : undefined,
 
-      // Trigger fuer die Haarplan-Strecke. Segment 15 horcht auf die Aenderung
-      // dieses Attributs. Ohne das startet keine Automation.
-      quiz_completed_at: createdAt,
+      // Bewusst NICHT quiz_completed_at: darauf horcht Segment 15 und damit der
+      // alte Welcome Flow (Automation 5), der nur fuer Legacy-Quiz-Leads gedacht
+      // ist. Die Haarplan-Strecke triggert stattdessen ueber quiz_kind
+      // (Segment 21). Eigener Feldname, gleicher Inhalt:
+      personal_plan_completed_at: createdAt,
 
       // Direkt von der E-Mail-Strecke genutzt.
       plan_id: buildPlanId(leadId),
