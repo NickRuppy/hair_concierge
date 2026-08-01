@@ -27,10 +27,11 @@ type PaymentFixtureProps = {
   applePayFlapping: boolean
   applePaySilent: boolean
   checkoutAttemptId: string
-  confirmBehavior: "success" | "reject" | "blocked"
+  confirmBehavior: "success" | "reject" | "blocked" | "deferred"
   checkoutLoadingReleaseDelayMs: number | null
   initiateCheckoutCount: number
   lifecycleProbe: boolean
+  onFirstPaymentEngagement: () => void
 }
 
 const labZeroAmount = { amount: "0,00 €", minorUnitsAmount: 0 }
@@ -57,6 +58,7 @@ function LabExpressCheckoutElement({
   disabled,
   onAvailablePaymentMethodsChange,
   onConfirm,
+  onConfirmReturn,
   onLoadError,
   onPaymentFailed,
   onReady,
@@ -67,6 +69,7 @@ function LabExpressCheckoutElement({
   applePayFlapping: boolean
   applePaySilent: boolean
   disabled: boolean
+  onConfirmReturn: (value: unknown) => void
   onPaymentFailed: () => void
 }) {
   const [visible, setVisible] = React.useState(
@@ -176,11 +179,12 @@ function LabExpressCheckoutElement({
         type="button"
         aria-label="Apple Pay"
         disabled={disabled}
-        onClick={() =>
-          onConfirm({
+        onClick={() => {
+          const confirmReturn: unknown = onConfirm({
             paymentFailed: onPaymentFailed,
           } as StripeExpressCheckoutElementConfirmEvent)
-        }
+          onConfirmReturn(confirmReturn)
+        }}
         className="min-h-[52px] w-full rounded-full bg-black px-4 text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-60"
       >
         <span className="text-xl font-semibold tracking-tight">Pay</span>
@@ -201,6 +205,7 @@ function PaymentFixture({
   checkoutLoadingReleaseDelayMs,
   initiateCheckoutCount,
   lifecycleProbe,
+  onFirstPaymentEngagement,
 }: PaymentFixtureProps) {
   const [mountIdentity] = React.useState(() => {
     labPaymentFixtureMountCount += 1
@@ -214,10 +219,14 @@ function PaymentFixture({
   const [appleCancelCount, setAppleCancelCount] = React.useState(0)
   const [confirmationCount, setConfirmationCount] = React.useState(0)
   const [paymentFailedCount, setPaymentFailedCount] = React.useState(0)
+  const [applePayConfirmReturn, setApplePayConfirmReturn] = React.useState<
+    "unobserved" | "thenable_pending" | "thenable_settled" | "not_thenable"
+  >("unobserved")
   const [checkoutLoadingReleased, setCheckoutLoadingReleased] = React.useState(false)
   const [checkoutRetryCount, setCheckoutRetryCount] = React.useState(0)
   const providerLockRef = React.useRef<StripeOfferProvider | null>(null)
   const cancelHandlerRef = React.useRef<(() => void) | null>(null)
+  const deferredConfirmResolverRef = React.useRef<(() => void) | null>(null)
   const { toast } = useToast()
   const effectiveCheckoutLoading = checkoutLoading && !checkoutLoadingReleased
 
@@ -268,8 +277,17 @@ function PaymentFixture({
         canConfirm: confirmBehavior !== "blocked",
         total: labCheckoutTotal,
         getExpressCheckoutElement: () => expressElement,
+        runServerUpdate: async (update) => {
+          await update()
+          return { type: "success" }
+        },
         confirm: async () => {
           setConfirmationCount((count) => count + 1)
+          if (confirmBehavior === "deferred") {
+            await new Promise<void>((resolve) => {
+              deferredConfirmResolverRef.current = resolve
+            })
+          }
           if (confirmBehavior === "reject") {
             throw new Error("synthetic Stripe rejection")
           }
@@ -290,7 +308,9 @@ function PaymentFixture({
         type="button"
         data-testid="paypal-button"
         disabled={providerLock !== null}
-        onClick={() => claimProvider("paypal")}
+        onClick={() => {
+          if (claimProvider("paypal")) onFirstPaymentEngagement()
+        }}
         className="min-h-12 w-full rounded-full bg-[#ffc439] px-4 text-sm font-extrabold text-[#111]"
       >
         PayPal
@@ -306,6 +326,7 @@ function PaymentFixture({
         <input
           className="mt-1 min-h-11 w-full rounded-[10px] border border-border bg-white px-3 text-sm text-foreground"
           inputMode="numeric"
+          onChange={onFirstPaymentEngagement}
           placeholder="1234 1234 1234 1234"
         />
       </label>
@@ -343,6 +364,7 @@ function PaymentFixture({
         data-apple-cancel-count={appleCancelCount}
         data-confirmation-count={confirmationCount}
         data-payment-failed-count={paymentFailedCount}
+        data-apple-pay-confirm-return={applePayConfirmReturn}
         data-provider-lock={providerLock ?? "unlocked"}
         className="sr-only"
       />
@@ -360,6 +382,7 @@ function PaymentFixture({
         key={`checkout-retry-${checkoutRetryCount}`}
         checkoutResult={checkoutResult}
         lockedProvider={providerLock}
+        onFirstPaymentEngagement={onFirstPaymentEngagement}
         onProviderLockClaim={claimProvider}
         onProviderLockRelease={releaseProvider}
         onRetry={() => {
@@ -376,6 +399,22 @@ function PaymentFixture({
             applePayLoadError={applePayLoadError}
             applePaySilent={applePaySilent || effectiveCheckoutLoading}
             disabled={providerLock !== null}
+            onConfirmReturn={(value) => {
+              const isThenable =
+                value !== null &&
+                (typeof value === "object" || typeof value === "function") &&
+                typeof (value as { then?: unknown }).then === "function"
+              if (!isThenable) {
+                setApplePayConfirmReturn("not_thenable")
+                return
+              }
+
+              setApplePayConfirmReturn("thenable_pending")
+              void Promise.resolve(value).then(
+                () => setApplePayConfirmReturn("thenable_settled"),
+                () => setApplePayConfirmReturn("thenable_settled"),
+              )
+            }}
             onPaymentFailed={() => setPaymentFailedCount((count) => count + 1)}
           />
         )}
@@ -399,6 +438,18 @@ function PaymentFixture({
         className="w-full rounded-[10px] border border-dashed border-muted-foreground px-4 py-3 text-sm font-bold text-muted-foreground"
       >
         Verspäteten PayPal-Abbruch simulieren
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          const resolve = deferredConfirmResolverRef.current
+          deferredConfirmResolverRef.current = null
+          resolve?.()
+        }}
+        className="w-full rounded-[10px] border border-dashed border-muted-foreground px-4 py-3 text-sm font-bold text-muted-foreground"
+      >
+        Stripe-Bestätigung abschließen simulieren
       </button>
 
       <button
@@ -435,6 +486,7 @@ function PaymentFixture({
 function OfferPaymentOverlayLabContent() {
   const [ready, setReady] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [checkoutEngaged, setCheckoutEngaged] = React.useState(true)
   const [lastOutcome, setLastOutcome] = React.useState("Noch nicht geöffnet")
   const [applePayAvailable, setApplePayAvailable] = React.useState(true)
   const [applePayAvailabilityDelayMs, setApplePayAvailabilityDelayMs] = React.useState<
@@ -448,16 +500,19 @@ function OfferPaymentOverlayLabContent() {
     number | null
   >(null)
   const [prewarmedLifecycle, setPrewarmedLifecycle] = React.useState(false)
-  const [confirmBehavior, setConfirmBehavior] = React.useState<"success" | "reject" | "blocked">(
-    "success",
-  )
+  const [confirmBehavior, setConfirmBehavior] = React.useState<
+    "success" | "reject" | "blocked" | "deferred"
+  >("success")
   const [initiateCheckoutCount, setInitiateCheckoutCount] = React.useState(0)
   const checkoutAttemptId = "lab-checkout-attempt-1"
   const selectedPlanRef = React.useRef<HTMLElement | null>(null)
   const checkoutReturnFocusRef = React.useRef<HTMLElement | null>(null)
+  const pristineDismissalModeRef = React.useRef(false)
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search)
+    pristineDismissalModeRef.current = params.get("dismissal") === "pristine"
+    setCheckoutEngaged(!pristineDismissalModeRef.current)
     const initialApplePayState = params.get("apple")
     setApplePayAvailable(initialApplePayState !== "unavailable")
     setApplePayAvailabilityDelayMs(
@@ -473,7 +528,9 @@ function OfferPaymentOverlayLabContent() {
     setPrewarmedLifecycle(params.get("lifecycle") === "prewarm")
     const initialConfirmBehavior = params.get("confirm")
     setConfirmBehavior(
-      initialConfirmBehavior === "reject" || initialConfirmBehavior === "blocked"
+      initialConfirmBehavior === "reject" ||
+        initialConfirmBehavior === "blocked" ||
+        initialConfirmBehavior === "deferred"
         ? initialConfirmBehavior
         : "success",
     )
@@ -496,6 +553,7 @@ function OfferPaymentOverlayLabContent() {
 
   const closeWithOutcome = (outcome: string) => {
     setLastOutcome(outcome)
+    setCheckoutEngaged(false)
     setOpen(false)
   }
 
@@ -555,6 +613,7 @@ function OfferPaymentOverlayLabContent() {
             onClick={() => {
               setLastOutcome("Zahlung geöffnet")
               checkoutReturnFocusRef.current = null
+              setCheckoutEngaged(!pristineDismissalModeRef.current)
               setInitiateCheckoutCount((count) => count + 1)
               setOpen(true)
             }}
@@ -570,6 +629,7 @@ function OfferPaymentOverlayLabContent() {
       </div>
 
       <OfferPaymentOverlay
+        checkoutEngaged={checkoutEngaged}
         open={open}
         keepMounted={prewarmedLifecycle}
         planName="Quartal"
@@ -596,6 +656,7 @@ function OfferPaymentOverlayLabContent() {
           checkoutLoadingReleaseDelayMs={checkoutLoadingReleaseDelayMs}
           initiateCheckoutCount={initiateCheckoutCount}
           lifecycleProbe={prewarmedLifecycle}
+          onFirstPaymentEngagement={() => setCheckoutEngaged(true)}
         />
       </OfferPaymentOverlay>
     </main>
@@ -619,6 +680,11 @@ type PrewarmScenario =
   | "timeout-wallet"
   | "timeout-cold"
   | "plan-change"
+  | "claim-slow"
+  | "claim-failure"
+  | "client-loading"
+  | "sync-failure"
+  | "sync-key-change"
 
 const prewarmScenarios = new Set<PrewarmScenario>([
   "ready",
@@ -629,6 +695,11 @@ const prewarmScenarios = new Set<PrewarmScenario>([
   "timeout-wallet",
   "timeout-cold",
   "plan-change",
+  "claim-slow",
+  "claim-failure",
+  "client-loading",
+  "sync-failure",
+  "sync-key-change",
 ])
 
 function getPrewarmScenario(value: string | undefined): PrewarmScenario {
@@ -663,6 +734,48 @@ function PrewarmPaymentFixture({
 }) {
   const availabilityCallbackRef = React.useRef(input.onApplePayAvailabilityResolved)
   const walletResolvedCallbackRef = React.useRef(onWalletResolved)
+  const onPreparedCheckoutActivate = input.onPreparedCheckoutActivate
+  const onPreparedCheckoutSyncFailed = input.onPreparedCheckoutSyncFailed
+  const onPreparedCheckoutSyncSucceeded = input.onPreparedCheckoutSyncSucceeded
+  const [effectivePreparationId, setEffectivePreparationId] = React.useState(input.preparationId)
+  const [runServerUpdateCount, setRunServerUpdateCount] = React.useState(0)
+  const runServerUpdateCountRef = React.useRef(0)
+  const wallet = getFixtureWalletResult(scenario)
+
+  const checkoutResult = React.useMemo<StripeOfferCheckoutResult>(() => {
+    if (scenario === "client-loading" && input.preparationId) {
+      return { type: "loading" }
+    }
+
+    return {
+      type: "success",
+      checkout: {
+        canConfirm: true,
+        confirm: async () => ({ type: "success" }),
+        getExpressCheckoutElement: () => null,
+        runServerUpdate: async (update) => {
+          runServerUpdateCountRef.current += 1
+          const updateIndex = runServerUpdateCountRef.current
+          setRunServerUpdateCount(updateIndex)
+          try {
+            const response = await update()
+            if (!(response instanceof Response)) {
+              return { type: "error", error: { message: "fixture response missing" } }
+            }
+          } catch {
+            return { type: "error", error: { message: "fixture activation failed" } }
+          }
+          if (scenario === "sync-key-change" && updateIndex === 1) {
+            await new Promise((resolve) => window.setTimeout(resolve, 250))
+          }
+          return scenario === "sync-failure"
+            ? { type: "error", error: { message: "fixture update failed" } }
+            : { type: "success" }
+        },
+        total: labCheckoutTotal,
+      },
+    }
+  }, [input.preparationId, scenario])
 
   React.useEffect(() => {
     availabilityCallbackRef.current = input.onApplePayAvailabilityResolved
@@ -670,14 +783,28 @@ function PrewarmPaymentFixture({
   }, [input.onApplePayAvailabilityResolved, onWalletResolved])
 
   React.useEffect(() => {
+    setEffectivePreparationId(input.preparationId)
+    runServerUpdateCountRef.current = 0
+    setRunServerUpdateCount(0)
+  }, [input.preparationId])
+
+  React.useEffect(() => {
     if (!input.preparationId) return
-    const wallet = getFixtureWalletResult(scenario)
     const timer = window.setTimeout(() => {
       availabilityCallbackRef.current(wallet.available)
       walletResolvedCallbackRef.current()
     }, wallet.delayMs)
     return () => window.clearTimeout(timer)
-  }, [input.preparationId, scenario])
+  }, [input.preparationId, wallet.available, wallet.delayMs])
+
+  React.useEffect(() => {
+    if (scenario !== "sync-key-change" || !input.visible || !input.preparationId) return
+    const timer = window.setTimeout(
+      () => setEffectivePreparationId(`${input.preparationId}-next`),
+      50,
+    )
+    return () => window.clearTimeout(timer)
+  }, [input.preparationId, input.visible, scenario])
 
   if (!input.visible) {
     return <div aria-hidden="true" data-testid="prewarm-payment-hidden" />
@@ -687,21 +814,42 @@ function PrewarmPaymentFixture({
     <section
       data-testid="prewarm-payment-checkout"
       data-checkout-attempt-id={input.checkoutAttemptId ?? "none"}
-      data-preparation-id={input.preparationId ?? "cold"}
+      data-preparation-id={effectivePreparationId ?? "cold"}
+      data-run-server-update-count={runServerUpdateCount}
       data-suppress-express-wallet={String(input.suppressExpressWallet)}
     >
-      {input.suppressExpressWallet ? null : (
-        <div data-testid="prewarm-apple-pay" data-offer-payment-step="apple_pay">
-          Apple Pay
-        </div>
-      )}
-      <div data-testid="prewarm-paypal" data-offer-payment-step="paypal">
-        PayPal
-      </div>
-      <label>
-        Karte
-        <input data-testid="prewarm-card" />
-      </label>
+      <StripeOfferElementsCheckoutContent
+        checkoutAttemptId={input.checkoutAttemptId ?? undefined}
+        checkoutResult={checkoutResult}
+        initialApplePayAvailability={wallet.available ? "available" : "unavailable"}
+        onFirstPaymentEngagement={input.onFirstPaymentEngagement}
+        onPreparedCheckoutActivate={onPreparedCheckoutActivate}
+        onPreparedCheckoutSyncFailed={onPreparedCheckoutSyncFailed}
+        onPreparedCheckoutSyncSucceeded={onPreparedCheckoutSyncSucceeded}
+        onRetry={() => undefined}
+        paymentElement={
+          <label>
+            Karte
+            <input data-testid="prewarm-card" onChange={input.onFirstPaymentEngagement} />
+          </label>
+        }
+        paymentElementReady
+        preparedCheckoutId={effectivePreparationId ?? undefined}
+        renderExpressCheckoutElement={() =>
+          wallet.available ? (
+            <div data-testid="prewarm-apple-pay" data-offer-payment-step="apple_pay">
+              Apple Pay
+            </div>
+          ) : null
+        }
+        secondaryPaymentMethod={
+          <div data-testid="prewarm-paypal" data-offer-payment-step="paypal">
+            PayPal
+          </div>
+        }
+        suppressExpressWallet={input.suppressExpressWallet}
+        visible
+      />
     </section>
   )
 }
@@ -784,7 +932,7 @@ function OneTimePrewarmPaymentFixture({
       </div>
       <label>
         Karte
-        <input data-testid="prewarm-card" />
+        <input data-testid="prewarm-card" onChange={input.onFirstPaymentEngagement} />
       </label>
     </section>
   )
@@ -822,7 +970,10 @@ function OfferPaymentPrewarmLabContent({ scenario: scenarioInput }: { scenario?:
       },
       claim: async () => {
         setClaimCount((count) => count + 1)
-        return true
+        if (scenario === "claim-slow") {
+          await new Promise((resolve) => window.setTimeout(resolve, 400))
+        }
+        return scenario !== "claim-failure"
       },
       renderPaymentCheckout: (input) => (
         <PrewarmPaymentFixture

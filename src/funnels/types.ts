@@ -4,8 +4,13 @@ import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
+import type { PersonalPlanQuizResumeBootstrap } from "@/lib/personal-plan-quiz/types"
 
-export type FunnelLandingVariantComponent = ComponentType
+export type FunnelLandingVariantProps = {
+  personalPlanQuizResume?: PersonalPlanQuizResumeBootstrap
+}
+
+export type FunnelLandingVariantComponent = ComponentType<FunnelLandingVariantProps>
 
 export type FunnelOfferVariantProps = {
   name: string

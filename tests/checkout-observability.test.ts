@@ -2,10 +2,63 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   buildCheckoutSentryPayload,
+  captureCheckoutException,
   getCheckoutRateLimitReason,
   scrubSentryBreadcrumb,
   scrubSentryEvent,
 } from "../src/lib/observability/checkout"
+
+test("captureCheckoutException preserves only bounded Express Checkout error context", () => {
+  const providerError = { message: "payment confirmation failed", code: "payment_failed" }
+  const tags: Record<string, string> = {}
+  let context: Record<string, unknown> | null = null
+  let captured: unknown = null
+
+  captureCheckoutException(
+    providerError,
+    {
+      provider: "stripe",
+      stage: "stripe_express_checkout_confirm",
+      source: "quiz_result_offer",
+      checkoutAttemptId: "attempt-123",
+      status: "failed",
+      reason: "confirm_error",
+    },
+    {
+      addBreadcrumb: () => undefined,
+      captureException: (error) => {
+        captured = error
+      },
+      withScope: (callback) =>
+        callback({
+          setContext: (_name, value) => {
+            context = value
+          },
+          setTag: (key, value) => {
+            tags[key] = value
+          },
+        }),
+    },
+  )
+
+  assert.equal(captured, providerError)
+  assert.deepEqual(tags, {
+    "checkout.provider": "stripe",
+    "checkout.stage": "stripe_express_checkout_confirm",
+    "checkout.source": "quiz_result_offer",
+    "checkout.status": "failed",
+    "checkout.reason": "confirm_error",
+  })
+  assert.deepEqual(context, {
+    provider: "stripe",
+    stage: "stripe_express_checkout_confirm",
+    source: "quiz_result_offer",
+    checkout_attempt_id: "attempt-123",
+    status: "failed",
+    reason: "confirm_error",
+  })
+  assert.equal(JSON.stringify({ tags, context }).includes("client_secret"), false)
+})
 
 test("buildCheckoutSentryPayload keeps searchable checkout tags without raw PayPal token", () => {
   const payload = buildCheckoutSentryPayload({
@@ -62,6 +115,24 @@ test("buildCheckoutSentryPayload redacts raw Stripe checkout session ids", () =>
 
   assert.equal(payload.context.stripe_session_id, "[Filtered]")
   assert.equal(JSON.stringify(payload).includes("cs_test_secret"), false)
+})
+
+test("buildCheckoutSentryPayload keeps prepared-session sync diagnostics sanitized", () => {
+  const payload = buildCheckoutSentryPayload({
+    provider: "stripe",
+    stage: "stripe_prepared_checkout_sync",
+    source: "quiz_result_offer",
+    checkoutAttemptId: "attempt-123",
+    preparationId: "preparation-123",
+    durationMs: 421,
+    status: "succeeded",
+  })
+
+  assert.equal(payload.context.checkout_attempt_id, "attempt-123")
+  assert.equal(payload.context.preparation_id, "preparation-123")
+  assert.equal(payload.context.duration_ms, 421)
+  assert.equal(payload.tags["checkout.status"], "succeeded")
+  assert.equal(JSON.stringify(payload).includes("client_secret"), false)
 })
 
 test("scrubSentryEvent removes checkout activation secrets from request urls", () => {
@@ -185,6 +256,36 @@ test("scrubSentryBreadcrumb removes checkout activation secrets from breadcrumb 
       url: "/api/paypal/activation-status?token=%5BFiltered%5D",
     },
   })
+})
+
+test("scrubSentryEvent removes resume tokens from every supported Sentry surface", () => {
+  const token = "opaque-resume-credential"
+  const event = scrubSentryEvent({
+    request: {
+      url: `https://chaarlie.example/lp/haarplan?resume_token=${token}&keep=yes`,
+      query_string: { resume_token: token, keep: "yes" },
+    },
+    breadcrumbs: [
+      {
+        message: `Navigated to /lp/haarplan?resume_token=${token}`,
+        data: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` },
+      },
+    ],
+    contexts: { resume: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` } },
+    extra: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` },
+    spans: [
+      {
+        description: `GET /api/quiz/personal-plan-draft/resume?resume_token=${token}`,
+        data: { resume_token: token, url: `/lp/haarplan?resume_token=${token}` },
+      },
+    ],
+  })
+
+  const serialized = JSON.stringify(event)
+  assert.equal(serialized.includes(token), false)
+  assert.equal(serialized.includes("[Filtered]"), true)
+  assert.equal(event.request?.url?.includes("resume_token=%5BFiltered%5D"), true)
+  assert.deepEqual(event.request?.query_string, { resume_token: "[Filtered]", keep: "yes" })
 })
 
 test("buildCheckoutSentryPayload tags checkout rate-limit source", () => {

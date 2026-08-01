@@ -116,6 +116,49 @@ async function expectMobilePaymentContainment(page: Page, appleState?: "load-err
 }
 
 test.describe("@ci offer payment overlay", () => {
+  test("pristine dismissal is immediate while entered card input stays protected until confirmed", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&dismissal=pristine`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+
+    const trigger = page.getByRole("button", { name: "Ja, jetzt starten" })
+    await trigger.click()
+    let checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout).toBeVisible()
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    await expect(checkout).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+
+    await trigger.click()
+    checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const cardNumber = checkout.getByPlaceholder("1234 1234 1234 1234")
+    await cardNumber.fill("4242")
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
+    await expect(confirmation).toBeVisible()
+
+    await page.getByRole("button", { name: "Weiter bezahlen" }).click()
+    await expect(confirmation).toBeHidden()
+    await expect(cardNumber).toHaveValue("4242")
+
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
+    await expect(checkout).toBeHidden()
+
+    await trigger.click()
+    checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout.getByPlaceholder("1234 1234 1234 1234")).toHaveValue("")
+    await checkout.getByRole("button", { name: "Plan ändern" }).click()
+    await expect(checkout).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+    await expect(page.getByTestId("last-outcome")).toContainText("Planänderung bestätigt")
+  })
+
   test("payment content stays contained in the mobile viewport matrix", async ({ page }) => {
     for (const viewport of [
       { width: 320, height: 568 },
@@ -317,7 +360,7 @@ test.describe("@ci offer payment overlay", () => {
     await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
   })
 
-  test("a guarded wallet confirmation notifies Stripe and leaves providers unlocked", async ({
+  test("wallet confirmation bypasses card readiness while card submission stays disabled", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
@@ -329,13 +372,20 @@ test.describe("@ci offer payment overlay", () => {
     await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+    const cardButton = checkout
+      .locator('[data-offer-payment-step="payment_element"]')
+      .getByRole("button")
+
+    await expect(cardButton).toBeDisabled()
+    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
 
     await checkout.getByRole("button", { name: "Apple Pay", exact: true }).click()
 
-    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "0")
-    await expect(diagnostic).toHaveAttribute("data-payment-failed-count", "1")
-    await expect(diagnostic).toHaveAttribute("data-provider-lock", "unlocked")
-    await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-payment-failed-count", "0")
+    await expect(diagnostic).toHaveAttribute("data-provider-lock", "stripe")
+    await expect(checkout.getByTestId("paypal-button")).toBeDisabled()
+    await expect(cardButton).toBeDisabled()
   })
 
   test("unavailable Apple Pay has no row or gap and leaves PayPal first on desktop", async ({
@@ -763,6 +813,27 @@ test.describe("@ci offer payment overlay", () => {
     await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
     await expect(checkout.getByRole("button", { name: "Apple Pay", exact: true })).toBeDisabled()
     await expect(checkout.getByTestId("paypal-button")).toBeDisabled()
+  })
+
+  test("Apple Pay Express onConfirm returns the checkout promise", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&confirm=deferred`, { waitUntil: "domcontentloaded" })
+    await expect(page.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+
+    await checkout.getByRole("button", { name: "Apple Pay", exact: true }).click()
+
+    await expect(diagnostic).toHaveAttribute("data-apple-pay-confirm-return", "thenable_pending")
+    await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
+    await checkout
+      .getByRole("button", { name: "Stripe-Bestätigung abschließen simulieren" })
+      .click()
+    await expect(diagnostic).toHaveAttribute("data-apple-pay-confirm-return", "thenable_settled")
   })
 
   test("a rejected Stripe confirmation shows recovery and releases its provider lock", async ({

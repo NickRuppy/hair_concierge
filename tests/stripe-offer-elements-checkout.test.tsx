@@ -5,10 +5,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 import type { StripeCheckoutSession } from "@stripe/stripe-js"
 
 import {
+  getPreparedCheckoutSyncRemainingMs,
   createStripeOfferElementsState,
   formatCheckoutTotal,
   getChangedApplePayAvailability,
   getApplePayAvailability,
+  getStripeExpressCheckoutExceptionReason,
   getStripeOfferElementsErrorMessage,
   hasApplePayMethod,
   isWalletDebugEnabled,
@@ -16,6 +18,7 @@ import {
   isWalletPaymentEligibilityProbeEnabled,
   normalizeWalletDebugMethods,
   reconcilePaymentElementApplePayAvailability,
+  synchronizePreparedCheckoutSession,
   StripeOfferElementsCheckoutContent,
   stripeOfferCheckoutAppearance,
   stripeOfferExpressCheckoutOptions,
@@ -152,6 +155,258 @@ test("offer Checkout Elements helpers keep Apple Pay gated and submit labels ses
   assert.match(getStripeOfferElementsErrorMessage(), /Zahlung konnte nicht bestätigt werden/)
 })
 
+test("first payment engagement ignores readiness, marks non-empty Payment Element input once, and precedes Stripe confirmation", () => {
+  assert.match(stripeOfferElementsSource, /onFirstPaymentEngagement\?: \(\) => void/)
+  assert.match(stripeOfferElementsSource, /const firstPaymentEngagementRef = useRef\(false\)/)
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(firstPaymentEngagementRef\.current \|\| !onFirstPaymentEngagement\) return/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /useEffect\(\(\) => \{\s*firstPaymentEngagementRef\.current = false\s*\}, \[checkoutAttemptId\]\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onChange=\{\(event(?:: StripePaymentElementChangeEvent)?\) => \{\s*if \(!event\.empty\) markFirstPaymentEngagement\(\)/,
+  )
+
+  const confirmCheckoutStart = stripeOfferElementsSource.indexOf(
+    "const confirmCheckout = useCallback",
+  )
+  const firstEngagementInConfirm = stripeOfferElementsSource.indexOf(
+    "markFirstPaymentEngagement()",
+    confirmCheckoutStart,
+  )
+  const claimStripeInConfirm = stripeOfferElementsSource.indexOf(
+    "claimStripe(paymentMethodType)",
+    confirmCheckoutStart,
+  )
+  assert.ok(firstEngagementInConfirm > confirmCheckoutStart)
+  assert.ok(claimStripeInConfirm > firstEngagementInConfirm)
+
+  const paymentReadyStart = stripeOfferElementsSource.indexOf("onReady={() => {")
+  const paymentReadyEnd = stripeOfferElementsSource.indexOf("}}", paymentReadyStart)
+  assert.ok(paymentReadyStart > -1)
+  assert.doesNotMatch(
+    stripeOfferElementsSource.slice(paymentReadyStart, paymentReadyEnd),
+    /markFirstPaymentEngagement/,
+  )
+})
+
+test("Express Checkout returns its confirmation promise and keeps ordinary card submission fire-and-forget", () => {
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirm: \(event: StripeExpressCheckoutElementConfirmEvent\) => Promise<void>/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirm: \(event\) => confirmCheckout\("apple_pay", event\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirm=\{\(event\) => confirmCheckout\("apple_pay", event\)\}/,
+  )
+  assert.doesNotMatch(
+    stripeOfferElementsSource,
+    /onConfirm(?::|=\{)\s*\(event\)[\s\S]*?void confirmCheckout\("apple_pay", event\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onClick=\{\(\) => void confirmCheckout\("payment_element"\)\}/,
+  )
+})
+
+test("Express Checkout bypasses only Payment Element readiness and traces every retained guard", () => {
+  assert.match(stripeOfferElementsSource, /!expressCheckoutConfirmEvent && !checkout\.canConfirm/)
+  assert.match(stripeOfferElementsSource, /"checkout_unavailable"/)
+  assert.match(stripeOfferElementsSource, /"confirmation_in_flight"/)
+  assert.match(stripeOfferElementsSource, /"prepared_checkout_not_synchronized"/)
+  assert.match(stripeOfferElementsSource, /"payment_element_not_confirmable"/)
+  assert.match(
+    stripeOfferElementsSource,
+    /recordWalletDebugEvent\("express_confirm_rejected", undefined, reason\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /const rejectConfirmation = \(reason: string\) => \{[\s\S]*?expressCheckoutConfirmEvent\?\.paymentFailed/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(!claimStripe\(paymentMethodType\)\) \{\s*rejectConfirmation\("provider_locked"\)/,
+  )
+})
+
+test("Express Checkout failures preserve bounded provider errors and classify unknown exceptions safely", () => {
+  assert.equal(
+    getStripeExpressCheckoutExceptionReason(
+      new Error("The confirm method must be called within the confirm event emitted by Stripe"),
+    ),
+    "confirm_event_invalid",
+  )
+  assert.equal(
+    getStripeExpressCheckoutExceptionReason({
+      message: "The confirm method must be called within the confirm event emitted by Stripe",
+    }),
+    "confirm_event_invalid",
+  )
+  assert.equal(
+    getStripeExpressCheckoutExceptionReason(new Error("network unavailable")),
+    "exception",
+  )
+  const hostileThrownValue = {
+    client_secret: "secret",
+    email: "person@example.com",
+    address: { line1: "Private street" },
+    payment_method: { id: "pm_secret" },
+  }
+  const hostileReason = getStripeExpressCheckoutExceptionReason(hostileThrownValue)
+  assert.equal(hostileReason, "exception")
+  assert.equal(JSON.stringify(hostileReason).includes("secret"), false)
+  assert.equal(JSON.stringify(hostileReason).includes("person@example.com"), false)
+
+  assert.match(stripeOfferElementsSource, /captureCheckoutException\(result\.error,/)
+  assert.match(
+    stripeOfferElementsSource,
+    /captureCheckoutException\(new Error\("Stripe Express Checkout confirmation failed"\),/,
+  )
+  assert.doesNotMatch(stripeOfferElementsSource, /captureCheckoutException\(error,/)
+  assert.match(stripeOfferElementsSource, /const message = getStripeOfferElementsErrorMessage\(\)/)
+})
+
+test("prepared checkout synchronization runs the claim inside Stripe's server-update boundary", async () => {
+  let activateCalls = 0
+  let runServerUpdateCalls = 0
+  let returnedResponse: Response | null = null
+  const activationResponse = new Response(null, { status: 200 })
+  const result = await synchronizePreparedCheckoutSession(
+    {
+      runServerUpdate: async (update) => {
+        runServerUpdateCalls += 1
+        returnedResponse = await update()
+        return { type: "success" }
+      },
+    },
+    async (signal) => {
+      activateCalls += 1
+      assert.equal(signal.aborted, false)
+      return { activated: true, response: activationResponse }
+    },
+    100,
+  )
+
+  assert.equal(runServerUpdateCalls, 1)
+  assert.equal(activateCalls, 1)
+  assert.equal(returnedResponse, activationResponse)
+  assert.equal(result.status, "succeeded")
+})
+
+test("prepared checkout synchronization rejects claim, Stripe errors, and timeouts", async () => {
+  const claimFailure = await synchronizePreparedCheckoutSession(
+    {
+      runServerUpdate: async (update) => {
+        await update()
+        return { type: "success" }
+      },
+    },
+    async () => ({ activated: false, response: new Response(null, { status: 409 }) }),
+    100,
+  )
+  assert.deepEqual(
+    {
+      status: claimFailure.status,
+      reason: claimFailure.status === "failed" && claimFailure.reason,
+    },
+    { status: "failed", reason: "activation_failed" },
+  )
+
+  const stripeFailure = await synchronizePreparedCheckoutSession(
+    {
+      runServerUpdate: async () => ({ type: "error", error: { message: "refresh failed" } }),
+    },
+    async () => ({ activated: true, response: new Response(null, { status: 200 }) }),
+    100,
+  )
+  assert.deepEqual(
+    {
+      status: stripeFailure.status,
+      reason: stripeFailure.status === "failed" && stripeFailure.reason,
+    },
+    { status: "failed", reason: "stripe_update_failed" },
+  )
+
+  let timedOutSignalAborted = false
+  const timeout = await synchronizePreparedCheckoutSession(
+    {
+      runServerUpdate: async (update) => {
+        await update()
+        return new Promise(() => undefined)
+      },
+    },
+    async (signal) => {
+      return new Promise((_, reject) => {
+        signal.addEventListener(
+          "abort",
+          () => {
+            timedOutSignalAborted = signal.aborted
+            reject(new Error("aborted"))
+          },
+          { once: true },
+        )
+      })
+    },
+    5,
+  )
+  assert.deepEqual(
+    { status: timeout.status, reason: timeout.status === "failed" && timeout.reason },
+    { status: "failed", reason: "timeout" },
+  )
+  assert.equal(timedOutSignalAborted, true)
+})
+
+test("prepared checkout synchronization timeout includes time spent waiting for Stripe Checkout", () => {
+  assert.equal(getPreparedCheckoutSyncRemainingMs(1_000, 1_000), 2_000)
+  assert.equal(getPreparedCheckoutSyncRemainingMs(1_000, 2_500), 500)
+  assert.equal(getPreparedCheckoutSyncRemainingMs(1_000, 4_000), 0)
+})
+
+test("prepared checkout keeps every payment option behind the synchronization gate", () => {
+  const html = renderToStaticMarkup(
+    <StripeOfferElementsCheckoutContent
+      checkoutAttemptId="attempt-prepared"
+      checkoutResult={{
+        type: "success",
+        checkout: {
+          canConfirm: true,
+          confirm: async () => ({ type: "success" }),
+          getExpressCheckoutElement: () => null,
+          runServerUpdate: async () => ({ type: "success" }),
+          ...sessionTotal,
+        },
+      }}
+      initialApplePayAvailability="available"
+      onPreparedCheckoutActivate={async () => ({
+        activated: true,
+        response: new Response(null, { status: 200 }),
+      })}
+      onPreparedCheckoutSyncFailed={() => assert.fail("sync should not settle during SSR")}
+      preparedCheckoutId="prepared-123"
+      onRetry={() => {}}
+      paymentElement={<div data-testid="payment-element">Card fields</div>}
+      paymentElementReady
+      renderExpressCheckoutElement={() => <div data-testid="express-element" />}
+      secondaryPaymentMethod={<div data-testid="secondary-payment-method">PayPal</div>}
+      visible
+    />,
+  )
+
+  assert.match(html, /aria-label="Zahlungsoptionen werden vorbereitet"/)
+  assert.match(html, /aria-hidden="true"/)
+  assert.doesNotMatch(html, /data-offer-payment-step="apple_pay"/)
+  assert.doesNotMatch(html, /data-testid="secondary-payment-method"/)
+  assert.doesNotMatch(html, /data-testid="payment-element"/)
+})
+
 test("wallet diagnostics stay query-gated and retain only availability booleans", () => {
   assert.equal(isWalletDebugEnabled("?wallet_debug=1"), true)
   assert.equal(isWalletDebugEnabled("?lead=abc&wallet_debug=1"), true)
@@ -245,8 +500,8 @@ test("Apple Pay availability changes and failures remove it from the exposure ga
     /const availability = getChangedApplePayAvailability\(event\)[\s\S]*?resolveApplePayAvailability\(availability\)/,
   )
   assert.match(stripeOfferElementsSource, /closeApplePayAvailability\("failed"\)/)
-  assert.match(stripeOfferElementsSource, /available=\{state\.applePayReady\}/)
-  assert.match(stripeOfferElementsSource, /providerReady=\{state\.applePayReady\}/)
+  assert.match(stripeOfferElementsSource, /available=\{applePayProviderReady\}/)
+  assert.match(stripeOfferElementsSource, /providerReady=\{applePayProviderReady\}/)
 })
 
 test("prewarmed offer Elements mount Express first and defer card methods until visible", () => {
@@ -285,7 +540,7 @@ test("prewarmed offer Elements mount Express first and defer card methods until 
     /showSecondaryPaymentMethod =\s*\n\s*visible === true && !holdPaymentChoices/,
   )
   assert.match(stripeOfferElementsSource, /option="apple_pay"/)
-  assert.match(stripeOfferElementsSource, /providerReady=\{state\.applePayReady\}/)
+  assert.match(stripeOfferElementsSource, /providerReady=\{applePayProviderReady\}/)
   assert.match(stripeOfferElementsSource, /option="card_and_more"/)
   assert.match(stripeOfferElementsSource, /available=\{paymentElementReady\}/)
   assert.match(stripeOfferElementsSource, /providerReady=\{paymentElementReady\}/)

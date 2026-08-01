@@ -22,6 +22,10 @@ import {
 import { posthog } from "../src/lib/analytics/runtime/posthog"
 import { buildOfferViewedPayload } from "../src/lib/analytics/offer-viewed-payload"
 import { initMetaPixel, trackMetaCheckoutStarted } from "../src/lib/meta-pixel"
+import {
+  hasSensitiveBrowserAnalyticsLocation,
+  sanitizeAnalyticsUrl,
+} from "../src/lib/analytics/page-url"
 
 type DestinationCall = {
   destination: "customerio" | "meta" | "posthog"
@@ -134,6 +138,19 @@ async function withGlobalBrowserAsync<T>(win: Window, doc: Document, fn: () => P
     }
   }
 }
+
+test("resume tokens suppress browser analytics and are stripped from owned analytics URLs", () => {
+  const token = "opaque-resume-credential"
+
+  assert.equal(
+    hasSensitiveBrowserAnalyticsLocation(new URLSearchParams({ resume_token: token })),
+    true,
+  )
+  assert.equal(
+    sanitizeAnalyticsUrl(`https://chaarlie.de/lp/haarplan?resume_token=${token}&utm_source=meta`),
+    "https://chaarlie.de/lp/haarplan",
+  )
+})
 
 test("quiz step views stay in PostHog and Customer.io but out of Meta", () => {
   withDestinationSpies((calls) => {

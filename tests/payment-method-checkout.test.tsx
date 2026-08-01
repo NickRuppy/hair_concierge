@@ -136,6 +136,31 @@ test("offer overlay express path renders withdrawal link and direct fallback wit
   assert.match(html, /data-offer-payment-option="paypal"/)
 })
 
+test("offer overlay threads prepared-session synchronization into Stripe Checkout Elements", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /onPreparedCheckoutActivate/)
+  assert.match(source, /onPreparedCheckoutSyncFailed/)
+  assert.match(source, /onPreparedCheckoutSyncSucceeded/)
+  assert.match(source, /preparedCheckoutId=\{clientSecret \? preparedCheckoutId : undefined\}/)
+  assert.doesNotMatch(source, /preparedCheckoutId=\{clientSecret \? checkoutKey : undefined\}/)
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutActivate=\{onPreparedCheckoutActivate\}/,
+  )
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutSyncFailed=\{onPreparedCheckoutSyncFailed\}/,
+  )
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutSyncSucceeded=\{onPreparedCheckoutSyncSucceeded\}/,
+  )
+})
+
 test("offer overlay wallet-suppressed path keeps PayPal and card checkout without Express", () => {
   const html = renderCheckout(true, "offer-overlay", true, true)
 
@@ -192,6 +217,43 @@ test("Stripe payment helper copy is only shown before the embedded checkout expa
   assert.match(source, /!cardCheckoutOpen \? \(/)
   assert.match(source, /id="payment-method-helper"/)
   assert.match(source, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
+})
+
+test("first payment engagement follows provider-lock claims and legacy card reveal", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+  assert.match(source, /onFirstPaymentEngagement\?: \(\) => void/)
+  assert.match(source, /onFirstPaymentEngagement=\{onFirstPaymentEngagement\}/)
+
+  const paypalSelectionStart = source.indexOf("onPaymentMethodSelected={(provider) =>")
+  const paypalLockClaim = source.indexOf('onProviderLockClaim?.("paypal")', paypalSelectionStart)
+  const paypalEngagement = source.indexOf("onFirstPaymentEngagement?.()", paypalSelectionStart)
+  const paypalSelection = source.indexOf(
+    "onPaymentMethodSelected?.(provider)",
+    paypalSelectionStart,
+  )
+  assert.ok(paypalSelectionStart > -1)
+  assert.ok(paypalLockClaim > paypalSelectionStart)
+  assert.ok(paypalEngagement > paypalLockClaim)
+  assert.ok(paypalSelection > paypalEngagement)
+
+  const paypalReadyStart = source.indexOf("onReady={() =>", paypalSelectionStart)
+  const paypalReadyEnd = source.indexOf("returnDestination=", paypalReadyStart)
+  assert.ok(paypalReadyStart > paypalSelection)
+  assert.ok(paypalReadyEnd > paypalReadyStart)
+  assert.doesNotMatch(source.slice(paypalReadyStart, paypalReadyEnd), /onFirstPaymentEngagement/)
+
+  const legacyCardReveal = source.indexOf("if (!cardCheckoutOpen)")
+  const legacyCardEngagement = source.indexOf("onFirstPaymentEngagement?.()", legacyCardReveal)
+  const legacyCardSelection = source.indexOf(
+    'onPaymentMethodSelected?.("stripe")',
+    legacyCardReveal,
+  )
+  assert.ok(legacyCardReveal > -1)
+  assert.ok(legacyCardEngagement > legacyCardReveal)
+  assert.ok(legacyCardSelection > legacyCardEngagement)
 })
 
 test("PayPal approval redirects to the provider-aware welcome URL", () => {

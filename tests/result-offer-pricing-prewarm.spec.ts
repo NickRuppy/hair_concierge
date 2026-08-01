@@ -106,8 +106,8 @@ test.describe("@ci result offer pricing prewarm lifecycle", () => {
     await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true", { timeout: 8_000 })
 
     await page.getByRole("button", { name: "Zahlung schließen" }).click()
-    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
     await expect(drawer(page)).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
     await cta.click()
     await expect(drawer(page)).toBeVisible({ timeout: 1_000 })
     await expect(page.getByTestId("prewarm-apple-pay")).toHaveCount(0)
@@ -157,6 +157,88 @@ test.describe("@ci result offer pricing prewarm lifecycle", () => {
     await expect(diagnostic).toHaveAttribute("data-claim-count", "1")
   })
 
+  test("keeps prepared payment choices hidden until the Session claim is synchronized", async ({
+    page,
+  }) => {
+    await openLab(page, "claim-slow")
+    const diagnostic = page.getByTestId("prewarm-diagnostic")
+    await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true")
+    await page.locator("[data-offer-cta='pricing_primary']").click()
+    await expect(drawer(page)).toBeVisible()
+    await expect(page.getByLabel("Zahlungsoptionen werden vorbereitet")).toBeVisible()
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeHidden()
+    await expect(page.getByTestId("prewarm-paypal")).toHaveCount(0)
+    await expect(page.getByTestId("prewarm-card")).toHaveCount(0)
+    await expect(diagnostic).toHaveAttribute("data-claim-count", "1")
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeVisible()
+    await expect(page.getByTestId("prewarm-paypal")).toBeVisible()
+    await expect(page.getByTestId("prewarm-card")).toBeVisible()
+  })
+
+  test("recovers a failed Stripe Session sync through a fresh Session without hiding Apple Pay", async ({
+    page,
+  }) => {
+    await openLab(page, "sync-failure")
+    const diagnostic = page.getByTestId("prewarm-diagnostic")
+    await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true")
+    await page.locator("[data-offer-cta='pricing_primary']").click()
+    await expect(drawer(page)).toBeVisible()
+    await expect(diagnostic).toHaveAttribute("data-claim-count", "1")
+    await expect(page.getByTestId("prewarm-payment-checkout")).toHaveAttribute(
+      "data-preparation-id",
+      "cold",
+    )
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeVisible()
+    await expect(page.getByTestId("prewarm-paypal")).toBeVisible()
+    await expect(page.getByTestId("prewarm-card")).toBeVisible()
+  })
+
+  test("recovers through a cold Session when the prepared Stripe client never loads", async ({
+    page,
+  }) => {
+    await openLab(page, "client-loading")
+    const diagnostic = page.getByTestId("prewarm-diagnostic")
+    await expect(diagnostic).toHaveAttribute("data-prepare-count", "1")
+    await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true")
+    const cta = page.locator("[data-offer-cta='pricing_primary']")
+    await cta.click()
+    await expect(drawer(page)).toBeVisible()
+    await expect(
+      page.getByRole("status", { name: "Zahlungsoptionen werden vorbereitet" }),
+    ).toBeVisible()
+    await expect(page.getByTestId("prewarm-payment-checkout")).toHaveAttribute(
+      "data-preparation-id",
+      "cold",
+      { timeout: 4_000 },
+    )
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeVisible()
+    await expect(page.getByTestId("prewarm-paypal")).toBeVisible()
+    await expect(page.getByTestId("prewarm-card")).toBeVisible()
+  })
+
+  test("starts a fresh real Stripe synchronization when the prepared checkout key changes", async ({
+    page,
+  }) => {
+    await openLab(page, "sync-key-change")
+    const diagnostic = page.getByTestId("prewarm-diagnostic")
+    await expect(diagnostic).toHaveAttribute("data-wallet-resolved", "true")
+    await page.locator("[data-offer-cta='pricing_primary']").click()
+    await expect(drawer(page)).toBeVisible()
+
+    const checkout = page.getByTestId("prewarm-payment-checkout")
+    await expect(checkout).toHaveAttribute("data-preparation-id", /-next$/)
+    await expect(checkout).toHaveAttribute("data-run-server-update-count", "2")
+    await expect(diagnostic).toHaveAttribute("data-claim-count", "1")
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeVisible()
+    await expect(page.getByTestId("prewarm-paypal")).toBeVisible()
+    await expect(page.getByTestId("prewarm-card")).toBeVisible()
+
+    await page.waitForTimeout(300)
+    await expect(checkout).toHaveAttribute("data-preparation-id", /-next$/)
+    await expect(checkout).toHaveAttribute("data-run-server-update-count", "2")
+    await expect(page.getByTestId("prewarm-apple-pay")).toBeVisible()
+  })
+
   test("reopens through the cold path without falsely suppressing Apple Pay", async ({ page }) => {
     await openLab(page, "ready")
     const diagnostic = page.getByTestId("prewarm-diagnostic")
@@ -165,8 +247,8 @@ test.describe("@ci result offer pricing prewarm lifecycle", () => {
     await cta.click()
     await expect(drawer(page)).toBeVisible()
     await page.getByRole("button", { name: "Zahlung schließen" }).click()
-    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
     await expect(drawer(page)).toBeHidden()
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
 
     await cta.click()
     await expect(drawer(page)).toBeVisible()

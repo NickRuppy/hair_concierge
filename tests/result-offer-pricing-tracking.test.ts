@@ -128,6 +128,36 @@ test("variant-aware checkout summaries distinguish membership intervals from one
   })
 })
 
+test("checkout engagement is attempt-scoped across both pricing arms", () => {
+  assert.equal(
+    (
+      pricingSource.match(/const \[checkoutEngaged, setCheckoutEngaged\] = useState\(false\)/g) ??
+      []
+    ).length,
+    2,
+  )
+  assert.equal(
+    (
+      pricingSource.match(
+        /const markCheckoutEngaged = useCallback\(\(\) => setCheckoutEngaged\(true\), \[\]\)/g,
+      ) ?? []
+    ).length,
+    2,
+  )
+  assert.match(
+    pricingSource,
+    /<PersonalPlanOneTimeCheckout[\s\S]*?onFirstPaymentEngagement=\{markCheckoutEngaged\}[\s\S]*?onRequestClose=\{\(\) => requestDismissal\("close"\)\}/,
+  )
+  assert.match(
+    pricingSource,
+    /<PaymentMethodCheckout[\s\S]*?onFirstPaymentEngagement=\{markCheckoutEngaged\}/,
+  )
+  assert.match(pricingSource, /checkoutEngaged=\{checkoutEngaged\}/)
+  assert.match(pricingSource, /checkoutEngaged=\{checkoutEngaged \|\| !expressElementsEnabled\}/)
+  assert.match(pricingSource, /onFirstPaymentEngagement: markCheckoutEngaged/)
+  assert.ok((pricingSource.match(/setCheckoutEngaged\(false\)/g) ?? []).length >= 6)
+})
+
 test("offer pricing tracks plan, checkout, payment-method, and sanitized failure diagnostics", () => {
   assert.match(pricingSource, /trackAppEvent\("offer_plan_selected"/)
   assert.match(pricingSource, /trackAppEvent\("offer_checkout_opened"/)
@@ -172,6 +202,12 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /setCheckoutAttemptId\(null\)/)
   assert.match(pricingSource, /setCheckoutAttemptId\(nextCheckoutAttemptId\)/)
   assert.match(pricingSource, /onPaymentOptionViewed=\{handlePaymentOptionViewed\}/)
+  assert.match(pricingSource, /preparedCheckoutId=\{preparedCheckoutForRender\?\.preparationId\}/)
+  assert.doesNotMatch(
+    pricingSource,
+    /preparedCheckoutId=\{preparedCheckoutForRender\?\.checkoutKey\}/,
+  )
+  assert.match(pricingSource, /errorCode: `prepared_checkout_sync_\$\{failure\.reason\}`/)
   assert.match(
     pricingSource,
     /if \(!stripePublishableKey && \(paymentOverlayEnabled \|\| !paypalEnabled\)\) \{[\s\S]*?attemptId: nextCheckoutAttemptId,[\s\S]*?errorCode: "stripe_publishable_key_missing"/,
@@ -444,10 +480,9 @@ test("late preparation responses cannot enter a checkout after its generation is
   assert.ok(openCheckoutSource)
   const captureIndex = openCheckoutSource.indexOf("const matchingPreparation")
   const invalidateIndex = openCheckoutSource.indexOf("prewarmGenerationRef.current += 1")
-  const claimIndex = openCheckoutSource.indexOf("claimPreparedCheckout(matchingPreparation")
   assert.ok(captureIndex >= 0)
   assert.ok(invalidateIndex > captureIndex)
-  assert.ok(claimIndex > invalidateIndex)
+  assert.doesNotMatch(openCheckoutSource, /claimPreparedCheckout\(/)
   assert.match(
     openCheckoutSource,
     /prewarmGenerationRef\.current \+= 1\s*\n\s*prewarmRequestRef\.current = null\s*\n\s*preparedClaimRef\.current = null/,
@@ -455,6 +490,15 @@ test("late preparation responses cannot enter a checkout after its generation is
   assert.match(
     pricingSource,
     /isCurrentOfferCheckoutPreparationGeneration\(prewarmGenerationRef\.current, generation\)/,
+  )
+  assert.match(
+    pricingSource,
+    /handlePreparedStripeCheckoutActivate[\s\S]*?claimPreparedCheckout\(\s*activePreparedCheckout/,
+  )
+  assert.match(pricingSource, /fetch\("\/api\/stripe\/create-checkout-session"[\s\S]*?signal,/)
+  assert.match(
+    pricingSource,
+    /handlePreparedStripeCheckoutSyncSucceeded[\s\S]*?trackAppEvent\("checkout_started"/,
   )
 })
 
@@ -521,6 +565,14 @@ test("fast taps await the same preparation and mirror one-shot wallet readiness 
 
 test("prepared Checkout Elements confirms only after its identity-matched claim succeeds", async () => {
   const activePreparation = { attemptId: "attempt-1", preparationId: "preparation-1" }
+  const claim = (activated: boolean) => ({
+    funnelEventId: "funnel-event-1",
+    tracked: false,
+    promise: Promise.resolve({
+      activated,
+      response: new Response(null, { status: activated ? 200 : 409 }),
+    }),
+  })
 
   assert.equal(await canConfirmPreparedOfferCheckout(null, null), true)
   assert.equal(await canConfirmPreparedOfferCheckout(activePreparation, null), false)
@@ -528,7 +580,7 @@ test("prepared Checkout Elements confirms only after its identity-matched claim 
     await canConfirmPreparedOfferCheckout(activePreparation, {
       attemptId: "attempt-2",
       preparationId: "preparation-1",
-      promise: Promise.resolve(true),
+      ...claim(true),
     }),
     false,
   )
@@ -536,7 +588,7 @@ test("prepared Checkout Elements confirms only after its identity-matched claim 
     await canConfirmPreparedOfferCheckout(activePreparation, {
       attemptId: "attempt-1",
       preparationId: "preparation-2",
-      promise: Promise.resolve(true),
+      ...claim(true),
     }),
     false,
   )
@@ -544,7 +596,7 @@ test("prepared Checkout Elements confirms only after its identity-matched claim 
     await canConfirmPreparedOfferCheckout(activePreparation, {
       attemptId: "attempt-1",
       preparationId: "preparation-1",
-      promise: Promise.resolve(false),
+      ...claim(false),
     }),
     false,
   )
@@ -552,7 +604,7 @@ test("prepared Checkout Elements confirms only after its identity-matched claim 
     await canConfirmPreparedOfferCheckout(activePreparation, {
       attemptId: "attempt-1",
       preparationId: "preparation-1",
-      promise: Promise.resolve(true),
+      ...claim(true),
     }),
     true,
   )

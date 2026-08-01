@@ -4,6 +4,7 @@ import test from "node:test"
 
 import {
   buildOfferPaymentConfirmationCopy,
+  getOfferPaymentOverlayDismissalOutcome,
   offerPaymentOverlayReducer,
   type OfferPaymentOverlayState,
 } from "../src/components/checkout/offer-payment-overlay"
@@ -43,6 +44,26 @@ test("offer payment overlay uses the approved German confirmation copy", () => {
   )
 })
 
+test("offer payment overlay only confirms dismissal after an engaged payment attempt", () => {
+  assert.equal(
+    getOfferPaymentOverlayDismissalOutcome({ reason: "close", checkoutEngaged: false }),
+    "abort",
+  )
+  assert.equal(
+    getOfferPaymentOverlayDismissalOutcome({ reason: "plan_change", checkoutEngaged: false }),
+    "plan_change",
+  )
+  assert.equal(
+    getOfferPaymentOverlayDismissalOutcome({ reason: "close", checkoutEngaged: true }),
+    "confirm",
+  )
+  assert.equal(
+    getOfferPaymentOverlayDismissalOutcome({ reason: "plan_change", checkoutEngaged: true }),
+    "confirm",
+  )
+  assert.equal(getOfferPaymentOverlayDismissalOutcome({ reason: "close" }), "confirm")
+})
+
 test("offer payment overlay exposes separate abort and plan-change callbacks", () => {
   const source = readFileSync(
     new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),
@@ -51,10 +72,26 @@ test("offer payment overlay exposes separate abort and plan-change callbacks", (
 
   assert.match(source, /onConfirmedAbort: \(\) => void/)
   assert.match(source, /onConfirmedPlanChange: \(\) => void/)
+  assert.match(source, /checkoutEngaged\?: boolean/)
+  assert.match(source, /checkoutEngaged = true/)
   assert.match(source, /restoreFocusRef\?: React\.RefObject<HTMLElement \| null>/)
   assert.match(source, /requestDismissal\("plan_change"\)/)
   assert.match(source, /onConfirmedPlanChange\(\)/)
   assert.match(source, /onConfirmedAbort\(\)/)
+  assert.match(source, /getOfferPaymentOverlayDismissalOutcome\(\{ reason, checkoutEngaged \}\)/)
+})
+
+test("offer payment overlay offers descendants only the dismissal action seam", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /export type OfferPaymentOverlayRenderActions = \{\n  requestDismissal:/)
+  assert.match(
+    source,
+    /typeof children === "function" \? children\(\{ requestDismissal \}\) : children/,
+  )
 })
 
 test("offer payment overlay keeps payment children mounted and inert under confirmation", () => {

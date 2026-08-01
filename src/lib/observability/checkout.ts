@@ -8,6 +8,8 @@ type CheckoutStage =
   | "stripe_checkout_session_create"
   | "stripe_embedded_checkout_client_secret"
   | "stripe_embedded_checkout_load"
+  | "stripe_express_checkout_confirm"
+  | "stripe_prepared_checkout_sync"
   | "stripe_webhook_activation"
   | "paypal_create_subscription_intent"
   | "paypal_create_subscription"
@@ -27,6 +29,9 @@ export interface CheckoutSentryDetails {
   source?: CheckoutSource
   interval?: CheckoutInterval
   leadId?: string | null
+  checkoutAttemptId?: string | null
+  preparationId?: string | null
+  durationMs?: number
   stripeSessionId?: string | null
   stripeCustomerId?: string | null
   stripeSubscriptionId?: string | null
@@ -94,8 +99,13 @@ interface CheckoutSentrySink {
   withScope(callback: (scope: CheckoutScopeLike) => void): void
 }
 
-const CHECKOUT_SECRET_QUERY_KEYS = new Set(["session_id", "token"])
-const CHECKOUT_SECRET_FIELD_KEYS = new Set(["session_id", "token", "stripe_session_id"])
+const CHECKOUT_SECRET_QUERY_KEYS = new Set(["resume_token", "session_id", "token"])
+const CHECKOUT_SECRET_FIELD_KEYS = new Set([
+  "resume_token",
+  "session_id",
+  "token",
+  "stripe_session_id",
+])
 const REDACTED_VALUE = "[Filtered]"
 
 export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): CheckoutSentryPayload {
@@ -111,6 +121,9 @@ export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): Chec
   addOptional(context, "source", details.source)
   addOptional(context, "interval", details.interval)
   addOptional(context, "lead_id", details.leadId)
+  addOptional(context, "checkout_attempt_id", details.checkoutAttemptId)
+  addOptional(context, "preparation_id", details.preparationId)
+  addOptional(context, "duration_ms", details.durationMs)
   addOptional(context, "stripe_session_id", details.stripeSessionId ? REDACTED_VALUE : null)
   addOptional(context, "stripe_customer_id", details.stripeCustomerId)
   addOptional(context, "stripe_subscription_id", details.stripeSubscriptionId)
@@ -368,7 +381,7 @@ function isLikelyUrl(value: string): boolean {
 }
 
 function hasCheckoutSecretQuery(value: string): boolean {
-  return /[?&](session_id|token)=/i.test(value)
+  return /[?&](resume_token|session_id|token)=/i.test(value)
 }
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {

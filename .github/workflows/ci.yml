@@ -144,7 +144,7 @@ jobs:
   playwright-smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [detect-ci-scope, quality-core]
+    needs: [detect-ci-scope]
     env:
       CI_OFFER_PAGE_LAB_ENABLED: "true"
       NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true"

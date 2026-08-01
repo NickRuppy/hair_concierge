@@ -129,9 +129,15 @@ export default async function OfferPageLab({
           : undefined
     return (
       <PersonalPlanOffer
+        disableCheckoutPrewarm
         entryContext="saved_result"
+        isInternalTest
         leadId="11111111-1111-4111-8111-111111111111"
         model={PERSONAL_PLAN_REVIEW_MODEL}
+        offerTracking={{
+          funnelPackageKey: "personal-plan-lab",
+          funnelSessionId: "22222222-2222-4222-8222-222222222222",
+        }}
         offerVariant={personalPlanOfferVariant}
         pricingCatalog={
           params.pricingCatalog === "personal_plan_launch_v1"

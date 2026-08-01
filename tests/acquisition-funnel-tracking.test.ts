@@ -25,7 +25,10 @@ test("acquisition funnel keeps Meta, Customer.io, and PostHog tracking from land
   assert.match(landing, /@\/providers\/tracking-providers/)
   const campaignLanding = read("src/app/lp/[slug]/page.tsx")
   assert.match(campaignLanding, /getFunnelPackageBySlug/)
-  assert.match(campaignLanding, /renderLandingVariant\(funnelPackage\.landingVariant\)/)
+  assert.match(
+    campaignLanding,
+    /renderLandingVariant\(funnelPackage\.landingVariant, \{[\s\S]*personalPlanQuizResume,[\s\S]*\}\)/,
+  )
   assert.match(campaignLanding, /<LandingTracking \/>/)
   assert.match(campaignLanding, /\{landingVariant\}/)
 

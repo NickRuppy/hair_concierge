@@ -11,6 +11,16 @@ import { PaymentOptionExposureVisibilityGate } from "./payment-option-exposure"
 
 export type OfferPaymentOverlayDismissalReason = "close" | "plan_change"
 
+export type OfferPaymentOverlayDismissalOutcome = "confirm" | "abort" | "plan_change"
+
+export type OfferPaymentOverlayRenderActions = {
+  requestDismissal: (reason: OfferPaymentOverlayDismissalReason) => void
+}
+
+export type OfferPaymentOverlayChildren =
+  | React.ReactNode
+  | ((actions: OfferPaymentOverlayRenderActions) => React.ReactNode)
+
 export type OfferPaymentOverlayState = {
   pendingDismissal: OfferPaymentOverlayDismissalReason | null
 }
@@ -37,8 +47,19 @@ export function buildOfferPaymentConfirmationCopy(planName: string) {
   return `Deine Eingaben werden verworfen. Dein ausgewählter Plan „${planName}“ bleibt erhalten.`
 }
 
+export function getOfferPaymentOverlayDismissalOutcome({
+  reason,
+  checkoutEngaged = true,
+}: {
+  reason: OfferPaymentOverlayDismissalReason
+  checkoutEngaged?: boolean
+}): OfferPaymentOverlayDismissalOutcome {
+  if (checkoutEngaged) return "confirm"
+  return reason === "plan_change" ? "plan_change" : "abort"
+}
+
 export type OfferPaymentOverlayProps = {
-  children: React.ReactNode
+  children: OfferPaymentOverlayChildren
   open: boolean
   planName: string
   priceLabel: string
@@ -48,6 +69,7 @@ export type OfferPaymentOverlayProps = {
   onContinuePayment?: () => void
   keepMounted?: boolean
   planChangeDisabled?: boolean
+  checkoutEngaged?: boolean
   restoreFocusRef?: React.RefObject<HTMLElement | null>
 }
 
@@ -78,6 +100,7 @@ export function OfferPaymentOverlay({
   onDismissRequest,
   keepMounted = false,
   planChangeDisabled = false,
+  checkoutEngaged = true,
   restoreFocusRef,
 }: OfferPaymentOverlayProps) {
   const [state, dispatch] = React.useReducer(offerPaymentOverlayReducer, initialOverlayState)
@@ -88,9 +111,18 @@ export function OfferPaymentOverlay({
   const requestDismissal = React.useCallback(
     (reason: OfferPaymentOverlayDismissalReason) => {
       onDismissRequest?.(reason)
-      dispatch({ type: "request_dismissal", reason })
+      const outcome = getOfferPaymentOverlayDismissalOutcome({ reason, checkoutEngaged })
+      if (outcome === "confirm") {
+        dispatch({ type: "request_dismissal", reason })
+        return
+      }
+      if (outcome === "plan_change") {
+        onConfirmedPlanChange()
+        return
+      }
+      onConfirmedAbort()
     },
-    [onDismissRequest],
+    [checkoutEngaged, onConfirmedAbort, onConfirmedPlanChange, onDismissRequest],
   )
 
   const continuePayment = React.useCallback(() => {
@@ -131,6 +163,7 @@ export function OfferPaymentOverlay({
 
   const confirmationOpen = state.pendingDismissal !== null
   const planSummary = `${planName} · ${priceLabel}`
+  const paymentChildren = typeof children === "function" ? children({ requestDismissal }) : children
   const header = (
     <header
       inert={confirmationOpen}
@@ -194,7 +227,7 @@ export function OfferPaymentOverlay({
           )}
         >
           <PaymentOptionExposureVisibilityGate visible={!confirmationOpen}>
-            {children}
+            {paymentChildren}
           </PaymentOptionExposureVisibilityGate>
         </div>
 

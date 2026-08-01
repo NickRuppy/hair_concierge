@@ -33,7 +33,7 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
   const api = read("src/app/api/quiz/personal-plan-lead/route.ts")
 
-  assert.match(landing, /<PersonalPlanQuiz \/>/)
+  assert.match(landing, /<PersonalPlanQuiz(?: resume=\{personalPlanQuizResume\})? \/>/)
   assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-prepare"/)
   assert.match(quiz, /artifactId/)
   assert.match(quiz, /claimToken/)
@@ -51,6 +51,32 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
   assert.match(quiz, /Deine Auswertung konnte gerade nicht gespeichert werden/)
   assert.match(api, /isPersonalPlanQuizV1Enabled\(\)/)
   assert.match(api, /status: 404/)
+})
+
+test("personal-plan quiz silently orchestrates server drafts without adding UI or leaking ephemeral state", () => {
+  const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+  const serverClient = read("src/lib/personal-plan-quiz/server-draft-client.ts")
+
+  assert.match(quiz, /resume\?: PersonalPlanQuizResumeBootstrap/)
+  assert.match(quiz, /choosePersonalPlanQuizResumeDraft/)
+  assert.match(quiz, /createPersonalPlanQuizServerDraftSession/)
+  assert.match(quiz, /pushPersonalPlanQuizHistoryState\(\{ ppq: next \}\)/)
+  assert.match(quiz, /const onPageHide = \(event: PageTransitionEvent\) =>/)
+  assert.match(quiz, /if \(!shouldFlushPersonalPlanQuizDraftOnPageHide\(event\)\) return/)
+  assert.match(quiz, /data-personal-plan-client-ready=\{draftReady \? "true" : "false"\}/)
+  assert.match(
+    quiz,
+    /stripPersonalPlanQuizResumeTokenFromCurrentUrl\(\)[\s\S]{0,240}void getServerDraftSession\(\)\.revoke\(\)[\s\S]{0,360}router\.push/,
+  )
+  assert.match(serverClient, /PERSONAL_PLAN_QUIZ_RESUME_TOKEN_PARAM = "resume_token"/)
+  assert.match(serverClient, /version: PERSONAL_PLAN_QUIZ_SERVER_DRAFT_VERSION/)
+  assert.match(serverClient, /expectedRevision/)
+  assert.match(serverClient, /keepalive: true/)
+  assert.match(serverClient, /response\.status === 404/)
+  assert.match(serverClient, /response\.status === 409/)
+  assert.doesNotMatch(serverClient, /PersonalPlanQuizEphemeralState/)
+  assert.doesNotMatch(serverClient, /ephemeral|dailyTime|microcommitments|email|marketingConsent/)
+  assert.doesNotMatch(quiz, /Willkommen zurück|Fortsetzen|Browser wechseln|Safari|Chrome/)
 })
 
 test("personal-plan result reveal owns future pacing but not offer-view tracking", () => {
