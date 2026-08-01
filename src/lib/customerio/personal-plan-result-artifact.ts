@@ -26,6 +26,7 @@ const diagnosticRowSchema = z.object({
 })
 
 const publicOfferModelSchema = z.object({
+  modelVersion: z.enum(["personal_plan_offer_v1", "personal_plan_offer_v2"]).optional(),
   profileLine: z.string().trim().min(1),
   diagnosticRows: z.tuple([diagnosticRowSchema, diagnosticRowSchema, diagnosticRowSchema]),
   primaryMessage: primaryMessageSchema.optional(),
@@ -75,7 +76,10 @@ function resolvePrimaryMessage(
   if (parsedModel.primaryMessage) return parsedModel.primaryMessage
   const parsedPriorities = z.array(prioritySchema).min(1).parse(priorities)
   const central = parsedPriorities.find((priority) => priority.isCentral) ?? parsedPriorities[0]
-  if (central.family !== parsedModel.diagnosticRows[0].id) {
+  if (
+    parsedModel.modelVersion !== "personal_plan_offer_v2" &&
+    central.family !== parsedModel.diagnosticRows[0].id
+  ) {
     throw new Error("Personal-plan email central priority does not match diagnostic row one")
   }
   return derivePersonalPlanPrimaryMessage({

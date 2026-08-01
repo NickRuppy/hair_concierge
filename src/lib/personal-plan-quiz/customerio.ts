@@ -6,6 +6,32 @@ import {
 } from "@/lib/customerio/server"
 import type { PersonalPlanQuizSubmissionEnvelope } from "@/lib/personal-plan-quiz/types"
 
+export const PERSONAL_PLAN_LEGACY_CONCERNS = [
+  "dry_dull_lengths",
+  "frizz_flyaways",
+  "low_shine",
+  "lost_shape",
+  "low_volume_or_weighed_down",
+  "breakage_or_split_ends",
+  "tangling",
+  "scalp_imbalance",
+] as const
+
+export type PersonalPlanLegacyConcern = (typeof PERSONAL_PLAN_LEGACY_CONCERNS)[number]
+
+export type PersonalPlanCustomerIoEnvelope =
+  | PersonalPlanQuizSubmissionEnvelope
+  | {
+      kind: PersonalPlanQuizSubmissionEnvelope["kind"]
+      version: 2
+      answers: Omit<
+        PersonalPlanQuizSubmissionEnvelope["answers"],
+        "currentConcerns" | "concernRecurrence"
+      > & {
+        currentConcerns?: PersonalPlanLegacyConcern[]
+      }
+    }
+
 const TEXTURE_LABELS: Record<string, string> = {
   straight: "Glatt",
   wavy: "Wellig",
@@ -67,11 +93,14 @@ const TREATMENT_LABELS: Record<string, string> = {
 
 const CONCERN_LABELS: Record<string, string> = {
   dry_dull_lengths: "Trockene oder raue Längen",
+  dry_lengths: "Trockene oder strohige Längen",
   frizz_flyaways: "Frizz oder viele abstehende Haare",
   low_shine: "Wenig Glanz",
   lost_shape: "Form oder Definition hält nicht",
   low_volume_or_weighed_down: "Zu wenig Volumen oder schnell beschwert",
   breakage_or_split_ends: "Haarbruch oder Spliss",
+  breakage: "Haarbruch in den Längen",
+  split_ends: "Sichtbar gespaltene oder ausgefranste Spitzen",
   tangling: "Schnelles Verknoten",
   scalp_imbalance: "Kopfhaut gerät schnell aus dem Gleichgewicht",
 }
@@ -118,7 +147,7 @@ type PersonalPlanCustomerIoInput = {
   email: string
   leadId: string
   marketingConsent: boolean
-  quizAnswers: PersonalPlanQuizSubmissionEnvelope
+  quizAnswers: PersonalPlanCustomerIoEnvelope
   funnelSessionId?: string | null
   funnelPackageKey?: string | null
 }
@@ -131,7 +160,7 @@ function labelsFor(values: readonly string[] | undefined, labels: Record<string,
   return values?.map((value) => labels[value] ?? value)
 }
 
-function buildProfileLine(answers: PersonalPlanQuizSubmissionEnvelope["answers"]) {
+function buildProfileLine(answers: PersonalPlanCustomerIoEnvelope["answers"]) {
   return [
     labelFor(answers.texture, TEXTURE_LABELS),
     labelFor(answers.thickness, THICKNESS_INLINE),

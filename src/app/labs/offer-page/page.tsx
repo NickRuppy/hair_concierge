@@ -13,6 +13,8 @@ import GuidedStoryFounderLetterOfferVariant from "@/funnels/offers/guided-story-
 import GuidedStoryLockedOfferVariant from "@/funnels/offers/guided-story-locked"
 import GuidedStoryPotentialOfferVariant from "@/funnels/offers/guided-story-potential"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
+import { buildPersonalPlanPreparedArtifact } from "@/lib/personal-plan-quiz/prepared-plan"
+import { canonicalizePersonalPlanAnswers } from "@/lib/personal-plan-quiz/persistence"
 import { APP_VALUE_STACK_CTA_LABEL } from "@/lib/quiz/app-value-stack-copy"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -31,7 +33,7 @@ const REVIEW_ANSWERS: QuizAnswers = {
   goals: ["less_frizz", "moisture", "shine"],
 }
 
-const PERSONAL_PLAN_REVIEW_MODEL: PersonalPlanOfferModel = {
+const PERSONAL_PLAN_LEGACY_REVIEW_MODEL: PersonalPlanOfferModel = {
   planTitle: "Dein persönlicher Plan für gesundes, schönes welliges Haar",
   profileLine: "Basierend auf deiner Analyse für welliges, mittelstarkes Haar",
   planFitStatement:
@@ -69,6 +71,30 @@ const PERSONAL_PLAN_REVIEW_MODEL: PersonalPlanOfferModel = {
     },
   ],
 }
+
+const PERSONAL_PLAN_REVIEW_MODEL = buildPersonalPlanPreparedArtifact(
+  canonicalizePersonalPlanAnswers({
+    texture: "wavy",
+    thickness: "normal",
+    density: "medium",
+    goals: ["manageability_styling", "shine"],
+    routineClarity: "trial_and_error",
+    resultReliability: "sometimes",
+    adaptationConfidence: "partly",
+    currentConcerns: ["tangling", "low_shine", "dry_lengths"],
+    concernRecurrence: { concernId: "tangling", frequency: "often" },
+    hairLength: "long",
+    hairSurface: "smooth",
+    elasticResponse: "stretches_bounces",
+    chemicalTreatments: ["lightened"],
+    scalpOiliness: "balanced",
+    scalpConcerns: [],
+    previousAttempts: "some_steps_helped",
+    blockers: ["product_fit"],
+    routineStyle: "simple_reliable",
+    meaningfulMoment: "everyday",
+  }),
+).publicOfferModel
 
 function StaticPricingPreview() {
   return (
@@ -133,7 +159,11 @@ export default async function OfferPageLab({
         entryContext="saved_result"
         isInternalTest
         leadId="11111111-1111-4111-8111-111111111111"
-        model={PERSONAL_PLAN_REVIEW_MODEL}
+        model={
+          params.scenario === "legacy"
+            ? PERSONAL_PLAN_LEGACY_REVIEW_MODEL
+            : PERSONAL_PLAN_REVIEW_MODEL
+        }
         offerTracking={{
           funnelPackageKey: "personal-plan-lab",
           funnelSessionId: "22222222-2222-4222-8222-222222222222",

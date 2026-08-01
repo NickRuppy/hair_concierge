@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Score-Erklärungen</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --plum: #563882;
+        --plum-dark: #2f183f;
+        --plum-muted: #766483;
+        --plum-ice: #f2edf8;
+        --green: #3b8d60;
+        --green-ice: #edf7f1;
+        --paper: #fcfaf7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eee9f0;
+        color: var(--plum-dark);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .phone {
+        width: min(100%, 390px);
+        min-height: 100vh;
+        margin: 0 auto;
+        overflow: hidden;
+        background: var(--paper);
+        box-shadow: 0 24px 70px rgba(47, 24, 63, 0.18);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 17px;
+        border-bottom: 1px solid rgba(86, 56, 130, 0.1);
+        background: rgba(252, 250, 247, 0.96);
+      }
+
+      .brand,
+      h1,
+      h2,
+      h3 {
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .brand {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .cta {
+        border: 0;
+        border-radius: 999px;
+        background: var(--plum);
+        color: white;
+        padding: 11px 18px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .hero {
+        padding: 22px 17px 20px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 36px;
+        line-height: 1;
+        letter-spacing: -1.2px;
+      }
+
+      .profile {
+        margin: 11px 0 0;
+        color: #9b8ca3;
+        font-size: 15px;
+      }
+
+      .diagnosis {
+        border-top: 1px solid rgba(86, 56, 130, 0.08);
+        background: rgba(255, 255, 255, 0.55);
+        padding: 27px 17px 38px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #9d8fa6;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 1.75px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 7px auto 0;
+        font-size: 31px;
+        line-height: 1.05;
+        letter-spacing: -0.9px;
+        text-align: center;
+      }
+
+      .intro {
+        max-width: 330px;
+        margin: 12px auto 20px;
+        color: var(--plum-muted);
+        font-size: 14px;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      .card {
+        margin-top: 13px;
+        padding: 16px;
+        border: 1px solid rgba(86, 56, 130, 0.1);
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 16px 42px -36px rgba(86, 56, 130, 0.7);
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 21px;
+        line-height: 1.15;
+      }
+
+      .spectrum {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        margin-top: 13px;
+      }
+
+      .spectrum-box {
+        padding: 12px;
+        border-radius: 13px;
+        background: #f6f2f8;
+      }
+
+      .spectrum-box.goal {
+        background: var(--plum-ice);
+      }
+
+      .spectrum-label {
+        margin: 0 0 9px;
+        color: #b09abe;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .goal .spectrum-label {
+        color: var(--plum);
+      }
+
+      .segments {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+      }
+
+      .segment {
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(86, 56, 130, 0.1);
+      }
+
+      .segment.active {
+        background: var(--plum);
+      }
+
+      .goal .segment.active {
+        background: var(--green);
+      }
+
+      .reason {
+        margin-top: 14px;
+        padding-top: 13px;
+        border-top: 1px solid rgba(86, 56, 130, 0.09);
+      }
+
+      .reason p {
+        margin: 0;
+        color: var(--plum-muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .reason strong {
+        color: #674b7d;
+        font-weight: 900;
+      }
+
+      .outlook {
+        margin-top: 17px;
+        padding: 19px 17px;
+        border-radius: 20px;
+        background: var(--green-ice);
+        color: #2f6849;
+        text-align: center;
+      }
+
+      .outlook-kicker {
+        margin: 0 0 6px;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+      }
+
+      .outlook h3 {
+        color: #285b40;
+        font-size: 24px;
+      }
+
+      .outlook-copy {
+        margin: 8px auto 0;
+        max-width: 310px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .note {
+        margin: 18px 0 0;
+        color: #aa9caf;
+        font-size: 11px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .states-phone {
+        min-height: 0;
+        margin-top: 32px;
+        margin-bottom: 32px;
+      }
+
+      .states-header {
+        padding: 24px 17px 4px;
+        text-align: center;
+      }
+
+      .states-header h2 {
+        font-size: 29px;
+      }
+
+      .state-tag {
+        display: inline-flex;
+        margin-bottom: 9px;
+        border-radius: 999px;
+        background: var(--plum-ice);
+        color: var(--plum);
+        padding: 5px 9px;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="phone">
+      <header class="header">
+        <span class="brand">chaarlie</span>
+        <button class="cta" type="button">Angebot ansehen</button>
+      </header>
+
+      <section class="hero">
+        <h1>Dein Haarplan ist bereit.</h1>
+        <p class="profile">Für welliges, mittelstarkes Haar.</p>
+      </section>
+
+      <section class="diagnosis">
+        <p class="eyebrow">Deine Ausgangslage</p>
+        <h2>In deinem Haar steckt viel Potenzial.</h2>
+        <p class="intro">
+          Deine Antworten zeigen, wie wir deine Ausgangslage einordnen.
+        </p>
+
+        <article class="card">
+          <h3>Kämmbarkeit &amp; Verknotung</h3>
+          <div class="spectrum">
+            <div class="spectrum-box">
+              <p class="spectrum-label">Viel Potenzial</p>
+              <div class="segments" aria-label="1 von 3">
+                <span class="segment active"></span><span class="segment"></span
+                ><span class="segment"></span>
+              </div>
+            </div>
+            <div class="spectrum-box goal">
+              <p class="spectrum-label">Optimal</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+          </div>
+          <div class="reason">
+            <p>
+              <strong>Schnelles Verknoten</strong> bringt beim Entwirren mehr Zug auf die Längen.
+              Eine <strong>raue Oberfläche</strong> erhöht die Reibung; <strong>lange Haare</strong>
+              bieten mehr Stellen zum Verhaken.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Glanz</h3>
+          <div class="spectrum">
+            <div class="spectrum-box">
+              <p class="spectrum-label">Viel Potenzial</p>
+              <div class="segments" aria-label="1 von 3">
+                <span class="segment active"></span><span class="segment"></span
+                ><span class="segment"></span>
+              </div>
+            </div>
+            <div class="spectrum-box goal">
+              <p class="spectrum-label">Optimal</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+          </div>
+          <div class="reason">
+            <p>
+              <strong>Wenig Glanz</strong> beschreibt den sichtbaren Lichtreflex – nicht
+              automatisch Trockenheit oder eine raue Oberfläche.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Feuchtigkeit &amp; Geschmeidigkeit</h3>
+          <div class="spectrum">
+            <div class="spectrum-box">
+              <p class="spectrum-label">Viel Potenzial</p>
+              <div class="segments" aria-label="1 von 3">
+                <span class="segment active"></span><span class="segment"></span
+                ><span class="segment"></span>
+              </div>
+            </div>
+            <div class="spectrum-box goal">
+              <p class="spectrum-label">Optimal</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+          </div>
+          <div class="reason">
+            <p>
+              <strong>Trockene oder strohige Längen</strong> fühlen sich weniger geschmeidig an.
+              <strong>Blondierung</strong> kann die Haarfaser poröser machen, sodass sie leichter
+              Glätte verliert.
+            </p>
+          </div>
+        </article>
+
+        <aside class="outlook">
+          <p class="outlook-kicker">Das Gute</p>
+          <h3>Hier können wir gezielt ansetzen.</h3>
+          <p class="outlook-copy">
+            Dein Plan baut genau auf diesen Punkten auf.
+          </p>
+        </aside>
+
+        <p class="note">
+          Review-Mockup · Die Karten zeigen das abgestimmte Beispiel. Ziele beeinflussen die
+          Auswahl, aber nicht die aktuelle Ausprägung der Segmente.
+        </p>
+      </section>
+    </main>
+
+    <main class="phone states-phone">
+      <section class="states-header">
+        <p class="eyebrow">Review-Ergänzung</p>
+        <h2>Weitere sichere Zustände</h2>
+        <p class="intro">
+          Diese Karten sind keine zusätzliche Seite im Funnel. Sie zeigen, wie dieselbe Komponente
+          bei leichter Evidenz, einer positiven Ausgangslage und einem bestehenden Ergebnis reagiert.
+        </p>
+      </section>
+
+      <section class="diagnosis">
+        <article class="card">
+          <span class="state-tag">Leichter Hinweis · 2/3</span>
+          <h3>Oberfläche &amp; Frizz</h3>
+          <div class="spectrum">
+            <div class="spectrum-box">
+              <p class="spectrum-label">Gute Basis</p>
+              <div class="segments" aria-label="2 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment"></span>
+              </div>
+            </div>
+            <div class="spectrum-box goal">
+              <p class="spectrum-label">Optimal</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+          </div>
+          <div class="reason">
+            <p>
+              Eine <strong>leicht unebene Haaroberfläche</strong> kann etwas mehr Reibung und Frizz
+              begünstigen. Weil es nur ein moderater Hinweis ist, bleibt die Ausgangslage insgesamt
+              gut.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="state-tag">Positive Ausgangslage · 3/3</span>
+          <h3>Kopfhaut-Balance</h3>
+          <div class="spectrum">
+            <div class="spectrum-box">
+              <p class="spectrum-label">Heute</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+            <div class="spectrum-box goal">
+              <p class="spectrum-label">Optimal</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+          </div>
+          <div class="reason">
+            <p>
+              Du beschreibst deine Kopfhaut als <strong>ausgeglichen</strong> und nennst keine
+              weiteren Beschwerden. Hier geht es vor allem darum, diese gute Balance zu erhalten.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="state-tag">Bestehendes Ergebnis · v1</span>
+          <h3>Feuchtigkeit &amp; Pflegebalance</h3>
+          <div class="spectrum">
+            <div class="spectrum-box">
+              <p class="spectrum-label">Unausgeglichen</p>
+              <div class="segments" aria-label="2 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment"></span>
+              </div>
+            </div>
+            <div class="spectrum-box goal">
+              <p class="spectrum-label">Ausgeglichen</p>
+              <div class="segments" aria-label="3 von 3">
+                <span class="segment active"></span><span class="segment active"></span
+                ><span class="segment active"></span>
+              </div>
+            </div>
+          </div>
+          <div class="reason">
+            <p>
+              Die Produktauswahl wird so aufgebaut, dass Längen und Spitzen genug Pflege bekommen,
+              ohne beschwert zu wirken.
+            </p>
+          </div>
+        </article>
+
+        <p class="note">
+          Der v1-Zustand ergänzt keine nachträgliche Begründung. Bereits gespeicherte Ergebnisse
+          bleiben in ihrer bestehenden, sicheren Zusammenfassung lesbar.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

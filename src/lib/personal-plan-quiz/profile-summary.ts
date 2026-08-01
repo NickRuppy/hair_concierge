@@ -28,7 +28,8 @@ function careFocus(answers: PersonalPlanQuizAnswers): string {
   const goals = new Set(answers.goals)
 
   if (
-    concerns.has("breakage_or_split_ends") ||
+    concerns.has("breakage") ||
+    concerns.has("split_ends") ||
     answers.chemicalTreatments?.includes("lightened") ||
     answers.elasticResponse === "snaps" ||
     goals.has("strength_ends")
@@ -36,7 +37,7 @@ function careFocus(answers: PersonalPlanQuizAnswers): string {
     focus.push("Stärkung der Längen")
   }
   if (
-    concerns.has("dry_dull_lengths") ||
+    concerns.has("dry_lengths") ||
     concerns.has("frizz_flyaways") ||
     goals.has("moisture") ||
     goals.has("frizz_surface")
@@ -49,7 +50,11 @@ function careFocus(answers: PersonalPlanQuizAnswers): string {
   if (concerns.has("low_volume_or_weighed_down") || goals.has("volume_balance")) {
     focus.push("Leichtigkeit & Volumen")
   }
-  if (concerns.has("scalp_imbalance") || goals.has("scalp_balance")) {
+  if (
+    answers.scalpOiliness !== "balanced" ||
+    answers.scalpConcerns?.length ||
+    goals.has("scalp_balance")
+  ) {
     focus.push("Kopfhaut-Balance")
   }
 

@@ -11,6 +11,7 @@ import {
   hashPersonalPlanQuizResumeCredential,
   isPersonalPlanQuizDraftCookieSecretConfigured,
   parsePersonalPlanQuizServerDraft,
+  parseStoredPersonalPlanQuizServerDraft,
   PERSONAL_PLAN_QUIZ_DRAFT_COOKIE,
   PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY,
   personalPlanQuizDraftCookieOptions,
@@ -26,7 +27,7 @@ import {
 process.env.PERSONAL_PLAN_QUIZ_DRAFT_COOKIE_SECRET = "test-only-resume-cookie-secret-32-plus"
 
 const minimalDraft = {
-  version: 3,
+  version: 4,
   screen: "texture",
   history: [],
   answers: { texture: "wavy" },
@@ -69,6 +70,26 @@ test("server quiz drafts accept partial durable answers but reject unknown and e
       answers: { currentConcerns: [], scalpConcerns: [] },
     })?.draft.answers,
     { currentConcerns: [], scalpConcerns: [] },
+  )
+})
+
+test("stored v3 drafts restart cleanly while retaining their server revision seam", () => {
+  assert.deepEqual(
+    parseStoredPersonalPlanQuizServerDraft({
+      screen: "current_problems",
+      history: ["texture", "thickness"],
+      answers: { currentConcerns: ["breakage_or_split_ends"] },
+    }),
+    { screen: "texture", history: [], answers: {} },
+  )
+  assert.deepEqual(parseStoredPersonalPlanQuizServerDraft(minimalDraft), {
+    screen: "texture",
+    history: [],
+    answers: { texture: "wavy" },
+  })
+  assert.equal(
+    parseStoredPersonalPlanQuizServerDraft({ version: 3, screen: "texture", history: [] }),
+    null,
   )
 })
 

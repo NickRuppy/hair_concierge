@@ -33,6 +33,13 @@ const durableAnswersSchema = z
     resultReliability: z.enum(["mostly", "sometimes", "rarely"]),
     adaptationConfidence: z.enum(["yes", "partly", "no"]),
     currentConcerns: stringArray(PERSONAL_PLAN_QUIZ_CONCERNS),
+    concernRecurrence: z
+      .object({
+        concernId: z.enum(PERSONAL_PLAN_QUIZ_CONCERNS),
+        frequency: z.enum(["often", "sometimes", "rather_not"]),
+      })
+      .strict()
+      .optional(),
     hairLength: z.enum(["very_short", "short", "medium", "long", "very_long"]),
     hairSurface: z.enum(["smooth", "slightly_uneven", "rough"]),
     elasticResponse: z.enum(["stretches_bounces", "stretches_stays", "snaps"]),
@@ -71,6 +78,18 @@ const durableAnswersSchema = z
     blockersOtherText: z.string().trim().max(280).optional(),
   })
   .strict()
+  .superRefine((answers, context) => {
+    if (
+      answers.concernRecurrence &&
+      !answers.currentConcerns.includes(answers.concernRecurrence.concernId)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["concernRecurrence", "concernId"],
+        message: "Wiederholung muss sich auf ein ausgewaehltes Anliegen beziehen",
+      })
+    }
+  })
 
 export const personalPlanLeadRequestSchema = z
   .object({

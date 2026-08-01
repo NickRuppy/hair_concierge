@@ -2,10 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
-import {
-  buildPersonalPlanPreparedArtifact,
-  personalPlanScoreToSegments,
-} from "../src/lib/personal-plan-quiz/prepared-plan"
+import { buildPersonalPlanPreparedArtifact } from "../src/lib/personal-plan-quiz/prepared-plan"
 import {
   canonicalizePersonalPlanAnswers,
   hashPersonalPlanAnswers,
@@ -33,14 +30,14 @@ const completeAnswers: CompleteAnswers = {
   resultReliability: "rarely",
   adaptationConfidence: "no",
   currentConcerns: [
-    "dry_dull_lengths",
+    "dry_lengths",
     "frizz_flyaways",
     "low_shine",
     "lost_shape",
     "low_volume_or_weighed_down",
-    "breakage_or_split_ends",
+    "breakage",
+    "split_ends",
     "tangling",
-    "scalp_imbalance",
   ],
   hairLength: "long",
   hairSurface: "rough",
@@ -116,25 +113,14 @@ test("volume balance follows factual hair signals instead of selection order", (
   assert.deepEqual(highCoarse.answers.goals, ["less_volume"])
 })
 
-test("score bands map to the reviewed three visual segments", () => {
-  for (const score of [40, 45, 50, 55, 60] as const) {
-    assert.equal(personalPlanScoreToSegments(score), 1)
-  }
-  for (const score of [65, 70, 75, 80] as const) {
-    assert.equal(personalPlanScoreToSegments(score), 2)
-  }
-  for (const score of [85, 90, 95, 100] as const) {
-    assert.equal(personalPlanScoreToSegments(score), 3)
-  }
-})
-
 test("prepared artifact contains three public dimensions but keeps products and routine locked", () => {
   const artifact = buildPersonalPlanPreparedArtifact(
     canonicalizePersonalPlanAnswers(completeAnswers),
   )
 
   assert.equal(artifact.publicOfferModel.diagnosticRows.length, 3)
-  assert.equal(artifact.diagnosticScores.dimensions.length, 3)
+  assert.equal(artifact.diagnosticScores.modelVersion, "hair_assessment_v1")
+  assert.equal(artifact.diagnosticScores.dimensions.length, 9)
   assert.equal(
     artifact.publicOfferModel.diagnosticRows.every((row) => row.potentialSegments === 3),
     true,
@@ -148,7 +134,7 @@ test("prepared artifact contains three public dimensions but keeps products and 
   assert.equal("frequency" in artifact.publicOfferModel, false)
 })
 
-test("prepared artifact derives the email statement from the same central priority as chart row one", () => {
+test("prepared artifact keeps email priority separate from the offer assessment", () => {
   const artifact = buildPersonalPlanPreparedArtifact(
     canonicalizePersonalPlanAnswers({
       ...completeAnswers,
@@ -157,10 +143,16 @@ test("prepared artifact derives the email statement from the same central priori
   )
 
   assert.equal(artifact.priorities[0].isCentral, true)
-  assert.equal(artifact.publicOfferModel.diagnosticRows[0].id, artifact.priorities[0].family)
   assert.equal(artifact.publicOfferModel.primaryMessage.kind, "concern")
   assert.equal(artifact.publicOfferModel.primaryMessage.label, artifact.priorities[0].title)
   assert.doesNotMatch(JSON.stringify(artifact.publicOfferModel.primaryMessage), /raw free text|<b>/)
+  assert.equal(artifact.publicOfferModel.modelVersion, "personal_plan_offer_v2")
+  assert.equal(
+    artifact.publicOfferModel.diagnosticRows.every((row) => row.explanationParts.length > 0),
+    true,
+  )
+  const publicJson = JSON.stringify(artifact.publicOfferModel)
+  assert.doesNotMatch(publicJson, /evidenceScore|concernRecurrence|blockersOtherText|scalpConcerns/)
 })
 
 test("straight, wavy, curly, and coily complete profiles all prepare deterministic plans", () => {
@@ -176,7 +168,7 @@ test("straight, wavy, curly, and coily complete profiles all prepare determinist
       currentConcerns:
         texture === "straight"
           ? ["low_shine", "low_volume_or_weighed_down"]
-          : ["dry_dull_lengths", "lost_shape", "frizz_flyaways"],
+          : ["dry_lengths", "lost_shape", "frizz_flyaways"],
       scalpConcerns: [],
       scalpOiliness: "balanced",
       elasticResponse: "stretches_bounces",

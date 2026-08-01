@@ -1,7 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { personalPlanPrepareRequestSchema } from "@/lib/personal-plan-quiz/persistence"
-import { syncPersonalPlanLeadToCustomerIo } from "@/lib/personal-plan-quiz/customerio"
+import {
+  PERSONAL_PLAN_LEGACY_CONCERNS,
+  syncPersonalPlanLeadToCustomerIo,
+  type PersonalPlanCustomerIoEnvelope,
+  type PersonalPlanLegacyConcern,
+} from "@/lib/personal-plan-quiz/customerio"
 import {
   PERSONAL_PLAN_QUIZ_KIND,
   PERSONAL_PLAN_QUIZ_VERSION,
@@ -159,31 +164,82 @@ export async function dispatchCustomerIoProfileSyncDue(
   return stats
 }
 
-function parseStoredEnvelope(lead: PersonalPlanLeadRow): PersonalPlanQuizSubmissionEnvelope {
-  if (lead.quiz_kind !== PERSONAL_PLAN_QUIZ_KIND || !lead.email) {
-    throw new Error("Customer.io profile sync lead is missing canonical identity")
-  }
-  if (!lead.quiz_answers || typeof lead.quiz_answers !== "object") {
-    throw new Error("Customer.io profile sync lead has no quiz answers")
-  }
-  const candidate = lead.quiz_answers as {
+export function parsePersonalPlanProfileSyncEnvelope(
+  value: unknown,
+): PersonalPlanCustomerIoEnvelope | null {
+  if (!value || typeof value !== "object") return null
+  const candidate = value as {
     kind?: unknown
     version?: unknown
     answers?: unknown
   }
   if (
     candidate.kind !== PERSONAL_PLAN_QUIZ_KIND ||
-    candidate.version !== PERSONAL_PLAN_QUIZ_VERSION
+    (candidate.version !== 2 && candidate.version !== PERSONAL_PLAN_QUIZ_VERSION)
   ) {
-    throw new Error("Customer.io profile sync lead has an unsupported quiz envelope")
+    return null
   }
-  const parsed = personalPlanPrepareRequestSchema.safeParse({ answers: candidate.answers })
-  if (!parsed.success) throw new Error("Customer.io profile sync lead has invalid quiz answers")
+  let answers = candidate.answers
+  if (candidate.version === 2) {
+    if (!answers || typeof answers !== "object" || Array.isArray(answers)) return null
+    const legacyAnswers = answers as Record<string, unknown>
+    const legacyConcerns = legacyAnswers.currentConcerns
+    if (legacyConcerns !== undefined && !Array.isArray(legacyConcerns)) return null
+    if ("concernRecurrence" in legacyAnswers) return null
+    const allowedLegacyConcerns = new Set<string>(PERSONAL_PLAN_LEGACY_CONCERNS)
+    if (
+      (legacyConcerns ?? []).some(
+        (concern) => typeof concern !== "string" || !allowedLegacyConcerns.has(concern),
+      ) ||
+      new Set(legacyConcerns ?? []).size !== (legacyConcerns ?? []).length
+    )
+      return null
+    const preservedLegacyConcerns = (legacyConcerns ?? []) as PersonalPlanLegacyConcern[]
+    answers = {
+      ...legacyAnswers,
+      currentConcerns: Array.from(
+        new Set(
+          preservedLegacyConcerns.flatMap((concern) => {
+            if (concern === "dry_dull_lengths") return ["dry_lengths"]
+            if (concern === "breakage_or_split_ends") return ["breakage", "split_ends"]
+            if (concern === "scalp_imbalance") return []
+            return [concern]
+          }),
+        ),
+      ),
+    }
+  }
+  const parsed = personalPlanPrepareRequestSchema.safeParse({ answers })
+  if (!parsed.success) return null
+  if (candidate.version === 2) {
+    const legacyAnswers = candidate.answers as Record<string, unknown>
+    const validatedAnswers = {
+      ...(parsed.data.answers as PersonalPlanQuizSubmissionEnvelope["answers"]),
+    }
+    delete validatedAnswers.concernRecurrence
+    return {
+      kind: PERSONAL_PLAN_QUIZ_KIND,
+      version: 2,
+      answers: {
+        ...validatedAnswers,
+        currentConcerns: (legacyAnswers.currentConcerns ?? []) as PersonalPlanLegacyConcern[],
+      },
+    }
+  }
   return {
     kind: PERSONAL_PLAN_QUIZ_KIND,
     version: PERSONAL_PLAN_QUIZ_VERSION,
-    answers: candidate.answers as PersonalPlanQuizSubmissionEnvelope["answers"],
+    answers: parsed.data.answers as PersonalPlanQuizSubmissionEnvelope["answers"],
   }
+}
+
+function parseStoredEnvelope(lead: PersonalPlanLeadRow): PersonalPlanCustomerIoEnvelope {
+  if (lead.quiz_kind !== PERSONAL_PLAN_QUIZ_KIND || !lead.email) {
+    throw new Error("Customer.io profile sync lead is missing canonical identity")
+  }
+  const parsed = parsePersonalPlanProfileSyncEnvelope(lead.quiz_answers)
+  if (!parsed) throw new Error("Customer.io profile sync lead has invalid quiz answers")
+  return parsed
 }
 
 function customerIoFailure(result: SyncResult, expectedEvent: boolean) {

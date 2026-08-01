@@ -9,7 +9,7 @@ import type {
 
 export const PERSONAL_PLAN_QUIZ_RESUME_TOKEN_PARAM = "resume_token"
 export const PERSONAL_PLAN_QUIZ_SERVER_DRAFT_API_PATH = "/api/quiz/personal-plan-draft"
-export const PERSONAL_PLAN_QUIZ_SERVER_DRAFT_VERSION = 3 as const
+export const PERSONAL_PLAN_QUIZ_SERVER_DRAFT_VERSION = 4 as const
 
 type FetchLike = (
   input: RequestInfo | URL,

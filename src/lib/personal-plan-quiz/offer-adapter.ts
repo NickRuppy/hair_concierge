@@ -18,12 +18,6 @@ export type PersonalPlanOfferAdapterResult = {
 }
 
 const TEXTURED = new Set<PersonalPlanQuizAnswers["texture"]>(["wavy", "curly", "coily"])
-const TREATED = new Set<NonNullable<PersonalPlanQuizAnswers["chemicalTreatments"]>[number]>([
-  "colored",
-  "lightened",
-  "permed",
-  "chemically_straightened",
-])
 
 const TREATMENT_MAP: Record<
   NonNullable<PersonalPlanQuizAnswers["chemicalTreatments"]>[number],
@@ -70,19 +64,6 @@ function hasConcern(
   return concerns?.includes(value) ?? false
 }
 
-function hasTreatment(answers: PersonalPlanQuizAnswers): boolean {
-  return answers.chemicalTreatments?.some((value) => TREATED.has(value)) ?? false
-}
-
-function shouldAddSplitEnds(answers: PersonalPlanQuizAnswers): boolean {
-  return (
-    answers.hairLength === "long" ||
-    answers.hairLength === "very_long" ||
-    answers.hairSurface === "rough" ||
-    hasTreatment(answers)
-  )
-}
-
 function volumeGoal(answers: PersonalPlanQuizAnswers): Goal | null {
   const hasFineOrLowDensity = answers.thickness === "fine" || answers.density === "low"
   if (hasFineOrLowDensity) return "volume"
@@ -94,11 +75,9 @@ function volumeGoal(answers: PersonalPlanQuizAnswers): Goal | null {
 
 function retainConcerns(answers: PersonalPlanQuizAnswers): NonNullable<QuizAnswers["concerns"]> {
   const selected = new Set<NonNullable<QuizAnswers["concerns"]>[number]>()
-  if (hasConcern(answers.currentConcerns, "breakage_or_split_ends")) {
-    selected.add("breakage")
-    if (shouldAddSplitEnds(answers)) selected.add("split_ends")
-  }
-  if (hasConcern(answers.currentConcerns, "dry_dull_lengths")) selected.add("dryness")
+  if (hasConcern(answers.currentConcerns, "breakage")) selected.add("breakage")
+  if (hasConcern(answers.currentConcerns, "split_ends")) selected.add("split_ends")
+  if (hasConcern(answers.currentConcerns, "dry_lengths")) selected.add("dryness")
   if (hasConcern(answers.currentConcerns, "tangling")) selected.add("tangling")
   if (hasConcern(answers.currentConcerns, "frizz_flyaways")) selected.add("frizz")
   return [...selected].slice(0, 3)
@@ -124,7 +103,6 @@ function mappedGoalSet(answers: PersonalPlanQuizAnswers): Set<Goal> {
     const direction = volumeGoal(answers)
     if (direction) mapped.add(direction)
   }
-  if (hasConcern(answers.currentConcerns, "scalp_imbalance")) mapped.add("healthy_scalp")
   return mapped
 }
 

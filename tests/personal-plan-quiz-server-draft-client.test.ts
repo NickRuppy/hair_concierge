@@ -95,7 +95,7 @@ function fakeWindow(href = "https://chaarlie.example/lp/haarplan?utm_source=meta
   return { win, calls }
 }
 
-test("v3 local drafts remain compatible while carrying optional server metadata", () => {
+test("v4 local drafts carry optional server metadata and reject v3 state", () => {
   const storage = new MemoryStorage()
   savePersonalPlanQuizDraft(
     {
@@ -127,11 +127,7 @@ test("v3 local drafts remain compatible while carrying optional server metadata"
       answers: { texture: "coily" },
     }),
   )
-  assert.deepEqual(loadPersonalPlanQuizDraft(storage), {
-    screen: "texture",
-    history: [],
-    answers: { texture: "coily" },
-  })
+  assert.equal(loadPersonalPlanQuizDraft(storage), null)
 
   clearPersonalPlanQuizDraft(storage)
   assert.equal(loadPersonalPlanQuizDraft(storage), null)
@@ -220,7 +216,7 @@ test("server draft payload is versioned, partial-safe, and durable-only", () => 
   )
 
   assert.deepEqual(payload, {
-    version: 3,
+    version: 4,
     screen: "plan_loading",
     history: ["texture", "daily_time", "plan_loading"],
     answers: { texture: "wavy" },
@@ -236,7 +232,7 @@ test("server draft payload is versioned, partial-safe, and durable-only", () => 
       { allowRevisionCatchup: true },
     ),
     {
-      version: 3,
+      version: 4,
       screen: "texture",
       history: [],
       answers: { texture: "wavy" },

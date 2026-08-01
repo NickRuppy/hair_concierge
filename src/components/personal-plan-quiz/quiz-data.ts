@@ -326,9 +326,9 @@ const TEXTURE_CONCERN_LABELS: Record<
 
 const SHARED_CONCERNS: Array<QuizOption & { value: PersonalPlanQuizConcern }> = [
   {
-    value: "dry_dull_lengths",
-    label: "Trockene oder raue Längen",
-    midSentenceLabel: "trockene oder raue Längen",
+    value: "dry_lengths",
+    label: "Trockene oder strohige Längen",
+    midSentenceLabel: "trockene oder strohige Längen",
     icon: "droplet",
   },
   {
@@ -344,22 +344,24 @@ const SHARED_CONCERNS: Array<QuizOption & { value: PersonalPlanQuizConcern }> = 
     icon: "sparkles",
   },
   {
-    value: "breakage_or_split_ends",
-    label: "Haarbruch oder Spliss",
-    midSentenceLabel: "Haarbruch oder Spliss",
+    value: "breakage",
+    label: "Mein Haar bricht in den Längen ab",
+    description: "Einzelne Haare reißen oberhalb der Spitzen ab.",
+    midSentenceLabel: "Haarbruch in den Längen",
     icon: "shield",
+  },
+  {
+    value: "split_ends",
+    label: "Meine Spitzen sind sichtbar gespalten oder ausgefranst",
+    description: "Die Enden einzelner Haare teilen sich sichtbar.",
+    midSentenceLabel: "sichtbar gespaltene oder ausgefranste Spitzen",
+    icon: "split",
   },
   {
     value: "tangling",
     label: "Schnelles Verknoten",
     midSentenceLabel: "Knoten oder Verfilzungen",
     icon: "comb",
-  },
-  {
-    value: "scalp_imbalance",
-    label: "Meine Kopfhaut gerät schnell aus dem Gleichgewicht",
-    midSentenceLabel: "Themen mit deiner Kopfhaut",
-    icon: "leaf",
   },
 ]
 

@@ -28,7 +28,7 @@ const answers: PersonalPlanPrepareRequest["answers"] = {
   routineClarity: "trial_and_error",
   resultReliability: "rarely",
   adaptationConfidence: "no",
-  currentConcerns: ["frizz_flyaways", "lost_shape", "dry_dull_lengths"],
+  currentConcerns: ["frizz_flyaways", "lost_shape", "dry_lengths"],
   hairLength: "long",
   hairSurface: "rough",
   elasticResponse: "stretches_bounces",
@@ -95,6 +95,9 @@ test("derives a controlled primary message for compatible stored artifacts", () 
   const artifact = prepared()
   const legacyModel = structuredClone(artifact.publicOfferModel) as Record<string, unknown>
   delete legacyModel.primaryMessage
+  legacyModel.modelVersion = "personal_plan_offer_v1"
+  ;(legacyModel.diagnosticRows as Array<Record<string, unknown>>)[0].id =
+    artifact.priorities[0].family
 
   const payload = buildPersonalPlanResultArtifactEmailPayload({
     email: "mia@example.com",
@@ -114,6 +117,9 @@ test("rejects a corrupted compatibility artifact whose central priority differs 
   const artifact = prepared()
   const legacyModel = structuredClone(artifact.publicOfferModel) as Record<string, unknown>
   delete legacyModel.primaryMessage
+  legacyModel.modelVersion = "personal_plan_offer_v1"
+  ;(legacyModel.diagnosticRows as Array<Record<string, unknown>>)[0].id =
+    artifact.priorities[0].family
   const priorities = structuredClone(artifact.priorities)
   priorities[0].family = priorities[1].family
 

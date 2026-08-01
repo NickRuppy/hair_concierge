@@ -13,6 +13,7 @@ import {
   parsePersonalPlanQuizServerDraft,
   PERSONAL_PLAN_QUIZ_DRAFT_COOKIE,
   PERSONAL_PLAN_QUIZ_DRAFT_MAX_BODY_BYTES,
+  PERSONAL_PLAN_QUIZ_DRAFT_VERSION,
   personalPlanQuizDraftCookieOptions,
 } from "@/lib/personal-plan-quiz/server-draft"
 import {
@@ -99,7 +100,7 @@ export async function POST(request: NextRequest) {
         p_draft_id: existingCookie.draftId,
         p_browser_generation: existingCookie.browserGeneration,
         p_expected_revision: parsed.expectedRevision,
-        p_draft: parsed.draft,
+        p_draft: { version: PERSONAL_PLAN_QUIZ_DRAFT_VERSION, ...parsed.draft },
         p_allow_revision_catchup: parsed.allowRevisionCatchup === true,
       })
       if (error)
@@ -147,7 +148,7 @@ export async function POST(request: NextRequest) {
       p_visitor_id: funnelContext.visitorId,
       p_package_key: funnelContext.packageKey,
       p_resume_token_hash: credential.resumeTokenHash,
-      p_draft: parsed.draft,
+      p_draft: { version: PERSONAL_PLAN_QUIZ_DRAFT_VERSION, ...parsed.draft },
     })
     if (error || !Array.isArray(data) || data.length !== 1)
       return NextResponse.json({ error: "unavailable" }, { status: 202, headers: noStoreHeaders() })
