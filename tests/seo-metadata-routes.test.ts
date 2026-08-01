@@ -139,6 +139,7 @@ test("classifies every current protected page and API route", () => {
     "/api/chat/feedback",
     "/api/chat/product-selection",
     "/api/chat/trigger",
+    "/api/customerio/profile-sync/reconcile",
     "/api/feedback",
     "/api/memory",
     "/api/memory/example",

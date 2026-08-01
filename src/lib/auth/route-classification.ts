@@ -60,6 +60,7 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/api/admin",
   "/api/billing",
   "/api/chat",
+  "/api/customerio",
   "/api/feedback",
   "/api/memory",
   "/api/product-intake",
