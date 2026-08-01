@@ -269,6 +269,7 @@ export function PaymentMethodCheckout({
               checkoutAttemptId={checkoutAttemptId}
               checkoutKey={checkoutKey}
               clientSecret={clientSecret}
+              commerceKind="subscription"
               fetchClientSecret={fetchClientSecret}
               holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
               preparedCheckoutId={clientSecret ? preparedCheckoutId : undefined}
@@ -286,6 +287,9 @@ export function PaymentMethodCheckout({
               onProviderLockClaim={onProviderLockClaim}
               onProviderLockRelease={onProviderLockRelease}
               onRetry={onRetry}
+              observabilitySource={
+                checkoutContext === "membership_reactivation" ? "reactivation" : source
+              }
               secondaryPaymentMethod={paypalCheckout}
               stripe={stripe}
               visible={visible}

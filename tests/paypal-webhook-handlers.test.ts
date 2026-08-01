@@ -462,18 +462,57 @@ test("BILLING.SUBSCRIPTION.PAYMENT.FAILED sets past_due and keeps access", async
   const { supabase, billing, profiles } = createSupabaseStub({
     billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
     profiles: { "user-1": { id: "user-1", subscription_status: "active" } },
+    paypalIntents: [
+      {
+        id: "intent-qa",
+        token: "token-qa",
+        interval: "month",
+        source: "pricing_page",
+        status: "approved",
+        provider_subscription_id: "I-active",
+        lead_id: null,
+        email: null,
+        user_id: "user-1",
+        expires_at: futureIso(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        metadata: { is_internal_test: true },
+      },
+    ],
   })
+  const reported: Array<Record<string, unknown>> = []
 
-  await handlePayPalWebhookEvent(event("WH-failed", "BILLING.SUBSCRIPTION.PAYMENT.FAILED"), {
+  const failedEvent = event("WH-failed", "BILLING.SUBSCRIPTION.PAYMENT.FAILED")
+  const deps = {
     supabase,
     premiumTierId: "tier-premium",
     freeTierId: "tier-free",
     retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
-  })
+    capturePaymentFailure(details: Record<string, unknown>) {
+      reported.push(details)
+    },
+  }
+  await handlePayPalWebhookEvent(failedEvent, deps)
+  await handlePayPalWebhookEvent(failedEvent, deps)
 
   assert.equal(billing[0].entitlement_status, "past_due")
   assert.equal(profiles["user-1"].subscription_status, "past_due")
   assert.equal(profiles["user-1"].subscription_tier_id, "tier-premium")
+  assert.deepEqual(reported, [
+    {
+      signal: "provider_payment_failed",
+      provider: "paypal",
+      boundary: "webhook",
+      errorFamily: "declined",
+      commerceKind: "subscription",
+      origin: "webhook",
+      method: "paypal",
+      truth: "failed",
+      live: false,
+      isInternalTest: true,
+      providerReferencePresent: true,
+    },
+  ])
 })
 
 test("BILLING.SUBSCRIPTION.CANCELLED keeps future paid-through access", async () => {

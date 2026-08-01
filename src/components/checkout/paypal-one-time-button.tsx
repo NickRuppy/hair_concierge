@@ -3,8 +3,54 @@
 import { useRef, useState } from "react"
 import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
 
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
+import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import { PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION } from "@/lib/billing/personal-plan-one-time-consent-copy"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import {
+  capturePaymentFailure,
+  type PaymentBoundary,
+  type PaymentErrorFamily,
+} from "@/lib/observability/payment"
+
+function capturePayPalOneTimeCustomerPaymentError({
+  boundary,
+  checkoutAttemptId,
+  errorFamily,
+  isInternalTest,
+  leadId,
+  live,
+  providerReferencePresent = false,
+  status,
+}: {
+  boundary: PaymentBoundary
+  checkoutAttemptId: string
+  errorFamily: PaymentErrorFamily
+  isInternalTest: boolean
+  leadId: string
+  live: boolean
+  providerReferencePresent?: boolean
+  status: string | number
+}) {
+  capturePaymentFailure({
+    signal: "customer_payment_error_observed",
+    provider: "paypal",
+    boundary,
+    errorFamily,
+    commerceKind: "one_time",
+    origin: "browser",
+    method: "paypal",
+    truth: "unknown",
+    live,
+    isInternalTest,
+    retryable: "true",
+    checkoutAttemptId,
+    leadId,
+    source: "quiz_result_offer",
+    status,
+    providerReferencePresent,
+  })
+}
 
 export function PayPalOneTimeButton({
   checkoutAttemptId,
@@ -32,6 +78,10 @@ export function PayPalOneTimeButton({
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const intentTokenRef = useRef<string | null>(null)
+  const suppressNextPayPalErrorRef = useRef(false)
+  const { paypalLive } = usePaymentRuntime()
+  const offerContext = useOfferTrackingContext()
+  const isInternalTest = offerContext?.isInternalTest ?? false
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
 
   if (!clientId) return null
@@ -46,8 +96,10 @@ export function PayPalOneTimeButton({
           fundingSource={FUNDING.PAYPAL}
           createOrder={async () => {
             setError(null)
+            suppressNextPayPalErrorRef.current = false
             if (!consentAccepted) {
               onConsentRequired?.()
+              suppressNextPayPalErrorRef.current = true
               throw new Error("one-time checkout consent required")
             }
             setBusy(true)
@@ -75,6 +127,7 @@ export function PayPalOneTimeButton({
               if (body.error === "checkout_access_already_exists") onDuplicateAccess?.()
               else onProviderConflict?.()
               setBusy(false)
+              suppressNextPayPalErrorRef.current = true
               throw new Error("checkout access already exists")
             }
             if (
@@ -83,6 +136,16 @@ export function PayPalOneTimeButton({
               typeof body.token !== "string"
             ) {
               setBusy(false)
+              suppressNextPayPalErrorRef.current = true
+              capturePayPalOneTimeCustomerPaymentError({
+                boundary: "provider_session",
+                checkoutAttemptId,
+                errorFamily: "provider_session",
+                isInternalTest,
+                leadId,
+                live: paypalLive,
+                status: response.ok ? "order_payload_incomplete" : response.status,
+              })
               throw new Error("PayPal order creation failed")
             }
             intentTokenRef.current = body.token
@@ -96,6 +159,15 @@ export function PayPalOneTimeButton({
               setError(
                 "PayPal-Zahlung konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
               )
+              capturePayPalOneTimeCustomerPaymentError({
+                boundary: "customer_authorization",
+                checkoutAttemptId,
+                errorFamily: "provider_session",
+                isInternalTest,
+                leadId,
+                live: paypalLive,
+                status: "approval_token_missing",
+              })
               return
             }
             const response = await fetch("/api/paypal/capture-order", {
@@ -109,6 +181,16 @@ export function PayPalOneTimeButton({
               setError(
                 "PayPal-Zahlung konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
               )
+              capturePayPalOneTimeCustomerPaymentError({
+                boundary: "provider_outcome",
+                checkoutAttemptId,
+                errorFamily: response.ok ? "provider_session" : "unknown",
+                isInternalTest,
+                leadId,
+                live: paypalLive,
+                providerReferencePresent: true,
+                status: response.ok ? "capture_payload_incomplete" : response.status,
+              })
               return
             }
             window.location.assign(body.welcomeUrl)
@@ -117,12 +199,25 @@ export function PayPalOneTimeButton({
           onInit={() => onReady?.()}
           onError={(paypalError) => {
             setBusy(false)
+            if (suppressNextPayPalErrorRef.current) {
+              suppressNextPayPalErrorRef.current = false
+              return
+            }
             if (
               paypalError instanceof Error &&
               (paypalError.message === "checkout access already exists" ||
                 paypalError.message === "one-time checkout consent required")
             )
               return
+            capturePayPalOneTimeCustomerPaymentError({
+              boundary: "provider_session",
+              checkoutAttemptId,
+              errorFamily: "unknown",
+              isInternalTest,
+              leadId,
+              live: paypalLive,
+              status: "paypal_button_error",
+            })
             setError("PayPal-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.")
           }}
         />

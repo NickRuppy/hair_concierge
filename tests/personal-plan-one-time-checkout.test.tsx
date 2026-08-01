@@ -84,7 +84,10 @@ test("one-time Apple Pay prewarms before the drawer opens without creating check
 
   assert.match(checkoutSource, /checkoutAttemptId: string \| null/)
   assert.match(checkoutSource, /onStripePreparationStateChangeRef/)
-  assert.match(checkoutSource, /if \(visibleRef\.current\) setError\(checkoutStartError\)/)
+  assert.match(
+    checkoutSource,
+    /if \(visibleRef\.current\) \{[\s\S]*setError\(checkoutStartError\)[\s\S]*reportStripeCustomerError/,
+  )
   assert.match(checkoutSource, /visible: boolean/)
   assert.match(checkoutSource, /visible=\{visible\}/)
   assert.match(checkoutSource, /if \(!checkoutAttemptId \|\| !offerContext/)
@@ -165,6 +168,61 @@ test("provider initialization is recorded only after a usable provider response"
     paypalSource,
     /const funnelEventId = createFunnelEventId\(\)[\s\S]*funnelEventId,[\s\S]*typeof body\.token !== "string"[\s\S]*throw new Error\("PayPal order creation failed"\)[\s\S]*onCheckoutStarted\?\.\(funnelEventId\)[\s\S]*return body\.orderId/,
   )
+})
+
+test("one-time PayPal reports visible payment failures once and excludes consent and conflicts", () => {
+  assert.match(paypalSource, /usePaymentRuntime/)
+  assert.match(paypalSource, /useOfferTrackingContext/)
+  assert.match(paypalSource, /capturePayPalOneTimeCustomerPaymentError/)
+  assert.match(paypalSource, /signal: "customer_payment_error_observed"/)
+  assert.match(paypalSource, /provider: "paypal"/)
+  assert.match(paypalSource, /commerceKind: "one_time"/)
+  assert.match(paypalSource, /origin: "browser"/)
+  assert.match(paypalSource, /method: "paypal"/)
+  assert.match(paypalSource, /truth: "unknown"/)
+  assert.match(paypalSource, /live: paypalLive/)
+  assert.match(paypalSource, /isInternalTest/)
+  assert.match(paypalSource, /const suppressNextPayPalErrorRef = useRef\(false\)/)
+
+  const createOrderSource = paypalSource.slice(
+    paypalSource.indexOf("createOrder={async"),
+    paypalSource.indexOf("onApprove={async"),
+  )
+  assert.match(
+    createOrderSource,
+    /if \(!consentAccepted\) \{[\s\S]*suppressNextPayPalErrorRef\.current = true[\s\S]*one-time checkout consent required/,
+  )
+  assert.match(
+    createOrderSource,
+    /if \(response\.status === 409\) \{[\s\S]*onDuplicateAccess\?\.\(\)[\s\S]*onProviderConflict\?\.\(\)[\s\S]*suppressNextPayPalErrorRef\.current = true/,
+  )
+  assert.match(createOrderSource, /boundary: "provider_session"/)
+  assert.match(
+    createOrderSource,
+    /status: response\.ok \? "order_payload_incomplete" : response\.status/,
+  )
+
+  const approveSource = paypalSource.slice(
+    paypalSource.indexOf("onApprove={async"),
+    paypalSource.indexOf("onCancel={() =>"),
+  )
+  assert.match(approveSource, /boundary: "customer_authorization"/)
+  assert.match(approveSource, /status: "approval_token_missing"/)
+  assert.match(approveSource, /boundary: "provider_outcome"/)
+  assert.match(
+    approveSource,
+    /status: response\.ok \? "capture_payload_incomplete" : response\.status/,
+  )
+
+  const sdkErrorSource = paypalSource.slice(
+    paypalSource.indexOf("onError={(paypalError) =>"),
+    paypalSource.indexOf("{busy ? ("),
+  )
+  assert.match(
+    sdkErrorSource,
+    /if \(suppressNextPayPalErrorRef\.current\) \{[\s\S]*suppressNextPayPalErrorRef\.current = false[\s\S]*return/,
+  )
+  assert.match(sdkErrorSource, /status: "paypal_button_error"/)
 })
 
 test("one-time checkout marks a real first interaction and routes its nested close through policy", () => {

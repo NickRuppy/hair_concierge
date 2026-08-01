@@ -9,7 +9,11 @@ import {
 } from "@paypal/react-paypal-js"
 import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js"
 
-import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
+import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
+import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
+import type { CheckoutStage } from "@/lib/observability/checkout"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"
@@ -24,6 +28,52 @@ import {
 } from "./active-subscription-dialog"
 
 const paypalStartError = "PayPal-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
+
+function capturePayPalSubscriptionCustomerPaymentError({
+  checkoutAttemptId,
+  errorFamily,
+  interval,
+  isInternalTest,
+  leadId,
+  live,
+  providerReferencePresent = false,
+  retryable = "true",
+  source,
+  stage,
+  status,
+}: {
+  checkoutAttemptId?: string
+  errorFamily: PaymentErrorFamily
+  interval: BillingInterval
+  isInternalTest: boolean
+  leadId?: string | null
+  live: boolean
+  providerReferencePresent?: boolean
+  retryable?: "true" | "false"
+  source: PayPalCheckoutSource
+  stage: CheckoutStage
+  status?: string | number | null
+}) {
+  capturePaymentFailure({
+    signal: "customer_payment_error_observed",
+    provider: "paypal",
+    stage,
+    errorFamily,
+    commerceKind: "subscription",
+    origin: "browser",
+    method: "paypal",
+    truth: "unknown",
+    live,
+    isInternalTest,
+    retryable,
+    checkoutAttemptId,
+    interval,
+    leadId,
+    source,
+    status,
+    providerReferencePresent,
+  })
+}
 
 class CheckoutAccessAlreadyExistsError extends Error {
   constructor(readonly email?: string | null) {
@@ -41,16 +91,50 @@ export function buildPayPalWelcomeUrl(token: string) {
 }
 
 function PayPalScriptFailureObserver({
+  checkoutAttemptId,
+  interval,
+  isInternalTest,
+  leadId,
+  live,
   onCheckoutFailed,
+  source,
 }: {
+  checkoutAttemptId?: string
+  interval: BillingInterval
+  isInternalTest: boolean
+  leadId?: string | null
+  live: boolean
   onCheckoutFailed?: (failure: CheckoutFailure) => void
+  source: PayPalCheckoutSource
 }) {
   const [{ isRejected }] = usePayPalScriptReducer()
   const reportedRef = useRef(false)
 
   useEffect(() => {
-    reportPayPalScriptFailureOnce(reportedRef, isRejected, onCheckoutFailed)
-  }, [isRejected, onCheckoutFailed])
+    reportPayPalScriptFailureOnce(reportedRef, isRejected, (failure) => {
+      capturePayPalSubscriptionCustomerPaymentError({
+        checkoutAttemptId,
+        errorFamily: "provider_unavailable",
+        interval,
+        isInternalTest,
+        leadId,
+        live,
+        source,
+        stage: "paypal_create_subscription",
+        status: failure.errorCode,
+      })
+      onCheckoutFailed?.(failure)
+    })
+  }, [
+    checkoutAttemptId,
+    interval,
+    isInternalTest,
+    isRejected,
+    leadId,
+    live,
+    onCheckoutFailed,
+    source,
+  ])
 
   return null
 }
@@ -85,16 +169,42 @@ export function PayPalSubscriptionButton({
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const intentTokenRef = useRef<string | null>(null)
   const suppressNextPayPalErrorRef = useRef(false)
+  const configurationReportedRef = useRef(false)
+  const { paypalLive } = usePaymentRuntime()
+  const offerContext = useOfferTrackingContext()
+  const isInternalTest = offerContext?.isInternalTest ?? false
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
 
   useEffect(() => {
-    if (clientId) return
+    if (clientId || configurationReportedRef.current) return
+    configurationReportedRef.current = true
+    capturePayPalSubscriptionCustomerPaymentError({
+      checkoutAttemptId,
+      errorFamily: "configuration",
+      interval,
+      isInternalTest,
+      leadId,
+      live: paypalLive,
+      retryable: "false",
+      source,
+      stage: "paypal_create_subscription_intent",
+      status: "paypal_client_id_missing",
+    })
     onCheckoutFailed?.({
       errorCode: "paypal_client_id_missing",
       failureStage: "configuration",
       retryable: false,
     })
-  }, [clientId, onCheckoutFailed])
+  }, [
+    checkoutAttemptId,
+    clientId,
+    interval,
+    isInternalTest,
+    leadId,
+    onCheckoutFailed,
+    paypalLive,
+    source,
+  ])
 
   if (!clientId) {
     return (
@@ -120,7 +230,15 @@ export function PayPalSubscriptionButton({
           vault: true,
         }}
       >
-        <PayPalScriptFailureObserver onCheckoutFailed={onCheckoutFailed} />
+        <PayPalScriptFailureObserver
+          checkoutAttemptId={checkoutAttemptId}
+          interval={interval}
+          isInternalTest={isInternalTest}
+          leadId={leadId}
+          live={paypalLive}
+          onCheckoutFailed={onCheckoutFailed}
+          source={source}
+        />
         <PayPalButtons
           className="w-full"
           fundingSource={FUNDING.PAYPAL}
@@ -140,13 +258,14 @@ export function PayPalSubscriptionButton({
             const funnelEventId = createFunnelEventId()
             addCheckoutBreadcrumb({
               provider: "paypal",
-              stage: "paypal_create_subscription",
+              stage: "paypal_create_subscription_intent",
               source,
               interval,
               leadId,
             })
+            let intent: Awaited<ReturnType<typeof createSubscriptionIntent>>
             try {
-              const intent = await createSubscriptionIntent({
+              intent = await createSubscriptionIntent({
                 checkoutAttemptId,
                 checkoutContext,
                 interval,
@@ -155,15 +274,6 @@ export function PayPalSubscriptionButton({
                 source,
                 funnelEventId,
               })
-              onCheckoutStarted(funnelEventId)
-              intentTokenRef.current = intent.token
-              return actions.subscription.create({
-                plan_id: intent.planId,
-                custom_id: intent.token,
-                application_context: {
-                  shipping_preference: "NO_SHIPPING",
-                },
-              } as Parameters<CreateSubscriptionActions["subscription"]["create"]>[0])
             } catch (err) {
               if (err instanceof CheckoutAccessAlreadyExistsError) {
                 suppressNextPayPalErrorRef.current = true
@@ -177,14 +287,56 @@ export function PayPalSubscriptionButton({
                 throw err
               }
               setError(err instanceof Error ? err.message : paypalStartError)
-              captureCheckoutException(err, {
-                provider: "paypal",
-                stage: "paypal_create_subscription",
-                source,
-                interval,
-                leadId,
-              })
               suppressNextPayPalErrorRef.current = true
+              capturePayPalSubscriptionCustomerPaymentError({
+                checkoutAttemptId,
+                errorFamily: "provider_session",
+                interval,
+                isInternalTest,
+                source,
+                leadId,
+                live: paypalLive,
+                stage: "paypal_create_subscription_intent",
+                status: "intent_failed",
+              })
+              onCheckoutFailed?.({
+                errorCode: "paypal_intent_failed",
+                failureStage: "provider_intent",
+                retryable: true,
+              })
+              throw err
+            }
+            onCheckoutStarted(funnelEventId)
+            intentTokenRef.current = intent.token
+            addCheckoutBreadcrumb({
+              provider: "paypal",
+              stage: "paypal_create_subscription",
+              source,
+              interval,
+              leadId,
+            })
+            try {
+              return await actions.subscription.create({
+                plan_id: intent.planId,
+                custom_id: intent.token,
+                application_context: {
+                  shipping_preference: "NO_SHIPPING",
+                },
+              } as Parameters<CreateSubscriptionActions["subscription"]["create"]>[0])
+            } catch (err) {
+              setError(paypalStartError)
+              suppressNextPayPalErrorRef.current = true
+              capturePayPalSubscriptionCustomerPaymentError({
+                checkoutAttemptId,
+                errorFamily: "provider_session",
+                interval,
+                isInternalTest,
+                source,
+                leadId,
+                live: paypalLive,
+                stage: "paypal_create_subscription",
+                status: "subscription_create_failed",
+              })
               onCheckoutFailed?.({
                 errorCode: "paypal_intent_failed",
                 failureStage: "provider_intent",
@@ -197,20 +349,22 @@ export function PayPalSubscriptionButton({
             const token = intentTokenRef.current
             if (!data.subscriptionID || !token) {
               setError(paypalStartError)
+              capturePayPalSubscriptionCustomerPaymentError({
+                checkoutAttemptId,
+                errorFamily: "provider_session",
+                interval,
+                isInternalTest,
+                source,
+                leadId,
+                live: paypalLive,
+                stage: "paypal_approve_subscription",
+                status: "approval_payload_incomplete",
+                providerReferencePresent: Boolean(data.subscriptionID),
+              })
               onCheckoutFailed?.({
                 errorCode: "paypal_approval_payload_incomplete",
                 failureStage: "provider_approval",
                 retryable: true,
-              })
-              captureCheckoutException(new Error("PayPal approval missing subscription or token"), {
-                provider: "paypal",
-                stage: "paypal_approve_subscription",
-                source,
-                interval,
-                leadId,
-                paypalSubscriptionId: data.subscriptionID,
-                paypalTokenPresent: Boolean(token),
-                reason: "approve_payload_incomplete",
               })
               return
             }
@@ -226,17 +380,19 @@ export function PayPalSubscriptionButton({
             let approved: Awaited<ReturnType<typeof approveSubscriptionIntent>>
             try {
               approved = await approveSubscriptionIntent(token, data.subscriptionID)
-            } catch (err) {
+            } catch {
               setError(paypalStartError)
-              captureCheckoutException(err, {
-                provider: "paypal",
-                stage: "paypal_approve_subscription",
-                source,
+              capturePayPalSubscriptionCustomerPaymentError({
+                checkoutAttemptId,
+                errorFamily: "network",
                 interval,
+                isInternalTest,
+                source,
                 leadId,
-                paypalSubscriptionId: data.subscriptionID,
-                paypalTokenPresent: true,
-                reason: "approval_request_failed",
+                live: paypalLive,
+                stage: "paypal_approve_subscription",
+                status: "approval_request_failed",
+                providerReferencePresent: true,
               })
               onCheckoutFailed?.({
                 errorCode: "paypal_approval_network_error",
@@ -271,15 +427,17 @@ export function PayPalSubscriptionButton({
                 })
                 return
               }
-              captureCheckoutException(new Error("PayPal subscription approval failed"), {
-                provider: "paypal",
-                stage: "paypal_approve_subscription",
-                source,
+              capturePayPalSubscriptionCustomerPaymentError({
+                checkoutAttemptId,
+                errorFamily: "provider_session",
                 interval,
+                isInternalTest,
+                source,
                 leadId,
-                paypalSubscriptionId: data.subscriptionID,
-                paypalTokenPresent: true,
+                live: paypalLive,
+                stage: "paypal_approve_subscription",
                 status: approved.status,
+                providerReferencePresent: true,
               })
               setError(approved.message)
               onCheckoutFailed?.({
@@ -303,19 +461,22 @@ export function PayPalSubscriptionButton({
           onCancel={() => {
             onCheckoutCancelled?.()
           }}
-          onError={(err) => {
+          onError={() => {
             if (suppressNextPayPalErrorRef.current) {
               suppressNextPayPalErrorRef.current = false
               return
             }
             setError(paypalStartError)
-            captureCheckoutException(err, {
-              provider: "paypal",
-              stage: "paypal_create_subscription",
-              source,
+            capturePayPalSubscriptionCustomerPaymentError({
+              checkoutAttemptId,
+              errorFamily: "unknown",
               interval,
+              isInternalTest,
+              source,
               leadId,
-              reason: "paypal_button_error",
+              live: paypalLive,
+              stage: "paypal_create_subscription",
+              status: "paypal_button_error",
             })
             onCheckoutFailed?.({
               errorCode: "paypal_button_error",

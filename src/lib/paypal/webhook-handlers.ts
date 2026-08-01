@@ -45,6 +45,8 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
+import { capturePaymentFailure } from "@/lib/observability/payment"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import {
   findOneTimePurchaseByProviderTransactionId,
@@ -118,6 +120,7 @@ export interface PayPalWebhookDeps {
   finalizeOneTimeLockedPlan?: Parameters<
     typeof activateVerifiedPayPalOrderIntent
   >[2]["finalizeLockedPlan"]
+  capturePaymentFailure?: typeof capturePaymentFailure
 }
 
 export type PayPalWebhookResult =
@@ -251,6 +254,23 @@ export async function handlePayPalWebhookEvent(
       }
       case "BILLING.SUBSCRIPTION.PAYMENT.FAILED":
       case "BILLING.SUBSCRIPTION.SUSPENDED": {
+        const checkoutIntent = await findPayPalCheckoutIntentByProviderSubscriptionId(
+          deps.supabase,
+          subscriptionId,
+        ).catch(() => null)
+        reportPayPalWebhookPaymentFailure(deps, {
+          signal: "provider_payment_failed",
+          provider: "paypal",
+          boundary: "webhook",
+          errorFamily: "declined",
+          commerceKind: "subscription",
+          origin: "webhook",
+          method: "paypal",
+          truth: "failed",
+          live: paymentRuntime().paypalLive,
+          isInternalTest: checkoutIntent?.metadata?.is_internal_test === true,
+          providerReferencePresent: Boolean(eventId),
+        })
         const billingRow = await updateExistingSubscription(subscription, deps, {
           provider_status: subscription.status ?? "SUSPENDED",
           entitlement_status: "past_due",
@@ -367,6 +387,7 @@ async function reconcilePayPalOrderCaptureEvent(
         sendConfirmation: deps.sendOneTimeConfirmation,
         finalizeLockedPlan: deps.finalizeOneTimeLockedPlan,
         defer: deps.defer,
+        capturePaymentFailure: deps.capturePaymentFailure,
       })
       if (!intent.provider_capture_id) {
         await tryMarkPayPalOrderIntentCaptured(deps.supabase, intent.token, captureId)
@@ -398,6 +419,26 @@ async function reconcilePayPalOrderCaptureEvent(
       refunded_amount_minor: cumulative,
       refunded_at: new Date().toISOString(),
     })
+  }
+}
+
+function paymentRuntime() {
+  return resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
+}
+
+function reportPayPalWebhookPaymentFailure(
+  deps: PayPalWebhookDeps,
+  failure: Parameters<typeof capturePaymentFailure>[0],
+) {
+  try {
+    const report = deps.capturePaymentFailure ?? capturePaymentFailure
+    report(failure)
+  } catch {
+    // Observability must not alter webhook reconciliation behavior.
   }
 }
 

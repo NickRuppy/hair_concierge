@@ -102,6 +102,29 @@ test("preserves funnel metadata with and without a lead", () => {
   })
 })
 
+test("propagates authoritative internal-test metadata to later provider objects", () => {
+  const subscription = buildStripeCheckoutSessionParams({
+    origin: "https://chaarlie.example",
+    priceId: "price_month",
+    customerEmail: "qa@example.com",
+    metadata: { is_internal_test: "true" },
+  })
+  assert.deepEqual(subscription.metadata, { is_internal_test: "true" })
+  assert.deepEqual(subscription.subscription_data?.metadata, { is_internal_test: "true" })
+
+  const oneTime = buildStripeCheckoutSessionParams({
+    checkoutKind: "personal_plan_once",
+    origin: "https://chaarlie.example",
+    priceId: "price_once",
+    customerEmail: "qa@example.com",
+    metadata: { is_internal_test: "true" },
+  })
+  assert.deepEqual(oneTime.payment_intent_data?.metadata, {
+    product_kind: "personal_plan_once",
+    is_internal_test: "true",
+  })
+})
+
 test("passes customer for customerId input without customer_email", () => {
   const params = buildStripeCheckoutSessionParams({
     origin: "https://chaarlie.example",

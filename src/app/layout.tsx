@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { LazyCookieConsent } from "@/components/cookie-consent/lazy-cookie-consent"
+import { PaymentRuntimeProvider } from "@/components/providers/payment-runtime-provider"
+import { getPaymentRuntime } from "@/lib/billing/payment-runtime"
 import { ROOT_METADATA } from "@/lib/seo/site-identity"
 import "./globals.css"
 
@@ -40,12 +42,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const paymentRuntime = getPaymentRuntime()
+
   return (
     <html lang="de" data-scroll-behavior="smooth">
       <body
         className={`${playfairDisplay.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        {children}
+        <PaymentRuntimeProvider runtime={paymentRuntime}>{children}</PaymentRuntimeProvider>
         <LazyCookieConsent />
       </body>
     </html>

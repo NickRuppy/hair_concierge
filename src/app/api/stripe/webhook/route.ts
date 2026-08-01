@@ -50,6 +50,8 @@ import {
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import { captureCheckoutException } from "@/lib/observability/checkout"
+import { capturePaymentFailure } from "@/lib/observability/payment"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 
@@ -82,6 +84,18 @@ function invoiceSubscriptionId(invoice: Stripe.Invoice) {
   return (
     stripeId(candidate.subscription) ??
     stripeId(candidate.parent?.subscription_details?.subscription)
+  )
+}
+
+function stripeObjectIsInternalTest(object: unknown): boolean {
+  if (!object || typeof object !== "object") return false
+  const candidate = object as {
+    metadata?: Record<string, string> | null
+    parent?: { subscription_details?: { metadata?: Record<string, string> | null } | null } | null
+  }
+  return (
+    candidate.metadata?.is_internal_test === "true" ||
+    candidate.parent?.subscription_details?.metadata?.is_internal_test === "true"
   )
 }
 
@@ -271,6 +285,7 @@ type StripeWebhookEventDeps = {
   linkQuizToProfile?: typeof defaultLinkQuizToProfile
   recordBillingAnalytics?: boolean
   captureCheckoutException?: typeof captureCheckoutException
+  capturePaymentFailure?: typeof capturePaymentFailure
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event, deps: StripeWebhookEventDeps) {
@@ -283,6 +298,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     linkQuizToProfile = defaultLinkQuizToProfile,
     recordBillingAnalytics = false,
     captureCheckoutException: captureCheckout = captureCheckoutException,
+    capturePaymentFailure: capturePayment = capturePaymentFailure,
   } = deps
   const timestamp = stripeEventTimestamp(event)
 
@@ -398,6 +414,19 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "checkout.session.async_payment_failed": {
       const session = event.data.object as unknown as Stripe.Checkout.Session
+      capturePayment({
+        signal: "provider_payment_failed",
+        provider: "stripe",
+        boundary: "webhook",
+        errorFamily: "declined",
+        commerceKind: session.mode === "payment" ? "one_time" : "subscription",
+        origin: "webhook",
+        method: "unknown",
+        truth: "failed",
+        live: paymentRuntime().stripeLive,
+        isInternalTest: stripeObjectIsInternalTest(session),
+        providerReferencePresent: Boolean(session.id),
+      })
       await handleCheckoutSessionAsyncPaymentFailed(session, {
         supabase,
         stripe,
@@ -429,6 +458,26 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
           })
         }
       }
+      break
+    }
+    case "payment_intent.payment_failed": {
+      const paymentIntent = event.data.object as unknown as Stripe.PaymentIntent
+      // Subscription failures are owned by invoice.payment_failed. Restrict this
+      // lane to metadata-authenticated one-time payments to avoid double alerts.
+      if (paymentIntent.metadata?.product_kind !== PERSONAL_PLAN_ONCE_KIND) break
+      capturePayment({
+        signal: "provider_payment_failed",
+        provider: "stripe",
+        boundary: "provider_outcome",
+        errorFamily: "declined",
+        commerceKind: "one_time",
+        origin: "webhook",
+        method: "unknown",
+        truth: "failed",
+        live: paymentRuntime().stripeLive,
+        isInternalTest: stripeObjectIsInternalTest(paymentIntent),
+        providerReferencePresent: Boolean(paymentIntent.id),
+      })
       break
     }
     case "charge.dispute.created": {
@@ -605,6 +654,19 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "invoice.payment_failed": {
       const invoice = event.data.object as unknown as Stripe.Invoice
+      capturePayment({
+        signal: "provider_payment_failed",
+        provider: "stripe",
+        boundary: "webhook",
+        errorFamily: "declined",
+        commerceKind: "subscription",
+        origin: "webhook",
+        method: "unknown",
+        truth: "failed",
+        live: paymentRuntime().stripeLive,
+        isInternalTest: stripeObjectIsInternalTest(invoice),
+        providerReferencePresent: Boolean(invoice.id),
+      })
       await handleInvoicePaymentFailed(invoice)
       const customerId = stripeId(invoice.customer)
       if (!customerId) break
@@ -758,6 +820,19 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown"
     await releaseWebhookEventClaim(supabase, "stripe", event.id)
+    capturePaymentFailure({
+      signal: "payment_webhook_processing_failed",
+      provider: "stripe",
+      boundary: "webhook",
+      errorFamily: "webhook_processing",
+      commerceKind: stripeWebhookCommerceKind(event),
+      origin: "webhook",
+      method: "unknown",
+      truth: "unknown",
+      live: paymentRuntime().stripeLive,
+      isInternalTest: false,
+      providerReferencePresent: Boolean(event.id),
+    })
     console.error("[stripe] handler error:", err)
     return new NextResponse(`handler error: ${message}`, { status: 500 })
   }
@@ -769,4 +844,24 @@ export async function POST(req: NextRequest) {
   })
 
   return NextResponse.json({ received: true })
+}
+
+function stripeWebhookCommerceKind(event: Stripe.Event) {
+  if (event.type === "checkout.session.async_payment_failed") {
+    const session = event.data.object as Stripe.Checkout.Session
+    return session.mode === "payment" ? "one_time" : "subscription"
+  }
+  if (event.type === "payment_intent.payment_failed") {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent
+    return paymentIntent.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND ? "one_time" : "unknown"
+  }
+  return event.type === "invoice.payment_failed" ? "subscription" : "unknown"
+}
+
+function paymentRuntime() {
+  return resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
 }

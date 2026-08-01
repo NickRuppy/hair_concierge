@@ -16,6 +16,11 @@ import {
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
 
+const paypalSubscriptionButtonSource = readFileSync(
+  new URL("../src/components/checkout/paypal-subscription-button.tsx", import.meta.url),
+  "utf8",
+)
+
 function renderCheckout(
   paypalEnabled: boolean,
   presentation: "default" | "offer-overlay" = "default",
@@ -204,6 +209,64 @@ test("PayPal script rejection reports once without coupling the card fallback", 
   assert.deepEqual(paymentState, { cardCheckoutOpen: true })
 })
 
+test("PayPal subscription button reports visible payment failures once and excludes control flow", () => {
+  assert.match(paypalSubscriptionButtonSource, /usePaymentRuntime/)
+  assert.match(paypalSubscriptionButtonSource, /useOfferTrackingContext/)
+  assert.match(paypalSubscriptionButtonSource, /capturePayPalSubscriptionCustomerPaymentError/)
+  assert.match(paypalSubscriptionButtonSource, /signal: "customer_payment_error_observed"/)
+  assert.match(paypalSubscriptionButtonSource, /provider: "paypal"/)
+  assert.match(paypalSubscriptionButtonSource, /commerceKind: "subscription"/)
+  assert.match(paypalSubscriptionButtonSource, /origin: "browser"/)
+  assert.match(paypalSubscriptionButtonSource, /method: "paypal"/)
+  assert.match(paypalSubscriptionButtonSource, /truth: "unknown"/)
+  assert.match(paypalSubscriptionButtonSource, /live: paypalLive/)
+  assert.match(paypalSubscriptionButtonSource, /isInternalTest/)
+  assert.doesNotMatch(paypalSubscriptionButtonSource, /captureCheckoutException/)
+
+  const createSubscriptionSource = paypalSubscriptionButtonSource.slice(
+    paypalSubscriptionButtonSource.indexOf("createSubscription={async"),
+    paypalSubscriptionButtonSource.indexOf("onApprove={async"),
+  )
+  assert.match(
+    createSubscriptionSource,
+    /if \(onPaymentMethodSelected\?\.\("paypal"\) === false\) \{[\s\S]*suppressNextPayPalErrorRef\.current = true[\s\S]*another payment provider is already active/,
+  )
+  assert.match(
+    createSubscriptionSource,
+    /err instanceof CheckoutAccessAlreadyExistsError[\s\S]*suppressNextPayPalErrorRef\.current = true[\s\S]*errorCode: "access_already_exists"/,
+  )
+  assert.match(createSubscriptionSource, /stage: "paypal_create_subscription_intent"/)
+  assert.match(createSubscriptionSource, /status: "intent_failed"/)
+  assert.match(createSubscriptionSource, /stage: "paypal_create_subscription"/)
+  assert.match(createSubscriptionSource, /status: "subscription_create_failed"/)
+
+  const approveSource = paypalSubscriptionButtonSource.slice(
+    paypalSubscriptionButtonSource.indexOf("onApprove={async"),
+    paypalSubscriptionButtonSource.indexOf("onCancel={() =>"),
+  )
+  assert.match(approveSource, /status: "approval_payload_incomplete"/)
+  assert.match(approveSource, /status: "approval_request_failed"/)
+  assert.match(approveSource, /status: approved\.status/)
+  const duplicateApproval = approveSource.slice(
+    approveSource.indexOf("if (approved.duplicate)"),
+    approveSource.indexOf(
+      "capturePayPalSubscriptionCustomerPaymentError",
+      approveSource.indexOf("if (approved.duplicate)"),
+    ),
+  )
+  assert.doesNotMatch(duplicateApproval, /capturePayPalSubscriptionCustomerPaymentError/)
+
+  const sdkErrorSource = paypalSubscriptionButtonSource.slice(
+    paypalSubscriptionButtonSource.indexOf("onError={() =>"),
+    paypalSubscriptionButtonSource.indexOf("style={{"),
+  )
+  assert.match(
+    sdkErrorSource,
+    /if \(suppressNextPayPalErrorRef\.current\) \{[\s\S]*suppressNextPayPalErrorRef\.current = false[\s\S]*return/,
+  )
+  assert.match(sdkErrorSource, /status: "paypal_button_error"/)
+})
+
 test("Stripe payment helper copy is only shown before the embedded checkout expands", () => {
   const source = readFileSync(
     new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
@@ -280,6 +343,11 @@ test("PayPal plan IDs are resolved by the server intent route", () => {
   assert.match(buttonSource, /usePayPalScriptReducer/)
   assert.match(buttonSource, /<PayPalScriptFailureObserver/)
   assert.match(buttonSource, /reportPayPalScriptFailureOnce\(reportedRef, isRejected/)
+  assert.match(buttonSource, /errorFamily: "provider_unavailable"[\s\S]*status: failure\.errorCode/)
+  assert.match(
+    buttonSource,
+    /configurationReportedRef\.current = true[\s\S]*status: "paypal_client_id_missing"/,
+  )
   assert.match(buttonSource, /onInit=\{\(\) =>/)
   assert.match(buttonSource, /onReady\?\.\(\)/)
   assert.match(buttonSource, /checkoutAttemptId,/)

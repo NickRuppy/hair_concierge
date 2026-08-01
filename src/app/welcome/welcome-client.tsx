@@ -4,12 +4,14 @@ import { CheckCircle, LoaderCircle, Mail } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useState, type FormEvent } from "react"
 import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { Input } from "@/components/ui/input"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
+import { capturePaymentFailure } from "@/lib/observability/payment"
 import {
   isCheckoutFirstTimeDestination,
   type CheckoutFirstTimeDestination,
@@ -72,6 +74,7 @@ export function WelcomeClient({
   oneTimeReturnState,
   activationRedirectTo = "/onboarding",
 }: WelcomeClientProps) {
+  const { paypalLive } = usePaymentRuntime()
   const router = useRouter()
   const supabase = createClient()
   const analyticsId = providedAnalyticsId ?? sessionId ?? activationSourceId(activationSource)
@@ -169,12 +172,20 @@ export function WelcomeClient({
       if (!cancelled && attempts < 15) {
         timer = setTimeout(pollActivation, 2000)
       } else if (!cancelled) {
-        captureCheckoutException(new Error("PayPal activation polling timed out"), {
+        capturePaymentFailure({
+          signal: "customer_payment_error_observed",
           provider: "paypal",
           stage: "paypal_activation_status_poll",
+          errorFamily: "timeout",
+          commerceKind: isOneTimePurchase ? "one_time" : "subscription",
+          origin: "browser",
+          method: "paypal",
+          truth: "unknown",
+          live: paypalLive,
+          isInternalTest: false,
+          retryable: "true",
           source: "welcome",
-          paypalTokenPresent: true,
-          reason: "polling_timeout",
+          providerReferencePresent: true,
         })
         setMessage("Das dauert gerade etwas länger. Bitte aktualisiere die Seite gleich erneut.")
       }
@@ -185,7 +196,7 @@ export function WelcomeClient({
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [mode, paypalActivationToken])
+  }, [isOneTimePurchase, mode, paypalActivationToken, paypalLive])
 
   useEffect(() => {
     if (

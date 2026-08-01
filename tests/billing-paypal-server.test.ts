@@ -44,6 +44,7 @@ import {
   createStripeCheckoutEmailAccessConflictResponse,
 } from "../src/app/api/stripe/create-checkout-session/route"
 import { handleBillingReconcile } from "../src/app/api/billing/reconcile/route"
+import { emptyPaymentIntegrityCounters } from "../src/app/api/billing/payment-monitor/route"
 import {
   EXPECTED_PAYPAL_PLAN_SHAPES,
   getPayPalIntervalForPlanId,
@@ -61,6 +62,22 @@ function futureIso() {
 
 function pastIso() {
   return new Date(Date.now() - 86_400_000).toISOString()
+}
+
+function successfulPaymentIntegritySummary() {
+  return {
+    status: "completed",
+    counters: emptyPaymentIntegrityCounters(),
+  }
+}
+
+async function successfulPaymentIntegrityResult() {
+  return {
+    status: "completed" as const,
+    counters: emptyPaymentIntegrityCounters(),
+    findings: [],
+    monitorFailures: [],
+  }
 }
 
 function sqlLikePatternToRegExp(pattern: string) {
@@ -1156,11 +1173,15 @@ test("billing reconcile route downgrades expired canceled rows and keeps future 
       cronSecret: "secret",
       getFreeTierId: async () => "tier-free",
       now: new Date(),
+      runPaymentIntegrity: successfulPaymentIntegrityResult,
     },
   )
 
   assert.equal(response.status, 200)
-  assert.deepEqual(response.body, { downgraded: 1 })
+  assert.deepEqual(response.body, {
+    downgraded: 1,
+    paymentIntegrity: successfulPaymentIntegritySummary(),
+  })
   assert.equal(profiles["expired-paypal-user"].subscription_status, "canceled")
   assert.equal(profiles["expired-paypal-user"].subscription_tier_id, "tier-free")
   assert.equal(profiles["future-paypal-user"].subscription_status, "active")
@@ -1199,11 +1220,15 @@ test("billing reconcile includes backfilled Stripe billing rows", async () => {
       cronSecret: "secret",
       getFreeTierId: async () => "tier-free",
       now: new Date(),
+      runPaymentIntegrity: successfulPaymentIntegrityResult,
     },
   )
 
   assert.equal(response.status, 200)
-  assert.deepEqual(response.body, { downgraded: 1 })
+  assert.deepEqual(response.body, {
+    downgraded: 1,
+    paymentIntegrity: successfulPaymentIntegritySummary(),
+  })
   assert.equal(profiles["stripe-user"].subscription_status, "canceled")
   assert.equal(profiles["stripe-user"].subscription_tier_id, "tier-free")
 })

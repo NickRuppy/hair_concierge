@@ -134,6 +134,7 @@ export async function POST(request: Request) {
     metadata: {
       checkout_attempt_id: parsed.data.checkoutAttemptId,
       funnel_event_id: parsed.data.funnelEventId,
+      is_internal_test: authorization.isInternalTest,
       ...(funnelContext
         ? {
             funnel_session_id: funnelContext.sessionId,
