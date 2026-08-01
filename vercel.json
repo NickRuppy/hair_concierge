@@ -3,6 +3,10 @@
     {
       "path": "/api/billing/reconcile",
       "schedule": "15 2 * * *"
+    },
+    {
+      "path": "/api/customerio/profile-sync/reconcile",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
