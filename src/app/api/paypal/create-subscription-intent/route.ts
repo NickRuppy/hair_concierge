@@ -182,6 +182,10 @@ export async function POST(request: Request) {
           ? {
               funnel_session_id: funnelContext.sessionId,
               funnel_package_key: funnelContext.packageKey,
+              ...("isInternalTest" in funnelContext &&
+              typeof funnelContext.isInternalTest === "boolean"
+                ? { is_internal_test: funnelContext.isInternalTest }
+                : {}),
             }
           : {}),
         ...(checkoutContext ? { checkout_context: checkoutContext } : {}),

@@ -18,8 +18,15 @@ import type {
 } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
+import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
-import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
+import { addCheckoutBreadcrumb, type CheckoutSource } from "@/lib/observability/checkout"
+import {
+  capturePaymentFailure,
+  type PaymentCommerceKind,
+  type PaymentErrorFamily,
+} from "@/lib/observability/payment"
 import { PaymentOptionExposure } from "./payment-option-exposure"
 
 export type StripeOfferPaymentMethodType = "apple_pay" | "payment_element"
@@ -136,6 +143,68 @@ export function getStripeExpressCheckoutExceptionReason(
       normalized.includes("must be called"))
     ? "confirm_event_invalid"
     : "exception"
+}
+
+type StripeCustomerPaymentErrorReason =
+  | "checkout_unavailable"
+  | "prepared_checkout_not_synchronized"
+  | "payment_element_not_confirmable"
+  | "confirm_error"
+  | "confirm_event_invalid"
+  | "exception"
+
+const STRIPE_CUSTOMER_PAYMENT_ERROR_FAMILY_BY_REASON: Record<
+  StripeCustomerPaymentErrorReason,
+  PaymentErrorFamily
+> = {
+  checkout_unavailable: "provider_session",
+  prepared_checkout_not_synchronized: "provider_session",
+  payment_element_not_confirmable: "not_confirmable",
+  confirm_error: "unknown",
+  confirm_event_invalid: "unknown",
+  exception: "unknown",
+}
+
+function mapStripeOfferPaymentMethod(method: StripeOfferPaymentMethodType): "apple_pay" | "card" {
+  return method === "apple_pay" ? "apple_pay" : "card"
+}
+
+function captureStripeCustomerPaymentError({
+  checkoutAttemptId,
+  commerceKind,
+  isInternalTest,
+  live,
+  method,
+  reason,
+  source,
+}: {
+  checkoutAttemptId?: string
+  commerceKind: PaymentCommerceKind
+  isInternalTest: boolean
+  live: boolean
+  method: StripeOfferPaymentMethodType
+  reason: StripeCustomerPaymentErrorReason
+  source: CheckoutSource
+}) {
+  capturePaymentFailure({
+    signal: "customer_payment_error_observed",
+    provider: "stripe",
+    stage:
+      reason === "prepared_checkout_not_synchronized"
+        ? "stripe_prepared_checkout_sync"
+        : "stripe_express_checkout_confirm",
+    errorFamily: STRIPE_CUSTOMER_PAYMENT_ERROR_FAMILY_BY_REASON[reason],
+    commerceKind,
+    origin: "browser",
+    method: mapStripeOfferPaymentMethod(method),
+    truth: "unknown",
+    live,
+    isInternalTest,
+    retryable: "true",
+    checkoutAttemptId,
+    source,
+    status: reason,
+  })
 }
 
 export const stripeOfferCheckoutAppearance: NonNullable<
@@ -326,6 +395,7 @@ export function reconcilePaymentElementApplePayAvailability(
 
 function StripeOfferElementsCheckoutBody({
   checkoutAttemptId,
+  commerceKind,
   holdPaymentChoicesUntilResolved,
   preparedCheckoutId,
   suppressExpressWallet,
@@ -345,8 +415,10 @@ function StripeOfferElementsCheckoutBody({
   onProviderLockRelease,
   onRetry,
   secondaryPaymentMethod,
+  observabilitySource,
 }: {
   checkoutAttemptId?: string
+  commerceKind?: PaymentCommerceKind
   holdPaymentChoicesUntilResolved?: boolean
   preparedCheckoutId?: string
   suppressExpressWallet?: boolean
@@ -368,6 +440,7 @@ function StripeOfferElementsCheckoutBody({
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   secondaryPaymentMethod?: ReactNode
+  observabilitySource?: CheckoutSource
   visible?: boolean
 }) {
   const checkoutResult = useCheckoutElements()
@@ -375,6 +448,7 @@ function StripeOfferElementsCheckoutBody({
   return (
     <StripeOfferElementsCheckoutContent
       checkoutAttemptId={checkoutAttemptId}
+      commerceKind={commerceKind}
       checkoutResult={checkoutResult}
       holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
       preparedCheckoutId={preparedCheckoutId}
@@ -394,6 +468,7 @@ function StripeOfferElementsCheckoutBody({
       onProviderLockRelease={onProviderLockRelease}
       onRetry={onRetry}
       secondaryPaymentMethod={secondaryPaymentMethod}
+      observabilitySource={observabilitySource}
       visible={visible}
     />
   )
@@ -401,6 +476,7 @@ function StripeOfferElementsCheckoutBody({
 
 export function StripeOfferElementsCheckoutContent({
   checkoutAttemptId,
+  commerceKind = "unknown",
   checkoutResult,
   holdPaymentChoicesUntilResolved = false,
   preparedCheckoutId,
@@ -424,9 +500,11 @@ export function StripeOfferElementsCheckoutContent({
   paymentElementReady: paymentElementReadyOverride,
   renderExpressCheckoutElement,
   secondaryPaymentMethod,
+  observabilitySource = "quiz_result_offer",
   visible = true,
 }: {
   checkoutAttemptId?: string
+  commerceKind?: PaymentCommerceKind
   checkoutResult: StripeOfferCheckoutResult
   holdPaymentChoicesUntilResolved?: boolean
   preparedCheckoutId?: string
@@ -454,9 +532,13 @@ export function StripeOfferElementsCheckoutContent({
   paymentElementReady?: boolean
   renderExpressCheckoutElement?: (props: StripeOfferExpressRendererProps) => ReactNode
   secondaryPaymentMethod?: ReactNode
+  observabilitySource?: CheckoutSource
   visible?: boolean
 }) {
   const checkout = checkoutResult.type === "success" ? checkoutResult.checkout : null
+  const { stripeLive } = usePaymentRuntime()
+  const offerContext = useOfferTrackingContext()
+  const isInternalTest = offerContext?.isInternalTest ?? false
   const preparedCheckoutSyncKey =
     visible && checkoutAttemptId && preparedCheckoutId && onPreparedCheckoutActivate
       ? `${preparedCheckoutId}:${checkoutAttemptId}`
@@ -495,6 +577,8 @@ export function StripeOfferElementsCheckoutContent({
   const applePayInitialResponseReceivedRef = useRef(false)
   const applePayAvailabilityClosedRef = useRef(false)
   const reportedApplePayAvailabilityRef = useRef(false)
+  const reportedCheckoutLoadErrorRef = useRef(false)
+  const reportedPaymentElementLoadErrorAttemptRef = useRef<string | null>(null)
   const preparedCheckoutSyncRunRef = useRef<{
     key: string
     promise: Promise<PreparedCheckoutSyncResult>
@@ -556,6 +640,38 @@ export function StripeOfferElementsCheckoutContent({
     },
     [],
   )
+
+  useEffect(() => {
+    if (checkoutResult.type !== "error") {
+      reportedCheckoutLoadErrorRef.current = false
+      return
+    }
+    if (reportedCheckoutLoadErrorRef.current) return
+    reportedCheckoutLoadErrorRef.current = true
+    capturePaymentFailure({
+      signal: "customer_payment_error_observed",
+      provider: "stripe",
+      stage: "stripe_embedded_checkout_load",
+      errorFamily: "provider_session",
+      commerceKind,
+      origin: "browser",
+      method: "unknown",
+      truth: "unknown",
+      live: stripeLive,
+      isInternalTest,
+      retryable: "true",
+      checkoutAttemptId,
+      source: observabilitySource,
+      status: "checkout_load_error",
+    })
+  }, [
+    checkoutAttemptId,
+    checkoutResult.type,
+    commerceKind,
+    isInternalTest,
+    observabilitySource,
+    stripeLive,
+  ])
 
   useEffect(() => {
     if (
@@ -866,6 +982,40 @@ export function StripeOfferElementsCheckoutContent({
     [closeApplePayAvailability, recordWalletDebugEvent],
   )
 
+  const handlePaymentElementLoadError = useCallback(
+    (event: { error: { code?: string | null; type: string } }) => {
+      setPaymentElementReady(false)
+      recordWalletDebugEvent("payment_load_error", undefined, event.error.code ?? event.error.type)
+      const attemptKey = checkoutAttemptId ?? "unscoped_checkout"
+      if (reportedPaymentElementLoadErrorAttemptRef.current === attemptKey) return
+      reportedPaymentElementLoadErrorAttemptRef.current = attemptKey
+      capturePaymentFailure({
+        signal: "customer_payment_error_observed",
+        provider: "stripe",
+        stage: "stripe_embedded_checkout_load",
+        errorFamily: "provider_session",
+        commerceKind,
+        origin: "browser",
+        method: "card",
+        truth: "unknown",
+        live: stripeLive,
+        isInternalTest,
+        retryable: "true",
+        checkoutAttemptId,
+        source: observabilitySource,
+        status: "payment_element_load_error",
+      })
+    },
+    [
+      checkoutAttemptId,
+      commerceKind,
+      isInternalTest,
+      observabilitySource,
+      recordWalletDebugEvent,
+      stripeLive,
+    ],
+  )
+
   const copyWalletDebugTrace = useCallback(() => {
     const trace = JSON.stringify(debugEntries, null, 2)
     const markCopied = () => {
@@ -928,8 +1078,20 @@ export function StripeOfferElementsCheckoutContent({
           message: getStripeOfferElementsErrorMessage(),
         })
       }
+      const reportAndRejectConfirmation = (reason: StripeCustomerPaymentErrorReason) => {
+        captureStripeCustomerPaymentError({
+          checkoutAttemptId,
+          commerceKind,
+          isInternalTest,
+          live: stripeLive,
+          method: paymentMethodType,
+          reason,
+          source: observabilitySource,
+        })
+        rejectConfirmation(reason)
+      }
       if (!checkout) {
-        rejectConfirmation("checkout_unavailable")
+        reportAndRejectConfirmation("checkout_unavailable")
         return
       }
       const confirmationGuardFailureReason = confirmingRef.current
@@ -940,7 +1102,11 @@ export function StripeOfferElementsCheckoutContent({
             ? "payment_element_not_confirmable"
             : null
       if (confirmationGuardFailureReason) {
-        rejectConfirmation(confirmationGuardFailureReason)
+        if (confirmationGuardFailureReason === "confirmation_in_flight") {
+          rejectConfirmation(confirmationGuardFailureReason)
+        } else {
+          reportAndRejectConfirmation(confirmationGuardFailureReason)
+        }
         return
       }
       markFirstPaymentEngagement()
@@ -985,16 +1151,15 @@ export function StripeOfferElementsCheckoutContent({
         shouldRelease = true
         recordExpressConfirm("failed", "confirm_error")
         recordWalletDebugEvent("checkout_confirm_failed", undefined, "confirm_error")
-        if (expressCheckoutConfirmEvent) {
-          captureCheckoutException(result.error, {
-            provider: "stripe",
-            stage: "stripe_express_checkout_confirm",
-            source: "quiz_result_offer",
-            checkoutAttemptId,
-            status: "failed",
-            reason: "confirm_error",
-          })
-        }
+        captureStripeCustomerPaymentError({
+          checkoutAttemptId,
+          commerceKind,
+          isInternalTest,
+          live: stripeLive,
+          method: paymentMethodType,
+          reason: "confirm_error",
+          source: observabilitySource,
+        })
         const message = getStripeOfferElementsErrorMessage(result.error.message)
         setErrorMessage(message)
         expressCheckoutConfirmEvent?.paymentFailed({ message })
@@ -1003,16 +1168,15 @@ export function StripeOfferElementsCheckoutContent({
         const reason = getStripeExpressCheckoutExceptionReason(error)
         recordExpressConfirm("failed", reason)
         recordWalletDebugEvent("checkout_confirm_failed", undefined, reason)
-        if (expressCheckoutConfirmEvent) {
-          captureCheckoutException(new Error("Stripe Express Checkout confirmation failed"), {
-            provider: "stripe",
-            stage: "stripe_express_checkout_confirm",
-            source: "quiz_result_offer",
-            checkoutAttemptId,
-            status: "failed",
-            reason,
-          })
-        }
+        captureStripeCustomerPaymentError({
+          checkoutAttemptId,
+          commerceKind,
+          isInternalTest,
+          live: stripeLive,
+          method: paymentMethodType,
+          reason,
+          source: observabilitySource,
+        })
         const message = getStripeOfferElementsErrorMessage()
         setErrorMessage(message)
         expressCheckoutConfirmEvent?.paymentFailed({ message })
@@ -1028,11 +1192,15 @@ export function StripeOfferElementsCheckoutContent({
       checkout,
       checkoutAttemptId,
       claimStripe,
+      commerceKind,
+      isInternalTest,
       markFirstPaymentEngagement,
       onBeforeConfirm,
+      observabilitySource,
       preparedCheckoutSyncPending,
       recordWalletDebugEvent,
       releaseStripe,
+      stripeLive,
     ],
   )
 
@@ -1256,14 +1424,7 @@ export function StripeOfferElementsCheckoutContent({
                 onChange={(event: StripePaymentElementChangeEvent) => {
                   if (!event.empty) markFirstPaymentEngagement()
                 }}
-                onLoadError={(event) => {
-                  setPaymentElementReady(false)
-                  recordWalletDebugEvent(
-                    "payment_load_error",
-                    undefined,
-                    event.error.code ?? event.error.type,
-                  )
-                }}
+                onLoadError={handlePaymentElementLoadError}
                 onLoaderStart={() => recordWalletDebugEvent("payment_loader_started")}
                 onReady={() => {
                   setPaymentElementReady(true)
@@ -1310,6 +1471,7 @@ export function StripeOfferElementsCheckout({
   checkoutAttemptId,
   checkoutKey,
   clientSecret,
+  commerceKind = "unknown",
   fetchClientSecret,
   holdPaymentChoicesUntilResolved = false,
   preparedCheckoutId,
@@ -1329,12 +1491,14 @@ export function StripeOfferElementsCheckout({
   onProviderLockRelease,
   onRetry,
   secondaryPaymentMethod,
+  observabilitySource = "quiz_result_offer",
   stripe,
   visible = true,
 }: {
   checkoutAttemptId?: string
   checkoutKey: string
   clientSecret?: string | null
+  commerceKind?: PaymentCommerceKind
   fetchClientSecret: () => Promise<string>
   holdPaymentChoicesUntilResolved?: boolean
   preparedCheckoutId?: string
@@ -1357,6 +1521,7 @@ export function StripeOfferElementsCheckout({
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
   secondaryPaymentMethod?: ReactNode
+  observabilitySource?: CheckoutSource
   stripe: Promise<Stripe | null>
   visible?: boolean
 }) {
@@ -1378,6 +1543,7 @@ export function StripeOfferElementsCheckout({
     >
       <StripeOfferElementsCheckoutBody
         checkoutAttemptId={checkoutAttemptId}
+        commerceKind={commerceKind}
         holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
         preparedCheckoutId={preparedCheckoutId}
         suppressExpressWallet={suppressExpressWallet}
@@ -1396,6 +1562,7 @@ export function StripeOfferElementsCheckout({
         onProviderLockRelease={onProviderLockRelease}
         onRetry={onRetry}
         secondaryPaymentMethod={secondaryPaymentMethod}
+        observabilitySource={observabilitySource}
         visible={visible}
       />
     </CheckoutElementsProvider>

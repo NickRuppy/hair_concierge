@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { StripeOfferElementsCheckout } from "@/components/checkout/stripe-offer-elements-checkout"
 import { ActiveSubscriptionDialog } from "@/components/checkout/active-subscription-dialog"
 import { PaymentOptionExposure } from "@/components/checkout/payment-option-exposure"
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import { Button } from "@/components/ui/button"
 import { claimOfferPaymentOptionView } from "@/lib/analytics/offer-payment-option-view"
@@ -16,6 +17,8 @@ import {
   PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
 } from "@/lib/billing/personal-plan-one-time-consent-copy"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import type { CheckoutStage } from "@/lib/observability/checkout"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import { PayPalOneTimeButton } from "./paypal-one-time-button"
 
@@ -66,6 +69,7 @@ export function PersonalPlanOneTimeCheckout({
   visible: boolean
 }) {
   const offerContext = useOfferTrackingContext()
+  const { stripeLive } = usePaymentRuntime()
   const checkoutStartedProvidersRef = useRef(new Set<string>())
   const paymentOptionViewsRef = useRef(new Set<string>())
   const paymentSelectionIndexRef = useRef(0)
@@ -83,6 +87,40 @@ export function PersonalPlanOneTimeCheckout({
   const [stripeSelected, setStripeSelected] = useState(false)
   const [stripePreparationId, setStripePreparationId] = useState(createFunnelEventId)
   const canStartPayment = Boolean(leadId && funnelSessionId)
+
+  const reportStripeCustomerError = useCallback(
+    ({
+      errorFamily,
+      providerReferencePresent = false,
+      stage,
+      status,
+    }: {
+      errorFamily: PaymentErrorFamily
+      providerReferencePresent?: boolean
+      stage: CheckoutStage
+      status?: number | string
+    }) => {
+      capturePaymentFailure({
+        signal: "customer_payment_error_observed",
+        provider: "stripe",
+        stage,
+        errorFamily,
+        commerceKind: "one_time",
+        origin: "browser",
+        method: "unknown",
+        truth: "unknown",
+        live: stripeLive,
+        isInternalTest: offerContext?.isInternalTest ?? false,
+        retryable: "true",
+        checkoutAttemptId,
+        leadId,
+        source: "quiz_result_offer",
+        status,
+        providerReferencePresent,
+      })
+    },
+    [checkoutAttemptId, leadId, offerContext?.isInternalTest, stripeLive],
+  )
 
   useEffect(() => {
     onStripePreparationStateChangeRef.current = onStripePreparationStateChange
@@ -203,6 +241,7 @@ export function PersonalPlanOneTimeCheckout({
   const fetchClientSecret = useCallback(async () => {
     if (!leadId || !funnelSessionId) throw new Error("one-time checkout is not authorized")
     reportStripePreparationState("preparing")
+    let responseStatus: number | undefined
     try {
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -217,6 +256,7 @@ export function PersonalPlanOneTimeCheckout({
           presentation: "offer_overlay_elements",
         }),
       })
+      responseStatus = response.status
       const body = (await response.json().catch(() => ({}))) as {
         client_secret?: unknown
         expires_at?: unknown
@@ -247,11 +287,24 @@ export function PersonalPlanOneTimeCheckout({
       reportStripePreparationState("prepared", body.expires_at)
       return body.client_secret
     } catch (error) {
-      if (visibleRef.current) setError(checkoutStartError)
+      if (visibleRef.current) {
+        setError(checkoutStartError)
+        reportStripeCustomerError({
+          errorFamily: responseStatus === undefined ? "network" : "provider_session",
+          stage: "stripe_embedded_checkout_client_secret",
+          status: responseStatus,
+        })
+      }
       reportStripePreparationState("failed")
       throw error
     }
-  }, [funnelSessionId, leadId, reportStripePreparationState, stripePreparationId])
+  }, [
+    funnelSessionId,
+    leadId,
+    reportStripeCustomerError,
+    reportStripePreparationState,
+    stripePreparationId,
+  ])
 
   const handleBeforeStripeConfirm = useCallback(async () => {
     if (!accepted) {
@@ -261,6 +314,11 @@ export function PersonalPlanOneTimeCheckout({
     const preparation = preparedStripeCheckoutRef.current
     if (!checkoutAttemptId || !leadId || !funnelSessionId || !preparation) {
       setError(checkoutStartError)
+      reportStripeCustomerError({
+        errorFamily: "provider_session",
+        stage: "stripe_prepared_checkout_sync",
+        status: "prepared_checkout_missing",
+      })
       return false
     }
     if (preparation.expiresAt <= Math.floor(Date.now() / 1000)) {
@@ -268,11 +326,23 @@ export function PersonalPlanOneTimeCheckout({
       setError("Die Zahlungsarten werden neu geladen. Bitte versuche es gleich noch einmal.")
       reportStripePreparationState("preparing")
       setStripePreparationId(createFunnelEventId())
+      reportStripeCustomerError({
+        errorFamily: "timeout",
+        providerReferencePresent: true,
+        stage: "stripe_prepared_checkout_sync",
+        status: "prepared_checkout_expired",
+      })
       return false
     }
     if (preparation.claimed) return true
     if (!preparation.preparationToken) {
       setError(checkoutStartError)
+      reportStripeCustomerError({
+        errorFamily: "provider_session",
+        providerReferencePresent: true,
+        stage: "stripe_prepared_checkout_sync",
+        status: "preparation_token_missing",
+      })
       return false
     }
 
@@ -324,6 +394,12 @@ export function PersonalPlanOneTimeCheckout({
         setStripePreparationId(createFunnelEventId())
       }
       setError(checkoutStartError)
+      reportStripeCustomerError({
+        errorFamily: "provider_session",
+        providerReferencePresent: true,
+        stage: "stripe_prepared_checkout_sync",
+        status: response.ok ? "claim_payload_invalid" : response.status,
+      })
       return false
     }
     preparation.claimed = true
@@ -335,6 +411,7 @@ export function PersonalPlanOneTimeCheckout({
     checkoutAttemptId,
     funnelSessionId,
     leadId,
+    reportStripeCustomerError,
     reportStripePreparationState,
     stripePreparationId,
     trackCheckoutStarted,
@@ -366,6 +443,7 @@ export function PersonalPlanOneTimeCheckout({
         <StripeOfferElementsCheckout
           checkoutAttemptId={checkoutAttemptId ?? undefined}
           checkoutKey={`personal-plan-once:${stripePreparationId}`}
+          commerceKind="one_time"
           fetchClientSecret={fetchClientSecret}
           onBeforeConfirm={handleBeforeStripeConfirm}
           onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
@@ -379,6 +457,7 @@ export function PersonalPlanOneTimeCheckout({
             setStripePreparationId(createFunnelEventId())
           }}
           paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
+          observabilitySource="quiz_result_offer"
           paymentElementEnabled={visible && stripeSelected}
           secondaryPaymentMethod={
             visible &&

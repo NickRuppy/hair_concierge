@@ -55,7 +55,17 @@ export function buildStripeCheckoutSessionParams({
               ...(extraMetadata?.checkout_attempt_id
                 ? { checkout_attempt_id: extraMetadata.checkout_attempt_id }
                 : {}),
+              ...(extraMetadata?.is_internal_test
+                ? { is_internal_test: extraMetadata.is_internal_test }
+                : {}),
             },
+          },
+        }
+      : {}),
+    ...(!isOneTimePurchase && extraMetadata?.is_internal_test
+      ? {
+          subscription_data: {
+            metadata: { is_internal_test: extraMetadata.is_internal_test },
           },
         }
       : {}),

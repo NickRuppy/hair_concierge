@@ -34,8 +34,25 @@ test("PayPal pending polling depends on the stable token instead of the activati
     welcomeClientSource,
     /!isOneTimePurchase && activationSource\.provider === "paypal" \? activationSource\.token : null/,
   )
-  assert.match(welcomeClientSource, /\}, \[mode, paypalActivationToken\]\)/)
+  assert.match(
+    welcomeClientSource,
+    /\}, \[isOneTimePurchase, mode, paypalActivationToken, paypalLive\]\)/,
+  )
   assert.doesNotMatch(welcomeClientSource, /\}, \[activationSource, mode\]\)/)
+})
+
+test("terminal PayPal activation polling reports a typed payment failure without the token", () => {
+  assert.match(
+    welcomeClientSource,
+    /capturePaymentFailure\(\{[\s\S]*signal: "customer_payment_error_observed"[\s\S]*stage: "paypal_activation_status_poll"[\s\S]*errorFamily: "timeout"/,
+  )
+  assert.match(welcomeClientSource, /providerReferencePresent: true/)
+  const paymentFailureCall = welcomeClientSource.match(
+    /capturePaymentFailure\(\{[\s\S]*?providerReferencePresent: true,[\s\S]*?\n\s*\}\)/,
+  )?.[0]
+  assert.ok(paymentFailureCall)
+  assert.doesNotMatch(paymentFailureCall, /token:/)
+  assert.doesNotMatch(paymentFailureCall, /paypalActivationToken/)
 })
 
 test("welcome labels the account email as Chaarlie-E-Mail", () => {

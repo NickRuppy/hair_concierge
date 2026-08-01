@@ -160,6 +160,8 @@ test("validates PayPal capture status, identity, amount, and currency", () => {
 test("does not mark or activate an order when the provider capture fails validation", async () => {
   let updateCalls = 0
   let accountCalls = 0
+  const reported: Array<Record<string, unknown>> = []
+  const qaIntent = { ...intent, metadata: { is_internal_test: true } }
   const supabase = {
     from(table: string) {
       assert.equal(table, "paypal_order_intents")
@@ -171,7 +173,7 @@ test("does not mark or activate an order when the provider capture fails validat
           return this
         },
         async maybeSingle() {
-          return { data: intent, error: null }
+          return { data: qaIntent, error: null }
         },
         update() {
           updateCalls += 1
@@ -184,6 +186,9 @@ test("does not mark or activate an order when the provider capture fails validat
   await assert.rejects(
     captureAndActivatePayPalOrder(intent.token, {
       supabase: supabase as never,
+      capturePaymentFailure(details: Record<string, unknown>) {
+        reported.push(details)
+      },
       captureOrder: async () => ({
         id: intent.provider_order_id ?? undefined,
         status: "COMPLETED",
@@ -213,7 +218,91 @@ test("does not mark or activate an order when the provider capture fails validat
   )
   assert.equal(updateCalls, 0)
   assert.equal(accountCalls, 0)
+  assert.deepEqual(reported, [
+    {
+      signal: "customer_payment_error_observed",
+      boundary: "provider_outcome",
+      errorFamily: "processing",
+      truth: "unknown",
+      provider: "paypal",
+      commerceKind: "one_time",
+      origin: "provider_api",
+      method: "paypal",
+      live: false,
+      isInternalTest: true,
+      retryable: "true",
+      checkoutAttemptId: qaIntent.checkout_attempt_id,
+      leadId: qaIntent.lead_id,
+      providerReferencePresent: true,
+    },
+  ])
 })
+
+test("reports a PayPal 422 capture response as one provider-confirmed failed capture", async () => {
+  const reported: Array<Record<string, unknown>> = []
+  const supabase = payPalOrderIntentLookup(intent)
+  const providerRejection = Object.assign(new Error("provider rejected capture"), { status: 422 })
+
+  await assert.rejects(
+    captureAndActivatePayPalOrder(intent.token, {
+      supabase: supabase as never,
+      captureOrder: async () => {
+        throw providerRejection
+      },
+      capturePaymentFailure(details: Record<string, unknown>) {
+        reported.push(details)
+      },
+    }),
+    providerRejection,
+  )
+
+  assert.equal(reported.length, 1)
+  assert.equal(reported[0].signal, "provider_payment_failed")
+  assert.equal(reported[0].errorFamily, "processing")
+  assert.equal(reported[0].truth, "failed")
+})
+
+test("keeps PayPal authentication and configuration failures out of provider-failed truth", async () => {
+  for (const status of [401, 403]) {
+    const reported: Array<Record<string, unknown>> = []
+    const error = Object.assign(new Error("merchant authentication failed"), { status })
+    await assert.rejects(
+      captureAndActivatePayPalOrder(intent.token, {
+        supabase: payPalOrderIntentLookup(intent) as never,
+        captureOrder: async () => {
+          throw error
+        },
+        capturePaymentFailure(details: Record<string, unknown>) {
+          reported.push(details)
+        },
+      }),
+      error,
+    )
+    assert.equal(reported.length, 1)
+    assert.equal(reported[0].signal, "customer_payment_error_observed")
+    assert.equal(reported[0].errorFamily, "provider_unavailable")
+    assert.equal(reported[0].truth, "unknown")
+  }
+})
+
+function payPalOrderIntentLookup(row: PayPalOrderIntentRow) {
+  return {
+    from(table: string) {
+      assert.equal(table, "paypal_order_intents")
+      return {
+        select() {
+          return this
+        },
+        eq() {
+          return this
+        },
+        async maybeSingle() {
+          return { data: row, error: null }
+        },
+      }
+    },
+  }
+}
 
 test("resolves refund and reversal webhooks through their related capture, not refund id", () => {
   assert.equal(

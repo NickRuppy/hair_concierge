@@ -13,6 +13,7 @@ import {
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
 } from "@/components/checkout/payment-method-checkout"
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { SubscriptionPlanSelector } from "@/components/checkout/subscription-plan-selector"
 import {
   createCheckoutAttemptController,
@@ -20,7 +21,8 @@ import {
 } from "@/lib/analytics/checkout-attempt"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
-import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
+import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -50,6 +52,7 @@ export function MembershipReactivationCheckout({
   initialInterval?: BillingInterval
   returnDestination: string
 }) {
+  const { stripeLive } = usePaymentRuntime()
   const checkoutRef = useRef<HTMLDivElement | null>(null)
   const checkoutAttemptControllerRef = useRef<CheckoutAttemptController | null>(null)
   checkoutAttemptControllerRef.current ??= createCheckoutAttemptController(createFunnelEventId)
@@ -67,6 +70,31 @@ export function MembershipReactivationCheckout({
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const selectedPlan = getStripePricingPlan(selectedInterval)
+
+  const reportStripeCustomerError = useCallback(
+    (errorFamily: PaymentErrorFamily, status?: number, attemptId = checkoutAttemptId) => {
+      capturePaymentFailure({
+        signal: "customer_payment_error_observed",
+        provider: "stripe",
+        stage: "stripe_embedded_checkout_client_secret",
+        errorFamily,
+        commerceKind: "subscription",
+        origin: "browser",
+        method: "card",
+        truth: "unknown",
+        live: stripeLive,
+        isInternalTest: false,
+        retryable: "true",
+        source: "reactivation",
+        interval: checkoutInterval ?? selectedInterval,
+        plan: getStripePricingPlan(checkoutInterval ?? selectedInterval).analyticsId,
+        checkoutAttemptId: attemptId,
+        status,
+        providerReferencePresent: false,
+      })
+    },
+    [checkoutAttemptId, checkoutInterval, selectedInterval, stripeLive],
+  )
 
   const getStripePromise = useCallback(() => {
     if (!stripePublishableKey) return unloadedStripePromise
@@ -116,9 +144,11 @@ export function MembershipReactivationCheckout({
       return
     }
 
-    setCheckoutError(
-      !isPayPalCheckoutEnabled() && !stripePublishableKey ? checkoutStartError : null,
-    )
+    const noPaymentProvider = !isPayPalCheckoutEnabled() && !stripePublishableKey
+    setCheckoutError(noPaymentProvider ? checkoutStartError : null)
+    if (noPaymentProvider) {
+      reportStripeCustomerError("configuration", undefined, nextAttempt.checkoutAttemptId)
+    }
     setCheckoutAttemptId(nextAttempt.checkoutAttemptId)
     setCheckoutInterval(selectedInterval)
     setCheckoutStripePromise(getStripePromise())
@@ -134,6 +164,7 @@ export function MembershipReactivationCheckout({
 
     if (!stripePublishableKey) {
       setCheckoutError(checkoutStartError)
+      reportStripeCustomerError("configuration")
       throw new Error("stripe publishable key missing")
     }
 
@@ -163,13 +194,7 @@ export function MembershipReactivationCheckout({
       })
     } catch (error) {
       setCheckoutError(checkoutStartError)
-      captureCheckoutException(error, {
-        provider: "stripe",
-        stage: "stripe_embedded_checkout_client_secret",
-        source: "pricing_page",
-        interval: checkoutInterval,
-        reason: "network_error",
-      })
+      reportStripeCustomerError("network")
       throw error
     }
 
@@ -187,19 +212,14 @@ export function MembershipReactivationCheckout({
       }
       setCheckoutError(checkoutStartError)
       const error = new Error("failed to create checkout session")
-      captureCheckoutException(error, {
-        provider: "stripe",
-        stage: "stripe_embedded_checkout_client_secret",
-        source: "pricing_page",
-        interval: checkoutInterval,
-        status: response.status,
-      })
+      reportStripeCustomerError("provider_session", response.status)
       throw error
     }
 
     const clientSecret = typeof body.client_secret === "string" ? body.client_secret : null
     if (!clientSecret) {
       setCheckoutError(checkoutStartError)
+      reportStripeCustomerError("provider_session", response.status)
       throw new Error("checkout session response missing client secret")
     }
 
@@ -224,6 +244,7 @@ export function MembershipReactivationCheckout({
     checkoutAttemptId,
     checkoutInterval,
     lockCheckoutToProvider,
+    reportStripeCustomerError,
     returnDestination,
   ])
 

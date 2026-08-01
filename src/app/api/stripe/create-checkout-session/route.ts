@@ -360,6 +360,7 @@ export async function POST(req: NextRequest) {
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
     let oneTimeConsentId: string | null = null
     let oneTimeProviderLocked: "stripe" | null = null
+    let checkoutIsInternalTest: boolean | undefined
 
     if (isOneTimePurchase) {
       // Re-fetches the persisted arm; browser fields only select this guarded path.
@@ -367,6 +368,7 @@ export async function POST(req: NextRequest) {
         leadId: leadId!,
         funnelSessionId,
       })
+      checkoutIsInternalTest = authorization.isInternalTest
       if (isPreparation) {
         const { data: existing, error: lookupError } = await getAdminSupabase()
           .from("personal_plan_one_time_checkout_consents")
@@ -660,6 +662,14 @@ export async function POST(req: NextRequest) {
           funnelContext,
         )
       : null
+    if (
+      checkoutIsInternalTest === undefined &&
+      funnelContext &&
+      "isInternalTest" in funnelContext &&
+      typeof funnelContext.isInternalTest === "boolean"
+    ) {
+      checkoutIsInternalTest = funnelContext.isInternalTest
+    }
 
     const preparationTokenForResponse = isPreparation ? createPreparedCheckoutToken() : null
     const preparedMetadata = isPreparation
@@ -691,18 +701,27 @@ export async function POST(req: NextRequest) {
       returnDestination: reactivationReservation?.return_destination,
       reactivationReservationId: reactivationReservation?.id,
       presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
-      ...(!isPreparation && (checkoutAttemptId || oneTimeConsentId)
+      ...(!isPreparation &&
+      (checkoutAttemptId || oneTimeConsentId || checkoutIsInternalTest !== undefined)
         ? {
             metadata: {
               ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
               ...(oneTimeConsentId ? { personal_plan_once_consent_id: oneTimeConsentId } : {}),
+              ...(checkoutIsInternalTest !== undefined
+                ? { is_internal_test: String(checkoutIsInternalTest) }
+                : {}),
             },
           }
         : {}),
       ...(isPreparation
         ? {
             expiresAt: preparedCheckoutExpiresAt(),
-            metadata: preparedMetadata,
+            metadata: {
+              ...preparedMetadata,
+              ...(checkoutIsInternalTest !== undefined
+                ? { is_internal_test: String(checkoutIsInternalTest) }
+                : {}),
+            },
           }
         : {}),
     })
@@ -1285,6 +1304,10 @@ async function claimPreparedCheckoutSession(input: {
               ? {
                   funnel_session_id: funnelContextForMetadata.sessionId,
                   funnel_package_key: funnelContextForMetadata.packageKey,
+                  ...("isInternalTest" in funnelContextForMetadata &&
+                  typeof funnelContextForMetadata.isInternalTest === "boolean"
+                    ? { is_internal_test: String(funnelContextForMetadata.isInternalTest) }
+                    : {}),
                 }
               : {}),
         },

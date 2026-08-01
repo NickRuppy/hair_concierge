@@ -141,6 +141,12 @@ test("offer pricing tracks plan, checkout, payment-method, and sanitized failure
   assert.match(pricingSource, /trackAppEvent\("offer_payment_option_viewed"/)
   assert.match(pricingSource, /claimOfferPaymentOptionView\(/)
   assert.match(pricingSource, /trackAppEvent\("checkout_start_failed"/)
+  assert.match(
+    pricingSource,
+    /provider === "stripe" && failure\.failureStage !== "duplicate_access"[\s\S]*capturePaymentFailure\(\{/,
+  )
+  assert.match(pricingSource, /isInternalTest: Boolean\(offerContext\?\.isInternalTest\)/)
+  assert.match(pricingSource, /checkoutAttemptId: attemptId/)
   assert.match(pricingSource, /errorCode: "stripe_session_request_failed"/)
   assert.match(pricingSource, /errorCode: "stripe_js_load_failed"/)
   assert.doesNotMatch(pricingSource, /errorCode: error\.message/)

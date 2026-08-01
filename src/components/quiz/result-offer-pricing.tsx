@@ -11,6 +11,7 @@ import {
   type CheckoutFailure,
 } from "@/components/checkout/payment-method-checkout"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
+import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import type {
   PreparedCheckoutActivationResult,
   PreparedCheckoutSyncResult,
@@ -66,6 +67,7 @@ import {
   type OfferCheckoutReadyGateState,
 } from "@/lib/stripe/offer-checkout-ready-gate"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const unloadedStripePromise = Promise.resolve(null)
@@ -120,6 +122,14 @@ type CheckoutGateTerminal =
 type CheckoutGateWaiter = {
   resolve: (terminal: CheckoutGateTerminal) => void
   token: number
+}
+
+function classifyOfferStripeFailure(failure: CheckoutFailure): PaymentErrorFamily {
+  if (failure.failureStage === "configuration") return "configuration"
+  if (failure.errorCode.includes("network")) return "network"
+  if (failure.errorCode.includes("timeout")) return "timeout"
+  if (failure.errorCode.includes("load")) return "provider_unavailable"
+  return "provider_session"
 }
 export type ResultOfferPricingCheckoutSummary =
   | {
@@ -794,6 +804,7 @@ function MembershipResultOfferPricing({
   openCheckoutRequestId?: number
   referencePrices?: QuizResultReferencePrices
 }) {
+  const { stripeLive } = usePaymentRuntime()
   const pricingRef = useRef<HTMLDivElement | null>(null)
   const pricingCtaRef = useRef<HTMLDivElement | null>(null)
   const inlineCheckoutRef = useRef<HTMLDivElement | null>(null)
@@ -986,7 +997,6 @@ function MembershipResultOfferPricing({
       interval: BillingInterval
       provider: "stripe" | "paypal"
     }) => {
-      if (!offerContext) return
       if (
         !checkoutAttemptController.claimFailure(
           attemptId,
@@ -998,6 +1008,33 @@ function MembershipResultOfferPricing({
         return
 
       const plan = getStripePricingPlan(interval)
+      if (provider === "stripe" && failure.failureStage !== "duplicate_access") {
+        capturePaymentFailure({
+          signal: "customer_payment_error_observed",
+          provider: "stripe",
+          stage: failure.errorCode.startsWith("prepared_checkout_")
+            ? "stripe_prepared_checkout_sync"
+            : failure.failureStage === "configuration"
+              ? "stripe_checkout_session_create"
+              : "stripe_embedded_checkout_client_secret",
+          errorFamily: classifyOfferStripeFailure(failure),
+          commerceKind: "subscription",
+          origin: "browser",
+          method: "unknown",
+          truth: "unknown",
+          live: stripeLive,
+          isInternalTest: Boolean(offerContext?.isInternalTest),
+          retryable: String(failure.retryable) as "true" | "false",
+          source: "quiz_result_offer",
+          interval,
+          plan: plan.analyticsId,
+          checkoutAttemptId: attemptId,
+          leadId,
+          providerReferencePresent: false,
+        })
+      }
+
+      if (!offerContext) return
       trackAppEvent("checkout_start_failed", {
         ...offerContext,
         checkoutAttemptId: attemptId,
@@ -1010,7 +1047,7 @@ function MembershipResultOfferPricing({
         value: plan.amount,
       })
     },
-    [checkoutAttemptController, offerContext],
+    [checkoutAttemptController, leadId, offerContext, stripeLive],
   )
 
   const prepareOfferCheckout = useCallback(

@@ -237,6 +237,57 @@ test("Express Checkout bypasses only Payment Element readiness and traces every 
   )
 })
 
+test("Stripe customer-visible confirmation failures emit classified browser payment signals once", () => {
+  assert.match(stripeOfferElementsSource, /usePaymentRuntime/)
+  assert.match(stripeOfferElementsSource, /useOfferTrackingContext/)
+  assert.match(stripeOfferElementsSource, /capturePaymentFailure/)
+  assert.match(stripeOfferElementsSource, /signal: "customer_payment_error_observed"/)
+  assert.match(stripeOfferElementsSource, /provider: "stripe"/)
+  assert.match(stripeOfferElementsSource, /origin: "browser"/)
+  assert.match(stripeOfferElementsSource, /truth: "unknown"/)
+  assert.match(stripeOfferElementsSource, /live: stripeLive/)
+  assert.match(stripeOfferElementsSource, /isInternalTest/)
+  assert.match(stripeOfferElementsSource, /method: mapStripeOfferPaymentMethod\(method\)/)
+  assert.match(stripeOfferElementsSource, /status: reason/)
+
+  const reasonType = stripeOfferElementsSource.slice(
+    stripeOfferElementsSource.indexOf("type StripeCustomerPaymentErrorReason"),
+    stripeOfferElementsSource.indexOf("const STRIPE_CUSTOMER_PAYMENT_ERROR_FAMILY_BY_REASON"),
+  )
+  assert.match(reasonType, /"checkout_unavailable"/)
+  assert.match(reasonType, /"prepared_checkout_not_synchronized"/)
+  assert.match(reasonType, /"payment_element_not_confirmable"/)
+  assert.match(reasonType, /"confirm_error"/)
+  assert.match(reasonType, /"confirm_event_invalid"/)
+  assert.match(reasonType, /"exception"/)
+  assert.doesNotMatch(reasonType, /"confirmation_in_flight"/)
+  assert.doesNotMatch(reasonType, /"provider_locked"/)
+
+  const confirmCheckoutSource = stripeOfferElementsSource.slice(
+    stripeOfferElementsSource.indexOf("const confirmCheckout = useCallback"),
+    stripeOfferElementsSource.indexOf('if (checkoutResult.type === "error")'),
+  )
+  const reportAndReject = confirmCheckoutSource.indexOf("const reportAndRejectConfirmation")
+  const reportCall = confirmCheckoutSource.indexOf(
+    "captureStripeCustomerPaymentError",
+    reportAndReject,
+  )
+  const rejectCall = confirmCheckoutSource.indexOf("rejectConfirmation(reason)", reportAndReject)
+  assert.ok(reportAndReject > -1)
+  assert.ok(reportCall > reportAndReject)
+  assert.ok(rejectCall > reportCall)
+  assert.match(confirmCheckoutSource, /reportAndRejectConfirmation\("checkout_unavailable"\)/)
+  assert.match(
+    confirmCheckoutSource,
+    /reportAndRejectConfirmation\(confirmationGuardFailureReason\)/,
+  )
+  assert.match(confirmCheckoutSource, /reason: "confirm_error"/)
+  assert.match(confirmCheckoutSource, /reason,\s*source: observabilitySource,\s*\}\)/)
+  assert.match(confirmCheckoutSource, /rejectConfirmation\("provider_locked"\)/)
+  assert.doesNotMatch(confirmCheckoutSource, /captureCheckoutException\(result\.error/)
+  assert.doesNotMatch(confirmCheckoutSource, /Stripe Express Checkout confirmation failed/)
+})
+
 test("Express Checkout failures preserve bounded provider errors and classify unknown exceptions safely", () => {
   assert.equal(
     getStripeExpressCheckoutExceptionReason(
@@ -265,12 +316,13 @@ test("Express Checkout failures preserve bounded provider errors and classify un
   assert.equal(JSON.stringify(hostileReason).includes("secret"), false)
   assert.equal(JSON.stringify(hostileReason).includes("person@example.com"), false)
 
-  assert.match(stripeOfferElementsSource, /captureCheckoutException\(result\.error,/)
+  assert.match(stripeOfferElementsSource, /reason: "confirm_error"/)
   assert.match(
     stripeOfferElementsSource,
-    /captureCheckoutException\(new Error\("Stripe Express Checkout confirmation failed"\),/,
+    /const reason = getStripeExpressCheckoutExceptionReason\(error\)/,
   )
   assert.doesNotMatch(stripeOfferElementsSource, /captureCheckoutException\(error,/)
+  assert.doesNotMatch(stripeOfferElementsSource, /Stripe Express Checkout confirmation failed/)
   assert.match(stripeOfferElementsSource, /const message = getStripeOfferElementsErrorMessage\(\)/)
 })
 
@@ -665,4 +717,31 @@ test("a Stripe preparation error keeps the independent secondary provider visibl
 
   assert.match(markup, /Die Zahlung konnte nicht bestätigt werden/)
   assert.match(markup, />PayPal</)
+  assert.match(stripeOfferElementsSource, /reportedCheckoutLoadErrorRef/)
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(reportedCheckoutLoadErrorRef\.current\) return[\s\S]*?status: "checkout_load_error"/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(checkoutResult\.type !== "error"\) \{[\s\S]*?reportedCheckoutLoadErrorRef\.current = false/,
+  )
+})
+
+test("Payment Element load errors emit one bounded card signal per checkout attempt", () => {
+  const handler = stripeOfferElementsSource.slice(
+    stripeOfferElementsSource.indexOf("const handlePaymentElementLoadError = useCallback"),
+    stripeOfferElementsSource.indexOf(
+      "const copyWalletDebugTrace",
+      stripeOfferElementsSource.indexOf("const handlePaymentElementLoadError = useCallback"),
+    ),
+  )
+
+  assert.match(handler, /reportedPaymentElementLoadErrorAttemptRef/)
+  assert.match(handler, /signal: "customer_payment_error_observed"/)
+  assert.match(handler, /stage: "stripe_embedded_checkout_load"/)
+  assert.match(handler, /method: "card"/)
+  assert.match(handler, /status: "payment_element_load_error"/)
+  assert.doesNotMatch(handler, /capturePaymentFailure\([\s\S]*?event\.error/)
+  assert.match(stripeOfferElementsSource, /onLoadError=\{handlePaymentElementLoadError\}/)
 })

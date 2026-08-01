@@ -1,10 +1,10 @@
 import * as Sentry from "@sentry/nextjs"
 
-type CheckoutProvider = "stripe" | "paypal"
-type CheckoutInterval = "month" | "quarter" | "year"
-type CheckoutSource = "pricing_page" | "quiz_result_offer" | "welcome"
+export type CheckoutProvider = "stripe" | "paypal"
+export type CheckoutInterval = "month" | "quarter" | "year"
+export type CheckoutSource = "pricing_page" | "quiz_result_offer" | "welcome" | "reactivation"
 
-type CheckoutStage =
+export type CheckoutStage =
   | "stripe_checkout_session_create"
   | "stripe_embedded_checkout_client_secret"
   | "stripe_embedded_checkout_load"
@@ -99,12 +99,36 @@ interface CheckoutSentrySink {
   withScope(callback: (scope: CheckoutScopeLike) => void): void
 }
 
-const CHECKOUT_SECRET_QUERY_KEYS = new Set(["resume_token", "session_id", "token"])
+const CHECKOUT_SECRET_QUERY_KEYS = new Set([
+  "resume_token",
+  "session_id",
+  "token",
+  "client_secret",
+  "email",
+  "email_address",
+  "receipt_email",
+  "payer_email",
+])
 const CHECKOUT_SECRET_FIELD_KEYS = new Set([
   "resume_token",
   "session_id",
   "token",
   "stripe_session_id",
+  "client_secret",
+  "payment_intent_client_secret",
+  "setup_intent_client_secret",
+  "email",
+  "email_address",
+  "receipt_email",
+  "payer_email",
+  "payer_email_address",
+  "clientsecret",
+  "paymentintentclientsecret",
+  "setupintentclientsecret",
+  "emailaddress",
+  "receiptemail",
+  "payeremail",
+  "payeremailaddress",
 ])
 const REDACTED_VALUE = "[Filtered]"
 
@@ -318,7 +342,12 @@ function scrubSentryValue(value: unknown, seen = new WeakSet<object>()): unknown
   const scrubbed: Record<string, unknown> = {}
   for (const [key, nestedValue] of Object.entries(value)) {
     const normalized = key.toLowerCase()
+    const compact = normalized.replace(/[-_]/g, "")
     if (CHECKOUT_SECRET_FIELD_KEYS.has(normalized)) {
+      scrubbed[key] = REDACTED_VALUE
+      continue
+    }
+    if (CHECKOUT_SECRET_FIELD_KEYS.has(compact)) {
       scrubbed[key] = REDACTED_VALUE
       continue
     }
@@ -381,7 +410,9 @@ function isLikelyUrl(value: string): boolean {
 }
 
 function hasCheckoutSecretQuery(value: string): boolean {
-  return /[?&](resume_token|session_id|token)=/i.test(value)
+  return /[?&](resume_token|session_id|token|client_secret|email|email_address|receipt_email|payer_email)=/i.test(
+    value,
+  )
 }
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {

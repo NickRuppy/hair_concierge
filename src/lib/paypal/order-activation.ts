@@ -32,6 +32,8 @@ import {
   type PayPalOrderIntentRow,
 } from "./order-intents"
 import type { PersonalPlanOneTimeFulfillmentJobRow } from "@/lib/billing/types"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
+import { capturePaymentFailure } from "@/lib/observability/payment"
 
 type CapturedPayPalOrder = Awaited<ReturnType<typeof captureProviderPayPalOrder>>
 export const PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER = "personal_plan_prepared_artifacts"
@@ -69,6 +71,7 @@ export type PayPalOrderActivationDeps = {
   finalizeLockedPlan?: OneTimeActivationDependencies["finalizeLockedPlan"]
   siteUrl?: string
   defer?: (work: () => void | Promise<void>) => void
+  capturePaymentFailure?: typeof capturePaymentFailure
 }
 
 type ActivePayPalCheckoutAccount = Extract<PayPalCheckoutAccountResult, { status: "active" }>
@@ -134,19 +137,70 @@ export async function captureAndActivatePayPalOrder(
         paidAt: existingPurchase.paid_at,
       }
     } else {
-      const order = await (deps.retrieveOrder ?? retrieveProviderPayPalOrder)(
-        intent.provider_order_id,
-      )
-      verifiedCapture = validateCapturedPayPalOrder(order, intent, undefined, {
-        expectedCaptureId: intent.provider_capture_id,
-      })
+      let order: CapturedPayPalOrder
+      try {
+        order = await (deps.retrieveOrder ?? retrieveProviderPayPalOrder)(intent.provider_order_id)
+      } catch (error) {
+        reportPayPalOrderFailure(deps, intent, {
+          signal: "customer_payment_error_observed",
+          boundary: "provider_outcome",
+          errorFamily: "provider_unavailable",
+          truth: "unknown",
+        })
+        throw error
+      }
+      try {
+        verifiedCapture = validateCapturedPayPalOrder(order, intent, undefined, {
+          expectedCaptureId: intent.provider_capture_id,
+        })
+      } catch (error) {
+        reportPayPalOrderFailure(deps, intent, {
+          signal: "customer_payment_error_observed",
+          boundary: "provider_outcome",
+          errorFamily: "processing",
+          truth: "unknown",
+        })
+        throw error
+      }
     }
   } else {
-    const order = await (deps.captureOrder ?? captureProviderPayPalOrder)(
-      intent.provider_order_id,
-      intent.token,
-    )
-    verifiedCapture = validateCapturedPayPalOrder(order, intent)
+    let order: CapturedPayPalOrder
+    try {
+      order = await (deps.captureOrder ?? captureProviderPayPalOrder)(
+        intent.provider_order_id,
+        intent.token,
+      )
+    } catch (error) {
+      reportPayPalOrderFailure(
+        deps,
+        intent,
+        isPayPalCaptureRejected(error)
+          ? {
+              signal: "provider_payment_failed",
+              boundary: "provider_outcome",
+              errorFamily: "processing",
+              truth: "failed",
+            }
+          : {
+              signal: "customer_payment_error_observed",
+              boundary: "provider_outcome",
+              errorFamily: "provider_unavailable",
+              truth: "unknown",
+            },
+      )
+      throw error
+    }
+    try {
+      verifiedCapture = validateCapturedPayPalOrder(order, intent)
+    } catch (error) {
+      reportPayPalOrderFailure(deps, intent, {
+        signal: "customer_payment_error_observed",
+        boundary: "provider_outcome",
+        errorFamily: "processing",
+        truth: "unknown",
+      })
+      throw error
+    }
   }
 
   if (!intent.provider_capture_id) {
@@ -175,48 +229,66 @@ export async function activateVerifiedPayPalOrderIntent(
     .select("*")
     .eq("id", intent.consent_id)
     .single()
-  if (consentError || !consent)
+  if (consentError || !consent) {
+    reportPayPalOrderFailure(deps, intent, {
+      signal: "customer_payment_error_observed",
+      boundary: "billing",
+      errorFamily: "billing_state",
+      truth: "succeeded",
+    })
     throw new PayPalCheckoutActivationError(
       "paypal_order_intent_missing",
       "PayPal order consent is missing",
     )
+  }
   const canonicalConsent = consent as PersonalPlanOneTimeCheckoutConsentRow
 
   let account: ActivePayPalCheckoutAccount | null = null
-  const activation = await activateVerifiedOneTimePayment(
-    payPalVerifiedPaymentFromCapture(capture, intent, canonicalConsent),
-    {
-      supabase: deps.supabase,
-      postPurchasePersisted: async () =>
-        bindPayPalConsentProviderReference(deps.supabase, canonicalConsent.id, capture),
-      sendConfirmation: deps.sendConfirmation,
-      finalizeLockedPlan:
-        deps.finalizeLockedPlan ??
-        ((context) => finalizeLockedPersonalPlanFromPreparedArtifact(deps.supabase, context)),
-      siteUrl: deps.siteUrl,
-      defer: deps.defer,
-      now: deps.now,
-      ensureAccount: async (payment) => {
-        account = await (deps.ensureAccount ?? ensurePayPalOneTimePurchaseAccount)(
-          {
-            supabase: deps.supabase,
-            premiumTierId: "",
-          },
-          {
-            email: payment.email,
-            activationKey: intent.token,
-            leadId: canonicalConsent.lead_id,
-          },
-        )
-        return { userId: account.userId }
+  let activation: OneTimeActivationResult
+  try {
+    activation = await activateVerifiedOneTimePayment(
+      payPalVerifiedPaymentFromCapture(capture, intent, canonicalConsent),
+      {
+        supabase: deps.supabase,
+        postPurchasePersisted: async () =>
+          bindPayPalConsentProviderReference(deps.supabase, canonicalConsent.id, capture),
+        sendConfirmation: deps.sendConfirmation,
+        finalizeLockedPlan:
+          deps.finalizeLockedPlan ??
+          ((context) => finalizeLockedPersonalPlanFromPreparedArtifact(deps.supabase, context)),
+        siteUrl: deps.siteUrl,
+        defer: deps.defer,
+        now: deps.now,
+        ensureAccount: async (payment) => {
+          account = await (deps.ensureAccount ?? ensurePayPalOneTimePurchaseAccount)(
+            {
+              supabase: deps.supabase,
+              premiumTierId: "",
+            },
+            {
+              email: payment.email,
+              activationKey: intent.token,
+              leadId: canonicalConsent.lead_id,
+            },
+          )
+          return { userId: account.userId }
+        },
+        linkQuizToProfile: deps.linkQuizToProfile
+          ? async ({ userId, payment, consent }) => {
+              await deps.linkQuizToProfile?.(userId, payment.email, consent.lead_id)
+            }
+          : undefined,
       },
-      linkQuizToProfile: deps.linkQuizToProfile
-        ? async ({ userId, payment, consent }) => {
-            await deps.linkQuizToProfile?.(userId, payment.email, consent.lead_id)
-          }
-        : undefined,
-    },
-  )
+    )
+  } catch (error) {
+    reportPayPalOrderFailure(deps, intent, {
+      signal: "customer_payment_error_observed",
+      boundary: "entitlement",
+      errorFamily: "entitlement_state",
+      truth: "succeeded",
+    })
+    throw error
+  }
 
   if (activation.state === "active") {
     const activeAccount =
@@ -266,6 +338,46 @@ export async function recoverPayPalOrderActivation(token: string, deps: PayPalOr
     deps,
   )
   return { ...result, intent }
+}
+
+function reportPayPalOrderFailure(
+  deps: PayPalOrderActivationDeps,
+  intent: PayPalOrderIntentRow,
+  failure: {
+    signal: "provider_payment_failed" | "customer_payment_error_observed"
+    boundary: "provider_outcome" | "billing" | "entitlement"
+    errorFamily: "processing" | "provider_unavailable" | "billing_state" | "entitlement_state"
+    truth: "failed" | "succeeded" | "unknown"
+  },
+) {
+  const report = deps.capturePaymentFailure ?? capturePaymentFailure
+  const runtime = resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
+  try {
+    report({
+      ...failure,
+      provider: "paypal",
+      commerceKind: "one_time",
+      origin: "provider_api",
+      method: "paypal",
+      live: runtime.paypalLive,
+      isInternalTest: intent.metadata?.is_internal_test === true,
+      retryable: "true",
+      checkoutAttemptId: intent.checkout_attempt_id,
+      leadId: intent.lead_id,
+      providerReferencePresent: Boolean(intent.provider_order_id),
+    })
+  } catch {
+    // Observability must not alter provider capture or activation behavior.
+  }
+}
+
+function isPayPalCaptureRejected(error: unknown) {
+  if (!error || typeof error !== "object" || !("status" in error)) return false
+  return error.status === 422
 }
 
 export async function processPayPalOneTimeFulfillmentJob(

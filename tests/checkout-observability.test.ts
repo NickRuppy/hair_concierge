@@ -288,6 +288,27 @@ test("scrubSentryEvent removes resume tokens from every supported Sentry surface
   assert.deepEqual(event.request?.query_string, { resume_token: "[Filtered]", keep: "yes" })
 })
 
+test("scrubSentryEvent redacts nested provider secrets and email equivalents", () => {
+  const secret = "pi_secret_123"
+  const email = "customer@example.com"
+  const event = scrubSentryEvent({
+    extra: {
+      stripe: { client_secret: secret, receipt_email: email },
+      paypal: { payer: { email_address: email }, payer_email: email },
+      nested: { payment_intent_client_secret: secret, setup_intent_client_secret: secret },
+      providerSdk: { clientSecret: secret, payerEmail: email, receiptEmail: email },
+    },
+    request: {
+      url: `https://chaarlie.de/welcome?email=${encodeURIComponent(email)}&client_secret=${secret}`,
+    },
+  })
+
+  const serialized = JSON.stringify(event)
+  assert.equal(serialized.includes(secret), false)
+  assert.equal(serialized.includes(email), false)
+  assert.equal(serialized.includes("[Filtered]"), true)
+})
+
 test("buildCheckoutSentryPayload tags checkout rate-limit source", () => {
   const payload = buildCheckoutSentryPayload({
     provider: "stripe",
