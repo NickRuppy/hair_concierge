@@ -116,3 +116,4 @@ Manual/read-only:
 - Migration SQL received static contract review and migration safety tests. It was not executed locally because Docker/Supabase local services were unavailable; normal migration-environment validation remains required before production application.
 - The required Claude counterpart plan/review lane was attempted read-only but unavailable because the local Claude account had reached its session limit. No counterpart verdict is claimed.
 - Customer.io release dependency: replace the existing `quiz_kind` / Segment 21 automation entry with `personal_plan_profile_submitted`; the old and new entry paths must not be active together for new leads.
+- Vercel release adjustment: normal delivery remains immediate best-effort, while the fallback retry cron runs once daily (`30 3 * * *`) to stay within the current Hobby plan. A manual retry command remains available for urgent recovery.

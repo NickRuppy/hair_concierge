@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -10,6 +11,20 @@ const request = (secret = "secret") =>
   new Request("https://example.com/api/customerio/profile-sync/reconcile", {
     headers: { authorization: `Bearer ${secret}` },
   })
+
+test("Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule", () => {
+  const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
+    crons: Array<{ path: string; schedule: string }>
+  }
+  const cron = config.crons.find(
+    (candidate) => candidate.path === "/api/customerio/profile-sync/reconcile",
+  )
+
+  assert.deepEqual(cron, {
+    path: "/api/customerio/profile-sync/reconcile",
+    schedule: "30 3 * * *",
+  })
+})
 
 test("Customer.io profile reconcile is bounded and authenticates before retry work", async () => {
   let calls = 0

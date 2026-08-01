@@ -236,6 +236,11 @@ Profile updates preserve an already delivered event marker. Historical backfill 
 to historical rows remain profile-only. Failed rows retry asynchronously and never make quiz
 completion depend on Customer.io availability.
 
+The lead route attempts the new row immediately after the response. The Vercel fallback cron runs
+once daily because the current Hobby plan does not accept more frequent cron schedules; operators
+can use `npm run customerio:profile-sync:retry` for an earlier manual retry. This daily cadence
+affects failures only, not the normal first delivery attempt.
+
 Manual replay should use Supabase rows as truth: rebuild the Customer.io payload from the lead/profile/subscription/outbox row and send it through the matching server-owned channel. Lifecycle events use the Pipelines API with stable `messageId` values; transactional/service artifacts such as `quiz_result_artifact` use the Customer.io App API after resetting their send status for replay. Do not replay from browser analytics events.
 
 Use these stable message ID shapes for manual replay:
