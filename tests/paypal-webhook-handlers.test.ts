@@ -740,7 +740,16 @@ test("browser-first existing billing row still records the first purchase from i
   const { supabase, analyticsOutbox } = createSupabaseStub({
     billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
     profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
-    paypalIntents: [checkoutIntent({ created_at: createdAt, status: "activated" })],
+    paypalIntents: [
+      checkoutIntent({
+        created_at: createdAt,
+        status: "activated",
+        metadata: {
+          pricing_catalog: "personal_plan_launch_v1",
+          paypal_plan_id: "P-launch-month",
+        },
+      }),
+    ],
   })
 
   await handlePayPalWebhookEvent(paymentEvent("WH-browser-first", "PAYMENT.SALE.COMPLETED"), {
@@ -759,6 +768,12 @@ test("browser-first existing billing row still records the first purchase from i
   const purchase = analyticsOutbox.find((row) => row.event_name === "purchase_completed")!
   assert.equal(purchase.source_object_id, "SALE-WH-browser-first")
   assert.equal((purchase.payload as Record<string, unknown>).checkout_reference, "I-active")
+  assert.equal(
+    (purchase.payload as Record<string, unknown>).pricing_catalog,
+    "personal_plan_launch_v1",
+  )
+  assert.equal((purchase.payload as Record<string, unknown>).plan_id, "premium_month")
+  assert.equal((purchase.payload as Record<string, unknown>).paypal_plan_id, "P-launch-month")
 })
 
 test("attributed PayPal initial purchase enqueues funnel only when both delivery flags are enabled", async () => {

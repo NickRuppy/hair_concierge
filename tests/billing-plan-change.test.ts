@@ -19,12 +19,20 @@ import {
   reconcileStripePlanChange,
   scheduleStripePlanChange,
 } from "../src/lib/stripe/subscription-plan-change"
+import { getStripePriceCatalogForId } from "../src/lib/stripe/client"
 import {
   PayPalPlanPairValidationError,
   type PayPalPlan,
   validatePayPalPlanPair,
 } from "../src/lib/paypal/subscription-shapes"
 import { upsertBillingSubscription } from "../src/lib/billing/subscriptions"
+
+process.env.STRIPE_PRICE_ID_MONTHLY = "price_month"
+process.env.STRIPE_PRICE_ID_QUARTERLY = "price_quarter"
+process.env.STRIPE_PRICE_ID_ANNUAL = "price_year"
+process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = "price_launch_month"
+process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY = "price_launch_quarter"
+process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_LAUNCH_ANNUAL = "price_launch_year"
 
 function subscription(patch: Partial<BillingSubscriptionRow> = {}): BillingSubscriptionRow {
   return {
@@ -414,6 +422,7 @@ function stripePrice(
 }
 
 function createStripePlanChangeFake(input?: {
+  currentPrice?: Stripe.Price
   cancelAtPeriodEnd?: boolean
   cancelAt?: number | null
   schedule?: string | null
@@ -429,7 +438,7 @@ function createStripePlanChangeFake(input?: {
   discounts?: unknown[]
 }) {
   const calls: Array<{ name: string; args: unknown[] }> = []
-  const currentPrice = stripePrice("month")
+  const currentPrice = input?.currentPrice ?? stripePrice("month")
   const targetPrice = input?.targetPrice ?? stripePrice("year")
   const fake = {
     subscriptions: {
@@ -491,6 +500,35 @@ function createStripePlanChangeFake(input?: {
   }
   return { stripe: fake as unknown as Stripe, calls }
 }
+
+test("Stripe provider catalog mapping recognizes both standard and launch price IDs", () => {
+  assert.deepEqual(getStripePriceCatalogForId("price_month"), {
+    family: "standard",
+    interval: "month",
+  })
+  assert.deepEqual(getStripePriceCatalogForId("price_launch_quarter"), {
+    family: "personal_plan_launch_v1",
+    interval: "quarter",
+  })
+  assert.equal(getStripePriceCatalogForId("price_unknown"), null)
+})
+
+test("Stripe provider catalog mapping preserves configured legacy standard price IDs", () => {
+  const previousLegacyMonthly = process.env.STRIPE_LEGACY_PRICE_IDS_MONTHLY
+  process.env.STRIPE_LEGACY_PRICE_IDS_MONTHLY = "price_old_month_a, price_old_month_b"
+  try {
+    assert.deepEqual(getStripePriceCatalogForId("price_old_month_b"), {
+      family: "standard",
+      interval: "month",
+    })
+  } finally {
+    if (previousLegacyMonthly === undefined) {
+      delete process.env.STRIPE_LEGACY_PRICE_IDS_MONTHLY
+    } else {
+      process.env.STRIPE_LEGACY_PRICE_IDS_MONTHLY = previousLegacyMonthly
+    }
+  }
+})
 
 test("Stripe rejects either live cancellation signal before schedule mutation", async () => {
   for (const scenario of [
@@ -572,6 +610,63 @@ test("Stripe schedules current service through period end and target service wit
     chaarlie_plan_change_target_interval: "year",
   })
   assert.deepEqual(update.args[2], { idempotencyKey: "plan-change:operation-123:update" })
+})
+
+test("Stripe schedules launch catalog changes at launch prices and rejects mixed catalog targets", async () => {
+  const launchMonth = stripePrice("month", { id: "price_launch_month", unit_amount: 999 })
+  const launchYear = stripePrice("year", { id: "price_launch_year", unit_amount: 6999 })
+  const launch = createStripePlanChangeFake({ currentPrice: launchMonth, targetPrice: launchYear })
+  await assert.doesNotReject(() =>
+    scheduleStripePlanChange({
+      stripe: launch.stripe,
+      subscriptionId: "sub_launch",
+      currentInterval: "month",
+      targetInterval: "year",
+      operationId: "operation-launch",
+    }),
+  )
+
+  const mixed = createStripePlanChangeFake({
+    currentPrice: launchMonth,
+    targetPrice: stripePrice("year"),
+  })
+  await assert.rejects(
+    scheduleStripePlanChange({
+      stripe: mixed.stripe,
+      subscriptionId: "sub_launch",
+      currentInterval: "month",
+      targetInterval: "year",
+      operationId: "operation-launch-mixed",
+      configuredTargetPriceId: "price_year",
+    }),
+    (error: unknown) =>
+      error instanceof Error &&
+      "code" in error &&
+      (error as { code?: string }).code === "stripe_catalog_mismatch",
+  )
+})
+
+test("Stripe rejects an unrecognized current provider price before schedule mutation", async () => {
+  const unknown = createStripePlanChangeFake({
+    currentPrice: stripePrice("month", { id: "price_unknown" }),
+  })
+  await assert.rejects(
+    scheduleStripePlanChange({
+      stripe: unknown.stripe,
+      subscriptionId: "sub_unknown",
+      currentInterval: "month",
+      targetInterval: "year",
+      operationId: "operation-unknown",
+    }),
+    (error: unknown) =>
+      error instanceof Error &&
+      "code" in error &&
+      (error as { code?: string }).code === "stripe_price_unrecognized",
+  )
+  assert.equal(
+    unknown.calls.some((call) => call.name === "schedule.create"),
+    false,
+  )
 })
 
 test("Stripe rejects multi-item and discounted subscriptions before schedule creation", async () => {
@@ -897,6 +992,31 @@ test("PayPal accepts configured same-product plan shapes", () => {
       targetInterval: "year",
       expectedProductId: "PROD-CHAARLIE",
     }),
+  )
+})
+
+test("PayPal rejects cross-family plan changes", () => {
+  assert.throws(
+    () =>
+      validatePayPalPlanPair({
+        currentPlan: paypalPlan("month"),
+        targetPlan: paypalPlan("year", {
+          billing_cycles: [
+            {
+              tenure_type: "REGULAR",
+              total_cycles: 0,
+              frequency: { interval_unit: "YEAR", interval_count: 1 },
+              pricing_scheme: { fixed_price: { value: "69.99", currency_code: "EUR" } },
+            },
+          ],
+        }),
+        currentInterval: "month",
+        targetInterval: "year",
+        currentFamily: "standard",
+        targetFamily: "personal_plan_launch_v1",
+      }),
+    (error: unknown) =>
+      error instanceof PayPalPlanPairValidationError && error.code === "paypal_catalog_mismatch",
   )
 })
 

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Einheitliche Membership-Launch-Preise</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --plum: #684276;
+        --plum-dark: #2a1837;
+        --plum-ice: #f7f1f8;
+        --plum-light: #dbc9df;
+        --coral: #ec6f62;
+        --muted: #766f79;
+        --border: #e8e1e9;
+        --green: #2f6d58;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f1f5;
+        color: var(--plum-dark);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      .page {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+      }
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--plum);
+        font:
+          700 11px/1.3 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        max-width: 900px;
+        font:
+          500 clamp(30px, 4vw, 48px)/1.08 Georgia,
+          serif;
+      }
+      .intro {
+        max-width: 850px;
+        margin: 14px 0 26px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .surfaces {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        align-items: start;
+      }
+      .frame {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: white;
+        box-shadow: 0 20px 55px -42px rgba(42, 24, 55, 0.65);
+      }
+      .frame-label {
+        padding: 12px 16px;
+        background: var(--plum-dark);
+        color: white;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .offer {
+        min-width: 0;
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 26px 18px 22px;
+      }
+      .offer-title {
+        margin: 0;
+        text-align: center;
+        font:
+          500 28px/1.12 Georgia,
+          serif;
+      }
+      .offer-copy {
+        min-height: 66px;
+        margin: 10px auto 16px;
+        max-width: 38ch;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+        text-align: center;
+      }
+      .discount {
+        display: flex;
+        min-height: 40px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--plum-light);
+        border-radius: 999px;
+        background: var(--plum-ice);
+        padding: 9px 12px;
+        font:
+          700 10px/1.3 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.08em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .retention {
+        margin: 8px 0 14px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 700;
+        text-align: center;
+      }
+      .plans {
+        display: grid;
+        gap: 10px;
+      }
+      .plan {
+        position: relative;
+        display: grid;
+        min-height: 78px;
+        grid-template-columns: 18px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+        background: white;
+      }
+      .plan.selected {
+        border-color: var(--plum);
+        background: var(--plum-ice);
+      }
+      .radio {
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        background: white;
+      }
+      .selected .radio {
+        border: 5px solid var(--plum);
+      }
+      .badge {
+        position: absolute;
+        right: 12px;
+        top: 0;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        background: var(--plum);
+        padding: 5px 9px;
+        color: white;
+        font:
+          700 8px/1 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .plan-name {
+        display: block;
+        font-size: 15px;
+        font-weight: 800;
+      }
+      .plan-detail {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 10.5px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+      .price {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .price s {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .price strong {
+        font-size: 17px;
+        line-height: 1;
+      }
+      .cta {
+        margin-top: 16px;
+        border-radius: 12px;
+        background: var(--coral);
+        padding: 17px 12px;
+        color: white;
+        font-size: 14px;
+        font-weight: 800;
+        text-align: center;
+      }
+      .guarantee {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: center;
+      }
+      .consistency {
+        margin: 24px 0 0;
+        border-left: 4px solid var(--green);
+        border-radius: 10px;
+        background: white;
+        padding: 15px 17px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .consistency strong {
+        color: var(--plum-dark);
+      }
+      .legal {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 20px;
+      }
+      .legal-card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: white;
+        padding: 18px;
+      }
+      .legal-card h2 {
+        margin: 0 0 10px;
+        font:
+          500 23px/1.2 Georgia,
+          serif;
+      }
+      .legal-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .legal-card.old {
+        opacity: 0.72;
+      }
+      .legal-card.new {
+        border-color: var(--plum-light);
+        background: var(--plum-ice);
+      }
+      @media (max-width: 1080px) {
+        .surfaces {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 720px) {
+        .page {
+          padding: 22px 12px 36px;
+        }
+        .surfaces,
+        .legal {
+          grid-template-columns: 1fr;
+        }
+        .offer {
+          padding-inline: 16px;
+        }
+        .offer-copy {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <p class="eyebrow">Revidiertes Review-Mockup · alle Membership-Kaufwege</p>
+      <h1>Ein Launch-Preis – unabhängig davon, wie jemand zu Chaarlie kommt.</h1>
+      <p class="intro">
+        Der umgebende Inhalt bleibt je Funnel unterschiedlich. Der gemeinsame Drei-Plan-Selector,
+        die CTA und der tatsächliche Stripe-/PayPal-Betrag sind überall identisch, solange der
+        Launch-Preis aktiv ist.
+      </p>
+
+      <div class="surfaces">
+        <section class="frame" aria-label="Personal Plan Ergebnis">
+          <div class="frame-label">Personal Plan · Membership-Ergebnis</div>
+          <div class="offer">
+            <h2 class="offer-title">Starte mit deinem persönlichen Plan.</h2>
+            <p class="offer-copy">
+              Routine, konkrete Produkthilfe und persönliche Fragen sind in jeder Laufzeit
+              enthalten.
+            </p>
+            <div class="discount">Launch-Rabatt sichern</div>
+            <p class="retention">Dein Launch-Preis bleibt bis zur Kündigung erhalten.</p>
+            <div class="plans">
+              <div class="plan">
+                <span class="radio"></span>
+                <span
+                  ><span class="plan-name">Monatlich</span
+                  ><span class="plan-detail">€9,99 · / Monat</span></span
+                >
+                <span class="price"><s>€14,99</s><strong>€9,99</strong></span>
+              </div>
+              <div class="plan selected">
+                <span class="badge">Beliebteste Wahl</span><span class="radio"></span>
+                <span
+                  ><span class="plan-name">Quartal</span
+                  ><span class="plan-detail">€19,99 · ~€6,66 / Monat · 33% sparen</span></span
+                >
+                <span class="price"><s>€34,99</s><strong>€19,99</strong></span>
+              </div>
+              <div class="plan">
+                <span class="radio"></span>
+                <span
+                  ><span class="plan-name">Jährlich</span
+                  ><span class="plan-detail">€69,99 · ~€5,83 / Monat · 42% sparen</span></span
+                >
+                <span class="price"><s>€99,99</s><strong>€69,99</strong></span>
+              </div>
+            </div>
+            <div class="cta">Jetzt starten — €19,99 im Quartal</div>
+            <p class="guarantee">14 Tage Geld-zurück-Garantie · Details in den Bedingungen</p>
+          </div>
+        </section>
+
+        <section class="frame" aria-label="Legacy Quiz und Guided Story Ergebnis">
+          <div class="frame-label">Alter Quiz · Default &amp; Guided Story</div>
+          <div class="offer">
+            <h2 class="offer-title">Deine persönliche Routine ist bereit.</h2>
+            <p class="offer-copy">
+              Schalte deine Routine, Produktempfehlungen und die persönliche Begleitung frei.
+            </p>
+            <div class="discount">Launch-Rabatt sichern</div>
+            <p class="retention">Dein Launch-Preis bleibt bis zur Kündigung erhalten.</p>
+            <div class="plans">
+              <div class="plan">
+                <span class="radio"></span>
+                <span
+                  ><span class="plan-name">Monatlich</span
+                  ><span class="plan-detail">€9,99 · / Monat</span></span
+                >
+                <span class="price"><s>€14,99</s><strong>€9,99</strong></span>
+              </div>
+              <div class="plan selected">
+                <span class="badge">Beliebteste Wahl</span><span class="radio"></span>
+                <span
+                  ><span class="plan-name">Quartal</span
+                  ><span class="plan-detail">€19,99 · ~€6,66 / Monat · 33% sparen</span></span
+                >
+                <span class="price"><s>€34,99</s><strong>€19,99</strong></span>
+              </div>
+              <div class="plan">
+                <span class="radio"></span>
+                <span
+                  ><span class="plan-name">Jährlich</span
+                  ><span class="plan-detail">€69,99 · ~€5,83 / Monat · 42% sparen</span></span
+                >
+                <span class="price"><s>€99,99</s><strong>€69,99</strong></span>
+              </div>
+            </div>
+            <div class="cta">Jetzt starten — €19,99 im Quartal</div>
+            <p class="guarantee">14 Tage Geld-zurück-Garantie · Details in den Bedingungen</p>
+          </div>
+        </section>
+
+        <section class="frame" aria-label="Membership Reaktivierung">
+          <div class="frame-label">Reaktivierung · neue Subscription</div>
+          <div class="offer">
+            <h2 class="offer-title">Mitgliedschaft reaktivieren</h2>
+            <p class="offer-copy">
+              Wähle deine Laufzeit und setze deine persönliche Haarpflege wieder fort.
+            </p>
+            <div class="discount">Launch-Rabatt sichern</div>
+            <p class="retention">Dein Launch-Preis bleibt bis zur Kündigung erhalten.</p>
+            <div class="plans">
+              <div class="plan">
+                <span class="radio"></span>
+                <span
+                  ><span class="plan-name">Monatlich</span
+                  ><span class="plan-detail">€9,99 · / Monat</span></span
+                >
+                <span class="price"><s>€14,99</s><strong>€9,99</strong></span>
+              </div>
+              <div class="plan selected">
+                <span class="badge">Beliebteste Wahl</span><span class="radio"></span>
+                <span
+                  ><span class="plan-name">Quartal</span
+                  ><span class="plan-detail">€19,99 · ~€6,66 / Monat · 33% sparen</span></span
+                >
+                <span class="price"><s>€34,99</s><strong>€19,99</strong></span>
+              </div>
+              <div class="plan">
+                <span class="radio"></span>
+                <span
+                  ><span class="plan-name">Jährlich</span
+                  ><span class="plan-detail">€69,99 · ~€5,83 / Monat · 42% sparen</span></span
+                >
+                <span class="price"><s>€99,99</s><strong>€69,99</strong></span>
+              </div>
+            </div>
+            <div class="cta">Jetzt starten — €19,99 im Quartal</div>
+            <p class="guarantee">14 Tage Geld-zurück-Garantie · Details in den Bedingungen</p>
+          </div>
+        </section>
+      </div>
+
+      <p class="consistency">
+        <strong>Ausgenommen ist nur die Vertragsfortführung:</strong> Eine aktive bestehende
+        Subscription wird nicht umgestellt. Im Profil sieht ein Standard-Subscriber weiterhin die
+        Standard-Familie; ein Launch-Subscriber sieht die Launch-Familie. Das €29,99-Einmalangebot
+        bleibt ebenfalls unverändert.
+      </p>
+
+      <div class="legal" aria-label="AGB Copy vor und nach der Änderung">
+        <section class="legal-card old">
+          <p class="eyebrow">AGB · heute</p>
+          <h2>Starre Preise und falsche Erstbetrags-Aussage</h2>
+          <p>
+            „Monatsplan: 14,99 € … Quartalsplan: 34,99 € … Jahresplan: 99,99 € … Aktions- oder
+            Einführungsrabatte können den ersten Abrechnungsbetrag reduzieren.“
+          </p>
+        </section>
+        <section class="legal-card new">
+          <p class="eyebrow">AGB · Vorschlag, vor Aktivierung rechtlich prüfen</p>
+          <h2>Der vor Abschluss gezeigte Preis gilt</h2>
+          <p>
+            „Für die gewählte Laufzeit gelten der unmittelbar vor Vertragsschluss angezeigte
+            Gesamtpreis und Abrechnungsrhythmus. Alle angezeigten Preise enthalten die gesetzliche
+            Mehrwertsteuer, soweit anwendbar. Ein als dauerhaft bis zur Kündigung ausgewiesener
+            Launch-Preis gilt für die Verlängerungen dieser Subscription bis zu ihrer Kündigung.“
+          </p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

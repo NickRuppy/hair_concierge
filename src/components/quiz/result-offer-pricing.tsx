@@ -52,8 +52,9 @@ import { resolvePersonalPlanPricingMode } from "@/lib/funnel/personal-plan-prici
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
-  STRIPE_PRICING_PLANS,
   getStripePricingPlan,
+  getStripePricingPlans,
+  type SubscriptionPricingCatalog,
 } from "@/lib/stripe/pricing-plans"
 import {
   IDLE_OFFER_CHECKOUT_READY_GATE,
@@ -180,8 +181,9 @@ export function canUseApplePayCapabilitySignal(win: ApplePayCapabilityWindow | u
 
 export function getMembershipCheckoutSummary(
   interval: BillingInterval,
+  pricingCatalog: SubscriptionPricingCatalog = "standard",
 ): ResultOfferPricingCheckoutSummary {
-  const plan = getStripePricingPlan(interval)
+  const plan = getStripePricingPlan(interval, pricingCatalog)
   return {
     commerceKind: "membership",
     interval,
@@ -345,6 +347,7 @@ export function ResultOfferPricing(props: {
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   openCheckoutRequestId?: number
+  pricingCatalog?: SubscriptionPricingCatalog
   referencePrices?: QuizResultReferencePrices
 }) {
   const offerContext = useOfferTrackingContext()
@@ -376,6 +379,7 @@ export function ResultOfferPricing(props: {
       offerTracking={props.offerTracking}
       offerVariant={props.offerVariant}
       openCheckoutRequestId={props.openCheckoutRequestId}
+      pricingCatalog={props.pricingCatalog}
       referencePrices={props.referencePrices}
     />
   )
@@ -747,6 +751,7 @@ function MembershipResultOfferPricing({
   onPricingReached,
   offerTracking,
   openCheckoutRequestId,
+  pricingCatalog = "standard",
   referencePrices,
 }: {
   checkoutLifecycleFixture?: ResultOfferPricingCheckoutLifecycleFixture
@@ -758,6 +763,7 @@ function MembershipResultOfferPricing({
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   openCheckoutRequestId?: number
+  pricingCatalog?: SubscriptionPricingCatalog
   referencePrices?: QuizResultReferencePrices
 }) {
   const pricingRef = useRef<HTMLDivElement | null>(null)
@@ -844,8 +850,8 @@ function MembershipResultOfferPricing({
   }, [])
 
   useEffect(() => {
-    onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval))
-  }, [onCheckoutSummaryChange, selectedInterval])
+    onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval, pricingCatalog))
+  }, [onCheckoutSummaryChange, pricingCatalog, selectedInterval])
 
   useEffect(() => {
     return () => {
@@ -902,11 +908,12 @@ function MembershipResultOfferPricing({
       const context: FunnelAnalyticsEnvelope | null = offerTracking ?? getCurrentFunnelContext()
       trackAppEvent("pricing_viewed", {
         ...offerContext,
-        availableIntervals: STRIPE_PRICING_PLANS.map((plan) => plan.interval),
+        availableIntervals: getStripePricingPlans(pricingCatalog).map((plan) => plan.interval),
         leadId: leadId ?? undefined,
         offerRevision: offerContext?.offerRevision,
         offerVariant: offerContext?.offerVariant,
         offerViewId: offerContext?.offerViewId,
+        pricingCatalog,
         pricingRevision: OFFER_PRICING_REVISION,
         selectedInterval,
         source: "quiz_result_offer_pricing",
@@ -915,7 +922,7 @@ function MembershipResultOfferPricing({
         funnelPackageKey: offerContext?.funnelPackageKey ?? context?.funnelPackageKey,
       })
       onPricingReached?.()
-      onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval))
+      onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval, pricingCatalog))
     }
 
     return observeOnceVisible(pricingElement, trackPricingViewed)
@@ -925,6 +932,7 @@ function MembershipResultOfferPricing({
     offerTracking,
     onCheckoutSummaryChange,
     onPricingReached,
+    pricingCatalog,
     selectedInterval,
   ])
 
@@ -959,7 +967,7 @@ function MembershipResultOfferPricing({
       )
         return
 
-      const plan = getStripePricingPlan(interval)
+      const plan = getStripePricingPlan(interval, pricingCatalog)
       trackAppEvent("checkout_start_failed", {
         ...offerContext,
         checkoutAttemptId: attemptId,
@@ -968,11 +976,12 @@ function MembershipResultOfferPricing({
         funnelEventId: createFunnelEventId(),
         interval,
         planId: plan.analyticsId,
+        pricingCatalog,
         provider,
         value: plan.amount,
       })
     },
-    [checkoutAttemptController, offerContext],
+    [checkoutAttemptController, offerContext, pricingCatalog],
   )
 
   const prepareOfferCheckout = useCallback(
@@ -1201,7 +1210,7 @@ function MembershipResultOfferPricing({
         .catch(() => false)
         .then((claimed) => {
           if (claimed) {
-            const plan = getStripePricingPlan(interval)
+            const plan = getStripePricingPlan(interval, pricingCatalog)
             trackAppEvent("checkout_started", {
               ...(offerContext ?? {}),
               checkoutAttemptId: attemptId,
@@ -1214,6 +1223,7 @@ function MembershipResultOfferPricing({
               funnelEventId,
               currency: plan.currency,
               planId: plan.analyticsId,
+              pricingCatalog,
               value: plan.amount,
             })
           }
@@ -1233,7 +1243,14 @@ function MembershipResultOfferPricing({
       }
       return promise
     },
-    [checkoutLifecycleFixture, leadId, offerContext, paymentOverlayEnabled, updatePreparedCheckout],
+    [
+      checkoutLifecycleFixture,
+      leadId,
+      offerContext,
+      paymentOverlayEnabled,
+      pricingCatalog,
+      updatePreparedCheckout,
+    ],
   )
 
   const recordPreparedApplePayAvailability = useCallback(
@@ -1244,11 +1261,12 @@ function MembershipResultOfferPricing({
       )
         return
       preparedWalletTelemetryTrackedRef.current.add(preparation.preparationId)
-      const plan = getStripePricingPlan(preparation.interval)
+      const plan = getStripePricingPlan(preparation.interval, pricingCatalog)
       trackAppEvent("checkout_prepared", {
         interval: preparation.interval,
         pageMountToWalletReadyMs: Math.max(0, Date.now() - pageMountedAtRef.current),
         planId: plan.analyticsId,
+        pricingCatalog,
         preparationDurationMs: Math.max(0, Date.now() - preparation.preparationStartedAt),
         preparationId: preparation.preparationId,
         walletAvailable,
@@ -1263,7 +1281,7 @@ function MembershipResultOfferPricing({
           : current,
       )
     },
-    [],
+    [pricingCatalog],
   )
 
   const handlePreparedApplePayAvailabilityResolved = useCallback(
@@ -1325,7 +1343,7 @@ function MembershipResultOfferPricing({
       prewarmPlanChangePendingRef.current = true
     }
     if (offerContext) {
-      const plan = getStripePricingPlan(interval)
+      const plan = getStripePricingPlan(interval, pricingCatalog)
       planSelectionIndexRef.current += 1
       trackAppEvent("offer_plan_selected", {
         ...offerContext,
@@ -1334,6 +1352,7 @@ function MembershipResultOfferPricing({
         interval,
         isDefault: interval === DEFAULT_PRICING_INTERVAL,
         planId: plan.analyticsId,
+        pricingCatalog,
         previousInterval: selectedInterval,
         selectionIndex: planSelectionIndexRef.current,
         value: plan.amount,
@@ -1433,7 +1452,7 @@ function MembershipResultOfferPricing({
     if (!matchingPreparation) updatePreparedCheckout(null)
     setSuppressExpressWallet(suppressWallet)
 
-    const plan = getStripePricingPlan(selectedInterval)
+    const plan = getStripePricingPlan(selectedInterval, pricingCatalog)
     const nextCheckoutAttemptId = nextAttempt.checkoutAttemptId
     const paypalEnabled = isPayPalCheckoutEnabled()
     if (offerContext) {
@@ -1451,6 +1470,7 @@ function MembershipResultOfferPricing({
         interval: selectedInterval,
         openIndex: checkoutOpenIndexRef.current,
         planId: plan.analyticsId,
+        pricingCatalog,
         value: plan.amount,
       })
     }
@@ -1669,7 +1689,7 @@ function MembershipResultOfferPricing({
 
     setCheckoutError(null)
     const funnelEventId = createFunnelEventId()
-    const plan = getStripePricingPlan(checkoutInterval)
+    const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
     let response: Response
     try {
       response = await fetch("/api/stripe/create-checkout-session", {
@@ -1759,6 +1779,7 @@ function MembershipResultOfferPricing({
       funnelEventId,
       currency: plan.currency,
       planId: plan.analyticsId,
+      pricingCatalog,
       value: plan.amount,
     })
 
@@ -1774,6 +1795,7 @@ function MembershipResultOfferPricing({
     setDuplicateEmail,
     expressElementsEnabled,
     paymentOverlayEnabled,
+    pricingCatalog,
   ])
 
   const handlePayPalCheckoutStarted = useCallback(
@@ -1785,7 +1807,7 @@ function MembershipResultOfferPricing({
         lockedProviderRef.current !== "paypal"
       )
         return
-      const plan = getStripePricingPlan(checkoutInterval)
+      const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
       trackAppEvent("checkout_started", {
         ...(offerContext ?? {}),
         checkoutAttemptId,
@@ -1798,6 +1820,7 @@ function MembershipResultOfferPricing({
         source: "quiz_result_offer",
         funnelEventId,
         planId: plan.analyticsId,
+        pricingCatalog,
         value: plan.amount,
       })
     },
@@ -1808,6 +1831,7 @@ function MembershipResultOfferPricing({
       offerContext,
       paymentOverlayEnabled,
       expressElementsEnabled,
+      pricingCatalog,
     ],
   )
 
@@ -1816,7 +1840,7 @@ function MembershipResultOfferPricing({
       if (!checkoutInterval || !checkoutAttemptId) return
       if (lockedProviderRef.current && lockedProviderRef.current !== provider) return
       if (!offerContext) return
-      const plan = getStripePricingPlan(checkoutInterval)
+      const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
       paymentSelectionIndexRef.current += 1
       trackAppEvent("offer_payment_method_selected", {
         ...offerContext,
@@ -1826,6 +1850,7 @@ function MembershipResultOfferPricing({
         interval: checkoutInterval,
         paymentMethodType,
         planId: plan.analyticsId,
+        pricingCatalog,
         provider,
         selectionIndex: paymentSelectionIndexRef.current,
         value: plan.amount,
@@ -1854,7 +1879,14 @@ function MembershipResultOfferPricing({
         }
       }
     },
-    [checkoutAttemptId, checkoutInterval, getStripePromise, offerContext, trackCheckoutFailure],
+    [
+      checkoutAttemptId,
+      checkoutInterval,
+      getStripePromise,
+      offerContext,
+      pricingCatalog,
+      trackCheckoutFailure,
+    ],
   )
 
   const handlePaymentOptionViewed = useCallback(
@@ -1863,7 +1895,7 @@ function MembershipResultOfferPricing({
       if (!claimOfferPaymentOptionView(paymentOptionViewsRef.current, checkoutAttemptId, option)) {
         return
       }
-      const plan = getStripePricingPlan(checkoutInterval)
+      const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
       trackAppEvent("offer_payment_option_viewed", {
         ...offerContext,
         checkoutAttemptId,
@@ -1872,11 +1904,12 @@ function MembershipResultOfferPricing({
         interval: checkoutInterval,
         option,
         planId: plan.analyticsId,
+        pricingCatalog,
         provider,
         value: plan.amount,
       })
     },
-    [checkoutAttemptId, checkoutInterval, offerContext],
+    [checkoutAttemptId, checkoutInterval, offerContext, pricingCatalog],
   )
 
   const handlePayPalCheckoutFailed = useCallback(
@@ -1915,7 +1948,7 @@ function MembershipResultOfferPricing({
     return false
   }, [activePreparedCheckout, checkoutAttemptId, checkoutInterval, trackCheckoutFailure])
 
-  const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval)
+  const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval, pricingCatalog)
   const preparedCheckoutForRender =
     checkoutInterval !== null
       ? activePreparedCheckout
@@ -2017,6 +2050,7 @@ function MembershipResultOfferPricing({
           offerTracking
           onContinue={openCheckout}
           onSelect={choosePlan}
+          pricingCatalog={pricingCatalog}
           referencePrices={referencePrices}
           selectedInterval={selectedInterval}
         />

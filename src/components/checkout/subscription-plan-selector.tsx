@@ -8,8 +8,9 @@ import {
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
-  STRIPE_PRICING_PLANS,
   getStripePricingPlan,
+  getStripePricingPlans,
+  type SubscriptionPricingCatalog,
 } from "@/lib/stripe/pricing-plans"
 
 function getPlanDetail(plan: ReturnType<typeof getStripePricingPlan>): string {
@@ -24,6 +25,7 @@ export function SubscriptionPlanSelector({
   onContinue,
   onSelect,
   referencePrices,
+  pricingCatalog = "standard",
   selectedInterval,
 }: {
   actionLabel?: string
@@ -33,21 +35,29 @@ export function SubscriptionPlanSelector({
   onContinue: () => void
   onSelect: (interval: BillingInterval) => void
   referencePrices?: QuizResultReferencePrices
+  pricingCatalog?: SubscriptionPricingCatalog
   selectedInterval: BillingInterval
 }) {
-  const selectedPlan = getStripePricingPlan(selectedInterval)
+  const plans = getStripePricingPlans(pricingCatalog)
+  const selectedPlan = getStripePricingPlan(selectedInterval, pricingCatalog)
   const selectedActionLabel = actionLabel ?? selectedPlan.ctaLabel
 
   return (
     <>
       {referencePrices ? (
         <p className="mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]">
-          <span aria-hidden="true">JETZT MIND. 20 % RABATT SICHERN</span>
-          <span className="sr-only">Jetzt mindestens 20 Prozent Rabatt sichern</span>
+          {pricingCatalog === "personal_plan_launch_v1" ? (
+            <span>Launch-Rabatt sichern</span>
+          ) : (
+            <>
+              <span aria-hidden="true">JETZT MIND. 20 % RABATT SICHERN</span>
+              <span className="sr-only">Jetzt mindestens 20 Prozent Rabatt sichern</span>
+            </>
+          )}
         </p>
       ) : null}
       <div className="grid gap-2.5">
-        {STRIPE_PRICING_PLANS.map((plan) => {
+        {plans.map((plan) => {
           const isSelected = plan.interval === selectedInterval
           return (
             <button
@@ -108,6 +118,11 @@ export function SubscriptionPlanSelector({
           )
         })}
       </div>
+      {pricingCatalog === "personal_plan_launch_v1" ? (
+        <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">
+          Dein Launch-Preis bleibt bis zur Kündigung erhalten.
+        </p>
+      ) : null}
 
       <Button
         type="button"

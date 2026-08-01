@@ -7,6 +7,7 @@ import type {
   OfferAnalyticsContext,
 } from "../events"
 import type { BillingInterval } from "@/lib/stripe/intervals"
+import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 
 function cleanAnalyticsPayload(payload: AnalyticsPayload) {
   return Object.fromEntries(
@@ -25,6 +26,7 @@ function offerContextProperties(data: Partial<OfferAnalyticsContext>) {
     offer_revision: data.offerRevision,
     offer_variant: data.offerVariant,
     offer_view_id: data.offerViewId,
+    pricing_catalog: data.pricingCatalog,
     shampoo_module_id: data.shampooModuleId,
     suggested_category: data.suggestedCategory,
   }
@@ -35,6 +37,7 @@ function commerceProperties(data: {
   currency?: string
   interval?: BillingInterval | null
   planId?: string
+  pricingCatalog?: SubscriptionPricingCatalog
   purchaseKind?: "personal_plan_once"
   value?: number
 }) {
@@ -43,6 +46,7 @@ function commerceProperties(data: {
     currency: data.currency,
     interval: "interval" in data ? data.interval : undefined,
     plan_id: data.planId,
+    pricing_catalog: data.pricingCatalog,
     purchase_kind: "purchaseKind" in data ? data.purchaseKind : undefined,
     value: data.value,
   }
@@ -72,6 +76,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         interval: data.interval,
         page_mount_to_wallet_ready_ms: data.pageMountToWalletReadyMs,
         plan_id: data.planId,
+        pricing_catalog: data.pricingCatalog,
         preparation_duration_ms: data.preparationDurationMs,
         preparation_id: data.preparationId,
         wallet_available: data.walletAvailable,
@@ -108,6 +113,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         interval: data.interval,
         paymentMethodType: data.paymentMethodType,
         planId: data.planId,
+        pricing_catalog: data.pricingCatalog,
         value: data.value,
       }
     }

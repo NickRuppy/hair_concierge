@@ -46,6 +46,8 @@ import {
 import { handleBillingReconcile } from "../src/app/api/billing/reconcile/route"
 import {
   EXPECTED_PAYPAL_PLAN_SHAPES,
+  EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY,
+  getPayPalPlanCatalogForId,
   getPayPalIntervalForPlanId,
   getPayPalPlanId,
 } from "../src/lib/paypal/plans"
@@ -1961,6 +1963,28 @@ test("getPayPalIntervalForPlanId recognizes current and legacy plan ids", () => 
   }
 })
 
+test("PayPal provider catalog mapping recognizes launch plan IDs", () => {
+  const previous = {
+    monthly: process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY,
+    quarterly: process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY,
+    annual: process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_ANNUAL,
+  }
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = "P-launch-month"
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY = "P-launch-quarter"
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_ANNUAL = "P-launch-year"
+  try {
+    assert.deepEqual(getPayPalPlanCatalogForId("P-launch-quarter"), {
+      family: "personal_plan_launch_v1",
+      interval: "quarter",
+    })
+    assert.equal(getPayPalIntervalForPlanId("P-launch-year"), "year")
+  } finally {
+    restoreEnv("PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY", previous.monthly)
+    restoreEnv("PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY", previous.quarterly)
+    restoreEnv("PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_ANNUAL", previous.annual)
+  }
+})
+
 test("getPayPalPlanId throws when the interval plan id is missing", () => {
   const previous = process.env.PAYPAL_PLAN_ID_MONTHLY
   delete process.env.PAYPAL_PLAN_ID_MONTHLY
@@ -1977,6 +2001,14 @@ test("expected PayPal plan definitions use configured EUR prices and intervals",
     month: { amount: "14.99", currency: "EUR", intervalUnit: "MONTH", intervalCount: 1 },
     quarter: { amount: "34.99", currency: "EUR", intervalUnit: "MONTH", intervalCount: 3 },
     year: { amount: "99.99", currency: "EUR", intervalUnit: "YEAR", intervalCount: 1 },
+  })
+})
+
+test("launch PayPal plan definitions use the launch EUR prices and intervals", () => {
+  assert.deepEqual(EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY.personal_plan_launch_v1, {
+    month: { amount: "9.99", currency: "EUR", intervalUnit: "MONTH", intervalCount: 1 },
+    quarter: { amount: "19.99", currency: "EUR", intervalUnit: "MONTH", intervalCount: 3 },
+    year: { amount: "69.99", currency: "EUR", intervalUnit: "YEAR", intervalCount: 1 },
   })
 })
 
@@ -2013,6 +2045,16 @@ test("PayPal CANCELLED maps to provider cancellation without immediate paid-thro
 
 test("validatePayPalPlanShape accepts the expected active PayPal billing plan shape", () => {
   assert.doesNotThrow(() => validatePayPalPlanShape(paypalPlan("ACTIVE"), "month"))
+})
+
+test("validatePayPalPlanShape validates the launch catalog amount", () => {
+  assert.doesNotThrow(() =>
+    validatePayPalPlanShape(
+      paypalPlan("ACTIVE", { value: "9.99" }),
+      "month",
+      "personal_plan_launch_v1",
+    ),
+  )
 })
 
 test("validatePayPalPlanShape rejects wrong amount, currency, or interval count", () => {

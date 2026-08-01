@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react
 import Link from "next/link"
 import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react"
 
-import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
+import {
+  PERSONAL_PLAN_LAUNCH_REFERENCE_PRICES,
+  QUIZ_RESULT_REFERENCE_PRICES,
+} from "@/components/checkout/plan-reference-prices"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import {
   getMembershipCheckoutSummary,
@@ -14,6 +17,7 @@ import {
 } from "@/components/quiz/result-offer-pricing"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
+import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
 
 const testimonials = [
@@ -405,6 +409,7 @@ export function PersonalPlanOffer({
   model,
   offerTracking,
   offerVariant = "personal-plan-v1",
+  pricingCatalog = "standard",
 }: {
   entryContext: OfferEntryContext
   focusTarget?: PersonalPlanOfferFocusTarget | null
@@ -413,6 +418,7 @@ export function PersonalPlanOffer({
   model: PersonalPlanOfferModel
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
+  pricingCatalog?: SubscriptionPricingCatalog
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
@@ -422,7 +428,7 @@ export function PersonalPlanOffer({
   const [checkoutSummary, setCheckoutSummary] = useState<ResultOfferPricingCheckoutSummary>(() =>
     isOneTimeOffer
       ? getPersonalPlanOneTimeCheckoutSummary()
-      : getMembershipCheckoutSummary("quarter"),
+      : getMembershipCheckoutSummary("quarter", pricingCatalog),
   )
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
@@ -458,6 +464,7 @@ export function PersonalPlanOffer({
       offerRevision={PERSONAL_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      pricingCatalog={isOneTimeOffer ? undefined : pricingCatalog}
       trackingIdentity={{
         conditionerModuleId: null,
         needLane: null,
@@ -571,7 +578,12 @@ export function PersonalPlanOffer({
               onCheckoutSummaryChange={setCheckoutSummary}
               onPricingReached={handlePricingReached}
               openCheckoutRequestId={checkoutOpenRequest}
-              referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
+              pricingCatalog={pricingCatalog}
+              referencePrices={
+                pricingCatalog === "personal_plan_launch_v1"
+                  ? PERSONAL_PLAN_LAUNCH_REFERENCE_PRICES
+                  : QUIZ_RESULT_REFERENCE_PRICES
+              }
             />
           </div>
         </section>

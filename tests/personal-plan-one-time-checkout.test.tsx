@@ -121,10 +121,12 @@ test("one-time pricing ignores duplicate checkout-open requests until the attemp
 
 test("offer lab can force the personal-plan pricing arm for browser-only verification", () => {
   assert.match(offerLabSource, /pricingArm\?: string/)
+  assert.match(offerLabSource, /pricingCatalog\?: string/)
   assert.match(offerLabSource, /pricingArm === "one_time"/)
   assert.match(offerLabSource, /pricingArm === "membership"/)
   assert.match(offerLabSource, /personal-plan-one-time-v1/)
   assert.match(offerLabSource, /personal-plan-v1/)
+  assert.match(offerLabSource, /pricingCatalog === "personal_plan_launch_v1"/)
 })
 
 test("provider initialization is recorded only after a usable provider response", () => {

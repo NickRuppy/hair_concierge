@@ -27,14 +27,18 @@ import {
   amountFromMinorUnits,
   billingAnalyticsEventKey,
   normalizedCurrency,
-  planIdForInterval,
 } from "@/lib/billing/analytics-events"
+import {
+  parseSubscriptionPricingCatalog,
+  STANDARD_PRICING_CATALOG,
+} from "@/lib/billing/pricing-catalog"
+import { getStripePricingPlan } from "@/lib/stripe/pricing-plans"
 import {
   BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
   recordBillingAnalyticsEvent,
   type BillingAnalyticsEventInput,
 } from "@/lib/billing/analytics-outbox"
-import type { BillingAnalyticsDestination } from "@/lib/billing/types"
+import type { BillingAnalyticsDestination, BillingInterval } from "@/lib/billing/types"
 import {
   identifyCustomerIoServerPerson,
   logCustomerIoServerResult,
@@ -119,9 +123,11 @@ async function recordStripeCheckoutAnalytics(input: {
   if (!activation.stripeSubscriptionId || !activation.stripeCustomerId) return
 
   const interval = activation.subscriptionInterval
+  if (interval !== "month" && interval !== "quarter" && interval !== "year") return
   const value = amountFromMinorUnits(session.amount_total)
   const currency = normalizedCurrency(session.currency)
-  const planId = planIdForInterval(interval)
+  const purchasePricing = resolveStripeCheckoutPurchasePricing(session, interval)
+  const { planId, pricingCatalog, providerPriceId } = purchasePricing
   const funnelSessionId = session.metadata?.funnel_session_id
   const funnelPackageKey = session.metadata?.funnel_package_key
   const purchaseEventKey = billingAnalyticsEventKey({
@@ -159,6 +165,8 @@ async function recordStripeCheckoutAnalytics(input: {
         currency,
         interval,
         plan_id: planId,
+        pricing_catalog: pricingCatalog,
+        stripe_price_id: providerPriceId,
         subscription_status: activation.subscriptionStatus,
         funnel_session_id: funnelSessionId,
         funnel_package_key: funnelPackageKey,
@@ -184,9 +192,27 @@ async function recordStripeCheckoutAnalytics(input: {
       checkout_session_id: session.id,
       interval,
       plan_id: planId,
+      pricing_catalog: pricingCatalog,
+      stripe_price_id: providerPriceId,
       subscription_status: activation.subscriptionStatus,
     },
   })
+}
+
+export function resolveStripeCheckoutPurchasePricing(
+  session: Pick<Stripe.Checkout.Session, "metadata">,
+  interval: BillingInterval,
+) {
+  const pricingCatalog =
+    parseSubscriptionPricingCatalog(
+      session.metadata?.pricing_catalog ?? session.metadata?.checkout_preparation_pricing_catalog,
+    ) ?? STANDARD_PRICING_CATALOG
+  return {
+    planId: getStripePricingPlan(interval, pricingCatalog).analyticsId,
+    pricingCatalog,
+    providerPriceId:
+      session.metadata?.stripe_price_id ?? session.metadata?.checkout_preparation_price_id,
+  }
 }
 
 function scheduleCustomerIoLifecycle(

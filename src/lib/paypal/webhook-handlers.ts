@@ -4,6 +4,11 @@ import {
   billingSubscriptionPayload,
 } from "@/lib/billing/analytics-events"
 import {
+  parseSubscriptionPricingCatalog,
+  STANDARD_PRICING_CATALOG,
+} from "@/lib/billing/pricing-catalog"
+import { getStripePricingPlan } from "@/lib/stripe/pricing-plans"
+import {
   BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
   findBillingAnalyticsEventByKey,
   recordBillingAnalyticsEvent,
@@ -694,6 +699,13 @@ async function recordPayPalSuccessfulPayment(
     })
     const funnelSessionId = stringMetadata(outcome.funnelMetadata, "funnel_session_id")
     const funnelPackageKey = stringMetadata(outcome.funnelMetadata, "funnel_package_key")
+    const pricingCatalog =
+      parseSubscriptionPricingCatalog(stringMetadata(outcome.funnelMetadata, "pricing_catalog")) ??
+      STANDARD_PRICING_CATALOG
+    const planId = billingRow.interval
+      ? getStripePricingPlan(billingRow.interval, pricingCatalog).analyticsId
+      : undefined
+    const paypalPlanId = stringMetadata(outcome.funnelMetadata, "paypal_plan_id")
     const purchaseDestinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
     if (
       isFunnelAttributionEnabled() &&
@@ -717,6 +729,9 @@ async function recordPayPalSuccessfulPayment(
         checkout_reference: billingRow.provider_subscription_id,
         funnel_session_id: funnelSessionId,
         funnel_package_key: funnelPackageKey,
+        plan_id: planId,
+        pricing_catalog: pricingCatalog,
+        paypal_plan_id: paypalPlanId,
       },
       destinations: purchaseDestinations,
     })
@@ -732,6 +747,9 @@ async function recordPayPalSuccessfulPayment(
       sourceObjectId: billingRow.provider_subscription_id,
       payload: billingSubscriptionPayload(billingRow, {
         payment_event_type: event.event_type,
+        plan_id: planId,
+        pricing_catalog: pricingCatalog,
+        paypal_plan_id: paypalPlanId,
       }),
     })
     return

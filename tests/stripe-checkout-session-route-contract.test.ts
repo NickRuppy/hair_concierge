@@ -10,6 +10,7 @@ import {
   preparedCheckoutExpiresAt,
   preparedCheckoutUnavailablePayload,
   reusableOneTimeStripeSessionClientSecret,
+  resolvePreparedCheckoutPricing,
   shouldRecordFunnelForCheckoutAction,
   StripeCheckoutSessionRequestSchema,
   validatePreparedCheckoutClaim,
@@ -352,6 +353,94 @@ test("rejects claim metadata and line-item mismatches", () => {
 
   for (const input of cases) {
     assert.deepEqual(validatePreparedCheckoutClaim(input), { ok: false, reason: "stale" })
+  }
+})
+
+test("derives a prepared launch claim from its allowlisted stored Price after flag-off", () => {
+  const envKey = "STRIPE_PRICE_ID_PERSONAL_PLAN_LAUNCH_MONTHLY"
+  const previous = process.env[envKey]
+  process.env[envKey] = "price_launch_month"
+  try {
+    const resolved = resolvePreparedCheckoutPricing({
+      isOneTimePurchase: false,
+      lineItemPriceId: "price_launch_month",
+      metadata: {
+        checkout_preparation_interval: "month",
+        checkout_preparation_price_id: "price_launch_month",
+        checkout_preparation_pricing_catalog: "personal_plan_launch_v1",
+      },
+      requestedInterval: "month",
+    })
+
+    assert.equal(resolved?.interval, "month")
+    assert.equal(resolved?.priceId, "price_launch_month")
+    assert.equal(resolved?.pricingCatalog, "personal_plan_launch_v1")
+    assert.equal(resolved?.analyticsPlan.amount, 9.99)
+  } finally {
+    if (previous === undefined) delete process.env[envKey]
+    else process.env[envKey] = previous
+  }
+})
+
+test("rejects prepared subscription Prices with unknown or mismatched catalog metadata", () => {
+  const envKey = "STRIPE_PRICE_ID_PERSONAL_PLAN_LAUNCH_MONTHLY"
+  const previous = process.env[envKey]
+  process.env[envKey] = "price_launch_month"
+  try {
+    const base = {
+      isOneTimePurchase: false,
+      lineItemPriceId: "price_launch_month",
+      requestedInterval: "month" as const,
+    }
+    assert.equal(
+      resolvePreparedCheckoutPricing({
+        ...base,
+        metadata: {
+          checkout_preparation_interval: "month",
+          checkout_preparation_price_id: "price_launch_month",
+          checkout_preparation_pricing_catalog: "standard",
+        },
+      }),
+      null,
+    )
+    assert.equal(
+      resolvePreparedCheckoutPricing({
+        ...base,
+        lineItemPriceId: "price_unknown",
+        metadata: {
+          checkout_preparation_interval: "month",
+          checkout_preparation_price_id: "price_unknown",
+          checkout_preparation_pricing_catalog: "personal_plan_launch_v1",
+        },
+      }),
+      null,
+    )
+  } finally {
+    if (previous === undefined) delete process.env[envKey]
+    else process.env[envKey] = previous
+  }
+})
+
+test("accepts a pre-deploy standard prepared Session without catalog metadata", () => {
+  const envKey = "STRIPE_PRICE_ID_MONTHLY"
+  const previous = process.env[envKey]
+  process.env[envKey] = "price_standard_month"
+  try {
+    const resolved = resolvePreparedCheckoutPricing({
+      isOneTimePurchase: false,
+      lineItemPriceId: "price_standard_month",
+      metadata: {
+        checkout_preparation_interval: "month",
+        checkout_preparation_price_id: "price_standard_month",
+      },
+      requestedInterval: "month",
+    })
+
+    assert.equal(resolved?.pricingCatalog, "standard")
+    assert.equal(resolved?.analyticsPlan.amount, 14.99)
+  } finally {
+    if (previous === undefined) delete process.env[envKey]
+    else process.env[envKey] = previous
   }
 })
 

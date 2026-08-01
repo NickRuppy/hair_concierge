@@ -1,4 +1,5 @@
 import type { BillingInterval } from "./intervals"
+import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 
 export interface StripePricingPlan {
   analyticsId: string
@@ -12,6 +13,8 @@ export interface StripePricingPlan {
   savings?: string
   ctaLabel: string
 }
+
+export type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 
 export const STRIPE_PRICING_PLANS: readonly StripePricingPlan[] = [
   {
@@ -49,10 +52,57 @@ export const STRIPE_PRICING_PLANS: readonly StripePricingPlan[] = [
   },
 ] as const
 
+export const PERSONAL_PLAN_LAUNCH_PRICING_PLANS: readonly StripePricingPlan[] = [
+  {
+    analyticsId: "premium_month",
+    amount: 9.99,
+    currency: "EUR",
+    interval: "month",
+    name: "Monatlich",
+    price: "€9,99",
+    perMonth: "/ Monat",
+    ctaLabel: "Jetzt starten — €9,99 / Monat",
+  },
+  {
+    analyticsId: "premium_quarter",
+    amount: 19.99,
+    currency: "EUR",
+    interval: "quarter",
+    name: "Quartal",
+    price: "€19,99",
+    perMonth: "~€6,66 / Monat",
+    badge: "Beliebteste Wahl",
+    savings: "33% sparen",
+    ctaLabel: "Jetzt starten — €19,99 im Quartal",
+  },
+  {
+    analyticsId: "premium_year",
+    amount: 69.99,
+    currency: "EUR",
+    interval: "year",
+    name: "Jährlich",
+    price: "€69,99",
+    perMonth: "~€5,83 / Monat",
+    savings: "42% sparen",
+    ctaLabel: "Jetzt starten — €69,99 / Jahr",
+  },
+] as const
+
 export const DEFAULT_PRICING_INTERVAL: BillingInterval = "quarter"
 
-export function getStripePricingPlan(interval: BillingInterval): StripePricingPlan {
-  const plan = STRIPE_PRICING_PLANS.find((candidate) => candidate.interval === interval)
+export function getStripePricingPlans(
+  catalog: SubscriptionPricingCatalog = "standard",
+): readonly StripePricingPlan[] {
+  return catalog === "personal_plan_launch_v1"
+    ? PERSONAL_PLAN_LAUNCH_PRICING_PLANS
+    : STRIPE_PRICING_PLANS
+}
+
+export function getStripePricingPlan(
+  interval: BillingInterval,
+  catalog: SubscriptionPricingCatalog = "standard",
+): StripePricingPlan {
+  const plan = getStripePricingPlans(catalog).find((candidate) => candidate.interval === interval)
   if (!plan) {
     throw new Error(`Unknown pricing interval: ${interval}`)
   }

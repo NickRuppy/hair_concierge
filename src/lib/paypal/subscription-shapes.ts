@@ -3,7 +3,11 @@ import type {
   BillingInterval,
   BillingSubscriptionInput,
 } from "../billing/types"
-import { EXPECTED_PAYPAL_PLAN_SHAPES, type ExpectedPayPalPlanShape } from "./plans"
+import {
+  EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY,
+  type ExpectedPayPalPlanShape,
+  type PayPalPlanCatalogFamily,
+} from "./plans"
 
 export type PayPalSubscription = {
   id?: string
@@ -104,8 +108,12 @@ export function toBillingSubscriptionInputFromPayPal(
   }
 }
 
-export function validatePayPalPlanShape(plan: PayPalPlan, interval: BillingInterval): void {
-  const expected = EXPECTED_PAYPAL_PLAN_SHAPES[interval]
+export function validatePayPalPlanShape(
+  plan: PayPalPlan,
+  interval: BillingInterval,
+  family: PayPalPlanCatalogFamily = "standard",
+): void {
+  const expected = EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY[family][interval]
   if (plan.status !== "ACTIVE") {
     throw new Error(
       `PayPal plan ${plan.id ?? "<unknown>"} expected ACTIVE status but received ${plan.status ?? "<missing>"}`,
@@ -128,11 +136,21 @@ export function validatePayPalPlanPair(input: {
   targetPlan: PayPalPlan
   currentInterval: BillingInterval
   targetInterval: BillingInterval
+  currentFamily?: PayPalPlanCatalogFamily
+  targetFamily?: PayPalPlanCatalogFamily
   expectedProductId?: string | null
 }) {
+  const currentFamily = input.currentFamily ?? "standard"
+  const targetFamily = input.targetFamily ?? "standard"
+  if (currentFamily !== targetFamily) {
+    throw new PayPalPlanPairValidationError(
+      "paypal_catalog_mismatch",
+      "Current and target PayPal plans are not part of the same catalog family",
+    )
+  }
   try {
-    validatePayPalPlanShape(input.currentPlan, input.currentInterval)
-    validatePayPalPlanShape(input.targetPlan, input.targetInterval)
+    validatePayPalPlanShape(input.currentPlan, input.currentInterval, currentFamily)
+    validatePayPalPlanShape(input.targetPlan, input.targetInterval, targetFamily)
   } catch (error) {
     throw new PayPalPlanPairValidationError(
       "paypal_plan_shape_mismatch",

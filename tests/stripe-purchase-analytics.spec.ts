@@ -44,6 +44,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
     interval: "quarter",
     paymentMethodType: "card",
     planId: "premium_quarter",
+    pricingCatalog: "standard",
     value: 34.99,
   })
   assert.equal(retrieveCalls.length, 1)
@@ -86,4 +87,47 @@ test("buildCheckoutPurchaseAnalytics omits payment method when actual method is 
   )
 
   assert.equal(result?.paymentMethodType, undefined)
+})
+
+test("buildCheckoutPurchaseAnalytics preserves the trusted launch catalog from Stripe metadata", async () => {
+  const stripe = {
+    subscriptions: {
+      async retrieve() {
+        return {
+          id: "sub_launch",
+          default_payment_method: { id: "pm_launch", type: "card" },
+          items: {
+            data: [
+              {
+                price: {
+                  recurring: { interval: "year", interval_count: 1 },
+                },
+              },
+            ],
+          },
+        }
+      },
+    },
+  }
+
+  const result = await buildCheckoutPurchaseAnalytics(
+    {
+      amount_total: 6999,
+      currency: "eur",
+      id: "cs_test_launch",
+      metadata: { pricing_catalog: "personal_plan_launch_v1" },
+      subscription: "sub_launch",
+    } as any,
+    stripe as any,
+  )
+
+  assert.deepEqual(result, {
+    currency: "EUR",
+    funnelPackageKey: undefined,
+    interval: "year",
+    paymentMethodType: "card",
+    planId: "premium_year",
+    pricingCatalog: "personal_plan_launch_v1",
+    value: 69.99,
+  })
 })
