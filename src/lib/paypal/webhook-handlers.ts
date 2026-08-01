@@ -386,7 +386,15 @@ async function reconcilePayPalOrderCaptureEvent(
         intent,
         captureId,
       )
-      await activateVerifiedPayPalOrderIntent(intent, verifiedCapture, {
+      const capturedIntent = intent.provider_capture_id
+        ? intent
+        : await tryMarkPayPalOrderIntentCaptured(
+            deps.supabase,
+            intent.token,
+            verifiedCapture.orderId,
+            captureId,
+          )
+      await activateVerifiedPayPalOrderIntent(capturedIntent, verifiedCapture, {
         supabase: deps.supabase,
         linkQuizToProfile: deps.linkQuizToProfile,
         sendConfirmation: deps.sendOneTimeConfirmation,
@@ -394,9 +402,6 @@ async function reconcilePayPalOrderCaptureEvent(
         defer: deps.defer,
         capturePaymentFailure: deps.capturePaymentFailure,
       })
-      if (!intent.provider_capture_id) {
-        await tryMarkPayPalOrderIntentCaptured(deps.supabase, intent.token, captureId)
-      }
       purchase = await findOneTimePurchaseByProviderTransactionId(
         deps.supabase,
         "paypal",

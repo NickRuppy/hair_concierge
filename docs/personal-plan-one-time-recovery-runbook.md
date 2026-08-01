@@ -107,6 +107,32 @@ The existing Vercel reconciliation cron runs once daily at `02:15` (`15 2 * * *`
 - The current transactional Customer.io integration has no implemented provider idempotency key and no acknowledgement persistence atomic with our database status write. If Customer.io accepts a send but the later database write fails, a retry can send a duplicate confirmation. This is deliberately an at-least-once boundary: do not suppress the retry, because doing so could withhold the required durable confirmation. Investigate using the deterministic `confirmation_reference` and the provider payment reference; do not infer any stronger Customer.io API guarantee from this implementation.
 - Once the duplicate-payment hardening is deployed, both conflict directions are permanent and receive no fulfillment: one provider transaction cannot resolve to a different consent, and one consent cannot bind to a second provider transaction. Stop automation and reconcile the extra provider charge for manual resolution/refund rather than trying another consent or retry target.
 
+## Expired uncaptured PayPal-order reset
+
+This is a separate, service-role-only operator action for an order that is provably impossible to capture. It never captures, voids, refunds, or otherwise changes anything at PayPal. It only makes the existing local checkout attempt eligible to create one replacement order after the provider and database guards agree.
+
+1. First run the default dry-run, with the exact PayPal order ID supplied only in the operator shell. The JSON receipt deliberately excludes it:
+
+   ```sh
+   npm run billing:one-time:recover -- \
+     --reset-expired-paypal-order \
+     --paypal-order=REDACTED
+   ```
+
+2. The script always performs a read-only PayPal `GET /v2/checkout/orders/{id}` before inspecting local eligibility. It permits reset only when PayPal returns the exact order for the configured merchant as `VOIDED` with no captures. A `404` is not enough evidence because it can also indicate the wrong PayPal environment or merchant account; stop and audit the operator credentials instead. All other status, capture, authentication, network, or response-shape outcomes also fail closed.
+3. The local preflight and the transactional RPC each require the same bound consent, an expired `created` intent, no capture, no Stripe binding, and no purchase evidence. A race or any mismatch fails closed.
+4. Only after separately authorized release review, use `--apply` and repeat the exact order ID in `--confirm-paypal-order`. Never copy either identifier into a ticket, chat, screenshot, or command output:
+
+   ```sh
+   npm run billing:one-time:recover -- \
+     --reset-expired-paypal-order \
+     --paypal-order=REDACTED \
+     --apply \
+     --confirm-paypal-order=REDACTED
+   ```
+
+The RPC writes an append-only audit row, clears only the obsolete local PayPal order reference, and renews that intent's expiry. It preserves the consent, user/lead identity, token, and all other evidence. Capture persistence is conditionally bound to the exact current order, so a stale in-flight capture cannot claim a reset/replacement intent. There is no automatic reset path and no public endpoint.
+
 ## Local verification status
 
 Focused source-level migration tests cover the authorization contract. Disposable-database migration execution remains pending locally because Docker is unavailable; no local or production migration has been applied from this worktree.

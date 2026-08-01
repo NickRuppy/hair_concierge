@@ -90,6 +90,7 @@ test("one-time activation status preserves a revoked Stripe purchase", async () 
 
 test("one-time activation status retrieves an already-captured PayPal order without capture or recovery", async () => {
   let verifiedToken: string | undefined
+  let markedCapture: { token: string; orderId: string; captureId: string } | undefined
   let activationCalls = 0
   const response = await handleOneTimeActivationStatus(
     request("/api/billing/one-time-activation-status?provider=paypal&token=I-test"),
@@ -107,14 +108,19 @@ test("one-time activation status retrieves an already-captured PayPal order with
             currency: "eur",
             paidAt: "2026-07-31T12:00:00.000Z",
           },
-          intent: {} as any,
+          intent: { provider_capture_id: null } as any,
           consent: {} as any,
           existingPurchase: null,
           accountContext: {} as any,
         }
       },
-      activateVerifiedPayPalOrderIntent: async () => {
+      tryMarkPayPalOrderIntentCaptured: async (_supabase, token, orderId, captureId) => {
+        markedCapture = { token, orderId, captureId }
+        return { provider_capture_id: captureId } as any
+      },
+      activateVerifiedPayPalOrderIntent: async (intent) => {
         activationCalls += 1
+        assert.equal(intent.provider_capture_id, "capture-test")
         return {
           status: "active",
           state: "active",
@@ -129,10 +135,54 @@ test("one-time activation status retrieves an already-captured PayPal order with
   assert.equal(response.headers.get("cache-control"), "no-store")
   assert.deepEqual(await response.json(), { status: "active" })
   assert.equal(verifiedToken, "I-test")
+  assert.deepEqual(markedCapture, {
+    token: "I-test",
+    orderId: "order-test",
+    captureId: "capture-test",
+  })
   assert.equal(activationCalls, 1)
   assert.doesNotMatch(statusRouteSource, /recoverPayPalOrderActivation/)
   assert.doesNotMatch(statusRouteSource, /captureProviderPayPalOrder/)
   assert.doesNotMatch(statusRouteSource, /captureAndActivatePayPalOrder/)
+})
+
+test("one-time activation status reuses an already-persisted PayPal capture", async () => {
+  let markerCalls = 0
+  const response = await handleOneTimeActivationStatus(
+    request("/api/billing/one-time-activation-status?provider=paypal&token=I-test"),
+    baseDeps({
+      verifyPayPalOneTimePaymentForRecovery: async () => ({
+        payment: {
+          provider: "paypal",
+          providerTransactionId: "capture-test",
+          providerOrderId: "order-test",
+          consentId: "consent-test",
+          email: "paypal@example.com",
+          amountMinor: 2999,
+          currency: "eur",
+          paidAt: "2026-07-31T12:00:00.000Z",
+        },
+        intent: { provider_capture_id: "capture-test" } as any,
+        consent: {} as any,
+        existingPurchase: null,
+        accountContext: {} as any,
+      }),
+      tryMarkPayPalOrderIntentCaptured: async () => {
+        markerCalls += 1
+        throw new Error("must not rewrite an already-persisted capture")
+      },
+      activateVerifiedPayPalOrderIntent: async () => ({
+        status: "active",
+        state: "active",
+        intent: { provider_capture_id: "capture-test" } as any,
+        account: {} as any,
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { status: "active" })
+  assert.equal(markerCalls, 0)
 })
 
 test("one-time activation status keeps an uncaptured PayPal order pending without activation", async () => {
@@ -141,10 +191,7 @@ test("one-time activation status keeps an uncaptured PayPal order pending withou
     request("/api/billing/one-time-activation-status?provider=paypal&token=I-test"),
     baseDeps({
       verifyPayPalOneTimePaymentForRecovery: async () => {
-        throw new PayPalCheckoutActivationError(
-          "paypal_order_capture_incomplete",
-          "not captured yet",
-        )
+        throw new PayPalCheckoutActivationError("paypal_order_capture_pending", "not captured yet")
       },
       activateVerifiedPayPalOrderIntent: async () => {
         activationCalls += 1
@@ -173,7 +220,7 @@ test("one-time activation status preserves a revoked PayPal purchase", async () 
           currency: "eur",
           paidAt: "2026-07-31T12:00:00.000Z",
         },
-        intent: {} as any,
+        intent: { provider_capture_id: "capture-test" } as any,
         consent: {} as any,
         existingPurchase: null,
         accountContext: {} as any,

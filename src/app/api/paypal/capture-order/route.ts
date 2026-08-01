@@ -28,6 +28,18 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     if (error instanceof PayPalCheckoutActivationError) {
+      if (error.code === "paypal_order_capture_pending") {
+        return NextResponse.json(
+          {
+            error: error.code,
+            status: "pending",
+            welcomeUrl: `/welcome?provider=paypal&purchase=one_time&token=${encodeURIComponent(
+              parsed.data.token,
+            )}`,
+          },
+          { status: 202 },
+        )
+      }
       return NextResponse.json({ error: error.code }, { status: 409 })
     }
     throw error

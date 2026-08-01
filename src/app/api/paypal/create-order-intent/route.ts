@@ -18,6 +18,7 @@ import {
   bindPayPalOrderIntentToOrder,
   createPayPalOrderIntent,
   createProviderPayPalOrder,
+  isPayPalOrderIntentExpired,
 } from "@/lib/paypal/order-intents"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -120,21 +121,39 @@ export async function POST(request: Request) {
   if (personalPlanOneTimeConsentBlocksPayPalOrder(consent)) {
     return NextResponse.json({ error: "payment provider already selected" }, { status: 409 })
   }
-  const intent = await createPayPalOrderIntent(admin, {
-    checkoutAttemptId: parsed.data.checkoutAttemptId,
-    userId: user?.id,
-    leadId,
-    funnelSessionId: authorization.sessionId,
-    consentId: consent.id,
-    email,
-    metadata: {
-      checkout_attempt_id: parsed.data.checkoutAttemptId,
-      funnel_event_id: parsed.data.funnelEventId,
-      is_internal_test: authorization.isInternalTest,
-      funnel_session_id: funnelContext.sessionId,
-      funnel_package_key: funnelContext.packageKey,
-    },
-  })
+  let intent: Awaited<ReturnType<typeof createPayPalOrderIntent>>
+  try {
+    intent = await createPayPalOrderIntent(admin, {
+      checkoutAttemptId: parsed.data.checkoutAttemptId,
+      userId: user?.id,
+      leadId,
+      funnelSessionId: authorization.sessionId,
+      consentId: consent.id,
+      email,
+      metadata: {
+        checkout_attempt_id: parsed.data.checkoutAttemptId,
+        funnel_event_id: parsed.data.funnelEventId,
+        is_internal_test: authorization.isInternalTest,
+        funnel_session_id: funnelContext.sessionId,
+        funnel_package_key: funnelContext.packageKey,
+      },
+    })
+  } catch (error) {
+    if (!isUniqueViolation(error)) throw error
+    const { data: existingIntent, error: lookupError } = await admin
+      .from("paypal_order_intents")
+      .select("*")
+      .eq("consent_id", consent.id)
+      .maybeSingle()
+    if (lookupError || !existingIntent) throw error
+    if (isPayPalOrderIntentExpired(existingIntent)) {
+      return NextResponse.json({ error: "paypal_order_intent_expired" }, { status: 409 })
+    }
+    throw error
+  }
+  if (isPayPalOrderIntentExpired(intent)) {
+    return NextResponse.json({ error: "paypal_order_intent_expired" }, { status: 409 })
+  }
   const orderId = intent.provider_order_id ?? (await createProviderPayPalOrder(intent))
   if (!intent.provider_order_id) {
     await bindPayPalOrderIntentToOrder(admin, intent.token, orderId)
@@ -192,4 +211,8 @@ async function toConflictResponse(promise: Promise<void>, email?: string | null)
     }
     throw error
   }
+}
+
+function isUniqueViolation(error: unknown) {
+  return Boolean(error && typeof error === "object" && "code" in error && error.code === "23505")
 }

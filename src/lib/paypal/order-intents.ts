@@ -37,6 +37,7 @@ type PayPalCaptureResponse = {
       captures?: Array<{
         id?: string
         status?: string
+        create_time?: string
         amount?: { currency_code?: string; value?: string }
       }>
     }
@@ -240,16 +241,29 @@ export async function bindPayPalOrderIntentToOrder(
 export async function markPayPalOrderIntentCaptured(
   supabase: PayPalOrderIntentClient,
   token: string,
+  orderId: string,
   captureId: string,
 ) {
   const { data, error } = await supabase
     .from("paypal_order_intents")
     .update({ provider_capture_id: captureId, status: "captured" })
     .eq("token", token)
+    .eq("provider_order_id", orderId)
+    .is("provider_capture_id", null)
     .select("*")
-    .single()
+    .maybeSingle()
   if (error) throw error
-  return data as PayPalOrderIntentRow
+  if (data) return data as PayPalOrderIntentRow
+
+  const current = await findPayPalOrderIntentByToken(supabase, token)
+  if (
+    current?.provider_order_id === orderId &&
+    current.provider_capture_id === captureId &&
+    current.status === "captured"
+  ) {
+    return current
+  }
+  return null
 }
 
 export async function captureProviderPayPalOrder(orderId: string, token: string) {
@@ -258,7 +272,10 @@ export async function captureProviderPayPalOrder(orderId: string, token: string)
     `/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`,
     {
       method: "POST",
-      headers: { "PayPal-Request-Id": paypalOrderRequestId(token, "capture") },
+      headers: {
+        "PayPal-Request-Id": paypalOrderRequestId(token, "capture"),
+        Prefer: "return=representation",
+      },
     },
   )
 }

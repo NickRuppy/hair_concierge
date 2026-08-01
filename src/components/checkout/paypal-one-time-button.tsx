@@ -60,6 +60,7 @@ export function PayPalOneTimeButton({
   onCheckoutStarted,
   onDuplicateAccess,
   onPaymentMethodSelected,
+  onProviderSelected,
   onProviderConflict,
   onReady,
   onConsentRequired,
@@ -71,11 +72,13 @@ export function PayPalOneTimeButton({
   onCheckoutStarted?: (funnelEventId: string) => void
   onDuplicateAccess?: () => void
   onPaymentMethodSelected?: () => void
+  onProviderSelected?: () => void
   onProviderConflict?: () => void
   onReady?: () => void
   onConsentRequired?: () => void
 }) {
   const [error, setError] = useState<string | null>(null)
+  const [expired, setExpired] = useState(false)
   const [busy, setBusy] = useState(false)
   const intentTokenRef = useRef<string | null>(null)
   const suppressNextPayPalErrorRef = useRef(false)
@@ -85,6 +88,23 @@ export function PayPalOneTimeButton({
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
 
   if (!clientId) return null
+
+  if (expired) {
+    return (
+      <div className="grid gap-3 rounded-[14px] border border-border bg-muted/30 p-4 text-center">
+        <p className="text-sm text-[var(--brand-plum-darkest)]">
+          Die PayPal-Zahlung ist abgelaufen. Schreib uns kurz – wir schalten die Zahlung sicher
+          wieder frei.
+        </p>
+        <a
+          className="text-sm font-semibold text-[var(--brand-plum)] underline underline-offset-4"
+          href="mailto:info@chaarlie.de?subject=PayPal-Zahlung%20freischalten"
+        >
+          Support kontaktieren
+        </a>
+      </div>
+    )
+  }
 
   return (
     <div className="grid gap-3">
@@ -122,6 +142,12 @@ export function PayPalOneTimeButton({
               error?: unknown
               orderId?: unknown
               token?: unknown
+            }
+            if (response.status === 409 && body.error === "paypal_order_intent_expired") {
+              setBusy(false)
+              setExpired(true)
+              suppressNextPayPalErrorRef.current = true
+              throw new Error("paypal order intent expired")
             }
             if (response.status === 409) {
               if (body.error === "checkout_access_already_exists") onDuplicateAccess?.()
@@ -176,7 +202,26 @@ export function PayPalOneTimeButton({
               headers: { "content-type": "application/json" },
               body: JSON.stringify({ token }),
             })
-            const body = (await response.json().catch(() => ({}))) as { welcomeUrl?: unknown }
+            const body = (await response.json().catch(() => ({}))) as {
+              error?: unknown
+              status?: unknown
+              welcomeUrl?: unknown
+            }
+            if (response.status === 409 && body.error === "paypal_order_intent_expired") {
+              setBusy(false)
+              setExpired(true)
+              return
+            }
+            if (response.status === 202 && body.status === "pending") {
+              if (typeof body.welcomeUrl === "string") window.location.assign(body.welcomeUrl)
+              else {
+                setBusy(false)
+                setError(
+                  "PayPal-Zahlung konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+                )
+              }
+              return
+            }
             if (!response.ok || typeof body.welcomeUrl !== "string") {
               setBusy(false)
               setError(
@@ -196,7 +241,10 @@ export function PayPalOneTimeButton({
             }
             window.location.assign(body.welcomeUrl)
           }}
-          onCancel={() => setBusy(false)}
+          onCancel={() => {
+            setBusy(false)
+            if (intentTokenRef.current) onProviderSelected?.()
+          }}
           onInit={() => onReady?.()}
           onError={(paypalError) => {
             setBusy(false)

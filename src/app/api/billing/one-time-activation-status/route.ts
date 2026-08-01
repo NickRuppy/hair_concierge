@@ -16,6 +16,7 @@ import {
 import { PayPalCheckoutActivationError } from "@/lib/paypal/checkout-activation"
 import {
   activateVerifiedPayPalOrderIntent,
+  tryMarkPayPalOrderIntentCaptured,
   verifyPayPalOneTimePaymentForRecovery,
 } from "@/lib/paypal/order-activation"
 
@@ -45,6 +46,7 @@ export interface OneTimeActivationStatusDeps {
   verifyCheckoutSessionForActivation?: typeof verifyCheckoutSessionForActivation
   ensureOneTimeCheckoutAccount?: typeof ensureOneTimeCheckoutAccount
   verifyPayPalOneTimePaymentForRecovery?: typeof verifyPayPalOneTimePaymentForRecovery
+  tryMarkPayPalOrderIntentCaptured?: typeof tryMarkPayPalOrderIntentCaptured
   activateVerifiedPayPalOrderIntent?: typeof activateVerifiedPayPalOrderIntent
   getPremiumTierId?: typeof getPremiumTierId
   linkQuizToProfile?: typeof linkQuizToProfile
@@ -106,10 +108,18 @@ export async function handleOneTimeActivationStatus(
       supabase: deps.supabase,
       token: parsed.token,
     })
+    const capturedIntent = verification.intent.provider_capture_id
+      ? verification.intent
+      : await (deps.tryMarkPayPalOrderIntentCaptured ?? tryMarkPayPalOrderIntentCaptured)(
+          deps.supabase,
+          parsed.token,
+          verification.payment.providerOrderId,
+          verification.payment.providerTransactionId,
+        )
     const activation = await (
       deps.activateVerifiedPayPalOrderIntent ?? activateVerifiedPayPalOrderIntent
     )(
-      verification.intent,
+      capturedIntent,
       {
         captureId: verification.payment.providerTransactionId,
         orderId: verification.payment.providerOrderId ?? verification.intent.provider_order_id!,
@@ -131,9 +141,9 @@ export async function handleOneTimeActivationStatus(
     if (error instanceof PayPalCheckoutActivationError) {
       return statusJson(
         {
-          status: error.code === "paypal_order_capture_incomplete" ? "pending" : "failed_permanent",
+          status: error.code === "paypal_order_capture_pending" ? "pending" : "failed_permanent",
         },
-        error.code === "paypal_order_capture_incomplete" ? 200 : 400,
+        error.code === "paypal_order_capture_pending" ? 200 : 400,
       )
     }
 

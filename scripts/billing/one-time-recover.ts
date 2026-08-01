@@ -33,6 +33,31 @@ export type RecoveryRequest = {
   paypalCaptureId?: string
 }
 
+export type PayPalExpiredOrderResetRequest = {
+  paypalOrderId: string
+  apply: boolean
+  confirmPayPalOrder?: string
+}
+
+export type PayPalExpiredOrderResetReceipt = {
+  ok: true
+  mode: "dry-run" | "apply"
+  reset: "paypal_expired_uncaptured_order"
+  providerState: "voided"
+  applyGuardSatisfied: boolean
+}
+
+export type PayPalExpiredOrderResetDependencies = {
+  expectedMerchantId: string
+  retrieveOrder: (orderId: string) => Promise<unknown>
+  inspectEligibility: (orderId: string) => Promise<{ eligible: boolean }>
+  applyReset: (
+    orderId: string,
+    providerState: PayPalExpiredOrderResetReceipt["providerState"],
+    verifiedAt: string,
+  ) => Promise<void>
+}
+
 export type NormalizedRecoveryTarget =
   | {
       provider: "stripe"
@@ -165,6 +190,137 @@ export function parseOneTimeRecoveryArgs(argv: string[]): RecoveryRequest {
     }
   }
   return request
+}
+
+export function parsePayPalExpiredOrderResetArgs(argv: string[]): PayPalExpiredOrderResetRequest {
+  let paypalOrderId: string | undefined
+  let confirmPayPalOrder: string | undefined
+  let apply = false
+  let resetMode = false
+  for (const arg of argv) {
+    const [key, rawValue] = splitArg(arg)
+    switch (key) {
+      case "--reset-expired-paypal-order":
+        if (rawValue)
+          throw new OneTimeRecoveryCommandError("invalid_reset_mode", "Reset mode takes no value")
+        resetMode = true
+        break
+      case "--paypal-order":
+        paypalOrderId = requireArgValue(key, rawValue)
+        break
+      case "--confirm-paypal-order":
+        confirmPayPalOrder = requireArgValue(key, rawValue)
+        break
+      case "--apply":
+        if (rawValue)
+          throw new OneTimeRecoveryCommandError("invalid_apply", "--apply takes no value")
+        apply = true
+        break
+      default:
+        throw new OneTimeRecoveryCommandError("unknown_argument", "Unknown reset argument")
+    }
+  }
+  if (!resetMode || !paypalOrderId) {
+    throw new OneTimeRecoveryCommandError(
+      "missing_paypal_order",
+      "Expired PayPal reset requires --reset-expired-paypal-order and --paypal-order",
+    )
+  }
+  return { paypalOrderId, apply, confirmPayPalOrder }
+}
+
+export async function runPayPalExpiredOrderResetCommand(
+  request: PayPalExpiredOrderResetRequest,
+  deps: PayPalExpiredOrderResetDependencies,
+): Promise<PayPalExpiredOrderResetReceipt> {
+  if (request.confirmPayPalOrder && !request.apply) {
+    throw new OneTimeRecoveryCommandError(
+      "confirm_without_apply",
+      "--confirm-paypal-order is only valid with --apply",
+    )
+  }
+  if (request.apply && request.confirmPayPalOrder !== request.paypalOrderId) {
+    throw new OneTimeRecoveryCommandError(
+      "apply_confirmation_mismatch",
+      "Apply requires --confirm-paypal-order to exactly match --paypal-order",
+    )
+  }
+
+  const providerState = await verifyPayPalOrderCanBeReset(
+    request.paypalOrderId,
+    deps.expectedMerchantId,
+    deps.retrieveOrder,
+  )
+  const providerVerifiedAt = new Date().toISOString()
+  const eligibility = await deps.inspectEligibility(request.paypalOrderId)
+  if (!eligibility.eligible) {
+    throw new OneTimeRecoveryCommandError(
+      "paypal_order_reset_ineligible",
+      "The local PayPal order is not eligible for reset",
+    )
+  }
+  if (request.apply) {
+    await deps.applyReset(request.paypalOrderId, providerState, providerVerifiedAt)
+  }
+
+  return {
+    ok: true,
+    mode: request.apply ? "apply" : "dry-run",
+    reset: "paypal_expired_uncaptured_order",
+    providerState,
+    applyGuardSatisfied: request.apply,
+  }
+}
+
+async function verifyPayPalOrderCanBeReset(
+  orderId: string,
+  expectedMerchantId: string,
+  retrieveOrder: (orderId: string) => Promise<unknown>,
+): Promise<"voided"> {
+  try {
+    const order = (await retrieveOrder(orderId)) as {
+      id?: unknown
+      status?: unknown
+      purchase_units?: Array<{
+        payee?: { merchant_id?: unknown }
+        payments?: { captures?: unknown[] }
+      }>
+    }
+    const captures = order.purchase_units?.flatMap((unit) => unit.payments?.captures ?? []) ?? []
+    const normalizedMerchantId = expectedMerchantId.trim()
+    const purchaseUnit = order.purchase_units?.[0]
+    if (
+      order.id !== orderId ||
+      !normalizedMerchantId ||
+      order.status !== "VOIDED" ||
+      order.purchase_units?.length !== 1 ||
+      captures.length > 0 ||
+      purchaseUnit?.payee?.merchant_id !== normalizedMerchantId
+    ) {
+      throw new OneTimeRecoveryCommandError(
+        "paypal_order_not_provably_voided",
+        "PayPal order must match the current merchant and be VOIDED with no captures before reset",
+      )
+    }
+    return "voided"
+  } catch (error) {
+    if (error instanceof OneTimeRecoveryCommandError) throw error
+    throw new OneTimeRecoveryCommandError(
+      isPayPalNotFound(error)
+        ? "paypal_order_not_found_unverified_environment"
+        : "paypal_provider_lookup_ambiguous",
+      "PayPal order lookup did not prove the order can be reset",
+    )
+  }
+}
+
+function isPayPalNotFound(error: unknown): boolean {
+  return Boolean(
+    error &&
+    typeof error === "object" &&
+    "status" in error &&
+    (error as { status?: unknown }).status === 404,
+  )
 }
 
 export async function runOneTimeRecoveryCommand(
@@ -344,11 +500,12 @@ export async function createLiveOneTimeRecoveryDependencies(): Promise<OneTimeRe
       return withSuppressedProviderConsole(async () => {
         const intent = raw.intent.provider_capture_id
           ? raw.intent
-          : ((await tryMarkPayPalOrderIntentCaptured(
+          : await tryMarkPayPalOrderIntentCaptured(
               supabase,
               raw.intent.token,
+              verification.payment.providerOrderId,
               verification.payment.providerTransactionId,
-            )) ?? raw.intent)
+            )
         return activateVerifiedPayPalOrderIntent(
           intent,
           {
@@ -364,6 +521,66 @@ export async function createLiveOneTimeRecoveryDependencies(): Promise<OneTimeRe
       })
     },
     readReceipt: async (payment) => readOneTimeRecoveryReceipt(supabase, payment),
+  }
+}
+
+export async function createLivePayPalExpiredOrderResetDependencies(): Promise<PayPalExpiredOrderResetDependencies> {
+  const [{ createAdminClient }, { retrieveProviderPayPalOrder }] = await Promise.all([
+    import("@/lib/supabase/admin"),
+    import("@/lib/paypal/order-activation"),
+  ])
+  const supabase = createAdminClient()
+
+  return {
+    expectedMerchantId: process.env.PAYPAL_MERCHANT_ID ?? "",
+    retrieveOrder: (orderId) =>
+      withSuppressedProviderConsole(() => retrieveProviderPayPalOrder(orderId)),
+    inspectEligibility: async (orderId) => {
+      const { data: intent, error: intentError } = await supabase
+        .from("paypal_order_intents")
+        .select("id, consent_id, provider_order_id, provider_capture_id, status, expires_at")
+        .eq("provider_order_id", orderId)
+        .maybeSingle()
+      if (intentError) throw intentError
+      if (
+        !intent ||
+        intent.status !== "created" ||
+        intent.provider_capture_id !== null ||
+        Date.parse(intent.expires_at) > Date.now()
+      ) {
+        return { eligible: false }
+      }
+
+      const { data: consent, error: consentError } = await supabase
+        .from("personal_plan_one_time_checkout_consents")
+        .select("id, paypal_order_id, stripe_checkout_session_id")
+        .eq("id", intent.consent_id)
+        .maybeSingle()
+      if (consentError) throw consentError
+      if (
+        !consent ||
+        consent.paypal_order_id !== orderId ||
+        consent.stripe_checkout_session_id !== null
+      ) {
+        return { eligible: false }
+      }
+
+      const { data: purchases, error: purchaseError } = await supabase
+        .from("billing_one_time_purchases")
+        .select("id")
+        .eq("consent_id", intent.consent_id)
+        .limit(1)
+      if (purchaseError) throw purchaseError
+      return { eligible: !purchases?.length }
+    },
+    applyReset: async (orderId, providerState, verifiedAt) => {
+      const { error } = await supabase.rpc("reset_expired_uncaptured_paypal_order", {
+        p_provider_order_id: orderId,
+        p_provider_state: providerState,
+        p_provider_verified_at: verifiedAt,
+      })
+      if (error) throw error
+    },
   }
 }
 
@@ -523,11 +740,16 @@ async function withSuppressedProviderConsole<T>(work: () => Promise<T>): Promise
 
 async function main() {
   try {
-    const deps = await createLiveOneTimeRecoveryDependencies()
-    const receipt = await runOneTimeRecoveryCommand(
-      parseOneTimeRecoveryArgs(process.argv.slice(2)),
-      deps,
-    )
+    const argv = process.argv.slice(2)
+    const receipt = argv.includes("--reset-expired-paypal-order")
+      ? await runPayPalExpiredOrderResetCommand(
+          parsePayPalExpiredOrderResetArgs(argv),
+          await createLivePayPalExpiredOrderResetDependencies(),
+        )
+      : await runOneTimeRecoveryCommand(
+          parseOneTimeRecoveryArgs(argv),
+          await createLiveOneTimeRecoveryDependencies(),
+        )
     console.log(JSON.stringify(receipt, null, 2))
   } catch (error) {
     console.error(JSON.stringify({ ok: false, error: sanitizedCliError(error) }, null, 2))
