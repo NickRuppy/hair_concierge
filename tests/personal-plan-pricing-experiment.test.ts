@@ -9,7 +9,10 @@ import {
   isPersonalPlanPricingExperimentVariant,
   resolvePersonalPlanPricingMode,
 } from "../src/lib/funnel/personal-plan-pricing-experiment"
-import { isPersonalPlanPricingExperimentEnabled } from "../src/lib/funnel/flags"
+import {
+  isPersonalPlanLaunchPricingEnabled,
+  isPersonalPlanPricingExperimentEnabled,
+} from "../src/lib/funnel/flags"
 import {
   createPersonalPlanOneTimeQaToken,
   verifyPersonalPlanOneTimeQaToken,
@@ -51,6 +54,21 @@ test("personal-plan pricing experiment flag is enabled only by exact true", () =
   } finally {
     if (previous === undefined) delete process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED
     else process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED = previous
+  }
+})
+
+test("personal-plan launch pricing flag defaults off and enables only for exact true", () => {
+  const previous = process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED
+  try {
+    delete process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED
+    assert.equal(isPersonalPlanLaunchPricingEnabled(), false)
+    process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = "TRUE"
+    assert.equal(isPersonalPlanLaunchPricingEnabled(), false)
+    process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = "true"
+    assert.equal(isPersonalPlanLaunchPricingEnabled(), true)
+  } finally {
+    if (previous === undefined) delete process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED
+    else process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = previous
   }
 })
 

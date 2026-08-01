@@ -58,6 +58,7 @@ export function CheckoutReturnAnalytics({
           interval: purchase.interval,
           paymentMethodType: purchase.paymentMethodType,
           planId: purchase.planId,
+          pricingCatalog: purchase.pricingCatalog,
           value: purchase.value,
         })
       }

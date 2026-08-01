@@ -1,6 +1,9 @@
 import type Stripe from "stripe"
-import { getStripePricingPlan } from "./pricing-plans"
-import { PRICE_IDS } from "./client"
+import {
+  getStripePriceCatalogForId,
+  getStripePriceId,
+  type StripePriceCatalogFamily,
+} from "./client"
 import { intervalFromPrice, type BillingInterval } from "./intervals"
 
 export class StripePlanChangeConflictError extends Error {
@@ -113,7 +116,21 @@ async function ensureStripePlanChangeSchedule(
   if (!item)
     throw new StripePlanChangeConflictError("stripe_item_missing", "Subscription item missing")
   const currentPrice = await resolvedPrice(stripe, item.price)
-  const targetPriceId = input.configuredTargetPriceId ?? PRICE_IDS[targetInterval]
+  const currentCatalog = getStripePriceCatalogForId(currentPrice.id)
+  if (!currentCatalog) {
+    throw new StripePlanChangeConflictError(
+      "stripe_price_unrecognized",
+      "Current Stripe price is not part of a configured catalog family",
+    )
+  }
+  if (currentCatalog.interval !== currentInterval) {
+    throw new StripePlanChangeConflictError(
+      "stripe_interval_mismatch",
+      "Current Stripe price does not match the recorded interval",
+    )
+  }
+  const targetPriceId =
+    input.configuredTargetPriceId ?? getStripePriceId(targetInterval, currentCatalog.family)
   if (!targetPriceId) {
     throw new StripePlanChangeConflictError(
       "stripe_target_unconfigured",
@@ -121,8 +138,27 @@ async function ensureStripePlanChangeSchedule(
     )
   }
   const targetPrice = await stripe.prices.retrieve(targetPriceId, { expand: ["product"] })
-  validateStripePrice(currentPrice, currentInterval)
-  validateStripePrice(targetPrice, targetInterval)
+  const targetCatalog = getStripePriceCatalogForId(targetPrice.id)
+  if (!targetCatalog) {
+    throw new StripePlanChangeConflictError(
+      "stripe_price_unrecognized",
+      "Target Stripe price is not part of a configured catalog family",
+    )
+  }
+  if (targetCatalog.family !== currentCatalog.family) {
+    throw new StripePlanChangeConflictError(
+      "stripe_catalog_mismatch",
+      "Current and target Stripe prices are not part of the same catalog family",
+    )
+  }
+  if (targetCatalog.interval !== targetInterval) {
+    throw new StripePlanChangeConflictError(
+      "stripe_interval_mismatch",
+      "Target Stripe price does not match the requested interval",
+    )
+  }
+  validateStripePrice(currentPrice, currentInterval, currentCatalog.family)
+  validateStripePrice(targetPrice, targetInterval, targetCatalog.family)
 
   const currentProductId = objectId(currentPrice.product)
   const targetProductId = objectId(targetPrice.product)
@@ -276,8 +312,28 @@ function isMissingStripeResource(error: unknown) {
   return candidate.code === "resource_missing" || candidate.statusCode === 404
 }
 
-export function validateStripePrice(price: Stripe.Price, interval: BillingInterval) {
-  const expected = getStripePricingPlan(interval)
+const STRIPE_PRICE_SHAPES: Record<
+  StripePriceCatalogFamily,
+  Record<BillingInterval, { amount: number; currency: "EUR" }>
+> = {
+  standard: {
+    month: { amount: 14.99, currency: "EUR" },
+    quarter: { amount: 34.99, currency: "EUR" },
+    year: { amount: 99.99, currency: "EUR" },
+  },
+  personal_plan_launch_v1: {
+    month: { amount: 9.99, currency: "EUR" },
+    quarter: { amount: 19.99, currency: "EUR" },
+    year: { amount: 69.99, currency: "EUR" },
+  },
+}
+
+export function validateStripePrice(
+  price: Stripe.Price,
+  interval: BillingInterval,
+  family: StripePriceCatalogFamily = "standard",
+) {
+  const expected = STRIPE_PRICE_SHAPES[family][interval]
   if (!price.active) {
     throw new StripePlanChangeConflictError("stripe_price_inactive", "Stripe price is inactive")
   }

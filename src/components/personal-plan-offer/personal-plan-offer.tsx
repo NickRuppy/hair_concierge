@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react
 import Link from "next/link"
 import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react"
 
-import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
+import {
+  getSubscriptionPlanReferencePrices,
+  QUIZ_RESULT_REFERENCE_PRICES,
+} from "@/components/checkout/plan-reference-prices"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import {
   getMembershipCheckoutSummary,
@@ -14,6 +17,7 @@ import {
 } from "@/components/quiz/result-offer-pricing"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
+import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
 
 const testimonials = [
@@ -406,6 +410,7 @@ export function PersonalPlanOffer({
   model,
   offerTracking,
   offerVariant = "personal-plan-v1",
+  pricingCatalog,
 }: {
   disableCheckoutPrewarm?: boolean
   entryContext: OfferEntryContext
@@ -415,16 +420,19 @@ export function PersonalPlanOffer({
   model: PersonalPlanOfferModel
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
+  pricingCatalog?: SubscriptionPricingCatalog
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const [clientReady, setClientReady] = useState(false)
   const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
+  const resolvedPricingCatalog = pricingCatalog ?? "standard"
+  const pricingCatalogWasProvided = pricingCatalog !== undefined
   const [pricingReached, setPricingReached] = useState(false)
   const [checkoutSummary, setCheckoutSummary] = useState<ResultOfferPricingCheckoutSummary>(() =>
     isOneTimeOffer
       ? getPersonalPlanOneTimeCheckoutSummary()
-      : getMembershipCheckoutSummary("quarter"),
+      : getMembershipCheckoutSummary("quarter", resolvedPricingCatalog),
   )
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
@@ -460,6 +468,7 @@ export function PersonalPlanOffer({
       offerRevision={PERSONAL_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      pricingCatalog={isOneTimeOffer ? undefined : resolvedPricingCatalog}
       trackingIdentity={{
         conditionerModuleId: null,
         needLane: null,
@@ -574,7 +583,13 @@ export function PersonalPlanOffer({
               onCheckoutSummaryChange={setCheckoutSummary}
               onPricingReached={handlePricingReached}
               openCheckoutRequestId={checkoutOpenRequest}
-              referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
+              pricingCatalog={resolvedPricingCatalog}
+              referencePrices={
+                pricingCatalogWasProvided
+                  ? (getSubscriptionPlanReferencePrices(resolvedPricingCatalog) ??
+                    QUIZ_RESULT_REFERENCE_PRICES)
+                  : QUIZ_RESULT_REFERENCE_PRICES
+              }
             />
           </div>
         </section>

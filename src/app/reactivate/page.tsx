@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 
 import { MembershipReactivationPage } from "@/components/reactivation/membership-reactivation-page"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
+import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
+import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
 import { buildQuizOfferPreview } from "@/lib/quiz/offer-preview"
 import { buildQuizAnswersFromHairProfile } from "@/lib/reactivation/profile-quiz-answers"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
@@ -63,6 +65,7 @@ export default async function ReactivatePage({
     console.warn("[reactivate] saved hair profile unavailable", hairProfileError)
 
   const routinePreview = buildQuizOfferPreview(buildQuizAnswersFromHairProfile(hairProfile))
+  const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
   const fullName = typeof profile?.full_name === "string" ? profile.full_name.trim() : ""
   const firstName = fullName ? fullName.split(/\s+/)[0] : null
 
@@ -70,6 +73,7 @@ export default async function ReactivatePage({
     <MembershipReactivationPage
       firstName={firstName}
       initialInterval={initialInterval}
+      pricingCatalog={pricingCatalog}
       returnDestination={returnDestination}
       routinePreview={routinePreview}
       showCheckout={accessState === "expired"}

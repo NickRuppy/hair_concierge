@@ -1,5 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { recordBillingAnalyticsEvent } from "./analytics-outbox"
+import { parseSubscriptionPricingCatalog, type SubscriptionPricingCatalog } from "./pricing-catalog"
+import { getStripePriceCatalogForId } from "@/lib/stripe/client"
+import { getPayPalPlanCatalogForId } from "@/lib/paypal/plans"
 import type {
   BillingInterval,
   BillingPlanChangeRow,
@@ -15,10 +18,6 @@ const OPEN_PLAN_CHANGE_STATUSES: BillingPlanChangeStatus[] = [
   "reconciling",
 ]
 const PAYPAL_APPROVAL_TTL_MS = 24 * 60 * 60 * 1000
-
-export function shouldRetainPlanChangeOperationId(status: string | undefined) {
-  return OPEN_PLAN_CHANGE_STATUSES.includes(status as BillingPlanChangeStatus)
-}
 
 export class PlanChangeError extends Error {
   constructor(
@@ -52,6 +51,8 @@ export function buildMembershipManagementState(input: {
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
   }
 
+  const pricingCatalog = resolvedSubscriptionPricingCatalog(subscription)
+
   if (subscription.cancel_at_period_end || subscription.entitlement_status === "canceled") {
     return {
       kind: "canceled_at_period_end",
@@ -69,11 +70,21 @@ export function buildMembershipManagementState(input: {
   if (!subscription.interval || !subscription.current_period_end) {
     return { kind: "legacy_unmanageable", renewalAt: subscription.current_period_end }
   }
+  if (!pricingCatalog) {
+    return {
+      kind: "catalog_unmanageable",
+      provider: subscription.provider,
+      currentInterval: subscription.interval,
+      renewalAt: subscription.current_period_end,
+      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+    }
+  }
   if (operation?.status === "reconciling" || operation?.status === "pending_provider") {
     return {
       kind: "reconciling",
       provider: subscription.provider,
       currentInterval: subscription.interval,
+      pricingCatalog,
       renewalAt: subscription.current_period_end,
       cancelAtPeriodEnd: false,
       targetInterval: operation.target_interval,
@@ -92,6 +103,7 @@ export function buildMembershipManagementState(input: {
       kind: "pending",
       provider: subscription.provider,
       currentInterval: subscription.interval,
+      pricingCatalog,
       renewalAt: subscription.current_period_end,
       cancelAtPeriodEnd: false,
       targetInterval: operation.target_interval,
@@ -103,6 +115,7 @@ export function buildMembershipManagementState(input: {
     kind: "manageable",
     provider: subscription.provider,
     currentInterval: subscription.interval,
+    pricingCatalog,
     renewalAt: subscription.current_period_end,
     cancelAtPeriodEnd: false,
   }
@@ -133,9 +146,45 @@ export function assertPlanChangeEligible(
   if (!subscription.interval || !subscription.current_period_end) {
     throw new PlanChangeError("legacy_unmanageable", "Für dieses Abo fehlen Verwaltungsdaten.")
   }
+  if (!resolvedSubscriptionPricingCatalog(subscription)) {
+    throw new PlanChangeError(
+      "catalog_unmanageable",
+      "Dieses Abo kann erst nach einer Preisabstimmung geändert werden.",
+    )
+  }
   if (subscription.interval === targetInterval) {
     throw new PlanChangeError("same_interval", "Dieser Plan ist bereits aktiv.", 400)
   }
+}
+
+export function resolvedSubscriptionPricingCatalog(
+  subscription: BillingSubscriptionRow,
+): SubscriptionPricingCatalog | null {
+  const metadata = subscription.metadata ?? {}
+  const storedCatalog = parseSubscriptionPricingCatalog(metadata.pricing_catalog)
+  const providerId =
+    subscription.provider === "stripe"
+      ? stringMetadata(metadata.stripe_price_id)
+      : (stringMetadata(metadata.paypal_plan_id) ?? stringMetadata(metadata.plan_id))
+  const providerCatalog = providerId
+    ? subscription.provider === "stripe"
+      ? getStripePriceCatalogForId(providerId)
+      : getPayPalPlanCatalogForId(providerId)
+    : null
+
+  if (!providerId) return storedCatalog
+  if (
+    !providerCatalog ||
+    providerCatalog.interval !== subscription.interval ||
+    (storedCatalog && storedCatalog !== providerCatalog.family)
+  ) {
+    return null
+  }
+  return providerCatalog.family
+}
+
+function stringMetadata(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value.trim() : null
 }
 
 export function isProviderStatusManageable(provider: string, status: string) {
@@ -374,12 +423,6 @@ function planChangePhaseOccurredAt(
   if (phase === "approved") return operation.approved_at ?? operation.created_at
   if (phase === "applied") return operation.applied_at ?? operation.updated_at
   return operation.updated_at
-}
-
-export function intervalLabel(interval: BillingInterval) {
-  if (interval === "month") return "Monatlich"
-  if (interval === "quarter") return "Quartalsweise"
-  return "Jährlich"
 }
 
 function withoutPendingPlanChange(metadata: Record<string, unknown> | null | undefined) {

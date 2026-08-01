@@ -9,7 +9,7 @@ export default function AgbPage() {
     <div className="flex min-h-screen flex-col items-center bg-background px-4 py-16">
       <div className="w-full max-w-2xl space-y-8">
         <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-          Letzte Aktualisierung: Mai 2026
+          Letzte Aktualisierung: August 2026
         </p>
         <h1 className="break-words text-3xl font-semibold tracking-tight text-foreground max-[359px]:text-2xl">
           Allgemeine Geschäftsbedingungen (AGB)
@@ -55,16 +55,14 @@ export default function AgbPage() {
             </p>
             <ul className="mt-2 list-inside list-disc space-y-1">
               <li>
-                <strong className="text-foreground">Monatsplan:</strong> 14,99 € pro Monat,
-                monatliche Abrechnung
+                <strong className="text-foreground">Monatsplan:</strong> monatliche Abrechnung
               </li>
               <li>
-                <strong className="text-foreground">Quartalsplan:</strong> 34,99 € pro Quartal
-                (entspricht ca. 11,66 € / Monat), quartalsweise Abrechnung
+                <strong className="text-foreground">Quartalsplan:</strong> Abrechnung alle drei
+                Monate
               </li>
               <li>
-                <strong className="text-foreground">Jahresplan:</strong> 99,99 € pro Jahr
-                (entspricht ca. 8,33 € / Monat), jährliche Abrechnung
+                <strong className="text-foreground">Jahresplan:</strong> jährliche Abrechnung
               </li>
               <li>
                 <strong className="text-foreground">Einmalkauf persönlicher Haarplan:</strong>{" "}
@@ -72,8 +70,10 @@ export default function AgbPage() {
               </li>
             </ul>
             <p className="mt-2">
-              Aktions- oder Einführungsrabatte können den ersten Abrechnungsbetrag reduzieren; die
-              jeweils angezeigten Konditionen im Checkout sind maßgeblich.
+              Der unmittelbar vor der Bestellung angezeigte Gesamtpreis je Abrechnungsperiode und
+              die dort ausgewiesenen Konditionen sind maßgeblich. Wird ein Aktions- oder
+              Einführungspreis ausdrücklich als bis zur Kündigung gültig ausgewiesen, gilt er auch
+              für die folgenden Verlängerungen derselben Mitgliedschaft bis zu deren Kündigung.
             </p>
           </section>
 

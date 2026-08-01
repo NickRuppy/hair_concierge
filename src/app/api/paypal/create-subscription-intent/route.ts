@@ -11,8 +11,14 @@ import {
   type PayPalCheckoutSource,
 } from "@/lib/paypal/checkout-intents"
 import type { BillingInterval } from "@/lib/billing/types"
-import { getPayPalPlanId } from "@/lib/paypal/plans"
+import { getPayPalPlanId, resolvePayPalPlanId } from "@/lib/paypal/plans"
 import { getStripePricingPlan } from "@/lib/stripe/pricing-plans"
+import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
+import {
+  parseSubscriptionPricingCatalog,
+  resolveSubscriptionPricingCatalog,
+  type SubscriptionPricingCatalog,
+} from "@/lib/billing/pricing-catalog"
 import { cookies } from "next/headers"
 import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import {
@@ -32,24 +38,54 @@ import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return
 
 export const runtime = "nodejs"
 
-const BodySchema = z.object({
-  interval: z.enum(["month", "quarter", "year"]),
-  leadId: z.string().uuid().nullable().optional(),
-  source: z.enum(["pricing_page", "quiz_result_offer"]),
-  funnelEventId: z.string().uuid().optional(),
-  checkoutAttemptId: z.string().uuid().optional(),
-  checkoutContext: z.literal("membership_reactivation").optional(),
-  returnDestination: z.string().max(500).optional(),
-})
+export const PayPalSubscriptionIntentRequestSchema = z
+  .object({
+    interval: z.enum(["month", "quarter", "year"]),
+    leadId: z.string().uuid().nullable().optional(),
+    source: z.enum(["pricing_page", "quiz_result_offer"]),
+    funnelEventId: z.string().uuid().optional(),
+    checkoutAttemptId: z.string().uuid().optional(),
+    checkoutContext: z.literal("membership_reactivation").optional(),
+    returnDestination: z.string().max(500).optional(),
+  })
+  .strict()
 
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"
+
+export function resolveStoredPayPalCheckoutIntentPlan({
+  intentInterval,
+  metadata,
+  requestedInterval,
+}: {
+  intentInterval: BillingInterval
+  metadata: Record<string, unknown>
+  requestedInterval: BillingInterval
+}): { planId: string; pricingCatalog: SubscriptionPricingCatalog } {
+  const planId = typeof metadata.paypal_plan_id === "string" ? metadata.paypal_plan_id.trim() : ""
+  const pricingCatalog = parseSubscriptionPricingCatalog(metadata.pricing_catalog)
+  const resolvedPlan = planId ? resolvePayPalPlanId(planId) : null
+
+  if (
+    !pricingCatalog ||
+    !resolvedPlan ||
+    intentInterval !== requestedInterval ||
+    resolvedPlan.interval !== requestedInterval ||
+    resolvedPlan.pricingCatalog !== pricingCatalog
+  ) {
+    throw new Error("stored PayPal checkout intent plan is invalid")
+  }
+
+  return { planId, pricingCatalog }
+}
 
 export async function POST(request: Request) {
   if (process.env.NEXT_PUBLIC_PAYPAL_ENABLED !== "true") {
     return NextResponse.json({ error: "paypal disabled" }, { status: 404 })
   }
 
-  const parsed = BodySchema.safeParse(await request.json().catch(() => null))
+  const parsed = PayPalSubscriptionIntentRequestSchema.safeParse(
+    await request.json().catch(() => null),
+  )
   if (!parsed.success) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
@@ -63,23 +99,6 @@ export async function POST(request: Request) {
     checkoutContext,
     returnDestination: rawReturnDestination,
   } = parsed.data
-  const analyticsPlan = getStripePricingPlan(interval)
-  let planId: string
-  try {
-    planId = getPayPalPlanId(interval)
-  } catch {
-    captureCheckoutException(new Error("PayPal plan not configured"), {
-      provider: "paypal",
-      stage: "paypal_create_subscription_intent",
-      source,
-      interval,
-      leadId,
-      status: 500,
-      reason: "plan_not_configured",
-    })
-    return NextResponse.json({ error: "paypal plan not configured" }, { status: 500 })
-  }
-
   try {
     const admin = createAdminClient()
     const supabase = await createClient()
@@ -126,6 +145,9 @@ export async function POST(request: Request) {
       if (conflict) return conflict
     }
 
+    const leadFunnelContext = resolvedLeadId
+      ? await resolveFunnelContextForLead(resolvedLeadId)
+      : null
     if (checkoutContext === "membership_reactivation" && user?.id && checkoutAttemptId) {
       try {
         reactivationReservation = await acquireMembershipReactivationCheckout(admin, {
@@ -157,14 +179,54 @@ export async function POST(request: Request) {
           reactivationReservation.id,
           existingIntent.id,
         )
-        return NextResponse.json({ token: existingIntent.token, planId })
+        try {
+          const storedPlan = resolveStoredPayPalCheckoutIntentPlan({
+            intentInterval: existingIntent.interval,
+            metadata: existingIntent.metadata,
+            requestedInterval: interval,
+          })
+          return NextResponse.json({ token: existingIntent.token, planId: storedPlan.planId })
+        } catch (error) {
+          captureCheckoutException(error, {
+            provider: "paypal",
+            stage: "paypal_create_subscription_intent",
+            source,
+            interval,
+            leadId,
+            status: 500,
+            reason: "stored_intent_plan_invalid",
+          })
+          return NextResponse.json({ error: "paypal checkout intent invalid" }, { status: 500 })
+        }
       }
+    }
+
+    const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
+    const analyticsPlan = getStripePricingPlan(interval, pricingCatalog)
+    let planId: string
+    try {
+      planId = getPayPalPlanId(interval, pricingCatalog)
+      const resolvedPlan = resolvePayPalPlanId(planId)
+      if (resolvedPlan?.interval !== interval || resolvedPlan.pricingCatalog !== pricingCatalog) {
+        throw new Error("PayPal plan is not recognized by the selected catalog")
+      }
+    } catch {
+      captureCheckoutException(new Error("PayPal plan not configured"), {
+        provider: "paypal",
+        stage: "paypal_create_subscription_intent",
+        source,
+        interval,
+        leadId,
+        status: 500,
+        reason: "plan_not_configured",
+      })
+      return NextResponse.json({ error: "paypal plan not configured" }, { status: 500 })
     }
 
     const cookieStore = await cookies()
     const funnelContext =
       (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
-      (await resolveFunnelContextForLead(resolvedLeadId))
+      leadFunnelContext
     const funnelTouch = funnelContext
       ? await resolvePendingFunnelTouchValue(
           cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -178,6 +240,8 @@ export async function POST(request: Request) {
       email,
       userId: user?.id ?? null,
       metadata: {
+        paypal_plan_id: planId,
+        pricing_catalog: pricingCatalog,
         ...(funnelContext
           ? {
               funnel_session_id: funnelContext.sessionId,
@@ -231,6 +295,7 @@ export async function POST(request: Request) {
             ...(checkoutContext ? { checkout_context: checkoutContext } : {}),
             currency: analyticsPlan.currency,
             plan_id: analyticsPlan.analyticsId,
+            pricing_catalog: pricingCatalog,
             value: analyticsPlan.amount,
           },
         })

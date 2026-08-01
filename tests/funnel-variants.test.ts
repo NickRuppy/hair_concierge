@@ -79,9 +79,10 @@ test("landing route owns tracking outside contributor variants", () => {
 test("result client injects one shared pricing slot into the selected offer", () => {
   assert.match(resultClientSource, /renderOfferVariant\(offerVariant/)
   assert.match(resultClientSource, /quizAnswers,/)
+  assert.match(resultClientSource, /pricingCatalog=\{pricingCatalog\}/)
   assert.match(
     resultClientSource,
-    /pricingSlot:\s*(?:\(\s*)?<ResultOfferPricing[\s\S]*referencePrices=\{QUIZ_RESULT_REFERENCE_PRICES\}/,
+    /pricingSlot:\s*(?:\(\s*)?<ResultOfferPricing[\s\S]*pricingCatalog=\{pricingCatalog\}[\s\S]*referencePrices=\{[\s\S]*pricingCatalogWasProvided[\s\S]*getSubscriptionPlanReferencePrices\(pricingCatalog\)[\s\S]*QUIZ_RESULT_REFERENCE_PRICES/,
   )
   assert.doesNotMatch(resultClientSource, /QuizResultOfferPage\b/)
 })

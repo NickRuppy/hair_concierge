@@ -14,6 +14,7 @@ import {
 
 import { OfferPreviewRoutine } from "@/components/quiz/offer-preview-routine"
 import { MembershipReactivationCheckout } from "@/components/reactivation/membership-reactivation-checkout"
+import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import { signOutAction } from "@/app/auth/actions"
 import type { QuizOfferPreview } from "@/lib/quiz/offer-preview-types"
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -68,12 +69,14 @@ const faqs = [
 export function MembershipReactivationPage({
   firstName,
   initialInterval = DEFAULT_PRICING_INTERVAL,
+  pricingCatalog,
   returnDestination,
   routinePreview,
   showCheckout = true,
 }: {
   firstName: string | null
   initialInterval?: BillingInterval
+  pricingCatalog: SubscriptionPricingCatalog
   returnDestination: string
   routinePreview: QuizOfferPreview
   showCheckout?: boolean
@@ -205,6 +208,7 @@ export function MembershipReactivationPage({
             {showCheckout ? (
               <MembershipReactivationCheckout
                 initialInterval={initialInterval}
+                pricingCatalog={pricingCatalog}
                 returnDestination={returnDestination}
               />
             ) : (

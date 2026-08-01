@@ -9,7 +9,7 @@ import {
 import { DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP } from "../src/lib/billing/payment-integrity"
 
 const now = new Date("2026-08-01T12:00:00.000Z")
-const deadlineAt = new Date("2026-08-01T12:00:30.000Z")
+const deadlineAt = new Date(Date.now() + 30_000)
 const twoHoursAgo = Math.floor(new Date("2026-08-01T10:00:00.000Z").getTime() / 1000)
 
 test("provider references are represented only by a server-keyed HMAC digest", () => {

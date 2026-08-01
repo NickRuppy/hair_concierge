@@ -246,13 +246,18 @@ export const personalPlanPricingExperimentDashboard = {
   arms: experimentArms,
   insights: {
     overview: {
-      title: "Personal Plan · Preisexperiment — Übersicht pro Arm (7 Tage)",
+      title: "Personal Plan · Preisexperiment — Übersicht pro Arm und Preiskatalog (7 Tage)",
       description:
-        "Vergleicht nur Mitgliedschaft und Einmalkauf paket- und sessionbasiert über alle Revisionen. Interne QA ist ausgeschlossen; leere Reihen bedeuten keine berechtigten Experiment-Sessions.",
+        "Vergleicht Mitgliedschaft und Einmalkauf paket- und sessionbasiert nach Offer-Variante und Preiskatalog über alle Revisionen. Interne QA ist ausgeschlossen; ältere Mitgliedschafts-Sessions ohne Katalog-Metadatum erscheinen als unknown.",
       query: `WITH eligible AS (
   SELECT
     toString(properties.funnel_session_id) AS session_id,
     argMin(toString(properties.offer_variant), timestamp) AS arm,
+    argMinIf(
+      toString(properties.pricing_catalog),
+      timestamp,
+      notEmpty(ifNull(toString(properties.pricing_catalog), ''))
+    ) AS pricing_catalog,
     min(timestamp) AS offer_viewed_at
   FROM events
   WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to}
@@ -264,7 +269,14 @@ export const personalPlanPricingExperimentDashboard = {
   GROUP BY session_id
   HAVING uniqExact(toString(properties.offer_variant)) = 1
 ), per_session AS (
-  SELECT eligible.session_id, eligible.arm,
+  SELECT
+    eligible.session_id,
+    eligible.arm,
+    if(
+      eligible.arm = 'personal-plan-one-time-v1',
+      'personal_plan_once',
+      if(empty(ifNull(eligible.pricing_catalog, '')), 'unknown', eligible.pricing_catalog)
+    ) AS pricing_catalog,
     max(if(experiment_event.event = 'offer_section_viewed' AND experiment_event.properties.section_id = 'pricing', 1, 0)) AS pricing_viewed,
     max(if(experiment_event.event = 'offer_cta_clicked' AND experiment_event.properties.destination = 'checkout', 1, 0)) AS checkout_intent,
     max(if(experiment_event.event = 'offer_checkout_opened', 1, 0)) AS checkout_opened,
@@ -280,9 +292,9 @@ export const personalPlanPricingExperimentDashboard = {
     -- purchase_completed carries package/session identity, but not offer_variant.
     AND (experiment_event.event = 'purchase_completed' OR experiment_event.properties.offer_variant = eligible.arm)
     AND ${excludeInternalQaFor("experiment_event")}
-  GROUP BY eligible.session_id, eligible.arm
+  GROUP BY eligible.session_id, eligible.arm, eligible.pricing_catalog
 )
-SELECT arm AS experiment_arm, uniqExact(session_id) AS offer_sessions,
+SELECT arm AS experiment_arm, pricing_catalog, uniqExact(session_id) AS offer_sessions,
   uniqExactIf(session_id, pricing_viewed = 1) AS pricing_viewed_sessions,
   uniqExactIf(session_id, checkout_intent = 1) AS checkout_intent_sessions,
   uniqExactIf(session_id, checkout_opened = 1) AS checkout_opened_sessions,
@@ -290,7 +302,7 @@ SELECT arm AS experiment_arm, uniqExact(session_id) AS offer_sessions,
   uniqExactIf(session_id, payment_option_viewed = 1) AS payment_option_viewed_sessions,
   uniqExactIf(session_id, purchase_completed = 1) AS purchases,
   round(100 * purchases / nullIf(offer_sessions, 0), 2) AS conversion_rate_percent
-FROM per_session GROUP BY arm ORDER BY experiment_arm`,
+FROM per_session GROUP BY arm, pricing_catalog ORDER BY experiment_arm, pricing_catalog`,
     },
   },
 } as const

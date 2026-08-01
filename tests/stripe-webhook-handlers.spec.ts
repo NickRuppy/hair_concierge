@@ -404,6 +404,57 @@ test("subscription.updated keeps status=active when cancel_at_period_end flips",
   expect(result.matchedCurrentSubscription).toBe(true)
 })
 
+test("subscription.updated persists an unknown observed Price instead of trusting stale catalog metadata", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "x@y",
+    stripe_customer_id: "cus_X",
+    stripe_subscription_id: "sub_X",
+    subscription_status: "active",
+    subscription_interval: "month",
+  }
+  billing.push({
+    id: "billing_X",
+    user_id: "u",
+    provider: "stripe",
+    provider_customer_id: "cus_X",
+    provider_subscriber_email: null,
+    provider_subscription_id: "sub_X",
+    provider_status: "active",
+    entitlement_status: "active",
+    interval: "month",
+    current_period_end: new Date(1_900_000_000 * 1000).toISOString(),
+    cancel_at_period_end: false,
+    cancel_scheduled_at: null,
+    cancelled_at: null,
+    metadata: { stripe_price_id: "price_month", pricing_catalog: "standard" },
+  })
+
+  await handleSubscriptionUpdated(
+    {
+      id: "sub_X",
+      customer: "cus_X",
+      status: "active",
+      cancel_at_period_end: false,
+      items: {
+        data: [
+          {
+            price: { id: "price_unrecognized", interval: "month", interval_count: 1 },
+            current_period_end: 1_900_000_000,
+          },
+        ],
+      },
+    } as any,
+    deps,
+  )
+
+  expect(billing[0].metadata).toEqual({
+    stripe_price_id: "price_unrecognized",
+    pricing_catalog: "standard",
+  })
+})
+
 test("subscription.updated prefers cancel_at and clears normalized cancellation on resumption", async () => {
   const { billing, deps, profiles } = stubDeps()
   profiles.u = {

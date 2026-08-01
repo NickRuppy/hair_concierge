@@ -24,7 +24,8 @@ import {
   resolveGuidedStoryOfferExperiment,
   resolvePersonalPlanPricingExperiment,
 } from "@/lib/funnel/server"
-import { isFunnelAttributionEnabled } from "@/lib/funnel/flags"
+import { isFunnelAttributionEnabled, isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
+import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
 
@@ -233,6 +234,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
               : null,
           })
   const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
+  const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (
     <ResultPageClient
@@ -250,6 +252,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       returnTo={returnTo}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      pricingCatalog={pricingCatalog}
     />
   )
 }

@@ -793,6 +793,7 @@ test("PostHog checkout preparation maps only opaque performance diagnostics", ()
       interval: "quarter",
       pageMountToWalletReadyMs: 4620,
       planId: "premium_quarter",
+      pricingCatalog: "personal_plan_launch_v1",
       preparationDurationMs: 3810,
       preparationId: "prepared_opaque_123",
       walletAvailable: true,
@@ -808,6 +809,7 @@ test("PostHog checkout preparation maps only opaque performance diagnostics", ()
         interval: "quarter",
         page_mount_to_wallet_ready_ms: 4620,
         plan_id: "premium_quarter",
+        pricing_catalog: "personal_plan_launch_v1",
         preparation_duration_ms: 3810,
         preparation_id: "prepared_opaque_123",
         wallet_available: true,
@@ -904,6 +906,7 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
       offerRevision: "product_led_v1",
       offerVariant: "default",
       offerViewId: "40000000-0000-4000-8000-000000000099",
+      pricingCatalog: "personal_plan_launch_v1",
       sectionId: "mini_routine",
       sectionIndex: 1,
       shampooModuleId: "shampoo-balanced-normal",
@@ -929,6 +932,7 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
         offer_revision: "product_led_v1",
         offer_variant: "default",
         offer_view_id: "40000000-0000-4000-8000-000000000099",
+        pricing_catalog: "personal_plan_launch_v1",
         section_id: "mini_routine",
         section_index: 1,
         shampoo_module_id: "shampoo-balanced-normal",
@@ -961,8 +965,9 @@ test("PostHog retains truthful payment option exposure context", () => {
       offerViewId: "40000000-0000-4000-8000-000000000094",
       option: "card_and_more",
       planId: "premium_quarter",
+      pricingCatalog: "personal_plan_launch_v1",
       provider: "stripe",
-      value: 34.99,
+      value: 19.99,
     })
   } finally {
     posthog.capture = originalCapture
@@ -985,8 +990,9 @@ test("PostHog retains truthful payment option exposure context", () => {
         offer_view_id: "40000000-0000-4000-8000-000000000094",
         option: "card_and_more",
         plan_id: "premium_quarter",
+        pricing_catalog: "personal_plan_launch_v1",
         provider: "stripe",
-        value: 34.99,
+        value: 19.99,
       },
     ],
   ])

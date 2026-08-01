@@ -101,6 +101,7 @@ export default async function OfferPageLab({
   searchParams: Promise<{
     focus?: string
     pricingArm?: string
+    pricingCatalog?: string
     scenario?: string
     variant?: string
   }>
@@ -138,6 +139,11 @@ export default async function OfferPageLab({
           funnelSessionId: "22222222-2222-4222-8222-222222222222",
         }}
         offerVariant={personalPlanOfferVariant}
+        pricingCatalog={
+          params.pricingCatalog === "personal_plan_launch_v1"
+            ? "personal_plan_launch_v1"
+            : "standard"
+        }
       />
     )
   }

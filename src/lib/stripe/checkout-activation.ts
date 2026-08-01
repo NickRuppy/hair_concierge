@@ -22,6 +22,7 @@ import {
   PERSONAL_PLAN_ONCE_PRODUCT,
 } from "@/lib/billing/offer-products"
 import { intervalFromPrice } from "./intervals"
+import { getStripePriceCatalogForId } from "./client"
 
 export interface CheckoutActivationDeps {
   supabase: SupabaseClient
@@ -122,6 +123,7 @@ export interface RetrievedSub {
     data: Array<{
       current_period_end?: number
       price: {
+        id?: string
         interval?: string
         interval_count?: number
         recurring?: { interval: string; interval_count: number }
@@ -265,6 +267,7 @@ export async function ensureCheckoutAccount(
       metadata: {
         checkout_session_id: valid.id,
         payment_status: session.payment_status ?? "unknown",
+        ...stripePricingMetadata(price.id),
       },
     }),
   )
@@ -288,6 +291,17 @@ export async function ensureCheckoutAccount(
     stripeCustomerId: valid.customerId,
     stripeSubscriptionId: sub.id,
     subscriptionStatus: sub.status ?? "active",
+  }
+}
+
+export function stripePricingMetadata(priceId: string | undefined): Record<string, string> {
+  const normalizedPriceId = priceId?.trim() || null
+  if (!normalizedPriceId) return {}
+  const priceCatalog = normalizedPriceId ? getStripePriceCatalogForId(normalizedPriceId) : null
+  if (!priceCatalog) return { stripe_price_id: normalizedPriceId }
+  return {
+    stripe_price_id: normalizedPriceId,
+    pricing_catalog: priceCatalog.family,
   }
 }
 

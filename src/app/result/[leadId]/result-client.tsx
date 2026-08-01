@@ -2,7 +2,10 @@
 
 import { useEffect } from "react"
 
-import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
+import {
+  getSubscriptionPlanReferencePrices,
+  QUIZ_RESULT_REFERENCE_PRICES,
+} from "@/components/checkout/plan-reference-prices"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 import {
@@ -18,6 +21,7 @@ import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
+import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
 
@@ -36,6 +40,7 @@ export function ResultPageClient({
   returnTo = null,
   offerTracking = null,
   offerVariant = "default",
+  pricingCatalog,
 }: {
   leadId: string
   name: string
@@ -51,8 +56,11 @@ export function ResultPageClient({
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
+  pricingCatalog?: SubscriptionPricingCatalog
 }) {
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
+  const resolvedPricingCatalog = pricingCatalog ?? "standard"
+  const pricingCatalogWasProvided = pricingCatalog !== undefined
 
   if (quizKind === "personal_plan") {
     if (hasAccess) {
@@ -72,6 +80,7 @@ export function ResultPageClient({
         model={personalPlanOffer}
         offerTracking={offerTracking}
         offerVariant={offerVariant}
+        pricingCatalog={pricingCatalog}
       />
     )
   }
@@ -90,6 +99,8 @@ export function ResultPageClient({
       name={name}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      pricingCatalog={resolvedPricingCatalog}
+      pricingCatalogWasProvided={pricingCatalogWasProvided}
       quizAnswers={quizAnswers}
       returnTo={returnTo}
     />
@@ -105,6 +116,8 @@ function LegacyResultPageClient({
   name,
   offerTracking,
   offerVariant,
+  pricingCatalog,
+  pricingCatalogWasProvided,
   quizAnswers,
   returnTo,
 }: {
@@ -116,6 +129,8 @@ function LegacyResultPageClient({
   name: string
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
+  pricingCatalog: SubscriptionPricingCatalog
+  pricingCatalogWasProvided: boolean
   quizAnswers: QuizAnswers
   returnTo?: string | null
 }) {
@@ -158,7 +173,12 @@ function LegacyResultPageClient({
       <ResultOfferPricing
         leadId={leadId}
         offerTracking={offerTracking}
-        referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
+        pricingCatalog={pricingCatalog}
+        referencePrices={
+          pricingCatalogWasProvided
+            ? (getSubscriptionPlanReferencePrices(pricingCatalog) ?? QUIZ_RESULT_REFERENCE_PRICES)
+            : QUIZ_RESULT_REFERENCE_PRICES
+        }
       />
     ),
   })

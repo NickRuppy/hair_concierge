@@ -1,5 +1,5 @@
 import type { BillingInterval } from "@/lib/billing/types"
-import { getPayPalPlanId } from "./plans"
+import { getPayPalPlanCatalogForId, getPayPalPlanId } from "./plans"
 import { PayPalRequestError, paypalRequest } from "./client"
 import {
   type PayPalSubscription,
@@ -49,14 +49,36 @@ export async function initiatePayPalPlanChange(input: {
     throw new PayPalPlanChangeConflictError("paypal_current_plan_missing", "PayPal plan is missing")
   }
   const currentPlan = await retrievePayPalPlan(subscription.plan_id)
-  const targetPlanId = getPayPalPlanId(input.targetInterval)
+  const currentCatalog = getPayPalPlanCatalogForId(currentPlan.id ?? subscription.plan_id)
+  if (!currentCatalog) {
+    throw new PayPalPlanChangeConflictError(
+      "paypal_plan_unrecognized",
+      "Current PayPal plan is not part of a configured catalog family",
+    )
+  }
+  if (currentCatalog.interval !== input.currentInterval) {
+    throw new PayPalPlanChangeConflictError(
+      "paypal_interval_mismatch",
+      "Current PayPal plan does not match the recorded interval",
+    )
+  }
+  const targetPlanId = getPayPalPlanId(input.targetInterval, currentCatalog.family)
   const targetPlan = await retrievePayPalPlan(targetPlanId)
+  const targetCatalog = getPayPalPlanCatalogForId(targetPlan.id ?? targetPlanId)
+  if (!targetCatalog) {
+    throw new PayPalPlanChangeConflictError(
+      "paypal_plan_unrecognized",
+      "Target PayPal plan is not part of a configured catalog family",
+    )
+  }
   try {
     validatePayPalPlanPair({
       currentPlan,
       targetPlan,
       currentInterval: input.currentInterval,
       targetInterval: input.targetInterval,
+      currentFamily: currentCatalog.family,
+      targetFamily: targetCatalog.family,
       expectedProductId: process.env.PAYPAL_PRODUCT_ID?.trim(),
     })
   } catch (error) {
@@ -127,6 +149,13 @@ export async function verifyApprovedPayPalPlanChange(input: {
     )
   }
   const targetPlan = await retrievePayPalPlan(input.targetPlanId)
-  validatePayPalPlanShape(targetPlan, input.targetInterval)
+  const targetCatalog = getPayPalPlanCatalogForId(targetPlan.id ?? input.targetPlanId)
+  if (!targetCatalog || targetCatalog.interval !== input.targetInterval) {
+    throw new PayPalPlanChangeConflictError(
+      "paypal_plan_unrecognized",
+      "Target PayPal plan is not part of the configured catalog",
+    )
+  }
+  validatePayPalPlanShape(targetPlan, input.targetInterval, targetCatalog.family)
   return subscription
 }

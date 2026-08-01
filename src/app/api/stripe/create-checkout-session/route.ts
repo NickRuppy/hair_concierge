@@ -14,12 +14,17 @@ import {
   resolveFunnelContextForLead,
   resolvePendingFunnelTouchValue,
 } from "@/lib/funnel/server"
+import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
+import {
+  resolveSubscriptionPricingCatalog,
+  type SubscriptionPricingCatalog,
+} from "@/lib/billing/pricing-catalog"
 import {
   bindPersonalPlanOneTimeConsentProviderReference,
   createPersonalPlanOneTimeCheckoutConsent,
   PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
 } from "@/lib/billing/personal-plan-one-time-consents"
-import { getStripe, PRICE_IDS } from "@/lib/stripe/client"
+import { getStripe, getStripePriceId, resolveStripePriceId } from "@/lib/stripe/client"
 import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { getStripePricingPlan } from "@/lib/stripe/pricing-plans"
@@ -310,26 +315,6 @@ export async function POST(req: NextRequest) {
   const isPreparation = action === "prepare"
   const subscriptionInterval = interval as BillingInterval
   const commerceInterval = isOneTimePurchase ? "one_time" : subscriptionInterval
-  const analyticsPlan = isOneTimePurchase
-    ? PERSONAL_PLAN_ONCE_PRODUCT
-    : getStripePricingPlan(subscriptionInterval)
-
-  const priceId = isOneTimePurchase
-    ? getPersonalPlanOnceStripePriceId()
-    : PRICE_IDS[subscriptionInterval]
-  if (!priceId) {
-    captureCheckoutException(new Error("Stripe price not configured"), {
-      provider: "stripe",
-      stage: "stripe_checkout_session_create",
-      source: "pricing_page",
-      interval: commerceInterval as never,
-      leadId,
-      status: 500,
-      reason: "price_not_configured",
-    })
-    return NextResponse.json({ error: "price not configured" }, { status: 500 })
-  }
-
   try {
     // Identity resolution: prefer existing Stripe customer > email > 400
     // Priority: leadId email → authed user's stripe_customer_id → authed user's email → 400
@@ -593,8 +578,8 @@ export async function POST(req: NextRequest) {
     if (action === "claim") {
       return claimPreparedCheckoutSession({
         stripe,
-        interval: commerceInterval,
-        priceId,
+        requestedInterval: commerceInterval,
+        isOneTimePurchase,
         source,
         presentation,
         leadId: resolvedLeadId,
@@ -606,13 +591,41 @@ export async function POST(req: NextRequest) {
         preparedSessionId: preparedSessionId!,
         checkoutAttemptId: checkoutAttemptId!,
         funnelEventId: funnelEventId!,
-        analyticsPlan,
         oneTimeConsentId,
         adminSupabase: isOneTimePurchase ? getAdminSupabase() : undefined,
         funnelSessionId: isOneTimePurchase ? funnelSessionId : undefined,
         cookieStore,
         userIdForFunnel: user?.id,
       })
+    }
+
+    const leadFunnelContext = resolvedLeadId
+      ? await resolveFunnelContextForLead(resolvedLeadId)
+      : null
+    const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
+    const analyticsPlan = isOneTimePurchase
+      ? PERSONAL_PLAN_ONCE_PRODUCT
+      : getStripePricingPlan(subscriptionInterval, pricingCatalog)
+    const priceId = isOneTimePurchase
+      ? getPersonalPlanOnceStripePriceId()
+      : getStripePriceId(subscriptionInterval, pricingCatalog)
+    const resolvedSubscriptionPrice = isOneTimePurchase ? null : resolveStripePriceId(priceId)
+    if (
+      !priceId ||
+      (!isOneTimePurchase &&
+        (resolvedSubscriptionPrice?.interval !== subscriptionInterval ||
+          resolvedSubscriptionPrice.pricingCatalog !== pricingCatalog))
+    ) {
+      captureCheckoutException(new Error("Stripe price not configured"), {
+        provider: "stripe",
+        stage: "stripe_checkout_session_create",
+        source: "pricing_page",
+        interval: commerceInterval as never,
+        leadId,
+        status: 500,
+        reason: "price_not_configured",
+      })
+      return NextResponse.json({ error: "price not configured" }, { status: 500 })
     }
 
     if (reactivationReservation?.provider_reference) {
@@ -655,7 +668,7 @@ export async function POST(req: NextRequest) {
     const funnelContext = !shouldRecordFunnelForCheckoutAction(action)
       ? null
       : ((await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
-        (await resolveFunnelContextForLead(resolvedLeadId)))
+        leadFunnelContext)
     const funnelTouch = funnelContext
       ? await resolvePendingFunnelTouchValue(
           cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -678,6 +691,7 @@ export async function POST(req: NextRequest) {
           preparationTokenHash: hashPreparedCheckoutToken(preparationTokenForResponse!),
           interval: commerceInterval,
           priceId,
+          pricingCatalog: isOneTimePurchase ? undefined : pricingCatalog,
           source,
           presentation,
           identityHash: createPreparedCheckoutIdentityHash({
@@ -702,11 +716,17 @@ export async function POST(req: NextRequest) {
       reactivationReservationId: reactivationReservation?.id,
       presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
       ...(!isPreparation &&
-      (checkoutAttemptId || oneTimeConsentId || checkoutIsInternalTest !== undefined)
+      (checkoutAttemptId ||
+        oneTimeConsentId ||
+        !isOneTimePurchase ||
+        checkoutIsInternalTest !== undefined)
         ? {
             metadata: {
               ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
               ...(oneTimeConsentId ? { personal_plan_once_consent_id: oneTimeConsentId } : {}),
+              ...(!isOneTimePurchase
+                ? { pricing_catalog: pricingCatalog, stripe_price_id: priceId }
+                : {}),
               ...(checkoutIsInternalTest !== undefined
                 ? { is_internal_test: String(checkoutIsInternalTest) }
                 : {}),
@@ -789,6 +809,7 @@ export async function POST(req: NextRequest) {
             ...(checkoutContext ? { checkout_context: checkoutContext } : {}),
             currency: analyticsPlan.currency,
             plan_id: analyticsPlan.analyticsId,
+            ...(!isOneTimePurchase ? { pricing_catalog: pricingCatalog } : {}),
             value: analyticsPlan.amount,
           },
         })
@@ -861,6 +882,7 @@ function buildPreparedCheckoutMetadata(input: {
   preparationTokenHash: string
   interval: CheckoutCommerceInterval
   priceId: string
+  pricingCatalog?: SubscriptionPricingCatalog
   source: "pricing_page" | "quiz_result_offer"
   presentation?: "offer_overlay_elements"
   identityHash: string
@@ -871,6 +893,7 @@ function buildPreparedCheckoutMetadata(input: {
     checkout_preparation_status: "prepared",
     checkout_preparation_interval: input.interval,
     checkout_preparation_price_id: input.priceId,
+    ...(input.pricingCatalog ? { checkout_preparation_pricing_catalog: input.pricingCatalog } : {}),
     checkout_preparation_source: input.source,
     checkout_preparation_presentation: input.presentation ?? "",
     checkout_preparation_identity_hash: input.identityHash,
@@ -1121,10 +1144,59 @@ async function loadOneTimeConsentFunnelContext(input: {
   })
 }
 
-async function claimPreparedCheckoutSession(input: {
-  stripe: Stripe
+export function resolvePreparedCheckoutPricing(input: {
+  isOneTimePurchase: boolean
+  lineItemPriceId?: string
+  metadata: Record<string, string>
+  requestedInterval: CheckoutCommerceInterval
+}): {
+  analyticsPlan: CheckoutAnalyticsPlan
   interval: CheckoutCommerceInterval
   priceId: string
+  pricingCatalog?: SubscriptionPricingCatalog
+} | null {
+  const priceId = input.metadata.checkout_preparation_price_id
+  if (!priceId || input.lineItemPriceId !== priceId) return null
+
+  if (input.isOneTimePurchase) {
+    if (
+      input.requestedInterval !== "one_time" ||
+      input.metadata.checkout_preparation_interval !== "one_time" ||
+      priceId !== getPersonalPlanOnceStripePriceId()
+    )
+      return null
+    return {
+      analyticsPlan: PERSONAL_PLAN_ONCE_PRODUCT,
+      interval: "one_time",
+      priceId,
+    }
+  }
+
+  if (input.requestedInterval === "one_time") return null
+  const resolved = resolveStripePriceId(priceId)
+  const storedPricingCatalog = input.metadata.checkout_preparation_pricing_catalog
+  if (
+    !resolved ||
+    resolved.interval !== input.requestedInterval ||
+    input.metadata.checkout_preparation_interval !== resolved.interval ||
+    (storedPricingCatalog && storedPricingCatalog !== resolved.pricingCatalog) ||
+    (resolved.pricingCatalog === "personal_plan_launch_v1" &&
+      storedPricingCatalog !== resolved.pricingCatalog)
+  )
+    return null
+
+  return {
+    analyticsPlan: getStripePricingPlan(resolved.interval, resolved.pricingCatalog),
+    interval: resolved.interval,
+    priceId,
+    pricingCatalog: resolved.pricingCatalog,
+  }
+}
+
+async function claimPreparedCheckoutSession(input: {
+  stripe: Stripe
+  requestedInterval: CheckoutCommerceInterval
+  isOneTimePurchase: boolean
   source: "pricing_page" | "quiz_result_offer"
   presentation?: "offer_overlay_elements"
   leadId: string | null
@@ -1136,7 +1208,6 @@ async function claimPreparedCheckoutSession(input: {
   preparedSessionId: string
   checkoutAttemptId: string
   funnelEventId: string
-  analyticsPlan: CheckoutAnalyticsPlan
   cookieStore: Awaited<ReturnType<typeof cookies>>
   userIdForFunnel?: string
   oneTimeConsentId?: string | null
@@ -1163,6 +1234,13 @@ async function claimPreparedCheckoutSession(input: {
   const lineItemPrice = session.line_items?.data[0]?.price
   const resolvedLineItemPrice =
     typeof lineItemPrice === "string" ? lineItemPrice : lineItemPrice?.id
+  const preparedPricing = resolvePreparedCheckoutPricing({
+    isOneTimePurchase: input.isOneTimePurchase,
+    lineItemPriceId: resolvedLineItemPrice,
+    metadata,
+    requestedInterval: input.requestedInterval,
+  })
+  if (!preparedPricing) return preparedCheckoutUnavailable()
   const oneTimeConsentFunnelContext =
     input.oneTimeConsentId && input.adminSupabase
       ? await loadOneTimeConsentFunnelContext({
@@ -1173,7 +1251,6 @@ async function claimPreparedCheckoutSession(input: {
         })
       : undefined
   if (input.oneTimeConsentId && !oneTimeConsentFunnelContext) return preparedCheckoutUnavailable()
-
   const validation = validatePreparedCheckoutClaim({
     metadata,
     sessionStatus: session.status,
@@ -1182,8 +1259,8 @@ async function claimPreparedCheckoutSession(input: {
     lineItemPriceId: resolvedLineItemPrice,
     preparationId: input.preparationId,
     preparationToken: input.preparationToken,
-    interval: input.interval,
-    priceId: input.priceId,
+    interval: preparedPricing.interval,
+    priceId: preparedPricing.priceId,
     source: input.source,
     presentation: input.presentation,
     identityHash,
@@ -1199,8 +1276,8 @@ async function claimPreparedCheckoutSession(input: {
         lineItemPriceId: resolvedLineItemPrice,
         preparationId: input.preparationId,
         preparationToken: input.preparationToken,
-        interval: input.interval,
-        priceId: input.priceId,
+        interval: preparedPricing.interval,
+        priceId: preparedPricing.priceId,
         source: input.source,
         presentation: input.presentation,
         identityHash,
@@ -1256,14 +1333,15 @@ async function claimPreparedCheckoutSession(input: {
       )
     }
     const funnelResult = await recordPreparedCheckoutStarted({
-      interval: input.interval,
+      interval: preparedPricing.interval,
       source: input.source,
       leadId: input.leadId,
       userId: input.userIdForFunnel,
       checkoutAttemptId: input.checkoutAttemptId,
       funnelEventId: input.funnelEventId,
       sessionId: session.id,
-      analyticsPlan: input.analyticsPlan,
+      analyticsPlan: preparedPricing.analyticsPlan,
+      pricingCatalog: preparedPricing.pricingCatalog,
       cookieStore: input.cookieStore,
       funnelContext: oneTimeConsentFunnelContext ?? undefined,
     })
@@ -1341,14 +1419,15 @@ async function claimPreparedCheckoutSession(input: {
     )
   }
   const funnelResult = await recordPreparedCheckoutStarted({
-    interval: input.interval,
+    interval: preparedPricing.interval,
     source: input.source,
     leadId: input.leadId,
     userId: input.userIdForFunnel,
     checkoutAttemptId: input.checkoutAttemptId,
     funnelEventId: input.funnelEventId,
     sessionId: session.id,
-    analyticsPlan: input.analyticsPlan,
+    analyticsPlan: preparedPricing.analyticsPlan,
+    pricingCatalog: preparedPricing.pricingCatalog,
     cookieStore: input.cookieStore,
     funnelContext: oneTimeConsentFunnelContext ?? undefined,
   })
@@ -1402,6 +1481,7 @@ async function recordPreparedCheckoutStarted(input: {
   funnelEventId: string
   sessionId: string
   analyticsPlan: CheckoutAnalyticsPlan
+  pricingCatalog?: SubscriptionPricingCatalog
   cookieStore: Awaited<ReturnType<typeof cookies>>
   funnelContext?: FunnelCookieContext
 }) {
@@ -1429,6 +1509,7 @@ async function recordPreparedCheckoutStarted(input: {
       checkout_attempt_id: input.checkoutAttemptId,
       currency: input.analyticsPlan.currency,
       plan_id: input.analyticsPlan.analyticsId,
+      ...(input.pricingCatalog ? { pricing_catalog: input.pricingCatalog } : {}),
       value: input.analyticsPlan.amount,
     },
   })

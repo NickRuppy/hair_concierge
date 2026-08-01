@@ -1,5 +1,11 @@
 import type Stripe from "stripe"
+import {
+  parseSubscriptionPricingCatalog,
+  STANDARD_PRICING_CATALOG,
+  type SubscriptionPricingCatalog,
+} from "../billing/pricing-catalog"
 import { intervalFromPrice, type BillingInterval } from "./intervals"
+import { getStripePricingPlan } from "./pricing-plans"
 
 type RetrievedSubscription = {
   default_payment_method?: string | { id: string; type?: string } | null
@@ -25,16 +31,13 @@ function selectedPaymentMethodTypeFromSubscription(subscription: RetrievedSubscr
   return paymentMethod.type
 }
 
-function planIdForInterval(interval: BillingInterval) {
-  return `premium_${interval}`
-}
-
 export type CheckoutPurchaseAnalytics = {
   currency: string
   funnelPackageKey?: string
   interval: BillingInterval
   paymentMethodType?: string
   planId: string
+  pricingCatalog: SubscriptionPricingCatalog
   value: number
 }
 
@@ -62,13 +65,18 @@ export async function buildCheckoutPurchaseAnalytics(
     interval: price.recurring?.interval ?? price.interval ?? "",
     interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
   })
+  const pricingCatalog =
+    parseSubscriptionPricingCatalog(
+      session.metadata?.pricing_catalog ?? session.metadata?.checkout_preparation_pricing_catalog,
+    ) ?? STANDARD_PRICING_CATALOG
 
   return {
     currency: session.currency.toUpperCase(),
     funnelPackageKey: session.metadata?.funnel_package_key || undefined,
     interval,
-    planId: planIdForInterval(interval),
+    planId: getStripePricingPlan(interval, pricingCatalog).analyticsId,
     paymentMethodType: selectedPaymentMethodTypeFromSubscription(subscription),
+    pricingCatalog,
     value: session.amount_total / 100,
   }
 }

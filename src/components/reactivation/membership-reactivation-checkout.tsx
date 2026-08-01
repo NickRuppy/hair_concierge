@@ -13,6 +13,7 @@ import {
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
 } from "@/components/checkout/payment-method-checkout"
+import { getSubscriptionPlanReferencePrices } from "@/components/checkout/plan-reference-prices"
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { SubscriptionPlanSelector } from "@/components/checkout/subscription-plan-selector"
 import {
@@ -26,8 +27,9 @@ import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observabil
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
-  STRIPE_PRICING_PLANS,
   getStripePricingPlan,
+  getStripePricingPlans,
+  type SubscriptionPricingCatalog,
 } from "@/lib/stripe/pricing-plans"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -47,9 +49,11 @@ export function getReactivationRetryAttemptId(checkoutAttemptId: string | null) 
 
 export function MembershipReactivationCheckout({
   initialInterval = DEFAULT_PRICING_INTERVAL,
+  pricingCatalog,
   returnDestination,
 }: {
   initialInterval?: BillingInterval
+  pricingCatalog: SubscriptionPricingCatalog
   returnDestination: string
 }) {
   const { stripeLive } = usePaymentRuntime()
@@ -69,7 +73,7 @@ export function MembershipReactivationCheckout({
     useState<Promise<Stripe | null>>(unloadedStripePromise)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
-  const selectedPlan = getStripePricingPlan(selectedInterval)
+  const selectedPlan = getStripePricingPlan(selectedInterval, pricingCatalog)
 
   const reportStripeCustomerError = useCallback(
     (errorFamily: PaymentErrorFamily, status?: number, attemptId = checkoutAttemptId) => {
@@ -111,15 +115,16 @@ export function MembershipReactivationCheckout({
   useEffect(() => {
     const context = getCurrentFunnelContext()
     trackAppEvent("pricing_viewed", {
-      availableIntervals: STRIPE_PRICING_PLANS.map((plan) => plan.interval),
+      availableIntervals: getStripePricingPlans(pricingCatalog).map((plan) => plan.interval),
       checkoutContext,
       funnelEventId: createFunnelEventId(),
       funnelPackageKey: context?.funnelPackageKey,
       funnelSessionId: context?.funnelSessionId,
       selectedInterval: initialInterval,
+      pricingCatalog,
       source: "pricing_page",
     })
-  }, [initialInterval])
+  }, [initialInterval, pricingCatalog])
 
   const lockCheckoutToProvider = useCallback((provider: LockedCheckoutProvider) => {
     if (lockedProviderRef.current && lockedProviderRef.current !== provider) return
@@ -170,7 +175,7 @@ export function MembershipReactivationCheckout({
 
     setCheckoutError(null)
     const funnelEventId = createFunnelEventId()
-    const plan = getStripePricingPlan(checkoutInterval)
+    const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
     addCheckoutBreadcrumb({
       provider: "stripe",
       stage: "stripe_embedded_checkout_client_secret",
@@ -234,6 +239,7 @@ export function MembershipReactivationCheckout({
       funnelSessionId: context?.funnelSessionId,
       interval: checkoutInterval,
       planId: plan.analyticsId,
+      pricingCatalog,
       provider: "stripe",
       source: "pricing_page",
       value: plan.amount,
@@ -244,6 +250,7 @@ export function MembershipReactivationCheckout({
     checkoutAttemptId,
     checkoutInterval,
     lockCheckoutToProvider,
+    pricingCatalog,
     reportStripeCustomerError,
     returnDestination,
   ])
@@ -253,7 +260,7 @@ export function MembershipReactivationCheckout({
       if (!checkoutInterval || !checkoutAttemptId) return
       lockCheckoutToProvider("paypal")
       const context = getCurrentFunnelContext()
-      const plan = getStripePricingPlan(checkoutInterval)
+      const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
       trackAppEvent("checkout_started", {
         checkoutAttemptId,
         checkoutContext,
@@ -263,12 +270,13 @@ export function MembershipReactivationCheckout({
         funnelSessionId: context?.funnelSessionId,
         interval: checkoutInterval,
         planId: plan.analyticsId,
+        pricingCatalog,
         provider: "paypal",
         source: "pricing_page",
         value: plan.amount,
       })
     },
-    [checkoutAttemptId, checkoutInterval, lockCheckoutToProvider],
+    [checkoutAttemptId, checkoutInterval, lockCheckoutToProvider, pricingCatalog],
   )
 
   return (
@@ -283,6 +291,8 @@ export function MembershipReactivationCheckout({
           actionLabel={`${selectedPlan.price} · Mitgliedschaft reaktivieren`}
           onContinue={openCheckout}
           onSelect={choosePlan}
+          pricingCatalog={pricingCatalog}
+          referencePrices={getSubscriptionPlanReferencePrices(pricingCatalog)}
           selectedInterval={selectedInterval}
         />
       ) : null}
@@ -310,7 +320,7 @@ export function MembershipReactivationCheckout({
               setCheckoutError(null)
               setCheckoutRetryKey((current) => current + 1)
             }}
-            planLabel={getStripePricingPlan(checkoutInterval).ctaLabel}
+            planLabel={getStripePricingPlan(checkoutInterval, pricingCatalog).ctaLabel}
             returnDestination={returnDestination}
             source="pricing_page"
             stripe={checkoutStripePromise}

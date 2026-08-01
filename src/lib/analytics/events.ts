@@ -1,4 +1,5 @@
 import type { BillingInterval } from "@/lib/stripe/intervals"
+import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 
 export type AnalyticsValue = string | number | boolean | null | string[] | number[] | boolean[]
 export type AnalyticsPayload = Record<string, AnalyticsValue | undefined>
@@ -30,6 +31,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   offerRevision: string
   offerVariant: string
   offerViewId: string
+  pricingCatalog?: SubscriptionPricingCatalog
   shampooModuleId?: string | null
   suggestedCategory?: string | null
 }
@@ -106,6 +108,7 @@ type MembershipCommerceProperties = {
   currency: string
   interval: BillingInterval
   planId: string
+  pricingCatalog?: SubscriptionPricingCatalog
   value: number
 }
 
@@ -140,6 +143,7 @@ export type AppEventMap = {
     interval: BillingInterval
     pageMountToWalletReadyMs: number
     planId: string
+    pricingCatalog?: SubscriptionPricingCatalog
     preparationDurationMs: number
     preparationId: string
     walletAvailable: boolean
@@ -161,6 +165,7 @@ export type AppEventMap = {
       interval?: BillingInterval | null
       leadId?: string | null
       planId?: string
+      pricingCatalog?: SubscriptionPricingCatalog
       provider: "stripe" | "paypal"
       purchaseKind?: "personal_plan_once"
       source: "pricing_page" | "quiz_result_offer"
@@ -241,6 +246,7 @@ export type AppEventMap = {
       offerVariant?: string
       offerViewId?: string
       planId?: string
+      pricingCatalog?: SubscriptionPricingCatalog
       pricingRevision?: string
       purchaseKind?: "personal_plan_once"
       selectedInterval?: BillingInterval
@@ -253,6 +259,7 @@ export type AppEventMap = {
     interval: string
     planId: string
     paymentMethodType?: string
+    pricingCatalog?: SubscriptionPricingCatalog
     value: number
   }
   personal_plan_quiz_screen_viewed: {

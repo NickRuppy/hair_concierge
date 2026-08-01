@@ -34,6 +34,7 @@ import type {
 } from "@/lib/analytics/events"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import { resolveOfferSectionIndex } from "@/lib/analytics/offer-section-order"
+import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 
 export const OFFER_REVISION = "product_led_v2"
 export const GUIDED_STORY_OFFER_REVISION = "guided_story_v1"
@@ -84,6 +85,7 @@ export function OfferTrackingProvider({
   leadId,
   offerTracking,
   offerVariant,
+  pricingCatalog,
   trackingIdentity,
   offerRevision = OFFER_REVISION,
   revealedThrough,
@@ -96,6 +98,7 @@ export function OfferTrackingProvider({
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
+  pricingCatalog?: SubscriptionPricingCatalog
   trackingIdentity: OfferTrackingIdentity
   offerRevision?: string
   revealedThrough?: 1 | 2 | 3 | 4
@@ -127,6 +130,7 @@ export function OfferTrackingProvider({
       offerRevision,
       offerVariant,
       offerViewId,
+      ...(pricingCatalog ? { pricingCatalog } : {}),
       shampooModuleId,
       suggestedCategory,
     }),
@@ -140,6 +144,7 @@ export function OfferTrackingProvider({
       leadId,
       offerVariant,
       offerViewId,
+      pricingCatalog,
       needLane,
       offerRevision,
       shampooModuleId,

@@ -3,7 +3,12 @@ import type {
   BillingInterval,
   BillingSubscriptionInput,
 } from "../billing/types"
-import { EXPECTED_PAYPAL_PLAN_SHAPES, type ExpectedPayPalPlanShape } from "./plans"
+import {
+  EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY,
+  getPayPalPlanCatalogForId,
+  type ExpectedPayPalPlanShape,
+  type PayPalPlanCatalogFamily,
+} from "./plans"
 
 export type PayPalSubscription = {
   id?: string
@@ -84,6 +89,8 @@ export function toBillingSubscriptionInputFromPayPal(
     subscription.status === "CANCELLED" || subscription.status === "EXPIRED"
   const providerSubscriberEmail =
     subscription.subscriber?.email_address?.trim().toLowerCase() || undefined
+  const planId = subscription.plan_id?.trim() || null
+  const planCatalog = planId ? getPayPalPlanCatalogForId(planId) : null
 
   return {
     user_id: userId,
@@ -99,13 +106,19 @@ export function toBillingSubscriptionInputFromPayPal(
     cancel_scheduled_at: isProviderCancellation ? paidThrough : null,
     cancelled_at: isProviderCancellation ? new Date().toISOString() : null,
     metadata: {
-      plan_id: subscription.plan_id ?? null,
+      plan_id: planId,
+      paypal_plan_id: planId,
+      ...(planCatalog ? { pricing_catalog: planCatalog.family } : {}),
     },
   }
 }
 
-export function validatePayPalPlanShape(plan: PayPalPlan, interval: BillingInterval): void {
-  const expected = EXPECTED_PAYPAL_PLAN_SHAPES[interval]
+export function validatePayPalPlanShape(
+  plan: PayPalPlan,
+  interval: BillingInterval,
+  family: PayPalPlanCatalogFamily = "standard",
+): void {
+  const expected = EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY[family][interval]
   if (plan.status !== "ACTIVE") {
     throw new Error(
       `PayPal plan ${plan.id ?? "<unknown>"} expected ACTIVE status but received ${plan.status ?? "<missing>"}`,
@@ -128,11 +141,21 @@ export function validatePayPalPlanPair(input: {
   targetPlan: PayPalPlan
   currentInterval: BillingInterval
   targetInterval: BillingInterval
+  currentFamily?: PayPalPlanCatalogFamily
+  targetFamily?: PayPalPlanCatalogFamily
   expectedProductId?: string | null
 }) {
+  const currentFamily = input.currentFamily ?? "standard"
+  const targetFamily = input.targetFamily ?? "standard"
+  if (currentFamily !== targetFamily) {
+    throw new PayPalPlanPairValidationError(
+      "paypal_catalog_mismatch",
+      "Current and target PayPal plans are not part of the same catalog family",
+    )
+  }
   try {
-    validatePayPalPlanShape(input.currentPlan, input.currentInterval)
-    validatePayPalPlanShape(input.targetPlan, input.targetInterval)
+    validatePayPalPlanShape(input.currentPlan, input.currentInterval, currentFamily)
+    validatePayPalPlanShape(input.targetPlan, input.targetInterval, targetFamily)
   } catch (error) {
     throw new PayPalPlanPairValidationError(
       "paypal_plan_shape_mismatch",

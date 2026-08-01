@@ -10,7 +10,7 @@ import {
 } from "../src/lib/billing/payment-integrity"
 
 const now = new Date("2026-08-01T12:00:00.000Z")
-const deadlineAt = new Date("2026-08-01T12:00:40.000Z")
+const deadlineAt = new Date(Date.now() + 40_000)
 
 function hoursAgo(hours: number): Date {
   return new Date(now.getTime() - hours * 60 * 60 * 1000)

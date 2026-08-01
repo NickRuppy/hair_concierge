@@ -22,7 +22,10 @@ import {
   isOfferCheckoutPrewarmEnabled,
   isOfferCheckoutResolvedOpenEnabled,
 } from "../src/lib/funnel/flags"
-import { STRIPE_PRICING_PLANS } from "../src/lib/stripe/pricing-plans"
+import {
+  PERSONAL_PLAN_LAUNCH_PRICING_PLANS,
+  STRIPE_PRICING_PLANS,
+} from "../src/lib/stripe/pricing-plans"
 
 const pricingSource = readFileSync(
   new URL("../src/components/quiz/result-offer-pricing.tsx", import.meta.url),
@@ -47,6 +50,20 @@ test("offer analytics plan metadata matches canonical purchase IDs and advertise
       { analyticsId: "premium_year", amount: 99.99, currency: "EUR", interval: "year" },
     ],
   )
+
+  assert.deepEqual(
+    PERSONAL_PLAN_LAUNCH_PRICING_PLANS.map(({ analyticsId, amount, currency, interval }) => ({
+      analyticsId,
+      amount,
+      currency,
+      interval,
+    })),
+    [
+      { analyticsId: "premium_month", amount: 9.99, currency: "EUR", interval: "month" },
+      { analyticsId: "premium_quarter", amount: 19.99, currency: "EUR", interval: "quarter" },
+      { analyticsId: "premium_year", amount: 69.99, currency: "EUR", interval: "year" },
+    ],
+  )
 })
 
 test("visibility-based pricing tracking preserves funnel attribution metadata", () => {
@@ -55,7 +72,8 @@ test("visibility-based pricing tracking preserves funnel attribution metadata", 
   assert.match(pricingSource, /offerContext\?\.funnelSessionId \?\? context\?\.funnelSessionId/)
   assert.match(pricingSource, /offerContext\?\.funnelPackageKey \?\? context\?\.funnelPackageKey/)
   assert.match(pricingSource, /pricingRevision: OFFER_PRICING_REVISION/)
-  assert.match(pricingSource, /availableIntervals: STRIPE_PRICING_PLANS/)
+  assert.match(pricingSource, /availableIntervals: getStripePricingPlans\(pricingCatalog\)/)
+  assert.match(pricingSource, /pricingCatalog,/)
   assert.match(pricingSource, /trackAppEvent\("pricing_viewed", \{\s*\.\.\.offerContext,/)
 })
 
@@ -74,26 +92,33 @@ test("pricing visibility uses existing observers for pricing-reached and checkou
   )
   assert.match(
     pricingSource,
-    /onCheckoutSummaryChange\?\.\(getMembershipCheckoutSummary\(selectedInterval\)\)/,
+    /onCheckoutSummaryChange\?\.\(getMembershipCheckoutSummary\(selectedInterval, pricingCatalog\)\)/,
   )
   assert.equal((pricingSource.match(/observeOnceVisible\(pricingElement/g) ?? []).length, 2)
   assert.doesNotMatch(pricingSource, /new IntersectionObserver[\s\S]*onPricingReached/)
 })
 
 test("variant-aware checkout summaries distinguish membership intervals from one-time purchase", () => {
-  assert.deepEqual(getMembershipCheckoutSummary("month"), {
+  assert.deepEqual(getMembershipCheckoutSummary("month", "standard"), {
     commerceKind: "membership",
     interval: "month",
     planName: "Monatlich",
     priceLabel: "€14,99",
     stickyLine: "Monatlich · €14,99",
   })
-  assert.deepEqual(getMembershipCheckoutSummary("quarter"), {
+  assert.deepEqual(getMembershipCheckoutSummary("quarter", "standard"), {
     commerceKind: "membership",
     interval: "quarter",
     planName: "Quartal",
     priceLabel: "€34,99",
     stickyLine: "Quartal · €34,99",
+  })
+  assert.deepEqual(getMembershipCheckoutSummary("quarter", "personal_plan_launch_v1"), {
+    commerceKind: "membership",
+    interval: "quarter",
+    planName: "Quartal",
+    priceLabel: "€19,99",
+    stickyLine: "Quartal · €19,99",
   })
   assert.deepEqual(getPersonalPlanOneTimeCheckoutSummary(), {
     commerceKind: "one_time",

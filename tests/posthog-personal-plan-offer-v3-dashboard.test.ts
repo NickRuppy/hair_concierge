@@ -127,7 +127,7 @@ test("O6 exposes current, historical, missing, and unexpected Personal Plan offe
   expectInternalQaExcluded(query)
 })
 
-test("pricing experiment has one two-arm overview with visibility, purchases, and conversion", () => {
+test("pricing experiment has one two-arm and catalog overview with visibility, purchases, and conversion", () => {
   const experiment = pricingExperimentDashboardModule.personalPlanPricingExperimentDashboard
   const insights = Object.values(experiment.insights)
 
@@ -148,6 +148,10 @@ test("pricing experiment has one two-arm overview with visibility, purchases, an
   assert.match(query, /offer_payment_option_viewed/)
   assert.match(query, /purchase_completed/)
   assert.match(query, /conversion_rate_percent/)
+  assert.match(query, /properties\.pricing_catalog/)
+  assert.match(query, /personal_plan_once/)
+  assert.match(query, /'unknown'/)
+  assert.match(query, /GROUP BY arm, pricing_catalog/)
   assert.match(query, /HAVING uniqExact\(toString\(properties\.offer_variant\)\) = 1/)
   assert.match(
     query,

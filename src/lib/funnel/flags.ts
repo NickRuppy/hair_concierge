@@ -10,6 +10,10 @@ export function isPersonalPlanPricingExperimentEnabled() {
   return process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED === "true"
 }
 
+export function isPersonalPlanLaunchPricingEnabled() {
+  return process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED === "true"
+}
+
 export function isPersonalPlanOneTimeQaEnabled() {
   return process.env.PERSONAL_PLAN_ONE_TIME_QA_ENABLED === "true"
 }
