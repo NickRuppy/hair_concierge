@@ -201,6 +201,7 @@ test("Stripe one-time historical success with a terminal refunded local row is a
 })
 
 test("Stripe invoice reconciliation reads modern parent subscription references", async () => {
+  let invoiceParams: Record<string, unknown> | undefined
   const runner = createPaymentIntegrityRunner({
     digestSecret: "digest-secret",
     paymentRuntime: { stripeLive: true, paypalLive: false },
@@ -220,6 +221,9 @@ test("Stripe invoice reconciliation reads modern parent subscription references"
           has_more: false,
         },
       ],
+      onInvoiceList: (params) => {
+        invoiceParams = params
+      },
     }),
     paypalRequest: async () => ({}),
     supabase: fakeSupabase(),
@@ -232,6 +236,7 @@ test("Stripe invoice reconciliation reads modern parent subscription references"
     ["provider_success_without_billing_success"],
   )
   assert.equal(JSON.stringify(result).includes("sub_parent_modern"), false)
+  assert.equal(invoiceParams?.expand, undefined)
 })
 
 test("subscription success with retained canceled-at-period-end access is reconciled", async () => {
@@ -902,7 +907,7 @@ function fakeStripe(
     sessions?: Array<{ data: Array<Record<string, unknown>>; has_more?: boolean }>
     invoices?: Array<{ data: Array<Record<string, unknown>>; has_more?: boolean }>
     sessionError?: Error
-    onInvoiceList?: () => void
+    onInvoiceList?: (params: Record<string, unknown>) => void
     onSessionList?: (params: Record<string, unknown>) => void
   } = {},
 ) {
@@ -919,8 +924,8 @@ function fakeStripe(
       },
     },
     invoices: {
-      async list() {
-        options.onInvoiceList?.()
+      async list(params: Record<string, unknown>) {
+        options.onInvoiceList?.(params)
         return invoicePages.shift() ?? { data: [], has_more: false }
       },
     },
