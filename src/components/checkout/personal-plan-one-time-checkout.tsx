@@ -83,6 +83,7 @@ export function PersonalPlanOneTimeCheckout({
   const [error, setError] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [paypalReady, setPaypalReady] = useState(false)
+  const [paypalProviderLocked, setPaypalProviderLocked] = useState(false)
   const [stripeProviderLocked, setStripeProviderLocked] = useState(false)
   const [stripeSelected, setStripeSelected] = useState(false)
   const [stripePreparationId, setStripePreparationId] = useState(createFunnelEventId)
@@ -242,6 +243,7 @@ export function PersonalPlanOneTimeCheckout({
     if (!leadId || !funnelSessionId) throw new Error("one-time checkout is not authorized")
     reportStripePreparationState("preparing")
     let responseStatus: number | undefined
+    let paypalLocked = false
     try {
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -265,6 +267,16 @@ export function PersonalPlanOneTimeCheckout({
         session_id?: unknown
         status?: unknown
       }
+      if (response.status === 409 && body.provider_locked === "paypal") {
+        paypalLocked = true
+        preparedStripeCheckoutRef.current = null
+        setPaypalProviderLocked(true)
+        setStripeProviderLocked(false)
+        setStripeSelected(false)
+        setError(null)
+        reportStripePreparationState("failed")
+        throw new Error("one-time checkout is locked to PayPal")
+      }
       if (
         !response.ok ||
         (body.status !== "prepared" && body.status !== "recovered") ||
@@ -287,6 +299,7 @@ export function PersonalPlanOneTimeCheckout({
       reportStripePreparationState("prepared", body.expires_at)
       return body.client_secret
     } catch (error) {
+      if (paypalLocked) throw error
       if (visibleRef.current) {
         setError(checkoutStartError)
         reportStripeCustomerError({
@@ -371,6 +384,7 @@ export function PersonalPlanOneTimeCheckout({
     const body = (await response.json().catch(() => ({}))) as {
       client_secret?: unknown
       error?: unknown
+      provider_locked?: unknown
       session_id?: unknown
       status?: unknown
     }
@@ -380,7 +394,11 @@ export function PersonalPlanOneTimeCheckout({
         body.error === "checkout already completed"
       )
         setDuplicateDialogOpen(true)
-      else setError("Eine andere Zahlungsart wurde bereits gestartet.")
+      else if (body.provider_locked === "paypal") {
+        setPaypalProviderLocked(true)
+        setStripeSelected(false)
+        setError(null)
+      } else setError("Eine andere Zahlungsart wurde bereits gestartet.")
       return false
     }
     if (
@@ -439,7 +457,46 @@ export function PersonalPlanOneTimeCheckout({
         <span>{PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT}</span>
       </label>
 
-      {canStartPayment ? (
+      {canStartPayment && paypalProviderLocked ? (
+        <div className="grid gap-3">
+          <p
+            className="rounded-[12px] border border-border bg-muted/30 px-3 py-2 text-center text-sm text-[var(--brand-plum-darkest)]"
+            role="status"
+          >
+            PayPal ist bereits ausgewählt. Schließe die Zahlung dort ab.
+          </p>
+          {visible && checkoutAttemptId && process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
+            <PaymentOptionExposure
+              checkoutAttemptId={checkoutAttemptId}
+              onViewed={handlePaymentOptionViewed}
+              option="paypal"
+              provider="paypal"
+              providerReady={paypalReady}
+              visible
+            >
+              <PayPalOneTimeButton
+                checkoutAttemptId={checkoutAttemptId}
+                consentAccepted={accepted}
+                funnelSessionId={funnelSessionId!}
+                leadId={leadId!}
+                onCheckoutStarted={(funnelEventId) =>
+                  trackCheckoutStarted("paypal", "explicit_provider_action", funnelEventId)
+                }
+                onDuplicateAccess={() => setDuplicateDialogOpen(true)}
+                onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
+                onProviderConflict={() =>
+                  setError("Eine andere Zahlungsart wurde bereits gestartet.")
+                }
+                onReady={() => setPaypalReady(true)}
+                onConsentRequired={requestConsent}
+              />
+            </PaymentOptionExposure>
+          ) : null}
+          <Button disabled type="button" variant="outline">
+            Karte ist für diesen Zahlungsversuch nicht verfügbar
+          </Button>
+        </div>
+      ) : canStartPayment ? (
         <StripeOfferElementsCheckout
           checkoutAttemptId={checkoutAttemptId ?? undefined}
           checkoutKey={`personal-plan-once:${stripePreparationId}`}
@@ -484,6 +541,11 @@ export function PersonalPlanOneTimeCheckout({
                       }
                       onDuplicateAccess={() => setDuplicateDialogOpen(true)}
                       onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
+                      onProviderSelected={() => {
+                        setPaypalProviderLocked(true)
+                        setStripeSelected(false)
+                        setError(null)
+                      }}
                       onProviderConflict={() =>
                         setError("Eine andere Zahlungsart wurde bereits gestartet.")
                       }

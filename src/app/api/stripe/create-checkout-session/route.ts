@@ -364,7 +364,10 @@ export async function POST(req: NextRequest) {
           .maybeSingle()
         if (lookupError) throw lookupError
         if (existing?.paypal_order_id) {
-          return NextResponse.json({ error: "payment provider already selected" }, { status: 409 })
+          return NextResponse.json(
+            { error: "payment provider already selected", provider_locked: "paypal" },
+            { status: 409 },
+          )
         }
         if (existing?.stripe_checkout_session_id) {
           oneTimeProviderLocked = "stripe"
@@ -409,7 +412,7 @@ export async function POST(req: NextRequest) {
           if (lookupError || !existing) throw error
           if (existing.paypal_order_id) {
             return NextResponse.json(
-              { error: "payment provider already selected" },
+              { error: "payment provider already selected", provider_locked: "paypal" },
               { status: 409 },
             )
           }

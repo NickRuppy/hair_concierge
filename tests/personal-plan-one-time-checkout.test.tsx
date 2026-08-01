@@ -18,6 +18,14 @@ const paypalOrderRouteSource = readFileSync(
   new URL("../src/app/api/paypal/create-order-intent/route.ts", import.meta.url),
   "utf8",
 )
+const paypalCaptureRouteSource = readFileSync(
+  new URL("../src/app/api/paypal/capture-order/route.ts", import.meta.url),
+  "utf8",
+)
+const stripeCheckoutRouteSource = readFileSync(
+  new URL("../src/app/api/stripe/create-checkout-session/route.ts", import.meta.url),
+  "utf8",
+)
 const offerLabSource = readFileSync(
   new URL("../src/app/labs/offer-page/page.tsx", import.meta.url),
   "utf8",
@@ -53,7 +61,7 @@ test("one-time payment providers preload independently while consent gates final
   )
   assert.match(checkoutSource, /onBeforeConfirm=\{handleBeforeStripeConfirm\}/)
   assert.match(checkoutSource, /consentAccepted=\{accepted\}/)
-  assert.match(checkoutSource, /\{canStartPayment \? \(/)
+  assert.match(checkoutSource, /\) : canStartPayment \? \(/)
   assert.match(checkoutSource, /stripeSelected \? \(/)
   assert.match(checkoutSource, /Mit Karte bezahlen/)
   assert.match(checkoutSource, /consentAccepted: true/)
@@ -64,6 +72,34 @@ test("one-time payment providers preload independently while consent gates final
   assert.match(paypalSource, /consentAccepted: true/)
   assert.match(paypalSource, /consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION/)
   assert.match(paypalSource, /funnelSessionId/)
+})
+
+test("a PayPal-owned checkout stays usable without presenting a generic Stripe failure", () => {
+  assert.match(
+    stripeCheckoutRouteSource,
+    /error: "payment provider already selected", provider_locked: "paypal"/,
+  )
+  assert.match(checkoutSource, /body\.provider_locked === "paypal"/)
+  assert.match(checkoutSource, /PayPal ist bereits ausgewählt/)
+  assert.match(checkoutSource, /Karte ist für diesen Zahlungsversuch nicht verfügbar/)
+  assert.match(checkoutSource, /onProviderSelected/)
+  assert.match(paypalSource, /onProviderSelected\?\.\(\)/)
+})
+
+test("PayPal pending capture continues to welcome while an expired intent stops blind retries", () => {
+  assert.match(
+    paypalCaptureRouteSource,
+    /error\.code === "paypal_order_capture_pending"[\s\S]*status: "pending"[\s\S]*status: 202/,
+  )
+  assert.match(paypalSource, /body\.status === "pending"/)
+  assert.match(paypalSource, /window\.location\.assign\(body\.welcomeUrl\)/)
+  assert.match(paypalSource, /body\.error === "paypal_order_intent_expired"/)
+  assert.match(paypalSource, /Die PayPal-Zahlung ist abgelaufen/)
+  assert.match(paypalSource, /mailto:/)
+  assert.match(
+    paypalOrderRouteSource,
+    /createPayPalOrderIntent[\s\S]*isUniqueViolation[\s\S]*consent_id[\s\S]*paypal_order_intent_expired/,
+  )
 })
 
 test("one-time Apple Pay prewarms before the drawer opens without creating checkout analytics", () => {

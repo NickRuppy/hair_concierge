@@ -140,14 +140,14 @@ export async function captureAndActivatePayPalOrder(
       let order: CapturedPayPalOrder
       try {
         order = await (deps.retrieveOrder ?? retrieveProviderPayPalOrder)(intent.provider_order_id)
-      } catch (error) {
+      } catch {
         reportPayPalOrderFailure(deps, intent, {
           signal: "customer_payment_error_observed",
           boundary: "provider_outcome",
           errorFamily: "provider_unavailable",
           truth: "unknown",
         })
-        throw error
+        throw payPalCapturePendingError()
       }
       try {
         verifiedCapture = validateCapturedPayPalOrder(order, intent, undefined, {
@@ -171,42 +171,78 @@ export async function captureAndActivatePayPalOrder(
         intent.token,
       )
     } catch (error) {
-      reportPayPalOrderFailure(
-        deps,
-        intent,
-        isPayPalCaptureRejected(error)
-          ? {
-              signal: "provider_payment_failed",
-              boundary: "provider_outcome",
-              errorFamily: "processing",
-              truth: "failed",
-            }
-          : {
-              signal: "customer_payment_error_observed",
-              boundary: "provider_outcome",
-              errorFamily: "provider_unavailable",
-              truth: "unknown",
-            },
-      )
-      throw error
+      if (isPayPalOrderAlreadyCaptured(error)) {
+        try {
+          order = await (deps.retrieveOrder ?? retrieveProviderPayPalOrder)(
+            intent.provider_order_id,
+          )
+        } catch {
+          reportPayPalOrderFailure(deps, intent, {
+            signal: "customer_payment_error_observed",
+            boundary: "provider_outcome",
+            errorFamily: "provider_unavailable",
+            truth: "unknown",
+          })
+          throw payPalCapturePendingError()
+        }
+      } else {
+        reportPayPalOrderFailure(
+          deps,
+          intent,
+          isPayPalCaptureRejected(error)
+            ? {
+                signal: "provider_payment_failed",
+                boundary: "provider_outcome",
+                errorFamily: "processing",
+                truth: "failed",
+              }
+            : {
+                signal: "customer_payment_error_observed",
+                boundary: "provider_outcome",
+                errorFamily: "provider_unavailable",
+                truth: "unknown",
+              },
+        )
+        throw error
+      }
     }
     try {
       verifiedCapture = validateCapturedPayPalOrder(order, intent)
     } catch (error) {
-      reportPayPalOrderFailure(deps, intent, {
-        signal: "customer_payment_error_observed",
-        boundary: "provider_outcome",
-        errorFamily: "processing",
-        truth: "unknown",
-      })
-      throw error
+      if (shouldRetrievePayPalOrderAfterCapture(order, intent)) {
+        try {
+          order = await (deps.retrieveOrder ?? retrieveProviderPayPalOrder)(
+            intent.provider_order_id,
+          )
+        } catch {
+          reportPayPalOrderFailure(deps, intent, {
+            signal: "customer_payment_error_observed",
+            boundary: "provider_outcome",
+            errorFamily: "provider_unavailable",
+            truth: "unknown",
+          })
+          throw payPalCapturePendingError()
+        }
+        try {
+          verifiedCapture = validateCapturedPayPalOrder(order, intent)
+        } catch (retrieveValidationError) {
+          reportPayPalOrderFailure(deps, intent, payPalCaptureValidationFailure(order))
+          throw retrieveValidationError
+        }
+      } else {
+        reportPayPalOrderFailure(deps, intent, payPalCaptureValidationFailure(order))
+        throw error
+      }
     }
   }
 
   if (!intent.provider_capture_id) {
-    intent =
-      (await tryMarkPayPalOrderIntentCaptured(deps.supabase, token, verifiedCapture.captureId)) ??
-      intent
+    intent = await tryMarkPayPalOrderIntentCaptured(
+      deps.supabase,
+      token,
+      verifiedCapture.orderId,
+      verifiedCapture.captureId,
+    )
   }
   const result = await activateVerifiedPayPalOrderIntent(intent, verifiedCapture, deps)
   return { ...result, intent }
@@ -323,11 +359,12 @@ export async function recoverPayPalOrderActivation(token: string, deps: PayPalOr
   })
   const intent = verification.intent.provider_capture_id
     ? verification.intent
-    : ((await tryMarkPayPalOrderIntentCaptured(
+    : await tryMarkPayPalOrderIntentCaptured(
         deps.supabase,
         token,
+        verification.payment.providerOrderId,
         verification.payment.providerTransactionId,
-      )) ?? verification.intent)
+      )
   const result = await activateVerifiedPayPalOrderIntent(
     intent,
     {
@@ -378,6 +415,116 @@ function reportPayPalOrderFailure(
 function isPayPalCaptureRejected(error: unknown) {
   if (!error || typeof error !== "object" || !("status" in error)) return false
   return error.status === 422
+}
+
+function payPalCapturePendingError() {
+  return new PayPalCheckoutActivationError(
+    "paypal_order_capture_pending",
+    "PayPal order capture is not complete",
+  )
+}
+
+function isPayPalOrderAlreadyCaptured(error: unknown) {
+  if (!isPayPalCaptureRejected(error)) return false
+  const candidate = error as { message?: unknown; details?: unknown }
+  const message = typeof candidate.message === "string" ? candidate.message : ""
+  let details = ""
+  try {
+    details = JSON.stringify(candidate.details ?? "")
+  } catch {
+    // A malformed provider error remains an ordinary rejected capture.
+  }
+  return /ORDER_ALREADY_CAPTURED/i.test(`${message} ${details}`)
+}
+
+function shouldRetrievePayPalOrderAfterCapture(
+  order: CapturedPayPalOrder,
+  intent: PayPalOrderIntentRow,
+) {
+  const expectedMerchantId = process.env.PAYPAL_MERCHANT_ID?.trim()
+  const orderId = typeof order.id === "string" ? order.id.trim() : ""
+  const purchaseUnits = order.purchase_units ?? []
+  const purchaseUnit = purchaseUnits[0]
+  const captures = purchaseUnit?.payments?.captures ?? []
+
+  if (orderId && orderId !== intent.provider_order_id) return false
+  if (purchaseUnits.length > 1) return false
+  if (purchaseUnit?.custom_id != null && purchaseUnit.custom_id !== intent.token) return false
+  if (
+    purchaseUnit?.payee?.merchant_id != null &&
+    expectedMerchantId &&
+    purchaseUnit.payee.merchant_id !== expectedMerchantId
+  ) {
+    return false
+  }
+  if (
+    purchaseUnit?.amount?.currency_code != null &&
+    purchaseUnit.amount.currency_code !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY
+  ) {
+    return false
+  }
+  if (
+    purchaseUnit?.amount?.value != null &&
+    purchaseUnit.amount.value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT
+  ) {
+    return false
+  }
+  if (
+    captures.some(
+      (capture) =>
+        (capture.amount?.currency_code != null &&
+          capture.amount.currency_code !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY) ||
+        (capture.amount?.value != null &&
+          capture.amount.value !== PAYPAL_PERSONAL_PLAN_ONCE_AMOUNT),
+    )
+  ) {
+    return false
+  }
+
+  // A successful capture can return a deliberately sparse representation.
+  // Only missing or unsettled evidence is eligible for the single read-only lookup;
+  // explicit identity or amount contradictions above remain fail-closed.
+  if (!orderId || !order.status || !purchaseUnit) return true
+  if (
+    purchaseUnit.custom_id == null ||
+    purchaseUnit.payee?.merchant_id == null ||
+    purchaseUnit.amount?.currency_code == null ||
+    purchaseUnit.amount?.value == null ||
+    captures.length === 0
+  ) {
+    return true
+  }
+  return captures.some(
+    (capture) =>
+      capture.status === "PENDING" ||
+      capture.id == null ||
+      capture.create_time == null ||
+      capture.amount?.currency_code == null ||
+      capture.amount?.value == null,
+  )
+}
+
+function payPalCaptureValidationFailure(order: CapturedPayPalOrder) {
+  const captureStatuses =
+    order.purchase_units?.flatMap((unit) =>
+      (unit.payments?.captures ?? []).map((capture) => capture.status),
+    ) ?? []
+  const providerConfirmedFailure =
+    order.status === "VOIDED" ||
+    captureStatuses.some((status) => status === "DECLINED" || status === "FAILED")
+  return providerConfirmedFailure
+    ? ({
+        signal: "provider_payment_failed",
+        boundary: "provider_outcome",
+        errorFamily: "processing",
+        truth: "failed",
+      } as const)
+    : ({
+        signal: "customer_payment_error_observed",
+        boundary: "provider_outcome",
+        errorFamily: "processing",
+        truth: "unknown",
+      } as const)
 }
 
 export async function processPayPalOneTimeFulfillmentJob(
@@ -450,7 +597,7 @@ function payPalRetryVerificationError(error: unknown): unknown {
 }
 
 function isRetryablePayPalOneTimeVerificationError(error: PayPalCheckoutActivationError) {
-  return error.code === "paypal_order_capture_incomplete" && /not complete/i.test(error.message)
+  return error.code === "paypal_order_capture_pending"
 }
 
 function bindPayPalConsentProviderReference(
@@ -567,11 +714,14 @@ export function validateCapturedPayPalOrder(
       "PayPal order capture failed validation",
     )
   }
-  if (order.status !== "COMPLETED" || !capture || capture.status !== "COMPLETED") {
+  if (order.status === "VOIDED" || capture?.status === "DECLINED" || capture?.status === "FAILED") {
     throw new PayPalCheckoutActivationError(
       "paypal_order_capture_incomplete",
-      "PayPal order capture is not complete",
+      "PayPal order capture failed validation",
     )
+  }
+  if (order.status !== "COMPLETED" || !capture || capture.status !== "COMPLETED") {
+    throw payPalCapturePendingError()
   }
   if (
     capture?.amount?.currency_code !== PAYPAL_PERSONAL_PLAN_ONCE_CURRENCY ||
@@ -595,10 +745,13 @@ function validateSingleCompletedPayPalOrderCapture(
   const completedCaptures = (order.purchase_units?.[0]?.payments?.captures ?? []).filter(
     (capture) => capture.status === "COMPLETED" && typeof capture.id === "string",
   )
+  if (completedCaptures.length === 0) {
+    throw payPalCapturePendingError()
+  }
   if (completedCaptures.length !== 1) {
     throw new PayPalCheckoutActivationError(
       "paypal_order_capture_incomplete",
-      "PayPal order capture is not complete",
+      "PayPal order capture failed validation",
     )
   }
   return validateCapturedPayPalOrder(order, intent, undefined, {
@@ -791,15 +944,24 @@ function tokenHash(token: string) {
 export async function tryMarkPayPalOrderIntentCaptured(
   supabase: SupabaseClient,
   token: string,
+  orderId: string,
   captureId: string,
-): Promise<PayPalOrderIntentRow | null> {
+): Promise<PayPalOrderIntentRow> {
   try {
-    return await markPayPalOrderIntentCaptured(supabase, token, captureId)
+    const intent = await markPayPalOrderIntentCaptured(supabase, token, orderId, captureId)
+    if (!intent) {
+      throw new PayPalCheckoutActivationError(
+        "paypal_order_capture_incomplete",
+        "PayPal capture no longer matches the current order intent",
+      )
+    }
+    return intent
   } catch (error) {
+    if (error instanceof PayPalCheckoutActivationError) throw error
     console.warn("[paypal:one-time] captured payment persisted but intent update failed", {
       reason: sanitizedIntentUpdateFailureReason(error),
     })
-    return null
+    throw payPalCapturePendingError()
   }
 }
 

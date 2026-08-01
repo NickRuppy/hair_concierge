@@ -43,6 +43,7 @@ export type PayPalCheckoutActivationErrorCode =
   | "paypal_existing_access"
   | "paypal_order_intent_missing"
   | "paypal_order_intent_expired"
+  | "paypal_order_capture_pending"
   | "paypal_order_capture_incomplete"
   | "paypal_order_confirmation_failed"
 

@@ -13,6 +13,7 @@ import {
   PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER as PAYPAL_PREPARED_ARTIFACT_DELIVERY_PROVIDER,
   processPayPalOneTimeFulfillmentJob,
   recoverPayPalOrderActivation,
+  tryMarkPayPalOrderIntentCaptured,
   validateCapturedPayPalOrder,
   verifyPayPalOneTimePaymentForRecovery,
   verifiedPayPalCaptureFromWebhook,
@@ -93,6 +94,15 @@ test("uses separate stable idempotency keys for PayPal create and capture", () =
     paypalOrderRequestId(intent.token, "capture"),
     `personal-plan-once:capture:${intent.token}`,
   )
+})
+
+test("requests the full PayPal representation for a capture", async () => {
+  const source = await readFile(
+    new URL("../src/lib/paypal/order-intents.ts", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /(?:["']Prefer["']|Prefer):\s*["']return=representation["']/)
 })
 
 test("reuses the consent-linked PayPal intent when a later checkout attempt hits the consent uniqueness guard", async () => {
@@ -222,6 +232,7 @@ test("validates PayPal capture status, identity, amount, and currency", () => {
 test("does not mark or activate an order when the provider capture fails validation", async () => {
   let updateCalls = 0
   let accountCalls = 0
+  let retrieveCalls = 0
   const reported: Array<Record<string, unknown>> = []
   const qaIntent = { ...intent, metadata: { is_internal_test: true } }
   const supabase = {
@@ -270,6 +281,10 @@ test("does not mark or activate an order when the provider capture fails validat
           },
         ],
       }),
+      retrieveOrder: async () => {
+        retrieveCalls += 1
+        throw new Error("contradictory capture evidence must not be replaced by a lookup")
+      },
       ensureAccount: async () => {
         accountCalls += 1
         throw new Error("account activation must not run")
@@ -280,6 +295,7 @@ test("does not mark or activate an order when the provider capture fails validat
   )
   assert.equal(updateCalls, 0)
   assert.equal(accountCalls, 0)
+  assert.equal(retrieveCalls, 0)
   assert.deepEqual(reported, [
     {
       signal: "customer_payment_error_observed",
@@ -322,6 +338,189 @@ test("reports a PayPal 422 capture response as one provider-confirmed failed cap
   assert.equal(reported[0].signal, "provider_payment_failed")
   assert.equal(reported[0].errorFamily, "processing")
   assert.equal(reported[0].truth, "failed")
+})
+
+test("recovers a successful minimal PayPal capture response through one order lookup", async () => {
+  const state = payPalActivationReplayState()
+  const originalMerchantId = process.env.PAYPAL_MERCHANT_ID
+  process.env.PAYPAL_MERCHANT_ID = "MERCHANT-1"
+  let captureCalls = 0
+  let retrieveCalls = 0
+
+  try {
+    const result = await captureAndActivatePayPalOrder(intent.token, {
+      supabase: state.supabase as never,
+      captureOrder: async () => {
+        captureCalls += 1
+        return { id: "ORDER-1", status: "COMPLETED" }
+      },
+      retrieveOrder: async () => {
+        retrieveCalls += 1
+        return completedPayPalOrder()
+      },
+      defer: () => {},
+    })
+
+    assert.equal(result.status, "paid_pending")
+    assert.equal(captureCalls, 1)
+    assert.equal(retrieveCalls, 1)
+    assert.equal(state.intent.provider_capture_id, "CAPTURE-1")
+    assert.equal(state.purchases.length, 1)
+  } finally {
+    if (originalMerchantId === undefined) delete process.env.PAYPAL_MERCHANT_ID
+    else process.env.PAYPAL_MERCHANT_ID = originalMerchantId
+  }
+})
+
+test("recovers ORDER_ALREADY_CAPTURED through retrieval without a second capture", async () => {
+  const state = payPalActivationReplayState()
+  const originalMerchantId = process.env.PAYPAL_MERCHANT_ID
+  process.env.PAYPAL_MERCHANT_ID = "MERCHANT-1"
+  let captureCalls = 0
+  let retrieveCalls = 0
+  const alreadyCaptured = Object.assign(
+    new Error(
+      'PayPal request failed (422 Unprocessable Entity): {"details":[{"issue":"ORDER_ALREADY_CAPTURED"}]}',
+    ),
+    { status: 422 },
+  )
+
+  try {
+    const result = await captureAndActivatePayPalOrder(intent.token, {
+      supabase: state.supabase as never,
+      captureOrder: async () => {
+        captureCalls += 1
+        throw alreadyCaptured
+      },
+      retrieveOrder: async () => {
+        retrieveCalls += 1
+        return completedPayPalOrder()
+      },
+      defer: () => {},
+    })
+
+    assert.equal(result.status, "paid_pending")
+    assert.equal(captureCalls, 1)
+    assert.equal(retrieveCalls, 1)
+    assert.equal(state.intent.provider_capture_id, "CAPTURE-1")
+    assert.equal(state.purchases.length, 1)
+  } finally {
+    if (originalMerchantId === undefined) delete process.env.PAYPAL_MERCHANT_ID
+    else process.env.PAYPAL_MERCHANT_ID = originalMerchantId
+  }
+})
+
+test("routes ambiguous post-capture lookup outages to pending recovery", async () => {
+  const state = payPalActivationReplayState()
+  const lookupFailure = Object.assign(new Error("provider lookup unavailable"), { status: 503 })
+
+  await assert.rejects(
+    captureAndActivatePayPalOrder(intent.token, {
+      supabase: state.supabase as never,
+      captureOrder: async () => ({ id: "ORDER-1", status: "COMPLETED" }),
+      retrieveOrder: async () => {
+        throw lookupFailure
+      },
+    }),
+    (error: unknown) =>
+      error instanceof Error &&
+      "code" in error &&
+      error.code === "paypal_order_capture_pending" &&
+      /not complete/i.test(error.message),
+  )
+  assert.equal(state.intent.provider_capture_id, null)
+  assert.equal(state.purchases.length, 0)
+})
+
+test("does not activate when minimal capture recovery still shows a pending order", async () => {
+  const state = payPalActivationReplayState()
+  const originalMerchantId = process.env.PAYPAL_MERCHANT_ID
+  process.env.PAYPAL_MERCHANT_ID = "MERCHANT-1"
+  let retrieveCalls = 0
+
+  try {
+    await assert.rejects(
+      captureAndActivatePayPalOrder(intent.token, {
+        supabase: state.supabase as never,
+        captureOrder: async () => ({ id: "ORDER-1", status: "PENDING" }),
+        retrieveOrder: async () => {
+          retrieveCalls += 1
+          return {
+            ...completedPayPalOrder(),
+            status: "APPROVED",
+            purchase_units: [
+              {
+                ...completedPayPalOrder().purchase_units[0],
+                payments: { captures: [] },
+              },
+            ],
+          }
+        },
+      }),
+      (error: unknown) =>
+        error instanceof Error && "code" in error && error.code === "paypal_order_capture_pending",
+    )
+
+    assert.equal(retrieveCalls, 1)
+    assert.equal(state.intent.provider_capture_id, null)
+    assert.equal(state.purchases.length, 0)
+  } finally {
+    if (originalMerchantId === undefined) delete process.env.PAYPAL_MERCHANT_ID
+    else process.env.PAYPAL_MERCHANT_ID = originalMerchantId
+  }
+})
+
+test("treats a represented declined capture as failed without replacing its evidence", async () => {
+  const state = payPalActivationReplayState()
+  const originalMerchantId = process.env.PAYPAL_MERCHANT_ID
+  process.env.PAYPAL_MERCHANT_ID = "MERCHANT-1"
+  const reported: Array<Record<string, unknown>> = []
+  let retrieveCalls = 0
+
+  try {
+    await assert.rejects(
+      captureAndActivatePayPalOrder(intent.token, {
+        supabase: state.supabase as never,
+        captureOrder: async () => ({
+          ...completedPayPalOrder(),
+          status: "APPROVED",
+          purchase_units: [
+            {
+              ...completedPayPalOrder().purchase_units[0],
+              payments: {
+                captures: [
+                  {
+                    ...completedPayPalOrder().purchase_units[0]!.payments.captures[0],
+                    status: "DECLINED",
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+        retrieveOrder: async () => {
+          retrieveCalls += 1
+          return completedPayPalOrder()
+        },
+        capturePaymentFailure(details: Record<string, unknown>) {
+          reported.push(details)
+        },
+      }),
+      (error: unknown) =>
+        error instanceof Error &&
+        "code" in error &&
+        error.code === "paypal_order_capture_incomplete",
+    )
+
+    assert.equal(retrieveCalls, 0)
+    assert.equal(state.purchases.length, 0)
+    assert.equal(reported.length, 1)
+    assert.equal(reported[0]?.signal, "provider_payment_failed")
+    assert.equal(reported[0]?.truth, "failed")
+  } finally {
+    if (originalMerchantId === undefined) delete process.env.PAYPAL_MERCHANT_ID
+    else process.env.PAYPAL_MERCHANT_ID = originalMerchantId
+  }
 })
 
 test("keeps PayPal authentication and configuration failures out of provider-failed truth", async () => {
@@ -739,7 +938,7 @@ test("valid capture persistence precedes fallible PayPal activation", async () =
     new URL("../src/lib/paypal/order-activation.ts", import.meta.url),
     "utf8",
   )
-  const capture = source.indexOf("tryMarkPayPalOrderIntentCaptured(deps.supabase, token")
+  const capture = source.indexOf("tryMarkPayPalOrderIntentCaptured(")
   const activation = source.indexOf(
     "activateVerifiedPayPalOrderIntent(intent, verifiedCapture, deps)",
   )
@@ -828,7 +1027,7 @@ test("PayPal consent-bind failure leaves purchase durable and retry does not rec
   }
 })
 
-test("PayPal retry recovers by order when capture-id persistence failed", async () => {
+test("PayPal capture-id persistence failure stays pending until a safe retry", async () => {
   const state = payPalActivationReplayState({ failIntentCapturePersistOnce: true })
   const originalMerchantId = process.env.PAYPAL_MERCHANT_ID
   process.env.PAYPAL_MERCHANT_ID = "MERCHANT-1"
@@ -873,11 +1072,22 @@ test("PayPal retry recovers by order when capture-id persistence failed", async 
       now: () => new Date("2026-07-31T10:02:00.000Z"),
     }
 
-    const first = await captureAndActivatePayPalOrder(intent.token, deps)
+    await assert.rejects(
+      captureAndActivatePayPalOrder(intent.token, deps),
+      (error: unknown) =>
+        error instanceof Error && "code" in error && error.code === "paypal_order_capture_pending",
+    )
 
-    assert.equal(first.status, "paid_pending")
     assert.equal(captureCalls, 1)
     assert.equal(state.intent.provider_capture_id, null)
+    assert.equal(state.purchases.length, 0)
+    assert.equal(state.jobs.length, 0)
+
+    const second = await captureAndActivatePayPalOrder(intent.token, deps)
+
+    assert.equal(second.status, "paid_pending")
+    assert.equal(captureCalls, 2)
+    assert.equal(state.intent.provider_capture_id, "CAPTURE-1")
     assert.equal(state.purchases[0]?.provider_transaction_id, "CAPTURE-1")
     assert.equal(state.purchases[0]?.provider_order_id, "ORDER-1")
     assert.equal(state.jobs[0]?.status, "failed")
@@ -893,10 +1103,10 @@ test("PayPal retry recovers by order when capture-id persistence failed", async 
     const replay = await processPayPalOneTimeFulfillmentJob(claimedRetryJob as never, deps)
 
     assert.equal(replay.state, "active")
-    assert.equal(captureCalls, 1)
+    assert.equal(captureCalls, 2)
     assert.equal(retrieveCalls, 1)
     assert.equal(state.jobs[0]?.status, "completed")
-    assert.equal(state.intent.provider_capture_id, null)
+    assert.equal(state.intent.provider_capture_id, "CAPTURE-1")
   } finally {
     if (originalMerchantId === undefined) delete process.env.PAYPAL_MERCHANT_ID
     else process.env.PAYPAL_MERCHANT_ID = originalMerchantId
@@ -923,6 +1133,28 @@ test("PayPal recovery wrapper is non-charging and verifies before local repair",
     recoveryFunction.indexOf("verifyPayPalOneTimePaymentForRecovery") <
       recoveryFunction.indexOf("tryMarkPayPalOrderIntentCaptured"),
   )
+})
+
+test("a stale capture cannot claim an intent after its PayPal order binding changed", async () => {
+  const state = payPalActivationReplayState()
+  state.intent.provider_order_id = "ORDER-2"
+
+  await assert.rejects(
+    tryMarkPayPalOrderIntentCaptured(
+      state.supabase as never,
+      state.intent.token,
+      "ORDER-1",
+      "CAPTURE-OLD",
+    ),
+    (error: unknown) =>
+      error instanceof Error &&
+      "code" in error &&
+      error.code === "paypal_order_capture_incomplete" &&
+      /no longer matches/i.test(error.message),
+  )
+  assert.equal(state.intent.provider_order_id, "ORDER-2")
+  assert.equal(state.intent.provider_capture_id, null)
+  assert.equal(state.purchases.length, 0)
 })
 
 test("PayPal fulfillment job replay delegates provider retry without capture/create calls", async () => {
@@ -1145,9 +1377,7 @@ test("PayPal operator recovery verification fails closed while order capture is 
         }),
       }),
       (error: unknown) =>
-        error instanceof Error &&
-        "code" in error &&
-        error.code === "paypal_order_capture_incomplete",
+        error instanceof Error && "code" in error && error.code === "paypal_order_capture_pending",
     )
   } finally {
     if (originalMerchantId === undefined) {
@@ -1311,6 +1541,10 @@ function payPalActivationReplayState(
           const updateFilters: Array<[string, unknown]> = []
           const updateBuilder: any = {
             eq(column: string, value: unknown) {
+              updateFilters.push([column, value])
+              return updateBuilder
+            },
+            is(column: string, value: unknown) {
               updateFilters.push([column, value])
               return updateBuilder
             },

@@ -3,8 +3,10 @@ import test from "node:test"
 
 import {
   normalizeRecoveryTarget,
+  parsePayPalExpiredOrderResetArgs,
   parseOneTimeRecoveryArgs,
   readOneTimeRecoveryReceipt,
+  runPayPalExpiredOrderResetCommand,
   runOneTimeRecoveryCommand,
   type OneTimeRecoveryDependencies,
   type ReconciliationReceipt,
@@ -127,6 +129,141 @@ test("defaults to dry-run and performs no activation writes", async () => {
   assert.equal(receipt.mode, "dry-run")
   assert.equal(receipt.applyGuardSatisfied, false)
   assert.deepEqual(calls, ["verifyStripe:stripe_checkout_session", "readReceipt"])
+})
+
+test("expired PayPal reset is dry-run by default and reads the provider before local eligibility", async () => {
+  const calls: string[] = []
+  const receipt = await runPayPalExpiredOrderResetCommand(
+    parsePayPalExpiredOrderResetArgs([
+      "--reset-expired-paypal-order",
+      `--paypal-order=${sensitive.paypalOrder}`,
+    ]),
+    {
+      expectedMerchantId: "MERCHANT-1",
+      retrieveOrder: async () => {
+        calls.push("provider-get")
+        return {
+          id: sensitive.paypalOrder,
+          status: "VOIDED",
+          purchase_units: [{ payee: { merchant_id: "MERCHANT-1" }, payments: { captures: [] } }],
+        }
+      },
+      inspectEligibility: async () => {
+        calls.push("local-eligibility")
+        return { eligible: true }
+      },
+      applyReset: async () => {
+        calls.push("apply")
+      },
+    },
+  )
+
+  assert.deepEqual(calls, ["provider-get", "local-eligibility"])
+  assert.deepEqual(receipt, {
+    ok: true,
+    mode: "dry-run",
+    reset: "paypal_expired_uncaptured_order",
+    providerState: "voided",
+    applyGuardSatisfied: false,
+  })
+  assert.doesNotMatch(JSON.stringify(receipt), /ORDER-SECRET|paypal-token-secret/)
+})
+
+test("expired PayPal reset requires an exact order confirmation before any provider lookup", async () => {
+  const calls: string[] = []
+  await assert.rejects(
+    runPayPalExpiredOrderResetCommand(
+      parsePayPalExpiredOrderResetArgs([
+        "--reset-expired-paypal-order",
+        `--paypal-order=${sensitive.paypalOrder}`,
+        "--apply",
+        "--confirm-paypal-order=other-order",
+      ]),
+      {
+        expectedMerchantId: "MERCHANT-1",
+        retrieveOrder: async () => {
+          calls.push("provider-get")
+          return {
+            id: sensitive.paypalOrder,
+            status: "VOIDED",
+            purchase_units: [{ payee: { merchant_id: "MERCHANT-1" }, payments: { captures: [] } }],
+          }
+        },
+        inspectEligibility: async () => ({ eligible: true }),
+        applyReset: async () => undefined,
+      },
+    ),
+    (error: unknown) =>
+      error instanceof Error && "code" in error && error.code === "apply_confirmation_mismatch",
+  )
+  assert.deepEqual(calls, [])
+})
+
+test("expired PayPal reset rejects any provider state or capture other than voided with no captures", async () => {
+  for (const order of [
+    { id: sensitive.paypalOrder, status: "CREATED", purchase_units: [] },
+    {
+      id: sensitive.paypalOrder,
+      status: "VOIDED",
+      purchase_units: [{ payments: { captures: [{ id: "capture" }] } }],
+    },
+    { id: "another-order", status: "VOIDED", purchase_units: [{ payments: { captures: [] } }] },
+    { id: sensitive.paypalOrder, status: "VOIDED" },
+  ]) {
+    await assert.rejects(
+      runPayPalExpiredOrderResetCommand(
+        parsePayPalExpiredOrderResetArgs([
+          "--reset-expired-paypal-order",
+          `--paypal-order=${sensitive.paypalOrder}`,
+        ]),
+        {
+          expectedMerchantId: "MERCHANT-1",
+          retrieveOrder: async () => order,
+          inspectEligibility: async () => ({ eligible: true }),
+          applyReset: async () => undefined,
+        },
+      ),
+      (error: unknown) =>
+        error instanceof Error &&
+        "code" in error &&
+        error.code === "paypal_order_not_provably_voided",
+    )
+  }
+})
+
+test("expired PayPal reset rejects 404 before local eligibility because provider environment is unproven", async () => {
+  const calls: string[] = []
+  await assert.rejects(
+    runPayPalExpiredOrderResetCommand(
+      parsePayPalExpiredOrderResetArgs([
+        "--reset-expired-paypal-order",
+        `--paypal-order=${sensitive.paypalOrder}`,
+        "--apply",
+        `--confirm-paypal-order=${sensitive.paypalOrder}`,
+      ]),
+      {
+        expectedMerchantId: "MERCHANT-1",
+        retrieveOrder: async () => {
+          calls.push("provider-get")
+          const error = new Error("not found") as Error & { status?: number }
+          error.status = 404
+          throw error
+        },
+        inspectEligibility: async () => {
+          calls.push("local-eligibility")
+          return { eligible: true }
+        },
+        applyReset: async () => {
+          calls.push("apply")
+        },
+      },
+    ),
+    (error: unknown) =>
+      error instanceof Error &&
+      "code" in error &&
+      error.code === "paypal_order_not_found_unverified_environment",
+  )
+  assert.deepEqual(calls, ["provider-get"])
 })
 
 test("refuses all recovery modes before provider or database seams while the experiment is enabled", async () => {

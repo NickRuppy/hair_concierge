@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PayPal Recovery States</title>
+    <style>
+      :root {
+        --plum: #7148a8;
+        --ink: #311f47;
+        --muted: #786d7f;
+        --line: #e5dfe8;
+        --wash: #f7f3fa;
+        --danger: #c84f5d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 18px 56px;
+        background: #f2eff3;
+        color: var(--ink);
+        font:
+          16px/1.45 ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      header {
+        max-width: 1100px;
+        margin: 0 auto 24px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 28px;
+      }
+      header p {
+        margin: 0;
+        color: var(--muted);
+      }
+      main {
+        max-width: 1100px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+      section {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 26px;
+        box-shadow: 0 12px 34px rgba(47, 28, 59, 0.08);
+      }
+      .eyebrow {
+        margin: 0 0 16px;
+        color: var(--plum);
+        font-size: 13px;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      h2 {
+        margin: 0 0 4px;
+        font-size: 23px;
+      }
+      .price {
+        margin: 0 0 20px;
+        font-weight: 700;
+      }
+      .consent {
+        display: flex;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        font-size: 14px;
+      }
+      .consent span:first-child {
+        display: grid;
+        place-items: center;
+        width: 18px;
+        height: 18px;
+        flex: 0 0 18px;
+        border-radius: 4px;
+        background: var(--plum);
+        color: white;
+        font-size: 12px;
+      }
+      .notice {
+        margin: 16px 0 10px;
+        padding: 11px 13px;
+        border-radius: 12px;
+        background: var(--wash);
+        color: #5d4674;
+        font-size: 14px;
+        text-align: center;
+      }
+      .paypal {
+        margin-top: 12px;
+        padding: 15px;
+        border-radius: 8px;
+        background: #ffc439;
+        color: #063b75;
+        text-align: center;
+        font-weight: 900;
+        font-size: 22px;
+        font-style: italic;
+      }
+      button {
+        width: 100%;
+        margin-top: 12px;
+        padding: 14px;
+        border: 1.5px solid var(--plum);
+        border-radius: 12px;
+        background: white;
+        color: var(--plum);
+        font: inherit;
+        font-weight: 700;
+      }
+      button[disabled] {
+        border-color: #d6cedc;
+        color: #9e93a5;
+        background: #faf8fb;
+      }
+      .expired {
+        margin: 16px 0 0;
+        padding: 16px;
+        border: 1px solid #f0c7cc;
+        border-radius: 14px;
+        background: #fff7f7;
+        text-align: center;
+      }
+      .expired strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--danger);
+      }
+      .expired p {
+        margin: 0;
+        color: #6d5b65;
+        font-size: 14px;
+      }
+      .support {
+        background: var(--plum);
+        color: white;
+        border: 0;
+      }
+      .annotation {
+        margin: 18px 0 0;
+        padding-top: 16px;
+        border-top: 1px dashed var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 760px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+        body {
+          padding: 18px 12px 36px;
+        }
+        section {
+          padding: 20px;
+          border-radius: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Vorgeschlagene Recovery-Zustände</h1>
+      <p>
+        Keine rote Fehlermeldung für einen erwarteten Provider-Lock; kein blindes „erneut versuchen“
+        bei einem abgelaufenen PayPal-Auftrag.
+      </p>
+    </header>
+    <main>
+      <section>
+        <p class="eyebrow">Zustand A · PayPal bereits gewählt</p>
+        <h2>Sicher bezahlen</h2>
+        <p class="price">Persönlicher Haarplan · 29,99 €</p>
+        <div class="consent">
+          <span>✓</span
+          ><span
+            >Ich verlange ausdrücklich die sofortige Erstellung meines Haarplans. Mir ist bekannt,
+            dass mein Widerrufsrecht nach vollständiger Erstellung und Bereitstellung
+            erlischt.</span
+          >
+        </div>
+        <div class="notice">PayPal ist bereits ausgewählt. Schließe die Zahlung dort ab.</div>
+        <div class="paypal">PayPal</div>
+        <button disabled>Mit Karte bezahlen</button>
+        <p class="annotation">
+          PayPal bleibt aktiv. Die Karte bleibt sichtbar, aber klar als vorübergehend nicht
+          verfügbar markiert. Es erscheint keine rote Zahlungsfehlermeldung.
+        </p>
+      </section>
+      <section>
+        <p class="eyebrow">Zustand B · PayPal-Auftrag abgelaufen</p>
+        <h2>Sicher bezahlen</h2>
+        <p class="price">Persönlicher Haarplan · 29,99 €</p>
+        <div class="consent">
+          <span>✓</span
+          ><span
+            >Ich verlange ausdrücklich die sofortige Erstellung meines Haarplans. Mir ist bekannt,
+            dass mein Widerrufsrecht nach vollständiger Erstellung und Bereitstellung
+            erlischt.</span
+          >
+        </div>
+        <div class="expired">
+          <strong>Die PayPal-Zahlung ist abgelaufen.</strong>
+          <p>Schreib uns kurz – wir schalten die Zahlung sicher wieder frei.</p>
+        </div>
+        <button class="support">Support kontaktieren</button>
+        <button>Zahlung schließen</button>
+        <p class="annotation">
+          Kein „erneut versuchen“, solange der alte Auftrag gesperrt ist. Der Operator prüft zuerst
+          den PayPal-Status und setzt nur einen nachweislich unbezahlten Auftrag zurück.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
