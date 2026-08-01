@@ -513,6 +513,20 @@ executable against validated live provider resources.
   | C23 | defect                 | Modified Stripe analytics spec is outside current CI globs                                                                   | accepted                                                     | rename or explicitly include it in CI                                                                | CI command proves execution              |
   | C24 | reviewer mismatch      | Reviewer again proposed a Claude-specific rescue invocation                                                                  | rejected                                                     | repository AGENTS routes Codex through `request-code-review` and one Claude counterpart lane         | implementation-loop receipt              |
 
+- Fresh-agent review decisions on 2026-08-01:
+  - **F1 accepted and implemented:** Stripe now persists every observed Price
+    ID. An unknown Price, a catalog conflict, or a provider-resource interval
+    mismatch disables only plan management until reconciliation; it does not
+    change the subscription, renewal, entitlement, or provider resource.
+  - **F2 explicitly deferred by Nick:** stored Stripe reactivation Sessions are
+    still checked after current-catalog configuration. A normal flag change is
+    safe while both catalogs remain configured; the residual failure mode
+    requires incomplete or inconsistent deployment configuration. No code or
+    test is changed for this finding.
+  - This is a backend-only integrity fix. It reuses the existing
+    `catalog_unmanageable` profile state and introduces no new user-facing
+    surface, copy, timing, or feedback, so no additional mockup is required.
+
 - Revised mockup review: **confirmed by Nick on 2026-08-01**.
 - Revised designed-journey sign-off: **confirmed by Nick on 2026-08-01**.
 - Implementation-loop handoff: **authorized by Nick on 2026-08-01**, including
@@ -523,3 +537,56 @@ executable against validated live provider resources.
   - browser screenshots: **none created; local URL inspection was blocked**;
   - counterpart report: **temporary outside the repository unless a finding
     requires retention**.
+
+## Local implementation receipt — 2026-08-01
+
+- Scope is implemented locally on `codex/launch-price-test`; nothing in this
+  receipt authorizes or records a push, deployment, flag activation, catalog
+  deletion/deactivation, subscriber migration, or production backfill write.
+- Every new recurring-membership entry path resolves the same server-owned
+  catalog flag. Personal Plan one-time remains €29.99. Existing subscriptions
+  retain their provider resource and amount, and subscriber plan changes stay
+  within the subscriber's verified provider family.
+- Stripe prepared-checkout and PayPal checkout-intent resumes retain the stored
+  Price/Plan across a flag change rather than silently switching resources.
+- Read-only production inventory with a provisional cutoff of
+  `2026-08-01T08:25:36.000Z` classified 103 existing subscription rows as
+  verified, 0 as reconciliation-required, and 103 as eligible metadata updates.
+  Nothing was written. The exact operational cutoff must be selected and the
+  inventory rerun before any separately approved apply.
+- The backfill defaults to read-only and requires `--apply`, the dedicated
+  production-write acknowledgement, the exact Supabase project confirmation,
+  a matching project URL, the launch flag still off, and optimistic
+  `updated_at` concurrency checks.
+- Verification evidence:
+  - full Node suite before the final two narrow review fixes: 2,235/2,235
+    passing;
+  - final affected regression set after those fixes: 127/127 passing;
+  - server-backed Playwright contracts before those server-only fixes: 197/197
+    passing;
+  - final `npm run ci:verify`: typecheck, lint, and production build passing
+    (four pre-existing lint warnings, zero errors);
+  - production bundle inspection: Stripe's Node SDK is absent from affected
+    client chunks.
+- Two whole-tree counterpart reviews completed. Their actionable findings were
+  fixed and covered by focused regression tests; the remaining flag-flip UI
+  observation is the documented quiet-window rollout risk, not a subscriber or
+  provider-resource mutation.
+- Live provider validators were not rerun locally because the available local
+  and Vercel-pulled environments do not expose usable production credentials.
+  Run both read-only validators from an operator environment with the real
+  credentials before dark deployment.
+- Remaining release gates are: legal/compliance approval of the launch
+  comparison treatment; live read-only provider validation; exact cutoff
+  selection plus explicit backfill-apply authorization; explicit ship/dark
+  deploy authorization; and separate launch-flag activation authorization.
+- Finding F1 verification receipt:
+  - the pre-fix regression reproduced stale `standard` resolution after an
+    unknown observed Stripe Price; the same guard passes after the fix;
+  - 62/62 affected Node tests and 27/27 Stripe webhook Playwright tests pass;
+  - `npm run ci:verify` passes typecheck, lint with zero errors and four
+    pre-existing warnings, and the production build;
+  - the focused fresh-agent delta review reports **No blocking findings**;
+  - finding F2 remains unchanged and explicitly deferred by Nick;
+  - no provider call, subscriber mutation, production write, deployment, or
+    flag activation was performed; publication remained separately gated.

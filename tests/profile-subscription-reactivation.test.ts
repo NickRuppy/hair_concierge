@@ -2,6 +2,12 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
 
+import {
+  PERSONAL_PLAN_LAUNCH_PRICING_CATALOG,
+  resolveSubscriptionPricingCatalog,
+  STANDARD_PRICING_CATALOG,
+} from "../src/lib/billing/pricing-catalog"
+
 const read = (path: string) => readFileSync(path, "utf8")
 
 const pageSource = read("src/app/reactivate/page.tsx")
@@ -12,6 +18,7 @@ const middlewareSource = read("src/lib/supabase/middleware.ts")
 const stripeRouteSource = read("src/app/api/stripe/create-checkout-session/route.ts")
 const paypalRouteSource = read("src/app/api/paypal/create-subscription-intent/route.ts")
 const profilePlanSwitcherSource = read("src/components/profile/profile-plan-switcher.tsx")
+const reactivationPageSource = read("src/app/reactivate/page.tsx")
 const migrationSource = read(
   "supabase/migrations/20260714200000_membership_reactivation_checkout_reservations.sql",
 )
@@ -24,6 +31,22 @@ test("reactivation is a server-owned, fail-closed expired-member surface", () =>
   assert.match(pageSource, /buildQuizAnswersFromHairProfile\(hairProfile\)/)
   assert.match(productionUiSource, /MembershipReactivationCheckout/)
   assert.match(productionUiSource, /starten wir vorsichtshalber keine Zahlung/)
+  assert.match(
+    reactivationPageSource,
+    /resolveSubscriptionPricingCatalog\(isPersonalPlanLaunchPricingEnabled\(\)\)/,
+  )
+  assert.match(reactivationPageSource, /pricingCatalog=\{pricingCatalog\}/)
+  assert.match(productionUiSource, /pricingCatalog=\{pricingCatalog\}/)
+  assert.match(checkoutSource, /pricingCatalog=\{pricingCatalog\}/)
+  assert.match(
+    checkoutSource,
+    /referencePrices=\{getSubscriptionPlanReferencePrices\(pricingCatalog\)\}/,
+  )
+})
+
+test("reactivation uses the active acquisition catalog for new membership checkout", () => {
+  assert.equal(resolveSubscriptionPricingCatalog(true), PERSONAL_PLAN_LAUNCH_PRICING_CATALOG)
+  assert.equal(resolveSubscriptionPricingCatalog(false), STANDARD_PRICING_CATALOG)
 })
 
 test("membership reactivation uses one correlated attempt across both providers", () => {
@@ -57,6 +80,7 @@ test("the database atomically prevents competing reactivation checkouts", () => 
     /idempotencyKey: `membership-reactivation:\$\{reactivationReservation\.id\}`/,
   )
   assert.match(paypalRouteSource, /createOrAdoptPayPalReactivationCheckoutIntent/)
+  assert.match(paypalRouteSource, /resolveStoredPayPalCheckoutIntentPlan/)
 })
 
 test("definitively dead Stripe sessions release the reservation and rotate the client attempt", () => {

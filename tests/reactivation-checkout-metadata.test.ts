@@ -5,6 +5,7 @@ import { createElement } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { PaymentMethodCheckout } from "../src/components/checkout/payment-method-checkout"
+import { resolveStoredPayPalCheckoutIntentPlan } from "../src/app/api/paypal/create-subscription-intent/route"
 import {
   canChangeReactivationCheckoutPlan,
   getReactivationRetryAttemptId,
@@ -50,6 +51,73 @@ test("onboarding overrides saved reactivation return destinations", () => {
     getAuthenticatedCheckoutSuccessRedirect(true, null),
     "/profile?membership=reactivated",
   )
+})
+
+test("a resumed PayPal reactivation returns its stored launch plan after the flag changes", () => {
+  const previousPlanId = process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY = "P-launch-quarter"
+
+  try {
+    assert.deepEqual(
+      resolveStoredPayPalCheckoutIntentPlan({
+        intentInterval: "quarter",
+        requestedInterval: "quarter",
+        metadata: {
+          paypal_plan_id: "P-launch-quarter",
+          pricing_catalog: "personal_plan_launch_v1",
+        },
+      }),
+      { planId: "P-launch-quarter", pricingCatalog: "personal_plan_launch_v1" },
+    )
+  } finally {
+    if (previousPlanId === undefined) {
+      delete process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY
+    } else {
+      process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY = previousPlanId
+    }
+  }
+})
+
+test("a resumed PayPal reactivation fails closed for missing or mismatched stored plan metadata", () => {
+  const previousPlanId = process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY = "P-launch-quarter"
+
+  try {
+    for (const metadata of [
+      {},
+      { paypal_plan_id: "P-launch-quarter", pricing_catalog: "standard" },
+      { paypal_plan_id: "P-unconfigured", pricing_catalog: "personal_plan_launch_v1" },
+    ]) {
+      assert.throws(
+        () =>
+          resolveStoredPayPalCheckoutIntentPlan({
+            intentInterval: "quarter",
+            requestedInterval: "quarter",
+            metadata,
+          }),
+        /stored PayPal checkout intent plan is invalid/,
+      )
+    }
+
+    assert.throws(
+      () =>
+        resolveStoredPayPalCheckoutIntentPlan({
+          intentInterval: "quarter",
+          requestedInterval: "month",
+          metadata: {
+            paypal_plan_id: "P-launch-quarter",
+            pricing_catalog: "personal_plan_launch_v1",
+          },
+        }),
+      /stored PayPal checkout intent plan is invalid/,
+    )
+  } finally {
+    if (previousPlanId === undefined) {
+      delete process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY
+    } else {
+      process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_QUARTERLY = previousPlanId
+    }
+  }
 })
 
 const recoveringStripeReservation: MembershipReactivationCheckoutReservation = {

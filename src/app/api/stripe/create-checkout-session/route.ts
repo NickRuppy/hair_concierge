@@ -325,7 +325,6 @@ export async function POST(req: NextRequest) {
     let customerId: string | undefined
     let customerEmail: string | undefined
     let resolvedLeadId: string | null = null
-    let leadQuizKind: "legacy" | "personal_plan" | null = null
 
     const cookieStore = await cookies()
     const supabase = createServerClient(
@@ -519,7 +518,7 @@ export async function POST(req: NextRequest) {
       const adminSupabase = getAdminSupabase()
       const { data, error } = await adminSupabase
         .from("leads")
-        .select("email, quiz_kind")
+        .select("email")
         .eq("id", leadId)
         .maybeSingle()
       if (error) {
@@ -540,7 +539,6 @@ export async function POST(req: NextRequest) {
           ? preparedCheckoutUnavailable()
           : NextResponse.json({ error: "lead lookup failed" }, { status: 500 })
       }
-      leadQuizKind = data?.quiz_kind === "personal_plan" ? "personal_plan" : data ? "legacy" : null
       customerEmail = data?.email ?? undefined
       if (customerEmail) {
         resolvedLeadId = leadId
@@ -605,12 +603,7 @@ export async function POST(req: NextRequest) {
     const leadFunnelContext = resolvedLeadId
       ? await resolveFunnelContextForLead(resolvedLeadId)
       : null
-    const pricingCatalog = resolveSubscriptionPricingCatalog({
-      checkoutContext,
-      launchPricingEnabled: isPersonalPlanLaunchPricingEnabled(),
-      offerVariant: leadFunnelContext?.offerVariant,
-      quizKind: leadQuizKind,
-    })
+    const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
     const analyticsPlan = isOneTimePurchase
       ? PERSONAL_PLAN_ONCE_PRODUCT
       : getStripePricingPlan(subscriptionInterval, pricingCatalog)

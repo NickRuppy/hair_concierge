@@ -155,3 +155,17 @@ test("legal pages distinguish the one-time personal plan from memberships", () =
   assert.match(privacySource, /Mitgliedschaft oder eines Einmalkaufs/)
   assert.match(privacySource, /Mitgliedschaften und Einmalkäufe/)
 })
+
+test("membership terms stay amount-neutral and describe persistent launch pricing truthfully", () => {
+  const termsSource = readFileSync("src/app/agb/page.tsx", "utf8")
+
+  assert.match(termsSource, /Monatsplan:[\s\S]*monatliche Abrechnung/)
+  assert.match(termsSource, /Quartalsplan:[\s\S]*Abrechnung alle drei\s+Monate/)
+  assert.match(termsSource, /Jahresplan:[\s\S]*jährliche Abrechnung/)
+  assert.match(termsSource, /Gesamtpreis je Abrechnungsperiode/)
+  assert.match(termsSource, /bis zur Kündigung gültig/)
+  assert.match(termsSource, /folgenden Verlängerungen derselben Mitgliedschaft/)
+  assert.doesNotMatch(termsSource, /(?:14|34|99|9|19|69),99\s*€/)
+  assert.doesNotMatch(termsSource, /(?:11,66|8,33)\s*€/)
+  assert.doesNotMatch(termsSource, /ersten Abrechnungsbetrag/)
+})

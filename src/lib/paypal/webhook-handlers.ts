@@ -700,12 +700,15 @@ async function recordPayPalSuccessfulPayment(
     const funnelSessionId = stringMetadata(outcome.funnelMetadata, "funnel_session_id")
     const funnelPackageKey = stringMetadata(outcome.funnelMetadata, "funnel_package_key")
     const pricingCatalog =
+      parseSubscriptionPricingCatalog(stringMetadata(billingRow.metadata, "pricing_catalog")) ??
       parseSubscriptionPricingCatalog(stringMetadata(outcome.funnelMetadata, "pricing_catalog")) ??
       STANDARD_PRICING_CATALOG
     const planId = billingRow.interval
       ? getStripePricingPlan(billingRow.interval, pricingCatalog).analyticsId
       : undefined
-    const paypalPlanId = stringMetadata(outcome.funnelMetadata, "paypal_plan_id")
+    const paypalPlanId =
+      stringMetadata(billingRow.metadata, "paypal_plan_id") ??
+      stringMetadata(outcome.funnelMetadata, "paypal_plan_id")
     const purchaseDestinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
     if (
       isFunnelAttributionEnabled() &&

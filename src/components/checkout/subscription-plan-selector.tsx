@@ -47,11 +47,14 @@ export function SubscriptionPlanSelector({
       {referencePrices ? (
         <p className="mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]">
           {pricingCatalog === "personal_plan_launch_v1" ? (
-            <span>Launch-Rabatt sichern</span>
+            <>
+              <span aria-hidden="true">Launch-Rabatt sichern</span>
+              <span className="sr-only">Launch-Rabatt mit regulärem Vergleichspreis sichern</span>
+            </>
           ) : (
             <>
-              <span aria-hidden="true">JETZT MIND. 20 % RABATT SICHERN</span>
-              <span className="sr-only">Jetzt mindestens 20 Prozent Rabatt sichern</span>
+              <span aria-hidden="true">Regulärer Vergleichspreis</span>
+              <span className="sr-only">Regulärer Vergleichspreis</span>
             </>
           )}
         </p>
@@ -101,7 +104,11 @@ export function SubscriptionPlanSelector({
               <span className="flex shrink-0 flex-col items-end gap-1">
                 {referencePrices ? (
                   <span className="text-[14px] font-medium leading-none text-muted-foreground">
-                    <span className="sr-only">Vergleichspreis </span>
+                    <span className="sr-only">
+                      {pricingCatalog === "personal_plan_launch_v1"
+                        ? "Regulärer Preis "
+                        : "Vergleichspreis "}
+                    </span>
                     <s>{formatQuizResultReferencePrice(referencePrices[plan.interval])}</s>
                   </span>
                 ) : null}
@@ -120,7 +127,7 @@ export function SubscriptionPlanSelector({
       </div>
       {pricingCatalog === "personal_plan_launch_v1" ? (
         <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">
-          Dein Launch-Preis bleibt bis zur Kündigung erhalten.
+          Dein Launch-Preis bleibt bis zur Kündigung erhalten. Regulär ab €14,99.
         </p>
       ) : null}
 

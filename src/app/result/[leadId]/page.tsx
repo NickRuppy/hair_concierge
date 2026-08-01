@@ -212,11 +212,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
               : null,
           })
   const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
-  const pricingCatalog = resolveSubscriptionPricingCatalog({
-    launchPricingEnabled: isPersonalPlanLaunchPricingEnabled(),
-    offerVariant,
-    quizKind: lead.quiz_kind,
-  })
+  const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (
     <ResultPageClient

@@ -16,7 +16,7 @@ import { ManageSubscriptionButton } from "@/components/profile/manage-subscripti
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
 import type { MembershipManagementState } from "@/lib/billing/types"
 import { formatBillingDate } from "@/lib/billing/display"
-import { intervalLabel } from "@/lib/billing/plan-change"
+import { intervalLabel } from "@/lib/billing/plan-change-client"
 import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   coerceUserProductUsageRows,

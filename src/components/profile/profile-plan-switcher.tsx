@@ -3,8 +3,8 @@
 import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import type { BillingInterval, MembershipManagementState } from "@/lib/billing/types"
-import { intervalLabel, shouldRetainPlanChangeOperationId } from "@/lib/billing/plan-change"
-import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
+import { intervalLabel, shouldRetainPlanChangeOperationId } from "@/lib/billing/plan-change-client"
+import { getStripePricingPlans } from "@/lib/stripe/pricing-plans"
 
 export function ProfilePlanSwitcher({
   state,
@@ -75,8 +75,17 @@ export function ProfilePlanSwitcher({
     )
   }
 
+  if (state.kind === "catalog_unmanageable") {
+    return (
+      <p className="mt-4 text-sm text-muted-foreground">
+        Deine Preisoptionen werden gerade abgeglichen. Bitte versuche es später erneut.
+      </p>
+    )
+  }
+
   if (state.kind !== "manageable") return null
   const currentInterval = state.currentInterval
+  const pricingPlans = getStripePricingPlans(state.pricingCatalog)
 
   async function retryPlanChange(
     reconciliation: Extract<MembershipManagementState, { kind: "reconciling" }>,
@@ -162,7 +171,7 @@ export function ProfilePlanSwitcher({
             unverändert und es gibt keine anteilige Abrechnung.
           </p>
           <div className="grid gap-2">
-            {STRIPE_PRICING_PLANS.map((plan) => {
+            {pricingPlans.map((plan) => {
               const current = plan.interval === currentInterval
               const selected = plan.interval === target
               return (

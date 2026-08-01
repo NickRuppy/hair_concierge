@@ -6,6 +6,7 @@ import {
 } from "../src/lib/paypal/webhook-handlers"
 import type { BillingSubscriptionRow } from "../src/lib/billing/types"
 import type { PayPalSubscription } from "../src/lib/paypal/subscription-shapes"
+import { toBillingSubscriptionInputFromPayPal } from "../src/lib/paypal/subscription-shapes"
 
 function futureIso(days = 1) {
   return new Date(Date.now() + days * 86_400_000).toISOString()
@@ -14,6 +15,52 @@ function futureIso(days = 1) {
 function pastIso() {
   return new Date(Date.now() - 86_400_000).toISOString()
 }
+
+test("PayPal activation metadata persists the verified launch plan catalog", () => {
+  const previous = process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = "P-launch-month"
+  try {
+    const input = toBillingSubscriptionInputFromPayPal(
+      {
+        id: "I-launch",
+        status: "ACTIVE",
+        plan_id: "P-launch-month",
+        subscriber: { payer_id: "payer-launch", email_address: "launch@example.com" },
+        billing_info: { next_billing_time: futureIso() },
+      },
+      "user-launch",
+      "month",
+    )
+    assert.deepEqual(input.metadata, {
+      plan_id: "P-launch-month",
+      paypal_plan_id: "P-launch-month",
+      pricing_catalog: "personal_plan_launch_v1",
+    })
+  } finally {
+    if (previous === undefined) delete process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY
+    else process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = previous
+  }
+})
+
+test("an unknown PayPal plan keeps provider identity without clearing stored catalog metadata", () => {
+  const input = toBillingSubscriptionInputFromPayPal(
+    {
+      id: "I-legacy",
+      status: "ACTIVE",
+      plan_id: "P-not-currently-configured",
+      subscriber: { payer_id: "payer-legacy" },
+      billing_info: { next_billing_time: futureIso() },
+    },
+    "user-legacy",
+    "month",
+  )
+
+  assert.deepEqual(input.metadata, {
+    plan_id: "P-not-currently-configured",
+    paypal_plan_id: "P-not-currently-configured",
+  })
+  assert.equal(Object.hasOwn(input.metadata ?? {}, "pricing_catalog"), false)
+})
 
 function createSupabaseStub(seed?: {
   billing?: Partial<BillingSubscriptionRow>[]
@@ -127,6 +174,12 @@ function createSupabaseStub(seed?: {
       },
       in(column: string, value: unknown[]) {
         state.filters.push({ column, value, op: "in" })
+        return builder
+      },
+      order() {
+        return builder
+      },
+      limit() {
         return builder
       },
       maybeSingle: async () => {
@@ -735,31 +788,48 @@ test("activation refresh keeps the stored interval for legacy PayPal plan ids", 
   assert.equal(profiles["user-1"].subscription_interval, "year")
 })
 
-test("browser-first existing billing row still records the first purchase from its bound intent", async () => {
+test("browser-first purchase analytics prefers the billing row's provider catalog", async () => {
+  const previousLaunchPlan = process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = "P-launch-month"
   const createdAt = new Date(Date.now() - 60_000).toISOString()
   const { supabase, analyticsOutbox } = createSupabaseStub({
-    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    billing: [
+      {
+        user_id: "user-1",
+        provider_subscription_id: "I-active",
+        metadata: {
+          pricing_catalog: "personal_plan_launch_v1",
+          paypal_plan_id: "P-launch-month",
+        },
+      },
+    ],
     profiles: { "user-1": { id: "user-1", email: "paypal@example.com" } },
     paypalIntents: [
       checkoutIntent({
         created_at: createdAt,
         status: "activated",
-        metadata: {
-          pricing_catalog: "personal_plan_launch_v1",
-          paypal_plan_id: "P-launch-month",
-        },
+        metadata: {},
       }),
     ],
   })
 
-  await handlePayPalWebhookEvent(paymentEvent("WH-browser-first", "PAYMENT.SALE.COMPLETED"), {
-    supabase,
-    premiumTierId: "tier-premium",
-    freeTierId: "tier-free",
-    retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
-    recordBillingAnalytics: true,
-    defer: () => undefined,
-  })
+  try {
+    await handlePayPalWebhookEvent(paymentEvent("WH-browser-first", "PAYMENT.SALE.COMPLETED"), {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => ({
+        ...subscription("ACTIVE", futureIso()),
+        plan_id: "P-launch-month",
+      }),
+      recordBillingAnalytics: true,
+      defer: () => undefined,
+    })
+  } finally {
+    if (previousLaunchPlan === undefined)
+      delete process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY
+    else process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = previousLaunchPlan
+  }
 
   assert.deepEqual(analyticsOutbox.map((row) => row.event_name).sort(), [
     "purchase_completed",

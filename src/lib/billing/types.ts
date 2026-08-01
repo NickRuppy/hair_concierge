@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import type { SubscriptionPricingCatalog } from "./pricing-catalog"
 
 export type BillingProvider = "stripe" | "paypal"
 export type BillingInterval = "month" | "quarter" | "year"
@@ -107,6 +108,7 @@ export type MembershipManagementState =
       kind: "manageable"
       provider: BillingProvider
       currentInterval: BillingInterval
+      pricingCatalog: SubscriptionPricingCatalog
       renewalAt: string
       cancelAtPeriodEnd: false
     }
@@ -114,6 +116,7 @@ export type MembershipManagementState =
       kind: "pending"
       provider: BillingProvider
       currentInterval: BillingInterval
+      pricingCatalog: SubscriptionPricingCatalog
       renewalAt: string
       cancelAtPeriodEnd: false
       targetInterval: BillingInterval
@@ -124,6 +127,7 @@ export type MembershipManagementState =
       kind: "reconciling"
       provider: BillingProvider
       currentInterval: BillingInterval
+      pricingCatalog: SubscriptionPricingCatalog
       renewalAt: string
       cancelAtPeriodEnd: false
       targetInterval: BillingInterval
@@ -144,6 +148,13 @@ export type MembershipManagementState =
       currentInterval: BillingInterval | null
       renewalAt: string | null
       cancelAtPeriodEnd: true
+    }
+  | {
+      kind: "catalog_unmanageable"
+      provider: BillingProvider
+      currentInterval: BillingInterval | null
+      renewalAt: string | null
+      cancelAtPeriodEnd: boolean
     }
   | { kind: "manual_grant"; renewalAt: string | null }
   | { kind: "legacy_unmanageable"; renewalAt: string | null }

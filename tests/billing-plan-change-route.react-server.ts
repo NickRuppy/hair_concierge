@@ -24,7 +24,7 @@ function subscription(patch: Partial<BillingSubscriptionRow> = {}): BillingSubsc
     cancel_at_period_end: false,
     cancel_scheduled_at: null,
     cancelled_at: null,
-    metadata: {},
+    metadata: { pricing_catalog: "standard" },
     created_at: "2026-07-14T12:00:00.000Z",
     updated_at: "2026-07-14T12:00:00.000Z",
     ...patch,

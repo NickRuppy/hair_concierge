@@ -7,6 +7,7 @@ import type {
 import {
   ensureCheckoutAccount,
   ensureOneTimeCheckoutAccount,
+  stripePricingMetadata,
   stripeEntitlementStatus,
   subPeriodEndIso,
 } from "./checkout-activation"
@@ -311,6 +312,7 @@ interface UpdatedSub {
     data: Array<{
       current_period_end?: number
       price: {
+        id?: string
         recurring?: { interval: string; interval_count: number }
         interval?: string
         interval_count?: number
@@ -365,6 +367,9 @@ export async function handleSubscriptionUpdated(
     current_period_end: periodEnd,
     cancel_at_period_end: Boolean(s.cancel_at_period_end || s.cancel_at != null),
     cancel_scheduled_at: cancelScheduledAt,
+    metadata: {
+      ...stripePricingMetadata(price.id),
+    },
   })
   await applyPlanChangeAtRenewal(deps.supabase, {
     subscription: billingRow,

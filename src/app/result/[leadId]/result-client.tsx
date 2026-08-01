@@ -2,7 +2,10 @@
 
 import { useEffect } from "react"
 
-import { QUIZ_RESULT_REFERENCE_PRICES } from "@/components/checkout/plan-reference-prices"
+import {
+  getSubscriptionPlanReferencePrices,
+  QUIZ_RESULT_REFERENCE_PRICES,
+} from "@/components/checkout/plan-reference-prices"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 import {
@@ -37,7 +40,7 @@ export function ResultPageClient({
   returnTo = null,
   offerTracking = null,
   offerVariant = "default",
-  pricingCatalog = "standard",
+  pricingCatalog,
 }: {
   leadId: string
   name: string
@@ -56,6 +59,8 @@ export function ResultPageClient({
   pricingCatalog?: SubscriptionPricingCatalog
 }) {
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
+  const resolvedPricingCatalog = pricingCatalog ?? "standard"
+  const pricingCatalogWasProvided = pricingCatalog !== undefined
 
   if (quizKind === "personal_plan") {
     if (hasAccess) {
@@ -94,6 +99,8 @@ export function ResultPageClient({
       name={name}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      pricingCatalog={resolvedPricingCatalog}
+      pricingCatalogWasProvided={pricingCatalogWasProvided}
       quizAnswers={quizAnswers}
       returnTo={returnTo}
     />
@@ -109,6 +116,8 @@ function LegacyResultPageClient({
   name,
   offerTracking,
   offerVariant,
+  pricingCatalog,
+  pricingCatalogWasProvided,
   quizAnswers,
   returnTo,
 }: {
@@ -120,6 +129,8 @@ function LegacyResultPageClient({
   name: string
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
+  pricingCatalog: SubscriptionPricingCatalog
+  pricingCatalogWasProvided: boolean
   quizAnswers: QuizAnswers
   returnTo?: string | null
 }) {
@@ -162,7 +173,12 @@ function LegacyResultPageClient({
       <ResultOfferPricing
         leadId={leadId}
         offerTracking={offerTracking}
-        referencePrices={QUIZ_RESULT_REFERENCE_PRICES}
+        pricingCatalog={pricingCatalog}
+        referencePrices={
+          pricingCatalogWasProvided
+            ? getSubscriptionPlanReferencePrices(pricingCatalog)
+            : QUIZ_RESULT_REFERENCE_PRICES
+        }
       />
     ),
   })

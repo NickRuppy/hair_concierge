@@ -5,7 +5,7 @@ import Link from "next/link"
 import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react"
 
 import {
-  PERSONAL_PLAN_LAUNCH_REFERENCE_PRICES,
+  getSubscriptionPlanReferencePrices,
   QUIZ_RESULT_REFERENCE_PRICES,
 } from "@/components/checkout/plan-reference-prices"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
@@ -410,7 +410,7 @@ export function PersonalPlanOffer({
   model,
   offerTracking,
   offerVariant = "personal-plan-v1",
-  pricingCatalog = "standard",
+  pricingCatalog,
 }: {
   disableCheckoutPrewarm?: boolean
   entryContext: OfferEntryContext
@@ -426,11 +426,13 @@ export function PersonalPlanOffer({
   const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const [clientReady, setClientReady] = useState(false)
   const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
+  const resolvedPricingCatalog = pricingCatalog ?? "standard"
+  const pricingCatalogWasProvided = pricingCatalog !== undefined
   const [pricingReached, setPricingReached] = useState(false)
   const [checkoutSummary, setCheckoutSummary] = useState<ResultOfferPricingCheckoutSummary>(() =>
     isOneTimeOffer
       ? getPersonalPlanOneTimeCheckoutSummary()
-      : getMembershipCheckoutSummary("quarter", pricingCatalog),
+      : getMembershipCheckoutSummary("quarter", resolvedPricingCatalog),
   )
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
@@ -466,7 +468,7 @@ export function PersonalPlanOffer({
       offerRevision={PERSONAL_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
-      pricingCatalog={isOneTimeOffer ? undefined : pricingCatalog}
+      pricingCatalog={isOneTimeOffer ? undefined : resolvedPricingCatalog}
       trackingIdentity={{
         conditionerModuleId: null,
         needLane: null,
@@ -581,10 +583,10 @@ export function PersonalPlanOffer({
               onCheckoutSummaryChange={setCheckoutSummary}
               onPricingReached={handlePricingReached}
               openCheckoutRequestId={checkoutOpenRequest}
-              pricingCatalog={pricingCatalog}
+              pricingCatalog={resolvedPricingCatalog}
               referencePrices={
-                pricingCatalog === "personal_plan_launch_v1"
-                  ? PERSONAL_PLAN_LAUNCH_REFERENCE_PRICES
+                pricingCatalogWasProvided
+                  ? getSubscriptionPlanReferencePrices(resolvedPricingCatalog)
                   : QUIZ_RESULT_REFERENCE_PRICES
               }
             />

@@ -5,6 +5,7 @@ import type {
 } from "../billing/types"
 import {
   EXPECTED_PAYPAL_PLAN_SHAPES_BY_FAMILY,
+  getPayPalPlanCatalogForId,
   type ExpectedPayPalPlanShape,
   type PayPalPlanCatalogFamily,
 } from "./plans"
@@ -88,6 +89,8 @@ export function toBillingSubscriptionInputFromPayPal(
     subscription.status === "CANCELLED" || subscription.status === "EXPIRED"
   const providerSubscriberEmail =
     subscription.subscriber?.email_address?.trim().toLowerCase() || undefined
+  const planId = subscription.plan_id?.trim() || null
+  const planCatalog = planId ? getPayPalPlanCatalogForId(planId) : null
 
   return {
     user_id: userId,
@@ -103,7 +106,9 @@ export function toBillingSubscriptionInputFromPayPal(
     cancel_scheduled_at: isProviderCancellation ? paidThrough : null,
     cancelled_at: isProviderCancellation ? new Date().toISOString() : null,
     metadata: {
-      plan_id: subscription.plan_id ?? null,
+      plan_id: planId,
+      paypal_plan_id: planId,
+      ...(planCatalog ? { pricing_catalog: planCatalog.family } : {}),
     },
   }
 }

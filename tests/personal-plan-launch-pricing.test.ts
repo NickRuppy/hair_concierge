@@ -10,58 +10,12 @@ import { PayPalSubscriptionIntentRequestSchema } from "../src/app/api/paypal/cre
 import { StripeCheckoutSessionRequestSchema } from "../src/app/api/stripe/create-checkout-session/route"
 import { resolveStripeCheckoutPurchasePricing } from "../src/app/api/stripe/webhook/route"
 
-test("selects launch pricing only for an enabled personal-plan membership offer", () => {
-  assert.equal(
-    resolveSubscriptionPricingCatalog({
-      launchPricingEnabled: true,
-      offerVariant: "personal-plan-membership-v1",
-      quizKind: "personal_plan",
-    }),
-    PERSONAL_PLAN_LAUNCH_PRICING_CATALOG,
-  )
-  assert.equal(
-    resolveSubscriptionPricingCatalog({
-      launchPricingEnabled: true,
-      offerVariant: "personal-plan-v1",
-      quizKind: "personal_plan",
-    }),
-    PERSONAL_PLAN_LAUNCH_PRICING_CATALOG,
-  )
+test("the recurring acquisition catalog is owned only by the strict launch flag", () => {
+  assert.equal(resolveSubscriptionPricingCatalog(true), PERSONAL_PLAN_LAUNCH_PRICING_CATALOG)
 })
 
-test("falls back to standard pricing outside the trusted launch scope", () => {
-  const cases = [
-    {
-      launchPricingEnabled: false,
-      offerVariant: "personal-plan-membership-v1",
-      quizKind: "personal_plan" as const,
-    },
-    {
-      launchPricingEnabled: true,
-      offerVariant: "personal-plan-one-time-v1",
-      quizKind: "personal_plan" as const,
-    },
-    {
-      launchPricingEnabled: true,
-      offerVariant: "personal-plan-membership-v1",
-      quizKind: "legacy" as const,
-    },
-    {
-      launchPricingEnabled: true,
-      offerVariant: "personal-plan-membership-v1",
-      quizKind: "personal_plan" as const,
-      checkoutContext: "membership_reactivation" as const,
-    },
-    {
-      launchPricingEnabled: true,
-      offerVariant: null,
-      quizKind: null,
-    },
-  ]
-
-  for (const input of cases) {
-    assert.equal(resolveSubscriptionPricingCatalog(input), STANDARD_PRICING_CATALOG)
-  }
+test("falls back to standard pricing only when the trusted launch flag is off", () => {
+  assert.equal(resolveSubscriptionPricingCatalog(false), STANDARD_PRICING_CATALOG)
 })
 
 test("provider request schemas reject a browser-supplied pricing catalog", () => {

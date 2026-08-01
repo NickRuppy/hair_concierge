@@ -99,14 +99,14 @@ test("pricing visibility uses existing observers for pricing-reached and checkou
 })
 
 test("variant-aware checkout summaries distinguish membership intervals from one-time purchase", () => {
-  assert.deepEqual(getMembershipCheckoutSummary("month"), {
+  assert.deepEqual(getMembershipCheckoutSummary("month", "standard"), {
     commerceKind: "membership",
     interval: "month",
     planName: "Monatlich",
     priceLabel: "€14,99",
     stickyLine: "Monatlich · €14,99",
   })
-  assert.deepEqual(getMembershipCheckoutSummary("quarter"), {
+  assert.deepEqual(getMembershipCheckoutSummary("quarter", "standard"), {
     commerceKind: "membership",
     interval: "quarter",
     planName: "Quartal",

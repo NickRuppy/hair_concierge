@@ -9,8 +9,9 @@ import {
   assertPlanChangeEligible,
   buildMembershipManagementState,
   findStalePendingPayPalPlanChanges,
-  shouldRetainPlanChangeOperationId,
+  resolvedSubscriptionPricingCatalog,
 } from "../src/lib/billing/plan-change"
+import { shouldRetainPlanChangeOperationId } from "../src/lib/billing/plan-change-client"
 import { reconcileStalePayPalPlanChanges } from "../src/lib/paypal/stale-plan-change"
 import type { BillingPlanChangeRow, BillingSubscriptionRow } from "../src/lib/billing/types"
 import {
@@ -20,6 +21,7 @@ import {
   scheduleStripePlanChange,
 } from "../src/lib/stripe/subscription-plan-change"
 import { getStripePriceCatalogForId } from "../src/lib/stripe/client"
+import { stripePricingMetadata } from "../src/lib/stripe/checkout-activation"
 import {
   PayPalPlanPairValidationError,
   type PayPalPlan,
@@ -49,7 +51,11 @@ function subscription(patch: Partial<BillingSubscriptionRow> = {}): BillingSubsc
     cancel_at_period_end: false,
     cancel_scheduled_at: null,
     cancelled_at: null,
-    metadata: { preserved: true },
+    metadata: {
+      preserved: true,
+      stripe_price_id: "price_month",
+      pricing_catalog: "standard",
+    },
     created_at: "2026-07-14T12:00:00.000Z",
     updated_at: "2026-07-14T12:00:00.000Z",
     ...patch,
@@ -84,6 +90,7 @@ test("membership management read model exposes switching only for manageable ren
     kind: "manageable",
     provider: "stripe",
     currentInterval: "month",
+    pricingCatalog: "standard",
     renewalAt: "2026-08-14T12:00:00.000Z",
     cancelAtPeriodEnd: false,
   })
@@ -125,6 +132,14 @@ test("membership management read model exposes switching only for manageable ren
 })
 
 test("pending and reconciliation states keep the current interval visible", () => {
+  const previousPayPalPlans = {
+    month: process.env.PAYPAL_PLAN_ID_MONTHLY,
+    quarter: process.env.PAYPAL_PLAN_ID_QUARTERLY,
+    year: process.env.PAYPAL_PLAN_ID_ANNUAL,
+  }
+  process.env.PAYPAL_PLAN_ID_MONTHLY = "P-month"
+  process.env.PAYPAL_PLAN_ID_QUARTERLY = "P-quarter"
+  process.env.PAYPAL_PLAN_ID_ANNUAL = "P-year"
   const pending = buildMembershipManagementState({
     subscription: subscription(),
     operation: operation(),
@@ -134,7 +149,11 @@ test("pending and reconciliation states keep the current interval visible", () =
   assert.equal("targetInterval" in pending && pending.targetInterval, "year")
 
   const approvalPending = buildMembershipManagementState({
-    subscription: subscription({ provider: "paypal", provider_status: "ACTIVE" }),
+    subscription: subscription({
+      provider: "paypal",
+      provider_status: "ACTIVE",
+      metadata: { paypal_plan_id: "P-month", pricing_catalog: "standard" },
+    }),
     operation: operation({
       provider: "paypal",
       status: "pending_approval",
@@ -148,7 +167,11 @@ test("pending and reconciliation states keep the current interval visible", () =
   )
 
   const reconciling = buildMembershipManagementState({
-    subscription: subscription({ provider: "paypal", provider_status: "ACTIVE" }),
+    subscription: subscription({
+      provider: "paypal",
+      provider_status: "ACTIVE",
+      metadata: { paypal_plan_id: "P-month", pricing_catalog: "standard" },
+    }),
     operation: operation({ provider: "paypal", status: "reconciling" }),
   })
   assert.equal(reconciling.kind, "reconciling")
@@ -159,11 +182,92 @@ test("pending and reconciliation states keep the current interval visible", () =
   assert.equal(reconciling.kind === "reconciling" && reconciling.retryable, false)
 
   const providerPending = buildMembershipManagementState({
-    subscription: subscription({ provider: "paypal", provider_status: "ACTIVE" }),
+    subscription: subscription({
+      provider: "paypal",
+      provider_status: "ACTIVE",
+      metadata: { paypal_plan_id: "P-month", pricing_catalog: "standard" },
+    }),
     operation: operation({ provider: "paypal", status: "pending_provider" }),
   })
   assert.equal(providerPending.kind, "reconciling")
   assert.equal(providerPending.kind === "reconciling" && providerPending.retryable, true)
+  const payPalEnvKeys = {
+    month: "PAYPAL_PLAN_ID_MONTHLY",
+    quarter: "PAYPAL_PLAN_ID_QUARTERLY",
+    year: "PAYPAL_PLAN_ID_ANNUAL",
+  } as const
+  for (const interval of Object.keys(payPalEnvKeys) as Array<keyof typeof payPalEnvKeys>) {
+    const value = previousPayPalPlans[interval]
+    if (value === undefined) delete process.env[payPalEnvKeys[interval]]
+    else process.env[payPalEnvKeys[interval]] = value
+  }
+})
+
+test("membership catalog accepts gated pre-activation markers and fails closed on provider mismatch", () => {
+  assert.deepEqual(stripePricingMetadata("price_launch_month"), {
+    stripe_price_id: "price_launch_month",
+    pricing_catalog: "personal_plan_launch_v1",
+  })
+  assert.deepEqual(stripePricingMetadata("price_unrecognized"), {
+    stripe_price_id: "price_unrecognized",
+  })
+  const legacyStandard = buildMembershipManagementState({
+    subscription: subscription({ metadata: { pricing_catalog: "standard" } }),
+  })
+  assert.equal(legacyStandard.kind, "manageable")
+  assert.equal(legacyStandard.kind === "manageable" && legacyStandard.pricingCatalog, "standard")
+  assert.doesNotThrow(() =>
+    assertPlanChangeEligible(subscription({ metadata: { pricing_catalog: "standard" } }), "year"),
+  )
+
+  const preDeployStripeRow = subscription({
+    metadata: { checkout_session_id: "cs_predeploy", payment_status: "paid" },
+  })
+  assert.equal(
+    buildMembershipManagementState({ subscription: preDeployStripeRow }).kind,
+    "catalog_unmanageable",
+  )
+  assert.throws(
+    () => assertPlanChangeEligible(preDeployStripeRow, "year"),
+    (error) => error instanceof PlanChangeError && error.code === "catalog_unmanageable",
+  )
+
+  const launch = buildMembershipManagementState({
+    subscription: subscription({
+      metadata: {
+        stripe_price_id: "price_launch_month",
+        pricing_catalog: "personal_plan_launch_v1",
+      },
+    }),
+  })
+  assert.equal(launch.kind, "manageable")
+  assert.equal(launch.kind === "manageable" && launch.pricingCatalog, "personal_plan_launch_v1")
+
+  for (const metadata of [
+    { stripe_price_id: "price_unknown" },
+    { stripe_price_id: "price_month", pricing_catalog: "personal_plan_launch_v1" },
+  ]) {
+    const row = subscription({ metadata })
+    assert.equal(buildMembershipManagementState({ subscription: row }).kind, "catalog_unmanageable")
+    assert.throws(
+      () => assertPlanChangeEligible(row, "year"),
+      (error) => error instanceof PlanChangeError && error.code === "catalog_unmanageable",
+    )
+  }
+
+  const intervalMismatch = subscription({
+    interval: "year",
+    metadata: { stripe_price_id: "price_month", pricing_catalog: "standard" },
+  })
+  assert.equal(resolvedSubscriptionPricingCatalog(intervalMismatch), null)
+  assert.equal(
+    buildMembershipManagementState({ subscription: intervalMismatch }).kind,
+    "catalog_unmanageable",
+  )
+
+  const profileSwitcher = readFileSync("src/components/profile/profile-plan-switcher.tsx", "utf8")
+  assert.match(profileSwitcher, /getStripePricingPlans\(state\.pricingCatalog\)/)
+  assert.match(profileSwitcher, /catalog_unmanageable/)
 })
 
 test("the client operation id is retained for every authoritative open state", () => {
@@ -1244,7 +1348,11 @@ test("renewal application stays successful when applied analytics fail", async (
 
 test("billing upsert merges incoming metadata without deleting unrelated provider state", async () => {
   const existing = subscription({
-    metadata: { preserved: true, pending_plan_change: { operation_id: "op" } },
+    metadata: {
+      preserved: true,
+      pending_plan_change: { operation_id: "op" },
+      pricing_catalog: "standard",
+    },
   })
   let upserted: Record<string, unknown> | null = null
   function query() {
@@ -1275,11 +1383,20 @@ test("billing upsert merges incoming metadata without deleting unrelated provide
     provider_subscription_id: existing.provider_subscription_id,
     provider_status: existing.provider_status,
     entitlement_status: existing.entitlement_status,
-    metadata: { plan_id: "P-YEAR" },
+    metadata: { plan_id: "P-YEAR", ...stripePricingMetadata("price_unrecognized") },
   })
   assert.deepEqual((upserted as { metadata?: unknown } | null)?.metadata, {
     preserved: true,
     pending_plan_change: { operation_id: "op" },
+    pricing_catalog: "standard",
     plan_id: "P-YEAR",
+    stripe_price_id: "price_unrecognized",
   })
+  const mergedMetadata = (upserted as { metadata?: Record<string, unknown> } | null)?.metadata
+  assert.equal(
+    buildMembershipManagementState({
+      subscription: subscription({ metadata: mergedMetadata }),
+    }).kind,
+    "catalog_unmanageable",
+  )
 })
