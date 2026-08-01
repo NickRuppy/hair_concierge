@@ -91,6 +91,17 @@ test("lets every configured cron reach route-level auth without a session lookup
   }
 })
 
+test("lets the bearer-authenticated payment monitor reach route-level auth without a session", async () => {
+  const response = await updateSession(
+    new NextRequest("https://chaarlie.de/api/billing/payment-monitor", {
+      method: "POST",
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
 test("redirects legacy offer links to the combined result offer with the quiz lead id", async () => {
   const response = await updateSession(
     new NextRequest("https://chaarlie.de/offer?lead_id=lead-123"),
