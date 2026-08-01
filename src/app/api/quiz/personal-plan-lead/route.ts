@@ -91,6 +91,7 @@ export async function POST(request: Request) {
         email,
         leadId,
         marketingConsent: parsed.marketingConsent,
+        quizAnswers,
       }),
     )
     enqueueMetaLead({
