@@ -187,6 +187,8 @@ test("prepare and lead endpoints exchange only an opaque claim before the result
   assert.match(leadRoute, /save_personal_plan_lead_with_artifact/)
   assert.match(leadRoute, /hashPersonalPlanClaimToken\(parsed\.preparedPlan\.claimToken\)/)
   assert.match(leadRoute, /resolveBrowserFunnelEventId\(body\)/)
+  assert.match(leadRoute, /dispatchCustomerIoProfileSyncForLead\(supabase, leadId\)/)
+  assert.doesNotMatch(leadRoute, /syncPersonalPlanLeadToCustomerIo\(/)
   assert.match(leadRoute, /enqueueMetaLead\(\{/)
   assert.match(leadRoute, /META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL/)
   assert.match(leadRoute, /isPreparedPlanClaimError/)
@@ -194,7 +196,7 @@ test("prepare and lead endpoints exchange only an opaque claim before the result
   assert.doesNotMatch(leadRoute, /NextResponse\.json\(\{[\s\S]{0,200}artifact/)
 })
 
-test("personal-plan Customer.io sync identifies only non-diagnostic lead continuity", async () => {
+test("personal-plan Customer.io sync identifies the approved structured profile without an event", async () => {
   const originalFetch = globalThis.fetch
   const originalKey = process.env.CUSTOMERIO_SERVER_WRITE_KEY
   const calls: Array<{ url: string; body: Record<string, unknown> }> = []
@@ -213,15 +215,23 @@ test("personal-plan Customer.io sync identifies only non-diagnostic lead continu
       email: "plan@example.com",
       leadId: "lead-123",
       marketingConsent: false,
+      quizAnswers: canonicalizePersonalPlanAnswers(
+        personalPlanLeadRequestSchema.parse(request).answers,
+      ),
+      profileSyncRevision: 1,
+      sendCompletionEvent: false,
     })
     assert.equal(calls.length, 1)
     assert.equal(calls[0].url, "https://cdp-eu.customer.io/v1/identify")
-    assert.deepEqual(calls[0].body.traits, {
-      email: "plan@example.com",
-      lead_id: "lead-123",
-      quiz_kind: "personal_plan",
-      marketing_consent: false,
-    })
+    const traits = calls[0].body.traits as Record<string, unknown>
+    assert.equal(traits.email, "plan@example.com")
+    assert.equal(traits.lead_id, "lead-123")
+    assert.equal(traits.quiz_kind, "personal_plan")
+    assert.equal(traits.marketing_consent, false)
+    assert.equal(traits.personal_plan_profile_version, 2)
+    assert.deepEqual(traits.personal_plan_goals, ["moisture", "shine"])
+    assert.equal("plan_expires_at" in traits, false)
+    assert.equal("blockers_other_text" in traits, false)
   } finally {
     globalThis.fetch = originalFetch
     if (originalKey === undefined) delete process.env.CUSTOMERIO_SERVER_WRITE_KEY

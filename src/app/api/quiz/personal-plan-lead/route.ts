@@ -1,7 +1,7 @@
 import { after, NextResponse } from "next/server"
 import { cookies } from "next/headers"
 
-import { syncPersonalPlanLeadToCustomerIo } from "@/lib/personal-plan-quiz/customerio"
+import { dispatchCustomerIoProfileSyncForLead } from "@/lib/personal-plan-quiz/customerio-outbox"
 import { enqueueMetaLead } from "@/app/api/quiz/lead/route"
 import { metaRequestData, resolveBrowserFunnelEventId } from "@/lib/analytics/meta-capi"
 import { META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
@@ -85,14 +85,21 @@ export async function POST(request: Request) {
     }
 
     const createdAt = new Date().toISOString()
-    after(() =>
-      syncPersonalPlanLeadToCustomerIo({
-        createdAt,
-        email,
-        leadId,
-        marketingConsent: parsed.marketingConsent,
-      }),
-    )
+    after(async () => {
+      try {
+        const outcome = await dispatchCustomerIoProfileSyncForLead(supabase, leadId)
+        if (outcome === "failed") {
+          console.warn("[customerio:profile-sync] deferred delivery queued for retry", {
+            leadId,
+          })
+        }
+      } catch (error) {
+        console.warn("[customerio:profile-sync] deferred dispatch failed", {
+          leadId,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+    })
     enqueueMetaLead({
       browserEventId,
       email,

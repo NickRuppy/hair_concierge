@@ -95,6 +95,8 @@
     "posthog:personal-plan-pricing-experiment-insight": "tsx scripts/posthog/ensure-personal-plan-pricing-experiment-insight.ts",
     "customerio:quiz-result-email": "tsx scripts/customerio-quiz-result-email.ts",
     "customerio:personal-plan-result-email": "tsx scripts/customerio-personal-plan-result-email.ts",
+    "customerio:backfill-personal-plan": "tsx scripts/backfill-personal-plan-customerio.ts",
+    "customerio:profile-sync:retry": "tsx scripts/customerio/retry-profile-sync.ts",
     "billing:analytics:retry": "tsx scripts/billing-analytics/retry-outbox.ts",
     "billing:one-time:recover": "tsx scripts/billing/one-time-recover.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
