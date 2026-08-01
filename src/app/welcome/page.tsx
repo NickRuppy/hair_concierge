@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation"
+import { after } from "next/server"
 import { createHash } from "node:crypto"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -64,6 +65,31 @@ async function renderStripeWelcome(session_id: string) {
         stripeSessionId: session_id,
         reason: err.code,
       })
+
+      // Activation validation can fail after Stripe has already captured a
+      // one-time payment. Re-read the provider session before falling back to
+      // pricing so we never invite a paid buyer to purchase again.
+      const recoveredSession = await stripe.checkout.sessions.retrieve(session_id).catch(() => null)
+      if (recoveredSession?.mode === "payment" && recoveredSession.payment_status === "paid") {
+        return (
+          <WelcomeClient
+            activationSource={{
+              provider: "stripe",
+              sessionId: session_id,
+              purchaseKind: "one_time",
+            }}
+            email={
+              recoveredSession.customer_details?.email ??
+              recoveredSession.customer_email ??
+              undefined
+            }
+            mode="pending"
+            oneTimeReturnState={oneTimeReturnStateFromError(err)}
+            purchase={null}
+            sessionId={session_id}
+          />
+        )
+      }
       redirect("/pricing")
     }
     throw err
@@ -96,8 +122,97 @@ async function renderStripeWelcome(session_id: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  if (isOneTimePurchase) {
+    const source = {
+      provider: "stripe" as const,
+      sessionId: session_id,
+      purchaseKind: "one_time" as const,
+    }
+    const oneTimeDestination = await resolveCheckoutFirstTimeDestination(
+      admin,
+      session.metadata?.lead_id,
+      session.metadata?.checkout_context,
+    )
+    let account
+    try {
+      account = await ensureOneTimeCheckoutAccount(session, {
+        supabase: admin,
+        stripe,
+        premiumTierId: await getPremiumTierId(admin),
+        linkQuizToProfile,
+        defer: after,
+      })
+    } catch (err) {
+      captureCheckoutException(err, {
+        provider: "stripe",
+        stage: "checkout_return",
+        source: "welcome",
+        stripeSessionId: session_id,
+        reason: err instanceof CheckoutActivationError ? err.code : "one_time_activation_failed",
+      })
+      return (
+        <WelcomeClient
+          activationSource={source}
+          email={email}
+          mode="pending"
+          oneTimeReturnState={oneTimeReturnStateFromError(err)}
+          purchase={null}
+          activationRedirectTo={oneTimeDestination}
+          sessionId={session_id}
+        />
+      )
+    }
+    const accountDestination = await resolveCheckoutFirstTimeDestination(
+      admin,
+      account.leadId ?? session.metadata?.lead_id,
+      account.checkoutContext ?? session.metadata?.checkout_context,
+    )
+
+    if (account.state !== "active") {
+      return (
+        <WelcomeClient
+          activationSource={source}
+          email={account.email}
+          mode="pending"
+          purchase={null}
+          activationRedirectTo={accountDestination}
+          sessionId={session_id}
+        />
+      )
+    }
+
+    if (user?.email?.toLowerCase() === account.email.toLowerCase()) {
+      const redirectTo = await resolveAuthenticatedCheckoutRedirect(
+        supabase,
+        user.id,
+        null,
+        accountDestination,
+      )
+      return (
+        <WelcomeClient
+          activationSource={source}
+          email={account.email}
+          purchase={null}
+          redirectTo={redirectTo}
+          activationRedirectTo={accountDestination}
+          sessionId={session_id}
+        />
+      )
+    }
+
+    return (
+      <WelcomeClient
+        activationSource={source}
+        email={account.email}
+        purchase={null}
+        activationRedirectTo={accountDestination}
+        sessionId={session_id}
+      />
+    )
+  }
+
   if (user?.email?.toLowerCase() === email.toLowerCase()) {
-    await (isOneTimePurchase ? ensureOneTimeCheckoutAccount : ensureCheckoutAccount)(session, {
+    await ensureCheckoutAccount(session, {
       supabase: admin,
       stripe,
       premiumTierId: await getPremiumTierId(admin),
@@ -160,22 +275,66 @@ async function renderPayPalOneTimeWelcome(token: string | undefined) {
   if (!token) redirect("/")
 
   const admin = createAdminClient()
-  const activation = await recoverPayPalOrderActivation(token, {
-    supabase: admin,
-    linkQuizToProfile,
-  }).catch((err) => {
-    if (err instanceof PayPalCheckoutActivationError) {
-      captureCheckoutException(err, {
-        provider: "paypal",
-        stage: "checkout_return",
-        source: "welcome",
-        paypalTokenPresent: true,
-        reason: err.code,
-      })
-      redirect("/pricing")
+  let activation
+  try {
+    activation = await recoverPayPalOrderActivation(token, {
+      supabase: admin,
+      linkQuizToProfile,
+      defer: after,
+    })
+  } catch (err) {
+    captureCheckoutException(err, {
+      provider: "paypal",
+      stage: "checkout_return",
+      source: "welcome",
+      paypalTokenPresent: true,
+      reason:
+        err instanceof PayPalCheckoutActivationError ? err.code : "one_time_activation_failed",
+    })
+    return (
+      <WelcomeClient
+        activationSource={{ provider: "paypal", token, purchaseKind: "one_time" }}
+        analyticsId={paypalCheckoutAnalyticsId(token)}
+        mode="pending"
+        oneTimeReturnState="support_needed"
+        purchase={null}
+      />
+    )
+  }
+  const source = { provider: "paypal" as const, token, purchaseKind: "one_time" as const }
+
+  if (activation.status !== "active") {
+    const intent = activation.intent
+    if (typeof intent === "string") {
+      return (
+        <WelcomeClient
+          activationSource={source}
+          analyticsId={paypalCheckoutAnalyticsId(token)}
+          mode="pending"
+          purchase={null}
+        />
+      )
     }
-    throw err
-  })
+    const checkoutContext =
+      typeof intent.metadata?.checkout_context === "string"
+        ? intent.metadata.checkout_context
+        : null
+    const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
+      admin,
+      intent.lead_id,
+      checkoutContext,
+    )
+    return (
+      <WelcomeClient
+        activationSource={source}
+        analyticsId={paypalCheckoutAnalyticsId(token)}
+        mode="pending"
+        purchase={null}
+        activationRedirectTo={firstTimeDestination}
+      />
+    )
+  }
+
   const account = activation.account
   const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
     admin,
@@ -186,7 +345,6 @@ async function renderPayPalOneTimeWelcome(token: string | undefined) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  const source = { provider: "paypal" as const, token, purchaseKind: "one_time" as const }
 
   if (user?.email?.toLowerCase() === account.email.toLowerCase()) {
     const redirectTo = await resolveAuthenticatedCheckoutRedirect(
@@ -216,6 +374,13 @@ async function renderPayPalOneTimeWelcome(token: string | undefined) {
       activationRedirectTo={firstTimeDestination}
     />
   )
+}
+
+function oneTimeReturnStateFromError(error: unknown): "revoked" | "support_needed" {
+  return error instanceof CheckoutActivationError &&
+    error.code === "checkout_one_time_charge_revoked"
+    ? "revoked"
+    : "support_needed"
 }
 
 async function renderPayPalWelcome(token: string | undefined) {

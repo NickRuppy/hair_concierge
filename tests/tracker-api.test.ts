@@ -11,7 +11,7 @@ interface FakeState {
   writes: Array<{ table: string; op: string; payload: unknown }>
   errors?: Record<string, string>
   rpcCalls: Array<{ functionName: string; args: Record<string, unknown> }>
-  access?: "paid" | "manual" | "legacy" | "expired" | "error"
+  access?: "paid" | "manual" | "legacy" | "paid_pending" | "expired" | "error"
   authCalls?: number
   adminCalls?: number
 }
@@ -177,7 +177,12 @@ function makeDeps(state: FakeState) {
       assert.equal(lookup.userId, state.user?.id)
       if (state.access === "error") throw new Error("access unavailable")
       if (state.access === "manual") assert.equal(lookup.email, state.user?.email)
-      return state.access !== "expired"
+      return state.access !== "expired" && state.access !== "paid_pending"
+    },
+    resolveOneTimeAccessState: async (_client: unknown, lookup: { userId: string }) => {
+      assert.equal(lookup.userId, state.user?.id)
+      if (state.access === "paid_pending") return "paid_pending"
+      return "none"
     },
     loadRoutineArtifactData: async () =>
       ({
@@ -304,6 +309,15 @@ test("tracker handlers fail closed for expired or unavailable access", async () 
       .status,
     503,
   )
+})
+
+test("tracker handlers deny paid pending access without subscription-required copy", async () => {
+  const state = baseState()
+  state.access = "paid_pending"
+  const result = await createTrackerApiHandlers(makeDeps(state)).getTracker({ tz: "Europe/Berlin" })
+
+  assert.equal(result.status, 409)
+  assert.deepEqual(result.body, { error: "activation_pending" })
 })
 
 test("getTracker: rejects an invalid IANA timezone with 400", async () => {

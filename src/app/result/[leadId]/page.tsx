@@ -7,6 +7,7 @@ import { ResultPageClient } from "./result-client"
 import { parsePersonalPlanOfferModel } from "@/components/personal-plan-offer/model"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
+import { recordPersonalPlanOneTimeFirstAccess } from "@/lib/billing/personal-plan-one-time-first-access"
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import {
   getQuizResultSearchParamValue,
@@ -114,7 +115,10 @@ function parseQuizAnswers(raw: unknown): QuizAnswers | null {
   return parsed.success ? parsed.data : null
 }
 
-async function getAuthenticatedResultAccess(): Promise<boolean> {
+async function getAuthenticatedResultAccess(): Promise<{
+  hasAccess: boolean
+  userId: string | null
+}> {
   const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -131,12 +135,16 @@ async function getAuthenticatedResultAccess(): Promise<boolean> {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) return false
+  if (!user) return { hasAccess: false, userId: null }
 
-  return hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }).catch((error) => {
+  const hasAccess = await hasCurrentAppAccess(supabase, {
+    userId: user.id,
+    email: user.email,
+  }).catch((error) => {
     console.warn("[result-page] failed to resolve authenticated access", error)
     return false
   })
+  return { hasAccess, userId: user.id }
 }
 
 export default async function ResultPage({ params, searchParams }: Props) {
@@ -155,7 +163,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       : entry === "result_email"
         ? "result_email"
         : "saved_result"
-  const [lead, hasAccess] = await Promise.all([
+  const [lead, authenticatedAccess] = await Promise.all([
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
@@ -166,6 +174,20 @@ export default async function ResultPage({ params, searchParams }: Props) {
   if (!lead || (lead.quiz_kind === "legacy" && !quizAnswers)) {
     notFound()
   }
+
+  if (authenticatedAccess.userId) {
+    await recordPersonalPlanOneTimeFirstAccess(createAdminClient(), {
+      userId: authenticatedAccess.userId,
+      leadId: lead.id,
+    }).catch(() => {
+      console.warn("[result-page] failed to record one-time plan first access", {
+        leadId: lead.id,
+        userId: authenticatedAccess.userId,
+      })
+    })
+  }
+
+  const hasAccess = authenticatedAccess.hasAccess
 
   const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
   const personalPlanSession = funnelContext

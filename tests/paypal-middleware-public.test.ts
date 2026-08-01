@@ -66,6 +66,17 @@ test("allows unauthenticated PayPal webhook calls through the proxy", async () =
   assert.equal(response.headers.get("location"), null)
 })
 
+test("allows only the one-time activation polling capability through without a session", async () => {
+  const response = await updateSession(
+    new NextRequest(
+      "https://chaarlie.de/api/billing/one-time-activation-status?provider=stripe&session_id=cs_test",
+    ),
+  )
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
 test("lets every configured cron reach route-level auth without a session lookup", async () => {
   const vercelConfig = JSON.parse(
     readFileSync(new URL("../vercel.json", import.meta.url), "utf8"),

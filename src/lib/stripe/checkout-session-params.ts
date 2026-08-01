@@ -42,6 +42,8 @@ export function buildStripeCheckoutSessionParams({
     line_items: [{ price: priceId, quantity: 1 }],
     // Pass customer OR customer_email — never both (Stripe rejects that combination)
     ...(customerId ? { customer: customerId } : { customer_email: customerEmail }),
+    // One-time purchases need a Customer even when Checkout starts with only an email.
+    ...(isOneTimePurchase && !customerId ? { customer_creation: "always" } : {}),
     return_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
     ...(expiresAt ? { expires_at: expiresAt } : {}),
     automatic_tax: { enabled: true },

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
+import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -32,7 +33,16 @@ async function resolveStatus(request: Request, retryLink: boolean) {
   }
 
   const admin = createAdminClient()
-  const active = await hasCurrentAppAccess(admin, { userId: user.id, email: user.email })
+  const [active, oneTimeAccessState] = await Promise.all([
+    hasCurrentAppAccess(admin, { userId: user.id, email: user.email }),
+    resolveOneTimeAccessState(admin, user.id),
+  ])
+  if (!active && oneTimeAccessState === "paid_pending") {
+    return NextResponse.json(
+      { status: "paid_pending" },
+      { headers: { "Cache-Control": "private, no-store" } },
+    )
+  }
   if (!active) {
     return NextResponse.json({ status: "subscription_required" }, { status: 403 })
   }

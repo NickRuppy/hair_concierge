@@ -344,7 +344,9 @@ test("password activation uses the verified Stripe one-time account path", async
         userId: "user-once",
         email: "stripe@example.com",
         canSetInitialPassword: true,
+        state: "active",
         paymentIntentId: "pi-once",
+        purchaseId: "purchase-once",
       }
     },
   })
@@ -623,7 +625,9 @@ test("magic-link activation uses the verified Stripe one-time account path", asy
           userId: "user-once",
           email: "once@example.com",
           canSetInitialPassword: true,
+          state: "active",
           paymentIntentId: "pi-once",
+          purchaseId: "purchase-once",
         }
       },
       claimCheckoutActivation: async () => true,
@@ -635,6 +639,81 @@ test("magic-link activation uses the verified Stripe one-time account path", asy
   expect(oneTimeCalls).toBe(1)
   expect(subscriptionCalls).toBe(0)
   expect(otpCalls[0]).toMatchObject({ email: "once@example.com" })
+})
+
+test("Stripe one-time password setup refuses paid-pending activation without setting credentials", async () => {
+  const { calls, deps } = stubDeps({
+    verifyCheckoutSessionForActivation: async () =>
+      checkoutSession({
+        id: "cs_test_password",
+        metadata: { product_kind: "personal_plan_once" },
+      }),
+    ensureOneTimeCheckoutAccount: async () => ({
+      userId: "user-once",
+      email: "once@example.com",
+      canSetInitialPassword: true,
+      state: "paid_pending",
+      paymentIntentId: "pi-once",
+      purchaseId: "purchase-once",
+    }),
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 409,
+    body: { code: "activation_pending" },
+  })
+  expect(calls.some(([operation]) => operation === "updateUserById")).toBe(false)
+})
+
+test("Stripe one-time magic link refuses paid-pending activation before OTP send", async () => {
+  const otpCalls: any[] = []
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("cs_once_pending_magic"),
+    provider: "email",
+  })
+  supabase.auth.signInWithOtp = async (args: Record<string, unknown>) => {
+    otpCalls.push(args)
+    return { data: {}, error: null }
+  }
+
+  const response = await handleSendMagicLink(
+    { session_id: "cs_once_pending_magic" },
+    {
+      stripe: {} as any,
+      supabase,
+      siteUrl: "https://hair.example",
+      checkRateLimit: async () => ({ allowed: true }),
+      verifyCheckoutSessionForActivation: async () =>
+        checkoutSession({
+          id: "cs_once_pending_magic",
+          metadata: { product_kind: "personal_plan_once" },
+        }),
+      ensureCheckoutAccount: async () => {
+        throw new Error("subscription activation must not run")
+      },
+      ensureOneTimeCheckoutAccount: async () => ({
+        userId: "user-once",
+        email: "once@example.com",
+        canSetInitialPassword: true,
+        state: "paid_pending",
+        paymentIntentId: "pi-once",
+        purchaseId: "purchase-once",
+      }),
+      claimCheckoutActivation: async () => true,
+      releaseCheckoutActivationClaim: async () => {},
+    },
+  )
+
+  expect(response).toMatchObject({
+    status: 409,
+    body: { code: "activation_pending" },
+  })
+  expect(otpCalls).toEqual([])
 })
 
 test("PayPal one-time auth recovery uses the canonical order activation, not subscriptions", async () => {
@@ -668,6 +747,42 @@ test("PayPal one-time auth recovery uses the canonical order activation, not sub
   expect(response).toMatchObject({
     status: 200,
     body: { ok: true, email: "paypal-once@example.com" },
+  })
+})
+
+test("PayPal one-time password setup refuses paid-pending activation", async () => {
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("paypal:I-once-pending"),
+    provider: "email",
+  })
+  const { deps } = stubDeps({
+    supabase,
+    recoverPayPalOrderActivation: async () => ({
+      status: "paid_pending",
+      intent: {} as any,
+      account: {
+        status: "active",
+        userId: "user-paypal-once",
+        email: "paypal-once@example.com",
+        providerSubscriberEmail: null,
+        canSetInitialPassword: true,
+      },
+    }),
+  })
+
+  const response = await handleSetCheckoutPassword(
+    {
+      provider: "paypal",
+      purchase: "one_time",
+      token: "I-once-pending",
+      password: "long-enough",
+    },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 409,
+    body: { code: "activation_pending" },
   })
 })
 

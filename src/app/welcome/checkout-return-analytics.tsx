@@ -7,12 +7,24 @@ import { trackMetaPageView } from "@/lib/meta-pixel"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 
+export function shouldTrackCheckoutReturnSubscriptionStarted({
+  purchaseKind,
+  sessionId,
+}: {
+  purchaseKind?: "one_time"
+  sessionId: string
+}) {
+  return purchaseKind !== "one_time" && !sessionId.startsWith("paypal:")
+}
+
 export function CheckoutReturnAnalytics({
   purchase,
+  purchaseKind,
   redirectTo,
   sessionId,
 }: {
   purchase: CheckoutPurchaseAnalytics | null
+  purchaseKind?: "one_time"
   redirectTo?: string
   sessionId: string
 }) {
@@ -33,7 +45,7 @@ export function CheckoutReturnAnalytics({
         stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
         paypalTokenPresent: sessionId.startsWith("paypal:"),
       })
-      if (!sessionId.startsWith("paypal:")) {
+      if (shouldTrackCheckoutReturnSubscriptionStarted({ purchaseKind, sessionId })) {
         trackAppEvent("subscription_started", {
           checkoutSessionId: sessionId,
         })
@@ -72,7 +84,7 @@ export function CheckoutReturnAnalytics({
         router.replace(redirectTo)
       }
     }
-  }, [purchase, redirectTo, router, sessionId])
+  }, [purchase, purchaseKind, redirectTo, router, sessionId])
 
   return null
 }

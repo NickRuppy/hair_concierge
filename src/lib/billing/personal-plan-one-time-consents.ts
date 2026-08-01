@@ -4,7 +4,7 @@ import {
   PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
   PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
 } from "./personal-plan-one-time-consent-copy"
-import type { SupabaseBillingClient } from "./types"
+import type { BillingOneTimePurchaseRow, SupabaseBillingClient } from "./types"
 
 export {
   PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
@@ -101,6 +101,20 @@ export async function findPersonalPlanOneTimeConsentByStripeCheckoutSessionId(
   )
 }
 
+export async function findPersonalPlanOneTimeConsentById(
+  supabase: SupabaseBillingClient,
+  consentId: string,
+): Promise<PersonalPlanOneTimeCheckoutConsentRow | null> {
+  const { data, error } = await supabase
+    .from("personal_plan_one_time_checkout_consents")
+    .select("*")
+    .eq("id", consentId)
+    .maybeSingle()
+
+  if (error) throw error
+  return (data as PersonalPlanOneTimeCheckoutConsentRow | null) ?? null
+}
+
 export async function findPersonalPlanOneTimeConsentByPayPalReference(
   supabase: SupabaseBillingClient,
   reference: { orderId: string } | { captureId: string },
@@ -151,6 +165,20 @@ export async function bindPersonalPlanOneTimeConsentProviderReference(
 
   if (error) throw error
   return data as PersonalPlanOneTimeCheckoutConsentRow
+}
+
+export async function bindPersonalPlanOneTimePurchaseUser(
+  supabase: SupabaseBillingClient & { rpc: (fn: string, args: Record<string, unknown>) => unknown },
+  input: { consentId: string; purchaseId: string; userId: string },
+): Promise<BillingOneTimePurchaseRow> {
+  const result = supabase.rpc("bind_personal_plan_one_time_purchase_user", {
+    p_consent_id: input.consentId,
+    p_purchase_id: input.purchaseId,
+    p_user_id: input.userId,
+  }) as PromiseLike<{ data: unknown; error: unknown }>
+  const { data, error } = await result
+  if (error) throw error
+  return data as BillingOneTimePurchaseRow
 }
 
 export async function recordPersonalPlanOneTimeConfirmation(

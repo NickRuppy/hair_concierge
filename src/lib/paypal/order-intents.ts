@@ -172,11 +172,21 @@ export async function findPayPalOrderIntentByProviderReference(
   supabase: PayPalOrderIntentClient,
   input: { orderId?: string | null; captureId?: string | null },
 ) {
-  let query = supabase.from("paypal_order_intents").select("*")
-  if (input.captureId) query = query.eq("provider_capture_id", input.captureId)
-  else if (input.orderId) query = query.eq("provider_order_id", input.orderId)
-  else return null
-  const { data, error } = await query.maybeSingle()
+  if (input.captureId) {
+    const { data, error } = await supabase
+      .from("paypal_order_intents")
+      .select("*")
+      .eq("provider_capture_id", input.captureId)
+      .maybeSingle()
+    if (error) throw error
+    if (data || !input.orderId) return data as PayPalOrderIntentRow | null
+  }
+  if (!input.orderId) return null
+  const { data, error } = await supabase
+    .from("paypal_order_intents")
+    .select("*")
+    .eq("provider_order_id", input.orderId)
+    .maybeSingle()
   if (error) throw error
   return data as PayPalOrderIntentRow | null
 }
