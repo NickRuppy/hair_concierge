@@ -72,12 +72,98 @@ goal_labels
 
 Do not send raw free text such as `concerns_other_text`.
 
+## Personal Plan Lead Traits
+
+Personal Plan leads use the same identity rules but a dedicated, versioned projection. Shared
+attributes are reused only when their primitive type and raw vocabulary match the legacy quiz:
+
+```txt
+email
+lead_id
+quiz_kind
+marketing_consent
+consent_timestamp
+personal_plan_completed_at
+personal_plan_profile_version
+funnel_session_id
+funnel_package_key
+profile_line
+hair_texture
+hair_texture_label
+thickness
+thickness_label
+density
+density_label
+hair_length
+hair_length_label
+protein_moisture_balance
+protein_moisture_balance_label
+```
+
+Answers whose cardinality or vocabulary differs from the legacy quiz stay in the Personal Plan
+namespace so an email address that completed both quizzes cannot silently change an existing
+Customer.io attribute from a scalar to an array or replace its vocabulary:
+
+```txt
+personal_plan_hair_surface
+personal_plan_hair_surface_label
+personal_plan_scalp_oiliness
+personal_plan_scalp_oiliness_label
+personal_plan_scalp_concerns
+personal_plan_scalp_concern_labels
+personal_plan_has_scalp_concern
+personal_plan_chemical_treatments
+personal_plan_chemical_treatment_labels
+personal_plan_concerns
+personal_plan_concern_labels
+personal_plan_goals
+personal_plan_goal_labels
+personal_plan_routine_style
+personal_plan_routine_style_label
+personal_plan_routine_clarity
+personal_plan_routine_clarity_label
+```
+
+Do not project `blockersOtherText` or any other free text. Do not persist or identify a
+`plan_expires_at` attribute. If an email presents a seven-day marketing date, Customer.io derives
+that display value from `personal_plan_completed_at`; it is not an application-access deadline.
+The existing Customer.io plan identifier remains a display derivation from `lead_id`.
+
+Customer.io operator snippets:
+
+```liquid
+HP-{{ customer.lead_id | slice: 0, 5 | upcase }}
+{{ customer.personal_plan_completed_at | date: '%s' | plus: 0 | add_day: 7 | date: '%d.%m.%Y', 'Europe/Berlin' }}
+```
+
+`add_day` and the timezone-aware `date` filter are documented in the official
+[Customer.io Liquid syntax list](https://docs.customer.io/messaging/liquid/tag-list/).
+
+Consented Personal Plan leads emit the stable server event `personal_plan_profile_submitted` only
+after their identify call succeeds. A later consent change from false to true can request the event
+once. Marketing campaigns using this event must also require `marketing_consent = true` as a
+second gate and should be configured for one entry with re-entry disabled. The delivery uses a
+stable message ID, but Customer.io delivery and the local delivered marker cannot be committed in
+one transaction, so the campaign-level entry guard is the final duplicate-email safeguard.
+Historical backfill requests profile identify delivery only and must never emit this event.
+Before a live backfill, audit active Customer.io campaigns and pause or guard every segment- or
+attribute-triggered flow that these identify updates could enter. Excluding the completion event
+prevents entry into the new event-triggered campaign; it cannot by itself suppress an unrelated
+campaign that reacts to changed person attributes. The backfill CLI therefore requires the
+explicit `--confirm-campaigns-safe` preflight flag in live mode.
+
+Cut over the Personal Plan automation from the existing `quiz_kind` / Segment 21 entry rule to
+`personal_plan_profile_submitted`; do not leave both entry paths active for new leads. Activate the
+event-triggered path only after the segment-triggered path is disabled or otherwise made mutually
+exclusive.
+
 ## Campaign Events
 
 Customer.io campaigns should use server-source events for canonical triggers.
 
 ```txt
 quiz_profile_submitted
+personal_plan_profile_submitted
 purchase_completed
 payment_completed
 subscription_started
@@ -102,6 +188,7 @@ Browser `purchase_completed` and `subscription_started` must not be routed to Cu
 ## Event Source Rules
 
 - `quiz_profile_submitted` uses `source: "quiz_lead_api"`.
+- `personal_plan_profile_submitted` uses `source: "personal_plan_lead_api"`.
 - Billing lifecycle events use `source: "billing_analytics_outbox"` and include `billing_provider`.
 - Browser return events may use `source: "browser_return"` when sent to Customer.io.
 
@@ -140,11 +227,27 @@ Customer.io sync is best-effort. Failures must never block quiz lead capture, pa
 
 Supabase remains the source of truth for manual replay. Billing replay should use `billing_analytics_outbox` and `billing_analytics_deliveries`.
 
+Personal Plan profile delivery uses `customerio_profile_sync_outbox`. The outbox stores the lead
+ID and delivery state only; the worker reloads current profile and funnel data from Supabase on
+every attempt. Its monotonic `profile_revision` gives each changed profile a new identify message
+ID while keeping retries of that revision idempotent. Only leads inserted after the outbox exists are event-eligible. Consented eligible
+leads request the completion event once, including a later consent change from false to true.
+Profile updates preserve an already delivered event marker. Historical backfill and later updates
+to historical rows remain profile-only. Failed rows retry asynchronously and never make quiz
+completion depend on Customer.io availability.
+
+The lead route attempts the new row immediately after the response. The Vercel fallback cron runs
+once daily because the current Hobby plan does not accept more frequent cron schedules; operators
+can use `npm run customerio:profile-sync:retry` for an earlier manual retry. This daily cadence
+affects failures only, not the normal first delivery attempt.
+
 Manual replay should use Supabase rows as truth: rebuild the Customer.io payload from the lead/profile/subscription/outbox row and send it through the matching server-owned channel. Lifecycle events use the Pipelines API with stable `messageId` values; transactional/service artifacts such as `quiz_result_artifact` use the Customer.io App API after resetting their send status for replay. Do not replay from browser analytics events.
 
 Use these stable message ID shapes for manual replay:
 
 ```txt
 quiz_profile_submitted:<lead_id>
+identify:personal_plan_lead:<lead_id>:<profile_revision>
+personal_plan_profile_submitted:<lead_id>
 <canonical_event_name>:<billing_analytics_event_key>
 ```

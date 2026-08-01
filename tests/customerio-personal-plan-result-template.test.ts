@@ -31,7 +31,7 @@ test("rich template is email-safe, compact, escaped, and hard-paywall only", () 
   assert.match(html, /row\.title\s*\|\s*xml_escape/)
   assert.match(html, /row\.summary\s*\|\s*xml_escape/)
   assert.match(html, /trigger\.plan_fit_statement\s*\|\s*xml_escape/)
-  assert.equal((html.match(/trigger\.result_url/g) ?? []).length, 2)
+  assert.equal((html.match(/trigger\.result_url/g) ?? []).length, 3)
   assert.doesNotMatch(html, /locked_plan|trigger\.products|trigger\.routine|trigger\.frequency/i)
   assert.doesNotMatch(
     html,
