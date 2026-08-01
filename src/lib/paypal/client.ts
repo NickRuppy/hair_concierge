@@ -7,6 +7,9 @@ type OAuthTokenResponse = {
 }
 
 let cachedToken: { token: string; expiresAt: number } | null = null
+let pendingToken: Promise<string> | null = null
+
+const PAYPAL_OAUTH_TIMEOUT_MS = 10_000
 
 export class PayPalRequestError extends Error {
   constructor(
@@ -28,7 +31,7 @@ export function getPayPalBaseUrl(): string {
 }
 
 export async function paypalRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const token = await getPayPalAccessToken()
+  const token = await getPayPalAccessToken(init.signal)
   let response: Response
   try {
     response = await fetch(`${getPayPalBaseUrl()}${path}`, {
@@ -57,9 +60,19 @@ export async function paypalRequest<T>(path: string, init: RequestInit = {}): Pr
   return (await response.json()) as T
 }
 
-export async function getPayPalAccessToken(): Promise<string> {
+export async function getPayPalAccessToken(signal?: AbortSignal | null): Promise<string> {
   if (cachedToken && cachedToken.expiresAt > Date.now() + 60_000) return cachedToken.token
 
+  if (!pendingToken) {
+    pendingToken = requestPayPalAccessToken().finally(() => {
+      pendingToken = null
+    })
+  }
+
+  return waitForSignal(pendingToken, signal)
+}
+
+async function requestPayPalAccessToken(): Promise<string> {
   const clientId = process.env.PAYPAL_CLIENT_ID
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET
   if (!clientId) throw new Error("PAYPAL_CLIENT_ID is not set")
@@ -74,6 +87,7 @@ export async function getPayPalAccessToken(): Promise<string> {
       Accept: "application/json",
     },
     body: "grant_type=client_credentials",
+    signal: AbortSignal.timeout(PAYPAL_OAUTH_TIMEOUT_MS),
   })
 
   if (!response.ok) {
@@ -90,6 +104,23 @@ export async function getPayPalAccessToken(): Promise<string> {
     expiresAt: Date.now() + Math.max(0, token.expires_in ?? 0) * 1000,
   }
   return cachedToken.token
+}
+
+async function waitForSignal<T>(promise: Promise<T>, signal?: AbortSignal | null): Promise<T> {
+  if (!signal) return promise
+  if (signal.aborted) throw abortError()
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => reject(abortError())
+    signal.addEventListener("abort", onAbort, { once: true })
+    void promise.then(resolve, reject).finally(() => signal.removeEventListener("abort", onAbort))
+  })
+}
+
+function abortError(): Error {
+  const error = new Error("PayPal request aborted")
+  error.name = "AbortError"
+  return error
 }
 
 async function readBody(response: Response): Promise<string> {

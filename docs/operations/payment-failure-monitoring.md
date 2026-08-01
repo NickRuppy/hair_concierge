@@ -30,7 +30,8 @@ Expected detection latency:
 
 - Direct provider failure or webhook processing exception: immediate.
 - Silent provider-success/local-state mismatch: usually 60-90 minutes after provider success, because the check waits 60 minutes and then runs on the next 30-minute local cadence.
-- Missed local runner: alert once configured if the `payment-integrity-local` check-in is late beyond the missed-run tolerance.
+- Failed local run: the endpoint emits `payment_monitor_failed` to Sentry and the LaunchAgent records a nonzero result with privacy-safe provider failure categories.
+- Sleeping/offline Mac: no local missed-run alert is configured. The daily Vercel reconciliation is the cloud fallback.
 
 ## Privacy and lookup rules
 
@@ -104,6 +105,7 @@ If `payment_monitor_failed` fires or the local monitor misses expected check-ins
    - Keychain service name: `com.chaarlie.payment-monitor.trigger-secret`
    - Endpoint: `https://chaarlie.de/api/billing/payment-monitor`
    - Cadence: every 30 minutes
+   - Client timeout: 50 seconds around the route's 40-second work budget
 3. Do not log or paste the trigger secret.
 4. Rerun the monitor manually only with the approved local script and production endpoint.
 5. If the local Mac was asleep/offline, rely on the daily cloud fallback once configured and inspect the next successful local check.
@@ -127,14 +129,14 @@ Before treating the system as operational:
 
 - Confirm production deploy contains this code.
 - Configure Sentry alert routing for the five `payment.signal` values.
-- Configure Sentry Cron/check-in tracking for `payment-integrity-local` and the daily cloud fallback.
+- Confirm the daily Vercel reconciliation cron remains configured as the cloud fallback. The local route does not send Sentry Cron check-ins; the Mac LaunchAgent owns scheduling while normal Sentry error events own monitor-failure alerts.
 - Confirm the production Stripe webhook endpoint delivers `payment_intent.payment_failed`,
   `checkout.session.async_payment_failed`, and `invoice.payment_failed` events.
 - Set production `PAYMENT_MONITOR_TRIGGER_SECRET`.
 - Store the same secret in local macOS Keychain under `com.chaarlie.payment-monitor.trigger-secret`.
 - Install a LaunchAgent or equivalent local scheduler for the 30-minute local trigger.
 - Run one manual local trigger against `https://chaarlie.de/api/billing/payment-monitor`.
-- Verify Sentry records an ok check-in and no secret or raw provider reference appears in logs.
+- Verify a manual run returns `200 completed`, and verify a controlled monitor failure reaches Sentry without a secret or raw provider reference.
 - Run a controlled checkout test and confirm customer-visible errors, provider failures, webhook exceptions, and reconciliation signals are classified as expected.
 
 Do not install local automation, change Sentry workflows, or rotate secrets as part of code review unless that rollout step is explicitly authorized.
