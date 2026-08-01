@@ -3,74 +3,125 @@
  *
  * Liegt bewusst getrennt von `email-deliverability.ts`, weil dort `node:dns`
  * importiert wird und die Quiz-Komponente eine Client-Komponente ist.
- * Beide Seiten nutzen dieselbe Domainliste, damit Vorschlag im Formular und
+ * Beide Seiten nutzen dieselben Listen, damit Vorschlag im Formular und
  * Pruefung auf dem Server nicht auseinanderlaufen.
  */
 
-/** Bekannte Domains, gegen die auf Tippfehler geprueft wird. */
-export const KNOWN_EMAIL_DOMAINS = [
+export const EMAIL_ADDRESS_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/**
+ * Belegte Tippfehler auf echte Anbieterdomains.
+ *
+ * Bewusst eine explizite Liste statt einer Aehnlichkeitsheuristik. Eine
+ * Levenshtein-Distanz ueber alle bekannten Domains erzeugt Fehlvorschlaege
+ * bei real existierenden Domains: `mail.com` liegt eine Einfuegung von
+ * `gmail.com` entfernt, `example.co` eine von `example.com`. Beide sind
+ * gueltig, ein Korrekturvorschlag waere dort schlicht falsch.
+ *
+ * Diese Liste enthaelt nur Domains, die selbst kein Mail annehmen und
+ * eindeutig einem Anbieter zuzuordnen sind. Erweiterungen bitte anhand
+ * echter Bounce-Logs, nicht anhand von Vermutungen.
+ */
+const DOMAIN_TYPOS: Record<string, string> = {
+  // gmail.com
+  "gmail.vom": "gmail.com",
+  "gmail.con": "gmail.com",
+  "gmail.cim": "gmail.com",
+  "gmail.comm": "gmail.com",
+  "gmaill.com": "gmail.com",
+  "gmial.com": "gmail.com",
+  "gmai.com": "gmail.com",
+  "gnail.com": "gmail.com",
+  // gmx.de
+  "gmx.den": "gmx.de",
+  "gmx.dee": "gmx.de",
+  "gmx.d": "gmx.de",
+  "gmx.ed": "gmx.de",
+  // web.de
+  "web.d": "web.de",
+  "web.dee": "web.de",
+  "web.ed": "web.de",
+  "wen.de": "web.de",
+  // hotmail
+  "hotmial.com": "hotmail.com",
+  "hotmai.com": "hotmail.com",
+  "hotmail.con": "hotmail.com",
+  "hotmail.vom": "hotmail.com",
+  // outlook
+  "outlok.com": "outlook.com",
+  "outloo.com": "outlook.com",
+  "outlook.con": "outlook.com",
+  "outlook.vom": "outlook.com",
+  // icloud
+  "iclould.com": "icloud.com",
+  "iclod.com": "icloud.com",
+  "icloud.con": "icloud.com",
+  "icloud.vom": "icloud.com",
+  // yahoo
+  "yaho.com": "yahoo.com",
+  "yahoo.con": "yahoo.com",
+  "yahoo.vom": "yahoo.com",
+  // t-online
+  "t-online.d": "t-online.de",
+  "t-online.den": "t-online.de",
+  "tonline.de": "t-online.de",
+  // sonstige
+  "freenet.d": "freenet.de",
+  "aol.con": "aol.com",
+  "aol.vom": "aol.com",
+}
+
+/**
+ * Grossanbieter, die nachweislich Mail annehmen. Fuer diese Domains wird der
+ * MX-Lookup uebersprungen, das spart einen DNS-Roundtrip pro Lead.
+ *
+ * Enthaelt bewusst auch `mail.com`, `gmx.com` und `live.com`: real
+ * existierende Domains, die einer Aehnlichkeitsheuristik zum Opfer fielen.
+ */
+export const KNOWN_GOOD_EMAIL_DOMAINS = [
   "gmail.com",
   "googlemail.com",
   "gmx.de",
   "gmx.net",
   "gmx.at",
   "gmx.ch",
+  "gmx.com",
   "web.de",
   "outlook.com",
   "outlook.de",
   "hotmail.com",
   "hotmail.de",
+  "live.com",
   "live.de",
   "icloud.com",
   "me.com",
+  "mac.com",
   "yahoo.com",
   "yahoo.de",
+  "ymail.com",
   "t-online.de",
   "freenet.de",
   "aol.com",
+  "aol.de",
+  "mail.com",
+  "mail.de",
   "posteo.de",
+  "posteo.net",
   "mailbox.org",
   "protonmail.com",
   "proton.me",
+  "arcor.de",
 ]
-
-/** Top-Level-Domains, die haeufig vertippt werden. */
-const KNOWN_TLDS = ["com", "de", "net", "org", "at", "ch", "eu", "io", "me"]
-
-/** Wegwerf-Adressen: nehmen wir an, senden aber nichts hin. */
-export const DISPOSABLE_EMAIL_DOMAINS = [
-  "mailinator.com",
-  "guerrillamail.com",
-  "10minutemail.com",
-  "tempmail.com",
-  "trashmail.com",
-  "yopmail.com",
-  "sharklasers.com",
-]
-
-export const EMAIL_ADDRESS_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function levenshtein(a: string, b: string): number {
-  if (a === b) return 0
-  if (!a.length) return b.length
-  if (!b.length) return a.length
-  let prev = Array.from({ length: b.length + 1 }, (_, i) => i)
-  for (let i = 1; i <= a.length; i += 1) {
-    const row = [i]
-    for (let j = 1; j <= b.length; j += 1) {
-      row[j] = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))
-    }
-    prev = row
-  }
-  return prev[b.length]
-}
 
 /**
- * Schlaegt eine Korrektur vor, wenn die Domain einer bekannten sehr aehnlich
- * ist. Faengt "gmail.vom", "gmx.den", "gmial.com", "web.d".
+ * Schlaegt eine Korrektur vor, wenn die Domain ein belegter Tippfehler ist.
  *
- * Anders als eine Autovervollstaendigung per startsWith greift das auch dann,
- * wenn die Adresse bereits vollstaendig getippt ist.
+ * Anders als eine Autovervollstaendigung per `startsWith` greift das auch
+ * dann, wenn die Adresse bereits vollstaendig getippt ist. Genau diese Faelle
+ * (z. B. `gmail.vom`) sind in den Bounce-Logs aufgetaucht.
+ *
+ * Gibt `null` zurueck, wenn die Domain nicht eindeutig als Tippfehler belegt
+ * ist. Lieber kein Vorschlag als ein falscher.
  */
 export function suggestEmailCorrection(email: string): string | null {
   const value = email.trim().toLowerCase()
@@ -78,29 +129,9 @@ export function suggestEmailCorrection(email: string): string | null {
   if (at < 1) return null
   const local = value.slice(0, at)
   const domain = value.slice(at + 1)
-  if (!domain || KNOWN_EMAIL_DOMAINS.includes(domain)) return null
+  if (!local || !domain) return null
 
-  let best: { domain: string; distance: number } | null = null
-  for (const candidate of KNOWN_EMAIL_DOMAINS) {
-    const distance = levenshtein(domain, candidate)
-    // Bei kurzen Domains nur Distanz 1 zulassen, sonst zu viele Fehltreffer.
-    const limit = candidate.length <= 8 ? 1 : 2
-    if (distance <= limit && (!best || distance < best.distance)) {
-      best = { domain: candidate, distance }
-    }
-  }
-  if (best) return `${local}@${best.domain}`
-
-  // Zweiter Versuch: nur die TLD ist vertippt (z.B. "meinefirma.dee").
-  const lastDot = domain.lastIndexOf(".")
-  if (lastDot > 0) {
-    const base = domain.slice(0, lastDot)
-    const tld = domain.slice(lastDot + 1)
-    if (!KNOWN_TLDS.includes(tld)) {
-      for (const candidate of KNOWN_TLDS) {
-        if (levenshtein(tld, candidate) === 1) return `${local}@${base}.${candidate}`
-      }
-    }
-  }
-  return null
+  const corrected = DOMAIN_TYPOS[domain]
+  if (!corrected || corrected === domain) return null
+  return `${local}@${corrected}`
 }

@@ -64,10 +64,7 @@ export async function POST(request: Request) {
     if (!deliverability.ok) {
       return NextResponse.json(
         {
-          error:
-            deliverability.reason === "disposable"
-              ? "Bitte gib eine dauerhafte E-Mail-Adresse ein."
-              : "Diese E-Mail-Adresse konnten wir nicht erreichen. Bitte pruefe die Schreibweise.",
+          error: "Diese E-Mail-Adresse konnten wir nicht erreichen. Bitte pruefe die Schreibweise.",
           reason: deliverability.reason,
           suggestion: deliverability.suggestion,
         },

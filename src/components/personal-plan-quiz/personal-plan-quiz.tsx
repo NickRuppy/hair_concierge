@@ -1773,10 +1773,17 @@ function EmailCapture({
   const [email, setEmail] = useState("")
   const [step, setStep] = useState<"email" | "consent">("email")
   const [error, setError] = useState("")
+  const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [pendingConsent, setPendingConsent] = useState<boolean | null>(null)
   const funnelEventIdRef = useRef<string | null>(null)
-  const suggestions = getEmailSuggestions(email)
+  const localSuggestions = getEmailSuggestions(email)
+  // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
+  // fehlgeschlagenen Zustellpruefung, nicht aus einer Heuristik im Formular.
+  const suggestions =
+    serverSuggestion && serverSuggestion !== email.trim().toLowerCase()
+      ? [serverSuggestion, ...localSuggestions.filter((s) => s !== serverSuggestion)]
+      : localSuggestions
 
   function continueToConsent() {
     if (!EMAIL_PATTERN.test(email.trim())) {
@@ -1816,6 +1823,26 @@ function EmailCapture({
       if (!response.ok) {
         if (response.status === 409) {
           onPreparedPlanRejected()
+          return
+        }
+        // Die Adresse ist nicht zustellbar. Zurueck ins E-Mail-Feld, damit sie
+        // korrigiert werden kann, statt den Nutzer im Consent-Schritt mit einer
+        // generischen Fehlermeldung stehen zu lassen.
+        if (response.status === 422) {
+          const detail: unknown = await response.json().catch(() => null)
+          const record =
+            detail && typeof detail === "object" && !Array.isArray(detail)
+              ? (detail as Record<string, unknown>)
+              : {}
+          const suggestion = typeof record.suggestion === "string" ? record.suggestion : null
+          setServerSuggestion(suggestion)
+          setStep("email")
+          setError(
+            typeof record.error === "string"
+              ? record.error
+              : "Diese E-Mail-Adresse konnten wir nicht erreichen. Bitte pruefe die Schreibweise.",
+          )
+          window.scrollTo(0, 0)
           return
         }
         throw new Error(`Save failed with ${response.status}`)
@@ -1896,6 +1923,7 @@ function EmailCapture({
                     onClick={() => {
                       setEmail(suggestion)
                       setError("")
+                      setServerSuggestion(null)
                     }}
                     type="button"
                   >
