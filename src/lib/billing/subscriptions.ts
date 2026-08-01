@@ -5,7 +5,7 @@ import type {
   BillingSubscriptionRow,
   SupabaseBillingClient,
 } from "./types"
-import { findCurrentOneTimePurchaseForUser } from "./purchases"
+import { findCurrentOneTimePurchaseForUser, resolveOneTimeAccessStateForUser } from "./purchases"
 
 type LegacyProfileSubscription = {
   id: string
@@ -144,8 +144,8 @@ export async function assertCanStartCheckout(
     throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
   }
 
-  const purchase = await findCurrentOneTimePurchaseForUser(supabase, userId)
-  if (purchase) {
+  const oneTimeAccessState = await resolveOneTimeAccessStateForUser(supabase, userId)
+  if (oneTimeAccessState === "active" || oneTimeAccessState === "paid_pending") {
     throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
   }
 

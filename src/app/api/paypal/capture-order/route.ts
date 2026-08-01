@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import { z } from "zod"
 
 import { captureAndActivatePayPalOrder } from "@/lib/paypal/order-activation"
@@ -16,10 +16,12 @@ export async function POST(request: Request) {
     const result = await captureAndActivatePayPalOrder(parsed.data.token, {
       supabase: createAdminClient(),
       linkQuizToProfile,
+      defer: after,
     })
     return NextResponse.json({
       token: result.intent.token,
       captured: true,
+      activationStatus: result.status,
       welcomeUrl: `/welcome?provider=paypal&purchase=one_time&token=${encodeURIComponent(
         result.intent.token,
       )}`,

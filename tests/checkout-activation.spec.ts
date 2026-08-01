@@ -625,6 +625,53 @@ test("verifyCheckoutSessionForActivation returns complete paid sessions", async 
   })
 })
 
+test("verifyCheckoutSessionForActivation accepts a server-retrieved paid one-time session without a Stripe customer", async () => {
+  const previousPrice = process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_ONCE
+  process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_ONCE = "price_once"
+  const session = {
+    id: "cs_once_customerless",
+    status: "complete",
+    mode: "payment",
+    payment_status: "paid",
+    amount_total: 2999,
+    currency: "eur",
+    customer: null,
+    customer_details: { email: "paid-once@example.com" },
+    payment_intent: {
+      id: "pi_once_customerless",
+      created: 1_754_000_000,
+      latest_charge: { id: "ch_once_customerless", created: 1_754_000_123 },
+    },
+    line_items: { data: [{ price: { id: "price_once" } }] },
+    metadata: {
+      product_kind: "personal_plan_once",
+      personal_plan_once_consent_id: "0f762541-b540-4d26-8328-28d79737d39c",
+      lead_id: "11111111-1111-4111-8111-111111111111",
+      funnel_session_id: "22222222-2222-4222-8222-222222222222",
+      checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+      checkout_preparation_status: "claimed",
+      checkout_attempt_id: "65b32f4a-6f32-4c0d-b311-84beab8e0fc3",
+      checkout_funnel_event_id: "6f6cf50f-51e4-4318-a17e-c13a1eb669c4",
+    },
+  }
+  const stripe = {
+    checkout: { sessions: { retrieve: async () => session } },
+  } as any
+
+  try {
+    await expect(
+      verifyCheckoutSessionForActivation("cs_once_customerless", stripe),
+    ).resolves.toMatchObject({
+      id: "cs_once_customerless",
+      customer: null,
+      payment_status: "paid",
+    })
+  } finally {
+    if (previousPrice === undefined) delete process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_ONCE
+    else process.env.STRIPE_PRICE_ID_PERSONAL_PLAN_ONCE = previousPrice
+  }
+})
+
 test("@ci verifyCheckoutSessionForActivation rejects an unclaimed prepared checkout", async () => {
   const stripe = {
     checkout: {

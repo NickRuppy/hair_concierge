@@ -24,6 +24,7 @@ interface WelcomeClientProps {
   sessionId?: string
   activationSource: CheckoutActivationSource
   mode?: "activation" | "pending" | "duplicate"
+  oneTimeReturnState?: Exclude<OneTimePendingState, "pending">
   activationRedirectTo?: CheckoutFirstTimeDestination
 }
 
@@ -33,6 +34,14 @@ type CheckoutActivationSource =
 
 type LoadingState = "password" | "magic_link" | null
 type ScreenState = { view: "choice" } | { view: "sent" }
+type OneTimePendingState = "pending" | "timed_out" | "support_needed" | "revoked"
+type OneTimeActivationStatus =
+  | "active"
+  | "paid_pending"
+  | "pending"
+  | "revoked"
+  | "failed_permanent"
+  | "permanent_failure"
 
 const SIGN_IN_AFTER_PASSWORD_ERROR =
   "Passwort wurde erstellt, aber die Anmeldung hat nicht geklappt. Bitte melde dich mit deiner E-Mail und deinem Passwort an."
@@ -41,6 +50,15 @@ const NETWORK_ERROR =
 const UNKNOWN_ERROR = "Unbekannter Fehler"
 const MAGIC_LINK_BODY =
   "Wir senden dir einen sicheren Login-Link. Du klickst ihn im Postfach an und bist direkt angemeldet."
+const ONE_TIME_PENDING_TIMEOUT_TITLE = "Das dauert gerade länger als erwartet"
+const ONE_TIME_PENDING_TIMEOUT_BODY =
+  "Deine Zahlung ist sicher erfasst – du wirst nicht erneut belastet. Wir senden dir eine E-Mail, sobald dein Zugang bereit ist."
+const ONE_TIME_PENDING_SUPPORT_BODY =
+  "Deine Zahlung ist sicher erfasst. Bitte kontaktiere uns, damit wir deinen Zugang manuell prüfen können."
+const ONE_TIME_RETURN_SUPPORT_BODY =
+  "Wir konnten deinen Zugang nicht automatisch prüfen. Unser Support hilft dir weiter. Bitte bewahre deine Bestellbestätigung auf."
+const ONE_TIME_RETURN_REVOKED_BODY =
+  "Für diese Bestellung kann kein Zugang geöffnet werden. Wenn dir etwas unklar ist, kontaktiere bitte unseren Support."
 
 export function WelcomeClient({
   analyticsId: providedAnalyticsId,
@@ -51,6 +69,7 @@ export function WelcomeClient({
   sessionId,
   activationSource,
   mode = "activation",
+  oneTimeReturnState,
   activationRedirectTo = "/onboarding",
 }: WelcomeClientProps) {
   const router = useRouter()
@@ -60,9 +79,14 @@ export function WelcomeClient({
     () => activationRequestBody(activationSource, activationRedirectTo),
     [activationRedirectTo, activationSource],
   )
-  const paypalActivationToken =
-    activationSource.provider === "paypal" ? activationSource.token : null
   const isOneTimePurchase = activationSource.purchaseKind === "one_time"
+  const paypalActivationToken =
+    !isOneTimePurchase && activationSource.provider === "paypal" ? activationSource.token : null
+  const oneTimeActivationStatusUrl = useMemo(
+    () => oneTimeActivationStatusRequestUrl(activationSource),
+    [activationSource],
+  )
+  const oneTimePollingBlockedByReturnState = oneTimeReturnState === "revoked"
   const showProviderSubscriberEmail =
     Boolean(providerSubscriberEmail?.trim()) &&
     providerSubscriberEmail?.trim().toLowerCase() !== email?.trim().toLowerCase()
@@ -73,6 +97,10 @@ export function WelcomeClient({
   const [confirmPassword, setConfirmPassword] = useState("")
   const [message, setMessage] = useState<string | null>(null)
   const [highlightMagicLink, setHighlightMagicLink] = useState(false)
+  const [oneTimePendingState, setOneTimePendingState] = useState<OneTimePendingState>(
+    oneTimeReturnState ?? "pending",
+  )
+  const [oneTimePendingCheck, setOneTimePendingCheck] = useState(0)
 
   useEffect(() => {
     if (mode !== "pending" || !paypalActivationToken) return
@@ -158,6 +186,116 @@ export function WelcomeClient({
       if (timer) clearTimeout(timer)
     }
   }, [mode, paypalActivationToken])
+
+  useEffect(() => {
+    if (
+      mode !== "pending" ||
+      !isOneTimePurchase ||
+      !oneTimeActivationStatusUrl ||
+      oneTimePollingBlockedByReturnState
+    )
+      return
+
+    const statusUrl = oneTimeActivationStatusUrl
+    let cancelled = false
+    let attempts = 0
+    let timer: ReturnType<typeof setTimeout> | null = null
+
+    setMessage(null)
+    setOneTimePendingState("pending")
+
+    async function pollActivation() {
+      attempts += 1
+      try {
+        const response = await fetch(statusUrl)
+        const body = await response.json().catch(() => ({}))
+        if (cancelled) return
+        const status = normalizeOneTimeActivationStatus(body.status)
+
+        if (status === "active" && response.ok) {
+          addCheckoutBreadcrumb({
+            provider: activationSource.provider,
+            stage: "checkout_return",
+            source: "welcome",
+            status: "active",
+          })
+          window.location.reload()
+          return
+        }
+        if (status === "paid_pending" || status === "pending") {
+          scheduleNextOneTimeActivationPoll()
+          return
+        }
+        if (status === "revoked") {
+          setOneTimePendingState("revoked")
+          return
+        }
+        if (isPermanentOneTimeActivationStatus(status)) {
+          setOneTimePendingState("support_needed")
+          return
+        }
+        if (response.ok) {
+          setOneTimePendingState("support_needed")
+          return
+        }
+
+        if (response.status >= 500) {
+          scheduleNextOneTimeActivationPoll()
+          return
+        }
+
+        setOneTimePendingState("support_needed")
+        if (attempts === 1) {
+          captureCheckoutException(new Error("One-time activation status poll failed"), {
+            provider: activationSource.provider,
+            stage: "checkout_return",
+            source: "welcome",
+            status: response.status,
+          })
+        }
+        return
+      } catch (err) {
+        if (cancelled) return
+        if (attempts === 1) {
+          captureCheckoutException(err, {
+            provider: activationSource.provider,
+            stage: "checkout_return",
+            source: "welcome",
+            reason: "network_error",
+          })
+        }
+        scheduleNextOneTimeActivationPoll()
+      }
+    }
+
+    function scheduleNextOneTimeActivationPoll() {
+      if (cancelled) return
+      if (attempts < 15) {
+        timer = setTimeout(pollActivation, 2000)
+        return
+      }
+      setOneTimePendingState("timed_out")
+      captureCheckoutException(new Error("One-time activation polling timed out"), {
+        provider: activationSource.provider,
+        stage: "checkout_return",
+        source: "welcome",
+        reason: "polling_timeout",
+      })
+    }
+
+    timer = setTimeout(pollActivation, 1200)
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [
+    activationSource.provider,
+    isOneTimePurchase,
+    mode,
+    oneTimeActivationStatusUrl,
+    oneTimePendingCheck,
+    oneTimePollingBlockedByReturnState,
+  ])
 
   async function handleCreatePassword(e: FormEvent) {
     e.preventDefault()
@@ -251,6 +389,7 @@ export function WelcomeClient({
       <>
         <CheckoutReturnAnalytics
           purchase={purchase}
+          purchaseKind={activationSource.purchaseKind}
           redirectTo={redirectTo}
           sessionId={analyticsId}
         />
@@ -268,11 +407,101 @@ export function WelcomeClient({
   }
 
   if (mode === "pending") {
+    if (isOneTimePurchase) {
+      const isBlocked = oneTimePendingState !== "pending"
+      const canRetryOneTimeStatus = oneTimePendingState !== "revoked"
+      return (
+        <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+          <section
+            aria-live={isBlocked ? "assertive" : "polite"}
+            className="w-full max-w-md space-y-6 text-center"
+            role={isBlocked ? "alert" : "status"}
+          >
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              {isBlocked ? (
+                <Mail className="h-6 w-6 text-primary" />
+              ) : (
+                <LoaderCircle className="h-6 w-6 animate-spin text-primary motion-reduce:animate-none" />
+              )}
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-primary">
+                {oneTimePendingState === "revoked"
+                  ? "Bestellung prüfen"
+                  : oneTimePendingState === "support_needed"
+                    ? "Zugang prüfen"
+                    : "Zahlung bestätigt"}
+              </p>
+              <h1 className="font-header text-3xl text-foreground">
+                {oneTimePendingState === "timed_out"
+                  ? ONE_TIME_PENDING_TIMEOUT_TITLE
+                  : oneTimePendingState === "support_needed"
+                    ? "Wir prüfen deinen Zugang"
+                    : "Wir schließen deinen Zugang ab"}
+              </h1>
+              <p className="text-base text-muted-foreground">
+                {oneTimePendingState === "timed_out"
+                  ? ONE_TIME_PENDING_TIMEOUT_BODY
+                  : oneTimePendingState === "support_needed"
+                    ? oneTimeReturnState === "support_needed"
+                      ? ONE_TIME_RETURN_SUPPORT_BODY
+                      : ONE_TIME_PENDING_SUPPORT_BODY
+                    : oneTimePendingState === "revoked"
+                      ? ONE_TIME_RETURN_REVOKED_BODY
+                      : "Deine Zahlung ist sicher erfasst. Wir senden dir gleich die Bestätigung und öffnen anschließend deinen persönlichen Haarplan."}
+              </p>
+            </div>
+
+            {!isBlocked ? (
+              <ol className="mx-auto w-full max-w-xs space-y-3 text-left text-sm text-muted-foreground">
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 shrink-0 text-primary" />
+                  Zahlung bestätigt
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-primary text-xs text-primary">
+                    2
+                  </span>
+                  Bestätigung wird gesendet
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-muted-foreground/40 text-xs">
+                    3
+                  </span>
+                  Zugang wird geöffnet
+                </li>
+              </ol>
+            ) : null}
+
+            {isBlocked ? (
+              <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+                {canRetryOneTimeStatus ? (
+                  <button
+                    type="button"
+                    onClick={() => setOneTimePendingCheck((current) => current + 1)}
+                    className="inline-flex min-h-11 items-center justify-center rounded-lg border border-primary bg-transparent px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+                  >
+                    Status erneut prüfen
+                  </button>
+                ) : null}
+                <a
+                  href="/kontakt"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-card px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  Support kontaktieren
+                </a>
+              </div>
+            ) : null}
+          </section>
+        </main>
+      )
+    }
+
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
-        <div className="w-full max-w-md space-y-5 text-center">
+        <div aria-live="polite" className="w-full max-w-md space-y-5 text-center" role="status">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-            <LoaderCircle className="h-6 w-6 animate-spin text-primary" />
+            <LoaderCircle className="h-6 w-6 animate-spin text-primary motion-reduce:animate-none" />
           </div>
           <div className="space-y-2">
             <h1 className="font-header text-3xl text-foreground">Wir aktivieren dein Abo...</h1>
@@ -311,7 +540,11 @@ export function WelcomeClient({
   if (state.view === "sent") {
     return (
       <>
-        <CheckoutReturnAnalytics purchase={purchase} sessionId={analyticsId} />
+        <CheckoutReturnAnalytics
+          purchase={purchase}
+          purchaseKind={activationSource.purchaseKind}
+          sessionId={analyticsId}
+        />
         <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
@@ -332,7 +565,11 @@ export function WelcomeClient({
 
   return (
     <>
-      <CheckoutReturnAnalytics purchase={purchase} sessionId={analyticsId} />
+      <CheckoutReturnAnalytics
+        purchase={purchase}
+        purchaseKind={activationSource.purchaseKind}
+        sessionId={analyticsId}
+      />
       <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
         <div className="w-full max-w-4xl space-y-6">
           <div className="space-y-4 text-center">
@@ -497,6 +734,17 @@ function activationRequestBody(
   return { session_id: source.sessionId, next }
 }
 
+function oneTimeActivationStatusRequestUrl(source: CheckoutActivationSource): string | null {
+  if (source.purchaseKind !== "one_time") return null
+  const params = new URLSearchParams({ provider: source.provider })
+  if (source.provider === "paypal") {
+    params.set("token", source.token)
+  } else {
+    params.set("session_id", source.sessionId)
+  }
+  return `/api/billing/one-time-activation-status?${params.toString()}`
+}
+
 function activationSourceId(source: CheckoutActivationSource): string {
   if (source.provider === "paypal") return "paypal:checkout"
   return source.sessionId
@@ -526,4 +774,22 @@ function normalizeError(err: unknown): string {
   if (err instanceof TypeError && err.message.toLowerCase().includes("fetch")) return NETWORK_ERROR
   if (err instanceof Error) return err.message
   return UNKNOWN_ERROR
+}
+
+function normalizeOneTimeActivationStatus(value: unknown): OneTimeActivationStatus | null {
+  if (
+    value === "active" ||
+    value === "paid_pending" ||
+    value === "pending" ||
+    value === "revoked" ||
+    value === "failed_permanent" ||
+    value === "permanent_failure"
+  ) {
+    return value
+  }
+  return null
+}
+
+function isPermanentOneTimeActivationStatus(status: OneTimeActivationStatus | null): boolean {
+  return status === "failed_permanent" || status === "permanent_failure"
 }

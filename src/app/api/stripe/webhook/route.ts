@@ -24,8 +24,8 @@ import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import { linkQuizToProfile as defaultLinkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import type Stripe from "stripe"
 import {
-  amountFromMinorUnits,
   billingAnalyticsEventKey,
+  amountFromMinorUnits,
   normalizedCurrency,
   planIdForInterval,
 } from "@/lib/billing/analytics-events"
@@ -293,7 +293,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         session.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND &&
         session.mode === "payment"
       ) {
-        const activation = await handleOneTimeCheckoutSessionCompleted(session, {
+        await handleOneTimeCheckoutSessionCompleted(session, {
           supabase,
           stripe,
           premiumTierId: "",
@@ -301,48 +301,6 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
           profileLinkMode: "defer",
           defer,
         })
-        if (recordBillingAnalytics) {
-          const destinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
-          if (
-            isFunnelAttributionEnabled() &&
-            isBillingFunnelDeliveryEnabled() &&
-            session.metadata?.funnel_session_id &&
-            session.metadata?.funnel_package_key
-          ) {
-            destinations.push("funnel")
-          }
-          await recordStripeBillingAnalytics(
-            supabase,
-            defer,
-            {
-              eventKey: billingAnalyticsEventKey({
-                provider: "stripe",
-                eventName: "purchase_completed",
-                sourceObjectId: session.id,
-              }),
-              eventName: "purchase_completed",
-              userId: activation.userId,
-              providerCustomerId: activation.stripeCustomerId ?? null,
-              providerSubscriptionId: null,
-              sourceEventId: event.id,
-              sourceObjectId: session.id,
-              occurredAt: timestamp,
-              payload: {
-                checkout_session_id: session.id,
-                checkout_reference: session.id,
-                meta_event_id: session.id,
-                value: 29.99,
-                currency: "EUR",
-                interval: "one_time",
-                plan_id: PERSONAL_PLAN_ONCE_KIND,
-                has_paid_access: true,
-                funnel_session_id: session.metadata?.funnel_session_id,
-                funnel_package_key: session.metadata?.funnel_package_key,
-              },
-            },
-            destinations,
-          )
-        }
         break
       }
       let activation
@@ -696,7 +654,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       const charge = event.data.object as unknown as Stripe.Charge
       const oneTimeRefund = await handleOneTimeChargeRefunded(charge, { supabase })
       if (oneTimeRefund) {
-        if (recordBillingAnalytics)
+        if (recordBillingAnalytics && oneTimeRefund.purchase.user_id)
           await recordStripeBillingAnalytics(supabase, defer, {
             eventKey: billingAnalyticsEventKey({
               provider: "stripe",

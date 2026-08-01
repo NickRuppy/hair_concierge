@@ -1,17 +1,24 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { NextRequest } from "next/server"
 import {
+  canonicalOneTimeClaimMetadata,
+  canonicalOneTimeClaimMetadataPatch,
   classifyOneTimeStripeSessionRecovery,
   hashPreparedCheckoutToken,
   hasMatchingPreparedCheckoutClaim,
   isOfferCheckoutPrewarmEnabled,
   isOfferElementsCheckoutEnabled,
+  hasCanonicalOneTimeClaimMetadata,
+  POST,
   preparedCheckoutClaimIdempotencyKey,
   preparedCheckoutExpiresAt,
   preparedCheckoutUnavailablePayload,
   reusableOneTimeStripeSessionClientSecret,
+  resolveOneTimeConsentFunnelContext,
   shouldRecordFunnelForCheckoutAction,
   StripeCheckoutSessionRequestSchema,
+  validatePreparedCheckoutCanonicalMetadataRepair,
   validatePreparedCheckoutClaim,
 } from "../src/app/api/stripe/create-checkout-session/route"
 
@@ -66,7 +73,7 @@ test("accepts the allowlisted Elements presentation only for quiz-result offers"
   assert.equal(parsed.success, true)
 })
 
-test("accepts only the narrow one-time personal-plan request contract", () => {
+test("accepts only one-time prepare/claim and rejects direct creation or a missing lead", () => {
   const oneTimeBase = {
     purchaseKind: "personal_plan_once" as const,
     leadId: "8d9675fe-f955-46a2-84dc-0ef5e94009d1",
@@ -74,7 +81,7 @@ test("accepts only the narrow one-time personal-plan request contract", () => {
     source: "quiz_result_offer" as const,
     presentation: "offer_overlay_elements" as const,
   }
-  const validOneTime = StripeCheckoutSessionRequestSchema.safeParse({
+  const unsupportedDirectCreate = StripeCheckoutSessionRequestSchema.safeParse({
     ...oneTimeBase,
     checkoutAttemptId,
     funnelEventId,
@@ -128,14 +135,45 @@ test("accepts only the narrow one-time personal-plan request contract", () => {
     funnelEventId,
     amount: 1,
   })
+  const preparationWithoutLead = StripeCheckoutSessionRequestSchema.safeParse({
+    ...oneTimeBase,
+    leadId: undefined,
+    action: "prepare",
+    preparationId,
+  })
 
-  assert.equal(validOneTime.success, true)
+  assert.equal(unsupportedDirectCreate.success, false)
   assert.equal(validPreparation.success, true)
   assert.equal(validClaim.success, true)
   assert.equal(claimWithoutConsent.success, false)
   assert.equal(withSubscriptionInterval.success, false)
   assert.equal(withoutAttempt.success, false)
   assert.equal(browserAmount.success, false)
+  assert.equal(preparationWithoutLead.success, false)
+})
+
+test("unsupported one-time direct creation stops at the request boundary", async () => {
+  const response = await POST(
+    new NextRequest("https://chaarlie.de/api/stripe/create-checkout-session", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        action: "create",
+        purchaseKind: "personal_plan_once",
+        leadId: validRequest.leadId,
+        funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+        source: "quiz_result_offer",
+        presentation: "offer_overlay_elements",
+        checkoutAttemptId,
+        funnelEventId,
+        consentAccepted: true,
+        consentCopyVersion: "2026-07-31",
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 400)
+  assert.deepEqual(await response.json(), { error: "bad request" })
 })
 
 test("rejects generic UI modes and non-offer Elements presentation requests", () => {
@@ -414,5 +452,191 @@ test("claim updates are serialized by preparation id and only accept returned ma
       funnelEventId,
     ),
     false,
+  )
+})
+
+test("one-time prepared claims use the accepted consent's funnel session over a later cookie", () => {
+  const consentSessionId = "7a9675fe-f955-46a2-84dc-0ef5e94009d2"
+  const cookieSessionId = "1a9675fe-f955-46a2-84dc-0ef5e94009d2"
+  const context = resolveOneTimeConsentFunnelContext({
+    consentId: "consent-1",
+    expectedLeadId: validRequest.leadId,
+    expectedFunnelSessionId: consentSessionId,
+    consent: {
+      id: "consent-1",
+      lead_id: validRequest.leadId,
+      funnel_session_id: consentSessionId,
+      product_kind: "personal_plan_once",
+      offer_variant: "personal-plan-one-time-v1",
+    },
+    funnelSession: {
+      id: consentSessionId,
+      lead_id: validRequest.leadId,
+      visitor_id: "9a9675fe-f955-46a2-84dc-0ef5e94009d2",
+      package_key: "default_organic",
+      offer_variant: "personal-plan-one-time-v1",
+      first_seen_at: "2026-07-31T10:00:00.000Z",
+    },
+  })
+
+  assert.deepEqual(context, {
+    visitorId: "9a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    sessionId: consentSessionId,
+    packageKey: "default_organic",
+    issuedAt: Date.parse("2026-07-31T10:00:00.000Z"),
+    leadId: validRequest.leadId,
+    offerVariant: "personal-plan-one-time-v1",
+  })
+  assert.notEqual(context?.sessionId, cookieSessionId)
+  assert.deepEqual(canonicalOneTimeClaimMetadata(context!), {
+    lead_id: validRequest.leadId,
+    funnel_session_id: consentSessionId,
+    funnel_package_key: "default_organic",
+    offer_variant: "personal-plan-one-time-v1",
+  })
+  assert.equal(
+    hasCanonicalOneTimeClaimMetadata(
+      {
+        lead_id: validRequest.leadId,
+        funnel_session_id: consentSessionId,
+        funnel_package_key: "default_organic",
+        offer_variant: "personal-plan-one-time-v1",
+      },
+      context!,
+    ),
+    true,
+  )
+  assert.equal(
+    hasCanonicalOneTimeClaimMetadata(
+      {
+        lead_id: validRequest.leadId,
+        funnel_session_id: cookieSessionId,
+        funnel_package_key: "default_organic",
+        offer_variant: "personal-plan-one-time-v1",
+      },
+      context!,
+    ),
+    false,
+  )
+  assert.equal(
+    resolveOneTimeConsentFunnelContext({
+      consentId: "consent-1",
+      expectedLeadId: validRequest.leadId,
+      expectedFunnelSessionId: consentSessionId,
+      consent: {
+        id: "consent-1",
+        lead_id: validRequest.leadId,
+        funnel_session_id: cookieSessionId,
+        product_kind: "personal_plan_once",
+        offer_variant: "personal-plan-one-time-v1",
+      },
+      funnelSession: {
+        id: cookieSessionId,
+        lead_id: validRequest.leadId,
+        visitor_id: "9a9675fe-f955-46a2-84dc-0ef5e94009d2",
+        package_key: "default_organic",
+        offer_variant: "personal-plan-one-time-v1",
+        first_seen_at: "2026-07-31T10:00:00.000Z",
+      },
+    }),
+    null,
+  )
+})
+
+test("already-complete one-time prepared claims repair only missing canonical consent metadata", () => {
+  const consentId = "0f762541-b540-4d26-8328-28d79737d39c"
+  const consentSessionId = "7a9675fe-f955-46a2-84dc-0ef5e94009d2"
+  const context = {
+    visitorId: "9a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    sessionId: consentSessionId,
+    packageKey: "default_organic",
+    issuedAt: Date.parse("2026-07-31T10:00:00.000Z"),
+    leadId: validRequest.leadId,
+    offerVariant: "personal-plan-one-time-v1" as const,
+  }
+  const claimedMetadata = {
+    ...preparedClaimInput({
+      interval: "one_time",
+      priceId: "price_once",
+      lineItemPriceId: "price_once",
+    }).metadata,
+    checkout_preparation_interval: "one_time",
+    checkout_preparation_price_id: "price_once",
+    checkout_preparation_status: "claimed",
+    checkout_attempt_id: checkoutAttemptId,
+    checkout_funnel_event_id: funnelEventId,
+    personal_plan_once_consent_id: consentId,
+  }
+  const expectedPatch = {
+    lead_id: validRequest.leadId,
+    funnel_session_id: consentSessionId,
+    funnel_package_key: "default_organic",
+    offer_variant: "personal-plan-one-time-v1",
+  }
+
+  assert.deepEqual(canonicalOneTimeClaimMetadataPatch(claimedMetadata, context), expectedPatch)
+  assert.deepEqual(
+    validatePreparedCheckoutCanonicalMetadataRepair({
+      metadata: claimedMetadata,
+      sessionStatus: "complete",
+      lineItemPriceId: "price_once",
+      preparationId,
+      preparationToken,
+      interval: "one_time",
+      priceId: "price_once",
+      source: "quiz_result_offer",
+      presentation: "offer_overlay_elements",
+      identityHash: "identity-hash",
+      checkoutAttemptId,
+      funnelEventId,
+      oneTimeConsentId: consentId,
+      context,
+    }),
+    {
+      ok: true,
+      patch: expectedPatch,
+    },
+  )
+  assert.deepEqual(
+    validatePreparedCheckoutCanonicalMetadataRepair({
+      metadata: { ...claimedMetadata, lead_id: "9d9675fe-f955-46a2-84dc-0ef5e94009d9" },
+      sessionStatus: "complete",
+      lineItemPriceId: "price_once",
+      preparationId,
+      preparationToken,
+      interval: "one_time",
+      priceId: "price_once",
+      source: "quiz_result_offer",
+      presentation: "offer_overlay_elements",
+      identityHash: "identity-hash",
+      checkoutAttemptId,
+      funnelEventId,
+      oneTimeConsentId: consentId,
+      context,
+    }),
+    {
+      ok: false,
+    },
+  )
+  assert.deepEqual(
+    validatePreparedCheckoutCanonicalMetadataRepair({
+      metadata: claimedMetadata,
+      sessionStatus: "open",
+      lineItemPriceId: "price_once",
+      preparationId,
+      preparationToken,
+      interval: "one_time",
+      priceId: "price_once",
+      source: "quiz_result_offer",
+      presentation: "offer_overlay_elements",
+      identityHash: "identity-hash",
+      checkoutAttemptId,
+      funnelEventId,
+      oneTimeConsentId: consentId,
+      context,
+    }),
+    {
+      ok: false,
+    },
   )
 })

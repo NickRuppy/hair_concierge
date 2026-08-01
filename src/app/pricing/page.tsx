@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation"
 
+import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
+import type { OneTimeAccessState } from "@/lib/billing/types"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import { createClient } from "@/lib/supabase/server"
 
@@ -23,8 +25,12 @@ export default async function PricingPage({
   if (!user) redirect("/quiz")
 
   let active: boolean
+  let oneTimeAccessState: OneTimeAccessState
   try {
-    active = await hasCurrentAppAccess(supabase, { userId: user.id, email: user.email })
+    ;[active, oneTimeAccessState] = await Promise.all([
+      hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }),
+      resolveOneTimeAccessState(supabase, user.id),
+    ])
   } catch (error) {
     console.warn("[pricing] app access check failed", error)
     const params = new URLSearchParams({ reason: "access_check_unavailable" })
@@ -33,6 +39,7 @@ export default async function PricingPage({
   }
 
   if (active) redirect("/profile#mitgliedschaft")
+  if (oneTimeAccessState === "paid_pending") redirect("/plan-bereit")
 
   const params = new URLSearchParams({ reason: "expired" })
   if (sp.interval === "month" || sp.interval === "quarter" || sp.interval === "year") {

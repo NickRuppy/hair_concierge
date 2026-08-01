@@ -150,8 +150,10 @@ test("offer and profile reactivation pricing views keep funnel attribution with 
   )
 })
 
-test("checkout return only emits browser Subscribe when it can share Stripe's event id", () => {
+test("checkout return emits browser Subscribe only for subscription Stripe returns", async () => {
   const source = read("src/app/welcome/checkout-return-analytics.tsx")
+  const { shouldTrackCheckoutReturnSubscriptionStarted } =
+    await import("@/app/welcome/checkout-return-analytics")
 
   assert.ok(
     source.indexOf('window.history.replaceState(window.history.state, "", "/welcome")') <
@@ -167,6 +169,12 @@ test("checkout return only emits browser Subscribe when it can share Stripe's ev
 
   assert.match(
     source,
-    /if \(!sessionId\.startsWith\("paypal:"\)\) \{[\s\S]*trackAppEvent\("subscription_started", \{[\s\S]*checkoutSessionId: sessionId/,
+    /if \(shouldTrackCheckoutReturnSubscriptionStarted\(\{ purchaseKind, sessionId \}\)\) \{[\s\S]*trackAppEvent\("subscription_started", \{[\s\S]*checkoutSessionId: sessionId/,
   )
+  assert.equal(
+    shouldTrackCheckoutReturnSubscriptionStarted({ purchaseKind: "one_time", sessionId: "cs_123" }),
+    false,
+  )
+  assert.equal(shouldTrackCheckoutReturnSubscriptionStarted({ sessionId: "cs_123" }), true)
+  assert.equal(shouldTrackCheckoutReturnSubscriptionStarted({ sessionId: "paypal:token" }), false)
 })
