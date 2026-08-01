@@ -14,6 +14,10 @@ const paypalSource = readFileSync(
   new URL("../src/components/checkout/paypal-one-time-button.tsx", import.meta.url),
   "utf8",
 )
+const paypalOrderRouteSource = readFileSync(
+  new URL("../src/app/api/paypal/create-order-intent/route.ts", import.meta.url),
+  "utf8",
+)
 const offerLabSource = readFileSync(
   new URL("../src/app/labs/offer-page/page.tsx", import.meta.url),
   "utf8",
@@ -201,6 +205,10 @@ test("one-time PayPal reports visible payment failures once and excludes consent
   assert.match(createOrderSource, /boundary: "provider_session"/)
   assert.match(
     createOrderSource,
+    /setError\("PayPal-Zahlung konnte nicht gestartet werden\. Bitte versuche es erneut\."\)[\s\S]*suppressNextPayPalErrorRef\.current = true[\s\S]*throw new Error\("PayPal order creation failed"\)/,
+  )
+  assert.match(
+    createOrderSource,
     /status: response\.ok \? "order_payload_incomplete" : response\.status/,
   )
 
@@ -225,6 +233,15 @@ test("one-time PayPal reports visible payment failures once and excludes consent
     /if \(suppressNextPayPalErrorRef\.current\) \{[\s\S]*suppressNextPayPalErrorRef\.current = false[\s\S]*return/,
   )
   assert.match(sdkErrorSource, /status: "paypal_button_error"/)
+})
+
+test("one-time PayPal attribution uses the authorized result session, not browser cookies", () => {
+  assert.match(
+    paypalOrderRouteSource,
+    /const funnelContext = \{[\s\S]*visitorId: authorization\.visitorId,[\s\S]*sessionId: authorization\.sessionId,[\s\S]*packageKey: authorization\.packageKey,[\s\S]*issuedAt: authorization\.issuedAt/,
+  )
+  assert.doesNotMatch(paypalOrderRouteSource, /resolveFunnelCookieContext/)
+  assert.doesNotMatch(paypalOrderRouteSource, /resolveFunnelContextForLead/)
 })
 
 test("one-time checkout marks a real first interaction and routes its nested close through policy", () => {

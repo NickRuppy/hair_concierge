@@ -136,6 +136,7 @@ export function PayPalOneTimeButton({
               typeof body.token !== "string"
             ) {
               setBusy(false)
+              setError("PayPal-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.")
               suppressNextPayPalErrorRef.current = true
               capturePayPalOneTimeCustomerPaymentError({
                 boundary: "provider_session",

@@ -4,7 +4,7 @@ import { z } from "zod"
 
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
-import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
+import { FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import { assertPersonalPlanOneTimeCheckoutAuthorized } from "@/lib/funnel/server"
 import {
   createPersonalPlanOneTimeCheckoutConsent,
@@ -13,12 +13,7 @@ import {
   PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
   type PersonalPlanOneTimeCheckoutConsentRow,
 } from "@/lib/billing/personal-plan-one-time-consents"
-import {
-  recordFunnelEvent,
-  resolveFunnelCookieContext,
-  resolveFunnelContextForLead,
-  resolvePendingFunnelTouchValue,
-} from "@/lib/funnel/server"
+import { recordFunnelEvent, resolvePendingFunnelTouchValue } from "@/lib/funnel/server"
 import {
   bindPayPalOrderIntentToOrder,
   createPayPalOrderIntent,
@@ -90,15 +85,16 @@ export async function POST(request: Request) {
   if (emailConflict) return emailConflict
 
   const cookieStore = await cookies()
-  const funnelContext =
-    (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
-    (await resolveFunnelContextForLead(leadId))
-  const funnelTouch = funnelContext
-    ? await resolvePendingFunnelTouchValue(
-        cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
-        funnelContext,
-      )
-    : null
+  const funnelContext = {
+    visitorId: authorization.visitorId,
+    sessionId: authorization.sessionId,
+    packageKey: authorization.packageKey,
+    issuedAt: authorization.issuedAt,
+  }
+  const funnelTouch = await resolvePendingFunnelTouchValue(
+    cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+    funnelContext,
+  )
   let consent = await findPersonalPlanOneTimeConsentByLeadSession(admin, {
     leadId: authorization.leadId,
     funnelSessionId: authorization.sessionId,
@@ -135,12 +131,8 @@ export async function POST(request: Request) {
       checkout_attempt_id: parsed.data.checkoutAttemptId,
       funnel_event_id: parsed.data.funnelEventId,
       is_internal_test: authorization.isInternalTest,
-      ...(funnelContext
-        ? {
-            funnel_session_id: funnelContext.sessionId,
-            funnel_package_key: funnelContext.packageKey,
-          }
-        : {}),
+      funnel_session_id: funnelContext.sessionId,
+      funnel_package_key: funnelContext.packageKey,
     },
   })
   const orderId = intent.provider_order_id ?? (await createProviderPayPalOrder(intent))
@@ -151,32 +143,31 @@ export async function POST(request: Request) {
     })
   }
 
-  const funnelRecorded =
-    funnelContext && parsed.data.funnelEventId
-      ? await recordFunnelEvent({
-          context: funnelContext,
-          eventId: parsed.data.funnelEventId,
-          milestone: "checkout_started",
-          leadId,
-          userId: user?.id,
-          checkoutProvider: "paypal",
-          checkoutReference: orderId,
-          touch: funnelTouch,
-          properties: {
-            source: "quiz_result_offer",
-            interval: "one_time",
-            checkout_attempt_id: parsed.data.checkoutAttemptId,
-            currency: PERSONAL_PLAN_ONCE_PRODUCT.currency,
-            plan_id: PERSONAL_PLAN_ONCE_PRODUCT.analyticsId,
-            value: PERSONAL_PLAN_ONCE_PRODUCT.amount,
-          },
+  const funnelRecorded = parsed.data.funnelEventId
+    ? await recordFunnelEvent({
+        context: funnelContext,
+        eventId: parsed.data.funnelEventId,
+        milestone: "checkout_started",
+        leadId,
+        userId: user?.id,
+        checkoutProvider: "paypal",
+        checkoutReference: orderId,
+        touch: funnelTouch,
+        properties: {
+          source: "quiz_result_offer",
+          interval: "one_time",
+          checkout_attempt_id: parsed.data.checkoutAttemptId,
+          currency: PERSONAL_PLAN_ONCE_PRODUCT.currency,
+          plan_id: PERSONAL_PLAN_ONCE_PRODUCT.analyticsId,
+          value: PERSONAL_PLAN_ONCE_PRODUCT.amount,
+        },
+      })
+        .then(() => true)
+        .catch((error) => {
+          console.warn("[funnel] PayPal one-time checkout tracking failed", error)
+          return false
         })
-          .then(() => true)
-          .catch((error) => {
-            console.warn("[funnel] PayPal one-time checkout tracking failed", error)
-            return false
-          })
-      : false
+    : false
 
   const response = NextResponse.json({ token: intent.token, orderId })
   if (funnelTouch && funnelRecorded) {
