@@ -78,7 +78,7 @@ test("payment reporter refuses email-like values in internal identity fields", (
   assert.equal("user_id" in payload.context, false)
   assert.equal("lead_id" in payload.context, false)
   assert.equal("checkout_attempt_id" in payload.context, false)
-  assert.equal(JSON.stringify(payload).includes("example.com"), false)
+  assert.doesNotMatch(JSON.stringify(payload), /@/)
 })
 
 test("integrity findings add only an opaque attempt or caller-supplied digest to the fingerprint", () => {
