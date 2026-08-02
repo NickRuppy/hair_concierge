@@ -54,6 +54,7 @@ export interface PaymentIntegrityLocalState {
   billingSucceeded?: boolean
   activeEntitlement?: boolean
   paidOneTimePurchase?: boolean
+  isInternalTest?: boolean
 }
 
 export interface PaymentIntegrityLocalAdapter {
@@ -330,10 +331,14 @@ export async function reconcilePaymentIntegrity(
           return
         }
 
-        counters.candidatesChecked += 1
-        if (normalized.candidate.outcome === "failed") counters.providerFailures += 1
+        const evaluatedCandidate = localState.isInternalTest
+          ? { ...normalized.candidate, isInternalTest: true }
+          : normalized.candidate
 
-        for (const finding of evaluateCandidate(normalized.candidate, localState)) {
+        counters.candidatesChecked += 1
+        if (evaluatedCandidate.outcome === "failed") counters.providerFailures += 1
+
+        for (const finding of evaluateCandidate(evaluatedCandidate, localState)) {
           await recordFinding(finding)
         }
       },

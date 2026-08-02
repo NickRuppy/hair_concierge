@@ -40,6 +40,7 @@ type ProviderReferenceHint = {
   providerSubscriptionId?: string
   providerTransactionId?: string
   providerOrderId?: string
+  funnelSessionId?: string
   userId?: string | null
   leadId?: string | null
 }
@@ -85,7 +86,17 @@ export function createPaymentIntegrityRunner(
     hint: Omit<ProviderReferenceHint, "provider" | "commerceKind"> = {},
   ): string => {
     const digest = createProviderReferenceDigest(digestSecret, provider, commerceKind, reference)
-    referenceHints.set(digest, { provider, commerceKind, ...hint })
+    const existing = referenceHints.get(digest)
+    referenceHints.set(digest, {
+      provider,
+      commerceKind,
+      providerSubscriptionId: hint.providerSubscriptionId ?? existing?.providerSubscriptionId,
+      providerTransactionId: hint.providerTransactionId ?? existing?.providerTransactionId,
+      providerOrderId: hint.providerOrderId ?? existing?.providerOrderId,
+      funnelSessionId: hint.funnelSessionId ?? existing?.funnelSessionId,
+      userId: hint.userId ?? existing?.userId,
+      leadId: hint.leadId ?? existing?.leadId,
+    })
     return digest
   }
 
@@ -316,6 +327,7 @@ class StripePaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
       safeInternalIdentifier(metadata.checkout_attempt)
     const leadId = safeInternalIdentifier(metadata.lead_id)
     const userId = safeInternalIdentifier(metadata.user_id)
+    const funnelSessionId = safeInternalIdentifier(metadata.funnel_session_id)
     const internalTest = isInternalTestMetadata(metadata)
     const occurredAt = timestampSecondsToDate(session.created)
 
@@ -332,7 +344,7 @@ class StripePaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
           "stripe",
           "subscription",
           subscriptionId,
-          { providerSubscriptionId: subscriptionId, userId, leadId },
+          { providerSubscriptionId: subscriptionId, funnelSessionId, userId, leadId },
         ),
         method: stripeMethodFromPaymentIntent(paymentIntent),
         live: this.deps.paymentRuntime.stripeLive,
@@ -361,6 +373,7 @@ class StripePaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
           {
             providerTransactionId: paymentIntentId,
             providerOrderId: sessionId,
+            funnelSessionId,
             userId,
             leadId,
           },
@@ -396,6 +409,7 @@ class StripePaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
         subscriptionId,
         {
           providerSubscriptionId: subscriptionId,
+          funnelSessionId: safeInternalIdentifier(metadata.funnel_session_id),
           userId: safeInternalIdentifier(metadata.user_id),
           leadId: safeInternalIdentifier(metadata.lead_id),
         },
@@ -705,8 +719,9 @@ class SupabasePaymentIntegrityLocalAdapter implements PaymentIntegrityLocalAdapt
     candidate: PaymentIntegrityCandidate,
     hint: ProviderReferenceHint | undefined,
   ): Promise<PaymentIntegrityLocalState> {
+    const isInternalTest = await this.isInternalFunnelSession(hint)
     if (!hint?.providerSubscriptionId) {
-      return { billingSucceeded: false, activeEntitlement: false }
+      return { billingSucceeded: false, activeEntitlement: false, isInternalTest }
     }
 
     const { data, error } = await this.deps.supabase
@@ -720,6 +735,7 @@ class SupabasePaymentIntegrityLocalAdapter implements PaymentIntegrityLocalAdapt
     const row = (data as Record<string, unknown> | null) ?? null
     return {
       billingSucceeded: Boolean(row),
+      isInternalTest,
       activeEntitlement: Boolean(
         row &&
         isActiveLocalEntitlement(
@@ -735,8 +751,9 @@ class SupabasePaymentIntegrityLocalAdapter implements PaymentIntegrityLocalAdapt
   private async getOneTimeState(
     hint: ProviderReferenceHint | undefined,
   ): Promise<PaymentIntegrityLocalState> {
+    const isInternalTest = await this.isInternalFunnelSession(hint)
     if (!hint?.providerTransactionId && !hint?.providerOrderId) {
-      return { paidOneTimePurchase: false }
+      return { paidOneTimePurchase: false, isInternalTest }
     }
 
     const byTransaction = hint.providerTransactionId
@@ -751,7 +768,21 @@ class SupabasePaymentIntegrityLocalAdapter implements PaymentIntegrityLocalAdapt
       paidOneTimePurchase:
         isTerminalOneTimePurchaseStatus(byTransaction?.status) ||
         isTerminalOneTimePurchaseStatus(byOrder?.status),
+      isInternalTest,
     }
+  }
+
+  private async isInternalFunnelSession(hint: ProviderReferenceHint | undefined): Promise<boolean> {
+    if (!hint?.funnelSessionId) return false
+
+    const { data, error } = await this.deps.supabase
+      .from("funnel_sessions")
+      .select("is_internal_test")
+      .eq("id", hint.funnelSessionId)
+      .maybeSingle()
+
+    if (error) return false
+    return (data as { is_internal_test?: unknown } | null)?.is_internal_test === true
   }
 
   private async findOneTimePurchase(

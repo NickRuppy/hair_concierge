@@ -110,6 +110,26 @@ test("subscription provider success requires billing success and active entitlem
   assert.equal(result.counters.findings, 2)
 })
 
+test("local funnel classification promotes historical provider findings to internal tests", async () => {
+  const result = await reconcilePaymentIntegrity({
+    now,
+    deadlineAt,
+    providers: [
+      {
+        provider: "stripe",
+        listCandidates: async () => ({ candidates: [candidate("historical-qa")] }),
+      },
+    ],
+    local: {
+      getState: async () =>
+        localState({ billingSucceeded: false, activeEntitlement: false, isInternalTest: true }),
+    },
+  })
+
+  assert.equal(result.findings.length, 1)
+  assert.equal(result.findings[0]?.isInternalTest, true)
+})
+
 test("one-time provider success depends only on its paid purchase record", async () => {
   const result = await reconcilePaymentIntegrity({
     now,

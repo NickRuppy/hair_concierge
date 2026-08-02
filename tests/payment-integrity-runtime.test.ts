@@ -88,6 +88,54 @@ test("Stripe provider discovery paginates within the bounded window and maps str
   assert.equal(JSON.stringify(result).includes("sub_missing"), false)
 })
 
+test("Stripe invoice discovery preserves the checkout session's internal funnel hint", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_subscription_qa", "sub_subscription_qa", {
+              checkout_attempt_id: "attempt_subscription_qa",
+              funnel_session_id: "funnel_subscription_qa",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+      invoices: [
+        {
+          data: [
+            {
+              id: "in_subscription_qa",
+              status: "paid",
+              created: twoHoursAgo,
+              parent: {
+                subscription_details: { subscription: { id: "sub_subscription_qa" } },
+              },
+              metadata: {},
+            },
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      funnel_sessions: [{ id: "funnel_subscription_qa", is_internal_test: true }],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.findings.length, 2)
+  assert.equal(
+    result.findings.every((finding) => finding.isInternalTest),
+    true,
+  )
+})
+
 test("Stripe marks the provider incomplete when checkout sessions consume the cap before invoice scan", async () => {
   let invoiceCalls = 0
   const sessions = Array.from({ length: DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP }, (_, index) =>
@@ -163,6 +211,35 @@ test("Stripe one-time success maps only to a paid one-time purchase row", async 
     ["provider_success_without_paid_one_time_purchase"],
   )
   assert.equal(result.findings[0]?.checkoutAttemptId, "attempt_once_miss")
+})
+
+test("Stripe enriches missing provider QA metadata from the exact funnel session", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeOneTimeSession("cs_historical_qa", "pi_historical_qa", {
+              checkout_attempt_id: "attempt_historical_qa",
+              funnel_session_id: "funnel_historical_qa",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      funnel_sessions: [{ id: "funnel_historical_qa", is_internal_test: true }],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.findings.length, 1)
+  assert.equal(result.findings[0]?.isInternalTest, true)
 })
 
 test("Stripe one-time historical success with a terminal refunded local row is already reconciled", async () => {
@@ -1094,6 +1171,7 @@ function fakeSupabase(
     billing_one_time_purchases?: Array<Record<string, unknown>>
     paypal_checkout_intents?: Array<Record<string, unknown>>
     paypal_order_intents?: Array<Record<string, unknown>>
+    funnel_sessions?: Array<Record<string, unknown>>
     errors?: Record<string, Error>
   } = {},
 ) {
@@ -1102,6 +1180,7 @@ function fakeSupabase(
     billing_one_time_purchases: input.billing_one_time_purchases ?? [],
     paypal_checkout_intents: input.paypal_checkout_intents ?? [],
     paypal_order_intents: input.paypal_order_intents ?? [],
+    funnel_sessions: input.funnel_sessions ?? [],
   }
 
   return {
