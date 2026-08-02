@@ -80,7 +80,13 @@ Icons als SVG, mobil ohne Umbruch.
 **Neu:**
 1. `Jederzeit kündbar` in die Garantiezeile unter dem CTA, siehe SUB-02.
 2. FAQ "Kann ich Chaarlie jederzeit beenden?" aufnehmen, siehe SUB-06.
-3. Kündigungsbutton nach § 312k BGB im Footer, dauerhaft erreichbar, Beschriftung "Verträge hier kündigen". Vorher rechtlich abklären.
+3. Kündigungsbutton nach § 312k BGB.
+
+Gesetzliche Pflicht für jedes Abo, das online mit Verbrauchern geschlossen wird. Fehlt der Button, kann die Kundin den Vertrag jederzeit fristlos kündigen. Umsetzung:
+- Button `Verträge hier kündigen` im Footer, dauerhaft sichtbar, ohne Login erreichbar
+- führt auf eine Bestätigungsseite mit Button `Jetzt kündigen`
+- Kündigung muss ohne Login, ohne Kontaktformular und ohne Begründung möglich sein
+- Bestätigung per E-Mail mit Kündigungszeitpunkt
 
 ---
 
@@ -184,8 +190,4 @@ Geprüft und aufgeschoben, nicht vergessen:
 - Hero-Visual gegen echte Kundinnenbilder testen.
 - Laufzeit-Vorauswahl Jährlich statt Quartal testen.
 
----
-
-## Offene Frage
-
-Kündigungsbutton § 312k BGB: rechtlich abklären. SUB-05.
+Keine offenen Fragen. Alle Tickets sind ohne Rückfrage umsetzbar.

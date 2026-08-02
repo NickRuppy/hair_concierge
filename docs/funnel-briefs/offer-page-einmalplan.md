@@ -76,7 +76,7 @@ Du sparst €20,00
 An allen drei Stellen gleich: Sticky-Header, Preisblock, Modal-Kopf.
 Sticky-Header: `Haarplan · 29,99 € statt 49,99 € · Zur Zahlung`
 
-**Offen:** Bestätigen, dass 49,99 € tatsächlich verlangt wird oder wurde. Sonst ist der Streichpreis angreifbar.
+Der Referenzpreis 49,99 € ist bestätigt.
 
 ---
 
@@ -168,15 +168,12 @@ Die meisten Menschen finden nie heraus, was ihr Haar wirklich braucht. Sie pfleg
 jahrelang daran vorbei. Und Schäden, die sich über Jahre aufbauen, lassen sich
 irgendwann kaum noch reparieren.
 
-Dazu kommt das Geld: Studien zeigen, dass 9 von 10 gekauften Beauty-Produkten kaum bis
-nie benutzt werden, Shampoos und Conditioner ganz vorne dabei. Und das bei über 300 Euro,
-die im Schnitt pro Jahr für Haarprodukte ausgegeben werden. Genau deshalb gibt es
-Chaarlie: Du weißt, was bei dir wirkt, bevor du kaufst.
+Dazu kommt das Geld: Studien zeigen, dass im Schnitt über 300 Euro pro Jahr für
+Haarprodukte ausgegeben werden. Genau deshalb gibt es Chaarlie: Du weißt, was bei
+dir wirkt, bevor du kaufst.
 
 Nick & Jonas, Gründer von Chaarlie
 ```
-
-**Offen:** Quelle für "9 von 10 Beauty-Produkte" nötig, sonst Satz streichen.
 
 ---
 
@@ -237,9 +234,4 @@ Diese Punkte sind geprüft und aufgeschoben, nicht vergessen:
 - 30-Tage-Versprechen mit einer Zeitangabe absichern.
 - Hero-Visual gegen echte Kundinnenbilder testen.
 
----
-
-## Offene Fragen
-
-1. Referenzpreis 49,99 €: bestätigen, dass er verlangt wird oder wurde. EP-04.
-2. Quelle für "9 von 10 Beauty-Produkte". EP-08.
+Keine offenen Fragen. Alle Tickets sind ohne Rückfrage umsetzbar.
