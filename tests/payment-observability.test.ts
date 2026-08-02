@@ -209,3 +209,33 @@ test("payment reporter clears an inherited Sentry user when no safe internal id 
 
   assert.deepEqual(seenUsers, [null])
 })
+
+test("payment reporter returns the Sentry event id as a delivery receipt", () => {
+  const eventId = capturePaymentFailure(
+    {
+      signal: "payment_monitor_failed",
+      provider: "paypal",
+      boundary: "reconciliation",
+      errorFamily: "provider_unavailable",
+      commerceKind: "unknown",
+      origin: "reconciliation",
+      method: "unknown",
+      truth: "unknown",
+      live: true,
+      isInternalTest: false,
+    },
+    {
+      captureException: () => "0123456789abcdef0123456789abcdef",
+      withScope: (callback) =>
+        callback({
+          setContext: () => undefined,
+          setFingerprint: () => undefined,
+          setLevel: () => undefined,
+          setTag: () => undefined,
+          setUser: () => undefined,
+        }),
+    },
+  )
+
+  assert.equal(eventId, "0123456789abcdef0123456789abcdef")
+})

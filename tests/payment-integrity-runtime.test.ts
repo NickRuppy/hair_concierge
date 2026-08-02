@@ -517,6 +517,128 @@ test("PayPal renewal scan is bounded by local subscriptions and recent subscript
   assert.equal(JSON.stringify(result).includes("TXN-RAW-RENEWAL"), false)
 })
 
+test("PayPal renewal scan skips only explicitly excluded internal pre-cutover tests", async () => {
+  const paypalPaths: string[] = []
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: false, paypalLive: true },
+    stripe: fakeStripe(),
+    paypalRequest: async (path) => {
+      paypalPaths.push(path)
+      if (path.includes("I-LEGACY-INTERNAL")) throw new Error("legacy app resource unavailable")
+      return { transactions: [] }
+    },
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "paypal",
+          provider_subscription_id: "I-LEGACY-INTERNAL",
+          user_id: "user_legacy_internal",
+          metadata: {
+            is_internal_test: true,
+            payment_monitor_exclusion_reason: "pre_cutover_rest_app",
+          },
+          updated_at: "2026-05-28T09:35:51.654Z",
+        },
+        {
+          provider: "paypal",
+          provider_subscription_id: "I-CURRENT-CUSTOMER",
+          user_id: "user_current_customer",
+          metadata: {},
+          updated_at: "2026-08-01T09:35:51.654Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.status, "completed")
+  assert.equal(result.counters.incompleteProviders, 0)
+  assert.equal(
+    paypalPaths.some((path) => path.includes("I-LEGACY-INTERNAL")),
+    false,
+  )
+  assert.equal(
+    paypalPaths.some((path) => path.includes("I-CURRENT-CUSTOMER")),
+    true,
+  )
+})
+
+test("PayPal renewal scan fails closed for unclassified or malformed exclusions", async () => {
+  for (const metadata of [
+    { is_internal_test: true },
+    { payment_monitor_exclusion_reason: "pre_cutover_rest_app" },
+    { is_internal_test: true, payment_monitor_exclusion_reason: "unknown_reason" },
+    { internal_test: true, payment_monitor_exclusion_reason: "pre_cutover_rest_app" },
+    { production_qa: true, payment_monitor_exclusion_reason: "pre_cutover_rest_app" },
+    { qa_test: true, payment_monitor_exclusion_reason: "pre_cutover_rest_app" },
+  ]) {
+    let calls = 0
+    const runner = createPaymentIntegrityRunner({
+      digestSecret: "digest-secret",
+      paymentRuntime: { stripeLive: false, paypalLive: true },
+      stripe: fakeStripe(),
+      paypalRequest: async () => {
+        calls += 1
+        throw new Error("provider resource unavailable")
+      },
+      supabase: fakeSupabase({
+        billing_subscriptions: [
+          {
+            provider: "paypal",
+            provider_subscription_id: "I-UNCLASSIFIED",
+            user_id: "user_unclassified",
+            metadata,
+            updated_at: "2026-08-01T09:35:51.654Z",
+          },
+        ],
+      }),
+    })
+
+    const result = await runner({ now, deadlineAt: futureDeadline() })
+
+    assert.equal(calls, 1)
+    assert.equal(result.status, "monitor_failed")
+    assert.equal(result.counters.incompleteProviders, 1)
+    assert.equal(result.monitorFailures[0]?.reason, "incomplete_pagination")
+  }
+})
+
+test("PayPal exclusions cannot hide monitored rows beyond the candidate cap", async () => {
+  const rows = [
+    {
+      provider: "paypal",
+      provider_subscription_id: "I-EXCLUDED-FIRST",
+      user_id: "user_excluded_first",
+      metadata: {
+        is_internal_test: true,
+        payment_monitor_exclusion_reason: "pre_cutover_rest_app",
+      },
+      updated_at: "2026-08-01T12:00:00.000Z",
+    },
+    ...Array.from({ length: DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP + 1 }, (_, index) => ({
+      provider: "paypal",
+      provider_subscription_id: `I-MONITORED-${index}`,
+      user_id: `user_monitored_${index}`,
+      metadata: {},
+      updated_at: "2026-08-01T11:00:00.000Z",
+    })),
+  ]
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: false, paypalLive: true },
+    stripe: fakeStripe(),
+    paypalRequest: async () => ({ transactions: [] }),
+    supabase: fakeSupabase({ billing_subscriptions: rows }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.status, "monitor_failed")
+  assert.equal(result.counters.incompleteProviders, 1)
+})
+
 test("PayPal provider lookups use bounded concurrency instead of serial round trips", async () => {
   let active = 0
   let maxActive = 0
@@ -681,10 +803,13 @@ test("reporter maps integrity findings and monitor failures to typed payment Sen
   const captured: unknown[] = []
   const reporter = createPaymentIntegrityReporter({
     paymentRuntime: { stripeLive: true, paypalLive: false },
-    reportPaymentFailure: (details) => captured.push(details),
+    reportPaymentFailure: (details) => {
+      captured.push(details)
+      return "0123456789abcdef0123456789abcdef"
+    },
   })
 
-  reporter.reportFinding?.({
+  const findingReceipt = reporter.reportFinding?.({
     signal: "payment_integrity_mismatch",
     provider: "stripe",
     commerceKind: "subscription",
@@ -698,7 +823,7 @@ test("reporter maps integrity findings and monitor failures to typed payment Sen
     isInternalTest: false,
     userId: "user_report",
   })
-  reporter.reportMonitorFailure?.({
+  const monitorReceipt = reporter.reportMonitorFailure?.({
     signal: "payment_monitor_failed",
     provider: "stripe",
     reason: "provider_error",
@@ -712,6 +837,37 @@ test("reporter maps integrity findings and monitor failures to typed payment Sen
   assert.equal((captured[0] as { origin: string }).origin, "reconciliation")
   assert.equal((captured[1] as { live: boolean }).live, true)
   assert.equal((captured[1] as { status: string }).status, "provider_error")
+  assert.equal(findingReceipt, "0123456789abcdef0123456789abcdef")
+  assert.equal(monitorReceipt, "0123456789abcdef0123456789abcdef")
+})
+
+test("payment integrity result retains safe Sentry receipt ids for route delivery checks", async () => {
+  let sequence = 0
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: false, paypalLive: true },
+    stripe: fakeStripe(),
+    paypalRequest: async () => {
+      throw new Error("provider unavailable")
+    },
+    reportPaymentFailure: () => `${String(++sequence).padStart(32, "0")}`,
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "paypal",
+          provider_subscription_id: "I-UNAVAILABLE",
+          user_id: "user_unavailable",
+          metadata: {},
+          updated_at: "2026-08-01T09:35:51.654Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.status, "monitor_failed")
+  assert.deepEqual(result.telemetryEventIds, ["00000000000000000000000000000001"])
 })
 
 test("provider calls are bounded by a short timeout and sanitized as provider monitor failures", async () => {

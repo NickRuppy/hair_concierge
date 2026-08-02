@@ -33,7 +33,7 @@ import {
 } from "./order-intents"
 import type { PersonalPlanOneTimeFulfillmentJobRow } from "@/lib/billing/types"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
 
 type CapturedPayPalOrder = Awaited<ReturnType<typeof captureProviderPayPalOrder>>
 export const PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER = "personal_plan_prepared_artifacts"
@@ -71,7 +71,7 @@ export type PayPalOrderActivationDeps = {
   finalizeLockedPlan?: OneTimeActivationDependencies["finalizeLockedPlan"]
   siteUrl?: string
   defer?: (work: () => void | Promise<void>) => void
-  capturePaymentFailure?: typeof capturePaymentFailure
+  capturePaymentFailure?: PaymentFailureReporter
 }
 
 type ActivePayPalCheckoutAccount = Extract<PayPalCheckoutAccountResult, { status: "active" }>

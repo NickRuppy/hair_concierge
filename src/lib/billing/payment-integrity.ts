@@ -92,6 +92,7 @@ export type PaymentIntegrityMonitorFailureReason =
   | "deadline_exhausted"
   | "missing_identity"
   | "invalid_candidate"
+  | "telemetry_delivery_failed"
 
 export interface PaymentIntegrityMonitorFailure {
   signal: "payment_monitor_failed"
@@ -129,6 +130,7 @@ export interface PaymentIntegrityResult {
   counters: PaymentIntegrityCounters
   findings: PaymentIntegrityFinding[]
   monitorFailures: PaymentIntegrityMonitorFailure[]
+  telemetryEventIds?: string[]
 }
 
 export interface PaymentIntegrityOptions {
@@ -174,19 +176,26 @@ export async function reconcilePaymentIntegrity(
   const counters = createCounters()
   const findings: PaymentIntegrityFinding[] = []
   const monitorFailures: PaymentIntegrityMonitorFailure[] = []
+  const telemetryEventIds: string[] = []
   const lookbackStartedAt = new Date(nowMs - lookbackMs)
   const settlementGraceStartedAt = new Date(nowMs - settlementGraceMs)
 
   const recordFinding = async (finding: PaymentIntegrityFinding): Promise<void> => {
     counters.findings += 1
     if (findings.length < maxFindings) findings.push(finding)
-    await safeCall(() => options.reporter?.reportFinding?.(finding))
+    recordTelemetryReceipt(
+      telemetryEventIds,
+      await safeCall(() => options.reporter?.reportFinding?.(finding)),
+    )
   }
 
   const recordMonitorFailure = async (failure: PaymentIntegrityMonitorFailure): Promise<void> => {
     counters.monitorFailures += 1
     if (monitorFailures.length < maxMonitorFailures) monitorFailures.push(failure)
-    await safeCall(() => options.reporter?.reportMonitorFailure?.(failure))
+    recordTelemetryReceipt(
+      telemetryEventIds,
+      await safeCall(() => options.reporter?.reportMonitorFailure?.(failure)),
+    )
   }
 
   const reportDeadlineExhausted = async (): Promise<void> => {
@@ -201,7 +210,7 @@ export async function reconcilePaymentIntegrity(
 
   if (clock() >= deadlineMs) {
     await reportDeadlineExhausted()
-    return buildResult(counters, findings, monitorFailures)
+    return buildResult(counters, findings, monitorFailures, telemetryEventIds)
   }
 
   for (const adapter of options.providers) {
@@ -331,7 +340,7 @@ export async function reconcilePaymentIntegrity(
     )
   }
 
-  return buildResult(counters, findings, monitorFailures)
+  return buildResult(counters, findings, monitorFailures, telemetryEventIds)
 }
 
 type NormalizedCandidateResult =
@@ -532,12 +541,14 @@ function buildResult(
   counters: PaymentIntegrityCounters,
   findings: PaymentIntegrityFinding[],
   monitorFailures: PaymentIntegrityMonitorFailure[],
+  telemetryEventIds: string[],
 ): PaymentIntegrityResult {
   return {
     status: counters.monitorFailures > 0 ? "monitor_failed" : "completed",
     counters,
     findings,
     monitorFailures,
+    ...(telemetryEventIds.length > 0 ? { telemetryEventIds } : {}),
   }
 }
 
@@ -562,15 +573,21 @@ function createCounters(): PaymentIntegrityCounters {
   }
 }
 
-async function safeCall(callback: () => unknown): Promise<void> {
+async function safeCall(callback: () => unknown): Promise<unknown> {
   try {
     const result = callback()
     if (result && typeof (result as PromiseLike<unknown>).then === "function") {
-      await Promise.resolve(result).catch(() => undefined)
+      return await Promise.resolve(result).catch(() => undefined)
     }
+    return result
   } catch {
     // Monitoring must not change reconciliation outcomes.
+    return undefined
   }
+}
+
+function recordTelemetryReceipt(receipts: string[], value: unknown): void {
+  if (typeof value === "string" && /^[a-f0-9]{32}$/.test(value)) receipts.push(value)
 }
 
 function safeInternalIdentifier(value: string | null | undefined): string | undefined {

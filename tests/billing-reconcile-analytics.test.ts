@@ -383,7 +383,9 @@ test("billing reconcile isolates integrity failure and marks the daily check-in 
       },
       reportMonitorFailure: (failure) => {
         monitorFailures.push(failure)
+        return "0123456789abcdef0123456789abcdef"
       },
+      flushTelemetry: async () => true,
       dispatchAnalyticsDue: async () => {
         analyticsRuns += 1
         return { processed: 1, delivered: 1, failed: 0 }

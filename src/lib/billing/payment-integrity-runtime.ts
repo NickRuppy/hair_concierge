@@ -19,7 +19,7 @@ import {
   type PaymentIntegrityResult,
 } from "@/lib/billing/payment-integrity"
 import { resolvePaymentRuntime, type PaymentRuntime } from "@/lib/billing/payment-runtime-config"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
 import { getStripe } from "@/lib/stripe/client"
 
 export type RunPaymentIntegrityInput = { now: Date; deadlineAt: Date }
@@ -47,7 +47,7 @@ type PaymentIntegrityRuntimeDeps = {
   digestSecret?: string
   paymentRuntime?: PaymentRuntime
   paypalRequest?: PayPalRequest
-  reportPaymentFailure?: typeof capturePaymentFailure
+  reportPaymentFailure?: PaymentFailureReporter
   stripe?: StripeClient
   supabase?: QueryableSupabase
 }
@@ -56,6 +56,8 @@ const DIGEST_CONTEXT = "payment-integrity-provider-reference-v1"
 const STRIPE_PAGE_SIZE = 100
 const PROVIDER_REQUEST_TIMEOUT_MS = 10_000
 const PAYPAL_PROVIDER_CONCURRENCY = 4
+const PAYPAL_RENEWAL_INVENTORY_CAP = 500
+const PAYPAL_RENEWAL_EXCLUSION_REASON = "pre_cutover_rest_app"
 const ACTIVE_ENTITLEMENT_STATUSES = new Set(["active", "past_due"])
 const TERMINAL_ONE_TIME_PURCHASE_STATUSES = new Set(["paid", "refunded", "reversed", "disputed"])
 
@@ -136,13 +138,13 @@ export function createProviderReferenceDigest(
 
 export function createPaymentIntegrityReporter(input: {
   paymentRuntime: PaymentRuntime
-  reportPaymentFailure?: typeof capturePaymentFailure
+  reportPaymentFailure?: PaymentFailureReporter
 }): PaymentIntegrityReporter {
   const reportPaymentFailure = input.reportPaymentFailure ?? capturePaymentFailure
 
   return {
     reportFinding(finding: PaymentIntegrityFinding) {
-      reportPaymentFailure({
+      return reportPaymentFailure({
         signal: "payment_integrity_mismatch",
         provider: finding.provider,
         boundary: finding.boundary,
@@ -163,7 +165,7 @@ export function createPaymentIntegrityReporter(input: {
       })
     },
     reportMonitorFailure(failure: PaymentIntegrityMonitorFailure) {
-      reportPaymentFailure({
+      return reportPaymentFailure({
         signal: "payment_monitor_failed",
         provider: failure.provider,
         boundary: "reconciliation",
@@ -440,12 +442,12 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
 
     if (candidates.length < window.limit && Date.now() < window.deadlineAt.getTime()) {
       const renewalCapacity = window.limit - candidates.length
-      const renewalRows = await this.listLocalSubscriptionRows({
-        ...window,
-        limit: renewalCapacity,
-      })
+      const renewalRows = await this.listLocalSubscriptionRows()
+      const monitoredRenewalRows = renewalRows.filter(
+        (row) => !isExcludedInternalPayPalRenewal(row),
+      )
       const renewalScan = await mapProviderRowsWithConcurrency(
-        renewalRows.slice(0, renewalCapacity),
+        monitoredRenewalRows.slice(0, renewalCapacity),
         window.deadlineAt,
         (row) => this.candidatesFromSubscriptionTransactions(row, window),
       )
@@ -453,7 +455,8 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
       for (const renewalCandidates of renewalScan.results) {
         candidates.push(...renewalCandidates.slice(0, window.limit - candidates.length))
       }
-      incomplete ||= renewalRows.length > renewalCapacity
+      incomplete ||= monitoredRenewalRows.length > renewalCapacity
+      incomplete ||= renewalRows.length > PAYPAL_RENEWAL_INVENTORY_CAP
     } else {
       incomplete = true
     }
@@ -519,13 +522,13 @@ class PayPalPaymentIntegrityProvider implements PaymentIntegrityProviderAdapter 
     )
   }
 
-  private async listLocalSubscriptionRows(window: PaymentIntegrityListWindow) {
+  private async listLocalSubscriptionRows() {
     const { data, error } = await this.deps.supabase
       .from("billing_subscriptions")
       .select("provider_subscription_id, user_id, metadata, updated_at")
       .eq("provider", "paypal")
       .order("updated_at", { ascending: false })
-      .limit(window.limit + 1)
+      .limit(PAYPAL_RENEWAL_INVENTORY_CAP + 1)
 
     if (error) throw error
     return ((data as Array<Record<string, unknown>> | null) ?? []).filter((row) =>
@@ -970,6 +973,14 @@ function dedupeCandidates(candidates: PaymentIntegrityCandidate[]) {
 function isInternalTestMetadata(metadata: Record<string, unknown>): boolean {
   return ["is_internal_test", "internal_test", "production_qa", "qa_test"].some((key) =>
     booleanLike(metadata[key]),
+  )
+}
+
+function isExcludedInternalPayPalRenewal(row: Record<string, unknown>): boolean {
+  const metadata = metadataValue(row.metadata)
+  return (
+    booleanLike(metadata.is_internal_test) &&
+    metadata.payment_monitor_exclusion_reason === PAYPAL_RENEWAL_EXCLUSION_REASON
   )
 }
 

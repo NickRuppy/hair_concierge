@@ -106,6 +106,7 @@
     "billing:analytics:retry": "tsx scripts/billing-analytics/retry-outbox.ts",
     "billing:launch-catalog:inventory": "tsx scripts/billing/personal-plan-pricing-catalog-backfill.ts --dry-run",
     "billing:launch-catalog:apply": "tsx scripts/billing/personal-plan-pricing-catalog-backfill.ts --apply",
+    "billing:payment-monitor:classify-paypal-test": "tsx scripts/billing/classify-payment-monitor-paypal-test.ts",
     "billing:one-time:recover": "tsx scripts/billing/one-time-recover.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",

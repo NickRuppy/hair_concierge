@@ -54,7 +54,7 @@ import {
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import { captureCheckoutException } from "@/lib/observability/checkout"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
@@ -311,7 +311,7 @@ type StripeWebhookEventDeps = {
   linkQuizToProfile?: typeof defaultLinkQuizToProfile
   recordBillingAnalytics?: boolean
   captureCheckoutException?: typeof captureCheckoutException
-  capturePaymentFailure?: typeof capturePaymentFailure
+  capturePaymentFailure?: PaymentFailureReporter
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event, deps: StripeWebhookEventDeps) {
