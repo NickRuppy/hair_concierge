@@ -26,7 +26,7 @@ import {
   capturePaymentFailure,
   type PaymentCommerceKind,
   type PaymentErrorFamily,
-} from "@/lib/observability/payment"
+} from "@/lib/observability/payment-client"
 import { PaymentOptionExposure } from "./payment-option-exposure"
 
 export type StripeOfferPaymentMethodType = "apple_pay" | "payment_element"

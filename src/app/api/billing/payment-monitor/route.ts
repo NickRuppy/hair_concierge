@@ -1,5 +1,4 @@
 import { createHmac, timingSafeEqual } from "node:crypto"
-import * as Sentry from "@sentry/nextjs"
 import { NextResponse } from "next/server"
 
 import type {
@@ -8,7 +7,10 @@ import type {
   PaymentIntegrityResult,
 } from "@/lib/billing/payment-integrity"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import {
+  captureServerPaymentFailure,
+  flushServerPaymentTelemetry,
+} from "@/lib/observability/payment-server"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
@@ -217,7 +219,7 @@ async function flushTelemetryWithRetry(flush: () => Promise<unknown>): Promise<b
 }
 
 export function flushPaymentMonitorTelemetry(): Promise<boolean> {
-  return Sentry.flush(2_000)
+  return flushServerPaymentTelemetry(2_000)
 }
 
 async function safeReportMonitorFailure(
@@ -243,7 +245,7 @@ function reportPaymentMonitorFailure(failure: PaymentIntegrityMonitorFailure) {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
   })
-  return capturePaymentFailure({
+  return captureServerPaymentFailure({
     signal: failure.signal,
     provider: failure.provider,
     boundary: "reconciliation",

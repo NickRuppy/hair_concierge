@@ -1,5 +1,3 @@
-import * as Sentry from "@sentry/nextjs"
-
 import type { CheckoutInterval, CheckoutSource, CheckoutStage } from "@/lib/observability/checkout"
 
 export type PaymentSignal =
@@ -192,9 +190,9 @@ export function buildPaymentFailurePayload(details: PaymentFailureDetails): Paym
  * Reports an already-classified payment outcome. This deliberately accepts no provider
  * error object: callers must classify it into the closed signal and family above.
  */
-export function capturePaymentFailure(
+export function capturePaymentFailureWithSink(
   details: PaymentFailureDetails,
-  sink: PaymentSentrySink = Sentry,
+  sink: PaymentSentrySink,
 ): string | undefined {
   let eventId: string | undefined
   try {

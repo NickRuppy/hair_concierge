@@ -2,6 +2,8 @@ import { defineConfig } from "@playwright/test"
 import fs from "fs"
 import path from "path"
 
+import "./tests/server-only-register.cjs"
+
 // Load .env.local so Supabase keys are available to tests
 const envPath = path.resolve(".env.local")
 if (fs.existsSync(envPath)) {

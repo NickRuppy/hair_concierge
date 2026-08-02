@@ -13,7 +13,7 @@ import { usePaymentRuntime } from "@/components/providers/payment-runtime-provid
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
 import type { CheckoutStage } from "@/lib/observability/checkout"
-import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"

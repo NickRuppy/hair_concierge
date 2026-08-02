@@ -19,7 +19,8 @@ import {
   type PaymentIntegrityResult,
 } from "@/lib/billing/payment-integrity"
 import { resolvePaymentRuntime, type PaymentRuntime } from "@/lib/billing/payment-runtime-config"
-import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
+import type { PaymentFailureReporter } from "@/lib/observability/payment"
+import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { getStripe } from "@/lib/stripe/client"
 
 export type RunPaymentIntegrityInput = { now: Date; deadlineAt: Date }
@@ -90,7 +91,7 @@ export function createPaymentIntegrityRunner(
 
   const reporter = createPaymentIntegrityReporter({
     paymentRuntime,
-    reportPaymentFailure: deps.reportPaymentFailure ?? capturePaymentFailure,
+    reportPaymentFailure: deps.reportPaymentFailure ?? captureServerPaymentFailure,
   })
 
   return async ({ now, deadlineAt }) =>
@@ -140,7 +141,7 @@ export function createPaymentIntegrityReporter(input: {
   paymentRuntime: PaymentRuntime
   reportPaymentFailure?: PaymentFailureReporter
 }): PaymentIntegrityReporter {
-  const reportPaymentFailure = input.reportPaymentFailure ?? capturePaymentFailure
+  const reportPaymentFailure = input.reportPaymentFailure ?? captureServerPaymentFailure
 
   return {
     reportFinding(finding: PaymentIntegrityFinding) {

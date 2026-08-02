@@ -23,7 +23,7 @@ import {
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
 import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
-import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,

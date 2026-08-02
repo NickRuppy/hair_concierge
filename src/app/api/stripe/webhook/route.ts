@@ -54,7 +54,8 @@ import {
 import { claimWebhookEvent, releaseWebhookEventClaim } from "@/lib/billing/webhook-events"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import { captureCheckoutException } from "@/lib/observability/checkout"
-import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
+import type { PaymentFailureReporter } from "@/lib/observability/payment"
+import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
@@ -324,7 +325,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     linkQuizToProfile = defaultLinkQuizToProfile,
     recordBillingAnalytics = false,
     captureCheckoutException: captureCheckout = captureCheckoutException,
-    capturePaymentFailure: capturePayment = capturePaymentFailure,
+    capturePaymentFailure: capturePayment = captureServerPaymentFailure,
   } = deps
   const timestamp = stripeEventTimestamp(event)
 
@@ -846,7 +847,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown"
     await releaseWebhookEventClaim(supabase, "stripe", event.id)
-    capturePaymentFailure({
+    captureServerPaymentFailure({
       signal: "payment_webhook_processing_failed",
       provider: "stripe",
       boundary: "webhook",
