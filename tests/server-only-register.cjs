@@ -1,4 +1,4 @@
-import Module from "node:module"
+const Module = require("node:module")
 
 const load = Module._load
 
