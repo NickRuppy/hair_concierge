@@ -78,10 +78,14 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
 
   return (
     <>
+      {/*
+        Feste Hoehe statt min-height, plus erzwungene 100 % auf Widget und iframe:
+        tf.createWidget dimensioniert den iframe nicht selbst, er faellt sonst auf
+        die HTML-Standardgroesse 300x150 zurueck und klebt oben links im Container.
+      */}
       <div
         ref={containerRef}
-        style={{ minHeight: 520 }}
-        className="overflow-hidden rounded-[14px] border border-border bg-card"
+        className="h-[600px] w-full overflow-hidden rounded-[14px] border border-border bg-card [&_.tf-v1-widget]:!h-full [&_.tf-v1-widget]:!w-full [&_iframe]:!h-full [&_iframe]:!w-full"
       />
       <Script
         src="https://embed.typeform.com/next/embed.js"
