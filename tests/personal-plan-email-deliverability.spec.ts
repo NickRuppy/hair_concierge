@@ -1,5 +1,10 @@
 import { expect, test, type Page } from "@playwright/test"
 
+import {
+  EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  type EmailDeliverabilityRejectionResponse,
+} from "../src/lib/email-deliverability-shared"
+
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 
 const personalPlanDraft = {
@@ -15,6 +20,12 @@ const preparedPlanClaim = {
   answersKey: JSON.stringify(personalPlanDraft.answers),
   expiresAt: "2099-01-01T00:00:00.000Z",
 }
+
+const rejectedLeadResponse = {
+  error: EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  reason: "no_mx",
+  suggestion: "max.mustermann@gmail.com",
+} satisfies EmailDeliverabilityRejectionResponse
 
 async function openEmailCapture(page: Page) {
   await page.setViewportSize({ width: 390, height: 844 })
@@ -73,12 +84,7 @@ test.describe("@ci personal-plan email deliverability recovery", () => {
         await route.fulfill({
           contentType: "application/json",
           status: 422,
-          body: JSON.stringify({
-            error:
-              "Diese E-Mail-Domain kann keine E-Mails empfangen. Prüfe die Adresse oder verwende eine andere.",
-            reason: "no_mx",
-            suggestion: "max.mustermann@gmail.com",
-          }),
+          body: JSON.stringify(rejectedLeadResponse),
         })
         return
       }
@@ -117,12 +123,7 @@ test.describe("@ci personal-plan email deliverability recovery", () => {
       await route.fulfill({
         contentType: "application/json",
         status: 422,
-        body: JSON.stringify({
-          error:
-            "Diese E-Mail-Domain kann keine E-Mails empfangen. Prüfe die Adresse oder verwende eine andere.",
-          reason: "no_mx",
-          suggestion: "max.mustermann@gmail.com",
-        }),
+        body: JSON.stringify(rejectedLeadResponse),
       })
     })
 

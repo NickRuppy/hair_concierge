@@ -19,7 +19,11 @@ import {
  */
 
 export type EmailDeliverability =
-  | { ok: true; normalized: string }
+  | {
+      ok: true
+      normalized: string
+      outcome: "known_good" | "mx" | "implicit_mx" | "fail_open"
+    }
   | { ok: false; reason: EmailDeliverabilityFailure; suggestion?: string }
 
 /** Erlaubt das Einschleusen eines Resolvers im Test. */
@@ -102,46 +106,64 @@ export async function checkEmailDeliverability(
   const domain = normalized.slice(normalized.lastIndexOf("@") + 1)
 
   // Grossanbieter brauchen keinen Lookup.
-  if (KNOWN_GOOD_EMAIL_DOMAINS.includes(domain)) return { ok: true, normalized }
+  if (KNOWN_GOOD_EMAIL_DOMAINS.includes(domain)) {
+    return { ok: true, normalized, outcome: "known_good" }
+  }
 
   const suggestion = suggestEmailCorrection(normalized) ?? undefined
+  const deadlineAt = Date.now() + timeoutMs
+  const withDeadline = <T>(operation: () => Promise<T>): Promise<T> => {
+    const remainingMs = deadlineAt - Date.now()
+    if (remainingMs <= 0) return Promise.reject(new Error("dns_timeout"))
+    return withTimeout(Promise.resolve().then(operation), remainingMs)
+  }
 
   let mxRecords: { exchange: string; priority: number }[] | null = null
   try {
-    mxRecords = await withTimeout(resolver.resolveMx(domain), timeoutMs)
+    mxRecords = await withDeadline(() => resolver.resolveMx(domain))
   } catch (caught) {
     if (!isDefinitiveDnsFailure(caught)) {
       // Timeout oder Resolver-Problem: im Zweifel durchlassen.
-      return { ok: true, normalized }
+      return { ok: true, normalized, outcome: "fail_open" }
     }
-    // ENOTFOUND/ENODATA auf MX heisst nur: kein MX-Eintrag. Ob die Domain
-    // existiert, entscheidet der A/AAAA-Fallback unten.
+    if ((caught as NodeJS.ErrnoException)?.code === "ENOTFOUND") {
+      return { ok: false, reason: "no_mx", suggestion }
+    }
+    // ENODATA auf MX heisst nur: kein MX-Eintrag. Ob die Domain existiert,
+    // entscheidet der A/AAAA-Fallback unten.
     mxRecords = []
   }
 
   if (mxRecords.length > 0) {
     if (isNullMx(mxRecords)) return { ok: false, reason: "null_mx", suggestion }
-    return { ok: true, normalized }
+    return { ok: true, normalized, outcome: "mx" }
   }
 
-  // Kein MX: nach RFC 5321 faellt die Zustellung auf A/AAAA zurueck.
-  try {
-    const [a, aaaa] = await Promise.all([
-      withTimeout(resolver.resolve4(domain), timeoutMs).catch((caught) => {
-        if (isDefinitiveDnsFailure(caught)) return [] as string[]
-        throw caught
-      }),
-      withTimeout(resolver.resolve6(domain), timeoutMs).catch((caught) => {
-        if (isDefinitiveDnsFailure(caught)) return [] as string[]
-        throw caught
-      }),
-    ])
-    if (a.length > 0 || aaaa.length > 0) return { ok: true, normalized }
-    return { ok: false, reason: "no_mx", suggestion }
-  } catch {
-    // Timeout oder Resolver-Problem beim Fallback: durchlassen.
-    return { ok: true, normalized }
+  // Kein MX: nach RFC 5321 faellt die Zustellung auf A/AAAA zurueck. Ein
+  // erfolgreicher Adresstyp reicht, auch wenn der andere Resolver transient
+  // scheitert. Nur ohne belegten A/AAAA-Eintrag wird im Zweifel durchgelassen.
+  const resolveAddressRecords = async (operation: () => Promise<string[]>) => {
+    try {
+      return await withDeadline(operation)
+    } catch (caught) {
+      if (isDefinitiveDnsFailure(caught)) return []
+      throw caught
+    }
   }
+  const addressResults = await Promise.allSettled([
+    resolveAddressRecords(() => resolver.resolve4(domain)),
+    resolveAddressRecords(() => resolver.resolve6(domain)),
+  ])
+  const hasAddressRecord = addressResults.some(
+    (result) => result.status === "fulfilled" && result.value.length > 0,
+  )
+  if (hasAddressRecord) return { ok: true, normalized, outcome: "implicit_mx" }
+  if (addressResults.every((result) => result.status === "fulfilled")) {
+    return { ok: false, reason: "no_mx", suggestion }
+  }
+
+  // Timeout oder Resolver-Problem beim Fallback: durchlassen.
+  return { ok: true, normalized, outcome: "fail_open" }
 }
 
 export { suggestEmailCorrection }

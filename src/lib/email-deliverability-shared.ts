@@ -13,8 +13,31 @@ export const EMAIL_DELIVERABILITY_FAILURES = ["format", "no_mx", "null_mx"] as c
 
 export type EmailDeliverabilityFailure = (typeof EMAIL_DELIVERABILITY_FAILURES)[number]
 
+export const EMAIL_DELIVERABILITY_REJECTION_MESSAGE =
+  "Diese E-Mail-Domain kann keine E-Mails empfangen. Prüfe die Adresse oder verwende eine andere."
+
+export interface EmailDeliverabilityRejectionResponse {
+  error: string
+  reason: EmailDeliverabilityFailure
+  suggestion?: string
+}
+
 export function isEmailDeliverabilityFailure(value: unknown): value is EmailDeliverabilityFailure {
   return EMAIL_DELIVERABILITY_FAILURES.some((reason) => reason === value)
+}
+
+export function parseEmailDeliverabilityRejection(
+  value: unknown,
+): EmailDeliverabilityRejectionResponse | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  if (!isEmailDeliverabilityFailure(record.reason)) return null
+
+  return {
+    error: typeof record.error === "string" ? record.error : EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+    reason: record.reason,
+    ...(typeof record.suggestion === "string" ? { suggestion: record.suggestion } : {}),
+  }
 }
 
 /**

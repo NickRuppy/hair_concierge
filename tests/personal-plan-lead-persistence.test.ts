@@ -12,6 +12,11 @@ import {
   personalPlanPrepareRequestSchema,
 } from "../src/lib/personal-plan-quiz/persistence"
 import { syncPersonalPlanLeadToCustomerIo } from "../src/lib/personal-plan-quiz/customerio"
+import {
+  createPersonalPlanLeadPostHandler,
+  recordEmailDeliverabilityOutcome,
+} from "../src/app/api/quiz/personal-plan-lead/route"
+import { EMAIL_DELIVERABILITY_REJECTION_MESSAGE } from "../src/lib/email-deliverability-shared"
 
 const request = {
   email: "  PLAN@EXAMPLE.COM ",
@@ -224,25 +229,126 @@ test("prepare and lead endpoints exchange only an opaque claim before the result
   assert.doesNotMatch(leadRoute, /NextResponse\.json\(\{[\s\S]{0,200}artifact/)
 })
 
-test("lead route rejects definitive deliverability failures before persistence", () => {
-  const leadRoute = readFileSync(
-    new URL("../src/app/api/quiz/personal-plan-lead/route.ts", import.meta.url),
-    "utf8",
-  )
-  const deliverabilityCheck = leadRoute.indexOf(
-    "const deliverability = await checkEmailDeliverability(email)",
-  )
-  const persistenceCall = leadRoute.indexOf("save_personal_plan_lead_with_artifact")
+test("lead route executes a definitive deliverability rejection before persistence", async () => {
+  const previousFlag = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+  process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+  let checkedEmail: string | undefined
+  let recorded = false
+  const handler = createPersonalPlanLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    checkEmailDeliverability: async (email) => {
+      checkedEmail = email
+      return { ok: false, reason: "no_mx", suggestion: "plan@example.com" }
+    },
+    recordEmailDeliverabilityOutcome: () => {
+      recorded = true
+    },
+  })
 
-  assert.ok(deliverabilityCheck >= 0, "lead route must check deliverability")
-  assert.ok(
-    persistenceCall > deliverabilityCheck,
-    "deliverability rejection must happen before the lead is persisted",
+  try {
+    const response = await handler(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+
+    assert.equal(response.status, 422)
+    assert.equal(checkedEmail, "plan@example.com")
+    assert.equal(recorded, true)
+    assert.deepEqual(await response.json(), {
+      error: EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+      reason: "no_mx",
+      suggestion: "plan@example.com",
+    })
+  } finally {
+    if (previousFlag === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = previousFlag
+  }
+})
+
+test("lead route lets an accepted address reach persistence", async (context) => {
+  const previousFlag = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+  process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+  const errorLog = context.mock.method(console, "error", () => {})
+  let rpcCall: unknown[] | undefined
+  const handler = createPersonalPlanLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    checkEmailDeliverability: async () => ({
+      ok: true,
+      normalized: "canonical@example.com",
+      outcome: "mx",
+    }),
+    recordEmailDeliverabilityOutcome: () => {},
+    cookies: (async () => ({ get: () => undefined })) as typeof import("next/headers").cookies,
+    createAdminClient: (() => ({
+      rpc: async (...args: unknown[]) => {
+        rpcCall = args
+        throw new Error("stop after persistence boundary")
+      },
+    })) as unknown as typeof import("../src/lib/supabase/admin").createAdminClient,
+  })
+
+  try {
+    const response = await handler(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+
+    assert.equal(response.status, 500)
+    assert.equal(rpcCall?.[0], "save_personal_plan_lead_with_artifact")
+    assert.equal((rpcCall?.[1] as { p_email?: unknown })?.p_email, "canonical@example.com")
+    assert.equal(errorLog.mock.callCount(), 1)
+  } finally {
+    if (previousFlag === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = previousFlag
+  }
+})
+
+test("Sentry deliverability metrics expose only bounded outcomes and never block", (context) => {
+  const calls: unknown[][] = []
+  const warning = context.mock.method(console, "warn", () => {})
+  const count = (...args: unknown[]) => {
+    calls.push(args)
+  }
+
+  recordEmailDeliverabilityOutcome(
+    { ok: true, normalized: "private@example.com", outcome: "fail_open" },
+    count,
   )
-  assert.match(
-    leadRoute,
-    /if \(!deliverability\.ok\) \{[\s\S]*reason: deliverability\.reason,[\s\S]*suggestion: deliverability\.suggestion,[\s\S]*\{ status: 422 \}/,
+  recordEmailDeliverabilityOutcome(
+    { ok: false, reason: "no_mx", suggestion: "private@example.com" },
+    count,
   )
+
+  assert.deepEqual(calls, [
+    ["quiz.email_deliverability.check", 1, { attributes: { outcome: "fail_open" } }],
+    [
+      "quiz.email_deliverability.check",
+      1,
+      {
+        attributes: {
+          outcome: "rejected",
+          reason: "no_mx",
+          suggestion_present: true,
+        },
+      },
+    ],
+  ])
+  assert.equal(JSON.stringify(calls).includes("private@example.com"), false)
+  assert.doesNotThrow(() =>
+    recordEmailDeliverabilityOutcome(
+      { ok: true, normalized: "private@example.com", outcome: "known_good" },
+      () => {
+        throw new Error("Sentry unavailable")
+      },
+    ),
+  )
+  assert.equal(warning.mock.callCount(), 1)
 })
 
 test("personal-plan Customer.io sync identifies the approved structured profile without an event", async () => {

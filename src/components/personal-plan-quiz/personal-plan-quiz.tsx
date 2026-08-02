@@ -66,7 +66,9 @@ import { TreatmentPermedIcon, TreatmentStraightenedIcon } from "@/components/ui/
 import { Input } from "@/components/ui/input"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import {
-  isEmailDeliverabilityFailure,
+  EMAIL_ADDRESS_PATTERN,
+  EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  parseEmailDeliverabilityRejection,
   suggestEmailCorrection,
 } from "@/lib/email-deliverability-shared"
 import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
@@ -125,7 +127,6 @@ import {
   type QuizQuestionConfig,
 } from "./quiz-data"
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
 const AUTO_ADVANCE_MS = 260
 const PREPARED_PLAN_SESSION_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
@@ -1797,7 +1798,7 @@ function EmailCapture({
   }, [step])
 
   function continueToConsent() {
-    if (!EMAIL_PATTERN.test(email.trim())) {
+    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
     }
@@ -1807,7 +1808,7 @@ function EmailCapture({
   }
 
   async function submit(marketingConsent: boolean) {
-    if (!EMAIL_PATTERN.test(email.trim())) {
+    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
       setStep("email")
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
@@ -1841,26 +1842,18 @@ function EmailCapture({
         // generischen Fehlermeldung stehen zu lassen.
         if (response.status === 422) {
           const detail: unknown = await response.json().catch(() => null)
-          const record =
-            detail && typeof detail === "object" && !Array.isArray(detail)
-              ? (detail as Record<string, unknown>)
-              : {}
-          const suggestion = typeof record.suggestion === "string" ? record.suggestion : null
-          const reason = isEmailDeliverabilityFailure(record.reason) ? record.reason : null
-          if (reason) {
+          const rejection = parseEmailDeliverabilityRejection(detail)
+          const suggestion = rejection?.suggestion ?? null
+          if (rejection) {
             trackAppEvent("quiz_email_deliverability_rejected", {
-              reason,
+              reason: rejection.reason,
               suggestionPresent: Boolean(suggestion),
             })
           }
           focusEmailOnRecoveryRef.current = true
           setServerSuggestion(suggestion)
           setStep("email")
-          setError(
-            typeof record.error === "string"
-              ? record.error
-              : "Diese E-Mail-Domain kann keine E-Mails empfangen. Prüfe die Adresse oder verwende eine andere.",
-          )
+          setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
           window.scrollTo(0, 0)
           return
         }
