@@ -30,6 +30,9 @@ const CHECKOUT_SECRET_QUERY_KEYS = new Set([
   "resume_token",
   "session_id",
   "token",
+  "preparation_token",
+  "preparationToken",
+  "preparationtoken",
   "client_secret",
   "email",
   "email_address",
@@ -40,6 +43,8 @@ const CHECKOUT_SECRET_FIELD_KEYS = new Set([
   "resume_token",
   "session_id",
   "token",
+  "preparation_token",
+  "preparationtoken",
   "stripe_session_id",
   "client_secret",
   "payment_intent_client_secret",
@@ -185,7 +190,7 @@ function isLikelyUrl(value: string): boolean {
 }
 
 function hasCheckoutSecretQuery(value: string): boolean {
-  return /[?&](resume_token|session_id|token|client_secret|email|email_address|receipt_email|payer_email)=/i.test(
+  return /[?&](resume_token|session_id|token|preparation_token|preparationToken|preparationtoken|client_secret|email|email_address|receipt_email|payer_email)=/i.test(
     value,
   )
 }

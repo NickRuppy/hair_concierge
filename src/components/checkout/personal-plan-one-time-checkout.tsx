@@ -20,6 +20,12 @@ import { createFunnelEventId } from "@/lib/funnel/client"
 import type { CheckoutStage } from "@/lib/observability/checkout"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
+import {
+  createPreparedCheckoutCredential,
+  createAlreadyReportedPreparedCheckoutError,
+  getPreparedCheckoutControlOutcome,
+  type PreparedCheckoutCredential,
+} from "@/lib/stripe/prepared-checkout-credential"
 import { PayPalOneTimeButton } from "./paypal-one-time-button"
 
 const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
@@ -86,7 +92,10 @@ export function PersonalPlanOneTimeCheckout({
   const [paypalProviderLocked, setPaypalProviderLocked] = useState(false)
   const [stripeProviderLocked, setStripeProviderLocked] = useState(false)
   const [stripeSelected, setStripeSelected] = useState(false)
-  const [stripePreparationId, setStripePreparationId] = useState(createFunnelEventId)
+  const [stripePreparationCredential, setStripePreparationCredential] =
+    useState<PreparedCheckoutCredential>(createPreparedCheckoutCredential)
+  const [preparationFailureReported, setPreparationFailureReported] = useState(false)
+  const stripePreparationId = stripePreparationCredential.preparationId
   const canStartPayment = Boolean(leadId && funnelSessionId)
 
   const reportStripeCustomerError = useCallback(
@@ -138,8 +147,9 @@ export function PersonalPlanOneTimeCheckout({
     if (stripePreparationRefreshRequestId === 0) return
     preparedStripeCheckoutRef.current = null
     setError(null)
+    setPreparationFailureReported(false)
     reportStripePreparationState("preparing")
-    setStripePreparationId(createFunnelEventId())
+    setStripePreparationCredential(createPreparedCheckoutCredential())
   }, [reportStripePreparationState, stripePreparationRefreshRequestId])
 
   useEffect(() => {
@@ -241,9 +251,14 @@ export function PersonalPlanOneTimeCheckout({
 
   const fetchClientSecret = useCallback(async () => {
     if (!leadId || !funnelSessionId) throw new Error("one-time checkout is not authorized")
+    const cachedPreparation = preparedStripeCheckoutRef.current
+    if (cachedPreparation && cachedPreparation.expiresAt * 1000 > Date.now() + 30_000) {
+      return cachedPreparation.clientSecret
+    }
     reportStripePreparationState("preparing")
     let responseStatus: number | undefined
     let paypalLocked = false
+    let handledControlOutcome = false
     try {
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -254,6 +269,7 @@ export function PersonalPlanOneTimeCheckout({
           leadId,
           funnelSessionId,
           preparationId: stripePreparationId,
+          preparationToken: stripePreparationCredential.preparationToken,
           source: "quiz_result_offer",
           presentation: "offer_overlay_elements",
         }),
@@ -261,13 +277,19 @@ export function PersonalPlanOneTimeCheckout({
       responseStatus = response.status
       const body = (await response.json().catch(() => ({}))) as {
         client_secret?: unknown
+        error?: unknown
         expires_at?: unknown
         preparation_token?: unknown
         provider_locked?: unknown
         session_id?: unknown
         status?: unknown
       }
-      if (response.status === 409 && body.provider_locked === "paypal") {
+      const controlOutcome = getPreparedCheckoutControlOutcome({
+        error: body.error,
+        providerLocked: body.provider_locked,
+        status: body.status,
+      })
+      if (response.status === 409 && controlOutcome === "provider_locked") {
         paypalLocked = true
         preparedStripeCheckoutRef.current = null
         setPaypalProviderLocked(true)
@@ -275,7 +297,13 @@ export function PersonalPlanOneTimeCheckout({
         setStripeSelected(false)
         setError(null)
         reportStripePreparationState("failed")
-        throw new Error("one-time checkout is locked to PayPal")
+        throw new Error("prepared_checkout_control:provider_locked")
+      }
+      if (controlOutcome === "prepared_checkout_unavailable") {
+        handledControlOutcome = true
+        preparedStripeCheckoutRef.current = null
+        reportStripePreparationState("failed")
+        throw new Error("prepared_checkout_control:prepared_checkout_unavailable")
       }
       if (
         !response.ok ||
@@ -299,9 +327,10 @@ export function PersonalPlanOneTimeCheckout({
       reportStripePreparationState("prepared", body.expires_at)
       return body.client_secret
     } catch (error) {
-      if (paypalLocked) throw error
+      if (paypalLocked || handledControlOutcome) throw error
       if (visibleRef.current) {
         setError(checkoutStartError)
+        setPreparationFailureReported(true)
         reportStripeCustomerError({
           errorFamily: responseStatus === undefined ? "network" : "provider_session",
           stage: "stripe_embedded_checkout_client_secret",
@@ -309,7 +338,7 @@ export function PersonalPlanOneTimeCheckout({
         })
       }
       reportStripePreparationState("failed")
-      throw error
+      throw createAlreadyReportedPreparedCheckoutError(error)
     }
   }, [
     funnelSessionId,
@@ -317,6 +346,7 @@ export function PersonalPlanOneTimeCheckout({
     reportStripeCustomerError,
     reportStripePreparationState,
     stripePreparationId,
+    stripePreparationCredential.preparationToken,
   ])
 
   const handleBeforeStripeConfirm = useCallback(async () => {
@@ -338,7 +368,8 @@ export function PersonalPlanOneTimeCheckout({
       preparedStripeCheckoutRef.current = null
       setError("Die Zahlungsarten werden neu geladen. Bitte versuche es gleich noch einmal.")
       reportStripePreparationState("preparing")
-      setStripePreparationId(createFunnelEventId())
+      setPreparationFailureReported(false)
+      setStripePreparationCredential(createPreparedCheckoutCredential())
       reportStripeCustomerError({
         errorFamily: "timeout",
         providerReferencePresent: true,
@@ -389,12 +420,13 @@ export function PersonalPlanOneTimeCheckout({
       status?: unknown
     }
     if (response.status === 409) {
-      if (
-        body.error === "checkout_access_already_exists" ||
-        body.error === "checkout already completed"
-      )
-        setDuplicateDialogOpen(true)
-      else if (body.provider_locked === "paypal") {
+      const controlOutcome = getPreparedCheckoutControlOutcome({
+        error: body.error,
+        providerLocked: body.provider_locked,
+        status: body.status,
+      })
+      if (controlOutcome === "duplicate_access") setDuplicateDialogOpen(true)
+      else if (controlOutcome === "provider_locked" && body.provider_locked === "paypal") {
         setPaypalProviderLocked(true)
         setStripeSelected(false)
         setError(null)
@@ -409,7 +441,9 @@ export function PersonalPlanOneTimeCheckout({
     ) {
       if (body.status === "unavailable") {
         preparedStripeCheckoutRef.current = null
-        setStripePreparationId(createFunnelEventId())
+        setPreparationFailureReported(false)
+        setStripePreparationCredential(createPreparedCheckoutCredential())
+        return false
       }
       setError(checkoutStartError)
       reportStripeCustomerError({
@@ -502,6 +536,7 @@ export function PersonalPlanOneTimeCheckout({
           checkoutKey={`personal-plan-once:${stripePreparationId}`}
           commerceKind="one_time"
           fetchClientSecret={fetchClientSecret}
+          preparationFailureReported={preparationFailureReported}
           onBeforeConfirm={handleBeforeStripeConfirm}
           onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
           onFirstPaymentEngagement={markFirstEngagement}
@@ -510,8 +545,9 @@ export function PersonalPlanOneTimeCheckout({
           onRetry={() => {
             preparedStripeCheckoutRef.current = null
             setError(null)
+            setPreparationFailureReported(false)
             reportStripePreparationState("preparing")
-            setStripePreparationId(createFunnelEventId())
+            setStripePreparationCredential(createPreparedCheckoutCredential())
           }}
           paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
           observabilitySource="quiz_result_offer"

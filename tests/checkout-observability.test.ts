@@ -288,6 +288,36 @@ test("scrubSentryEvent removes resume tokens from every supported Sentry surface
   assert.deepEqual(event.request?.query_string, { resume_token: "[Filtered]", keep: "yes" })
 })
 
+test("scrubSentryEvent redacts preparation tokens including normalized nested request data", () => {
+  const token = "opaque-preparation-credential"
+  const event = scrubSentryEvent({
+    request: {
+      url: `/api/stripe/create-checkout-session?preparation_token=${token}&preparationToken=${token}&preparationtoken=${token}`,
+      query_string: `preparationToken=${token}&keep=yes`,
+      data: {
+        preparationToken: token,
+        preparation_token: token,
+        preparationtoken: token,
+        nested: { preparationToken: token },
+      },
+    },
+  })
+
+  const serialized = JSON.stringify(event)
+  assert.equal(serialized.includes(token), false)
+  assert.equal(
+    event.request?.url,
+    "/api/stripe/create-checkout-session?preparation_token=%5BFiltered%5D&preparationToken=%5BFiltered%5D&preparationtoken=%5BFiltered%5D",
+  )
+  assert.equal(event.request?.query_string, "preparationToken=%5BFiltered%5D&keep=yes")
+  assert.deepEqual(event.request?.data, {
+    preparationToken: "[Filtered]",
+    preparation_token: "[Filtered]",
+    preparationtoken: "[Filtered]",
+    nested: { preparationToken: "[Filtered]" },
+  })
+})
+
 test("scrubSentryEvent redacts nested provider secrets and email equivalents", () => {
   const secret = "pi_secret_123"
   const email = "customer@example.com"

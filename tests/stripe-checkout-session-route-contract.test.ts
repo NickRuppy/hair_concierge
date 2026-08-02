@@ -4,6 +4,7 @@ import { NextRequest } from "next/server"
 import {
   canonicalOneTimeClaimMetadata,
   canonicalOneTimeClaimMetadataPatch,
+  classifyCheckoutInitializationFailure,
   classifyOneTimeStripeSessionRecovery,
   hashPreparedCheckoutToken,
   hasMatchingPreparedCheckoutClaim,
@@ -11,10 +12,13 @@ import {
   isOfferElementsCheckoutEnabled,
   hasCanonicalOneTimeClaimMetadata,
   POST,
+  preparedCheckoutApplicationExpiresAt,
   preparedCheckoutClaimIdempotencyKey,
+  preparedCheckoutCreateIdempotencyKey,
   preparedCheckoutExpiresAt,
   preparedCheckoutUnavailablePayload,
   reusableOneTimeStripeSessionClientSecret,
+  reportStripeCheckoutInitializationFailure,
   resolvePreparedCheckoutPricing,
   resolveOneTimeConsentFunnelContext,
   shouldRecordFunnelForCheckoutAction,
@@ -93,6 +97,7 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     ...oneTimeBase,
     action: "prepare",
     preparationId,
+    preparationToken,
   })
   const validClaim = StripeCheckoutSessionRequestSchema.safeParse({
     ...oneTimeBase,
@@ -141,6 +146,7 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     leadId: undefined,
     action: "prepare",
     preparationId,
+    preparationToken,
   })
 
   assert.equal(unsupportedDirectCreate.success, false)
@@ -278,12 +284,41 @@ test("one-time checkout reuses only an open Stripe Session with a client secret"
   )
 })
 
-test("prepared Sessions leave a safe margin above Stripe's 30-minute expiry minimum", () => {
+test("prepared and recovered one-time Sessions use a capped server-clock application deadline", () => {
   const nowSeconds = 1_000_000
   const expiresAt = preparedCheckoutExpiresAt(nowSeconds)
 
   assert.equal(expiresAt, nowSeconds + 31 * 60)
   assert.equal(expiresAt - nowSeconds > 30 * 60, true)
+  assert.equal(preparedCheckoutApplicationExpiresAt(nowSeconds + 60 * 60, nowSeconds), expiresAt)
+  const recoveredOneTimeStripeExpiry = nowSeconds + 60
+  assert.equal(
+    preparedCheckoutApplicationExpiresAt(recoveredOneTimeStripeExpiry, nowSeconds),
+    recoveredOneTimeStripeExpiry,
+  )
+})
+
+test("prepared checkout retries keep the provider idempotency proof stable until refresh", () => {
+  const preparationId = "c2a89c81-7e93-4d81-98d1-c7cfd7047721"
+  const refreshedPreparationId = "d3b90d92-8fa4-4e92-a9e2-d8dfe8158832"
+  const refreshedToken = "9uAW9UoGi4kDyEH9pyR7zCWrRIe6WTULs3Ja0hLaW2t"
+
+  const first = {
+    idempotencyKey: preparedCheckoutCreateIdempotencyKey(preparationId),
+    tokenHash: hashPreparedCheckoutToken(preparationToken),
+  }
+  const retry = {
+    idempotencyKey: preparedCheckoutCreateIdempotencyKey(preparationId),
+    tokenHash: hashPreparedCheckoutToken(preparationToken),
+  }
+  const refreshed = {
+    idempotencyKey: preparedCheckoutCreateIdempotencyKey(refreshedPreparationId),
+    tokenHash: hashPreparedCheckoutToken(refreshedToken),
+  }
+
+  assert.deepEqual(retry, first)
+  assert.notEqual(refreshed.idempotencyKey, first.idempotencyKey)
+  assert.notEqual(refreshed.tokenHash, first.tokenHash)
 })
 
 test("prepared checkout failures use one generic client payload", () => {
@@ -291,6 +326,75 @@ test("prepared checkout failures use one generic client payload", () => {
     status: "unavailable",
     reason: "prepared_checkout_unavailable",
   })
+})
+
+test("checkout initialization failures retain only closed provider causes", () => {
+  assert.deepEqual(classifyCheckoutInitializationFailure({ code: "idempotency_error" }), {
+    errorFamily: "provider_session",
+    status: "idempotency_conflict",
+  })
+  assert.deepEqual(classifyCheckoutInitializationFailure({ statusCode: 429 }), {
+    errorFamily: "provider_unavailable",
+    status: "rate_limited",
+  })
+  assert.deepEqual(classifyCheckoutInitializationFailure({ code: "price_not_configured" }), {
+    errorFamily: "configuration",
+    status: "configuration_missing",
+  })
+  assert.deepEqual(
+    classifyCheckoutInitializationFailure(
+      new Error("customer@example.com cs_secret_should_not_escape"),
+    ),
+    { errorFamily: "unknown", status: "unknown" },
+  )
+})
+
+test("unexpected checkout initialization failures capture once, flush once, and use live runtime truth", async () => {
+  const captured: unknown[] = []
+  let flushCalls = 0
+
+  await reportStripeCheckoutInitializationFailure(
+    {
+      error: { code: "idempotency_error", message: "cs_secret_never_reported" },
+      commerceKind: "one_time",
+      isInternalTest: true,
+      leadId: validRequest.leadId,
+      source: "quiz_result_offer",
+    },
+    {
+      capture: (details) => {
+        captured.push(details)
+        return undefined
+      },
+      flush: async () => {
+        flushCalls += 1
+        return true
+      },
+      environment: {
+        VERCEL_ENV: "production",
+        STRIPE_SECRET_KEY: "sk_live_safe_test_key",
+      },
+    },
+  )
+
+  assert.equal(captured.length, 1)
+  assert.equal(flushCalls, 1)
+  assert.deepEqual(captured[0], {
+    signal: "payment_checkout_initialization_failed",
+    provider: "stripe",
+    boundary: "provider_session",
+    errorFamily: "provider_session",
+    commerceKind: "one_time",
+    origin: "provider_api",
+    method: "unknown",
+    truth: "unknown",
+    live: true,
+    isInternalTest: true,
+    source: "quiz_result_offer",
+    leadId: validRequest.leadId,
+    status: "idempotency_conflict",
+  })
+  assert.doesNotMatch(JSON.stringify(captured), /cs_secret|message|token/i)
 })
 
 test("rejects Elements presentation for membership reactivation inputs", () => {
@@ -316,11 +420,18 @@ test("requires the tightly-scoped preparation contract and keeps legacy creation
     action: "prepare",
     presentation: "offer_overlay_elements",
     preparationId: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
+    preparationToken,
   })
   const missingPreparationId = StripeCheckoutSessionRequestSchema.safeParse({
     ...validRequest,
     action: "prepare",
     presentation: "offer_overlay_elements",
+  })
+  const missingPreparationToken = StripeCheckoutSessionRequestSchema.safeParse({
+    ...validRequest,
+    action: "prepare",
+    presentation: "offer_overlay_elements",
+    preparationId: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
   })
   const genericPreparation = StripeCheckoutSessionRequestSchema.safeParse({
     ...validRequest,
@@ -331,6 +442,7 @@ test("requires the tightly-scoped preparation contract and keeps legacy creation
   assert.equal(legacy.success, true)
   assert.equal(prepared.success, true)
   assert.equal(missingPreparationId.success, false)
+  assert.equal(missingPreparationToken.success, false)
   assert.equal(genericPreparation.success, false)
 })
 

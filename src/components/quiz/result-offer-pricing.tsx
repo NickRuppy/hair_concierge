@@ -53,6 +53,10 @@ import type {
   OfferPaymentOptionProvider,
 } from "@/lib/analytics/events"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
+import {
+  createPreparedCheckoutCredential,
+  type PreparedCheckoutCredential,
+} from "@/lib/stripe/prepared-checkout-credential"
 import { resolvePersonalPlanPricingMode } from "@/lib/funnel/personal-plan-pricing-experiment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
@@ -164,6 +168,7 @@ export type ResultOfferPricingCheckoutLifecycleFixture = {
   prepare: (input: {
     interval: BillingInterval
     preparationId: string
+    preparationToken: string
   }) => Promise<PreparedOfferCheckoutResponse>
   renderPaymentCheckout: (input: {
     checkoutAttemptId: string | null
@@ -279,10 +284,6 @@ export async function canConfirmPreparedOfferCheckout(
     return false
   }
   return claim.promise.then((result) => result.activated)
-}
-
-function createOfferCheckoutPreparationId() {
-  return globalThis.crypto?.randomUUID?.() ?? createFunnelEventId()
 }
 
 export function readPreparedOfferCheckoutResponse(
@@ -1063,13 +1064,13 @@ function MembershipResultOfferPricing({
     async ({
       generation,
       interval,
-      preparationId,
+      credential,
       requestKey,
       startedAt,
     }: {
       generation: number
       interval: BillingInterval
-      preparationId: string
+      credential: PreparedCheckoutCredential
       requestKey: string
       startedAt: number
     }): Promise<PreparedOfferCheckout | null> => {
@@ -1079,7 +1080,8 @@ function MembershipResultOfferPricing({
         if (checkoutLifecycleFixture) {
           data = await checkoutLifecycleFixture.prepare({
             interval,
-            preparationId,
+            preparationId: credential.preparationId,
+            preparationToken: credential.preparationToken,
           })
         } else {
           ensureStripePromise()
@@ -1092,7 +1094,8 @@ function MembershipResultOfferPricing({
               leadId,
               source: "quiz_result_offer",
               presentation: "offer_overlay_elements",
-              preparationId,
+              preparationId: credential.preparationId,
+              preparationToken: credential.preparationToken,
             }),
           })
           if (!response.ok) return null
@@ -1108,9 +1111,9 @@ function MembershipResultOfferPricing({
 
         const nextPreparation: PreparedOfferCheckout = {
           ...prepared,
-          checkoutKey: `prepared:${interval}:${prepared.sessionId}:${preparationId}`,
+          checkoutKey: `prepared:${interval}:${prepared.sessionId}:${credential.preparationId}`,
           interval,
-          preparationId,
+          preparationId: credential.preparationId,
           preparationStartedAt: startedAt,
           walletTelemetryTracked: false,
         }
@@ -1164,14 +1167,14 @@ function MembershipResultOfferPricing({
       if (prewarmRequestRef.current?.key === requestKey) return
 
       const generation = ++prewarmGenerationRef.current
-      const preparationId = createOfferCheckoutPreparationId()
+      const credential = createPreparedCheckoutCredential()
       prewarmAttemptedKeysRef.current.add(requestKey)
       prewarmFailedKeysRef.current.delete(requestKey)
       prewarmPlanChangePendingRef.current = false
       const promise = prepareOfferCheckout({
         generation,
         interval,
-        preparationId,
+        credential,
         requestKey,
         startedAt: Date.now(),
       })
@@ -1789,7 +1792,7 @@ function MembershipResultOfferPricing({
           interval: checkoutInterval,
           provider: "stripe",
         })
-        throw new Error("checkout access already exists")
+        throw new Error("prepared_checkout_control:duplicate_access")
       }
       setCheckoutError(checkoutStartError)
       trackCheckoutFailure({

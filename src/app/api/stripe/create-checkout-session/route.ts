@@ -4,12 +4,18 @@ import { createClient } from "@supabase/supabase-js"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import { captureCheckoutException } from "@/lib/observability/checkout"
+import {
+  captureServerPaymentFailure,
+  flushServerPaymentTelemetry,
+} from "@/lib/observability/payment-server"
 import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import {
   recordFunnelEvent,
   assertPersonalPlanOneTimeCheckoutAuthorized,
+  PersonalPlanOneTimeCheckoutAuthorizationError,
   resolveFunnelCookieContext,
   resolveFunnelContextForLead,
   resolvePendingFunnelTouchValue,
@@ -43,7 +49,7 @@ import {
   type MembershipReactivationCheckoutReservation,
 } from "@/lib/reactivation/checkout-reservations"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto"
+import { createHash, timingSafeEqual } from "node:crypto"
 import type Stripe from "stripe"
 
 const PREPARED_CHECKOUT_MINIMUM_TTL_SECONDS = 30 * 60
@@ -177,11 +183,11 @@ export const StripeCheckoutSessionRequestSchema = z
             path: ["action"],
           })
         }
-        if (!preparationId) {
+        if (!preparationId || !preparationToken) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "prepared checkout requires a preparation id",
-            path: ["preparationId"],
+            message: "prepared checkout requires a preparation credential",
+            path: preparationId ? ["preparationToken"] : ["preparationId"],
           })
         }
         if (checkoutAttemptId || funnelEventId || checkoutContext || returnDestination) {
@@ -284,6 +290,13 @@ export function preparedCheckoutExpiresAt(nowSeconds = Math.floor(Date.now() / 1
   )
 }
 
+export function preparedCheckoutApplicationExpiresAt(
+  stripeExpiresAt: number,
+  applicationWindowStartedAt = Math.floor(Date.now() / 1000),
+) {
+  return Math.min(stripeExpiresAt, preparedCheckoutExpiresAt(applicationWindowStartedAt))
+}
+
 export async function POST(req: NextRequest) {
   const parsed = StripeCheckoutSessionRequestSchema.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {
@@ -315,6 +328,7 @@ export async function POST(req: NextRequest) {
   const isPreparation = action === "prepare"
   const subscriptionInterval = interval as BillingInterval
   const commerceInterval = isOneTimePurchase ? "one_time" : subscriptionInterval
+  let checkoutIsInternalTest: boolean | undefined
   try {
     // Identity resolution: prefer existing Stripe customer > email > 400
     // Priority: leadId email → authed user's stripe_customer_id → authed user's email → 400
@@ -345,14 +359,26 @@ export async function POST(req: NextRequest) {
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
     let oneTimeConsentId: string | null = null
     let oneTimeProviderLocked: "stripe" | null = null
-    let checkoutIsInternalTest: boolean | undefined
 
     if (isOneTimePurchase) {
       // Re-fetches the persisted arm; browser fields only select this guarded path.
-      const authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({
-        leadId: leadId!,
-        funnelSessionId,
-      })
+      let authorization
+      try {
+        authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({
+          leadId: leadId!,
+          funnelSessionId,
+        })
+      } catch (error) {
+        if (
+          !(error instanceof PersonalPlanOneTimeCheckoutAuthorizationError) ||
+          error.reason !== "not_authorized"
+        ) {
+          throw error
+        }
+        return isPreparation
+          ? preparedCheckoutUnavailable()
+          : NextResponse.json({ error: "not found" }, { status: 404 })
+      }
       checkoutIsInternalTest = authorization.isInternalTest
       if (isPreparation) {
         const { data: existing, error: lookupError } = await getAdminSupabase()
@@ -380,7 +406,7 @@ export async function POST(req: NextRequest) {
               status: "recovered",
               client_secret: recovery.clientSecret,
               session_id: existingSession.id,
-              expires_at: existingSession.expires_at,
+              expires_at: preparedCheckoutApplicationExpiresAt(existingSession.expires_at),
               provider_locked: "stripe",
             })
           }
@@ -527,14 +553,12 @@ export async function POST(req: NextRequest) {
           leadId,
           error,
         })
-        captureCheckoutException(error, {
-          provider: "stripe",
-          stage: "stripe_checkout_session_create",
-          source: "pricing_page",
-          interval: commerceInterval as never,
+        await reportStripeCheckoutInitializationFailure({
+          error,
+          commerceKind: isOneTimePurchase ? "one_time" : "subscription",
+          isInternalTest: checkoutIsInternalTest ?? false,
           leadId,
-          status: 500,
-          reason: "lead_lookup_failed",
+          source,
         })
         return isPreparation
           ? preparedCheckoutUnavailable()
@@ -619,14 +643,12 @@ export async function POST(req: NextRequest) {
         (resolvedSubscriptionPrice?.interval !== subscriptionInterval ||
           resolvedSubscriptionPrice.pricingCatalog !== pricingCatalog))
     ) {
-      captureCheckoutException(new Error("Stripe price not configured"), {
-        provider: "stripe",
-        stage: "stripe_checkout_session_create",
-        source: "pricing_page",
-        interval: commerceInterval as never,
+      await reportStripeCheckoutInitializationFailure({
+        error: { code: "price_not_configured" },
+        commerceKind: isOneTimePurchase ? "one_time" : "subscription",
+        isInternalTest: checkoutIsInternalTest ?? false,
         leadId,
-        status: 500,
-        reason: "price_not_configured",
+        source,
       })
       return NextResponse.json({ error: "price not configured" }, { status: 500 })
     }
@@ -687,11 +709,10 @@ export async function POST(req: NextRequest) {
       checkoutIsInternalTest = funnelContext.isInternalTest
     }
 
-    const preparationTokenForResponse = isPreparation ? createPreparedCheckoutToken() : null
     const preparedMetadata = isPreparation
       ? buildPreparedCheckoutMetadata({
           preparationId: preparationId!,
-          preparationTokenHash: hashPreparedCheckoutToken(preparationTokenForResponse!),
+          preparationTokenHash: hashPreparedCheckoutToken(preparationToken!),
           interval: commerceInterval,
           priceId,
           pricingCatalog: isOneTimePurchase ? undefined : pricingCatalog,
@@ -738,7 +759,6 @@ export async function POST(req: NextRequest) {
         : {}),
       ...(isPreparation
         ? {
-            expiresAt: preparedCheckoutExpiresAt(),
             metadata: {
               ...preparedMetadata,
               ...(checkoutIsInternalTest !== undefined
@@ -753,7 +773,7 @@ export async function POST(req: NextRequest) {
       reactivationReservation
         ? { idempotencyKey: `membership-reactivation:${reactivationReservation.id}` }
         : isPreparation
-          ? { idempotencyKey: `offer-elements-preparation:${preparationId}` }
+          ? { idempotencyKey: preparedCheckoutCreateIdempotencyKey(preparationId!) }
           : isOneTimePurchase
             ? { idempotencyKey: `personal-plan-once:${checkoutAttemptId}` }
             : undefined,
@@ -772,25 +792,20 @@ export async function POST(req: NextRequest) {
     }
 
     if (isPreparation) {
-      if (!session.client_secret || !preparationTokenForResponse) {
+      if (!session.client_secret) {
         throw new Error("prepared Stripe checkout session has no client secret")
       }
       // Stripe can replay the idempotent Session for the same preparation ID.
       // Never hand back a fresh token that cannot claim that existing Session.
-      if (
-        !hasMatchingToken(
-          session.metadata?.checkout_preparation_token_hash,
-          preparationTokenForResponse,
-        )
-      ) {
+      if (!hasMatchingToken(session.metadata?.checkout_preparation_token_hash, preparationToken!)) {
         return preparedCheckoutUnavailable()
       }
       return NextResponse.json({
         status: "prepared",
         client_secret: session.client_secret,
         session_id: session.id,
-        preparation_token: preparationTokenForResponse,
-        expires_at: session.expires_at,
+        preparation_token: preparationToken,
+        expires_at: preparedCheckoutApplicationExpiresAt(session.expires_at, session.created),
         ...(oneTimeProviderLocked ? { provider_locked: oneTimeProviderLocked } : {}),
       })
     }
@@ -829,12 +844,12 @@ export async function POST(req: NextRequest) {
     }
     return response
   } catch (error) {
-    captureCheckoutException(error, {
-      provider: "stripe",
-      stage: "stripe_checkout_session_create",
-      source: "pricing_page",
-      interval: commerceInterval as never,
+    await reportStripeCheckoutInitializationFailure({
+      error,
+      commerceKind: isOneTimePurchase ? "one_time" : "subscription",
+      isInternalTest: checkoutIsInternalTest ?? false,
       leadId,
+      source,
     })
     throw error
   }
@@ -846,6 +861,91 @@ function isDefinitivelyMissingStripeResource(error: unknown) {
   return candidate.code === "resource_missing" || candidate.statusCode === 404
 }
 
+export function classifyCheckoutInitializationFailure(error: unknown): {
+  errorFamily: "configuration" | "provider_session" | "provider_unavailable" | "unknown"
+  status:
+    | "idempotency_conflict"
+    | "configuration_missing"
+    | "rate_limited"
+    | "provider_unavailable"
+    | "unknown"
+} {
+  const candidate =
+    error && typeof error === "object"
+      ? (error as { code?: unknown; statusCode?: unknown; type?: unknown })
+      : null
+  const code = typeof candidate?.code === "string" ? candidate.code : ""
+  const statusCode = typeof candidate?.statusCode === "number" ? candidate.statusCode : undefined
+  const type = typeof candidate?.type === "string" ? candidate.type : ""
+
+  if (code === "idempotency_error") {
+    return { errorFamily: "provider_session", status: "idempotency_conflict" }
+  }
+  if (
+    code === "api_key_expired" ||
+    code === "invalid_api_key" ||
+    code === "price_not_configured" ||
+    type === "StripeAuthenticationError"
+  ) {
+    return { errorFamily: "configuration", status: "configuration_missing" }
+  }
+  if (code === "rate_limit" || statusCode === 429) {
+    return { errorFamily: "provider_unavailable", status: "rate_limited" }
+  }
+  if (statusCode === 502 || statusCode === 503 || statusCode === 504 || type === "StripeAPIError") {
+    return { errorFamily: "provider_unavailable", status: "provider_unavailable" }
+  }
+  return { errorFamily: "unknown", status: "unknown" }
+}
+
+type StripeCheckoutInitializationFailure = {
+  error: unknown
+  commerceKind: "subscription" | "one_time"
+  isInternalTest: boolean
+  leadId?: string | null
+  source: "pricing_page" | "quiz_result_offer"
+}
+
+type StripeCheckoutInitializationTelemetry = {
+  capture: typeof captureServerPaymentFailure
+  flush: typeof flushServerPaymentTelemetry
+  environment: { STRIPE_SECRET_KEY?: string; VERCEL_ENV?: string }
+}
+
+export async function reportStripeCheckoutInitializationFailure(
+  input: StripeCheckoutInitializationFailure,
+  telemetry: StripeCheckoutInitializationTelemetry = {
+    capture: captureServerPaymentFailure,
+    flush: flushServerPaymentTelemetry,
+    environment: {
+      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+    },
+  },
+) {
+  const classification = classifyCheckoutInitializationFailure(input.error)
+  const runtime = resolvePaymentRuntime({
+    VERCEL_ENV: telemetry.environment.VERCEL_ENV,
+    STRIPE_SECRET_KEY: telemetry.environment.STRIPE_SECRET_KEY,
+  })
+  telemetry.capture({
+    signal: "payment_checkout_initialization_failed",
+    provider: "stripe",
+    boundary: "provider_session",
+    errorFamily: classification.errorFamily,
+    commerceKind: input.commerceKind,
+    origin: "provider_api",
+    method: "unknown",
+    truth: "unknown",
+    live: runtime.stripeLive,
+    isInternalTest: input.isInternalTest,
+    source: input.source,
+    leadId: input.leadId,
+    status: classification.status,
+  })
+  await telemetry.flush()
+}
+
 export function preparedCheckoutUnavailablePayload() {
   return { status: "unavailable" as const, reason: PREPARED_SESSION_UNAVAILABLE }
 }
@@ -854,10 +954,6 @@ function preparedCheckoutUnavailable() {
   // Clients deliberately receive one outcome for identity, expiry, and token failures.
   // Detailed causes are safe to add to server-only diagnostics without becoming an oracle.
   return NextResponse.json(preparedCheckoutUnavailablePayload())
-}
-
-function createPreparedCheckoutToken() {
-  return randomBytes(32).toString("base64url")
 }
 
 export function hashPreparedCheckoutToken(token: string) {
@@ -982,6 +1078,10 @@ export function hasMatchingPreparedCheckoutClaim(
 
 export function preparedCheckoutClaimIdempotencyKey(preparationId: string) {
   return `offer-elements-claim:${preparationId}`
+}
+
+export function preparedCheckoutCreateIdempotencyKey(preparationId: string) {
+  return `offer-elements-preparation:${preparationId}`
 }
 
 type OneTimeConsentAttributionRow = {
@@ -1257,7 +1357,7 @@ async function claimPreparedCheckoutSession(input: {
   const validation = validatePreparedCheckoutClaim({
     metadata,
     sessionStatus: session.status,
-    expiresAt: session.expires_at,
+    expiresAt: preparedCheckoutApplicationExpiresAt(session.expires_at, session.created),
     nowSeconds: Math.floor(Date.now() / 1000),
     lineItemPriceId: resolvedLineItemPrice,
     preparationId: input.preparationId,

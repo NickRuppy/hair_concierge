@@ -28,6 +28,10 @@ import {
   type PaymentErrorFamily,
 } from "@/lib/observability/payment-client"
 import { PaymentOptionExposure } from "./payment-option-exposure"
+import {
+  isAlreadyReportedPreparedCheckoutError,
+  isHandledPreparedCheckoutControlError,
+} from "@/lib/stripe/prepared-checkout-credential"
 
 export type StripeOfferPaymentMethodType = "apple_pay" | "payment_element"
 export type StripeOfferProvider = "stripe" | "paypal"
@@ -397,6 +401,7 @@ function StripeOfferElementsCheckoutBody({
   checkoutAttemptId,
   commerceKind,
   holdPaymentChoicesUntilResolved,
+  preparationFailureReported,
   preparedCheckoutId,
   suppressExpressWallet,
   onBeforeConfirm,
@@ -420,6 +425,7 @@ function StripeOfferElementsCheckoutBody({
   checkoutAttemptId?: string
   commerceKind?: PaymentCommerceKind
   holdPaymentChoicesUntilResolved?: boolean
+  preparationFailureReported?: boolean
   preparedCheckoutId?: string
   suppressExpressWallet?: boolean
   lockedProvider?: StripeOfferProvider | null
@@ -451,6 +457,7 @@ function StripeOfferElementsCheckoutBody({
       commerceKind={commerceKind}
       checkoutResult={checkoutResult}
       holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
+      preparationFailureReported={preparationFailureReported}
       preparedCheckoutId={preparedCheckoutId}
       suppressExpressWallet={suppressExpressWallet}
       lockedProvider={lockedProvider}
@@ -479,6 +486,7 @@ export function StripeOfferElementsCheckoutContent({
   commerceKind = "unknown",
   checkoutResult,
   holdPaymentChoicesUntilResolved = false,
+  preparationFailureReported = false,
   preparedCheckoutId,
   suppressExpressWallet = false,
   initialApplePayAvailability = "pending",
@@ -507,6 +515,7 @@ export function StripeOfferElementsCheckoutContent({
   commerceKind?: PaymentCommerceKind
   checkoutResult: StripeOfferCheckoutResult
   holdPaymentChoicesUntilResolved?: boolean
+  preparationFailureReported?: boolean
   preparedCheckoutId?: string
   suppressExpressWallet?: boolean
   initialApplePayAvailability?: ApplePayAvailability
@@ -642,7 +651,13 @@ export function StripeOfferElementsCheckoutContent({
   )
 
   useEffect(() => {
-    if (checkoutResult.type !== "error") {
+    if (
+      checkoutResult.type !== "error" ||
+      !visible ||
+      preparationFailureReported ||
+      isHandledPreparedCheckoutControlError(checkoutResult.error) ||
+      isAlreadyReportedPreparedCheckoutError(checkoutResult.error)
+    ) {
       reportedCheckoutLoadErrorRef.current = false
       return
     }
@@ -666,11 +681,14 @@ export function StripeOfferElementsCheckoutContent({
     })
   }, [
     checkoutAttemptId,
+    checkoutResult,
     checkoutResult.type,
     commerceKind,
     isInternalTest,
     observabilitySource,
+    preparationFailureReported,
     stripeLive,
+    visible,
   ])
 
   useEffect(() => {
@@ -987,6 +1005,7 @@ export function StripeOfferElementsCheckoutContent({
       setPaymentElementReady(false)
       recordWalletDebugEvent("payment_load_error", undefined, event.error.code ?? event.error.type)
       const attemptKey = checkoutAttemptId ?? "unscoped_checkout"
+      if (!visible || preparationFailureReported) return
       if (reportedPaymentElementLoadErrorAttemptRef.current === attemptKey) return
       reportedPaymentElementLoadErrorAttemptRef.current = attemptKey
       capturePaymentFailure({
@@ -1011,8 +1030,10 @@ export function StripeOfferElementsCheckoutContent({
       commerceKind,
       isInternalTest,
       observabilitySource,
+      preparationFailureReported,
       recordWalletDebugEvent,
       stripeLive,
+      visible,
     ],
   )
 
@@ -1474,6 +1495,7 @@ export function StripeOfferElementsCheckout({
   commerceKind = "unknown",
   fetchClientSecret,
   holdPaymentChoicesUntilResolved = false,
+  preparationFailureReported = false,
   preparedCheckoutId,
   suppressExpressWallet = false,
   lockedProvider = null,
@@ -1501,6 +1523,7 @@ export function StripeOfferElementsCheckout({
   commerceKind?: PaymentCommerceKind
   fetchClientSecret: () => Promise<string>
   holdPaymentChoicesUntilResolved?: boolean
+  preparationFailureReported?: boolean
   preparedCheckoutId?: string
   suppressExpressWallet?: boolean
   lockedProvider?: StripeOfferProvider | null
@@ -1545,6 +1568,7 @@ export function StripeOfferElementsCheckout({
         checkoutAttemptId={checkoutAttemptId}
         commerceKind={commerceKind}
         holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
+        preparationFailureReported={preparationFailureReported}
         preparedCheckoutId={preparedCheckoutId}
         suppressExpressWallet={suppressExpressWallet}
         lockedProvider={lockedProvider}
