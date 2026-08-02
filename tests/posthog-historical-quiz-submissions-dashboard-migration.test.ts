@@ -65,7 +65,7 @@ function legacyMonthlyInsight(): StoredInsight {
 
 function exactDashboard(
   insights = historicalQuizDashboard.insights.map((_, index) => exactInsight(index)),
-) {
+): StoredDashboard {
   return {
     id: 880001,
     name: historicalQuizDashboard.title,
@@ -78,7 +78,7 @@ function exactDashboard(
       insight,
       layouts: structuredClone(historicalQuizDashboard.insights[index].layout),
     })),
-  } satisfies StoredDashboard
+  }
 }
 
 function legacyMonthlyDashboard() {
@@ -448,6 +448,93 @@ test("duplicate or drifted exact-title resources abort before writes", async () 
   )
   assert.equal(
     drift.methods.some((method) => method !== "GET"),
+    false,
+  )
+})
+
+test("active dashboard or HogQL filters abort before writes", async () => {
+  const filteredDashboard = exactDashboard()
+  filteredDashboard.filters.properties = [
+    { key: "$browser", value: ["Chrome"], operator: "exact", type: "event" },
+  ]
+  const dashboardFilter = mockPostHog({ dashboards: [filteredDashboard] })
+  await assert.rejects(
+    runHistoricalQuizDashboard(["--apply", "--confirm-project=126788"], {
+      fetch: dashboardFilter.fetch,
+      output: () => {},
+      token: "test",
+    }),
+    /unexpected historical dashboard filters/,
+  )
+  assert.equal(
+    dashboardFilter.methods.some((method) => method !== "GET"),
+    false,
+  )
+
+  const filteredInsight = exactInsight(0)
+  const source = filteredInsight.query.source as {
+    filters: { properties: unknown[]; filterTestAccounts: boolean }
+  }
+  source.filters.properties = [
+    { key: "$browser", value: ["Chrome"], operator: "exact", type: "event" },
+  ]
+  source.filters.filterTestAccounts = true
+  const insightFilter = mockPostHog({ insights: [filteredInsight] })
+  await assert.rejects(
+    runHistoricalQuizDashboard(["--apply", "--confirm-project=126788"], {
+      fetch: insightFilter.fetch,
+      output: () => {},
+      token: "test",
+    }),
+    /drifted from the reviewed historical-quiz spec/,
+  )
+  assert.equal(
+    insightFilter.methods.some((method) => method !== "GET"),
+    false,
+  )
+})
+
+test("foreign or duplicate tiles abort before repair writes", async () => {
+  const foreignTileDashboard = exactDashboard([exactInsight(0)])
+  foreignTileDashboard.tiles.push({
+    id: 9999,
+    insight: {
+      id: 9998,
+      name: "Unrelated insight",
+      description: "Not owned by this dashboard migration",
+      query: {},
+    },
+  })
+  const foreignTile = mockPostHog({ dashboards: [foreignTileDashboard] })
+  await assert.rejects(
+    runHistoricalQuizDashboard(["--apply", "--confirm-project=126788"], {
+      fetch: foreignTile.fetch,
+      output: () => {},
+      token: "test",
+    }),
+    /unexpected non-task tile/,
+  )
+  assert.equal(
+    foreignTile.methods.some((method) => method !== "GET"),
+    false,
+  )
+
+  const duplicateTileDashboard = exactDashboard([exactInsight(0)])
+  duplicateTileDashboard.tiles.push({
+    id: 9997,
+    insight: structuredClone(duplicateTileDashboard.tiles[0].insight),
+  })
+  const duplicateTile = mockPostHog({ dashboards: [duplicateTileDashboard] })
+  await assert.rejects(
+    runHistoricalQuizDashboard(["--apply", "--confirm-project=126788"], {
+      fetch: duplicateTile.fetch,
+      output: () => {},
+      token: "test",
+    }),
+    /more than once/,
+  )
+  assert.equal(
+    duplicateTile.methods.some((method) => method !== "GET"),
     false,
   )
 })

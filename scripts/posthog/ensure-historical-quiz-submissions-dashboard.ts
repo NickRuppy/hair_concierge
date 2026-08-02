@@ -124,6 +124,32 @@ function dateRangeMatches(value: unknown) {
   )
 }
 
+function inactiveFilterValue(value: unknown) {
+  return (
+    value === undefined ||
+    value === null ||
+    value === false ||
+    (Array.isArray(value) && value.length === 0)
+  )
+}
+
+function dashboardHasNoUnexpectedActiveFilters(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+  const dateKeys = new Set(["date_from", "date_to", "explicitDate"])
+  return Object.entries(value as Record<string, unknown>).every(
+    ([key, item]) => dateKeys.has(key) || inactiveFilterValue(item),
+  )
+}
+
+function hogQLFiltersMatch(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+  const filters = value as Record<string, unknown>
+  if (!dateRangeMatches(filters.dateRange)) return false
+  return Object.entries(filters).every(
+    ([key, item]) => key === "dateRange" || inactiveFilterValue(item),
+  )
+}
+
 function matchesSubset(actual: unknown, expected: unknown): boolean {
   if (Array.isArray(expected)) {
     return (
@@ -171,7 +197,7 @@ function assertInsightMatchesSpec(insight: Insight, spec: InsightVersion) {
     return
   }
   const source = insight.query?.source as
-    | { kind?: unknown; query?: unknown; filters?: { dateRange?: unknown } }
+    | { kind?: unknown; query?: unknown; filters?: Record<string, unknown> }
     | undefined
   if (
     insight.name !== spec.title ||
@@ -180,7 +206,7 @@ function assertInsightMatchesSpec(insight: Insight, spec: InsightVersion) {
       (spec.display === "Table" ? "DataTableNode" : "DataVisualizationNode") ||
     source?.kind !== "HogQLQuery" ||
     source.query !== spec.query ||
-    !dateRangeMatches(source.filters?.dateRange)
+    !hogQLFiltersMatch(source.filters)
   ) {
     throw new Error(`Insight "${spec.title}" drifted from the reviewed historical-quiz spec.`)
   }
@@ -219,9 +245,42 @@ function assertDashboardIdentity(dashboard: Dashboard) {
   }
 }
 
+function assertDashboardSafeForRepair(dashboard: Dashboard) {
+  if (!dashboardHasNoUnexpectedActiveFilters(dashboard.filters)) {
+    throw new Error(
+      `Dashboard "${historicalQuizDashboard.title}" has unexpected historical dashboard filters.`,
+    )
+  }
+  if (!Array.isArray(dashboard.tiles)) {
+    throw new Error(`Dashboard ${dashboard.id} response has no tiles.`)
+  }
+
+  const ownerByTitle = new Map<string, string>()
+  for (const spec of historicalQuizDashboard.insights) {
+    ownerByTitle.set(spec.title, spec.key)
+    const previousVersion = previousVersionFor(spec)
+    if (previousVersion) ownerByTitle.set(previousVersion.title, spec.key)
+  }
+  const seenOwners = new Set<string>()
+  for (const tile of dashboard.tiles) {
+    const title = tile.insight?.name
+    const owner = title ? ownerByTitle.get(title) : undefined
+    if (!owner) {
+      throw new Error(`Dashboard ${dashboard.id} contains an unexpected non-task tile.`)
+    }
+    if (seenOwners.has(owner)) {
+      throw new Error(`Dashboard ${dashboard.id} contains a reviewed insight more than once.`)
+    }
+    seenOwners.add(owner)
+  }
+}
+
 function assertDashboardFinal(dashboard: Dashboard) {
   assertDashboardIdentity(dashboard)
-  if (!dateRangeMatches(dashboard.filters)) {
+  if (
+    !dateRangeMatches(dashboard.filters) ||
+    !dashboardHasNoUnexpectedActiveFilters(dashboard.filters)
+  ) {
     throw new Error(
       `Dashboard "${historicalQuizDashboard.title}" has an unexpected historical date filter.`,
     )
@@ -351,7 +410,10 @@ export async function runHistoricalQuizDashboard(
   let dashboard = dashboardMatches[0]
     ? await fetchDashboard(deps, dashboardMatches[0].id)
     : undefined
-  if (dashboard) assertDashboardIdentity(dashboard)
+  if (dashboard) {
+    assertDashboardIdentity(dashboard)
+    assertDashboardSafeForRepair(dashboard)
+  }
 
   const existingInsights = new Map<string, { insight: Insight; version: "current" | "previous" }>()
   for (const spec of historicalQuizDashboard.insights) {
