@@ -99,13 +99,13 @@ export default function WaitlistPage() {
 
       <section className="mt-14 border-t border-border pt-10">
         <h2 className="font-display text-2xl font-semibold text-foreground">
-          Wer hinter der Methode steht
+          Woher die Methode kommt
         </h2>
         <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">
           Die Logik dahinter ist kein Bauchgefühl. Zugtest, Oberflächentest und eine saubere
-          Einordnung der Kopfhaut sind Handwerk aus dem Friseurstuhl. Friseurmeister Tom Hannemann
-          berät uns dabei, damit aus 4.000 Antworten und über 1.000 geprüften Produkten eine
-          Empfehlung wird, die eine Begründung hat.
+          Einordnung der Kopfhaut sind altes Friseurhandwerk. Neu ist nur, dass wir es konsequent
+          in ein System übersetzt haben: über 4.000 Antworten aus der Umfrage, über 1.000 geprüfte
+          Produkte, und zu jeder Empfehlung die Begründung, warum sie zu dir passt.
         </p>
       </section>
 
