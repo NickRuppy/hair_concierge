@@ -1,6 +1,7 @@
 "use client"
 
 import Script from "next/script"
+import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef } from "react"
 
 import { WAITLIST_EMAIL_STORAGE_KEY } from "@/lib/waitlist/config"
@@ -42,6 +43,7 @@ function readEmail() {
  * E-Mail direkt am Response, existiert es nicht, ignoriert Typeform es still.
  */
 export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
+  const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
   const mountedRef = useRef(false)
 
@@ -67,9 +69,14 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
           body: JSON.stringify({ responseId, ...(email ? { email } : {}) }),
           keepalive: true,
         }).catch(() => {})
+
+        // Weiterleitung statt Weiter-Button auf der Seite: So kann die Umfrage
+        // nicht übersprungen werden. Kurz warten, damit das Typeform-Ende noch
+        // sichtbar ist und die Meldung oben rausgeht.
+        window.setTimeout(() => router.push("/warteliste/danke"), 1200)
       },
     })
-  }, [surveyId])
+  }, [router, surveyId])
 
   useEffect(() => {
     // Falls das Skript schon geladen war (Client-Navigation), feuert onReady nicht.

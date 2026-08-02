@@ -27,10 +27,12 @@ export const LAUNCH_CLOSE_LABEL = "Dienstag, 11. August, 23:59 Uhr"
 export const WAITLIST_SURVEY_ID = process.env.NEXT_PUBLIC_WAITLIST_SURVEY_ID ?? "DP6saz3M"
 
 /**
- * Invite-Link der WhatsApp-Gruppe. Leer = Schritt wird ausgeblendet, die Seite
- * bleibt vollstaendig funktionsfaehig.
+ * Invite-Link der WhatsApp-Community. Leer = der Schritt wird ausgeblendet, die
+ * Seite bleibt vollstaendig funktionsfaehig.
  */
-export const WAITLIST_WHATSAPP_URL = process.env.NEXT_PUBLIC_WAITLIST_WHATSAPP_URL ?? ""
+export const WAITLIST_WHATSAPP_URL =
+  process.env.NEXT_PUBLIC_WAITLIST_WHATSAPP_URL ??
+  "https://chat.whatsapp.com/DFky27pitXN19Lq99Zmafy?s=cl&p=i&mlu=4"
 
 /**
  * sessionStorage-Schluessel, unter dem die E-Mail vom Opt-in zur Umfrage

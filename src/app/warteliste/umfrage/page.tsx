@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
 import { WaitlistProgress } from "@/components/waitlist/waitlist-progress"
 import { WaitlistShell } from "@/components/waitlist/waitlist-shell"
@@ -16,20 +15,18 @@ const BADGES = ["100 % kostenlos", "60 Sekunden", "Start am 9. August"]
 export default function WaitlistSurveyPage() {
   return (
     <WaitlistShell>
-      <WaitlistProgress percent={8} label="Fast geschafft" />
+      <WaitlistProgress percent={67} label="Fast geschafft" />
 
       <section className="mt-8 text-center">
         <p className="font-mono text-xs font-medium uppercase tracking-wider text-[var(--brand-plum)]">
           Fast geschafft
         </p>
         <h1 className="mt-4 font-display text-[1.75rem] font-semibold leading-tight text-foreground sm:text-[2.25rem]">
-          Dein Platz steht.
-          <br />
-          Jetzt machen wir ihn passend.
+          Dein Platz ist fast gesichert
         </h1>
         <p className="mx-auto mt-4 max-w-lg leading-relaxed text-muted-foreground">
-          Beantworte die kurzen Fragen, damit wir den Start am 9. August auf Haare wie deine
-          ausrichten. Wir lesen jede einzelne Antwort.
+          Ein letzter Schritt, damit wir chaarlie auf dich und deine Haare abstimmen können.
+          Danach schalten wir dir die kostenlosen Ressourcen in unserer WhatsApp-Community frei.
         </p>
         <p className="mt-4 text-sm font-semibold text-foreground">Dauert weniger als 60 Sekunden</p>
 
@@ -45,6 +42,11 @@ export default function WaitlistSurveyPage() {
         </ul>
       </section>
 
+      {/*
+        Bewusst ohne Weiter-Button: Der Schritt ist nur abgeschlossen, wenn die
+        Umfrage ausgefüllt ist. Die Weiterleitung auf /warteliste/danke passiert
+        im onSubmit des Embeds.
+      */}
       {WAITLIST_SURVEY_ID ? (
         <div className="mt-9">
           <WaitlistSurvey surveyId={WAITLIST_SURVEY_ID} />
@@ -57,18 +59,6 @@ export default function WaitlistSurveyPage() {
           </p>
         </div>
       )}
-
-      <div className="mt-8 text-center">
-        <Link
-          href="/warteliste/danke"
-          className="inline-block rounded-[10px] bg-[var(--brand-coral)] px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
-        >
-          Weiter zum letzten Schritt
-        </Link>
-        <p className="mt-3 text-xs text-muted-foreground">
-          Dein Platz auf der Warteliste ist bereits gesichert. Die Fragen sind freiwillig.
-        </p>
-      </div>
     </WaitlistShell>
   )
 }
