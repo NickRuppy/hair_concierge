@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E-Mail-Korrektur — Mockup</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: #302042;
+        background: #f3eef5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 32px 24px 48px;
+        background: #f3eef5;
+      }
+      .intro {
+        max-width: 860px;
+        margin: 0 auto 24px;
+      }
+      .intro h1 {
+        margin: 0;
+        font:
+          600 25px/1.2 Georgia,
+          serif;
+      }
+      .intro p {
+        margin: 8px 0 0;
+        color: #6b5c70;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .comparison {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 28px;
+      }
+      .state {
+        width: 390px;
+      }
+      .state-label {
+        min-height: 64px;
+        margin-bottom: 10px;
+      }
+      .eyebrow {
+        color: #70479e;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .state-label h2 {
+        margin: 5px 0 0;
+        font-size: 16px;
+        line-height: 1.3;
+      }
+      .phone {
+        width: 390px;
+        min-height: 844px;
+        overflow: hidden;
+        border-radius: 26px;
+        background: #fffcfa;
+        box-shadow: 0 12px 34px rgba(53, 32, 66, 0.15);
+      }
+      header {
+        border-bottom: 1px solid #d9c4ee;
+        padding: 12px 16px 10px;
+      }
+      .top {
+        display: grid;
+        grid-template-columns: 72px 1fr 72px;
+        align-items: center;
+      }
+      .back {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid #e5dfe8;
+        background: white;
+        font-size: 25px;
+        color: #302042;
+      }
+      .brand {
+        text-align: center;
+        font-family: Georgia, serif;
+        font-size: 24px;
+      }
+      .section {
+        text-align: right;
+        color: #6f45a4;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+      .progress {
+        height: 6px;
+        margin-top: 8px;
+        border-radius: 99px;
+        background: #7450ad;
+        position: relative;
+      }
+      .progress::after {
+        content: "";
+        position: absolute;
+        right: 28px;
+        top: -3px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #7450ad;
+      }
+      .labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+        font-size: 8px;
+        color: #35273e;
+      }
+      main {
+        padding: 20px 16px 42px;
+      }
+      .ready {
+        padding: 9px 16px;
+        border-radius: 99px;
+        text-align: center;
+        background: #f4ecfd;
+        color: #6e49a0;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .screen-title {
+        margin: 26px auto 12px;
+        max-width: 350px;
+        text-align: center;
+        font:
+          500 35px/1.08 Georgia,
+          serif;
+        letter-spacing: -0.02em;
+      }
+      .lede {
+        margin: 0 auto 30px;
+        text-align: center;
+        color: #746d70;
+        font-size: 17px;
+        line-height: 1.55;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      input {
+        width: 100%;
+        height: 52px;
+        border: 1.5px solid #d9c4ee;
+        border-radius: 16px;
+        padding: 0 16px;
+        background: white;
+        color: #4c4548;
+        font-size: 16px;
+        outline: none;
+      }
+      .live-suggestion {
+        width: 100%;
+        margin-top: -1px;
+        border: 1px solid #d9c4ee;
+        border-radius: 0 0 14px 14px;
+        padding: 12px 14px;
+        background: #f8f3fc;
+        text-align: left;
+        color: #302042;
+        font-size: 14px;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+      }
+      .has-suggestion {
+        border-radius: 16px 16px 0 0;
+      }
+      .input-error {
+        border: 2px solid #bd3d4e;
+        box-shadow: 0 0 0 4px rgba(116, 80, 173, 0.22);
+      }
+      .error {
+        display: flex;
+        gap: 8px;
+        margin: 11px 0 0;
+        color: #a93446;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.42;
+      }
+      .error-icon {
+        flex: 0 0 auto;
+      }
+      .server-suggestion {
+        width: 100%;
+        margin-top: 10px;
+        border: 1px solid #d9c4ee;
+        border-radius: 13px;
+        padding: 12px 14px;
+        background: white;
+        text-align: left;
+        color: #302042;
+        font-size: 14px;
+        font-weight: 750;
+      }
+      .server-suggestion span {
+        display: block;
+        margin-bottom: 2px;
+        color: #75647d;
+        font-size: 11px;
+        font-weight: 650;
+      }
+      .privacy {
+        display: flex;
+        gap: 9px;
+        margin: 20px 0 24px;
+        color: #746d70;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .lock {
+        flex: 0 0 auto;
+        font-size: 15px;
+      }
+      .cta {
+        width: 100%;
+        height: 49px;
+        border: 0;
+        border-radius: 13px;
+        background: #d36773;
+        color: white;
+        font-size: 17px;
+        font-weight: 700;
+        box-shadow: 0 2px 3px rgba(75, 42, 55, 0.12);
+      }
+      .annotation {
+        margin: 13px 3px 0;
+        padding-left: 10px;
+        border-left: 3px solid #7450ad;
+        color: #66556c;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      @media (max-width: 860px) {
+        body {
+          padding: 24px 0 36px;
+        }
+        .intro {
+          padding: 0 16px;
+        }
+        .comparison {
+          display: grid;
+          gap: 30px;
+        }
+        .state,
+        .phone {
+          width: min(390px, 100vw);
+        }
+        .phone {
+          border-radius: 0;
+        }
+        .state-label {
+          padding: 0 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="intro">
+      <h1>Zwei kleine Ergänzungen zur E-Mail-Prüfung</h1>
+      <p>
+        Planungsansicht: links Jonas’ bestehender leichter Tippfehler-Hinweis, rechts die ergänzte
+        barrierearme Rückkehr nach einer endgültigen Server-Ablehnung.
+      </p>
+    </div>
+    <div class="comparison">
+      <section class="state">
+        <div class="state-label">
+          <div class="eyebrow">1 · Beim Tippen</div>
+          <h2>Leichter Hinweis, aber keine Blockade</h2>
+        </div>
+        <div class="phone">
+          <header>
+            <div class="top">
+              <button class="back" aria-label="Zurück">←</button>
+              <div class="brand">chaarlie</div>
+              <div class="section">ERGEBNIS</div>
+            </div>
+            <div class="progress"></div>
+            <div class="labels">
+              <span>PROFIL</span><span>ZIELE</span><span>ANALYSE</span><span>PLAN</span
+              ><span>ERGEBNIS</span>
+            </div>
+          </header>
+          <main>
+            <div class="ready">Deine persönliche Auswertung ist bereit.</div>
+            <h1 class="screen-title">Wohin dürfen wir deine persönliche Auswertung senden?</h1>
+            <p class="lede">So kannst du dein Ergebnis jetzt ansehen und später wieder öffnen.</p>
+            <label for="email-early">E-Mail-Adresse</label>
+            <input
+              class="has-suggestion"
+              id="email-early"
+              value="max.mustermann@gmail.vom"
+              spellcheck="false"
+            />
+            <button class="live-suggestion" type="button">max.mustermann@gmail.com</button>
+            <p class="privacy">
+              <span class="lock">♙</span
+              ><span
+                >Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.</span
+              >
+            </p>
+            <button class="cta" type="button">Weiter zu meiner Auswertung</button>
+            <p class="annotation">
+              Der belegte Tippfehler erscheint direkt als klickbarer Vorschlag. Die Eingabe kann
+              trotzdem unverändert zum Consent weitergehen.
+            </p>
+          </main>
+        </div>
+      </section>
+
+      <section class="state">
+        <div class="state-label">
+          <div class="eyebrow">2 · Rückkehr vom Consent</div>
+          <h2>Fehler landet wieder direkt am E-Mail-Feld</h2>
+        </div>
+        <div class="phone">
+          <header>
+            <div class="top">
+              <button class="back" aria-label="Zurück">←</button>
+              <div class="brand">chaarlie</div>
+              <div class="section">ERGEBNIS</div>
+            </div>
+            <div class="progress"></div>
+            <div class="labels">
+              <span>PROFIL</span><span>ZIELE</span><span>ANALYSE</span><span>PLAN</span
+              ><span>ERGEBNIS</span>
+            </div>
+          </header>
+          <main>
+            <div class="ready">Deine persönliche Auswertung ist bereit.</div>
+            <h1 class="screen-title">Wohin dürfen wir deine persönliche Auswertung senden?</h1>
+            <p class="lede">So kannst du dein Ergebnis jetzt ansehen und später wieder öffnen.</p>
+            <label for="email-returned">E-Mail-Adresse</label>
+            <input
+              aria-describedby="email-returned-error"
+              aria-invalid="true"
+              autofocus
+              class="input-error"
+              id="email-returned"
+              value="max.mustermann@gmail.vom"
+            />
+            <p class="error" id="email-returned-error" role="alert">
+              <span class="error-icon">!</span
+              ><span
+                >Diese E-Mail-Domain kann keine E-Mails empfangen. Prüfe die Adresse oder verwende
+                eine andere.</span
+              >
+            </p>
+            <button class="server-suggestion" type="button">
+              <span>Vorgeschlagene Korrektur</span>max.mustermann@gmail.com
+            </button>
+            <p class="privacy">
+              <span class="lock">♙</span
+              ><span
+                >Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.</span
+              >
+            </p>
+            <button class="cta" type="button">Weiter zu meiner Auswertung</button>
+            <p class="annotation">
+              Der Fokus springt sichtbar zurück ins Feld. Fehlertext und Feld sind technisch
+              verknüpft und werden gemeinsam vorgelesen.
+            </p>
+          </main>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

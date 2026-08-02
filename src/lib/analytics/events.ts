@@ -1,5 +1,6 @@
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
+import type { EmailDeliverabilityFailure } from "@/lib/email-deliverability-shared"
 
 export type AnalyticsValue = string | number | boolean | null | string[] | number[] | boolean[]
 export type AnalyticsPayload = Record<string, AnalyticsValue | undefined>
@@ -294,6 +295,10 @@ export type AppEventMap = {
   quiz_lead_captured: FunnelAnalyticsEnvelope & {
     leadId: string
     marketingConsent: boolean
+  }
+  quiz_email_deliverability_rejected: {
+    reason: EmailDeliverabilityFailure
+    suggestionPresent: boolean
   }
   quiz_started: FunnelAnalyticsEnvelope & {
     stepName: string

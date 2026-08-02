@@ -1,6 +1,12 @@
 import { after, NextResponse } from "next/server"
 import { cookies } from "next/headers"
+import * as Sentry from "@sentry/nextjs"
 
+import { checkEmailDeliverability, type EmailDeliverability } from "@/lib/email-deliverability"
+import {
+  EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  type EmailDeliverabilityRejectionResponse,
+} from "@/lib/email-deliverability-shared"
 import { dispatchCustomerIoProfileSyncForLead } from "@/lib/personal-plan-quiz/customerio-outbox"
 import { enqueueMetaLead } from "@/app/api/quiz/lead/route"
 import { metaRequestData, resolveBrowserFunnelEventId } from "@/lib/analytics/meta-capi"
@@ -22,120 +28,184 @@ import {
 } from "@/lib/funnel/server"
 import { isPersonalPlanQuizV1Enabled } from "@/lib/funnel/flags"
 
-export async function POST(request: Request) {
-  if (!isPersonalPlanQuizV1Enabled()) {
-    return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 })
+interface PersonalPlanLeadPostDependencies {
+  checkRateLimit: typeof checkRateLimit
+  checkEmailDeliverability: typeof checkEmailDeliverability
+  recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
+  createAdminClient: typeof createAdminClient
+  cookies: typeof cookies
+}
+
+export function createPersonalPlanLeadPostHandler(
+  overrides: Partial<PersonalPlanLeadPostDependencies> = {},
+) {
+  const dependencies: PersonalPlanLeadPostDependencies = {
+    checkRateLimit,
+    checkEmailDeliverability,
+    recordEmailDeliverabilityOutcome,
+    createAdminClient,
+    cookies,
+    ...overrides,
   }
 
-  const rateCheck = await checkRateLimit(
-    request.headers.get("x-forwarded-for") ?? "unknown",
-    QUIZ_LEAD_RATE_LIMIT,
-  )
-  if (!rateCheck.allowed) {
-    return NextResponse.json(
-      { error: "Zu viele Anfragen" },
-      { status: rateCheck.error === "service_unavailable" ? 503 : 429 },
-    )
-  }
-
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
-  }
-  const parseResult = personalPlanLeadRequestSchema.safeParse(body)
-  if (!parseResult.success) {
-    return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
-  }
-
-  try {
-    const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
-    const parsed = parseResult.data
-    const email = normalizePersonalPlanEmail(parsed.email)
-    const metaUserRequestData = metaRequestData(request)
-    const quizAnswers = canonicalizePersonalPlanAnswers(parsed.answers)
-    const answerHash = hashPersonalPlanAnswers(quizAnswers)
-    const supabase = createAdminClient()
-    const cookieStore = await cookies()
-    const funnelContext = await resolveFunnelCookieContext(
-      cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-    )
-    const funnelTouch = funnelContext
-      ? await resolvePendingFunnelTouchValue(
-          cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
-          funnelContext,
-        )
-      : null
-    const { data: savedLeads, error: saveError } = await supabase.rpc(
-      "save_personal_plan_lead_with_artifact",
-      {
-        p_email: email,
-        p_marketing_consent: parsed.marketingConsent,
-        p_quiz_answers: quizAnswers,
-        p_artifact_id: parsed.preparedPlan.artifactId,
-        p_claim_token_hash: hashPersonalPlanClaimToken(parsed.preparedPlan.claimToken),
-        p_answer_hash: answerHash,
-      },
-    )
-    if (saveError) throw saveError
-    const leadId = savedLeads?.[0]?.lead_id
-    if (typeof leadId !== "string") {
-      throw new Error("Personal-plan lead save returned no lead ID")
+  return async function POST(request: Request) {
+    if (!isPersonalPlanQuizV1Enabled()) {
+      return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 })
     }
 
-    const createdAt = new Date().toISOString()
-    after(async () => {
-      try {
-        const outcome = await dispatchCustomerIoProfileSyncForLead(supabase, leadId)
-        if (outcome === "failed") {
-          console.warn("[customerio:profile-sync] deferred delivery queued for retry", {
+    const rateCheck = await dependencies.checkRateLimit(
+      request.headers.get("x-forwarded-for") ?? "unknown",
+      QUIZ_LEAD_RATE_LIMIT,
+    )
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: "Zu viele Anfragen" },
+        { status: rateCheck.error === "service_unavailable" ? 503 : 429 },
+      )
+    }
+
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
+    }
+    const parseResult = personalPlanLeadRequestSchema.safeParse(body)
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
+    }
+
+    try {
+      const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
+      const parsed = parseResult.data
+      const email = normalizePersonalPlanEmail(parsed.email)
+
+      // Zustellbarkeit pruefen, bevor der Lead gespeichert wird. Tippfehler in
+      // der Domain ("gmail.vom", "gmx.den") waren die Hauptursache fuer eine
+      // Bounce-Quote von rund 4,6 Prozent, die Gmail den Absender in den
+      // Spam-Ordner sortieren laesst. Bei DNS-Problemen laesst die Pruefung
+      // bewusst durch, sie darf nie Leads blockieren.
+      const deliverability = await dependencies.checkEmailDeliverability(email)
+      dependencies.recordEmailDeliverabilityOutcome(deliverability)
+      if (!deliverability.ok) {
+        const rejection: EmailDeliverabilityRejectionResponse = {
+          error: EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+          reason: deliverability.reason,
+          suggestion: deliverability.suggestion,
+        }
+        return NextResponse.json(rejection, { status: 422 })
+      }
+      const deliverableEmail = deliverability.normalized
+      const metaUserRequestData = metaRequestData(request)
+      const quizAnswers = canonicalizePersonalPlanAnswers(parsed.answers)
+      const answerHash = hashPersonalPlanAnswers(quizAnswers)
+      const supabase = dependencies.createAdminClient()
+      const cookieStore = await dependencies.cookies()
+      const funnelContext = await resolveFunnelCookieContext(
+        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+      )
+      const funnelTouch = funnelContext
+        ? await resolvePendingFunnelTouchValue(
+            cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+            funnelContext,
+          )
+        : null
+      const { data: savedLeads, error: saveError } = await supabase.rpc(
+        "save_personal_plan_lead_with_artifact",
+        {
+          p_email: deliverableEmail,
+          p_marketing_consent: parsed.marketingConsent,
+          p_quiz_answers: quizAnswers,
+          p_artifact_id: parsed.preparedPlan.artifactId,
+          p_claim_token_hash: hashPersonalPlanClaimToken(parsed.preparedPlan.claimToken),
+          p_answer_hash: answerHash,
+        },
+      )
+      if (saveError) throw saveError
+      const leadId = savedLeads?.[0]?.lead_id
+      if (typeof leadId !== "string") {
+        throw new Error("Personal-plan lead save returned no lead ID")
+      }
+
+      const createdAt = new Date().toISOString()
+      after(async () => {
+        try {
+          const outcome = await dispatchCustomerIoProfileSyncForLead(supabase, leadId)
+          if (outcome === "failed") {
+            console.warn("[customerio:profile-sync] deferred delivery queued for retry", {
+              leadId,
+            })
+          }
+        } catch (error) {
+          console.warn("[customerio:profile-sync] deferred dispatch failed", {
             leadId,
+            error: error instanceof Error ? error.message : String(error),
           })
         }
-      } catch (error) {
-        console.warn("[customerio:profile-sync] deferred dispatch failed", {
-          leadId,
-          error: error instanceof Error ? error.message : String(error),
-        })
-      }
-    })
-    enqueueMetaLead({
-      browserEventId,
-      email,
-      eventSourceUrl: META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL,
-      eventTime: createdAt,
-      leadId,
-      name: "",
-      requestData: metaUserRequestData,
-    })
-    const attributionAttached = funnelContext
-      ? await recordFunnelEvent({
-          context: funnelContext,
-          eventId: funnelEventId,
-          milestone: "lead_captured",
-          leadId,
-          touch: funnelTouch,
-        })
-          .then(() => true)
-          .catch((error) => {
-            console.warn("[funnel] personal-plan lead attachment failed", error)
-            return false
+      })
+      enqueueMetaLead({
+        browserEventId,
+        email: deliverableEmail,
+        eventSourceUrl: META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL,
+        eventTime: createdAt,
+        leadId,
+        name: "",
+        requestData: metaUserRequestData,
+      })
+      const attributionAttached = funnelContext
+        ? await recordFunnelEvent({
+            context: funnelContext,
+            eventId: funnelEventId,
+            milestone: "lead_captured",
+            leadId,
+            touch: funnelTouch,
           })
-      : false
-    const response = NextResponse.json({ leadId, attributionAttached })
-    if (attributionAttached && funnelTouch)
-      response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
-    return response
+            .then(() => true)
+            .catch((error) => {
+              console.warn("[funnel] personal-plan lead attachment failed", error)
+              return false
+            })
+        : false
+      const response = NextResponse.json({ leadId, attributionAttached })
+      if (attributionAttached && funnelTouch)
+        response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+      return response
+    } catch (error) {
+      console.error("Personal-plan lead API error:", error)
+      return NextResponse.json(
+        {
+          error: isPreparedPlanClaimError(error)
+            ? "Plan muss erneut vorbereitet werden"
+            : "Speichern fehlgeschlagen",
+        },
+        { status: isPreparedPlanClaimError(error) ? 409 : 500 },
+      )
+    }
+  }
+}
+
+export const POST = createPersonalPlanLeadPostHandler()
+
+export function recordEmailDeliverabilityOutcome(
+  deliverability: EmailDeliverability,
+  countMetric?: typeof Sentry.metrics.count,
+) {
+  try {
+    const emitMetric = countMetric ?? Sentry.metrics?.count
+    if (!emitMetric) return
+    const attributes = deliverability.ok
+      ? { outcome: deliverability.outcome }
+      : {
+          outcome: "rejected" as const,
+          reason: deliverability.reason,
+          suggestion_present: Boolean(deliverability.suggestion),
+        }
+    emitMetric("quiz.email_deliverability.check", 1, { attributes })
   } catch (error) {
-    console.error("Personal-plan lead API error:", error)
-    return NextResponse.json(
-      {
-        error: isPreparedPlanClaimError(error)
-          ? "Plan muss erneut vorbereitet werden"
-          : "Speichern fehlgeschlagen",
-      },
-      { status: isPreparedPlanClaimError(error) ? 409 : 500 },
+    // Observability must never turn an accepted address into a lost lead.
+    console.warn(
+      "[deliverability] Sentry metric failed",
+      error instanceof Error ? error.message : String(error),
     )
   }
 }

@@ -65,6 +65,12 @@ import { Button } from "@/components/ui/button"
 import { TreatmentPermedIcon, TreatmentStraightenedIcon } from "@/components/ui/icon"
 import { Input } from "@/components/ui/input"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import {
+  EMAIL_ADDRESS_PATTERN,
+  EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  parseEmailDeliverabilityRejection,
+  suggestEmailCorrection,
+} from "@/lib/email-deliverability-shared"
 import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
 import {
   PERSONAL_PLAN_LOADING_STAGES,
@@ -121,7 +127,6 @@ import {
   type QuizQuestionConfig,
 } from "./quiz-data"
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
 const AUTO_ADVANCE_MS = 260
 const PREPARED_PLAN_SESSION_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
@@ -1741,6 +1746,14 @@ function getEmailSuggestions(email: string) {
   if (!value) return []
   const [localPart, typedDomain = ""] = value.split("@")
   if (!localPart) return []
+
+  // Erst pruefen, ob die Domain einer bekannten sehr aehnlich ist. Das faengt
+  // fertig getippte Vertipper wie "gmail.vom" oder "gmx.den", bei denen die
+  // Praefix-Suche unten nichts findet. Diese Faelle waren die Hauptursache
+  // der Bounces.
+  const correction = suggestEmailCorrection(value)
+  if (correction) return [correction]
+
   const matches = EMAIL_PROVIDERS.filter((provider) =>
     typedDomain ? provider.startsWith(typedDomain) : true,
   )
@@ -1764,13 +1777,28 @@ function EmailCapture({
   const [email, setEmail] = useState("")
   const [step, setStep] = useState<"email" | "consent">("email")
   const [error, setError] = useState("")
+  const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [pendingConsent, setPendingConsent] = useState<boolean | null>(null)
+  const emailInputRef = useRef<HTMLInputElement>(null)
+  const focusEmailOnRecoveryRef = useRef(false)
   const funnelEventIdRef = useRef<string | null>(null)
-  const suggestions = getEmailSuggestions(email)
+  const localSuggestions = getEmailSuggestions(email)
+  // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
+  // fehlgeschlagenen Zustellpruefung, nicht aus einer Heuristik im Formular.
+  const suggestions =
+    serverSuggestion && serverSuggestion !== email.trim().toLowerCase()
+      ? [serverSuggestion, ...localSuggestions.filter((s) => s !== serverSuggestion)]
+      : localSuggestions
+
+  useEffect(() => {
+    if (step !== "email" || !focusEmailOnRecoveryRef.current) return
+    focusEmailOnRecoveryRef.current = false
+    emailInputRef.current?.focus()
+  }, [step])
 
   function continueToConsent() {
-    if (!EMAIL_PATTERN.test(email.trim())) {
+    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
     }
@@ -1780,7 +1808,7 @@ function EmailCapture({
   }
 
   async function submit(marketingConsent: boolean) {
-    if (!EMAIL_PATTERN.test(email.trim())) {
+    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
       setStep("email")
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
@@ -1807,6 +1835,26 @@ function EmailCapture({
       if (!response.ok) {
         if (response.status === 409) {
           onPreparedPlanRejected()
+          return
+        }
+        // Die Adresse ist nicht zustellbar. Zurueck ins E-Mail-Feld, damit sie
+        // korrigiert werden kann, statt den Nutzer im Consent-Schritt mit einer
+        // generischen Fehlermeldung stehen zu lassen.
+        if (response.status === 422) {
+          const detail: unknown = await response.json().catch(() => null)
+          const rejection = parseEmailDeliverabilityRejection(detail)
+          const suggestion = rejection?.suggestion ?? null
+          if (rejection) {
+            trackAppEvent("quiz_email_deliverability_rejected", {
+              reason: rejection.reason,
+              suggestionPresent: Boolean(suggestion),
+            })
+          }
+          focusEmailOnRecoveryRef.current = true
+          setServerSuggestion(suggestion)
+          setStep("email")
+          setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
+          window.scrollTo(0, 0)
           return
         }
         throw new Error(`Save failed with ${response.status}`)
@@ -1862,6 +1910,7 @@ function EmailCapture({
               E-Mail-Adresse
             </label>
             <Input
+              aria-describedby={error ? "personal-plan-email-error" : undefined}
               aria-invalid={Boolean(error)}
               autoComplete="email"
               className={cn(
@@ -1873,8 +1922,11 @@ function EmailCapture({
               onChange={(event) => {
                 setEmail(event.target.value)
                 setError("")
+                setServerSuggestion(null)
               }}
               placeholder="du@beispiel.de"
+              ref={emailInputRef}
+              spellCheck={false}
               type="email"
               value={email}
             />
@@ -1887,6 +1939,7 @@ function EmailCapture({
                     onClick={() => {
                       setEmail(suggestion)
                       setError("")
+                      setServerSuggestion(null)
                     }}
                     type="button"
                   >
@@ -1896,7 +1949,15 @@ function EmailCapture({
               </div>
             ) : null}
           </div>
-          {error ? <p className="mt-3 text-sm font-semibold text-destructive">{error}</p> : null}
+          {error ? (
+            <p
+              className="mt-3 text-sm font-semibold text-destructive"
+              id="personal-plan-email-error"
+              role="alert"
+            >
+              {error}
+            </p>
+          ) : null}
           <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-[var(--text-sub)]">
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
             Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.

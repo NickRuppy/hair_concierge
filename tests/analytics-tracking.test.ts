@@ -942,6 +942,51 @@ test("offer diagnostics route only to PostHog with stable snake_case context", (
   ])
 })
 
+test("email deliverability rejection is privacy-safe PostHog-only telemetry", () => {
+  assert.deepEqual(eventRoutes.quiz_email_deliverability_rejected, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("quiz_email_deliverability_rejected", {
+      reason: "no_mx",
+      suggestionPresent: true,
+    })
+
+    assert.deepEqual(calls, [
+      {
+        destination: "posthog",
+        eventName: "quiz_email_deliverability_rejected",
+        payload: { reason: "no_mx", suggestionPresent: true },
+      },
+    ])
+    assert.equal(JSON.stringify(calls).includes("@"), false)
+    assert.equal(JSON.stringify(calls).includes("domain"), false)
+  })
+
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("quiz_email_deliverability_rejected", {
+      reason: "null_mx",
+      suggestionPresent: false,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    ["quiz_email_deliverability_rejected", { reason: "null_mx", suggestion_present: false }],
+  ])
+})
+
 test("PostHog retains truthful payment option exposure context", () => {
   const originalCapture = posthog.capture
   const calls: unknown[][] = []

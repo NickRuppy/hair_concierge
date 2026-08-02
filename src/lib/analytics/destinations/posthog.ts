@@ -141,6 +141,13 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         marketing_consent: data.marketingConsent,
       }
     }
+    case "quiz_email_deliverability_rejected": {
+      const data = payload as AppEventMap["quiz_email_deliverability_rejected"]
+      return {
+        reason: data.reason,
+        suggestion_present: data.suggestionPresent,
+      }
+    }
     case "quiz_goals_selected":
       return payload
     case "quiz_started":
