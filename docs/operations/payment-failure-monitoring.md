@@ -137,8 +137,8 @@ Do not suppress `payment_integrity_mismatch` until provider truth, billing truth
 Use current events rather than issue counts when closing the groups discovered during the prepared
 Checkout incident:
 
-- `HAIR-CONCIERGE-2N` / `2P`: keep open until the stable prepared-session retry is deployed and a
-  production repeat reuses the same Stripe Session without a provider idempotency error.
+- `HAIR-CONCIERGE-2N` / `2P`: keep open until the cold-checkout release is deployed and a
+  production attempt creates a fresh Stripe Session without a provider idempotency error.
 - `HAIR-CONCIERGE-22`: close after duplicate/existing-access control flow no longer creates an
   unhandled browser exception and the existing-access dialog still works.
 - `HAIR-CONCIERGE-1N`, `1R`, `1P`, `2E`, `2F`: close after the exact native-bridge filter is deployed

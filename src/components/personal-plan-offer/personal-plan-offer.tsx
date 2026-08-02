@@ -415,7 +415,7 @@ function AnimatedPersonalPlanFaqItem({
 }
 
 export function PersonalPlanOffer({
-  disableCheckoutPrewarm = false,
+  checkoutPresentationFixture,
   entryContext,
   focusTarget = null,
   isInternalTest = false,
@@ -425,7 +425,7 @@ export function PersonalPlanOffer({
   offerVariant = "personal-plan-v1",
   pricingCatalog,
 }: {
-  disableCheckoutPrewarm?: boolean
+  checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
   entryContext: OfferEntryContext
   focusTarget?: PersonalPlanOfferFocusTarget | null
   isInternalTest?: boolean
@@ -436,7 +436,6 @@ export function PersonalPlanOffer({
   pricingCatalog?: SubscriptionPricingCatalog
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
-  const [checkoutWaiting, setCheckoutWaiting] = useState(false)
   const [clientReady, setClientReady] = useState(false)
   const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
   const resolvedPricingCatalog = pricingCatalog ?? "standard"
@@ -499,19 +498,14 @@ export function PersonalPlanOffer({
               chaarlie
             </Link>
             <button
-              aria-busy={pricingReached && checkoutWaiting ? true : undefined}
-              aria-disabled={pricingReached && checkoutWaiting ? true : undefined}
               className="personal-plan-sticky-cta flex h-11 w-36 sm:w-40 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--brand-plum)] px-3 text-center text-sm font-bold leading-tight text-white shadow-[0_10px_28px_-18px_rgba(var(--brand-plum-rgb),0.85)]"
-              data-offer-cta={pricingReached && checkoutWaiting ? undefined : "sticky_header"}
+              data-offer-cta="sticky_header"
               data-offer-destination={stickyDestination}
               data-offer-selected-interval={stickySelectedInterval}
               data-offer-source-section={stickySourceSection}
               data-offer-sticky-cta=""
               data-offer-sticky-state={pricingReached ? "after_pricing" : "before_pricing"}
-              onClick={() => {
-                if (pricingReached && checkoutWaiting) return
-                stickyAction()
-              }}
+              onClick={stickyAction}
               type="button"
             >
               {pricingReached ? (
@@ -597,11 +591,10 @@ export function PersonalPlanOffer({
           </div>
           <div className="mt-7">
             <ResultOfferPricing
-              disableCheckoutPrewarm={disableCheckoutPrewarm}
+              checkoutPresentationFixture={checkoutPresentationFixture}
               leadId={leadId}
               offerTracking={offerTracking}
               offerVariant={offerVariant}
-              onCheckoutWaitingChange={setCheckoutWaiting}
               onCheckoutSummaryChange={setCheckoutSummary}
               onPricingReached={handlePricingReached}
               openCheckoutRequestId={checkoutOpenRequest}
@@ -847,28 +840,11 @@ export function PersonalPlanOffer({
               data-offer-cta="final"
               data-offer-destination="checkout"
               data-offer-source-section="final_cta"
-              aria-disabled={checkoutWaiting || undefined}
-              aria-busy={checkoutWaiting || undefined}
-              onClick={() => {
-                if (!checkoutWaiting) openCheckout()
-              }}
+              onClick={openCheckout}
               type="button"
             >
-              {checkoutWaiting ? (
-                <span className="inline-flex items-center justify-center gap-2">
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin rounded-full border-2 border-[var(--brand-plum-darkest)]/30 border-t-[var(--brand-plum-darkest)] motion-reduce:animate-none"
-                  />
-                  <span>Zahlungsoptionen werden vorbereitet …</span>
-                </span>
-              ) : (
-                "Plan sichern"
-              )}
+              Plan sichern
             </button>
-            <span className="sr-only" role="status" aria-live="polite">
-              {checkoutWaiting ? "Zahlungsoptionen werden vorbereitet …" : ""}
-            </span>
           </div>
         </section>
       </main>

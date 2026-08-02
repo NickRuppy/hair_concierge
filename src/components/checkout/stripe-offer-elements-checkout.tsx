@@ -44,26 +44,8 @@ export type StripePaymentElementAvailablePaymentMethodsChangeEvent =
   StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent
 const APPLE_PAY_INITIAL_RESPONSE_TIMEOUT_MS = 5_000
 const APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS = 10_000
-export const PREPARED_CHECKOUT_SYNC_TIMEOUT_MS = 2_000
 type StripeOfferConfirmResult = { type: "success" } | { type: "error"; error: { message: string } }
 export type StripeOfferBeforeConfirmResult = boolean | { allowed: boolean; errorMessage?: string }
-type StripeOfferServerUpdateResult =
-  | { type: "success" }
-  | { type: "error"; error: { message?: string } }
-type StripeOfferServerUpdateActions = {
-  runServerUpdate: (userFunction: () => Promise<Response>) => Promise<StripeOfferServerUpdateResult>
-}
-export type PreparedCheckoutActivationResult = {
-  activated: boolean
-  response: Response
-}
-export type PreparedCheckoutSyncFailureReason =
-  | "activation_failed"
-  | "stripe_update_failed"
-  | "timeout"
-export type PreparedCheckoutSyncResult =
-  | { status: "succeeded"; durationMs: number }
-  | { status: "failed"; durationMs: number; reason: PreparedCheckoutSyncFailureReason }
 type StripeOfferExpressElement = {
   on: (event: "cancel", handler: () => void) => unknown
   off: (event: "cancel", handler: () => void) => unknown
@@ -89,7 +71,6 @@ export type StripeOfferCheckoutResult =
           expressCheckoutConfirmEvent?: StripeExpressCheckoutElementConfirmEvent
         }) => Promise<StripeOfferConfirmResult>
         getExpressCheckoutElement: () => StripeOfferExpressElement | null
-        runServerUpdate: StripeOfferServerUpdateActions["runServerUpdate"]
       }
     }
 export type StripeOfferExpressRendererProps = {
@@ -151,7 +132,6 @@ export function getStripeExpressCheckoutExceptionReason(
 
 type StripeCustomerPaymentErrorReason =
   | "checkout_unavailable"
-  | "prepared_checkout_not_synchronized"
   | "payment_element_not_confirmable"
   | "confirm_error"
   | "confirm_event_invalid"
@@ -162,7 +142,6 @@ const STRIPE_CUSTOMER_PAYMENT_ERROR_FAMILY_BY_REASON: Record<
   PaymentErrorFamily
 > = {
   checkout_unavailable: "provider_session",
-  prepared_checkout_not_synchronized: "provider_session",
   payment_element_not_confirmable: "not_confirmable",
   confirm_error: "unknown",
   confirm_event_invalid: "unknown",
@@ -193,10 +172,7 @@ function captureStripeCustomerPaymentError({
   capturePaymentFailure({
     signal: "customer_payment_error_observed",
     provider: "stripe",
-    stage:
-      reason === "prepared_checkout_not_synchronized"
-        ? "stripe_prepared_checkout_sync"
-        : "stripe_express_checkout_confirm",
+    stage: "stripe_express_checkout_confirm",
     errorFamily: STRIPE_CUSTOMER_PAYMENT_ERROR_FAMILY_BY_REASON[reason],
     commerceKind,
     origin: "browser",
@@ -217,61 +193,6 @@ export const stripeOfferCheckoutAppearance: NonNullable<
   variables: {
     borderRadius: "26px",
   },
-}
-
-export async function synchronizePreparedCheckoutSession(
-  checkout: StripeOfferServerUpdateActions,
-  activate: (signal: AbortSignal) => Promise<PreparedCheckoutActivationResult>,
-  timeoutMs = PREPARED_CHECKOUT_SYNC_TIMEOUT_MS,
-): Promise<PreparedCheckoutSyncResult> {
-  const startedAt = Date.now()
-  const controller = new AbortController()
-  let activationFailed = false
-  const durationMs = () => Math.max(0, Date.now() - startedAt)
-  const updatePromise = checkout
-    .runServerUpdate(async () => {
-      try {
-        const activation = await activate(controller.signal)
-        if (!activation.activated) throw new Error("prepared_checkout_activation_failed")
-        return activation.response
-      } catch (error) {
-        activationFailed = true
-        throw error
-      }
-    })
-    .then<PreparedCheckoutSyncResult>((result) =>
-      result.type === "success"
-        ? { status: "succeeded", durationMs: durationMs() }
-        : {
-            status: "failed",
-            durationMs: durationMs(),
-            reason: activationFailed ? "activation_failed" : "stripe_update_failed",
-          },
-    )
-    .catch<PreparedCheckoutSyncResult>(() => ({
-      status: "failed",
-      durationMs: durationMs(),
-      reason: activationFailed ? "activation_failed" : "stripe_update_failed",
-    }))
-
-  let timeout: ReturnType<typeof setTimeout> | null = null
-  const timeoutPromise = new Promise<PreparedCheckoutSyncResult>((resolve) => {
-    timeout = setTimeout(() => {
-      controller.abort()
-      resolve({ status: "failed", durationMs: durationMs(), reason: "timeout" })
-    }, timeoutMs)
-  })
-  const result = await Promise.race([updatePromise, timeoutPromise])
-  if (timeout !== null) clearTimeout(timeout)
-  return result
-}
-
-export function getPreparedCheckoutSyncRemainingMs(
-  startedAt: number,
-  now = Date.now(),
-  timeoutMs = PREPARED_CHECKOUT_SYNC_TIMEOUT_MS,
-) {
-  return Math.max(0, timeoutMs - Math.max(0, now - startedAt))
 }
 
 export type StripeOfferElementsState = {
@@ -400,16 +321,9 @@ export function reconcilePaymentElementApplePayAvailability(
 function StripeOfferElementsCheckoutBody({
   checkoutAttemptId,
   commerceKind,
-  holdPaymentChoicesUntilResolved,
   preparationFailureReported,
-  preparedCheckoutId,
-  suppressExpressWallet,
   onBeforeConfirm,
-  onApplePayAvailabilityResolved,
   onFirstPaymentEngagement,
-  onPreparedCheckoutActivate,
-  onPreparedCheckoutSyncFailed,
-  onPreparedCheckoutSyncSucceeded,
   paymentElementEnabled,
   paymentButtonLabel,
   visible,
@@ -424,17 +338,10 @@ function StripeOfferElementsCheckoutBody({
 }: {
   checkoutAttemptId?: string
   commerceKind?: PaymentCommerceKind
-  holdPaymentChoicesUntilResolved?: boolean
   preparationFailureReported?: boolean
-  preparedCheckoutId?: string
-  suppressExpressWallet?: boolean
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
-  onApplePayAvailabilityResolved?: (available: boolean) => void
   onFirstPaymentEngagement?: () => void
-  onPreparedCheckoutActivate?: (signal: AbortSignal) => Promise<PreparedCheckoutActivationResult>
-  onPreparedCheckoutSyncFailed?: (failure: PreparedCheckoutSyncResult) => void
-  onPreparedCheckoutSyncSucceeded?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -456,17 +363,10 @@ function StripeOfferElementsCheckoutBody({
       checkoutAttemptId={checkoutAttemptId}
       commerceKind={commerceKind}
       checkoutResult={checkoutResult}
-      holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
       preparationFailureReported={preparationFailureReported}
-      preparedCheckoutId={preparedCheckoutId}
-      suppressExpressWallet={suppressExpressWallet}
       lockedProvider={lockedProvider}
       onBeforeConfirm={onBeforeConfirm}
-      onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
       onFirstPaymentEngagement={onFirstPaymentEngagement}
-      onPreparedCheckoutActivate={onPreparedCheckoutActivate}
-      onPreparedCheckoutSyncFailed={onPreparedCheckoutSyncFailed}
-      onPreparedCheckoutSyncSucceeded={onPreparedCheckoutSyncSucceeded}
       onPaymentMethodSelected={onPaymentMethodSelected}
       onPaymentOptionViewed={onPaymentOptionViewed}
       paymentElementEnabled={paymentElementEnabled}
@@ -485,18 +385,11 @@ export function StripeOfferElementsCheckoutContent({
   checkoutAttemptId,
   commerceKind = "unknown",
   checkoutResult,
-  holdPaymentChoicesUntilResolved = false,
   preparationFailureReported = false,
-  preparedCheckoutId,
-  suppressExpressWallet = false,
   initialApplePayAvailability = "pending",
   lockedProvider,
   onBeforeConfirm,
-  onApplePayAvailabilityResolved,
   onFirstPaymentEngagement,
-  onPreparedCheckoutActivate,
-  onPreparedCheckoutSyncFailed,
-  onPreparedCheckoutSyncSucceeded,
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   paymentElementEnabled = true,
@@ -514,18 +407,11 @@ export function StripeOfferElementsCheckoutContent({
   checkoutAttemptId?: string
   commerceKind?: PaymentCommerceKind
   checkoutResult: StripeOfferCheckoutResult
-  holdPaymentChoicesUntilResolved?: boolean
   preparationFailureReported?: boolean
-  preparedCheckoutId?: string
-  suppressExpressWallet?: boolean
   initialApplePayAvailability?: ApplePayAvailability
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
-  onApplePayAvailabilityResolved?: (available: boolean) => void
   onFirstPaymentEngagement?: () => void
-  onPreparedCheckoutActivate?: (signal: AbortSignal) => Promise<PreparedCheckoutActivationResult>
-  onPreparedCheckoutSyncFailed?: (failure: PreparedCheckoutSyncResult) => void
-  onPreparedCheckoutSyncSucceeded?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -548,14 +434,6 @@ export function StripeOfferElementsCheckoutContent({
   const { stripeLive } = usePaymentRuntime()
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
-  const preparedCheckoutSyncKey =
-    visible && checkoutAttemptId && preparedCheckoutId && onPreparedCheckoutActivate
-      ? `${preparedCheckoutId}:${checkoutAttemptId}`
-      : null
-  const [preparedCheckoutSyncState, setPreparedCheckoutSyncState] = useState<{
-    key: string | null
-    status: "idle" | "syncing" | "succeeded" | "failed"
-  }>({ key: null, status: "idle" })
   const [applePayAvailability, setApplePayAvailability] = useState<ApplePayAvailability>(
     initialApplePayAvailability,
   )
@@ -585,18 +463,8 @@ export function StripeOfferElementsCheckoutContent({
   const applePayLoadingDeadlineRef = useRef(Date.now() + APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS)
   const applePayInitialResponseReceivedRef = useRef(false)
   const applePayAvailabilityClosedRef = useRef(false)
-  const reportedApplePayAvailabilityRef = useRef(false)
   const reportedCheckoutLoadErrorRef = useRef(false)
   const reportedPaymentElementLoadErrorAttemptRef = useRef<string | null>(null)
-  const preparedCheckoutSyncRunRef = useRef<{
-    key: string
-    promise: Promise<PreparedCheckoutSyncResult>
-  } | null>(null)
-  const preparedCheckoutSyncDeadlineRef = useRef<{
-    key: string
-    startedAt: number
-  } | null>(null)
-  const preparedCheckoutSyncReportedKeyRef = useRef<string | null>(null)
 
   const clearApplePayInitialResponseTimer = useCallback(() => {
     if (applePayInitialResponseTimerRef.current === null) return
@@ -606,32 +474,22 @@ export function StripeOfferElementsCheckoutContent({
 
   const resolveApplePayAvailability = useCallback(
     (availability: ApplePayAvailability) => {
-      if (suppressExpressWallet) return
       clearApplePayInitialResponseTimer()
       applePayInitialResponseReceivedRef.current = true
       if (applePayAvailabilityClosedRef.current) return
       setApplePayAvailability(availability)
-      if (!reportedApplePayAvailabilityRef.current) {
-        reportedApplePayAvailabilityRef.current = true
-        onApplePayAvailabilityResolved?.(availability === "available")
-      }
     },
-    [clearApplePayInitialResponseTimer, onApplePayAvailabilityResolved, suppressExpressWallet],
+    [clearApplePayInitialResponseTimer],
   )
 
   const closeApplePayAvailability = useCallback(
     (availability: Extract<ApplePayAvailability, "failed" | "unavailable">) => {
-      if (suppressExpressWallet) return
       clearApplePayInitialResponseTimer()
       applePayInitialResponseReceivedRef.current = true
       applePayAvailabilityClosedRef.current = true
       setApplePayAvailability(availability)
-      if (!reportedApplePayAvailabilityRef.current) {
-        reportedApplePayAvailabilityRef.current = true
-        onApplePayAvailabilityResolved?.(false)
-      }
     },
-    [clearApplePayInitialResponseTimer, onApplePayAvailabilityResolved, suppressExpressWallet],
+    [clearApplePayInitialResponseTimer],
   )
 
   const recordWalletDebugEvent = useCallback(
@@ -693,139 +551,6 @@ export function StripeOfferElementsCheckoutContent({
 
   useEffect(() => {
     if (
-      !preparedCheckoutSyncKey ||
-      !checkoutAttemptId ||
-      !preparedCheckoutId ||
-      !onPreparedCheckoutActivate ||
-      preparedCheckoutSyncReportedKeyRef.current === preparedCheckoutSyncKey
-    ) {
-      return
-    }
-
-    let deadline = preparedCheckoutSyncDeadlineRef.current
-    if (!deadline || deadline.key !== preparedCheckoutSyncKey) {
-      deadline = { key: preparedCheckoutSyncKey, startedAt: Date.now() }
-      preparedCheckoutSyncDeadlineRef.current = deadline
-      setPreparedCheckoutSyncState({ key: preparedCheckoutSyncKey, status: "syncing" })
-      recordWalletDebugEvent("prepared_checkout_sync_started")
-      addCheckoutBreadcrumb({
-        provider: "stripe",
-        stage: "stripe_prepared_checkout_sync",
-        source: "quiz_result_offer",
-        checkoutAttemptId,
-        preparationId: preparedCheckoutId,
-        status: "started",
-      })
-    }
-    const syncDeadline = deadline
-
-    let active = true
-    const reportResult = (result: PreparedCheckoutSyncResult) => {
-      if (!active || preparedCheckoutSyncReportedKeyRef.current === preparedCheckoutSyncKey) {
-        return
-      }
-      preparedCheckoutSyncReportedKeyRef.current = preparedCheckoutSyncKey
-
-      if (result.status === "succeeded") {
-        setPreparedCheckoutSyncState({ key: preparedCheckoutSyncKey, status: "succeeded" })
-        recordWalletDebugEvent(
-          "prepared_checkout_sync_succeeded",
-          undefined,
-          `${result.durationMs}ms`,
-        )
-        addCheckoutBreadcrumb({
-          provider: "stripe",
-          stage: "stripe_prepared_checkout_sync",
-          source: "quiz_result_offer",
-          checkoutAttemptId,
-          preparationId: preparedCheckoutId,
-          durationMs: result.durationMs,
-          status: "succeeded",
-        })
-        onPreparedCheckoutSyncSucceeded?.()
-        return
-      }
-
-      setPreparedCheckoutSyncState({ key: preparedCheckoutSyncKey, status: "failed" })
-      recordWalletDebugEvent(
-        "prepared_checkout_sync_failed",
-        undefined,
-        `${result.reason};${result.durationMs}ms`,
-      )
-      addCheckoutBreadcrumb(
-        {
-          provider: "stripe",
-          stage: "stripe_prepared_checkout_sync",
-          source: "quiz_result_offer",
-          checkoutAttemptId,
-          preparationId: preparedCheckoutId,
-          durationMs: result.durationMs,
-          reason: result.reason,
-          status: "failed",
-        },
-        "warning",
-      )
-      onPreparedCheckoutSyncFailed?.(result)
-    }
-
-    const remainingMs = getPreparedCheckoutSyncRemainingMs(syncDeadline.startedAt)
-    if (!checkout) {
-      const timeout = window.setTimeout(
-        () =>
-          reportResult({
-            status: "failed",
-            durationMs: Date.now() - syncDeadline.startedAt,
-            reason: "timeout",
-          }),
-        remainingMs,
-      )
-      return () => {
-        active = false
-        window.clearTimeout(timeout)
-      }
-    }
-
-    let syncRun = preparedCheckoutSyncRunRef.current
-    if (!syncRun || syncRun.key !== preparedCheckoutSyncKey) {
-      syncRun = {
-        key: preparedCheckoutSyncKey,
-        promise: synchronizePreparedCheckoutSession(
-          checkout,
-          onPreparedCheckoutActivate,
-          remainingMs,
-        ).then((result) => ({
-          ...result,
-          durationMs: Date.now() - syncDeadline.startedAt,
-        })),
-      }
-      preparedCheckoutSyncRunRef.current = syncRun
-    }
-
-    const currentSyncRun = syncRun
-    void currentSyncRun.promise.then((result) => {
-      if (!active || preparedCheckoutSyncRunRef.current !== currentSyncRun) {
-        return
-      }
-      reportResult(result)
-    })
-
-    return () => {
-      active = false
-    }
-  }, [
-    checkout,
-    checkoutAttemptId,
-    onPreparedCheckoutActivate,
-    onPreparedCheckoutSyncFailed,
-    onPreparedCheckoutSyncSucceeded,
-    preparedCheckoutId,
-    preparedCheckoutSyncKey,
-    recordWalletDebugEvent,
-  ])
-
-  useEffect(() => {
-    if (
-      suppressExpressWallet ||
       !visible ||
       applePayInitialResponseReceivedRef.current ||
       applePayAvailabilityClosedRef.current
@@ -833,11 +558,10 @@ export function StripeOfferElementsCheckoutContent({
       return
     }
     applePayLoadingDeadlineRef.current = Date.now() + APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS
-  }, [suppressExpressWallet, visible])
+  }, [visible])
 
   useEffect(() => {
     if (
-      suppressExpressWallet ||
       !visible ||
       checkoutResult.type === "error" ||
       applePayInitialResponseReceivedRef.current ||
@@ -865,7 +589,6 @@ export function StripeOfferElementsCheckoutContent({
     clearApplePayInitialResponseTimer,
     closeApplePayAvailability,
     recordWalletDebugEvent,
-    suppressExpressWallet,
     visible,
   ])
 
@@ -966,13 +689,6 @@ export function StripeOfferElementsCheckoutContent({
     errorMessage,
     session: checkout,
   })
-  const preparedCheckoutSyncRequired = preparedCheckoutSyncKey !== null
-  const preparedCheckoutSyncReady =
-    !preparedCheckoutSyncRequired ||
-    (preparedCheckoutSyncState.key === preparedCheckoutSyncKey &&
-      preparedCheckoutSyncState.status === "succeeded")
-  const preparedCheckoutSyncPending = preparedCheckoutSyncRequired && !preparedCheckoutSyncReady
-
   const handleExpressCheckoutReady = useCallback(
     (event: StripeExpressCheckoutElementReadyEvent) => {
       recordWalletDebugEvent("express_ready", event.availablePaymentMethods)
@@ -1117,11 +833,9 @@ export function StripeOfferElementsCheckoutContent({
       }
       const confirmationGuardFailureReason = confirmingRef.current
         ? "confirmation_in_flight"
-        : preparedCheckoutSyncPending
-          ? "prepared_checkout_not_synchronized"
-          : !expressCheckoutConfirmEvent && !checkout.canConfirm
-            ? "payment_element_not_confirmable"
-            : null
+        : !expressCheckoutConfirmEvent && !checkout.canConfirm
+          ? "payment_element_not_confirmable"
+          : null
       if (confirmationGuardFailureReason) {
         if (confirmationGuardFailureReason === "confirmation_in_flight") {
           rejectConfirmation(confirmationGuardFailureReason)
@@ -1218,7 +932,6 @@ export function StripeOfferElementsCheckoutContent({
       markFirstPaymentEngagement,
       onBeforeConfirm,
       observabilitySource,
-      preparedCheckoutSyncPending,
       recordWalletDebugEvent,
       releaseStripe,
       stripeLive,
@@ -1250,19 +963,11 @@ export function StripeOfferElementsCheckoutContent({
   const applePayFailed = applePayAvailability === "failed"
   const applePayUnavailable = applePayAvailability === "unavailable"
   const expressDomProbeEnabled = expressDomProbeEnabledRef.current
-  const holdPaymentChoices =
-    preparedCheckoutSyncPending ||
-    (!suppressExpressWallet &&
-      holdPaymentChoicesUntilResolved &&
-      visible === true &&
-      !applePayFailed &&
-      (checkoutResult.type === "loading" || applePayPending))
-  const showSecondaryPaymentMethod =
-    visible === true && !holdPaymentChoices && Boolean(secondaryPaymentMethod)
-  const showPaymentElement = paymentElementEnabled && !holdPaymentChoices
+  const showSecondaryPaymentMethod = visible === true && Boolean(secondaryPaymentMethod)
+  const showPaymentElement = paymentElementEnabled
   const showResolvedPaymentDivider =
     showPaymentElement && (state.applePayReady || showSecondaryPaymentMethod)
-  const applePayProviderReady = state.applePayReady && preparedCheckoutSyncReady
+  const applePayProviderReady = state.applePayReady
 
   return (
     <div className="relative grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">
@@ -1289,26 +994,9 @@ export function StripeOfferElementsCheckoutContent({
         </details>
       ) : null}
 
-      {holdPaymentChoices && !expressDomProbeEnabled ? (
-        <div
-          aria-label="Zahlungsoptionen werden vorbereitet"
-          className="flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-black/[0.06] bg-black/[0.055] text-[13px] font-semibold text-[var(--text-caption)]"
-          role="status"
-        >
-          <span
-            aria-hidden="true"
-            className="size-4 animate-spin rounded-full border-2 border-black/15 border-t-black/50 motion-reduce:animate-none"
-          />
-          <span>Zahlungsoptionen werden vorbereitet …</span>
-        </div>
-      ) : null}
-
       {/* Stripe's documented hidden mount preserves measurable geometry while wallets are
           evaluated. Unavailable Express Checkout stays out of flow without collapsing to 0px. */}
-      {!suppressExpressWallet &&
-      applePayPending &&
-      !holdPaymentChoices &&
-      !expressDomProbeEnabled ? (
+      {applePayPending && !expressDomProbeEnabled ? (
         <div
           aria-label="Apple Pay wird geladen"
           className="pointer-events-none absolute inset-x-0 top-0 z-10 flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-black/[0.06] bg-black/[0.055] text-[13px] font-semibold text-[var(--text-caption)]"
@@ -1321,10 +1009,7 @@ export function StripeOfferElementsCheckoutContent({
           <span>Apple Pay wird geladen …</span>
         </div>
       ) : null}
-      {!suppressExpressWallet &&
-      applePayFailed &&
-      !holdPaymentChoices &&
-      !expressDomProbeEnabled ? (
+      {applePayFailed && !expressDomProbeEnabled ? (
         checkoutResult.type === "loading" ? (
           lockedProvider === "paypal" ? (
             <div
@@ -1355,58 +1040,54 @@ export function StripeOfferElementsCheckoutContent({
           </div>
         )
       ) : null}
-      {!suppressExpressWallet ? (
-        <PaymentOptionExposure
-          available={applePayProviderReady}
-          checkoutAttemptId={checkoutAttemptId}
-          className={
-            applePayUnavailable && !expressDomProbeEnabled
-              ? "absolute inset-x-0 h-[52px] overflow-hidden"
-              : undefined
-          }
-          onViewed={onPaymentOptionViewed}
-          option="apple_pay"
-          provider="stripe"
-          providerReady={applePayProviderReady}
-          visible={visible}
+      <PaymentOptionExposure
+        available={applePayProviderReady}
+        checkoutAttemptId={checkoutAttemptId}
+        className={
+          applePayUnavailable && !expressDomProbeEnabled
+            ? "absolute inset-x-0 h-[52px] overflow-hidden"
+            : undefined
+        }
+        onViewed={onPaymentOptionViewed}
+        option="apple_pay"
+        provider="stripe"
+        providerReady={applePayProviderReady}
+        visible={visible}
+      >
+        <div
+          ref={expressHostRef}
+          aria-hidden={!applePayProviderReady && !expressDomProbeEnabled}
+          className={`${
+            expressDomProbeEnabled
+              ? "min-h-[52px]"
+              : applePayPending || applePayFailed
+                ? "invisible min-h-[52px]"
+                : applePayUnavailable
+                  ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
+                  : ""
+          } ${lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""}`}
+          data-offer-apple-pay-availability={applePayAvailability}
+          data-offer-payment-element="apple_pay"
+          data-offer-payment-step={applePayProviderReady ? "apple_pay" : undefined}
         >
-          <div
-            ref={expressHostRef}
-            aria-hidden={!applePayProviderReady && !expressDomProbeEnabled}
-            className={`${
-              expressDomProbeEnabled
-                ? "min-h-[52px]"
-                : holdPaymentChoices
-                  ? "invisible absolute inset-x-0 top-0 h-[52px] overflow-hidden"
-                  : applePayPending || applePayFailed
-                    ? "invisible min-h-[52px]"
-                    : applePayUnavailable
-                      ? "invisible absolute inset-x-0 h-[52px] overflow-hidden"
-                      : ""
-            } ${lockedProvider === "paypal" ? "pointer-events-none opacity-50" : ""}`}
-            data-offer-apple-pay-availability={applePayAvailability}
-            data-offer-payment-element="apple_pay"
-            data-offer-payment-step={applePayProviderReady ? "apple_pay" : undefined}
-          >
-            {renderExpressCheckoutElement ? (
-              renderExpressCheckoutElement({
-                onAvailablePaymentMethodsChange: handleAvailablePaymentMethodsChange,
-                onConfirm: (event) => confirmCheckout("apple_pay", event),
-                onLoadError: handleExpressCheckoutLoadError,
-                onReady: handleExpressCheckoutReady,
-                options: stripeOfferExpressCheckoutOptions,
-              })
-            ) : (
-              <ExpressCheckoutElement
-                onConfirm={(event) => confirmCheckout("apple_pay", event)}
-                onLoadError={handleExpressCheckoutLoadError}
-                onReady={handleExpressCheckoutReady}
-                options={stripeOfferExpressCheckoutOptions}
-              />
-            )}
-          </div>
-        </PaymentOptionExposure>
-      ) : null}
+          {renderExpressCheckoutElement ? (
+            renderExpressCheckoutElement({
+              onAvailablePaymentMethodsChange: handleAvailablePaymentMethodsChange,
+              onConfirm: (event) => confirmCheckout("apple_pay", event),
+              onLoadError: handleExpressCheckoutLoadError,
+              onReady: handleExpressCheckoutReady,
+              options: stripeOfferExpressCheckoutOptions,
+            })
+          ) : (
+            <ExpressCheckoutElement
+              onConfirm={(event) => confirmCheckout("apple_pay", event)}
+              onLoadError={handleExpressCheckoutLoadError}
+              onReady={handleExpressCheckoutReady}
+              options={stripeOfferExpressCheckoutOptions}
+            />
+          )}
+        </div>
+      </PaymentOptionExposure>
 
       {showSecondaryPaymentMethod ? secondaryPaymentMethod : null}
 
@@ -1494,17 +1175,10 @@ export function StripeOfferElementsCheckout({
   clientSecret,
   commerceKind = "unknown",
   fetchClientSecret,
-  holdPaymentChoicesUntilResolved = false,
   preparationFailureReported = false,
-  preparedCheckoutId,
-  suppressExpressWallet = false,
   lockedProvider = null,
   onBeforeConfirm,
-  onApplePayAvailabilityResolved,
   onFirstPaymentEngagement,
-  onPreparedCheckoutActivate,
-  onPreparedCheckoutSyncFailed,
-  onPreparedCheckoutSyncSucceeded,
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   paymentElementEnabled = true,
@@ -1522,17 +1196,10 @@ export function StripeOfferElementsCheckout({
   clientSecret?: string | null
   commerceKind?: PaymentCommerceKind
   fetchClientSecret: () => Promise<string>
-  holdPaymentChoicesUntilResolved?: boolean
   preparationFailureReported?: boolean
-  preparedCheckoutId?: string
-  suppressExpressWallet?: boolean
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
-  onApplePayAvailabilityResolved?: (available: boolean) => void
   onFirstPaymentEngagement?: () => void
-  onPreparedCheckoutActivate?: (signal: AbortSignal) => Promise<PreparedCheckoutActivationResult>
-  onPreparedCheckoutSyncFailed?: (failure: PreparedCheckoutSyncResult) => void
-  onPreparedCheckoutSyncSucceeded?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -1567,17 +1234,10 @@ export function StripeOfferElementsCheckout({
       <StripeOfferElementsCheckoutBody
         checkoutAttemptId={checkoutAttemptId}
         commerceKind={commerceKind}
-        holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
         preparationFailureReported={preparationFailureReported}
-        preparedCheckoutId={preparedCheckoutId}
-        suppressExpressWallet={suppressExpressWallet}
         lockedProvider={lockedProvider}
         onBeforeConfirm={onBeforeConfirm}
-        onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
         onFirstPaymentEngagement={onFirstPaymentEngagement}
-        onPreparedCheckoutActivate={onPreparedCheckoutActivate}
-        onPreparedCheckoutSyncFailed={onPreparedCheckoutSyncFailed}
-        onPreparedCheckoutSyncSucceeded={onPreparedCheckoutSyncSucceeded}
         onPaymentMethodSelected={onPaymentMethodSelected}
         onPaymentOptionViewed={onPaymentOptionViewed}
         paymentElementEnabled={paymentElementEnabled}

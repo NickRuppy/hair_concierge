@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import { NextRequest } from "next/server"
 import {
@@ -8,7 +9,6 @@ import {
   classifyOneTimeStripeSessionRecovery,
   hashPreparedCheckoutToken,
   hasMatchingPreparedCheckoutClaim,
-  isOfferCheckoutPrewarmEnabled,
   isOfferElementsCheckoutEnabled,
   hasCanonicalOneTimeClaimMetadata,
   POST,
@@ -17,15 +17,24 @@ import {
   preparedCheckoutCreateIdempotencyKey,
   preparedCheckoutExpiresAt,
   preparedCheckoutUnavailablePayload,
+  reportMissingExactOfferFunnelContext,
   reusableOneTimeStripeSessionClientSecret,
   reportStripeCheckoutInitializationFailure,
+  resolveCheckoutFunnelContext,
+  resolveStripeCheckoutSessionCreateOptions,
   resolvePreparedCheckoutPricing,
   resolveOneTimeConsentFunnelContext,
   shouldRecordFunnelForCheckoutAction,
   StripeCheckoutSessionRequestSchema,
   validatePreparedCheckoutCanonicalMetadataRepair,
   validatePreparedCheckoutClaim,
+  quizOfferMembershipCreateIdempotencyKey,
 } from "../src/app/api/stripe/create-checkout-session/route"
+
+const routeSource = readFileSync(
+  new URL("../src/app/api/stripe/create-checkout-session/route.ts", import.meta.url),
+  "utf8",
+)
 
 const validRequest = {
   interval: "month",
@@ -73,6 +82,8 @@ test("accepts the allowlisted Elements presentation only for quiz-result offers"
   const parsed = StripeCheckoutSessionRequestSchema.safeParse({
     ...validRequest,
     presentation: "offer_overlay_elements",
+    checkoutAttemptId,
+    checkoutSessionAttemptId: "3bb694df-6cdf-4615-a8c7-4a0c787c2a34",
   })
 
   assert.equal(parsed.success, true)
@@ -106,6 +117,18 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     preparationToken,
     preparedSessionId: "cs_test_personal_plan_once",
     checkoutAttemptId,
+    funnelEventId,
+    consentAccepted: true,
+    consentCopyVersion: "2026-07-31",
+  })
+  const claimWithMembershipSessionAttempt = StripeCheckoutSessionRequestSchema.safeParse({
+    ...oneTimeBase,
+    action: "claim",
+    preparationId,
+    preparationToken,
+    preparedSessionId: "cs_test_personal_plan_once",
+    checkoutAttemptId,
+    checkoutSessionAttemptId: "3bb694df-6cdf-4615-a8c7-4a0c787c2a34",
     funnelEventId,
     consentAccepted: true,
     consentCopyVersion: "2026-07-31",
@@ -152,6 +175,7 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
   assert.equal(unsupportedDirectCreate.success, false)
   assert.equal(validPreparation.success, true)
   assert.equal(validClaim.success, true)
+  assert.equal(claimWithMembershipSessionAttempt.success, false)
   assert.equal(claimWithoutConsent.success, false)
   assert.equal(withSubscriptionInterval.success, false)
   assert.equal(withoutAttempt.success, false)
@@ -183,6 +207,141 @@ test("unsupported one-time direct creation stops at the request boundary", async
   assert.deepEqual(await response.json(), { error: "bad request" })
 })
 
+test("quiz-offer membership idempotency is stable within a Session attempt and fresh on retry", () => {
+  const firstSessionAttemptId = "3bb694df-6cdf-4615-a8c7-4a0c787c2a34"
+  const retrySessionAttemptId = "fe4c3c27-05b3-4d9b-9a03-aa3ca99fbb1f"
+  const first = resolveStripeCheckoutSessionCreateOptions({
+    isPreparation: false,
+    isOneTimePurchase: false,
+    source: "quiz_result_offer",
+    checkoutAttemptId,
+    checkoutSessionAttemptId: firstSessionAttemptId,
+  })
+  const replay = resolveStripeCheckoutSessionCreateOptions({
+    isPreparation: false,
+    isOneTimePurchase: false,
+    source: "quiz_result_offer",
+    checkoutAttemptId,
+    checkoutSessionAttemptId: firstSessionAttemptId,
+  })
+  const retry = resolveStripeCheckoutSessionCreateOptions({
+    isPreparation: false,
+    isOneTimePurchase: false,
+    source: "quiz_result_offer",
+    checkoutAttemptId,
+    checkoutSessionAttemptId: retrySessionAttemptId,
+  })
+  const legacyAsset = resolveStripeCheckoutSessionCreateOptions({
+    isPreparation: false,
+    isOneTimePurchase: false,
+    source: "quiz_result_offer",
+    checkoutAttemptId,
+  })
+
+  assert.deepEqual(first, {
+    idempotencyKey: quizOfferMembershipCreateIdempotencyKey(firstSessionAttemptId),
+  })
+  assert.deepEqual(replay, first)
+  assert.notDeepEqual(retry, first)
+  assert.deepEqual(legacyAsset, {
+    idempotencyKey: quizOfferMembershipCreateIdempotencyKey(checkoutAttemptId),
+  })
+  assert.match(
+    routeSource,
+    /exactOfferFunnelSessionId = source === "quiz_result_offer" \? funnelSessionId : undefined/,
+  )
+  assert.match(
+    routeSource,
+    /resolveFunnelContextForLead\(resolvedLeadId, exactOfferFunnelSessionId\)/,
+  )
+})
+
+test("pinned offer attribution falls back only to the same signed cookie session", () => {
+  const exactSessionId = "7a9675fe-f955-46a2-84dc-0ef5e94009d2"
+  const leadContext = { sessionId: exactSessionId, isInternalTest: true }
+  const matchingCookie = { sessionId: exactSessionId, packageKey: "personal-plan-membership-v1" }
+  const otherCookie = {
+    sessionId: "9f3922cf-ce08-4454-b03d-f64bf3261bb0",
+    packageKey: "personal-plan-membership-v1",
+  }
+
+  assert.equal(
+    resolveCheckoutFunnelContext({
+      shouldRecord: true,
+      exactOfferFunnelSessionId: exactSessionId,
+      leadFunnelContext: leadContext,
+      cookieFunnelContext: otherCookie,
+    }),
+    leadContext,
+  )
+  assert.equal(
+    resolveCheckoutFunnelContext({
+      shouldRecord: true,
+      exactOfferFunnelSessionId: exactSessionId,
+      leadFunnelContext: null,
+      cookieFunnelContext: matchingCookie,
+    }),
+    matchingCookie,
+  )
+  assert.equal(
+    resolveCheckoutFunnelContext({
+      shouldRecord: true,
+      exactOfferFunnelSessionId: exactSessionId,
+      leadFunnelContext: null,
+      cookieFunnelContext: otherCookie,
+    }),
+    null,
+  )
+  assert.equal(
+    resolveCheckoutFunnelContext({
+      shouldRecord: false,
+      exactOfferFunnelSessionId: exactSessionId,
+      leadFunnelContext: leadContext,
+      cookieFunnelContext: matchingCookie,
+    }),
+    null,
+  )
+})
+
+test("missing exact offer attribution is reported without identifiers or blocking checkout", () => {
+  const captures: Array<{ error: unknown; details: unknown }> = []
+  const reported = reportMissingExactOfferFunnelContext(
+    {
+      shouldRecord: true,
+      exactOfferFunnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+      funnelContext: null,
+      interval: "month",
+    },
+    (error, details) => captures.push({ error, details }),
+  )
+
+  assert.equal(reported, true)
+  assert.equal(captures.length, 1)
+  assert.match(String(captures[0]?.error), /quiz offer funnel context unavailable/)
+  assert.deepEqual(captures[0]?.details, {
+    provider: "stripe",
+    stage: "stripe_checkout_session_create",
+    source: "quiz_result_offer",
+    interval: "month",
+    reason: "funnel_context_unavailable",
+  })
+  assert.equal(
+    reportMissingExactOfferFunnelContext(
+      {
+        shouldRecord: true,
+        exactOfferFunnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+        funnelContext: null,
+        interval: "month",
+      },
+      () => {
+        throw new Error("telemetry unavailable")
+      },
+      () => {},
+    ),
+    true,
+  )
+})
+
 test("rejects generic UI modes and non-offer Elements presentation requests", () => {
   const rawUiMode = StripeCheckoutSessionRequestSchema.safeParse({
     ...validRequest,
@@ -193,9 +352,16 @@ test("rejects generic UI modes and non-offer Elements presentation requests", ()
     source: "pricing_page",
     presentation: "offer_overlay_elements",
   })
+  const sessionAttemptOutsideOffer = StripeCheckoutSessionRequestSchema.safeParse({
+    ...validRequest,
+    source: "pricing_page",
+    checkoutAttemptId,
+    checkoutSessionAttemptId: "3bb694df-6cdf-4615-a8c7-4a0c787c2a34",
+  })
 
   assert.equal(rawUiMode.success, false)
   assert.equal(nonOfferPresentation.success, false)
+  assert.equal(sessionAttemptOutsideOffer.success, false)
 })
 
 test("requires both public checkout flags before accepting an Elements session", () => {
@@ -213,18 +379,6 @@ test("requires both public checkout flags before accepting an Elements session",
       NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true",
       NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true",
     }),
-    true,
-  )
-})
-
-test("keeps prewarm actions disabled unless the dedicated kill switch is exactly true", () => {
-  assert.equal(isOfferCheckoutPrewarmEnabled({}), false)
-  assert.equal(
-    isOfferCheckoutPrewarmEnabled({ NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED: "true\n" }),
-    false,
-  )
-  assert.equal(
-    isOfferCheckoutPrewarmEnabled({ NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED: "true" }),
     true,
   )
 })
@@ -413,7 +567,7 @@ test("rejects Elements presentation for membership reactivation inputs", () => {
   assert.equal(withReturnDestination.success, false)
 })
 
-test("requires the tightly-scoped preparation contract and keeps legacy creation valid", () => {
+test("keeps tightly-scoped subscription preparation only for the documented asset-drain window", () => {
   const legacy = StripeCheckoutSessionRequestSchema.safeParse(validRequest)
   const prepared = StripeCheckoutSessionRequestSchema.safeParse({
     ...validRequest,

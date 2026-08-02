@@ -8,23 +8,21 @@ perform Stripe Dashboard changes, enable flags, or make production calls.
 - `NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED` is strict default-off: only
   the literal value `"true"` may select the Elements flow.
 - It is effective only when `NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED` is also
-  enabled. With the overlay flag off, the offer keeps its existing surface.
-- Disable the express flag to restore PR #245's Embedded Checkout in the
-  overlay without reverting code. Verify that rollback in the target
-  environment before activation.
+  enabled. With the overlay flag off, membership keeps its existing surface and
+  the one-time offer stays PayPal-only because its Stripe Elements request
+  requires both gates.
+- For membership, disabling the express flag restores PR #245's Embedded
+  Checkout in the overlay without reverting code. For the one-time offer,
+  disabling it removes Stripe Elements (Apple Pay and card) and leaves PayPal
+  as the containment fallback; a non-Express one-time Stripe fallback is not
+  implemented. Verify the relevant containment path in the target environment
+  before activation.
 
-### Offer checkout early-prewarm matrix
+### Offer checkout lifecycle
 
-All offer checkout prewarm flags are strict build-time flags: only the literal value `"true"` enables a behavior. Changing one requires a redeploy; it is not an instant runtime rollback.
+The offer no longer creates speculative Stripe Sessions or holds the drawer behind a readiness gate. Membership checkout opens first and creates one fresh Session for the explicit attempt. The one-time checkout opens with a non-actionable Apple Pay/card reservation, starts Stripe only after consent, and keeps PayPal selectable.
 
-| Base `NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED` | Early `NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED` | Resolved-open `NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED` | Behavior |
-| --- | --- | --- | --- |
-| off | any | any | No speculative preparation; existing synchronous cold checkout path. |
-| on | off | any | Existing CTA-visibility prewarm timing; no early-prewarm resolved-open gate. |
-| on | on | off | Prepare at first visible result-page mount; CTA opens through the existing ungated path. |
-| on | on | on | Prepare at first visible result-page mount and wait at a fast CTA tap until wallet readiness, preparation failure/unavailability, or the five-second fallback deadline. |
-
-`NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED=true` without early prewarm intentionally short-circuits to the shipped ungated behavior. For the narrowest rollback of a dead CTA or duplicate-attempt regression, set the resolved-open flag to anything other than the exact literal `"true"` and redeploy. Disable early prewarm to restore CTA-visibility timing; disable the base prewarm flag to remove the whole speculative preparation path.
+The former base, early-prewarm, and resolved-open flags no longer control client behavior. The supported operational containment is `NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED=false` followed by a redeploy. Membership returns to non-Express Embedded Checkout; the one-time offer becomes PayPal-only because it has no non-Express Stripe fallback. A code rollback is required to restore the removed speculative lifecycle.
 
 ## Stripe environment preflight
 

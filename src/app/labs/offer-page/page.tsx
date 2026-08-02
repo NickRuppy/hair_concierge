@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
 import {
   OfferPaymentOverlayLab,
-  OfferPaymentPrewarmLab,
+  OfferPaymentColdCheckoutLab,
 } from "@/components/checkout/offer-payment-overlay-lab"
 import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-plan-offer"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
@@ -126,6 +126,8 @@ export default async function OfferPageLab({
 }: {
   searchParams: Promise<{
     focus?: string
+    expressElements?: string
+    overlay?: string
     pricingArm?: string
     pricingCatalog?: string
     scenario?: string
@@ -142,8 +144,8 @@ export default async function OfferPageLab({
     return <OfferPaymentOverlayLab />
   }
 
-  if (variant === "payment-prewarm") {
-    return <OfferPaymentPrewarmLab scenario={params.scenario} />
+  if (variant === "payment-cold-checkout") {
+    return <OfferPaymentColdCheckoutLab scenario={params.scenario} />
   }
 
   if (variant === "personal-plan") {
@@ -155,7 +157,10 @@ export default async function OfferPageLab({
           : undefined
     return (
       <PersonalPlanOffer
-        disableCheckoutPrewarm
+        checkoutPresentationFixture={{
+          expressElements: params.expressElements !== "off",
+          overlay: params.overlay !== "off",
+        }}
         entryContext="saved_result"
         isInternalTest
         leadId="11111111-1111-4111-8111-111111111111"

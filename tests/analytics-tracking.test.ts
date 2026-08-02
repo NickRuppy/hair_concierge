@@ -12,10 +12,6 @@ import {
 import { eventRoutes } from "../src/lib/analytics/routes"
 import { trackAppEvent } from "../src/lib/analytics/track-app-event"
 import {
-  isOfferCheckoutEarlyPrewarmEnabled,
-  isOfferCheckoutResolvedOpenEnabled,
-} from "../src/lib/funnel/flags"
-import {
   clearCustomerIoBrowserClient,
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
@@ -198,35 +194,6 @@ test("checkout preparation is technical PostHog telemetry without a browser funn
     assert.deepEqual(funnelWrites, [])
   } finally {
     globalThis.fetch = originalFetch
-  }
-})
-
-test("early-prewarm and resolved-open flags are strict default-off readers", () => {
-  const earlyKey = "NEXT_PUBLIC_OFFER_CHECKOUT_EARLY_PREWARM_ENABLED"
-  const resolvedKey = "NEXT_PUBLIC_OFFER_CHECKOUT_RESOLVED_OPEN_ENABLED"
-  const originalEarly = process.env[earlyKey]
-  const originalResolved = process.env[resolvedKey]
-
-  try {
-    delete process.env[earlyKey]
-    delete process.env[resolvedKey]
-    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), false)
-    assert.equal(isOfferCheckoutResolvedOpenEnabled(), false)
-
-    process.env[earlyKey] = "true\n"
-    process.env[resolvedKey] = "TRUE"
-    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), false)
-    assert.equal(isOfferCheckoutResolvedOpenEnabled(), false)
-
-    process.env[earlyKey] = "true"
-    process.env[resolvedKey] = "true"
-    assert.equal(isOfferCheckoutEarlyPrewarmEnabled(), true)
-    assert.equal(isOfferCheckoutResolvedOpenEnabled(), true)
-  } finally {
-    if (originalEarly === undefined) delete process.env[earlyKey]
-    else process.env[earlyKey] = originalEarly
-    if (originalResolved === undefined) delete process.env[resolvedKey]
-    else process.env[resolvedKey] = originalResolved
   }
 })
 

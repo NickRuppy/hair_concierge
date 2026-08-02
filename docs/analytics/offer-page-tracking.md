@@ -17,7 +17,6 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | CTA action           | `offer_cta_clicked`             | A tracked offer CTA was clicked; `destination` distinguishes navigation from checkout intent   | PostHog                                                                                         |
 | Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                                              | Existing PostHog, Customer.io, and Meta routes                                                  |
 | Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                                          | PostHog                                                                                         |
-| CTA preparation wait | `checkout_preparation_outcome`  | Technical terminal outcome for a click-gate wait, or silent prewarm observation                | PostHog only                                                                                    |
 | Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                                    | PostHog; Meta `InitiateCheckout` for the overlay only                                           |
 | Payment option reach | `offer_payment_option_viewed`   | One ready payment option was at least 50% visible for 750 ms in the open overlay               | PostHog only                                                                                    |
 | Payment choice       | `offer_payment_method_selected` | A provider was explicitly selected; Stripe records `apple_pay` or `payment_element` when known | PostHog                                                                                         |
@@ -27,18 +26,22 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 
 `checkout_started` is deliberately later than `offer_checkout_opened`: opening the UI expresses intent, while checkout start requires a successful provider session or intent. Both events carry `checkoutPresentation` (`inline` or `overlay`). `checkout_started` also carries `checkoutStartTrigger`: `automatic_mount` for the default-mounted Stripe session and `explicit_provider_action` for an explicit provider action such as PayPal.
 
-### Early-prewarm timing contract
+### Cold checkout timing contract
 
-The CTA tap remains immediate intent: `offer_cta_clicked` is emitted when the customer taps a tracked CTA, even if a technical readiness gate keeps the drawer closed briefly. That wait is not an open or a checkout start. Each terminal wait emits the PostHog-only `checkout_preparation_outcome` with `outcome` (`prepared`, `prepared_unusable`, `wallet_unavailable_or_error`, `prepare_failure`, `timeout_prepared`, `timeout_cold`, or `prewarm_silent`) and `waitDurationMs`. It has no Customer.io, Meta, funnel, checkout-attempt, customer, or attribution fields.
+The CTA tap remains immediate intent: `offer_cta_clicked` is emitted when the customer taps a tracked CTA, and the drawer opens synchronously. The current offer checkout performs no Stripe or PayPal provider work from page mount, pricing visibility, or a hidden drawer.
 
-`offer_checkout_opened` is emitted only when the payment drawer actually opens; Meta `InitiateCheckout` therefore remains tied to an actual drawer open, never background preparation or the waiting CTA. `checkout_started` remains later still, when Stripe creates a session or PayPal creates an intent. `checkout_prepared` is technical PostHog telemetry and adds `pageMountToWalletReadyMs`, measured from the offer-pricing component mount rather than request start. A closed-drawer diagnostic that reaches its observation limit records `checkout_preparation_outcome=prewarm_silent`; it must not masquerade as `checkout_prepared.walletAvailable=false` or mutate wallet readiness.
+`offer_checkout_opened` is emitted when the drawer opens; Meta `InitiateCheckout` remains tied to that action. Membership then creates a fresh Stripe Session for a private Session-attempt ID while retaining the immutable drawer checkout-attempt ID for analytics. The one-time offer reserves the Apple Pay/card positions without making them actionable and starts its unbound Stripe preparation only after the customer accepts the existing consent. PayPal remains independently selectable. `checkout_started` is later still: after Stripe creates a usable Session or PayPal creates an intent.
+
+An explicit Stripe retry does not reopen the drawer and therefore does not emit another `offer_checkout_opened` or Meta `InitiateCheckout`. It keeps the analytics `checkoutAttemptId` stable. A known provider/response failure rotates the private `checkoutSessionAttemptId` so a cached failed Session cannot trap the retry; an uncertain network transport failure reuses that private ID so a Session whose response was lost can be recovered. All provider outcomes remain joined to the original drawer open.
+
+`checkout_prepared` and `checkout_preparation_outcome` remain historical typed events for already-recorded analytics, but the current offer client does not emit them.
 
 Apple Pay availability, Express Checkout mounting, and Payment Element initialization do not count as a payment choice. In the flagged offer-overlay Elements path, `offer_payment_method_selected` retains `provider=stripe` and adds `paymentMethodType=apple_pay` for a real Apple Pay interaction or `payment_element` for the fallback submit path.
 
 `offer_payment_option_viewed` is the exposure signal between initialization and interaction. It
 emits at most once per `checkoutAttemptId` and option (`apple_pay`, `paypal`, or
 `card_and_more`) after that provider reports readiness and the option remains at least 50% visible
-for 750 ms in a visible tab. Hidden prewarm, unavailable wallets, failed provider loads, rerenders,
+for 750 ms in a visible tab. Closed checkout, unavailable wallets, failed provider loads, rerenders,
 and options outside the open overlay do not emit. The event carries the common offer and commerce
 context plus `checkoutAttemptId`, `provider`, and `option`.
 
@@ -61,14 +64,19 @@ Create the Meta custom conversion **Offer Page Viewed** from source event `ViewC
 
 For the overlay, one explicit `Jetzt starten` action emits `offer_checkout_opened` and owns Meta `InitiateCheckout`, using its stable `checkoutAttemptId` as the Meta event ID. Provider-session `checkout_started` events remain available to PostHog and Customer.io but are suppressed from Meta only when `checkoutPresentation=overlay`. Inline fallback and checkout surfaces outside this offer retain their existing Meta delivery.
 
-The overlay is strictly default-off and renders only when
+For membership, the overlay is strictly default-off and renders only when
 `NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED=true`; otherwise the existing inline checkout and its
-current Meta routing remain unchanged.
+current Meta routing remain unchanged. The one-time offer always uses its payment dialog. For that
+offer, disabling the overlay flag is a Stripe Elements containment switch: Apple Pay and card are
+removed while the PayPal-only dialog remains available.
 
 The Elements/Apple Pay path is a second default-off gate: it is active only when both
 `NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED=true` and
-`NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED=true`. With either flag off, the client sends the
-unchanged Checkout Session request and keeps the existing payment presentation and event behavior.
+`NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED=true`. With Express disabled, membership uses the
+existing non-Express Embedded Checkout presentation. The one-time offer does not mount Stripe,
+reports only PayPal as available, and becomes PayPal-only because it has no non-Express Stripe
+fallback. Disabling the overlay flag keeps the existing non-overlay membership behavior.
+The one-time offer remains PayPal-only whenever either Elements gate is disabled.
 
 ### Offer-view deduplication
 

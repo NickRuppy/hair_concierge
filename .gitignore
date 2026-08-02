@@ -88,6 +88,7 @@ test-*.json
 fix-test-user.mjs
 test-screenshots*/
 *.png
+!plans/mockups/apple-pay-cold-checkout.png
 !public/images/**/*.png
 /daily-briefing-*.md
 
