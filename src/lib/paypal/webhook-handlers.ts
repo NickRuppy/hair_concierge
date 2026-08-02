@@ -50,7 +50,7 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import {
@@ -125,7 +125,7 @@ export interface PayPalWebhookDeps {
   finalizeOneTimeLockedPlan?: Parameters<
     typeof activateVerifiedPayPalOrderIntent
   >[2]["finalizeLockedPlan"]
-  capturePaymentFailure?: typeof capturePaymentFailure
+  capturePaymentFailure?: PaymentFailureReporter
 }
 
 export type PayPalWebhookResult =

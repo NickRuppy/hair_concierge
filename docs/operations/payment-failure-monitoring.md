@@ -123,6 +123,58 @@ Suppress or downgrade only after evidence:
 
 Do not suppress `payment_integrity_mismatch` until provider truth, billing truth, and access truth have been checked.
 
+### Explicit PayPal renewal exclusions
+
+The renewal scan fails closed on PayPal lookup errors. A row is omitted only when billing metadata
+contains both:
+
+```text
+is_internal_test=true
+payment_monitor_exclusion_reason=pre_cutover_rest_app
+```
+
+This closed reason is reserved for a production test subscription created before the current live
+REST app existed. It does not mean that PayPal 404 is generally acceptable, and it must never be
+applied to a customer row merely to make the monitor green. Internal-test metadata without this
+reason, this reason without an internal-test marker, and every unknown provider error still fail the
+monitor.
+
+The guarded command is dry-run by default. It reports no email, internal identity, or raw PayPal
+reference:
+
+```bash
+npm run billing:payment-monitor:classify-paypal-test -- \
+  --subscription-id=<legacy-test-subscription-id>
+```
+
+Applying the metadata-only classification requires all production gates:
+
+```bash
+PAYMENT_MONITOR_TEST_CLASSIFICATION_PRODUCTION_WRITE=1 \
+npm run billing:payment-monitor:classify-paypal-test -- \
+  --subscription-id=<legacy-test-subscription-id> \
+  --apply \
+  --confirm-internal-test \
+  --confirm-project=pqdkhefxsxkyeqelqegq
+```
+
+The command requires exactly one pre-cutover PayPal row and uses its `updated_at` value as an
+optimistic lock. It merges metadata only; it does not cancel the PayPal subscription, change billing
+or entitlement status, or remove access. If the row changes between inventory and apply, the command
+refuses the write.
+
+### Sentry delivery receipt
+
+Whenever reconciliation produces an integrity finding or monitor failure, the runtime retains the
+32-character Sentry event ID returned by capture. The route requires one valid receipt per emitted
+incident and a successful `Sentry.flush()` result before it treats telemetry as delivered. A false or
+throwing flush is retried once. Missing receipts or two failed flushes add the closed
+`telemetry_delivery_failed` monitor failure and keep the HTTP response non-successful.
+
+The event ID proves that Sentry accepted the event locally and the flush proves that the transport
+queue completed; final rollout verification must still open/query the corresponding Sentry event by
+time and closed payment tags.
+
 ## Controlled rollout checklist
 
 Before treating the system as operational:

@@ -69,6 +69,8 @@ export type PaymentFailureDetails = PaymentBoundaryDetails & {
   providerReferenceDigest?: string | null
 }
 
+export type PaymentFailureReporter = (details: PaymentFailureDetails) => unknown
+
 export interface PaymentFailurePayload {
   fingerprint: string[]
   tags: Record<string, string>
@@ -193,7 +195,8 @@ export function buildPaymentFailurePayload(details: PaymentFailureDetails): Paym
 export function capturePaymentFailure(
   details: PaymentFailureDetails,
   sink: PaymentSentrySink = Sentry,
-): void {
+): string | undefined {
+  let eventId: string | undefined
   try {
     containAsyncFailure(
       sink.withScope((scope) => {
@@ -203,12 +206,17 @@ export function capturePaymentFailure(
         scope.setContext("payment", payload.context)
         scope.setLevel(payload.level)
         scope.setUser(payload.user)
-        containAsyncFailure(sink.captureException(new Error(payload.message)))
+        const captureResult = sink.captureException(new Error(payload.message))
+        if (typeof captureResult === "string" && /^[a-f0-9]{32}$/.test(captureResult))
+          eventId = captureResult
+        containAsyncFailure(captureResult)
+        return captureResult
       }),
     )
   } catch {
     // Observability must not alter a payment outcome.
   }
+  return eventId
 }
 
 function paymentFailureMessage(signal: PaymentSignal, errorFamily: PaymentErrorFamily): string {

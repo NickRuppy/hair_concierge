@@ -28,24 +28,7 @@ function result(overrides: Partial<PaymentIntegrityResult> = {}): PaymentIntegri
   return {
     status: "completed",
     counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },
-    findings: [
-      {
-        signal: "payment_integrity_mismatch",
-        provider: "stripe",
-        commerceKind: "subscription",
-        boundary: "billing",
-        errorFamily: "billing_state",
-        invariant: "provider_success_without_billing_success",
-        checkoutAttemptId: "checkout_attempt_must_not_leak",
-        providerReferenceDigest: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        method: "card",
-        truth: "succeeded",
-        live: true,
-        isInternalTest: false,
-        userId: "user_must_not_leak",
-        leadId: "lead_must_not_leak",
-      },
-    ],
+    findings: [],
     monitorFailures: [],
     ...overrides,
   }
@@ -172,7 +155,9 @@ test("payment monitor contains runner and Sentry failures without exposing error
     },
     reportMonitorFailure: (failure) => {
       monitorFailures.push(failure)
+      return "0123456789abcdef0123456789abcdef"
     },
+    flushTelemetry: async () => true,
   })
 
   assert.equal(response.status, 500)
@@ -230,10 +215,12 @@ test("payment monitor returns safe failure categories and flushes telemetry befo
             errorFamily: "provider_unavailable",
           },
         ],
+        telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
       }),
     captureCheckIn: () => undefined,
     flushTelemetry: async () => {
       flushes += 1
+      return flushes > 1
     },
   })
 
@@ -255,6 +242,123 @@ test("payment monitor returns safe failure categories and flushes telemetry befo
       ],
     },
   })
+  assert.equal(flushes, 2)
+})
+
+test("payment monitor fails closed when an emitted incident has no Sentry receipt", async () => {
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () =>
+      result({
+        status: "monitor_failed",
+        counters: {
+          ...emptyPaymentIntegrityCounters(),
+          monitorFailures: 1,
+          incompleteProviders: 1,
+        },
+        monitorFailures: [
+          {
+            signal: "payment_monitor_failed",
+            provider: "paypal",
+            reason: "incomplete_pagination",
+            errorFamily: "unknown",
+          },
+        ],
+      }),
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => true,
+  })
+
+  assert.equal(response.status, 500)
+  assert.deepEqual(response.body, {
+    paymentIntegrity: {
+      status: "monitor_failed",
+      counters: {
+        ...emptyPaymentIntegrityCounters(),
+        monitorFailures: 2,
+        incompleteProviders: 1,
+      },
+      failures: [
+        {
+          provider: "paypal",
+          reason: "incomplete_pagination",
+          errorFamily: "unknown",
+        },
+        {
+          provider: "unknown",
+          reason: "telemetry_delivery_failed",
+          errorFamily: "unknown",
+        },
+      ],
+    },
+  })
+})
+
+test("payment monitor flushes completed integrity findings before returning success", async () => {
+  let flushes = 0
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () =>
+      result({
+        counters: {
+          ...emptyPaymentIntegrityCounters(),
+          providersScanned: 2,
+          candidatesChecked: 4,
+          findings: 1,
+        },
+        findings: [
+          {
+            signal: "payment_integrity_mismatch",
+            provider: "stripe",
+            commerceKind: "subscription",
+            boundary: "billing",
+            errorFamily: "billing_state",
+            invariant: "provider_success_without_billing_success",
+            providerReferenceDigest:
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            method: "card",
+            truth: "succeeded",
+            live: true,
+            isInternalTest: false,
+          },
+        ],
+        telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
+      }),
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => {
+      flushes += 1
+      return true
+    },
+  })
+
+  assert.equal(response.status, 200)
+  assert.equal(flushes, 1)
+})
+
+test("payment monitor uses uncapped incident counters when requiring Sentry receipts", async () => {
+  let flushes = 0
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () =>
+      result({
+        counters: {
+          ...emptyPaymentIntegrityCounters(),
+          findings: 1,
+        },
+        findings: [],
+        telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
+      }),
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => {
+      flushes += 1
+      return true
+    },
+  })
+
+  assert.equal(response.status, 200)
   assert.equal(flushes, 1)
 })
 
@@ -273,9 +377,10 @@ test("payment monitor omits unexpected runtime failure categories from its respo
             errorFamily: "raw-family-secret",
           } as never,
         ],
+        telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
       }),
     captureCheckIn: () => undefined,
-    flushTelemetry: async () => undefined,
+    flushTelemetry: async () => true,
   })
 
   assert.equal(response.status, 500)

@@ -3,7 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { handlePayPalWebhookEvent } from "@/lib/paypal/webhook-handlers"
 import { getBillingTierIds } from "@/lib/billing/tier-ids"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 
 export const runtime = "nodejs"
@@ -20,7 +20,7 @@ type PayPalWebhookRouteDeps = {
   createSupabaseClient: () => SupabaseClient
   getTierIds: typeof getTierIds
   handlePayPalWebhookEvent: typeof handlePayPalWebhookEvent
-  capturePaymentFailure: typeof capturePaymentFailure
+  capturePaymentFailure: PaymentFailureReporter
   verifyPayPalWebhookSignature: typeof verifyPayPalWebhookSignature
 }
 
