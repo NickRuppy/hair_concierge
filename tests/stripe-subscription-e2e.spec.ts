@@ -10,11 +10,14 @@ import { expect, test } from "@playwright/test"
 // Manual golden path:
 //   quiz result offer page -> selected plan CTA -> inline Stripe iframe -> /welcome
 
-const TEST_EMAIL = `e2e-${Date.now()}@chaarlie-test.local`
+const TEST_EMAIL = `info+stripe-e2e-${Date.now()}@chaarlie.de`
 
 test.describe.skip("Stripe subscription golden path (manual)", () => {
   test("quiz result offer → stripe test card → welcome shows magic-link", async ({ page }) => {
     test.setTimeout(120_000)
+    await page.route("**/api/quiz/result-artifact", async (route) => {
+      await route.fulfill({ contentType: "application/json", status: 202, body: "{}" })
+    })
 
     // 1. Complete the quiz until the owner-facing result offer page appears.
     await page.goto("/quiz")

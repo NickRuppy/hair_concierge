@@ -69,12 +69,18 @@ async function waitForPreparedHairAnalysis(page: Page, name: string) {
 }
 
 test.describe.serial("Quiz to onboarding E2E", () => {
-  const email = `playwright-quiz-${Date.now()}@hairconscierge.test`
+  const email = `info+playwright-quiz-${Date.now()}@chaarlie.de`
   const password = "Playwright123!"
   const fullName = "Playwright Quiz"
   let userId: string | null = null
   let firstLeadId: string | null = null
   let rerunLeadId: string | null = null
+
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/quiz/result-artifact", async (route) => {
+      await route.fulfill({ contentType: "application/json", status: 202, body: "{}" })
+    })
+  })
 
   async function fetchLatestLead() {
     const { data, error } = await admin

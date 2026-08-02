@@ -110,7 +110,7 @@ function think() {
 }
 
 function uniqueEmail() {
-  return `k6-${Date.now()}-${__VU}-${__ITER}@chaarlie-load.test`
+  return `info+k6-${Date.now()}-${__VU}-${__ITER}@chaarlie.de`
 }
 
 function quizAnswers() {
@@ -178,7 +178,6 @@ export default function () {
         "lead id returned": (res) => Boolean(res.json("leadId")),
         "lead not edge-mitigated": isNotEdgeMitigated,
       })
-
     })
   }
 

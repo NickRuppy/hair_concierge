@@ -27,9 +27,12 @@ test("completed quiz opens the stored funnel offer on the canonical result route
   page,
 }) => {
   test.setTimeout(120_000)
-  const email = `playwright-result-route-${Date.now()}@hairconscierge.test`
+  const email = `info+playwright-result-route-${Date.now()}@chaarlie.de`
 
   await hideCookieBanner(page)
+  await page.route("**/api/quiz/result-artifact", async (route) => {
+    await route.fulfill({ contentType: "application/json", status: 202, body: "{}" })
+  })
 
   try {
     await page.goto("/quiz", { waitUntil: "networkidle" })
