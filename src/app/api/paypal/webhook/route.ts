@@ -3,7 +3,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { handlePayPalWebhookEvent } from "@/lib/paypal/webhook-handlers"
 import { getBillingTierIds } from "@/lib/billing/tier-ids"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
-import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
+import type { PaymentFailureReporter } from "@/lib/observability/payment"
+import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 
 export const runtime = "nodejs"
@@ -35,7 +36,7 @@ export async function handlePayPalWebhookPost(
       }),
     getTierIds: resolveTierIds = getTierIds,
     handlePayPalWebhookEvent: handleEvent = handlePayPalWebhookEvent,
-    capturePaymentFailure: capturePayment = capturePaymentFailure,
+    capturePaymentFailure: capturePayment = captureServerPaymentFailure,
     verifyPayPalWebhookSignature: verifySignature = verifyPayPalWebhookSignature,
   } = overrides
   const startedAt = Date.now()

@@ -11,7 +11,7 @@ import {
   capturePaymentFailure,
   type PaymentBoundary,
   type PaymentErrorFamily,
-} from "@/lib/observability/payment"
+} from "@/lib/observability/payment-client"
 
 function capturePayPalOneTimeCustomerPaymentError({
   boundary,

@@ -3,7 +3,7 @@ import test from "node:test"
 
 import {
   buildPaymentFailurePayload,
-  capturePaymentFailure,
+  capturePaymentFailureWithSink,
   getPaymentBoundary,
   getPaymentFailureLevel,
 } from "../src/lib/observability/payment"
@@ -147,7 +147,7 @@ test("payment reporter swallows synchronous and asynchronous sink failures", asy
   }
 
   assert.doesNotThrow(() =>
-    capturePaymentFailure(details, {
+    capturePaymentFailureWithSink(details, {
       captureException: () => {
         throw new Error("sink failed")
       },
@@ -163,7 +163,7 @@ test("payment reporter swallows synchronous and asynchronous sink failures", asy
   )
 
   assert.doesNotThrow(() =>
-    capturePaymentFailure(details, {
+    capturePaymentFailureWithSink(details, {
       captureException: () => Promise.reject(new Error("async sink failed")),
       withScope: (callback) =>
         callback({
@@ -181,7 +181,7 @@ test("payment reporter swallows synchronous and asynchronous sink failures", asy
 test("payment reporter clears an inherited Sentry user when no safe internal id exists", () => {
   const seenUsers: Array<{ id: string } | null> = []
 
-  capturePaymentFailure(
+  capturePaymentFailureWithSink(
     {
       signal: "payment_monitor_failed",
       provider: "unknown",
@@ -211,7 +211,7 @@ test("payment reporter clears an inherited Sentry user when no safe internal id 
 })
 
 test("payment reporter returns the Sentry event id as a delivery receipt", () => {
-  const eventId = capturePaymentFailure(
+  const eventId = capturePaymentFailureWithSink(
     {
       signal: "payment_monitor_failed",
       provider: "paypal",

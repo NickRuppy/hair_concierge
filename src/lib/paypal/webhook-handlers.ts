@@ -50,7 +50,8 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
-import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
+import type { PaymentFailureDetails, PaymentFailureReporter } from "@/lib/observability/payment"
+import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import {
@@ -442,10 +443,10 @@ function paymentRuntime() {
 
 function reportPayPalWebhookPaymentFailure(
   deps: PayPalWebhookDeps,
-  failure: Parameters<typeof capturePaymentFailure>[0],
+  failure: PaymentFailureDetails,
 ) {
   try {
-    const report = deps.capturePaymentFailure ?? capturePaymentFailure
+    const report = deps.capturePaymentFailure ?? captureServerPaymentFailure
     report(failure)
   } catch {
     // Observability must not alter webhook reconciliation behavior.

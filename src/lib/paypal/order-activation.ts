@@ -33,7 +33,8 @@ import {
 } from "./order-intents"
 import type { PersonalPlanOneTimeFulfillmentJobRow } from "@/lib/billing/types"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
-import { capturePaymentFailure, type PaymentFailureReporter } from "@/lib/observability/payment"
+import type { PaymentFailureReporter } from "@/lib/observability/payment"
+import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 
 type CapturedPayPalOrder = Awaited<ReturnType<typeof captureProviderPayPalOrder>>
 export const PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER = "personal_plan_prepared_artifacts"
@@ -387,7 +388,7 @@ function reportPayPalOrderFailure(
     truth: "failed" | "succeeded" | "unknown"
   },
 ) {
-  const report = deps.capturePaymentFailure ?? capturePaymentFailure
+  const report = deps.capturePaymentFailure ?? captureServerPaymentFailure
   const runtime = resolvePaymentRuntime({
     VERCEL_ENV: process.env.VERCEL_ENV,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,

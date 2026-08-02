@@ -18,7 +18,7 @@ import {
 } from "@/lib/billing/personal-plan-one-time-consent-copy"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import type { CheckoutStage } from "@/lib/observability/checkout"
-import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import { PayPalOneTimeButton } from "./paypal-one-time-button"
 

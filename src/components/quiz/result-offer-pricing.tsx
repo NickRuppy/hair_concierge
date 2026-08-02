@@ -68,7 +68,7 @@ import {
   type OfferCheckoutReadyGateState,
 } from "@/lib/stripe/offer-checkout-ready-gate"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
-import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment"
+import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const unloadedStripePromise = Promise.resolve(null)

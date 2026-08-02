@@ -11,7 +11,7 @@ import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
-import { capturePaymentFailure } from "@/lib/observability/payment"
+import { capturePaymentFailure } from "@/lib/observability/payment-client"
 import {
   isCheckoutFirstTimeDestination,
   type CheckoutFirstTimeDestination,
