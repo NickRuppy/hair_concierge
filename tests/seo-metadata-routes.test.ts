@@ -76,6 +76,9 @@ test("classifies every current public page and route handler", () => {
     "/robots.txt",
     "/sitemap.xml",
     "/twitter-image",
+    "/warteliste",
+    "/warteliste/danke",
+    "/warteliste/umfrage",
     "/welcome",
     "/widerruf",
     "/api/analytics/meta-offer-view",
@@ -99,6 +102,8 @@ test("classifies every current public page and route handler", () => {
     "/api/stripe/portal-session",
     "/api/stripe/session",
     "/api/stripe/webhook",
+    "/api/waitlist",
+    "/api/waitlist/survey",
   ]
 
   for (const pathname of publicRoutes) {

@@ -29,11 +29,13 @@ const PUBLIC_ROUTE_PREFIXES = [
   "/auth",
   "/lp",
   "/result",
+  "/warteliste",
   "/api/funnel",
   "/api/og",
   "/api/paypal",
   "/api/quiz",
   "/api/stripe",
+  "/api/waitlist",
 ]
 
 const PUBLIC_API_EXACT_ROUTES = [
