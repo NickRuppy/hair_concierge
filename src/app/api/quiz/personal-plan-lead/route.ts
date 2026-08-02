@@ -1,8 +1,8 @@
 import { after, NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import * as Sentry from "@sentry/nextjs"
 
-import { checkEmailDeliverability, type EmailDeliverability } from "@/lib/email-deliverability"
+import { checkEmailDeliverability } from "@/lib/email-deliverability"
+import { recordEmailDeliverabilityOutcome } from "@/lib/email-deliverability-observability"
 import {
   EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
   type EmailDeliverabilityRejectionResponse,
@@ -86,7 +86,7 @@ export function createPersonalPlanLeadPostHandler(
       // Spam-Ordner sortieren laesst. Bei DNS-Problemen laesst die Pruefung
       // bewusst durch, sie darf nie Leads blockieren.
       const deliverability = await dependencies.checkEmailDeliverability(email)
-      dependencies.recordEmailDeliverabilityOutcome(deliverability)
+      dependencies.recordEmailDeliverabilityOutcome("personal_plan", deliverability)
       if (!deliverability.ok) {
         const rejection: EmailDeliverabilityRejectionResponse = {
           error: EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
@@ -185,30 +185,6 @@ export function createPersonalPlanLeadPostHandler(
 }
 
 export const POST = createPersonalPlanLeadPostHandler()
-
-export function recordEmailDeliverabilityOutcome(
-  deliverability: EmailDeliverability,
-  countMetric?: typeof Sentry.metrics.count,
-) {
-  try {
-    const emitMetric = countMetric ?? Sentry.metrics?.count
-    if (!emitMetric) return
-    const attributes = deliverability.ok
-      ? { outcome: deliverability.outcome }
-      : {
-          outcome: "rejected" as const,
-          reason: deliverability.reason,
-          suggestion_present: Boolean(deliverability.suggestion),
-        }
-    emitMetric("quiz.email_deliverability.check", 1, { attributes })
-  } catch (error) {
-    // Observability must never turn an accepted address into a lost lead.
-    console.warn(
-      "[deliverability] Sentry metric failed",
-      error instanceof Error ? error.message : String(error),
-    )
-  }
-}
 
 function isPreparedPlanClaimError(error: unknown): boolean {
   if (!error || typeof error !== "object" || Array.isArray(error)) return false

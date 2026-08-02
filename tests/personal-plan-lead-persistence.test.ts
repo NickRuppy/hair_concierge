@@ -12,10 +12,8 @@ import {
   personalPlanPrepareRequestSchema,
 } from "../src/lib/personal-plan-quiz/persistence"
 import { syncPersonalPlanLeadToCustomerIo } from "../src/lib/personal-plan-quiz/customerio"
-import {
-  createPersonalPlanLeadPostHandler,
-  recordEmailDeliverabilityOutcome,
-} from "../src/app/api/quiz/personal-plan-lead/route"
+import { createPersonalPlanLeadPostHandler } from "../src/app/api/quiz/personal-plan-lead/route"
+import { recordEmailDeliverabilityOutcome } from "../src/lib/email-deliverability-observability"
 import { EMAIL_DELIVERABILITY_REJECTION_MESSAGE } from "../src/lib/email-deliverability-shared"
 
 const request = {
@@ -317,21 +315,28 @@ test("Sentry deliverability metrics expose only bounded outcomes and never block
   }
 
   recordEmailDeliverabilityOutcome(
+    "personal_plan",
     { ok: true, normalized: "private@example.com", outcome: "fail_open" },
     count,
   )
   recordEmailDeliverabilityOutcome(
+    "legacy",
     { ok: false, reason: "no_mx", suggestion: "private@example.com" },
     count,
   )
 
   assert.deepEqual(calls, [
-    ["quiz.email_deliverability.check", 1, { attributes: { outcome: "fail_open" } }],
+    [
+      "quiz.email_deliverability.check",
+      1,
+      { attributes: { journey: "personal_plan", outcome: "fail_open" } },
+    ],
     [
       "quiz.email_deliverability.check",
       1,
       {
         attributes: {
+          journey: "legacy",
           outcome: "rejected",
           reason: "no_mx",
           suggestion_present: true,
@@ -342,6 +347,7 @@ test("Sentry deliverability metrics expose only bounded outcomes and never block
   assert.equal(JSON.stringify(calls).includes("private@example.com"), false)
   assert.doesNotThrow(() =>
     recordEmailDeliverabilityOutcome(
+      "personal_plan",
       { ok: true, normalized: "private@example.com", outcome: "known_good" },
       () => {
         throw new Error("Sentry unavailable")

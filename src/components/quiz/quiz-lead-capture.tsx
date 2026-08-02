@@ -12,9 +12,15 @@ import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import {
+  EMAIL_ADDRESS_PATTERN,
+  EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  parseEmailDeliverabilityRejection,
+  suggestEmailCorrection,
+} from "@/lib/email-deliverability-shared"
 
 function isValidEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
 }
 
 export function QuizLeadCapture() {
@@ -31,6 +37,18 @@ export function QuizLeadCapture() {
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
+  const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
+  const liveSuggestion = suggestEmailCorrection(lead.email)
+
+  const updateEmail = (email: string) => {
+    setLeadField("email", email)
+    setError("")
+    setServerSuggestion(null)
+  }
+
+  const applySuggestion = (suggestion: string) => {
+    updateEmail(suggestion)
+  }
 
   const handleNameSubmit = () => {
     if (lead.name.trim()) {
@@ -40,6 +58,8 @@ export function QuizLeadCapture() {
 
   const handleEmailSubmit = () => {
     if (isValidEmail(lead.email)) {
+      setError("")
+      setServerSuggestion(null)
       setLeadCaptureSubStep("consent")
     }
   }
@@ -65,7 +85,25 @@ export function QuizLeadCapture() {
         }),
       })
 
-      if (!res.ok) throw new Error("Speichern fehlgeschlagen")
+      if (!res.ok) {
+        if (res.status === 422) {
+          const detail: unknown = await res.json().catch(() => null)
+          const rejection = parseEmailDeliverabilityRejection(detail)
+          const suggestion = rejection?.suggestion ?? null
+          if (rejection) {
+            trackAppEvent("quiz_email_deliverability_rejected", {
+              reason: rejection.reason,
+              suggestionPresent: Boolean(suggestion),
+            })
+          }
+          setServerSuggestion(suggestion)
+          setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
+          setLeadCaptureSubStep("email")
+          window.scrollTo(0, 0)
+          return
+        }
+        throw new Error("Speichern fehlgeschlagen")
+      }
 
       const data = await res.json()
       setLeadId(data.leadId)
@@ -87,6 +125,8 @@ export function QuizLeadCapture() {
     if (leadCaptureSubStep === "consent") {
       setLeadCaptureSubStep("email")
     } else if (leadCaptureSubStep === "email") {
+      setError("")
+      setServerSuggestion(null)
       setLeadCaptureSubStep("name")
     } else if (leadCaptureSubStep === "name") {
       goBack()
@@ -163,21 +203,43 @@ export function QuizLeadCapture() {
           <Input
             type="email"
             value={lead.email}
-            onChange={(e) => setLeadField("email", e.target.value)}
+            onChange={(e) => updateEmail(e.target.value)}
             placeholder="name@beispiel.de"
             autoFocus
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? "legacy-quiz-email-error" : undefined}
             className="h-14 rounded-xl bg-muted border-border text-foreground placeholder:text-muted-foreground text-base mb-3"
             onKeyDown={(e) => {
               if (e.key === "Enter") handleEmailSubmit()
             }}
           />
+          {error && (
+            <p
+              id="legacy-quiz-email-error"
+              role="alert"
+              className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
+            >
+              {error}
+            </p>
+          )}
+          {(serverSuggestion ?? liveSuggestion) && (
+            <button
+              type="button"
+              onClick={() => applySuggestion((serverSuggestion ?? liveSuggestion)!)}
+              className="mb-3 rounded-xl border border-[rgba(var(--brand-plum-rgb),0.3)] bg-card px-3 py-2.5 text-left text-sm font-semibold text-[var(--brand-plum)] transition-colors hover:bg-muted"
+            >
+              <span className="block text-xs font-normal text-muted-foreground">
+                {serverSuggestion ? "Korrektur übernehmen" : "Meintest du?"}
+              </span>
+              {serverSuggestion ?? liveSuggestion}
+            </button>
+          )}
           <div className="flex items-start gap-2 mb-4">
             <Icon name="lock" size={16} className="text-[var(--text-caption)] shrink-0 mt-0.5" />
             <p className="text-sm text-[var(--text-caption)] leading-relaxed">
               Wir schützen deine Daten und nehmen Datenschutz sehr ernst – kein Spam.
             </p>
           </div>
-          {error && <p className="text-sm text-red-400 mb-2">{error}</p>}
           <div className="mt-auto pt-4">
             <Button
               onClick={handleEmailSubmit}

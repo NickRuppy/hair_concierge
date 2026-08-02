@@ -24,10 +24,16 @@ async function hideCookieBanner(page: Page) {
 }
 
 test.describe.serial("Authenticated intake routing", () => {
-  const email = `playwright-intake-${Date.now()}@hairconscierge.test`
+  const email = `info+playwright-intake-${Date.now()}@chaarlie.de`
   const password = "Playwright123!"
   const fullName = "Playwright Intake"
   let userId: string | null = null
+
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/quiz/result-artifact", async (route) => {
+      await route.fulfill({ contentType: "application/json", status: 202, body: "{}" })
+    })
+  })
 
   async function fetchLatestLead() {
     const { data, error } = await admin

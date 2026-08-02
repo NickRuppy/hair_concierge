@@ -22,6 +22,12 @@ import {
   type MetaConversionDeliveryResult,
 } from "@/lib/analytics/meta-capi"
 import { META_QUIZ_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
+import { checkEmailDeliverability } from "@/lib/email-deliverability"
+import { recordEmailDeliverabilityOutcome } from "@/lib/email-deliverability-observability"
+import {
+  EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+  type EmailDeliverabilityRejectionResponse,
+} from "@/lib/email-deliverability-shared"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
@@ -30,74 +36,162 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
 }
 
-export async function POST(request: Request) {
-  const ip = request.headers.get("x-forwarded-for") ?? "unknown"
-  const rateCheck = await checkRateLimit(ip, QUIZ_LEAD_RATE_LIMIT)
-  if (!rateCheck.allowed) {
-    const status = rateCheck.error === "service_unavailable" ? 503 : 429
-    return NextResponse.json({ error: "Zu viele Anfragen" }, { status })
+interface QuizLeadPostDependencies {
+  checkRateLimit: typeof checkRateLimit
+  checkEmailDeliverability: typeof checkEmailDeliverability
+  recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
+  createAdminClient: typeof createAdminClient
+  cookies: typeof cookies
+}
+
+export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDependencies> = {}) {
+  const dependencies: QuizLeadPostDependencies = {
+    checkRateLimit,
+    checkEmailDeliverability,
+    recordEmailDeliverabilityOutcome,
+    createAdminClient,
+    cookies,
+    ...overrides,
   }
 
-  try {
-    const body = await request.json()
-    const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
-    const parsed = leadSchema.parse(body)
-    const email = normalizeEmail(parsed.email)
-    const quizAnswers = canonicalizeQuizAnswers(parsed.quizAnswers)
-    const metaUserRequestData = metaRequestData(request)
-
-    const supabase = createAdminClient()
-    const cookieStore = await cookies()
-    const funnelContext = await resolveFunnelCookieContext(
-      cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-    )
-    const funnelTouch = funnelContext
-      ? await resolvePendingFunnelTouchValue(
-          cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
-          funnelContext,
-        )
-      : null
-    const recentThreshold = new Date(Date.now() - DEDUPE_WINDOW_MS).toISOString()
-
-    const { data: recentLeads, error: recentLeadsError } = await supabase
-      .from("leads")
-      .select("id, quiz_answers, marketing_consent, status")
-      .eq("quiz_kind", "legacy")
-      .eq("email", email)
-      .gte("created_at", recentThreshold)
-      .order("created_at", { ascending: false })
-      .limit(MAX_RECENT_DUPLICATE_CANDIDATES)
-
-    if (recentLeadsError) {
-      console.error("Lead dedupe lookup error:", recentLeadsError)
-      return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
+  return async function POST(request: Request) {
+    const ip = request.headers.get("x-forwarded-for") ?? "unknown"
+    const rateCheck = await dependencies.checkRateLimit(ip, QUIZ_LEAD_RATE_LIMIT)
+    if (!rateCheck.allowed) {
+      const status = rateCheck.error === "service_unavailable" ? 503 : 429
+      return NextResponse.json({ error: "Zu viele Anfragen" }, { status })
     }
 
-    const existingLead = findReusableLead(
-      (recentLeads as Array<{ id: string; quiz_answers: Record<string, unknown> | null }> | null) ??
-        null,
-      quizAnswers,
-    )
-
-    if (existingLead) {
-      const createdAt = new Date().toISOString()
-      if (existingLead.marketing_consent !== parsed.marketingConsent) {
-        const { error: updateError } = await supabase
-          .from("leads")
-          .update({ marketing_consent: parsed.marketingConsent })
-          .eq("id", existingLead.id)
-
-        if (updateError) {
-          console.error("Lead dedupe update error:", updateError)
-          return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
+    try {
+      const body = await request.json()
+      const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
+      const parsed = leadSchema.parse(body)
+      const email = normalizeEmail(parsed.email)
+      const deliverability = await dependencies.checkEmailDeliverability(email)
+      dependencies.recordEmailDeliverabilityOutcome("legacy", deliverability)
+      if (!deliverability.ok) {
+        const rejection: EmailDeliverabilityRejectionResponse = {
+          error: EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
+          reason: deliverability.reason,
+          suggestion: deliverability.suggestion,
         }
+        return NextResponse.json(rejection, { status: 422 })
+      }
+      const deliverableEmail = deliverability.normalized
+      const quizAnswers = canonicalizeQuizAnswers(parsed.quizAnswers)
+      const metaUserRequestData = metaRequestData(request)
+
+      const supabase = dependencies.createAdminClient()
+      const cookieStore = await dependencies.cookies()
+      const funnelContext = await resolveFunnelCookieContext(
+        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+      )
+      const funnelTouch = funnelContext
+        ? await resolvePendingFunnelTouchValue(
+            cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+            funnelContext,
+          )
+        : null
+      const recentThreshold = new Date(Date.now() - DEDUPE_WINDOW_MS).toISOString()
+
+      const { data: recentLeads, error: recentLeadsError } = await supabase
+        .from("leads")
+        .select("id, quiz_answers, marketing_consent, status")
+        .eq("quiz_kind", "legacy")
+        .eq("email", deliverableEmail)
+        .gte("created_at", recentThreshold)
+        .order("created_at", { ascending: false })
+        .limit(MAX_RECENT_DUPLICATE_CANDIDATES)
+
+      if (recentLeadsError) {
+        console.error("Lead dedupe lookup error:", recentLeadsError)
+        return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
       }
 
+      const existingLead = findReusableLead(
+        (recentLeads as Array<{
+          id: string
+          quiz_answers: Record<string, unknown> | null
+        }> | null) ?? null,
+        quizAnswers,
+      )
+
+      if (existingLead) {
+        const createdAt = new Date().toISOString()
+        if (existingLead.marketing_consent !== parsed.marketingConsent) {
+          const { error: updateError } = await supabase
+            .from("leads")
+            .update({ marketing_consent: parsed.marketingConsent })
+            .eq("id", existingLead.id)
+
+          if (updateError) {
+            console.error("Lead dedupe update error:", updateError)
+            return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
+          }
+        }
+
+        after(() =>
+          syncQuizLeadToCustomerIo({
+            createdAt,
+            email: deliverableEmail,
+            leadId: existingLead.id,
+            marketingConsent: parsed.marketingConsent,
+            name: parsed.name,
+            quizAnswers,
+            funnelSessionId: funnelContext?.sessionId,
+            funnelPackageKey: funnelContext?.packageKey,
+          }),
+        )
+        enqueueMetaLead({
+          browserEventId,
+          eventTime: createdAt,
+          email: deliverableEmail,
+          leadId: existingLead.id,
+          name: parsed.name,
+          requestData: metaUserRequestData,
+        })
+
+        const funnelRecorded = funnelContext
+          ? await recordFunnelEvent({
+              context: funnelContext,
+              eventId: funnelEventId,
+              milestone: "lead_captured",
+              leadId: existingLead.id,
+              touch: funnelTouch,
+            })
+              .then(() => true)
+              .catch((error) => {
+                console.warn("[funnel] lead attachment failed", error)
+                return false
+              })
+          : false
+
+        return leadResponse(existingLead.id, Boolean(funnelTouch) && funnelRecorded)
+      }
+
+      const { data, error } = await supabase
+        .from("leads")
+        .insert({
+          name: parsed.name,
+          email: deliverableEmail,
+          marketing_consent: parsed.marketingConsent,
+          quiz_answers: quizAnswers,
+          status: "captured",
+        })
+        .select("id")
+        .single()
+
+      if (error) {
+        console.error("Lead insert error:", error)
+        return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
+      }
+
+      const createdAt = new Date().toISOString()
       after(() =>
         syncQuizLeadToCustomerIo({
           createdAt,
-          email,
-          leadId: existingLead.id,
+          email: deliverableEmail,
+          leadId: data.id,
           marketingConsent: parsed.marketingConsent,
           name: parsed.name,
           quizAnswers,
@@ -108,8 +202,8 @@ export async function POST(request: Request) {
       enqueueMetaLead({
         browserEventId,
         eventTime: createdAt,
-        email,
-        leadId: existingLead.id,
+        email: deliverableEmail,
+        leadId: data.id,
         name: parsed.name,
         requestData: metaUserRequestData,
       })
@@ -119,7 +213,7 @@ export async function POST(request: Request) {
             context: funnelContext,
             eventId: funnelEventId,
             milestone: "lead_captured",
-            leadId: existingLead.id,
+            leadId: data.id,
             touch: funnelTouch,
           })
             .then(() => true)
@@ -129,69 +223,15 @@ export async function POST(request: Request) {
             })
         : false
 
-      return leadResponse(existingLead.id, Boolean(funnelTouch) && funnelRecorded)
+      return leadResponse(data.id, Boolean(funnelTouch) && funnelRecorded)
+    } catch (err) {
+      console.error("Lead API error:", err)
+      return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
     }
-
-    const { data, error } = await supabase
-      .from("leads")
-      .insert({
-        name: parsed.name,
-        email,
-        marketing_consent: parsed.marketingConsent,
-        quiz_answers: quizAnswers,
-        status: "captured",
-      })
-      .select("id")
-      .single()
-
-    if (error) {
-      console.error("Lead insert error:", error)
-      return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
-    }
-
-    const createdAt = new Date().toISOString()
-    after(() =>
-      syncQuizLeadToCustomerIo({
-        createdAt,
-        email,
-        leadId: data.id,
-        marketingConsent: parsed.marketingConsent,
-        name: parsed.name,
-        quizAnswers,
-        funnelSessionId: funnelContext?.sessionId,
-        funnelPackageKey: funnelContext?.packageKey,
-      }),
-    )
-    enqueueMetaLead({
-      browserEventId,
-      eventTime: createdAt,
-      email,
-      leadId: data.id,
-      name: parsed.name,
-      requestData: metaUserRequestData,
-    })
-
-    const funnelRecorded = funnelContext
-      ? await recordFunnelEvent({
-          context: funnelContext,
-          eventId: funnelEventId,
-          milestone: "lead_captured",
-          leadId: data.id,
-          touch: funnelTouch,
-        })
-          .then(() => true)
-          .catch((error) => {
-            console.warn("[funnel] lead attachment failed", error)
-            return false
-          })
-      : false
-
-    return leadResponse(data.id, Boolean(funnelTouch) && funnelRecorded)
-  } catch (err) {
-    console.error("Lead API error:", err)
-    return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
   }
 }
+
+export const POST = createQuizLeadPostHandler()
 
 export type MetaLeadEnqueueInput = {
   browserEventId: string | null
