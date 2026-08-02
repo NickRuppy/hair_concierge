@@ -18,6 +18,20 @@ const preparedPlanClaim = {
 
 async function openEmailCapture(page: Page) {
   await page.setViewportSize({ width: 390, height: 844 })
+  await page.route("**/api/funnel/session", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      status: 200,
+      body: JSON.stringify({
+        enabled: false,
+        funnelPackageKey: null,
+        funnelSessionId: null,
+      }),
+    })
+  })
+  await page.route("**/api/quiz/personal-plan-draft", async (route) => {
+    await route.fulfill({ contentType: "application/json", status: 404, body: "{}" })
+  })
   await page.addInitScript(
     ({ draft, claim }) => {
       window.localStorage.setItem(
