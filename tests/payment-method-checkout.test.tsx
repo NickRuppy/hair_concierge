@@ -25,7 +25,6 @@ function renderCheckout(
   paypalEnabled: boolean,
   presentation: "default" | "offer-overlay" = "default",
   expressElementsEnabled = false,
-  suppressExpressWallet = false,
 ) {
   const previousPayPalEnabled = process.env.NEXT_PUBLIC_PAYPAL_ENABLED
   const previousPayPalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
@@ -48,7 +47,6 @@ function renderCheckout(
         planLabel="Jetzt starten — €34,99 im Quartal"
         presentation={presentation}
         expressElementsEnabled={expressElementsEnabled}
-        suppressExpressWallet={suppressExpressWallet}
         source="quiz_result_offer"
         stripe={Promise.resolve(null)}
       />,
@@ -141,41 +139,20 @@ test("offer overlay express path renders withdrawal link and direct fallback wit
   assert.match(html, /data-offer-payment-option="paypal"/)
 })
 
-test("offer overlay threads prepared-session synchronization into Stripe Checkout Elements", () => {
+test("offer overlay no longer threads prepared-session synchronization into Stripe Checkout Elements", () => {
   const source = readFileSync(
     new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
     "utf8",
   )
 
-  assert.match(source, /onPreparedCheckoutActivate/)
-  assert.match(source, /onPreparedCheckoutSyncFailed/)
-  assert.match(source, /onPreparedCheckoutSyncSucceeded/)
-  assert.match(source, /preparedCheckoutId=\{clientSecret \? preparedCheckoutId : undefined\}/)
-  assert.doesNotMatch(source, /preparedCheckoutId=\{clientSecret \? checkoutKey : undefined\}/)
+  assert.doesNotMatch(source, /onPreparedCheckoutActivate/)
+  assert.doesNotMatch(source, /onPreparedCheckoutSyncFailed/)
+  assert.doesNotMatch(source, /onPreparedCheckoutSyncSucceeded/)
+  assert.doesNotMatch(source, /preparedCheckoutId/)
   assert.match(
     source,
-    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutActivate=\{onPreparedCheckoutActivate\}/,
+    /<StripeOfferElementsCheckout[\s\S]*onBeforeConfirm=\{onBeforeStripeConfirm\}/,
   )
-  assert.match(
-    source,
-    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutSyncFailed=\{onPreparedCheckoutSyncFailed\}/,
-  )
-  assert.match(
-    source,
-    /<StripeOfferElementsCheckout[\s\S]*onPreparedCheckoutSyncSucceeded=\{onPreparedCheckoutSyncSucceeded\}/,
-  )
-})
-
-test("offer overlay wallet-suppressed path keeps PayPal and card checkout without Express", () => {
-  const html = renderCheckout(true, "offer-overlay", true, true)
-
-  assert.match(html, /data-offer-payment-step="paypal"/)
-  assert.match(html, /data-offer-payment-step="payment_element"/)
-  assert.match(html, /Karte &amp; weitere/)
-  assert.doesNotMatch(html, /data-offer-payment-element="apple_pay"/)
-  assert.doesNotMatch(html, /Apple Pay wird geladen/)
-  assert.doesNotMatch(html, /Apple Pay ist derzeit nicht verfügbar/)
-  assert.doesNotMatch(html, /Zahlungsoptionen konnten nicht geladen werden/)
 })
 
 test("PayPal script rejection reports once without coupling the card fallback", () => {

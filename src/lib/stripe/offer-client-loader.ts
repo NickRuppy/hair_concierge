@@ -7,7 +7,7 @@ const unloadedStripePromise = Promise.resolve(null)
 let offerStripePromise: Promise<Stripe | null> | null = null
 
 export function getOfferStripePromise(loader: StripeLoader = loadStripe): Promise<Stripe | null> {
-  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim()
   if (!publishableKey) return unloadedStripePromise
 
   if (!offerStripePromise) {

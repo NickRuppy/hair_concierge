@@ -64,9 +64,12 @@ export async function resolveFunnelCookieContext(value?: string) {
   return value ? decodeFunnelContext(value, secret) : null
 }
 
-export async function resolveFunnelContextForLead(leadId?: string | null) {
+export async function resolveFunnelContextForLead(
+  leadId?: string | null,
+  funnelSessionId?: string | null,
+) {
   if (!isFunnelAttributionEnabled() || !leadId) return null
-  const { data } = await createAdminClient()
+  let query = createAdminClient()
     .from("funnel_sessions")
     .select(
       "id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, checkout_started_at, is_internal_test",
@@ -74,7 +77,8 @@ export async function resolveFunnelContextForLead(leadId?: string | null) {
     .eq("lead_id", leadId)
     .order("first_seen_at", { ascending: false })
     .limit(1)
-    .maybeSingle()
+  if (funnelSessionId) query = query.eq("id", funnelSessionId)
+  const { data } = await query.maybeSingle()
   if (!data) return null
   return {
     visitorId: data.visitor_id,

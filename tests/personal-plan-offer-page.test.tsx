@@ -234,7 +234,7 @@ test("sticky offer CTA morph preserves pricing navigation before checkout intent
   )
   assert.match(offerSource, /checkoutSummary\.commerceKind === "membership"/)
   assert.match(offerSource, /data-offer-selected-interval=\{stickySelectedInterval\}/)
-  assert.match(offerSource, /pricingReached && checkoutWaiting \? undefined : "sticky_header"/)
+  assert.match(offerSource, /data-offer-cta="sticky_header"/)
 })
 
 test("personal plan FAQ stays native while exposing measured-height motion hooks", () => {
@@ -330,8 +330,8 @@ test("pricing exposes a narrow external checkout request seam", () => {
   )
   assert.match(pricingSource, /openCheckoutRequestId\?: number/)
   assert.match(pricingSource, /claimCheckoutOpenRequest\(/)
-  assert.match(pricingSource, /handledCheckoutOpenRequestsRef/)
-  assert.match(pricingSource, /openCheckout\(\)/)
+  assert.match(pricingSource, /handledRequestsRef/)
+  assert.match(pricingSource, /window\.setTimeout\(openCheckout, 0\)/)
 })
 
 test("sticky header only scrolls and focuses pricing", () => {
@@ -357,18 +357,16 @@ test("sticky header only scrolls and focuses pricing", () => {
   assert.deepEqual(calls.at(-1), ["focus", { preventScroll: true }])
 })
 
-test("personal plan offer keeps its waiting checkout CTA focusable and guarded", () => {
+test("personal plan offer opens checkout immediately without a readiness gate", () => {
   const offerSource = readFileSync(
     new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
     "utf8",
   )
 
-  assert.match(offerSource, /const \[checkoutWaiting, setCheckoutWaiting\] = useState\(false\)/)
-  assert.match(offerSource, /onCheckoutWaitingChange=\{setCheckoutWaiting\}/)
-  assert.match(offerSource, /aria-disabled=\{checkoutWaiting \|\| undefined\}/)
-  assert.match(offerSource, /if \(!checkoutWaiting\) openCheckout\(\)/)
-  assert.match(offerSource, /role="status"/)
-  assert.match(offerSource, /Zahlungsoptionen werden vorbereitet …/)
+  assert.doesNotMatch(offerSource, /checkoutWaiting|onCheckoutWaitingChange/)
+  assert.match(offerSource, /onClick=\{openCheckout\}/)
+  assert.match(offerSource, /data-offer-cta="final"/)
+  assert.doesNotMatch(offerSource, /Zahlungsoptionen werden vorbereitet …/)
 })
 
 test("personal plan analytics use their own revision label", () => {

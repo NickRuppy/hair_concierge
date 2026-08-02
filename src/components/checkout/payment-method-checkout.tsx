@@ -68,7 +68,6 @@ export function PaymentMethodCheckout({
   checkoutKey,
   clientSecret,
   fetchClientSecret,
-  holdPaymentChoicesUntilResolved = false,
   interval,
   leadId,
   lockedProvider = null,
@@ -78,11 +77,6 @@ export function PaymentMethodCheckout({
   onPayPalCheckoutStarted,
   onFirstPaymentEngagement,
   onPaymentOptionViewed,
-  onPreparedApplePayAvailabilityResolved,
-  onPreparedCheckoutActivate,
-  onPreparedCheckoutSyncFailed,
-  onPreparedCheckoutSyncSucceeded,
-  preparedCheckoutId,
   onPaymentMethodSelected,
   onProviderLockClaim,
   onProviderLockRelease,
@@ -95,7 +89,6 @@ export function PaymentMethodCheckout({
   stripe,
   visible = true,
   expressElementsEnabled = false,
-  suppressExpressWallet = false,
 }: {
   cardCheckoutMinHeightClassName?: "min-h-[560px]" | "min-h-[600px]"
   checkoutAttemptId?: string
@@ -104,7 +97,6 @@ export function PaymentMethodCheckout({
   checkoutKey: string
   clientSecret?: string | null
   fetchClientSecret: () => Promise<string>
-  holdPaymentChoicesUntilResolved?: boolean
   interval: BillingInterval
   leadId?: string | null
   lockedProvider?: "stripe" | "paypal" | null
@@ -114,17 +106,6 @@ export function PaymentMethodCheckout({
   onPayPalCheckoutStarted: (funnelEventId: string) => void
   onFirstPaymentEngagement?: () => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
-  onPreparedApplePayAvailabilityResolved?: (available: boolean) => void
-  onPreparedCheckoutActivate?: Parameters<
-    typeof StripeOfferElementsCheckout
-  >[0]["onPreparedCheckoutActivate"]
-  onPreparedCheckoutSyncFailed?: Parameters<
-    typeof StripeOfferElementsCheckout
-  >[0]["onPreparedCheckoutSyncFailed"]
-  onPreparedCheckoutSyncSucceeded?: Parameters<
-    typeof StripeOfferElementsCheckout
-  >[0]["onPreparedCheckoutSyncSucceeded"]
-  preparedCheckoutId?: string
   onPaymentMethodSelected?: (
     provider: "stripe" | "paypal",
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -140,7 +121,6 @@ export function PaymentMethodCheckout({
   stripe: Promise<Stripe | null>
   visible?: boolean
   expressElementsEnabled?: boolean
-  suppressExpressWallet?: boolean
 }) {
   const paypalEnabled = isPayPalCheckoutEnabled()
   const isOfferOverlay = presentation === "offer-overlay"
@@ -271,16 +251,9 @@ export function PaymentMethodCheckout({
               clientSecret={clientSecret}
               commerceKind="subscription"
               fetchClientSecret={fetchClientSecret}
-              holdPaymentChoicesUntilResolved={holdPaymentChoicesUntilResolved}
-              preparedCheckoutId={clientSecret ? preparedCheckoutId : undefined}
-              suppressExpressWallet={suppressExpressWallet}
               lockedProvider={lockedProvider}
               onBeforeConfirm={onBeforeStripeConfirm}
-              onApplePayAvailabilityResolved={onPreparedApplePayAvailabilityResolved}
               onFirstPaymentEngagement={onFirstPaymentEngagement}
-              onPreparedCheckoutActivate={onPreparedCheckoutActivate}
-              onPreparedCheckoutSyncFailed={onPreparedCheckoutSyncFailed}
-              onPreparedCheckoutSyncSucceeded={onPreparedCheckoutSyncSucceeded}
               onPaymentMethodSelected={onPaymentMethodSelected}
               onPaymentOptionViewed={onPaymentOptionViewed}
               paymentElementEnabled={paymentElementEnabled}

@@ -29,6 +29,10 @@ import {
 import { PayPalOneTimeButton } from "./paypal-one-time-button"
 
 const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
+const paypalCheckoutEnabled =
+  process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" &&
+  Boolean(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim())
+const stripePublishableKeyPresent = Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim())
 const personalPlanOneTimeCommerce = {
   commerceKind: "one_time",
   currency: PERSONAL_PLAN_ONCE_PRODUCT.currency,
@@ -46,32 +50,21 @@ type PreparedOneTimeStripeCheckout = {
   sessionId: string
 }
 
-export type PersonalPlanOneTimeStripePreparationState = "idle" | "preparing" | "prepared" | "failed"
-
 export function PersonalPlanOneTimeCheckout({
   checkoutAttemptId,
   funnelSessionId,
   leadId,
-  onApplePayAvailabilityResolved,
   onFirstPaymentEngagement,
   onRequestClose,
-  onStripePreparationStateChange,
-  stripePreparationRefreshRequestId,
-  suppressExpressWallet = false,
+  stripeElementsEnabled,
   visible,
 }: {
   checkoutAttemptId: string | null
   funnelSessionId: string | null | undefined
   leadId: string | null
-  onApplePayAvailabilityResolved?: (available: boolean) => void
   onFirstPaymentEngagement?: () => void
   onRequestClose: () => void
-  onStripePreparationStateChange?: (
-    state: PersonalPlanOneTimeStripePreparationState,
-    expiresAt?: number,
-  ) => void
-  stripePreparationRefreshRequestId: number
-  suppressExpressWallet?: boolean
+  stripeElementsEnabled: boolean
   visible: boolean
 }) {
   const offerContext = useOfferTrackingContext()
@@ -80,7 +73,6 @@ export function PersonalPlanOneTimeCheckout({
   const paymentOptionViewsRef = useRef(new Set<string>())
   const paymentSelectionIndexRef = useRef(0)
   const consentInputRef = useRef<HTMLInputElement>(null)
-  const onStripePreparationStateChangeRef = useRef(onStripePreparationStateChange)
   const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
   const visibleRef = useRef(visible)
   const wasVisibleRef = useRef(visible)
@@ -97,6 +89,8 @@ export function PersonalPlanOneTimeCheckout({
   const [preparationFailureReported, setPreparationFailureReported] = useState(false)
   const stripePreparationId = stripePreparationCredential.preparationId
   const canStartPayment = Boolean(leadId && funnelSessionId)
+  const stripeAvailable = stripeElementsEnabled && stripePublishableKeyPresent
+  const stripeCheckoutEnabled = stripeAvailable && visible && accepted
 
   const reportStripeCustomerError = useCallback(
     ({
@@ -133,26 +127,6 @@ export function PersonalPlanOneTimeCheckout({
   )
 
   useEffect(() => {
-    onStripePreparationStateChangeRef.current = onStripePreparationStateChange
-  }, [onStripePreparationStateChange])
-
-  const reportStripePreparationState = useCallback(
-    (state: PersonalPlanOneTimeStripePreparationState, expiresAt?: number) => {
-      onStripePreparationStateChangeRef.current?.(state, expiresAt)
-    },
-    [],
-  )
-
-  useEffect(() => {
-    if (stripePreparationRefreshRequestId === 0) return
-    preparedStripeCheckoutRef.current = null
-    setError(null)
-    setPreparationFailureReported(false)
-    reportStripePreparationState("preparing")
-    setStripePreparationCredential(createPreparedCheckoutCredential())
-  }, [reportStripePreparationState, stripePreparationRefreshRequestId])
-
-  useEffect(() => {
     checkoutStartedProvidersRef.current.clear()
     paymentOptionViewsRef.current.clear()
     paymentSelectionIndexRef.current = 0
@@ -165,13 +139,18 @@ export function PersonalPlanOneTimeCheckout({
     visibleRef.current = visible
     if (!wasVisible || visible) return
 
-    // A confirmed close starts a fresh user interaction without discarding the
-    // already prepared Stripe session and Express Checkout mount.
+    // A confirmed close discards unclaimed provider state. Reopening starts a
+    // fresh, consent-gated Stripe preparation inside the new drawer instance.
+    preparedStripeCheckoutRef.current = null
     setAccepted(false)
     setDuplicateDialogOpen(false)
     setError(null)
     setPaypalReady(false)
+    setPaypalProviderLocked(false)
+    setStripeProviderLocked(false)
     setStripeSelected(false)
+    setPreparationFailureReported(false)
+    setStripePreparationCredential(createPreparedCheckoutCredential())
   }, [visible])
 
   const markFirstEngagement = useCallback(() => {
@@ -255,7 +234,6 @@ export function PersonalPlanOneTimeCheckout({
     if (cachedPreparation && cachedPreparation.expiresAt * 1000 > Date.now() + 30_000) {
       return cachedPreparation.clientSecret
     }
-    reportStripePreparationState("preparing")
     let responseStatus: number | undefined
     let paypalLocked = false
     let handledControlOutcome = false
@@ -296,13 +274,11 @@ export function PersonalPlanOneTimeCheckout({
         setStripeProviderLocked(false)
         setStripeSelected(false)
         setError(null)
-        reportStripePreparationState("failed")
         throw new Error("prepared_checkout_control:provider_locked")
       }
       if (controlOutcome === "prepared_checkout_unavailable") {
         handledControlOutcome = true
         preparedStripeCheckoutRef.current = null
-        reportStripePreparationState("failed")
         throw new Error("prepared_checkout_control:prepared_checkout_unavailable")
       }
       if (
@@ -324,7 +300,6 @@ export function PersonalPlanOneTimeCheckout({
         sessionId: body.session_id,
       }
       setStripeProviderLocked(body.provider_locked === "stripe")
-      reportStripePreparationState("prepared", body.expires_at)
       return body.client_secret
     } catch (error) {
       if (paypalLocked || handledControlOutcome) throw error
@@ -337,14 +312,12 @@ export function PersonalPlanOneTimeCheckout({
           status: responseStatus,
         })
       }
-      reportStripePreparationState("failed")
       throw createAlreadyReportedPreparedCheckoutError(error)
     }
   }, [
     funnelSessionId,
     leadId,
     reportStripeCustomerError,
-    reportStripePreparationState,
     stripePreparationId,
     stripePreparationCredential.preparationToken,
   ])
@@ -367,7 +340,6 @@ export function PersonalPlanOneTimeCheckout({
     if (preparation.expiresAt <= Math.floor(Date.now() / 1000)) {
       preparedStripeCheckoutRef.current = null
       setError("Die Zahlungsarten werden neu geladen. Bitte versuche es gleich noch einmal.")
-      reportStripePreparationState("preparing")
       setPreparationFailureReported(false)
       setStripePreparationCredential(createPreparedCheckoutCredential())
       reportStripeCustomerError({
@@ -464,10 +436,54 @@ export function PersonalPlanOneTimeCheckout({
     funnelSessionId,
     leadId,
     reportStripeCustomerError,
-    reportStripePreparationState,
     stripePreparationId,
     trackCheckoutStarted,
   ])
+
+  const paypalPaymentOption =
+    visible && checkoutAttemptId && paypalCheckoutEnabled && !stripeProviderLocked ? (
+      <PaymentOptionExposure
+        checkoutAttemptId={checkoutAttemptId}
+        onViewed={handlePaymentOptionViewed}
+        option="paypal"
+        provider="paypal"
+        providerReady={paypalReady}
+        visible
+      >
+        {!paypalReady ? (
+          <div
+            className="flex min-h-[48px] items-center justify-center gap-2 rounded-[12px] border border-border bg-white px-4 py-3 text-sm font-semibold text-[var(--brand-plum-darkest)]"
+            data-offer-payment-placeholder="paypal"
+            role="status"
+          >
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin rounded-full border-2 border-black/15 border-t-black/50 motion-reduce:animate-none"
+            />
+            <span>PayPal wird geladen …</span>
+          </div>
+        ) : null}
+        <PayPalOneTimeButton
+          checkoutAttemptId={checkoutAttemptId}
+          consentAccepted={accepted}
+          funnelSessionId={funnelSessionId!}
+          leadId={leadId!}
+          onCheckoutStarted={(funnelEventId) =>
+            trackCheckoutStarted("paypal", "explicit_provider_action", funnelEventId)
+          }
+          onDuplicateAccess={() => setDuplicateDialogOpen(true)}
+          onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
+          onProviderSelected={() => {
+            setPaypalProviderLocked(true)
+            setStripeSelected(false)
+            setError(null)
+          }}
+          onProviderConflict={() => setError("Eine andere Zahlungsart wurde bereits gestartet.")}
+          onReady={() => setPaypalReady(true)}
+          onConsentRequired={requestConsent}
+        />
+      </PaymentOptionExposure>
+    ) : null
 
   return (
     <div className="grid gap-4">
@@ -483,6 +499,10 @@ export function PersonalPlanOneTimeCheckout({
           className="mt-0.5 size-4 shrink-0 accent-[var(--brand-plum)]"
           onChange={(event) => {
             markFirstEngagement()
+            // Consent changes move PayPal between the placeholder and Stripe
+            // layouts. Reset readiness before that provider iframe remounts so
+            // exposure and loading telemetry cannot retain a stale ready state.
+            if (stripeAvailable) setPaypalReady(false)
             setAccepted(event.target.checked)
             if (event.target.checked) setError(null)
           }}
@@ -499,38 +519,21 @@ export function PersonalPlanOneTimeCheckout({
           >
             PayPal ist bereits ausgewählt. Schließe die Zahlung dort ab.
           </p>
-          {visible && checkoutAttemptId && process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" ? (
-            <PaymentOptionExposure
-              checkoutAttemptId={checkoutAttemptId}
-              onViewed={handlePaymentOptionViewed}
-              option="paypal"
-              provider="paypal"
-              providerReady={paypalReady}
-              visible
-            >
-              <PayPalOneTimeButton
-                checkoutAttemptId={checkoutAttemptId}
-                consentAccepted={accepted}
-                funnelSessionId={funnelSessionId!}
-                leadId={leadId!}
-                onCheckoutStarted={(funnelEventId) =>
-                  trackCheckoutStarted("paypal", "explicit_provider_action", funnelEventId)
-                }
-                onDuplicateAccess={() => setDuplicateDialogOpen(true)}
-                onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
-                onProviderConflict={() =>
-                  setError("Eine andere Zahlungsart wurde bereits gestartet.")
-                }
-                onReady={() => setPaypalReady(true)}
-                onConsentRequired={requestConsent}
-              />
-            </PaymentOptionExposure>
-          ) : null}
+          {paypalPaymentOption}
           <Button disabled type="button" variant="outline">
             Karte ist für diesen Zahlungsversuch nicht verfügbar
           </Button>
         </div>
-      ) : canStartPayment ? (
+      ) : canStartPayment && !stripeAvailable ? (
+        (paypalPaymentOption ?? (
+          <p
+            className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            role="alert"
+          >
+            {checkoutStartError}
+          </p>
+        ))
+      ) : canStartPayment && stripeCheckoutEnabled ? (
         <StripeOfferElementsCheckout
           checkoutAttemptId={checkoutAttemptId ?? undefined}
           checkoutKey={`personal-plan-once:${stripePreparationId}`}
@@ -538,7 +541,6 @@ export function PersonalPlanOneTimeCheckout({
           fetchClientSecret={fetchClientSecret}
           preparationFailureReported={preparationFailureReported}
           onBeforeConfirm={handleBeforeStripeConfirm}
-          onApplePayAvailabilityResolved={onApplePayAvailabilityResolved}
           onFirstPaymentEngagement={markFirstEngagement}
           onPaymentMethodSelected={handlePaymentMethodSelected}
           onPaymentOptionViewed={handlePaymentOptionViewed}
@@ -546,7 +548,6 @@ export function PersonalPlanOneTimeCheckout({
             preparedStripeCheckoutRef.current = null
             setError(null)
             setPreparationFailureReported(false)
-            reportStripePreparationState("preparing")
             setStripePreparationCredential(createPreparedCheckoutCredential())
           }}
           paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
@@ -555,41 +556,9 @@ export function PersonalPlanOneTimeCheckout({
           secondaryPaymentMethod={
             visible &&
             checkoutAttemptId &&
-            ((process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" && !stripeProviderLocked) ||
-              !stripeSelected) ? (
+            ((paypalCheckoutEnabled && !stripeProviderLocked) || !stripeSelected) ? (
               <div className="grid gap-3">
-                {process.env.NEXT_PUBLIC_PAYPAL_ENABLED === "true" && !stripeProviderLocked ? (
-                  <PaymentOptionExposure
-                    checkoutAttemptId={checkoutAttemptId}
-                    onViewed={handlePaymentOptionViewed}
-                    option="paypal"
-                    provider="paypal"
-                    providerReady={paypalReady}
-                    visible
-                  >
-                    <PayPalOneTimeButton
-                      checkoutAttemptId={checkoutAttemptId}
-                      consentAccepted={accepted}
-                      funnelSessionId={funnelSessionId!}
-                      leadId={leadId!}
-                      onCheckoutStarted={(funnelEventId) =>
-                        trackCheckoutStarted("paypal", "explicit_provider_action", funnelEventId)
-                      }
-                      onDuplicateAccess={() => setDuplicateDialogOpen(true)}
-                      onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
-                      onProviderSelected={() => {
-                        setPaypalProviderLocked(true)
-                        setStripeSelected(false)
-                        setError(null)
-                      }}
-                      onProviderConflict={() =>
-                        setError("Eine andere Zahlungsart wurde bereits gestartet.")
-                      }
-                      onReady={() => setPaypalReady(true)}
-                      onConsentRequired={requestConsent}
-                    />
-                  </PaymentOptionExposure>
-                ) : null}
+                {paypalPaymentOption}
                 {!stripeSelected ? (
                   <Button
                     onClick={() => {
@@ -606,9 +575,23 @@ export function PersonalPlanOneTimeCheckout({
             ) : undefined
           }
           stripe={getOfferStripePromise()}
-          suppressExpressWallet={suppressExpressWallet}
           visible={visible}
         />
+      ) : canStartPayment ? (
+        <div className="grid gap-3">
+          <div
+            aria-disabled="true"
+            className="flex min-h-[48px] items-center justify-between rounded-[12px] bg-black px-4 py-3 text-left text-white opacity-60"
+            data-offer-payment-placeholder="apple_pay"
+          >
+            <span className="text-base font-semibold">Apple Pay</span>
+            <span className="text-xs">Nach Einwilligung verfügbar</span>
+          </div>
+          {paypalPaymentOption}
+          <Button disabled type="button" variant="outline">
+            Karte nach Einwilligung verfügbar
+          </Button>
+        </div>
       ) : (
         <p
           className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"

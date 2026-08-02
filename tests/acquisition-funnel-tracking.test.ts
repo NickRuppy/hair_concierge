@@ -114,14 +114,18 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
   }
 })
 
-test("shared offer loader warms Stripe only after a guided support or pricing component mounts", () => {
+test("shared loader may warm Stripe.js, but pricing starts checkout only on explicit open", () => {
   const source = read("src/components/quiz/result-offer-pricing.tsx")
   const loaderSource = read("src/lib/stripe/offer-client-loader.ts")
   const supportSource = read("src/components/quiz/guided-story-support.tsx")
 
   assert.match(loaderSource, /from "@stripe\/stripe-js\/pure"/)
   assert.match(source, /getOfferStripePromise/)
-  assert.match(source, /useEffect\(\(\) => \{\s*getStripePromise\(\)/)
+  assert.doesNotMatch(source, /useEffect\(\(\) => \{[\s\S]{0,120}getOfferStripePromise\(\)/)
+  assert.match(
+    source,
+    /const openCheckout = useCallback\(\(\) => \{[\s\S]*const stripePromise = getOfferStripePromise\(\)/,
+  )
   assert.match(supportSource, /useEffect\(\(\) => \{\s*warmOfferStripe\(\)/)
   assert.doesNotMatch(supportSource, /ResultOfferPricing|pricingSlot/)
 })
@@ -133,15 +137,15 @@ test("offer and profile reactivation pricing views keep funnel attribution with 
   )
 
   assert.doesNotMatch(source, /bootstrapFunnelContext\(\)\.then/)
-  assert.match(source, /const context: FunnelAnalyticsEnvelope \| null =/)
+  assert.match(source, /const fallback = offerTracking \?\? getCurrentFunnelContext\(\)/)
   assert.match(source, /trackAppEvent\("pricing_viewed", \{[\s\S]*funnelEventId,/)
   assert.match(
     source,
-    /funnelSessionId: offerContext\?\.funnelSessionId \?\? context\?\.funnelSessionId/,
+    /funnelSessionId: offerContext\?\.funnelSessionId \?\? fallback\?\.funnelSessionId/,
   )
   assert.match(
     source,
-    /funnelPackageKey: offerContext\?\.funnelPackageKey \?\? context\?\.funnelPackageKey/,
+    /funnelPackageKey: offerContext\?\.funnelPackageKey \?\? fallback\?\.funnelPackageKey/,
   )
   assert.doesNotMatch(profilePricingSource, /bootstrapFunnelContext\(\)\.then/)
   assert.match(

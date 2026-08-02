@@ -5,7 +5,7 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
-import { captureCheckoutException } from "@/lib/observability/checkout"
+import { captureCheckoutException, type CheckoutInterval } from "@/lib/observability/checkout"
 import {
   captureServerPaymentFailure,
   flushServerPaymentTelemetry,
@@ -75,6 +75,7 @@ export const StripeCheckoutSessionRequestSchema = z
     source: z.enum(["pricing_page", "quiz_result_offer"]).default("pricing_page"),
     funnelEventId: z.string().uuid().optional(),
     checkoutAttemptId: z.string().uuid().optional(),
+    checkoutSessionAttemptId: z.string().uuid().optional(),
     checkoutContext: z.literal("membership_reactivation").optional(),
     returnDestination: z.string().max(500).optional(),
     presentation: z.literal("offer_overlay_elements").optional(),
@@ -89,6 +90,7 @@ export const StripeCheckoutSessionRequestSchema = z
       {
         action,
         checkoutAttemptId,
+        checkoutSessionAttemptId,
         checkoutContext,
         consentAccepted,
         consentCopyVersion,
@@ -122,6 +124,7 @@ export const StripeCheckoutSessionRequestSchema = z
             ? Boolean(
                 preparationId &&
                 !checkoutAttemptId &&
+                !checkoutSessionAttemptId &&
                 !funnelEventId &&
                 consentAccepted === undefined &&
                 consentCopyVersion === undefined,
@@ -132,6 +135,7 @@ export const StripeCheckoutSessionRequestSchema = z
                   preparationToken &&
                   preparedSessionId &&
                   checkoutAttemptId &&
+                  !checkoutSessionAttemptId &&
                   funnelEventId &&
                   hasCanonicalConsent,
                 )
@@ -175,6 +179,23 @@ export const StripeCheckoutSessionRequestSchema = z
           path: ["presentation"],
         })
       }
+      if (
+        checkoutSessionAttemptId &&
+        (action !== "create" ||
+          source !== "quiz_result_offer" ||
+          purchaseKind === PERSONAL_PLAN_ONCE_KIND ||
+          !checkoutAttemptId)
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "checkout Session attempts are limited to direct membership offer creation",
+          path: ["checkoutSessionAttemptId"],
+        })
+      }
+      // Membership clients no longer initiate prepare/claim. The schema temporarily
+      // accepts those actions so an already-loaded production asset can finish its
+      // checkout; remove that compatibility after the 14-day zero-use drain in the
+      // cold-checkout rollout plan. One-time checkout still owns this protocol.
       if (action === "prepare") {
         if (presentation !== "offer_overlay_elements" || source !== "quiz_result_offer") {
           context.addIssue({
@@ -190,7 +211,13 @@ export const StripeCheckoutSessionRequestSchema = z
             path: preparationId ? ["preparationToken"] : ["preparationId"],
           })
         }
-        if (checkoutAttemptId || funnelEventId || checkoutContext || returnDestination) {
+        if (
+          checkoutAttemptId ||
+          checkoutSessionAttemptId ||
+          funnelEventId ||
+          checkoutContext ||
+          returnDestination
+        ) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             message: "prepared checkout cannot claim an attempt or reactivation",
@@ -247,17 +274,95 @@ export function isOfferElementsCheckoutEnabled(
   )
 }
 
-export function isOfferCheckoutPrewarmEnabled(
-  environment: { NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED?: string } = {
-    NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED:
-      process.env.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED,
-  },
-) {
-  return environment.NEXT_PUBLIC_OFFER_CHECKOUT_PREWARM_ENABLED === "true"
-}
-
 export function shouldRecordFunnelForCheckoutAction(action: "create" | "prepare" | "claim") {
   return action !== "prepare"
+}
+
+export function resolveCheckoutFunnelContext<
+  TLead extends { sessionId: string },
+  TCookie extends { sessionId: string },
+>({
+  shouldRecord,
+  exactOfferFunnelSessionId,
+  leadFunnelContext,
+  cookieFunnelContext,
+}: {
+  shouldRecord: boolean
+  exactOfferFunnelSessionId?: string
+  leadFunnelContext: TLead | null
+  cookieFunnelContext: TCookie | null
+}): TLead | TCookie | null {
+  if (!shouldRecord) return null
+  if (!exactOfferFunnelSessionId) return cookieFunnelContext ?? leadFunnelContext
+  if (leadFunnelContext?.sessionId === exactOfferFunnelSessionId) return leadFunnelContext
+  if (cookieFunnelContext?.sessionId === exactOfferFunnelSessionId) return cookieFunnelContext
+  return null
+}
+
+export function reportMissingExactOfferFunnelContext(
+  {
+    exactOfferFunnelSessionId,
+    funnelContext,
+    interval,
+    shouldRecord,
+  }: {
+    exactOfferFunnelSessionId?: string
+    funnelContext: unknown | null
+    interval: CheckoutInterval
+    shouldRecord: boolean
+  },
+  capture: typeof captureCheckoutException = captureCheckoutException,
+  warn: (message: string, error: unknown) => void = console.warn,
+) {
+  if (!shouldRecord || !exactOfferFunnelSessionId || funnelContext) return false
+  try {
+    capture(new Error("quiz offer funnel context unavailable"), {
+      provider: "stripe",
+      stage: "stripe_checkout_session_create",
+      source: "quiz_result_offer",
+      interval,
+      reason: "funnel_context_unavailable",
+    })
+  } catch (error) {
+    warn("[funnel] missing-context observability failed", error)
+  }
+  return true
+}
+
+export function resolveStripeCheckoutSessionCreateOptions({
+  reactivationReservationId,
+  isPreparation,
+  preparationId,
+  isOneTimePurchase,
+  source,
+  checkoutAttemptId,
+  checkoutSessionAttemptId,
+}: {
+  reactivationReservationId?: string
+  isPreparation: boolean
+  preparationId?: string
+  isOneTimePurchase: boolean
+  source: "pricing_page" | "quiz_result_offer"
+  checkoutAttemptId?: string
+  checkoutSessionAttemptId?: string
+}) {
+  if (reactivationReservationId) {
+    return { idempotencyKey: `membership-reactivation:${reactivationReservationId}` }
+  }
+  if (isPreparation && preparationId) {
+    return { idempotencyKey: preparedCheckoutCreateIdempotencyKey(preparationId) }
+  }
+  if (isOneTimePurchase && checkoutAttemptId) {
+    return { idempotencyKey: `personal-plan-once:${checkoutAttemptId}` }
+  }
+  if (source === "quiz_result_offer" && checkoutAttemptId) {
+    return {
+      idempotencyKey: quizOfferMembershipCreateIdempotencyKey(
+        checkoutSessionAttemptId ?? checkoutAttemptId,
+      ),
+    }
+  }
+  return undefined
 }
 
 export function reusableOneTimeStripeSessionClientSecret(
@@ -310,6 +415,7 @@ export async function POST(req: NextRequest) {
     source,
     funnelEventId,
     checkoutAttemptId,
+    checkoutSessionAttemptId,
     checkoutContext,
     action,
     preparationId,
@@ -321,9 +427,6 @@ export async function POST(req: NextRequest) {
   const isOneTimePurchase = purchaseKind === PERSONAL_PLAN_ONCE_KIND
   if (presentation === "offer_overlay_elements" && !isOfferElementsCheckoutEnabled()) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
-  }
-  if (action !== "create" && !isOfferCheckoutPrewarmEnabled()) {
-    return NextResponse.json({ error: "not found" }, { status: 404 })
   }
   const isPreparation = action === "prepare"
   const subscriptionInterval = interval as BillingInterval
@@ -626,8 +729,9 @@ export async function POST(req: NextRequest) {
       })
     }
 
+    const exactOfferFunnelSessionId = source === "quiz_result_offer" ? funnelSessionId : undefined
     const leadFunnelContext = resolvedLeadId
-      ? await resolveFunnelContextForLead(resolvedLeadId)
+      ? await resolveFunnelContextForLead(resolvedLeadId, exactOfferFunnelSessionId)
       : null
     const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
     const analyticsPlan = isOneTimePurchase
@@ -690,10 +794,22 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "reactivation_checkout_unavailable" }, { status: 409 })
       }
     }
-    const funnelContext = !shouldRecordFunnelForCheckoutAction(action)
-      ? null
-      : ((await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
-        leadFunnelContext)
+    const shouldRecordCheckoutFunnel = shouldRecordFunnelForCheckoutAction(action)
+    const cookieFunnelContext = shouldRecordCheckoutFunnel
+      ? await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)
+      : null
+    const funnelContext = resolveCheckoutFunnelContext({
+      shouldRecord: shouldRecordCheckoutFunnel,
+      exactOfferFunnelSessionId,
+      leadFunnelContext,
+      cookieFunnelContext,
+    })
+    reportMissingExactOfferFunnelContext({
+      shouldRecord: shouldRecordCheckoutFunnel,
+      exactOfferFunnelSessionId,
+      funnelContext,
+      interval: subscriptionInterval,
+    })
     const funnelTouch = funnelContext
       ? await resolvePendingFunnelTouchValue(
           cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -770,13 +886,15 @@ export async function POST(req: NextRequest) {
     })
     const session = await stripe.checkout.sessions.create(
       params,
-      reactivationReservation
-        ? { idempotencyKey: `membership-reactivation:${reactivationReservation.id}` }
-        : isPreparation
-          ? { idempotencyKey: preparedCheckoutCreateIdempotencyKey(preparationId!) }
-          : isOneTimePurchase
-            ? { idempotencyKey: `personal-plan-once:${checkoutAttemptId}` }
-            : undefined,
+      resolveStripeCheckoutSessionCreateOptions({
+        reactivationReservationId: reactivationReservation?.id,
+        isPreparation,
+        preparationId,
+        isOneTimePurchase,
+        source,
+        checkoutAttemptId,
+        checkoutSessionAttemptId,
+      }),
     )
     if (reactivationReservation) {
       await bindMembershipReactivationProviderReference(
@@ -1082,6 +1200,10 @@ export function preparedCheckoutClaimIdempotencyKey(preparationId: string) {
 
 export function preparedCheckoutCreateIdempotencyKey(preparationId: string) {
   return `offer-elements-preparation:${preparationId}`
+}
+
+export function quizOfferMembershipCreateIdempotencyKey(checkoutAttemptId: string) {
+  return `quiz-offer-membership:${checkoutAttemptId}`
 }
 
 type OneTimeConsentAttributionRow = {

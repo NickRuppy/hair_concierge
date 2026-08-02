@@ -29,6 +29,28 @@ test("returns a stable unloaded promise when Stripe is not configured", async ()
   assert.equal(calls, 0)
 })
 
+test("treats a whitespace-only Stripe key as unconfigured", async () => {
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "   "
+  let calls = 0
+  const loader = async () => {
+    calls += 1
+    return null
+  }
+
+  assert.equal(await getOfferStripePromise(loader), null)
+  assert.equal(calls, 0)
+})
+
+test("normalizes surrounding whitespace before loading Stripe", async () => {
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "  pk_test_guided_story  "
+  const loader = async (key: string) => {
+    assert.equal(key, "pk_test_guided_story")
+    return null
+  }
+
+  assert.equal(await getOfferStripePromise(loader), null)
+})
+
 test("shares one configured loader promise between warm-up and checkout", async () => {
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_test_guided_story"
   let calls = 0

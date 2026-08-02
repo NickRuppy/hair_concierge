@@ -77,8 +77,9 @@ test("the database atomically prevents competing reactivation checkouts", () => 
   assert.match(migrationSource, /expires_at <= now\(\)/)
   assert.match(
     stripeRouteSource,
-    /idempotencyKey: `membership-reactivation:\$\{reactivationReservation\.id\}`/,
+    /idempotencyKey: `membership-reactivation:\$\{reactivationReservationId\}`/,
   )
+  assert.match(stripeRouteSource, /reactivationReservationId: reactivationReservation\?\.id/)
   assert.match(paypalRouteSource, /createOrAdoptPayPalReactivationCheckoutIntent/)
   assert.match(paypalRouteSource, /resolveStoredPayPalCheckoutIntentPlan/)
 })

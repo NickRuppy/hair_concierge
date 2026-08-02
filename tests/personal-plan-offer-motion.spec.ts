@@ -9,8 +9,18 @@ const offerViewports = [
   { width: 1280, height: 800 },
 ]
 
-async function openPersonalPlanLab(page: Page, pricingArm: "membership" | "one_time") {
-  await page.goto(`${labPath}&pricingArm=${pricingArm}`, { waitUntil: "domcontentloaded" })
+async function openPersonalPlanLab(
+  page: Page,
+  pricingArm: "membership" | "one_time",
+  options: { expressElements?: "off"; overlay?: "off" } = {},
+) {
+  const expressElements = options.expressElements
+    ? `&expressElements=${options.expressElements}`
+    : ""
+  const overlay = options.overlay ? `&overlay=${options.overlay}` : ""
+  await page.goto(`${labPath}&pricingArm=${pricingArm}${expressElements}${overlay}`, {
+    waitUntil: "domcontentloaded",
+  })
   await expect(page.getByRole("heading", { name: "Dein Haarplan ist bereit." })).toBeVisible()
   await expect(page.locator("[data-personal-plan-offer-client-ready]")).toHaveAttribute(
     "data-personal-plan-offer-client-ready",
@@ -30,6 +40,38 @@ async function enableApplePayCapability(page: Page) {
     Object.defineProperty(window, "ApplePaySession", {
       configurable: true,
       value: { canMakePayments: () => true },
+    })
+  })
+}
+
+async function stubPayPalSdk(page: Page) {
+  await page.route("**/sdk/js?**", async (route) => {
+    await route.fulfill({
+      body: `
+        window.paypal = {
+          Buttons: function (options) {
+            return {
+              close: function () { return Promise.resolve(); },
+              isEligible: function () { return true; },
+              render: function (container) {
+                var actions = {
+                  disable: function () { return Promise.resolve(); },
+                  enable: function () { return Promise.resolve(); }
+                };
+                if (options.onInit) options.onInit({}, actions);
+                var button = document.createElement("button");
+                button.setAttribute("aria-label", "PayPal");
+                button.textContent = "PayPal";
+                container.appendChild(button);
+                return Promise.resolve();
+              },
+              updateProps: function () {}
+            };
+          }
+        };
+      `,
+      contentType: "application/javascript",
+      status: 200,
     })
   })
 }
@@ -168,9 +210,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await expect(stickyCta).toContainText("Zur Zahlung")
   })
 
-  test("personal-plan lab never auto-prewarms providers for its synthetic identity", async ({
-    page,
-  }) => {
+  test("personal-plan offer never starts provider work before checkout opens", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await enableApplePayCapability(page)
     let checkoutPreparationRequests = 0
@@ -186,17 +226,52 @@ test.describe("@ci personal plan offer motion hooks", () => {
     for (const pricingArm of ["one_time", "membership"] as const) {
       await openPersonalPlanLab(page, pricingArm)
       await revealPricing(page)
-      await expect(page.locator("[data-checkout-prewarm-disabled='true']")).toBeVisible()
       await page.waitForTimeout(500)
     }
 
     expect(checkoutPreparationRequests).toBe(0)
   })
 
+  for (const disabledGate of ["express", "overlay"] as const) {
+    test(`one-time Stripe containment is PayPal-only with ${disabledGate} off`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await stubPayPalSdk(page)
+      let stripeRequests = 0
+      await page.route("**/api/stripe/create-checkout-session", async (route) => {
+        stripeRequests += 1
+        await route.abort()
+      })
+      await openPersonalPlanLab(
+        page,
+        "one_time",
+        disabledGate === "express" ? { expressElements: "off" } : { overlay: "off" },
+      )
+
+      const openCheckout = page.getByRole("button", {
+        name: "Haarplan für €29,99 freischalten",
+      })
+      await openCheckout.scrollIntoViewIfNeeded()
+      await openCheckout.click()
+      const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+      await expect(checkout.locator('[data-offer-payment-option="paypal"]')).toBeVisible()
+      await expect(checkout.locator('[data-offer-payment-placeholder="paypal"]')).toHaveCount(0)
+      await expect(checkout.locator('[data-offer-payment-placeholder="apple_pay"]')).toHaveCount(0)
+      await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toHaveCount(0)
+      await checkout.getByRole("checkbox").check()
+      await expect(checkout.locator('[data-offer-payment-placeholder="paypal"]')).toHaveCount(0)
+      await expect(checkout.getByRole("button", { name: "PayPal" })).toBeVisible()
+      expect(stripeRequests).toBe(0)
+    })
+  }
+
   test("one-time checkout dismisses pristine state directly and protects consent or provider engagement", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
       await route.fulfill({
         body: JSON.stringify({ error: "synthetic lab response" }),

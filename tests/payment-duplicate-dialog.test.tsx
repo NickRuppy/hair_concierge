@@ -68,7 +68,7 @@ test("Stripe duplicate responses are handled in offer and membership reactivatio
     assert.match(source, /ActiveSubscriptionDialog/)
     assert.match(source, /isCheckoutAccessAlreadyExistsResponse/)
     assert.match(source, /readCheckoutAccessAlreadyExistsEmail/)
-    assert.match(source, /setDuplicateDialogOpen\(true\)/)
+    assert.match(source, /setDuplicate(?:Dialog)?Open\(true\)/)
   }
 })
 
