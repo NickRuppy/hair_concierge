@@ -1,14 +1,24 @@
 "use client"
 
 import Script from "next/script"
-import { useSyncExternalStore } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
 import { WAITLIST_EMAIL_STORAGE_KEY } from "@/lib/waitlist/config"
 
-// sessionStorage aendert sich waehrend dieser Seite nicht, also gibt subscribe
-// nur eine No-op-Abmeldefunktion zurueck.
-function subscribe() {
-  return () => {}
+type TypeformSubmitEvent = { formId: string; responseId: string }
+
+type TypeformWidgetOptions = {
+  container: HTMLElement
+  hidden?: Record<string, string>
+  inlineOnMobile?: boolean
+  medium?: string
+  onSubmit?: (event: TypeformSubmitEvent) => void
+}
+
+declare global {
+  interface Window {
+    tf?: { createWidget: (formId: string, options: TypeformWidgetOptions) => unknown }
+  }
 }
 
 function readEmail() {
@@ -19,37 +29,65 @@ function readEmail() {
   }
 }
 
-function readEmailOnServer() {
-  return null
-}
-
 /**
- * Typeform-Embed. Das Skript liest die data-tf-* Attribute und rendert das
- * Formular in den Container. Kein npm-Paket noetig, damit der Embed unabhaengig
- * vom Build ausgetauscht werden kann.
+ * Typeform-Embed über die JS-SDK statt über die data-tf-* Attribute.
  *
- * Die E-Mail kommt aus dem sessionStorage und wird als Hidden Field
- * durchgereicht, damit sich Antworten dem Customer.io-Profil zuordnen lassen.
- * useSyncExternalStore statt useEffect: der Wert steht damit direkt nach der
- * Hydration am DOM, also bevor das Embed-Skript den Container einliest, und es
- * gibt keine Abweichung zwischen Server- und Client-Render.
- * Ist das Hidden Field im Typeform (noch) nicht angelegt, ignoriert Typeform den
- * Wert stillschweigend, der Embed funktioniert trotzdem.
+ * Grund: Nur so kommen wir an den onSubmit-Callback mit der responseId. Damit
+ * melden wir den Abschluss selbst an Customer.io und verknüpfen die Antwort über
+ * die responseId mit dem Profil. Das ersetzt das Typeform-Hidden-Field, das sich
+ * über die API nicht anlegen lässt, und funktioniert auch dann, wenn im Typeform
+ * gar kein Hidden Field konfiguriert ist.
+ *
+ * `hidden` wird zusätzlich mitgegeben: existiert das Feld im Formular, steht die
+ * E-Mail direkt am Response, existiert es nicht, ignoriert Typeform es still.
  */
 export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
-  const email = useSyncExternalStore(subscribe, readEmail, readEmailOnServer)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mountedRef = useRef(false)
+
+  const mountWidget = useCallback(() => {
+    if (mountedRef.current) return
+    const container = containerRef.current
+    if (!container || !window.tf) return
+
+    mountedRef.current = true
+    const email = readEmail()
+
+    window.tf.createWidget(surveyId, {
+      container,
+      inlineOnMobile: true,
+      medium: "waitlist",
+      ...(email ? { hidden: { email } } : {}),
+      onSubmit: ({ responseId }) => {
+        // Kein await, kein Fehler-Handling nach außen: Der Abschluss der Umfrage
+        // darf nie davon abhängen, dass unser eigener Endpunkt erreichbar ist.
+        void fetch("/api/waitlist/survey", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ responseId, ...(email ? { email } : {}) }),
+          keepalive: true,
+        }).catch(() => {})
+      },
+    })
+  }, [surveyId])
+
+  useEffect(() => {
+    // Falls das Skript schon geladen war (Client-Navigation), feuert onReady nicht.
+    mountWidget()
+  }, [mountWidget])
 
   return (
     <>
       <div
-        data-tf-widget={surveyId}
-        data-tf-inline-on-mobile
-        data-tf-medium="waitlist"
-        {...(email ? { "data-tf-hidden": `email=${email}` } : {})}
+        ref={containerRef}
         style={{ minHeight: 520 }}
         className="overflow-hidden rounded-[14px] border border-border bg-card"
       />
-      <Script src="https://embed.typeform.com/next/embed.js" strategy="afterInteractive" />
+      <Script
+        src="https://embed.typeform.com/next/embed.js"
+        strategy="afterInteractive"
+        onReady={mountWidget}
+      />
     </>
   )
 }
