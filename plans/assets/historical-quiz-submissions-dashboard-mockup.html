@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quiz — Historische Starts, Abschlüsse & Leads</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #171717;
+        --muted: #6f6f68;
+        --line: #deded8;
+        --panel: #ffffff;
+        --canvas: #f4f4ef;
+        --blue: #2450ff;
+        --purple: #8c6cff;
+        --green: #278d55;
+        --amber-bg: #fff8dc;
+        --amber-line: #e5cd69;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .shell {
+        width: 1500px;
+        margin: 0 auto;
+        padding: 26px 30px 48px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .mark {
+        width: 20px;
+        height: 20px;
+        position: relative;
+      }
+      .mark span {
+        position: absolute;
+        left: 0;
+        height: 4px;
+        border-radius: 4px;
+        background: var(--blue);
+      }
+      .mark span:nth-child(1) {
+        top: 1px;
+        width: 18px;
+      }
+      .mark span:nth-child(2) {
+        top: 8px;
+        width: 12px;
+      }
+      .mark span:nth-child(3) {
+        top: 15px;
+        width: 7px;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0;
+        letter-spacing: -0.35px;
+      }
+      .actions {
+        display: flex;
+        gap: 9px;
+      }
+      .button {
+        background: white;
+        border: 1px solid #c8c8c2;
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-weight: 650;
+        font-size: 13px;
+      }
+      .button.primary {
+        border-color: #d1a628;
+        box-shadow: 0 0 0 2px #ffe49a inset;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #42423e;
+        margin-bottom: 14px;
+      }
+
+      .caveat {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        background: var(--amber-bg);
+        border: 1px solid var(--amber-line);
+        border-radius: 9px;
+        padding: 12px 14px;
+        margin-bottom: 14px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .caveat b {
+        font-weight: 750;
+      }
+      .info {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 auto;
+        border: 1.5px solid #786500;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 15px;
+        font-weight: 800;
+        color: #786500;
+      }
+
+      .filters {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 9px;
+        margin-bottom: 14px;
+      }
+      .filter-group {
+        display: flex;
+        gap: 8px;
+      }
+      .filter {
+        border: 1px solid #d3d3cd;
+        border-radius: 7px;
+        padding: 8px 11px;
+        font-size: 13px;
+        font-weight: 650;
+        background: #fff;
+      }
+      .updated {
+        font-size: 12px;
+        color: var(--muted);
+        padding-right: 6px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 16px 18px 18px;
+        min-height: 260px;
+        overflow: hidden;
+      }
+      .panel.full {
+        grid-column: 1 / -1;
+      }
+      .panel-title {
+        font-size: 15px;
+        font-weight: 750;
+        margin-bottom: 4px;
+      }
+      .panel-subtitle {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 15px;
+      }
+
+      .funnel {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) 0.72fr;
+        gap: 12px;
+        align-items: end;
+        height: 190px;
+      }
+      .stage {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+      }
+      .metric {
+        font-size: 28px;
+        font-weight: 780;
+        letter-spacing: -0.6px;
+      }
+      .metric small {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .bar {
+        margin-top: 8px;
+        width: 100%;
+        border-radius: 7px 7px 2px 2px;
+        background: var(--blue);
+        min-height: 30px;
+      }
+      .bar.complete {
+        height: 63%;
+        background: #5273ff;
+      }
+      .bar.lead {
+        height: 51%;
+        background: var(--purple);
+      }
+      .bar.start {
+        height: 92%;
+      }
+      .stage-label {
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .conversion {
+        align-self: center;
+        border-left: 1px solid var(--line);
+        padding-left: 18px;
+        margin-bottom: 26px;
+      }
+      .conversion .metric {
+        font-size: 24px;
+      }
+      .conversion p {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.35;
+        margin: 4px 0 0;
+      }
+
+      .chart-wrap {
+        height: 275px;
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        grid-template-rows: 1fr 24px;
+      }
+      .axis-y {
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 11px;
+        padding-bottom: 4px;
+      }
+      .plot {
+        position: relative;
+        border-left: 1px solid #d8d8d2;
+        border-bottom: 1px solid #d8d8d2;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 62px,
+          #ecece7 63px
+        );
+      }
+      .plot svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .axis-x {
+        grid-column: 2;
+        display: flex;
+        justify-content: space-around;
+        color: var(--muted);
+        font-size: 11px;
+        padding-top: 7px;
+      }
+      .legend {
+        display: flex;
+        gap: 18px;
+        justify-content: flex-end;
+        margin-top: 9px;
+        font-size: 11px;
+        color: #55554f;
+      }
+      .dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        margin-right: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      th {
+        text-align: right;
+        color: var(--muted);
+        font-weight: 650;
+        border-bottom: 1px solid var(--line);
+        padding: 9px 8px;
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      td {
+        text-align: right;
+        padding: 11px 8px;
+        border-bottom: 1px solid #eeeeea;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .pill {
+        display: inline-block;
+        background: #eceeff;
+        color: #233b9b;
+        border-radius: 999px;
+        padding: 3px 7px;
+        font-size: 10px;
+        font-weight: 750;
+      }
+      .pill.legacy {
+        background: #f0f0ec;
+        color: #55554f;
+      }
+      .quality {
+        color: #8a6200;
+        font-weight: 700;
+      }
+      .ok {
+        color: var(--green);
+        font-weight: 700;
+      }
+      .foot {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <h1>Quiz — Historische Starts, Abschlüsse &amp; Leads</h1>
+        </div>
+        <div class="actions">
+          <span class="button">Subscribe</span><span class="button primary">Edit</span>
+        </div>
+      </div>
+
+      <div class="subtitle">
+        Historischer Gesamtblick über Standardquiz, Personal Plan und ältere nicht zuordenbare
+        Quiz-Ereignisse auf den Produktionshosts.
+      </div>
+
+      <div class="caveat">
+        <span class="info">i</span>
+        <div>
+          <b>PostHog-Näherung ab 28. Mai 2026.</b> „Lead gespeichert“ bedeutet:
+          <code>quiz_lead_captured</code> wurde nach der API-Antwort gesendet. Das sind keine
+          eindeutigen E-Mail-Adressen. Quiz-Ereignisse tragen aktuell keine verlässliche interne
+          Testmarkierung; Supabase bleibt die Quelle der Wahrheit für Leads und Test-Ausschlüsse.
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter-group">
+          <span class="filter">📅 28. Mai 2026 – heute</span
+          ><span class="filter">Alle Quiz-Versionen</span
+          ><span class="filter">Produktionshosts · Tests können enthalten sein</span>
+        </div>
+        <span class="updated">Beispieldaten · Stand 2. Aug. 2026</span>
+      </div>
+
+      <section class="grid">
+        <article class="panel full">
+          <div class="panel-title">A1 · Historischer Überblick — eindeutige getrackte Personen</div>
+          <div class="panel-subtitle">
+            Kein strikt sequenzieller Funnel: Beim Standardquiz wird der Lead vor „abgeschlossen“
+            gespeichert, beim Personal Plan danach.
+          </div>
+          <div class="funnel">
+            <div class="stage">
+              <div class="metric">2.383 <small>Personen</small></div>
+              <div class="bar start"></div>
+              <div class="stage-label">Quiz gestartet</div>
+            </div>
+            <div class="stage">
+              <div class="metric">1.539 <small>Personen</small></div>
+              <div class="bar complete"></div>
+              <div class="stage-label">Quiz abgeschlossen</div>
+            </div>
+            <div class="stage">
+              <div class="metric">1.252 <small>Personen</small></div>
+              <div class="bar lead"></div>
+              <div class="stage-label">Lead gespeichert</div>
+            </div>
+            <div class="conversion">
+              <div class="metric">52,5 %</div>
+              <p>Start → Lead<br />auf Personenbasis</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel full">
+          <div class="panel-title">A2 · Täglicher Verlauf — Starts, Abschlüsse &amp; Leads</div>
+          <div class="panel-subtitle">
+            Eindeutige getrackte Personen pro Kalendertag; jeder Punkt steht für einen Tag. Der
+            aktuelle Tag ist unvollständig.
+          </div>
+          <div class="chart-wrap">
+            <div class="axis-y">
+              <span>80</span><span>60</span><span>40</span><span>20</span><span>0</span>
+            </div>
+            <div class="plot">
+              <svg
+                viewBox="0 0 1300 240"
+                preserveAspectRatio="none"
+                role="img"
+                aria-label="Täglicher Verlauf als Liniendiagramm mit einem Punkt pro Tag"
+              >
+                <polyline
+                  points="40,78 100,60 160,90 220,51 280,72 340,42 400,69 460,33 520,54 580,24 640,45 700,66 760,48 820,81 880,57 940,36 1000,63 1060,42 1120,75 1180,54 1240,195"
+                  fill="none"
+                  stroke="#2450ff"
+                  stroke-width="3"
+                  vector-effect="non-scaling-stroke"
+                />
+                <polyline
+                  points="40,135 100,126 160,144 220,117 280,132 340,111 400,129 460,102 520,120 580,96 640,114 700,132 760,111 820,141 880,123 940,105 1000,132 1060,111 1120,138 1180,120 1240,210"
+                  fill="none"
+                  stroke="#5273ff"
+                  stroke-width="3"
+                  vector-effect="non-scaling-stroke"
+                />
+                <polyline
+                  points="40,153 100,144 160,159 220,135 280,150 340,132 400,147 460,126 520,141 580,120 640,138 700,150 760,132 820,159 880,144 940,129 1000,150 1060,132 1120,156 1180,141 1240,216"
+                  fill="none"
+                  stroke="#8c6cff"
+                  stroke-width="3"
+                  vector-effect="non-scaling-stroke"
+                />
+                <g fill="#2450ff">
+                  <circle cx="40" cy="78" r="4" />
+                  <circle cx="100" cy="60" r="4" />
+                  <circle cx="160" cy="90" r="4" />
+                  <circle cx="220" cy="51" r="4" />
+                  <circle cx="280" cy="72" r="4" />
+                  <circle cx="340" cy="42" r="4" />
+                  <circle cx="400" cy="69" r="4" />
+                  <circle cx="460" cy="33" r="4" />
+                  <circle cx="520" cy="54" r="4" />
+                  <circle cx="580" cy="24" r="4" />
+                  <circle cx="640" cy="45" r="4" />
+                  <circle cx="700" cy="66" r="4" />
+                  <circle cx="760" cy="48" r="4" />
+                  <circle cx="820" cy="81" r="4" />
+                  <circle cx="880" cy="57" r="4" />
+                  <circle cx="940" cy="36" r="4" />
+                  <circle cx="1000" cy="63" r="4" />
+                  <circle cx="1060" cy="42" r="4" />
+                  <circle cx="1120" cy="75" r="4" />
+                  <circle cx="1180" cy="54" r="4" />
+                  <circle cx="1240" cy="195" r="4" />
+                </g>
+                <g fill="#5273ff">
+                  <circle cx="40" cy="135" r="4" />
+                  <circle cx="100" cy="126" r="4" />
+                  <circle cx="160" cy="144" r="4" />
+                  <circle cx="220" cy="117" r="4" />
+                  <circle cx="280" cy="132" r="4" />
+                  <circle cx="340" cy="111" r="4" />
+                  <circle cx="400" cy="129" r="4" />
+                  <circle cx="460" cy="102" r="4" />
+                  <circle cx="520" cy="120" r="4" />
+                  <circle cx="580" cy="96" r="4" />
+                  <circle cx="640" cy="114" r="4" />
+                  <circle cx="700" cy="132" r="4" />
+                  <circle cx="760" cy="111" r="4" />
+                  <circle cx="820" cy="141" r="4" />
+                  <circle cx="880" cy="123" r="4" />
+                  <circle cx="940" cy="105" r="4" />
+                  <circle cx="1000" cy="132" r="4" />
+                  <circle cx="1060" cy="111" r="4" />
+                  <circle cx="1120" cy="138" r="4" />
+                  <circle cx="1180" cy="120" r="4" />
+                  <circle cx="1240" cy="210" r="4" />
+                </g>
+                <g fill="#8c6cff">
+                  <circle cx="40" cy="153" r="4" />
+                  <circle cx="100" cy="144" r="4" />
+                  <circle cx="160" cy="159" r="4" />
+                  <circle cx="220" cy="135" r="4" />
+                  <circle cx="280" cy="150" r="4" />
+                  <circle cx="340" cy="132" r="4" />
+                  <circle cx="400" cy="147" r="4" />
+                  <circle cx="460" cy="126" r="4" />
+                  <circle cx="520" cy="141" r="4" />
+                  <circle cx="580" cy="120" r="4" />
+                  <circle cx="640" cy="138" r="4" />
+                  <circle cx="700" cy="150" r="4" />
+                  <circle cx="760" cy="132" r="4" />
+                  <circle cx="820" cy="159" r="4" />
+                  <circle cx="880" cy="144" r="4" />
+                  <circle cx="940" cy="129" r="4" />
+                  <circle cx="1000" cy="150" r="4" />
+                  <circle cx="1060" cy="132" r="4" />
+                  <circle cx="1120" cy="156" r="4" />
+                  <circle cx="1180" cy="141" r="4" />
+                  <circle cx="1240" cy="216" r="4" />
+                </g>
+              </svg>
+            </div>
+            <div class="axis-x">
+              <span>13. Juli</span><span>17. Juli</span><span>21. Juli</span><span>25. Juli</span
+              ><span>29. Juli</span><span>2. Aug.*</span>
+            </div>
+          </div>
+          <div class="legend">
+            <span><i class="dot" style="background: #2450ff"></i>Gestartet</span
+            ><span><i class="dot" style="background: #5273ff"></i>Abgeschlossen</span
+            ><span><i class="dot" style="background: #8c6cff"></i>Lead gespeichert</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-title">B1 · Nach Quiz-Paket / Attribution</div>
+          <div class="panel-subtitle">
+            Eindeutige Personen seit Trackingstart; fehlender Paketkontext bleibt als eigener Bucket
+            sichtbar.
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Gestartet</th>
+                <th>Abgeschlossen</th>
+                <th>Leads</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill legacy">Standardquiz</span></td>
+                <td>957</td>
+                <td>564</td>
+                <td>569</td>
+              </tr>
+              <tr>
+                <td><span class="pill">Personal Plan</span></td>
+                <td>949</td>
+                <td>675</td>
+                <td>380</td>
+              </tr>
+              <tr>
+                <td><span class="pill legacy">Ohne Paketzuordnung</span></td>
+                <td>533</td>
+                <td>334</td>
+                <td>335</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="foot">
+            „Ohne Paketzuordnung“ kann ältere und aktuelle direkte Quiz-Nutzung enthalten.
+            Paketzeilen sind nicht über Personen addierbar.
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-title">B2 · Personen vs. Ereignisse</div>
+          <div class="panel-subtitle">
+            Zeigt Wiederholungen und macht deutlich, warum PostHog-Leads nicht mit eindeutigen
+            E-Mails gleichzusetzen sind.
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Schritt</th>
+                <th>Personen</th>
+                <th>Ereignisse</th>
+                <th>Mehrfachfaktor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Quiz gestartet</td>
+                <td>2.383</td>
+                <td>3.464</td>
+                <td>1,45×</td>
+              </tr>
+              <tr>
+                <td>Quiz abgeschlossen</td>
+                <td>1.539</td>
+                <td>1.695</td>
+                <td>1,10×</td>
+              </tr>
+              <tr>
+                <td>Lead gespeichert</td>
+                <td>1.252</td>
+                <td>1.359</td>
+                <td>1,09×</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
