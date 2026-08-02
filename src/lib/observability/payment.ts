@@ -2,6 +2,7 @@ import type { CheckoutInterval, CheckoutSource, CheckoutStage } from "@/lib/obse
 
 export type PaymentSignal =
   | "customer_payment_error_observed"
+  | "payment_checkout_initialization_failed"
   | "provider_payment_failed"
   | "payment_webhook_processing_failed"
   | "payment_integrity_mismatch"
@@ -110,6 +111,7 @@ const PAYMENT_BOUNDARY_BY_STAGE: Record<CheckoutStage, PaymentBoundary> = {
 
 const PAYMENT_LEVEL_BY_SIGNAL: Record<PaymentSignal, PaymentFailureLevel> = {
   customer_payment_error_observed: "warning",
+  payment_checkout_initialization_failed: "error",
   provider_payment_failed: "warning",
   payment_webhook_processing_failed: "error",
   payment_integrity_mismatch: "fatal",

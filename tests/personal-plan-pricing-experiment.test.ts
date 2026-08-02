@@ -20,6 +20,7 @@ import {
 import {
   assertPersonalPlanOneTimeCheckoutAuthorized,
   assignPersonalPlanOneTimeQa,
+  PersonalPlanOneTimeCheckoutAuthorizationError,
   resolvePersonalPlanPricingExperiment,
 } from "../src/lib/funnel/server"
 
@@ -513,4 +514,28 @@ test("one-time checkout authorization uses only the canonical stored session", a
       /not authorized/,
     )
   }
+})
+
+test("one-time checkout authorization distinguishes lookup failure from expected denial", async () => {
+  await assert.rejects(
+    assertPersonalPlanOneTimeCheckoutAuthorized({
+      leadId,
+      funnelSessionId: sessionId,
+      fetchSession: async () => ({ data: null, error: new Error("database unavailable") }),
+    }),
+    (error) =>
+      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
+      error.reason === "lookup_failed",
+  )
+
+  await assert.rejects(
+    assertPersonalPlanOneTimeCheckoutAuthorized({
+      leadId,
+      funnelSessionId: sessionId,
+      fetchSession: async () => ({ data: null, error: null }),
+    }),
+    (error) =>
+      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
+      error.reason === "not_authorized",
+  )
 })

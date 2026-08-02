@@ -290,6 +290,21 @@ export type PersonalPlanOneTimeCheckoutAuthorization = {
   isInternalTest: boolean
 }
 
+export class PersonalPlanOneTimeCheckoutAuthorizationError extends Error {
+  constructor(
+    readonly reason: "lookup_failed" | "not_authorized",
+    options?: ErrorOptions,
+  ) {
+    super(
+      reason === "lookup_failed"
+        ? "Personal-plan one-time checkout authorization lookup failed"
+        : "Personal-plan one-time checkout is not authorized",
+      options,
+    )
+    this.name = "PersonalPlanOneTimeCheckoutAuthorizationError"
+  }
+}
+
 type PersonalPlanOneTimeCheckoutSession = {
   id: string
   lead_id: string | null
@@ -326,8 +341,10 @@ export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
       return query.maybeSingle()
     })
   const { data, error } = await fetchSession()
+  if (error) {
+    throw new PersonalPlanOneTimeCheckoutAuthorizationError("lookup_failed", { cause: error })
+  }
   if (
-    error ||
     !data ||
     data.id !== (input.funnelSessionId ?? data.id) ||
     data.lead_id !== input.leadId ||
@@ -337,7 +354,7 @@ export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
     !data.visitor_id ||
     !Number.isFinite(Date.parse(data.first_seen_at))
   )
-    throw new Error("Personal-plan one-time checkout is not authorized")
+    throw new PersonalPlanOneTimeCheckoutAuthorizationError("not_authorized")
   return {
     sessionId: data.id,
     leadId: input.leadId,

@@ -4,15 +4,16 @@ This runbook covers payment failure observability for Chaarlie. It is operator g
 
 ## What is monitored
 
-The implementation emits five typed payment signals to Sentry. The signal is the primary triage field; use tags and the `payment` context to classify the case.
+The implementation emits six typed payment signals to Sentry. The signal is the primary triage field; use tags and the `payment` context to classify the case.
 
-| Signal                              | Severity | Meaning                                                                                                                                            | First response                                                                           |
-| ----------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `customer_payment_error_observed`   | warning  | A user-visible checkout error occurred in the browser or checkout parent flow. This can be a real failure or a recovered/customer-retryable issue. | Check whether the same internal user/lead/attempt later succeeded.                       |
-| `provider_payment_failed`           | warning  | Stripe or PayPal explicitly reported a failed payment outcome.                                                                                     | Treat as a real payment failure until settlement and local billing state prove recovery. |
-| `payment_webhook_processing_failed` | error    | A verified provider webhook was received, but local processing threw or could not complete.                                                        | Check webhook processing, billing rows, and entitlement or purchase state immediately.   |
-| `payment_integrity_mismatch`        | fatal    | Reconciliation found provider truth and local truth disagree after the grace period.                                                               | Treat as an integrity incident until proven false positive.                              |
-| `payment_monitor_failed`            | error    | The monitoring route, provider scan, local lookup, or scheduled trigger failed.                                                                    | Restore the monitor path first, then rerun the check.                                    |
+| Signal                                   | Severity | Meaning                                                                                                                                                                 | First response                                                                                                                           |
+| ---------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `customer_payment_error_observed`        | warning  | A user-visible checkout error occurred in the browser or checkout parent flow. This can be a real failure or a recovered/customer-retryable issue.                      | Check whether the same internal user/lead/attempt later succeeded.                                                                       |
+| `payment_checkout_initialization_failed` | error    | The server could not initialize a provider checkout Session. The customer could not reach authorization, so this is an integration incident rather than a card decline. | Inspect the closed `status`, provider, source, and commerce kind immediately; then correlate any browser companion by safe internal IDs. |
+| `provider_payment_failed`                | warning  | Stripe or PayPal explicitly reported a failed payment outcome.                                                                                                          | Treat as a real payment failure until settlement and local billing state prove recovery.                                                 |
+| `payment_webhook_processing_failed`      | error    | A verified provider webhook was received, but local processing threw or could not complete.                                                                             | Check webhook processing, billing rows, and entitlement or purchase state immediately.                                                   |
+| `payment_integrity_mismatch`             | fatal    | Reconciliation found provider truth and local truth disagree after the grace period.                                                                                    | Treat as an integrity incident until proven false positive.                                                                              |
+| `payment_monitor_failed`                 | error    | The monitoring route, provider scan, local lookup, or scheduled trigger failed.                                                                                         | Restore the monitor path first, then rerun the check.                                                                                    |
 
 Important distinction: a customer-visible error is not automatically lost revenue. It becomes a real failure only if the same checkout attempt, user, or lead did not later reach a valid provider success and local access state.
 
@@ -28,7 +29,7 @@ The integrity checker uses a 60-minute settlement grace period before flagging s
 
 Expected detection latency:
 
-- Direct provider failure or webhook processing exception: immediate.
+- Checkout initialization, direct provider failure, or webhook processing exception: immediate.
 - Silent provider-success/local-state mismatch: usually 60-90 minutes after provider success, because the check waits 60 minutes and then runs on the next 30-minute local cadence.
 - Failed local run: the endpoint emits `payment_monitor_failed` to Sentry and the LaunchAgent records a nonzero result with privacy-safe provider failure categories.
 - Sleeping/offline Mac: no local missed-run alert is configured. The daily Vercel reconciliation is the cloud fallback.
@@ -63,14 +64,19 @@ Use this order so each incident is classified against payment truth, not UI symp
    - `payment.live`
    - `payment.is_internal_test`
 2. If `payment.live=false` or `payment.is_internal_test=true`, classify as internal QA unless there is evidence it affected a real customer.
-3. Use `user_id`, `lead_id`, or `checkout_attempt_id` to find the local customer/payment trail.
-4. Reconcile provider state:
+3. For `payment_checkout_initialization_failed`, inspect the closed `status` before any provider lookup:
+   - `idempotency_conflict`: compare the idempotency key and request parameters in the provider dashboard; do not infer a decline.
+   - `configuration_missing`: verify the deployed price/provider configuration.
+   - `rate_limited` or `provider_unavailable`: verify whether a later attempt recovered before contacting the customer.
+   - `unknown`: inspect provider/Vercel evidence without copying raw messages or references into Sentry.
+4. Use `user_id`, `lead_id`, or `checkout_attempt_id` to find the local customer/payment trail.
+5. Reconcile provider state:
    - Provider outcome: failed, succeeded, pending, canceled, or abandoned.
    - Verified webhook: received and processed, received and failed, or not available in local evidence.
    - Billing row: subscription, checkout, or one-time purchase state.
    - Access state: entitlement for subscriptions or paid purchase for one-time plans.
    - Settlement state: whether the outcome is still inside the 60-minute grace period.
-5. Classify and act using the table below.
+6. Classify and act using the table below.
 
 | Classification                   | Criteria                                                                                                                                 | Action                                                                                             |
 | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
@@ -119,9 +125,31 @@ Suppress or downgrade only after evidence:
 - Customer-visible recovered errors: close after verifying provider success and correct access.
 - Provider pending states: wait until the 60-minute grace period has elapsed.
 - Repeated identical browser errors with later success: keep one tracking issue for UX/noise, but do not count each event as failed revenue.
+- Expected preparation-unavailable, existing-access, and provider-lock outcomes are checkout control flow, not payment failures. If one reaches Sentry, fix the reporting owner rather than weakening provider or integrity signals.
+- A browser checkout-load signal accompanying one server initialization signal is one incident. Correlate it by safe internal identifiers; do not count both events as two blocked customers.
+- Exact Meta/Instagram native-bridge exceptions may be dropped only when the known message, `app://` frame, and native bridge function all match. Do not suppress by user agent, browser name, message alone, or `app://` alone.
 - Monitor outage during local Mac sleep: track monitor availability separately from payment integrity.
 
 Do not suppress `payment_integrity_mismatch` until provider truth, billing truth, and access truth have been checked.
+
+### 2026-08-02 incident closure checklist
+
+Use current events rather than issue counts when closing the groups discovered during the prepared
+Checkout incident:
+
+- `HAIR-CONCIERGE-2N` / `2P`: keep open until the stable prepared-session retry is deployed and a
+  production repeat reuses the same Stripe Session without a provider idempotency error.
+- `HAIR-CONCIERGE-22`: close after duplicate/existing-access control flow no longer creates an
+  unhandled browser exception and the existing-access dialog still works.
+- `HAIR-CONCIERGE-1N`, `1R`, `1P`, `2E`, `2F`: close after the exact native-bridge filter is deployed
+  and near-miss regression tests prove Chaarlie exceptions remain reportable.
+- `HAIR-CONCIERGE-2W` / `2Y`: close when the repaired monitor has a later successful route result
+  and local scheduled exit; do not change the integrity scan merely to silence the old issue.
+- `HAIR-CONCIERGE-2X`: retain as an internal QA integrity finding or close as QA according to the
+  alert workflow. It must stay tagged `payment.is_internal_test=true` and must not notify as a real
+  customer incident.
+- `HAIR-CONCIERGE-2Q`: no action when it remains resolved and no new non-internal live volume alert
+  fires.
 
 ### Explicit PayPal renewal exclusions
 
@@ -180,7 +208,9 @@ time and closed payment tags.
 Before treating the system as operational:
 
 - Confirm production deploy contains this code.
-- Configure Sentry alert routing for the five `payment.signal` values.
+- Configure Sentry alert routing for the six `payment.signal` values. A live, non-internal
+  `payment_checkout_initialization_failed` is immediately actionable; exclude
+  `payment.is_internal_test=true` from customer notifications while retaining the event for QA.
 - Confirm the daily Vercel reconciliation cron remains configured as the cloud fallback. The local route does not send Sentry Cron check-ins; the Mac LaunchAgent owns scheduling while normal Sentry error events own monitor-failure alerts.
 - Confirm the production Stripe webhook endpoint delivers `payment_intent.payment_failed`,
   `checkout.session.async_payment_failed`, and `invoice.payment_failed` events.
@@ -190,6 +220,9 @@ Before treating the system as operational:
 - Run one manual local trigger against `https://chaarlie.de/api/billing/payment-monitor`.
 - Verify a manual run returns `200 completed`, and verify a controlled monitor failure reaches Sentry without a secret or raw provider reference.
 - Run a controlled checkout test and confirm customer-visible errors, provider failures, webhook exceptions, and reconciliation signals are classified as expected.
+- For prepared Checkout, repeat the client-secret request within one preparation generation and
+  verify Stripe replays the same Session without an `idempotency_error`; then perform a deliberate
+  refresh and verify it uses a new preparation identity.
 
 Do not install local automation, change Sentry workflows, or rotate secrets as part of code review unless that rollout step is explicitly authorized.
 

@@ -5,7 +5,10 @@ import { z } from "zod"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
-import { assertPersonalPlanOneTimeCheckoutAuthorized } from "@/lib/funnel/server"
+import {
+  assertPersonalPlanOneTimeCheckoutAuthorized,
+  PersonalPlanOneTimeCheckoutAuthorizationError,
+} from "@/lib/funnel/server"
 import {
   createPersonalPlanOneTimeCheckoutConsent,
   bindPersonalPlanOneTimeConsentProviderReference,
@@ -69,7 +72,13 @@ export async function POST(request: Request) {
       leadId,
       funnelSessionId: parsed.data.funnelSessionId,
     })
-  } catch {
+  } catch (error) {
+    if (
+      !(error instanceof PersonalPlanOneTimeCheckoutAuthorizationError) ||
+      error.reason !== "not_authorized"
+    ) {
+      throw error
+    }
     return NextResponse.json({ error: "not found" }, { status: 404 })
   }
   if (leadId) {

@@ -57,6 +57,28 @@ test("payment reporter uses lead id only when the internal user id is absent", (
   assert.equal(payload.level, "warning")
 })
 
+test("checkout initialization failures use the closed error signal and severity", () => {
+  const payload = buildPaymentFailurePayload({
+    signal: "payment_checkout_initialization_failed",
+    provider: "stripe",
+    boundary: "provider_session",
+    errorFamily: "provider_session",
+    commerceKind: "one_time",
+    origin: "provider_api",
+    method: "unknown",
+    truth: "unknown",
+    live: true,
+    isInternalTest: false,
+    source: "quiz_result_offer",
+    status: "idempotency_conflict",
+  })
+
+  assert.equal(payload.level, "error")
+  assert.equal(payload.tags["payment.signal"], "payment_checkout_initialization_failed")
+  assert.equal(payload.context.status, "idempotency_conflict")
+  assert.doesNotMatch(JSON.stringify(payload), /client_secret|customer@example.com|cs_/)
+})
+
 test("payment reporter refuses email-like values in internal identity fields", () => {
   const payload = buildPaymentFailurePayload({
     signal: "customer_payment_error_observed",

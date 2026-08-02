@@ -724,7 +724,7 @@ test("a Stripe preparation error keeps the independent secondary provider visibl
   )
   assert.match(
     stripeOfferElementsSource,
-    /if \(checkoutResult\.type !== "error"\) \{[\s\S]*?reportedCheckoutLoadErrorRef\.current = false/,
+    /preparationFailureReported[\s\S]*?isHandledPreparedCheckoutControlError\(checkoutResult\.error\)[\s\S]*?isAlreadyReportedPreparedCheckoutError\(checkoutResult\.error\)[\s\S]*?reportedCheckoutLoadErrorRef\.current = false/,
   )
 })
 

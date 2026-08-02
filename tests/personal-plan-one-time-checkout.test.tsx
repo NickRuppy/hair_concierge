@@ -52,6 +52,7 @@ test("one-time payment providers preload independently while consent gates final
   assert.doesNotMatch(checkoutSource, /Zahlungsarten erst nach Einwilligung verfügbar/)
   assert.doesNotMatch(checkoutSource, /disabled[\s\S]{0,220} Pay/)
   assert.match(checkoutSource, /action: "prepare"/)
+  assert.match(checkoutSource, /preparationToken: stripePreparationCredential\.preparationToken/)
   assert.match(checkoutSource, /action: "claim"/)
   assert.match(checkoutSource, /body\.status !== "prepared" && body\.status !== "recovered"/)
   assert.match(checkoutSource, /setStripeProviderLocked\(body\.provider_locked === "stripe"\)/)
@@ -131,6 +132,9 @@ test("one-time Apple Pay prewarms before the drawer opens without creating check
   assert.match(checkoutSource, /visible: boolean/)
   assert.match(checkoutSource, /visible=\{visible\}/)
   assert.match(checkoutSource, /if \(!checkoutAttemptId \|\| !offerContext/)
+  assert.match(checkoutSource, /cachedPreparation\.expiresAt \* 1000 > Date\.now\(\) \+ 30_000/)
+  assert.match(checkoutSource, /prepared_checkout_control:prepared_checkout_unavailable/)
+  assert.match(checkoutSource, /throw createAlreadyReportedPreparedCheckoutError\(error\)/)
 })
 
 test("one-time pricing preserves the offer-to-provider analytics journey", () => {

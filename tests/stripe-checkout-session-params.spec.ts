@@ -184,13 +184,12 @@ test("keeps the embedded Checkout return URL on the welcome page", () => {
   )
 })
 
-test("adds only hashed, short-lived preparation metadata to an Elements Session", () => {
+test("prepared Elements Sessions omit Stripe expiry while retaining only hashed metadata", () => {
   const params = buildStripeCheckoutSessionParams({
     origin: "https://chaarlie.example",
     priceId: "price_month",
     customerEmail: "lead@example.com",
     presentation: "elements",
-    expiresAt: 1_800_000_000,
     metadata: {
       checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
       checkout_preparation_token_hash:
@@ -199,7 +198,7 @@ test("adds only hashed, short-lived preparation metadata to an Elements Session"
     },
   })
 
-  assert.equal(params.expires_at, 1_800_000_000)
+  assert.equal("expires_at" in params, false)
   assert.deepEqual(params.metadata, {
     checkout_preparation_id: "c2a89c81-7e93-4d81-98d1-c7cfd7047721",
     checkout_preparation_token_hash:
