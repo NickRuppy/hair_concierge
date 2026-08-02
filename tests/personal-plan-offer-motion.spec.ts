@@ -271,6 +271,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
       await route.fulfill({
         body: JSON.stringify({ error: "synthetic lab response" }),
