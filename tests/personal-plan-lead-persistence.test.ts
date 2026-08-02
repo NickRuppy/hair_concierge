@@ -224,6 +224,27 @@ test("prepare and lead endpoints exchange only an opaque claim before the result
   assert.doesNotMatch(leadRoute, /NextResponse\.json\(\{[\s\S]{0,200}artifact/)
 })
 
+test("lead route rejects definitive deliverability failures before persistence", () => {
+  const leadRoute = readFileSync(
+    new URL("../src/app/api/quiz/personal-plan-lead/route.ts", import.meta.url),
+    "utf8",
+  )
+  const deliverabilityCheck = leadRoute.indexOf(
+    "const deliverability = await checkEmailDeliverability(email)",
+  )
+  const persistenceCall = leadRoute.indexOf("save_personal_plan_lead_with_artifact")
+
+  assert.ok(deliverabilityCheck >= 0, "lead route must check deliverability")
+  assert.ok(
+    persistenceCall > deliverabilityCheck,
+    "deliverability rejection must happen before the lead is persisted",
+  )
+  assert.match(
+    leadRoute,
+    /if \(!deliverability\.ok\) \{[\s\S]*reason: deliverability\.reason,[\s\S]*suggestion: deliverability\.suggestion,[\s\S]*\{ status: 422 \}/,
+  )
+})
+
 test("personal-plan Customer.io sync identifies the approved structured profile without an event", async () => {
   const originalFetch = globalThis.fetch
   const originalKey = process.env.CUSTOMERIO_SERVER_WRITE_KEY
