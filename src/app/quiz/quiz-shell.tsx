@@ -6,11 +6,24 @@ import { QuizInfoStrip } from "@/components/quiz/quiz-info-strip"
 import { AppRouteProviders } from "@/providers/route-providers"
 import { useEffect, useRef, useState } from "react"
 
+const QUIZ_MOTION_ORDER = [2, 3, 13, 15, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
+
+function getTransitionDirection(previousStep: number, nextStep: number) {
+  const previousIndex = QUIZ_MOTION_ORDER.indexOf(previousStep)
+  const nextIndex = QUIZ_MOTION_ORDER.indexOf(nextStep)
+
+  if (previousIndex === -1 || nextIndex === -1) return "forward"
+  return nextIndex < previousIndex ? "back" : "forward"
+}
+
 export function QuizShell({ children }: { children: React.ReactNode }) {
   const step = useQuizStore((s) => s.step)
+  const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
   const standardScrollRef = useRef<HTMLDivElement>(null)
   const resultScrollRef = useRef<HTMLDivElement>(null)
   const previousStepRef = useRef(step)
+  const [transitionDirection, setTransitionDirection] = useState<"forward" | "back">("forward")
+  const previousTransitionKeyRef = useRef(`${step}:${leadCaptureSubStep}`)
   // Info strip is only shown on the first question (step 2). The dismiss
   // state lives here (not in the strip) so it persists across step changes
   // within the same session — the layout doesn't unmount when the user
@@ -18,8 +31,12 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
   const [infoStripDismissed, setInfoStripDismissed] = useState(false)
 
   useEffect(() => {
-    if (previousStepRef.current === step) return
+    const transitionKey = `${step}:${leadCaptureSubStep}`
+    if (previousTransitionKeyRef.current === transitionKey) return
+
+    setTransitionDirection(getTransitionDirection(previousStepRef.current, step))
     previousStepRef.current = step
+    previousTransitionKeyRef.current = transitionKey
 
     const resetStepScroll = () => {
       const container = step === 11 ? resultScrollRef.current : standardScrollRef.current
@@ -47,7 +64,7 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
       window.cancelAnimationFrame(firstFrame)
       window.cancelAnimationFrame(secondFrame)
     }
-  }, [step])
+  }, [leadCaptureSubStep, step])
 
   // Results page (step 11): full-width centered layout, no brand panel
   if (step === 11) {
@@ -74,7 +91,13 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
             {step === 2 && !infoStripDismissed && (
               <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
             )}
-            {children}
+            <div
+              key={`${step}:${leadCaptureSubStep}`}
+              className="personal-plan-screen-enter"
+              data-personal-plan-transition-direction={transitionDirection}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </div>

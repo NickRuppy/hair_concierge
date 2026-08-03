@@ -4,27 +4,27 @@
     "slug": null,
     "channel": "organic",
     "status": "active",
-    "landingVariant": "default",
+    "landingVariant": "organic-refresh",
     "quizVariant": "legacy-quiz-v1",
-    "offerVariant": "guided-story"
+    "offerVariant": "organic-plan-v1"
   },
   {
     "key": "scalp_check_placeholder",
     "slug": "scalp-check",
     "channel": "meta",
-    "status": "placeholder",
+    "status": "archived",
     "landingVariant": "default",
     "quizVariant": "legacy-quiz-v1",
-    "offerVariant": "default"
+    "offerVariant": "organic-plan-v1"
   },
   {
     "key": "meta_routine_v1",
     "slug": "routine",
     "channel": "meta",
-    "status": "active",
+    "status": "archived",
     "landingVariant": "default",
     "quizVariant": "legacy-quiz-v1",
-    "offerVariant": "guided-story"
+    "offerVariant": "organic-plan-v1"
   },
   {
     "key": "meta_personal_plan_v1",

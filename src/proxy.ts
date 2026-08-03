@@ -12,8 +12,13 @@ import {
   type FunnelCookieContext,
   type FunnelTouch,
 } from "@/lib/funnel/cookie"
-import { isFunnelAttributionEnabled } from "@/lib/funnel/flags"
-import { getFunnelPackageBySlug, resolveDefaultFunnelPackage } from "@/lib/funnel/packages"
+import { isFunnelAttributionEnabled, isPersonalPlanQuizV1Enabled } from "@/lib/funnel/flags"
+import {
+  getFunnelPackageByKey,
+  getFunnelPackageBySlug,
+  resolveDefaultFunnelPackage,
+  type FunnelPackage,
+} from "@/lib/funnel/packages"
 import { type NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 
@@ -22,6 +27,15 @@ export async function proxy(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.hostname = "chaarlie.de"
     return NextResponse.redirect(url, 308)
+  }
+
+  if (request.nextUrl.pathname === "/lp/routine" || request.nextUrl.pathname === "/lp/routine/") {
+    const url = request.nextUrl.clone()
+    url.pathname = "/"
+    for (const key of [...url.searchParams.keys()]) {
+      if (!SAFE_RETIRED_ROUTINE_QUERY_KEYS.has(key)) url.searchParams.delete(key)
+    }
+    return NextResponse.redirect(url, 307)
   }
 
   const response = await updateSession(request)
@@ -33,7 +47,11 @@ export async function proxy(request: NextRequest) {
     return response
   }
 
-  const selectedPackage = resolvePackageForPath(request.nextUrl.pathname)
+  const personalPlanEnabled = isPersonalPlanQuizV1Enabled()
+  const selectedPackage = resolveAttributablePackageForPath(
+    request.nextUrl.pathname,
+    personalPlanEnabled,
+  )
   if (!selectedPackage) return response
 
   const existingValue = request.cookies.get(FUNNEL_SESSION_COOKIE)?.value
@@ -41,15 +59,21 @@ export async function proxy(request: NextRequest) {
   const explicitlySelectsPackage =
     request.nextUrl.pathname === "/" || request.nextUrl.pathname.startsWith("/lp/")
 
-  let context = existing
-  if (!context || (explicitlySelectsPackage && context.packageKey !== selectedPackage.key)) {
-    context = {
-      visitorId: existing?.visitorId ?? crypto.randomUUID(),
-      sessionId: crypto.randomUUID(),
-      packageKey: selectedPackage.key,
-      issuedAt: Date.now(),
-    }
-  }
+  const startNewSession = shouldStartNewFunnelSession({
+    existingPackageKey: existing?.packageKey ?? null,
+    explicitlySelectsPackage,
+    personalPlanEnabled,
+    selectedPackage,
+  })
+  const context: FunnelCookieContext =
+    startNewSession || !existing
+      ? {
+          visitorId: existing?.visitorId ?? crypto.randomUUID(),
+          sessionId: crypto.randomUUID(),
+          packageKey: selectedPackage.key,
+          issuedAt: Date.now(),
+        }
+      : existing
 
   response.cookies.set(
     FUNNEL_SESSION_COOKIE,
@@ -72,10 +96,53 @@ export async function proxy(request: NextRequest) {
   return response
 }
 
-function resolvePackageForPath(pathname: string) {
+const SAFE_RETIRED_ROUTINE_QUERY_KEYS = new Set([
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "fbclid",
+])
+
+export function isAttributableFunnelPackage(
+  funnelPackage: FunnelPackage,
+  personalPlanEnabled: boolean,
+) {
+  if (funnelPackage.key === "default_organic") return funnelPackage.status === "active"
+  return (
+    funnelPackage.key === "meta_personal_plan_v1" &&
+    funnelPackage.status === "placeholder" &&
+    personalPlanEnabled
+  )
+}
+
+export function resolveAttributablePackageForPath(pathname: string, personalPlanEnabled: boolean) {
   if (pathname === "/" || pathname === "/quiz") return resolveDefaultFunnelPackage()
   const match = pathname.match(/^\/lp\/([^/]+)\/?$/)
-  return match ? getFunnelPackageBySlug(match[1]) : null
+  const funnelPackage = match ? getFunnelPackageBySlug(match[1]) : null
+  return funnelPackage && isAttributableFunnelPackage(funnelPackage, personalPlanEnabled)
+    ? funnelPackage
+    : null
+}
+
+export function shouldStartNewFunnelSession({
+  existingPackageKey,
+  explicitlySelectsPackage,
+  personalPlanEnabled,
+  selectedPackage,
+}: {
+  existingPackageKey: string | null
+  explicitlySelectsPackage: boolean
+  personalPlanEnabled: boolean
+  selectedPackage: FunnelPackage
+}) {
+  if (!existingPackageKey) return true
+  const existingPackage = getFunnelPackageByKey(existingPackageKey)
+  if (!existingPackage || !isAttributableFunnelPackage(existingPackage, personalPlanEnabled)) {
+    return true
+  }
+  return explicitlySelectsPackage && existingPackageKey !== selectedPackage.key
 }
 
 function truncate(value: string | null, maxLength: number) {

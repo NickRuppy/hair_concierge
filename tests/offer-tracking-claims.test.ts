@@ -22,30 +22,18 @@ test("chapter claims do not mutate the prior claim set or repeat earlier chapter
   assert.deepEqual([...previouslyClaimed], ["analysis", "routine", "support", "pricing"])
 })
 
-test("guided-story assigns a one-based index to every FAQ open", () => {
-  assert.deepEqual(resolveOfferFaqOpenClaim("guided-story", false, 0), {
-    nextOpenIndex: 1,
-    openIndex: 1,
-  })
-  assert.deepEqual(resolveOfferFaqOpenClaim("guided-story", true, 1), {
-    nextOpenIndex: 2,
-    openIndex: 2,
-  })
-})
-
-test("guided-story experiment arms preserve repeat FAQ-open claims", () => {
-  assert.deepEqual(resolveOfferFaqOpenClaim("guided-story-locked", true, 3), {
-    nextOpenIndex: 4,
-    openIndex: 4,
-  })
-})
-
-test("other variants remain once-per-ID without adding an open index", () => {
+test("the organic offer and retired aliases remain once-per-ID without an open index", () => {
+  for (const variant of ["organic-plan-v1", "guided-story", "guided-story-potential"]) {
+    assert.deepEqual(resolveOfferFaqOpenClaim(variant, false, 0), {
+      nextOpenIndex: 0,
+      openIndex: undefined,
+    })
+  }
   assert.deepEqual(resolveOfferFaqOpenClaim("default", false, 0), {
     nextOpenIndex: 0,
     openIndex: undefined,
   })
-  assert.equal(resolveOfferFaqOpenClaim("default", true, 0), null)
+  assert.equal(resolveOfferFaqOpenClaim("guided-story", true, 0), null)
 })
 
 test("the guided-story chat answer does not count toward engagement depth", () => {

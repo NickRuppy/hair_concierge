@@ -21,13 +21,13 @@ import {
   recordFunnelEvent,
   assignPersonalPlanOneTimeQa,
   resolveFunnelContextForLead,
-  resolveGuidedStoryOfferExperiment,
   resolvePersonalPlanPricingExperiment,
 } from "@/lib/funnel/server"
 import { isFunnelAttributionEnabled, isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
 import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
+import { resolveLegacyResultOfferVariant } from "@/lib/funnel/packages"
 
 export const dynamic = "force-dynamic"
 
@@ -93,7 +93,11 @@ async function getPersonalPlanPublicOfferModel(
   return parsePersonalPlanOfferModel(data?.public_offer_model ?? null)
 }
 
-async function recordLeadOfferView(leadId: string, context: FunnelCookieContext | null) {
+async function recordLeadOfferView(
+  leadId: string,
+  context: FunnelCookieContext | null,
+  trustedOfferVariant: string,
+) {
   if (!isFunnelAttributionEnabled() || !context) return null
   const eventId = crypto.randomUUID()
   await recordFunnelEvent({
@@ -101,6 +105,7 @@ async function recordLeadOfferView(leadId: string, context: FunnelCookieContext 
     eventId,
     milestone: "offer_viewed",
     leadId,
+    trustedOfferVariant,
   }).catch((error) => console.warn("[funnel] result offer tracking failed", error))
   return {
     funnelEventId: eventId,
@@ -221,19 +226,11 @@ export default async function ResultPage({ params, searchParams }: Props) {
     lead.quiz_kind === "personal_plan"
       ? await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
       : hasAccess
-        ? "default"
-        : await resolveGuidedStoryOfferExperiment({
-            leadId,
-            session: funnelContext
-              ? {
-                  sessionId: funnelContext.sessionId,
-                  packageKey: funnelContext.packageKey,
-                  offerVariant: funnelContext.offerVariant ?? null,
-                  offerViewedAt: funnelContext.offerViewedAt ?? null,
-                }
-              : null,
-          })
-  const offerTracking = hasAccess ? null : await recordLeadOfferView(leadId, funnelContext)
+        ? "organic-plan-v1"
+        : resolveLegacyResultOfferVariant(funnelContext)
+  const offerTracking = hasAccess
+    ? null
+    : await recordLeadOfferView(leadId, funnelContext, offerVariant)
   const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (

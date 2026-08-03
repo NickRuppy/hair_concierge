@@ -1,28 +1,18 @@
-export const PERSONAL_PLAN_QUIZ_GOALS = [
-  "moisture",
-  "frizz_surface",
-  "shine",
-  "shape_definition",
-  "volume_balance",
-  "strength_ends",
-  "scalp_balance",
-  "manageability_styling",
-] as const
+import {
+  DIAGNOSTIC_CONCERNS,
+  DIAGNOSTIC_GOALS,
+  type DiagnosticConcern,
+  type DiagnosticGoal,
+  type PersonalPlanDiagnosticInput,
+} from "@/lib/quiz/diagnostic-input"
 
-export type PersonalPlanQuizGoal = (typeof PERSONAL_PLAN_QUIZ_GOALS)[number]
+export const PERSONAL_PLAN_QUIZ_GOALS = DIAGNOSTIC_GOALS
 
-export const PERSONAL_PLAN_QUIZ_CONCERNS = [
-  "dry_lengths",
-  "frizz_flyaways",
-  "low_shine",
-  "lost_shape",
-  "low_volume_or_weighed_down",
-  "breakage",
-  "split_ends",
-  "tangling",
-] as const
+export type PersonalPlanQuizGoal = DiagnosticGoal
 
-export type PersonalPlanQuizConcern = (typeof PERSONAL_PLAN_QUIZ_CONCERNS)[number]
+export const PERSONAL_PLAN_QUIZ_CONCERNS = DIAGNOSTIC_CONCERNS
+
+export type PersonalPlanQuizConcern = DiagnosticConcern
 
 export type PersonalPlanQuizConcernRecurrence = {
   concernId: PersonalPlanQuizConcern
@@ -33,24 +23,10 @@ export type PersonalPlanQuizConcernRecurrence = {
  * Durable V2 answers only. Conversion admissions, the daily-time commitment,
  * loading commitments, email, and consent intentionally live outside this type.
  */
-export type PersonalPlanQuizAnswers = {
-  texture?: "straight" | "wavy" | "curly" | "coily"
-  thickness?: "fine" | "normal" | "coarse"
-  density?: "low" | "medium" | "high"
-  goals?: PersonalPlanQuizGoal[]
+export type PersonalPlanQuizAnswers = PersonalPlanDiagnosticInput & {
   routineClarity?: "clear" | "partial" | "trial_and_error" | "none"
   resultReliability?: "mostly" | "sometimes" | "rarely"
   adaptationConfidence?: "yes" | "partly" | "no"
-  currentConcerns?: PersonalPlanQuizConcern[]
-  concernRecurrence?: PersonalPlanQuizConcernRecurrence
-  hairLength?: "very_short" | "short" | "medium" | "long" | "very_long"
-  hairSurface?: "smooth" | "slightly_uneven" | "rough"
-  elasticResponse?: "stretches_bounces" | "stretches_stays" | "snaps"
-  chemicalTreatments?: Array<
-    "natural" | "colored" | "lightened" | "permed" | "chemically_straightened"
-  >
-  scalpOiliness?: "oily" | "balanced" | "dry"
-  scalpConcerns?: Array<"oily_dandruff" | "dry_dandruff" | "irritated">
   previousAttempts?:
     | "nothing_reliably_worked"
     | "some_steps_helped"

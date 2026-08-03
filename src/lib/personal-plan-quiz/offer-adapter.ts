@@ -1,5 +1,6 @@
 import { GOALS, type Goal } from "@/lib/vocabulary/concerns-goals"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import type { PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
 
 import type {
   PersonalPlanQuizAnswers,
@@ -15,6 +16,109 @@ export type PersonalPlanFallbackMetadata = {
 export type PersonalPlanOfferAdapterResult = {
   answers: QuizAnswers
   fallbackMetadata: PersonalPlanFallbackMetadata
+}
+
+const LEGACY_CONCERN_TO_DIAGNOSTIC = {
+  hair_damage: "hair_damage",
+  split_ends: "split_ends",
+  breakage: "breakage",
+  dryness: "dry_lengths",
+  frizz: "frizz_flyaways",
+  tangling: "tangling",
+  dry_lengths: "dry_lengths",
+  frizz_flyaways: "frizz_flyaways",
+  low_shine: "low_shine",
+  lost_shape: "lost_shape",
+  low_volume_or_weighed_down: "low_volume_or_weighed_down",
+} as const
+
+const LEGACY_GOAL_TO_DIAGNOSTIC = {
+  moisture: "moisture",
+  less_frizz: "frizz_surface",
+  shine: "shine",
+  curl_definition: "shape_definition",
+  volume: "volume_balance",
+  less_volume: "volume_balance",
+  anti_breakage: "strength_ends",
+  less_split_ends: "strength_ends",
+  healthy_scalp: "scalp_balance",
+  frizz_surface: "frizz_surface",
+  shape_definition: "shape_definition",
+  volume_balance: "volume_balance",
+  strength_ends: "strength_ends",
+  scalp_balance: "scalp_balance",
+  manageability_styling: "manageability_styling",
+} as const
+
+/**
+ * Converts the legacy factual answers into the exact input the public
+ * assessment understands. Context questions which legacy never asked remain
+ * absent; this adapter must never synthesize them.
+ */
+export function adaptLegacyQuizAnswersForAssessment(
+  answers: QuizAnswers,
+): PersonalPlanDiagnosticInput {
+  const concerns = (answers.concerns ?? []).flatMap((value) => {
+    const mapped = LEGACY_CONCERN_TO_DIAGNOSTIC[value as keyof typeof LEGACY_CONCERN_TO_DIAGNOSTIC]
+    return mapped ? [mapped] : []
+  })
+  const goals = (answers.goals ?? []).flatMap((value) => {
+    const mapped = LEGACY_GOAL_TO_DIAGNOSTIC[value as keyof typeof LEGACY_GOAL_TO_DIAGNOSTIC]
+    return mapped ? [mapped] : []
+  })
+  const scalpConcernByCondition = {
+    schuppen: "oily_dandruff",
+    trockene_schuppen: "dry_dandruff",
+    gereizt: "irritated",
+  } as const
+  const treatmentByLegacyValue = {
+    natur: "natural",
+    gefaerbt: "colored",
+    blondiert: "lightened",
+    dauerwelle: "permed",
+    chemisch_geglaettet: "chemically_straightened",
+  } as const
+
+  return {
+    texture: answers.structure as PersonalPlanDiagnosticInput["texture"],
+    thickness: answers.thickness as PersonalPlanDiagnosticInput["thickness"],
+    density: answers.density as PersonalPlanDiagnosticInput["density"],
+    goals: [...new Set(goals)],
+    currentConcerns: [...new Set(concerns)],
+    hairLength: answers.hair_length,
+    hairSurface:
+      answers.fingertest === "glatt"
+        ? "smooth"
+        : answers.fingertest === "leicht_uneben"
+          ? "slightly_uneven"
+          : answers.fingertest === "rau"
+            ? "rough"
+            : undefined,
+    elasticResponse: answers.pulltest as PersonalPlanDiagnosticInput["elasticResponse"],
+    chemicalTreatments: (answers.treatment ?? []).flatMap((value) => {
+      const mapped = treatmentByLegacyValue[value as keyof typeof treatmentByLegacyValue]
+      return mapped ? [mapped] : []
+    }),
+    scalpOiliness:
+      answers.scalp_type === "fettig"
+        ? "oily"
+        : answers.scalp_type === "trocken"
+          ? "dry"
+          : answers.scalp_type === "ausgeglichen"
+            ? "balanced"
+            : undefined,
+    scalpConcerns:
+      answers.has_scalp_issue && answers.scalp_condition
+        ? [
+            scalpConcernByCondition[
+              answers.scalp_condition as keyof typeof scalpConcernByCondition
+            ],
+          ].filter(
+            (value): value is NonNullable<PersonalPlanDiagnosticInput["scalpConcerns"]>[number] =>
+              value !== undefined,
+          )
+        : [],
+  }
 }
 
 const TEXTURED = new Set<PersonalPlanQuizAnswers["texture"]>(["wavy", "curly", "coily"])
@@ -75,11 +179,15 @@ function volumeGoal(answers: PersonalPlanQuizAnswers): Goal | null {
 
 function retainConcerns(answers: PersonalPlanQuizAnswers): NonNullable<QuizAnswers["concerns"]> {
   const selected = new Set<NonNullable<QuizAnswers["concerns"]>[number]>()
+  if (hasConcern(answers.currentConcerns, "hair_damage")) selected.add("hair_damage")
   if (hasConcern(answers.currentConcerns, "breakage")) selected.add("breakage")
   if (hasConcern(answers.currentConcerns, "split_ends")) selected.add("split_ends")
   if (hasConcern(answers.currentConcerns, "dry_lengths")) selected.add("dryness")
   if (hasConcern(answers.currentConcerns, "tangling")) selected.add("tangling")
   if (hasConcern(answers.currentConcerns, "frizz_flyaways")) selected.add("frizz")
+  // The paid-plan legacy offer adapter remains intentionally capped for its
+  // established routine contract. Raw Personal Plan answers and the shared
+  // assessment above retain every selection.
   return [...selected].slice(0, 3)
 }
 

@@ -49,12 +49,24 @@ test("quiz schema accepts free-text-only concern notes", () => {
   assert.equal(parsed.concerns_other_text, "statische Haare")
 })
 
-test("quiz schema rejects more than three concerns", () => {
+test("quiz schema accepts all nine shared concerns and rejects duplicates or unknowns", () => {
+  const concerns = [
+    "dry_lengths",
+    "frizz_flyaways",
+    "low_shine",
+    "lost_shape",
+    "low_volume_or_weighed_down",
+    "hair_damage",
+    "breakage",
+    "split_ends",
+    "tangling",
+  ]
+  assert.deepEqual(quizAnswersSchema.parse({ ...createBaseAnswers(), concerns }).concerns, concerns)
   assert.throws(() =>
-    quizAnswersSchema.parse({
-      ...createBaseAnswers(),
-      concerns: ["hair_damage", "split_ends", "breakage", "dryness"],
-    }),
+    quizAnswersSchema.parse({ ...createBaseAnswers(), concerns: [...concerns, "hair_damage"] }),
+  )
+  assert.throws(() =>
+    quizAnswersSchema.parse({ ...createBaseAnswers(), concerns: ["unknown_concern"] }),
   )
 })
 
@@ -112,21 +124,31 @@ test("quiz schema rejects free-text notes above 50 characters", () => {
   assert.equal(parsed.success, false)
 })
 
-test("quiz schema accepts up to 5 goals", () => {
+test("quiz schema accepts all eight shared goals and historical stored goal values", () => {
   const parsed = quizAnswersSchema.parse({
     ...createBaseAnswers(),
-    goals: ["volume", "shine", "less_frizz", "moisture", "healthy_scalp"],
+    goals: [
+      "moisture",
+      "frizz_surface",
+      "shine",
+      "shape_definition",
+      "volume_balance",
+      "strength_ends",
+      "scalp_balance",
+      "manageability_styling",
+    ],
   })
 
-  assert.equal(parsed.goals?.length, 5)
-})
-
-test("quiz schema rejects more than 5 goals", () => {
-  assert.throws(() =>
+  assert.equal(parsed.goals?.length, 8)
+  assert.deepEqual(
     quizAnswersSchema.parse({
       ...createBaseAnswers(),
-      goals: ["volume", "shine", "less_frizz", "moisture", "healthy_scalp", "strengthen"],
-    }),
+      goals: ["healthier_hair", "color_protection"],
+    }).goals,
+    ["healthier_hair", "color_protection"],
+  )
+  assert.throws(() =>
+    quizAnswersSchema.parse({ ...createBaseAnswers(), goals: ["moisture", "moisture"] }),
   )
 })
 

@@ -1,8 +1,5 @@
-import type {
-  PersonalPlanQuizAnswers,
-  PersonalPlanQuizConcern,
-  PersonalPlanQuizGoal,
-} from "./types"
+import type { PersonalPlanQuizConcern, PersonalPlanQuizGoal } from "./types"
+import type { PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
 
 export const HAIR_ASSESSMENT_DIMENSION_IDS = [
   "scalp_balance",
@@ -68,28 +65,34 @@ const CONCERN_BY_DIMENSION: Partial<Record<HairAssessmentDimensionId, PersonalPl
 const RECURRENCE_RANK = { often: 3, sometimes: 2, rather_not: 1 } as const
 const HARSH_TREATMENTS = new Set(["lightened", "permed", "chemically_straightened"])
 
-function hasConcern(answers: PersonalPlanQuizAnswers, concern: PersonalPlanQuizConcern) {
+function hasConcern(answers: PersonalPlanDiagnosticInput, concern: PersonalPlanQuizConcern) {
   return answers.currentConcerns?.includes(concern) ?? false
 }
 
-function hasHarshTreatment(answers: PersonalPlanQuizAnswers) {
+function hasHarshTreatment(answers: PersonalPlanDiagnosticInput) {
   return answers.chemicalTreatments?.some((treatment) => HARSH_TREATMENTS.has(treatment)) ?? false
 }
 
 function dimension(
   id: HairAssessmentDimensionId,
-  answers: PersonalPlanQuizAnswers,
+  answers: PersonalPlanDiagnosticInput,
   evidence: AssessmentEvidence[],
   positiveEligible = false,
 ): HairAssessmentDimension {
   const active = evidence.some((item) => item.kind === "primary" || item.kind === "observation")
   const scored = active ? evidence : evidence.filter((item) => item.kind === "neutral")
-  const explicitConcern = CONCERN_BY_DIMENSION[id]
-    ? hasConcern(answers, CONCERN_BY_DIMENSION[id]!)
-    : false
+  const explicitConcern =
+    id === "breakage_stability"
+      ? hasConcern(answers, "breakage") || hasConcern(answers, "hair_damage")
+      : CONCERN_BY_DIMENSION[id]
+        ? hasConcern(answers, CONCERN_BY_DIMENSION[id]!)
+        : false
   const concernRecurrence = answers.concernRecurrence
   const recurrence =
-    explicitConcern && concernRecurrence && concernRecurrence.concernId === CONCERN_BY_DIMENSION[id]
+    explicitConcern &&
+    concernRecurrence &&
+    (concernRecurrence.concernId === CONCERN_BY_DIMENSION[id] ||
+      (id === "breakage_stability" && concernRecurrence.concernId === "hair_damage"))
       ? concernRecurrence.frequency
       : undefined
   return {
@@ -107,7 +110,7 @@ function dimension(
   }
 }
 
-function evaluateDimensions(answers: PersonalPlanQuizAnswers): HairAssessmentDimension[] {
+function evaluateDimensions(answers: PersonalPlanDiagnosticInput): HairAssessmentDimension[] {
   const scalpSignals: AssessmentEvidence[] = []
   if (answers.scalpOiliness === "oily")
     scalpSignals.push({ id: "scalp_oily", kind: "primary", weight: 2 })
@@ -161,6 +164,8 @@ function evaluateDimensions(answers: PersonalPlanQuizAnswers): HairAssessmentDim
 
   const breakage: AssessmentEvidence[] = []
   if (hasConcern(answers, "breakage")) breakage.push({ id: "breakage", kind: "primary", weight: 2 })
+  else if (hasConcern(answers, "hair_damage"))
+    breakage.push({ id: "hair_damage", kind: "primary", weight: 2 })
   if (answers.elasticResponse === "snaps")
     breakage.push({ id: "elastic_snaps", kind: "observation", weight: 1 })
   if (answers.elasticResponse === "stretches_stays")
@@ -203,13 +208,20 @@ function evaluateDimensions(answers: PersonalPlanQuizAnswers): HairAssessmentDim
       answers.scalpOiliness === "balanced" && !answers.scalpConcerns?.length,
     ),
     dimension("moisture_softness", answers, moisture),
-    dimension("surface_frizz", answers, surface, answers.hairSurface === "smooth"),
+    dimension(
+      "surface_frizz",
+      answers,
+      surface,
+      answers.hairSurface === "smooth" && !hasConcern(answers, "frizz_flyaways"),
+    ),
     dimension("shine", answers, shine),
     dimension(
       "breakage_stability",
       answers,
       breakage,
-      answers.elasticResponse === "stretches_bounces" && !hasConcern(answers, "breakage"),
+      answers.elasticResponse === "stretches_bounces" &&
+        !hasConcern(answers, "breakage") &&
+        !hasConcern(answers, "hair_damage"),
     ),
     dimension("split_ends", answers, splitEnds),
     dimension("manageability_tangling", answers, tangling),
@@ -225,7 +237,7 @@ function areDisplaySiblings(left: HairAssessmentDimensionId, right: HairAssessme
   )
 }
 
-export function assessPersonalPlanHair(answers: PersonalPlanQuizAnswers): HairAssessment {
+export function assessPersonalPlanHair(answers: PersonalPlanDiagnosticInput): HairAssessment {
   const dimensions = evaluateDimensions(answers)
   const active = dimensions.filter((item) => item.active)
   active.sort((left, right) => {

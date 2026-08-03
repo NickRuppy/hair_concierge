@@ -6,6 +6,7 @@ import {
   getFunnelPackageByKey,
   getFunnelPackageBySlug,
   resolveDefaultFunnelPackage,
+  resolveLegacyResultOfferVariant,
   resolveOfferVariantForSession,
   validateFunnelPackages,
 } from "../src/lib/funnel/packages"
@@ -20,26 +21,22 @@ test("resolves the default organic package", () => {
 
   assert.equal(funnelPackage.key, DEFAULT_FUNNEL_PACKAGE_KEY)
   assert.equal(funnelPackage.slug, null)
-  assert.equal(funnelPackage.offerVariant, "guided-story")
+  assert.equal(funnelPackage.landingVariant, "organic-refresh")
+  assert.equal(funnelPackage.offerVariant, "organic-plan-v1")
   assert.equal(funnelPackage.quizVariant, "legacy-quiz-v1")
 })
 
-test("resolves the active Meta routine package separately from organic", () => {
-  const organicPackage = resolveDefaultFunnelPackage()
+test("retains retired acquisition packages for historical decoding only", () => {
   const metaPackage = getFunnelPackageBySlug("routine")
 
   assert.equal(metaPackage?.key, "meta_routine_v1")
-  assert.equal(metaPackage?.channel, "meta")
-  assert.equal(metaPackage?.status, "active")
-  assert.notEqual(metaPackage?.key, organicPackage.key)
-  assert.equal(metaPackage?.landingVariant, organicPackage.landingVariant)
-  assert.equal(metaPackage?.offerVariant, organicPackage.offerVariant)
+  assert.equal(metaPackage?.status, "archived")
 })
 
 test("resolves the placeholder campaign package by slug", () => {
   const funnelPackage = getFunnelPackageBySlug("scalp-check")
   assert.equal(funnelPackage?.key, "scalp_check_placeholder")
-  assert.equal(funnelPackage?.status, "placeholder")
+  assert.equal(funnelPackage?.status, "archived")
 })
 
 test("resolves the gated personal-plan quiz placeholder package by slug", () => {
@@ -146,9 +143,6 @@ test("stored session offer variant wins over the current package mapping", () =>
   )
 })
 
-test("a session without a stored offer uses its package mapping", () => {
-  assert.equal(
-    resolveOfferVariantForSession({ packageKey: "meta_routine_v1", offerVariant: null }),
-    "guided-story",
-  )
+test("a historical legacy session without a stored offer uses the organic offer", () => {
+  assert.equal(resolveLegacyResultOfferVariant({ offerVariant: null }), "organic-plan-v1")
 })

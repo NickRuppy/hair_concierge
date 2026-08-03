@@ -34,37 +34,22 @@ const quizResultsSource = readFileSync(
 
 test("every package references registered landing, quiz, and offer variants", () => {
   for (const funnelPackage of FUNNEL_PACKAGES) {
-    assert.ok(funnelPackage.landingVariant in LANDING_VARIANTS, funnelPackage.key)
     const quizVariant = getQuizVariant(funnelPackage.quizVariant)
     assert.ok(quizVariant, funnelPackage.key)
-    assert.ok(
-      isLandingCompatibleQuizVariant(quizVariant, funnelPackage.landingVariant),
-      funnelPackage.key,
-    )
-    assert.ok(funnelPackage.offerVariant in OFFER_VARIANTS, funnelPackage.key)
+    if (funnelPackage.status !== "archived") {
+      assert.ok(funnelPackage.landingVariant in LANDING_VARIANTS, funnelPackage.key)
+      assert.ok(
+        isLandingCompatibleQuizVariant(quizVariant, funnelPackage.landingVariant),
+        funnelPackage.key,
+      )
+      assert.ok(funnelPackage.offerVariant in OFFER_VARIANTS, funnelPackage.key)
+    }
   }
 })
 
-test("guided story is registered while the historical offers remain available for rollback", () => {
-  assert.ok("app-value-stack" in OFFER_VARIANTS)
-  assert.ok("default" in OFFER_VARIANTS)
-  assert.ok("guided-story" in OFFER_VARIANTS)
-  assert.ok("guided-story-founder-letter" in OFFER_VARIANTS)
-  assert.ok("guided-story-locked" in OFFER_VARIANTS)
-  assert.ok("guided-story-potential" in OFFER_VARIANTS)
+test("the two live flows register the organic and Personal Plan offers", () => {
+  assert.ok("organic-plan-v1" in OFFER_VARIANTS)
   assert.ok("personal-plan-v1" in OFFER_VARIANTS)
-  assert.equal(
-    Object.keys(OFFER_VARIANTS).filter((variant) => variant === "app-value-stack").length,
-    1,
-  )
-  assert.equal(
-    Object.keys(OFFER_VARIANTS).filter((variant) => variant === "guided-story").length,
-    1,
-  )
-  assert.equal(
-    Object.keys(OFFER_VARIANTS).filter((variant) => variant.startsWith("guided-story-")).length,
-    3,
-  )
 })
 
 test("landing route owns tracking outside contributor variants", () => {
@@ -87,14 +72,15 @@ test("result client injects one shared pricing slot into the selected offer", ()
   assert.doesNotMatch(resultClientSource, /QuizResultOfferPage\b/)
 })
 
-test("result route resolves the persisted experiment winner before recording an offer view", () => {
+test("result route preserves trusted stored result context before recording an offer view", () => {
   assert.match(funnelServerSource, /package_key, offer_variant, offer_viewed_at, first_seen_at/)
   assert.match(funnelServerSource, /offerVariant: data\.offer_variant/)
-  assert.match(resultPageSource, /resolveGuidedStoryOfferExperiment/)
-  assert.match(resultPageSource, /await recordLeadOfferView\(leadId, funnelContext\)/)
+  assert.match(resultPageSource, /resolveLegacyResultOfferVariant/)
+  assert.match(resultPageSource, /trustedOfferVariant/)
+  assert.match(resultPageSource, /await recordLeadOfferView\(leadId, funnelContext, offerVariant\)/)
   assert.ok(
-    resultPageSource.indexOf("resolveGuidedStoryOfferExperiment") <
-      resultPageSource.indexOf("await recordLeadOfferView(leadId, funnelContext)"),
+    resultPageSource.indexOf("resolveLegacyResultOfferVariant") <
+      resultPageSource.indexOf("await recordLeadOfferView(leadId, funnelContext, offerVariant)"),
   )
 })
 

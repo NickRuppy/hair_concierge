@@ -1,7 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
-import { normalizeStoredQuizAnswers } from "./normalization"
+import { normalizeStoredQuizAnswers, projectQuizAnswersToLegacyVocabulary } from "./normalization"
 
 export function canLinkDirectQuizLead(
   lead: { email: string; userId: string | null },
@@ -70,7 +70,9 @@ export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<st
   } else if (answers.has_scalp_issue === false) {
     profileData.scalp_condition = null
   }
-  if (answers.concerns !== undefined) profileData.concerns = answers.concerns
+  if (answers.concerns !== undefined) {
+    profileData.concerns = projectQuizAnswersToLegacyVocabulary(answers).concerns
+  }
 
   // Map quiz chemical treatment keys to English
   const TREATMENT_MAP: Record<string, string> = {
@@ -99,8 +101,9 @@ export function buildProfileDataFromPersonalPlanCanonicalProfile(
   }
 
   const profileData = buildProfileDataFromQuizAnswers(answers)
-  if (Array.isArray(answers.goals) && answers.goals.length > 0) {
-    profileData.goals = [...answers.goals]
+  const legacyVocabulary = projectQuizAnswersToLegacyVocabulary(answers)
+  if (legacyVocabulary.goals.length > 0) {
+    profileData.goals = legacyVocabulary.goals
   }
 
   if (!hasCompletedQuizDiagnostics(profileData)) {
@@ -265,8 +268,10 @@ function prepareLegacyProfileProjection(quizAnswers: unknown): {
   console.log("[linkQuizToProfile] legacy answers:", Object.keys(answers))
   return {
     profileData: buildProfileDataFromQuizAnswers(answers),
-    incomingGoals:
-      Array.isArray(answers.goals) && answers.goals.length > 0 ? (answers.goals as string[]) : null,
+    incomingGoals: (() => {
+      const goals = projectQuizAnswersToLegacyVocabulary(answers).goals
+      return goals.length > 0 ? goals : null
+    })(),
   }
 }
 

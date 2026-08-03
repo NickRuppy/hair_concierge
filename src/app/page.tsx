@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import DefaultLandingVariant from "@/funnels/landing/default"
+import OrganicRefreshLandingVariant from "@/funnels/landing/organic-refresh"
 import { LandingTracking } from "@/providers/tracking-providers"
 import { JsonLd } from "@/components/seo/json-ld"
 import { HOME_METADATA, ORGANIZATION_JSON_LD, WEBSITE_JSON_LD } from "@/lib/seo/site-identity"
@@ -12,7 +12,7 @@ export default function Home() {
       <JsonLd data={ORGANIZATION_JSON_LD} />
       <JsonLd data={WEBSITE_JSON_LD} />
       <LandingTracking />
-      <DefaultLandingVariant />
+      <OrganicRefreshLandingVariant />
     </>
   )
 }

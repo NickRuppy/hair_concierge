@@ -1,0 +1,2657 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – vollständiger Organic-Funnel</title>
+    <style>
+      :root {
+        --ink: #321b4d;
+        --ink-soft: #594a66;
+        --plum: #7651b0;
+        --plum-dark: #563882;
+        --lilac: #f5effd;
+        --coral: #dc6671;
+        --coral-dark: #c6505d;
+        --paper: #fdfbf9;
+        --warm: #f5f0ec;
+        --line: #e7dfda;
+        --green: #2f8156;
+        --shadow: 0 26px 80px rgba(50, 27, 77, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 5%, rgba(156, 123, 200, 0.2), transparent 28rem),
+          linear-gradient(135deg, #faf7f4, #efe8e3);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+      h1,
+      h2,
+      h3,
+      .serif {
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .review-shell {
+        display: grid;
+        grid-template-columns: minmax(260px, 330px) minmax(390px, 520px) minmax(240px, 310px);
+        justify-content: center;
+        gap: 28px;
+        min-height: 100vh;
+        padding: 28px;
+      }
+
+      .review-panel {
+        position: sticky;
+        top: 28px;
+        align-self: start;
+        max-height: calc(100vh - 56px);
+        overflow: auto;
+        border: 1px solid rgba(50, 27, 77, 0.1);
+        border-radius: 24px;
+        background: rgba(253, 251, 249, 0.88);
+        box-shadow: 0 14px 45px rgba(50, 27, 77, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .review-copy {
+        padding: 22px;
+      }
+      .review-copy h1 {
+        margin: 7px 0 10px;
+        font-size: 31px;
+        line-height: 1.02;
+        font-weight: 500;
+      }
+      .review-copy p {
+        color: var(--ink-soft);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .eyebrow {
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .contract {
+        display: grid;
+        gap: 8px;
+        margin-top: 17px;
+      }
+      .contract span {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .contract b {
+        color: var(--green);
+      }
+
+      .jump-title {
+        padding: 15px 18px 8px;
+        border-top: 1px solid var(--line);
+        color: var(--ink-soft);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .jump-list {
+        display: grid;
+        gap: 2px;
+        padding: 0 10px 16px;
+      }
+      .jump-list button {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 9px 10px;
+        border: 0;
+        border-radius: 11px;
+        background: transparent;
+        font-size: 11px;
+        text-align: left;
+        cursor: pointer;
+      }
+      .jump-list button:hover {
+        background: var(--lilac);
+      }
+      .jump-list button.active {
+        color: white;
+        background: var(--plum);
+      }
+      .jump-list .number {
+        display: grid;
+        place-items: center;
+        width: 21px;
+        height: 21px;
+        flex: 0 0 auto;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        font-size: 9px;
+        font-weight: 800;
+        opacity: 0.75;
+      }
+
+      .device-wrap {
+        position: relative;
+      }
+      .device-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 0 7px 10px;
+        color: var(--ink-soft);
+        font-size: 11px;
+      }
+      .device-label strong {
+        color: var(--ink);
+      }
+      .phone {
+        position: sticky;
+        top: 28px;
+        height: calc(100vh - 56px);
+        min-height: 720px;
+        overflow: hidden;
+        border: 8px solid #21122f;
+        border-radius: 38px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .screen {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      .screen:focus {
+        outline: 0;
+      }
+      .screen-inner {
+        min-height: 100%;
+      }
+      .screen.screen-transition > * {
+        animation: screenEnter 200ms ease-out both;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 8;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 58px;
+        padding: 12px 19px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(253, 251, 249, 0.94);
+        backdrop-filter: blur(15px);
+      }
+      .brand {
+        font:
+          600 25px/1 Georgia,
+          serif;
+        letter-spacing: -0.02em;
+      }
+      .toplink {
+        border: 0;
+        color: var(--plum);
+        background: transparent;
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .primary,
+      .secondary {
+        width: 100%;
+        min-height: 52px;
+        border-radius: 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .primary {
+        border: 0;
+        color: white;
+        background: linear-gradient(180deg, var(--coral), var(--coral-dark));
+        box-shadow: 0 12px 26px rgba(220, 102, 113, 0.23);
+      }
+      .primary:disabled {
+        cursor: not-allowed;
+        opacity: 0.38;
+        box-shadow: none;
+      }
+      .secondary {
+        border: 1px solid rgba(118, 81, 176, 0.28);
+        color: var(--plum-dark);
+        background: white;
+      }
+      .primary small {
+        display: block;
+        margin-top: 3px;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 10px;
+        font-weight: 500;
+      }
+
+      .landing-hero {
+        padding: 28px 20px 25px;
+        background: linear-gradient(180deg, var(--paper), var(--lilac));
+      }
+      .landing-hero h2 {
+        margin: 8px 0 12px;
+        font-size: 39px;
+        line-height: 0.99;
+        font-weight: 500;
+        letter-spacing: -0.035em;
+      }
+      .landing-hero > p {
+        color: var(--ink-soft);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+      .hero-visual {
+        position: relative;
+        height: 208px;
+        margin: 20px 0 18px;
+        overflow: hidden;
+        border: 1px solid rgba(50, 27, 77, 0.1);
+        border-radius: 22px;
+        background: white;
+      }
+      .hero-visual img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+      }
+      .hero-result {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        padding: 10px;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 25px rgba(50, 27, 77, 0.16);
+      }
+      .hero-result span {
+        color: var(--ink-soft);
+        font-size: 8px;
+        line-height: 1.25;
+      }
+      .hero-result b {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--ink);
+        font-size: 9px;
+      }
+      .trust {
+        display: flex;
+        justify-content: center;
+        gap: 13px;
+        margin-top: 12px;
+        color: var(--ink-soft);
+        font-size: 9px;
+      }
+      .trust b {
+        color: var(--green);
+      }
+
+      .landing-section {
+        padding: 28px 20px;
+        border-top: 1px solid var(--line);
+      }
+      .landing-section h3 {
+        margin: 6px 0 12px;
+        font-size: 28px;
+        line-height: 1.06;
+        font-weight: 500;
+      }
+      .landing-section > p {
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .split-card,
+      .step-card,
+      .faq-row {
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+      }
+      .split-card + .split-card,
+      .step-card + .step-card,
+      .faq-row + .faq-row {
+        margin-top: 9px;
+      }
+      .split-card.optional {
+        border-color: rgba(118, 81, 176, 0.22);
+        background: var(--lilac);
+      }
+      .split-card b,
+      .step-card b {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+      .split-card p,
+      .step-card p,
+      .faq-row p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .step-card {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+      }
+      .step-card .step-n {
+        display: grid;
+        place-items: center;
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        color: white;
+        background: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+      }
+      .faq-row b {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 12px;
+      }
+      .final-landing {
+        padding: 32px 20px 38px;
+        color: white;
+        background: var(--ink);
+        text-align: center;
+      }
+      .final-landing h3 {
+        margin-bottom: 10px;
+        font-size: 29px;
+        font-weight: 500;
+      }
+      .final-landing p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .quiz-shell {
+        min-height: 100%;
+        padding-bottom: 22px;
+        background:
+          radial-gradient(circle at 88% 9%, rgba(156, 123, 200, 0.16), transparent 12rem),
+          linear-gradient(180deg, #fcf8ff 0, var(--paper) 250px);
+      }
+      .quiz-head {
+        position: sticky;
+        top: 0;
+        z-index: 7;
+        padding: 14px 17px 12px;
+        border-bottom: 1px solid rgba(118, 81, 176, 0.16);
+        background: rgba(253, 251, 249, 0.95);
+        backdrop-filter: blur(14px);
+      }
+      .quiz-head-row {
+        display: grid;
+        grid-template-columns: 42px 1fr 42px;
+        align-items: center;
+        gap: 8px;
+      }
+      .back {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        font-size: 21px;
+        cursor: pointer;
+      }
+      .back:hover {
+        background: var(--lilac);
+      }
+      .q-brand {
+        font:
+          600 21px/1 Georgia,
+          serif;
+        text-align: center;
+      }
+      .q-count {
+        color: var(--ink-soft);
+        font-size: 10px;
+        text-align: right;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 3px;
+        margin-top: 7px;
+      }
+      .progress i {
+        height: 4px;
+        border-radius: 99px;
+        background: #e4dbea;
+      }
+      .progress i.done {
+        background: var(--plum);
+      }
+      .phase-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 8px;
+        color: var(--ink-soft);
+        font-size: 9px;
+      }
+      .phase-line b {
+        color: var(--plum);
+      }
+      .quiz-body {
+        padding: 27px 18px 8px;
+      }
+      .quiz-body h2 {
+        margin: 7px 0 9px;
+        font-size: 31px;
+        line-height: 1.04;
+        font-weight: 500;
+      }
+      .instruction {
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.55;
+        white-space: pre-line;
+      }
+      .question-cue {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        gap: 11px;
+        align-items: center;
+        margin-top: 15px;
+        padding: 12px;
+        border: 1px solid rgba(118, 81, 176, 0.13);
+        border-radius: 16px;
+        color: var(--ink-soft);
+        background: rgba(245, 239, 253, 0.76);
+        font-size: 10px;
+        line-height: 1.45;
+      }
+      .question-cue b {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--ink);
+        font-size: 11px;
+      }
+      .options {
+        display: grid;
+        gap: 10px;
+        margin-top: 19px;
+      }
+      .options.photo-grid,
+      .options.portrait-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .option {
+        position: relative;
+        width: 100%;
+        min-height: 76px;
+        padding: 14px 47px 14px 14px;
+        border: 1.5px solid #ddd2e7;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 12px 34px -28px rgba(50, 27, 77, 0.6);
+        text-align: left;
+        cursor: pointer;
+        transition: 150ms ease;
+      }
+      .option:hover {
+        border-color: var(--plum);
+        transform: translateY(-1px);
+      }
+      .option.selected {
+        border-color: var(--plum);
+        background: var(--lilac);
+        box-shadow:
+          0 0 0 2px rgba(118, 81, 176, 0.13),
+          0 12px 28px rgba(118, 81, 176, 0.09);
+      }
+      .option strong {
+        display: block;
+        font-size: 14px;
+        line-height: 1.25;
+      }
+      .option small {
+        display: block;
+        margin-top: 4px;
+        color: var(--ink-soft);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+      .check {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        display: grid;
+        place-items: center;
+        width: 23px;
+        height: 23px;
+        border: 1.5px solid #cbbdde;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        color: transparent;
+        background: white;
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .selected .check {
+        border-color: var(--plum);
+        color: white;
+        background: var(--plum);
+      }
+      .option.media-card {
+        min-height: 0;
+        overflow: hidden;
+        padding: 0 0 44px;
+      }
+      .option.media-card img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1.05;
+        object-fit: cover;
+        object-position: center 34%;
+        background: var(--lilac);
+      }
+      .option.portrait-card img {
+        object-position: center 24%;
+      }
+      .option.media-card strong {
+        position: absolute;
+        right: 40px;
+        bottom: 14px;
+        left: 12px;
+        font-size: 13px;
+      }
+      .option.media-card .check {
+        top: auto;
+        right: 10px;
+        bottom: 10px;
+        transform: none;
+      }
+      .option.thumbnail-card {
+        display: grid;
+        grid-template-columns: 106px 1fr 24px;
+        gap: 13px;
+        align-items: center;
+        min-height: 96px;
+        overflow: hidden;
+        padding: 0 13px 0 0;
+      }
+      .option.thumbnail-card img {
+        width: 106px;
+        height: 96px;
+        object-fit: cover;
+        background: var(--lilac);
+      }
+      .option.thumbnail-card .option-copy {
+        min-width: 0;
+      }
+      .option.thumbnail-card .check,
+      .option.has-icon .check {
+        position: static;
+        transform: none;
+      }
+      .option.has-icon {
+        display: grid;
+        grid-template-columns: 43px minmax(0, 1fr) 24px;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 13px;
+      }
+      .option-icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        color: var(--plum);
+        background: var(--lilac);
+      }
+      .option-icon svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.8;
+      }
+      .option.selected .option-icon {
+        color: white;
+        background: var(--plum);
+      }
+      .option-copy {
+        display: block;
+        min-width: 0;
+      }
+      .option.multi .check {
+        border-radius: 6px;
+      }
+      .continue-wrap {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        padding: 14px 18px 18px;
+        background: linear-gradient(transparent, var(--paper) 18%, var(--paper));
+      }
+      .selection-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 12px 2px -4px;
+        color: var(--ink-soft);
+        font-size: 10px;
+      }
+      .selection-meta b {
+        color: var(--plum);
+      }
+      .inline-note {
+        margin-top: 12px;
+        padding: 11px 12px;
+        border-radius: 13px;
+        color: var(--ink-soft);
+        background: var(--warm);
+        font-size: 10px;
+        line-height: 1.45;
+      }
+
+      .gate-card {
+        margin-top: 16px;
+        padding: 15px;
+        border: 1px solid rgba(118, 81, 176, 0.2);
+        border-radius: 18px;
+        background: var(--lilac);
+      }
+      .gate-card h3 {
+        margin-bottom: 10px;
+        font-size: 21px;
+        line-height: 1.08;
+        font-weight: 500;
+      }
+      .gate-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+      .gate-actions button {
+        min-height: 46px;
+        border: 1px solid rgba(118, 81, 176, 0.27);
+        border-radius: 12px;
+        color: var(--plum-dark);
+        background: white;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .lead-shell {
+        display: grid;
+        min-height: 100%;
+        grid-template-rows: auto 1fr;
+        background: linear-gradient(180deg, var(--lilac), var(--paper) 42%);
+      }
+      .lead-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 30px 22px 46px;
+      }
+      .lead-body h2 {
+        margin: 8px 0 10px;
+        font-size: 37px;
+        line-height: 1.02;
+        font-weight: 500;
+      }
+      .lead-body > p {
+        color: var(--ink-soft);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .lead-visual {
+        display: grid;
+        place-items: center;
+        width: 78px;
+        height: 78px;
+        margin-bottom: 19px;
+        border: 1px solid rgba(118, 81, 176, 0.16);
+        border-radius: 24px;
+        color: var(--plum);
+        background: white;
+        box-shadow: 0 18px 42px -28px rgba(50, 27, 77, 0.5);
+      }
+      .lead-visual svg {
+        width: 34px;
+        height: 34px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.6;
+      }
+      .lead-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 15px;
+      }
+      .lead-summary span {
+        padding: 6px 9px;
+        border-radius: 99px;
+        color: var(--plum-dark);
+        background: rgba(245, 239, 253, 0.82);
+        font-size: 9px;
+        font-weight: 700;
+      }
+      .field {
+        margin-top: 21px;
+      }
+      .field label {
+        display: block;
+        margin: 0 0 7px 2px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .field input {
+        width: 100%;
+        height: 55px;
+        padding: 0 15px;
+        border: 1.5px solid #d9cede;
+        border-radius: 14px;
+        color: var(--ink);
+        background: white;
+        outline: 0;
+      }
+      .field input:focus {
+        border-color: var(--plum);
+        box-shadow: 0 0 0 4px rgba(118, 81, 176, 0.1);
+      }
+      .field input.error {
+        border-color: var(--coral);
+      }
+      .error-copy {
+        margin: 7px 2px 0;
+        color: #b84651;
+        font-size: 10px;
+      }
+      .lead-actions {
+        display: grid;
+        gap: 9px;
+        margin-top: 16px;
+      }
+      .consent-choice {
+        display: flex;
+        gap: 11px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: white;
+        cursor: pointer;
+      }
+      .consent-choice + .consent-choice {
+        margin-top: 9px;
+      }
+      .consent-choice.selected {
+        border-color: var(--plum);
+        background: var(--lilac);
+      }
+      .consent-choice .check {
+        position: static;
+        flex: 0 0 auto;
+        transform: none;
+      }
+      .consent-choice b {
+        display: block;
+        font-size: 12px;
+      }
+      .consent-choice span {
+        display: block;
+        margin-top: 3px;
+        color: var(--ink-soft);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      .draft-card {
+        margin-top: 22px;
+        padding: 18px;
+        border: 1px solid rgba(118, 81, 176, 0.22);
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 15px 38px rgba(50, 27, 77, 0.08);
+      }
+      .draft-card b {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+      .draft-card p {
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .draft-card .lead-actions {
+        margin-top: 14px;
+      }
+
+      .preparation {
+        display: grid;
+        min-height: 100%;
+        place-items: center;
+        padding: 38px 24px;
+        background: linear-gradient(160deg, var(--lilac), var(--paper) 62%);
+        text-align: center;
+      }
+      .preparation h2 {
+        margin-bottom: 10px;
+        font-size: 34px;
+        line-height: 1.03;
+        font-weight: 500;
+      }
+      .preparation p {
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .prep-card {
+        width: min(100%, 350px);
+        margin: 22px auto 18px;
+        padding: 18px;
+        border: 1px solid rgba(118, 81, 176, 0.18);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 24px 70px -45px rgba(70, 41, 59, 0.65);
+        text-align: left;
+      }
+      .prep-status {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 750;
+      }
+      .prep-progress {
+        height: 7px;
+        margin-top: 12px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: rgba(118, 81, 176, 0.14);
+      }
+      .prep-progress i {
+        display: block;
+        width: 72%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--plum);
+        animation: prepProgress 2.4s ease-in-out infinite alternate;
+      }
+      .prep-steps {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+        text-align: left;
+      }
+      .prep-steps span {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 0;
+        border-radius: 12px;
+        color: var(--ink-soft);
+        font-size: 10px;
+      }
+      .prep-steps b {
+        display: grid;
+        place-items: center;
+        width: 23px;
+        height: 23px;
+        border: 1px solid rgba(118, 81, 176, 0.18);
+        border-radius: 50%;
+        color: var(--green);
+        background: rgba(231, 243, 233, 0.9);
+      }
+
+      .offer {
+        padding-bottom: 85px;
+        background: var(--paper);
+      }
+      .offer .topbar .primary {
+        width: auto;
+        min-height: 38px;
+        padding: 0 13px;
+        border-radius: 11px;
+        font-size: 10px;
+      }
+      .new-offer-sticky {
+        min-height: 40px;
+        padding: 0 15px;
+        border-radius: 999px;
+        color: white;
+        background: var(--plum);
+        box-shadow: 0 10px 28px -18px rgba(118, 81, 176, 0.85);
+        font-size: 10px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .new-offer-sticky .sticky-plan {
+        display: grid;
+        gap: 2px;
+        line-height: 1;
+      }
+      .new-offer-sticky .sticky-plan small {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 8px;
+      }
+      .offer-hero {
+        padding: 28px 20px 21px;
+        background: linear-gradient(180deg, var(--lilac), var(--paper));
+      }
+      .free-badge {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 99px;
+        color: var(--green);
+        background: rgba(47, 129, 86, 0.1);
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .offer-hero h2 {
+        margin: 10px 0 10px;
+        font-size: 38px;
+        line-height: 0.99;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+      }
+      .offer-hero p {
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .profile-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 15px;
+      }
+      .profile-chips span {
+        padding: 6px 9px;
+        border: 1px solid rgba(118, 81, 176, 0.18);
+        border-radius: 99px;
+        color: var(--plum-dark);
+        background: white;
+        font-size: 9px;
+        font-weight: 700;
+      }
+      .offer-section {
+        padding: 29px 19px;
+        border-top: 1px solid var(--line);
+      }
+      .offer-section.tinted {
+        background: var(--lilac);
+      }
+      .offer-section.dark {
+        color: white;
+        background: var(--ink);
+      }
+      .offer-section h3 {
+        margin: 6px 0 12px;
+        font-size: 29px;
+        line-height: 1.05;
+        font-weight: 500;
+      }
+      .offer-section > p {
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .offer-section.dark > p {
+        color: rgba(255, 255, 255, 0.68);
+      }
+      .priority {
+        overflow: hidden;
+        border: 1px solid rgba(118, 81, 176, 0.2);
+        border-radius: 18px;
+        background: white;
+      }
+      .priority + .priority {
+        margin-top: 11px;
+      }
+      .priority-head {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 15px;
+        background: var(--lilac);
+      }
+      .priority-n {
+        display: grid;
+        place-items: center;
+        width: 27px;
+        height: 27px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        color: white;
+        background: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+      }
+      .priority-head b {
+        font-size: 13px;
+      }
+      .priority-body {
+        display: grid;
+        gap: 11px;
+        padding: 14px 15px;
+      }
+      .priority-body div {
+        padding-left: 10px;
+        border-left: 2px solid rgba(118, 81, 176, 0.2);
+      }
+      .priority-body b {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--plum-dark);
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .priority-body p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 10px;
+        line-height: 1.45;
+      }
+      .free-complete {
+        margin-top: 16px;
+        padding: 13px;
+        border: 1px solid rgba(47, 129, 86, 0.23);
+        border-radius: 14px;
+        color: var(--green);
+        background: rgba(47, 129, 86, 0.07);
+        font-size: 10px;
+        line-height: 1.45;
+      }
+      .new-offer-hero {
+        padding: 30px 22px 27px;
+        background: var(--paper);
+        text-align: center;
+      }
+      .new-offer-hero h2 {
+        max-width: 330px;
+        margin: 0 auto;
+        font-size: 39px;
+        line-height: 0.98;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+      }
+      .new-offer-hero p {
+        max-width: 340px;
+        margin: 12px auto 0;
+        color: rgba(86, 56, 130, 0.72);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .diagnosis-zone {
+        background: rgba(255, 255, 255, 0.58);
+        text-align: center;
+      }
+      .diagnosis-zone > p {
+        max-width: 330px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .diagnostic-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+        text-align: left;
+      }
+      .diagnostic-card {
+        overflow: hidden;
+        border: 1px solid rgba(118, 81, 176, 0.11);
+        border-radius: 17px;
+        background: white;
+        box-shadow: 0 16px 42px -34px rgba(50, 27, 77, 0.55);
+      }
+      .diagnostic-title {
+        display: flex;
+        gap: 9px;
+        align-items: center;
+        padding: 13px 14px 10px;
+      }
+      .diagnostic-title .option-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+      }
+      .diagnostic-title .option-icon svg {
+        width: 19px;
+        height: 19px;
+      }
+      .diagnostic-title b {
+        font-size: 12px;
+        line-height: 1.3;
+      }
+      .diagnostic-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 0 12px 12px;
+      }
+      .diagnostic-columns div {
+        min-height: 84px;
+        padding: 10px;
+        border-radius: 12px;
+        background: #f7f4f9;
+      }
+      .diagnostic-columns div.target {
+        background: #edf7f0;
+      }
+      .diagnostic-columns span {
+        display: block;
+        margin-bottom: 4px;
+        color: rgba(86, 56, 130, 0.62);
+        font-size: 8px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .diagnostic-columns .target span {
+        color: var(--green);
+      }
+      .diagnostic-columns p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.42;
+      }
+      .diagnostic-why {
+        margin: 0;
+        padding: 10px 13px 12px;
+        border-top: 1px solid rgba(118, 81, 176, 0.08);
+        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.45;
+      }
+      .diagnostic-why b {
+        color: var(--plum-dark);
+      }
+      .good-card {
+        margin-top: 13px;
+        padding: 14px;
+        border: 1px solid #ccebd8;
+        border-radius: 16px;
+        background: #eaf8ef;
+        text-align: left;
+      }
+      .good-card span {
+        color: var(--green);
+        font-size: 8px;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .good-card b {
+        display: block;
+        margin-top: 3px;
+        font:
+          500 18px/1.1 Georgia,
+          serif;
+      }
+      .good-card p {
+        margin: 4px 0 0;
+        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.4;
+      }
+
+      .pricing-intro {
+        text-align: center;
+      }
+      .pricing-intro .eyebrow {
+        display: block;
+        margin-bottom: 7px;
+      }
+      .pricing-grid {
+        display: grid;
+        gap: 9px;
+        margin-top: 18px;
+      }
+      .price-card {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        padding: 14px;
+        border: 1.5px solid var(--line);
+        border-radius: 15px;
+        background: white;
+        cursor: pointer;
+      }
+      .price-card.selected {
+        border-color: var(--plum);
+        box-shadow: 0 10px 28px rgba(118, 81, 176, 0.1);
+      }
+      .price-card .popular {
+        position: absolute;
+        top: -8px;
+        right: 12px;
+        padding: 4px 7px;
+        border-radius: 99px;
+        color: white;
+        background: var(--plum);
+        font-size: 7px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .price-card b {
+        display: block;
+        font-size: 13px;
+      }
+      .price-card small {
+        color: var(--ink-soft);
+        font-size: 9px;
+      }
+      .price {
+        font:
+          600 18px Georgia,
+          serif;
+      }
+      .price-cta {
+        margin-top: 13px;
+      }
+      .legal-note {
+        margin: 9px 8px 0;
+        color: var(--ink-soft);
+        font-size: 8px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .highlight-list,
+      .method-grid,
+      .quote-grid {
+        display: grid;
+        gap: 9px;
+        margin-top: 15px;
+      }
+      .highlight {
+        display: grid;
+        grid-template-columns: 25px 1fr;
+        gap: 9px;
+        align-items: start;
+        padding: 13px;
+        border-radius: 14px;
+        border: 1px solid rgba(118, 81, 176, 0.09);
+        background: white;
+        box-shadow: 0 16px 42px -34px rgba(50, 27, 77, 0.55);
+      }
+      .highlight i {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        color: white;
+        color: var(--plum);
+        background: #eee8f6;
+        font-style: normal;
+        font-size: 10px;
+      }
+      .highlight b {
+        font-size: 11px;
+      }
+      .highlight span {
+        color: var(--ink-soft);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+      .method-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .method {
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+        text-align: center;
+      }
+      .method-card {
+        padding: 17px;
+        border: 1px solid rgba(118, 81, 176, 0.09);
+        border-radius: 17px;
+        background: white;
+        box-shadow: 0 16px 42px -34px rgba(50, 27, 77, 0.6);
+        text-align: center;
+      }
+      .method-card h3 {
+        margin-top: 0;
+        font-size: 23px;
+      }
+      .method b {
+        display: block;
+        font-size: 11px;
+      }
+      .method span {
+        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.35;
+      }
+      .stat-grid {
+        display: grid;
+        gap: 8px;
+        margin-top: 15px;
+      }
+      .stat {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid rgba(118, 81, 176, 0.07);
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 16px 42px -34px rgba(50, 27, 77, 0.55);
+        text-align: left;
+      }
+      .stat b {
+        display: grid;
+        place-items: center;
+        width: 58px;
+        height: 58px;
+        padding: 7px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--ring, var(--plum)) var(--value),
+          rgba(118, 81, 176, 0.1) 0
+        );
+        font:
+          600 17px Georgia,
+          serif;
+      }
+      .stat b em {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: white;
+        font-style: normal;
+      }
+      .stat span {
+        color: var(--ink-soft);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .method-bridge {
+        display: grid;
+        place-items: center;
+        gap: 7px;
+        margin-top: 10px;
+        padding: 13px 15px;
+        border-radius: 14px;
+        color: white;
+        background: var(--plum);
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.4;
+        text-align: center;
+      }
+      .method-bridge i {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.14);
+        font-style: normal;
+      }
+      .before-after-grid {
+        display: grid;
+        gap: 9px;
+        margin-top: 16px;
+      }
+      .before-after-card {
+        overflow: hidden;
+        border: 1px solid rgba(118, 81, 176, 0.1);
+        border-radius: 17px;
+        background: white;
+        box-shadow: 0 16px 42px -34px rgba(50, 27, 77, 0.55);
+      }
+      .before-after-card p {
+        display: grid;
+        grid-template-columns: 23px 1fr;
+        gap: 9px;
+        align-items: start;
+        margin: 0;
+        padding: 12px 13px;
+        font-size: 10px;
+        line-height: 1.45;
+        text-align: left;
+      }
+      .before-after-card p.before {
+        color: rgba(86, 56, 130, 0.55);
+        background: #f7f4f9;
+        font-style: italic;
+      }
+      .before-after-card p.after {
+        border-top: 1px solid rgba(118, 81, 176, 0.08);
+        color: var(--plum-dark);
+        font-weight: 800;
+      }
+      .contrast-icon {
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        color: #99909e;
+        background: #ebe7ee;
+        font-style: normal;
+      }
+      .after .contrast-icon {
+        color: white;
+        background: var(--plum);
+      }
+      .quote {
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: white;
+      }
+      .quote p {
+        margin-bottom: 9px;
+        color: var(--ink-soft);
+        font:
+          italic 12px/1.5 Georgia,
+          serif;
+      }
+      .quote b {
+        font-size: 9px;
+      }
+      .guarantee {
+        display: grid;
+        grid-template-columns: 48px 1fr;
+        gap: 13px;
+        align-items: center;
+        padding: 17px;
+        border: 1px solid rgba(47, 129, 86, 0.24);
+        border-radius: 17px;
+        background: rgba(47, 129, 86, 0.07);
+      }
+      .guarantee .seal {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border: 2px solid var(--green);
+        border-radius: 50%;
+        color: var(--green);
+        font-size: 20px;
+      }
+      .guarantee b {
+        display: block;
+        font-size: 12px;
+      }
+      .guarantee p {
+        margin: 3px 0 0;
+        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.4;
+      }
+      .guarantee.centered {
+        display: block;
+        padding: 20px;
+        background: white;
+        text-align: center;
+      }
+      .guarantee.centered b {
+        font:
+          500 28px/1.05 Georgia,
+          serif;
+      }
+      .guarantee.centered p {
+        margin: 8px auto 0;
+        max-width: 310px;
+        font-size: 10px;
+      }
+      .quote-stars {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--coral);
+        font-size: 10px;
+        letter-spacing: 0.08em;
+      }
+      .faq-row b {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+      .faq-section > h3 {
+        text-align: center;
+      }
+      .sticky-offer-cta {
+        position: sticky;
+        bottom: 0;
+        z-index: 7;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 11px 15px 13px;
+        border-top: 1px solid var(--line);
+        background: rgba(253, 251, 249, 0.96);
+        backdrop-filter: blur(15px);
+      }
+      .sticky-offer-cta b {
+        display: block;
+        font-size: 11px;
+      }
+      .sticky-offer-cta span {
+        color: var(--ink-soft);
+        font-size: 9px;
+      }
+      .sticky-offer-cta .primary {
+        width: auto;
+        min-height: 42px;
+        padding: 0 14px;
+        font-size: 10px;
+      }
+
+      .notes {
+        padding: 20px;
+      }
+      .state-card {
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+      }
+      .state-card + .state-card {
+        margin-top: 10px;
+      }
+      .state-card h2 {
+        margin: 5px 0 8px;
+        font-size: 22px;
+        line-height: 1.05;
+        font-weight: 500;
+      }
+      .state-card p,
+      .state-card li {
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .state-card ul {
+        margin: 9px 0 0;
+        padding-left: 17px;
+      }
+      .data-key {
+        display: inline-flex;
+        margin: 3px 3px 0 0;
+        padding: 5px 7px;
+        border-radius: 7px;
+        color: var(--plum-dark);
+        background: var(--lilac);
+        font:
+          700 8px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      .review-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .review-actions button {
+        min-height: 40px;
+        border: 1px solid rgba(118, 81, 176, 0.24);
+        border-radius: 11px;
+        color: var(--plum-dark);
+        background: white;
+        font-size: 10px;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        align-items: end;
+        background: rgba(33, 18, 47, 0.56);
+      }
+      .checkout-sheet {
+        padding: 19px 18px 25px;
+        border-radius: 24px 24px 0 0;
+        background: var(--paper);
+        box-shadow: 0 -18px 45px rgba(33, 18, 47, 0.2);
+      }
+      .sheet-grab {
+        width: 38px;
+        height: 4px;
+        margin: 0 auto 15px;
+        border-radius: 99px;
+        background: #d9d0dc;
+      }
+      .checkout-sheet h2 {
+        margin-bottom: 6px;
+        font-size: 27px;
+        font-weight: 500;
+      }
+      .checkout-sheet > p {
+        color: var(--ink-soft);
+        font-size: 10px;
+        line-height: 1.45;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 14px 0;
+        padding: 13px;
+        border-radius: 13px;
+        background: var(--lilac);
+        font-size: 11px;
+      }
+      .payment-choice {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        min-height: 50px;
+        margin-top: 8px;
+        padding: 0 13px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: white;
+        font-size: 11px;
+        font-weight: 750;
+      }
+      .payment-choice span {
+        font-weight: 500;
+      }
+      .close-sheet {
+        width: 100%;
+        margin-top: 10px;
+        border: 0;
+        color: var(--ink-soft);
+        background: transparent;
+        font-size: 10px;
+        cursor: pointer;
+      }
+
+      .mobile-review {
+        display: none;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes screenEnter {
+        from {
+          opacity: 0;
+          transform: translateX(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes prepProgress {
+        from {
+          width: 58%;
+        }
+        to {
+          width: 82%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media (max-width: 1080px) {
+        .review-shell {
+          grid-template-columns: minmax(250px, 310px) minmax(390px, 480px);
+        }
+        .notes-panel {
+          display: none;
+        }
+      }
+      @media (max-width: 760px) {
+        body {
+          background: var(--paper);
+        }
+        .review-shell {
+          display: block;
+          min-height: 100vh;
+          padding: 0;
+        }
+        .review-panel {
+          display: none;
+        }
+        .device-label {
+          display: none;
+        }
+        .phone {
+          position: static;
+          height: 100vh;
+          min-height: 0;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+        .mobile-review {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review-shell">
+      <aside class="review-panel" aria-label="Review-Navigation">
+        <div class="review-copy">
+          <span class="eyebrow">Klickbarer Planungsprototyp</span>
+          <h1>Der komplette Weg</h1>
+          <p>
+            Vom organischen Einstieg bis zur bestehenden Zahlungsauswahl. Alle zehn Fragegruppen
+            sind enthalten; nichts wird gesendet oder gekauft.
+          </p>
+          <div class="contract">
+            <span><b>✓</b> Gleiche 10 Fragegruppen; Probleme und Ziele harmonisiert</span>
+            <span
+              ><b>✓</b> Einer von zwei aktiven Quiz-Flows; alte Founder-/Score-Varianten
+              entfallen</span
+            >
+            <span><b>✓</b> Keine Zwischenresultate oder Commitment-Screens</span>
+            <span><b>✓</b> Kein Countdown und kein Vorher/Nachher-Bild</span>
+          </div>
+        </div>
+        <div class="jump-title">Direkt zu einem Zustand</div>
+        <nav class="jump-list" id="jump-list"></nav>
+      </aside>
+
+      <section class="device-wrap">
+        <div class="device-label">
+          <strong id="device-title">Landingpage</strong><span>390 px · klickbar</span>
+        </div>
+        <div class="phone">
+          <div class="screen" id="screen" tabindex="-1"></div>
+          <button class="mobile-review" id="mobile-next">Nächster Zustand →</button>
+        </div>
+      </section>
+
+      <aside class="review-panel notes-panel" aria-label="Design-Notizen">
+        <div class="notes" id="notes"></div>
+      </aside>
+    </main>
+
+    <script>
+      const portraitBase = "../../public/images/quiz/hair-portrait/"
+      const personalPlanBase = "../../public/images/funnels/personal-plan-quiz/"
+      const state = {
+        screen: "landing",
+        answers: {
+          structure: "wavy",
+          thickness: "fine",
+          density: "medium",
+          hair_length: "long",
+          fingertest: "leicht_uneben",
+          pulltest: "stretches_bounces",
+          treatment: ["gefaerbt"],
+          scalp_type: "ausgeglichen",
+          has_scalp_issue: false,
+          concerns: ["dryness", "frizz"],
+          goals: ["less_frizz", "moisture", "shine"],
+        },
+        lead: { name: "Lea", email: "lea@beispiel.de", consent: false },
+        scalpPhase: "type",
+        selectedPlan: "quarter",
+        pricingReached: false,
+        emailError: false,
+        checkout: false,
+      }
+
+      const questions = [
+        {
+          id: "q1",
+          key: "structure",
+          phase: "Profil",
+          title: "Welche Haarstruktur haben die meisten deiner Haare?",
+          instruction:
+            "Wähle die natürliche Form deiner Haare. Wenn deine Längen behandelt sind, hilft der unbehandelte Ansatz als Orientierung.",
+          layout: "photo-grid",
+          options: [
+            ["straight", "Glatt", "Die Strähne hängt glatt herunter", "texture-straight.webp"],
+            ["wavy", "Wellig", "Bildet sichtbare S-Formen", "texture-wavy.webp"],
+            ["curly", "Lockig", "Formt deutliche Locken oder Spiralen", "texture-curly.webp"],
+            ["coily", "Kraus", "Enge Coils oder Z-Formen", "texture-coily.webp"],
+          ],
+        },
+        {
+          id: "q2",
+          key: "thickness",
+          phase: "Profil",
+          title: "Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?",
+          instruction: "Vergleiche ein einzelnes Haar mit einem Nähfaden.",
+          layout: "thumbnail",
+          options: [
+            ["fine", "Fein", "Kaum spürbar – dünner als ein Nähfaden", "thickness-fine.webp"],
+            ["normal", "Mittel", "Spürbar – ähnlich wie ein Nähfaden", "thickness-normal.webp"],
+            [
+              "coarse",
+              "Dick",
+              "Deutlich spürbar – dicker als ein Nähfaden",
+              "thickness-coarse.webp",
+            ],
+          ],
+        },
+        {
+          id: "q3",
+          key: "density",
+          phase: "Profil",
+          title: "Wie dicht ist dein Haar insgesamt?",
+          instruction:
+            "Schau auf Scheitel, Zopf-Umfang und darauf, wie viel Kopfhaut sichtbar ist.",
+          options: [
+            [
+              "low",
+              "Wenig Haare",
+              "Der Scheitel wirkt breiter oder die Kopfhaut scheint schnell durch.",
+              "feather",
+            ],
+            [
+              "medium",
+              "Mittlere Dichte",
+              "Weder auffällig wenig noch auffällig viele Haare.",
+              "equal",
+            ],
+            [
+              "high",
+              "Viele Haare",
+              "Dein Haar fühlt sich voll an, ein Zopf wirkt eher dick.",
+              "layers",
+            ],
+          ],
+        },
+        {
+          id: "q4",
+          key: "hair_length",
+          phase: "Profil",
+          title: "Wie lang sind deine Haare aktuell?",
+          instruction:
+            "Bei Locken oder Coils zählt die sanft gestreckte Länge. Wenn du dazwischen liegst, wähle die längere Option.",
+          layout: "portrait-grid",
+          options: [
+            [
+              "very_short",
+              "Sehr kurz",
+              "Maschinenschnitt bis Pixie, etwa bis zu den Ohren.",
+              "wavy-very-short.webp",
+            ],
+            [
+              "short",
+              "Kurz",
+              "Bob-Länge, unter den Ohren bis knapp über die Schultern.",
+              "wavy-short.webp",
+            ],
+            [
+              "medium",
+              "Mittellang",
+              "Schulterlänge bis Brusthöhe oder untere Schulterblätter.",
+              "wavy-medium.webp",
+            ],
+            [
+              "long",
+              "Lang",
+              "Unter Brust oder Schulterblättern bis ungefähr zur Taille.",
+              "wavy-long.webp",
+            ],
+            ["very_long", "Sehr lang", "Taille oder länger.", "wavy-very-long.webp"],
+          ],
+        },
+        {
+          id: "q5",
+          key: "fingertest",
+          phase: "Zustand",
+          title: "Wie fühlt sich deine Haaroberfläche an?",
+          instruction: "Fahre langsam mit zwei Fingern über ein sauberes, trockenes Haar.",
+          cue: [
+            "hand",
+            "So testest du",
+            "Nimm eine einzelne, trockene Strähne und streiche ohne Druck darüber.",
+          ],
+          options: [
+            ["glatt", "Glatt wie Glas", "Die Finger gleiten gleichmäßig durch", "sparkles"],
+            [
+              "leicht_uneben",
+              "Leicht uneben",
+              "Kleine Hügel spürbar, nicht durchgehend",
+              "activity",
+            ],
+            ["rau", "Richtig rau und huckelig", "Durchgehend rau und uneben", "hand"],
+          ],
+        },
+        {
+          id: "q6",
+          key: "pulltest",
+          phase: "Zustand",
+          title: "Wie elastisch ist dein Haar?",
+          instruction:
+            "Zieh ein einzelnes Haar sehr vorsichtig auseinander – wirklich mit Gefühl, nicht reißen.",
+          cue: [
+            "move",
+            "Nur sanft dehnen",
+            "Nutze am besten ein bereits ausgefallenes Haar und höre sofort auf, wenn es stark spannt.",
+          ],
+          options: [
+            [
+              "stretches_bounces",
+              "Dehnt sich und geht zurück",
+              "Federt in den Ursprungszustand zurück",
+              "refresh",
+            ],
+            [
+              "stretches_stays",
+              "Dehnt sich, bleibt ausgeleiert",
+              "Kommt nicht mehr zurück",
+              "move",
+            ],
+            ["snaps", "Reißt sofort", "Bricht bei leichtem Zug direkt ab", "zap"],
+          ],
+        },
+        {
+          id: "q7",
+          key: "treatment",
+          phase: "Zustand",
+          title: "Sind deine Haare chemisch behandelt?",
+          instruction: "Wähle alles, was Farbe oder Form länger verändert hat.",
+          multi: true,
+          options: [
+            ["natur", "Naturhaar", "Keine Farbe, kein Blondieren", "leaf"],
+            ["gefaerbt", "Gefärbt / getönt", "Farbveränderung ohne Aufhellen", "pipette"],
+            ["blondiert", "Blondiert / aufgehellt", "Bleach, Strähnchen oder Balayage", "flame"],
+            ["dauerwelle", "Dauerwelle", "Chemisch dauerhaft gewellt", "waves"],
+            [
+              "chemisch_geglaettet",
+              "Chemisch geglättet",
+              "Relaxer oder dauerhafte Glättung",
+              "align",
+            ],
+          ],
+        },
+        {
+          id: "q8",
+          key: "scalp_type",
+          phase: "Zustand",
+          title: "Wie schnell fetten deine Ansätze nach?",
+          scalp: true,
+        },
+        {
+          id: "q9",
+          key: "concerns",
+          phase: "Probleme",
+          title: "Welche Haarprobleme beschäftigen dich gerade am meisten?",
+          instruction: "Wähle alles aus, was bei dir immer wieder eine Rolle spielt.",
+          multi: true,
+          options: [
+            [
+              "dryness",
+              "Trockene oder strohige Längen",
+              "Fühlen sich rau oder wenig geschmeidig an",
+              "droplet",
+            ],
+            [
+              "hair_damage",
+              "Haarschäden",
+              "Die Längen wirken strapaziert oder geschwächt",
+              "shield",
+            ],
+            [
+              "frizz",
+              "Frizz oder viele abstehende Haare",
+              "Einzelne Haare liegen unruhig außerhalb der Form",
+              "wind",
+            ],
+            ["low_shine", "Wenig Glanz", "Die Längen wirken stumpf oder glanzlos", "sparkles"],
+            [
+              "breakage",
+              "Haarbruch in den Längen",
+              "Einzelne Haare reißen oberhalb der Spitzen ab",
+              "zap",
+            ],
+            [
+              "split_ends",
+              "Sichtbar gespaltene Spitzen",
+              "Die Enden einzelner Haare teilen sich sichtbar",
+              "split",
+            ],
+            ["tangling", "Schnelles Verknoten", "Das Haar verheddert sich schnell", "comb"],
+            [
+              "lost_shape",
+              "Meine Wellen verlieren schnell ihre Definition",
+              "Die Form hält nicht so, wie ich es möchte",
+              "waves",
+            ],
+            [
+              "low_volume_or_weighed_down",
+              "Mein Ansatz wirkt flach oder die Längen schnell beschwert",
+              "Volumen und Leichtigkeit geraten aus dem Gleichgewicht",
+              "layers",
+            ],
+          ],
+        },
+        {
+          id: "q10",
+          key: "goals",
+          phase: "Ziele",
+          title: "Was wünschst du dir für deine Wellen?",
+          instruction:
+            "Wähle alles aus, was dir wichtig ist. Du musst dich nicht auf ein Ziel begrenzen.",
+          multi: true,
+          options: [
+            ["moisture", "Feuchtigkeit ohne Beschweren", "", "droplet"],
+            ["less_frizz", "Weniger Frizz", "", "wind"],
+            ["shine", "Mehr Glanz", "", "sparkles"],
+            ["strength_ends", "Weniger Haarbruch und Spliss", "", "shield"],
+            ["healthy_scalp", "Ausgeglichene Kopfhaut", "", "leaf"],
+            ["manageability_styling", "Leichteres Entwirren und Styling", "", "comb"],
+            ["curl_definition", "Mehr Wellen-Definition", "", "waves"],
+            ["volume_balance", "Ausgewogenes Volumen", "", "layers"],
+          ],
+        },
+      ]
+
+      const screens = [
+        ["landing", "Landingpage"],
+        ["draft", "Entwurf fortsetzen"],
+        ...questions.flatMap((q, i) => [
+          [q.id, `${i + 1}. ${q.title.replace(/\?$/, "")}`],
+          ...(q.id === "q8" ? [["q8-condition", "8b. Kopfhaut-Beschwerde"]] : []),
+        ]),
+        ["lead-name", "Name"],
+        ["lead-email", "E-Mail"],
+        ["email-error", "E-Mail-Fehler"],
+        ["consent", "Optionales Einverständnis"],
+        ["preparation", "Analyse vorbereiten"],
+        ["offer", "Ergebnis & Angebot"],
+        ["checkout", "Zahlungsübergabe"],
+      ]
+
+      const screen = document.getElementById("screen")
+      const jumpList = document.getElementById("jump-list")
+      const notes = document.getElementById("notes")
+
+      function qIndex(id) {
+        return questions.findIndex((q) => q.id === id)
+      }
+      function nextFrom(id) {
+        const index = qIndex(id)
+        if (index >= 0 && index < questions.length - 1) return questions[index + 1].id
+        if (id === "q10") return "lead-name"
+        return "landing"
+      }
+      function previousFrom(id) {
+        const index = qIndex(id)
+        if (index > 0) return questions[index - 1].id
+        if (id === "q1") return "landing"
+        return "landing"
+      }
+      function go(id) {
+        if (id === "q8-condition") {
+          state.scalpPhase = "condition"
+          id = "q8"
+        } else if (id === "q8" || id === "q8-type") {
+          state.scalpPhase = "type"
+          id = "q8"
+        }
+        if (id === "email-error") {
+          state.emailError = true
+          id = "lead-email"
+        } else if (id !== "lead-email") state.emailError = false
+        if (id === "checkout") {
+          state.screen = "offer"
+          state.checkout = true
+        } else {
+          state.screen = id
+          state.checkout = false
+        }
+        const visibleId = state.checkout
+          ? "checkout"
+          : state.emailError
+            ? "email-error"
+            : state.screen === "q8" && state.scalpPhase === "condition"
+              ? "q8-condition"
+              : state.screen
+        history.replaceState(null, "", `?screen=${encodeURIComponent(visibleId)}`)
+        render()
+      }
+
+      function topbar(action = "") {
+        return `<header class="topbar"><span class="brand">chaarlie</span>${action}</header>`
+      }
+
+      function landing() {
+        return `<div class="screen-inner">
+          ${topbar('<button class="toplink" data-go="q1">Analyse starten</button>')}
+          <section class="landing-hero">
+            <span class="eyebrow">Kostenlose 2-Minuten-Haaranalyse</span>
+            <h2>Versteh dein Haar.<br />Pflege es gezielter.</h2>
+            <p>Zehn kurze Fragen zeigen dir, was dein Haar wahrscheinlich gerade braucht – ohne Produktchaos und ohne pauschale Tipps.</p>
+            <div class="hero-visual">
+              <img src="${portraitBase}wavy-long.webp" alt="Person mit langen, welligen Haaren" />
+              <div class="hero-result"><span><b>Dein Profil</b>Wellig · fein</span><span><b>Dein Fokus</b>Feuchtigkeit</span><span><b>Dein Hebel</b>Leicht pflegen</span></div>
+            </div>
+            <button class="primary" data-go="q1">Kostenlose Haaranalyse starten<small>10 Fragen · etwa 2 Minuten</small></button>
+            <div class="trust"><span><b>✓</b> Kostenlos</span><span><b>✓</b> Ohne Kaufpflicht</span><span><b>✓</b> DSGVO-konform</span></div>
+          </section>
+          <section class="landing-section">
+            <span class="eyebrow">Klar getrennt</span><h3>Erst verstehen. Dann selbst entscheiden.</h3>
+            <div class="split-card"><b>Deine Analyse ist kostenlos</b><p>Du siehst dein Haarprofil und drei persönliche Pflege-Prioritäten direkt nach dem Quiz.</p></div>
+            <div class="split-card optional"><b>Der genaue Haarplan ist optional</b><p>Wenn du danach konkrete Produkte, Reihenfolge und Anwendung möchtest, kannst du einen vollständigen Plan wählen.</p></div>
+          </section>
+          <section class="landing-section">
+            <span class="eyebrow">So funktioniert es</span><h3>Drei ruhige Schritte</h3>
+            <div class="step-card"><span class="step-n">1</span><div><b>Dein Haar beschreiben</b><p>Struktur, Dicke, Dichte und Länge.</p></div></div>
+            <div class="step-card"><span class="step-n">2</span><div><b>Zustand einordnen</b><p>Oberfläche, Elastizität, Kopfhaut und Behandlung.</p></div></div>
+            <div class="step-card"><span class="step-n">3</span><div><b>Prioritäten erhalten</b><p>Was auffällt, warum es relevant ist und was helfen kann.</p></div></div>
+          </section>
+          <section class="landing-section">
+            <span class="eyebrow">Häufige Fragen</span><h3>Bevor du startest</h3>
+            <div class="faq-row"><b>Muss ich danach etwas kaufen?</b><p>Nein. Deine Analyse bleibt kostenlos. Der ausführliche Plan ist ein separates, optionales Angebot.</p></div>
+            <div class="faq-row"><b>Brauche ich besondere Produkte?</b><p>Nein. Im Quiz geht es zuerst um dein Haar. Bestehende Produkte können später berücksichtigt werden.</p></div>
+            <div class="faq-row"><b>Ist das eine medizinische Diagnose?</b><p>Nein. Chaarlie bietet kosmetische Pflegeorientierung und ersetzt keine dermatologische Abklärung.</p></div>
+          </section>
+          <section class="final-landing"><h3>Bereit, dein Haar besser zu verstehen?</h3><p>Zehn Fragen. Kostenlos. Dein persönliches Ergebnis direkt danach.</p><button class="primary" data-go="q1">Analyse starten</button></section>
+        </div>`
+      }
+
+      function quizHeader(q, index, backTarget = previousFrom(q.id)) {
+        return `<header class="quiz-head"><div class="quiz-head-row"><button class="back" aria-label="Zurück" data-go="${backTarget}">←</button><div class="q-brand">chaarlie</div><span class="q-count">${index + 1}/10</span></div><div class="progress">${questions.map((_, i) => `<i class="${i <= index ? "done" : ""}"></i>`).join("")}</div><div class="phase-line"><b>${q.phase}</b><span>${index < 4 ? "Grundprofil" : index < 8 ? "Haarzustand" : "Probleme & Ziele"}</span></div></header>`
+      }
+
+      function iconSvg(name) {
+        const paths = {
+          feather:
+            '<path d="M20 4c-6 0-12 4-14 10l-2 6 6-2c6-2 10-8 10-14Z"/><path d="m5 19 9-9"/>',
+          equal: '<path d="M5 9h14M5 15h14"/>',
+          layers: '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>',
+          sparkles:
+            '<path d="m12 3 1.3 3.7L17 8l-3.7 1.3L12 13l-1.3-3.7L7 8l3.7-1.3L12 3Z"/><path d="m5 14 .8 2.2L8 17l-2.2.8L5 20l-.8-2.2L2 17l2.2-.8L5 14ZM19 13l.7 1.8 1.8.7-1.8.7L19 18l-.7-1.8-1.8-.7 1.8-.7L19 13Z"/>',
+          activity: '<path d="M3 12h4l2-5 4 10 2-5h6"/>',
+          hand: '<path d="M7 11V6a2 2 0 0 1 4 0v4-6a2 2 0 0 1 4 0v6-4a2 2 0 0 1 4 0v7c0 5-3 8-7 8-3 0-5-2-7-5l-2-3a2 2 0 0 1 3-2l1 1"/>',
+          refresh: '<path d="M20 6v5h-5"/><path d="M18 17a8 8 0 1 1 1.7-8L20 11"/>',
+          move: '<path d="m8 7 4-4 4 4M8 17l4 4 4-4M12 3v18"/>',
+          zap: '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>',
+          leaf: '<path d="M20 4C11 4 5 8 5 15c0 3 2 5 5 5 7 0 10-7 10-16Z"/><path d="M5 20c2-5 6-9 12-12"/>',
+          pipette: '<path d="m19 3 2 2-3 3-2-2 3-3ZM16 6 6 16M8 14l2 2-4 4H3v-3l3-3"/>',
+          flame:
+            '<path d="M12 22c4 0 7-3 7-7 0-5-3-8-6-12 0 4-2 6-4 8-1-2-2-3-2-5-2 3-3 6-3 9 0 4 3 7 8 7Z"/>',
+          waves:
+            '<path d="M3 7c3 0 3 2 6 2s3-2 6-2 3 2 6 2M3 12c3 0 3 2 6 2s3-2 6-2 3 2 6 2M3 17c3 0 3 2 6 2s3-2 6-2 3 2 6 2"/>',
+          align: '<path d="M4 6h16M7 12h10M4 18h16"/>',
+          shield:
+            '<path d="M12 3 4 6v6c0 5 3 8 8 10 5-2 8-5 8-10V6l-8-3Z"/><path d="m9 12 2 2 4-4"/>',
+          split: '<path d="M6 3v5c0 3 2 4 6 4h6M18 8l4 4-4 4M6 21v-4c0-3 2-5 5-5"/>',
+          droplet: '<path d="M12 2S5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13Z"/>',
+          wind: '<path d="M3 8h10c3 0 3-4 0-4-1 0-2 .5-2 1M3 12h16c3 0 3-4 0-4M3 16h11c3 0 3 4 0 4-1 0-2-.5-2-1"/>',
+          comb: '<path d="M5 3v12c0 4 3 6 7 6s7-2 7-6V3M9 3v10M13 3v10M17 3v10"/>',
+          heart:
+            '<path d="M20 8c0 6-8 11-8 11S4 14 4 8a4 4 0 0 1 7-3 4 4 0 0 1 7-1 4 4 0 0 1 2 4Z"/>',
+          palette:
+            '<path d="M12 3a9 9 0 1 0 0 18h2a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h4c2 0 4-2 4-4 0-4-4-6-9-6Z"/><path d="M7 9h.01M10 6h.01M15 7h.01"/>',
+          scale: '<path d="M12 3v18M5 6h14M5 6l-3 7h6L5 6ZM19 6l-3 7h6l-3-7ZM8 21h8"/>',
+          sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+          flakes: '<path d="m12 3v18M5 7l14 10M19 7 5 17M8 4l4 3 4-3M8 20l4-3 4 3"/>',
+          alert: '<path d="M12 3 2 21h20L12 3Z"/><path d="M12 9v5M12 18h.01"/>',
+          user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 4-7 8-7s7 2 8 7"/>',
+          mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
+        }
+        return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.sparkles}</svg>`
+      }
+
+      function genericQuestion(q) {
+        const index = qIndex(q.id)
+        const selected = state.answers[q.key] || (q.multi ? [] : "")
+        const selectedList = Array.isArray(selected) ? selected : [selected]
+        const optionHtml = q.options
+          .map(([value, label, detail, visual]) => {
+            const isSelected = selectedList.includes(value)
+            if (q.layout === "photo-grid")
+              return `<button class="option media-card ${isSelected ? "selected" : ""}" data-answer="${value}"><img src="${personalPlanBase}${visual}" alt="${label}" /><strong>${label}</strong><span class="check">✓</span></button>`
+            if (q.layout === "thumbnail")
+              return `<button class="option thumbnail-card ${isSelected ? "selected" : ""}" data-answer="${value}"><img src="${personalPlanBase}${visual}" alt="${label}" /><span class="option-copy"><strong>${label}</strong><small>${detail}</small></span><span class="check">✓</span></button>`
+            if (q.layout === "portrait-grid")
+              return `<button class="option media-card portrait-card ${isSelected ? "selected" : ""}" data-answer="${value}"><img src="${portraitBase}${visual}" alt="${label}" /><strong>${label}</strong><span class="check">✓</span></button>`
+            return `<button class="option has-icon ${q.multi ? "multi" : ""} ${isSelected ? "selected" : ""}" data-answer="${value}"><span class="option-icon">${iconSvg(visual)}</span><span class="option-copy"><strong>${label}</strong>${detail ? `<small>${detail}</small>` : ""}</span><span class="check">✓</span></button>`
+          })
+          .join("")
+        const count = selectedList.filter(Boolean).length
+        return `<div class="quiz-shell">${quizHeader(q, index)}<div class="quiz-body"><span class="eyebrow">Frage ${index + 1}</span><h2>${q.title}</h2><p class="instruction">${q.instruction}</p>${q.cue ? `<div class="question-cue"><span class="option-icon">${iconSvg(q.cue[0])}</span><span><b>${q.cue[1]}</b>${q.cue[2]}</span></div>` : ""}<div class="options ${q.layout || "icon-list"}">${optionHtml}</div>${q.multi ? `<div class="selection-meta"><span>Mehrfachauswahl</span><b>${count}${q.max ? `/${q.max}` : ""} gewählt</b></div>` : ""}${q.id === "q7" ? '<div class="inline-note">„Naturhaar“ schließt chemische Behandlungen aus. Die gespeicherten Werte bleiben unverändert.</div>' : ""}</div>${q.multi ? `<div class="continue-wrap"><button class="primary" data-go="${nextFrom(q.id)}" ${count ? "" : "disabled"}>Weiter</button></div>` : ""}</div>`
+      }
+
+      function scalpQuestion(q) {
+        const index = 7
+        const types = [
+          ["fettig", "Fettig", "Ansätze werden nach 1–2 Tagen ölig", "droplet"],
+          ["ausgeglichen", "Ausgeglichen", "Kommt gut 2–3 Tage ohne Waschen klar", "scale"],
+          ["trocken", "Trocken", "Spannt gelegentlich, fühlt sich rau an", "sun"],
+        ]
+        const conditions = [
+          ["schuppen", "Schuppen", "Weiße oder gelbliche Flocken", "flakes"],
+          [
+            "trockene_schuppen",
+            "Trockene Schuppen",
+            "Kleine, weiße Flocken und Spannungsgefühl",
+            "sun",
+          ],
+          ["gereizt", "Gereizte Kopfhaut", "Jucken, Rötungen oder Brennen", "alert"],
+        ]
+        const isCondition = state.scalpPhase === "condition"
+        const chosen = isCondition ? state.answers.scalp_condition : state.answers.scalp_type
+        const rows = (isCondition ? conditions : types)
+          .map(
+            ([value, label, detail, icon]) =>
+              `<button class="option has-icon ${chosen === value ? "selected" : ""}" data-scalp="${value}"><span class="option-icon">${iconSvg(icon)}</span><span class="option-copy"><strong>${label}</strong><small>${detail}</small></span><span class="check">✓</span></button>`,
+          )
+          .join("")
+        return `<div class="quiz-shell">${quizHeader(q, index, isCondition ? "q8-type" : "q7")}<div class="quiz-body"><span class="eyebrow">Frage 8${isCondition ? " · Folgefrage" : ""}</span><h2>${isCondition ? "Was trifft auf deine Kopfhaut zu?" : "Wie schnell fetten deine Ansätze nach?"}</h2><p class="instruction">${isCondition ? "Wähle die Beschwerde, die am ehesten passt." : "Deine Gesichtshaut kann ein Hinweis sein – entscheidend ist, wie sich dein Ansatz zwischen den Wäschen verhält."}</p><div class="options">${rows}</div>${!isCondition && state.answers.scalp_type ? `<div class="gate-card"><h3>Hast du zusätzlich Schuppen, Juckreiz oder Rötungen?</h3><div class="gate-actions"><button data-scalp-gate="no">Nein</button><button data-scalp-gate="yes">Ja</button></div></div>` : ""}</div></div>`
+      }
+
+      function lead(kind) {
+        const data = {
+          "lead-name": [
+            "Fast da",
+            "Wie dürfen wir dich ansprechen?",
+            "So können wir dein Ergebnis persönlicher formulieren.",
+            "Vorname",
+            "name",
+            state.lead.name,
+            "Weiter",
+            "lead-email",
+          ],
+          "lead-email": [
+            "Dein Ergebnis sichern",
+            `Wohin dürfen wir deine Analyse schicken${state.lead.name ? `, ${state.lead.name}` : ""}?`,
+            "Du erhältst einen persönlichen Link, damit du dein Ergebnis später wieder öffnen kannst.",
+            "E-Mail-Adresse",
+            "email",
+            state.emailError ? "lea@beispiel" : state.lead.email,
+            "Analyse erstellen",
+            "consent",
+          ],
+        }[kind]
+        return `<div class="lead-shell">${topbar(`<button class="toplink" data-go="${kind === "lead-name" ? "q10" : "lead-name"}">Zurück</button>`)}<div class="lead-body"><div class="lead-visual">${iconSvg(kind === "lead-name" ? "user" : "mail")}</div><span class="eyebrow">${data[0]}</span><h2>${data[1]}</h2><p>${data[2]}</p><div class="lead-summary"><span>Wellig</span><span>Fein</span><span>10 Fragen beantwortet</span></div><div class="field"><label for="lead-field">${data[3]}</label><input id="lead-field" class="${state.emailError ? "error" : ""}" type="${data[4]}" value="${data[5]}" autocomplete="${data[4] === "email" ? "email" : "given-name"}" />${state.emailError ? '<p class="error-copy">Bitte prüfe die E-Mail-Adresse. Meintest du lea@beispiel.de?</p>' : ""}</div><div class="lead-actions"><button class="primary" data-go="${data[7]}">${state.emailError ? "E-Mail korrigieren" : data[6]}</button>${state.emailError ? '<button class="secondary" data-go="lead-email">Erneut versuchen</button>' : ""}</div><div class="inline-note">Deine Quizantworten bleiben dieselben. Name, E-Mail und Einverständnis sind separate Lead-Daten.</div></div></div>`
+      }
+
+      function consent() {
+        return `<div class="lead-shell">${topbar('<button class="toplink" data-go="lead-email">Zurück</button>')}<div class="lead-body"><div class="lead-visual">${iconSvg("mail")}</div><span class="eyebrow">Optional</span><h2>Möchtest du weitere Haartipps erhalten?</h2><p>Dein Ergebnis bekommst du unabhängig von dieser Entscheidung.</p><button class="consent-choice ${state.lead.consent ? "selected" : ""}" data-consent="yes"><span class="option-icon">${iconSvg("sparkles")}</span><span><b>Ja, Tipps per E-Mail</b><span>Ich kann mich jederzeit wieder abmelden.</span></span><span class="check">✓</span></button><button class="consent-choice ${!state.lead.consent ? "selected" : ""}" data-consent="no"><span class="option-icon">${iconSvg("shield")}</span><span><b>Nein, nur mein Ergebnis</b><span>Keine zusätzlichen Marketing-E-Mails.</span></span><span class="check">✓</span></button><div class="lead-actions"><button class="primary" data-go="preparation">Ergebnis vorbereiten</button></div></div></div>`
+      }
+
+      function draft() {
+        return `<div class="lead-shell">${topbar("")}<div class="lead-body"><span class="eyebrow">Willkommen zurück</span><h2>Du hast schon angefangen.</h2><p>Auf diesem Gerät wurde ein unvollständiges Quiz gefunden.</p><div class="draft-card"><b>6 von 10 Fragen beantwortet</b><p>Zuletzt gespeichert: Haaroberfläche und Elastizität. Deine bisherigen Angaben liegen nur als Quiz-Entwurf vor.</p><div class="lead-actions"><button class="primary" data-go="q7">Entwurf fortsetzen</button><button class="secondary" data-go="q1">Neu starten</button></div></div></div></div>`
+      }
+
+      function preparation() {
+        return `<div class="preparation"><div><span class="eyebrow">Einen Moment</span><h2>Wir ordnen deine Antworten ein.</h2><p>Dein Haarprofil und deine drei wichtigsten Pflege-Prioritäten werden vorbereitet.</p><div class="prep-card"><div class="prep-status"><span>Deine Analyse wird vorbereitet</span><span>72 %</span></div><div class="prep-progress"><i></i></div><div class="prep-steps"><span><b>✓</b> Haarprofil zusammenführen</span><span><b>✓</b> Ziele und Probleme abgleichen</span><span><b>3</b> Persönliche Analyse erstellen</span></div></div><button class="primary" data-go="offer">Mockup: Ergebnis anzeigen</button><p class="legal-note">Die neue Quiz-Animation und der Fortschritt bleiben; die Commitment-Popovers entfallen. Im echten Flow geht es automatisch weiter.</p></div></div>`
+      }
+
+      function pricingCards() {
+        const plans = [
+          ["month", "Monatlich", "€14,99", "monatlich kündbar"],
+          ["quarter", "Quartal", "€34,99", "entspricht €11,66 / Monat"],
+          ["year", "Jährlich", "€99,99", "entspricht €8,33 / Monat"],
+        ]
+        return plans
+          .map(
+            ([id, label, price, note]) =>
+              `<button class="price-card ${state.selectedPlan === id ? "selected" : ""}" data-plan="${id}">${id === "quarter" ? '<span class="popular">Am beliebtesten</span>' : ""}<span><b>${label}</b><small>${note}</small></span><span class="price">${price}</span></button>`,
+          )
+          .join("")
+      }
+
+      function checkoutModal() {
+        if (!state.checkout) return ""
+        const plan = {
+          month: ["Monatlich", "€14,99"],
+          quarter: ["Quartal", "€34,99"],
+          year: ["Jährlich", "€99,99"],
+        }[state.selectedPlan]
+        return `<div class="modal-backdrop"><section class="checkout-sheet" role="dialog" aria-modal="true" aria-label="Zahlungsmethode wählen"><div class="sheet-grab"></div><span class="eyebrow">Bestehender Checkout</span><h2>Zahlungsmethode wählen</h2><p>Ab hier bleiben Anbieter, Rechtstexte, Fehlerbehandlung und Freischaltung unverändert.</p><div class="summary-row"><b>${plan[0]}</b><b>${plan[1]}</b></div><button class="payment-choice">Mit Karte bezahlen <span>Stripe →</span></button><button class="payment-choice">Mit PayPal bezahlen <span>PayPal →</span></button><button class="close-sheet" data-close-checkout>Zurück zum Ergebnis</button></section></div>`
+      }
+
+      function offer() {
+        const stickyPrice = {
+          month: "Monatlich · €14,99",
+          quarter: "Quartal · €34,99",
+          year: "Jährlich · €99,99",
+        }[state.selectedPlan]
+        const stickyAction = state.pricingReached
+          ? `<button class="toplink new-offer-sticky" data-checkout><span class="sticky-plan"><small>${stickyPrice}</small>Zur Zahlung</span></button>`
+          : '<button class="toplink new-offer-sticky" data-scroll-pricing>Angebot ansehen</button>'
+        return `<div class="offer">${topbar(stickyAction)}
+          <section class="new-offer-hero"><h2>Dein Haarplan ist bereit.</h2><p>Feines, welliges Haar mit mittlerer Dichte · Fokus auf Feuchtigkeit, Frizz und Glanz.</p></section>
+
+          <section class="offer-section diagnosis-zone"><span class="eyebrow">Deine Ausgangslage</span><h3>In deinem Haar steckt viel Potenzial.</h3><p>Deine Antworten zeigen, wie wir deine Ausgangslage einordnen.</p>
+            <div class="diagnostic-list">
+              <article class="diagnostic-card"><div class="diagnostic-title"><span class="option-icon">${iconSvg("wind")}</span><b>Mehr Bündelung und Kontrolle</b></div><div class="diagnostic-columns"><div><span>Das erkennen wir</span><p>Frizz und abstehende Härchen lassen deine Längen schneller unruhig wirken.</p></div><div class="target"><span>Was hilft</span><p>Leichtes Leave-in und sanftes Styling bündeln deine Wellen.</p></div></div><p class="diagnostic-why"><b>Warum:</b> Reibung und Luftfeuchtigkeit verändern die Ausrichtung einzelner Fasern.</p></article>
+              <article class="diagnostic-card"><div class="diagnostic-title"><span class="option-icon">${iconSvg("droplet")}</span><b>Trockene, beanspruchte Längen</b></div><div class="diagnostic-columns"><div><span>Das erkennen wir</span><p>Trockenheit und eine unebene Oberfläche treten bei dir gemeinsam auf.</p></div><div class="target"><span>Was hilft</span><p>Schonend reinigen, konsequent pflegen und Hitze reduzieren.</p></div></div><p class="diagnostic-why"><b>Warum:</b> Färben und wiederholte Reibung können den Pflegebedarf erhöhen.</p></article>
+              <article class="diagnostic-card"><div class="diagnostic-title"><span class="option-icon">${iconSvg("leaf")}</span><b>Ausgeglichene Kopfhaut</b></div><div class="diagnostic-columns"><div><span>Das erkennen wir</span><p>Deine Kopfhaut bleibt mehrere Tage angenehm und ausgeglichen.</p></div><div class="target"><span>Was hilft</span><p>Die einfache Reinigungsbasis beibehalten und die Längen fokussieren.</p></div></div><p class="diagnostic-why"><b>Warum:</b> Kopfhaut und Längen dürfen trotzdem unterschiedlich gepflegt werden.</p></article>
+            </div>
+            <div class="good-card"><span>Das Gute</span><b>Hier können wir gezielt ansetzen.</b><p>Dein Plan baut genau auf diesen Punkten auf.</p></div>
+          </section>
+
+          <section class="offer-section"><span class="eyebrow">Was du freischaltest</span><h3>Die Highlights deines Plans</h3><div class="highlight-list"><div class="highlight"><i>✓</i><span><b>Versteh endlich, was deine Haare wirklich brauchen</b> – statt weiter zu raten.</span></div><div class="highlight"><i>✓</i><span><b>Eine klare Routine ohne Produktchaos:</b> wenige Produkte, feste Reihenfolge.</span></div><div class="highlight"><i>✓</i><span>Fahr dir durch die Haare und sie fühlen sich <b>weich</b> an – nicht trocken und strohig.</span></div><div class="highlight"><i>✓</i><span>Trag deine Haare wieder <b>offen</b> – mit einem richtig guten Gefühl.</span></div></div></section>
+
+          <section class="offer-section pricing-intro" id="pricing"><span class="eyebrow">Plan freischalten</span><h3>Starte mit deinem persönlichen Plan.</h3><div class="pricing-grid">${pricingCards()}</div><button class="primary price-cta" data-checkout>Jetzt starten · €34,99 im Quartal</button><p class="legal-note">14 Tage Geld-zurück-Garantie · Preise und bestehender Checkout bleiben unverändert.</p></section>
+
+          <section class="offer-section tinted"><div class="method-card"><h3>Dein Plan basiert auf echter Haar-Diagnostik:</h3><div class="method-grid"><div class="method"><b>Zugtest</b><span>Struktur & Elastizität</span></div><div class="method"><b>Oberflächentest</b><span>Haaroberfläche & Glanz</span></div><div class="method"><b>Kopfhaut-Check</b><span>Typ & Zustand</span></div><div class="method"><b>Über 1.000 Produkte</b><span>analysiert & geprüft</span></div></div><p class="legal-note">Entwickelt gemeinsam mit Friseurmeistern.</p></div><div class="method-bridge"><i>↓</i>Daraus entstehen deine Produktauswahl, Reihenfolge und Anwendung.</div></section>
+
+          <section class="offer-section"><h3>Vorher und <span style="color:var(--plum)">nachher</span> mit Chaarlie</h3><p>So beschreiben es Frauen in unserer Umfrage:</p><div class="before-after-grid"><article class="before-after-card"><p class="before"><i class="contrast-icon">×</i>„Ich weiß nie, welche Produkte wirklich zu mir passen.“</p><p class="after"><i class="contrast-icon">✓</i>Empfehlungen mit Grund, abgestimmt auf deine Auswertung</p></article><article class="before-after-card"><p class="before"><i class="contrast-icon">×</i>„Meine Haare sind trocken, strohig oder glanzlos.“</p><p class="after"><i class="contrast-icon">✓</i>Weich, geschmeidig, mit Glanz, den man sieht</p></article><article class="before-after-card"><p class="before"><i class="contrast-icon">×</i>Haare im Dutt oder Zopf verstecken</p><p class="after"><i class="contrast-icon">✓</i>Haare offen tragen, mit gutem Gefühl</p></article></div></section>
+
+          <section class="offer-section diagnosis-zone"><span class="eyebrow">Was Frauen wirklich beschäftigt</span><h3>Über 4.000 Frauen haben uns geantwortet.</h3><div class="stat-grid"><div class="stat" style="--value:82%;--ring:#563882"><b><em>82%</em></b><span>wollen verstehen, was ihr Haar wirklich braucht</span></div><div class="stat" style="--value:73%;--ring:#7657a2"><b><em>73%</em></b><span>wünschen sich eine klare Routine ohne Produktchaos</span></div><div class="stat" style="--value:63%;--ring:#9a7cbd"><b><em>63%</em></b><span>suchen Klarheit, welche Produkte wirklich passen</span></div></div><p class="legal-note">Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich</p></section>
+
+          <section class="offer-section"><span class="eyebrow">Stimmen aus der Beta</span><h3>Das sagen Kundinnen über Chaarlie.</h3><div class="quote-grid"><div class="quote"><span class="quote-stars">★★★★★</span><b>Kim · Endlich verstehe ich meine Haare</b><p>„Der Fragebogen ist echt gut und leicht verständlich. Auch die Produktempfehlung fand ich gut.“</p></div><div class="quote"><span class="quote-stars">★★★★★</span><b>Kerstin · Echte Antworten bekommen</b><p>„Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.“</p></div><div class="quote"><span class="quote-stars">★★★★★</span><b>Sarah · Nie wieder googeln vorm Regal</b><p>„Bei den Produkten stehen Preis, Anwendung und der Grund dabei, warum sie empfohlen werden.“</p></div></div></section>
+
+          <section class="offer-section"><div class="guarantee centered"><span class="eyebrow">Ohne Risiko</span><b>14 Tage Geld-zurück-Garantie</b><p>Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.</p></div></section>
+
+          <section class="offer-section faq-section"><h3>Häufige Fragen</h3><div class="faq-row"><b>Warum reicht nicht einfach ein neues Shampoo?<span>⌄</span></b></div><div class="faq-row"><b>Ist der Plan wirklich auf mein Haar abgestimmt?<span>⌄</span></b></div><div class="faq-row"><b>Was bekomme ich genau?<span>⌄</span></b></div><div class="faq-row"><b>Kann ich meine bisherigen Produkte weiterverwenden?<span>⌄</span></b></div><div class="faq-row"><b>Was passiert direkt nach dem Kauf?<span>⌄</span></b></div></section>
+
+          <section class="final-landing" style="background:var(--plum)"><h3>Dein Plan zu schöneren Haaren in 30 Tagen.</h3><button class="secondary" data-checkout>Plan sichern</button></section>
+          ${checkoutModal()}</div>`
+      }
+
+      function notesFor() {
+        const id = state.checkout ? "checkout" : state.emailError ? "email-error" : state.screen
+        const q = questions.find((item) => item.id === id)
+        if (q)
+          return `<div class="state-card"><span class="eyebrow">Aktueller Zustand</span><h2>${q.id.toUpperCase()} · ${q.phase}</h2><p>${q.multi ? "Mehrfachauswahl mit einem expliziten Weiter-Button." : q.scalp ? "Bestehende bedingte Unterfrage, aber keine zusätzliche Quizfrage." : "Einzelauswahl gibt kurzes Feedback und geht dann direkt weiter."}</p><div><span class="data-key">${q.key}</span>${q.scalp ? '<span class="data-key">has_scalp_issue</span><span class="data-key">scalp_condition</span>' : ""}</div></div><div class="state-card"><span class="eyebrow">Review-Fokus</span><h2>Komprimiert, nicht verkürzt</h2><ul><li>${q.id === "q9" || q.id === "q10" ? "Probleme und Ziele folgen der harmonisierten Personal-Plan-Taxonomie." : "Frage und Antwortwerte bleiben erhalten."}</li><li>Keine Motivationstexte zwischen den Fragen.</li><li>Zurück bleibt jederzeit erreichbar.</li></ul></div>`
+        const copy = {
+          landing: [
+            "Einstieg",
+            "Marke zuerst",
+            "Der Influencer-Link verändert Attribution, aber nicht die sichtbare Marke. Kostenloses Ergebnis und optionaler Plan werden vor dem Start getrennt.",
+          ],
+          draft: [
+            "Recovery",
+            "Entwurf gefunden",
+            "Der bestehende Fortsetzen/Neustart-Fall bleibt im neuen visuellen Rahmen erhalten.",
+          ],
+          "lead-name": [
+            "Lead",
+            "Persönliche Anrede",
+            "Name und E-Mail bleiben separate Schritte. Es wird keine zusätzliche Zustimmung erzwungen.",
+          ],
+          "lead-email": [
+            "Lead",
+            "Ergebnislink sichern",
+            "Die E-Mail erklärt den späteren Zugriff; der Plan-Kauf wird hier noch nicht beworben.",
+          ],
+          "email-error": [
+            "Recovery",
+            "Korrigierbarer Fehler",
+            "Fehler und Vorschlag erscheinen direkt am Feld. Die bisherigen Antworten bleiben erhalten.",
+          ],
+          consent: [
+            "Consent",
+            "Echt optional",
+            "Beide Entscheidungen sind gleichwertig. Das Ergebnis folgt in jedem Fall.",
+          ],
+          preparation: [
+            "System",
+            "Eine wahrheitsgemäße Wartephase",
+            "Nur Verarbeitungsschritte, kein erfundenes Zwischenresultat und kein Commitment.",
+          ],
+          offer: [
+            "Ergebnis + Angebot",
+            "Alles auf einer linearen Seite",
+            "Drei bestehende Prioritäten zuerst, danach eine klare Gratis/Bezahlt-Grenze. Kein Vorher/Nachher-Bild, Countdown oder Reveal-Gate.",
+          ],
+          checkout: [
+            "Boundary",
+            "Bestehender Checkout",
+            "Die Darstellung endet vor einer Zahlung. Anbieter, Rechtstexte und Entitlement-Verhalten werden nicht neu gestaltet.",
+          ],
+        }[id] || ["Flow", "Zustand", "Review-Zustand"]
+        return `<div class="state-card"><span class="eyebrow">${copy[0]}</span><h2>${copy[1]}</h2><p>${copy[2]}</p></div><div class="state-card"><span class="eyebrow">Steuerung</span><h2>Feedback gezielt geben</h2><p>Nenne einfach den Zustand und was du ändern möchtest, zum Beispiel „Frage 4 wirkt zu technisch“ oder „der Übergang zum Angebot ist zu abrupt“.</p><div class="review-actions"><button data-prev>← Zurück</button><button data-next>Weiter →</button></div></div>`
+      }
+
+      function visibleScreenId() {
+        if (state.checkout) return "checkout"
+        if (state.emailError) return "email-error"
+        if (state.screen === "q8" && state.scalpPhase === "condition") return "q8-condition"
+        return state.screen
+      }
+      function adjacent(direction) {
+        const current = screens.findIndex(([id]) => id === visibleScreenId())
+        const next = Math.max(0, Math.min(screens.length - 1, current + direction))
+        go(screens[next][0])
+      }
+
+      function bind() {
+        document
+          .querySelectorAll("[data-go]")
+          .forEach((el) => el.addEventListener("click", () => go(el.dataset.go)))
+        document.querySelectorAll("[data-answer]").forEach((el) =>
+          el.addEventListener("click", () => {
+            const q = questions.find((item) => item.id === state.screen)
+            const value = el.dataset.answer
+            if (q.multi) {
+              let list = [...(state.answers[q.key] || [])]
+              if (list.includes(value)) list = list.filter((item) => item !== value)
+              else if (!q.max || list.length < q.max) list.push(value)
+              if (q.id === "q7" && value === "natur" && list.includes("natur")) list = ["natur"]
+              if (q.id === "q7" && value !== "natur") list = list.filter((item) => item !== "natur")
+              state.answers[q.key] = list
+              render(false)
+            } else {
+              state.answers[q.key] = value
+              render(false)
+              window.setTimeout(() => go(nextFrom(q.id)), 190)
+            }
+          }),
+        )
+        document.querySelectorAll("[data-scalp]").forEach((el) =>
+          el.addEventListener("click", () => {
+            if (state.scalpPhase === "condition") {
+              state.answers.scalp_condition = el.dataset.scalp
+              state.answers.has_scalp_issue = true
+              render(false)
+              window.setTimeout(() => {
+                state.scalpPhase = "type"
+                go("q9")
+              }, 190)
+            } else {
+              state.answers.scalp_type = el.dataset.scalp
+              render(false)
+            }
+          }),
+        )
+        document.querySelectorAll("[data-scalp-gate]").forEach((el) =>
+          el.addEventListener("click", () => {
+            if (el.dataset.scalpGate === "yes") {
+              state.answers.has_scalp_issue = true
+              state.scalpPhase = "condition"
+              render()
+            } else {
+              state.answers.has_scalp_issue = false
+              delete state.answers.scalp_condition
+              go("q9")
+            }
+          }),
+        )
+        document.querySelectorAll("[data-consent]").forEach((el) =>
+          el.addEventListener("click", () => {
+            state.lead.consent = el.dataset.consent === "yes"
+            render(false)
+          }),
+        )
+        document.querySelectorAll("[data-plan]").forEach((el) =>
+          el.addEventListener("click", () => {
+            state.selectedPlan = el.dataset.plan
+            render(false)
+            document.getElementById("pricing")?.scrollIntoView({ block: "start" })
+          }),
+        )
+        document.querySelectorAll("[data-checkout]").forEach((el) =>
+          el.addEventListener("click", () => {
+            state.checkout = true
+            history.replaceState(null, "", "?screen=checkout")
+            render(false)
+          }),
+        )
+        document.querySelectorAll("[data-close-checkout]").forEach((el) =>
+          el.addEventListener("click", () => {
+            state.checkout = false
+            history.replaceState(null, "", "?screen=offer")
+            render(false)
+          }),
+        )
+        document.querySelectorAll("[data-scroll-pricing]").forEach((el) =>
+          el.addEventListener("click", () => {
+            state.pricingReached = true
+            render(false)
+            document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })
+          }),
+        )
+        document
+          .querySelectorAll("[data-prev]")
+          .forEach((el) => el.addEventListener("click", () => adjacent(-1)))
+        document
+          .querySelectorAll("[data-next]")
+          .forEach((el) => el.addEventListener("click", () => adjacent(1)))
+      }
+
+      let lastRenderedScreen = null
+
+      function render(resetScroll = true) {
+        const q = questions.find((item) => item.id === state.screen)
+        let html = ""
+        if (state.screen === "landing") html = landing()
+        else if (state.screen === "draft") html = draft()
+        else if (q) html = q.scalp ? scalpQuestion(q) : genericQuestion(q)
+        else if (state.screen === "lead-name" || state.screen === "lead-email")
+          html = lead(state.screen)
+        else if (state.screen === "consent") html = consent()
+        else if (state.screen === "preparation") html = preparation()
+        else html = offer()
+        screen.innerHTML = html
+        if (resetScroll) screen.scrollTop = 0
+        const current = visibleScreenId()
+        if (resetScroll && current !== lastRenderedScreen) {
+          screen.classList.remove("screen-transition")
+          void screen.offsetWidth
+          screen.classList.add("screen-transition")
+        }
+        lastRenderedScreen = current
+        document.getElementById("device-title").textContent =
+          screens.find(([id]) => id === current)?.[1] || "Flow"
+        jumpList.innerHTML = screens
+          .map(
+            ([id, label], i) =>
+              `<button class="${id === current ? "active" : ""}" data-jump="${id}"><span class="number">${i + 1}</span><span>${label}</span></button>`,
+          )
+          .join("")
+        jumpList
+          .querySelectorAll("[data-jump]")
+          .forEach((el) => el.addEventListener("click", () => go(el.dataset.jump)))
+        notes.innerHTML = notesFor()
+        bind()
+      }
+
+      document.getElementById("mobile-next").addEventListener("click", () => adjacent(1))
+      window.addEventListener("keydown", (event) => {
+        if (
+          event.key === "ArrowRight" &&
+          !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+        )
+          adjacent(1)
+        if (
+          event.key === "ArrowLeft" &&
+          !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+        )
+          adjacent(-1)
+        if (event.key === "Escape" && state.checkout) {
+          state.checkout = false
+          render(false)
+        }
+      })
+      const requested = new URLSearchParams(location.search).get("screen")
+      go(screens.some(([id]) => id === requested) ? requested : "landing")
+    </script>
+  </body>
+</html>

@@ -1,8 +1,8 @@
 import type { QuizAnswers } from "./types"
 import { HAIR_LENGTHS } from "@/lib/vocabulary"
 import { GOALS } from "@/lib/vocabulary/concerns-goals"
-
-const MAX_GOALS = 5
+import { PROFILE_CONCERNS, type Goal, type ProfileConcern } from "@/lib/vocabulary"
+import { DIAGNOSTIC_CONCERNS, DIAGNOSTIC_GOALS } from "./diagnostic-input"
 
 export const QUIZ_STRUCTURE_VALUES = ["straight", "wavy", "curly", "coily"] as const
 export const QUIZ_THICKNESS_VALUES = ["fine", "normal", "coarse"] as const
@@ -19,6 +19,11 @@ export const QUIZ_CONCERN_VALUES = [
   "dryness",
   "frizz",
   "tangling",
+] as const
+/** Full allowed set for new starts plus historical stored values. */
+export const QUIZ_ANSWER_CONCERN_VALUES = [
+  ...QUIZ_CONCERN_VALUES,
+  ...DIAGNOSTIC_CONCERNS.filter((value) => !QUIZ_CONCERN_VALUES.includes(value as never)),
 ] as const
 export const QUIZ_TREATMENT_VALUES = [
   "natur",
@@ -62,14 +67,19 @@ function sortTreatments(treatment: unknown): QuizAnswers["treatment"] | undefine
   return [...unique]
 }
 
+export const QUIZ_GOAL_VALUES = [
+  ...GOALS,
+  ...DIAGNOSTIC_GOALS.filter((value) => !GOALS.includes(value as never)),
+] as const
+
 function sortConcerns(concerns: unknown): QuizAnswers["concerns"] | undefined {
   if (!Array.isArray(concerns)) return undefined
 
-  const unique = QUIZ_CONCERN_VALUES.filter((value) => concerns.includes(value))
+  const unique = QUIZ_ANSWER_CONCERN_VALUES.filter((value) => concerns.includes(value))
 
   if (unique.length === 0) return []
 
-  return unique.slice(0, 3)
+  return unique
 }
 
 function normalizeConcernOtherText(value: unknown): string | undefined {
@@ -84,7 +94,7 @@ function normalizeConcernOtherText(value: unknown): string | undefined {
 function normalizeGoals(raw: unknown): QuizAnswers["goals"] {
   if (!Array.isArray(raw)) return undefined
 
-  const allowed = new Set<string>(GOALS)
+  const allowed = new Set<string>(QUIZ_GOAL_VALUES)
   const seen = new Set<string>()
 
   // Walk input in user-chosen order so first-seen wins for the volume↔less_volume
@@ -97,11 +107,10 @@ function normalizeGoals(raw: unknown): QuizAnswers["goals"] {
     if (value === "less_volume" && seen.has("volume")) continue
     if (value === "volume" && seen.has("less_volume")) continue
     seen.add(value)
-    if (seen.size >= MAX_GOALS) break
   }
 
   if (seen.size === 0) return undefined
-  return GOALS.filter((g) => seen.has(g))
+  return QUIZ_GOAL_VALUES.filter((g) => seen.has(g))
 }
 
 export function toggleTreatmentSelection(current: string[], value: string): string[] {
@@ -140,7 +149,7 @@ export function toggleConcernSelection(
     return []
   }
 
-  if (!QUIZ_CONCERN_VALUES.includes(value as (typeof QUIZ_CONCERN_VALUES)[number])) {
+  if (!QUIZ_ANSWER_CONCERN_VALUES.includes(value as (typeof QUIZ_ANSWER_CONCERN_VALUES)[number])) {
     return sortConcerns(current) ?? []
   }
 
@@ -148,7 +157,7 @@ export function toggleConcernSelection(
 
   if (set.has(value)) {
     set.delete(value)
-  } else if (set.size < 3) {
+  } else {
     set.add(value)
   }
 
@@ -243,6 +252,93 @@ export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
   }
 
   return normalized
+}
+
+/**
+ * Compatibility boundary for established profile, routine and Customer.io
+ * consumers. New quiz-only families deliberately do not become onboarding
+ * options; unavailable historical equivalents are omitted rather than guessed.
+ */
+export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
+  concerns: ProfileConcern[]
+  goals: Goal[]
+} {
+  const concernMap: Partial<Record<string, ProfileConcern>> = {
+    hair_damage: "hair_damage",
+    breakage: "breakage",
+    split_ends: "split_ends",
+    dryness: "dryness",
+    dry_lengths: "dryness",
+    frizz: "frizz",
+    frizz_flyaways: "frizz",
+    tangling: "tangling",
+  }
+  const hasFineOrLowDensity = answers.thickness === "fine" || answers.density === "low"
+  const hasControlSignal =
+    answers.thickness === "coarse" ||
+    answers.density === "high" ||
+    answers.structure === "wavy" ||
+    answers.structure === "curly" ||
+    answers.structure === "coily"
+  const goalMap: Partial<Record<string, Goal>> = {
+    moisture: "moisture",
+    frizz_surface: "less_frizz",
+    less_frizz: "less_frizz",
+    shine: "shine",
+    shape_definition: "curl_definition",
+    curl_definition: "curl_definition",
+    strength_ends: "anti_breakage",
+    anti_breakage: "anti_breakage",
+    less_split_ends: "less_split_ends",
+    scalp_balance: "healthy_scalp",
+    healthy_scalp: "healthy_scalp",
+    manageability_styling: "less_frizz",
+    volume: "volume",
+    less_volume: "less_volume",
+    healthier_hair: "healthier_hair",
+    color_protection: "color_protection",
+    strengthen: "strengthen",
+  }
+  const projectedGoals = new Set<Goal>()
+  for (const value of answers.goals ?? []) {
+    if (value === "volume_balance") {
+      // The neutral user-facing family only receives a directional legacy goal
+      // when factual signals support one; it never claims the opposite result.
+      if (hasFineOrLowDensity) projectedGoals.add("volume")
+      else if (hasControlSignal) projectedGoals.add("less_volume")
+      continue
+    }
+    const mapped = goalMap[value]
+    if (mapped) projectedGoals.add(mapped)
+  }
+  if (projectedGoals.has("volume") && projectedGoals.has("less_volume")) {
+    projectedGoals.delete(hasFineOrLowDensity ? "less_volume" : "volume")
+  }
+
+  const projectedConcerns = new Set<ProfileConcern>()
+  for (const value of answers.concerns ?? []) {
+    const mapped = concernMap[value]
+    if (mapped) projectedConcerns.add(mapped)
+  }
+  return {
+    concerns: PROFILE_CONCERNS.filter((value) => projectedConcerns.has(value)),
+    goals: GOALS.filter((value) => projectedGoals.has(value)),
+  }
+}
+
+/**
+ * Supplies established narrative, routine and email builders with their
+ * original vocabulary while retaining every factual answer unchanged.
+ */
+export function projectQuizAnswersForLegacyConsumers(answers: QuizAnswers): QuizAnswers {
+  const normalized = canonicalizeQuizAnswers(answers)
+  const legacyVocabulary = projectQuizAnswersToLegacyVocabulary(normalized)
+
+  return {
+    ...normalized,
+    concerns: legacyVocabulary.concerns,
+    goals: legacyVocabulary.goals,
+  }
 }
 
 export function areQuizAnswersEqual(left: QuizAnswers, right: QuizAnswers): boolean {

@@ -5,9 +5,7 @@ import {
   isBrowserRecordableFunnelMilestone,
   recordFunnelEventWithRpc,
   recordFunnelPurchaseFromSession,
-  resolveGuidedStoryOfferExperiment,
 } from "../src/lib/funnel/server"
-import { isGuidedStoryExperimentVariant } from "../src/lib/funnel/offer-experiment"
 import type { SupabaseBillingAnalyticsClient } from "../src/lib/billing/types"
 
 test("browser funnel writes cannot claim server-confirmed conversions", () => {
@@ -75,6 +73,28 @@ test("record helper surfaces RPC failures", async () => {
     }),
     rpcError,
   )
+})
+
+test("result-only trusted offer context preserves a stored arm while browser events use packages", async () => {
+  let storedArm: unknown = null
+  await recordFunnelEventWithRpc(
+    async (args) => {
+      storedArm = args.p_offer_variant
+      return { data: null, error: null }
+    },
+    {
+      context: {
+        visitorId: "10000000-0000-4000-8000-000000000001",
+        sessionId: "20000000-0000-4000-8000-000000000002",
+        packageKey: "default_organic",
+        issuedAt: Date.now(),
+      },
+      eventId: crypto.randomUUID(),
+      milestone: "offer_viewed",
+      trustedOfferVariant: "guided-story-founder-letter",
+    },
+  )
+  assert.equal(storedArm, "guided-story-founder-letter")
 })
 
 test("browser funnel helper retains wall-clock occurrence when none is supplied", async () => {
@@ -150,127 +170,4 @@ test("purchase helper returns typed permanent and transient outcomes", async () 
     assert.equal(transient.kind, "transient")
     assert.equal(transient.error, "RPC unavailable")
   }
-})
-
-test("guided-story experiment persists a server-selected arm before offer tracking", async () => {
-  let updateValue: unknown = null
-  let updateId: unknown = null
-  let offerViewedAtGuard: unknown = null
-  let baseVariantGuard: unknown = null
-  const client = {
-    from: () => ({
-      update: (values: Record<string, unknown>) => ({
-        eq: (column: string, value: string) => {
-          updateValue = values.offer_variant
-          updateId = column === "id" ? value : null
-          return {
-            is: (isColumn: string, isValue: null) => {
-              offerViewedAtGuard = isColumn === "offer_viewed_at" ? isValue : "wrong-column"
-              return {
-                eq: (guardColumn: string, guardValue: string) => {
-                  baseVariantGuard = guardColumn === "offer_variant" ? guardValue : "wrong-column"
-                  return {
-                    select: () => ({
-                      maybeSingle: async () => ({
-                        data: { offer_variant: values.offer_variant },
-                        error: null,
-                      }),
-                    }),
-                  }
-                },
-              }
-            },
-          }
-        },
-      }),
-      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),
-    }),
-  }
-  const variant = await resolveGuidedStoryOfferExperiment({
-    leadId: "lead-1",
-    enabled: true,
-    client: client as never,
-    session: {
-      sessionId: "session-1",
-      packageKey: "default_organic",
-      offerVariant: "guided-story",
-      offerViewedAt: null,
-    },
-  })
-
-  assert.equal(isGuidedStoryExperimentVariant(variant), true)
-  assert.equal(updateValue, variant)
-  assert.equal(updateId, "session-1")
-  assert.equal(offerViewedAtGuard, null)
-  assert.equal(baseVariantGuard, "guided-story")
-})
-
-test("guided-story experiment reads back a concurrent winner and falls back after a write error", async () => {
-  const raceClient = {
-    from: () => ({
-      update: () => ({
-        eq: () => ({
-          is: () => ({
-            eq: () => ({
-              select: () => ({ maybeSingle: async () => ({ data: null, error: null }) }),
-            }),
-          }),
-        }),
-      }),
-      select: () => ({
-        eq: () => ({
-          maybeSingle: async () => ({
-            data: { offer_variant: "guided-story-potential" },
-            error: null,
-          }),
-        }),
-      }),
-    }),
-  }
-  const common = {
-    leadId: "lead-1",
-    enabled: true,
-    session: {
-      sessionId: "session-1",
-      packageKey: "default_organic",
-      offerVariant: "guided-story",
-      offerViewedAt: null,
-    },
-  }
-  assert.equal(
-    await resolveGuidedStoryOfferExperiment({ ...common, client: raceClient as never }),
-    "guided-story-potential",
-  )
-
-  let captured = 0
-  const errorClient = {
-    from: () => ({
-      update: () => ({
-        eq: () => ({
-          is: () => ({
-            eq: () => ({
-              select: () => ({
-                maybeSingle: async () => ({
-                  data: null,
-                  error: new Error("db message must not be added as context"),
-                }),
-              }),
-            }),
-          }),
-        }),
-      }),
-      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),
-    }),
-  }
-  assert.equal(
-    await resolveGuidedStoryOfferExperiment({
-      ...common,
-      client: errorClient as never,
-      captureFailure: () => {
-        captured += 1
-      },
-    }),
-    "guided-story",
-  )
-  assert.equal(captured, 1)
 })

@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   canonicalizeQuizAnswers,
   normalizeStoredQuizAnswers,
+  projectQuizAnswersToLegacyVocabulary,
   toggleConcernSelection,
   toggleTreatmentSelection,
 } from "../src/lib/quiz/normalization"
@@ -129,13 +130,28 @@ test("blank free-text concern notes normalize to undefined", () => {
   assert.equal(normalized.concerns_other_text, undefined)
 })
 
-test("none stays exclusive and concern selection caps at three entries", () => {
+test("new quiz concerns preserve every unique shared selection", () => {
   let selected = toggleConcernSelection([], "hair_damage")
   selected = toggleConcernSelection(selected, "split_ends")
   selected = toggleConcernSelection(selected, "breakage")
   selected = toggleConcernSelection(selected, "dryness")
+  selected = toggleConcernSelection(selected, "frizz_flyaways")
+  selected = toggleConcernSelection(selected, "low_shine")
+  selected = toggleConcernSelection(selected, "lost_shape")
+  selected = toggleConcernSelection(selected, "low_volume_or_weighed_down")
+  selected = toggleConcernSelection(selected, "tangling")
 
-  assert.deepEqual(selected, ["hair_damage", "split_ends", "breakage"])
+  assert.deepEqual(selected, [
+    "hair_damage",
+    "split_ends",
+    "breakage",
+    "dryness",
+    "tangling",
+    "frizz_flyaways",
+    "low_shine",
+    "lost_shape",
+    "low_volume_or_weighed_down",
+  ])
   assert.deepEqual(toggleConcernSelection(selected, "none"), [])
 })
 
@@ -191,22 +207,30 @@ test("invalid goal values are filtered out", () => {
   assert.deepEqual(normalized.goals, ["volume", "shine"])
 })
 
-test("goals are capped at 5 (first-seen wins, then sorted canonically)", () => {
+test("new quiz goals preserve every unique shared selection", () => {
   const normalized = normalizeStoredQuizAnswers({
     goals: [
-      "volume",
-      "shine",
-      "less_frizz",
       "moisture",
-      "healthy_scalp",
-      "strengthen",
-      "anti_breakage",
+      "frizz_surface",
+      "shine",
+      "shape_definition",
+      "volume_balance",
+      "strength_ends",
+      "scalp_balance",
+      "manageability_styling",
     ],
   })
 
-  assert.equal(normalized.goals?.length, 5)
-  // First 5 input items kept (strengthen + anti_breakage dropped), then re-sorted by GOALS index
-  assert.deepEqual(normalized.goals, ["volume", "less_frizz", "moisture", "healthy_scalp", "shine"])
+  assert.deepEqual(normalized.goals, [
+    "moisture",
+    "shine",
+    "frizz_surface",
+    "shape_definition",
+    "volume_balance",
+    "strength_ends",
+    "scalp_balance",
+    "manageability_styling",
+  ])
 })
 
 test("goals drop the conflicting volume/less_volume pair (keeps first occurrence)", () => {
@@ -238,4 +262,17 @@ test("canonicalization carries goals through in canonical GOALS order", () => {
 
   // less_frizz=2, moisture=4
   assert.deepEqual(canonical.goals, ["less_frizz", "moisture"])
+})
+
+test("shared quiz values project once into the existing profile vocabulary", () => {
+  const projected = projectQuizAnswersToLegacyVocabulary({
+    structure: "coily",
+    thickness: "coarse",
+    density: "high",
+    concerns: ["hair_damage", "frizz_flyaways", "low_shine", "tangling"],
+    goals: ["manageability_styling", "volume_balance", "strength_ends"],
+  })
+
+  assert.deepEqual(projected.concerns, ["hair_damage", "frizz", "tangling"])
+  assert.deepEqual(projected.goals, ["less_frizz", "less_volume", "anti_breakage"])
 })
