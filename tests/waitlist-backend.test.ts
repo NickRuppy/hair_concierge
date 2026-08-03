@@ -24,7 +24,7 @@ import {
 } from "@/lib/waitlist/tokens"
 
 const migrationPath =
-  "supabase/migrations/20260803120000_waitlist_signups_and_customerio_outbox.sql"
+  "supabase/migrations/20260803121000_waitlist_signups_and_customerio_outbox.sql"
 
 test("waitlist campaign matches the live Customer.io launch segment", () => {
   assert.equal(WAITLIST_CAMPAIGN, "launch_1_2026_08")

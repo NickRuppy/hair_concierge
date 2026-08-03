@@ -252,8 +252,16 @@ Status: **approved by Nick on 2026-08-03**.
   that the prior payment warning is sufficiently resolved and Customer.io remains fully
   usable. No live smoke event was emitted.
 - Live migration preflight after removing scheduled reconciliation (2026-08-03): the
-  linked production ledger contains `20260803120000`. Its already-applied SQL remains
-  unchanged; the application no longer configures or serves a waitlist retry cron.
+  linked production ledger contains `20260803120000`, while read-only production API
+  checks confirm that the two waitlist tables are not present. The already-applied
+  one-time-purchase comment migration therefore keeps `20260803120000`; the not-yet-
+  applied waitlist schema uses the fresh unique version `20260803121000`. The
+  application does not configure or serve a waitlist retry cron.
+- No manual production migration was applied during merge preparation. The waitlist
+  migration will travel through the normal post-merge deployment path.
+- Final integrated verification: 33/33 focused waitlist tests, 26/26 migration contract
+  tests, 2,599/2,599 full Node tests, `npm run ci:verify`, and the two previously timed
+  out `/quiz` Playwright paths all passed on the combined tree.
 - PR #314 disposition: source/reference only; owner branch ports the useful UI and copy.
 - Durable plan and mockup: **commit** with the implementation.
 - Explorer and transient render output: **discard** after integration.
