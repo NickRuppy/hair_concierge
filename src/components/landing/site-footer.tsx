@@ -1,9 +1,13 @@
 import Link from "next/link"
 
+import {
+  FooterCookieSettingsButton,
+  FooterLink,
+  footerCompanyLinks,
+  footerLegalLinks,
+  footerProductLinks,
+} from "./footer-links"
 import { Wordmark } from "./wordmark"
-
-const linkClass =
-  "text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
 
 const headingClass =
   "mb-4 font-mono text-xs font-medium uppercase tracking-wider text-[var(--brand-plum)]"
@@ -30,61 +34,35 @@ export function SiteFooter() {
           <div>
             <h4 className={headingClass}>Produkt</h4>
             <ul className="flex flex-col gap-2.5">
-              <li>
-                <Link href="/quiz" prefetch={false} className={linkClass}>
-                  Haaranalyse starten
-                </Link>
-              </li>
-              <li>
-                <Link href="/methodik" className={linkClass}>
-                  Methodik
-                </Link>
-              </li>
+              {footerProductLinks.map((item) => (
+                <li key={item.href}>
+                  <FooterLink {...item} />
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <h4 className={headingClass}>Unternehmen</h4>
             <ul className="flex flex-col gap-2.5">
-              <li>
-                <Link href="/impressum" className={linkClass}>
-                  Impressum
-                </Link>
-              </li>
-              <li>
-                <Link href="/kontakt" className={linkClass}>
-                  Kontakt
-                </Link>
-              </li>
+              {footerCompanyLinks.map((item) => (
+                <li key={item.href}>
+                  <FooterLink {...item} />
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <h4 className={headingClass}>Rechtliches</h4>
             <ul className="flex flex-col gap-2.5">
+              {footerLegalLinks.map((item) => (
+                <li key={item.href}>
+                  <FooterLink {...item} />
+                </li>
+              ))}
               <li>
-                <Link href="/datenschutz" className={linkClass}>
-                  Datenschutz
-                </Link>
-              </li>
-              <li>
-                <Link href="/agb" className={linkClass}>
-                  AGB
-                </Link>
-              </li>
-              <li>
-                <Link href="/widerruf" className={linkClass}>
-                  Widerruf
-                </Link>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  data-cookie-settings-trigger
-                  className="cursor-pointer border-0 bg-transparent p-0 text-left font-[inherit] text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
-                >
-                  Cookie-Einstellungen
-                </button>
+                <FooterCookieSettingsButton />
               </li>
             </ul>
           </div>

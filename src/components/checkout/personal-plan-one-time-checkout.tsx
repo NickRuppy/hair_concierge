@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import Link from "next/link"
 
 import { StripeOfferElementsCheckout } from "@/components/checkout/stripe-offer-elements-checkout"
 import { ActiveSubscriptionDialog } from "@/components/checkout/active-subscription-dialog"
@@ -12,10 +13,6 @@ import { claimOfferPaymentOptionView } from "@/lib/analytics/offer-payment-optio
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
-import {
-  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
-  PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
-} from "@/lib/billing/personal-plan-one-time-consent-copy"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import type { CheckoutStage } from "@/lib/observability/checkout"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
@@ -72,12 +69,10 @@ export function PersonalPlanOneTimeCheckout({
   const checkoutStartedProvidersRef = useRef(new Set<string>())
   const paymentOptionViewsRef = useRef(new Set<string>())
   const paymentSelectionIndexRef = useRef(0)
-  const consentInputRef = useRef<HTMLInputElement>(null)
   const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
   const visibleRef = useRef(visible)
   const wasVisibleRef = useRef(visible)
   const firstEngagementRef = useRef(false)
-  const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [paypalReady, setPaypalReady] = useState(false)
@@ -90,7 +85,7 @@ export function PersonalPlanOneTimeCheckout({
   const stripePreparationId = stripePreparationCredential.preparationId
   const canStartPayment = Boolean(leadId && funnelSessionId)
   const stripeAvailable = stripeElementsEnabled && stripePublishableKeyPresent
-  const stripeCheckoutEnabled = stripeAvailable && visible && accepted
+  const stripeCheckoutEnabled = stripeAvailable && visible
 
   const reportStripeCustomerError = useCallback(
     ({
@@ -140,9 +135,8 @@ export function PersonalPlanOneTimeCheckout({
     if (!wasVisible || visible) return
 
     // A confirmed close discards unclaimed provider state. Reopening starts a
-    // fresh, consent-gated Stripe preparation inside the new drawer instance.
+    // fresh Stripe preparation inside the new drawer instance.
     preparedStripeCheckoutRef.current = null
-    setAccepted(false)
     setDuplicateDialogOpen(false)
     setError(null)
     setPaypalReady(false)
@@ -222,11 +216,6 @@ export function PersonalPlanOneTimeCheckout({
     },
     [checkoutAttemptId, offerContext],
   )
-
-  const requestConsent = useCallback(() => {
-    setError("Bitte bestätige zuerst die Einwilligung oben.")
-    consentInputRef.current?.focus()
-  }, [])
 
   const fetchClientSecret = useCallback(async () => {
     if (!leadId || !funnelSessionId) throw new Error("one-time checkout is not authorized")
@@ -323,10 +312,6 @@ export function PersonalPlanOneTimeCheckout({
   ])
 
   const handleBeforeStripeConfirm = useCallback(async () => {
-    if (!accepted) {
-      consentInputRef.current?.focus()
-      return { allowed: false, errorMessage: "Bitte bestätige zuerst die Einwilligung oben." }
-    }
     const preparation = preparedStripeCheckoutRef.current
     if (!checkoutAttemptId || !leadId || !funnelSessionId || !preparation) {
       setError(checkoutStartError)
@@ -371,8 +356,6 @@ export function PersonalPlanOneTimeCheckout({
       body: JSON.stringify({
         action: "claim",
         purchaseKind: "personal_plan_once",
-        consentAccepted: true,
-        consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
         leadId,
         funnelSessionId,
         preparationId: stripePreparationId,
@@ -431,7 +414,6 @@ export function PersonalPlanOneTimeCheckout({
     trackCheckoutStarted("stripe", "explicit_provider_action", funnelEventId)
     return true
   }, [
-    accepted,
     checkoutAttemptId,
     funnelSessionId,
     leadId,
@@ -465,7 +447,6 @@ export function PersonalPlanOneTimeCheckout({
         ) : null}
         <PayPalOneTimeButton
           checkoutAttemptId={checkoutAttemptId}
-          consentAccepted={accepted}
           funnelSessionId={funnelSessionId!}
           leadId={leadId!}
           onCheckoutStarted={(funnelEventId) =>
@@ -480,37 +461,23 @@ export function PersonalPlanOneTimeCheckout({
           }}
           onProviderConflict={() => setError("Eine andere Zahlungsart wurde bereits gestartet.")}
           onReady={() => setPaypalReady(true)}
-          onConsentRequired={requestConsent}
         />
       </PaymentOptionExposure>
     ) : null
 
   return (
     <div className="grid gap-4">
+      <section className="rounded-[14px] border border-[var(--brand-coral)]/25 bg-[var(--brand-coral)]/10 p-4 text-[var(--brand-plum-darkest)]">
+        <h3 className="text-base font-bold">14 Tage Geld-zurück-Garantie</h3>
+        <p className="mt-1 text-sm leading-6">
+          Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige Rückerstattung.
+        </p>
+      </section>
       <ActiveSubscriptionDialog
         accessKind="one_time"
         onOpenChange={setDuplicateDialogOpen}
         open={duplicateDialogOpen}
       />
-      <label className="flex cursor-pointer items-start gap-3 rounded-[14px] border border-border bg-white p-4 text-sm leading-5 text-[var(--brand-plum-darkest)]">
-        <input
-          ref={consentInputRef}
-          checked={accepted}
-          className="mt-0.5 size-4 shrink-0 accent-[var(--brand-plum)]"
-          onChange={(event) => {
-            markFirstEngagement()
-            // Consent changes move PayPal between the placeholder and Stripe
-            // layouts. Reset readiness before that provider iframe remounts so
-            // exposure and loading telemetry cannot retain a stale ready state.
-            if (stripeAvailable) setPaypalReady(false)
-            setAccepted(event.target.checked)
-            if (event.target.checked) setError(null)
-          }}
-          type="checkbox"
-        />
-        <span>{PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT}</span>
-      </label>
-
       {canStartPayment && paypalProviderLocked ? (
         <div className="grid gap-3">
           <p
@@ -577,21 +544,6 @@ export function PersonalPlanOneTimeCheckout({
           stripe={getOfferStripePromise()}
           visible={visible}
         />
-      ) : canStartPayment ? (
-        <div className="grid gap-3">
-          <div
-            aria-disabled="true"
-            className="flex min-h-[48px] items-center justify-between rounded-[12px] bg-black px-4 py-3 text-left text-white opacity-60"
-            data-offer-payment-placeholder="apple_pay"
-          >
-            <span className="text-base font-semibold">Apple Pay</span>
-            <span className="text-xs">Nach Einwilligung verfügbar</span>
-          </div>
-          {paypalPaymentOption}
-          <Button disabled type="button" variant="outline">
-            Karte nach Einwilligung verfügbar
-          </Button>
-        </div>
       ) : (
         <p
           className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
@@ -606,6 +558,34 @@ export function PersonalPlanOneTimeCheckout({
           {error}
         </p>
       ) : null}
+      <div className="grid gap-2 text-center text-xs leading-5 text-muted-foreground">
+        <p>
+          Zahlungsdaten verarbeitet dein gewählter Anbieter.{" "}
+          <Link
+            className="font-semibold text-[var(--brand-plum)] underline underline-offset-2"
+            href="/datenschutz"
+          >
+            Mehr zum Datenschutz.
+          </Link>
+        </p>
+        <nav
+          aria-label="Rechtliche Informationen zur Zahlung"
+          className="flex flex-wrap justify-center gap-x-3 gap-y-1"
+        >
+          <Link className="underline underline-offset-2" href="/impressum">
+            Impressum
+          </Link>
+          <Link className="underline underline-offset-2" href="/agb">
+            AGB
+          </Link>
+          <Link className="underline underline-offset-2" href="/widerruf">
+            Widerruf
+          </Link>
+          <Link className="underline underline-offset-2" href="/kontakt">
+            Kontakt
+          </Link>
+        </nav>
+      </div>
       <Button type="button" variant="outline" onClick={onRequestClose}>
         Zahlung schließen
       </Button>

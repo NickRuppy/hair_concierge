@@ -16,6 +16,7 @@ test("the €29.99 one-time product remains server-owned", () => {
     description: "Einmalige Erstellung eines persönlichen Haarplans · Kein Abo",
     name: "Persönlicher Haarplan",
     paypalCategory: "DIGITAL_GOODS",
+    plannedRegularPrice: 49.99,
     sku: "personal_plan_once",
   })
   assert.equal(

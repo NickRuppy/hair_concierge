@@ -34,6 +34,15 @@ const personalPlanOfferSource = readFileSync(
   new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
   "utf8",
 )
+const withdrawalSource = readFileSync(
+  new URL("../src/app/widerruf/page.tsx", import.meta.url),
+  "utf8",
+)
+const termsSource = readFileSync(new URL("../src/app/agb/page.tsx", import.meta.url), "utf8")
+const imprintSource = readFileSync(
+  new URL("../src/app/impressum/page.tsx", import.meta.url),
+  "utf8",
+)
 
 test("one-time pricing renders only the approved personal-plan offer", () => {
   assert.match(pricingSource, /resolvePersonalPlanPricingMode\(offerVariant\) === "one_time"/)
@@ -46,16 +55,11 @@ test("one-time pricing renders only the approved personal-plan offer", () => {
   assert.match(pricingSource, /Analyse deiner aktuellen Pflege/)
 })
 
-test("one-time Stripe preparation starts only after consent while PayPal remains available", () => {
-  assert.match(checkoutSource, /personal-plan-one-time-consent-copy/)
-  assert.match(checkoutSource, /checked=\{accepted\}/)
-  assert.match(
-    checkoutSource,
-    /const stripeCheckoutEnabled = stripeAvailable && visible && accepted/,
-  )
-  assert.match(checkoutSource, /data-offer-payment-placeholder="apple_pay"/)
-  assert.match(checkoutSource, /aria-disabled="true"/)
-  assert.match(checkoutSource, /Apple Pay[\s\S]{0,180}Nach Einwilligung verfügbar/)
+test("one-time payment methods mount immediately without a visible or client consent gate", () => {
+  assert.doesNotMatch(checkoutSource, /personal-plan-one-time-consent-copy/)
+  assert.doesNotMatch(checkoutSource, /checked=\{accepted\}/)
+  assert.match(checkoutSource, /const stripeCheckoutEnabled = stripeAvailable && visible/)
+  assert.doesNotMatch(checkoutSource, /Nach Einwilligung verfügbar/)
   assert.match(checkoutSource, /action: "prepare"/)
   assert.match(checkoutSource, /preparationToken: stripePreparationCredential\.preparationToken/)
   assert.match(checkoutSource, /action: "claim"/)
@@ -66,20 +70,21 @@ test("one-time Stripe preparation starts only after consent while PayPal remains
     /preparation\.claimFunnelEventId \?\? createFunnelEventId\(\)[\s\S]*preparation\.claimFunnelEventId = funnelEventId/,
   )
   assert.match(checkoutSource, /onBeforeConfirm=\{handleBeforeStripeConfirm\}/)
-  assert.match(checkoutSource, /consentAccepted=\{accepted\}/)
   assert.match(checkoutSource, /canStartPayment && stripeCheckoutEnabled \? \(/)
   assert.match(checkoutSource, /const paypalPaymentOption =/)
   assert.match(checkoutSource, /\{paypalPaymentOption\}/)
   assert.match(checkoutSource, /stripeSelected \? \(/)
   assert.match(checkoutSource, /Mit Karte bezahlen/)
-  assert.match(checkoutSource, /consentAccepted: true/)
-  assert.match(checkoutSource, /consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION/)
+  assert.doesNotMatch(checkoutSource, /consentAccepted/)
+  assert.doesNotMatch(checkoutSource, /consentCopyVersion/)
   assert.match(checkoutSource, /funnelSessionId/)
-  assert.match(paypalSource, /consentAccepted: boolean/)
-  assert.match(paypalSource, /if \(!consentAccepted\)/)
-  assert.match(paypalSource, /consentAccepted: true/)
-  assert.match(paypalSource, /consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION/)
+  assert.doesNotMatch(paypalSource, /consentAccepted/)
+  assert.doesNotMatch(paypalSource, /consentCopyVersion/)
   assert.match(paypalSource, /funnelSessionId/)
+  assert.doesNotMatch(paypalOrderRouteSource, /consentAccepted/)
+  assert.doesNotMatch(paypalOrderRouteSource, /consentCopyVersion/)
+  assert.doesNotMatch(stripeCheckoutRouteSource, /consentAccepted/)
+  assert.doesNotMatch(stripeCheckoutRouteSource, /consentCopyVersion/)
 })
 
 test("one-time Express containment renders PayPal without mounting Stripe", () => {
@@ -93,7 +98,7 @@ test("one-time Express containment renders PayPal without mounting Stripe", () =
     /availableProviders: \[[\s\S]*expressElementsEnabled && stripePublishableKey \? \["stripe"\] : \[\]/,
   )
   assert.match(pricingSource, /\[expressElementsEnabled, offerContext, onCheckoutOpen\]/)
-  assert.match(checkoutSource, /stripeCheckoutEnabled = stripeAvailable && visible && accepted/)
+  assert.match(checkoutSource, /stripeCheckoutEnabled = stripeAvailable && visible/)
   assert.match(
     checkoutSource,
     /canStartPayment && !stripeAvailable \? \([\s\S]*paypalPaymentOption[\s\S]*\) : canStartPayment && stripeCheckoutEnabled \? \(/,
@@ -128,7 +133,7 @@ test("PayPal pending capture continues to welcome while an expired intent stops 
   )
 })
 
-test("one-time Apple Pay does no provider work before drawer open and consent", () => {
+test("one-time Apple Pay does no provider work before the drawer opens", () => {
   assert.doesNotMatch(pricingSource, /const oneTimePrewarmEnabled =/)
   assert.doesNotMatch(pricingSource, /oneTimePrewarmEligible/)
   assert.doesNotMatch(pricingSource, /stripePreparationRefreshRequestId/)
@@ -178,7 +183,6 @@ test("one-time pricing preserves the offer-to-provider analytics journey", () =>
   assert.match(checkoutSource, /providerReady=\{paypalReady\}/)
   assert.match(checkoutSource, /data-offer-payment-placeholder="paypal"/)
   assert.match(checkoutSource, /PayPal wird geladen …/)
-  assert.match(checkoutSource, /if \(stripeAvailable\) setPaypalReady\(false\)/)
   assert.match(checkoutSource, /Boolean\(process\.env\.NEXT_PUBLIC_PAYPAL_CLIENT_ID\?\.trim\(\)\)/)
   assert.match(
     checkoutSource,
@@ -241,7 +245,7 @@ test("provider initialization is recorded only after a usable provider response"
   )
 })
 
-test("one-time PayPal reports visible payment failures once and excludes consent and conflicts", () => {
+test("one-time PayPal reports visible payment failures once and excludes control conflicts", () => {
   assert.match(paypalSource, /usePaymentRuntime/)
   assert.match(paypalSource, /useOfferTrackingContext/)
   assert.match(paypalSource, /capturePayPalOneTimeCustomerPaymentError/)
@@ -259,10 +263,7 @@ test("one-time PayPal reports visible payment failures once and excludes consent
     paypalSource.indexOf("createOrder={async"),
     paypalSource.indexOf("onApprove={async"),
   )
-  assert.match(
-    createOrderSource,
-    /if \(!consentAccepted\) \{[\s\S]*suppressNextPayPalErrorRef\.current = true[\s\S]*one-time checkout consent required/,
-  )
+  assert.doesNotMatch(createOrderSource, /consent/)
   assert.match(
     createOrderSource,
     /if \(response\.status === 409\) \{[\s\S]*onDuplicateAccess\?\.\(\)[\s\S]*onProviderConflict\?\.\(\)[\s\S]*suppressNextPayPalErrorRef\.current = true/,
@@ -319,10 +320,6 @@ test("one-time checkout marks a real first interaction and routes its nested clo
   )
   assert.match(
     checkoutSource,
-    /onChange=\{\(event\) => \{[\s\S]*markFirstEngagement\(\)[\s\S]*setPaypalReady\(false\)[\s\S]*setAccepted\(event\.target\.checked\)/,
-  )
-  assert.match(
-    checkoutSource,
     /onClick=\{\(\) => \{[\s\S]*markFirstEngagement\(\)[\s\S]*setStripeSelected\(true\)/,
   )
   assert.match(
@@ -339,6 +336,36 @@ test("one-time checkout marks a real first interaction and routes its nested clo
     checkoutSource.indexOf("const fetchClientSecret"),
   )
   assert.doesNotMatch(paymentOptionExposure, /markFirstEngagement/)
+})
+
+test("one-time checkout leads with the approved guarantee and ends with privacy and legal routes", () => {
+  const guarantee = checkoutSource.indexOf("14 Tage Geld-zurück-Garantie")
+  const paymentOptions = checkoutSource.indexOf("const paypalPaymentOption")
+  const privacy = checkoutSource.indexOf("Zahlungsdaten verarbeitet dein gewählter Anbieter")
+  assert.ok(guarantee >= 0)
+  assert.ok(paymentOptions >= 0)
+  assert.ok(privacy >= 0)
+  assert.ok(guarantee < privacy)
+  assert.match(
+    checkoutSource,
+    /Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige Rückerstattung\./,
+  )
+  assert.match(checkoutSource, /href="\/datenschutz"/)
+  assert.match(checkoutSource, /href="\/agb"/)
+  assert.match(checkoutSource, /href="\/widerruf"/)
+  assert.match(checkoutSource, /href="\/kontakt"/)
+  assert.doesNotMatch(checkoutSource, /Sicher bezahlen über deinen gewählten Zahlungsanbieter/)
+})
+
+test("one-time legal pages promise the approved refund treatment without obsolete OS text", () => {
+  assert.match(withdrawalSource, /14-Tage-Geld-zurück-Garantie/)
+  assert.match(withdrawalSource, /vollständige Rückerstattung/)
+  assert.doesNotMatch(
+    withdrawalSource,
+    /Geld-zurück-Garantie wird für diesen Einmalkauf nicht zugesagt/,
+  )
+  assert.match(termsSource, /Einmalkauf[\s\S]*14-Tage-Geld-zurück-Garantie/)
+  assert.doesNotMatch(imprintSource, /Online-Streitbeilegung|consumers\/odr/)
 })
 
 test("one-time checkout keeps each payment attempt isolated", () => {

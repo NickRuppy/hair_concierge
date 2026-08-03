@@ -62,6 +62,9 @@ async function stubPayPalSdk(page: Page) {
                 var button = document.createElement("button");
                 button.setAttribute("aria-label", "PayPal");
                 button.textContent = "PayPal";
+                button.addEventListener("click", function () {
+                  if (options.createOrder) Promise.resolve(options.createOrder()).catch(function () {});
+                });
                 container.appendChild(button);
                 return Promise.resolve();
               },
@@ -206,7 +209,9 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "checkout")
     await expect(stickyCta).toHaveAttribute("data-offer-source-section", "pricing")
     await expect(stickyCta).not.toHaveAttribute("data-offer-selected-interval")
-    await expect(stickyCta).toContainText("Haarplan · 29,99 €")
+    await expect(stickyCta).toContainText("Haarplan")
+    await expect(stickyCta.locator("s")).toHaveText("49,99 €")
+    await expect(stickyCta).toContainText("29,99 €")
     await expect(stickyCta).toContainText("Zur Zahlung")
   })
 
@@ -260,19 +265,26 @@ test.describe("@ci personal plan offer motion hooks", () => {
       await expect(checkout.locator('[data-offer-payment-placeholder="paypal"]')).toHaveCount(0)
       await expect(checkout.locator('[data-offer-payment-placeholder="apple_pay"]')).toHaveCount(0)
       await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toHaveCount(0)
-      await checkout.getByRole("checkbox").check()
+      await expect(checkout.getByRole("checkbox")).toHaveCount(0)
       await expect(checkout.locator('[data-offer-payment-placeholder="paypal"]')).toHaveCount(0)
       await expect(checkout.getByRole("button", { name: "PayPal" })).toBeVisible()
       expect(stripeRequests).toBe(0)
     })
   }
 
-  test("one-time checkout dismisses pristine state directly and protects consent or provider engagement", async ({
+  test("one-time checkout dismisses pristine state directly and protects provider engagement", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await stubPayPalSdk(page)
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      await route.fulfill({
+        body: JSON.stringify({ error: "synthetic lab response" }),
+        contentType: "application/json",
+        status: 503,
+      })
+    })
+    await page.route("**/api/paypal/create-order-intent", async (route) => {
       await route.fulfill({
         body: JSON.stringify({ error: "synthetic lab response" }),
         contentType: "application/json",
@@ -294,32 +306,30 @@ test.describe("@ci personal plan offer motion hooks", () => {
 
     await openCheckout.click()
     checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
-    let consent = checkout.getByRole("checkbox")
-    await consent.check()
+    await expect(checkout.getByRole("checkbox")).toHaveCount(0)
+    await checkout.getByRole("button", { name: "PayPal" }).click()
     await checkout.getByRole("button", { name: "Zahlung schließen" }).last().click()
     const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
     await expect(confirmation).toBeVisible()
     await page.getByRole("button", { name: "Weiter bezahlen" }).click()
-    await expect(consent).toBeChecked()
+    await expect(checkout).toBeVisible()
     await checkout.getByRole("button", { name: "Zahlung schließen" }).last().click()
     await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
     await expect(checkout).toBeHidden()
 
     await openCheckout.click()
     checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
-    consent = checkout.getByRole("checkbox")
-    await expect(consent).not.toBeChecked()
-    await consent.check()
-    await checkout.getByRole("button", { name: "Mit Karte bezahlen" }).click()
+    await expect(checkout.getByRole("checkbox")).toHaveCount(0)
     await checkout.getByRole("button", { name: "Zahlung schließen" }).last().click()
-    await expect(confirmation).toBeVisible()
+    await expect(checkout).toBeHidden()
+    await expect(confirmation).toHaveCount(0)
   })
 
   test("FAQ disclosure remains native and supports keyboard reversal", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await openPersonalPlanLab(page, "membership")
 
-    const faq = page.locator("[data-offer-faq='personal-plan-1']")
+    const faq = page.locator("[data-offer-faq='new-shampoo-not-enough']")
     const summary = faq.locator("summary")
     await expect(faq).not.toHaveAttribute("open")
     await summary.focus()
@@ -349,7 +359,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await page.getByRole("button", { name: /Monatlich/ }).click()
     await expect(page.locator("[data-offer-plan-cta-content]")).toHaveCSS("animation-name", "none")
 
-    const faq = page.locator("[data-offer-faq='personal-plan-1']")
+    const faq = page.locator("[data-offer-faq='new-shampoo-not-enough']")
     await faq.locator("summary").click()
     await expect(faq).toHaveAttribute("open", "")
     await expect(faq).toHaveCSS("transition-duration", "0s")

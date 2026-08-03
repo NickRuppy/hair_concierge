@@ -97,6 +97,54 @@ test("post-purchase hook runs after purchase persistence and before fulfillment"
   assert.deepEqual(calls, ["post_purchase", "account", "confirmation", "finalize"])
 })
 
+test("confirmation labels new purchase context separately while preserving historical consent", async () => {
+  const snapshots: unknown[] = []
+  for (const canonicalConsent of [
+    consent({
+      copy_version: "purchase_context_refund_v1",
+      consent_text: "Neutraler Kaufkontext",
+      accepted_at: "2026-08-03T10:00:00.000Z",
+    }),
+    consent({
+      copy_version: "2026-07-31",
+      consent_text: "Historische ausdrückliche Einwilligung",
+      accepted_at: "2026-07-31T10:00:00.000Z",
+    }),
+  ]) {
+    const db = createActivationDb({ consents: [canonicalConsent] })
+    const result = await activateVerifiedOneTimePayment(verifiedPayment(), {
+      supabase: db.supabase as never,
+      ensureAccount: async () => ({ userId: "user-1" }),
+      sendConfirmation: async (input) => {
+        snapshots.push(input.contractSnapshot)
+        return { confirmationReference: "customerio:message:stripe:pi_123" }
+      },
+      finalizeLockedPlan: async () => ({
+        lockedPlan: { routine: "fixed" },
+        deliveryProvider: "customerio",
+        deliveryReference: "customerio:delivery:1",
+      }),
+      now: fixedNow,
+    })
+    assert.equal(result.state, "active")
+  }
+
+  assert.deepEqual(snapshots, [
+    {
+      kind: "purchase_context",
+      text: "Neutraler Kaufkontext",
+      version: "purchase_context_refund_v1",
+      createdAt: "2026-08-03T10:00:00.000Z",
+    },
+    {
+      kind: "historical_consent",
+      text: "Historische ausdrückliche Einwilligung",
+      version: "2026-07-31",
+      acceptedAt: "2026-07-31T10:00:00.000Z",
+    },
+  ])
+})
+
 test("post-purchase hook failure leaves durable paid-pending purchase and replay retries the hook", async () => {
   const db = createActivationDb()
   const payment = verifiedPayment({

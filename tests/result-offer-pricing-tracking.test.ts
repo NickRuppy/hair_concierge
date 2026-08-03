@@ -52,6 +52,7 @@ test("checkout summaries retain the selected immutable offer", () => {
     commerceKind: "one_time",
     planName: "Haarplan",
     priceLabel: "29,99 €",
+    referencePriceLabel: "49,99 €",
     stickyLine: "Haarplan · 29,99 €",
   })
 })
@@ -137,6 +138,25 @@ test("one-time drawer is mounted only after its explicit open", async () => {
   assert.match(oneTime, /<PersonalPlanOneTimeCheckout/)
   assert.doesNotMatch(oneTime, /keepMounted/)
   assert.doesNotMatch(oneTime, /checkoutWaiting|ResolvedOpen|oneTimePrewarm/i)
+})
+
+test("one-time pricing keeps the launch anchor and trust stack in the approved order", async () => {
+  const source = await readFile(sourcePath, "utf8")
+  const oneTime = source.slice(
+    source.indexOf("function PersonalPlanOneTimePricing"),
+    source.indexOf("function MembershipResultOfferPricing"),
+  )
+
+  assert.match(source, /plannedRegularPrice[\s\S]*\.toFixed\(2\)/)
+  assert.match(
+    oneTime,
+    /Launch-Preis[\s\S]*<s[^>]*>[\s\S]*\{personalPlanOneTimeReferencePriceLabel\}[\s\S]*<\/s>[\s\S]*<strong[^>]*>€29,99<\/strong>/,
+  )
+  assert.match(
+    oneTime,
+    /14 Tage Geld-zurück-Garantie · Einmalzahlung · Kein Abo[\s\S]*PayPal · Apple Pay \(auf unterstützten Geräten\) · Visa · Mastercard[\s\S]*Zahlungsdaten verarbeitet dein gewählter Anbieter\.[\s\S]*Mehr zum Datenschutz\./,
+  )
+  assert.doesNotMatch(oneTime, /Sicher bezahlen über deinen gewählten Zahlungsanbieter\./)
 })
 
 test("pricing visibility waits for intersection and fires exactly once", () => {

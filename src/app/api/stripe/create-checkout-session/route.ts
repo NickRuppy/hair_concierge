@@ -28,7 +28,6 @@ import {
 import {
   bindPersonalPlanOneTimeConsentProviderReference,
   createPersonalPlanOneTimeCheckoutConsent,
-  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
 } from "@/lib/billing/personal-plan-one-time-consents"
 import { getStripe, getStripePriceId, resolveStripePriceId } from "@/lib/stripe/client"
 import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
@@ -66,8 +65,6 @@ export const StripeCheckoutSessionRequestSchema = z
   .object({
     interval: z.enum(["month", "quarter", "year"]).optional(),
     purchaseKind: z.literal(PERSONAL_PLAN_ONCE_KIND).optional(),
-    consentAccepted: z.literal(true).optional(),
-    consentCopyVersion: z.string().optional(),
     funnelSessionId: z.string().uuid().optional(),
     // Accept null too — the client sends `leadId: null` when there's no ?lead=
     // in the URL (resubscribe path). `.optional()` alone rejects null.
@@ -92,8 +89,6 @@ export const StripeCheckoutSessionRequestSchema = z
         checkoutAttemptId,
         checkoutSessionAttemptId,
         checkoutContext,
-        consentAccepted,
-        consentCopyVersion,
         funnelEventId,
         funnelSessionId,
         interval,
@@ -116,18 +111,10 @@ export const StripeCheckoutSessionRequestSchema = z
             path: ["interval"],
           })
         }
-        const hasCanonicalConsent =
-          consentAccepted === true &&
-          consentCopyVersion === PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION
         const hasValidActionContract =
           action === "prepare"
             ? Boolean(
-                preparationId &&
-                !checkoutAttemptId &&
-                !checkoutSessionAttemptId &&
-                !funnelEventId &&
-                consentAccepted === undefined &&
-                consentCopyVersion === undefined,
+                preparationId && !checkoutAttemptId && !checkoutSessionAttemptId && !funnelEventId,
               )
             : action === "claim"
               ? Boolean(
@@ -136,8 +123,7 @@ export const StripeCheckoutSessionRequestSchema = z
                   preparedSessionId &&
                   checkoutAttemptId &&
                   !checkoutSessionAttemptId &&
-                  funnelEventId &&
-                  hasCanonicalConsent,
+                  funnelEventId,
                 )
               : false
         if (
