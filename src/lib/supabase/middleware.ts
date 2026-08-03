@@ -30,6 +30,7 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/reconcile",
   "/api/billing/payment-monitor",
   "/api/customerio/profile-sync/reconcile",
+  "/api/customerio/waitlist-sync/reconcile",
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/one-time-activation-status",
