@@ -143,7 +143,6 @@ const row = (
   status,
   attempts: 0,
   processing_started_at: null,
-  next_attempt_at: null,
   created_at: "2026-08-03T00:00:00.000Z",
 })
 
@@ -152,7 +151,6 @@ function dependencies(
 ): WaitlistCustomerIoDispatchDependencies {
   return {
     findRows: async () => [row()],
-    findDueRows: async () => [row()],
     claimRow: async (_client, item) => ({
       ...item,
       status: "processing",
@@ -210,7 +208,7 @@ test("outbox does not claim delivered or failed ownership after a lost lease", a
   assert.equal(failed, "skipped")
 })
 
-test("outbox retries missing credentials and transient errors, but terminals 4xx failures", async () => {
+test("outbox records provider failures and terminalizes non-retryable 4xx failures", async () => {
   const failures: Array<{ permanent: boolean; error: string }> = []
   const run = (delivery: {
     identify: { ok: boolean; skipped?: boolean; status?: number; error?: string }

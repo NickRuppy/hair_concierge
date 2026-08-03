@@ -36,8 +36,9 @@ truthful and durable:
 
 Use a dedicated waitlist data model and typed waitlist analytics. Do not introduce a
 fake quiz funnel package, reuse the `leads` table, or make Customer.io the source of
-truth. Customer.io delivery is driven from a retryable Supabase outbox and the live
-automation is verified end to end before the route is considered operationally ready.
+truth. Customer.io delivery is dispatched immediately from a durable Supabase delivery
+ledger, and the live automation is verified before the route is considered operationally
+ready.
 
 ## Scope and non-goals
 
@@ -46,7 +47,8 @@ automation is verified end to end before the route is considered operationally r
 - public waitlist, optional survey, and optional WhatsApp pages;
 - shared email deliverability validation and user-visible correction/retry states;
 - idempotent Supabase signup persistence and secure survey association;
-- retryable Customer.io identify plus `waitlist_signup` and survey-completion delivery;
+- immediate outbox-backed Customer.io identify plus `waitlist_signup` and
+  survey-completion delivery;
 - live Customer.io welcome/launch automation verification and activation;
 - dedicated non-PII PostHog events and bounded waitlist UTM attribution;
 - Typeform CSP support, loading, failure, retry, and skip behavior;
@@ -71,8 +73,8 @@ automation is verified end to end before the route is considered operationally r
 - `supabase/migrations/<timestamp>_waitlist_signups_and_customerio_outbox.sql`
   - add `waitlist_signups` with unique `(campaign, normalized_email)`, consent and
     attribution fields, hashed survey-association token, and optional survey result;
-  - add a protected waitlist Customer.io outbox with claim, retry, terminal-failure,
-    and delivery state;
+  - add a protected waitlist Customer.io outbox with claim, terminal-failure, and
+    delivery state;
   - enable RLS and deny direct public table access.
 - `src/lib/waitlist/config.ts`
   - centralize every campaign/date/copy-sensitive value and the approved external
@@ -80,7 +82,7 @@ automation is verified end to end before the route is considered operationally r
 - `src/lib/waitlist/persistence.ts`, `tokens.ts`, `customerio.ts`, and
   `customerio-outbox.ts`
   - normalize and persist signups, issue/verify opaque association tokens, build
-    Customer.io messages, and dispatch/reconcile delivery from current Supabase truth.
+    Customer.io messages, and dispatch immediate delivery from current Supabase truth.
 - `src/app/api/waitlist/route.ts`
   - expose an injectable/testable POST handler; rate-limit, parse, validate email
     deliverability, save transactionally, schedule immediate outbox dispatch, and
@@ -89,11 +91,6 @@ automation is verified end to end before the route is considered operationally r
   - accept `responseId + opaqueToken`, never browser-supplied email identity; validate
     association, record idempotently, enqueue delivery, and keep the optional survey
     from affecting signup truth.
-- `src/app/api/customerio/waitlist-sync/reconcile/route.ts`, `vercel.json`
-  - add protected daily reconciliation using the existing cron-secret convention and
-    the current Vercel Hobby-plan cadence; immediate delivery remains the normal path,
-    while a bounded 25-row batch provides durable recovery after provider outages.
-
 ### User journey
 
 - `src/app/warteliste/layout.tsx`, `page.tsx`, `umfrage/page.tsx`, `danke/page.tsx`
@@ -179,10 +176,10 @@ Status: **approved by Nick on 2026-08-03**.
    normalization, token generation/verification, duplicate behavior, and injectable
    server seams. Completion: focused tests prove duplicate signup safety and reject
    forged or cross-signup survey association.
-3. **Implement retryable Customer.io projection.** Build identify/event payloads from
-   current Supabase rows, inspect `{ok, skipped, status, error}`, claim safely, retry
-   transient failures, and expose protected reconciliation. Completion: tests cover
-   success, missing credentials, transient retry, terminal failure, stale claims, and
+3. **Implement immediate Customer.io projection.** Build identify/event payloads from
+   current Supabase rows, inspect `{ok, skipped, status, error}`, claim safely, record
+   failures, and avoid any scheduled reconciliation endpoint. Completion: tests cover
+   success, missing credentials, provider failure, terminal failure, stale claims, and
    idempotent messages.
 4. **Implement the two public APIs.** Reuse email deliverability and separate signup/
    survey rate-limit buckets. Return signup success only after durable persistence;
@@ -251,8 +248,9 @@ Status: **approved by Nick on 2026-08-03**.
   welcome message is configured for subscribed profiles with an unsubscribe link.
   Segment 20 expects `waitlist_campaign = launch_1_2026_08`; the backend contract was
   aligned to that exact value. The seven dated follow-up broadcasts remain Draft, the
-  segment currently has zero profiles before deployment, and Customer.io displays a
-  payment-failed warning. No live smoke event was emitted.
+  segment currently has zero profiles before deployment. Nick confirmed on 2026-08-03
+  that the prior payment warning is sufficiently resolved and Customer.io remains fully
+  usable. No live smoke event was emitted.
 - PR #314 disposition: source/reference only; owner branch ports the useful UI and copy.
 - Durable plan and mockup: **commit** with the implementation.
 - Explorer and transient render output: **discard** after integration.

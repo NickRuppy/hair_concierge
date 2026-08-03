@@ -17,13 +17,11 @@ export type WaitlistCustomerIoOutboxRow = {
   status: "pending" | "processing" | "delivered" | "failed" | "failed_permanent"
   attempts: number
   processing_started_at: string | null
-  next_attempt_at: string | null
   created_at: string
 }
 
 export type WaitlistCustomerIoDispatchDependencies = {
   findRows: (supabase: SupabaseClient, signupId: string) => Promise<WaitlistCustomerIoOutboxRow[]>
-  findDueRows: (supabase: SupabaseClient, limit: number) => Promise<WaitlistCustomerIoOutboxRow[]>
   claimRow: (
     supabase: SupabaseClient,
     row: WaitlistCustomerIoOutboxRow,
@@ -44,11 +42,6 @@ export type WaitlistCustomerIoDispatchDependencies = {
 }
 
 type Options = { dependencies?: Partial<WaitlistCustomerIoDispatchDependencies> }
-export type WaitlistCustomerIoDispatchStats = {
-  processed: number
-  delivered: number
-  failed: number
-}
 
 export async function dispatchWaitlistCustomerIoForSignup(
   supabase: SupabaseClient,
@@ -64,21 +57,6 @@ export async function dispatchWaitlistCustomerIoForSignup(
     else if (rowOutcome === "delivered" && outcome === "skipped") outcome = "delivered"
   }
   return outcome
-}
-
-export async function dispatchWaitlistCustomerIoDue(
-  supabase: SupabaseClient,
-  options: { limit: number; dependencies?: Partial<WaitlistCustomerIoDispatchDependencies> },
-): Promise<WaitlistCustomerIoDispatchStats> {
-  const deps = { ...DEFAULT_DEPENDENCIES, ...options.dependencies }
-  const stats: WaitlistCustomerIoDispatchStats = { processed: 0, delivered: 0, failed: 0 }
-  for (const row of await deps.findDueRows(supabase, options.limit)) {
-    const outcome = await dispatchRow(supabase, row, deps)
-    if (outcome === "skipped") continue
-    stats.processed += 1
-    stats[outcome] += 1
-  }
-  return stats
 }
 
 async function dispatchRow(
@@ -127,29 +105,11 @@ function isPermanentStatus(status?: number) {
   return status !== undefined && status >= 400 && status < 500 && ![408, 409, 429].includes(status)
 }
 
-function nextAttemptAt(attempts: number) {
-  return new Date(Date.now() + Math.min(60, attempts * attempts) * 60_000).toISOString()
-}
-
 async function findRows(supabase: SupabaseClient, signupId: string) {
   const { data, error } = await supabase
     .from("waitlist_customerio_outbox")
     .select("*")
     .eq("signup_id", signupId)
-  if (error) throw error
-  return (data ?? []) as WaitlistCustomerIoOutboxRow[]
-}
-
-async function findDueRows(supabase: SupabaseClient, limit: number) {
-  const now = new Date().toISOString()
-  const stale = new Date(Date.now() - STALE_PROCESSING_MINUTES * 60_000).toISOString()
-  const { data, error } = await supabase
-    .from("waitlist_customerio_outbox")
-    .select("*")
-    .in("status", ["pending", "failed", "processing"])
-    .or(`next_attempt_at.is.null,next_attempt_at.lte.${now},processing_started_at.lte.${stale}`)
-    .order("created_at", { ascending: true })
-    .limit(limit)
   if (error) throw error
   return (data ?? []) as WaitlistCustomerIoOutboxRow[]
 }
@@ -195,7 +155,6 @@ async function markDelivered(supabase: SupabaseClient, row: WaitlistCustomerIoOu
       status: "delivered",
       attempts: row.attempts + 1,
       processing_started_at: null,
-      next_attempt_at: null,
       delivered_at: now,
       last_error: null,
       updated_at: now,
@@ -223,7 +182,6 @@ async function markFailed(
       status: terminal ? "failed_permanent" : "failed",
       attempts,
       processing_started_at: null,
-      next_attempt_at: terminal ? null : nextAttemptAt(attempts),
       last_error: errorMessage,
       updated_at: new Date().toISOString(),
     })
@@ -238,7 +196,6 @@ async function markFailed(
 
 const DEFAULT_DEPENDENCIES: WaitlistCustomerIoDispatchDependencies = {
   findRows,
-  findDueRows,
   claimRow,
   loadSignup,
   deliver: syncWaitlistSignupToCustomerIo,

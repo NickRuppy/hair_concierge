@@ -7,10 +7,6 @@
     {
       "path": "/api/customerio/profile-sync/reconcile",
       "schedule": "30 3 * * *"
-    },
-    {
-      "path": "/api/customerio/waitlist-sync/reconcile",
-      "schedule": "45 4 * * *"
     }
   ]
 }

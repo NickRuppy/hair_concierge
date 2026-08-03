@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import test from "node:test"
 
 import { EMAIL_DELIVERABILITY_REJECTION_MESSAGE } from "../src/lib/email-deliverability-shared"
@@ -11,11 +11,6 @@ import {
   createWaitlistSurveyPostHandler,
   WAITLIST_SURVEY_RATE_LIMIT,
 } from "../src/app/api/waitlist/survey/route"
-import {
-  handleWaitlistCustomerIoReconcile,
-  maxDuration,
-} from "../src/app/api/customerio/waitlist-sync/reconcile/route"
-import { waitlistCronBearerMatches } from "../src/lib/waitlist/api-auth"
 
 const request = (body: unknown, headers?: HeadersInit) =>
   new Request("https://example.com/api/waitlist", {
@@ -279,43 +274,14 @@ test("survey rejects untrusted identity fields instead of treating Typeform as a
   assert.equal(calls, 0)
 })
 
-test("waitlist Customer.io cron is protected and scheduled", async () => {
-  let calls = 0
-  const forbidden = await handleWaitlistCustomerIoReconcile(new Request("https://example.com"), {
-    supabase: {} as never,
-    cronSecret: "secret",
-    dispatchDue: async () => {
-      calls += 1
-      return { processed: 0, delivered: 0, failed: 0 }
-    },
-  })
-  assert.equal(forbidden.status, 401)
-  assert.equal(calls, 0)
-
-  const allowed = await handleWaitlistCustomerIoReconcile(
-    new Request("https://example.com", { headers: { authorization: "Bearer secret" } }),
-    {
-      supabase: {} as never,
-      cronSecret: "secret",
-      dispatchDue: async (_supabase, options) => {
-        calls += 1
-        assert.deepEqual(options, { limit: 25 })
-        return { processed: 3, delivered: 2, failed: 1 }
-      },
-    },
+test("waitlist Customer.io delivery has no scheduled reconciliation endpoint", () => {
+  const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
+    crons: Array<{ path: string }>
+  }
+  assert.equal(
+    config.crons.some(({ path }) => path === "/api/customerio/waitlist-sync/reconcile"),
+    false,
   )
-  assert.equal(maxDuration, 60)
-  assert.deepEqual(allowed, { status: 200, body: { processed: 3, delivered: 2, failed: 1 } })
-
-  const config = JSON.parse(readFileSync("vercel.json", "utf8")) as { crons: unknown[] }
-  assert.deepEqual(config.crons.at(-1), {
-    path: "/api/customerio/waitlist-sync/reconcile",
-    schedule: "45 4 * * *",
-  })
-})
-
-test("waitlist cron bearer verification rejects missing and wrong-length secrets", () => {
-  assert.equal(waitlistCronBearerMatches(null, "secret"), false)
-  assert.equal(waitlistCronBearerMatches("Bearer x", "a-much-longer-secret"), false)
-  assert.equal(waitlistCronBearerMatches("Bearer secret", "secret"), true)
+  assert.equal(existsSync("src/app/api/customerio/waitlist-sync/reconcile/route.ts"), false)
+  assert.equal(existsSync("src/lib/waitlist/api-auth.ts"), false)
 })
