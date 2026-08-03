@@ -116,7 +116,7 @@ test("selector without reference prices does not render comparison prices", () =
   assert.equal(Array.from(html.matchAll(/<s[^>]*>([^<]+)<\/s>/g)).length, 0)
 })
 
-test("personal-plan launch selector renders approved launch prices and retention copy", () => {
+test("personal-plan launch selector keeps the comparison prices and approved trust copy", () => {
   const html = renderToStaticMarkup(
     <SubscriptionPlanSelector
       onContinue={() => undefined}
@@ -129,7 +129,14 @@ test("personal-plan launch selector renders approved launch prices and retention
 
   assert.match(html, /Launch-Rabatt sichern/)
   assert.match(html, /Launch-Rabatt mit regulärem Vergleichspreis sichern/)
-  assert.match(html, /Dein Launch-Preis bleibt bis zur Kündigung erhalten\. Regulär ab €14,99\./)
+  assert.doesNotMatch(
+    html,
+    /Dein Launch-Preis bleibt bis zur Kündigung erhalten\. Regulär ab €14,99\./,
+  )
+  assert.match(html, /14 Tage Geld-zurück-Garantie · Jederzeit kündbar/)
+  assert.match(html, /PayPal · Apple Pay \(auf unterstützten Geräten\) · Visa · Mastercard/)
+  assert.match(html, /Zahlungsdaten verarbeitet dein gewählter Anbieter\./)
+  assert.match(html, /href="\/datenschutz"/)
   assert.match(html, /Jetzt starten — €19,99 im Quartal/)
   assert.match(html, /~€6,66 \/ Monat · 33% sparen/)
   assert.match(html, /~€5,83 \/ Monat · 42% sparen/)

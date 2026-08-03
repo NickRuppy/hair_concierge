@@ -8,6 +8,7 @@ export const PERSONAL_PLAN_ONCE_PRODUCT = {
   description: "Einmalige Erstellung eines persönlichen Haarplans · Kein Abo",
   name: "Persönlicher Haarplan",
   paypalCategory: "DIGITAL_GOODS",
+  plannedRegularPrice: 49.99,
   sku: PERSONAL_PLAN_ONCE_KIND,
 } as const
 

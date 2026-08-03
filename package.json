@@ -97,6 +97,7 @@
     "paypal:personal-plan-launch:validate": "tsx scripts/paypal/validate-personal-plan-launch-plans.ts",
     "posthog:personal-plan-offer-v2:dashboards": "tsx scripts/posthog/update-personal-plan-offer-v2-dashboards.ts",
     "posthog:personal-plan-offer-v3:dashboards": "tsx scripts/posthog/update-personal-plan-offer-v3-dashboards.ts",
+    "posthog:personal-plan-offer-v4:dashboards": "tsx scripts/posthog/update-personal-plan-offer-v4-dashboards.ts",
     "posthog:personal-plan-reveal-skip-insight": "tsx scripts/posthog/add-personal-plan-reveal-skip-insight.ts",
     "posthog:personal-plan-pricing-experiment-insight": "tsx scripts/posthog/ensure-personal-plan-pricing-experiment-insight.ts",
     "posthog:historical-quiz-dashboard": "tsx scripts/posthog/ensure-historical-quiz-submissions-dashboard.ts",

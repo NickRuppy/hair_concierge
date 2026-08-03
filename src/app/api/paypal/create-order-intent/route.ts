@@ -13,7 +13,6 @@ import {
   createPersonalPlanOneTimeCheckoutConsent,
   bindPersonalPlanOneTimeConsentProviderReference,
   findPersonalPlanOneTimeConsentByLeadSession,
-  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
   type PersonalPlanOneTimeCheckoutConsentRow,
 } from "@/lib/billing/personal-plan-one-time-consents"
 import { recordFunnelEvent, resolvePendingFunnelTouchValue } from "@/lib/funnel/server"
@@ -33,8 +32,6 @@ const PayPalOrderIntentRequestSchema = z
     funnelSessionId: z.string().uuid(),
     checkoutAttemptId: z.string().uuid(),
     funnelEventId: z.string().uuid().optional(),
-    consentAccepted: z.literal(true),
-    consentCopyVersion: z.literal(PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION),
   })
   .strict()
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"

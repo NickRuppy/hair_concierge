@@ -101,8 +101,6 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     ...oneTimeBase,
     checkoutAttemptId,
     funnelEventId,
-    consentAccepted: true,
-    consentCopyVersion: "2026-07-31",
   })
   const validPreparation = StripeCheckoutSessionRequestSchema.safeParse({
     ...oneTimeBase,
@@ -118,8 +116,6 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     preparedSessionId: "cs_test_personal_plan_once",
     checkoutAttemptId,
     funnelEventId,
-    consentAccepted: true,
-    consentCopyVersion: "2026-07-31",
   })
   const claimWithMembershipSessionAttempt = StripeCheckoutSessionRequestSchema.safeParse({
     ...oneTimeBase,
@@ -130,10 +126,8 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     checkoutAttemptId,
     checkoutSessionAttemptId: "3bb694df-6cdf-4615-a8c7-4a0c787c2a34",
     funnelEventId,
-    consentAccepted: true,
-    consentCopyVersion: "2026-07-31",
   })
-  const claimWithoutConsent = StripeCheckoutSessionRequestSchema.safeParse({
+  const claimWithFakeConsent = StripeCheckoutSessionRequestSchema.safeParse({
     ...oneTimeBase,
     action: "claim",
     preparationId,
@@ -141,6 +135,8 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
     preparedSessionId: "cs_test_personal_plan_once",
     checkoutAttemptId,
     funnelEventId,
+    consentAccepted: true,
+    consentCopyVersion: "2026-07-31",
   })
   const withSubscriptionInterval = StripeCheckoutSessionRequestSchema.safeParse({
     purchaseKind: "personal_plan_once",
@@ -176,7 +172,7 @@ test("accepts only one-time prepare/claim and rejects direct creation or a missi
   assert.equal(validPreparation.success, true)
   assert.equal(validClaim.success, true)
   assert.equal(claimWithMembershipSessionAttempt.success, false)
-  assert.equal(claimWithoutConsent.success, false)
+  assert.equal(claimWithFakeConsent.success, false)
   assert.equal(withSubscriptionInterval.success, false)
   assert.equal(withoutAttempt.success, false)
   assert.equal(browserAmount.success, false)
@@ -197,8 +193,6 @@ test("unsupported one-time direct creation stops at the request boundary", async
         presentation: "offer_overlay_elements",
         checkoutAttemptId,
         funnelEventId,
-        consentAccepted: true,
-        consentCopyVersion: "2026-07-31",
       }),
     }),
   )

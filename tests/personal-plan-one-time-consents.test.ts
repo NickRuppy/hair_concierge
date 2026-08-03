@@ -11,8 +11,8 @@ import {
   recordPersonalPlanOneTimeDeliveryEvidence,
 } from "../src/lib/billing/personal-plan-one-time-consents"
 import {
-  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
-  PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
+  PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION,
+  PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT,
 } from "../src/lib/billing/personal-plan-one-time-consent-copy"
 
 const consent = {
@@ -22,7 +22,7 @@ const consent = {
   paypal_capture_id: "capture-123",
 }
 
-test("consent creation stores exact versioned text and its stable hash", async () => {
+test("purchase-context creation stores the exact neutral snapshot and its stable hash", async () => {
   const state: { inserted: Record<string, unknown> | null } = { inserted: null }
   const supabase = {
     from(table: string) {
@@ -39,26 +39,31 @@ test("consent creation stores exact versioned text and its stable hash", async (
     leadId: "lead-1",
     funnelSessionId: "session-1",
     offerVariant: "personal-plan-one-time-v1",
-    acceptedAt: "2026-07-31T10:00:00.000Z",
+    createdAt: "2026-08-03T10:00:00.000Z",
   })
-  assert.equal(state.inserted?.consent_text, PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT)
+  assert.equal(state.inserted?.copy_version, "purchase_context_refund_v1")
+  assert.equal(state.inserted?.consent_text, PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT)
   assert.equal(
     state.inserted?.consent_text_sha256,
-    consentTextSha256(PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT),
+    consentTextSha256(PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT),
   )
+  assert.equal(state.inserted?.accepted_at, "2026-08-03T10:00:00.000Z")
 })
 
-test("canonical consent copy is client-safe and has the server-compatible version", () => {
+test("canonical purchase-context copy is client-safe and has the server-owned discriminator", () => {
   const copyModule = readFileSync(
     new URL("../src/lib/billing/personal-plan-one-time-consent-copy.ts", import.meta.url),
     "utf8",
   )
   assert.doesNotMatch(copyModule, /node:/)
-  assert.equal(PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION, "2026-07-31")
-  assert.equal(PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT.length > 0, true)
+  assert.equal(PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION, "purchase_context_refund_v1")
+  assert.equal(
+    PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT,
+    "Für den persönlichen Haarplan gilt ein 14-tägiges Widerrufsrecht. Innerhalb dieses Zeitraums wird der vollständige Kaufpreis auf Wunsch erstattet.",
+  )
 })
 
-test("consent creation rejects a browser-supplied or stale copy variant", async () => {
+test("purchase-context creation rejects a caller-supplied or stale copy variant", async () => {
   const supabase = { from: () => ({ insert: () => assert.fail("must not insert") }) }
   await assert.rejects(
     () =>
@@ -66,9 +71,9 @@ test("consent creation rejects a browser-supplied or stale copy variant", async 
         leadId: "lead-1",
         funnelSessionId: "session-1",
         offerVariant: "personal-plan-one-time-v1",
-        consentText: "not the approved consent",
+        purchaseContextText: "not the approved purchase context",
       }),
-    /Unsupported personal-plan one-time consent copy/,
+    /Unsupported personal-plan one-time purchase context/,
   )
 })
 
@@ -189,6 +194,21 @@ test("migration makes accepted evidence immutable and requires confirmation befo
     migration,
     /REVOKE ALL ON TABLE public\.personal_plan_one_time_checkout_consents FROM anon, authenticated/,
   )
+})
+
+test("forward-only comment migration distinguishes historical waivers from new purchase context", () => {
+  const migration = readFileSync(
+    new URL(
+      "../supabase/migrations/20260803120000_document_one_time_purchase_context.sql",
+      import.meta.url,
+    ),
+    "utf8",
+  )
+  assert.match(migration, /purchase_context_refund_v1/)
+  assert.match(migration, /historical explicit-waiver evidence/i)
+  assert.match(migration, /accepted_at[^;]+server-created purchase-context timestamp/i)
+  assert.match(migration, /consent_text[^;]+compatibility column name/i)
+  assert.doesNotMatch(migration, /UPDATE\s+public\.personal_plan_one_time_checkout_consents/i)
 })
 
 test("recovery migration fixes consent binding to null-to-user only with same-user no-op", () => {

@@ -1,18 +1,19 @@
 import { createHash } from "node:crypto"
 
 import {
-  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
-  PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
+  PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION,
+  PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT,
 } from "./personal-plan-one-time-consent-copy"
 import type { BillingOneTimePurchaseRow, SupabaseBillingClient } from "./types"
 
 export {
-  PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
-  PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
+  PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION,
+  PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT,
 } from "./personal-plan-one-time-consent-copy"
 
-const CONSENT_COPY_BY_VERSION = {
-  [PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION]: PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT,
+const PURCHASE_CONTEXT_BY_VERSION = {
+  [PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION]:
+    PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT,
 } as const
 
 export type PersonalPlanOneTimeCheckoutConsentRow = {
@@ -50,9 +51,9 @@ export type CreatePersonalPlanOneTimeConsentInput = {
   funnelSessionId: string
   offerVariant: string
   userId?: string | null
-  acceptedAt?: string
-  consentText?: string
-  copyVersion?: string
+  createdAt?: string
+  purchaseContextText?: string
+  purchaseContextVersion?: string
 }
 
 export function consentTextSha256(consentText: string): string {
@@ -63,12 +64,16 @@ export async function createPersonalPlanOneTimeCheckoutConsent(
   supabase: SupabaseBillingClient,
   input: CreatePersonalPlanOneTimeConsentInput,
 ): Promise<PersonalPlanOneTimeCheckoutConsentRow> {
-  const consentText = input.consentText ?? PERSONAL_PLAN_ONE_TIME_CONSENT_TEXT
-  const copyVersion = input.copyVersion ?? PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION
+  const purchaseContextText =
+    input.purchaseContextText ?? PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT
+  const purchaseContextVersion =
+    input.purchaseContextVersion ?? PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION
   if (
-    CONSENT_COPY_BY_VERSION[copyVersion as keyof typeof CONSENT_COPY_BY_VERSION] !== consentText
+    PURCHASE_CONTEXT_BY_VERSION[
+      purchaseContextVersion as keyof typeof PURCHASE_CONTEXT_BY_VERSION
+    ] !== purchaseContextText
   ) {
-    throw new Error("Unsupported personal-plan one-time consent copy")
+    throw new Error("Unsupported personal-plan one-time purchase context")
   }
   const { data, error } = await supabase
     .from("personal_plan_one_time_checkout_consents")
@@ -78,10 +83,12 @@ export async function createPersonalPlanOneTimeCheckoutConsent(
       user_id: input.userId ?? null,
       product_kind: "personal_plan_once",
       offer_variant: input.offerVariant,
-      copy_version: copyVersion,
-      consent_text: consentText,
-      consent_text_sha256: consentTextSha256(consentText),
-      accepted_at: input.acceptedAt ?? new Date().toISOString(),
+      copy_version: purchaseContextVersion,
+      consent_text: purchaseContextText,
+      consent_text_sha256: consentTextSha256(purchaseContextText),
+      // Compatibility column: for purchase-context rows this is the server-created
+      // context timestamp, not evidence of a customer acceptance action.
+      accepted_at: input.createdAt ?? new Date().toISOString(),
     })
     .select("*")
     .single()

@@ -125,12 +125,6 @@ export function SubscriptionPlanSelector({
           )
         })}
       </div>
-      {pricingCatalog === "personal_plan_launch_v1" ? (
-        <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">
-          Dein Launch-Preis bleibt bis zur Kündigung erhalten. Regulär ab €14,99.
-        </p>
-      ) : null}
-
       <Button
         type="button"
         aria-disabled={busy || undefined}
@@ -168,9 +162,16 @@ export function SubscriptionPlanSelector({
       <span className="sr-only" role="status" aria-live="polite">
         {busy ? (busyLabel ?? "Zahlungsoptionen werden vorbereitet …") : ""}
       </span>
-      <p className="mt-4 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
-        14 Tage Geld-zurück-Garantie · Details in den Bedingungen
-      </p>
+      <div className="mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
+        <p>14 Tage Geld-zurück-Garantie · Jederzeit kündbar</p>
+        <p>PayPal · Apple Pay (auf unterstützten Geräten) · Visa · Mastercard</p>
+        <p>
+          Zahlungsdaten verarbeitet dein gewählter Anbieter.{" "}
+          <a className="underline underline-offset-2" href="/datenschutz">
+            Mehr zum Datenschutz.
+          </a>
+        </p>
+      </div>
     </>
   )
 }

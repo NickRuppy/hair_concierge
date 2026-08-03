@@ -122,7 +122,8 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.doesNotMatch(analysisSource, /MEIN HAARPROFIL ANSEHEN/)
   assert.doesNotMatch(resultsSource, /Wir prüfen deinen Zugang/)
   assert.doesNotMatch(resultsSource, /Dein Ergebnis wird geöffnet/)
-  assert.match(planSelectorSource, /Details in den Bedingungen/)
+  assert.match(planSelectorSource, /14 Tage Geld-zurück-Garantie · Jederzeit kündbar/)
+  assert.match(planSelectorSource, /Zahlungsdaten verarbeitet dein gewählter Anbieter/)
   assert.match(socialImageSource, /MÖGLICHES PFLEGEZIEL/)
   assert.match(privacySource, /persönliche Auswertung und Routine/)
   assert.match(termsSource, /Auswertungen, Routinen, Produktempfehlungen/)
@@ -146,12 +147,9 @@ test("legal pages distinguish the one-time personal plan from memberships", () =
 
   assert.match(termsSource, /Einmalkauf persönlicher Haarplan/)
   assert.match(termsSource, /kein Abonnement und keine automatische Verlängerung/)
-  assert.match(termsSource, /für Mitgliedschaften angebotenen freiwilligen\s+Geld-zurück-Garantie/)
+  assert.match(termsSource, /14-Tage-Geld-zurück-Garantie/)
   assert.match(termsSource, /Beim Einmalkauf des\s+persönlichen Haarplans/)
-  assert.match(
-    withdrawalSource,
-    /Eine freiwillige\s+Geld-zurück-Garantie wird für diesen Einmalkauf nicht zugesagt/,
-  )
+  assert.match(withdrawalSource, /14-Tage-Geld-zurück-Garantie/)
   assert.match(privacySource, /Mitgliedschaft oder eines Einmalkaufs/)
   assert.match(privacySource, /Mitgliedschaften und Einmalkäufe/)
 })

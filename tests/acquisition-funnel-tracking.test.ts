@@ -102,7 +102,6 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
     "src/components/landing/how-it-works.tsx",
     "src/components/landing/final-cta.tsx",
     "src/components/landing/sticky-quiz-cta.tsx",
-    "src/components/landing/site-footer.tsx",
   ]) {
     const source = read(path)
     const quizLinks = source.match(/<Link\b(?=[^>]*href="\/quiz")[^>]*>/g) ?? []
@@ -112,6 +111,13 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
       assert.match(link, /prefetch=\{false\}/, `${path} /quiz links should opt out of prefetch`)
     }
   }
+
+  const footerSource = read("src/components/landing/site-footer.tsx")
+  const footerLinksSource = read("src/components/landing/footer-links.tsx")
+  assert.match(footerSource, /footerProductLinks\.map/)
+  assert.match(footerSource, /<FooterLink \{\.\.\.item\} \/>/)
+  assert.match(footerLinksSource, /href: "\/quiz", label: "Haaranalyse starten", prefetch: false/)
+  assert.match(footerLinksSource, /<Link href=\{href\} prefetch=\{prefetch\}/)
 })
 
 test("shared loader may warm Stripe.js, but pricing starts checkout only on explicit open", () => {
