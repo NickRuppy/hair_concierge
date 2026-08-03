@@ -120,8 +120,15 @@ export function createWaitlistPostHandler(overrides: Partial<WaitlistPostDepende
         surveyAlreadyCompleted: signup.surveyAlreadyCompleted,
         ...(signup.surveyToken ? { surveyToken: signup.surveyToken } : {}),
       })
-    } catch {
+    } catch (error) {
       // Signup errors deliberately contain no request details: names and emails are PII.
+      console.error(
+        `[waitlist] signup persistence failed: ${safePersistenceErrorMessage(error, [
+          parsed.data.firstName,
+          parsed.data.email,
+          deliverability.normalized,
+        ])}`,
+      )
       return NextResponse.json(
         { error: "Dein Platz konnte nicht gespeichert werden." },
         { status: 500 },
@@ -134,4 +141,30 @@ export const POST = createWaitlistPostHandler()
 
 function requestIp(request: Request) {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+}
+
+function safePersistenceErrorMessage(error: unknown, privateValues: string[]) {
+  const rawMessage =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" &&
+          error !== null &&
+          "message" in error &&
+          typeof error.message === "string"
+        ? error.message
+        : "Unknown persistence error"
+
+  return privateValues
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .sort((left, right) => right.length - left.length)
+    .reduce(
+      (message, value) => message.replace(new RegExp(escapeRegExp(value), "giu"), "[redacted]"),
+      rawMessage,
+    )
+    .slice(0, 500)
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }

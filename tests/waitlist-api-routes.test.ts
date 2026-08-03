@@ -205,14 +205,26 @@ test("completed duplicate signup returns no dead survey token", async () => {
 })
 
 test("waitlist signup reports persistence failures without PII", async () => {
+  const originalConsoleError = console.error
+  const logs: string[] = []
+  console.error = (...values: unknown[]) => logs.push(values.join(" "))
   const { handler } = signupHandler({
     saveWaitlistSignup: async () => {
-      throw new Error("ada@example.com database failure")
+      throw { message: "Ada <ada@example.com> database failure" }
     },
   })
-  const response = await handler(request(signupBody))
-  assert.equal(response.status, 500)
-  assert.deepEqual(await response.json(), { error: "Dein Platz konnte nicht gespeichert werden." })
+  try {
+    const response = await handler(request(signupBody))
+    assert.equal(response.status, 500)
+    assert.deepEqual(await response.json(), {
+      error: "Dein Platz konnte nicht gespeichert werden.",
+    })
+  } finally {
+    console.error = originalConsoleError
+  }
+  assert.equal(logs.length, 1)
+  assert.match(logs[0], /database failure/)
+  assert.doesNotMatch(logs[0], /Ada|ada@example\.com/)
 })
 
 test("survey accepts only opaque token association and schedules delivery idempotently", async () => {
