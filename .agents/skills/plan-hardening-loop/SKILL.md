@@ -1,6 +1,6 @@
 ---
 name: plan-hardening-loop
-description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups for any user-facing change, obtain a counterpart-model review, or align the designed user journey before implementation. For user-facing work, this skill ends only after mockup review and explicit user-journey sign-off; every plan ends at an approved implementation handoff. Use implementation-loop for execution.
+description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups or conditional runnable prototypes for user-facing work, obtain a counterpart-model review, or align the designed user journey before implementation. For user-facing work, this skill ends only after evidence review and explicit user-journey sign-off; every plan ends at an approved implementation handoff. Use implementation-loop for execution.
 ---
 
 # Plan Hardening Loop
@@ -9,7 +9,7 @@ Turn fuzzy intent or an existing plan into one chosen, evidence-grounded impleme
 
 ## Boundary
 
-- This skill owns discovery, options, decisions, user-facing mockups, plan writing, counterpart review, user-journey sign-off, and revision.
+- This skill owns discovery, options, decisions, user-facing evidence, plan writing, counterpart review, user-journey sign-off, and revision.
 - It does not implement the plan. Handoff execution to `implementation-loop`.
 - Keep external evidence, internal product logic, and reconciliation separate as defined in `AGENTS.md`.
 - Do not use it for a tiny non-user-facing change that does not need a durable plan. Any user-facing change still uses the mockup and journey gates even when the eventual code diff is small.
@@ -42,24 +42,29 @@ Recommend one option when the evidence supports it. After every 2-4 substantive 
 
 Completion criterion: every consequential fork has one chosen direction or one explicit unresolved user decision.
 
-## 3. Make every user-facing change visible
+## 3. Make consequential behavior concrete
 
 For any user-facing work, create at least one reviewable mockup during planning and show it to the user before finalizing the plan. Do this even for apparently small copy, hierarchy, spacing, state, or interaction changes; put the proposal in context instead of asking the user to imagine it from prose.
 
-Choose the lightest artifact that makes the decision real:
+State the decision the artifact must resolve, then choose the lightest evidence that makes it real:
 
 - annotated current/proposed screenshot for a small change to an existing surface
 - wireframe for information hierarchy or a multi-step flow
-- lightweight HTML prototype for layout, responsive behavior, or interaction
-- 2-3 comparable variants when a meaningful visual or interaction fork remains
+- rendered lightweight HTML for layout or responsive behavior
+- 2-3 comparable mockup variants when a meaningful visual fork remains
+- the `prototype` skill only when interaction, changing state, or a logic model cannot be judged reliably from a static artifact
+
+Do enough grilling to name the prototype question and its decision criterion before invoking `prototype`. A prototype is a higher-fidelity branch of this mockup step, not an opening phase or an automatic requirement. Use its UI branch for interactive or stateful experience questions and its logic branch for state transitions, business rules, data shapes, or interface behavior. Return the prototype's answer to this loop, record the selected behavior in the plan, and require production implementation to rewrite retained behavior with normal tests and safeguards.
+
+For backend-only planning, skip the user-facing mockup ladder. Invoke `prototype` only when operating a logic model will settle a consequential implementation decision more reliably than discussion or a static diagram.
 
 Ground mockups in the actual product surface when one exists. Inspect and capture the current surface first, then annotate that screenshot or recreate the proposed state as rendered lightweight HTML. For copy-only changes, show the before/after wording inside the real component layout at a representative viewport. A Markdown quote, ASCII sketch, detached copy sample, or prose description does not count as a mockup for an existing surface.
 
 Use realistic content and German UI copy. Show mobile and desktop when the experience materially differs, and include loading, empty, error, confirmation, or recovery states when they affect comprehension or trust.
 
-Mockups are planning artifacts, not production implementation. Keep durable ones in the task worktree and transient previews outside the repository. Present them to the user, incorporate feedback, and record the selected direction in the plan. Purely backend work may skip mockups only when the plan explicitly states that no user-facing surface, copy, timing, or feedback changes.
+Mockups and prototypes are planning artifacts, not production implementation. Keep durable decision evidence in the task worktree and transient previews outside the repository. Present the relevant evidence to the user, incorporate feedback, record what it proved, and record the selected direction in the plan. Purely backend work may skip user-facing evidence only when the plan explicitly states that no user-facing surface, copy, timing, or feedback changes.
 
-Completion criterion: the user has seen the relevant experience, mockup feedback is reflected in the chosen direction, and mockup review is recorded as confirmed for user-facing work.
+Completion criterion: the user has seen or operated the relevant experience, feedback and prototype findings are reflected in the chosen direction, and evidence review is recorded as confirmed for user-facing work. Any logic prototype also has its finding and disposition recorded.
 
 ## 4. Write or update the plan
 
@@ -117,7 +122,7 @@ Report:
 - plan path
 - review artifact path, if intentionally retained
 - accepted, rejected, deferred, and decision-required findings
-- mockup review status and selected artifact or direction
+- evidence review status and selected artifact or direction
 - user-journey sign-off status and any corrections incorporated
 - residual risks
 - artifact disposition: commit, archive, or discard
