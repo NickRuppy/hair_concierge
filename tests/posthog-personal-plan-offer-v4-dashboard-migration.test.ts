@@ -6,12 +6,22 @@ import { join } from "node:path"
 import test from "node:test"
 
 import {
+  afterFingerprints,
   fingerprintInsight,
   resourceIds,
   runMigration,
   transformInsight,
   type Insight,
 } from "../scripts/posthog/update-personal-plan-offer-v4-dashboards"
+
+test("production migration records every reviewed v4 fingerprint for safe retries", () => {
+  assert.deepEqual(
+    Object.keys(afterFingerprints)
+      .map(Number)
+      .sort((left, right) => left - right),
+    [...resourceIds].sort((left, right) => left - right),
+  )
+})
 
 function fixtureBlocks(source: string) {
   const prelude = source.match(/const b2V2Prelude = `([\s\S]*?)`\n\nconst b2V4Prelude/)?.[1]

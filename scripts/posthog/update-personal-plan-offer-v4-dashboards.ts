@@ -30,7 +30,16 @@ const beforeFingerprints: Record<number, string> = {
   5033903: "2966b30b4a90dca7c7b1e5025ef29956bc8e65482ce1c09cbf8d1941204318e9",
 }
 
-const afterFingerprints: Partial<Record<number, string>> = {}
+export const afterFingerprints: Partial<Record<number, string>> = {
+  5235347: "630ca8e80913f6da5a762c4092539100a6115863d363b5b95ecb832f7f2fdefe",
+  5235348: "16386d5ef718a9dac0afd003e3eee0de967a7049d917ae6470a8e072530a6afa",
+  5235350: "06ebe53d149f204dd87f5d3f560224db4d599a0bcebabbe16e321bee935593da",
+  5245339: "d26ebbdf76e9c4e1eb3aa4ef1d3380171520ac12f512d63a73836c9d4175c950",
+  5250265: "b5d09289ae002d21199ee6714dfe30239e3101e9979500618c8494de4c0c4ac0",
+  5233190: "94fb0b352781051218423a9a6e7566d9e82de14700d1af0f5d4ff66a090e0f42",
+  5235351: "fa3617da312d4f3a2d19c016063874462955ba925ae66e819121c3bcd74f2299",
+  5033903: "2966b30b4a90dca7c7b1e5025ef29956bc8e65482ce1c09cbf8d1941204318e9",
+}
 
 const b2V2Prelude = `WITH section_events AS (
   SELECT
