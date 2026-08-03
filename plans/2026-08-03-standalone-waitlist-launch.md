@@ -251,6 +251,9 @@ Status: **approved by Nick on 2026-08-03**.
   segment currently has zero profiles before deployment. Nick confirmed on 2026-08-03
   that the prior payment warning is sufficiently resolved and Customer.io remains fully
   usable. No live smoke event was emitted.
+- Live migration preflight after removing scheduled reconciliation (2026-08-03): the
+  linked production ledger contains `20260803120000`. Its already-applied SQL remains
+  unchanged; the application no longer configures or serves a waitlist retry cron.
 - PR #314 disposition: source/reference only; owner branch ports the useful UI and copy.
 - Durable plan and mockup: **commit** with the implementation.
 - Explorer and transient render output: **discard** after integration.
