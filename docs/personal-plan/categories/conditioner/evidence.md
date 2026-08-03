@@ -70,6 +70,12 @@ Product implication: Conditioner provides baseline slip, but a larger persistent
 
 Product implication: a light Conditioner can still have high repair support. Do not automatically make Conditioner richer because repair need is high, and contextualize elasticity with other damage/dryness inputs.
 
+### Chemical-treatment severity supports a coarse proxy, not an exact universal scale
+
+**Evidence: moderate for the broad ordering; weak for exact numeric equivalence.** Hair-fibre studies and scientific reviews support a coarse ordering in which non-oxidative temporary/direct colour is generally least structurally aggressive, ordinary oxidative permanent colour and oxidative perming both create material fibre changes, and bleaching/lightening plus strong chemical straightening/relaxing are high-damage processes. Exposure strength, pH, heat, processing time, repetition, overlapping treatments, and starting fibre condition can outweigh the category label.
+
+Product implication: the V1 internal ordering `colored = 2`, `permed = 2`, `chemically_straightened = 3`, and `lightened = 4` is acceptable as a conservative deterministic proxy. It is not a scientific measurement scale. `chemically_straightened` remains deliberately generalized because V1 does not ask whether the process used thioglycolate, hydroxide relaxer, or heat-assisted acid smoothing; some of those protocols may equal or exceed bleaching damage. Repeated or combined treatment remains visible in the underlying evidence/reason payload even when the numeric treatment contribution is capped.
+
 ## Abbey Yung technique review
 
 The verified primary source is Abbey Yung's video “How to Apply Conditioner for WAY Better Results (The Abbey Yung Method Hacks: Step 6).” A full platform transcript was not available during review, so reconstructed steps must not be presented as exact quotations.
@@ -105,6 +111,10 @@ Conditioner-associated burning, itching, rash, swelling, or persistent scalp sym
 | [Robbins and Kamath: wet/dry combing](https://pubmed.ncbi.nlm.nih.gov/17728947/) | Laboratory hair-fibre study | Wet-hair vulnerability and Conditioner-associated breakage reduction | Hair tresses, not long-term consumer outcomes |
 | [Scalp product allergen systematic review](https://pubmed.ncbi.nlm.nih.gov/35318978/) | Systematic review | Reaction/safety boundary | Does not rank normal Conditioner fit |
 | [Abbey Yung official video](https://www.youtube.com/watch?v=WSA-Lfa620o) | Creator technique source | Technique reference requested for review | No usable transcript; not scientific efficacy evidence |
+| [Kwon et al., Heliyon 2024](https://doi.org/10.1016/j.heliyon.2024.e37871) | Repeated-dyeing fibre study | Permanent oxidative colour causes cumulative nanoscale damage with repetition | Ex-vivo hair, not a universal consumer damage score |
+| [Inoue et al., Journal of Cosmetic Science 2002](https://pubmed.ncbi.nlm.nih.gov/12512011/) | Hair-fibre study | Bleaching and perming produce time-dependent labile protein changes | Does not establish one universal cross-treatment ranking |
+| [Barreto et al., 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8280444/) | Scientific review | Straightening chemistries differ; overlapping incompatible processes increase breakage risk | Review spans heterogeneous products and protocols |
+| [Lima et al., 2023](https://journals.iucr.org/j/issues/2023/04/00/tj5033/tj5033.pdf) | Controlled hair-tress study | Heat-assisted acid straightening can cause severe fibre changes, especially with bleaching | One protocol; mechanistic evidence, not a population outcome |
 
 ## Open evidence gaps
 

@@ -1,6 +1,6 @@
 # Personal Plan App V1 — Implementation Plan
 
-**Status:** not implementation-ready; dedicated plan-engine architecture selected, detailed shampoo specification confirmed, remaining category grilling in progress
+**Status:** not implementation-ready; dedicated plan-engine architecture selected, detailed Shampoo and Conditioner specifications confirmed, remaining category grilling in progress
 
 **Outcome:** deliver the paid personal-plan promise as a deterministic three-stage plan and a lightweight daily-use app
 
@@ -54,10 +54,10 @@ The offer artifact's `locked_plan` is preview/provenance input, not the final re
 | Category | Current status | Implementation authority |
 |---|---|---|
 | Shampoo | Detailed behavior confirmed: inclusion, scalp-concern precedence, role splitting, cadence, owned-product handling, catalog selection, response check, and escalation | `docs/personal-plan/categories/shampoo/decision.md` plus its linked evidence and the cross-category computation spec |
-| Conditioner | Inclusion, target axes, event cadence, multi-product allocation, application guidance, and initial fit rules recorded; remaining exact precedence/catalog reconciliation is still open | `docs/personal-plan/categories/conditioner/decision.md` plus its linked evidence |
+| Conditioner | Detailed category behavior confirmed: inclusion, target axes, functional needs, event cadence, multi-product allocation, layered product-fit verdicts, application guidance, fallbacks, and fixtures. Shared reason salience and cross-category function ownership are intentionally deferred until every category is specified. | `docs/personal-plan/categories/conditioner/decision.md` plus its linked evidence |
 | Remaining V1 categories | Inclusion and broad behavior are still provisional until grilled with Nick | To be added category by category |
 
-This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo is the first category-specific template; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
+This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo and Conditioner are the first confirmed category specifications; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
 
 ## 3. Architectural invariants
 
@@ -352,6 +352,8 @@ The plan is complete when all required inputs and category decisions are persist
 **Files:** `types.ts`, `compute.ts`, confirmed category modules, selection, check-in scheduling, tests.
 
 - Compose plan-owned category modules into `PlanCategoryDecision[]`; do not adapt or call runtime CareBalance as the authority.
+- Run the confirmed two-pass functional-coverage ledger: category modules expose their local core fit plus primary/supporting capabilities, then `compute.ts` fills material uncovered plan needs in deterministic priority order without a combinatorial optimizer.
+- Keep Conditioner category-specific allocation simple: at most one new exact recommendation; several suitable owned products may be confirmed as interchangeable for the same category cadence without an invented per-product rotation.
 - Reconcile owned matched, pending, absent, override, shopping, and acquired states.
 - Keep exact recommendation stable from saved choices unless invalid/discontinued/excluded.
 - Produce compact German explanation data from reason codes; UI copy remains a presentation mapping.
@@ -568,7 +570,7 @@ The plan is complete when all required inputs and category decisions are persist
 - `plans/2026-08-02-personal-plan-app-implementation-v2.md`: **commit now as the living category-by-category planning checkpoint; it is not implementation-ready until the open gates are closed**.
 - `docs/personal-plan/categories/README.md`: **commit** as the category evidence/decision convention.
 - `docs/personal-plan/categories/shampoo/evidence.md` and `decision.md`: **commit** as the confirmed Shampoo evidence and product-policy checkpoint.
-- `docs/personal-plan/categories/conditioner/evidence.md` and `decision.md`: **commit** as the current Conditioner evidence and in-progress product-policy checkpoint.
+- `docs/personal-plan/categories/conditioner/evidence.md` and `decision.md`: **commit** as the confirmed Conditioner evidence and product-policy checkpoint.
 - reviewed HTML mockups and selected option mockup: **commit**.
 - rendered reference screenshots: **commit** if still the visual comparison oracle.
 - superseded 2026-07-30 plan: **commit** with superseded notice for provenance, or **discard** before PR if Nick prefers a single plan artifact; decide before implementation handoff.
@@ -576,7 +578,7 @@ The plan is complete when all required inputs and category decisions are persist
 
 ## 11. Open gates
 
-1. Complete the same detailed specification pass for conditioner and every remaining V1 category; styling remains explicitly deferred.
+1. Complete the same detailed specification pass for every remaining V1 category; styling remains explicitly deferred. Afterward, lock shared reason salience and the cross-category function-ownership matrix.
 2. Visually review the updated v12 states at 375 px: routine-derived Bedarfsplan cards, budget/exclusions, optional-present/optional-empty Bedarfsplan, confirmed-product-only days, and tracker-grounded progress.
 3. Confirm the final designed-user-journey walkthrough.
 4. Run the required whole-plan counterpart review after the category specifications are complete and incorporate only verified findings.

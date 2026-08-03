@@ -1,6 +1,6 @@
 # Personal Plan Computation Specification
 
-**Status:** computation grilling in progress; Stage 1 shape and the detailed shampoo category are confirmed, conditioner inclusion is confirmed but its detailed module is still pending
+**Status:** computation grilling in progress; Stage 1 shape and the detailed Shampoo and Conditioner categories are confirmed, remaining category and cross-category passes are pending
 **Scope:** deterministic computation behind the reviewed three-stage personal-plan journey
 **Visual direction:** `plans/mockups/2026-07-30-promise-product-journey.html` and selected calendar Option 1 in `plans/mockups/2026-08-01-day-type-calendar-logging-options.html`
 
@@ -80,6 +80,38 @@ The current deterministic engine contains useful prior logic for these reusable 
 - `ShampooCadenceAssessment`: scalp-led target wash-frequency range, modified conservatively for fiber fragility and meaningful routine load.
 
 The personal-plan implementation recycles the useful rules into one `PlanNeedAssessment` computed once in `src/lib/personal-plan/needs.ts`. Category modules consume this assessment plus the complete `PlanProfile`; they do not call CareBalance, the legacy `InterventionPlan`, or Chat request context. The page only renders the saved decisions and never recomputes them.
+
+### Confirmed plan-wide functional coverage
+
+Goals and current problems belong to the whole plan, not independently to one product category. Product categories expose the jobs they can perform; the portfolio computation coordinates those capabilities without making category modules call or recursively optimize one another.
+
+Use one deterministic two-pass coverage ledger:
+
+1. **Category-local pass:** each category computes its own need tier, core target, cadence, candidate fit, and the plan-level functional needs it can resolve or support. No category claims exclusive ownership yet.
+2. **Portfolio pass:** start with included categories and their best core-fit assignments, record the functional needs already covered, then inspect remaining needs in priority order. Add or prioritize another eligible category only when it materially covers an unmet need. Stop when all material needs are covered, no valid category can cover the remainder, or only explicitly optional support remains.
+
+The coverage distinction is intentionally small:
+
+- `primary`: the category can genuinely perform the job;
+- `supporting`: the category can help but must not be presented as the complete solution when stronger primary coverage is required.
+
+Functional-need priority is derived once from the lossless profile:
+
+- `3`: a current problem and a matching goal;
+- `2`: a current problem without the matching goal;
+- `1`: a goal without the current problem.
+
+Selection precedence is:
+
+1. safety, exclusions, and hard eligibility;
+2. the category's core product fit;
+3. functional-benefit coverage within that valid core fit;
+4. plan-wide coverage, preferring an already-included sufficient product over an unnecessary extra product;
+5. deterministic tie-breakers such as current ownership, explicit user choice, budget, and availability.
+
+This is not a combinatorial product optimizer. Category modules stay independently testable, and `compute.ts` performs one ordered coverage pass over their outputs. The same product may cover several needs, and the plan must not add a second product merely to duplicate an already-satisfied function. Several products are appropriate only when they have distinct plan jobs or the user explicitly confirms a rotation.
+
+The final primary/supporting ownership matrix is completed after Conditioner, Leave-in, Mask, Oil, and later Styling have each been specified. Until then, each category decision records only the functions that category can legitimately resolve or support; it must not invent behavior for an unfinished category.
 
 ### New logic to add
 
@@ -233,13 +265,14 @@ interface SevenDayProjection {
 - Products that are not assigned to a role remain visible in Stage 2 as unassigned. They are never silently inserted into day instructions.
 - The default result recommends the cleanest valid assignment; the user may keep or reassign a product through the existing non-blocking override behavior.
 - A pending product cannot satisfy a role until reviewed. It remains visible as `pending_review`, while the role is shown as unresolved or covered by another verified product.
+- Conditioner is the V1 category-specific exception to fixed per-product allocation: recommend at most one new exact Conditioner, but allow several separately evaluated suitable owned Conditioners to remain active as interchangeable choices for the same post-wash role. Conditioner cadence remains category-level and no primary/secondary frequency split is invented.
 
 ### Total category cadence and product allocation
 
 - Category computation owns the total required cadence. Product assignments partition that total; they do not create additional category events.
 - For three planned wash events, valid Shampoo allocations include one product `3`, two products `2 + 1`, or three products `1 + 1 + 1`.
 - The sum of active product assignments must cover the computed total exactly unless a documented recipe intentionally uses more than one product in the same event.
-- Conditioner follows the same rule: the category default is one Conditioner need after each eligible wash, while one or more confirmed Conditioners may divide those occurrences.
+- Conditioner keeps the same category-total invariant but not a forced product split: there is one Conditioner occurrence after each eligible wash, and any one confirmed suitable active Conditioner may fill that occurrence.
 - Current inventory frequency and recommended plan-assignment frequency remain separate facts.
 - Any change to total cadence or its product allocation creates a proposed successor and requires confirmation before changing the active plan.
 
@@ -408,7 +441,7 @@ An explicitly empty `scalpConcerns[]` is valid. Missing `scalpOiliness`, missing
 - `short` (chin/jaw length), `medium`, `long`, and `very_long`: always `basis`.
 - `very_short`: never automatic basis; `optional` only with a material care signal, otherwise `not_needed`.
 - The exact conditioner weight/direction still adapts to thickness, density, texture, surface, elasticity/balance, chemical treatment, damage, concerns, goals, and volume direction.
-- A mask can replace conditioner within a specific compiled day recipe only when the category/product protocol says so. That recipe-level substitution does not remove conditioner as a general Bedarfsplan category.
+- Conditioner remains the post-shampoo baseline in V1. Mask, Bondbuilder, Oil, or another treatment does not replace it by default. Only a narrowly defined future Leave-in exception may suppress it in a specific recipe, and that decision belongs to the Leave-in category specification.
 
 ### Need-tier mapping
 
@@ -498,7 +531,7 @@ This is intentionally smaller than a universal routine DSL. Category defaults pr
 
 - shampoo: wet hair; apply to scalp; massage; rinse;
 - conditioner: after shampoo; lengths/ends; rinse after a short product-directed dwell;
-- rinse-out mask: after shampoo; lengths/ends; default replaces conditioner unless verified directions say otherwise;
+- rinse-out mask: after shampoo in the verified product-directed order; it does not replace Conditioner by default in V1;
 - leave-in: after wash on the stage supported by its structured metadata; do not rinse;
 - heat protectant: before the heat event, covering exposed hair;
 - deep-cleansing shampoo: replaces normal shampoo in that wash, followed by appropriate length conditioning;
