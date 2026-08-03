@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
 import { WaitlistForm } from "@/components/waitlist/waitlist-form"
+import { WaitlistLandingMilestone } from "@/components/waitlist/waitlist-landing-milestone"
 import { WaitlistShell } from "@/components/waitlist/waitlist-shell"
 import { FOUNDING_COHORT_SIZE, LAUNCH_DATE_LABEL } from "@/lib/waitlist/config"
 
@@ -34,6 +35,8 @@ const PROOF = [
 export default function WaitlistPage() {
   return (
     <WaitlistShell>
+      <WaitlistLandingMilestone />
+
       <section>
         <p className="mb-4 font-mono text-xs font-medium uppercase tracking-wider text-[var(--brand-plum)]">
           Warteliste · Start am {LAUNCH_DATE_LABEL}
