@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Standalone Warteliste – Journey-Mockup</title>
+    <style>
+      :root {
+        --ink: #332d2b;
+        --muted: #726a67;
+        --plum: #4b2b72;
+        --plum-soft: #f1ebf7;
+        --coral: #d95f6d;
+        --coral-dark: #b84754;
+        --paper: #fdfbf9;
+        --card: #ffffff;
+        --line: #e8e0dc;
+        --success: #248451;
+        --whatsapp: #25d366;
+        --shadow: 0 16px 42px rgba(51, 45, 43, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #eee9e6;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .review-bar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px;
+        background: rgba(51, 45, 43, 0.96);
+      }
+
+      .review-bar a {
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        padding: 7px 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 12px;
+      }
+
+      .review-bar a.active {
+        background: white;
+        color: var(--ink);
+      }
+
+      .canvas {
+        width: min(100%, 820px);
+        min-height: calc(100vh - 48px);
+        margin: 0 auto;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      header {
+        display: flex;
+        justify-content: center;
+        border-bottom: 1px solid var(--line);
+        padding: 17px 20px;
+        background: rgba(253, 251, 249, 0.96);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font:
+          600 22px Georgia,
+          serif;
+        color: #2d1947;
+      }
+      .drop {
+        display: grid;
+        place-items: center;
+        width: 27px;
+        height: 27px;
+        border-radius: 8px;
+        color: white;
+        background: #2d1947;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 22px 28px;
+      }
+      .view {
+        display: none;
+      }
+      body[data-view="entry"] .view-entry,
+      body[data-view="survey"] .view-survey,
+      body[data-view="survey-error"] .view-survey-error,
+      body[data-view="thanks"] .view-thanks {
+        display: block;
+      }
+
+      .eyebrow {
+        margin: 0 0 15px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      h1 {
+        max-width: 700px;
+        margin: 0;
+        font-size: clamp(34px, 6vw, 54px);
+        line-height: 1.05;
+      }
+      h2 {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.15;
+      }
+      h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+      p {
+        line-height: 1.55;
+      }
+      .lead {
+        max-width: 650px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .center {
+        text-align: center;
+      }
+      .center .lead {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .card {
+        margin-top: 30px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 24px;
+        background: var(--card);
+        box-shadow: 0 3px 12px rgba(51, 45, 43, 0.04);
+      }
+      .form {
+        display: grid;
+        gap: 12px;
+      }
+      .form-title {
+        margin: 0 0 4px;
+        font-weight: 700;
+      }
+      input {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 15px 14px;
+        background: white;
+        font: inherit;
+      }
+      button,
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 10px;
+        min-height: 52px;
+        padding: 14px 20px;
+        background: var(--coral);
+        color: white;
+        font: 700 16px inherit;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .button.secondary {
+        border: 1px solid var(--plum);
+        color: var(--plum);
+        background: white;
+      }
+      .link {
+        color: var(--plum);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .micro {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .section {
+        margin-top: 54px;
+        border-top: 1px solid var(--line);
+        padding-top: 34px;
+      }
+      .proof {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .stat {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 17px;
+        background: white;
+      }
+      .stat strong {
+        display: block;
+        color: var(--plum);
+        font:
+          700 25px Georgia,
+          serif;
+      }
+      .stat span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .steps {
+        display: grid;
+        gap: 17px;
+        margin-top: 22px;
+        padding: 0;
+        list-style: none;
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 32px 1fr;
+        gap: 13px;
+      }
+      .step-num {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        color: white;
+        background: var(--plum);
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .step strong {
+        display: block;
+      }
+      .step p {
+        margin: 4px 0 0;
+        color: var(--muted);
+      }
+
+      .progress-wrap {
+        margin-bottom: 34px;
+      }
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .progress {
+        height: 6px;
+        margin-top: 9px;
+        border-radius: 999px;
+        background: #e9e0ef;
+        overflow: hidden;
+      }
+      .progress > span {
+        display: block;
+        width: 34%;
+        height: 100%;
+        background: var(--coral);
+      }
+      .success {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+        color: var(--success);
+        font-weight: 800;
+      }
+      .check {
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #ddf5e8;
+      }
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 18px;
+      }
+      .badge {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 12px;
+        color: var(--plum);
+        background: white;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .typeform {
+        min-height: 330px;
+        margin-top: 26px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 30px;
+        background: white;
+      }
+      .typeform small {
+        display: inline-grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        color: white;
+        background: var(--plum);
+      }
+      .typeform h3 {
+        margin-top: 22px;
+        font-family: inherit;
+        font-size: 22px;
+      }
+      .options {
+        display: grid;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .option {
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 13px;
+        color: var(--muted);
+      }
+      .skip {
+        margin-top: 18px;
+        text-align: center;
+      }
+      .reassure {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .error-card {
+        border-color: #e9adb4;
+        background: #fff8f8;
+        text-align: center;
+      }
+      .error-icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        color: var(--coral-dark);
+        background: #fde2e5;
+        font-weight: 900;
+      }
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .whatsapp {
+        border: 2px solid var(--whatsapp);
+        text-align: center;
+      }
+      .whatsapp .button {
+        width: 100%;
+        max-width: 390px;
+        background: var(--whatsapp);
+      }
+      .benefits {
+        display: grid;
+        gap: 15px;
+        max-width: 520px;
+        margin: 24px auto 0;
+        padding: 0;
+        list-style: none;
+        text-align: left;
+      }
+      .benefits li {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 10px;
+      }
+      .benefits .check {
+        color: white;
+        background: var(--whatsapp);
+      }
+      .benefits strong {
+        display: block;
+      }
+      .benefits p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .qr-card {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 24px;
+        align-items: center;
+      }
+      .qr {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
+        border: 12px solid white;
+        outline: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--plum);
+        background: repeating-conic-gradient(#2d1947 0 25%, white 0 50%) 0 0 / 18px 18px;
+        font-weight: 900;
+      }
+      .qr span {
+        padding: 8px;
+        background: white;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 28px 22px 38px;
+        color: var(--muted);
+        background: white;
+        font-size: 13px;
+      }
+      .legal {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 16px;
+      }
+      .legal a {
+        color: var(--muted);
+      }
+
+      @media (max-width: 640px) {
+        .review-bar {
+          justify-content: flex-start;
+          overflow-x: auto;
+          flex-wrap: nowrap;
+        }
+        .canvas {
+          box-shadow: none;
+        }
+        main {
+          padding: 35px 20px 24px;
+        }
+        h1 {
+          font-size: 36px;
+        }
+        .lead {
+          font-size: 16px;
+        }
+        .card {
+          padding: 19px;
+        }
+        .proof {
+          grid-template-columns: 1fr;
+        }
+        .qr-card {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .qr {
+          width: 170px;
+          margin: 0 auto;
+        }
+        .button-row {
+          display: grid;
+        }
+      }
+    </style>
+  </head>
+  <body data-view="entry">
+    <nav class="review-bar" aria-label="Mockup-Zustände">
+      <a data-state="entry" href="?view=entry">1 · Einstieg</a>
+      <a data-state="survey" href="?view=survey">2 · Platz gesichert + Umfrage</a>
+      <a data-state="survey-error" href="?view=survey-error">2b · Umfrage-Fehler</a>
+      <a data-state="thanks" href="?view=thanks">3 · Bestätigung + WhatsApp</a>
+    </nav>
+
+    <div class="canvas">
+      <header>
+        <div class="brand"><span class="drop">◐</span> chaarlie</div>
+      </header>
+
+      <main>
+        <section class="view view-entry">
+          <p class="eyebrow">Warteliste · Start am Sonntag, 9. August</p>
+          <h1>Versteh endlich, was dein Haar wirklich braucht.</h1>
+          <p class="lead">
+            chaarlie übersetzt Haarstruktur, Kopfhaut und Alltag in eine klare Routine mit wenigen
+            Produkten, die zusammenpassen. Am Sonntag, 9. August öffnen wir die erste
+            Gründungsrunde.
+          </p>
+
+          <div class="card">
+            <form class="form">
+              <p class="form-title">Sichere dir deinen Platz auf der Warteliste</p>
+              <input aria-label="Vorname" placeholder="Dein Vorname" />
+              <input aria-label="E-Mail-Adresse" placeholder="Deine E-Mail-Adresse" />
+              <button type="button">Platz sichern</button>
+              <p class="micro">
+                Mit dem Eintragen bekommst du E-Mails zum Start von chaarlie. Abmelden geht
+                jederzeit. Mehr dazu in der <a class="link" href="#">Datenschutzerklärung</a>.
+              </p>
+            </form>
+          </div>
+
+          <section class="section">
+            <h2>Warum wir das bauen</h2>
+            <p class="lead">
+              Wir haben über 4.000 Frauen gefragt, was in ihrer Haarpflege schiefgeht. Die Antworten
+              zeigen ein klares Muster: Es fehlt nicht an Disziplin oder Budget, sondern an einer
+              verlässlichen Einordnung, welche Produkte zu genau diesem Haar passen.
+            </p>
+            <div class="proof">
+              <div class="stat">
+                <strong>4.000+</strong><span>befragte Frauen zu ihrer Haarpflege</span>
+              </div>
+              <div class="stat">
+                <strong>82 %</strong><span>wollen endlich verstehen, was ihr Haar braucht</span>
+              </div>
+              <div class="stat">
+                <strong>63 %</strong><span>wissen nie, welche Produkte wirklich passen</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2>So läuft es ab</h2>
+            <ol class="steps">
+              <li class="step">
+                <span class="step-num">1</span>
+                <div>
+                  <strong>Du trägst dich ein</strong>
+                  <p>
+                    Vorname und E-Mail reichen. Damit ist dein Platz auf der Warteliste gesichert.
+                  </p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num">2</span>
+                <div>
+                  <strong>Du hilfst uns beim Feinschliff</strong>
+                  <p>
+                    Die kurze Umfrage ist freiwillig. Sie hilft uns, den Start näher an echte
+                    Haarprobleme anzupassen.
+                  </p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num">3</span>
+                <div>
+                  <strong>Am Sonntag, 9. August geht es los</strong>
+                  <p>
+                    Die Warteliste bekommt den Zugang zuerst, zum Gründungspreis. Die erste Runde
+                    ist auf 300 Plätze begrenzt.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </section>
+
+        <section class="view view-survey">
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Platz gesichert</span><span>1 von 3 erledigt</span>
+            </div>
+            <div class="progress"><span></span></div>
+          </div>
+          <div class="center">
+            <div class="success"><span class="check">✓</span> Du bist auf der Warteliste</div>
+            <h1>Dein Platz ist gesichert. Hilf uns, den Start besser zu machen.</h1>
+            <p class="lead">
+              Die Umfrage dauert weniger als 60 Sekunden. Deine Antworten helfen uns, chaarlie auf
+              echte Haarprobleme, Routinen und Unsicherheiten der Warteliste abzustimmen.
+            </p>
+            <div class="badges">
+              <span class="badge">Freiwillig</span><span class="badge">Unter 60 Sekunden</span
+              ><span class="badge">Start am 9. August</span>
+            </div>
+          </div>
+          <div class="typeform">
+            <small>1</small>
+            <h3>Was beschreibt deine Haarpflege im Moment am besten?</h3>
+            <div class="options">
+              <div class="option">Ich probiere viel aus, aber nichts passt richtig.</div>
+              <div class="option">Ich habe eine Routine, verstehe sie aber nicht wirklich.</div>
+              <div class="option">Ich fange gerade erst an.</div>
+            </div>
+          </div>
+          <div class="skip">
+            <a class="link" href="?view=thanks">Umfrage überspringen</a>
+            <p class="reassure">
+              Du bleibst auf der Warteliste, auch wenn du die Umfrage überspringst.
+            </p>
+          </div>
+        </section>
+
+        <section class="view view-survey-error">
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Platz gesichert</span><span>1 von 3 erledigt</span>
+            </div>
+            <div class="progress"><span></span></div>
+          </div>
+          <div class="center">
+            <div class="success"><span class="check">✓</span> Du bist auf der Warteliste</div>
+            <h1>Dein Platz ist gesichert.</h1>
+            <p class="lead">
+              Die freiwillige Umfrage hilft uns beim Feinschliff – aber sie entscheidet nicht über
+              deinen Platz.
+            </p>
+          </div>
+          <div class="card error-card">
+            <div class="error-icon">!</div>
+            <h2>Die Umfrage lädt gerade nicht.</h2>
+            <p>
+              Dein Platz ist trotzdem gesichert. Du kannst es gleich nochmal versuchen oder direkt
+              zum letzten Schritt gehen.
+            </p>
+            <div class="button-row">
+              <a class="button" href="?view=survey">Nochmal versuchen</a
+              ><a class="button secondary" href="?view=thanks">Zum letzten Schritt</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="view view-thanks">
+          <div class="center">
+            <div class="success"><span class="check">✓</span> Geschafft</div>
+            <h1>Du bist drin. Komm jetzt in die WhatsApp-Community.</h1>
+            <p class="lead">
+              Dein Platz auf der Warteliste ist sicher. In WhatsApp bekommst du den Launch-Link, den
+              Gründungspreis und die kurzen Ressourcen bis zum Start am schnellsten. Per E-Mail
+              schicken wir sie dir auch.
+            </p>
+          </div>
+
+          <section class="card whatsapp">
+            <h2>Tritt der WhatsApp-Community bei</h2>
+            <p>Launch-Link, Gründungspreis und kurze Haarpflege-Ressourcen zuerst sehen.</p>
+            <a class="button" href="#">WhatsApp-Community beitreten</a>
+            <p class="micro">
+              Kostenlos · Nur Ankündigungen von uns · Du kannst jederzeit wieder gehen
+            </p>
+            <ul class="benefits">
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Launch-Link zuerst sehen</strong>
+                  <p>
+                    Der Zugang am Sonntag, 9. August kommt zuerst in die Community, kurz vor der
+                    E-Mail.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Gründungspreis nicht verpassen</strong>
+                  <p>
+                    Er gilt bis Dienstag, 11. August, 23:59 Uhr. Die erste Runde ist auf 300 Plätze
+                    begrenzt.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Kurze Haarpflege-Ressourcen bekommen</strong>
+                  <p>
+                    Zugtest, Kopfhaut-Einordnung und die Drei-Produkte-Basis kommen dort kompakt an.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <section class="card qr-card">
+            <div class="qr"><span>QR</span></div>
+            <div>
+              <h2>Gerade am Laptop?</h2>
+              <p>
+                Scann den Code mit der Kamera deines Handys. Dann öffnet sich die WhatsApp-Community
+                direkt auf deinem Smartphone.
+              </p>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Was jetzt passiert</h2>
+            <ol class="steps">
+              <li class="step">
+                <span class="step-num">1</span>
+                <div>
+                  <strong>Schau in dein E-Mail-Postfach</strong>
+                  <p>
+                    Die Willkommens-Mail bestätigt deinen Platz. Wenn sie nicht ankommt, schau bitte
+                    im Spam-Ordner nach.
+                  </p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num">2</span>
+                <div>
+                  <strong>Bis zum Start</strong>
+                  <p>Du bekommst kurze Inhalte, die du auch ohne chaarlie anwenden kannst.</p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num">3</span>
+                <div>
+                  <strong>Sonntag, 9. August, 10:00 Uhr</strong>
+                  <p>
+                    Wir öffnen für die Warteliste. Der Gründungspreis gilt bis Dienstag, 11. August,
+                    23:59 Uhr.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </section>
+      </main>
+
+      <footer>
+        <div class="brand"><span class="drop">◐</span> chaarlie</div>
+        <p>
+          Strukturierte Haarpflege-Auswertung auf Basis deiner Angaben. Ein Produkt der Haarmony
+          LLC.
+        </p>
+        <div class="legal">
+          <a href="#">Impressum</a><a href="#">Datenschutz</a><a href="#">AGB</a
+          ><a href="#">Widerruf</a><a href="#">Cookie-Einstellungen</a>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const requested = new URLSearchParams(location.search).get("view")
+      const allowed = new Set(["entry", "survey", "survey-error", "thanks"])
+      const current = allowed.has(requested) ? requested : "entry"
+      document.body.dataset.view = current
+      document.querySelector(`[data-state="${current}"]`)?.classList.add("active")
+    </script>
+  </body>
+</html>

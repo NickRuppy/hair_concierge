@@ -91,6 +91,10 @@ export type CheckoutPreparationOutcome =
   | "timeout_cold"
   | "prewarm_silent"
 
+export type WaitlistSignupKind = "new" | "duplicate"
+export type WaitlistSurveyCompletion = "completed" | "skipped"
+export type WaitlistWhatsAppSurface = "thank_you"
+
 export function claimCheckoutFailure(
   seen: Set<string>,
   checkoutAttemptId: string,
@@ -310,6 +314,17 @@ export type AppEventMap = {
   }
   subscription_started: {
     checkoutSessionId: string
+  }
+  // Waitlist events deliberately contain only bounded campaign-state properties.
+  // Signup identity, survey tokens/results, and attribution remain outside analytics.
+  waitlist_signup_completed: {
+    signupKind: WaitlistSignupKind
+  }
+  waitlist_survey_completed: {
+    completion: WaitlistSurveyCompletion
+  }
+  waitlist_whatsapp_clicked: {
+    surface: WaitlistWhatsAppSurface
   }
 }
 

@@ -22,6 +22,9 @@ const PUBLIC_EXACT_ROUTES = [
   "/sitemap.xml",
   "/twitter-image",
   "/welcome",
+  "/warteliste",
+  "/warteliste/umfrage",
+  "/warteliste/danke",
   "/widerruf",
 ]
 
@@ -46,6 +49,8 @@ const PUBLIC_API_EXACT_ROUTES = [
   // A paid buyer reaches this capability before an account/session exists.
   // Keep it exact: all other billing APIs remain behind the billing prefix.
   "/api/billing/one-time-activation-status",
+  "/api/waitlist",
+  "/api/waitlist/survey",
 ]
 
 const PROTECTED_ROUTE_PREFIXES = [
@@ -68,6 +73,10 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/api/profile",
   "/api/routine",
   "/api/tracker",
+  // The public waitlist entries above are intentionally exact; later
+  // descendants must not silently inherit public access.
+  "/warteliste",
+  "/api/waitlist",
 ]
 
 const DEVELOPMENT_ROUTE_PREFIXES = ["/labs", "/api/labs"]

@@ -38,4 +38,7 @@ export const eventRoutes = {
   quiz_started: { customerio: true, meta: true, posthog: true },
   quiz_step_viewed: { customerio: true, meta: false, posthog: true },
   subscription_started: { customerio: false, meta: true, posthog: false },
+  waitlist_signup_completed: { customerio: false, meta: false, posthog: true },
+  waitlist_survey_completed: { customerio: false, meta: false, posthog: true },
+  waitlist_whatsapp_clicked: { customerio: false, meta: false, posthog: true },
 } satisfies Record<AppEventName, AppEventRoute>

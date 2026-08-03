@@ -309,6 +309,18 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "subscription_started":
       return payload
+    case "waitlist_signup_completed": {
+      const data = payload as AppEventMap["waitlist_signup_completed"]
+      return { signup_kind: data.signupKind }
+    }
+    case "waitlist_survey_completed": {
+      const data = payload as AppEventMap["waitlist_survey_completed"]
+      return { completion: data.completion }
+    }
+    case "waitlist_whatsapp_clicked": {
+      const data = payload as AppEventMap["waitlist_whatsapp_clicked"]
+      return { surface: data.surface }
+    }
     default:
       return assertNever(eventName)
   }
