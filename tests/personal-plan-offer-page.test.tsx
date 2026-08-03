@@ -125,6 +125,15 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /Über 1.000 Produkte/i)
   assert.match(html, /analysiert &amp; geprüft/i)
   assert.match(html, /Entwickelt gemeinsam mit Friseurmeistern/i)
+  assert.equal((html.match(/Entwickelt gemeinsam mit Friseurmeistern/g) ?? []).length, 1)
+  assert.ok(
+    html.indexOf("Entwickelt gemeinsam mit Friseurmeistern") < html.indexOf("Deine Ausgangslage"),
+    "Friseurmeister proof should sit beneath the hero before diagnosis",
+  )
+  assert.match(
+    html,
+    /Unabhängig und passend zu deinem Haar ausgewählt\. Kauflinks können Affiliate-Links sein/i,
+  )
   assert.match(html, /Daraus entstehen deine Produktauswahl, Reihenfolge und Anwendung/i)
   assert.match(html, /Vorher und[\s\S]*nachher[\s\S]*mit Chaarlie/i)
   assert.match(html, /So beschreiben es Frauen in unserer Umfrage/i)
@@ -150,18 +159,64 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /63%/i)
   assert.match(html, /4\.024 Antworten/i)
   assert.match(html, /Kim · Endlich verstehe ich meine Haare/i)
+  assert.match(html, />Erfahrungen</)
+  assert.doesNotMatch(html, /Stimmen aus der Beta/i)
+  assert.match(html, /34 · feines, welliges, blondiertes Haar/i)
+  assert.match(
+    html,
+    /Der Fragebogen ist echt gut und leicht verständlich\. Im Chat hat das Antworten super geklappt\. Auch die Produktempfehlung fand ich gut\./i,
+  )
   assert.match(html, /Kerstin · Echte Antworten bekommen/i)
+  assert.match(
+    html,
+    /Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen\./i,
+  )
   assert.match(html, /Sarah · Nie wieder googeln vorm Regal/i)
+  assert.match(
+    html,
+    /Bei den Produkten stehen Preis und Anwendung dabei – und warum sie empfohlen werden\. So muss ich nicht erst googeln\./i,
+  )
+  assert.equal((html.match(/aria-label="5 von 5 Sternen"/g) ?? []).length, 3)
   assert.match(html, /Das sagen Kundinnen über Chaarlie/i)
   assert.match(html, /14 Tage Geld-zurück-Garantie/i)
+  assert.doesNotMatch(html, /Ohne Risiko/i)
   assert.match(html, /Dein Plan zu schöneren Haaren in 30 Tagen/i)
   assert.match(html, /Warum reicht nicht einfach ein neues Shampoo/i)
   assert.match(html, /Ist der Plan wirklich auf mein Haar abgestimmt/i)
-  assert.match(html, /Was bekomme ich genau/i)
-  assert.match(html, /Kann ich meine bisherigen Produkte weiterverwenden/i)
-  assert.match(html, /Was passiert direkt nach dem Kauf/i)
-  assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 5)
-  assert.doesNotMatch(html, /Ist Chat oder Haartagebuch Teil davon/i)
+  assert.match(html, /Was bekomme ich – und was passiert nach dem Kauf/i)
+  assert.match(html, /Muss ich neue oder teure Produkte kaufen/i)
+  assert.match(html, /Was, wenn Chaarlie für mich nicht hilfreich ist/i)
+  assert.match(html, /Woher weiß ich, dass das echt ist/i)
+  assert.match(html, /Wie lange, bis ich etwas merke/i)
+  assert.match(html, /Warum ist Chaarlie ein Abo/i)
+  assert.match(html, /Wie und wann kann ich kündigen/i)
+  assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 9)
+  assert.doesNotMatch(
+    html,
+    /Was bekomme ich genau|Kann ich meine bisherigen Produkte weiterverwenden|data-offer-faq="personal-plan-/i,
+  )
+  for (const slug of [
+    "new-shampoo-not-enough",
+    "personalized-plan",
+    "included-and-after-purchase",
+    "new-or-expensive-products",
+    "not-helpful-refund",
+    "recommendation-credibility",
+    "time-to-notice",
+    "why-subscription",
+    "cancellation-timing",
+  ]) {
+    assert.match(html, new RegExp(`data-offer-faq="${slug}"`))
+  }
+  assert.doesNotMatch(html, /Warum kostet Chaarlie etwas|Ist das ein Abo\?/i)
+  assert.match(html, /Haarmony LLC/i)
+  assert.match(html, /info@chaarlie\.de/i)
+  assert.match(html, /href="\/impressum"/)
+  assert.match(html, /href="\/datenschutz"/)
+  assert.match(html, /href="\/agb"/)
+  assert.match(html, /href="\/widerruf"/)
+  assert.match(html, /href="\/kontakt"/)
+  assert.match(html, /data-cookie-settings-trigger/)
   assert.match(html, /data-offer-section="personal_plan_diagnosis"/)
   const completePlanSection = html.match(
     /<section[^>]*data-offer-section="personal_plan_complete_plan"[^>]*>/,
@@ -201,11 +256,11 @@ test("personal plan offer renders approved hierarchy without personalized produc
       "hero",
       "personal_plan_diagnosis",
       "pricing",
+      "testimonials",
       "personal_plan_complete_plan",
       "personal_plan_method",
       "personal_plan_before_after",
       "personal_plan_survey",
-      "testimonials",
       "guarantee",
       "faq",
       "final_cta",
@@ -274,7 +329,16 @@ test("one-time personal plan removes the membership guarantee from the shared of
 
   assert.match(html, /Einmalige Erstellung/i)
   assert.match(html, /Einmalzahlung · Kein Abo/i)
-  assert.doesNotMatch(html, /14 Tage Geld-zurück-Garantie|data-offer-section="guarantee"/i)
+  assert.doesNotMatch(html, /data-offer-section="guarantee"/i)
+  assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 7)
+  assert.match(html, /data-offer-faq="new-shampoo-not-enough"/)
+  assert.match(html, /data-offer-faq="time-to-notice"/)
+  assert.doesNotMatch(
+    html,
+    /data-offer-faq="why-subscription"|data-offer-faq="cancellation-timing"/,
+  )
+  assert.doesNotMatch(html, /Warum ist Chaarlie ein Abo|Wie und wann kann ich kündigen/i)
+  assert.doesNotMatch(html, /data-offer-faq="personal-plan-/)
 })
 
 test("personal plan result shows recovery instead of falling through to legacy offer", () => {
@@ -375,7 +439,7 @@ test("personal plan analytics use their own revision label", () => {
     "utf8",
   )
 
-  assert.match(offerSource, /const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v3"/)
+  assert.match(offerSource, /const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v4"/)
   assert.match(offerSource, /offerRevision=\{PERSONAL_PLAN_OFFER_REVISION\}/)
   assert.doesNotMatch(offerSource, /GUIDED_STORY_OFFER_REVISION/)
 })

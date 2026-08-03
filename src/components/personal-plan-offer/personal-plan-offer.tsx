@@ -15,6 +15,11 @@ import {
   ResultOfferPricing,
   type ResultOfferPricingCheckoutSummary,
 } from "@/components/quiz/result-offer-pricing"
+import {
+  FooterCookieSettingsButton,
+  FooterLink,
+  offerFooterLinks,
+} from "@/components/landing/footer-links"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
@@ -22,9 +27,10 @@ import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./
 
 const testimonials = [
   {
+    context: "34 · feines, welliges, blondiertes Haar",
     name: "Kim · Endlich verstehe ich meine Haare",
     quote:
-      "Der Fragebogen ist echt gut und leicht verständlich. Auch die Produktempfehlung fand ich gut.",
+      "Der Fragebogen ist echt gut und leicht verständlich. Im Chat hat das Antworten super geklappt. Auch die Produktempfehlung fand ich gut.",
   },
   {
     name: "Kerstin · Echte Antworten bekommen",
@@ -34,11 +40,11 @@ const testimonials = [
   {
     name: "Sarah · Nie wieder googeln vorm Regal",
     quote:
-      "Bei den Produkten stehen Preis, Anwendung und der Grund dabei, warum sie empfohlen werden.",
+      "Bei den Produkten stehen Preis und Anwendung dabei – und warum sie empfohlen werden. So muss ich nicht erst googeln.",
   },
 ]
 
-const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v3"
+const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v4"
 
 const planHighlights = [
   {
@@ -92,27 +98,64 @@ const surveyStats = [
   ["63%", "wissen nicht, welche Produkte wirklich passen", "#9a7cbd"],
 ] as const
 
-const personalPlanFaqItems = [
-  [
-    "Warum reicht nicht einfach ein neues Shampoo?",
-    "Ein einzelnes Produkt kann nur einen Teil beeinflussen. Dein Plan verbindet Reinigung, Pflege, Styling und Anwendung, damit die Schritte zu deinem Haar und zueinander passen.",
-  ],
-  [
-    "Ist der Plan wirklich auf mein Haar abgestimmt?",
-    "Deine Haarstruktur, Dicke, Dichte, Länge, Oberfläche, Elastizität, Kopfhaut und Ziele bestimmen, wie dein Plan aufgebaut wird.",
-  ],
-  [
-    "Was bekomme ich genau?",
-    "Eine vollständige Routine mit passenden Produkten, der richtigen Reihenfolge sowie klarer Anwendung und Häufigkeit. Chat und Haartagebuch sind ergänzend enthalten.",
-  ],
-  [
-    "Kann ich meine bisherigen Produkte weiterverwenden?",
-    "Ja. Im anschließenden Onboarding gibst du an, was du bereits nutzt. Passende Produkte können in deinen Plan übernommen werden.",
-  ],
-  [
-    "Was passiert direkt nach dem Kauf?",
-    "Du ergänzt noch deine vorhandenen Produkte und Gewohnheiten. Danach wird dein vollständiger Plan im Routinebereich geöffnet.",
-  ],
+const personalPlanSharedFaqItems = [
+  {
+    id: "new-shampoo-not-enough",
+    question: "Warum reicht nicht einfach ein neues Shampoo?",
+    answer:
+      "Ein einzelnes Produkt kann nur einen Teil beeinflussen. Dein Plan verbindet Reinigung, Pflege, Styling und Anwendung, damit die Schritte zu deinem Haar und zueinander passen.",
+  },
+  {
+    id: "personalized-plan",
+    question: "Ist der Plan wirklich auf mein Haar abgestimmt?",
+    answer:
+      "Deine Haarstruktur, Dicke, Dichte, Länge, Oberfläche, Elastizität, Kopfhaut und Ziele bestimmen, wie dein Plan aufgebaut wird.",
+  },
+  {
+    id: "included-and-after-purchase",
+    question: "Was bekomme ich – und was passiert nach dem Kauf?",
+    answer:
+      "Du erhältst eine vollständige Routine mit passenden Produkten, der richtigen Reihenfolge sowie klarer Anwendung und Häufigkeit. Chat und Haartagebuch sind ergänzend enthalten. Nach dem Kauf ergänzt du noch deine vorhandenen Produkte und Gewohnheiten; anschließend öffnet sich dein Routinebereich.",
+  },
+  {
+    id: "new-or-expensive-products",
+    question: "Muss ich neue oder teure Produkte kaufen?",
+    answer:
+      "Nein. Wir empfehlen in unterschiedlichen Preisklassen. Du entscheidest, was du kaufst, und passende Produkte, die du bereits hast, können in deinen Plan übernommen werden.",
+  },
+  {
+    id: "not-helpful-refund",
+    question: "Was, wenn Chaarlie für mich nicht hilfreich ist?",
+    answer:
+      "Wenn Chaarlie für dich nicht hilfreich ist, erhältst du innerhalb der ersten 14 Tage eine vollständige Rückerstattung.",
+  },
+  {
+    id: "recommendation-credibility",
+    question: "Woher weiß ich, dass das echt ist?",
+    answer:
+      "Bei Chaarlie siehst du, warum eine Empfehlung zu deinem Haar passt. Unsere Produktdaten basieren auf nachvollziehbaren Quellen, und dein Plan wurde gemeinsam mit Friseurmeistern entwickelt. Wenn Chaarlie für dich nicht hilfreich ist, erhältst du innerhalb von 14 Tagen eine Rückerstattung.",
+  },
+  {
+    id: "time-to-notice",
+    question: "Wie lange, bis ich etwas merke?",
+    answer:
+      "Ob die Routine zu dir passt, merkst du oft schon nach den ersten Anwendungen: Sie sollte verständlich sein und sich gut in deinen Alltag einfügen. Wann sich dein Haar sichtbar oder spürbar verändert, ist individuell. Manche Veränderungen zeigen sich schnell, andere brauchen mehrere Wochen konsequente Pflege. Wir versprechen deshalb keinen festen Zeitpunkt – geben dir aber einen klaren Plan und eine 14-Tage-Geld-zurück-Garantie.",
+  },
+] as const
+
+const personalPlanMembershipFaqItems = [
+  {
+    id: "why-subscription",
+    question: "Warum ist Chaarlie ein Abo?",
+    answer:
+      "Dein Haar und deine Bedürfnisse können sich verändern – etwa durch Jahreszeiten, äußere Einflüsse, Färben, neue Ziele oder wenn du neue Produkte ausprobierst. Deshalb bleibt Chaarlie an deiner Seite: Deine Routine kann angepasst werden und du erhältst Unterstützung, wenn sich etwas verändert. So bleibt dein Plan keine Momentaufnahme, sondern entwickelt sich mit dir weiter.",
+  },
+  {
+    id: "cancellation-timing",
+    question: "Wie und wann kann ich kündigen?",
+    answer:
+      "Du kannst deine Mitgliedschaft jederzeit beenden. Sie läuft bis zum Ende der bereits bezahlten Abrechnungsperiode weiter; danach entstehen keine weiteren Kosten.",
+  },
 ] as const
 
 export function scrollToPersonalPlanPricing(
@@ -170,6 +213,76 @@ function displayProfileLine(profileLine?: string): string {
   }
   const personalized = value.match(/^Basierend auf deiner Analyse für (.+)$/)
   return `${personalized ? `Für ${personalized[1]}` : value}.`
+}
+
+function readOneTimeReferencePriceLabel(
+  summary: ResultOfferPricingCheckoutSummary,
+): string | undefined {
+  if (summary.commerceKind !== "one_time") return undefined
+  return summary.referencePriceLabel
+}
+
+function HairdresserProof() {
+  return (
+    <p className="mt-4 inline-flex rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 shadow-[0_12px_30px_-24px_rgba(20,83,45,0.55)] sm:text-sm [@media(min-width:640px)_and_(max-height:700px)]:justify-self-start">
+      Entwickelt gemeinsam mit Friseurmeistern.
+    </p>
+  )
+}
+
+function TestimonialsSection() {
+  return (
+    <section className="px-4 py-7 sm:py-14" data-offer-section="testimonials">
+      <div className="mx-auto max-w-4xl text-center">
+        <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
+          Erfahrungen
+        </p>
+        <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
+          Das sagen Kundinnen über Chaarlie.
+        </h2>
+        <div className="mt-7 grid items-stretch gap-3 md:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <blockquote
+              className="h-full rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+              key={testimonial.name}
+            >
+              <span aria-label="5 von 5 Sternen" className="text-[#d96869]">
+                ★★★★★
+              </span>
+              <strong className="mt-2 block">{testimonial.name}</strong>
+              {"context" in testimonial ? (
+                <span className="mt-1 block text-sm leading-5 text-[rgba(var(--brand-plum-rgb),0.58)]">
+                  {testimonial.context}
+                </span>
+              ) : null}
+              <p className="mt-3 text-base leading-7">„{testimonial.quote}“</p>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PersonalPlanOfferFooter() {
+  return (
+    <footer className="border-t border-[rgba(var(--brand-plum-rgb),0.10)] bg-white/70 px-4 py-8 text-[rgba(var(--brand-plum-rgb),0.68)]">
+      <div className="mx-auto flex max-w-4xl flex-col gap-4 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <p className="font-semibold text-[var(--brand-plum-darkest)]">
+          Haarmony LLC ·{" "}
+          <a className="underline underline-offset-4" href="mailto:info@chaarlie.de">
+            info@chaarlie.de
+          </a>
+        </p>
+        <nav aria-label="Rechtliches und Kontakt" className="flex flex-wrap gap-x-4 gap-y-2">
+          {offerFooterLinks.map((item) => (
+            <FooterLink key={item.href} {...item} />
+          ))}
+          <FooterCookieSettingsButton />
+        </nav>
+      </div>
+    </footer>
+  )
 }
 
 function BeforeAfterFigure() {
@@ -469,6 +582,7 @@ export function PersonalPlanOffer({
   const stickyDestination = pricingReached ? "checkout" : "pricing"
   const stickySourceSection = pricingReached ? "pricing" : "hero"
   const stickyAction = pricingReached ? openCheckout : scrollToPricing
+  const stickyReferencePriceLabel = readOneTimeReferencePriceLabel(checkoutSummary)
   const handlePricingReached = useCallback(() => setPricingReached(true), [])
 
   return (
@@ -518,7 +632,17 @@ export function PersonalPlanOffer({
                   className="personal-plan-sticky-summary grid gap-0.5"
                   data-offer-sticky-summary=""
                 >
-                  <span className="text-[11px] leading-none">{checkoutSummary.stickyLine}</span>
+                  {checkoutSummary.commerceKind === "one_time" && stickyReferencePriceLabel ? (
+                    <>
+                      <span className="text-[11px] leading-none">{checkoutSummary.planName}</span>
+                      <span className="inline-flex items-baseline justify-center gap-1.5 text-[13px] leading-none">
+                        <s className="text-white/70">{stickyReferencePriceLabel}</s>
+                        <span>{checkoutSummary.priceLabel}</span>
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[11px] leading-none">{checkoutSummary.stickyLine}</span>
+                  )}
                   <span className="text-[13px] leading-none">Zur Zahlung</span>
                 </span>
               ) : (
@@ -538,6 +662,7 @@ export function PersonalPlanOffer({
           <p className="mx-auto mt-3 max-w-[34rem] text-base leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-lg [@media(min-width:640px)_and_(max-height:700px)]:mx-0 [@media(min-width:640px)_and_(max-height:700px)]:mt-2 [@media(min-width:640px)_and_(max-height:700px)]:self-start [@media(min-width:640px)_and_(max-height:700px)]:text-base">
             {displayProfileLine(model.profileLine)}
           </p>
+          <HairdresserProof />
           <BeforeAfterFigure />
         </section>
 
@@ -609,6 +734,8 @@ export function PersonalPlanOffer({
           </div>
         </section>
 
+        <TestimonialsSection />
+
         <section
           className="mx-auto max-w-4xl scroll-mt-16 px-4 py-7 sm:py-14"
           data-offer-section="personal_plan_complete_plan"
@@ -673,7 +800,8 @@ export function PersonalPlanOffer({
                 ))}
               </div>
               <p className="mt-3 text-center text-[11px] text-[rgba(var(--brand-plum-rgb),0.58)] sm:text-xs">
-                Entwickelt gemeinsam mit Friseurmeistern.
+                Unabhängig und passend zu deinem Haar ausgewählt. Kauflinks können Affiliate-Links
+                sein.
               </p>
             </div>
             <div className="mt-3 flex flex-col items-center gap-2 rounded-2xl bg-[var(--brand-plum)] px-4 py-3.5 text-center text-white">
@@ -770,61 +898,37 @@ export function PersonalPlanOffer({
           </div>
         </section>
 
-        <section className="px-4 py-7 sm:py-14" data-offer-section="testimonials">
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              Stimmen aus der Beta
-            </p>
-            <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Das sagen Kundinnen über Chaarlie.
-            </h2>
-            <div className="mt-7 grid items-stretch gap-3 md:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <blockquote
-                  className="h-full rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
-                  key={testimonial.name}
-                >
-                  <span aria-label="5 von 5 Sternen" className="text-[#d96869]">
-                    ★★★★★
-                  </span>
-                  <strong className="mt-2 block">{testimonial.name}</strong>
-                  <p className="mt-3 text-base leading-7">„{testimonial.quote}“</p>
-                </blockquote>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {!isOneTimeOffer ? (
           <section
             className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
             data-offer-section="guarantee"
           >
             <div className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 text-center sm:rounded-[1.75rem] sm:p-6">
-              <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)] sm:text-sm">
-                Ohne Risiko
-              </p>
-              <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
+              <h2 className="mx-auto max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
                 14 Tage Geld-zurück-Garantie
               </h2>
               <p className="mx-auto mt-3 max-w-[34rem] text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:mt-4 sm:text-base sm:leading-7">
-                Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.
+                Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige
+                Rückerstattung.
               </p>
             </div>
           </section>
         ) : null}
 
-        <section className="mx-auto max-w-4xl px-4 pb-24 pt-1" data-offer-section="faq">
+        <section className="mx-auto max-w-4xl px-4 pb-12 pt-1" data-offer-section="faq">
           <h2 className="text-center font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">
             Häufige Fragen
           </h2>
           <div className="mt-6 space-y-3">
-            {personalPlanFaqItems.map(([question, answer], index) => (
+            {[
+              ...personalPlanSharedFaqItems,
+              ...(isOneTimeOffer ? [] : personalPlanMembershipFaqItems),
+            ].map((item) => (
               <AnimatedPersonalPlanFaqItem
-                answer={answer}
-                faqId={`personal-plan-${index + 1}`}
-                key={question}
-                question={question}
+                answer={item.answer}
+                faqId={item.id}
+                key={item.id}
+                question={item.question}
               />
             ))}
           </div>
@@ -847,6 +951,7 @@ export function PersonalPlanOffer({
             </button>
           </div>
         </section>
+        <PersonalPlanOfferFooter />
       </main>
     </OfferTrackingProvider>
   )

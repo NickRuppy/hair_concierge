@@ -9,7 +9,7 @@ export default function WiderrufPage() {
     <div className="flex min-h-screen flex-col items-center bg-background px-4 py-16">
       <div className="w-full max-w-2xl space-y-8">
         <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-          Letzte Aktualisierung: Mai 2026
+          Letzte Aktualisierung: August 2026
         </p>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Widerrufsbelehrung
@@ -23,8 +23,10 @@ export default function WiderrufPage() {
               widerrufen. Die Widerrufsfrist beträgt 14 Tage ab dem Tag des Vertragsschlusses.
             </p>
             <p className="mt-2">
-              Dies gilt auch für den einmalig bezahlten persönlichen Haarplan. Eine freiwillige
-              Geld-zurück-Garantie wird für diesen Einmalkauf nicht zugesagt.
+              Dies gilt auch für den einmalig bezahlten persönlichen Haarplan. Zusätzlich gilt dafür
+              eine 14-Tage-Geld-zurück-Garantie: Wenn Chaarlie für dich nicht hilfreich ist,
+              erhältst du eine vollständige Rückerstattung. Deine gesetzlichen Rechte bleiben davon
+              unberührt.
             </p>
             <p className="mt-2">Um dein Widerrufsrecht auszuüben, musst du uns:</p>
             <address className="mt-2 not-italic">

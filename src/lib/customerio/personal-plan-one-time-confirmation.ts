@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import type { CustomerIoTransactionalEmailPayload } from "./transactional"
+import type { CustomerIoMessageData, CustomerIoTransactionalEmailPayload } from "./transactional"
 import { sendCustomerIoTransactionalEmail } from "./transactional"
 
 export const PERSONAL_PLAN_ONE_TIME_CONFIRMATION_MESSAGE_ID = "personal_plan_one_time_confirmation"
@@ -11,9 +11,19 @@ const PERSONAL_PLAN_NAME = "Persönlicher Haarplan"
 const PERSONAL_PLAN_AMOUNT_EUR = "29.99"
 const PERSONAL_PLAN_CURRENCY = "EUR"
 
-const confirmationInputSchema = z.object({
-  email: z.string().trim().email(),
-  consent: z.object({
+const contractSnapshotSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("purchase_context"),
+    text: z
+      .string()
+      .min(1)
+      .max(2_000)
+      .refine((value) => value.trim().length > 0, "Purchase-context text is required"),
+    version: z.string().trim().min(1).max(100),
+    createdAt: z.string().datetime({ offset: true }),
+  }),
+  z.object({
+    kind: z.literal("historical_consent"),
     text: z
       .string()
       .min(1)
@@ -22,6 +32,11 @@ const confirmationInputSchema = z.object({
     version: z.string().trim().min(1).max(100),
     acceptedAt: z.string().datetime({ offset: true }),
   }),
+])
+
+const confirmationInputSchema = z.object({
+  email: z.string().trim().email(),
+  contractSnapshot: contractSnapshotSchema,
   payment: z.object({
     provider: z.enum(["stripe", "paypal"]),
     reference: z.string().trim().min(1).max(500),
@@ -62,6 +77,18 @@ export function buildPersonalPlanOneTimeConfirmationPayload(
 ): CustomerIoTransactionalEmailPayload {
   const parsed = confirmationInputSchema.parse(input)
   const providerLabel = parsed.payment.provider === "stripe" ? "Stripe" : "PayPal"
+  const contractSnapshotData: CustomerIoMessageData =
+    parsed.contractSnapshot.kind === "purchase_context"
+      ? {
+          purchase_context_text: parsed.contractSnapshot.text,
+          purchase_context_version: parsed.contractSnapshot.version,
+          purchase_context_created_at: parsed.contractSnapshot.createdAt,
+        }
+      : {
+          consent_text: parsed.contractSnapshot.text,
+          consent_version: parsed.contractSnapshot.version,
+          consent_accepted_at: parsed.contractSnapshot.acceptedAt,
+        }
 
   return {
     to: parsed.email,
@@ -72,9 +99,7 @@ export function buildPersonalPlanOneTimeConfirmationPayload(
       currency: PERSONAL_PLAN_CURRENCY,
       is_subscription: false,
       subscription_text: "Kein Abo. Es handelt sich um eine einmalige Zahlung.",
-      consent_text: parsed.consent.text,
-      consent_version: parsed.consent.version,
-      consent_accepted_at: parsed.consent.acceptedAt,
+      ...contractSnapshotData,
       payment_provider: providerLabel,
       payment_reference: parsed.payment.reference,
       support_contact_url: parsed.supportUrl,

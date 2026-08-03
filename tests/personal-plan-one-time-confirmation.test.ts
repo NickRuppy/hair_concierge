@@ -11,10 +11,11 @@ import {
 
 const input = {
   email: "  lea@example.com ",
-  consent: {
-    text: "Ich verlange ausdrücklich die sofortige Erstellung meines Haarplans.",
-    version: "2026-07-31",
-    acceptedAt: "2026-07-31T10:15:00.000Z",
+  contractSnapshot: {
+    kind: "purchase_context" as const,
+    text: "Für den persönlichen Haarplan gilt ein 14-tägiges Widerrufsrecht.",
+    version: "purchase_context_refund_v1",
+    createdAt: "2026-08-03T10:15:00.000Z",
   },
   payment: { provider: "stripe" as const, reference: "  cs_test_123  " },
   supportUrl: "https://chaarlie.example/kontakt",
@@ -22,11 +23,11 @@ const input = {
   resultUrl: "https://chaarlie.example/result/lead-123",
 }
 
-test("builds the one-time confirmation payload with consent and access details only", () => {
-  const exactConsentText = `${input.consent.text}\n`
+test("builds the new one-time confirmation payload without labeling context as acceptance", () => {
+  const exactContextText = `${input.contractSnapshot.text}\n`
   const payload = buildPersonalPlanOneTimeConfirmationPayload({
     ...input,
-    consent: { ...input.consent, text: exactConsentText },
+    contractSnapshot: { ...input.contractSnapshot, text: exactContextText },
   })
 
   assert.equal(payload.to, "lea@example.com")
@@ -37,9 +38,9 @@ test("builds the one-time confirmation payload with consent and access details o
     currency: "EUR",
     is_subscription: false,
     subscription_text: "Kein Abo. Es handelt sich um eine einmalige Zahlung.",
-    consent_text: exactConsentText,
-    consent_version: "2026-07-31",
-    consent_accepted_at: "2026-07-31T10:15:00.000Z",
+    purchase_context_text: exactContextText,
+    purchase_context_version: "purchase_context_refund_v1",
+    purchase_context_created_at: "2026-08-03T10:15:00.000Z",
     payment_provider: "Stripe",
     payment_reference: "cs_test_123",
     support_contact_url: input.supportUrl,
@@ -48,6 +49,23 @@ test("builds the one-time confirmation payload with consent and access details o
   })
   assert.equal("quiz_answers" in payload.messageData, false)
   assert.equal("diagnostics" in payload.messageData, false)
+  assert.equal("consent_text" in payload.messageData, false)
+  assert.equal("consent_accepted_at" in payload.messageData, false)
+})
+
+test("historical waiver rows retain their explicit-consent confirmation fields", () => {
+  const payload = buildPersonalPlanOneTimeConfirmationPayload({
+    ...input,
+    contractSnapshot: {
+      kind: "historical_consent",
+      text: "Ich verlange ausdrücklich die sofortige Erstellung meines Haarplans.",
+      version: "2026-07-31",
+      acceptedAt: "2026-07-31T10:15:00.000Z",
+    },
+  })
+  assert.equal(payload.messageData.consent_version, "2026-07-31")
+  assert.equal(payload.messageData.consent_accepted_at, "2026-07-31T10:15:00.000Z")
+  assert.equal("purchase_context_created_at" in payload.messageData, false)
 })
 
 test("uses the configured transactional message ID and trims it", () => {

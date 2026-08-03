@@ -9,7 +9,7 @@ export default function ImpressumPage() {
     <div className="flex min-h-screen flex-col items-center bg-background px-4 py-16">
       <div className="w-full max-w-2xl space-y-8">
         <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-          Letzte Aktualisierung: Mai 2026
+          Letzte Aktualisierung: August 2026
         </p>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">Impressum</h1>
         <p className="text-sm leading-relaxed text-muted-foreground">
@@ -65,25 +65,6 @@ export default function ImpressumPage() {
               Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
             </h2>
             <p>Jonas Eidenschink, Anschrift wie oben</p>
-          </section>
-
-          <section>
-            <h2 className="mb-2 font-medium text-foreground">
-              Plattform der EU-Kommission zur Online-Streitbeilegung
-            </h2>
-            <p>
-              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS)
-              bereit, die du unter{" "}
-              <a
-                href="https://ec.europa.eu/consumers/odr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground underline"
-              >
-                ec.europa.eu/consumers/odr
-              </a>{" "}
-              findest.
-            </p>
           </section>
 
           <section>

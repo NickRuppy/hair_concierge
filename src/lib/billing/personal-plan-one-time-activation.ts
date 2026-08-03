@@ -11,6 +11,7 @@ import {
   recordPersonalPlanOneTimeDeliveryEvidence,
   type PersonalPlanOneTimeCheckoutConsentRow,
 } from "./personal-plan-one-time-consents"
+import { isPersonalPlanOneTimePurchaseContextCopyVersion } from "./personal-plan-one-time-consent-copy"
 import {
   findOneTimePurchaseByConsentId,
   findOneTimePurchaseByProviderTransactionId,
@@ -438,11 +439,19 @@ async function tryCompletePersonalPlanOneTimeActivation(
       const siteUrl = input.siteUrl ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
       const confirmation = await (input.sendConfirmation ?? sendPersonalPlanOneTimeConfirmation)({
         email: input.payment.email,
-        consent: {
-          text: consent.consent_text,
-          version: consent.copy_version,
-          acceptedAt: consent.accepted_at,
-        },
+        contractSnapshot: isPersonalPlanOneTimePurchaseContextCopyVersion(consent.copy_version)
+          ? {
+              kind: "purchase_context",
+              text: consent.consent_text,
+              version: consent.copy_version,
+              createdAt: consent.accepted_at,
+            }
+          : {
+              kind: "historical_consent",
+              text: consent.consent_text,
+              version: consent.copy_version,
+              acceptedAt: consent.accepted_at,
+            },
         payment: {
           provider: input.payment.provider,
           reference: input.payment.providerTransactionId,

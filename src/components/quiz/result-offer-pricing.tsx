@@ -59,6 +59,9 @@ const personalPlanOneTimeCommerce = {
   purchaseKind: "personal_plan_once",
   value: PERSONAL_PLAN_ONCE_PRODUCT.amount,
 } as const
+const personalPlanOneTimeReferencePriceLabel = `€${PERSONAL_PLAN_ONCE_PRODUCT.plannedRegularPrice
+  .toFixed(2)
+  .replace(".", ",")}`
 type LockedCheckoutProvider = "stripe" | "paypal"
 
 function classifyOfferStripeFailure(failure: CheckoutFailure): PaymentErrorFamily {
@@ -105,7 +108,13 @@ export type ResultOfferPricingCheckoutSummary =
       priceLabel: string
       stickyLine: string
     }
-  | { commerceKind: "one_time"; planName: string; priceLabel: string; stickyLine: string }
+  | {
+      commerceKind: "one_time"
+      planName: string
+      priceLabel: string
+      referencePriceLabel: string
+      stickyLine: string
+    }
 
 export function getMembershipCheckoutSummary(
   interval: BillingInterval,
@@ -126,6 +135,7 @@ export function getPersonalPlanOneTimeCheckoutSummary(): ResultOfferPricingCheck
     commerceKind: "one_time",
     planName: "Haarplan",
     priceLabel: "29,99 €",
+    referencePriceLabel: `${personalPlanOneTimeReferencePriceLabel.replace("€", "")} €`,
     stickyLine: "Haarplan · 29,99 €",
   }
 }
@@ -279,7 +289,17 @@ function PersonalPlanOneTimePricing({
           <h3 className="text-[17px] font-bold text-[var(--brand-plum-darkest)]">
             Persönlicher Haarplan
           </h3>
-          <strong className="text-[22px] text-[var(--brand-plum-darkest)]">€29,99</strong>
+          <span className="flex flex-col items-end gap-1">
+            <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+              Launch-Preis
+            </span>
+            <span className="flex items-baseline gap-2">
+              <s className="text-sm font-medium text-muted-foreground">
+                {personalPlanOneTimeReferencePriceLabel}
+              </s>
+              <strong className="text-[22px] text-[var(--brand-plum-darkest)]">€29,99</strong>
+            </span>
+          </span>
         </div>
         <ul className="mt-5 grid gap-3 text-sm leading-5 text-[var(--brand-plum-darkest)]">
           {[
@@ -303,9 +323,16 @@ function PersonalPlanOneTimePricing({
       >
         Haarplan für €29,99 freischalten
       </button>
-      <p className="text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
-        Einmalzahlung · Kein Abo
-      </p>
+      <div className="space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
+        <p>14 Tage Geld-zurück-Garantie · Einmalzahlung · Kein Abo</p>
+        <p>PayPal · Apple Pay (auf unterstützten Geräten) · Visa · Mastercard</p>
+        <p>
+          Zahlungsdaten verarbeitet dein gewählter Anbieter.{" "}
+          <a className="underline underline-offset-2" href="/datenschutz">
+            Mehr zum Datenschutz.
+          </a>
+        </p>
+      </div>
       <OfferPaymentOverlay
         checkoutEngaged={engaged}
         onConfirmedAbort={close}

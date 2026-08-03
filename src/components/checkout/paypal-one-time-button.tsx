@@ -5,7 +5,6 @@ import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-payp
 
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
-import { PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION } from "@/lib/billing/personal-plan-one-time-consent-copy"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import {
   capturePaymentFailure,
@@ -54,7 +53,6 @@ function capturePayPalOneTimeCustomerPaymentError({
 
 export function PayPalOneTimeButton({
   checkoutAttemptId,
-  consentAccepted,
   funnelSessionId,
   leadId,
   onCheckoutStarted,
@@ -63,10 +61,8 @@ export function PayPalOneTimeButton({
   onProviderSelected,
   onProviderConflict,
   onReady,
-  onConsentRequired,
 }: {
   checkoutAttemptId: string
-  consentAccepted: boolean
   funnelSessionId: string
   leadId: string
   onCheckoutStarted?: (funnelEventId: string) => void
@@ -75,7 +71,6 @@ export function PayPalOneTimeButton({
   onProviderSelected?: () => void
   onProviderConflict?: () => void
   onReady?: () => void
-  onConsentRequired?: () => void
 }) {
   const [error, setError] = useState<string | null>(null)
   const [expired, setExpired] = useState(false)
@@ -117,11 +112,6 @@ export function PayPalOneTimeButton({
           createOrder={async () => {
             setError(null)
             suppressNextPayPalErrorRef.current = false
-            if (!consentAccepted) {
-              onConsentRequired?.()
-              suppressNextPayPalErrorRef.current = true
-              throw new Error("one-time checkout consent required")
-            }
             setBusy(true)
             const funnelEventId = createFunnelEventId()
             onPaymentMethodSelected?.()
@@ -130,8 +120,6 @@ export function PayPalOneTimeButton({
               headers: { "content-type": "application/json" },
               body: JSON.stringify({
                 purchaseKind: "personal_plan_once",
-                consentAccepted: true,
-                consentCopyVersion: PERSONAL_PLAN_ONE_TIME_CONSENT_COPY_VERSION,
                 leadId,
                 funnelSessionId,
                 checkoutAttemptId,
@@ -254,8 +242,7 @@ export function PayPalOneTimeButton({
             }
             if (
               paypalError instanceof Error &&
-              (paypalError.message === "checkout access already exists" ||
-                paypalError.message === "one-time checkout consent required")
+              paypalError.message === "checkout access already exists"
             )
               return
             capturePayPalOneTimeCustomerPaymentError({

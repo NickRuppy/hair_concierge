@@ -92,9 +92,9 @@ export default function AgbPage() {
               </a>{" "}
               erfolgen. Die Kündigung wird zum Ende der laufenden Abrechnungsperiode wirksam;
               bereits gezahlte Beträge werden nicht anteilig erstattet, vorbehaltlich des
-              gesetzlichen Widerrufsrechts und der für Mitgliedschaften angebotenen freiwilligen
-              Geld-zurück-Garantie. Der Einmalkauf des persönlichen Haarplans ist kein Abonnement,
-              hat keine Laufzeit und ist nicht kündbar.
+              gesetzlichen Widerrufsrechts und einer für die jeweilige Bestellung angebotenen
+              freiwilligen Geld-zurück-Garantie. Der Einmalkauf des persönlichen Haarplans ist kein
+              Abonnement, hat keine Laufzeit und ist nicht kündbar.
             </p>
           </section>
 
@@ -106,6 +106,12 @@ export default function AgbPage() {
                 Widerrufsbelehrung
               </Link>
               .
+            </p>
+            <p className="mt-2">
+              Für den Einmalkauf des persönlichen Haarplans gilt zusätzlich eine
+              14-Tage-Geld-zurück-Garantie: Wenn Chaarlie für dich nicht hilfreich ist, erhältst du
+              eine vollständige Rückerstattung. Gesetzliche Rechte werden dadurch nicht
+              eingeschränkt.
             </p>
           </section>
 
