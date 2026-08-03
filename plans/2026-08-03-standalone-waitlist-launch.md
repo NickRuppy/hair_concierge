@@ -90,8 +90,9 @@ automation is verified end to end before the route is considered operationally r
     association, record idempotently, enqueue delivery, and keep the optional survey
     from affecting signup truth.
 - `src/app/api/customerio/waitlist-sync/reconcile/route.ts`, `vercel.json`
-  - add protected hourly reconciliation using the existing cron-secret convention so a
-    launch-sized outage backlog does not recover at only ten rows per day.
+  - add protected daily reconciliation using the existing cron-secret convention and
+    the current Vercel Hobby-plan cadence; immediate delivery remains the normal path,
+    while a bounded 25-row batch provides durable recovery after provider outages.
 
 ### User journey
 

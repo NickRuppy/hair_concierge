@@ -41,6 +41,6 @@ export async function handleWaitlistCustomerIoReconcile(
   }
 
   const dispatchDue = dependencies.dispatchDue ?? dispatchWaitlistCustomerIoDue
-  const stats = await dispatchDue(dependencies.supabase, { limit: 10 })
+  const stats = await dispatchDue(dependencies.supabase, { limit: 25 })
   return { status: 200, body: stats }
 }

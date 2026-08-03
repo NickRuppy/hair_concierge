@@ -299,7 +299,7 @@ test("waitlist Customer.io cron is protected and scheduled", async () => {
       cronSecret: "secret",
       dispatchDue: async (_supabase, options) => {
         calls += 1
-        assert.deepEqual(options, { limit: 10 })
+        assert.deepEqual(options, { limit: 25 })
         return { processed: 3, delivered: 2, failed: 1 }
       },
     },
@@ -310,7 +310,7 @@ test("waitlist Customer.io cron is protected and scheduled", async () => {
   const config = JSON.parse(readFileSync("vercel.json", "utf8")) as { crons: unknown[] }
   assert.deepEqual(config.crons.at(-1), {
     path: "/api/customerio/waitlist-sync/reconcile",
-    schedule: "45 * * * *",
+    schedule: "45 4 * * *",
   })
 })
 
