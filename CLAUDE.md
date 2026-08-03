@@ -21,13 +21,14 @@ For trivial non-user-facing tasks (single file, <20 lines changed), skip the opt
 
 Before any user-facing implementation:
 
-1. Inspect the current product surface and create at least one reviewable mockup during planning. Use an annotated current/proposed screenshot for a small existing-surface change, a wireframe for a new flow, or rendered lightweight HTML for layout and interaction. For copy-only work, show the before/after copy inside the real component layout. Markdown, ASCII, detached copy samples, and prose-only descriptions do not count as mockups for an existing surface.
+1. Inspect the current product surface and create at least one reviewable mockup during planning. Use an annotated current/proposed screenshot for a small existing-surface change, a wireframe for a new flow, or rendered lightweight HTML for layout and responsive behavior. For copy-only work, show the before/after copy inside the real component layout. Markdown, ASCII, detached copy samples, and prose-only descriptions do not count as mockups for an existing surface.
 2. Show 2-3 variants for a meaningful visual fork, use realistic German copy, and include responsive or critical loading/error/recovery states when they materially affect the experience.
-3. Present the mockup to Nick, incorporate feedback, and record mockup review as confirmed in the implementation plan.
-4. Translate the final design into a concrete user journey: entry state, ordered user actions and system responses, meaningful variants, error/recovery states, and completion.
-5. Walk Nick through that journey and obtain explicit sign-off. Earlier general plan approval does not satisfy the mockup or journey gate.
+3. If interaction, changing state, or a logic model cannot be judged from static evidence, first name the question and decision criterion, then invoke the repo's `prototype` skill as a higher-fidelity branch of this mockup step. Record what it proved and rewrite retained behavior through the normal production implementation and test workflow.
+4. Present the relevant evidence to Nick, incorporate feedback, and record evidence review as confirmed in the implementation plan.
+5. Translate the final design into a concrete user journey: entry state, ordered user actions and system responses, meaningful variants, error/recovery states, and completion.
+6. Walk Nick through that journey and obtain explicit sign-off. Earlier general plan approval does not satisfy the evidence or journey gate.
 
-Do not invoke `executing-plans` or `subagent-driven-development` while mockup review or user-journey sign-off is missing or pending. Purely backend work may skip mockups only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
+Do not invoke `executing-plans` or `subagent-driven-development` while evidence review or user-journey sign-off is missing or pending. Purely backend work may skip user-facing evidence only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
 
 ## Branch Gate
 
@@ -71,7 +72,7 @@ The main interactive session (intended: Fable 5) is the orchestrator: it decompo
 - Create or reuse `.worktrees/<slug>` on `codex/<slug>` before writing persistent plans or implementation changes
 - Use `npm run worktree:new -- <slug>` to create a bootstrapped worktree
 - Use `npm run dev:worktree` inside a worktree so parallel runs do not fight over the same port
-- Include the chosen plan and durable mockups in the PR; keep transient review output outside the repo and explicitly archive or discard it
+- Include the chosen plan and durable mockup or prototype evidence in the PR; keep transient review output outside the repo and explicitly archive or discard it
 
 ## Project Conventions
 

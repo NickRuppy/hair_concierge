@@ -19,7 +19,7 @@ A Goal can contain this loop. The loop does not require formal Goal mode.
 
 Read the approved plan and inspect any active goal before editing.
 
-For user-facing work, confirm the plan contains **Mockup evidence**, confirmed mockup review, a **Designed user journey**, and explicit user-journey sign-off. If any is missing or pending, return to `plan-hardening-loop`; do not implement. A prose-only visual description or general plan approval is not a substitute. For backend-only work, accept an explicitly confirmed operator/integration journey plus an explicit statement that no user-facing mockup is required because no surface, copy, timing, or feedback changes.
+For user-facing work, confirm the plan contains **Planning evidence**, confirmed evidence review, a **Designed user journey**, and explicit user-journey sign-off. If any is missing or pending, return to `plan-hardening-loop`; do not implement. A prose-only visual description or general plan approval is not a substitute. If a prototype settled a decision, confirm its finding and disposition are recorded and rewrite retained behavior through the normal production test and safeguard workflow. For backend-only work, accept an explicitly confirmed operator/integration journey plus an explicit statement that no user-facing mockup is required because no surface, copy, timing, or feedback changes.
 
 Use formal Goal mode only when the user explicitly asks for it and the work is likely to span multiple turns, resumptions, or a long implementation sequence. If formal Goal mode is requested, first inspect the existing goal to avoid replacing unrelated active work.
 
@@ -34,7 +34,7 @@ Verification: <proof required>
 Stop: <last authorized external action>
 ```
 
-Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine automation runs do not trigger this skill and do not require an implementation contract or formal Goal. A tiny user-facing fix still returns to `plan-hardening-loop` for contextual mockup review and journey sign-off.
+Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine automation runs do not trigger this skill and do not require an implementation contract or formal Goal. A tiny user-facing fix still returns to `plan-hardening-loop` for contextual evidence review and journey sign-off.
 
 Completion criterion: the controlling outcome is stable, authorization is clear, and process details are subordinate to it.
 

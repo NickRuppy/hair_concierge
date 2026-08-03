@@ -10,8 +10,8 @@
 worktree:new -> plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) -> ship-it -> merge -> worktree:finish
 ```
 
-- Start persistent planning in the task worktree. Keep the chosen plan and durable mockups with the PR; archive or discard transient review artifacts explicitly.
-- `plan-hardening-loop` owns non-trivial planning, meaningful option comparison, user-facing mockups, counterpart plan review, revision, and a final designed-user-journey walkthrough. For user-facing work it stops only after Nick has reviewed the mockup and explicitly confirmed the journey.
+- Start persistent planning in the task worktree. Keep the chosen plan and durable mockup or prototype evidence with the PR; archive or discard transient review artifacts explicitly.
+- `plan-hardening-loop` owns non-trivial planning, meaningful option comparison, user-facing evidence, counterpart plan review, revision, and a final designed-user-journey walkthrough. It invokes `prototype` only when a runnable UI or logic artifact is needed to settle a named decision that lighter mockups cannot answer. For user-facing work it stops only after Nick has reviewed the evidence and explicitly confirmed the journey.
 - `implementation-loop` owns execution of an approved plan or clearly bounded non-trivial change. It invokes `ready-check` and `request-code-review` before its review-ready handoff; do not rerun them as separate top-level phases on unchanged content.
 - `ready-check` owns repository and user-flow verification.
 - `request-code-review` is the single local review router. Do not separately stack `code-reviewer`, thermo review, and other general review skills unless it delegates those lenses.
@@ -62,9 +62,11 @@ Use for campaign-matched landing and offer packages, the shared funnel generator
 
 For non-trivial plans, present 2-3 similarly scoped approaches only for meaningful product, architecture, UX, data, rollout, verification, risk, or scope forks. Explain what gets easier, what gets harder, and the residual risk. Let the user choose when local evidence cannot settle the fork.
 
-For every user-facing change, inspect the current product surface and create at least one reviewable mockup during planning. Use the lightest useful format: an annotated screenshot for a small existing-surface change, a wireframe for a new hierarchy or flow, or rendered lightweight HTML for layout and interaction. For copy-only work on an existing surface, show the before/after copy inside the real component layout. Show 2-3 variants for meaningful visual forks, use realistic German copy, and include responsive or critical error/loading states when they materially affect the experience. Markdown, ASCII, detached copy samples, and prose-only descriptions do not count as mockups for an existing surface.
+For every user-facing change, inspect the current product surface and create at least one reviewable mockup during planning. Use the lightest useful format: an annotated screenshot for a small existing-surface change, a wireframe for a new hierarchy or flow, or rendered lightweight HTML for layout and responsive behavior. For copy-only work on an existing surface, show the before/after copy inside the real component layout. Show 2-3 variants for meaningful visual forks, use realistic German copy, and include responsive or critical error/loading states when they materially affect the experience. Markdown, ASCII, detached copy samples, and prose-only descriptions do not count as mockups for an existing surface.
 
-Before implementing a user-facing plan, record the reviewed mockup and incorporated feedback, then translate the final design into the concrete user journey and walk Nick through it once more. Include entry state, ordered user actions and system responses, error/recovery states, meaningful variants, and completion. Require confirmed mockup review and explicit journey sign-off; earlier general plan approval does not satisfy either gate.
+Invoke `prototype` from the mockup step only after grilling has named the question and decision criterion, and only when interaction, changing state, or a logic model cannot be judged reliably from static evidence. Treat the result as planning evidence: record what it proved, then rewrite any retained behavior through the normal production implementation and test workflow.
+
+Before implementing a user-facing plan, record the reviewed mockup or prototype evidence and incorporated feedback, then translate the final design into the concrete user journey and walk Nick through it once more. Include entry state, ordered user actions and system responses, error/recovery states, meaningful variants, and completion. Require confirmed evidence review and explicit journey sign-off; earlier general plan approval does not satisfy either gate.
 
 ## Orchestration
 
@@ -109,7 +111,7 @@ The reviewer is read-only and terminal: it returns a verdict and must not invoke
 ## Working outputs
 
 - Put the chosen implementation plan in the task worktree under `plans/` and include it in the PR.
-- Keep durable mockups with the PR. Store transient reviewer output outside the repository, then archive or discard it explicitly.
+- Keep durable mockup or prototype decision evidence with the PR. Store transient reviewer output outside the repository, then archive or discard it explicitly.
 - Put reusable project docs in `docs/`.
 - Only add to `questions-for-domain-review.md` when internal domain review is genuinely required and external evidence or repository context cannot resolve the question.
 - Keep workflow instructions and receipts concise; link to the owning rule instead of repeating it.
