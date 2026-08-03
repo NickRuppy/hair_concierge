@@ -50,6 +50,10 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
       resetStepScroll()
       secondFrame = window.requestAnimationFrame(() => {
         const container = resetStepScroll()
+        // The lead-capture substeps manage their own input focus via autoFocus.
+        // Moving focus back to the heading here would override the editable
+        // email field after a deliverability rejection.
+        if (step === 9) return
         const heading = container?.querySelector<HTMLElement>("h1, h2")
         if (heading) {
           if (!heading.hasAttribute("tabindex")) {
@@ -92,7 +96,7 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
               <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
             )}
             <div
-              key={`${step}:${leadCaptureSubStep}`}
+              key={step}
               className="personal-plan-screen-enter"
               data-personal-plan-transition-direction={transitionDirection}
             >

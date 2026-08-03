@@ -30,3 +30,9 @@ test("legacy quiz shell uses the Personal Plan motion classes for screen transit
   assert.match(quizShellSource, /personal-plan-screen-enter/)
   assert.match(quizShellSource, /data-personal-plan-transition-direction/)
 })
+
+test("legacy lead capture keeps local recovery state across its animated substeps", () => {
+  assert.match(quizShellSource, /key=\{step\}/)
+  assert.doesNotMatch(quizShellSource, /key=\{`\$\{step\}:\$\{leadCaptureSubStep\}`\}/)
+  assert.match(quizShellSource, /if \(step === 9\) return/)
+})

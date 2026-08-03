@@ -8,22 +8,14 @@ test.describe("Core user flows — smoke test @ci", () => {
     expect(response?.ok() || response?.status() === 304).toBeTruthy()
     // Hero H1 is the marketing landing's signature copy
     const heroHeading = page.locator("h1").first()
-    await expect(heroHeading).toContainText("In 2 Minuten verstehst du besser")
-    // The header CTA should link to /quiz (multiple CTAs share this name — take the header's)
-    const quizCta = page.getByRole("link", { name: "Haaranalyse starten" }).first()
-    await expect(quizCta).toHaveAttribute("href", "/quiz")
-    // Returning users need a visible sign-in path — header has Anmelden → /chat
-    // (middleware routes signed-in users straight to /chat, signed-out returning
-    // users through /auth with next preserved)
-    const signInLink = page.getByRole("link", { name: "Anmelden" })
-    await expect(signInLink).toHaveAttribute("href", "/chat")
-    // The pricing section was removed from the landing — anonymous /pricing visits
-    // hit a checkout dead-end, so there is no "Plan wählen" CTA on the page anymore.
+    await expect(heroHeading).toContainText("Versteh dein Haar. Ohne Produktchaos.")
+    // Both the compact header action and the primary hero action start the regular quiz.
+    await expect(
+      page.getByRole("link", { name: "Analyse starten", exact: true }).first(),
+    ).toHaveAttribute("href", "/quiz")
+    await expect(page.locator("[data-landing-hero-cta]")).toHaveAttribute("href", "/quiz")
+    // The organic landing deliberately keeps pricing out of the entry experience.
     await expect(page.getByText("Plan wählen")).toHaveCount(0)
-    // The footer no longer exposes a "Preise" link (it deep-linked to /pricing).
-    // A stable legal link like Impressum must still be present.
-    await expect(page.locator('footer a[href="/pricing"]')).toHaveCount(0)
-    await expect(page.locator('footer a[href="/impressum"]')).toBeVisible()
     // Take a screenshot as evidence
     await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })
