@@ -4,7 +4,7 @@ import type {
   HairAssessmentDimensionId,
 } from "./hair-assessment"
 import { evidenceScoreToSegments } from "./hair-assessment"
-import type { PersonalPlanQuizAnswers } from "./types"
+import type { PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
 
 export type PersonalPlanExplanationPart = {
   kind: "text" | "answer"
@@ -62,21 +62,21 @@ function assertExplanationContract(parts: readonly PersonalPlanExplanationPart[]
   }
 }
 
-function treatmentLabel(answers: PersonalPlanQuizAnswers) {
+function treatmentLabel(answers: PersonalPlanDiagnosticInput) {
   if (answers.chemicalTreatments?.includes("lightened")) return "Blondierung"
   if (answers.chemicalTreatments?.includes("permed")) return "Eine Dauerwelle"
   if (answers.chemicalTreatments?.includes("chemically_straightened")) return "Chemische Glättung"
   return null
 }
 
-function shapeAnchor(answers: PersonalPlanQuizAnswers) {
+function shapeAnchor(answers: PersonalPlanDiagnosticInput) {
   if (answers.texture === "curly") return "Deine Locken verlieren schnell Definition"
   if (answers.texture === "coily") return "Die Definition deiner Coils hält nicht"
   if (answers.texture === "wavy") return "Deine Wellen verlieren schnell ihre Form"
   return "Dein Haar verliert schnell Form und Halt"
 }
 
-function volumeAnchor(answers: PersonalPlanQuizAnswers) {
+function volumeAnchor(answers: PersonalPlanDiagnosticInput) {
   if (answers.texture === "wavy") return "Flacher Ansatz und beschwerte Längen"
   if (answers.texture === "curly" || answers.texture === "coily")
     return "Ungleichmäßige Form oder ungleichmäßiges Volumen"
@@ -85,7 +85,7 @@ function volumeAnchor(answers: PersonalPlanQuizAnswers) {
 
 function explanationFor(
   dimension: HairAssessmentDimension,
-  answers: PersonalPlanQuizAnswers,
+  answers: PersonalPlanDiagnosticInput,
   owns: (evidenceId: string) => boolean,
 ): PersonalPlanExplanationPart[] {
   const has = (id: string) => dimension.evidence.some((evidence) => evidence.id === id) && owns(id)
@@ -239,7 +239,7 @@ function explanationFor(
         answer("wieder in seine Form zurück"),
         text(". Das spricht für eine aktuell flexible Ausgangslage."),
       ]
-    if (!has("breakage") && has("elastic_stays"))
+    if (!has("breakage") && !has("hair_damage") && has("elastic_stays"))
       return [
         text("Beim sanften Dehnen "),
         answer("blieb dein Haar gedehnt"),
@@ -250,11 +250,16 @@ function explanationFor(
           answer("Haarbruch in den Längen"),
           text(" beginnt oberhalb der Spitzen und braucht mehr als reine Spitzenpflege."),
         ]
-      : [
-          text("Beim sanften Dehnen ist dein Haar "),
-          answer("schnell gerissen"),
-          text(" – ein Hinweis darauf, dass es Zug aktuell weniger gut standhält."),
-        ]
+      : has("hair_damage")
+        ? [
+            answer("Strapazierte oder geschädigte Längen"),
+            text(" brauchen eine Routine, die Belastung reduziert und die Faser gezielt schützt."),
+          ]
+        : [
+            text("Beim sanften Dehnen ist dein Haar "),
+            answer("schnell gerissen"),
+            text(" – ein Hinweis darauf, dass es Zug aktuell weniger gut standhält."),
+          ]
     if (treatment)
       appendIfFits(parts, [
         text(" "),
@@ -328,7 +333,7 @@ function explanationFor(
 
 export function buildPersonalPlanAssessmentRows(
   assessment: HairAssessment,
-  answers: PersonalPlanQuizAnswers,
+  answers: PersonalPlanDiagnosticInput,
 ): [PersonalPlanAssessmentRow, PersonalPlanAssessmentRow, PersonalPlanAssessmentRow] {
   const selected = assessment.selectedDimensionIds.map((id) => {
     const found = assessment.dimensions.find((dimension) => dimension.id === id)
@@ -365,8 +370,13 @@ export function buildPersonalPlanAssessmentRows(
     return {
       id: dimension.id,
       title:
-        dimension.id === "breakage_stability" && !dimension.explicitConcern
-          ? "Stabilität"
+        dimension.id === "breakage_stability"
+          ? !dimension.explicitConcern
+            ? "Stabilität"
+            : dimension.evidence.some((item) => item.id === "hair_damage") &&
+                !dimension.evidence.some((item) => item.id === "breakage")
+              ? "Struktur & Stabilität"
+              : TITLES[dimension.id]
           : TITLES[dimension.id],
       todayLabel:
         todaySegments === 1 ? "viel Potenzial" : todaySegments === 2 ? "gute Basis" : "optimal",

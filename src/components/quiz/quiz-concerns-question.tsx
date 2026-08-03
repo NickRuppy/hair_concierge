@@ -6,18 +6,26 @@ import { Button } from "@/components/ui/button"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { getQuestionByStep, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
-import { toggleConcernSelection } from "@/lib/quiz/normalization"
 import { useQuizStore } from "@/lib/quiz/store"
+import { resolveVisibleDiagnosticConcerns } from "@/lib/quiz/diagnostic-input"
+
+function toggleConcern(current: string[], value: string): string[] {
+  if (value === "none") return []
+  if (current.includes(value)) return current.filter((item) => item !== value)
+  return [...current, value]
+}
 
 export function QuizConcernsQuestion() {
   const question = getQuestionByStep(8)
   const { answers, setAnswer, goBack, goNext } = useQuizStore()
-  const [localSelection, setLocalSelection] = useState<string[]>(answers.concerns ?? [])
+  const [localSelection, setLocalSelection] = useState<string[]>(
+    resolveVisibleDiagnosticConcerns(answers.concerns ?? []),
+  )
   const [otherText, setOtherText] = useState(answers.concerns_other_text ?? "")
   const [showOtherField, setShowOtherField] = useState(Boolean(answers.concerns_other_text?.trim()))
 
   const handleToggle = useCallback((value: string) => {
-    setLocalSelection((current) => toggleConcernSelection(current, value))
+    setLocalSelection((current) => toggleConcern(current, value))
   }, [])
 
   const handleNone = useCallback(() => {
@@ -41,6 +49,8 @@ export function QuizConcernsQuestion() {
   const hasTypedNote = otherText.trim().length > 0
   const customOptionActive = showOtherField || hasTypedNote
   const canContinue = hasSelection || hasTypedNote
+  const instruction =
+    "Wähle alles aus, was wiederholt auf deine Längen und Spitzen zutrifft. Wir priorisieren es später automatisch."
 
   return (
     <div className="flex flex-col" key="quiz-concerns-question">
@@ -61,23 +71,17 @@ export function QuizConcernsQuestion() {
       </div>
 
       <h2 className="font-header text-3xl leading-tight text-foreground mb-2">{question.title}</h2>
-      <p className="text-sm text-muted-foreground leading-relaxed">{question.instruction}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed">{instruction}</p>
       <div className="mb-5 mt-3 flex items-center justify-between gap-3">
         <span className="rounded-full border border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-semibold text-[var(--brand-plum)]">
-          Bis zu {question.maxSelections}
+          Alles auswählen, was passt
         </span>
-        <span className="text-xs text-[var(--text-caption)]">
-          {localSelection.length}/{question.maxSelections} gewählt
-        </span>
+        <span className="text-xs text-[var(--text-caption)]">{localSelection.length} gewählt</span>
       </div>
 
       <div className="space-y-3 flex-1">
         {question.options.map((option, index) => {
           const active = localSelection.includes(option.value)
-          const disabled =
-            !active &&
-            typeof question.maxSelections === "number" &&
-            localSelection.length >= question.maxSelections
 
           return (
             <QuizOptionCard
@@ -86,7 +90,6 @@ export function QuizConcernsQuestion() {
               label={option.label}
               description={option.description}
               active={active}
-              disabled={disabled}
               onClick={() => handleToggle(option.value)}
               animationDelay={index * 60}
             />

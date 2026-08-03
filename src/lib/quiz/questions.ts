@@ -237,15 +237,32 @@ export const quizQuestions: QuizQuestion[] = [
   {
     step: 8,
     questionNumber: getQuizQuestionNumber(8) ?? 9,
-    title: "Welche Haarprobleme beschäftigen dich gerade am meisten?",
-    instruction:
-      "Wähle bis zu 3 Punkte aus, die aktuell am besten zu deinen Längen und Spitzen passen.",
+    title: "Welche Haarprobleme beschäftigen dich gerade?",
+    instruction: "Wähle alles aus, was aktuell auf dein Haar zutrifft.",
     options: [
       {
         value: "hair_damage",
-        label: "Haarschäden",
-        description: "Die Längen wirken strapaziert und geschwächt",
+        label: "Mein Haar wirkt insgesamt strapaziert oder geschädigt",
+        description: "Die Längen wirken insgesamt beansprucht.",
         icon: "goal-repair",
+      },
+      {
+        value: "dry_lengths",
+        label: "Trockene oder strohige Längen",
+        description: "Deine Längen fühlen sich trocken oder rau an.",
+        icon: "goal-moisture",
+      },
+      {
+        value: "frizz_flyaways",
+        label: "Frizz oder viele abstehende Haare",
+        description: "Viele Haare stehen ab oder die Oberfläche wirkt unruhig.",
+        icon: "goal-frizz",
+      },
+      {
+        value: "low_shine",
+        label: "Wenig Glanz",
+        description: "Deine Längen wirken stumpf oder glanzlos.",
+        icon: "goal-shine",
       },
       {
         value: "split_ends",
@@ -260,16 +277,16 @@ export const quizQuestions: QuizQuestion[] = [
         icon: "goal-strength",
       },
       {
-        value: "dryness",
-        label: "Trockenheit",
-        description: "Die Längen fühlen sich stumpf und trocken an",
-        icon: "goal-moisture",
+        value: "lost_shape",
+        label: "Meine Form oder Definition hält nicht so, wie ich es möchte",
+        description: "Wellen, Locken oder die Form verlieren schnell Halt.",
+        icon: "goal-smoothness",
       },
       {
-        value: "frizz",
-        label: "Frizz",
-        description: "Viele abstehende Härchen und wenig Geschmeidigkeit",
-        icon: "goal-frizz",
+        value: "low_volume_or_weighed_down",
+        label: "Mein Ansatz wirkt flach oder meine Längen schnell beschwert",
+        description: "Volumen und Leichtigkeit fühlen sich nicht ausgewogen an.",
+        icon: "goal-volume",
       },
       {
         value: "tangling",
@@ -279,7 +296,6 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "multi",
-    maxSelections: 3,
     motivation: remainingQuestionsText(8, "Fast geschafft"),
   },
 ]

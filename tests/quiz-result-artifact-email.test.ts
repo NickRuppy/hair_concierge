@@ -98,6 +98,38 @@ test("builds Customer.io message data from the shared offer-page content", () =>
   }
 })
 
+test("projects new organic concern and goal ids before building the legacy email artifact", () => {
+  const baseInput = {
+    leadId: "550e8400-e29b-41d4-a716-446655440000",
+    name: "Lea Beispiel",
+    email: "lea@example.com",
+    siteUrl: "https://chaarlie.de",
+  }
+  const diagnosticPayload = buildQuizResultArtifactEmailPayload({
+    ...baseInput,
+    quizAnswers: {
+      ...answers,
+      concerns: ["dry_lengths", "frizz_flyaways"],
+      goals: ["frizz_surface", "scalp_balance"],
+    },
+  })
+  const legacyPayload = buildQuizResultArtifactEmailPayload({
+    ...baseInput,
+    quizAnswers: {
+      ...answers,
+      concerns: ["dryness", "frizz"],
+      goals: ["less_frizz", "healthy_scalp"],
+    },
+  })
+
+  assert.deepEqual(diagnosticPayload.messageData.signals, legacyPayload.messageData.signals)
+  assert.deepEqual(diagnosticPayload.messageData.rows, legacyPayload.messageData.rows)
+  assert.deepEqual(
+    diagnosticPayload.messageData.routine_levers,
+    legacyPayload.messageData.routine_levers,
+  )
+})
+
 test("supports numeric Customer.io transactional message id override", () => {
   const previousMessageId = process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]
   process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV] = "7"

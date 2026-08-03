@@ -28,6 +28,10 @@ export default async function CampaignLandingPage({
   const [{ slug }, resolvedSearchParams] = await Promise.all([params, searchParams])
   const funnelPackage = getFunnelPackageBySlug(slug)
   if (!funnelPackage) notFound()
+  if (funnelPackage.key === "meta_routine_v1") {
+    redirect(buildRetiredRoutineRedirect(resolvedSearchParams))
+  }
+  if (funnelPackage.status === "archived") notFound()
   if (funnelPackage.key === "meta_personal_plan_v1" && !isPersonalPlanQuizV1Enabled()) {
     notFound()
   }
@@ -69,6 +73,27 @@ export default async function CampaignLandingPage({
       {landingVariant}
     </>
   )
+}
+
+const SAFE_RETIRED_ROUTINE_QUERY_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "fbclid",
+] as const
+
+export function buildRetiredRoutineRedirect(
+  searchParams: Record<string, string | string[] | undefined>,
+) {
+  const params = new URLSearchParams()
+  for (const key of SAFE_RETIRED_ROUTINE_QUERY_KEYS) {
+    const value = getSingleSearchParam(searchParams[key])
+    if (value) params.set(key, value)
+  }
+  const query = params.toString()
+  return query ? `/?${query}` : "/"
 }
 
 function getSingleSearchParam(value: string | string[] | undefined) {

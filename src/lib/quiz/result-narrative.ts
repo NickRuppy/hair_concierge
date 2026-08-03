@@ -1,7 +1,7 @@
 import type { ChemicalTreatment, Goal } from "@/lib/vocabulary"
 import { getChemicalTreatmentDamageWeight } from "@/lib/profile/chemical-treatment"
 
-import { canonicalizeQuizAnswers } from "./normalization"
+import { projectQuizAnswersForLegacyConsumers } from "./normalization"
 import { resolveQuizNeed, type QuizConcern, type QuizNeedLane } from "./need-lane"
 import type { QuizAnswers } from "./types"
 
@@ -933,7 +933,7 @@ function buildNeedsSection(
 }
 
 export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNarrative {
-  const answers = canonicalizeQuizAnswers(rawAnswers)
+  const answers = projectQuizAnswersForLegacyConsumers(rawAnswers)
   const { lane, primaryConcern, primaryGoal } = resolveQuizNeed(answers)
 
   const hairFeelRow = buildHairFeelRow(answers, primaryConcern, primaryGoal)

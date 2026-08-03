@@ -23,6 +23,12 @@ export type SelectionMode = "single" | "multi"
 import type { IconName } from "@/components/ui/icon"
 import type { InfoTipId } from "@/lib/help/info-tips"
 import type { HairLength, ProfileConcern } from "@/lib/vocabulary"
+import type { Goal } from "@/lib/vocabulary/concerns-goals"
+import type { DiagnosticConcern, DiagnosticGoal } from "./diagnostic-input"
+
+/** Values accepted by the legacy quiz persistence boundary. */
+export type QuizConcern = ProfileConcern | DiagnosticConcern
+export type QuizGoal = Goal | DiagnosticGoal
 
 export interface QuizOption {
   value: string
@@ -53,10 +59,12 @@ export interface QuizAnswers {
   scalp_type?: string
   has_scalp_issue?: boolean
   scalp_condition?: string
-  concerns?: ProfileConcern[]
+  /** Quiz-owned values; legacy profile consumers use an explicit projection. */
+  concerns?: QuizConcern[]
   concerns_other_text?: string
   treatment?: string[]
-  goals?: string[]
+  /** Quiz-owned values; legacy profile consumers use an explicit projection. */
+  goals?: QuizGoal[]
 }
 
 export interface LeadData {

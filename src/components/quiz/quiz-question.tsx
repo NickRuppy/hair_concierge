@@ -11,6 +11,7 @@ import { toggleTreatmentSelection } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS } from "@/lib/help/info-tips"
+import { getLegacyQuizOptionLayout, getLegacyQuizOptionVisual } from "./legacy-quiz-visuals"
 
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",
@@ -66,13 +67,10 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         if (arr.includes(value)) {
           return arr.filter((v) => v !== value)
         }
-        if (question.maxSelections && arr.length >= question.maxSelections) {
-          return arr
-        }
         return [...arr, value]
       })
     },
-    [answerKey, question.maxSelections],
+    [answerKey],
   )
 
   const handleMultiContinue = () => {
@@ -87,6 +85,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
 
   const multiHasSelection = Array.isArray(localSelection) && localSelection.length > 0
   const infoTip = question.infoTipId ? INFO_TIPS[question.infoTipId] : null
+  const visualLayout = getLegacyQuizOptionLayout(question.step)
 
   return (
     <div className="flex flex-col" key={question.step}>
@@ -124,7 +123,11 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       <p className="text-sm text-muted-foreground leading-relaxed mb-5">{question.instruction}</p>
 
       {/* Options */}
-      <div className="space-y-3 flex-1">
+      <div
+        className={
+          visualLayout === "grid" ? "grid flex-1 grid-cols-2 gap-3" : "flex flex-1 flex-col gap-3"
+        }
+      >
         {question.options.map((opt, i) => (
           <QuizOptionCard
             key={opt.value}
@@ -132,6 +135,13 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
             label={opt.label}
             description={opt.description}
             active={isSelected(opt.value)}
+            visual={getLegacyQuizOptionVisual({
+              answers,
+              index: i,
+              step: question.step,
+              value: opt.value,
+            })}
+            visualLayout={visualLayout}
             onClick={() =>
               question.selectionMode === "single"
                 ? handleSingleSelect(opt.value)

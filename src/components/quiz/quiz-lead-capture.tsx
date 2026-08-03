@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,7 +38,24 @@ export function QuizLeadCapture() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
+  const emailInputRef = useRef<HTMLInputElement>(null)
   const liveSuggestion = suggestEmailCorrection(lead.email)
+
+  useEffect(() => {
+    if (leadCaptureSubStep !== "email") return
+
+    let secondFrame = 0
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        emailInputRef.current?.focus({ preventScroll: true })
+      })
+    })
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame)
+      window.cancelAnimationFrame(secondFrame)
+    }
+  }, [leadCaptureSubStep])
 
   const updateEmail = (email: string) => {
     setLeadField("email", email)
@@ -201,6 +218,7 @@ export function QuizLeadCapture() {
         <div className="animate-fade-in-up flex-1 flex flex-col">
           <h2 className="font-header text-3xl text-foreground mb-6">Deine E-Mail Adresse</h2>
           <Input
+            ref={emailInputRef}
             type="email"
             value={lead.email}
             onChange={(e) => updateEmail(e.target.value)}

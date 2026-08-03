@@ -219,7 +219,7 @@ const GOAL_LABELS: Record<
     scalp_balance: "Ausgeglichene Kopfhaut",
     manageability_styling: "Leichteres Styling",
     shape_definition: "Mehr Form und Halt",
-    volume_balance: "Mehr Volumen",
+    volume_balance: "Ausgewogenes Volumen",
   },
   wavy: {
     moisture: "Feuchtigkeit ohne Beschweren",
@@ -229,7 +229,7 @@ const GOAL_LABELS: Record<
     scalp_balance: "Ausgeglichene Kopfhaut",
     manageability_styling: "Leichteres Styling",
     shape_definition: "Mehr Wellen-Definition",
-    volume_balance: "Mehr Volumen am Ansatz",
+    volume_balance: "Ausgewogenes Volumen",
   },
   curly: {
     moisture: "Intensive Feuchtigkeit",
@@ -342,6 +342,12 @@ const SHARED_CONCERNS: Array<QuizOption & { value: PersonalPlanQuizConcern }> = 
     label: "Wenig Glanz",
     midSentenceLabel: "stumpfe, glanzlose Längen",
     icon: "sparkles",
+  },
+  {
+    value: "hair_damage",
+    label: "Mein Haar wirkt insgesamt strapaziert oder geschädigt",
+    midSentenceLabel: "insgesamt strapaziertes Haar",
+    icon: "shield",
   },
   {
     value: "breakage",

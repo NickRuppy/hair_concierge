@@ -1,21 +1,15 @@
 import { notFound } from "next/navigation"
 
-import { QuizResultOfferPage } from "@/components/quiz/quiz-result-offer-page"
 import {
   OfferPaymentOverlayLab,
   OfferPaymentColdCheckoutLab,
 } from "@/components/checkout/offer-payment-overlay-lab"
 import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-plan-offer"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
-import AppValueStackOfferVariant from "@/funnels/offers/app-value-stack"
-import GuidedStoryOfferVariant from "@/funnels/offers/guided-story"
-import GuidedStoryFounderLetterOfferVariant from "@/funnels/offers/guided-story-founder-letter"
-import GuidedStoryLockedOfferVariant from "@/funnels/offers/guided-story-locked"
-import GuidedStoryPotentialOfferVariant from "@/funnels/offers/guided-story-potential"
+import OrganicPlanOfferVariant from "@/funnels/offers/organic-plan-v1"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
 import { buildPersonalPlanPreparedArtifact } from "@/lib/personal-plan-quiz/prepared-plan"
 import { canonicalizePersonalPlanAnswers } from "@/lib/personal-plan-quiz/persistence"
-import { APP_VALUE_STACK_CTA_LABEL } from "@/lib/quiz/app-value-stack-copy"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
@@ -112,7 +106,7 @@ function StaticPricingPreview() {
         </div>
       ))}
       <div className="rounded-[12px] bg-[var(--brand-coral)] px-5 py-4 text-center text-[14px] font-bold text-white">
-        {APP_VALUE_STACK_CTA_LABEL}
+        Plan sichern
       </div>
       <p className="text-center text-[11px] text-muted-foreground">
         14 Tage Geld-zurück-Garantie · Details in den Bedingungen
@@ -137,7 +131,7 @@ export default async function OfferPageLab({
   if (!isOfferPageLabEnabled(process.env)) notFound()
 
   const params = await searchParams
-  const variant = params.variant ?? "app-value-stack"
+  const variant = params.variant ?? "organic-plan"
   const narrative = buildQuizResultNarrative(REVIEW_ANSWERS)
 
   if (variant === "payment-overlay") {
@@ -183,56 +177,15 @@ export default async function OfferPageLab({
     )
   }
 
-  if (variant === "default") {
-    return (
-      <QuizResultOfferPage
-        leadId={null}
-        name="Lea"
-        narrative={narrative}
-        quizAnswers={REVIEW_ANSWERS}
-      />
-    )
-  }
-
-  if (
-    variant === "guided-story" ||
-    variant === "guided-story-locked" ||
-    variant === "guided-story-founder-letter" ||
-    variant === "guided-story-potential"
-  ) {
-    const GuidedStoryVariant =
-      variant === "guided-story-locked"
-        ? GuidedStoryLockedOfferVariant
-        : variant === "guided-story-founder-letter"
-          ? GuidedStoryFounderLetterOfferVariant
-          : variant === "guided-story-potential"
-            ? GuidedStoryPotentialOfferVariant
-            : GuidedStoryOfferVariant
-
-    return (
-      <GuidedStoryVariant
-        entryContext={params.focus === "routine" ? "routine_return" : "quiz_completion"}
-        focusRoutine={params.focus === "routine"}
-        focusTarget={params.focus === "unlock-plan" ? "unlock-plan" : null}
-        leadId={null}
-        name="Lea"
-        narrative={narrative}
-        offerVariant={variant}
-        quizAnswers={REVIEW_ANSWERS}
-        pricingSlot={<StaticPricingPreview />}
-      />
-    )
-  }
-
-  if (variant !== "app-value-stack") notFound()
+  if (variant !== "organic-plan" && variant !== "organic-plan-v1") notFound()
 
   return (
-    <AppValueStackOfferVariant
+    <OrganicPlanOfferVariant
       entryContext="quiz_completion"
       leadId={null}
       name="Lea"
       narrative={narrative}
-      offerVariant="app-value-stack"
+      offerVariant="organic-plan-v1"
       quizAnswers={REVIEW_ANSWERS}
       pricingSlot={<StaticPricingPreview />}
     />

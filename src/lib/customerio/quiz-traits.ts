@@ -1,5 +1,8 @@
 import type { CustomerIoServerProperties } from "@/lib/customerio/server"
-import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
+import {
+  canonicalizeQuizAnswers,
+  projectQuizAnswersToLegacyVocabulary,
+} from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { HAIR_LENGTH_LABELS } from "@/lib/vocabulary"
 import { GOAL_LABELS, PROFILE_CONCERN_LABELS } from "@/lib/vocabulary/concerns-goals"
@@ -92,6 +95,7 @@ export function buildCustomerIoQuizLeadSync({
 }) {
   const normalizedEmail = normalizeEmail(email)
   const answers = canonicalizeQuizAnswers(quizAnswers)
+  const legacyVocabulary = projectQuizAnswersToLegacyVocabulary(answers)
   const identifyTraits: CustomerIoServerProperties = {
     email: normalizedEmail,
     first_name: firstName(name),
@@ -118,12 +122,12 @@ export function buildCustomerIoQuizLeadSync({
     has_scalp_issue: answers.has_scalp_issue,
     scalp_condition: answers.scalp_condition,
     scalp_condition_label: labelFor(answers.scalp_condition, SCALP_CONDITION_LABELS),
-    concerns: answers.concerns,
-    concern_labels: labelsFor(answers.concerns, PROFILE_CONCERN_LABELS),
+    concerns: legacyVocabulary.concerns,
+    concern_labels: labelsFor(legacyVocabulary.concerns, PROFILE_CONCERN_LABELS),
     chemical_treatment: answers.treatment,
     chemical_treatment_labels: labelsFor(answers.treatment, TREATMENT_LABELS),
-    goals: answers.goals,
-    goal_labels: labelsFor(answers.goals, GOAL_LABELS),
+    goals: legacyVocabulary.goals,
+    goal_labels: labelsFor(legacyVocabulary.goals, GOAL_LABELS),
   }
 
   return {

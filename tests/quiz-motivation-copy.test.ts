@@ -31,8 +31,10 @@ test("quiz question sequence drives special step counters", () => {
 
 test("goal cards expose selection state without repeated status pills", async () => {
   const source = await readFile("src/components/quiz/quiz-goals.tsx", "utf8")
+  const cardSource = await readFile("src/components/quiz/quiz-option-card.tsx", "utf8")
 
-  assert.match(source, /aria-pressed=\{isSelected\}/)
+  assert.match(source, /active=\{isSelected\}/)
+  assert.match(cardSource, /aria-pressed=\{active\}/)
   assert.doesNotMatch(source, />Ziel</)
   assert.doesNotMatch(source, />Ausgewählt</)
 })

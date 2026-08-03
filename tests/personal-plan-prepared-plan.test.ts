@@ -113,6 +113,15 @@ test("volume balance follows factual hair signals instead of selection order", (
   assert.deepEqual(highCoarse.answers.goals, ["less_volume"])
 })
 
+test("new damage concern is retained without merging it into Frizz", () => {
+  const adapted = adaptPersonalPlanAnswersForOffer({
+    ...completeAnswers,
+    currentConcerns: ["hair_damage", "frizz_flyaways"],
+  })
+
+  assert.deepEqual(adapted.answers.concerns, ["hair_damage", "frizz"])
+})
+
 test("prepared artifact contains three public dimensions but keeps products and routine locked", () => {
   const artifact = buildPersonalPlanPreparedArtifact(
     canonicalizePersonalPlanAnswers(completeAnswers),

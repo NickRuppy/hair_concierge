@@ -2,10 +2,6 @@ export function isFunnelAttributionEnabled() {
   return process.env.FUNNEL_ATTRIBUTION_ENABLED === "true"
 }
 
-export function isGuidedStoryOfferExperimentEnabled() {
-  return process.env.GUIDED_STORY_OFFER_EXPERIMENT_ENABLED === "true"
-}
-
 export function isPersonalPlanPricingExperimentEnabled() {
   return process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED === "true"
 }

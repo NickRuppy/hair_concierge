@@ -23,7 +23,6 @@ import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
-import { isGuidedStoryFamilyVariant } from "@/lib/funnel/offer-experiment"
 
 export function ResultPageClient({
   leadId,
@@ -138,10 +137,15 @@ function LegacyResultPageClient({
   const cta = getQuizResultCta({ canGoStraightToRoutine: hasAccess })
 
   useEffect(() => {
-    if (!focusTarget || isGuidedStoryFamilyVariant(offerVariant)) return
+    if (!focusTarget) return
+
+    const presentationTarget =
+      focusTarget === "unlock-plan" ? "personal_plan_complete_plan" : focusTarget
 
     window.requestAnimationFrame(() => {
-      document.getElementById(focusTarget)?.scrollIntoView({ behavior: "smooth", block: "start" })
+      document
+        .getElementById(presentationTarget)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" })
     })
   }, [focusTarget, offerVariant])
 

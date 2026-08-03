@@ -7,6 +7,7 @@ import {
   type HairAssessmentDimensionId,
 } from "../src/lib/personal-plan-quiz/hair-assessment"
 import { buildPersonalPlanAssessmentRows } from "../src/lib/personal-plan-quiz/assessment-copy"
+import { adaptLegacyQuizAnswersForAssessment } from "../src/lib/personal-plan-quiz/offer-adapter"
 import {
   PERSONAL_PLAN_QUIZ_CONCERNS,
   PERSONAL_PLAN_QUIZ_GOALS,
@@ -127,6 +128,93 @@ test("surface and shine are display siblings while breakage and split ends stay 
     }),
   )
   assert.deepEqual(assessment.selectedDimensionIds, ["shine", "breakage_stability", "split_ends"])
+})
+
+test("Haarschäden and Frizz stay independent assessment signals", () => {
+  const answers = complete({
+    currentConcerns: ["hair_damage", "frizz_flyaways"],
+    hairSurface: "smooth",
+    elasticResponse: "stretches_bounces",
+  })
+  const assessment = assessPersonalPlanHair(answers)
+  const rows = buildPersonalPlanAssessmentRows(assessment, answers)
+
+  assert.equal(assessment.selectedDimensionIds.includes("breakage_stability"), true)
+  assert.equal(assessment.selectedDimensionIds.includes("surface_frizz"), true)
+  assert.equal(
+    assessment.dimensions
+      .find((dimension) => dimension.id === "breakage_stability")
+      ?.evidence.some((evidence) => evidence.id === "hair_damage"),
+    true,
+  )
+  const damageRow = rows.find((row) => row.id === "breakage_stability")
+  const frizzRow = rows.find((row) => row.id === "surface_frizz")
+  assert.equal(damageRow?.title, "Struktur & Stabilität")
+  assert.match(damageRow?.summary ?? "", /Strapazierte oder geschädigte Längen/)
+  assert.doesNotMatch(damageRow?.summary ?? "", /flexible Ausgangslage/)
+  assert.match(frizzRow?.summary ?? "", /Frizz oder abstehende Haare/)
+  assert.doesNotMatch(frizzRow?.summary ?? "", /ruhige Haargefühl/)
+})
+
+test("generic damage honors its exact recurrence only as an ordering tie-break", () => {
+  const assessment = assessPersonalPlanHair(
+    complete({
+      currentConcerns: ["hair_damage", "frizz_flyaways"],
+      concernRecurrence: { concernId: "hair_damage", frequency: "often" },
+      hairSurface: "smooth",
+    }),
+  )
+  assert.deepEqual(assessment.selectedDimensionIds.slice(0, 2), [
+    "breakage_stability",
+    "surface_frizz",
+  ])
+})
+
+test("explicit Haarschäden copy takes precedence over a stays-stretched observation", () => {
+  const answers = complete({
+    currentConcerns: ["hair_damage"],
+    elasticResponse: "stretches_stays",
+  })
+  const assessment = assessPersonalPlanHair(answers)
+  const damageRow = buildPersonalPlanAssessmentRows(assessment, answers).find(
+    (row) => row.id === "breakage_stability",
+  )
+
+  assert.equal(damageRow?.title, "Struktur & Stabilität")
+  assert.match(damageRow?.summary ?? "", /Strapazierte oder geschädigte Längen/)
+  assert.doesNotMatch(damageRow?.summary ?? "", /blieb dein Haar gedehnt/)
+})
+
+test("legacy factual answers adapt to the shared diagnosis without invented context", () => {
+  const input = adaptLegacyQuizAnswersForAssessment({
+    structure: "wavy",
+    thickness: "fine",
+    density: "low",
+    hair_length: "long",
+    fingertest: "rau",
+    pulltest: "snaps",
+    scalp_type: "trocken",
+    has_scalp_issue: true,
+    scalp_condition: "gereizt",
+    treatment: ["blondiert"],
+    concerns: ["hair_damage", "frizz_flyaways"],
+    goals: ["volume_balance", "manageability_styling"],
+  })
+
+  assert.deepEqual(input, {
+    texture: "wavy",
+    thickness: "fine",
+    density: "low",
+    hairLength: "long",
+    hairSurface: "rough",
+    elasticResponse: "snaps",
+    scalpOiliness: "dry",
+    scalpConcerns: ["irritated"],
+    chemicalTreatments: ["lightened"],
+    currentConcerns: ["hair_damage", "frizz_flyaways"],
+    goals: ["volume_balance", "manageability_styling"],
+  })
+  assert.equal("concernRecurrence" in input, false)
 })
 
 test("a stretch observation cannot place Haarbruch beside explicitly selected Spliss", () => {

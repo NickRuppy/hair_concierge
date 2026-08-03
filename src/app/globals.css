@@ -266,23 +266,27 @@
   .quiz-card {
     position: relative;
     background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 14px 18px;
+    border: 1px solid var(--brand-plum-light);
+    border-radius: 16px;
+    padding: 14px 16px;
     overflow: hidden;
+    box-shadow: 0 12px 34px -30px rgba(var(--brand-plum-rgb), 0.55);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .quiz-card:hover {
-      border-color: hsl(var(--primary) / 0.3);
-      background: hsl(var(--muted));
+      border-color: var(--brand-plum);
+      background: #fff;
+      transform: translateY(-1px);
     }
   }
 
   .quiz-card-active {
-    background: var(--brand-plum-ice);
+    background: #fff;
     border-color: var(--brand-plum);
-    box-shadow: 0 0 20px rgba(var(--brand-plum-rgb), 0.08);
+    box-shadow:
+      0 0 0 2px rgba(var(--brand-plum-rgb), 0.18),
+      0 16px 40px -30px rgba(var(--brand-plum-rgb), 0.72);
   }
 
   /* Brand coral — meets WCAG 1.4.11 for non-text UI (buttons >= 3:1) */

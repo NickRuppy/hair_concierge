@@ -3,30 +3,40 @@ import test from "node:test"
 
 import { resolveOfferSectionIndex } from "../src/lib/analytics/offer-section-order"
 
-test("guided-story keeps stable contiguous indices across gated reveals", () => {
-  assert.equal(resolveOfferSectionIndex("guided-story", "personalized_analysis"), 0)
-  assert.equal(resolveOfferSectionIndex("guided-story", "product_story_chat"), 3)
-  assert.equal(resolveOfferSectionIndex("guided-story", "pricing"), 6)
-  assert.equal(resolveOfferSectionIndex("guided-story", "faq"), 7)
-  assert.equal(resolveOfferSectionIndex("guided-story", "product_story_chat_answer"), 8)
+test("retired legacy variants use the organic presentation order", () => {
+  for (const variant of [
+    "default",
+    "app-value-stack",
+    "guided-story",
+    "guided-story-locked",
+    "guided-story-founder-letter",
+    "guided-story-potential",
+  ]) {
+    assert.equal(
+      resolveOfferSectionIndex(variant, "pricing"),
+      resolveOfferSectionIndex("organic-plan-v1", "pricing"),
+    )
+  }
 })
 
-test("every guided-story experiment arm shares the guided behavior and founder letter has its slot", () => {
-  assert.equal(resolveOfferSectionIndex("guided-story-locked", "pricing"), 6)
-  assert.equal(resolveOfferSectionIndex("guided-story-potential", "faq"), 7)
-  assert.equal(resolveOfferSectionIndex("guided-story-founder-letter", "founder_letter"), 1)
-  assert.equal(resolveOfferSectionIndex("guided-story-founder-letter", "mini_routine"), 2)
-})
+test("organic order matches every rendered tracked section", () => {
+  const organicOrder = [
+    "hero",
+    "personal_plan_diagnosis",
+    "personal_plan_complete_plan",
+    "pricing",
+    "personal_plan_method",
+    "personal_plan_before_after",
+    "personal_plan_survey",
+    "testimonials",
+    "guarantee",
+    "faq",
+    "final_cta",
+  ] as const
 
-test("incumbent variants preserve their existing DOM-order section indices", () => {
-  assert.equal(resolveOfferSectionIndex("app-value-stack", "product_story_routine"), 5)
-  assert.equal(resolveOfferSectionIndex("app-value-stack", "product_story_chat"), 6)
-  assert.equal(resolveOfferSectionIndex("app-value-stack", "pricing"), 9)
-  assert.equal(resolveOfferSectionIndex("app-value-stack", "final_cta"), 11)
-
-  assert.equal(resolveOfferSectionIndex("default", "product_story_chat"), 4)
-  assert.equal(resolveOfferSectionIndex("default", "pricing"), 8)
-  assert.equal(resolveOfferSectionIndex("default", "final_cta"), 11)
+  for (const [index, sectionId] of organicOrder.entries()) {
+    assert.equal(resolveOfferSectionIndex("organic-plan-v1", sectionId), index)
+  }
 })
 
 test("personal-plan keeps the v3 visual order with pricing directly after diagnosis", () => {
@@ -58,6 +68,5 @@ test("personal-plan pricing treatment arms keep the same section order", () => {
 })
 
 test("unknown section combinations sort after a variant's declared sections", () => {
-  assert.equal(resolveOfferSectionIndex("guided-story", "final_cta"), 9)
-  assert.equal(resolveOfferSectionIndex("app-value-stack", "guarantee"), 12)
+  assert.equal(resolveOfferSectionIndex("organic-plan-v1", "product_story_chat_answer"), 11)
 })

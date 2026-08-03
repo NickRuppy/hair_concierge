@@ -3,7 +3,7 @@
     "id": "legacy-quiz-v1",
     "quizKind": "legacy",
     "delivery": { "kind": "route", "route": "/quiz" },
-    "landingVariants": ["default"]
+    "landingVariants": ["default", "organic-refresh"]
   },
   {
     "id": "personal-plan-quiz-v1",

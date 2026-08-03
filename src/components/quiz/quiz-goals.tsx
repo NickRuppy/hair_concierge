@@ -4,26 +4,20 @@ import { useCallback, useMemo } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { QuizProgressBar } from "./quiz-progress-bar"
+import { QuizOptionCard } from "./quiz-option-card"
 import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { useQuizStore } from "@/lib/quiz/store"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import { cn } from "@/lib/utils"
-import { getAvailableGoals, getAvailableGoalLabel } from "@/lib/onboarding/goal-flow"
+import { getGoalOptions } from "@/components/personal-plan-quiz/quiz-data"
 import type { HairTexture } from "@/lib/vocabulary"
-
-const MAX_GOALS = 5
+import { resolveVisibleDiagnosticGoals } from "@/lib/quiz/diagnostic-input"
+import { getLegacyQuizGoalIcon } from "./legacy-quiz-visuals"
 
 function toggleGoal(current: string[], goal: string): string[] {
   if (current.includes(goal)) {
     return current.filter((g) => g !== goal)
   }
-  let next = current
-  if (goal === "volume") next = next.filter((g) => g !== "less_volume")
-  if (goal === "less_volume") next = next.filter((g) => g !== "volume")
-  if (next.length >= MAX_GOALS) {
-    return current
-  }
-  return [...next, goal]
+  return [...current, goal]
 }
 
 export function QuizGoals() {
@@ -33,11 +27,11 @@ export function QuizGoals() {
   const goBack = useQuizStore((s) => s.goBack)
 
   const selectedGoals = useMemo(
-    () => (answers.goals as string[] | undefined) ?? [],
+    () => resolveVisibleDiagnosticGoals((answers.goals as string[] | undefined) ?? []),
     [answers.goals],
   )
   const hairTexture = (answers.structure as HairTexture | undefined) ?? null
-  const goals = useMemo(() => getAvailableGoals(hairTexture), [hairTexture])
+  const goals = useMemo(() => getGoalOptions(hairTexture ?? undefined), [hairTexture])
 
   const handleToggle = useCallback(
     (goal: string) => {
@@ -78,64 +72,30 @@ export function QuizGoals() {
       </h2>
       <div className="mb-5 flex items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Wähle bis zu {MAX_GOALS} Ziele, die wir in deinem Plan priorisieren sollen.
+          Wähle alles aus, was sich für deinen Plan wichtig anfühlt. Wir priorisieren daraus die
+          Reihenfolge.
         </p>
         <span className="shrink-0 rounded-full border border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-semibold text-[var(--brand-plum)]">
-          {selectedGoals.length}/{MAX_GOALS} gewählt
+          {selectedGoals.length} gewählt
         </span>
       </div>
 
-      <div className="grid auto-rows-fr grid-cols-2 gap-3 flex-1">
+      <div className="flex flex-1 flex-col gap-3">
         {goals.map((goal, i) => {
-          const isSelected = selectedGoals.includes(goal)
-          const isDisabled = !isSelected && selectedGoals.length >= MAX_GOALS
+          const isSelected = selectedGoals.some((value) => value === goal.value)
 
           return (
-            <button
-              key={goal}
-              type="button"
-              onClick={() => handleToggle(goal)}
-              disabled={isDisabled}
-              aria-pressed={isSelected}
-              className={cn(
-                "relative animate-fade-in-up flex h-full min-h-[104px] items-center rounded-2xl border px-4 py-5 pr-12 text-left transition-all duration-200",
-                isSelected
-                  ? "border-[var(--brand-plum)] bg-[rgba(var(--brand-plum-rgb),0.08)] shadow-[0_14px_36px_-28px_rgba(var(--brand-plum-rgb),0.45)]"
-                  : "border-border bg-card hover:border-primary/30 hover:bg-muted/40",
-                isDisabled && "cursor-not-allowed opacity-40",
-              )}
-              style={{ animationDelay: `${i * 40}ms` }}
-            >
-              <span className="text-[15px] font-semibold leading-snug text-foreground sm:text-base">
-                {getAvailableGoalLabel(goal, hairTexture)}
-              </span>
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute right-4 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border transition-colors",
-                  isSelected
-                    ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-primary-foreground"
-                    : "border-border bg-white text-transparent",
-                )}
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M2.5 6L5 8.5L9.5 4"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </button>
+            <QuizOptionCard
+              key={goal.value}
+              icon={getLegacyQuizGoalIcon(goal.value)}
+              label={goal.label}
+              active={isSelected}
+              onClick={() => handleToggle(goal.value)}
+              animationDelay={i * 40}
+            />
           )
         })}
       </div>
-
-      <p className="mt-4 text-center text-sm text-[var(--text-caption)]">
-        Du kannst deine Ziele später im Profil jederzeit anpassen.
-      </p>
 
       <div className="mt-4">
         <Button

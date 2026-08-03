@@ -1,5 +1,8 @@
 import packageDefinitions from "@/funnels/packages.json"
 import { assertLandingCompatibleQuizVariant } from "@/funnels/quizzes/registry"
+import { ORGANIC_PLAN_OFFER_VARIANT } from "@/lib/funnel/offer-presentation"
+
+export { ORGANIC_PLAN_OFFER_VARIANT } from "@/lib/funnel/offer-presentation"
 
 export type FunnelPackage = {
   key: string
@@ -89,4 +92,14 @@ export function resolveOfferVariantForSession(
   const funnelPackage = getFunnelPackageByKey(session.packageKey)
   if (!funnelPackage) throw new Error(`Unknown funnel package: ${session.packageKey}`)
   return funnelPackage.offerVariant
+}
+
+/**
+ * Legacy result links are an attribution boundary: preserve an explicitly stored
+ * arm, but never recreate a retired package default for an old null value.
+ */
+export function resolveLegacyResultOfferVariant(
+  session: { offerVariant?: string | null } | null,
+): string {
+  return session?.offerVariant ?? ORGANIC_PLAN_OFFER_VARIANT
 }

@@ -44,7 +44,7 @@ test("quiz draft stores only restorable quiz answers and progress", () => {
     answers: {
       structure: "wavy",
       hair_length: "medium" as const,
-      goals: ["shine"],
+      goals: ["shine"] as "shine"[],
     },
     lead: {
       name: "Lea",

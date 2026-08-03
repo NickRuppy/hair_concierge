@@ -4,7 +4,7 @@ import { getProductFrequencyMetadata } from "@/lib/vocabulary"
 import type { HairDensity, HairThickness, ScalpCondition, ScalpType } from "@/lib/vocabulary"
 
 import { resolveQuizNeed, type QuizNeedLane } from "./need-lane"
-import { canonicalizeQuizAnswers } from "./normalization"
+import { projectQuizAnswersForLegacyConsumers } from "./normalization"
 import { selectOfferPreviewProduct } from "./offer-preview-products"
 import type {
   OfferPreviewCadence,
@@ -239,7 +239,7 @@ function toCard(
 }
 
 export function buildQuizOfferPreview(rawAnswers: QuizAnswers): QuizOfferPreview {
-  const answers = canonicalizeQuizAnswers(rawAnswers)
+  const answers = projectQuizAnswersForLegacyConsumers(rawAnswers)
   const resolution = resolveQuizNeed(answers)
   const needs = deriveOfferPreviewNeedProfile(answers)
   const products = [

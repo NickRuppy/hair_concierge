@@ -48,7 +48,7 @@ test("result page client preserves a validated retake destination for entitled u
   )
 })
 
-test("result page client passes persisted quiz answers into the default product-led offer", () => {
+test("result page client passes persisted quiz answers into the organic offer", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient
       leadId="11111111-1111-4111-8111-111111111111"
@@ -60,9 +60,9 @@ test("result page client passes persisted quiz answers into the default product-
     />,
   )
 
-  assert.match(html, /Deine Analyse ist der Anfang/i)
-  assert.match(html, /Shampoo · Beispiel/i)
-  assert.match(html, /Conditioner · Beispiel/i)
-  assert.match(html, /id="unlock-plan"/i)
+  assert.match(html, /Dein Haarplan ist bereit/i)
+  assert.match(html, /Deine Ausgangslage/i)
+  assert.match(html, /Die Highlights deines Plans/i)
+  assert.match(html, /id="personal_plan_complete_plan"/i)
   assert.match(html, /id="pricing"/i)
 })

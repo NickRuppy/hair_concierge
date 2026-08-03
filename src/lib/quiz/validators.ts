@@ -6,12 +6,12 @@ import {
   QUIZ_HAIR_LENGTH_VALUES,
   QUIZ_FINGERTEST_VALUES,
   QUIZ_PULLTEST_VALUES,
-  QUIZ_CONCERN_VALUES,
+  QUIZ_ANSWER_CONCERN_VALUES,
+  QUIZ_GOAL_VALUES,
   QUIZ_SCALP_TYPE_VALUES,
   QUIZ_SCALP_CONDITION_VALUES,
   QUIZ_TREATMENT_VALUES,
 } from "./normalization"
-import { GOALS } from "@/lib/vocabulary/concerns-goals"
 
 const baseQuizAnswersShape = {
   structure: z.enum(QUIZ_STRUCTURE_VALUES),
@@ -22,16 +22,12 @@ const baseQuizAnswersShape = {
   scalp_type: z.enum(QUIZ_SCALP_TYPE_VALUES),
   has_scalp_issue: z.boolean(),
   scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
-  concerns: z.array(z.enum(QUIZ_CONCERN_VALUES)).max(3, "Bitte waehle hoechstens drei Bedenken"),
+  concerns: z.array(z.enum(QUIZ_ANSWER_CONCERN_VALUES)),
   concerns_other_text: z.string().trim().max(50, "Bitte bleib bei maximal 50 Zeichen").optional(),
   treatment: z
     .array(z.enum(QUIZ_TREATMENT_VALUES))
     .min(1, "Bitte waehle mindestens eine Behandlung"),
-  goals: z
-    .array(z.enum(GOALS))
-    .min(1, "Bitte waehle mindestens ein Ziel")
-    .max(5, "Bitte waehle hoechstens fuenf Ziele")
-    .optional(),
+  goals: z.array(z.enum(QUIZ_GOAL_VALUES)).min(1, "Bitte waehle mindestens ein Ziel").optional(),
 } satisfies z.ZodRawShape
 
 function applyQuizAnswerRules<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {

@@ -11,17 +11,10 @@ import {
 } from "./cookie"
 import {
   isFunnelAttributionEnabled,
-  isGuidedStoryOfferExperimentEnabled,
   isPersonalPlanOneTimeQaEnabled,
   isPersonalPlanPricingExperimentEnabled,
 } from "./flags"
-import { getFunnelPackageByKey, resolveOfferVariantForSession } from "./packages"
-import {
-  GUIDED_STORY_OFFER_EXPERIMENT,
-  assignGuidedStoryExperimentVariant,
-  isGuidedStoryExperimentVariant,
-  isGuidedStoryFamilyVariant,
-} from "./offer-experiment"
+import { getFunnelPackageByKey } from "./packages"
 import { captureOfferExperimentAssignmentFailure } from "@/lib/observability/offer-experiment"
 import {
   PERSONAL_PLAN_PRICING_EXPERIMENT,
@@ -370,97 +363,6 @@ export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
   }
 }
 
-export async function resolveGuidedStoryOfferExperiment(input: {
-  leadId: string
-  session: OfferExperimentSession | null
-  enabled?: boolean
-  client?: OfferExperimentAssignmentClient
-  captureFailure?: typeof captureOfferExperimentAssignmentFailure
-}): Promise<string> {
-  const { leadId, session } = input
-  const enabled = input.enabled ?? isGuidedStoryOfferExperimentEnabled()
-  const fallback = GUIDED_STORY_OFFER_EXPERIMENT.baseVariant
-  const resolvedVariant = resolveOfferVariantForSession(session)
-
-  if (!isGuidedStoryFamilyVariant(resolvedVariant)) return resolvedVariant
-  if (!enabled) {
-    if (!isGuidedStoryExperimentVariant(session?.offerVariant)) return fallback
-    if (session.offerViewedAt) return session.offerVariant
-
-    const storedVariant = session.offerVariant
-    const client =
-      input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
-    const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
-
-    try {
-      const { data, error } = await client
-        .from("funnel_sessions")
-        .update({ offer_variant: fallback })
-        .eq("id", session.sessionId)
-        .is("offer_viewed_at", null)
-        .eq("offer_variant", storedVariant)
-        .select("offer_variant")
-        .maybeSingle()
-      if (error) throw error
-      if (data?.offer_variant) return data.offer_variant
-
-      const readBack = await client
-        .from("funnel_sessions")
-        .select("offer_variant")
-        .eq("id", session.sessionId)
-        .maybeSingle()
-      if (readBack.error) throw readBack.error
-      return readBack.data?.offer_variant ?? storedVariant
-    } catch (error) {
-      captureFailure(error, {
-        experimentId: GUIDED_STORY_OFFER_EXPERIMENT.id,
-        revision: GUIDED_STORY_OFFER_EXPERIMENT.revision,
-        intendedVariant: fallback,
-        fallbackVariant: storedVariant,
-        packageKey: session.packageKey,
-      })
-      return storedVariant
-    }
-  }
-  if (isGuidedStoryExperimentVariant(session?.offerVariant)) return session.offerVariant
-  if (!session) return assignGuidedStoryExperimentVariant(leadId)
-  if (session.offerViewedAt || resolvedVariant !== fallback) return resolvedVariant
-
-  const intendedVariant = assignGuidedStoryExperimentVariant(session.sessionId)
-  const client = input.client ?? (createAdminClient() as unknown as OfferExperimentAssignmentClient)
-  const captureFailure = input.captureFailure ?? captureOfferExperimentAssignmentFailure
-
-  try {
-    const { data, error } = await client
-      .from("funnel_sessions")
-      .update({ offer_variant: intendedVariant })
-      .eq("id", session.sessionId)
-      .is("offer_viewed_at", null)
-      .eq("offer_variant", fallback)
-      .select("offer_variant")
-      .maybeSingle()
-    if (error) throw error
-    if (data?.offer_variant) return data.offer_variant
-
-    const readBack = await client
-      .from("funnel_sessions")
-      .select("offer_variant")
-      .eq("id", session.sessionId)
-      .maybeSingle()
-    if (readBack.error) throw readBack.error
-    return readBack.data?.offer_variant ?? fallback
-  } catch (error) {
-    captureFailure(error, {
-      experimentId: GUIDED_STORY_OFFER_EXPERIMENT.id,
-      revision: GUIDED_STORY_OFFER_EXPERIMENT.revision,
-      intendedVariant,
-      fallbackVariant: fallback,
-      packageKey: session.packageKey,
-    })
-    return fallback
-  }
-}
-
 export async function resolvePendingFunnelTouch(
   request: NextRequest,
   context: FunnelCookieContext,
@@ -495,6 +397,8 @@ export async function recordFunnelEvent(input: {
   checkoutReference?: string | null
   occurredAt?: string
   properties?: Record<string, unknown>
+  /** Only server-resolved result context may set this; browser events use package defaults. */
+  trustedOfferVariant?: string
 }) {
   return recordFunnelEventWithRpc(
     (args) => createAdminClient().rpc("record_funnel_event", args),
@@ -520,6 +424,7 @@ export async function recordFunnelEventWithRpc(
     checkoutReference?: string | null
     occurredAt?: string
     properties?: Record<string, unknown>
+    trustedOfferVariant?: string
   },
 ) {
   const funnelPackage = getFunnelPackageByKey(input.context.packageKey)
@@ -533,7 +438,7 @@ export async function recordFunnelEventWithRpc(
     p_landing_slug: funnelPackage.slug,
     p_channel: funnelPackage.channel,
     p_landing_variant: funnelPackage.landingVariant,
-    p_offer_variant: funnelPackage.offerVariant,
+    p_offer_variant: input.trustedOfferVariant ?? funnelPackage.offerVariant,
     p_quiz_variant: funnelPackage.quizVariant,
     p_event_name: input.milestone,
     p_occurred_at: input.occurredAt ?? new Date().toISOString(),

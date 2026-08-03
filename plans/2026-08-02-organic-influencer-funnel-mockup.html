@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Organic Funnel Refresh</title>
+    <style>
+      :root {
+        --ink: #2f174f;
+        --plum: #7651b0;
+        --plum-2: #9c7bc8;
+        --lilac: #f5effd;
+        --coral: #df6670;
+        --paper: #fdfbf9;
+        --muted: #756f6c;
+        --line: #e9e2dd;
+        --green: #278451;
+        --shadow: 0 24px 70px rgba(47, 23, 79, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 6%, rgba(156, 123, 200, .16), transparent 26rem),
+          linear-gradient(#f8f4f0, #efe9e5);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1, h2, h3, .serif { font-family: Georgia, "Times New Roman", serif; }
+      button { font: inherit; }
+
+      .review-bar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 14px max(20px, calc((100vw - 1320px) / 2));
+        border-bottom: 1px solid rgba(47, 23, 79, .12);
+        background: rgba(253, 251, 249, .94);
+        backdrop-filter: blur(16px);
+      }
+
+      .review-bar strong { font-size: 14px; }
+      .review-bar small { display: block; color: var(--muted); margin-top: 2px; }
+      .switch { display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: var(--lilac); }
+      .switch button {
+        border: 0;
+        border-radius: 999px;
+        padding: 9px 13px;
+        color: var(--ink);
+        background: transparent;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .switch button.active { color: white; background: var(--plum); }
+
+      .intro {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 48px 24px 26px;
+      }
+      .intro .eyebrow, .eyebrow {
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+      }
+      .intro h1 { max-width: 900px; margin: 8px 0 12px; font-size: clamp(34px, 5vw, 62px); line-height: 1.02; font-weight: 500; }
+      .intro p { max-width: 780px; color: var(--muted); font-size: 16px; line-height: 1.6; }
+      .contract { display: flex; flex-wrap: wrap; gap: 8px; }
+      .contract span { padding: 7px 10px; border: 1px solid rgba(47,23,79,.12); border-radius: 999px; background: rgba(255,255,255,.7); font-size: 11px; font-weight: 700; }
+
+      .journey {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 10px 24px 70px;
+        align-items: start;
+      }
+
+      .stage-label { display: flex; align-items: center; justify-content: space-between; margin: 0 4px 10px; }
+      .stage-label strong { font-size: 14px; }
+      .stage-label span { color: var(--muted); font-size: 11px; }
+
+      .phone {
+        overflow: hidden;
+        min-height: 790px;
+        border: 8px solid #20102f;
+        border-radius: 34px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .phone-inner { min-height: 790px; }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 18px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(253,251,249,.96);
+      }
+      .brand { font: 600 24px/1 Georgia, serif; }
+      .top-action { color: var(--plum); font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+
+      .hero { padding: 24px 20px 22px; background: linear-gradient(180deg, var(--paper), var(--lilac)); }
+      .hero h2 { margin: 8px 0 12px; font-size: 39px; line-height: 1.01; font-weight: 500; letter-spacing: -.025em; }
+      .hero p { color: var(--muted); font-size: 14px; line-height: 1.55; }
+      .hero-image {
+        position: relative;
+        height: 194px;
+        margin: 20px -4px 0;
+        overflow: hidden;
+        border: 1px solid rgba(47,23,79,.11);
+        border-radius: 22px;
+        background: white;
+      }
+      .hero-image img { width: 100%; height: 100%; object-fit: cover; object-position: center 23%; }
+      .hero-image .result-card {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        padding: 10px;
+        border: 1px solid rgba(47,23,79,.09);
+        border-radius: 14px;
+        background: rgba(255,255,255,.94);
+        box-shadow: 0 12px 28px rgba(47,23,79,.14);
+      }
+      .result-card span { font-size: 8px; line-height: 1.25; color: var(--muted); }
+      .result-card b { display: block; margin-bottom: 2px; color: var(--ink); font-size: 9px; }
+
+      .creator-note {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding: 11px 12px;
+        border: 1px solid rgba(118,81,176,.2);
+        border-radius: 14px;
+        background: white;
+        font-size: 11px;
+        line-height: 1.35;
+      }
+      .creator-note .avatar { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 auto; border-radius: 50%; color: white; background: var(--plum); font-weight: 800; }
+      body.creator .creator-note { display: flex; }
+
+      .cta {
+        display: block;
+        width: 100%;
+        border: 0;
+        border-radius: 14px;
+        padding: 15px 18px;
+        color: white;
+        background: linear-gradient(180deg, var(--coral), #c84f5d);
+        box-shadow: 0 12px 26px rgba(223,102,112,.22);
+        font-size: 15px;
+        font-weight: 800;
+        text-align: center;
+      }
+      .cta small { display: block; margin-top: 3px; color: rgba(255,255,255,.84); font-size: 10px; font-weight: 500; }
+      .trust { display: flex; justify-content: center; gap: 12px; margin: 12px 0 0; color: var(--muted); font-size: 9px; }
+      .trust b { color: var(--green); }
+
+      .section { padding: 24px 20px; border-top: 1px solid var(--line); }
+      .section h3 { margin: 4px 0 12px; font-size: 26px; line-height: 1.08; font-weight: 500; }
+      .section > p { color: var(--muted); font-size: 12px; line-height: 1.55; }
+      .split-card, .free-card, .plan-card {
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+      }
+      .split-card + .split-card { margin-top: 9px; }
+      .split-card strong { display: block; margin-bottom: 4px; font-size: 13px; }
+      .split-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+      .split-card.optional { background: var(--lilac); border-color: rgba(118,81,176,.18); }
+
+      .quiz-header { padding: 17px 18px 13px; border-bottom: 1px solid rgba(118,81,176,.18); }
+      .quiz-top { display: flex; justify-content: space-between; align-items: center; }
+      .quiz-top .brand { font-size: 22px; }
+      .quiz-phase { color: var(--plum); font-size: 10px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+      .phase-track { display: grid; grid-template-columns: 1.1fr 1.4fr .8fr; gap: 5px; margin-top: 13px; }
+      .phase-track span { height: 4px; border-radius: 99px; background: #dfd8e8; }
+      .phase-track span:first-child { background: var(--plum); }
+
+      .quiz-body { padding: 22px 18px 16px; }
+      .quiz-body h2 { margin: 7px 0 8px; font-size: 33px; line-height: 1.04; font-weight: 500; }
+      .quiz-body .instruction { color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .answer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 18px; }
+      .answer {
+        overflow: hidden;
+        padding: 0;
+        border: 1.5px solid #d3c0ea;
+        border-radius: 17px;
+        background: white;
+        text-align: left;
+      }
+      .answer.selected { outline: 3px solid rgba(118,81,176,.15); border-color: var(--plum); }
+      .answer img { display: block; width: 100%; aspect-ratio: 1.05; object-fit: cover; object-position: center 22%; }
+      .answer .label { display: flex; align-items: center; justify-content: space-between; padding: 11px 12px; font-size: 14px; font-weight: 800; }
+      .radio { display: grid; place-items: center; width: 22px; height: 22px; border: 2px solid #cbb5e6; border-radius: 50%; }
+      .selected .radio { border-color: var(--plum); }
+      .selected .radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--plum); }
+      .progress-note { margin-top: 14px; color: var(--muted); font-size: 10px; text-align: center; }
+      .quiz-foot { padding: 13px 18px 18px; color: var(--muted); font-size: 10px; text-align: center; }
+
+      .offer-hero { padding: 22px 19px 18px; }
+      .offer-hero h2 { margin: 8px 0 10px; font-size: 35px; line-height: 1.02; font-weight: 500; }
+      .offer-hero p { color: var(--muted); font-size: 12px; line-height: 1.55; }
+      .free-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 99px; color: var(--green); background: rgba(39,132,81,.09); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .free-card { margin: 0 18px 10px; padding: 16px; border-color: rgba(118,81,176,.2); background: linear-gradient(145deg, #fff, var(--lilac)); }
+      .profile-line { font-size: 13px; font-weight: 800; }
+      .finding { display: flex; gap: 10px; padding: 11px 0; border-top: 1px solid rgba(47,23,79,.09); }
+      .finding:first-of-type { margin-top: 10px; }
+      .finding .n { display: grid; place-items: center; width: 22px; height: 22px; flex: 0 0 auto; border-radius: 50%; color: white; background: var(--plum); font-size: 9px; font-weight: 800; }
+      .finding b { display: block; font-size: 11px; }
+      .finding span { color: var(--muted); font-size: 10px; line-height: 1.35; }
+
+      .optional-divider { padding: 17px 18px 10px; text-align: center; }
+      .optional-divider b { display: block; font: 500 26px/1.05 Georgia, serif; }
+      .optional-divider span { display: block; margin-top: 6px; color: var(--muted); font-size: 10px; }
+      .plan-card { margin: 0 18px 12px; background: #fff; }
+      .plan-card .locked { display: inline-flex; margin-bottom: 8px; padding: 5px 8px; border-radius: 99px; color: var(--plum); background: var(--lilac); font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .plan-card h3 { margin: 0 0 7px; font-size: 23px; line-height: 1.05; font-weight: 500; }
+      .plan-card p { color: var(--muted); font-size: 10px; line-height: 1.45; }
+      .plan-list { display: grid; gap: 7px; margin: 12px 0; }
+      .plan-list div { padding: 9px 10px; border-radius: 10px; background: #faf8f7; font-size: 10px; font-weight: 700; }
+      .plan-list div::before { content: "✓"; margin-right: 7px; color: var(--green); }
+      .price { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin: 12px 0 10px; }
+      .price b { font-size: 22px; }
+      .price span { color: var(--muted); font-size: 9px; text-align: right; }
+      .offer-foot { padding: 4px 20px 18px; color: var(--muted); font-size: 9px; line-height: 1.45; text-align: center; }
+      .offer-followup { margin: 0 18px 12px; padding: 17px 15px; border: 1px solid var(--line); border-radius: 16px; background: white; }
+      .offer-followup h3 { margin: 4px 0 9px; font-size: 22px; line-height: 1.08; font-weight: 500; }
+      .offer-followup p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+      .offer-followup .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 11px; }
+      .offer-followup .mini-grid span { padding: 9px; border-radius: 10px; background: var(--lilac); font-size: 9px; font-weight: 750; text-align: center; }
+      .proof-line { display: flex; justify-content: center; gap: 8px; margin-top: 10px; color: var(--plum); font-size: 9px; font-weight: 750; }
+
+      .notes { max-width: 1320px; margin: -34px auto 60px; padding: 0 24px; }
+      .notes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .note { padding: 16px; border: 1px solid rgba(47,23,79,.11); border-radius: 16px; background: rgba(255,255,255,.68); }
+      .note b { display: block; margin-bottom: 5px; font-size: 12px; }
+      .note p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+      @media (max-width: 980px) {
+        .journey { grid-template-columns: 1fr; max-width: 470px; }
+        .notes { max-width: 470px; }
+        .notes-grid { grid-template-columns: 1fr; }
+        .review-bar { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-bar">
+      <div>
+        <strong>Organic Funnel Refresh · Planungsprototyp</strong>
+        <small>Gleiche Quizwerte und Berechnung; vorgeschlagene Nutzerführung und Copy.</small>
+      </div>
+      <div class="switch" aria-label="Einstieg vergleichen">
+        <button id="brandButton" type="button">Brand-first</button>
+        <button id="creatorButton" type="button">Creator-Handoff</button>
+      </div>
+    </div>
+
+    <header class="intro">
+      <div class="eyebrow">Empfohlene Richtung · zusammenhängender Organic Flow</div>
+      <h1>Weniger Funnel-Gefühl. Mehr ehrliche, visuelle Orientierung.</h1>
+      <p>
+        Der reguläre Flow übernimmt die stärksten Muster des Haarplan-Quiz, ohne dessen Datenmodell,
+        zusätzliche Überzeugungsschritte, Micro-Commitments oder Zwischenergebnisse zu übernehmen.
+      </p>
+      <div class="contract">
+        <span>10 bestehende Fragen</span>
+        <span>unveränderte Answer Keys</span>
+        <span>gleiche Lead-API</span>
+        <span>gleiche Ergebnisberechnung</span>
+        <span>keine zusätzlichen Screens</span>
+        <span>transparentes Free/Paid-Versprechen</span>
+      </div>
+    </header>
+
+    <main class="journey">
+      <section>
+        <div class="stage-label"><strong>1 · Landingpage</strong><span>/</span></div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="top"><div class="brand">chaarlie</div><div class="top-action">Anmelden</div></div>
+            <div class="hero">
+              <div class="creator-note">
+                <div class="avatar">C</div>
+                <div><b>Du kommst über eine Empfehlung?</b><br />Willkommen – hier startet deine kostenlose Haaranalyse.</div>
+              </div>
+              <div class="eyebrow">Kostenlose Haaranalyse · ca. 2 Minuten</div>
+              <h2>Versteh, was dein Haar wirklich braucht.</h2>
+              <p>
+                Zehn einfache Fragen zu Haar, Kopfhaut und Zielen. Danach siehst du dein persönliches
+                Haarprofil und die drei wichtigsten Pflegehebel.
+              </p>
+              <button class="cta" type="button">Meine Haaranalyse starten<small>kostenlos · kein Konto nötig</small></button>
+              <div class="trust"><span><b>✓</b> Ergebnis direkt</span><span><b>✓</b> DSGVO-konform</span></div>
+              <div class="hero-image">
+                <img src="../../public/images/quiz/hair-portrait/wavy-long.webp" alt="Beispiel für welliges Haar" />
+                <div class="result-card">
+                  <span><b>Struktur</b>Wellig</span>
+                  <span><b>Bedarf</b>Feuchtigkeit</span>
+                  <span><b>Hebel</b>Bündelung</span>
+                </div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="eyebrow">Was dich erwartet</div>
+              <h3>Erst verstehen. Dann entscheiden.</h3>
+              <div class="split-card">
+                <strong>Kostenlos: deine Haaranalyse</strong>
+                <p>Haarprofil, wichtigste Bedürfnisse und ein klarer erster Pflegehebel.</p>
+              </div>
+              <div class="split-card optional">
+                <strong>Optional danach: dein persönlicher Plan</strong>
+                <p>Routine, konkrete Produkte und Chaarlie als Begleitung – klar als Bezahlangebot getrennt.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="stage-label"><strong>2 · Bestehendes Quiz, neue Hülle</strong><span>/quiz</span></div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="quiz-header">
+              <div class="quiz-top"><div class="brand">chaarlie</div><div class="quiz-phase">Profil · 1 von 4</div></div>
+              <div class="phase-track"><span></span><span></span><span></span></div>
+            </div>
+            <div class="quiz-body">
+              <div class="eyebrow">Dein Haarprofil</div>
+              <h2>Welche Haarstruktur haben die meisten deiner Haare?</h2>
+              <p class="instruction">Wähle die natürliche Form, so gut du sie erkennen kannst. Der unbehandelte Ansatz hilft dir bei der Einschätzung.</p>
+              <div class="answer-grid">
+                <button class="answer" type="button">
+                  <img src="../../public/images/quiz/hair-portrait/straight-medium.webp" alt="Glattes Haar" />
+                  <span class="label">Glatt <span class="radio"></span></span>
+                </button>
+                <button class="answer selected" type="button">
+                  <img src="../../public/images/quiz/hair-portrait/wavy-medium.webp" alt="Welliges Haar" />
+                  <span class="label">Wellig <span class="radio"></span></span>
+                </button>
+                <button class="answer" type="button">
+                  <img src="../../public/images/quiz/hair-portrait/curly-medium.webp" alt="Lockiges Haar" />
+                  <span class="label">Lockig <span class="radio"></span></span>
+                </button>
+                <button class="answer" type="button">
+                  <img src="../../public/images/quiz/hair-portrait/coily-medium.webp" alt="Krauses Haar" />
+                  <span class="label">Kraus <span class="radio"></span></span>
+                </button>
+              </div>
+              <div class="progress-note">Auswahl gespeichert · noch 9 Fragen</div>
+            </div>
+            <div class="quiz-foot">Automatischer Wechsel nach Einzelauswahl · Zurück jederzeit möglich</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="stage-label"><strong>3 · Ergebnis + optionaler Plan</strong><span>/result/:leadId</span></div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="top"><div class="brand">chaarlie</div><div class="top-action">Deine Analyse</div></div>
+            <div class="offer-hero">
+              <div class="free-badge">✓ Kostenlose Analyse abgeschlossen</div>
+              <h2>Lea, das ist dein Haarprofil.</h2>
+              <p>Aus deinen Antworten ergeben sich drei Bereiche, die für deine Pflege jetzt besonders wichtig sind.</p>
+            </div>
+            <div class="free-card">
+              <div class="profile-line">Welliges, mittelstarkes Haar · trockene Längen</div>
+              <div class="finding"><div class="n">1</div><div><b>Bündelung & Frizz</b><span>Deine Wellen profitieren von weniger Reibung und gezieltem Halt.</span></div></div>
+              <div class="finding"><div class="n">2</div><div><b>Feuchtigkeit</b><span>Geschmeidigkeit ist wichtiger als noch mehr Protein.</span></div></div>
+              <div class="finding"><div class="n">3</div><div><b>Kopfhaut-Balance</b><span>Dein Waschrhythmus kann unkompliziert bleiben.</span></div></div>
+            </div>
+            <div class="optional-divider">
+              <b>Willst du daraus einen konkreten Plan machen?</b>
+              <span>Optional – deine Analyse oben bleibt kostenlos.</span>
+            </div>
+            <div class="plan-card">
+              <span class="locked">Persönlicher Plan</span>
+              <h3>Chaarlie übersetzt deine Analyse in deinen Alltag.</h3>
+              <p>Nach dem Start ergänzt du deine vorhandenen Produkte. Chaarlie prüft, was bleiben kann, und erstellt deine Routine.</p>
+              <div class="plan-list">
+                <div>Waschtage mit Reihenfolge und Menge</div>
+                <div>Konkrete Produkte nur für echte Lücken</div>
+                <div>Antworten, wenn sich dein Haar verändert</div>
+              </div>
+              <div class="price"><b>ab 8,33 €</b><span>pro Monat<br />14 Tage Garantie</span></div>
+              <button class="cta" type="button">Persönlichen Plan freischalten<small>Preis und Laufzeit vor dem Bezahlen sichtbar</small></button>
+            </div>
+            <div class="offer-followup">
+              <div class="eyebrow">Was du freischaltest</div>
+              <h3>Die Highlights deines Plans</h3>
+              <div class="mini-grid">
+                <span>Waschtage & Reihenfolge</span>
+                <span>Produkte für echte Lücken</span>
+                <span>Chat-Begleitung</span>
+                <span>Anpassungen im Alltag</span>
+              </div>
+            </div>
+            <div class="offer-followup">
+              <div class="eyebrow">So entsteht dein Plan</div>
+              <h3>Auf Basis deiner zehn Antworten.</h3>
+              <p>Textur, Haardicke, Dichte, Länge, Oberfläche, Elastizität, Behandlung, Kopfhaut, aktuelle Themen und Ziele bleiben die einzigen Eingaben.</p>
+              <div class="proof-line"><span>Keine Vorher/Nachher-Abbildung</span><span>·</span><span>keine erfundenen Scores</span></div>
+            </div>
+            <div class="offer-followup">
+              <div class="eyebrow">Vertrauen & Fragen</div>
+              <h3>Kundinnenstimmen, Garantie und FAQ.</h3>
+              <p>Diese unteren Bereiche folgen der neuen Angebotsseite. Die Vorher/Nachher-Abbildung entfällt vollständig; Preis, Kündigung und Garantie bleiben klar sichtbar.</p>
+            </div>
+            <div class="offer-foot">Kein Countdown, keine künstliche Verknappung. Die Kaufentscheidung beginnt erst nach dem kostenlosen Ergebnis.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="notes">
+      <div class="notes-grid">
+        <div class="note"><b>Unveränderte Daten</b><p>Die sichtbaren Karten schreiben weiterhin exakt in <code>structure</code>, <code>thickness</code>, <code>density</code>, <code>hair_length</code> usw. Keine neue Quizversion und kein neues Lead-Schema.</p></div>
+        <div class="note"><b>Keine zusätzlichen Screens</b><p>Keine Commitments, Überzeugungsfragen oder Zwischenresultate aus dem Haarplan-Quiz. Nach einer Einzelauswahl folgt direkt die nächste bestehende Frage.</p></div>
+        <div class="note"><b>Recovery</b><p>Bestehender Draft-Resume, E-Mail-Korrektur, Back-Navigation und Fehlerzustände bleiben erhalten und werden nur visuell an die neue Hülle angepasst.</p></div>
+      </div>
+    </section>
+
+    <script>
+      const params = new URLSearchParams(window.location.search)
+      const initial = params.get("entry") === "creator" ? "creator" : "brand"
+      const brandButton = document.getElementById("brandButton")
+      const creatorButton = document.getElementById("creatorButton")
+      function setEntry(entry) {
+        document.body.classList.toggle("creator", entry === "creator")
+        brandButton.classList.toggle("active", entry === "brand")
+        creatorButton.classList.toggle("active", entry === "creator")
+      }
+      brandButton.addEventListener("click", () => setEntry("brand"))
+      creatorButton.addEventListener("click", () => setEntry("creator"))
+      setEntry(initial)
+    </script>
+  </body>
+</html>
