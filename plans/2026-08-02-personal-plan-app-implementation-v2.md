@@ -53,8 +53,8 @@ The offer artifact's `locked_plan` is preview/provenance input, not the final re
 
 | Category | Current status | Implementation authority |
 |---|---|---|
-| Shampoo | Detailed behavior confirmed: inclusion, scalp-concern precedence, role splitting, cadence, owned-product handling, catalog selection, response check, and escalation | `plans/2026-08-02-personal-plan-computation-spec.md` plus `plans/2026-08-03-shampoo-scalp-condition-research.md` |
-| Conditioner | Basis inclusion confirmed for everyone except very short hair; detailed target, frequency, replacement, and product-fit rules still pending | To be added category by category |
+| Shampoo | Detailed behavior confirmed: inclusion, scalp-concern precedence, role splitting, cadence, owned-product handling, catalog selection, response check, and escalation | `docs/personal-plan/categories/shampoo/decision.md` plus its linked evidence and the cross-category computation spec |
+| Conditioner | Inclusion, target axes, event cadence, multi-product allocation, application guidance, and initial fit rules recorded; remaining exact precedence/catalog reconciliation is still open | `docs/personal-plan/categories/conditioner/decision.md` plus its linked evidence |
 | Remaining V1 categories | Inclusion and broad behavior are still provisional until grilled with Nick | To be added category by category |
 
 This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo is the first category-specific template; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
@@ -74,6 +74,8 @@ This commit is a stable planning checkpoint, not authorization to implement the 
 11. Only confirmed-in-hand products produce executable steps.
 12. Verified product instructions override category defaults; unknown timing stays visibly unknown.
 13. Deterministic scheduling receives `startDate` and `timeZone` as explicit inputs; pure computation never reads the system clock.
+14. Category computation owns the total cadence; the sum of active product assignments covers that total exactly and never increases it implicitly.
+15. Current product frequency and recommended plan-assignment frequency are distinct versioned facts.
 
 CareBalance and the legacy recommendation runtime may be inspected for proven rules, but no Personal Plan task calls them as its recommendation authority. Each confirmed category is implemented once inside the dedicated plan-owned module boundary; shared catalog data and genuinely generic pure helpers may still be reused.
 
@@ -151,6 +153,14 @@ Do not create a second mutable product inventory, day-log store, or check-in sys
 - `src/lib/personal-plan/recompute.ts`
 - `src/lib/personal-plan/persistence.ts`
 
+### Durable category knowledge
+
+- `docs/personal-plan/categories/README.md`
+- `docs/personal-plan/categories/<category>/evidence.md`
+- `docs/personal-plan/categories/<category>/decision.md`
+
+Each category is checkpointed after its evidence and product decisions are reconciled. These files preserve evidence, rationale, and implementation intent; they do not replace runtime code, tests, catalog data, or verified product protocols.
+
 ### New product surfaces
 
 - `src/app/plan-start/page.tsx`
@@ -163,6 +173,7 @@ Do not create a second mutable product inventory, day-log store, or check-in sys
 
 ### Tests
 
+- `tests/personal-plan-category-artifacts.test.ts`
 - `tests/personal-plan-compute.test.ts`
 - `tests/personal-plan-shampoo-selection.test.ts`
 - `tests/personal-plan-shampoo-check-ins.test.ts`
@@ -279,13 +290,14 @@ The plan is complete when all required inputs and category decisions are persist
 
 #### Task 2 — Implement the confirmed shampoo module test-first
 
-**Files:** `src/lib/personal-plan/categories/shampoo.ts`, its co-located tests, `src/lib/personal-plan/types.ts`, and shared frequency helpers only where they are genuinely category-independent.
+**Files:** `docs/personal-plan/categories/shampoo/decision.md`, `src/lib/personal-plan/categories/shampoo.ts`, its co-located tests, `src/lib/personal-plan/types.ts`, and shared frequency helpers only where they are genuinely category-independent.
 
 - Consume the lossless canonical inputs used by the confirmed shampoo specification, including scalp oiliness, specific scalp concerns, current wash frequency, dry-shampoo use, product load, fragility, goals, exclusions, and the user's current shampoo inventory.
 - Always include shampoo in the basis and compute one or two explicit roles: `shampoo_everyday` and, only for `oily_dandruff`, `shampoo_dandruff`.
 - Port or copy the useful cadence arithmetic into the dedicated module without calling CareBalance or the legacy recommendation runtime.
 - Preserve the confirmed low/medium/high cadence bands, nearest-boundary behavior, `does_not_wash` handling, dry-shampoo bridge, and deep-cleansing handoff.
 - Return typed clarification needs and stable reason codes instead of composing UI copy inside the engine.
+- Enforce the category-cadence invariant: active Shampoo assignment frequencies sum to the resolved total wash cadence, whether one, two, or three products cover it.
 - Write the sixteen shampoo regression fixtures in the computation spec before the implementation; keep current Chat and routine behavior unchanged.
 
 **Complete when:** all shampoo fixtures pass, equivalent versioned inputs produce stable output, and the module has no runtime dependency on Chat, CareBalance, or a lossy profile adapter.
@@ -498,6 +510,7 @@ The plan is complete when all required inputs and category decisions are persist
 
 ### Automated
 
+- category-artifact traceability: every implemented category has evidence/decision files, matching `decisionVersion`, resolvable runtime/test links, and mapped fixture IDs;
 - pure computation fixture tests from the computation spec;
 - all sixteen confirmed shampoo fixtures, including specific scalp-answer precedence, single/dual role output, primary/secondary changes, cadence boundaries, and clarification states;
 - shampoo catalog-selection tests for dandruff, dry flakes, irritation, combined dandruff/irritation, exclusions, no-safe-match, and stable accepted alternatives;
@@ -546,14 +559,16 @@ The plan is complete when all required inputs and category decisions are persist
 - Flag: `PERSONAL_PLAN_APP_V1_ENABLED`.
 - Audience: entitled `personal_plan` buyers only.
 - Rollback: disable flag; existing onboarding/routine/tracker data remains intact.
-- Worktree: this planning worktree is behind current `main` and contains untracked planning artifacts. Before implementation, preserve/commit the approved artifacts and start execution from a freshly synchronized task worktree or safely rebase after the branch gate; do not implement against the stale snapshot.
+- Worktree: this planning worktree is behind current `main` and contains the committed/in-progress planning stream. Before implementation, preserve/commit the approved artifacts and start execution from a freshly synchronized task worktree or safely rebase after the branch gate; do not implement against the stale snapshot.
 - Publication is not authorized by this plan. Implementation stops at review-ready handoff.
 
 ### Artifact disposition
 
 - `plans/2026-08-02-personal-plan-computation-spec.md`: **commit**.
 - `plans/2026-08-02-personal-plan-app-implementation-v2.md`: **commit now as the living category-by-category planning checkpoint; it is not implementation-ready until the open gates are closed**.
-- `plans/2026-08-03-shampoo-scalp-condition-research.md`: **commit** as the evidence authority behind the confirmed shampoo rules.
+- `docs/personal-plan/categories/README.md`: **commit** as the category evidence/decision convention.
+- `docs/personal-plan/categories/shampoo/evidence.md` and `decision.md`: **commit** as the confirmed Shampoo evidence and product-policy checkpoint.
+- `docs/personal-plan/categories/conditioner/evidence.md` and `decision.md`: **commit** as the current Conditioner evidence and in-progress product-policy checkpoint.
 - reviewed HTML mockups and selected option mockup: **commit**.
 - rendered reference screenshots: **commit** if still the visual comparison oracle.
 - superseded 2026-07-30 plan: **commit** with superseded notice for provenance, or **discard** before PR if Nick prefers a single plan artifact; decide before implementation handoff.

@@ -234,6 +234,15 @@ interface SevenDayProjection {
 - The default result recommends the cleanest valid assignment; the user may keep or reassign a product through the existing non-blocking override behavior.
 - A pending product cannot satisfy a role until reviewed. It remains visible as `pending_review`, while the role is shown as unresolved or covered by another verified product.
 
+### Total category cadence and product allocation
+
+- Category computation owns the total required cadence. Product assignments partition that total; they do not create additional category events.
+- For three planned wash events, valid Shampoo allocations include one product `3`, two products `2 + 1`, or three products `1 + 1 + 1`.
+- The sum of active product assignments must cover the computed total exactly unless a documented recipe intentionally uses more than one product in the same event.
+- Conditioner follows the same rule: the category default is one Conditioner need after each eligible wash, while one or more confirmed Conditioners may divide those occurrences.
+- Current inventory frequency and recommended plan-assignment frequency remain separate facts.
+- Any change to total cadence or its product allocation creates a proposed successor and requires confirmation before changing the active plan.
+
 ## 5. Category computation
 
 Each personal-plan category module directly returns `needTier`, target product type, target frequency, reason evidence, confidence, and missing inputs. Product presence must not determine whether a category is inherently needed.
@@ -253,7 +262,7 @@ Each personal-plan category module directly returns `needTier`, target product t
 
 ### Shampoo behavior — confirmed detailed category specification
 
-This section is the implementation authority for shampoo. The external evidence and catalog audit remain separate in `plans/2026-08-03-shampoo-scalp-condition-research.md`.
+The confirmed category decision is `docs/personal-plan/categories/shampoo/decision.md`; its external evidence and catalog audit remain separate in the linked `evidence.md`. This section retains the shared contracts, detailed behavior, and regression fixtures that connect Shampoo to the wider Personal Plan compiler.
 
 #### Category decision and precedence
 
@@ -517,6 +526,7 @@ The compiler consumes only products confirmed in the user's hands (`owned_active
 ### Frequency allocation
 
 - The shampoo target is the total wash-event budget.
+- Active Shampoo assignments must sum to that exact total. A single product may cover all events, or several explicitly assigned products may divide them.
 - `clarifying_wash` and `intensive_care_wash` are normally substitutions inside that wash budget, not extra washes.
 - No compiled wash subtype may make total planned washes exceed the shampoo target.
 - A specialized recipe's cadence is capped by both its anchor product target and total wash cadence.
@@ -587,6 +597,10 @@ Historical logs are immutable snapshots of what the user logged and retain the v
 
 External evidence and current internal behavior are kept distinct:
 
+- Durable category research and confirmed product decisions live in paired files under `docs/personal-plan/categories/<category>/evidence.md` and `decision.md`.
+- During planning, a confirmed decision file is the category implementation specification. After implementation, `src/lib/personal-plan/**`, tests, catalog/spec data, and verified product protocols are runtime authority.
+- Existing AgentV2 guidance packages may later consume a curated operational projection. Raw evidence notes are never loaded as executable recommendation policy.
+
 - Dermatology guidance supports shampooing the scalp rather than scrubbing the full hair length and applying conditioner after washing; this supports safe category defaults, not a universal exact amount or dwell time.
 - Cosmetic-science review literature describes rinse-out conditioners as post-shampoo products with short dwell, but exact timing remains formulation/product dependent.
 - Official Olaplex and K18 directions materially differ, so treatment order and minutes must be product-specific data rather than inferred from the category name.
@@ -605,6 +619,8 @@ Sources:
 - K18 official product directions: https://www.k18hair.com/en-ca/products/leave-in-molecular-repair-hair-mask-50-ml
 - Rele and Mohile, coconut/mineral/sunflower oil hair-damage study: https://pubmed.ncbi.nlm.nih.gov/12715094/
 - Lee et al., hair-shaft damage from heat and drying: https://pmc.ncbi.nlm.nih.gov/articles/PMC3229938/
+- Personal Plan Shampoo evidence: `docs/personal-plan/categories/shampoo/evidence.md`
+- Personal Plan Conditioner evidence: `docs/personal-plan/categories/conditioner/evidence.md`
 
 ## 11. Test matrix
 

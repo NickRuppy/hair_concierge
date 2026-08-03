@@ -1,3 +1,12 @@
+---
+category: shampoo
+document_type: evidence
+status: researched
+evidence_version: 1
+last_reviewed_at: 2026-08-03
+decision_file: docs/personal-plan/categories/shampoo/decision.md
+---
+
 # Shampoo requirements for dandruff, dry flakes, and irritated scalp
 
 **Status:** external evidence review reconciled with the live catalog; shampoo product rules confirmed by Nick on 2026-08-03
