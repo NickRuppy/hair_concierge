@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 
 const trustItems = ["10 Fragen", "kostenlos", "Ergebnis sofort"] as const
@@ -89,7 +90,19 @@ export default function OrganicRefreshLandingVariant() {
 
         <div className="relative mx-auto w-full max-w-[360px] rounded-[2rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-4 shadow-[0_28px_64px_-42px_rgba(var(--brand-plum-rgb),0.8)]">
           <div className="rounded-[1.5rem] bg-[#f4eff8] p-4">
-            <div className="aspect-[4/5] rounded-[1.25rem] bg-[radial-gradient(circle_at_30%_20%,#fff_0,#fff6_26%,transparent_42%),linear-gradient(145deg,#d7c6e7,#f5ded9)]" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-[#e8dfea]">
+              <Image
+                alt="Beispielprofil mit welligem Haar"
+                className="object-cover object-center"
+                fill
+                priority
+                sizes="(max-width: 1024px) 360px, 320px"
+                src="/images/funnels/personal-plan-quiz/profile-summary/wavy-medium.webp"
+              />
+              <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum-darkest)] shadow-sm backdrop-blur">
+                Beispielprofil
+              </span>
+            </div>
           </div>
           <div className="mt-4 space-y-2">
             {profileCards.map(([label, value]) => (

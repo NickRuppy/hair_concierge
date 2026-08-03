@@ -13,6 +13,8 @@ import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS } from "@/lib/help/info-tips"
 import { getLegacyQuizOptionLayout, getLegacyQuizOptionVisual } from "./legacy-quiz-visuals"
 
+const AUTO_ADVANCE_MS = 260
+
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",
   3: "thickness",
@@ -51,7 +53,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       setAdvancing(true)
       setTimeout(() => {
         goNext()
-      }, 400)
+      }, AUTO_ADVANCE_MS)
     },
     [answerKey, setAnswer, goNext, advancing],
   )
