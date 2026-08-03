@@ -25,6 +25,8 @@ import {
 
 const migrationPath =
   "supabase/migrations/20260803121000_waitlist_signups_and_customerio_outbox.sql"
+const fixMigrationPath =
+  "supabase/migrations/20260803122000_fix_waitlist_signup_outbox_conflict.sql"
 
 test("waitlist campaign matches the live Customer.io launch segment", () => {
   assert.equal(WAITLIST_CAMPAIGN, "launch_1_2026_08")
@@ -49,6 +51,20 @@ test("waitlist migration keeps signups private, idempotent, and independently qu
   assert.match(migration, /known email cannot take over/i)
   assert.match(migration, /Survey completion is client-attested and grants no entitlement/i)
   assert.doesNotMatch(migration, /public\.leads/i)
+})
+
+test("waitlist signup fix targets the named outbox constraint without changing the RPC contract", () => {
+  const migration = readFileSync(fixMigrationPath, "utf8")
+  assert.match(migration, /CREATE OR REPLACE FUNCTION public\.create_waitlist_signup/i)
+  assert.match(
+    migration,
+    /RETURNS TABLE \(signup_id uuid, created boolean, survey_already_completed boolean\)/i,
+  )
+  assert.match(
+    migration,
+    /ON CONFLICT ON CONSTRAINT waitlist_customerio_outbox_signup_event_key\s+DO NOTHING/i,
+  )
+  assert.doesNotMatch(migration, /ON CONFLICT \(signup_id, event_type\)/i)
 })
 
 test("signup persistence normalizes email and withholds survey authority from a public duplicate", async () => {

@@ -110,7 +110,7 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
   function retrySave() {
     if (pendingResponseId) void complete(pendingResponseId)
   }
-  function skip() {
+  function continueAfterTechnicalFailure() {
     try {
       window.sessionStorage.removeItem(WAITLIST_SURVEY_TOKEN_STORAGE_KEY)
     } catch {}
@@ -134,7 +134,7 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
           <div className="p-6 text-center">
             <p role="alert" className="text-sm text-muted-foreground">
               Deine Antworten sind angekommen, konnten aber noch nicht deinem Platz zugeordnet
-              werden. Bitte versuch es erneut oder geh ohne Zuordnung weiter.
+              werden. Bitte versuch es erneut. Deine Anmeldung ist bereits gespeichert.
             </p>
             <button
               type="button"
@@ -145,17 +145,17 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
             </button>
             <button
               type="button"
-              onClick={skip}
+              onClick={continueAfterTechnicalFailure}
               className="mt-3 block w-full text-sm font-medium text-[var(--brand-plum)] underline underline-offset-4"
             >
-              Ohne Zuordnung zum letzten Schritt
+              Bei technischem Problem weiter
             </button>
           </div>
         ) : null}
         {state === "error" ? (
           <div className="p-6 text-center">
             <p role="alert" className="text-sm text-muted-foreground">
-              Die Umfrage konnte nicht geladen werden. Dein Platz bleibt trotzdem gesichert.
+              Die Umfrage konnte nicht geladen werden. Deine Anmeldung ist bereits gespeichert.
             </p>
             <button
               type="button"
@@ -166,10 +166,10 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
             </button>
             <button
               type="button"
-              onClick={skip}
+              onClick={continueAfterTechnicalFailure}
               className="mt-3 block w-full text-sm font-medium text-[var(--brand-plum)] underline underline-offset-4"
             >
-              Zum letzten Schritt
+              Bei technischem Problem weiter
             </button>
           </div>
         ) : null}
@@ -181,18 +181,6 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
               : "hidden"
           }
         />
-      </div>
-      <div className="mt-5 text-center">
-        <button
-          type="button"
-          onClick={skip}
-          className="text-sm font-medium text-[var(--brand-plum)] underline underline-offset-4"
-        >
-          Umfrage überspringen
-        </button>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Das Überspringen hat keinen Einfluss auf deinen gesicherten Platz.
-        </p>
       </div>
       <Script
         src="https://embed.typeform.com/next/embed.js"
