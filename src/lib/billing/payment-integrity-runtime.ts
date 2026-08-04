@@ -61,6 +61,17 @@ const PAYPAL_PROVIDER_CONCURRENCY = 4
 const PAYPAL_RENEWAL_INVENTORY_CAP = 500
 const PAYPAL_RENEWAL_EXCLUSION_REASON = "pre_cutover_rest_app"
 const ACTIVE_ENTITLEMENT_STATUSES = new Set(["active", "past_due"])
+const TERMINAL_SUBSCRIPTION_PROVIDER_STATUSES = new Set([
+  "canceled",
+  "cancelled",
+  "expired",
+  "incomplete_expired",
+])
+const RECONCILING_SUBSCRIPTION_EVENT_NAMES = [
+  "purchase_completed",
+  "subscription_started",
+  "refund_completed",
+]
 const TERMINAL_ONE_TIME_PURCHASE_STATUSES = new Set(["paid", "refunded", "reversed", "disputed"])
 
 export function createPaymentIntegrityRunner(
@@ -726,16 +737,26 @@ class SupabasePaymentIntegrityLocalAdapter implements PaymentIntegrityLocalAdapt
 
     const { data, error } = await this.deps.supabase
       .from("billing_subscriptions")
-      .select("provider_status, entitlement_status, current_period_end, cancel_at_period_end")
+      .select(
+        "provider_status, entitlement_status, current_period_end, cancel_at_period_end, cancelled_at",
+      )
       .eq("provider", candidate.provider)
       .eq("provider_subscription_id", hint.providerSubscriptionId)
       .maybeSingle()
     if (error) throw error
 
     const row = (data as Record<string, unknown> | null) ?? null
+    const terminalLifecycle = Boolean(
+      row && isReconciledTerminalSubscription(row, candidate.occurredAt),
+    )
+    const subscriptionLifecycleReconciled = Boolean(
+      terminalLifecycle &&
+      (await this.hasSubscriptionReconciliationEvidence(candidate, hint, row?.cancelled_at)),
+    )
     return {
       billingSucceeded: Boolean(row),
       isInternalTest,
+      subscriptionLifecycleReconciled,
       activeEntitlement: Boolean(
         row &&
         isActiveLocalEntitlement(
@@ -746,6 +767,38 @@ class SupabasePaymentIntegrityLocalAdapter implements PaymentIntegrityLocalAdapt
         ),
       ),
     }
+  }
+
+  private async hasSubscriptionReconciliationEvidence(
+    candidate: PaymentIntegrityCandidate,
+    hint: ProviderReferenceHint,
+    cancelledAtValue: unknown,
+  ): Promise<boolean> {
+    const cancelledAt = stringValue(cancelledAtValue)
+    const candidateOccurredAt =
+      candidate.occurredAt instanceof Date ? candidate.occurredAt : new Date(candidate.occurredAt)
+    if (!cancelledAt || !Number.isFinite(candidateOccurredAt.getTime())) return false
+
+    const { data, error } = await this.deps.supabase
+      .from("billing_analytics_outbox")
+      .select("event_name, occurred_at")
+      .eq("provider", candidate.provider)
+      .eq("provider_subscription_id", hint.providerSubscriptionId)
+      .in("event_name", RECONCILING_SUBSCRIPTION_EVENT_NAMES)
+      .gte("occurred_at", candidateOccurredAt.toISOString())
+      .order("occurred_at", { ascending: false })
+      .limit(10)
+    if (error) throw error
+    const cancelledAtMs = Date.parse(cancelledAt)
+    return ((data as Array<Record<string, unknown>> | null) ?? []).some((event) => {
+      if (stringValue(event.event_name) === "refund_completed") return true
+      // Purchase and subscription-started events are written only after checkout activation
+      // has produced local billing/access truth; payment capture alone is not sufficient.
+      const occurredAt = stringValue(event.occurred_at)
+      return Boolean(
+        occurredAt && Number.isFinite(cancelledAtMs) && Date.parse(occurredAt) <= cancelledAtMs,
+      )
+    })
   }
 
   private async getOneTimeState(
@@ -972,6 +1025,28 @@ function isActiveLocalEntitlement(
   if (!status || !ACTIVE_ENTITLEMENT_STATUSES.has(status)) return false
   if (!currentPeriodEnd) return true
   return isFutureIso(currentPeriodEnd, now)
+}
+
+function isReconciledTerminalSubscription(
+  row: Record<string, unknown>,
+  candidateOccurredAt: Date | string,
+): boolean {
+  if (stringValue(row.entitlement_status) !== "canceled") return false
+  const providerStatus = stringValue(row.provider_status)?.toLowerCase()
+  if (!providerStatus || !TERMINAL_SUBSCRIPTION_PROVIDER_STATUSES.has(providerStatus)) return false
+
+  const cancelledAt = stringValue(row.cancelled_at)
+  if (!cancelledAt) return false
+  const cancelledAtMs = Date.parse(cancelledAt)
+  const candidateOccurredAtMs =
+    candidateOccurredAt instanceof Date
+      ? candidateOccurredAt.getTime()
+      : Date.parse(candidateOccurredAt)
+  return (
+    Number.isFinite(cancelledAtMs) &&
+    Number.isFinite(candidateOccurredAtMs) &&
+    cancelledAtMs >= candidateOccurredAtMs
+  )
 }
 
 function isTerminalOneTimePurchaseStatus(status: string | undefined): boolean {

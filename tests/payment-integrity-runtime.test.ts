@@ -129,7 +129,8 @@ test("Stripe invoice discovery preserves the checkout session's internal funnel 
 
   const result = await runner({ now, deadlineAt: futureDeadline() })
 
-  assert.equal(result.findings.length, 2)
+  assert.equal(result.counters.candidatesChecked, 2)
+  assert.equal(result.findings.length, 1)
   assert.equal(
     result.findings.every((finding) => finding.isInternalTest),
     true,
@@ -351,6 +352,280 @@ test("subscription success with retained canceled-at-period-end access is reconc
 
   assert.equal(result.status, "completed")
   assert.equal(result.counters.findings, 0)
+})
+
+test("subscription success is reconciled when the same subscription terminated afterward", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_terminated", "sub_terminated", {
+              checkout_attempt_id: "attempt_terminated",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+      invoices: [
+        {
+          data: [
+            {
+              id: "in_terminated",
+              status: "paid",
+              created: twoHoursAgo,
+              parent: { subscription_details: { subscription: "sub_terminated" } },
+              metadata: {},
+            },
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_terminated",
+          provider_status: "canceled",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancel_at_period_end: false,
+          cancelled_at: "2026-08-01T11:00:00.000Z",
+        },
+      ],
+      billing_analytics_outbox: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_terminated",
+          event_name: "refund_completed",
+          occurred_at: "2026-08-01T11:30:00.000Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.status, "completed")
+  assert.equal(result.counters.candidatesChecked, 2)
+  assert.equal(result.counters.findings, 0)
+})
+
+test("later cancellation without refund or activation evidence still alerts", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_unproven_access", "sub_unproven_access", {
+              checkout_attempt_id: "attempt_unproven_access",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_unproven_access",
+          provider_status: "canceled",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancel_at_period_end: false,
+          cancelled_at: "2026-08-01T11:00:00.000Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.deepEqual(
+    result.findings.map((finding) => finding.invariant),
+    ["provider_success_without_active_entitlement"],
+  )
+})
+
+test("activation evidence between payment and cancellation reconciles the lifecycle", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_activated_then_canceled", "sub_activated_then_canceled", {
+              checkout_attempt_id: "attempt_activated_then_canceled",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_activated_then_canceled",
+          provider_status: "canceled",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancel_at_period_end: false,
+          cancelled_at: "2026-08-01T11:00:00.000Z",
+        },
+      ],
+      billing_analytics_outbox: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_activated_then_canceled",
+          event_name: "subscription_started",
+          occurred_at: "2026-08-01T10:30:00.000Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.counters.findings, 0)
+})
+
+test("activation evidence after cancellation does not reconcile the lifecycle", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_activation_after_cancel", "sub_activation_after_cancel", {
+              checkout_attempt_id: "attempt_activation_after_cancel",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_activation_after_cancel",
+          provider_status: "canceled",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancel_at_period_end: false,
+          cancelled_at: "2026-08-01T11:00:00.000Z",
+        },
+      ],
+      billing_analytics_outbox: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_activation_after_cancel",
+          event_name: "subscription_started",
+          occurred_at: "2026-08-01T11:30:00.000Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.deepEqual(
+    result.findings.map((finding) => finding.invariant),
+    ["provider_success_without_active_entitlement"],
+  )
+})
+
+test("subscription success after local termination still alerts", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_after_termination", "sub_after_termination", {
+              checkout_attempt_id: "attempt_after_termination",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_after_termination",
+          provider_status: "canceled",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancel_at_period_end: false,
+          cancelled_at: "2026-08-01T09:00:00.000Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.deepEqual(
+    result.findings.map((finding) => finding.invariant),
+    ["provider_success_without_active_entitlement"],
+  )
+})
+
+test("terminal local subscription without cancellation time still alerts", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: true, paypalLive: false },
+    stripe: fakeStripe({
+      sessions: [
+        {
+          data: [
+            stripeSubscriptionSession("cs_missing_cancel_time", "sub_missing_cancel_time", {
+              checkout_attempt_id: "attempt_missing_cancel_time",
+            }),
+          ],
+          has_more: false,
+        },
+      ],
+    }),
+    paypalRequest: async () => ({}),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "stripe",
+          provider_subscription_id: "sub_missing_cancel_time",
+          provider_status: "canceled",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancel_at_period_end: false,
+          cancelled_at: null,
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.deepEqual(
+    result.findings.map((finding) => finding.invariant),
+    ["provider_success_without_active_entitlement"],
+  )
 })
 
 test("subscription success with a local past_due entitlement is reconciled", async () => {
@@ -592,6 +867,52 @@ test("PayPal renewal scan is bounded by local subscriptions and recent subscript
   )
   assert.equal(JSON.stringify(result).includes("I-LOCAL-RENEWAL"), false)
   assert.equal(JSON.stringify(result).includes("TXN-RAW-RENEWAL"), false)
+})
+
+test("PayPal refunded cancellation reconciles normalized terminal provider status", async () => {
+  const runner = createPaymentIntegrityRunner({
+    digestSecret: "digest-secret",
+    paymentRuntime: { stripeLive: false, paypalLive: true },
+    stripe: fakeStripe(),
+    paypalRequest: async () => ({
+      transactions: [
+        {
+          id: "TXN-REFUNDED-CANCELLATION",
+          status: "COMPLETED",
+          time: "2026-08-01T09:30:00.000Z",
+        },
+      ],
+    }),
+    supabase: fakeSupabase({
+      billing_subscriptions: [
+        {
+          provider: "paypal",
+          provider_subscription_id: "I-REFUNDED-CANCELLATION",
+          user_id: "user_refunded_cancellation",
+          provider_status: "CANCELLED",
+          entitlement_status: "canceled",
+          current_period_end: null,
+          cancelled_at: "2026-08-01T11:00:00.000Z",
+          metadata: {},
+          updated_at: "2026-08-01T11:00:00.000Z",
+        },
+      ],
+      billing_analytics_outbox: [
+        {
+          provider: "paypal",
+          provider_subscription_id: "I-REFUNDED-CANCELLATION",
+          event_name: "refund_completed",
+          occurred_at: "2026-08-01T11:30:00.000Z",
+        },
+      ],
+    }),
+  })
+
+  const result = await runner({ now, deadlineAt: futureDeadline() })
+
+  assert.equal(result.status, "completed")
+  assert.equal(result.counters.candidatesChecked, 1)
+  assert.equal(result.counters.findings, 0)
 })
 
 test("PayPal renewal scan skips only explicitly excluded internal pre-cutover tests", async () => {
@@ -1168,6 +1489,7 @@ function fakeStripe(
 function fakeSupabase(
   input: {
     billing_subscriptions?: Array<Record<string, unknown>>
+    billing_analytics_outbox?: Array<Record<string, unknown>>
     billing_one_time_purchases?: Array<Record<string, unknown>>
     paypal_checkout_intents?: Array<Record<string, unknown>>
     paypal_order_intents?: Array<Record<string, unknown>>
@@ -1177,6 +1499,7 @@ function fakeSupabase(
 ) {
   const tables: Record<string, Array<Record<string, unknown>>> = {
     billing_subscriptions: input.billing_subscriptions ?? [],
+    billing_analytics_outbox: input.billing_analytics_outbox ?? [],
     billing_one_time_purchases: input.billing_one_time_purchases ?? [],
     paypal_checkout_intents: input.paypal_checkout_intents ?? [],
     paypal_order_intents: input.paypal_order_intents ?? [],
@@ -1193,6 +1516,10 @@ function fakeSupabase(
         },
         eq(column: string, value: unknown) {
           filters.push((row) => row[column] === value)
+          return builder
+        },
+        in(column: string, values: unknown[]) {
+          filters.push((row) => values.includes(row[column]))
           return builder
         },
         not(column: string, operator: string, value: unknown) {

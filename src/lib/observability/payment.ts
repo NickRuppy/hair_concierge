@@ -176,11 +176,16 @@ export function buildPaymentFailurePayload(details: PaymentFailureDetails): Paym
     `payment/${details.signal}/${details.provider}/${boundary}/${details.errorFamily}`,
   ]
   if (details.signal === "payment_integrity_mismatch") {
-    const finding = safeInternalIdentifier(details.checkoutAttemptId)
+    const providerReferenceDigest = safeOpaqueDigest(details.providerReferenceDigest)
+      ? details.providerReferenceDigest
+      : null
+    const checkoutAttemptId = safeInternalIdentifier(details.checkoutAttemptId)
       ? details.checkoutAttemptId
-      : safeOpaqueDigest(details.providerReferenceDigest)
-        ? details.providerReferenceDigest
-        : null
+      : null
+    const finding =
+      details.commerceKind === "subscription" && providerReferenceDigest
+        ? providerReferenceDigest
+        : (checkoutAttemptId ?? providerReferenceDigest)
     if (safeFingerprintSegment(details.invariant)) fingerprint.push(details.invariant)
     if (finding) fingerprint.push(finding)
   }
