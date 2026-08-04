@@ -1,0 +1,6 @@
+interface:
+  display_name: "Wayfinder"
+  short_description: "Map open-ended work into decisions"
+  default_prompt: "Use $wayfinder to map this open-ended outcome into decision tickets and a plan-hardening handoff."
+policy:
+  allow_implicit_invocation: false

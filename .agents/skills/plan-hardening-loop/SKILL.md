@@ -1,6 +1,6 @@
 ---
 name: plan-hardening-loop
-description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups or conditional runnable prototypes for user-facing work, obtain a counterpart-model review, or align the designed user journey before implementation. For user-facing work, this skill ends only after evidence review and explicit user-journey sign-off; every plan ends at an approved implementation handoff. Use implementation-loop for execution.
+description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups or conditional runnable prototypes for user-facing work, obtain a counterpart-model review, align the designed user journey before implementation, or continue from a Wayfinder handoff. For user-facing work, this skill ends only after evidence review and explicit user-journey sign-off; every plan ends at an approved implementation handoff. Use `$wayfinder` first only when Nick explicitly invokes it and dependent decisions prevent an implementation outcome or scope from being stated. Use implementation-loop for execution.
 ---
 
 # Plan Hardening Loop
@@ -11,12 +11,13 @@ Turn fuzzy intent or an existing plan into one chosen, evidence-grounded impleme
 
 - This skill owns discovery, options, decisions, user-facing evidence, plan writing, counterpart review, user-journey sign-off, and revision.
 - It does not implement the plan. Handoff execution to `implementation-loop`.
+- It accepts a Wayfinder handoff once the planning contract can be stated. If dependent decisions still prevent that, explain the boundary and offer explicit `$wayfinder` invocation instead of silently switching workflows.
 - Keep external evidence, internal product logic, and reconciliation separate as defined in `AGENTS.md`.
 - Do not use it for a tiny non-user-facing change that does not need a durable plan. Any user-facing change still uses the mockup and journey gates even when the eventual code diff is small.
 
 ## 1. Establish the planning contract
 
-Inspect the relevant repository context first. Then establish:
+Inspect the relevant repository context and any Wayfinder map first. Then establish:
 
 ```text
 Outcome: what will be different
