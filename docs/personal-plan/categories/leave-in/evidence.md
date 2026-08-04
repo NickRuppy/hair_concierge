@@ -2,7 +2,7 @@
 category: leave_in
 document_type: evidence
 status: reviewed
-evidence_version: 1
+evidence_version: 2
 last_reviewed_at: 2026-08-04
 decision_file: docs/personal-plan/categories/leave-in/decision.md
 ---
@@ -38,11 +38,11 @@ Product implication: infer the likely frizz job from the rest of the lossless pr
 
 Product implication: a definition goal alone does not automatically make Leave-in the best category. A Gel, Mousse, or genuine hold-providing Curl cream is the more direct category for cast, hold, and longevity. Leave-in becomes primary only when the actual unresolved job is conditioning, detangling, moisture, or manageable curl formation. A “curl cream” must be classified by verified function: conditioning without meaningful hold is Leave-in; film-forming hold is Styling; a verified hybrid may cover both.
 
-### Curly/coily texture supports frequent usefulness, not universal necessity
+### Curly/coily texture supports frequent usefulness; the confirmed plan applies a conservative texture split
 
 **Evidence: moderate professional guidance.** Dermatologists note that curly/coily hair is more prone to dryness, breakage, knotting, and frizz and recommend full-length rinse-out conditioning. A Leave-in or Oil after washing can assist moisturization, and Leave-in is recommended for between-wash detangling. The same guidance emphasizes trial and error rather than one mandatory product stack.
 
-Product implication: curly/coily texture alone can justify `optional` Leave-in because credible additional conditioning and manageability value exists. It becomes `basis` when the profile adds a material job such as dryness, tangling, frizz/manageability, or another confirmed Leave-in-owned need. Texture alone does not make Leave-in universally mandatory, and cast/hold still belongs to Styling.
+Evidence implication: curly or coily texture alone can justify `optional` Leave-in because credible additional conditioning and manageability value exists, but the sources do not establish one universally mandatory stack. The confirmed Personal Plan intentionally makes coily texture `basis` and curly texture `optional` as a conservative product-policy calibration around the higher recurring moisture-retention/manageability burden described for coily hair. This is not presented as proof that every coily-haired person must use the category. Wavy texture alone remains insufficient, and cast/hold still belongs to Styling.
 
 ### Shine can come from several surface-conditioning routes
 

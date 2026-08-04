@@ -305,11 +305,11 @@ Sectioning, gently removing excess runoff water, and distributing product betwee
 
 ## Detangling and Leave-in boundary
 
-Conditioner supplies baseline in-shower slip. When the user's main unresolved job is persistent post-wash detangling, Leave-in is the primary additional category to assess. A possible Leave-in replacement of rinse-out Conditioner is an explicit exception to define in the Leave-in category, not a default Conditioner rule.
+Conditioner supplies baseline in-shower slip. When the user's main unresolved job is persistent post-wash detangling, Leave-in is the primary additional category to assess. The confirmed Leave-in replacement of rinse-out Conditioner remains the explicit fine-and-very-short exception defined by the Leave-in category; it is not a default Conditioner rule.
 
 ## Replacement boundary
 
-In V1, the Conditioner module always contributes its normal post-shampoo occurrence. Mask, Bondbuilder, Oil, or another treatment does not replace it by default. The only potential category-level exception is a narrowly defined Leave-in replacement case, which must be decided and owned by the future Leave-in specification. Product-specific ordering may change where Conditioner appears, but does not silently remove the Conditioner need.
+In V1, the Conditioner module contributes its normal post-shampoo occurrence unless the confirmed Leave-in exception applies: `thickness = fine`, `hair_length = very_short`, a material Leave-in/conditioning job exists, and the exact Leave-in is verified as replacement-capable. Mask, Bondbuilder, Oil, or another treatment does not replace Conditioner by default. Product-specific ordering may change where Conditioner appears, but does not silently remove the Conditioner need.
 
 ## Structured reasoning payload
 

@@ -1,6 +1,6 @@
 # Personal Plan Computation Specification
 
-**Status:** computation grilling in progress; Stage 1 shape and the detailed Shampoo and Conditioner categories are confirmed, remaining category and cross-category passes are pending
+**Status:** computation grilling in progress; Stage 1 shape and the detailed Shampoo, Conditioner, and Leave-in categories are confirmed, remaining category and cross-category passes are pending
 **Scope:** deterministic computation behind the reviewed three-stage personal-plan journey
 **Visual direction:** `plans/mockups/2026-07-30-promise-product-journey.html` and selected calendar Option 1 in `plans/mockups/2026-08-01-day-type-calendar-logging-options.html`
 
@@ -284,7 +284,7 @@ Each personal-plan category module directly returns `needTier`, target product t
 |---|---|---|---|
 | Shampoo | `basis` for every user. The category explains the required shampoo type and frequency; deep cleansing remains a separate category. | Shampoo cadence, scalp route/bucket, thickness-aware selection, target profile, fit, reranking. | Make the basis decision independent of whether shampoo is currently present; expose complete type/frequency reasons. |
 | Conditioner | `basis` for `short`, `medium`, `long`, and `very_long` hair. For `very_short` hair it is never automatic basis: return `optional` only when a material length-care need exists, otherwise `not_needed`. | Conditioner target profile and fit are strong; cadence mirrors wash cadence. | Copy the useful target/fit logic into the clean plan category boundary and implement the confirmed length-led inclusion. |
-| Leave-in | `basis` when hydration, detangling, smoothing, curl/shape, repair, or post-wash heat/styling preparation creates a confident need; otherwise `optional` or `not_needed`. | Mature target/fit metadata, including application stage and conditioner relationship. | Define the plan-owned inclusion thresholds and avoid double-counting a separate heat protectant. |
+| Leave-in | Follow the exact corroboration matrix in `docs/personal-plan/categories/leave-in/decision.md`: direct detangling, named care-signal combinations, coily texture, material chemical treatment, and recurring heat plus a real care signal can create `basis`; weaker single signals remain `optional`; heat alone does not create Leave-in need. | Mature target/fit metadata, including application stage and Conditioner relationship. | Implement the confirmed plan-owned thresholds, role-relative fit, and portfolio-level heat coverage without forcing a combined product when a suitable separate Heat protectant already covers the event. |
 | Mask | `basis` for material intensive care/damage need; `optional` for lighter support; otherwise `not_needed`. | Target weight, repair, balance, need strength, role, target cadence. | Define plan-owned absent-category thresholds rather than copying the current overuse-only behavior. |
 | Heat protectant | `basis` with meaningful direct/cumulative heat; no automatic need for airflow-only drying. | Existing heat-classification logic and leave-in metadata can inform the new rule. | Add a first-class plan category target, fit evaluator, catalog selector, and product metadata. |
 | Bondbuilder | `basis` only at high structural-repair priority; `optional` at consider-level if product fit/protocol is known. | Damage priority, target intensity/application mode, protocol fields. | Fit must include application/protocol compatibility, not intensity alone. |
@@ -441,7 +441,17 @@ An explicitly empty `scalpConcerns[]` is valid. Missing `scalpOiliness`, missing
 - `short` (chin/jaw length), `medium`, `long`, and `very_long`: always `basis`.
 - `very_short`: never automatic basis; `optional` only with a material care signal, otherwise `not_needed`.
 - The exact conditioner weight/direction still adapts to thickness, density, texture, surface, elasticity/balance, chemical treatment, damage, concerns, goals, and volume direction.
-- Conditioner remains the post-shampoo baseline in V1. Mask, Bondbuilder, Oil, or another treatment does not replace it by default. Only a narrowly defined future Leave-in exception may suppress it in a specific recipe, and that decision belongs to the Leave-in category specification.
+- Conditioner remains the post-shampoo baseline in V1. Mask, Bondbuilder, Oil, or another treatment does not replace it by default. The confirmed Leave-in exception may suppress it only for fine and very-short hair when a material Leave-in job exists and the exact product is verified as replacement-capable.
+
+### Confirmed Leave-in inclusion
+
+- The exact authority is `docs/personal-plan/categories/leave-in/decision.md`; this overview must not broaden its explicit truth table.
+- `basis`: explicit tangling; dry/dull lengths corroborated by rough surface, moisture goal, tangling, or care-led frizz; lightened, permed, or chemically straightened hair; coily texture; or recurring heat (`daily`, `several_weekly`, `once_weekly`) plus a qualifying Leave-in care signal.
+- `optional`: a single weaker care signal such as dry/dull lengths, rough surface, moisture goal, ambiguous frizz, or curly texture; colored hair alone; definition/lost shape without a care need; shine alone; manageability goal without tangling; or repair/strength concern without stronger treatment or a care-led basis trigger.
+- `not_needed`: no relevant job; wavy texture alone; or heat exposure without a legitimate Leave-in care signal. Heat-only need belongs to Heat protectant.
+- Aggregate by explicit precedence: any named basis rule wins, otherwise any named optional rule wins, otherwise `not_needed`. Do not promote arbitrary pairs of optional signals.
+- Leave-in is always supporting for repair. Its `basis` status for materially chemically treated hair reflects ongoing leave-on care/protection, not primary repair ownership or a permanent-repair claim.
+- A combined care/heat Leave-in and a suitable care Leave-in plus separate Heat protectant are both valid portfolios. Prefer product minimization when it fits, but never force consolidation of an already-suitable two-product setup.
 
 ### Need-tier mapping
 
@@ -654,6 +664,7 @@ Sources:
 - Lee et al., hair-shaft damage from heat and drying: https://pmc.ncbi.nlm.nih.gov/articles/PMC3229938/
 - Personal Plan Shampoo evidence: `docs/personal-plan/categories/shampoo/evidence.md`
 - Personal Plan Conditioner evidence: `docs/personal-plan/categories/conditioner/evidence.md`
+- Personal Plan Leave-in evidence: `docs/personal-plan/categories/leave-in/evidence.md`
 
 ## 11. Test matrix
 
@@ -661,9 +672,9 @@ The implementation plan must include pure fixture tests for at least:
 
 1. no current products: dynamic ideal categories plus shopping recommendations; no executable product recipes;
 2. simple owned shampoo + conditioner: one wash recipe, no invented optional categories;
-3. dry/frizzy/damaged profile: confidently needed leave-in/mask land in `basis`; weaker support lands in `optional`;
-4. meaningful heat with integrated leave-in heat protection: no duplicate heat-protectant requirement;
-5. meaningful heat without verified heat protection: category required, exact recommendation or pending state;
+3. Leave-in inclusion boundaries: dry/dull lengths alone `optional`; dry/dull plus rough surface `basis`; coily alone `basis`; curly alone `optional`; wavy alone `not_needed`;
+4. recurring heat plus a qualifying Leave-in care signal: Leave-in `basis`; integrated verified heat protection covers the heat role without a duplicate requirement;
+5. suitable care Leave-in plus suitable separate Heat protectant: both roles covered and no consolidation switch; meaningful heat without verified protection produces a required Heat-protectant role and exact recommendation or pending state;
 6. clarifying need: clarifying subtype replaces a normal wash and does not increase total wash cadence;
 7. vulnerable hair/scalp: conservative clarifying cadence;
 8. incompatible bondbuilder and mask protocols: two intensive-care recipe variants;

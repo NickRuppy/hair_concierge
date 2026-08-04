@@ -2,7 +2,7 @@
 category: leave_in
 document_type: decision
 status: confirmed
-decision_version: 1
+decision_version: 2
 last_reviewed_at: 2026-08-04
 current_runtime_revision_reviewed: 6e2a0c55
 evidence_file: docs/personal-plan/categories/leave-in/evidence.md
@@ -65,11 +65,36 @@ Missing thickness cannot produce a confident exact recommendation. Missing elast
 
 Leave-in is not a universal baseline. Product ownership never changes the underlying need tier.
 
-| Rule ID | Condition | Tier |
-|---|---|---|
-| `leave_in.inclusion.material_job` | Leave-in is the best eligible category for a material current job or stated goal | `basis` |
-| `leave_in.inclusion.supporting_job` | Leave-in legitimately helps, but another category owns the job more directly or the benefit is incremental | `optional` |
-| `leave_in.inclusion.no_job` | No confirmed Leave-in-relevant job is present | `not_needed` |
+### Exact tier mapping
+
+| Rule ID | Canonical condition | Tier | Decisive job |
+|---|---|---|---|
+| `leave_in.inclusion.detangling` | `currentConcerns` contains `tangling` | `basis` | persistent post-wash detangling |
+| `leave_in.inclusion.dry_rough` | `currentConcerns` contains `dry_dull_lengths` and `hairSurface = rough` | `basis` | ongoing moisture, softness, and surface care |
+| `leave_in.inclusion.dry_moisture_goal` | `currentConcerns` contains `dry_dull_lengths` and `goals` contains `moisture` | `basis` | current dryness plus intended moisture outcome |
+| `leave_in.inclusion.dry_tangling` | `currentConcerns` contains both `dry_dull_lengths` and `tangling` | `basis` | moisture plus detangling; deduplicate with the direct tangling rule |
+| `leave_in.inclusion.care_frizz` | `currentConcerns` contains `frizz_flyaways` plus `dry_dull_lengths`, `hairSurface = rough`, or `tangling` | `basis` | care-led smoothing/anti-frizz |
+| `leave_in.inclusion.intensive_treatment_care` | `chemicalTreatments` contains `lightened`, `permed`, or `chemically_straightened` | `basis` | ongoing leave-on care/protection for materially treated lengths, not primary repair ownership |
+| `leave_in.inclusion.coily_texture` | `texture = coily` | `basis` | regular moisture retention and manageability support |
+| `leave_in.inclusion.recurring_heat_care` | `heatFrequency` is `daily`, `several_weekly`, or `once_weekly`, and at least one qualifying Leave-in care signal below exists | `basis` | combined ongoing care plus event-based heat preparation |
+| `leave_in.inclusion.single_care_signal` | only one of `dry_dull_lengths`, `hairSurface = rough`, `goals` contains `moisture`, care-ambiguous `frizz_flyaways`, or `texture = curly` exists and no basis rule matches | `optional` | useful support without enough evidence for a confident baseline |
+| `leave_in.inclusion.colored_only` | `chemicalTreatments` contains `colored` but no stronger treatment or basis signal | `optional` | incremental leave-on support for color-treated lengths |
+| `leave_in.inclusion.definition_only` | `texture` is `wavy` or `curly` and `goals` contains `shape_definition` or concerns contain `lost_shape`, without a care-led basis signal | `optional` | care/shape preparation; Styling owns lasting definition and hold |
+| `leave_in.inclusion.shine_only` | `goals` contains `shine` or concerns contain `low_shine`, without a care-led basis signal | `optional` | incremental shine support |
+| `leave_in.inclusion.repair_only` | concerns contain `breakage_or_split_ends` or goals contain `strength_ends`, without a stronger treatment or care-led basis signal | `optional` | repair support only; Conditioner, Mask, or Bondbuilder owns primary repair |
+| `leave_in.inclusion.manageability_goal_only` | goals contain `manageability_styling` without actual tangling or another basis signal | `optional` | general ease of styling without a confirmed detangling problem |
+| `leave_in.inclusion.no_job` | no basis or optional rule matches | `not_needed` | no confirmed Leave-in-relevant job |
+
+Qualifying signals for `leave_in.inclusion.recurring_heat_care` are `dry_dull_lengths`, `hairSurface = rough`, `goals` contains `moisture`, a corroborated care-frizz route, `texture` is `curly` or `coily`, `chemicalTreatments` contains `lightened`, `permed`, or `chemically_straightened`, or a material shared repair-support need. A material shared repair-support need means `PlanDamageAssessment.repairPriority` is `medium` or `high` and at least one structural or mechanical driver is present; a priority elevated by heat alone cannot corroborate the same heat rule. Tangling and several of these signals already produce `basis`; the heat rule mainly upgrades an otherwise optional care signal. Definition or shine alone does not qualify. Frizz alone remains ambiguous and does not qualify. Heat alone routes to Heat protectant.
+
+Aggregate deterministically:
+
+1. if any explicit `basis` rule matches, return `basis`;
+2. otherwise, if any explicit `optional` rule matches, return `optional`;
+3. otherwise return `not_needed`;
+4. do not promote arbitrary pairs of optional signals—only the named corroborating combinations and recurring-heat rule may promote them;
+5. product ownership never changes the need tier;
+6. thickness, density, and length normally change target fit, amount, and distribution rather than inclusion. The separately defined fine-and-very-short Conditioner-replacement case still requires a material Leave-in job.
 
 Confirmed ownership boundaries:
 
@@ -79,7 +104,7 @@ Confirmed ownership boundaries:
 - localized dry-end polish and immediate finishing shine may belong more directly to Oil/serum;
 - moisture/softness without an unresolved post-wash problem is normally supporting because Conditioner is the baseline;
 - verified heat protection may be combined into Leave-in when a compatible care job exists; heat need alone routes to a dedicated Heat protectant rather than creating Leave-in need;
-- curly/coily texture alone makes Leave-in `optional`, not universal `basis`;
+- coily texture alone makes Leave-in `basis`; curly texture alone makes it `optional`; wavy texture alone does not create Leave-in need;
 - a definition goal without a conditioning/manageability problem makes Leave-in `optional`; Styling owns lasting definition;
 - a shine goal alone makes Leave-in `optional`;
 - damage/repair alone makes Leave-in at most `optional`. Leave-in is always supporting for repair and never the primary repair owner;
@@ -90,6 +115,10 @@ Inference for frizz:
 - `frizz_flyaways` plus dry lengths, tangling, or rough surface supports the care route;
 - `frizz_flyaways` plus lost shape or a definition-led pattern supports the Styling route unless a separate care signal is also present;
 - frizz without corroborating context is ambiguous and cannot by itself justify a confident Leave-in `basis` decision.
+
+Definition and shape follow the same ownership boundary: wavy or curly texture plus a definition goal/lost-shape concern is `optional` when no care need exists. Adding dryness, roughness, tangling, or care-led frizz makes Leave-in `basis` for care and shape preparation, while Styling may still be required for durable hold. Coily hair is already `basis` from its regular care need; do not claim that Leave-in alone creates a lasting cast.
+
+Damage follows two distinct routes. Lightening, perming, or chemical straightening creates `basis` for ongoing care/protection even without another concern, but Leave-in remains supporting rather than primary for repair. Color alone, breakage/split ends, a strength/ends goal, or generic repair need is only `optional` unless another care-led basis trigger exists. Never describe this as permanent repair or split-end reversal.
 
 ## Target profile
 
@@ -161,14 +190,17 @@ Examples include tangling plus manageability/styling for priority `3`, tangling 
 
 Use a strong one-product bias:
 
-- heat exposure plus any meaningful Leave-in care job targets one product combining verified heat protection with the required care functions;
+- recurring heat means `daily`, `several_weekly`, or `once_weekly`; `rarely` does not upgrade the regular Leave-in tier;
+- recurring heat plus a qualifying Leave-in care signal makes Leave-in `basis` and creates an event-based heat-protection requirement at portfolio level;
+- prefer one product combining verified heat protection with the required care functions when it passes all core fit gates;
 - the care job may be mild, but strict thickness, weight, care, and application fit still pass;
+- an already-owned or otherwise suitable care Leave-in plus a separate suitable Heat protectant is equally valid coverage and does not require replacement merely to consolidate products;
 - if no suitable combined product exists, use a care Leave-in plus a dedicated Heat protectant;
 - heat need without a legitimate Leave-in care job routes directly to Heat protectant;
 - a Leave-in counts as Heat protection only from explicit verified product evidence. Heat-compatible directions, ingredients, format, or `styling_prep` alone do not qualify it;
 - respect verified temperature, activation, and dry/damp application limits.
 
-The ideal Bedarfsplan may target one combined profile. Stage 2 decides whether replacing an owned care Leave-in is preferable to keeping it and adding separate Heat protection. The user confirms the change.
+Stage 1 explains the care need and the separate portfolio-level Heat-protection requirement. Stage 2 first accepts any already-suitable combined or two-product setup, then recommends a combined product or a separate Heat protectant only when a role remains uncovered. The user confirms every proposed portfolio change.
 
 ## Conditioner relationship
 
@@ -327,22 +359,34 @@ The later shared presentation pass chooses the two or three card-level facts. It
 2. `leave-in-replacement-eligible-no-job`: fine and very short, but no material job = `not_needed`; capability does not create need.
 3. `leave-in-fine-short-replacement`: fine, very short, material dry/rough conditioning need = `basis`; light verified replacement-capable product can be ideal.
 4. `leave-in-tangling-manageability`: fine, long, tangling plus manageability goal = `basis`; light detangling target, priority `3`.
-5. `leave-in-care-heat-combined`: fine, dry/frizzy lengths plus regular blow-dry = `basis`; target one light combined care/heat product.
-6. `leave-in-care-only-owned-on-heat-plan`: owned care product is ideal post-wash but mismatch pre-heat; switch to combined product or keep plus Heat protectant.
+5. `leave-in-care-heat-combined`: fine, dry lengths plus `once_weekly` blow-dry = `basis`; target one light combined care/heat product when no suitable protection is already owned.
+6. `leave-in-care-plus-owned-heat-protectant`: owned care product is ideal post-wash and a separate owned Heat protectant fits the heat event; both roles are covered and no consolidation switch is proposed.
 7. `leave-in-definition-goal-only`: wavy, definition goal, no care problem = `optional`; Styling owns hold.
 8. `leave-in-coarse-curly-multi-need`: coarse, curly, rough/frizzy/lost-shape plus definition goal = `basis`; rich care/curl-support target; otherwise valid medium product is supportive.
-9. `leave-in-repair-only`: lightened/breakage, no primary Leave-in job = `optional`; Conditioner plus Mask/Bondbuilder own repair.
-10. `leave-in-pending-product`: category basis but owned identity pending = product `unknown`, excluded from recipes, exact verified alternative supplied.
-11. `leave-in-primary-secondary`: three washes and one heat-styling wash; care product primary on normal washes, verified heat-capable secondary on heat wash.
-12. `leave-in-one-product-all-occurrences`: one product fits care and heat; primary covers every applicable occurrence without another purchase.
-13. `leave-in-strict-thickness-mismatch`: otherwise attractive product excludes the user's thickness = mismatch.
-14. `leave-in-weight-near-match`: strict gate passes, target rich/product medium = supportive.
-15. `leave-in-missing-heat-proof`: product marketed for styling but explicit heat proof absent = unknown for pre-heat, still evaluated for care.
-16. `leave-in-owned-override`: mismatch product kept by user remains executable with role-specific non-blocking advice.
-17. `leave-in-sectioning-guidance`: long/dense/tangled or definition-led profile gets adaptive sectioning without invented section counts.
-18. `leave-in-product-protocol`: verified directions override the category fallback.
-19. `leave-in-no-valid-candidate`: no mismatch/unknown recommendation is promoted; plan exposes the uncovered role.
-20. `leave-in-between-wash-deferred`: no automatic numeric refresh cadence is compiled in V1.
+9. `leave-in-lightened-care`: lightened hair without another concern = `basis` for ongoing care/protection; Leave-in remains supporting for repair.
+10. `leave-in-repair-only`: breakage/split ends or strength goal without stronger treatment/care signal = `optional`; Conditioner plus Mask/Bondbuilder own repair.
+11. `leave-in-pending-product`: category basis but owned identity pending = product `unknown`, excluded from recipes, exact verified alternative supplied.
+12. `leave-in-primary-secondary`: three washes and one heat-styling wash; care product primary on normal washes, verified heat-capable secondary on heat wash.
+13. `leave-in-one-product-all-occurrences`: one product fits care and heat; primary covers every applicable occurrence without another purchase.
+14. `leave-in-dry-alone`: `dry_dull_lengths` without corroboration = `optional`.
+15. `leave-in-dry-rough`: `dry_dull_lengths` plus `hairSurface = rough` = `basis`.
+16. `leave-in-shine-only`: low-shine concern or shine goal alone = `optional`; Oil ownership remains deferred.
+17. `leave-in-coily-alone`: coily texture without another signal = `basis`.
+18. `leave-in-curly-alone`: curly texture without another signal = `optional`.
+19. `leave-in-wavy-alone`: wavy texture without a relevant concern/goal = `not_needed`.
+20. `leave-in-recurring-heat-care`: optional care signal plus `daily`, `several_weekly`, or `once_weekly` heat = `basis`.
+21. `leave-in-rare-heat-care`: optional care signal plus `rarely` heat remains `optional`; protection is event-specific but does not reshape the regular Leave-in plan.
+22. `leave-in-heat-only`: recurring heat without a Leave-in care signal = Leave-in `not_needed`; Heat protectant owns the job.
+23. `leave-in-definition-only`: wavy/curly definition or lost shape without care signal = `optional`; Styling owns hold.
+24. `leave-in-care-plus-definition`: patterned hair plus definition and care-led basis signal = Leave-in `basis` for care/shape preparation; no cast claim.
+25. `leave-in-strict-thickness-mismatch`: otherwise attractive product excludes the user's thickness = mismatch.
+26. `leave-in-weight-near-match`: strict gate passes, target rich/product medium = supportive.
+27. `leave-in-missing-heat-proof`: product marketed for styling but explicit heat proof absent = unknown for pre-heat, still evaluated for care.
+28. `leave-in-owned-override`: mismatch product kept by user remains executable with role-specific non-blocking advice.
+29. `leave-in-sectioning-guidance`: long/dense/tangled or definition-led profile gets adaptive sectioning without invented section counts.
+30. `leave-in-product-protocol`: verified directions override the category fallback.
+31. `leave-in-no-valid-candidate`: no mismatch/unknown recommendation is promoted; plan exposes the uncovered role.
+32. `leave-in-between-wash-deferred`: no automatic numeric refresh cadence is compiled in V1.
 
 This fixture set is intentionally broad and does not predict production verdict distribution. Before implementation readiness, run the completed rules against representative profile combinations and the live verified catalog to detect excessive `supportive`/`unknown` results and catalog coverage gaps.
 
