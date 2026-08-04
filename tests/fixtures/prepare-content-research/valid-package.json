@@ -1,0 +1,46 @@
+{
+  "schema_version": "prepare-content-research.v1",
+  "request_id": "2026-08-04-find-the-right-shampoo",
+  "status": "complete",
+  "created_at": "2026-08-04T10:00:00.000Z",
+  "research_scope": { "question": "How should beginners choose shampoo?" },
+  "intake": { "content_scope": "short_video", "product_specificity": "general" },
+  "repository": {
+    "commit_sha": "abc123",
+    "source_policy_version": "prepare-content-research-source-policy.v1",
+    "source_manifest_version": "prepare-content-research-source-manifest.v1"
+  },
+  "findings": ["claim.scalp-first"],
+  "claims": [
+    {
+      "claim_id": "claim.scalp-first",
+      "statement": "General shampoo selection should begin with scalp needs.",
+      "importance": "primary",
+      "source_type": "repository_guidance",
+      "source_refs": ["source.shampoo-guidance"],
+      "support_level": "direct",
+      "confidence": "high",
+      "limitations": ["This is general education, not a diagnosis."],
+      "verification_status": "verified"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source.shampoo-guidance",
+      "source_type": "repository_guidance",
+      "repo_path_or_url": "data/agent-v2/guidance/categories/shampoo.md",
+      "title": "Shampoo guidance",
+      "accessed_at_or_commit": "abc123",
+      "relevant_sections": ["Selection principles"]
+    }
+  ],
+  "material_gaps": [],
+  "conflicts": [],
+  "open_gaps": [],
+  "do_not_claim": ["A shampoo can diagnose scalp conditions."],
+  "verification": {
+    "status": "verified",
+    "checked_claim_ids": ["claim.scalp-first"],
+    "blockers": []
+  }
+}

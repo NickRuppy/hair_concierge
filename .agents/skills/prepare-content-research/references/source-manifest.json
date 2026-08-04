@@ -1,0 +1,232 @@
+{
+  "schema_version": "prepare-content-research-source-manifest.v1",
+  "package_index": "src/lib/agent-v2/guidance/package-index.ts",
+  "guidance_root": "data/agent-v2/guidance",
+  "base_by_purpose": {
+    "answer_quality_and_advisor_boundaries": ["base.advisor_rules.v1", "base.answer_contract.v1"],
+    "general_category_education": ["base.general_advice.v1", "base.goal_concern_levers.v1"],
+    "product_choice_or_catalog_claims": ["base.product_recommendation.v1"],
+    "routine_or_usage_claims": ["base.routine_building.v1"],
+    "safety_or_medically_adjacent_claims": ["base.safety_boundaries.v1"],
+    "handoff_format_audit_only": ["base.tone_and_format.v1"]
+  },
+  "packages": {
+    "base.advisor_rules.v1": {
+      "kind": "base",
+      "route": "base:advisor-rules",
+      "markdown_path": "data/agent-v2/guidance/base/advisor-rules.md",
+      "metadata_path": "data/agent-v2/guidance/base/advisor-rules.json"
+    },
+    "base.answer_contract.v1": {
+      "kind": "base",
+      "route": "base:answer-contract",
+      "markdown_path": "data/agent-v2/guidance/base/answer-contract.md",
+      "metadata_path": "data/agent-v2/guidance/base/answer-contract.json"
+    },
+    "base.product_recommendation.v1": {
+      "kind": "base",
+      "route": "base:product-recommendation",
+      "markdown_path": "data/agent-v2/guidance/base/product-recommendation.md",
+      "metadata_path": "data/agent-v2/guidance/base/product-recommendation.json"
+    },
+    "base.routine_building.v1": {
+      "kind": "base",
+      "route": "base:routine-building",
+      "markdown_path": "data/agent-v2/guidance/base/routine-building.md",
+      "metadata_path": "data/agent-v2/guidance/base/routine-building.json"
+    },
+    "base.general_advice.v1": {
+      "kind": "base",
+      "route": "base:general-advice",
+      "markdown_path": "data/agent-v2/guidance/base/general-advice.md",
+      "metadata_path": "data/agent-v2/guidance/base/general-advice.json"
+    },
+    "base.goal_concern_levers.v1": {
+      "kind": "base",
+      "route": "base:goal-concern-levers",
+      "markdown_path": "data/agent-v2/guidance/base/goal-concern-levers.md",
+      "metadata_path": "data/agent-v2/guidance/base/goal-concern-levers.json"
+    },
+    "base.safety_boundaries.v1": {
+      "kind": "base",
+      "route": "base:safety-boundaries",
+      "markdown_path": "data/agent-v2/guidance/base/safety-boundaries.md",
+      "metadata_path": "data/agent-v2/guidance/base/safety-boundaries.json"
+    },
+    "base.tone_and_format.v1": {
+      "kind": "base",
+      "route": "base:tone-and-format",
+      "markdown_path": "data/agent-v2/guidance/base/tone-and-format.md",
+      "metadata_path": "data/agent-v2/guidance/base/tone-and-format.json"
+    },
+    "category.shampoo.v1": {
+      "kind": "category",
+      "route": "category:shampoo",
+      "markdown_path": "data/agent-v2/guidance/categories/shampoo.md",
+      "metadata_path": "data/agent-v2/guidance/categories/shampoo.json"
+    },
+    "category.conditioner.v1": {
+      "kind": "category",
+      "route": "category:conditioner",
+      "markdown_path": "data/agent-v2/guidance/categories/conditioner.md",
+      "metadata_path": "data/agent-v2/guidance/categories/conditioner.json"
+    },
+    "category.leave_in.v1": {
+      "kind": "category",
+      "route": "category:leave-in",
+      "markdown_path": "data/agent-v2/guidance/categories/leave-in.md",
+      "metadata_path": "data/agent-v2/guidance/categories/leave-in.json"
+    },
+    "category.mask.v1": {
+      "kind": "category",
+      "route": "category:mask",
+      "markdown_path": "data/agent-v2/guidance/categories/mask.md",
+      "metadata_path": "data/agent-v2/guidance/categories/mask.json"
+    },
+    "category.oil.v1": {
+      "kind": "category",
+      "route": "category:oil",
+      "markdown_path": "data/agent-v2/guidance/categories/oil.md",
+      "metadata_path": "data/agent-v2/guidance/categories/oil.json"
+    },
+    "category.bondbuilder.v1": {
+      "kind": "category",
+      "route": "category:bondbuilder",
+      "markdown_path": "data/agent-v2/guidance/categories/bondbuilder.md",
+      "metadata_path": "data/agent-v2/guidance/categories/bondbuilder.json"
+    },
+    "category.deep_cleansing_shampoo.v1": {
+      "kind": "category",
+      "route": "category:deep-cleansing-shampoo",
+      "markdown_path": "data/agent-v2/guidance/categories/deep-cleansing-shampoo.md",
+      "metadata_path": "data/agent-v2/guidance/categories/deep-cleansing-shampoo.json"
+    },
+    "category.dry_shampoo.v1": {
+      "kind": "category",
+      "route": "category:dry-shampoo",
+      "markdown_path": "data/agent-v2/guidance/categories/dry-shampoo.md",
+      "metadata_path": "data/agent-v2/guidance/categories/dry-shampoo.json"
+    },
+    "category.peeling.v1": {
+      "kind": "category",
+      "route": "category:peeling",
+      "markdown_path": "data/agent-v2/guidance/categories/peeling.md",
+      "metadata_path": "data/agent-v2/guidance/categories/peeling.json"
+    },
+    "topic.night_protection.v1": {
+      "kind": "topic",
+      "route": "topic:night-protection",
+      "markdown_path": "data/agent-v2/guidance/topics/night-protection.md",
+      "metadata_path": "data/agent-v2/guidance/topics/night-protection.json"
+    }
+  },
+  "conditional_sources": {
+    "category_boundary_sources": {
+      "category.shampoo.v1": [
+        "category.deep_cleansing_shampoo.v1",
+        "category.dry_shampoo.v1",
+        "category.peeling.v1",
+        "category.conditioner.v1"
+      ],
+      "category.conditioner.v1": [
+        "category.mask.v1",
+        "category.leave_in.v1",
+        "category.shampoo.v1"
+      ],
+      "category.leave_in.v1": ["category.conditioner.v1", "category.mask.v1", "category.oil.v1"],
+      "category.mask.v1": [
+        "category.conditioner.v1",
+        "category.leave_in.v1",
+        "category.bondbuilder.v1"
+      ],
+      "category.oil.v1": ["category.leave_in.v1", "category.mask.v1"],
+      "category.bondbuilder.v1": ["category.mask.v1", "category.conditioner.v1"],
+      "category.deep_cleansing_shampoo.v1": ["category.shampoo.v1", "category.peeling.v1"],
+      "category.dry_shampoo.v1": ["category.shampoo.v1"],
+      "category.peeling.v1": ["category.shampoo.v1", "category.deep_cleansing_shampoo.v1"]
+    },
+    "advisory_topic_sources": {
+      "night_protection": [
+        "topic.night_protection.v1",
+        "base.general_advice.v1",
+        "base.safety_boundaries.v1"
+      ]
+    },
+    "runtime_behavior_claims": {
+      "source_type": "repository_runtime",
+      "paths": [
+        "src/lib/agent-v2/guidance/package-index.ts",
+        "src/lib/agent-v2/guidance/compiler.ts",
+        "src/lib/agent-v2/guidance/types.ts",
+        "src/lib/agent-v2/tools/guidance-tool.ts",
+        "src/lib/recommendation-engine/categories/shampoo.ts",
+        "src/lib/recommendation-engine/categories/conditioner.ts",
+        "src/lib/recommendation-engine/categories/leave-in.ts",
+        "src/lib/recommendation-engine/categories/mask.ts",
+        "src/lib/recommendation-engine/categories/oil.ts",
+        "src/lib/recommendation-engine/categories/bondbuilder.ts",
+        "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+        "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+        "src/lib/recommendation-engine/categories/peeling.ts",
+        "src/lib/recommendation-engine/categories/index.ts",
+        "src/lib/recommendation-engine/runtime.ts",
+        "src/lib/recommendation-engine/types.ts",
+        "tests/agent-v2-guidance-compiler.spec.ts",
+        "tests/recommendation-engine-categories.test.ts"
+      ]
+    },
+    "named_product_claims": {
+      "source_type": "repository_product_data",
+      "paths": [
+        "data/product-catalog-snapshot.json",
+        "data/product-catalog-normalization.json",
+        "data/product-catalog-normalization.schema.json",
+        "docs/product-catalog-identity-rules.md",
+        "docs/product-identity-normalization.md",
+        "src/lib/product-identity/index.ts",
+        "src/lib/product-identity/normalize.ts",
+        "src/lib/product-identity/brand-resolution.ts",
+        "src/lib/agent-v2/named-product-context.ts",
+        "src/lib/product-display-name.ts",
+        "src/lib/product-catalog/eligibility.ts"
+      ],
+      "freshness_rule": "For current formula, price, availability, packaging, or live retailer claims, record a repository gap and use current_product_source evidence through the external gate."
+    },
+    "external_gap_triggers": [
+      "scientific_or_ingredient_question_not_directly_supported_by_repo",
+      "medically_adjacent_scalp_or_hair_loss_boundary",
+      "current_formula_or_market_claim",
+      "professional_or_regulatory_claim_needed_for_safe_framing"
+    ],
+    "audit_only_sources": [
+      "docs/agent-v2-guidance-migration/category-guidance-standard.md",
+      "docs/agent-v2-guidance-migration/source-map.md"
+    ]
+  },
+  "excluded_primary_sources": [
+    {
+      "path_prefix": "plans/",
+      "reason": "Planning artifacts are not content authority."
+    },
+    {
+      "path_prefix": "docs/archive/",
+      "reason": "Archived docs may be stale."
+    },
+    {
+      "path_prefix": "docs/agent-v2-guidance-migration/",
+      "reason": "Migration docs are audit-only and must not become primary content authority."
+    },
+    {
+      "path_prefix": "data/agent-guidance/",
+      "reason": "Legacy guidance is superseded by data/agent-v2/guidance packages."
+    },
+    {
+      "path_prefix": "src/",
+      "reason": "Unbounded source search is excluded; use only exact runtime paths listed in conditional_sources."
+    },
+    {
+      "pattern": "repo-wide-search",
+      "reason": "Repository-wide retrieval is not an allowed primary source selection method."
+    }
+  ]
+}
