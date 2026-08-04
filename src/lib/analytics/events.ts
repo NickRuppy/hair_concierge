@@ -97,10 +97,19 @@ export type CheckoutLifecycleTransition =
   | "client_mounted"
   | "claimed"
   | "opened"
+  | "overlay_mounted"
+  | "overlay_visible"
+  | "overlay_visibility_timeout"
+  | "provider_load_started"
   | "provider_ready"
+  | "provider_load_timeout"
+  | "provider_load_error"
   | "payment_surface_selected"
   | "payment_engaged"
   | "confirm_started"
+  | "confirm_failed"
+  | "provider_cancelled"
+  | "unexpected_navigation"
   | "dismissed"
   | "resumed"
   | "recovery_presented"
@@ -121,7 +130,20 @@ export type CheckoutLifecycleRecoveryReason =
   | "provider_locked"
   | "confirmation_failed"
 
-export type CheckoutLifecycleEndReason = "customer_aborted" | "plan_changed" | "page_teardown"
+export type CheckoutLifecycleFailureReason =
+  | "overlay_not_visible"
+  | "provider_ready_timeout"
+  | "provider_load_error"
+  | "provider_request_timeout"
+  | "malformed_provider_response"
+  | "silent_control_outcome"
+  | "unexpected_route"
+
+export type CheckoutLifecycleEndReason =
+  | "customer_aborted"
+  | "plan_changed"
+  | "page_teardown"
+  | "unexpected_navigation"
 
 export type CheckoutLifecycleLastState = "none" | CheckoutLifecycleTransition
 
@@ -235,6 +257,7 @@ export type AppEventMap = {
     dismissalReason?: CheckoutLifecycleDismissalReason
     elapsedMs: number
     endReason?: CheckoutLifecycleEndReason
+    failureReason?: CheckoutLifecycleFailureReason
     lastState: CheckoutLifecycleLastState
     openIndex: number
     option?: OfferPaymentOption

@@ -186,6 +186,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         dismissal_reason: data.dismissalReason,
         elapsed_ms: data.elapsedMs,
         end_reason: data.endReason,
+        failure_reason: data.failureReason,
         last_state: data.lastState,
         open_index: data.openIndex,
         option: data.option,

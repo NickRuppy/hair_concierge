@@ -39,6 +39,11 @@ export type OfferCheckoutProviderLifecycleCallback = (
   provider: OfferPaymentOptionProvider,
   option: OfferPaymentOption,
 ) => void
+export type OfferCheckoutProviderLifecycleFailureCallback = (
+  provider: OfferPaymentOptionProvider,
+  option: OfferPaymentOption,
+  failureReason: "provider_ready_timeout" | "provider_load_error",
+) => void
 type ApplePayAvailability = "pending" | "available" | "unavailable" | "failed"
 export type StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent = {
   elementType?: "expressCheckout"
@@ -48,6 +53,7 @@ export type StripePaymentElementAvailablePaymentMethodsChangeEvent =
   StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent
 const APPLE_PAY_INITIAL_RESPONSE_TIMEOUT_MS = 5_000
 const APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS = 10_000
+const PAYMENT_ELEMENT_READY_TIMEOUT_MS = 10_000
 type StripeOfferConfirmResult = { type: "success" } | { type: "error"; error: { message: string } }
 export type StripeOfferBeforeConfirmResult = boolean | { allowed: boolean; errorMessage?: string }
 type StripeOfferExpressElement = {
@@ -335,6 +341,7 @@ function StripeOfferElementsCheckoutBody({
   onFirstPaymentEngagement,
   onClientMounted,
   onConfirmStarted,
+  onConfirmFailed,
   paymentElementEnabled,
   paymentButtonLabel,
   visible,
@@ -342,6 +349,10 @@ function StripeOfferElementsCheckoutBody({
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   onProviderReady,
+  onProviderCancelled,
+  onProviderLoadError,
+  onProviderLoadStarted,
+  onProviderLoadTimeout,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
@@ -357,12 +368,17 @@ function StripeOfferElementsCheckoutBody({
   onFirstPaymentEngagement?: () => void
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
   onConfirmStarted?: OfferCheckoutProviderLifecycleCallback
+  onConfirmFailed?: OfferCheckoutProviderLifecycleCallback
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onProviderReady?: OfferCheckoutProviderLifecycleCallback
+  onProviderCancelled?: OfferCheckoutProviderLifecycleCallback
+  onProviderLoadError?: OfferCheckoutProviderLifecycleFailureCallback
+  onProviderLoadStarted?: OfferCheckoutProviderLifecycleCallback
+  onProviderLoadTimeout?: OfferCheckoutProviderLifecycleFailureCallback
   paymentElementEnabled?: boolean
   paymentButtonLabel?: string
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
@@ -386,9 +402,14 @@ function StripeOfferElementsCheckoutBody({
       onFirstPaymentEngagement={onFirstPaymentEngagement}
       onClientMounted={onClientMounted}
       onConfirmStarted={onConfirmStarted}
+      onConfirmFailed={onConfirmFailed}
       onPaymentMethodSelected={onPaymentMethodSelected}
       onPaymentOptionViewed={onPaymentOptionViewed}
       onProviderReady={onProviderReady}
+      onProviderCancelled={onProviderCancelled}
+      onProviderLoadError={onProviderLoadError}
+      onProviderLoadStarted={onProviderLoadStarted}
+      onProviderLoadTimeout={onProviderLoadTimeout}
       paymentElementEnabled={paymentElementEnabled}
       paymentButtonLabel={paymentButtonLabel}
       onProviderLockClaim={onProviderLockClaim}
@@ -413,9 +434,14 @@ export function StripeOfferElementsCheckoutContent({
   onFirstPaymentEngagement,
   onClientMounted,
   onConfirmStarted,
+  onConfirmFailed,
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   onProviderReady,
+  onProviderCancelled,
+  onProviderLoadError,
+  onProviderLoadStarted,
+  onProviderLoadTimeout,
   paymentElementEnabled = true,
   paymentButtonLabel,
   onProviderLockClaim,
@@ -439,12 +465,17 @@ export function StripeOfferElementsCheckoutContent({
   onFirstPaymentEngagement?: () => void
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
   onConfirmStarted?: OfferCheckoutProviderLifecycleCallback
+  onConfirmFailed?: OfferCheckoutProviderLifecycleCallback
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onProviderReady?: OfferCheckoutProviderLifecycleCallback
+  onProviderCancelled?: OfferCheckoutProviderLifecycleCallback
+  onProviderLoadError?: OfferCheckoutProviderLifecycleFailureCallback
+  onProviderLoadStarted?: OfferCheckoutProviderLifecycleCallback
+  onProviderLoadTimeout?: OfferCheckoutProviderLifecycleFailureCallback
   paymentElementEnabled?: boolean
   paymentButtonLabel?: string
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
@@ -488,6 +519,9 @@ export function StripeOfferElementsCheckoutContent({
   const lockOwnerRef = useRef<StripeOfferProvider | null>(null)
   const expressHostRef = useRef<HTMLDivElement>(null)
   const applePayInitialResponseTimerRef = useRef<number | null>(null)
+  const paymentElementReadyTimerRef = useRef<number | null>(null)
+  const visibleRef = useRef(visible)
+  visibleRef.current = visible
   const applePayLoadingDeadlineRef = useRef(Date.now() + APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS)
   const applePayInitialResponseReceivedRef = useRef(false)
   const applePayAvailabilityClosedRef = useRef(false)
@@ -496,15 +530,20 @@ export function StripeOfferElementsCheckoutContent({
   const mountedProviderOptionsRef = useRef(new Set<OfferPaymentOption>())
   const readyProviderOptionsRef = useRef(new Set<OfferPaymentOption>())
   const confirmStartedProviderOptionsRef = useRef(new Set<OfferPaymentOption>())
+  const providerLoadStartedOptionsRef = useRef(new Set<OfferPaymentOption>())
+  const providerLoadTimeoutOptionsRef = useRef(new Set<OfferPaymentOption>())
 
   useEffect(() => {
     mountedProviderOptionsRef.current.clear()
     readyProviderOptionsRef.current.clear()
     confirmStartedProviderOptionsRef.current.clear()
+    providerLoadStartedOptionsRef.current.clear()
+    providerLoadTimeoutOptionsRef.current.clear()
   }, [checkoutAttemptId, checkoutKey])
 
   const reportClientMounted = useCallback(
     (option: OfferPaymentOption) => {
+      if (!visibleRef.current) return
       if (mountedProviderOptionsRef.current.has(option)) return
       mountedProviderOptionsRef.current.add(option)
       onClientMounted?.("stripe", option)
@@ -514,6 +553,7 @@ export function StripeOfferElementsCheckoutContent({
 
   const reportProviderReady = useCallback(
     (option: OfferPaymentOption) => {
+      if (!visibleRef.current) return
       if (readyProviderOptionsRef.current.has(option)) return
       readyProviderOptionsRef.current.add(option)
       onProviderReady?.("stripe", option)
@@ -530,11 +570,66 @@ export function StripeOfferElementsCheckoutContent({
     [onConfirmStarted],
   )
 
+  const reportProviderLoadStarted = useCallback(
+    (option: OfferPaymentOption) => {
+      if (!visibleRef.current) return
+      if (providerLoadStartedOptionsRef.current.has(option)) return
+      providerLoadStartedOptionsRef.current.add(option)
+      onProviderLoadStarted?.("stripe", option)
+    },
+    [onProviderLoadStarted],
+  )
+
+  const reportProviderLoadTimeout = useCallback(
+    (option: OfferPaymentOption) => {
+      if (!visibleRef.current) return
+      if (providerLoadTimeoutOptionsRef.current.has(option)) return
+      providerLoadTimeoutOptionsRef.current.add(option)
+      onProviderLoadTimeout?.("stripe", option, "provider_ready_timeout")
+      capturePaymentFailure({
+        signal: "checkout_experience_degraded",
+        provider: "stripe",
+        boundary: "provider_session",
+        errorFamily: "timeout",
+        commerceKind,
+        origin: "browser",
+        method: option === "apple_pay" ? "apple_pay" : "card",
+        truth: "unknown",
+        live: stripeLive,
+        isInternalTest,
+        retryable: "true",
+        checkoutAttemptId,
+        source: observabilitySource,
+        status: "provider_ready_timeout",
+      })
+    },
+    [
+      checkoutAttemptId,
+      commerceKind,
+      isInternalTest,
+      observabilitySource,
+      onProviderLoadTimeout,
+      stripeLive,
+    ],
+  )
+
   const clearApplePayInitialResponseTimer = useCallback(() => {
     if (applePayInitialResponseTimerRef.current === null) return
     window.clearTimeout(applePayInitialResponseTimerRef.current)
     applePayInitialResponseTimerRef.current = null
   }, [])
+
+  const clearPaymentElementReadyTimer = useCallback(() => {
+    if (paymentElementReadyTimerRef.current === null) return
+    window.clearTimeout(paymentElementReadyTimerRef.current)
+    paymentElementReadyTimerRef.current = null
+  }, [])
+
+  useEffect(() => clearPaymentElementReadyTimer, [checkoutAttemptId, clearPaymentElementReadyTimer])
+
+  useEffect(() => {
+    if (!visible) clearPaymentElementReadyTimer()
+  }, [clearPaymentElementReadyTimer, visible])
 
   const resolveApplePayAvailability = useCallback(
     (availability: ApplePayAvailability) => {
@@ -621,8 +716,9 @@ export function StripeOfferElementsCheckoutContent({
     ) {
       return
     }
+    reportProviderLoadStarted("apple_pay")
     applePayLoadingDeadlineRef.current = Date.now() + APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS
-  }, [visible])
+  }, [reportProviderLoadStarted, visible])
 
   useEffect(() => {
     if (
@@ -642,6 +738,7 @@ export function StripeOfferElementsCheckoutContent({
 
     applePayInitialResponseTimerRef.current = window.setTimeout(() => {
       recordWalletDebugEvent("express_response_timeout")
+      reportProviderLoadTimeout("apple_pay")
       closeApplePayAvailability("failed")
     }, responseTimeoutMs)
 
@@ -653,6 +750,7 @@ export function StripeOfferElementsCheckoutContent({
     clearApplePayInitialResponseTimer,
     closeApplePayAvailability,
     recordWalletDebugEvent,
+    reportProviderLoadTimeout,
     visible,
   ])
 
@@ -739,12 +837,13 @@ export function StripeOfferElementsCheckoutContent({
       confirmingRef.current = false
       setConfirming(false)
       releaseStripe()
+      onProviderCancelled?.("stripe", "apple_pay")
     }
     element.on("cancel", handleCancel)
     return () => {
       element.off("cancel", handleCancel)
     }
-  }, [checkout, recordWalletDebugEvent, releaseStripe])
+  }, [checkout, onProviderCancelled, recordWalletDebugEvent, releaseStripe])
 
   const state = createStripeOfferElementsState({
     applePayAvailable: applePayAvailability === "available",
@@ -778,16 +877,21 @@ export function StripeOfferElementsCheckoutContent({
 
   const handleExpressCheckoutLoadError = useCallback(
     (event: { error: { code?: string | null; type: string } }) => {
+      if (!visibleRef.current) return
       recordWalletDebugEvent("express_load_error", undefined, event.error.code ?? event.error.type)
+      onProviderLoadError?.("stripe", "apple_pay", "provider_load_error")
       closeApplePayAvailability("failed")
     },
-    [closeApplePayAvailability, recordWalletDebugEvent],
+    [closeApplePayAvailability, onProviderLoadError, recordWalletDebugEvent],
   )
 
   const handlePaymentElementLoadError = useCallback(
     (event: { error: { code?: string | null; type: string } }) => {
+      if (!visibleRef.current) return
+      clearPaymentElementReadyTimer()
       setPaymentElementReady(false)
       recordWalletDebugEvent("payment_load_error", undefined, event.error.code ?? event.error.type)
+      onProviderLoadError?.("stripe", "card_and_more", "provider_load_error")
       const attemptKey = checkoutAttemptId ?? "unscoped_checkout"
       if (!visible || preparationFailureReported) return
       if (reportedPaymentElementLoadErrorAttemptRef.current === attemptKey) return
@@ -811,9 +915,11 @@ export function StripeOfferElementsCheckoutContent({
     },
     [
       checkoutAttemptId,
+      clearPaymentElementReadyTimer,
       commerceKind,
       isInternalTest,
       observabilitySource,
+      onProviderLoadError,
       preparationFailureReported,
       recordWalletDebugEvent,
       stripeLive,
@@ -893,6 +999,7 @@ export function StripeOfferElementsCheckoutContent({
           reason,
           source: observabilitySource,
         })
+        onConfirmFailed?.("stripe", getStripeOfferPaymentOption(paymentMethodType))
         rejectConfirmation(reason)
       }
       if (!checkout) {
@@ -964,6 +1071,7 @@ export function StripeOfferElementsCheckoutContent({
           reason: "confirm_error",
           source: observabilitySource,
         })
+        onConfirmFailed?.("stripe", getStripeOfferPaymentOption(paymentMethodType))
         const message = getStripeOfferElementsErrorMessage(result.error.message)
         setErrorMessage(message)
         expressCheckoutConfirmEvent?.paymentFailed({ message })
@@ -981,6 +1089,7 @@ export function StripeOfferElementsCheckoutContent({
           reason,
           source: observabilitySource,
         })
+        onConfirmFailed?.("stripe", getStripeOfferPaymentOption(paymentMethodType))
         const message = getStripeOfferElementsErrorMessage()
         setErrorMessage(message)
         expressCheckoutConfirmEvent?.paymentFailed({ message })
@@ -1000,6 +1109,7 @@ export function StripeOfferElementsCheckoutContent({
       isInternalTest,
       markFirstPaymentEngagement,
       onBeforeConfirm,
+      onConfirmFailed,
       observabilitySource,
       recordWalletDebugEvent,
       reportConfirmStarted,
@@ -1198,10 +1308,17 @@ export function StripeOfferElementsCheckoutContent({
                 }}
                 onLoadError={handlePaymentElementLoadError}
                 onLoaderStart={() => {
+                  if (!visibleRef.current) return
                   reportClientMounted("card_and_more")
+                  reportProviderLoadStarted("card_and_more")
                   recordWalletDebugEvent("payment_loader_started")
+                  clearPaymentElementReadyTimer()
+                  paymentElementReadyTimerRef.current = window.setTimeout(() => {
+                    reportProviderLoadTimeout("card_and_more")
+                  }, PAYMENT_ELEMENT_READY_TIMEOUT_MS)
                 }}
                 onReady={() => {
+                  clearPaymentElementReadyTimer()
                   reportClientMounted("card_and_more")
                   reportProviderReady("card_and_more")
                   setPaymentElementReady(true)
@@ -1255,10 +1372,15 @@ export function StripeOfferElementsCheckout({
   onBeforeConfirm,
   onClientMounted,
   onConfirmStarted,
+  onConfirmFailed,
   onFirstPaymentEngagement,
   onPaymentMethodSelected,
   onPaymentOptionViewed,
   onProviderReady,
+  onProviderCancelled,
+  onProviderLoadError,
+  onProviderLoadStarted,
+  onProviderLoadTimeout,
   paymentElementEnabled = true,
   paymentButtonLabel,
   onProviderLockClaim,
@@ -1279,6 +1401,7 @@ export function StripeOfferElementsCheckout({
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
   onConfirmStarted?: OfferCheckoutProviderLifecycleCallback
+  onConfirmFailed?: OfferCheckoutProviderLifecycleCallback
   onFirstPaymentEngagement?: () => void
   onPaymentMethodSelected?: (
     provider: StripeOfferProvider,
@@ -1286,6 +1409,10 @@ export function StripeOfferElementsCheckout({
   ) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onProviderReady?: OfferCheckoutProviderLifecycleCallback
+  onProviderCancelled?: OfferCheckoutProviderLifecycleCallback
+  onProviderLoadError?: OfferCheckoutProviderLifecycleFailureCallback
+  onProviderLoadStarted?: OfferCheckoutProviderLifecycleCallback
+  onProviderLoadTimeout?: OfferCheckoutProviderLifecycleFailureCallback
   paymentElementEnabled?: boolean
   paymentButtonLabel?: string
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
@@ -1322,9 +1449,14 @@ export function StripeOfferElementsCheckout({
         onFirstPaymentEngagement={onFirstPaymentEngagement}
         onClientMounted={onClientMounted}
         onConfirmStarted={onConfirmStarted}
+        onConfirmFailed={onConfirmFailed}
         onPaymentMethodSelected={onPaymentMethodSelected}
         onPaymentOptionViewed={onPaymentOptionViewed}
         onProviderReady={onProviderReady}
+        onProviderCancelled={onProviderCancelled}
+        onProviderLoadError={onProviderLoadError}
+        onProviderLoadStarted={onProviderLoadStarted}
+        onProviderLoadTimeout={onProviderLoadTimeout}
         paymentElementEnabled={paymentElementEnabled}
         paymentButtonLabel={paymentButtonLabel}
         onProviderLockClaim={onProviderLockClaim}

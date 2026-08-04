@@ -6,6 +6,11 @@ import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-payp
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import type { CheckoutLifecycleClaim } from "@/lib/analytics/checkout-attempt"
+import {
+  createCheckoutWatchdog,
+  createCheckoutWatchdogRegistry,
+} from "@/lib/observability/checkout-watchdog"
 import {
   capturePaymentFailure,
   type PaymentBoundary,
@@ -20,7 +25,9 @@ function capturePayPalOneTimeCustomerPaymentError({
   leadId,
   live,
   providerReferencePresent = false,
+  signal = "customer_payment_error_observed",
   status,
+  durationMs,
 }: {
   boundary: PaymentBoundary
   checkoutAttemptId: string
@@ -29,10 +36,12 @@ function capturePayPalOneTimeCustomerPaymentError({
   leadId: string
   live: boolean
   providerReferencePresent?: boolean
+  signal?: "checkout_experience_degraded" | "customer_payment_error_observed"
   status: string | number
+  durationMs?: number
 }) {
   capturePaymentFailure({
-    signal: "customer_payment_error_observed",
+    signal,
     provider: "paypal",
     boundary,
     errorFamily,
@@ -47,6 +56,7 @@ function capturePayPalOneTimeCustomerPaymentError({
     leadId,
     source: "quiz_result_offer",
     status,
+    durationMs,
     providerReferencePresent,
   })
 }
@@ -63,6 +73,8 @@ export function PayPalOneTimeButton({
   onProviderSelected,
   onProviderConflict,
   onReady,
+  onCheckoutLifecycle,
+  visible = true,
 }: {
   checkoutAttemptId: string
   funnelSessionId: string
@@ -75,6 +87,10 @@ export function PayPalOneTimeButton({
   onProviderSelected?: () => void
   onProviderConflict?: () => void
   onReady?: () => void
+  visible?: boolean
+  onCheckoutLifecycle?: (
+    claim: Omit<CheckoutLifecycleClaim, "checkoutAttemptId" | "lastState" | "openIndex">,
+  ) => void
 }) {
   const [error, setError] = useState<string | null>(null)
   const [expired, setExpired] = useState(false)
@@ -83,6 +99,10 @@ export function PayPalOneTimeButton({
   const suppressNextPayPalErrorRef = useRef(false)
   const clientMountedReportedRef = useRef(false)
   const confirmStartedReportedRef = useRef(false)
+  const clearSdkWatchdogRef = useRef<(() => void) | null>(null)
+  const watchdogsRef = useRef(createCheckoutWatchdogRegistry())
+  const visibleRef = useRef(visible)
+  visibleRef.current = visible
   const { paypalLive } = usePaymentRuntime()
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
@@ -92,6 +112,59 @@ export function PayPalOneTimeButton({
     clientMountedReportedRef.current = false
     confirmStartedReportedRef.current = false
   }, [checkoutAttemptId])
+
+  useEffect(() => {
+    if (!clientId || !visible) return
+    const watchdogs = watchdogsRef.current
+    const watchdog = watchdogs.track(
+      createCheckoutWatchdog({
+        onTimeout: (durationMs) => {
+          if (clientMountedReportedRef.current) return
+          capturePayPalOneTimeCustomerPaymentError({
+            boundary: "provider_session",
+            checkoutAttemptId,
+            durationMs,
+            errorFamily: "timeout",
+            isInternalTest,
+            leadId,
+            live: paypalLive,
+            signal: "checkout_experience_degraded",
+            status: "paypal_sdk_ready_timeout",
+          })
+          onCheckoutLifecycle?.({
+            failureReason: "provider_ready_timeout",
+            option: "paypal",
+            provider: "paypal",
+            transition: "provider_load_timeout",
+          })
+        },
+      }),
+    )
+    clearSdkWatchdogRef.current = () => watchdogs.settle(watchdog)
+    return () => {
+      watchdogs.settle(watchdog)
+      if (clearSdkWatchdogRef.current) clearSdkWatchdogRef.current = null
+    }
+  }, [
+    checkoutAttemptId,
+    clientId,
+    isInternalTest,
+    leadId,
+    onCheckoutLifecycle,
+    paypalLive,
+    visible,
+  ])
+
+  useEffect(() => {
+    if (visible) return
+    watchdogsRef.current.settleAll()
+    clearSdkWatchdogRef.current = null
+  }, [visible])
+
+  useEffect(() => {
+    const watchdogs = watchdogsRef.current
+    return () => watchdogs.settleAll()
+  }, [])
 
   if (!clientId) return null
 
@@ -130,17 +203,45 @@ export function PayPalOneTimeButton({
               confirmStartedReportedRef.current = true
               onConfirmStarted?.()
             }
-            const response = await fetch("/api/paypal/create-order-intent", {
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify({
-                purchaseKind: "personal_plan_once",
-                leadId,
-                funnelSessionId,
-                checkoutAttemptId,
-                funnelEventId,
+            const watchdog = watchdogsRef.current.track(
+              createCheckoutWatchdog({
+                onTimeout: (durationMs) => {
+                  capturePayPalOneTimeCustomerPaymentError({
+                    boundary: "provider_session",
+                    checkoutAttemptId,
+                    durationMs,
+                    errorFamily: "timeout",
+                    isInternalTest,
+                    leadId,
+                    live: paypalLive,
+                    signal: "checkout_experience_degraded",
+                    status: "paypal_create_order_timeout",
+                  })
+                  onCheckoutLifecycle?.({
+                    failureReason: "provider_request_timeout",
+                    option: "paypal",
+                    provider: "paypal",
+                    transition: "provider_load_timeout",
+                  })
+                },
               }),
-            })
+            )
+            let response: Response
+            try {
+              response = await fetch("/api/paypal/create-order-intent", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  purchaseKind: "personal_plan_once",
+                  leadId,
+                  funnelSessionId,
+                  checkoutAttemptId,
+                  funnelEventId,
+                }),
+              })
+            } finally {
+              watchdogsRef.current.settle(watchdog)
+            }
             const body = (await response.json().catch(() => ({}))) as {
               error?: unknown
               orderId?: unknown
@@ -200,11 +301,40 @@ export function PayPalOneTimeButton({
               })
               return
             }
-            const response = await fetch("/api/paypal/capture-order", {
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify({ token }),
-            })
+            const watchdog = watchdogsRef.current.track(
+              createCheckoutWatchdog({
+                onTimeout: (durationMs) => {
+                  capturePayPalOneTimeCustomerPaymentError({
+                    boundary: "provider_outcome",
+                    checkoutAttemptId,
+                    durationMs,
+                    errorFamily: "timeout",
+                    isInternalTest,
+                    leadId,
+                    live: paypalLive,
+                    providerReferencePresent: true,
+                    signal: "checkout_experience_degraded",
+                    status: "paypal_capture_order_timeout",
+                  })
+                  onCheckoutLifecycle?.({
+                    failureReason: "provider_request_timeout",
+                    option: "paypal",
+                    provider: "paypal",
+                    transition: "provider_load_timeout",
+                  })
+                },
+              }),
+            )
+            let response: Response
+            try {
+              response = await fetch("/api/paypal/capture-order", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ token }),
+              })
+            } finally {
+              watchdogsRef.current.settle(watchdog)
+            }
             const body = (await response.json().catch(() => ({}))) as {
               error?: unknown
               status?: unknown
@@ -222,6 +352,23 @@ export function PayPalOneTimeButton({
                 setError(
                   "PayPal-Zahlung konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
                 )
+                capturePayPalOneTimeCustomerPaymentError({
+                  boundary: "provider_outcome",
+                  checkoutAttemptId,
+                  errorFamily: "provider_session",
+                  isInternalTest,
+                  leadId,
+                  live: paypalLive,
+                  providerReferencePresent: true,
+                  signal: "checkout_experience_degraded",
+                  status: "paypal_capture_pending_missing_welcome_url",
+                })
+                onCheckoutLifecycle?.({
+                  failureReason: "malformed_provider_response",
+                  option: "paypal",
+                  provider: "paypal",
+                  transition: "provider_load_error",
+                })
               }
               return
             }
@@ -246,9 +393,15 @@ export function PayPalOneTimeButton({
           }}
           onCancel={() => {
             setBusy(false)
+            onCheckoutLifecycle?.({
+              option: "paypal",
+              provider: "paypal",
+              transition: "provider_cancelled",
+            })
             if (intentTokenRef.current) onProviderSelected?.()
           }}
           onInit={() => {
+            clearSdkWatchdogRef.current?.()
             if (!clientMountedReportedRef.current) {
               clientMountedReportedRef.current = true
               onClientMounted?.()
@@ -256,6 +409,7 @@ export function PayPalOneTimeButton({
             onReady?.()
           }}
           onError={(paypalError) => {
+            if (!visibleRef.current) return
             setBusy(false)
             if (suppressNextPayPalErrorRef.current) {
               suppressNextPayPalErrorRef.current = false
@@ -274,6 +428,12 @@ export function PayPalOneTimeButton({
               leadId,
               live: paypalLive,
               status: "paypal_button_error",
+            })
+            onCheckoutLifecycle?.({
+              failureReason: "provider_load_error",
+              option: "paypal",
+              provider: "paypal",
+              transition: "provider_load_error",
             })
             setError("PayPal-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.")
           }}

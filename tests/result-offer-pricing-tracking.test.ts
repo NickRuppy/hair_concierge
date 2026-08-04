@@ -4,9 +4,11 @@ import test from "node:test"
 
 import { observeOnceVisible } from "../src/lib/analytics/observe-once-visible"
 import {
+  createOverlayPresentationWatchdog,
   claimOfferProviderLock,
   getMembershipCheckoutSummary,
   getPersonalPlanOneTimeCheckoutSummary,
+  isUnexpectedCheckoutNavigationPath,
   releaseOfferProviderLock,
   shouldRotateStripeSessionAttemptOnRetry,
   trackStripeJsAvailability,
@@ -83,6 +85,48 @@ test("Stripe.js null and rejected loads remain observable after explicit open", 
   ])
 })
 
+test("overlay presentation watchdog reports only a real visibility timeout", () => {
+  const callbacks: Array<() => void> = []
+  const cleared: unknown[] = []
+  let failures = 0
+  const dependencies = {
+    clearTimeout: (timer: unknown) => {
+      cleared.push(timer)
+    },
+    setTimeout: (callback: () => void) => {
+      callbacks.push(callback)
+      return callbacks.length as unknown as ReturnType<typeof setTimeout>
+    },
+    timeoutMs: 50,
+  }
+
+  const visible = createOverlayPresentationWatchdog(() => {
+    failures += 1
+  }, dependencies)
+  visible.start()
+  visible.start()
+  assert.equal(callbacks.length, 1)
+  visible.markVisible()
+  assert.equal(failures, 0)
+  assert.equal(cleared.length, 1)
+
+  const missing = createOverlayPresentationWatchdog(() => {
+    failures += 1
+  }, dependencies)
+  missing.start()
+  callbacks[1]?.()
+  // The watchdog itself is one-shot; a scheduler cannot make it report twice.
+  callbacks[1]?.()
+  assert.equal(failures, 1)
+
+  const dismissed = createOverlayPresentationWatchdog(() => {
+    failures += 1
+  }, dependencies)
+  dismissed.start()
+  dismissed.stop()
+  assert.equal(failures, 1)
+})
+
 test("membership retry reuses uncertain transports and rotates known failed Session attempts", () => {
   assert.equal(shouldRotateStripeSessionAttemptOnRetry("network"), false)
   assert.equal(shouldRotateStripeSessionAttemptOnRetry("provider_response"), true)
@@ -152,6 +196,23 @@ test("overlay checkout attempts hide without ending provider identity and resume
     source,
     /onConfirmedAbort=\{\(\) =>\s*engaged \|\| !express\s*\? endCheckout\(\{[\s\S]*endReason: "customer_aborted"[\s\S]*\}\)\s*: close\(\)/,
   )
+  assert.match(source, /onPresentationStateChange=\{onOverlayPresentationStateChange\}/)
+  assert.match(source, /"overlay_visibility_timeout"/)
+  assert.match(source, /"unexpected_navigation"/)
+  assert.match(source, /signal: "checkout_experience_degraded"/)
+  assert.match(source, /"overlay_not_visible"/)
+  assert.match(source, /"unexpected_route"/)
+  assert.match(source, /window\.history\.pushState = observedPushState/)
+})
+
+test("checkout navigation classification catches the confirmed landing reset without flagging success", () => {
+  assert.equal(isUnexpectedCheckoutNavigationPath("/result/lead-123", "/result/lead-123"), false)
+  assert.equal(isUnexpectedCheckoutNavigationPath("/result/lead-123", "/welcome"), false)
+  for (const legalPath of ["/datenschutz", "/impressum", "/agb", "/widerruf", "/kontakt"]) {
+    assert.equal(isUnexpectedCheckoutNavigationPath("/result/lead-123", legalPath), false)
+  }
+  assert.equal(isUnexpectedCheckoutNavigationPath("/result/lead-123", "/lp/haarplan"), true)
+  assert.equal(isUnexpectedCheckoutNavigationPath("/result/lead-123", "/quiz"), true)
 })
 
 test("one-time drawer stays mounted across hidden same-plan resumes", async () => {

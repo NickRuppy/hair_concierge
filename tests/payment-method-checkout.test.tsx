@@ -9,6 +9,10 @@ import {
   paymentMethodCheckoutReducer,
 } from "../src/components/checkout/payment-method-checkout"
 import { buildPayPalWelcomeUrl } from "../src/components/checkout/paypal-subscription-button"
+import {
+  createCheckoutWatchdog,
+  createCheckoutWatchdogRegistry,
+} from "../src/lib/observability/checkout-watchdog"
 import { reportPayPalScriptFailureOnce } from "../src/components/checkout/paypal-script-failure"
 import { customerIoDestination } from "../src/lib/analytics/destinations/customerio"
 import {
@@ -217,11 +221,56 @@ test("PayPal script rejection reports once without coupling the card fallback", 
   assert.deepEqual(paymentState, { cardCheckoutOpen: true })
 })
 
+test("PayPal checkout watchdog reports one stalled operation without changing its later outcome", () => {
+  let scheduled: (() => void) | undefined
+  const reports: number[] = []
+  const watchdog = createCheckoutWatchdog({
+    onTimeout: (durationMs) => reports.push(durationMs),
+    schedule: (callback) => {
+      scheduled = callback
+      return 0 as unknown as ReturnType<typeof globalThis.setTimeout>
+    },
+  })
+
+  assert.ok(scheduled)
+  scheduled?.()
+  scheduled?.()
+  assert.equal(reports.length, 1)
+  // Settling after the signal is intentionally non-invasive: provider work can still finish.
+  watchdog.settle()
+  assert.equal(reports.length, 1)
+})
+
+test("hidden PayPal checkout settles active watchdogs and reopening can track a fresh one", () => {
+  const scheduled: Array<() => void> = []
+  const reports: string[] = []
+  const registry = createCheckoutWatchdogRegistry()
+  const createTrackedWatchdog = (label: string) =>
+    registry.track(
+      createCheckoutWatchdog({
+        onTimeout: () => reports.push(label),
+        schedule: (callback) => {
+          scheduled.push(callback)
+          return 0 as unknown as ReturnType<typeof globalThis.setTimeout>
+        },
+      }),
+    )
+
+  createTrackedWatchdog("hidden")
+  registry.settleAll()
+  scheduled[0]?.()
+  assert.deepEqual(reports, [])
+
+  createTrackedWatchdog("reopened")
+  scheduled[1]?.()
+  assert.deepEqual(reports, ["reopened"])
+})
+
 test("PayPal subscription button reports visible payment failures once and excludes control flow", () => {
   assert.match(paypalSubscriptionButtonSource, /usePaymentRuntime/)
   assert.match(paypalSubscriptionButtonSource, /useOfferTrackingContext/)
   assert.match(paypalSubscriptionButtonSource, /capturePayPalSubscriptionCustomerPaymentError/)
-  assert.match(paypalSubscriptionButtonSource, /signal: "customer_payment_error_observed"/)
+  assert.match(paypalSubscriptionButtonSource, /signal = "customer_payment_error_observed"/)
   assert.match(paypalSubscriptionButtonSource, /provider: "paypal"/)
   assert.match(paypalSubscriptionButtonSource, /commerceKind: "subscription"/)
   assert.match(paypalSubscriptionButtonSource, /origin: "browser"/)
@@ -273,6 +322,19 @@ test("PayPal subscription button reports visible payment failures once and exclu
     /if \(suppressNextPayPalErrorRef\.current\) \{[\s\S]*suppressNextPayPalErrorRef\.current = false[\s\S]*return/,
   )
   assert.match(sdkErrorSource, /status: "paypal_button_error"/)
+  assert.match(sdkErrorSource, /if \(!visibleRef\.current\) return/)
+  assert.match(
+    paypalSubscriptionButtonSource,
+    /if \(!visible\) return[\s\S]*reportPayPalScriptFailureOnce/,
+  )
+  assert.match(paypalSubscriptionButtonSource, /signal: "checkout_experience_degraded"/)
+  assert.match(paypalSubscriptionButtonSource, /status: "paypal_sdk_ready_timeout"/)
+  assert.match(
+    paypalSubscriptionButtonSource,
+    /status: "paypal_create_subscription_intent_timeout"/,
+  )
+  assert.match(paypalSubscriptionButtonSource, /status: "paypal_approve_subscription_timeout"/)
+  assert.match(paypalSubscriptionButtonSource, /transition: "provider_cancelled"/)
 })
 
 test("Stripe payment helper copy is only shown before the embedded checkout expands", () => {

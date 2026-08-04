@@ -4,6 +4,7 @@ import test from "node:test"
 
 import type { PaymentFailureDetails } from "../src/lib/observability/payment"
 import {
+  captureServerPaymentCheckIn,
   captureServerPaymentFailure,
   flushServerPaymentTelemetry,
   type ServerPaymentSentry,
@@ -52,6 +53,7 @@ function fakeSentry(input: { initialized?: boolean; eventId?: string; flushResul
   let initialized = input.initialized ?? false
   let initCalls = 0
   let captureCalls = 0
+  const checkIns: Array<{ checkIn: unknown; config: unknown }> = []
   const sentry = {
     init() {
       initCalls += 1
@@ -73,6 +75,10 @@ function fakeSentry(input: { initialized?: boolean; eventId?: string; flushResul
       captureCalls += 1
       return input.eventId ?? "a".repeat(32)
     },
+    captureCheckIn(checkIn: unknown, config: unknown) {
+      checkIns.push({ checkIn, config })
+      return "check-in-id"
+    },
     async flush() {
       return input.flushResult ?? true
     },
@@ -82,6 +88,7 @@ function fakeSentry(input: { initialized?: boolean; eventId?: string; flushResul
     sentry,
     initCalls: () => initCalls,
     captureCalls: () => captureCalls,
+    checkIns: () => checkIns,
   }
 }
 
@@ -101,6 +108,59 @@ test("server payment reporter lazily initializes the Node Sentry client before c
   assert.equal(fake.captureCalls(), 1)
 })
 
+test("server payment check-ins upsert stable local and daily monitor schedules", () => {
+  const fake = fakeSentry({ initialized: true })
+  const deps = { sentry: fake.sentry, environment: {} }
+
+  assert.equal(
+    captureServerPaymentCheckIn(
+      { monitorSlug: "payment-integrity-local", status: "in_progress" },
+      deps,
+    ),
+    "check-in-id",
+  )
+  assert.equal(
+    captureServerPaymentCheckIn(
+      { monitorSlug: "payment-integrity-daily", status: "in_progress" },
+      deps,
+    ),
+    "check-in-id",
+  )
+  captureServerPaymentCheckIn(
+    {
+      monitorSlug: "payment-integrity-daily",
+      status: "ok",
+      checkInId: "check-in-id",
+      duration: 1,
+    },
+    deps,
+  )
+
+  assert.deepEqual(fake.checkIns()[0], {
+    checkIn: { monitorSlug: "payment-integrity-local", status: "in_progress" },
+    config: {
+      schedule: { type: "interval", value: 30, unit: "minute" },
+      checkinMargin: 20,
+      maxRuntime: 2,
+      timezone: "Europe/Berlin",
+      failureIssueThreshold: 2,
+      recoveryThreshold: 1,
+    },
+  })
+  assert.deepEqual(fake.checkIns()[1], {
+    checkIn: { monitorSlug: "payment-integrity-daily", status: "in_progress" },
+    config: {
+      schedule: { type: "crontab", value: "15 2 * * *" },
+      checkinMargin: 15,
+      maxRuntime: 2,
+      timezone: "UTC",
+      failureIssueThreshold: 1,
+      recoveryThreshold: 1,
+    },
+  })
+  assert.equal(fake.checkIns()[2]?.config, undefined)
+})
+
 test("server payment reporter fails closed when no runtime DSN initializes a client", async () => {
   const fake = fakeSentry({})
   const deps = { sentry: fake.sentry, environment: {} }
@@ -109,6 +169,40 @@ test("server payment reporter fails closed when no runtime DSN initializes a cli
   assert.equal(await flushServerPaymentTelemetry(2_000, deps), false)
   assert.equal(fake.initCalls(), 0)
   assert.equal(fake.captureCalls(), 0)
+})
+
+test("server checkout degradation kill switch does not suppress payment truth signals", () => {
+  const fake = fakeSentry({ initialized: true })
+  const environment = { CHECKOUT_OBSERVABILITY_ENABLED: "false" }
+
+  assert.equal(
+    captureServerPaymentFailure(
+      {
+        ...details,
+        signal: "checkout_experience_degraded",
+        boundary: "presentation",
+        errorFamily: "presentation",
+      },
+      { sentry: fake.sentry, environment },
+    ),
+    undefined,
+  )
+  assert.equal(
+    captureServerPaymentFailure(
+      {
+        ...details,
+        signal: "customer_payment_error_observed",
+        errorFamily: "control_outcome",
+      },
+      { sentry: fake.sentry, environment },
+    ),
+    undefined,
+  )
+  assert.equal(
+    captureServerPaymentFailure(details, { sentry: fake.sentry, environment }),
+    "a".repeat(32),
+  )
+  assert.equal(fake.captureCalls(), 1)
 })
 
 test("server payment telemetry reuses an initialized client and returns its flush result", async () => {

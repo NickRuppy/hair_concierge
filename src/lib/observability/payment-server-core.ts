@@ -1,4 +1,5 @@
 import {
+  checkoutExperienceObservabilityEnabled,
   capturePaymentFailureWithSink,
   type PaymentFailureDetails,
   type PaymentSentrySink,
@@ -20,9 +21,42 @@ type ServerSentryInitOptions = {
 }
 
 export type ServerPaymentSentry = PaymentSentrySink & {
+  captureCheckIn(checkIn: PaymentMonitorCheckIn, monitorConfig?: PaymentMonitorConfig): string
   init(options: ServerSentryInitOptions): unknown
   getClient(): ServerSentryClient | undefined
   flush(timeout?: number): Promise<boolean>
+}
+
+export type PaymentMonitorCheckIn =
+  | { monitorSlug: string; status: "in_progress" }
+  | { monitorSlug: string; status: "ok" | "error"; checkInId?: string; duration?: number }
+
+type PaymentMonitorConfig = {
+  schedule: { type: "crontab"; value: string } | { type: "interval"; value: number; unit: "minute" }
+  checkinMargin: number
+  maxRuntime: number
+  timezone: string
+  failureIssueThreshold: number
+  recoveryThreshold: number
+}
+
+const PAYMENT_MONITOR_CONFIGS: Record<string, PaymentMonitorConfig> = {
+  "payment-integrity-local": {
+    schedule: { type: "interval", value: 30, unit: "minute" },
+    checkinMargin: 20,
+    maxRuntime: 2,
+    timezone: "Europe/Berlin",
+    failureIssueThreshold: 2,
+    recoveryThreshold: 1,
+  },
+  "payment-integrity-daily": {
+    schedule: { type: "crontab", value: "15 2 * * *" },
+    checkinMargin: 15,
+    maxRuntime: 2,
+    timezone: "UTC",
+    failureIssueThreshold: 1,
+    recoveryThreshold: 1,
+  },
 }
 
 export type ServerPaymentObservabilityDeps = {
@@ -68,6 +102,16 @@ export function captureServerPaymentFailure(
   details: PaymentFailureDetails,
   deps: ServerPaymentObservabilityDeps,
 ): string | undefined {
+  if (
+    (details.signal === "checkout_experience_degraded" ||
+      (details.signal === "customer_payment_error_observed" &&
+        details.errorFamily === "control_outcome")) &&
+    !checkoutExperienceObservabilityEnabled(
+      (deps.environment ?? process.env).CHECKOUT_OBSERVABILITY_ENABLED,
+    )
+  ) {
+    return undefined
+  }
   if (!ensureServerPaymentSentry(deps)) return undefined
   return capturePaymentFailureWithSink(details, deps.sentry)
 }
@@ -81,5 +125,20 @@ export async function flushServerPaymentTelemetry(
     return (await deps.sentry.flush(timeout)) === true
   } catch {
     return false
+  }
+}
+
+export function captureServerPaymentCheckIn(
+  checkIn: PaymentMonitorCheckIn,
+  deps: ServerPaymentObservabilityDeps,
+): string | undefined {
+  if (!ensureServerPaymentSentry(deps)) return undefined
+  try {
+    return deps.sentry.captureCheckIn(
+      checkIn,
+      checkIn.status === "in_progress" ? PAYMENT_MONITOR_CONFIGS[checkIn.monitorSlug] : undefined,
+    )
+  } catch {
+    return undefined
   }
 }

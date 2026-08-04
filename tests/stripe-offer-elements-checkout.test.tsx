@@ -244,7 +244,7 @@ test("Stripe lifecycle seams report mounted before ready and confirmation withou
   const expressMounted = stripeOfferElementsSource.indexOf('reportClientMounted("apple_pay")')
   const expressReady = stripeOfferElementsSource.indexOf("onReady: handleExpressCheckoutReady")
   const paymentLoaderStart = stripeOfferElementsSource.indexOf(
-    'onLoaderStart={() => {\n                  reportClientMounted("card_and_more")',
+    "onLoaderStart={() => {\n                  if (!visibleRef.current) return",
   )
   const paymentReady = stripeOfferElementsSource.indexOf("onReady={() => {")
   const confirmStarted = stripeOfferElementsSource.indexOf(
@@ -262,7 +262,7 @@ test("Stripe lifecycle seams report mounted before ready and confirmation withou
   assert.ok(providerConfirm > confirmStarted)
   assert.match(
     stripeOfferElementsSource,
-    /useEffect\(\(\) => \{\s*mountedProviderOptionsRef\.current\.clear\(\)\s*readyProviderOptionsRef\.current\.clear\(\)\s*confirmStartedProviderOptionsRef\.current\.clear\(\)\s*\}, \[checkoutAttemptId, checkoutKey\]\)/,
+    /useEffect\(\(\) => \{\s*mountedProviderOptionsRef\.current\.clear\(\)\s*readyProviderOptionsRef\.current\.clear\(\)\s*confirmStartedProviderOptionsRef\.current\.clear\(\)\s*providerLoadStartedOptionsRef\.current\.clear\(\)\s*providerLoadTimeoutOptionsRef\.current\.clear\(\)\s*\}, \[checkoutAttemptId, checkoutKey\]\)/,
   )
 })
 
@@ -638,4 +638,26 @@ test("Payment Element load errors emit one bounded card signal per checkout atte
   assert.match(handler, /status: "payment_element_load_error"/)
   assert.doesNotMatch(handler, /capturePaymentFailure\([\s\S]*?event\.error/)
   assert.match(stripeOfferElementsSource, /onLoadError=\{handlePaymentElementLoadError\}/)
+})
+
+test("Stripe readiness watchdogs are one-shot, cancel on ready or load error, and do not alter provider behavior", () => {
+  assert.match(stripeOfferElementsSource, /const PAYMENT_ELEMENT_READY_TIMEOUT_MS = 10_000/)
+  assert.match(stripeOfferElementsSource, /const reportProviderLoadTimeout = useCallback/)
+  assert.match(stripeOfferElementsSource, /providerLoadTimeoutOptionsRef\.current\.has\(option\)/)
+  assert.match(stripeOfferElementsSource, /signal: "checkout_experience_degraded"/)
+  assert.match(stripeOfferElementsSource, /status: "provider_ready_timeout"/)
+  assert.match(stripeOfferElementsSource, /reportProviderLoadTimeout\("apple_pay"\)/)
+  assert.match(
+    stripeOfferElementsSource,
+    /onLoaderStart=\{\(\) => \{[\s\S]*if \(!visibleRef\.current\) return[\s\S]*reportProviderLoadStarted\("card_and_more"\)[\s\S]*window\.setTimeout\([\s\S]*reportProviderLoadTimeout\("card_and_more"\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onReady=\{\(\) => \{\s*clearPaymentElementReadyTimer\(\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /const handlePaymentElementLoadError = useCallback\([\s\S]*if \(!visibleRef\.current\) return[\s\S]*clearPaymentElementReadyTimer\(\)/,
+  )
+  assert.doesNotMatch(stripeOfferElementsSource, /AbortController/)
 })

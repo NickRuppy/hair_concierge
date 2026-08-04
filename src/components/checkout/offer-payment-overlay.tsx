@@ -79,6 +79,11 @@ export type OfferPaymentOverlayProps = {
   onConfirmedAbort: () => void
   onConfirmedPlanChange: () => void
   onDismissRequest?: (reason: OfferPaymentOverlayDismissalReason) => void
+  /**
+   * A presentation-only seam for the checkout owner. It intentionally does not
+   * influence dismissal, routing, focus, or sheet animation.
+   */
+  onPresentationStateChange?: (state: "mounted" | "visible") => void
   onContinuePayment?: () => void
   keepMounted?: boolean
   planChangeDisabled?: boolean
@@ -111,6 +116,7 @@ export function OfferPaymentOverlay({
   onConfirmedPlanChange,
   onContinuePayment,
   onDismissRequest,
+  onPresentationStateChange,
   keepMounted = false,
   planChangeDisabled = false,
   checkoutEngaged = true,
@@ -126,6 +132,27 @@ export function OfferPaymentOverlay({
     () => {},
   )
   const isDesktop = useDesktopCheckoutModal()
+
+  React.useEffect(() => {
+    if (!open) return
+    onPresentationStateChange?.("mounted")
+
+    const deadline = performance.now() + 5_000
+    let frame: number | null = null
+    const probeVisibility = () => {
+      const surface = checkoutSurfaceRef.current
+      if (surface && isOfferPaymentSurfaceVisible(surface)) {
+        onPresentationStateChange?.("visible")
+        return
+      }
+      if (performance.now() < deadline) frame = window.requestAnimationFrame(probeVisibility)
+    }
+    frame = window.requestAnimationFrame(probeVisibility)
+
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame)
+    }
+  }, [onPresentationStateChange, open])
 
   const requestDismissal = React.useCallback(
     (reason: OfferPaymentOverlayDismissalReason) => {
@@ -334,5 +361,23 @@ export function OfferPaymentOverlay({
         ) : null}
       </BottomSheetContent>
     </BottomSheet>
+  )
+}
+
+function isOfferPaymentSurfaceVisible(surface: HTMLElement) {
+  const style = window.getComputedStyle(surface)
+  const rect = surface.getBoundingClientRect()
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth
+  const visibleHeight = Math.max(0, Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0))
+  const visibleWidth = Math.max(0, Math.min(rect.right, viewportWidth) - Math.max(rect.left, 0))
+  return (
+    style.display !== "none" &&
+    style.visibility !== "hidden" &&
+    style.opacity !== "0" &&
+    rect.width > 0 &&
+    rect.height > 0 &&
+    visibleWidth >= Math.min(64, rect.width * 0.25) &&
+    visibleHeight >= Math.min(96, rect.height * 0.25)
   )
 }

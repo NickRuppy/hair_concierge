@@ -3,6 +3,7 @@ import {
   type CheckoutFailureStage,
   type CheckoutLifecycleDismissalReason,
   type CheckoutLifecycleEndReason,
+  type CheckoutLifecycleFailureReason,
   type CheckoutLifecycleLastState,
   type CheckoutLifecycleRecoveryReason,
   type CheckoutLifecycleTransition,
@@ -25,6 +26,7 @@ export type CheckoutLifecycleClaim = {
   checkoutAttemptId: string
   dismissalReason?: CheckoutLifecycleDismissalReason
   endReason?: CheckoutLifecycleEndReason
+  failureReason?: CheckoutLifecycleFailureReason
   lastState: CheckoutLifecycleLastState
   openIndex: number
   option?: OfferPaymentOption
@@ -37,6 +39,7 @@ function lifecycleClaimKey({
   checkoutAttemptId,
   dismissalReason,
   endReason,
+  failureReason,
   openIndex,
   option,
   provider,
@@ -49,6 +52,7 @@ function lifecycleClaimKey({
     provider ?? "",
     option ?? "",
     dismissalReason ?? recoveryReason ?? endReason ?? "",
+    failureReason ?? "",
     openIndex,
   ].join(":")
 }

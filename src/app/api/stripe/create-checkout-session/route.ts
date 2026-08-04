@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server"
+import { after, NextResponse, type NextRequest } from "next/server"
 import { z } from "zod"
 import { createClient } from "@supabase/supabase-js"
 import { createServerClient } from "@supabase/ssr"
@@ -424,6 +424,13 @@ export async function POST(req: NextRequest) {
     let customerId: string | undefined
     let customerEmail: string | undefined
     let resolvedLeadId: string | null = null
+    const preparedControlContext = () => ({
+      commerceKind: isOneTimePurchase ? ("one_time" as const) : ("subscription" as const),
+      isInternalTest: checkoutIsInternalTest ?? false,
+      leadId: resolvedLeadId ?? leadId,
+      checkoutAttemptId,
+      source,
+    })
 
     const cookieStore = await cookies()
     const supabase = createServerClient(
@@ -465,7 +472,10 @@ export async function POST(req: NextRequest) {
           throw error
         }
         return isPreparation
-          ? preparedCheckoutUnavailable()
+          ? await preparedCheckoutUnavailable({
+              ...preparedControlContext(),
+              cause: "authorization_unavailable",
+            })
           : NextResponse.json({ error: "not found" }, { status: 404 })
       }
       checkoutIsInternalTest = authorization.isInternalTest
@@ -479,6 +489,7 @@ export async function POST(req: NextRequest) {
           .maybeSingle()
         if (lookupError) throw lookupError
         if (existing?.paypal_order_id) {
+          await preparedCheckoutProviderLocked(preparedControlContext(), "paypal")
           return NextResponse.json(
             { error: "payment provider already selected", provider_locked: "paypal" },
             { status: 409 },
@@ -526,6 +537,7 @@ export async function POST(req: NextRequest) {
             .maybeSingle()
           if (lookupError || !existing) throw error
           if (existing.paypal_order_id) {
+            await preparedCheckoutProviderLocked(preparedControlContext(), "paypal")
             return NextResponse.json(
               { error: "payment provider already selected", provider_locked: "paypal" },
               { status: 409 },
@@ -544,6 +556,7 @@ export async function POST(req: NextRequest) {
                   return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
                 }
                 if (recovery.type !== "replace") {
+                  await preparedCheckoutProviderLocked(preparedControlContext(), "stripe")
                   return NextResponse.json(
                     { error: "payment provider already selected" },
                     { status: 409 },
@@ -566,6 +579,7 @@ export async function POST(req: NextRequest) {
                 throw new Error("Existing one-time Stripe Session is not reusable")
               }
             } else {
+              await preparedCheckoutProviderLocked(preparedControlContext(), "stripe")
               return NextResponse.json(
                 { error: "payment provider already selected" },
                 { status: 409 },
@@ -591,7 +605,12 @@ export async function POST(req: NextRequest) {
         user.email,
       )
       if (conflictResponse) {
-        return isPreparation ? preparedCheckoutUnavailable() : conflictResponse
+        return isPreparation
+          ? await preparedCheckoutUnavailable({
+              ...preparedControlContext(),
+              cause: "access_conflict",
+            })
+          : conflictResponse
       }
       if (user?.email) {
         const emailConflictResponse = await createStripeCheckoutEmailAccessConflictResponse(
@@ -599,7 +618,12 @@ export async function POST(req: NextRequest) {
           user.email,
         )
         if (emailConflictResponse) {
-          return isPreparation ? preparedCheckoutUnavailable() : emailConflictResponse
+          return isPreparation
+            ? await preparedCheckoutUnavailable({
+                ...preparedControlContext(),
+                cause: "access_conflict",
+              })
+            : emailConflictResponse
         }
       }
 
@@ -650,7 +674,10 @@ export async function POST(req: NextRequest) {
           source,
         })
         return isPreparation
-          ? preparedCheckoutUnavailable()
+          ? await preparedCheckoutUnavailable({
+              ...preparedControlContext(),
+              cause: "lead_lookup_unavailable",
+            })
           : NextResponse.json({ error: "lead lookup failed" }, { status: 500 })
       }
       customerEmail = data?.email ?? undefined
@@ -662,7 +689,12 @@ export async function POST(req: NextRequest) {
           { includeEmail: false },
         )
         if (conflictResponse) {
-          return isPreparation ? preparedCheckoutUnavailable() : conflictResponse
+          return isPreparation
+            ? await preparedCheckoutUnavailable({
+                ...preparedControlContext(),
+                cause: "access_conflict",
+              })
+            : conflictResponse
         }
       }
     }
@@ -683,7 +715,10 @@ export async function POST(req: NextRequest) {
         }
       } else {
         return isPreparation
-          ? preparedCheckoutUnavailable()
+          ? await preparedCheckoutUnavailable({
+              ...preparedControlContext(),
+              cause: "identity_unavailable",
+            })
           : NextResponse.json({ error: "identity required" }, { status: 400 })
       }
     }
@@ -712,6 +747,7 @@ export async function POST(req: NextRequest) {
         funnelSessionId: isOneTimePurchase ? funnelSessionId : undefined,
         cookieStore,
         userIdForFunnel: user?.id,
+        isInternalTest: checkoutIsInternalTest ?? false,
       })
     }
 
@@ -902,7 +938,10 @@ export async function POST(req: NextRequest) {
       // Stripe can replay the idempotent Session for the same preparation ID.
       // Never hand back a fresh token that cannot claim that existing Session.
       if (!hasMatchingToken(session.metadata?.checkout_preparation_token_hash, preparationToken!)) {
-        return preparedCheckoutUnavailable()
+        return await preparedCheckoutUnavailable({
+          ...preparedControlContext(),
+          cause: "preparation_token_mismatch",
+        })
       }
       return NextResponse.json({
         status: "prepared",
@@ -1054,10 +1093,115 @@ export function preparedCheckoutUnavailablePayload() {
   return { status: "unavailable" as const, reason: PREPARED_SESSION_UNAVAILABLE }
 }
 
-function preparedCheckoutUnavailable() {
+export type PreparedCheckoutControlOutcomeCause =
+  | "authorization_unavailable"
+  | "provider_locked_paypal"
+  | "provider_locked_stripe"
+  | "access_conflict"
+  | "lead_lookup_unavailable"
+  | "identity_unavailable"
+  | "preparation_token_mismatch"
+  | "prepared_session_missing"
+  | "prepared_pricing_missing"
+  | "consent_context_missing"
+  | "claim_validation_failed"
+  | "canonical_metadata_repair_failed"
+  | "prepared_client_secret_missing"
+  | "claim_update_failed"
+  | "claim_metadata_mismatch"
+
+type PreparedCheckoutControlOutcomeTelemetry = {
+  capture: typeof captureServerPaymentFailure
+  flush: typeof flushServerPaymentTelemetry
+  schedule?: (task: () => Promise<void>) => void
+  environment: { STRIPE_SECRET_KEY?: string; VERCEL_ENV?: string }
+}
+
+export async function reportPreparedCheckoutControlOutcome(
+  input: {
+    cause: PreparedCheckoutControlOutcomeCause
+    commerceKind: "subscription" | "one_time"
+    isInternalTest: boolean
+    leadId?: string | null
+    checkoutAttemptId?: string | null
+    source: "pricing_page" | "quiz_result_offer"
+  },
+  telemetry: PreparedCheckoutControlOutcomeTelemetry = {
+    capture: captureServerPaymentFailure,
+    flush: flushServerPaymentTelemetry,
+    environment: {
+      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+    },
+  },
+) {
+  try {
+    const runtime = resolvePaymentRuntime({
+      VERCEL_ENV: telemetry.environment.VERCEL_ENV,
+      STRIPE_SECRET_KEY: telemetry.environment.STRIPE_SECRET_KEY,
+    })
+    const eventId = telemetry.capture({
+      signal:
+        input.cause === "access_conflict" || input.cause.startsWith("provider_locked_")
+          ? "customer_payment_error_observed"
+          : "checkout_experience_degraded",
+      provider: "stripe",
+      boundary: "provider_session",
+      errorFamily: "control_outcome",
+      commerceKind: input.commerceKind,
+      origin: "provider_api",
+      method: "unknown",
+      truth: "unknown",
+      live: runtime.stripeLive,
+      isInternalTest: input.isInternalTest,
+      retryable: "true",
+      source: input.source,
+      leadId: input.leadId,
+      checkoutAttemptId: input.checkoutAttemptId,
+      status: input.cause,
+    })
+    if (!eventId) return
+    const schedule = telemetry.schedule ?? ((task: () => Promise<void>) => after(task))
+    schedule(async () => {
+      try {
+        await telemetry.flush()
+      } catch {
+        // Post-response telemetry delivery must not affect checkout recovery.
+      }
+    })
+  } catch {
+    // Control-outcome diagnostics must never affect the opaque recovery response.
+  }
+}
+
+async function preparedCheckoutUnavailable(input: {
+  cause: Exclude<
+    PreparedCheckoutControlOutcomeCause,
+    "provider_locked_paypal" | "provider_locked_stripe"
+  >
+  commerceKind: "subscription" | "one_time"
+  isInternalTest: boolean
+  leadId?: string | null
+  checkoutAttemptId?: string | null
+  source: "pricing_page" | "quiz_result_offer"
+}) {
   // Clients deliberately receive one outcome for identity, expiry, and token failures.
   // Detailed causes are safe to add to server-only diagnostics without becoming an oracle.
+  await reportPreparedCheckoutControlOutcome(input)
   return NextResponse.json(preparedCheckoutUnavailablePayload())
+}
+
+async function preparedCheckoutProviderLocked(
+  input: {
+    commerceKind: "subscription" | "one_time"
+    isInternalTest: boolean
+    leadId?: string | null
+    checkoutAttemptId?: string | null
+    source: "pricing_page" | "quiz_result_offer"
+  },
+  provider: "paypal" | "stripe",
+) {
+  await reportPreparedCheckoutControlOutcome({ ...input, cause: `provider_locked_${provider}` })
 }
 
 export function hashPreparedCheckoutToken(token: string) {
@@ -1421,17 +1565,30 @@ async function claimPreparedCheckoutSession(input: {
   funnelEventId: string
   cookieStore: Awaited<ReturnType<typeof cookies>>
   userIdForFunnel?: string
+  isInternalTest: boolean
   oneTimeConsentId?: string | null
   adminSupabase?: ReturnType<typeof createBillingAdminClient>
   funnelSessionId?: string | null
 }) {
+  const preparedControlContext = () => ({
+    commerceKind: input.isOneTimePurchase ? ("one_time" as const) : ("subscription" as const),
+    isInternalTest: input.isInternalTest,
+    leadId: input.leadId,
+    checkoutAttemptId: input.checkoutAttemptId,
+    source: input.source,
+  })
   let session: Stripe.Checkout.Session
   try {
     session = await input.stripe.checkout.sessions.retrieve(input.preparedSessionId, {
       expand: ["line_items"],
     })
   } catch (error) {
-    if (isDefinitivelyMissingStripeResource(error)) return preparedCheckoutUnavailable()
+    if (isDefinitivelyMissingStripeResource(error)) {
+      return await preparedCheckoutUnavailable({
+        ...preparedControlContext(),
+        cause: "prepared_session_missing",
+      })
+    }
     throw error
   }
 
@@ -1451,7 +1608,12 @@ async function claimPreparedCheckoutSession(input: {
     metadata,
     requestedInterval: input.requestedInterval,
   })
-  if (!preparedPricing) return preparedCheckoutUnavailable()
+  if (!preparedPricing) {
+    return await preparedCheckoutUnavailable({
+      ...preparedControlContext(),
+      cause: "prepared_pricing_missing",
+    })
+  }
   const oneTimeConsentFunnelContext =
     input.oneTimeConsentId && input.adminSupabase
       ? await loadOneTimeConsentFunnelContext({
@@ -1461,7 +1623,12 @@ async function claimPreparedCheckoutSession(input: {
           expectedFunnelSessionId: input.funnelSessionId ?? null,
         })
       : undefined
-  if (input.oneTimeConsentId && !oneTimeConsentFunnelContext) return preparedCheckoutUnavailable()
+  if (input.oneTimeConsentId && !oneTimeConsentFunnelContext) {
+    return await preparedCheckoutUnavailable({
+      ...preparedControlContext(),
+      cause: "consent_context_missing",
+    })
+  }
   const validation = validatePreparedCheckoutClaim({
     metadata,
     sessionStatus: session.status,
@@ -1506,7 +1673,10 @@ async function claimPreparedCheckoutSession(input: {
           patch: repairValidation.patch,
         })
         if (!repaired || !hasCanonicalOneTimeClaimMetadata(repaired, oneTimeConsentFunnelContext)) {
-          return preparedCheckoutUnavailable()
+          return await preparedCheckoutUnavailable({
+            ...preparedControlContext(),
+            cause: "canonical_metadata_repair_failed",
+          })
         }
         if (input.adminSupabase) {
           await bindPersonalPlanOneTimeConsentProviderReference(
@@ -1518,13 +1688,21 @@ async function claimPreparedCheckoutSession(input: {
         return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
       }
     }
-    return preparedCheckoutUnavailable()
+    return await preparedCheckoutUnavailable({
+      ...preparedControlContext(),
+      cause: "claim_validation_failed",
+    })
   }
 
   if (validation.alreadyClaimed) {
     if (oneTimeConsentFunnelContext) {
       const patch = canonicalOneTimeClaimMetadataPatch(metadata, oneTimeConsentFunnelContext)
-      if (!patch) return preparedCheckoutUnavailable()
+      if (!patch) {
+        return await preparedCheckoutUnavailable({
+          ...preparedControlContext(),
+          cause: "canonical_metadata_repair_failed",
+        })
+      }
       const repaired = await repairCanonicalOneTimeClaimMetadata({
         stripe: input.stripe,
         sessionId: session.id,
@@ -1533,7 +1711,10 @@ async function claimPreparedCheckoutSession(input: {
         patch,
       })
       if (!repaired || !hasCanonicalOneTimeClaimMetadata(repaired, oneTimeConsentFunnelContext)) {
-        return preparedCheckoutUnavailable()
+        return await preparedCheckoutUnavailable({
+          ...preparedControlContext(),
+          cause: "canonical_metadata_repair_failed",
+        })
       }
     }
     if (input.oneTimeConsentId && input.adminSupabase) {
@@ -1567,7 +1748,10 @@ async function claimPreparedCheckoutSession(input: {
     return response
   }
   if (!session.client_secret) {
-    return preparedCheckoutUnavailable()
+    return await preparedCheckoutUnavailable({
+      ...preparedControlContext(),
+      cause: "prepared_client_secret_missing",
+    })
   }
 
   const funnelContextForMetadata =
@@ -1608,7 +1792,10 @@ async function claimPreparedCheckoutSession(input: {
       preparationId: input.preparationId,
       error: error instanceof Error ? error.message : "unknown",
     })
-    return preparedCheckoutUnavailable()
+    return await preparedCheckoutUnavailable({
+      ...preparedControlContext(),
+      cause: "claim_update_failed",
+    })
   }
   if (
     !hasMatchingPreparedCheckoutClaim(
@@ -1620,7 +1807,10 @@ async function claimPreparedCheckoutSession(input: {
     (oneTimeConsentFunnelContext &&
       !hasCanonicalOneTimeClaimMetadata(claimedSession.metadata ?? {}, oneTimeConsentFunnelContext))
   ) {
-    return preparedCheckoutUnavailable()
+    return await preparedCheckoutUnavailable({
+      ...preparedControlContext(),
+      cause: "claim_metadata_mismatch",
+    })
   }
   if (input.oneTimeConsentId && input.adminSupabase) {
     await bindPersonalPlanOneTimeConsentProviderReference(

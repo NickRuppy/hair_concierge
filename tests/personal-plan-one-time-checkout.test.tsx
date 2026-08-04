@@ -55,6 +55,21 @@ test("one-time pricing renders only the approved personal-plan offer", () => {
   assert.match(pricingSource, /Analyse deiner aktuellen Pflege/)
 })
 
+test("one-time PayPal records watchdogs, cancellation, and malformed pending capture without changing checkout flow", () => {
+  assert.match(paypalSource, /createCheckoutWatchdog/)
+  assert.match(paypalSource, /status: "paypal_sdk_ready_timeout"/)
+  assert.match(paypalSource, /status: "paypal_create_order_timeout"/)
+  assert.match(paypalSource, /status: "paypal_capture_order_timeout"/)
+  assert.match(paypalSource, /status: "paypal_capture_pending_missing_welcome_url"/)
+  assert.match(paypalSource, /signal: "checkout_experience_degraded"/)
+  assert.match(paypalSource, /transition: "provider_cancelled"/)
+  assert.match(paypalSource, /failureReason: "provider_load_error"/)
+  assert.match(paypalSource, /onError=\{\(paypalError\) => \{\s*if \(!visibleRef\.current\) return/)
+  assert.match(paypalSource, /finally \{\s*watchdogsRef\.current\.settle\(watchdog\)/)
+  assert.match(paypalSource, /if \(visible\) return\s*watchdogsRef\.current\.settleAll\(\)/)
+  assert.match(checkoutSource, /<PayPalOneTimeButton[\s\S]*?visible=\{visible\}/)
+})
+
 test("one-time payment methods mount immediately without a visible or client consent gate", () => {
   assert.doesNotMatch(checkoutSource, /personal-plan-one-time-consent-copy/)
   assert.doesNotMatch(checkoutSource, /checked=\{accepted\}/)
@@ -178,6 +193,19 @@ test("one-time Apple Pay does no provider work before the drawer opens", () => {
   assert.match(checkoutSource, /preparedStripeCheckoutRef\.current = null/)
   assert.match(checkoutSource, /prepared_checkout_control:prepared_checkout_unavailable/)
   assert.match(checkoutSource, /throw createAlreadyReportedPreparedCheckoutError\(error\)/)
+})
+
+test("one-time Stripe preparation watchdog reports a late response without changing the request or control recovery", () => {
+  assert.match(checkoutSource, /const PREPARED_STRIPE_RESPONSE_TIMEOUT_MS = 10_000/)
+  assert.match(checkoutSource, /const reportStripePreparationTimeout = useCallback/)
+  assert.match(checkoutSource, /signal: "checkout_experience_degraded"/)
+  assert.match(checkoutSource, /status: "provider_request_timeout"/)
+  assert.match(checkoutSource, /failureReason: "provider_request_timeout"/)
+  assert.match(checkoutSource, /transition: "provider_load_started"/)
+  assert.match(checkoutSource, /stripePreparationRequestTimerRef\.current = window\.setTimeout/)
+  assert.match(checkoutSource, /finally \{\s*clearStripePreparationRequestTimer\(\)/)
+  assert.match(checkoutSource, /failureReason: "silent_control_outcome"/)
+  assert.doesNotMatch(checkoutSource, /AbortController/)
 })
 
 test("one-time controls render in-overlay recovery without payment-failure reporting", () => {
@@ -369,7 +397,7 @@ test("one-time PayPal reports visible payment failures once and excludes control
   assert.match(paypalSource, /usePaymentRuntime/)
   assert.match(paypalSource, /useOfferTrackingContext/)
   assert.match(paypalSource, /capturePayPalOneTimeCustomerPaymentError/)
-  assert.match(paypalSource, /signal: "customer_payment_error_observed"/)
+  assert.match(paypalSource, /signal = "customer_payment_error_observed"/)
   assert.match(paypalSource, /provider: "paypal"/)
   assert.match(paypalSource, /commerceKind: "one_time"/)
   assert.match(paypalSource, /origin: "browser"/)
