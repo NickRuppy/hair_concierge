@@ -53,6 +53,7 @@ export interface PaymentIntegrityProviderAdapter {
 export interface PaymentIntegrityLocalState {
   billingSucceeded?: boolean
   activeEntitlement?: boolean
+  subscriptionLifecycleReconciled?: boolean
   paidOneTimePurchase?: boolean
   isInternalTest?: boolean
 }
@@ -176,12 +177,16 @@ export async function reconcilePaymentIntegrity(
   )
   const counters = createCounters()
   const findings: PaymentIntegrityFinding[] = []
+  const recordedFindingKeys = new Set<string>()
   const monitorFailures: PaymentIntegrityMonitorFailure[] = []
   const telemetryEventIds: string[] = []
   const lookbackStartedAt = new Date(nowMs - lookbackMs)
   const settlementGraceStartedAt = new Date(nowMs - settlementGraceMs)
 
   const recordFinding = async (finding: PaymentIntegrityFinding): Promise<void> => {
+    const dedupeKey = findingDedupeKey(finding)
+    if (dedupeKey && recordedFindingKeys.has(dedupeKey)) return
+    if (dedupeKey) recordedFindingKeys.add(dedupeKey)
     counters.findings += 1
     if (findings.length < maxFindings) findings.push(finding)
     recordTelemetryReceipt(
@@ -408,6 +413,7 @@ function evaluateCandidate(
           }),
         ]
       }
+      if (localState.subscriptionLifecycleReconciled) return []
       if (!localState.activeEntitlement) {
         return [
           buildFinding(candidate, {
@@ -486,10 +492,20 @@ function findingIdentity(
   candidate: PaymentIntegrityCandidate,
 ): { checkoutAttemptId?: string; providerReferenceDigest?: string } | null {
   const checkoutAttemptId = safeInternalIdentifier(candidate.checkoutAttemptId)
-  if (checkoutAttemptId) return { checkoutAttemptId }
   const providerReferenceDigest = safeOpaqueDigest(candidate.providerReferenceDigest)
-  if (providerReferenceDigest) return { providerReferenceDigest }
-  return null
+  if (!checkoutAttemptId && !providerReferenceDigest) return null
+  return {
+    ...(checkoutAttemptId ? { checkoutAttemptId } : {}),
+    ...(providerReferenceDigest ? { providerReferenceDigest } : {}),
+  }
+}
+
+function findingDedupeKey(finding: PaymentIntegrityFinding): string | null {
+  const providerReferenceDigest = safeOpaqueDigest(finding.providerReferenceDigest)
+  if (!providerReferenceDigest) return null
+  return [finding.provider, finding.commerceKind, finding.invariant, providerReferenceDigest].join(
+    ":",
+  )
 }
 
 async function mapWithConcurrency<T>(

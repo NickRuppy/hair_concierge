@@ -148,6 +148,7 @@ test("integrity findings add only an opaque attempt or caller-supplied digest to
     live: true,
     isInternalTest: false,
     invariant: "provider_success_without_entitlement",
+    checkoutAttemptId: "attempt-123",
     providerReferenceDigest: digest,
     providerReferencePresent: true,
   })
@@ -158,6 +159,25 @@ test("integrity findings add only an opaque attempt or caller-supplied digest to
     digest,
   ])
   assert.equal(JSON.stringify(payload).includes("provider-reference"), false)
+
+  const oneTimePayload = buildPaymentFailurePayload({
+    signal: "payment_integrity_mismatch",
+    provider: "stripe",
+    boundary: "billing",
+    errorFamily: "billing_state",
+    commerceKind: "one_time",
+    origin: "reconciliation",
+    method: "card",
+    truth: "succeeded",
+    live: true,
+    isInternalTest: false,
+    invariant: "provider_success_without_paid_one_time_purchase",
+    checkoutAttemptId: "attempt-123",
+    providerReferenceDigest: digest,
+    providerReferencePresent: true,
+  })
+
+  assert.equal(oneTimePayload.fingerprint.at(-1), "attempt-123")
 })
 
 test("integrity fingerprints and bounded context reject raw or message-like caller strings", () => {

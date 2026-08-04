@@ -110,6 +110,43 @@ test("subscription provider success requires billing success and active entitlem
   assert.equal(result.counters.findings, 2)
 })
 
+test("duplicate provider representations produce one finding per subscription invariant", async () => {
+  const sharedDigest = "d".repeat(64)
+  const reported: string[] = []
+  const result = await reconcilePaymentIntegrity({
+    now,
+    deadlineAt,
+    providers: [
+      {
+        provider: "stripe",
+        listCandidates: async () => ({
+          candidates: [
+            candidate("checkout-representation", { providerReferenceDigest: sharedDigest }),
+            candidate("invoice-representation", {
+              checkoutAttemptId: null,
+              providerReferenceDigest: sharedDigest,
+            }),
+          ],
+        }),
+      },
+    ],
+    local: {
+      getState: async () => localState({ billingSucceeded: true, activeEntitlement: false }),
+    },
+    reporter: {
+      reportFinding: (finding) => {
+        reported.push(finding.providerReferenceDigest ?? "missing")
+      },
+    },
+  })
+
+  assert.equal(result.counters.candidatesChecked, 2)
+  assert.equal(result.counters.findings, 1)
+  assert.equal(result.findings.length, 1)
+  assert.equal(result.findings[0]?.providerReferenceDigest, sharedDigest)
+  assert.deepEqual(reported, [sharedDigest])
+})
+
 test("local funnel classification promotes historical provider findings to internal tests", async () => {
   const result = await reconcilePaymentIntegrity({
     now,
