@@ -5,6 +5,7 @@ import {
   emptyPaymentIntegrityCounters,
   handlePaymentMonitor,
   maxDuration,
+  runPaymentIntegrityBranch,
   safeBearerTokenMatches,
   type RunPaymentIntegrity,
 } from "../src/app/api/billing/payment-monitor/route"
@@ -134,6 +135,51 @@ test("payment monitor runs with a 40 second deadline and returns aggregate-only 
       status: "ok",
       checkInId: "check-in-id",
       duration: 0,
+    },
+  ])
+})
+
+test("production monitor mode requires start and finish check-in receipts plus a flushed transport", async () => {
+  let checkInCount = 0
+  let flushCount = 0
+  const delivered = await runPaymentIntegrityBranch({
+    monitorSlug: "payment-integrity-daily",
+    deadlineMs: 20_000,
+    runPaymentIntegrity: async () => result(),
+    captureCheckIn: () => {
+      checkInCount += 1
+      return checkInCount === 1 ? "start-id" : "finish-id"
+    },
+    flushTelemetry: async () => {
+      flushCount += 1
+      return true
+    },
+    requireCheckInReceipt: true,
+    now: () => now,
+    clock: () => now.getTime(),
+  })
+
+  assert.equal(delivered.ok, true)
+  assert.equal(flushCount, 1)
+
+  const missingReceipt = await runPaymentIntegrityBranch({
+    monitorSlug: "payment-integrity-daily",
+    deadlineMs: 20_000,
+    runPaymentIntegrity: async () => result(),
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => true,
+    requireCheckInReceipt: true,
+    now: () => now,
+    clock: () => now.getTime(),
+  })
+
+  assert.equal(missingReceipt.ok, false)
+  assert.equal(missingReceipt.summary.status, "monitor_failed")
+  assert.deepEqual(missingReceipt.summary.failures, [
+    {
+      provider: "unknown",
+      reason: "telemetry_delivery_failed",
+      errorFamily: "unknown",
     },
   ])
 })

@@ -9,6 +9,7 @@ import { LockKeyhole } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { CheckoutContext, CheckoutFailureStage } from "@/lib/analytics/events"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
+import type { CheckoutLifecycleClaim } from "@/lib/analytics/checkout-attempt"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { PaymentOptionExposure } from "./payment-option-exposure"
 import {
@@ -77,6 +78,7 @@ export function PaymentMethodCheckout({
   onChangePlan,
   onPayPalCheckoutFailed,
   onPayPalCheckoutStarted,
+  onCheckoutLifecycle,
   onFirstPaymentEngagement,
   onConfirmStarted,
   onPaymentOptionViewed,
@@ -109,6 +111,9 @@ export function PaymentMethodCheckout({
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
+  onCheckoutLifecycle?: (
+    claim: Omit<CheckoutLifecycleClaim, "checkoutAttemptId" | "lastState" | "openIndex">,
+  ) => void
   onFirstPaymentEngagement?: () => void
   onConfirmStarted?: OfferCheckoutProviderLifecycleCallback
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
@@ -178,6 +183,7 @@ export function PaymentMethodCheckout({
             onProviderLockRelease?.("paypal")
           }}
           onCheckoutStarted={onPayPalCheckoutStarted}
+          onCheckoutLifecycle={onCheckoutLifecycle}
           onClientMounted={() => onClientMounted?.("paypal", "paypal")}
           onConfirmStarted={() => onConfirmStarted?.("paypal", "paypal")}
           onPaymentMethodSelected={(provider) => {
@@ -192,6 +198,7 @@ export function PaymentMethodCheckout({
           }}
           returnDestination={returnDestination}
           source={source}
+          visible={visible}
         />
       </PaymentOptionExposure>
       <p className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]">
@@ -267,10 +274,35 @@ export function PaymentMethodCheckout({
               onBeforeConfirm={onBeforeStripeConfirm}
               onClientMounted={onClientMounted}
               onConfirmStarted={onConfirmStarted}
+              onConfirmFailed={(provider, option) =>
+                onCheckoutLifecycle?.({ option, provider, transition: "confirm_failed" })
+              }
               onFirstPaymentEngagement={onFirstPaymentEngagement}
               onPaymentMethodSelected={onPaymentMethodSelected}
               onPaymentOptionViewed={onPaymentOptionViewed}
               onProviderReady={onProviderReady}
+              onProviderCancelled={(provider, option) =>
+                onCheckoutLifecycle?.({ option, provider, transition: "provider_cancelled" })
+              }
+              onProviderLoadError={(provider, option, failureReason) =>
+                onCheckoutLifecycle?.({
+                  failureReason,
+                  option,
+                  provider,
+                  transition: "provider_load_error",
+                })
+              }
+              onProviderLoadStarted={(provider, option) =>
+                onCheckoutLifecycle?.({ option, provider, transition: "provider_load_started" })
+              }
+              onProviderLoadTimeout={(provider, option, failureReason) =>
+                onCheckoutLifecycle?.({
+                  failureReason,
+                  option,
+                  provider,
+                  transition: "provider_load_timeout",
+                })
+              }
               paymentElementEnabled={paymentElementEnabled}
               onProviderLockClaim={onProviderLockClaim}
               onProviderLockRelease={onProviderLockRelease}

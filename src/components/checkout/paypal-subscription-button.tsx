@@ -21,6 +21,10 @@ import type { CheckoutFailure } from "./payment-method-checkout"
 import type { CheckoutContext } from "@/lib/analytics/events"
 import { reportPayPalScriptFailureOnce } from "./paypal-script-failure"
 import {
+  createCheckoutWatchdog,
+  createCheckoutWatchdogRegistry,
+} from "@/lib/observability/checkout-watchdog"
+import {
   ActiveSubscriptionDialog,
   checkoutAccessAlreadyExistsError,
   isCheckoutAccessAlreadyExistsResponse,
@@ -38,9 +42,11 @@ function capturePayPalSubscriptionCustomerPaymentError({
   live,
   providerReferencePresent = false,
   retryable = "true",
+  signal = "customer_payment_error_observed",
   source,
   stage,
   status,
+  durationMs,
 }: {
   checkoutAttemptId?: string
   errorFamily: PaymentErrorFamily
@@ -50,12 +56,14 @@ function capturePayPalSubscriptionCustomerPaymentError({
   live: boolean
   providerReferencePresent?: boolean
   retryable?: "true" | "false"
+  signal?: "checkout_experience_degraded" | "customer_payment_error_observed"
   source: PayPalCheckoutSource
   stage: CheckoutStage
   status?: string | number | null
+  durationMs?: number
 }) {
   capturePaymentFailure({
-    signal: "customer_payment_error_observed",
+    signal,
     provider: "paypal",
     stage,
     errorFamily,
@@ -71,6 +79,7 @@ function capturePayPalSubscriptionCustomerPaymentError({
     leadId,
     source,
     status,
+    durationMs,
     providerReferencePresent,
   })
 }
@@ -98,6 +107,7 @@ function PayPalScriptFailureObserver({
   live,
   onCheckoutFailed,
   source,
+  visible,
 }: {
   checkoutAttemptId?: string
   interval: BillingInterval
@@ -106,11 +116,13 @@ function PayPalScriptFailureObserver({
   live: boolean
   onCheckoutFailed?: (failure: CheckoutFailure) => void
   source: PayPalCheckoutSource
+  visible: boolean
 }) {
   const [{ isRejected }] = usePayPalScriptReducer()
   const reportedRef = useRef(false)
 
   useEffect(() => {
+    if (!visible) return
     reportPayPalScriptFailureOnce(reportedRef, isRejected, (failure) => {
       capturePayPalSubscriptionCustomerPaymentError({
         checkoutAttemptId,
@@ -134,6 +146,7 @@ function PayPalScriptFailureObserver({
     live,
     onCheckoutFailed,
     source,
+    visible,
   ])
 
   return null
@@ -151,8 +164,10 @@ export function PayPalSubscriptionButton({
   onCheckoutStarted,
   onConfirmStarted,
   onPaymentMethodSelected,
+  onCheckoutLifecycle,
   returnDestination,
   source,
+  visible = true,
 }: {
   checkoutAttemptId?: string
   checkoutContext?: CheckoutContext
@@ -165,8 +180,19 @@ export function PayPalSubscriptionButton({
   onCheckoutStarted: (funnelEventId: string) => void
   onConfirmStarted?: () => void
   onPaymentMethodSelected?: (provider: "stripe" | "paypal") => boolean | void
+  onCheckoutLifecycle?: (claim: {
+    failureReason?:
+      | "malformed_provider_response"
+      | "provider_load_error"
+      | "provider_ready_timeout"
+      | "provider_request_timeout"
+    option: "paypal"
+    provider: "paypal"
+    transition: "provider_cancelled" | "provider_load_error" | "provider_load_timeout"
+  }) => void
   returnDestination?: string
   source: PayPalCheckoutSource
+  visible?: boolean
 }) {
   const [error, setError] = useState<string | null>(null)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
@@ -177,6 +203,10 @@ export function PayPalSubscriptionButton({
   const clientMountedReportedRef = useRef(false)
   const readyReportedRef = useRef(false)
   const confirmStartedReportedRef = useRef(false)
+  const clearSdkWatchdogRef = useRef<(() => void) | null>(null)
+  const watchdogsRef = useRef(createCheckoutWatchdogRegistry())
+  const visibleRef = useRef(visible)
+  visibleRef.current = visible
   const { paypalLive } = usePaymentRuntime()
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
@@ -187,6 +217,63 @@ export function PayPalSubscriptionButton({
     readyReportedRef.current = false
     confirmStartedReportedRef.current = false
   }, [checkoutAttemptId])
+
+  useEffect(() => {
+    if (!clientId || !visible) return
+    const watchdogs = watchdogsRef.current
+    const watchdog = watchdogs.track(
+      createCheckoutWatchdog({
+        onTimeout: (durationMs) => {
+          if (clientMountedReportedRef.current) return
+          capturePayPalSubscriptionCustomerPaymentError({
+            checkoutAttemptId,
+            durationMs,
+            errorFamily: "timeout",
+            interval,
+            isInternalTest,
+            leadId,
+            live: paypalLive,
+            signal: "checkout_experience_degraded",
+            source,
+            stage: "paypal_create_subscription_intent",
+            status: "paypal_sdk_ready_timeout",
+          })
+          onCheckoutLifecycle?.({
+            failureReason: "provider_ready_timeout",
+            option: "paypal",
+            provider: "paypal",
+            transition: "provider_load_timeout",
+          })
+        },
+      }),
+    )
+    clearSdkWatchdogRef.current = () => watchdogs.settle(watchdog)
+    return () => {
+      watchdogs.settle(watchdog)
+      if (clearSdkWatchdogRef.current) clearSdkWatchdogRef.current = null
+    }
+  }, [
+    checkoutAttemptId,
+    clientId,
+    interval,
+    isInternalTest,
+    leadId,
+    onCheckoutLifecycle,
+    paypalLive,
+    source,
+    visible,
+  ])
+
+  useEffect(() => {
+    if (visible) return
+    watchdogsRef.current.settleAll()
+    clearSdkWatchdogRef.current = null
+  }, [visible])
+
+  useEffect(() => {
+    const watchdogs = watchdogsRef.current
+    return () => watchdogs.settleAll()
+  }, [])
 
   useEffect(() => {
     if (clientId || configurationReportedRef.current) return
@@ -251,11 +338,13 @@ export function PayPalSubscriptionButton({
           live={paypalLive}
           onCheckoutFailed={onCheckoutFailed}
           source={source}
+          visible={visible}
         />
         <PayPalButtons
           className="w-full"
           fundingSource={FUNDING.PAYPAL}
           onInit={() => {
+            clearSdkWatchdogRef.current?.()
             if (!clientMountedReportedRef.current) {
               clientMountedReportedRef.current = true
               onClientMounted?.()
@@ -289,15 +378,44 @@ export function PayPalSubscriptionButton({
                 confirmStartedReportedRef.current = true
                 onConfirmStarted?.()
               }
-              intent = await createSubscriptionIntent({
-                checkoutAttemptId,
-                checkoutContext,
-                interval,
-                leadId,
-                returnDestination,
-                source,
-                funnelEventId,
-              })
+              const watchdog = watchdogsRef.current.track(
+                createCheckoutWatchdog({
+                  onTimeout: (durationMs) => {
+                    capturePayPalSubscriptionCustomerPaymentError({
+                      checkoutAttemptId,
+                      durationMs,
+                      errorFamily: "timeout",
+                      interval,
+                      isInternalTest,
+                      leadId,
+                      live: paypalLive,
+                      signal: "checkout_experience_degraded",
+                      source,
+                      stage: "paypal_create_subscription_intent",
+                      status: "paypal_create_subscription_intent_timeout",
+                    })
+                    onCheckoutLifecycle?.({
+                      failureReason: "provider_request_timeout",
+                      option: "paypal",
+                      provider: "paypal",
+                      transition: "provider_load_timeout",
+                    })
+                  },
+                }),
+              )
+              try {
+                intent = await createSubscriptionIntent({
+                  checkoutAttemptId,
+                  checkoutContext,
+                  interval,
+                  leadId,
+                  returnDestination,
+                  source,
+                  funnelEventId,
+                })
+              } finally {
+                watchdogsRef.current.settle(watchdog)
+              }
             } catch (err) {
               if (err instanceof CheckoutAccessAlreadyExistsError) {
                 suppressNextPayPalErrorRef.current = true
@@ -340,13 +458,42 @@ export function PayPalSubscriptionButton({
               leadId,
             })
             try {
-              return await actions.subscription.create({
-                plan_id: intent.planId,
-                custom_id: intent.token,
-                application_context: {
-                  shipping_preference: "NO_SHIPPING",
-                },
-              } as Parameters<CreateSubscriptionActions["subscription"]["create"]>[0])
+              const watchdog = watchdogsRef.current.track(
+                createCheckoutWatchdog({
+                  onTimeout: (durationMs) => {
+                    capturePayPalSubscriptionCustomerPaymentError({
+                      checkoutAttemptId,
+                      durationMs,
+                      errorFamily: "timeout",
+                      interval,
+                      isInternalTest,
+                      leadId,
+                      live: paypalLive,
+                      signal: "checkout_experience_degraded",
+                      source,
+                      stage: "paypal_create_subscription",
+                      status: "paypal_subscription_create_timeout",
+                    })
+                    onCheckoutLifecycle?.({
+                      failureReason: "provider_request_timeout",
+                      option: "paypal",
+                      provider: "paypal",
+                      transition: "provider_load_timeout",
+                    })
+                  },
+                }),
+              )
+              try {
+                return await actions.subscription.create({
+                  plan_id: intent.planId,
+                  custom_id: intent.token,
+                  application_context: {
+                    shipping_preference: "NO_SHIPPING",
+                  },
+                } as Parameters<CreateSubscriptionActions["subscription"]["create"]>[0])
+              } finally {
+                watchdogsRef.current.settle(watchdog)
+              }
             } catch (err) {
               setError(paypalStartError)
               suppressNextPayPalErrorRef.current = true
@@ -403,7 +550,37 @@ export function PayPalSubscriptionButton({
             })
             let approved: Awaited<ReturnType<typeof approveSubscriptionIntent>>
             try {
-              approved = await approveSubscriptionIntent(token, data.subscriptionID)
+              const watchdog = watchdogsRef.current.track(
+                createCheckoutWatchdog({
+                  onTimeout: (durationMs) => {
+                    capturePayPalSubscriptionCustomerPaymentError({
+                      checkoutAttemptId,
+                      durationMs,
+                      errorFamily: "timeout",
+                      interval,
+                      isInternalTest,
+                      leadId,
+                      live: paypalLive,
+                      providerReferencePresent: true,
+                      signal: "checkout_experience_degraded",
+                      source,
+                      stage: "paypal_approve_subscription",
+                      status: "paypal_approve_subscription_timeout",
+                    })
+                    onCheckoutLifecycle?.({
+                      failureReason: "provider_request_timeout",
+                      option: "paypal",
+                      provider: "paypal",
+                      transition: "provider_load_timeout",
+                    })
+                  },
+                }),
+              )
+              try {
+                approved = await approveSubscriptionIntent(token, data.subscriptionID)
+              } finally {
+                watchdogsRef.current.settle(watchdog)
+              }
             } catch {
               setError(paypalStartError)
               capturePayPalSubscriptionCustomerPaymentError({
@@ -483,9 +660,15 @@ export function PayPalSubscriptionButton({
             window.location.assign(buildPayPalWelcomeUrl(token))
           }}
           onCancel={() => {
+            onCheckoutLifecycle?.({
+              option: "paypal",
+              provider: "paypal",
+              transition: "provider_cancelled",
+            })
             onCheckoutCancelled?.()
           }}
           onError={() => {
+            if (!visibleRef.current) return
             if (suppressNextPayPalErrorRef.current) {
               suppressNextPayPalErrorRef.current = false
               return
@@ -501,6 +684,12 @@ export function PayPalSubscriptionButton({
               live: paypalLive,
               stage: "paypal_create_subscription",
               status: "paypal_button_error",
+            })
+            onCheckoutLifecycle?.({
+              failureReason: "provider_load_error",
+              option: "paypal",
+              provider: "paypal",
+              transition: "provider_load_error",
             })
             onCheckoutFailed?.({
               errorCode: "paypal_button_error",

@@ -43,6 +43,11 @@ import type {
 import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import { resolvePersonalPlanPricingMode } from "@/lib/funnel/personal-plan-pricing-experiment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
+
+export function isUnexpectedCheckoutNavigationPath(expectedPathname: string, nextPathname: string) {
+  if (nextPathname === expectedPathname) return false
+  return !/^\/(?:welcome|datenschutz|impressum|agb|widerruf|kontakt)(?:\/|$)/.test(nextPathname)
+}
 import {
   DEFAULT_PRICING_INTERVAL,
   getStripePricingPlan,
@@ -66,6 +71,192 @@ const personalPlanOneTimeReferencePriceLabel = `€${PERSONAL_PLAN_ONCE_PRODUCT.
   .toFixed(2)
   .replace(".", ",")}`
 type LockedCheckoutProvider = "stripe" | "paypal"
+
+export const OFFER_CHECKOUT_OVERLAY_VISIBILITY_TIMEOUT_MS = 5_000
+
+type OverlayPresentationWatchdog = {
+  markVisible: () => void
+  start: () => void
+  stop: () => void
+}
+
+type OverlayPresentationWatchdogDependencies = {
+  clearTimeout?: (timer: ReturnType<typeof setTimeout>) => void
+  setTimeout?: (callback: () => void, timeoutMs: number) => ReturnType<typeof setTimeout>
+  timeoutMs?: number
+}
+
+/**
+ * Watches presentation only. The timer never changes checkout state, routing, or animation.
+ */
+export function createOverlayPresentationWatchdog(
+  onTimeout: () => void,
+  dependencies: OverlayPresentationWatchdogDependencies = {},
+): OverlayPresentationWatchdog {
+  const schedule = dependencies.setTimeout ?? window.setTimeout
+  const cancel = dependencies.clearTimeout ?? window.clearTimeout
+  const timeoutMs = dependencies.timeoutMs ?? OFFER_CHECKOUT_OVERLAY_VISIBILITY_TIMEOUT_MS
+  let timer: ReturnType<typeof setTimeout> | null = null
+  let resolved = false
+
+  const clear = () => {
+    if (timer === null) return
+    cancel(timer)
+    timer = null
+  }
+
+  return {
+    markVisible() {
+      resolved = true
+      clear()
+    },
+    start() {
+      if (resolved || timer !== null) return
+      timer = schedule(() => {
+        timer = null
+        if (resolved) return
+        resolved = true
+        onTimeout()
+      }, timeoutMs)
+    },
+    stop: clear,
+  }
+}
+
+function useCheckoutOverlayPresentationIntegrity({
+  attemptId,
+  attempts,
+  commerceKind,
+  interval,
+  isInternalTest,
+  leadId,
+  live,
+  open,
+  plan,
+  trackLifecycle,
+}: {
+  attemptId: string | null
+  attempts: CheckoutAttemptController
+  commerceKind: "one_time" | "subscription"
+  interval?: BillingInterval
+  isInternalTest: boolean
+  leadId: string | null
+  live: boolean
+  open: boolean
+  plan: string
+  trackLifecycle: (
+    checkoutAttemptId: string,
+    claim: Omit<CheckoutLifecycleClaim, "checkoutAttemptId" | "lastState" | "openIndex"> & {
+      lastState?: CheckoutLifecycleClaim["lastState"]
+      openIndex?: number
+    },
+  ) => void
+}) {
+  const watchdogRef = useRef<OverlayPresentationWatchdog | null>(null)
+  const reportingRef = useRef(new Set<string>())
+
+  const reportPresentationFailure = useCallback(
+    (
+      checkoutAttemptId: string,
+      openIndex: number,
+      failureReason: "overlay_not_visible" | "unexpected_route",
+    ) => {
+      const key = `${checkoutAttemptId}:${openIndex}:${failureReason}`
+      if (reportingRef.current.has(key)) return
+      reportingRef.current.add(key)
+      const isUnexpectedRoute = failureReason === "unexpected_route"
+      trackLifecycle(checkoutAttemptId, {
+        endReason: isUnexpectedRoute ? "unexpected_navigation" : undefined,
+        failureReason,
+        openIndex,
+        transition: isUnexpectedRoute ? "unexpected_navigation" : "overlay_visibility_timeout",
+      })
+      capturePaymentFailure({
+        signal: "checkout_experience_degraded",
+        provider: "unknown",
+        boundary: isUnexpectedRoute ? "navigation" : "presentation",
+        errorFamily: isUnexpectedRoute ? "navigation" : "presentation",
+        commerceKind,
+        origin: "browser",
+        method: "unknown",
+        truth: "unknown",
+        live,
+        isInternalTest,
+        retryable: "true",
+        checkoutAttemptId,
+        leadId,
+        source: "quiz_result_offer",
+        interval,
+        plan,
+        durationMs: isUnexpectedRoute ? undefined : OFFER_CHECKOUT_OVERLAY_VISIBILITY_TIMEOUT_MS,
+        status: failureReason,
+        providerReferencePresent: false,
+      })
+    },
+    [commerceKind, interval, isInternalTest, leadId, live, plan, trackLifecycle],
+  )
+
+  useEffect(() => {
+    if (!open || !attemptId) return
+    const openIndex = attempts.openIndex() ?? 1
+    const watchdog = createOverlayPresentationWatchdog(() =>
+      reportPresentationFailure(attemptId, openIndex, "overlay_not_visible"),
+    )
+    watchdogRef.current = watchdog
+    watchdog.start()
+    return () => {
+      watchdog.stop()
+      if (watchdogRef.current === watchdog) watchdogRef.current = null
+    }
+  }, [attemptId, attempts, open, reportPresentationFailure])
+
+  useEffect(() => {
+    if (!open || !attemptId) return
+    const expectedPathname = window.location.pathname
+    const openIndex = attempts.openIndex() ?? 1
+    const reportUnexpectedRoute = () => {
+      if (!isUnexpectedCheckoutNavigationPath(expectedPathname, window.location.pathname)) return
+      reportPresentationFailure(attemptId, openIndex, "unexpected_route")
+    }
+    const originalPushState = window.history.pushState
+    const originalReplaceState = window.history.replaceState
+    const observedPushState: History["pushState"] = function (...args) {
+      originalPushState.apply(window.history, args)
+      reportUnexpectedRoute()
+    }
+    const observedReplaceState: History["replaceState"] = function (...args) {
+      originalReplaceState.apply(window.history, args)
+      reportUnexpectedRoute()
+    }
+    window.history.pushState = observedPushState
+    window.history.replaceState = observedReplaceState
+    window.addEventListener("popstate", reportUnexpectedRoute)
+    window.addEventListener("pagehide", reportUnexpectedRoute)
+    return () => {
+      window.removeEventListener("popstate", reportUnexpectedRoute)
+      window.removeEventListener("pagehide", reportUnexpectedRoute)
+      if (window.history.pushState === observedPushState) {
+        window.history.pushState = originalPushState
+      }
+      if (window.history.replaceState === observedReplaceState) {
+        window.history.replaceState = originalReplaceState
+      }
+    }
+  }, [attemptId, attempts, open, reportPresentationFailure])
+
+  return useCallback(
+    (state: "mounted" | "visible") => {
+      if (!attemptId) return
+      const openIndex = attempts.openIndex() ?? 1
+      if (state === "visible") watchdogRef.current?.markVisible()
+      trackLifecycle(attemptId, {
+        openIndex,
+        transition: state === "mounted" ? "overlay_mounted" : "overlay_visible",
+      })
+    },
+    [attemptId, attempts, trackLifecycle],
+  )
+}
 
 function mapOverlayDismissalReason(
   reason: "x" | "backdrop" | "escape" | "handle_drag" | "browser_back" | "close" | "plan_change",
@@ -231,6 +422,7 @@ function PersonalPlanOneTimePricing({
   onPricingReached?: () => void
   openCheckoutRequestId?: number
 }) {
+  const { stripeLive } = usePaymentRuntime()
   const pricingRef = useRef<HTMLDivElement | null>(null)
   const trackedRef = useRef(false)
   const handledRequestsRef = useRef(new Set<number>())
@@ -293,6 +485,7 @@ function PersonalPlanOneTimePricing({
         elapsedMs: Math.max(0, Date.now() - attemptStartedAtRef.current),
         dismissalReason: lifecycleClaim.dismissalReason,
         endReason: lifecycleClaim.endReason,
+        failureReason: lifecycleClaim.failureReason,
         lastState: lifecycleClaim.lastState,
         openIndex,
         option: lifecycleClaim.option,
@@ -304,6 +497,17 @@ function PersonalPlanOneTimePricing({
     },
     [attempts],
   )
+  const onOverlayPresentationStateChange = useCheckoutOverlayPresentationIntegrity({
+    attemptId,
+    attempts,
+    commerceKind: "one_time",
+    isInternalTest: Boolean(offerContext?.isInternalTest),
+    leadId,
+    live: stripeLive,
+    open,
+    plan: PERSONAL_PLAN_ONCE_PRODUCT.analyticsId,
+    trackLifecycle: trackCheckoutLifecycle,
+  })
   const hideCheckout = useCallback(() => {
     if (!attemptId) {
       setOpen(false)
@@ -486,6 +690,7 @@ function PersonalPlanOneTimePricing({
         onDismissRequest={(reason) => {
           lastDismissalReasonRef.current = mapOverlayDismissalReason(reason)
         }}
+        onPresentationStateChange={onOverlayPresentationStateChange}
         open={open}
         planName="Persönlicher Haarplan"
         priceLabel="29,99 €"
@@ -636,6 +841,7 @@ function MembershipResultOfferPricing({
         elapsedMs: Math.max(0, Date.now() - membershipAttemptStartedAtRef.current),
         dismissalReason: lifecycleClaim.dismissalReason,
         endReason: lifecycleClaim.endReason,
+        failureReason: lifecycleClaim.failureReason,
         lastState: lifecycleClaim.lastState,
         openIndex,
         option: lifecycleClaim.option,
@@ -647,6 +853,18 @@ function MembershipResultOfferPricing({
     },
     [attempts, overlay],
   )
+  const onOverlayPresentationStateChange = useCheckoutOverlayPresentationIntegrity({
+    attemptId,
+    attempts,
+    commerceKind: "subscription",
+    interval: checkoutInterval ?? selectedInterval,
+    isInternalTest: Boolean(offerContext?.isInternalTest),
+    leadId,
+    live: stripeLive,
+    open: overlay && checkoutVisible,
+    plan: getStripePricingPlan(checkoutInterval ?? selectedInterval, pricingCatalog).analyticsId,
+    trackLifecycle: trackCheckoutLifecycle,
+  })
   const reportFailure = useCallback(
     (
       failure: CheckoutFailure,
@@ -1023,6 +1241,10 @@ function MembershipResultOfferPricing({
           transition: "client_mounted",
         })
       }}
+      onCheckoutLifecycle={(claim) => {
+        if (!attemptId) return
+        trackCheckoutLifecycle(attemptId, claim)
+      }}
       onChangePlan={() => close({ focusPlan: true })}
       onConfirmStarted={(provider, option) => {
         if (!attemptId) return
@@ -1193,6 +1415,7 @@ function MembershipResultOfferPricing({
           onDismissRequest={(reason) => {
             membershipLastDismissalReasonRef.current = mapOverlayDismissalReason(reason)
           }}
+          onPresentationStateChange={onOverlayPresentationStateChange}
           keepMounted={Boolean(checkoutInterval)}
           open={checkoutVisible}
           planName={activePlan.name}

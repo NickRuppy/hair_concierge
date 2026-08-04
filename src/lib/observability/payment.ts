@@ -2,6 +2,7 @@ import type { CheckoutInterval, CheckoutSource, CheckoutStage } from "@/lib/obse
 
 export type PaymentSignal =
   | "customer_payment_error_observed"
+  | "checkout_experience_degraded"
   | "payment_checkout_initialization_failed"
   | "provider_payment_failed"
   | "payment_webhook_processing_failed"
@@ -10,6 +11,8 @@ export type PaymentSignal =
 
 export type PaymentProvider = "stripe" | "paypal" | "unknown"
 export type PaymentBoundary =
+  | "presentation"
+  | "navigation"
   | "configuration"
   | "provider_session"
   | "customer_authorization"
@@ -19,6 +22,9 @@ export type PaymentBoundary =
   | "entitlement"
   | "reconciliation"
 export type PaymentErrorFamily =
+  | "presentation"
+  | "navigation"
+  | "control_outcome"
   | "configuration"
   | "provider_session"
   | "not_confirmable"
@@ -111,6 +117,7 @@ const PAYMENT_BOUNDARY_BY_STAGE: Record<CheckoutStage, PaymentBoundary> = {
 
 const PAYMENT_LEVEL_BY_SIGNAL: Record<PaymentSignal, PaymentFailureLevel> = {
   customer_payment_error_observed: "warning",
+  checkout_experience_degraded: "error",
   payment_checkout_initialization_failed: "error",
   provider_payment_failed: "warning",
   payment_webhook_processing_failed: "error",
@@ -124,6 +131,10 @@ export function getPaymentBoundary(stage: CheckoutStage): PaymentBoundary {
 
 export function getPaymentFailureLevel(signal: PaymentSignal): PaymentFailureLevel {
   return PAYMENT_LEVEL_BY_SIGNAL[signal]
+}
+
+export function checkoutExperienceObservabilityEnabled(value: string | undefined): boolean {
+  return value?.trim().toLowerCase() !== "false"
 }
 
 export function buildPaymentFailurePayload(details: PaymentFailureDetails): PaymentFailurePayload {

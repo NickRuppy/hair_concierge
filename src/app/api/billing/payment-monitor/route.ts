@@ -8,6 +8,7 @@ import type {
 } from "@/lib/billing/payment-integrity"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import {
+  captureServerPaymentCheckIn,
   captureServerPaymentFailure,
   flushServerPaymentTelemetry,
 } from "@/lib/observability/payment-server"
@@ -43,6 +44,7 @@ type PaymentMonitorDeps = {
   runPaymentIntegrity: RunPaymentIntegrity
   checkRateLimit?: (identifier: string) => Promise<RateLimitResult> | RateLimitResult
   captureCheckIn?: (checkIn: PaymentIntegrityCheckIn) => unknown
+  requireCheckInReceipt?: boolean
   flushTelemetry?: () => Promise<unknown>
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
   now?: () => Date
@@ -74,6 +76,7 @@ export async function POST(request: Request) {
         const runner = await loadPaymentIntegrityRunner()
         return runner(input)
       },
+      requireCheckInReceipt: true,
     }),
   )
 }
@@ -98,7 +101,8 @@ export async function handlePaymentMonitor(
     monitorSlug: "payment-integrity-local",
     deadlineMs: PAYMENT_MONITOR_DEADLINE_MS,
     runPaymentIntegrity: deps.runPaymentIntegrity,
-    captureCheckIn: deps.captureCheckIn ?? ignorePaymentIntegrityCheckIn,
+    captureCheckIn: deps.captureCheckIn ?? captureServerPaymentCheckIn,
+    requireCheckInReceipt: deps.requireCheckInReceipt === true,
     flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
     reportMonitorFailure: deps.reportMonitorFailure,
     now: deps.now,
@@ -134,6 +138,7 @@ export async function runPaymentIntegrityBranch(options: {
   deadlineMs: number
   runPaymentIntegrity: RunPaymentIntegrity
   captureCheckIn: (checkIn: PaymentIntegrityCheckIn) => unknown
+  requireCheckInReceipt?: boolean
   flushTelemetry?: () => Promise<unknown>
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
   now?: () => Date
@@ -152,17 +157,24 @@ export async function runPaymentIntegrityBranch(options: {
       now,
       deadlineAt: new Date(now.getTime() + options.deadlineMs),
     })
-    const telemetryOk = await confirmTelemetryDelivery(result, options.flushTelemetry)
+    const eventTelemetryOk = await confirmTelemetryDelivery(result, options.flushTelemetry)
+    const finalCheckInId = safeCaptureCheckIn(options.captureCheckIn, {
+      monitorSlug: options.monitorSlug,
+      status: result.status === "completed" && eventTelemetryOk ? "ok" : "error",
+      checkInId,
+      duration: Math.max(0, (clock() - startedAt) / 1_000),
+    })
+    const checkInTelemetryOk = await confirmCheckInDelivery({
+      checkInId,
+      finalCheckInId,
+      flush: options.flushTelemetry,
+      required: options.requireCheckInReceipt === true,
+    })
+    const telemetryOk = eventTelemetryOk && checkInTelemetryOk
     const summary = telemetryOk
       ? summarizePaymentIntegrity(result)
       : withTelemetryDeliveryFailure(summarizePaymentIntegrity(result))
     const ok = result.status === "completed" && telemetryOk
-    safeCaptureCheckIn(options.captureCheckIn, {
-      monitorSlug: options.monitorSlug,
-      status: ok ? "ok" : "error",
-      checkInId,
-      duration: Math.max(0, (clock() - startedAt) / 1_000),
-    })
     return { ok, summary }
   } catch {
     const failure: PaymentIntegrityMonitorFailure = {
@@ -178,12 +190,20 @@ export async function runPaymentIntegrityBranch(options: {
     const telemetryOk =
       Boolean(eventId) &&
       Boolean(options.flushTelemetry && (await flushTelemetryWithRetry(options.flushTelemetry)))
-    safeCaptureCheckIn(options.captureCheckIn, {
+    const finalCheckInId = safeCaptureCheckIn(options.captureCheckIn, {
       monitorSlug: options.monitorSlug,
       status: "error",
       checkInId,
       duration: Math.max(0, (clock() - startedAt) / 1_000),
     })
+    if (options.requireCheckInReceipt === true) {
+      await confirmCheckInDelivery({
+        checkInId,
+        finalCheckInId,
+        flush: options.flushTelemetry,
+        required: true,
+      })
+    }
     const summary: PaymentIntegritySummary = {
       status: "error",
       counters: emptyPaymentIntegrityCounters(),
@@ -205,6 +225,17 @@ async function confirmTelemetryDelivery(
   const receipts = (result.telemetryEventIds ?? []).filter(isSentryEventId)
   if (receipts.length < expectedReceipts || !flush) return false
   return flushTelemetryWithRetry(flush)
+}
+
+async function confirmCheckInDelivery(input: {
+  checkInId?: string
+  finalCheckInId?: string
+  flush: (() => Promise<unknown>) | undefined
+  required: boolean
+}): Promise<boolean> {
+  if (!input.required) return true
+  if (!input.checkInId || !input.finalCheckInId || !input.flush) return false
+  return flushTelemetryWithRetry(input.flush)
 }
 
 async function flushTelemetryWithRetry(flush: () => Promise<unknown>): Promise<boolean> {
@@ -387,8 +418,6 @@ function safeCaptureCheckIn(
     return undefined
   }
 }
-
-export function ignorePaymentIntegrityCheckIn() {}
 
 function toNextResponse(result: PaymentMonitorRouteResult) {
   return NextResponse.json(result.body, { status: result.status })

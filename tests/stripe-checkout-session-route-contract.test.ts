@@ -17,6 +17,7 @@ import {
   preparedCheckoutCreateIdempotencyKey,
   preparedCheckoutExpiresAt,
   preparedCheckoutUnavailablePayload,
+  reportPreparedCheckoutControlOutcome,
   reportMissingExactOfferFunnelContext,
   reusableOneTimeStripeSessionClientSecret,
   reportStripeCheckoutInitializationFailure,
@@ -474,6 +475,161 @@ test("prepared checkout failures use one generic client payload", () => {
     status: "unavailable",
     reason: "prepared_checkout_unavailable",
   })
+})
+
+test("prepared checkout control outcomes capture a sanitized, correlated degradation signal", async () => {
+  const captured: unknown[] = []
+  let flushCalls = 0
+  const causes = [
+    "authorization_unavailable",
+    "provider_locked_paypal",
+    "provider_locked_stripe",
+    "access_conflict",
+    "lead_lookup_unavailable",
+    "identity_unavailable",
+    "preparation_token_mismatch",
+    "prepared_session_missing",
+    "prepared_pricing_missing",
+    "consent_context_missing",
+    "claim_validation_failed",
+    "canonical_metadata_repair_failed",
+    "prepared_client_secret_missing",
+    "claim_update_failed",
+    "claim_metadata_mismatch",
+  ] as const
+
+  for (const cause of causes) {
+    await reportPreparedCheckoutControlOutcome(
+      {
+        cause,
+        commerceKind: "one_time",
+        isInternalTest: true,
+        leadId: validRequest.leadId,
+        checkoutAttemptId: "50000000-0000-4000-8000-000000000099",
+        source: "quiz_result_offer",
+      },
+      {
+        capture: (details) => {
+          captured.push(details)
+          return "a".repeat(32)
+        },
+        flush: async () => {
+          flushCalls += 1
+          return true
+        },
+        schedule: (task) => {
+          void task()
+        },
+        environment: {
+          VERCEL_ENV: "production",
+          STRIPE_SECRET_KEY: "sk_live_safe_test_key",
+        },
+      },
+    )
+  }
+
+  assert.equal(flushCalls, causes.length)
+  assert.equal(captured.length, causes.length)
+  assert.deepEqual(
+    captured.map((details) => (details as { status?: unknown }).status),
+    causes,
+  )
+  assert.deepEqual(captured[0], {
+    signal: "checkout_experience_degraded",
+    provider: "stripe",
+    boundary: "provider_session",
+    errorFamily: "control_outcome",
+    commerceKind: "one_time",
+    origin: "provider_api",
+    method: "unknown",
+    truth: "unknown",
+    live: true,
+    isInternalTest: true,
+    retryable: "true",
+    source: "quiz_result_offer",
+    leadId: validRequest.leadId,
+    checkoutAttemptId: "50000000-0000-4000-8000-000000000099",
+    status: "authorization_unavailable",
+  })
+  assert.equal((captured[1] as { signal?: unknown }).signal, "customer_payment_error_observed")
+  assert.equal((captured[3] as { signal?: unknown }).signal, "customer_payment_error_observed")
+  assert.doesNotMatch(JSON.stringify(captured), /customer@example.com|cs_[A-Za-z0-9_]+/i)
+})
+
+test("prepared checkout control telemetry failure is contained", async () => {
+  await assert.doesNotReject(() =>
+    reportPreparedCheckoutControlOutcome(
+      {
+        cause: "provider_locked_paypal",
+        commerceKind: "one_time",
+        isInternalTest: false,
+        source: "quiz_result_offer",
+      },
+      {
+        capture: () => {
+          throw new Error("telemetry unavailable")
+        },
+        flush: async () => {
+          throw new Error("flush unavailable")
+        },
+        environment: {},
+      },
+    ),
+  )
+})
+
+test("prepared checkout control telemetry flush does not delay the recovery response", async () => {
+  let scheduledTask: (() => Promise<void>) | undefined
+  let flushResolved = false
+  const report = reportPreparedCheckoutControlOutcome(
+    {
+      cause: "prepared_session_missing",
+      commerceKind: "one_time",
+      isInternalTest: false,
+      source: "quiz_result_offer",
+    },
+    {
+      capture: () => "a".repeat(32),
+      flush: async () => {
+        await new Promise<void>((resolve) => setImmediate(resolve))
+        flushResolved = true
+        return true
+      },
+      schedule: (task) => {
+        scheduledTask = task
+      },
+      environment: {},
+    },
+  )
+
+  await report
+  assert.equal(flushResolved, false)
+  assert.ok(scheduledTask)
+  await scheduledTask?.()
+  assert.equal(flushResolved, true)
+})
+
+test("prepared checkout control telemetry does not schedule a flush without an event receipt", async () => {
+  let scheduleCalls = 0
+
+  await reportPreparedCheckoutControlOutcome(
+    {
+      cause: "provider_locked_stripe",
+      commerceKind: "one_time",
+      isInternalTest: false,
+      source: "quiz_result_offer",
+    },
+    {
+      capture: () => undefined,
+      flush: async () => true,
+      schedule: () => {
+        scheduleCalls += 1
+      },
+      environment: {},
+    },
+  )
+
+  assert.equal(scheduleCalls, 0)
 })
 
 test("checkout initialization failures retain only closed provider causes", () => {

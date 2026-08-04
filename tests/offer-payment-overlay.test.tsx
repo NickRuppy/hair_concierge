@@ -83,6 +83,7 @@ test("offer payment overlay exposes separate abort and plan-change callbacks", (
   assert.match(source, /onConfirmedAbort: \(\) => void/)
   assert.match(source, /onConfirmedPlanChange: \(\) => void/)
   assert.match(source, /checkoutEngaged\?: boolean/)
+  assert.match(source, /onPresentationStateChange\?: \(state: "mounted" \| "visible"\) => void/)
   assert.match(source, /checkoutEngaged = true/)
   assert.match(source, /restoreFocusRef\?: React\.RefObject<HTMLElement \| null>/)
   assert.match(source, /requestDismissal\("plan_change"\)/)
@@ -92,6 +93,11 @@ test("offer payment overlay exposes separate abort and plan-change callbacks", (
   assert.match(source, /type OfferPaymentOverlayDismissalReason =\n  \| "x"/)
   assert.match(source, /\| "browser_back"/)
   assert.match(source, /dragOrigin="handle"/)
+  assert.match(source, /onPresentationStateChange\?\.\("mounted"\)/)
+  assert.match(source, /onPresentationStateChange\?\.\("visible"\)/)
+  assert.match(source, /isOfferPaymentSurfaceVisible\(surface\)/)
+  assert.match(source, /visibleHeight >= Math\.min\(96, rect\.height \* 0\.25\)/)
+  assert.match(source, /requestAnimationFrame\(probeVisibility\)/)
 })
 
 test("offer payment overlay offers descendants only the dismissal action seam", () => {

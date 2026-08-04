@@ -19,11 +19,11 @@ import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import {
   emptyPaymentIntegrityCounters,
   flushPaymentMonitorTelemetry,
-  ignorePaymentIntegrityCheckIn,
   runPaymentIntegrityBranch,
   safeBearerTokenMatches,
   type RunPaymentIntegrity,
 } from "@/app/api/billing/payment-monitor/route"
+import { captureServerPaymentCheckIn } from "@/lib/observability/payment-server"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
@@ -51,6 +51,7 @@ type ReconcileDeps = {
   oneTimeFulfillmentRuntime?: OneTimeFulfillmentRuntime
   runPaymentIntegrity?: RunPaymentIntegrity
   captureCheckIn?: Parameters<typeof runPaymentIntegrityBranch>[0]["captureCheckIn"]
+  requireCheckInReceipt?: boolean
   flushTelemetry?: Parameters<typeof runPaymentIntegrityBranch>[0]["flushTelemetry"]
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
   clock?: () => number
@@ -94,6 +95,7 @@ export async function GET(request: Request) {
         const runner = await loadPaymentIntegrityRunner()
         return runner(input)
       },
+      requireCheckInReceipt: true,
     }),
   )
 }
@@ -110,7 +112,8 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
         monitorSlug: "payment-integrity-daily",
         deadlineMs: PAYMENT_INTEGRITY_DAILY_DEADLINE_MS,
         runPaymentIntegrity: deps.runPaymentIntegrity,
-        captureCheckIn: deps.captureCheckIn ?? ignorePaymentIntegrityCheckIn,
+        captureCheckIn: deps.captureCheckIn ?? captureServerPaymentCheckIn,
+        requireCheckInReceipt: deps.requireCheckInReceipt === true,
         flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
         reportMonitorFailure: deps.reportMonitorFailure,
         now: () => now,

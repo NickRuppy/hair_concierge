@@ -6,7 +6,14 @@ import {
   capturePaymentFailureWithSink,
   getPaymentBoundary,
   getPaymentFailureLevel,
+  checkoutExperienceObservabilityEnabled,
 } from "../src/lib/observability/payment"
+
+test("checkout experience observability defaults on and has an explicit false kill switch", () => {
+  assert.equal(checkoutExperienceObservabilityEnabled(undefined), true)
+  assert.equal(checkoutExperienceObservabilityEnabled("true"), true)
+  assert.equal(checkoutExperienceObservabilityEnabled(" FALSE "), false)
+})
 
 test("payment reporter uses closed tags, a safe internal user id, and stable immediate grouping", () => {
   const payload = buildPaymentFailurePayload({
@@ -77,6 +84,30 @@ test("checkout initialization failures use the closed error signal and severity"
   assert.equal(payload.tags["payment.signal"], "payment_checkout_initialization_failed")
   assert.equal(payload.context.status, "idempotency_conflict")
   assert.doesNotMatch(JSON.stringify(payload), /client_secret|customer@example.com|cs_/)
+})
+
+test("structural checkout degradation is an error with bounded stable grouping", () => {
+  const payload = buildPaymentFailurePayload({
+    signal: "checkout_experience_degraded",
+    provider: "unknown",
+    boundary: "presentation",
+    errorFamily: "presentation",
+    commerceKind: "one_time",
+    origin: "browser",
+    method: "unknown",
+    truth: "unknown",
+    live: true,
+    isInternalTest: false,
+    checkoutAttemptId: "attempt-123",
+    status: "overlay_not_visible",
+  })
+
+  assert.equal(payload.level, "error")
+  assert.deepEqual(payload.fingerprint, [
+    "payment/checkout_experience_degraded/unknown/presentation/presentation",
+  ])
+  assert.equal(payload.tags["payment.status"], undefined)
+  assert.equal(payload.context.status, "overlay_not_visible")
 })
 
 test("payment reporter refuses email-like values in internal identity fields", () => {
