@@ -11,6 +11,9 @@ test("waitlist UI preserves the standalone conversion and privacy boundaries", (
 
   assert.match(form, /marketingConsent: true/)
   assert.match(form, /attribution: readWaitlistAttribution\(\)/)
+  assert.match(form, /const metaEventId = crypto\.randomUUID\(\)/)
+  assert.match(form, /if \(body\.duplicate === false\)/)
+  assert.match(form, /trackMetaWaitlistLeadCaptured\(metaEventId\)/)
   assert.match(form, /WAITLIST_SURVEY_TOKEN_STORAGE_KEY/)
   assert.doesNotMatch(form, /sessionStorage\.setItem\([^)]*email/)
   assert.match(survey, /opaqueToken, responseId/)
@@ -21,6 +24,8 @@ test("waitlist UI preserves the standalone conversion and privacy boundaries", (
   assert.match(survey, /Zuordnung erneut versuchen/)
   assert.match(survey, /Bei technischem Problem weiter/)
   assert.match(survey, /setPendingResponseId\(responseId\)/)
+  assert.match(survey, /metaCompletionTracked/)
+  assert.match(survey, /trackMetaWaitlistSurveyCompleted\(crypto\.randomUUID\(\)\)/)
   assert.match(layout, /WaitlistTrackingProvider/)
 })
 

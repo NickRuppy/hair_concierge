@@ -10,6 +10,8 @@ import {
   trackMetaOfferViewed,
   trackMetaPurchaseConfirmed,
   trackMetaSubscriptionConfirmed,
+  trackMetaWaitlistLeadCaptured,
+  trackMetaWaitlistSurveyCompleted,
 } from "../src/lib/meta-pixel"
 
 function createMetaDom(options: { storageThrows?: boolean } = {}) {
@@ -122,6 +124,30 @@ test("offer view uses its unique content name and caller-provided dedupe id", ()
       "ViewContent",
       { content_name: "quiz_result_offer_view" },
       { eventID: "80000000-0000-8000-8000-000000000093" },
+    ],
+  ])
+})
+
+test("waitlist conversions use distinct standard events and caller-provided ids", () => {
+  const dom = createMetaDom()
+  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+
+  assert.equal(trackMetaWaitlistLeadCaptured("waitlist-lead-1", { win: dom.win }), true)
+  assert.equal(trackMetaWaitlistSurveyCompleted("waitlist-survey-1", { win: dom.win }), true)
+
+  assert.deepEqual(dom.calls, [
+    [
+      "track",
+      "Lead",
+      { content_name: "waitlist_signup", marketing_consent: true },
+      { eventID: "waitlist-lead-1" },
+    ],
+    [
+      "track",
+      "CompleteRegistration",
+      { content_name: "waitlist_survey_completion" },
+      { eventID: "waitlist-survey-1" },
     ],
   ])
 })

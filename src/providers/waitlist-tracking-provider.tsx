@@ -8,21 +8,32 @@ import {
   configurePostHogFunnelContext,
   releasePostHogRuntime,
 } from "@/lib/analytics/runtime/posthog"
+import { initMetaPixel } from "@/lib/meta-pixel"
 import { readWaitlistAttribution } from "@/lib/waitlist/attribution"
 import { COOKIE_CONSENT_CHANGE_EVENT, loadConsent, type CookieConsent } from "@/lib/cookie-consent"
+import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 
 function WaitlistTrackingBootstrap() {
-  const started = useRef(false)
+  const postHogStarted = useRef(false)
+  const metaStarted = useRef(false)
   const start = useCallback((consent: CookieConsent | null) => {
-    if (started.current || consent?.analytics !== true) return
-    started.current = true
-    posthog.register(
-      Object.fromEntries(
-        Object.entries(readWaitlistAttribution()).map(([key, value]) => [`waitlist_${key}`, value]),
-      ),
-    )
-    void configurePostHogFunnelContext(Promise.resolve(null)).then(() => releasePostHogRuntime())
+    if (!postHogStarted.current && consent?.analytics === true) {
+      postHogStarted.current = true
+      posthog.register(
+        Object.fromEntries(
+          Object.entries(readWaitlistAttribution()).map(([key, value]) => [
+            `waitlist_${key}`,
+            value,
+          ]),
+        ),
+      )
+      void configurePostHogFunnelContext(Promise.resolve(null)).then(() => releasePostHogRuntime())
+    }
+
+    if (!metaStarted.current && consent?.marketing === true) {
+      metaStarted.current = initMetaPixel()
+    }
   }, [])
 
   useEffect(() => {
@@ -40,9 +51,11 @@ function WaitlistTrackingBootstrap() {
 
 export function WaitlistTrackingProvider({ children }: { children: ReactNode }) {
   return (
-    <PostHogClientProvider>
-      <WaitlistTrackingBootstrap />
-      {children}
-    </PostHogClientProvider>
+    <MetaPixelProvider>
+      <PostHogClientProvider>
+        <WaitlistTrackingBootstrap />
+        {children}
+      </PostHogClientProvider>
+    </MetaPixelProvider>
   )
 }

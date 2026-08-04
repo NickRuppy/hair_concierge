@@ -101,7 +101,7 @@ test("waitlist attribution allowlists, caps, persists, and tolerates storage fai
   assert.doesNotThrow(() => storeWaitlistAttribution({ utmTerm: "curly" }, unavailableStorage))
 })
 
-test("waitlist analytics is PostHog-only and never emits identifiers or funnel properties", () => {
+test("waitlist app analytics never emits identifiers or funnel properties", () => {
   assert.deepEqual(eventRoutes.waitlist_signup_completed, {
     customerio: false,
     meta: false,
@@ -132,11 +132,14 @@ test("waitlist analytics is PostHog-only and never emits identifiers or funnel p
   assert.doesNotMatch(JSON.stringify(captured), /email|token|signup_id|response_id|funnel_/i)
 })
 
-test("waitlist tracking bootstrap excludes funnel, Meta, and browser Customer.io", () => {
+test("waitlist tracking keeps funnel and browser Customer.io isolated while gating vendors", () => {
   const source = readFileSync("src/providers/waitlist-tracking-provider.tsx", "utf8")
-  assert.doesNotMatch(source, /FunnelContextBootstrap|MetaPixel|CustomerIo/)
+  assert.doesNotMatch(source, /FunnelContextBootstrap|AnalyticsRuntimeCoordinator|CustomerIo/)
+  assert.match(source, /<MetaPixelProvider>/)
+  assert.match(source, /initMetaPixel\(\)/)
   assert.match(source, /loadConsent\(\)/)
-  assert.match(source, /consent\?\.analytics !== true/)
+  assert.match(source, /consent\?\.analytics === true/)
+  assert.match(source, /consent\?\.marketing === true/)
   assert.match(source, /COOKIE_CONSENT_CHANGE_EVENT/)
   assert.match(source, /configurePostHogFunnelContext\(Promise\.resolve\(null\)\)/)
 })
