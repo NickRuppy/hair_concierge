@@ -20,6 +20,10 @@ async function openCheckoutAtNonzeroScroll(page: Page) {
   await trigger.scrollIntoViewIfNeeded()
   const scrollBefore = await page.evaluate(() => ({ x: window.scrollX, y: window.scrollY }))
   expect(scrollBefore.y).toBeGreaterThan(0)
+  // Mobile WebKit does not focus a button merely because it was tapped. Make
+  // the pre-open focus owner explicit so restoration is deterministic.
+  await trigger.focus()
+  await expect(trigger).toBeFocused()
   await trigger.click()
   const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
   await expect(checkout).toBeVisible()
@@ -275,25 +279,180 @@ test.describe("@ci offer payment overlay", () => {
     await expect
       .poll(() => page.evaluate(() => ({ x: window.scrollX, y: window.scrollY })))
       .toEqual(scrollBefore)
-    await expect(page.getByRole("button", { name: "Ja, jetzt starten" })).toBeFocused()
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          Boolean(document.activeElement?.closest('[data-testid="selected-plan-card"]')),
+        ),
+      )
+      .toBe(true)
     await expect(page.getByTestId("last-outcome")).toContainText("Zahlung abgebrochen")
   })
 
-  test("mobile swipe requests confirmation and snaps the sheet back", async ({ page }) => {
+  test("handle dismissal keeps the exact 80px/81px boundary and snaps the sheet back", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     const { checkout } = await openCheckoutAtNonzeroScroll(page)
     const handle = checkout.locator("[data-bottom-sheet-handle]")
     const handleBox = await handle.boundingBox()
     expect(handleBox).not.toBeNull()
 
-    await page.mouse.move(handleBox!.x + handleBox!.width / 2, handleBox!.y + handleBox!.height / 2)
-    await page.mouse.down()
-    await page.mouse.move(handleBox!.x + handleBox!.width / 2, handleBox!.y + 130, { steps: 4 })
-    await page.mouse.up()
+    const startX = Math.round(handleBox!.x + handleBox!.width / 2)
+    const startY = Math.round(handleBox!.y + handleBox!.height / 2)
+    const dragHandle = async (distance: number) => {
+      await page.mouse.move(startX, startY)
+      await page.mouse.down()
+      await page.mouse.move(startX, startY + distance, { steps: 4 })
+      await page.mouse.up()
+    }
+
+    await dragHandle(80)
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+    await expect(checkout).toBeVisible()
+
+    await dragHandle(81)
 
     await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toBeVisible()
     await expect.poll(async () => (await checkout.boundingBox())?.y).toBeGreaterThanOrEqual(47)
     await expect.poll(async () => (await checkout.boundingBox())?.y).toBeLessThanOrEqual(49)
+  })
+
+  test("payment descendants never start the 81px-120px dismissal gesture", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    const { checkout } = await openCheckoutAtNonzeroScroll(page)
+    const descendants = [
+      checkout.getByRole("button", { name: "Apple Pay", exact: true }),
+      checkout.getByTestId("paypal-button"),
+      checkout.getByPlaceholder("1234 1234 1234 1234"),
+      checkout.locator('[data-offer-payment-step="payment_element"]'),
+    ]
+    const distances = [81, 100, 120, 120]
+
+    for (const [index, descendant] of descendants.entries()) {
+      const box = await descendant.boundingBox()
+      expect(box).not.toBeNull()
+      const startX = Math.round(box!.x + Math.min(8, box!.width / 2))
+      const startY = Math.round(box!.y + Math.min(8, box!.height / 2))
+      await page.mouse.move(startX, startY)
+      await page.mouse.down()
+      await page.mouse.move(startX, startY + distances[index], { steps: 4 })
+      await page.mouse.up()
+      await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+      await expect(checkout).toBeVisible()
+    }
+  })
+
+  test("first browser Back dismisses checkout on the same result and second Back is not guarded", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&dismissal=pristine`, { waitUntil: "domcontentloaded" })
+    await page.getByRole("button", { name: "Nur essentielle" }).click()
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout).toBeVisible()
+    await waitForMotion(page)
+    const url = page.url()
+    await page.goBack()
+    await expect(checkout).toBeHidden()
+    expect(page.url()).toBe(url)
+    await page.goBack()
+    expect(page.url()).not.toBe(url)
+  })
+
+  test("continuing after an engaged browser Back restores exactly one checkout guard", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(labPath, { waitUntil: "domcontentloaded" })
+    await page.getByRole("button", { name: "Nur essentielle" }).click()
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
+    const url = page.url()
+
+    await page.goBack()
+    await expect(confirmation).toBeVisible()
+    expect(page.url()).toBe(url)
+
+    await page.getByRole("button", { name: "Weiter bezahlen" }).click()
+    await expect(confirmation).toBeHidden()
+    await expect(checkout).toBeVisible()
+    expect(page.url()).toBe(url)
+
+    await page.goBack()
+    await expect(confirmation).toBeVisible()
+    expect(page.url()).toBe(url)
+  })
+
+  test("browser Back during a non-Back confirmation still restores the checkout guard", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(labPath, { waitUntil: "domcontentloaded" })
+    await page.getByRole("button", { name: "Nur essentielle" }).click()
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
+    const url = page.url()
+
+    await checkout.getByRole("button", { name: "Zahlung schließen" }).click()
+    await expect(confirmation).toBeVisible()
+
+    await page.goBack()
+    await expect(confirmation).toBeVisible()
+    expect(page.url()).toBe(url)
+
+    await page.getByRole("button", { name: "Weiter bezahlen" }).click()
+    await expect(confirmation).toBeHidden()
+    await expect(checkout).toBeVisible()
+
+    await page.goBack()
+    await expect(confirmation).toBeVisible()
+    expect(page.url()).toBe(url)
+  })
+
+  test("engagement rerenders do not consume or duplicate the checkout history sentinel", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      const historyCounts = { push: 0, back: 0 }
+      const pushState = window.history.pushState.bind(window.history)
+      const back = window.history.back.bind(window.history)
+      window.history.pushState = (...args) => {
+        historyCounts.push += 1
+        return pushState(...args)
+      }
+      window.history.back = () => {
+        historyCounts.back += 1
+        return back()
+      }
+      ;(
+        window as Window & { __checkoutHistoryCounts?: typeof historyCounts }
+      ).__checkoutHistoryCounts = historyCounts
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&dismissal=pristine`, { waitUntil: "domcontentloaded" })
+    await page.getByRole("button", { name: "Nur essentielle" }).click()
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout).toBeVisible()
+    const beforeEngagement = await page.evaluate(
+      () =>
+        (window as unknown as { __checkoutHistoryCounts: { push: number; back: number } })
+          .__checkoutHistoryCounts,
+    )
+    await checkout.getByPlaceholder("1234 1234 1234 1234").fill("4242")
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (window as unknown as { __checkoutHistoryCounts: { push: number; back: number } })
+              .__checkoutHistoryCounts,
+        ),
+      )
+      .toEqual(beforeEngagement)
   })
 
   test("plan-change confirmation cancels with Escape and restores selected-plan focus", async ({

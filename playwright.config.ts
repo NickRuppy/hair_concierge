@@ -1,4 +1,4 @@
-import { defineConfig } from "@playwright/test"
+import { defineConfig, devices } from "@playwright/test"
 import fs from "fs"
 import path from "path"
 
@@ -34,8 +34,8 @@ export default defineConfig({
     },
     {
       name: "webkit-mobile-action",
-      testMatch: "personal-plan-mobile-action.spec.ts",
-      use: { browserName: "webkit" },
+      testMatch: ["personal-plan-mobile-action.spec.ts", "offer-payment-overlay.spec.ts"],
+      use: { ...devices["iPhone 13"], browserName: "webkit" },
     },
   ],
 })

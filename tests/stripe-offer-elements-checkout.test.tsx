@@ -215,6 +215,57 @@ test("Express Checkout returns its confirmation promise and keeps ordinary card 
   )
 })
 
+test("Stripe lifecycle seams report mounted before ready and confirmation without duplicating a provider mount", () => {
+  assert.match(
+    stripeOfferElementsSource,
+    /export type OfferCheckoutProviderLifecycleCallback = \(\s*provider: OfferPaymentOptionProvider,\s*option: OfferPaymentOption,\s*\) => void/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onClientMounted\?: OfferCheckoutProviderLifecycleCallback/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onProviderReady\?: OfferCheckoutProviderLifecycleCallback/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /onConfirmStarted\?: OfferCheckoutProviderLifecycleCallback/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /const mountedProviderOptionsRef = useRef\(new Set<OfferPaymentOption>\(\)\)/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /const reportClientMounted = useCallback\(\s*\(option: OfferPaymentOption\) => \{[\s\S]*?mountedProviderOptionsRef\.current\.has\(option\)[\s\S]*?onClientMounted\?\.\("stripe", option\)/,
+  )
+
+  const expressMounted = stripeOfferElementsSource.indexOf('reportClientMounted("apple_pay")')
+  const expressReady = stripeOfferElementsSource.indexOf("onReady: handleExpressCheckoutReady")
+  const paymentLoaderStart = stripeOfferElementsSource.indexOf(
+    'onLoaderStart={() => {\n                  reportClientMounted("card_and_more")',
+  )
+  const paymentReady = stripeOfferElementsSource.indexOf("onReady={() => {")
+  const confirmStarted = stripeOfferElementsSource.indexOf(
+    "reportConfirmStarted(getStripeOfferPaymentOption(paymentMethodType))",
+  )
+  const providerConfirm = stripeOfferElementsSource.indexOf(
+    "const result = await checkout.confirm(",
+  )
+
+  assert.ok(expressMounted > -1)
+  assert.ok(expressReady > expressMounted)
+  assert.ok(paymentLoaderStart > -1)
+  assert.ok(paymentReady > paymentLoaderStart)
+  assert.ok(confirmStarted > -1)
+  assert.ok(providerConfirm > confirmStarted)
+  assert.match(
+    stripeOfferElementsSource,
+    /useEffect\(\(\) => \{\s*mountedProviderOptionsRef\.current\.clear\(\)\s*readyProviderOptionsRef\.current\.clear\(\)\s*confirmStartedProviderOptionsRef\.current\.clear\(\)\s*\}, \[checkoutAttemptId, checkoutKey\]\)/,
+  )
+})
+
 test("Express Checkout bypasses only Payment Element readiness and traces every retained guard", () => {
   assert.match(stripeOfferElementsSource, /!expressCheckoutConfirmEvent && !checkout\.canConfirm/)
   assert.match(stripeOfferElementsSource, /"checkout_unavailable"/)

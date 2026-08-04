@@ -7,6 +7,7 @@ import {
   getPreparedCheckoutControlOutcome,
   isHandledPreparedCheckoutControlError,
   isAlreadyReportedPreparedCheckoutError,
+  isPreparedCheckoutUsable,
 } from "../src/lib/stripe/prepared-checkout-credential"
 
 test("prepared checkout credentials are stable values until their owner deliberately refreshes", () => {
@@ -52,4 +53,13 @@ test("expected prepared checkout controls stay outside payment-failure reporting
   assert.equal(isAlreadyReportedPreparedCheckoutError(alreadyReported), true)
   assert.equal(isHandledPreparedCheckoutControlError(alreadyReported), false)
   assert.equal(isAlreadyReportedPreparedCheckoutError(new Error("network failure")), false)
+})
+
+test("prepared checkout usability keeps the exact 30 second safety margin", () => {
+  const now = Date.UTC(2026, 7, 4, 12, 0, 0)
+  const expiresAtInSeconds = (remainingMs: number) => Math.floor((now + remainingMs) / 1000)
+
+  assert.equal(isPreparedCheckoutUsable(expiresAtInSeconds(30_000), now), false)
+  assert.equal(isPreparedCheckoutUsable(expiresAtInSeconds(30_999), now), false)
+  assert.equal(isPreparedCheckoutUsable(expiresAtInSeconds(31_000), now), true)
 })

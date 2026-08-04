@@ -91,6 +91,40 @@ export type CheckoutPreparationOutcome =
   | "timeout_cold"
   | "prewarm_silent"
 
+export type CheckoutLifecycleTransition =
+  | "preparation_started"
+  | "prepared_response_received"
+  | "client_mounted"
+  | "claimed"
+  | "opened"
+  | "provider_ready"
+  | "payment_surface_selected"
+  | "payment_engaged"
+  | "confirm_started"
+  | "dismissed"
+  | "resumed"
+  | "recovery_presented"
+  | "attempt_ended"
+
+export type CheckoutLifecycleDismissalReason =
+  | "close_button"
+  | "backdrop"
+  | "drag_handle"
+  | "escape"
+  | "system_back"
+  | "plan_changed"
+
+export type CheckoutLifecycleRecoveryReason =
+  | "provider_timeout"
+  | "provider_load_error"
+  | "prepared_checkout_unavailable"
+  | "provider_locked"
+  | "confirmation_failed"
+
+export type CheckoutLifecycleEndReason = "customer_aborted" | "plan_changed" | "page_teardown"
+
+export type CheckoutLifecycleLastState = "none" | CheckoutLifecycleTransition
+
 export type WaitlistSignupKind = "new" | "duplicate"
 export type WaitlistSurveyCompletion = "completed" | "skipped"
 export type WaitlistWhatsAppSurface = "thank_you"
@@ -192,6 +226,22 @@ export type AppEventMap = {
       checkoutPresentation: CheckoutPresentation
       openIndex: number
     }
+  // Diagnostic lifecycle only. It intentionally carries neither funnel nor
+  // provider/session/customer identifiers beyond the app-owned attempt ID.
+  offer_checkout_lifecycle: {
+    checkoutAttemptId: string
+    checkoutPresentation: CheckoutPresentation
+    commerceKind: "one_time" | "subscription"
+    dismissalReason?: CheckoutLifecycleDismissalReason
+    elapsedMs: number
+    endReason?: CheckoutLifecycleEndReason
+    lastState: CheckoutLifecycleLastState
+    openIndex: number
+    option?: OfferPaymentOption
+    provider?: OfferPaymentOptionProvider
+    recoveryReason?: CheckoutLifecycleRecoveryReason
+    transition: CheckoutLifecycleTransition
+  }
   offer_cta_clicked: OfferAnalyticsContext & {
     ctaId: OfferCtaId
     destination: string

@@ -146,8 +146,10 @@ export function PayPalSubscriptionButton({
   leadId,
   onCheckoutCancelled,
   onCheckoutFailed,
+  onClientMounted,
   onReady,
   onCheckoutStarted,
+  onConfirmStarted,
   onPaymentMethodSelected,
   returnDestination,
   source,
@@ -158,8 +160,10 @@ export function PayPalSubscriptionButton({
   leadId?: string | null
   onCheckoutCancelled?: () => void
   onCheckoutFailed?: (failure: CheckoutFailure) => void
+  onClientMounted?: () => void
   onReady?: () => void
   onCheckoutStarted: (funnelEventId: string) => void
+  onConfirmStarted?: () => void
   onPaymentMethodSelected?: (provider: "stripe" | "paypal") => boolean | void
   returnDestination?: string
   source: PayPalCheckoutSource
@@ -170,10 +174,19 @@ export function PayPalSubscriptionButton({
   const intentTokenRef = useRef<string | null>(null)
   const suppressNextPayPalErrorRef = useRef(false)
   const configurationReportedRef = useRef(false)
+  const clientMountedReportedRef = useRef(false)
+  const readyReportedRef = useRef(false)
+  const confirmStartedReportedRef = useRef(false)
   const { paypalLive } = usePaymentRuntime()
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
+
+  useEffect(() => {
+    clientMountedReportedRef.current = false
+    readyReportedRef.current = false
+    confirmStartedReportedRef.current = false
+  }, [checkoutAttemptId])
 
   useEffect(() => {
     if (clientId || configurationReportedRef.current) return
@@ -243,7 +256,14 @@ export function PayPalSubscriptionButton({
           className="w-full"
           fundingSource={FUNDING.PAYPAL}
           onInit={() => {
-            onReady?.()
+            if (!clientMountedReportedRef.current) {
+              clientMountedReportedRef.current = true
+              onClientMounted?.()
+            }
+            if (!readyReportedRef.current) {
+              readyReportedRef.current = true
+              onReady?.()
+            }
           }}
           createSubscription={async (
             _data: Record<string, unknown>,
@@ -265,6 +285,10 @@ export function PayPalSubscriptionButton({
             })
             let intent: Awaited<ReturnType<typeof createSubscriptionIntent>>
             try {
+              if (!confirmStartedReportedRef.current) {
+                confirmStartedReportedRef.current = true
+                onConfirmStarted?.()
+              }
               intent = await createSubscriptionIntent({
                 checkoutAttemptId,
                 checkoutContext,

@@ -537,6 +537,69 @@ test("checkout preparation telemetry stays out of business checkout and provider
     meta: false,
     posthog: true,
   })
+  assert.deepEqual(eventRoutes.offer_checkout_lifecycle, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
+})
+
+test("checkout lifecycle is PostHog-only and maps only its bounded snake_case contract", () => {
+  const payload: AppEventMap["offer_checkout_lifecycle"] = {
+    checkoutAttemptId: "checkout-attempt-privacy-safe",
+    checkoutPresentation: "overlay",
+    commerceKind: "one_time",
+    elapsedMs: 1250,
+    endReason: "customer_aborted",
+    lastState: "confirm_started",
+    openIndex: 2,
+    option: "card_and_more",
+    provider: "stripe",
+    transition: "attempt_ended",
+  }
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("offer_checkout_lifecycle", payload)
+    assert.deepEqual(calls, [
+      { destination: "posthog", eventName: "offer_checkout_lifecycle", payload },
+    ])
+  })
+
+  const originalCapture = posthog.capture
+  const postHogCalls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    postHogCalls.push(args)
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("offer_checkout_lifecycle", {
+      ...payload,
+      preparationId: "must-not-reach-posthog",
+      email: "must-not-reach-posthog@example.com",
+      providerSessionId: "must-not-reach-posthog",
+      token: "must-not-reach-posthog",
+    } as AppEventMap["offer_checkout_lifecycle"])
+
+    assert.deepEqual(postHogCalls, [
+      [
+        "offer_checkout_lifecycle",
+        {
+          checkout_attempt_id: "checkout-attempt-privacy-safe",
+          checkout_presentation: "overlay",
+          commerce_kind: "one_time",
+          elapsed_ms: 1250,
+          end_reason: "customer_aborted",
+          last_state: "confirm_started",
+          open_index: 2,
+          option: "card_and_more",
+          provider: "stripe",
+          transition: "attempt_ended",
+        },
+      ],
+    ])
+  } finally {
+    posthog.capture = originalCapture
+  }
 })
 
 test("browser quiz lead capture does not route to Customer.io", () => {

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mobile Checkout Reliability – Review</title>
+    <style>
+      :root {
+        --ink: #301540;
+        --muted: #6f6573;
+        --paper: #fbfaf8;
+        --line: #e2dce4;
+        --plum: #71408f;
+        --plum-soft: #f3ecf7;
+        --green: #16775d;
+        --green-soft: #e8f6f1;
+        --amber: #9a5b00;
+        --amber-soft: #fff4dc;
+        --red: #ad3047;
+        --shadow: 0 18px 50px rgba(48, 21, 64, 0.12);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: linear-gradient(180deg, #f6f1f7 0%, #fbfaf8 100%);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main { max-width: 1440px; margin: 0 auto; padding: 50px 42px 62px; }
+      h1 { margin: 0; font-size: 38px; line-height: 1.08; letter-spacing: -0.035em; }
+      .lead { max-width: 960px; margin: 12px 0 32px; color: var(--muted); font-size: 18px; line-height: 1.5; }
+      .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+      .case { min-width: 0; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.9); padding: 20px; box-shadow: var(--shadow); }
+      .case h2 { margin: 0 0 5px; font-size: 21px; }
+      .case > p { min-height: 48px; margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+      .phone { position: relative; width: min(100%, 330px); height: 590px; margin: 0 auto; overflow: hidden; border: 6px solid var(--ink); border-radius: 38px; background: #d9d2da; }
+      .offer { position: absolute; inset: 0; padding: 68px 20px 20px; background: linear-gradient(#e8e0e9, #f6f1f5); color: #7d7380; }
+      .offer div { height: 12px; margin: 13px 0; border-radius: 99px; background: rgba(48,21,64,.11); }
+      .offer div:nth-child(2) { width: 78%; }
+      .offer div:nth-child(3) { width: 55%; }
+      .sheet { position: absolute; inset: 42px 0 0; border-radius: 28px 28px 0 0; background: var(--paper); box-shadow: 0 -8px 30px rgba(48,21,64,.18); }
+      .handle-zone { height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 28px 28px 0 0; background: var(--green-soft); }
+      .handle { width: 48px; height: 7px; border-radius: 10px; background: var(--green); box-shadow: 0 0 0 4px rgba(22,119,93,.15); }
+      .head { display: flex; justify-content: space-between; gap: 10px; padding: 12px 18px 13px; border-bottom: 1px solid var(--line); }
+      .title { font-size: 17px; font-weight: 850; }
+      .plan { margin-top: 4px; font-size: 12px; font-weight: 700; }
+      .x { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; font-size: 19px; }
+      .body { padding: 17px 18px 20px; }
+      .legal { margin-bottom: 12px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+      .pay { min-height: 50px; display: grid; place-items: center; margin: 10px 0; border-radius: 999px; font-size: 14px; font-weight: 850; }
+      .apple { background: #050505; color: white; }
+      .paypal { border: 1px solid #e5c566; background: #ffc439; color: #251800; }
+      .card { margin-top: 13px; border: 2px dashed rgba(22,119,93,.65); border-radius: 16px; padding: 14px; background: rgba(232,246,241,.45); }
+      .card strong { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+      .input { height: 44px; margin-top: 12px; border: 1px solid #d8d0da; border-radius: 10px; background: white; color: #9c919f; padding: 12px; font-size: 12px; }
+      .cta { min-height: 50px; display: grid; place-items: center; margin-top: 12px; border-radius: 999px; background: var(--plum); color: white; font-size: 13px; font-weight: 850; text-align: center; padding: 8px 14px; }
+      .gesture { position: absolute; right: 20px; top: 228px; width: 66px; height: 170px; border-right: 5px solid var(--red); }
+      .gesture:after { content: ""; position: absolute; right: -13px; bottom: -2px; width: 20px; height: 20px; border-right: 5px solid var(--red); border-bottom: 5px solid var(--red); transform: rotate(45deg); }
+      .gesture span { position: absolute; right: 8px; top: 55px; width: 150px; color: var(--red); font-size: 12px; font-weight: 850; text-align: right; }
+      .dialog-backdrop { position: absolute; inset: 0; display: grid; place-items: center; padding: 22px; background: rgba(48,21,64,.38); }
+      .dialog { width: 100%; border-radius: 18px; background: white; padding: 20px; text-align: center; box-shadow: 0 22px 60px rgba(0,0,0,.25); }
+      .dialog h3 { margin: 0 0 8px; font-size: 19px; }
+      .dialog p { margin: 0 0 16px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+      .secondary { background: white; color: var(--red); border: 1px solid rgba(173,48,71,.28); }
+      .timeout { border: 1px solid #e7bb64; border-radius: 16px; background: var(--amber-soft); padding: 15px; }
+      .timeout strong { display: block; color: #693c00; font-size: 14px; }
+      .timeout p { margin: 7px 0 12px; color: #7c5c2e; font-size: 12px; line-height: 1.45; }
+      .retry { min-height: 44px; display: grid; place-items: center; border-radius: 11px; background: var(--plum); color: white; font-size: 13px; font-weight: 850; }
+      .still { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(154,91,0,.22); color: var(--muted); font-size: 11px; text-align: center; }
+      .tag { display: inline-flex; margin-top: 15px; border-radius: 999px; padding: 8px 11px; background: var(--green-soft); color: #12634f; font-size: 12px; font-weight: 850; }
+      .tag.amber { background: var(--amber-soft); color: #7c4a00; }
+      .lifecycle { margin-top: 28px; border-radius: 22px; background: var(--ink); color: white; padding: 22px 24px 24px; }
+      .lifecycle h2 { margin: 0 0 4px; font-size: 20px; }
+      .lifecycle > p { margin: 0 0 18px; color: rgba(255,255,255,.72); font-size: 13px; }
+      .steps { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 8px; align-items: center; }
+      .step { position: relative; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 11px 8px; background: rgba(255,255,255,.07); font-size: 12px; font-weight: 800; text-align: center; }
+      .step:not(:last-child):after { content: "→"; position: absolute; right: -10px; top: 50%; z-index: 2; transform: translateY(-50%); color: #ffc98c; }
+      .outcomes { margin-top: 14px; color: #f6d7ab; font-size: 12px; line-height: 1.55; }
+      @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } .case > p { min-height: 0; } .steps { grid-template-columns: repeat(2, minmax(0,1fr)); } .step:after { display: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Mobile Checkout: vollständig zuverlässig</h1>
+      <p class="lead">Gewählte Richtung: absichtliche Aktionen bleiben möglich, unbeabsichtigte Gesten und Browser-Zurück verlieren nie den fertigen Plan, und langsame Zahlungsanbieter lassen den Checkout offen mit einer klaren Wiederherstellung.</p>
+
+      <section class="grid">
+        <article class="case">
+          <h2>1. Zahlung bleibt interaktiv</h2>
+          <p>Nur der sichtbare Griff darf eine Schließgeste starten. Auf Apple Pay, PayPal oder Karte wird getippt und gescrollt – niemals geschlossen.</p>
+          <div class="phone">
+            <div class="sheet">
+              <div class="handle-zone"><div class="handle"></div></div>
+              <div class="head"><div><div class="title">Sicher bezahlen</div><div class="plan">Quartal · 19,99 €</div></div><div class="x">×</div></div>
+              <div class="body">
+                <div class="legal">Es gilt das gesetzliche 14-tägige Widerrufsrecht. <u>Details ansehen</u></div>
+                <div class="pay apple">Pay</div>
+                <div class="pay paypal">PayPal</div>
+                <div class="card"><strong><span>Karte & weitere</span><span>19,99 €</span></strong><div class="input">1234 1234 1234 1234</div><div class="cta">Kostenpflichtig abonnieren · 19,99 €</div></div>
+              </div>
+            </div>
+            <div class="gesture" aria-label="Abwärtsbewegung auf der Zahlungsfläche scrollt nur"></div>
+          </div>
+          <span class="tag">Griff, X und Hintergrund bleiben bewusst nutzbar</span>
+        </article>
+
+        <article class="case">
+          <h2>2. Browser-Zurück ist sicher</h2>
+          <p>Das erste Zurück bleibt auf dem fertigen Ergebnis. Nach Zahlungseingabe verwendet es dieselbe Bestätigung wie X, Hintergrund und Griff.</p>
+          <div class="phone">
+            <div class="offer"><div></div><div></div><div></div></div>
+            <div class="sheet">
+              <div class="handle-zone"><div class="handle"></div></div>
+              <div class="head"><div><div class="title">Sicher bezahlen</div><div class="plan">Quartal · 19,99 €</div></div><div class="x">×</div></div>
+              <div class="body"><div class="card"><strong><span>Karte & weitere</span><span>19,99 €</span></strong><div class="input">4242 …</div></div></div>
+              <div class="dialog-backdrop">
+                <div class="dialog">
+                  <h3>Zahlung abbrechen?</h3>
+                  <p>Deine Eingaben werden verworfen. Dein ausgewählter Plan „Quartal“ bleibt erhalten.</p>
+                  <div class="cta">Weiter bezahlen</div>
+                  <div class="cta secondary">Zahlung abbrechen</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="tag">Ergebnis, Auswahl und vorbereitete Sitzung bleiben erhalten</span>
+        </article>
+
+        <article class="case">
+          <h2>3. Langsames Laden hat einen Ausweg</h2>
+          <p>Eine Zahlungsart darf ausfallen, ohne den Checkout zu schließen. Bereite Alternativen bleiben verfügbar; die betroffene Methode kann neu geladen werden.</p>
+          <div class="phone">
+            <div class="sheet">
+              <div class="handle-zone"><div class="handle"></div></div>
+              <div class="head"><div><div class="title">Sicher bezahlen</div><div class="plan">Quartal · 19,99 €</div></div><div class="x">×</div></div>
+              <div class="body">
+                <div class="pay paypal">Mit PayPal bezahlen</div>
+                <div class="timeout">
+                  <strong>Kartenzahlung lädt länger als erwartet</strong>
+                  <p>Du kannst es erneut versuchen oder eine andere verfügbare Zahlungsart wählen.</p>
+                  <div class="retry">Kartenzahlung erneut laden</div>
+                </div>
+                <div class="still">Der Checkout bleibt geöffnet. Es wurde noch keine Zahlung ausgelöst.</div>
+              </div>
+            </div>
+          </div>
+          <span class="tag amber">Kein automatisches Schließen, kein erfundener Fehlversuch</span>
+        </article>
+      </section>
+
+      <section class="lifecycle">
+        <h2>Eine nachvollziehbare Spur pro Checkout</h2>
+        <p>Eine stabile Checkout-ID verbindet Öffnen, Schließen und Wiederaufnehmen; ein Öffnungszähler hält die einzelnen Ansichten auseinander – ohne Zahlungsdaten oder Secrets.</p>
+        <div class="steps">
+          <div class="step">geöffnet</div><div class="step">Sitzung erstellt</div><div class="step">Option bereit</div><div class="step">Oberfläche gewählt</div><div class="step">Zahlung bedient</div><div class="step">Bestätigung gestartet</div><div class="step">Provider-Ergebnis</div>
+        </div>
+        <div class="outcomes">Schließen ist ein nachvollziehbarer Zwischenzustand: geschlossen → wiederaufgenommen. Ladefehler, Bereitschafts-Timeout, Bestätigungsfehler, Planwechsel und Erfolg bleiben getrennt. Replay Vision darf einen Klick oder Zahlungsfehler nur behaupten, wenn diese Spur ihn belegt.</div>
+      </section>
+    </main>
+  </body>
+</html>

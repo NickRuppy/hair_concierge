@@ -177,6 +177,23 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         open_index: data.openIndex,
       }
     }
+    case "offer_checkout_lifecycle": {
+      const data = payload as AppEventMap["offer_checkout_lifecycle"]
+      return {
+        checkout_attempt_id: data.checkoutAttemptId,
+        checkout_presentation: data.checkoutPresentation,
+        commerce_kind: data.commerceKind,
+        dismissal_reason: data.dismissalReason,
+        elapsed_ms: data.elapsedMs,
+        end_reason: data.endReason,
+        last_state: data.lastState,
+        open_index: data.openIndex,
+        option: data.option,
+        provider: data.provider,
+        recovery_reason: data.recoveryReason,
+        transition: data.transition,
+      }
+    }
     case "offer_chapter_revealed": {
       const data = payload as AppEventMap["offer_chapter_revealed"]
       return {

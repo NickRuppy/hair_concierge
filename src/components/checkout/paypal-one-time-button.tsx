@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
 
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
@@ -55,7 +55,9 @@ export function PayPalOneTimeButton({
   checkoutAttemptId,
   funnelSessionId,
   leadId,
+  onClientMounted,
   onCheckoutStarted,
+  onConfirmStarted,
   onDuplicateAccess,
   onPaymentMethodSelected,
   onProviderSelected,
@@ -65,7 +67,9 @@ export function PayPalOneTimeButton({
   checkoutAttemptId: string
   funnelSessionId: string
   leadId: string
+  onClientMounted?: () => void
   onCheckoutStarted?: (funnelEventId: string) => void
+  onConfirmStarted?: () => void
   onDuplicateAccess?: () => void
   onPaymentMethodSelected?: () => void
   onProviderSelected?: () => void
@@ -77,10 +81,17 @@ export function PayPalOneTimeButton({
   const [busy, setBusy] = useState(false)
   const intentTokenRef = useRef<string | null>(null)
   const suppressNextPayPalErrorRef = useRef(false)
+  const clientMountedReportedRef = useRef(false)
+  const confirmStartedReportedRef = useRef(false)
   const { paypalLive } = usePaymentRuntime()
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
+
+  useEffect(() => {
+    clientMountedReportedRef.current = false
+    confirmStartedReportedRef.current = false
+  }, [checkoutAttemptId])
 
   if (!clientId) return null
 
@@ -115,6 +126,10 @@ export function PayPalOneTimeButton({
             setBusy(true)
             const funnelEventId = createFunnelEventId()
             onPaymentMethodSelected?.()
+            if (!confirmStartedReportedRef.current) {
+              confirmStartedReportedRef.current = true
+              onConfirmStarted?.()
+            }
             const response = await fetch("/api/paypal/create-order-intent", {
               method: "POST",
               headers: { "content-type": "application/json" },
@@ -233,7 +248,13 @@ export function PayPalOneTimeButton({
             setBusy(false)
             if (intentTokenRef.current) onProviderSelected?.()
           }}
-          onInit={() => onReady?.()}
+          onInit={() => {
+            if (!clientMountedReportedRef.current) {
+              clientMountedReportedRef.current = true
+              onClientMounted?.()
+            }
+            onReady?.()
+          }}
           onError={(paypalError) => {
             setBusy(false)
             if (suppressNextPayPalErrorRef.current) {

@@ -18,6 +18,7 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | Pricing reach        | `pricing_viewed`                | Pricing reached the existing visibility threshold                                              | Existing PostHog, Customer.io, and Meta routes                                                  |
 | Plan choice          | `offer_plan_selected`           | A pricing plan was explicitly clicked                                                          | PostHog                                                                                         |
 | Checkout UI intent   | `offer_checkout_opened`         | The payment UI was opened, before a provider session exists                                    | PostHog; Meta `InitiateCheckout` for the overlay only                                           |
+| Checkout lifecycle   | `offer_checkout_lifecycle`      | Privacy-safe diagnostic transition for one app-owned checkout attempt                           | PostHog only                                                                                    |
 | Payment option reach | `offer_payment_option_viewed`   | One ready payment option was at least 50% visible for 750 ms in the open overlay               | PostHog only                                                                                    |
 | Payment choice       | `offer_payment_method_selected` | A provider was explicitly selected; Stripe records `apple_pay` or `payment_element` when known | PostHog                                                                                         |
 | Checkout failure     | `checkout_start_failed`         | Provider initialization failed or duplicate access blocked checkout                            | PostHog                                                                                         |
@@ -25,6 +26,16 @@ The offer uses explicit typed events. PostHog autocapture and session replay are
 | Purchase             | `purchase_completed`            | Authoritative server-side paid conversion                                                      | Existing billing analytics/outbox routes                                                        |
 
 `checkout_started` is deliberately later than `offer_checkout_opened`: opening the UI expresses intent, while checkout start requires a successful provider session or intent. Both events carry `checkoutPresentation` (`inline` or `overlay`). `checkout_started` also carries `checkoutStartTrigger`: `automatic_mount` for the default-mounted Stripe session and `explicit_provider_action` for an explicit provider action such as PayPal.
+
+### Checkout lifecycle diagnostic contract
+
+`offer_checkout_lifecycle` is a PostHog-only diagnostic event, never a first-party funnel milestone or a Meta or Customer.io event. Its fixed transitions are `preparation_started`, `prepared_response_received`, `client_mounted`, `claimed`, `opened`, `provider_ready`, `payment_surface_selected`, `payment_engaged`, `confirm_started`, `dismissed`, `resumed`, `recovery_presented`, and `attempt_ended`.
+
+Every event contains only the app-owned `checkoutAttemptId`, `openIndex`, `commerceKind` (`one_time` or `subscription`), `checkoutPresentation`, `transition`, `elapsedMs`, and `lastState`; it may add a bounded `provider`, `option`, and one fixed dismissal, recovery, or end reason. It excludes provider session and preparation IDs, email, tokens, and free text. A transition is claimed once per attempt, transition, provider/option/reason, and `openIndex`, while a new provider or reopen index can record a meaningful later transition. A pristine `dismissed` only hides an attempt; a later `resumed` keeps its attempt ID and increments `openIndex`. After engagement, a confirmed abort records its dismissal and then a terminal `attempt_ended`, so provider-owned form input is discarded as promised by the confirmation copy.
+
+Lifecycle telemetry diagnoses the client boundary only. The one-time and membership `checkout_started` milestones have different preparation boundaries and must not be compared between arms as equivalent funnel stages. Provider and Supabase/billing truth remain authoritative for prepared sessions, payments, purchases, and entitlements.
+
+Client teardown is deliberately recorded as `page_teardown`, never `completed`: provider return, purchase and entitlement truth decide whether a payment succeeded. The other terminal reasons emitted by this slice are `customer_aborted` and `plan_changed`.
 
 ### Cold checkout timing contract
 

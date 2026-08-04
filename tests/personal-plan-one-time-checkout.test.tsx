@@ -58,7 +58,10 @@ test("one-time pricing renders only the approved personal-plan offer", () => {
 test("one-time payment methods mount immediately without a visible or client consent gate", () => {
   assert.doesNotMatch(checkoutSource, /personal-plan-one-time-consent-copy/)
   assert.doesNotMatch(checkoutSource, /checked=\{accepted\}/)
-  assert.match(checkoutSource, /const stripeCheckoutEnabled = stripeAvailable && visible/)
+  assert.match(
+    checkoutSource,
+    /const stripeCheckoutMounted = stripeAvailable && Boolean\(checkoutAttemptId\)/,
+  )
   assert.doesNotMatch(checkoutSource, /Nach Einwilligung verfügbar/)
   assert.match(checkoutSource, /action: "prepare"/)
   assert.match(checkoutSource, /preparationToken: stripePreparationCredential\.preparationToken/)
@@ -70,7 +73,7 @@ test("one-time payment methods mount immediately without a visible or client con
     /preparation\.claimFunnelEventId \?\? createFunnelEventId\(\)[\s\S]*preparation\.claimFunnelEventId = funnelEventId/,
   )
   assert.match(checkoutSource, /onBeforeConfirm=\{handleBeforeStripeConfirm\}/)
-  assert.match(checkoutSource, /canStartPayment && stripeCheckoutEnabled \? \(/)
+  assert.match(checkoutSource, /canStartPayment && stripeCheckoutMounted \? \(/)
   assert.match(checkoutSource, /const paypalPaymentOption =/)
   assert.match(checkoutSource, /\{paypalPaymentOption\}/)
   assert.match(checkoutSource, /stripeSelected \? \(/)
@@ -97,11 +100,14 @@ test("one-time Express containment renders PayPal without mounting Stripe", () =
     pricingSource,
     /availableProviders: \[[\s\S]*expressElementsEnabled && stripePublishableKey \? \["stripe"\] : \[\]/,
   )
-  assert.match(pricingSource, /\[expressElementsEnabled, offerContext, onCheckoutOpen\]/)
-  assert.match(checkoutSource, /stripeCheckoutEnabled = stripeAvailable && visible/)
+  assert.match(pricingSource, /expressElementsEnabled,[\s\S]*offerContext,[\s\S]*onCheckoutOpen/)
   assert.match(
     checkoutSource,
-    /canStartPayment && !stripeAvailable \? \([\s\S]*paypalPaymentOption[\s\S]*\) : canStartPayment && stripeCheckoutEnabled \? \(/,
+    /stripeCheckoutMounted = stripeAvailable && Boolean\(checkoutAttemptId\)/,
+  )
+  assert.match(
+    checkoutSource,
+    /canStartPayment && !stripeAvailable \? \([\s\S]*paypalPaymentOption[\s\S]*\) : canStartPayment && stripeCheckoutMounted \? \(/,
   )
 })
 
@@ -111,6 +117,7 @@ test("a PayPal-owned checkout stays usable without presenting a generic Stripe f
     /error: "payment provider already selected", provider_locked: "paypal"/,
   )
   assert.match(checkoutSource, /body\.provider_locked === "paypal"/)
+  assert.match(checkoutSource, /providerLockedOwner === "paypal"/)
   assert.match(checkoutSource, /PayPal ist bereits ausgewählt/)
   assert.match(checkoutSource, /Karte ist für diesen Zahlungsversuch nicht verfügbar/)
   assert.match(checkoutSource, /onProviderSelected/)
@@ -138,7 +145,8 @@ test("one-time Apple Pay does no provider work before the drawer opens", () => {
   assert.doesNotMatch(pricingSource, /oneTimePrewarmEligible/)
   assert.doesNotMatch(pricingSource, /stripePreparationRefreshRequestId/)
   assert.doesNotMatch(pricingSource, /keepMounted=\{oneTimePrewarmEligible\}/)
-  assert.match(pricingSource, /open \? \(/)
+  assert.match(pricingSource, /attemptId \? \(/)
+  assert.match(pricingSource, /keepMounted=\{Boolean\(attemptId\)\}/)
   assert.doesNotMatch(pricingSource, /onStripePreparationStateChange/)
 
   const openCheckout = pricingSource.slice(
@@ -151,7 +159,10 @@ test("one-time Apple Pay does no provider work before the drawer opens", () => {
       pricingSource.indexOf("const openCheckout = useCallback"),
     ),
   )
-  assert.match(openCheckout, /const nextAttemptId = createFunnelEventId\(\)/)
+  assert.match(
+    openCheckout,
+    /const next = attempts\.open\(\)[\s\S]*const nextAttemptId = next\.checkoutAttemptId/,
+  )
   assert.match(openCheckout, /trackAppEvent\("offer_checkout_opened"/)
 
   assert.match(checkoutSource, /checkoutAttemptId: string \| null/)
@@ -163,10 +174,84 @@ test("one-time Apple Pay does no provider work before the drawer opens", () => {
   assert.match(checkoutSource, /visible: boolean/)
   assert.match(checkoutSource, /visible=\{visible\}/)
   assert.match(checkoutSource, /if \(!checkoutAttemptId \|\| !offerContext/)
-  assert.match(checkoutSource, /canStartPayment && stripeCheckoutEnabled \? \(/)
+  assert.match(checkoutSource, /canStartPayment && stripeCheckoutMounted \? \(/)
   assert.match(checkoutSource, /preparedStripeCheckoutRef\.current = null/)
   assert.match(checkoutSource, /prepared_checkout_control:prepared_checkout_unavailable/)
   assert.match(checkoutSource, /throw createAlreadyReportedPreparedCheckoutError\(error\)/)
+})
+
+test("one-time controls render in-overlay recovery without payment-failure reporting", () => {
+  assert.match(checkoutSource, /type StripeControlRecovery =/)
+  assert.match(checkoutSource, /presentStripeControlRecovery\("prepared_checkout_unavailable"\)/)
+  assert.match(checkoutSource, /Haarplan-Zahlung erneut vorbereiten/)
+  assert.match(
+    checkoutSource,
+    /Die Kartenzahlung konnte nicht mit diesem vorbereiteten Zahlungsversuch verbunden werden\./,
+  )
+  assert.match(checkoutSource, /rotateStripePreparationForRecovery/)
+  assert.match(checkoutSource, /stripeControlRecoveryRotatedRef\.current/)
+  assert.match(
+    checkoutSource,
+    /stripeControlRecovery === "prepared_checkout_unavailable" \? \([\s\S]*Haarplan-Zahlung erneut vorbereiten/,
+  )
+  assert.doesNotMatch(
+    checkoutSource,
+    /stripeControlRecovery === "provider_locked_stripe"[\s\S]*Haarplan-Zahlung erneut vorbereiten/,
+  )
+  assert.match(checkoutSource, /Kartenzahlung wieder öffnen/)
+  const lockedStripeResume = checkoutSource.slice(
+    checkoutSource.indexOf("const resumeProviderLockedStripe"),
+    checkoutSource.indexOf("const trackCheckoutStarted"),
+  )
+  assert.doesNotMatch(lockedStripeResume, /createPreparedCheckoutCredential/)
+  assert.match(
+    checkoutSource,
+    /trackCheckoutLifecycle\([\s\S]*recoveryReason:[\s\S]*"prepared_checkout_unavailable"[\s\S]*transition: "recovery_presented"/,
+  )
+  const controlCatch = checkoutSource.slice(
+    checkoutSource.indexOf("if (paypalLocked || handledControlOutcome) throw error"),
+    checkoutSource.indexOf("throw createAlreadyReportedPreparedCheckoutError(error)"),
+  )
+  assert.match(
+    controlCatch,
+    /if \(paypalLocked \|\| handledControlOutcome\) throw error[\s\S]*reportStripeCustomerError/,
+  )
+  assert.doesNotMatch(controlCatch, /capturePaymentFailure/)
+})
+
+test("one-time preparation credential is not rotated by first mount or same-attempt hide", () => {
+  const oneTime = pricingSource.slice(
+    pricingSource.indexOf("function PersonalPlanOneTimePricing"),
+    pricingSource.indexOf("function MembershipResultOfferPricing"),
+  )
+  assert.match(
+    checkoutSource,
+    /useState<PreparedCheckoutCredential>\(createPreparedCheckoutCredential\)/,
+  )
+  assert.match(checkoutSource, /const mountedCheckoutAttemptIdRef = useRef\(checkoutAttemptId\)/)
+  assert.match(
+    checkoutSource,
+    /if \(mountedCheckoutAttemptIdRef\.current === checkoutAttemptId\) return[\s\S]*setStripePreparationCredential\(createPreparedCheckoutCredential\(\)\)/,
+  )
+  const hideCheckout = oneTime.slice(
+    oneTime.indexOf("const hideCheckout = useCallback"),
+    oneTime.indexOf("const endCheckout = useCallback"),
+  )
+  assert.doesNotMatch(
+    hideCheckout,
+    /hideCheckout[\s\S]*setAttemptId\(null\)[\s\S]*<PersonalPlanOneTimeCheckout/,
+  )
+  assert.match(oneTime, /keepMounted=\{Boolean\(attemptId\)\}/)
+  assert.match(
+    checkoutSource,
+    /const paypalPaymentOption =\s*checkoutAttemptId && paypalCheckoutEnabled && !stripeProviderLocked/,
+  )
+  assert.doesNotMatch(checkoutSource, /visible &&\s*checkoutAttemptId && paypalCheckoutEnabled/)
+  assert.match(
+    checkoutSource,
+    /if \(!visible \|\| wasVisible\) return[\s\S]*isPreparedCheckoutUsable\(cachedPreparation\.expiresAt\)[\s\S]*setStripePreparationCredential\(createPreparedCheckoutCredential\(\)\)/,
+  )
+  assert.match(checkoutSource, /if \(!isPreparedCheckoutUsable\(preparation\.expiresAt\)\)/)
 })
 
 test("one-time pricing preserves the offer-to-provider analytics journey", () => {
@@ -177,6 +262,19 @@ test("one-time pricing preserves the offer-to-provider analytics journey", () =>
   assert.match(checkoutSource, /trackAppEvent\("checkout_started"/)
   assert.match(checkoutSource, /trackAppEvent\("offer_payment_method_selected"/)
   assert.match(checkoutSource, /trackAppEvent\("offer_payment_option_viewed"/)
+  assert.match(
+    checkoutSource,
+    /trackCheckoutLifecycle\([\s\S]*transition: "payment_surface_selected"/,
+  )
+  assert.match(checkoutSource, /trackCheckoutLifecycle\([\s\S]*transition: "preparation_started"/)
+  assert.match(
+    checkoutSource,
+    /trackCheckoutLifecycle\([\s\S]*transition: "prepared_response_received"/,
+  )
+  assert.match(checkoutSource, /trackCheckoutLifecycle\([\s\S]*transition: "confirm_started"/)
+  assert.match(checkoutSource, /trackCheckoutLifecycle\([\s\S]*transition: "claimed"/)
+  assert.match(checkoutSource, /trackCheckoutLifecycle\([\s\S]*transition: "provider_ready"/)
+  assert.match(checkoutSource, /trackCheckoutLifecycle\([\s\S]*transition: "payment_engaged"/)
   assert.match(checkoutSource, /claimOfferPaymentOptionView/)
   assert.match(checkoutSource, /onPaymentMethodSelected=\{handlePaymentMethodSelected\}/)
   assert.match(checkoutSource, /onPaymentOptionViewed=\{handlePaymentOptionViewed\}/)
@@ -188,18 +286,40 @@ test("one-time pricing preserves the offer-to-provider analytics journey", () =>
     checkoutSource,
     /const stripeAvailable = stripeElementsEnabled && stripePublishableKeyPresent/,
   )
-  assert.match(paypalSource, /onInit=\{\(\) => onReady\?\.\(\)\}/)
+  assert.match(
+    checkoutSource,
+    /const stripeCheckoutMounted = stripeAvailable && Boolean\(checkoutAttemptId\)/,
+  )
+  assert.match(checkoutSource, /paymentElementEnabled=\{stripeSelected\}/)
+  assert.match(checkoutSource, /visible=\{visible\}/)
+  assert.match(
+    paypalSource,
+    /onInit=\{\(\) => \{[\s\S]*onClientMounted\?\.\(\)[\s\S]*onReady\?\.\(\)/,
+  )
+  assert.match(
+    paypalSource,
+    /onPaymentMethodSelected\?\.\(\)[\s\S]*onConfirmStarted\?\.\(\)[\s\S]*fetch\("\/api\/paypal\/create-order-intent"/,
+  )
+  assert.match(checkoutSource, /onClientMounted=\{\(provider, option\) =>/)
+  assert.match(checkoutSource, /onConfirmStarted=\{\(provider, option\) =>/)
+  assert.match(checkoutSource, /onProviderReady=\{\(provider, option\) =>/)
   assert.match(paypalSource, /onPaymentMethodSelected\?\.\(\)/)
   assert.match(paypalSource, /onCheckoutStarted\?\.\(funnelEventId\)/)
 })
 
-test("one-time pricing ignores duplicate checkout-open requests until the attempt closes", () => {
-  assert.match(pricingSource, /const openRef = useRef\(false\)/)
+test("one-time pricing ignores duplicate visible opens but resumes a hidden attempt", () => {
   assert.match(
     pricingSource,
-    /const openCheckout = useCallback\(\(\) => \{\s*if \(openRef\.current\) return\s*openRef\.current = true/,
+    /const attemptsRef = useRef<CheckoutAttemptController \| null>\(null\)/,
   )
-  assert.match(pricingSource, /const close = useCallback\(\(\) => \{\s*openRef\.current = false/)
+  assert.match(
+    pricingSource,
+    /const openCheckout = useCallback\(\(\) => \{[\s\S]*if \(open\) return[\s\S]*if \(attemptId\) \{[\s\S]*attempts\.resume\(\)/,
+  )
+  assert.match(
+    pricingSource,
+    /const hideCheckout = useCallback\(\(\) => \{[\s\S]*attempts\.hide\(\)/,
+  )
 })
 
 test("offer lab can force the personal-plan pricing arm for browser-only verification", () => {
@@ -368,19 +488,26 @@ test("one-time legal pages promise the approved refund treatment without obsolet
   assert.doesNotMatch(imprintSource, /Online-Streitbeilegung|consumers\/odr/)
 })
 
-test("one-time checkout keeps each payment attempt isolated", () => {
-  assert.match(pricingSource, /const openRef = useRef\(false\)/)
+test("one-time checkout isolates terminal attempts while preserving hidden resumes", () => {
   assert.match(
     pricingSource,
-    /const openCheckout = useCallback\(\(\) => \{\s*if \(openRef\.current\) return\s*openRef\.current = true/,
+    /const attemptsRef = useRef<CheckoutAttemptController \| null>\(null\)/,
   )
   assert.match(
     pricingSource,
-    /const close = useCallback\(\(\) => \{\s*openRef\.current = false[\s\S]*setAttemptId\(null\)/,
+    /const hideCheckout = useCallback\(\(\) => \{[\s\S]*attempts\.hide\(\)[\s\S]*setOpen\(false\)[\s\S]*setEngaged\(false\)/,
+  )
+  assert.match(
+    pricingSource,
+    /const endCheckout = useCallback\([\s\S]*attempts\.end\(\)[\s\S]*setAttemptId\(null\)/,
   )
   assert.match(
     checkoutSource,
     /checkoutStartedProvidersRef\.current\.clear\(\)[\s\S]*firstEngagementRef\.current = false[\s\S]*\}, \[checkoutAttemptId\]\)/,
+  )
+  assert.match(
+    pricingSource,
+    /onConfirmedAbort=\{\(\) =>\s*engaged\s*\? endCheckout\(\{[\s\S]*endReason: "customer_aborted"[\s\S]*\}\)\s*: hideCheckout\(\)/,
   )
   assert.match(pricingSource, /setAttemptId\(nextAttemptId\)\s*setOpen\(true\)/)
 })

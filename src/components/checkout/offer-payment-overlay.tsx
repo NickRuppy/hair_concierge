@@ -7,9 +7,22 @@ import { Button } from "@/components/ui/button"
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { MODAL_LAYER_PRIORITIES } from "@/lib/ui/modal-layer-manager"
 import { cn } from "@/lib/utils"
+import {
+  consumeOfferCheckoutHistorySentinel,
+  createOfferCheckoutHistoryGuard,
+  pushOfferCheckoutHistorySentinel,
+  restoreOfferCheckoutHistorySentinel,
+} from "@/lib/checkout/offer-checkout-history"
 import { PaymentOptionExposureVisibilityGate } from "./payment-option-exposure"
 
-export type OfferPaymentOverlayDismissalReason = "close" | "plan_change"
+export type OfferPaymentOverlayDismissalReason =
+  | "x"
+  | "backdrop"
+  | "escape"
+  | "handle_drag"
+  | "browser_back"
+  | "close"
+  | "plan_change"
 
 export type OfferPaymentOverlayDismissalOutcome = "confirm" | "abort" | "plan_change"
 
@@ -104,28 +117,39 @@ export function OfferPaymentOverlay({
   restoreFocusRef,
 }: OfferPaymentOverlayProps) {
   const [state, dispatch] = React.useReducer(offerPaymentOverlayReducer, initialOverlayState)
+  const [immediateDismissal, setImmediateDismissal] =
+    React.useState<OfferPaymentOverlayDismissalReason | null>(null)
   const continueButtonRef = React.useRef<HTMLButtonElement | null>(null)
   const checkoutSurfaceRef = React.useRef<HTMLDivElement | null>(null)
+  const historyGuardRef = React.useRef(createOfferCheckoutHistoryGuard())
+  const requestDismissalRef = React.useRef<(reason: OfferPaymentOverlayDismissalReason) => void>(
+    () => {},
+  )
   const isDesktop = useDesktopCheckoutModal()
 
   const requestDismissal = React.useCallback(
     (reason: OfferPaymentOverlayDismissalReason) => {
-      onDismissRequest?.(reason)
       const outcome = getOfferPaymentOverlayDismissalOutcome({ reason, checkoutEngaged })
       if (outcome === "confirm") {
+        if (state.pendingDismissal) return
+        onDismissRequest?.(reason)
         dispatch({ type: "request_dismissal", reason })
         return
       }
-      if (outcome === "plan_change") {
-        onConfirmedPlanChange()
-        return
-      }
-      onConfirmedAbort()
+      onDismissRequest?.(reason)
+      setImmediateDismissal(reason)
     },
-    [checkoutEngaged, onConfirmedAbort, onConfirmedPlanChange, onDismissRequest],
+    [checkoutEngaged, onDismissRequest, state.pendingDismissal],
   )
 
+  React.useEffect(() => {
+    requestDismissalRef.current = requestDismissal
+  }, [requestDismissal])
+
   const continuePayment = React.useCallback(() => {
+    if (!historyGuardRef.current.ownsSentinel) {
+      restoreOfferCheckoutHistorySentinel(historyGuardRef.current)
+    }
     dispatch({ type: "continue_payment" })
     onContinuePayment?.()
     window.requestAnimationFrame(() => checkoutSurfaceRef.current?.focus({ preventScroll: true }))
@@ -138,7 +162,7 @@ export function OfferPaymentOverlay({
         continuePayment()
         return
       }
-      requestDismissal("close")
+      requestDismissal("backdrop")
     },
     [continuePayment, requestDismissal, state.pendingDismissal],
   )
@@ -146,14 +170,40 @@ export function OfferPaymentOverlay({
   const confirmDismissal = React.useCallback(() => {
     const reason = state.pendingDismissal
     if (reason === "plan_change") {
+      consumeOfferCheckoutHistorySentinel(historyGuardRef.current)
       onConfirmedPlanChange()
       return
     }
+    consumeOfferCheckoutHistorySentinel(historyGuardRef.current)
     onConfirmedAbort()
   }, [onConfirmedAbort, onConfirmedPlanChange, state.pendingDismissal])
 
   React.useEffect(() => {
     if (!open) dispatch({ type: "reset" })
+  }, [open])
+
+  React.useEffect(() => {
+    if (!immediateDismissal) return
+    setImmediateDismissal(null)
+    consumeOfferCheckoutHistorySentinel(historyGuardRef.current)
+    if (immediateDismissal === "plan_change") onConfirmedPlanChange()
+    else onConfirmedAbort()
+  }, [immediateDismissal, onConfirmedAbort, onConfirmedPlanChange])
+
+  React.useEffect(() => {
+    if (!open) return
+    const historyGuard = historyGuardRef.current
+    pushOfferCheckoutHistorySentinel(historyGuard)
+    const onPopState = () => {
+      if (!historyGuard.ownsSentinel) return
+      historyGuard.ownsSentinel = false
+      requestDismissalRef.current("browser_back")
+    }
+    window.addEventListener("popstate", onPopState)
+    return () => {
+      window.removeEventListener("popstate", onPopState)
+      consumeOfferCheckoutHistorySentinel(historyGuard)
+    }
   }, [open])
 
   React.useEffect(() => {
@@ -189,7 +239,7 @@ export function OfferPaymentOverlay({
       </div>
       <button
         type="button"
-        onClick={() => requestDismissal("close")}
+        onClick={() => requestDismissal("x")}
         className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-border bg-white text-[var(--brand-plum-darkest)] transition-colors hover:bg-[var(--brand-plum-ice)] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       >
         <X className="h-4 w-4" aria-hidden="true" />
@@ -203,6 +253,7 @@ export function OfferPaymentOverlay({
       <BottomSheetContent
         contentClassName="flex min-h-0 flex-1 flex-col overflow-hidden px-0 pb-0"
         disableDrag={isDesktop}
+        dragOrigin="handle"
         header={header}
         initialFocusRef={checkoutSurfaceRef}
         keepMounted={keepMounted}
@@ -210,6 +261,13 @@ export function OfferPaymentOverlay({
         restoreFocusRef={restoreFocusRef}
         rootClassName="checkout-payment-sheet-motion z-[110] [&_.bottom-sheet-backdrop]:bg-[rgba(31,23,34,0.56)]"
         showCloseButton={false}
+        onDismissRequest={(reason) => {
+          if (state.pendingDismissal) {
+            continuePayment()
+            return
+          }
+          requestDismissal(reason)
+        }}
         className={cn(
           "z-[110] h-[calc(100dvh-48px)] max-h-[calc(100dvh-48px)] overflow-hidden rounded-t-[24px] bg-[#fbfaf8] shadow-[0_-12px_36px_rgba(20,12,27,0.24)]",
           "sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:h-auto sm:max-h-[calc(100dvh-64px)] sm:w-[min(620px,calc(100vw-32px))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[22px] sm:shadow-[0_22px_80px_rgba(20,12,27,0.38)]",
