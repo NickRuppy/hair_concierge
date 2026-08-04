@@ -386,6 +386,31 @@ test.describe("@ci offer payment overlay", () => {
     expect(page.url()).toBe(url)
   })
 
+  test("stale checkout history state cannot leave a reopened checkout unguarded", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&history=previous`, { waitUntil: "domcontentloaded" })
+    await page.goto(labPath, { waitUntil: "domcontentloaded" })
+    await page.getByRole("button", { name: "Nur essentielle" }).click()
+    await page.evaluate(() => {
+      window.history.replaceState({ __chaarlieOfferCheckout: "open-v1" }, "", window.location.href)
+    })
+
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
+    const resultUrl = page.url()
+
+    await page.goBack()
+    await expect(confirmation).toBeVisible()
+    expect(page.url()).toBe(resultUrl)
+
+    await page.getByRole("button", { name: "Zahlung abbrechen" }).click()
+    await expect(checkout).toBeHidden()
+    expect(page.url()).toBe(resultUrl)
+  })
+
   test("browser Back during a non-Back confirmation still restores the checkout guard", async ({
     page,
   }) => {
