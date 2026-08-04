@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hair-concierge.local/schemas/prepare-content-research-package.v1.json",
+  "title": "Prepare Content Research package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "status",
+    "created_at",
+    "research_scope",
+    "intake",
+    "repository",
+    "findings",
+    "claims",
+    "sources",
+    "material_gaps",
+    "conflicts",
+    "open_gaps",
+    "do_not_claim",
+    "verification"
+  ],
+  "properties": {
+    "schema_version": { "const": "prepare-content-research.v1" },
+    "request_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["complete", "partial", "blocked"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "research_scope": { "type": "object" },
+    "intake": { "type": "object" },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit_sha", "source_policy_version", "source_manifest_version"],
+      "properties": {
+        "commit_sha": { "type": "string", "minLength": 1 },
+        "source_policy_version": { "const": "prepare-content-research-source-policy.v1" },
+        "source_manifest_version": { "const": "prepare-content-research-source-manifest.v1" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "description": "Ordered claim IDs selected as prioritized findings."
+    },
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "material_gaps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/materialGap" }
+    },
+    "conflicts": { "type": "array" },
+    "open_gaps": { "type": "array" },
+    "do_not_claim": { "type": "array" },
+    "verification": { "$ref": "#/$defs/verification" },
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operator_notes": { "type": "string" },
+        "downstream_corrections": { "type": "array" }
+      }
+    },
+    "persistence_skipped": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "intended_path"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1 },
+        "intended_path": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "sourceType": {
+      "enum": [
+        "repository_guidance",
+        "repository_runtime",
+        "repository_product_data",
+        "external_scientific",
+        "external_regulatory",
+        "external_expert_guidance",
+        "current_product_source",
+        "synthesis",
+        "unsupported"
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "statement",
+        "importance",
+        "source_type",
+        "source_refs",
+        "support_level",
+        "confidence",
+        "limitations",
+        "verification_status"
+      ],
+      "properties": {
+        "claim_id": { "type": "string", "minLength": 1 },
+        "statement": { "type": "string", "minLength": 1 },
+        "importance": { "enum": ["primary", "supporting", "context"] },
+        "source_type": { "$ref": "#/$defs/sourceType" },
+        "source_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "support_level": {
+          "enum": ["direct", "supported_synthesis", "uncertain", "conflicted", "unsupported"]
+        },
+        "confidence": { "enum": ["high", "medium", "low", "not_assessed"] },
+        "limitations": { "type": "array", "items": { "type": "string" } },
+        "verification_status": {
+          "enum": ["verified", "needs_review", "rejected", "blocked", "not_applicable"]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_type",
+        "repo_path_or_url",
+        "title",
+        "accessed_at_or_commit",
+        "relevant_sections"
+      ],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "source_type": { "$ref": "#/$defs/sourceType" },
+        "repo_path_or_url": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "accessed_at_or_commit": { "type": "string", "minLength": 1 },
+        "relevant_sections": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "materialGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "unsupported_question",
+        "repo_sources_checked",
+        "why_repo_is_insufficient",
+        "required_external_source_type",
+        "status",
+        "external_source_refs"
+      ],
+      "properties": {
+        "gap_id": { "type": "string", "minLength": 1 },
+        "unsupported_question": { "type": "string", "minLength": 1 },
+        "repo_sources_checked": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "why_repo_is_insufficient": { "type": "string", "minLength": 1 },
+        "required_external_source_type": {
+          "enum": [
+            "external_scientific",
+            "external_regulatory",
+            "external_expert_guidance",
+            "current_product_source"
+          ]
+        },
+        "status": { "enum": ["resolved", "unresolved", "blocked"] },
+        "external_source_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checked_claim_ids", "blockers"],
+      "properties": {
+        "status": { "enum": ["verified", "partial", "blocked"] },
+        "checked_claim_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "blockers": { "type": "array", "items": { "type": "string" } },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prepare Content Research — operator journey</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f4efe6;
+        --ink: #181713;
+        --muted: #68645c;
+        --line: #d7cec0;
+        --card: #fffdf8;
+        --accent: #df5e3d;
+        --accent-soft: #f9e4da;
+        --repo: #e5f0ff;
+        --external: #f4e7ff;
+        --success: #e2f2df;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: radial-gradient(circle at top left, #fff7e9 0, transparent 34rem), var(--paper);
+        color: var(--ink);
+        font:
+          15px/1.45 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 40px));
+        margin: 40px auto 56px;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 24px;
+        align-items: end;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 24px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-family: Georgia, serif;
+        font-size: clamp(34px, 5vw, 58px);
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 17px;
+      }
+      p {
+        margin: 0;
+      }
+      .subtitle {
+        max-width: 720px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .tag {
+        border: 1px solid var(--ink);
+        border-radius: 999px;
+        padding: 7px 11px;
+        font-size: 12px;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .panel {
+        min-height: 510px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: color-mix(in srgb, var(--card) 92%, transparent);
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgb(59 45 25 / 6%);
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .step {
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .body {
+        padding: 18px;
+      }
+      .stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .bubble {
+        max-width: 92%;
+        padding: 12px 14px;
+        border-radius: 15px;
+        background: #f0ebe1;
+      }
+
+      .bubble.user {
+        justify-self: end;
+        background: var(--ink);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .bubble.agent {
+        border-bottom-left-radius: 4px;
+      }
+      .bubble strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .checklist,
+      .source-list,
+      .package-list {
+        display: grid;
+        gap: 9px;
+        margin-top: 14px;
+      }
+
+      .item {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 9px;
+        align-items: start;
+      }
+
+      .num {
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent-soft);
+        color: #8d321d;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .source {
+        border-radius: 12px;
+        padding: 11px 12px;
+        background: var(--repo);
+      }
+
+      .source.external {
+        background: var(--external);
+      }
+      .source small,
+      .package small {
+        display: block;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      .package {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 11px 12px;
+        background: white;
+      }
+
+      .status {
+        margin-top: 14px;
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--success);
+        color: #244420;
+        font-weight: 650;
+      }
+
+      .boundary {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .boundary b {
+        color: var(--accent);
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      @media (max-width: 860px) {
+        header {
+          grid-template-columns: 1fr;
+        }
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        .panel {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>From topic to trusted research</h1>
+          <p class="subtitle">
+            The skill asks only what is missing, searches the repository’s curated guidance, fills
+            genuine gaps transparently, and returns a verified research package.
+          </p>
+        </div>
+        <span class="tag">Planning evidence · v1</span>
+      </header>
+
+      <section class="flow" aria-label="Designed operator journey">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Guided intake</h2>
+            <span class="step">01 · Clarify</span>
+          </div>
+          <div class="body stack">
+            <div class="bubble user">
+              <strong>Co-founder</strong>Use $prepare-content-research.<br />Topic: How do I find
+              the right shampoo?
+            </div>
+            <div class="bubble agent">
+              <strong>Agent</strong>I already have the topic. I need three details:
+            </div>
+            <div class="checklist">
+              <div class="item">
+                <span class="num">1</span
+                ><span>What exact question or misconception should the research resolve?</span>
+              </div>
+              <div class="item">
+                <span class="num">2</span
+                ><span>General category education, a named product, or ingredient analysis?</span>
+              </div>
+              <div class="item">
+                <span class="num">3</span
+                ><span>One short video, long-form material, or a series?</span>
+              </div>
+            </div>
+            <div class="bubble user">
+              General education for one 45–60 second video. Help beginners avoid choosing shampoo
+              based only on dry lengths.
+            </div>
+            <div class="boundary">
+              <b>Adaptive:</b
+              ><span
+                >Never repeat information already supplied. Do not ask about voice, hooks, visuals,
+                or style.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Evidence assembly</h2>
+            <span class="step">02 · Research</span>
+          </div>
+          <div class="body">
+            <div class="source-list">
+              <div class="source">
+                <strong>Repository guidance</strong
+                ><small
+                  >Category package, hard rules, safety boundaries, and relevant cross-category
+                  context.</small
+                >
+              </div>
+              <div class="source">
+                <strong>Runtime or product truth</strong
+                ><small
+                  >Loaded only when the question is about current Chaarlie behavior or a concrete
+                  product.</small
+                >
+              </div>
+              <div class="source external">
+                <strong>External evidence escalation</strong
+                ><small
+                  >Scientific and expert sources only for a real repository gap; provenance remains
+                  separate.</small
+                >
+              </div>
+            </div>
+            <div class="checklist">
+              <div class="item">
+                <span class="num">✓</span
+                ><span>Extract atomic claims before producing the summary.</span>
+              </div>
+              <div class="item">
+                <span class="num">✓</span
+                ><span>Preserve disagreements and downgrade uncertain claims.</span>
+              </div>
+              <div class="item">
+                <span class="num">✓</span
+                ><span>Run an independent claim-to-source verification pass.</span>
+              </div>
+              <div class="item">
+                <span class="num">✓</span
+                ><span
+                  >Exclude plans, archives, legacy guidance, and unbounded repository search.</span
+                >
+              </div>
+            </div>
+            <div class="boundary">
+              <b>Recovery:</b
+              ><span
+                >If outside research is unavailable, unsupported claims stay out and the gap remains
+                visible.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Verified handoff</h2>
+            <span class="step">03 · Return</span>
+          </div>
+          <div class="body">
+            <div class="package-list">
+              <div class="package">
+                <strong>Research summary</strong
+                ><small
+                  >Prioritized, scope-aware findings for the downstream content creator.</small
+                >
+              </div>
+              <div class="package">
+                <strong>Claim ledger</strong
+                ><small
+                  >Support level, source type, references, confidence, limitations, and
+                  status.</small
+                >
+              </div>
+              <div class="package">
+                <strong>Boundaries</strong
+                ><small
+                  >What not to claim, conflicts, unresolved questions, and evidence gaps.</small
+                >
+              </div>
+              <div class="package">
+                <strong>Traceability</strong
+                ><small
+                  >Repository SHA, research date, source manifest version, and verification
+                  result.</small
+                >
+              </div>
+            </div>
+            <div class="status">Research complete · returned to caller · package saved</div>
+            <div class="boundary">
+              <b>Stops here:</b
+              ><span
+                >No script, voice, hook, storyboard, generation payload, video creation, or
+                publication.</span
+              >
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer>
+        <span>Primary artifact: human-readable research.md</span>
+        <span>Machine handoff: package.json</span>
+      </footer>
+    </main>
+  </body>
+</html>

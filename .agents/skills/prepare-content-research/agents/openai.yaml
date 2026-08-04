@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prepare Content Research"
+  short_description: "Build verified content research packages"
+  default_prompt: "Use $prepare-content-research for Topic: How do I find the right shampoo?"
+
+policy:
+  allow_implicit_invocation: false

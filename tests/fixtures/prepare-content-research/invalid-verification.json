@@ -1,0 +1,21 @@
+{
+  "schema_version": "prepare-content-research.v1",
+  "request_id": "invalid-verification",
+  "status": "complete",
+  "created_at": "2026-08-04T10:00:00.000Z",
+  "research_scope": {},
+  "intake": {},
+  "repository": {
+    "commit_sha": "abc",
+    "source_policy_version": "prepare-content-research-source-policy.v1",
+    "source_manifest_version": "prepare-content-research-source-manifest.v1"
+  },
+  "findings": [],
+  "claims": [],
+  "sources": [],
+  "material_gaps": [],
+  "conflicts": [],
+  "open_gaps": [],
+  "do_not_claim": [],
+  "verification": { "status": "verified", "checked_claim_ids": [], "blockers": ["A blocker"] }
+}
