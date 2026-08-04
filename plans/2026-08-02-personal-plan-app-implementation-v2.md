@@ -1,6 +1,6 @@
 # Personal Plan App V1 — Implementation Plan
 
-**Status:** not implementation-ready; dedicated plan-engine architecture selected, detailed Shampoo and Conditioner specifications confirmed, remaining category grilling in progress
+**Status:** not implementation-ready; dedicated plan-engine architecture selected, detailed Shampoo, Conditioner, and Leave-in specifications confirmed, remaining category grilling in progress
 
 **Outcome:** deliver the paid personal-plan promise as a deterministic three-stage plan and a lightweight daily-use app
 
@@ -55,9 +55,10 @@ The offer artifact's `locked_plan` is preview/provenance input, not the final re
 |---|---|---|
 | Shampoo | Detailed behavior confirmed: inclusion, scalp-concern precedence, role splitting, cadence, owned-product handling, catalog selection, response check, and escalation | `docs/personal-plan/categories/shampoo/decision.md` plus its linked evidence and the cross-category computation spec |
 | Conditioner | Detailed category behavior confirmed: inclusion, target axes, functional needs, event cadence, multi-product allocation, layered product-fit verdicts, application guidance, fallbacks, and fixtures. Shared reason salience and cross-category function ownership are intentionally deferred until every category is specified. | `docs/personal-plan/categories/conditioner/decision.md` plus its linked evidence |
+| Leave-in | Detailed wash-day and heat-event behavior confirmed: inclusion and ownership boundaries, target axes, care/heat combination, narrow Conditioner replacement, occurrence cadence, primary/secondary allocation, role-relative fit, application fallback, safety, and fixtures. Between-wash refresh and final shared ownership/presentation remain explicitly deferred. | `docs/personal-plan/categories/leave-in/decision.md` plus its linked evidence |
 | Remaining V1 categories | Inclusion and broad behavior are still provisional until grilled with Nick | To be added category by category |
 
-This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo and Conditioner are the first confirmed category specifications; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
+This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo, Conditioner, and Leave-in are the first confirmed category specifications; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
 
 ## 3. Architectural invariants
 

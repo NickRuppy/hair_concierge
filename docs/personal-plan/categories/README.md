@@ -2,6 +2,8 @@
 
 This directory preserves the category-by-category evidence and product decisions behind the Personal Plan without turning prose into a second runtime recommendation engine.
 
+Use `category-design-framework.md` as the reusable grilling order and completeness checklist for every new category. It defines which decisions belong inside one category and which mechanics stay shared across the Personal Plan.
+
 ## Authority model
 
 | Layer | Owns | Does not own |
