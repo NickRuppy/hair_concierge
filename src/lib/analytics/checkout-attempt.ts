@@ -1,4 +1,14 @@
-import { claimCheckoutFailure, type CheckoutFailureStage } from "./events"
+import {
+  claimCheckoutFailure,
+  type CheckoutFailureStage,
+  type CheckoutLifecycleDismissalReason,
+  type CheckoutLifecycleEndReason,
+  type CheckoutLifecycleLastState,
+  type CheckoutLifecycleRecoveryReason,
+  type CheckoutLifecycleTransition,
+  type OfferPaymentOption,
+  type OfferPaymentOptionProvider,
+} from "./events"
 
 export type CheckoutAttemptOpenResult = {
   checkoutAttemptId: string
@@ -11,11 +21,46 @@ export function claimCheckoutOpenRequest(seen: Set<number>, requestId?: number) 
   return true
 }
 
+export type CheckoutLifecycleClaim = {
+  checkoutAttemptId: string
+  dismissalReason?: CheckoutLifecycleDismissalReason
+  endReason?: CheckoutLifecycleEndReason
+  lastState: CheckoutLifecycleLastState
+  openIndex: number
+  option?: OfferPaymentOption
+  provider?: OfferPaymentOptionProvider
+  recoveryReason?: CheckoutLifecycleRecoveryReason
+  transition: CheckoutLifecycleTransition
+}
+
+function lifecycleClaimKey({
+  checkoutAttemptId,
+  dismissalReason,
+  endReason,
+  openIndex,
+  option,
+  provider,
+  recoveryReason,
+  transition,
+}: CheckoutLifecycleClaim) {
+  return [
+    checkoutAttemptId,
+    transition,
+    provider ?? "",
+    option ?? "",
+    dismissalReason ?? recoveryReason ?? endReason ?? "",
+    openIndex,
+  ].join(":")
+}
+
 export function createCheckoutAttemptController(
   createId: () => string = () => crypto.randomUUID(),
 ) {
   let activeCheckoutAttemptId: string | null = null
+  let activeOpenIndex: number | null = null
+  let isHidden = false
   const seenFailureBranches = new Set<string>()
+  const seenLifecycleTransitions = new Set<string>()
 
   return {
     open(): CheckoutAttemptOpenResult {
@@ -24,6 +69,8 @@ export function createCheckoutAttemptController(
       }
 
       activeCheckoutAttemptId = createId()
+      activeOpenIndex = 1
+      isHidden = false
       return { checkoutAttemptId: activeCheckoutAttemptId, isNew: true }
     },
 
@@ -31,9 +78,42 @@ export function createCheckoutAttemptController(
       return activeCheckoutAttemptId
     },
 
+    /** Hiding a checkout preserves its app-owned attempt for a later resume. */
+    hide() {
+      if (!activeCheckoutAttemptId) return null
+      isHidden = true
+      return activeCheckoutAttemptId
+    },
+
+    /** Resuming a hidden attempt advances its presentation index exactly once. */
+    resume(): CheckoutAttemptOpenResult | null {
+      if (!activeCheckoutAttemptId) return null
+      if (isHidden) {
+        activeOpenIndex = (activeOpenIndex ?? 0) + 1
+        isHidden = false
+      }
+      return { checkoutAttemptId: activeCheckoutAttemptId, isNew: false }
+    },
+
+    openIndex() {
+      return activeOpenIndex
+    },
+
+    /** Ends the customer checkout attempt; it cannot be resumed afterwards. */
+    end() {
+      const closedCheckoutAttemptId = activeCheckoutAttemptId
+      activeCheckoutAttemptId = null
+      activeOpenIndex = null
+      isHidden = false
+      return closedCheckoutAttemptId
+    },
+
+    // Retained for existing callers that treat every close as terminal.
     close() {
       const closedCheckoutAttemptId = activeCheckoutAttemptId
       activeCheckoutAttemptId = null
+      activeOpenIndex = null
+      isHidden = false
       return closedCheckoutAttemptId
     },
 
@@ -50,6 +130,19 @@ export function createCheckoutAttemptController(
         failureStage,
         errorCode,
       )
+    },
+
+    claimLifecycle(claim: CheckoutLifecycleClaim) {
+      if (
+        claim.checkoutAttemptId !== activeCheckoutAttemptId ||
+        claim.openIndex !== activeOpenIndex
+      ) {
+        return false
+      }
+      const key = lifecycleClaimKey(claim)
+      if (seenLifecycleTransitions.has(key)) return false
+      seenLifecycleTransitions.add(key)
+      return true
     },
   }
 }

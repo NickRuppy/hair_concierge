@@ -45,6 +45,16 @@ test("offer payment overlay uses the approved German confirmation copy", () => {
 })
 
 test("offer payment overlay only confirms dismissal after an engaged payment attempt", () => {
+  for (const reason of ["x", "backdrop", "escape", "handle_drag", "browser_back"] as const) {
+    assert.equal(
+      getOfferPaymentOverlayDismissalOutcome({ reason, checkoutEngaged: false }),
+      "abort",
+    )
+    assert.equal(
+      getOfferPaymentOverlayDismissalOutcome({ reason, checkoutEngaged: true }),
+      "confirm",
+    )
+  }
   assert.equal(
     getOfferPaymentOverlayDismissalOutcome({ reason: "close", checkoutEngaged: false }),
     "abort",
@@ -79,6 +89,9 @@ test("offer payment overlay exposes separate abort and plan-change callbacks", (
   assert.match(source, /onConfirmedPlanChange\(\)/)
   assert.match(source, /onConfirmedAbort\(\)/)
   assert.match(source, /getOfferPaymentOverlayDismissalOutcome\(\{ reason, checkoutEngaged \}\)/)
+  assert.match(source, /type OfferPaymentOverlayDismissalReason =\n  \| "x"/)
+  assert.match(source, /\| "browser_back"/)
+  assert.match(source, /dragOrigin="handle"/)
 })
 
 test("offer payment overlay offers descendants only the dismissal action seam", () => {

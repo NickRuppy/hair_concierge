@@ -36,6 +36,16 @@ export type PreparedCheckoutControlOutcome =
   | "provider_locked"
   | null
 
+export const PREPARED_CHECKOUT_EXPIRY_MARGIN_MS = 30_000
+
+export function isPreparedCheckoutUsable(
+  expiresAtSeconds: number,
+  nowMs = Date.now(),
+  marginMs = PREPARED_CHECKOUT_EXPIRY_MARGIN_MS,
+) {
+  return expiresAtSeconds * 1000 > nowMs + marginMs
+}
+
 /** Expected checkout control responses are recoverable UI state, never payment incidents. */
 export function getPreparedCheckoutControlOutcome({
   error,

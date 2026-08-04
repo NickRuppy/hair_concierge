@@ -57,6 +57,7 @@ function BottomSheet({
 interface BottomSheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
   contentClassName?: string
   disableDrag?: boolean
+  dragOrigin?: "panel" | "handle"
   header?: React.ReactNode
   initialFocusRef?: React.RefObject<HTMLElement | null>
   keepMounted?: boolean
@@ -65,6 +66,7 @@ interface BottomSheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
   rootClassName?: string
   footer?: React.ReactNode
   showCloseButton?: boolean
+  onDismissRequest?: (origin: "x" | "backdrop" | "escape" | "handle_drag") => void
 }
 
 const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentProps>(
@@ -73,6 +75,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       className,
       contentClassName,
       disableDrag = false,
+      dragOrigin = "panel",
       footer,
       header,
       initialFocusRef,
@@ -81,6 +84,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       restoreFocusRef,
       rootClassName,
       showCloseButton = true,
+      onDismissRequest,
       children,
       style,
       ...props
@@ -243,18 +247,26 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       return () => document.removeEventListener("keydown", handleKeyDown)
     }, [modalActive, isTopLayer])
 
+    const requestDismissal = React.useCallback(
+      (origin: "x" | "backdrop" | "escape" | "handle_drag") => {
+        if (onDismissRequest) onDismissRequest(origin)
+        else onOpenChange(false)
+      },
+      [onDismissRequest, onOpenChange],
+    )
+
     // Escape key
     React.useEffect(() => {
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key !== "Escape" || !isTopLayer) return
         e.preventDefault()
-        onOpenChange(false)
+        requestDismissal("escape")
       }
       if (modalActive) {
         document.addEventListener("keydown", handleEscape)
       }
       return () => document.removeEventListener("keydown", handleEscape)
-    }, [modalActive, isTopLayer, onOpenChange])
+    }, [modalActive, isTopLayer, requestDismissal])
 
     // Drag handlers
     const handlePointerDown = React.useCallback(
@@ -266,6 +278,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         if (target.closest('[role="slider"]')) return
         // Only start drag from the handle area or when scrolled to top
         const isHandle = target.closest("[data-bottom-sheet-handle]")
+        if (dragOrigin === "handle" && !isHandle) return
         const scrollContainer = contentRef.current
         const isScrolledToTop = !scrollContainer || scrollContainer.scrollTop <= 0
 
@@ -274,7 +287,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         // Record a drag candidate only — capture happens after real movement.
         pendingDrag.current = { pointerId: e.pointerId, startY: e.clientY }
       },
-      [disableDrag, isTopLayer],
+      [disableDrag, dragOrigin, isTopLayer],
     )
 
     const handlePointerMove = React.useCallback(
@@ -313,13 +326,13 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         const pending = pendingDrag.current
         pendingDrag.current = null
         if (!draggingRef.current) {
-          if (pending && event.clientY - pending.startY > 80) onOpenChange(false)
+          if (pending && event.clientY - pending.startY > 80) requestDismissal("handle_drag")
           return
         }
         draggingRef.current = false
         setDragging(false)
         if (dragYRef.current > 80) {
-          onOpenChange(false)
+          requestDismissal("handle_drag")
           // A controlled consumer may intercept dismissal (for example to show
           // a confirmation) and keep the sheet open. Snap the gesture offset
           // back either way; the CSS exit animation owns the real close path.
@@ -330,7 +343,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
           setDragY(0)
         }
       },
-      [disableDrag, isTopLayer, onOpenChange],
+      [disableDrag, isTopLayer, requestDismissal],
     )
 
     const handlePointerCancel = React.useCallback((event: React.PointerEvent) => {
@@ -365,7 +378,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
             )}
             data-state={visible && !closing ? "open" : "closed"}
             onClick={() => {
-              if (isTopLayer) onOpenChange(false)
+              if (isTopLayer) requestDismissal("backdrop")
             }}
           />
         ) : null}
@@ -412,7 +425,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
               ref={closeButtonRef}
               type="button"
               className="absolute right-3 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-md bg-background/95 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              onClick={() => onOpenChange(false)}
+              onClick={() => requestDismissal("x")}
             >
               <X className="h-4 w-4" />
               <span className="sr-only">Schließen</span>

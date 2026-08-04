@@ -13,6 +13,7 @@ import type { BillingInterval } from "@/lib/stripe/intervals"
 import { PaymentOptionExposure } from "./payment-option-exposure"
 import {
   StripeOfferElementsCheckout,
+  type OfferCheckoutProviderLifecycleCallback,
   type StripeOfferPaymentMethodType,
   type StripeOfferProvider,
 } from "./stripe-offer-elements-checkout"
@@ -72,11 +73,14 @@ export function PaymentMethodCheckout({
   leadId,
   lockedProvider = null,
   onBeforeStripeConfirm,
+  onClientMounted,
   onChangePlan,
   onPayPalCheckoutFailed,
   onPayPalCheckoutStarted,
   onFirstPaymentEngagement,
+  onConfirmStarted,
   onPaymentOptionViewed,
+  onProviderReady,
   onPaymentMethodSelected,
   onProviderLockClaim,
   onProviderLockRelease,
@@ -101,11 +105,14 @@ export function PaymentMethodCheckout({
   leadId?: string | null
   lockedProvider?: "stripe" | "paypal" | null
   onBeforeStripeConfirm?: () => Promise<boolean>
+  onClientMounted?: OfferCheckoutProviderLifecycleCallback
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
   onFirstPaymentEngagement?: () => void
+  onConfirmStarted?: OfferCheckoutProviderLifecycleCallback
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
+  onProviderReady?: OfferCheckoutProviderLifecycleCallback
   onPaymentMethodSelected?: (
     provider: "stripe" | "paypal",
     paymentMethodType?: StripeOfferPaymentMethodType,
@@ -171,13 +178,18 @@ export function PaymentMethodCheckout({
             onProviderLockRelease?.("paypal")
           }}
           onCheckoutStarted={onPayPalCheckoutStarted}
+          onClientMounted={() => onClientMounted?.("paypal", "paypal")}
+          onConfirmStarted={() => onConfirmStarted?.("paypal", "paypal")}
           onPaymentMethodSelected={(provider) => {
             if (onProviderLockClaim?.("paypal") === false) return false
             onFirstPaymentEngagement?.()
             onPaymentMethodSelected?.(provider)
             return true
           }}
-          onReady={() => setPayPalReadyForCheckoutKey(checkoutKey)}
+          onReady={() => {
+            setPayPalReadyForCheckoutKey(checkoutKey)
+            onProviderReady?.("paypal", "paypal")
+          }}
           returnDestination={returnDestination}
           source={source}
         />
@@ -253,9 +265,12 @@ export function PaymentMethodCheckout({
               fetchClientSecret={fetchClientSecret}
               lockedProvider={lockedProvider}
               onBeforeConfirm={onBeforeStripeConfirm}
+              onClientMounted={onClientMounted}
+              onConfirmStarted={onConfirmStarted}
               onFirstPaymentEngagement={onFirstPaymentEngagement}
               onPaymentMethodSelected={onPaymentMethodSelected}
               onPaymentOptionViewed={onPaymentOptionViewed}
+              onProviderReady={onProviderReady}
               paymentElementEnabled={paymentElementEnabled}
               onProviderLockClaim={onProviderLockClaim}
               onProviderLockRelease={onProviderLockRelease}

@@ -29,10 +29,13 @@ import {
   claimCheckoutOpenRequest,
   createCheckoutAttemptController,
   type CheckoutAttemptController,
+  type CheckoutLifecycleClaim,
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
 import { isOfferPaymentOverlayEnabled, isStripeExpressCheckoutEnabled } from "@/lib/funnel/flags"
 import type {
+  CheckoutLifecycleDismissalReason,
+  CheckoutLifecycleTransition,
   FunnelAnalyticsEnvelope,
   OfferPaymentOption,
   OfferPaymentOptionProvider,
@@ -63,6 +66,25 @@ const personalPlanOneTimeReferencePriceLabel = `€${PERSONAL_PLAN_ONCE_PRODUCT.
   .toFixed(2)
   .replace(".", ",")}`
 type LockedCheckoutProvider = "stripe" | "paypal"
+
+function mapOverlayDismissalReason(
+  reason: "x" | "backdrop" | "escape" | "handle_drag" | "browser_back" | "close" | "plan_change",
+): CheckoutLifecycleDismissalReason {
+  switch (reason) {
+    case "x":
+    case "close":
+      return "close_button"
+    case "handle_drag":
+      return "drag_handle"
+    case "browser_back":
+      return "system_back"
+    case "plan_change":
+      return "plan_changed"
+    case "backdrop":
+    case "escape":
+      return reason
+  }
+}
 
 function classifyOfferStripeFailure(failure: CheckoutFailure): PaymentErrorFamily {
   if (failure.failureStage === "configuration") return "configuration"
@@ -211,9 +233,14 @@ function PersonalPlanOneTimePricing({
 }) {
   const pricingRef = useRef<HTMLDivElement | null>(null)
   const trackedRef = useRef(false)
-  const openRef = useRef(false)
   const handledRequestsRef = useRef(new Set<number>())
-  const openIndexRef = useRef(0)
+  const attemptsRef = useRef<CheckoutAttemptController | null>(null)
+  const attemptStartedAtRef = useRef(0)
+  const lastLifecycleTransitionRef = useRef<"none" | CheckoutLifecycleTransition>("none")
+  const lastDismissalReasonRef =
+    useRef<ReturnType<typeof mapOverlayDismissalReason>>("close_button")
+  attemptsRef.current ??= createCheckoutAttemptController(createFunnelEventId)
+  const attempts = attemptsRef.current
   const [open, setOpen] = useState(false)
   const [attemptId, setAttemptId] = useState<string | null>(null)
   const [engaged, setEngaged] = useState(false)
@@ -243,17 +270,105 @@ function PersonalPlanOneTimePricing({
     })
   }, [leadId, offerContext, onPricingReached])
 
-  const close = useCallback(() => {
-    openRef.current = false
+  const trackCheckoutLifecycle = useCallback(
+    (
+      checkoutAttemptId: string,
+      claim: Omit<CheckoutLifecycleClaim, "checkoutAttemptId" | "lastState" | "openIndex"> & {
+        lastState?: CheckoutLifecycleClaim["lastState"]
+        openIndex?: number
+      },
+    ) => {
+      const openIndex = claim.openIndex ?? attempts.openIndex() ?? 1
+      const lifecycleClaim: CheckoutLifecycleClaim = {
+        ...claim,
+        checkoutAttemptId,
+        lastState: claim.lastState ?? lastLifecycleTransitionRef.current,
+        openIndex,
+      }
+      if (!attempts.claimLifecycle(lifecycleClaim)) return
+      trackAppEvent("offer_checkout_lifecycle", {
+        checkoutAttemptId,
+        checkoutPresentation: "overlay",
+        commerceKind: "one_time",
+        elapsedMs: Math.max(0, Date.now() - attemptStartedAtRef.current),
+        dismissalReason: lifecycleClaim.dismissalReason,
+        endReason: lifecycleClaim.endReason,
+        lastState: lifecycleClaim.lastState,
+        openIndex,
+        option: lifecycleClaim.option,
+        provider: lifecycleClaim.provider,
+        recoveryReason: lifecycleClaim.recoveryReason,
+        transition: lifecycleClaim.transition,
+      })
+      lastLifecycleTransitionRef.current = lifecycleClaim.transition
+    },
+    [attempts],
+  )
+  const hideCheckout = useCallback(() => {
+    if (!attemptId) {
+      setOpen(false)
+      setEngaged(false)
+      return
+    }
+    attempts.hide()
     setOpen(false)
-    setAttemptId(null)
     setEngaged(false)
-  }, [])
+    trackCheckoutLifecycle(attemptId, {
+      dismissalReason: lastDismissalReasonRef.current,
+      transition: "dismissed",
+    })
+  }, [attemptId, attempts, trackCheckoutLifecycle])
+  const endCheckout = useCallback(
+    ({
+      dismissalReason,
+      endReason = "plan_changed",
+    }: {
+      dismissalReason?: CheckoutLifecycleDismissalReason
+      endReason?: CheckoutLifecycleClaim["endReason"]
+    } = {}) => {
+      if (attemptId) {
+        const normalizedDismissalReason =
+          dismissalReason ?? (endReason === "plan_changed" ? "plan_changed" : undefined)
+        if (normalizedDismissalReason) {
+          trackCheckoutLifecycle(attemptId, {
+            dismissalReason: normalizedDismissalReason,
+            transition: "dismissed",
+          })
+        }
+        trackCheckoutLifecycle(attemptId, {
+          endReason,
+          transition: "attempt_ended",
+        })
+      }
+      attempts.end()
+      setOpen(false)
+      setAttemptId(null)
+      setEngaged(false)
+      lastLifecycleTransitionRef.current = "none"
+      attemptStartedAtRef.current = 0
+    },
+    [attemptId, attempts, trackCheckoutLifecycle],
+  )
   const openCheckout = useCallback(() => {
-    if (openRef.current) return
-    openRef.current = true
-    const nextAttemptId = createFunnelEventId()
-    openIndexRef.current += 1
+    if (open) return
+    if (attemptId) {
+      const resumed = attempts.resume()
+      setOpen(true)
+      setEngaged(false)
+      if (resumed) {
+        trackCheckoutLifecycle(resumed.checkoutAttemptId, {
+          openIndex: attempts.openIndex() ?? 1,
+          transition: "resumed",
+        })
+      }
+      onCheckoutOpen?.()
+      return
+    }
+    const next = attempts.open()
+    const nextAttemptId = next.checkoutAttemptId
+    attemptStartedAtRef.current = Date.now()
+    lastLifecycleTransitionRef.current = "none"
+    const openIndex = attempts.openIndex() ?? 1
     if (offerContext)
       trackAppEvent("offer_checkout_opened", {
         ...offerContext,
@@ -267,17 +382,40 @@ function PersonalPlanOneTimePricing({
         checkoutAttemptId: nextAttemptId,
         checkoutPresentation: "overlay",
         funnelEventId: createFunnelEventId(),
-        openIndex: openIndexRef.current,
+        openIndex,
       })
+    trackCheckoutLifecycle(nextAttemptId, {
+      lastState: "none",
+      openIndex,
+      transition: "opened",
+    })
     setAttemptId(nextAttemptId)
     setOpen(true)
     onCheckoutOpen?.()
-  }, [expressElementsEnabled, offerContext, onCheckoutOpen])
+  }, [
+    attemptId,
+    attempts,
+    expressElementsEnabled,
+    offerContext,
+    onCheckoutOpen,
+    open,
+    trackCheckoutLifecycle,
+  ])
   useEffect(() => {
     if (!claimCheckoutOpenRequest(handledRequestsRef.current, openCheckoutRequestId)) return
     const timer = window.setTimeout(openCheckout, 0)
     return () => window.clearTimeout(timer)
   }, [openCheckout, openCheckoutRequestId])
+  useEffect(() => {
+    if (!attemptId) return
+    return () => {
+      trackCheckoutLifecycle(attemptId, {
+        endReason: "page_teardown",
+        transition: "attempt_ended",
+      })
+      attempts.end()
+    }
+  }, [attemptId, attempts, trackCheckoutLifecycle])
 
   return (
     <div ref={pricingRef} className="space-y-4" data-personal-plan-pricing-mode="one_time">
@@ -335,22 +473,34 @@ function PersonalPlanOneTimePricing({
       </div>
       <OfferPaymentOverlay
         checkoutEngaged={engaged}
-        onConfirmedAbort={close}
-        onConfirmedPlanChange={close}
+        keepMounted={Boolean(attemptId)}
+        onConfirmedAbort={() =>
+          engaged
+            ? endCheckout({
+                dismissalReason: lastDismissalReasonRef.current,
+                endReason: "customer_aborted",
+              })
+            : hideCheckout()
+        }
+        onConfirmedPlanChange={() => endCheckout({ endReason: "plan_changed" })}
+        onDismissRequest={(reason) => {
+          lastDismissalReasonRef.current = mapOverlayDismissalReason(reason)
+        }}
         open={open}
         planName="Persönlicher Haarplan"
         priceLabel="29,99 €"
       >
         {({ requestDismissal }) =>
-          open ? (
+          attemptId ? (
             <PersonalPlanOneTimeCheckout
               checkoutAttemptId={attemptId}
               funnelSessionId={funnelSessionId}
               leadId={leadId}
+              onCheckoutLifecycle={(claim) => trackCheckoutLifecycle(attemptId, claim)}
               onFirstPaymentEngagement={() => setEngaged(true)}
               onRequestClose={() => requestDismissal("close")}
               stripeElementsEnabled={expressElementsEnabled}
-              visible
+              visible={open}
             />
           ) : null
         }
@@ -386,7 +536,6 @@ function MembershipResultOfferPricing({
   const inlineCheckoutRef = useRef<HTMLDivElement | null>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
   const trackedRef = useRef(false)
-  const openIndexRef = useRef(0)
   const handledRequestsRef = useRef(new Set<number>())
   const lockRef = useRef<LockedCheckoutProvider | null>(null)
   const selectionIndexRef = useRef(0)
@@ -394,6 +543,10 @@ function MembershipResultOfferPricing({
   const optionViewsRef = useRef(new Set<string>())
   const stripeFunnelEventRef = useRef<{ attemptId: string; funnelEventId: string } | null>(null)
   const rotateStripeSessionAttemptOnRetryRef = useRef(true)
+  const membershipAttemptStartedAtRef = useRef(0)
+  const membershipLastLifecycleTransitionRef = useRef<"none" | CheckoutLifecycleTransition>("none")
+  const membershipLastDismissalReasonRef =
+    useRef<ReturnType<typeof mapOverlayDismissalReason>>("close_button")
   const attemptsRef = useRef<CheckoutAttemptController | null>(null)
   attemptsRef.current ??= createCheckoutAttemptController(createFunnelEventId)
   const attempts = attemptsRef.current
@@ -401,6 +554,7 @@ function MembershipResultOfferPricing({
   const [selectedInterval, setSelectedInterval] =
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
+  const [checkoutVisible, setCheckoutVisible] = useState(false)
   const [attemptId, setAttemptId] = useState<string | null>(null)
   const [checkoutSessionAttemptId, setCheckoutSessionAttemptId] = useState<string | null>(null)
   const [lockedProvider, setLockedProvider] = useState<LockedCheckoutProvider | null>(null)
@@ -459,6 +613,40 @@ function MembershipResultOfferPricing({
     }
     return next.accepted
   }, [])
+  const trackCheckoutLifecycle = useCallback(
+    (
+      checkoutAttemptId: string,
+      claim: Omit<CheckoutLifecycleClaim, "checkoutAttemptId" | "lastState" | "openIndex"> & {
+        lastState?: CheckoutLifecycleClaim["lastState"]
+        openIndex?: number
+      },
+    ) => {
+      const openIndex = claim.openIndex ?? attempts.openIndex() ?? 1
+      const lifecycleClaim: CheckoutLifecycleClaim = {
+        ...claim,
+        checkoutAttemptId,
+        lastState: claim.lastState ?? membershipLastLifecycleTransitionRef.current,
+        openIndex,
+      }
+      if (!attempts.claimLifecycle(lifecycleClaim)) return
+      trackAppEvent("offer_checkout_lifecycle", {
+        checkoutAttemptId,
+        checkoutPresentation: overlay ? "overlay" : "inline",
+        commerceKind: "subscription",
+        elapsedMs: Math.max(0, Date.now() - membershipAttemptStartedAtRef.current),
+        dismissalReason: lifecycleClaim.dismissalReason,
+        endReason: lifecycleClaim.endReason,
+        lastState: lifecycleClaim.lastState,
+        openIndex,
+        option: lifecycleClaim.option,
+        provider: lifecycleClaim.provider,
+        recoveryReason: lifecycleClaim.recoveryReason,
+        transition: lifecycleClaim.transition,
+      })
+      membershipLastLifecycleTransitionRef.current = lifecycleClaim.transition
+    },
+    [attempts, overlay],
+  )
   const reportFailure = useCallback(
     (
       failure: CheckoutFailure,
@@ -513,28 +701,91 @@ function MembershipResultOfferPricing({
     [attemptId, attempts, checkoutInterval, leadId, offerContext, pricingCatalog, stripeLive],
   )
 
-  const close = useCallback(
-    ({ focusPlan = false }: { focusPlan?: boolean } = {}) => {
+  const endCheckout = useCallback(
+    ({
+      dismissalReason,
+      endReason = "plan_changed",
+      focusPlan = false,
+    }: {
+      dismissalReason?: CheckoutLifecycleDismissalReason
+      endReason?: CheckoutLifecycleClaim["endReason"]
+      focusPlan?: boolean
+    } = {}) => {
       returnFocusRef.current = focusPlan
         ? (pricingRef.current?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]') ??
           null)
         : null
-      attempts.close()
+      if (attemptId) {
+        const normalizedDismissalReason =
+          dismissalReason ?? (endReason === "plan_changed" ? "plan_changed" : undefined)
+        if (normalizedDismissalReason) {
+          trackCheckoutLifecycle(attemptId, {
+            dismissalReason: normalizedDismissalReason,
+            transition: "dismissed",
+          })
+        }
+        trackCheckoutLifecycle(attemptId, {
+          endReason,
+          transition: "attempt_ended",
+        })
+      }
+      attempts.end()
       resetLock()
       setAttemptId(null)
       setCheckoutSessionAttemptId(null)
       setCheckoutInterval(null)
+      setCheckoutVisible(false)
+      setEngaged(false)
+      setError(null)
+      membershipLastLifecycleTransitionRef.current = "none"
+      membershipAttemptStartedAtRef.current = 0
+    },
+    [attemptId, attempts, resetLock, trackCheckoutLifecycle],
+  )
+  const close = useCallback(
+    ({ focusPlan = false }: { focusPlan?: boolean } = {}) => {
+      if (!overlay) {
+        endCheckout({ focusPlan })
+        return
+      }
+      returnFocusRef.current = focusPlan
+        ? (pricingRef.current?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]') ??
+          null)
+        : null
+      if (attemptId) {
+        attempts.hide()
+        trackCheckoutLifecycle(attemptId, {
+          dismissalReason: membershipLastDismissalReasonRef.current,
+          transition: "dismissed",
+        })
+      }
+      setCheckoutVisible(false)
       setEngaged(false)
       setError(null)
     },
-    [attempts, resetLock],
+    [attemptId, attempts, endCheckout, overlay, trackCheckoutLifecycle],
   )
   const openCheckout = useCallback(() => {
+    if (overlay && attemptId && checkoutInterval && !checkoutVisible) {
+      const resumed = attempts.resume()
+      setCheckoutVisible(true)
+      setEngaged(false)
+      if (resumed) {
+        trackCheckoutLifecycle(resumed.checkoutAttemptId, {
+          openIndex: attempts.openIndex() ?? 1,
+          transition: "resumed",
+        })
+      }
+      onCheckoutOpen?.()
+      return
+    }
     const next = attempts.open()
     if (!next.isNew) return
     const id = next.checkoutAttemptId
     const plan = getStripePricingPlan(selectedInterval, pricingCatalog)
-    openIndexRef.current += 1
+    membershipAttemptStartedAtRef.current = Date.now()
+    membershipLastLifecycleTransitionRef.current = "none"
+    const openIndex = attempts.openIndex() ?? 1
     if (offerContext)
       trackAppEvent("offer_checkout_opened", {
         ...offerContext,
@@ -549,11 +800,16 @@ function MembershipResultOfferPricing({
         currency: plan.currency,
         funnelEventId: createFunnelEventId(),
         interval: selectedInterval,
-        openIndex: openIndexRef.current,
+        openIndex,
         planId: plan.analyticsId,
         pricingCatalog,
         value: plan.amount,
       })
+    trackCheckoutLifecycle(id, {
+      lastState: "none",
+      openIndex,
+      transition: "opened",
+    })
     const stripePromise = getOfferStripePromise()
     const stripeRequired = overlay || !isPayPalCheckoutEnabled()
     if (stripePublishableKey && stripeRequired) {
@@ -578,6 +834,7 @@ function MembershipResultOfferPricing({
     setAttemptId(id)
     setCheckoutSessionAttemptId(createFunnelEventId())
     setCheckoutInterval(selectedInterval)
+    setCheckoutVisible(true)
     setStripe(stripePromise)
     onCheckoutOpen?.()
     if (!overlay)
@@ -586,18 +843,32 @@ function MembershipResultOfferPricing({
       )
   }, [
     attempts,
+    attemptId,
+    checkoutInterval,
+    checkoutVisible,
     offerContext,
     onCheckoutOpen,
     overlay,
     pricingCatalog,
     reportFailure,
     selectedInterval,
+    trackCheckoutLifecycle,
   ])
   useEffect(() => {
     if (!claimCheckoutOpenRequest(handledRequestsRef.current, openCheckoutRequestId)) return
     const timer = window.setTimeout(openCheckout, 0)
     return () => window.clearTimeout(timer)
   }, [openCheckout, openCheckoutRequestId])
+  useEffect(() => {
+    if (!attemptId) return
+    return () => {
+      trackCheckoutLifecycle(attemptId, {
+        endReason: "page_teardown",
+        transition: "attempt_ended",
+      })
+      attempts.end()
+    }
+  }, [attemptId, attempts, trackCheckoutLifecycle])
 
   const fetchClientSecret = useCallback(async () => {
     if (!checkoutInterval || !attemptId || !checkoutSessionAttemptId) {
@@ -623,6 +894,10 @@ function MembershipResultOfferPricing({
     const funnelEventId = stripeFunnelEventRef.current.funnelEventId
     let response: Response
     try {
+      trackCheckoutLifecycle(attemptId, {
+        provider: "stripe",
+        transition: "preparation_started",
+      })
       response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -711,6 +986,10 @@ function MembershipResultOfferPricing({
       pricingCatalog,
       value: plan.amount,
     })
+    trackCheckoutLifecycle(attemptId, {
+      provider: "stripe",
+      transition: "prepared_response_received",
+    })
     return data.client_secret
   }, [
     attemptId,
@@ -722,6 +1001,7 @@ function MembershipResultOfferPricing({
     overlay,
     pricingCatalog,
     reportFailure,
+    trackCheckoutLifecycle,
   ])
 
   const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval, pricingCatalog)
@@ -735,12 +1015,47 @@ function MembershipResultOfferPricing({
       interval={checkoutInterval}
       leadId={leadId}
       lockedProvider={express ? lockedProvider : null}
+      onClientMounted={(provider, option) => {
+        if (!attemptId) return
+        trackCheckoutLifecycle(attemptId, {
+          option,
+          provider,
+          transition: "client_mounted",
+        })
+      }}
       onChangePlan={() => close({ focusPlan: true })}
-      onFirstPaymentEngagement={() => setEngaged(true)}
+      onConfirmStarted={(provider, option) => {
+        if (!attemptId) return
+        trackCheckoutLifecycle(attemptId, {
+          option,
+          provider,
+          transition: "confirm_started",
+        })
+        if (provider === "paypal") {
+          trackCheckoutLifecycle(attemptId, {
+            option,
+            provider,
+            transition: "preparation_started",
+          })
+        }
+      }}
+      onFirstPaymentEngagement={() => {
+        if (attemptId) {
+          trackCheckoutLifecycle(attemptId, {
+            transition: "payment_engaged",
+          })
+        }
+        setEngaged(true)
+      }}
       onPayPalCheckoutFailed={(failure) => reportFailure(failure, "paypal")}
       onPayPalCheckoutStarted={(funnelEventId) => {
         if (!attemptId) return
         const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
+        trackCheckoutLifecycle(attemptId, {
+          option: "paypal",
+          provider: "paypal",
+          transition: "prepared_response_received",
+        })
         trackAppEvent("checkout_started", {
           ...(offerContext ?? {}),
           checkoutAttemptId: attemptId,
@@ -755,6 +1070,14 @@ function MembershipResultOfferPricing({
           planId: plan.analyticsId,
           pricingCatalog,
           value: plan.amount,
+        })
+      }}
+      onProviderReady={(provider, option) => {
+        if (!attemptId) return
+        trackCheckoutLifecycle(attemptId, {
+          option,
+          provider,
+          transition: "provider_ready",
         })
       }}
       onPaymentOptionViewed={(provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => {
@@ -815,7 +1138,7 @@ function MembershipResultOfferPricing({
       presentation={overlay ? "offer-overlay" : "default"}
       source="quiz_result_offer"
       stripe={stripe}
-      visible
+      visible={overlay ? checkoutVisible : true}
     />
   ) : null
 
@@ -849,7 +1172,7 @@ function MembershipResultOfferPricing({
           }
           planSelectionIndexRef.current += 1
           setSelectedInterval(interval)
-          close()
+          endCheckout({ endReason: "plan_changed" })
         }}
         pricingCatalog={pricingCatalog}
         referencePrices={referencePrices}
@@ -858,9 +1181,20 @@ function MembershipResultOfferPricing({
       {overlay ? (
         <OfferPaymentOverlay
           checkoutEngaged={engaged || !express}
-          onConfirmedAbort={() => close()}
-          onConfirmedPlanChange={() => close({ focusPlan: true })}
-          open={checkoutInterval !== null}
+          onConfirmedAbort={() =>
+            engaged || !express
+              ? endCheckout({
+                  dismissalReason: membershipLastDismissalReasonRef.current,
+                  endReason: "customer_aborted",
+                })
+              : close()
+          }
+          onConfirmedPlanChange={() => endCheckout({ endReason: "plan_changed", focusPlan: true })}
+          onDismissRequest={(reason) => {
+            membershipLastDismissalReasonRef.current = mapOverlayDismissalReason(reason)
+          }}
+          keepMounted={Boolean(checkoutInterval)}
+          open={checkoutVisible}
           planName={activePlan.name}
           priceLabel={`${activePlan.price.replace(/^€/, "")} €`}
           restoreFocusRef={returnFocusRef}

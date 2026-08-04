@@ -155,6 +155,37 @@ test("offer overlay no longer threads prepared-session synchronization into Stri
   )
 })
 
+test("payment-method checkout forwards lifecycle seams to truthful Stripe and PayPal callbacks", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /onClientMounted\?: OfferCheckoutProviderLifecycleCallback/)
+  assert.match(source, /onProviderReady\?: OfferCheckoutProviderLifecycleCallback/)
+  assert.match(source, /onConfirmStarted\?: OfferCheckoutProviderLifecycleCallback/)
+  assert.match(
+    source,
+    /<DynamicPayPalSubscriptionButton[\s\S]*?onClientMounted=\{\(\) => onClientMounted\?\.\("paypal", "paypal"\)\}[\s\S]*?onReady=\{\(\) => \{[\s\S]*?onProviderReady\?\.\("paypal", "paypal"\)/,
+  )
+  assert.match(
+    source,
+    /<StripeOfferElementsCheckout[\s\S]*?onClientMounted=\{onClientMounted\}[\s\S]*?onConfirmStarted=\{onConfirmStarted\}[\s\S]*?onProviderReady=\{onProviderReady\}/,
+  )
+  assert.match(paypalSubscriptionButtonSource, /onClientMounted\?: \(\) => void/)
+  assert.match(paypalSubscriptionButtonSource, /onConfirmStarted\?: \(\) => void/)
+  const paypalInit = paypalSubscriptionButtonSource.indexOf("onInit={() => {")
+  const paypalMounted = paypalSubscriptionButtonSource.indexOf("onClientMounted?.()", paypalInit)
+  const paypalReady = paypalSubscriptionButtonSource.indexOf("onReady?.()", paypalInit)
+  assert.ok(paypalInit > -1)
+  assert.ok(paypalMounted > paypalInit)
+  assert.ok(paypalReady > paypalMounted)
+  const confirmStarted = paypalSubscriptionButtonSource.indexOf("onConfirmStarted?.()")
+  const providerCall = paypalSubscriptionButtonSource.indexOf("createSubscriptionIntent({")
+  assert.ok(confirmStarted > -1)
+  assert.ok(providerCall > confirmStarted)
+})
+
 test("PayPal script rejection reports once without coupling the card fallback", () => {
   const reported = { current: false }
   const failures: unknown[] = []

@@ -113,6 +113,12 @@ test("membership orchestration is cold and creates a session only for an explici
   assert.match(source, /trackAppEvent\("checkout_start_failed"/)
   assert.match(source, /capturePaymentFailure\(\{/)
   assert.match(source, /attempts\.claimFailure\(/)
+  assert.match(source, /trackCheckoutLifecycle\(attemptId,[\s\S]*transition: "preparation_started"/)
+  assert.match(
+    source,
+    /trackCheckoutLifecycle\(attemptId,[\s\S]*transition: "prepared_response_received"/,
+  )
+  assert.match(source, /trackCheckoutLifecycle\(attemptId,[\s\S]*transition: "payment_engaged"/)
   assert.match(
     source,
     /const retryId = attempts\.retry\(\)[\s\S]*rotateStripeSessionAttemptOnRetryRef\.current[\s\S]*setCheckoutSessionAttemptId\(createFunnelEventId\(\)\)[\s\S]*setCheckoutInterval\(null\)[\s\S]*setCheckoutInterval\(selectedInterval\)/,
@@ -125,18 +131,48 @@ test("membership orchestration is cold and creates a session only for an explici
     source,
     /if \(!response\.ok\) \{[\s\S]*shouldRotateStripeSessionAttemptOnRetry\("provider_response"\)/,
   )
-  assert.match(source, /attempts\.close\(\)/)
+  assert.match(source, /attempts\.end\(\)/)
+  assert.match(source, /attempts\.hide\(\)/)
 })
 
-test("one-time drawer is mounted only after its explicit open", async () => {
+test("overlay checkout attempts hide without ending provider identity and resume without business reopen", async () => {
+  const source = await readFile(sourcePath, "utf8")
+  assert.match(source, /attempts\.hide\(\)/)
+  assert.match(source, /attempts\.resume\(\)/)
+  assert.match(source, /attempts\.end\(\)/)
+  assert.match(source, /const \[checkoutVisible, setCheckoutVisible\] = useState\(false\)/)
+  assert.match(source, /open=\{checkoutVisible\}/)
+  assert.match(source, /keepMounted=\{Boolean\(checkoutInterval\)\}/)
+  assert.match(source, /setCheckoutVisible\(false\)[\s\S]*setEngaged\(false\)/)
+  assert.doesNotMatch(
+    source,
+    /onConfirmedAbort=\{\(\) => close\(\)\}[\s\S]*open=\{checkoutInterval !== null\}/,
+  )
+  assert.match(
+    source,
+    /onConfirmedAbort=\{\(\) =>\s*engaged \|\| !express\s*\? endCheckout\(\{[\s\S]*endReason: "customer_aborted"[\s\S]*\}\)\s*: close\(\)/,
+  )
+})
+
+test("one-time drawer stays mounted across hidden same-plan resumes", async () => {
   const source = await readFile(sourcePath, "utf8")
   const oneTime = source.slice(
     source.indexOf("function PersonalPlanOneTimePricing"),
     source.indexOf("function MembershipResultOfferPricing"),
   )
-  assert.match(oneTime, /open \? \(/)
+  assert.match(oneTime, /attempts\.hide\(\)/)
+  assert.match(oneTime, /attempts\.resume\(\)/)
+  assert.match(oneTime, /attempts\.end\(\)/)
+  assert.match(oneTime, /keepMounted=\{Boolean\(attemptId\)\}/)
+  assert.match(oneTime, /attemptId \? \(/)
   assert.match(oneTime, /<PersonalPlanOneTimeCheckout/)
-  assert.doesNotMatch(oneTime, /keepMounted/)
+  assert.doesNotMatch(
+    oneTime,
+    /setAttemptId\(null\)[\s\S]*setOpen\(false\)[\s\S]*setEngaged\(false\)/,
+  )
+  assert.match(oneTime, /trackCheckoutLifecycle\([\s\S]*transition: "opened"/)
+  assert.match(oneTime, /trackCheckoutLifecycle\([\s\S]*transition: "resumed"/)
+  assert.match(oneTime, /trackCheckoutLifecycle\([\s\S]*transition: "dismissed"/)
   assert.doesNotMatch(oneTime, /checkoutWaiting|ResolvedOpen|oneTimePrewarm/i)
 })
 
