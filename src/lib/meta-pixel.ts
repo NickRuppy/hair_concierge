@@ -12,6 +12,7 @@ export type MetaEventProperties = Record<string, MetaEventValue>
 export type MetaStandardEvent =
   | "PageView"
   | "Lead"
+  | "CompleteRegistration"
   | "InitiateCheckout"
   | "Purchase"
   | "Subscribe"
@@ -336,6 +337,31 @@ export function trackMetaLeadCaptured(
       ...funnelPackageProperties(packageKey),
     },
     { eventID: eventID ?? undefined },
+  )
+}
+
+export function trackMetaWaitlistLeadCaptured(
+  eventID: string,
+  options: Pick<BrowserTargets, "win"> = {},
+) {
+  return trackMetaEvent(
+    "Lead",
+    {
+      content_name: "waitlist_signup",
+      marketing_consent: true,
+    },
+    { eventID, ...options },
+  )
+}
+
+export function trackMetaWaitlistSurveyCompleted(
+  eventID: string,
+  options: Pick<BrowserTargets, "win"> = {},
+) {
+  return trackMetaEvent(
+    "CompleteRegistration",
+    { content_name: "waitlist_survey_completion" },
+    { eventID, ...options },
   )
 }
 

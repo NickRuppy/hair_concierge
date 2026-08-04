@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
 
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { trackMetaWaitlistSurveyCompleted } from "@/lib/meta-pixel"
 import { WAITLIST_SURVEY_TOKEN_STORAGE_KEY } from "@/lib/waitlist/config"
 
 type TypeformEvent = { responseId: string }
@@ -28,6 +29,7 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
   const router = useRouter()
   const container = useRef<HTMLDivElement>(null)
   const mounted = useRef(false)
+  const metaCompletionTracked = useRef(false)
   const timeoutRef = useRef<number | null>(null)
   const [state, setState] = useState<"loading" | "ready" | "saving" | "save-error" | "error">(
     "loading",
@@ -74,6 +76,10 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
         inlineOnMobile: true,
         medium: "waitlist",
         onSubmit: ({ responseId }) => {
+          if (!metaCompletionTracked.current) {
+            metaCompletionTracked.current = true
+            trackMetaWaitlistSurveyCompleted(crypto.randomUUID())
+          }
           void complete(responseId)
         },
       })

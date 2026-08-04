@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useId, useState } from "react"
 
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { trackMetaWaitlistLeadCaptured } from "@/lib/meta-pixel"
 import { readWaitlistAttribution } from "@/lib/waitlist/attribution"
 import { WAITLIST_SURVEY_TOKEN_STORAGE_KEY } from "@/lib/waitlist/config"
 
@@ -39,6 +40,7 @@ export function WaitlistForm() {
     setErrors({})
     setSuggestionApplied(false)
     try {
+      const metaEventId = crypto.randomUUID()
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,6 +68,7 @@ export function WaitlistForm() {
       trackAppEvent("waitlist_signup_completed", {
         signupKind: body.duplicate ? "duplicate" : "new",
       })
+      if (body.duplicate === false) trackMetaWaitlistLeadCaptured(metaEventId)
       if (body.surveyAlreadyCompleted || !body.surveyToken) return router.push("/warteliste/danke")
       try {
         window.sessionStorage.setItem(WAITLIST_SURVEY_TOKEN_STORAGE_KEY, body.surveyToken)
