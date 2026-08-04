@@ -7,9 +7,10 @@
 ## Core workflow
 
 ```text
-worktree:new -> plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) -> ship-it -> merge -> worktree:finish
+[$wayfinder ->] worktree:new -> plan-hardening-loop -> implementation-loop (ready-check -> request-code-review) -> ship-it -> merge -> worktree:finish
 ```
 
+- `$wayfinder` is an explicit, optional pre-planning loop for a nameable destination whose dependent decisions still prevent a concrete implementation outcome or scope. It keeps a small Linear decision map, may invoke `prototype` for one named uncertainty, and hands the resolved direction to `plan-hardening-loop`. Skip it when ordinary grilling can make the work plan-shaped.
 - Start persistent planning in the task worktree. Keep the chosen plan and durable mockup or prototype evidence with the PR; archive or discard transient review artifacts explicitly.
 - `plan-hardening-loop` owns non-trivial planning, meaningful option comparison, user-facing evidence, counterpart plan review, revision, and a final designed-user-journey walkthrough. It invokes `prototype` only when a runnable UI or logic artifact is needed to settle a named decision that lighter mockups cannot answer. For user-facing work it stops only after Nick has reviewed the evidence and explicitly confirmed the journey.
 - `implementation-loop` owns execution of an approved plan or clearly bounded non-trivial change. It invokes `ready-check` and `request-code-review` before its review-ready handoff; do not rerun them as separate top-level phases on unchanged content.
@@ -31,6 +32,10 @@ worktree:new -> plan-hardening-loop -> implementation-loop (ready-check -> reque
 ### `bug`
 
 Use only when Nick explicitly invokes `$bug` with a screenshot, message, example response, log, or symptom. It owns sanitized intake, Linear canonicalization, evidence-led diagnosis, proportional research, and the five-decision brief. Invocation authorizes Linear maintenance plus read-only investigation, not containment or code/publication changes. After decisions, hand off to the existing core workflow.
+
+### `wayfinder`
+
+Use only when Nick explicitly invokes `$wayfinder` for work that is too open-ended to satisfy the `plan-hardening-loop` planning contract because multiple consequential decisions are unresolved or dependent. It maps decisions rather than implementation tasks, requires confirmation before creating or updating the Linear map, and exits as soon as the direction can be hardened into an implementation plan.
 
 ### Goal versus loop
 
