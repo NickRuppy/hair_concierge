@@ -43,6 +43,15 @@ test("checkout history owns one same-URL sentinel and ignores foreign quiz state
   assert.deepEqual(win.counts(), { pushes: 1, backs: 0 })
 })
 
+test("a new overlay guard pushes above stale checkout history state", () => {
+  const win = createWindow({ __chaarlieOfferCheckout: "open-v1" })
+  const guard = createOfferCheckoutHistoryGuard()
+
+  assert.equal(pushOfferCheckoutHistorySentinel(guard, win), true)
+  assert.equal(guard.ownsSentinel, true)
+  assert.deepEqual(win.counts(), { pushes: 1, backs: 0 })
+})
+
 test("Back dismissal consumes one guard, confirmation cancellation restores one, then explicit close consumes it", () => {
   const win = createWindow()
   const guard = createOfferCheckoutHistoryGuard()

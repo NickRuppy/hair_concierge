@@ -36,7 +36,7 @@ export function pushOfferCheckoutHistorySentinel(
   guard: OfferCheckoutHistoryGuard,
   win: CheckoutHistoryWindow = window,
 ): boolean {
-  if (guard.ownsSentinel || isOfferCheckoutHistoryState(win.history.state)) return false
+  if (guard.ownsSentinel) return false
   win.history.pushState(createOfferCheckoutHistoryState(), "", win.location.href)
   guard.ownsSentinel = true
   return true
