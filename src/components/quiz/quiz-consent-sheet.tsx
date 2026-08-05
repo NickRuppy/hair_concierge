@@ -1,8 +1,8 @@
 "use client"
 
-import { QuizCard } from "./quiz-card"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Icon } from "@/components/ui/icon"
+import { Loader2 } from "lucide-react"
 
 interface QuizConsentSheetProps {
   open: boolean
@@ -11,53 +11,63 @@ interface QuizConsentSheetProps {
 }
 
 export function QuizConsentSheet({ open, saving, onConsent }: QuizConsentSheetProps) {
+  const [pendingChoice, setPendingChoice] = useState<boolean | null>(null)
+
   if (!open) return null
 
+  const handleChoice = (accepted: boolean) => {
+    setPendingChoice(accepted)
+    onConsent(accepted)
+  }
+
   return (
-    <div className="animate-fade-in-up">
-      <QuizCard className="px-6 py-6">
-        {/* Envelope icon */}
-        <div
-          className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
-          style={{ background: "rgba(var(--brand-plum-rgb), 0.15)" }}
-        >
-          <Icon name="mail" size={24} className="text-[var(--brand-plum)]" />
-        </div>
-
-        <h3 className="font-header text-center text-xl text-foreground mb-2">
-          Dürfen wir dir Haarpflege-Tipps schicken?
-        </h3>
-
-        {/* Plum divider */}
-        <div className="mx-auto mb-3 h-0.5 w-10 rounded-full bg-[var(--brand-plum)]" />
-
-        <p className="text-center text-sm font-semibold text-foreground mb-1">
-          Experten-Tipps, Produkt-News und exklusive Angebote.
-        </p>
-        <p className="text-center text-xs text-[var(--text-caption)] mb-6 leading-relaxed">
-          Du kannst dich jederzeit abmelden über den Link in unseren E-Mails. Unsere{" "}
-          <a href="/datenschutz" target="_blank" className="underline hover:text-muted-foreground">
-            Datenschutzerklärung
-          </a>{" "}
-          findest du hier.
-        </p>
-
+    <section className="mx-auto w-full max-w-[40rem] animate-fade-in-up">
+      <h1 className="mt-6 text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] outline-none focus:outline-none sm:text-[2.4rem]">
+        Dürfen wir dir Haarpflege-Tipps schicken?
+      </h1>
+      <p className="mt-3 text-center leading-7 text-[var(--text-sub)]">
+        Deine Auswertung bekommst du in jedem Fall. Mit Ja erlaubst du zusätzliche Tipps,
+        Produkt-News und Angebote per E-Mail.
+      </p>
+      <div className="mt-7 grid gap-3">
         <Button
-          onClick={() => onConsent(true)}
+          onClick={() => handleChoice(true)}
           disabled={saving}
-          variant="unstyled"
-          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl mb-3"
+          className="h-12 text-base"
+          variant="cta"
         >
-          {saving ? "Wird gespeichert..." : "Ja, weiter zu meinem Plan"}
+          {saving && pendingChoice === true ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Wird gespeichert…
+            </>
+          ) : (
+            "Ja, weiter zu meiner Auswertung"
+          )}
         </Button>
-        <button
-          onClick={() => onConsent(false)}
+        <Button
+          onClick={() => handleChoice(false)}
           disabled={saving}
-          className="w-full text-center text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+          className="h-12 rounded-[14px] border-[var(--brand-plum-light)] bg-white text-base text-[var(--brand-plum-darkest)] hover:bg-[var(--brand-plum-ice)]"
+          variant="outline"
         >
-          Nein, nur meinen Plan schicken
-        </button>
-      </QuizCard>
-    </div>
+          {saving && pendingChoice === false ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Wird gespeichert…
+            </>
+          ) : (
+            "Nein, nur meine Auswertung schicken"
+          )}
+        </Button>
+      </div>
+      <p className="mt-5 text-center text-xs leading-5 text-[var(--text-sub)]">
+        Du kannst dich jederzeit über den Link in unseren E-Mails abmelden. Mehr dazu in unserer{" "}
+        <a className="underline hover:text-foreground" href="/datenschutz" target="_blank">
+          Datenschutzerklärung
+        </a>
+        .
+      </p>
+    </section>
   )
 }

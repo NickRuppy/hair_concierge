@@ -5,15 +5,12 @@ import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { ArrowLeft } from "lucide-react"
-import {
-  getQuizQuestionNumber,
-  getRemainingQuizQuestions,
-  QUIZ_TOTAL_QUESTIONS,
-} from "@/lib/quiz/questions"
+import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 type Phase = "type" | "gate" | "condition"
 
 import type { IconName } from "@/components/ui/icon"
+import { useQuizBrowserBack, useQuizBrowserHistoryEntry } from "./quiz-browser-history"
 
 const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] = [
   {
@@ -83,6 +80,7 @@ export function QuizScalpQuestion() {
   // Track whether sections should animate (false on re-entry, true on user-driven transitions)
   const [animateGate, setAnimateGate] = useState(false)
   const [animateCondition, setAnimateCondition] = useState(false)
+  const pushBrowserHistoryEntry = useQuizBrowserHistoryEntry()
 
   useEffect(() => {
     if (phase !== "gate" || !animateGate) return
@@ -103,12 +101,13 @@ export function QuizScalpQuestion() {
       setAnswer("scalp_condition", undefined)
       setAdvancing(true)
       setTimeout(() => {
+        pushBrowserHistoryEntry()
         setAnimateGate(true)
         setPhase("gate")
         setAdvancing(false)
       }, 300)
     },
-    [setAnswer, advancing],
+    [advancing, pushBrowserHistoryEntry, setAnswer],
   )
 
   const handleGateAnswer = useCallback(
@@ -127,11 +126,12 @@ export function QuizScalpQuestion() {
         setAnswer("scalp_condition", undefined)
         setAdvancing(true)
         setAnimateCondition(true)
+        pushBrowserHistoryEntry()
         setPhase("condition")
         setAdvancing(false)
       }
     },
-    [setAnswer, goNext, advancing],
+    [advancing, goNext, pushBrowserHistoryEntry, setAnswer],
   )
 
   const handleConditionSelect = useCallback(
@@ -168,17 +168,16 @@ export function QuizScalpQuestion() {
       goBack()
     }
   }, [phase, goBack, setAnswer])
+  const requestBack = useQuizBrowserBack(handleBack)
 
   const pastTypePhase = phase !== "type"
   const questionNumber = getQuizQuestionNumber(6) ?? 8
-  const remainingQuestions = getRemainingQuizQuestions(6) ?? 0
-
   return (
     <div className="flex flex-col" key="scalp-question">
       {/* Back button + progress */}
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={handleBack}
+          onClick={requestBack}
           aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -193,7 +192,7 @@ export function QuizScalpQuestion() {
       </div>
 
       {/* Title + instruction — always visible */}
-      <h2 className="font-header text-3xl leading-tight text-foreground mb-2">
+      <h2 className="mb-2 font-header text-3xl leading-tight text-foreground outline-none focus:outline-none">
         Wie schnell fetten deine Ansätze nach?
       </h2>
       <p className="text-sm text-muted-foreground leading-relaxed mb-5">
@@ -297,11 +296,6 @@ export function QuizScalpQuestion() {
           ))}
         </div>
       </div>
-
-      {/* Motivation text — always anchored at bottom */}
-      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">
-        Gut — noch {remainingQuestions} Fragen.
-      </p>
     </div>
   )
 }

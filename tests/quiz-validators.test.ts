@@ -115,12 +115,17 @@ test("quiz schema rejects natur combined with a chemical shape treatment", () =>
   )
 })
 
-test("quiz schema rejects free-text notes above 50 characters", () => {
+test("quiz schema accepts 120-character concern notes and rejects longer text", () => {
+  const accepted = quizAnswersSchema.safeParse({
+    ...createBaseAnswers(),
+    concerns_other_text: "x".repeat(120),
+  })
   const parsed = quizAnswersSchema.safeParse({
     ...createBaseAnswers(),
-    concerns_other_text: "x".repeat(51),
+    concerns_other_text: "x".repeat(121),
   })
 
+  assert.equal(accepted.success, true)
   assert.equal(parsed.success, false)
 })
 

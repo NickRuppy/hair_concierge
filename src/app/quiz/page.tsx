@@ -14,6 +14,10 @@ import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import {
+  getLegacyQuizScreenPosition,
+  seedLegacyQuizBrowserHistoryToDepth,
+} from "@/lib/quiz/browser-history"
 
 const STEP_NAMES: Record<number, string> = {
   2: "hair_texture",
@@ -35,8 +39,7 @@ const STEP_NAMES: Record<number, string> = {
 export default function QuizPage() {
   const step = useQuizStore((s) => s.step)
   const restoreDraft = useQuizStore((s) => s.restoreDraft)
-  const resetQuiz = useQuizStore((s) => s.reset)
-  const [draftStatus, setDraftStatus] = useState<"checking" | "prompt" | "ready">("checking")
+  const [draftStatus, setDraftStatus] = useState<"checking" | "ready">("checking")
   const quizStartedRef = useRef(false)
   const lastTrackedStepRef = useRef<number | null>(null)
 
@@ -48,11 +51,19 @@ export default function QuizPage() {
         return
       }
 
-      setDraftStatus(loadQuizDraft() ? "prompt" : "ready")
+      const draft = loadQuizDraft()
+      if (draft) {
+        const restoredPosition = getLegacyQuizScreenPosition(draft.step, "name")
+        // The store transition below adds the final entry. Seed the earlier
+        // screens first so browser/system Back maps to one quiz screen at a time.
+        seedLegacyQuizBrowserHistoryToDepth(Math.max(0, restoredPosition - 1))
+        restoreDraft()
+      }
+      setDraftStatus("ready")
     }, 0)
 
     return () => window.clearTimeout(timer)
-  }, [])
+  }, [restoreDraft])
 
   useEffect(() => {
     if (draftStatus !== "ready") return
@@ -77,46 +88,6 @@ export default function QuizPage() {
 
   if (draftStatus === "checking") {
     return null
-  }
-
-  if (draftStatus === "prompt") {
-    return (
-      <div className="flex min-h-[420px] flex-col justify-center">
-        <div className="animate-fade-in-up rounded-lg border border-border bg-card p-5 shadow-sm">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-[var(--brand-plum)]">
-            Angefangener Haar-Check
-          </p>
-          <h1 className="font-header text-3xl leading-tight text-foreground">
-            Du hast noch einen angefangenen Haar-Check.
-          </h1>
-          <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-            Möchtest du dort weitermachen, wo du aufgehört hast?
-          </p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <button
-              type="button"
-              className="quiz-btn-primary min-h-12 rounded-xl px-5 py-3 text-base font-bold"
-              onClick={() => {
-                restoreDraft()
-                setDraftStatus("ready")
-              }}
-            >
-              Weitermachen
-            </button>
-            <button
-              type="button"
-              className="min-h-12 rounded-xl border border-border px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-muted"
-              onClick={() => {
-                resetQuiz()
-                setDraftStatus("ready")
-              }}
-            >
-              Neu starten
-            </button>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   // Step 6: custom scalp progressive disclosure

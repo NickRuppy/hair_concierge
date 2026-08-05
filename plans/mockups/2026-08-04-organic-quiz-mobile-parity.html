@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Organic Quiz · Mobile-Parität</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #301648;
+        --plum: #7350a8;
+        --plum-light: #ded1ec;
+        --ice: #f5f0fa;
+        --muted: #756f76;
+        --coral: #c96d73;
+        --paper: #fffdfa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #eee9e5;
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+      header.page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 34px 24px 20px;
+      }
+      h1,
+      h2 {
+        font-family: Georgia, serif;
+        font-weight: 500;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(30px, 4vw, 48px);
+      }
+      .lede {
+        max-width: 760px;
+        margin: 0;
+        color: #625a63;
+        line-height: 1.55;
+      }
+      .section {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .section-title {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      .section-copy {
+        margin: 0 0 18px;
+        color: #625a63;
+        line-height: 1.5;
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 26px;
+      }
+      .case {
+        min-width: 0;
+      }
+      .case-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .pill {
+        border-radius: 999px;
+        padding: 7px 10px;
+        background: #fff;
+      }
+      .pill.before {
+        color: #8a5258;
+      }
+      .pill.target {
+        color: #3f714e;
+      }
+      .phone {
+        position: relative;
+        width: min(100%, 390px);
+        height: 844px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 8px solid #2d292e;
+        border-radius: 34px;
+        background: var(--paper);
+        box-shadow: 0 28px 60px -36px rgba(48, 22, 72, 0.6);
+      }
+      .phone.short {
+        width: min(100%, 375px);
+        height: 667px;
+      }
+      .screen {
+        height: 100%;
+        overflow: hidden;
+        padding: 24px 14px 28px;
+      }
+      .screen.target {
+        padding: 16px;
+      }
+      .info-strip {
+        position: relative;
+        display: grid;
+        grid-template-columns: 20px 1fr 20px;
+        gap: 8px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(222, 209, 236, 0.7);
+        border-radius: 10px;
+        background: var(--ice);
+        padding: 10px 12px;
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      .info-strip b {
+        font-weight: 750;
+      }
+      .info-icon,
+      .info-close {
+        color: var(--plum);
+        font-weight: 800;
+      }
+      .progress {
+        display: grid;
+        grid-template-columns: 42px 1fr 34px;
+        align-items: center;
+        gap: 10px;
+      }
+      .back {
+        font-size: 27px;
+        color: #7a747a;
+        text-align: center;
+      }
+      .track {
+        height: 4px;
+        border-radius: 999px;
+        background: #e6e1e5;
+        overflow: hidden;
+      }
+      .fill {
+        width: 10%;
+        height: 100%;
+        background: var(--plum);
+        border-radius: inherit;
+      }
+      .counter {
+        color: #817981;
+        font-size: 14px;
+      }
+      .question {
+        margin: 20px 0 8px;
+        font-size: 31px;
+        line-height: 1.08;
+      }
+      .target .question {
+        margin: 14px auto 8px;
+        max-width: 340px;
+        text-align: center;
+        font-size: 26px;
+        line-height: 1.08;
+      }
+      .instruction {
+        margin: 0 0 18px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+      .target .instruction {
+        max-width: 340px;
+        margin: 0 auto 14px;
+        text-align: center;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .visual-card {
+        overflow: hidden;
+        min-height: 246px;
+        border: 1px solid var(--plum-light);
+        border-radius: 16px;
+        background: #fff;
+      }
+      .visual-card img {
+        width: 100%;
+        height: 128px;
+        display: block;
+        object-fit: cover;
+        object-position: center 38%;
+      }
+      .visual-card .body {
+        position: relative;
+        padding: 13px 13px 15px;
+      }
+      .visual-card strong {
+        display: block;
+        padding-right: 24px;
+        font-size: 15px;
+      }
+      .visual-card small {
+        display: block;
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.38;
+      }
+      .radio {
+        position: absolute;
+        top: 13px;
+        right: 12px;
+        width: 22px;
+        height: 22px;
+        border: 1px solid var(--plum-light);
+        border-radius: 50%;
+      }
+      .target .visual-card {
+        min-height: 0;
+        height: 184px;
+      }
+      .target .visual-card img {
+        height: 140px;
+      }
+      .target .visual-card .body {
+        height: 44px;
+        display: flex;
+        align-items: center;
+        padding: 7px 11px;
+      }
+      .target .visual-card small {
+        display: none;
+      }
+      .target .radio {
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+      }
+      .fade {
+        position: absolute;
+        inset: auto 0 0;
+        height: 118px;
+        background: linear-gradient(transparent, var(--paper) 76%);
+        pointer-events: none;
+      }
+      .annotation {
+        position: absolute;
+        z-index: 3;
+        border: 1px solid rgba(48, 22, 72, 0.18);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 10px 30px -18px rgba(48, 22, 72, 0.7);
+        padding: 9px 11px;
+        color: #5d495e;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .annotation.warn {
+        left: 16px;
+        right: 16px;
+        bottom: 18px;
+        color: #894c54;
+      }
+      .annotation.good {
+        left: 16px;
+        right: 16px;
+        bottom: 18px;
+        color: #3f714e;
+      }
+      .list-screen {
+        padding: 22px 14px 24px;
+      }
+      .list-screen.target {
+        padding: 16px 14px 100px;
+      }
+      .list-screen .question {
+        font-size: 29px;
+      }
+      .list-screen.target .question {
+        font-size: 26px;
+      }
+      .options {
+        display: grid;
+        gap: 11px;
+      }
+      .option {
+        min-height: 82px;
+        display: grid;
+        grid-template-columns: 42px 1fr 24px;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--plum-light);
+        border-radius: 16px;
+        background: #fff;
+        padding: 12px;
+      }
+      .icon {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--ice);
+        color: var(--plum);
+        font-size: 19px;
+      }
+      .option strong {
+        font-size: 15px;
+      }
+      .option small {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .check {
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--plum-light);
+        border-radius: 7px;
+      }
+      .below-fold {
+        margin-top: 14px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        background: #e2b5b8;
+        color: white;
+        font-weight: 800;
+      }
+      .sticky-action {
+        position: absolute;
+        z-index: 5;
+        inset: auto 0 0;
+        padding: 12px 16px 18px;
+        border-top: 1px solid var(--plum-light);
+        background: rgba(255, 253, 250, 0.96);
+        box-shadow: 0 -18px 36px -30px rgba(48, 22, 72, 0.8);
+      }
+      .sticky-action button {
+        width: 100%;
+        height: 48px;
+        border: 0;
+        border-radius: 12px;
+        background: #ddb0b4;
+        color: white;
+        font: inherit;
+        font-weight: 800;
+      }
+      .fold-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 760px;
+        border-top: 2px dashed rgba(201, 109, 115, 0.6);
+      }
+      .fold-label {
+        position: absolute;
+        right: 10px;
+        top: 733px;
+        color: #9b5c63;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .phone.short .fold-line {
+        top: 583px;
+      }
+      .phone.short .fold-label {
+        top: 556px;
+      }
+      .decision {
+        max-width: 1180px;
+        margin: 10px auto 50px;
+        padding: 0 24px;
+      }
+      .decision-card {
+        border-radius: 20px;
+        background: #fff;
+        padding: 22px;
+        box-shadow: 0 20px 55px -42px rgba(48, 22, 72, 0.6);
+      }
+      .decision-card strong {
+        color: #3f714e;
+      }
+      .decision-card ul {
+        margin: 12px 0 0;
+        padding-left: 20px;
+        color: #625a63;
+        line-height: 1.6;
+      }
+      @media (max-width: 880px) {
+        .compare {
+          grid-template-columns: 1fr;
+        }
+        .phone {
+          height: 844px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page">
+      <h1>Mobile-Parität für den ruhigen Quiz-Flow</h1>
+      <p class="lede">
+        390 × 844 Referenz mit vollständigem Produktionstext und dem Hinweis des regulären Quiz.
+        Links: aktuelles Verhalten. Rechts: die bereits bewährten Mobile-Regeln des
+        Personal-Plan-Quiz, ohne neue Fragen, Copy oder Sales-Elemente.
+      </p>
+    </header>
+
+    <section class="section">
+      <h2 class="section-title">1 · Bildfrage: mehr Auswahl im ersten Viewport</h2>
+      <p class="section-copy">
+        Die aktuelle Bildkarte verbraucht auf Mobile Platz für Beschreibungen. Das Ziel übernimmt
+        die kompakte Bildkarte des neuen Quiz: Titel und Anleitung ruhiger zentriert,
+        Bildbeschreibungen bleiben für Screenreader und auf Desktop erhalten. Der vorhandene Hinweis
+        und die vollständige Anleitung bleiben sichtbar.
+      </p>
+      <div class="compare">
+        <div class="case">
+          <div class="case-label">
+            <span>Aktuell</span><span class="pill before">nur 2 Optionen vollständig sichtbar</span>
+          </div>
+          <div class="phone">
+            <div class="screen">
+              <div class="info-strip">
+                <span class="info-icon">ⓘ</span
+                ><span
+                  ><b>Lass uns deine Haare verstehen — Schritt für Schritt.</b> 10 schnelle Fragen
+                  zur Basis, dann gehts an deine Routine und Produkte.</span
+                ><span class="info-close">×</span>
+              </div>
+              <div class="progress">
+                <span class="back">←</span><span class="track"><span class="fill"></span></span
+                ><span class="counter">1/10</span>
+              </div>
+              <h2 class="question">Welche Haarstruktur haben die meisten deiner Haare?</h2>
+              <p class="instruction">
+                Wähle die natürliche Form deiner Haare, so gut du sie erkennen kannst. Wenn deine
+                Längen chemisch geglättet oder dauergewellt sind, hilft der unbehandelte Ansatz als
+                Orientierung.
+              </p>
+              <div class="grid">
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-straight.webp"
+                    alt=""
+                  />
+                  <div class="body">
+                    <strong>Glatt</strong><span class="radio"></span
+                    ><small>Die Strähne hängt glatt runter</small>
+                  </div>
+                </article>
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-wavy.webp"
+                    alt=""
+                  />
+                  <div class="body">
+                    <strong>Wellig</strong><span class="radio"></span
+                    ><small>Bildet eine S-Kurve, keine 3D-Windung</small>
+                  </div>
+                </article>
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-curly.webp"
+                    alt=""
+                  />
+                  <div class="body">
+                    <strong>Lockig</strong><span class="radio"></span
+                    ><small>Formt sich zu einer deutlichen 3D-Locke</small>
+                  </div>
+                </article>
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-coily.webp"
+                    alt=""
+                  />
+                  <div class="body">
+                    <strong>Kraus</strong><span class="radio"></span
+                    ><small>Enge Windungen, die sich in sich selbst drehen</small>
+                  </div>
+                </article>
+              </div>
+              <div class="fade"></div>
+              <div class="annotation warn">
+                Produktion: zweite Reihe endet bei ca. 962 px — deutlich unter dem 844-px-Viewport.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case">
+          <div class="case-label">
+            <span>Ziel</span><span class="pill target">alle 4 Optionen sichtbar</span>
+          </div>
+          <div class="phone">
+            <div class="screen target">
+              <div class="info-strip">
+                <span class="info-icon">ⓘ</span
+                ><span
+                  ><b>Lass uns deine Haare verstehen — Schritt für Schritt.</b> 10 schnelle Fragen
+                  zur Basis, dann gehts an deine Routine und Produkte.</span
+                ><span class="info-close">×</span>
+              </div>
+              <div class="progress">
+                <span class="back">←</span><span class="track"><span class="fill"></span></span
+                ><span class="counter">1/10</span>
+              </div>
+              <h2 class="question">Welche Haarstruktur haben die meisten deiner Haare?</h2>
+              <p class="instruction">
+                Wähle die natürliche Form deiner Haare, so gut du sie erkennen kannst. Wenn deine
+                Längen chemisch geglättet oder dauergewellt sind, hilft der unbehandelte Ansatz als
+                Orientierung.
+              </p>
+              <div class="grid">
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-straight.webp"
+                    alt=""
+                  />
+                  <div class="body"><strong>Glatt</strong><span class="radio"></span></div>
+                </article>
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-wavy.webp"
+                    alt=""
+                  />
+                  <div class="body"><strong>Wellig</strong><span class="radio"></span></div>
+                </article>
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-curly.webp"
+                    alt=""
+                  />
+                  <div class="body"><strong>Lockig</strong><span class="radio"></span></div>
+                </article>
+                <article class="visual-card">
+                  <img
+                    src="https://chaarlie.de/images/funnels/personal-plan-quiz/texture-coily.webp"
+                    alt=""
+                  />
+                  <div class="body"><strong>Kraus</strong><span class="radio"></span></div>
+                </article>
+              </div>
+              <div class="annotation good">
+                Gleicher Hinweis, voller Text, gleiche Optionen und Bilder; nur die Mobile-Dichte
+                folgt dem neuen Quiz.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">2 · Mehrfachauswahl: Aktion bleibt erreichbar</h2>
+      <p class="section-copy">
+        375 × 667 Stressfall. Im aktuellen Flow liegt „Weiter“ nach den Optionen im Dokument. Das
+        Ziel nutzt dieselbe portalisierte, Safe-Area-feste Aktion wie der neue Quiz-Flow. Die
+        Motivation und die „Nichts davon“-Alternative bleiben im scrollenden Inhalt; ein
+        abschließender Abstand hält auch das letzte Element oberhalb des Buttons erreichbar.
+      </p>
+      <div class="compare">
+        <div class="case">
+          <div class="case-label">
+            <span>Aktuell</span><span class="pill before">Button unter dem Fold</span>
+          </div>
+          <div class="phone short">
+            <div class="screen list-screen">
+              <div class="progress">
+                <span class="back">←</span
+                ><span class="track"><span class="fill" style="width: 70%"></span></span
+                ><span class="counter">7/10</span>
+              </div>
+              <h2 class="question">Sind deine Haare chemisch behandelt?</h2>
+              <p class="instruction">Wähle alles aus, was aktuell zutrifft.</p>
+              <div class="options">
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span><strong>Naturhaar</strong><small>Keine Farbe, kein Blondieren</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Gefärbt / getönt</strong
+                    ><small>Farbveränderung, aber kein Aufhellen</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Blondiert / aufgehellt</strong
+                    ><small>Gebleacht, Strähnchen oder Balayage</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Dauerwelle</strong
+                    ><small>Chemisch dauerhaft gewellte Längen</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Chemisch geglättet</strong
+                    ><small>Relaxer oder dauerhafte Glättung</small></span
+                  ><span class="check"></span>
+                </div>
+              </div>
+              <div class="below-fold">Weiter</div>
+              <span class="fold-label">sichtbarer Bereich endet hier</span
+              ><span class="fold-line"></span>
+            </div>
+          </div>
+        </div>
+        <div class="case">
+          <div class="case-label">
+            <span>Ziel</span><span class="pill target">Sticky + Safe Area</span>
+          </div>
+          <div class="phone short">
+            <div class="screen list-screen target">
+              <div class="progress">
+                <span class="back">←</span
+                ><span class="track"><span class="fill" style="width: 70%"></span></span
+                ><span class="counter">7/10</span>
+              </div>
+              <h2 class="question">Sind deine Haare chemisch behandelt?</h2>
+              <p class="instruction">Wähle alles aus, was aktuell zutrifft.</p>
+              <div class="options">
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span><strong>Naturhaar</strong><small>Keine Farbe, kein Blondieren</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Gefärbt / getönt</strong
+                    ><small>Farbveränderung, aber kein Aufhellen</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Blondiert / aufgehellt</strong
+                    ><small>Gebleacht, Strähnchen oder Balayage</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Dauerwelle</strong
+                    ><small>Chemisch dauerhaft gewellte Längen</small></span
+                  ><span class="check"></span>
+                </div>
+                <div class="option">
+                  <span class="icon">⌁</span
+                  ><span
+                    ><strong>Chemisch geglättet</strong
+                    ><small>Relaxer oder dauerhafte Glättung</small></span
+                  ><span class="check"></span>
+                </div>
+              </div>
+              <div class="sticky-action"><button>Weiter</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="decision">
+      <div class="decision-card">
+        <strong>Empfohlene Grenze</strong>
+        <ul>
+          <li>
+            Sticky Action nur dort, wo der reguläre Flow bereits eine explizite
+            Mehrfachauswahl-Aktion hat: Behandlung, Haarprobleme, Ziele.
+          </li>
+          <li>
+            Der Behandlungsschritt mit Vorschaubildern behält seine erklärenden Texte; nur echte
+            2×2-Bildkarten werden kompakt.
+          </li>
+          <li>
+            Bei Haarproblemen bleibt „Nichts davon trifft gerade zu“ im scrollenden Inhalt, damit
+            die feste Button-Zone nicht in der Höhe springt.
+          </li>
+          <li>
+            Formular- und Consent-Schritte bleiben unverändert, weil auch das neue Quiz dort keine
+            gemeinsame Sticky-Action verwendet.
+          </li>
+          <li>
+            Kein neuer Stage-Header, keine neuen Fragen, keine Copy-, Tracking-, Scoring- oder
+            Offer-Änderungen.
+          </li>
+        </ul>
+      </div>
+    </section>
+  </body>
+</html>

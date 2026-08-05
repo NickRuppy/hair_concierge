@@ -46,6 +46,19 @@ const GOAL_ICONS: Record<string, IconName> = {
   growth: "goal-growth",
 }
 
+const CONCERN_ICONS: Record<string, IconName> = {
+  dry_lengths: "goal-moisture",
+  frizz_flyaways: "goal-frizz",
+  low_shine: "goal-shine",
+  hair_damage: "goal-repair",
+  breakage: "goal-strength",
+  split_ends: "goal-split-ends",
+  tangling: "goal-smoothness",
+  lost_shape: "goal-definition",
+  low_volume_or_weighed_down: "goal-volume",
+  hair_loss_or_thinning: "goal-growth",
+}
+
 export type LegacyQuizOptionVisual =
   | {
       kind: "image"
@@ -118,4 +131,8 @@ export function getLegacyQuizOptionVisual({
 
 export function getLegacyQuizGoalIcon(goal: string): IconName {
   return GOAL_ICONS[goal] ?? "goal-repair"
+}
+
+export function getLegacyQuizConcernIcon(concern: string): IconName {
+  return CONCERN_ICONS[concern] ?? "goal-repair"
 }

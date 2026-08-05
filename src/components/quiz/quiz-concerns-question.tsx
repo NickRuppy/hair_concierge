@@ -1,13 +1,18 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { ArrowLeft } from "lucide-react"
+import { useState, useCallback, useMemo, useRef, type FocusEvent } from "react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { getQuestionByStep, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { useQuizStore } from "@/lib/quiz/store"
 import { resolveVisibleDiagnosticConcerns } from "@/lib/quiz/diagnostic-input"
+import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
+import { useQuizBrowserBack } from "./quiz-browser-history"
+import { getConcernOptions } from "@/components/personal-plan-quiz/quiz-data"
+import type { HairTexture } from "@/lib/vocabulary"
+import { getLegacyQuizConcernIcon } from "./legacy-quiz-visuals"
 
 function toggleConcern(current: string[], value: string): string[] {
   if (value === "none") return []
@@ -17,25 +22,20 @@ function toggleConcern(current: string[], value: string): string[] {
 
 export function QuizConcernsQuestion() {
   const question = getQuestionByStep(8)
-  const { answers, setAnswer, goBack, goNext } = useQuizStore()
+  const { answers, setAnswer, goNext } = useQuizStore()
+  const requestBack = useQuizBrowserBack()
   const [localSelection, setLocalSelection] = useState<string[]>(
     resolveVisibleDiagnosticConcerns(answers.concerns ?? []),
   )
   const [otherText, setOtherText] = useState(answers.concerns_other_text ?? "")
   const [showOtherField, setShowOtherField] = useState(Boolean(answers.concerns_other_text?.trim()))
+  const otherTextRef = useRef<HTMLTextAreaElement>(null)
+  const hairTexture = (answers.structure as HairTexture | undefined) ?? null
+  const concerns = useMemo(() => getConcernOptions(hairTexture ?? undefined), [hairTexture])
 
   const handleToggle = useCallback((value: string) => {
     setLocalSelection((current) => toggleConcern(current, value))
   }, [])
-
-  const handleNone = useCallback(() => {
-    setLocalSelection([])
-    setAnswer("concerns", [])
-    setAnswer("concerns_other_text", otherText.trim() || undefined)
-    window.setTimeout(() => {
-      goNext()
-    }, 250)
-  }, [goNext, otherText, setAnswer])
 
   const handleContinue = useCallback(() => {
     setAnswer("concerns", localSelection)
@@ -43,20 +43,48 @@ export function QuizConcernsQuestion() {
     goNext()
   }, [goNext, localSelection, otherText, setAnswer])
 
+  const handleOtherFocus = useCallback((event: FocusEvent<HTMLTextAreaElement>) => {
+    if (!window.matchMedia("(max-width: 639px), (max-height: 700px)").matches) return
+    const target = event.currentTarget
+    const revealAboveFooter = (behavior: ScrollBehavior) => {
+      if (!target.isConnected || document.activeElement !== target) return
+      const footer = document.querySelector<HTMLElement>('[data-quiz-bottom-action="viewport"]')
+      if (!footer) return
+      const overlap =
+        target.getBoundingClientRect().bottom - footer.getBoundingClientRect().top + 16
+      if (overlap > 0) {
+        window.scrollBy({ top: overlap, behavior })
+      }
+    }
+    window.requestAnimationFrame(() => revealAboveFooter("auto"))
+    window.setTimeout(
+      () =>
+        revealAboveFooter(
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        ),
+      250,
+    )
+  }, [])
+
+  const handleShowOtherField = () => {
+    setShowOtherField(true)
+    window.requestAnimationFrame(() => otherTextRef.current?.focus())
+  }
+
   if (!question) return null
 
   const hasSelection = localSelection.length > 0
   const hasTypedNote = otherText.trim().length > 0
   const customOptionActive = showOtherField || hasTypedNote
   const canContinue = hasSelection || hasTypedNote
-  const instruction =
-    "Wähle alles aus, was wiederholt auf deine Längen und Spitzen zutrifft. Wir priorisieren es später automatisch."
+  const selectedCount = localSelection.length + (hasTypedNote ? 1 : 0)
+  const instruction = "Wähle alles aus, was immer wieder eine Rolle spielt."
 
   return (
     <div className="flex flex-col" key="quiz-concerns-question">
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={goBack}
+          onClick={requestBack}
           aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -70,26 +98,24 @@ export function QuizConcernsQuestion() {
         </span>
       </div>
 
-      <h2 className="font-header text-3xl leading-tight text-foreground mb-2">{question.title}</h2>
-      <p className="text-sm text-muted-foreground leading-relaxed">{instruction}</p>
-      <div className="mb-5 mt-3 flex items-center justify-between gap-3">
-        <span className="rounded-full border border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-semibold text-[var(--brand-plum)]">
-          Alles auswählen, was passt
-        </span>
-        <span className="text-xs text-[var(--text-caption)]">{localSelection.length} gewählt</span>
-      </div>
-
-      <div className="space-y-3 flex-1">
-        {question.options.map((option, index) => {
+      <h2 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-foreground outline-none focus:outline-none sm:text-[2.4rem]">
+        Was beschäftigt dich gerade?
+      </h2>
+      <p className="mx-auto mt-2 max-w-xl text-center text-[15px] leading-6 text-muted-foreground">
+        {instruction}
+      </p>
+      <div className="mt-5 flex-1 space-y-3">
+        {concerns.map((option, index) => {
           const active = localSelection.includes(option.value)
 
           return (
             <QuizOptionCard
               key={option.value}
-              icon={option.icon}
+              icon={getLegacyQuizConcernIcon(option.value)}
               label={option.label}
               description={option.description}
               active={active}
+              multi
               onClick={() => handleToggle(option.value)}
               animationDelay={index * 60}
             />
@@ -101,8 +127,9 @@ export function QuizConcernsQuestion() {
             label="Etwas anderes"
             description="Wenn dein Thema nicht in der Liste steht, beschreib es kurz selbst."
             active={customOptionActive}
-            onClick={() => setShowOtherField(true)}
-            animationDelay={question.options.length * 60}
+            multi
+            onClick={handleShowOtherField}
+            animationDelay={concerns.length * 60}
           />
           {showOtherField ? (
             <div className="mt-3 animate-fade-in-up rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.22)] bg-card/80 p-4">
@@ -113,10 +140,12 @@ export function QuizConcernsQuestion() {
                 Eigene Notiz
               </label>
               <textarea
+                ref={otherTextRef}
                 id="quiz-concerns-other-text"
                 value={otherText}
-                onChange={(event) => setOtherText(event.target.value.slice(0, 50))}
-                maxLength={50}
+                onChange={(event) => setOtherText(event.target.value.slice(0, 120))}
+                onFocus={handleOtherFocus}
+                maxLength={120}
                 rows={2}
                 placeholder="Zum Beispiel: stumpf nach dem Föhnen"
                 className="h-[78.75px] min-h-[78.75px] w-full overflow-y-auto rounded-xl border border-border bg-background px-[18px] py-[14px] text-base font-semibold leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -132,36 +161,28 @@ export function QuizConcernsQuestion() {
                 >
                   Notiz entfernen
                 </button>
-                <p className="text-xs text-[var(--text-caption)]">{otherText.length}/50</p>
+                <p className="text-xs text-[var(--text-caption)]">{otherText.length}/120</p>
               </div>
             </div>
           ) : null}
         </div>
       </div>
 
-      <div className="mt-4 space-y-3">
+      <QuizMobileBottomAction className="mt-4">
         <Button
           type="button"
           onClick={handleContinue}
           disabled={!canContinue}
-          variant="unstyled"
-          className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${canContinue ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+          className="h-12 w-full text-base"
+          variant="cta"
         >
-          Weiter
+          <span className="personal-plan-multi-count" key={selectedCount}>
+            {selectedCount > 0 ? `${selectedCount} ausgewählt · Weiter` : "Weiter"}
+          </span>
+          <ChevronRight className="ml-1 h-4 w-4" />
         </Button>
-
-        {!hasSelection && !hasTypedNote && !customOptionActive ? (
-          <button
-            type="button"
-            onClick={handleNone}
-            className="w-full text-center text-sm font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-          >
-            Nichts davon trifft gerade zu
-          </button>
-        ) : null}
-      </div>
-
-      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">{question.motivation}</p>
+      </QuizMobileBottomAction>
+      <QuizMobileBottomClearance />
     </div>
   )
 }

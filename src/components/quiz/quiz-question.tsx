@@ -6,12 +6,14 @@ import type { QuizQuestion as QuizQuestionType } from "@/lib/quiz/types"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import { toggleTreatmentSelection } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS } from "@/lib/help/info-tips"
 import { getLegacyQuizOptionLayout, getLegacyQuizOptionVisual } from "./legacy-quiz-visuals"
+import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
+import { useQuizBrowserBack } from "./quiz-browser-history"
 
 const AUTO_ADVANCE_MS = 260
 
@@ -30,7 +32,8 @@ interface QuizQuestionProps {
 }
 
 export function QuizQuestion({ question }: QuizQuestionProps) {
-  const { answers, setAnswer, goNext, goBack } = useQuizStore()
+  const { answers, setAnswer, goNext } = useQuizStore()
+  const requestBack = useQuizBrowserBack()
   const answerKey = ANSWER_KEY_MAP[question.step]
   const currentValue = answers[answerKey]
 
@@ -94,7 +97,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       {/* Back button + progress */}
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={goBack}
+          onClick={requestBack}
           aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -109,8 +112,10 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       </div>
 
       {/* Title */}
-      <div className="mb-2 flex items-baseline gap-2">
-        <h1 className="font-header text-3xl leading-tight text-foreground">{question.title}</h1>
+      <div className="mb-2 flex items-center justify-center gap-2">
+        <h1 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-foreground outline-none focus:outline-none sm:text-[2.4rem]">
+          {question.title}
+        </h1>
         {infoTip && (
           <InfoTip
             title={infoTip.title}
@@ -122,7 +127,9 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       </div>
 
       {/* Instruction */}
-      <p className="text-sm text-muted-foreground leading-relaxed mb-5">{question.instruction}</p>
+      <p className="mx-auto mb-5 max-w-xl text-center text-[15px] leading-6 text-muted-foreground">
+        {question.instruction}
+      </p>
 
       {/* Options */}
       <div
@@ -137,6 +144,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
             label={opt.label}
             description={opt.description}
             active={isSelected(opt.value)}
+            multi={question.selectionMode === "multi"}
             visual={getLegacyQuizOptionVisual({
               answers,
               index: i,
@@ -156,20 +164,24 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
 
       {/* Multi-select continue button */}
       {question.selectionMode === "multi" && (
-        <div className="mt-4">
+        <QuizMobileBottomAction className="mt-4">
           <Button
             onClick={handleMultiContinue}
             disabled={!multiHasSelection}
-            variant="unstyled"
-            className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${multiHasSelection ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+            className="h-12 w-full text-base"
+            variant="cta"
           >
-            Weiter
+            <span className="personal-plan-multi-count" key={localSelection.length}>
+              {localSelection.length > 0
+                ? `${localSelection.length} ausgewählt · Weiter`
+                : "Weiter"}
+            </span>
+            <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
-        </div>
+        </QuizMobileBottomAction>
       )}
 
-      {/* Motivation text */}
-      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">{question.motivation}</p>
+      {question.selectionMode === "multi" ? <QuizMobileBottomClearance /> : null}
     </div>
   )
 }
