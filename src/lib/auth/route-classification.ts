@@ -23,6 +23,7 @@ const PUBLIC_EXACT_ROUTES = [
   "/twitter-image",
   "/welcome",
   "/warteliste",
+  "/warteliste/b",
   "/warteliste/umfrage",
   "/warteliste/danke",
   "/widerruf",

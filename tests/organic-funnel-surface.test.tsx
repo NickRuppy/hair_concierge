@@ -47,6 +47,35 @@ test("organic refresh landing presents a calm free analysis with optional paid p
   assert.doesNotMatch(html, /Founder|Score|Countdown|Angebot läuft ab|nur heute/i)
 })
 
+test("quiz-gate landing keeps its approved copy and routes every quiz action to the modal", () => {
+  const landing = readFileSync(
+    new URL("../src/components/waitlist/quiz-gate-landing.tsx", import.meta.url),
+    "utf8",
+  )
+  const modal = readFileSync(
+    new URL("../src/components/waitlist/quiz-gate-modal.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(landing, /Quiz starten/)
+  assert.match(landing, /Kostenloses Quiz starten/)
+  assert.match(landing, /Zehn Fragen\. Kostenlos\. Bald wieder verfügbar\./)
+  assert.match(landing, /10 Fragen · Bald wieder verfügbar/)
+  assert.match(landing, /Persönliches Ergebnis/)
+  assert.match(
+    landing,
+    /Du erfährst, wo dein Haar heute steht und welche Pflegehebel relevant sind\./,
+  )
+  assert.match(landing, /Du erfährst, welche Pflegehebel für dich\s+relevant sind/)
+  assert.doesNotMatch(landing, /Danach siehst du/)
+  assert.match(modal, /Bald wieder offen/)
+  assert.equal((modal.match(/Sonntag, 9\. August/g) ?? []).length, 1)
+  assert.match(modal, /overlayClassName="bg-\[rgba\(42,24,69,0\.55\)\]"/)
+  assert.doesNotMatch(landing, /href="\/quiz"/)
+  assert.match(landing, /<SiteFooter onQuizAction=\{openFooterModal\} \/>/)
+  assert.match(landing, /<QuizGateModal open=\{modalOpen\} onOpenChange=\{updateModalOpen\} \/>/)
+})
+
 test("organic offer renders the approved calm hierarchy with exactly one supplied pricing slot", () => {
   const html = renderToStaticMarkup(<OrganicPlanV1OfferVariant {...offerProps} />)
   const sectionIds = Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1])

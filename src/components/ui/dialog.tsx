@@ -97,10 +97,20 @@ function DialogClose({
 interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   modalPriority?: number
+  overlayClassName?: string
 }
 
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ className, children, modalPriority = MODAL_LAYER_PRIORITIES.dialog, ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      modalPriority = MODAL_LAYER_PRIORITIES.dialog,
+      overlayClassName,
+      ...props
+    },
+    ref,
+  ) => {
     const { open, onOpenChange, titleId } = React.useContext(DialogContext)
     const [mounted, setMounted] = React.useState(false)
     const [isTopLayer, setIsTopLayer] = React.useState(false)
@@ -215,7 +225,11 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
       <div ref={setRootElement} className="fixed inset-0 z-[120] flex items-center justify-center">
         {/* Overlay */}
         <div
-          className="fixed inset-0 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out"
+          data-dialog-overlay
+          className={cn(
+            "fixed inset-0 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out",
+            overlayClassName,
+          )}
           onClick={() => {
             if (isTopLayer) onOpenChange(false)
           }}

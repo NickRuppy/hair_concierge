@@ -26,6 +26,7 @@ const production: RouteEnvironment = {
 test("waitlist routes are exact public entries and descendants remain protected", () => {
   for (const pathname of [
     "/warteliste",
+    "/warteliste/b",
     "/warteliste/umfrage",
     "/warteliste/danke",
     "/api/waitlist",
@@ -36,6 +37,7 @@ test("waitlist routes are exact public entries and descendants remain protected"
 
   for (const pathname of [
     "/warteliste/other",
+    "/warteliste/b/other",
     "/api/waitlist/other",
     "/api/waitlist/survey/other",
   ]) {
@@ -48,6 +50,12 @@ test("waitlist pages receive noindex headers", async () => {
   const rule = headers?.find((entry) => entry.source === "/warteliste/:path*")
 
   assert.deepEqual(rule?.headers, [{ key: "X-Robots-Tag", value: "noindex, nofollow" }])
+})
+
+test("quiz-gate entry declares a page-level noindex contract", () => {
+  const source = readFileSync("src/app/warteliste/b/page.tsx", "utf8")
+
+  assert.match(source, /robots: \{ index: false, follow: false \}/)
 })
 
 test("CSP adds only the exact Typeform script and frame origins", async () => {

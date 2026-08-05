@@ -354,6 +354,20 @@ export function trackMetaWaitlistLeadCaptured(
   )
 }
 
+export function trackMetaQuizGateLeadCaptured(
+  eventID: string,
+  options: Pick<BrowserTargets, "win"> = {},
+) {
+  return trackMetaEvent(
+    "Lead",
+    {
+      content_name: "quiz_gate",
+      marketing_consent: true,
+    },
+    { eventID, ...options },
+  )
+}
+
 export function trackMetaWaitlistSurveyCompleted(
   eventID: string,
   options: Pick<BrowserTargets, "win"> = {},
