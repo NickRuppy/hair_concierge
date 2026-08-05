@@ -80,6 +80,49 @@ test("quiz option card keeps trailing info outside the selectable card button", 
   assert.match(html, /\baria-pressed="false"/)
 })
 
+test("grid image cards use the compact mobile footer while keeping their description accessible", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard
+      label="Wellig"
+      description="Bildet eine S-Kurve, keine 3D-Windung"
+      active={false}
+      onClick={() => {}}
+      visual={{
+        kind: "image",
+        src: "/images/funnels/personal-plan-quiz/texture-wavy.webp",
+        alt: "Welliges Haar",
+      }}
+      visualLayout="grid"
+    />,
+  )
+
+  assert.match(html, /h-\[184px\]/)
+  assert.match(html, /h-\[140px\]/)
+  assert.match(html, /\[@media\(max-height:700px\)\]:h-\[152px\]/)
+  assert.match(html, /\bhidden sm:block\b/)
+  assert.match(html, /aria-describedby="[^"]+"/)
+})
+
+test("thumbnail image cards keep their explanatory description visible on mobile", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard
+      label="Fein"
+      description="Kaum spürbar – dünner als ein Nähfaden"
+      active={false}
+      onClick={() => {}}
+      visual={{
+        kind: "image",
+        src: "/images/funnels/personal-plan-quiz/thickness-fine.webp",
+        alt: "Feines Haar",
+      }}
+      visualLayout="thumbnail"
+    />,
+  )
+
+  assert.doesNotMatch(html, /\bhidden sm:block\b/)
+  assert.match(html, /Kaum spürbar – dünner als ein Nähfaden/)
+})
+
 test("single-select screen syncs prop changes and cancels delayed selection on back", async () => {
   const source = await readFile(
     "src/components/onboarding/screens/single-select-screen.tsx",

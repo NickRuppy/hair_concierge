@@ -34,7 +34,11 @@ export default defineConfig({
     },
     {
       name: "webkit-mobile-action",
-      testMatch: ["personal-plan-mobile-action.spec.ts", "offer-payment-overlay.spec.ts"],
+      testMatch: [
+        "personal-plan-mobile-action.spec.ts",
+        "legacy-quiz-mobile-action.spec.ts",
+        "offer-payment-overlay.spec.ts",
+      ],
       use: { ...devices["iPhone 13"], browserName: "webkit" },
     },
   ],

@@ -268,16 +268,16 @@
     background: var(--color-card);
     border: 1px solid var(--brand-plum-light);
     border-radius: 16px;
-    padding: 14px 16px;
+    padding: 16px;
     overflow: hidden;
-    box-shadow: 0 12px 34px -30px rgba(var(--brand-plum-rgb), 0.55);
+    box-shadow: 0 12px 34px -28px rgba(var(--brand-plum-rgb), 0.6);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .quiz-card:hover {
       border-color: var(--brand-plum);
       background: #fff;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
   }
 
@@ -285,7 +285,7 @@
     background: #fff;
     border-color: var(--brand-plum);
     box-shadow:
-      0 0 0 2px rgba(var(--brand-plum-rgb), 0.18),
+      0 0 0 2px rgba(var(--brand-plum-rgb), 0.2),
       0 16px 40px -30px rgba(var(--brand-plum-rgb), 0.72);
   }
 
@@ -876,6 +876,10 @@
 
 .personal-plan-option-card[aria-pressed="true"] .personal-plan-option-check {
   animation: personalPlanSelectionSettle 180ms ease-out both;
+}
+
+[data-personal-plan-transition-root] :is(h1, h2)[tabindex="-1"]:focus {
+  outline: none;
 }
 
 .personal-plan-multi-count {

@@ -349,7 +349,7 @@ test("quiz is indexable while pricing is noindex and nofollow", () => {
 test("the indexable quiz entry state exposes one primary question heading", () => {
   const source = readFileSync("src/components/quiz/quiz-question.tsx", "utf8")
 
-  assert.match(source, /<h1[^>]*>\{question\.title\}<\/h1>/)
+  assert.match(source, /<h1[^>]*>\s*\{question\.title\}\s*<\/h1>/)
 })
 
 test("private layouts share an explicit noindex and nofollow contract", () => {

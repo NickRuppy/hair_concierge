@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,6 +18,7 @@ import {
   parseEmailDeliverabilityRejection,
   suggestEmailCorrection,
 } from "@/lib/email-deliverability-shared"
+import { useQuizBrowserBack } from "./quiz-browser-history"
 
 function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
@@ -81,6 +82,19 @@ export function QuizLeadCapture() {
     }
   }
 
+  const handleBack = useCallback(() => {
+    if (leadCaptureSubStep === "consent") {
+      setLeadCaptureSubStep("email")
+    } else if (leadCaptureSubStep === "email") {
+      setError("")
+      setServerSuggestion(null)
+      setLeadCaptureSubStep("name")
+    } else if (leadCaptureSubStep === "name") {
+      goBack()
+    }
+  }, [goBack, leadCaptureSubStep, setLeadCaptureSubStep])
+  const requestBack = useQuizBrowserBack(handleBack)
+
   const handleConsent = async (accepted: boolean) => {
     if (saving) return
 
@@ -115,7 +129,7 @@ export function QuizLeadCapture() {
           }
           setServerSuggestion(suggestion)
           setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
-          setLeadCaptureSubStep("email")
+          requestBack()
           window.scrollTo(0, 0)
           return
         }
@@ -132,21 +146,9 @@ export function QuizLeadCapture() {
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
-      setLeadCaptureSubStep("email")
+      requestBack()
     } finally {
       setSaving(false)
-    }
-  }
-
-  const handleBack = () => {
-    if (leadCaptureSubStep === "consent") {
-      setLeadCaptureSubStep("email")
-    } else if (leadCaptureSubStep === "email") {
-      setError("")
-      setServerSuggestion(null)
-      setLeadCaptureSubStep("name")
-    } else if (leadCaptureSubStep === "name") {
-      goBack()
     }
   }
 
@@ -155,7 +157,7 @@ export function QuizLeadCapture() {
       {/* Progress bar */}
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={handleBack}
+          onClick={requestBack}
           aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -190,7 +192,9 @@ export function QuizLeadCapture() {
       {/* Sub-step content */}
       {leadCaptureSubStep === "name" && (
         <div className="animate-fade-in-up flex-1 flex flex-col">
-          <h2 className="font-header text-3xl text-foreground mb-6">Wie heißt du?</h2>
+          <h2 className="mb-6 font-header text-3xl text-foreground outline-none focus:outline-none">
+            Wie heißt du?
+          </h2>
           <Input
             value={lead.name}
             onChange={(e) => setLeadField("name", e.target.value)}
@@ -216,7 +220,9 @@ export function QuizLeadCapture() {
 
       {leadCaptureSubStep === "email" && (
         <div className="animate-fade-in-up flex-1 flex flex-col">
-          <h2 className="font-header text-3xl text-foreground mb-6">Deine E-Mail Adresse</h2>
+          <h2 className="mb-6 font-header text-3xl text-foreground outline-none focus:outline-none">
+            Deine E-Mail Adresse
+          </h2>
           <Input
             ref={emailInputRef}
             type="email"

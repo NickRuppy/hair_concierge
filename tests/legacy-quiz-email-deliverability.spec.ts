@@ -42,7 +42,6 @@ async function openEmailCapture(page: Page) {
     window.localStorage.setItem("chaarlie:quiz-draft:v1", JSON.stringify(draft))
   }, legacyQuizDraft)
   await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
-  await page.getByRole("button", { name: "Weitermachen" }).click()
   await expect(page.getByRole("heading", { name: "Wie heißt du?" })).toBeVisible()
   await page.getByPlaceholder("Dein Vorname").fill("Legacy Test")
   await page.getByRole("button", { name: "Weiter zum Ergebnis" }).click()
@@ -90,12 +89,16 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     ).toBeVisible()
     await page.getByRole("button", { name: "Weiter" }).click()
 
-    const consentNo = page.getByRole("button", { name: "Nein, nur meinen Plan schicken" })
+    const consentNo = page.getByRole("button", {
+      name: "Nein, nur meine Auswertung schicken",
+    })
     await consentNo.click()
     await firstRequestReceived
-    const savingButton = page.getByRole("button", { name: "Wird gespeichert..." })
+    const savingButton = page.getByRole("button", { name: "Wird gespeichert…" })
     await expect(savingButton).toBeDisabled()
-    await expect(consentNo).toBeDisabled()
+    await expect(
+      page.getByRole("button", { name: "Ja, weiter zu meiner Auswertung" }),
+    ).toBeDisabled()
     await expect(savingButton).toBeVisible()
     releaseFirstResponse()
 
@@ -115,7 +118,7 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     await expect(email).not.toHaveAttribute("aria-describedby", /.+/)
 
     await page.getByRole("button", { name: "Weiter" }).click()
-    await page.getByRole("button", { name: "Nein, nur meinen Plan schicken" }).click()
+    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
     await expect(page.getByText("Deine Angaben sind gespeichert", { exact: true })).toBeVisible()
     expect(submissionCount).toBe(2)
   })
@@ -133,7 +136,7 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     const email = page.getByPlaceholder("name@beispiel.de")
     await email.fill("legacy.test@gmail.vom")
     await page.getByRole("button", { name: "Weiter" }).click()
-    await page.getByRole("button", { name: "Nein, nur meinen Plan schicken" }).click()
+    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
     await expect(page.locator("#legacy-quiz-email-error")).toBeVisible()
 
     await email.fill("legacy.test@gmail.com")

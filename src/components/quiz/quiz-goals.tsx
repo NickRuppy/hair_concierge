@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useMemo } from "react"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizOptionCard } from "./quiz-option-card"
@@ -12,6 +12,9 @@ import { getGoalOptions } from "@/components/personal-plan-quiz/quiz-data"
 import type { HairTexture } from "@/lib/vocabulary"
 import { resolveVisibleDiagnosticGoals } from "@/lib/quiz/diagnostic-input"
 import { getLegacyQuizGoalIcon } from "./legacy-quiz-visuals"
+import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
+import { useQuizBrowserBack } from "./quiz-browser-history"
+import { TEXTURE_COPY } from "@/components/personal-plan-quiz/quiz-data"
 
 function toggleGoal(current: string[], goal: string): string[] {
   if (current.includes(goal)) {
@@ -24,7 +27,7 @@ export function QuizGoals() {
   const answers = useQuizStore((s) => s.answers)
   const setAnswer = useQuizStore((s) => s.setAnswer)
   const goNext = useQuizStore((s) => s.goNext)
-  const goBack = useQuizStore((s) => s.goBack)
+  const requestBack = useQuizBrowserBack()
 
   const selectedGoals = useMemo(
     () => resolveVisibleDiagnosticGoals((answers.goals as string[] | undefined) ?? []),
@@ -53,7 +56,7 @@ export function QuizGoals() {
     <div className="flex flex-col" key="quiz-goals">
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={goBack}
+          onClick={requestBack}
           aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -67,18 +70,13 @@ export function QuizGoals() {
         </span>
       </div>
 
-      <h2 className="font-header text-3xl leading-tight text-foreground mb-2">
-        Was sind deine Haarziele?
+      <h2 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-foreground outline-none focus:outline-none sm:text-[2.4rem]">
+        Was wünschst du dir für {TEXTURE_COPY[hairTexture ?? "wavy"].possessive}?
       </h2>
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Wähle alles aus, was sich für deinen Plan wichtig anfühlt. Wir priorisieren daraus die
-          Reihenfolge.
-        </p>
-        <span className="shrink-0 rounded-full border border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-semibold text-[var(--brand-plum)]">
-          {selectedGoals.length} gewählt
-        </span>
-      </div>
+      <p className="mx-auto mb-5 mt-2 max-w-xl text-center text-[15px] leading-6 text-muted-foreground">
+        Wähle alles aus, was sich für deinen Plan wichtig anfühlt. Wir priorisieren daraus die
+        Reihenfolge.
+      </p>
 
       <div className="flex flex-1 flex-col gap-3">
         {goals.map((goal, i) => {
@@ -90,6 +88,7 @@ export function QuizGoals() {
               icon={getLegacyQuizGoalIcon(goal.value)}
               label={goal.label}
               active={isSelected}
+              multi
               onClick={() => handleToggle(goal.value)}
               animationDelay={i * 40}
             />
@@ -97,21 +96,21 @@ export function QuizGoals() {
         })}
       </div>
 
-      <div className="mt-4">
+      <QuizMobileBottomAction className="mt-4">
         <Button
           type="button"
           onClick={handleContinue}
           disabled={!canContinue}
-          variant="unstyled"
-          className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${canContinue ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+          className="h-12 w-full text-base"
+          variant="cta"
         >
-          Weiter
+          <span className="personal-plan-multi-count" key={selectedGoals.length}>
+            {selectedGoals.length > 0 ? `${selectedGoals.length} ausgewählt · Weiter` : "Weiter"}
+          </span>
+          <ChevronRight className="ml-1 h-4 w-4" />
         </Button>
-      </div>
-
-      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">
-        Letzte Frage — dein Pflegeplan ist gleich da.
-      </p>
+      </QuizMobileBottomAction>
+      <QuizMobileBottomClearance />
     </div>
   )
 }

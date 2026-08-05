@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
-import { HairPortraitArtwork } from "@/components/quiz/hair-portrait"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { buildQuizResultPath } from "@/lib/quiz/result-navigation"
 import { useQuizStore } from "@/lib/quiz/store"
@@ -12,6 +11,7 @@ import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
 
 import { QuizAnalysis } from "./quiz-analysis"
+import { useQuizBrowserBack } from "./quiz-browser-history"
 
 interface PreparationAccessState {
   authLoading: boolean
@@ -112,7 +112,8 @@ export function QuizPreparation() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, loading: authLoading } = useAuth()
-  const { answers, lead, leadId, setLeadCaptureSubStep, setStep } = useQuizStore()
+  const { answers, lead, leadId, setLeadCaptureSubStep } = useQuizStore()
+  const requestBack = useQuizBrowserBack()
   const [checkedAccessKey, setCheckedAccessKey] = useState<string | null>(null)
   const quizCompletedLeadRef = useRef<string | null>(null)
   const resultArtifactLeadRef = useRef<string | null>(null)
@@ -208,7 +209,7 @@ export function QuizPreparation() {
           className="quiz-btn-primary mt-7 min-h-14 w-full max-w-sm rounded-xl px-5 py-3 text-base font-bold"
           onClick={() => {
             setLeadCaptureSubStep(getPreparationRecoverySubStep(lead.name))
-            setStep(9)
+            requestBack()
           }}
           type="button"
         >
@@ -224,7 +225,6 @@ export function QuizPreparation() {
       onReveal={() => {
         if (resultPath) router.push(resultPath)
       }}
-      portrait={<HairPortraitArtwork className="w-[170px]" rawAnswers={answers} />}
       ready={Boolean(resultPath && accessSettled)}
     />
   )

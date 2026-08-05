@@ -20,6 +20,7 @@ interface QuizOptionCardProps {
   label: string
   description?: string
   active: boolean
+  multi?: boolean
   disabled?: boolean
   onClick: () => void
   animationDelay?: number
@@ -28,9 +29,14 @@ interface QuizOptionCardProps {
   visualLayout?: LegacyQuizOptionLayout
 }
 
-function SelectionCheck() {
+function SelectionCheck({ multi = false }: { multi?: boolean }) {
   return (
-    <div className="personal-plan-option-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum)] text-primary-foreground">
+    <div
+      className={cn(
+        "personal-plan-option-check flex h-5 w-5 shrink-0 items-center justify-center bg-[var(--brand-plum)] text-primary-foreground",
+        multi ? "rounded-[6px]" : "rounded-full",
+      )}
+    >
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
         <path
           d="M2.5 6L5 8.5L9.5 4"
@@ -87,6 +93,7 @@ export function QuizOptionCard({
   label,
   description,
   active,
+  multi = false,
   disabled,
   onClick,
   animationDelay = 0,
@@ -99,6 +106,7 @@ export function QuizOptionCard({
 
   if (visual && visualLayout !== "row") {
     const isThumbnail = visualLayout === "thumbnail" && visual.kind === "image"
+    const isGrid = visualLayout === "grid"
 
     return (
       <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
@@ -111,7 +119,11 @@ export function QuizOptionCard({
           onClick={onClick}
           className={cn(
             "personal-plan-option-card group relative flex w-full overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] disabled:cursor-not-allowed disabled:opacity-50",
-            isThumbnail ? "items-stretch" : "h-full min-h-[184px] flex-col",
+            isThumbnail
+              ? "items-stretch"
+              : isGrid
+                ? "h-[184px] flex-col sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0"
+                : "h-full min-h-[184px] flex-col",
             active
               ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
               : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
@@ -122,7 +134,9 @@ export function QuizOptionCard({
               "relative shrink-0 overflow-hidden bg-[var(--brand-plum-ice)]",
               isThumbnail
                 ? "aspect-square w-[7.5rem] self-stretch"
-                : "h-32 w-full sm:h-36 [@media(max-height:700px)]:h-28",
+                : isGrid
+                  ? "h-[140px] w-full sm:h-36 [@media(max-height:700px)]:h-28"
+                  : "h-32 w-full sm:h-36 [@media(max-height:700px)]:h-28",
             )}
           >
             {visual.kind === "image" ? (
@@ -146,7 +160,11 @@ export function QuizOptionCard({
           <span
             className={cn(
               "flex min-w-0 flex-1 gap-3",
-              isThumbnail ? "items-center px-4 py-3" : "items-start p-4",
+              isThumbnail
+                ? "items-center px-4 py-3"
+                : isGrid
+                  ? "h-11 items-center px-3 py-1.5 sm:h-auto sm:items-start sm:p-4 [@media(max-height:700px)]:h-10 [@media(max-height:700px)]:px-2.5 [@media(max-height:700px)]:py-1"
+                  : "items-start p-4",
             )}
           >
             <span className="min-w-0 flex-1">
@@ -159,18 +177,24 @@ export function QuizOptionCard({
               {description ? (
                 <span
                   id={descriptionId}
-                  className="mt-1 block text-sm leading-5 text-[var(--text-sub)]"
+                  className={cn(
+                    "mt-1 block text-sm leading-5 text-[var(--text-sub)]",
+                    isGrid && "hidden sm:block",
+                  )}
                 >
                   {description}
                 </span>
               ) : null}
             </span>
             {active ? (
-              <SelectionCheck />
+              <SelectionCheck multi={multi} />
             ) : (
               <span
                 aria-hidden="true"
-                className="h-5 w-5 shrink-0 rounded-full border border-[var(--brand-plum-light)] bg-white"
+                className={cn(
+                  "h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white",
+                  multi ? "rounded-[6px]" : "rounded-full",
+                )}
               />
             )}
           </span>
@@ -184,8 +208,8 @@ export function QuizOptionCard({
       <div
         aria-disabled={disabled || undefined}
         className={cn(
-          "quiz-card transition-all duration-200",
-          active && "quiz-card-active scale-[1.015]",
+          "personal-plan-option-card quiz-card transition duration-200",
+          active && "quiz-card-active",
           !disabled && "cursor-pointer",
           disabled && "opacity-60",
         )}
@@ -208,29 +232,35 @@ export function QuizOptionCard({
           <div className="flex-1 min-w-0">
             <p
               id={labelId}
-              className="break-words hyphens-auto text-base font-semibold leading-snug text-foreground"
+              className="break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]"
             >
               {label}
             </p>
             {description && (
-              <p
-                id={descriptionId}
-                className="text-sm text-muted-foreground mt-0.5 leading-relaxed"
-              >
+              <p id={descriptionId} className="mt-1 text-sm leading-5 text-[var(--text-sub)]">
                 {description}
               </p>
             )}
           </div>
-          {(trailing || active) && (
-            <div className="pointer-events-auto flex min-w-[4.25rem] shrink-0 items-center justify-end gap-2">
-              {trailing}
-              {active ? (
-                <SelectionCheck />
-              ) : trailing ? (
-                <span className="h-5 w-5 shrink-0" aria-hidden="true" />
-              ) : null}
-            </div>
-          )}
+          <div
+            className={cn(
+              "pointer-events-auto flex shrink-0 items-center justify-end gap-2",
+              trailing && "min-w-[4.25rem]",
+            )}
+          >
+            {trailing}
+            {active ? (
+              <SelectionCheck multi={multi} />
+            ) : (
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white",
+                  multi ? "rounded-[6px]" : "rounded-full",
+                )}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

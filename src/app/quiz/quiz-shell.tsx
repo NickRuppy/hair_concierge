@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuizStore } from "@/lib/quiz/store"
-import { QuizBrandPanel } from "@/components/quiz/quiz-brand-panel"
+import { QuizBrowserHistoryProvider } from "@/components/quiz/quiz-browser-history"
 import { QuizInfoStrip } from "@/components/quiz/quiz-info-strip"
 import { QuizProgressTransitionProvider } from "@/components/quiz/quiz-progress-bar"
 import { AppRouteProviders } from "@/providers/route-providers"
@@ -163,54 +163,54 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
   if (step === 11) {
     return (
       <AppRouteProviders>
-        <div ref={resultScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
-          <div className="mx-auto max-w-[960px] px-5 py-8 md:px-10 md:py-12">{children}</div>
-        </div>
+        <QuizBrowserHistoryProvider>
+          <div ref={resultScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
+            <div className="mx-auto max-w-[960px] px-5 py-8 md:px-10 md:py-12">{children}</div>
+          </div>
+        </QuizBrowserHistoryProvider>
       </AppRouteProviders>
     )
   }
 
   return (
     <AppRouteProviders>
-      <div className="flex min-h-[100dvh] bg-background">
-        {/* Left panel — brand / contextual (hidden on mobile) */}
-        <div className="sticky top-0 hidden h-screen w-1/2 items-center justify-center overflow-hidden md:flex">
-          <QuizBrandPanel />
-        </div>
-
-        {/* Right panel — quiz content (full-width on mobile) */}
-        <div ref={standardScrollRef} className="w-full overflow-y-auto md:w-1/2">
-          <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
-            {step === 2 && !infoStripDismissed && (
-              <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
-            )}
-            <div className="relative grid w-full" data-personal-plan-transition-root>
-              <div
-                ref={activeLayerRef}
-                className={`col-start-1 row-start-1 w-full${outgoingLayer ? " personal-plan-screen-enter" : ""}`}
-                data-personal-plan-transition-direction={
-                  outgoingLayer ? transitionDirection : undefined
-                }
-                data-personal-plan-transition-layer="active"
-              >
-                <QuizProgressTransitionProvider transition={progressTransition}>
-                  {children}
-                </QuizProgressTransitionProvider>
-              </div>
-              {outgoingLayer ? (
+      <QuizBrowserHistoryProvider>
+        <div className="flex min-h-[100dvh] justify-center bg-background">
+          <div ref={standardScrollRef} className="w-full overflow-y-auto">
+            <div
+              className={`mx-auto w-full max-w-[40rem] ${step === 9 || step === 10 ? "px-5 py-8" : "px-4 py-5"} sm:px-6 sm:py-8 md:py-12`}
+            >
+              {step === 2 && !infoStripDismissed && (
+                <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
+              )}
+              <div className="relative grid w-full" data-personal-plan-transition-root>
                 <div
-                  aria-hidden="true"
-                  className="personal-plan-screen-exit pointer-events-none absolute inset-x-0 top-0 w-full select-none"
-                  data-personal-plan-transition-direction={outgoingLayer.direction}
-                  data-personal-plan-transition-layer="outgoing"
-                  dangerouslySetInnerHTML={{ __html: outgoingLayer.html }}
-                  inert
-                />
-              ) : null}
+                  ref={activeLayerRef}
+                  className={`col-start-1 row-start-1 w-full${outgoingLayer ? " personal-plan-screen-enter" : ""}`}
+                  data-personal-plan-transition-direction={
+                    outgoingLayer ? transitionDirection : undefined
+                  }
+                  data-personal-plan-transition-layer="active"
+                >
+                  <QuizProgressTransitionProvider transition={progressTransition}>
+                    {children}
+                  </QuizProgressTransitionProvider>
+                </div>
+                {outgoingLayer ? (
+                  <div
+                    aria-hidden="true"
+                    className="personal-plan-screen-exit pointer-events-none absolute inset-x-0 top-0 w-full select-none"
+                    data-personal-plan-transition-direction={outgoingLayer.direction}
+                    data-personal-plan-transition-layer="outgoing"
+                    dangerouslySetInnerHTML={{ __html: outgoingLayer.html }}
+                    inert
+                  />
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </QuizBrowserHistoryProvider>
     </AppRouteProviders>
   )
 }
