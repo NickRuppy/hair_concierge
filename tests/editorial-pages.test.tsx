@@ -104,11 +104,17 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.match(faqSource, /Chaarlie sicher bereitzustellen und zu verbessern/)
   assert.match(analysisSource, /Deine Angaben sind gespeichert/)
   assert.match(analysisSource, /wir stellen deine Haaranalyse zusammen\./)
-  assert.match(analysisSource, /Wir verbinden deine Angaben zu Haar, Zielen und Problemen\./)
   assert.match(
     analysisSource,
-    /QUIZ_ANALYSIS_STEPS\s*=\s*\[\s*"Deine wichtigsten Haar-Themen werden priorisiert",\s*"Passende Produkte und Routine-Schritte werden zusammengestellt",\s*"Deine persönliche Begleitung mit Chaarlie wird vorbereitet",\s*\]\s*as const/,
+    /Während wir rechnen, zeigen wir dir, wie dein Plan dich Schritt für Schritt unterstützen kann\./,
   )
+  assert.match(
+    analysisSource,
+    /QUIZ_ANALYSIS_STEPS\s*=\s*\[\s*"Dein Haarprofil wird ausgewertet",\s*"Deine wichtigsten Pflegehebel werden sortiert",\s*"Dein persönlicher Plan wird zusammengestellt",\s*\]\s*as const/,
+  )
+  assert.match(analysisSource, /label: "Heute"/)
+  assert.match(analysisSource, /label: "Nach 7 Tagen"/)
+  assert.match(analysisSource, /label: "Nach 4 Wochen"/)
   assert.match(analysisSource, /deine Haaranalyse ist bereit\./)
   assert.match(
     analysisSource,
