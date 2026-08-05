@@ -59,3 +59,25 @@ test("waitlist pages use the agreed final-step framing and preserve recovery", (
   assert.match(shell, /AGB/)
   assert.doesNotMatch(shell, /SiteFooter/)
 })
+
+test("quiz-gate signup tracks exactly one Lead only for a new token-bearing waitlist signup", () => {
+  const modal = read("src/components/waitlist/quiz-gate-modal.tsx")
+
+  assert.match(modal, /fetch\("\/api\/waitlist"/)
+  assert.match(modal, /attribution: readWaitlistAttribution\(\)/)
+  assert.match(modal, /const metaEventId = crypto\.randomUUID\(\)/)
+  assert.match(
+    modal,
+    /if \(body\.duplicate === false\) trackMetaQuizGateLeadCaptured\(metaEventId\)/,
+  )
+  assert.match(
+    modal,
+    /if \(body\.duplicate !== false \|\| body\.surveyAlreadyCompleted \|\| !body\.surveyToken\) \{\s*return router\.push\("\/warteliste\/danke"\)/,
+  )
+  assert.match(
+    modal,
+    /sessionStorage\.setItem\(WAITLIST_SURVEY_TOKEN_STORAGE_KEY, body\.surveyToken\)/,
+  )
+  assert.match(modal, /router\.push\("\/warteliste\/umfrage"\)/)
+  assert.doesNotMatch(modal, /trackMetaWaitlistLeadCaptured/)
+})

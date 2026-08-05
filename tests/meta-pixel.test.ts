@@ -9,6 +9,7 @@ import {
   trackMetaPageView,
   trackMetaOfferViewed,
   trackMetaPurchaseConfirmed,
+  trackMetaQuizGateLeadCaptured,
   trackMetaSubscriptionConfirmed,
   trackMetaWaitlistLeadCaptured,
   trackMetaWaitlistSurveyCompleted,
@@ -128,12 +129,13 @@ test("offer view uses its unique content name and caller-provided dedupe id", ()
   ])
 })
 
-test("waitlist conversions use distinct standard events and caller-provided ids", () => {
+test("waitlist and quiz-gate lead conversions preserve their distinct standard-event payloads", () => {
   const dom = createMetaDom()
   initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
   dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
 
   assert.equal(trackMetaWaitlistLeadCaptured("waitlist-lead-1", { win: dom.win }), true)
+  assert.equal(trackMetaQuizGateLeadCaptured("quiz-gate-lead-1", { win: dom.win }), true)
   assert.equal(trackMetaWaitlistSurveyCompleted("waitlist-survey-1", { win: dom.win }), true)
 
   assert.deepEqual(dom.calls, [
@@ -142,6 +144,12 @@ test("waitlist conversions use distinct standard events and caller-provided ids"
       "Lead",
       { content_name: "waitlist_signup", marketing_consent: true },
       { eventID: "waitlist-lead-1" },
+    ],
+    [
+      "track",
+      "Lead",
+      { content_name: "quiz_gate", marketing_consent: true },
+      { eventID: "quiz-gate-lead-1" },
     ],
     [
       "track",

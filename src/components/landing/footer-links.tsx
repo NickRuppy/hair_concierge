@@ -46,6 +46,25 @@ export function FooterLink({
   )
 }
 
+export function FooterButton({
+  label,
+  onClick,
+}: {
+  label: string
+  onClick: (trigger: HTMLButtonElement) => void
+}) {
+  return (
+    <button
+      type="button"
+      data-quiz-gate-trigger
+      className={`${footerLinkClass} text-left`}
+      onClick={(event) => onClick(event.currentTarget)}
+    >
+      {label}
+    </button>
+  )
+}
+
 export function FooterCookieSettingsButton({
   className = footerCookieButtonClass,
 }: {
