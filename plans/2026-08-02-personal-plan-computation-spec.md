@@ -9,7 +9,7 @@
 After the paid onboarding, the same saved inputs must deterministically produce:
 
 1. the product categories this person needs, may benefit from, or does not need;
-2. the exact owned product verdict and one exact recommended product per included category;
+2. the exact owned product verdict and one exact recommended product per uncovered included role, with one verified product reused when it genuinely covers several roles;
 3. the products currently active in the person's real plan versus products that remain on the shopping list;
 4. a small ordered library of personal day types with recommended frequencies and precise instructions;
 5. a seven-day plan band that uses those day types and lets the user log one exact day type for a date.
@@ -81,6 +81,33 @@ The current deterministic engine contains useful prior logic for these reusable 
 
 The personal-plan implementation recycles the useful rules into one `PlanNeedAssessment` computed once in `src/lib/personal-plan/needs.ts`. Category modules consume this assessment plus the complete `PlanProfile`; they do not call CareBalance, the legacy `InterventionPlan`, or Chat request context. The page only renders the saved decisions and never recomputes them.
 
+`PlanDamageAssessment` also exposes one deliberately narrow corroboration fact for category rules:
+
+```ts
+type MaterialStructuralDriver =
+  | 'chemical_treatment'
+  | 'brittle_snap_pattern'
+
+interface MaterialStructuralVulnerability {
+  present: boolean
+  drivers: MaterialStructuralDriver[]
+}
+```
+
+`chemical_treatment` is present for `colored`, `lightened`, `permed`, or `chemically_straightened`; `brittle_snap_pattern` is present for `elasticResponse = snaps`. The fact excludes surface roughness, breakage/split-end concerns, dry lengths, Heat, and mechanical stress. Those inputs remain available in their own assessment lanes, but cannot corroborate themselves by passing through the combined structural or repair score. Oil consumes this shared fact for its confirmed pre-wash rule; it does not create another damage score.
+
+### Shared thickness-suitability contract
+
+`products.suitable_thicknesses` remains the single cross-category authority and becomes nullable in every application type:
+
+- `null`: not verified -> `unknown` / `noch in Prüfung`;
+- non-empty array containing the user's thickness: verified pass;
+- non-empty array excluding the user's thickness: verified mismatch.
+
+An empty array is invalid for an active recommendable product and never acts as a wildcard. Before enforcing this contract, audit legacy empty arrays and convert each to `null` when unresolved or to a researched non-empty list. Product intake, admin editing, selectors, and TypeScript types must preserve `null` rather than coercing it to `[]`. Conditioner, Leave-in, Mask, and Oil consume this same three-outcome contract. Shampoo keeps its confirmed role/bucket-specific product eligibility where that authority is stricter.
+
+The user's own `PlanProfile.thickness` is different: paid onboarding validates it as mandatory before computation begins. Category modules do not guess it and do not implement unreachable missing-user-thickness branches.
+
 ### Confirmed plan-wide functional coverage
 
 Goals and current problems belong to the whole plan, not independently to one product category. Product categories expose the jobs they can perform; the portfolio computation coordinates those capabilities without making category modules call or recursively optimize one another.
@@ -110,6 +137,20 @@ Selection precedence is:
 5. deterministic tie-breakers such as current ownership, explicit user choice, budget, and availability.
 
 This is not a combinatorial product optimizer. Category modules stay independently testable, and `compute.ts` performs one ordered coverage pass over their outputs. The same product may cover several needs, and the plan must not add a second product merely to duplicate an already-satisfied function. Several products are appropriate only when they have distinct plan jobs or the user explicitly confirms a rotation.
+
+Do not impose a category-level occurrence cap. In the rare Oil case where pre-wash fibre support, damp smoothing, and dry finishing are each independently Basis, retain all three roles and occurrences. Reuse a multi-role product only when it is a complete fit for every assigned job; bottle minimization is not permission to erase a role.
+
+For non-coily damp Oil proposed as Basis from a direct frizz/smoothing job, apply one explicit portfolio arbitration rule:
+
+- if an already-Basis Leave-in target owns `smooth_anti_frizz` as a required primary function, finalize damp Oil as `optional` supporting coverage;
+- otherwise retain damp Oil as `basis` for the uncovered material frizz job;
+- coily plus frizz is the confirmed exception and retains both Basis layers in Leave-in-then-Oil order;
+- arbitrate target functions before exact owned-product reconciliation so Stage 1 does not change according to catalog availability or what the user happens to own;
+- Stage 2 must find an exact product that satisfies the assigned required functions or leave the role visibly unresolved. It never rewrites category need to accommodate a weaker owned product.
+
+Add portfolio fixtures for: non-coily frizz covered by a broader Basis Leave-in target; non-coily frizz not covered by another Basis target; the explicit coily layered exception; and an owned Leave-in that misses assigned smoothing coverage without causing Stage-1 re-arbitration.
+
+Also test job-to-product arbitration as a table: for each material job, compare the eligible category targets, select the strongest complete fit, and prefer fewer products only when both alternatives cover the job equally well. The test oracle is functional ownership plus strict fit—not what the user already owns and not the raw count of marketed benefits.
 
 The final primary/supporting ownership matrix is completed after Conditioner, Leave-in, Mask, Oil, and later Styling have each been specified. Until then, each category decision records only the functions that category can legitimately resolve or support; it must not invent behavior for an unfinished category.
 
@@ -162,6 +203,13 @@ If a required input is missing, the compiler returns a typed clarification requi
 
 ```ts
 type PlanNeedTier = "basis" | "optional" | "not_needed"
+type CategoryFitStatus = "ideal" | "supportive" | "mismatch" | "unknown"
+
+interface PlanEvidenceRef {
+  source: "concern" | "goal" | "profile" | "assessment"
+  key: string
+  sourceAnswerId: string | null
+}
 
 interface PlanCategoryDecision {
   category: InventoryCategory
@@ -179,7 +227,12 @@ interface PlanProductRole {
   needTier: Exclude<PlanNeedTier, "not_needed">
   targetProfile: unknown
   frequencyTarget: PlanFrequencyTarget | null
-  frequencyRule: "fixed" | "remaining_category_events" | "product_directed"
+  frequencyRule:
+    | "fixed"
+    | "remaining_category_events"
+    | "product_directed"
+    | "every_eligible_wash"
+    | "deferred_day_type"
   reasonCodes: string[]
   explanation: string
 }
@@ -218,7 +271,8 @@ interface PlanProductPlacement {
   usageId: string
   roleKeys: string[]
   plannedFrequency: PlanFrequencyTarget | null
-  position: "primary" | "secondary"
+  displayOrder: number
+  position: "primary" | "secondary" | null
 }
 
 type PlanDayTypeKey =
@@ -250,15 +304,19 @@ interface SevenDayProjection {
 }
 ```
 
+`PlanCategoryDecision.roles` contains only included `basis` or `optional` roles. A category may retain evaluated `not_needed` roles in its category-specific reasoning facts, but those evaluations never enter assignments or schedules. `every_eligible_wash` derives occurrences from the compiled wash events without pretending to be a separate numeric frequency; `deferred_day_type` keeps an accepted optional role unscheduled until its day-type placement policy is confirmed.
+
 `estimatedMinutes` is `null` when any blocking/wait duration is unknown. The UI then says “Dauer laut Produkt” instead of showing fabricated precision.
 
 ### Multiple products within one category
 
 - An included category contains one or more semantic product roles. Roles are not new catalog categories; they describe distinct jobs such as `everyday` or `dandruff_control`.
-- `primary` and `secondary` are product placements, not permanent role names. After role assignment and frequency allocation, the product used most frequently in the currently proposed plan becomes the category's `primary` product; remaining active products are `secondary`.
+- V1 permits several simultaneously recommended roles only where the category pass has explicitly confirmed materially different jobs: Shampoo, Leave-in, and Oil. Other current categories keep one role; functional benefits or format variants do not create additional roles or products.
+- Stage 1 renders every included role as a concise use-case pill inside the single category card. Stage 2 assigns exact products per role and may either reuse one verified multi-role product or show separate products. Stage 3 compiles each assignment according to its own occurrence and protocol.
+- `primary` and `secondary` are optional category-specific placements, not a universal product requirement. Categories use them only when frequency prominence is meaningful, such as the confirmed Shampoo allocation.
 - The same product may cover multiple roles; aggregate its planned use before deriving its placement.
-- Primary/secondary placement may change when the confirmed usage plan changes. That change appears in the proposed-plan delta and never silently rewrites the active plan.
-- Equal-frequency tie-breaker: retain the active plan's current primary. For a new plan with different semantic roles, the broader everyday/default role wins the tie; for equal products rotating within the same role, retain the product the user selected first. Any later change still requires proposed-plan confirmation.
+- When a category uses primary/secondary, a placement change appears in the proposed-plan delta and never silently rewrites the active plan. Its category authority owns the deterministic tie-breaker.
+- Oil never uses primary/secondary or numbered Oil labels. Its assigned products are ordered by earliest application role: pre-wash, damp leave-on, dry finish. Conditioner retains its confirmed interchangeable-product exception.
 - The engine evaluates every owned product in the category against every role and builds a deterministic fit matrix.
 - The same verified product may satisfy multiple roles. The UI and plan must not force a second purchase when one product demonstrably fulfils both jobs.
 - A role may contain multiple active owned products when the user intentionally rotates equally suitable products. Rotation is an explicit assignment, not inferred merely because two products exist.
@@ -291,7 +349,7 @@ Each personal-plan category module directly returns `needTier`, target product t
 | Deep-cleansing shampoo | `basis` for likely/strong reset need; `optional` for possible reset need; otherwise `not_needed`. | Reset assessment, vulnerability-aware cadence, target/fit/reranking. | Emit absent-category need; stop using a generic fixed “every 5-6 washes” instruction. |
 | Dry shampoo | Never a health/care requirement. `optional` only as an explicit between-wash bridge that suits the scalp context. | Conservative bridge logic, fit/reranking, cadence ceiling. | Separate convenience from care need in user-facing explanation. |
 | Peeling | `optional` only with a specific scalp-reset case and no irritation contraindication; otherwise `not_needed`. | Reset and irritation caution, target/fit/reranking. | Application mode/timing metadata; medical-adjacent copy boundary. |
-| Oil | `optional` and purpose-specific (finish or pre-wash), never a generic hydration requirement. | Purpose-specific target/selector and current usage cautions. | Define plan-owned, purpose-gated inclusion and cadence. |
+| Oil | Follow `docs/personal-plan/categories/oil/decision.md`: compute pre-wash fibre treatment, damp smoothing, and dry finish independently; each may be `basis`, `optional`, or `not_needed`. Oil is never a generic hydration requirement. | Legacy purpose/subtype data is migration input only; retain useful purpose clarification and safety boundaries. | Implement the confirmed role truth tables, canonical Oil product spec, role-relative fit, exact assignment, application, and fixtures; research/backfill live catalog facts. |
 
 ### Shampoo behavior — confirmed detailed category specification
 
@@ -453,6 +511,19 @@ An explicitly empty `scalpConcerns[]` is valid. Missing `scalpOiliness`, missing
 - Leave-in is always supporting for repair. Its `basis` status for materially chemically treated hair reflects ongoing leave-on care/protection, not primary repair ownership or a permanent-repair claim.
 - A combined care/heat Leave-in and a suitable care Leave-in plus separate Heat protectant are both valid portfolios. Prefer product minimization when it fits, but never force consolidation of an already-suitable two-product setup.
 
+### Confirmed Oil behavior
+
+- The exact authority is `docs/personal-plan/categories/oil/decision.md`; external evidence remains separate in its linked `evidence.md`.
+- Compute `pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, and `dry_finish` independently. Show one Stage-1 Oil card with every included use-case pill; roles do not imply bottle count.
+- Pre-wash may be `basis` only when an observed breakage or dry/rough problem is independently corroborated by non-natural chemical treatment or brittle snapping. The combined structural score cannot corroborate a concern that helped create that score. Dry finish may be `basis` for observed low shine or an uncomplicated shine goal. Damp Oil may be `basis` for uncomplicated frizz/smoothing where it replaces a separate Leave-in, or as an explicit second Basis layer after Leave-in for coily hair plus frizz. Coily texture alone creates no Oil role.
+- Basis Oil roles occur at every compatible wash: pre-wash before washing, damp smoothing after washing, and dry finish after the hair is dry. Optional wash-day allocation and shared Oil/Leave-in between-wash bridge care are intentionally defined by the later day-type specification, which is a hard gate before global Personal Plan activation rather than a post-launch follow-up.
+- Emit only Basis/Optional Oil roles into `PlanCategoryDecision.roles`. Retain all three evaluated roles separately for reasoning. Basis roles use `every_eligible_wash`; optional roles use `deferred_day_type` with no fabricated numeric target.
+- Prefer one verified product across roles when it fits each role; otherwise assign separate products. Present Oil assignments in chronological role order without primary/secondary labels; additional owned Oils remain evaluated but unassigned unless the user confirms a role swap.
+- Strict role support and `suitableThicknesses` are hard gates. Leave-on weight is role-specific: recommend an ideal weight for new purchases, but offer a fitting owned heavier product a minimal-dose trial before switching. Pre-wash ignores leave-on weight.
+- Pending products remain visible but cannot enter executable recipes. Supply one verified alternative for an uncovered Basis role. Purchase-link opening never changes the active assignment.
+- Scalp oiliness or a scalp concern never creates an Oil role and never suppresses an independently valid lengths/ends role. Keep placement away from the scalp; only a shared safety exclusion or confirmed adverse response suppresses the product assignment.
+- Oil owns immediate dry finishing and qualified pre-wash support. It replaces separate Leave-in only for the narrow uncomplicated non-coily damp-smoothing case; coily hair plus frizz deliberately keeps both Basis layers in Leave-in-then-Oil order. Oil never replaces Conditioner, Mask, Styling hold/definition, or verified Heat protection.
+
 ### Need-tier mapping
 
 - `basis`: Hair Concierge confidently recommends this category for this person. It may answer essential maintenance, a current condition, or a stated goal; those reasons do not create separate visual tiers.
@@ -502,7 +573,7 @@ The exact table/JSON split remains an implementation decision. It must support e
 - Safe category defaults can define relative order and application area.
 - Exact amount, wait time, rinse/leave-in behavior, replacement behavior, and product-specific incompatibilities follow verified product directions.
 - Product directions override category defaults. Olaplex No.3 and K18 are a concrete reason: both are marketed as repair treatments, but one is used before shampoo/conditioner while the other is used after shampoo, before conditioner, and left in for a defined time.
-- When a verified exact protocol is absent, do not invent minutes. The plan may use a conservative generic instruction and visibly say that exact timing follows the label.
+- When a verified exact protocol is absent, do not invent minutes. The plan may use a conservative generic instruction and visibly say that exact timing follows the label only when the confirmed category decision marks those missing fields non-critical. A category such as Oil may instead return `noch in Prüfung` when role support or critical application timing is unresolved.
 
 ### Minimal protocol model
 
@@ -520,7 +591,11 @@ type ApplicationStage =
 
 interface ProductApplicationProtocol {
   productId: string
+  roleKey: string
   stage: ApplicationStage
+  hairState: "dry_unwashed" | "wet" | "damp" | "dry"
+  placement: "scalp" | "roots" | "lengths_ends" | "all_exposed_hair"
+  amountGuidance: string | null
   phases: Array<{
     verb: string
     activeSeconds: number | null
@@ -535,7 +610,7 @@ interface ProductApplicationProtocol {
 }
 ```
 
-This is intentionally smaller than a universal routine DSL. Category defaults provide the normal sequence; product overrides only encode what must differ.
+This is intentionally smaller than a universal routine DSL. Category defaults provide the normal sequence where permitted; product-role rows encode verified differences and the critical facts required by stricter categories such as Oil.
 
 ### Conservative category defaults
 
@@ -546,7 +621,7 @@ This is intentionally smaller than a universal routine DSL. Category defaults pr
 - heat protectant: before the heat event, covering exposed hair;
 - deep-cleansing shampoo: replaces normal shampoo in that wash, followed by appropriate length conditioning;
 - dry shampoo: scalp/root bridge, product-directed wait, brush/comb out; never replaces washing with shampoo and water;
-- oil: use only for the selected purpose; dry finish and pre-wash oiling are different protocols;
+- oil: use only for the assigned verified role; pre-wash, damp leave-on smoothing, and dry finish are distinct protocols with the confirmed category fallbacks;
 - bondbuilder and peeling: no generic exact timeline without verified protocol metadata.
 
 Medical boundary: persistent/severe flaking, marked irritation, pain, sores, or hair loss does not produce a more aggressive cosmetic day type; it produces a professional-care caveat.
@@ -557,9 +632,9 @@ The compiler consumes only products confirmed in the user's hands (`owned_active
 
 ### Recipe construction
 
-1. Create the normal `wash` template from active shampoo plus applicable conditioner/leave-in/heat-protection/finish products.
+1. Create the normal `wash` template from active shampoo plus applicable basis pre-wash Oil, Conditioner, Leave-in, Heat-protection, damp Oil, Styling, and dry-finish products in verified order.
 2. Replace a normal wash occurrence with `clarifying_wash` when an active deep-cleansing product has a non-zero target cadence.
-3. Create one or more `intensive_care_wash` recipes for active mask, bondbuilder, or deliberately selected pre-wash oil protocols.
+3. Create one or more `intensive_care_wash` recipes for active Mask or Bondbuilder protocols. A Basis pre-wash Oil stays attached to every compatible wash rather than creating a separate intensive-care day.
 4. Pack intensive treatments into one recipe only when verified protocol metadata says their stages and exclusions are compatible.
 5. If two intensive treatments are incompatible, generate two variants with the same base key and different stable recipe ids/focus labels, for example `intensive_care_wash:bondbuilder` and `intensive_care_wash:mask`.
 6. Create `refresh` only when an active product has a valid dry-hair/root-refresh protocol and the user has a real between-wash use case.

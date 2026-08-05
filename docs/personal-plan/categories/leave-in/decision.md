@@ -7,7 +7,7 @@ last_reviewed_at: 2026-08-04
 current_runtime_revision_reviewed: 6e2a0c55
 evidence_file: docs/personal-plan/categories/leave-in/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/leave-in.ts
-test_surface: src/lib/personal-plan/categories/leave-in.test.ts
+test_surface: tests/personal-plan/categories/leave-in.test.ts
 ---
 
 # Personal Plan Leave-in decision
@@ -59,7 +59,7 @@ Consume canonical source answers directly for:
 
 Do not add a mandatory format-preference onboarding question. Format is a product comparison axis in Stage 2. Add a conditional clarification only when an existing answer cannot determine a material inclusion, safety, or application decision.
 
-Missing thickness cannot produce a confident exact recommendation. Missing elasticity follows the shared Conditioner clarification policy because care direction must not be diagnosed from weaker proxies. Missing product heat or replacement evidence produces a role-specific `unknown`, not optimistic fit.
+Shared `suitable_thicknesses = null` cannot produce a confident exact recommendation. A non-empty verified array containing the user's thickness passes; a non-empty array excluding it is a mismatch. Empty arrays are invalid for active recommendable products, and legacy empty arrays remain `unknown` until researched. Missing elasticity follows the shared Conditioner clarification policy because care direction must not be diagnosed from weaker proxies. Missing product heat or replacement evidence produces a role-specific `unknown`, not optimistic fit.
 
 ## Inclusion and category ownership
 
@@ -200,7 +200,14 @@ Use a strong one-product bias:
 - a Leave-in counts as Heat protection only from explicit verified product evidence. Heat-compatible directions, ingredients, format, or `styling_prep` alone do not qualify it;
 - respect verified temperature, activation, and dry/damp application limits.
 
-Stage 1 explains the care need and the separate portfolio-level Heat-protection requirement. Stage 2 first accepts any already-suitable combined or two-product setup, then recommends a combined product or a separate Heat protectant only when a role remains uncovered. The user confirms every proposed portfolio change.
+Stage 1 keeps one Leave-in category card and shows the applicable use-case pills:
+
+- `Pflege nach der Wäsche` for the post-wash care role;
+- `Hitzeschutz vor dem Styling` only when recurring Heat plus a legitimate Leave-in care need creates the separate portfolio-level Heat-protection requirement.
+
+Moisture, detangling, smoothing, definition, shine, and repair support remain product functions or target axes; they do not create separate Leave-in use cases or purchases. Conditioner replacement is a special mode of the post-wash role, not another simultaneous role. Between-wash refresh remains deferred.
+
+Stage 2 first accepts any already-suitable combined or two-product setup. It prefers one verified Leave-in that covers both included roles, but may assign a care Leave-in plus another Heat-protective Leave-in or a dedicated Heat protectant when necessary. Stage 2 recommends a new product only for an uncovered role. The user confirms every proposed portfolio change.
 
 ## Conditioner relationship
 
@@ -226,7 +233,7 @@ Frequency is compiled from occurrences rather than a separate weekly Leave-in gu
 - optional products enter executable recipes only after the user confirms them;
 - verified product-specific protocol overrides the category fallback.
 
-Meaningful between-wash use exists for some products, but no universal numeric cadence is justified. Do not schedule it until the deferred event is specified.
+Meaningful between-wash use exists for some Leave-ins and Oils and may act as shared bridge care between wash days. Do not exclude it or assign a universal numeric cadence. Define its category ownership, eligible products, triggers, and instructions together with the later non-wash day types.
 
 ## Multiple products
 

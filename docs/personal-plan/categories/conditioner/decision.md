@@ -6,7 +6,7 @@ decision_version: 1
 last_reviewed_at: 2026-08-03
 evidence_file: docs/personal-plan/categories/conditioner/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/conditioner.ts
-test_surface: src/lib/personal-plan/categories/conditioner.test.ts
+test_surface: tests/personal-plan/categories/conditioner.test.ts
 ---
 
 # Personal Plan Conditioner decision
@@ -244,9 +244,9 @@ Use a layered verdict rather than one undifferentiated binary match.
 
 ### Layer 1 — strict suitability
 
-- Verified `suitable_thicknesses` must contain the user's `thickness`.
+- Shared `suitable_thicknesses = null` means not verified and therefore `unknown`; a non-empty verified array must contain the user's `thickness`.
 - A verified exclusion is a hard mismatch even when the formula weight looks close.
-- Missing or empty thickness-suitability data is `unknown`, not an implicit match.
+- Empty arrays are invalid for active recommendable products. Legacy empty arrays remain `unknown` until researched and migrated; they are never an implicit match or a verified exclusion.
 - Strong exclusions, unresolved identity, pending review, and safety constraints are applied before formula fit.
 
 ### Layer 2 — core formula fit

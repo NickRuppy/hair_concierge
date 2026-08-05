@@ -6,7 +6,7 @@ decision_version: 1
 last_reviewed_at: 2026-08-03
 evidence_file: docs/personal-plan/categories/shampoo/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/shampoo.ts
-test_surface: src/lib/personal-plan/categories/shampoo.test.ts
+test_surface: tests/personal-plan/categories/shampoo.test.ts
 ---
 
 # Personal Plan Shampoo decision

@@ -6,7 +6,7 @@ decision_version: 1
 last_reviewed_at: 2026-08-05
 evidence_file: docs/personal-plan/categories/mask/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/mask.ts
-test_surface: src/lib/personal-plan/categories/mask.test.ts
+test_surface: tests/personal-plan/categories/mask.test.ts
 ---
 
 # Personal Plan Mask decision
@@ -210,9 +210,9 @@ Mask reuses the confirmed Conditioner fit thresholds. The category adds only the
 
 ### Layer 1 — strict suitability
 
-- `suitableThicknesses` must contain the user's thickness;
+- shared `suitableThicknesses = null` means not verified; a non-empty verified array must contain the user's thickness;
 - a verified thickness exclusion or safety conflict is `mismatch`;
-- missing or empty required suitability data is `unknown`;
+- missing suitability is `unknown`; empty arrays are invalid for active recommendable products, and legacy empty arrays remain `unknown` until researched and migrated;
 - pending or unresolved product identity remains `unknown` and cannot enter an executable recipe.
 
 ### Layer 2 — core formula fit
