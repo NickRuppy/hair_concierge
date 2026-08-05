@@ -76,6 +76,7 @@ const durableAnswersSchema = z
     ]),
     meaningfulMoment: z.enum(["everyday", "work", "social", "going_out", "special_occasions"]),
     blockersOtherText: z.string().trim().max(280).optional(),
+    currentConcernsOtherText: z.string().trim().max(50).optional(),
   })
   .strict()
   .superRefine((answers, context) => {
@@ -123,11 +124,13 @@ export function normalizePersonalPlanEmail(email: string) {
 export function canonicalizePersonalPlanAnswers(
   answers: PersonalPlanLeadRequest["answers"] | PersonalPlanPrepareRequest["answers"],
 ): PersonalPlanQuizSubmissionEnvelope {
+  const { currentConcernsOtherText, ...durableAnswers } = answers
+
   return {
     kind: PERSONAL_PLAN_QUIZ_KIND,
     version: PERSONAL_PLAN_QUIZ_VERSION,
     answers: {
-      ...answers,
+      ...durableAnswers,
       goals: [...answers.goals].sort(),
       currentConcerns: [...answers.currentConcerns].sort(),
       scalpConcerns: [...answers.scalpConcerns].sort() as NonNullable<
@@ -137,6 +140,9 @@ export function canonicalizePersonalPlanAnswers(
         PersonalPlanQuizAnswers["chemicalTreatments"]
       >,
       blockers: [...answers.blockers].sort() as NonNullable<PersonalPlanQuizAnswers["blockers"]>,
+      ...(currentConcernsOtherText?.trim()
+        ? { currentConcernsOtherText: currentConcernsOtherText.trim() }
+        : {}),
     },
   }
 }

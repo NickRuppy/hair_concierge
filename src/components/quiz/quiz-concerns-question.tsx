@@ -143,9 +143,9 @@ export function QuizConcernsQuestion() {
                 ref={otherTextRef}
                 id="quiz-concerns-other-text"
                 value={otherText}
-                onChange={(event) => setOtherText(event.target.value.slice(0, 120))}
+                onChange={(event) => setOtherText(event.target.value.slice(0, 50))}
                 onFocus={handleOtherFocus}
-                maxLength={120}
+                maxLength={50}
                 rows={2}
                 placeholder="Zum Beispiel: stumpf nach dem Föhnen"
                 className="h-[78.75px] min-h-[78.75px] w-full overflow-y-auto rounded-xl border border-border bg-background px-[18px] py-[14px] text-base font-semibold leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -161,7 +161,7 @@ export function QuizConcernsQuestion() {
                 >
                   Notiz entfernen
                 </button>
-                <p className="text-xs text-[var(--text-caption)]">{otherText.length}/120</p>
+                <p className="text-xs text-[var(--text-caption)]">{otherText.length}/50</p>
               </div>
             </div>
           ) : null}

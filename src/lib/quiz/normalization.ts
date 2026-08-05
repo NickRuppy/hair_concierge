@@ -88,7 +88,7 @@ function normalizeConcernOtherText(value: unknown): string | undefined {
   const trimmed = value.trim()
   if (trimmed.length === 0) return undefined
 
-  return trimmed
+  return trimmed.slice(0, 50)
 }
 
 function normalizeGoals(raw: unknown): QuizAnswers["goals"] {
@@ -272,6 +272,7 @@ export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
     frizz: "frizz",
     frizz_flyaways: "frizz",
     tangling: "tangling",
+    hair_loss_or_thinning: "hair_loss",
   }
   const hasFineOrLowDensity = answers.thickness === "fine" || answers.density === "low"
   const hasControlSignal =

@@ -57,6 +57,15 @@ test("profile update data maps expanded quiz treatment values to canonical profi
   )
 })
 
+test("profile update data projects combined hair-loss quiz concern to exactly hair_loss", () => {
+  assert.deepEqual(
+    linkToProfile.buildProfileDataFromQuizAnswers({
+      concerns: ["hair_loss_or_thinning"],
+    }).concerns,
+    ["hair_loss"],
+  )
+})
+
 test("personal-plan canonical diagnostics project every required onboarding field", () => {
   assert.deepEqual(
     linkToProfile.buildProfileDataFromPersonalPlanCanonicalProfile({

@@ -28,6 +28,7 @@ const LEGACY_CONCERN_TO_DIAGNOSTIC = {
   dry_lengths: "dry_lengths",
   frizz_flyaways: "frizz_flyaways",
   low_shine: "low_shine",
+  hair_loss_or_thinning: "hair_loss_or_thinning",
   lost_shape: "lost_shape",
   low_volume_or_weighed_down: "low_volume_or_weighed_down",
 } as const
@@ -188,7 +189,14 @@ function retainConcerns(answers: PersonalPlanQuizAnswers): NonNullable<QuizAnswe
   // The paid-plan legacy offer adapter remains intentionally capped for its
   // established routine contract. Raw Personal Plan answers and the shared
   // assessment above retain every selection.
-  return [...selected].slice(0, 3)
+  const retained = [...selected].slice(0, 3)
+  if (
+    hasConcern(answers.currentConcerns, "hair_loss_or_thinning") &&
+    !retained.includes("hair_loss_or_thinning")
+  ) {
+    retained.push("hair_loss_or_thinning")
+  }
+  return retained
 }
 
 function mappedGoalSet(answers: PersonalPlanQuizAnswers): Set<Goal> {

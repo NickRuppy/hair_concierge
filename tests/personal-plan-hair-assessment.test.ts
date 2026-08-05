@@ -2,8 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  HAIR_ASSESSMENT_DIMENSION_IDS,
   assessPersonalPlanHair,
   evidenceScoreToSegments,
+  resolvePrimaryPersonalPlanConcern,
   type HairAssessmentDimensionId,
 } from "../src/lib/personal-plan-quiz/hair-assessment"
 import { buildPersonalPlanAssessmentRows } from "../src/lib/personal-plan-quiz/assessment-copy"
@@ -45,13 +47,14 @@ function scores(answers: PersonalPlanQuizAnswers) {
   ) as Record<HairAssessmentDimensionId, number>
 }
 
-test("the nine dimensions use only the approved primary, observation and support weights", () => {
+test("the ten dimensions use only the approved primary, observation and support weights", () => {
   const result = scores(
     complete({
       currentConcerns: [
         "dry_lengths",
         "frizz_flyaways",
         "low_shine",
+        "hair_loss_or_thinning",
         "breakage",
         "split_ends",
         "tangling",
@@ -69,6 +72,7 @@ test("the nine dimensions use only the approved primary, observation and support
 
   assert.deepEqual(result, {
     scalp_balance: 2.5,
+    hair_loss_thinning: 2,
     moisture_softness: 3,
     surface_frizz: 3,
     shine: 2.5,
@@ -78,6 +82,14 @@ test("the nine dimensions use only the approved primary, observation and support
     shape_definition: 2.5,
     volume_lightness: 2,
   })
+})
+
+test("hair-loss dimension is pinned second for assessment tie-breaks", () => {
+  assert.deepEqual(HAIR_ASSESSMENT_DIMENSION_IDS.slice(0, 3), [
+    "scalp_balance",
+    "hair_loss_thinning",
+    "moisture_softness",
+  ])
 })
 
 test("support and goals cannot activate a dimension or worsen its visible band", () => {
@@ -167,6 +179,80 @@ test("generic damage honors its exact recurrence only as an ordering tie-break",
   assert.deepEqual(assessment.selectedDimensionIds.slice(0, 2), [
     "breakage_stability",
     "surface_frizz",
+  ])
+})
+
+test("primary concern resolver uses pre-recurrence assessment ranking", () => {
+  const selected = resolvePrimaryPersonalPlanConcern(
+    complete({
+      currentConcerns: ["dry_lengths", "tangling"],
+      concernRecurrence: { concernId: "tangling", frequency: "often" },
+      goals: [],
+    }),
+  )
+
+  assert.equal(selected, "dry_lengths")
+})
+
+test("primary concern resolver maps the combined hair-loss dimension back to its quiz concern", () => {
+  assert.equal(
+    resolvePrimaryPersonalPlanConcern(
+      complete({
+        currentConcerns: ["dry_lengths", "hair_loss_or_thinning"],
+        goals: [],
+      }),
+    ),
+    "hair_loss_or_thinning",
+  )
+})
+
+test("primary concern resolver keeps breakage and generic damage distinct", () => {
+  assert.equal(
+    resolvePrimaryPersonalPlanConcern(complete({ currentConcerns: ["hair_damage"], goals: [] })),
+    "hair_damage",
+  )
+  assert.equal(
+    resolvePrimaryPersonalPlanConcern(
+      complete({ currentConcerns: ["hair_damage", "breakage"], goals: [] }),
+    ),
+    "breakage",
+  )
+})
+
+test("primary concern resolver never lets observation-only dimensions win", () => {
+  assert.equal(
+    resolvePrimaryPersonalPlanConcern(
+      complete({
+        currentConcerns: [],
+        hairSurface: "rough",
+        elasticResponse: "snaps",
+        goals: ["frizz_surface"],
+      }),
+    ),
+    null,
+  )
+})
+
+test("hair-loss assessment row uses the reviewed cautious two-sentence copy", () => {
+  const answers = complete({
+    currentConcerns: ["hair_loss_or_thinning", "dry_lengths", "frizz_flyaways"],
+    goals: ["moisture"],
+  })
+  const rows = buildPersonalPlanAssessmentRows(assessPersonalPlanHair(answers), answers)
+  const row = rows.find((candidate) => candidate.id === "hair_loss_thinning")
+
+  assert.equal(row?.title, "Haarausfall & dünner werdendes Haar")
+  assert.equal(
+    row?.summary,
+    "Schonende Pflege schützt bei Haarausfall und dünner werdendem Haar vor zusätzlichem Haarbruch, Zug und Reibung. Medizinische Behandlungen können Haarausfall bremsen oder neues Wachstum unterstützen.",
+  )
+  assert.deepEqual(row?.explanationParts, [
+    { kind: "text", text: "Schonende Pflege schützt bei " },
+    { kind: "answer", text: "Haarausfall und dünner werdendem Haar" },
+    {
+      kind: "text",
+      text: " vor zusätzlichem Haarbruch, Zug und Reibung. Medizinische Behandlungen können Haarausfall bremsen oder neues Wachstum unterstützen.",
+    },
   ])
 })
 
@@ -393,6 +479,7 @@ test("all reviewed row families keep public copy within two sentences and 28 wor
     complete({ currentConcerns: ["tangling"], hairLength: "long", hairSurface: "rough" }),
     complete({ texture: "curly", currentConcerns: ["lost_shape", "frizz_flyaways"] }),
     complete({ texture: "coily", currentConcerns: ["low_volume_or_weighed_down"] }),
+    complete({ currentConcerns: ["hair_loss_or_thinning"] }),
   ]
 
   for (const answers of scenarios) {

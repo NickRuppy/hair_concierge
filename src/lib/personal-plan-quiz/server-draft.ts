@@ -99,6 +99,7 @@ const partialDurableAnswersSchema = z
       .enum(["everyday", "work", "social", "going_out", "special_occasions"])
       .optional(),
     blockersOtherText: z.string().trim().min(1).max(280).optional(),
+    currentConcernsOtherText: z.string().trim().min(1).max(50).optional(),
   })
   .strict()
   .superRefine((answers, context) => {

@@ -38,7 +38,7 @@ test("legacy concerns reuse the Personal Plan concern options while retaining fr
   assert.match(quizConcernsSource, /getConcernOptions\(hairTexture \?\? undefined\)/)
   assert.match(quizConcernsSource, /Was beschäftigt dich gerade\?/)
   assert.match(quizConcernsSource, /label="Etwas anderes"/)
-  assert.match(quizConcernsSource, /maxLength=\{120\}/)
+  assert.match(quizConcernsSource, /maxLength=\{50\}/)
   assert.doesNotMatch(quizConcernsSource, /question\.options\.map/)
   assert.doesNotMatch(quizConcernsSource, /Nichts davon/)
 })

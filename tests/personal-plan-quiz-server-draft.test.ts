@@ -71,6 +71,20 @@ test("server quiz drafts accept partial durable answers but reject unknown and e
     })?.draft.answers,
     { currentConcerns: [], scalpConcerns: [] },
   )
+  assert.deepEqual(
+    parsePersonalPlanQuizServerDraft({
+      ...minimalDraft,
+      answers: { currentConcerns: [], currentConcernsOtherText: "x".repeat(50) },
+    })?.draft.answers,
+    { currentConcerns: [], currentConcernsOtherText: "x".repeat(50) },
+  )
+  assert.equal(
+    parsePersonalPlanQuizServerDraft({
+      ...minimalDraft,
+      answers: { currentConcernsOtherText: "x".repeat(51) },
+    }),
+    null,
+  )
 })
 
 test("stored v3 drafts restart cleanly while retaining their server revision seam", () => {

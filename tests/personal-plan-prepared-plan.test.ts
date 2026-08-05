@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
 import { buildPersonalPlanPreparedArtifact } from "../src/lib/personal-plan-quiz/prepared-plan"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/link-to-profile"
 import {
   canonicalizePersonalPlanAnswers,
   hashPersonalPlanAnswers,
@@ -122,6 +123,33 @@ test("new damage concern is retained without merging it into Frizz", () => {
   assert.deepEqual(adapted.answers.concerns, ["hair_damage", "frizz"])
 })
 
+test("combined hair-loss concern appends profile compatibility without displacing routine concerns", () => {
+  const adapted = adaptPersonalPlanAnswersForOffer({
+    ...completeAnswers,
+    currentConcerns: ["breakage", "split_ends", "dry_lengths", "hair_loss_or_thinning"],
+  })
+
+  assert.deepEqual(adapted.answers.concerns, [
+    "breakage",
+    "split_ends",
+    "dryness",
+    "hair_loss_or_thinning",
+  ])
+
+  const artifact = buildPersonalPlanPreparedArtifact(
+    canonicalizePersonalPlanAnswers({
+      ...completeAnswers,
+      currentConcerns: ["breakage", "split_ends", "dry_lengths", "hair_loss_or_thinning"],
+    }),
+  )
+  const profile = buildProfileDataFromPersonalPlanCanonicalProfile(artifact.canonicalProfile)
+  const profileConcerns = profile.concerns as string[]
+  assert.equal(profileConcerns.filter((concern) => concern === "hair_loss").length, 1)
+  assert.equal(profileConcerns.includes("breakage"), true)
+  assert.equal(profileConcerns.includes("split_ends"), true)
+  assert.equal(profileConcerns.includes("dryness"), true)
+})
+
 test("prepared artifact contains three public dimensions but keeps products and routine locked", () => {
   const artifact = buildPersonalPlanPreparedArtifact(
     canonicalizePersonalPlanAnswers(completeAnswers),
@@ -129,7 +157,7 @@ test("prepared artifact contains three public dimensions but keeps products and 
 
   assert.equal(artifact.publicOfferModel.diagnosticRows.length, 3)
   assert.equal(artifact.diagnosticScores.modelVersion, "hair_assessment_v1")
-  assert.equal(artifact.diagnosticScores.dimensions.length, 9)
+  assert.equal(artifact.diagnosticScores.dimensions.length, 10)
   assert.equal(
     artifact.publicOfferModel.diagnosticRows.every((row) => row.potentialSegments === 3),
     true,
