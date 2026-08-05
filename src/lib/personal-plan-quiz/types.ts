@@ -50,6 +50,8 @@ export type PersonalPlanQuizAnswers = PersonalPlanDiagnosticInput & {
   meaningfulMoment?: "everyday" | "work" | "social" | "going_out" | "special_occasions"
   /** Optional free-text detail captured when "Etwas anderes" is chosen on the blockers screen. */
   blockersOtherText?: string
+  /** Optional, non-diagnostic detail captured alongside current concerns. */
+  currentConcernsOtherText?: string
 }
 
 export type PersonalPlanQuizEphemeralState = {

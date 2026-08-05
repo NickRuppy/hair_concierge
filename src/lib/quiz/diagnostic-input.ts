@@ -23,6 +23,7 @@ export const DIAGNOSTIC_CONCERNS = [
   "lost_shape",
   "low_volume_or_weighed_down",
   "hair_damage",
+  "hair_loss_or_thinning",
   "breakage",
   "split_ends",
   "tangling",

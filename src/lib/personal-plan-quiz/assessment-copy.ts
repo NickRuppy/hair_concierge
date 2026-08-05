@@ -24,6 +24,7 @@ export type PersonalPlanAssessmentRow = {
 
 const TITLES: Record<HairAssessmentDimensionId, string> = {
   scalp_balance: "Kopfhaut-Balance",
+  hair_loss_thinning: "Haarausfall & dünner werdendes Haar",
   moisture_softness: "Feuchtigkeit & Geschmeidigkeit",
   surface_frizz: "Oberfläche & Frizz",
   shine: "Glanz",
@@ -144,6 +145,16 @@ function explanationFor(
         oiliness?.startsWith("Fettige")
           ? " braucht gründliche Reinigung, aber nicht automatisch stärkere Entfettung."
           : " passt besser zu milder Reinigung als zu zusätzlicher Entfettung.",
+      ),
+    ]
+  }
+
+  if (dimension.id === "hair_loss_thinning") {
+    return [
+      text("Schonende Pflege schützt bei "),
+      answer("Haarausfall und dünner werdendem Haar"),
+      text(
+        " vor zusätzlichem Haarbruch, Zug und Reibung. Medizinische Behandlungen können Haarausfall bremsen oder neues Wachstum unterstützen.",
       ),
     ]
   }

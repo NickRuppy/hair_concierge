@@ -1,8 +1,9 @@
 import type { PersonalPlanQuizConcern, PersonalPlanQuizGoal } from "./types"
-import type { PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
+import type { DiagnosticConcern, PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
 
 export const HAIR_ASSESSMENT_DIMENSION_IDS = [
   "scalp_balance",
+  "hair_loss_thinning",
   "moisture_softness",
   "surface_frizz",
   "shine",
@@ -39,7 +40,7 @@ export type HairAssessment = {
   selectedDimensionIds: HairAssessmentDimensionId[]
 }
 
-const GOAL_BY_DIMENSION: Record<HairAssessmentDimensionId, PersonalPlanQuizGoal> = {
+const GOAL_BY_DIMENSION: Partial<Record<HairAssessmentDimensionId, PersonalPlanQuizGoal>> = {
   scalp_balance: "scalp_balance",
   moisture_softness: "moisture",
   surface_frizz: "frizz_surface",
@@ -52,6 +53,7 @@ const GOAL_BY_DIMENSION: Record<HairAssessmentDimensionId, PersonalPlanQuizGoal>
 }
 
 const CONCERN_BY_DIMENSION: Partial<Record<HairAssessmentDimensionId, PersonalPlanQuizConcern>> = {
+  hair_loss_thinning: "hair_loss_or_thinning",
   moisture_softness: "dry_lengths",
   surface_frizz: "frizz_flyaways",
   shine: "low_shine",
@@ -81,6 +83,7 @@ function dimension(
 ): HairAssessmentDimension {
   const active = evidence.some((item) => item.kind === "primary" || item.kind === "observation")
   const scored = active ? evidence : evidence.filter((item) => item.kind === "neutral")
+  const goal = GOAL_BY_DIMENSION[id]
   const explicitConcern =
     id === "breakage_stability"
       ? hasConcern(answers, "breakage") || hasConcern(answers, "hair_damage")
@@ -101,7 +104,7 @@ function dimension(
       3,
       scored.reduce((total, item) => total + item.weight, 0),
     ),
-    goalMatch: answers.goals?.includes(GOAL_BY_DIMENSION[id]) ?? false,
+    goalMatch: goal ? (answers.goals?.includes(goal) ?? false) : false,
     active,
     explicitConcern,
     positiveEligible,
@@ -136,6 +139,10 @@ function evaluateDimensions(answers: PersonalPlanDiagnosticInput): HairAssessmen
     })
   if (answers.scalpOiliness === "balanced" && !answers.scalpConcerns?.length)
     scalpSignals.push({ id: "scalp_balanced", kind: "neutral", weight: 0 })
+
+  const hairLoss: AssessmentEvidence[] = []
+  if (hasConcern(answers, "hair_loss_or_thinning"))
+    hairLoss.push({ id: "hair_loss_or_thinning", kind: "primary", weight: 2 })
 
   const moisture: AssessmentEvidence[] = []
   if (hasConcern(answers, "dry_lengths"))
@@ -207,6 +214,7 @@ function evaluateDimensions(answers: PersonalPlanDiagnosticInput): HairAssessmen
       scalpSignals,
       answers.scalpOiliness === "balanced" && !answers.scalpConcerns?.length,
     ),
+    dimension("hair_loss_thinning", answers, hairLoss),
     dimension("moisture_softness", answers, moisture),
     dimension(
       "surface_frizz",
@@ -237,8 +245,10 @@ function areDisplaySiblings(left: HairAssessmentDimensionId, right: HairAssessme
   )
 }
 
-export function assessPersonalPlanHair(answers: PersonalPlanDiagnosticInput): HairAssessment {
-  const dimensions = evaluateDimensions(answers)
+function rankActiveDimensions(
+  dimensions: HairAssessmentDimension[],
+  options: { includeRecurrence: boolean },
+) {
   const active = dimensions.filter((item) => item.active)
   active.sort((left, right) => {
     const priorityDifference =
@@ -246,16 +256,55 @@ export function assessPersonalPlanHair(answers: PersonalPlanDiagnosticInput): Ha
       Number(right.goalMatch) * 0.5 -
       (left.evidenceScore + Number(left.goalMatch) * 0.5)
     if (priorityDifference) return priorityDifference
-    const recurrenceDifference =
-      (right.recurrence ? RECURRENCE_RANK[right.recurrence] : 0) -
-      (left.recurrence ? RECURRENCE_RANK[left.recurrence] : 0)
-    if (recurrenceDifference) return recurrenceDifference
+    if (options.includeRecurrence) {
+      const recurrenceDifference =
+        (right.recurrence ? RECURRENCE_RANK[right.recurrence] : 0) -
+        (left.recurrence ? RECURRENCE_RANK[left.recurrence] : 0)
+      if (recurrenceDifference) return recurrenceDifference
+    }
     if (left.explicitConcern !== right.explicitConcern) return left.explicitConcern ? -1 : 1
     return (
       HAIR_ASSESSMENT_DIMENSION_IDS.indexOf(left.id) -
       HAIR_ASSESSMENT_DIMENSION_IDS.indexOf(right.id)
     )
   })
+  return active
+}
+
+function concernForDimension(
+  dimension: HairAssessmentDimension,
+  answers: PersonalPlanDiagnosticInput,
+): DiagnosticConcern | null {
+  if (!dimension.explicitConcern) return null
+  if (dimension.id === "hair_loss_thinning") {
+    return hasConcern(answers, "hair_loss_or_thinning") ? "hair_loss_or_thinning" : null
+  }
+  if (dimension.id === "breakage_stability") {
+    if (hasConcern(answers, "breakage")) return "breakage"
+    if (hasConcern(answers, "hair_damage")) return "hair_damage"
+    return null
+  }
+  const concern = CONCERN_BY_DIMENSION[dimension.id]
+  return concern && hasConcern(answers, concern) ? concern : null
+}
+
+export function resolvePrimaryPersonalPlanConcern(
+  answers: PersonalPlanDiagnosticInput,
+): DiagnosticConcern | null {
+  const preRecurrenceAnswers = { ...answers, concernRecurrence: undefined }
+  const ranked = rankActiveDimensions(evaluateDimensions(preRecurrenceAnswers), {
+    includeRecurrence: false,
+  })
+  for (const dimension of ranked) {
+    const concern = concernForDimension(dimension, preRecurrenceAnswers)
+    if (concern) return concern
+  }
+  return null
+}
+
+export function assessPersonalPlanHair(answers: PersonalPlanDiagnosticInput): HairAssessment {
+  const dimensions = evaluateDimensions(answers)
+  const active = rankActiveDimensions(dimensions, { includeRecurrence: true })
 
   const selected: HairAssessmentDimensionId[] = []
   const explicitSplitEnds = active.some(

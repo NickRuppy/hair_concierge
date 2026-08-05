@@ -145,6 +145,12 @@ export function getNextPersonalPlanQuizScreen(
   }
   if (screen === "admission_conflict") return "admission_practical_cost"
 
+  if (screen === "scalp_concerns" && !answers.currentConcerns?.length) {
+    return derivePersonalPlanConflictPrompt(answers)
+      ? "admission_conflict"
+      : "admission_practical_cost"
+  }
+
   const index = PRIMARY_SEQUENCE.indexOf(screen)
   return index === -1 ? null : (PRIMARY_SEQUENCE[index + 1] ?? null)
 }

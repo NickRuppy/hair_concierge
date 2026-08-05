@@ -8,6 +8,8 @@ import {
   toggleConcernSelection,
   toggleTreatmentSelection,
 } from "../src/lib/quiz/normalization"
+import { DIAGNOSTIC_CONCERNS } from "../src/lib/quiz/diagnostic-input"
+import { getConcernOptions } from "../src/components/personal-plan-quiz/quiz-data"
 
 test("natur stays exclusive in treatment selection", () => {
   assert.deepEqual(toggleTreatmentSelection([], "natur"), ["natur"])
@@ -130,8 +132,17 @@ test("blank free-text concern notes normalize to undefined", () => {
   assert.equal(normalized.concerns_other_text, undefined)
 })
 
+test("legacy free-text concern notes are clamped to the current 50-character limit", () => {
+  assert.equal(
+    normalizeStoredQuizAnswers({ concerns_other_text: `  ${"x".repeat(120)}  ` })
+      .concerns_other_text,
+    "x".repeat(50),
+  )
+})
+
 test("new quiz concerns preserve every unique shared selection", () => {
   let selected = toggleConcernSelection([], "hair_damage")
+  selected = toggleConcernSelection(selected, "hair_loss_or_thinning")
   selected = toggleConcernSelection(selected, "split_ends")
   selected = toggleConcernSelection(selected, "breakage")
   selected = toggleConcernSelection(selected, "dryness")
@@ -151,8 +162,25 @@ test("new quiz concerns preserve every unique shared selection", () => {
     "low_shine",
     "lost_shape",
     "low_volume_or_weighed_down",
+    "hair_loss_or_thinning",
   ])
   assert.deepEqual(toggleConcernSelection(selected, "none"), [])
+})
+
+test("shared hair-loss concern is added once after hair damage with reviewed copy", () => {
+  const concernIndex = DIAGNOSTIC_CONCERNS.indexOf("hair_loss_or_thinning")
+  assert.equal(concernIndex, DIAGNOSTIC_CONCERNS.indexOf("hair_damage") + 1)
+
+  const options = getConcernOptions("wavy")
+  const optionIndex = options.findIndex((option) => option.value === "hair_loss_or_thinning")
+  assert.equal(optionIndex, options.findIndex((option) => option.value === "hair_damage") + 1)
+  assert.deepEqual(options[optionIndex], {
+    value: "hair_loss_or_thinning",
+    label: "Haarausfall oder dünner werdendes Haar",
+    description: "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht.",
+    midSentenceLabel: "Haarausfall oder dünner werdendes Haar",
+    icon: "goal-growth",
+  })
 })
 
 test("canonicalization drops invalid natur conflicts", () => {
@@ -269,10 +297,10 @@ test("shared quiz values project once into the existing profile vocabulary", () 
     structure: "coily",
     thickness: "coarse",
     density: "high",
-    concerns: ["hair_damage", "frizz_flyaways", "low_shine", "tangling"],
+    concerns: ["hair_damage", "frizz_flyaways", "low_shine", "tangling", "hair_loss_or_thinning"],
     goals: ["manageability_styling", "volume_balance", "strength_ends"],
   })
 
-  assert.deepEqual(projected.concerns, ["hair_damage", "frizz", "tangling"])
+  assert.deepEqual(projected.concerns, ["hair_loss", "hair_damage", "frizz", "tangling"])
   assert.deepEqual(projected.goals, ["less_frizz", "less_volume", "anti_breakage"])
 })

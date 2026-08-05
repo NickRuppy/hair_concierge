@@ -62,7 +62,28 @@ test("five stable checkpoint sections cover every semantic phase", () => {
 
 test("scalp concerns use one optional multi-select screen without a medical warning branch", () => {
   assert.equal(getNextPersonalPlanQuizScreen("scalp_oiliness", {}), "scalp_concerns")
-  assert.equal(getNextPersonalPlanQuizScreen("scalp_concerns", {}), "admission_recurrence")
+  assert.equal(getNextPersonalPlanQuizScreen("scalp_concerns", {}), "admission_practical_cost")
+  assert.equal(
+    getNextPersonalPlanQuizScreen("scalp_concerns", { currentConcerns: ["dry_lengths"] }),
+    "admission_recurrence",
+  )
+  assert.equal(
+    getNextPersonalPlanQuizScreen("scalp_concerns", { thickness: "fine", goals: ["moisture"] }),
+    "admission_conflict",
+  )
+})
+
+test("browser draft trims malformed current concern notes without resetting v4 drafts", () => {
+  const storage = new MemoryStorage()
+  savePersonalPlanQuizDraft(
+    {
+      screen: "current_problems",
+      history: [],
+      answers: { currentConcerns: [], currentConcernsOtherText: `  ${"x".repeat(51)}  ` },
+    },
+    storage,
+  )
+  assert.equal(loadPersonalPlanQuizDraft(storage)?.answers.currentConcernsOtherText, "x".repeat(50))
 })
 
 test("conflicting-needs prompt is shown only for a supported trade-off", () => {

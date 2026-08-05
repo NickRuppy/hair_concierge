@@ -197,6 +197,30 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.doesNotMatch(quiz + data, /ABKLÄRUNG|hasPersonalPlanSafetySignal|safetySignals/)
 })
 
+test("personal-plan concern notes are standalone, bounded, and do not restore a hair-concern none card", () => {
+  const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
+  const currentProblems = quiz.slice(
+    quiz.indexOf('if (screen === "current_problems")'),
+    quiz.indexOf('if (screen === "analysis_bridge")'),
+  )
+  const scalpConcerns = quiz.slice(
+    quiz.indexOf('if (screen === "scalp_concerns")'),
+    quiz.indexOf('if (screen === "admission_recurrence")'),
+  )
+
+  assert.match(quiz, /resolvePrimaryPersonalPlanConcern/)
+  assert.match(quiz, /standaloneOtherText/)
+  assert.match(quiz, /continueValidity/)
+  assert.match(quiz, /maxLength: 50/)
+  assert.match(quiz, /next\.currentConcerns = existing\.currentConcerns \?\? \[\]/)
+  assert.match(quiz, /Notiz entfernen/)
+  assert.match(quiz, /<textarea/)
+  assert.doesNotMatch(currentProblems, /noneOption|onEmpty|Nichts davon/)
+  assert.match(scalpConcerns, /noneOption/)
+  assert.match(scalpConcerns, /onEmpty/)
+  assert.match(quiz, /otherTextMaxLength = 280/)
+})
+
 test("personal-plan length portraits always use the canonical shared asset resolver", () => {
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
 

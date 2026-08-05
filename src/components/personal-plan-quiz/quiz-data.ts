@@ -47,6 +47,7 @@ export type QuizIconKey =
   | "wallet"
   | "calendar-x"
   | "pen"
+  | "goal-growth"
 
 export type QuizOption = {
   value: string
@@ -348,6 +349,13 @@ const SHARED_CONCERNS: Array<QuizOption & { value: PersonalPlanQuizConcern }> = 
     label: "Mein Haar wirkt insgesamt strapaziert oder geschädigt",
     midSentenceLabel: "insgesamt strapaziertes Haar",
     icon: "shield",
+  },
+  {
+    value: "hair_loss_or_thinning",
+    label: "Haarausfall oder dünner werdendes Haar",
+    description: "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht.",
+    midSentenceLabel: "Haarausfall oder dünner werdendes Haar",
+    icon: "goal-growth",
   },
   {
     value: "breakage",

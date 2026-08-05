@@ -90,6 +90,54 @@ test("personal-plan persistence accepts split concerns and binds recurrence to a
   )
 })
 
+test("personal-plan persistence canonicalizes a 50-character concern note and rejects longer text", () => {
+  const note = "x".repeat(50)
+  const parsed = personalPlanPrepareRequestSchema.parse({
+    answers: { ...request.answers, currentConcernsOtherText: `  ${note}  ` },
+  })
+  assert.equal(
+    canonicalizePersonalPlanAnswers(parsed.answers).answers.currentConcernsOtherText,
+    note,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: { ...request.answers, currentConcernsOtherText: "x".repeat(51) },
+    }).success,
+    false,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: {
+        ...request.answers,
+        currentConcerns: [],
+        concernRecurrence: undefined,
+        currentConcernsOtherText: "Anderes Thema",
+      },
+    }).success,
+    true,
+  )
+  assert.equal(
+    personalPlanPrepareRequestSchema.safeParse({
+      answers: { ...request.answers, blockersOtherText: "x".repeat(280) },
+    }).success,
+    true,
+  )
+  const blank = personalPlanPrepareRequestSchema.parse({
+    answers: { ...request.answers, currentConcernsOtherText: "   " },
+  })
+  assert.equal(
+    canonicalizePersonalPlanAnswers(blank.answers).answers.currentConcernsOtherText,
+    undefined,
+  )
+  assert.equal(
+    Object.hasOwn(
+      canonicalizePersonalPlanAnswers(blank.answers).answers,
+      "currentConcernsOtherText",
+    ),
+    false,
+  )
+})
+
 test("personal-plan persistence rejects ephemeral commitments and duplicate scalp concerns", () => {
   assert.equal(
     personalPlanLeadRequestSchema.safeParse({

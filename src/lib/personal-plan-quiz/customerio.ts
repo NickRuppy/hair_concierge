@@ -96,6 +96,8 @@ const CONCERN_LABELS: Record<string, string> = {
   dry_lengths: "Trockene oder strohige Längen",
   frizz_flyaways: "Frizz oder viele abstehende Haare",
   low_shine: "Wenig Glanz",
+  hair_damage: "Mein Haar wirkt insgesamt strapaziert oder geschädigt",
+  hair_loss_or_thinning: "Haarausfall oder dünner werdendes Haar",
   lost_shape: "Form oder Definition hält nicht",
   low_volume_or_weighed_down: "Zu wenig Volumen oder schnell beschwert",
   breakage_or_split_ends: "Haarbruch oder Spliss",

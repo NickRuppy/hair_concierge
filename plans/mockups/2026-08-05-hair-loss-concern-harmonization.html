@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie – Haarausfall in beiden Quiz-Funnels</title>
+    <style>
+      :root {
+        --ink: #27232d;
+        --muted: #69636e;
+        --plum: #6c4a7e;
+        --plum-dark: #493255;
+        --plum-soft: #f4eef7;
+        --rose: #ef999f;
+        --rose-soft: #fff3f2;
+        --green: #e5f2e9;
+        --green-ink: #274b36;
+        --sand: #f8f5f1;
+        --white: #fff;
+        --line: #e8e1e8;
+        --shadow: 0 24px 70px rgba(54, 37, 64, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 8% 4%, rgba(239, 153, 159, 0.18), transparent 24rem),
+          radial-gradient(circle at 92% 12%, rgba(108, 74, 126, 0.14), transparent 28rem),
+          #f5f1ee;
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button, textarea { font: inherit; }
+      button { color: inherit; }
+
+      .review-shell {
+        width: min(1440px, calc(100% - 36px));
+        margin: 0 auto;
+        padding: 38px 0 72px;
+      }
+
+      .review-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.65fr);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 30px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1 {
+        max-width: 830px;
+        margin-bottom: 12px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(38px, 5vw, 68px);
+        font-weight: 500;
+        line-height: 0.98;
+        letter-spacing: -0.04em;
+      }
+
+      .review-intro {
+        max-width: 780px;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      .decision {
+        padding: 18px 20px;
+        border: 1px solid rgba(108, 74, 126, 0.2);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 16px 44px rgba(54, 37, 64, 0.07);
+      }
+
+      .decision strong { display: block; margin-bottom: 6px; color: var(--plum-dark); }
+      .decision span { color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+        gap: 24px;
+        align-items: start;
+      }
+
+      .column { display: grid; gap: 24px; }
+
+      .frame {
+        overflow: hidden;
+        border: 1px solid rgba(73, 50, 85, 0.1);
+        border-radius: 30px;
+        background: var(--white);
+        box-shadow: var(--shadow);
+      }
+
+      .frame-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        padding: 13px 18px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfaf9;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .frame-label span:last-child {
+        color: var(--plum);
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .mobile {
+        width: min(100%, 430px);
+        min-height: 760px;
+        margin: 0 auto;
+        background: linear-gradient(180deg, #fff 0, #fff 70%, #fdfaf8 100%);
+      }
+
+      .quiz-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 22px 20px 12px;
+      }
+
+      .back {
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: #fff;
+        font-size: 21px;
+      }
+
+      .progress { flex: 1; height: 6px; overflow: hidden; border-radius: 99px; background: #eee8ef; }
+      .progress::after { content: ""; display: block; width: 58%; height: 100%; border-radius: inherit; background: var(--plum); }
+      .step { color: var(--muted); font-size: 12px; font-weight: 700; }
+
+      .quiz-body { padding: 22px 22px 32px; }
+      .quiz-body h2, .result-screen h2 {
+        margin-bottom: 10px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 31px;
+        font-weight: 500;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+      }
+
+      .subcopy { margin-bottom: 22px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+      .options { display: grid; gap: 11px; }
+
+      .option {
+        position: relative;
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 12px;
+        padding: 15px 16px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: #fff;
+      }
+
+      .option.selected {
+        border-color: var(--plum);
+        background: var(--plum-soft);
+        box-shadow: inset 0 0 0 1px var(--plum);
+      }
+
+      .check {
+        display: grid;
+        place-items: center;
+        width: 25px;
+        height: 25px;
+        border: 1px solid #cfc4d2;
+        border-radius: 8px;
+        background: #fff;
+        color: transparent;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .selected .check { border-color: var(--plum); background: var(--plum); color: #fff; }
+      .option strong { display: block; margin: 1px 0 4px; font-size: 14px; line-height: 1.35; }
+      .option small { display: block; color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+      .other {
+        margin-top: 14px;
+        padding: 15px;
+        border: 1px dashed #cfc4d2;
+        border-radius: 17px;
+        background: #fcfafc;
+      }
+
+      .other label { display: block; margin-bottom: 9px; color: var(--plum-dark); font-size: 13px; font-weight: 800; }
+      .other textarea {
+        width: 100%;
+        min-height: 76px;
+        padding: 11px 12px;
+        resize: none;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      .counter { margin: 7px 2px 0; color: #8b8490; font-size: 11px; text-align: right; }
+
+      .continue {
+        width: 100%;
+        min-height: 52px;
+        margin-top: 18px;
+        border: 0;
+        border-radius: 99px;
+        color: #fff;
+        background: var(--plum);
+        font-weight: 800;
+      }
+
+      .result-screen { padding: 32px; background: linear-gradient(180deg, #fff, #fcfaf7); }
+      .result-screen.personal { background: linear-gradient(180deg, #fbf7f4, #fff 30%); }
+
+      .result-kicker {
+        display: inline-flex;
+        margin-bottom: 13px;
+        padding: 7px 11px;
+        border-radius: 99px;
+        color: var(--plum-dark);
+        background: var(--plum-soft);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .result-lede { max-width: 710px; margin-bottom: 22px; color: var(--muted); font-size: 15px; line-height: 1.65; }
+      .diagnostics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+      .diagnostic { padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+      .diagnostic b { display: block; margin-bottom: 5px; color: var(--plum-dark); font-size: 13px; }
+      .diagnostic span { color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+      .metric-list { display: grid; gap: 12px; }
+      .metric-row {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 19px;
+        background: #fff;
+        box-shadow: 0 14px 38px -34px rgba(54, 37, 64, 0.45);
+      }
+      .metric-row h3 { margin: 0 0 12px; font-family: Georgia, "Times New Roman", serif; font-size: 21px; font-weight: 500; }
+      .metric-scales { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+      .metric-scale { padding: 11px; border-radius: 12px; background: #f8f5f9; }
+      .metric-scale.goal { background: var(--plum-soft); }
+      .metric-scale b { display: block; margin-bottom: 7px; color: var(--muted); font-size: 11px; }
+      .bars { display: flex; gap: 5px; }
+      .bars span { flex: 1; height: 8px; border-radius: 99px; background: #e7dfe9; }
+      .bars.today span:first-child { background: var(--plum); }
+      .bars.today.two span:nth-child(2) { background: var(--plum); }
+      .bars.goal span { background: #3b8d60; }
+      .metric-row p { margin: 11px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+      .guidance {
+        padding: 22px;
+        border: 1px solid rgba(108, 74, 126, 0.18);
+        border-radius: 22px;
+        background: linear-gradient(140deg, #f8f1fa, #fff8f6);
+      }
+
+      .guidance-head {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 13px;
+        align-items: start;
+      }
+
+      .guidance-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        color: #fff;
+        background: var(--plum);
+        font-size: 20px;
+      }
+
+      .guidance h3 { margin-bottom: 7px; font-family: Georgia, "Times New Roman", serif; font-size: 23px; font-weight: 500; }
+      .guidance-intro { margin-bottom: 18px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+      .levers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+      .lever { padding: 13px; border-radius: 14px; background: rgba(255, 255, 255, 0.76); }
+      .lever b { display: block; margin-bottom: 5px; color: var(--plum-dark); font-size: 12px; }
+      .lever span { color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+      .medical {
+        margin: 14px 0 0;
+        padding: 12px 14px;
+        border-radius: 13px;
+        color: #704245;
+        background: var(--rose-soft);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .fit {
+        margin-top: 15px;
+        padding: 15px 17px;
+        border-radius: 16px;
+        color: var(--green-ink);
+        background: var(--green);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .plan-preview {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .plan-card { padding: 15px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+      .plan-card small { color: var(--plum); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+      .plan-card b { display: block; margin: 7px 0 4px; font-size: 13px; }
+      .plan-card p { margin-bottom: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+      .notes {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .note { padding: 17px 18px; border-radius: 18px; background: rgba(255, 255, 255, 0.68); border: 1px solid rgba(73, 50, 85, 0.1); }
+      .note b { display: block; margin-bottom: 6px; color: var(--plum-dark); font-size: 13px; }
+      .note span { color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+      @media (max-width: 980px) {
+        .review-head, .comparison { grid-template-columns: 1fr; }
+        .notes { grid-template-columns: 1fr; }
+      }
+
+      @media (max-width: 620px) {
+        .review-shell { width: min(100% - 20px, 460px); padding-top: 24px; }
+        .review-head { gap: 18px; }
+        h1 { font-size: 42px; }
+        .frame { border-radius: 22px; }
+        .result-screen { padding: 23px 18px; }
+        .diagnostics, .levers, .plan-preview { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review-shell">
+      <header class="review-head">
+        <div>
+          <p class="eyebrow">Planungs-Mockup · beide Quiz-Funnels</p>
+          <h1>Haarausfall ergänzt die bestehende Concern-Logik.</h1>
+          <p class="review-intro">
+            Eine gemeinsame Auswahl in beiden Quizzes. „Etwas anderes“ bleibt als freie Notiz erhalten,
+            „Nichts davon“ entfällt. Haarausfall nimmt normal am Ranking und an den drei Ergebniszeilen teil.
+          </p>
+        </div>
+        <aside class="decision">
+          <strong>Empfohlene Architektur</strong>
+          <span>Ein neuer Concern, dieselbe Journey. Das organische Quiz hat Freitext und die Entfernung von „Nichts davon“ bereits; der Personal Plan wird daran angeglichen.</span>
+        </aside>
+      </header>
+
+      <section class="comparison">
+        <div class="column">
+          <article class="frame">
+            <div class="frame-label"><span>1 · Erfassung</span><span>identisch in beiden Quizzes</span></div>
+            <div class="mobile">
+              <div class="quiz-top">
+                <button class="back" aria-label="Zurück">‹</button>
+                <div class="progress"></div>
+                <span class="step">12 / 29</span>
+              </div>
+              <div class="quiz-body">
+                <h2>Was beschäftigt dich gerade?</h2>
+                <p class="subcopy">Wähle alles aus, was immer wieder eine Rolle spielt.</p>
+                <div class="options">
+                  <div class="option">
+                    <span class="check">✓</span>
+                    <div><strong>Meine Haare fühlen sich trocken oder spröde an</strong></div>
+                  </div>
+                  <div class="option selected">
+                    <span class="check">✓</span>
+                    <div>
+                      <strong>Haarausfall oder dünner werdendes Haar</strong>
+                      <small>Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht.</small>
+                    </div>
+                  </div>
+                  <div class="option">
+                    <span class="check">✓</span>
+                    <div><strong>Mein Haar wirkt platt oder schnell beschwert</strong></div>
+                  </div>
+                </div>
+                <div class="other">
+                  <label for="other">Etwas anderes</label>
+                  <textarea id="other" placeholder="Beschreibe kurz, was dir noch auffällt …"></textarea>
+                  <div class="counter">0 / 50</div>
+                </div>
+                <button class="continue">Weiter</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-label"><span>2 · Bestehende Rückfrage</span><span>wenn Haarausfall zuerst rankt</span></div>
+            <div class="mobile" style="min-height:620px">
+              <div class="quiz-top">
+                <button class="back" aria-label="Zurück">‹</button>
+                <div class="progress"></div>
+                <span class="step">18 / 29</span>
+              </div>
+              <div class="quiz-body" style="padding-top:34px">
+                <h2>Kommt das immer wieder?</h2>
+                <p class="subcopy" style="font-size:15px">Haarausfall oder dünner werdendes Haar beschäftigt dich wiederholt.</p>
+                <div class="options">
+                  <div class="option selected">
+                    <span class="check">✓</span>
+                    <div><strong>Ja, häufig</strong></div>
+                  </div>
+                  <div class="option">
+                    <span class="check">✓</span>
+                    <div><strong>Manchmal</strong></div>
+                  </div>
+                  <div class="option">
+                    <span class="check">✓</span>
+                    <div><strong>Eher nicht</strong></div>
+                  </div>
+                </div>
+                <button class="continue">Weiter</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="column">
+          <article class="frame">
+            <div class="frame-label"><span>3A · Personal-Plan-Offer</span><span>eine der bestehenden drei Zeilen</span></div>
+            <div class="result-screen personal">
+              <span class="result-kicker">Deine Ausgangslage</span>
+              <h2>In deinem Haar steckt viel Potenzial</h2>
+              <p class="result-lede">Deine Antworten zeigen, wie wir deine Ausgangslage einordnen.</p>
+              <div class="metric-list">
+                <article class="metric-row">
+                  <h3>Haarausfall &amp; dünner werdendes Haar</h3>
+                  <div class="metric-scales">
+                    <div class="metric-scale"><b>Viel Potenzial</b><div class="bars today"><span></span><span></span><span></span></div></div>
+                    <div class="metric-scale goal"><b>Optimal</b><div class="bars goal"><span></span><span></span><span></span></div></div>
+                  </div>
+                  <p>Schonende Pflege schützt bei <strong>Haarausfall und dünner werdendem Haar</strong> vor zusätzlichem Haarbruch, Zug und Reibung. Medizinische Behandlungen können Haarausfall bremsen oder neues Wachstum unterstützen.</p>
+                </article>
+                <article class="metric-row">
+                  <h3>Kopfhaut-Balance</h3>
+                  <div class="metric-scales">
+                    <div class="metric-scale"><b>Gute Basis</b><div class="bars today two"><span></span><span></span><span></span></div></div>
+                    <div class="metric-scale goal"><b>Optimal</b><div class="bars goal"><span></span><span></span><span></span></div></div>
+                  </div>
+                  <p>Dein Waschrhythmus und die Reinigung werden auf deine Kopfhaut abgestimmt.</p>
+                </article>
+                <article class="metric-row">
+                  <h3>Feuchtigkeit &amp; Geschmeidigkeit</h3>
+                  <div class="metric-scales">
+                    <div class="metric-scale"><b>Viel Potenzial</b><div class="bars today"><span></span><span></span><span></span></div></div>
+                    <div class="metric-scale goal"><b>Optimal</b><div class="bars goal"><span></span><span></span><span></span></div></div>
+                  </div>
+                  <p>Deine Längen brauchen regelmäßige Pflege und leichteres Entwirren.</p>
+                </article>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-label"><span>3B · Klassisches Quiz-Ergebnis</span><span>ebenfalls normale Ergebniszeile</span></div>
+            <div class="result-screen">
+              <span class="result-kicker">Was dein Haar jetzt braucht</span>
+              <h2>Deine wichtigsten Pflegehebel</h2>
+              <p class="result-lede">Haarausfall wird wie die anderen ausgewählten Themen priorisiert und in den bestehenden Ergebnisaufbau übernommen.</p>
+              <div class="metric-list">
+                <article class="metric-row">
+                  <h3>Haarausfall &amp; dünner werdendes Haar</h3>
+                  <div class="metric-scales">
+                    <div class="metric-scale"><b>Heute</b><div class="bars today"><span></span><span></span><span></span></div></div>
+                    <div class="metric-scale goal"><b>Dein Pflegefokus</b><div class="bars goal"><span></span><span></span><span></span></div></div>
+                  </div>
+                  <p>Schonende Pflege schützt bei <strong>Haarausfall und dünner werdendem Haar</strong> vor zusätzlichem Haarbruch, Zug und Reibung. Medizinische Behandlungen können Haarausfall bremsen oder neues Wachstum unterstützen.</p>
+                </article>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="notes">
+          <div class="note"><b>Dieselbe Erfassung</b><span>„Haarausfall oder dünner werdendes Haar“ und „Etwas anderes“ stehen in beiden Listen. Es gibt kein „Nichts davon“.</span></div>
+          <div class="note"><b>Dieselbe Priorisierung</b><span>Der strukturierte Concern nimmt normal am Ranking teil. Freitext wird gespeichert, aber nicht automatisch interpretiert oder gerankt.</span></div>
+          <div class="note"><b>Dieselben drei Zeilen</b><span>Auf beiden Ergebniswegen erscheint Haarausfall als normale Ergebniszeile. Keine zusätzliche Offer-Sektion und keine Sonderseite.</span></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

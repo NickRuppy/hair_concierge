@@ -27,6 +27,7 @@ import {
   Clock,
   Coffee,
   Cylinder,
+  Dna,
   Droplets,
   Equal,
   Feather,
@@ -109,6 +110,7 @@ import {
 } from "@/lib/quiz/hair-portrait-assets"
 import type { PortraitConfig } from "@/lib/quiz/portrait-config"
 import { cn } from "@/lib/utils"
+import { resolvePrimaryPersonalPlanConcern } from "@/lib/personal-plan-quiz/hair-assessment"
 
 import {
   DAILY_TIME_OPTIONS,
@@ -231,6 +233,7 @@ const ICONS: Record<QuizIconKey, LucideIcon> = {
   feather: Feather,
   equal: Equal,
   cylinder: Cylinder,
+  "goal-growth": Dna,
   refresh: RefreshCw,
   move: MoveHorizontal,
   zap: Zap,
@@ -824,6 +827,8 @@ function QuestionScreen({
   otherTextValue,
   onOtherTextChange,
   otherTextPlaceholder,
+  otherTextMaxLength = 280,
+  standaloneOtherText,
 }: {
   config: QuizQuestionConfig
   selected: readonly string[]
@@ -839,6 +844,16 @@ function QuestionScreen({
   otherTextValue?: string
   onOtherTextChange?: (value: string) => void
   otherTextPlaceholder?: string
+  otherTextMaxLength?: number
+  standaloneOtherText?: {
+    visible: boolean
+    value?: string
+    placeholder?: string
+    maxLength: number
+    onShow: () => void
+    onChange: (value: string) => void
+    onClear: () => void
+  }
 }) {
   return (
     <section className="mx-auto w-full max-w-[40rem]">
@@ -921,7 +936,7 @@ function QuestionScreen({
                 <Input
                   autoFocus
                   className="h-12 rounded-[14px] border-[var(--brand-plum-light)] bg-white px-4 text-[15px]"
-                  maxLength={280}
+                  maxLength={otherTextMaxLength}
                   onChange={(event) => onOtherTextChange?.(event.target.value)}
                   placeholder={otherTextPlaceholder ?? "Magst du kurz sagen, was?"}
                   value={otherTextValue ?? ""}
@@ -945,6 +960,54 @@ function QuestionScreen({
           />
         ) : null}
       </div>
+      {standaloneOtherText ? (
+        <div className="mt-3">
+          <OptionCard
+            multi
+            onClick={standaloneOtherText.onShow}
+            option={{
+              value: "__other__",
+              label: "Etwas anderes",
+              description: "Wenn dein Thema nicht in der Liste steht, beschreib es kurz selbst.",
+            }}
+            selected={standaloneOtherText.visible || Boolean(standaloneOtherText.value?.trim())}
+          />
+          {standaloneOtherText.visible ? (
+            <div className="mt-3 rounded-2xl border border-[var(--brand-plum-light)] bg-white p-4">
+              <label
+                className="mb-2 block text-sm font-medium text-[var(--brand-plum-darkest)]"
+                htmlFor="personal-plan-current-concerns-other-text"
+              >
+                Eigene Notiz
+              </label>
+              <textarea
+                autoFocus
+                className="min-h-[78px] w-full resize-none rounded-xl border border-[var(--brand-plum-light)] bg-white px-4 py-3 text-[15px]"
+                id="personal-plan-current-concerns-other-text"
+                maxLength={standaloneOtherText.maxLength}
+                onChange={(event) => standaloneOtherText.onChange(event.target.value)}
+                placeholder={
+                  standaloneOtherText.placeholder ?? "Zum Beispiel: stumpf nach dem Föhnen"
+                }
+                rows={2}
+                value={standaloneOtherText.value ?? ""}
+              />
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <button
+                  className="text-xs font-medium text-[var(--text-caption)] underline underline-offset-4"
+                  onClick={standaloneOtherText.onClear}
+                  type="button"
+                >
+                  Notiz entfernen
+                </button>
+                <p className="text-xs text-[var(--text-caption)]">
+                  {(standaloneOtherText.value ?? "").length}/{standaloneOtherText.maxLength}
+                </p>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       {transition && canContinue ? (
         <p className="mt-5 rounded-2xl bg-[var(--brand-plum-ice)] px-4 py-3 text-sm leading-6 text-[var(--brand-plum-dark)]">
           {transition}
@@ -1248,20 +1311,21 @@ function AdmissionScreen({
   onSelect: (value: string) => void
 }) {
   const conflictPrompt = derivePersonalPlanConflictPrompt(answers)
-  const firstConcern = getConcernOptions(answers.texture).find((option) =>
-    answers.currentConcerns?.includes(option.value as never),
+  const primaryConcern = resolvePrimaryPersonalPlanConcern(answers)
+  const primaryConcernOption = getConcernOptions(answers.texture).find(
+    (option) => option.value === primaryConcern,
   )
-  const firstConcernLabel = firstConcern?.midSentenceLabel ?? firstConcern?.label
+  const primaryConcernLabel = primaryConcernOption?.midSentenceLabel ?? primaryConcernOption?.label
   const concernRecurrence = answers.concernRecurrence
   const content =
     screen === "admission_recurrence"
       ? {
           title: "Kommt das immer wieder?",
-          subtitle: firstConcernLabel
-            ? `${capitalizeFirst(firstConcernLabel)} beschäftigt dich wiederholt.`
+          subtitle: primaryConcernLabel
+            ? `${capitalizeFirst(primaryConcernLabel)} beschäftigt dich wiederholt.`
             : "Deine aktuellen Haarthemen kehren wieder.",
           selected:
-            concernRecurrence && concernRecurrence.concernId === firstConcern?.value
+            concernRecurrence && concernRecurrence.concernId === primaryConcern
               ? concernRecurrence.frequency
               : undefined,
           options: ADMISSION_OPTIONS,
@@ -2059,6 +2123,7 @@ export function PersonalPlanQuiz({
     () => initialServerDraft?.answers ?? {},
   )
   const [ephemeral, setEphemeral] = useState<PersonalPlanQuizEphemeralState>({})
+  const [currentConcernNoteOpen, setCurrentConcernNoteOpen] = useState(false)
   const [draftReady, setDraftReady] = useState(false)
   const [preparedPlan, setPreparedPlan] = useState<PreparedPlanState>({
     status: "idle",
@@ -2467,11 +2532,22 @@ export function PersonalPlanQuiz({
         value?: string
         placeholder?: string
         onChange: (value: string) => void
+        maxLength?: number
+      }
+      continueValidity?: boolean
+      standaloneOtherText?: {
+        visible: boolean
+        value?: string
+        placeholder?: string
+        maxLength: number
+        onShow: () => void
+        onChange: (value: string) => void
+        onClear: () => void
       }
     },
   ) {
     const selected = selectedValues(config, answers)
-    const canContinue = selected.length > 0
+    const canContinue = options?.continueValidity ?? selected.length > 0
 
     return (
       <QuestionScreen
@@ -2486,10 +2562,12 @@ export function PersonalPlanQuiz({
           config.multi ? selectMulti(config, value) : selectSingle(config, value)
         }
         otherTextPlaceholder={options?.otherText?.placeholder}
+        otherTextMaxLength={options?.otherText?.maxLength}
         otherTextTriggerValue={options?.otherText?.triggerValue}
         otherTextValue={options?.otherText?.value}
         selected={selected}
         transition={transition}
+        standaloneOtherText={options?.standaloneOtherText}
       />
     )
   }
@@ -2506,9 +2584,7 @@ export function PersonalPlanQuiz({
   }
 
   function selectConcernRecurrence(value: string) {
-    const concernId = getConcernOptions(answers.texture).find((option) =>
-      answers.currentConcerns?.includes(option.value as never),
-    )?.value
+    const concernId = resolvePrimaryPersonalPlanConcern(answers)
     if (!concernId) {
       scheduleNext(answers)
       return
@@ -2553,6 +2629,7 @@ export function PersonalPlanQuiz({
       )
     }
     if (screen === "current_problems") {
+      const hasCurrentConcernNote = Boolean(answers.currentConcernsOtherText?.trim())
       return renderQuestion(
         {
           field: "currentConcerns",
@@ -2564,14 +2641,35 @@ export function PersonalPlanQuiz({
         },
         undefined,
         {
-          noneOption: {
-            label: "Nichts davon",
-            description: "Aktuell beschäftigt mich nichts davon.",
-          },
-          onEmpty: () => {
-            const next = { ...answers, currentConcerns: [], concernRecurrence: undefined }
-            setAnswers(next)
-            goNext(next)
+          continueValidity: Boolean(answers.currentConcerns?.length) || hasCurrentConcernNote,
+          standaloneOtherText: {
+            visible: currentConcernNoteOpen || hasCurrentConcernNote,
+            value: answers.currentConcernsOtherText,
+            maxLength: 50,
+            onShow: () => {
+              setCurrentConcernNoteOpen(true)
+            },
+            onChange: (value) => {
+              setAnswers((existing) => {
+                const next = { ...existing }
+                const bounded = value.slice(0, 50)
+                if (bounded.trim()) {
+                  next.currentConcerns = existing.currentConcerns ?? []
+                  next.currentConcernsOtherText = bounded
+                } else {
+                  delete next.currentConcernsOtherText
+                }
+                return next
+              })
+            },
+            onClear: () => {
+              setCurrentConcernNoteOpen(false)
+              setAnswers((existing) => {
+                const next = { ...existing }
+                delete next.currentConcernsOtherText
+                return next
+              })
+            },
           },
         },
       )

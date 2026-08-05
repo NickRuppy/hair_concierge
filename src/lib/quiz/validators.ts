@@ -23,7 +23,7 @@ const baseQuizAnswersShape = {
   has_scalp_issue: z.boolean(),
   scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
   concerns: z.array(z.enum(QUIZ_ANSWER_CONCERN_VALUES)),
-  concerns_other_text: z.string().trim().max(120, "Bitte bleib bei maximal 120 Zeichen").optional(),
+  concerns_other_text: z.string().trim().max(50, "Bitte bleib bei maximal 50 Zeichen").optional(),
   treatment: z
     .array(z.enum(QUIZ_TREATMENT_VALUES))
     .min(1, "Bitte waehle mindestens eine Behandlung"),

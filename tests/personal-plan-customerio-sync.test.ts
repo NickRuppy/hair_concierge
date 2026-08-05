@@ -6,7 +6,10 @@ import {
   syncPersonalPlanLeadToCustomerIo,
 } from "../src/lib/personal-plan-quiz/customerio"
 import { parsePersonalPlanProfileSyncEnvelope } from "../src/lib/personal-plan-quiz/customerio-outbox"
-import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-plan-quiz/types"
+import {
+  PERSONAL_PLAN_QUIZ_CONCERNS,
+  type PersonalPlanQuizSubmissionEnvelope,
+} from "../src/lib/personal-plan-quiz/types"
 
 const quizAnswers: PersonalPlanQuizSubmissionEnvelope = {
   kind: "personal_plan",
@@ -19,7 +22,8 @@ const quizAnswers: PersonalPlanQuizSubmissionEnvelope = {
     routineClarity: "partial",
     resultReliability: "sometimes",
     adaptationConfidence: "partly",
-    currentConcerns: ["dry_lengths", "frizz_flyaways"],
+    currentConcerns: ["dry_lengths", "frizz_flyaways", "hair_loss_or_thinning"],
+    currentConcernsOtherText: "Bitte nicht an Customer.io senden",
     hairLength: "medium",
     hairSurface: "slightly_uneven",
     elasticResponse: "stretches_stays",
@@ -111,7 +115,16 @@ test("personal-plan traits keep shared primitives canonical and namespace diverg
     "Gereizte Kopfhaut",
   ])
   assert.deepEqual(traits.personal_plan_chemical_treatments, ["colored"])
-  assert.deepEqual(traits.personal_plan_concerns, ["dry_lengths", "frizz_flyaways"])
+  assert.deepEqual(traits.personal_plan_concerns, [
+    "dry_lengths",
+    "frizz_flyaways",
+    "hair_loss_or_thinning",
+  ])
+  assert.deepEqual(traits.personal_plan_concern_labels, [
+    "Trockene oder strohige Längen",
+    "Frizz oder viele abstehende Haare",
+    "Haarausfall oder dünner werdendes Haar",
+  ])
   assert.deepEqual(traits.personal_plan_goals, ["moisture", "shine"])
   assert.equal(traits.funnel_session_id, "session-123")
   assert.equal(traits.funnel_package_key, "meta_personal_plan_v1")
@@ -121,8 +134,35 @@ test("personal-plan traits keep shared primitives canonical and namespace diverg
   assert.equal("concerns" in traits, false)
   assert.equal("goals" in traits, false)
   assert.equal("blockers_other_text" in traits, false)
+  assert.equal("currentConcernsOtherText" in traits, false)
+  assert.equal("current_concerns_other_text" in traits, false)
+  assert.doesNotMatch(JSON.stringify(traits), /Bitte nicht an Customer\.io senden/)
   assert.equal("plan_id" in traits, false)
   assert.equal("plan_expires_at" in traits, false)
+})
+
+test("every structured Personal Plan concern has a readable Customer.io label", () => {
+  const traits = buildPersonalPlanCustomerIoTraits({
+    createdAt: "2026-08-01T10:00:00.000Z",
+    email: "labels@example.com",
+    leadId: "lead-labels",
+    marketingConsent: true,
+    quizAnswers: {
+      ...quizAnswers,
+      answers: {
+        ...quizAnswers.answers,
+        currentConcerns: [...PERSONAL_PLAN_QUIZ_CONCERNS],
+      },
+    },
+  })
+
+  assert.equal(
+    (traits.personal_plan_concern_labels as string[]).length,
+    PERSONAL_PLAN_QUIZ_CONCERNS.length,
+  )
+  for (const [index, label] of (traits.personal_plan_concern_labels as string[]).entries()) {
+    assert.notEqual(label, PERSONAL_PLAN_QUIZ_CONCERNS[index])
+  }
 })
 
 test("personal-plan live sync identifies first and emits one dedicated stable completion event", async () => {

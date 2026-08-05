@@ -128,6 +128,11 @@ export function sanitizePersonalPlanQuizAnswers(value: unknown): PersonalPlanQui
     if (trimmed) answers.blockersOtherText = trimmed
   }
 
+  if (typeof input.currentConcernsOtherText === "string") {
+    const trimmed = input.currentConcernsOtherText.trim().slice(0, 50)
+    if (trimmed) answers.currentConcernsOtherText = trimmed
+  }
+
   if (answers.chemicalTreatments?.includes("natural") && answers.chemicalTreatments.length > 1) {
     answers.chemicalTreatments = ["natural"]
   }
