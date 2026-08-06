@@ -1,6 +1,6 @@
 # Personal Plan App V1 — Implementation Plan
 
-**Status:** not implementation-ready; dedicated plan-engine architecture selected, detailed Shampoo, Conditioner, and Leave-in specifications confirmed, remaining category grilling in progress
+**Status:** not implementation-ready; dedicated plan-engine architecture selected, detailed Shampoo, Conditioner, Leave-in, Mask, Oil, and Deep Cleansing specifications confirmed, remaining category grilling in progress
 
 **Outcome:** deliver the paid personal-plan promise as a deterministic three-stage plan and a lightweight daily-use app
 
@@ -58,9 +58,10 @@ The offer artifact's `locked_plan` is preview/provenance input, not the final re
 | Leave-in | Detailed wash-day and heat-event behavior confirmed: inclusion and ownership boundaries, target axes, care/heat combination, narrow Conditioner replacement, occurrence cadence, primary/secondary allocation, role-relative fit, application fallback, safety, and fixtures. Between-wash refresh and final shared ownership/presentation remain explicitly deferred. | `docs/personal-plan/categories/leave-in/decision.md` plus its linked evidence |
 | Mask | Detailed behavior confirmed: inclusion, target axes, functions, cadence bands, one-primary allocation, layered fit, verified protocols, fallbacks, safety, reasoning, and fixtures. | `docs/personal-plan/categories/mask/decision.md` plus its linked evidence |
 | Oil | Detailed wash-day behavior confirmed: three independent roles, inclusion, use-case presentation, functional benefits, every-wash Basis cadence, chronological role-based product assignment without primary/secondary ranking, role-relative weight/dosage fit, reconciliation, application, safety, ownership, and fixtures. Optional/non-wash allocation belongs to the later day-type spec and is a hard pre-launch gate; live catalog backfill remains an implementation dependency. | `docs/personal-plan/categories/oil/decision.md` plus its linked evidence |
+| Deep Cleansing | Detailed behavior confirmed: Reset-load inputs and scoring, Basis/Optional thresholds, every-third/every-fourth-wash substitution cadence, scalp pause boundary, residue/mineral roles, minimal product facts, layered fit, one-product allocation, application fallback, reasoning, and fixtures. Colour compatibility remains an explicit catalog backfill rather than an inferred fact. | `docs/personal-plan/categories/deep-cleansing/decision.md` plus its linked evidence |
 | Remaining V1 categories | Inclusion and broad behavior are still provisional until grilled with Nick | To be added category by category |
 
-This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo, Conditioner, Leave-in, Mask, and Oil are confirmed category specifications; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
+This commit is a stable planning checkpoint, not authorization to implement the whole app. Shampoo, Conditioner, Leave-in, Mask, Oil, and Deep Cleansing are confirmed category specifications; implementation starts only after the remaining categories, the reviewed journey, and the final plan review are complete.
 
 ## 3. Architectural invariants
 
@@ -148,7 +149,9 @@ Do not create a second mutable product inventory, day-log store, or check-in sys
 - `src/lib/personal-plan/types.ts`
 - `src/lib/personal-plan/compute.ts`
 - `src/lib/personal-plan/categories/shampoo.ts`
+- `src/lib/personal-plan/categories/deep-cleansing.ts`
 - `tests/personal-plan/categories/shampoo.test.ts`
+- `tests/personal-plan/categories/deep-cleansing.test.ts`
 - `src/lib/personal-plan/check-ins.ts`
 - `src/lib/personal-plan/protocols.ts`
 - `src/lib/personal-plan/day-types.ts`
@@ -176,6 +179,7 @@ Each category is checkpointed after its evidence and product decisions are recon
 
 ### Tests
 
+- Category-unit tests live under `tests/personal-plan/categories/*.test.ts`; plan-wide integration, persistence, scheduling, and artifact tests retain the repository's flat `tests/personal-plan-*.test.ts` convention. Task 2 must extend `test:node` with the nested category glob while preserving the existing flat glob.
 - `tests/personal-plan-category-artifacts.test.ts`
 - `tests/personal-plan-compute.test.ts`
 - `tests/personal-plan-shampoo-selection.test.ts`
@@ -288,7 +292,7 @@ The plan is complete when all required inputs and category decisions are persist
 - Confirm existing profile projection covers all runtime inputs; add the smallest post-payment questions for missing wash/heat/routine fields.
 - Validate mandatory user thickness before invoking plan computation. Do not add per-category fallback or inference branches for this unreachable state; nullable product thickness suitability remains a separate catalog concern.
 - Preserve backwards parsing for already-created V3 artifacts.
-- Create the shared `PlanDamageAssessment` type and derive its `materialStructuralVulnerability` fact from non-natural chemical treatment and brittle snapping only. Preserve the exact driver IDs; do not derive it from the combined structural level, repair priority, surface roughness, or breakage/split-end concerns.
+- Create the shared `PlanDamageAssessment` type and derive its `materialStructuralVulnerability` fact from non-natural chemical treatment and brittle snapping only. Preserve the exact existing drivers from `getChemicalTreatmentDamageDrivers(...)` in `src/lib/profile/chemical-treatment.ts` (`bleached_hair`, `colored_hair`, `permed_hair`, `chemically_straightened_hair`) and `brittle_snap_pattern` from `proteinMoistureBalance = snaps` in `src/lib/recommendation-engine/assessments/damage.ts`; do not derive it from the combined structural level, repair priority, surface roughness, or breakage/split-end concerns.
 - Test old artifacts, new artifacts, resume, and projection.
 
 **Complete when:** one typed server-side input object contains every field required by category and day-type computation; no required value is read only from client state.
@@ -321,6 +325,7 @@ The plan is complete when all required inputs and category decisions are persist
 - Ensure integrated leave-in heat protection satisfies the heat job without a duplicate recommendation.
 - Add one canonical `product_oil_specs` table with nullable constrained supported roles, formula family, weight, the three confirmed functional benefits, tri-state verified Heat protection, and constrained `OilIngredientFlag` values. The name deliberately follows the shared product-level category convention and is not Personal-Plan-specific. Preflight the live schema because repository history previously used this name: preserve/export and migrate any surviving rows before adapting the schema; never drop a populated historical table. Treat legacy Oil subtype, purpose, and ingredient flags as migration hints and research/backfill active products before selection. Personal Plan reads canonical facts only from `product_oil_specs`; retain `product_oil_eligibility` as a compatibility projection for its named existing readers, then explicitly drop its trigger/functions/table when those readers are retired.
 - Extend Product Intake Oil validation, approval upserts, and readiness checks to require/write `product_oil_specs` in V1. During coexistence it also maintains the minimum legacy eligibility projection required by current app-side readers. Role-specific protocol review remains separate; a newly approved Oil cannot enter an executable recipe until its required protocol is verified.
+- Replace Personal Plan use of the legacy Deep Cleansing intensity/focus shape with the confirmed minimal product spec: nullable verified `supportedResetRoles[]`, `targetScalpTypes[]`, and tri-state `suitableForColorTreatedHair`. Do not use or migrate `reset_intensity` into Personal Plan matching. Backfill the five active orientation products from the confirmed category decision and leave colour compatibility unknown until an exact source verifies it.
 - Enforce: exact recommendation must be `ideal` or `supportive`; otherwise return pending/no-safe-match.
 - Preserve the existing owned product in assessment candidate scope even when it would not be a general recommendation.
 - Treat the reviewed `schuppen` catalog bucket as the current treatment-capable cosmetic first line; do not create a second runtime `anti_dandruff_active` authority.
@@ -372,6 +377,7 @@ Global Personal Plan activation has an Oil data gate: the launch fixture matrix 
 - Keep multi-role output narrow: only confirmed Shampoo, Leave-in, and Oil rules may create several simultaneous use-case assignments in V1. Do not convert benefits, formats, or speculative future category variants into additional roles.
 - Keep Conditioner category-specific allocation simple: at most one new exact recommendation; several suitable owned products may be confirmed as interchangeable for the same category cadence without an invented per-product rotation.
 - Implement the confirmed Oil role truth tables, per-role fit, chronological role assignment without primary/secondary ranking, reconciliation lifecycle, structured reasoning, and the confirmed table-driven plus interaction fixtures at `tests/personal-plan/categories/oil.test.ts`.
+- Implement the confirmed Deep Cleansing Reset-load score, exact need/cadence bands, single-product fit and allocation, safety pause, structured reasoning, Shampoo substitution, and single-pass application fallback at `tests/personal-plan/categories/deep-cleansing.test.ts`. Keep `reset_intensity` and ingredient-derived strength out of the Personal Plan path.
 - Extend `npm run test:node` so all `tests/personal-plan/categories/*.test.ts` files run alongside the existing root test suite. Run the Oil file explicitly plus the updated `npm run test:node` and `npm run ci:verify` before completion.
 - Keep all three Oil role evaluations in category-specific reasoning, but emit only Basis/Optional roles into the shared plan. Use `every_eligible_wash` for Basis Oil occurrences and `deferred_day_type` for accepted optional roles until their day-type placement is confirmed.
 - Preserve the confirmed rare triple-Basis Oil case. The selector may reuse a fully fitting multi-role product, but neither product-count minimization nor a category-level occurrence cap may demote an independently justified role.
@@ -601,6 +607,7 @@ Global Personal Plan activation has an Oil data gate: the launch fixture matrix 
 - `docs/personal-plan/categories/leave-in/evidence.md` and `decision.md`: **commit** as the confirmed Leave-in evidence and product-policy checkpoint.
 - `docs/personal-plan/categories/mask/evidence.md` and `decision.md`: **commit** as the confirmed Mask evidence and product-policy checkpoint.
 - `docs/personal-plan/categories/oil/evidence.md` and `decision.md`, plus `docs/oil-recommendation-data-path.md`: **commit** as the confirmed Oil evidence/product policy and temporary legacy-reader migration map.
+- `docs/personal-plan/categories/deep-cleansing/evidence.md` and `decision.md`: **commit** as the confirmed Deep Cleansing evidence and product-policy checkpoint.
 - reviewed HTML mockups and selected option mockup: **commit**.
 - rendered reference screenshots: **commit** if still the visual comparison oracle.
 - superseded 2026-07-30 plan: **commit** with superseded notice for provenance, or **discard** before PR if Nick prefers a single plan artifact; decide before implementation handoff.
