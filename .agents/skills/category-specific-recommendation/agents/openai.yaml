@@ -3,4 +3,4 @@ interface:
   short_description: "Define one product category end to end"
   default_prompt: "Use $category-specific-recommendation to define this Personal Plan product category through confirmed Stage 1, Stage 2, and Stage 3 decisions."
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
