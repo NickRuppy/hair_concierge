@@ -1,6 +1,6 @@
 interface:
-  display_name: "Category Recommendation"
-  short_description: "Design one deterministic product-category flow"
-  default_prompt: "Use $category-specific-recommendation to design or revise this product-category recommendation flow."
+  display_name: "Personal Plan Category"
+  short_description: "Define one product category end to end"
+  default_prompt: "Use $category-specific-recommendation to define this Personal Plan product category through confirmed Stage 1, Stage 2, and Stage 3 decisions."
 policy:
   allow_implicit_invocation: true
