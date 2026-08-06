@@ -43,7 +43,7 @@ Non-jobs and exclusions:
 
 | Area | Current truth | Treatment | Gap or implication |
 |---|---|---|---|
-| Lossless quiz input | Current `main` and production V3 preserve `hair_damage`, `breakage`, and `split_ends` separately; the source planning worktree is intentionally stale here and still contains historical V2 `breakage_or_split_ends` | `reuse` V3; `adapt` V2 only at a typed legacy boundary | Never treat this worktree's stale V2 source as production truth, collapse V3, or consume the lossy offer/canonical projection |
+| Lossless quiz input | Current `main` and production V3 preserve `hair_damage`, `breakage`, and `split_ends` separately; the source planning worktree is intentionally stale here and still contains historical V2 `breakage_or_split_ends` | `reuse` V3; migrate V2 to `split_ends` only at the historical boundary | Never treat this worktree's stale V2 source as production truth, collapse V3, or consume the lossy offer/canonical projection |
 | Shared damage model | Current `DamageAssessment` has structural, heat, and mechanical lanes plus repair and Bondbuilder priorities | `adapt` into plan-owned `PlanDamageAssessment` | One shared assessment; no Bondbuilder-only damage score |
 | Legacy inclusion | Intervention/CareBalance logic uses `bondBuilderPriority` and product/request-dependent relevance | `reject` as Stage-1 authority | Need is independent of ownership, request, and product availability |
 | Legacy target | User profile is split into chemical-crosslink and peptide lanes | `reject` | Mechanism is not a person-side target |
@@ -72,7 +72,7 @@ Do not consume thickness, density, length, texture, volume sensitivity, product 
 Input semantics:
 
 - Current V3 separate concerns are authoritative.
-- Historical V2 `breakage_or_split_ends` is ambiguous. It must trigger a conditional clarification (`breakage | split_ends | both | neither`) before a final Bondbuilder tier is computed; it is never silently projected to both signals.
+- Historical V2 `breakage_or_split_ends` migrates deterministically to `split_ends`. This intentionally chooses the less escalatory interpretation: it adds supporting context but never becomes a strong Bondbuilder indicator. The accepted limitation is that genuine historical breakage may be under-prioritized; V3 facts are never changed by this migration.
 - An explicitly empty V3 concern list is valid and contributes no indicators.
 - Missing required chemical-treatment, surface, elasticity, or concern data after validation returns the shared typed incomplete-profile/clarification state; do not guess.
 - `chemicalTreatments = ['natural']` means no declared chemical-treatment trigger. Invalid mixtures containing `natural` plus a treatment are rejected by shared validation.
@@ -357,7 +357,7 @@ Every hard rule above maps to at least one fixture:
 14. `bondbuilder-stretches-stays-only`: no tier effect.
 15. `bondbuilder-severe-heat-only`: `not_needed`; Heat protection reason remains primary.
 16. `bondbuilder-high-repair-dedup`: high repair priority derived from breakage plus that same breakage → one strong indicator, `optional`.
-17. `bondbuilder-v2-combined-clarification`: historical combined concern → typed clarification; no guessed tier.
+17. `bondbuilder-v2-combined-migration`: historical combined concern → `split_ends`; supporting context only and no strong indicator.
 18. `bondbuilder-missing-required-profile`: typed incomplete-profile state.
 19. `bondbuilder-equal-shortlist`: Epres, K18, and Nº.3PLUS all pass with no preference → equal ideal shortlist.
 20. `bondbuilder-format-preference`: verified pre-wash spray preference selects Epres from otherwise equal ideal candidates.
@@ -394,7 +394,7 @@ Read-only live inspection on 2026-08-06 established:
 
 ### Gates
 
-1. Implement the V3 lossless adapter and an explicit V2 combined-concern clarification path; never use the lossy offer/canonical projection.
+1. Implement the V3 lossless adapter and the explicit historical migration `breakage_or_split_ends -> split_ends`; never apply that migration to V3 or use the lossy offer/canonical projection.
 2. Copy/adapt the shared damage assessment into `src/lib/personal-plan/**` with parity tests and raw-fact deduplication.
 3. Audit `product_bondbuilder_specs` and all active Bondbuilder rows against canonical field/null semantics.
 4. Create a new selector inside `src/lib/personal-plan/**` that preserves lifecycle/relationship authority without mechanism-lane, intensity-only, auto-add-on, or marketing-score routing. Do not change the legacy recommendation selector as part of this category implementation.
@@ -403,7 +403,7 @@ Read-only live inspection on 2026-08-06 established:
 7. Add the plan-owned module and every fixture above at `tests/personal-plan/categories/bondbuilder.test.ts`.
 8. Add cross-category fixtures for Conditioner retention, Leave-in supporting-only repair, Mask/Bondbuilder non-double-counting, Heat-prevention precedence, and incompatible intensive-care recipes.
 9. Keep exact Stage-2 lifecycle transitions and shared check-in UI in their shared specifications; verify Bondbuilder state behavior there before launch.
-10. The historical-V2 conditional clarification uses the shared Stage-1 setup-question surface and requires reviewed German copy and journey coverage before implementation; it does not add another question to the current V3 quiz.
+10. Apply the V2 migration once in the shared lossless normalization boundary so every category consumes the same migrated `split_ends` fact; do not duplicate category-local migration logic.
 11. Keep the paid-user feature flag off until the relevant stage's modules, portfolio fixtures, data gates, and reviewed journey gates pass. Stage-1 confirmation and engine implementation do not wait for Stage-3 protocol rows; executable Stage-3 launch does.
 
 ## Deferred shared dependencies

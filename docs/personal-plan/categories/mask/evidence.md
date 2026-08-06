@@ -2,8 +2,8 @@
 category: mask
 document_type: evidence
 status: reviewed
-evidence_version: 1
-last_reviewed_at: 2026-08-05
+evidence_version: 2
+last_reviewed_at: 2026-08-06
 decision_file: docs/personal-plan/categories/mask/decision.md
 ---
 
@@ -11,7 +11,7 @@ decision_file: docs/personal-plan/categories/mask/decision.md
 
 ## Status
 
-This file preserves the evidence-sensitive conclusions already reviewed during the Mask category pass. The source register and precise strength labels must be normalized before the category is marked confirmed. Current recommendation-engine behavior belongs in `decision.md` as internal input and is not efficacy evidence.
+This file preserves the evidence-sensitive conclusions reviewed during the Mask category pass. The source register separates scientific, regulatory, and manufacturer evidence and states the relevant limitations. Current recommendation-engine behavior belongs in `decision.md` as internal input and is not efficacy evidence.
 
 ## Answer-first findings
 
