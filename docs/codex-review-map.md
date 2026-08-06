@@ -112,7 +112,7 @@ Only run fixes in a task worktree. Treat the patch as a draft change until Codex
 ## Escalation Rules
 
 - Use `hair-care-expert` before changing medically adjacent scalp, shedding, hair-loss, or evidence-sensitive guidance.
-- Use `category-specific-recommendation` before redesigning a single product-category recommendation flow.
+- When Nick explicitly invokes it, use `category-specific-recommendation` to define a Personal Plan product category end to end.
 - Add to `questions-for-domain-review.md` only when local context and external evidence cannot resolve the question.
 - Mark weak Clawpatch findings as `uncertain` or `false-positive` rather than turning them into churn.
 - Prefer screenshots, traces, or Langfuse experiment links for trust-facing behavior changes.

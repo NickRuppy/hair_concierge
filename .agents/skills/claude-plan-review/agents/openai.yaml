@@ -1,0 +1,6 @@
+interface:
+  display_name: "Claude Review Bridge"
+  short_description: "Ask Claude Code to review plans or code changes."
+  default_prompt: "Use $claude-plan-review to review origin/main...HEAD with Claude and summarize the verified findings."
+policy:
+  allow_implicit_invocation: true

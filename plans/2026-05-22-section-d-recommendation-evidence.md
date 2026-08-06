@@ -1,6 +1,6 @@
 # CareBalance Routine Intelligence Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `hair-care-expert` or equivalent evidence review before changing domain rules, `category-specific-recommendation` or equivalent deterministic category work when implementing each category, and `superpowers:test-driven-development` during implementation. Use `superpowers:subagent-driven-development` for execution because the tasks are separable. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `hair-care-expert` or equivalent evidence review before changing domain rules and `superpowers:test-driven-development` during implementation. Use `category-specific-recommendation` only when Nick explicitly invokes it; otherwise apply this plan's deterministic category tasks directly. Use `superpowers:subagent-driven-development` for execution because the tasks are separable. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a complete replacement-grade routine product-category and frequency intelligence layer that can be tested in full beside the current planner before any old planner removal.
 

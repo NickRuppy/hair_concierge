@@ -1,0 +1,6 @@
+interface:
+  display_name: "Request Code Review"
+  short_description: "Run the single final code-review gate"
+  default_prompt: "Use $request-code-review to review the current branch, verify findings locally, and add structural review only when the risk gate triggers."
+policy:
+  allow_implicit_invocation: true

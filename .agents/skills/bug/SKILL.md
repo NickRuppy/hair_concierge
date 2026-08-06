@@ -50,7 +50,7 @@ Record the reproduction result, diagnosis, confidence, negative evidence, and re
 
 ## 4. Research And Decide
 
-Research only after the failure class is bounded, unless evidence is needed to establish expected behavior. Prefer authoritative primary sources. Route hair-care evidence to `hair-care-expert`, category logic to `category-specific-recommendation`, and assistant architecture to `llm-architecture-review`; keep external evidence separate from internal product logic unless reconciliation is requested.
+Research only after the failure class is bounded, unless evidence is needed to establish expected behavior. Prefer authoritative primary sources. Route hair-care evidence to `hair-care-expert` and assistant architecture to `llm-architecture-review`. Route category logic to `category-specific-recommendation` only when Nick explicitly invokes that skill; otherwise keep the bug pass diagnostic and hand the chosen category decision slot into the normal planning workflow. Keep external evidence separate from internal product logic unless reconciliation is requested.
 
 Return a concise diagnosis brief followed by exactly five decision slots:
 
