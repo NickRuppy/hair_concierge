@@ -12,7 +12,7 @@ Read this checklist completely before grilling a Personal Plan category. Work th
 
 ## 1. Reconnaissance map
 
-Start from the current worktree. Use `rg`/`rg --files` to resolve renamed paths and inspect actual values, not summaries.
+Start from the current worktree or the source branch/worktree Nick identifies. Use `rg`/`rg --files` to resolve renamed paths and inspect actual values, not summaries.
 
 ### Durable Personal Plan sources
 
@@ -20,7 +20,9 @@ Start from the current worktree. Use `rg`/`rg --files` to resolve renamed paths 
 - `docs/personal-plan/categories/README.md`
 - `docs/personal-plan/categories/<category>/{evidence,decision}.md`
 - confirmed adjacent-category `decision.md` files
-- the current `plans/*personal-plan*implementation*.md` and computation specification
+- `plans/2026-08-02-personal-plan-app-implementation-v2.md`, or its explicitly superseding living plan, plus the current computation specification
+
+If these are not present in the active worktree, inspect the identified source context read-only. Their absence blocks the final durable checkpoint, but this bundled checklist still governs current-repo reconnaissance and the working decision ledger without inventing answers.
 
 ### Lossless user inputs and questions
 
@@ -165,10 +167,10 @@ Never invent a per-product split for interchangeable products and never force a 
 48. What are Layer 2 core role/formula/axis fits?
 49. What are Layer 3 required and supporting function-coverage rules?
 50. What exact conditions aggregate to:
-   - `ideal` / `passt sehr gut`;
-   - `supportive` / `passt mit Einschränkung`;
-   - `mismatch` / `wechseln empfohlen`;
-   - `unknown` / `noch in Prüfung`?
+    - `ideal` / `passt sehr gut`;
+    - `supportive` / `passt mit Einschränkung`;
+    - `mismatch` / `wechseln empfohlen`;
+    - `unknown` / `noch in Prüfung`?
 51. What is the precedence among pending identity, safety, strict mismatch, core mismatch, missing required data, supportive deviation, and ideal?
 52. How is every owned product evaluated independently and role-relatively?
 53. How are candidates filtered, ranked, tie-broken, stabilized, deduplicated across roles, and constrained by exclusions/budget/availability?

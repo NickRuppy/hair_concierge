@@ -53,7 +53,7 @@ Use for external hair-care research, evidence-sensitive rules, myth or overreach
 
 ### `category-specific-recommendation`
 
-Use to redesign, specify, or implement one product category at a time: explicit questions, deterministic mappings, fallback rules, response metadata, and tests. Use `hair-care-expert` first only when new external evidence is requested; preserving current internal recommendation behavior does not require external research.
+Use only when Nick explicitly invokes it to define one Personal Plan product category end to end. It owns the Stage 1/2/3 decision contract, exact-product reconciliation, application rules, deterministic fixtures, and catalog/launch gates. Use `hair-care-expert` first only when new external evidence is requested; preserving current internal recommendation behavior does not require external research.
 
 ### `product-intake`
 
