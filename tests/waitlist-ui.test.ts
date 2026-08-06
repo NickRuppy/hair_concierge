@@ -78,6 +78,6 @@ test("quiz-gate signup tracks exactly one Lead only for a new token-bearing wait
     modal,
     /sessionStorage\.setItem\(WAITLIST_SURVEY_TOKEN_STORAGE_KEY, body\.surveyToken\)/,
   )
-  assert.match(modal, /router\.push\("\/warteliste\/umfrage"\)/)
+  assert.doesNotMatch(modal, /router\.push\("\/warteliste\/umfrage"\)/)
   assert.doesNotMatch(modal, /trackMetaWaitlistLeadCaptured/)
 })

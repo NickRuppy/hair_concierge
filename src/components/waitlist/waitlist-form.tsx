@@ -73,7 +73,7 @@ export function WaitlistForm() {
       try {
         window.sessionStorage.setItem(WAITLIST_SURVEY_TOKEN_STORAGE_KEY, body.surveyToken)
       } catch {}
-      router.push("/warteliste/umfrage")
+      router.push("/warteliste/danke")
     } catch {
       setErrors({
         form: "Keine Verbindung. Dein Platz wurde noch nicht gespeichert. Bitte versuch es erneut.",

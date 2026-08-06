@@ -72,7 +72,7 @@ test.describe("waitlist B quiz gate", () => {
     }
   })
 
-  test("routes a new signup with its opaque token into the existing survey", async ({ page }) => {
+  test("routes a new signup with its opaque token directly to thanks", async ({ page }) => {
     await page.route("**/api/waitlist", async (route) => {
       await route.fulfill({
         status: 200,
@@ -87,7 +87,7 @@ test.describe("waitlist B quiz gate", () => {
     await page.getByLabel("Deine E-Mail-Adresse").fill("lea@example.com")
     await page.getByRole("button", { name: "Platz vormerken" }).click()
 
-    await expect(page).toHaveURL(/\/warteliste\/umfrage$/)
+    await expect(page).toHaveURL(/\/warteliste\/danke$/)
     await expect
       .poll(() =>
         page.evaluate(() => window.sessionStorage.getItem("chaarlie_waitlist_survey_token")),
