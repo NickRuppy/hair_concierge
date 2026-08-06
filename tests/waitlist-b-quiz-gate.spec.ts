@@ -72,7 +72,7 @@ test.describe("waitlist B quiz gate", () => {
     }
   })
 
-  test("routes a new signup with its opaque token into the existing survey", async ({ page }) => {
+  test("routes a new signup with its opaque token directly to thanks", async ({ page }) => {
     await page.route("**/api/waitlist", async (route) => {
       await route.fulfill({
         status: 200,
@@ -87,7 +87,7 @@ test.describe("waitlist B quiz gate", () => {
     await page.getByLabel("Deine E-Mail-Adresse").fill("lea@example.com")
     await page.getByRole("button", { name: "Platz vormerken" }).click()
 
-    await expect(page).toHaveURL(/\/warteliste\/umfrage$/)
+    await expect(page).toHaveURL(/\/warteliste\/danke$/)
     await expect
       .poll(() =>
         page.evaluate(() => window.sessionStorage.getItem("chaarlie_waitlist_survey_token")),
@@ -114,6 +114,13 @@ test.describe("waitlist B quiz gate", () => {
     expect(
       await page.evaluate(() => window.sessionStorage.getItem("chaarlie_waitlist_survey_token")),
     ).toBeNull()
+  })
+
+  test("email survey access removes the capability from the visible URL", async ({ page }) => {
+    await openWithConsentSettled(page, `/api/waitlist/survey-access?token=${"a".repeat(64)}`)
+
+    await expect(page).toHaveURL(`${baseUrl}/warteliste/umfrage`)
+    await expect(page.getByRole("heading", { name: "Dein Platz ist fast gesichert" })).toBeVisible()
   })
 
   test("shows the existing rate-limit and service errors without navigating", async ({ page }) => {

@@ -138,7 +138,7 @@ async function loadSignup(supabase: SupabaseClient, signupId: string) {
   const { data, error } = await supabase
     .from("waitlist_signups")
     .select(
-      "id,campaign,normalized_email,first_name,marketing_consent,survey_response_id,survey_completed_at,created_at",
+      "id,campaign,normalized_email,first_name,marketing_consent,survey_token_hash,survey_response_id,survey_completed_at,created_at",
     )
     .eq("id", signupId)
     .maybeSingle()

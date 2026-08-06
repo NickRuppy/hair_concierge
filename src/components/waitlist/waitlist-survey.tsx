@@ -48,11 +48,10 @@ export function WaitlistSurvey({ surveyId }: { surveyId: string }) {
       setState("saving")
       try {
         const opaqueToken = token()
-        if (!opaqueToken) throw new Error("Missing survey association token")
         const response = await fetch("/api/waitlist/survey", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ opaqueToken, responseId }),
+          body: JSON.stringify({ ...(opaqueToken ? { opaqueToken } : {}), responseId }),
           keepalive: true,
         })
         if (!response.ok) throw new Error("Survey association failed")
