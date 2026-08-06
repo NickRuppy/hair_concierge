@@ -266,7 +266,7 @@ Use the safe non-breaking rollout:
 5. use `null` for an unreviewed repair-support value, producing `unknown` / `noch in Prüfung` rather than an optimistic match;
 6. reverify the preserved values during the Mask workstream of the shared cross-category follow-up enrichment PR; any value that lacks adequate finished-product support becomes `null` rather than a guessed level;
 7. add nullable constrained `functional_benefits` only in the enrichment change that supplies reviewed values; do not ship an all-null field that changes no output. Exact application facts remain solely in the shared protocol authority;
-8. defer the physical rename to `repair_support_level` until the legacy engine and all other `concentration` consumers are retired or migrated. That later repository-wide expand/backfill/contract change must include the approval RPCs and all script writers; it is not a Mask launch prerequisite.
+8. assign the physical rename to `repair_support_level` to the shared cross-category follow-up enrichment workstream, not Stage 1. Use a repository-wide expand/backfill/contract rollout that includes the legacy engine, approval RPCs, generated types, admin/intake consumers, intake JSON rows, validators, selectors, tests, and every script writer. Temporary compatibility during deployment is transport safety, never a second editable product authority. The workstream is complete only after the new consumers and value fingerprints are verified and the legacy column can be contracted safely.
 
 The Mask catalog facts for Stage 2 are shared `suitable_thicknesses`, `weight`, `balance_direction`, nullable `concentration` mapped to domain `repairSupportLevel`, and only genuinely necessary shared exclusion/explanation facts. Verified `functional_benefits` join that set when their enrichment lands. `ingredient_flags` may remain catalog research metadata but is not a direct Personal Plan fit or benefit authority; its later keep/drop cleanup is outside this category runtime.
 
@@ -579,8 +579,8 @@ Shared card-level reason salience remains deferred until every category is speci
 Mask uses three explicit gates:
 
 1. the pure Stage-1 need/target/cadence computation may land without a product-spec migration, consistent with the shared Stage-1 scope;
-2. before Stage-2 Mask product reconciliation is enabled, land the safe nullable-storage migration, retain physical `concentration`, map it to domain `repairSupportLevel`, and complete the named consumer audit;
-3. before Stage-3 recipes or Mask recommendations are activated, the shared `product_application_protocols` structure and one cross-category enrichment PR must verify the critical Mask protocol for all 35 products that are currently active and recommended.
+2. the shared cross-category follow-up enrichment workstream owns the safe `concentration` to `repair_support_level` expand/backfill/contract migration, complete consumer audit, and reviewed repair-support values before Stage-2 Mask product reconciliation is enabled;
+3. before Stage-3 recipes or Mask recommendations are activated, that same follow-up workstream must add the shared `product_application_protocols` structure and verify the critical Mask protocol for all 35 products that are currently active and recommended.
 
 Read-only production verification on 2026-08-06 found exactly 35 Mask rows matching `category_key = 'mask'`, `lifecycle_status = 'active'`, `is_active = true`, and `is_chaarlie_recommended = true`. All 35 have `product_mask_specs`, populated `concentration`, populated `balance_direction`, and non-empty `suitable_thicknesses`. Production currently has no structured product-protocol table or equivalent Mask protocol authority, so none of the critical application coverage below is assumed complete.
 
@@ -602,8 +602,8 @@ Until all 35 critical packages pass review, the new Mask recommendation path rem
 - shared lifecycle/persistence mechanics must implement the local Stage-2 outcomes above before Stage-2 activation;
 - the shared day-type compiler must place the category-owned occurrences without changing their total cadence;
 - the shared post-payment setup/input contract must add canonical wash frequency with explicit `does_not_wash`; this blocks exact Stage-1 cadence and every regular Stage-3 Mask allocation, not the person-side inclusion tier;
-- execution of the confirmed all-35 Mask workstream in the shared cross-category follow-up enrichment PR and its activation gate; this blocks Mask recommendation launch.
+- execution of the shared follow-up enrichment workstream—including the safe repair-support rename, consumer/RPC/writer migration, reviewed values, and all-35 protocol gate—blocks Stage-2 Mask reconciliation and Mask recommendation launch as specified above.
 
 ## Stop-gate result
 
-Category policy for Stage 1, Stage 2, and Stage 3 is confirmed. No Mask-local product decision remains open. Exact cadence implementation is gated on the shared wash-frequency setup input. Catalog implementation is gated on the safe nullable-storage/consumer audit; launch is additionally gated on verified critical protocol coverage for all 35 active recommended Mask products. Shared portfolio ownership, lifecycle mechanics, day-type compilation, and presentation remain named dependencies and may not be reimplemented as Mask-local authorities.
+Category policy for Stage 1, Stage 2, and Stage 3 is confirmed. No Mask-local product decision remains open. Exact cadence implementation is gated on the shared wash-frequency setup input. The shared follow-up enrichment workstream owns the repair-support rename and complete consumer audit before Stage 2; launch is additionally gated on verified critical protocol coverage for all 35 active recommended Mask products. Shared portfolio ownership, lifecycle mechanics, day-type compilation, and presentation remain named dependencies and may not be reimplemented as Mask-local authorities.
