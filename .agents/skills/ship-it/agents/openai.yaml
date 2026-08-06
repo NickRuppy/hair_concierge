@@ -1,0 +1,6 @@
+interface:
+  display_name: "Ship It"
+  short_description: "Finish the branch handoff"
+  default_prompt: "Use $ship-it to publish this verified Hair Concierge branch through commit, push, and draft PR, stopping before merge, deployment, production writes, or cleanup."
+policy:
+  allow_implicit_invocation: true

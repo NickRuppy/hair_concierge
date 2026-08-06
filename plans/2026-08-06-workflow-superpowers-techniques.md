@@ -8,7 +8,8 @@ Source context:
 
 - Current workflow: `AGENTS.md`
 - Repo skills: `.agents/skills/plan-hardening-loop`, `.agents/skills/implementation-loop`
-- Personal skills: `~/.codex/skills/request-code-review`, `ready-check`, `diagnosing-bugs`, and `branch-gate`
+- Cross-project personal utilities: `~/.codex/skills/request-code-review`, `diagnosing-bugs`, and `branch-gate`
+- Hair Concierge project gates: `.agents/skills/ready-check` and `.agents/skills/ship-it`
 - Reviewed upstream source: `https://github.com/obra/superpowers/tree/main/skills`
 
 ## Chosen direction
@@ -43,11 +44,12 @@ Non-goals:
 - `.agents/skills/plan-hardening-loop/references/plan-format.md`: add task right-sizing, `Consumes` / `Produces` interfaces, and a concise coverage/placeholder/type/order self-review.
 - `.agents/skills/implementation-loop/SKILL.md`: add durable resume reconciliation, worker result statuses, and a conditional pointer to test-quality guidance.
 - `.agents/skills/implementation-loop/references/test-first-quality.md`: single detailed owner for red proof, independent expectations, behavior-over-mocks, and mutation checks. `implementation-loop` and `ready-check` carry pointers, not copies.
+- `.agents/skills/ready-check/SKILL.md`: require fresh red proof for new deterministic regression guards and independent verification of delegated results.
+- `.agents/skills/ship-it/SKILL.md`: keep Hair Concierge publication and migration boundaries versioned with the project.
 
-### Personal, immediately active
+### Cross-project personal utilities
 
 - `~/.codex/skills/request-code-review/SKILL.md`: add a compact review-feedback application contract.
-- `~/.codex/skills/ready-check/SKILL.md`: require fresh red proof for new deterministic regression guards and independent verification of delegated results, linking to the repo test-quality reference only when working in Hair Concierge.
 - `~/.codex/skills/diagnosing-bugs/SKILL.md`: require working/broken comparison and conditionally load targeted debugging techniques.
 - `~/.codex/skills/diagnosing-bugs/references/targeted-techniques.md`: single source for component-boundary mapping, condition-based waiting, and conditional defense-in-depth.
 - `~/.codex/skills/branch-gate/SKILL.md`: add linked-worktree and submodule interpretation plus ignored-directory verification.
@@ -142,11 +144,11 @@ Manual:
 ## Review and handoff
 
 - Run the required read-only counterpart plan review before edits and reconcile its findings.
-- Before editing unversioned personal skills, copy the four owned skill directories to a timestamped temporary backup and report the restore path.
+- Before editing unversioned personal utilities, copy their owned directories to a timestamped temporary backup and report the restore path.
 - After implementation, run a whole-scope concision and correctness review covering both repository and personal skill changes.
 - Repository artifact: this plan is committed with the eventual PR if publication is later authorized.
 - Counterpart output: transient and discarded.
-- Personal skill changes: immediately active but not represented by the repository branch; report them separately.
+- `ready-check` and `ship-it` are repository-owned; cross-project utilities remain local and are reported separately.
 - Stop before commit, push, PR, merge, deployment, production writes, or cleanup.
 
 Planning evidence: upstream and current-skill comparison reviewed in conversation on 2026-08-06.
@@ -185,6 +187,8 @@ Counterpart findings accepted before implementation:
 - made the test reference, existing resume path, and existing review-integration section the single owners;
 - captured a reversible personal-skill snapshot at `/tmp/workflow-skills-backup-20260806.A8Ngm6`;
 - pinned the 4,652-word baseline and 5% combined ceiling.
+
+Ownership clarification after review: Hair Concierge-specific gates are repository-owned. `ready-check` and `ship-it` moved to `.agents/skills`; generic branch, diagnosis, review, and Claude utilities remain local.
 
 Verification:
 

@@ -2,7 +2,7 @@
 
 ## Role of this file
 
-`AGENTS.md` routes Hair Concierge work. Repo-owned skills live under `.agents/skills`; companion personal workflow skills may live under `~/.codex/skills`. Prefer the smallest skill set that covers the task and state the chosen skills and order when it matters. If a referenced personal skill is unavailable, use the closest built-in equivalent or apply the named gate directly from this file; do not fail solely because a personal profile is missing, and never skip an explicit approval boundary.
+`AGENTS.md` routes Hair Concierge work. Hair Concierge-specific skills live under `.agents/skills` and travel with the repository. Cross-project utilities such as `branch-gate`, `diagnosing-bugs`, `request-code-review`, and `claude-plan-review` may live under `~/.codex/skills`; they remain optional implementations of the gates defined here, not project-owned policy. Prefer the smallest skill set that covers the task and state the chosen skills and order when it matters. If a referenced personal utility is unavailable, use the closest built-in equivalent or apply the named gate directly from this file; do not fail solely because a personal profile is missing, and never skip an explicit approval boundary.
 
 ## Core workflow
 
@@ -15,7 +15,7 @@
 - `plan-hardening-loop` owns non-trivial planning, meaningful option comparison, user-facing evidence, counterpart plan review, revision, and a final designed-user-journey walkthrough. It invokes `prototype` only when a runnable UI or logic artifact is needed to settle a named decision that lighter mockups cannot answer. For user-facing work it stops only after Nick has reviewed the evidence and explicitly confirmed the journey.
 - `implementation-loop` owns execution of an approved plan or clearly bounded non-trivial change. It invokes `ready-check` and `request-code-review` before its review-ready handoff; do not rerun them as separate top-level phases on unchanged content.
 - `ready-check` owns repository and user-flow verification.
-- `request-code-review` is the single local review router. Do not separately stack `code-reviewer`, thermo review, and other general review skills unless it delegates those lenses.
+- `request-code-review` is the single cross-project review router. Do not separately stack `code-reviewer`, thermo review, and other general review skills unless it delegates those lenses.
 - `ship-it` owns explicitly authorized publication branches. “Ship it” means commit, push, and draft PR. A later “merge it” is separate authorization for verified-head squash merge plus guarded cleanup of that exact task; deployment and production writes remain separate.
 
 ### Merge and finish
