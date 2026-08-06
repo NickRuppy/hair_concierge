@@ -5,6 +5,11 @@ import { checkRateLimit, type RateLimitConfig } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { dispatchWaitlistCustomerIoForSignup } from "@/lib/waitlist/customerio-outbox"
 import { recordWaitlistSurvey } from "@/lib/waitlist/persistence"
+import {
+  readWaitlistSurveyAccessCookie,
+  WAITLIST_SURVEY_ACCESS_COOKIE,
+  waitlistSurveyAccessCookieOptions,
+} from "@/lib/waitlist/survey-access"
 
 export const WAITLIST_SURVEY_RATE_LIMIT: RateLimitConfig = {
   prefix: "waitlist-survey",
@@ -14,7 +19,7 @@ export const WAITLIST_SURVEY_RATE_LIMIT: RateLimitConfig = {
 
 const surveySchema = z
   .object({
-    opaqueToken: z.string().min(32).max(256),
+    opaqueToken: z.string().min(32).max(256).optional(),
     responseId: z.string().trim().min(1).max(512),
   })
   .strict()
@@ -56,11 +61,22 @@ export function createWaitlistSurveyPostHandler(
     const parsed = surveySchema.safeParse(await request.json().catch(() => null))
     if (!parsed.success) return NextResponse.json({ error: "Ungültige Daten" }, { status: 400 })
 
+    const cookieTokenHash = readWaitlistSurveyAccessCookie(request.headers.get("cookie"))
+    const authorization = parsed.data.opaqueToken
+      ? { opaqueToken: parsed.data.opaqueToken, responseId: parsed.data.responseId }
+      : cookieTokenHash
+        ? {
+            tokenHash: cookieTokenHash,
+            responseId: parsed.data.responseId,
+          }
+        : null
+    if (!authorization) return NextResponse.json({ error: "Ungültige Daten" }, { status: 400 })
+
     try {
       const supabase = dependencies.createAdminClient()
       // The response ID is client-attested from Typeform's browser callback. It can
       // only update optional survey/message projection; it grants no access or entitlement.
-      const survey = await dependencies.recordWaitlistSurvey(supabase, parsed.data)
+      const survey = await dependencies.recordWaitlistSurvey(supabase, authorization)
       if (!survey.recorded) {
         return NextResponse.json({ error: "Ungültige oder abgelaufene Umfrage." }, { status: 404 })
       }
@@ -70,7 +86,12 @@ export function createWaitlistSurveyPostHandler(
           .dispatchWaitlistCustomerIoForSignup(supabase, survey.signupId)
           .catch(() => undefined),
       )
-      return NextResponse.json({ ok: true })
+      const response = NextResponse.json({ ok: true })
+      response.cookies.set(WAITLIST_SURVEY_ACCESS_COOKIE, "", {
+        ...waitlistSurveyAccessCookieOptions,
+        maxAge: 0,
+      })
+      return response
     } catch {
       return NextResponse.json(
         { error: "Umfrage konnte nicht gespeichert werden." },

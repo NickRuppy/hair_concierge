@@ -52,6 +52,7 @@ const PUBLIC_API_EXACT_ROUTES = [
   "/api/billing/one-time-activation-status",
   "/api/waitlist",
   "/api/waitlist/survey",
+  "/api/waitlist/survey-access",
 ]
 
 const PROTECTED_ROUTE_PREFIXES = [

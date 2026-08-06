@@ -31,6 +31,7 @@ test("waitlist routes are exact public entries and descendants remain protected"
     "/warteliste/danke",
     "/api/waitlist",
     "/api/waitlist/survey",
+    "/api/waitlist/survey-access",
   ]) {
     assert.equal(classifyRoute(pathname, production), "public", pathname)
   }
@@ -40,6 +41,7 @@ test("waitlist routes are exact public entries and descendants remain protected"
     "/warteliste/b/other",
     "/api/waitlist/other",
     "/api/waitlist/survey/other",
+    "/api/waitlist/survey-access/other",
   ]) {
     assert.equal(classifyRoute(pathname, production), "protected", pathname)
   }

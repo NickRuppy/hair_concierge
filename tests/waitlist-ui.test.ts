@@ -16,7 +16,7 @@ test("waitlist UI preserves the standalone conversion and privacy boundaries", (
   assert.match(form, /trackMetaWaitlistLeadCaptured\(metaEventId\)/)
   assert.match(form, /WAITLIST_SURVEY_TOKEN_STORAGE_KEY/)
   assert.doesNotMatch(form, /sessionStorage\.setItem\([^)]*email/)
-  assert.match(survey, /opaqueToken, responseId/)
+  assert.match(survey, /opaqueToken \? \{ opaqueToken \} : \{\}\), responseId/)
   assert.doesNotMatch(survey, /Umfrage überspringen/)
   assert.match(survey, /waitlist_survey_completed/)
   assert.match(survey, /if \(!response\.ok\) throw/)

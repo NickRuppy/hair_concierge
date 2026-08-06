@@ -116,6 +116,13 @@ test.describe("waitlist B quiz gate", () => {
     ).toBeNull()
   })
 
+  test("email survey access removes the capability from the visible URL", async ({ page }) => {
+    await openWithConsentSettled(page, `/api/waitlist/survey-access?token=${"a".repeat(64)}`)
+
+    await expect(page).toHaveURL(`${baseUrl}/warteliste/umfrage`)
+    await expect(page.getByRole("heading", { name: "Dein Platz ist fast gesichert" })).toBeVisible()
+  })
+
   test("shows the existing rate-limit and service errors without navigating", async ({ page }) => {
     for (const scenario of [
       { status: 429, error: "Zu viele Versuche. Bitte warte kurz und probiere es erneut." },

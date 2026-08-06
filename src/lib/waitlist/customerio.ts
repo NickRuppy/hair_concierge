@@ -3,6 +3,7 @@ import {
   trackCustomerIoServerEvent,
   type CustomerIoServerResult,
 } from "@/lib/customerio/server"
+import { SITE_ORIGIN } from "@/lib/seo/site-identity"
 
 export type WaitlistCustomerIoSignup = {
   id: string
@@ -10,6 +11,7 @@ export type WaitlistCustomerIoSignup = {
   normalized_email: string
   first_name: string | null
   marketing_consent: boolean
+  survey_token_hash: string
   survey_response_id: string | null
   survey_completed_at: string | null
   created_at: string
@@ -59,6 +61,11 @@ export async function syncWaitlistSignupToCustomerIo(input: {
       waitlist_signup_id: input.signup.id,
       marketing_consent: input.signup.marketing_consent,
       survey_completed: input.eventType === "waitlist_survey_completed",
+      ...(input.eventType === "waitlist_signup"
+        ? {
+            survey_url: `${SITE_ORIGIN}/api/waitlist/survey-access?token=${encodeURIComponent(input.signup.survey_token_hash)}`,
+          }
+        : {}),
     },
   })
   return { identify, event }

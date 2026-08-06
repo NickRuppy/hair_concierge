@@ -8,6 +8,7 @@ import {
   type WaitlistCustomerIoOutboxRow,
 } from "@/lib/waitlist/customerio-outbox"
 import {
+  syncWaitlistSignupToCustomerIo,
   waitlistCustomerIoEventTimestamp,
   waitlistCustomerIoIdentity,
 } from "@/lib/waitlist/customerio"
@@ -147,6 +148,64 @@ test("survey tokens are hashed and cannot be forged or used for another signup",
     { signupId: "", recorded: false },
   )
   assert.equal(hashes[0], hashWaitlistSurveyToken(first.token))
+
+  assert.deepEqual(
+    await recordWaitlistSurvey(fake as never, {
+      tokenHash: first.tokenHash,
+      responseId: "response-1",
+    }),
+    { signupId: "signup-1", recorded: true },
+  )
+  assert.equal(hashes[2], first.tokenHash)
+})
+
+test("Customer.io puts the stored survey capability only on the signup event", async () => {
+  const calls: Array<Record<string, unknown>> = []
+  const originalFetch = globalThis.fetch
+  const originalWriteKey = process.env.CUSTOMERIO_SERVER_WRITE_KEY
+  process.env.CUSTOMERIO_SERVER_WRITE_KEY = "server-key"
+  globalThis.fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    calls.push(JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>)
+    return new Response("{}", { status: 200 })
+  }) as typeof fetch
+
+  const signup = {
+    id: "signup-uuid",
+    campaign: "launch_1_2026_08",
+    normalized_email: "ada@example.com",
+    first_name: "Ada",
+    marketing_consent: true,
+    survey_token_hash: "a".repeat(64),
+    survey_response_id: null,
+    survey_completed_at: null,
+    created_at: "2026-08-03T09:00:00.000Z",
+  }
+
+  try {
+    await syncWaitlistSignupToCustomerIo({
+      signup,
+      eventType: "waitlist_signup",
+      messageId: "waitlist-signup:signup-uuid",
+    })
+    await syncWaitlistSignupToCustomerIo({
+      signup,
+      eventType: "waitlist_survey_completed",
+      messageId: "waitlist-survey-completed:signup-uuid",
+    })
+  } finally {
+    globalThis.fetch = originalFetch
+    if (originalWriteKey === undefined) delete process.env.CUSTOMERIO_SERVER_WRITE_KEY
+    else process.env.CUSTOMERIO_SERVER_WRITE_KEY = originalWriteKey
+  }
+
+  const signupProperties = calls[1].properties as Record<string, unknown>
+  const completionProperties = calls[3].properties as Record<string, unknown>
+  assert.equal(
+    signupProperties.survey_url,
+    `https://chaarlie.de/api/waitlist/survey-access?token=${"a".repeat(64)}`,
+  )
+  assert.equal(completionProperties.survey_url, undefined)
+  assert.doesNotMatch(JSON.stringify(calls[0]), /survey_token_hash|survey_url/)
 })
 
 const row = (
@@ -178,6 +237,7 @@ function dependencies(
       normalized_email: "ada@example.com",
       first_name: "Ada",
       marketing_consent: true,
+      survey_token_hash: "a".repeat(64),
       survey_response_id: null,
       survey_completed_at: null,
       created_at: "2026-08-03T00:00:00.000Z",
@@ -266,6 +326,7 @@ test("Customer.io pre-auth identity is normalized email and keeps the UUID as li
     normalized_email: "ada@example.com",
     first_name: "Ada",
     marketing_consent: true,
+    survey_token_hash: "a".repeat(64),
     survey_response_id: null,
     survey_completed_at: null,
     created_at: "2026-08-03T00:00:00.000Z",
@@ -281,6 +342,7 @@ test("Customer.io timestamps a delayed survey event at completion instead of sig
     normalized_email: "ada@example.com",
     first_name: "Ada",
     marketing_consent: true,
+    survey_token_hash: "a".repeat(64),
     survey_response_id: "response-1",
     survey_completed_at: "2026-08-05T12:00:00.000Z",
     created_at: "2026-08-03T09:00:00.000Z",
