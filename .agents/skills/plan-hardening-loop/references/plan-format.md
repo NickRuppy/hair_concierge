@@ -10,7 +10,7 @@ Use the smallest durable plan that makes implementation and verification unambig
 4. **Target map** — list concrete files when known; otherwise name repository surfaces and explain how implementation will locate the exact files.
 5. **Designed user journey** — describe the actor, entry condition, ordered user-visible steps and decisions, system responses, error/recovery states, meaningful variants, and completion state. For backend-only work, describe the operator or integration journey and explicitly state that no end-user journey changes.
 6. **Planning evidence** — for user-facing work, link the annotated screenshot, wireframe, rendered HTML, compared variants, or conditional runnable prototype; name the question each artifact answered, the selected direction, feedback incorporated, and evidence-review status. For backend-only work, state why no user-facing evidence is required; link a logic prototype when one settled an implementation decision.
-7. **Ordered tasks** — each task ends with a checkable completion criterion and names tests or fixtures to add or change.
+7. **Ordered tasks** — each task is the smallest independently testable deliverable a reviewer could meaningfully accept or reject. Fold setup, fixtures, documentation, and configuration into the deliverable that needs them. Each task ends with a checkable completion criterion and names tests or fixtures to add or change.
 8. **Verification** — separate automated checks, manual/browser checks, migration or live-state checks, and evidence-sensitive review. Derive user-facing acceptance checks from the designed journey and reviewed mockup.
 9. **Review and handoff** — identify branch/worktree expectations, review gates, rollout risks, sign-off status, artifact disposition, and the stop point before publication.
 
@@ -24,3 +24,12 @@ Use the smallest durable plan that makes implementation and verification unambig
 - Mark user-journey sign-off as `pending` until the post-review walkthrough is explicitly confirmed. Record confirmed corrections in the plan before changing it to `confirmed`.
 - Make migrations, auth, billing, privacy, medical-adjacent guidance, and irreversible actions explicit when in scope.
 - A task such as “update the service” is incomplete; name the behavior, likely seam, regression guard, and proof of completion.
+- For dependent tasks, record `Consumes` and `Produces` with the exact interface, artifact, signature, event, or value that crosses the boundary. Keep shared exact values in one authoritative section instead of repeating them in several tasks.
+
+## Self-review before counterpart review
+
+- **Coverage:** every approved requirement and meaningful recovery state maps to a task or explicit non-goal.
+- **Placeholders:** no `TBD`, vague “handle edge cases,” unnamed tests, or unresolved implementation choice remains.
+- **Consistency:** types, signatures, names, IDs, events, and exact values agree across tasks and source evidence.
+- **Order:** dependency order matches each task's `Consumes` and `Produces`; no task assumes an artifact that does not yet exist.
+- **Scope:** independently shippable subsystems have separate plans, while inseparable setup stays with its deliverable.

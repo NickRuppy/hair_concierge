@@ -26,6 +26,8 @@ Non-goals: what is excluded
 Done when: evidence required for an implementation-ready plan
 ```
 
+If the outcome spans independently shippable subsystems, split it before detailed grilling. Plan the first outcome and leave the others as explicit follow-ups.
+
 Ask only for missing information that local context cannot answer. Acknowledge the contract and continue without seeking ceremonial confirmation unless an assumption changes scope.
 
 Before writing a persistent plan or mockup, use `branch-gate` and create or reuse the task worktree. Keep all durable task artifacts there.
@@ -69,7 +71,7 @@ Completion criterion: the user has seen or operated the relevant experience, fee
 
 ## 4. Write or update the plan
 
-Read `references/plan-format.md`, then create or patch the plan under `plans/` in the task worktree. Preserve only the chosen path.
+Read `references/plan-format.md`, then create or patch the plan under `plans/` in the task worktree. Preserve only the chosen path and complete its self-review before counterpart review.
 
 Completion criterion: the plan contains concrete files or repository surfaces, scope boundaries, ordered tasks, automated and manual verification, review gates, and an execution handoff.
 

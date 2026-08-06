@@ -23,7 +23,7 @@ For user-facing work, confirm the plan contains **Planning evidence**, confirmed
 
 Use formal Goal mode only when the user explicitly asks for it and the work is likely to span multiple turns, resumptions, or a long implementation sequence. If formal Goal mode is requested, first inspect the existing goal to avoid replacing unrelated active work.
 
-On resume, continue a matching active goal without creating a replacement. If the matching goal is paused, do not replace it or continue implementation until the user or system resumes it. If an existing goal is unrelated, or its status cannot be safely reconciled, stop and ask before closing or replacing it.
+On resume, continue a matching active goal without replacement. Reconcile plan status with `git log`, the current diff, and receipts; trust durable artifacts over chat and do not repeat completed slices after compaction. If the goal is paused, wait for the user or system to resume it. If an existing goal is unrelated or cannot be reconciled safely, ask before replacing it.
 
 In every implementation-loop run, state a compact implementation contract. Formal Goal mode supplements this contract; it does not replace it:
 
@@ -44,6 +44,8 @@ Use `branch-gate`. Reuse the planning worktree; if no persistent planning artifa
 
 Choose sequential execution for tightly coupled work, bounded delegation for independent scopes, or mixed execution when both apply. Keep product decisions, architecture, integration, and readiness in the main session.
 
+Delegation uses the roles and brief contract in `AGENTS.md`. Require `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED`; every non-`DONE` status must change the context, scope, model, plan, or stop decision before retry or review.
+
 Completion criterion: the write location, base, dirty-state ownership, and execution scopes are unambiguous.
 
 ## 3. Implement in bounded slices
@@ -54,6 +56,8 @@ Follow the plan in dependency order. For each slice:
 2. make the smallest coherent change;
 3. run focused verification;
 4. update the working plan and record deviations with evidence.
+
+When changing deterministic behavior or regression guards, read `references/test-first-quality.md` and record the red proof.
 
 Return to planning only when evidence reveals a product decision, material architecture change, scope expansion, or risk acceptance that the approved plan did not settle.
 
