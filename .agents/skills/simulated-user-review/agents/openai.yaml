@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simulated User Review"
+  short_description: "Persona-based browser UX review"
+  default_prompt: "Use $simulated-user-review to review the Hair Concierge experience at the provided URL and return a report-ready qualitative UX summary."

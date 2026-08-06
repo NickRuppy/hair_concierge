@@ -1,0 +1,4 @@
+interface:
+  display_name: "Branch Gate"
+  short_description: "Choose branch or worktree before edits"
+  default_prompt: "Use $branch-gate to check the Git state before starting implementation."

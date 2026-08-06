@@ -80,7 +80,7 @@ Completion criterion: the receipt matches the exact content proposed for review.
 
 ## 5. Review once, at the right boundary
 
-Use `request-code-review` as the single local review router. Run the configured counterpart whole-branch review only when `AGENTS.md` requires it. Verify findings locally, fix supported defects, and rerun affected checks.
+Use `request-code-review` as the single repository review router. Run the configured counterpart whole-branch review only when `AGENTS.md` requires it. Verify findings locally, fix supported defects, and rerun affected checks.
 
 If content changes after either receipt, refresh the stale receipt; do not blindly rerun unrelated review lanes. Staging or committing byte-identical content does not stale a receipt.
 

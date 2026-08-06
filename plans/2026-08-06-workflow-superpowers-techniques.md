@@ -8,8 +8,7 @@ Source context:
 
 - Current workflow: `AGENTS.md`
 - Repo skills: `.agents/skills/plan-hardening-loop`, `.agents/skills/implementation-loop`
-- Cross-project personal utilities: `~/.codex/skills/request-code-review`, `diagnosing-bugs`, and `branch-gate`
-- Hair Concierge project gates: `.agents/skills/ready-check` and `.agents/skills/ship-it`
+- Repo skills: all orchestration, verification, review, diagnosis, branch, UX-review, counterpart-review, and publication skills under `.agents/skills`
 - Reviewed upstream source: `https://github.com/obra/superpowers/tree/main/skills`
 
 ## Chosen direction
@@ -47,13 +46,16 @@ Non-goals:
 - `.agents/skills/ready-check/SKILL.md`: require fresh red proof for new deterministic regression guards and independent verification of delegated results.
 - `.agents/skills/ship-it/SKILL.md`: keep Hair Concierge publication and migration boundaries versioned with the project.
 
-### Cross-project personal utilities
+### Supporting workflow skills
 
-- `~/.codex/skills/request-code-review/SKILL.md`: add a compact review-feedback application contract.
-- `~/.codex/skills/diagnosing-bugs/SKILL.md`: require working/broken comparison and conditionally load targeted debugging techniques.
-- `~/.codex/skills/diagnosing-bugs/references/targeted-techniques.md`: single source for component-boundary mapping, condition-based waiting, and conditional defense-in-depth.
-- `~/.codex/skills/branch-gate/SKILL.md`: add linked-worktree and submodule interpretation plus ignored-directory verification.
-- `~/.codex/skills/branch-gate/scripts/git-state.sh`: report git/common directory identity, superproject state, and detached-head status.
+- `.agents/skills/request-code-review/SKILL.md`: add a compact review-feedback application contract.
+- `.agents/skills/diagnosing-bugs/SKILL.md`: require working/broken comparison and conditionally load targeted debugging techniques.
+- `.agents/skills/diagnosing-bugs/references/targeted-techniques.md`: single source for component-boundary mapping, condition-based waiting, and conditional defense-in-depth.
+- `.agents/skills/branch-gate/SKILL.md`: add linked-worktree and submodule interpretation plus ignored-directory verification.
+- `.agents/skills/branch-gate/scripts/git-state.sh`: report git/common directory identity, superproject state, and detached-head status.
+- `.agents/skills/request-code-review` owns the `code-reviewer` and conditional `thermo-nuclear-code-quality-review` lenses.
+- `.agents/skills/ready-check` may invoke `.agents/skills/simulated-user-review`.
+- `.agents/skills/claude-plan-review` owns the repository's optional counterpart-review bridge.
 
 ## Operator journey
 
@@ -128,7 +130,7 @@ Automated:
 
 - `git diff --check`
 - parse/check YAML frontmatter for every changed `SKILL.md`
-- `bash -n ~/.codex/skills/branch-gate/scripts/git-state.sh`
+- `bash -n .agents/skills/branch-gate/scripts/git-state.sh`
 - run the branch snapshot from both the root checkout and task worktree and confirm the states differ correctly
 - compare before/after word counts and inspect every top-level increase
 - `rg` checks for duplicate status contracts and repeated test/debugging rules
@@ -144,12 +146,12 @@ Manual:
 ## Review and handoff
 
 - Run the required read-only counterpart plan review before edits and reconcile its findings.
-- Before editing unversioned personal utilities, copy their owned directories to a timestamped temporary backup and report the restore path.
-- After implementation, run a whole-scope concision and correctness review covering both repository and personal skill changes.
-- Repository artifact: this plan is committed with the eventual PR if publication is later authorized.
+- Before migrating unversioned personal utilities, copy their owned directories to a timestamped temporary backup and report the restore path.
+- After implementation, run a whole-scope concision and correctness review covering all repository skill changes.
+- Repository artifact: this plan is committed with the draft PR.
 - Counterpart output: transient and discarded.
-- `ready-check` and `ship-it` are repository-owned; cross-project utilities remain local and are reported separately.
-- Stop before commit, push, PR, merge, deployment, production writes, or cleanup.
+- Every skill referenced by the Hair Concierge workflow is repository-owned; same-named local copies are removed.
+- Initial stop was before publication. Nick later authorized commit, push, and a draft PR; the current stop remains before merge, deployment, production writes, or worktree cleanup.
 
 Planning evidence: upstream and current-skill comparison reviewed in conversation on 2026-08-06.
 
@@ -179,16 +181,17 @@ Single owners:
 
 ## Implementation and review receipt
 
-Status: all six tasks complete; publication pending explicit authorization.
+Status: all six technique tasks and the repository-ownership migration are complete; published in draft PR #332.
 
 Counterpart findings accepted before implementation:
 
 - narrowed review-feedback and worktree edits to missing deltas;
 - made the test reference, existing resume path, and existing review-integration section the single owners;
 - captured a reversible personal-skill snapshot at `/tmp/workflow-skills-backup-20260806.A8Ngm6`;
+- captured the complete pre-migration workflow-skill snapshot at `/tmp/hair-concierge-workflow-skills-20260806.6sYio7`;
 - pinned the 4,652-word baseline and 5% combined ceiling.
 
-Ownership clarification after review: Hair Concierge-specific gates are repository-owned. `ready-check` and `ship-it` moved to `.agents/skills`; generic branch, diagnosis, review, and Claude utilities remain local.
+Ownership clarification after review: repository portability is the priority for this single-user, primarily single-project setup. Every workflow dependency moved to `.agents/skills`, and same-named local copies were removed. Unrelated personal and other-project skills remain local.
 
 Verification:
 
@@ -196,5 +199,10 @@ Verification:
 - YAML frontmatter parsed for all six changed top-level skills;
 - `git diff --check` and `bash -n` passed;
 - root, linked-worktree, detached-head, and ignored-directory checks passed.
+- all 19 workflow skills and 18 available agent metadata files validated from `.agents/skills`;
+- repo/local duplicate skill names: none;
+- migrated scripts remained executable and matched the pre-migration snapshot; other migrated content matched except for intentional repo-relative paths and ownership wording;
+- `npm run typecheck` passed after the ownership migration;
+- the final Claude whole-branch review was skipped at Nick's explicit request; local `request-code-review` remained required.
 
 Final whole-scope review: no blocking findings. Accepted one wording correction that treats linked-worktree identity and submodule context as separate signals, removed one redundant review-feedback sentence, and retained execution-worker statuses in `implementation-loop` while `AGENTS.md` remains the owner of general delegation roles and brief structure.
