@@ -1,26 +1,26 @@
 ---
 name: category-specific-recommendation
-description: Use for Hair Concierge when defining, grilling, completing, or implementing one Personal Plan product category end to end, including Stage 1 need/type/tier/frequency, Stage 2 exact owned/recommended product fit and reconciliation, Stage 3 day-type occurrence/application, deterministic rules, product facts, fixtures, and catalog or launch gates. Use hair-care-expert first only when new external evidence is needed.
+description: Use only when Nick explicitly invokes this skill to define, grill, complete, or implement one Hair Concierge Personal Plan product category end to end, including Stage 1 need/type/tier/frequency, Stage 2 exact owned/recommended product fit and reconciliation, Stage 3 day-type occurrence/application, deterministic rules, product facts, fixtures, and catalog or launch gates. Use hair-care-expert first only when new external evidence is needed.
 ---
 
 # Category-Specific Recommendation
 
-Define one category as a complete, deterministic Personal Plan contract before implementation. Preserve the dedicated `src/lib/personal-plan/**` architecture: legacy CareBalance, recommendation, Routine, and Chat behavior may supply evidence or reusable pure helpers, but never becomes a second runtime authority.
+Define one category as a complete, deterministic Personal Plan contract before implementation. Target the living plan's dedicated Personal Plan module boundary, currently proposed as `src/lib/personal-plan/**`: legacy CareBalance, recommendation, Routine, and Chat behavior may supply evidence or reusable pure helpers, but never becomes a second runtime authority.
 
-## Required context
+## Source context
 
-Read these current-worktree sources before asking Nick to define anything:
+Locate these sources in the active worktree or the source branch/worktree Nick identifies, then read every available source before asking Nick to define anything:
 
 - `docs/personal-plan/categories/category-design-framework.md`
 - `docs/personal-plan/categories/README.md`
 - the category's existing `evidence.md` and `decision.md`, if present
 - confirmed adjacent-category records relevant to ownership or replacement
-- the living Personal Plan implementation plan
+- `plans/2026-08-02-personal-plan-app-implementation-v2.md`, or its explicitly superseding living plan
 - current computation, lossless answer schema, questions, product inventory/pending state, catalog spec tables, application protocols, selectors, and tests
 
 Read [references/category-definition-checklist.md](references/category-definition-checklist.md) completely before the first product-decision question. Use its reconnaissance map and exact question set. Resolve current paths with `rg`; examples in the reference are discovery hints, not permanent authority.
 
-If a required durable source is absent, stop and report the missing authority instead of inventing a parallel convention.
+If the framework, category index, or living plan remains unavailable after checking the identified source context, use the bundled checklist as the process contract. Continue read-only reconnaissance and the one-decision-at-a-time working ledger, but treat the missing durable destination as a `category_blocker` for writing or committing the final category checkpoint. Report the missing authority and never invent a parallel architecture or convention.
 
 ## Authority boundaries
 
@@ -63,7 +63,7 @@ Follow the reference in order. For each consequential decision:
 5. wait for Nick's answer;
 6. record the confirmed answer, rule implication, and any dependency in a working decision ledger.
 
-Do not batch unrelated questions, reopen a confirmed decision without new evidence, or treat silence as approval. Preserve exact canonical values and use German for all proposed user-facing copy.
+Do not batch unrelated questions, reopen a confirmed decision without new evidence, or treat silence as approval. Preserve exact canonical values, follow the project vocabulary in `AGENTS.md`, and use German for all proposed user-facing copy.
 
 ### 3. Lock the three-stage contract
 
@@ -93,7 +93,8 @@ Only after Nick has confirmed the full category policy:
 2. update/create `decision.md` with confirmed policy, deterministic mappings, fallbacks, reason facts, fixtures, metadata, runtime/test targets, and explicit deferrals;
 3. update the living implementation plan's category-status, implementation, verification, gate, and artifact-disposition sections without redesigning shared architecture;
 4. inspect the complete diff and ensure it contains only the category evidence/decision, the living plan, and directly required category-framework/index metadata;
-5. run relevant document/traceability checks and create one scoped category checkpoint commit.
+5. run the named document/traceability checks from the living plan; report any unavailable check instead of improvising one;
+6. create one scoped category checkpoint commit only when Nick has explicitly authorized committing or shipping; otherwise stop with a review-ready diff.
 
 Do not mark `decision.md` confirmed or commit the checkpoint while a category blocker remains. Catalog/data gaps or shared dependencies may remain only when policy is fully decided, the gap is named, its owner/gate is explicit, and it cannot be mistaken for launch readiness.
 
@@ -108,6 +109,6 @@ Report:
 - category-local decisions and deliberately deferred shared mechanics;
 - fixtures and deterministic stop-gate result;
 - catalog/data/launch blockers;
-- changed artifacts, validation, and scoped checkpoint commit.
+- changed artifacts, validation, and the scoped checkpoint commit when one was authorized.
 
 Never claim the category or implementation complete when the stop gate fails.
