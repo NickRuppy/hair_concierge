@@ -2,8 +2,9 @@
 category: conditioner
 document_type: decision
 status: confirmed
-decision_version: 1
-last_reviewed_at: 2026-08-03
+decision_version: 2
+last_reviewed_at: 2026-08-06
+current_runtime_revision_reviewed: 0007e10d852004a6fb18f86e76afd7591fba435d
 evidence_file: docs/personal-plan/categories/conditioner/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/conditioner.ts
 test_surface: tests/personal-plan/categories/conditioner.test.ts
@@ -359,3 +360,18 @@ Reason salience and the final user-facing explanation format are deliberately de
 
 - After the adjacent categories are specified, lock whether Conditioner is `primary` or `supporting` for each shared function in the cross-category ownership matrix.
 - In the shared presentation pass, define which two or three deterministic facts receive card-level salience when several weight, balance, repair, and functional signals apply; retain the remaining facts in expanded detail.
+
+## Catalog, data, and launch gate
+
+Conditioner has no launch-cohort or enrichment shortage. A read-only live-catalog audit on 2026-08-06 found 43 active recommended Conditioners, all with non-empty verified `suitable_thicknesses`, matching Conditioner specs, complete weight/repair/balance rerank facts, images, prices, and purchase links. Verified coverage exists for all three thickness values: 14 fine, 16 normal, and 15 coarse products.
+
+Launch readiness is therefore an integrity-preservation gate:
+
+1. preserve every existing verified non-empty `suitable_thicknesses` array and matching Conditioner/rerank row during the nullable-semantics migration;
+2. use `null` only for unreviewed product suitability, producing `unknown` / `noch in Prüfung` rather than a match or mismatch;
+3. reject `[]` as invalid for an active recommended Conditioner rather than treating it as a wildcard or verified exclusion;
+4. verify after migration that fine, normal, and coarse each retain valid exact candidates and that row counts/data fingerprints match the preflight snapshot;
+5. keep the confirmed safe generic Conditioner application fallback launch-capable; exact-product protocol rows are required only when a product materially differs from that fallback;
+6. preserve the honest no-safe-match state for a rare fully excluded profile rather than promoting `mismatch` or `unknown`.
+
+This gate does not require a separate Conditioner seeding PR, re-research of the 43 complete products, or an arbitrary minimum SKU count. Product Intake must still apply the same null/non-empty rules to future Conditioner approvals.

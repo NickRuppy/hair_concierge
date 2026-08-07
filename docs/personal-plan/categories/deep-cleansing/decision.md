@@ -2,8 +2,9 @@
 category: deep_cleansing_shampoo
 document_type: decision
 status: confirmed
-decision_version: 1
+decision_version: 2
 last_reviewed_at: 2026-08-06
+current_runtime_revision_reviewed: 0007e10d852004a6fb18f86e76afd7591fba435d
 evidence_file: docs/personal-plan/categories/deep-cleansing/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/deep-cleansing.ts
 test_surface: tests/personal-plan/categories/deep-cleansing.test.ts
@@ -15,7 +16,7 @@ test_surface: tests/personal-plan/categories/deep-cleansing.test.ts
 
 This document records the confirmed deterministic policy for the Deep Cleansing Shampoo category. It follows `docs/personal-plan/categories/category-design-framework.md`. Existing CareBalance, Reset-assessment, routine-page, and recommendation-runtime code are implementation inputs only; the new Personal Plan module owns this category after implementation.
 
-The category decisions are complete. Current-product colour compatibility and the minimal product-spec backfill remain catalog-data work rather than open product logic.
+The category decisions are complete. The minimal product-spec backfill remains catalog-data work rather than open product logic.
 
 ## Category charter
 
@@ -121,7 +122,6 @@ interface ProductDeepCleansingSpec {
   productId: string
   supportedResetRoles: DeepCleansingResetRole[] | UnverifiedDeepCleansingFact
   targetScalpTypes: ('oily' | 'balanced' | 'dry')[] | UnverifiedDeepCleansingFact
-  suitableForColorTreatedHair: boolean | UnverifiedDeepCleansingFact
 }
 ```
 
@@ -133,9 +133,9 @@ Field semantics:
 - for arrays, `[]` means reviewed and verified to have no explicit values;
 - `supportedResetRoles` is hard eligibility;
 - `targetScalpTypes` is soft target positioning only;
-- `suitableForColorTreatedHair` is a strict compatibility fact only for a user with colour-treated hair;
-- a manufacturer “all hair types” claim does not automatically prove colour-treated compatibility;
 - product facts come from verified finished-product sources, not ingredient inference.
+
+Colour-treated compatibility is deliberately absent from the V1 Deep Cleansing schema, fit model, enrichment package, and launch gate. The broader colour-care topic has not yet been designed consistently across categories. Do not create an all-null placeholder column or infer compatibility locally; introduce a shared cross-category capability only when that topic is specified.
 
 Do not use the legacy `reset_intensity` field in Personal Plan selection. It cannot be calibrated reliably and must not be copied into a new target-intensity axis.
 
@@ -145,22 +145,21 @@ Evaluate one active/selected Deep Cleansing product against the required role:
 
 | Verdict | Deterministic meaning |
 |---|---|
-| `ideal` / `passt sehr gut` | Product identity is verified, it supports the required Reset role, and no verified incompatibility applies |
+| `ideal` / `passt sehr gut` | Product identity is verified and it supports the required Reset role |
 | `supportive` / `passt mit Einschränkung` | It supports the required role but has one explicit relevant product-specific limitation |
-| `mismatch` / `wechseln empfohlen` | Wrong category, required role is explicitly unsupported, or colour-treated suitability is verified false for a colour-treated user |
-| `unknown` / `noch in Prüfung` | Product is pending or a required hard fact is unverified; colour suitability `null` is unknown only when the user's hair is colour-treated |
+| `mismatch` / `wechseln empfohlen` | Wrong category or required role is explicitly unsupported |
+| `unknown` / `noch in Prüfung` | Product is pending or a required hard fact is unverified |
 
 Selection precedence:
 
 1. verified Deep Cleansing identity and lifecycle;
 2. required Reset-role support;
-3. verified user-specific compatibility;
-4. preserve a valid owned product rather than force an unnecessary switch;
-5. when selecting a new exact product, use explicit scalp-target positioning as a soft rank;
-6. use verified protocol simplicity and practical shared catalog tie-breakers only between otherwise suitable candidates;
-7. stable catalog order resolves a remaining exact tie.
+3. preserve a valid owned product rather than force an unnecessary switch;
+4. when selecting a new exact product, use explicit scalp-target positioning as a soft rank;
+5. use verified protocol simplicity and practical shared catalog tie-breakers only between otherwise suitable candidates;
+6. stable catalog order resolves a remaining exact tie.
 
-Soft positioning never rescues the wrong role, overrides a verified incompatibility, or downgrades a valid general owned product. A general verified residue product still `passt sehr gut` for an oily-scalp user; an explicit oily-scalp target merely ranks another valid new candidate higher.
+Soft positioning never rescues the wrong role or downgrades a valid general owned product. A general verified residue product still `passt sehr gut` for an oily-scalp user; an explicit oily-scalp target merely ranks another valid new candidate higher.
 
 ## Product allocation and reconciliation
 
@@ -214,15 +213,15 @@ Example optional explanation:
 
 ## Current active-product orientation
 
-| Product | `supportedResetRoles` | `targetScalpTypes` | `suitableForColorTreatedHair` |
-|---|---|---|---|
-| NEQI Deep Cleansing Shampoo | `['residue_reset']` | `['oily', 'dry']` | `null` |
-| Swiss-O-Par Tiefenreinigung | `['residue_reset', 'mineral_reset']` based on explicit Anti-Kalk/mineral-deposit positioning | `[]` | `null` |
-| Balea Professional Tiefenreinigung | `['residue_reset']` | `['oily']` | `null` |
-| ISANA Professional Tiefenreinigung | `['residue_reset']` | `[]` | `null` |
-| Gliss Scalp Balance Tiefenreinigung | `['residue_reset']` | `['oily']` | `null` |
+| Product | `supportedResetRoles` | `targetScalpTypes` |
+|---|---|---|
+| NEQI Deep Cleansing Shampoo | `['residue_reset']` | `['oily', 'dry']` |
+| Swiss-O-Par Tiefenreinigung | `['residue_reset', 'mineral_reset']` based on explicit Anti-Kalk/mineral-deposit positioning | `[]` |
+| Balea Professional Tiefenreinigung | `['residue_reset']` | `['oily']` |
+| ISANA Professional Tiefenreinigung | `['residue_reset']` | `[]` |
+| Gliss Scalp Balance Tiefenreinigung | `['residue_reset']` | `['oily']` |
 
-The role/target rows are reviewed orientation for catalog backfill. Every colour value remains unknown until an exact explicit source is verified. The inactive professional/high-end product rows remain outside this category checkpoint.
+The role/target rows are reviewed orientation for catalog backfill. The inactive professional/high-end product rows remain outside this category checkpoint.
 
 ## Required deterministic fixtures
 
@@ -244,20 +243,19 @@ The role/target rows are reviewed orientation for catalog backfill. Every colour
 16. verified residue owned product for oily scalp without explicit oily target -> `ideal`, no forced switch;
 17. required mineral role plus residue-only product -> `mismatch`;
 18. Swiss-O-Par for verified mineral role -> role passes without a chelation efficacy claim;
-19. colour-treated user plus compatibility `null` -> `unknown`;
-20. colour-treated user plus verified false -> `mismatch`;
-21. non-colour-treated user ignores colour compatibility `null`;
-22. pending owned product -> `unknown` and no executable step;
-23. two owned products -> one selected/active; the other saved and unanalysed;
-24. Reset occurrence substitutes for regular Shampoo and keeps total wash cadence unchanged;
-25. application fallback compiles exactly one pass and then resumes existing after-wash steps.
+19. pending owned product -> `unknown` and no executable step;
+20. two owned products -> one selected/active; the other saved and unanalysed;
+21. Reset occurrence substitutes for regular Shampoo and keeps total wash cadence unchanged;
+22. application fallback compiles exactly one pass and then resumes existing after-wash steps.
 
 ## Launch/data gate
+
+Deep Cleansing uses the shared two-step rollout. Its canonical schema and deterministic runtime may land inert with the other category implementation work. The five active orientation products are then backfilled through the single shared cross-category follow-up enrichment PR. Deep Cleansing activation waits until that PR has verified and inserted the five products' canonical Reset-role facts and reviewed scalp-target facts.
 
 Before this category can produce confident exact recommendations:
 
 - the active launch products must have canonical supported-role and scalp-target facts;
-- colour-treated launch fixtures require at least one verified compatible exact product or the honest no-verified-match state;
 - pending/unverified products must never be promoted to a confident alternative;
 - category tests must cover every rule and fixture above;
-- no runtime reader may use `reset_intensity` as Personal Plan fit authority.
+- no runtime reader may use `reset_intensity` as Personal Plan fit authority;
+- colour compatibility must remain absent rather than being represented by an unenriched placeholder until shared colour-care policy exists.

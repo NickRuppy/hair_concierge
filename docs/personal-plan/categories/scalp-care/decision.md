@@ -2,8 +2,8 @@
 category: scalp_care
 document_type: decision
 status: confirmed
-decision_version: 1
-last_reviewed_at: 2026-08-06
+decision_version: 2
+last_reviewed_at: 2026-08-07
 evidence_file: docs/personal-plan/categories/scalp-care/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/scalp-care.ts
 test_surface: tests/personal-plan/categories/scalp-care.test.ts
@@ -77,7 +77,7 @@ Product ownership never creates or removes the underlying Stage-1 need. An owned
 
 ### Conditional irritation clarification
 
-When `scalpConcerns` contains `irritated`, onboarding asks immediately after the scalp-concern screen:
+When the saved paid quiz contains `irritated`, post-plan onboarding asks this conditional clarification after the initial Stage-1 Bedarfsplan and before refined product reconciliation:
 
 > **Wie fühlt sich die Reizung aktuell an?**
 
@@ -89,11 +89,12 @@ Stable contract:
 - screen ID: `scalp_irritation_detail`;
 - durable answer field: `scalpIrritationState`;
 - answer required only when `irritated` is selected;
-- either answer continues through the existing post-scalp onboarding route;
+- either answer continues through the post-plan onboarding route;
 - deselecting `irritated` clears the stored detail;
 - a stored detail without `irritated` is invalid and is cleared during draft editing or rejected at final validation;
-- legacy/incomplete `irritated` input without the detail returns typed `clarification_required` and permits no exact cosmetic recommendation;
-- draft/resume and final submission preserve the answer because it changes safety and recommendation behavior.
+- the quiz-only Stage-1 projection with `irritated` but no detail retains a typed missing fact and may only render a safely paused contextual category where another quiz fact already establishes it; it never asks the question before showing the paid result or permits an exact cosmetic recommendation;
+- post-plan draft/resume and refined-plan computation preserve the answer because it changes safety and recommendation behavior;
+- the immutable paid quiz envelope is neither mutated nor version-bumped for this later answer.
 
 ### Shared scalp-buildup assessment
 
@@ -151,7 +152,7 @@ Scalp Care is optional-only in V1.
 |---|---|---|---|
 | `scalp_care.inclusion.never_basis` | Any cosmetic Scalp Care profile | Never return `basis`. | Hard V1 ceiling; evidence and captured response history do not support a universal essential step. |
 | `scalp_care.safety.pause_all` | `scalpIrritationState = burning_painful_or_inflamed`, or a known active burning/pain/open/weeping/swollen/pustular/reaction state | Return internal safety pause; suppress all proactive cosmetic roles and exact recommendations. | Highest precedence. Owned products remain visible in reconciliation with do-not-use/pause guidance. |
-| `scalp_care.clarification.irritation` | `irritated` selected and `scalpIrritationState` missing | Return `clarification_required('scalp_irritation_detail')`. | Before role computation. Do not guess. |
+| `scalp_care.clarification.irritation` | `irritated` selected and `scalpIrritationState` missing | Initial projection: retain `scalp_irritation_detail` as a typed deferred fact and never invent treatment direction; refined projection: return `clarification_required('scalp_irritation_detail')` until post-plan onboarding answers it. | Before role computation. Do not guess or block the initial paid result. |
 | `scalp_care.role.comfort` | `scalpOiliness = dry`, or `scalpIrritationState = mild_sensitive_or_itchy` | Add `scalp_comfort`. | Optional; does not diagnose a barrier condition. |
 | `scalp_care.role.flake_oil_adjunct` | `scalpOiliness = oily`, `oily_dandruff`, or `dry_dandruff` | Add `scalp_flake_oil_adjunct`. | Optional supporting role; Shampoo remains primary for dandruff-like flakes and ordinary oil control. |
 | `scalp_care.role.dry_flake_comfort` | `dry_dandruff` | Also add supporting `scalp_comfort`. | One category result; not two automatic purchases. |
@@ -491,9 +492,9 @@ Every rule above must map to at least one named test fixture. Implementation fol
 - Implement the approved shared multi-product plan first: remove the one-row-per-user/category invariant, retain exact-row mutation semantics, and add role-relative plan assignments only in the later Personal Plan layer.
 - Add the shared conditional main-product selector: when more than one owned product competes for a role, require the user to choose that role's main product; save all siblings and analyse only the selected product. Scalp Care invokes this separately for each relevant role.
 - Represent `as_needed` as a non-comparable sibling in a shared `ReportedProductFrequency = ProductFrequency | 'as_needed'` contract. Do not insert it into the ordered numeric `PRODUCT_FREQUENCIES` metadata or pass it to `isProductFrequencyAtLeast`; add dedicated normalization/storage/UI handling so existing frequency arithmetic cannot order it accidentally.
-- Add the durable `scalp_irritation_detail` screen/answer to the lossless quiz, persistence, resume, projections, and versioned profile. Bump the submission envelope to version 4 and keep Customer.io/outbox compatibility for in-flight versions 2 and 3 during the transition.
-- Compute quiz progress from the reachable screen sequence or an equivalent monotonic conditional-step contract; do not divide by a flat screen list that includes a skipped conditional screen.
-- Gate the new conditional screen with `PERSONAL_PLAN_SCALP_IRRITATION_DETAIL_ENABLED`, default off. If it is disabled, Scalp Care cannot launch for users whose `irritated` answer lacks the clarification; use conservative safety pause rather than silently guessing. This is an input-flow rollback control, not a second Scalp Care recommendation architecture.
+- Add the durable `scalp_irritation_detail` answer to the post-plan onboarding draft, persistence, resume, refined profile projection, and validation. Do not add it to or mutate the immutable paid quiz envelope.
+- Compute post-plan onboarding progress from its reachable conditional sequence or an equivalent monotonic contract; do not count a skipped clarification as an unanswered required step.
+- The shared Personal Plan feature flag gates this unfinished continuation. Until post-plan onboarding is available, an initial `irritated` profile remains safely deferred/paused and no exact cosmetic Scalp Care recommendation is activated.
 - Extend the Stage-1 category set and shared output to include `scalp_care` and role-keyed product-directed cadence.
 - Expose scalp/root product-usage reason facts from the shared Reset/product-load assessment.
 - Add the portfolio coverage rule that prevents duplicate Shampoo/Deep Cleansing/Scalp Care purchases.
@@ -514,9 +515,9 @@ Concrete identity integration must update `CanonicalProductCategoryKey`, `SUPPOR
 ### Verification, rollout, and rollback
 
 - Implement all `SC-*` fixtures and cross-category Shampoo/Deep Cleansing coverage fixtures.
-- Add migration/FK/RLS/cardinality tests, Product Intake validation tests, protocol tests, conditional-flow/progress/version tests, and deterministic proposal tests.
-- Capture a privacy-safe aggregate baseline for quiz completion around the existing scalp-concern step before enabling the conditional screen. After enablement, compare conditional-screen reach/completion and total quiz completion without logging raw answers, symptom text, or product identity.
-- Keep Scalp Care recommendation launch behind the shared Personal Plan feature flag; do not add a separate Scalp Care runtime architecture. The dedicated input-screen flag exists only so the live quiz step can be disabled without killing the entire funnel.
+- Add migration/FK/RLS/cardinality tests, Product Intake validation tests, protocol tests, post-plan conditional-flow/progress/resume tests, and deterministic proposal tests.
+- Measure privacy-safe post-plan clarification reach/completion and overall onboarding completion without logging raw answers, symptom text, or product identity.
+- Keep Scalp Care recommendation launch behind the shared Personal Plan feature flag; do not add a separate Scalp Care runtime architecture or alter the paid quiz for this clarification.
 - Track privacy-safe category/role/tier/verdict/reason IDs only—never raw symptoms, free text, product names, or health context in analytics.
 - Roll back exposure through the shared feature flag/application rollback while retaining additive catalog/inventory data; do not use destructive production down migrations.
 
@@ -525,7 +526,7 @@ Concrete identity integration must update `CanonicalProductCategoryKey`, `SUPPOR
 There is no recognition-only interim Scalp Care launch. Nick explicitly chose the complete canonical architecture rather than an intermediate product model. Execute only after the shared prerequisites are available:
 
 1. implement and verify many-row owned inventory without changing legacy recommendation cardinality;
-2. add the conditional quiz field, version/projection compatibility, monotonic progress, measurement, and its dedicated rollback flag;
+2. add the conditional post-plan onboarding field, draft/refined-profile persistence, monotonic progress, and privacy-safe measurement;
 3. expand canonical identity, Product Intake, and `ProductScalpCareSpec`, then reconcile legacy rows behind guarded constraints;
 4. create the shared role-assignment and normalized product-protocol authorities and verify the launch-product facts;
 5. implement Stage-1 Scalp Care need/role/buildup behavior and portfolio deduplication test-first;
@@ -556,7 +557,7 @@ None. Nick confirmed the category architecture, four roles, optional-only policy
 - Stage-1 category/output expansion;
 - scalp/root buildup reason facts;
 - portfolio coverage/deduplication;
-- quiz clarification persistence;
+- post-plan clarification persistence;
 - shared reason salience and final German card templates.
 
 These dependencies block implementation/launch, not the confirmed category policy.

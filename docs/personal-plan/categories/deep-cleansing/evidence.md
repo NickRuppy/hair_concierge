@@ -49,7 +49,7 @@ Product implication: store explicit verified `residue_reset` and `mineral_reset`
 
 Current products use overlapping “deep,” “intensive,” “gentle,” daily-use, and weekly-use language. Public ingredient lists and marketing do not provide a stable common scale for `gentle | medium | strong`; finished-formula behavior also cannot be inferred from one surfactant or active ingredient.
 
-Product implication: remove `resetIntensity` from Personal Plan fit. Use verified role, target positioning, compatibility, cadence, and exact application protocol instead.
+Product implication: remove `resetIntensity` from Personal Plan fit. Use verified role, target positioning, cadence, and exact application protocol instead.
 
 ### Deep Cleansing is normally one Shampoo pass
 
@@ -63,11 +63,11 @@ General Shampoo guidance supports thoroughly wetting the hair, applying primaril
 
 Product implication: do not invent minutes, dosage, or a second pass. Exact verified directions may override placement or contact time, while the user's already-planned after-wash care follows the final rinse.
 
-### Colour-treated suitability must be an explicit product fact
+### Colour-treated suitability is deferred from V1
 
 Deep-cleansing products may accelerate colour loss, while some exact products are marketed as colour-compatible. The five currently active orientation-product pages do not provide a sufficiently explicit, unambiguous colour-treated compatibility statement.
 
-Product implication: use a nullable verified compatibility fact. Missing evidence is `unknown`, not verified unsuitability and not an optimistic fit.
+Product implication: the evidence does not support an optimistic compatibility default. Because the broader cross-category colour-care topic is not yet designed, V1 omits this axis from the Deep Cleansing schema, matching, enrichment, and launch gate rather than creating an all-null local field. This evidence can be reconsidered when shared colour-care policy is specified.
 
 ## Current active-product orientation
 

@@ -18,6 +18,25 @@ During planning, an approved `decision.md` is the implementation specification. 
 
 External evidence and internal decisions must remain in separate files. Agent guidance may later distill the operational value, but must not ingest raw research as if it were executable or universally certain.
 
+## Confirmed Personal Plan category authorities
+
+The Stage-1 Bedarfsplan has ten product-category authorities. Each category computes its own need, target, cadence, reasons, and typed unresolved state. The shared portfolio pass may apply only the explicitly documented coverage/arbitration rules; it is not a second score or recommendation engine.
+
+| Category key | German label | Decision authority | Stage-1 policy | Later activation gate |
+|---|---|---|---|---|
+| `shampoo` | Shampoo | [`shampoo/decision.md`](./shampoo/decision.md) | confirmed | reviewed role/product facts and critical targeted protocols |
+| `conditioner` | Conditioner | [`conditioner/decision.md`](./conditioner/decision.md) | confirmed | preserve verified thickness/spec integrity |
+| `leave_in` | Leave-in | [`leave-in/decision.md`](./leave-in/decision.md) | confirmed | verified role, fit, Heat capability, and protocol facts |
+| `mask` | Haarmaske | [`mask/decision.md`](./mask/decision.md) | confirmed | safe `repair_support_level` migration before Stage 2; critical protocols for all 35 active recommended Masks before recommendation/Stage 3 activation |
+| `oil` | Haaröl | [`oil/decision.md`](./oil/decision.md) | confirmed | verified role/weight/thickness/Heat facts and critical role protocols |
+| `deep_cleansing_shampoo` | Tiefenreinigungsshampoo | [`deep-cleansing/decision.md`](./deep-cleansing/decision.md) | confirmed | five launch-product role/target rows verified |
+| `dry_shampoo` | Trockenshampoo | [`dry-shampoo/decision.md`](./dry-shampoo/decision.md) | confirmed | canonical specs verified for all 10 active recommended products |
+| `heat_protectant` | Hitzeschutz | [`heat-protectant/decision.md`](./heat-protectant/decision.md) | confirmed | six active exact packages enriched; pending Balea stays ineligible until reviewed |
+| `bondbuilder` | Bondbuilder | [`bondbuilder/decision.md`](./bondbuilder/decision.md) | confirmed | active catalog semantics and executable protocols verified for assigned products |
+| `scalp_care` | Kopfhautpflege | [`scalp-care/decision.md`](./scalp-care/decision.md) | confirmed, optional-only | canonical identity/intake migration, irritation detail, role facts, and critical protocols |
+
+`scalp_exfoliant` is a role inside `scalp_care`; there is no separate Personal Plan Peeling category. Styling remains outside V1. Hair Tools is a separate Personal Plan stream: its normalized exposure classifier may supply Heat facts, but Hair Tools output is not one of these ten product-category cards.
+
 ## Required category files
 
 Each category directory contains:

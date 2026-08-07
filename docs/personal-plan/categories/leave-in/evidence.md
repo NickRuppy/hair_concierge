@@ -90,7 +90,7 @@ External research should be commissioned only as each product-policy question be
 2. When does a Leave-in materially improve post-wash detangling, friction, softness, frizz/surface control, or definition support?
 3. Can a Leave-in safely replace rinse-out Conditioner in any narrow profile/product case, or should it remain additive in V1?
 4. How should formula weight, format, amount, and application area vary with thickness, density, texture, length, volume sensitivity, and buildup risk?
-5. Which product claims and verified protocol facts are required before a Leave-in can satisfy blow-dry, diffuser, or high-temperature direct-heat protection?
+5. Which finished-product evidence and verified application-state/reapplication facts are required before a Leave-in can satisfy a qualifying Heat event, without treating claimed maximum temperature as a comparative fit axis?
 6. What conservative application guidance is defensible without exact product directions, including damp/dry stage, distribution, detangling, reapplication, and refresh use?
 7. What safety, reaction, scalp-placement, buildup, breakage, repair, and split-end boundaries must be explicit?
 
@@ -99,7 +99,7 @@ External research should be commissioned only as each product-policy question be
 - Prefer dermatology, cosmetic-science, hair-fibre, regulatory, and exact manufacturer protocol sources appropriate to the question.
 - Keep creator technique guidance separate from efficacy and safety evidence.
 - Record evidence strength and limitations; weak evidence does not become a hard deterministic rule.
-- Product-specific heat temperatures, activation, amounts, and application order require a verified product source rather than category inference.
+- Product temperature claims may remain in source provenance but do not establish a comparative V1 fit grade. Material application state, reapplication, amounts, and order require an exact verified product protocol rather than category inference.
 
 ## Source register
 

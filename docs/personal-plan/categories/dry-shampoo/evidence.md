@@ -35,18 +35,17 @@ Accumulated Dry Shampoo can contribute to scalp irritation, while application ov
 
 Product implication: preserve product fit, cadence advice, and temporary execution pause as separate outputs. Pause active irritation, dry flakes, active dandruff, or visible buildup; do not make sensitivity positioning a hard blocker without a known reaction.
 
-### The Drogerie market supports four useful application formats
+### The verified V1 Drogerie cohort supports three useful application formats
 
 The reviewed products show materially different application behavior:
 
 - conventional pressurized aerosol sprays;
 - pressurized aerosol foams;
-- non-aerosol liquid sprays/pumps that dry after application;
-- powder/pump formats, provisionally supported until the exact Drogerie candidate is verified.
+- non-aerosol liquid sprays/pumps that dry after application.
 
 These differences mainly change application. They do not provide a reliable global hierarchy of product quality or fit.
 
-Product implication: store one constrained format, derive aerosol status from it, and compile one standardized fallback per format. Do not add a separate aerosol boolean.
+Product implication: store one constrained three-value V1 format, derive aerosol status from it, and compile one standardized fallback per format. Do not add a separate aerosol boolean. The unverified powder candidate remains outside V1 rather than creating a speculative enum and protocol.
 
 ### Refresh and volume/texture are the useful product directions
 
@@ -60,17 +59,17 @@ Tinted Dry Shampoos are designed to reduce visible residue on corresponding hair
 
 Product implication: universal products can be recommended immediately. Resolve a tinted variant inline in Stage 2 only when it is otherwise preferred. Treat a wrong tint as `passt mit Einschränkung`, not an efficacy failure.
 
-### “No visible residue” is a useful comparison claim but not a hard guarantee
+### “No visible residue” remains evidence-only in V1
 
 Several reviewed products advertise no visible residue after correct application or brushing. This is a finished-product marketing claim and may depend on dosage, distribution, hair colour, and application.
 
-Product implication: store it as nullable verified claim metadata and use it only as a small tie-breaker or comparison fact.
+Product implication: do not add this claim to the V1 Dry Shampoo schema or ranking model. Tint compatibility already covers the material appearance mismatch, while this weaker marketing claim would add enrichment without changing fit. Retain it only as source background for possible later product copy.
 
-### Fragrance-free and sensitive claims are descriptive until a user-side exclusion exists
+### Fragrance-free claims are deferred from the V1 schema
 
 Several Drogerie products are marketed as fragrance-free or sensitive. The current onboarding does not collect fragrance or aerosol exclusions.
 
-Product implication: preserve verified `fragranceFree` and sensitivity positioning for product facts and reasoning, but do not create dormant hard filters. A known user reaction remains a separate explicit mismatch reason.
+Product implication: do not add a Dry Shampoo-local `fragranceFree` field while no user-side preference or matching behavior exists. Retain these claims only as source orientation. If the product later supports fragrance avoidance, introduce it through one shared cross-category attribute. Sensitive-scalp positioning remains separately represented by `scalpSensitivityFit`, and a known user reaction remains an explicit mismatch reason.
 
 ### Cleansing strength is not a useful Dry Shampoo axis
 
@@ -89,10 +88,10 @@ This matrix records only the properties relevant to the proposed schema. Exact r
 | Balea Trockenshampoo Kopfhaut Sensitive | standard refresh | aerosol spray | fragrance-free/sensitive; no visible residue after brushing | orientation only |
 | Guhl 30sek Trockenshampoo Volumen & Frische | volume/texture | aerosol spray | volume, grip, root refresh | orientation only |
 | Jean&Len Trockenshampoo 7in1 | volume/texture | aerosol spray | refresh, volume, texture/grip, no-white-residue claim | orientation only |
-| Balea Trockenshampoo Schaum Kopfhaut Sensitive | volume/texture | aerosol foam | sensitive/fragrance-free; refresh plus Styling/volume through drying | orientation only |
+| Balea Trockenshampoo Schaum Kopfhaut Sensitive | volume/texture | aerosol foam | exact current dm SKU/GTIN verified; pressurized aerosol foam; sensitive/fragrance-free; refresh plus Styling/volume through drying | exact format verified 2026-08-06 |
 | ISANA Trockenshampoo Schaum Sensitiv | volume/texture | aerosol foam | sensitive positioning; volume through drying | orientation only |
-| got2b Liquid-to-Dry | standard refresh | non-aerosol liquid | liquid application; no-visible-residue claim | orientation only |
-| Alterra Trockenshampoo Sensitiv | unverified | provisional non-aerosol powder | exact current product/source not sufficiently verified | must remain unknown/pending |
+| got2b Liquid-to-Dry | standard refresh | non-aerosol liquid | exact current dm SKU/GTIN and manufacturer product verified; pump liquid without propellant; no-visible-residue claim | exact format verified 2026-08-06; dm temporarily unavailable |
+| Alterra Trockenshampoo Sensitiv | unverified | possible non-aerosol powder | exact current product/source not sufficiently verified | outside V1; reconsider only through exact product intake |
 
 No product in this matrix is added to or activated in the database by this category decision.
 
@@ -116,11 +115,11 @@ The reviewed liquid-to-dry product uses a pump/spray application, a short drying
 
 Product implication: use a generic sparse-application/dry/work-in protocol unless an exact product override supplies verified numbers.
 
-### Non-aerosol powder
+### Excluded powder orientation
 
 Powder Dry Shampoos generally require sparse root distribution, a short dwell, massage, and removal of excess. The exact Drogerie product from the supplied list was not verified from a sufficiently authoritative current source.
 
-Product implication: support the format in the schema but keep any exact candidate unknown until catalog intake verifies identity and directions.
+Product implication: do not support the format in the V1 schema or compiler. Add it later only if exact product intake verifies a current candidate and its materially distinct instructions.
 
 ## Evidence limitations
 
@@ -139,7 +138,7 @@ Product implication: support the format in the schema but keep any exact candida
 | [AAD — Dry Shampoo tips](https://www.aad.org/public/everyday-care/hair-scalp-care/hair/dry-shampoo-best-results) | Dermatology guidance | Oil absorption rather than water cleansing; wash after one or two uses; accumulation/irritation boundary | Does not define a universal weekly cadence or exact product fit |
 | [Balea Trockenshampoo Kopfhaut Sensitive](https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive) | Retailer/manufacturer data | Aerosol spray, sensitive/fragrance-free positioning, residue claim, application | Product-specific marketing evidence |
 | [Balea Trockenshampoo Schaum Kopfhaut Sensitive](https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive) | Retailer/manufacturer data | Aerosol foam, sensitive positioning, drying and volume/Styling directions | Product-specific marketing evidence |
-| [got2b Liquid-to-Dry](https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry) | Retailer/manufacturer data | Non-aerosol liquid format, drying/application phases, residue claim | Product-specific marketing evidence |
+| [got2b Liquid-to-Dry](https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry) and [official got2b product page](https://www.got2b.de/haarstyling/produkt/trockenshampoo/trockenshampoo-liquid-to-dry-spray.html) | Retailer/manufacturer data | Exact non-aerosol pump-liquid format, drying/application phases, residue claim, current product identity | Product-specific marketing evidence; dm was temporarily unavailable on 2026-08-06 |
 | [Langhaarmädchen Trockenshampoo sensitive](https://www.dm.de/p/d/2972775/langhaarmaedchen-trockenshampoo-sensitive) | Retailer/manufacturer data | Aerosol, fragrance-free/sensitive positioning, volume/matte-root direction | Product-specific marketing evidence |
 | [Guhl 30sek Trockenshampoo Volumen & Frische](https://www.guhl.com/produkt/30sek-trockenshampoos/30sek-trockenshampoo-volumen-frische/) | Manufacturer data | Volume/grip direction and aerosol application | Product-specific marketing evidence |
 | [Jean&Len Trockenshampoo 7in1](https://www.jeanlen.de/en/Trockenshampoo-7in1-200-ml/2900100243) | Manufacturer data | Refresh, volume/texture, and no-white-residue positioning | Product-specific marketing evidence |

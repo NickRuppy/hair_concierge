@@ -2,8 +2,9 @@
 category: dry_shampoo
 document_type: decision
 status: confirmed
-decision_version: 1
+decision_version: 2
 last_reviewed_at: 2026-08-06
+current_runtime_revision_reviewed: 0007e10d852004a6fb18f86e76afd7591fba435d
 evidence_file: docs/personal-plan/categories/dry-shampoo/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/dry-shampoo.ts
 test_surface: tests/personal-plan/categories/dry-shampoo.test.ts
@@ -15,7 +16,7 @@ test_surface: tests/personal-plan/categories/dry-shampoo.test.ts
 
 This document records the confirmed deterministic policy for the Dry Shampoo category. It follows `docs/personal-plan/categories/category-design-framework.md`. Existing CareBalance and recommendation-runtime rules are implementation inputs only; the new Personal Plan category module owns this behavior after implementation.
 
-The category-level product journey and rules are confirmed. Exact catalog backfill, the provisional powder-format verification, and the shared late-binding variant-resolution component remain implementation/data work rather than open product-policy questions.
+The category-level product journey and rules are confirmed. Exact catalog backfill and the shared late-binding variant-resolution component remain implementation/data work rather than open product-policy questions.
 
 ## Category charter
 
@@ -129,16 +130,13 @@ type DryShampooFormat =
   | 'aerosol_spray'
   | 'aerosol_foam'
   | 'non_aerosol_liquid'
-  | 'non_aerosol_powder'
 
 interface ProductDryShampooSpec {
   productId: string
   stylingEffect: DryShampooStylingEffect
   hairColorFit: DryShampooHairColorFit
   scalpSensitivityFit: 'sensitive_ok' | 'normal_only' | null
-  fragranceFree: boolean | null
-  format: DryShampooFormat
-  noVisibleResidueClaim: boolean | null
+  format: DryShampooFormat | null
 }
 ```
 
@@ -148,13 +146,29 @@ Field semantics:
 - `stylingEffect` is a soft directional fit;
 - `hairColorFit` is a soft appearance compatibility fact;
 - `scalpSensitivityFit` is a soft suitability fact unless an actual negative reaction is known;
-- `fragranceFree` is descriptive metadata only in V1 because no user-side fragrance exclusion exists;
 - `format` compiles the application protocol and may be used for comparison, but current profile data does not choose it;
-- `noVisibleResidueClaim` is a small comparison/ranking fact only;
 - `null` means unverified, never false;
-- `non_aerosol_powder` remains a supported provisional enum until an exact Drogerie product is verified during catalog intake.
 
-Do not add a separate `isAerosol` boolean, cleansing strength, generic functional-benefit array, or dormant fragrance/aerosol filters.
+Keep `scalpSensitivityFit` in V1. The lossless quiz value `scalp_condition = gereizt` supplies the available sensitivity target for product assessment, while active symptoms independently set `executionState = pause`. Product fit and temporary execution safety therefore remain separate rather than deleting the sensitivity property because use is paused.
+
+Do not add a separate `isAerosol` boolean: the constrained format already expresses aerosol versus non-aerosol and also selects the correct application protocol. Do not add cleansing strength, a generic functional-benefit array, or dormant fragrance/aerosol filters. `fragranceFree` is deliberately absent from the V1 category schema because the user profile has no fragrance-avoidance input and the fact would not affect matching or ranking. If fragrance preference is introduced later, model it once as a shared cross-category product attribute rather than adding a Dry Shampoo-local field.
+
+### Canonical Dry Shampoo schema cutover
+
+The live catalog currently has 10 active recommended Dry Shampoos with legacy specs. This is a controlled schema migration followed by exact-product enrichment, not a new seed cohort.
+
+Use one clean cutover with no compatibility aliases or dual authority:
+
+1. rename `primary_effect` to `styling_effect` across the database, generated types, Product Intake, admin, selectors, reason codes, validators, and tests;
+2. migrate legacy `classic_refresh` and `sensitive_refresh` to `standard_refresh`, while `volume_texture` remains unchanged;
+3. keep sensitivity positioning solely in `scalp_sensitivity_fit`; `sensitive_refresh` must not survive as a second representation of the same fact;
+4. replace the legacy `foam_or_liquid` format with the precise canonical enum and do not retain the combined value or a fallback alias;
+5. preserve all eight current `aerosol_spray` values mechanically in the schema/runtime migration;
+6. set the two legacy `foam_or_liquid` rows to `null` in that migration rather than inserting product-specific facts into the schema/runtime PR;
+7. in the shared cross-category follow-up enrichment PR, write the verified exact mappings `Balea Trockenshampoo Schaum Kopfhaut Sensitive -> aerosol_foam` and `got2b Liquid-to-Dry -> non_aerosol_liquid` from the sources recorded in `evidence.md`;
+8. use `null` for any other unverified format and keep that product `unknown` / `noch in Prüfung` and out of executable instructions until reviewed.
+
+The schema/runtime PR may therefore land inert without guessing. Dry Shampoo activation requires all 10 active recommended products to have a verified canonical format after the shared enrichment PR.
 
 ## Stage 2 fit
 
@@ -206,8 +220,7 @@ Selection order:
 2. sensitivity and resolved hair-colour compatibility;
 3. `volume` prefers `volume_texture`; `less_volume` prefers `standard_refresh`; with neither, both are acceptable;
 4. preserve a suitable owned product before proposing an unnecessary replacement;
-5. prefer `noVisibleResidueClaim = true` only as a small tie-breaker;
-6. use curated catalog priority and then stable catalog order for a remaining tie.
+5. use curated catalog priority and then stable catalog order for a remaining tie.
 
 Format has no global preference order. The winning suitable product brings its format. Stage 2 may show an equally suitable alternative-format tile such as:
 
@@ -224,6 +237,8 @@ Hair colour is not part of current onboarding. Universal products may be selecte
 - dunkel.
 
 The answer belongs to the proposed plan input and resolves the tinted variant before confirmation. This is a shared late-binding pattern for uncollected variant/preference attributes, not a Dry Shampoo-specific parallel architecture.
+
+This inline answer represents visible hair-colour/tint fit only. It does not record whether the hair is colour-treated, does not establish colour-care compatibility, and does not introduce the deferred cross-category colour-care topic. In the worst case it is asked once at the moment a tinted candidate actually needs resolution; universal products require no question.
 
 ## Product allocation and reconciliation
 
@@ -278,12 +293,6 @@ Dry Shampoo is an optional non-wash-day action. Use one standardized protocol pe
 2. Let the liquid dry briefly.
 3. Work it in with a towel, brush, or cool air as the verified product directions permit.
 
-### Non-aerosol powder
-
-1. Distribute sparingly over dry roots.
-2. Let it sit briefly.
-3. Massage in and brush away excess.
-
 Shared application rules:
 
 - do not apply over active irritation, dry flakes, active dandruff, or visible buildup;
@@ -333,21 +342,20 @@ The engine emits reason codes and structured facts. Presentation maps them to co
 23. missing required hard catalog fact -> `unknown`;
 24. two owned products -> selected/first is assessed; the other stays saved and unanalysed;
 25. supportive candidate and no ideal catalog candidate -> may be offered with explicit limitation, never forced;
-26. exact tie with residue-claim difference -> verified no-visible-residue claim wins only as tie-breaker;
-27. equally suitable different format -> alternative-format comparison, no fit downgrade;
-28. each of the four formats compiles its corresponding standardized protocol;
-29. after one logged occurrence since wet wash -> another optional occurrence remains possible;
-30. after two logged occurrences since wet wash -> next relevant suggestion is wet wash;
-31. main-product change -> proposed successor and no silent active-plan mutation;
-32. unverified provisional powder product -> remains pending/unknown until exact intake verification.
+26. equally suitable different format -> alternative-format comparison, no fit downgrade;
+27. each of the three V1 formats compiles its corresponding standardized protocol;
+28. after one logged occurrence since wet wash -> another optional occurrence remains possible;
+29. after two logged occurrences since wet wash -> next relevant suggestion is wet wash;
+30. main-product change -> proposed successor and no silent active-plan mutation.
 
 ## Launch/data gate
 
+Dry Shampoo participates in the shared two-step rollout. The canonical schema migration and deterministic runtime may land inert first. Its workstream in the single shared cross-category follow-up enrichment PR then verifies the complete canonical spec for all 10 currently active recommended products, including the two exact format splits above, before activation.
+
 Before confident exact Dry Shampoo recommendations launch:
 
-- active launch products must be backfilled to the canonical product specification;
+- all 10 active recommended products must be backfilled to the canonical product specification;
 - each active recommended product must have verified identity, format, styling effect, hair-colour fit, and sensitivity positioning or an honest `unknown` state;
-- the exact Drogerie powder candidate must be verified before `non_aerosol_powder` is assigned to it;
 - pending/unverified products must never be promoted to a confident recommendation;
 - category tests must cover every rule and fixture above;
 - the current runtime cadence thresholds must be replaced by this single confirmed Personal Plan policy rather than partially reused.

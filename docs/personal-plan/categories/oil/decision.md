@@ -2,8 +2,8 @@
 category: oil
 document_type: decision
 status: confirmed
-decision_version: 1
-last_reviewed_at: 2026-08-05
+decision_version: 2
+last_reviewed_at: 2026-08-07
 evidence_file: docs/personal-plan/categories/oil/evidence.md
 runtime_authority_after_implementation: src/lib/personal-plan/categories/oil.ts
 test_surface: tests/personal-plan/categories/oil.test.ts
@@ -80,14 +80,14 @@ Relevant goals are:
 
 Relevant current concerns are:
 
-- `dry_dull_lengths`;
+- `dry_lengths`;
 - `frizz_flyaways`;
 - `low_shine`;
-- `breakage_or_split_ends`;
+- `breakage`;
+- `split_ends`;
 - `tangling`;
 - `lost_shape` only as a boundary with Styling;
 - `low_volume_or_weighed_down` as a weight/load sensitivity;
-- `scalp_imbalance` only as a scalp-role boundary; it never creates a fibre role and does not suppress legitimate lengths/ends use.
 
 Corroborating profile and exposure inputs are `hairSurface`, `chemicalTreatments`, `elasticResponse`, thickness, density, and hair length. Scalp oiliness and scalp concerns never create a supported Oil role, but they also do not suppress an independently valid lengths/ends role. Only a shared safety exclusion, a product reaction, or an adverse scalp response suppresses assignment.
 
@@ -102,7 +102,7 @@ Surface roughness, breakage, split ends, dry lengths, Heat, and mechanical stres
 
 Primary job: formula- and protocol-qualified reduction of wash-associated fibre stress for vulnerable lengths.
 
-- strongest observed signals: `breakage_or_split_ends`, or `dry_dull_lengths` combined with `hairSurface = rough`;
+- strongest observed signals: `breakage`, or `dry_lengths` combined with `hairSurface = rough`; `split_ends` is supporting-only and never creates a Basis pre-wash role by itself or through exposure corroboration;
 - goal-only support: `strength_ends` and `moisture`;
 - independent corroboration: non-natural chemical treatment or `elasticResponse = snaps`;
 - supporting context that cannot independently promote the role: rough surface and long/very-long hair;
@@ -112,7 +112,7 @@ Primary job: formula- and protocol-qualified reduction of wash-associated fibre 
 
 Primary cosmetic job: short-term surface smoothing, softness, and flyaway/frizz reduction on damp hair. Detangling and manageability are supporting rather than exclusive Oil jobs.
 
-- observed signals: `frizz_flyaways`, `dry_dull_lengths`, and secondarily `tangling`;
+- observed signals: `frizz_flyaways`, `dry_lengths`, and secondarily `tangling`;
 - goal support: `frizz_surface`, `shine`, and `manageability_styling`;
 - corroboration: rough surface, textured hair, and chemical treatment;
 - Leave-in normally owns persistent damp-hair conditioning and detangling more directly, so this Oil role is normally supporting/optional rather than the first category chosen;
@@ -151,9 +151,9 @@ Compute each supported role independently. The strongest included role later det
 
 Define the shared `healthyManageableLengths` guard once before any role consumes it. It passes only when all of the following are confirmed:
 
-- no `dry_dull_lengths` concern;
+- no `dry_lengths` concern;
 - no `tangling` concern;
-- no `breakage_or_split_ends` concern;
+- no `breakage` or `split_ends` concern;
 - `hairSurface` is not `rough`;
 - `materialStructuralVulnerability.present = false` in the shared `PlanDamageAssessment`;
 - no `lost_shape` concern;
@@ -170,7 +170,7 @@ Frizz/flyaway or low-shine signals themselves do not fail this guard because the
 | `oil.dry_finish.shine_goal_support` | `goals` contains `shine` without current `low_shine`, but the healthy/manageable-lengths guard does not pass | `optional` | Conditioner or Leave-in owns the broader care need; Oil remains incremental finishing support. |
 | `oil.dry_finish.frizz_flyaways` | `currentConcerns` contains `frizz_flyaways` and no Basis rule matches | `optional` | Oil may polish flyaways, but the quiz does not distinguish localized flyaways from distributed frizz or shape loss. |
 | `oil.dry_finish.frizz_goal` | `goals` contains `frizz_surface` and no Basis rule matches | `optional` | Surface finishing support; Leave-in or Styling may own the main job. |
-| `oil.dry_finish.dry_rough_support` | `currentConcerns` contains `dry_dull_lengths` or `hairSurface = rough`, without a stronger dry-finish rule | `optional` | Finish support only; Conditioner/Leave-in own general conditioning. |
+| `oil.dry_finish.dry_rough_support` | `currentConcerns` contains `dry_lengths` or `hairSurface = rough`, without a stronger dry-finish rule | `optional` | Finish support only; Conditioner/Leave-in own general conditioning. |
 | `oil.dry_finish.no_job` | No rule above matches | `not_needed` | No confirmed dry-finish job. |
 
 Precedence and boundaries:
@@ -179,21 +179,22 @@ Precedence and boundaries:
 2. a shine goal without a current low-shine concern becomes `basis` only when the healthy/manageable-lengths guard passes;
 3. frizz/flyaways always makes `dry_finish` optional by itself, even when the matching goal is also selected; a direct healthy/manageable anti-frizz job belongs to the damp smoothing role instead;
 4. `low_volume_or_weighed_down`, fine thickness, or low density does not erase a real `low_shine` need; it changes target weight, amount, and product fit;
-5. `lost_shape`, `shape_definition`, `breakage_or_split_ends`, `strength_ends`, tangling, scalp inputs, and volume goals alone do not create a dry-finish role;
+5. `lost_shape`, `shape_definition`, `breakage`, `split_ends`, `strength_ends`, tangling, scalp inputs, and volume goals alone do not create a dry-finish role;
 6. product format or ownership never upgrades the role tier.
 
 ### `pre_wash_fibre_treatment`
 
 Use the shared `PlanDamageAssessment` to recognize a material chemical/structural vulnerability rather than scoring the same treatment answers again inside Oil.
 
-For the goal-led optional rule, `preWashVulnerabilitySignal` means at least one of: `breakage_or_split_ends`; `dry_dull_lengths` together with `hairSurface = rough`; or `materialStructuralVulnerability.present = true`. Long hair, a goal by itself, and general frizz do not satisfy this signal.
+For the goal-led optional rule, `preWashVulnerabilitySignal` means at least one of: `breakage`; `split_ends`; `dry_lengths` together with `hairSurface = rough`; or `materialStructuralVulnerability.present = true`. Long hair, a goal by itself, and general frizz do not satisfy this signal. `split_ends` can corroborate only an optional goal-led support route; it never promotes pre-wash Oil to Basis.
 
 | Rule ID | Condition | Role tier | Reason |
 |---|---|---|---|
-| `oil.pre_wash_fibre_treatment.breakage_corroborated` | `currentConcerns` contains `breakage_or_split_ends` and `materialStructuralVulnerability.present = true` | `basis` | Observed vulnerable ends/fibre plus independent corroboration supports a qualified preventive pre-wash role. |
-| `oil.pre_wash_fibre_treatment.dry_rough_treated` | `dry_dull_lengths`, `hairSurface = rough`, and `materialStructuralVulnerability.present = true` | `basis` | Dry/rough lengths plus material treatment exposure justify stronger wash-associated support. |
-| `oil.pre_wash_fibre_treatment.breakage_alone` | `breakage_or_split_ends` without a Basis corroborator | `optional` | Possible preventive support without enough evidence for a confident baseline. |
-| `oil.pre_wash_fibre_treatment.dry_rough` | `dry_dull_lengths` plus `hairSurface = rough` without material structural vulnerability | `optional` | Conditioner/Leave-in/Mask own general care; pre-wash Oil may add support. |
+| `oil.pre_wash_fibre_treatment.breakage_corroborated` | `currentConcerns` contains `breakage` and `materialStructuralVulnerability.present = true` | `basis` | Observed breakage plus independent corroboration supports a qualified preventive pre-wash role. |
+| `oil.pre_wash_fibre_treatment.dry_rough_treated` | `dry_lengths`, `hairSurface = rough`, and `materialStructuralVulnerability.present = true` | `basis` | Dry/rough lengths plus material treatment exposure justify stronger wash-associated support. |
+| `oil.pre_wash_fibre_treatment.breakage_alone` | `breakage` without a Basis corroborator | `optional` | Possible preventive support without enough evidence for a confident baseline. |
+| `oil.pre_wash_fibre_treatment.split_ends_support` | `split_ends` with no stronger pre-wash rule | `optional` | Cosmetic/preventive support only; never claim that Oil repairs existing split ends. |
+| `oil.pre_wash_fibre_treatment.dry_rough` | `dry_lengths` plus `hairSurface = rough` without material structural vulnerability | `optional` | Conditioner/Leave-in/Mask own general care; pre-wash Oil may add support. |
 | `oil.pre_wash_fibre_treatment.structural_exposure_only` | `materialStructuralVulnerability.present = true` without an observed pre-wash concern | `optional` | Exposure alone does not prove that another category is required. |
 | `oil.pre_wash_fibre_treatment.goal_corroborated` | `goals` contains `strength_ends` or `moisture` plus `preWashVulnerabilitySignal`, with no Basis rule | `optional` | Goal-led support with corroboration. |
 | `oil.pre_wash_fibre_treatment.no_job` | No rule above matches | `not_needed` | No confirmed pre-wash fibre-treatment job. |
@@ -216,7 +217,7 @@ This internal key represents the damp smoothing/pre-style use case. It does not 
 | `oil.leave_on_fibre_conditioning.coily_frizz_layer` | `texture = coily` plus `frizz_flyaways` concern or `frizz_surface` goal | `basis` | Leave-in remains the broad conditioning Basis; a fitting damp Oil is a deliberate second Basis layer for additional smoothing, applied after Leave-in. |
 | `oil.leave_on_fibre_conditioning.frizz_direct` | `frizz_flyaways` concern or `frizz_surface` goal plus `healthyManageableLengths` | local `basis` candidate | A light damp Oil/serum is the direct minimal product for smoothing and flyaway control when no broader conditioning or shape job is present. The portfolio pass makes the final ownership decision below. |
 | `oil.leave_on_fibre_conditioning.frizz_support` | `frizz_flyaways` concern or `frizz_surface` goal, but the healthy/manageable guard fails | `optional` | Leave-in or Styling owns the broader care or shape need; Oil may add surface smoothing. |
-| `oil.leave_on_fibre_conditioning.dry_rough_support` | `dry_dull_lengths` concern or `hairSurface = rough`, with no stronger damp rule | `optional` | Leave-in owns persistent care; Oil is only a supporting layer. |
+| `oil.leave_on_fibre_conditioning.dry_rough_support` | `dry_lengths` concern or `hairSurface = rough`, with no stronger damp rule | `optional` | Leave-in owns persistent care; Oil is only a supporting layer. |
 | `oil.leave_on_fibre_conditioning.tangling_support` | `tangling` concern, with no stronger damp rule | `optional` | Leave-in owns broad detangling; a suitable Oil may add slip but is not the primary solution. |
 | `oil.leave_on_fibre_conditioning.no_job` | No rule above matches | `not_needed` | No confirmed damp smoothing/pre-style job. |
 
@@ -666,7 +667,7 @@ Use one parameterized rule-table matrix that exercises every Oil role-rule row a
 25. `oil-coily-frizz-layer`: coily texture plus frizz concern/goal -> Leave-in remains Basis and damp Oil is also Basis after Leave-in; coily texture alone still creates no Oil role.
 26. `oil-three-basis-roles`: independently corroborated pre-wash vulnerability plus coily/frizz damp smoothing plus observed low shine -> all three roles remain `basis`; assignment minimizes bottles only when one product fully fits several roles, and Stage 3 retains all three chronological occurrences.
 
-The parameterized matrix explicitly includes `oil.dry_finish.shine_goal_support`, `oil.pre_wash_fibre_treatment.structural_exposure_only`, `oil.pre_wash_fibre_treatment.goal_corroborated`, and `oil.leave_on_fibre_conditioning.tangling_support`; do not duplicate those simple rows as bespoke fixtures.
+The parameterized matrix explicitly includes `oil.dry_finish.shine_goal_support`, `oil.pre_wash_fibre_treatment.structural_exposure_only`, `oil.pre_wash_fibre_treatment.split_ends_support`, `oil.pre_wash_fibre_treatment.goal_corroborated`, and `oil.leave_on_fibre_conditioning.tangling_support`; do not duplicate those simple rows as bespoke fixtures.
 
 Shared portfolio tests additionally compare competing category targets for the same job: Leave-in-only anti-frizz coverage, Oil retaining uncovered anti-frizz ownership, the coily two-layer exception, exact-product failure without Stage-1 re-arbitration, and equal-coverage tie-breaking by fewer products. These tests assert that product minimization never defeats stronger target fit or required functional coverage.
 
