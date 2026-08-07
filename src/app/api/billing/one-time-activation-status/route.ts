@@ -140,11 +140,14 @@ export async function handleOneTimeActivationStatus(
       return statusJson({ status: stripeActivationErrorStatus(error.code) }, 400)
     }
     if (error instanceof PayPalCheckoutActivationError) {
+      const retryable =
+        error.code === "paypal_order_capture_pending" ||
+        error.code === "paypal_user_race_unresolved"
       return statusJson(
         {
-          status: error.code === "paypal_order_capture_pending" ? "pending" : "failed_permanent",
+          status: retryable ? "pending" : "failed_permanent",
         },
-        error.code === "paypal_order_capture_pending" ? 200 : 400,
+        retryable ? 200 : 400,
       )
     }
 

@@ -332,6 +332,26 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await stubPayPalSdk(page)
     let createOrderCalls = 0
     let statusCalls = 0
+    let stripePreparationCalls = 0
+    let releaseStripePreparation = () => {}
+    const stripePreparationReleased = new Promise<void>((resolve) => {
+      releaseStripePreparation = resolve
+    })
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      stripePreparationCalls += 1
+      await stripePreparationReleased
+      await route.fulfill({
+        body: JSON.stringify({
+          status: "prepared",
+          client_secret: "pi_late_stripe_prepare_secret_test",
+          expires_at: Date.now() + 60_000,
+          preparation_token: "late-stripe-preparation-token",
+          session_id: "cs_late_stripe_prepare",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
     await page.route("**/api/paypal/create-order-intent", async (route) => {
       createOrderCalls += 1
       await route.fulfill({
@@ -360,8 +380,16 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await openCheckout.click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     const paypalButton = checkout.getByRole("button", { name: "PayPal" })
+    await expect.poll(() => stripePreparationCalls).toBe(1)
     await paypalButton.click()
     await expect.poll(() => createOrderCalls).toBe(1)
+    const paypalOwnedAttempt = checkout.getByText(
+      "Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.",
+    )
+    await expect(paypalOwnedAttempt).toBeVisible()
+
+    releaseStripePreparation()
+    await expect(paypalOwnedAttempt).toBeVisible()
 
     await page.evaluate(() => {
       const paypalWindow = window as typeof window & {
@@ -374,11 +402,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await expect(checkout.getByText("Noch keine Zahlung bestätigt")).toBeVisible({
       timeout: 10_000,
     })
-    await expect(
-      checkout.getByText(
-        "Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.",
-      ),
-    ).toBeVisible()
+    await expect(paypalOwnedAttempt).toBeVisible()
     await expect(checkout.getByText("Schließe die Zahlung dort ab.")).toHaveCount(0)
     await expect.poll(() => statusCalls).toBe(3)
     await expect(paypalButton).toBeVisible()
@@ -471,6 +495,11 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await openCheckout.click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     await checkout.getByRole("button", { name: "PayPal" }).click()
+    await expect(
+      checkout.getByText(
+        "Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.",
+      ),
+    ).toBeVisible()
 
     await page.evaluate(() => {
       const paypalWindow = window as typeof window & {

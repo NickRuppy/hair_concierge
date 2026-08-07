@@ -84,6 +84,7 @@ export function PersonalPlanOneTimeCheckout({
   const checkoutStartedProvidersRef = useRef(new Set<string>())
   const paymentOptionViewsRef = useRef(new Set<string>())
   const paymentSelectionIndexRef = useRef(0)
+  const providerOwnerRef = useRef<"paypal" | "stripe" | null>(null)
   const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
   const visibleRef = useRef(visible)
   const wasVisibleRef = useRef(visible)
@@ -154,6 +155,7 @@ export function PersonalPlanOneTimeCheckout({
     paymentOptionViewsRef.current.clear()
     paymentSelectionIndexRef.current = 0
     firstEngagementRef.current = false
+    providerOwnerRef.current = null
     preparedStripeCheckoutRef.current = null
     stripePreparationInFlightRef.current = null
     stripeControlRecoveryRotatedRef.current = false
@@ -424,15 +426,28 @@ export function PersonalPlanOneTimeCheckout({
         if (!resolvedState) {
           throw new Error("one-time Stripe session preparation failed")
         }
+        if (
+          providerOwnerRef.current === "paypal" &&
+          (resolvedState.kind === "unavailable" ||
+            (resolvedState.kind === "ready" && resolvedState.checkout.owner === null))
+        ) {
+          // A PayPal order may claim this attempt while an earlier, unclaimed
+          // Stripe preparation is still in flight. That stale response must
+          // never make Stripe available again for the PayPal-owned attempt.
+          preparedStripeCheckoutRef.current = null
+          return ""
+        }
         if (resolvedState.kind !== "ready") {
           preparedStripeCheckoutRef.current = null
           setError(null)
           setPreparationFailureReported(false)
           setPreparedStripeCheckoutState(resolvedState)
           if (resolvedState.kind === "duplicate_access") {
+            providerOwnerRef.current = null
             setStripeSelected(false)
             setDuplicateDialogOpen(true)
           } else if (resolvedState.kind === "provider_locked_paypal") {
+            providerOwnerRef.current = "paypal"
             setStripeSelected(false)
             trackCheckoutLifecycle({
               provider: "paypal",
@@ -440,6 +455,7 @@ export function PersonalPlanOneTimeCheckout({
               transition: "recovery_presented",
             })
           } else if (resolvedState.kind === "provider_locked_stripe") {
+            providerOwnerRef.current = "stripe"
             setStripeSelected(true)
             trackCheckoutLifecycle({
               provider: "stripe",
@@ -459,6 +475,7 @@ export function PersonalPlanOneTimeCheckout({
           claimed: body.status === "recovered",
           ...resolvedState.checkout,
         }
+        providerOwnerRef.current = resolvedState.checkout.owner
         trackCheckoutLifecycle({
           provider: "stripe",
           transition: "prepared_response_received",
@@ -469,6 +486,10 @@ export function PersonalPlanOneTimeCheckout({
         return resolvedState.checkout.clientSecret
       } catch (error) {
         if (!isCurrentPreparation()) return ""
+        if (providerOwnerRef.current === "paypal") {
+          preparedStripeCheckoutRef.current = null
+          return ""
+        }
         // The request may settle during the sheet's exit animation. Keep the
         // parent-owned state recoverable so a still-mounted or reopened sheet
         // never remains on an indefinite loading surface.
@@ -589,6 +610,7 @@ export function PersonalPlanOneTimeCheckout({
       })
       if (controlOutcome === "duplicate_access") setDuplicateDialogOpen(true)
       else if (controlOutcome === "provider_locked" && body.provider_locked === "paypal") {
+        providerOwnerRef.current = "paypal"
         setPreparedStripeCheckoutState({ kind: "provider_locked_paypal" })
         setStripeSelected(false)
         setError(null)
@@ -598,6 +620,7 @@ export function PersonalPlanOneTimeCheckout({
           transition: "recovery_presented",
         })
       } else if (controlOutcome === "provider_locked" && body.provider_locked === "stripe") {
+        providerOwnerRef.current = "stripe"
         setStripeSelected(true)
         setPreparedStripeCheckoutState({ kind: "provider_locked_stripe" })
         trackCheckoutLifecycle({
@@ -633,6 +656,7 @@ export function PersonalPlanOneTimeCheckout({
       return false
     }
     preparation.claimed = true
+    providerOwnerRef.current = "stripe"
     setStripeSelected(true)
     setPreparedStripeCheckoutState((current) =>
       current.kind === "ready"
@@ -720,6 +744,7 @@ export function PersonalPlanOneTimeCheckout({
           onDuplicateAccess={() => setDuplicateDialogOpen(true)}
           onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
           onProviderSelected={() => {
+            providerOwnerRef.current = "paypal"
             setPreparedStripeCheckoutState({ kind: "provider_locked_paypal" })
             setStripeSelected(false)
             setError(null)

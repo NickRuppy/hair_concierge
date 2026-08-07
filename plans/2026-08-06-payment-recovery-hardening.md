@@ -460,13 +460,14 @@ Counterpart reviewer: Claude Code, seven plan/spec passes, Opus, effort `high`, 
 
 ## Implementation receipt — 7 August 2026
 
-Status: implemented and locally verified in the task worktree; not committed, pushed, deployed, or applied to production.
+Status: implemented and published in PR #337. A pre-merge CI failure exposed one additional cross-provider race; the correction and its follow-up activation-safety review are included in the final verified scope. Merge, deployment, production configuration, and customer/account writes remain separately gated.
 
 - **Slice A:** active PayPal replay now derives initial-password capability from the matching server-owned activation marker. A webhook-created auth row therefore remains eligible for its one allowed password setup; initialized, foreign-token, and auth-admin-read-failure paths remain fail-closed. The existing endpoint `409` stays unchanged as the last defensive guard.
 - **Slice B1:** PayPal SDK `onError` now enters a reducer-controlled reconciliation cycle against the existing activation-status authority at absolute offsets 0/3/7 seconds with an eight-second deadline, one in-flight request, stale-response rejection, a bounded manual recheck, and one navigation claim. Unconfirmed states use neutral copy and no success icon; a missing token leaves the mounted PayPal control usable and does not expose an inert status button.
 - **Slice B2:** Stripe preparation control outcomes are parent-owned typed states before Checkout Elements mounts. PayPal and Stripe provider locks are rendered as explicit mutually exclusive recovery states; a Stripe preparation failure has a visible retry, expired preparation rotates its credential from a loading state, and a successful Stripe claim owns the attempt immediately.
 - **Slice C:** the existing reconciliation surfaces now run a paid-but-access-not-active monitor after one-time fulfillment retry. It excludes internal-test traffic, reports privacy-safe provider/reason signals, treats local lookup failure, canonical-access contradiction, and a genuine scan/finding cap as monitor failures, and fails the route visibly when evidence delivery cannot be confirmed. It scans the oldest eligible purchases first with stable `(paid_at, id)` ordering, four bounded workers, a 200-row scan budget, and at most 50 findings; a one-row look-ahead distinguishes an exact-budget result from a genuinely partial scan.
 - **History/dismissal:** the exact browser Back and payment-descendant swipe regressions stayed green. No production history implementation changed without a reproduced red defect.
+- **Pre-merge CI race:** a PayPal order can claim the checkout attempt while the initial Stripe preparation request is still in flight. The older unclaimed Stripe response previously overwrote the PayPal-owned state and could re-enable card controls. A deterministic delayed-response browser regression proved the failure. The checkout now records provider ownership synchronously, ignores stale unclaimed Stripe readiness/failure after PayPal ownership, and still permits duplicate-access or genuine Stripe-owned server truth to override stale client state.
 
 Review findings accepted during implementation:
 
@@ -495,10 +496,11 @@ Review findings accepted during implementation:
 - carried terminal PayPal recovery truth into welcome as a non-retryable return state, removing the dead-end manual status button while keeping support reachable;
 - made a fresh successful server reconciliation override a stale terminal URL hint, so a concurrent recovery cannot strand a now-recoverable customer on support;
 - added a safe payment-welcome lab plus browser journeys for pending PayPal recovery, genuine existing access, terminal support, new-account activation/magic-link choice, and an authenticated returning-customer handoff.
+- kept the defensive `paypal_user_race_unresolved` account-visibility race retryable after verified capture, while preserving missing intent/consent and invalid payment truth as terminal support outcomes.
 
 Final verification on the resulting source tree:
 
-- `npm run test:node`: 2,726 tests passed, 0 failed;
+- `npm run test:node`: 2,728 tests passed, 0 failed;
 - `npx playwright test tests/auth-post-checkout-routes.spec.ts --project=chromium --timeout=30000`: 36 passed;
 - `npx playwright test tests/offer-payment-overlay.spec.ts --project=chromium --timeout=30000`: 32 passed;
 - focused PayPal SDK uncertainty journey: 1 passed, including three bounded activation checks, one order intent, retained PayPal control, neutral pending copy, and one recovery warning;
@@ -506,6 +508,8 @@ Final verification on the resulting source tree:
 - PayPal-disabled browser fixture: fresh card selection remained visible with no PayPal control and exactly one preparation request;
 - simulated-user payment acceptance: 5 passed on the real checkout/welcome/profile components — neutral PayPal pending, existing-access login with email prefill and no payment controls, terminal support with no manual recheck, confirmed-payment activation plus one explicit magic-link request stub, and authenticated return into the app;
 - `npm run ci:verify`: typecheck, lint, and production build passed; lint retained four unrelated pre-existing warnings and introduced no errors;
+- exact GitHub-style production Playwright command after the provider-ownership fix: 115 passed, 3 skipped;
+- focused delayed-Stripe/PayPal-ownership and terminal-recovery production browser checks: 2 passed, repeated three times for 6/6 stable passes;
 - `git diff --check`: passed.
 
 ## Review and handoff
@@ -513,7 +517,7 @@ Final verification on the resulting source tree:
 - Worktree: `.worktrees/payment-recovery-hardening-plan`
 - Branch: `codex/payment-recovery-hardening-plan`
 - Implemented scope: Slices A, B1, B2, and the code/runbook portion of C are integrated in this worktree for one whole-tree review. Production rollout and Sentry workflow mutation remain separately gated.
-- Counterpart review: multiple read-only Claude Code passes ran at `high` effort. The final Opus whole-tree pass found no hard defects; its stale terminal-hint edge was fixed and regression-tested. Its reconcile-ordering and preparation single-flight test-gap notes were rejected after verifying the existing explicit ordering and single-flight browser tests. The remaining volume/latency observations are retained below as bounded operational risks.
+- Counterpart review: multiple read-only Claude Code passes ran at `high` effort. The final Opus whole-tree pass found no critical/high-severity defect and confirmed the provider-ownership correction. Its medium finding that `paypal_user_race_unresolved` could reach a non-retryable welcome state was accepted narrowly, fixed, and regression-tested; missing intent/consent remains terminal. Earlier stale-terminal-hint feedback was also fixed and regression-tested. Reconcile-ordering and preparation single-flight test-gap notes were rejected after verifying the existing explicit ordering and single-flight browser tests. Remaining defensive parsing and volume/latency observations are retained as bounded residual risks.
 - Planning evidence: **commit**.
 - Durable plan: **commit**.
 - Claude review report: **discard after findings are reconciled** unless Nick explicitly requests retention.
@@ -521,7 +525,7 @@ Final verification on the resulting source tree:
 - Production replay data and temporary investigation output: **discard/not retained**.
 - Evidence review: **confirmed by Nick on 7 August 2026**.
 - User-journey sign-off: **confirmed by Nick on 7 August 2026; implementation authorized**.
-- Stop point: verified review-ready implementation. No commit, push, PR, deployment, production configuration, payment, account repair, or customer contact is authorized by this implementation task.
+- Stop point: PR #337 may be merged only at the reviewed content fingerprint and after all checks on that exact head are green. Deployment, production configuration, payment, account repair, and customer contact remain separately gated.
 
 ### Residual risks
 
@@ -529,6 +533,7 @@ Final verification on the resulting source tree:
 - The activation-status endpoint can perform idempotent local fulfillment after observing provider capture; correctness depends on the existing fulfillment-job claim and its exactly-once regression staying green.
 - Old and active tabs share the token/IP activation-status rate-limit bucket. Rate limiting remains a calm pending state, and the two-tab fixture must prove the chosen schedule does not turn contention into a false failure.
 - Provider ownership currently emerges through provider-specific routes. Refactoring Stripe preparation must preserve Apple Pay readiness and avoid claiming Stripe prematurely.
+- The prepared-Stripe response parser trusts the same-origin route contract that every `recovered` response also carries `provider_locked: "stripe"` and a valid finite expiry. The current route does so; malformed/contradictory 2xx response hardening remains a low-severity defensive follow-up rather than a merge blocker.
 - The final navigation event may be a multi-tab/stale-page sequence rather than a remaining sentinel defect. The plan deliberately requires red evidence before changing history.
 - Sentry aggregate uniqueness/filter capabilities must be verified in the live project; if the workflow cannot express unique attempts safely, use issue routing plus a scheduled privacy-safe aggregate rather than weakening dedupe.
 - The daily reconcile intentionally completes one-time fulfillment retry before starting integrity, entitlement, analytics, and paid-access branches so the monitor sees post-retry truth. The ordering is regression-tested, but its added front-loaded latency must remain within the route's 60-second budget at production volume.
