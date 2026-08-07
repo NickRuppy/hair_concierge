@@ -2,9 +2,16 @@ import Link from "next/link"
 
 import { Wordmark } from "@/components/landing/wordmark"
 
-export function WaitlistShell({ children }: { children: React.ReactNode }) {
+export function WaitlistShell({
+  children,
+  topBanner,
+}: {
+  children: React.ReactNode
+  topBanner?: React.ReactNode
+}) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#fdfbf9] text-foreground">
+      {topBanner ? <div className="border-b border-border bg-[#fff8e7]">{topBanner}</div> : null}
       <header className="border-b border-border bg-[#fdfbf9]">
         <div className="mx-auto flex max-w-3xl justify-center px-5 py-4 sm:px-6">
           <Link href="/warteliste" aria-label="chaarlie Warteliste">
