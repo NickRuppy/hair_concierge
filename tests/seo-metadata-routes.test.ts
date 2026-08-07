@@ -56,6 +56,12 @@ const ciOfferPageLab: RouteEnvironment = {
   localDevLoginEnabled: false,
 }
 
+const ciPersonalPlanStage3Lab: RouteEnvironment = {
+  ciPersonalPlanStage3LabEnabled: true,
+  nodeEnv: "production",
+  localDevLoginEnabled: false,
+}
+
 test("classifies every current public page and route handler", () => {
   const publicRoutes = [
     "/",
@@ -219,6 +225,15 @@ test("preserves environment-conditional development routes", () => {
   assert.equal(classifyRoute("/labs/portrait", vercelPreview), "development")
   assert.equal(classifyRoute("/labs/offer-page", ciOfferPageLab), "development")
   assert.equal(classifyRoute("/labs/portrait", ciOfferPageLab), "protected")
+  assert.equal(
+    classifyRoute("/labs/personal-plan/stage-3", vercelPreview),
+    "development",
+  )
+  assert.equal(
+    classifyRoute("/labs/personal-plan/stage-3", ciPersonalPlanStage3Lab),
+    "development",
+  )
+  assert.equal(classifyRoute("/labs/personal-plan/stage-3", production), "protected")
   assert.equal(classifyRoute("/labs/app-proof", vercelPreview), "protected")
   assert.equal(classifyRoute("/labs/portrait", production), "protected")
 })

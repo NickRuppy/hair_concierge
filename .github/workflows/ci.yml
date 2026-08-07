@@ -138,6 +138,8 @@ jobs:
         run: npm run build
       - name: Check funnel registries
         run: npm run funnel:check
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
       - name: Run deterministic contract tests
         run: npm run test:contracts
 
