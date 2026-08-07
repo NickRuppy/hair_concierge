@@ -205,6 +205,56 @@ test("one-time activation status keeps an uncaptured PayPal order pending withou
   assert.equal(activationCalls, 0)
 })
 
+test("one-time activation status keeps a transient PayPal user race pending", async () => {
+  const response = await handleOneTimeActivationStatus(
+    request("/api/billing/one-time-activation-status?provider=paypal&token=I-test"),
+    baseDeps({
+      verifyPayPalOneTimePaymentForRecovery: async () => ({
+        payment: {
+          provider: "paypal",
+          providerTransactionId: "capture-test",
+          providerOrderId: "order-test",
+          consentId: "consent-test",
+          email: "paypal@example.com",
+          amountMinor: 2999,
+          currency: "eur",
+          paidAt: "2026-07-31T12:00:00.000Z",
+        },
+        intent: { provider_capture_id: "capture-test" } as any,
+        consent: {} as any,
+        existingPurchase: null,
+        accountContext: {} as any,
+      }),
+      activateVerifiedPayPalOrderIntent: async () => {
+        throw new PayPalCheckoutActivationError(
+          "paypal_user_race_unresolved",
+          "auth user is not visible yet",
+        )
+      },
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { status: "pending" })
+})
+
+test("one-time activation status keeps a missing PayPal intent terminal", async () => {
+  const response = await handleOneTimeActivationStatus(
+    request("/api/billing/one-time-activation-status?provider=paypal&token=I-test"),
+    baseDeps({
+      verifyPayPalOneTimePaymentForRecovery: async () => {
+        throw new PayPalCheckoutActivationError(
+          "paypal_order_intent_missing",
+          "order intent is missing",
+        )
+      },
+    }),
+  )
+
+  assert.equal(response.status, 400)
+  assert.deepEqual(await response.json(), { status: "failed_permanent" })
+})
+
 test("one-time activation status preserves a revoked PayPal purchase", async () => {
   const response = await handleOneTimeActivationStatus(
     request("/api/billing/one-time-activation-status?provider=paypal&token=I-test"),

@@ -113,6 +113,12 @@ export type CheckoutLifecycleTransition =
   | "dismissed"
   | "resumed"
   | "recovery_presented"
+  | "recovery_started"
+  | "recovery_pending"
+  | "recovery_pending_access"
+  | "recovery_succeeded"
+  | "recovery_failed_permanent"
+  | "recovery_revoked"
   | "attempt_ended"
 
 export type CheckoutLifecycleDismissalReason =

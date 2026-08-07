@@ -186,6 +186,58 @@ test("logs only privacy-safe monitor failure categories from the authenticated e
   assert.equal(output.join("\n").includes(secret), false)
 })
 
+test("logs paid-access monitor failures with stable dedupe", async () => {
+  const { logger, output } = loggerOutput()
+  const exitCode = await main(["--endpoint", endpoint], {
+    getKeychainSecret: async () => secret,
+    fetch: async () =>
+      Response.json(
+        {
+          paymentIntegrity: {
+            failures: [
+              {
+                provider: "unknown",
+                reason: "local_lookup_error",
+                errorFamily: "unknown",
+              },
+            ],
+          },
+          paidAccess: {
+            failures: [
+              {
+                provider: "unknown",
+                reason: "local_lookup_error",
+                errorFamily: "unknown",
+                rawProviderReference: "must-not-leak",
+              },
+              {
+                provider: "unknown",
+                reason: "candidate_cap",
+                errorFamily: "unknown",
+              },
+              {
+                provider: "paypal",
+                reason: "canonical_access_conflict",
+                errorFamily: "unknown",
+                purchaseId: "must-not-leak",
+              },
+            ],
+          },
+        },
+        { status: 500 },
+      ),
+    logger,
+  })
+
+  assert.equal(exitCode, 1)
+  assert.match(
+    output[0],
+    / http_failure status=500 failures=unknown:local_lookup_error:unknown,unknown:candidate_cap:unknown,paypal:canonical_access_conflict:unknown$/,
+  )
+  assert.equal(output.join("\n").includes("must-not-leak"), false)
+  assert.equal(output.join("\n").includes(secret), false)
+})
+
 test("requires the endpoint argument and does not place a Keychain value in process arguments", async () => {
   const { logger, output } = loggerOutput()
   const before = [...process.argv]

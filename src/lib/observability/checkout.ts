@@ -24,6 +24,17 @@ export type CheckoutStage =
 
 type BreadcrumbLevel = "debug" | "info" | "warning" | "error"
 type RateLimitSource = "app" | "supabase_auth"
+type PayPalOneTimeSdkCallbackPhase = "on_error"
+type PayPalOneTimeSdkRecoveryOutcome =
+  | "no_token"
+  | "pending"
+  | "pending_access"
+  | "succeeded"
+  | "failed_permanent"
+  | "revoked"
+type CheckoutBrowserFamily = "chrome" | "safari" | "firefox" | "edge" | "other" | "unknown"
+type CheckoutViewportClass = "mobile" | "tablet" | "desktop" | "unknown"
+type CheckoutStandaloneWebViewHint = "standalone" | "webview" | "browser" | "unknown"
 
 export interface CheckoutSentryDetails {
   provider: CheckoutProvider
@@ -41,6 +52,12 @@ export interface CheckoutSentryDetails {
   paypalEventId?: string | null
   paypalEventType?: string | null
   paypalTokenPresent?: boolean
+  paypalCallbackPhase?: PayPalOneTimeSdkCallbackPhase
+  paypalRecoveryOutcome?: PayPalOneTimeSdkRecoveryOutcome
+  release?: string | null
+  browserFamily?: CheckoutBrowserFamily
+  viewportClass?: CheckoutViewportClass
+  standaloneWebViewHint?: CheckoutStandaloneWebViewHint
   status?: number | string
   reason?: string | null
   rateLimitSource?: RateLimitSource
@@ -93,6 +110,12 @@ export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): Chec
   addOptional(context, "paypal_event_id", details.paypalEventId)
   addOptional(context, "paypal_event_type", details.paypalEventType)
   addOptional(context, "paypal_token_present", details.paypalTokenPresent)
+  addOptional(context, "paypal_callback_phase", details.paypalCallbackPhase)
+  addOptional(context, "paypal_recovery_outcome", details.paypalRecoveryOutcome)
+  addOptional(context, "release", details.release)
+  addOptional(context, "browser_family", details.browserFamily)
+  addOptional(context, "viewport_class", details.viewportClass)
+  addOptional(context, "standalone_webview_hint", details.standaloneWebViewHint)
   addOptional(context, "status", details.status)
   addOptional(context, "reason", details.reason)
   addOptional(context, "rate_limit_source", details.rateLimitSource)
@@ -102,6 +125,10 @@ export function buildCheckoutSentryPayload(details: CheckoutSentryDetails): Chec
   addTag(tags, "checkout.status", details.status)
   addTag(tags, "checkout.reason", details.reason)
   addTag(tags, "checkout.rate_limit_source", details.rateLimitSource)
+  addTag(tags, "checkout.paypal_recovery_outcome", details.paypalRecoveryOutcome)
+  addTag(tags, "checkout.browser_family", details.browserFamily)
+  addTag(tags, "checkout.viewport_class", details.viewportClass)
+  addTag(tags, "checkout.standalone_webview_hint", details.standaloneWebViewHint)
 
   return { tags, context }
 }
@@ -154,6 +181,55 @@ export function captureCheckoutException(
     scope.setContext("checkout", payload.context)
     scope.setLevel?.("error")
     sink.captureException(error)
+  })
+}
+
+export function capturePayPalOneTimeSdkRecoveryWarning(
+  details: {
+    checkoutAttemptId: string
+    isInternalTest: boolean
+    live: boolean
+    paypalTokenPresent: boolean
+    paypalRecoveryOutcome: PayPalOneTimeSdkRecoveryOutcome
+    release?: string | null
+    browserFamily?: CheckoutBrowserFamily
+    viewportClass?: CheckoutViewportClass
+    standaloneWebViewHint?: CheckoutStandaloneWebViewHint
+  },
+  sink: CheckoutSentrySink = Sentry,
+) {
+  const payload = buildCheckoutSentryPayload({
+    provider: "paypal",
+    stage: "paypal_activation_status_poll",
+    source: "quiz_result_offer",
+    checkoutAttemptId: details.checkoutAttemptId,
+    paypalCallbackPhase: "on_error",
+    paypalTokenPresent: details.paypalTokenPresent,
+    paypalRecoveryOutcome: details.paypalRecoveryOutcome,
+    release: details.release,
+    browserFamily: details.browserFamily,
+    viewportClass: details.viewportClass,
+    standaloneWebViewHint: details.standaloneWebViewHint,
+    reason: "paypal_sdk_onerror",
+    status: details.paypalRecoveryOutcome,
+  })
+  sink.withScope((scope) => {
+    for (const [key, value] of Object.entries(payload.tags)) {
+      scope.setTag(key, value)
+    }
+    scope.setTag("payment.signal", "customer_payment_error_observed")
+    scope.setTag("payment.provider", "paypal")
+    scope.setTag("payment.boundary", "provider_session")
+    scope.setTag("payment.origin", "browser")
+    scope.setTag("payment.method", "paypal")
+    scope.setTag("payment.truth", "unknown")
+    scope.setTag("payment.retryable", "true")
+    scope.setTag("payment.commerce_kind", "one_time")
+    scope.setTag("payment.is_internal_test", String(details.isInternalTest))
+    scope.setTag("payment.live", String(details.live))
+    scope.setContext("checkout", payload.context)
+    scope.setLevel?.("warning")
+    sink.captureException(new Error("paypal_sdk_onerror_recovery_warning"))
   })
 }
 

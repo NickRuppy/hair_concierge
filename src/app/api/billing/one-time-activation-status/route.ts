@@ -22,9 +22,10 @@ import {
 
 export const runtime = "nodejs"
 
-// The pending client polls at most 15 times, every two seconds. This leaves
-// normal retries comfortably below the shared-window limit while bounding a
-// public endpoint before it reaches either payment provider.
+// The welcome client polls at most 15 times every two seconds. PayPal overlay
+// recovery can add three automatic checks plus cooled-down manual checks. The
+// shared 30-per-minute token/IP budget intentionally throttles reloads,
+// multiple tabs, and manual contention; a 429 remains a neutral pending state.
 export const ONE_TIME_ACTIVATION_STATUS_RATE_LIMIT = {
   prefix: "one-time-activation-status",
   limit: 30,
@@ -139,11 +140,14 @@ export async function handleOneTimeActivationStatus(
       return statusJson({ status: stripeActivationErrorStatus(error.code) }, 400)
     }
     if (error instanceof PayPalCheckoutActivationError) {
+      const retryable =
+        error.code === "paypal_order_capture_pending" ||
+        error.code === "paypal_user_race_unresolved"
       return statusJson(
         {
-          status: error.code === "paypal_order_capture_pending" ? "pending" : "failed_permanent",
+          status: retryable ? "pending" : "failed_permanent",
         },
-        error.code === "paypal_order_capture_pending" ? 200 : 400,
+        retryable ? 200 : 400,
       )
     }
 

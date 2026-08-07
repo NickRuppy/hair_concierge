@@ -505,7 +505,15 @@ test("cold offer Elements mount normal Express lifecycle without prewarm gates",
   assert.match(stripeOfferElementsSource, /clientSecret\?: string \| null/)
   assert.match(
     stripeOfferElementsSource,
-    /clientSecret \? Promise\.resolve\(clientSecret\) : fetchClientSecret\(\)/,
+    /if \(clientSecret\) return Promise\.resolve\(clientSecret\)[\s\S]*return fetchClientSecret\?\.\(\) \?\? null/,
+  )
+  assert.match(
+    stripeOfferElementsSource,
+    /if \(!clientSecretPromise\) \{[\s\S]*role="alert"[\s\S]*Erneut versuchen/,
+  )
+  assert.doesNotMatch(
+    stripeOfferElementsSource,
+    /Stripe Checkout requires a resolved client secret/,
   )
   assert.match(stripeOfferElementsSource, /paymentElementEnabled = true/)
   assert.match(stripeOfferElementsSource, /const showPaymentElement = paymentElementEnabled/)

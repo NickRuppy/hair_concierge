@@ -7,6 +7,7 @@ export type PaymentSignal =
   | "provider_payment_failed"
   | "payment_webhook_processing_failed"
   | "payment_integrity_mismatch"
+  | "paid_but_entitlement_not_active"
   | "payment_monitor_failed"
 
 export type PaymentProvider = "stripe" | "paypal" | "unknown"
@@ -71,6 +72,7 @@ export type PaymentFailureDetails = PaymentBoundaryDetails & {
   status?: number | string | null
   providerReferencePresent?: boolean | null
   invariant?: string | null
+  purchaseId?: string | null
   providerReferenceDigest?: string | null
 }
 
@@ -122,6 +124,7 @@ const PAYMENT_LEVEL_BY_SIGNAL: Record<PaymentSignal, PaymentFailureLevel> = {
   provider_payment_failed: "warning",
   payment_webhook_processing_failed: "error",
   payment_integrity_mismatch: "fatal",
+  paid_but_entitlement_not_active: "error",
   payment_monitor_failed: "error",
 }
 
@@ -162,6 +165,7 @@ export function buildPaymentFailurePayload(details: PaymentFailureDetails): Paym
 
   addSafeInternalId(context, "checkout_attempt_id", details.checkoutAttemptId)
   addSafeInternalId(context, "lead_id", details.leadId)
+  addSafeInternalId(context, "purchase_id", details.purchaseId)
   addSafeInternalId(context, "user_id", details.userId)
   addOptional(context, "source", details.source)
   addOptional(context, "interval", details.interval)
@@ -188,6 +192,10 @@ export function buildPaymentFailurePayload(details: PaymentFailureDetails): Paym
         : (checkoutAttemptId ?? providerReferenceDigest)
     if (safeFingerprintSegment(details.invariant)) fingerprint.push(details.invariant)
     if (finding) fingerprint.push(finding)
+  }
+  if (details.signal === "paid_but_entitlement_not_active") {
+    if (safeFingerprintSegment(details.invariant)) fingerprint.push(details.invariant)
+    if (safeInternalIdentifier(details.purchaseId)) fingerprint.push(details.purchaseId)
   }
 
   return {

@@ -84,7 +84,7 @@ export async function ensurePayPalOneTimePurchaseAccount(
   const created = existing ? null : await createPayPalCheckoutUser(deps, email, input.activationKey)
   const userId = existing?.id ?? created!.userId
   const canSetInitialPassword = existing
-    ? await canSetPasswordForPayPalSubscription(deps, userId, input.activationKey)
+    ? await canSetInitialPasswordForPayPalCheckout(deps.supabase, userId, input.activationKey)
     : created!.created
   await upsertSubscriptionProfile(deps, userId, { email })
   if (deps.linkQuizToProfile && input.leadId)
@@ -184,7 +184,11 @@ export async function ensurePayPalCheckoutAccount(
   if (existingProfile) {
     userId = existingProfile.id
     await assertNoDifferentCurrentSubscription(deps, userId, valid.id)
-    canSetInitialPassword = await canSetPasswordForPayPalSubscription(deps, userId, activationKey)
+    canSetInitialPassword = await canSetInitialPasswordForPayPalCheckout(
+      deps.supabase,
+      userId,
+      activationKey,
+    )
   } else {
     const created = await createPayPalCheckoutUser(deps, accountEmail, activationKey)
     if (!created.created) await assertNoDifferentCurrentSubscription(deps, created.userId, valid.id)
@@ -356,12 +360,12 @@ async function createPayPalCheckoutUser(
   throw new Error(`createUser failed: ${error?.message ?? "unknown"}`)
 }
 
-async function canSetPasswordForPayPalSubscription(
-  deps: PayPalCheckoutActivationDeps,
+export async function canSetInitialPasswordForPayPalCheckout(
+  supabase: SupabaseClient,
   userId: string,
   activationKey: string,
 ): Promise<boolean> {
-  const user = await getAuthUserById(deps, userId)
+  const user = await getAuthUserById(supabase, userId)
   if (!user) return false
 
   const appMetadata = isRecord(user.app_metadata) ? user.app_metadata : {}
@@ -373,10 +377,10 @@ async function canSetPasswordForPayPalSubscription(
 }
 
 async function getAuthUserById(
-  deps: PayPalCheckoutActivationDeps,
+  supabase: SupabaseClient,
   userId: string,
 ): Promise<{ app_metadata?: unknown } | null> {
-  const admin = deps.supabase.auth.admin as unknown as {
+  const admin = supabase.auth.admin as unknown as {
     getUserById?: (userId: string) => Promise<{
       data?: { user?: { app_metadata?: unknown } | null }
       error?: { message?: string } | null

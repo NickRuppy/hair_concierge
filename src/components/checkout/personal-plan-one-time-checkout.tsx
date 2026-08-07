@@ -25,6 +25,10 @@ import {
   isPreparedCheckoutUsable,
   type PreparedCheckoutCredential,
 } from "@/lib/stripe/prepared-checkout-credential"
+import {
+  resolvePreparedStripeCheckoutState,
+  type PreparedStripeCheckoutState,
+} from "@/lib/stripe/prepared-stripe-checkout-state"
 import { PayPalOneTimeButton } from "./paypal-one-time-button"
 
 const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
@@ -46,11 +50,10 @@ type PreparedOneTimeStripeCheckout = {
   claimed: boolean
   clientSecret: string
   expiresAt: number
+  owner: "stripe" | null
   preparationToken: string | null
   sessionId: string
 }
-
-type StripeControlRecovery = "prepared_checkout_unavailable" | "provider_locked_stripe" | null
 
 export function PersonalPlanOneTimeCheckout({
   checkoutAttemptId,
@@ -81,6 +84,7 @@ export function PersonalPlanOneTimeCheckout({
   const checkoutStartedProvidersRef = useRef(new Set<string>())
   const paymentOptionViewsRef = useRef(new Set<string>())
   const paymentSelectionIndexRef = useRef(0)
+  const providerOwnerRef = useRef<"paypal" | "stripe" | null>(null)
   const preparedStripeCheckoutRef = useRef<PreparedOneTimeStripeCheckout | null>(null)
   const visibleRef = useRef(visible)
   const wasVisibleRef = useRef(visible)
@@ -88,18 +92,24 @@ export function PersonalPlanOneTimeCheckout({
   const mountedCheckoutAttemptIdRef = useRef(checkoutAttemptId)
   const stripeControlRecoveryRotatedRef = useRef(false)
   const stripePreparationRequestTimerRef = useRef<number | null>(null)
+  const stripePreparationRequestTimerOwnerRef = useRef<string | null>(null)
+  const stripePreparationInFlightRef = useRef<{
+    preparationId: string
+    promise: Promise<string>
+  } | null>(null)
   const stripePreparationTimeoutReportedRef = useRef<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
-  const [providerLockedOwner, setProviderLockedOwner] = useState<"stripe" | "paypal" | null>(null)
   const [paypalReady, setPaypalReady] = useState(false)
-  const [stripeProviderLocked, setStripeProviderLocked] = useState(false)
   const [stripeSelected, setStripeSelected] = useState(false)
-  const [stripeControlRecovery, setStripeControlRecovery] = useState<StripeControlRecovery>(null)
+  const [preparedStripeCheckoutState, setPreparedStripeCheckoutState] =
+    useState<PreparedStripeCheckoutState>({ kind: "loading" })
   const [stripePreparationCredential, setStripePreparationCredential] =
     useState<PreparedCheckoutCredential>(createPreparedCheckoutCredential)
   const [preparationFailureReported, setPreparationFailureReported] = useState(false)
   const stripePreparationId = stripePreparationCredential.preparationId
+  const activeStripePreparationRef = useRef({ checkoutAttemptId, stripePreparationId })
+  activeStripePreparationRef.current = { checkoutAttemptId, stripePreparationId }
   const canStartPayment = Boolean(leadId && funnelSessionId)
   const stripeAvailable = stripeElementsEnabled && stripePublishableKeyPresent
   const stripeCheckoutMounted = stripeAvailable && Boolean(checkoutAttemptId)
@@ -145,15 +155,15 @@ export function PersonalPlanOneTimeCheckout({
     paymentOptionViewsRef.current.clear()
     paymentSelectionIndexRef.current = 0
     firstEngagementRef.current = false
+    providerOwnerRef.current = null
     preparedStripeCheckoutRef.current = null
+    stripePreparationInFlightRef.current = null
     stripeControlRecoveryRotatedRef.current = false
     setDuplicateDialogOpen(false)
     setError(null)
-    setProviderLockedOwner(null)
     setPaypalReady(false)
-    setStripeProviderLocked(false)
     setStripeSelected(false)
-    setStripeControlRecovery(null)
+    setPreparedStripeCheckoutState({ kind: "loading" })
     setPreparationFailureReported(false)
     setStripePreparationCredential(createPreparedCheckoutCredential())
   }, [checkoutAttemptId])
@@ -170,9 +180,10 @@ export function PersonalPlanOneTimeCheckout({
     // hidden. Rotate only the provider preparation; the customer attempt stays
     // intact and the remounted Elements owner fetches one fresh credential.
     preparedStripeCheckoutRef.current = null
+    stripePreparationInFlightRef.current = null
     stripeControlRecoveryRotatedRef.current = false
     setPreparationFailureReported(false)
-    setStripeControlRecovery(null)
+    setPreparedStripeCheckoutState({ kind: "loading" })
     setStripePreparationCredential(createPreparedCheckoutCredential())
   }, [visible])
 
@@ -189,10 +200,17 @@ export function PersonalPlanOneTimeCheckout({
     [checkoutAttemptId, onCheckoutLifecycle],
   )
 
-  const clearStripePreparationRequestTimer = useCallback(() => {
+  const clearStripePreparationRequestTimer = useCallback((expectedPreparationId?: string) => {
+    if (
+      expectedPreparationId &&
+      stripePreparationRequestTimerOwnerRef.current !== expectedPreparationId
+    ) {
+      return
+    }
     if (stripePreparationRequestTimerRef.current === null) return
     window.clearTimeout(stripePreparationRequestTimerRef.current)
     stripePreparationRequestTimerRef.current = null
+    stripePreparationRequestTimerOwnerRef.current = null
   }, [])
 
   useEffect(() => () => clearStripePreparationRequestTimer(), [clearStripePreparationRequestTimer])
@@ -247,39 +265,14 @@ export function PersonalPlanOneTimeCheckout({
 
   const rotateStripePreparationForRecovery = useCallback(() => {
     preparedStripeCheckoutRef.current = null
+    stripePreparationInFlightRef.current = null
     setError(null)
-    setProviderLockedOwner(null)
-    setStripeProviderLocked(false)
-    setStripeControlRecovery(null)
+    setPreparedStripeCheckoutState({ kind: "loading" })
     setPreparationFailureReported(false)
     if (!stripeControlRecoveryRotatedRef.current) {
       stripeControlRecoveryRotatedRef.current = true
       setStripePreparationCredential(createPreparedCheckoutCredential())
     }
-  }, [])
-
-  const presentStripeControlRecovery = useCallback(
-    (recovery: Exclude<StripeControlRecovery, null>) => {
-      preparedStripeCheckoutRef.current = null
-      setError(null)
-      setPreparationFailureReported(true)
-      setStripeControlRecovery(recovery)
-      trackCheckoutLifecycle({
-        provider: "stripe",
-        recoveryReason:
-          recovery === "prepared_checkout_unavailable"
-            ? "prepared_checkout_unavailable"
-            : "provider_locked",
-        transition: "recovery_presented",
-      })
-    },
-    [trackCheckoutLifecycle],
-  )
-
-  const resumeProviderLockedStripe = useCallback(() => {
-    setError(null)
-    setPreparationFailureReported(false)
-    setStripeControlRecovery(null)
   }, [])
 
   const trackCheckoutStarted = useCallback(
@@ -350,140 +343,199 @@ export function PersonalPlanOneTimeCheckout({
     if (!leadId || !funnelSessionId) throw new Error("one-time checkout is not authorized")
     const cachedPreparation = preparedStripeCheckoutRef.current
     if (cachedPreparation && isPreparedCheckoutUsable(cachedPreparation.expiresAt)) {
+      setPreparedStripeCheckoutState({
+        kind: "ready",
+        checkout: cachedPreparation,
+      })
       return cachedPreparation.clientSecret
     }
-    let responseStatus: number | undefined
-    let paypalLocked = false
-    let handledControlOutcome = false
+    const inFlightPreparation = stripePreparationInFlightRef.current
+    if (inFlightPreparation?.preparationId === stripePreparationId) {
+      return inFlightPreparation.promise
+    }
+    const preparationPromise = prepareStripeClientSecret()
+    stripePreparationInFlightRef.current = {
+      preparationId: stripePreparationId,
+      promise: preparationPromise,
+    }
     try {
-      trackCheckoutLifecycle({
-        provider: "stripe",
-        transition: "preparation_started",
-      })
-      trackCheckoutLifecycle({
-        provider: "stripe",
-        transition: "provider_load_started",
-      })
-      clearStripePreparationRequestTimer()
-      stripePreparationRequestTimerRef.current = window.setTimeout(
-        reportStripePreparationTimeout,
-        PREPARED_STRIPE_RESPONSE_TIMEOUT_MS,
-      )
-      const response = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          action: "prepare",
-          purchaseKind: "personal_plan_once",
-          leadId,
-          funnelSessionId,
-          preparationId: stripePreparationId,
-          preparationToken: stripePreparationCredential.preparationToken,
-          source: "quiz_result_offer",
-          presentation: "offer_overlay_elements",
-        }),
-      })
-      responseStatus = response.status
-      const body = (await response.json().catch(() => ({}))) as {
-        client_secret?: unknown
-        error?: unknown
-        expires_at?: unknown
-        preparation_token?: unknown
-        provider_locked?: unknown
-        session_id?: unknown
-        status?: unknown
+      return await preparationPromise
+    } finally {
+      if (stripePreparationInFlightRef.current?.promise === preparationPromise) {
+        stripePreparationInFlightRef.current = null
       }
-      const controlOutcome = getPreparedCheckoutControlOutcome({
-        error: body.error,
-        providerLocked: body.provider_locked,
-        status: body.status,
-      })
-      if (response.status === 409 && controlOutcome === "provider_locked") {
-        const lockedProvider = body.provider_locked === "stripe" ? "stripe" : "paypal"
-        setProviderLockedOwner(lockedProvider)
-        if (lockedProvider === "paypal") {
-          paypalLocked = true
-          preparedStripeCheckoutRef.current = null
-          setStripeProviderLocked(false)
-          setStripeSelected(false)
-          setStripeControlRecovery(null)
-          setError(null)
-        } else {
-          handledControlOutcome = true
-          trackCheckoutLifecycle({
-            provider: "stripe",
-            failureReason: "silent_control_outcome",
-            transition: "provider_load_error",
-          })
-          setStripeProviderLocked(true)
-          setStripeSelected(true)
-          presentStripeControlRecovery("provider_locked_stripe")
-        }
-        throw new Error("prepared_checkout_control:provider_locked")
+    }
+
+    async function prepareStripeClientSecret() {
+      const requestAttemptId = checkoutAttemptId
+      const requestPreparationId = stripePreparationId
+      const isCurrentPreparation = () => {
+        const active = activeStripePreparationRef.current
+        return (
+          active.checkoutAttemptId === requestAttemptId &&
+          active.stripePreparationId === requestPreparationId
+        )
       }
-      if (controlOutcome === "prepared_checkout_unavailable") {
-        handledControlOutcome = true
+      let responseStatus: number | undefined
+      try {
         trackCheckoutLifecycle({
           provider: "stripe",
-          failureReason: "silent_control_outcome",
-          transition: "provider_load_error",
+          transition: "preparation_started",
         })
-        presentStripeControlRecovery("prepared_checkout_unavailable")
-        throw new Error("prepared_checkout_control:prepared_checkout_unavailable")
-      }
-      if (
-        !response.ok ||
-        (body.status !== "prepared" && body.status !== "recovered") ||
-        typeof body.client_secret !== "string" ||
-        typeof body.expires_at !== "number" ||
-        (body.status === "prepared" && typeof body.preparation_token !== "string") ||
-        typeof body.session_id !== "string"
-      ) {
-        throw new Error("one-time Stripe session preparation failed")
-      }
-      preparedStripeCheckoutRef.current = {
-        claimed: body.status === "recovered",
-        clientSecret: body.client_secret,
-        expiresAt: body.expires_at,
-        preparationToken:
-          typeof body.preparation_token === "string" ? body.preparation_token : null,
-        sessionId: body.session_id,
-      }
-      trackCheckoutLifecycle({
-        provider: "stripe",
-        transition: "prepared_response_received",
-      })
-      setStripeControlRecovery(null)
-      stripeControlRecoveryRotatedRef.current = false
-      setProviderLockedOwner(body.provider_locked === "stripe" ? "stripe" : null)
-      setStripeProviderLocked(body.provider_locked === "stripe")
-      return body.client_secret
-    } catch (error) {
-      if (paypalLocked || handledControlOutcome) throw error
-      if (visibleRef.current) {
-        setError(checkoutStartError)
-        setPreparationFailureReported(true)
-        reportStripeCustomerError({
-          errorFamily: responseStatus === undefined ? "network" : "provider_session",
-          stage: "stripe_embedded_checkout_client_secret",
-          status: responseStatus,
+        trackCheckoutLifecycle({
+          provider: "stripe",
+          transition: "provider_load_started",
         })
+        clearStripePreparationRequestTimer()
+        stripePreparationRequestTimerOwnerRef.current = requestPreparationId
+        stripePreparationRequestTimerRef.current = window.setTimeout(
+          reportStripePreparationTimeout,
+          PREPARED_STRIPE_RESPONSE_TIMEOUT_MS,
+        )
+        const response = await fetch("/api/stripe/create-checkout-session", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            action: "prepare",
+            purchaseKind: "personal_plan_once",
+            leadId,
+            funnelSessionId,
+            preparationId: stripePreparationId,
+            preparationToken: stripePreparationCredential.preparationToken,
+            source: "quiz_result_offer",
+            presentation: "offer_overlay_elements",
+          }),
+        })
+        responseStatus = response.status
+        const body = (await response.json().catch(() => ({}))) as {
+          client_secret?: unknown
+          email?: unknown
+          error?: unknown
+          expires_at?: unknown
+          preparation_token?: unknown
+          provider_locked?: unknown
+          session_id?: unknown
+          status?: unknown
+        }
+        if (!isCurrentPreparation()) return ""
+        const resolvedState = resolvePreparedStripeCheckoutState({
+          body,
+          responseOk: response.ok,
+          responseStatus: response.status,
+        })
+        if (!resolvedState) {
+          throw new Error("one-time Stripe session preparation failed")
+        }
+        if (
+          providerOwnerRef.current === "paypal" &&
+          (resolvedState.kind === "unavailable" ||
+            (resolvedState.kind === "ready" && resolvedState.checkout.owner === null))
+        ) {
+          // A PayPal order may claim this attempt while an earlier, unclaimed
+          // Stripe preparation is still in flight. That stale response must
+          // never make Stripe available again for the PayPal-owned attempt.
+          preparedStripeCheckoutRef.current = null
+          return ""
+        }
+        if (resolvedState.kind !== "ready") {
+          preparedStripeCheckoutRef.current = null
+          setError(null)
+          setPreparationFailureReported(false)
+          setPreparedStripeCheckoutState(resolvedState)
+          if (resolvedState.kind === "duplicate_access") {
+            providerOwnerRef.current = null
+            setStripeSelected(false)
+            setDuplicateDialogOpen(true)
+          } else if (resolvedState.kind === "provider_locked_paypal") {
+            providerOwnerRef.current = "paypal"
+            setStripeSelected(false)
+            trackCheckoutLifecycle({
+              provider: "paypal",
+              recoveryReason: "provider_locked",
+              transition: "recovery_presented",
+            })
+          } else if (resolvedState.kind === "provider_locked_stripe") {
+            providerOwnerRef.current = "stripe"
+            setStripeSelected(true)
+            trackCheckoutLifecycle({
+              provider: "stripe",
+              recoveryReason: "provider_locked",
+              transition: "recovery_presented",
+            })
+          } else {
+            trackCheckoutLifecycle({
+              provider: "stripe",
+              recoveryReason: "prepared_checkout_unavailable",
+              transition: "recovery_presented",
+            })
+          }
+          return ""
+        }
+        preparedStripeCheckoutRef.current = {
+          claimed: body.status === "recovered",
+          ...resolvedState.checkout,
+        }
+        providerOwnerRef.current = resolvedState.checkout.owner
+        trackCheckoutLifecycle({
+          provider: "stripe",
+          transition: "prepared_response_received",
+        })
+        stripeControlRecoveryRotatedRef.current = false
+        setStripeSelected(resolvedState.checkout.owner === "stripe")
+        setPreparedStripeCheckoutState(resolvedState)
+        return resolvedState.checkout.clientSecret
+      } catch (error) {
+        if (!isCurrentPreparation()) return ""
+        if (providerOwnerRef.current === "paypal") {
+          preparedStripeCheckoutRef.current = null
+          return ""
+        }
+        // The request may settle during the sheet's exit animation. Keep the
+        // parent-owned state recoverable so a still-mounted or reopened sheet
+        // never remains on an indefinite loading surface.
+        setPreparedStripeCheckoutState({ kind: "unavailable" })
+        if (visibleRef.current) {
+          setError(checkoutStartError)
+          setPreparationFailureReported(true)
+          reportStripeCustomerError({
+            errorFamily: responseStatus === undefined ? "network" : "provider_session",
+            stage: "stripe_embedded_checkout_client_secret",
+            status: responseStatus,
+          })
+        }
+        throw createAlreadyReportedPreparedCheckoutError(error)
+      } finally {
+        clearStripePreparationRequestTimer(requestPreparationId)
       }
-      throw createAlreadyReportedPreparedCheckoutError(error)
-    } finally {
-      clearStripePreparationRequestTimer()
     }
   }, [
+    checkoutAttemptId,
     funnelSessionId,
     leadId,
     reportStripeCustomerError,
     stripePreparationId,
     stripePreparationCredential.preparationToken,
-    presentStripeControlRecovery,
     clearStripePreparationRequestTimer,
     reportStripePreparationTimeout,
     trackCheckoutLifecycle,
   ])
+
+  useEffect(() => {
+    if (
+      !canStartPayment ||
+      !stripeCheckoutMounted ||
+      preparedStripeCheckoutState.kind !== "loading"
+    ) {
+      return
+    }
+    let active = true
+    void fetchClientSecret().catch(() => {
+      if (!active) return
+    })
+    return () => {
+      active = false
+    }
+  }, [canStartPayment, fetchClientSecret, preparedStripeCheckoutState.kind, stripeCheckoutMounted])
 
   const handleBeforeStripeConfirm = useCallback(async () => {
     const preparation = preparedStripeCheckoutRef.current
@@ -498,8 +550,10 @@ export function PersonalPlanOneTimeCheckout({
     }
     if (!isPreparedCheckoutUsable(preparation.expiresAt)) {
       preparedStripeCheckoutRef.current = null
+      stripePreparationInFlightRef.current = null
       setError("Die Zahlungsarten werden neu geladen. Bitte versuche es gleich noch einmal.")
       setPreparationFailureReported(false)
+      setPreparedStripeCheckoutState({ kind: "loading" })
       setStripePreparationCredential(createPreparedCheckoutCredential())
       reportStripeCustomerError({
         errorFamily: "timeout",
@@ -556,7 +610,8 @@ export function PersonalPlanOneTimeCheckout({
       })
       if (controlOutcome === "duplicate_access") setDuplicateDialogOpen(true)
       else if (controlOutcome === "provider_locked" && body.provider_locked === "paypal") {
-        setProviderLockedOwner("paypal")
+        providerOwnerRef.current = "paypal"
+        setPreparedStripeCheckoutState({ kind: "provider_locked_paypal" })
         setStripeSelected(false)
         setError(null)
         trackCheckoutLifecycle({
@@ -565,10 +620,14 @@ export function PersonalPlanOneTimeCheckout({
           transition: "recovery_presented",
         })
       } else if (controlOutcome === "provider_locked" && body.provider_locked === "stripe") {
-        setProviderLockedOwner("stripe")
-        setStripeProviderLocked(true)
+        providerOwnerRef.current = "stripe"
         setStripeSelected(true)
-        presentStripeControlRecovery("provider_locked_stripe")
+        setPreparedStripeCheckoutState({ kind: "provider_locked_stripe" })
+        trackCheckoutLifecycle({
+          provider: "stripe",
+          recoveryReason: "provider_locked",
+          transition: "recovery_presented",
+        })
       } else setError("Eine andere Zahlungsart wurde bereits gestartet.")
       return false
     }
@@ -579,7 +638,12 @@ export function PersonalPlanOneTimeCheckout({
       body.session_id !== preparation.sessionId
     ) {
       if (body.status === "unavailable") {
-        presentStripeControlRecovery("prepared_checkout_unavailable")
+        setPreparedStripeCheckoutState({ kind: "unavailable" })
+        trackCheckoutLifecycle({
+          provider: "stripe",
+          recoveryReason: "prepared_checkout_unavailable",
+          transition: "recovery_presented",
+        })
         return false
       }
       setError(checkoutStartError)
@@ -592,12 +656,17 @@ export function PersonalPlanOneTimeCheckout({
       return false
     }
     preparation.claimed = true
+    providerOwnerRef.current = "stripe"
+    setStripeSelected(true)
+    setPreparedStripeCheckoutState((current) =>
+      current.kind === "ready"
+        ? { kind: "ready", checkout: { ...current.checkout, owner: "stripe" } }
+        : current,
+    )
     trackCheckoutLifecycle({
       provider: "stripe",
       transition: "claimed",
     })
-    setProviderLockedOwner("stripe")
-    setStripeProviderLocked(true)
     trackCheckoutStarted("stripe", "explicit_provider_action", funnelEventId)
     return true
   }, [
@@ -607,12 +676,17 @@ export function PersonalPlanOneTimeCheckout({
     reportStripeCustomerError,
     stripePreparationId,
     trackCheckoutStarted,
-    presentStripeControlRecovery,
     trackCheckoutLifecycle,
   ])
 
+  const paypalOwnedAttempt = preparedStripeCheckoutState.kind === "provider_locked_paypal"
+  const paypalSuppressedByStripeOwner =
+    preparedStripeCheckoutState.kind === "duplicate_access" ||
+    preparedStripeCheckoutState.kind === "provider_locked_stripe" ||
+    (preparedStripeCheckoutState.kind === "ready" &&
+      preparedStripeCheckoutState.checkout.owner === "stripe")
   const paypalPaymentOption =
-    checkoutAttemptId && paypalCheckoutEnabled && !stripeProviderLocked ? (
+    checkoutAttemptId && paypalCheckoutEnabled && !paypalSuppressedByStripeOwner ? (
       <PaymentOptionExposure
         checkoutAttemptId={checkoutAttemptId}
         onViewed={handlePaymentOptionViewed}
@@ -670,9 +744,9 @@ export function PersonalPlanOneTimeCheckout({
           onDuplicateAccess={() => setDuplicateDialogOpen(true)}
           onPaymentMethodSelected={() => handlePaymentMethodSelected("paypal")}
           onProviderSelected={() => {
-            setProviderLockedOwner("paypal")
+            providerOwnerRef.current = "paypal"
+            setPreparedStripeCheckoutState({ kind: "provider_locked_paypal" })
             setStripeSelected(false)
-            setStripeControlRecovery(null)
             setError(null)
           }}
           onProviderConflict={() => setError("Eine andere Zahlungsart wurde bereits gestartet.")}
@@ -688,29 +762,225 @@ export function PersonalPlanOneTimeCheckout({
       </PaymentOptionExposure>
     ) : null
 
-  const stripeControlRecoveryCard = stripeControlRecovery ? (
-    <div className="grid gap-3 rounded-[14px] border border-[var(--brand-coral)]/30 bg-[var(--brand-coral)]/10 p-4 text-center text-[var(--brand-plum-darkest)]">
-      <p className="text-sm font-bold" role="status">
-        {stripeControlRecovery === "prepared_checkout_unavailable"
-          ? "Kartenzahlung neu verbinden"
-          : "Kartenzahlung ist bereits ausgewählt"}
-      </p>
-      <p className="text-sm leading-6">
-        {stripeControlRecovery === "prepared_checkout_unavailable"
-          ? "Die Kartenzahlung konnte nicht mit diesem vorbereiteten Zahlungsversuch verbunden werden. Dein Haarplan bleibt ausgewählt."
-          : "Diese Kartenzahlung gehört bereits zu deinem Zahlungsversuch. Wir öffnen genau diesen Versuch erneut, damit keine zweite Zahlung entsteht."}
-      </p>
-      {stripeControlRecovery === "prepared_checkout_unavailable" ? (
+  const stripeSelectionControl =
+    preparedStripeCheckoutState.kind === "ready" && !stripeSelected ? (
+      <Button
+        onClick={() => {
+          trackCheckoutLifecycle({
+            option: "card_and_more",
+            provider: "stripe",
+            transition: "payment_surface_selected",
+          })
+          markFirstEngagement()
+          setError(null)
+          setStripeSelected(true)
+        }}
+        type="button"
+      >
+        Mit Karte bezahlen
+      </Button>
+    ) : null
+
+  const stripeSwitchBackControl =
+    preparedStripeCheckoutState.kind === "ready" &&
+    stripeSelected &&
+    preparedStripeCheckoutState.checkout.owner !== "stripe" &&
+    paypalPaymentOption ? (
+      <Button
+        onClick={() => {
+          trackCheckoutLifecycle({
+            option: "paypal",
+            provider: "paypal",
+            transition: "payment_surface_selected",
+          })
+          setError(null)
+          setStripeSelected(false)
+        }}
+        type="button"
+        variant="outline"
+      >
+        Stattdessen PayPal verwenden
+      </Button>
+    ) : null
+
+  const paypalStableSlot =
+    canStartPayment && paypalPaymentOption ? (
+      <div
+        className="grid gap-3"
+        data-one-time-paypal-stable-slot="true"
+        key="one-time-paypal-stable-slot"
+      >
+        {paypalOwnedAttempt ? (
+          <p
+            className="rounded-[12px] border border-border bg-muted/30 px-3 py-2 text-center text-sm text-[var(--brand-plum-darkest)]"
+            role="status"
+          >
+            Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn
+            fortzusetzen.
+          </p>
+        ) : null}
+        {paypalPaymentOption}
+        {paypalOwnedAttempt ? (
+          <Button disabled type="button" variant="outline">
+            Karte ist für diesen Zahlungsversuch nicht verfügbar
+          </Button>
+        ) : null}
+      </div>
+    ) : null
+
+  const stripeControlRecoveryCard =
+    preparedStripeCheckoutState.kind === "unavailable" ||
+    preparedStripeCheckoutState.kind === "provider_locked_stripe" ? (
+      <div className="grid gap-3 rounded-[14px] border border-[var(--brand-coral)]/30 bg-[var(--brand-coral)]/10 p-4 text-center text-[var(--brand-plum-darkest)]">
+        <p className="text-sm font-bold" role="status">
+          {preparedStripeCheckoutState.kind === "unavailable"
+            ? "Kartenzahlung neu verbinden"
+            : "Kartenzahlung ist bereits ausgewählt"}
+        </p>
+        <p className="text-sm leading-6">
+          {preparedStripeCheckoutState.kind === "unavailable"
+            ? "Die Kartenzahlung konnte nicht mit diesem vorbereiteten Zahlungsversuch verbunden werden. Dein Haarplan bleibt ausgewählt."
+            : "Diese Kartenzahlung gehört bereits zu deinem Zahlungsversuch. Wir öffnen genau diesen Versuch erneut, damit keine zweite Zahlung entsteht."}
+        </p>
         <Button type="button" variant="outline" onClick={rotateStripePreparationForRecovery}>
-          Haarplan-Zahlung erneut vorbereiten
+          {preparedStripeCheckoutState.kind === "unavailable"
+            ? "Haarplan-Zahlung erneut vorbereiten"
+            : "Kartenzahlung wieder öffnen"}
         </Button>
-      ) : (
-        <Button type="button" variant="outline" onClick={resumeProviderLockedStripe}>
-          Kartenzahlung wieder öffnen
+      </div>
+    ) : null
+
+  const paypalOwnedUnavailableCard =
+    paypalOwnedAttempt && !paypalPaymentOption ? (
+      <div className="grid gap-2 rounded-[14px] border border-border bg-muted/30 p-4 text-center text-[var(--brand-plum-darkest)]">
+        <p className="text-sm font-bold" role="status">
+          Dieser Zahlungsversuch läuft bereits über PayPal
+        </p>
+        <p className="text-sm leading-6">
+          PayPal kann hier gerade nicht geladen werden. Dein Zahlungsversuch bleibt erhalten und es
+          wird keine zweite Bestellung angelegt. Schließe das Zahlungsfenster und öffne es später
+          erneut.
+        </p>
+      </div>
+    ) : null
+
+  const duplicateAccessCard =
+    preparedStripeCheckoutState.kind === "duplicate_access" ? (
+      <div className="grid gap-3 rounded-[14px] border border-border bg-muted/30 p-4 text-center text-[var(--brand-plum-darkest)]">
+        <p className="text-sm font-bold" role="status">
+          Dein Haarplan-Zugang ist bereits aktiv
+        </p>
+        <p className="text-sm leading-6">
+          Für dieses Konto wurde die Zahlung bereits abgeschlossen. Melde dich an, um deinen
+          Haarplan zu öffnen.
+        </p>
+        <Button type="button" variant="outline" onClick={() => setDuplicateDialogOpen(true)}>
+          Bestehenden Zugang öffnen
         </Button>
-      )}
+      </div>
+    ) : null
+
+  const checkoutStartErrorMessage = (
+    <p className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      {checkoutStartError}
+    </p>
+  )
+
+  const primaryPaymentBody = !canStartPayment ? (
+    checkoutStartErrorMessage
+  ) : duplicateAccessCard ? (
+    duplicateAccessCard
+  ) : preparedStripeCheckoutState.kind === "provider_locked_paypal" ? (
+    paypalOwnedUnavailableCard
+  ) : stripeControlRecoveryCard ? (
+    <div className="grid gap-3">
+      {stripeControlRecoveryCard}
+      {preparedStripeCheckoutState.kind === "provider_locked_stripe" ? (
+        <Button disabled type="button" variant="outline">
+          PayPal ist für diesen Zahlungsversuch nicht verfügbar
+        </Button>
+      ) : null}
     </div>
-  ) : null
+  ) : !stripeAvailable ? (
+    paypalPaymentOption ? null : (
+      checkoutStartErrorMessage
+    )
+  ) : stripeCheckoutMounted && preparedStripeCheckoutState.kind === "ready" ? (
+    <StripeOfferElementsCheckout
+      checkoutAttemptId={checkoutAttemptId ?? undefined}
+      checkoutKey={`personal-plan-once:${stripePreparationId}`}
+      clientSecret={preparedStripeCheckoutState.checkout.clientSecret}
+      commerceKind="one_time"
+      preparationFailureReported={preparationFailureReported}
+      onBeforeConfirm={handleBeforeStripeConfirm}
+      onClientMounted={(provider, option) =>
+        trackCheckoutLifecycle({ provider, option, transition: "client_mounted" })
+      }
+      onConfirmStarted={(provider, option) =>
+        trackCheckoutLifecycle({ provider, option, transition: "confirm_started" })
+      }
+      onConfirmFailed={(provider, option) =>
+        trackCheckoutLifecycle({ provider, option, transition: "confirm_failed" })
+      }
+      onFirstPaymentEngagement={markFirstEngagement}
+      onPaymentMethodSelected={handlePaymentMethodSelected}
+      onPaymentOptionViewed={handlePaymentOptionViewed}
+      onProviderReady={(provider, option) =>
+        trackCheckoutLifecycle({ provider, option, transition: "provider_ready" })
+      }
+      onProviderCancelled={(provider, option) =>
+        trackCheckoutLifecycle({ provider, option, transition: "provider_cancelled" })
+      }
+      onProviderLoadError={(provider, option, failureReason) =>
+        trackCheckoutLifecycle({
+          failureReason,
+          provider,
+          option,
+          transition: "provider_load_error",
+        })
+      }
+      onProviderLoadStarted={(provider, option) =>
+        trackCheckoutLifecycle({ provider, option, transition: "provider_load_started" })
+      }
+      onProviderLoadTimeout={(provider, option, failureReason) =>
+        trackCheckoutLifecycle({
+          failureReason,
+          provider,
+          option,
+          transition: "provider_load_timeout",
+        })
+      }
+      onRetry={() => {
+        preparedStripeCheckoutRef.current = null
+        stripePreparationInFlightRef.current = null
+        setError(null)
+        stripeControlRecoveryRotatedRef.current = false
+        setPreparationFailureReported(false)
+        setPreparedStripeCheckoutState({ kind: "loading" })
+        setStripePreparationCredential(createPreparedCheckoutCredential())
+      }}
+      paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
+      observabilitySource="quiz_result_offer"
+      paymentElementEnabled={
+        stripeSelected || preparedStripeCheckoutState.checkout.owner === "stripe"
+      }
+      stripe={getOfferStripePromise()}
+      visible={visible}
+    />
+  ) : stripeCheckoutMounted && preparedStripeCheckoutState.kind === "loading" ? (
+    <div
+      className="flex min-h-[52px] items-center justify-center gap-2 rounded-[12px] border border-border bg-white px-4 py-3 text-sm font-semibold text-[var(--brand-plum-darkest)]"
+      role="status"
+    >
+      <span
+        aria-hidden="true"
+        className="size-4 animate-spin rounded-full border-2 border-black/15 border-t-black/50 motion-reduce:animate-none"
+      />
+      <span>Zahlungsarten werden vorbereitet …</span>
+    </div>
+  ) : (
+    checkoutStartErrorMessage
+  )
 
   return (
     <div className="grid gap-4">
@@ -722,136 +992,18 @@ export function PersonalPlanOneTimeCheckout({
       </section>
       <ActiveSubscriptionDialog
         accessKind="one_time"
+        email={
+          preparedStripeCheckoutState.kind === "duplicate_access"
+            ? preparedStripeCheckoutState.email
+            : null
+        }
         onOpenChange={setDuplicateDialogOpen}
         open={duplicateDialogOpen}
       />
-      {canStartPayment && providerLockedOwner === "paypal" ? (
-        <div className="grid gap-3">
-          <p
-            className="rounded-[12px] border border-border bg-muted/30 px-3 py-2 text-center text-sm text-[var(--brand-plum-darkest)]"
-            role="status"
-          >
-            PayPal ist bereits ausgewählt. Schließe die Zahlung dort ab.
-          </p>
-          {paypalPaymentOption}
-          <Button disabled type="button" variant="outline">
-            Karte ist für diesen Zahlungsversuch nicht verfügbar
-          </Button>
-        </div>
-      ) : canStartPayment && stripeControlRecovery ? (
-        <div className="grid gap-3">
-          {stripeControlRecoveryCard}
-          {providerLockedOwner === "stripe" ? (
-            <Button disabled type="button" variant="outline">
-              PayPal ist für diesen Zahlungsversuch nicht verfügbar
-            </Button>
-          ) : (
-            paypalPaymentOption
-          )}
-        </div>
-      ) : canStartPayment && !stripeAvailable ? (
-        (paypalPaymentOption ?? (
-          <p
-            className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
-            role="alert"
-          >
-            {checkoutStartError}
-          </p>
-        ))
-      ) : canStartPayment && stripeCheckoutMounted ? (
-        <StripeOfferElementsCheckout
-          checkoutAttemptId={checkoutAttemptId ?? undefined}
-          checkoutKey={`personal-plan-once:${stripePreparationId}`}
-          commerceKind="one_time"
-          fetchClientSecret={fetchClientSecret}
-          preparationFailureReported={preparationFailureReported}
-          onBeforeConfirm={handleBeforeStripeConfirm}
-          onClientMounted={(provider, option) =>
-            trackCheckoutLifecycle({ provider, option, transition: "client_mounted" })
-          }
-          onConfirmStarted={(provider, option) =>
-            trackCheckoutLifecycle({ provider, option, transition: "confirm_started" })
-          }
-          onConfirmFailed={(provider, option) =>
-            trackCheckoutLifecycle({ provider, option, transition: "confirm_failed" })
-          }
-          onFirstPaymentEngagement={markFirstEngagement}
-          onPaymentMethodSelected={handlePaymentMethodSelected}
-          onPaymentOptionViewed={handlePaymentOptionViewed}
-          onProviderReady={(provider, option) =>
-            trackCheckoutLifecycle({ provider, option, transition: "provider_ready" })
-          }
-          onProviderCancelled={(provider, option) =>
-            trackCheckoutLifecycle({ provider, option, transition: "provider_cancelled" })
-          }
-          onProviderLoadError={(provider, option, failureReason) =>
-            trackCheckoutLifecycle({
-              failureReason,
-              provider,
-              option,
-              transition: "provider_load_error",
-            })
-          }
-          onProviderLoadStarted={(provider, option) =>
-            trackCheckoutLifecycle({ provider, option, transition: "provider_load_started" })
-          }
-          onProviderLoadTimeout={(provider, option, failureReason) =>
-            trackCheckoutLifecycle({
-              failureReason,
-              provider,
-              option,
-              transition: "provider_load_timeout",
-            })
-          }
-          onRetry={() => {
-            preparedStripeCheckoutRef.current = null
-            setError(null)
-            setProviderLockedOwner(null)
-            setStripeControlRecovery(null)
-            stripeControlRecoveryRotatedRef.current = false
-            setPreparationFailureReported(false)
-            setStripePreparationCredential(createPreparedCheckoutCredential())
-          }}
-          paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
-          observabilitySource="quiz_result_offer"
-          paymentElementEnabled={stripeSelected}
-          secondaryPaymentMethod={
-            checkoutAttemptId &&
-            ((paypalCheckoutEnabled && !stripeProviderLocked) || !stripeSelected) ? (
-              <div className="grid gap-3">
-                {paypalPaymentOption}
-                {!stripeSelected ? (
-                  <Button
-                    onClick={() => {
-                      trackCheckoutLifecycle({
-                        option: "card_and_more",
-                        provider: "stripe",
-                        transition: "payment_surface_selected",
-                      })
-                      markFirstEngagement()
-                      setError(null)
-                      setStripeControlRecovery(null)
-                      setStripeSelected(true)
-                    }}
-                    type="button"
-                  >
-                    Mit Karte bezahlen
-                  </Button>
-                ) : null}
-              </div>
-            ) : undefined
-          }
-          stripe={getOfferStripePromise()}
-          visible={visible}
-        />
-      ) : (
-        <p
-          className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
-          role="alert"
-        >
-          {checkoutStartError}
-        </p>
-      )}
+      {primaryPaymentBody}
+      {paypalStableSlot}
+      {stripeSelectionControl}
+      {stripeSwitchBackControl}
 
       {error ? (
         <p className="text-center text-sm text-destructive" role="alert">

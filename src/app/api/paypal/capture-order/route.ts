@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import { captureAndActivatePayPalOrder } from "@/lib/paypal/order-activation"
 import { PayPalCheckoutActivationError } from "@/lib/paypal/checkout-activation"
+import { buildPayPalOneTimeWelcomeUrl } from "@/lib/paypal/welcome-url"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -22,9 +23,7 @@ export async function POST(request: Request) {
       token: result.intent.token,
       captured: true,
       activationStatus: result.status,
-      welcomeUrl: `/welcome?provider=paypal&purchase=one_time&token=${encodeURIComponent(
-        result.intent.token,
-      )}`,
+      welcomeUrl: buildPayPalOneTimeWelcomeUrl(result.intent.token),
     })
   } catch (error) {
     if (error instanceof PayPalCheckoutActivationError) {
@@ -33,9 +32,7 @@ export async function POST(request: Request) {
           {
             error: error.code,
             status: "pending",
-            welcomeUrl: `/welcome?provider=paypal&purchase=one_time&token=${encodeURIComponent(
-              parsed.data.token,
-            )}`,
+            welcomeUrl: buildPayPalOneTimeWelcomeUrl(parsed.data.token),
           },
           { status: 202 },
         )

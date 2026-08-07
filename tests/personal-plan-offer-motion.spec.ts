@@ -50,6 +50,8 @@ async function stubPayPalSdk(page: Page) {
       body: `
         window.paypal = {
           Buttons: function (options) {
+            window.__chaarliePayPalMountCount = (window.__chaarliePayPalMountCount || 0) + 1;
+            window.__chaarliePayPalOptions = options;
             return {
               close: function () { return Promise.resolve(); },
               isEligible: function () { return true; },
@@ -323,6 +325,346 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await checkout.getByRole("button", { name: "Zahlung schließen" }).last().click()
     await expect(checkout).toBeHidden()
     await expect(confirmation).toHaveCount(0)
+  })
+
+  test("PayPal SDK uncertainty stays pending on the same mounted attempt", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
+    let createOrderCalls = 0
+    let statusCalls = 0
+    let stripePreparationCalls = 0
+    let releaseStripePreparation = () => {}
+    const stripePreparationReleased = new Promise<void>((resolve) => {
+      releaseStripePreparation = resolve
+    })
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      stripePreparationCalls += 1
+      await stripePreparationReleased
+      await route.fulfill({
+        body: JSON.stringify({
+          status: "prepared",
+          client_secret: "pi_late_stripe_prepare_secret_test",
+          expires_at: Date.now() + 60_000,
+          preparation_token: "late-stripe-preparation-token",
+          session_id: "cs_late_stripe_prepare",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+    await page.route("**/api/paypal/create-order-intent", async (route) => {
+      createOrderCalls += 1
+      await route.fulfill({
+        body: JSON.stringify({
+          orderId: "PAYPAL-ORDER-RECOVERY-1",
+          token: "paypal-recovery-token",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+    await page.route("**/api/billing/one-time-activation-status?**", async (route) => {
+      statusCalls += 1
+      await route.fulfill({
+        body: JSON.stringify({ status: "pending" }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+
+    await openPersonalPlanLab(page, "one_time")
+    const openCheckout = page.getByRole("button", {
+      name: "Haarplan für €29,99 freischalten",
+    })
+    await openCheckout.scrollIntoViewIfNeeded()
+    await openCheckout.click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const paypalButton = checkout.getByRole("button", { name: "PayPal" })
+    await expect.poll(() => stripePreparationCalls).toBe(1)
+    await paypalButton.click()
+    await expect.poll(() => createOrderCalls).toBe(1)
+    const paypalOwnedAttempt = checkout.getByText(
+      "Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.",
+    )
+    await expect(paypalOwnedAttempt).toBeVisible()
+
+    releaseStripePreparation()
+    await expect(paypalOwnedAttempt).toBeVisible()
+
+    await page.evaluate(() => {
+      const paypalWindow = window as typeof window & {
+        __chaarliePayPalOptions?: { onError?: (error: Error) => void }
+      }
+      paypalWindow.__chaarliePayPalOptions?.onError?.(new Error("synthetic SDK failure"))
+    })
+
+    await expect(checkout.getByText("Wir prüfen deine PayPal-Zahlung")).toBeVisible()
+    await expect(checkout.getByText("Noch keine Zahlung bestätigt")).toBeVisible({
+      timeout: 10_000,
+    })
+    await expect(paypalOwnedAttempt).toBeVisible()
+    await expect(checkout.getByText("Schließe die Zahlung dort ab.")).toHaveCount(0)
+    await expect.poll(() => statusCalls).toBe(3)
+    await expect(paypalButton).toBeVisible()
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (window as typeof window & { __chaarliePayPalMountCount?: number })
+              .__chaarliePayPalMountCount,
+        ),
+      )
+      .toBe(1)
+    await expect(checkout.getByText("Zahlung erfolgreich")).toHaveCount(0)
+
+    const manualCheck = checkout.getByRole("button", { name: "Status erneut prüfen" })
+    await expect(manualCheck).toBeDisabled()
+    await expect(manualCheck).toBeEnabled({ timeout: 4_000 })
+    await page.screenshot({
+      path: "/tmp/chaarlie-payment-recovery-pending.png",
+    })
+  })
+
+  test("existing one-time access stops payment and carries the Chaarlie email into login", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      await route.fulfill({
+        body: JSON.stringify({
+          error: "checkout_access_already_exists",
+          email: "lea@example.com",
+        }),
+        contentType: "application/json",
+        status: 409,
+      })
+    })
+
+    await openPersonalPlanLab(page, "one_time")
+    const openCheckout = page.getByRole("button", {
+      name: "Haarplan für €29,99 freischalten",
+    })
+    await openCheckout.scrollIntoViewIfNeeded()
+    await openCheckout.click()
+
+    const existingAccess = page.getByRole("dialog", { name: "Aktiver Zugang gefunden" })
+    await expect(existingAccess).toBeVisible()
+    await expect(existingAccess.getByText("lea@example.com", { exact: true })).toBeVisible()
+    await expect(existingAccess.getByRole("link", { name: "Einloggen" })).toHaveAttribute(
+      "href",
+      "/auth?email=lea%40example.com",
+    )
+
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toHaveCount(0)
+    await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toHaveCount(0)
+    await page.screenshot({
+      path: "/tmp/chaarlie-payment-existing-access.png",
+    })
+  })
+
+  test("a terminal PayPal recovery state hands the customer to support without another payment", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
+    await page.route("**/api/paypal/create-order-intent", async (route) => {
+      await route.fulfill({
+        body: JSON.stringify({
+          orderId: "PAYPAL-ORDER-SUPPORT-1",
+          token: "paypal-support-token",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+    await page.route("**/api/billing/one-time-activation-status?**", async (route) => {
+      await route.fulfill({
+        body: JSON.stringify({ status: "failed_permanent" }),
+        contentType: "application/json",
+        status: 400,
+      })
+    })
+
+    await openPersonalPlanLab(page, "one_time")
+    const openCheckout = page.getByRole("button", {
+      name: "Haarplan für €29,99 freischalten",
+    })
+    await openCheckout.scrollIntoViewIfNeeded()
+    await openCheckout.click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await checkout.getByRole("button", { name: "PayPal" }).click()
+    await expect(
+      checkout.getByText(
+        "Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.",
+      ),
+    ).toBeVisible()
+
+    await page.evaluate(() => {
+      const paypalWindow = window as typeof window & {
+        __chaarliePayPalOptions?: { onError?: (error: Error) => void }
+      }
+      paypalWindow.__chaarliePayPalOptions?.onError?.(new Error("synthetic SDK failure"))
+    })
+
+    await page.waitForURL(
+      "/welcome?provider=paypal&purchase=one_time&token=paypal-support-token&return_state=failed_permanent",
+      { timeout: 10_000 },
+    )
+    await expect(page.getByRole("heading", { name: "Wir prüfen deinen Zugang" })).toBeVisible()
+    await expect(
+      page.getByText(
+        "Wir konnten deinen Zugang nicht automatisch prüfen. Unser Support hilft dir weiter. Bitte bewahre deine Bestellbestätigung auf.",
+      ),
+    ).toBeVisible()
+    await expect(page.getByRole("link", { name: "Support kontaktieren" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Status erneut prüfen" })).toHaveCount(0)
+    await expect(page.getByText("Zahlung erneut")).toHaveCount(0)
+    await page.screenshot({ path: "/tmp/chaarlie-payment-support-handoff.png" })
+  })
+
+  test("a newly activated customer sees confirmed payment and can choose a login link", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    let magicLinkRequests = 0
+    await page.route("**/api/auth/send-magic-link", async (route) => {
+      magicLinkRequests += 1
+      await route.fulfill({
+        body: JSON.stringify({ ok: true }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+
+    await page.goto("/labs/offer-page?variant=payment-welcome", {
+      waitUntil: "domcontentloaded",
+    })
+    await expect(page.getByText("Zahlung erfolgreich", { exact: true })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Zugang einrichten" })).toBeVisible()
+    await expect(page.getByLabel("Chaarlie-E-Mail")).toHaveValue("lea@example.com")
+    await expect(page.getByRole("heading", { name: "Mit Passwort fortfahren" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Ohne Passwort fortfahren" })).toBeVisible()
+    await page.screenshot({ path: "/tmp/chaarlie-payment-activation-choice.png" })
+
+    await page.getByRole("button", { name: "Login-Link senden" }).click()
+    await expect(page.getByRole("heading", { name: "Check deine E-Mails" })).toBeVisible()
+    await expect(page.getByText("Wir haben dir einen Login-Link geschickt.")).toBeVisible()
+    expect(magicLinkRequests).toBe(1)
+    await page.screenshot({ path: "/tmp/chaarlie-payment-magic-link-sent.png" })
+  })
+
+  test("an authenticated returning customer continues into the app instead of payment", async ({
+    page,
+  }) => {
+    test.skip(
+      process.env.PLAYWRIGHT_EXPECT_LOCAL_DEV_LOGIN !== "true",
+      "run against a local server with LOCAL_DEV_LOGIN_ENABLED=1",
+    )
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto("/api/dev/login?next=/profile?membership=reactivated")
+    await page.waitForURL("/profile?membership=reactivated", { timeout: 15_000 })
+    await expect(page.getByRole("heading", { name: "Mein Profil", level: 1 })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Produkte", level: 2 })).toBeVisible({
+      timeout: 10_000,
+    })
+    await expect(page.getByText("9/10 vollständig", { exact: true })).toBeVisible({
+      timeout: 10_000,
+    })
+    await expect(page.getByText("Zahlung erneut")).toHaveCount(0)
+    await page.screenshot({ path: "/tmp/chaarlie-payment-authenticated-handoff.png" })
+  })
+
+  test("one-time card selection is single-flight and keeps PayPal available before claim", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
+    let prepareCalls = 0
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      const body = route.request().postDataJSON() as { action?: unknown }
+      if (body.action !== "prepare") {
+        await route.fulfill({
+          body: JSON.stringify({ error: "unexpected action" }),
+          contentType: "application/json",
+          status: 400,
+        })
+        return
+      }
+      prepareCalls += 1
+      await page.waitForTimeout(100)
+      await route.fulfill({
+        body: JSON.stringify({
+          client_secret: "cs_test_single_flight_secret",
+          expires_at: Date.now() + 5 * 60_000,
+          preparation_token: "prepared-token",
+          session_id: "cs_test_single_flight",
+          status: "prepared",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+
+    await openPersonalPlanLab(page, "one_time")
+    const openCheckout = page.getByRole("button", {
+      name: "Haarplan für €29,99 freischalten",
+    })
+    await openCheckout.scrollIntoViewIfNeeded()
+    await openCheckout.click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+    const cardButton = checkout.getByRole("button", { name: "Mit Karte bezahlen" })
+    await expect(cardButton).toBeVisible({ timeout: 10_000 })
+    await page.setViewportSize({ width: 391, height: 844 })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await expect.poll(() => prepareCalls).toBe(1)
+
+    await cardButton.click()
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toBeVisible()
+    await expect(
+      checkout.getByRole("button", { name: "Stattdessen PayPal verwenden" }),
+    ).toBeVisible()
+    expect(prepareCalls).toBe(1)
+  })
+
+  test("one-time card selection remains available when the PayPal build flag is disabled", async ({
+    page,
+  }) => {
+    test.skip(
+      process.env.PLAYWRIGHT_EXPECT_PAYPAL_DISABLED !== "true",
+      "run against a server built with NEXT_PUBLIC_PAYPAL_ENABLED=false",
+    )
+    let prepareCalls = 0
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      prepareCalls += 1
+      await route.fulfill({
+        body: JSON.stringify({
+          client_secret: "cs_test_paypal_disabled_secret",
+          expires_at: Date.now() + 5 * 60_000,
+          preparation_token: "prepared-token",
+          session_id: "cs_test_paypal_disabled",
+          status: "prepared",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+
+    await openPersonalPlanLab(page, "one_time")
+    const openCheckout = page.getByRole("button", {
+      name: "Haarplan für €29,99 freischalten",
+    })
+    await openCheckout.scrollIntoViewIfNeeded()
+    await openCheckout.click()
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+
+    await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toBeVisible({
+      timeout: 10_000,
+    })
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toHaveCount(0)
+    expect(prepareCalls).toBe(1)
   })
 
   test("FAQ disclosure remains native and supports keyboard reversal", async ({ page }) => {

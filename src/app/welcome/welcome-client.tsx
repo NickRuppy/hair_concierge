@@ -36,7 +36,12 @@ type CheckoutActivationSource =
 
 type LoadingState = "password" | "magic_link" | null
 type ScreenState = { view: "choice" } | { view: "sent" }
-type OneTimePendingState = "pending" | "timed_out" | "support_needed" | "revoked"
+type OneTimePendingState =
+  | "pending"
+  | "timed_out"
+  | "support_needed"
+  | "failed_permanent"
+  | "revoked"
 type OneTimeActivationStatus =
   | "active"
   | "paid_pending"
@@ -89,7 +94,8 @@ export function WelcomeClient({
     () => oneTimeActivationStatusRequestUrl(activationSource),
     [activationSource],
   )
-  const oneTimePollingBlockedByReturnState = oneTimeReturnState === "revoked"
+  const oneTimePollingBlockedByReturnState =
+    oneTimeReturnState === "revoked" || oneTimeReturnState === "failed_permanent"
   const showProviderSubscriberEmail =
     Boolean(providerSubscriberEmail?.trim()) &&
     providerSubscriberEmail?.trim().toLowerCase() !== email?.trim().toLowerCase()
@@ -242,7 +248,7 @@ export function WelcomeClient({
           return
         }
         if (isPermanentOneTimeActivationStatus(status)) {
-          setOneTimePendingState("support_needed")
+          setOneTimePendingState("failed_permanent")
           return
         }
         if (response.ok) {
@@ -420,7 +426,8 @@ export function WelcomeClient({
   if (mode === "pending") {
     if (isOneTimePurchase) {
       const isBlocked = oneTimePendingState !== "pending"
-      const canRetryOneTimeStatus = oneTimePendingState !== "revoked"
+      const canRetryOneTimeStatus =
+        oneTimePendingState !== "revoked" && oneTimePendingState !== "failed_permanent"
       return (
         <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
           <section
@@ -439,22 +446,26 @@ export function WelcomeClient({
               <p className="text-sm font-medium text-primary">
                 {oneTimePendingState === "revoked"
                   ? "Bestellung prüfen"
-                  : oneTimePendingState === "support_needed"
+                  : oneTimePendingState === "support_needed" ||
+                      oneTimePendingState === "failed_permanent"
                     ? "Zugang prüfen"
                     : "Zahlung bestätigt"}
               </p>
               <h1 className="font-header text-3xl text-foreground">
                 {oneTimePendingState === "timed_out"
                   ? ONE_TIME_PENDING_TIMEOUT_TITLE
-                  : oneTimePendingState === "support_needed"
+                  : oneTimePendingState === "support_needed" ||
+                      oneTimePendingState === "failed_permanent"
                     ? "Wir prüfen deinen Zugang"
                     : "Wir schließen deinen Zugang ab"}
               </h1>
               <p className="text-base text-muted-foreground">
                 {oneTimePendingState === "timed_out"
                   ? ONE_TIME_PENDING_TIMEOUT_BODY
-                  : oneTimePendingState === "support_needed"
-                    ? oneTimeReturnState === "support_needed"
+                  : oneTimePendingState === "support_needed" ||
+                      oneTimePendingState === "failed_permanent"
+                    ? oneTimeReturnState === "support_needed" ||
+                      oneTimeReturnState === "failed_permanent"
                       ? ONE_TIME_RETURN_SUPPORT_BODY
                       : ONE_TIME_PENDING_SUPPORT_BODY
                     : oneTimePendingState === "revoked"

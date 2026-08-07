@@ -130,6 +130,130 @@ test("billing reconcile runs one-time fulfillment retry only behind its dedicate
   )
 })
 
+test("billing reconcile runs paid-access monitor after one-time fulfillment retry", async () => {
+  const order: string[] = []
+  const reported: unknown[] = []
+  let flushes = 0
+  const response = await handleBillingReconcile(
+    request(),
+    createDeps({
+      oneTimeFulfillmentRetryEnabled: true,
+      reconcileOneTimeFulfillmentRetries: async () => {
+        order.push("fulfillment")
+        return oneTimeRetryStats({ claimed: 1 })
+      },
+      runPaidAccessMonitor: async () => {
+        order.push("paid-access")
+        return {
+          status: "completed",
+          counters: {
+            purchasesListed: 1,
+            purchasesChecked: 1,
+            skippedInternalTest: 0,
+            active: 0,
+            findings: 1,
+            monitorFailures: 0,
+          },
+          findings: [
+            {
+              signal: "paid_but_entitlement_not_active",
+              provider: "paypal",
+              purchaseId: "purchase_daily_receipt",
+              reason: "delivery_evidence_missing",
+              paidAt: "2026-08-01T10:00:00.000Z",
+              isInternalTest: false,
+            },
+          ],
+          monitorFailures: [],
+        }
+      },
+      reportPaidAccessFinding: (finding) => {
+        reported.push(finding)
+        return "abcdef0123456789abcdef0123456789"
+      },
+      flushTelemetry: async () => {
+        flushes += 1
+        return true
+      },
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(order, ["fulfillment", "paid-access"])
+  assert.equal(reported.length, 1)
+  assert.equal(flushes, 1)
+  assert.deepEqual(response.body.paidAccess, {
+    status: "completed",
+    counters: {
+      purchasesListed: 1,
+      purchasesChecked: 1,
+      skippedInternalTest: 0,
+      active: 0,
+      findings: 1,
+      monitorFailures: 0,
+    },
+    findings: [{ provider: "paypal", reason: "delivery_evidence_missing" }],
+  })
+})
+
+test("billing reconcile does not start unattended branches before one-time fulfillment finishes", async () => {
+  const order: string[] = []
+  let fulfillmentFinished = false
+  const assertFulfillmentFinished = (branch: string) => {
+    order.push(branch)
+    assert.equal(fulfillmentFinished, true)
+  }
+
+  const response = await handleBillingReconcile(
+    request(),
+    createDeps({
+      analyticsRetryEnabled: true,
+      oneTimeFulfillmentRetryEnabled: true,
+      reconcileOneTimeFulfillmentRetries: async () => {
+        order.push("fulfillment")
+        await Promise.resolve()
+        fulfillmentFinished = true
+        return oneTimeRetryStats({ claimed: 1 })
+      },
+      runPaymentIntegrity: async () => {
+        assertFulfillmentFinished("integrity")
+        return integrityResult()
+      },
+      getFreeTierId: async () => {
+        assertFulfillmentFinished("entitlement")
+        return "tier-free"
+      },
+      dispatchAnalyticsDue: async () => {
+        assertFulfillmentFinished("analytics")
+        return { processed: 0, delivered: 0, failed: 0 }
+      },
+      runPaidAccessMonitor: async () => {
+        assertFulfillmentFinished("paid-access")
+        return {
+          status: "completed",
+          counters: {
+            purchasesListed: 0,
+            purchasesChecked: 0,
+            skippedInternalTest: 0,
+            active: 0,
+            findings: 0,
+            monitorFailures: 0,
+          },
+          findings: [],
+          monitorFailures: [],
+        }
+      },
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.equal(order[0], "fulfillment")
+  assert.ok(order.includes("integrity"))
+  assert.ok(order.includes("entitlement"))
+  assert.ok(order.includes("analytics"))
+  assert.ok(order.includes("paid-access"))
+})
+
 test("default one-time fulfillment dispatchers pass quiz linking to both provider processors", async () => {
   const linkQuizToProfile = async () => {}
   let stripeLink: unknown
