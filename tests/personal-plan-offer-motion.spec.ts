@@ -1,6 +1,16 @@
 import { expect, test, type Page } from "@playwright/test"
 
 const labPath = "/labs/offer-page?variant=personal-plan"
+// Keep this aligned with @stripe/stripe-js: it accepts the legacy v3 URL and
+// the active release-train URL (for example, /dahlia/stripe.js), each with an
+// optional query string.
+const stripeSdkScriptUrlPattern =
+  /^https:\/\/js\.stripe\.com\/(?:v3\/?|(?:v3|[a-z]+)\/stripe\.js)(?:\?.*)?$/
+
+function isStripeSdkScriptUrl(url: string): boolean {
+  return stripeSdkScriptUrlPattern.test(url)
+}
+
 const offerViewports = [
   { width: 320, height: 568 },
   { width: 360, height: 800 },
@@ -79,6 +89,15 @@ async function stubPayPalSdk(page: Page) {
       status: 200,
     })
   })
+}
+
+async function blockStripeSdk(page: Page) {
+  await page.route(
+    (url) => isStripeSdkScriptUrl(url.toString()),
+    async (route) => {
+      await route.abort()
+    },
+  )
 }
 
 test.describe("@ci personal plan offer motion hooks", () => {
@@ -221,6 +240,12 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await page.setViewportSize({ width: 390, height: 844 })
     await enableApplePayCapability(page)
     let checkoutPreparationRequests = 0
+    let stripeSdkRequests = 0
+    page.on("request", (request) => {
+      if (request.resourceType() === "script" && isStripeSdkScriptUrl(request.url())) {
+        stripeSdkRequests += 1
+      }
+    })
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
       checkoutPreparationRequests += 1
       await route.fulfill({
@@ -234,6 +259,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
       await openPersonalPlanLab(page, pricingArm)
       await revealPricing(page)
       await page.waitForTimeout(500)
+      expect(stripeSdkRequests).toBe(0)
     }
 
     expect(checkoutPreparationRequests).toBe(0)
@@ -278,6 +304,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await blockStripeSdk(page)
     await stubPayPalSdk(page)
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
       await route.fulfill({
@@ -333,6 +360,22 @@ test.describe("@ci personal plan offer motion hooks", () => {
     let createOrderCalls = 0
     let statusCalls = 0
     let stripePreparationCalls = 0
+    let stripeSdkRequests = 0
+    page.on("request", (request) => {
+      if (request.resourceType() === "script" && isStripeSdkScriptUrl(request.url())) {
+        stripeSdkRequests += 1
+      }
+    })
+    await page.route(
+      (url) => isStripeSdkScriptUrl(url.toString()),
+      async (route) => {
+        await route.fulfill({
+          body: "window.Stripe = function () { return {}; }; window.Stripe.version = 'dahlia';",
+          contentType: "application/javascript",
+          status: 200,
+        })
+      },
+    )
     let releaseStripePreparation = () => {}
     const stripePreparationReleased = new Promise<void>((resolve) => {
       releaseStripePreparation = resolve
@@ -377,10 +420,12 @@ test.describe("@ci personal plan offer motion hooks", () => {
       name: "Haarplan für €29,99 freischalten",
     })
     await openCheckout.scrollIntoViewIfNeeded()
+    expect(stripeSdkRequests).toBe(0)
     await openCheckout.click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     const paypalButton = checkout.getByRole("button", { name: "PayPal" })
     await expect.poll(() => stripePreparationCalls).toBe(1)
+    await expect.poll(() => stripeSdkRequests).toBe(1)
     await paypalButton.click()
     await expect.poll(() => createOrderCalls).toBe(1)
     const paypalOwnedAttempt = checkout.getByText(
@@ -425,10 +470,80 @@ test.describe("@ci personal plan offer motion hooks", () => {
     })
   })
 
+  test("a failed speculative Stripe SDK load retries automatically for the checkout child", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await stubPayPalSdk(page)
+
+    let stripeSdkRequests = 0
+    let prepareCalls = 0
+    let releasePreparation = () => {}
+    const preparationReleased = new Promise<void>((resolve) => {
+      releasePreparation = resolve
+    })
+    const firstStripeRequestFailed = page.waitForEvent("requestfailed", {
+      predicate: (request) => isStripeSdkScriptUrl(request.url()),
+    })
+
+    await page.route(
+      (url) => isStripeSdkScriptUrl(url.toString()),
+      async (route) => {
+        stripeSdkRequests += 1
+        if (stripeSdkRequests === 1) {
+          await route.abort()
+          return
+        }
+        await route.continue()
+      },
+    )
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      const body = route.request().postDataJSON() as { action?: unknown }
+      expect(body.action).toBe("prepare")
+      prepareCalls += 1
+      await preparationReleased
+      await route.fulfill({
+        body: JSON.stringify({
+          client_secret: "cs_test_speculative_retry_secret",
+          expires_at: Date.now() + 5 * 60_000,
+          preparation_token: "speculative-retry-token",
+          session_id: "cs_test_speculative_retry",
+          status: "prepared",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+
+    await openPersonalPlanLab(page, "one_time")
+    const openCheckout = page.getByRole("button", {
+      name: "Haarplan für €29,99 freischalten",
+    })
+    await openCheckout.scrollIntoViewIfNeeded()
+    expect(stripeSdkRequests).toBe(0)
+    await openCheckout.click()
+
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toBeVisible()
+    await expect.poll(() => prepareCalls).toBe(1)
+    await expect.poll(() => stripeSdkRequests).toBe(1)
+    await firstStripeRequestFailed
+
+    releasePreparation()
+
+    await expect.poll(() => stripeSdkRequests).toBe(2)
+    await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toBeVisible({
+      timeout: 10_000,
+    })
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toBeVisible()
+    expect(prepareCalls).toBe(1)
+  })
+
   test("existing one-time access stops payment and carries the Chaarlie email into login", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await blockStripeSdk(page)
     await stubPayPalSdk(page)
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
       await route.fulfill({
@@ -468,6 +583,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await blockStripeSdk(page)
     await stubPayPalSdk(page)
     await page.route("**/api/paypal/create-order-intent", async (route) => {
       await route.fulfill({

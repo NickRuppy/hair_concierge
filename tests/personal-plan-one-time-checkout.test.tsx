@@ -109,6 +109,45 @@ test("one-time payment methods mount immediately without a visible or client con
   assert.doesNotMatch(stripeCheckoutRouteSource, /consentCopyVersion/)
 })
 
+function getStripeWarmEffect(source: string) {
+  const warmCallIndex = source.indexOf("warmOfferStripe()")
+  const warmEffectStart = source.lastIndexOf("  useEffect(() => {", warmCallIndex)
+  const warmEffectEnd = source.indexOf(
+    "\n  }, [canStartPayment, stripeCheckoutMounted])",
+    warmCallIndex,
+  )
+
+  assert.ok(warmCallIndex >= 0)
+  assert.ok(warmEffectStart >= 0)
+  assert.ok(warmEffectEnd >= 0)
+
+  return source.slice(warmEffectStart, warmEffectEnd)
+}
+
+function assertStripeWarmEffectGuards(source: string) {
+  assert.match(
+    getStripeWarmEffect(source),
+    /if \(!canStartPayment \|\| !stripeCheckoutMounted\) return\s+warmOfferStripe\(\)/,
+  )
+}
+
+test("one-time Stripe.js warms while the prepared checkout request is pending", () => {
+  const warmCallIndex = checkoutSource.indexOf("warmOfferStripe()")
+  const prepareCallIndex = checkoutSource.indexOf("void fetchClientSecret()")
+
+  assert.ok(warmCallIndex >= 0)
+  assert.ok(prepareCallIndex >= 0)
+  assert.ok(warmCallIndex < prepareCallIndex)
+  assertStripeWarmEffectGuards(checkoutSource)
+
+  const unguardedWarmSource = checkoutSource.replace(
+    "    if (!canStartPayment || !stripeCheckoutMounted) return\n    warmOfferStripe()",
+    "    warmOfferStripe()",
+  )
+  assert.notEqual(unguardedWarmSource, checkoutSource)
+  assert.throws(() => assertStripeWarmEffectGuards(unguardedWarmSource))
+})
+
 test("one-time Express containment renders PayPal without mounting Stripe", () => {
   assert.match(
     pricingSource,
