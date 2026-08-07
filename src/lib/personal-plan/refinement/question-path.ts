@@ -1,0 +1,281 @@
+import type {
+  AdditionalHeatTool,
+  DetanglingStylingContext,
+  DryingRoute,
+  DryShampooBridgePreference,
+  DryShampooVisibleHairColor,
+  HeatProtectionConsistency,
+  NightProtection,
+  OilPurpose,
+  PersonalPlanRefinementAnswersV1,
+  ProductFrequency,
+  ScalpIrritationDetail,
+  Stage2AnswerKey,
+  Stage2HeatEventSource,
+  Stage2HeatEventQuestionId,
+  Stage2PathState,
+  Stage2QuestionId,
+  Stage2TriggerContext,
+  TowelMaterial,
+  TowelTechnique,
+} from "./types"
+import {
+  ADDITIONAL_HEAT_TOOLS,
+  DETANGLING_STYLING_CONTEXTS,
+  DRY_SHAMPOO_BRIDGE_PREFERENCES,
+  DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
+  DRYING_ROUTES,
+  HEAT_PROTECTION_CONSISTENCIES,
+  OIL_PURPOSES,
+  SCALP_IRRITATION_DETAILS,
+  STAGE2_PRODUCT_CATEGORIES,
+} from "./types"
+import {
+  NIGHT_PROTECTIONS,
+  TOWEL_MATERIALS,
+  TOWEL_TECHNIQUES,
+} from "@/lib/vocabulary/onboarding-care"
+import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
+import {
+  createStage2HeatEventId,
+  getSelectedStage2HeatEventSources,
+  requiresStage2HeatProtection,
+} from "./heat-events"
+
+const BASE_QUESTION_IDS: Stage2QuestionId[] = ["current_product_categories", "wet_wash_frequency"]
+const END_QUESTION_IDS: Stage2QuestionId[] = [
+  "towel_handling",
+  "drying_routes",
+  "additional_heat_tools",
+  "detangling_styling_contexts",
+  "night_protection",
+]
+
+type PathInput = {
+  triggerContext: Stage2TriggerContext
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: readonly Stage2QuestionId[]
+}
+
+export type Stage2PrunedAnswers = {
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+  prunedAnswerKeys: Stage2AnswerKey[]
+}
+
+export type Stage2RefinementContract = Stage2PrunedAnswers & {
+  path: Stage2PathState
+  validationErrors: string[]
+  isComplete: boolean
+}
+
+export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
+  const answers = {
+    ...input.answers,
+    heatEvents: input.answers.heatEvents ? { ...input.answers.heatEvents } : undefined,
+  }
+  const prunedAnswerKeys: Stage2AnswerKey[] = []
+  const remove = (key: Stage2AnswerKey) => {
+    if (answers[key] !== undefined) {
+      delete answers[key]
+      prunedAnswerKeys.push(key)
+    }
+  }
+  const categories = answers.currentProductCategories ?? []
+  const usesDryShampoo = categories.includes("dry_shampoo")
+
+  if (!input.triggerContext.hasReportedIrritatedScalp) remove("scalpIrritationDetail")
+  if (!categories.includes("oil")) remove("oilPurposes")
+
+  if (usesDryShampoo) {
+    remove("dryShampooBridgePreference")
+  } else if (input.triggerContext.dryShampooBridgeEligibility !== "eligible") {
+    remove("dryShampooBridgePreference")
+    remove("dryShampooVisibleHairColor")
+  } else if (answers.dryShampooBridgePreference !== "accept") {
+    remove("dryShampooVisibleHairColor")
+  }
+
+  if (
+    answers.towel &&
+    (!answers.towel.material || answers.towel.material === "no_towel") &&
+    answers.towel.technique !== undefined
+  ) {
+    answers.towel = { material: answers.towel.material }
+    prunedAnswerKeys.push("towel")
+  }
+
+  const selectedEventIds = new Set<Stage2HeatEventQuestionId>(
+    getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId),
+  )
+  if (answers.heatEvents) {
+    const remainingEvents = Object.fromEntries(
+      Object.entries(answers.heatEvents).filter(([id]) =>
+        selectedEventIds.has(id as Stage2HeatEventQuestionId),
+      ),
+    )
+    if (Object.keys(remainingEvents).length !== Object.keys(answers.heatEvents).length) {
+      answers.heatEvents = remainingEvents
+      prunedAnswerKeys.push("heatEvents")
+    }
+  }
+
+  const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, answers)
+  const activeQuestionIds = new Set<Stage2QuestionId>(orderedQuestionIds)
+  const completedQuestionIds = input.completedQuestionIds.filter((id) => activeQuestionIds.has(id))
+  return { answers, completedQuestionIds, prunedAnswerKeys }
+}
+
+export function getOrderedQuestionIds(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): Stage2QuestionId[] {
+  const categories = answers.currentProductCategories ?? []
+  const usesDryShampoo = categories.includes("dry_shampoo")
+  const ids = [...BASE_QUESTION_IDS]
+  if (triggerContext.hasReportedIrritatedScalp) ids.push("scalp_irritation_detail")
+  if (usesDryShampoo) {
+    ids.push("dry_shampoo_visible_hair_color")
+  } else if (triggerContext.dryShampooBridgeEligibility === "eligible") {
+    ids.push("dry_shampoo_bridge_preference")
+    if (answers.dryShampooBridgePreference === "accept") ids.push("dry_shampoo_visible_hair_color")
+  }
+  if (categories.includes("oil")) ids.push("oil_purposes")
+  ids.push(...END_QUESTION_IDS.slice(0, 3))
+  ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
+  ids.push(...END_QUESTION_IDS.slice(3))
+  return ids
+}
+
+export function resolveStage2Path(input: PathInput): Stage2PathState {
+  return resolveStage2RefinementContract(input).path
+}
+
+/** The sole canonical server/gateway transition input: prune, validate, then derive the path. */
+export function resolveStage2RefinementContract(input: PathInput): Stage2RefinementContract {
+  const pruned = pruneStage2Answers(input)
+  const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, pruned.answers)
+  const completedQuestionIds = orderedQuestionIds.filter(
+    (id) => pruned.completedQuestionIds.includes(id) && isQuestionAnswerValid(id, pruned.answers),
+  )
+  const firstUnresolvedQuestionId =
+    orderedQuestionIds.find((id) => !completedQuestionIds.includes(id)) ?? null
+  const path: Stage2PathState = {
+    orderedQuestionIds,
+    requiredQuestionIds: orderedQuestionIds,
+    completedQuestionIds,
+    firstUnresolvedQuestionId,
+    prunedAnswerKeys: pruned.prunedAnswerKeys,
+  }
+  const validationErrors = orderedQuestionIds.flatMap((questionId) =>
+    isQuestionAnswerValid(questionId, pruned.answers)
+      ? []
+      : [`${questionId} is invalid or incomplete`],
+  )
+  return {
+    ...pruned,
+    completedQuestionIds,
+    path,
+    validationErrors,
+    isComplete: firstUnresolvedQuestionId === null,
+  }
+}
+
+export function validateStage2Answers(input: PathInput): string[] {
+  return resolveStage2RefinementContract(input).validationErrors
+}
+
+export function getEffectiveDryShampooBridgePreference(
+  answers: PersonalPlanRefinementAnswersV1,
+): DryShampooBridgePreference | undefined {
+  return answers.currentProductCategories?.includes("dry_shampoo")
+    ? "accept"
+    : answers.dryShampooBridgePreference
+}
+
+function isOneOf<T extends string>(value: unknown, values: readonly T[]): value is T {
+  return typeof value === "string" && values.includes(value as T)
+}
+
+function isOrderedKnownArray<T extends string>(
+  value: unknown,
+  values: readonly T[],
+  requireValue = false,
+): value is T[] {
+  if (!Array.isArray(value) || (requireValue && value.length === 0)) return false
+  const selected = new Set(value)
+  return (
+    value.length === selected.size &&
+    value.every((item) => isOneOf(item, values)) &&
+    value.every(
+      (item, index) => index === 0 || values.indexOf(value[index - 1]) < values.indexOf(item),
+    )
+  )
+}
+
+function isQuestionAnswerValid(
+  questionId: Stage2QuestionId,
+  answers: PersonalPlanRefinementAnswersV1,
+): boolean {
+  if (questionId.startsWith("heat:")) return isHeatEventAnswerValid(questionId, answers)
+  switch (questionId) {
+    case "current_product_categories":
+      return isOrderedKnownArray(answers.currentProductCategories, STAGE2_PRODUCT_CATEGORIES)
+    case "wet_wash_frequency":
+      return (
+        answers.wetWashFrequency === "does_not_wash" ||
+        isOneOf(answers.wetWashFrequency, PRODUCT_FREQUENCIES)
+      )
+    case "scalp_irritation_detail":
+      return isOneOf<ScalpIrritationDetail>(answers.scalpIrritationDetail, SCALP_IRRITATION_DETAILS)
+    case "dry_shampoo_bridge_preference":
+      return isOneOf<DryShampooBridgePreference>(
+        answers.dryShampooBridgePreference,
+        DRY_SHAMPOO_BRIDGE_PREFERENCES,
+      )
+    case "dry_shampoo_visible_hair_color":
+      return isOneOf<DryShampooVisibleHairColor>(
+        answers.dryShampooVisibleHairColor,
+        DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
+      )
+    case "oil_purposes":
+      return isOrderedKnownArray<OilPurpose>(answers.oilPurposes, OIL_PURPOSES, true)
+    case "towel_handling":
+      return isTowelHandlingValid(answers)
+    case "drying_routes":
+      return isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES)
+    case "additional_heat_tools":
+      return isOrderedKnownArray<AdditionalHeatTool>(
+        answers.additionalHeatTools,
+        ADDITIONAL_HEAT_TOOLS,
+      )
+    case "detangling_styling_contexts":
+      return isOrderedKnownArray<DetanglingStylingContext>(
+        answers.detanglingStylingContexts,
+        DETANGLING_STYLING_CONTEXTS,
+      )
+    case "night_protection":
+      return isOrderedKnownArray<NightProtection>(answers.nightProtection, NIGHT_PROTECTIONS)
+  }
+  return false
+}
+
+function isTowelHandlingValid(answers: PersonalPlanRefinementAnswersV1): boolean {
+  const towel = answers.towel
+  if (!towel || !isOneOf<TowelMaterial>(towel.material, TOWEL_MATERIALS)) return false
+  return towel.material === "no_towel"
+    ? towel.technique === undefined
+    : isOneOf<TowelTechnique>(towel.technique, TOWEL_TECHNIQUES)
+}
+
+function isHeatEventAnswerValid(
+  questionId: Stage2QuestionId,
+  answers: PersonalPlanRefinementAnswersV1,
+): boolean {
+  const source = questionId.slice("heat:".length) as Stage2HeatEventSource
+  const event = answers.heatEvents?.[questionId]
+  if (!event || !isOneOf<ProductFrequency>(event.frequency, PRODUCT_FREQUENCIES)) return false
+  return requiresStage2HeatProtection(source)
+    ? isOneOf<HeatProtectionConsistency>(event.protectionConsistency, HEAT_PROTECTION_CONSISTENCIES)
+    : event.protectionConsistency === undefined
+}
