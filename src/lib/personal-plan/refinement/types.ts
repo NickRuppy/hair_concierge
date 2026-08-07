@@ -67,15 +67,6 @@ export type Stage2HeatEventTool =
   | "curling_iron"
   | "other"
 export type Stage2HeatEventRoute = "ordinary_airflow" | "airflow_shaping" | "direct_contact_heat"
-export const DETANGLING_STYLING_CONTEXTS = [
-  "wet_or_damp_with_slip",
-  "wet_or_damp_without_slip",
-  "dry",
-  "during_blowdry_or_styling",
-  "fingers_only",
-] as const
-export type DetanglingStylingContext = (typeof DETANGLING_STYLING_CONTEXTS)[number]
-
 export type HeatEventAnswer = {
   frequency: ProductFrequency
   protectionConsistency?: HeatProtectionConsistency
@@ -92,7 +83,6 @@ export type PersonalPlanRefinementAnswersV1 = {
   dryingRoutes?: DryingRoute[]
   additionalHeatTools?: AdditionalHeatTool[]
   heatEvents?: Record<string, HeatEventAnswer>
-  detanglingStylingContexts?: DetanglingStylingContext[]
   nightProtection?: NightProtection[]
 }
 
@@ -106,7 +96,6 @@ export type Stage2StaticQuestionId =
   | "towel_handling"
   | "drying_routes"
   | "additional_heat_tools"
-  | "detangling_styling_contexts"
   | "night_protection"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
 export type Stage2QuestionId = Stage2StaticQuestionId | Stage2HeatEventQuestionId

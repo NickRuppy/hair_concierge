@@ -18,7 +18,6 @@ const completeAnswers = {
   towel: { material: "no_towel" as const },
   dryingRoutes: [],
   additionalHeatTools: [],
-  detanglingStylingContexts: [],
   nightProtection: [],
 }
 
@@ -28,7 +27,6 @@ const completeQuestionIds = [
   "towel_handling",
   "drying_routes",
   "additional_heat_tools",
-  "detangling_styling_contexts",
   "night_protection",
 ] as const
 

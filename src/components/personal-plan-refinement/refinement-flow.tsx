@@ -547,7 +547,6 @@ function labelForQuestion(questionId: Stage2QuestionId): string {
     towel_handling: "Handtuch",
     drying_routes: "Trocknungswege",
     additional_heat_tools: "Zusätzliche Hitze-Tools",
-    detangling_styling_contexts: "Entwirren und Styling",
     night_protection: "Nachtschutz",
   } as const satisfies Record<Exclude<Stage2QuestionId, `heat:${string}`>, string>
   return labels[questionId as Stage2StaticQuestionId]

@@ -20,7 +20,6 @@ const completeAnswers = {
   towel: { material: "no_towel" as const },
   dryingRoutes: [],
   additionalHeatTools: [],
-  detanglingStylingContexts: [],
   nightProtection: [],
 }
 
@@ -30,7 +29,6 @@ const completeQuestionIds = [
   "towel_handling",
   "drying_routes",
   "additional_heat_tools",
-  "detangling_styling_contexts",
   "night_protection",
 ] as const
 
@@ -188,7 +186,6 @@ test("completion rejects an unresolved path and repeats one deterministic opaque
   for (const [questionId, answer] of [
     ["drying_routes", []],
     ["additional_heat_tools", []],
-    ["detangling_styling_contexts", []],
     ["night_protection", []],
   ] as const) {
     session = await gateway.saveAnswer({ questionId, answer, expectedRevision: session.revision })
@@ -250,7 +247,6 @@ test("one-shot completion failure preserves progress and retries truthfully", as
   for (const [questionId, answer] of [
     ["drying_routes", []],
     ["additional_heat_tools", []],
-    ["detangling_styling_contexts", []],
     ["night_protection", []],
   ] as const) {
     session = await gateway.saveAnswer({ questionId, answer, expectedRevision: session.revision })

@@ -12,7 +12,6 @@ import {
 import { RefinementBridge } from "../src/components/personal-plan-refinement/refinement-bridge"
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
-  DETANGLING_OPTIONS,
   DRYING_ROUTE_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
   OIL_PURPOSE_OPTIONS,
@@ -33,7 +32,6 @@ import {
 } from "../src/lib/personal-plan/refinement/session"
 import {
   ADDITIONAL_HEAT_TOOLS,
-  DETANGLING_STYLING_CONTEXTS,
   DRYING_ROUTES,
   OIL_PURPOSES,
   STAGE2_PRODUCT_CATEGORIES,
@@ -163,10 +161,6 @@ test("UI option value order stays coupled to canonical Slice A vocabularies", ()
   assert.deepEqual(
     ADDITIONAL_HEAT_TOOL_OPTIONS.map((option) => option.value),
     [...ADDITIONAL_HEAT_TOOLS],
-  )
-  assert.deepEqual(
-    DETANGLING_OPTIONS.map((option) => option.value),
-    [...DETANGLING_STYLING_CONTEXTS],
   )
   assert.deepEqual(
     NIGHT_PROTECTION_OPTIONS.map((option) => option.value),
@@ -308,7 +302,6 @@ test("loaded complete sessions require completedHandoff instead of a completion 
       towel: { material: "no_towel" },
       dryingRoutes: [],
       additionalHeatTools: [],
-      detanglingStylingContexts: [],
       nightProtection: [],
     },
     completedQuestionIds: [
@@ -317,7 +310,6 @@ test("loaded complete sessions require completedHandoff instead of a completion 
       "towel_handling",
       "drying_routes",
       "additional_heat_tools",
-      "detangling_styling_contexts",
       "night_protection",
     ],
     completedHandoff: {
@@ -353,7 +345,6 @@ test("bridge back targets the final canonical question", () => {
       towel: { material: "no_towel" },
       dryingRoutes: [],
       additionalHeatTools: [],
-      detanglingStylingContexts: [],
       nightProtection: [],
     },
     completedQuestionIds: [
@@ -362,7 +353,6 @@ test("bridge back targets the final canonical question", () => {
       "towel_handling",
       "drying_routes",
       "additional_heat_tools",
-      "detangling_styling_contexts",
       "night_protection",
     ],
   })

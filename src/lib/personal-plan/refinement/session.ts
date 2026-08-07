@@ -173,11 +173,6 @@ function replaceQuestionAnswer(
         answer,
       ) as PersonalPlanRefinementAnswersV1["additionalHeatTools"]
       break
-    case "detangling_styling_contexts":
-      next.detanglingStylingContexts = structuredClone(
-        answer,
-      ) as PersonalPlanRefinementAnswersV1["detanglingStylingContexts"]
-      break
     case "night_protection":
       next.nightProtection = structuredClone(
         answer,

@@ -146,7 +146,6 @@ test("path inserts irritation, Oil and separately ordered heat questions without
     "heat:diffuser_airflow_shaping",
     "heat:dryer_brush",
     "heat:straightener",
-    "detangling_styling_contexts",
     "night_protection",
   ])
 })
@@ -158,7 +157,6 @@ test("completion distinguishes completed empty multi-select pages from unanswere
     towel: { material: "no_towel" as const },
     dryingRoutes: [],
     additionalHeatTools: [],
-    detanglingStylingContexts: [],
     nightProtection: [],
   }
   const required = [
@@ -167,7 +165,6 @@ test("completion distinguishes completed empty multi-select pages from unanswere
     "towel_handling",
     "drying_routes",
     "additional_heat_tools",
-    "detangling_styling_contexts",
     "night_protection",
   ] as const
   const complete = resolveStage2Path({

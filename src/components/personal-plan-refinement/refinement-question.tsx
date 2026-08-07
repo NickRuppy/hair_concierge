@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils"
 
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
-  DETANGLING_OPTIONS,
   DRYING_ROUTE_OPTIONS,
   DRY_SHAMPOO_BRIDGE_OPTIONS,
   HEAT_PROTECTION_OPTIONS,
@@ -95,8 +94,6 @@ export function getAnswerForQuestion(
       return answers.dryingRoutes
     case "additional_heat_tools":
       return answers.additionalHeatTools
-    case "detangling_styling_contexts":
-      return answers.detanglingStylingContexts
     case "night_protection":
       return answers.nightProtection
   }
@@ -574,22 +571,6 @@ function renderQuestionBody({
           />
         ),
       }
-    case "detangling_styling_contexts":
-      return {
-        sectionLabel: "Wie du dein Haar behandelst",
-        title: "Wann entwirrst oder stylst du dein Haar meistens?",
-        lead: "Wir erfassen Situationen und Gewohnheiten, keine Bürsten- oder Kammtypen.",
-        body: (
-          <RefinementOptions
-            options={DETANGLING_OPTIONS}
-            value={(answer ?? []) as string[]}
-            multi
-            allowNone
-            noneDescription="Keiner dieser Kontexte trifft meistens zu."
-            onChange={onLocalAnswerChange}
-          />
-        ),
-      }
     case "night_protection":
       return {
         sectionLabel: "Wie du dein Haar behandelst",
@@ -622,7 +603,6 @@ function SectionProgress({ questionId }: { questionId: Stage2QuestionId }) {
     questionId === "towel_handling" ||
     questionId === "drying_routes" ||
     questionId === "additional_heat_tools" ||
-    questionId === "detangling_styling_contexts" ||
     questionId === "night_protection" ||
     questionId.startsWith("heat:")
   return (
@@ -792,7 +772,6 @@ export function getQuestionFamily(questionId: Stage2QuestionId) {
     questionId.startsWith("heat:")
   )
     return "heat_behavior"
-  if (questionId === "detangling_styling_contexts") return "detangling_behavior"
   if (questionId === "night_protection") return "night_behavior"
   return "conditional_context"
 }
@@ -801,7 +780,6 @@ export function getQuestionSection(questionId: Stage2QuestionId) {
   return questionId === "towel_handling" ||
     questionId === "drying_routes" ||
     questionId === "additional_heat_tools" ||
-    questionId === "detangling_styling_contexts" ||
     questionId === "night_protection" ||
     questionId.startsWith("heat:")
     ? "hair_handling"

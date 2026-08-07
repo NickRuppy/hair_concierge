@@ -25,13 +25,13 @@ Each stage has a different cognitive weight. Stage 1 is the reward. Stage 2 feel
 
 This replaces the earlier compressed three-stage vocabulary:
 
-| Earlier concept | New stage |
-| --- | --- |
-| Quiz-only Bedarfsplan | Stage 1 — Bedarf |
-| Missing-input and habit questions scattered before or inside the old flow | Stage 2 — Verfeinerung |
-| Exact-product reconciliation in the old Stage 2 | Stage 3 — Produkte |
-| No separately named output between product decisions and application | Stage 4 — Routine |
-| Day-type compiler and application guidance in the old Stage 3 | Stage 5 — Anwendungsplan |
+| Earlier concept                                                           | New stage                |
+| ------------------------------------------------------------------------- | ------------------------ |
+| Quiz-only Bedarfsplan                                                     | Stage 1 — Bedarf         |
+| Missing-input and habit questions scattered before or inside the old flow | Stage 2 — Verfeinerung   |
+| Exact-product reconciliation in the old Stage 2                           | Stage 3 — Produkte       |
+| No separately named output between product decisions and application      | Stage 4 — Routine        |
+| Day-type compiler and application guidance in the old Stage 3             | Stage 5 — Anwendungsplan |
 
 ## 2. Product-wide invariants
 
@@ -118,22 +118,21 @@ The actor is an authenticated Personal Plan buyer with a saved paid-quiz artifac
 
 The path uses only the two stable section labels `Was du heute benutzt` and `Wie du dein Haar behandelst`; it never shows a mutable `Frage X von Y` total. Each answered page saves before advancing, and changing a parent answer removes now-irrelevant descendant answers from the draft before recomputation.
 
-| Order | Question / stored fact | Format and trigger | Named consequence |
-|---|---|---|---|
-| A1 | `Welche Produktarten nutzt du aktuell?` → `current_product_categories` | Grouped multi-select of exactly the ten V1 plan categories; everyone; explicit none is exclusive | Defines Stage-3 Pass-1 inventory and known current category coverage; does not imply fit |
-| A2 | `Wie oft wäschst du deine Haare normalerweise nass?` → `wet_wash_frequency` | Single select using `ProductFrequency` plus `does_not_wash`; everyone | Resolves Shampoo cadence comparison, Dry-Shampoo bridge eligibility, Mask allocation, and part of later Deep-Cleansing load |
-| A3 | `Wie fühlt sich die gereizte Kopfhaut aktuell an?` → `scalp_irritation_detail` | `mild_sensitive_or_itchy` versus `burning_painful_or_inflamed`; only when paid quiz contains `irritated` | Chooses the conservative Scalp-Care route or pauses cosmetic scalp guidance |
-| A4 | `Möchtest du Trockenshampoo nutzen, um Tage bis zur nächsten Haarwäsche zu überbrücken?` → `dry_shampoo_bridge_preference` | Accept/decline; only when refined scalp/wash logic indicates the bridge and current categories exclude Dry Shampoo | Resolves the deferred Dry-Shampoo need; existing use counts as accepted without asking |
-| A5 | `Welche sichtbare Haarfarbe hast du am Ansatz?` → `dry_shampoo_visible_hair_color` | `hell/blond`, `braun`, `dunkel`; only for existing or newly accepted Dry-Shampoo use | Enables later tint/residue fit; never substitutes for chemical-colour status |
-| A6 | `Wofür verwendest du Haaröl?` → `oil_purposes` | Multi-select: pre-wash lengths, damp leave-on care, dry finish, scalp; only when Oil is selected | Creates semantic Oil roles for one active product per purpose in Stage 3 |
-| B1 | `Womit und wie trocknest du dein Haar direkt nach der Wäsche?` → `towel_material`, `towel_technique` | One page: material first, then technique when material is not `no_towel`; everyone | Adds only evidence-backed mechanical/frizz context and deterministic Stage-5 handling guidance |
-| B2 | `Wie trocknest du dein Haar normalerweise?` → `drying_routes` | Natural multi-select: air-dry, ordinary blow-dry, diffuser/airflow shaping; everyone | Removes legacy duplication, supplies application context, and creates normalized airflow events |
-| B3 | `Welche weiteren Hitzetools nutzt du?` → `additional_heat_tools` | Multi-select of supported direct/airflow styling tools plus exclusive none; everyone | Completes the event set without repeating dryer/diffuser |
-| B4…n | `Wie oft nutzt du {event} – und wie konsequent Hitzeschutz?` → `heat_events[]` | One page per selected heated event; `ProductFrequency` for every event and `always | sometimes | no | unsure` protection only for `airflow_shaping` or `direct_contact_heat` | Resolves Heat tier, Heat-protectant need and coverage uncertainty, application rule, and event-specific cadence |
-| B5 | `Wie entwirrst oder bürstest du dein Haar normalerweise?` → `detangling_styling_contexts` | Multi-select: wet/damp with slip, wet/damp without slip, dry detangling, while blow-drying, fingers only; explicit no regular brushing is exclusive; everyone | Supplies texture-aware mechanical-risk and Stage-5 detangling/styling instructions without judging a tool name alone |
-| B6 | `Wie schützt du dein Haar nachts?` → `night_protection` | Existing semantic multi-select plus exclusive no protection; everyone | Distinguishes an explicit behavior gap from unknown and controls Stage-5 night guidance |
+| Order | Question / stored fact                                                                                                     | Format and trigger                                                                                                 | Named consequence                                                                                                           |
+| ----- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | --- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| A1    | `Welche Produktarten nutzt du aktuell?` → `current_product_categories`                                                     | Grouped multi-select of exactly the ten V1 plan categories; everyone; explicit none is exclusive                   | Defines Stage-3 Pass-1 inventory and known current category coverage; does not imply fit                                    |
+| A2    | `Wie oft wäschst du deine Haare normalerweise nass?` → `wet_wash_frequency`                                                | Single select using `ProductFrequency` plus `does_not_wash`; everyone                                              | Resolves Shampoo cadence comparison, Dry-Shampoo bridge eligibility, Mask allocation, and part of later Deep-Cleansing load |
+| A3    | `Wie fühlt sich die gereizte Kopfhaut aktuell an?` → `scalp_irritation_detail`                                             | `mild_sensitive_or_itchy` versus `burning_painful_or_inflamed`; only when paid quiz contains `irritated`           | Chooses the conservative Scalp-Care route or pauses cosmetic scalp guidance                                                 |
+| A4    | `Möchtest du Trockenshampoo nutzen, um Tage bis zur nächsten Haarwäsche zu überbrücken?` → `dry_shampoo_bridge_preference` | Accept/decline; only when refined scalp/wash logic indicates the bridge and current categories exclude Dry Shampoo | Resolves the deferred Dry-Shampoo need; existing use counts as accepted without asking                                      |
+| A5    | `Welche sichtbare Haarfarbe hast du am Ansatz?` → `dry_shampoo_visible_hair_color`                                         | `hell/blond`, `braun`, `dunkel`; only for existing or newly accepted Dry-Shampoo use                               | Enables later tint/residue fit; never substitutes for chemical-colour status                                                |
+| A6    | `Wofür verwendest du Haaröl?` → `oil_purposes`                                                                             | Multi-select: pre-wash lengths, damp leave-on care, dry finish, scalp; only when Oil is selected                   | Creates semantic Oil roles for one active product per purpose in Stage 3                                                    |
+| B1    | `Womit und wie trocknest du dein Haar direkt nach der Wäsche?` → `towel_material`, `towel_technique`                       | One page: material first, then technique when material is not `no_towel`; everyone                                 | Adds only evidence-backed mechanical/frizz context and deterministic Stage-5 handling guidance                              |
+| B2    | `Wie trocknest du dein Haar normalerweise?` → `drying_routes`                                                              | Natural multi-select: air-dry, ordinary blow-dry, diffuser/airflow shaping; everyone                               | Removes legacy duplication, supplies application context, and creates normalized airflow events                             |
+| B3    | `Welche weiteren Hitzetools nutzt du?` → `additional_heat_tools`                                                           | Multi-select of supported direct/airflow styling tools plus exclusive none; everyone                               | Completes the event set without repeating dryer/diffuser                                                                    |
+| B4…n  | `Wie oft nutzt du {event} – und wie konsequent Hitzeschutz?` → `heat_events[]`                                             | One page per selected heated event; `ProductFrequency` for every event and `always                                 | sometimes                                                                                                                   | no  | unsure`protection only for`airflow_shaping`or`direct_contact_heat` | Resolves Heat tier, Heat-protectant need and coverage uncertainty, application rule, and event-specific cadence |
+| B5    | `Wie schützt du dein Haar nachts?` → `night_protection`                                                                    | Existing semantic multi-select plus exclusive no protection; everyone                                              | Distinguishes an explicit behavior gap from unknown and controls Stage-5 night guidance                                     |
 
-After B6, no further onboarding question may appear in Stages 3–5. The system validates the condition graph, saves the completed Stage-2 answer version, recomputes the refined need state backstage, and shows only the neutral Stage-3 Pass-1 bridge. A saved draft supports exit/resume but never unlocks that bridge until all relevant answers are complete.
+After B5, no further onboarding question may appear in Stages 3–5. The system validates the condition graph, saves the completed Stage-2 answer version, recomputes the refined need state backstage, and shows only the neutral Stage-3 Pass-1 bridge. A saved draft supports exit/resume but never unlocks that bridge until all relevant answers are complete.
 
 ### Stage 3 — Produkte
 
@@ -155,13 +154,15 @@ After B6, no further onboarding question may appear in Stages 3–5. The system 
 8. The page must handle single-product categories, multi-role categories, several owned products, one product covering several roles, and owned products in categories that the refined plan does not need.
 9. A compact clear-fit state confirms which owned product will remain active and why it is sufficient. The user can skim and continue without opening the full comparison, but may inspect the same requirement evidence on demand.
 10. Depending on the evidence and inventory state, the user can:
-   - confirm a fitting owned product for the routine;
-   - knowingly keep a mismatching product as an advised override;
-   - add the recommended replacement or addition to the shopping list;
-   - state that the recommended product is already owned;
-   - inspect or choose a bounded validated alternative;
-   - submit another product for review;
-   - defer the decision if the final Stage-4 completion policy allows it.
+
+- confirm a fitting owned product for the routine;
+- knowingly keep a mismatching product as an advised override;
+- add the recommended replacement or addition to the shopping list;
+- state that the recommended product is already owned;
+- inspect or choose a bounded validated alternative;
+- submit another product for review;
+- defer the decision if the final Stage-4 completion policy allows it.
+
 11. `Ich wechsle` cannot silently mean “I own and use the replacement now.” The final actions must distinguish future intent, shopping-list placement, acquisition, and activation.
 12. The exact recommendation remains stable unless the user changes a relevant answer, chooses an alternative, removes it, or marks it acquired.
 13. Both product-stage passes save after every product or category decision and resume deterministically in the correct pass.

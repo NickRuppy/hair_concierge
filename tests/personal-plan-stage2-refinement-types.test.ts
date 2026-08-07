@@ -3,7 +3,6 @@ import test from "node:test"
 
 import {
   ADDITIONAL_HEAT_TOOLS,
-  DETANGLING_STYLING_CONTEXTS,
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   DRYING_ROUTES,
@@ -47,13 +46,6 @@ test("Stage 2 vocabulary arrays preserve the approved stable order", () => {
     "straightener",
     "curling_or_wave_iron",
     "thermal_rollers",
-  ])
-  assert.deepEqual(DETANGLING_STYLING_CONTEXTS, [
-    "wet_or_damp_with_slip",
-    "wet_or_damp_without_slip",
-    "dry",
-    "during_blowdry_or_styling",
-    "fingers_only",
   ])
   assert.deepEqual(SCALP_IRRITATION_DETAILS, [
     "mild_sensitive_or_itchy",

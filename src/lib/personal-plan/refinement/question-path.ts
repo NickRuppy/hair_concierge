@@ -1,6 +1,5 @@
 import type {
   AdditionalHeatTool,
-  DetanglingStylingContext,
   DryingRoute,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
@@ -21,7 +20,6 @@ import type {
 } from "./types"
 import {
   ADDITIONAL_HEAT_TOOLS,
-  DETANGLING_STYLING_CONTEXTS,
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   DRYING_ROUTES,
@@ -47,7 +45,6 @@ const END_QUESTION_IDS: Stage2QuestionId[] = [
   "towel_handling",
   "drying_routes",
   "additional_heat_tools",
-  "detangling_styling_contexts",
   "night_protection",
 ]
 
@@ -248,11 +245,6 @@ function isQuestionAnswerValid(
       return isOrderedKnownArray<AdditionalHeatTool>(
         answers.additionalHeatTools,
         ADDITIONAL_HEAT_TOOLS,
-      )
-    case "detangling_styling_contexts":
-      return isOrderedKnownArray<DetanglingStylingContext>(
-        answers.detanglingStylingContexts,
-        DETANGLING_STYLING_CONTEXTS,
       )
     case "night_protection":
       return isOrderedKnownArray<NightProtection>(answers.nightProtection, NIGHT_PROTECTIONS)

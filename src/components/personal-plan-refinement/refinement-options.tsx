@@ -6,7 +6,6 @@ import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import type { IconName } from "@/components/ui/icon"
 import type {
   AdditionalHeatTool,
-  DetanglingStylingContext,
   DryingRoute,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
@@ -200,27 +199,6 @@ export const HEAT_PROTECTION_OPTIONS = [
   { value: "no", label: "Nein", icon: "heat-protection-no" },
   { value: "unsure", label: "Unsicher", icon: "help" },
 ] as const satisfies readonly RefinementOption<HeatProtectionConsistency>[]
-
-export const DETANGLING_OPTIONS = [
-  {
-    value: "wet_or_damp_with_slip",
-    label: "Nass oder feucht – mit Gleitfähigkeit (Slip)",
-    description: "Zum Beispiel mit Conditioner, Maske oder Leave-in.",
-    icon: "goal-moisture",
-  },
-  {
-    value: "wet_or_damp_without_slip",
-    label: "Nass oder feucht – ohne Pflegeprodukt",
-    icon: "goal-frizz",
-  },
-  { value: "dry", label: "Trocken", icon: "goal-shine" },
-  {
-    value: "during_blowdry_or_styling",
-    label: "Während des Föhnens oder Stylings",
-    icon: "drying-blow",
-  },
-  { value: "fingers_only", label: "Meist nur mit den Fingern", icon: "brush-fingers" },
-] as const satisfies readonly RefinementOption<DetanglingStylingContext>[]
 
 export const NIGHT_PROTECTION_OPTIONS = Object.entries(NIGHT_PROTECTION_LABELS).map(
   ([value, label]) => ({

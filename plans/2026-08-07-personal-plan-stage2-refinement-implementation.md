@@ -104,117 +104,97 @@ The customer journey remains exactly the signed-off sequence in sections 3 and 1
 
 The server owns this order and every trigger. The client must not independently infer a different path.
 
-| Order | Question ID and canonical answer | Trigger | Consequence |
-| --- | --- | --- | --- |
-| A1 | `current_product_categories` | everyone | Defines Stage-3 Pass-1 inventory and current category coverage without implying fit |
-| A2 | `wet_wash_frequency` | everyone | Supplies the general wet-wash rhythm for refined Shampoo comparison, Dry-Shampoo bridge eligibility, Mask placement, and later load calculations |
-| A3 | `scalp_irritation_detail` | paid quiz contains `irritated` | Keeps mild cosmetic guidance conservative or pauses it for painful/burning/inflamed symptoms |
-| A4 | `dry_shampoo_bridge_preference` | the partial refined computation exposes the bridge opportunity and current categories exclude Dry Shampoo | Resolves accept/decline; existing use is normalized to acceptance without asking |
-| A5 | `dry_shampoo_visible_hair_color` | current Dry Shampoo use or accepted bridge | Supplies later tint/residue matching only |
-| A6 | `oil_purposes` | Oil selected | Creates distinct semantic Oil roles; Stage 3 captures one primary active Oil per purpose |
-| B1 | `towel_material` plus conditional `towel_technique` | everyone; technique omitted for `no_towel` | Supplies mechanical/frizz context and later handling guidance without inferring technique from material |
-| B2 | `drying_routes` | everyone | Captures air-drying and/or the ordinary/forming airflow routes |
-| B3 | `additional_heat_tools` | everyone | Completes Heat events without repeating dryer or diffuser |
-| B4…n | `heat_events[event_id]` with `frequency` and conditional `protection_consistency` | once per selected heated event; protection omitted only for ordinary airflow | Preserves per-event exposure and protection coverage; never collapses all events into one answer |
-| B5 | `detangling_styling_contexts` | everyone | Captures behavior rather than unsupported tool-name risk inference |
-| B6 | `night_protection` | everyone | Supplies later application guidance; explicit none differs from unanswered |
+| Order | Question ID and canonical answer                                                  | Trigger                                                                                                   | Consequence                                                                                                                                      |
+| ----- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A1    | `current_product_categories`                                                      | everyone                                                                                                  | Defines Stage-3 Pass-1 inventory and current category coverage without implying fit                                                              |
+| A2    | `wet_wash_frequency`                                                              | everyone                                                                                                  | Supplies the general wet-wash rhythm for refined Shampoo comparison, Dry-Shampoo bridge eligibility, Mask placement, and later load calculations |
+| A3    | `scalp_irritation_detail`                                                         | paid quiz contains `irritated`                                                                            | Keeps mild cosmetic guidance conservative or pauses it for painful/burning/inflamed symptoms                                                     |
+| A4    | `dry_shampoo_bridge_preference`                                                   | the partial refined computation exposes the bridge opportunity and current categories exclude Dry Shampoo | Resolves accept/decline; existing use is normalized to acceptance without asking                                                                 |
+| A5    | `dry_shampoo_visible_hair_color`                                                  | current Dry Shampoo use or accepted bridge                                                                | Supplies later tint/residue matching only                                                                                                        |
+| A6    | `oil_purposes`                                                                    | Oil selected                                                                                              | Creates distinct semantic Oil roles; Stage 3 captures one primary active Oil per purpose                                                         |
+| B1    | `towel_material` plus conditional `towel_technique`                               | everyone; technique omitted for `no_towel`                                                                | Supplies mechanical/frizz context and later handling guidance without inferring technique from material                                          |
+| B2    | `drying_routes`                                                                   | everyone                                                                                                  | Captures air-drying and/or the ordinary/forming airflow routes                                                                                   |
+| B3    | `additional_heat_tools`                                                           | everyone                                                                                                  | Completes Heat events without repeating dryer or diffuser                                                                                        |
+| B4…n  | `heat_events[event_id]` with `frequency` and conditional `protection_consistency` | once per selected heated event; protection omitted only for ordinary airflow                              | Preserves per-event exposure and protection coverage; never collapses all events into one answer                                                 |
+| B5    | `night_protection`                                                                | everyone                                                                                                  | Supplies later application guidance; explicit none differs from unanswered                                                                       |
 
 ### Canonical vocabularies
 
 ```ts
 type Stage2ProductCategory =
-  | 'shampoo'
-  | 'conditioner'
-  | 'leave_in'
-  | 'heat_protectant'
-  | 'oil'
-  | 'mask'
-  | 'scalp_care'
-  | 'dry_shampoo'
-  | 'bondbuilder'
-  | 'deep_cleansing_shampoo'
+  | "shampoo"
+  | "conditioner"
+  | "leave_in"
+  | "heat_protectant"
+  | "oil"
+  | "mask"
+  | "scalp_care"
+  | "dry_shampoo"
+  | "bondbuilder"
+  | "deep_cleansing_shampoo"
 
-type WetWashFrequency = ProductFrequency | 'does_not_wash'
+type WetWashFrequency = ProductFrequency | "does_not_wash"
 
-type ScalpIrritationDetail =
-  | 'mild_sensitive_or_itchy'
-  | 'burning_painful_or_inflamed'
+type ScalpIrritationDetail = "mild_sensitive_or_itchy" | "burning_painful_or_inflamed"
 
-type DryShampooBridgePreference = 'accept' | 'decline'
-type DryShampooVisibleHairColor = 'light_blonde' | 'brown' | 'dark'
+type DryShampooBridgePreference = "accept" | "decline"
+type DryShampooVisibleHairColor = "light_blonde" | "brown" | "dark"
 
-type OilPurpose =
-  | 'prewash_lengths'
-  | 'damp_leave_on'
-  | 'dry_finish'
-  | 'scalp'
+type OilPurpose = "prewash_lengths" | "damp_leave_on" | "dry_finish" | "scalp"
 
-type DryingRoute =
-  | 'air_dry'
-  | 'ordinary_blow_dry'
-  | 'diffuser_or_airflow_shaping'
+type DryingRoute = "air_dry" | "ordinary_blow_dry" | "diffuser_or_airflow_shaping"
 
 type AdditionalHeatTool =
-  | 'dryer_brush'
-  | 'hot_air_styler'
-  | 'straightener'
-  | 'curling_or_wave_iron'
-  | 'thermal_rollers'
+  | "dryer_brush"
+  | "hot_air_styler"
+  | "straightener"
+  | "curling_or_wave_iron"
+  | "thermal_rollers"
 
-type HeatProtectionConsistency = 'always' | 'sometimes' | 'no' | 'unsure'
+type HeatProtectionConsistency = "always" | "sometimes" | "no" | "unsure"
 
 type Stage2HeatEventSource =
-  | 'ordinary_blow_dry'
-  | 'diffuser_airflow_shaping'
-  | 'dryer_brush'
-  | 'hot_air_styler'
-  | 'straightener'
-  | 'curling_or_wave_iron'
-  | 'thermal_rollers'
+  | "ordinary_blow_dry"
+  | "diffuser_airflow_shaping"
+  | "dryer_brush"
+  | "hot_air_styler"
+  | "straightener"
+  | "curling_or_wave_iron"
+  | "thermal_rollers"
 
 type Stage2HeatEventTool =
-  | 'hair_dryer'
-  | 'dryer_brush'
-  | 'hot_air_styler'
-  | 'straightener'
-  | 'curling_iron'
-  | 'other'
+  | "hair_dryer"
+  | "dryer_brush"
+  | "hot_air_styler"
+  | "straightener"
+  | "curling_iron"
+  | "other"
 
-type Stage2HeatEventRoute =
-  | 'ordinary_airflow'
-  | 'airflow_shaping'
-  | 'direct_contact_heat'
-
-type DetanglingStylingContext =
-  | 'wet_or_damp_with_slip'
-  | 'wet_or_damp_without_slip'
-  | 'dry'
-  | 'during_blowdry_or_styling'
-  | 'fingers_only'
+type Stage2HeatEventRoute = "ordinary_airflow" | "airflow_shaping" | "direct_contact_heat"
 
 type NightProtection =
-  | 'silk_satin_pillow'
-  | 'silk_satin_bonnet'
-  | 'loose_tied'
-  | 'pineapple'
-  | 'length_tip_accessory'
+  | "silk_satin_pillow"
+  | "silk_satin_bonnet"
+  | "loose_tied"
+  | "pineapple"
+  | "length_tip_accessory"
 ```
 
-`current_product_categories`, `oil_purposes`, `drying_routes`, `additional_heat_tools`, `detangling_styling_contexts`, and `night_protection` use arrays with stable code-owned ordering. Explicit none is represented by a completed empty array plus page completion, not a fake category or sentinel inside the array. UI none choices are exclusive.
+`current_product_categories`, `oil_purposes`, `drying_routes`, `additional_heat_tools`, and `night_protection` use arrays with stable code-owned ordering. Explicit none is represented by a completed empty array plus page completion, not a fake category or sentinel inside the array. UI none choices are exclusive.
 
 The category screen contains exactly the ten values above. It has no `Other`, Styling, Serum, Scrub, or free text. It groups categories into Stage-1 relevant and remaining supported categories for presentation only; no category is preselected merely because the plan recommends it.
 
 Milestone A owns the local `Stage2HeatEventSource`, `Stage2HeatEventTool`, and `Stage2HeatEventRoute` unions above; it imports no absent Stage-1 plan type. The Heat-event projection creates the exact stable ID `heat:${source}` from the seven-value Stage-2 source enum, never from `tool`, `route`, array position, or a random client ID. This keeps ordinary blow-dry and diffuser distinct despite their shared `hair_dryer` tool, and keeps `thermal_rollers` distinct from any future source that may also map to `other`. Milestone B adapts these local events into the landed `PlanHeatToolUseEvent` contract. The mapping is:
 
-| Stage-2 source | `tool` | `route` |
-| --- | --- | --- |
-| ordinary blow-dry | `hair_dryer` | `ordinary_airflow` |
-| diffuser / airflow shaping | `hair_dryer` | `airflow_shaping` |
-| dryer brush | `dryer_brush` | `airflow_shaping` |
-| hot-air styler | `hot_air_styler` | `airflow_shaping` |
-| straightener | `straightener` | `direct_contact_heat` |
-| curling/wave iron | `curling_iron` | `direct_contact_heat` |
-| thermal rollers | `other` | `direct_contact_heat` |
+| Stage-2 source             | `tool`           | `route`               |
+| -------------------------- | ---------------- | --------------------- |
+| ordinary blow-dry          | `hair_dryer`     | `ordinary_airflow`    |
+| diffuser / airflow shaping | `hair_dryer`     | `airflow_shaping`     |
+| dryer brush                | `dryer_brush`    | `airflow_shaping`     |
+| hot-air styler             | `hot_air_styler` | `airflow_shaping`     |
+| straightener               | `straightener`   | `direct_contact_heat` |
+| curling/wave iron          | `curling_iron`   | `direct_contact_heat` |
+| thermal rollers            | `other`          | `direct_contact_heat` |
 
 Air-drying is retained as application context but does not create a Stage-2 Heat event. Every generated event has its own `ProductFrequency`. `protectionConsistency` is required for `airflow_shaping` and `direct_contact_heat` and absent for `ordinary_airflow`. No maximum or average frequency is used by the Personal Plan computation.
 
@@ -236,11 +216,13 @@ type PersonalPlanRefinementAnswersV1 = {
   }
   dryingRoutes?: DryingRoute[]
   additionalHeatTools?: AdditionalHeatTool[]
-  heatEvents?: Record<string, {
-    frequency: ProductFrequency
-    protectionConsistency?: HeatProtectionConsistency
-  }>
-  detanglingStylingContexts?: DetanglingStylingContext[]
+  heatEvents?: Record<
+    string,
+    {
+      frequency: ProductFrequency
+      protectionConsistency?: HeatProtectionConsistency
+    }
+  >
   nightProtection?: NightProtection[]
 }
 ```
@@ -282,14 +264,14 @@ The independent build owns only facts it can truthfully define without Stage 1:
 type Stage2TriggerContext = {
   relevantCategories: Stage2ProductCategory[]
   hasReportedIrritatedScalp: boolean
-  dryShampooBridgeEligibility: 'unknown' | 'eligible' | 'ineligible'
+  dryShampooBridgeEligibility: "unknown" | "eligible" | "ineligible"
 }
 
 type Stage2RefinementSession = {
   schemaVersion: 1
   pathVersion: string
   revision: number
-  status: 'in_progress' | 'complete'
+  status: "in_progress" | "complete"
   triggerContext: Stage2TriggerContext
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: Stage2QuestionId[]
@@ -305,7 +287,7 @@ interface Stage2RefinementGateway {
   }): Promise<Stage2RefinementSession>
   complete(input: { expectedRevision: number }): Promise<{
     refinedVersionId: string
-    nextHref: '/plan-start/produkte'
+    nextHref: "/plan-start/produkte"
   }>
 }
 ```
@@ -325,7 +307,7 @@ Do not let a refined call return a snapshot with `snapshotKind: 'initial_need'`.
 ```ts
 type RefinedNeedPlanSnapshot = {
   schemaVersion: 1
-  snapshotKind: 'refined_need'
+  snapshotKind: "refined_need"
   computationVersion: string
   inputHash: string
   createdAt: string
@@ -357,10 +339,10 @@ The Stage-2 completion response contains IDs and navigation state, not decisions
 
 ```ts
 type Stage2CompleteResponse = {
-  status: 'complete'
+  status: "complete"
   personalPlanId: string
   refinedVersionId: string
-  next: { stage: 3; pass: 'product_capture'; href: '/plan-start/produkte' }
+  next: { stage: 3; pass: "product_capture"; href: "/plan-start/produkte" }
 }
 ```
 

@@ -23,8 +23,17 @@ export type Stage2PreviewScenario =
   | "complete"
   | "complete-error"
 
-export function Stage2PreviewClient({ scenario }: { scenario: Stage2PreviewScenario }) {
-  const gateway = useMemo(() => createPreviewGateway(scenario), [scenario])
+export function Stage2PreviewClient({
+  scenario,
+  triggerContext,
+}: {
+  scenario: Stage2PreviewScenario
+  triggerContext?: Stage2TriggerContext
+}) {
+  const gateway = useMemo(
+    () => createPreviewGateway(scenario, triggerContext),
+    [scenario, triggerContext],
+  )
 
   return (
     <div data-stage2-preview-scenario={scenario}>
@@ -38,10 +47,13 @@ export function Stage2PreviewClient({ scenario }: { scenario: Stage2PreviewScena
   )
 }
 
-export function createPreviewGateway(scenario: Stage2PreviewScenario): Stage2RefinementGateway {
+export function createPreviewGateway(
+  scenario: Stage2PreviewScenario,
+  triggerContext?: Stage2TriggerContext,
+): Stage2RefinementGateway {
   const fixture = createStage2FixtureGateway({
     runtimeEnvironment: process.env.NODE_ENV === "test" ? "test" : "development",
-    triggerContext: triggerContextForScenario(scenario),
+    triggerContext: triggerContext ?? triggerContextForScenario(scenario),
     initialAnswers: initialAnswersForScenario(scenario),
     initialCompletedQuestionIds: completedQuestionsForScenario(scenario),
     initialRevision: scenario === "resume" ? 7 : scenario === "complete" ? 12 : 0,
@@ -97,7 +109,6 @@ function initialAnswersForScenario(
       heatEvents: {
         "heat:ordinary_blow_dry": { frequency: "weekly_2x" },
       },
-      detanglingStylingContexts: ["wet_or_damp_with_slip"],
     }
   }
   if (scenario === "complete") {
@@ -118,7 +129,6 @@ function completedQuestionsForScenario(scenario: Stage2PreviewScenario): Stage2Q
       "drying_routes",
       "additional_heat_tools",
       "heat:ordinary_blow_dry",
-      "detangling_styling_contexts",
     ]
   }
   if (scenario === "complete") {
@@ -128,7 +138,6 @@ function completedQuestionsForScenario(scenario: Stage2PreviewScenario): Stage2Q
       "towel_handling",
       "drying_routes",
       "additional_heat_tools",
-      "detangling_styling_contexts",
       "night_protection",
     ]
   }
@@ -142,7 +151,6 @@ function completeAnswers(): PersonalPlanRefinementAnswersV1 {
     towel: { material: "no_towel" },
     dryingRoutes: [],
     additionalHeatTools: [],
-    detanglingStylingContexts: [],
     nightProtection: [],
   }
 }
