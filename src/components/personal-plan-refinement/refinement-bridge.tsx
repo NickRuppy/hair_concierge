@@ -6,10 +6,16 @@ export function RefinementBridge({
   refinedVersionId,
   nextHref,
   onBack,
+  onContinue,
+  isContinuing = false,
+  continueError,
 }: {
   refinedVersionId: string
   nextHref: "/plan-start/produkte"
   onBack?: () => void
+  onContinue?: () => void
+  isContinuing?: boolean
+  continueError?: string
 }) {
   return (
     <div className="min-h-dvh bg-[var(--background,#fdfbf9)] text-[var(--text-main,#3a3835)]">
@@ -62,11 +68,19 @@ export function RefinementBridge({
           <button
             type="button"
             data-stage2-next-href={nextHref}
+            onClick={onContinue}
+            disabled={isContinuing}
+            aria-busy={isContinuing}
             className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-xl bg-[var(--brand-coral,#d4616a)] px-4 text-sm font-bold text-white shadow-[0_10px_25px_rgba(212,97,106,0.18)] transition hover:bg-[var(--brand-coral-dark,#c0555d)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]"
           >
-            Produkte erfassen&nbsp; →
+            {isContinuing ? "Produkte werden vorbereitet …" : "Produkte erfassen →"}
           </button>
         </div>
+        {continueError ? (
+          <p role="alert" className="mt-3 text-sm text-[#a3434b]">
+            {continueError}
+          </p>
+        ) : null}
       </main>
     </div>
   )

@@ -2,9 +2,8 @@ import { notFound } from "next/navigation"
 
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
-import { Stage2PreviewClient } from "@/app/labs/personal-plan-stage-2/preview-client"
-
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "./fixture"
+import { PersonalPlanStage1To3JourneyClient } from "./journey-client"
 
 export default function PersonalPlanStage1Stage2LabPage() {
   if (process.env.NODE_ENV !== "development") notFound()
@@ -20,19 +19,5 @@ export default function PersonalPlanStage1Stage2LabPage() {
 
   const triggerContext = deriveStage2TriggerContext(result.snapshot)
 
-  return (
-    <main>
-      <aside
-        className="mx-auto mt-4 w-[min(100%-2rem,42rem)] rounded-2xl bg-slate-900 px-4 py-3 text-sm text-white"
-        data-stage1-stage2-integration
-      >
-        <strong>Lokaler Integrationstest</strong>
-        <span className="mt-1 block text-white/75">
-          Stage 2 wird aus einem echten Stage-1-Plan mit {triggerContext.relevantCategories.length}{" "}
-          sichtbaren Kategorien gestartet.
-        </span>
-      </aside>
-      <Stage2PreviewClient scenario="ready" triggerContext={triggerContext} />
-    </main>
-  )
+  return <PersonalPlanStage1To3JourneyClient triggerContext={triggerContext} />
 }

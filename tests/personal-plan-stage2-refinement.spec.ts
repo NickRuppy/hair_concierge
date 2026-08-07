@@ -34,7 +34,6 @@ async function finishNeutral(page: Page) {
   await chooseNoneAndContinue(page)
   await chooseNoneAndContinue(page)
   await chooseNoneAndContinue(page)
-  await chooseNoneAndContinue(page)
 }
 
 test.describe("Stage 2 refinement Labs preview", () => {
@@ -114,7 +113,6 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await page.getByRole("button", { name: "Manchmal" }).click()
     await page.getByRole("button", { name: "Weiter" }).click()
     await chooseNoneAndContinue(page)
-    await chooseNoneAndContinue(page)
     await expect(page.locator("[data-refined-version-id]")).toBeVisible()
     await expect(page.getByText(/Ergebnis|Veränderungskarte|dein Ergebnis/i)).toHaveCount(0)
   })
@@ -148,7 +146,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(bridge).toBeVisible()
     await expect(bridge).toHaveAttribute(
       "data-refined-version-id",
-      /fixture-refined-stage2-fixture-v1-r7/,
+      /fixture-refined-stage2-fixture-v1-r6/,
     )
   })
 

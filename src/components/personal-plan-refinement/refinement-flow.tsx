@@ -53,15 +53,23 @@ export type Stage2RefinementTelemetryEvent =
   | { name: "personal_plan_stage2_resumed" }
   | { name: "personal_plan_stage2_completed" }
   | { name: "personal_plan_stage2_bridge_viewed" }
+  | { name: "personal_plan_stage2_handoff_failed" }
+
+export type Stage2HandoffPayload = {
+  handoff: Stage2CompleteResult
+  session: Stage2RefinementSession
+}
 
 export function RefinementFlow({
   gateway,
   onTelemetry,
   onSecondaryExit,
+  onHandoff,
 }: {
   gateway: Stage2RefinementGateway
   onTelemetry?: (event: Stage2RefinementTelemetryEvent) => void
   onSecondaryExit?: () => void
+  onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
 }) {
   const [session, setSession] = useState<Stage2RefinementSession | null>(null)
   const [activeQuestionId, setActiveQuestionId] = useState<Stage2QuestionId | null>(null)
@@ -72,6 +80,7 @@ export function RefinementFlow({
   )
   const [liveMessage, setLiveMessage] = useState("")
   const [bridge, setBridge] = useState<Stage2CompleteResult | null>(null)
+  const [handoffStatus, setHandoffStatus] = useState<"idle" | "loading" | "error">("idle")
   const generationRef = useRef(0)
   const telemetryRef = useRef(onTelemetry)
 
@@ -186,8 +195,21 @@ export function RefinementFlow({
     const finalQuestionId = getBridgeBackQuestionId(session)
     if (!finalQuestionId) return
     setActiveFromSession(session, finalQuestionId)
+    setHandoffStatus("idle")
     setMode("question")
   }, [session, setActiveFromSession])
+
+  const handleBridgeContinue = useCallback(async () => {
+    if (!onHandoff || !session || !bridge || handoffStatus === "loading") return
+    setHandoffStatus("loading")
+    try {
+      await onHandoff({ handoff: bridge, session })
+      setHandoffStatus("idle")
+    } catch {
+      emit({ name: "personal_plan_stage2_handoff_failed" })
+      setHandoffStatus("error")
+    }
+  }, [bridge, emit, handoffStatus, onHandoff, session])
 
   const completeStage2Session = useCallback(
     async (nextSession: Stage2RefinementSession) => {
@@ -332,6 +354,13 @@ export function RefinementFlow({
           refinedVersionId={bridge.refinedVersionId}
           nextHref={bridge.nextHref}
           onBack={getBridgeBackQuestionId(session) ? handleBridgeBack : undefined}
+          onContinue={onHandoff ? handleBridgeContinue : undefined}
+          isContinuing={handoffStatus === "loading"}
+          continueError={
+            handoffStatus === "error"
+              ? "Deine Produkte konnten nicht vorbereitet werden. Versuche es noch einmal."
+              : undefined
+          }
         />
       )
     }
@@ -368,11 +397,14 @@ export function RefinementFlow({
     bridge,
     handleBack,
     handleBridgeBack,
+    handleBridgeContinue,
     handleLocalAnswer,
     handleSubmit,
     liveMessage,
     localAnswer,
     mode,
+    handoffStatus,
+    onHandoff,
     onSecondaryExit,
     session,
     status,

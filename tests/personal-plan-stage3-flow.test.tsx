@@ -16,6 +16,8 @@ import {
   PortfolioHandoff,
   Stage3ProductsFlow,
 } from "../src/components/personal-plan-products/stage3-products-flow"
+import { CATEGORY_AUTHORITY_STUBS } from "../src/lib/personal-plan/products/authorities"
+import type { Stage3EntryContext } from "../src/lib/personal-plan/products/contracts"
 
 type ClientStateHarness = {
   render: () => Promise<ReactElement | null>
@@ -239,6 +241,53 @@ test("stage 3 lab route is guarded and composed from the interactive flow", () =
   assert.match(source, /<Stage3ProductsFlow \/>/)
 })
 
+test("integrated Stage 3 consumes the supplied refined entry context instead of fixture requirements", async () => {
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "fixture-personal-plan-integrated",
+    refinedVersionId: "fixture-refined-integrated-r12",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: [...CATEGORY_AUTHORITY_STUBS.shampoo.requiredRoles],
+        needSummary: "Sanfte Reinigung für deine empfindliche Kopfhaut.",
+        authorityVersion: CATEGORY_AUTHORITY_STUBS.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [
+      {
+        category: "shampoo",
+        allowsMultiple: CATEGORY_AUTHORITY_STUBS.shampoo.allowsMultiple,
+        allowsExplicitNone: true,
+      },
+    ],
+  }
+
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      draftId: "fixture-stage3-integrated",
+      userId: "fixture-user-integrated",
+      searchDebounceMs: 0,
+    }),
+  )
+  let tree = await renderSettled(harness)
+  const transition = findByType<React.ComponentProps<typeof Stage3Transition>>(
+    tree,
+    Stage3Transition,
+  )
+  assert.equal(transition?.props.context, "product_capture")
+  transition?.props.onContinue()
+
+  tree = await renderSettled(harness)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.categoryLabel, "Shampoo")
+  assert.equal(capture?.props.needSummary, entryContext.orderedCategories[0]?.needSummary)
+})
+
 test("interactive lab flow captures products first, assigns roles, decides fit, and displays a typed handoff", async () => {
   const harness = createClientStateHarness(() => Stage3ProductsFlow({ searchDebounceMs: 0 }))
   let tree = await renderSettled(harness)
@@ -354,7 +403,10 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   assert.equal(transition?.props.context, "routine_ready")
   transition.props.onContinue()
   tree = await renderSettled(harness)
-  assert.equal(findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState), null)
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState),
+    null,
+  )
   const handoff = findByType<React.ComponentProps<typeof PortfolioHandoff>>(tree, PortfolioHandoff)
   assert.ok(handoff)
   const handoffText = textContent(PortfolioHandoff(handoff.props))

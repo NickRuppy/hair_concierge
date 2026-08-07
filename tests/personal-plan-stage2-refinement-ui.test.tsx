@@ -65,6 +65,21 @@ test("renders the German invitation and neutral bridge hierarchy without result 
   assert.doesNotMatch(bridgeHtml, /Empfehlung|Delta|verändert|Tier|Routinekarte|Produktkarte/i)
 })
 
+test("the bridge exposes a real continuation action and blocks duplicate handoff attempts", () => {
+  const bridgeHtml = renderToStaticMarkup(
+    <RefinementBridge
+      refinedVersionId="fixture-refined-stage2-v1-r9"
+      nextHref="/plan-start/produkte"
+      onContinue={() => {}}
+      isContinuing
+    />,
+  )
+
+  assert.match(bridgeHtml, /Produkte werden vorbereitet/)
+  assert.match(bridgeHtml, /disabled=""/)
+  assert.match(bridgeHtml, /aria-busy="true"/)
+})
+
 test("renders two qualitative sections and never a numeric question total", () => {
   const session = createStage2RefinementSession({
     pathVersion: "stage2-ui-test",
@@ -370,6 +385,7 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
     "personal_plan_stage2_resumed",
     "personal_plan_stage2_completed",
     "personal_plan_stage2_bridge_viewed",
+    "personal_plan_stage2_handoff_failed",
   ])
 
   const viewed: Stage2RefinementTelemetryEvent = {
@@ -381,11 +397,15 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
     name: "personal_plan_stage2_save_failed",
     errorCode: "completion_failed",
   }
+  const handoffFailed: Stage2RefinementTelemetryEvent = {
+    name: "personal_plan_stage2_handoff_failed",
+  }
 
   assert.deepEqual(Object.keys(viewed).sort(), ["family", "name", "section"])
   assert.deepEqual(Object.keys(failed).sort(), ["errorCode", "name"])
+  assert.deepEqual(Object.keys(handoffFailed), ["name"])
   assert.doesNotMatch(
-    JSON.stringify([viewed, failed]),
+    JSON.stringify([viewed, failed, handoffFailed]),
     /questionId|answer|category|irritation|frequency|root/i,
   )
 })
@@ -422,5 +442,8 @@ test("Labs preview is development guarded and keeps fixture-gateway behind previ
   }
   await visit(srcRoot)
 
-  assert.deepEqual(importers.sort(), ["app/labs/personal-plan-stage-2/preview-client.tsx"])
+  assert.deepEqual(importers.sort(), [
+    "app/labs/personal-plan-stage-2/preview-client.tsx",
+    "components/personal-plan-products/stage3-products-flow.tsx",
+  ])
 })

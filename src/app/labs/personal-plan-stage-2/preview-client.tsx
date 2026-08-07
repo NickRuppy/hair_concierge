@@ -2,7 +2,10 @@
 
 import { useMemo } from "react"
 
-import { RefinementFlow } from "@/components/personal-plan-refinement/refinement-flow"
+import {
+  RefinementFlow,
+  type Stage2HandoffPayload,
+} from "@/components/personal-plan-refinement/refinement-flow"
 import type {
   Stage2RefinementGateway,
   Stage2SaveAnswerInput,
@@ -26,9 +29,11 @@ export type Stage2PreviewScenario =
 export function Stage2PreviewClient({
   scenario,
   triggerContext,
+  onHandoff,
 }: {
   scenario: Stage2PreviewScenario
   triggerContext?: Stage2TriggerContext
+  onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
 }) {
   const gateway = useMemo(
     () => createPreviewGateway(scenario, triggerContext),
@@ -42,6 +47,7 @@ export function Stage2PreviewClient({
         onSecondaryExit={() => {
           // Preview-safe no-op: the customer component must not invent a Bedarfsplan href.
         }}
+        onHandoff={onHandoff}
       />
     </div>
   )

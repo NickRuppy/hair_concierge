@@ -1,6 +1,6 @@
 # Personal Plan Stage 3 — Products implementation plan
 
-**Status:** implementation-ready for standalone Milestone A; product behavior, mockup flow evidence, critical states, and the final designed journey were explicitly confirmed by Nick on 2026-08-07; read-only Claude counterpart review was reconciled on 2026-08-07; transition styling is intentionally provisional and is not a production pixel specification
+**Status:** standalone Milestone A implemented and verified; the development-only Stage 1 → 2 → 3 integration slice is implemented locally against the real refined Stage-1 recomputation and remains fixture/in-memory-backed; production persistence, catalog mutation, customer-route activation, and Stage-4 activation remain deferred
 
 **Outcome:** turn the immutable Stage-2 refined need plan into an exact, explainable product portfolio by first identifying what the customer owns and how they use it, then resolving each relevant category as keep, informed override, planned replacement, pending review, or honest gap; hand the resulting proposal directly to Stage 4 without silently activating or changing a routine
 
@@ -28,7 +28,20 @@ Build and verify:
 
 Milestone A uses fixture IDs, an in-memory gateway, and explicit stub category-authority results. It owns the local ten-category and semantic-role types because the neighboring branches do not yet expose stable source contracts. It does not create production tables or APIs, write `user_product_usage`, submit real intake records, call recommendation commerce links, activate `/plan-start/produkte`, or create an active routine.
 
-### Milestone B — Stage 1/2/3/4 integration, deferred
+### Milestone B — integration
+
+The first development-only integration slice is complete:
+
+- Stage 2 exposes an explicit completion callback instead of a fixture-only dead-end;
+- the completed Stage-2 session is converted into `PlanRoutineContext` and recomputes the deterministic Stage-1 plan with `projection: 'refined_post_plan'`;
+- a pure adapter converts that refined snapshot into `Stage3EntryContext`, preserving the refined rendered category order;
+- the combined Labs journey replaces the `Produkte erfassen` placeholder with the real Stage-3 capture → role → fit flow;
+- editing a completed Stage-2 answer invalidates the old handoff, and an unfinished Stage-3 draft restarts as a whole against the successor `refinedVersionId`;
+- the standalone Stage-2 and Stage-3 Labs routes remain available and compatible.
+
+This slice deliberately remains development-only and fixture/in-memory-backed. It does not add Supabase persistence, mutate real intake, activate a production customer route, or activate Stage 4.
+
+### Remaining Milestone B — production integration, deferred
 
 Once the neighboring contracts are stable:
 
@@ -711,3 +724,28 @@ Implemented on `codex/personal-plan-stage3-products` as a standalone, fixture-ba
 The self-hosting Stage-3 npm wrapper was not run directly in the task worktree because terminating the existing dev server was outside this loop's authority. Its underlying browser suite passed against that server, and the package/CI orchestration is covered by repository tests. The fixture preview keeps drafts only in memory; durable refresh/resume and real recovery across browser reloads remain part of Milestone B persistence.
 
 **Artifact disposition:** keep this plan and the reviewed HTML mockup as durable PR evidence. No generated screenshots, temporary build copy, Claude report, or browser traces are retained in the repository.
+
+## 16. Development-only Stage 1 → 2 → 3 integration receipt
+
+Integrated locally on `codex/personal-plan-stage1-2-integration` without adding production persistence, a customer route, real intake mutation, Stage-4 activation, publication, or deployment.
+
+### Delivered integration behavior
+
+- the Stage-2 bridge now exposes an explicit, retryable handoff action while retaining its standalone preview behavior;
+- the server-side Labs adapter validates the completed handoff, derives `PlanRoutineContext`, recomputes the refined deterministic Stage-1 plan, and converts the resulting rendered order into `Stage3EntryContext`;
+- the combined Labs journey replaces the placeholder with the real Stage-3 capture → role → fit flow;
+- returning to Stage 2 preserves the completed refinement; editing it creates a successor refined version and remounts Stage 3 with a fresh whole draft;
+- the adapter rejects initial projections, blank opaque IDs, and an impossible empty rendered category list;
+- handoff failures expose recoverable German UI and emit only a coarse privacy-safe telemetry event.
+
+### Verification and review
+
+- focused Stage-1/2/3 adapter, flow, and component tests: 20 passing after the final review delta;
+- full Node suite: 2,821 passing before the narrow final review delta, whose affected tests were rerun;
+- combined Stage-1→3, standalone Stage-2, and standalone Stage-3 Playwright contract: 12 passing at mobile and desktop coverage;
+- `npm run ci:verify`: typecheck, lint with four pre-existing warnings, and production build passing;
+- `git diff --check`: passing;
+- independent Claude correctness/structural review found one CI coverage gap and one diagnostic gap; both were fixed, and its residual empty-plan risk was converted into a tested fail-fast guard;
+- the existing Personal Plan Playwright contract script now runs all three browser specs in CI.
+
+**Artifact disposition:** keep this plan, reviewed mockups, source stabilization commits, and the local integration delta as task-owned implementation evidence. Keep the counterpart report and canonical manifest in the system temporary directory only. No generated browser traces or screenshots are retained.
