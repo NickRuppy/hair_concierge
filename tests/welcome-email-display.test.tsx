@@ -115,7 +115,7 @@ test("one-time activation errors render a safe support or revoked state instead 
   assert.doesNotMatch(stripeOneTimeBranch, /redirect\("\/pricing"\)/)
   assert.doesNotMatch(stripeOneTimeBranch, /throw err/)
   assert.match(paypalOneTimeBranch, /await recoverPayPalOrderActivation/)
-  assert.match(paypalOneTimeBranch, /oneTimeReturnState="support_needed"/)
+  assert.match(paypalOneTimeBranch, /oneTimeReturnState=\{returnState \?\? "support_needed"\}/)
   assert.doesNotMatch(paypalOneTimeBranch, /redirect\("\/pricing"\)/)
   assert.doesNotMatch(paypalOneTimeBranch, /throw err/)
   assert.match(welcomeClientSource, /ONE_TIME_RETURN_REVOKED_BODY/)
@@ -186,8 +186,10 @@ test("PayPal one-time pending and revoked returns do not require an account", ()
   assert.ok(oneTimeWelcomeStart >= 0)
   assert.ok(nonActiveBranch > oneTimeWelcomeStart)
   assert.ok(accountRead > nonActiveBranch)
+  const recoverableBranch = welcomePageSource.slice(nonActiveBranch, accountRead)
   assert.match(welcomePageSource, /intent\.lead_id/)
-  assert.match(welcomePageSource, /mode="pending"/)
+  assert.match(recoverableBranch, /mode="pending"/)
+  assert.doesNotMatch(recoverableBranch, /oneTimeReturnState/)
 })
 
 test("one-time pending accepts pending states, reloads active, and blocks permanent states", () => {
@@ -196,13 +198,17 @@ test("one-time pending accepts pending states, reloads active, and blocks perman
   assert.match(welcomeClientSource, /status === "revoked"/)
   assert.match(welcomeClientSource, /failed_permanent/)
   assert.match(welcomeClientSource, /permanent_failure/)
+  assert.match(
+    welcomeClientSource,
+    /oneTimePendingState !== "revoked" && oneTimePendingState !== "failed_permanent"/,
+  )
   assert.match(welcomeClientSource, /window\.location\.reload\(\)/)
 })
 
-test("one-time support-needed returns can poll again while revoked stays support-only", () => {
+test("retryable support can poll again while revoked and terminal failure stay support-only", () => {
   assert.match(
     welcomeClientSource,
-    /const oneTimePollingBlockedByReturnState = oneTimeReturnState === "revoked"/,
+    /const oneTimePollingBlockedByReturnState =\s*oneTimeReturnState === "revoked" \|\| oneTimeReturnState === "failed_permanent"/,
   )
   assert.match(welcomeClientSource, /\|\|\s*oneTimePollingBlockedByReturnState/)
   assert.doesNotMatch(welcomeClientSource, /\|\|\s*oneTimeReturnState\s*\)\s*return/)
@@ -212,7 +218,7 @@ test("one-time support-needed returns can poll again while revoked stays support
   )
   assert.match(
     welcomeClientSource,
-    /const canRetryOneTimeStatus = oneTimePendingState !== "revoked"/,
+    /const canRetryOneTimeStatus =\s*oneTimePendingState !== "revoked" && oneTimePendingState !== "failed_permanent"/,
   )
   assert.match(welcomeClientSource, /\{canRetryOneTimeStatus \? \(/)
   assert.match(welcomeClientSource, /onClick=\{\(\) => setOneTimePendingCheck/)

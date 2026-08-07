@@ -37,13 +37,18 @@ export default async function WelcomePage({
   searchParams: Promise<{
     provider?: string
     purchase?: string
+    return_state?: string
     session_id?: string
     token?: string
   }>
 }) {
-  const { provider, purchase, session_id, token } = await searchParams
+  const { provider, purchase, return_state, session_id, token } = await searchParams
   if (provider === "paypal") {
-    if (purchase === "one_time") return renderPayPalOneTimeWelcome(token)
+    if (purchase === "one_time") {
+      const returnState =
+        return_state === "failed_permanent" || return_state === "revoked" ? return_state : undefined
+      return renderPayPalOneTimeWelcome(token, returnState)
+    }
     return renderPayPalWelcome(token)
   }
 
@@ -271,7 +276,10 @@ async function renderStripeWelcome(session_id: string) {
   )
 }
 
-async function renderPayPalOneTimeWelcome(token: string | undefined) {
+async function renderPayPalOneTimeWelcome(
+  token: string | undefined,
+  returnState?: "failed_permanent" | "revoked",
+) {
   if (!token) redirect("/")
 
   const admin = createAdminClient()
@@ -296,7 +304,7 @@ async function renderPayPalOneTimeWelcome(token: string | undefined) {
         activationSource={{ provider: "paypal", token, purchaseKind: "one_time" }}
         analyticsId={paypalCheckoutAnalyticsId(token)}
         mode="pending"
-        oneTimeReturnState="support_needed"
+        oneTimeReturnState={returnState ?? "support_needed"}
         purchase={null}
       />
     )

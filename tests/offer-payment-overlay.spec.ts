@@ -343,6 +343,47 @@ test.describe("@ci offer payment overlay", () => {
     }
   })
 
+  test("a downward swipe from an interactive payment control at scroll-top preserves the attempt", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    const { checkout } = await openCheckoutAtNonzeroScroll(page)
+    const paymentControl = checkout.getByTestId("paypal-button")
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+    const resultUrl = page.url()
+    const attemptBefore = await diagnostic.getAttribute("data-checkout-attempt-id")
+    const initiationsBefore = await diagnostic.getAttribute("data-initiate-checkout-count")
+
+    await checkout.locator("[data-offer-payment-scroll-surface]").evaluate((surface) => {
+      surface.scrollTop = 0
+    })
+    await expect
+      .poll(() =>
+        checkout
+          .locator("[data-offer-payment-scroll-surface]")
+          .evaluate((surface) => surface.scrollTop),
+      )
+      .toBe(0)
+
+    const controlBox = await paymentControl.boundingBox()
+    expect(controlBox).not.toBeNull()
+    const startX = Math.round(controlBox!.x + controlBox!.width / 2)
+    const startY = Math.round(controlBox!.y + controlBox!.height / 2)
+    await page.mouse.move(startX, startY)
+    await page.mouse.down()
+    await page.mouse.move(startX, startY + 120, { steps: 4 })
+    await page.mouse.up()
+
+    await expect(page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })).toHaveCount(0)
+    await expect(checkout).toBeVisible()
+    expect(page.url()).toBe(resultUrl)
+    await expect(diagnostic).toHaveAttribute("data-checkout-attempt-id", attemptBefore ?? "")
+    await expect(diagnostic).toHaveAttribute(
+      "data-initiate-checkout-count",
+      initiationsBefore ?? "",
+    )
+  })
+
   test("first browser Back dismisses checkout on the same result and second Back is not guarded", async ({
     page,
   }) => {
@@ -359,6 +400,50 @@ test.describe("@ci offer payment overlay", () => {
     expect(page.url()).toBe(url)
     await page.goBack()
     expect(page.url()).not.toBe(url)
+  })
+
+  test("an old tab cannot mutate the open checkout before its guarded Back", async ({
+    page,
+    context,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${labPath}&history=previous&dismissal=pristine`, {
+      waitUntil: "domcontentloaded",
+    })
+    await page.goto(`${labPath}&dismissal=pristine`, { waitUntil: "domcontentloaded" })
+    await page.getByRole("button", { name: "Nur essentielle" }).click()
+    await page.getByRole("button", { name: "Ja, jetzt starten" }).click()
+
+    const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
+    const diagnostic = checkout.getByTestId("checkout-attempt-diagnostic")
+    await expect(checkout).toBeVisible()
+    const resultUrl = page.url()
+    const attemptBefore = await diagnostic.getAttribute("data-checkout-attempt-id")
+    const initiationsBefore = await diagnostic.getAttribute("data-initiate-checkout-count")
+
+    const oldTab = await context.newPage()
+    await oldTab.setViewportSize({ width: 390, height: 844 })
+    await oldTab.goto(`${labPath}&history=old-tab`, { waitUntil: "domcontentloaded" })
+    await expect(oldTab.locator("[data-payment-overlay-lab-ready]")).toHaveAttribute(
+      "data-payment-overlay-lab-ready",
+      "true",
+    )
+    await oldTab.close()
+    await page.bringToFront()
+
+    await expect(checkout).toBeVisible()
+    expect(page.url()).toBe(resultUrl)
+    await expect(diagnostic).toHaveAttribute("data-checkout-attempt-id", attemptBefore ?? "")
+    await expect(diagnostic).toHaveAttribute(
+      "data-initiate-checkout-count",
+      initiationsBefore ?? "",
+    )
+
+    await page.goBack()
+    await expect(checkout).toBeHidden()
+    expect(page.url()).toBe(resultUrl)
+    await page.goBack({ waitUntil: "domcontentloaded" })
+    expect(page.url()).not.toBe(resultUrl)
   })
 
   test("continuing after an engaged browser Back restores exactly one checkout guard", async ({

@@ -3,6 +3,7 @@ import test from "node:test"
 import {
   buildCheckoutSentryPayload,
   captureCheckoutException,
+  capturePayPalOneTimeSdkRecoveryWarning,
   getCheckoutRateLimitReason,
   scrubSentryBreadcrumb,
   scrubSentryEvent,
@@ -58,6 +59,89 @@ test("captureCheckoutException preserves only bounded Express Checkout error con
     reason: "confirm_error",
   })
   assert.equal(JSON.stringify({ tags, context }).includes("client_secret"), false)
+})
+
+test("capturePayPalOneTimeSdkRecoveryWarning emits only bounded recovery context", () => {
+  const tags: Record<string, string> = {}
+  let context: Record<string, unknown> | null = null
+  let captured: unknown = null
+  let level: string | null = null
+
+  capturePayPalOneTimeSdkRecoveryWarning(
+    {
+      checkoutAttemptId: "attempt-safe-123",
+      isInternalTest: true,
+      live: false,
+      paypalTokenPresent: true,
+      paypalRecoveryOutcome: "pending",
+      release: "release-safe",
+      browserFamily: "safari",
+      viewportClass: "mobile",
+      standaloneWebViewHint: "webview",
+    },
+    {
+      addBreadcrumb: () => undefined,
+      captureException: (error) => {
+        captured = error
+      },
+      withScope: (callback) =>
+        callback({
+          setContext: (_name, value) => {
+            context = value
+          },
+          setLevel: (value) => {
+            level = value
+          },
+          setTag: (key, value) => {
+            tags[key] = value
+          },
+        }),
+    },
+  )
+
+  assert.equal(captured instanceof Error, true)
+  assert.equal((captured as Error).message, "paypal_sdk_onerror_recovery_warning")
+  assert.equal(level, "warning")
+  assert.deepEqual(tags, {
+    "checkout.provider": "paypal",
+    "checkout.stage": "paypal_activation_status_poll",
+    "checkout.source": "quiz_result_offer",
+    "checkout.status": "pending",
+    "checkout.reason": "paypal_sdk_onerror",
+    "checkout.paypal_recovery_outcome": "pending",
+    "checkout.browser_family": "safari",
+    "checkout.viewport_class": "mobile",
+    "checkout.standalone_webview_hint": "webview",
+    "payment.signal": "customer_payment_error_observed",
+    "payment.provider": "paypal",
+    "payment.boundary": "provider_session",
+    "payment.origin": "browser",
+    "payment.method": "paypal",
+    "payment.truth": "unknown",
+    "payment.retryable": "true",
+    "payment.commerce_kind": "one_time",
+    "payment.is_internal_test": "true",
+    "payment.live": "false",
+  })
+  assert.deepEqual(context, {
+    provider: "paypal",
+    stage: "paypal_activation_status_poll",
+    source: "quiz_result_offer",
+    checkout_attempt_id: "attempt-safe-123",
+    paypal_token_present: true,
+    paypal_callback_phase: "on_error",
+    paypal_recovery_outcome: "pending",
+    release: "release-safe",
+    browser_family: "safari",
+    viewport_class: "mobile",
+    standalone_webview_hint: "webview",
+    status: "pending",
+    reason: "paypal_sdk_onerror",
+  })
+  assert.doesNotMatch(
+    JSON.stringify({ tags, context, captured: (captured as Error).message }),
+    /secret-token|payer@example\.de|https:\/\/www\.paypal\.com|stack trace/i,
+  )
 })
 
 test("buildCheckoutSentryPayload keeps searchable checkout tags without raw PayPal token", () => {

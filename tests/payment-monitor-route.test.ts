@@ -5,6 +5,7 @@ import {
   emptyPaymentIntegrityCounters,
   handlePaymentMonitor,
   maxDuration,
+  resolvePaidAccessFindingLive,
   runPaymentIntegrityBranch,
   safeBearerTokenMatches,
   type RunPaymentIntegrity,
@@ -37,6 +38,25 @@ function result(overrides: Partial<PaymentIntegrityResult> = {}): PaymentIntegri
 
 test("payment monitor reserves response time around its 40 second work deadline", () => {
   assert.equal(maxDuration, 60)
+})
+
+test("paid-access finding live tag follows the finding provider only", () => {
+  assert.equal(
+    resolvePaidAccessFindingLive("paypal", { stripeLive: true, paypalLive: false }),
+    false,
+  )
+  assert.equal(
+    resolvePaidAccessFindingLive("stripe", { stripeLive: false, paypalLive: true }),
+    false,
+  )
+  assert.equal(
+    resolvePaidAccessFindingLive("paypal", { stripeLive: false, paypalLive: true }),
+    true,
+  )
+  assert.equal(
+    resolvePaidAccessFindingLive("stripe", { stripeLive: true, paypalLive: false }),
+    true,
+  )
 })
 
 test("payment monitor uses fixed-size constant-time auth comparison input", () => {
@@ -406,6 +426,298 @@ test("payment monitor uses uncapped incident counters when requiring Sentry rece
 
   assert.equal(response.status, 200)
   assert.equal(flushes, 1)
+})
+
+test("payment monitor runs paid-access branch with aggregate-only output", async () => {
+  let flushes = 0
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () => result(),
+    runPaidAccessMonitor: async () => ({
+      status: "completed",
+      counters: {
+        purchasesListed: 1,
+        purchasesChecked: 1,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 1,
+        monitorFailures: 0,
+      },
+      findings: [
+        {
+          signal: "paid_but_entitlement_not_active",
+          provider: "paypal",
+          purchaseId: "purchase_12345678",
+          reason: "delivery_evidence_missing",
+          userId: "user_12345678",
+          leadId: "lead_12345678",
+          paidAt: "2026-08-07T10:00:00.000Z",
+          isInternalTest: false,
+        },
+      ],
+      monitorFailures: [],
+      telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
+    }),
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => {
+      flushes += 1
+      return true
+    },
+  })
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(response.body, {
+    paymentIntegrity: {
+      status: "completed",
+      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },
+    },
+    paidAccess: {
+      status: "completed",
+      counters: {
+        purchasesListed: 1,
+        purchasesChecked: 1,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 1,
+        monitorFailures: 0,
+      },
+      findings: [{ provider: "paypal", reason: "delivery_evidence_missing" }],
+    },
+  })
+  assert.equal(JSON.stringify(response.body).includes("purchase_12345678"), false)
+  assert.equal(JSON.stringify(response.body).includes("user_12345678"), false)
+  assert.equal(JSON.stringify(response.body).includes("lead_12345678"), false)
+  assert.equal(flushes, 1)
+})
+
+test("payment monitor branch emits paid-access findings when runner returns no receipt", async () => {
+  const reported: unknown[] = []
+  let flushes = 0
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () => result(),
+    runPaidAccessMonitor: async () => ({
+      status: "completed",
+      counters: {
+        purchasesListed: 1,
+        purchasesChecked: 1,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 1,
+        monitorFailures: 0,
+      },
+      findings: [
+        {
+          signal: "paid_but_entitlement_not_active",
+          provider: "paypal",
+          purchaseId: "purchase_branch_receipt",
+          reason: "delivery_evidence_missing",
+          paidAt: "2026-08-07T10:00:00.000Z",
+          isInternalTest: false,
+        },
+      ],
+      monitorFailures: [],
+    }),
+    reportPaidAccessFinding: (finding) => {
+      reported.push(finding)
+      return "abcdef0123456789abcdef0123456789"
+    },
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => {
+      flushes += 1
+      return true
+    },
+  })
+
+  assert.equal(response.status, 200)
+  assert.equal(reported.length, 1)
+  assert.equal(flushes, 1)
+  assert.ok("paymentIntegrity" in response.body)
+  assert.deepEqual(response.body.paidAccess, {
+    status: "completed",
+    counters: {
+      purchasesListed: 1,
+      purchasesChecked: 1,
+      skippedInternalTest: 0,
+      active: 0,
+      findings: 1,
+      monitorFailures: 0,
+    },
+    findings: [{ provider: "paypal", reason: "delivery_evidence_missing" }],
+  })
+})
+
+test("payment monitor fails closed on partial paid-access receipts without duplicate reporting", async () => {
+  const reported: unknown[] = []
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () => result(),
+    runPaidAccessMonitor: async () => ({
+      status: "completed",
+      counters: {
+        purchasesListed: 2,
+        purchasesChecked: 2,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 2,
+        monitorFailures: 0,
+      },
+      findings: [
+        {
+          signal: "paid_but_entitlement_not_active",
+          provider: "paypal",
+          purchaseId: "purchase_partial_receipt_1",
+          reason: "delivery_evidence_missing",
+          paidAt: "2026-08-07T10:00:00.000Z",
+          isInternalTest: false,
+        },
+        {
+          signal: "paid_but_entitlement_not_active",
+          provider: "paypal",
+          purchaseId: "purchase_partial_receipt_2",
+          reason: "confirmation_pending",
+          paidAt: "2026-08-07T10:05:00.000Z",
+          isInternalTest: false,
+        },
+      ],
+      monitorFailures: [],
+      telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
+    }),
+    reportPaidAccessFinding: (finding) => {
+      reported.push(finding)
+      return "abcdef0123456789abcdef0123456789"
+    },
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => true,
+  })
+
+  assert.equal(response.status, 500)
+  assert.equal(reported.length, 0)
+  assert.ok("paymentIntegrity" in response.body)
+  assert.equal(response.body.paidAccess?.status, "monitor_failed")
+  assert.deepEqual(response.body.paidAccess?.failures, [
+    {
+      provider: "unknown",
+      reason: "local_lookup_error",
+      errorFamily: "unknown",
+    },
+  ])
+})
+
+test("payment monitor fails closed when paid-access finding has no Sentry receipt", async () => {
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () => result(),
+    runPaidAccessMonitor: async () => ({
+      status: "completed",
+      counters: {
+        purchasesListed: 1,
+        purchasesChecked: 1,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 1,
+        monitorFailures: 0,
+      },
+      findings: [
+        {
+          signal: "paid_but_entitlement_not_active",
+          provider: "stripe",
+          purchaseId: "purchase_no_receipt",
+          reason: "binding_missing",
+          paidAt: "2026-08-07T10:00:00.000Z",
+          isInternalTest: false,
+        },
+      ],
+      monitorFailures: [],
+    }),
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => true,
+  })
+
+  assert.equal(response.status, 500)
+  assert.deepEqual(response.body, {
+    paymentIntegrity: {
+      status: "completed",
+      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },
+    },
+    paidAccess: {
+      status: "monitor_failed",
+      counters: {
+        purchasesListed: 1,
+        purchasesChecked: 1,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 1,
+        monitorFailures: 1,
+      },
+      findings: [{ provider: "stripe", reason: "binding_missing" }],
+      failures: [
+        {
+          provider: "unknown",
+          reason: "local_lookup_error",
+          errorFamily: "unknown",
+        },
+      ],
+    },
+  })
+})
+
+test("payment monitor preserves a canonical paid-access conflict category", async () => {
+  const response = await handlePaymentMonitor(request(), {
+    triggerSecret: secret,
+    checkRateLimit: () => ({ allowed: true }),
+    runPaymentIntegrity: async () => result(),
+    runPaidAccessMonitor: async () => ({
+      status: "monitor_failed",
+      counters: {
+        purchasesListed: 1,
+        purchasesChecked: 1,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 1,
+        monitorFailures: 1,
+      },
+      findings: [
+        {
+          signal: "paid_but_entitlement_not_active",
+          provider: "paypal",
+          purchaseId: "purchase_conflict",
+          reason: "delivery_evidence_missing",
+          paidAt: "2026-08-07T10:00:00.000Z",
+          isInternalTest: false,
+        },
+      ],
+      monitorFailures: [
+        {
+          signal: "payment_monitor_failed",
+          provider: "paypal",
+          reason: "canonical_access_conflict",
+          errorFamily: "unknown",
+          purchaseId: "purchase_conflict",
+        },
+      ],
+    }),
+    reportPaidAccessFinding: () => "0123456789abcdef0123456789abcdef",
+    reportPaidAccessMonitorFailure: () => "abcdef0123456789abcdef0123456789",
+    captureCheckIn: () => undefined,
+    flushTelemetry: async () => true,
+  })
+
+  assert.equal(response.status, 500)
+  assert.ok("paidAccess" in response.body)
+  if (!("paidAccess" in response.body)) return
+  assert.deepEqual(response.body.paidAccess?.failures, [
+    {
+      provider: "paypal",
+      reason: "canonical_access_conflict",
+      errorFamily: "unknown",
+    },
+  ])
+  assert.equal(JSON.stringify(response.body).includes("purchase_conflict"), false)
 })
 
 test("payment monitor omits unexpected runtime failure categories from its response", async () => {

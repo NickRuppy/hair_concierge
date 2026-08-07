@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Payment recovery states – planning evidence</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #fdfbf9;
+        --card: #ffffff;
+        --ink: #291c2d;
+        --muted: #746a78;
+        --line: #e9e1e9;
+        --plum: #77517d;
+        --plum-soft: #f3edf4;
+        --green: #247a52;
+        --green-soft: #eaf7f0;
+        --coral: #d96d5f;
+        --shadow: 0 22px 60px rgba(67, 42, 69, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main { max-width: 1680px; margin: 0 auto; padding: 44px 24px 64px; }
+      .intro { max-width: 790px; margin-bottom: 32px; }
+      .eyebrow { color: var(--plum); font-size: 12px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+      h1 { margin: 9px 0 10px; font-family: Georgia, serif; font-size: 38px; line-height: 1.08; }
+      .intro p, .note { color: var(--muted); line-height: 1.6; }
+      .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+      .example h2 { min-height: 44px; margin: 0 0 12px; font-size: 15px; }
+      .phone {
+        width: 100%;
+        min-height: 704px;
+        overflow: hidden;
+        border: 1px solid #d9cfd9;
+        border-radius: 28px;
+        background: #f8f4f2;
+        box-shadow: var(--shadow);
+      }
+      .statusbar { height: 26px; background: #fff; border-bottom: 1px solid var(--line); }
+      .result { padding: 20px 18px 32px; }
+      .result-card { height: 150px; border-radius: 18px; background: linear-gradient(135deg, #f2e5ea, #eee8f1); opacity: .68; }
+      .sheet {
+        margin-top: -18px;
+        min-height: 546px;
+        border-radius: 24px 24px 0 0;
+        background: var(--card);
+        padding: 12px 20px 28px;
+        box-shadow: 0 -14px 34px rgba(50, 31, 54, .08);
+      }
+      .handle { width: 44px; height: 4px; border-radius: 99px; background: #d7ced8; margin: 0 auto 19px; }
+      .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .sheet h3, .welcome h3 { margin: 0; font-family: Georgia, serif; font-size: 26px; line-height: 1.12; }
+      .price { color: var(--plum); font-weight: 800; }
+      .choice { margin-top: 18px; border: 1px solid var(--plum); border-radius: 14px; padding: 15px; background: #fff; }
+      .choice-title { display: flex; align-items: center; gap: 9px; font-weight: 800; }
+      .radio { width: 18px; height: 18px; border: 5px solid var(--plum); border-radius: 50%; }
+      .recovery { margin-top: 16px; border-radius: 14px; background: var(--plum-soft); padding: 18px 16px; text-align: center; }
+      .recovery.good { background: var(--green-soft); }
+      .icon { width: 42px; height: 42px; display: grid; place-items: center; margin: 0 auto 12px; border-radius: 50%; background: #fff; color: var(--plum); font-size: 20px; font-weight: 900; }
+      .good .icon { color: var(--green); }
+      .recovery strong { display: block; font-size: 17px; }
+      .recovery p { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+      .button { display: flex; min-height: 48px; width: 100%; align-items: center; justify-content: center; margin-top: 14px; border: 0; border-radius: 11px; background: var(--plum); color: #fff; font-size: 15px; font-weight: 800; }
+      .button.secondary { background: transparent; color: var(--plum); border: 1px solid var(--plum); }
+      .link { display: block; margin-top: 16px; color: var(--plum); text-align: center; font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+      .microcopy { margin-top: 12px; color: var(--muted); font-size: 12px; line-height: 1.45; text-align: center; }
+      .welcome { min-height: 678px; padding: 46px 22px 32px; background: var(--bg); text-align: center; }
+      .check { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 15px; border-radius: 50%; background: var(--green-soft); color: var(--green); font-size: 25px; font-weight: 900; }
+      .success { color: var(--green); font-size: 13px; font-weight: 800; }
+      .welcome h3 { margin-top: 8px; font-size: 30px; }
+      .welcome > p { margin: 10px auto 0; color: var(--muted); line-height: 1.5; }
+      .account { margin-top: 24px; border: 1px solid var(--line); border-radius: 16px; background: #fff; padding: 18px; text-align: left; box-shadow: 0 10px 30px rgba(67, 42, 69, .06); }
+      .account label { color: var(--muted); font-size: 12px; font-weight: 700; }
+      .email { margin-top: 7px; border-radius: 9px; background: #f4f0f4; padding: 12px; text-align: center; font-size: 14px; font-weight: 700; }
+      .account p { color: var(--muted); font-size: 14px; line-height: 1.5; text-align: center; }
+      .annotation { margin-top: 14px; border-left: 3px solid var(--coral); padding-left: 12px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+      @media (max-width: 1280px) {
+        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      @media (max-width: 760px) {
+        .grid { grid-template-columns: 1fr; }
+        .example { max-width: 430px; margin: 0 auto; }
+        .example h2 { min-height: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <div class="eyebrow">Planungsentwurf · Mobile Kernzustände</div>
+        <h1>Eine Zahlung darf nie wie verloren wirken</h1>
+        <p>
+          Vorgeschlagene Zustände im bestehenden Checkout- und Welcome-Look. Sie ersetzen die
+          pauschale Fehlermeldung, halten Ungewissheit sichtbar pending und korrigieren die falsche
+          Einordnung des betroffenen Neukontos.
+        </p>
+      </section>
+
+      <section class="grid">
+        <article class="example">
+          <h2>1 · PayPal meldet einen Client-Fehler, Serverstatus noch offen</h2>
+          <div class="phone">
+            <div class="statusbar"></div>
+            <div class="result"><div class="result-card"></div></div>
+            <div class="sheet">
+              <div class="handle"></div>
+              <div class="sheet-head"><h3>Haarplan freischalten</h3><span class="price">29,99 €</span></div>
+              <div class="choice"><div class="choice-title"><span class="radio"></span>PayPal</div></div>
+              <div class="recovery">
+                <div class="icon">↻</div>
+                <strong>Wir prüfen deine PayPal-Zahlung</strong>
+                <p>Bei PayPal ist etwas Unerwartetes passiert. Wir gleichen kurz ab, ob eine Zahlung eingegangen ist.</p>
+              </div>
+              <p class="microcopy">Bitte starte in diesem Moment keine zweite Zahlungsart.</p>
+            </div>
+          </div>
+          <p class="annotation">Kein roter Fehler, solange der Server den Ausgang noch nicht kennt.</p>
+        </article>
+
+        <article class="example">
+          <h2>2 · Noch keine Zahlung bestätigt</h2>
+          <div class="phone">
+            <div class="statusbar"></div>
+            <div class="result"><div class="result-card"></div></div>
+            <div class="sheet">
+              <div class="handle"></div>
+              <div class="sheet-head"><h3>Haarplan freischalten</h3><span class="price">29,99 €</span></div>
+              <button class="choice" style="width:100%; text-align:left"><span class="choice-title"><span class="radio"></span>PayPal</span></button>
+              <div class="recovery">
+                <div class="icon">↻</div>
+                <strong>Noch keine Zahlung bestätigt</strong>
+                <p>Wir haben noch keine endgültige Bestätigung von PayPal. Der Zahlungsversuch bleibt erhalten.</p>
+              </div>
+              <button class="button secondary">Status erneut prüfen</button>
+              <p class="microcopy">Dieser Zahlungsversuch läuft bereits über PayPal. Karte und Apple Pay sind deshalb deaktiviert.</p>
+            </div>
+          </div>
+          <p class="annotation">Pending bleibt pending. Der sichtbare PayPal-Button nutzt denselben Versuch; der Status-Check startet keine Zahlung.</p>
+        </article>
+
+        <article class="example">
+          <h2>3 · Zahlung erfolgreich, Neukonto wurde gerade angelegt</h2>
+          <div class="phone">
+            <div class="statusbar"></div>
+            <div class="welcome">
+              <div class="check">✓</div>
+              <div class="success">Zahlung erfolgreich</div>
+              <h3>Dein Haarplan ist bereit</h3>
+              <p>Wir haben dein Chaarlie-Konto mit dieser Zahlung angelegt. Wähle jetzt, wie du deinen Haarplan öffnen möchtest.</p>
+              <div class="account">
+                <label>Chaarlie-E-Mail</label>
+                <div class="email">kundin@example.de</div>
+                <button class="button">Passwort erstellen</button>
+                <a class="link" href="#">Stattdessen Login-Link senden</a>
+              </div>
+              <p class="microcopy">Deine Zahlung und dein Zugang bleiben mit diesem Aktivierungslink verbunden.</p>
+            </div>
+          </div>
+          <p class="annotation">Im betroffenen Fall gab es vorher kein Konto. Die serverseitige Aktivierungsfähigkeit bleibt auch nach Webhook/Replays erhalten.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

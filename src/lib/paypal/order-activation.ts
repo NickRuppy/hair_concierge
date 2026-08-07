@@ -17,6 +17,7 @@ import {
 } from "@/lib/billing/personal-plan-one-time-consents"
 import { sendPersonalPlanOneTimeConfirmation } from "@/lib/customerio/personal-plan-one-time-confirmation"
 import {
+  canSetInitialPasswordForPayPalCheckout,
   ensurePayPalOneTimePurchaseAccount,
   PayPalCheckoutActivationError,
   type PayPalCheckoutAccountResult,
@@ -334,6 +335,7 @@ export async function activateVerifiedPayPalOrderIntent(
         userId: activation.purchase.user_id,
         email: intent.email,
         leadId: canonicalConsent.lead_id,
+        activationKey: intent.token,
       }))
     return {
       status: "active",
@@ -859,9 +861,9 @@ async function loadPayPalIntentForRecovery(
   return intent
 }
 
-async function loadActivePayPalOneTimeAccountFromReplay(
+export async function loadActivePayPalOneTimeAccountFromReplay(
   supabase: SupabaseClient,
-  input: { userId: string | null; email: string; leadId: string },
+  input: { userId: string | null; email: string; leadId: string; activationKey: string },
 ): Promise<ActivePayPalCheckoutAccount> {
   if (!input.userId) {
     throw new PayPalCheckoutActivationError(
@@ -880,12 +882,25 @@ async function loadActivePayPalOneTimeAccountFromReplay(
     typeof (data as { email?: unknown } | null)?.email === "string"
       ? (data as { email: string }).email.trim().toLowerCase()
       : ""
+  let canSetInitialPassword = false
+  try {
+    canSetInitialPassword = await canSetInitialPasswordForPayPalCheckout(
+      supabase,
+      input.userId,
+      input.activationKey,
+    )
+  } catch {
+    // The payment and entitlement are already active. An auth-admin read outage
+    // must not turn the welcome replay into a support failure; deny password setup
+    // until a later replay can re-check the one-time activation capability.
+    canSetInitialPassword = false
+  }
   return {
     status: "active",
     userId: input.userId,
     email: profileEmail || input.email.trim().toLowerCase(),
     providerSubscriberEmail: null,
-    canSetInitialPassword: false,
+    canSetInitialPassword,
     leadId: input.leadId,
     checkoutContext: null,
   }

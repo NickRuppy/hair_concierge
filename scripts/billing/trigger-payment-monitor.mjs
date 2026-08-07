@@ -14,6 +14,7 @@ const MONITOR_FAILURE_REASONS = new Set([
   "local_lookup_error",
   "incomplete_pagination",
   "candidate_cap",
+  "canonical_access_conflict",
   "deadline_exhausted",
   "missing_identity",
   "invalid_candidate",
@@ -149,20 +150,29 @@ export async function main(argv = process.argv.slice(2), dependencies = {}) {
 async function readMonitorFailures(response) {
   try {
     const body = await response.json()
-    const failures = body?.paymentIntegrity?.failures
-    if (!Array.isArray(failures)) return []
+    const failures = [
+      ...(Array.isArray(body?.paymentIntegrity?.failures) ? body.paymentIntegrity.failures : []),
+      ...(Array.isArray(body?.paidAccess?.failures) ? body.paidAccess.failures : []),
+    ]
+    if (failures.length === 0) return []
 
-    return failures.slice(0, 20).flatMap((failure) => {
-      if (!failure || typeof failure !== "object") return []
-      const { provider, reason, errorFamily } = failure
-      if (
-        !MONITOR_PROVIDERS.has(provider) ||
-        !MONITOR_FAILURE_REASONS.has(reason) ||
-        !MONITOR_ERROR_FAMILIES.has(errorFamily)
-      )
-        return []
-      return [{ provider, reason, errorFamily }]
-    })
+    const seen = new Set()
+    return failures
+      .flatMap((failure) => {
+        if (!failure || typeof failure !== "object") return []
+        const { provider, reason, errorFamily } = failure
+        if (
+          !MONITOR_PROVIDERS.has(provider) ||
+          !MONITOR_FAILURE_REASONS.has(reason) ||
+          !MONITOR_ERROR_FAMILIES.has(errorFamily)
+        )
+          return []
+        const key = `${provider}:${reason}:${errorFamily}`
+        if (seen.has(key)) return []
+        seen.add(key)
+        return [{ provider, reason, errorFamily }]
+      })
+      .slice(0, 20)
   } catch {
     return []
   }
