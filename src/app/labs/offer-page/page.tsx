@@ -7,6 +7,7 @@ import {
 import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-plan-offer"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import OrganicPlanOfferVariant from "@/funnels/offers/organic-plan-v1"
+import { WelcomeClient } from "@/app/welcome/welcome-client"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
 import { buildPersonalPlanPreparedArtifact } from "@/lib/personal-plan-quiz/prepared-plan"
 import { canonicalizePersonalPlanAnswers } from "@/lib/personal-plan-quiz/persistence"
@@ -140,6 +141,20 @@ export default async function OfferPageLab({
 
   if (variant === "payment-cold-checkout") {
     return <OfferPaymentColdCheckoutLab scenario={params.scenario} />
+  }
+
+  if (variant === "payment-welcome") {
+    return (
+      <WelcomeClient
+        activationSource={{
+          provider: "paypal",
+          purchaseKind: "one_time",
+          token: "payment-welcome-lab-token",
+        }}
+        email="lea@example.com"
+        purchase={null}
+      />
+    )
   }
 
   if (variant === "personal-plan") {

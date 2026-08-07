@@ -10,6 +10,7 @@ import {
 import {
   captureAndActivatePayPalOrder,
   finalizeLockedPersonalPlanFromPreparedArtifact,
+  loadActivePayPalOneTimeAccountFromReplay,
   PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER as PAYPAL_PREPARED_ARTIFACT_DELIVERY_PROVIDER,
   processPayPalOneTimeFulfillmentJob,
   recoverPayPalOrderActivation,
@@ -18,6 +19,7 @@ import {
   verifyPayPalOneTimePaymentForRecovery,
   verifiedPayPalCaptureFromWebhook,
 } from "../src/lib/paypal/order-activation"
+import { paypalCheckoutActivationHash } from "../src/lib/paypal/checkout-activation"
 import { PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER as STRIPE_PREPARED_ARTIFACT_DELIVERY_PROVIDER } from "../src/lib/stripe/checkout-activation"
 import {
   assertValidPayPalOneTimeCaptureEvent,
@@ -1282,15 +1284,72 @@ test("PayPal fulfillment retry keeps genuinely pending provider capture retryabl
   }
 })
 
-test("PayPal active replay reconstructs an existing account instead of throwing", async () => {
-  const source = await readFile(
-    new URL("../src/lib/paypal/order-activation.ts", import.meta.url),
-    "utf8",
+test("PayPal active replay preserves first-password eligibility for the matching checkout token", async () => {
+  const replay = await loadActivePayPalOneTimeAccountFromReplay(
+    paypalActiveReplaySupabase({
+      checkout_activation_session_hash: paypalCheckoutActivationHash(intent.token),
+    }) as never,
+    {
+      userId: "user-created-by-fulfillment",
+      email: intent.email!,
+      leadId: intent.lead_id!,
+      activationKey: intent.token,
+    },
   )
-  assert.match(source, /loadActivePayPalOneTimeAccountFromReplay/)
-  assert.match(source, /userId: activation\.purchase\.user_id/)
-  assert.match(source, /canSetInitialPassword: false/)
-  assert.doesNotMatch(source, /activation\.state === "active" && !account/)
+
+  assert.equal(replay.status, "active")
+  assert.equal(replay.canSetInitialPassword, true)
+  assert.equal(replay.checkoutContext, null)
+  assert.equal(replay.leadId, intent.lead_id)
+})
+
+test("PayPal active replay rejects initialized and foreign checkout activation metadata", async () => {
+  const cases = [
+    {
+      name: "password already initialized",
+      metadata: {
+        checkout_activation_session_hash: paypalCheckoutActivationHash(intent.token),
+        password_initialized_at: "2026-08-07T10:00:00.000Z",
+      },
+    },
+    {
+      name: "foreign checkout token",
+      metadata: {
+        checkout_activation_session_hash: paypalCheckoutActivationHash("another-token"),
+      },
+    },
+  ]
+
+  for (const scenario of cases) {
+    const replay = await loadActivePayPalOneTimeAccountFromReplay(
+      paypalActiveReplaySupabase(scenario.metadata) as never,
+      {
+        userId: "user-existing",
+        email: intent.email!,
+        leadId: intent.lead_id!,
+        activationKey: intent.token,
+      },
+    )
+
+    assert.equal(replay.canSetInitialPassword, false, scenario.name)
+    assert.equal(replay.checkoutContext, null, scenario.name)
+  }
+})
+
+test("PayPal active replay fails closed when the auth-admin capability lookup errors", async () => {
+  const replay = await loadActivePayPalOneTimeAccountFromReplay(
+    paypalActiveReplaySupabase({}, { authError: "temporary auth outage" }) as never,
+    {
+      userId: "user-created-by-fulfillment",
+      email: intent.email!,
+      leadId: intent.lead_id!,
+      activationKey: intent.token,
+    },
+  )
+
+  assert.equal(replay.status, "active")
+  assert.equal(replay.canSetInitialPassword, false)
+  assert.equal(replay.checkoutContext, null)
 })
 
 test("PayPal operator recovery verification is read-only and returns sanitized normalized payment", async () => {
@@ -1408,6 +1467,39 @@ test("legacy PayPal activation-status route stays subscription-only", async () =
   assert.doesNotMatch(source, /purchase === "one_time"/)
   assert.doesNotMatch(source, /recoverPayPalOrderActivation/)
 })
+
+function paypalActiveReplaySupabase(
+  appMetadata: Record<string, unknown>,
+  options: { authError?: string } = {},
+) {
+  const profileQuery = {
+    select() {
+      return this
+    },
+    eq() {
+      return this
+    },
+    async maybeSingle() {
+      return { data: { id: "user-created-by-fulfillment", email: intent.email }, error: null }
+    },
+  }
+
+  return {
+    from(table: string) {
+      assert.equal(table, "profiles")
+      return profileQuery
+    },
+    auth: {
+      admin: {
+        async getUserById() {
+          if (options.authError)
+            return { data: { user: null }, error: { message: options.authError } }
+          return { data: { user: { app_metadata: appMetadata } }, error: null }
+        },
+      },
+    },
+  }
+}
 
 function completedPayPalOrder() {
   return {

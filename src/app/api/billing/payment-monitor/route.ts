@@ -6,12 +6,19 @@ import type {
   PaymentIntegrityMonitorFailure,
   PaymentIntegrityResult,
 } from "@/lib/billing/payment-integrity"
+import {
+  monitorPaidOneTimeAccess,
+  type PaidAccessMonitorFailure,
+  type PaidAccessMonitorFinding,
+  type PaidAccessMonitorResult,
+} from "@/lib/billing/paid-access-monitor"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import {
   captureServerPaymentCheckIn,
   captureServerPaymentFailure,
   flushServerPaymentTelemetry,
 } from "@/lib/observability/payment-server"
+import { createAdminClient } from "@/lib/supabase/admin"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
@@ -32,6 +39,7 @@ export type RunPaymentIntegrityInput = {
 export type RunPaymentIntegrity = (
   input: RunPaymentIntegrityInput,
 ) => Promise<PaymentIntegrityResult>
+export type RunPaidAccessMonitor = (input: { now: Date }) => Promise<PaidAccessMonitorResult>
 
 type RateLimitResult = { allowed: boolean; error?: string }
 
@@ -47,6 +55,9 @@ type PaymentMonitorDeps = {
   requireCheckInReceipt?: boolean
   flushTelemetry?: () => Promise<unknown>
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
+  runPaidAccessMonitor?: RunPaidAccessMonitor
+  reportPaidAccessFinding?: (finding: PaidAccessMonitorFinding) => unknown
+  reportPaidAccessMonitorFailure?: (failure: PaidAccessMonitorFailure) => unknown
   now?: () => Date
   clock?: () => number
 }
@@ -56,10 +67,18 @@ type PaymentIntegritySummary = {
   counters: PaymentIntegrityCounters
   failures?: Array<Pick<PaymentIntegrityMonitorFailure, "provider" | "reason" | "errorFamily">>
 }
+type PaidAccessSummary = {
+  status: PaidAccessMonitorResult["status"] | "error"
+  counters: PaidAccessMonitorResult["counters"]
+  findings?: Array<Pick<PaidAccessMonitorFinding, "provider" | "reason">>
+  failures?: Array<Pick<PaidAccessMonitorFailure, "provider" | "reason" | "errorFamily">>
+}
 
 type PaymentMonitorRouteResult = {
   status: number
-  body: { paymentIntegrity: PaymentIntegritySummary } | { error: string }
+  body:
+    | { paymentIntegrity: PaymentIntegritySummary; paidAccess?: PaidAccessSummary }
+    | { error: string }
 }
 
 type PaymentIntegrityRuntimeModule = {
@@ -76,6 +95,13 @@ export async function POST(request: Request) {
         const runner = await loadPaymentIntegrityRunner()
         return runner(input)
       },
+      runPaidAccessMonitor: ({ now }) =>
+        monitorPaidOneTimeAccess({
+          supabase: createAdminClient(),
+          now,
+        }),
+      reportPaidAccessFinding,
+      reportPaidAccessMonitorFailure,
       requireCheckInReceipt: true,
     }),
   )
@@ -97,21 +123,38 @@ export async function handlePaymentMonitor(
     }
   }
 
-  const branch = await runPaymentIntegrityBranch({
-    monitorSlug: "payment-integrity-local",
-    deadlineMs: PAYMENT_MONITOR_DEADLINE_MS,
-    runPaymentIntegrity: deps.runPaymentIntegrity,
-    captureCheckIn: deps.captureCheckIn ?? captureServerPaymentCheckIn,
-    requireCheckInReceipt: deps.requireCheckInReceipt === true,
-    flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
-    reportMonitorFailure: deps.reportMonitorFailure,
-    now: deps.now,
-    clock: deps.clock,
-  })
+  const now = deps.now?.() ?? new Date()
+  const [branch, paidAccessBranch] = await Promise.all([
+    runPaymentIntegrityBranch({
+      monitorSlug: "payment-integrity-local",
+      deadlineMs: PAYMENT_MONITOR_DEADLINE_MS,
+      runPaymentIntegrity: deps.runPaymentIntegrity,
+      captureCheckIn: deps.captureCheckIn ?? captureServerPaymentCheckIn,
+      requireCheckInReceipt: deps.requireCheckInReceipt === true,
+      flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
+      reportMonitorFailure: deps.reportMonitorFailure,
+      now: () => now,
+      clock: deps.clock,
+    }),
+    deps.runPaidAccessMonitor
+      ? runPaidAccessMonitorBranch({
+          runPaidAccessMonitor: deps.runPaidAccessMonitor,
+          flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
+          reportFinding: deps.reportPaidAccessFinding,
+          reportMonitorFailure: deps.reportPaidAccessMonitorFailure,
+          now,
+        })
+      : Promise.resolve(null),
+  ])
+
+  const paidAccessOk = !paidAccessBranch || paidAccessBranch.ok
 
   return {
-    status: branch.ok && branch.summary.status === "completed" ? 200 : 500,
-    body: { paymentIntegrity: branch.summary },
+    status: branch.ok && branch.summary.status === "completed" && paidAccessOk ? 200 : 500,
+    body: {
+      paymentIntegrity: branch.summary,
+      ...(paidAccessBranch ? { paidAccess: paidAccessBranch.summary } : {}),
+    },
   }
 }
 
@@ -216,8 +259,105 @@ export async function runPaymentIntegrityBranch(options: {
   }
 }
 
+export async function runPaidAccessMonitorBranch(options: {
+  runPaidAccessMonitor: RunPaidAccessMonitor
+  flushTelemetry?: () => Promise<unknown>
+  reportFinding?: (finding: PaidAccessMonitorFinding) => unknown
+  reportMonitorFailure?: (failure: PaidAccessMonitorFailure) => unknown
+  now: Date
+}): Promise<{ ok: boolean; summary: PaidAccessSummary }> {
+  try {
+    const result = await options.runPaidAccessMonitor({ now: options.now })
+    const resultWithBranchReceipts = await reportPaidAccessResultFindings(result, {
+      reportFinding: options.reportFinding,
+      reportMonitorFailure: options.reportMonitorFailure,
+    })
+    const telemetryOk = await confirmPaidAccessTelemetryDelivery(
+      resultWithBranchReceipts,
+      options.flushTelemetry,
+    )
+    const summary = telemetryOk
+      ? summarizePaidAccess(resultWithBranchReceipts)
+      : withPaidAccessTelemetryDeliveryFailure(summarizePaidAccess(resultWithBranchReceipts))
+    return { ok: resultWithBranchReceipts.status === "completed" && telemetryOk, summary }
+  } catch {
+    const failure: PaidAccessMonitorFailure = {
+      signal: "payment_monitor_failed",
+      provider: "unknown",
+      reason: "local_lookup_error",
+      errorFamily: "unknown",
+    }
+    const eventId = await safeReportPaidAccessMonitorFailure(options.reportMonitorFailure, failure)
+    const telemetryOk =
+      Boolean(eventId) &&
+      Boolean(options.flushTelemetry && (await flushTelemetryWithRetry(options.flushTelemetry)))
+    const summary: PaidAccessSummary = {
+      status: "error",
+      counters: {
+        purchasesListed: 0,
+        purchasesChecked: 0,
+        skippedInternalTest: 0,
+        active: 0,
+        findings: 0,
+        monitorFailures: 1,
+      },
+      failures: summarizePaidAccessFailures([failure]),
+    }
+    return {
+      ok: false,
+      summary: telemetryOk ? summary : withPaidAccessTelemetryDeliveryFailure(summary),
+    }
+  }
+}
+
+async function reportPaidAccessResultFindings(
+  result: PaidAccessMonitorResult,
+  reporters: {
+    reportFinding?: (finding: PaidAccessMonitorFinding) => unknown
+    reportMonitorFailure?: (failure: PaidAccessMonitorFailure) => unknown
+  },
+): Promise<PaidAccessMonitorResult> {
+  const expectedReceipts = result.counters.findings + result.counters.monitorFailures
+  if (expectedReceipts === 0) return result
+  if (result.telemetryEventIds !== undefined) return result
+
+  const branchReceipts: string[] = []
+  if (reporters.reportFinding) {
+    for (const finding of result.findings) {
+      const eventId = await safeReportPaidAccessFinding(reporters.reportFinding, finding)
+      if (eventId) branchReceipts.push(eventId)
+    }
+  }
+  if (reporters.reportMonitorFailure) {
+    for (const failure of result.monitorFailures) {
+      const eventId = await safeReportPaidAccessMonitorFailure(
+        reporters.reportMonitorFailure,
+        failure,
+      )
+      if (eventId) branchReceipts.push(eventId)
+    }
+  }
+  if (branchReceipts.length === 0) return result
+
+  return {
+    ...result,
+    telemetryEventIds: [...(result.telemetryEventIds ?? []), ...branchReceipts],
+  }
+}
+
 async function confirmTelemetryDelivery(
   result: PaymentIntegrityResult,
+  flush: (() => Promise<unknown>) | undefined,
+): Promise<boolean> {
+  const expectedReceipts = result.counters.findings + result.counters.monitorFailures
+  if (expectedReceipts === 0) return true
+  const receipts = (result.telemetryEventIds ?? []).filter(isSentryEventId)
+  if (receipts.length < expectedReceipts || !flush) return false
+  return flushTelemetryWithRetry(flush)
+}
+
+async function confirmPaidAccessTelemetryDelivery(
+  result: PaidAccessMonitorResult,
   flush: (() => Promise<unknown>) | undefined,
 ): Promise<boolean> {
   const expectedReceipts = result.counters.findings + result.counters.monitorFailures
@@ -270,6 +410,40 @@ async function safeReportMonitorFailure(
   }
 }
 
+async function safeReportPaidAccessMonitorFailure(
+  reporter: ((failure: PaidAccessMonitorFailure) => unknown) | undefined,
+  failure: PaidAccessMonitorFailure,
+): Promise<string | undefined> {
+  if (!reporter) return undefined
+  try {
+    const result = reporter(failure)
+    if (result && typeof (result as PromiseLike<unknown>).then === "function") {
+      const resolved = await Promise.resolve(result).catch(() => undefined)
+      return isSentryEventId(resolved) ? resolved : undefined
+    }
+    return isSentryEventId(result) ? result : undefined
+  } catch {
+    return undefined
+  }
+}
+
+async function safeReportPaidAccessFinding(
+  reporter: ((finding: PaidAccessMonitorFinding) => unknown) | undefined,
+  finding: PaidAccessMonitorFinding,
+): Promise<string | undefined> {
+  if (!reporter) return undefined
+  try {
+    const result = reporter(finding)
+    if (result && typeof (result as PromiseLike<unknown>).then === "function") {
+      const resolved = await Promise.resolve(result).catch(() => undefined)
+      return isSentryEventId(resolved) ? resolved : undefined
+    }
+    return isSentryEventId(result) ? result : undefined
+  } catch {
+    return undefined
+  }
+}
+
 function reportPaymentMonitorFailure(failure: PaymentIntegrityMonitorFailure) {
   const paymentRuntime = resolvePaymentRuntime({
     VERCEL_ENV: process.env.VERCEL_ENV,
@@ -293,6 +467,65 @@ function reportPaymentMonitorFailure(failure: PaymentIntegrityMonitorFailure) {
   })
 }
 
+export function reportPaidAccessFinding(finding: PaidAccessMonitorFinding) {
+  const paymentRuntime = resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
+  return captureServerPaymentFailure({
+    signal: "paid_but_entitlement_not_active",
+    provider: finding.provider,
+    boundary: "entitlement",
+    errorFamily: "entitlement_state",
+    commerceKind: "one_time",
+    origin: "reconciliation",
+    method: finding.provider === "paypal" ? "paypal" : "unknown",
+    truth: "succeeded",
+    live: resolvePaidAccessFindingLive(finding.provider, paymentRuntime),
+    isInternalTest: false,
+    retryable: "true",
+    status: finding.reason,
+    invariant: finding.reason,
+    purchaseId: finding.purchaseId,
+    userId: finding.userId,
+    leadId: finding.leadId,
+    plan: "personal_plan_once",
+    providerReferencePresent: false,
+  })
+}
+
+export function resolvePaidAccessFindingLive(
+  provider: PaidAccessMonitorFinding["provider"],
+  paymentRuntime: { stripeLive: boolean; paypalLive: boolean },
+): boolean {
+  return provider === "stripe" ? paymentRuntime.stripeLive : paymentRuntime.paypalLive
+}
+
+export function reportPaidAccessMonitorFailure(failure: PaidAccessMonitorFailure) {
+  const paymentRuntime = resolvePaymentRuntime({
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+  })
+  return captureServerPaymentFailure({
+    signal: failure.signal,
+    provider: failure.provider,
+    boundary: "reconciliation",
+    errorFamily: failure.errorFamily,
+    commerceKind: "one_time",
+    origin: "reconciliation",
+    method: "unknown",
+    truth: "unknown",
+    live: paymentRuntime.stripeLive || paymentRuntime.paypalLive,
+    isInternalTest: false,
+    retryable: "true",
+    status: failure.reason,
+    purchaseId: failure.purchaseId,
+    providerReferencePresent: false,
+  })
+}
+
 export function summarizePaymentIntegrity(result: PaymentIntegrityResult): PaymentIntegritySummary {
   const failures = summarizeMonitorFailures(result.monitorFailures)
   return {
@@ -300,6 +533,47 @@ export function summarizePaymentIntegrity(result: PaymentIntegrityResult): Payme
     counters: result.counters,
     ...(failures.length > 0 ? { failures } : {}),
   }
+}
+
+export function summarizePaidAccess(result: PaidAccessMonitorResult): PaidAccessSummary {
+  const failures = summarizePaidAccessFailures(result.monitorFailures)
+  const findings = summarizePaidAccessFindings(result.findings)
+  return {
+    status: result.status,
+    counters: result.counters,
+    ...(findings.length > 0 ? { findings } : {}),
+    ...(failures.length > 0 ? { failures } : {}),
+  }
+}
+
+function summarizePaidAccessFindings(findings: PaidAccessMonitorFinding[]) {
+  const providers = new Set(["stripe", "paypal"])
+  const reasons = new Set([
+    "binding_missing",
+    "confirmation_pending",
+    "delivery_evidence_missing",
+    "fulfillment_failed_permanent",
+    "fulfillment_retry_stalled",
+  ])
+  return findings.flatMap(({ provider, reason }) => {
+    if (!providers.has(provider) || !reasons.has(reason)) return []
+    return [{ provider, reason }]
+  })
+}
+
+function summarizePaidAccessFailures(failures: PaidAccessMonitorFailure[]) {
+  return failures.flatMap(({ provider, reason, errorFamily }) => {
+    if (errorFamily !== "unknown") return []
+    if (reason === "canonical_access_conflict") {
+      if (provider !== "stripe" && provider !== "paypal") return []
+    } else if (
+      provider !== "unknown" ||
+      (reason !== "local_lookup_error" && reason !== "candidate_cap")
+    ) {
+      return []
+    }
+    return [{ provider, reason, errorFamily }]
+  })
 }
 
 function summarizeMonitorFailures(failures: PaymentIntegrityMonitorFailure[]) {
@@ -338,6 +612,24 @@ function withTelemetryDeliveryFailure(summary: PaymentIntegritySummary): Payment
       monitorFailures: summary.counters.monitorFailures + 1,
     },
     failures: [...(summary.failures ?? []), ...summarizeMonitorFailures([failure])],
+  }
+}
+
+function withPaidAccessTelemetryDeliveryFailure(summary: PaidAccessSummary): PaidAccessSummary {
+  const failure: PaidAccessMonitorFailure = {
+    signal: "payment_monitor_failed",
+    provider: "unknown",
+    reason: "local_lookup_error",
+    errorFamily: "unknown",
+  }
+  return {
+    ...summary,
+    status: summary.status === "error" ? "error" : "monitor_failed",
+    counters: {
+      ...summary.counters,
+      monitorFailures: summary.counters.monitorFailures + 1,
+    },
+    failures: [...(summary.failures ?? []), ...summarizePaidAccessFailures([failure])],
   }
 }
 

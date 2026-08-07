@@ -11,6 +11,11 @@ import type {
   PersonalPlanOneTimeFulfillmentJobRow,
 } from "@/lib/billing/types"
 import type { PaymentIntegrityMonitorFailure } from "@/lib/billing/payment-integrity"
+import {
+  monitorPaidOneTimeAccess,
+  type PaidAccessMonitorFailure,
+  type PaidAccessMonitorFinding,
+} from "@/lib/billing/paid-access-monitor"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import type { processPayPalOneTimeFulfillmentJob } from "@/lib/paypal/order-activation"
 import type { getStripe } from "@/lib/stripe/client"
@@ -19,8 +24,12 @@ import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import {
   emptyPaymentIntegrityCounters,
   flushPaymentMonitorTelemetry,
+  reportPaidAccessFinding,
+  reportPaidAccessMonitorFailure,
+  runPaidAccessMonitorBranch,
   runPaymentIntegrityBranch,
   safeBearerTokenMatches,
+  type RunPaidAccessMonitor,
   type RunPaymentIntegrity,
 } from "@/app/api/billing/payment-monitor/route"
 import { captureServerPaymentCheckIn } from "@/lib/observability/payment-server"
@@ -50,10 +59,13 @@ type ReconcileDeps = {
   oneTimeFulfillmentDispatchers?: PersonalPlanOneTimeFulfillmentDispatchers
   oneTimeFulfillmentRuntime?: OneTimeFulfillmentRuntime
   runPaymentIntegrity?: RunPaymentIntegrity
+  runPaidAccessMonitor?: RunPaidAccessMonitor
   captureCheckIn?: Parameters<typeof runPaymentIntegrityBranch>[0]["captureCheckIn"]
   requireCheckInReceipt?: boolean
   flushTelemetry?: Parameters<typeof runPaymentIntegrityBranch>[0]["flushTelemetry"]
   reportMonitorFailure?: (failure: PaymentIntegrityMonitorFailure) => unknown
+  reportPaidAccessFinding?: (finding: PaidAccessMonitorFinding) => unknown
+  reportPaidAccessMonitorFailure?: (failure: PaidAccessMonitorFailure) => unknown
   clock?: () => number
 }
 
@@ -95,6 +107,13 @@ export async function GET(request: Request) {
         const runner = await loadPaymentIntegrityRunner()
         return runner(input)
       },
+      runPaidAccessMonitor: ({ now }) =>
+        monitorPaidOneTimeAccess({
+          supabase,
+          now,
+        }),
+      reportPaidAccessFinding,
+      reportPaidAccessMonitorFailure,
       requireCheckInReceipt: true,
     }),
   )
@@ -107,6 +126,11 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
   }
 
   const now = deps.now ?? new Date()
+  const oneTimeBranch =
+    deps.oneTimeFulfillmentRetryEnabled === true
+      ? await runOneTimeFulfillmentBranch(deps)
+      : { ok: true, result: undefined }
+
   const integrity = deps.runPaymentIntegrity
     ? runPaymentIntegrityBranch({
         monitorSlug: "payment-integrity-daily",
@@ -127,26 +151,29 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
         },
       })
   const entitlement = runEntitlementBranch(deps, now)
-  const oneTimeFulfillment =
-    deps.oneTimeFulfillmentRetryEnabled === true
-      ? runOneTimeFulfillmentBranch(deps)
-      : Promise.resolve({ ok: true, result: undefined })
   const analytics =
     deps.analyticsRetryEnabled === true
       ? runAnalyticsBranch(deps)
       : Promise.resolve({ ok: true, result: undefined })
 
-  const [integrityBranch, entitlementBranch, oneTimeBranch, analyticsBranch] = await Promise.all([
-    integrity,
-    entitlement,
-    oneTimeFulfillment,
-    analytics,
-  ])
+  const paidAccess = deps.runPaidAccessMonitor
+    ? runPaidAccessMonitorBranch({
+        runPaidAccessMonitor: deps.runPaidAccessMonitor,
+        flushTelemetry: deps.flushTelemetry ?? flushPaymentMonitorTelemetry,
+        reportFinding: deps.reportPaidAccessFinding,
+        reportMonitorFailure: deps.reportPaidAccessMonitorFailure,
+        now,
+      })
+    : Promise.resolve({ ok: true, summary: undefined })
+  const [integrityBranch, paidAccessBranch, entitlementBranch, analyticsBranch] = await Promise.all(
+    [integrity, paidAccess, entitlement, analytics],
+  )
 
   const body: Record<string, unknown> = {
     ...entitlementBranch.result,
     paymentIntegrity: integrityBranch.summary,
   }
+  if (paidAccessBranch.summary) body.paidAccess = paidAccessBranch.summary
 
   if (oneTimeBranch.result) body.oneTimeFulfillmentRetry = oneTimeBranch.result
 
@@ -157,6 +184,7 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
   if (!entitlementBranch.ok) body.entitlements = { status: "error" }
   const status =
     integrityBranch.ok &&
+    paidAccessBranch.ok &&
     entitlementBranch.ok &&
     analyticsBranch.ok &&
     oneTimeBranch.ok &&

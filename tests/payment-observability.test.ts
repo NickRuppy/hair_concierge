@@ -35,6 +35,7 @@ test("payment reporter uses closed tags, a safe internal user id, and stable imm
 
   assert.equal(getPaymentBoundary("stripe_express_checkout_confirm"), "customer_authorization")
   assert.equal(getPaymentFailureLevel("payment_integrity_mismatch"), "fatal")
+  assert.equal(getPaymentFailureLevel("paid_but_entitlement_not_active"), "error")
   assert.deepEqual(payload.fingerprint, [
     "payment/customer_payment_error_observed/stripe/customer_authorization/not_confirmable",
   ])

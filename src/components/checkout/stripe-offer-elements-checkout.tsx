@@ -1395,7 +1395,7 @@ export function StripeOfferElementsCheckout({
   checkoutKey: string
   clientSecret?: string | null
   commerceKind?: PaymentCommerceKind
-  fetchClientSecret: () => Promise<string>
+  fetchClientSecret?: () => Promise<string>
   preparationFailureReported?: boolean
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
@@ -1423,10 +1423,31 @@ export function StripeOfferElementsCheckout({
   stripe: Promise<Stripe | null>
   visible?: boolean
 }) {
-  const clientSecretPromise = useMemo(
-    () => (clientSecret ? Promise.resolve(clientSecret) : fetchClientSecret()),
-    [clientSecret, fetchClientSecret],
-  )
+  const clientSecretPromise = useMemo(() => {
+    if (clientSecret) return Promise.resolve(clientSecret)
+    return fetchClientSecret?.() ?? null
+  }, [clientSecret, fetchClientSecret])
+
+  if (!clientSecretPromise) {
+    return (
+      <div className="grid gap-3">
+        <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
+          <p className="mb-3 text-sm text-destructive" role="alert">
+            {getStripeOfferElementsErrorMessage()}
+          </p>
+          <Button
+            type="button"
+            variant="unstyled"
+            onClick={onRetry}
+            className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
+          >
+            Erneut versuchen
+          </Button>
+        </div>
+        {visible && secondaryPaymentMethod ? secondaryPaymentMethod : null}
+      </div>
+    )
+  }
 
   return (
     <CheckoutElementsProvider
