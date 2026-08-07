@@ -17,7 +17,7 @@ import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import type { CheckoutStage } from "@/lib/observability/checkout"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
-import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
+import { getOfferStripePromise, warmOfferStripe } from "@/lib/stripe/offer-client-loader"
 import {
   createPreparedCheckoutCredential,
   createAlreadyReportedPreparedCheckoutError,
@@ -519,6 +519,11 @@ export function PersonalPlanOneTimeCheckout({
     reportStripePreparationTimeout,
     trackCheckoutLifecycle,
   ])
+
+  useEffect(() => {
+    if (!canStartPayment || !stripeCheckoutMounted) return
+    warmOfferStripe()
+  }, [canStartPayment, stripeCheckoutMounted])
 
   useEffect(() => {
     if (
