@@ -309,6 +309,34 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         step_index: data.stepIndex,
       }
     }
+    case "personal_plan_stage3_flow_viewed": {
+      const data = payload as AppEventMap["personal_plan_stage3_flow_viewed"]
+      return { pass: data.pass, step_key: data.stepKey }
+    }
+    case "personal_plan_stage3_search_interacted": {
+      const data = payload as AppEventMap["personal_plan_stage3_search_interacted"]
+      return {
+        interaction: data.interaction,
+        result_count_band: data.resultCountBand,
+        selected_candidate_position: data.selectedCandidatePosition,
+      }
+    }
+    case "personal_plan_stage3_fallback_opened": {
+      const data = payload as AppEventMap["personal_plan_stage3_fallback_opened"]
+      return { step_key: data.stepKey }
+    }
+    case "personal_plan_stage3_decision_selected": {
+      const data = payload as AppEventMap["personal_plan_stage3_decision_selected"]
+      return { decision_type: data.decisionType, step_key: data.stepKey }
+    }
+    case "personal_plan_stage3_save_outcome": {
+      const data = payload as AppEventMap["personal_plan_stage3_save_outcome"]
+      return { outcome: data.outcome }
+    }
+    case "personal_plan_stage3_handoff": {
+      const data = payload as AppEventMap["personal_plan_stage3_handoff"]
+      return { outcome: data.outcome }
+    }
     case "pricing_viewed": {
       const data = payload as AppEventMap["pricing_viewed"]
       return {

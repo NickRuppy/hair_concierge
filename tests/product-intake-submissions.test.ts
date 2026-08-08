@@ -30,6 +30,25 @@ const OTHER_CONVERSATION_ID = "33333333-3333-4333-8333-333333333333"
 const EXISTING_USAGE_ID = "44444444-4444-4444-8444-444444444444"
 const OTHER_USAGE_ID = "55555555-5555-4555-8555-555555555555"
 
+test("manual and photo intake accept the supported heat-protectant and scalp-care categories", () => {
+  const manual = onboardingProductIntakeSubmissionSchema.parse({
+    intake_method: "manual",
+    category: "heat_protectant",
+    frequency_range: "weekly_1x",
+    brand_text: "Beispielmarke",
+    product_name_text: "Hitzeschutzspray",
+  })
+  const photo = chatProductIntakeSubmissionSchema.parse({
+    intake_method: "photo",
+    category: "scalp_care",
+    frequency_range: "weekly_1x",
+    front_image_path: "product-intake/test/scalp-care.jpg",
+  })
+
+  assert.equal(manual.category, "heat_protectant")
+  assert.equal(photo.category, "scalp_care")
+})
+
 const catalog: ProductIntakeCatalog = {
   products: [
     {
@@ -105,6 +124,7 @@ function makeSubmission(
     id: overrides.id ?? "submission-1",
     user_id: USER_ID,
     user_product_usage_id: null,
+    user_product_id: null,
     source: "onboarding",
     source_conversation_id: null,
     intake_method: "manual",
@@ -285,6 +305,12 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
         usage_id: existingUsage?.id ?? null,
         submission_id: submissionId,
       }
+    },
+    async createSubmissionForUserProduct() {
+      throw new Error("Personal Plan adapter is not configured in this legacy intake fake")
+    },
+    async cancelSubmissionForUserProduct() {
+      throw new Error("Personal Plan adapter is not configured in this legacy intake fake")
     },
     async findProductSubmission(id, userId) {
       calls.push(`find_submission:${id}`)

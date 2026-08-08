@@ -3,6 +3,7 @@ import type { ProductIntakeCatalog } from "@/lib/product-intake/product-matching
 import type {
   ProductFrequency,
   ProductIntakeCategoryKey,
+  ProductIntakeSubmissionSource,
   ProductSubmissionSource,
   ProductUsageMatchStatus,
 } from "@/lib/types"
@@ -26,11 +27,26 @@ export type ProductIntakeUsageRow = {
   updated_at?: string
 }
 
+export type ProductIntakeUserProductRow = {
+  id: string
+  user_id: string
+  category: ProductIntakeCategoryKey
+  catalog_product_id: string | null
+  brand_text: string | null
+  product_name_text: string | null
+  identity_status: "matched" | "pending_review" | "needs_more_info" | "text_only"
+  ownership_status: "owned" | "archived"
+  created_at?: string
+  updated_at?: string
+}
+
 export type ProductIntakeSubmissionRow = {
   id: string
   user_id: string
   user_product_usage_id: string | null
-  source: ProductSubmissionSource
+  user_product_id: string | null
+  personal_plan_request_fingerprint?: string | null
+  source: ProductIntakeSubmissionSource
   source_conversation_id: string | null
   intake_method: "manual" | "photo"
   category: ProductIntakeCategoryKey
@@ -141,6 +157,32 @@ export type ProductIntakeRepository = {
     category: ProductIntakeCategoryKey
     usage_id: string | null
     submission_id: string | null
+  }>
+  createSubmissionForUserProduct: (params: {
+    userId: string
+    userProductId: string
+    category: ProductIntakeCategoryKey
+    frequencyRange: ProductFrequency
+    intakeMethod: "manual" | "photo"
+    brandText: string | null
+    productNameText: string | null
+    frontImagePath: string | null
+    barcodeImagePath: string | null
+    requestFingerprint: string
+    now: string
+  }) => Promise<{
+    userProduct: ProductIntakeUserProductRow
+    submission: ProductIntakeSubmissionRow
+    replayed: boolean
+  }>
+  cancelSubmissionForUserProduct: (params: {
+    userId: string
+    userProductId: string
+    submissionId: string
+    now: string
+  }) => Promise<{
+    userProduct: ProductIntakeUserProductRow
+    submission: ProductIntakeSubmissionRow
   }>
   findProductSubmission: (id: string, userId: string) => Promise<ProductIntakeSubmissionRow | null>
   insertProductSubmission: (

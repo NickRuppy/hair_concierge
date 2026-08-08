@@ -23,7 +23,7 @@ const stringArray = <T extends readonly [string, ...string[]]>(values: T, min = 
       }
     })
 
-const durableAnswersSchema = z
+export const personalPlanDurableAnswersBaseSchema = z
   .object({
     texture: z.enum(["straight", "wavy", "curly", "coily"]),
     thickness: z.enum(["fine", "normal", "coarse"]),
@@ -79,7 +79,9 @@ const durableAnswersSchema = z
     currentConcernsOtherText: z.string().trim().max(50).optional(),
   })
   .strict()
-  .superRefine((answers, context) => {
+
+export const personalPlanDurableAnswersSchema = personalPlanDurableAnswersBaseSchema.superRefine(
+  (answers, context) => {
     if (
       answers.concernRecurrence &&
       !answers.currentConcerns.includes(answers.concernRecurrence.concernId)
@@ -90,13 +92,14 @@ const durableAnswersSchema = z
         message: "Wiederholung muss sich auf ein ausgewaehltes Anliegen beziehen",
       })
     }
-  })
+  },
+)
 
 export const personalPlanLeadRequestSchema = z
   .object({
     email: z.string().trim().email("Bitte gib eine gueltige E-Mail-Adresse ein"),
     marketingConsent: z.boolean(),
-    answers: durableAnswersSchema,
+    answers: personalPlanDurableAnswersSchema,
     preparedPlan: z
       .object({
         artifactId: z.string().uuid(),
@@ -111,7 +114,7 @@ export type PersonalPlanLeadRequest = z.infer<typeof personalPlanLeadRequestSche
 
 export const personalPlanPrepareRequestSchema = z
   .object({
-    answers: durableAnswersSchema,
+    answers: personalPlanDurableAnswersSchema,
   })
   .strict()
 

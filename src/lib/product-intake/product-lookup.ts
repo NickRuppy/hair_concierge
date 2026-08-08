@@ -108,6 +108,8 @@ const CATEGORY_HINTS: Array<[ProductIntakeCategoryKey, string[]]> = [
   ["conditioner", ["conditioner", "spulung", "spuelung"]],
   ["mask", ["maske", "mask", "haarkur", "kur"]],
   ["bondbuilder", ["bondbuilder"]],
+  ["heat_protectant", ["hitzeschutz", "heat protectant"]],
+  ["scalp_care", ["kopfhautpflege", "scalp care"]],
   ["shampoo", ["shampoo", "shampo", "shampoing"]],
   ["oil", ["haarol", "haaroel", "ol", "oel", "oil"]],
 ]

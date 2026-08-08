@@ -56,6 +56,18 @@ const ciOfferPageLab: RouteEnvironment = {
   localDevLoginEnabled: false,
 }
 
+const ciPersonalPlanStage3Lab: RouteEnvironment = {
+  ciPersonalPlanStage3LabEnabled: true,
+  nodeEnv: "production",
+  localDevLoginEnabled: false,
+}
+
+const ciPersonalPlanProductionJourney: RouteEnvironment = {
+  ciPersonalPlanProductionJourneyEnabled: true,
+  nodeEnv: "development",
+  localDevLoginEnabled: false,
+}
+
 test("classifies every current public page and route handler", () => {
   const publicRoutes = [
     "/",
@@ -143,6 +155,8 @@ test("classifies every current protected page and API route", () => {
     "/api/feedback",
     "/api/memory",
     "/api/memory/example",
+    "/api/personal-plan",
+    "/api/personal-plan/stage-3/complete",
     "/api/product-intake/brand-options",
     "/api/product-intake/chat",
     "/api/product-intake/onboarding",
@@ -158,6 +172,8 @@ test("classifies every current protected page and API route", () => {
     "/api/tracker/dismiss-nudge",
     "/api/tracker/log",
     "/plan-bereit/status",
+    "/plan-start",
+    "/plan-start/produkte",
     "/tracker",
   ]
 
@@ -219,6 +235,12 @@ test("preserves environment-conditional development routes", () => {
   assert.equal(classifyRoute("/labs/portrait", vercelPreview), "development")
   assert.equal(classifyRoute("/labs/offer-page", ciOfferPageLab), "development")
   assert.equal(classifyRoute("/labs/portrait", ciOfferPageLab), "protected")
+  assert.equal(classifyRoute("/labs/personal-plan/stage-3", vercelPreview), "development")
+  assert.equal(classifyRoute("/labs/personal-plan/stage-3", ciPersonalPlanStage3Lab), "development")
+  assert.equal(classifyRoute("/labs/personal-plan/stage-3", production), "protected")
+  assert.equal(classifyRoute("/plan-start", ciPersonalPlanProductionJourney), "development")
+  assert.equal(classifyRoute("/plan-start/produkte", ciPersonalPlanProductionJourney), "protected")
+  assert.equal(classifyRoute("/plan-start", production), "protected")
   assert.equal(classifyRoute("/labs/app-proof", vercelPreview), "protected")
   assert.equal(classifyRoute("/labs/portrait", production), "protected")
 })

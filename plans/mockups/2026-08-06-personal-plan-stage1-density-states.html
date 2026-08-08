@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chaarlie — Bedarfsplan: Basis und optionale Ergänzungen</title>
+<style>
+  :root {
+    --ink:#291a43; --body:#393633; --muted:#706a65; --line:#e7e0d9; --paper:#fdfbf9;
+    --purple:#6b50a0; --rose:#d4616a; --green:#6faa70; --yellow:#c8a038;
+    --basis-bg:rgba(110,170,110,.10); --basis-line:rgba(110,170,110,.24);
+    --optional-bg:rgba(110,105,95,.10); --paused-bg:rgba(220,180,60,.12);
+  }
+  * { box-sizing:border-box }
+  body { margin:0; background:#f2eff4; color:var(--body); font:14px/1.38 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+  button { font:inherit }
+  .document { max-width:980px; margin:auto; padding:34px 20px 64px; }
+  .kicker { color:var(--purple); font-size:11px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+  h1 { margin:5px 0 7px; color:var(--ink); font:500 30px/1.16 Georgia,serif; }
+  .intro { max-width:720px; color:var(--muted); margin:0 0 20px; }
+  .chooser { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 18px; }
+  .chooser button { border:1px solid #d8cde9; background:#fff; color:var(--ink); padding:8px 10px; border-radius:999px; font-weight:650; font-size:12px; cursor:pointer; }
+  .chooser button[aria-pressed="true"] { background:var(--purple); color:#fff; border-color:var(--purple); }
+  .review-note { border-left:3px solid var(--purple); color:#5d5662; background:#faf8fd; padding:10px 12px; border-radius:0 8px 8px 0; font-size:12px; margin-bottom:18px; }
+  .phone { width:375px; max-width:100%; margin:auto; background:#17111e; border-radius:32px; padding:9px; box-shadow:0 22px 50px rgba(38,22,58,.25); }
+  .screen { height:760px; overflow-y:auto; overflow-x:hidden; border-radius:25px; background:var(--paper); position:relative; scrollbar-width:none; }
+  .screen::-webkit-scrollbar { display:none; }
+  .apphead { position:sticky; top:0; z-index:4; display:flex; align-items:center; gap:7px; height:47px; padding:0 14px; border-bottom:1px solid #eee8e2; background:rgba(253,251,249,.96); backdrop-filter:blur(8px); }
+  .mark { display:flex; gap:2px; align-items:end; height:15px; }
+  .mark i { background:var(--purple); border-radius:2px; display:block; width:3px; height:15px; }
+  .mark i:nth-child(2){height:10px;opacity:.65}.mark i:nth-child(3){height:6px;opacity:.35}
+  .wordmark{font:500 19px Georgia,serif;color:var(--ink)}
+  .stage { margin-left:auto; color:#756e70;font-size:11px;font-weight:750; }
+  main { padding:12px 12px 18px; }
+  .overline { color:#6e6863; letter-spacing:.12em; text-transform:uppercase; font-size:10px; font-weight:800; margin-bottom:4px; }
+  h2 { margin:0; color:var(--ink); font:500 23px/1.14 Georgia,serif; letter-spacing:-.01em; }
+  .lead { margin:5px 0 10px; font-size:11.5px; color:var(--muted); }
+  .journey-progress { height:4px; overflow:hidden; margin:10px 0 13px; border-radius:999px; background:#e7e0d9; }
+  .journey-progress i { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#7658aa,#5d438f); }
+  .section-head { display:flex; align-items:baseline; justify-content:space-between; margin:0 2px 8px; }
+  .section-head strong { color:var(--ink);font-size:13px; }
+  .section-head span { color:var(--purple);font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase; }
+  .plan-card { margin-bottom:9px; overflow:hidden; border:1px solid var(--basis-line); border-radius:19px; background:var(--basis-bg); box-shadow:0 3px 11px rgba(43,26,67,.035); }
+  .plan-card.optional { border-color:rgba(31,26,20,.07); background:var(--optional-bg); box-shadow:inset 0 2px 5px rgba(31,26,20,.06),inset 0 -1px 1px rgba(255,255,255,.65); }
+  .plan-card.paused { border-color:rgba(200,160,40,.28); background:var(--paused-bg); box-shadow:none; }
+  .card-summary { appearance:none; width:100%; border:0; background:transparent; padding:11px; display:grid; grid-template-columns:66px 1fr 16px; align-items:center; gap:11px; text-align:left; color:inherit; cursor:pointer; }
+  .card-summary:focus-visible { outline:2px solid var(--purple); outline-offset:-3px; border-radius:16px; }
+  .tile { position:relative; width:66px; height:82px; display:grid; place-items:center; overflow:hidden; border-radius:14px; background:#f3efe8; box-shadow:inset 0 0 0 1px rgba(31,26,20,.04); }
+  .tile img { display:block; width:78%; height:94%; object-fit:contain; }
+  .optional .tile { opacity:.76; filter:saturate(.72); }
+  .paused .tile { background:#f5ebd2; color:#8a6a30; opacity:1; filter:none; }
+  .card-copy { min-width:0; }
+  .eyeline { display:flex; align-items:center; gap:5px; color:var(--purple); font-size:8.5px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--green); flex:none; }
+  .optional .dot { background:var(--purple); }
+  .paused .dot { background:var(--yellow); }
+  .badge { border-radius:999px; background:rgba(107,80,160,.14); padding:2px 6px; color:var(--purple); font-size:8px; letter-spacing:.08em; }
+  .paused .badge { background:rgba(200,160,40,.18); color:#7f5d0c; }
+  .card-title { display:block; margin:4px 0 3px; color:var(--ink); font-size:13.5px; line-height:1.18; }
+  .purpose { display:-webkit-box; margin:0; overflow:hidden; color:#5f5954; font-size:9.8px; line-height:1.32; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+  .pills { display:flex; overflow:hidden; flex-wrap:nowrap; gap:4px; margin-top:6px; }
+  .pill { overflow:hidden; max-width:105px; border:1px solid rgba(107,80,160,.15); border-radius:999px; background:rgba(255,255,255,.72); padding:2px 6px; color:#62507e; font-size:7.8px; font-weight:750; text-overflow:ellipsis; white-space:nowrap; }
+  .frequency { display:flex; align-items:center; gap:5px; margin-top:7px; padding-top:6px; border-top:1px solid rgba(67,55,48,.08); color:#665e58; font-size:8.8px; font-weight:700; }
+  .frequency::before { display:grid; place-items:center; width:15px; height:15px; border-radius:50%; background:rgba(107,80,160,.11); color:var(--purple); font-size:10px; content:"◷"; }
+  .balls { display:none; }
+  .chev { color:rgba(31,26,20,.38); font-size:16px; transition:transform .16s ease; }
+  .plan-card.open .chev { transform:rotate(180deg); }
+  .card-detail { display:none; margin:0 10px 10px; padding:10px; border:1px solid rgba(107,80,160,.12); border-radius:14px; background:rgba(255,255,255,.76); box-shadow:inset 0 1px 0 rgba(255,255,255,.7); }
+  .plan-card.open .card-detail { display:block; }
+  .card-detail::before { display:block; margin:0 2px 8px; color:var(--ink); font-size:10px; font-weight:850; letter-spacing:.08em; text-transform:uppercase; content:"Dein Anforderungsprofil"; }
+  .detail-row { position:relative; padding:9px 10px 9px 38px; border:0; border-radius:11px; background:#f8f5f2; }
+  .detail-row + .detail-row { margin-top:6px; }
+  .detail-row::before { position:absolute; left:10px; top:10px; display:grid; place-items:center; width:20px; height:20px; border-radius:7px; background:#eaf2e8; color:#4c8050; font-size:10px; font-weight:850; content:"✓"; }
+  .detail-row:nth-child(2)::before { background:#eee7f4; color:var(--purple); content:"↳"; }
+  .detail-row:nth-child(3)::before { background:#f1ece7; color:#71645c; content:"◷"; }
+  .detail-row b { color:var(--ink); font-size:10.5px; }
+  .detail-row p { margin:3px 0 0; color:#625d58; font-size:10.3px; line-height:1.42; }
+  .page-nav { position:sticky; bottom:-18px; z-index:3; display:flex; align-items:center; justify-content:space-between; gap:8px; margin:13px -12px -18px; padding:10px 12px 13px; border-top:1px solid #ece6df; background:rgba(253,251,249,.97); backdrop-filter:blur(8px); }
+  .nav-button { border:0; border-radius:12px; padding:11px 13px; font-weight:800; font-size:11px; cursor:pointer; }
+  .nav-button.primary { margin-left:auto; background:var(--purple); color:#fff; }
+  .nav-button.secondary { background:transparent; color:var(--purple); }
+  .tabbar { display:flex; border-top:1px solid #eee8e2; background:#fff; }
+  .tab { flex:1;text-align:center;padding:9px 0 11px;color:#7b7470;font-size:10px; }
+  .tab.on { color:var(--purple);font-weight:800; }.tab i{display:block;font-style:normal;font-size:16px;line-height:15px;margin-bottom:3px}
+  .empty-note { margin:13px 0; padding:11px 12px; border-radius:12px; background:#f1eee9; color:#655f5a; font-size:11px; }
+  .frame { display:none; }.frame.active { display:block; }
+  .statecaption { max-width:375px;margin:13px auto 0;color:#67616a;font-size:12px; }.statecaption b{color:var(--ink)}
+  .error-icon { margin:52px auto 18px;width:62px;height:62px;border-radius:20px;background:#f1ecf8;display:grid;place-items:center;color:var(--purple);font-size:27px; }
+  .transition-hero { margin:28px 0 18px; padding:22px 18px; border:1px solid rgba(107,80,160,.13); border-radius:22px; background:linear-gradient(145deg,#f3edf8,#fff8f3); text-align:center; }
+  .transition-mark { display:grid; place-items:center; width:54px; height:54px; margin:0 auto 15px; border-radius:18px; background:#fff; color:var(--purple); box-shadow:0 8px 20px rgba(59,38,80,.10); font-size:24px; }
+  .transition-hero h2 { font-size:26px; }
+  .transition-hero p { margin:9px auto 0; max-width:270px; color:#625d58; font-size:11.5px; line-height:1.48; }
+  @media(max-width:520px){.document{padding:22px 12px 44px}h1{font-size:26px}.chooser button{font-size:11px;padding:7px 9px}}
+  @media(max-width:360px){.card-summary{grid-template-columns:58px 1fr 12px;gap:8px;padding:9px}.tile{width:58px;height:76px}.purpose{font-size:9.3px}.pill{max-width:88px}}
+</style>
+<body>
+<div class="document">
+  <div class="kicker">Planungsartefakt · Personal Plan · Stage 1</div>
+  <h1>Bedarfsplan: Basis &amp; optionale Ergänzungen</h1>
+  <p class="intro">Direkter bezahlter Output nach dem Quiz: zuerst eine kompakte Basis-Seite — auch im dichten Edge Case mit bis zu acht Kategorien — danach genau eine optionale Seite, wenn echte Ergänzungen vorliegen, und erst dann der Übergang zum persönlichen Produktabgleich.</p>
+  <nav class="chooser" aria-label="Zustand auswählen">
+    <button data-view="basis" aria-pressed="true">A · Seite 1: Basis</button>
+    <button data-view="optional">B · Seite 2: Optional</button>
+    <button data-view="base-only">C · A ohne optionale Folgeseite</button>
+    <button data-view="paused">D · pausierte Karte auf B</button>
+    <button data-view="expanded">E · aufgeklappt</button>
+    <button data-view="error">F · Fehler</button>
+    <button data-view="transition">G · Übergang</button>
+    <button data-view="unavailable">H · Nicht verfügbar</button>
+  </nav>
+  <div class="review-note">Die Karten übernehmen die visuelle Sprache der live Routine und zeigen den aktuell besten konkreten Produkttreffer für das Beispielprofil. Basis oder Optional beschreibt den Bedarf; „pausiert“ ist nur ein zusätzlicher Anwendungsstatus. Produktvergleich, eigene Produkte und Tausch-Aktionen folgen in Stage 2.</div>
+
+  <div class="frame active" id="basis">
+    <div class="phone"><div class="screen">
+      <header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Bedarfsplan</span></header>
+      <main>
+        <div class="overline">Dein persönlicher Plan</div><h2>Deine Basis</h2><p class="lead">Basierend auf deinem Quiz sind das die Grundlagen für deine Routine.</p>
+        <div class="journey-progress" role="progressbar" aria-label="Bedarfsplan-Fortschritt" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><i style="width:50%"></i></div>
+        <div class="section-head"><strong>Von uns klar empfohlen</strong><span>6 Kategorien</span></div>
+
+        <section class="plan-card">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1ef2be82-259c-4a1f-af2e-3ac3403f9731/37-1ef2be82-259c-4a1f-af2e-3ac3403f9731-salthouse-salthouse-anti-juckreiz-d55447789e9c.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Shampoo</span><strong class="card-title">Sanft reinigend</strong><span class="purpose">Entfernt Talg und Rückstände, ohne deine empfindliche Kopfhaut unnötig zu reizen.</span><span class="pills"><span class="pill">sanft</span><span class="pill">sensible Kopfhaut</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>2–3× pro Woche</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Sanft und zuverlässig reinigen, ohne stark entfettend zu sein.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine Kopfhaut reagiert empfindlich und braucht deshalb eine sanfte Reinigungsrichtung.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Zwei- bis dreimal pro Woche.</p></div></div>
+        </section>
+
+        <section class="plan-card">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/007a0b35-2372-4836-9aa5-fd089cd588d4/05-007a0b35-2372-4836-9aa5-fd089cd588d4-balea-balea-natural-beauty-hibiskus-78479c0a7a2f.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Conditioner</span><strong class="card-title">Leicht pflegend</strong><span class="purpose">Glättet deine trockeneren Längen nach der Wäsche, ohne feines Haar zu beschweren.</span><span class="pills"><span class="pill">leichte Pflege</span><span class="pill">Feuchtigkeit</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>nach jeder Haarwäsche</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Leichte Feuchtigkeit und Glättung liefern, ohne feines Haar zu beschweren.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine Längen sind trockener als dein Ansatz; zu reichhaltige Pflege nimmt dir Volumen.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach jeder Haarwäsche.</p></div></div>
+        </section>
+
+        <section class="plan-card">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/5dc2fae3-a0ca-4e6c-9c30-02dd192772f0/16-5dc2fae3-a0ca-4e6c-9c30-02dd192772f0-gliss-gliss-ultimate-repair-spruh-conditioner-e4d12ef3de4d.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Leave-in</span><strong class="card-title">Leicht schützend</strong><span class="purpose">Gibt deinen behandelten Längen zusätzlichen Schutz vor Trockenheit und Reibung.</span><span class="pills"><span class="pill">leicht</span><span class="pill">Schutz &amp; Glättung</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>nach jeder Haarwäsche</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Leicht pflegen, die Oberfläche glätten und vor Alltagsreibung schützen.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Behandelte, raue Längen brauchen mehr als nur ausspülbare Pflege.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach jeder Haarwäsche.</p></div></div>
+        </section>
+
+        <section class="plan-card">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/52264c47-f339-49db-9fb2-207d1ad3b470/12-52264c47-f339-49db-9fb2-207d1ad3b470-fructis-fructis-hair-food-aloe-vera-3fb71a0b6d41.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Haarmaske</span><strong class="card-title">Intensive Pflege</strong><span class="purpose">Ergänzt deine normale Pflege, wenn die behandelten Längen mehr Unterstützung brauchen.</span><span class="pills"><span class="pill">intensiv</span><span class="pill">behandelte Längen</span></span><span class="frequency"><span class="balls"><i class="on"></i><i></i><i></i><i></i><i></i></span>etwa alle 2 Wochen</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Konzentrierte Pflege in einer leichten, feuchtigkeitsorientierten Richtung liefern.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine chemisch behandelten Längen zeigen einen erhöhten Pflegebedarf.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Etwa alle zwei Wochen.</p></div></div>
+        </section>
+
+        <section class="plan-card">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/5827a3b9-a488-4c74-b13a-4d655f94f1c3/40-5827a3b9-a488-4c74-b13a-4d655f94f1c3-pantene-pantene-pro-v-miracles-7in1-ol-spray-6b71bf764efd.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Haaröl</span><strong class="card-title">Leichtes Finish</strong><span class="purpose">Glättet Frizz und gibt Glanz, ohne deine feinen Längen unnötig zu beschweren.</span><span class="pills"><span class="pill">Finish &amp; Glanz</span><span class="pill">Frizz glätten</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>nach Bedarf</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Mit kleiner Dosierung glätten und Glanz geben, ohne schwer zu wirken.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine raueren Spitzen und dein Frizz profitieren von einem gezielten Finish.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach Bedarf; eine kleine Menge reicht.</p></div></div>
+        </section>
+
+        <section class="plan-card">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/3dc24d67-e6c0-4239-a273-058a87d13553/20-3dc24d67-e6c0-4239-a273-058a87d13553-olaplex-olaplex-no-3plus-complete-repair-treatment-654f51a2bea9.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Bondbuilder</span><strong class="card-title">Gezielter Strukturschutz</strong><span class="purpose">Unterstützt deine aufgehellten Längen gezielter als normale Pflege allein.</span><span class="pills"><span class="pill">Strukturpflege</span><span class="pill">aufgehelltes Haar</span></span><span class="frequency"><span class="balls"><i class="on"></i><i></i><i></i><i></i><i></i></span>nach Produktprotokoll</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Spezialisierte Strukturpflege für chemisch beanspruchtes Haar bieten.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine aufgehellten Längen bringen einen erhöhten strukturellen Pflegebedarf mit.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach dem verifizierten Protokoll des ausgewählten Produkts.</p></div></div>
+        </section>
+
+        <nav class="page-nav" aria-label="Bedarfsplan-Seiten"><button class="nav-button primary" data-go-view="optional">Optionale Empfehlungen&nbsp; →</button></nav>
+      </main>
+      <footer class="tabbar"><span class="tab on"><i>✦</i>Plan</span><span class="tab"><i>□</i>Produkte</span><span class="tab"><i>◷</i>Fortschritt</span></footer>
+    </div></div>
+    <p class="statecaption"><b>A · Basis:</b> Die erste Seite enthält ausschließlich die selbstbewusste Grundlage. Schon geschlossen erklärt jede Karte Produktart, Zweck, persönliche Passung, zentrale Eigenschaften und Frequenz.</p>
+  </div>
+
+  <div class="frame" id="optional">
+    <div class="phone"><div class="screen">
+      <header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Bedarfsplan</span></header>
+      <main>
+        <div class="overline">Optionale Empfehlungen</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Basierend auf deinem Quiz können diese Ergänzungen deine Ziele zusätzlich unterstützen.</p>
+        <div class="journey-progress" role="progressbar" aria-label="Bedarfsplan-Fortschritt" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><i style="width:100%"></i></div>
+        <div class="section-head"><strong>Für deine Ziele</strong><span>2 Vorschläge</span></div>
+        <section class="plan-card optional">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/41e09958-5a1f-4997-b99b-f8384b7a8c0c/10-41e09958-5a1f-4997-b99b-f8384b7a8c0c-balea-trockenshampoo-kopfhaut-sensitive-fa7cd89f842d.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Trockenshampoo <i class="badge">Optional</i></span><strong class="card-title">Sensitives Aerosol</strong><span class="purpose">Überbrückt einen fettigeren Ansatz, wenn du noch keinen zusätzlichen Waschtag möchtest.</span><span class="pills"><span class="pill">sensitiv</span><span class="pill">unsichtbares Finish</span></span><span class="frequency"><span class="balls"><i class="on"></i><i></i><i></i><i></i><i></i></span>bei Bedarf</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Öl am Ansatz aufnehmen und sich ohne starken sichtbaren Rückstand ausarbeiten lassen.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Dein Ansatz kann vor deinem nächsten geplanten Waschtag nachfetten.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Gelegentlich zur Überbrückung, nicht als Ersatz für Haarwäsche.</p></div></div>
+        </section>
+        <section class="plan-card optional">
+          <button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/4a95e1de-54e9-4fcd-b227-72a5824d13c1/11-4a95e1de-54e9-4fcd-b227-72a5824d13c1-dr-scheller-dr-scheller-jojobaol-18ac55078631.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Pre-wash-Öl <i class="badge">Optional</i></span><strong class="card-title">Reichhaltige Vorwäsche</strong><span class="purpose">Kann deine trockenen Längen vor einem intensiveren Waschtag zusätzlich schützen.</span><span class="pills"><span class="pill">Vorwäsche</span><span class="pill">reichhaltig</span></span><span class="frequency"><span class="balls"><i class="on"></i><i></i><i></i><i></i><i></i></span>bei Bedarf</span></span><span class="chev">⌄</span></button>
+          <div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Die Längen vor der Wäsche umhüllen; das Gewicht spielt beim Auswaschen weniger stark hinein.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine trockenen, behandelten Längen können vor einzelnen Waschtagen zusätzliche Pflege vertragen.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Situativ vor einem Waschtag.</p></div></div>
+        </section>
+        <nav class="page-nav" aria-label="Bedarfsplan-Seiten"><button class="nav-button secondary" data-go-view="basis">←&nbsp; Zur Basis</button><button class="nav-button primary" data-go-view="transition">Plan wirklich zu meinem machen&nbsp; →</button></nav>
+      </main>
+      <footer class="tabbar"><span class="tab on"><i>✦</i>Plan</span><span class="tab"><i>□</i>Produkte</span><span class="tab"><i>◷</i>Fortschritt</span></footer>
+    </div></div>
+    <p class="statecaption"><b>B · Optional:</b> Optionale Kategorien stehen auf einer eigenen zweiten Seite. Der Zurück-Pfeil hält die Verbindung zur Basis sichtbar; nichts Optionales wird in den Pflichtkern gemischt.</p>
+  </div>
+
+  <div class="frame" id="base-only">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Deine Basis</span></header><main>
+      <div class="overline">Dein persönlicher Plan</div><h2>Deine Basis</h2><p class="lead">Basierend auf deinem Quiz sind das die Grundlagen für deine Routine.</p>
+      <div class="journey-progress" role="progressbar" aria-label="Bedarfsplan-Fortschritt" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><i style="width:100%"></i></div>
+      <div class="section-head"><strong>Von uns klar empfohlen</strong><span>2 Kategorien</span></div>
+      <section class="plan-card"><button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/e7bfd306-b128-4735-a9f8-0eeacdbd5013/44-e7bfd306-b128-4735-a9f8-0eeacdbd5013-sebamed-sebamed-every-day-shampoo-fb676817270f.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Shampoo</span><strong class="card-title">Ausgeglichen reinigend</strong><span class="purpose">Reinigt passend zu deiner unkomplizierten Kopfhaut und geringen Produktlast.</span><span class="pills"><span class="pill">ausgeglichen</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>2× pro Woche</span></span><span class="chev">⌄</span></button><div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Ausgeglichen reinigen, ohne unnötig stark zu entfetten.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine Kopfhaut zeigt keine besonderen Zusatzanforderungen.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Zweimal pro Woche.</p></div></div></section>
+      <section class="plan-card"><button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/483b41d6-632c-4efe-9bcc-488c80bf5bb7/09-483b41d6-632c-4efe-9bcc-488c80bf5bb7-balea-balea-ultra-med-sensitive-59115f28323b.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Conditioner</span><strong class="card-title">Leichte Basispflege</strong><span class="purpose">Hält deine Längen nach jeder Wäsche glatt und gut kämmbar.</span><span class="pills"><span class="pill">leicht</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>nach jeder Haarwäsche</span></span><span class="chev">⌄</span></button><div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Leicht glätten und die Kämmbarkeit unterstützen.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine Längen brauchen normale Pflege ohne zusätzliche Intensivstufe.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach jeder Haarwäsche.</p></div></div></section>
+      <div class="empty-note">Dein Plan ist damit vollständig. Wir ergänzen nichts nur der Vollständigkeit halber.</div>
+      <nav class="page-nav"><button class="nav-button primary" data-go-view="transition">Plan wirklich zu meinem machen&nbsp; →</button></nav>
+    </main></div></div>
+    <p class="statecaption"><b>C · A ohne optionale Folgeseite:</b> Das ist keine zusätzliche Nutzerseite. Es zeigt nur: Gibt es keine echten Ergänzungen, wird B vollständig übersprungen und die Person geht von A direkt weiter.</p>
+  </div>
+
+  <div class="frame" id="paused">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Bedarfsplan</span></header><main>
+      <div class="overline">Optionale Empfehlungen</div><h2>Zusätzlich sinnvoll</h2><p class="lead">Eine grundsätzlich hilfreiche Ergänzung ist im Moment pausiert.</p><div class="journey-progress" role="progressbar" aria-label="Bedarfsplan-Fortschritt" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><i style="width:100%"></i></div>
+      <section class="plan-card paused open"><button class="card-summary" type="button" aria-expanded="true"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/41e09958-5a1f-4997-b99b-f8384b7a8c0c/10-41e09958-5a1f-4997-b99b-f8384b7a8c0c-balea-trockenshampoo-kopfhaut-sensitive-fa7cd89f842d.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Trockenshampoo <i class="badge">Pausiert</i></span><strong class="card-title">Aktuell nicht anwenden</strong><span class="purpose">Die Kategorie wäre hilfreich, soll aber wegen deiner gereizten Kopfhaut gerade pausieren.</span><span class="pills"><span class="pill">gereizte Kopfhaut</span></span><span class="frequency">später: bei Bedarf</span></span><span class="chev">⌄</span></button><div class="card-detail"><div class="detail-row"><b>Voraussetzung für die Anwendung</b><p>Deine Kopfhaut sollte sich zuerst beruhigt haben.</p></div><div class="detail-row"><b>Warum es gerade pausiert</b><p>Bei gereizter Kopfhaut empfehlen wir aktuell kein Trockenshampoo.</p></div><div class="detail-row"><b>Späterer Rhythmus</b><p>Gelegentlich zwischen geplanten Waschtagen.</p></div></div></section>
+      <nav class="page-nav"><button class="nav-button secondary" data-go-view="basis">←&nbsp; Zur Basis</button><button class="nav-button primary" data-go-view="transition">Plan wirklich zu meinem machen&nbsp; →</button></nav>
+    </main></div></div>
+    <p class="statecaption"><b>D · Pausierte Karte auf B:</b> Auch das ist keine zusätzliche Seite. „Pausiert“ liegt über Basis oder Optional; hier wird lediglich die optionale Ausprägung auf B gezeigt.</p>
+  </div>
+
+  <div class="frame" id="expanded">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Bedarfsplan</span></header><main>
+      <div class="overline">Dein persönlicher Plan</div><h2>Deine Basis</h2><p class="lead">Die geschlossene Karte erklärt bereits das Wesentliche. Aufklappen zeigt die Begründung dahinter.</p><div class="journey-progress" role="progressbar" aria-label="Bedarfsplan-Fortschritt" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><i style="width:50%"></i></div>
+      <section class="plan-card open"><button class="card-summary" type="button" aria-expanded="true"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/007a0b35-2372-4836-9aa5-fd089cd588d4/05-007a0b35-2372-4836-9aa5-fd089cd588d4-balea-balea-natural-beauty-hibiskus-78479c0a7a2f.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Conditioner</span><strong class="card-title">Leicht pflegend</strong><span class="purpose">Glättet deine trockeneren Längen nach der Wäsche, ohne feines Haar zu beschweren.</span><span class="pills"><span class="pill">leichte Pflege</span><span class="pill">Feuchtigkeit &amp; Glättung</span></span><span class="frequency"><span class="balls"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>nach jeder Haarwäsche</span></span><span class="chev">⌄</span></button><div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Leichte Feuchtigkeit und Glättung liefern, ohne dein Haar zu beschweren.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine Längen sind trockener als dein Ansatz und reagieren auf zu reichhaltige Pflege schnell mit weniger Volumen.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach jeder Haarwäsche.</p></div></div></section>
+      <section class="plan-card"><button class="card-summary" type="button" aria-expanded="false"><span class="tile"><img src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/5dc2fae3-a0ca-4e6c-9c30-02dd192772f0/16-5dc2fae3-a0ca-4e6c-9c30-02dd192772f0-gliss-gliss-ultimate-repair-spruh-conditioner-e4d12ef3de4d.webp" alt=""></span><span class="card-copy"><span class="eyeline"><i class="dot"></i>Leave-in</span><strong class="card-title">Leicht schützend</strong><span class="purpose">Ergänzt die ausspülbare Pflege für deine behandelten Längen.</span><span class="pills"><span class="pill">Schutz</span><span class="pill">Glättung</span></span><span class="frequency">nach jeder Haarwäsche</span></span><span class="chev">⌄</span></button><div class="card-detail"><div class="detail-row"><b>Worauf es beim Produkt ankommt</b><p>Leicht pflegen, glätten und vor Alltagsreibung schützen.</p></div><div class="detail-row"><b>Warum das zu deinem Haar passt</b><p>Deine Längen sind chemisch behandelt und rau.</p></div><div class="detail-row"><b>Empfohlener Rhythmus</b><p>Nach jeder Haarwäsche.</p></div></div></section>
+      <nav class="page-nav"><button class="nav-button primary" data-go-view="optional">Optionale Empfehlungen&nbsp; →</button></nav>
+    </main></div></div>
+    <p class="statecaption"><b>E · Aufgeklappt:</b> Das „Anforderungsprofil“ bündelt Produkteigenschaften, persönliche Passung und Rhythmus als drei gleichwertige Fakten — nicht als Anleitung oder Prozess.</p>
+  </div>
+
+  <div class="frame" id="transition">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Nächster Schritt</span></header><main>
+      <div class="journey-progress" role="progressbar" aria-label="Bedarfsplan abgeschlossen" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><i style="width:100%"></i></div>
+      <section class="transition-hero"><div class="transition-mark">✓</div><div class="overline">Deine Grundlage steht</div><h2>Jetzt machen wir sie zu deiner.</h2><p>Als Nächstes gleichen wir den Plan mit deinen Produkten ab.</p></section>
+      <nav class="page-nav"><button class="nav-button secondary" data-go-view="basis">←&nbsp; Zum Plan</button><button class="nav-button primary">Produkte abgleichen&nbsp; →</button></nav>
+    </main></div></div>
+    <p class="statecaption"><b>G · Übergang:</b> Der Plan wurde bereits geliefert; jetzt beginnt der Produktabgleich.</p>
+  </div>
+
+  <div class="frame" id="error">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Dein Plan</span></header><main>
+      <div class="overline">Dein persönlicher Plan</div><h2>Dein Plan lädt gerade nicht</h2><p class="lead">Deine Antworten sind gespeichert. Du musst nichts noch einmal ausfüllen.</p><div class="error-icon">↻</div><p style="text-align:center;color:#625d58;margin:0 auto 18px;max-width:270px">Wir konnten deinen Bedarfsplan nicht abrufen. Versuche es gleich noch einmal.</p><button class="nav-button primary" style="display:block;width:100%">Erneut versuchen</button><button class="nav-button secondary" style="display:block;width:100%;margin-top:4px">Später fortfahren</button>
+    </main></div></div>
+    <p class="statecaption"><b>F · Fehler:</b> Auch bei einem Ladefehler bleibt die Reihenfolge unverändert: zuerst wird der bereits bezahlte Bedarfsplan wiederhergestellt. Zusätzliche Fragen beginnen erst nach A/B und dem Übergang.</p>
+  </div>
+
+  <div class="frame" id="unavailable">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Dein Plan</span></header><main>
+      <div class="overline">Dein persönlicher Plan</div><h2>Dieser Planbereich ist gerade nicht verfügbar</h2><p class="lead">Deine bisherigen Angaben bleiben gespeichert.</p><div class="error-icon">i</div><p style="text-align:center;color:#625d58;margin:0 auto 18px;max-width:270px">Du musst nichts erneut ausfüllen. Du kannst zu deinem Profil zurückkehren oder uns kontaktieren.</p><button class="nav-button primary" style="display:block;width:100%">Zum Profil</button><button class="nav-button secondary" style="display:block;width:100%;margin-top:4px">Support kontaktieren</button>
+    </main></div></div>
+    <p class="statecaption"><b>H · Nicht verfügbar:</b> Bei deaktiviertem Rollout oder nicht passendem Konto bleibt die Person auf der Personal-Plan-Oberfläche. Es gibt keinen Umweg über Chat, altes Onboarding oder Quiz.</p>
+  </div>
+</div>
+<script>
+  function setView(id) {
+    document.querySelectorAll('[data-view]').forEach(item => item.setAttribute('aria-pressed', String(item.dataset.view === id)));
+    document.querySelectorAll('.frame').forEach(frame => frame.classList.toggle('active', frame.id === id));
+    const screen = document.querySelector(`#${id} .screen`); if (screen) screen.scrollTop = 0;
+  }
+  document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+  document.querySelectorAll('[data-go-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.goView)));
+  document.querySelectorAll('.card-summary').forEach(button => button.addEventListener('click', () => {
+    const card = button.closest('.plan-card'); const open = !card.classList.contains('open');
+    card.classList.toggle('open', open); button.setAttribute('aria-expanded', String(open));
+  }));
+  const requestedView = new URLSearchParams(window.location.search).get('view');
+  if (requestedView && document.getElementById(requestedView)) setView(requestedView);
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+import { z } from "zod"
+
+import {
+  createStage2RefinementSession,
+  saveStage2SessionAnswer,
+  type Stage2RefinementHandoff,
+  type Stage2RefinementSession,
+} from "@/lib/personal-plan/refinement/session"
+import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import type {
+  PersonalPlanRefinementAnswersV1,
+  Stage2QuestionId,
+  Stage2TriggerContext,
+} from "@/lib/personal-plan/refinement/types"
+import { Stage2RefinementError } from "@/lib/personal-plan/refinement/gateway"
+import type { JsonValue } from "./index"
+
+const MAX_REFINEMENT_PAYLOAD_BYTES = 64 * 1024
+
+export const stage2AnswerSaveInputSchema = z.object({
+  questionId: z.string().min(1).max(96),
+  answer: z.unknown(),
+  expectedRevision: z.number().int().nonnegative(),
+})
+
+export const stage2CompleteInputSchema = z.object({
+  expectedRevision: z.number().int().nonnegative(),
+})
+
+export type Stage2PersistedDraft = {
+  id: string
+  personalPlanId: string
+  baseInitialNeedVersionId: string
+  schemaVersion: number
+  preparedArtifactSourceId: string
+  baseInputSnapshot: JsonValue
+  pathVersion: string
+  triggerContext: Stage2TriggerContext
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+  revision: number
+  status: "in_progress" | "complete" | "stale"
+  refinedVersionId: string | null
+}
+
+export type Stage2RefinementPersistence = {
+  loadOrCreate(userId: string): Promise<Stage2PersistedDraft>
+  reopen(input: { userId: string; draft: Stage2PersistedDraft }): Promise<Stage2PersistedDraft>
+  save(input: {
+    userId: string
+    draft: Stage2PersistedDraft
+    expectedRevision: number
+    answers: PersonalPlanRefinementAnswersV1
+    completedQuestionIds: Stage2QuestionId[]
+  }): Promise<
+    { outcome: "saved"; revision: number } | { outcome: "revision_conflict"; revision: number }
+  >
+  complete(input: {
+    userId: string
+    draft: Stage2PersistedDraft
+    expectedRevision: number
+    inputSnapshot: Record<string, unknown>
+    outputSnapshot: Record<string, unknown>
+    inputHash: string
+    schemaVersion: number
+    computationVersion: string
+  }): Promise<
+    | { outcome: "completed" | "already_completed"; refinedVersionId: string }
+    | { outcome: "revision_conflict"; revision: number }
+    | { outcome: "stale_source" }
+  >
+}
+
+export type Stage2RefinementSnapshotBuilder = (input: {
+  baseInitialNeedVersionId: string
+  preparedArtifactSourceId: string
+  baseInputSnapshot: JsonValue
+  triggerContext: Stage2TriggerContext
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: readonly Stage2QuestionId[]
+}) => {
+  inputSnapshot: Record<string, unknown>
+  outputSnapshot: Record<string, unknown>
+  inputHash: string
+  schemaVersion: number
+  computationVersion: string
+}
+
+export function createStage2RefinementService(input: {
+  userId: string
+  persistence: Stage2RefinementPersistence
+  snapshotBuilder: Stage2RefinementSnapshotBuilder
+}) {
+  let cached: Stage2PersistedDraft | null = null
+
+  async function loadDraft(): Promise<Stage2PersistedDraft> {
+    const draft = await input.persistence.loadOrCreate(input.userId)
+    // A stale row is historical only. The persistence boundary must create a fresh draft.
+    if (draft.status === "stale") {
+      throw new Stage2RefinementError(
+        "temporarily_unavailable",
+        "A fresh refinement draft is unavailable",
+      )
+    }
+    cached = draft
+    return draft
+  }
+
+  function sessionFrom(draft: Stage2PersistedDraft): Stage2RefinementSession {
+    return createStage2RefinementSession({
+      pathVersion: draft.pathVersion,
+      triggerContext: draft.triggerContext,
+      answers: draft.answers,
+      completedQuestionIds: draft.completedQuestionIds,
+      revision: draft.revision,
+      status: draft.status === "complete" ? "complete" : "in_progress",
+      completedHandoff:
+        draft.status === "complete" && draft.refinedVersionId
+          ? { refinedVersionId: draft.refinedVersionId, nextHref: "/plan-start/produkte" }
+          : undefined,
+    })
+  }
+
+  return {
+    async load(): Promise<Stage2RefinementSession> {
+      return sessionFrom(await loadDraft())
+    },
+    async saveAnswer(raw: unknown): Promise<Stage2RefinementSession> {
+      const parsed = stage2AnswerSaveInputSchema.safeParse(raw)
+      if (!parsed.success) throw new Stage2RefinementError("invalid_answer")
+      let draft = cached ?? (await loadDraft())
+      if (draft.status === "complete") {
+        draft = await input.persistence.reopen({ userId: input.userId, draft })
+        cached = draft
+      }
+      if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")
+      const next = saveStage2SessionAnswer(sessionFrom(draft), {
+        questionId: parsed.data.questionId as Stage2QuestionId,
+        answer: parsed.data.answer,
+      })
+      if (
+        JSON.stringify({ answers: next.answers, completedQuestionIds: next.completedQuestionIds })
+          .length > MAX_REFINEMENT_PAYLOAD_BYTES
+      ) {
+        throw new Stage2RefinementError("invalid_answer", "The refinement payload is too large")
+      }
+      const saved = await input.persistence.save({
+        userId: input.userId,
+        draft,
+        expectedRevision: parsed.data.expectedRevision,
+        answers: next.answers,
+        completedQuestionIds: next.completedQuestionIds,
+      })
+      if (saved.outcome === "revision_conflict") {
+        cached = null
+        throw new Stage2RefinementError("revision_conflict")
+      }
+      cached = {
+        ...draft,
+        answers: next.answers,
+        completedQuestionIds: next.completedQuestionIds,
+        revision: saved.revision,
+      }
+      return sessionFrom(cached)
+    },
+    async complete(raw: unknown): Promise<Stage2RefinementHandoff> {
+      const parsed = stage2CompleteInputSchema.safeParse(raw)
+      if (!parsed.success) throw new Stage2RefinementError("completion_failed")
+      const draft = cached ?? (await loadDraft())
+      const contract = resolveStage2RefinementContract({
+        triggerContext: draft.triggerContext,
+        answers: draft.answers,
+        completedQuestionIds: draft.completedQuestionIds,
+      })
+      if (!contract.isComplete) throw new Stage2RefinementError("incomplete_refinement")
+      const snapshot = input.snapshotBuilder({
+        baseInitialNeedVersionId: draft.baseInitialNeedVersionId,
+        preparedArtifactSourceId: draft.preparedArtifactSourceId,
+        baseInputSnapshot: draft.baseInputSnapshot,
+        triggerContext: draft.triggerContext,
+        answers: contract.answers,
+        completedQuestionIds: contract.path.completedQuestionIds,
+      })
+      const result = await input.persistence.complete({
+        userId: input.userId,
+        draft,
+        expectedRevision: parsed.data.expectedRevision,
+        ...snapshot,
+      })
+      if (result.outcome === "revision_conflict") {
+        cached = null
+        throw new Stage2RefinementError("revision_conflict")
+      }
+      if (result.outcome === "stale_source") {
+        cached = null
+        throw new Stage2RefinementError(
+          "revision_conflict",
+          "The initial need changed; reload refinement",
+        )
+      }
+      cached = { ...draft, status: "complete", refinedVersionId: result.refinedVersionId }
+      return { refinedVersionId: result.refinedVersionId, nextHref: "/plan-start/produkte" }
+    },
+  }
+}
