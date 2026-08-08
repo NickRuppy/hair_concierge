@@ -25,6 +25,8 @@ test("personal-plan resume entry resolves or exchanges before landing rendering 
   assert.ok(renderIndex > exchangeIndex)
   assert.ok(trackingIndex > renderIndex)
   assert.match(landing, /redirect\("\/lp\/haarplan"\)/)
+  assert.match(landing, /resumeToken && !resumeEnabled/)
+  assert.doesNotMatch(landing, /initialReturnDecision\.kind !== "unavailable"/)
   assert.match(
     landing,
     /\/api\/quiz\/personal-plan-draft\/resume\?\$\{PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY\}=/,
@@ -39,16 +41,14 @@ test("completed result return has fixed precedence over explicit and stored draf
   const resultResolveIndex = landing.indexOf("resultReturn = await")
   const resultDecisionIndex = landing.indexOf("const initialReturnDecision =")
   const resultRedirectIndex = landing.indexOf("?entry=quiz_return")
-  const explicitResumeIndex = landing.indexOf(
-    '!resumeEnabled && initialReturnDecision.kind === "resume_token"',
-  )
+  const resumeFallbackIndex = landing.indexOf("resumeToken && !resumeEnabled")
   const draftResolveIndex = landing.indexOf("const landingState = await")
 
   assert.ok(resultResolveIndex >= 0)
   assert.ok(resultDecisionIndex > resultResolveIndex)
   assert.ok(resultRedirectIndex > resultDecisionIndex)
-  assert.ok(explicitResumeIndex > resultRedirectIndex)
-  assert.ok(draftResolveIndex > explicitResumeIndex)
+  assert.ok(resumeFallbackIndex > resultRedirectIndex)
+  assert.ok(draftResolveIndex > resumeFallbackIndex)
 })
 
 test("resume entry preserves the deployed strict cross-origin referrer policy", () => {

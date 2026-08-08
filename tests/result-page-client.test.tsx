@@ -90,6 +90,8 @@ test("result restart waits for a successful reset before clearing browser state 
     localDraftClear < offerSource.indexOf('window.location.replace("/lp/haarplan")'),
     "navigation must follow local cleanup",
   )
+  assert.match(offerSource, /Restricted browser contexts can block access/)
+  assert.doesNotMatch(offerSource, /local result return reset failed/)
   assert.match(offerSource, /Das hat gerade nicht geklappt\. Bitte versuche es noch einmal\./)
   assert.doesNotMatch(offerSource, /fresh=1/)
 })

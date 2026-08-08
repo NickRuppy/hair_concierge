@@ -32,6 +32,11 @@ import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
 import { resolveLegacyResultOfferVariant } from "@/lib/funnel/packages"
+import {
+  isPersonalPlanResultReturnForLead,
+  PERSONAL_PLAN_RESULT_RETURN_COOKIE,
+  resolvePersonalPlanResultReturn,
+} from "@/lib/personal-plan-quiz/result-return"
 
 export const dynamic = "force-dynamic"
 
@@ -166,6 +171,26 @@ async function getAuthenticatedResultAccess(): Promise<{
   return { hasAccess, userId: user.id }
 }
 
+async function hasTrustedPersonalPlanResultReturn(input: {
+  entry: string | null
+  lead: LeadResultRow | null
+}) {
+  if (
+    input.entry !== "quiz_return" ||
+    input.lead?.quiz_kind !== "personal_plan" ||
+    !isPersonalPlanResultReturnEnabled()
+  ) {
+    return false
+  }
+
+  const cookieStore = await cookies()
+  const token = cookieStore.get(PERSONAL_PLAN_RESULT_RETURN_COOKIE)?.value
+  if (!token) return false
+
+  const resolution = await resolvePersonalPlanResultReturn(token)
+  return isPersonalPlanResultReturnForLead(resolution, input.lead.id)
+}
+
 export default async function ResultPage({ params, searchParams }: Props) {
   const [{ leadId }, sp] = await Promise.all([params, searchParams])
   const focus = getQuizResultSearchParamValue(sp.focus)
@@ -175,19 +200,20 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const focusTarget = focus === "unlock-plan" ? "unlock-plan" : focusRoutine ? "pricing" : null
   const personalPlanFocusTarget = resolvePersonalPlanOfferFocusTarget(focus)
   const returnTo = resolveQuizResultRetakeReturnTo(sp.mode, sp.returnTo)
-  const entryContext: OfferEntryContext = focusRoutine
-    ? "routine_return"
-    : entry === "quiz_completion"
-      ? "quiz_completion"
-      : entry === "quiz_return"
-        ? "quiz_return"
-        : entry === "result_email"
-          ? "result_email"
-          : "saved_result"
   const [lead, authenticatedAccess] = await Promise.all([
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
+  const trustedPersonalPlanResultReturn = await hasTrustedPersonalPlanResultReturn({ entry, lead })
+  const entryContext: OfferEntryContext = focusRoutine
+    ? "routine_return"
+    : entry === "quiz_completion"
+      ? "quiz_completion"
+      : trustedPersonalPlanResultReturn
+        ? "quiz_return"
+        : entry === "result_email"
+          ? "result_email"
+          : "saved_result"
   const quizAnswers = lead?.quiz_kind === "legacy" ? parseQuizAnswers(lead.quiz_answers) : null
   const personalPlanOffer =
     lead?.quiz_kind === "personal_plan" ? await getPersonalPlanPublicOfferModel(lead.id) : null

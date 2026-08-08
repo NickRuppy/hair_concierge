@@ -235,9 +235,16 @@ function PersonalPlanQuizRestart({ className = "" }: { className?: string }) {
       })
       if (response.status !== 204) throw new Error("result return reset failed")
 
-      const draftCleared = clearPersonalPlanQuizDraft(window.localStorage)
-      const preparedPlanCleared = clearPersonalPlanPreparedPlanClaim(window.sessionStorage)
-      if (!draftCleared || !preparedPlanCleared) throw new Error("local result return reset failed")
+      try {
+        clearPersonalPlanQuizDraft(window.localStorage)
+      } catch {
+        // Restricted browser contexts can block access to the storage object itself.
+      }
+      try {
+        clearPersonalPlanPreparedPlanClaim(window.sessionStorage)
+      } catch {
+        // The server-side reset succeeded, so local storage cannot block navigation.
+      }
 
       window.location.replace("/lp/haarplan")
     } catch {

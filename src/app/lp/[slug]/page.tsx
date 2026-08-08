@@ -71,30 +71,23 @@ export default async function CampaignLandingPage({
       redirect(`/result/${encodeURIComponent(initialReturnDecision.leadId)}?entry=quiz_return`)
     }
 
-    if (initialReturnDecision.kind !== "unavailable") {
-      if (!resumeEnabled && initialReturnDecision.kind === "resume_token") {
-        redirect("/lp/haarplan")
+    if (resumeToken && !resumeEnabled) {
+      redirect("/lp/haarplan")
+    }
+
+    if (resumeEnabled) {
+      const landingState = await resolvePersonalPlanQuizDraftLandingState({
+        cookieValue: cookieStore.get(PERSONAL_PLAN_QUIZ_DRAFT_COOKIE)?.value,
+        resumeToken,
+      })
+
+      if (landingState.shouldExchange && resumeToken) {
+        redirect(
+          `/api/quiz/personal-plan-draft/resume?${PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY}=${encodeURIComponent(resumeToken)}`,
+        )
       }
 
-      if (resumeEnabled) {
-        const landingState = await resolvePersonalPlanQuizDraftLandingState({
-          cookieValue: cookieStore.get(PERSONAL_PLAN_QUIZ_DRAFT_COOKIE)?.value,
-          resumeToken,
-        })
-        const resumeDecision = resolvePersonalPlanReturnLanding({
-          resultReturn,
-          resumeToken,
-          hasDraft: Boolean(landingState.snapshot),
-        })
-
-        if (resumeDecision.kind === "resume_token" && landingState.shouldExchange && resumeToken) {
-          redirect(
-            `/api/quiz/personal-plan-draft/resume?${PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY}=${encodeURIComponent(resumeToken)}`,
-          )
-        }
-
-        personalPlanQuizResume = { enabled: true, snapshot: landingState.snapshot }
-      }
+      personalPlanQuizResume = { enabled: true, snapshot: landingState.snapshot }
     }
   }
 

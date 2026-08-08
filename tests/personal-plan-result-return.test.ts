@@ -7,6 +7,7 @@ import {
   hashPersonalPlanResultReturnToken,
   issuePersonalPlanResultReturn,
   isConnectionTransportFailure,
+  isPersonalPlanResultReturnForLead,
   isValidPersonalPlanResultReturnToken,
   PERSONAL_PLAN_RESULT_RETURN_COOKIE,
   personalPlanResultReturnCookieOptions,
@@ -86,7 +87,15 @@ test("returned transport errors retry once, then warn without disclosing capabil
   const resolved = await resolvePersonalPlanResultReturn(token, {
     rpc: async () => {
       calls += 1
-      return { data: null, error: { code: "ECONNRESET", message: "connection reset" } }
+      return {
+        data: null,
+        error: {
+          code: "",
+          message: "TypeError: fetch failed",
+          details: "TypeError: fetch failed\n\nCaused by: Error: read ECONNRESET (ECONNRESET)",
+          hint: "",
+        },
+      }
     },
     warn: (message) => warnings.push(message),
   })
@@ -94,6 +103,30 @@ test("returned transport errors retry once, then warn without disclosing capabil
   assert.equal(calls, 2)
   assert.deepEqual(warnings, ["Personal Plan result return lookup unavailable"])
   assert.equal(warnings.join(" ").includes(token), false)
+})
+
+test("a resolved PostgREST transport envelope retries before succeeding", async () => {
+  const token = createPersonalPlanResultReturnCredential().token
+  let calls = 0
+  const resolved = await resolvePersonalPlanResultReturn(token, {
+    rpc: async () => {
+      calls += 1
+      if (calls === 1) {
+        return {
+          data: null,
+          error: {
+            code: "",
+            message: "TypeError: fetch failed",
+            details: "TypeError: fetch failed\n\nCaused by: Error: read ECONNRESET (ECONNRESET)",
+            hint: "",
+          },
+        }
+      }
+      return { data: [{ lead_id: LEAD_ID }], error: null }
+    },
+  })
+  assert.deepEqual(resolved, { leadId: LEAD_ID, status: "resolved" })
+  assert.equal(calls, 2)
 })
 
 test("issue rotates the single lead capability and revoke clears the host-only cookie", async () => {
@@ -177,4 +210,22 @@ test("valid result has fixed precedence over an explicit resume token and an exi
     { kind: "draft" },
   )
   assert.deepEqual(resolvePersonalPlanReturnLanding({}), { kind: "fresh" })
+})
+
+test("return-entry trust requires a resolved capability for the requested lead", () => {
+  assert.equal(
+    isPersonalPlanResultReturnForLead({ leadId: LEAD_ID, status: "resolved" }, LEAD_ID),
+    true,
+  )
+  assert.equal(
+    isPersonalPlanResultReturnForLead(
+      { leadId: LEAD_ID, status: "resolved" },
+      "11111111-1111-4111-8111-111111111111",
+    ),
+    false,
+  )
+  assert.equal(
+    isPersonalPlanResultReturnForLead({ leadId: null, status: "unavailable" }, LEAD_ID),
+    false,
+  )
 })

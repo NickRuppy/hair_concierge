@@ -46,6 +46,13 @@ export type PersonalPlanResultReturnResolution = {
   status: "resolved" | "invalid" | "unavailable"
 }
 
+export function isPersonalPlanResultReturnForLead(
+  resolution: PersonalPlanResultReturnResolution,
+  leadId: string,
+) {
+  return resolution.status === "resolved" && resolution.leadId === leadId
+}
+
 export function createPersonalPlanResultReturnCredential() {
   const { claimToken: token, claimTokenHash: tokenHash } = createPersonalPlanClaimCredential()
   return { token, tokenHash }
@@ -108,8 +115,19 @@ export function isConnectionTransportFailure(error: unknown) {
         ? String(errorRecord.code)
         : ""
   const message = error instanceof Error ? error.message : String(errorRecord?.message ?? "")
+  const details = String(errorRecord?.details ?? "")
+  const isPostgrestTransportEnvelope =
+    !!errorRecord &&
+    !code &&
+    /^(?:TypeError:\s*)?(?:fetch failed|failed to fetch|network error|load failed)/i.test(
+      message,
+    ) &&
+    /(?:fetch failed|failed to fetch|network error|load failed|ECONNRESET|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN)/i.test(
+      `${message}\n${details}`,
+    )
   return (
     /^(ECONNRESET|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN)$/i.test(code) ||
+    isPostgrestTransportEnvelope ||
     ((isTransportTypeError || isFetchError) &&
       /(?:fetch failed|network error|connection (?:reset|refused)|timed out)/i.test(message))
   )
