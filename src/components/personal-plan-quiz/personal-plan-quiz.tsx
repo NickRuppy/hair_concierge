@@ -75,8 +75,10 @@ import {
 import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
 import {
   PERSONAL_PLAN_LOADING_STAGES,
+  PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY,
   PERSONAL_PLAN_QUIZ_SCREEN_IDS,
   appendPersonalPlanQuizHistory,
+  clearPersonalPlanPreparedPlanClaim,
   clearPersonalPlanQuizDraft,
   derivePersonalPlanConflictPrompt,
   derivePersonalPlanProfileSummary,
@@ -131,7 +133,6 @@ import {
 
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
 const AUTO_ADVANCE_MS = 260
-const PREPARED_PLAN_SESSION_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
 const SCREEN_EXIT_MS = 200
 const subscribeToClientReady = () => () => {}
 const getClientReadySnapshot = () => true
@@ -343,7 +344,9 @@ function loadPreparedPlanClaim(
   answers: PersonalPlanQuizAnswers,
 ): PreparedPlanClaim | null {
   try {
-    const value: unknown = JSON.parse(storage.getItem(PREPARED_PLAN_SESSION_KEY) ?? "null")
+    const value: unknown = JSON.parse(
+      storage.getItem(PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY) ?? "null",
+    )
     if (!value || typeof value !== "object" || Array.isArray(value)) return null
     const claim = value as Record<string, unknown>
     if (
@@ -370,17 +373,9 @@ function loadPreparedPlanClaim(
 
 function savePreparedPlanClaim(storage: Storage, claim: PreparedPlanClaim): void {
   try {
-    storage.setItem(PREPARED_PLAN_SESSION_KEY, JSON.stringify(claim))
+    storage.setItem(PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY, JSON.stringify(claim))
   } catch {
     // The active React state remains sufficient for the current tab.
-  }
-}
-
-function clearPreparedPlanClaim(storage: Storage): void {
-  try {
-    storage.removeItem(PREPARED_PLAN_SESSION_KEY)
-  } catch {
-    // Restricted storage must not block the quiz.
   }
 }
 
@@ -2264,7 +2259,7 @@ export function PersonalPlanQuiz({
     setPreparedPlan((current) => {
       if (current.status !== "ready" || current.claim.answersKey === answersKey) return current
       const storage = getBrowserSessionStorage()
-      if (storage) clearPreparedPlanClaim(storage)
+      if (storage) clearPersonalPlanPreparedPlanClaim(storage)
       return { status: "idle", claim: null, error: null }
     })
   }, [answersKey])
@@ -2811,7 +2806,7 @@ export function PersonalPlanQuiz({
           preparedPlan={preparedPlan.claim}
           onPreparedPlanRejected={() => {
             const sessionStorage = getBrowserSessionStorage()
-            if (sessionStorage) clearPreparedPlanClaim(sessionStorage)
+            if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
             setPreparedPlan({ status: "idle", claim: null, error: null })
           }}
           onSaved={(leadId) => {
@@ -2820,7 +2815,7 @@ export function PersonalPlanQuiz({
             const storage = getBrowserDraftStorage()
             if (storage) clearPersonalPlanQuizDraft(storage)
             const sessionStorage = getBrowserSessionStorage()
-            if (sessionStorage) clearPreparedPlanClaim(sessionStorage)
+            if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
             router.push(`/result/${leadId}/reveal`)
           }}
         />

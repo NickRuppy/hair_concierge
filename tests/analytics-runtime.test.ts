@@ -162,6 +162,16 @@ test("PostHog removes sensitive queries and fragments from automatic URL propert
   )
 })
 
+test("PostHog preserves the allowlisted quiz-return result context", () => {
+  assert.equal(
+    sanitizePostHogProperties({
+      $current_url:
+        "https://chaarlie.de/result/lead-123?entry=quiz_return&utm_source=repeat&resume_token=secret",
+    }).$current_url,
+    "https://chaarlie.de/result/lead-123?entry=quiz_return",
+  )
+})
+
 test("PostHog removes sensitive queries from session replay URLs", () => {
   assert.deepEqual(
     sanitizePostHogSessionRecordingRequest({

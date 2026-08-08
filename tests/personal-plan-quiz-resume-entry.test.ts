@@ -8,11 +8,18 @@ function read(path: string) {
 
 test("personal-plan resume entry resolves or exchanges before landing rendering and tracking", () => {
   const landing = read("src/app/lp/[slug]/page.tsx")
+  const resultResolveIndex = landing.indexOf("resultReturn = await")
+  const resultDecisionIndex = landing.indexOf("const initialReturnDecision =")
+  const resultRedirectIndex = landing.indexOf("?entry=quiz_return")
   const resolveIndex = landing.indexOf("const landingState = await")
   const exchangeIndex = landing.indexOf("/api/quiz/personal-plan-draft/resume?")
   const renderIndex = landing.lastIndexOf("renderLandingVariant")
   const trackingIndex = landing.indexOf("<LandingTracking />")
 
+  assert.ok(resultResolveIndex >= 0)
+  assert.ok(resultDecisionIndex > resultResolveIndex)
+  assert.ok(resultRedirectIndex > resultDecisionIndex)
+  assert.ok(resolveIndex > resultRedirectIndex)
   assert.ok(resolveIndex >= 0)
   assert.ok(exchangeIndex > resolveIndex)
   assert.ok(renderIndex > exchangeIndex)
@@ -23,6 +30,25 @@ test("personal-plan resume entry resolves or exchanges before landing rendering 
     /\/api\/quiz\/personal-plan-draft\/resume\?\$\{PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY\}=/,
   )
   assert.doesNotMatch(landing, /returnTo|redirectTo|new URL\(resumeToken/i)
+  assert.match(landing, /export const dynamic = "force-dynamic"/)
+  assert.match(landing, /isPersonalPlanResultReturnEnabled\(\)/)
+})
+
+test("completed result return has fixed precedence over explicit and stored draft resume", () => {
+  const landing = read("src/app/lp/[slug]/page.tsx")
+  const resultResolveIndex = landing.indexOf("resultReturn = await")
+  const resultDecisionIndex = landing.indexOf("const initialReturnDecision =")
+  const resultRedirectIndex = landing.indexOf("?entry=quiz_return")
+  const explicitResumeIndex = landing.indexOf(
+    '!resumeEnabled && initialReturnDecision.kind === "resume_token"',
+  )
+  const draftResolveIndex = landing.indexOf("const landingState = await")
+
+  assert.ok(resultResolveIndex >= 0)
+  assert.ok(resultDecisionIndex > resultResolveIndex)
+  assert.ok(resultRedirectIndex > resultDecisionIndex)
+  assert.ok(explicitResumeIndex > resultRedirectIndex)
+  assert.ok(draftResolveIndex > explicitResumeIndex)
 })
 
 test("resume entry preserves the deployed strict cross-origin referrer policy", () => {

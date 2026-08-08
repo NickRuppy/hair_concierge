@@ -5,6 +5,7 @@ import {
   defaultOneTimeFulfillmentDispatchers,
   handleBillingReconcile,
   maxDuration,
+  runBrowserRecoveryCleanup,
 } from "../src/app/api/billing/reconcile/route"
 import { emptyPaymentIntegrityCounters } from "../src/app/api/billing/payment-monitor/route"
 import type {
@@ -18,6 +19,10 @@ const request = (secret = "secret") =>
     headers: { authorization: `Bearer ${secret}` },
   })
 const now = new Date("2026-08-01T12:00:00.000Z")
+const emptyBrowserRecoveryCleanup = {
+  quizDrafts: { ok: true, purged: 0 },
+  resultReturns: { ok: true, purged: 0 },
+}
 
 function integrityResult(overrides: Partial<PaymentIntegrityResult> = {}): PaymentIntegrityResult {
   return {
@@ -42,12 +47,60 @@ function createDeps(
     analyticsRetryEnabled: false,
     dispatchAnalyticsDue: async () => ({ processed: 0, delivered: 0, failed: 0 }),
     runPaymentIntegrity: async () => integrityResult(),
+    browserRecoveryCleanup: async () => emptyBrowserRecoveryCleanup,
     ...overrides,
   }
 }
 
 test("billing reconcile declares a 60 second maximum duration", () => {
   assert.equal(maxDuration, 60)
+})
+
+test("billing reconcile reports bounded browser recovery cleanup without changing payment health", async () => {
+  const calls: string[] = []
+  const response = await handleBillingReconcile(
+    request(),
+    createDeps({
+      browserRecoveryCleanup: async (limit) => {
+        calls.push(`cleanup:${limit}`)
+        return {
+          quizDrafts: { ok: true, purged: 3 },
+          resultReturns: { ok: false, purged: 0 },
+        }
+      },
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(calls, ["cleanup:500"])
+  assert.deepEqual(response.body.browserRecoveryCleanup, {
+    quizDrafts: { ok: true, purged: 3 },
+    resultReturns: { ok: false, purged: 0 },
+  })
+})
+
+test("browser recovery cleanup calls both purges once with the 500-row bound and isolates errors", async () => {
+  const calls: Array<[string, unknown]> = []
+  const result = await runBrowserRecoveryCleanup(
+    {
+      rpc: async (name: string, args: unknown) => {
+        calls.push([name, args])
+        return name === "purge_expired_personal_plan_quiz_drafts"
+          ? { data: 500, error: null }
+          : { data: null, error: { code: "database_error" } }
+      },
+    } as never,
+    500,
+  )
+
+  assert.deepEqual(calls, [
+    ["purge_expired_personal_plan_quiz_drafts", { p_limit: 500 }],
+    ["purge_expired_personal_plan_result_returns", { p_limit: 500 }],
+  ])
+  assert.deepEqual(result, {
+    quizDrafts: { ok: true, purged: 500 },
+    resultReturns: { ok: false, purged: 0 },
+  })
 })
 
 test("billing reconcile keeps retry disabled by default and still runs integrity first", async () => {
@@ -81,6 +134,7 @@ test("billing reconcile keeps retry disabled by default and still runs integrity
   assert.equal(integrityInput?.now, now)
   assert.equal(integrityInput?.deadlineAt.getTime(), now.getTime() + 20_000)
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
     downgraded: 2,
     paymentIntegrity: {
       status: "completed",
@@ -311,6 +365,7 @@ test("billing reconcile drains all destinations with a limit of ten when enabled
     { destination: "funnel", limit: 10 },
   ])
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
     downgraded: 2,
     paymentIntegrity: {
       status: "completed",
@@ -343,6 +398,7 @@ test("billing reconcile isolates and sanitizes one analytics destination rejecti
   assert.equal(response.status, 500)
   assert.deepEqual(completed.sort(), ["customerio", "funnel", "meta"])
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
     downgraded: 2,
     paymentIntegrity: {
       status: "completed",
@@ -433,6 +489,7 @@ test("billing reconcile isolates entitlement failure from integrity, analytics, 
   assert.equal(oneTimeRetryRuns, 1)
   assert.equal(JSON.stringify(response.body).includes("entitlement secret"), false)
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
     downgraded: 0,
     paymentIntegrity: {
       status: "completed",
@@ -522,6 +579,7 @@ test("billing reconcile isolates integrity failure and marks the daily check-in 
   assert.equal(analyticsRuns, 4)
   assert.equal(JSON.stringify(response.body).includes("provider secret"), false)
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
     downgraded: 3,
     paymentIntegrity: {
       status: "error",

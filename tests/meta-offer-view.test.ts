@@ -97,6 +97,7 @@ test("Meta offer endpoint rejects forged context, unknown keys, and malformed ID
 
   for (const invalid of [
     { ...payload, entryContext: "result_email" },
+    { ...payload, entryContext: "quiz_return" },
     { ...payload, extra: "not-allowed" },
     { ...payload, metaEventId: "not-a-uuid" },
     { ...payload, leadId: "not-a-uuid" },

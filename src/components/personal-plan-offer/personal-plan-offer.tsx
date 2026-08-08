@@ -21,6 +21,10 @@ import {
   offerFooterLinks,
 } from "@/components/landing/footer-links"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
+import {
+  clearPersonalPlanPreparedPlanClaim,
+  clearPersonalPlanQuizDraft,
+} from "@/lib/personal-plan-quiz"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
@@ -213,6 +217,55 @@ function displayProfileLine(profileLine?: string): string {
   }
   const personalized = value.match(/^Basierend auf deiner Analyse für (.+)$/)
   return `${personalized ? `Für ${personalized[1]}` : value}.`
+}
+
+function PersonalPlanQuizRestart({ className = "" }: { className?: string }) {
+  const [status, setStatus] = useState<"idle" | "restarting" | "error">("idle")
+  const inFlight = useRef(false)
+
+  const restart = useCallback(async () => {
+    if (inFlight.current) return
+    inFlight.current = true
+    setStatus("restarting")
+
+    try {
+      const response = await fetch("/api/quiz/personal-plan-result-return/reset", {
+        method: "POST",
+        credentials: "same-origin",
+      })
+      if (response.status !== 204) throw new Error("result return reset failed")
+
+      const draftCleared = clearPersonalPlanQuizDraft(window.localStorage)
+      const preparedPlanCleared = clearPersonalPlanPreparedPlanClaim(window.sessionStorage)
+      if (!draftCleared || !preparedPlanCleared) throw new Error("local result return reset failed")
+
+      window.location.replace("/lp/haarplan")
+    } catch {
+      inFlight.current = false
+      setStatus("error")
+    }
+  }, [])
+
+  return (
+    <div className={className}>
+      <button
+        aria-busy={status === "restarting"}
+        className="text-sm font-semibold underline underline-offset-4 disabled:cursor-wait disabled:opacity-70"
+        disabled={status === "restarting"}
+        onClick={() => void restart()}
+        type="button"
+      >
+        {status === "restarting"
+          ? "Haar-Check wird vorbereitet …"
+          : "Du möchtest deine Angaben ändern? Haar-Check neu starten"}
+      </button>
+      {status === "error" ? (
+        <p aria-live="polite" className="mt-3 text-sm" role="status">
+          Das hat gerade nicht geklappt. Bitte versuche es noch einmal.
+        </p>
+      ) : null}
+    </div>
+  )
 }
 
 function readOneTimeReferencePriceLabel(
@@ -528,6 +581,7 @@ function AnimatedPersonalPlanFaqItem({
 }
 
 export function PersonalPlanOffer({
+  showQuizRestart = false,
   checkoutPresentationFixture,
   entryContext,
   focusTarget = null,
@@ -538,6 +592,7 @@ export function PersonalPlanOffer({
   offerVariant = "personal-plan-v1",
   pricingCatalog,
 }: {
+  showQuizRestart?: boolean
   checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
   entryContext: OfferEntryContext
   focusTarget?: PersonalPlanOfferFocusTarget | null
@@ -949,6 +1004,7 @@ export function PersonalPlanOffer({
             >
               Plan sichern
             </button>
+            {showQuizRestart ? <PersonalPlanQuizRestart className="mt-5" /> : null}
           </div>
         </section>
         <PersonalPlanOfferFooter />
@@ -957,7 +1013,15 @@ export function PersonalPlanOffer({
   )
 }
 
-export function PersonalPlanOfferRecovery({ leadId }: { leadId: string }) {
+export function PersonalPlanOfferRecovery({
+  reloadEntryContext = "quiz_completion",
+  showQuizRestart = false,
+  leadId,
+}: {
+  reloadEntryContext?: OfferEntryContext
+  showQuizRestart?: boolean
+  leadId: string
+}) {
   return (
     <main className="grid min-h-screen place-items-center bg-[#fcfaf7] px-4 text-[var(--brand-plum-darkest)]">
       <section className="max-w-lg rounded-[2rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-7 text-center shadow-[0_22px_54px_-40px_rgba(var(--brand-plum-rgb),0.55)]">
@@ -973,10 +1037,11 @@ export function PersonalPlanOfferRecovery({ leadId }: { leadId: string }) {
         </p>
         <Link
           className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"
-          href={`/result/${leadId}?entry=quiz_completion`}
+          href={`/result/${leadId}?entry=${reloadEntryContext}`}
         >
           Ergebnis erneut laden
         </Link>
+        {showQuizRestart ? <PersonalPlanQuizRestart className="mt-5" /> : null}
       </section>
     </main>
   )

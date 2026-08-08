@@ -26,7 +26,8 @@ import {
   resolveFunnelCookieContext,
   resolvePendingFunnelTouchValue,
 } from "@/lib/funnel/server"
-import { isPersonalPlanQuizV1Enabled } from "@/lib/funnel/flags"
+import { isPersonalPlanQuizV1Enabled, isPersonalPlanResultReturnEnabled } from "@/lib/funnel/flags"
+import { issuePersonalPlanResultReturn } from "@/lib/personal-plan-quiz/result-return"
 
 interface PersonalPlanLeadPostDependencies {
   checkRateLimit: typeof checkRateLimit
@@ -34,6 +35,8 @@ interface PersonalPlanLeadPostDependencies {
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
   createAdminClient: typeof createAdminClient
   cookies: typeof cookies
+  issueResultReturn: typeof issuePersonalPlanResultReturn
+  scheduleAfter: typeof after
 }
 
 export function createPersonalPlanLeadPostHandler(
@@ -45,6 +48,8 @@ export function createPersonalPlanLeadPostHandler(
     recordEmailDeliverabilityOutcome,
     createAdminClient,
     cookies,
+    issueResultReturn: issuePersonalPlanResultReturn,
+    scheduleAfter: after,
     ...overrides,
   }
 
@@ -128,7 +133,7 @@ export function createPersonalPlanLeadPostHandler(
       }
 
       const createdAt = new Date().toISOString()
-      after(async () => {
+      dependencies.scheduleAfter(async () => {
         try {
           const outcome = await dispatchCustomerIoProfileSyncForLead(supabase, leadId)
           if (outcome === "failed") {
@@ -167,6 +172,20 @@ export function createPersonalPlanLeadPostHandler(
             })
         : false
       const response = NextResponse.json({ leadId, attributionAttached })
+      if (isPersonalPlanResultReturnEnabled()) {
+        try {
+          const issued = await dependencies.issueResultReturn({
+            leadId,
+            response,
+            admin: supabase as never,
+          })
+          if (!issued.issued) {
+            console.warn("[personal-plan-result-return] capability issuance unavailable")
+          }
+        } catch {
+          console.warn("[personal-plan-result-return] capability issuance unavailable")
+        }
+      }
       if (attributionAttached && funnelTouch)
         response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
       return response

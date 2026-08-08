@@ -433,6 +433,104 @@ test("personal plan offer opens checkout immediately without a readiness gate", 
   assert.doesNotMatch(offerSource, /Zahlungsoptionen werden vorbereitet …/)
 })
 
+test("personal plan restart is an explicit opt-in after the final CTA only", () => {
+  const enabledHtml = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+      showQuizRestart
+    />,
+  )
+  const disabledHtml = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_completion"
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  assert.match(enabledHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+  assert.ok(
+    enabledHtml.indexOf('data-offer-cta="final"') <
+      enabledHtml.indexOf("Du möchtest deine Angaben ändern? Haar-Check neu starten"),
+  )
+  assert.doesNotMatch(disabledHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+})
+
+test("personal plan restart stays out of paid, legacy, and default recovery result paths", () => {
+  const paidHtml = renderToStaticMarkup(
+    <ResultPageClient
+      showQuizRestart
+      focusRoutine={false}
+      hasAccess
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      personalPlanOffer={publicOfferModel}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+  const legacyHtml = renderToStaticMarkup(
+    <ResultPageClient
+      showQuizRestart
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      quizAnswers={null}
+    />,
+  )
+
+  assert.doesNotMatch(paidHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+  assert.doesNotMatch(legacyHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+})
+
+test("personal plan recovery exposes restart only when the server explicitly allows it", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      showQuizRestart
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      personalPlanOffer={null}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  assert.match(html, /Dein Ergebnis ist noch nicht vollständig bereit\./)
+  assert.match(html, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+})
+
+test("personal plan return recovery reloads with its return entry context", () => {
+  const html = renderToStaticMarkup(
+    <ResultPageClient
+      entryContext="quiz_return"
+      focusRoutine={false}
+      hasAccess={false}
+      leadId="11111111-1111-4111-8111-111111111111"
+      name="Lea"
+      personalPlanOffer={null}
+      quizAnswers={null}
+      quizKind="personal_plan"
+    />,
+  )
+
+  assert.match(html, /href="\/result\/11111111-1111-4111-8111-111111111111\?entry=quiz_return"/)
+})
+
 test("personal plan analytics use their own revision label", () => {
   const offerSource = readFileSync(
     new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),

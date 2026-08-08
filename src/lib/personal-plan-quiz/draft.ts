@@ -8,6 +8,7 @@ import {
 } from "./types"
 
 export const PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY = "chaarlie:personal-plan-quiz-draft:v4"
+export const PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY = "chaarlie:personal-plan-quiz-prepared:v1"
 const DRAFT_VERSION = 4
 
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">
@@ -228,10 +229,22 @@ export function loadPersonalPlanQuizDraft(storage: StorageLike): PersonalPlanQui
   }
 }
 
-export function clearPersonalPlanQuizDraft(storage: StorageLike): void {
+export function clearPersonalPlanQuizDraft(storage: StorageLike): boolean {
   try {
     storage.removeItem(PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY)
+    return true
   } catch {
     // Storage can be unavailable in private or restricted browser contexts.
+    return false
+  }
+}
+
+export function clearPersonalPlanPreparedPlanClaim(storage: StorageLike): boolean {
+  try {
+    storage.removeItem(PERSONAL_PLAN_PREPARED_PLAN_STORAGE_KEY)
+    return true
+  } catch {
+    // Storage can be unavailable in private or restricted browser contexts.
+    return false
   }
 }

@@ -23,7 +23,11 @@ import {
   resolveFunnelContextForLead,
   resolvePersonalPlanPricingExperiment,
 } from "@/lib/funnel/server"
-import { isFunnelAttributionEnabled, isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
+import {
+  isFunnelAttributionEnabled,
+  isPersonalPlanLaunchPricingEnabled,
+  isPersonalPlanResultReturnEnabled,
+} from "@/lib/funnel/flags"
 import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
@@ -114,6 +118,15 @@ async function recordLeadOfferView(
   }
 }
 
+function buildReturnOfferTracking(context: FunnelCookieContext | null) {
+  if (!isFunnelAttributionEnabled() || !context) return null
+  return {
+    funnelEventId: null,
+    funnelSessionId: context.sessionId,
+    funnelPackageKey: context.packageKey,
+  }
+}
+
 function parseQuizAnswers(raw: unknown): QuizAnswers | null {
   const normalized = normalizeStoredQuizAnswers((raw as Record<string, unknown> | null) ?? null)
   const parsed = storedQuizAnswersSchema.safeParse(normalized)
@@ -166,9 +179,11 @@ export default async function ResultPage({ params, searchParams }: Props) {
     ? "routine_return"
     : entry === "quiz_completion"
       ? "quiz_completion"
-      : entry === "result_email"
-        ? "result_email"
-        : "saved_result"
+      : entry === "quiz_return"
+        ? "quiz_return"
+        : entry === "result_email"
+          ? "result_email"
+          : "saved_result"
   const [lead, authenticatedAccess] = await Promise.all([
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
@@ -230,7 +245,9 @@ export default async function ResultPage({ params, searchParams }: Props) {
         : resolveLegacyResultOfferVariant(funnelContext)
   const offerTracking = hasAccess
     ? null
-    : await recordLeadOfferView(leadId, funnelContext, offerVariant)
+    : entryContext === "quiz_return"
+      ? buildReturnOfferTracking(funnelContext)
+      : await recordLeadOfferView(leadId, funnelContext, offerVariant)
   const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (
@@ -250,6 +267,9 @@ export default async function ResultPage({ params, searchParams }: Props) {
       offerTracking={offerTracking}
       offerVariant={offerVariant}
       pricingCatalog={pricingCatalog}
+      showQuizRestart={
+        lead.quiz_kind === "personal_plan" && !hasAccess && isPersonalPlanResultReturnEnabled()
+      }
     />
   )
 }

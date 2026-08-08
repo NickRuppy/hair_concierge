@@ -67,6 +67,12 @@ type ReconcileDeps = {
   reportPaidAccessFinding?: (finding: PaidAccessMonitorFinding) => unknown
   reportPaidAccessMonitorFailure?: (failure: PaidAccessMonitorFailure) => unknown
   clock?: () => number
+  browserRecoveryCleanup?: (limit: number) => Promise<BrowserRecoveryCleanupResult>
+}
+
+type BrowserRecoveryCleanupResult = {
+  quizDrafts: { ok: boolean; purged: number }
+  resultReturns: { ok: boolean; purged: number }
 }
 
 type PaymentIntegrityRuntimeModule = {
@@ -165,13 +171,24 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
         now,
       })
     : Promise.resolve({ ok: true, summary: undefined })
-  const [integrityBranch, paidAccessBranch, entitlementBranch, analyticsBranch] = await Promise.all(
-    [integrity, paidAccess, entitlement, analytics],
-  )
+  const browserRecoveryCleanup = (
+    deps.browserRecoveryCleanup ?? ((limit) => runBrowserRecoveryCleanup(deps.supabase, limit))
+  )(500).catch(() => ({
+    quizDrafts: { ok: false, purged: 0 },
+    resultReturns: { ok: false, purged: 0 },
+  }))
+  const [
+    integrityBranch,
+    paidAccessBranch,
+    entitlementBranch,
+    analyticsBranch,
+    browserRecoveryCleanupResult,
+  ] = await Promise.all([integrity, paidAccess, entitlement, analytics, browserRecoveryCleanup])
 
   const body: Record<string, unknown> = {
     ...entitlementBranch.result,
     paymentIntegrity: integrityBranch.summary,
+    browserRecoveryCleanup: browserRecoveryCleanupResult,
   }
   if (paidAccessBranch.summary) body.paidAccess = paidAccessBranch.summary
 
@@ -193,6 +210,27 @@ export async function handleBillingReconcile(request: Request, deps: ReconcileDe
       : 500
 
   return { status, body }
+}
+
+export async function runBrowserRecoveryCleanup(
+  supabase: SupabaseClient,
+  limit: number,
+): Promise<BrowserRecoveryCleanupResult> {
+  const purge = async (rpcName: string) => {
+    try {
+      const { data, error } = await supabase.rpc(rpcName, { p_limit: limit })
+      if (error) throw error
+      return { ok: true, purged: typeof data === "number" ? data : 0 }
+    } catch {
+      return { ok: false, purged: 0 }
+    }
+  }
+
+  const [quizDrafts, resultReturns] = await Promise.all([
+    purge("purge_expired_personal_plan_quiz_drafts"),
+    purge("purge_expired_personal_plan_result_returns"),
+  ])
+  return { quizDrafts, resultReturns }
 }
 
 async function runEntitlementBranch(deps: ReconcileDeps, now: Date) {

@@ -96,6 +96,18 @@ test("Customer.io offer engagement rejects missing analytics consent", () => {
   )
 })
 
+test("Customer.io offer engagement accepts a same-device quiz return context", () => {
+  const parsed = customerIoOfferEngagementSchema.parse({
+    ...eventPayload(),
+    analyticsConsent: true,
+    entryContext: "quiz_return",
+    funnelEventId: null,
+  })
+
+  assert.equal(parsed.entryContext, "quiz_return")
+  assert.equal(parsed.funnelEventId, null)
+})
+
 test("personal-plan offer engagement accepts its v2 before/after section without a legacy need lane", async () => {
   const deliveries: unknown[] = []
   const dependencies: OfferEngagementRouteDependencies = {
