@@ -55,6 +55,8 @@ cp "$repository_root/supabase/tests/personal_plan_stage4_routine.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage4_routine.sql"
 cp "$repository_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql"
+cp "$repository_root/supabase/tests/personal_plan_stage5_application.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage5_application.sql"
 
 supabase=(npm exec -- supabase --workdir "$test_project_root")
 started_by_this_script=false
@@ -88,4 +90,5 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/personal_plan_stage1_3_foundation.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage4_routine.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage5_application.sql" \
   --local

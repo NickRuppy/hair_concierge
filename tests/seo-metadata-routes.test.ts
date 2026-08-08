@@ -129,6 +129,8 @@ test("classifies every current protected page and API route", () => {
     "/admin/users",
     "/chat",
     "/chat/example",
+    "/anwendung",
+    "/anwendung/wash_day",
     "/onboarding",
     "/plan-bereit",
     "/profile",

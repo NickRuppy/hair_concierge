@@ -20,7 +20,7 @@ import {
 
 export function Header() {
   const { profile, signOut } = useAuth()
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ""
   const [menuOpen, setMenuOpen] = useState(false)
   const hasPendingRoutineProposal = useRoutineAttention(
     !pathname.startsWith("/auth") && !pathname.startsWith("/quiz"),

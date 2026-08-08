@@ -59,6 +59,7 @@ const PUBLIC_API_EXACT_ROUTES = [
 
 const PROTECTED_ROUTE_PREFIXES = [
   "/admin",
+  "/anwendung",
   "/chat",
   "/onboarding",
   "/plan-bereit",

@@ -18,7 +18,9 @@ test("header exposes Routine navigation on desktop and mobile", () => {
   assert.equal((source.match(/>\s*Routine\s*</g) ?? []).length, 2)
 })
 
-test("middleware app-route helper matches chat, routine, and tracker paths by route segment", () => {
+test("middleware app-route helper matches Anwendung, chat, routine, and tracker by route segment", () => {
+  assert.equal(isAuthenticatedAppRoutePath("/anwendung"), true)
+  assert.equal(isAuthenticatedAppRoutePath("/anwendung/wash_day"), true)
   assert.equal(isAuthenticatedAppRoutePath("/chat"), true)
   assert.equal(isAuthenticatedAppRoutePath("/chat/history"), true)
   assert.equal(isAuthenticatedAppRoutePath("/routine"), true)
@@ -27,6 +29,7 @@ test("middleware app-route helper matches chat, routine, and tracker paths by ro
   assert.equal(isAuthenticatedAppRoutePath("/tracker/history"), true)
 
   assert.equal(isAuthenticatedAppRoutePath("/routine-ish"), false)
+  assert.equal(isAuthenticatedAppRoutePath("/anwendung-ish"), false)
   assert.equal(isAuthenticatedAppRoutePath("/tracker-ish"), false)
   assert.equal(isAuthenticatedAppRoutePath("/api/chat"), false)
   assert.equal(isAuthenticatedAppRoutePath("/api/routine"), false)
@@ -34,7 +37,9 @@ test("middleware app-route helper matches chat, routine, and tracker paths by ro
   assert.equal(isAuthenticatedAppRoutePath("/plan-start/produkte"), false)
 })
 
-test("middleware subscription helper matches chat, profile, routine, tracker, memory, and their API paths", () => {
+test("middleware subscription helper requires access for Anwendung and existing app paths", () => {
+  assert.equal(requiresSubscriptionPath("/anwendung"), true)
+  assert.equal(requiresSubscriptionPath("/anwendung/wash_day"), true)
   assert.equal(requiresSubscriptionPath("/chat"), true)
   assert.equal(requiresSubscriptionPath("/api/chat"), true)
   assert.equal(requiresSubscriptionPath("/api/chat/messages"), true)
@@ -58,6 +63,7 @@ test("middleware subscription helper matches chat, profile, routine, tracker, me
   assert.equal(requiresSubscriptionPath("/api/personal-plan/stage-3/complete"), true)
 
   assert.equal(requiresSubscriptionPath("/routine-ish"), false)
+  assert.equal(requiresSubscriptionPath("/anwendung-ish"), false)
   assert.equal(requiresSubscriptionPath("/api/routine-ish"), false)
   assert.equal(requiresSubscriptionPath("/tracker-ish"), false)
   assert.equal(requiresSubscriptionPath("/api/tracker-ish"), false)

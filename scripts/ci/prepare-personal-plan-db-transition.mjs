@@ -14,6 +14,7 @@ const requiredPersonalPlanMigrations = [
   "20260808062602_personal_plan_stage1_3_foundation.sql",
   "20260808062603_personal_plan_routine_backend.sql",
   "20260808062620_personal_plan_product_intake_user_products.sql",
+  "20260808062747_personal_plan_application_guidance.sql",
   "20260808065528_personal_plan_category_readiness.sql",
   "20260808070000_personal_plan_routine_successor_lifecycle.sql",
   "20260808071000_personal_plan_routine_source_reconciliation.sql",

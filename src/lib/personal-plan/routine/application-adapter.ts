@@ -1,0 +1,232 @@
+import "server-only"
+
+import type { RoutinePayloadV1 } from "./contracts"
+import { adaptCatalogApplicationFacts } from "@/lib/routines/personal-plan/application/catalog-facts"
+import type {
+  NormalizedProfile,
+  NormalizedRoutineItem,
+} from "@/lib/routines/personal-plan/application/contracts"
+
+const semanticRoleByRoutineRole = {
+  shampoo_everyday: "cleanse",
+  shampoo_dandruff: "cleanse",
+  conditioner_rinse_out: "condition",
+  post_wash_leave_in: "leave_in",
+  pre_heat_application: "heat_protection",
+  intensive_conditioning_mask: "intensive_care",
+  pre_wash_fibre_treatment: "bond_repair",
+  leave_on_fibre_conditioning: "leave_in",
+  dry_finish: "finish",
+  residue_reset: "reset_cleanse",
+  mineral_reset: "reset_cleanse",
+  root_refresh_bridge: "refresh",
+  pre_heat_protection: "heat_protection",
+  specialized_bond_treatment: "bond_repair",
+  scalp_comfort: "scalp_care",
+  scalp_flake_oil_adjunct: "scalp_care",
+  density_claim_tonic: "scalp_care",
+  scalp_exfoliant: "scalp_care",
+} as const
+
+type ProductRow = {
+  id: string
+  category: string | null
+  category_key: string | null
+  is_active: boolean
+  lifecycle_status: string
+  product_leave_in_specs?: unknown[] | object
+  product_bondbuilder_specs?: unknown[] | object
+  product_mask_specs?: unknown[] | object
+  product_oil_specs?: unknown[] | object
+  product_heat_protectant_specs?: unknown[] | object
+  product_scalp_care_specs?: unknown[] | object
+  product_dry_shampoo_specs?: unknown[] | object
+}
+type Query = {
+  select(columns: string): Query
+  eq(column: string, value: string | boolean): Query
+  in(column: string, values: string[]): Promise<{ data: ProductRow[] | null; error: unknown }>
+  maybeSingle(): Promise<{ data: unknown; error: unknown }>
+}
+export type ApplicationRoutineReadClient = { from(table: string): Query }
+const PRODUCT_SELECT =
+  "id,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
+const first = <T>(value: unknown): T | null =>
+  Array.isArray(value)
+    ? value.length === 1
+      ? (value[0] as T)
+      : null
+    : value && typeof value === "object"
+      ? (value as T)
+      : null
+const provenance = (facts: Record<string, unknown>) =>
+  Object.fromEntries(Object.keys(facts).map((key) => [key, "catalog_spec" as const]))
+
+function factsFor(category: string, row: ProductRow) {
+  if (category === "leave_in") {
+    const spec = first<{
+      format: "spray" | "milk" | "lotion" | "cream" | "serum"
+      roles: string[]
+      provides_heat_protection: boolean
+      heat_protection_max_c: number | null
+      heat_activation_required: boolean
+      application_stage: string[]
+    }>(row.product_leave_in_specs)
+    return spec
+      ? adaptCatalogApplicationFacts({ category: "leave_in", spec })
+      : { facts: {}, provenance: {} }
+  }
+  if (category === "bondbuilder") {
+    const spec = first<{
+      application_mode: "pre_shampoo" | "post_wash_leave_in"
+      treatment_mode: "rinse_out" | "leave_in"
+      product_format: "cream_treatment" | "primer_treatment" | "leave_in_mask" | "spray_treatment"
+      usage_protocol:
+        | "olaplex_3plus"
+        | "olaplex_0_booster"
+        | "olaplex_3_legacy"
+        | "k18_leave_in"
+        | "epres_spray"
+    }>(row.product_bondbuilder_specs)
+    return spec
+      ? adaptCatalogApplicationFacts({ category: "bondbuilder", spec })
+      : { facts: {}, provenance: {} }
+  }
+  if (category === "dry_shampoo") {
+    const spec = first<{ format: "aerosol_spray" | "powder" | "foam_or_liquid" }>(
+      row.product_dry_shampoo_specs,
+    )
+    return spec
+      ? adaptCatalogApplicationFacts({ category: "dry_shampoo", spec })
+      : { facts: {}, provenance: {} }
+  }
+  const spec =
+    category === "mask"
+      ? first<Record<string, unknown>>(row.product_mask_specs)
+      : category === "oil"
+        ? first<Record<string, unknown>>(row.product_oil_specs)
+        : category === "heat_protectant"
+          ? first<Record<string, unknown>>(row.product_heat_protectant_specs)
+          : category === "scalp_care"
+            ? first<Record<string, unknown>>(row.product_scalp_care_specs)
+            : null
+  return spec ? { facts: spec, provenance: provenance(spec) } : { facts: {}, provenance: {} }
+}
+
+/** Owner-scoped active Routine in, verified catalog identities out. Exactly one products query. */
+export async function adaptAcceptedActiveRoutineForApplication(input: {
+  client: ApplicationRoutineReadClient
+  activeVersion: { id: string; payload: RoutinePayloadV1 }
+}): Promise<{ routineVersionId: string; planId: string; routineItems: NormalizedRoutineItem[] }> {
+  const candidates = input.activeVersion.payload.items.filter(
+    (item) =>
+      item.state.inclusion === "included" &&
+      item.state.availability === "owned" &&
+      item.executable &&
+      item.product.kind === "owned",
+  )
+  const productIds = [
+    ...new Set(
+      candidates.map((item) => (item.product.kind === "owned" ? item.product.productId : "")),
+    ),
+  ]
+  if (!productIds.length)
+    return {
+      routineVersionId: input.activeVersion.id,
+      planId: input.activeVersion.payload.planId,
+      routineItems: [],
+    }
+  const { data, error } = await input.client
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .in("id", productIds)
+  if (error) throw error
+  const products = new Map((data ?? []).map((row) => [row.id, row]))
+  const routineItems = candidates.map((item) => {
+    if (item.product.kind !== "owned") throw new Error("accepted_routine_product_not_owned")
+    const product = products.get(item.product.productId)
+    const category = product?.category_key ?? product?.category
+    if (
+      !product ||
+      !product.is_active ||
+      product.lifecycle_status !== "active" ||
+      category !== item.category
+    ) {
+      throw new Error("accepted_routine_product_unavailable")
+    }
+    const adapted = factsFor(category, product)
+    return {
+      itemId: item.itemKey,
+      productId: product.id,
+      productName: item.product.displayName,
+      category: item.category,
+      role: semanticRoleByRoutineRole[item.role],
+      sourceRoutineRole: item.role,
+      inclusion: "included" as const,
+      availability: "owned" as const,
+      executable: true as const,
+      applicationInstanceKey: item.assignmentKey,
+      catalogFacts: adapted.facts,
+      catalogFactProvenance: adapted.provenance,
+    }
+  })
+  return {
+    routineVersionId: input.activeVersion.id,
+    planId: input.activeVersion.payload.planId,
+    routineItems,
+  }
+}
+
+export async function loadImmutableRoutineProfile(input: {
+  client: ApplicationRoutineReadClient
+  userId: string
+  planId: string
+  refinedVersionId: string
+}): Promise<NormalizedProfile> {
+  const { data, error } = await input.client
+    .from("personal_plan_need_versions")
+    .select("output_snapshot")
+    .eq("id", input.refinedVersionId)
+    .eq("user_id", input.userId)
+    .eq("personal_plan_id", input.planId)
+    .eq("kind", "refined")
+    .maybeSingle()
+  if (error || !data || typeof data !== "object") throw error ?? new Error("refined_need_not_found")
+  const snapshot = (data as { output_snapshot?: unknown }).output_snapshot
+  const profile =
+    snapshot && typeof snapshot === "object" && "profile" in snapshot
+      ? (snapshot as { profile?: { hair?: unknown } }).profile
+      : undefined
+  const hair = profile?.hair
+  if (!hair || typeof hair !== "object") return {}
+  const source = hair as Record<string, unknown>
+  const events =
+    snapshot && typeof snapshot === "object" && "assessments" in snapshot
+      ? (snapshot as { assessments?: { heatExposure?: { events?: unknown } } }).assessments
+          ?.heatExposure?.events
+      : undefined
+  const routes = Array.isArray(events)
+    ? events
+        .map((event) =>
+          event && typeof event === "object" ? (event as { route?: unknown }).route : undefined,
+        )
+        .filter((route): route is string => typeof route === "string")
+    : []
+  const dryingRoute = routes.includes("direct_contact_heat")
+    ? "heat_tool"
+    : routes.includes("airflow_shaping")
+      ? "blow_dry"
+      : undefined
+  return {
+    length: ["short", "medium", "long"].includes(String(source.length))
+      ? (source.length as NormalizedProfile["length"])
+      : undefined,
+    density: ["low", "medium", "high"].includes(String(source.density))
+      ? (source.density as NormalizedProfile["density"])
+      : undefined,
+    thickness: ["fine", "normal", "coarse"].includes(String(source.thickness))
+      ? (source.thickness as NormalizedProfile["thickness"])
+      : undefined,
+    dryingRoute,
+  }
+}

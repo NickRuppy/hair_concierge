@@ -12,8 +12,9 @@ import {
   type RouteEnvironment,
 } from "@/lib/auth/route-classification"
 
-const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/chat", "/routine", "/tracker"]
+const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/tracker"]
 const SUB_REQUIRED_PREFIXES = [
+  "/anwendung",
   "/onboarding",
   "/chat",
   "/api/chat",
