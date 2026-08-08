@@ -105,6 +105,7 @@
     <button data-view="expanded">E · aufgeklappt</button>
     <button data-view="error">F · Fehler</button>
     <button data-view="transition">G · Übergang</button>
+    <button data-view="unavailable">H · Nicht verfügbar</button>
   </nav>
   <div class="review-note">Die Karten übernehmen die visuelle Sprache der live Routine und zeigen den aktuell besten konkreten Produkttreffer für das Beispielprofil. Basis oder Optional beschreibt den Bedarf; „pausiert“ ist nur ein zusätzlicher Anwendungsstatus. Produktvergleich, eigene Produkte und Tausch-Aktionen folgen in Stage 2.</div>
 
@@ -222,6 +223,13 @@
     </main></div></div>
     <p class="statecaption"><b>F · Fehler:</b> Auch bei einem Ladefehler bleibt die Reihenfolge unverändert: zuerst wird der bereits bezahlte Bedarfsplan wiederhergestellt. Zusätzliche Fragen beginnen erst nach A/B und dem Übergang.</p>
   </div>
+
+  <div class="frame" id="unavailable">
+    <div class="phone"><div class="screen"><header class="apphead"><span class="mark"><i></i><i></i><i></i></span><span class="wordmark">chaarlie</span><span class="stage">Dein Plan</span></header><main>
+      <div class="overline">Dein persönlicher Plan</div><h2>Dieser Planbereich ist gerade nicht verfügbar</h2><p class="lead">Deine bisherigen Angaben bleiben gespeichert.</p><div class="error-icon">i</div><p style="text-align:center;color:#625d58;margin:0 auto 18px;max-width:270px">Du musst nichts erneut ausfüllen. Du kannst zu deinem Profil zurückkehren oder uns kontaktieren.</p><button class="nav-button primary" style="display:block;width:100%">Zum Profil</button><button class="nav-button secondary" style="display:block;width:100%;margin-top:4px">Support kontaktieren</button>
+    </main></div></div>
+    <p class="statecaption"><b>H · Nicht verfügbar:</b> Bei deaktiviertem Rollout oder nicht passendem Konto bleibt die Person auf der Personal-Plan-Oberfläche. Es gibt keinen Umweg über Chat, altes Onboarding oder Quiz.</p>
+  </div>
 </div>
 <script>
   function setView(id) {
@@ -235,6 +243,8 @@
     const card = button.closest('.plan-card'); const open = !card.classList.contains('open');
     card.classList.toggle('open', open); button.setAttribute('aria-expanded', String(open));
   }));
+  const requestedView = new URLSearchParams(window.location.search).get('view');
+  if (requestedView && document.getElementById(requestedView)) setView(requestedView);
 </script>
 </body>
 </html>

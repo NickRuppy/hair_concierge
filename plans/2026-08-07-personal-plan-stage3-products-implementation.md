@@ -2,6 +2,8 @@
 
 **Status:** standalone Milestone A implemented and verified; the development-only Stage 1 → 2 → 3 integration slice is implemented locally against the real refined Stage-1 recomputation and remains fixture/in-memory-backed; production persistence, catalog mutation, customer-route activation, and Stage-4 activation remain deferred
 
+**Production-persistence authority:** `plans/2026-08-07-personal-plan-stage1-3-production-foundation.md` supersedes this plan's Milestone-B table name and broad production-integration bullets. This plan remains authoritative for Stage-3 domain contracts, state machine, portfolio semantics, signed-off UI and user journey; the foundation plan must extract a neutral gateway without changing those behaviors.
+
 **Outcome:** turn the immutable Stage-2 refined need plan into an exact, explainable product portfolio by first identifying what the customer owns and how they use it, then resolving each relevant category as keep, informed override, planned replacement, pending review, or honest gap; hand the resulting proposal directly to Stage 4 without silently activating or changing a routine
 
 **Product authority:** the ten category decisions under `docs/personal-plan/categories/*/decision.md` in the active Stage-1 implementation worktree, including its currently uncommitted Heat Protectant decision, with the approved five-stage journey as the cross-stage authority. Those documents use their own category-local three-stage vocabulary (`Bedarf → Produkte → Anwendung`); in this cross-journey plan, their category-local Product Stage maps to journey Stage 3 and their Application Stage maps to journey Stages 4–5.

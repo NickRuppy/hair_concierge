@@ -145,6 +145,8 @@ const CATEGORY_SPEC_KEYS = {
   dry_shampoo: ["product_dry_shampoo_specs"],
   deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
   bondbuilder: ["product_bondbuilder_specs", "product_relationships"],
+  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
+  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
 } as const
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
@@ -162,12 +164,15 @@ const REQUIRED_CATEGORY_SPEC_KEYS = {
   dry_shampoo: ["product_dry_shampoo_specs"],
   deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
   bondbuilder: ["product_bondbuilder_specs"],
+  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
+  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
 } as const
 const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_shampoo_specs",
   "product_conditioner_specs",
   "product_leave_in_eligibility",
   "product_oil_eligibility",
+  "product_application_protocols",
 ])
 
 type CategoryContractKey = keyof typeof CATEGORY_SPEC_KEYS
@@ -1003,6 +1008,8 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
   if (categoryKey === "dry_shampoo") return dryShampooApprovalContract()
   if (categoryKey === "deep_cleansing_shampoo") return deepCleansingShampooApprovalContract()
   if (categoryKey === "bondbuilder") return bondbuilderApprovalContract()
+  if (categoryKey === "heat_protectant") return heatProtectantApprovalContract()
+  if (categoryKey === "scalp_care") return scalpCareApprovalContract()
 
   return {
     category_key: "leave_in",
@@ -1105,6 +1112,60 @@ function bondbuilderApprovalContract(): JsonRecord {
       usage_protocol: [...PRODUCT_BOND_USAGE_PROTOCOLS],
     },
     product_relationships: "optional; emit only when needed by the approval payload",
+  }
+}
+
+function heatProtectantApprovalContract(): JsonRecord {
+  return {
+    category_key: "heat_protectant",
+    instruction:
+      "Research only explicit finished-product heat-protection evidence and exact manufacturer application instructions. Do not infer heat protection from a name, format, ingredient, or adjacent care claim.",
+    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.heat_protectant],
+    product_heat_protectant_specs: {
+      format: ["spray"],
+      provides_heat_protection:
+        "true, false, or null when the finished-product evidence is unresolved",
+    },
+    product_application_protocols: {
+      category: ["heat_protectant"],
+      role: ["pre_heat_protection"],
+      required_fields: ["application_state", "reapplication"],
+      application_state: ["damp", "dry", "either"],
+      reapplication: ["required", "optional", "not_stated"],
+    },
+  }
+}
+
+function scalpCareApprovalContract(): JsonRecord {
+  return {
+    category_key: "scalp_care",
+    instruction:
+      "Research only cosmetic scalp-care product facts and exact manufacturer instructions. Preserve medical boundaries: do not turn flake, oil, density, shedding, or comfort claims into diagnosis or treatment claims.",
+    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.scalp_care],
+    product_scalp_care_specs: {
+      primary_role: [
+        "scalp_comfort",
+        "scalp_flake_oil_adjunct",
+        "density_claim_tonic",
+        "scalp_exfoliant",
+      ],
+      presentation_format: [
+        "serum",
+        "tonic",
+        "lotion_or_fluid",
+        "oil",
+        "scrub",
+        "other",
+        "unknown",
+      ],
+      rinse_mode: ["leave_on", "rinse_off"],
+      application_instructions: "exact reviewed manufacturer instruction text",
+    },
+    product_application_protocols: {
+      category: ["scalp_care"],
+      role: ["scalp_comfort", "scalp_flake_oil_adjunct", "density_claim_tonic", "scalp_exfoliant"],
+      note: "The protocol role must equal product_scalp_care_specs.primary_role.",
+    },
   }
 }
 
@@ -1613,6 +1674,12 @@ function normalizeCategoryKey(category: string | null | undefined): CategoryCont
     case "bondbuilder":
     case "bond_builder":
       return "bondbuilder"
+    case "heat_protectant":
+    case "hitzeschutz":
+      return "heat_protectant"
+    case "scalp_care":
+    case "kopfhautpflege":
+      return "scalp_care"
     default:
       return null
   }

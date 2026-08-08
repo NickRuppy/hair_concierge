@@ -105,6 +105,7 @@ jobs:
       retrieval_eval: ${{ steps.changes.outputs.retrieval_eval }}
       playwright_smoke: ${{ steps.changes.outputs.playwright_smoke }}
       security_scan: ${{ steps.changes.outputs.security_scan }}
+      personal_plan_db: ${{ steps.changes.outputs.personal_plan_db }}
       full_ci: ${{ steps.changes.outputs.full_ci }}
     steps:
       - uses: actions/checkout@v6
@@ -142,6 +143,26 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run deterministic contract tests
         run: npm run test:contracts
+
+  personal-plan-db-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.personal_plan_db != 'true'
+        run: echo "No Personal Plan persistence, Product Intake contract, migration, or Supabase test paths changed."
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: npm ci
+      - name: Run local Personal Plan database contracts
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: time npm run test:personal-plan-db
 
   playwright-smoke:
     runs-on: ubuntu-latest

@@ -20,6 +20,8 @@ const SUB_REQUIRED_PREFIXES = [
   "/api/product-intake",
   "/profile",
   "/api/profile",
+  "/plan-start",
+  "/api/personal-plan",
   "/api/memory",
   "/routine",
   "/api/routine",
@@ -83,8 +85,10 @@ export async function updateSession(request: NextRequest) {
     ciOfferPageLabEnabled:
       process.env.CI === "true" && process.env.CI_OFFER_PAGE_LAB_ENABLED === "true",
     ciPersonalPlanStage3LabEnabled:
+      process.env.CI === "true" && process.env.CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED === "true",
+    ciPersonalPlanProductionJourneyEnabled:
       process.env.CI === "true" &&
-      process.env.CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED === "true",
+      process.env.CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED === "true",
     nodeEnv: process.env.NODE_ENV,
     localDevLoginEnabled: process.env.LOCAL_DEV_LOGIN_ENABLED === "1",
     vercelEnv: process.env.VERCEL_ENV,

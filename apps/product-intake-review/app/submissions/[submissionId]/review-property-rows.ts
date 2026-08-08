@@ -17,6 +17,9 @@ const SPEC_TABLE_ORDER = [
   "product_dry_shampoo_specs",
   "product_deep_cleansing_shampoo_specs",
   "product_bondbuilder_specs",
+  "product_heat_protectant_specs",
+  "product_scalp_care_specs",
+  "product_application_protocols",
 ] as const
 
 const SPEC_TABLE_COLUMNS: Record<(typeof SPEC_TABLE_ORDER)[number], string[]> = {
@@ -62,6 +65,28 @@ const SPEC_TABLE_COLUMNS: Record<(typeof SPEC_TABLE_ORDER)[number], string[]> = 
     "treatment_mode",
     "product_format",
     "usage_protocol",
+  ],
+  product_heat_protectant_specs: ["format", "provides_heat_protection"],
+  product_scalp_care_specs: [
+    "primary_role",
+    "presentation_format",
+    "rinse_mode",
+    "application_instructions",
+  ],
+  product_application_protocols: [
+    "category",
+    "role",
+    "cadence",
+    "application_stage",
+    "application_state",
+    "placement",
+    "contact_time_seconds",
+    "rinse_action",
+    "reapplication",
+    "instruction_modifiers",
+    "source_label",
+    "source_url",
+    "source_text",
   ],
 }
 

@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  CATEGORY_AUTHORITY_STUBS,
+  CATEGORY_ROLE_POLICIES,
   addCapturedProduct,
   assignProductRoles,
   completeCaptureCategory,
@@ -20,34 +20,39 @@ const now = "2026-08-07T10:00:00.000Z"
 const requirements: Stage3CategoryRequirement[] = [
   {
     category: "conditioner",
-    requiredRoles: ["category_coverage"],
+    requiredRoles: ["conditioner_rinse_out"],
     needSummary: "Pflege nach jeder Wäsche",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.conditioner.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
   },
   {
     category: "oil",
-    requiredRoles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+    requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
     needSummary: "Längen versiegeln und Pre-Wash unterstützen",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.oil.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
   },
   {
     category: "heat_protectant",
-    requiredRoles: ["heat_protection_hot_tools"],
+    requiredRoles: ["pre_heat_protection"],
+    qualifyingRoutes: ["direct_contact_heat"],
     needSummary: "Schutz vor Hitze",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.heat_protectant.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
   },
 ]
 
-function addConditioner(draft = createStage3Draft({
-  draftId: "draft-state",
-  userId: "user-1",
-  personalPlanId: "plan-1",
-  refinedVersionId: "refined-v1",
-  requirements,
-  now,
-}), id: "conditioner-1" | "conditioner-2" = "conditioner-1") {
+function addConditioner(
+  draft = createStage3Draft({
+    draftId: "draft-state",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-v1",
+    requirements,
+    now,
+  }),
+  id: "conditioner-1" | "conditioner-2" = "conditioner-1",
+) {
   return addCapturedProduct(draft, {
     capturedProductId: id,
+    userProductId: `user-product-${id}`,
     identity: {
       kind: "catalog_product",
       productId: `${id}-product`,
@@ -71,18 +76,22 @@ test("two suitable Conditioners remain separate decision subjects without a prim
   })
   const withTwoConditioners = completeCaptureCategory(
     assignProductRoles(
-      assignProductRoles(addConditioner(addConditioner(initial, "conditioner-1"), "conditioner-2"), {
-        capturedProductId: "conditioner-1",
-        category: "conditioner",
-        roles: ["category_coverage"],
-      }),
+      assignProductRoles(
+        addConditioner(addConditioner(initial, "conditioner-1"), "conditioner-2"),
+        {
+          capturedProductId: "conditioner-1",
+          category: "conditioner",
+          roles: ["conditioner_rinse_out"],
+        },
+      ),
       {
         capturedProductId: "conditioner-2",
         category: "conditioner",
-        roles: ["category_coverage"],
+        roles: ["conditioner_rinse_out"],
       },
     ),
     "conditioner",
+    requirements,
   )
 
   assert.equal(
@@ -96,6 +105,7 @@ test("two suitable Conditioners remain separate decision subjects without a prim
         assignProductRoles(
           addCapturedProduct(withTwoConditioners, {
             capturedProductId: "oil-1",
+            userProductId: "user-product-oil-1",
             identity: {
               kind: "catalog_product",
               productId: "oil-product-1",
@@ -109,18 +119,20 @@ test("two suitable Conditioners remain separate decision subjects without a prim
           {
             capturedProductId: "oil-1",
             category: "oil",
-            roles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+            roles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
           },
         ),
         "oil",
+        requirements,
       ),
       {
         category: "heat_protectant",
-        role: "heat_protection_hot_tools",
+        role: "pre_heat_protection",
         reason: "no_product_owned",
       },
     ),
     "heat_protectant",
+    requirements,
   )
 
   const decisionReady = computeStage3PathState(withRemainingCapture, requirements)
@@ -128,13 +140,13 @@ test("two suitable Conditioners remain separate decision subjects without a prim
   assert.equal(decisionReady.canCompleteCapture, true)
   assert.equal(
     decisionReady.firstUnresolvedStepKey,
-    "decision:conditioner:category_coverage:conditioner-1",
+    "decision:conditioner:conditioner_rinse_out:conditioner-1",
   )
 
   const withOneDecision = recordProductDecision(withRemainingCapture, {
-    decisionKey: "decision:conditioner:category_coverage:conditioner-1",
+    decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-1",
     category: "conditioner",
-    role: "category_coverage",
+    role: "conditioner_rinse_out",
     capturedProductId: "conditioner-1",
     verdict: "ideal",
     choiceState: "owned_active",
@@ -144,7 +156,7 @@ test("two suitable Conditioners remain separate decision subjects without a prim
   })
   assert.equal(
     computeStage3PathState(withOneDecision, requirements).firstUnresolvedStepKey,
-    "decision:conditioner:category_coverage:conditioner-2",
+    "decision:conditioner:conditioner_rinse_out:conditioner-2",
   )
 })
 
@@ -161,18 +173,54 @@ test("explicit no-product capture marks a role uncovered and reaches decisions",
   const gapDraft = completeCaptureCategory(
     markRoleUncovered(initial, {
       category: "heat_protectant",
-      role: "heat_protection_hot_tools",
+      role: "pre_heat_protection",
       reason: "no_product_owned",
     }),
     "heat_protectant",
+    [requirements[2]],
   )
 
   const path = computeStage3PathState(gapDraft, [requirements[2]])
   assert.equal(path.pass, "product_decisions")
   assert.equal(path.canCompleteCapture, true)
+  assert.equal(path.firstUnresolvedStepKey, "decision:heat_protectant:pre_heat_protection:gap")
+})
+
+test("capture completion uses the refined need roles and never invents optional category roles", () => {
+  const scalpRequirement: Stage3CategoryRequirement = {
+    category: "scalp_care",
+    requiredRoles: ["scalp_comfort"],
+    needSummary: "Beruhigende Pflege für deine Kopfhaut",
+    authorityVersion: CATEGORY_ROLE_POLICIES.scalp_care.authorityVersion,
+  }
+  const initial = createStage3Draft({
+    draftId: "draft-scalp-subset",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-v1",
+    requirements: [scalpRequirement],
+    now,
+  })
+  const assigned = assignProductRoles(
+    addCapturedProduct(initial, {
+      capturedProductId: "scalp-1",
+      userProductId: "user-product-scalp-1",
+      identity: {
+        kind: "catalog_product",
+        productId: "scalp-product-1",
+        displayName: "Scalp Care",
+        category: "scalp_care",
+      },
+      frequencyRange: "weekly_1x",
+      ownership: "owned",
+      source: "catalog_search",
+    }),
+    { capturedProductId: "scalp-1", category: "scalp_care", roles: ["scalp_comfort"] },
+  )
+
   assert.equal(
-    path.firstUnresolvedStepKey,
-    "decision:heat_protectant:heat_protection_hot_tools:gap",
+    completeCaptureCategory(assigned, "scalp_care", [scalpRequirement]).pass,
+    "product_decisions",
   )
 })
 
@@ -187,6 +235,7 @@ test("one Oil can cover several exact purposes but two Oils cannot own the same 
   })
   const withOilOne = addCapturedProduct(initial, {
     capturedProductId: "oil-1",
+    userProductId: "user-product-oil-1",
     identity: {
       kind: "catalog_product",
       productId: "oil-product-1",
@@ -202,12 +251,13 @@ test("one Oil can cover several exact purposes but two Oils cannot own the same 
     assignProductRoles(withOilOne, {
       capturedProductId: "oil-1",
       category: "oil",
-      roles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+      roles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
     }),
   )
 
   const withOilTwo = addCapturedProduct(withOilOne, {
     capturedProductId: "oil-2",
+    userProductId: "user-product-oil-2",
     identity: {
       kind: "catalog_product",
       productId: "oil-product-2",
@@ -237,17 +287,18 @@ test("recordProductDecision rejects arbitrary or mismatched decision subjects", 
     assignProductRoles(addConditioner(undefined, "conditioner-1"), {
       capturedProductId: "conditioner-1",
       category: "conditioner",
-      roles: ["category_coverage"],
+      roles: ["conditioner_rinse_out"],
     }),
     "conditioner",
+    requirements,
   )
 
   assert.throws(
     () =>
       recordProductDecision(captureComplete, {
-        decisionKey: "decision:conditioner:category_coverage:conditioner-2",
+        decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-2",
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         capturedProductId: "conditioner-1",
         verdict: "ideal",
         choiceState: "owned_active",
@@ -255,7 +306,7 @@ test("recordProductDecision rejects arbitrary or mismatched decision subjects", 
         recommendation: null,
         limitationAcknowledged: false,
       }),
-    /decision decision:conditioner:category_coverage:conditioner-2 is not a derived decision subject/,
+    /decision decision:conditioner:conditioner_rinse_out:conditioner-2 is not a derived decision subject/,
   )
 })
 
@@ -294,14 +345,16 @@ test("reopening one capture category prunes only that category decisions and kee
     assignProductRoles(addConditioner(initial), {
       capturedProductId: "conditioner-1",
       category: "conditioner",
-      roles: ["category_coverage"],
+      roles: ["conditioner_rinse_out"],
     }),
     "conditioner",
+    requirements,
   )
   const oilComplete = completeCaptureCategory(
     assignProductRoles(
       addCapturedProduct(conditionerComplete, {
         capturedProductId: "oil-1",
+        userProductId: "user-product-oil-1",
         identity: {
           kind: "catalog_product",
           productId: "oil-product-1",
@@ -315,16 +368,17 @@ test("reopening one capture category prunes only that category decisions and kee
       {
         capturedProductId: "oil-1",
         category: "oil",
-        roles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+        roles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
       },
     ),
     "oil",
+    requirements,
   )
   const decided = recordProductDecision(
     recordProductDecision(oilComplete, {
-      decisionKey: "decision:conditioner:category_coverage:conditioner-1",
+      decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-1",
       category: "conditioner",
-      role: "category_coverage",
+      role: "conditioner_rinse_out",
       capturedProductId: "conditioner-1",
       verdict: "ideal",
       choiceState: "owned_active",
@@ -352,10 +406,10 @@ test("reopening one capture category prunes only that category decisions and kee
   assert.deepEqual(reopened.completedCaptureCategories, ["conditioner"])
   assert.deepEqual(
     reopened.decisions.map((decision) => decision.decisionKey),
-    ["decision:conditioner:category_coverage:conditioner-1"],
+    ["decision:conditioner:conditioner_rinse_out:conditioner-1"],
   )
   assert.deepEqual(reopened.completedDecisionKeys, [
-    "decision:conditioner:category_coverage:conditioner-1",
+    "decision:conditioner:conditioner_rinse_out:conditioner-1",
   ])
   assert.deepEqual(
     reopened.products.map((product) => product.capturedProductId),
@@ -374,24 +428,28 @@ test("removing a captured product prunes only that product descendants", () => {
   })
   const withTwoConditioners = completeCaptureCategory(
     assignProductRoles(
-      assignProductRoles(addConditioner(addConditioner(initial, "conditioner-1"), "conditioner-2"), {
-        capturedProductId: "conditioner-1",
-        category: "conditioner",
-        roles: ["category_coverage"],
-      }),
+      assignProductRoles(
+        addConditioner(addConditioner(initial, "conditioner-1"), "conditioner-2"),
+        {
+          capturedProductId: "conditioner-1",
+          category: "conditioner",
+          roles: ["conditioner_rinse_out"],
+        },
+      ),
       {
         capturedProductId: "conditioner-2",
         category: "conditioner",
-        roles: ["category_coverage"],
+        roles: ["conditioner_rinse_out"],
       },
     ),
     "conditioner",
+    [requirements[0]],
   )
   const decided = recordProductDecision(
     recordProductDecision(withTwoConditioners, {
-      decisionKey: "decision:conditioner:category_coverage:conditioner-1",
+      decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-1",
       category: "conditioner",
-      role: "category_coverage",
+      role: "conditioner_rinse_out",
       capturedProductId: "conditioner-1",
       verdict: "ideal",
       choiceState: "owned_active",
@@ -400,9 +458,9 @@ test("removing a captured product prunes only that product descendants", () => {
       limitationAcknowledged: false,
     }),
     {
-      decisionKey: "decision:conditioner:category_coverage:conditioner-2",
+      decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-2",
       category: "conditioner",
-      role: "category_coverage",
+      role: "conditioner_rinse_out",
       capturedProductId: "conditioner-2",
       verdict: "supportive",
       choiceState: "owned_active",
@@ -419,14 +477,18 @@ test("removing a captured product prunes only that product descendants", () => {
     ["conditioner-2"],
   )
   assert.deepEqual(pruned.roleAssignments, [
-    { capturedProductId: "conditioner-2", category: "conditioner", roles: ["category_coverage"] },
+    {
+      capturedProductId: "conditioner-2",
+      category: "conditioner",
+      roles: ["conditioner_rinse_out"],
+    },
   ])
   assert.deepEqual(
     pruned.decisions.map((decision) => decision.decisionKey),
-    ["decision:conditioner:category_coverage:conditioner-2"],
+    ["decision:conditioner:conditioner_rinse_out:conditioner-2"],
   )
   assert.deepEqual(pruned.completedDecisionKeys, [
-    "decision:conditioner:category_coverage:conditioner-2",
+    "decision:conditioner:conditioner_rinse_out:conditioner-2",
   ])
 })
 
@@ -442,6 +504,7 @@ test("updating role assignments after decisions prunes stale decision subjects",
   const withOilRoles = assignProductRoles(
     addCapturedProduct(initial, {
       capturedProductId: "oil-1",
+      userProductId: "user-product-oil-1",
       identity: {
         kind: "catalog_product",
         productId: "oil-product-1",
@@ -455,7 +518,7 @@ test("updating role assignments after decisions prunes stale decision subjects",
     {
       capturedProductId: "oil-1",
       category: "oil",
-      roles: ["dry_finish", "scalp"],
+      roles: ["dry_finish", "leave_on_fibre_conditioning"],
     },
   )
   const decided = recordProductDecision(
@@ -471,9 +534,9 @@ test("updating role assignments after decisions prunes stale decision subjects",
       limitationAcknowledged: false,
     }),
     {
-      decisionKey: "decision:oil:scalp:oil-1",
+      decisionKey: "decision:oil:leave_on_fibre_conditioning:oil-1",
       category: "oil",
-      role: "scalp",
+      role: "leave_on_fibre_conditioning",
       capturedProductId: "oil-1",
       verdict: "supportive",
       choiceState: "owned_active",
@@ -511,6 +574,7 @@ test("marking a role uncovered removes conflicting assignments and decisions", (
   const withOilRoles = assignProductRoles(
     addCapturedProduct(initial, {
       capturedProductId: "oil-1",
+      userProductId: "user-product-oil-1",
       identity: {
         kind: "catalog_product",
         productId: "oil-product-1",
@@ -524,7 +588,7 @@ test("marking a role uncovered removes conflicting assignments and decisions", (
     {
       capturedProductId: "oil-1",
       category: "oil",
-      roles: ["dry_finish", "scalp"],
+      roles: ["dry_finish", "leave_on_fibre_conditioning"],
     },
   )
   const decided = recordProductDecision(withOilRoles, {
@@ -546,7 +610,7 @@ test("marking a role uncovered removes conflicting assignments and decisions", (
   })
 
   assert.deepEqual(uncovered.roleAssignments, [
-    { capturedProductId: "oil-1", category: "oil", roles: ["scalp"] },
+    { capturedProductId: "oil-1", category: "oil", roles: ["leave_on_fibre_conditioning"] },
   ])
   assert.deepEqual(uncovered.uncoveredRoles, [
     { category: "oil", role: "dry_finish", reason: "no_product_owned" },

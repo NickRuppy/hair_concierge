@@ -883,6 +883,9 @@ export function IntakeFallbackBoundary({
   categoryLabel,
   status,
   message,
+  frequencyOptions,
+  selectedFrequency,
+  onFrequencyChange,
   onOpen,
   onRetry,
   onCancel,
@@ -890,6 +893,9 @@ export function IntakeFallbackBoundary({
   categoryLabel: string
   status: "idle" | "pending" | "error"
   message?: string
+  frequencyOptions: Stage3FrequencyOption[]
+  selectedFrequency: string | null
+  onFrequencyChange: (value: string) => void
   onOpen: () => void
   onRetry?: () => void
   onCancel: () => void
@@ -910,6 +916,14 @@ export function IntakeFallbackBoundary({
         Produkt per Foto oder manuell hinzufügen. Wenn es noch nicht sicher zugeordnet werden kann,
         bleibt es in Prüfung und du kannst fortfahren.
       </p>
+      <div className="mt-4">
+        <ProductFrequencyPicker
+          options={frequencyOptions}
+          selected={selectedFrequency}
+          productName={categoryLabel}
+          onChange={onFrequencyChange}
+        />
+      </div>
       {message ? (
         <p
           className={cn(
@@ -923,11 +937,21 @@ export function IntakeFallbackBoundary({
         </p>
       ) : null}
       <div className="mt-4 grid gap-2">
-        <Button type="button" variant="default" onClick={onOpen}>
+        <Button
+          type="button"
+          variant="default"
+          onClick={onOpen}
+          disabled={status === "pending" || selectedFrequency === null}
+        >
           Produkt per Foto oder manuell hinzufügen
         </Button>
         {onRetry ? (
-          <Button type="button" variant="outline" onClick={onRetry}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onRetry}
+            disabled={status === "pending" || selectedFrequency === null}
+          >
             Erneut versuchen
           </Button>
         ) : null}

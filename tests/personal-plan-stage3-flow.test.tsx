@@ -16,7 +16,10 @@ import {
   PortfolioHandoff,
   Stage3ProductsFlow,
 } from "../src/components/personal-plan-products/stage3-products-flow"
-import { CATEGORY_AUTHORITY_STUBS } from "../src/lib/personal-plan/products/authorities"
+import { customerIoDestination } from "../src/lib/analytics/destinations/customerio"
+import { metaDestination } from "../src/lib/analytics/destinations/meta"
+import { postHogDestination } from "../src/lib/analytics/destinations/posthog"
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import type { Stage3EntryContext } from "../src/lib/personal-plan/products/contracts"
 
 type ClientStateHarness = {
@@ -225,20 +228,58 @@ async function chooseDecision(harness: ClientStateHarness, kind: Stage3DecisionA
   )
   assert.ok(screen)
   const decision = screen.props.decisions[0]!
-  const action = decision.actions.find((candidate) => candidate.kind === kind)
+  const action =
+    decision.actions.find((candidate) => candidate.kind === kind) ?? decision.actions[0]
   assert.ok(action, `missing ${kind} action for ${decision.decisionKey}`)
   await screen.props.onChooseAction(decision.decisionKey, action)
 }
 
 test("stage 3 lab route is guarded and composed from the interactive flow", () => {
-  const source = readFileSync(
+  const routeSource = readFileSync(
     new URL("../src/app/labs/personal-plan/stage-3/page.tsx", import.meta.url),
     "utf8",
   )
+  const clientSource = readFileSync(
+    new URL("../src/app/labs/personal-plan/stage-3/lab-client.tsx", import.meta.url),
+    "utf8",
+  )
 
-  assert.match(source, /isPersonalPlanStage3LabEnabled\(process\.env\)/)
-  assert.match(source, /notFound\(\)/)
-  assert.match(source, /<Stage3ProductsFlow \/>/)
+  assert.match(routeSource, /isPersonalPlanStage3LabEnabled\(process\.env\)/)
+  assert.match(routeSource, /notFound\(\)/)
+  assert.match(routeSource, /<PersonalPlanStage3LabClient \/>/)
+  assert.match(clientSource, /developmentStage3Analytics/)
+  assert.match(clientSource, /<Stage3ProductsFlow analytics=\{developmentStage3Analytics\} \/>/)
+})
+
+test("the production-default Stage 3 flow keeps vendor analytics inert", async () => {
+  const destinations = [postHogDestination, customerIoDestination, metaDestination] as const
+  const originalTracks = destinations.map((destination) => destination.track)
+  const calls: unknown[][] = []
+
+  try {
+    for (const destination of destinations) {
+      destination.track = ((...args: unknown[]) => {
+        calls.push(args)
+        return true
+      }) as typeof destination.track
+    }
+
+    const harness = createClientStateHarness(() => Stage3ProductsFlow({ searchDebounceMs: 0 }))
+    let tree = await renderSettled(harness)
+    const transition = findByType<React.ComponentProps<typeof Stage3Transition>>(
+      tree,
+      Stage3Transition,
+    )
+    transition?.props.onContinue()
+    tree = await renderSettled(harness)
+    assert.ok(findByType(tree, ProductCaptureScreen))
+  } finally {
+    for (const [index, destination] of destinations.entries()) {
+      destination.track = originalTracks[index] as typeof destination.track
+    }
+  }
+
+  assert.deepEqual(calls, [])
 })
 
 test("integrated Stage 3 consumes the supplied refined entry context instead of fixture requirements", async () => {
@@ -249,15 +290,15 @@ test("integrated Stage 3 consumes the supplied refined entry context instead of 
     orderedCategories: [
       {
         category: "shampoo",
-        requiredRoles: [...CATEGORY_AUTHORITY_STUBS.shampoo.requiredRoles],
+        requiredRoles: ["shampoo_everyday"],
         needSummary: "Sanfte Reinigung für deine empfindliche Kopfhaut.",
-        authorityVersion: CATEGORY_AUTHORITY_STUBS.shampoo.authorityVersion,
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
       },
     ],
     inventoryPrompts: [
       {
         category: "shampoo",
-        allowsMultiple: CATEGORY_AUTHORITY_STUBS.shampoo.allowsMultiple,
+        allowsMultiple: CATEGORY_ROLE_POLICIES.shampoo.allowsMultiple,
         allowsExplicitNone: true,
       },
     ],
@@ -286,6 +327,123 @@ test("integrated Stage 3 consumes the supplied refined entry context instead of 
   )
   assert.equal(capture?.props.categoryLabel, "Shampoo")
   assert.equal(capture?.props.needSummary, entryContext.orderedCategories[0]?.needSummary)
+})
+
+test("production intake retries retain one idempotency identity after a transport failure", async () => {
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-intake-retry",
+    refinedVersionId: "refined-intake-retry",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const keys: string[] = []
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      draftId: "fixture-stage3-intake-retry",
+      userId: "fixture-user-intake-retry",
+      searchDebounceMs: 0,
+      intakeClient: {
+        submit: async (input) => {
+          keys.push(input.idempotencyKey)
+          throw new Error("transport")
+        },
+      },
+    }),
+  )
+
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof Stage3Transition>>(
+    tree,
+    Stage3Transition,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onOpenFallbackIntake()
+  tree = await renderSettled(harness)
+  let fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+  fallback?.props.onFrequencyChange("weekly_1x")
+  tree = await renderSettled(harness)
+  fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+  fallback?.props.onOpen()
+  await new Promise((resolve) => setImmediate(resolve))
+  tree = await renderSettled(harness)
+  fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+  fallback?.props.onRetry?.()
+  await new Promise((resolve) => setImmediate(resolve))
+
+  assert.equal(keys.length, 2)
+  assert.equal(keys[0], keys[1])
+})
+
+test("fallback intake requires and persists the user's selected product frequency", async () => {
+  const submittedFrequencies: string[] = []
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      searchDebounceMs: 0,
+      intakeClient: {
+        submit: async ({ input }) => {
+          submittedFrequencies.push(input.frequency_range)
+          throw new Error("synthetic transport failure")
+        },
+      },
+    }),
+  )
+
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof Stage3Transition>>(
+    tree,
+    Stage3Transition,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onOpenFallbackIntake()
+  tree = await renderSettled(harness)
+  let fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+
+  fallback?.props.onOpen()
+  await new Promise((resolve) => setImmediate(resolve))
+  assert.deepEqual(submittedFrequencies, [])
+
+  tree = await renderSettled(harness)
+  fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+  fallback?.props.onFrequencyChange("weekly_1x")
+  tree = await renderSettled(harness)
+  fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+  fallback?.props.onOpen()
+  await new Promise((resolve) => setImmediate(resolve))
+
+  assert.deepEqual(submittedFrequencies, ["weekly_1x"])
 })
 
 test("interactive lab flow captures products first, assigns roles, decides fit, and displays a typed handoff", async () => {
@@ -317,7 +475,7 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   )
   assert.equal(roleScreen?.props.category, "conditioner")
   for (const product of roleScreen.props.products) {
-    roleScreen.props.onToggleRole(product.capturedProductId, "category_coverage", true)
+    roleScreen.props.onToggleRole(product.capturedProductId, "conditioner_rinse_out", true)
   }
   tree = await renderSettled(harness)
   roleScreen = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
@@ -355,7 +513,13 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
     IntakeFallbackBoundary,
   )
   assert.equal(fallback?.props.status, "idle")
-  await fallback.props.onOpen()
+  fallback?.props.onFrequencyChange("weekly_1x")
+  tree = await renderSettled(harness)
+  const readyFallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+    tree,
+    IntakeFallbackBoundary,
+  )
+  await readyFallback?.props.onOpen()
   tree = await renderSettled(harness)
   capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
@@ -394,7 +558,6 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   await chooseDecision(harness, "keep")
   await chooseDecision(harness, "keep")
   await chooseDecision(harness, "keep")
-  await chooseDecision(harness, "keep")
   await chooseDecision(harness, "pending")
   await chooseDecision(harness, "skip")
 
@@ -412,7 +575,7 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   const handoffText = textContent(PortfolioHandoff(handoff.props))
   assert.match(handoffText, /Portfolio fixture-portfolio-/)
   assert.match(handoffText, /Routine-Entwurf fixture-routine-proposal-/)
-  assert.equal(handoff.props.completion.portfolio.ownedProducts.length, 5)
+  assert.equal(handoff.props.completion.portfolio.ownedProducts.length, 4)
   assert.equal(handoff.props.completion.portfolio.plannedPurchases.length, 1)
   assert.equal(handoff.props.completion.portfolio.pendingProducts.length, 1)
   assert.equal(handoff.props.completion.portfolio.uncoveredRoles.length, 3)

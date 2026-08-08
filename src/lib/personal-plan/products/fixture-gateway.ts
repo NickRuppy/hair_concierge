@@ -1,14 +1,17 @@
-import { getCategoryAuthority } from "./authorities"
+import type {
+  Stage3CompleteResponse,
+  Stage3DraftResponse,
+  Stage3MutationResponse,
+  Stage3ProductsGateway,
+  Stage3ProductsMutation,
+  Stage3SearchResponse,
+} from "./gateway"
 import {
+  stage3CategoryRequirementSchema,
   type PersonalPlanCategory,
-  type ProposedProductPortfolio,
   type Stage3CatalogCandidate,
-  type Stage3CatalogSearchResult,
-  type Stage3CapturedUncoveredRole,
   type Stage3CategoryRequirement,
-  type Stage3ProductDecision,
   type Stage3ProductDraft,
-  type Stage3RoleAssignment,
 } from "./contracts"
 import { createProposedProductPortfolio } from "./portfolio"
 import {
@@ -108,77 +111,17 @@ type LoadOrCreateInput = {
   requirements: Stage3CategoryRequirement[]
 }
 
-export type FixtureDraftResponse = {
-  status: "active" | "stale"
-  draft: Stage3ProductDraft
-}
+export type FixtureDraftResponse = Stage3DraftResponse
 
-export type FixtureSearchResponse =
-  | { status: "ready"; requestToken: number; result: Stage3CatalogSearchResult }
-  | { status: "ignored"; requestToken: number }
+export type FixtureSearchResponse = Stage3SearchResponse
 
-export type FixtureMutation =
-  | {
-      type: "capture_catalog_candidate"
-      candidateId: string
-      frequencyRange: Stage3ProductDraft["products"][number]["frequencyRange"]
-    }
-  | {
-      type: "capture_pending_submission"
-      submissionId: string
-      displayName: string
-      category: PersonalPlanCategory
-      reviewStatus: "pending_review" | "needs_more_info"
-      frequencyRange: Stage3ProductDraft["products"][number]["frequencyRange"]
-    }
-  | {
-      type: "assign_roles"
-      capturedProductId: string
-      category: PersonalPlanCategory
-      roles: Stage3RoleAssignment["roles"]
-    }
-  | { type: "mark_role_uncovered"; uncoveredRole: Stage3CapturedUncoveredRole }
-  | { type: "complete_capture_category"; category: PersonalPlanCategory }
-  | { type: "reopen_capture_category"; category: PersonalPlanCategory }
-  | { type: "remove_captured_product"; capturedProductId: string }
-  | { type: "record_decision"; decision: Stage3ProductDecision }
+export type FixtureMutation = Stage3ProductsMutation
 
-export type FixtureMutationResponse =
-  | { status: "saved"; draft: Stage3ProductDraft }
-  | { status: "conflict"; latestDraft: Stage3ProductDraft }
+export type FixtureMutationResponse = Stage3MutationResponse
 
-export type FixtureCompleteResponse =
-  | {
-      status: "ready_for_routine"
-      draft: Stage3ProductDraft
-      portfolio: ProposedProductPortfolio
-      personalPlanId: string
-      refinedVersionId: string
-      productPortfolioVersionId: string
-      routineProposalId: string
-      next: { stage: 4; href: string }
-    }
-  | { status: "conflict"; latestDraft: Stage3ProductDraft }
-  | { status: "not_ready"; draft: Stage3ProductDraft }
+export type FixtureCompleteResponse = Stage3CompleteResponse
 
-export type FixtureStage3Gateway = {
-  loadOrCreate(input: LoadOrCreateInput): Promise<FixtureDraftResponse>
-  search(input: {
-    category: PersonalPlanCategory
-    query: string
-    requestToken: number
-  }): Promise<FixtureSearchResponse>
-  mutate(input: {
-    draftId: string
-    expectedRevision: number
-    mutation: FixtureMutation
-  }): Promise<FixtureMutationResponse>
-  invalidateForRefinedVersion(input: {
-    draftId: string
-    refinedVersionId: string
-  }): Promise<FixtureDraftResponse>
-  complete(input: { draftId: string; expectedRevision: number }): Promise<FixtureCompleteResponse>
-}
+export type FixtureStage3Gateway = Stage3ProductsGateway
 
 export function createFixtureStage3Gateway(
   options: FixtureStage3GatewayOptions = {},
@@ -191,7 +134,6 @@ export function createFixtureStage3Gateway(
     string,
     Extract<FixtureCompleteResponse, { status: "ready_for_routine" }>
   >()
-  let highestSearchRequestToken = -1
   let nextCapturedProduct = 1
   let nextPortfolio = 1
   let nextRoutineProposal = 1
@@ -204,14 +146,14 @@ export function createFixtureStage3Gateway(
       if (existing.refinedVersionId !== input.refinedVersionId && existing.status !== "completed") {
         const stale = invalidateDraftForRefinedVersion(existing, input.refinedVersionId, now())
         drafts.set(stale.draftId, stale)
-        return { status: "stale", draft: stale }
+        return { status: "stale", draft: stale, requirements: input.requirements }
       }
-      return { status: existing.status === "stale" ? "stale" : "active", draft: existing }
+      return { status: existing.status, draft: existing, requirements: input.requirements }
     }
     const draft = createStage3Draft({ ...input, now: now() })
     drafts.set(draft.draftId, draft)
     requirementsByDraftId.set(draft.draftId, input.requirements)
-    return { status: "active", draft }
+    return { status: "active", draft, requirements: input.requirements }
   }
 
   async function search(input: {
@@ -219,12 +161,9 @@ export function createFixtureStage3Gateway(
     query: string
     requestToken: number
   }): Promise<FixtureSearchResponse> {
-    highestSearchRequestToken = Math.max(highestSearchRequestToken, input.requestToken)
     const query = input.query.trim()
     await delay(searchDelayMs)
     failOnceIfConfigured(pendingFailures, "search")
-    if (input.requestToken < highestSearchRequestToken)
-      return { status: "ignored", requestToken: input.requestToken }
     const candidates =
       query.length < 2
         ? []
@@ -256,9 +195,16 @@ export function createFixtureStage3Gateway(
     if (draft.revision !== input.expectedRevision) return { status: "conflict", latestDraft: draft }
     if (draft.status !== "active") return { status: "conflict", latestDraft: draft }
     failOnceIfConfigured(pendingFailures, "mutate")
+    const requirements = requirementsByDraftId.get(input.draftId)
+    if (!requirements) throw new Error(`missing requirements for draft ${input.draftId}`)
 
     const next = {
-      ...applyMutation(draft, input.mutation, () => `fixture-captured-${nextCapturedProduct++}`),
+      ...applyMutation(
+        draft,
+        input.mutation,
+        requirements,
+        () => `fixture-captured-${nextCapturedProduct++}`,
+      ),
       updatedAt: now(),
     }
     drafts.set(next.draftId, next)
@@ -270,9 +216,11 @@ export function createFixtureStage3Gateway(
     refinedVersionId: string
   }): Promise<FixtureDraftResponse> {
     const draft = requireDraft(drafts, input.draftId)
+    const requirements = requirementsByDraftId.get(input.draftId)
+    if (!requirements) throw new Error(`missing requirements for draft ${input.draftId}`)
     const next = invalidateDraftForRefinedVersion(draft, input.refinedVersionId, now())
     drafts.set(next.draftId, next)
-    return { status: next.status === "stale" ? "stale" : "active", draft: next }
+    return { status: next.status, draft: next, requirements }
   }
 
   async function complete(input: {
@@ -330,6 +278,7 @@ export function createFixtureStage3Gateway(
 function applyMutation(
   draft: Stage3ProductDraft,
   mutation: FixtureMutation,
+  requirements: Stage3CategoryRequirement[],
   nextCapturedProductId: () => string,
 ): Stage3ProductDraft {
   switch (mutation.type) {
@@ -338,6 +287,7 @@ function applyMutation(
       if (!candidate) throw new Error(`unknown fixture candidate ${mutation.candidateId}`)
       return addCapturedProduct(draft, {
         capturedProductId: nextCapturedProductId(),
+        userProductId: `fixture-user-product:${candidate.productId}`,
         identity: {
           kind: "catalog_product",
           productId: candidate.productId,
@@ -352,10 +302,10 @@ function applyMutation(
     case "capture_pending_submission":
       return addCapturedProduct(draft, {
         capturedProductId: nextCapturedProductId(),
+        userProductId: `fixture-user-product:${mutation.submissionId}`,
         identity: {
           kind: "pending_submission",
           submissionId: mutation.submissionId,
-          usageId: null,
           displayName: mutation.displayName,
           category: mutation.category,
           reviewStatus: mutation.reviewStatus,
@@ -369,7 +319,7 @@ function applyMutation(
     case "mark_role_uncovered":
       return markRoleUncovered(draft, mutation.uncoveredRole)
     case "complete_capture_category":
-      return completeCaptureCategory(draft, mutation.category)
+      return completeCaptureCategory(draft, mutation.category, requirements)
     case "reopen_capture_category":
       return reopenCaptureCategory(draft, mutation.category)
     case "remove_captured_product":
@@ -381,11 +331,7 @@ function applyMutation(
 
 function assertFixtureAuthorityRequirements(requirements: Stage3CategoryRequirement[]): void {
   for (const requirement of requirements) {
-    const authority = getCategoryAuthority(requirement.category)
-    if (
-      requirement.authorityVersion !== authority.authorityVersion ||
-      requirement.requiredRoles.join("|") !== authority.requiredRoles.join("|")
-    ) {
+    if (!stage3CategoryRequirementSchema.safeParse(requirement).success) {
       throw new Error(`requirements for ${requirement.category} do not match fixture authority`)
     }
   }

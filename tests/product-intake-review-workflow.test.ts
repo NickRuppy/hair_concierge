@@ -174,6 +174,53 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           usage_protocol: "k18_leave_in",
         },
       }
+    case "heat_protectant":
+      return {
+        product_heat_protectant_specs: { format: "spray", provides_heat_protection: true },
+        product_application_protocols: [
+          {
+            category: "heat_protectant",
+            role: "pre_heat_protection",
+            cadence: { kind: "event" },
+            application_stage: "before_heat",
+            application_state: "damp",
+            placement: "lengths",
+            contact_time_seconds: null,
+            rinse_action: "leave_in",
+            reapplication: "required",
+            instruction_modifiers: [],
+            source_label: "Hersteller",
+            source_url: "https://example.test/instructions",
+            source_text: "Vor jeder Hitze anwenden.",
+          },
+        ],
+      }
+    case "scalp_care":
+      return {
+        product_scalp_care_specs: {
+          primary_role: "scalp_comfort",
+          presentation_format: "serum",
+          rinse_mode: "leave_on",
+          application_instructions: "Auf die Kopfhaut auftragen.",
+        },
+        product_application_protocols: [
+          {
+            category: "scalp_care",
+            role: "scalp_comfort",
+            cadence: { kind: "as_needed" },
+            application_stage: "after_washing",
+            application_state: "either",
+            placement: "scalp",
+            contact_time_seconds: null,
+            rinse_action: "leave_in",
+            reapplication: "not_stated",
+            instruction_modifiers: [],
+            source_label: "Hersteller",
+            source_url: "https://example.test/instructions",
+            source_text: "Bei Bedarf anwenden.",
+          },
+        ],
+      }
   }
 }
 
@@ -184,6 +231,90 @@ test("unsupported category fails approval validation", () => {
 
   assert.equal(result.ok, false)
   assert.ok(result.missingFields.includes("final.product.category_key"))
+})
+
+test("heat protectant requires verified tri-state capability and an exact pre-heat protocol", () => {
+  const payload = reviewedPayload("heat_protectant" as ProductIntakeReviewCategoryKey, {
+    product_heat_protectant_specs: {
+      format: "spray",
+      provides_heat_protection: null,
+    },
+    product_application_protocols: [
+      {
+        category: "heat_protectant",
+        role: "pre_heat_protection",
+        cadence: { kind: "event" },
+        application_stage: "before_heat",
+        application_state: "damp",
+        placement: "lengths",
+        contact_time_seconds: null,
+        rinse_action: "leave_in",
+        reapplication: "required",
+        instruction_modifiers: [],
+        source_label: "Hersteller",
+        source_url: "https://example.test/instructions",
+        source_text: "Vor jedem Hitzestyling anwenden.",
+      },
+    ],
+  })
+
+  const result = validateProductIntakeApprovalPayload(payload)
+
+  assert.equal(result.ok, true)
+  if (!result.ok) return
+  assert.deepEqual(
+    result.targetSpecOperations.map((operation) => operation.table),
+    ["product_heat_protectant_specs", "product_application_protocols"],
+  )
+  assert.deepEqual(result.targetSpecOperations[0]?.rows, [
+    { product_id: PRODUCT_ID_PLACEHOLDER, format: "spray", provides_heat_protection: null },
+  ])
+})
+
+test("scalp care requires an exact role, cosmetic format and product protocol", () => {
+  const payload = reviewedPayload("scalp_care" as ProductIntakeReviewCategoryKey, {
+    product_scalp_care_specs: {
+      primary_role: "scalp_comfort",
+      presentation_format: "serum",
+      rinse_mode: "leave_on",
+      application_instructions: "Scheitelweise auf die Kopfhaut geben.",
+    },
+    product_application_protocols: [
+      {
+        category: "scalp_care",
+        role: "scalp_comfort",
+        cadence: { kind: "as_needed" },
+        application_stage: "after_washing",
+        application_state: "either",
+        placement: "scalp",
+        contact_time_seconds: null,
+        rinse_action: "leave_in",
+        reapplication: "not_stated",
+        instruction_modifiers: ["cosmetic_only"],
+        source_label: "Hersteller",
+        source_url: "https://example.test/instructions",
+        source_text: "Bei Bedarf anwenden.",
+      },
+    ],
+  })
+
+  const result = validateProductIntakeApprovalPayload(payload)
+
+  assert.equal(result.ok, true)
+  if (!result.ok) return
+  assert.deepEqual(
+    result.targetSpecOperations.map((operation) => operation.table),
+    ["product_scalp_care_specs", "product_application_protocols"],
+  )
+  assert.deepEqual(result.targetSpecOperations[0]?.rows, [
+    {
+      product_id: PRODUCT_ID_PLACEHOLDER,
+      primary_role: "scalp_comfort",
+      presentation_format: "serum",
+      rinse_mode: "leave_on",
+      application_instructions: "Scheitelweise auf die Kopfhaut geben.",
+    },
+  ])
 })
 
 test("missing base product fields fail approval validation", () => {
@@ -301,6 +432,8 @@ test("each supported category emits expected target table operation shapes", () 
     dry_shampoo: ["product_dry_shampoo_specs"],
     deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
     bondbuilder: ["product_bondbuilder_specs"],
+    heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
+    scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
   }
 
   for (const [categoryKey, expectedTables] of Object.entries(expectedTablesByCategory) as Array<

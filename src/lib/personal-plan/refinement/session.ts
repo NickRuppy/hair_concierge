@@ -17,7 +17,7 @@ export type Stage2RefinementSession = {
   schemaVersion: 1
   pathVersion: string
   revision: number
-  status: "in_progress" | "complete"
+  status: "in_progress" | "complete" | "stale"
   triggerContext: Stage2TriggerContext
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: Stage2QuestionId[]
@@ -31,7 +31,7 @@ export type CreateStage2RefinementSessionInput = {
   answers?: PersonalPlanRefinementAnswersV1
   completedQuestionIds?: Stage2QuestionId[]
   revision?: number
-  status?: "in_progress" | "complete"
+  status?: "in_progress" | "complete" | "stale"
   completedHandoff?: Stage2RefinementHandoff
 }
 
@@ -56,7 +56,7 @@ export function createStage2RefinementSession(
       "A complete refinement session must carry its completed handoff",
     )
   }
-  if (status === "in_progress" && input.completedHandoff) {
+  if (status !== "complete" && input.completedHandoff) {
     throw new Stage2RefinementError(
       "incomplete_refinement",
       "An in-progress refinement session cannot carry a completed handoff",
@@ -79,6 +79,9 @@ export function saveStage2SessionAnswer(
   session: Stage2RefinementSession,
   input: { questionId: Stage2QuestionId; answer: unknown },
 ): Stage2RefinementSession {
+  if (session.status === "stale") {
+    throw new Stage2RefinementError("revision_conflict", "A stale refinement must be reloaded")
+  }
   const canonical = resolveStage2RefinementContract({
     triggerContext: session.triggerContext,
     answers: session.answers,

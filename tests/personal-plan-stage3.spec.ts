@@ -29,7 +29,9 @@ async function searchAndSelect(page: Page, query: string, productName: string) {
 test.describe("Personal Plan products lab", () => {
   test.use({ viewport: { width: 375, height: 844 }, hasTouch: true })
 
-  test("keeps the mobile-first product journey customer-facing while reaching the routine handoff", async ({ page }) => {
+  test("keeps the mobile-first product journey customer-facing while reaching the routine handoff", async ({
+    page,
+  }) => {
     await openStage3Lab(page)
     await expect(page.locator("body")).not.toContainText(/\b(?:Pass\s*[12]|Stage\s*3|Part)\b/i)
 
@@ -40,9 +42,15 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: /Weiteres Conditioner hinzufügen/ }).click()
     await searchAndSelect(page, "Soft Care", "Conditioner Soft Care")
     await page.getByRole("button", { name: "Kategorie abschließen" }).click()
-    await expect(page.getByRole("heading", { name: /Welche Aufgabe hat dein Conditioner/ })).toBeVisible()
-    await page.getByRole("checkbox", { name: /Conditioner Balance: Pflege nach der Wäsche/ }).check()
-    await page.getByRole("checkbox", { name: /Conditioner Soft Care: Pflege nach der Wäsche/ }).check()
+    await expect(
+      page.getByRole("heading", { name: /Welche Aufgabe hat dein Conditioner/ }),
+    ).toBeVisible()
+    await page
+      .getByRole("checkbox", { name: /Conditioner Balance: Pflege nach der Wäsche/ })
+      .check()
+    await page
+      .getByRole("checkbox", { name: /Conditioner Soft Care: Pflege nach der Wäsche/ })
+      .check()
     await page.getByRole("button", { name: "Zuordnung speichern" }).click()
 
     await expect(page.getByRole("heading", { name: /Dein Öl/ })).toBeVisible()
@@ -52,13 +60,13 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("checkbox", { name: /Pre-Wash für die Längen/ }).check()
     await page.getByRole("checkbox", { name: /Pflege im feuchten Haar/ }).check()
     await page.getByRole("checkbox", { name: /Glanz und Finish/ }).check()
-    await page.getByRole("checkbox", { name: /Pflege der Kopfhaut/ }).check()
     await page.getByRole("button", { name: "Zuordnung speichern" }).click()
 
     await expect(page.getByRole("heading", { name: /Dein Kopfhautprodukt/ })).toBeVisible()
     await page.getByRole("searchbox", { name: "Produkt suchen" }).fill("unbekanntes tonic")
     await expect(page.getByRole("status")).toContainText(/Kein sicherer Treffer/i)
     await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
+    await page.getByRole("button", { name: "1x/Woche" }).click()
     await page.getByRole("button", { name: /Produkt per Foto oder manuell hinzufügen/ }).click()
     await expect(page.getByText(/Noch in Prüfung · gespeichert/i)).toBeVisible()
     await page.getByRole("button", { name: "Kategorie abschließen" }).click()
@@ -68,13 +76,15 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.getByRole("heading", { name: /Dein Hitzeschutz/ })).toBeVisible()
     await page.getByRole("button", { name: "Ich habe dafür kein Produkt" }).click()
 
-    await expect(page.getByRole("heading", { name: "Wie gut passen deine Produkte?" })).toBeVisible()
+    await expect(
+      page.getByRole("heading", { name: "Wie gut passen deine Produkte?" }),
+    ).toBeVisible()
     await continueFromTransition(page, "Produkte prüfen")
     await expect(page.getByText("Passt sehr gut", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /weiterverwenden/ }).click()
     await expect(page.getByText("Wechseln empfohlen", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /einplanen/ }).click()
-    for (let index = 0; index < 4; index += 1) {
+    for (let index = 0; index < 3; index += 1) {
       await expect(page.getByText("Passt sehr gut", { exact: true })).toBeVisible()
       await page.getByRole("button", { name: /weiterverwenden/ }).click()
     }

@@ -1,7 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { CATEGORY_AUTHORITY_STUBS } from "../src/lib/personal-plan/products/authorities"
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import { Stage3ProductsGatewayError } from "../src/lib/personal-plan/products/gateway"
 import {
   createFixtureStage3Gateway,
   type FixtureStage3Gateway,
@@ -12,15 +13,27 @@ const now = "2026-08-07T10:00:00.000Z"
 const requirements: Stage3CategoryRequirement[] = [
   {
     category: "conditioner",
-    requiredRoles: ["category_coverage"],
+    requiredRoles: ["conditioner_rinse_out"],
     needSummary: "Pflege nach jeder Wäsche",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.conditioner.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
   },
 ]
 
 function gateway(): FixtureStage3Gateway {
   return createFixtureStage3Gateway({ now: () => now, searchDelayMs: 0 })
 }
+
+test("production product failures share the frozen unavailable and snapshot codes", () => {
+  for (const code of [
+    "temporarily_unavailable",
+    "unsupported_snapshot_version",
+    "snapshot_too_large",
+  ] as const) {
+    const error = new Stage3ProductsGatewayError(code)
+    assert.equal(error.name, "Stage3ProductsGatewayError")
+    assert.equal(error.code, code)
+  }
+})
 
 async function createDraft(subject: FixtureStage3Gateway) {
   return subject.loadOrCreate({
@@ -40,13 +53,13 @@ test("loads or creates a draft from fixture authority requirements and resumes i
   assert.equal(first.status, "active")
   assert.equal(first.draft.revision, 0)
   assert.deepEqual(first.draft.authorityVersions, {
-    conditioner: CATEGORY_AUTHORITY_STUBS.conditioner.authorityVersion,
+    conditioner: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
   })
   assert.equal(resumed.status, "active")
   assert.equal(resumed.draft, first.draft)
 })
 
-test("search trims and requires two characters, caps at eight, and ignores stale requests", async () => {
+test("search trims and requires two characters, caps at eight, and echoes request tokens", async () => {
   const subject = createFixtureStage3Gateway({ now: () => now, searchDelayMs: 0 })
 
   const tooShort = await subject.search({ category: "conditioner", query: " a ", requestToken: 1 })
@@ -71,7 +84,8 @@ test("search trims and requires two characters, caps at eight, and ignores stale
   assert.equal(latest.result.query, "condition")
   assert.ok(latest.result.candidates.length <= 8)
   assert.ok(latest.result.candidates.every((candidate) => candidate.category === "conditioner"))
-  assert.deepEqual(stale, { status: "ignored", requestToken: 2 })
+  assert.equal(stale.status, "ready")
+  assert.equal(stale.requestToken, 2)
 })
 
 test("fixture search covers Shampoo, Conditioner, Oil, Scalp Care, and Heat Protectant", async () => {
@@ -163,7 +177,7 @@ test("one-shot fixture failures are recoverable and never apply a failed save or
       type: "assign_roles",
       capturedProductId: saved.draft.products[0]!.capturedProductId,
       category: "conditioner",
-      roles: ["category_coverage"],
+      roles: ["conditioner_rinse_out"],
     },
   })
   assert.equal(assigned.status, "saved")
@@ -179,9 +193,9 @@ test("one-shot fixture failures are recoverable and never apply a failed save or
     mutation: {
       type: "record_decision",
       decision: {
-        decisionKey: `decision:conditioner:category_coverage:${saved.draft.products[0]!.capturedProductId}`,
+        decisionKey: `decision:conditioner:conditioner_rinse_out:${saved.draft.products[0]!.capturedProductId}`,
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         capturedProductId: saved.draft.products[0]!.capturedProductId,
         verdict: "ideal",
         choiceState: "owned_active",
@@ -263,7 +277,7 @@ test("records explicit no-product roles as a normal revisioned mutation", async 
       type: "mark_role_uncovered",
       uncoveredRole: {
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         reason: "no_product_owned",
       },
     },
@@ -271,7 +285,7 @@ test("records explicit no-product roles as a normal revisioned mutation", async 
 
   assert.equal(saved.status, "saved")
   assert.deepEqual(saved.draft.uncoveredRoles, [
-    { category: "conditioner", role: "category_coverage", reason: "no_product_owned" },
+    { category: "conditioner", role: "conditioner_rinse_out", reason: "no_product_owned" },
   ])
 })
 
@@ -341,7 +355,7 @@ test("completion freezes one opaque portfolio and routine proposal idempotently"
       type: "assign_roles",
       capturedProductId: captured.draft.products[0]!.capturedProductId,
       category: "conditioner",
-      roles: ["category_coverage"],
+      roles: ["conditioner_rinse_out"],
     },
   })
   assert.equal(assigned.status, "saved")
@@ -357,9 +371,9 @@ test("completion freezes one opaque portfolio and routine proposal idempotently"
     mutation: {
       type: "record_decision",
       decision: {
-        decisionKey: `decision:conditioner:category_coverage:${captureComplete.draft.products[0]!.capturedProductId}`,
+        decisionKey: `decision:conditioner:conditioner_rinse_out:${captureComplete.draft.products[0]!.capturedProductId}`,
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         capturedProductId: captureComplete.draft.products[0]!.capturedProductId,
         verdict: "ideal",
         choiceState: "owned_active",
@@ -381,10 +395,13 @@ test("completion freezes one opaque portfolio and routine proposal idempotently"
     draftId: "draft-1",
     expectedRevision: first.draft.revision,
   })
+  const resumed = await createDraft(subject)
 
   assert.match(first.productPortfolioVersionId, /^fixture-portfolio-/)
   assert.match(first.routineProposalId, /^fixture-routine-proposal-/)
   assert.equal(second.status, "ready_for_routine")
   assert.equal(second.productPortfolioVersionId, first.productPortfolioVersionId)
   assert.equal(second.routineProposalId, first.routineProposalId)
+  assert.equal(resumed.status, "completed")
+  assert.equal(resumed.draft.status, "completed")
 })

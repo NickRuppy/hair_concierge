@@ -1,115 +1,126 @@
-import type { PersonalPlanCategory, Stage3SemanticRole } from "./contracts"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 
-export type Stage3CatalogSupport = "live_catalog" | "fixture_only"
+import type { PersonalPlanCategory } from "./contracts"
+
 export type Stage3RoleMultiplicity = "single_product_per_role" | "multiple_products_per_role"
 
-export type Stage3CategoryAuthorityStub = {
+export type CategoryRolePolicy = {
   category: PersonalPlanCategory
   authorityVersion: string
   allowsMultiple: boolean
-  catalogSupport: Stage3CatalogSupport
-  requiredRoles: Stage3SemanticRole[]
-  roleMultiplicity: Partial<Record<Stage3SemanticRole, Stage3RoleMultiplicity>>
+  allowedRoles: readonly PlanProductRole[]
+  roleMultiplicity: Partial<Record<PlanProductRole, Stage3RoleMultiplicity>>
 }
 
-export const CATEGORY_AUTHORITY_STUBS = {
+const single = "single_product_per_role" as const
+
+export const CATEGORY_ROLE_POLICIES = {
   shampoo: {
     category: "shampoo",
-    authorityVersion: "stage3.fixture.shampoo.v1",
+    authorityVersion: "personal-plan.shampoo.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["shampoo_primary"],
-    roleMultiplicity: { shampoo_primary: "single_product_per_role" },
+    allowedRoles: ["shampoo_everyday", "shampoo_dandruff"],
+    roleMultiplicity: { shampoo_everyday: single, shampoo_dandruff: single },
   },
   conditioner: {
     category: "conditioner",
-    authorityVersion: "stage3.fixture.conditioner.v1",
+    authorityVersion: "personal-plan.conditioner.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["category_coverage"],
-    roleMultiplicity: { category_coverage: "multiple_products_per_role" },
+    allowedRoles: ["conditioner_rinse_out"],
+    roleMultiplicity: { conditioner_rinse_out: "multiple_products_per_role" },
   },
   leave_in: {
     category: "leave_in",
-    authorityVersion: "stage3.fixture.leave_in.v1",
+    authorityVersion: "personal-plan.leave-in.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["category_primary"],
-    roleMultiplicity: { category_primary: "single_product_per_role" },
+    allowedRoles: ["post_wash_leave_in", "pre_heat_application"],
+    roleMultiplicity: { post_wash_leave_in: single, pre_heat_application: single },
   },
   heat_protectant: {
     category: "heat_protectant",
-    authorityVersion: "stage3.fixture.heat_protectant.v1",
+    authorityVersion: "personal-plan.heat-protectant.v1",
     allowsMultiple: true,
-    catalogSupport: "fixture_only",
-    requiredRoles: ["heat_protection_hot_tools"],
-    roleMultiplicity: { heat_protection_hot_tools: "single_product_per_role" },
+    allowedRoles: ["pre_heat_protection"],
+    roleMultiplicity: { pre_heat_protection: single },
   },
   oil: {
     category: "oil",
-    authorityVersion: "stage3.fixture.oil.v1",
+    authorityVersion: "personal-plan.oil.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+    allowedRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
     roleMultiplicity: {
-      prewash_lengths: "single_product_per_role",
-      damp_leave_on: "single_product_per_role",
-      dry_finish: "single_product_per_role",
-      scalp: "single_product_per_role",
+      pre_wash_fibre_treatment: single,
+      leave_on_fibre_conditioning: single,
+      dry_finish: single,
     },
   },
   mask: {
     category: "mask",
-    authorityVersion: "stage3.fixture.mask.v1",
+    authorityVersion: "personal-plan.mask.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["category_primary"],
-    roleMultiplicity: { category_primary: "single_product_per_role" },
+    allowedRoles: ["intensive_conditioning_mask"],
+    roleMultiplicity: { intensive_conditioning_mask: single },
   },
   scalp_care: {
     category: "scalp_care",
-    authorityVersion: "stage3.fixture.scalp_care.v1",
+    authorityVersion: "personal-plan.scalp-care.v1",
     allowsMultiple: true,
-    catalogSupport: "fixture_only",
-    requiredRoles: ["scalp_care_soothing"],
-    roleMultiplicity: { scalp_care_soothing: "single_product_per_role" },
+    allowedRoles: [
+      "scalp_comfort",
+      "scalp_flake_oil_adjunct",
+      "density_claim_tonic",
+      "scalp_exfoliant",
+    ],
+    roleMultiplicity: {
+      scalp_comfort: single,
+      scalp_flake_oil_adjunct: single,
+      density_claim_tonic: single,
+      scalp_exfoliant: single,
+    },
   },
   dry_shampoo: {
     category: "dry_shampoo",
-    authorityVersion: "stage3.fixture.dry_shampoo.v1",
+    authorityVersion: "personal-plan.dry-shampoo.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["category_primary"],
-    roleMultiplicity: { category_primary: "single_product_per_role" },
+    allowedRoles: ["root_refresh_bridge"],
+    roleMultiplicity: { root_refresh_bridge: single },
   },
   bondbuilder: {
     category: "bondbuilder",
-    authorityVersion: "stage3.fixture.bondbuilder.v1",
+    authorityVersion: "personal-plan.bondbuilder.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["category_primary"],
-    roleMultiplicity: { category_primary: "single_product_per_role" },
+    allowedRoles: ["specialized_bond_treatment"],
+    roleMultiplicity: { specialized_bond_treatment: single },
   },
   deep_cleansing_shampoo: {
     category: "deep_cleansing_shampoo",
-    authorityVersion: "stage3.fixture.deep_cleansing_shampoo.v1",
+    authorityVersion: "personal-plan.deep-cleansing.v1",
     allowsMultiple: true,
-    catalogSupport: "live_catalog",
-    requiredRoles: ["category_primary"],
-    roleMultiplicity: { category_primary: "single_product_per_role" },
+    allowedRoles: ["residue_reset", "mineral_reset"],
+    roleMultiplicity: { residue_reset: single, mineral_reset: single },
   },
-} as const satisfies Record<PersonalPlanCategory, Stage3CategoryAuthorityStub>
+} as const satisfies Record<PersonalPlanCategory, CategoryRolePolicy>
 
-export function getCategoryAuthority(category: PersonalPlanCategory): Stage3CategoryAuthorityStub {
-  return CATEGORY_AUTHORITY_STUBS[category]
+export function getCategoryRolePolicy(category: PersonalPlanCategory): CategoryRolePolicy {
+  return CATEGORY_ROLE_POLICIES[category]
+}
+
+export function roleAllowedForCategory(
+  category: PersonalPlanCategory,
+  role: PlanProductRole,
+): boolean {
+  return CATEGORY_ROLE_POLICIES[category].allowedRoles.includes(role as never)
 }
 
 export function allowsMultipleProductsForRole(
   category: PersonalPlanCategory,
-  role: Stage3SemanticRole,
+  role: PlanProductRole,
 ): boolean {
-  const roleMultiplicity = CATEGORY_AUTHORITY_STUBS[category].roleMultiplicity as Partial<
-    Record<Stage3SemanticRole, Stage3RoleMultiplicity>
-  >
-  return roleMultiplicity[role] === "multiple_products_per_role"
+  return (
+    (
+      CATEGORY_ROLE_POLICIES[category].roleMultiplicity as Partial<
+        Record<PlanProductRole, Stage3RoleMultiplicity>
+      >
+    )[role] === "multiple_products_per_role"
+  )
 }

@@ -2,6 +2,8 @@
 
 **Status:** approved by Nick on 2026-08-07 for subagent-driven standalone implementation before the later Stage-1/Stage-3 plug-in; customer journey, responsive mockup, independent delivery boundary, counterpart reviews, and standalone-to-integration walkthrough are confirmed
 
+**Production-persistence authority:** `plans/2026-08-07-personal-plan-stage1-3-production-foundation.md` supersedes this plan's `personal_plan_versions` persistence naming and Milestone-B table/API rollout details. This plan remains authoritative for Stage-2 questions, path/pruning logic, revision semantics, signed-off UI and user journey.
+
 **Outcome:** after the user has received the immutable quiz-only Bedarfsplan, collect every remaining high-signal general behavior and context fact in one light, resumable flow, compute a separate immutable refined need version backstage, and hand the user directly into Stage 3 without showing a refinement result, delta, or explanation
 
 **Final integration depends on:** the Stage-1 Personal Plan domain and persistence contracts from `plans/2026-08-06-personal-plan-stage1-bedarf-implementation.md` and the stable Stage-3 entry contract. The standalone Stage-2 build deliberately does not import, copy, or modify the active uncommitted Stage-1 worktree.

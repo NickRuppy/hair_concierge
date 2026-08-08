@@ -20,12 +20,16 @@ const CATEGORY_SPEC_KEYS = [
   "product_dry_shampoo_specs",
   "product_deep_cleansing_shampoo_specs",
   "product_bondbuilder_specs",
+  "product_heat_protectant_specs",
+  "product_scalp_care_specs",
+  "product_application_protocols",
 ] as const
 const ARRAY_CATEGORY_SPEC_KEYS = new Set<(typeof CATEGORY_SPEC_KEYS)[number]>([
   "product_shampoo_specs",
   "product_conditioner_specs",
   "product_leave_in_eligibility",
   "product_oil_eligibility",
+  "product_application_protocols",
 ])
 
 export type FinalImageUploadDecision =

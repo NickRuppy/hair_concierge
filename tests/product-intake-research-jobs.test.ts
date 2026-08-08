@@ -111,6 +111,8 @@ const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
   "dry_shampoo",
   "deep_cleansing_shampoo",
   "bondbuilder",
+  "heat_protectant",
+  "scalp_care",
 ]
 
 const ARRAY_SPEC_TABLES = new Set([
@@ -118,6 +120,7 @@ const ARRAY_SPEC_TABLES = new Set([
   "product_conditioner_specs",
   "product_leave_in_eligibility",
   "product_oil_eligibility",
+  "product_application_protocols",
 ])
 
 function approvalReadyPayload(
@@ -303,6 +306,53 @@ function validCategorySpecsForAudit(
           product_format: "leave_in_mask",
           usage_protocol: "k18_leave_in",
         },
+      }
+    case "heat_protectant":
+      return {
+        product_heat_protectant_specs: { format: "spray", provides_heat_protection: true },
+        product_application_protocols: [
+          {
+            category: "heat_protectant",
+            role: "pre_heat_protection",
+            cadence: { kind: "event" },
+            application_stage: "before_heat",
+            application_state: "damp",
+            placement: "lengths",
+            contact_time_seconds: null,
+            rinse_action: "leave_in",
+            reapplication: "required",
+            instruction_modifiers: [],
+            source_label: "Hersteller",
+            source_url: "https://example.test/instructions",
+            source_text: "Vor jeder Hitze anwenden.",
+          },
+        ],
+      }
+    case "scalp_care":
+      return {
+        product_scalp_care_specs: {
+          primary_role: "scalp_comfort",
+          presentation_format: "serum",
+          rinse_mode: "leave_on",
+          application_instructions: "Auf die Kopfhaut auftragen.",
+        },
+        product_application_protocols: [
+          {
+            category: "scalp_care",
+            role: "scalp_comfort",
+            cadence: { kind: "as_needed" },
+            application_stage: "after_washing",
+            application_state: "either",
+            placement: "scalp",
+            contact_time_seconds: null,
+            rinse_action: "leave_in",
+            reapplication: "not_stated",
+            instruction_modifiers: [],
+            source_label: "Hersteller",
+            source_url: "https://example.test/instructions",
+            source_text: "Bei Bedarf anwenden.",
+          },
+        ],
       }
   }
 }

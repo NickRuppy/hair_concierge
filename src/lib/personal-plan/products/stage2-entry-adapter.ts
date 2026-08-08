@@ -1,6 +1,6 @@
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 
-import { CATEGORY_AUTHORITY_STUBS } from "./authorities"
+import { CATEGORY_ROLE_POLICIES } from "./authorities"
 import type { PersonalPlanCategory, Stage3EntryContext } from "./contracts"
 
 const NEED_SUMMARIES: Record<PersonalPlanCategory, string> = {
@@ -45,19 +45,40 @@ export function buildStage3EntryContext(
     personalPlanId,
     refinedVersionId,
     orderedCategories: snapshot.renderedOrder.map((category) => {
-      const authority = CATEGORY_AUTHORITY_STUBS[category]
+      const decision = snapshot.decisions.find((candidate) => candidate.category === category)
+      if (!decision) throw new Error(`Stage 3 entry is missing a refined decision for ${category}`)
+      const authority = CATEGORY_ROLE_POLICIES[category]
+      const requiredRoles = decision.roles.filter((role) =>
+        authority.allowedRoles.includes(role as never),
+      )
+      if (requiredRoles.length !== decision.roles.length) {
+        throw new Error(`Stage 3 role is not allowed for category ${category}`)
+      }
+      const qualifyingRoutes =
+        category === "heat_protectant" ? requireHeatQualifyingRoutes(decision.target) : undefined
 
       return {
         category,
-        requiredRoles: [...authority.requiredRoles],
+        requiredRoles,
+        ...(qualifyingRoutes ? { qualifyingRoutes } : {}),
         needSummary: NEED_SUMMARIES[category],
         authorityVersion: authority.authorityVersion,
       }
     }),
     inventoryPrompts: snapshot.renderedOrder.map((category) => ({
       category,
-      allowsMultiple: CATEGORY_AUTHORITY_STUBS[category].allowsMultiple,
+      allowsMultiple: CATEGORY_ROLE_POLICIES[category].allowsMultiple,
       allowsExplicitNone: true,
     })),
   }
+}
+
+function requireHeatQualifyingRoutes(
+  target: InitialNeedPlanSnapshot["decisions"][number]["target"],
+) {
+  if (!target || target.category !== "heat_protectant" || target.qualifyingRoutes.length === 0) {
+    throw new Error("Stage 3 Heat Protectant entry requires qualifying routes")
+  }
+
+  return [...target.qualifyingRoutes]
 }

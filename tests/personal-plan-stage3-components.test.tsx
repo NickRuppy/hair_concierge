@@ -229,6 +229,9 @@ test("system states and intake fallback expose busy, live, retry, and boundary a
       categoryLabel="Conditioner"
       status="error"
       message="Upload konnte nicht gespeichert werden."
+      frequencyOptions={[{ value: "weekly_1x", label: "1x/Woche" }]}
+      selectedFrequency={null}
+      onFrequencyChange={() => {}}
       onOpen={() => {}}
       onRetry={() => {}}
       onCancel={() => {}}

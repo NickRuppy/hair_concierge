@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  CATEGORY_AUTHORITY_STUBS,
+  CATEGORY_ROLE_POLICIES,
   createProposedProductPortfolio,
   type Stage3CategoryRequirement,
   type Stage3ProductDraft,
@@ -12,21 +12,22 @@ const now = "2026-08-07T10:00:00.000Z"
 const requirements: Stage3CategoryRequirement[] = [
   {
     category: "conditioner",
-    requiredRoles: ["category_coverage"],
+    requiredRoles: ["conditioner_rinse_out"],
     needSummary: "Pflege nach jeder Wäsche",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.conditioner.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
   },
   {
     category: "oil",
-    requiredRoles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+    requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
     needSummary: "Längen versiegeln und Pre-Wash unterstützen",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.oil.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
   },
   {
     category: "heat_protectant",
-    requiredRoles: ["heat_protection_hot_tools"],
+    requiredRoles: ["pre_heat_protection"],
+    qualifyingRoutes: ["direct_contact_heat"],
     needSummary: "Schutz vor Hitze",
-    authorityVersion: CATEGORY_AUTHORITY_STUBS.heat_protectant.authorityVersion,
+    authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
   },
 ]
 
@@ -35,9 +36,9 @@ function completedDraft(): Stage3ProductDraft {
     schemaVersion: 1,
     status: "active",
     authorityVersions: {
-      conditioner: CATEGORY_AUTHORITY_STUBS.conditioner.authorityVersion,
-      oil: CATEGORY_AUTHORITY_STUBS.oil.authorityVersion,
-      heat_protectant: CATEGORY_AUTHORITY_STUBS.heat_protectant.authorityVersion,
+      conditioner: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      oil: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      heat_protectant: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
     },
     draftId: "draft-portfolio",
     userId: "user-1",
@@ -51,6 +52,7 @@ function completedDraft(): Stage3ProductDraft {
     products: [
       {
         capturedProductId: "conditioner-1",
+        userProductId: "user-product-conditioner-1",
         identity: {
           kind: "catalog_product",
           productId: "conditioner-product-1",
@@ -63,6 +65,7 @@ function completedDraft(): Stage3ProductDraft {
       },
       {
         capturedProductId: "conditioner-2",
+        userProductId: "user-product-conditioner-2",
         identity: {
           kind: "catalog_product",
           productId: "conditioner-product-2",
@@ -75,6 +78,7 @@ function completedDraft(): Stage3ProductDraft {
       },
       {
         capturedProductId: "oil-1",
+        userProductId: "user-product-oil-1",
         identity: {
           kind: "catalog_product",
           productId: "oil-product-1",
@@ -87,26 +91,34 @@ function completedDraft(): Stage3ProductDraft {
       },
     ],
     roleAssignments: [
-      { capturedProductId: "conditioner-1", category: "conditioner", roles: ["category_coverage"] },
-      { capturedProductId: "conditioner-2", category: "conditioner", roles: ["category_coverage"] },
+      {
+        capturedProductId: "conditioner-1",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+      {
+        capturedProductId: "conditioner-2",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
       {
         capturedProductId: "oil-1",
         category: "oil",
-        roles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+        roles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
       },
     ],
     uncoveredRoles: [
       {
         category: "heat_protectant",
-        role: "heat_protection_hot_tools",
+        role: "pre_heat_protection",
         reason: "no_product_owned",
       },
     ],
     decisions: [
       {
-        decisionKey: "decision:conditioner:category_coverage:conditioner-1",
+        decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-1",
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         capturedProductId: "conditioner-1",
         verdict: "ideal",
         choiceState: "owned_active",
@@ -115,9 +127,9 @@ function completedDraft(): Stage3ProductDraft {
         limitationAcknowledged: false,
       },
       {
-        decisionKey: "decision:conditioner:category_coverage:conditioner-2",
+        decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-2",
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         capturedProductId: "conditioner-2",
         verdict: "supportive",
         choiceState: "owned_active",
@@ -126,27 +138,28 @@ function completedDraft(): Stage3ProductDraft {
         limitationAcknowledged: false,
       },
       {
-        decisionKey: "decision:oil:prewash_lengths:oil-1",
+        decisionKey: "decision:oil:pre_wash_fibre_treatment:oil-1",
         category: "oil",
-        role: "prewash_lengths",
+        role: "pre_wash_fibre_treatment",
         capturedProductId: "oil-1",
         verdict: "mismatch",
         choiceState: "planned_purchase",
         criterionResults: [],
         recommendation: {
           recommendationId: "rec-oil-1",
+          productId: "catalog-oil-recommended",
           category: "oil",
-          role: "prewash_lengths",
+          role: "pre_wash_fibre_treatment",
           displayName: "Empfohlenes Oil",
           reason: "Bessere Pre-Wash-Pflege",
-          authorityRuleId: "oil.fixture.prewash_lengths",
+          authorityRuleId: "oil.fixture.pre_wash_fibre_treatment",
         },
         limitationAcknowledged: false,
       },
       {
-        decisionKey: "decision:oil:damp_leave_on:oil-1",
+        decisionKey: "decision:oil:leave_on_fibre_conditioning:oil-1",
         category: "oil",
-        role: "damp_leave_on",
+        role: "leave_on_fibre_conditioning",
         capturedProductId: "oil-1",
         verdict: "supportive",
         choiceState: "owned_active",
@@ -166,20 +179,9 @@ function completedDraft(): Stage3ProductDraft {
         limitationAcknowledged: true,
       },
       {
-        decisionKey: "decision:oil:scalp:oil-1",
-        category: "oil",
-        role: "scalp",
-        capturedProductId: "oil-1",
-        verdict: "supportive",
-        choiceState: "owned_active",
-        criterionResults: [],
-        recommendation: null,
-        limitationAcknowledged: false,
-      },
-      {
-        decisionKey: "decision:heat_protectant:heat_protection_hot_tools:gap",
+        decisionKey: "decision:heat_protectant:pre_heat_protection:gap",
         category: "heat_protectant",
-        role: "heat_protection_hot_tools",
+        role: "pre_heat_protection",
         capturedProductId: null,
         verdict: "unknown",
         choiceState: "unassigned",
@@ -190,13 +192,12 @@ function completedDraft(): Stage3ProductDraft {
     ],
     completedCaptureCategories: ["conditioner", "oil", "heat_protectant"],
     completedDecisionKeys: [
-      "decision:conditioner:category_coverage:conditioner-1",
-      "decision:conditioner:category_coverage:conditioner-2",
-      "decision:oil:prewash_lengths:oil-1",
-      "decision:oil:damp_leave_on:oil-1",
+      "decision:conditioner:conditioner_rinse_out:conditioner-1",
+      "decision:conditioner:conditioner_rinse_out:conditioner-2",
+      "decision:oil:pre_wash_fibre_treatment:oil-1",
       "decision:oil:dry_finish:oil-1",
-      "decision:oil:scalp:oil-1",
-      "decision:heat_protectant:heat_protection_hot_tools:gap",
+      "decision:oil:leave_on_fibre_conditioning:oil-1",
+      "decision:heat_protectant:pre_heat_protection:gap",
     ],
     createdAt: now,
     updatedAt: now,
@@ -220,19 +221,19 @@ test("portfolio keeps two suitable Conditioners executable and preserves planned
       {
         capturedProductId: "conditioner-1",
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         choiceState: "owned_active",
       },
       {
         capturedProductId: "conditioner-2",
         category: "conditioner",
-        role: "category_coverage",
+        role: "conditioner_rinse_out",
         choiceState: "owned_active",
       },
       {
         capturedProductId: "oil-1",
         category: "oil",
-        role: "damp_leave_on",
+        role: "leave_on_fibre_conditioning",
         choiceState: "owned_active",
       },
       {
@@ -241,37 +242,32 @@ test("portfolio keeps two suitable Conditioners executable and preserves planned
         role: "dry_finish",
         choiceState: "owned_override",
       },
-      {
-        capturedProductId: "oil-1",
-        category: "oil",
-        role: "scalp",
-        choiceState: "owned_active",
-      },
     ],
   )
   assert.deepEqual(portfolio.plannedPurchases, [
     {
-      plannedPurchaseId: "planned:oil:prewash_lengths",
+      plannedPurchaseId: "planned:oil:pre_wash_fibre_treatment",
       category: "oil",
-      role: "prewash_lengths",
+      role: "pre_wash_fibre_treatment",
       recommendationId: "rec-oil-1",
+      productId: "catalog-oil-recommended",
       displayName: "Empfohlenes Oil",
       reason: "Bessere Pre-Wash-Pflege",
-      authorityRuleId: "oil.fixture.prewash_lengths",
+      authorityRuleId: "oil.fixture.pre_wash_fibre_treatment",
     },
   ])
   assert.deepEqual(portfolio.uncoveredRoles, [
     {
       category: "oil",
-      role: "prewash_lengths",
+      role: "pre_wash_fibre_treatment",
       reason: "planned_purchase_not_acquired",
-      linkedDecisionKey: "decision:oil:prewash_lengths:oil-1",
+      linkedDecisionKey: "decision:oil:pre_wash_fibre_treatment:oil-1",
     },
     {
       category: "heat_protectant",
-      role: "heat_protection_hot_tools",
+      role: "pre_heat_protection",
       reason: "no_product_owned",
-      linkedDecisionKey: "decision:heat_protectant:heat_protection_hot_tools:gap",
+      linkedDecisionKey: "decision:heat_protectant:pre_heat_protection:gap",
     },
   ])
 })

@@ -1,6 +1,4 @@
-import {
-  computeStage3PathState,
-} from "./state-machine"
+import { computeStage3PathState } from "./state-machine"
 import {
   isExecutableChoice,
   type ProposedProductPortfolio,
@@ -29,7 +27,9 @@ export function createProposedProductPortfolio(
     throw new Error("Cannot create portfolio from incomplete draft")
   }
 
-  const productsById = new Map(draft.products.map((product) => [product.capturedProductId, product]))
+  const productsById = new Map(
+    draft.products.map((product) => [product.capturedProductId, product]),
+  )
   const categoryResolutions: Stage3CategoryResolution[] = []
   const ownedProducts: Stage3OwnedProduct[] = []
   const plannedPurchases: Stage3PlannedPurchase[] = []
@@ -37,7 +37,9 @@ export function createProposedProductPortfolio(
   const uncoveredRoles: Stage3UncoveredRole[] = []
 
   for (const decision of draft.decisions) {
-    const product = decision.capturedProductId ? productsById.get(decision.capturedProductId) : undefined
+    const product = decision.capturedProductId
+      ? productsById.get(decision.capturedProductId)
+      : undefined
     const executable =
       isExecutableChoice(decision.choiceState) && product?.identity.kind === "catalog_product"
     const gapPreserved = !executable
@@ -57,6 +59,7 @@ export function createProposedProductPortfolio(
       const choiceState = decision.choiceState as "owned_active" | "owned_override"
       ownedProducts.push({
         capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
         productId: product.identity.productId,
         displayName: product.identity.displayName,
         category: decision.category,
@@ -107,6 +110,7 @@ function projectNonExecutableDecision(
       category: decision.category,
       role: decision.role,
       recommendationId: decision.recommendation.recommendationId,
+      productId: decision.recommendation.productId,
       displayName: decision.recommendation.displayName,
       reason: decision.recommendation.reason,
       authorityRuleId: decision.recommendation.authorityRuleId,
@@ -120,9 +124,13 @@ function projectNonExecutableDecision(
     return
   }
 
-  if (decision.choiceState === "pending_review" && product?.identity.kind === "pending_submission") {
+  if (
+    decision.choiceState === "pending_review" &&
+    product?.identity.kind === "pending_submission"
+  ) {
     pendingProducts.push({
       capturedProductId: product.capturedProductId,
+      userProductId: product.userProductId,
       submissionId: product.identity.submissionId,
       category: decision.category,
       role: decision.role,

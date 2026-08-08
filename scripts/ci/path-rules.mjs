@@ -52,6 +52,22 @@ const PLAYWRIGHT_EXACT = [
 const SECURITY_PREFIXES = [".github/workflows/", "supabase/migrations/"]
 const SECURITY_EXACT = ["package.json", "package-lock.json", ".github/dependabot.yml"]
 
+const PERSONAL_PLAN_DB_PREFIXES = [
+  "supabase/migrations/",
+  "supabase/tests/",
+  "src/lib/personal-plan/persistence/",
+  "src/lib/personal-plan/products/",
+  "src/lib/product-intake/",
+  "src/app/api/personal-plan/",
+]
+
+const PERSONAL_PLAN_DB_EXACT = [
+  "scripts/ci/prepare-personal-plan-db-transition.mjs",
+  "scripts/test-personal-plan-db.sh",
+  "package.json",
+  ".github/workflows/ci.yml",
+]
+
 function matches(file, prefixes, exact) {
   return exact.includes(file) || prefixes.some((prefix) => file.startsWith(prefix))
 }
@@ -71,6 +87,8 @@ export function classifyCiScope(files, prContext = {}) {
       fullCi || files.some((file) => matches(file, PLAYWRIGHT_PREFIXES, PLAYWRIGHT_EXACT)),
     security_scan:
       fullCi || files.some((file) => matches(file, SECURITY_PREFIXES, SECURITY_EXACT)),
+    personal_plan_db:
+      fullCi || files.some((file) => matches(file, PERSONAL_PLAN_DB_PREFIXES, PERSONAL_PLAN_DB_EXACT)),
     full_ci: fullCi,
   }
 }

@@ -30,6 +30,8 @@ test("middleware app-route helper matches chat, routine, and tracker paths by ro
   assert.equal(isAuthenticatedAppRoutePath("/tracker-ish"), false)
   assert.equal(isAuthenticatedAppRoutePath("/api/chat"), false)
   assert.equal(isAuthenticatedAppRoutePath("/api/routine"), false)
+  assert.equal(isAuthenticatedAppRoutePath("/plan-start"), false)
+  assert.equal(isAuthenticatedAppRoutePath("/plan-start/produkte"), false)
 })
 
 test("middleware subscription helper matches chat, profile, routine, tracker, memory, and their API paths", () => {
@@ -50,6 +52,10 @@ test("middleware subscription helper matches chat, profile, routine, tracker, me
   assert.equal(requiresSubscriptionPath("/api/profile/update"), true)
   assert.equal(requiresSubscriptionPath("/api/memory"), true)
   assert.equal(requiresSubscriptionPath("/api/memory/entries"), true)
+  assert.equal(requiresSubscriptionPath("/plan-start"), true)
+  assert.equal(requiresSubscriptionPath("/plan-start/produkte"), true)
+  assert.equal(requiresSubscriptionPath("/api/personal-plan"), true)
+  assert.equal(requiresSubscriptionPath("/api/personal-plan/stage-3/complete"), true)
 
   assert.equal(requiresSubscriptionPath("/routine-ish"), false)
   assert.equal(requiresSubscriptionPath("/api/routine-ish"), false)

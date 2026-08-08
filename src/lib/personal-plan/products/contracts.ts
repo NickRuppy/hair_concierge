@@ -1,7 +1,12 @@
 import { z } from "zod"
 
+import type { PlanHeatToolRoute, PlanProductRole } from "@/lib/personal-plan/types"
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
-import { allowsMultipleProductsForRole } from "./authorities"
+import {
+  allowsMultipleProductsForRole,
+  getCategoryRolePolicy,
+  roleAllowedForCategory,
+} from "./authorities"
 
 export const PERSONAL_PLAN_PRODUCT_CATEGORIES = [
   "shampoo",
@@ -18,36 +23,35 @@ export const PERSONAL_PLAN_PRODUCT_CATEGORIES = [
 
 export type PersonalPlanCategory = (typeof PERSONAL_PLAN_PRODUCT_CATEGORIES)[number]
 
-export const SHAMPOO_ROLES = ["shampoo_primary", "shampoo_alternating"] as const
-export type ShampooRole = (typeof SHAMPOO_ROLES)[number]
+export const STAGE3_HEAT_QUALIFYING_ROUTES = [
+  "airflow_shaping",
+  "direct_contact_heat",
+] as const satisfies readonly Extract<
+  PlanHeatToolRoute,
+  "airflow_shaping" | "direct_contact_heat"
+>[]
+export type Stage3HeatQualifyingRoute = (typeof STAGE3_HEAT_QUALIFYING_ROUTES)[number]
 
-export const OIL_PURPOSES = ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"] as const
-export type OilPurpose = (typeof OIL_PURPOSES)[number]
-
-export const SCALP_CARE_ROLES = ["scalp_care_soothing", "scalp_care_flake_control"] as const
-export type ScalpCareRole = (typeof SCALP_CARE_ROLES)[number]
-
-export const HEAT_PROTECTION_ROLES = [
-  "heat_protection_hot_tools",
-  "heat_protection_blow_dry",
-] as const
-export type HeatProtectionRole = (typeof HEAT_PROTECTION_ROLES)[number]
-
-export const CATEGORY_PRIMARY_ROLES = ["category_primary"] as const
-export type CategoryPrimaryRole = (typeof CATEGORY_PRIMARY_ROLES)[number]
-
-export const CATEGORY_COVERAGE_ROLES = ["category_coverage"] as const
-export type CategoryCoverageRole = (typeof CATEGORY_COVERAGE_ROLES)[number]
-
-export const STAGE3_SEMANTIC_ROLES = [
-  ...SHAMPOO_ROLES,
-  ...OIL_PURPOSES,
-  ...SCALP_CARE_ROLES,
-  ...HEAT_PROTECTION_ROLES,
-  ...CATEGORY_PRIMARY_ROLES,
-  ...CATEGORY_COVERAGE_ROLES,
-] as const
-export type Stage3SemanticRole = (typeof STAGE3_SEMANTIC_ROLES)[number]
+export const PLAN_PRODUCT_ROLES = [
+  "shampoo_everyday",
+  "shampoo_dandruff",
+  "conditioner_rinse_out",
+  "post_wash_leave_in",
+  "pre_heat_application",
+  "intensive_conditioning_mask",
+  "pre_wash_fibre_treatment",
+  "leave_on_fibre_conditioning",
+  "dry_finish",
+  "residue_reset",
+  "mineral_reset",
+  "root_refresh_bridge",
+  "pre_heat_protection",
+  "specialized_bond_treatment",
+  "scalp_comfort",
+  "scalp_flake_oil_adjunct",
+  "density_claim_tonic",
+  "scalp_exfoliant",
+] as const satisfies readonly PlanProductRole[]
 
 export const STAGE3_PASS_VALUES = [
   "product_capture",
@@ -73,7 +77,7 @@ export const STAGE3_CHOICE_STATES = [
 export type Stage3ChoiceState = (typeof STAGE3_CHOICE_STATES)[number]
 
 export const personalPlanCategorySchema = z.enum(PERSONAL_PLAN_PRODUCT_CATEGORIES)
-export const stage3SemanticRoleSchema = z.enum(STAGE3_SEMANTIC_ROLES)
+export const planProductRoleSchema = z.enum(PLAN_PRODUCT_ROLES)
 export const productFrequencySchema = z.enum(PRODUCT_FREQUENCIES)
 
 export type Stage3EntryContext = {
@@ -86,7 +90,8 @@ export type Stage3EntryContext = {
 
 export type Stage3CategoryRequirement = {
   category: PersonalPlanCategory
-  requiredRoles: Stage3SemanticRole[]
+  requiredRoles: PlanProductRole[]
+  qualifyingRoutes?: Stage3HeatQualifyingRoute[]
   needSummary: string
   authorityVersion: string
 }
@@ -122,8 +127,9 @@ export type Stage3CriterionResult = {
 
 export type Stage3Recommendation = {
   recommendationId: string
+  productId: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   displayName: string
   reason: string
   authorityRuleId: string
@@ -139,7 +145,6 @@ export type Stage3ProductIdentity =
   | {
       kind: "pending_submission"
       submissionId: string
-      usageId: string | null
       displayName: string
       category: PersonalPlanCategory
       reviewStatus: "pending_review" | "needs_more_info"
@@ -147,6 +152,7 @@ export type Stage3ProductIdentity =
 
 export type Stage3CapturedProduct = {
   capturedProductId: string
+  userProductId: string
   identity: Stage3ProductIdentity
   frequencyRange: ProductFrequency
   ownership: "owned"
@@ -156,19 +162,19 @@ export type Stage3CapturedProduct = {
 export type Stage3RoleAssignment = {
   capturedProductId: string
   category: PersonalPlanCategory
-  roles: Stage3SemanticRole[]
+  roles: PlanProductRole[]
 }
 
 export type Stage3CapturedUncoveredRole = {
   category: PersonalPlanCategory
-  role: Stage3SemanticRole
+  role: PlanProductRole
   reason: "no_product_owned" | "not_ready_to_decide"
 }
 
 export type Stage3DecisionSubject = {
   decisionKey: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole
+  role: PlanProductRole
   capturedProductId: string | null
   subjectKind: "captured_product" | "uncovered_role"
 }
@@ -176,7 +182,7 @@ export type Stage3DecisionSubject = {
 export type Stage3ProductDecision = {
   decisionKey: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   capturedProductId: string | null
   verdict: Stage3FitVerdict
   choiceState: Stage3ChoiceState
@@ -213,7 +219,7 @@ export type Stage3CategoryProgress = {
   capturedCount: number
   completedCapture: boolean
   completedDecisions: boolean
-  uncoveredRoles: Stage3SemanticRole[]
+  uncoveredRoles: PlanProductRole[]
 }
 
 export type Stage3BlockingReason = {
@@ -224,7 +230,7 @@ export type Stage3BlockingReason = {
     | "draft_invalid"
     | "stale_refined_version"
   category: PersonalPlanCategory | null
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   message: string
 }
 
@@ -242,7 +248,7 @@ export type Stage3PathState = {
 export type Stage3CategoryResolution = {
   decisionKey: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   verdict: Stage3FitVerdict
   choiceState: Stage3ChoiceState
   capturedProductId: string | null
@@ -252,10 +258,11 @@ export type Stage3CategoryResolution = {
 
 export type Stage3OwnedProduct = {
   capturedProductId: string
+  userProductId: string
   productId: string
   displayName: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   frequencyRange: ProductFrequency
   choiceState: "owned_active" | "owned_override"
   sourceDecisionKey: string
@@ -264,8 +271,9 @@ export type Stage3OwnedProduct = {
 export type Stage3PlannedPurchase = {
   plannedPurchaseId: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   recommendationId: string
+  productId: string
   displayName: string
   reason: string
   authorityRuleId: string
@@ -273,16 +281,17 @@ export type Stage3PlannedPurchase = {
 
 export type Stage3PendingProduct = {
   capturedProductId: string
+  userProductId: string
   submissionId: string
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   displayName: string
   reviewStatus: "pending_review" | "needs_more_info"
 }
 
 export type Stage3UncoveredRole = {
   category: PersonalPlanCategory
-  role: Stage3SemanticRole | null
+  role: PlanProductRole | null
   reason:
     | "planned_purchase_not_acquired"
     | "pending_review"
@@ -318,8 +327,9 @@ export const stage3CriterionResultSchema: z.ZodType<Stage3CriterionResult> = z.o
 
 export const stage3RecommendationSchema: z.ZodType<Stage3Recommendation> = z.object({
   recommendationId: idSchema,
+  productId: idSchema,
   category: personalPlanCategorySchema,
-  role: stage3SemanticRoleSchema.nullable(),
+  role: planProductRoleSchema.nullable(),
   displayName: z.string().min(1),
   reason: z.string().min(1),
   authorityRuleId: idSchema,
@@ -337,7 +347,6 @@ export const stage3ProductIdentitySchema: z.ZodType<Stage3ProductIdentity> = z.d
     z.object({
       kind: z.literal("pending_submission"),
       submissionId: idSchema,
-      usageId: idSchema.nullable(),
       displayName: z.string().min(1),
       category: personalPlanCategorySchema,
       reviewStatus: z.enum(["pending_review", "needs_more_info"]),
@@ -347,29 +356,18 @@ export const stage3ProductIdentitySchema: z.ZodType<Stage3ProductIdentity> = z.d
 
 export const stage3CapturedProductSchema: z.ZodType<Stage3CapturedProduct> = z.object({
   capturedProductId: idSchema,
+  userProductId: idSchema,
   identity: stage3ProductIdentitySchema,
   frequencyRange: productFrequencySchema,
   ownership: z.literal("owned"),
   source: z.enum(["catalog_search", "intake_fallback", "existing_inventory"]),
 })
 
-function roleAllowedForCategory(category: PersonalPlanCategory, role: Stage3SemanticRole): boolean {
-  if (role === "category_primary") {
-    return category !== "oil" && category !== "scalp_care" && category !== "conditioner"
-  }
-  if (role === "category_coverage") return category === "conditioner"
-  if ((OIL_PURPOSES as readonly string[]).includes(role)) return category === "oil"
-  if (role.startsWith("scalp_care_")) return category === "scalp_care"
-  if (role.startsWith("heat_protection_")) return category === "heat_protectant"
-  if (role.startsWith("shampoo_")) return category === "shampoo"
-  return false
-}
-
 export const stage3RoleAssignmentSchema: z.ZodType<Stage3RoleAssignment> = z
   .object({
     capturedProductId: idSchema,
     category: personalPlanCategorySchema,
-    roles: z.array(stage3SemanticRoleSchema).min(1),
+    roles: z.array(planProductRoleSchema).min(1),
   })
   .superRefine((assignment, ctx) => {
     for (const role of assignment.roles) {
@@ -386,7 +384,7 @@ export const stage3RoleAssignmentSchema: z.ZodType<Stage3RoleAssignment> = z
 export const stage3CapturedUncoveredRoleSchema: z.ZodType<Stage3CapturedUncoveredRole> = z
   .object({
     category: personalPlanCategorySchema,
-    role: stage3SemanticRoleSchema,
+    role: planProductRoleSchema,
     reason: z.enum(["no_product_owned", "not_ready_to_decide"]),
   })
   .superRefine((uncoveredRole, ctx) => {
@@ -403,7 +401,7 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
   .object({
     decisionKey: idSchema,
     category: personalPlanCategorySchema,
-    role: stage3SemanticRoleSchema.nullable(),
+    role: planProductRoleSchema.nullable(),
     capturedProductId: idSchema.nullable(),
     verdict: z.enum(STAGE3_FIT_VERDICTS),
     choiceState: z.enum(STAGE3_CHOICE_STATES),
@@ -474,12 +472,64 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
     }
   })
 
-export const stage3CategoryRequirementSchema: z.ZodType<Stage3CategoryRequirement> = z.object({
-  category: personalPlanCategorySchema,
-  requiredRoles: z.array(stage3SemanticRoleSchema),
-  needSummary: z.string().min(1),
-  authorityVersion: idSchema,
-})
+export const stage3CategoryRequirementSchema: z.ZodType<Stage3CategoryRequirement> = z
+  .object({
+    category: personalPlanCategorySchema,
+    requiredRoles: z.array(planProductRoleSchema).min(1),
+    qualifyingRoutes: z.array(z.enum(STAGE3_HEAT_QUALIFYING_ROUTES)).min(1).optional(),
+    needSummary: z.string().min(1),
+    authorityVersion: idSchema,
+  })
+  .superRefine((requirement, context) => {
+    const policy = getCategoryRolePolicy(requirement.category)
+    if (requirement.authorityVersion !== policy.authorityVersion) {
+      context.addIssue({
+        code: "custom",
+        message: `authority version does not match category ${requirement.category}`,
+        path: ["authorityVersion"],
+      })
+    }
+    if (new Set(requirement.requiredRoles).size !== requirement.requiredRoles.length) {
+      context.addIssue({
+        code: "custom",
+        message: "required roles must be unique",
+        path: ["requiredRoles"],
+      })
+    }
+    if (requirement.category === "heat_protectant" && !requirement.qualifyingRoutes) {
+      context.addIssue({
+        code: "custom",
+        message: "heat protectant requires qualifying route metadata",
+        path: ["qualifyingRoutes"],
+      })
+    }
+    if (requirement.category !== "heat_protectant" && requirement.qualifyingRoutes) {
+      context.addIssue({
+        code: "custom",
+        message: `qualifying routes are not allowed for category ${requirement.category}`,
+        path: ["qualifyingRoutes"],
+      })
+    }
+    if (
+      requirement.qualifyingRoutes &&
+      new Set(requirement.qualifyingRoutes).size !== requirement.qualifyingRoutes.length
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "qualifying routes must be unique",
+        path: ["qualifyingRoutes"],
+      })
+    }
+    for (const role of requirement.requiredRoles) {
+      if (!roleAllowedForCategory(requirement.category, role)) {
+        context.addIssue({
+          code: "custom",
+          message: `role ${role} is not allowed for category ${requirement.category}`,
+          path: ["requiredRoles"],
+        })
+      }
+    }
+  })
 
 const authorityVersionsSchema = z
   .object({
@@ -527,14 +577,16 @@ export function isExecutableChoice(
 
 export function stage3DecisionKey(
   category: PersonalPlanCategory,
-  role: Stage3SemanticRole,
+  role: PlanProductRole,
   capturedProductId: string | null,
 ): string {
   return `decision:${category}:${role}:${capturedProductId ?? "gap"}`
 }
 
 export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3DecisionSubject[] {
-  const productsById = new Map(draft.products.map((product) => [product.capturedProductId, product]))
+  const productsById = new Map(
+    draft.products.map((product) => [product.capturedProductId, product]),
+  )
   const subjects: Stage3DecisionSubject[] = []
 
   for (const assignment of draft.roleAssignments) {
@@ -573,7 +625,9 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
 
   const orderedCategories = new Set(draft.orderedCategories)
   const fallbackCategory = draft.orderedCategories.length === 1 ? draft.orderedCategories[0] : null
-  const productsById = new Map(draft.products.map((product) => [product.capturedProductId, product]))
+  const productsById = new Map(
+    draft.products.map((product) => [product.capturedProductId, product]),
+  )
 
   for (const product of draft.products) {
     if (!orderedCategories.has(product.identity.category)) {
@@ -652,10 +706,16 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
         `decision category ${decision.category} does not match product category ${product.identity.category}`,
       )
     }
-    if (product?.identity.kind === "pending_submission" && decision.choiceState !== "pending_review") {
+    if (
+      product?.identity.kind === "pending_submission" &&
+      decision.choiceState !== "pending_review"
+    ) {
       issues.push(`pending product ${product.capturedProductId} must remain pending_review`)
     }
-    if (decision.choiceState === "pending_review" && product?.identity.kind !== "pending_submission") {
+    if (
+      decision.choiceState === "pending_review" &&
+      product?.identity.kind !== "pending_submission"
+    ) {
       issues.push(`pending_review decision ${decision.decisionKey} requires a pending submission`)
     }
   }

@@ -33,6 +33,34 @@ const TABLE_COLUMN_CHECKS = [
     reason: "category support gating",
   },
   {
+    table: "product_heat_protectant_specs",
+    columns: ["product_id", "format", "provides_heat_protection"],
+    reason: "heat-protectant category spec support",
+  },
+  {
+    table: "product_scalp_care_specs",
+    columns: [
+      "product_id",
+      "primary_role",
+      "presentation_format",
+      "rinse_mode",
+      "application_instructions",
+    ],
+    reason: "scalp-care category spec support",
+  },
+  {
+    table: "product_application_protocols",
+    columns: [
+      "product_id",
+      "category",
+      "role",
+      "application_state",
+      "reapplication",
+      "instruction_modifiers",
+    ],
+    reason: "category application protocol support",
+  },
+  {
     table: "brands",
     columns: ["id", "canonical_name", "normalized_name"],
     reason: "brand resolution",

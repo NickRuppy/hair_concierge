@@ -9,6 +9,7 @@ test("full CI marker in PR title forces all path-aware gates", () => {
     retrieval_eval: true,
     playwright_smoke: true,
     security_scan: true,
+    personal_plan_db: true,
     full_ci: true,
   })
 })
@@ -19,6 +20,7 @@ test("diff failures can force all path-aware gates without changed files", () =>
     retrieval_eval: true,
     playwright_smoke: true,
     security_scan: true,
+    personal_plan_db: true,
     full_ci: true,
   })
 })
@@ -58,4 +60,24 @@ test("product list chunk changes run retrieval eval", () => {
 test("workflow and dependency changes mark security scan relevant", () => {
   assert.equal(classifyCiScope([".github/workflows/ci.yml"]).security_scan, true)
   assert.equal(classifyCiScope(["package-lock.json"]).security_scan, true)
+})
+
+test("Personal Plan persistence and database contracts run the local database gate", () => {
+  assert.equal(
+    classifyCiScope(["supabase/tests/personal_plan_stage1_3_foundation.sql"]).personal_plan_db,
+    true,
+  )
+  assert.equal(
+    classifyCiScope(["scripts/ci/prepare-personal-plan-db-transition.mjs"]).personal_plan_db,
+    true,
+  )
+  assert.equal(
+    classifyCiScope(["src/lib/personal-plan/persistence/plan-repository.ts"]).personal_plan_db,
+    true,
+  )
+  assert.equal(
+    classifyCiScope(["src/lib/product-intake/submit-personal-plan-product.ts"]).personal_plan_db,
+    true,
+  )
+  assert.equal(classifyCiScope(["docs/readme.md"]).personal_plan_db, false)
 })

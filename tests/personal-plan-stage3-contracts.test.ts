@@ -2,10 +2,11 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  CATEGORY_AUTHORITY_STUBS,
-  OIL_PURPOSES,
+  CATEGORY_ROLE_POLICIES,
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
+  PLAN_PRODUCT_ROLES,
   deriveStage3DecisionSubjects,
+  stage3CategoryRequirementSchema,
   stage3CapturedProductSchema,
   stage3ProductDecisionSchema,
   stage3RoleAssignmentSchema,
@@ -19,7 +20,7 @@ function draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3ProductDraft 
   return {
     schemaVersion: 1,
     status: "active",
-    authorityVersions: { oil: CATEGORY_AUTHORITY_STUBS.oil.authorityVersion },
+    authorityVersions: { oil: CATEGORY_ROLE_POLICIES.oil.authorityVersion },
     draftId: "draft-contract",
     userId: "user-1",
     personalPlanId: "plan-1",
@@ -32,6 +33,7 @@ function draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3ProductDraft 
     products: [
       {
         capturedProductId: "oil-1",
+        userProductId: "user-product-oil-1",
         identity: {
           kind: "catalog_product",
           productId: "catalog-oil-1",
@@ -43,9 +45,7 @@ function draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3ProductDraft 
         source: "catalog_search",
       },
     ],
-    roleAssignments: [
-      { capturedProductId: "oil-1", category: "oil", roles: ["dry_finish"] },
-    ],
+    roleAssignments: [{ capturedProductId: "oil-1", category: "oil", roles: ["dry_finish"] }],
     uncoveredRoles: [],
     decisions: [],
     completedCaptureCategories: ["oil"],
@@ -56,7 +56,7 @@ function draft(overrides: Partial<Stage3ProductDraft> = {}): Stage3ProductDraft 
   }
 }
 
-test("Stage 3 owns exact category, Oil purpose, and Conditioner coverage literals", () => {
+test("Stage 3 owns canonical PlanProductRole authorities without fixture provenance", () => {
   assert.deepEqual(PERSONAL_PLAN_PRODUCT_CATEGORIES, [
     "shampoo",
     "conditioner",
@@ -69,25 +69,41 @@ test("Stage 3 owns exact category, Oil purpose, and Conditioner coverage literal
     "bondbuilder",
     "deep_cleansing_shampoo",
   ])
-  assert.deepEqual(OIL_PURPOSES, ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"])
-  assert.deepEqual(CATEGORY_AUTHORITY_STUBS.oil.requiredRoles, [
-    "prewash_lengths",
-    "damp_leave_on",
+  assert.deepEqual(CATEGORY_ROLE_POLICIES.oil.allowedRoles, [
+    "pre_wash_fibre_treatment",
+    "leave_on_fibre_conditioning",
     "dry_finish",
-    "scalp",
   ])
-  assert.deepEqual(CATEGORY_AUTHORITY_STUBS.conditioner.requiredRoles, ["category_coverage"])
+  assert.deepEqual(CATEGORY_ROLE_POLICIES.scalp_care.allowedRoles, [
+    "scalp_comfort",
+    "scalp_flake_oil_adjunct",
+    "density_claim_tonic",
+    "scalp_exfoliant",
+  ])
+  assert.deepEqual(CATEGORY_ROLE_POLICIES.heat_protectant.allowedRoles, ["pre_heat_protection"])
   assert.equal(
-    CATEGORY_AUTHORITY_STUBS.conditioner.roleMultiplicity.category_coverage,
+    CATEGORY_ROLE_POLICIES.conditioner.roleMultiplicity.conditioner_rinse_out,
     "multiple_products_per_role",
   )
-  assert.equal(CATEGORY_AUTHORITY_STUBS.heat_protectant.catalogSupport, "fixture_only")
-  assert.equal(CATEGORY_AUTHORITY_STUBS.scalp_care.catalogSupport, "fixture_only")
+  for (const policy of Object.values(CATEGORY_ROLE_POLICIES)) {
+    assert.equal(policy.authorityVersion.startsWith("stage3.fixture."), false)
+  }
+})
+
+test("every canonical role belongs to exactly one category policy", () => {
+  for (const role of PLAN_PRODUCT_ROLES) {
+    const owners = Object.values(CATEGORY_ROLE_POLICIES)
+      .filter((policy) => policy.allowedRoles.some((allowedRole) => allowedRole === role))
+      .map((policy) => policy.category)
+
+    assert.equal(owners.length, 1, `${role} must have exactly one category owner`)
+  }
 })
 
 test("captured products require exact identity, owned state, and canonical ProductFrequency", () => {
   const valid = {
     capturedProductId: "captured-1",
+    userProductId: "user-product-1",
     identity: {
       kind: "catalog_product",
       productId: "product-1",
@@ -99,6 +115,8 @@ test("captured products require exact identity, owned state, and canonical Produ
     source: "catalog_search",
   }
   assert.equal(stage3CapturedProductSchema.safeParse(valid).success, true)
+  const { userProductId: _missingUserProductId, ...withoutUserProductId } = valid
+  assert.equal(stage3CapturedProductSchema.safeParse(withoutUserProductId).success, false)
   assert.equal(
     stage3CapturedProductSchema.safeParse({ ...valid, frequencyRange: "sometimes" }).success,
     false,
@@ -114,10 +132,28 @@ test("captured products require exact identity, owned state, and canonical Produ
 
 test("role and decision schemas enforce category authority and explicit allowed choices", () => {
   assert.equal(
+    stage3CategoryRequirementSchema.safeParse({
+      category: "oil",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Oil",
+      authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+    }).success,
+    false,
+  )
+  assert.equal(
+    stage3CategoryRequirementSchema.safeParse({
+      category: "heat_protectant",
+      requiredRoles: ["pre_heat_protection"],
+      needSummary: "Heat",
+      authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+    }).success,
+    false,
+  )
+  assert.equal(
     stage3RoleAssignmentSchema.safeParse({
       capturedProductId: "oil-1",
       category: "oil",
-      roles: ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"],
+      roles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
     }).success,
     true,
   )
@@ -125,7 +161,7 @@ test("role and decision schemas enforce category authority and explicit allowed 
     stage3RoleAssignmentSchema.safeParse({
       capturedProductId: "oil-1",
       category: "oil",
-      roles: ["category_coverage"],
+      roles: ["conditioner_rinse_out"],
     }).success,
     false,
   )
@@ -168,6 +204,7 @@ test("draft validation allows Conditioner coverage multiplicity but rejects dupl
         {
           ...draft().products[0],
           capturedProductId: "conditioner-1",
+          userProductId: "user-product-conditioner-1",
           identity: {
             kind: "catalog_product",
             productId: "conditioner-1",
@@ -178,6 +215,7 @@ test("draft validation allows Conditioner coverage multiplicity but rejects dupl
         {
           ...draft().products[0],
           capturedProductId: "conditioner-2",
+          userProductId: "user-product-conditioner-2",
           identity: {
             kind: "catalog_product",
             productId: "conditioner-2",
@@ -187,8 +225,16 @@ test("draft validation allows Conditioner coverage multiplicity but rejects dupl
         },
       ],
       roleAssignments: [
-        { capturedProductId: "conditioner-1", category: "conditioner", roles: ["category_coverage"] },
-        { capturedProductId: "conditioner-2", category: "conditioner", roles: ["category_coverage"] },
+        {
+          capturedProductId: "conditioner-1",
+          category: "conditioner",
+          roles: ["conditioner_rinse_out"],
+        },
+        {
+          capturedProductId: "conditioner-2",
+          category: "conditioner",
+          roles: ["conditioner_rinse_out"],
+        },
       ],
     }),
     [],
@@ -201,6 +247,7 @@ test("draft validation allows Conditioner coverage multiplicity but rejects dupl
           ...draft().products,
           {
             capturedProductId: "oil-2",
+            userProductId: "user-product-oil-2",
             identity: {
               kind: "catalog_product",
               productId: "catalog-oil-2",
@@ -230,6 +277,7 @@ test("decision subjects are derived per assigned product-role or explicit gap", 
       {
         ...draft().products[0],
         capturedProductId: "conditioner-1",
+        userProductId: "user-product-conditioner-1",
         identity: {
           kind: "catalog_product",
           productId: "conditioner-1",
@@ -240,6 +288,7 @@ test("decision subjects are derived per assigned product-role or explicit gap", 
       {
         ...draft().products[0],
         capturedProductId: "conditioner-2",
+        userProductId: "user-product-conditioner-2",
         identity: {
           kind: "catalog_product",
           productId: "conditioner-2",
@@ -249,33 +298,41 @@ test("decision subjects are derived per assigned product-role or explicit gap", 
       },
     ],
     roleAssignments: [
-      { capturedProductId: "conditioner-1", category: "conditioner", roles: ["category_coverage"] },
-      { capturedProductId: "conditioner-2", category: "conditioner", roles: ["category_coverage"] },
+      {
+        capturedProductId: "conditioner-1",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+      {
+        capturedProductId: "conditioner-2",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
     ],
     uncoveredRoles: [
-      { category: "heat_protectant", role: "heat_protection_hot_tools", reason: "no_product_owned" },
+      { category: "heat_protectant", role: "pre_heat_protection", reason: "no_product_owned" },
     ],
   })
 
   assert.deepEqual(subjects, [
     {
-      decisionKey: "decision:conditioner:category_coverage:conditioner-1",
+      decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-1",
       category: "conditioner",
-      role: "category_coverage",
+      role: "conditioner_rinse_out",
       capturedProductId: "conditioner-1",
       subjectKind: "captured_product",
     },
     {
-      decisionKey: "decision:conditioner:category_coverage:conditioner-2",
+      decisionKey: "decision:conditioner:conditioner_rinse_out:conditioner-2",
       category: "conditioner",
-      role: "category_coverage",
+      role: "conditioner_rinse_out",
       capturedProductId: "conditioner-2",
       subjectKind: "captured_product",
     },
     {
-      decisionKey: "decision:heat_protectant:heat_protection_hot_tools:gap",
+      decisionKey: "decision:heat_protectant:pre_heat_protection:gap",
       category: "heat_protectant",
-      role: "heat_protection_hot_tools",
+      role: "pre_heat_protection",
       capturedProductId: null,
       subjectKind: "uncovered_role",
     },

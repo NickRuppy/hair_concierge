@@ -1,0 +1,187 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
+
+import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
+import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import type { Stage2RefinementPersistence, Stage2PersistedDraft } from "./stage2-refinement-service"
+
+type AdminClient = SupabaseClient
+
+/** Server-only persistence adapter. It is intentionally supplied only to route composition. */
+export function createSupabaseStage2RefinementPersistence(
+  client: AdminClient,
+): Stage2RefinementPersistence {
+  return {
+    async loadOrCreate(userId) {
+      const { data: plan, error: planError } = await client
+        .from("personal_plans")
+        .select("id,current_initial_need_version_id")
+        .eq("user_id", userId)
+        .maybeSingle()
+      if (planError || !plan?.current_initial_need_version_id)
+        throw new Error("stage2_plan_unavailable")
+
+      const { data: initial, error: initialError } = await client
+        .from("personal_plan_need_versions")
+        .select("id,prepared_artifact_source_id,input_snapshot,output_snapshot")
+        .eq("id", plan.current_initial_need_version_id)
+        .eq("user_id", userId)
+        .maybeSingle()
+      if (initialError || !initial?.prepared_artifact_source_id)
+        throw new Error("stage2_initial_need_unavailable")
+      const triggerContext = deriveStage2TriggerContext(
+        initial.output_snapshot as InitialNeedPlanSnapshot,
+      )
+
+      const { data: current, error: currentError } = await client
+        .from("personal_plan_refinement_drafts")
+        .select(
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+        )
+        .eq("personal_plan_id", plan.id)
+        .eq("base_initial_need_version_id", initial.id)
+        .eq("status", "in_progress")
+        .maybeSingle()
+      if (currentError) throw new Error("stage2_draft_read_failed")
+      if (current) return mapDraft(current, triggerContext, initial)
+
+      const { data: completed, error: completedError } = await client
+        .from("personal_plan_refinement_drafts")
+        .select(
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+        )
+        .eq("personal_plan_id", plan.id)
+        .eq("base_initial_need_version_id", initial.id)
+        .eq("status", "complete")
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (completedError) throw new Error("stage2_completed_draft_read_failed")
+      if (completed) return mapDraft(completed, triggerContext, initial)
+
+      const { data: created, error: createError } = await client
+        .from("personal_plan_refinement_drafts")
+        .insert({
+          user_id: userId,
+          personal_plan_id: plan.id,
+          base_initial_need_version_id: initial.id,
+          schema_version: 1,
+          answers: {},
+          completed_question_ids: [],
+        })
+        .select(
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+        )
+        .single()
+      if (!createError && created) return mapDraft(created, triggerContext, initial)
+
+      // The partial unique index turns concurrent creation into a safe read-after-conflict.
+      const { data: raced, error: racedError } = await client
+        .from("personal_plan_refinement_drafts")
+        .select(
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+        )
+        .eq("personal_plan_id", plan.id)
+        .eq("base_initial_need_version_id", initial.id)
+        .eq("status", "in_progress")
+        .single()
+      if (racedError || !raced) throw new Error("stage2_draft_create_failed")
+      return mapDraft(raced, triggerContext, initial)
+    },
+    async reopen({ userId, draft }) {
+      const insert = {
+        user_id: userId,
+        personal_plan_id: draft.personalPlanId,
+        base_initial_need_version_id: draft.baseInitialNeedVersionId,
+        schema_version: draft.schemaVersion,
+        answers: draft.answers,
+        completed_question_ids: draft.completedQuestionIds,
+        revision: draft.revision,
+      }
+      const columns =
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id"
+      const { data: created, error } = await client
+        .from("personal_plan_refinement_drafts")
+        .insert(insert)
+        .select(columns)
+        .single()
+      const initial = {
+        prepared_artifact_source_id: draft.preparedArtifactSourceId,
+        input_snapshot: draft.baseInputSnapshot,
+      }
+      if (!error && created) return mapDraft(created, draft.triggerContext, initial)
+      const { data: raced, error: racedError } = await client
+        .from("personal_plan_refinement_drafts")
+        .select(columns)
+        .eq("personal_plan_id", draft.personalPlanId)
+        .eq("base_initial_need_version_id", draft.baseInitialNeedVersionId)
+        .eq("status", "in_progress")
+        .single()
+      if (racedError || !raced) throw new Error("stage2_draft_reopen_failed")
+      return mapDraft(raced, draft.triggerContext, initial)
+    },
+    async save(input) {
+      const { data, error } = await client.rpc("personal_plan_save_refinement_draft", {
+        p_user_id: input.userId,
+        p_draft_id: input.draft.id,
+        p_expected_revision: input.expectedRevision,
+        p_answers: input.answers,
+        p_completed_question_ids: input.completedQuestionIds,
+      })
+      if (error || !data) throw new Error("stage2_save_failed")
+      if (data.outcome === "revision_conflict")
+        return { outcome: "revision_conflict", revision: Number(data.currentRevision) }
+      if (data.outcome !== "saved") throw new Error("stage2_save_rejected")
+      return { outcome: "saved", revision: Number(data.revision) }
+    },
+    async complete(input) {
+      const { data, error } = await client.rpc("personal_plan_complete_refinement_draft", {
+        p_user_id: input.userId,
+        p_personal_plan_id: input.draft.personalPlanId,
+        p_draft_id: input.draft.id,
+        p_expected_revision: input.expectedRevision,
+        p_schema_version: input.schemaVersion,
+        p_computation_version: input.computationVersion,
+        p_input_hash: input.inputHash,
+        p_input_snapshot: input.inputSnapshot,
+        p_output_snapshot: input.outputSnapshot,
+      })
+      if (error || !data) throw new Error("stage2_complete_failed")
+      if (data.outcome === "revision_conflict")
+        return { outcome: "revision_conflict", revision: Number(data.currentRevision ?? 0) }
+      if (data.outcome === "stale_source") return { outcome: "stale_source" }
+      if (
+        (data.outcome === "completed" || data.outcome === "already_completed") &&
+        data.refinedNeedVersionId
+      ) {
+        return { outcome: data.outcome, refinedVersionId: String(data.refinedNeedVersionId) }
+      }
+      throw new Error("stage2_complete_rejected")
+    },
+  }
+}
+
+function mapDraft(
+  row: Record<string, unknown>,
+  triggerContext: Stage2PersistedDraft["triggerContext"],
+  initial: { prepared_artifact_source_id: string; input_snapshot: unknown },
+): Stage2PersistedDraft {
+  return {
+    id: String(row.id),
+    personalPlanId: String(row.personal_plan_id),
+    baseInitialNeedVersionId: String(row.base_initial_need_version_id),
+    schemaVersion: Number(row.schema_version),
+    preparedArtifactSourceId: initial.prepared_artifact_source_id,
+    baseInputSnapshot: initial.input_snapshot as Stage2PersistedDraft["baseInputSnapshot"],
+    pathVersion: `stage2-v${String(row.schema_version)}`,
+    triggerContext,
+    answers: (row.answers ?? {}) as Stage2PersistedDraft["answers"],
+    completedQuestionIds: (row.completed_question_ids ??
+      []) as Stage2PersistedDraft["completedQuestionIds"],
+    revision: Number(row.revision),
+    status: row.status as Stage2PersistedDraft["status"],
+    refinedVersionId:
+      typeof row.result_refined_need_version_id === "string"
+        ? row.result_refined_need_version_id
+        : null,
+  }
+}

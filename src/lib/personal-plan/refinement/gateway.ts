@@ -8,6 +8,9 @@ export type Stage2RefinementErrorCode =
   | "invalid_answer"
   | "question_not_current"
   | "incomplete_refinement"
+  | "temporarily_unavailable"
+  | "unsupported_snapshot_version"
+  | "snapshot_too_large"
 
 export class Stage2RefinementError extends Error {
   constructor(

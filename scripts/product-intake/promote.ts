@@ -74,6 +74,8 @@ export const REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY = {
   dry_shampoo: ["product_dry_shampoo_specs"],
   deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
   bondbuilder: ["product_bondbuilder_specs"],
+  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
+  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
 } as const
 
 type PromotionCategory = keyof typeof REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY

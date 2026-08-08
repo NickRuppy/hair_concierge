@@ -591,6 +591,8 @@ const PRODUCT_LOOKUP_CATEGORY_LABELS: Record<ProductIntakeCategoryKey, string> =
   dry_shampoo: "Trockenshampoo",
   deep_cleansing_shampoo: "Tiefenreinigungsshampoo",
   bondbuilder: "Bondbuilder",
+  heat_protectant: "Hitzeschutz",
+  scalp_care: "Kopfhautpflege",
 }
 
 function isProductIntakeCategoryKey(value: string | null): value is ProductIntakeCategoryKey {
@@ -1554,10 +1556,11 @@ function buildLookupInputFromNamedProductContext(
 }
 
 function stripTrailingCategoryTerm(displayName: string, category: ProductIntakeCategoryKey) {
-  const terms = [
-    PRODUCT_LOOKUP_CATEGORY_LABELS[category],
-    ...getAgentV2NamedProductCategoryReferenceTerms(category),
-  ]
+  const agentV2ReferenceTerms =
+    category === "heat_protectant" || category === "scalp_care"
+      ? []
+      : getAgentV2NamedProductCategoryReferenceTerms(category)
+  const terms = [PRODUCT_LOOKUP_CATEGORY_LABELS[category], ...agentV2ReferenceTerms]
     .map((term) => term.trim())
     .filter(Boolean)
     .sort((left, right) => right.length - left.length)

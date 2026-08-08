@@ -6,6 +6,7 @@ import { Stage2PreviewClient } from "@/app/labs/personal-plan-stage-2/preview-cl
 import type { Stage2HandoffPayload } from "@/components/personal-plan-refinement/refinement-flow"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
 import type { Stage3EntryContext } from "@/lib/personal-plan/products/contracts"
+import { developmentStage3Analytics } from "@/lib/personal-plan/products/stage3-development-analytics"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 
 import { prepareStage3EntryContextAction } from "./actions"
@@ -38,6 +39,7 @@ export function PersonalPlanStage1To3JourneyClient({
             entryContext={entryContext}
             draftId={`fixture-stage3-${entryContext.refinedVersionId}`}
             userId="fixture-user"
+            analytics={developmentStage3Analytics}
             onBackToRefinement={() => setEntryContext(null)}
           />
         </div>

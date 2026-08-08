@@ -1,4 +1,5 @@
-import { CATEGORY_AUTHORITY_STUBS } from "./authorities"
+import { CATEGORY_ROLE_POLICIES } from "./authorities"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 import {
   deriveStage3DecisionSubjects,
   isExecutableChoice,
@@ -17,7 +18,6 @@ import {
   type Stage3ProductDecision,
   type Stage3ProductDraft,
   type Stage3RoleAssignment,
-  type Stage3SemanticRole,
 } from "./contracts"
 
 type CreateStage3DraftInput = {
@@ -57,7 +57,10 @@ export function createStage3Draft(input: CreateStage3DraftInput): Stage3ProductD
   }
 }
 
-function cloneWithRevision(draft: Stage3ProductDraft, updates: Partial<Stage3ProductDraft>): Stage3ProductDraft {
+function cloneWithRevision(
+  draft: Stage3ProductDraft,
+  updates: Partial<Stage3ProductDraft>,
+): Stage3ProductDraft {
   const next: Stage3ProductDraft = {
     ...draft,
     ...updates,
@@ -71,14 +74,15 @@ function cloneWithRevision(draft: Stage3ProductDraft, updates: Partial<Stage3Pro
   return next
 }
 
-function pruneInvalidDecisionDescendants(draft: Stage3ProductDraft): Pick<
-  Stage3ProductDraft,
-  "decisions" | "completedDecisionKeys"
-> {
+function pruneInvalidDecisionDescendants(
+  draft: Stage3ProductDraft,
+): Pick<Stage3ProductDraft, "decisions" | "completedDecisionKeys"> {
   const validDecisionKeys = new Set(
     deriveStage3DecisionSubjects(draft).map((subject) => subject.decisionKey),
   )
-  const decisions = draft.decisions.filter((decision) => validDecisionKeys.has(decision.decisionKey))
+  const decisions = draft.decisions.filter((decision) =>
+    validDecisionKeys.has(decision.decisionKey),
+  )
   const remainingDecisionKeys = new Set(decisions.map((decision) => decision.decisionKey))
   const completedDecisionKeys = draft.completedDecisionKeys.filter((decisionKey) =>
     remainingDecisionKeys.has(decisionKey),
@@ -110,10 +114,14 @@ export function addCapturedProduct(
       `identity category ${parsedProduct.identity.category} does not match ordered categories`,
     )
   }
-  if (draft.products.some((existing) => existing.capturedProductId === parsedProduct.capturedProductId)) {
+  if (
+    draft.products.some(
+      (existing) => existing.capturedProductId === parsedProduct.capturedProductId,
+    )
+  ) {
     throw new Error(`captured product ${parsedProduct.capturedProductId} already exists`)
   }
-  const authority = CATEGORY_AUTHORITY_STUBS[parsedProduct.identity.category]
+  const authority = CATEGORY_ROLE_POLICIES[parsedProduct.identity.category]
   const sameCategoryCount = draft.products.filter(
     (existing) => existing.identity.category === parsedProduct.identity.category,
   ).length
@@ -165,7 +173,8 @@ export function markRoleUncovered(
     .filter((assignment) => assignment.roles.length > 0)
   const withoutExisting = draft.uncoveredRoles.filter(
     (existing) =>
-      existing.category !== parsedUncoveredRole.category || existing.role !== parsedUncoveredRole.role,
+      existing.category !== parsedUncoveredRole.category ||
+      existing.role !== parsedUncoveredRole.role,
   )
   const candidate: Stage3ProductDraft = {
     ...draft,
@@ -221,6 +230,7 @@ export function removeCapturedProduct(
 export function completeCaptureCategory(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
+  requirements: Stage3CategoryRequirement[],
 ): Stage3ProductDraft {
   if (!draft.orderedCategories.includes(category)) {
     throw new Error(`category ${category} is not in this draft`)
@@ -228,11 +238,13 @@ export function completeCaptureCategory(
   const completed = new Set(draft.completedCaptureCategories)
   completed.add(category)
   const next = cloneWithRevision(draft, {
-    completedCaptureCategories: draft.orderedCategories.filter((candidate) => completed.has(candidate)),
+    completedCaptureCategories: draft.orderedCategories.filter((candidate) =>
+      completed.has(candidate),
+    ),
   })
   return {
     ...next,
-    pass: computeCaptureCompletion(next, requirementsFromDraft(next)).canCompleteCapture
+    pass: computeCaptureCompletion(next, requirements).canCompleteCapture
       ? "product_decisions"
       : "product_capture",
   }
@@ -269,21 +281,11 @@ export function invalidateDraftForRefinedVersion(
   }
 }
 
-function requirementsFromDraft(draft: Stage3ProductDraft): Stage3CategoryRequirement[] {
-  return draft.orderedCategories.map((category) => ({
-    category,
-    requiredRoles: [...(CATEGORY_AUTHORITY_STUBS[category].requiredRoles as Stage3SemanticRole[])],
-    needSummary: "",
-    authorityVersion:
-      draft.authorityVersions[category] ?? CATEGORY_AUTHORITY_STUBS[category].authorityVersion,
-  }))
-}
-
 function getRolesForCategory(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
-): Set<Stage3SemanticRole> {
-  const roles = new Set<Stage3SemanticRole>()
+): Set<PlanProductRole> {
+  const roles = new Set<PlanProductRole>()
   for (const assignment of draft.roleAssignments) {
     if (assignment.category !== category) continue
     for (const role of assignment.roles) roles.add(role)
@@ -294,8 +296,8 @@ function getRolesForCategory(
 function getUncoveredRolesForCategory(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
-): Set<Stage3SemanticRole> {
-  const roles = new Set<Stage3SemanticRole>()
+): Set<PlanProductRole> {
+  const roles = new Set<PlanProductRole>()
   for (const uncoveredRole of draft.uncoveredRoles) {
     if (uncoveredRole.category === category) roles.add(uncoveredRole.role)
   }
@@ -305,16 +307,20 @@ function getUncoveredRolesForCategory(
 function hasDecisionForRole(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
-  role: Stage3SemanticRole,
+  role: PlanProductRole,
 ): boolean {
-  return draft.decisions.some((decision) => decision.category === category && decision.role === role)
+  return draft.decisions.some(
+    (decision) => decision.category === category && decision.role === role,
+  )
 }
 
 function areAllDecisionSubjectsComplete(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
 ): boolean {
-  const subjects = deriveStage3DecisionSubjects(draft).filter((subject) => subject.category === category)
+  const subjects = deriveStage3DecisionSubjects(draft).filter(
+    (subject) => subject.category === category,
+  )
   return (
     subjects.length > 0 &&
     subjects.every((subject) =>
@@ -369,7 +375,9 @@ function computeCaptureCompletion(
 
   const canCompleteCapture =
     draft.status === "active" &&
-    blockingReasons.every((reason) => reason.code !== "capture_incomplete" && reason.code !== "role_uncovered")
+    blockingReasons.every(
+      (reason) => reason.code !== "capture_incomplete" && reason.code !== "role_uncovered",
+    )
 
   return { canCompleteCapture, blockingReasons, categorySummaries }
 }
@@ -389,7 +397,11 @@ export function computeStage3PathState(
     if (draft.completedCaptureCategories.includes(requirement.category)) {
       completedStepKeys.push(`capture:${requirement.category}`)
     }
-    if (requirement.requiredRoles.every((role) => getRolesForCategory(draft, requirement.category).has(role))) {
+    if (
+      requirement.requiredRoles.every((role) =>
+        getRolesForCategory(draft, requirement.category).has(role),
+      )
+    ) {
       completedStepKeys.push(`roles:${requirement.category}`)
     } else if (
       requirement.requiredRoles.every((role) => {
@@ -442,9 +454,7 @@ export function computeStage3PathState(
   }
 
   const subjects = deriveStage3DecisionSubjects(draft)
-  const requirementKeys = new Set(
-    requirements.map((requirement) => requirement.category),
-  )
+  const requirementKeys = new Set(requirements.map((requirement) => requirement.category))
   const decisionStepKeys = subjects
     .filter((subject) => requirementKeys.has(subject.category))
     .map((subject) => subject.decisionKey)
@@ -462,7 +472,8 @@ export function computeStage3PathState(
       if (
         roleSubjects.length === 0 ||
         roleSubjects.some(
-          (subject) => !draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
+          (subject) =>
+            !draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
         )
       ) {
         blockingReasons.push({
@@ -496,9 +507,10 @@ export function computeStage3PathState(
     firstUnresolvedStepKey: firstUnresolvedDecisionStepKey,
     categorySummaries: captureCompletion.categorySummaries.map((summary) => ({
       ...summary,
-      completedDecisions: requirements
-        .find((requirement) => requirement.category === summary.category)!
-        .requiredRoles.every((role) => hasDecisionForRole(draft, summary.category, role)) &&
+      completedDecisions:
+        requirements
+          .find((requirement) => requirement.category === summary.category)!
+          .requiredRoles.every((role) => hasDecisionForRole(draft, summary.category, role)) &&
         areAllDecisionSubjectsComplete(draft, summary.category),
     })),
     canCompleteCapture: true,

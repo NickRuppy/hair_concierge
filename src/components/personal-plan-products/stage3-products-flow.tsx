@@ -3,8 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import { CATEGORY_AUTHORITY_STUBS } from "@/lib/personal-plan/products/authorities"
+import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import {
+  noOpStage3Analytics,
+  type Stage3AnalyticsPort,
+} from "@/lib/personal-plan/products/stage3-analytics"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 import {
   deriveStage3DecisionSubjects,
   type PersonalPlanCategory,
@@ -13,16 +17,19 @@ import {
   type Stage3EntryContext,
   type Stage3ProductDecision,
   type Stage3ProductDraft,
-  type Stage3SemanticRole,
 } from "@/lib/personal-plan/products/contracts"
 import { createStage3Draft } from "@/lib/personal-plan/products/state-machine"
 import {
   createFixtureStage3Gateway,
   FixtureGatewaySimulatedError,
-  type FixtureCompleteResponse,
-  type FixtureMutation,
-  type FixtureStage3Gateway,
 } from "@/lib/personal-plan/products/fixture-gateway"
+import {
+  Stage3ProductsGatewayError,
+  type Stage3CompleteResponse,
+  type Stage3IntakeClientPort,
+  type Stage3ProductsGateway,
+  type Stage3ProductsMutation,
+} from "@/lib/personal-plan/products/gateway"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import {
@@ -55,10 +62,16 @@ type SystemIssue = {
 }
 
 const DEFAULT_REQUIREMENTS: Stage3CategoryRequirement[] = [
-  requirement("conditioner", "Pflege nach jeder Wäsche"),
-  requirement("oil", "Schutz und Finish für deine Längen"),
-  requirement("scalp_care", "Beruhigende Pflege für deine Kopfhaut"),
-  requirement("heat_protectant", "Schutz bei Styling mit Hitze"),
+  requirement("conditioner", ["conditioner_rinse_out"], "Pflege nach jeder Wäsche"),
+  requirement(
+    "oil",
+    ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+    "Schutz und Finish für deine Längen",
+  ),
+  requirement("scalp_care", ["scalp_comfort"], "Beruhigende Pflege für deine Kopfhaut"),
+  requirement("heat_protectant", ["pre_heat_protection"], "Schutz bei Styling mit Hitze", [
+    "direct_contact_heat",
+  ]),
 ]
 
 const CATEGORY_COPY: Record<PersonalPlanCategory, { label: string; need: string }> = {
@@ -77,31 +90,31 @@ const CATEGORY_COPY: Record<PersonalPlanCategory, { label: string; need: string 
   },
 }
 
-const ROLE_COPY: Record<Stage3SemanticRole, { label: string; description: string }> = {
-  shampoo_primary: { label: "Hauptreinigung", description: "Für deine regelmäßige Haarwäsche" },
-  shampoo_alternating: { label: "Abwechselnde Reinigung", description: "Als gezielte Ergänzung" },
-  prewash_lengths: { label: "Pre-Wash für die Längen", description: "Vor der Haarwäsche" },
-  damp_leave_on: { label: "Pflege im feuchten Haar", description: "Nach der Haarwäsche" },
+const ROLE_COPY: Record<PlanProductRole, { label: string; description: string }> = {
+  shampoo_everyday: { label: "Hauptreinigung", description: "Für deine regelmäßige Haarwäsche" },
+  shampoo_dandruff: { label: "Gezielte Reinigung", description: "Als gezielte Ergänzung" },
+  conditioner_rinse_out: { label: "Pflege nach der Wäsche", description: "Zum Ausspülen" },
+  post_wash_leave_in: { label: "Pflege im feuchten Haar", description: "Nach der Haarwäsche" },
+  pre_heat_application: { label: "Vor dem Styling", description: "Vor Wärme im Haar" },
+  intensive_conditioning_mask: { label: "Intensivpflege", description: "Als auswaschbare Pflege" },
+  pre_wash_fibre_treatment: { label: "Pre-Wash für die Längen", description: "Vor der Haarwäsche" },
+  leave_on_fibre_conditioning: {
+    label: "Pflege im feuchten Haar",
+    description: "Nach der Haarwäsche",
+  },
   dry_finish: { label: "Glanz und Finish", description: "Im trockenen Haar" },
-  scalp: { label: "Pflege der Kopfhaut", description: "Direkt auf der Kopfhaut" },
-  scalp_care_soothing: { label: "Kopfhaut beruhigen", description: "Für ein ruhigeres Hautgefühl" },
-  scalp_care_flake_control: {
+  residue_reset: { label: "Rückstände lösen", description: "Bei Bedarf" },
+  mineral_reset: { label: "Mineralrückstände lösen", description: "Bei Bedarf" },
+  root_refresh_bridge: { label: "Ansatz auffrischen", description: "Zwischen Haarwäschen" },
+  pre_heat_protection: { label: "Schutz vor Stylinghitze", description: "Vor Hitze" },
+  specialized_bond_treatment: { label: "Bondpflege", description: "Nach Produktprotokoll" },
+  scalp_comfort: { label: "Kopfhaut beruhigen", description: "Für ein ruhigeres Hautgefühl" },
+  scalp_flake_oil_adjunct: {
     label: "Schuppen kontrollieren",
     description: "Bei sichtbaren Schuppen",
   },
-  heat_protection_hot_tools: {
-    label: "Schutz vor Stylinghitze",
-    description: "Vor Glätteisen oder Lockenstab",
-  },
-  heat_protection_blow_dry: { label: "Schutz beim Föhnen", description: "Vor warmer Föhnluft" },
-  category_primary: {
-    label: "Geplante Hauptpflege",
-    description: "Für den vorgesehenen Routineplatz",
-  },
-  category_coverage: {
-    label: "Pflege nach der Wäsche",
-    description: "Mehrere passende Conditioner dürfen bleiben",
-  },
+  density_claim_tonic: { label: "Kopfhaut-Tonic", description: "Mit begrenzter Evidenz" },
+  scalp_exfoliant: { label: "Kopfhaut klären", description: "Bei Bedarf" },
 }
 
 const FREQUENCIES: Array<{ value: ProductFrequency; label: string }> = [
@@ -120,22 +133,26 @@ export function Stage3ProductsFlow({
   entryContext,
   draftId = "fixture-stage3-draft",
   userId = "fixture-user",
-  fixtureGateway,
+  gateway: providedGateway,
+  intakeClient,
+  analytics = noOpStage3Analytics,
   onBackToRefinement,
 }: {
   searchDebounceMs?: number
   entryContext?: Stage3EntryContext
   draftId?: string
   userId?: string
-  fixtureGateway?: FixtureStage3Gateway
+  gateway?: Stage3ProductsGateway
+  intakeClient?: Stage3IntakeClientPort
+  analytics?: Stage3AnalyticsPort
   onBackToRefinement?: () => void
 } = {}) {
   const requirements = entryContext?.orderedCategories ?? DEFAULT_REQUIREMENTS
   const personalPlanId = entryContext?.personalPlanId ?? "fixture-personal-plan"
   const refinedVersionId = entryContext?.refinedVersionId ?? "fixture-refined-version"
-  const gatewayRef = useRef<FixtureStage3Gateway | null>(null)
+  const gatewayRef = useRef<Stage3ProductsGateway | null>(null)
   if (!gatewayRef.current) {
-    gatewayRef.current = fixtureGateway ?? createFixtureStage3Gateway({ searchDelayMs: 0 })
+    gatewayRef.current = providedGateway ?? createFixtureStage3Gateway({ searchDelayMs: 0 })
   }
   const gateway = gatewayRef.current
 
@@ -161,15 +178,17 @@ export function Stage3ProductsFlow({
   const [pendingCandidate, setPendingCandidate] = useState<Stage3CatalogCandidate | null>(null)
   const [showFallback, setShowFallback] = useState(false)
   const [fallbackPending, setFallbackPending] = useState(false)
+  const [fallbackError, setFallbackError] = useState<string>()
   const [roleAssignments, setRoleAssignments] = useState<Record<string, string[]>>({})
   const [roleErrors, setRoleErrors] = useState<string[]>([])
   const [saveLabel, setSaveLabel] = useState("Wird geladen")
   const [systemIssue, setSystemIssue] = useState<SystemIssue | null>(null)
   const [completion, setCompletion] = useState<Extract<
-    FixtureCompleteResponse,
+    Stage3CompleteResponse,
     { status: "ready_for_routine" }
   > | null>(null)
   const searchToken = useRef(0)
+  const intakeIdempotencyKey = useRef<string | null>(null)
 
   const currentRequirement = requirements[categoryIndex]
   const currentCategory = currentRequirement?.category ?? requirements[0]?.category ?? "shampoo"
@@ -203,14 +222,14 @@ export function Stage3ProductsFlow({
           retry: () => window.location.reload(),
         })
       })
-    trackAppEvent("personal_plan_stage3_flow_viewed", {
+    analytics.track("personal_plan_stage3_flow_viewed", {
       pass: "product_capture",
       stepKey: "capture_orientation",
     })
     return () => {
       active = false
     }
-  }, [draftId, gateway, personalPlanId, refinedVersionId, requirements, userId])
+  }, [analytics, draftId, gateway, personalPlanId, refinedVersionId, requirements, userId])
 
   useEffect(() => {
     if (phase !== "capture") return
@@ -228,7 +247,7 @@ export function Stage3ProductsFlow({
       void gateway
         .search({ category: currentCategory, query: trimmed, requestToken })
         .then((response) => {
-          if (response.status === "ignored") return
+          if (response.requestToken !== searchToken.current) return
           const results = response.result.candidates.map((candidate) => ({
             candidateId: candidate.candidateId,
             displayName: candidate.displayName,
@@ -239,7 +258,7 @@ export function Stage3ProductsFlow({
           setSearchResults(results)
           setSearchStatus(results.length > 0 ? "ready" : "empty")
           setSearchMessage(results.length > 0 ? undefined : "Kein sicherer Treffer gefunden.")
-          trackAppEvent("personal_plan_stage3_search_interacted", {
+          analytics.track("personal_plan_stage3_search_interacted", {
             interaction: "results_viewed",
             resultCountBand: results.length === 0 ? "0" : results.length <= 3 ? "1_3" : "4_8",
           })
@@ -252,7 +271,7 @@ export function Stage3ProductsFlow({
     }, searchDebounceMs)
 
     return () => clearTimeout(timeout)
-  }, [currentCategory, gateway, phase, query, searchDebounceMs])
+  }, [analytics, currentCategory, gateway, phase, query, searchDebounceMs])
 
   const activeDraft = draft
 
@@ -292,7 +311,7 @@ export function Stage3ProductsFlow({
         onBack={onBackToRefinement}
         onContinue={() => {
           setPhase("capture")
-          trackAppEvent("personal_plan_stage3_flow_viewed", {
+          analytics.track("personal_plan_stage3_flow_viewed", {
             pass: "product_capture",
             stepKey: "product_search",
           })
@@ -307,9 +326,16 @@ export function Stage3ProductsFlow({
       return shell(
         <IntakeFallbackBoundary
           categoryLabel={currentCopy.label}
-          status={fallbackPending ? "pending" : "idle"}
-          message={fallbackPending ? "Produkt wird für die Prüfung gespeichert." : undefined}
+          status={fallbackPending ? "pending" : fallbackError ? "error" : "idle"}
+          message={fallbackPending ? "Produkt wird für die Prüfung gespeichert." : fallbackError}
+          frequencyOptions={FREQUENCIES}
+          selectedFrequency={frequency}
+          onFrequencyChange={(value) => {
+            setFrequency(value as ProductFrequency)
+            setFallbackError(undefined)
+          }}
           onOpen={() => void capturePendingProduct()}
+          onRetry={() => void capturePendingProduct()}
           onCancel={() => setShowFallback(false)}
         />,
         currentCopy.label,
@@ -365,8 +391,10 @@ export function Stage3ProductsFlow({
         }}
         onRemoveProduct={(capturedProductId) => void removeProduct(capturedProductId)}
         onOpenFallbackIntake={() => {
+          intakeIdempotencyKey.current ??= createStableIdempotencyKey()
+          setFallbackError(undefined)
           setShowFallback(true)
-          trackAppEvent("personal_plan_stage3_fallback_opened", { stepKey: "product_search" })
+          analytics.track("personal_plan_stage3_fallback_opened", { stepKey: "product_search" })
         }}
         onExplicitNone={currentProducts.length === 0 ? () => void markCurrentRoleGap() : undefined}
         onContinue={() => void continueCapture()}
@@ -419,7 +447,7 @@ export function Stage3ProductsFlow({
         onBack={() => setPhase("capture")}
         onContinue={() => {
           setPhase("decisions")
-          trackAppEvent("personal_plan_stage3_flow_viewed", {
+          analytics.track("personal_plan_stage3_flow_viewed", {
             pass: "product_decisions",
             stepKey: "fit_decision",
           })
@@ -489,7 +517,7 @@ export function Stage3ProductsFlow({
     if (!candidate) return
     setPendingCandidate(candidate)
     setFrequency(null)
-    trackAppEvent("personal_plan_stage3_search_interacted", {
+    analytics.track("personal_plan_stage3_search_interacted", {
       interaction: "candidate_selected",
       resultCountBand: searchResults.length <= 3 ? "1_3" : "4_8",
       selectedCandidatePosition: Math.min(8, candidatePosition + 1) as
@@ -518,7 +546,44 @@ export function Stage3ProductsFlow({
   }
 
   async function capturePendingProduct() {
+    if (!frequency) {
+      setFallbackError("Wähle zuerst aus, wie oft du dieses Produkt nutzt.")
+      return
+    }
     setFallbackPending(true)
+    setFallbackError(undefined)
+    if (intakeClient) {
+      try {
+        const response = await intakeClient.submit({
+          draftId: activeDraft.draftId,
+          expectedRevision: activeDraft.revision,
+          idempotencyKey:
+            intakeIdempotencyKey.current ??
+            (intakeIdempotencyKey.current = createStableIdempotencyKey()),
+          input: {
+            intake_method: "manual",
+            brand_text: "Unbekannte Marke",
+            product_name_text: `${currentCopy.label} – manuell hinzugefügt`,
+            frequency_range: frequency,
+          },
+        })
+        intakeIdempotencyKey.current = null
+        setDraft(response.draft)
+        setFallbackPending(false)
+        setShowFallback(false)
+        return
+      } catch (error) {
+        if (
+          error instanceof Stage3ProductsGatewayError &&
+          (error.code === "rolled_back" || error.code === "idempotency_key_reused")
+        ) {
+          intakeIdempotencyKey.current = null
+        }
+        setFallbackPending(false)
+        setFallbackError("Das Produkt konnte nicht gespeichert werden. Versuche es noch einmal.")
+        return
+      }
+    }
     await saveMutation(
       {
         type: "capture_pending_submission",
@@ -526,7 +591,7 @@ export function Stage3ProductsFlow({
         displayName: `${currentCopy.label} – manuell hinzugefügt`,
         category: currentCategory,
         reviewStatus: "pending_review",
-        frequencyRange: frequency ?? "weekly_2x",
+        frequencyRange: frequency,
       },
       () => {
         setFallbackPending(false)
@@ -552,7 +617,7 @@ export function Stage3ProductsFlow({
     setRoleAssignments(initialAssignments)
     setRoleErrors([])
     setPhase("roles")
-    trackAppEvent("personal_plan_stage3_flow_viewed", {
+    analytics.track("personal_plan_stage3_flow_viewed", {
       pass: "product_capture",
       stepKey: "role_assignment",
     })
@@ -594,7 +659,7 @@ export function Stage3ProductsFlow({
             type: "assign_roles",
             capturedProductId: product.capturedProductId,
             category: currentCategory,
-            roles: (roleAssignments[product.capturedProductId] ?? []) as Stage3SemanticRole[],
+            roles: (roleAssignments[product.capturedProductId] ?? []) as PlanProductRole[],
           },
         })
         if (response.status === "conflict")
@@ -678,7 +743,7 @@ export function Stage3ProductsFlow({
     }
     const decision = makeDecision(subject, action)
     await saveMutation({ type: "record_decision", decision }, (nextDraft) => {
-      trackAppEvent("personal_plan_stage3_decision_selected", {
+      analytics.track("personal_plan_stage3_decision_selected", {
         decisionType:
           action.kind === "pending"
             ? "pending_review"
@@ -727,7 +792,7 @@ export function Stage3ProductsFlow({
       setPhase("routine_ready")
       const hasPending = response.portfolio.pendingProducts.length > 0
       const hasGap = response.portfolio.uncoveredRoles.length > 0
-      trackAppEvent("personal_plan_stage3_handoff", {
+      analytics.track("personal_plan_stage3_handoff", {
         outcome: hasPending
           ? "ready_with_pending"
           : hasGap
@@ -740,7 +805,7 @@ export function Stage3ProductsFlow({
   }
 
   async function saveMutation(
-    mutation: FixtureMutation,
+    mutation: Stage3ProductsMutation,
     afterSave?: (nextDraft: Stage3ProductDraft) => void,
   ) {
     setSaveLabel("Wird gespeichert")
@@ -754,7 +819,7 @@ export function Stage3ProductsFlow({
         return handleConflict(response.latestDraft, () => void saveMutation(mutation, afterSave))
       setDraft(response.draft)
       setSaveLabel("Gespeichert")
-      trackAppEvent("personal_plan_stage3_save_outcome", { outcome: "saved" })
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       afterSave?.(response.draft)
     } catch (error) {
       handleMutationError(error, () => void saveMutation(mutation, afterSave))
@@ -769,7 +834,7 @@ export function Stage3ProductsFlow({
       message: "Wir haben den neuesten Stand geladen. Versuche deine letzte Auswahl erneut.",
       retry: () => {
         setSystemIssue(null)
-        trackAppEvent("personal_plan_stage3_save_outcome", { outcome: "conflict" })
+        analytics.track("personal_plan_stage3_save_outcome", { outcome: "conflict" })
         retry()
       },
     })
@@ -786,7 +851,7 @@ export function Stage3ProductsFlow({
       message,
       retry: () => {
         setSystemIssue(null)
-        trackAppEvent("personal_plan_stage3_save_outcome", { outcome: "retry" })
+        analytics.track("personal_plan_stage3_save_outcome", { outcome: "retry" })
         retry()
       },
     })
@@ -795,12 +860,18 @@ export function Stage3ProductsFlow({
 
 function requirement(
   category: PersonalPlanCategory,
+  requiredRoles: PlanProductRole[],
   needSummary: string,
+  qualifyingRoutes?: Stage3CategoryRequirement["qualifyingRoutes"],
 ): Stage3CategoryRequirement {
-  const authority = CATEGORY_AUTHORITY_STUBS[category]
+  const authority = CATEGORY_ROLE_POLICIES[category]
+  if (requiredRoles.some((role) => !authority.allowedRoles.includes(role as never))) {
+    throw new Error(`Fixture role is not allowed for category ${category}`)
+  }
   return {
     category,
-    requiredRoles: [...authority.requiredRoles],
+    requiredRoles,
+    ...(qualifyingRoutes ? { qualifyingRoutes } : {}),
     needSummary,
     authorityVersion: authority.authorityVersion,
   }
@@ -938,6 +1009,7 @@ function makeDecision(
     action.kind === "plan_purchase"
       ? {
           recommendationId: `fixture-recommendation-${subject.category}-${subject.role}`,
+          productId: `fixture-recommended-product-${subject.category}-${subject.role}`,
           category: subject.category,
           role: subject.role,
           displayName: "Leichter Pflege-Conditioner",
@@ -986,7 +1058,7 @@ function makeDecision(
 export function PortfolioHandoff({
   completion,
 }: {
-  completion: Extract<FixtureCompleteResponse, { status: "ready_for_routine" }>
+  completion: Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>
 }) {
   const portfolio: ProposedProductPortfolio = completion.portfolio
   return (
@@ -1023,4 +1095,8 @@ function SummaryRow({ label, value }: { label: string; value: number }) {
       <dd className="font-semibold text-foreground">{value}</dd>
     </div>
   )
+}
+
+function createStableIdempotencyKey(): string {
+  return crypto.randomUUID()
 }

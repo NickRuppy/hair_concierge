@@ -10,3 +10,13 @@ test("typed refinement errors expose stable recovery codes", () => {
   assert.equal(error.message, "Newer progress exists")
   assert.equal(error instanceof Error, true)
 })
+
+test("production refinement failures share the frozen unavailable and snapshot codes", () => {
+  for (const code of [
+    "temporarily_unavailable",
+    "unsupported_snapshot_version",
+    "snapshot_too_large",
+  ] as const) {
+    assert.equal(new Stage2RefinementError(code).code, code)
+  }
+})

@@ -2,6 +2,8 @@
 
 **Status:** the A/B-first journey, quiz-led Shampoo cadence, revised Stage-1 mockup, Oil/Leave-in V3 vocabulary port, final counterpart revalidation, and narrated-journey sign-off are complete. The retained artifact uses quiz-only best-match packshots, a non-sequential fold-up, and the short transition approved by Nick on 2026-08-07. PR A's deterministic engine is implemented, its final counterpart findings are reconciled, and verification is complete. PR B/C intentionally wait for the separate Stage-2 specification task to implement the frozen exact-product preview-selector boundary.
 
+**Production-persistence authority:** `plans/2026-08-07-personal-plan-stage1-3-production-foundation.md` supersedes this plan's `personal_plan_versions` naming, source-scoped plan cardinality, persistence tasks and production rollout wiring. This plan remains authoritative for Stage-1 deterministic behavior, fixtures, signed-off UI and user journey.
+
 **Outcome:** immediately after payment, an entitled Personal Plan buyer receives a deterministic, saved initial Bedarfsplan computed from the paid quiz facts already available. It explains which product categories and product types currently form the Basis, which are optional, their best-known occurrence rhythm, and why—before asking any further onboarding or current-product questions.
 
 **Parent context:** [Personal Plan App V1 plan](./2026-08-02-personal-plan-app-implementation-v2.md) and [computation specification](./2026-08-02-personal-plan-computation-spec.md).

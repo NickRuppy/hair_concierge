@@ -3,6 +3,7 @@ export type RouteClassification = "public" | "protected" | "legacy" | "developme
 export type RouteEnvironment = {
   ciOfferPageLabEnabled?: boolean
   ciPersonalPlanStage3LabEnabled?: boolean
+  ciPersonalPlanProductionJourneyEnabled?: boolean
   nodeEnv: string | undefined
   localDevLoginEnabled: boolean
   vercelEnv?: string | undefined
@@ -62,6 +63,7 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/onboarding",
   "/plan-bereit",
   "/profile",
+  "/plan-start",
   "/reactivate",
   "/routine",
   "/tracker",
@@ -71,6 +73,7 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/api/customerio",
   "/api/feedback",
   "/api/memory",
+  "/api/personal-plan",
   "/api/product-intake",
   "/api/products",
   "/api/profile",
@@ -114,6 +117,10 @@ export function classifyRoute(
   const isCiPersonalPlanStage3Lab =
     pathname === "/labs/personal-plan/stage-3" &&
     environment.ciPersonalPlanStage3LabEnabled === true
+  const isCiPersonalPlanProductionJourney =
+    pathname === "/plan-start" &&
+    isDevelopment &&
+    environment.ciPersonalPlanProductionJourneyEnabled === true
   const isLocalLoginRoute = pathname === LOCAL_LOGIN_ROUTE
   const isStandardDevelopmentRoute =
     DEVELOPMENT_EXACT_ROUTES.includes(pathname) ||
@@ -126,7 +133,8 @@ export function classifyRoute(
   if (
     (VERCEL_PREVIEW_DEVELOPMENT_ROUTES.includes(pathname) && isVercelPreview) ||
     isCiOfferPageLab ||
-    isCiPersonalPlanStage3Lab
+    isCiPersonalPlanStage3Lab ||
+    isCiPersonalPlanProductionJourney
   ) {
     return "development"
   }
