@@ -256,7 +256,7 @@ export function createFixtureStage3Gateway(
         refinedVersionId: draft.refinedVersionId,
         productPortfolioVersionId: portfolioVersionId,
         routineProposalId: `fixture-routine-proposal-${nextRoutineProposal++}`,
-        next: { stage: 4, href: "/plan-start/routine" },
+        next: { stage: 4, href: "/routine" },
       }
       drafts.set(draft.draftId, completedDraft)
       completions.set(draft.draftId, completed)

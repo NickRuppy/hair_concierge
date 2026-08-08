@@ -273,7 +273,7 @@ export function createProductionStage3ProductsGateway(
         refinedVersionId: draft.refinedVersionId,
         productPortfolioVersionId: staged.portfolioVersionId,
         routineProposalId: staged.routineProposalId,
-        next: { stage: 4, href: "/plan-start/routine" },
+        next: { stage: 4, href: "/routine" },
       }
     },
   }

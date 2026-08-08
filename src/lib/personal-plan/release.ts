@@ -2,6 +2,13 @@ type PersonalPlanAppReleaseEnvironment = {
   [key: string]: string | undefined
   PERSONAL_PLAN_APP_V1_ENABLED?: string
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
+  PERSONAL_PLAN_STAGE4_ENABLED?: string
+}
+
+export function isPersonalPlanStage4Enabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_STAGE4_ENABLED === "true"
 }
 
 const UTC_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/

@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan · Stage 4 Routine</title>
+    <style>
+      :root {
+        --paper: #fbfaf8;
+        --white: #fff;
+        --ink: #2f1938;
+        --muted: #746c75;
+        --line: #e7e0dd;
+        --plum: #7657a2;
+        --plum-dark: #44264e;
+        --plum-ice: #f3edf9;
+        --green: #579465;
+        --green-bg: #eef5ec;
+        --blue-bg: #edf3f7;
+        --rose-bg: #f7eeee;
+        --sand-bg: #f7f1e8;
+        --gold: #936f2f;
+        --danger: #9d4e58;
+        --shadow: 0 18px 50px rgba(55, 31, 62, 0.12);
+        --display: Georgia, "Times New Roman", serif;
+        --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #f1eeeb;
+        font-family: var(--sans);
+      }
+      button {
+        font: inherit;
+      }
+      .artifact {
+        min-height: 100vh;
+        padding: 22px;
+      }
+      .artifact-header {
+        max-width: 1180px;
+        margin: 0 auto 16px;
+      }
+      .artifact-header h1 {
+        margin: 0;
+        font: 500 27px/1.15 var(--display);
+      }
+      .artifact-header p {
+        max-width: 850px;
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .review-question {
+        padding: 11px 13px;
+        border: 1px solid #d7cae5;
+        border-radius: 14px;
+        background: #faf6ff;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        max-width: 1180px;
+        margin: 0 auto 16px;
+      }
+      .controls button {
+        padding: 8px 11px;
+        border: 1px solid #d6ceca;
+        border-radius: 999px;
+        color: #5d5260;
+        background: #fff;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .controls button[aria-pressed="true"] {
+        border-color: var(--plum);
+        color: #fff;
+        background: var(--plum);
+      }
+      .viewport-control {
+        margin-left: auto;
+      }
+      .stage {
+        display: grid;
+        place-items: start center;
+        min-height: 820px;
+      }
+      .device {
+        position: relative;
+        width: 390px;
+        min-height: 820px;
+        overflow: hidden;
+        border: 1px solid #ddd5d1;
+        border-radius: 28px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        transition: width 0.2s ease;
+      }
+      .device.desktop {
+        width: min(1120px, calc(100vw - 44px));
+        border-radius: 20px;
+      }
+      .app-header {
+        display: flex;
+        height: 68px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      .brand {
+        font: 500 27px/1 var(--display);
+      }
+      .brand span {
+        margin-right: 7px;
+        color: var(--plum);
+      }
+      .avatar {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .app-main {
+        padding: 25px 20px 100px;
+      }
+      .device.desktop .app-main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 36px 34px 112px;
+      }
+      .eyebrow {
+        margin: 0;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 8px 0 0;
+        font: 500 32px/1.08 var(--display);
+      }
+      .lede {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .title-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      .edit-global {
+        flex: none;
+        margin-top: 4px;
+        padding: 8px 10px;
+        border: 1px solid #cdbede;
+        border-radius: 11px;
+        color: var(--plum);
+        background: #fff;
+        font-size: 11px;
+        font-weight: 750;
+      }
+      .section-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin: 24px 0 10px;
+      }
+      .section-heading h3 {
+        margin: 0;
+        font: 500 21px/1.2 var(--display);
+      }
+      .section-heading span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .cards {
+        display: grid;
+        gap: 11px;
+      }
+      .device.desktop .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+      .routine-card {
+        display: grid;
+        grid-template-columns: 76px 1fr auto;
+        gap: 13px;
+        min-height: 116px;
+        padding: 13px;
+        border: 1px solid rgba(70, 50, 55, 0.09);
+        border-radius: 20px;
+        text-align: left;
+        background: var(--green-bg);
+      }
+      .routine-card.shampoo {
+        background: var(--blue-bg);
+      }
+      .routine-card.conditioner {
+        background: var(--green-bg);
+      }
+      .routine-card.oil {
+        background: var(--sand-bg);
+      }
+      .routine-card.heat {
+        background: var(--rose-bg);
+      }
+      .routine-card.extra {
+        background: var(--plum-ice);
+      }
+      .product-image {
+        display: grid;
+        width: 76px;
+        min-height: 88px;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.55);
+      }
+      .product-image img {
+        max-width: 60px;
+        max-height: 78px;
+        object-fit: contain;
+      }
+      .bottle {
+        width: 24px;
+        height: 62px;
+        border: 2px solid rgba(68, 38, 78, 0.25);
+        border-radius: 6px 6px 10px 10px;
+        background: linear-gradient(#fff, #eadfed);
+      }
+      .card-copy {
+        min-width: 0;
+        align-self: center;
+      }
+      .purpose {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 780;
+        line-height: 1.22;
+      }
+      .category-line {
+        margin-top: 5px;
+        color: var(--plum);
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .product-name {
+        margin-top: 4px;
+        color: #4c404f;
+        font-size: 12px;
+        line-height: 1.25;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 7px;
+        border-radius: 999px;
+        color: #5d5260;
+        background: rgba(255, 255, 255, 0.7);
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .chip.good {
+        color: #376f43;
+      }
+      .chip.plan {
+        color: #7d5c22;
+        background: #fff5da;
+      }
+      .chip.warn {
+        color: #884752;
+        background: #fff0f1;
+      }
+      .chevron {
+        align-self: center;
+        color: #9c929d;
+        font-size: 20px;
+      }
+      .initial-actions,
+      .success-next {
+        margin-top: 19px;
+        padding: 15px;
+        border: 1px solid #d5c9e2;
+        border-radius: 18px;
+        background: var(--plum-ice);
+      }
+      .initial-actions strong,
+      .success-next strong {
+        display: block;
+        font: 500 18px/1.25 var(--display);
+      }
+      .initial-actions p,
+      .success-next p {
+        margin: 5px 0 12px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .primary,
+      .secondary,
+      .text-button {
+        width: 100%;
+        min-height: 44px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .primary {
+        border: 1px solid var(--plum);
+        color: #fff;
+        background: var(--plum);
+      }
+      .secondary {
+        border: 1px solid #cdbede;
+        color: var(--plum);
+        background: #fff;
+      }
+      .text-button {
+        border: 0;
+        color: #6e6170;
+        background: transparent;
+      }
+      .bottom-nav {
+        position: absolute;
+        z-index: 9;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        height: 72px;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+      }
+      .nav-item {
+        position: relative;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 4px;
+        color: #8a818b;
+        font-size: 9px;
+      }
+      .nav-item strong {
+        font-size: 17px;
+        line-height: 1;
+      }
+      .nav-item.active {
+        color: var(--plum);
+        font-weight: 800;
+      }
+      .notification-dot {
+        position: absolute;
+        top: 12px;
+        left: calc(50% + 8px);
+        width: 8px;
+        height: 8px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        background: #d54c61;
+      }
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+      .overlay {
+        position: absolute;
+        z-index: 12;
+        inset: 0;
+        display: grid;
+        align-items: end;
+        background: rgba(42, 30, 43, 0.34);
+      }
+      .sheet {
+        max-height: 78%;
+        overflow: auto;
+        padding: 23px 20px 20px;
+        border-radius: 24px 24px 0 0;
+        background: #fff;
+        box-shadow: 0 -18px 45px rgba(46, 27, 50, 0.18);
+      }
+      .device.desktop .sheet {
+        width: min(620px, 90%);
+        margin: auto;
+        border-radius: 24px;
+      }
+      .sheet-handle {
+        width: 38px;
+        height: 4px;
+        margin: -11px auto 16px;
+        border-radius: 4px;
+        background: #ddd6dc;
+      }
+      .sheet h3 {
+        margin: 0;
+        font: 500 24px/1.2 var(--display);
+      }
+      .sheet > p {
+        margin: 8px 0 16px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .change-group {
+        margin: 15px 0;
+      }
+      .change-group h4 {
+        margin: 0 0 7px;
+        color: var(--plum);
+        font-size: 10px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .change-row {
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: var(--paper);
+      }
+      .change-row + .change-row {
+        margin-top: 7px;
+      }
+      .change-row strong {
+        display: block;
+        font-size: 12px;
+      }
+      .change-row span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.35;
+      }
+      .unchanged {
+        margin: 12px 0;
+        color: var(--muted);
+        font-size: 10px;
+        text-align: center;
+      }
+      .sheet-actions {
+        display: grid;
+        gap: 7px;
+        margin-top: 14px;
+      }
+      .detail-product {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 17px;
+        margin-top: 20px;
+        padding: 16px;
+        border-radius: 20px;
+        background: var(--rose-bg);
+      }
+      .detail-product .product-image {
+        width: 110px;
+        min-height: 135px;
+      }
+      .detail-product .bottle {
+        width: 34px;
+        height: 92px;
+      }
+      .detail-product h3 {
+        margin: 8px 0 0;
+        font: 500 21px/1.18 var(--display);
+      }
+      .detail-product p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .commerce {
+        margin-top: 12px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+      }
+      .commerce-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 11px;
+      }
+      .disclosure {
+        margin: 9px 0 12px;
+        color: var(--muted);
+        font-size: 9px;
+        line-height: 1.4;
+      }
+      .editor-toolbar {
+        position: sticky;
+        top: -25px;
+        z-index: 4;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin: -25px -20px 16px;
+        padding: 15px 20px 12px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(251, 250, 248, 0.97);
+      }
+      .editor-toolbar strong {
+        font: 500 20px/1.2 var(--display);
+      }
+      .editor-card {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+      }
+      .editor-card + .editor-card {
+        margin-top: 10px;
+      }
+      .editor-card .top {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .editor-card h4 {
+        margin: 0;
+        font-size: 13px;
+      }
+      .editor-card p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .edit-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        margin-top: 11px;
+      }
+      .fake-select {
+        padding: 9px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: #564c58;
+        background: var(--paper);
+        font-size: 10px;
+      }
+      .remove {
+        border: 0;
+        color: var(--danger);
+        background: transparent;
+        font-size: 10px;
+        font-weight: 800;
+      }
+      .add-category {
+        width: 100%;
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px dashed #bcaaca;
+        border-radius: 13px;
+        color: var(--plum);
+        background: #faf7fd;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .editor-footer {
+        position: sticky;
+        bottom: 76px;
+        z-index: 5;
+        margin: 17px -20px -25px;
+        padding: 12px 20px 15px;
+        background: linear-gradient(180deg, rgba(251, 250, 248, 0), var(--paper) 25%);
+      }
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        max-width: 1180px;
+        margin: 18px auto 0;
+      }
+      .note {
+        padding: 13px;
+        border: 1px solid #ddd6d2;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.75);
+        color: #6e6470;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .note strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+      }
+      @media (max-width: 720px) {
+        .artifact {
+          padding: 12px;
+        }
+        .controls {
+          gap: 5px;
+        }
+        .controls button {
+          padding: 7px 9px;
+          font-size: 10px;
+        }
+        .viewport-control {
+          margin-left: 0;
+        }
+        .device {
+          width: min(390px, calc(100vw - 24px));
+        }
+        .notes {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-header">
+        <h1>Stage 4 · Routine</h1>
+        <p class="review-question">
+          <strong>Review question:</strong> Does this feel like the calm, central product blueprint
+          that closes the product decisions—while keeping editing, future purchases, and recomputed
+          changes understandable without turning every card into a control panel?
+        </p>
+      </header>
+
+      <nav class="controls" aria-label="Mockup states">
+        <button type="button" data-state="proposal" aria-pressed="true">
+          1 · Erster Vorschlag
+        </button>
+        <button type="button" data-state="active" aria-pressed="false">2 · Aktive Routine</button>
+        <button type="button" data-state="detail" aria-pressed="false">3 · Produktdetail</button>
+        <button type="button" data-state="edit" aria-pressed="false">4 · Bearbeiten</button>
+        <button type="button" data-state="delta" aria-pressed="false">5 · Änderungen</button>
+        <button type="button" data-state="notice" aria-pressed="false">6 · Neuer Vorschlag</button>
+        <button type="button" class="viewport-control" data-viewport aria-pressed="false">
+          Desktop ansehen
+        </button>
+      </nav>
+
+      <section class="stage">
+        <div class="device" id="device">
+          <header class="app-header">
+            <div class="brand"><span>Ⅲ</span>chaarlie</div>
+            <div class="avatar">C</div>
+          </header>
+
+          <section class="screen active" data-screen="proposal">
+            <div class="app-main">
+              <p class="eyebrow">Routine</p>
+              <h2>Deine Routine steht</h2>
+              <p class="lede">
+                Das sind die Produkte und Rollen, die du gemeinsam mit Chaarlie ausgewählt hast.
+              </p>
+              <div id="proposal-cards"></div>
+              <div class="initial-actions">
+                <strong>Passt diese Routine für dich?</strong>
+                <p>
+                  Mit deiner Bestätigung wird genau diese Version aktiv. Offene Käufe bleiben als
+                  geplant markiert.
+                </p>
+                <button class="primary" type="button">Routine bestätigen</button>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item"><strong>⌂</strong>Heute</div>
+              <div class="nav-item active"><strong>▦</strong>Routine</div>
+              <div class="nav-item"><strong>◷</strong>Fortschritt</div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="active">
+            <div class="app-main">
+              <div class="title-row">
+                <div>
+                  <p class="eyebrow">Routine</p>
+                  <h2>Deine Routine</h2>
+                  <p class="lede">Deine bestätigten Produkte und ihre Aufgaben.</p>
+                </div>
+                <button class="edit-global" type="button">Routine bearbeiten</button>
+              </div>
+              <div id="active-cards"></div>
+              <div class="success-next">
+                <strong>Deine Routine ist aktiv</strong>
+                <p>
+                  Du weißt jetzt, welche Produkte dazugehören. Im nächsten Schritt siehst du, wie du
+                  sie anwendest.
+                </p>
+                <button class="secondary" type="button">Anwendungsplan ansehen</button>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item"><strong>⌂</strong>Heute</div>
+              <div class="nav-item active"><strong>▦</strong>Routine</div>
+              <div class="nav-item"><strong>◷</strong>Fortschritt</div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="detail">
+            <div class="app-main">
+              <p class="eyebrow">Hitzeschutz</p>
+              <h2>Schutz beim Glätten</h2>
+              <p class="lede">
+                Dieses Produkt ist für deine Routine eingeplant und noch nicht als gekauft
+                bestätigt.
+              </p>
+              <div class="detail-product">
+                <div class="product-image"><div class="bottle"></div></div>
+                <div>
+                  <span class="chip plan">Geplant</span>
+                  <h3>Jean & Len Hitzeschutz Spray</h3>
+                  <p>Hitzeschutz · direkte Hitze</p>
+                  <p>Bei jedem Glätten</p>
+                </div>
+              </div>
+              <div class="commerce">
+                <div class="commerce-row">
+                  <strong>ca. 5,95 €</strong><span>Verfügbar · heute geprüft</span>
+                </div>
+                <p class="disclosure">
+                  Der Link führt zu einem externen Shop. Chaarlie kann für vermittelte Käufe eine
+                  Provision erhalten.
+                </p>
+                <button class="primary" type="button">Zum Produkt ↗</button
+                ><button class="text-button" type="button">Ich habe es schon gekauft</button>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item"><strong>⌂</strong>Heute</div>
+              <div class="nav-item active"><strong>▦</strong>Routine</div>
+              <div class="nav-item"><strong>◷</strong>Fortschritt</div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="edit">
+            <div class="app-main">
+              <div class="editor-toolbar">
+                <strong>Routine bearbeiten</strong
+                ><button class="text-button" style="width: auto; min-height: auto" type="button">
+                  Abbrechen
+                </button>
+              </div>
+              <p class="lede" style="margin-bottom: 15px">
+                Ändere Produkte, Kategorien oder Häufigkeiten. Deine aktive Routine bleibt
+                unverändert, bis du die Änderungen bestätigst.
+              </p>
+              <div class="section-heading">
+                <h3>Deine Basis</h3>
+                <span>4 Bausteine</span>
+              </div>
+              <div class="editor-card">
+                <div class="top">
+                  <div>
+                    <h4>Sanfte Reinigung</h4>
+                    <p>Shampoo · Balea MED Ultra Sensitive</p>
+                  </div>
+                  <button class="remove">Entfernen</button>
+                </div>
+                <div class="edit-fields">
+                  <div class="fake-select">Produkt ändern ▾</div>
+                  <div class="fake-select">2× pro Woche ▾</div>
+                </div>
+              </div>
+              <div class="editor-card">
+                <div class="top">
+                  <div>
+                    <h4>Pflege nach jeder Wäsche</h4>
+                    <p>Conditioner · Jean & Len Leichter Conditioner</p>
+                  </div>
+                  <button class="remove">Entfernen</button>
+                </div>
+                <div class="edit-fields">
+                  <div class="fake-select">Produkt ändern ▾</div>
+                  <div class="fake-select">Nach jeder Wäsche ▾</div>
+                </div>
+              </div>
+              <div class="editor-card">
+                <div class="top">
+                  <div>
+                    <h4>Pflege vor der Haarwäsche</h4>
+                    <p>Öl · Garnier Wahre Schätze Arganöl</p>
+                  </div>
+                  <button class="remove">Entfernen</button>
+                </div>
+                <div class="edit-fields">
+                  <div class="fake-select">Produkt ändern ▾</div>
+                  <div class="fake-select">1× pro Woche ▾</div>
+                </div>
+              </div>
+              <div class="editor-card">
+                <div class="top">
+                  <div>
+                    <h4>Glanz im trockenen Haar</h4>
+                    <p>Öl · Garnier Wahre Schätze Arganöl</p>
+                  </div>
+                  <button class="remove">Entfernen</button>
+                </div>
+                <div class="edit-fields">
+                  <div class="fake-select">Produkt ändern ▾</div>
+                  <div class="fake-select">Bei Bedarf ▾</div>
+                </div>
+              </div>
+              <div class="section-heading">
+                <h3>Optional</h3>
+                <span>2 Bausteine</span>
+              </div>
+              <button class="add-category" type="button">＋ Kategorie hinzufügen</button>
+              <div class="editor-footer">
+                <button class="primary" type="button">Änderungen prüfen · 2</button>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item"><strong>⌂</strong>Heute</div>
+              <div class="nav-item active"><strong>▦</strong>Routine</div>
+              <div class="nav-item"><strong>◷</strong>Fortschritt</div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="delta">
+            <div class="app-main">
+              <p class="eyebrow">Routine</p>
+              <h2>Deine Routine</h2>
+              <p class="lede">
+                Die bestätigte Version bleibt aktiv, bis du den neuen Vorschlag annimmst.
+              </p>
+              <div id="delta-cards"></div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item"><strong>⌂</strong>Heute</div>
+              <div class="nav-item active"><strong>▦</strong>Routine</div>
+              <div class="nav-item"><strong>◷</strong>Fortschritt</div>
+            </div>
+            <div class="overlay">
+              <div class="sheet">
+                <div class="sheet-handle"></div>
+                <h3>Änderungen an deiner Routine</h3>
+                <p>
+                  Wir haben deine komplette Routine neu berechnet und zeigen dir nur, was sich
+                  ändert.
+                </p>
+                <div class="change-group">
+                  <h4>Von dir geändert</h4>
+                  <div class="change-row">
+                    <strong>Pflege nach jeder Wäsche</strong
+                    ><span>Langhaarmädchen Lovely Long → Jean & Len Leichter Conditioner</span>
+                  </div>
+                </div>
+                <div class="change-group">
+                  <h4>Dadurch außerdem angepasst</h4>
+                  <div class="change-row">
+                    <strong>Glanz im trockenen Haar</strong
+                    ><span
+                      >Öl entfällt. Der neue Conditioner deckt die bisherige zusätzliche Pflege
+                      ab.</span
+                    >
+                  </div>
+                </div>
+                <div class="unchanged">5 weitere Routine-Bausteine bleiben unverändert.</div>
+                <div class="sheet-actions">
+                  <button class="primary" type="button">Änderungen übernehmen</button
+                  ><button class="secondary" type="button">Zurück zum Bearbeiten</button
+                  ><button class="text-button" type="button">Änderungen verwerfen</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="notice">
+            <div class="app-main">
+              <div class="title-row">
+                <div>
+                  <p class="eyebrow">Routine</p>
+                  <h2>Deine Routine</h2>
+                  <p class="lede">Deine bestätigten Produkte und ihre Aufgaben.</p>
+                </div>
+                <button class="edit-global" type="button">Routine bearbeiten</button>
+              </div>
+              <div id="notice-cards"></div>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item"><strong>⌂</strong>Heute</div>
+              <div class="nav-item active">
+                <span class="notification-dot" aria-label="Neue Routine-Änderungen"></span
+                ><strong>▦</strong>Routine
+              </div>
+              <div class="nav-item"><strong>◷</strong>Fortschritt</div>
+            </div>
+            <div class="overlay">
+              <div class="sheet">
+                <div class="sheet-handle"></div>
+                <h3>Deine Routine hat einen neuen Vorschlag</h3>
+                <p>
+                  Ein Produkt wurde aktualisiert. Wir haben deine komplette Routine neu geprüft.
+                </p>
+                <div class="change-row">
+                  <strong>Conditioner geändert · Öl neu bewertet</strong
+                  ><span
+                    >Deine aktive Routine bleibt unverändert, bis du die Änderungen geprüft
+                    hast.</span
+                  >
+                </div>
+                <div class="sheet-actions">
+                  <button class="primary" type="button">Änderungen prüfen</button
+                  ><button class="text-button" type="button">Später</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="notes">
+        <div class="note">
+          <strong>Current-surface continuity</strong>Typography, cream background, image-led rounded
+          cards, frequency treatment, and calm colour blocks are taken from the real
+          RoutineCard-based App Proof—not the older standalone plan mockups.
+        </div>
+        <div class="note">
+          <strong>Chosen hierarchy</strong>Stage 1 order and Basis/Optional grouping remain. Every
+          product-role assignment gets its own purpose-first card. Untouched non-recommended
+          categories stay hidden.
+        </div>
+        <div class="note">
+          <strong>Chosen change model</strong>One global editor validates locally, recomputes the
+          whole Routine at review, shows direct and automatic consequences in one sheet, and
+          activates the successor atomically.
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const images = {
+        shampoo:
+          "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/ead1333b-6839-464d-b272-673d39bb95a4/02-ead1333b-6839-464d-b272-673d39bb95a4-balea-balea-aqua-hyaluron-f41a5b48efe1.webp",
+        conditioner:
+          "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/2a159694-6799-4be7-a0aa-572757c94801/31-2a159694-6799-4be7-a0aa-572757c94801-langhaarmadchen-langhaarmadchen-lovely-long-d30fd7fd3ec3.webp",
+        leavein:
+          "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/0b21f996-bb42-4b10-89bd-4881c4346d53/22-0b21f996-bb42-4b10-89bd-4881c4346d53-isana-isana-feuchtigkeits-leave-in-hyaluron-ba1624f6c1eb.webp",
+      }
+      const basis = [
+        {
+          cls: "shampoo",
+          purpose: "Sanfte Reinigung",
+          category: "Shampoo",
+          product: "Balea MED Ultra Sensitive",
+          cadence: "2× pro Woche",
+          image: images.shampoo,
+        },
+        {
+          cls: "conditioner",
+          purpose: "Pflege nach jeder Wäsche",
+          category: "Conditioner",
+          product: "Jean & Len Leichter Conditioner",
+          cadence: "Nach jeder Wäsche",
+          image: images.conditioner,
+        },
+        {
+          cls: "oil",
+          purpose: "Pflege vor der Haarwäsche",
+          category: "Öl",
+          product: "Garnier Wahre Schätze Arganöl",
+          cadence: "1× pro Woche",
+        },
+        {
+          cls: "oil",
+          purpose: "Glanz im trockenen Haar",
+          category: "Öl",
+          product: "Garnier Wahre Schätze Arganöl",
+          cadence: "Bei Bedarf",
+        },
+      ]
+      const optional = [
+        {
+          cls: "heat",
+          purpose: "Schutz beim Glätten",
+          category: "Hitzeschutz",
+          product: "Jean & Len Hitzeschutz Spray",
+          cadence: "Bei jedem Glätten",
+          state: "Geplant",
+          stateClass: "plan",
+        },
+        {
+          cls: "extra",
+          purpose: "Zusätzliche Pflege",
+          category: "Maske",
+          product: "Garnier Hair Food Banana",
+          cadence: "Alle 2 Wochen",
+          state: "Nicht empfohlen · von dir eingeplant",
+          stateClass: "warn",
+          image: images.leavein,
+        },
+      ]
+      function card(item) {
+        const image = item.image ? `<img src="${item.image}" alt="">` : `<div class="bottle"></div>`
+        const state = item.state
+          ? `<span class="chip ${item.stateClass || ""}">${item.state}</span>`
+          : `<span class="chip good">Aktiv</span>`
+        return `<button class="routine-card ${item.cls}" type="button" aria-label="${item.purpose}: ${item.product}"><span class="product-image">${image}</span><span class="card-copy"><span class="purpose">${item.purpose}</span><span class="category-line">${item.category}</span><span class="product-name">${item.product}</span><span class="meta">${state}<span class="chip">${item.cadence}</span></span></span><span class="chevron">›</span></button>`
+      }
+      function routineMarkup() {
+        return `<div class="section-heading"><h3>Deine Basis</h3><span>${basis.length} Bausteine</span></div><div class="cards">${basis.map(card).join("")}</div><div class="section-heading"><h3>Optional</h3><span>${optional.length} Bausteine</span></div><div class="cards">${optional.map(card).join("")}</div>`
+      }
+      document
+        .querySelectorAll("#proposal-cards,#active-cards,#delta-cards,#notice-cards")
+        .forEach((target) => {
+          target.innerHTML = routineMarkup()
+        })
+      const stateButtons = document.querySelectorAll("[data-state]")
+      stateButtons.forEach((button) =>
+        button.addEventListener("click", () => {
+          stateButtons.forEach((candidate) =>
+            candidate.setAttribute("aria-pressed", String(candidate === button)),
+          )
+          document
+            .querySelectorAll("[data-screen]")
+            .forEach((screen) =>
+              screen.classList.toggle("active", screen.dataset.screen === button.dataset.state),
+            )
+        }),
+      )
+      const viewportButton = document.querySelector("[data-viewport]")
+      viewportButton.addEventListener("click", () => {
+        const desktop = document.querySelector("#device").classList.toggle("desktop")
+        viewportButton.setAttribute("aria-pressed", String(desktop))
+        viewportButton.textContent = desktop ? "Mobile ansehen" : "Desktop ansehen"
+      })
+    </script>
+  </body>
+</html>

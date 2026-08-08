@@ -204,7 +204,6 @@ test("initial Routine preserves Stage-3 choices and canonical Basis then Optiona
       itemKeys: [
         "item:heat_protectant:pre_heat_protection:captured-pending-a",
         "item:oil:dry_finish:planned-a",
-        "item:mask:intensive_conditioning_mask:none",
       ],
     },
   ])

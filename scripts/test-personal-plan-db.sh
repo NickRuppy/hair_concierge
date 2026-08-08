@@ -27,7 +27,7 @@ mkdir -p \
 
 # This validates the checked-in production baseline before any Docker command,
 # then copies every repository migration newer than the recorded production
-# head. The helper also proves the four required Personal Plan migrations are
+# head. The helper also proves the required Personal Plan migrations are
 # present in their frozen relative order.
 node "$transition_preparer" \
   --metadata "$baseline_metadata_file" \
@@ -40,15 +40,23 @@ cp "$repository_root/supabase/config.toml" "$test_project_root/supabase/config.t
 perl -0pi -e \
   's/^project_id = "hair_conscierge"$/project_id = "hair_conscierge_personal_plan_contract"/m' \
   "$test_project_root/supabase/config.toml"
+# Keep this disposable project isolated even when the normal developer stack
+# is already running. Cleanup below still targets only the dedicated project.
+perl -0pi -e \
+  's/port = 54321/port = 55321/g; s/port = 54322/port = 55322/g; s/shadow_port = 54320/shadow_port = 55320/g; s/port = 54329/port = 55329/g; s/port = 54323/port = 55323/g; s/port = 54324/port = 55324/g; s/port = 54327/port = 55327/g; s/inspector_port = 8083/inspector_port = 18083/g' \
+  "$test_project_root/supabase/config.toml"
 cp "$repository_root"/supabase/templates/*.html "$test_project_root/supabase/templates/"
 
 cp "$repository_root/supabase/tests/waitlist_signup_outbox.sql" \
   "$test_project_root/supabase/tests/waitlist_signup_outbox.sql"
 cp "$repository_root/supabase/tests/personal_plan_stage1_3_foundation.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage1_3_foundation.sql"
+cp "$repository_root/supabase/tests/personal_plan_stage4_routine.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage4_routine.sql"
+cp "$repository_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql"
 
 supabase=(npm exec -- supabase --workdir "$test_project_root")
-repository_supabase=(npm exec -- supabase)
 started_by_this_script=false
 
 cleanup() {
@@ -67,14 +75,6 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-if "${repository_supabase[@]}" status --output json >/dev/null 2>&1; then
-  cat >&2 <<'EOF'
-Refusing to reset an already-running local Supabase project.
-Stop it first so this isolated contract owns the configured local ports.
-EOF
-  exit 2
-fi
-
 "${supabase[@]}" stop --project-id "$test_project_id" --no-backup >/dev/null 2>&1 || true
 started_by_this_script=true
 "${supabase[@]}" start
@@ -86,4 +86,6 @@ started_by_this_script=true
 "${supabase[@]}" test db \
   "$test_project_root/supabase/tests/waitlist_signup_outbox.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage1_3_foundation.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage4_routine.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql" \
   --local
