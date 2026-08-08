@@ -180,6 +180,24 @@ export type PersonalPlanStage3HandoffOutcome =
   | "ready_with_pending"
   | "ready_with_gap"
 
+// Stage 4 telemetry is deliberately structural. It must never contain product,
+// proposal, plan, user, profile, price, URL, or free-text data.
+export type PersonalPlanStage4Surface = "routine_page" | "routine_card" | "routine_detail"
+export type PersonalPlanStage4Origin = "routine_page" | "proposal" | "editor" | "sync"
+export type PersonalPlanStage4RoutineVariant = "active" | "proposal" | "empty"
+export type PersonalPlanStage4ChangeCountBand = "0" | "1" | "2_4" | "5_plus"
+export type PersonalPlanStage4ProposalInteraction =
+  | "displayed"
+  | "dismissed"
+  | "accepted"
+  | "rejected"
+export type PersonalPlanStage4EditorInteraction = "opened" | "submitted"
+export type PersonalPlanStage4ItemInteraction =
+  | "product_detail_opened"
+  | "shop_link_opened"
+  | "acquisition_declared"
+export type PersonalPlanStage4Outcome = "no_change" | "conflict" | "error"
+
 export function claimCheckoutFailure(
   seen: Set<string>,
   checkoutAttemptId: string,
@@ -410,6 +428,28 @@ export type AppEventMap = {
   }
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome
+  }
+  personal_plan_stage4_routine_viewed: {
+    surface: "routine_page"
+    variant: PersonalPlanStage4RoutineVariant
+  }
+  personal_plan_stage4_proposal_interacted: {
+    changeCountBand: PersonalPlanStage4ChangeCountBand
+    interaction: PersonalPlanStage4ProposalInteraction
+    origin: "routine_page"
+  }
+  personal_plan_stage4_editor_interacted: {
+    changeCountBand?: PersonalPlanStage4ChangeCountBand
+    interaction: PersonalPlanStage4EditorInteraction
+    origin: "routine_page"
+  }
+  personal_plan_stage4_item_interacted: {
+    interaction: PersonalPlanStage4ItemInteraction
+    surface: Exclude<PersonalPlanStage4Surface, "routine_page">
+  }
+  personal_plan_stage4_outcome: {
+    origin: PersonalPlanStage4Origin
+    outcome: PersonalPlanStage4Outcome
   }
   quiz_completed: FunnelAnalyticsEnvelope & {
     hairLength?: string

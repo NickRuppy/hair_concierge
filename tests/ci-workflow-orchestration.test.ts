@@ -181,7 +181,7 @@ test("Playwright smoke starts after scope detection without waiting for core qua
   assert.throws(() => guardedRunCommands(unguardedInlineRun), /unguarded command/)
 })
 
-test("quality core installs Chromium before the Stage 3 self-hosted browser contract", () => {
+test("quality core installs Chromium before the self-hosted Personal Plan browser contracts", () => {
   const qualityCore = jobSource(ciWorkflow, "quality-core")
   const stage3BrowserScript = packageManifest.scripts["test:playwright:personal-plan-stage3"]
 
@@ -199,7 +199,7 @@ test("quality core installs Chromium before the Stage 3 self-hosted browser cont
   )
   assert.match(
     packageManifest.scripts["test:contracts"],
-    /(?:^| && )npm run test:playwright:personal-plan-stage3$/,
+    /(?:^| && )npm run test:playwright:personal-plan-stage3 && npm run test:playwright:personal-plan-stage4$/,
   )
 })
 

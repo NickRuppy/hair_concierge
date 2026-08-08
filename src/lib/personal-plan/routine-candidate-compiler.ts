@@ -1,5 +1,3 @@
-import { createHash } from "node:crypto"
-
 import { CATEGORY_ROLE_POLICIES } from "./products/authorities"
 import type {
   PersonalPlanCategory,
@@ -13,14 +11,38 @@ import type {
   RoutineCandidateCompilerInput,
 } from "./routine-proposal-stager"
 import { STAGE1_CATEGORY_ORDER, type PlanCategoryDecision, type PlanProductRole } from "./types"
+import { semanticHash } from "./routine/canonicalize"
+import { applyRoutineEdits as applyEdits } from "./routine/editor"
+import { diffRoutinePayloads as diffPayloads } from "./routine/diff"
 
 const COMPILER_VERSION = "personal-plan-routine-compiler.v1"
 const PORTFOLIO_AUTHORITY_VERSION = "personal-plan-product-portfolio.v1"
 
-type RoutineSystemAssessment = "basis" | "optional" | "not_recommended"
-type RoutineInclusion = "included" | "excluded"
+export type RoutineSystemAssessment = "basis" | "optional" | "not_recommended"
+export type RoutineInclusion = "included" | "excluded"
 
-type RoutineItem = {
+export type RoutineProductRef =
+  | { kind: "owned"; capturedProductId: string; productId: string }
+  | { kind: "planned"; plannedPurchaseId: string; productId: string | null }
+  | { kind: "pending_review"; capturedProductId: string; submissionId: string }
+  | { kind: "none" }
+
+export type RoutineAssignment = {
+  assignmentKey: string
+  role: PlanProductRole
+  productRef: RoutineProductRef
+  cadenceOverride: string | null
+  fitDecision: "standard" | "informed_override"
+}
+
+export type RoutineIntentCategory = {
+  category: PersonalPlanCategory
+  inclusion: RoutineInclusion
+  inclusionSource: "stage3" | "user"
+  assignments: RoutineAssignment[]
+}
+
+export type RoutineItem = {
   itemKey: string
   assignmentKey: string
   category: PersonalPlanCategory
@@ -40,7 +62,7 @@ type RoutineItem = {
     | { kind: "none"; displayName: null }
   cadence: {
     recommended: PlanCategoryDecision["frequency"]
-    userOverride: null
+    userOverride: string | null
     displayKey: string
   }
   sourceDecisionKeys: string[]
@@ -48,16 +70,90 @@ type RoutineItem = {
   executable: boolean
 }
 
-function canonicalJson(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`
-  if (value !== null && typeof value === "object") {
-    return `{${Object.entries(value)
-      .filter(([, child]) => child !== undefined)
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([key, child]) => `${JSON.stringify(key)}:${canonicalJson(child)}`)
-      .join(",")}}`
+export type RoutineCompiledPayload = {
+  schemaVersion: 1
+  planId: string
+  versionId: string
+  parentVersionId: string | null
+  source: {
+    refinedVersionId: string
+    productPortfolioVersionId: string
+    sourceFingerprint: string
+    compilerVersion: string
+    authorityVersions: Record<string, string>
   }
-  return JSON.stringify(value)
+  intent: { schemaVersion: 1; categories: RoutineIntentCategory[] }
+  sections: Array<{ key: "basis" | "optional"; itemKeys: string[] }>
+  items: RoutineItem[]
+  createdAt?: string
+}
+
+export type RoutineEditOperation =
+  | { kind: "category_inclusion"; category: PersonalPlanCategory; inclusion: RoutineInclusion }
+  | { kind: "assignment_replace"; assignmentKey: string; productRef: RoutineProductRef }
+  | { kind: "assignment_remove"; assignmentKey: string }
+  | { kind: "assignment_role"; assignmentKey: string; role: PlanProductRole }
+  | { kind: "cadence_override"; assignmentKey: string; cadenceOverride: string | null }
+
+export type RoutineProposalDelta = {
+  schemaVersion: 1
+  direct: Array<{ kind: "added" | "removed" | "changed"; itemKey: string; explanationKey: string }>
+  consequential: Array<{
+    kind: "added" | "removed" | "changed"
+    itemKey: string
+    explanationKey: string
+  }>
+  unchangedItemCount: number
+}
+
+/** Applies bounded user intent changes, then reconstructs every item and section. */
+export function applyRoutineEdits(
+  input: RoutineCompiledPayload,
+  operations: readonly RoutineEditOperation[],
+): RoutineCompiledPayload {
+  return applyEdits(input, operations)
+}
+
+/** Diffs semantic Routine state. Operation targets are direct; all recompiled effects are consequential. */
+export function diffRoutinePayloads(
+  previous: RoutineCompiledPayload,
+  next: RoutineCompiledPayload,
+  operations: readonly RoutineEditOperation[],
+): RoutineProposalDelta {
+  return diffPayloads(previous, next, operations)
+}
+
+/** Excludes persistence IDs, timestamps and commerce display data from semantic equality. */
+export function hashRoutineSemantics(payload: RoutineCompiledPayload): string {
+  return semanticHash({
+    schemaVersion: payload.schemaVersion,
+    source: {
+      refinedVersionId: payload.source.refinedVersionId,
+      compilerVersion: payload.source.compilerVersion,
+      authorityVersions: payload.source.authorityVersions,
+    },
+    intent: payload.intent,
+    sections: payload.sections,
+    items: payload.items.map(({ product, ...item }) => ({
+      ...item,
+      product:
+        product.kind === "owned"
+          ? {
+              kind: product.kind,
+              capturedProductId: product.capturedProductId,
+              productId: product.productId,
+            }
+          : product.kind === "planned"
+            ? {
+                kind: product.kind,
+                plannedPurchaseId: product.plannedPurchaseId,
+                productId: product.productId,
+              }
+            : product.kind === "pending_review"
+              ? { kind: product.kind, submissionId: product.submissionId }
+              : product,
+    })),
+  })
 }
 
 function categoryOrder(category: PersonalPlanCategory): number {
@@ -198,7 +294,7 @@ function sortItems(left: RoutineItem, right: RoutineItem): number {
   )
 }
 
-function productRef(item: RoutineItem): JsonValue {
+function productRef(item: RoutineItem): RoutineProductRef {
   if (item.product.kind === "owned") {
     return {
       kind: "owned",
@@ -259,7 +355,9 @@ export async function compileInitialRoutineCandidate(
   authorityVersions.portfolio = PORTFOLIO_AUTHORITY_VERSION
   authorityVersions.routine = COMPILER_VERSION
 
-  const categories = Array.from(new Set(items.map((item) => item.category)))
+  const categories: RoutineIntentCategory[] = Array.from(
+    new Set(items.map((item) => item.category)),
+  )
     .sort((left, right) => categoryOrder(left) - categoryOrder(right))
     .map((category) => {
       const categoryItems = items.filter((item) => item.category === category)
@@ -276,7 +374,7 @@ export async function compileInitialRoutineCandidate(
           cadenceOverride: null,
           fitDecision: item.state.fitDecision,
         })),
-      }
+      } satisfies RoutineIntentCategory
     })
   const sections = (["basis", "optional"] as const).map((key) => ({
     key,
@@ -284,7 +382,9 @@ export async function compileInitialRoutineCandidate(
       .filter((item) =>
         key === "basis"
           ? item.state.systemAssessment === "basis"
-          : item.state.systemAssessment !== "basis",
+          : item.state.systemAssessment === "optional" ||
+            (item.state.systemAssessment === "not_recommended" &&
+              item.state.inclusion === "included"),
       )
       .map((item) => item.itemKey),
   }))
@@ -300,9 +400,7 @@ export async function compileInitialRoutineCandidate(
     sections,
     items,
   }
-  const sourceFingerprint = createHash("sha256")
-    .update(canonicalJson(fingerprintPreimage))
-    .digest("hex")
+  const sourceFingerprint = semanticHash(fingerprintPreimage)
 
   const payload = {
     schemaVersion: 1,
@@ -320,7 +418,7 @@ export async function compileInitialRoutineCandidate(
     sections,
     items,
     createdAt: "pending-sql-assignment",
-  } as unknown as JsonValue
+  } satisfies RoutineCompiledPayload as unknown as JsonValue
 
   return {
     schemaVersion: 1,

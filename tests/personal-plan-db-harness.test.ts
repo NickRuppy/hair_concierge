@@ -1,6 +1,13 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { mkdtempSync, mkdirSync, readdirSync, renameSync, writeFileSync } from "node:fs"
+import {
+  mkdtempSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  writeFileSync,
+} from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { spawnSync } from "node:child_process"
@@ -13,7 +20,17 @@ const requiredMigrations = [
   "20260808062603_personal_plan_routine_backend.sql",
   "20260808062620_personal_plan_product_intake_user_products.sql",
   "20260808065528_personal_plan_category_readiness.sql",
+  "20260808070000_personal_plan_routine_successor_lifecycle.sql",
+  "20260808071000_personal_plan_routine_source_reconciliation.sql",
 ]
+
+test("database harness isolates its project and ports from a developer Supabase stack", () => {
+  const harness = readFileSync(join(process.cwd(), "scripts/test-personal-plan-db.sh"), "utf8")
+  assert.match(harness, /hair_conscierge_personal_plan_contract/)
+  assert.match(harness, /port = 55321/)
+  assert.match(harness, /port = 55322/)
+  assert.doesNotMatch(harness, /repository_supabase/)
+})
 
 function sha256(content: string): string {
   return createHash("sha256").update(content).digest("hex")

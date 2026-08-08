@@ -13,11 +13,18 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import {
+  RoutineAttentionIndicator,
+  useRoutineAttention,
+} from "@/components/routine/personal-plan/routine-attention-indicator"
 
 export function Header() {
   const { profile, signOut } = useAuth()
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const hasPendingRoutineProposal = useRoutineAttention(
+    !pathname.startsWith("/auth") && !pathname.startsWith("/quiz"),
+  )
 
   // Don't show header on auth or quiz pages
   if (pathname.startsWith("/auth") || pathname.startsWith("/quiz")) {
@@ -25,7 +32,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 relative bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-primary/20 after:to-transparent">
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-primary/20 after:to-transparent">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <Link href="/chat" className="flex items-center gap-2">
           <div className="flex items-center gap-[3px]">
@@ -44,7 +51,7 @@ export function Header() {
             <MessageCircle className="mr-1.5 h-4 w-4" />
             Chat
           </NavLink>
-          <NavLink href="/routine" current={pathname}>
+          <NavLink href="/routine" current={pathname} attention={hasPendingRoutineProposal}>
             <ListChecks className="mr-1.5 h-4 w-4" />
             Routine
           </NavLink>
@@ -89,7 +96,13 @@ export function Header() {
               <MessageCircle className="mr-1.5 h-4 w-4" />
               Chat
             </NavLink>
-            <NavLink href="/routine" current={pathname} onClick={() => setMenuOpen(false)} mobile>
+            <NavLink
+              href="/routine"
+              current={pathname}
+              onClick={() => setMenuOpen(false)}
+              mobile
+              attention={hasPendingRoutineProposal}
+            >
               <ListChecks className="mr-1.5 h-4 w-4" />
               Routine
             </NavLink>
@@ -129,12 +142,14 @@ function NavLink({
   current,
   onClick,
   mobile,
+  attention = false,
   children,
 }: {
   href: string
   current: string
   onClick?: () => void
   mobile?: boolean
+  attention?: boolean
   children: React.ReactNode
 }) {
   const isActive = current === href || current.startsWith(href + "/")
@@ -142,13 +157,14 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`inline-flex items-center rounded-md px-3 ${mobile ? "py-3" : "py-2"} text-sm font-medium transition-colors ${
+      className={`relative inline-flex items-center rounded-md px-3 ${mobile ? "py-3" : "py-2"} text-sm font-medium transition-colors ${
         isActive
           ? "bg-accent text-accent-foreground"
           : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
       }`}
     >
       {children}
+      <RoutineAttentionIndicator hasPendingProposal={attention} />
     </Link>
   )
 }

@@ -263,7 +263,10 @@ export type Stage3OwnedProduct = {
   displayName: string
   category: PersonalPlanCategory
   role: PlanProductRole | null
-  frequencyRange: ProductFrequency
+  // Stage 4 may turn an exact planned purchase into owned inventory before the
+  // person has reported how often they use it. Recommended Routine cadence is
+  // kept separately and must not be written back as observed usage.
+  frequencyRange: ProductFrequency | null
   choiceState: "owned_active" | "owned_override"
   sourceDecisionKey: string
 }
