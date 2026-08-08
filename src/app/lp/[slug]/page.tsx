@@ -5,6 +5,7 @@ import { renderLandingVariant } from "@/funnels/landing/registry"
 import {
   isPersonalPlanQuizCrossBrowserResumeEnabled,
   isPersonalPlanQuizV1Enabled,
+  isPersonalPlanResultReturnEnabled,
 } from "@/lib/funnel/flags"
 import { getFunnelPackageBySlug } from "@/lib/funnel/packages"
 import {
@@ -12,7 +13,15 @@ import {
   PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY,
   resolvePersonalPlanQuizDraftLandingState,
 } from "@/lib/personal-plan-quiz/server-draft"
+import {
+  type PersonalPlanResultReturnResolution,
+  PERSONAL_PLAN_RESULT_RETURN_COOKIE,
+  resolvePersonalPlanResultReturn,
+  resolvePersonalPlanReturnLanding,
+} from "@/lib/personal-plan-quiz/result-return"
 import { LandingTracking } from "@/providers/tracking-providers"
+
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -43,10 +52,30 @@ export default async function CampaignLandingPage({
   let personalPlanQuizResume
 
   if (funnelPackage.key === "meta_personal_plan_v1") {
-    if (!resumeEnabled && resumeToken) redirect("/lp/haarplan")
+    const cookieStore = await cookies()
+    const resultCookie = cookieStore.get(PERSONAL_PLAN_RESULT_RETURN_COOKIE)?.value
+    let resultReturn: PersonalPlanResultReturnResolution = {
+      leadId: null,
+      status: "invalid",
+    }
+
+    if (isPersonalPlanResultReturnEnabled() && resultCookie) {
+      resultReturn = await resolvePersonalPlanResultReturn(resultCookie)
+    }
+
+    const initialReturnDecision = resolvePersonalPlanReturnLanding({
+      resultReturn,
+      resumeToken,
+    })
+    if (initialReturnDecision.kind === "result") {
+      redirect(`/result/${encodeURIComponent(initialReturnDecision.leadId)}?entry=quiz_return`)
+    }
+
+    if (resumeToken && !resumeEnabled) {
+      redirect("/lp/haarplan")
+    }
 
     if (resumeEnabled) {
-      const cookieStore = await cookies()
       const landingState = await resolvePersonalPlanQuizDraftLandingState({
         cookieValue: cookieStore.get(PERSONAL_PLAN_QUIZ_DRAFT_COOKIE)?.value,
         resumeToken,

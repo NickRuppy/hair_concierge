@@ -13,6 +13,7 @@ export type FunnelAnalyticsEnvelope = {
 
 export type OfferEntryContext =
   | "quiz_completion"
+  | "quiz_return"
   | "saved_result"
   | "routine_return"
   | "result_email"

@@ -25,6 +25,7 @@ import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 
 export function ResultPageClient({
+  showQuizRestart = false,
   leadId,
   name,
   personalPlanOffer = null,
@@ -41,6 +42,7 @@ export function ResultPageClient({
   offerVariant = "default",
   pricingCatalog,
 }: {
+  showQuizRestart?: boolean
   leadId: string
   name: string
   personalPlanOffer?: PersonalPlanOfferModel | null
@@ -67,11 +69,18 @@ export function ResultPageClient({
     }
 
     if (!personalPlanOffer) {
-      return <PersonalPlanOfferRecovery leadId={leadId} />
+      return (
+        <PersonalPlanOfferRecovery
+          leadId={leadId}
+          reloadEntryContext={entryContext === "quiz_return" ? "quiz_return" : "quiz_completion"}
+          showQuizRestart={showQuizRestart}
+        />
+      )
     }
 
     return (
       <PersonalPlanOffer
+        showQuizRestart={showQuizRestart}
         entryContext={resolvedEntryContext}
         focusTarget={personalPlanFocusTarget}
         isInternalTest={isInternalTest}

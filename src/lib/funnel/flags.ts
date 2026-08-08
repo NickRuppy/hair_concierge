@@ -42,3 +42,8 @@ export function isPersonalPlanQuizV1Enabled() {
 export function isPersonalPlanQuizCrossBrowserResumeEnabled() {
   return process.env.PERSONAL_PLAN_QUIZ_CROSS_BROWSER_RESUME_ENABLED === "true"
 }
+
+/** Same-browser return to a completed unpaid Personal Plan result. */
+export function isPersonalPlanResultReturnEnabled() {
+  return process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED === "true"
+}

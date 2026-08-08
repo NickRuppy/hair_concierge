@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan – Rückkehr-Routing</title>
+    <style>
+      :root {
+        --ink: #2c174c;
+        --muted: #716c68;
+        --plum: #7351ad;
+        --plum-soft: #cdbce8;
+        --plum-wash: #f7f2fc;
+        --paper: #fcfaf7;
+        --coral: #d9656f;
+        --line: rgba(44, 23, 76, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eee9f3;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .review {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 38px 28px 54px;
+      }
+
+      .review-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 22px;
+      }
+
+      .eyebrow {
+        margin: 0 0 7px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 7px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(32px, 4vw, 52px);
+        font-weight: 500;
+        letter-spacing: -0.035em;
+      }
+
+      .lede {
+        max-width: 760px;
+        margin-bottom: 0;
+        color: #5e5764;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .decision {
+        flex: 0 0 auto;
+        border: 1px solid rgba(115, 81, 173, 0.18);
+        border-radius: 999px;
+        background: white;
+        padding: 10px 15px;
+        color: var(--plum);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .case {
+        overflow: hidden;
+        border: 1px solid rgba(44, 23, 76, 0.08);
+        border-radius: 28px;
+        background: white;
+        box-shadow: 0 22px 60px -46px rgba(44, 23, 76, 0.65);
+      }
+
+      .case-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--line);
+        padding: 20px 22px;
+      }
+
+      .case-number {
+        display: inline-grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--ink);
+        color: white;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .case-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 850;
+      }
+
+      .route {
+        border-radius: 999px;
+        background: var(--plum-wash);
+        padding: 8px 12px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .annotation {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 11px;
+        align-items: center;
+        margin: 18px 22px;
+        border: 1px dashed rgba(115, 81, 173, 0.35);
+        border-radius: 16px;
+        background: var(--plum-wash);
+        padding: 13px 14px;
+        color: #4f3d67;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .arrow {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum);
+        color: white;
+        font-weight: 900;
+      }
+
+      .screen {
+        margin: 0 22px 22px;
+        overflow: hidden;
+        border: 1px solid rgba(44, 23, 76, 0.1);
+        border-radius: 21px;
+        background: var(--paper);
+        min-height: 640px;
+      }
+
+      .quiz-top,
+      .offer-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(115, 81, 173, 0.2);
+        background: rgba(252, 250, 247, 0.94);
+        padding: 15px 22px;
+      }
+
+      .brand {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .section-label {
+        color: var(--plum);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .progress-wrap {
+        padding: 13px 22px 8px;
+      }
+      .progress {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: var(--plum-soft);
+      }
+
+      .progress > div {
+        width: 46%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--plum);
+      }
+
+      .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .quiz-body {
+        padding: 26px 28px 32px;
+      }
+
+      .back {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 18px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .quiz-body h2,
+      .offer-card h2 {
+        margin-bottom: 9px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.06;
+      }
+
+      .quiz-body > p {
+        margin-bottom: 20px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .answers {
+        display: grid;
+        gap: 10px;
+      }
+      .answer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid var(--plum-soft);
+        border-radius: 15px;
+        background: white;
+        padding: 14px 15px;
+        font-size: 14px;
+        font-weight: 750;
+      }
+
+      .answer.selected {
+        border: 2px solid var(--plum);
+        background: var(--plum-wash);
+      }
+
+      .radio {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--plum-soft);
+        border-radius: 50%;
+      }
+
+      .answer.selected .radio {
+        border: 6px solid var(--plum);
+        background: white;
+      }
+
+      .resume-note {
+        margin: 24px 0 0;
+        border-radius: 13px;
+        background: #edf7f0;
+        padding: 12px 13px;
+        color: #285a3b;
+        font-size: 12px;
+        font-weight: 750;
+        line-height: 1.45;
+      }
+
+      .offer-body {
+        padding: 28px;
+      }
+      .faq {
+        display: grid;
+        gap: 9px;
+        margin-bottom: 22px;
+      }
+      .faq div {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+        padding: 14px;
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .offer-card {
+        border-radius: 19px;
+        background: var(--plum);
+        padding: 26px 20px;
+        text-align: center;
+        color: white;
+      }
+
+      .offer-card h2 {
+        margin-bottom: 17px;
+        font-size: 29px;
+      }
+      .cta {
+        display: inline-flex;
+        border-radius: 999px;
+        background: white;
+        padding: 12px 23px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .retake {
+        padding: 18px 12px 22px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .retake a {
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .retake-callout {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 10px;
+        border-radius: 999px;
+        background: #fff2d9;
+        padding: 7px 10px;
+        color: #795319;
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .legal {
+        border-top: 1px solid var(--line);
+        padding: 18px 20px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .recovery-case {
+        grid-column: 1 / -1;
+      }
+      .recovery-layout {
+        display: grid;
+        grid-template-columns: minmax(260px, 0.72fr) minmax(360px, 1.28fr);
+        gap: 22px;
+        align-items: center;
+        padding: 0 22px 22px;
+      }
+      .recovery-layout .annotation {
+        margin: 0;
+      }
+      .recovery-screen {
+        min-height: 0;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 34px 22px;
+      }
+      .recovery-card {
+        max-width: 560px;
+        border: 1px solid rgba(44, 23, 76, 0.1);
+        border-radius: 24px;
+        background: white;
+        padding: 28px;
+        text-align: center;
+        box-shadow: 0 22px 54px -40px rgba(44, 23, 76, 0.55);
+      }
+      .recovery-card .mini-eyebrow {
+        margin-bottom: 9px;
+        color: rgba(44, 23, 76, 0.58);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .recovery-card h2 {
+        margin-bottom: 12px;
+        font-family: Georgia, serif;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 1.08;
+      }
+      .recovery-card p {
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .reload {
+        display: inline-flex;
+        border-radius: 999px;
+        background: var(--plum);
+        padding: 12px 20px;
+        color: white;
+        font-size: 13px;
+        font-weight: 850;
+      }
+      .recovery-retake {
+        margin-top: 17px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .recovery-retake a {
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .restart-error-case {
+        grid-column: 1 / -1;
+      }
+      .restart-error-layout {
+        display: grid;
+        grid-template-columns: minmax(260px, 0.72fr) minmax(360px, 1.28fr);
+        gap: 22px;
+        align-items: center;
+        padding: 0 22px 22px;
+      }
+      .restart-error-layout .annotation {
+        margin: 0;
+      }
+      .restart-error-screen {
+        min-height: 0;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 32px 22px;
+      }
+      .restart-error-card {
+        width: min(560px, 100%);
+        border: 1px solid rgba(44, 23, 76, 0.1);
+        border-radius: 22px;
+        background: white;
+        padding: 24px;
+        text-align: center;
+      }
+      .restart-error-card .primary-placeholder {
+        margin-bottom: 18px;
+        border-radius: 16px;
+        background: var(--plum);
+        padding: 18px;
+        color: white;
+        font-family: Georgia, serif;
+        font-size: 24px;
+      }
+      .restart-error-card .restart-link {
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .restart-error-message {
+        margin: 10px 0 0;
+        color: #9b3644;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .restart-error-message a {
+        color: #7d2431;
+        font-weight: 850;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      @media (max-width: 850px) {
+        .review {
+          padding: 24px 12px 36px;
+        }
+        .review-header {
+          display: block;
+        }
+        .decision {
+          display: inline-block;
+          margin-top: 14px;
+        }
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        .case-header {
+          align-items: flex-start;
+        }
+        .route {
+          max-width: 155px;
+          text-align: right;
+        }
+        .screen {
+          min-height: auto;
+        }
+        .recovery-layout {
+          grid-template-columns: 1fr;
+          padding: 0 18px 18px;
+        }
+        .restart-error-layout {
+          grid-template-columns: 1fr;
+          padding: 0 18px 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review">
+      <header class="review-header">
+        <div>
+          <p class="eyebrow">Planungs-Mockup · Rückkehr über /lp/haarplan</p>
+          <h1>Ohne Umweg zurück zum relevanten Zustand</h1>
+          <p class="lede">
+            Es erscheint keine Auswahl- oder Hinweisseite. Die Auflösung passiert vor dem sichtbaren
+            Seitenaufbau; der Besucher landet direkt im gespeicherten Quiz oder in seinem Ergebnis.
+          </p>
+        </div>
+        <div class="decision">Direkte Weiterleitung · kein Chooser</div>
+      </header>
+
+      <section class="flow">
+        <article class="case">
+          <header class="case-header">
+            <div class="case-title"><span class="case-number">1</span> Quiz noch nicht fertig</div>
+            <div class="route">/lp/haarplan → exakter Schritt</div>
+          </header>
+          <div class="annotation">
+            <span class="arrow">→</span>
+            <span
+              ><strong>Direkter Resume:</strong> gespeicherte Auswahl, Verlauf und Zurück-Navigation
+              bleiben erhalten.</span
+            >
+          </div>
+          <div class="screen">
+            <div class="quiz-top">
+              <span class="brand">chaarlie</span>
+              <span class="section-label">Analyse</span>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress"><div></div></div>
+              <div class="progress-labels">
+                <span>Profil</span><span>Ziele</span><span>Analyse</span><span>Plan</span
+                ><span>Ergebnis</span>
+              </div>
+            </div>
+            <div class="quiz-body">
+              <div class="back">← Zurück</div>
+              <h2>Wie fühlt sich die Oberfläche deiner Haare an?</h2>
+              <p>Streiche mit zwei Fingern über eine einzelne Strähne.</p>
+              <div class="answers">
+                <div class="answer">
+                  <span>Glatt und geschmeidig</span><span class="radio"></span>
+                </div>
+                <div class="answer selected">
+                  <span>Etwas rau oder uneben</span><span class="radio"></span>
+                </div>
+                <div class="answer">
+                  <span>Sehr rau oder strohig</span><span class="radio"></span>
+                </div>
+              </div>
+              <div class="resume-note">
+                Kein Banner nötig: Der wiederhergestellte Zustand ist sofort interaktiv. Über
+                „Zurück“ kann die Person frühere Antworten ändern.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="case">
+          <header class="case-header">
+            <div class="case-title">
+              <span class="case-number">2</span> Fertig, noch nicht gekauft
+            </div>
+            <div class="route">/lp/haarplan → gespeichertes Ergebnis</div>
+          </header>
+          <div class="annotation">
+            <span class="arrow">→</span>
+            <span
+              ><strong>Direkter Result Return:</strong> innerhalb von 30 Tagen öffnet das bestehende
+              Ergebnis ohne neue Quiz-Eingabe.</span
+            >
+          </div>
+          <div class="screen">
+            <div class="offer-top">
+              <span class="brand">chaarlie</span>
+              <span class="cta" style="background: var(--plum); color: white; padding: 10px 15px"
+                >Angebot ansehen</span
+              >
+            </div>
+            <div class="offer-body">
+              <div class="faq">
+                <div>
+                  Ist der Plan wirklich auf mein Haar abgestimmt?
+                  <span style="float: right">⌄</span>
+                </div>
+                <div>
+                  Was bekomme ich – und was passiert nach dem Kauf?
+                  <span style="float: right">⌄</span>
+                </div>
+                <div>
+                  Muss ich neue oder teure Produkte kaufen? <span style="float: right">⌄</span>
+                </div>
+              </div>
+              <div class="offer-card">
+                <h2>Dein Plan zu schöneren Haaren in 30 Tagen.</h2>
+                <span class="cta">Plan sichern</span>
+              </div>
+              <div class="retake">
+                Du möchtest deine Angaben ändern?
+                <a href="#">Haar-Check neu starten</a>
+                <div><span class="retake-callout">Neu · bewusst niedrig gewichtet</span></div>
+              </div>
+            </div>
+            <div class="legal">Haarmony LLC · Datenschutz · AGB · Cookie-Einstellungen</div>
+          </div>
+        </article>
+
+        <article class="case recovery-case">
+          <header class="case-header">
+            <div class="case-title">
+              <span class="case-number">3</span> Gespeichertes Ergebnis vorübergehend unvollständig
+            </div>
+            <div class="route">Reload bleibt primär · Retake als Ausweg</div>
+          </header>
+          <div class="recovery-layout">
+            <div class="annotation">
+              <span class="arrow">→</span>
+              <span
+                ><strong>Kein Dead End:</strong> Die Person kann das Ergebnis erneut laden oder
+                bewusst einen neuen Haar-Check beginnen.</span
+              >
+            </div>
+            <div class="screen recovery-screen">
+              <section class="recovery-card">
+                <div class="mini-eyebrow">Haarplan wird vorbereitet</div>
+                <h2>Dein Ergebnis ist noch nicht vollständig bereit.</h2>
+                <p>
+                  Bitte versuche es noch einmal. Deine Quizdaten bleiben erhalten, aber wir zeigen
+                  keine erfundenen Produktempfehlungen an.
+                </p>
+                <span class="reload">Ergebnis erneut laden</span>
+                <div class="recovery-retake">
+                  Du möchtest lieber neu beginnen? <a href="#">Haar-Check neu starten</a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+
+        <article class="case restart-error-case">
+          <header class="case-header">
+            <div class="case-title">
+              <span class="case-number">4</span> Neustart kann nicht sicher abgeschlossen werden
+            </div>
+            <div class="route">Auf Ergebnis bleiben · erneut versuchen</div>
+          </header>
+          <div class="restart-error-layout">
+            <div class="annotation">
+              <span class="arrow">→</span>
+              <span
+                ><strong>Kein Zustandsverlust:</strong> Erst nach erfolgreichem Server-Reset werden
+                lokale Daten gelöscht und die Quizseite geöffnet.</span
+              >
+            </div>
+            <div class="screen restart-error-screen">
+              <section class="restart-error-card">
+                <div class="primary-placeholder">Dein gespeichertes Ergebnis bleibt geöffnet.</div>
+                <span class="restart-link">Haar-Check neu starten</span>
+                <p class="restart-error-message">
+                  Das hat nicht geklappt. Bitte versuche es noch einmal.
+                  <a href="#">Erneut versuchen</a>
+                </p>
+              </section>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

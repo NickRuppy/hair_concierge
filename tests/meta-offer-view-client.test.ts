@@ -138,26 +138,28 @@ test("Meta offer view sends Pixel and endpoint with the identical id", async () 
 })
 
 test("non-completion entries never claim or send the primary Meta offer view", async () => {
-  const storage = memoryStorage()
-  let sends = 0
-  const tracked = await trackMetaOfferViewOnce(
-    { ...identity, entryContext: "result_email" },
-    {
-      storage,
-      trackPixel: () => {
-        sends += 1
-        return true
+  for (const entryContext of ["result_email", "quiz_return"] as const) {
+    const storage = memoryStorage()
+    let sends = 0
+    const tracked = await trackMetaOfferViewOnce(
+      { ...identity, entryContext },
+      {
+        storage,
+        trackPixel: () => {
+          sends += 1
+          return true
+        },
+        send: async () => {
+          sends += 1
+          return new Response(null, { status: 202 })
+        },
       },
-      send: async () => {
-        sends += 1
-        return new Response(null, { status: 202 })
-      },
-    },
-  )
+    )
 
-  assert.equal(tracked, false)
-  assert.equal(sends, 0)
-  assert.equal(storage.values.size, 0)
+    assert.equal(tracked, false)
+    assert.equal(sends, 0)
+    assert.equal(storage.values.size, 0)
+  }
 })
 
 test("a transport failure never rejects the offer render path", async () => {

@@ -8,21 +8,47 @@ function read(path: string) {
 
 test("personal-plan resume entry resolves or exchanges before landing rendering and tracking", () => {
   const landing = read("src/app/lp/[slug]/page.tsx")
+  const resultResolveIndex = landing.indexOf("resultReturn = await")
+  const resultDecisionIndex = landing.indexOf("const initialReturnDecision =")
+  const resultRedirectIndex = landing.indexOf("?entry=quiz_return")
   const resolveIndex = landing.indexOf("const landingState = await")
   const exchangeIndex = landing.indexOf("/api/quiz/personal-plan-draft/resume?")
   const renderIndex = landing.lastIndexOf("renderLandingVariant")
   const trackingIndex = landing.indexOf("<LandingTracking />")
 
+  assert.ok(resultResolveIndex >= 0)
+  assert.ok(resultDecisionIndex > resultResolveIndex)
+  assert.ok(resultRedirectIndex > resultDecisionIndex)
+  assert.ok(resolveIndex > resultRedirectIndex)
   assert.ok(resolveIndex >= 0)
   assert.ok(exchangeIndex > resolveIndex)
   assert.ok(renderIndex > exchangeIndex)
   assert.ok(trackingIndex > renderIndex)
   assert.match(landing, /redirect\("\/lp\/haarplan"\)/)
+  assert.match(landing, /resumeToken && !resumeEnabled/)
+  assert.doesNotMatch(landing, /initialReturnDecision\.kind !== "unavailable"/)
   assert.match(
     landing,
     /\/api\/quiz\/personal-plan-draft\/resume\?\$\{PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY\}=/,
   )
   assert.doesNotMatch(landing, /returnTo|redirectTo|new URL\(resumeToken/i)
+  assert.match(landing, /export const dynamic = "force-dynamic"/)
+  assert.match(landing, /isPersonalPlanResultReturnEnabled\(\)/)
+})
+
+test("completed result return has fixed precedence over explicit and stored draft resume", () => {
+  const landing = read("src/app/lp/[slug]/page.tsx")
+  const resultResolveIndex = landing.indexOf("resultReturn = await")
+  const resultDecisionIndex = landing.indexOf("const initialReturnDecision =")
+  const resultRedirectIndex = landing.indexOf("?entry=quiz_return")
+  const resumeFallbackIndex = landing.indexOf("resumeToken && !resumeEnabled")
+  const draftResolveIndex = landing.indexOf("const landingState = await")
+
+  assert.ok(resultResolveIndex >= 0)
+  assert.ok(resultDecisionIndex > resultResolveIndex)
+  assert.ok(resultRedirectIndex > resultDecisionIndex)
+  assert.ok(resumeFallbackIndex > resultRedirectIndex)
+  assert.ok(draftResolveIndex > resumeFallbackIndex)
 })
 
 test("resume entry preserves the deployed strict cross-origin referrer policy", () => {
