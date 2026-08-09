@@ -3,9 +3,11 @@ import type {
   PersonalPlanCategory,
   Stage3CatalogSearchResult,
   Stage3CategoryRequirement,
+  Stage3ProductDecision,
   Stage3ProductDraft,
   ProposedProductPortfolio,
 } from "./contracts"
+import { deriveStage3DecisionSubjects } from "./contracts"
 import type {
   Stage3CompleteResponse,
   Stage3DraftResponse,
@@ -16,12 +18,18 @@ import type {
 } from "./gateway"
 import { createProposedProductPortfolio } from "./portfolio"
 import {
+  effectiveStage3CategoryDecisions,
+  effectiveStage3Coverage,
+  effectiveStage3Requirements,
+} from "./product-load-resolution"
+import {
   addCapturedProduct,
   assignProductRoles,
   completeCaptureCategory,
   markRoleUncovered,
   recordProductDecision,
   removeCapturedProduct,
+  replaceCategoryRoleAssignments,
   reopenCaptureCategory,
 } from "./state-machine"
 import type {
@@ -29,6 +37,15 @@ import type {
   RoutineProposalStager,
 } from "@/lib/personal-plan/routine-proposal-stager"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import type { Stage3DecisionSubject } from "./contracts"
+import type { Stage3AuthorityFactBundle } from "./authority/catalog-facts"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthorityInput,
+  Stage3AuthoritySemanticIntent,
+} from "./authority/contracts"
+import { evaluateStage3Authority } from "./authority/evaluate"
+import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from "./authority/snapshot"
 
 /**
  * This is deliberately a narrow, injected boundary.  SQL owns draft creation
@@ -81,6 +98,16 @@ export type Stage3ProductionPersistence = {
     refinedVersionId: string
   }): Promise<InitialNeedPlanSnapshot>
   loadSourceRevision(input: { userId: string; personalPlanId: string }): Promise<number>
+  loadCurrentRefinedVersionId(input: {
+    userId: string
+    personalPlanId: string
+  }): Promise<string | null>
+  loadAuthorityFacts(input: {
+    userId: string
+    draft: Stage3ProductDraft
+    subject: Stage3DecisionSubject
+    heatRoutes: string[]
+  }): Promise<Stage3AuthorityFactBundle>
   loadDraft(input: { userId: string; draftId: string }): Promise<Stage3ProductDraft | null>
 }
 
@@ -93,9 +120,18 @@ export type Stage3ProductionGatewayOptions = {
   now?: () => string
 }
 
+export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
+  evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
+  resolveDecision(input: {
+    draftId: string
+    expectedRevision: number
+    intent: Stage3AuthoritySemanticIntent
+  }): Promise<Stage3MutationResponse>
+}
+
 export function createProductionStage3ProductsGateway(
   options: Stage3ProductionGatewayOptions,
-): Stage3ProductsGateway {
+): Stage3AuthorityProductionGateway {
   const now = options.now ?? (() => new Date().toISOString())
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
@@ -113,6 +149,53 @@ export function createProductionStage3ProductsGateway(
     })
     cached = { draft, requirements }
     return cached
+  }
+
+  async function authoritativeEvaluation(
+    draft: Stage3ProductDraft,
+    subjectKey: string,
+  ): Promise<Stage3AuthorityEvaluation> {
+    const snapshot = requireCurrentAuthoritySnapshot(draft)
+    const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
+      userId: options.userId,
+      personalPlanId: draft.personalPlanId,
+    })
+    if (currentRefinedVersionId !== draft.refinedVersionId) {
+      throw new Stage3AuthoritySnapshotError("stale_refined_source")
+    }
+
+    const subject = deriveStage3DecisionSubjects(draft).find(
+      (candidate) => candidate.decisionKey === subjectKey,
+    )
+    if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
+    const effectiveDecisions = effectiveStage3CategoryDecisions(draft)
+    const categoryDecision = effectiveDecisions.find(
+      (decision) => decision.category === subject.category,
+    )
+    if (!categoryDecision) throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+    const captured = subject.capturedProductId
+      ? draft.products.find((product) => product.capturedProductId === subject.capturedProductId)
+      : null
+    const facts = await options.persistence.loadAuthorityFacts({
+      userId: options.userId,
+      draft,
+      subject,
+      heatRoutes: qualifyingHeatRoutes(snapshot.categoryDecisions),
+    })
+
+    return evaluateStage3Authority({
+      category: subject.category,
+      authorityVersion: snapshot.authorityVersions[subject.category],
+      refinedVersionId: draft.refinedVersionId,
+      refinedInputHash: snapshot.refinedInputHash,
+      subjectKey: subject.decisionKey,
+      role: subject.role,
+      capturedProductId: subject.capturedProductId,
+      subjectIdentity: captured?.identity ?? null,
+      categoryDecision,
+      coverage: effectiveStage3Coverage(draft),
+      ...facts,
+    } as Stage3AuthorityInput)
   }
 
   return {
@@ -276,6 +359,56 @@ export function createProductionStage3ProductsGateway(
         next: { stage: 4, href: "/routine" },
       }
     },
+    async evaluateDecisions(input) {
+      const loaded = await current(input.draftId)
+      return Promise.all(
+        deriveStage3DecisionSubjects(loaded.draft).map((subject) =>
+          authoritativeEvaluation(loaded.draft, subject.decisionKey),
+        ),
+      )
+    },
+    async resolveDecision(input) {
+      const loaded = await current(input.draftId)
+      const draft = loaded.draft
+      if (draft.revision !== input.expectedRevision || draft.status !== "active") {
+        return { status: "conflict", latestDraft: draft }
+      }
+      const subject = deriveStage3DecisionSubjects(draft).find(
+        (candidate) => candidate.decisionKey === input.intent.subjectKey,
+      )
+      if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
+      const evaluation = await authoritativeEvaluation(draft, subject.decisionKey)
+      if (!evaluation.allowedActions.includes(input.intent.action as never)) {
+        throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
+      }
+      validateSelectedCandidate(input.intent, evaluation)
+
+      const snapshot = requireCurrentAuthoritySnapshot(draft)
+      const decision = buildAuthorityDecision(subject, input.intent, evaluation, snapshot)
+      const next = { ...recordProductDecision(draft, decision), updatedAt: now() }
+      const saved = await options.persistence.save({
+        userId: options.userId,
+        draftId: draft.draftId,
+        expectedRevision: input.expectedRevision,
+        draft: next,
+      })
+      cached = { ...loaded, draft: saved.draft }
+      return saved.outcome === "saved"
+        ? { status: "saved", draft: saved.draft }
+        : { status: "conflict", latestDraft: saved.draft }
+    },
+  }
+}
+
+export class Stage3AuthorityMutationError extends Error {
+  constructor(
+    public readonly code:
+      | "stage3_authority_subject_invalid"
+      | "stage3_authority_action_invalid"
+      | "stage3_authority_candidate_invalid",
+  ) {
+    super(code)
+    this.name = "Stage3AuthorityMutationError"
   }
 }
 
@@ -283,6 +416,77 @@ export class Stage3ProductionUnavailableError extends Error {
   constructor() {
     super("temporarily_unavailable")
     this.name = "Stage3ProductionUnavailableError"
+  }
+}
+
+function qualifyingHeatRoutes(
+  decisions: NonNullable<Stage3ProductDraft["authoritySnapshot"]>["categoryDecisions"],
+): string[] {
+  const heat = decisions.find((decision) => decision.category === "heat_protectant")
+  return heat?.target?.category === "heat_protectant" ? [...heat.target.qualifyingRoutes] : []
+}
+
+function validateSelectedCandidate(
+  intent: Stage3AuthoritySemanticIntent,
+  evaluation: Stage3AuthorityEvaluation,
+) {
+  if (intent.action === "plan_recommendation") {
+    if (
+      evaluation.status !== "known" ||
+      !evaluation.recommendation ||
+      (intent.selectedCandidateId !== undefined &&
+        intent.selectedCandidateId !== evaluation.recommendation.productId)
+    ) {
+      throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
+    }
+    return
+  }
+  if (intent.selectedCandidateId !== undefined) {
+    throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
+  }
+}
+
+function buildAuthorityDecision(
+  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+  intent: Stage3AuthoritySemanticIntent,
+  evaluation: Stage3AuthorityEvaluation,
+  snapshot: NonNullable<Stage3ProductDraft["authoritySnapshot"]>,
+): Stage3ProductDecision {
+  const known = evaluation.status === "known" ? evaluation : null
+  const criteria =
+    evaluation.status === "known" || evaluation.status === "unknown" ? evaluation.criteria : []
+  const choiceState: Stage3ProductDecision["choiceState"] =
+    intent.action === "keep_owned"
+      ? "owned_active"
+      : intent.action === "acknowledge_override"
+        ? "owned_override"
+        : intent.action === "plan_recommendation"
+          ? "planned_purchase"
+          : intent.action === "keep_pending"
+            ? "pending_review"
+            : "unassigned"
+
+  return {
+    decisionKey: subject.decisionKey,
+    category: subject.category,
+    role: subject.role,
+    capturedProductId: subject.capturedProductId,
+    verdict: known?.verdict ?? "unknown",
+    choiceState,
+    criterionResults: criteria,
+    recommendation:
+      intent.action === "plan_recommendation" ? (known?.recommendation ?? null) : null,
+    limitationAcknowledged: intent.action === "acknowledge_override",
+    authorityEvidence: {
+      schemaVersion: 1,
+      subjectKey: subject.decisionKey,
+      refinedNeedVersionId: snapshot.refinedNeedVersionId,
+      refinedInputHash: snapshot.refinedInputHash,
+      authorityVersion: snapshot.authorityVersions[subject.category],
+      productFactFingerprint: known?.productFactFingerprint ?? null,
+      recommendationFactFingerprint: known?.recommendationFactFingerprint ?? null,
+      coverageRuleIds: evaluation.coverageRuleIds,
+    },
   }
 }
 
@@ -346,6 +550,15 @@ async function applyMutation(
     }
     case "assign_roles":
       return withUpdatedAt(assignProductRoles(draft, mutation))
+    case "replace_category_role_assignments":
+      return withUpdatedAt(
+        replaceCategoryRoleAssignments(
+          draft,
+          mutation.category,
+          mutation.assignments,
+          effectiveStage3Requirements(requirements, draft),
+        ),
+      )
     case "mark_role_uncovered":
       return withUpdatedAt(markRoleUncovered(draft, mutation.uncoveredRole))
     case "complete_capture_category":
@@ -355,7 +568,7 @@ async function applyMutation(
     case "remove_captured_product":
       return withUpdatedAt(removeCapturedProduct(draft, mutation.capturedProductId))
     case "record_decision":
-      return withUpdatedAt(recordProductDecision(draft, mutation.decision))
+      throw new Error("stage3_client_decision_rejected")
   }
 }
 

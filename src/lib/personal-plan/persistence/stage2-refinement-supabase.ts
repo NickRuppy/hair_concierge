@@ -2,61 +2,85 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
-import type { Stage2RefinementPersistence, Stage2PersistedDraft } from "./stage2-refinement-service"
+import type {
+  Stage2PersistedDraft,
+  Stage2RefinementPersistence,
+  Stage2RefinementResumeReader,
+} from "./stage2-refinement-service"
 
 type AdminClient = SupabaseClient
 
 /** Server-only persistence adapter. It is intentionally supplied only to route composition. */
 export function createSupabaseStage2RefinementPersistence(
   client: AdminClient,
-): Stage2RefinementPersistence {
-  return {
-    async loadOrCreate(userId) {
-      const { data: plan, error: planError } = await client
-        .from("personal_plans")
-        .select("id,current_initial_need_version_id")
-        .eq("user_id", userId)
-        .maybeSingle()
-      if (planError || !plan?.current_initial_need_version_id)
-        throw new Error("stage2_plan_unavailable")
+): Stage2RefinementPersistence & Stage2RefinementResumeReader {
+  async function loadSource(userId: string) {
+    const { data: plan, error: planError } = await client
+      .from("personal_plans")
+      .select("id,current_initial_need_version_id")
+      .eq("user_id", userId)
+      .maybeSingle()
+    if (planError || !plan?.current_initial_need_version_id)
+      throw new Error("stage2_plan_unavailable")
 
-      const { data: initial, error: initialError } = await client
-        .from("personal_plan_need_versions")
-        .select("id,prepared_artifact_source_id,input_snapshot,output_snapshot")
-        .eq("id", plan.current_initial_need_version_id)
-        .eq("user_id", userId)
-        .maybeSingle()
-      if (initialError || !initial?.prepared_artifact_source_id)
-        throw new Error("stage2_initial_need_unavailable")
-      const triggerContext = deriveStage2TriggerContext(
+    const { data: initial, error: initialError } = await client
+      .from("personal_plan_need_versions")
+      .select("id,prepared_artifact_source_id,input_snapshot,output_snapshot")
+      .eq("id", plan.current_initial_need_version_id)
+      .eq("user_id", userId)
+      .maybeSingle()
+    if (initialError || !initial?.prepared_artifact_source_id)
+      throw new Error("stage2_initial_need_unavailable")
+
+    return {
+      plan,
+      initial,
+      triggerContext: deriveStage2TriggerContext(
         initial.output_snapshot as InitialNeedPlanSnapshot,
+      ),
+    }
+  }
+
+  async function loadExistingFromSource(
+    source: Awaited<ReturnType<typeof loadSource>>,
+  ): Promise<Stage2PersistedDraft | null> {
+    const { plan, initial, triggerContext } = source
+    const { data: current, error: currentError } = await client
+      .from("personal_plan_refinement_drafts")
+      .select(
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
       )
+      .eq("personal_plan_id", plan.id)
+      .eq("base_initial_need_version_id", initial.id)
+      .eq("status", "in_progress")
+      .maybeSingle()
+    if (currentError) throw new Error("stage2_draft_read_failed")
+    if (current) return mapDraft(current, triggerContext, initial)
 
-      const { data: current, error: currentError } = await client
-        .from("personal_plan_refinement_drafts")
-        .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
-        )
-        .eq("personal_plan_id", plan.id)
-        .eq("base_initial_need_version_id", initial.id)
-        .eq("status", "in_progress")
-        .maybeSingle()
-      if (currentError) throw new Error("stage2_draft_read_failed")
-      if (current) return mapDraft(current, triggerContext, initial)
+    const { data: completed, error: completedError } = await client
+      .from("personal_plan_refinement_drafts")
+      .select(
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
+      )
+      .eq("personal_plan_id", plan.id)
+      .eq("base_initial_need_version_id", initial.id)
+      .eq("status", "complete")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (completedError) throw new Error("stage2_completed_draft_read_failed")
+    return completed ? mapDraft(completed, triggerContext, initial) : null
+  }
 
-      const { data: completed, error: completedError } = await client
-        .from("personal_plan_refinement_drafts")
-        .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,revision,status,result_refined_need_version_id",
-        )
-        .eq("personal_plan_id", plan.id)
-        .eq("base_initial_need_version_id", initial.id)
-        .eq("status", "complete")
-        .order("updated_at", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (completedError) throw new Error("stage2_completed_draft_read_failed")
-      if (completed) return mapDraft(completed, triggerContext, initial)
+  return {
+    async loadExisting(userId) {
+      return loadExistingFromSource(await loadSource(userId))
+    },
+    async loadOrCreate(userId) {
+      const source = await loadSource(userId)
+      const existing = await loadExistingFromSource(source)
+      if (existing) return existing
+      const { plan, initial, triggerContext } = source
 
       const { data: created, error: createError } = await client
         .from("personal_plan_refinement_drafts")

@@ -40,7 +40,11 @@ export type ApplicationRecoveryKind =
   | "no_active_routine"
   | "unavailable"
 
+export type ApplicationRecoveryView =
+  | { state: ApplicationRecoveryKind }
+  | { state: "day_unavailable"; overviewHref: "/anwendung" }
+
 export type ApplicationPageView =
   | { state: "ready"; days: ApplicationDayView[]; selectedDayType?: ApplicationDayTypeKey }
   | { state: "no_complete_day"; restDay: ApplicationDayView }
-  | { state: ApplicationRecoveryKind }
+  | ApplicationRecoveryView

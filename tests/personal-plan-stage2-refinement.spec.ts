@@ -24,6 +24,7 @@ async function chooseNoneAndContinue(page: Page, label = "Nichts davon") {
   })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")
+  await expect(page.getByRole("button", { name: "Weiter" })).toBeEnabled()
   await page.getByRole("button", { name: "Weiter" }).click()
 }
 
@@ -72,7 +73,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(bridge).toBeVisible()
     await expect(page.locator("[data-stage2-next-href]")).toHaveAttribute(
       "data-stage2-next-href",
-      "/plan-start/produkte",
+      "/plan-start",
     )
     await expect(bridge.locator("a")).toHaveCount(0)
     await expect(bridge).not.toContainText(/Ergebnis|Veränderung|Karte|Delta/i)

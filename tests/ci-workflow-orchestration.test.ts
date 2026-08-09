@@ -191,7 +191,7 @@ test("quality core installs Chromium before the self-hosted Personal Plan browse
   )
   assert.equal(
     stage3BrowserScript,
-    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PLAYWRIGHT_BASE_URL=http://127.0.0.1:3217 start-server-and-test 'npm run dev -- --hostname 127.0.0.1 --port 3217' http://127.0.0.1:3217 'playwright test tests/personal-plan-start.spec.ts tests/personal-plan-stage2-refinement.spec.ts tests/personal-plan-stage1-2-3.spec.ts tests/personal-plan-stage3.spec.ts --project=chromium'",
+    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true PLAYWRIGHT_BASE_URL=http://127.0.0.1:3217 start-server-and-test 'npm run dev -- --hostname 127.0.0.1 --port 3217' http://127.0.0.1:3217 'playwright test tests/personal-plan-start.spec.ts tests/personal-plan-stage2-refinement.spec.ts tests/personal-plan-stage1-2-3.spec.ts tests/personal-plan-stage3.spec.ts --project=chromium'",
   )
   assert.match(
     packageManifest.scripts["test:contracts"],
@@ -199,7 +199,11 @@ test("quality core installs Chromium before the self-hosted Personal Plan browse
   )
   assert.match(
     packageManifest.scripts["test:contracts"],
-    /(?:^| && )npm run test:playwright:personal-plan-stage3 && npm run test:playwright:personal-plan-stage4$/,
+    /(?:^| && )npm run test:playwright:personal-plan-stage3 && npm run test:playwright:personal-plan-stage4 && npm run test:playwright:personal-plan-stage5$/,
+  )
+  assert.doesNotMatch(
+    packageManifest.scripts["test:contracts"],
+    /test:playwright:personal-plan-stage1-5/,
   )
 })
 
@@ -212,14 +216,26 @@ test("Personal Plan database contracts are path-scoped, local, and time-bounded"
     /^      personal_plan_db: \$\{\{ steps\.changes\.outputs\.personal_plan_db \}\}$/m,
   )
   assert.deepEqual(jobDependencyNames(ciWorkflow, "personal-plan-db-contract"), ["detect-ci-scope"])
-  assert.match(databaseContracts, /^    timeout-minutes: 15$/m)
+  assert.match(databaseContracts, /^    timeout-minutes: 30$/m)
+  assert.match(
+    databaseContracts,
+    /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: npx playwright install --with-deps chromium/m,
+  )
   assert.match(
     databaseContracts,
     /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: time npm run test:personal-plan-db/m,
   )
+  assert.match(
+    databaseContracts,
+    /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: time npm run test:playwright:personal-plan-stage1-5/m,
+  )
   assert.equal(
     packageManifest.scripts["test:personal-plan-db"],
     "bash scripts/test-personal-plan-db.sh",
+  )
+  assert.equal(
+    packageManifest.scripts["test:playwright:personal-plan-stage1-5"],
+    "bash scripts/test-personal-plan-stage1-5-browser.sh",
   )
 })
 

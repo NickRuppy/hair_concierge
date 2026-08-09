@@ -71,6 +71,10 @@ export type Stage2RefinementPersistence = {
   >
 }
 
+export type Stage2RefinementResumeReader = {
+  loadExisting(userId: string): Promise<Stage2PersistedDraft | null>
+}
+
 export type Stage2RefinementSnapshotBuilder = (input: {
   baseInitialNeedVersionId: string
   preparedArtifactSourceId: string
@@ -84,6 +88,38 @@ export type Stage2RefinementSnapshotBuilder = (input: {
   inputHash: string
   schemaVersion: number
   computationVersion: string
+}
+
+export function stage2SessionFromPersistedDraft(
+  draft: Stage2PersistedDraft,
+): Stage2RefinementSession {
+  return createStage2RefinementSession({
+    pathVersion: draft.pathVersion,
+    triggerContext: draft.triggerContext,
+    answers: draft.answers,
+    completedQuestionIds: draft.completedQuestionIds,
+    revision: draft.revision,
+    status: draft.status,
+    completedHandoff:
+      draft.status === "complete" && draft.refinedVersionId
+        ? { refinedVersionId: draft.refinedVersionId, nextHref: "/plan-start" }
+        : undefined,
+  })
+}
+
+export async function loadExistingStage2RefinementSession(input: {
+  userId: string
+  persistence: Stage2RefinementResumeReader
+}): Promise<Stage2RefinementSession | null> {
+  const draft = await input.persistence.loadExisting(input.userId)
+  if (!draft) return null
+  if (draft.status === "stale") {
+    throw new Stage2RefinementError(
+      "temporarily_unavailable",
+      "A current refinement draft is unavailable",
+    )
+  }
+  return stage2SessionFromPersistedDraft(draft)
 }
 
 export function createStage2RefinementService(input: {
@@ -106,24 +142,9 @@ export function createStage2RefinementService(input: {
     return draft
   }
 
-  function sessionFrom(draft: Stage2PersistedDraft): Stage2RefinementSession {
-    return createStage2RefinementSession({
-      pathVersion: draft.pathVersion,
-      triggerContext: draft.triggerContext,
-      answers: draft.answers,
-      completedQuestionIds: draft.completedQuestionIds,
-      revision: draft.revision,
-      status: draft.status === "complete" ? "complete" : "in_progress",
-      completedHandoff:
-        draft.status === "complete" && draft.refinedVersionId
-          ? { refinedVersionId: draft.refinedVersionId, nextHref: "/plan-start/produkte" }
-          : undefined,
-    })
-  }
-
   return {
     async load(): Promise<Stage2RefinementSession> {
-      return sessionFrom(await loadDraft())
+      return stage2SessionFromPersistedDraft(await loadDraft())
     },
     async saveAnswer(raw: unknown): Promise<Stage2RefinementSession> {
       const parsed = stage2AnswerSaveInputSchema.safeParse(raw)
@@ -134,7 +155,7 @@ export function createStage2RefinementService(input: {
         cached = draft
       }
       if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")
-      const next = saveStage2SessionAnswer(sessionFrom(draft), {
+      const next = saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), {
         questionId: parsed.data.questionId as Stage2QuestionId,
         answer: parsed.data.answer,
       })
@@ -161,7 +182,7 @@ export function createStage2RefinementService(input: {
         completedQuestionIds: next.completedQuestionIds,
         revision: saved.revision,
       }
-      return sessionFrom(cached)
+      return stage2SessionFromPersistedDraft(cached)
     },
     async complete(raw: unknown): Promise<Stage2RefinementHandoff> {
       const parsed = stage2CompleteInputSchema.safeParse(raw)
@@ -199,7 +220,7 @@ export function createStage2RefinementService(input: {
         )
       }
       cached = { ...draft, status: "complete", refinedVersionId: result.refinedVersionId }
-      return { refinedVersionId: result.refinedVersionId, nextHref: "/plan-start/produkte" }
+      return { refinedVersionId: result.refinedVersionId, nextHref: "/plan-start" }
     },
   }
 }

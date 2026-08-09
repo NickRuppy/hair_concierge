@@ -1,5 +1,6 @@
 import type { AppEventMap } from "@/lib/analytics/events"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { loadConsent } from "@/lib/cookie-consent"
 
 export type RoutineAnalyticsEventName =
   | "personal_plan_stage4_routine_viewed"
@@ -17,8 +18,20 @@ export const noOpRoutineAnalytics: RoutineAnalyticsPort = {
   track() {},
 }
 
-export const routineAnalytics: RoutineAnalyticsPort = {
-  track(eventName, payload) {
-    trackAppEvent(eventName, payload)
-  },
+type ConsentAwareRoutineAnalyticsDeps = {
+  loadConsent: typeof loadConsent
+  trackAppEvent: RoutineAnalyticsPort["track"]
 }
+
+export function createConsentAwareRoutineAnalytics(
+  deps: ConsentAwareRoutineAnalyticsDeps = { loadConsent, trackAppEvent },
+): RoutineAnalyticsPort {
+  return {
+    track(eventName, payload) {
+      if (deps.loadConsent()?.analytics !== true) return
+      deps.trackAppEvent(eventName, payload)
+    },
+  }
+}
+
+export const routineAnalytics = createConsentAwareRoutineAnalytics()

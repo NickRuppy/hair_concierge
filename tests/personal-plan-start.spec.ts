@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test"
 
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
+import { prepareStage3EntryContextForLab } from "../src/app/labs/personal-plan-stage-1-2/integration"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
 const labPath = "/labs/personal-plan-start"
+const productionCompositionLabPath = `${labPath}?scenario=production-composition`
 const personalPlanId = "20000000-0000-4000-8000-000000000001"
 const refinedVersionId = "30000000-0000-4000-8000-000000000001"
 const productDraftId = "40000000-0000-4000-8000-000000000001"
@@ -19,32 +21,60 @@ const computed = computeNeedPlan({
 if (computed.status !== "ready") throw new Error("production browser fixture failed to compute")
 
 const completedRefinement = createStage2RefinementSession({
-  pathVersion: "stage2-v1",
+  pathVersion: "stage2-fixture-v1",
   triggerContext: {
-    relevantCategories: ["shampoo", "mask", "heat_protectant"],
-    hasReportedIrritatedScalp: false,
-    dryShampooBridgeEligibility: "ineligible",
+    relevantCategories: [
+      "shampoo",
+      "conditioner",
+      "leave_in",
+      "oil",
+      "mask",
+      "bondbuilder",
+      "deep_cleansing_shampoo",
+    ],
+    hasReportedIrritatedScalp: true,
+    dryShampooBridgeEligibility: "eligible",
   },
   answers: {
-    currentProductCategories: ["shampoo"],
+    currentProductCategories: ["shampoo", "conditioner", "oil"],
     wetWashFrequency: "weekly_2x",
-    towel: { material: "no_towel" },
-    dryingRoutes: [],
-    additionalHeatTools: [],
+    scalpIrritationDetail: "mild_sensitive_or_itchy",
+    dryShampooBridgePreference: "accept",
+    dryShampooVisibleHairColor: "dark",
+    oilPurposes: ["dry_finish"],
+    towel: { material: "mikrofaser", technique: "gentle_press" },
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: ["straightener"],
+    heatEvents: {
+      "heat:ordinary_blow_dry": { frequency: "weekly_2x" },
+      "heat:straightener": { frequency: "monthly_1x", protectionConsistency: "always" },
+    },
     nightProtection: [],
   },
   completedQuestionIds: [
     "current_product_categories",
     "wet_wash_frequency",
+    "scalp_irritation_detail",
+    "dry_shampoo_bridge_preference",
+    "dry_shampoo_visible_hair_color",
+    "oil_purposes",
     "towel_handling",
     "drying_routes",
     "additional_heat_tools",
+    "heat:ordinary_blow_dry",
+    "heat:straightener",
     "night_protection",
   ],
-  revision: 6,
+  revision: 12,
   status: "complete",
-  completedHandoff: { refinedVersionId, nextHref: "/plan-start/produkte" },
+  completedHandoff: { refinedVersionId, nextHref: "/plan-start" },
 })
+const preparedStage3Entry = prepareStage3EntryContextForLab({
+  session: completedRefinement,
+  handoff: completedRefinement.completedHandoff!,
+}).entryContext
+if (!preparedStage3Entry.authoritySnapshot)
+  throw new Error("production browser fixture is missing Stage 3 authority")
 
 test.describe("production-shaped Personal Plan Stage 1 surface", () => {
   test("preserves the signed mobile Basis, Optional and transition journey", async ({ page }) => {
@@ -70,7 +100,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     ).toBe(true)
   })
 
-  test("authenticated production composition resumes Stage 2 and hands authoritative roles to Stage 3", async ({
+  test("production-component composition resumes Stage 2 and hands authoritative roles to Stage 3", async ({
     page,
   }) => {
     await page.route("**/api/personal-plan/stage-1", (route) =>
@@ -97,18 +127,12 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
         contentType: "application/json",
         body: JSON.stringify({
           status: "active",
-          requirements: [
-            {
-              category: "shampoo",
-              requiredRoles: ["shampoo_everyday"],
-              needSummary: "Sanfte Reinigung für deinen Waschrhythmus.",
-              authorityVersion: "personal-plan.shampoo.v1",
-            },
-          ],
+          requirements: preparedStage3Entry.orderedCategories,
           draft: {
             schemaVersion: 1,
             status: "active",
-            authorityVersions: { shampoo: "personal-plan.shampoo.v1" },
+            authorityVersions: preparedStage3Entry.authoritySnapshot.authorityVersions,
+            authoritySnapshot: preparedStage3Entry.authoritySnapshot,
             draftId: productDraftId,
             userId: "authenticated-owner",
             personalPlanId,
@@ -116,8 +140,8 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
             staleRefinedVersionId: null,
             revision: 0,
             pass: "product_capture",
-            orderedCategories: ["shampoo"],
-            categoryCursor: "shampoo",
+            orderedCategories: preparedStage3Entry.authoritySnapshot.orderedCategories,
+            categoryCursor: preparedStage3Entry.authoritySnapshot.orderedCategories[0],
             products: [],
             roleAssignments: [],
             uncoveredRoles: [],
@@ -131,11 +155,11 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       }),
     )
 
-    await page.goto("/plan-start")
+    await page.goto(productionCompositionLabPath)
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await page.getByRole("button", { name: "Plan wirklich zu meinem machen" }).click()
-    await page.getByRole("button", { name: "Produkte abgleichen" }).click()
+    await page.getByRole("button", { name: "Plan verfeinern" }).click()
     await expect(page.locator("[data-refined-version-id]")).toHaveAttribute(
       "data-refined-version-id",
       refinedVersionId,
@@ -144,6 +168,8 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await page.getByRole("button", { name: "Produkte suchen" }).click()
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
-    await expect(page.getByText("Sanfte Reinigung für deinen Waschrhythmus.")).toBeVisible()
+    await expect(
+      page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),
+    ).toBeVisible()
   })
 })

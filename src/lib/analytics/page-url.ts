@@ -6,7 +6,7 @@ export const META_OFFER_EVENT_SOURCE_URL = "https://chaarlie.de/result"
 export const META_CHECKOUT_RETURN_EVENT_SOURCE_URL = "https://chaarlie.de/welcome"
 
 const SAFE_RESULT_QUERY_VALUES = {
-  entry: new Set(["quiz_completion"]),
+  entry: new Set(["quiz_completion", "quiz_return"]),
   focus: new Set(["routine", "unlock-plan"]),
 } as const
 

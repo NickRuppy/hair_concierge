@@ -125,8 +125,10 @@ test("refined projection does not defer a known Shampoo frequency", () => {
     computationVersion: "stage1-v1",
     createdAt: "2026-08-07T12:00:00.000Z",
     routine: {
+      currentProductLoad: { state: "unknown", reason: "current_product_load" },
       shampooFrequency: { state: "known", value: "weekly_2x" },
       heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+      mechanicalExposureSignals: [],
       dryShampooBridgePreference: {
         state: "unknown",
         reason: "dry_shampoo_bridge_preference",

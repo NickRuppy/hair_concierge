@@ -11,7 +11,7 @@ export function RefinementBridge({
   continueError,
 }: {
   refinedVersionId: string
-  nextHref: "/plan-start/produkte"
+  nextHref: "/plan-start"
   onBack?: () => void
   onContinue?: () => void
   isContinuing?: boolean

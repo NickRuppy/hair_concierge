@@ -1,15 +1,16 @@
-import { Header } from "@/components/layout/header"
 import { ApplicationPage } from "@/components/application/application-page"
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
-import {
-  canAccessPersonalPlanStage5,
-  resolvePersonalPlanStage5Rollout,
-} from "@/lib/personal-plan/stage5-rollout"
+import { resolvePersonalPlanStage5Rollout } from "@/lib/personal-plan/stage5-rollout"
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
+import {
+  canAccessPersonalPlanJourneyStage,
+  type PersonalPlanJourneyAccess,
+} from "@/lib/personal-plan/journey-access"
+import { loadCachedPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/navigation-access"
 import {
   adaptAcceptedActiveRoutineForApplication,
   loadImmutableRoutineProfile,
@@ -33,7 +34,7 @@ type AdminReadClient = PersonalPlanRoutineReadClient & ApplicationRoutineReadCli
 
 export type AnwendungResolverDeps = {
   getUserId: () => Promise<string | null>
-  isInternal: (userId: string) => Promise<boolean>
+  loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   loadRoutine: (userId: string) => ReturnType<typeof loadPersonalPlanRoutineView>
   adaptRoutine: typeof adaptAcceptedActiveRoutineForApplication
   loadProfile: typeof loadImmutableRoutineProfile
@@ -70,9 +71,8 @@ export async function resolveAnwendungPage(
   let failureContext: Omit<PersonalPlanApplicationFailureDetails, "reason" | "durationMs"> = {}
 
   try {
-    const rollout = deps.rollout()
-    const isInternal = rollout === "internal" ? await deps.isInternal(userId) : false
-    if (!canAccessPersonalPlanStage5({ rollout, isEligiblePersonalPlanOwner: true, isInternal })) {
+    const journey = await deps.loadJourneyAccess(userId)
+    if (!canAccessPersonalPlanJourneyStage(journey, "stage5")) {
       return { state: "feature_disabled" }
     }
     const routine = await deps.loadRoutine(userId)
@@ -124,10 +124,14 @@ export async function resolveAnwendungPage(
       compiled,
       dayDefinitions,
     })
-    if (view.state === "ready" && selectedDayType) {
-      return view.days.some((day) => day.dayType === selectedDayType)
-        ? { ...view, selectedDayType }
-        : { state: "unavailable" }
+    if (selectedDayType) {
+      if (view.state === "ready" && view.days.some((day) => day.dayType === selectedDayType)) {
+        return { ...view, selectedDayType }
+      }
+      if (view.state === "no_complete_day" && view.restDay.dayType === selectedDayType) {
+        return { state: "ready", days: [view.restDay], selectedDayType }
+      }
+      return { state: "day_unavailable", overviewHref: "/anwendung" }
     }
     return view
   } catch (error) {
@@ -145,15 +149,7 @@ function createAdminReadClient() {
 }
 const defaultDeps: AnwendungResolverDeps = {
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
-  isInternal: async (userId) => {
-    const { data, error } = await createAdminReadClient()
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", userId)
-      .maybeSingle()
-    if (error) throw error
-    return Boolean((data as { is_admin?: boolean } | null)?.is_admin)
-  },
+  loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
   loadRoutine: (userId) =>
     loadPersonalPlanRoutineView({ client: createAdminReadClient(), userId, enabled: true }),
   adaptRoutine: adaptAcceptedActiveRoutineForApplication,
@@ -170,10 +166,5 @@ export default async function AnwendungPage({
   selectedDayType,
 }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
   const view = await resolveAnwendungPage(defaultDeps, selectedDayType)
-  return (
-    <>
-      <Header />
-      <ApplicationPage view={view} />
-    </>
-  )
+  return <ApplicationPage view={view} />
 }

@@ -23,7 +23,7 @@ export function prepareStage3EntryContextForLab({
   }
   if (
     session.completedHandoff.refinedVersionId !== handoff.refinedVersionId ||
-    handoff.nextHref !== "/plan-start/produkte"
+    handoff.nextHref !== "/plan-start"
   ) {
     throw new Error("Stage 2 handoff does not match the completed refinement")
   }

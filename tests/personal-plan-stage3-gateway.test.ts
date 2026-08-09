@@ -252,6 +252,62 @@ test("captures an identity only after explicit mutation and returns revision con
   assert.equal(conflict.latestDraft.revision, saved.draft.revision)
 })
 
+test("Labs fixture evaluates and resolves only semantic Stage 3 decision intents", async () => {
+  const subject = gateway()
+  await createDraft(subject)
+  const search = await subject.search({
+    category: "conditioner",
+    query: "condition",
+    requestToken: 1,
+  })
+  assert.equal(search.status, "ready")
+  const captured = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: 0,
+    mutation: {
+      type: "capture_catalog_candidate",
+      candidateId: search.result.candidates[0]!.candidateId,
+      frequencyRange: "weekly_2x",
+    },
+  })
+  assert.equal(captured.status, "saved")
+  const assigned = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: captured.draft.revision,
+    mutation: {
+      type: "assign_roles",
+      capturedProductId: captured.draft.products[0]!.capturedProductId,
+      category: "conditioner",
+      roles: ["conditioner_rinse_out"],
+    },
+  })
+  assert.equal(assigned.status, "saved")
+  const completedCapture = await subject.mutate({
+    draftId: "draft-1",
+    expectedRevision: assigned.draft.revision,
+    mutation: { type: "complete_capture_category", category: "conditioner" },
+  })
+  assert.equal(completedCapture.status, "saved")
+
+  const [evaluation] = await subject.evaluateDecisions({ draftId: "draft-1" })
+  assert.equal(evaluation?.status, "known")
+  assert.equal(evaluation?.subjectKey.startsWith("decision:conditioner:"), true)
+  assert.deepEqual(evaluation?.allowedActions, ["keep_owned"])
+
+  const resolved = await subject.resolveDecision({
+    draftId: "draft-1",
+    expectedRevision: completedCapture.draft.revision,
+    intent: {
+      type: "resolve_decision",
+      subjectKey: evaluation!.subjectKey,
+      action: "keep_owned",
+    },
+  })
+  assert.equal(resolved.status, "saved")
+  assert.equal(resolved.draft.decisions[0]?.choiceState, "owned_active")
+  assert.equal(resolved.draft.decisions[0]?.decisionKey, evaluation?.subjectKey)
+})
+
 test("invalidates the whole unfinished draft when the refined version changes", async () => {
   const subject = gateway()
   await createDraft(subject)

@@ -5,6 +5,8 @@ import { isPersonalPlanStage3LabEnabled } from "../src/lib/labs/personal-plan-st
 import {
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanAppV1Enabled,
+  isPersonalPlanStage2Enabled,
+  isPersonalPlanStage3Enabled,
 } from "../src/lib/personal-plan/release"
 
 test("the single Personal Plan app kill-switch is strict and default-off", () => {
@@ -12,6 +14,18 @@ test("the single Personal Plan app kill-switch is strict and default-off", () =>
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "false" }), false)
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "TRUE" }), false)
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), true)
+})
+
+test("Stage 2 and Stage 3 release gates are strict and default-off", () => {
+  for (const [reader, key] of [
+    [isPersonalPlanStage2Enabled, "PERSONAL_PLAN_STAGE2_ENABLED"],
+    [isPersonalPlanStage3Enabled, "PERSONAL_PLAN_STAGE3_ENABLED"],
+  ] as const) {
+    assert.equal(reader({}), false)
+    assert.equal(reader({ [key]: "false" }), false)
+    assert.equal(reader({ [key]: "TRUE" }), false)
+    assert.equal(reader({ [key]: "true" }), true)
+  }
 })
 
 test("new-buyer cutoff accepts only real ISO-8601 UTC instants", () => {

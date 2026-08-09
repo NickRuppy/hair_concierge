@@ -33,6 +33,13 @@ const payload = {
   items: [],
   createdAt: "2026-08-08T00:00:00.000Z",
 }
+const stage4Access = {
+  kind: "personal_plan" as const,
+  personalPlanId: ids.plan,
+  frontier: "stage4" as const,
+  nextHref: "/routine" as const,
+  allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+}
 
 function client(rows: Record<string, unknown>): PersonalPlanRoutineReadClient {
   return {
@@ -62,6 +69,7 @@ function routeDeps(overrides: Record<string, unknown> = {}) {
   return {
     enabled: () => true,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
     client: () =>
       client({
         personal_plans: {
@@ -114,7 +122,10 @@ test("routine read preserves no-plan versus incomplete-plan and disables new ent
         }),
     }),
   ).GET()
-  assert.equal((await response.json()).status, "stage4_not_available")
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [404, { error: "personal_plan_not_available" }],
+  )
 })
 
 test("attention never leaks proposal facts and is false when Stage 4 is disabled", async () => {
@@ -126,6 +137,44 @@ test("attention never leaks proposal facts and is false when Stage 4 is disabled
   assert.deepEqual(await response.json(), { hasPendingProposal: false })
 })
 
+test("attention stays non-exposing before the Stage 4 frontier and journey-loader failure fails closed", async () => {
+  let constructed = false
+  let response = await createPersonalPlanRoutineAttentionRouteHandlers(
+    routeDeps({
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: ids.plan,
+        frontier: "stage3",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+      }),
+      client: () => {
+        constructed = true
+        return client({})
+      },
+    }),
+  ).GET()
+  assert.deepEqual(await response.json(), { hasPendingProposal: false })
+  assert.equal(constructed, false)
+
+  response = await createPersonalPlanRoutineRouteHandlers(
+    routeDeps({
+      loadJourneyAccess: async () => {
+        throw new Error("journey loader unavailable")
+      },
+      client: () => {
+        constructed = true
+        return client({})
+      },
+    }),
+  ).GET()
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [503, { error: "temporarily_unavailable" }],
+  )
+  assert.equal(constructed, false)
+})
+
 test("routine endpoints require an authenticated user", async () => {
   const response = await createPersonalPlanRoutineRouteHandlers(
     routeDeps({ getUserId: async () => null }),
@@ -133,11 +182,58 @@ test("routine endpoints require an authenticated user", async () => {
   assert.deepEqual([response.status, await response.json()], [401, { error: "unauthorized" }])
 })
 
+test("routine read rejects a Personal Plan owner before constructing its read client when Stage 4 is beyond the frontier", async () => {
+  let constructed = false
+  const response = await createPersonalPlanRoutineRouteHandlers(
+    routeDeps({
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: ids.plan,
+        frontier: "stage3",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+      }),
+      client: () => {
+        constructed = true
+        return client({})
+      },
+    }),
+  ).GET()
+
+  assert.deepEqual([response.status, await response.json()], [409, { error: "stage_not_ready" }])
+  assert.equal(constructed, false)
+})
+
+test("proposal mutations reject a Personal Plan owner before parsing or constructing a service when Stage 4 is beyond the frontier", async () => {
+  let constructed = false
+  const response = await createPersonalPlanRoutineProposalRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: ids.plan,
+      frontier: "stage3",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+    }),
+    service: () => {
+      constructed = true
+      return {} as never
+    },
+  } as never).POST(
+    new Request("http://local/api/personal-plan/routine/proposals", { method: "POST", body: "{}" }),
+  )
+
+  assert.deepEqual([response.status, await response.json()], [409, { error: "stage_not_ready" }])
+  assert.equal(constructed, false)
+})
+
 test("proposal mutation derives the user before constructing the service and rejects unbounded bodies", async () => {
   let constructed = false
   const handlers = createPersonalPlanRoutineProposalRouteHandlers({
     enabled: () => true,
     getUserId: async () => null,
+    loadJourneyAccess: async () => stage4Access,
     service: () => {
       constructed = true
       return {} as never
@@ -152,6 +248,7 @@ test("proposal mutation derives the user before constructing the service and rej
   const invalid = await createPersonalPlanRoutineProposalRouteHandlers({
     enabled: () => true,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
     service: () => ({}) as never,
   }).POST(
     new Request("http://local/api/personal-plan/routine/proposals", {
@@ -177,6 +274,7 @@ test("initial proposal rejection remains a typed unambiguous non-mutating error"
   const handlers = createPersonalPlanRoutineResolveRouteHandlers({
     enabled: () => true,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
     service: () =>
       ({ resolve: async () => ({ status: "initial_proposal_not_rejectable" }) }) as never,
   })

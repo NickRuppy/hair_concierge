@@ -1,6 +1,12 @@
 import { z } from "zod"
 
-import type { PlanHeatToolRoute, PlanProductRole } from "@/lib/personal-plan/types"
+import type {
+  PlanCategoryDecision,
+  PlanHeatToolRoute,
+  PlanProfile,
+  PlanPortfolioCoverageFact,
+  PlanProductRole,
+} from "@/lib/personal-plan/types"
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
 import {
   allowsMultipleProductsForRole,
@@ -86,6 +92,42 @@ export type Stage3EntryContext = {
   refinedVersionId: string
   orderedCategories: Stage3CategoryRequirement[]
   inventoryPrompts: Stage3InventoryPrompt[]
+  /** Required on production entry; optional only for legacy fixture callers. */
+  authoritySnapshot?: Stage3AuthoritySnapshotV1
+}
+
+export type Stage3AuthoritySnapshotV1 = {
+  schemaVersion: 1
+  refinedNeedVersionId: string
+  refinedInputHash: string
+  productLoadContext?: Stage3ProductLoadContextV1
+  categoryDecisions: PlanCategoryDecision[]
+  coverage: PlanPortfolioCoverageFact[]
+  orderedCategories: PersonalPlanCategory[]
+  inventoryOnlyCategories?: PersonalPlanCategory[]
+  authorityVersions: Record<PersonalPlanCategory, string>
+}
+
+export type Stage3ProductLoadContextV1 = {
+  schemaVersion: 1
+  scalpOiliness: PlanProfile["scalp"]["oiliness"]
+  deepCleansingScalpPause: boolean
+  hasLowVolumeOrWeighedDown: boolean
+  shampooFrequency: ProductFrequency | "does_not_wash" | null
+  oilPurposes: Array<"prewash_lengths" | "damp_leave_on" | "dry_finish" | "scalp">
+}
+
+export type Stage3ProductLoadResolutionV1 = {
+  schemaVersion: 1
+  refinedNeedVersionId: string
+  refinedInputHash: string
+  capturedFrequencyFingerprint: string
+  authorityVersions: Partial<
+    Record<Extract<PersonalPlanCategory, "deep_cleansing_shampoo" | "scalp_care">, string>
+  >
+  requirements: Stage3CategoryRequirement[]
+  decisions: PlanCategoryDecision[]
+  coverage: PlanPortfolioCoverageFact[]
 }
 
 export type Stage3CategoryRequirement = {
@@ -189,6 +231,18 @@ export type Stage3ProductDecision = {
   criterionResults: Stage3CriterionResult[]
   recommendation: Stage3Recommendation | null
   limitationAcknowledged: boolean
+  authorityEvidence?: Stage3DecisionAuthorityEvidenceV1
+}
+
+export type Stage3DecisionAuthorityEvidenceV1 = {
+  schemaVersion: 1
+  subjectKey: string
+  refinedNeedVersionId: string
+  refinedInputHash: string
+  authorityVersion: string
+  productFactFingerprint: string | null
+  recommendationFactFingerprint: string | null
+  coverageRuleIds: string[]
 }
 
 export type Stage3ProductDraft = {
@@ -212,6 +266,8 @@ export type Stage3ProductDraft = {
   completedDecisionKeys: string[]
   createdAt: string
   updatedAt: string
+  authoritySnapshot?: Stage3AuthoritySnapshotV1
+  productLoadResolution?: Stage3ProductLoadResolutionV1
 }
 
 export type Stage3CategoryProgress = {
@@ -306,7 +362,7 @@ export type Stage3UncoveredRole = {
 }
 
 export type ProposedProductPortfolio = {
-  schemaVersion: 1
+  schemaVersion: 1 | 2
   portfolioVersionId: string
   personalPlanId: string
   refinedVersionId: string
@@ -316,6 +372,7 @@ export type ProposedProductPortfolio = {
   plannedPurchases: Stage3PlannedPurchase[]
   pendingProducts: Stage3PendingProduct[]
   uncoveredRoles: Stage3UncoveredRole[]
+  productLoadResolution?: Stage3ProductLoadResolutionV1
   createdAt: string
 }
 
@@ -411,6 +468,18 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
     criterionResults: z.array(stage3CriterionResultSchema),
     recommendation: stage3RecommendationSchema.nullable(),
     limitationAcknowledged: z.boolean(),
+    authorityEvidence: z
+      .object({
+        schemaVersion: z.literal(1),
+        subjectKey: idSchema,
+        refinedNeedVersionId: idSchema,
+        refinedInputHash: idSchema,
+        authorityVersion: idSchema,
+        productFactFingerprint: idSchema.nullable(),
+        recommendationFactFingerprint: idSchema.nullable(),
+        coverageRuleIds: z.array(idSchema),
+      })
+      .optional(),
   })
   .superRefine((decision, ctx) => {
     if (decision.role && !roleAllowedForCategory(decision.category, decision.role)) {
@@ -478,7 +547,7 @@ export const stage3ProductDecisionSchema: z.ZodType<Stage3ProductDecision> = z
 export const stage3CategoryRequirementSchema: z.ZodType<Stage3CategoryRequirement> = z
   .object({
     category: personalPlanCategorySchema,
-    requiredRoles: z.array(planProductRoleSchema).min(1),
+    requiredRoles: z.array(planProductRoleSchema),
     qualifyingRoutes: z.array(z.enum(STAGE3_HEAT_QUALIFYING_ROUTES)).min(1).optional(),
     needSummary: z.string().min(1),
     authorityVersion: idSchema,
@@ -549,6 +618,39 @@ const authorityVersionsSchema = z
   })
   .strict()
 
+const stage3ProductLoadContextSchema: z.ZodType<Stage3ProductLoadContextV1> = z
+  .object({
+    schemaVersion: z.literal(1),
+    scalpOiliness: z.enum(["oily", "balanced", "dry"]),
+    deepCleansingScalpPause: z.boolean(),
+    hasLowVolumeOrWeighedDown: z.boolean(),
+    shampooFrequency: z.union([productFrequencySchema, z.literal("does_not_wash")]).nullable(),
+    oilPurposes: z.array(z.enum(["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"])),
+  })
+  .strict()
+
+const stage3ProductLoadResolutionSchema: z.ZodType<Stage3ProductLoadResolutionV1> = z
+  .object({
+    schemaVersion: z.literal(1),
+    refinedNeedVersionId: idSchema,
+    refinedInputHash: idSchema,
+    capturedFrequencyFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
+    authorityVersions: z
+      .object({
+        deep_cleansing_shampoo: idSchema.optional(),
+        scalp_care: idSchema.optional(),
+      })
+      .strict(),
+    requirements: z.array(stage3CategoryRequirementSchema),
+    decisions: z.array(z.record(z.string(), z.unknown())) as unknown as z.ZodType<
+      PlanCategoryDecision[]
+    >,
+    coverage: z.array(z.record(z.string(), z.unknown())) as unknown as z.ZodType<
+      PlanPortfolioCoverageFact[]
+    >,
+  })
+  .strict()
+
 export const stage3ProductDraftSchema: z.ZodType<Stage3ProductDraft> = z.object({
   schemaVersion: z.literal(1),
   status: z.enum(STAGE3_DRAFT_STATUS_VALUES),
@@ -570,6 +672,24 @@ export const stage3ProductDraftSchema: z.ZodType<Stage3ProductDraft> = z.object(
   completedDecisionKeys: z.array(idSchema),
   createdAt: idSchema,
   updatedAt: idSchema,
+  authoritySnapshot: z
+    .object({
+      schemaVersion: z.literal(1),
+      refinedNeedVersionId: idSchema,
+      refinedInputHash: idSchema,
+      productLoadContext: stage3ProductLoadContextSchema.optional(),
+      // The refined snapshot is immutable server output. These fields retain
+      // its complete JSON values; their linkage and authority versions are
+      // checked again by requireCurrentAuthoritySnapshot before evaluation.
+      categoryDecisions: z.array(z.record(z.string(), z.unknown())),
+      coverage: z.array(z.record(z.string(), z.unknown())),
+      orderedCategories: z.array(personalPlanCategorySchema),
+      inventoryOnlyCategories: z.array(personalPlanCategorySchema).optional().default([]),
+      authorityVersions: z.record(personalPlanCategorySchema, idSchema),
+    })
+    .strict()
+    .optional() as z.ZodType<Stage3AuthoritySnapshotV1 | undefined>,
+  productLoadResolution: stage3ProductLoadResolutionSchema.optional(),
 })
 
 export function isExecutableChoice(
@@ -692,8 +812,12 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
       ) {
         issues.push(`decision ${decision.decisionKey} does not match its derived subject`)
       }
-      if (subject.subjectKind === "uncovered_role" && decision.choiceState !== "unassigned") {
-        issues.push(`uncovered decision ${decision.decisionKey} must remain unassigned`)
+      if (
+        subject.subjectKind === "uncovered_role" &&
+        decision.choiceState !== "unassigned" &&
+        decision.choiceState !== "planned_purchase"
+      ) {
+        issues.push(`uncovered decision ${decision.decisionKey} must remain unassigned or planned`)
       }
     }
 
@@ -711,9 +835,12 @@ export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
     }
     if (
       product?.identity.kind === "pending_submission" &&
-      decision.choiceState !== "pending_review"
+      decision.choiceState !== "pending_review" &&
+      decision.choiceState !== "unassigned"
     ) {
-      issues.push(`pending product ${product.capturedProductId} must remain pending_review`)
+      issues.push(
+        `pending product ${product.capturedProductId} must remain pending_review or be left unassigned`,
+      )
     }
     if (
       decision.choiceState === "pending_review" &&

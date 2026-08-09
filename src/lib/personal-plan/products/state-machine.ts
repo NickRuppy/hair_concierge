@@ -1,4 +1,4 @@
-import { CATEGORY_ROLE_POLICIES } from "./authorities"
+import { allowsMultipleProductsForRole, CATEGORY_ROLE_POLICIES } from "./authorities"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 import {
   deriveStage3DecisionSubjects,
@@ -19,6 +19,79 @@ import {
   type Stage3ProductDraft,
   type Stage3RoleAssignment,
 } from "./contracts"
+import {
+  effectiveStage3Requirements,
+  resolveStage3ProductLoadResolution,
+} from "./product-load-resolution"
+
+function clearProductLoadResolution(draft: Stage3ProductDraft): Stage3ProductDraft {
+  const resolution = draft.productLoadResolution
+  if (!resolution) return draft
+  const overlayCategories = new Set(
+    resolution.requirements.map((requirement) => requirement.category),
+  )
+  const baseCategories = new Set(
+    draft.authoritySnapshot?.orderedCategories ?? draft.orderedCategories,
+  )
+  const decisions = draft.decisions.filter((decision) => !overlayCategories.has(decision.category))
+  const decisionKeys = new Set(decisions.map((decision) => decision.decisionKey))
+  const authorityVersions = { ...draft.authorityVersions }
+  for (const category of overlayCategories) {
+    if (!baseCategories.has(category)) delete authorityVersions[category]
+  }
+  return {
+    ...draft,
+    authorityVersions,
+    orderedCategories: draft.orderedCategories.filter(
+      (category) => baseCategories.has(category) || !overlayCategories.has(category),
+    ),
+    completedCaptureCategories: draft.completedCaptureCategories.filter(
+      (category) => baseCategories.has(category) || !overlayCategories.has(category),
+    ),
+    uncoveredRoles: draft.uncoveredRoles.filter((role) => !overlayCategories.has(role.category)),
+    decisions,
+    completedDecisionKeys: draft.completedDecisionKeys.filter((key) => decisionKeys.has(key)),
+    productLoadResolution: undefined,
+  }
+}
+
+function applyProductLoadResolution(draft: Stage3ProductDraft): Stage3ProductDraft {
+  const cleared = clearProductLoadResolution(draft)
+  const resolution = resolveStage3ProductLoadResolution(cleared)
+  if (!resolution) return { ...cleared, productLoadResolution: undefined }
+  const orderedCategories = [...cleared.orderedCategories]
+  const completedCaptureCategories = new Set(cleared.completedCaptureCategories)
+  const uncoveredRoles = [...cleared.uncoveredRoles]
+  const authorityVersions = { ...cleared.authorityVersions }
+  for (const requirement of resolution.requirements) {
+    if (!orderedCategories.includes(requirement.category))
+      orderedCategories.push(requirement.category)
+    completedCaptureCategories.add(requirement.category)
+    authorityVersions[requirement.category] = requirement.authorityVersion
+    for (const role of requirement.requiredRoles) {
+      const assigned = cleared.roleAssignments.some(
+        (assignment) =>
+          assignment.category === requirement.category && assignment.roles.includes(role),
+      )
+      const uncovered = uncoveredRoles.some(
+        (candidate) => candidate.category === requirement.category && candidate.role === role,
+      )
+      if (!assigned && !uncovered) {
+        uncoveredRoles.push({ category: requirement.category, role, reason: "no_product_owned" })
+      }
+    }
+  }
+  return {
+    ...cleared,
+    authorityVersions,
+    orderedCategories,
+    completedCaptureCategories: orderedCategories.filter((category) =>
+      completedCaptureCategories.has(category),
+    ),
+    uncoveredRoles,
+    productLoadResolution: resolution,
+  }
+}
 
 type CreateStage3DraftInput = {
   draftId: string
@@ -108,6 +181,7 @@ export function addCapturedProduct(
   draft: Stage3ProductDraft,
   product: Stage3CapturedProduct,
 ): Stage3ProductDraft {
+  draft = clearProductLoadResolution(draft)
   const parsedProduct = stage3CapturedProductSchema.parse(product)
   if (!draft.orderedCategories.includes(parsedProduct.identity.category)) {
     throw new Error(
@@ -135,6 +209,7 @@ export function assignProductRoles(
   draft: Stage3ProductDraft,
   assignment: Stage3RoleAssignment,
 ): Stage3ProductDraft {
+  draft = clearProductLoadResolution(draft)
   const parsedAssignment = stage3RoleAssignmentSchema.parse(assignment)
   const withoutExisting = draft.roleAssignments.filter(
     (existing) => existing.capturedProductId !== parsedAssignment.capturedProductId,
@@ -157,10 +232,80 @@ export function assignProductRoles(
   })
 }
 
+export function replaceCategoryRoleAssignments(
+  draft: Stage3ProductDraft,
+  category: PersonalPlanCategory,
+  assignments: Stage3RoleAssignment[],
+  requirements: Stage3CategoryRequirement[],
+): Stage3ProductDraft {
+  draft = clearProductLoadResolution(draft)
+  if (!draft.orderedCategories.includes(category)) {
+    throw new Error(`category ${category} is not in this draft`)
+  }
+  const requirement = requirements.find((candidate) => candidate.category === category)
+  if (!requirement) throw new Error(`requirements for category ${category} are unavailable`)
+
+  const productsById = new Map(
+    draft.products.map((product) => [product.capturedProductId, product]),
+  )
+  const requiredRoles = new Set(requirement.requiredRoles)
+  const seenProductIds = new Set<string>()
+  const roleCounts = new Map<PlanProductRole, number>()
+  const parsedAssignments = assignments.map((assignment) => {
+    const parsed = stage3RoleAssignmentSchema.parse(assignment)
+    if (parsed.category !== category) {
+      throw new Error(`assignment category ${parsed.category} does not match ${category}`)
+    }
+    if (seenProductIds.has(parsed.capturedProductId)) {
+      throw new Error(`product ${parsed.capturedProductId} is assigned more than once`)
+    }
+    seenProductIds.add(parsed.capturedProductId)
+    const product = productsById.get(parsed.capturedProductId)
+    if (!product || product.identity.category !== category) {
+      throw new Error(`product ${parsed.capturedProductId} does not belong to category ${category}`)
+    }
+    if (new Set(parsed.roles).size !== parsed.roles.length) {
+      throw new Error(`product ${parsed.capturedProductId} contains duplicate roles`)
+    }
+    for (const role of parsed.roles) {
+      if (!requiredRoles.has(role)) {
+        throw new Error(`role ${role} is not required for category ${category}`)
+      }
+      roleCounts.set(role, (roleCounts.get(role) ?? 0) + 1)
+    }
+    return parsed
+  })
+
+  for (const role of requirement.requiredRoles) {
+    const count = roleCounts.get(role) ?? 0
+    if (count === 0) throw new Error(`required role ${role} is uncovered`)
+    if (count > 1 && !allowsMultipleProductsForRole(category, role)) {
+      throw new Error(`role ${role} already assigned`)
+    }
+  }
+
+  const candidate: Stage3ProductDraft = {
+    ...draft,
+    roleAssignments: [
+      ...draft.roleAssignments.filter((assignment) => assignment.category !== category),
+      ...parsedAssignments,
+    ],
+    uncoveredRoles: draft.uncoveredRoles.filter(
+      (uncoveredRole) => uncoveredRole.category !== category,
+    ),
+  }
+  return cloneWithRevision(draft, {
+    roleAssignments: candidate.roleAssignments,
+    uncoveredRoles: candidate.uncoveredRoles,
+    ...pruneInvalidDecisionDescendants(candidate),
+  })
+}
+
 export function markRoleUncovered(
   draft: Stage3ProductDraft,
   uncoveredRole: Stage3CapturedUncoveredRole,
 ): Stage3ProductDraft {
+  draft = clearProductLoadResolution(draft)
   const parsedUncoveredRole = stage3CapturedUncoveredRoleSchema.parse(uncoveredRole)
   const roleAssignments = draft.roleAssignments
     .map((assignment) => {
@@ -192,6 +337,7 @@ export function reopenCaptureCategory(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,
 ): Stage3ProductDraft {
+  draft = clearProductLoadResolution(draft)
   if (!draft.orderedCategories.includes(category)) {
     throw new Error(`category ${category} is not in this draft`)
   }
@@ -209,6 +355,7 @@ export function removeCapturedProduct(
   draft: Stage3ProductDraft,
   capturedProductId: string,
 ): Stage3ProductDraft {
+  draft = clearProductLoadResolution(draft)
   if (!draft.products.some((product) => product.capturedProductId === capturedProductId)) {
     throw new Error(`captured product ${capturedProductId} does not exist`)
   }
@@ -237,17 +384,19 @@ export function completeCaptureCategory(
   }
   const completed = new Set(draft.completedCaptureCategories)
   completed.add(category)
+  const completedCaptureCategories = draft.orderedCategories.filter((candidate) =>
+    completed.has(candidate),
+  )
+  const candidate = { ...draft, completedCaptureCategories }
+  const captureComplete = computeCaptureCompletion(candidate, requirements).canCompleteCapture
   const next = cloneWithRevision(draft, {
-    completedCaptureCategories: draft.orderedCategories.filter((candidate) =>
-      completed.has(candidate),
-    ),
+    completedCaptureCategories,
+    pass: captureComplete ? "product_decisions" : "product_capture",
+    categoryCursor: captureComplete
+      ? null
+      : (draft.orderedCategories.find((candidate) => !completed.has(candidate)) ?? null),
   })
-  return {
-    ...next,
-    pass: computeCaptureCompletion(next, requirements).canCompleteCapture
-      ? "product_decisions"
-      : "product_capture",
-  }
+  return captureComplete ? applyProductLoadResolution(next) : next
 }
 
 export function recordProductDecision(
@@ -387,6 +536,7 @@ export function computeStage3PathState(
   requirements: Stage3CategoryRequirement[],
 ): Stage3PathState {
   const validationIssues = validateStage3Draft(draft)
+  requirements = effectiveStage3Requirements(requirements, draft)
   const orderedStepKeys = requirements.flatMap((requirement) => [
     `capture:${requirement.category}`,
     ...(requirement.requiredRoles.length > 0 ? [`roles:${requirement.category}`] : []),

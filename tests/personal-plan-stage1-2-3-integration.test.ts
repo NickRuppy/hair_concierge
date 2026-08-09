@@ -61,7 +61,7 @@ const completedQuestionIds: Stage2QuestionId[] = [
 
 const handoff: Stage2RefinementHandoff = {
   refinedVersionId: "fixture-refined-stage2-v1-r12",
-  nextHref: "/plan-start/produkte",
+  nextHref: "/plan-start",
 }
 
 function completedSession() {

@@ -120,7 +120,9 @@ export function buildPlanProfile(
     routine?: PlanRoutineContext
   },
 ): PlanProfile {
-  const routine = options.routine ?? INITIAL_UNKNOWN_ROUTINE_CONTEXT
+  const routine = options.routine
+    ? { ...INITIAL_UNKNOWN_ROUTINE_CONTEXT, ...options.routine }
+    : INITIAL_UNKNOWN_ROUTINE_CONTEXT
   const concerns: PlanCurrentConcern[] =
     envelope.version === 2
       ? normalizeV2Concerns(envelope.answers.currentConcerns)

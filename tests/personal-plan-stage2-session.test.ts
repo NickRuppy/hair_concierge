@@ -84,7 +84,7 @@ test("rejects status and handoff combinations that cannot be true", () => {
         triggerContext,
         completedHandoff: {
           refinedVersionId: "fixture-refined-stage2-v1-r7",
-          nextHref: "/plan-start/produkte",
+          nextHref: "/plan-start",
         },
       } as Parameters<typeof createStage2RefinementSession>[0]),
     /handoff/i,

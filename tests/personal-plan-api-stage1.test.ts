@@ -5,10 +5,19 @@ import {
   handleStage1LoadOrCreate,
   type Stage1RouteDeps,
 } from "../src/app/api/personal-plan/stage-1/route"
+import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
+
+const stage1Access: PersonalPlanJourneyAccess = {
+  kind: "personal_plan_start",
+  frontier: "stage1",
+  nextHref: "/plan-start",
+  allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+}
 
 function dependencies(overrides: Partial<Stage1RouteDeps> = {}): Stage1RouteDeps {
   return {
     getAuthenticatedUser: async () => ({ id: "user-1" }),
+    loadJourneyAccess: async () => stage1Access,
     persistence: {
       isEnabled: () => true,
       cohortCutoff: () => new Date("2026-08-08T00:00:00.000Z"),
@@ -40,6 +49,24 @@ test("Stage 1 API derives identity server-side and never accepts a browser user 
     }),
   )
   assert.deepEqual(result, { status: 409, body: { error: "activation_pending" } })
+})
+
+test("Stage 1 rejects an unreachable owner before constructing persistence", async () => {
+  let constructed = false
+  const result = await handleStage1LoadOrCreate(
+    dependencies({
+      loadJourneyAccess: async () => ({ kind: "paid_pending", recoveryHref: "/plan-bereit" }),
+      persistence: {
+        ...dependencies().persistence,
+        createOrReuseInitialNeed: async () => {
+          constructed = true
+          throw new Error("must not run")
+        },
+      },
+    }),
+  )
+  assert.deepEqual(result, { status: 409, body: { error: "activation_pending" } })
+  assert.equal(constructed, false)
 })
 
 test("Stage 1 API preserves typed release and availability responses", async () => {

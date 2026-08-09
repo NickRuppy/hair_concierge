@@ -10,7 +10,7 @@ import { Stage2RefinementError } from "./gateway"
 
 export type Stage2RefinementHandoff = {
   refinedVersionId: string
-  nextHref: "/plan-start/produkte"
+  nextHref: "/plan-start"
 }
 
 export type Stage2RefinementSession = {

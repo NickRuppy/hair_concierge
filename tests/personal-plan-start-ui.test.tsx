@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import PlanStartPage from "../src/app/plan-start/page"
+import PlanStartPage, { resolvePlanStartPageState } from "../src/app/plan-start/page"
 import {
   NeedCard,
   PlanStartFlow,
@@ -132,6 +132,23 @@ test("omits the Optional page and progress step when no optional categories exis
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
 })
 
+test("Stage 1-only keeps signed Basis and Optional pages but removes the refinement transition", () => {
+  const basis = renderToStaticMarkup(
+    <PlanStartFlow state="ready" plan={readyPlan} refinementAvailable={false} />,
+  )
+  const terminalBasis = renderToStaticMarkup(
+    <PlanStartFlow
+      state="ready"
+      plan={{ basis: { ...readyPlan.basis, progress: 100 }, optional: null }}
+      refinementAvailable={false}
+    />,
+  )
+
+  assert.match(basis, /Optionale Empfehlungen/)
+  assert.doesNotMatch(basis, /Plan wirklich zu meinem machen|Plan verfeinern/)
+  assert.doesNotMatch(terminalBasis, /Plan wirklich zu meinem machen|Plan verfeinern/)
+})
+
 test("renders paused cards as visible included categories with Anforderungsprofil details", () => {
   const html = renderToStaticMarkup(<NeedCard card={readyPlan.optional!.cards[0]!} />)
 
@@ -152,19 +169,23 @@ test("renders loading, retry and transition states without questions or legacy d
   assert.match(retry, /Erneut versuchen/)
   assert.match(transition, /Deine Grundlage steht/)
   assert.match(transition, /Jetzt machen wir sie zu deiner/)
-  assert.doesNotMatch(`${loading}${retry}${transition}`, /Frage|Quiz starten|Chat|Routine/)
+  assert.doesNotMatch(`${loading}${retry}${transition}`, /Quiz starten|Chat|Routine/)
 })
 
-test("the production transition enables its Stage 2 entry only when a customer callback is injected", () => {
+test("the production transition presents the signed Stage 2 handoff when a customer callback is injected", () => {
   const disabled = renderToStaticMarkup(<PlanStartTransition onBack={() => {}} />)
   const enabled = renderToStaticMarkup(
     <PlanStartTransition onBack={() => {}} onContinue={() => {}} />,
   )
 
-  assert.match(disabled, /Produkte abgleichen/)
+  assert.match(disabled, /Als Nächstes verfeinern wir deinen Plan mit ein paar gezielten Fragen\./)
+  assert.match(disabled, /Plan verfeinern/)
   assert.match(disabled, /disabled=""/)
-  assert.match(enabled, /Produkte abgleichen/)
+  assert.match(disabled, /bg-\[#6B50A0\]\/55/)
+  assert.match(enabled, /Plan verfeinern/)
   assert.doesNotMatch(enabled, /disabled=""/)
+  assert.match(enabled, /bg-\[#6B50A0\](?= px-3\.5)/)
+  assert.doesNotMatch(enabled, /bg-\[#6B50A0\]\/55/)
 })
 
 test("renders compact unavailable state H with profile and support exits", () => {
@@ -179,11 +200,11 @@ test("renders compact unavailable state H with profile and support exits", () =>
   assert.doesNotMatch(html, /\/chat|\/routine|\/onboarding|\/quiz/)
 })
 
-test("the flag-off production page renders unavailable H instead of redirecting or loading data", () => {
+test("the flag-off production page renders unavailable H instead of redirecting or loading data", async () => {
   const previous = process.env.PERSONAL_PLAN_APP_V1_ENABLED
   delete process.env.PERSONAL_PLAN_APP_V1_ENABLED
   try {
-    const html = renderToStaticMarkup(<PlanStartPage />)
+    const html = renderToStaticMarkup(await PlanStartPage())
     assert.match(html, /Dieser Planbereich ist gerade nicht verfügbar/)
     assert.match(html, /Zum Profil/)
     assert.doesNotMatch(html, /redirect|permanentRedirect|\/chat|\/routine|\/onboarding/)
@@ -194,6 +215,62 @@ test("the flag-off production page renders unavailable H instead of redirecting 
       process.env.PERSONAL_PLAN_APP_V1_ENABLED = previous
     }
   }
+})
+
+test("the production page exposes only the admitted Stage 1 gate and sends delayed provisioning to its compact wait page", async () => {
+  assert.deepEqual(
+    await resolvePlanStartPageState({
+      enabled: () => true,
+      stage2Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({ kind: "paid_pending", recoveryHref: "/plan-bereit" }),
+      loadExistingRefinementSession: async () => null,
+    }),
+    { state: "paid_pending" },
+  )
+  assert.deepEqual(
+    await resolvePlanStartPageState({
+      enabled: () => true,
+      stage2Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({ kind: "legacy" }),
+      loadExistingRefinementSession: async () => null,
+    }),
+    { state: "unavailable" },
+  )
+  assert.deepEqual(
+    await resolvePlanStartPageState({
+      enabled: () => true,
+      stage2Enabled: () => true,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan_start",
+        frontier: "stage1",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+      }),
+      loadExistingRefinementSession: async () => null,
+    }),
+    { state: "production", initialJourney: { stage: "stage1" } },
+  )
+})
+
+test("the production page passes the Stage 2 gate independently of Stage 1 plan creation", async () => {
+  assert.deepEqual(
+    await resolvePlanStartPageState({
+      enabled: () => true,
+      stage2Enabled: () => false,
+      getUserId: async () => "owner-1",
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan_start",
+        frontier: "stage1",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+      }),
+      loadExistingRefinementSession: async () => null,
+    }),
+    { state: "production", initialJourney: { stage: "stage1", refinementAvailable: false } },
+  )
 })
 
 test("the enabled production gate maps ineligible API responses to unavailable H", () => {

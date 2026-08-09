@@ -6,17 +6,59 @@ export function getAuthenticatedCheckoutSuccessRedirect(
   firstTimeDestination = "/onboarding",
 ) {
   if (!onboardingCompleted) return firstTimeDestination
+  // This is not a reactivation: a Personal Plan purchase has already derived
+  // the owner-specific ready or provisioning destination on the server.
+  if (
+    !reactivationReturnDestination &&
+    (firstTimeDestination === "/plan-start" ||
+      firstTimeDestination.startsWith("/plan-bereit?lead="))
+  ) {
+    return firstTimeDestination
+  }
   return reactivationReturnDestination ?? "/profile?membership=reactivated"
 }
 
-export type CheckoutFirstTimeDestination = "/onboarding" | `/plan-bereit?lead=${string}`
+export type CheckoutFirstTimeDestination =
+  | "/onboarding"
+  | "/plan-start"
+  | `/plan-bereit?lead=${string}`
+
+export type PersonalPlanCheckoutReadiness = {
+  appEnabled: boolean
+  accessState: "active" | "paid_pending" | "none" | "revoked"
+  paidAt: string | null
+  artifactLeadId: string | null
+  preparedArtifactAttached: boolean
+  cohortCutoff: Date | null
+}
+
+export function resolvePersonalPlanCheckoutReadiness(input: PersonalPlanCheckoutReadiness): {
+  activationReady: boolean
+  legacy: boolean
+} {
+  if (input.accessState !== "active") return { activationReady: false, legacy: false }
+  if (!input.cohortCutoff || !input.paidAt || !input.artifactLeadId) {
+    return { activationReady: false, legacy: true }
+  }
+  const paidAt = new Date(input.paidAt)
+  if (Number.isNaN(paidAt.getTime()) || paidAt.getTime() < input.cohortCutoff.getTime()) {
+    return { activationReady: false, legacy: true }
+  }
+  return {
+    activationReady: input.appEnabled && input.preparedArtifactAttached,
+    legacy: false,
+  }
+}
 
 export function getCheckoutFirstTimeDestination(
   quizKind: string | null | undefined,
   leadId?: string | null,
   checkoutContext?: string | null,
+  options: { personalPlanActivationReady?: boolean; personalPlanLegacy?: boolean } = {},
 ): CheckoutFirstTimeDestination {
   if (checkoutContext === "membership_reactivation") return "/onboarding"
+  if (quizKind === "personal_plan" && options.personalPlanLegacy) return "/onboarding"
+  if (quizKind === "personal_plan" && options.personalPlanActivationReady) return "/plan-start"
   return quizKind === "personal_plan" && leadId
     ? `/plan-bereit?lead=${encodeURIComponent(leadId)}`
     : "/onboarding"
@@ -27,6 +69,7 @@ export function isCheckoutFirstTimeDestination(
 ): value is CheckoutFirstTimeDestination {
   return (
     value === "/onboarding" ||
+    value === "/plan-start" ||
     (typeof value === "string" && /^\/plan-bereit\?lead=[^&/?#]+$/.test(value))
   )
 }
@@ -35,6 +78,7 @@ export async function resolveCheckoutFirstTimeDestination(
   supabase: Pick<SupabaseClient, "from">,
   leadId?: string | null,
   checkoutContext?: string | null,
+  options?: { personalPlanActivationReady?: boolean; personalPlanLegacy?: boolean },
 ): Promise<CheckoutFirstTimeDestination> {
   if (!leadId || checkoutContext === "membership_reactivation") return "/onboarding"
 
@@ -53,5 +97,6 @@ export async function resolveCheckoutFirstTimeDestination(
     (data as { quiz_kind?: string | null } | null)?.quiz_kind,
     leadId,
     checkoutContext,
+    options,
   )
 }

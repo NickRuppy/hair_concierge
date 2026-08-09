@@ -4,6 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthoritySemanticIntent,
+} from "@/lib/personal-plan/products/authority/contracts"
 import {
   noOpStage3Analytics,
   type Stage3AnalyticsPort,
@@ -15,21 +19,19 @@ import {
   type ProposedProductPortfolio,
   type Stage3CategoryRequirement,
   type Stage3EntryContext,
-  type Stage3ProductDecision,
   type Stage3ProductDraft,
 } from "@/lib/personal-plan/products/contracts"
 import { createStage3Draft } from "@/lib/personal-plan/products/state-machine"
 import {
-  createFixtureStage3Gateway,
-  FixtureGatewaySimulatedError,
-} from "@/lib/personal-plan/products/fixture-gateway"
-import {
   Stage3ProductsGatewayError,
   type Stage3CompleteResponse,
+  type Stage3DraftResponse,
   type Stage3IntakeClientPort,
+  type Stage3MutationResponse,
   type Stage3ProductsGateway,
   type Stage3ProductsMutation,
 } from "@/lib/personal-plan/products/gateway"
+import { createHttpStage3ProductsGateway } from "@/lib/personal-plan/products/http-gateway"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import {
@@ -51,8 +53,25 @@ type FlowPhase =
   | "roles"
   | "fit_orientation"
   | "decisions"
-  | "routine_ready"
   | "handoff"
+
+type Stage3UiGateway = Stage3ProductsGateway & {
+  evaluateDecisions?: (input: { draftId: string }) => Promise<Stage3AuthorityEvaluation[]>
+  resolveDecision?: (input: {
+    draftId: string
+    expectedRevision: number
+    intent: Stage3AuthoritySemanticIntent
+  }) => Promise<Stage3MutationResponse>
+}
+
+type Stage3AuthorityDraftResponse = Stage3DraftResponse & {
+  authorityEvaluations?: Stage3AuthorityEvaluation[]
+}
+
+export type Stage3RoutineHandoff = Pick<
+  Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>,
+  "personalPlanId" | "refinedVersionId" | "productPortfolioVersionId" | "routineProposalId" | "next"
+>
 
 type SystemIssue = {
   kind: "error" | "conflict"
@@ -137,22 +156,24 @@ export function Stage3ProductsFlow({
   intakeClient,
   analytics = noOpStage3Analytics,
   onBackToRefinement,
+  onOpenRoutine,
 }: {
   searchDebounceMs?: number
   entryContext?: Stage3EntryContext
   draftId?: string
   userId?: string
-  gateway?: Stage3ProductsGateway
+  gateway?: Stage3UiGateway
   intakeClient?: Stage3IntakeClientPort
   analytics?: Stage3AnalyticsPort
   onBackToRefinement?: () => void
+  onOpenRoutine?: (handoff: Stage3RoutineHandoff) => void
 } = {}) {
   const requirements = entryContext?.orderedCategories ?? DEFAULT_REQUIREMENTS
   const personalPlanId = entryContext?.personalPlanId ?? "fixture-personal-plan"
   const refinedVersionId = entryContext?.refinedVersionId ?? "fixture-refined-version"
-  const gatewayRef = useRef<Stage3ProductsGateway | null>(null)
+  const gatewayRef = useRef<Stage3UiGateway | null>(null)
   if (!gatewayRef.current) {
-    gatewayRef.current = providedGateway ?? createFixtureStage3Gateway({ searchDelayMs: 0 })
+    gatewayRef.current = providedGateway ?? createHttpStage3ProductsGateway()
   }
   const gateway = gatewayRef.current
 
@@ -183,12 +204,15 @@ export function Stage3ProductsFlow({
   const [roleErrors, setRoleErrors] = useState<string[]>([])
   const [saveLabel, setSaveLabel] = useState("Wird geladen")
   const [systemIssue, setSystemIssue] = useState<SystemIssue | null>(null)
+  const [authorityEvaluations, setAuthorityEvaluations] = useState<Stage3AuthorityEvaluation[]>([])
+  const [authorityStatus, setAuthorityStatus] = useState<"idle" | "loading" | "ready">("idle")
   const [completion, setCompletion] = useState<Extract<
     Stage3CompleteResponse,
     { status: "ready_for_routine" }
   > | null>(null)
   const searchToken = useRef(0)
   const intakeIdempotencyKey = useRef<string | null>(null)
+  const completingDraftRevision = useRef<number | null>(null)
 
   const currentRequirement = requirements[categoryIndex]
   const currentCategory = currentRequirement?.category ?? requirements[0]?.category ?? "shampoo"
@@ -210,8 +234,7 @@ export function Stage3ProductsFlow({
       })
       .then((response) => {
         if (!active) return
-        setDraft(response.draft)
-        setSaveLabel("Gespeichert")
+        return resumeLoadedDraft(response as Stage3AuthorityDraftResponse)
       })
       .catch(() => {
         if (!active) return
@@ -222,13 +245,11 @@ export function Stage3ProductsFlow({
           retry: () => window.location.reload(),
         })
       })
-    analytics.track("personal_plan_stage3_flow_viewed", {
-      pass: "product_capture",
-      stepKey: "capture_orientation",
-    })
     return () => {
       active = false
     }
+    // The resume helper reads the same immutable entry and gateway values listed here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analytics, draftId, gateway, personalPlanId, refinedVersionId, requirements, userId])
 
   useEffect(() => {
@@ -398,7 +419,7 @@ export function Stage3ProductsFlow({
         }}
         onExplicitNone={currentProducts.length === 0 ? () => void markCurrentRoleGap() : undefined}
         onContinue={() => void continueCapture()}
-        onBack={() => setPhase(categoryIndex === 0 ? "capture_orientation" : "capture")}
+        onBack={categoryIndex === 0 ? () => setPhase("capture_orientation") : undefined}
       />
     )
 
@@ -444,7 +465,10 @@ export function Stage3ProductsFlow({
     return shell(
       <Stage3Transition
         context="fit_check"
-        onBack={() => setPhase("capture")}
+        onBack={() => {
+          const lastCategory = requirements[requirements.length - 1]?.category
+          if (lastCategory) void reopenCategory(lastCategory)
+        }}
         onContinue={() => {
           setPhase("decisions")
           analytics.track("personal_plan_stage3_flow_viewed", {
@@ -463,7 +487,10 @@ export function Stage3ProductsFlow({
         !draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
     )
     if (!nextSubject) {
-      void completeFlow(draft)
+      if (completingDraftRevision.current !== draft.revision) {
+        completingDraftRevision.current = draft.revision
+        void completeFlow(draft)
+      }
       return shell(
         <Stage3SystemState
           state="loading"
@@ -473,32 +500,57 @@ export function Stage3ProductsFlow({
         "Abschluss",
       )
     }
-    return shell(
-      <ProductDecisionScreen
-        decisions={[
-          decisionProjection(
-            draft,
-            nextSubject,
-            requirements.find((item) => item.category === nextSubject.category)?.needSummary,
-          ),
-        ]}
-        onChooseAction={(decisionKey, action) => void chooseDecision(decisionKey, action)}
-        onBack={() => setPhase("fit_orientation")}
-      />,
-      CATEGORY_COPY[nextSubject.category].label,
+    const evaluation = authorityEvaluations.find(
+      (candidate) => candidate.subjectKey === nextSubject.decisionKey,
     )
-  }
-
-  if (phase === "routine_ready") {
+    if (authorityStatus !== "ready" || !evaluation) {
+      return shell(
+        <Stage3SystemState
+          state="loading"
+          title="Passung wird geprüft."
+          message="Einen Moment bitte."
+        />,
+        CATEGORY_COPY[nextSubject.category].label,
+      )
+    }
     return shell(
-      <Stage3Transition context="routine_ready" onContinue={() => setPhase("handoff")} />,
-      "Routine vorbereiten",
+      <>
+        <ProductDecisionScreen
+          decisions={[
+            authorityEvaluationProjection(
+              draft,
+              nextSubject,
+              evaluation,
+              requirements.find((item) => item.category === nextSubject.category)?.needSummary,
+            ),
+          ]}
+          onChooseAction={(decisionKey, action) => void chooseDecision(decisionKey, action)}
+          onBack={() => void reopenCategory(nextSubject.category)}
+        />
+        {evaluation.status === "unsupported" ? (
+          <div className="mt-4 rounded-xl border border-border bg-card p-4">
+            <p className="text-sm text-[var(--text-sub)]">
+              Wir können diese Passung gerade nicht abschließen. Deine bisherigen Angaben bleiben
+              gespeichert.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-3 w-full"
+              onClick={onBackToRefinement ?? (() => window.location.reload())}
+            >
+              {onBackToRefinement ? "Zur Verfeinerung" : "Neu laden"}
+            </Button>
+          </div>
+        ) : null}
+      </>,
+      CATEGORY_COPY[nextSubject.category].label,
     )
   }
 
   return shell(
     completion ? (
-      <PortfolioHandoff completion={completion} />
+      <PortfolioHandoff completion={completion} onOpenRoutine={() => openRoutine(completion)} />
     ) : (
       <Stage3SystemState
         state="loading"
@@ -508,6 +560,121 @@ export function Stage3ProductsFlow({
     ),
     "Bereit für deine Routine",
   )
+
+  async function resumeLoadedDraft(response: Stage3AuthorityDraftResponse) {
+    const loadedDraft = response.draft
+    if (
+      loadedDraft.personalPlanId !== personalPlanId ||
+      loadedDraft.refinedVersionId !== refinedVersionId
+    ) {
+      throw new Error("stage3_refined_version_mismatch")
+    }
+    setDraft(loadedDraft)
+    setSaveLabel("Gespeichert")
+
+    if (loadedDraft.pass === "ready_for_routine" || loadedDraft.status === "completed") {
+      await completeFlow(loadedDraft)
+      return
+    }
+
+    if (loadedDraft.pass === "product_decisions") {
+      await loadAuthorityEvaluations(loadedDraft, response.authorityEvaluations)
+      setPhase(loadedDraft.decisions.length > 0 ? "decisions" : "fit_orientation")
+      analytics.track("personal_plan_stage3_flow_viewed", {
+        pass: "product_decisions",
+        stepKey: loadedDraft.decisions.length > 0 ? "fit_decision" : "fit_orientation",
+      })
+      return
+    }
+
+    const cursorIndex = requirements.findIndex(
+      (requirement) => requirement.category === loadedDraft.categoryCursor,
+    )
+    if (cursorIndex >= 0) setCategoryIndex(cursorIndex)
+    const resumesCapture =
+      loadedDraft.revision > 0 || loadedDraft.completedCaptureCategories.length > 0
+    setPhase(resumesCapture ? "capture" : "capture_orientation")
+    analytics.track("personal_plan_stage3_flow_viewed", {
+      pass: "product_capture",
+      stepKey: resumesCapture ? "product_search" : "capture_orientation",
+    })
+  }
+
+  async function loadAuthorityEvaluations(
+    sourceDraft: Stage3ProductDraft,
+    preloaded?: Stage3AuthorityEvaluation[],
+  ) {
+    setAuthorityStatus("loading")
+    let evaluations = preloaded
+    if (!evaluations) {
+      if (gateway.evaluateDecisions) {
+        evaluations = await gateway.evaluateDecisions({ draftId: sourceDraft.draftId })
+      } else {
+        const response = await fetch(
+          `/api/personal-plan/stage-3?${new URLSearchParams({ personalPlanId, refinedVersionId })}`,
+          { method: "GET", cache: "no-store" },
+        )
+        const body = (await response
+          .json()
+          .catch(() => null)) as Stage3AuthorityDraftResponse | null
+        if (!response.ok || !body || body.draft.draftId !== sourceDraft.draftId) {
+          throw new Stage3ProductsGatewayError("temporarily_unavailable")
+        }
+        evaluations = body.authorityEvaluations
+      }
+    }
+    if (!evaluations) throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    setAuthorityEvaluations(evaluations)
+    setAuthorityStatus("ready")
+  }
+
+  async function resolveAuthorityDecision(input: {
+    draftId: string
+    expectedRevision: number
+    intent: Stage3AuthoritySemanticIntent
+  }): Promise<Stage3MutationResponse> {
+    if (gateway.resolveDecision) return gateway.resolveDecision(input)
+    const response = await fetch("/api/personal-plan/stage-3", {
+      method: "PATCH",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+      cache: "no-store",
+    })
+    const body = (await response.json().catch(() => null)) as
+      | Stage3MutationResponse
+      | { latestDraft?: Stage3ProductDraft }
+      | null
+    if (response.status === 409 && body && "latestDraft" in body && body.latestDraft) {
+      return { status: "conflict", latestDraft: body.latestDraft }
+    }
+    if (!response.ok || !body || !("status" in body)) {
+      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    }
+    return body as Stage3MutationResponse
+  }
+
+  function openRoutine(ready: Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>) {
+    if (
+      ready.next.stage !== 4 ||
+      ready.next.href !== "/routine" ||
+      !ready.personalPlanId ||
+      !ready.refinedVersionId ||
+      !ready.productPortfolioVersionId ||
+      !ready.routineProposalId
+    ) {
+      handleMutationError(new Error("stage3_routine_handoff_invalid"), () => openRoutine(ready))
+      return
+    }
+    const handoff: Stage3RoutineHandoff = {
+      personalPlanId: ready.personalPlanId,
+      refinedVersionId: ready.refinedVersionId,
+      productPortfolioVersionId: ready.productPortfolioVersionId,
+      routineProposalId: ready.routineProposalId,
+      next: ready.next,
+    }
+    if (onOpenRoutine) onOpenRoutine(handoff)
+    else window.location.replace(ready.next.href)
+  }
 
   function selectCandidate(candidateId: string) {
     const candidatePosition = searchResults.findIndex(
@@ -649,23 +816,24 @@ export function Stage3ProductsFlow({
       return
     }
 
-    let nextDraft = activeDraft
     try {
-      for (const product of currentProducts) {
-        const response = await gateway.mutate({
-          draftId: nextDraft.draftId,
-          expectedRevision: nextDraft.revision,
-          mutation: {
-            type: "assign_roles",
-            capturedProductId: product.capturedProductId,
-            category: currentCategory,
-            roles: (roleAssignments[product.capturedProductId] ?? []) as PlanProductRole[],
-          },
-        })
-        if (response.status === "conflict")
-          return handleConflict(response.latestDraft, saveRolesAndContinue)
-        nextDraft = response.draft
-      }
+      const replacement = await gateway.mutate({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        mutation: {
+          type: "replace_category_role_assignments",
+          category: currentCategory,
+          assignments: currentProducts.flatMap((product) => {
+            const roles = (roleAssignments[product.capturedProductId] ?? []) as PlanProductRole[]
+            return roles.length > 0
+              ? [{ capturedProductId: product.capturedProductId, category: currentCategory, roles }]
+              : []
+          }),
+        },
+      })
+      if (replacement.status === "conflict")
+        return handleConflict(replacement.latestDraft, saveRolesAndContinue)
+      const nextDraft = replacement.draft
       const completed = await gateway.mutate({
         draftId: nextDraft.draftId,
         expectedRevision: nextDraft.revision,
@@ -675,7 +843,7 @@ export function Stage3ProductsFlow({
         return handleConflict(completed.latestDraft, saveRolesAndContinue)
       setDraft(completed.draft)
       setSaveLabel("Gespeichert")
-      advanceCategoryOrFit()
+      await advanceFromServerCursor(completed.draft)
     } catch (error) {
       handleMutationError(error, saveRolesAndContinue)
     }
@@ -705,23 +873,28 @@ export function Stage3ProductsFlow({
       if (completed.status === "conflict")
         return handleConflict(completed.latestDraft, markCurrentRoleGap)
       setDraft(completed.draft)
-      advanceCategoryOrFit()
+      await advanceFromServerCursor(completed.draft)
     } catch (error) {
       handleMutationError(error, markCurrentRoleGap)
     }
   }
 
-  function advanceCategoryOrFit() {
+  async function advanceFromServerCursor(nextDraft: Stage3ProductDraft) {
     setQuery("")
     setSearchResults([])
     setSearchStatus("idle")
     setPendingCandidate(null)
     setFrequency(null)
     setRoleAssignments({})
-    if (categoryIndex < requirements.length - 1) {
-      setCategoryIndex((index) => index + 1)
+    if (nextDraft.pass === "product_capture" && nextDraft.categoryCursor) {
+      const nextIndex = requirements.findIndex(
+        (requirement) => requirement.category === nextDraft.categoryCursor,
+      )
+      if (nextIndex < 0) throw new Error("stage3_category_cursor_invalid")
+      setCategoryIndex(nextIndex)
       setPhase("capture")
     } else {
+      await loadAuthorityEvaluations(nextDraft)
       setPhase("fit_orientation")
     }
   }
@@ -732,26 +905,54 @@ export function Stage3ProductsFlow({
     )
     if (!subject) return
     if (action.kind === "choose_other") {
-      await saveMutation({ type: "reopen_capture_category", category: subject.category }, () => {
-        setCategoryIndex(requirements.findIndex((entry) => entry.category === subject.category))
-        setQuery("")
-        setSearchResults([])
-        setSearchStatus("idle")
-        setPhase("capture")
-      })
+      await reopenCategory(subject.category)
       return
     }
-    const decision = makeDecision(subject, action)
-    await saveMutation({ type: "record_decision", decision }, (nextDraft) => {
+    const evaluation = authorityEvaluations.find(
+      (candidate) => candidate.subjectKey === decisionKey,
+    )
+    const semanticAction = semanticActionFor(action)
+    if (
+      !evaluation ||
+      !semanticAction ||
+      !evaluation.allowedActions.includes(semanticAction as never)
+    ) {
+      handleMutationError(
+        new Error("stage3_authority_action_unavailable"),
+        () => void chooseDecision(decisionKey, action),
+      )
+      return
+    }
+    const intent: Stage3AuthoritySemanticIntent = {
+      type: "resolve_decision",
+      subjectKey: decisionKey,
+      action: semanticAction,
+      ...(semanticAction === "plan_recommendation" &&
+      evaluation.status === "known" &&
+      evaluation.recommendation
+        ? { selectedCandidateId: evaluation.recommendation.productId }
+        : {}),
+    }
+    setSaveLabel("Wird gespeichert")
+    try {
+      const response = await resolveAuthorityDecision({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        intent,
+      })
+      if (response.status === "conflict")
+        return handleConflict(response.latestDraft, () => void chooseDecision(decisionKey, action))
+      const nextDraft = response.draft
+      setDraft(nextDraft)
+      setSaveLabel("Gespeichert")
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       analytics.track("personal_plan_stage3_decision_selected", {
         decisionType:
           action.kind === "pending"
             ? "pending_review"
             : action.kind === "skip"
               ? "uncovered"
-              : action.kind === "choose_other"
-                ? "uncovered"
-                : action.kind,
+              : action.kind,
         stepKey: "fit_decision",
       })
       const remaining = deriveStage3DecisionSubjects(nextDraft).some(
@@ -759,11 +960,35 @@ export function Stage3ProductsFlow({
           !nextDraft.decisions.some((entry) => entry.decisionKey === candidate.decisionKey),
       )
       if (!remaining) void completeFlow(nextDraft)
-    })
+    } catch (error) {
+      handleMutationError(error, () => void chooseDecision(decisionKey, action))
+    }
   }
 
   async function removeProduct(capturedProductId: string) {
     await saveMutation({ type: "remove_captured_product", capturedProductId })
+  }
+
+  async function reopenCategory(category: PersonalPlanCategory) {
+    await saveMutation({ type: "reopen_capture_category", category }, (nextDraft) => {
+      const cursorIndex = requirements.findIndex(
+        (requirement) => requirement.category === nextDraft.categoryCursor,
+      )
+      if (cursorIndex < 0) {
+        handleMutationError(
+          new Error("stage3_category_cursor_invalid"),
+          () => void reopenCategory(category),
+        )
+        return
+      }
+      setAuthorityEvaluations([])
+      setAuthorityStatus("idle")
+      setCategoryIndex(cursorIndex)
+      setQuery("")
+      setSearchResults([])
+      setSearchStatus("idle")
+      setPhase("capture")
+    })
   }
 
   async function completeFlow(sourceDraft: Stage3ProductDraft) {
@@ -776,6 +1001,7 @@ export function Stage3ProductsFlow({
       if (response.status === "conflict")
         return handleConflict(response.latestDraft, () => void completeFlow(response.latestDraft))
       if (response.status === "not_ready") {
+        completingDraftRevision.current = null
         setSystemIssue({
           kind: "error",
           title: "Deine Auswahl ist noch nicht vollständig.",
@@ -789,7 +1015,7 @@ export function Stage3ProductsFlow({
       }
       setDraft(response.draft)
       setCompletion(response)
-      setPhase("routine_ready")
+      setPhase("handoff")
       const hasPending = response.portfolio.pendingProducts.length > 0
       const hasGap = response.portfolio.uncoveredRoles.length > 0
       analytics.track("personal_plan_stage3_handoff", {
@@ -800,6 +1026,7 @@ export function Stage3ProductsFlow({
             : "ready_for_routine",
       })
     } catch (error) {
+      completingDraftRevision.current = null
       handleMutationError(error, () => void completeFlow(sourceDraft))
     }
   }
@@ -840,11 +1067,8 @@ export function Stage3ProductsFlow({
     })
   }
 
-  function handleMutationError(error: unknown, retry: () => void) {
-    const message =
-      error instanceof FixtureGatewaySimulatedError
-        ? "Die Testverbindung wurde kurz unterbrochen. Es wurde nichts verändert."
-        : "Die Auswahl konnte nicht gespeichert werden."
+  function handleMutationError(_error: unknown, retry: () => void) {
+    const message = "Die Auswahl konnte nicht gespeichert werden."
     setSystemIssue({
       kind: "error",
       title: "Speichern fehlgeschlagen.",
@@ -881,184 +1105,177 @@ function progressForPhase(phase: FlowPhase, categoryIndex: number, requirementCo
   if (phase === "capture_orientation") return 0
   if (phase === "capture" || phase === "roles") return categoryIndex + 1
   if (phase === "fit_orientation" || phase === "decisions") return requirementCount + 1
-  if (phase === "routine_ready") return requirementCount + 2
   return requirementCount + 3
 }
 
-function decisionProjection(
+export function authorityEvaluationProjection(
   draft: Stage3ProductDraft,
   subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+  evaluation: Stage3AuthorityEvaluation,
   needSummary = CATEGORY_COPY[subject.category].need,
 ): Stage3ProductDecisionProjection {
+  if (evaluation.subjectKey !== subject.decisionKey || evaluation.category !== subject.category) {
+    throw new Error("stage3_authority_projection_mismatch")
+  }
   const product = subject.capturedProductId
     ? draft.products.find((candidate) => candidate.capturedProductId === subject.capturedProductId)
     : undefined
-  const conditionerIndex = draft.products
-    .filter((candidate) => candidate.identity.category === "conditioner")
-    .findIndex((candidate) => candidate.capturedProductId === subject.capturedProductId)
-  const mismatch = subject.category === "conditioner" && conditionerIndex === 1
-  const pending = product?.identity.kind === "pending_submission"
-
-  if (!product) {
-    return {
-      kind: "gap",
-      decisionKey: subject.decisionKey,
-      categoryLabel: CATEGORY_COPY[subject.category].label,
-      needSummary,
-      verdictLabel: "Offene Lücke",
-      rationale: "Du nutzt dafür aktuell kein Produkt. Die Lücke bleibt im Plan sichtbar.",
-      actions: [{ kind: "skip", label: "Lücke im Plan markieren" }],
-    }
-  }
-
-  if (pending) {
-    return {
-      kind: "pending",
-      decisionKey: subject.decisionKey,
-      categoryLabel: CATEGORY_COPY[subject.category].label,
-      needSummary,
-      verdictLabel: "Noch in Prüfung",
-      rationale: "Wir bewerten dieses Produkt erst, wenn die Identität sicher bestätigt ist.",
-      ownedProductName: product.identity.displayName,
-      actions: [
-        {
-          kind: "pending",
-          label: "Prüfung später fortsetzen",
-          productName: product.identity.displayName,
-        },
-      ],
-    }
-  }
-
-  if (mismatch) {
-    return {
-      kind: "mismatch",
-      decisionKey: subject.decisionKey,
-      categoryLabel: CATEGORY_COPY[subject.category].label,
-      needSummary,
-      verdictLabel: "Wechseln empfohlen",
-      rationale: "Eine leichtere Pflege passt in diesem Beispiel besser zu deinem Bedarf.",
-      ownedProductName: product.identity.displayName,
-      criteria: [
-        {
-          label: "Pflegewirkung",
-          result: "Zu schwer",
-          tone: "negative",
-          explanation: "Damit die Längen gepflegt bleiben, ohne beschwert zu wirken.",
-        },
-        {
-          label: "Alltagstauglichkeit",
-          result: "Nur bedingt",
-          tone: "warning",
-          explanation: "Das Produkt sollte zu deiner regelmäßigen Wäsche passen.",
-        },
-        {
-          label: "Bedarf",
-          result: "Alternative passt besser",
-          tone: "positive",
-          explanation: "Die Empfehlung deckt den konkreten Pflegebedarf ab.",
-        },
-      ],
-      recommendation: {
-        productName: "Leichter Pflege-Conditioner",
-        priceLabel: "ca. 18 €",
-        availabilityLabel: "Verfügbar",
-        sellerLabel: "Beispielhändler",
-      },
-      actions: [
-        {
-          kind: "plan_purchase",
-          label: "Leichter Pflege-Conditioner einplanen",
-          productName: "Leichter Pflege-Conditioner",
-        },
-        {
-          kind: "override",
-          label: `${product.identity.displayName} behalten`,
-          productName: product.identity.displayName,
-        },
-        { kind: "choose_other", label: "Anderes Produkt wählen" },
-      ],
-    }
-  }
-
-  return {
-    kind: "fit",
+  const base = {
     decisionKey: subject.decisionKey,
     categoryLabel: CATEGORY_COPY[subject.category].label,
     needSummary,
-    verdictLabel: "Passt sehr gut",
+    ...(product ? { ownedProductName: product.identity.displayName } : {}),
+  }
+
+  if (evaluation.status === "pending") {
+    return {
+      ...base,
+      kind: "pending",
+      verdictLabel: "Noch in Prüfung",
+      rationale: "Wir prüfen das Produkt, bevor wir seine Passung bewerten.",
+      actions: projectAuthorityActions(evaluation, product?.identity.displayName),
+    }
+  }
+  if (evaluation.status === "unknown") {
+    return {
+      ...base,
+      kind: "gap",
+      verdictLabel: "Noch nicht beurteilbar",
+      rationale: "Für eine verlässliche Bewertung fehlen noch bestätigte Produktinformationen.",
+      criteria: evaluation.criteria.map(projectCriterion),
+      actions: projectAuthorityActions(evaluation, product?.identity.displayName),
+    }
+  }
+  if (evaluation.status === "unsupported") {
+    return {
+      ...base,
+      kind: "gap",
+      verdictLabel: "Prüfung nicht verfügbar",
+      rationale: "Diese Passung können wir aktuell noch nicht verlässlich prüfen.",
+      actions: [],
+    }
+  }
+  const kind =
+    evaluation.verdict === "mismatch"
+      ? "mismatch"
+      : evaluation.verdict === "unknown"
+        ? "gap"
+        : "fit"
+  return {
+    ...base,
+    kind,
+    verdictLabel:
+      evaluation.verdict === "ideal"
+        ? "Passt sehr gut"
+        : evaluation.verdict === "supportive"
+          ? "Passt mit Einschränkung"
+          : evaluation.verdict === "mismatch"
+            ? "Passt nicht zu deinem Bedarf"
+            : "Noch nicht beurteilbar",
     rationale:
-      "Deine Wahl erfüllt den vorgesehenen Bedarf. Das ist ein guter Baustein für deine Routine.",
-    ownedProductName: product.identity.displayName,
-    criteria: [{ label: "Dein Bedarf", result: "Erfüllt", tone: "positive" }],
-    actions: [
-      {
-        kind: "keep",
-        label: `${product.identity.displayName} weiterverwenden`,
-        productName: product.identity.displayName,
-      },
-    ],
+      evaluation.verdict === "ideal"
+        ? "Das Produkt erfüllt den vorgesehenen Bedarf. Das ist ein guter Baustein für deine Routine."
+        : evaluation.verdict === "supportive"
+          ? "Das Produkt unterstützt deinen Bedarf mit einer dokumentierten Einschränkung."
+          : evaluation.verdict === "mismatch"
+            ? "Die bestätigten Produkteigenschaften passen nicht zu diesem Bedarf."
+            : "Eine verlässliche Bewertung ist noch nicht möglich.",
+    criteria: evaluation.criteria.map(projectCriterion),
+    ...(evaluation.recommendation
+      ? { recommendation: { productName: evaluation.recommendation.displayName } }
+      : {}),
+    actions: projectAuthorityActions(
+      evaluation,
+      product?.identity.displayName,
+      evaluation.recommendation?.displayName,
+    ),
   }
 }
 
-function makeDecision(
-  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
-  action: Stage3DecisionAction,
-): Stage3ProductDecision {
-  const recommendation =
-    action.kind === "plan_purchase"
-      ? {
-          recommendationId: `fixture-recommendation-${subject.category}-${subject.role}`,
-          productId: `fixture-recommended-product-${subject.category}-${subject.role}`,
-          category: subject.category,
-          role: subject.role,
-          displayName: "Leichter Pflege-Conditioner",
-          reason: "Passt im Fixture besser zum Bedarf.",
-          authorityRuleId: "fixture-authority-rule",
-        }
-      : null
-
+function projectCriterion(
+  criterion: Extract<
+    Stage3AuthorityEvaluation,
+    { status: "known" | "unknown" }
+  >["criteria"][number],
+) {
   return {
-    decisionKey: subject.decisionKey,
-    category: subject.category,
-    role: subject.role,
-    capturedProductId: subject.capturedProductId,
-    verdict:
-      action.kind === "plan_purchase" || action.kind === "override"
-        ? "mismatch"
-        : action.kind === "keep"
-          ? "ideal"
-          : "unknown",
-    choiceState:
-      action.kind === "keep"
-        ? "owned_active"
-        : action.kind === "override"
-          ? "owned_override"
-          : action.kind === "plan_purchase"
-            ? "planned_purchase"
-            : action.kind === "pending"
-              ? "pending_review"
-              : "unassigned",
-    criterionResults:
-      action.kind === "keep"
-        ? [
-            {
-              criterionId: "fixture-fit",
-              label: "Bedarf",
-              result: "pass",
-              explanation: "Der Bedarf wird im Fixture erfüllt.",
-            },
-          ]
-        : [],
-    recommendation,
-    limitationAcknowledged: action.kind === "override",
+    label: criterion.label,
+    result:
+      criterion.result === "pass"
+        ? "Erfüllt"
+        : criterion.result === "caution"
+          ? "Teilweise"
+          : criterion.result === "fail"
+            ? "Nicht erfüllt"
+            : "Noch offen",
+    tone:
+      criterion.result === "pass"
+        ? ("positive" as const)
+        : criterion.result === "fail"
+          ? ("negative" as const)
+          : ("warning" as const),
+    explanation: criterion.explanation,
+  }
+}
+
+function projectAuthorityActions(
+  evaluation: Stage3AuthorityEvaluation,
+  productName?: string,
+  recommendationName?: string,
+): Stage3DecisionAction[] {
+  return evaluation.allowedActions.map((action) => {
+    switch (action) {
+      case "keep_owned":
+        return { kind: "keep", label: `${productName ?? "Produkt"} weiterverwenden`, productName }
+      case "acknowledge_override":
+        return {
+          kind: "override",
+          label: `${productName ?? "Produkt"} trotzdem behalten`,
+          productName,
+        }
+      case "plan_recommendation":
+        return {
+          kind: "plan_purchase",
+          label: `${recommendationName ?? "Empfehlung"} einplanen`,
+          productName: recommendationName,
+        }
+      case "keep_pending":
+        return { kind: "pending", label: "Prüfung später fortsetzen", productName }
+      case "leave_uncovered":
+        return {
+          kind: "skip",
+          label: productName ? "Nicht in die Routine übernehmen" : "Lücke im Plan markieren",
+          productName,
+        }
+    }
+  })
+}
+
+function semanticActionFor(
+  action: Stage3DecisionAction,
+): Stage3AuthoritySemanticIntent["action"] | null {
+  switch (action.kind) {
+    case "keep":
+      return "keep_owned"
+    case "override":
+      return "acknowledge_override"
+    case "plan_purchase":
+      return "plan_recommendation"
+    case "pending":
+      return "keep_pending"
+    case "skip":
+      return "leave_uncovered"
+    case "choose_other":
+      return null
   }
 }
 
 export function PortfolioHandoff({
   completion,
+  onOpenRoutine,
 }: {
   completion: Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>
+  onOpenRoutine?: () => void
 }) {
   const portfolio: ProposedProductPortfolio = completion.portfolio
   return (
@@ -1078,12 +1295,14 @@ export function PortfolioHandoff({
         <SummaryRow label="In Prüfung" value={portfolio.pendingProducts.length} />
         <SummaryRow label="Offene Lücken" value={portfolio.uncoveredRoles.length} />
       </dl>
-      <p className="mt-5 text-xs text-muted-foreground">
-        Portfolio {completion.productPortfolioVersionId}
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Routine-Entwurf {completion.routineProposalId}
-      </p>
+      <Button
+        type="button"
+        variant="unstyled"
+        className="quiz-btn-primary mt-6 w-full"
+        onClick={onOpenRoutine}
+      >
+        Routine öffnen
+      </Button>
     </section>
   )
 }

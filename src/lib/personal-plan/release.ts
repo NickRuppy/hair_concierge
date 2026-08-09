@@ -2,7 +2,21 @@ type PersonalPlanAppReleaseEnvironment = {
   [key: string]: string | undefined
   PERSONAL_PLAN_APP_V1_ENABLED?: string
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
+  PERSONAL_PLAN_STAGE2_ENABLED?: string
+  PERSONAL_PLAN_STAGE3_ENABLED?: string
   PERSONAL_PLAN_STAGE4_ENABLED?: string
+}
+
+export function isPersonalPlanStage2Enabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_STAGE2_ENABLED === "true"
+}
+
+export function isPersonalPlanStage3Enabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_STAGE3_ENABLED === "true"
 }
 
 export function isPersonalPlanStage4Enabled(

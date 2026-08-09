@@ -122,6 +122,65 @@ test("mask-observed-plus-moderate-exposure: mask.inclusion.observed_plus_exposur
   }
 })
 
+test("mask-rough-rubbing-only: moderate mechanical exposure alone remains optional", () => {
+  const decision = decide(
+    {
+      currentConcerns: [],
+      goals: ["volume_balance"],
+      hairSurface: "smooth",
+      elasticResponse: "stretches_bounces",
+      chemicalTreatments: ["natural"],
+      texture: "straight",
+    },
+    {
+      mechanicalLevel: "moderate",
+      mechanicalSignals: ["towel_rough_rubbing"],
+      repairPriority: "medium",
+    },
+  )
+
+  assert.equal(decision.needTier, "optional")
+  assert.ok(decision.reasons.some((reason) => reason.id === "mask.inclusion.exposure_only"))
+})
+
+test("mask-frequent-ordinary-airflow: route-aware exposure may support, but alone stays optional", () => {
+  const frequentOrdinaryAirflow = {
+    state: "known" as const,
+    events: [
+      {
+        id: "frequent-ordinary-airflow",
+        tool: "hair_dryer" as const,
+        route: "ordinary_airflow" as const,
+        frequency: "weekly_3_4x" as const,
+        sourceRuleIds: ["test.ordinary-airflow"],
+      },
+    ],
+  }
+  const exposureOnly = decide(
+    {
+      currentConcerns: [],
+      goals: ["volume_balance"],
+      hairSurface: "smooth",
+      elasticResponse: "stretches_bounces",
+      chemicalTreatments: ["natural"],
+      texture: "straight",
+    },
+    { ordinaryAirflowExposure: frequentOrdinaryAirflow },
+  )
+  const observedPlusExposure = decide(
+    {
+      currentConcerns: ["tangling"],
+      hairSurface: "smooth",
+      elasticResponse: "stretches_bounces",
+      chemicalTreatments: ["natural"],
+    },
+    { ordinaryAirflowExposure: frequentOrdinaryAirflow },
+  )
+
+  assert.equal(exposureOnly.needTier, "optional")
+  assert.equal(observedPlusExposure.needTier, "basis")
+})
+
 test("mask-rare-heat-plus-one-need stays optional until shared Heat level is moderate", () => {
   const decision = decide(
     {

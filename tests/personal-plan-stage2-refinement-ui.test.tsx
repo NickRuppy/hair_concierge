@@ -51,16 +51,13 @@ function countOccurrences(source: string, needle: string): number {
 
 test("renders the German invitation and neutral bridge hierarchy without result leakage", () => {
   const bridgeHtml = renderToStaticMarkup(
-    <RefinementBridge
-      refinedVersionId="fixture-refined-stage2-v1-r9"
-      nextHref="/plan-start/produkte"
-    />,
+    <RefinementBridge refinedVersionId="fixture-refined-stage2-v1-r9" nextHref="/plan-start" />,
   )
 
   assert.match(bridgeHtml, /Jetzt schauen wir uns deine Produkte an\./)
   assert.match(bridgeHtml, /Produkte erfassen/)
   assert.match(bridgeHtml, /fixture-refined-stage2-v1-r9/)
-  assert.match(bridgeHtml, /data-stage2-next-href="\/plan-start\/produkte"/)
+  assert.match(bridgeHtml, /data-stage2-next-href="\/plan-start"/)
   assert.doesNotMatch(bridgeHtml, /<a\b/)
   assert.doesNotMatch(bridgeHtml, /Empfehlung|Delta|verändert|Tier|Routinekarte|Produktkarte/i)
 })
@@ -69,7 +66,7 @@ test("the bridge exposes a real continuation action and blocks duplicate handoff
   const bridgeHtml = renderToStaticMarkup(
     <RefinementBridge
       refinedVersionId="fixture-refined-stage2-v1-r9"
-      nextHref="/plan-start/produkte"
+      nextHref="/plan-start"
       onContinue={() => {}}
       isContinuing
     />,
@@ -211,6 +208,45 @@ test("global category none is inactive when only a relevant category is selected
   )
 })
 
+test("an unanswered additional heat-tool selection stays distinct from an explicit empty answer", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+  })
+  const unansweredHtml = renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId="additional_heat_tools"
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+    />,
+  )
+  const explicitNoneHtml = renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId="additional_heat_tools"
+      localAnswer={[]}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+    />,
+  )
+
+  const noneControl = /aria-pressed="true" aria-label="Nichts davon; andere Auswahl wird gelöscht"/
+  assert.doesNotMatch(unansweredHtml, noneControl)
+  assert.match(unansweredHtml, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
+  assert.match(explicitNoneHtml, noneControl)
+  assert.doesNotMatch(explicitNoneHtml, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
+})
+
 test("merges grouped category selections without dropping the other group", () => {
   const currentSelection = ["shampoo", "oil", "mask"] as const
   const relevantGroup = ["shampoo", "mask", "heat_protectant"] as const
@@ -329,14 +365,14 @@ test("loaded complete sessions require completedHandoff instead of a completion 
     ],
     completedHandoff: {
       refinedVersionId: "fixture-refined-loaded-r9",
-      nextHref: "/plan-start/produkte",
+      nextHref: "/plan-start",
     },
     revision: 9,
     status: "complete",
   })
   assert.deepEqual(getCompletedHandoffForLoadedSession(completeSession), {
     refinedVersionId: "fixture-refined-loaded-r9",
-    nextHref: "/plan-start/produkte",
+    nextHref: "/plan-start",
   })
 
   const inconsistent = {
@@ -410,7 +446,7 @@ test("telemetry events are code-owned and expose only coarse safe properties", (
   )
 })
 
-test("Labs preview is development guarded and keeps fixture-gateway behind preview-client", async () => {
+test("Labs previews are development guarded and keep fixture-gateway behind Labs clients", async () => {
   const pageSource = await readFile(
     new URL("../src/app/labs/personal-plan-stage-2/page.tsx", import.meta.url),
     "utf8",
@@ -443,7 +479,8 @@ test("Labs preview is development guarded and keeps fixture-gateway behind previ
   await visit(srcRoot)
 
   assert.deepEqual(importers.sort(), [
+    "app/labs/personal-plan-stage-1-2/journey-client.tsx",
     "app/labs/personal-plan-stage-2/preview-client.tsx",
-    "components/personal-plan-products/stage3-products-flow.tsx",
+    "app/labs/personal-plan/stage-3/lab-client.tsx",
   ])
 })

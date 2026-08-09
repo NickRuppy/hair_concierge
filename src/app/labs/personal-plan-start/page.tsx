@@ -2,13 +2,22 @@ import { notFound } from "next/navigation"
 
 import {
   PlanStartFlow,
+  PlanStartProductionGate,
   adaptInitialNeedSnapshotToPlanStartViewModel,
 } from "@/components/personal-plan-start"
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "@/app/labs/personal-plan-stage-1-2/fixture"
 
-export default function PersonalPlanStartLabPage() {
+export default async function PersonalPlanStartLabPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scenario?: string }>
+}) {
   if (process.env.NODE_ENV !== "development") notFound()
+
+  const { scenario } = await searchParams
+  if (scenario === "production-composition")
+    return <PlanStartProductionGate initialJourney={{ stage: "stage1" }} />
 
   const computed = computeNeedPlan({
     rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,

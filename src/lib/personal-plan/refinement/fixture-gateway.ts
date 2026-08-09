@@ -131,6 +131,6 @@ function createFixtureHandoff(pathVersion: string, revision: number): Stage2Refi
   const safePathVersion = pathVersion.replace(/[^a-zA-Z0-9_-]/g, "-")
   return {
     refinedVersionId: `fixture-refined-${safePathVersion}-r${revision}`,
-    nextHref: "/plan-start/produkte",
+    nextHref: "/plan-start",
   }
 }

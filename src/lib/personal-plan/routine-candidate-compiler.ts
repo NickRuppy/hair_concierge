@@ -325,8 +325,9 @@ export async function compileInitialRoutineCandidate(
 ): Promise<RoutineCandidate> {
   const portfolio = input.portfolioSnapshot as unknown as ProposedProductPortfolio
   if (
-    input.portfolioSchemaVersion !== 1 ||
-    portfolio.schemaVersion !== 1 ||
+    ![1, 2].includes(input.portfolioSchemaVersion) ||
+    ![1, 2].includes(portfolio.schemaVersion) ||
+    input.portfolioSchemaVersion !== portfolio.schemaVersion ||
     portfolio.personalPlanId !== input.personalPlanId
   ) {
     // SQL owns the authoritative refined-version FK comparison while holding
@@ -336,7 +337,10 @@ export async function compileInitialRoutineCandidate(
   }
 
   const decisions = new Map(
-    input.refinedNeedSnapshot.decisions.map((decision) => [decision.category, decision]),
+    [
+      ...input.refinedNeedSnapshot.decisions,
+      ...(portfolio.productLoadResolution?.decisions ?? []),
+    ].map((decision) => [decision.category, decision]),
   )
   const items = portfolio.categoryResolutions.map((resolution) => {
     const decision = decisions.get(resolution.category)

@@ -44,7 +44,7 @@ export function ApplicationPage({ view }: { view: ApplicationPageView }) {
   }
 
   if (view.state !== "ready") {
-    return <ApplicationState state={view.state} />
+    return <ApplicationState view={view} />
   }
 
   const selectedDayType = view.selectedDayType ?? null

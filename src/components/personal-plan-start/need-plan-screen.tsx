@@ -22,7 +22,7 @@ type NeedPlanScreenProps = {
   screen: NeedPlanScreenViewModel
   hasOptionalPage: boolean
   onBack?: () => void
-  onNext: () => void
+  onNext?: () => void
 }
 
 export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: NeedPlanScreenProps) {
@@ -64,36 +64,40 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
           ))}
         </div>
       </main>
-      <nav
-        aria-label="Bedarfsplan-Seiten"
-        className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
-      >
-        <div
-          className={cn(
-            "mx-auto flex max-w-[430px] items-center gap-2 sm:max-w-[560px]",
-            !onBack && "justify-end",
-          )}
+      {onBack || onNext ? (
+        <nav
+          aria-label="Bedarfsplan-Seiten"
+          className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
         >
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex min-h-11 items-center gap-1 rounded-[12px] px-3 text-[11px] font-extrabold text-[#6B50A0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              Zur Basis
-            </button>
-          ) : null}
-          <button
-            type="button"
-            onClick={onNext}
-            className="ml-auto inline-flex min-h-11 items-center gap-1 rounded-[12px] bg-[#6B50A0] px-3.5 text-[11px] font-extrabold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          <div
+            className={cn(
+              "mx-auto flex max-w-[430px] items-center gap-2 sm:max-w-[560px]",
+              !onBack && "justify-end",
+            )}
           >
-            {nextLabel}
-            <ChevronRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-      </nav>
+            {onBack ? (
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex min-h-11 items-center gap-1 rounded-[12px] px-3 text-[11px] font-extrabold text-[#6B50A0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                Zur Basis
+              </button>
+            ) : null}
+            {onNext ? (
+              <button
+                type="button"
+                onClick={onNext}
+                className="ml-auto inline-flex min-h-11 items-center gap-1 rounded-[12px] bg-[#6B50A0] px-3.5 text-[11px] font-extrabold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {nextLabel}
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : null}
+          </div>
+        </nav>
+      ) : null}
     </section>
   )
 }

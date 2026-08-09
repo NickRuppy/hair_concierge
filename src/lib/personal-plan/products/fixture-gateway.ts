@@ -6,11 +6,18 @@ import type {
   Stage3ProductsMutation,
   Stage3SearchResponse,
 } from "./gateway"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthoritySemanticIntent,
+} from "./authority/contracts"
 import {
+  deriveStage3DecisionSubjects,
   stage3CategoryRequirementSchema,
   type PersonalPlanCategory,
   type Stage3CatalogCandidate,
   type Stage3CategoryRequirement,
+  type Stage3DecisionSubject,
+  type Stage3ProductDecision,
   type Stage3ProductDraft,
 } from "./contracts"
 import { createProposedProductPortfolio } from "./portfolio"
@@ -23,6 +30,7 @@ import {
   markRoleUncovered,
   recordProductDecision,
   removeCapturedProduct,
+  replaceCategoryRoleAssignments,
   reopenCaptureCategory,
 } from "./state-machine"
 
@@ -121,7 +129,19 @@ export type FixtureMutationResponse = Stage3MutationResponse
 
 export type FixtureCompleteResponse = Stage3CompleteResponse
 
-export type FixtureStage3Gateway = Stage3ProductsGateway
+/**
+ * Labs-only adapter. It mirrors the production flow's semantic evaluation
+ * boundary without importing product facts or authority decisions from the
+ * production server.
+ */
+export type FixtureStage3Gateway = Stage3ProductsGateway & {
+  evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
+  resolveDecision(input: {
+    draftId: string
+    expectedRevision: number
+    intent: Stage3AuthoritySemanticIntent
+  }): Promise<Stage3MutationResponse>
+}
 
 export function createFixtureStage3Gateway(
   options: FixtureStage3GatewayOptions = {},
@@ -272,7 +292,171 @@ export function createFixtureStage3Gateway(
     }
   }
 
-  return { loadOrCreate, search, mutate, invalidateForRefinedVersion, complete }
+  async function evaluateDecisions(input: {
+    draftId: string
+  }): Promise<Stage3AuthorityEvaluation[]> {
+    const draft = requireDraft(drafts, input.draftId)
+    return deriveStage3DecisionSubjects(draft).map((subject) =>
+      evaluateFixtureDecision(draft, subject),
+    )
+  }
+
+  async function resolveDecision(input: {
+    draftId: string
+    expectedRevision: number
+    intent: Stage3AuthoritySemanticIntent
+  }): Promise<Stage3MutationResponse> {
+    const draft = requireDraft(drafts, input.draftId)
+    if (draft.revision !== input.expectedRevision || draft.status !== "active") {
+      return { status: "conflict", latestDraft: draft }
+    }
+    const subject = deriveStage3DecisionSubjects(draft).find(
+      (candidate) => candidate.decisionKey === input.intent.subjectKey,
+    )
+    if (!subject) throw new Error("fixture authority subject is unavailable")
+    const evaluation = evaluateFixtureDecision(draft, subject)
+    if (!evaluation.allowedActions.includes(input.intent.action as never)) {
+      throw new Error("fixture authority action is unavailable")
+    }
+    if (
+      input.intent.action === "plan_recommendation" &&
+      (evaluation.status !== "known" ||
+        !evaluation.recommendation ||
+        input.intent.selectedCandidateId !== evaluation.recommendation.productId)
+    ) {
+      throw new Error("fixture recommendation candidate is unavailable")
+    }
+    if (input.intent.action !== "plan_recommendation" && input.intent.selectedCandidateId) {
+      throw new Error("fixture recommendation candidate is unexpected")
+    }
+
+    const next = {
+      ...recordProductDecision(draft, fixtureAuthorityDecision(subject, evaluation, input.intent)),
+      updatedAt: now(),
+    }
+    drafts.set(next.draftId, next)
+    return { status: "saved", draft: next }
+  }
+
+  return {
+    loadOrCreate,
+    search,
+    mutate,
+    invalidateForRefinedVersion,
+    complete,
+    evaluateDecisions,
+    resolveDecision,
+  }
+}
+
+function evaluateFixtureDecision(
+  draft: Stage3ProductDraft,
+  subject: Stage3DecisionSubject,
+): Stage3AuthorityEvaluation {
+  const product = subject.capturedProductId
+    ? draft.products.find((candidate) => candidate.capturedProductId === subject.capturedProductId)
+    : null
+
+  if (product?.identity.kind === "pending_submission") {
+    return {
+      status: "pending",
+      category: subject.category,
+      subjectKey: subject.decisionKey,
+      reason: "product_intake_pending",
+      allowedActions: ["keep_pending", "leave_uncovered"],
+      coverageRuleIds: ["fixture.pending_product"],
+    }
+  }
+
+  if (!product) {
+    return {
+      status: "known",
+      category: subject.category,
+      subjectKey: subject.decisionKey,
+      verdict: "unknown",
+      criteria: [],
+      allowedActions: ["leave_uncovered"],
+      recommendation: null,
+      productFactFingerprint: null,
+      recommendationFactFingerprint: null,
+      coverageRuleIds: ["fixture.uncovered_role"],
+    }
+  }
+
+  const categoryProducts = draft.products.filter(
+    (candidate) => candidate.identity.category === subject.category,
+  )
+  const productIndex = categoryProducts.findIndex(
+    (candidate) => candidate.capturedProductId === subject.capturedProductId,
+  )
+  // The second Conditioner is intentionally a visible mismatch fixture so the
+  // Labs journey demonstrates the semantic recommendation route.
+  const mismatch = subject.category === "conditioner" && productIndex === 1
+  const recommendation = mismatch
+    ? {
+        recommendationId: `fixture-recommendation:${subject.decisionKey}`,
+        productId: `fixture-recommended:${subject.decisionKey}`,
+        category: subject.category,
+        role: subject.role,
+        displayName: "Leichter Pflege-Conditioner",
+        reason: "Passt besser zum Bedarf.",
+        authorityRuleId: "fixture.conditioner_balance",
+      }
+    : null
+
+  return {
+    status: "known",
+    category: subject.category,
+    subjectKey: subject.decisionKey,
+    verdict: mismatch ? "mismatch" : "ideal",
+    criteria: [
+      {
+        criterionId: `fixture:${subject.decisionKey}`,
+        label: "Bedarf",
+        result: mismatch ? "fail" : "pass",
+        explanation: mismatch ? "Die Passung weicht ab." : "Der Bedarf wird erfüllt.",
+      },
+    ],
+    allowedActions: mismatch ? ["plan_recommendation", "acknowledge_override"] : ["keep_owned"],
+    recommendation,
+    productFactFingerprint: `fixture-facts:${subject.decisionKey}`,
+    recommendationFactFingerprint: recommendation
+      ? `fixture-facts:${recommendation.productId}`
+      : null,
+    coverageRuleIds: ["fixture.category_fit"],
+  }
+}
+
+function fixtureAuthorityDecision(
+  subject: Stage3DecisionSubject,
+  evaluation: Stage3AuthorityEvaluation,
+  intent: Stage3AuthoritySemanticIntent,
+): Stage3ProductDecision {
+  const known = evaluation.status === "known" ? evaluation : null
+  const criteria =
+    evaluation.status === "known" || evaluation.status === "unknown" ? evaluation.criteria : []
+
+  return {
+    decisionKey: subject.decisionKey,
+    category: subject.category,
+    role: subject.role,
+    capturedProductId: subject.capturedProductId,
+    verdict: known?.verdict ?? "unknown",
+    choiceState:
+      intent.action === "keep_owned"
+        ? "owned_active"
+        : intent.action === "acknowledge_override"
+          ? "owned_override"
+          : intent.action === "plan_recommendation"
+            ? "planned_purchase"
+            : intent.action === "keep_pending"
+              ? "pending_review"
+              : "unassigned",
+    criterionResults: criteria,
+    recommendation:
+      intent.action === "plan_recommendation" ? (known?.recommendation ?? null) : null,
+    limitationAcknowledged: intent.action === "acknowledge_override",
+  }
 }
 
 function applyMutation(
@@ -316,6 +500,13 @@ function applyMutation(
       })
     case "assign_roles":
       return assignProductRoles(draft, mutation)
+    case "replace_category_role_assignments":
+      return replaceCategoryRoleAssignments(
+        draft,
+        mutation.category,
+        mutation.assignments,
+        requirements,
+      )
     case "mark_role_uncovered":
       return markRoleUncovered(draft, mutation.uncoveredRole)
     case "complete_capture_category":

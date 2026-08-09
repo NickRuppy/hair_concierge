@@ -378,6 +378,7 @@ test("sync route authenticates before admin service construction and respects th
   let response = await createPersonalPlanRoutineSyncRouteHandlers({
     enabled: () => true,
     getUserId: async () => null,
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     service: () => {
       constructed = true
       return {} as never
@@ -389,6 +390,7 @@ test("sync route authenticates before admin service construction and respects th
   response = await createPersonalPlanRoutineSyncRouteHandlers({
     enabled: () => false,
     getUserId: async () => "owner-a",
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     service: () =>
       ({
         sync: async () => ({

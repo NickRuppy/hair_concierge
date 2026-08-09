@@ -3,6 +3,14 @@ import test from "node:test"
 
 import { createStage3IntakeRouteHandlers } from "../src/app/api/personal-plan/stage-3/intake/route"
 
+const stage3Access = {
+  kind: "personal_plan" as const,
+  personalPlanId: "55555555-5555-4555-8555-555555555555",
+  frontier: "stage3" as const,
+  nextHref: "/plan-start" as const,
+  allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+}
+
 const userId = "11111111-1111-4111-8111-111111111111"
 const key = "22222222-2222-4222-8222-222222222222"
 const submissionId = "33333333-3333-4333-8333-333333333333"
@@ -108,6 +116,7 @@ test("Stage 3 intake rolls back a definite gateway conflict and tells the client
   const handlers = createStage3IntakeRouteHandlers({
     enabled: () => true,
     getUserId: async () => userId,
+    loadJourneyAccess: async () => stage3Access,
     checkRateLimit: async () => ({ allowed: true }),
     repository: () => repository(calls),
     persistence: () =>
@@ -144,6 +153,7 @@ test("Stage 3 intake exposes failed compensation as same-key retryable work", as
   const handlers = createStage3IntakeRouteHandlers({
     enabled: () => true,
     getUserId: async () => userId,
+    loadJourneyAccess: async () => stage3Access,
     checkRateLimit: async () => ({ allowed: true }),
     repository: () => repository(calls),
     persistence: () =>
@@ -201,6 +211,7 @@ test("Stage 3 intake treats a lost mutation response as a replay when the latest
   const handlers = createStage3IntakeRouteHandlers({
     enabled: () => true,
     getUserId: async () => userId,
+    loadJourneyAccess: async () => stage3Access,
     checkRateLimit: async () => ({ allowed: true }),
     repository: () => repository(calls),
     persistence: () =>

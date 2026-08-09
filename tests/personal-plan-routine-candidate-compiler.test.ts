@@ -282,3 +282,87 @@ test("compiler rejects a portfolio role without a resolved refined category deci
     /routine_candidate_missing_refined_decision:conditioner/,
   )
 })
+
+test("compiler accepts a v2 portfolio with a frozen supplemental product-load decision", async () => {
+  const supplementalPortfolio = {
+    ...portfolio(),
+    schemaVersion: 2,
+    categoryResolutions: [
+      {
+        decisionKey: "decision:deep_cleansing_shampoo:residue_reset:gap",
+        category: "deep_cleansing_shampoo",
+        role: "residue_reset",
+        verdict: "unknown",
+        choiceState: "unassigned",
+        capturedProductId: null,
+        executable: false,
+        gapPreserved: true,
+      },
+    ],
+    ownedProducts: [],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [
+      {
+        category: "deep_cleansing_shampoo",
+        role: "residue_reset",
+        reason: "no_product_owned",
+        linkedDecisionKey: "decision:deep_cleansing_shampoo:residue_reset:gap",
+      },
+    ],
+    productLoadResolution: {
+      schemaVersion: 1,
+      refinedNeedVersionId: "refined-a",
+      refinedInputHash: "refined-input-a",
+      capturedFrequencyFingerprint: "a".repeat(64),
+      authorityVersions: {
+        deep_cleansing_shampoo: CATEGORY_ROLE_POLICIES.deep_cleansing_shampoo.authorityVersion,
+      },
+      requirements: [
+        {
+          category: "deep_cleansing_shampoo",
+          requiredRoles: ["residue_reset"],
+          needSummary: "Entfernt Ablagerungen bei hoher aktueller Produktlast.",
+          authorityVersion: CATEGORY_ROLE_POLICIES.deep_cleansing_shampoo.authorityVersion,
+        },
+      ],
+      decisions: [
+        {
+          category: "deep_cleansing_shampoo",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["residue_reset"],
+          target: { category: "deep_cleansing_shampoo", roles: ["residue_reset"] },
+          frequency: {
+            kind: "every_nth_wash",
+            roles: ["residue_reset"],
+            every: 3,
+            substitutesRegularShampoo: true,
+          },
+          reasons: [
+            {
+              id: "deep_cleansing.inclusion.high_load",
+              salience: "primary",
+              evidence: [],
+              values: { resetLoad: 4 },
+            },
+          ],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+    },
+  } as unknown as ProposedProductPortfolio
+
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSchemaVersion: 2,
+    portfolioSnapshot: supplementalPortfolio as never,
+  })
+  const payload = candidate.payload as Record<string, any>
+
+  assert.equal(payload.items[0]?.category, "deep_cleansing_shampoo")
+  assert.equal(payload.items[0]?.state.systemAssessment, "basis")
+  assert.equal(payload.items[0]?.cadence.recommended.every, 3)
+})

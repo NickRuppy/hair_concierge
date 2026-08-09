@@ -12,6 +12,7 @@ import type {
 } from "./types"
 
 const STAGE2_HEAT_SOURCE_RULE_IDS = ["post_plan_onboarding:heat_tool_use"]
+const TOWEL_ROUGH_RUBBING_SIGNAL = "towel_rough_rubbing" as const
 
 type CompletedRefinementInput = {
   triggerContext: Stage2TriggerContext
@@ -51,8 +52,17 @@ export function buildPlanRoutineContextFromCompletedRefinement(
   }
 
   const dryShampooBridgePreference = getEffectiveDryShampooBridgePreference(contract.answers)
+  const mechanicalExposureSignals =
+    contract.answers.towel?.technique === "rough_rubbing" ? [TOWEL_ROUGH_RUBBING_SIGNAL] : []
 
   return {
+    currentProductLoad: {
+      state: "known",
+      value: {
+        categories: [...(contract.answers.currentProductCategories ?? [])],
+        oilPurposes: [...(contract.answers.oilPurposes ?? [])],
+      },
+    },
     shampooFrequency: { state: "known", value: shampooFrequency },
     heatToolUse: {
       state: "known",
@@ -64,6 +74,7 @@ export function buildPlanRoutineContextFromCompletedRefinement(
         sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS],
       })),
     },
+    mechanicalExposureSignals,
     dryShampooBridgePreference: dryShampooBridgePreference
       ? { state: "known", value: dryShampooBridgePreference }
       : { state: "unknown", reason: "dry_shampoo_bridge_preference" },

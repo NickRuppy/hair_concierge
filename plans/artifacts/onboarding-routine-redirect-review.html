@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Onboarding-Abschluss: Chat zu Routine</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #24201d;
+        --muted: #746b64;
+        --line: #ded8d2;
+        --paper: #f5f1ec;
+        --card: #fffdfb;
+        --accent: #24201d;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      main {
+        width: min(1440px, 100%);
+        margin: 0 auto;
+        padding: 42px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 850px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 38px;
+        line-height: 1.12;
+      }
+
+      .intro {
+        max-width: 850px;
+        margin: 12px 0 30px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .panel {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: var(--card);
+        box-shadow: 0 20px 50px rgb(53 46 41 / 10%);
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .panel-header strong { font-size: 16px; }
+
+      .route {
+        border-radius: 999px;
+        background: #ebe6e0;
+        padding: 6px 10px;
+        color: #514942;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+
+      .phone {
+        position: relative;
+        min-height: 525px;
+        padding: 30px 22px;
+        background: linear-gradient(145deg, #8f8880, #4e4945);
+      }
+
+      .modal {
+        width: min(355px, 100%);
+        margin: 48px auto 0;
+        border: 1px solid #d7d0c8;
+        border-radius: 18px;
+        background: #fffdfb;
+        padding: 34px 28px 28px;
+        text-align: center;
+        box-shadow: 0 24px 70px rgb(0 0 0 / 26%);
+      }
+
+      .modal h2 {
+        margin: 0 0 14px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 30px;
+      }
+
+      .modal p {
+        margin: 0 0 28px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .button {
+        width: 100%;
+        border: 0;
+        border-radius: 11px;
+        background: var(--accent);
+        color: white;
+        padding: 15px 16px;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+      }
+
+      .handoff {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 27px;
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .handoff span {
+        border: 1px solid rgb(255 255 255 / 45%);
+        border-radius: 999px;
+        background: rgb(0 0 0 / 18%);
+        padding: 7px 11px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+
+      .routine-preview {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        width: 190px;
+        border: 1px solid #d8d2cc;
+        border-radius: 13px;
+        background: #fffdfb;
+        padding: 14px;
+        box-shadow: 0 14px 32px rgb(0 0 0 / 22%);
+      }
+
+      .routine-preview small {
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .routine-preview h3 {
+        margin: 4px 0 10px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 16px;
+      }
+
+      .routine-row {
+        height: 32px;
+        margin-top: 7px;
+        border: 1px solid #e3ddd7;
+        border-radius: 8px;
+        background: #f7f3ef;
+      }
+
+      .note {
+        padding: 16px 20px 20px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .note strong { color: var(--ink); }
+
+      @media (max-width: 900px) {
+        main { padding: 24px 16px; }
+        .comparison { grid-template-columns: 1fr; }
+        h1 { font-size: 31px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Review-Artefakt · Neuer Nutzer nach Quiz, Kauf und Onboarding</p>
+      <h1>Der Abschluss bleibt vertraut – nur der nächste Fokus wechselt zur Routine.</h1>
+      <p class="intro">
+        Entscheidung: Ändern wir ausschließlich den Standard-Abschluss für neue Nutzer, während
+        explizite Rücksprungziele aus Profilbearbeitung oder Retake unverändert bleiben?
+      </p>
+
+      <section class="comparison" aria-label="Vorher-Nachher-Vergleich">
+        <article class="panel">
+          <header class="panel-header">
+            <strong>Heute</strong>
+            <span class="route">/chat</span>
+          </header>
+          <div class="phone">
+            <div class="modal">
+              <h2>Geschafft! 🎉</h2>
+              <p>Dein Haarprofil ist komplett. Jetzt kann ich dir personalisierte Empfehlungen geben.</p>
+              <div class="button">ZUM CHAT</div>
+            </div>
+            <div class="handoff">Klick <b>→</b> <span>/chat</span></div>
+          </div>
+          <p class="note"><strong>Bestehendes Verhalten:</strong> Der Abschluss lenkt Aufmerksamkeit sofort in den Chat.</p>
+        </article>
+
+        <article class="panel">
+          <header class="panel-header">
+            <strong>Vorgeschlagen</strong>
+            <span class="route">/routine</span>
+          </header>
+          <div class="phone">
+            <div class="modal">
+              <h2>Geschafft! 🎉</h2>
+              <p>Dein Haarprofil ist komplett. Jetzt kann ich dir personalisierte Empfehlungen geben.</p>
+              <div class="button">ZU MEINER ROUTINE</div>
+            </div>
+            <div class="handoff">Klick <b>→</b> <span>/routine</span></div>
+            <div class="routine-preview" aria-label="Bestehende Routine-Seite">
+              <small>Routine</small>
+              <h3>Deine aktuelle Haarpflege</h3>
+              <div class="routine-row"></div>
+              <div class="routine-row"></div>
+              <div class="routine-row"></div>
+            </div>
+          </div>
+          <p class="note"><strong>Neue Richtung:</strong> Derselbe Abschluss führt zur bestehenden Routine-Übersicht; Chat bleibt über die Navigation erreichbar.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

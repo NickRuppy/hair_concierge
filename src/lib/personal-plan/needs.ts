@@ -1,5 +1,6 @@
 import type {
   PlanChemicalTreatment,
+  PlanCurrentProductLoad,
   PlanDamageAssessment,
   PlanDamageLevel,
   PlanHairLossBoundaryAssessment,
@@ -11,6 +12,14 @@ import type {
   PlanScalpBuildupAssessment,
   PlanShampooCadenceAssessment,
 } from "./types"
+
+const LOW_OR_NO_WET_WASH_FREQUENCIES = new Set([
+  "does_not_wash",
+  "less_than_monthly",
+  "monthly_1x",
+  "biweekly_1x",
+  "weekly_1x",
+])
 
 function chemicalStress(treatments: readonly PlanChemicalTreatment[]): 0 | 1 | 2 | 3 | 4 {
   const selected = new Set(treatments)
@@ -121,7 +130,12 @@ function buildDamageAssessment(profile: PlanProfile): PlanDamageAssessment {
   const structuralLevel = damageLevel(structuralScore)
   const computedHeatScore = heatScore(profile)
   const heatLevel = damageLevel(computedHeatScore)
-  const mechanicalLevel = damageLevel(0)
+  const mechanicalSignals = [...profile.routine.mechanicalExposureSignals]
+  const mechanicalLevel: PlanDamageLevel = mechanicalSignals.length > 0 ? "moderate" : "none"
+  const heatEvents =
+    profile.routine.heatToolUse.state === "known" ? profile.routine.heatToolUse.value : []
+  const ordinaryAirflowEvents = heatEvents.filter((event) => event.route === "ordinary_airflow")
+  sourceFacts.push(...mechanicalSignals)
 
   return {
     knowledgeState: profile.routine.heatToolUse.state === "known" ? "known" : "partial",
@@ -131,11 +145,13 @@ function buildDamageAssessment(profile: PlanProfile): PlanDamageAssessment {
     heatLevel,
     mechanicalLevel,
     structuralSignals,
-    mechanicalSignals: [],
-    heatSignals:
+    mechanicalSignals,
+    heatSignals: heatEvents.map((event) => `heat_route:${event.route}`),
+    heatEvents,
+    ordinaryAirflowExposure:
       profile.routine.heatToolUse.state === "known"
-        ? profile.routine.heatToolUse.value.map((event) => `heat_route:${event.route}`)
-        : [],
+        ? { state: "known", events: ordinaryAirflowEvents }
+        : { state: "unknown", events: [] },
     repairPriority: repairPriority(structuralLevel, heatLevel, mechanicalLevel),
     missingInputs: profile.routine.heatToolUse.state === "unknown" ? ["heat_tool_use"] : [],
   }
@@ -164,29 +180,69 @@ function buildShampooCadenceAssessment(profile: PlanProfile): PlanShampooCadence
 function buildResetLoadAssessment(profile: PlanProfile): PlanResetLoadAssessment {
   const oilyScalp = profile.scalp.oiliness === "oily"
   const shampooFrequency = profile.routine.shampooFrequency
+  const currentProductLoad = profile.routine.currentProductLoad
   const sourceFacts = oilyScalp ? ["scalp.oiliness:oily"] : []
   if (shampooFrequency.state === "known") {
     sourceFacts.push(`shampoo_frequency:${shampooFrequency.value}`)
   }
+
+  if (currentProductLoad.state === "unknown") {
+    return {
+      knowledgeState: "partial",
+      sourceFacts,
+      knownScore: oilyScalp ? 1 : 0,
+      unknownSignals: [
+        "dry_shampoo",
+        "leave_in",
+        "finishing_oil",
+        ...(shampooFrequency.state === "unknown" ? (["shampoo_frequency"] as const) : []),
+      ],
+      missingInputs: [
+        "current_product_load",
+        ...(shampooFrequency.state === "unknown" ? (["shampoo_frequency"] as const) : []),
+      ],
+    }
+  }
+
+  let knownScore = oilyScalp ? 1 : 0
+  const hasProductLoadSignal = false
+
+  if (
+    shampooFrequency.state === "known" &&
+    LOW_OR_NO_WET_WASH_FREQUENCIES.has(shampooFrequency.value) &&
+    (oilyScalp || hasProductLoadSignal)
+  ) {
+    knownScore += 1
+    sourceFacts.push("deep_cleansing.load.low_wash_relative_to_load")
+  }
+
   return {
-    knowledgeState: "partial",
+    knowledgeState: shampooFrequency.state === "known" ? "known" : "partial",
     sourceFacts,
-    knownScore: oilyScalp ? 1 : 0,
-    unknownSignals: [
-      "dry_shampoo",
-      "leave_in",
-      "finishing_oil",
-      ...(shampooFrequency.state === "unknown" ? (["shampoo_frequency"] as const) : []),
-    ],
-    missingInputs: [
-      "current_product_load",
-      ...(shampooFrequency.state === "unknown" ? (["shampoo_frequency"] as const) : []),
-    ],
+    knownScore,
+    unknownSignals: shampooFrequency.state === "unknown" ? ["shampoo_frequency"] : [],
+    missingInputs: shampooFrequency.state === "unknown" ? ["shampoo_frequency"] : [],
   }
 }
 
-function buildScalpBuildupAssessment(): PlanScalpBuildupAssessment {
-  return { knowledgeState: "unknown", state: "unknown", sourceFacts: [] }
+function buildScalpBuildupAssessment(
+  currentProductLoad: PlanProfile["routine"]["currentProductLoad"],
+): PlanScalpBuildupAssessment {
+  if (currentProductLoad.state === "unknown") {
+    return { knowledgeState: "unknown", state: "unknown", sourceFacts: [] }
+  }
+
+  const sourceFacts = scalpBuildupSourceFacts(currentProductLoad.value)
+  return {
+    knowledgeState: "known",
+    state: sourceFacts.length > 0 ? "present" : "absent",
+    sourceFacts,
+  }
+}
+
+function scalpBuildupSourceFacts(currentProductLoad: PlanCurrentProductLoad): string[] {
+  void currentProductLoad
+  return []
 }
 
 function buildHeatExposureAssessment(profile: PlanProfile): PlanHeatExposureAssessment {
@@ -221,7 +277,7 @@ export function buildPlanNeedAssessment(profile: PlanProfile): PlanNeedAssessmen
     damage: buildDamageAssessment(profile),
     shampooCadence: buildShampooCadenceAssessment(profile),
     resetLoad: buildResetLoadAssessment(profile),
-    scalpBuildup: buildScalpBuildupAssessment(),
+    scalpBuildup: buildScalpBuildupAssessment(profile.routine.currentProductLoad),
     heatExposure: buildHeatExposureAssessment(profile),
     hairLossBoundary: buildHairLossBoundary(profile),
   }

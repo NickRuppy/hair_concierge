@@ -9,7 +9,9 @@ import {
   type RoutineProposalSheetDeltaEntry,
 } from "../src/components/routine/personal-plan/routine-proposal-sheet"
 import {
+  classifyProposalReload,
   friendlyError,
+  refreshRouteAfterInitialRoutineAcceptance,
   routineProposalDeltaEntries,
 } from "../src/components/routine/personal-plan/personal-plan-routine-client"
 import { RoutineProductDetail } from "../src/components/routine/personal-plan/routine-product-detail"
@@ -393,6 +395,79 @@ test("proposal sheet body separates initial confirmation from successor review c
   findByText(tree, "Erneut versuchen").props.onClick()
   findByText(tree, "Ablehnen").props.onClick()
   assert.deepEqual(events, ["later", "accept", "reject"])
+})
+
+test("proposal acceptance reload distinguishes lost response, same pending, and supersession", () => {
+  const candidate = payload([item()])
+  const pendingView = {
+    status: "proposal" as const,
+    personalPlanId: "plan-1",
+    planRevision: 1,
+    sourceRevision: 1,
+    activeVersion: null,
+    pendingProposal: {
+      id: "proposal-1",
+      candidateVersionId: candidate.versionId,
+      sourceRevision: 1,
+      delta: { schemaVersion: 1 as const, direct: [], consequential: [], unchangedItemCount: 1 },
+      candidate,
+    },
+  }
+  const acceptedView = {
+    ...pendingView,
+    status: "active" as const,
+    activeVersion: { id: candidate.versionId, payload: candidate },
+    pendingProposal: null,
+  }
+  const successorView = {
+    ...acceptedView,
+    pendingProposal: { ...pendingView.pendingProposal, id: "proposal-2" },
+  }
+
+  assert.equal(classifyProposalReload(pendingView, "proposal-1"), "same_pending")
+  assert.equal(classifyProposalReload(acceptedView, "proposal-1"), "resolved")
+  assert.equal(classifyProposalReload(successorView, "proposal-1"), "superseded")
+})
+
+test("initial Routine acceptance refreshes the server route so navigation gains Anwendung", () => {
+  let refreshes = 0
+  const refresh = () => refreshes++
+
+  refreshRouteAfterInitialRoutineAcceptance({
+    action: "accept",
+    wasInitial: true,
+    refresh,
+  })
+  refreshRouteAfterInitialRoutineAcceptance({
+    action: "reject",
+    wasInitial: true,
+    refresh,
+  })
+  refreshRouteAfterInitialRoutineAcceptance({
+    action: "accept",
+    wasInitial: false,
+    refresh,
+  })
+
+  assert.equal(refreshes, 1)
+})
+
+test("proposal sheet blocks duplicate requests only while a request is running", () => {
+  const tree = RoutineProposalSheetBody({
+    variant: "initial",
+    directChanges: [],
+    consequentialChanges: [],
+    unchangedItemCount: 1,
+    submitting: true,
+    retrying: true,
+    onAccept: () => undefined,
+  })
+
+  const submit = findAll(
+    tree,
+    (element) => textContent(element) === "Wird gespeichert …" && element.props.disabled === true,
+  )[0]
+  assert.ok(submit)
 })
 
 test("proposal deltas render frozen consumer labels instead of internal item keys", () => {

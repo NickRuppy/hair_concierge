@@ -6,12 +6,18 @@ import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
+import {
+  canAccessPersonalPlanJourneyStage,
+  type PersonalPlanJourneyAccess,
+} from "@/lib/personal-plan/journey-access"
+import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
 export type PersonalPlanRoutineAttentionRouteDeps = {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
+  loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   client: () => PersonalPlanRoutineReadClient
 }
 const response = (body: unknown, status = 200) =>
@@ -24,7 +30,12 @@ export function createPersonalPlanRoutineAttentionRouteHandlers(
     async GET() {
       const userId = await deps.getUserId()
       if (!userId) return response({ error: "unauthorized" }, 401)
+      if (!deps.enabled()) return response({ hasPendingProposal: false })
       try {
+        const journey = await deps.loadJourneyAccess(userId)
+        if (!canAccessPersonalPlanJourneyStage(journey, "stage4")) {
+          return response({ hasPendingProposal: false })
+        }
         return response(
           await loadPersonalPlanRoutineAttention({
             client: deps.client(),
@@ -42,6 +53,7 @@ export function createPersonalPlanRoutineAttentionRouteHandlers(
 const handlers = createPersonalPlanRoutineAttentionRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   client: () => createAdminClient() as unknown as PersonalPlanRoutineReadClient,
 })
 export const GET = handlers.GET

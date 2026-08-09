@@ -26,8 +26,10 @@ test("Stage 1 keeps the approved stable category order", () => {
 
 test("the initial routine context represents later facts as typed unknowns", () => {
   assert.deepEqual(INITIAL_UNKNOWN_ROUTINE_CONTEXT, {
+    currentProductLoad: { state: "unknown", reason: "current_product_load" },
     shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
     heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+    mechanicalExposureSignals: [],
     dryShampooBridgePreference: {
       state: "unknown",
       reason: "dry_shampoo_bridge_preference",

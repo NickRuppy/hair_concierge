@@ -66,16 +66,26 @@ export type PlanHeatToolUseEvent = {
   sourceRuleIds: string[]
 }
 
+export type PlanMechanicalExposureSignal = "towel_rough_rubbing"
+export type PlanCurrentProductLoad = {
+  categories: Stage1Category[]
+  oilPurposes: Array<"prewash_lengths" | "damp_leave_on" | "dry_finish" | "scalp">
+}
+
 export type PlanRoutineContext = {
+  currentProductLoad: PlanKnowledge<PlanCurrentProductLoad>
   shampooFrequency: PlanKnowledge<ProductFrequency | "does_not_wash">
   heatToolUse: PlanKnowledge<PlanHeatToolUseEvent[]>
+  mechanicalExposureSignals: PlanMechanicalExposureSignal[]
   dryShampooBridgePreference: PlanKnowledge<"accept" | "decline">
   scalpIrritationState: PlanKnowledge<"mild_sensitive_or_itchy" | "burning_painful_or_inflamed">
 }
 
 export const INITIAL_UNKNOWN_ROUTINE_CONTEXT: PlanRoutineContext = {
+  currentProductLoad: { state: "unknown", reason: "current_product_load" },
   shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
   heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+  mechanicalExposureSignals: [],
   dryShampooBridgePreference: {
     state: "unknown",
     reason: "dry_shampoo_bridge_preference",
@@ -137,6 +147,10 @@ export type PlanDamageAssessment = {
   structuralSignals: string[]
   mechanicalSignals: string[]
   heatSignals: string[]
+  heatEvents: PlanHeatToolUseEvent[]
+  ordinaryAirflowExposure:
+    | { state: "known"; events: PlanHeatToolUseEvent[] }
+    | { state: "unknown"; events: [] }
   repairPriority: PlanRepairPriority
   missingInputs: PlanMissingFactId[]
 }

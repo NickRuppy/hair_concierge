@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 
 import {
   BottomSheet,
@@ -67,6 +68,29 @@ function countBand(count: number): "0" | "1" | "2_4" | "5_plus" {
   if (count === 1) return "1"
   if (count <= 4) return "2_4"
   return "5_plus"
+}
+
+export type ProposalReloadClassification = "resolved" | "same_pending" | "superseded"
+
+export function classifyProposalReload(
+  view: PersonalPlanRoutineView,
+  attemptedProposalId: string,
+): ProposalReloadClassification {
+  if (view.pendingProposal?.id === attemptedProposalId) return "same_pending"
+  if (view.pendingProposal) return "superseded"
+  return "resolved"
+}
+
+export function refreshRouteAfterInitialRoutineAcceptance({
+  action,
+  wasInitial,
+  refresh,
+}: {
+  action: "accept" | "reject"
+  wasInitial: boolean
+  refresh: () => void
+}) {
+  if (action === "accept" && wasInitial) refresh()
 }
 
 function editorSeed(view: PersonalPlanRoutineView): RoutinePayloadV1 | null {
@@ -160,10 +184,13 @@ export function routineProposalDeltaEntries(
 export function PersonalPlanRoutineClient({
   initialView,
   enabled,
+  stage5Reachable,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
+  stage5Reachable: boolean
 }) {
+  const router = useRouter()
   const [view, setView] = React.useState(initialView)
   const [mode, setMode] = React.useState<Mode>("overview")
   // A successor proposal is intentionally non-blocking during the current
@@ -172,10 +199,12 @@ export function PersonalPlanRoutineClient({
   const [proposalOpen, setProposalOpen] = React.useState(Boolean(initialView.pendingProposal))
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)
   const [detailOpen, setDetailOpen] = React.useState(false)
   const syncedOnEntry = React.useRef(false)
   const displayedProposalId = React.useRef<string | null>(null)
+  const proposalResolutionInFlight = React.useRef(false)
   const initialAnalyticsVariant = React.useRef<"active" | "proposal" | "empty">(
     initialView.pendingProposal && !initialView.activeVersion
       ? "proposal"
@@ -303,9 +332,44 @@ export function PersonalPlanRoutineClient({
 
   const resolveProposal = React.useCallback(
     async (action: "accept" | "reject") => {
-      if (!pending) return
+      if (!pending || busy || proposalResolutionInFlight.current) return
+      proposalResolutionInFlight.current = true
+      const attemptedProposalId = pending.id
+      const retryMessage = "Deine Entscheidung konnte nicht gespeichert werden."
+      const reconcileReload = (next: PersonalPlanRoutineView, message: string | null) => {
+        const classification = classifyProposalReload(next, attemptedProposalId)
+        if (classification === "resolved") {
+          setProposalRetryId(null)
+          setError(null)
+          setProposalOpen(false)
+          routineAnalytics.track("personal_plan_stage4_proposal_interacted", {
+            interaction: action === "accept" ? "accepted" : "rejected",
+            origin: "routine_page",
+            changeCountBand: countBand(
+              pending.delta.direct.length + pending.delta.consequential.length,
+            ),
+          })
+          refreshRouteAfterInitialRoutineAcceptance({
+            action,
+            wasInitial: !view.activeVersion,
+            refresh: () => router.refresh(),
+          })
+          return
+        }
+
+        const currentProposalId = next.pendingProposal?.id ?? attemptedProposalId
+        setProposalRetryId(currentProposalId)
+        setProposalOpen(true)
+        setError(
+          classification === "superseded"
+            ? "Deine Routine hat sich inzwischen geändert. Prüfe den aktuellen Vorschlag."
+            : (message ?? retryMessage),
+        )
+      }
+
       setBusy(true)
       setError(null)
+      setProposalRetryId(null)
       try {
         const response = await fetch(`/api/personal-plan/routine/proposals/${pending.id}/resolve`, {
           method: "POST",
@@ -318,31 +382,31 @@ export function PersonalPlanRoutineClient({
             friendlyError(code, "Deine Entscheidung konnte nicht gespeichert werden."),
           )
         }
-        await reload()
-        setProposalOpen(false)
-        routineAnalytics.track("personal_plan_stage4_proposal_interacted", {
-          interaction: action === "accept" ? "accepted" : "rejected",
-          origin: "routine_page",
-          changeCountBand: countBand(
-            pending.delta.direct.length + pending.delta.consequential.length,
-          ),
-        })
+        const next = await reload()
+        reconcileReload(next, null)
       } catch (resolveError) {
-        setError(
-          resolveError instanceof Error
+        const message =
+          resolveError instanceof Error &&
+          [
+            "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+            "Deine Routine hat sich inzwischen geändert. Wir haben den aktuellen Stand neu geladen.",
+          ].includes(resolveError.message)
             ? resolveError.message
-            : "Deine Entscheidung konnte nicht gespeichert werden.",
-        )
+            : retryMessage
         try {
-          await reload()
+          const next = await reload()
+          reconcileReload(next, message)
         } catch {
-          // Keep the server proposal visible and the decision retryable.
+          setError(message)
+          setProposalRetryId(attemptedProposalId)
+          setProposalOpen(true)
         }
       } finally {
+        proposalResolutionInFlight.current = false
         setBusy(false)
       }
     },
-    [pending, reload, view.planRevision],
+    [busy, pending, reload, router, view.activeVersion, view.planRevision],
   )
 
   const openDetail = React.useCallback(async (item: RoutinePayloadV1["items"][number]) => {
@@ -445,6 +509,7 @@ export function PersonalPlanRoutineClient({
       ) : null}
       <RoutinePage
         view={view}
+        stage5Reachable={stage5Reachable}
         onEdit={canEdit ? openEditor : undefined}
         onConfirm={isInitial && enabled ? () => setProposalOpen(true) : undefined}
         onItemDetail={(item) => void openDetail(item)}
@@ -476,7 +541,8 @@ export function PersonalPlanRoutineClient({
             pending.candidate,
           )}
           unchangedItemCount={pending.delta.unchangedItemCount}
-          retrying={busy}
+          submitting={busy}
+          retrying={proposalRetryId === pending.id}
           errorMessage={error}
           onAccept={() => void resolveProposal("accept")}
           onBackToEditor={canEdit ? openEditor : undefined}

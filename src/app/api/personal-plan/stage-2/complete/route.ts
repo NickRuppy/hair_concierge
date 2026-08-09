@@ -6,6 +6,11 @@ import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createPersistedStage2RefinementGateway } from "@/lib/personal-plan/refinement/production-persistence-gateway"
 import {
+  canAccessPersonalPlanJourneyStage,
+  type PersonalPlanJourneyAccess,
+} from "@/lib/personal-plan/journey-access"
+import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+import {
   Stage2RefinementError,
   type Stage2RefinementGateway,
 } from "@/lib/personal-plan/refinement/gateway"
@@ -18,6 +23,7 @@ export type Stage2CompleteRouteDeps = {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
   gatewayFor: (userId: string) => Stage2RefinementGateway
+  loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
 }
 
 function response(body: unknown, status = 200) {
@@ -48,6 +54,13 @@ export function createStage2CompleteRouteHandler(deps: Stage2CompleteRouteDeps) 
     if (!deps.enabled()) return response({ error: "personal_plan_not_available" }, 404)
     const userId = await deps.getUserId()
     if (!userId) return response({ error: "unauthorized" }, 401)
+    try {
+      if (!canAccessPersonalPlanJourneyStage(await deps.loadJourneyAccess(userId), "stage2")) {
+        return response({ error: "stage_not_ready" }, 409)
+      }
+    } catch {
+      return response({ error: "temporarily_unavailable" }, 503)
+    }
     const parsed = completeRequestSchema.safeParse(await request.json().catch(() => null))
     if (!parsed.success) return response({ error: "invalid_request" }, 400)
     try {
@@ -66,6 +79,7 @@ export function createStage2CompleteRouteHandler(deps: Stage2CompleteRouteDeps) 
 export const POST = createStage2CompleteRouteHandler({
   enabled: isPersonalPlanAppV1Enabled,
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   gatewayFor: (userId) =>
     createPersistedStage2RefinementGateway({
       userId,

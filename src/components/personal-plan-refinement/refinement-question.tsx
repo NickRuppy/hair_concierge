@@ -540,7 +540,7 @@ function renderQuestionBody({
         body: (
           <RefinementOptions
             options={DRYING_ROUTE_OPTIONS}
-            value={(answer ?? []) as string[]}
+            value={answer as string[] | undefined}
             multi
             allowNone
             noneDescription="Keiner dieser Wege trifft gerade zu."
@@ -563,7 +563,7 @@ function renderQuestionBody({
         body: (
           <RefinementOptions
             options={ADDITIONAL_HEAT_TOOL_OPTIONS}
-            value={(answer ?? []) as string[]}
+            value={answer as string[] | undefined}
             multi
             allowNone
             noneDescription="Ich nutze keine weiteren Hitze-Tools."
@@ -580,7 +580,7 @@ function renderQuestionBody({
         body: (
           <RefinementOptions
             options={NIGHT_PROTECTION_OPTIONS}
-            value={(answer ?? []) as string[]}
+            value={answer as string[] | undefined}
             multi
             allowNone
             noneDescription="Ich nutze meistens keinen dieser Nachtschutz-Schritte."

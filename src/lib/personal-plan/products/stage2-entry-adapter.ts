@@ -1,7 +1,12 @@
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
-import type { PersonalPlanCategory, Stage3EntryContext } from "./contracts"
+import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "./contracts"
+import type {
+  PersonalPlanCategory,
+  Stage3AuthoritySnapshotV1,
+  Stage3EntryContext,
+} from "./contracts"
 
 const NEED_SUMMARIES: Record<PersonalPlanCategory, string> = {
   shampoo: "Reinigt Kopfhaut und Haar passend zu deiner Wasch-Routine.",
@@ -26,10 +31,28 @@ function requireOpaqueId(value: string, label: keyof Stage3EntryIds): string {
   return value
 }
 
+function stage3OrderedCategories(snapshot: InitialNeedPlanSnapshot): PersonalPlanCategory[] {
+  const renderedCategories = new Set<PersonalPlanCategory>(snapshot.renderedOrder)
+  const inventoryOnlyCategories = new Set<PersonalPlanCategory>()
+  const routine = snapshot.profile.routine
+  if (routine?.currentProductLoad.state === "known") {
+    for (const category of routine.currentProductLoad.value.categories) {
+      if (!renderedCategories.has(category)) {
+        inventoryOnlyCategories.add(category)
+      }
+    }
+  }
+
+  return [
+    ...snapshot.renderedOrder,
+    ...PERSONAL_PLAN_PRODUCT_CATEGORIES.filter((category) => inventoryOnlyCategories.has(category)),
+  ]
+}
+
 export function buildStage3EntryContext(
   snapshot: InitialNeedPlanSnapshot,
   ids: Stage3EntryIds,
-): Stage3EntryContext {
+): Stage3EntryContext & { authoritySnapshot: Stage3AuthoritySnapshotV1 } {
   if (snapshot.profile.source.projection !== "refined_post_plan") {
     throw new Error("Stage 3 entry requires a refined_post_plan snapshot")
   }
@@ -39,23 +62,39 @@ export function buildStage3EntryContext(
 
   const personalPlanId = requireOpaqueId(ids.personalPlanId, "personalPlanId")
   const refinedVersionId = requireOpaqueId(ids.refinedVersionId, "refinedVersionId")
+  const orderedCategories = stage3OrderedCategories(snapshot)
+  const renderedCategories = new Set(snapshot.renderedOrder)
+  const inventoryOnlyCategories = orderedCategories.filter(
+    (category) => !renderedCategories.has(category),
+  )
+  const categoryDecisions = snapshot.renderedOrder.map((category) => {
+    const matches = snapshot.decisions.filter((candidate) => candidate.category === category)
+    if (matches.length !== 1) {
+      throw new Error(`Stage 3 entry requires exactly one refined decision for ${category}`)
+    }
+    return matches[0]!
+  })
+  if (!snapshot.inputHash?.trim()) {
+    throw new Error("Stage 3 entry requires a refined input hash")
+  }
 
   return {
     schemaVersion: 1,
     personalPlanId,
     refinedVersionId,
-    orderedCategories: snapshot.renderedOrder.map((category) => {
+    orderedCategories: orderedCategories.map((category) => {
       const decision = snapshot.decisions.find((candidate) => candidate.category === category)
-      if (!decision) throw new Error(`Stage 3 entry is missing a refined decision for ${category}`)
       const authority = CATEGORY_ROLE_POLICIES[category]
-      const requiredRoles = decision.roles.filter((role) =>
+      const requiredRoles = (decision?.roles ?? []).filter((role) =>
         authority.allowedRoles.includes(role as never),
       )
-      if (requiredRoles.length !== decision.roles.length) {
+      if (decision && requiredRoles.length !== decision.roles.length) {
         throw new Error(`Stage 3 role is not allowed for category ${category}`)
       }
       const qualifyingRoutes =
-        category === "heat_protectant" ? requireHeatQualifyingRoutes(decision.target) : undefined
+        category === "heat_protectant" && decision
+          ? requireHeatQualifyingRoutes(decision.target)
+          : undefined
 
       return {
         category,
@@ -65,11 +104,48 @@ export function buildStage3EntryContext(
         authorityVersion: authority.authorityVersion,
       }
     }),
-    inventoryPrompts: snapshot.renderedOrder.map((category) => ({
+    inventoryPrompts: orderedCategories.map((category) => ({
       category,
       allowsMultiple: CATEGORY_ROLE_POLICIES[category].allowsMultiple,
       allowsExplicitNone: true,
     })),
+    authoritySnapshot: {
+      schemaVersion: 1,
+      refinedNeedVersionId: refinedVersionId,
+      refinedInputHash: snapshot.inputHash,
+      ...(snapshot.profile.routine
+        ? {
+            productLoadContext: {
+              schemaVersion: 1 as const,
+              scalpOiliness: snapshot.profile.scalp.oiliness,
+              deepCleansingScalpPause:
+                snapshot.profile.scalp.concerns.includes("irritated") ||
+                snapshot.profile.scalp.concerns.includes("dry_dandruff"),
+              hasLowVolumeOrWeighedDown: snapshot.profile.concerns.includes(
+                "low_volume_or_weighed_down",
+              ),
+              shampooFrequency:
+                snapshot.profile.routine.shampooFrequency.state === "known"
+                  ? snapshot.profile.routine.shampooFrequency.value
+                  : null,
+              oilPurposes:
+                snapshot.profile.routine.currentProductLoad.state === "known"
+                  ? [...snapshot.profile.routine.currentProductLoad.value.oilPurposes]
+                  : [],
+            },
+          }
+        : {}),
+      categoryDecisions,
+      coverage: [...snapshot.coverage],
+      orderedCategories: [...orderedCategories],
+      inventoryOnlyCategories,
+      authorityVersions: Object.fromEntries(
+        Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+          category,
+          policy.authorityVersion,
+        ]),
+      ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    },
   }
 }
 

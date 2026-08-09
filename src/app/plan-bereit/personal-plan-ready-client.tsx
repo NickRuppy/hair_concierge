@@ -13,7 +13,13 @@ import {
 
 type ReadinessPhase = "checking" | "ready" | "timeout" | "error"
 
-export function PersonalPlanReadyClient({ leadId }: { leadId: string }) {
+export function PersonalPlanReadyClient({
+  leadId,
+  nextHref,
+}: {
+  leadId: string
+  nextHref: "/plan-start" | "/onboarding?returnTo=%2Froutine"
+}) {
   const [storyIndex, setStoryIndex] = useState(0)
   const [storyComplete, setStoryComplete] = useState(false)
   const [readiness, setReadiness] = useState<ReadinessPhase>("checking")
@@ -121,10 +127,10 @@ export function PersonalPlanReadyClient({ leadId }: { leadId: string }) {
               </div>
 
               <Link
-                href="/onboarding?returnTo=%2Froutine"
+                href={nextHref}
                 className="inline-flex min-h-14 w-full items-center justify-center rounded-full bg-[#88466c] px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#743b5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88466c] focus-visible:ring-offset-2"
               >
-                Plan mit Produkten verfeinern
+                Plan ansehen
               </Link>
             </div>
           ) : (

@@ -33,7 +33,7 @@ test("story progression exposes each message before completion", () => {
   assert.equal(personalPlanStoryIndexAt(6_600), 2)
 })
 
-test("readiness failures surface a recoverable error instead of polling forever", () => {
+test("readiness failures are recoverable and the ready CTA stays explicit", () => {
   const route = readFileSync(
     new URL("../src/app/plan-bereit/status/route.ts", import.meta.url),
     "utf8",
@@ -53,6 +53,8 @@ test("readiness failures surface a recoverable error instead of polling forever"
   assert.match(client, /!response\.ok \|\| body\.status === "error"/)
   assert.match(client, /method: attempts === 1 \? "POST" : "GET"/)
   assert.match(client, /\/plan-bereit\/status\?lead=/)
+  assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
+  assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Plan ansehen/)
   assert.match(route, /loadPersonalPlanReadiness\(admin, user\.id, user\.email, leadId\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)

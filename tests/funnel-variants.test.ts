@@ -87,6 +87,11 @@ test("result route preserves trusted stored result context before recording an o
 test("result route keeps fresh quiz completions distinct from saved-result visits", () => {
   assert.match(resultPageSource, /const entry = getQuizResultSearchParamValue\(sp\.entry\)/)
   assert.match(resultPageSource, /entry === "quiz_completion"/)
+  assert.match(resultPageSource, /input\.entry !== "quiz_return"/)
+  assert.match(resultPageSource, /isPersonalPlanResultReturnForLead/)
+  assert.match(resultPageSource, /trustedPersonalPlanResultReturn/)
+  assert.match(resultPageSource, /entryContext === "quiz_return"/)
+  assert.match(resultPageSource, /funnelEventId: null/)
   assert.match(resultPageSource, /entryContext=\{entryContext\}/)
   assert.match(resultClientSource, /entryContext \?\? \(focusRoutine \? "routine_return"/)
   assert.match(resultClientSource, /entryContext=\{resolvedEntryContext\}/)

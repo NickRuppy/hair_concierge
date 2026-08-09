@@ -82,7 +82,7 @@ test.describe("Personal Plan products lab", () => {
     await continueFromTransition(page, "Produkte prüfen")
     await expect(page.getByText("Passt sehr gut", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /weiterverwenden/ }).click()
-    await expect(page.getByText("Wechseln empfohlen", { exact: true })).toBeVisible()
+    await expect(page.getByText("Passt nicht zu deinem Bedarf", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /einplanen/ }).click()
     for (let index = 0; index < 3; index += 1) {
       await expect(page.getByText("Passt sehr gut", { exact: true })).toBeVisible()
@@ -90,12 +90,16 @@ test.describe("Personal Plan products lab", () => {
     }
     await expect(page.getByText("Noch in Prüfung", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /Prüfung später fortsetzen/ }).click()
-    await expect(page.getByText("Offene Lücke", { exact: true })).toBeVisible()
+    await expect(page.getByText("Noch nicht beurteilbar", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /Lücke im Plan markieren/ }).click()
 
-    await expect(page.getByRole("heading", { name: "Deine Produktauswahl steht." })).toBeVisible()
-    await continueFromTransition(page, "Routine öffnen")
-    await expect(page.getByText(/Portfolio fixture-portfolio-/i)).toBeVisible()
+    await expect(
+      page.getByRole("heading", { name: "Deine Produkte sind vorbereitet." }),
+    ).toBeVisible()
+    await expect(page.getByRole("button", { name: "Routine öffnen" })).toBeVisible()
+    await expect(page.locator("body")).not.toContainText(
+      /fixture-(?:portfolio|routine|personal-plan|refined-version)/i,
+    )
     await expect(page.locator("body")).not.toContainText(/\b(?:Pass\s*[12]|Stage\s*3|Part)\b/i)
   })
 

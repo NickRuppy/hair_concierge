@@ -11,6 +11,10 @@ import {
   type Stage3ProductDraft,
   type Stage3UncoveredRole,
 } from "./contracts"
+import {
+  effectiveStage3Requirements,
+  requireCurrentProductLoadResolution,
+} from "./product-load-resolution"
 
 type CreatePortfolioOptions = {
   portfolioVersionId: string
@@ -22,7 +26,9 @@ export function createProposedProductPortfolio(
   requirements: Stage3CategoryRequirement[],
   options: CreatePortfolioOptions,
 ): ProposedProductPortfolio {
-  const pathState = computeStage3PathState(draft, requirements)
+  requireCurrentProductLoadResolution(draft)
+  const effectiveRequirements = effectiveStage3Requirements(requirements, draft)
+  const pathState = computeStage3PathState(draft, effectiveRequirements)
   if (!pathState.canCreatePortfolio) {
     throw new Error("Cannot create portfolio from incomplete draft")
   }
@@ -82,7 +88,7 @@ export function createProposedProductPortfolio(
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: draft.productLoadResolution ? 2 : 1,
     portfolioVersionId: options.portfolioVersionId,
     personalPlanId: draft.personalPlanId,
     refinedVersionId: draft.refinedVersionId,
@@ -92,6 +98,7 @@ export function createProposedProductPortfolio(
     plannedPurchases,
     pendingProducts,
     uncoveredRoles,
+    ...(draft.productLoadResolution ? { productLoadResolution: draft.productLoadResolution } : {}),
     createdAt: options.createdAt,
   }
 }

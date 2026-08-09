@@ -5,13 +5,14 @@ import Link from "next/link"
 import { ArrowDown, ChevronDown } from "lucide-react"
 
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
+import { WistiaVideo } from "@/components/organic-plan-offer/wistia-video"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import { buildPersonalPlanAssessmentRows } from "@/lib/personal-plan-quiz/assessment-copy"
 import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment"
 import { adaptLegacyQuizAnswersForAssessment } from "@/lib/personal-plan-quiz/offer-adapter"
 import type { PersonalPlanDiagnosticDimension } from "@/components/personal-plan-offer/types"
 
-const ORGANIC_PLAN_OFFER_REVISION = "organic_plan_v1"
+const ORGANIC_PLAN_OFFER_REVISION = "organic_plan_v2"
 
 const planHighlights: ReadonlyArray<{ emphasis: string; prefix?: string; rest: string }> = [
   {
@@ -266,6 +267,10 @@ export function OrganicPlanOffer({
           <p className="mx-auto mt-3 max-w-[36rem] text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)] sm:text-lg">
             {profileLine(quizAnswers)}
           </p>
+          <p className="mx-auto mt-5 max-w-[36rem] text-base font-bold leading-6 text-[var(--brand-plum-darkest)] sm:text-lg">
+            Schau dir zuerst das Video an:
+          </p>
+          <WistiaVideo />
         </section>
 
         <section

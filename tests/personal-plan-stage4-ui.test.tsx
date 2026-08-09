@@ -111,7 +111,7 @@ test("renders Basis before Optional and preserves adjacent cards for the same ca
   assert.match(html, /Geplant/)
 })
 
-test("uses proposal copy initially, but continues showing the active snapshot while a proposal is pending", () => {
+test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 frontier is reachable", () => {
   const active = payload([item({ product: { kind: "owned", displayName: "Aktives Shampoo" } })])
   const candidate = payload([
     item({
@@ -134,11 +134,21 @@ test("uses proposal copy initially, but continues showing the active snapshot wh
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
     /Deine Routine steht/,
   )
-  const html = renderToStaticMarkup(<RoutinePage view={activeWithPending} />)
+  const html = renderToStaticMarkup(
+    <RoutinePage view={activeWithPending} stage5Reachable={false} />,
+  )
   assert.match(html, /Deine Routine/)
   assert.doesNotMatch(html, /Deine Routine steht/)
   assert.match(html, /Aktives Shampoo/)
   assert.doesNotMatch(html, /Neues Shampoo/)
+  assert.doesNotMatch(html, /Anwendungsplan ansehen/)
+  const stage5Html = renderToStaticMarkup(<RoutinePage view={activeWithPending} stage5Reachable />)
+  assert.match(stage5Html, /href="\/anwendung"/)
+  assert.match(stage5Html, /Anwendungsplan ansehen/)
+  assert.doesNotMatch(
+    renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
+    /Anwendungsplan ansehen/,
+  )
 })
 
 test("states non-executable conditions plainly and keeps editing global", () => {

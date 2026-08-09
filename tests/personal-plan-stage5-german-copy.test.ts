@@ -63,6 +63,22 @@ test("unavailable retry refreshes the server route instead of linking to the sam
   assert.doesNotMatch(source, /actionHref: "\/anwendung"/)
 })
 
+test("an unavailable direct day offers the bounded overview while transient failures retry", () => {
+  const dayUnavailable = renderToStaticMarkup(
+    createElement(ApplicationPage, {
+      view: { state: "day_unavailable", overviewHref: "/anwendung" },
+    }),
+  )
+  assert.match(dayUnavailable, /Dieser Anwendungstag ist gerade nicht verfügbar/)
+  assert.match(dayUnavailable, /href="\/anwendung"/)
+  assert.match(dayUnavailable, /Zur Übersicht/)
+
+  const source = readFileSync("src/components/application/application-state.tsx", "utf8")
+  assert.match(source, /actionLabel: "Erneut laden"/)
+  assert.match(source, /router\.refresh\(\)/)
+  assert.match(source, /var\(--personal-plan-shell-bottom-padding,0px\)/)
+})
+
 test("customer-facing Anwendung source avoids calendar, tracking, and completion semantics", () => {
   const files = [
     "src/components/application/application-page.tsx",

@@ -146,7 +146,7 @@ jobs:
 
   personal-plan-db-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     needs: [detect-ci-scope]
     steps:
       - uses: actions/checkout@v6
@@ -160,9 +160,15 @@ jobs:
       - name: Install dependencies
         if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
         run: npm ci
+      - name: Install Playwright browsers
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: npx playwright install --with-deps chromium
       - name: Run local Personal Plan database contracts
         if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
         run: time npm run test:personal-plan-db
+      - name: Run persisted Personal Plan browser journey
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: time npm run test:playwright:personal-plan-stage1-5
 
   playwright-smoke:
     runs-on: ubuntu-latest

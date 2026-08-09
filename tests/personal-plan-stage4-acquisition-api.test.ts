@@ -76,6 +76,7 @@ test("acquisition route authenticates before admin service construction and reje
   let response = await createPersonalPlanRoutineAcquireRouteHandlers({
     enabled: () => true,
     getUserId: async () => null,
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     service: () => {
       constructed = true
       return {} as never
@@ -89,6 +90,7 @@ test("acquisition route authenticates before admin service construction and reje
   response = await createPersonalPlanRoutineAcquireRouteHandlers({
     enabled: () => false,
     getUserId: async () => "owner-a",
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     service: () => ({ acquire: async () => ({ status: "not_found" }) }) as never,
   }).POST(new Request("http://local", { method: "POST" }), {
     params: Promise.resolve({ itemKey: "planned-oil" }),

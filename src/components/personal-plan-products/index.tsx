@@ -264,11 +264,11 @@ export function ProductCaptureScreen({
   onOpenFallbackIntake: () => void
   onExplicitNone?: () => void
   onContinue: () => void
-  onBack: () => void
+  onBack?: () => void
 }) {
   return (
     <section>
-      <BackButton onBack={onBack} />
+      {onBack ? <BackButton onBack={onBack} /> : null}
       <div className="animate-fade-in-up mb-2">
         <h1 className="font-header text-3xl leading-tight text-foreground">Dein {categoryLabel}</h1>
       </div>
@@ -790,8 +790,12 @@ function DecisionCard({
             type="button"
             variant={primaryActionKinds.has(action.kind) ? "default" : "outline"}
             onClick={() => onChooseAction(decision.decisionKey, action)}
+            data-stage3-decision-key={decision.decisionKey}
+            data-stage3-action-kind={action.kind}
             aria-label={
-              action.productName ? `${action.label}: ${action.productName}` : action.label
+              action.productName
+                ? `${action.label}: ${action.productName}`
+                : `${action.label}: ${decision.categoryLabel} — ${decision.needSummary}`
             }
           >
             {action.label}

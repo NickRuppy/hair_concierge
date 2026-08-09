@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -65,4 +66,32 @@ test("result page client passes persisted quiz answers into the organic offer", 
   assert.match(html, /Die Highlights deines Plans/i)
   assert.match(html, /id="personal_plan_complete_plan"/i)
   assert.match(html, /id="pricing"/i)
+})
+
+test("result restart waits for a successful reset before clearing browser state and navigating", () => {
+  const offerSource = readFileSync(
+    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(offerSource, /fetch\("\/api\/quiz\/personal-plan-result-return\/reset",/)
+  assert.match(offerSource, /credentials: "same-origin"/)
+  assert.match(offerSource, /response\.status !== 204/)
+  assert.match(offerSource, /clearPersonalPlanQuizDraft/)
+  assert.match(offerSource, /clearPersonalPlanPreparedPlanClaim/)
+  assert.match(offerSource, /window\.location\.replace\("\/lp\/haarplan"\)/)
+  const resetStatusCheck = offerSource.indexOf("response.status !== 204")
+  const localDraftClear = offerSource.indexOf("clearPersonalPlanQuizDraft", resetStatusCheck)
+  assert.ok(
+    resetStatusCheck < localDraftClear,
+    "browser data must only be cleared after the reset endpoint confirms 204",
+  )
+  assert.ok(
+    localDraftClear < offerSource.indexOf('window.location.replace("/lp/haarplan")'),
+    "navigation must follow local cleanup",
+  )
+  assert.match(offerSource, /Restricted browser contexts can block access/)
+  assert.doesNotMatch(offerSource, /local result return reset failed/)
+  assert.match(offerSource, /Das hat gerade nicht geklappt\. Bitte versuche es noch einmal\./)
+  assert.doesNotMatch(offerSource, /fresh=1/)
 })

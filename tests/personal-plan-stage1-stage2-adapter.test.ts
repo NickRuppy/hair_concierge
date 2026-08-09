@@ -6,6 +6,7 @@ import {
   buildPlanRoutineContextFromCompletedRefinement,
   deriveStage2TriggerContext,
 } from "../src/lib/personal-plan/refinement/stage1-adapter"
+import type { PlanRoutineContext } from "../src/lib/personal-plan/types"
 import type {
   PersonalPlanRefinementAnswersV1,
   Stage2QuestionId,
@@ -87,6 +88,13 @@ test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 reco
   })
 
   assert.deepEqual(routine, {
+    currentProductLoad: {
+      state: "known",
+      value: {
+        categories: ["shampoo"],
+        oilPurposes: [],
+      },
+    },
     shampooFrequency: { state: "known", value: "weekly_2x" },
     heatToolUse: {
       state: "known",
@@ -107,6 +115,7 @@ test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 reco
         },
       ],
     },
+    mechanicalExposureSignals: [],
     dryShampooBridgePreference: { state: "known", value: "accept" },
     scalpIrritationState: { state: "known", value: "mild_sensitive_or_itchy" },
   })
@@ -131,6 +140,119 @@ test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 reco
     refined.snapshot.decisions.find((decision) => decision.category === "heat_protectant")
       ?.needTier,
     "basis",
+  )
+})
+
+test("refined towel technique projects only explicit rough rubbing as mechanical exposure", () => {
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+
+  for (const [towel, expected] of [
+    [{ material: "frottee", technique: "rough_rubbing" }, ["towel_rough_rubbing"]],
+    [{ material: "frottee", technique: "gentle_press" }, []],
+    [{ material: "no_towel" }, []],
+  ] as const) {
+    const routine: PlanRoutineContext = buildPlanRoutineContextFromCompletedRefinement({
+      triggerContext,
+      answers: { ...completedAnswers, towel },
+      completedQuestionIds,
+    })
+
+    assert.deepEqual(routine.mechanicalExposureSignals, expected)
+  }
+})
+
+test("completed current-product categories clear current-product-load deferrals", () => {
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext,
+    answers: {
+      ...completedAnswers,
+      currentProductCategories: [],
+      dryShampooBridgePreference: "decline",
+    },
+    completedQuestionIds,
+  })
+
+  const refined = computeNeedPlan({
+    rawEnvelope: irritatedOilyEnvelope,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "refined_post_plan",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-07T12:10:00.000Z",
+    routine,
+  })
+
+  assert.equal(refined.status, "ready")
+  if (refined.status !== "ready") return
+  assert.equal(refined.snapshot.deferredFacts.includes("current_product_load"), false)
+  assert.equal(
+    refined.snapshot.decisions
+      .find((decision) => decision.category === "deep_cleansing_shampoo")
+      ?.deferredFacts.includes("current_product_load"),
+    false,
+  )
+  assert.equal(
+    refined.snapshot.decisions
+      .find((decision) => decision.category === "scalp_care")
+      ?.deferredFacts.includes("current_product_load"),
+    false,
+  )
+})
+
+test("current product categories stay inventory-routing facts instead of frequency load", () => {
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext,
+    answers: {
+      ...completedAnswers,
+      currentProductCategories: ["leave_in", "oil", "dry_shampoo"],
+      wetWashFrequency: "weekly_1x",
+      oilPurposes: ["dry_finish", "scalp"],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "scalp_irritation_detail",
+      "dry_shampoo_visible_hair_color",
+      "oil_purposes",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+      "heat:diffuser_airflow_shaping",
+      "heat:straightener",
+      "night_protection",
+    ],
+  })
+
+  const refined = computeNeedPlan({
+    rawEnvelope: irritatedOilyEnvelope,
+    artifactId: "11111111-1111-4111-8111-111111111111",
+    projection: "refined_post_plan",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-07T12:10:00.000Z",
+    routine,
+  })
+
+  assert.equal(refined.status, "ready")
+  if (refined.status !== "ready") return
+  assert.equal(refined.snapshot.assessments.resetLoad.knowledgeState, "known")
+  assert.equal(refined.snapshot.assessments.resetLoad.knownScore, 2)
+  assert.deepEqual(refined.snapshot.assessments.resetLoad.missingInputs, [])
+  assert.deepEqual(refined.snapshot.assessments.scalpBuildup, {
+    knowledgeState: "known",
+    state: "absent",
+    sourceFacts: [],
+  })
+  assert.deepEqual(
+    refined.snapshot.decisions.find((decision) => decision.category === "deep_cleansing_shampoo")
+      ?.deferredFacts,
+    [],
+  )
+  assert.deepEqual(
+    refined.snapshot.decisions
+      .find((decision) => decision.category === "scalp_care")
+      ?.roles.includes("scalp_exfoliant"),
+    false,
   )
 })
 

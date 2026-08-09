@@ -6,6 +6,7 @@ import {
   createStage3RouteHandlers,
   type Stage3RouteDeps,
 } from "../src/app/api/personal-plan/stage-3/route"
+import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 
 const draft = {
   schemaVersion: 1 as const,
@@ -38,10 +39,19 @@ const requirements = [
   },
 ]
 
+const stage3Access: PersonalPlanJourneyAccess = {
+  kind: "personal_plan",
+  personalPlanId: draft.personalPlanId,
+  frontier: "stage3",
+  nextHref: "/plan-start",
+  allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+}
+
 function deps(overrides: Partial<Stage3RouteDeps> = {}): Stage3RouteDeps {
   return {
     enabled: () => true,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
     checkRateLimit: async () => ({ allowed: true }),
     gatewayFor: (userId) => ({
       loadOrCreate: async (input) => ({
@@ -68,6 +78,42 @@ function deps(overrides: Partial<Stage3RouteDeps> = {}): Stage3RouteDeps {
     ...overrides,
   }
 }
+
+test("Stage 3 fails closed before rate-limit and gateway work without current refined authority", async () => {
+  let rateChecks = 0
+  let gatewayCalls = 0
+  const response = await createStage3RouteHandlers(
+    deps({
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: draft.personalPlanId,
+        frontier: "stage2",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
+      }),
+      checkRateLimit: async () => {
+        rateChecks += 1
+        return { allowed: true }
+      },
+      gatewayFor: () => {
+        gatewayCalls += 1
+        return deps().gatewayFor("owner-1")
+      },
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: { type: "remove_captured_product", capturedProductId: "x" },
+      }),
+    }),
+  )
+  assert.deepEqual([response!.status, await response!.json()], [409, { error: "stage_not_ready" }])
+  assert.equal(rateChecks, 0)
+  assert.equal(gatewayCalls, 0)
+})
 
 test("Stage 3 main boundary preserves flag, auth, validation and per-owner rate-limit outcomes", async () => {
   const url = `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`
@@ -172,6 +218,31 @@ test("Stage 3 GET is not mutation-rate-limited and PATCH rejects forged/server-o
   )
   assert.deepEqual([response!.status, await response!.json()], [400, { error: "invalid_request" }])
   assert.equal(rateChecks, 1)
+
+  response = await handlers.PATCH(
+    new Request(url, {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: 2,
+        mutation: {
+          type: "record_decision",
+          decision: {
+            decisionKey: "decision:shampoo:shampoo_everyday:forged",
+            category: "shampoo",
+            role: "shampoo_everyday",
+            capturedProductId: "forged",
+            verdict: "ideal",
+            choiceState: "owned_active",
+            criterionResults: [],
+            recommendation: null,
+            limitationAcknowledged: false,
+          },
+        },
+      }),
+    }),
+  )
+  assert.deepEqual([response!.status, await response!.json()], [400, { error: "invalid_request" }])
 })
 
 test("Stage 3 GET exposes the authoritative refined requirements", async () => {
@@ -179,6 +250,155 @@ test("Stage 3 GET exposes the authoritative refined requirements", async () => {
   const response = await createStage3RouteHandlers(deps()).GET(new Request(url))
   const body = await response!.json()
   assert.deepEqual(body.requirements, requirements)
+  assert.deepEqual(body.authorityEvaluations, [])
+})
+
+test("Stage 3 GET exposes server authority projections after capture", async () => {
+  let evaluatedDraftId = ""
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => ({
+          status: "active",
+          draft: { ...draft, pass: "product_decisions" as const },
+          requirements,
+        }),
+        evaluateDecisions: async ({ draftId }) => {
+          evaluatedDraftId = draftId
+          return [
+            {
+              status: "unknown" as const,
+              category: "shampoo" as const,
+              subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+              missingFacts: ["verified_protocol"],
+              criteria: [],
+              allowedActions: ["leave_uncovered" as const],
+              coverageRuleIds: [],
+            },
+          ]
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+  const body = await response!.json()
+  assert.equal(response!.status, 200)
+  assert.equal(evaluatedDraftId, draft.draftId)
+  assert.equal(body.authorityEvaluations[0]?.status, "unknown")
+})
+
+test("Stage 3 PATCH accepts semantic decision intent without accepting a client decision", async () => {
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecision: async (input: unknown) => {
+            received = input
+            return { status: "saved", draft }
+          },
+        }) as never,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+          action: "keep_owned",
+        },
+      }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intent: {
+      type: "resolve_decision",
+      subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+      action: "keep_owned",
+    },
+  })
+})
+
+test("Stage 3 PATCH accepts one atomic complete category-role replacement", async () => {
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        mutate: async (input) => {
+          received = input
+          return { status: "saved", draft }
+        },
+      }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: {
+          type: "replace_category_role_assignments",
+          category: "shampoo",
+          assignments: [
+            {
+              capturedProductId: "shampoo-primary",
+              category: "shampoo",
+              roles: ["shampoo_everyday"],
+            },
+          ],
+        },
+      }),
+    }),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    mutation: {
+      type: "replace_category_role_assignments",
+      category: "shampoo",
+      assignments: [
+        {
+          capturedProductId: "shampoo-primary",
+          category: "shampoo",
+          roles: ["shampoo_everyday"],
+        },
+      ],
+    },
+  })
+})
+
+test("Stage 3 PATCH rejects the legacy partial per-product role mutation", async () => {
+  const response = await createStage3RouteHandlers(deps()).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: {
+          type: "assign_roles",
+          capturedProductId: "shampoo-primary",
+          category: "shampoo",
+          roles: ["shampoo_everyday"],
+        },
+      }),
+    }),
+  )
+
+  assert.deepEqual([response!.status, await response!.json()], [400, { error: "invalid_request" }])
 })
 
 test("production Stage 3 completion composes the deterministic compiler and one-RPC stager", async () => {

@@ -132,6 +132,86 @@ test("shared damage lanes distinguish rare from material Heat and keep elasticit
   assert.equal(frequent.damage.repairPriority, "medium")
 })
 
+test("ordinary airflow retains its route and frequency as a distinct Mask exposure fact", () => {
+  const assessment = assess(
+    {
+      chemicalTreatments: ["natural"],
+      hairSurface: "smooth",
+      elasticResponse: "stretches_bounces",
+      currentConcerns: [],
+    },
+    {
+      ...INITIAL_UNKNOWN_ROUTINE_CONTEXT,
+      heatToolUse: {
+        state: "known",
+        value: [
+          {
+            id: "frequent-ordinary-airflow",
+            tool: "hair_dryer",
+            route: "ordinary_airflow",
+            frequency: "weekly_3_4x",
+            sourceRuleIds: ["test.ordinary-airflow"],
+          },
+          {
+            id: "rare-direct-heat",
+            tool: "straightener",
+            route: "direct_contact_heat",
+            frequency: "monthly_1x",
+            sourceRuleIds: ["test.direct-heat"],
+          },
+        ],
+      },
+    },
+  )
+
+  assert.deepEqual(assessment.damage.ordinaryAirflowExposure, {
+    state: "known",
+    events: [
+      {
+        id: "frequent-ordinary-airflow",
+        tool: "hair_dryer",
+        route: "ordinary_airflow",
+        frequency: "weekly_3_4x",
+        sourceRuleIds: ["test.ordinary-airflow"],
+      },
+    ],
+  })
+  assert.deepEqual(
+    assessment.heatExposure.events.map((event) => event.id),
+    ["frequent-ordinary-airflow", "rare-direct-heat"],
+  )
+})
+
+test("refined mechanical exposure maps rough rubbing to moderate and adds nothing otherwise", () => {
+  const baseRoutine: PlanRoutineContext = {
+    ...INITIAL_UNKNOWN_ROUTINE_CONTEXT,
+    heatToolUse: { state: "known", value: [] },
+  }
+  const roughRoutine: PlanRoutineContext = {
+    ...baseRoutine,
+    mechanicalExposureSignals: ["towel_rough_rubbing"],
+  }
+  const gentleOrNoTowelRoutine: PlanRoutineContext = {
+    ...baseRoutine,
+    mechanicalExposureSignals: [],
+  }
+  const profile = {
+    chemicalTreatments: ["natural" as const],
+    hairSurface: "smooth" as const,
+    elasticResponse: "stretches_bounces" as const,
+    currentConcerns: [],
+  }
+
+  const rough = assess(profile, roughRoutine)
+  const gentleOrNoTowel = assess(profile, gentleOrNoTowelRoutine)
+
+  assert.equal(rough.damage.mechanicalLevel, "moderate")
+  assert.deepEqual(rough.damage.mechanicalSignals, ["towel_rough_rubbing"])
+  assert.equal(rough.damage.repairPriority, "medium")
+  assert.equal(gentleOrNoTowel.damage.mechanicalLevel, "none")
+  assert.deepEqual(gentleOrNoTowel.damage.mechanicalSignals, [])
+})
+
 test("INITIAL-13: hair loss is isolated from repair and exposes the limited-evidence boundary", () => {
   const assessment = assess({
     chemicalTreatments: ["natural"],

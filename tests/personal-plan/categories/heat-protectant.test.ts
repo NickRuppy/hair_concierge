@@ -9,11 +9,13 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "../fixtures"
 
 function decide(events: PlanHeatToolUseEvent[] | "unknown") {
   const routine: PlanRoutineContext = {
+    currentProductLoad: { state: "unknown", reason: "current_product_load" },
     shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
     heatToolUse:
       events === "unknown"
         ? { state: "unknown", reason: "heat_tool_use" }
         : { state: "known", value: events },
+    mechanicalExposureSignals: [],
     dryShampooBridgePreference: {
       state: "unknown",
       reason: "dry_shampoo_bridge_preference",

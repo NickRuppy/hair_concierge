@@ -358,3 +358,45 @@ test("decision subjects are derived per assigned product-role or explicit gap", 
     /decision decision:oil:dry_finish:oil-2 is not a derived decision subject/,
   )
 })
+
+test("an uncovered role can carry only an unassigned or planned-purchase decision", () => {
+  const gap = {
+    ...draft(),
+    products: [],
+    roleAssignments: [],
+    uncoveredRoles: [
+      {
+        category: "oil" as const,
+        role: "dry_finish" as const,
+        reason: "no_product_owned" as const,
+      },
+    ],
+  }
+  const decision = {
+    decisionKey: "decision:oil:dry_finish:gap",
+    category: "oil" as const,
+    role: "dry_finish" as const,
+    capturedProductId: null,
+    verdict: "ideal" as const,
+    choiceState: "planned_purchase" as const,
+    criterionResults: [],
+    recommendation: {
+      recommendationId: "recommend:oil-1:dry_finish",
+      productId: "oil-1",
+      category: "oil" as const,
+      role: "dry_finish" as const,
+      displayName: "Empfohlenes Oil",
+      reason: "Passt zur Pflege.",
+      authorityRuleId: "oil.selection.core_fit",
+    },
+    limitationAcknowledged: false,
+  }
+
+  assert.deepEqual(validateStage3Draft({ ...gap, decisions: [decision] }), [])
+  assert.match(
+    validateStage3Draft({ ...gap, decisions: [{ ...decision, choiceState: "owned_active" }] }).join(
+      "\n",
+    ),
+    /must remain unassigned or planned/,
+  )
+})

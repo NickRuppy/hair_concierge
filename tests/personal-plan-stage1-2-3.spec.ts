@@ -48,6 +48,7 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
 
     await page.getByRole("button", { name: /Produkte erfassen/ }).click()
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
+    await expect(page.getByText("Gespeichert", { exact: true })).toBeVisible()
     await expect(page.locator("[data-stage3-entry-refined-version-id]")).toHaveAttribute(
       "data-stage3-entry-refined-version-id",
       firstRefinedVersion!,
@@ -68,6 +69,7 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
 
     await page.getByRole("button", { name: /Produkte erfassen/ }).click()
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
+    await expect(page.getByText("Gespeichert", { exact: true })).toBeVisible()
     await expect(page.locator("[data-stage3-entry-refined-version-id]")).toHaveAttribute(
       "data-stage3-entry-refined-version-id",
       successorVersion!,

@@ -1181,6 +1181,10 @@ test("billing reconcile route downgrades expired canceled rows and keeps future 
 
   assert.equal(response.status, 200)
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: {
+      quizDrafts: { ok: false, purged: 0 },
+      resultReturns: { ok: false, purged: 0 },
+    },
     downgraded: 1,
     paymentIntegrity: successfulPaymentIntegritySummary(),
   })
@@ -1228,6 +1232,10 @@ test("billing reconcile includes backfilled Stripe billing rows", async () => {
 
   assert.equal(response.status, 200)
   assert.deepEqual(response.body, {
+    browserRecoveryCleanup: {
+      quizDrafts: { ok: false, purged: 0 },
+      resultReturns: { ok: false, purged: 0 },
+    },
     downgraded: 1,
     paymentIntegrity: successfulPaymentIntegritySummary(),
   })

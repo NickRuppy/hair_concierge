@@ -36,7 +36,8 @@ test("route source composes the accepted Stage 4 Routine adapter", async () => {
     const source = readFileSync("src/app/anwendung/page.tsx", "utf8")
     assert.match(source, /loadPersonalPlanRoutineView/)
     assert.match(source, /adaptAcceptedActiveRoutineForApplication/)
-    assert.match(source, /canAccessPersonalPlanStage5/)
+    assert.match(source, /canAccessPersonalPlanJourneyStage/)
+    assert.match(source, /loadCachedPersonalPlanJourneyAccessForUser/)
   } finally {
     if (previous === undefined) delete process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
     else process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = previous
@@ -54,7 +55,8 @@ test("Anwendung page has no production fixture import or sample product path", (
 test("loading does not flash Anwendung navigation before owner eligibility is known", () => {
   const source = readFileSync("src/app/anwendung/loading.tsx", "utf8")
 
-  assert.match(source, /<Header/)
+  assert.doesNotMatch(source, /<Header/)
+  assert.doesNotMatch(source, /PersonalPlanNavigation/)
 })
 
 const DAY_KEYS: ApplicationDayTypeKey[] = [
@@ -114,7 +116,13 @@ const shampooProtocol = {
 function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungResolverDeps {
   return {
     getUserId: async () => "user-1",
-    isInternal: async () => true,
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan" as const,
+      personalPlanId: "plan-1",
+      frontier: "stage5" as const,
+      nextHref: "/anwendung" as const,
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
+    }),
     loadRoutine: async () => ({
       status: "active",
       personalPlanId: "plan-1",
@@ -159,7 +167,13 @@ test("internal rollout denial happens before any Routine, profile, catalog, or c
   const view = await resolveAnwendungPage(
     readyDeps({
       rollout: () => "internal",
-      isInternal: async () => false,
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan" as const,
+        personalPlanId: "plan-1",
+        frontier: "stage4" as const,
+        nextHref: "/routine" as const,
+        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+      }),
       loadRoutine: async () => {
         privilegedReads += 1
         throw new Error("must not read")
@@ -182,6 +196,39 @@ test("internal rollout denial happens before any Routine, profile, catalog, or c
   assert.equal(privilegedReads, 0)
 })
 
+test("journey frontier denial happens before any Routine, profile, catalog, or content read", async () => {
+  let privilegedReads = 0
+  const view = await resolveAnwendungPage(
+    readyDeps({
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan",
+        personalPlanId: "plan-1",
+        frontier: "stage4",
+        nextHref: "/routine",
+        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+      }),
+      loadRoutine: async () => {
+        privilegedReads += 1
+        throw new Error("must not read")
+      },
+      adaptRoutine: async () => {
+        privilegedReads += 1
+        throw new Error("must not read")
+      },
+      loadProfile: async () => {
+        privilegedReads += 1
+        throw new Error("must not read")
+      },
+      loadContent: () => {
+        privilegedReads += 1
+        throw new Error("must not read")
+      },
+    } as never),
+  )
+  assert.deepEqual(view, { state: "feature_disabled" })
+  assert.equal(privilegedReads, 0)
+})
+
 test("route has explicit no-active recovery, active success, unavailable direct day, and database recovery", async () => {
   const noActive = await resolveAnwendungPage(
     readyDeps({
@@ -198,7 +245,7 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal(active.state, "ready")
 
   const unavailableDay = await resolveAnwendungPage(readyDeps(), "refresh_day")
-  assert.deepEqual(unavailableDay, { state: "unavailable" })
+  assert.deepEqual(unavailableDay, { state: "day_unavailable", overviewHref: "/anwendung" })
 
   const failures: unknown[] = []
   const database = await resolveAnwendungPage(
@@ -213,4 +260,11 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal(failures.length, 1)
   assert.equal((failures[0] as { reason: string }).reason, "database")
   assert.equal(typeof (failures[0] as { durationMs: unknown }).durationMs, "number")
+})
+
+test("direct day route validates the canonical key and never renders an arbitrary segment", () => {
+  const source = readFileSync("src/app/anwendung/[dayType]/page.tsx", "utf8")
+  assert.match(source, /applicationDayTypeKeySchema\.safeParse/)
+  assert.match(source, /notFound\(\)/)
+  assert.doesNotMatch(source, /dangerouslySetInnerHTML/)
 })

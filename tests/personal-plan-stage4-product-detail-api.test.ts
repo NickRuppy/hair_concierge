@@ -253,6 +253,7 @@ test("route authenticates before constructing its admin-backed service and retur
   const handlers = createPersonalPlanRoutineItemRouteHandlers({
     enabled: () => true,
     getUserId: async () => null,
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     service: () => {
       constructed = true
       return {} as never
@@ -267,6 +268,7 @@ test("route authenticates before constructing its admin-backed service and retur
   response = await createPersonalPlanRoutineItemRouteHandlers({
     enabled: () => false,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     service: () => ({ load: async () => ({ status: "found" as const, detail: {} }) }) as never,
   }).GET(new Request("http://local"), { params: Promise.resolve({ itemKey: "wash" }) })
   assert.deepEqual(

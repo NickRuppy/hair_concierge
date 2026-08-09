@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
+import { createElement } from "react"
+import { renderToStaticMarkup } from "react-dom/server"
 
-import { resolveRoutinePage } from "../src/app/routine/page"
+import { resolveRoutinePage, RoutineUnavailableState } from "../src/app/routine/page"
+import { RetryRefreshButtonView } from "../src/components/ui/retry-refresh-button"
 import type { PersonalPlanRoutineView } from "../src/lib/personal-plan/routine/contracts"
 
 const activeView: PersonalPlanRoutineView = {
@@ -34,10 +38,18 @@ const activeView: PersonalPlanRoutineView = {
   },
   pendingProposal: null,
 }
+const stage4Access = {
+  kind: "personal_plan" as const,
+  personalPlanId: "plan-1",
+  frontier: "stage4" as const,
+  nextHref: "/routine" as const,
+  allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+}
 
 test("Routine resolver preserves legacy only for people without a Personal Plan", async () => {
   const noPlan = await resolveRoutinePage({
     getUserId: async () => "user-1",
+    loadJourneyAccess: async () => ({ kind: "legacy" }),
     stage4Enabled: () => true,
     readView: async () => ({ status: "no_personal_plan" }),
   })
@@ -45,6 +57,7 @@ test("Routine resolver preserves legacy only for people without a Personal Plan"
 
   const personalPlan = await resolveRoutinePage({
     getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
     stage4Enabled: () => false,
     readView: async ({ enabled }) => {
       assert.equal(enabled, false)
@@ -55,16 +68,75 @@ test("Routine resolver preserves legacy only for people without a Personal Plan"
   if (personalPlan.kind === "personal_plan") {
     assert.equal(personalPlan.enabled, false)
     assert.equal(personalPlan.view.activeVersion?.id, "routine-1")
+    assert.equal(personalPlan.stage5Reachable, false)
   }
+
+  const stage5Plan = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => ({
+      ...stage4Access,
+      frontier: "stage5" as const,
+      nextHref: "/anwendung" as const,
+      allowed: { ...stage4Access.allowed, stage5: true },
+    }),
+    stage4Enabled: () => true,
+    readView: async () => activeView,
+  })
+  assert.equal(stage5Plan.kind, "personal_plan")
+  if (stage5Plan.kind === "personal_plan") assert.equal(stage5Plan.stage5Reachable, true)
 })
 
 test("Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure", async () => {
   const result = await resolveRoutinePage({
     getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
     stage4Enabled: () => true,
     readView: async () => {
       throw new Error("database unavailable")
     },
   })
   assert.deepEqual(result, { kind: "unavailable" })
+})
+
+test("Routine unavailable recovery offers an explicit reload action", () => {
+  const html = renderToStaticMarkup(
+    RoutineUnavailableState({
+      retryAction: createElement(RetryRefreshButtonView, {
+        label: "Erneut laden",
+        onRetry: () => undefined,
+      }),
+    }),
+  )
+  assert.match(html, /<button[^>]*type="button"/)
+  assert.match(html, />Erneut laden<\/button>/)
+
+  let retries = 0
+  const retry = RetryRefreshButtonView({ label: "Erneut laden", onRetry: () => retries++ })
+  retry.props.onClick()
+  assert.equal(retries, 1)
+
+  const retrySource = readFileSync("src/components/ui/retry-refresh-button.tsx", "utf8")
+  assert.match(retrySource, /onRetry=\{\(\) => router\.refresh\(\)\}/)
+})
+
+test("Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable", async () => {
+  let read = false
+  const result = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    stage4Enabled: () => true,
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage3",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
+    }),
+    readView: async () => {
+      read = true
+      return activeView
+    },
+  } as never)
+
+  assert.deepEqual(result, { kind: "unavailable" })
+  assert.equal(read, false)
 })

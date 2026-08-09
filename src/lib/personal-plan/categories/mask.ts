@@ -11,6 +11,7 @@ import type {
   PlanReasonFact,
   PlanRepairSupportLevel,
 } from "../types"
+import { isProductFrequencyAtLeast } from "@/lib/vocabulary/frequencies"
 
 type StrongMaskNeed = "dry_lengths" | "rough_surface" | "hair_damage" | "breakage" | "tangling"
 
@@ -43,11 +44,20 @@ function strongObservedNeeds(profile: PlanProfile): StrongMaskNeed[] {
 }
 
 function hasMeaningfulExposure(profile: PlanProfile, damage: PlanDamageAssessment): boolean {
+  const hasMaterialQualifyingHeat = damage.heatEvents.some(
+    (event) =>
+      event.route !== "ordinary_airflow" && isProductFrequencyAtLeast(event.frequency, "weekly_2x"),
+  )
+  const hasFrequentOrdinaryAirflow =
+    damage.ordinaryAirflowExposure.state === "known" &&
+    damage.ordinaryAirflowExposure.events.some((event) =>
+      isProductFrequencyAtLeast(event.frequency, "weekly_3_4x"),
+    )
+
   return (
     profile.hair.chemicalTreatments.some((treatment) => treatment !== "natural") ||
-    damage.heatLevel === "moderate" ||
-    damage.heatLevel === "high" ||
-    damage.heatLevel === "severe" ||
+    hasMaterialQualifyingHeat ||
+    hasFrequentOrdinaryAirflow ||
     damage.mechanicalLevel === "moderate" ||
     damage.mechanicalLevel === "high" ||
     damage.mechanicalLevel === "severe"

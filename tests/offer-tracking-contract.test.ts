@@ -22,7 +22,7 @@ test("organic offer reports its own revision while preserving the stored offer i
     "utf8",
   )
 
-  assert.match(source, /ORGANIC_PLAN_OFFER_REVISION = "organic_plan_v1"/)
+  assert.match(source, /ORGANIC_PLAN_OFFER_REVISION = "organic_plan_v2"/)
   assert.match(source, /offerRevision=\{ORGANIC_PLAN_OFFER_REVISION\}/)
   assert.match(source, /offerVariant=\{offerVariant\}/)
   assert.match(source, /needLane: null/)

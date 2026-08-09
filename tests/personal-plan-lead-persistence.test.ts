@@ -355,6 +355,136 @@ test("lead route lets an accepted address reach persistence", async (context) =>
   }
 })
 
+test("lead completion issues only an HttpOnly result capability and remains successful if issuance fails", async (context) => {
+  const previousQuizFlag = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+  const previousReturnFlag = process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+  process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+  process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED = "true"
+  context.mock.method(console, "warn", () => {})
+  let issuanceCalls = 0
+
+  const createHandler = (issued: boolean | "throw") =>
+    createPersonalPlanLeadPostHandler({
+      checkRateLimit: async () => ({ allowed: true }),
+      checkEmailDeliverability: async () => ({
+        ok: true,
+        normalized: "canonical@example.com",
+        outcome: "mx",
+      }),
+      recordEmailDeliverabilityOutcome: () => {},
+      cookies: (async () => ({ get: () => undefined })) as typeof import("next/headers").cookies,
+      scheduleAfter: (() => undefined) as typeof import("next/server").after,
+      createAdminClient: (() => ({
+        rpc: async () => ({
+          data: [{ lead_id: "10000000-0000-4000-8000-000000000093" }],
+          error: null,
+        }),
+      })) as unknown as typeof import("../src/lib/supabase/admin").createAdminClient,
+      issueResultReturn: async ({ response }) => {
+        issuanceCalls += 1
+        if (issued === "throw") throw new Error("result return unavailable")
+        if (issued) {
+          response.cookies.set("__Host-test-result-return", "opaque", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            path: "/",
+            maxAge: 30 * 24 * 60 * 60,
+          })
+        }
+        return { issued: issued === true }
+      },
+    })
+
+  try {
+    const issuedResponse = await createHandler(true)(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+    assert.equal(issuedResponse.status, 200)
+    assert.deepEqual(await issuedResponse.json(), {
+      leadId: "10000000-0000-4000-8000-000000000093",
+      attributionAttached: false,
+    })
+    assert.match(issuedResponse.headers.get("set-cookie") ?? "", /HttpOnly/i)
+    assert.doesNotMatch(issuedResponse.headers.get("set-cookie") ?? "", /10000000-0000/)
+
+    const failedResponse = await createHandler(false)(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+    assert.equal(failedResponse.status, 200)
+
+    const thrownResponse = await createHandler("throw")(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+    assert.equal(thrownResponse.status, 200)
+    assert.equal(issuanceCalls, 3)
+  } finally {
+    if (previousQuizFlag === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = previousQuizFlag
+    if (previousReturnFlag === undefined) delete process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+    else process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED = previousReturnFlag
+  }
+})
+
+test("lead completion does not issue a result capability while the feature is disabled", async () => {
+  const previousQuizFlag = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+  const previousReturnFlag = process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+  process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+  delete process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+  let issuanceCalls = 0
+  const handler = createPersonalPlanLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    checkEmailDeliverability: async () => ({
+      ok: true,
+      normalized: "canonical@example.com",
+      outcome: "mx",
+    }),
+    recordEmailDeliverabilityOutcome: () => {},
+    cookies: (async () => ({ get: () => undefined })) as typeof import("next/headers").cookies,
+    scheduleAfter: (() => undefined) as typeof import("next/server").after,
+    createAdminClient: (() => ({
+      rpc: async () => ({
+        data: [{ lead_id: "10000000-0000-4000-8000-000000000093" }],
+        error: null,
+      }),
+    })) as unknown as typeof import("../src/lib/supabase/admin").createAdminClient,
+    issueResultReturn: async () => {
+      issuanceCalls += 1
+      return { issued: true }
+    },
+  })
+
+  try {
+    const response = await handler(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+    assert.equal(response.status, 200)
+    assert.equal(issuanceCalls, 0)
+    assert.equal(response.headers.get("set-cookie"), null)
+  } finally {
+    if (previousQuizFlag === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = previousQuizFlag
+    if (previousReturnFlag === undefined) delete process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED
+    else process.env.PERSONAL_PLAN_RESULT_RETURN_ENABLED = previousReturnFlag
+  }
+})
+
 test("Sentry deliverability metrics expose only bounded outcomes and never block", (context) => {
   const calls: unknown[][] = []
   const warning = context.mock.method(console, "warn", () => {})

@@ -14,6 +14,15 @@ import {
   type Stage2RefinementGateway,
 } from "../src/lib/personal-plan/refinement/gateway"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
+import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
+
+const stage2Access: PersonalPlanJourneyAccess = {
+  kind: "personal_plan",
+  personalPlanId: "plan-1",
+  frontier: "stage2",
+  nextHref: "/plan-start",
+  allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
+}
 
 const session = createStage2RefinementSession({
   pathVersion: "stage2.refinement.v1",
@@ -31,7 +40,7 @@ function gateway(overrides: Partial<Stage2RefinementGateway> = {}): Stage2Refine
   return {
     load: async () => session,
     saveAnswer: async () => session,
-    complete: async () => ({ refinedVersionId: "refined-1", nextHref: "/plan-start/produkte" }),
+    complete: async () => ({ refinedVersionId: "refined-1", nextHref: "/plan-start" }),
     ...overrides,
   }
 }
@@ -40,6 +49,7 @@ function deps(overrides: Partial<Stage2RouteDeps> = {}): Stage2RouteDeps {
   return {
     enabled: () => true,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage2Access,
     gatewayFor: () => gateway(),
     ...overrides,
   }
@@ -49,6 +59,7 @@ function completeDeps(overrides: Partial<Stage2CompleteRouteDeps> = {}): Stage2C
   return {
     enabled: () => true,
     getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage2Access,
     gatewayFor: () => gateway(),
     ...overrides,
   }
@@ -64,6 +75,26 @@ test("Stage 2 API preserves feature/auth boundaries and no-store responses", asy
 
   response = await createStage2RouteHandlers(deps({ getUserId: async () => null })).GET()
   assert.deepEqual([response.status, await response.json()], [401, { error: "unauthorized" }])
+})
+
+test("Stage 2 fails closed before constructing its gateway when Stage 1 is not reached", async () => {
+  let gatewayCalls = 0
+  const response = await createStage2RouteHandlers(
+    deps({
+      loadJourneyAccess: async () => ({
+        kind: "personal_plan_start",
+        frontier: "stage1",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+      }),
+      gatewayFor: () => {
+        gatewayCalls += 1
+        return gateway()
+      },
+    }),
+  ).GET()
+  assert.deepEqual([response.status, await response.json()], [409, { error: "stage_not_ready" }])
+  assert.equal(gatewayCalls, 0)
 })
 
 test("Stage 2 save rejects malformed JSON and unexpected body fields before reaching the gateway", async () => {
@@ -181,7 +212,7 @@ test("Stage 2 completion is a separate strict POST with owner-derived success, c
   assert.equal(owner, "owner-1")
   assert.deepEqual(
     [response.status, await response.json()],
-    [200, { refinedVersionId: "refined-1", nextHref: "/plan-start/produkte" }],
+    [200, { refinedVersionId: "refined-1", nextHref: "/plan-start" }],
   )
 
   response = await handler(

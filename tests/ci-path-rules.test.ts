@@ -81,3 +81,36 @@ test("Personal Plan persistence and database contracts run the local database ga
   )
   assert.equal(classifyCiScope(["docs/readme.md"]).personal_plan_db, false)
 })
+
+test("persisted Personal Plan browser harness paths run the isolated database gate", () => {
+  for (const path of [
+    "scripts/test-personal-plan-stage1-5-browser.sh",
+    "tests/personal-plan-stage1-5.spec.ts",
+    "scripts/test-personal-plan-stage4-browser.sh",
+    "tests/personal-plan-stage4-routine.spec.ts",
+    "scripts/test-personal-plan-stage5-browser.sh",
+    "tests/personal-plan-stage5-application.spec.ts",
+  ]) {
+    assert.equal(classifyCiScope([path]).personal_plan_db, true, path)
+  }
+})
+
+test("integrated Personal Plan runtime paths run the database and browser gate", () => {
+  for (const path of [
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/app/anwendung/page.tsx",
+    "src/app/routine/page.tsx",
+    "src/components/application/application-page.tsx",
+    "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "src/components/personal-plan-refinement/refinement-bridge.tsx",
+    "src/components/personal-plan-start/plan-start-flow.tsx",
+    "src/components/routine/personal-plan/routine-page.tsx",
+    "src/components/routine/routine-page-client.tsx",
+    "src/components/layout/personal-plan-navigation.tsx",
+  ]) {
+    assert.equal(classifyCiScope([path]).personal_plan_db, true, path)
+  }
+
+  assert.equal(classifyCiScope(["src/components/layout/header.tsx"]).personal_plan_db, false)
+  assert.equal(classifyCiScope(["src/components/routine/routine-card.tsx"]).personal_plan_db, false)
+})

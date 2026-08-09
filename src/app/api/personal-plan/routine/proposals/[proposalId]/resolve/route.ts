@@ -5,6 +5,11 @@ import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
+import {
+  canAccessPersonalPlanJourneyStage,
+  type PersonalPlanJourneyAccess,
+} from "@/lib/personal-plan/journey-access"
+import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { routineProposalResolveRequestSchema } from "@/lib/personal-plan/routine/contracts"
 import { createSupabaseRoutineProposalService } from "@/lib/personal-plan/routine/proposal-service"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -14,6 +19,7 @@ type Service = ReturnType<typeof createSupabaseRoutineProposalService>
 export type PersonalPlanRoutineResolveRouteDeps = {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
+  loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   service: () => Service
 }
 const paramsSchema = z.object({ proposalId: z.string().uuid() }).strict()
@@ -28,6 +34,14 @@ export function createPersonalPlanRoutineResolveRouteHandlers(
       if (!deps.enabled()) return response({ error: "personal_plan_not_available" }, 404)
       const userId = await deps.getUserId()
       if (!userId) return response({ error: "unauthorized" }, 401)
+      try {
+        const journey = await deps.loadJourneyAccess(userId)
+        if (!canAccessPersonalPlanJourneyStage(journey, "stage4")) {
+          return response({ error: "stage_not_ready" }, 409)
+        }
+      } catch {
+        return response({ error: "temporarily_unavailable" }, 503)
+      }
       const [body, params] = await Promise.all([request.json().catch(() => null), context.params])
       const parsed = routineProposalResolveRequestSchema.safeParse(body)
       const parsedParams = paramsSchema.safeParse(params)
@@ -50,6 +64,7 @@ export function createPersonalPlanRoutineResolveRouteHandlers(
 const handlers = createPersonalPlanRoutineResolveRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   service: () => createSupabaseRoutineProposalService({ client: createAdminClient() as never }),
 })
 export const POST = handlers.POST

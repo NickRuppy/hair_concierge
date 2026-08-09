@@ -49,6 +49,12 @@ export type Stage3ProductsMutation =
       category: PersonalPlanCategory
       roles: Stage3RoleAssignment["roles"]
     }
+  | {
+      type: "replace_category_role_assignments"
+      category: PersonalPlanCategory
+      /** Complete non-empty assignment set for this category; omitted products are cleared. */
+      assignments: Stage3RoleAssignment[]
+    }
   | { type: "mark_role_uncovered"; uncoveredRole: Stage3CapturedUncoveredRole }
   | { type: "complete_capture_category"; category: PersonalPlanCategory }
   | { type: "reopen_capture_category"; category: PersonalPlanCategory }

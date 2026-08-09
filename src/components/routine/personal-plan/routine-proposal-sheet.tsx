@@ -23,6 +23,7 @@ export type RoutineProposalSheetBodyProps = {
   directChanges: RoutineProposalSheetDeltaEntry[]
   consequentialChanges: RoutineProposalSheetDeltaEntry[]
   unchangedItemCount: number
+  submitting?: boolean
   retrying?: boolean
   errorMessage?: string | null
   onAccept: () => void
@@ -75,6 +76,7 @@ export function RoutineProposalSheetBody({
   directChanges,
   consequentialChanges,
   unchangedItemCount,
+  submitting = false,
   retrying = false,
   errorMessage,
   onAccept,
@@ -128,31 +130,38 @@ export function RoutineProposalSheetBody({
 
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
         {!isInitial && onDismissForVisit ? (
-          <Button type="button" variant="ghost" onClick={onDismissForVisit}>
+          <Button type="button" variant="ghost" disabled={submitting} onClick={onDismissForVisit}>
             Später
           </Button>
         ) : null}
         {onBackToEditor ? (
-          <Button type="button" variant="outline" onClick={onBackToEditor}>
+          <Button type="button" variant="outline" disabled={submitting} onClick={onBackToEditor}>
             Zurück zum Bearbeiten
           </Button>
         ) : null}
         {!isInitial && onDiscardCandidate ? (
-          <Button type="button" variant="outline" onClick={onDiscardCandidate}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={submitting}
+            onClick={onDiscardCandidate}
+          >
             Änderungen verwerfen
           </Button>
         ) : null}
         {!isInitial && onReject ? (
-          <Button type="button" variant="destructive" onClick={onReject}>
+          <Button type="button" variant="destructive" disabled={submitting} onClick={onReject}>
             Ablehnen
           </Button>
         ) : null}
-        <Button type="button" variant="cta" onClick={onAccept}>
-          {retrying
-            ? "Erneut versuchen"
-            : isInitial
-              ? "Routine bestätigen"
-              : "Änderungen übernehmen"}
+        <Button type="button" variant="cta" disabled={submitting} onClick={onAccept}>
+          {submitting
+            ? "Wird gespeichert …"
+            : retrying
+              ? "Erneut versuchen"
+              : isInitial
+                ? "Routine bestätigen"
+                : "Änderungen übernehmen"}
         </Button>
       </div>
     </div>
@@ -167,6 +176,7 @@ export function RoutineProposalSheet({
   directChanges,
   consequentialChanges,
   unchangedItemCount,
+  submitting,
   retrying,
   errorMessage,
   onAccept,
@@ -198,6 +208,7 @@ export function RoutineProposalSheet({
           directChanges={directChanges}
           consequentialChanges={consequentialChanges}
           unchangedItemCount={unchangedItemCount}
+          submitting={submitting}
           retrying={retrying}
           errorMessage={errorMessage}
           onAccept={onAccept}

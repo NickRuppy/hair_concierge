@@ -6,6 +6,7 @@ import type { Stage3ProductDraft } from "./contracts"
 import type { Stage3ProductionPersistence } from "./production-persistence-gateway"
 import { searchOwnedProductCatalog, type CatalogProductRecord } from "./inventory-search"
 import { createStage3Draft } from "./state-machine"
+import { loadStage3AuthorityFactBundle } from "./authority/catalog-facts"
 
 type AdminClient = SupabaseClient
 
@@ -36,14 +37,17 @@ export function createSupabaseStage3ProductionPersistence(
   return {
     async loadOrCreate(input) {
       const context = await loadRequirements(input)
-      const seed = createStage3Draft({
-        draftId: "pending-sql-assignment",
-        userId: input.userId,
-        personalPlanId: input.personalPlanId,
-        refinedVersionId: input.refinedVersionId,
-        requirements: context.orderedCategories,
-        now: new Date().toISOString(),
-      })
+      const seed = {
+        ...createStage3Draft({
+          draftId: "pending-sql-assignment",
+          userId: input.userId,
+          personalPlanId: input.personalPlanId,
+          refinedVersionId: input.refinedVersionId,
+          requirements: context.orderedCategories,
+          now: new Date().toISOString(),
+        }),
+        authoritySnapshot: context.authoritySnapshot,
+      }
       const { data, error } = await client.rpc("personal_plan_create_or_load_product_draft", {
         p_user_id: input.userId,
         p_personal_plan_id: input.personalPlanId,
@@ -186,6 +190,25 @@ export function createSupabaseStage3ProductionPersistence(
       if (error || !data) throw new Error("stage3_plan_source_unavailable")
       return Number(data.source_revision)
     },
+    async loadCurrentRefinedVersionId(input) {
+      const { data, error } = await client
+        .from("personal_plans")
+        .select("current_refined_need_version_id")
+        .eq("id", input.personalPlanId)
+        .eq("user_id", input.userId)
+        .maybeSingle()
+      if (error || !data) throw new Error("stage3_plan_source_unavailable")
+      return data.current_refined_need_version_id
+        ? String(data.current_refined_need_version_id)
+        : null
+    },
+    async loadAuthorityFacts(input) {
+      return loadStage3AuthorityFactBundle(client, {
+        draft: input.draft,
+        subject: input.subject,
+        heatRoutes: input.heatRoutes,
+      })
+    },
     async loadDraft(input) {
       const { data, error } = await client
         .from("personal_plan_product_drafts")
@@ -250,5 +273,6 @@ function mapStage3Draft(raw: unknown): Stage3ProductDraft {
       []) as string[],
     createdAt: String(row.created_at ?? payload.createdAt),
     updatedAt: String(row.updated_at ?? payload.updatedAt),
+    authoritySnapshot: payload.authoritySnapshot as Stage3ProductDraft["authoritySnapshot"],
   }
 }

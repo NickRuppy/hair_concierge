@@ -1,8 +1,10 @@
+import Link from "next/link"
+
 import type {
   PersonalPlanRoutineView,
   RoutinePayloadV1,
 } from "@/lib/personal-plan/routine/contracts"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 
 import { RoutineSection } from "./routine-section"
 
@@ -10,6 +12,7 @@ type RoutineItem = RoutinePayloadV1["items"][number]
 
 export type RoutinePageProps = {
   view: PersonalPlanRoutineView
+  stage5Reachable?: boolean
   onEdit?: () => void
   onConfirm?: () => void
   onItemDetail?: (item: RoutineItem) => void
@@ -20,7 +23,13 @@ function payloadFor(view: PersonalPlanRoutineView) {
   return view.activeVersion?.payload ?? null
 }
 
-export function RoutinePage({ view, onEdit, onConfirm, onItemDetail }: RoutinePageProps) {
+export function RoutinePage({
+  view,
+  stage5Reachable = false,
+  onEdit,
+  onConfirm,
+  onItemDetail,
+}: RoutinePageProps) {
   const payload = payloadFor(view)
   if (!payload) return null
 
@@ -49,6 +58,11 @@ export function RoutinePage({ view, onEdit, onConfirm, onItemDetail }: RoutinePa
             <Button variant="cta" onClick={onConfirm}>
               Routine bestätigen
             </Button>
+          ) : null}
+          {view.activeVersion && stage5Reachable ? (
+            <Link href="/anwendung" className={buttonVariants({ variant: "cta" })}>
+              Anwendungsplan ansehen
+            </Link>
           ) : null}
           {onEdit ? (
             <Button variant="outline" onClick={onEdit}>

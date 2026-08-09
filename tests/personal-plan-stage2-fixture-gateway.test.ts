@@ -199,7 +199,7 @@ test("completion rejects an unresolved path and repeats one deterministic opaque
   const first = await gateway.complete({ expectedRevision: session.revision })
   const second = await gateway.complete({ expectedRevision: session.revision })
   assert.deepEqual(second, first)
-  assert.equal(first.nextHref, "/plan-start/produkte")
+  assert.equal(first.nextHref, "/plan-start")
   assert.match(first.refinedVersionId, /^fixture-refined-/)
   assert.equal((await gateway.load()).status, "complete")
 })
@@ -218,7 +218,7 @@ test("a completed fixture loads with a detached canonical handoff", async () => 
   assert.equal(first.status, "complete")
   assert.deepEqual(first.completedHandoff, {
     refinedVersionId: "fixture-refined-stage2-fixture-v1-r7",
-    nextHref: "/plan-start/produkte",
+    nextHref: "/plan-start",
   })
   first.completedHandoff!.refinedVersionId = "mutated-by-caller"
   assert.equal(

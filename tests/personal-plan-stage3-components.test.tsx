@@ -12,6 +12,11 @@ import {
   Stage3Transition,
   type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
+import {
+  PortfolioHandoff,
+  authorityEvaluationProjection,
+} from "../src/components/personal-plan-products/stage3-products-flow"
+import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
 
 const forbiddenFlowLabels = /\b(?:Pass|Teil\s+\d|Stage|Stufe)\b/i
 
@@ -211,6 +216,12 @@ test("product decisions keep fit, mismatch, pending, and gap actions product-own
   assert.match(html, /Offene Luecke/)
   assert.match(html, /aria-label="Briogeo einplanen: Briogeo Don&#x27;t Despair, Repair!"/)
   assert.match(html, /aria-label="Alte Proteinmaske behalten: Alte Proteinmaske"/)
+  assert.match(html, /data-stage3-decision-key="gap-1"/)
+  assert.match(html, /data-stage3-action-kind="skip"/)
+  assert.match(
+    html,
+    /aria-label="Luecke im Plan markieren: Hitzeschutz — Schutz vor Foenhitzte fehlt\."/,
+  )
   assert.match(html, /ca\. 29 EUR/)
   assert.match(html, /role="status"/)
 })
@@ -245,4 +256,74 @@ test("system states and intake fallback expose busy, live, retry, and boundary a
   assert.match(fallbackHtml, /Produkt per Foto oder manuell hinzufügen/)
   assert.match(fallbackHtml, /Erneut versuchen/)
   assert.match(fallbackHtml, /Zurück zur Suche/)
+})
+
+test("completed Stage 3 offers a truthful Routine handoff without exposing technical IDs", () => {
+  const html = renderToStaticMarkup(
+    <PortfolioHandoff
+      completion={{
+        status: "ready_for_routine",
+        draft: {} as never,
+        portfolio: {
+          ownedProducts: [],
+          plannedPurchases: [],
+          pendingProducts: [],
+          uncoveredRoles: [],
+        } as never,
+        personalPlanId: "plan-opaque-123",
+        refinedVersionId: "refined-opaque-123",
+        productPortfolioVersionId: "portfolio-opaque-123",
+        routineProposalId: "proposal-opaque-123",
+        next: { stage: 4, href: "/routine" },
+      }}
+    />,
+  )
+
+  assert.match(html, />Routine öffnen</)
+  assert.doesNotMatch(html, /portfolio-opaque-123|proposal-opaque-123|plan-opaque-123/)
+  assert.doesNotMatch(html, /bereits aktiv|aktiviert/)
+})
+
+test("unknown and unsupported server evaluations stay explicit and do not acquire invented actions", () => {
+  const draft = { products: [] } as unknown as Stage3ProductDraft
+  const subject = {
+    decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
+    category: "conditioner" as const,
+    role: "conditioner_rinse_out" as const,
+    capturedProductId: null,
+    subjectKind: "uncovered_role" as const,
+  }
+  const unknown = authorityEvaluationProjection(draft, subject, {
+    status: "unknown",
+    category: "conditioner",
+    subjectKey: subject.decisionKey,
+    missingFacts: ["catalog_product_facts"],
+    criteria: [
+      {
+        criterionId: "conditioner.weight",
+        label: "Gewicht",
+        result: "unknown",
+        explanation: "Noch nicht bestätigt.",
+      },
+    ],
+    allowedActions: ["leave_uncovered"],
+    coverageRuleIds: [],
+  })
+  const unsupported = authorityEvaluationProjection(draft, subject, {
+    status: "unsupported",
+    category: "conditioner",
+    subjectKey: subject.decisionKey,
+    reason: "conditioner_target_unavailable",
+    allowedActions: [],
+    coverageRuleIds: [],
+  })
+
+  assert.equal(unknown.verdictLabel, "Noch nicht beurteilbar")
+  assert.deepEqual(
+    unknown.actions.map((action) => action.kind),
+    ["skip"],
+  )
+  assert.equal(unknown.criteria?.[0]?.result, "Noch offen")
+  assert.equal(unsupported.verdictLabel, "Prüfung nicht verfügbar")
+  assert.deepEqual(unsupported.actions, [])
 })
