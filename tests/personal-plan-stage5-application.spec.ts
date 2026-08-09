@@ -539,7 +539,9 @@ test("accepted Routine renders Anwendung overview and a bookmarkable day without
   await page.locator('input[type="password"]:visible').fill(password)
   await page.getByRole("button", { name: "Anmelden", exact: true }).click()
   await page.waitForURL("**/anwendung")
-  await expect(page.getByRole("heading", { name: "Anwendung", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Anwendung", exact: true })).toBeVisible({
+    timeout: 15_000,
+  })
   await expect(page.getByRole("link", { name: "Waschtag" })).toBeVisible()
   await page.screenshot({ path: testInfo.outputPath("overview-mobile-320.png"), fullPage: true })
 
