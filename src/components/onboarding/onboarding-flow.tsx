@@ -69,6 +69,10 @@ import type {
   NightProtection,
 } from "@/lib/vocabulary/onboarding-care"
 import type { IconName } from "@/components/ui/icon"
+import {
+  resolveOnboardingCompletionCtaLabel,
+  resolveOnboardingCompletionDestination,
+} from "@/lib/onboarding/completion-destination"
 
 const SAVE_TIMEOUT_MS = 15_000
 const SAVE_TIMEOUT_MESSAGE =
@@ -118,6 +122,8 @@ export function OnboardingFlow({
 }: OnboardingFlowProps) {
   const { toast } = useToast()
   const store = useOnboardingStore()
+  const completionDestination = resolveOnboardingCompletionDestination(returnTo)
+  const completionCtaLabel = resolveOnboardingCompletionCtaLabel(returnTo)
   const productIntake = useOnboardingProductIntakeController(productIntakeEnabled)
   const [hydrated, setHydrated] = useState(false)
   const [savingStep, setSavingStep] = useState<OnboardingStep | null>(null)
@@ -527,11 +533,7 @@ export function OnboardingFlow({
               .eq("id", userId)
 
             if (completionPopupError) throw completionPopupError
-            if (returnTo) {
-              window.location.assign(returnTo)
-              return
-            }
-            window.location.assign("/chat")
+            window.location.assign(completionDestination)
             return // Don't advance step
           }
         }
@@ -576,6 +578,7 @@ export function OnboardingFlow({
       productIntake,
       productIntakeEnabled,
       returnTo,
+      completionDestination,
       editScope,
       singleStepEdit,
       allowCompletionFallback,
@@ -969,7 +972,12 @@ export function OnboardingFlow({
         )
 
       case "celebration":
-        return <CelebrationPopup onDismiss={() => handleStepComplete("celebration")} />
+        return (
+          <CelebrationPopup
+            ctaLabel={completionCtaLabel}
+            onDismiss={() => handleStepComplete("celebration")}
+          />
+        )
 
       default:
         return null

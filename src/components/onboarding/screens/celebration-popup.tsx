@@ -1,10 +1,11 @@
 "use client"
 
 interface CelebrationPopupProps {
+  ctaLabel: string
   onDismiss: () => void
 }
 
-export function CelebrationPopup({ onDismiss }: CelebrationPopupProps) {
+export function CelebrationPopup({ ctaLabel, onDismiss }: CelebrationPopupProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="animate-scale-in mx-4 w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center shadow-2xl">
@@ -17,7 +18,7 @@ export function CelebrationPopup({ onDismiss }: CelebrationPopupProps) {
         </p>
 
         <button onClick={onDismiss} className="quiz-btn-primary w-full">
-          ZUM CHAT
+          {ctaLabel}
         </button>
       </div>
     </div>

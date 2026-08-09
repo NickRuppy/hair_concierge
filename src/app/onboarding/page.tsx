@@ -7,6 +7,7 @@ import { getOnboardingEditScope, type OnboardingStep } from "@/lib/onboarding/st
 import { resolveIntakeState } from "@/lib/auth/intake-state"
 import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 import { PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
+import { resolveOnboardingCompletionDestination } from "@/lib/onboarding/completion-destination"
 
 type OnboardingSearchParams = {
   lead?: string | string[]
@@ -173,7 +174,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   }
 
   if (intakeState === "ready" && !forcedStep) {
-    redirect(returnTo ?? "/chat")
+    redirect(resolveOnboardingCompletionDestination(returnTo))
   }
 
   // Fetch existing product usage
