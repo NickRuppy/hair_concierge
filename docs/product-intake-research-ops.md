@@ -193,7 +193,7 @@ Every final payload must include:
   `category_key`, `affiliate_link`, `image_url`, `price_eur`, `currency: "EUR"`,
   `purchase_link_status`, `purchase_link_checked_at`, `price_checked_at`
 - `final.identifiers[]` with `type` in `ean`, `gtin`, `barcode`,
-  `retailer_sku`, or `retailer_url`
+  `manufacturer_sku`, `retailer_sku`, or `retailer_url`
 - `final.sources[]`
 - `final.field_rationales` for product fields and every category spec table
 - `final.category_specs` only for the category-specific tables below
@@ -1107,3 +1107,112 @@ After approval:
 - [ ] Product image URL renders.
 - [ ] User notification was sent.
 - [ ] Daily product-addition record was written.
+
+## Internal catalog enrichment (Deliverable A)
+
+Internal catalog research uses the sanitized, tracked `data/catalog-enrichment/`
+manifest path. It is not a substitute for a submission package and must never
+create `product_submissions`, touch `user_product_usage`, link a user, notify a
+user, upload an image, or write Supabase. Local source evidence and images stay
+under ignored `ops/catalog-enrichment/` paths.
+
+Run only the non-writing preview while preparing an item:
+
+```bash
+npm run products:intake:catalog-enrichment:preview -- data/catalog-enrichment/personal-plan-launch-v1/<product>.json
+```
+
+The command has no apply mode. New products require duplicate-search evidence
+and no target ID. Existing-product enrichment requires the exact target product
+ID and its frozen target fingerprint. Unknown schema versions, unsupported
+tables, unsafe paths, signed URLs, secrets, user data, and a review fingerprint
+that does not match current content fail closed. The standalone local preview
+does not fetch a live target; the later programmatic handoff must provide the
+current target ID and fingerprint, which then fails closed on target drift.
+
+Preview output separates `schema_ok` from `ready_for_handoff` and reports the
+manifest's validation, review, disposition, and blocker state. Exit code 0 means
+only that the sanitized manifest is structurally previewable; it is not an
+approval or readiness signal. `ready_for_handoff` is true only for an explicit
+`ready_for_handoff` validation state, an approved content-bound review,
+`may_enter_deliverable_b: true`, and no recorded blockers.
+
+The shared Product Intake category validator remains the authority for payload
+validation. For every operation-bearing new product, catalog validation runs
+the category payload through that shared validator and requires the planned
+spec/protocol upserts to match its derived operations exactly. Existing-product
+enrichment validates each planned spec/protocol upsert against the same derived
+operations and allows only the placeholder or frozen target product ID. The
+complete `product_payload.final` also runs through the normal full Product
+Intake approval validator, and its embedded `category_specs` must exactly match
+the operation-driving `category_payload`. The catalog manifest does not add a
+parallel category validation layer.
+
+The checked-in JSON Schema is a frozen, reviewable static contract for the
+batch; the TypeScript validator is the runtime authority. Verification must run
+both the JSON Schema cohort check and the preview validator so drift between the
+two is visible before handoff:
+
+| Category | Required spec payload | Required protocol payload |
+| --- | --- | --- |
+| Heat Protectant | `product_heat_protectant_specs`: `format`, `provides_heat_protection` | `product_application_protocols`: `category=heat_protectant`, `role=pre_heat_protection` |
+| Scalp Care | `product_scalp_care_specs`: `primary_role`, `presentation_format`, `rinse_mode`, `application_instructions` | `product_application_protocols`: `category=scalp_care`, matching canonical role |
+
+### Guarded Deliverable B1 integration
+
+Deliverable B1 is a separate internal catalog path for one exact, manually
+reviewed cohort. It does not reuse submission approval, does not create or
+update user usage, and does not notify a user. Its default mode is read-only.
+
+Run the exact-batch preflight first:
+
+```bash
+npm run products:intake:catalog-enrichment:b1:preflight -- --batch personal-plan-launch-v1
+```
+
+Preflight must revalidate the 15 reviewed manifests, local image hashes,
+commercial freshness, linked schema and identities, complete paginated
+duplicate/identifier reads, and the 15 target Storage objects. It emits the
+canonical package and fingerprints but performs no writes. Missing B1
+migrations or exact identity seeds are blockers, not values to create ad hoc.
+The command accepts commercial observations for seven days and has no CLI
+override. If that window expires, stop and refresh/review the commercial facts
+and their frozen B0 fingerprint before migrating or applying the batch.
+
+The following canonical identities are production preconditions rather than
+generic seeds: Balea, got2b, Jean&Len, Gliss, Isana, L'Oréal Paris, Head &
+Shoulders, plus the approved Balea Professional, Gliss Scalp Balance, and Isana
+Professional lines. Preflight must resolve their exact reviewed UUIDs and names;
+any absence or drift blocks the batch.
+
+The apply entrypoint remains dry-run unless every exact confirmation is given:
+
+```bash
+npm run products:intake:catalog-enrichment:b1:apply -- \
+  --batch personal-plan-launch-v1 \
+  --apply \
+  --confirm \
+  --confirm-batch personal-plan-launch-v1 \
+  --reviewed-by nick \
+  --expected-batch-fingerprint <preflight-fingerprint> \
+  --expected-content-fingerprint <b0-index-fingerprint>
+```
+
+Never run that confirmed form without Nick explicitly authorizing the exact
+batch write after the migration has been separately approved and applied. The
+command re-runs preflight, uploads only absent hash-approved images with
+`upsert:false`, byte-verifies all existing or uploaded objects, then calls the
+single service-role batch RPC. A database failure reports any newly uploaded,
+unreferenced objects and never deletes them automatically.
+
+After an authorized apply, verify independently:
+
+```bash
+npm run products:intake:catalog-enrichment:b1:verify -- --batch personal-plan-launch-v1
+```
+
+The verifier checks the exact products, recommendation state, approved image
+provenance, identifiers, category specs, protocols, ledger fingerprints,
+Storage hashes, and duplicate absence. Successful B1 verification means only
+that the catalog cohort is ready; it does not deploy or enable Personal Plan
+flags.

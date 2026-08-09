@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Personal Plan catalog-enrichment manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "batch_id", "product_key", "category_key", "lifecycle_classification", "identity", "duplicate_check", "sources", "commercial", "image", "product_payload", "category_payload", "planned_operations", "validation", "review", "disposition"],
+  "properties": {
+    "schema_version": { "const": "personal-plan-launch-v1" },
+    "batch_id": { "$ref": "#/$defs/safeId" },
+    "product_key": { "$ref": "#/$defs/safeId" },
+    "category_key": { "enum": ["shampoo", "conditioner", "mask", "leave_in", "oil", "dry_shampoo", "deep_cleansing_shampoo", "bondbuilder", "heat_protectant", "scalp_care"] },
+    "lifecycle_classification": { "enum": ["new_product", "existing_product_enrichment", "verification_only", "provisional_candidate", "excluded"] },
+    "identity": { "type": "object", "minProperties": 1 },
+    "target_product_id": { "type": "string", "minLength": 1 },
+    "target_fingerprint": { "type": "string", "minLength": 1 },
+    "duplicate_check": { "type": "object", "required": ["checked_at", "candidates"], "properties": { "checked_at": { "type": "string", "format": "date-time" }, "candidates": { "type": "array" } }, "additionalProperties": true },
+    "sources": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["label", "type", "url"], "properties": { "label": { "type": "string", "minLength": 1 }, "type": { "type": "string", "minLength": 1 }, "url": { "type": "string", "format": "uri" } }, "additionalProperties": true } },
+    "commercial": { "type": "object", "minProperties": 1 },
+    "catalog_state": { "type": "object", "additionalProperties": false, "required": ["origin", "is_active", "lifecycle_status", "is_chaarlie_recommended"], "properties": { "origin": { "const": "curated" }, "is_active": { "const": true }, "lifecycle_status": { "const": "active" }, "is_chaarlie_recommended": { "type": "boolean" } } },
+    "image": { "type": "object", "required": ["local_asset_path"], "properties": { "local_asset_path": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" }, "expected_storage_path": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" }, "final_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" } }, "additionalProperties": true },
+    "product_payload": { "type": "object" },
+    "category_payload": { "type": "object" },
+    "planned_operations": { "type": "array", "items": { "oneOf": [ { "type": "object", "additionalProperties": false, "required": ["type", "table", "catalog_content"], "properties": { "type": { "const": "insert_product" }, "table": { "const": "products" }, "catalog_content": { "$ref": "#/$defs/catalogContent" } } }, { "type": "object", "additionalProperties": false, "required": ["type", "table"], "properties": { "type": { "const": "update_product" }, "table": { "const": "products" } } }, { "type": "object", "required": ["type", "table", "rows"], "properties": { "type": { "const": "upsert" }, "table": { "enum": ["product_shampoo_specs", "product_conditioner_specs", "product_conditioner_rerank_specs", "product_mask_specs", "product_leave_in_specs", "product_leave_in_fit_specs", "product_leave_in_eligibility", "product_oil_eligibility", "product_dry_shampoo_specs", "product_deep_cleansing_shampoo_specs", "product_bondbuilder_specs", "product_heat_protectant_specs", "product_scalp_care_specs", "product_application_protocols"] }, "rows": { "type": "array" } }, "additionalProperties": false } ] } },
+    "validation": { "type": "object", "minProperties": 1 },
+    "review": { "type": "object", "required": ["state"], "properties": { "state": { "enum": ["pending", "approved", "rework", "excluded"] }, "reviewed_content_fingerprint": { "type": "string" } }, "additionalProperties": true },
+    "disposition": { "type": "object", "minProperties": 1 }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "lifecycle_classification": { "const": "new_product" }
+        }
+      },
+      "then": {
+        "required": ["catalog_state"],
+        "not": {
+          "anyOf": [
+            { "required": ["target_product_id"] },
+            { "required": ["target_fingerprint"] }
+          ]
+        },
+        "properties": {
+          "image": { "required": ["expected_storage_path", "final_sha256"] },
+          "planned_operations": {
+            "minItems": 1,
+            "contains": {
+              "type": "object",
+              "required": ["type", "table"],
+              "properties": {
+                "type": { "const": "insert_product" },
+                "table": { "const": "products" }
+              }
+            },
+            "minContains": 1,
+            "maxContains": 1
+          }
+        }
+      }
+    },
+    { "if": { "properties": { "lifecycle_classification": { "enum": ["existing_product_enrichment", "verification_only"] } } }, "then": { "required": ["target_product_id", "target_fingerprint"] } },
+    { "if": { "properties": { "lifecycle_classification": { "enum": ["verification_only", "provisional_candidate", "excluded"] } } }, "then": { "properties": { "planned_operations": { "maxItems": 0 } } } }
+  ],
+  "$defs": { "safeId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }, "catalogContent": { "type": "object", "additionalProperties": false, "required": ["name", "brand", "category", "affiliate_link", "purchase_link_status", "purchase_link_checked_at", "price_checked_at", "price_eur", "currency", "image_asset_path", "image_sha256", "origin", "is_active", "lifecycle_status", "is_chaarlie_recommended", "brand_id", "product_line_id", "image_url"], "properties": { "name": { "type": "string", "minLength": 1 }, "brand": { "type": "string", "minLength": 1 }, "category": { "enum": ["shampoo", "conditioner", "mask", "leave_in", "oil", "dry_shampoo", "deep_cleansing_shampoo", "bondbuilder", "heat_protectant", "scalp_care"] }, "affiliate_link": { "type": "string", "format": "uri" }, "purchase_link_status": { "enum": ["available", "unavailable"] }, "purchase_link_checked_at": { "type": "string", "format": "date-time" }, "price_checked_at": { "type": "string", "format": "date-time" }, "price_eur": { "type": "number", "minimum": 0 }, "currency": { "const": "EUR" }, "image_asset_path": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" }, "image_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }, "origin": { "const": "curated" }, "is_active": { "const": true }, "lifecycle_status": { "const": "active" }, "is_chaarlie_recommended": { "type": "boolean" }, "brand_id": { "type": "null" }, "product_line_id": { "type": "null" }, "image_url": { "type": "null" } } } }
+}

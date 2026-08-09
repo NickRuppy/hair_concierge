@@ -1,0 +1,24 @@
+{
+  "schema_version": "personal-plan-launch-v1",
+  "batch_id": "personal-plan-launch-v1",
+  "checked_at": "2026-08-09T00:00:00.000Z",
+  "source": "read-only live catalog snapshot supplied to Deliverable A",
+  "manifest_schema_sha256": "084f2808464758edae42b33696aa5b1095b6bad35c3a12860ebb3920c0a64145",
+  "integrated_manifest_count": 114,
+  "readiness": {
+    "migration": "20260808065528_personal_plan_category_readiness",
+    "applied": false,
+    "absent_tables": [
+      "product_heat_protectant_specs",
+      "product_scalp_care_specs",
+      "product_application_protocols"
+    ]
+  },
+  "cohorts": {
+    "mask_active_recommended": { "count": 35, "rowset_hash": "9f1ffb534c100d651a7f5c79628436ca" },
+    "dry_shampoo_active_recommended": { "count": 10, "rowset_hash": "bcd7e8f4aeb35ae96b39cc3369d9e6c8" },
+    "deep_cleansing_legacy": { "count": 5, "rowset_hash": "47c29a721b0d4a3a7d390d24400a7a51" },
+    "bondbuilder_active_recommended": { "count": 5, "rowset_hash": "8a878f407111997ab0044a5dc7397c64", "primary_count": 3 },
+    "conditioner_active_recommended": { "count": 43, "rowset_hash": "54dd2c374251de4a1eaf1013ff1f18b3" }
+  }
+}

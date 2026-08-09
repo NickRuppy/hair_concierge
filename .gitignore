@@ -55,6 +55,8 @@ yarn-error.log*
 /data/
 !/data/
 /data/*
+!/data/catalog-enrichment/
+!/data/catalog-enrichment/**
 !/data/agent-guidance/
 !/data/agent-guidance/**
 !/data/agent-v2/
