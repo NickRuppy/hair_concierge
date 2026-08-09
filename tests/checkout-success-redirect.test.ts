@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFileSync } from "node:fs"
 
 import {
   getAuthenticatedCheckoutSuccessRedirect,
@@ -7,6 +8,12 @@ import {
   resolvePersonalPlanCheckoutReadiness,
   resolveCheckoutFirstTimeDestination,
 } from "../src/lib/billing/checkout-success-redirect"
+
+const welcomeSource = readFileSync("src/app/welcome/page.tsx", "utf8")
+
+test("post-payment Personal Plan routing uses owner-scoped rollout eligibility", () => {
+  assert.match(welcomeSource, /isPersonalPlanAppV1AllowedForUser\(input\.userId, admin as never\)/)
+})
 
 test("onboarded reactivation users return to their verified destination", () => {
   assert.equal(getAuthenticatedCheckoutSuccessRedirect(true, "/profile"), "/profile")

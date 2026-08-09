@@ -131,7 +131,7 @@ async function requireWrite(operation: PromiseLike<{ error: { message: string } 
   if (error) throw new Error(error.message)
 }
 
-async function seedBuyer(input: { email: string; active: boolean }) {
+async function seedBuyer(input: { email: string; active: boolean; internal?: boolean }) {
   const admin = adminClient()
   const { data: created, error: createError } = await admin.auth.admin.createUser({
     email: input.email,
@@ -154,6 +154,7 @@ async function seedBuyer(input: { email: string; active: boolean }) {
       full_name: "Personal Plan Browser",
       onboarding_completed: true,
       onboarding_step: "celebration",
+      is_admin: input.internal === true,
       subscription_status: input.active ? "active" : null,
       subscription_interval: input.active ? "month" : null,
       current_period_end: input.active ? "2027-08-08T12:00:00.000Z" : null,
@@ -568,7 +569,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     )
     await assertNoLabs(page)
     const email = "stage15-ready@hairconscierge.test"
-    const { admin, userId } = await seedBuyer({ email, active: true })
+    const { admin, userId } = await seedBuyer({ email, active: true, internal: true })
 
     await login(page, email, "/plan-start")
     await page.waitForURL("**/plan-start")
@@ -821,7 +822,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     )
     await assertNoLabs(page)
     const email = "stage15-pending@hairconscierge.test"
-    const pending = await seedBuyer({ email, active: false })
+    const pending = await seedBuyer({ email, active: false, internal: true })
 
     await login(page, email, `/plan-bereit?lead=${pending.leadId}`)
     await page.waitForURL("**/plan-bereit**")

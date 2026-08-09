@@ -6,8 +6,8 @@ export type PersonalPlanStage5RolloutEligibility = {
   rollout: PersonalPlanStage5Rollout
   isEligiblePersonalPlanOwner: boolean
   /**
-   * The page adapter must source this only from the existing server-side
-   * admin/internal profile signal (currently `profiles.is_admin`).
+   * The page adapter must source this from the shared server-owned Personal
+   * Plan cohort decision (admin profile or confirmed exact email allowlist).
    */
   isInternal: boolean
 }

@@ -11,12 +11,16 @@ import type { PersonalPlanCategory, Stage3AuthoritySnapshotV1 } from "./products
 import type { InitialNeedPlanSnapshot } from "./types"
 import {
   getPersonalPlanNewBuyerCohortCutoff,
+  canAccessPersonalPlanAppV1Rollout,
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
+  resolvePersonalPlanAppV1Rollout,
+  type PersonalPlanAppV1Rollout,
 } from "./release"
 import { canAccessPersonalPlanStage5, resolvePersonalPlanStage5Rollout } from "./stage5-rollout"
+import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from "./rollout-access"
 import {
   resolvePersonalPlanJourneyAccess,
   type PersonalPlanJourneyAccess,
@@ -43,6 +47,7 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
   }>
   cohortCutoff: () => Date | null
   appEnabled: () => boolean
+  appRollout: () => PersonalPlanAppV1Rollout
   stage2Enabled: () => boolean
   stage3Enabled: () => boolean
   stage4Enabled: () => boolean
@@ -124,6 +129,14 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
 ): Promise<PersonalPlanJourneyAccess> {
   if (!userId.trim() || userId === "user-id-required")
     throw new Error("journey_access_user_required")
+  const appEnabled = deps.appEnabled()
+  const appRollout = deps.appRollout()
+  if (appEnabled && appRollout !== "all") {
+    const isInternal = appRollout === "internal" ? await deps.loadIsInternal(userId) : false
+    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {
+      return { kind: "legacy" }
+    }
+  }
   const entitlement = await deps.loadEntitlement(userId)
   const newBuyer = isNewBuyerCohort(entitlement.paidAt, deps.cohortCutoff())
 
@@ -172,7 +185,6 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
 
   const loadedPlan = await deps.loadPlan(userId)
   const plan = loadedPlan ? { ...loadedPlan } : null
-  const appEnabled = deps.appEnabled()
   const stage2Enabled = deps.stage2Enabled()
   const stage3Enabled = deps.stage3Enabled()
   const stage4Enabled = deps.stage4Enabled()
@@ -258,6 +270,7 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
     },
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
     appEnabled: isPersonalPlanAppV1Enabled,
+    appRollout: resolvePersonalPlanAppV1Rollout,
     stage2Enabled: isPersonalPlanStage2Enabled,
     stage3Enabled: isPersonalPlanStage3Enabled,
     stage4Enabled: isPersonalPlanStage4Enabled,
@@ -357,10 +370,7 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
       }
     },
     async loadIsInternal(userId) {
-      const data = await required(
-        admin.from("profiles").select("is_admin").eq("id", userId).maybeSingle(),
-      )
-      return data?.is_admin === true
+      return isPersonalPlanInternalUser(userId, admin as unknown as PersonalPlanInternalUserClient)
     },
   }
 }

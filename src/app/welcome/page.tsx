@@ -19,10 +19,8 @@ import {
 } from "@/lib/billing/checkout-success-redirect"
 import { findPayPalCheckoutIntentByToken } from "@/lib/paypal/checkout-intents"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
-import {
-  getPersonalPlanNewBuyerCohortCutoff,
-  isPersonalPlanAppV1Enabled,
-} from "@/lib/personal-plan/release"
+import { getPersonalPlanNewBuyerCohortCutoff } from "@/lib/personal-plan/release"
+import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
 import {
   findOneTimePurchaseEntitlementForUser,
   resolveOneTimePurchaseAccessState,
@@ -562,7 +560,7 @@ async function resolveOneTimePersonalPlanDestination(
       preparedArtifactAttached = Boolean(data)
     }
     const readiness = resolvePersonalPlanCheckoutReadiness({
-      appEnabled: isPersonalPlanAppV1Enabled(),
+      appEnabled: await isPersonalPlanAppV1AllowedForUser(input.userId, admin as never),
       accessState: resolveOneTimePurchaseAccessState(entitlement),
       paidAt: entitlement?.purchase.paid_at ?? null,
       artifactLeadId,

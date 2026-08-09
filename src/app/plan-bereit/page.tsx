@@ -7,7 +7,7 @@ import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
-import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
+import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
 import { findPersonalPlanLead } from "./readiness"
 import { PersonalPlanReadyClient } from "./personal-plan-ready-client"
 
@@ -81,12 +81,16 @@ export default async function PersonalPlanReadyPage({
       redirect("/onboarding")
     case "ready":
       if (!lead) redirect("/onboarding")
+      const personalPlanV1Allowed = await isPersonalPlanAppV1AllowedForUser(user.id).catch(
+        (error) => {
+          console.warn("[plan-bereit] Personal Plan rollout eligibility unavailable", error)
+          return false
+        },
+      )
       return (
         <PersonalPlanReadyClient
           leadId={lead.id}
-          nextHref={
-            isPersonalPlanAppV1Enabled() ? "/plan-start" : "/onboarding?returnTo=%2Froutine"
-          }
+          nextHref={personalPlanV1Allowed ? "/plan-start" : "/onboarding?returnTo=%2Froutine"}
         />
       )
     case "pricing":

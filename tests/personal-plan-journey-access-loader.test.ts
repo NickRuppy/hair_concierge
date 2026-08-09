@@ -38,6 +38,7 @@ function deps(
     }),
     cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
     appEnabled: () => true,
+    appRollout: () => "all",
     stage2Enabled: () => true,
     stage3Enabled: () => true,
     stage4Enabled: () => true,
@@ -76,6 +77,33 @@ function deps(
     ...overrides,
   }
 }
+
+test("internal app rollout excludes non-internal users before plan data is read", async () => {
+  let entitlementReads = 0
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      appRollout: () => "internal",
+      loadIsInternal: async () => false,
+      loadEntitlement: async () => {
+        entitlementReads += 1
+        throw new Error("must not read entitlement for excluded users")
+      },
+    }),
+    "customer-1",
+  )
+
+  assert.deepEqual(access, { kind: "legacy" })
+  assert.equal(entitlementReads, 0)
+})
+
+test("internal app rollout admits the internal owner to the regular journey", async () => {
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({ appRollout: () => "internal", loadIsInternal: async () => true }),
+    "nick-1",
+  )
+
+  assert.equal(access.kind, "personal_plan")
+})
 
 test("loader derives the frontier only from owner-scoped entitlement, source, plan and current authority facts", async () => {
   const access = await loadPersonalPlanJourneyAccessWithDeps(deps(), "user-1")
@@ -429,6 +457,7 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       ...loader,
       cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
       appEnabled: () => true,
+      appRollout: () => "all",
       stage2Enabled: () => true,
       stage3Enabled: () => true,
       stage4Enabled: () => true,
@@ -466,6 +495,7 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       ...loader,
       cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
       appEnabled: () => true,
+      appRollout: () => "all",
       stage2Enabled: () => true,
       stage3Enabled: () => true,
       stage4Enabled: () => true,

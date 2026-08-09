@@ -3,10 +3,13 @@ import test from "node:test"
 
 import { isPersonalPlanStage3LabEnabled } from "../src/lib/labs/personal-plan-stage3-access"
 import {
+  canAccessPersonalPlanAppV1Rollout,
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
+  resolvePersonalPlanAppV1Rollout,
+  resolvePersonalPlanAppV1InternalEmails,
 } from "../src/lib/personal-plan/release"
 
 test("the single Personal Plan app kill-switch is strict and default-off", () => {
@@ -14,6 +17,48 @@ test("the single Personal Plan app kill-switch is strict and default-off", () =>
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "false" }), false)
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "TRUE" }), false)
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), true)
+})
+
+test("the Personal Plan rollout supports an internal-only production cohort", () => {
+  assert.equal(resolvePersonalPlanAppV1Rollout({}), "off")
+  assert.equal(resolvePersonalPlanAppV1Rollout({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), "all")
+
+  assert.deepEqual(
+    [
+      ...resolvePersonalPlanAppV1InternalEmails({
+        PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS:
+          " Nick+Plan@Example.com,invalid, nick+plan@example.com ",
+      }),
+    ],
+    ["nick+plan@example.com"],
+  )
+  assert.equal(
+    resolvePersonalPlanAppV1Rollout({
+      PERSONAL_PLAN_APP_V1_ENABLED: "true",
+      PERSONAL_PLAN_APP_V1_ROLLOUT: "internal",
+    }),
+    "internal",
+  )
+  assert.equal(
+    resolvePersonalPlanAppV1Rollout({
+      PERSONAL_PLAN_APP_V1_ENABLED: "true",
+      PERSONAL_PLAN_APP_V1_ROLLOUT: "invalid",
+    }),
+    "off",
+  )
+
+  assert.equal(
+    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: "internal", isInternal: true }),
+    true,
+  )
+  assert.equal(
+    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: "internal", isInternal: false }),
+    false,
+  )
+  assert.equal(
+    canAccessPersonalPlanAppV1Rollout({ appEnabled: false, rollout: "all", isInternal: true }),
+    false,
+  )
 })
 
 test("Stage 2 and Stage 3 release gates are strict and default-off", () => {
