@@ -1,11 +1,8 @@
 import {
-  findOneTimePurchaseEntitlementForUser,
-  resolveOneTimePurchaseAccessState,
-} from "@/lib/billing/purchases"
-import {
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanAppV1Enabled,
 } from "@/lib/personal-plan/release"
+import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
 
 import type {
   CreateInitialNeedRequest,
@@ -49,12 +46,12 @@ export function createStage1SupabaseDependencies(
     isEnabled: isPersonalPlanAppV1Enabled,
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
     async findEntitlement(userId) {
-      const entitlement = await findOneTimePurchaseEntitlementForUser(admin as never, userId)
+      const enrollment = await findPersonalPlanEnrollmentForUser(admin as never, userId)
       return {
-        accessState: resolveOneTimePurchaseAccessState(entitlement),
-        purchaseId: entitlement?.purchase.id ?? null,
-        paidAt: entitlement?.purchase.paid_at ?? null,
-        artifactLeadId: entitlement?.consent?.lead_id ?? null,
+        accessState: enrollment.accessState,
+        enrollmentSourceId: enrollment.sourceId,
+        paidAt: enrollment.paidAt,
+        artifactLeadId: enrollment.artifactLeadId,
       }
     },
     async loadArtifact(userId, artifactLeadId): Promise<Stage1PreparedArtifact | null> {

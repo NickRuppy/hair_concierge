@@ -1,9 +1,5 @@
 import "server-only"
 
-import {
-  findOneTimePurchaseEntitlementForUser,
-  resolveOneTimePurchaseAccessState,
-} from "@/lib/billing/purchases"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { buildStage3EntryContext } from "./products/stage2-entry-adapter"
 import { requireCurrentAuthoritySnapshot } from "./products/authority/snapshot"
@@ -26,6 +22,7 @@ import {
   type PersonalPlanJourneyAccess,
   type PersonalPlanJourneyAccessInput,
 } from "./journey-access"
+import { findPersonalPlanEnrollmentForUser } from "./enrollment"
 
 type AccessState = PersonalPlanJourneyAccessInput["accessState"]
 
@@ -261,11 +258,11 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
 ): PersonalPlanJourneyAccessLoaderDeps {
   return {
     async loadEntitlement(userId) {
-      const entitlement = await findOneTimePurchaseEntitlementForUser(admin as never, userId)
+      const enrollment = await findPersonalPlanEnrollmentForUser(admin as never, userId)
       return {
-        accessState: resolveOneTimePurchaseAccessState(entitlement),
-        paidAt: entitlement?.purchase.paid_at ?? null,
-        artifactLeadId: entitlement?.consent?.lead_id ?? null,
+        accessState: enrollment.accessState,
+        paidAt: enrollment.paidAt,
+        artifactLeadId: enrollment.artifactLeadId,
       }
     },
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,

@@ -23,7 +23,7 @@ function dependencies(overrides: Partial<Stage1RouteDeps> = {}): Stage1RouteDeps
       cohortCutoff: () => new Date("2026-08-08T00:00:00.000Z"),
       findEntitlement: async () => ({
         accessState: "active",
-        purchaseId: "purchase-1",
+        enrollmentSourceId: "purchase-1",
         paidAt: "2026-08-08T01:00:00.000Z",
         artifactLeadId: "lead-1",
       }),

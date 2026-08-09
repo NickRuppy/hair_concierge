@@ -20,7 +20,7 @@ function dependencies(
     cohortCutoff: () => new Date("2026-08-08T00:00:00.000Z"),
     findEntitlement: async () => ({
       accessState: "active",
-      purchaseId: "22222222-2222-4222-8222-222222222222",
+      enrollmentSourceId: "22222222-2222-4222-8222-222222222222",
       paidAt: "2026-08-08T01:00:00.000Z",
       artifactLeadId: "44444444-4444-4444-8444-444444444444",
     }),
@@ -69,7 +69,7 @@ test("Stage 1 keeps flag-off, non-cohort, and pending states outside all reads a
         isEnabled: () => expected !== "personal_plan_not_available",
         findEntitlement: async () => ({
           accessState: expected === "activation_pending" ? "paid_pending" : "active",
-          purchaseId: "purchase-1",
+          enrollmentSourceId: "purchase-1",
           paidAt: "2026-08-08T01:00:00.000Z",
           artifactLeadId: "lead-1",
         }),
@@ -100,7 +100,7 @@ test("Stage 1 rejects a paid purchase before the rollout cutoff without mutating
     dependencies({
       findEntitlement: async () => ({
         accessState: "active",
-        purchaseId: "purchase-1",
+        enrollmentSourceId: "purchase-1",
         paidAt: "2026-08-07T23:59:59.999Z",
         artifactLeadId: "lead-1",
       }),

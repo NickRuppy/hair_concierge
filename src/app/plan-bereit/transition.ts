@@ -1,7 +1,7 @@
 export const PERSONAL_PLAN_READY_MESSAGES = [
   "Deine Zahlung ist bestätigt.",
   "Dein persönlicher Haarplan ist vorbereitet.",
-  "Jetzt verfeinerst du ihn mit deinen Produkten.",
+  "Sieh dir jetzt zuerst deinen Bedarfsplan an.",
 ] as const
 
 export const PERSONAL_PLAN_READY_MESSAGE_MS = 2_200

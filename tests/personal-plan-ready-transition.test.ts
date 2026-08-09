@@ -10,11 +10,11 @@ import {
   personalPlanStoryIndexAt,
 } from "../src/app/plan-bereit/transition"
 
-test("the post-payment story confirms purchase, preparation, and product refinement", () => {
+test("the post-payment story confirms purchase and leads with the provisional need plan", () => {
   assert.deepEqual(PERSONAL_PLAN_READY_MESSAGES, [
     "Deine Zahlung ist bestätigt.",
     "Dein persönlicher Haarplan ist vorbereitet.",
-    "Jetzt verfeinerst du ihn mit deinen Produkten.",
+    "Sieh dir jetzt zuerst deinen Bedarfsplan an.",
   ])
 })
 
@@ -55,6 +55,9 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
   assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Plan ansehen/)
+  assert.match(client, /Dein Bedarfsplan ist bereit/)
+  assert.match(client, /Zuerst siehst du, was dein Haar laut deinem Quiz braucht/)
+  assert.doesNotMatch(client, /Verfeinere ihn jetzt mit deinen Produkten/)
   assert.match(route, /loadPersonalPlanReadiness\(admin, user\.id, user\.email, leadId\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)

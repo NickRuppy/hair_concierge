@@ -115,14 +115,12 @@ export function PersonalPlanReadyClient({
             <div className="w-full space-y-7">
               <div className="space-y-3">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#88466c]">
-                  Dein Plan ist vorbereitet
+                  Dein Bedarfsplan ist bereit
                 </p>
-                <h1 className="font-header text-4xl leading-tight">
-                  Verfeinere ihn jetzt mit deinen Produkten.
-                </h1>
+                <h1 className="font-header text-4xl leading-tight">Das braucht dein Haar.</h1>
                 <p className="mx-auto max-w-sm text-base leading-7 text-[#6d6069]">
-                  Ergänze die Produkte, die du bereits verwendest. Danach siehst du deinen
-                  vollständigen Haarplan in deiner Routine.
+                  Zuerst siehst du, was dein Haar laut deinem Quiz braucht. Danach machen wir den
+                  Plan mit deinen eigenen Produkten wirklich zu deinem.
                 </p>
               </div>
 

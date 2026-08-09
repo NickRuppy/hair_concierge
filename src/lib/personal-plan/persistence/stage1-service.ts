@@ -5,7 +5,7 @@ export const PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION = "stage1-v1"
 
 export type Stage1Entitlement = {
   accessState: "active" | "paid_pending" | "none" | "revoked"
-  purchaseId: string | null
+  enrollmentSourceId: string | null
   paidAt: string | null
   artifactLeadId: string | null
 }
@@ -99,7 +99,7 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
       const outputSnapshot = computed.snapshot as unknown as JsonValue
       const request: CreateInitialNeedRequest = {
         userId,
-        enrollmentPurchaseSourceId: entitlement.purchaseId!,
+        enrollmentPurchaseSourceId: entitlement.enrollmentSourceId!,
         preparedArtifactSourceId: artifact.id,
         schemaVersion: computed.snapshot.schemaVersion,
         computationVersion: computed.snapshot.computationVersion,
@@ -134,7 +134,7 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
 function isEligibleNewBuyer(entitlement: Stage1Entitlement, cutoff: Date | null): boolean {
   if (
     entitlement.accessState !== "active" ||
-    !entitlement.purchaseId ||
+    !entitlement.enrollmentSourceId ||
     !entitlement.paidAt ||
     !entitlement.artifactLeadId ||
     !cutoff
