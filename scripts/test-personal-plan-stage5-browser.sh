@@ -12,12 +12,32 @@ server_log="$test_workspace/next.log"
 server_pid=""
 started_by_this_script=false
 
+stop_server() {
+  if [[ -z "$server_pid" ]]; then
+    return
+  fi
+
+  # The Python launcher creates a dedicated session/process group, so this can
+  # stop only the Next tree started by this harness (npm -> next -> children).
+  if kill -0 -- "-$server_pid" >/dev/null 2>&1; then
+    kill -TERM -- "-$server_pid" >/dev/null 2>&1 || true
+  fi
+  for _ in $(seq 1 10); do
+    if ! kill -0 -- "-$server_pid" >/dev/null 2>&1; then
+      break
+    fi
+    sleep 1
+  done
+  if kill -0 -- "-$server_pid" >/dev/null 2>&1; then
+    kill -KILL -- "-$server_pid" >/dev/null 2>&1 || true
+  fi
+  wait "$server_pid" >/dev/null 2>&1 || true
+  server_pid=""
+}
+
 cleanup() {
   exit_status=$?
-  if [[ -n "$server_pid" ]]; then
-    kill "$server_pid" >/dev/null 2>&1 || true
-    wait "$server_pid" >/dev/null 2>&1 || true
-  fi
+  stop_server
   if [[ "$started_by_this_script" == "true" ]]; then
     npm exec -- supabase --workdir "$test_project_root" stop \
       --project-id "$test_project_id" --no-backup >/dev/null 2>&1 || true
@@ -61,7 +81,10 @@ export PERSONAL_PLAN_STAGE5_ROLLOUT=all
 export PERSONAL_PLAN_STAGE5_ISOLATED_BROWSER=1
 export PLAYWRIGHT_BASE_URL="http://127.0.0.1:3225"
 
-npm run dev -- --hostname 127.0.0.1 --port 3225 >"$server_log" 2>&1 &
+# Run Next in an isolated session. Killing npm alone leaves its Next child
+# behind, which can retain .next/dev/lock for the following browser harness.
+python3 -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' \
+  npm run dev -- --hostname 127.0.0.1 --port 3225 >"$server_log" 2>&1 &
 server_pid=$!
 
 for _ in $(seq 1 120); do

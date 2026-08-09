@@ -154,9 +154,9 @@ async function seedBuyer(input: { email: string; active: boolean }) {
       full_name: "Personal Plan Browser",
       onboarding_completed: true,
       onboarding_step: "celebration",
-      subscription_status: "active",
-      subscription_interval: "month",
-      current_period_end: "2027-08-08T12:00:00.000Z",
+      subscription_status: input.active ? "active" : null,
+      subscription_interval: input.active ? "month" : null,
+      current_period_end: input.active ? "2027-08-08T12:00:00.000Z" : null,
     }),
   )
   await requireWrite(
@@ -825,13 +825,14 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
 
     await login(page, email, `/plan-bereit?lead=${pending.leadId}`)
     await page.waitForURL("**/plan-bereit**")
-    await expect(page.getByRole("button", { name: "Erneut prüfen" })).toBeVisible()
+    const retryLink = page.getByRole("link", { name: "Status erneut prüfen" })
+    await expect(retryLink).toBeVisible()
     const denied = await page.request.get("/api/personal-plan/stage-2")
     expect(denied.status()).toBe(409)
-    await expect(denied.json()).resolves.toEqual({ error: "stage_not_ready" })
+    await expect(denied.json()).resolves.toEqual({ error: "activation_pending" })
 
     await completeDisposableFulfillment(pending.admin, pending)
-    await page.getByRole("button", { name: "Erneut prüfen" }).click()
+    await retryLink.click()
     await page.getByRole("link", { name: "Plan ansehen" }).click({ timeout: 15_000 })
     await page.waitForURL("**/plan-start")
   })
