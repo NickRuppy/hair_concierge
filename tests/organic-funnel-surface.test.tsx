@@ -81,6 +81,11 @@ test("organic offer renders the approved calm hierarchy with exactly one supplie
   const sectionIds = Array.from(html.matchAll(/data-offer-section="([^"]+)"/g), (match) => match[1])
 
   assert.match(html, /Dein Haarplan ist bereit/)
+  assert.match(html, /Schau dir zuerst das Video an:/)
+  assert.match(html, /<wistia-player[^>]*media-id="hofntlzjgj"/)
+  assert.match(html, /<wistia-player[^>]*aspect="1\.7777777777777777"/)
+  assert.match(html, /<wistia-player[^>]*autoplay="false"/)
+  assert.match(html, /<wistia-player[^>]*silent-autoplay="false"/)
   assert.match(html, /Deine Ausgangslage/)
   assert.match(html, /In deinem Haar steckt viel Potenzial/)
   assert.equal((html.match(/data-organic-diagnostic-row=/g) ?? []).length, 3)
@@ -122,6 +127,18 @@ test("organic offer excludes retired sales devices and photographic before-after
   assert.doesNotMatch(html, /Dein Haarpotenzial|% erreicht|Score/i)
   assert.doesNotMatch(html, /Angebot läuft ab|Countdown|Danach zum regulären Preis|nur heute/i)
   assert.doesNotMatch(html, /Ja, zeig mir Chaarlie|Kapitel|freischalten, um weiterzulesen/i)
+})
+
+test("organic offer loads the supplied Wistia scripts through the isolated video component", () => {
+  const source = readFileSync(
+    new URL("../src/components/organic-plan-offer/wistia-video.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /https:\/\/fast\.wistia\.com\/player\.js/)
+  assert.match(source, /https:\/\/fast\.wistia\.com\/embed\/\$\{WISTIA_MEDIA_ID\}\.js/)
+  assert.match(source, /type="module"/)
+  assert.match(source, /strategy="afterInteractive"/)
 })
 
 test("home page uses the organic refresh landing instead of the old default landing", () => {
