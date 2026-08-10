@@ -8,6 +8,10 @@ const env = Object.fromEntries(
     .map((l) => { const i = l.indexOf("="); return [l.slice(0, i).trim(), l.slice(i + 1)] }),
 )
 
+const hostname = new URL(env.NEXT_PUBLIC_SUPABASE_URL).hostname
+if (hostname !== "127.0.0.1" && hostname !== "localhost") {
+  throw new Error("ux-audit seed helper is local-Supabase-only")
+}
 const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 })

@@ -85,6 +85,8 @@ ux-audits/
 test-*.mjs
 test-*.ts
 test-*.json
+!scripts/personal-plan/test-owner.mjs
+!scripts/personal-plan/test-owner-policy.mjs
 fix-test-user.mjs
 test-screenshots*/
 *.png

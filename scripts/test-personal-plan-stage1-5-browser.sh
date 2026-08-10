@@ -142,4 +142,7 @@ if [[ "$server_ready" != "true" ]]; then
   exit 1
 fi
 
-npm exec -- playwright test tests/personal-plan-stage1-5.spec.ts --project=chromium
+npm exec -- playwright test tests/personal-plan-test-owner.spec.ts \
+  --project=chromium --workers=1
+npm exec -- playwright test tests/personal-plan-stage1-5.spec.ts \
+  --project=chromium --workers=1

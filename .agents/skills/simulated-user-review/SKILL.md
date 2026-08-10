@@ -39,7 +39,46 @@ Decide the authentication mode before navigating:
 - **Authenticated review:** Use when the user asks to test full functionality, profile, onboarding edits, chat, recommendations, saved state, subscription-gated pages, or anything behind an auth/paywall gate.
 - **Both:** Use when a release touches handoff between public and private areas, such as quiz-to-onboarding, checkout-to-welcome, or login redirects.
 
-For authenticated reviews, do not stop at the auth gate unless no safe auth path exists. First look for a repo-supported test login, seeded account, Playwright auth helper, local dev login route, or documented QA credential. For Hair Concierge local development, prefer the supported local dev login flow when available, and verify that any required app-access state is seeded too, such as an active billing subscription row when middleware gates `/onboarding`, `/chat`, or `/api/chat`. For Hair Concierge production or preview testing, check for the reusable UX-audit account seeded by `scripts/ux-audit-create-test-user.mjs`; the script refreshes auth, profile, billing entitlement, and product usage, and prints the current test credentials. If no safe path exists, report exactly what is missing.
+For authenticated reviews, do not stop at the auth gate unless no safe auth path exists. First look for a repo-supported test login, seeded account, Playwright auth helper, local dev login route, or documented QA credential. For Hair Concierge local development, prefer the supported local dev login flow when available, and verify that any required app-access state is seeded too, such as an active billing subscription row when middleware gates `/onboarding`, `/chat`, or `/api/chat`. The legacy `scripts/ux-audit-create-test-user.mjs` and `scripts/ux-audit-seed.mjs` helpers are local-Supabase-only and do not prepare Personal Plan access.
+
+For a production or preview Personal Plan Stage 1–5 review, use only the fixed synthetic owner workflow:
+
+1. Run the read-only inspection first:
+
+   ```sh
+   node scripts/personal-plan/test-owner.mjs inspect
+   ```
+
+2. If it reports `missing` or safely `partial`, stop and obtain explicit production-write authorization before preparation. The separately authorized command is:
+
+   ```sh
+   ALLOW_PERSONAL_PLAN_TEST_OWNER_PRODUCTION_WRITE=1 \
+     node scripts/personal-plan/test-owner.mjs prepare --apply \
+     --confirm-project=pqdkhefxsxkyeqelqegq
+   ```
+
+3. Before a fresh full journey, retain the completed state for diagnosis unless the user explicitly authorizes a reset. The separately authorized reset is:
+
+   ```sh
+   ALLOW_PERSONAL_PLAN_TEST_OWNER_PRODUCTION_WRITE=1 \
+     node scripts/personal-plan/test-owner.mjs reset --apply \
+     --confirm-project=pqdkhefxsxkyeqelqegq
+   ```
+
+4. Create a disposable authenticated browser state through the real one-time-link flow:
+
+   ```sh
+   ALLOW_PERSONAL_PLAN_TEST_OWNER_PRODUCTION_WRITE=1 \
+     node scripts/personal-plan/test-owner.mjs auth-state --apply \
+     --base-url=https://chaarlie.de \
+     --confirm-project=pqdkhefxsxkyeqelqegq
+   ```
+
+5. Open a new browser context with the printed absolute storage-state path, verify `/plan-start`, and perform the normal review. Delete the storage-state file immediately after the browser context closes. Never print or retain its contents, and never substitute a customer email or user id.
+
+Generating and consuming the auth state is not read-only: opening `/plan-start` may create or resume this synthetic owner's Personal Plan state. It therefore uses the same explicit production write gate as preparation/reset.
+
+The public field-test campaign flow is a separate short-lived participant journey and is not a reusable authenticated QA owner. If the synthetic owner command reports `unsafe`, stop and report its issue codes; do not repair rows manually or fall back to a real customer.
 
 ### 2. Use browser automation
 

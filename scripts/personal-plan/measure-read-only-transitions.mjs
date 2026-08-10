@@ -17,6 +17,12 @@ if (process.argv.includes("--help")) {
 
 Safety: the sampler aborts every non-GET/HEAD/OPTIONS request. Routine sync is therefore
 excluded deliberately; use Vercel timing logs for that POST after separately authorized testing.
+
+Create the disposable storage state first with:
+  ALLOW_PERSONAL_PLAN_TEST_OWNER_PRODUCTION_WRITE=1 \
+    node scripts/personal-plan/test-owner.mjs auth-state --apply \
+    --base-url=https://chaarlie.de \
+    --confirm-project=pqdkhefxsxkyeqelqegq
 `)
   process.exit(0)
 }
