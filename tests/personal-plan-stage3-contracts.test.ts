@@ -359,6 +359,48 @@ test("decision subjects are derived per assigned product-role or explicit gap", 
   )
 })
 
+test("decision subjects keep category and role authority order after a reopened category is appended", () => {
+  const commonDraft = {
+    ...draft(),
+    orderedCategories: ["oil", "bondbuilder"],
+    products: [],
+    roleAssignments: [],
+  } satisfies Stage3ProductDraft
+  const oilGaps = [
+    { category: "oil", role: "dry_finish", reason: "no_product_owned" },
+    { category: "oil", role: "pre_wash_fibre_treatment", reason: "no_product_owned" },
+    { category: "oil", role: "leave_on_fibre_conditioning", reason: "no_product_owned" },
+  ] as const
+  const bondbuilderGap = {
+    category: "bondbuilder",
+    role: "specialized_bond_treatment",
+    reason: "no_product_owned",
+  } as const
+  const initialSubjects = deriveStage3DecisionSubjects({
+    ...commonDraft,
+    uncoveredRoles: [...oilGaps, bondbuilderGap],
+  })
+  const reopenedSubjects = deriveStage3DecisionSubjects({
+    ...commonDraft,
+    uncoveredRoles: [bondbuilderGap, ...oilGaps],
+  })
+  const expected = [
+    "oil:pre_wash_fibre_treatment",
+    "oil:leave_on_fibre_conditioning",
+    "oil:dry_finish",
+    "bondbuilder:specialized_bond_treatment",
+  ]
+
+  assert.deepEqual(
+    initialSubjects.map((subject) => `${subject.category}:${subject.role}`),
+    expected,
+  )
+  assert.deepEqual(
+    reopenedSubjects.map((subject) => `${subject.category}:${subject.role}`),
+    expected,
+  )
+})
+
 test("an uncovered role can carry only an unassigned or planned-purchase decision", () => {
   const gap = {
     ...draft(),

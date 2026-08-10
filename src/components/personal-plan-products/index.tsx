@@ -86,6 +86,7 @@ export type Stage3ProductDecisionProjection = {
   kind: "fit" | "mismatch" | "pending" | "gap"
   decisionKey: string
   categoryLabel: string
+  roleLabel?: string
   needSummary: string
   verdictLabel: string
   rationale: string
@@ -567,23 +568,31 @@ export function SemanticRoleAssignment({
   onBack: () => void
   disabled?: boolean
 }) {
-  const roleCopy =
-    category === "oil"
-      ? "Ordne dein Öl den Zwecken zu, die es wirklich übernimmt. Ein Öl darf mehrere Zwecke abdecken."
-      : "Ordne jedes Produkt nur den Aufgaben zu, die es wirklich übernimmt. Ein Produkt darf mehrere Aufgaben abdecken."
+  const isOil = category === "oil"
+  const multipleOils = isOil && products.length > 1
+  const heading = isOil
+    ? multipleOils
+      ? "Wofür nutzt du deine Öle?"
+      : "Wofür nutzt du dein Öl?"
+    : `Welche Aufgabe hat dein ${categoryLabel}?`
+  const roleCopy = isOil
+    ? multipleOils
+      ? "Ordne jede Verwendung dem Öl zu, das sie tatsächlich übernimmt."
+      : "Wähle alles aus, was auf dieses Produkt zutrifft."
+    : "Ordne jedes Produkt nur den Aufgaben zu, die es wirklich übernimmt. Ein Produkt darf mehrere Aufgaben abdecken."
 
   return (
     <section>
       <BackButton onBack={onBack} disabled={disabled} />
       <div className="animate-fade-in-up mb-2">
-        <h1 className="font-header text-3xl leading-tight text-foreground">
-          Welche Aufgabe hat dein {categoryLabel}?
-        </h1>
+        <h1 className="font-header text-3xl leading-tight text-foreground">{heading}</h1>
       </div>
       <p className="animate-fade-in-up mb-6 text-sm text-[var(--text-sub)]">{roleCopy}</p>
-      <p className="animate-fade-in-up mb-6 text-sm font-semibold text-[var(--text-sub)]">
-        Nicht ausgewählte Aufgaben bleiben als offene Lücke im Plan erhalten.
-      </p>
+      {!isOil ? (
+        <p className="animate-fade-in-up mb-6 text-sm font-semibold text-[var(--text-sub)]">
+          Nicht ausgewählte Aufgaben bleiben als offene Lücke im Plan erhalten.
+        </p>
+      ) : null}
 
       <div className="space-y-3">
         {products.map((product) => (
@@ -598,6 +607,11 @@ export function SemanticRoleAssignment({
             <div className="mt-4 grid gap-2">
               {roles.map((role) => {
                 const checked = assignments[product.capturedProductId]?.includes(role.role) ?? false
+                const assignedProduct = checked
+                  ? undefined
+                  : products.find((candidate) =>
+                      assignments[candidate.capturedProductId]?.includes(role.role),
+                    )
                 const inputName = `stage3-role-${product.capturedProductId}-${role.role}`
 
                 return (
@@ -623,6 +637,11 @@ export function SemanticRoleAssignment({
                       {role.description ? (
                         <span className="mt-1 block text-xs text-muted-foreground">
                           {role.description}
+                        </span>
+                      ) : null}
+                      {isOil && assignedProduct ? (
+                        <span className="mt-1 block text-xs font-semibold text-[var(--brand-plum)]">
+                          Aktuell: {assignedProduct.displayName}
                         </span>
                       ) : null}
                     </span>
@@ -655,36 +674,54 @@ export function ProductDecisionScreen({
   onBack,
   groupClearFits = false,
   onAcceptClearFits,
+  consolidated = false,
 }: {
   decisions: Stage3ProductDecisionProjection[]
   onChooseAction: (decisionKey: string, action: Stage3DecisionAction) => void
   onBack: () => void
   groupClearFits?: boolean
   onAcceptClearFits?: () => void
+  consolidated?: boolean
 }) {
   return (
     <section>
       <BackButton onBack={onBack} />
       <div className="animate-fade-in-up mb-2">
         <h1 className="font-header text-3xl leading-tight text-foreground">
-          {groupClearFits ? "Diese Produkte passen" : "Produkte prüfen"}
+          {groupClearFits
+            ? "Diese Produkte passen"
+            : consolidated
+              ? "Offene Punkte zu deinem Öl"
+              : "Produkte prüfen"}
         </h1>
         {groupClearFits ? (
           <p className="mt-2 text-sm text-[var(--text-sub)]">
             Die wichtigsten Anforderungen sind abgedeckt. Übernimm sie gemeinsam in deine Routine.
           </p>
+        ) : consolidated ? (
+          <p className="mt-2 text-sm text-[var(--text-sub)]">
+            Entscheide nur noch die Punkte, bei denen es wirklich mehrere Möglichkeiten gibt.
+          </p>
         ) : null}
       </div>
 
       <div className="mt-5 space-y-4">
-        {decisions.map((decision) => (
-          <DecisionCard
-            key={decision.decisionKey}
-            decision={decision}
-            onChooseAction={onChooseAction}
-            hideActions={groupClearFits}
-          />
-        ))}
+        {decisions.map((decision) =>
+          consolidated ? (
+            <ConsolidatedDecisionCard
+              key={decision.decisionKey}
+              decision={decision}
+              onChooseAction={onChooseAction}
+            />
+          ) : (
+            <DecisionCard
+              key={decision.decisionKey}
+              decision={decision}
+              onChooseAction={onChooseAction}
+              hideActions={groupClearFits}
+            />
+          ),
+        )}
       </div>
       {groupClearFits && onAcceptClearFits ? (
         <Button
@@ -697,6 +734,69 @@ export function ProductDecisionScreen({
         </Button>
       ) : null}
     </section>
+  )
+}
+
+function ConsolidatedDecisionCard({
+  decision,
+  onChooseAction,
+}: {
+  decision: Stage3ProductDecisionProjection
+  onChooseAction: (decisionKey: string, action: Stage3DecisionAction) => void
+}) {
+  const toneClass = decisionToneClass(decision.kind)
+
+  return (
+    <article className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="flex items-start justify-between gap-3 p-4">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-foreground">
+            {decision.roleLabel ?? decision.needSummary}
+          </p>
+          <p className="mt-1 break-words text-xs text-muted-foreground">
+            {decision.ownedProductName ?? decision.categoryLabel}
+          </p>
+        </div>
+        <p className={cn("shrink-0 rounded-full px-2 py-1 text-xs font-semibold", toneClass.badge)}>
+          {decision.verdictLabel}
+        </p>
+      </div>
+      <div className="border-t border-border px-4 py-3">
+        <p className="text-sm text-[var(--text-sub)]">{decision.rationale}</p>
+        {decision.recommendation ? (
+          <p className="mt-2 text-sm font-semibold text-[var(--brand-plum)]">
+            Empfehlung: {decision.recommendation.productName}
+          </p>
+        ) : null}
+      </div>
+      {decision.kind === "pending" ? (
+        <p
+          role="status"
+          aria-live="polite"
+          className="border-t border-border px-4 py-3 text-sm text-[var(--status-pending-text)]"
+        >
+          Solange die Produktangaben noch geprüft werden, erscheint es nicht als Anwendungsschritt.
+        </p>
+      ) : null}
+      <div className="grid gap-2 border-t border-border bg-[var(--background)] p-4 sm:grid-cols-2">
+        {decision.actions.map((action) => (
+          <Button
+            key={`${decision.decisionKey}-${action.kind}-${action.label}`}
+            type="button"
+            variant={primaryActionKinds.has(action.kind) ? "unstyled" : "outline"}
+            className={
+              primaryActionKinds.has(action.kind) ? "personal-plan-primary-action" : undefined
+            }
+            onClick={() => onChooseAction(decision.decisionKey, action)}
+            data-stage3-decision-key={decision.decisionKey}
+            data-stage3-action-kind={action.kind}
+            aria-label={decisionActionAriaLabel(decision, action)}
+          >
+            {action.label}
+          </Button>
+        ))}
+      </div>
+    </article>
   )
 }
 
@@ -735,6 +835,11 @@ function DecisionCard({
       </div>
 
       <div className="border-t border-border px-4 py-3">
+        {decision.roleLabel ? (
+          <p className="mb-1 text-xs font-semibold text-[var(--brand-plum)]">
+            {decision.roleLabel}
+          </p>
+        ) : null}
         <p className="text-sm font-semibold text-foreground">{decision.needSummary}</p>
         <p className="mt-2 text-sm text-[var(--text-sub)]">{decision.rationale}</p>
       </div>
@@ -803,11 +908,7 @@ function DecisionCard({
               onClick={() => onChooseAction(decision.decisionKey, action)}
               data-stage3-decision-key={decision.decisionKey}
               data-stage3-action-kind={action.kind}
-              aria-label={
-                action.productName
-                  ? `${action.label}: ${action.productName}`
-                  : `${action.label}: ${decision.categoryLabel} — ${decision.needSummary}`
-              }
+              aria-label={decisionActionAriaLabel(decision, action)}
             >
               {action.label}
             </Button>
@@ -819,6 +920,16 @@ function DecisionCard({
 }
 
 const primaryActionKinds = new Set<Stage3DecisionAction["kind"]>(["keep", "plan_purchase"])
+
+function decisionActionAriaLabel(
+  decision: Stage3ProductDecisionProjection,
+  action: Stage3DecisionAction,
+) {
+  if (action.productName) {
+    return `${action.label}: ${action.productName}${decision.roleLabel ? ` — ${decision.roleLabel}` : ""}`
+  }
+  return `${action.label}: ${decision.categoryLabel} — ${decision.roleLabel ?? decision.needSummary}`
+}
 
 function decisionToneClass(kind: Stage3ProductDecisionProjection["kind"]) {
   if (kind === "fit") {

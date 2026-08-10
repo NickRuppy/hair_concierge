@@ -17,6 +17,7 @@ import {
 import {
   Stage3ProductsFlow,
   type Stage3RoutineHandoff,
+  updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
 import { customerIoDestination } from "../src/lib/analytics/destinations/customerio"
 import { metaDestination } from "../src/lib/analytics/destinations/meta"
@@ -1580,6 +1581,221 @@ test("grouped clear-fit acceptance shows saving and suppresses a second immediat
   assert.equal(singleCalls, 0)
 })
 
+test("Oil resolves checked use and unchecked gaps without replaying decision cards", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const handoffs: Stage3RoutineHandoff[] = []
+  const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-oil-checkbox-first",
+    refinedVersionId: "refined-oil-checkbox-first",
+    orderedCategories: [
+      {
+        category: "oil",
+        requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Schutz und Finish für deine Längen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      onOpenRoutine: (handoff) => handoffs.push(handoff),
+    }),
+  )
+
+  await captureCatalogProduct(harness, "Öl", "oil")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  const roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  assert.ok(roles)
+  roles.props.onToggleRole(roles.props.products[0]!.capturedProductId, "dry_finish", true)
+  tree = await renderSettled(harness)
+  await findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+
+  assert.equal(
+    findByType<React.ComponentProps<typeof ProductDecisionScreen>>(tree, ProductDecisionScreen),
+    null,
+  )
+  assert.deepEqual(
+    intents.map((intent) => intent.action),
+    ["leave_uncovered", "leave_uncovered", "keep_owned"],
+  )
+  assert.equal(handoffs.length, 1)
+})
+
+test("bootstrapped Oil decisions auto-resolve sole safe actions before review", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "oil",
+      requiredRoles: ["dry_finish"],
+      needSummary: "Finish für die Längen",
+      authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+    },
+  ]
+  const initialDraft = createStage3Draft({
+    draftId: "draft-oil-bootstrap-auto",
+    userId: "user-oil-bootstrap-auto",
+    personalPlanId: "plan-oil-bootstrap-auto",
+    refinedVersionId: "refined-oil-bootstrap-auto",
+    requirements,
+    now: "2026-08-10T00:00:00.000Z",
+  })
+  let latestDraft: Stage3ProductDraft = {
+    ...initialDraft,
+    revision: 1,
+    pass: "product_decisions",
+    categoryCursor: null,
+    uncoveredRoles: [{ category: "oil", role: "dry_finish", reason: "no_product_owned" }],
+  }
+  const subject = deriveStage3DecisionSubjects(latestDraft)[0]!
+  const evaluation = testAuthorityEvaluation(latestDraft, subject)
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const base = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const gateway = {
+    ...base,
+    async resolveDecision(input: {
+      draftId: string
+      expectedRevision: number
+      intent: Stage3AuthoritySemanticIntent
+    }): Promise<Stage3MutationResponse> {
+      intents.push(input.intent)
+      const decision = testAuthorityDecision(subject, evaluation, input.intent)
+      latestDraft = {
+        ...latestDraft,
+        revision: latestDraft.revision + 1,
+        decisions: [...latestDraft.decisions, decision],
+      }
+      return { status: "saved", draft: latestDraft }
+    },
+    async complete() {
+      return { status: "not_ready" as const, draft: latestDraft }
+    },
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: latestDraft.personalPlanId,
+      refinedVersionId: latestDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+    },
+    draft: latestDraft,
+    requirements,
+    authorityEvaluations: [evaluation],
+  }
+  const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
+
+  const tree = await renderSettled(harness)
+
+  assert.deepEqual(
+    intents.map((intent) => intent.action),
+    ["leave_uncovered"],
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof ProductDecisionScreen>>(tree, ProductDecisionScreen),
+    null,
+  )
+})
+
+test("assigning an Oil use to another product moves the exclusive checkbox", () => {
+  const assignments = updateStage3RoleAssignments(
+    { "oil-1": ["dry_finish", "pre_wash_fibre_treatment"], "oil-2": [] },
+    "oil-2",
+    "dry_finish",
+    true,
+    true,
+  )
+
+  assert.deepEqual(assignments, {
+    "oil-1": ["pre_wash_fibre_treatment"],
+    "oil-2": ["dry_finish"],
+  })
+})
+
+test("Oil consolidates genuine role choices while auto-resolving the safe role", async () => {
+  const intents: Stage3AuthoritySemanticIntent[] = []
+  const gateway = createAuthorityTestGateway({
+    onIntent: (intent) => intents.push(intent),
+    evaluate(draft, subject) {
+      const evaluation = testAuthorityEvaluation(draft, subject)
+      if (subject.role === "dry_finish") return evaluation
+      assert.equal(evaluation.status, "known")
+      return {
+        ...evaluation,
+        verdict: "mismatch",
+        allowedActions: ["plan_recommendation", "acknowledge_override"],
+        recommendation: {
+          recommendationId: `recommend:${subject.decisionKey}`,
+          productId: `recommended:${subject.decisionKey}`,
+          category: "oil",
+          role: subject.role,
+          displayName: "Passenderes Öl",
+          reason: "Passt besser zur Verwendung.",
+          authorityRuleId: "test.authority",
+        },
+        recommendationFactFingerprint: `facts:recommend:${subject.decisionKey}`,
+      }
+    },
+  })
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-oil-consolidated-choices",
+    refinedVersionId: "refined-oil-consolidated-choices",
+    orderedCategories: [
+      {
+        category: "oil",
+        requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+        needSummary: "Schutz und Finish für deine Längen",
+        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Öl", "oil")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  await assignEveryRoleToFirstProduct(harness)
+  tree = await renderSettled(harness)
+
+  const screen = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
+    tree,
+    ProductDecisionScreen,
+  )
+  assert.ok(screen)
+  assert.equal(screen.props.consolidated, true)
+  assert.deepEqual(
+    screen.props.decisions.map((decision) => decision.roleLabel),
+    ["Vor der Haarwäsche", "Im feuchten Haar"],
+  )
+  assert.deepEqual(
+    intents.map((intent) => intent.action),
+    ["keep_owned"],
+  )
+})
+
 test("interactive lab flow captures products first, assigns roles, decides fit, and displays a typed handoff", async () => {
   const intents: Stage3AuthoritySemanticIntent[] = []
   const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
@@ -1690,9 +1906,6 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
 
   await chooseDecision(harness, "keep")
   await chooseDecision(harness, "plan_purchase")
-  await chooseDecision(harness, "keep")
-  await chooseDecision(harness, "keep")
-  await chooseDecision(harness, "keep")
   await chooseDecision(harness, "pending")
   await chooseDecision(harness, "skip")
 
