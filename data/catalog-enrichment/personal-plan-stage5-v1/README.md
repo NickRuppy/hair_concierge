@@ -40,8 +40,11 @@ and missing launch cohorts rather than re-researching the complete catalog.
 
 ## Current research result
 
-- Mask: 5 of 35 exact protocols are executable. Thirty labels omit or do not
-  resolve the Conditioner relationship; a shared fallback decision is required.
+- Mask: 25 of 35 exact protocols are executable. The shared intensive-care
+  default makes the Mask replace Conditioner when an otherwise complete label
+  is silent only about that relationship. Seven products still need identity or
+  commercial re-verification; three still lack or contradict a critical
+  application direction.
 - Targeted dandruff Shampoo: 7 of 8 exact protocols are executable. The current
   DERMAXPRO page does not expose a product-specific application direction.
 - Bondbuilder: all four reviewed primary/companion protocols are executable.

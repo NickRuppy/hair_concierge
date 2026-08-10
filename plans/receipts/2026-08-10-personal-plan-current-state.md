@@ -49,7 +49,7 @@ The exact frozen product list is in
 
 | Batch | Verified executable rows | Explicitly blocked | Remaining gate |
 |---|---:|---:|---|
-| Mask | 5 | 30 | Decide the default Mask/Conditioner relationship when the label is silent. |
+| Mask | 25 | 10 | Seven identity/commercial gaps and three genuine application-direction gaps remain; silence only about Conditioner now defaults to replacement on the intensive-care wash. |
 | Targeted dandruff Shampoo | 7 | 1 | Refresh DERMAXPRO exact directions or keep it unresolved. |
 | Bondbuilder | 4 | 0 | Named-batch apply approval only. |
 | Oil smallest cohort | 2 role rows / 1 product | 4 sampled products | Verify a genuine pre-wash hair product and coarse leave-on/finish route. |

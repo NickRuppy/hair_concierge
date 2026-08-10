@@ -26,7 +26,7 @@
       "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
       "product_name": "Balea 3 in 1 Intensivmaske",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -36,16 +36,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states a three-minute rinse-out Mask use but not whether it replaces or follows Conditioner."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-d5d67009-7aac-4299-938b-7218b8635a0c",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
       "product_name": "Balea Aqua Hyaluron 3 in 1",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -55,16 +115,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states a three-minute rinse-out Mask use but not whether it replaces or follows Conditioner."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-55727898-2a5e-4f01-ace1-bd91521d98ab",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "55727898-2a5e-4f01-ace1-bd91521d98ab"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
       "product_name": "Balea Natural Beauty 3in1 Locken",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -74,10 +194,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states a three-minute rinse-out Mask use but not whether it replaces or follows Conditioner."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
@@ -181,7 +361,7 @@
       "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
       "product_name": "Balea Professional Plex Care 2in1",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -191,10 +371,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The product has distinct pre-wash and rinse-out uses; the rinse-out Mask directions do not state the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "Etwa 3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-plex-care-2in1",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
@@ -317,7 +557,7 @@
       "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
       "product_name": "Fructis Hair Food Aloe Vera",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -327,16 +567,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states five to ten minutes in damp lengths and ends, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-52264c47-f339-49db-9fb2-207d1ad3b470",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins feuchte Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "5–10 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
       "product_name": "Fructis Hair Food Papaya",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -346,16 +646,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states a three-minute rinse-out Mask use but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-9e1442c9-4ab8-4819-a851-66859a98ed80",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1676330/garnier-fructis-haarkur-papaya-hair-food-3in1-maske",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "17c50884-3c17-479a-848a-10447464e086",
       "product_name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -365,10 +725,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states a one-minute rinse-out treatment but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-17c50884-3c17-479a-848a-10447464e086",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "17c50884-3c17-479a-848a-10447464e086"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "1 Minute einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
@@ -472,7 +892,7 @@
       "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
       "product_name": "Guhl 30 sec. Feuchtigkeit",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -482,16 +902,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states 30 seconds on wet hair and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-c7326c6b-6175-4ec2-865f-68baf476c986",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "c7326c6b-6175-4ec2-865f-68baf476c986"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 30,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "30 Sekunden einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1649554/guhl-haarkur-30-sek-feuchtigkeit",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
       "product_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -501,16 +981,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The page describes a short rinse-out 2-in-1 use but does not give a precise Conditioner sequence for the Mask role."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
       "product_name": "Hask Argan Oil Repairing Deep Conditioner",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -520,10 +1060,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states up to ten minutes on clean wet hair, but the Mask-versus-Conditioner relationship remains ambiguous."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "7c057f58-3e9b-4347-b4c1-f04cc4213f94"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins saubere, nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "Bis zu 10 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
@@ -548,7 +1148,7 @@
       "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
       "product_name": "Jean&Len Tiefenreparatur Haarkur",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -558,16 +1158,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states three to five minutes on damp hair and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-b3932c84-d6e1-453d-b52e-bed1df190fed",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins feuchte Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3–5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-jeanundlen-tiefenreparatur-haarkur/p/4262401737824",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
       "product_name": "Neqi Build Boost",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -577,16 +1237,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label says Conditioner may be used as needed, which the current exact relationship enum cannot express without a policy choice."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Shampoonieren im gesamten Haar verteilen und einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "Mindestens 3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "b281d528-b312-4e44-98be-3e01f7e56644",
       "product_name": "Neqi Gloss Glaze",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -596,16 +1316,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label says Conditioner may be used as needed, which the current exact relationship enum cannot express without a policy choice."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-b281d528-b312-4e44-98be-3e01f7e56644",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "b281d528-b312-4e44-98be-3e01f7e56644"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Shampoonieren im gesamten Haar verteilen und einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "Mindestens 3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2972720/neqi-haarkur-treatment-treasures-gloss-glaze",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "22d41784-5fc6-40bb-a4dc-92841322f933",
       "product_name": "Neqi Peptide Power",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -615,10 +1395,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label says Conditioner may be used as needed, which the current exact relationship enum cannot express without a policy choice."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-22d41784-5fc6-40bb-a4dc-92841322f933",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "22d41784-5fc6-40bb-a4dc-92841322f933"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Shampoonieren im gesamten Haar verteilen und einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "Mindestens 3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "d33543b0-6011-45f1-9bb2-125289ac849a",
@@ -703,7 +1543,7 @@
       "product_id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
       "product_name": "Pantene Bond Repair",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -713,16 +1553,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states two minutes on wet hair and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
       "product_name": "Pantene Hydra Glow",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -732,10 +1632,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states two minutes on wet hair and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "077a94ae-fede-4773-9435-17022c2b89c0",
@@ -858,7 +1818,7 @@
       "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
       "product_name": "Schaebens Argan-Öl Haarmaske",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -868,16 +1828,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states five minutes after washing, three times weekly, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "3ce9a9da-4d58-4a66-a424-f8818960b5dc"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 300,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
       "product_name": "Syoss Haarkur Lamination Intense Glaze",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -887,16 +1907,76 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states three to five minutes on washed wet hair and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-cce6346c-8c92-4a17-b39b-cc7f300e84de",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "cce6346c-8c92-4a17-b39b-cc7f300e84de"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3–5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
       "product_name": "Syoss Intense Curls Haarmaske",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -906,10 +1986,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states two to three minutes after washing and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-4f6dc4e4-d163-405d-9c68-3b2467090078",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
@@ -934,7 +2074,7 @@
       "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
       "product_name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
@@ -944,10 +2084,70 @@
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states one minute on wet hair and rinse, but not the Conditioner relationship."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-ea353b65-544d-48a8-a057-c3e733b66326",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "ea353b65-544d-48a8-a057-c3e733b66326"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und gleichmäßig verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "1 Minute einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",

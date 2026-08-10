@@ -68,9 +68,11 @@ percentage, decide whether a fallback is launch-capable.
 
 ### Phase 1 — research result
 
-1. Mask: 5 exact protocols verified; 30 remain blocked on silent/ambiguous
-   Conditioner sequencing. The recommended shared fallback still needs Nick's
-   sign-off.
+1. Mask: 25 exact protocols verified. The confirmed shared fallback makes the
+   Mask replace Conditioner on an intensive-care wash when exact directions are
+   otherwise complete and silent only about that relationship. Ten products
+   remain blocked: seven on identity/commercial verification and three on a
+   genuinely missing or contradictory application direction.
 2. Targeted dandruff Shampoo: 7 exact protocols verified; DERMAXPRO remains
    blocked because its exact page provides no application direction.
 3. Bondbuilder: all 4 primary/companion protocols verified.
@@ -116,7 +118,7 @@ Current reviewed research fingerprints (recompute after any manifest edit):
 
 | Batch | Rows | SHA-256 |
 |---|---:|---|
-| `S5-02-mask-critical-protocols` | 5 | `004dbf9b6f7162dc32f18f6390b35f49846b56a0fdb968af5ee48c5447dc174e` |
+| `S5-02-mask-critical-protocols` | 25 | `695bc4e02623882c41b76c02e656fc26f56174f8f72a709d41503032789d70f4` |
 | `S5-03-targeted-dandruff-shampoo` | 7 | `dde059bc1d01f053ce62abc807564c32501caafa5bb93c64b968711d5daea442` |
 | `S5-04-bondbuilder-primary-protocols` | 4 | `bb7d6b9d70b51888477d89a471d0588b674f57ef2798a54ebbd263d26d1f9249` |
 | `S5-05-oil-role-coverage` | 2 | `7456cdbfed1a64f0516a9ad915a52f6b4c493e9fe7af45e576c8f3b4488988bb` |
@@ -145,12 +147,20 @@ Broad Stage 5 rollout remains `no_go`. Reconsider only when:
 
 ## Verification receipt
 
-- `npm run test:personal-plan`: 1,024 passed.
-- `npm run test:node`: 3,372 passed.
+- Branch `codex/personal-plan-catalog-completion`; base
+  `506bd05b84f2eebd5eece3c726a30163a146e3c6` (`origin/main`).
+- The Mask regression guard first failed with `5 !== 25` on the pre-decision
+  manifest, then passed after the replacement policy was materialized.
+- Focused Stage 5 compiler, adapter, resolver, day-matrix and catalog checks:
+  53 passed. The compiler proof renders Shampoo plus the exact Mask steps and
+  omits Conditioner when the protocol relationship is `replaces_conditioner`.
+- `npm run test:personal-plan`: 1,026 passed.
+- `npm run test:node`: 3,374 passed.
 - `npm run test:personal-plan-db`: 257 passed across 10 files, including the
   exact-protocol executor apply/replay/security contract.
-- Focused Stage 3/5 protocol tests: 43 passed; research validator reports 27
-  verified and 36 explicitly blocked rows across five manifests.
+- The refreshed research validator reports 47 verified and 16 explicitly
+  blocked rows across five manifests.
 - `npm run typecheck`: passed.
 - `npm run lint`: passed with four pre-existing warnings and zero errors.
 - `PERSONAL_PLAN_APP_V1_ENABLED=false npm run build`: passed.
+- `git diff --check`: passed.

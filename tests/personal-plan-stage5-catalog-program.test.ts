@@ -278,6 +278,35 @@ test("Stage 5 apply batch contains only verified exact protocols and has a stabl
   assert.equal(first.canonicalJson, second.canonicalJson)
 })
 
+test("Mask research applies the intensive-care replacement default without overriding label exceptions", async () => {
+  const manifest = validateProtocolResearchManifest(
+    await json<unknown>(`${ROOT}/protocol-research/S5-02-mask-critical-protocols.json`),
+  )
+  const built = buildStage5ProtocolApplyBatch(manifest)
+  const relationships = built.batch.protocols.map(
+    ({ guidance_payload }) => guidance_payload.protocolFacts.conditionerRelationship,
+  )
+
+  assert.equal(built.batch.protocols.length, 25)
+  assert.equal(
+    manifest.products.filter(({ research_status }) => research_status !== "verified").length,
+    10,
+  )
+  assert.equal(
+    relationships.filter((relationship) => relationship === "replaces_conditioner").length,
+    21,
+  )
+  assert.equal(
+    relationships.filter((relationship) => relationship === "conditioner_after").length,
+    2,
+  )
+  assert.equal(
+    relationships.filter((relationship) => relationship === "conditioner_before").length,
+    1,
+  )
+  assert.equal(relationships.filter((relationship) => relationship === "no_conditioner").length, 1)
+})
+
 test("Stage 5 protocol preflight rejects category drift and conflicting existing authority", async () => {
   const manifest = validateProtocolResearchManifest(
     await json<unknown>(`${ROOT}/protocol-research/S5-03-targeted-dandruff-shampoo.json`),

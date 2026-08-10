@@ -72,7 +72,7 @@ V1 excludes:
 - protocol-specific Bondbuilders and bond treatments;
 - products whose primary job is Styling rather than rinse-out care.
 
-At category level, Mask is normally additional to Conditioner. Within one concrete intensive-care wash, the Mask may replace Conditioner or be combined with it only according to the verified product relationship and protocol.
+At category level, Mask is normally additional to Conditioner because the user still needs Conditioner on ordinary washes. Within one concrete intensive-care wash, the Mask occupies the Conditioner slot by default. The exact product protocol may override that default only when its verified directions explicitly require Conditioner before or after the Mask.
 
 ## Inclusion and need tier
 
@@ -395,7 +395,8 @@ When exact directions do not specify otherwise:
 - Missing scalp permission defaults to lengths/ends only.
 - Missing heat-cap or overnight permission means those techniques are unsupported and omitted.
 - Missing multi-use evidence means ordinary rinse-out use only.
-- Missing contact time or Conditioner sequence is a critical role-level protocol gap: preserve otherwise valid core fit, show the Mask occurrence as `unknown`, and keep it out of the precise executable recipe until reviewed.
+- Missing contact time or rinse behavior is a critical role-level protocol gap: preserve otherwise valid core fit, show the Mask occurrence as `unknown`, and keep it out of the precise executable recipe until reviewed.
+- A label that is silent only about Conditioner sequencing uses the plan-wide `replaces_conditioner` default. This fallback changes no product claim and never overrides an explicit verified `conditioner_before`, `conditioner_after`, or `no_conditioner` direction.
 - A verified product-specific maximum frequency caps the category cadence. Missing maximum-frequency metadata does not increase cadence and does not replace the confirmed conservative category recommendation.
 
 For a new recommendation, choose only a product whose critical Mask protocol is verified. An owned product with a critical gap remains visible as `noch in Prüfung`; the user may follow its packaging independently, but the Personal Plan does not fabricate a precise recipe.
@@ -417,11 +418,11 @@ Only a confirmed in-hand primary compiles into Stage-3 steps. Shopping, pending,
 
 ## Conditioner and Leave-in relationship
 
-- Conditioner remains the baseline after eligible washes.
+- Conditioner remains the baseline after ordinary eligible washes.
 - Leave-in owns persistent post-wash care.
 - Mask owns periodic intensity.
 - A Basis Mask therefore normally appears alongside Conditioner in the portfolio, not instead of the Conditioner category.
-- On a specific intensive-care wash, the verified product protocol determines whether the Mask replaces Conditioner, is followed by Conditioner, or is used after Conditioner.
+- On a specific intensive-care wash, the Mask replaces Conditioner by default. A verified exact-product protocol may instead place Conditioner before or after the Mask.
 
 The canonical product protocol represents this relationship with the exact `MaskConditionerSequence` values defined above:
 
@@ -550,7 +551,7 @@ Shared card-level reason salience remains deferred until every category is speci
 19. `mask-one-primary-two-owned`: one primary receives the complete cadence; second fitting owned Mask remains independently evaluated and unassigned.
 20. `mask-pending-product`: visible as `noch in Prüfung`, excluded from precise recipes.
 21. `mask-missing-contact-time`: core fit retained, Mask occurrence protocol unknown, no invented waiting time.
-22. `mask-missing-conditioner-sequence`: no invented Conditioner order; occurrence stays out of precise recipes.
+22. `mask-missing-conditioner-sequence`: if Mask placement, timing, and rinse behavior are verified, apply the shared `replaces_conditioner` default; an explicit product sequence still wins.
 23. `mask-verified-protocol`: exact contact time and Conditioner sequence override category fallback.
 24. `mask-generic-application`: safe wet-hair lengths/ends fallback with adaptive sectioning and no false amount precision.
 25. `mask-heavy-response`: amount, then cadence, then product weight is adjusted in that order.
@@ -588,10 +589,10 @@ The minimum launch-blocking protocol package for every one of those 35 products 
 
 - verified product identity and source provenance;
 - verified contact time or contact-time range;
-- verified `MaskConditionerSequence`;
+- verified `MaskConditionerSequence`, or the shared `replaces_conditioner` default when the source is silent only on this relationship;
 - verified rinse behavior.
 
-Hair state, placement, amount, sectioning, scalp permission, heat-cap or overnight support, multi-use behavior, and maximum-frequency caps are enriched where the exact product supplies them. The conservative category fallbacks remain valid only for the explicitly non-critical gaps defined above; they do not replace contact time or Conditioner sequence.
+Hair state, placement, amount, sectioning, scalp permission, heat-cap or overnight support, multi-use behavior, and maximum-frequency caps are enriched where the exact product supplies them. The conservative category fallbacks remain valid only for the explicitly non-critical gaps defined above; they do not replace contact time or rinse behavior. The sole sequence fallback is that a Mask replaces Conditioner on its intensive-care wash when the exact directions are otherwise complete and silent only about Conditioner.
 
 Until all 35 critical packages pass review, the new Mask recommendation path remains inert. Individual incomplete products remain `unknown` / `noch in Prüfung` and cannot be compiled into a precise executable recipe. The shared cross-category follow-up enrichment PR must report Mask coverage counts, missing fields, source provenance, and deterministic protocol-validation results rather than activating on an assumed catalog default.
 
