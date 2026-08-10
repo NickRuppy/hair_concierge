@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type {
+  Stage3AuthorityActionKind,
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "@/lib/personal-plan/products/authority/contracts"
@@ -123,12 +124,15 @@ const ROLE_COPY: Record<PlanProductRole, { label: string; description: string }>
   post_wash_leave_in: { label: "Pflege im feuchten Haar", description: "Nach der Haarwäsche" },
   pre_heat_application: { label: "Vor dem Styling", description: "Vor Wärme im Haar" },
   intensive_conditioning_mask: { label: "Intensivpflege", description: "Als auswaschbare Pflege" },
-  pre_wash_fibre_treatment: { label: "Pre-Wash für die Längen", description: "Vor der Haarwäsche" },
-  leave_on_fibre_conditioning: {
-    label: "Pflege im feuchten Haar",
-    description: "Nach der Haarwäsche",
+  pre_wash_fibre_treatment: {
+    label: "Vor der Haarwäsche",
+    description: "Als Pflege vor dem Waschen",
   },
-  dry_finish: { label: "Glanz und Finish", description: "Im trockenen Haar" },
+  leave_on_fibre_conditioning: {
+    label: "Im feuchten Haar",
+    description: "Nach dem Waschen im feuchten Haar",
+  },
+  dry_finish: { label: "Im trockenen Haar", description: "Für Glanz und Finish" },
   residue_reset: { label: "Rückstände lösen", description: "Bei Bedarf" },
   mineral_reset: { label: "Mineralrückstände lösen", description: "Bei Bedarf" },
   root_refresh_bridge: { label: "Ansatz auffrischen", description: "Zwischen Haarwäschen" },
@@ -146,6 +150,44 @@ const ROLE_COPY: Record<PlanProductRole, { label: string; description: string }>
 const FREQUENCIES: Array<{ value: ProductFrequency; label: string }> = [
   ...PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS,
 ]
+
+export function automaticOilAuthorityAction(
+  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+  evaluation: Stage3AuthorityEvaluation,
+): Stage3AuthorityActionKind | null {
+  if (subject.category !== "oil" || evaluation.allowedActions.length !== 1) return null
+  const action = evaluation.allowedActions[0]
+  if (action === "keep_owned" && evaluation.status === "known" && evaluation.verdict === "ideal") {
+    return action
+  }
+  if (action === "keep_pending" && evaluation.status === "pending") return action
+  if (action === "leave_uncovered" && subject.subjectKind === "uncovered_role") return action
+  return null
+}
+
+export function updateStage3RoleAssignments(
+  current: Record<string, string[]>,
+  capturedProductId: string,
+  role: string,
+  checked: boolean,
+  exclusive: boolean,
+): Record<string, string[]> {
+  const next = Object.fromEntries(
+    Object.entries(current).map(([productId, roles]) => [productId, [...roles]]),
+  )
+  if (checked) {
+    if (exclusive) {
+      for (const productId of Object.keys(next))
+        next[productId] = (next[productId] ?? []).filter((candidate) => candidate !== role)
+    }
+    next[capturedProductId] = Array.from(new Set([...(next[capturedProductId] ?? []), role]))
+  } else {
+    next[capturedProductId] = (next[capturedProductId] ?? []).filter(
+      (candidate) => candidate !== role,
+    )
+  }
+  return next
+}
 
 export function Stage3ProductsFlow({
   searchDebounceMs = 250,
@@ -251,6 +293,7 @@ export function Stage3ProductsFlow({
   const completionInFlight = useRef(false)
   const categoryFinalizeInFlight = useRef(false)
   const decisionSubmitInFlight = useRef(false)
+  const bootstrapDecisionPreparationStarted = useRef(false)
 
   const currentRequirement = requirements[categoryIndex]
   const currentCategory = currentRequirement?.category ?? requirements[0]?.category ?? "shampoo"
@@ -259,6 +302,27 @@ export function Stage3ProductsFlow({
     () => draft?.products.filter((product) => product.identity.category === currentCategory) ?? [],
     [currentCategory, draft],
   )
+
+  useEffect(() => {
+    if (
+      !bootstrap ||
+      bootstrapDecisionPreparationStarted.current ||
+      bootstrap.draft.pass !== "product_decisions"
+    ) {
+      return
+    }
+    bootstrapDecisionPreparationStarted.current = true
+    void prepareDecisionPhase(bootstrap.draft, bootstrap.authorityEvaluations).catch(() => {
+      setSystemIssue({
+        kind: "error",
+        title: "Deine Produkte konnten nicht vorbereitet werden.",
+        message: "Versuche es noch einmal.",
+        retry: () => window.location.reload(),
+      })
+    })
+    // Bootstrap data is immutable for this mounted journey; preparation must run exactly once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bootstrap])
 
   useEffect(() => {
     if (!shouldLoadStage3DraftOnMount(bootstrap)) return
@@ -594,6 +658,61 @@ export function Stage3ProductsFlow({
         CATEGORY_COPY[nextSubject.category].label,
       )
     }
+    if (nextSubject.category === "oil") {
+      const oilDecisions = unresolvedSubjects
+        .filter((subject) => subject.category === "oil")
+        .map((subject) => ({
+          subject,
+          evaluation: authorityEvaluations.find(
+            (candidate) => candidate.subjectKey === subject.decisionKey,
+          ),
+        }))
+        .filter(
+          (
+            item,
+          ): item is {
+            subject: (typeof unresolvedSubjects)[number]
+            evaluation: Stage3AuthorityEvaluation
+          } => Boolean(item.evaluation),
+        )
+
+      return shell(
+        <>
+          <ProductDecisionScreen
+            decisions={oilDecisions.map(({ subject, evaluation: oilEvaluation }) =>
+              authorityEvaluationProjection(
+                draft,
+                subject,
+                oilEvaluation,
+                requirements.find((item) => item.category === subject.category)?.needSummary,
+              ),
+            )}
+            consolidated
+            onChooseAction={(decisionKey, action) => void chooseDecision(decisionKey, action)}
+            onBack={() => void reopenCategory("oil")}
+          />
+          {oilDecisions.some(
+            ({ evaluation: oilEvaluation }) => oilEvaluation.status === "unsupported",
+          ) ? (
+            <div className="mt-4 rounded-xl border border-border bg-card p-4">
+              <p className="text-sm text-[var(--text-sub)]">
+                Wir können diese Passung gerade nicht abschließen. Deine bisherigen Angaben bleiben
+                gespeichert.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-3 w-full"
+                onClick={onBackToRefinement ?? (() => window.location.reload())}
+              >
+                {onBackToRefinement ? "Zur Verfeinerung" : "Neu laden"}
+              </Button>
+            </div>
+          ) : null}
+        </>,
+        CATEGORY_COPY.oil.label,
+      )
+    }
     const clearFits = unresolvedSubjects
       .map((subject) => ({
         subject,
@@ -702,8 +821,7 @@ export function Stage3ProductsFlow({
     }
 
     if (loadedDraft.pass === "product_decisions") {
-      await loadAuthorityEvaluations(loadedDraft, response.authorityEvaluations)
-      setPhase("decisions")
+      await prepareDecisionPhase(loadedDraft, response.authorityEvaluations)
       analytics.track("personal_plan_stage3_flow_viewed", {
         pass: "product_decisions",
         stepKey: "fit_decision",
@@ -716,8 +834,7 @@ export function Stage3ProductsFlow({
     )
     if (cursorIndex >= 0) setCategoryIndex(cursorIndex)
     if (!loadedDraft.categoryCursor) {
-      await loadAuthorityEvaluations(loadedDraft, response.authorityEvaluations)
-      setPhase("decisions")
+      await prepareDecisionPhase(loadedDraft, response.authorityEvaluations)
       return
     }
     setPhase("capture")
@@ -730,7 +847,7 @@ export function Stage3ProductsFlow({
   async function loadAuthorityEvaluations(
     sourceDraft: Stage3ProductDraft,
     preloaded?: Stage3AuthorityEvaluation[],
-  ) {
+  ): Promise<Stage3AuthorityEvaluation[]> {
     setAuthorityStatus("loading")
     let evaluations = preloaded
     if (!evaluations) {
@@ -753,6 +870,32 @@ export function Stage3ProductsFlow({
     if (!evaluations) throw new Stage3ProductsGatewayError("temporarily_unavailable")
     setAuthorityEvaluations(evaluations)
     setAuthorityStatus("ready")
+    return evaluations
+  }
+
+  async function prepareDecisionPhase(
+    sourceDraft: Stage3ProductDraft,
+    preloaded?: Stage3AuthorityEvaluation[],
+  ) {
+    const evaluations = await loadAuthorityEvaluations(sourceDraft, preloaded)
+    const automaticOutcomes = deriveStage3DecisionSubjects(sourceDraft)
+      .filter(
+        (subject) =>
+          !sourceDraft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
+      )
+      .flatMap((subject) => {
+        const evaluation = evaluations.find(
+          (candidate) => candidate.subjectKey === subject.decisionKey,
+        )
+        const action = evaluation ? automaticOilAuthorityAction(subject, evaluation) : null
+        return evaluation && action ? [{ subject, action }] : []
+      })
+
+    if (automaticOutcomes.length > 0) {
+      await acceptAutomaticOutcomes(sourceDraft, automaticOutcomes)
+      return
+    }
+    setPhase("decisions")
   }
 
   async function resolveAuthorityDecision(input: {
@@ -1050,21 +1193,15 @@ export function Stage3ProductsFlow({
   }
 
   function toggleRole(capturedProductId: string, role: string, checked: boolean) {
-    setRoleAssignments((current) => {
-      const next = { ...current }
-      if (checked) {
-        if (currentCategory !== "conditioner") {
-          for (const productId of Object.keys(next))
-            next[productId] = (next[productId] ?? []).filter((candidate) => candidate !== role)
-        }
-        next[capturedProductId] = Array.from(new Set([...(next[capturedProductId] ?? []), role]))
-      } else {
-        next[capturedProductId] = (next[capturedProductId] ?? []).filter(
-          (candidate) => candidate !== role,
-        )
-      }
-      return next
-    })
+    setRoleAssignments((current) =>
+      updateStage3RoleAssignments(
+        current,
+        capturedProductId,
+        role,
+        checked,
+        currentCategory !== "conditioner",
+      ),
+    )
   }
 
   async function saveRolesAndContinue(assignments = roleAssignments) {
@@ -1205,8 +1342,7 @@ export function Stage3ProductsFlow({
       setCategoryIndex(nextIndex)
       setPhase("capture")
     } else {
-      await loadAuthorityEvaluations(nextDraft)
-      setPhase("decisions")
+      await prepareDecisionPhase(nextDraft)
     }
   }
 
@@ -1328,6 +1464,48 @@ export function Stage3ProductsFlow({
     } catch (error) {
       finishDecisionSubmission()
       handleMutationError(error, () => setPhase("decisions"))
+    }
+  }
+
+  async function acceptAutomaticOutcomes(
+    sourceDraft: Stage3ProductDraft,
+    outcomes: Array<{
+      subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]
+      action: Stage3AuthorityActionKind
+    }>,
+  ) {
+    if (!beginDecisionSubmission()) return
+    let nextDraft = sourceDraft
+    try {
+      for (const [index, { subject, action }] of outcomes.entries()) {
+        setSaveLabel(`${index + 1} von ${outcomes.length} gespeichert`)
+        const response = await resolveAuthorityDecision({
+          draftId: nextDraft.draftId,
+          expectedRevision: nextDraft.revision,
+          intent: { type: "resolve_decision", subjectKey: subject.decisionKey, action },
+        })
+        if (response.status === "conflict") {
+          finishDecisionSubmission()
+          return handleConflict(
+            response.latestDraft,
+            () => void prepareDecisionPhase(response.latestDraft),
+          )
+        }
+        nextDraft = response.draft
+        setDraft(nextDraft)
+      }
+      setSaveLabel("Gespeichert")
+      analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
+      const remaining = deriveStage3DecisionSubjects(nextDraft).some(
+        (subject) =>
+          !nextDraft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
+      )
+      finishDecisionSubmission()
+      if (remaining) setPhase("decisions")
+      else void completeFlow(nextDraft)
+    } catch (error) {
+      finishDecisionSubmission()
+      handleMutationError(error, () => void prepareDecisionPhase(nextDraft))
     }
   }
 
@@ -1521,6 +1699,7 @@ export function authorityEvaluationProjection(
   const base = {
     decisionKey: subject.decisionKey,
     categoryLabel: CATEGORY_COPY[subject.category].label,
+    ...(subject.category === "oil" ? { roleLabel: ROLE_COPY[subject.role].label } : {}),
     needSummary,
     ...(product ? { ownedProductName: product.identity.displayName } : {}),
   }

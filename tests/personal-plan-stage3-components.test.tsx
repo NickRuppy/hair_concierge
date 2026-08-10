@@ -196,7 +196,7 @@ test("every supported Personal Plan category renders an explicit German capture 
   assert.match(unknownHtml, /<h1[^>]*>Unbekannte Kategorie<\/h1>/)
 })
 
-test("semantic role assignment lets one oil product cover several purposes without a global primary", () => {
+test("semantic role assignment puts multiple oils and their exclusive uses on one checkbox screen", () => {
   const html = renderToStaticMarkup(
     <SemanticRoleAssignment
       categoryLabel="Öl"
@@ -211,6 +211,7 @@ test("semantic role assignment lets one oil product cover several purposes witho
       ]}
       assignments={{
         "oil-1": ["finish", "schutz"],
+        "oil-2": [],
       }}
       onToggleRole={() => {}}
       onContinue={() => {}}
@@ -218,15 +219,34 @@ test("semantic role assignment lets one oil product cover several purposes witho
     />,
   )
 
-  assert.match(html, /<h1[^>]*>Welche Aufgabe hat dein Öl\?<\/h1>/)
+  assert.match(html, /<h1[^>]*>Wofür nutzt du deine Öle\?<\/h1>/)
+  assert.match(html, /Ordne jede Verwendung dem Öl zu, das sie tatsächlich übernimmt\./)
   assert.match(html, /aria-label="Olaplex No\. 7 Bonding Oil: Glanz und Finish"/)
   assert.match(html, /aria-label="Olaplex No\. 7 Bonding Oil: Laengen schuetzen"/)
   assert.match(html, /name="stage3-role-oil-1-finish"/)
   assert.match(html, /name="stage3-role-oil-1-schutz"/)
-  assert.match(html, /Nicht ausgewählte Aufgaben bleiben als offene Lücke im Plan erhalten/)
+  assert.match(html, /Aktuell: Olaplex No\. 7 Bonding Oil/)
   assert.match(html, /Auswahl übernehmen/)
   assert.doesNotMatch(html, /role="alert"/)
   assert.doesNotMatch(html, /Primäres Öl|Hauptöl|global/)
+})
+
+test("single oil role assignment uses the concise approved question and helper", () => {
+  const html = renderToStaticMarkup(
+    <SemanticRoleAssignment
+      categoryLabel="Öl"
+      category="oil"
+      products={[{ capturedProductId: "oil-1", displayName: "Arganöl" }]}
+      roles={[{ role: "finish", label: "Im trockenen Haar" }]}
+      assignments={{ "oil-1": ["finish"] }}
+      onToggleRole={() => {}}
+      onContinue={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /<h1[^>]*>Wofür nutzt du dein Öl\?<\/h1>/)
+  assert.match(html, /Wähle alles aus, was auf dieses Produkt zutrifft\./)
 })
 
 test("product decisions keep fit, mismatch, pending, and gap actions product-owned and explicit", () => {
@@ -319,6 +339,55 @@ test("product decisions keep fit, mismatch, pending, and gap actions product-own
   )
   assert.match(html, /ca\. 29 EUR/)
   assert.match(html, /role="status"/)
+})
+
+test("consolidated product decisions show genuine Oil choices together", () => {
+  const decisions: Stage3ProductDecisionProjection[] = [
+    {
+      kind: "mismatch",
+      decisionKey: "oil-pre-wash",
+      categoryLabel: "Öl",
+      roleLabel: "Vor der Haarwäsche",
+      needSummary: "Pflege vor der Haarwäsche",
+      ownedProductName: "Arganöl",
+      verdictLabel: "Andere Option empfohlen",
+      rationale: "Ein anderes Produkt passt hier besser.",
+      actions: [
+        { kind: "plan_purchase", label: "Empfehlung einplanen" },
+        { kind: "override", label: "Arganöl trotzdem verwenden" },
+      ],
+    },
+    {
+      kind: "pending",
+      decisionKey: "oil-finish",
+      categoryLabel: "Öl",
+      roleLabel: "Im trockenen Haar",
+      needSummary: "Glanz und Finish",
+      ownedProductName: "Arganöl",
+      verdictLabel: "Noch in Prüfung",
+      rationale: "Die Produktdaten werden noch geprüft.",
+      actions: [
+        { kind: "pending", label: "Später prüfen" },
+        { kind: "skip", label: "Nicht einplanen" },
+      ],
+    },
+  ]
+
+  const html = renderToStaticMarkup(
+    <ProductDecisionScreen
+      decisions={decisions}
+      consolidated
+      onChooseAction={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /<h1[^>]*>Offene Punkte zu deinem Öl<\/h1>/)
+  assert.match(html, /Vor der Haarwäsche/)
+  assert.match(html, /Im trockenen Haar/)
+  assert.match(html, /aria-label="Empfehlung einplanen: Öl — Vor der Haarwäsche"/)
+  assert.match(html, /aria-label="Später prüfen: Öl — Im trockenen Haar"/)
+  assert.equal((html.match(/data-stage3-decision-key=/g) ?? []).length, 4)
 })
 
 test("system states and intake fallback expose busy, live, retry, and boundary actions", () => {

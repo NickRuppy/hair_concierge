@@ -4,6 +4,7 @@ import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { RoutinePage } from "../src/components/routine/personal-plan"
+import { routineCadenceLabel } from "../src/components/routine/personal-plan/routine-item-card"
 import type {
   PersonalPlanRoutineView,
   RoutinePayloadV1,
@@ -213,4 +214,134 @@ test("states non-executable conditions plainly and keeps editing global", () => 
     html,
     /aria-label="Zweck: Regelmäßige Reinigung; Kategorie: Shampoo; Produkt: Sanftes Shampoo; Status: Aktiv; Rhythmus: Täglich"/,
   )
+})
+
+test("translates structured Personal Plan cadence without exposing internal keys", () => {
+  const routine = payload([
+    item({
+      itemKey: "mask",
+      assignmentKey: "mask",
+      category: "mask",
+      role: "intensive_conditioning_mask",
+      purposeKey: "intensive_conditioning_mask",
+      product: { kind: "owned", displayName: "Pflegemaske" },
+      cadence: {
+        recommended: {
+          kind: "mask_regular_interval",
+          role: "intensive_conditioning_mask",
+          needStrength: "standard",
+          baseInterval: "biweekly_1x",
+          placementState: "placed_on_eligible_wash",
+        },
+        userOverride: null,
+        displayKey: "personal_plan.cadence.mask_regular_interval",
+      },
+    }),
+    item({
+      itemKey: "oil-pre-wash",
+      assignmentKey: "oil-pre-wash",
+      category: "oil",
+      role: "pre_wash_fibre_treatment",
+      purposeKey: "pre_wash_fibre_treatment",
+      product: { kind: "owned", displayName: "Arganöl" },
+      cadence: {
+        recommended: {
+          kind: "role_based_wash_linked",
+          roleFrequencies: [
+            {
+              role: "pre_wash_fibre_treatment",
+              tier: "basis",
+              cadence: "before_every_compatible_wash",
+            },
+          ],
+        },
+        userOverride: null,
+        displayKey: "personal_plan.cadence.role_based_wash_linked",
+      },
+    }),
+  ])
+
+  const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)
+
+  assert.match(html, /Rhythmus: Etwa alle 2 Wochen/)
+  assert.match(html, /Rhythmus: Vor jeder passenden Haarwäsche/)
+  assert.doesNotMatch(html, /personal_plan\.cadence\.mask_regular_interval/)
+  assert.doesNotMatch(html, /personal_plan\.cadence\.role_based_wash_linked/)
+})
+
+test("presents every structured cadence kind and keeps a user override authoritative", () => {
+  const cadenceCases = [
+    {
+      role: "shampoo_everyday",
+      recommended: { kind: "wet_wash_total", target: "weekly_2x" },
+      expected: "2× pro Woche",
+    },
+    {
+      role: "conditioner_rinse_out",
+      recommended: { kind: "after_each_eligible_wash" },
+      expected: "Nach jeder passenden Haarwäsche",
+    },
+    {
+      role: "pre_heat_protection",
+      recommended: { kind: "event_based" },
+      expected: "Vor jeder passenden Hitze-Anwendung",
+    },
+    {
+      role: "residue_reset",
+      recommended: { kind: "every_nth_wash", every: 4 },
+      expected: "Bei jeder vierten Haarwäsche",
+    },
+    {
+      role: "scalp_comfort",
+      recommended: { kind: "unscheduled_as_needed" },
+      expected: "Bei Bedarf",
+    },
+    {
+      role: "intensive_conditioning_mask",
+      recommended: { kind: "mask_regular_interval", baseInterval: "every_3_weeks" },
+      expected: "Etwa alle 3 Wochen",
+    },
+    {
+      role: "dry_finish",
+      recommended: {
+        kind: "role_based_wash_linked",
+        roleFrequencies: [{ role: "dry_finish", cadence: "finish_after_every_compatible_wash" }],
+      },
+      expected: "Als Finish nach jeder passenden Haarwäsche",
+    },
+    {
+      role: "specialized_bond_treatment",
+      recommended: { kind: "product_protocol_course" },
+      expected: "Nach Herstellerangabe",
+    },
+    {
+      role: "scalp_exfoliant",
+      recommended: {
+        kind: "role_keyed_product_protocol",
+        roleFrequencies: [{ role: "scalp_exfoliant", cadence: "occasional_according_to_product" }],
+      },
+      expected: "Gelegentlich nach Herstellerangabe",
+    },
+  ]
+
+  for (const cadenceCase of cadenceCases) {
+    const routineItem = item({
+      role: cadenceCase.role,
+      cadence: {
+        recommended: cadenceCase.recommended,
+        userOverride: null,
+        displayKey: `personal_plan.cadence.${cadenceCase.recommended.kind}`,
+      },
+    }) as unknown as RoutinePayloadV1["items"][number]
+    assert.equal(routineCadenceLabel(routineItem), cadenceCase.expected)
+  }
+
+  const overridden = item({
+    cadence: {
+      recommended: { kind: "mask_regular_interval", baseInterval: "every_3_weeks" },
+      userOverride: "daily_1x",
+      displayKey: "personal_plan.cadence.mask_regular_interval",
+    },
+  }) as unknown as RoutinePayloadV1["items"][number]
+  assert.equal(routineCadenceLabel(overridden), "Täglich")
 })

@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 Klarheit – Öl einmal zuordnen</title>
+    <style>
+      :root {
+        --ink: #352f2c;
+        --muted: #736d68;
+        --line: #e5ded9;
+        --paper: #fbfaf8;
+        --card: #fff;
+        --plum: #6d43a6;
+        --plum-soft: #f6f2fa;
+        --danger: #a73a46;
+        --danger-soft: #fff0f1;
+        --green: #356945;
+        --green-soft: #edf7ef;
+        --cta: #d75f6c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          15px/1.45 ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      main {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 72px;
+      }
+      h1,
+      h2 {
+        font-family: Georgia, serif;
+        font-weight: 500;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(30px, 4vw, 46px);
+      }
+      h2 {
+        margin: 52px 0 10px;
+        font-size: 28px;
+      }
+      .lead {
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .decision {
+        display: inline-block;
+        margin-top: 14px;
+        border-radius: 999px;
+        background: var(--green-soft);
+        color: var(--green);
+        padding: 7px 11px;
+        font-weight: 800;
+        font-size: 13px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        align-items: start;
+      }
+      .variant-label {
+        margin: 0 0 8px;
+        font-weight: 800;
+      }
+      .variant-note {
+        min-height: 44px;
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .screen {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: #fff;
+        padding: 24px;
+        box-shadow: 0 2px 5px rgb(39 27 18 / 8%);
+      }
+      .screen-title {
+        margin: 0;
+        font:
+          500 28px/1.15 Georgia,
+          serif;
+      }
+      .screen-help {
+        margin: 8px 0 18px;
+        color: var(--muted);
+      }
+      .product {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+      }
+      .product-name {
+        margin: 0 0 14px;
+        font-weight: 800;
+        font-size: 16px;
+      }
+      .product-meta {
+        float: right;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .options {
+        display: grid;
+        gap: 9px;
+      }
+      .option {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--plum-soft);
+        padding: 13px;
+      }
+      .box {
+        display: grid;
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        place-items: center;
+        border: 1px solid #918b86;
+        border-radius: 3px;
+        background: #fff;
+        font-size: 13px;
+      }
+      .box.checked {
+        border-color: var(--plum);
+        background: var(--plum);
+        color: #fff;
+      }
+      .option strong {
+        display: block;
+      }
+      .option span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .note {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .multi-products {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .assigned-elsewhere {
+        color: var(--plum) !important;
+        font-weight: 700;
+      }
+      .button {
+        display: block;
+        width: 100%;
+        margin-top: 18px;
+        border-radius: 11px;
+        background: var(--cta);
+        color: #fff;
+        padding: 13px;
+        text-align: center;
+        font-weight: 800;
+      }
+      .bad-flow {
+        display: grid;
+        gap: 8px;
+      }
+      .bad-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        padding: 12px;
+      }
+      .bad-card b {
+        display: block;
+        margin-top: 3px;
+      }
+      .bad-card span {
+        color: var(--danger);
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .strike {
+        color: var(--danger);
+        text-decoration: line-through;
+        text-decoration-thickness: 2px;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .step {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        padding: 13px;
+      }
+      .step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        top: 50%;
+        right: -16px;
+        z-index: 1;
+        color: var(--plum);
+        font-weight: 900;
+        transform: translateY(-50%);
+      }
+      .step span {
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .step b {
+        display: block;
+        margin-top: 4px;
+      }
+      .exception {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+        overflow: hidden;
+      }
+      .exception-head {
+        padding: 16px;
+      }
+      .exception-head p {
+        margin: 2px 0 0;
+        color: var(--muted);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        border-top: 1px solid var(--line);
+        padding: 14px 16px;
+        align-items: start;
+      }
+      .row strong {
+        display: block;
+      }
+      .row p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .status {
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .status.warn {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+      .status.open {
+        background: var(--plum-soft);
+        color: var(--plum);
+      }
+      .inline-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .inline-action {
+        border: 1px solid var(--plum);
+        border-radius: 8px;
+        color: var(--plum);
+        padding: 7px 9px;
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .routine-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .routine-card {
+        border: 1px solid var(--line);
+        border-left: 4px solid #c99fe4;
+        border-radius: 12px;
+        background: #fff;
+        padding: 16px;
+      }
+      .routine-card.oil {
+        border-left-color: #efaab5;
+      }
+      .routine-card p {
+        margin: 4px 0 0;
+      }
+      .routine-card .kicker {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .routine-card .purpose {
+        margin: 2px 0 10px;
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .raw {
+        color: var(--danger);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        overflow-wrap: anywhere;
+      }
+      .translated {
+        color: var(--green);
+        font-weight: 750;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #f5f2ef;
+        font-size: 13px;
+      }
+      td:first-child {
+        width: 32%;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+      .footer-note {
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 760px) {
+        .grid,
+        .routine-grid,
+        .multi-products {
+          grid-template-columns: 1fr;
+        }
+        .variant-note {
+          min-height: 0;
+        }
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        .step:not(:last-child)::after {
+          content: "↓";
+          top: auto;
+          right: 50%;
+          bottom: -20px;
+          transform: translateX(50%);
+        }
+      }
+      @media (max-width: 560px) {
+        main {
+          width: min(100% - 20px, 420px);
+          padding-top: 24px;
+        }
+        .screen {
+          padding: 16px;
+          border-radius: 18px;
+        }
+        .row {
+          grid-template-columns: 1fr;
+        }
+        .status {
+          justify-self: start;
+        }
+        table,
+        thead,
+        tbody,
+        tr,
+        th,
+        td {
+          display: block;
+        }
+        thead {
+          display: none;
+        }
+        td:first-child {
+          width: 100%;
+          border-bottom: 0;
+          padding-bottom: 2px;
+        }
+        td:last-child {
+          padding-top: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Stage 3: Das Öl nur einmal zuordnen</h1>
+      <p class="lead">
+        Die vorhandene Checkbox-Auswahl wird zur verbindlichen Entscheidung. Danach erscheinen keine
+        drei separaten Lückenkarten. Nur wenn wirklich eine Wahl nötig ist, unterbricht eine
+        kompakte, zusammengefasste Klärung den Ablauf.
+      </p>
+      <span class="decision">Gewählt: ein Checkbox-Schritt, keine Wiederholungsrunde</span>
+
+      <h2>Vorher und vorgeschlagener Standardweg</h2>
+      <div class="grid">
+        <section>
+          <p class="variant-label">Heute nach der Zuordnung</p>
+          <p class="variant-note">
+            Die drei Rollen werden später erneut als fast identische Einzelschritte gezeigt.
+          </p>
+          <div class="screen">
+            <p class="screen-title strike">Drei weitere Öl-Schritte</p>
+            <p class="screen-help">
+              Obwohl die Verwendung bereits über Checkboxen angegeben wurde.
+            </p>
+            <div class="bad-flow">
+              <div class="bad-card"><span>Öl</span><b>Öl · Lücke im Plan markieren</b></div>
+              <div class="bad-card"><span>Öl</span><b>Öl · Lücke im Plan markieren</b></div>
+              <div class="bad-card"><span>Öl</span><b>Öl · Lücke im Plan markieren</b></div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <p class="variant-label">Neu: eine eindeutige Zuordnung</p>
+          <p class="variant-note">
+            Mehrfachauswahl direkt am gewählten Produkt; keine erneute Bestätigung klarer
+            Ergebnisse.
+          </p>
+          <div class="screen">
+            <p class="screen-title">Wofür nutzt du dein Öl?</p>
+            <p class="screen-help">Wähle alles aus, was auf dieses Produkt zutrifft.</p>
+            <div class="product">
+              <p class="product-name">Oil Length Seal</p>
+              <div class="options">
+                <div class="option">
+                  <span class="box checked">✓</span>
+                  <div>
+                    <strong>Vor der Haarwäsche</strong
+                    ><span>Schutz für die Längen beim Waschen</span>
+                  </div>
+                </div>
+                <div class="option">
+                  <span class="box"></span>
+                  <div>
+                    <strong>Im feuchten Haar</strong><span>Pflege nach der Haarwäsche</span>
+                  </div>
+                </div>
+                <div class="option">
+                  <span class="box checked">✓</span>
+                  <div><strong>Im trockenen Haar</strong><span>Glanz und Finish</span></div>
+                </div>
+              </div>
+              <p class="note">
+                Nicht ausgewählt bedeutet nur: Dieses Öl übernimmt die Aufgabe nicht.
+              </p>
+            </div>
+            <span class="button">Auswahl übernehmen</span>
+          </div>
+        </section>
+      </div>
+
+      <h2>Standardweg ohne Wiederholung</h2>
+      <div class="flow">
+        <div class="step"><span>1</span><b>Öl auswählen</b></div>
+        <div class="step"><span>2</span><b>Verwendungen ankreuzen</b></div>
+        <div class="step"><span>3</span><b>Klare Ergebnisse automatisch speichern</b></div>
+        <div class="step"><span>4</span><b>Zur nächsten Kategorie</b></div>
+      </div>
+
+      <h2>Mehrere Öle auf derselben Seite</h2>
+      <p class="lead">
+        Jedes ausgewählte Öl erhält eine eigene Karte. Ein Öl darf mehrere Verwendungen übernehmen;
+        jede Verwendung gehört aber nur zu einem Öl. Wird sie bei einem anderen Produkt angekreuzt,
+        wandert die Zuordnung dorthin.
+      </p>
+      <div class="screen">
+        <p class="screen-title">Wofür nutzt du deine Öle?</p>
+        <p class="screen-help">Ordne jede Verwendung dem Öl zu, das sie tatsächlich übernimmt.</p>
+        <div class="multi-products">
+          <div class="product">
+            <p class="product-name">Arganöl <span class="product-meta">1 Verwendung</span></p>
+            <div class="options">
+              <div class="option">
+                <span class="box checked">✓</span>
+                <div>
+                  <strong>Vor der Haarwäsche</strong><span>Schutz für die Längen beim Waschen</span>
+                </div>
+              </div>
+              <div class="option">
+                <span class="box"></span>
+                <div>
+                  <strong>Im feuchten Haar</strong
+                  ><span class="assigned-elsewhere">Aktuell: Olaplex No. 7</span>
+                </div>
+              </div>
+              <div class="option">
+                <span class="box"></span>
+                <div>
+                  <strong>Im trockenen Haar</strong
+                  ><span class="assigned-elsewhere">Aktuell: Olaplex No. 7</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="product">
+            <p class="product-name">
+              Olaplex No. 7 <span class="product-meta">2 Verwendungen</span>
+            </p>
+            <div class="options">
+              <div class="option">
+                <span class="box"></span>
+                <div>
+                  <strong>Vor der Haarwäsche</strong
+                  ><span class="assigned-elsewhere">Aktuell: Arganöl</span>
+                </div>
+              </div>
+              <div class="option">
+                <span class="box checked">✓</span>
+                <div><strong>Im feuchten Haar</strong><span>Pflege nach der Haarwäsche</span></div>
+              </div>
+              <div class="option">
+                <span class="box checked">✓</span>
+                <div><strong>Im trockenen Haar</strong><span>Glanz und Finish</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note">
+          Beispiel: Wenn du „Im trockenen Haar“ bei Arganöl auswählst, wird die Zuordnung dort
+          gesetzt und bei Olaplex No. 7 entfernt.
+        </p>
+        <span class="button">Auswahl übernehmen</span>
+      </div>
+
+      <h2>Nur echte Entscheidungen unterbrechen</h2>
+      <p class="lead">
+        Ein Ergebnis mit genau einer sicheren Folge wird nicht erneut gefragt. Nur mehrere legitime
+        Optionen oder ein echter Passungskonflikt erscheinen gesammelt auf einer Öl-Seite.
+      </p>
+      <article class="exception">
+        <div class="exception-head">
+          <strong>Bei deinem Öl brauchen wir noch eine Entscheidung</strong>
+          <p>Oil Length Seal · nur die offenen Punkte</p>
+        </div>
+        <div class="row">
+          <div>
+            <strong>Im feuchten Haar</strong>
+            <p>Dieses Öl nutzt du dafür nicht. Für diese Aufgabe ist eine Alternative verfügbar.</p>
+            <div class="inline-actions">
+              <span class="inline-action">Empfehlung einplanen</span>
+              <span class="inline-action">Offen lassen</span>
+            </div>
+          </div>
+          <span class="status open">Entscheidung offen</span>
+        </div>
+        <div class="row">
+          <div>
+            <strong>Im trockenen Haar</strong>
+            <p>Die bestätigten Produkteigenschaften passen nicht gut zu diesem Zweck.</p>
+            <div class="inline-actions">
+              <span class="inline-action">Trotzdem dafür nutzen</span>
+              <span class="inline-action">Nicht dafür nutzen</span>
+            </div>
+          </div>
+          <span class="status warn">Passt nicht gut</span>
+        </div>
+      </article>
+
+      <h2>Routine: Schlüssel werden verständliche Rhythmen</h2>
+      <div class="routine-grid">
+        <article class="routine-card">
+          <p class="kicker">Zweck</p>
+          <p class="purpose">Intensivpflege</p>
+          <p>Pflegemaske</p>
+          <p>Kategorie: Maske</p>
+          <p class="raw">Heute: personal plan.cadence.mask regular interval</p>
+          <p class="translated">Neu: Etwa alle 2 Wochen</p>
+        </article>
+        <article class="routine-card oil">
+          <p class="kicker">Zweck</p>
+          <p class="purpose">Finish</p>
+          <p>Leichtes Haaröl</p>
+          <p>Kategorie: Öl</p>
+          <p class="raw">Heute: personal plan.cadence.role based wash linked</p>
+          <p class="translated">Neu: Als Finish nach jeder passenden Haarwäsche</p>
+        </article>
+      </div>
+
+      <h2>Vollständige Übersetzungsmatrix</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Interner Typ</th>
+            <th>Anzeige in der Routine</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>wet_wash_total</td>
+            <td>Konkreter gespeicherter Wert, z. B. „2× pro Woche“</td>
+          </tr>
+          <tr>
+            <td>after_each_eligible_wash</td>
+            <td>Nach jeder passenden Haarwäsche</td>
+          </tr>
+          <tr>
+            <td>event_based</td>
+            <td>Vor jeder passenden Hitze-Anwendung</td>
+          </tr>
+          <tr>
+            <td>every_nth_wash</td>
+            <td>Jede 3. bzw. 4. Haarwäsche</td>
+          </tr>
+          <tr>
+            <td>unscheduled_as_needed</td>
+            <td>Bei Bedarf</td>
+          </tr>
+          <tr>
+            <td>mask_regular_interval</td>
+            <td>1× pro Woche / etwa alle 2 Wochen / etwa alle 3 Wochen</td>
+          </tr>
+          <tr>
+            <td>role_based_wash_linked</td>
+            <td>Vor / nach jeder passenden Haarwäsche oder als Finish – passend zur Rolle</td>
+          </tr>
+          <tr>
+            <td>product_protocol_course</td>
+            <td>Nach Herstellerangabe</td>
+          </tr>
+          <tr>
+            <td>role_keyed_product_protocol</td>
+            <td>Bei Bedarf / regelmäßig / gelegentlich nach Herstellerangabe</td>
+          </tr>
+          <tr>
+            <td>none</td>
+            <td>Bei Bedarf</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="footer-note">
+        Unverändert bleiben Produktbewertung, Rollen, Frequenzregeln und Persistenzsemantik. Die UI
+        hört nur auf, eine bereits eindeutige Entscheidung ein zweites Mal abzufragen.
+      </p>
+    </main>
+  </body>
+</html>

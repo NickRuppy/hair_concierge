@@ -743,7 +743,34 @@ export function deriveStage3DecisionSubjects(draft: Stage3ProductDraft): Stage3D
     })
   }
 
-  return subjects
+  const categoryOrder = new Map(draft.orderedCategories.map((category, index) => [category, index]))
+  const productOrder = new Map(
+    draft.products.map((product, index) => [product.capturedProductId, index]),
+  )
+  const categoryIndex = (category: PersonalPlanCategory) =>
+    categoryOrder.get(category) ??
+    draft.orderedCategories.length + PERSONAL_PLAN_PRODUCT_CATEGORIES.indexOf(category)
+
+  return subjects.toSorted((left, right) => {
+    const categoryDifference = categoryIndex(left.category) - categoryIndex(right.category)
+    if (categoryDifference !== 0) return categoryDifference
+
+    const allowedRoles = getCategoryRolePolicy(left.category).allowedRoles
+    const roleDifference =
+      allowedRoles.indexOf(left.role as never) - allowedRoles.indexOf(right.role as never)
+    if (roleDifference !== 0) return roleDifference
+
+    const productDifference =
+      (left.capturedProductId === null
+        ? draft.products.length
+        : (productOrder.get(left.capturedProductId) ?? draft.products.length)) -
+      (right.capturedProductId === null
+        ? draft.products.length
+        : (productOrder.get(right.capturedProductId) ?? draft.products.length))
+    if (productDifference !== 0) return productDifference
+
+    return left.decisionKey.localeCompare(right.decisionKey)
+  })
 }
 
 export function validateStage3Draft(draft: Stage3ProductDraft): string[] {
