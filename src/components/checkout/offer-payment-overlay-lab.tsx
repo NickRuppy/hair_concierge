@@ -2,8 +2,8 @@
 
 import * as React from "react"
 
-import { ActiveSubscriptionDialog } from "@/components/checkout/active-subscription-dialog"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import {
   StripeOfferElementsCheckoutContent,
   type StripeOfferCheckoutResult,
@@ -12,8 +12,9 @@ import {
   type StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent,
 } from "@/components/checkout/stripe-offer-elements-checkout"
 import { Button } from "@/components/ui/button"
-import { ToastProvider, useToast } from "@/providers/toast-provider"
+import { ToastProvider } from "@/providers/toast-provider"
 import type { StripeExpressCheckoutElementConfirmEvent } from "@stripe/stripe-js"
+import { paymentFeedback, type PaymentFeedbackKind } from "@/lib/checkout/payment-feedback"
 
 type PaymentFixtureProps = {
   applePayAvailable: boolean
@@ -210,7 +211,8 @@ function PaymentFixture({
       count: labPaymentFixtureMountCount,
     }
   })
-  const [duplicateDialogOpen, setDuplicateDialogOpen] = React.useState(false)
+  const [labFeedbackKind, setLabFeedbackKind] = React.useState<PaymentFeedbackKind | null>(null)
+  const [labReportCode, setLabReportCode] = React.useState<string | null>(null)
   const [providerLock, setProviderLock] = React.useState<StripeOfferProvider | null>(null)
   const [appleCancelCount, setAppleCancelCount] = React.useState(0)
   const [confirmationCount, setConfirmationCount] = React.useState(0)
@@ -223,7 +225,6 @@ function PaymentFixture({
   const providerLockRef = React.useRef<StripeOfferProvider | null>(null)
   const cancelHandlerRef = React.useRef<(() => void) | null>(null)
   const deferredConfirmResolverRef = React.useRef<(() => void) | null>(null)
-  const { toast } = useToast()
   const effectiveCheckoutLoading = checkoutLoading && !checkoutLoadingReleased
 
   React.useEffect(() => {
@@ -446,7 +447,10 @@ function PaymentFixture({
 
       <button
         type="button"
-        onClick={() => setDuplicateDialogOpen(true)}
+        onClick={() => {
+          setLabReportCode(null)
+          setLabFeedbackKind("access_already_active")
+        }}
         className="w-full rounded-[10px] border border-dashed border-[var(--brand-plum)] px-4 py-3 text-sm font-bold text-[var(--brand-plum)]"
       >
         Doppelzugang simulieren
@@ -454,23 +458,28 @@ function PaymentFixture({
 
       <button
         type="button"
-        onClick={() =>
-          toast({
-            title: "Zahlung nicht möglich",
-            description: "Bitte prüfe deine Angaben und versuche es erneut.",
-            variant: "destructive",
-          })
-        }
+        onClick={() => {
+          setLabReportCode(null)
+          setLabFeedbackKind("card_declined")
+        }}
         className="w-full rounded-[10px] border border-dashed border-destructive px-4 py-3 text-sm font-bold text-destructive"
       >
         Fehlermeldung simulieren
       </button>
 
-      <ActiveSubscriptionDialog
-        email="lea@example.com"
-        open={duplicateDialogOpen}
-        onOpenChange={setDuplicateDialogOpen}
-      />
+      {labFeedbackKind ? (
+        <PaymentFeedbackCard
+          feedback={paymentFeedback(labFeedbackKind, {
+            provider: labFeedbackKind === "access_already_active" ? "checkout" : "stripe",
+            method: "card",
+          })}
+          onAction={() => setLabFeedbackKind(null)}
+          onReportProblem={() => setLabReportCode("PAY-7K2M9ABC")}
+          reportState={
+            labReportCode ? { status: "reported", reportCode: labReportCode } : { status: "idle" }
+          }
+        />
+      ) : null}
     </div>
   )
 }

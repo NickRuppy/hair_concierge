@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
 
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import {
   beginPayPalOneTimeRecoveryCheck,
@@ -21,6 +23,8 @@ import {
   type PayPalOneTimeRecoveryView,
 } from "@/lib/checkout/paypal-one-time-recovery"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import { paymentFeedback } from "@/lib/checkout/payment-feedback"
+import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import { buildPayPalOneTimeWelcomeUrl } from "@/lib/paypal/welcome-url"
 import type { CheckoutLifecycleClaim } from "@/lib/analytics/checkout-attempt"
 import {
@@ -134,6 +138,31 @@ export function PayPalOneTimeButton({
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
+  const pendingFeedback =
+    recoveryView?.kind === "pending"
+      ? paymentFeedback(
+          recoveryView.outcome === "no_token" ? "checkout_not_loaded" : "payment_status_pending",
+          {
+            provider: "paypal",
+            method: "paypal",
+            confirmationPhase:
+              recoveryView.outcome === "no_token" ? "before_confirm" : "after_confirm",
+          },
+        )
+      : null
+  const errorFeedback = error
+    ? paymentFeedback("payment_not_completed", {
+        provider: "paypal",
+        method: "paypal",
+        confirmationPhase: "after_confirm",
+      })
+    : null
+  const activeFeedback = pendingFeedback ?? errorFeedback
+  const supportReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: "result_one_time",
+    feedback: activeFeedback,
+  })
 
   useEffect(() => {
     clientMountedReportedRef.current = false
@@ -744,12 +773,29 @@ export function PayPalOneTimeButton({
       {busy ? (
         <span className="text-center text-xs text-muted-foreground">PayPal wird vorbereitet …</span>
       ) : null}
-      {error ? (
+      {error && errorFeedback && isPaymentFeedbackV2Enabled() ? (
+        <PaymentFeedbackCard
+          feedback={errorFeedback}
+          onAction={() => setError(null)}
+          onReportProblem={isPaymentSupportUiEnabled() ? supportReport.report : undefined}
+          reportState={supportReport.state}
+        />
+      ) : error ? (
         <p className="text-center text-sm text-destructive" role="alert">
           {error}
         </p>
       ) : null}
-      {recoveryView && (recoveryView.kind === "checking" || recoveryView.kind === "pending") ? (
+      {recoveryView?.kind === "pending" && pendingFeedback && isPaymentFeedbackV2Enabled() ? (
+        <PaymentFeedbackCard
+          feedback={pendingFeedback}
+          onAction={() => {
+            if (recoveryView.outcome === "no_token") setRecoveryView(null)
+            else if (recoveryView.manualCheckReady) beginManualPayPalRecoveryCheck()
+          }}
+          onReportProblem={isPaymentSupportUiEnabled() ? supportReport.report : undefined}
+          reportState={supportReport.state}
+        />
+      ) : recoveryView && (recoveryView.kind === "checking" || recoveryView.kind === "pending") ? (
         <div
           className="grid gap-3 rounded-[14px] border border-[var(--brand-plum)]/15 bg-[var(--brand-lavender)]/35 p-4 text-center"
           role={recoveryView.kind === "checking" ? "status" : undefined}

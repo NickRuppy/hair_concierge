@@ -28,6 +28,13 @@ All server calls use `CUSTOMERIO_SERVER_WRITE_KEY`, `X-Strict-Mode: 1`, ISO time
 The Customer.io App API remains reserved for requested transactional/service emails, including
 auth emails and quiz-result artifact delivery. It is not used for marketing campaigns.
 
+Payment-support receipts and human-approved resolution emails use the same App API path with
+message IDs from `CUSTOMERIO_PAYMENT_SUPPORT_RECEIPT_TRANSACTIONAL_MESSAGE_ID` and
+`CUSTOMERIO_PAYMENT_SUPPORT_RESOLUTION_TRANSACTIONAL_MESSAGE_ID`. Their payload contains only the
+`PAY-…` report code, a delivery-attempt ID, and, for resolutions, the approved short note. A valid
+`delivery_id` is required before local state becomes `sent`; network failure or an invalid 200 body
+is `delivery_uncertain` and must never be retried automatically.
+
 ## Quiz Lead Traits
 
 After a successful quiz lead capture, Customer.io receives all structured quiz answers and German display labels regardless of the final quiz email-marketing consent choice:

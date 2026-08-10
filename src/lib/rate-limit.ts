@@ -6,6 +6,11 @@ export interface RateLimitConfig {
   windowMs: number
 }
 
+export function fixedWindowRetryAfterSeconds(config: RateLimitConfig, nowMs = Date.now()): number {
+  const remainingMs = config.windowMs - (nowMs % config.windowMs)
+  return Math.max(1, Math.ceil(remainingMs / 1000))
+}
+
 /**
  * Check rate limit using Supabase RPC (persistent, cross-instance).
  * Fails closed: if the DB call fails, the request is rejected (503).
@@ -91,5 +96,11 @@ export const SEND_AUTH_LINK_RATE_LIMIT: RateLimitConfig = {
 export const SET_CHECKOUT_PASSWORD_RATE_LIMIT: RateLimitConfig = {
   prefix: "set-checkout-password",
   limit: 8,
+  windowMs: 10 * 60_000,
+}
+
+export const PAYMENT_SUPPORT_IP_RATE_LIMIT: RateLimitConfig = {
+  prefix: "payment-support-ip",
+  limit: 5,
   windowMs: 10 * 60_000,
 }

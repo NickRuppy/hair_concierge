@@ -88,6 +88,12 @@ export default function DatenschutzPage() {
               Interaktionen und Geräteinformationen, soweit erforderlich für Analyse und
               Fehlerüberwachung (Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO).
             </p>
+            <p className="mt-2">
+              <strong className="text-foreground">f) Bei gemeldeten Zahlungsproblemen:</strong>{" "}
+              Vorgangskennung, Zahlungsstatus und Fehlerkategorie. Wir nutzen diese Angaben, um den
+              Vorgang zu prüfen und dir Service-E-Mails zum Ergebnis zu senden. Wir speichern dabei
+              keine Kartendaten oder Fehlermeldungen des Zahlungsanbieters.
+            </p>
           </section>
 
           <section>
@@ -235,7 +241,9 @@ export default function DatenschutzPage() {
               Wir speichern personenbezogene Daten nur so lange, wie es für die jeweiligen Zwecke
               erforderlich ist oder gesetzliche Aufbewahrungsfristen es vorschreiben. Quiz-Antworten
               ohne Account werden nach 90 Tagen gelöscht. Rechnungsdaten 10 Jahre
-              (Aufbewahrungspflicht). Marketing-E-Mail-Daten bis zum Widerruf der Einwilligung.
+              (Aufbewahrungspflicht). Gelöste Zahlungs-Supportfälle werden nach 90 Tagen gelöscht;
+              offene Fälle bleiben bis zur Klärung gespeichert. Marketing-E-Mail-Daten bis zum
+              Widerruf der Einwilligung.
             </p>
           </section>
 

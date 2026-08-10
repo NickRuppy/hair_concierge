@@ -1,16 +1,20 @@
 "use client"
 
-import { useReducer, useState } from "react"
+import { useReducer, useRef, useState } from "react"
 import dynamic from "next/dynamic"
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
 import { LockKeyhole } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import type { CheckoutContext, CheckoutFailureStage } from "@/lib/analytics/events"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
 import type { CheckoutLifecycleClaim } from "@/lib/analytics/checkout-attempt"
 import type { BillingInterval } from "@/lib/stripe/intervals"
+import { paymentFeedback } from "@/lib/checkout/payment-feedback"
+import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import { PaymentOptionExposure } from "./payment-option-exposure"
 import {
   StripeOfferElementsCheckout,
@@ -146,6 +150,21 @@ export function PaymentMethodCheckout({
       }),
   )
   const [paypalReadyForCheckoutKey, setPayPalReadyForCheckoutKey] = useState<string | null>(null)
+  const paypalCheckoutRef = useRef<HTMLDivElement>(null)
+  const supportContext =
+    checkoutContext === "membership_reactivation" ? "reactivation" : "result_membership"
+  const checkoutFailureFeedback = checkoutError
+    ? paymentFeedback("checkout_not_loaded", {
+        provider: "stripe",
+        method: "card",
+        confirmationPhase: "before_confirm",
+      })
+    : null
+  const checkoutFailureReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: supportContext,
+    feedback: checkoutFailureFeedback,
+  })
   const showPayPalCheckout = paypalEnabled && lockedProvider !== "stripe"
   const showCardCheckout =
     lockedProvider !== "paypal" &&
@@ -157,7 +176,10 @@ export function PaymentMethodCheckout({
         ? "Dein Karten-Checkout läuft bereits. Bitte führe ihn hier fort."
         : null
   const paypalCheckout = showPayPalCheckout ? (
-    <div data-offer-payment-step={useOfferElementsCheckout ? "paypal" : undefined}>
+    <div
+      ref={paypalCheckoutRef}
+      data-offer-payment-step={useOfferElementsCheckout ? "paypal" : undefined}
+    >
       <PaymentOptionExposure
         checkoutAttemptId={checkoutAttemptId}
         onViewed={onPaymentOptionViewed}
@@ -251,7 +273,23 @@ export function PaymentMethodCheckout({
             </a>
           </p>
 
-          {checkoutError ? (
+          {checkoutError && isPaymentFeedbackV2Enabled() && checkoutFailureFeedback ? (
+            <PaymentFeedbackCard
+              feedback={checkoutFailureFeedback}
+              onAction={(action) => {
+                if (action === "reload" || action === "retry") onRetry()
+                if (action === "use_paypal") {
+                  paypalCheckoutRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }
+              }}
+              onReportProblem={
+                checkoutAttemptId && isPaymentSupportUiEnabled()
+                  ? checkoutFailureReport.report
+                  : undefined
+              }
+              reportState={checkoutFailureReport.state}
+            />
+          ) : checkoutError ? (
             <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
               <p className="mb-3 text-sm text-destructive">{checkoutError}</p>
               <Button
@@ -279,6 +317,11 @@ export function PaymentMethodCheckout({
               }
               onFirstPaymentEngagement={onFirstPaymentEngagement}
               onPaymentMethodSelected={onPaymentMethodSelected}
+              onPaymentFeedbackAction={(action) => {
+                if (action === "use_paypal") {
+                  paypalCheckoutRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }
+              }}
               onPaymentOptionViewed={onPaymentOptionViewed}
               onProviderReady={onProviderReady}
               onProviderCancelled={(provider, option) =>
@@ -304,6 +347,7 @@ export function PaymentMethodCheckout({
                 })
               }
               paymentElementEnabled={paymentElementEnabled}
+              paymentSupportContext={supportContext}
               onProviderLockClaim={onProviderLockClaim}
               onProviderLockRelease={onProviderLockRelease}
               onRetry={onRetry}

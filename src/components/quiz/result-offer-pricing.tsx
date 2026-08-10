@@ -16,6 +16,8 @@ import {
   isCheckoutAccessAlreadyExistsResponse,
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import type { QuizResultReferencePrices } from "@/components/checkout/plan-reference-prices"
 import { SubscriptionPlanSelector } from "@/components/checkout/subscription-plan-selector"
 import {
@@ -32,7 +34,13 @@ import {
   type CheckoutLifecycleClaim,
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
-import { isOfferPaymentOverlayEnabled, isStripeExpressCheckoutEnabled } from "@/lib/funnel/flags"
+import {
+  isOfferPaymentOverlayEnabled,
+  isPaymentFeedbackV2Enabled,
+  isPaymentSupportUiEnabled,
+  isStripeExpressCheckoutEnabled,
+} from "@/lib/funnel/flags"
+import { paymentFeedback } from "@/lib/checkout/payment-feedback"
 import type {
   CheckoutLifecycleDismissalReason,
   CheckoutLifecycleTransition,
@@ -771,6 +779,18 @@ function MembershipResultOfferPricing({
   const overlay = checkoutPresentationFixture?.overlay ?? isOfferPaymentOverlayEnabled()
   const express =
     overlay && (checkoutPresentationFixture?.expressElements ?? isStripeExpressCheckoutEnabled())
+  const duplicateFeedback = duplicateOpen
+    ? paymentFeedback("access_already_active", {
+        provider: "checkout",
+        method: "unknown",
+        accessAction: "login",
+      })
+    : null
+  const duplicateReport = usePaymentSupportReport({
+    checkoutAttemptId: attemptId,
+    checkoutContext: "result_membership",
+    feedback: duplicateFeedback,
+  })
 
   useEffect(
     () => onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval, pricingCatalog)),
@@ -1224,153 +1244,174 @@ function MembershipResultOfferPricing({
 
   const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval, pricingCatalog)
   const checkout = checkoutInterval ? (
-    <PaymentMethodCheckout
-      checkoutAttemptId={attemptId ?? undefined}
-      checkoutError={error}
-      checkoutKey={`${checkoutInterval}:${checkoutSessionAttemptId ?? "pending"}`}
-      expressElementsEnabled={express}
-      fetchClientSecret={fetchClientSecret}
-      interval={checkoutInterval}
-      leadId={leadId}
-      lockedProvider={express ? lockedProvider : null}
-      onClientMounted={(provider, option) => {
-        if (!attemptId) return
-        trackCheckoutLifecycle(attemptId, {
-          option,
-          provider,
-          transition: "client_mounted",
-        })
-      }}
-      onCheckoutLifecycle={(claim) => {
-        if (!attemptId) return
-        trackCheckoutLifecycle(attemptId, claim)
-      }}
-      onChangePlan={() => close({ focusPlan: true })}
-      onConfirmStarted={(provider, option) => {
-        if (!attemptId) return
-        trackCheckoutLifecycle(attemptId, {
-          option,
-          provider,
-          transition: "confirm_started",
-        })
-        if (provider === "paypal") {
+    duplicateOpen && isPaymentFeedbackV2Enabled() && duplicateFeedback ? (
+      <PaymentFeedbackCard
+        feedback={duplicateFeedback}
+        onAction={() => {
+          const href = duplicateEmail
+            ? `/auth?email=${encodeURIComponent(duplicateEmail)}`
+            : "/auth"
+          window.location.assign(href)
+        }}
+        onReportProblem={
+          attemptId && isPaymentSupportUiEnabled() ? duplicateReport.report : undefined
+        }
+        reportState={duplicateReport.state}
+      />
+    ) : (
+      <PaymentMethodCheckout
+        checkoutAttemptId={attemptId ?? undefined}
+        checkoutError={error}
+        checkoutKey={`${checkoutInterval}:${checkoutSessionAttemptId ?? "pending"}`}
+        expressElementsEnabled={express}
+        fetchClientSecret={fetchClientSecret}
+        interval={checkoutInterval}
+        leadId={leadId}
+        lockedProvider={express ? lockedProvider : null}
+        onClientMounted={(provider, option) => {
+          if (!attemptId) return
           trackCheckoutLifecycle(attemptId, {
             option,
             provider,
-            transition: "preparation_started",
+            transition: "client_mounted",
           })
-        }
-      }}
-      onFirstPaymentEngagement={() => {
-        if (attemptId) {
+        }}
+        onCheckoutLifecycle={(claim) => {
+          if (!attemptId) return
+          trackCheckoutLifecycle(attemptId, claim)
+        }}
+        onChangePlan={() => close({ focusPlan: true })}
+        onConfirmStarted={(provider, option) => {
+          if (!attemptId) return
           trackCheckoutLifecycle(attemptId, {
-            transition: "payment_engaged",
+            option,
+            provider,
+            transition: "confirm_started",
           })
-        }
-        setEngaged(true)
-      }}
-      onPayPalCheckoutFailed={(failure) => reportFailure(failure, "paypal")}
-      onPayPalCheckoutStarted={(funnelEventId) => {
-        if (!attemptId) return
-        const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
-        trackCheckoutLifecycle(attemptId, {
-          option: "paypal",
-          provider: "paypal",
-          transition: "prepared_response_received",
-        })
-        trackAppEvent("checkout_started", {
-          ...(offerContext ?? {}),
-          checkoutAttemptId: attemptId,
-          checkoutPresentation: overlay ? "overlay" : "inline",
-          checkoutStartTrigger: "explicit_provider_action",
-          currency: plan.currency,
-          interval: checkoutInterval,
-          leadId: leadId ?? undefined,
-          provider: "paypal",
-          source: "quiz_result_offer",
-          funnelEventId,
-          planId: plan.analyticsId,
-          pricingCatalog,
-          value: plan.amount,
-        })
-      }}
-      onProviderReady={(provider, option) => {
-        if (!attemptId) return
-        trackCheckoutLifecycle(attemptId, {
-          option,
-          provider,
-          transition: "provider_ready",
-        })
-      }}
-      onPaymentOptionViewed={(provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => {
-        if (
-          !attemptId ||
-          !offerContext ||
-          !claimOfferPaymentOptionView(optionViewsRef.current, attemptId, option)
-        )
-          return
-        const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
-        trackAppEvent("offer_payment_option_viewed", {
-          ...offerContext,
-          checkoutAttemptId: attemptId,
-          currency: plan.currency,
-          funnelEventId: createFunnelEventId(),
-          interval: checkoutInterval,
-          option,
-          planId: plan.analyticsId,
-          pricingCatalog,
-          provider,
-          value: plan.amount,
-        })
-      }}
-      onPaymentMethodSelected={(provider, paymentMethodType) => {
-        if (!attemptId || (lockRef.current && lockRef.current !== provider)) return
-        selectionIndexRef.current += 1
-        if (!offerContext) return
-        const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
-        trackAppEvent("offer_payment_method_selected", {
-          ...offerContext,
-          checkoutAttemptId: attemptId,
-          currency: plan.currency,
-          funnelEventId: createFunnelEventId(),
-          interval: checkoutInterval,
-          paymentMethodType,
-          planId: plan.analyticsId,
-          pricingCatalog,
-          provider,
-          selectionIndex: selectionIndexRef.current,
-          value: plan.amount,
-        })
-      }}
-      onProviderLockClaim={express ? claimLock : undefined}
-      onProviderLockRelease={express ? releaseLock : undefined}
-      onRetry={() => {
-        const retryId = attempts.retry()
-        if (!retryId) return
-        resetLock()
-        setEngaged(false)
-        setError(null)
-        if (rotateStripeSessionAttemptOnRetryRef.current) {
-          setCheckoutSessionAttemptId(createFunnelEventId())
-        }
-        setCheckoutInterval(null)
-        window.setTimeout(() => setCheckoutInterval(selectedInterval), 0)
-      }}
-      planLabel={activePlan.ctaLabel}
-      presentation={overlay ? "offer-overlay" : "default"}
-      source="quiz_result_offer"
-      stripe={stripe}
-      visible={overlay ? checkoutVisible : true}
-    />
+          if (provider === "paypal") {
+            trackCheckoutLifecycle(attemptId, {
+              option,
+              provider,
+              transition: "preparation_started",
+            })
+          }
+        }}
+        onFirstPaymentEngagement={() => {
+          if (attemptId) {
+            trackCheckoutLifecycle(attemptId, {
+              transition: "payment_engaged",
+            })
+          }
+          setEngaged(true)
+        }}
+        onPayPalCheckoutFailed={(failure) => reportFailure(failure, "paypal")}
+        onPayPalCheckoutStarted={(funnelEventId) => {
+          if (!attemptId) return
+          const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
+          trackCheckoutLifecycle(attemptId, {
+            option: "paypal",
+            provider: "paypal",
+            transition: "prepared_response_received",
+          })
+          trackAppEvent("checkout_started", {
+            ...(offerContext ?? {}),
+            checkoutAttemptId: attemptId,
+            checkoutPresentation: overlay ? "overlay" : "inline",
+            checkoutStartTrigger: "explicit_provider_action",
+            currency: plan.currency,
+            interval: checkoutInterval,
+            leadId: leadId ?? undefined,
+            provider: "paypal",
+            source: "quiz_result_offer",
+            funnelEventId,
+            planId: plan.analyticsId,
+            pricingCatalog,
+            value: plan.amount,
+          })
+        }}
+        onProviderReady={(provider, option) => {
+          if (!attemptId) return
+          trackCheckoutLifecycle(attemptId, {
+            option,
+            provider,
+            transition: "provider_ready",
+          })
+        }}
+        onPaymentOptionViewed={(
+          provider: OfferPaymentOptionProvider,
+          option: OfferPaymentOption,
+        ) => {
+          if (
+            !attemptId ||
+            !offerContext ||
+            !claimOfferPaymentOptionView(optionViewsRef.current, attemptId, option)
+          )
+            return
+          const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
+          trackAppEvent("offer_payment_option_viewed", {
+            ...offerContext,
+            checkoutAttemptId: attemptId,
+            currency: plan.currency,
+            funnelEventId: createFunnelEventId(),
+            interval: checkoutInterval,
+            option,
+            planId: plan.analyticsId,
+            pricingCatalog,
+            provider,
+            value: plan.amount,
+          })
+        }}
+        onPaymentMethodSelected={(provider, paymentMethodType) => {
+          if (!attemptId || (lockRef.current && lockRef.current !== provider)) return
+          selectionIndexRef.current += 1
+          if (!offerContext) return
+          const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
+          trackAppEvent("offer_payment_method_selected", {
+            ...offerContext,
+            checkoutAttemptId: attemptId,
+            currency: plan.currency,
+            funnelEventId: createFunnelEventId(),
+            interval: checkoutInterval,
+            paymentMethodType,
+            planId: plan.analyticsId,
+            pricingCatalog,
+            provider,
+            selectionIndex: selectionIndexRef.current,
+            value: plan.amount,
+          })
+        }}
+        onProviderLockClaim={express ? claimLock : undefined}
+        onProviderLockRelease={express ? releaseLock : undefined}
+        onRetry={() => {
+          const retryId = attempts.retry()
+          if (!retryId) return
+          resetLock()
+          setEngaged(false)
+          setError(null)
+          if (rotateStripeSessionAttemptOnRetryRef.current) {
+            setCheckoutSessionAttemptId(createFunnelEventId())
+          }
+          setCheckoutInterval(null)
+          window.setTimeout(() => setCheckoutInterval(selectedInterval), 0)
+        }}
+        planLabel={activePlan.ctaLabel}
+        presentation={overlay ? "offer-overlay" : "default"}
+        source="quiz_result_offer"
+        stripe={stripe}
+        visible={overlay ? checkoutVisible : true}
+      />
+    )
   ) : null
 
   return (
     <div ref={pricingRef} className="space-y-4">
-      <ActiveSubscriptionDialog
-        email={duplicateEmail}
-        onOpenChange={setDuplicateOpen}
-        open={duplicateOpen}
-      />
+      {!isPaymentFeedbackV2Enabled() ? (
+        <ActiveSubscriptionDialog
+          email={duplicateEmail}
+          onOpenChange={setDuplicateOpen}
+          open={duplicateOpen}
+        />
+      ) : null}
       <SubscriptionPlanSelector
         busy={false}
         offerTracking

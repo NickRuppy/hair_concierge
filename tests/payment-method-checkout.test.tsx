@@ -190,6 +190,17 @@ test("payment-method checkout forwards lifecycle seams to truthful Stripe and Pa
   assert.ok(providerCall > confirmStarted)
 })
 
+test("payment feedback can move the customer to the visible PayPal alternative", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /const paypalCheckoutRef = useRef<HTMLDivElement>\(null\)/)
+  assert.match(source, /action === "use_paypal"/)
+  assert.match(source, /paypalCheckoutRef\.current\?\.scrollIntoView/)
+})
+
 test("PayPal script rejection reports once without coupling the card fallback", () => {
   const reported = { current: false }
   const failures: unknown[] = []

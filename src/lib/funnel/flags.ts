@@ -34,6 +34,18 @@ export function isStripeExpressCheckoutEnabled() {
   return process.env.NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED === "true"
 }
 
+export function isPaymentFeedbackV2Enabled() {
+  return process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED === "true"
+}
+
+export function isPaymentSupportEnabled() {
+  return process.env.PAYMENT_SUPPORT_ENABLED === "true"
+}
+
+export function isPaymentSupportUiEnabled() {
+  return process.env.NEXT_PUBLIC_PAYMENT_SUPPORT_ENABLED === "true"
+}
+
 export function isPersonalPlanQuizV1Enabled() {
   return process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED === "true"
 }

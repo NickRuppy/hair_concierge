@@ -630,6 +630,28 @@ test("a Stripe preparation error keeps the independent secondary provider visibl
   )
 })
 
+test("payment feedback flag replaces a Stripe load error with actionable truth", () => {
+  const previous = process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED
+  process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED = "true"
+  try {
+    const markup = renderToStaticMarkup(
+      <StripeOfferElementsCheckoutContent
+        checkoutAttemptId="attempt-123"
+        checkoutResult={{ type: "error", error: { message: "private provider prose" } }}
+        onRetry={() => {}}
+        paymentSupportContext="result_membership"
+      />,
+    )
+    assert.match(markup, /Kartenzahlung nicht geladen/)
+    assert.match(markup, /Es wurde nichts abgebucht/)
+    assert.match(markup, /Erneut laden/)
+    assert.doesNotMatch(markup, /private provider prose/)
+  } finally {
+    if (previous === undefined) delete process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED
+    else process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED = previous
+  }
+})
+
 test("Payment Element load errors emit one bounded card signal per checkout attempt", () => {
   const handler = stripeOfferElementsSource.slice(
     stripeOfferElementsSource.indexOf("const handlePaymentElementLoadError = useCallback"),

@@ -4,7 +4,7 @@ This runbook covers payment and checkout-experience observability for Chaarlie. 
 
 ## What is monitored
 
-The implementation emits eight typed payment signals to Sentry. The signal is the primary triage field; use tags and the `payment` context to classify the case.
+The implementation emits nine typed payment signals to Sentry. The signal is the primary triage field; use tags and the `payment` context to classify the case.
 
 | Signal                                   | Severity | Meaning                                                                                                                                                                                     | First response                                                                                                                           |
 | ---------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -16,8 +16,27 @@ The implementation emits eight typed payment signals to Sentry. The signal is th
 | `payment_integrity_mismatch`             | fatal    | Reconciliation found provider truth and local truth disagree after the grace period.                                                                                                        | Treat as an integrity incident until proven false positive.                                                                              |
 | `paid_but_entitlement_not_active`        | error    | A `personal_plan_once` purchase is paid for more than 60 minutes but still resolves to `paid_pending` through the canonical one-time access contract.                                       | Inspect the closed reason, fulfillment job, consent binding, confirmation, generation, and delivery evidence.                            |
 | `payment_monitor_failed`                 | error    | The monitoring route, provider scan, local lookup, or scheduled trigger failed.                                                                                                             | Restore the monitor path first, then rerun the check.                                                                                    |
+| `customer_payment_issue_reported`        | warning  | A customer created a durable `PAY-…` support case from a truthful checkout feedback state.                                                                                                  | Search by the safe report code, then correlate provider, webhook, billing, and access truth before drafting a resolution.                |
 
 Important distinction: a customer-visible error is not automatically lost revenue. It becomes a real failure only if the same checkout attempt, user, or lead did not later reach a valid provider success and local access state.
+
+## Payment support cases
+
+Reporting remains off unless both `PAYMENT_SUPPORT_ENABLED=true` and
+`NEXT_PUBLIC_PAYMENT_SUPPORT_ENABLED=true`. Keep both off until the migration, Customer.io
+templates, Sentry signal, privacy review, and separate stale-delivery checker are verified.
+
+Use `npm run billing:payment-support -- --list` to inspect masked open cases. Resolution is dry-run
+by default and prints the exact German email. A send requires `--apply` plus a matching
+`--confirm-code=PAY-…`. `delivery_uncertain` requires a manual Customer.io check followed by an
+explicit `--finalize` or `--re-arm`; never blindly resend. Cleanup is also dry-run first and requires
+`--confirm-cleanup=DELETE_RESOLVED_PAYMENT_SUPPORT_CASES`. Customer-reported fields are hints:
+provider, webhook, billing, and access evidence determines the resolution truth.
+
+A receipt left in `sending` is ambiguous: the process may have stopped before or after Customer.io
+accepted it. The checker must alert after 15 minutes. Do not reset or resend it automatically, and
+keep reporting flags off until a guarded, evidence-backed receipt recovery procedure has been
+reviewed through the separate checker rollout.
 
 ## Why the August incident was missed
 
@@ -238,7 +257,7 @@ time and closed payment tags.
 Before treating the system as operational:
 
 - Confirm production deploy contains this code.
-- Configure Sentry alert routing for the eight `payment.signal` values. A live, non-internal
+- Configure Sentry alert routing for the nine `payment.signal` values. A live, non-internal
   `payment_checkout_initialization_failed`, `payment_webhook_processing_failed`, or `paid_but_entitlement_not_active` is immediately actionable after its code-defined grace/monitor branch emits. Notify on three unique live, non-internal `checkout_experience_degraded` attempts sharing provider, boundary, and error family within ten minutes. Keep `access_conflict` and `provider_locked_*` on the warning/control-flow route until the paid-access monitor is deployed and verified; only then may external Sentry workflows suppress expected provider-lock/access-conflict volume. Exclude `payment.is_internal_test=true` and `payment.live=false` from customer notifications while retaining both for QA.
 - Confirm the code-upserted `payment-integrity-local` monitor expects 30-minute check-ins and opens after two misses, and `payment-integrity-daily` follows `15 2 * * *` UTC and opens after one missed margin.
 - Confirm the daily Vercel reconciliation cron remains configured as the cloud fallback and sends an actual Sentry check-in receipt.

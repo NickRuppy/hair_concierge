@@ -121,6 +121,7 @@
     "billing:launch-catalog:apply": "tsx scripts/billing/personal-plan-pricing-catalog-backfill.ts --apply",
     "billing:payment-monitor:classify-paypal-test": "tsx scripts/billing/classify-payment-monitor-paypal-test.ts",
     "billing:one-time:recover": "tsx scripts/billing/one-time-recover.ts",
+    "billing:payment-support": "tsx scripts/billing/payment-support-cases.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",

@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zahlungsfeedback – UX Review</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        --background: #fdfbf9;
+        --surface: #ffffff;
+        --text: #2a1845;
+        --body: #3a3835;
+        --subtle: #6a6560;
+        --plum: #6b50a0;
+        --plum-dark: #3d2a62;
+        --plum-ice: #f2eefa;
+        --plum-rgb: 107, 80, 160;
+        --coral: #d4616a;
+        --coral-light: #fdeef0;
+        --coral-rgb: 212, 97, 106;
+        --border: #e6e1dd;
+        --success: #31715a;
+        --success-light: #edf7f2;
+        --warning: #a26021;
+        --warning-light: #fff6e8;
+      }
+
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 4%, rgba(var(--plum-rgb), .07), transparent 27rem),
+          var(--background);
+        color: var(--body);
+        font-family: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+      }
+      button { font: inherit; }
+      svg { display: block; }
+
+      .page {
+        width: min(1160px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+      .review-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .review-heading h1 {
+        margin: 0;
+        color: var(--text);
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -.025em;
+      }
+      .review-heading span,
+      .section-label {
+        color: rgba(var(--plum-rgb), .66);
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .stage {
+        position: relative;
+        display: grid;
+        min-height: 560px;
+        place-items: center;
+        overflow: hidden;
+        border: 1px solid rgba(var(--plum-rgb), .08);
+        border-radius: 26px;
+        padding: 44px 24px;
+        background:
+          linear-gradient(rgba(31, 23, 34, .56), rgba(31, 23, 34, .56)),
+          radial-gradient(circle at 50% 18%, #ffffff 0, #f4edf2 55%, #eee6eb 100%);
+        box-shadow: 0 24px 70px -48px rgba(var(--plum-rgb), .72);
+      }
+      .stage::before,
+      .stage::after {
+        position: absolute;
+        border-radius: 999px;
+        background: rgba(255,255,255,.22);
+        content: "";
+      }
+      .stage::before { width: 360px; height: 14px; left: 7%; top: 10%; }
+      .stage::after { width: 220px; height: 14px; right: 8%; bottom: 12%; }
+
+      .modal {
+        position: relative;
+        z-index: 1;
+        width: min(620px, 100%);
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.52);
+        border-radius: 22px;
+        background: #fbfaf8;
+        box-shadow: 0 22px 80px rgba(20, 12, 27, .38);
+      }
+      .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+        padding: 20px 24px 16px;
+      }
+      .modal-title {
+        margin: 0 0 5px;
+        color: var(--text);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.35;
+        letter-spacing: -.012em;
+      }
+      .summary {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 5px 8px;
+        color: var(--subtle);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .summary strong { color: var(--text); font-weight: 700; }
+      .summary button {
+        border: 0;
+        padding: 0;
+        background: none;
+        color: var(--plum);
+        font-size: inherit;
+        font-weight: 800;
+      }
+      .close {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: white;
+        color: var(--text);
+      }
+      .modal-body {
+        display: grid;
+        gap: 16px;
+        padding: 20px 28px 24px;
+      }
+      .guarantee {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(var(--coral-rgb), .24);
+        border-radius: 14px;
+        background: rgba(var(--coral-rgb), .08);
+        padding: 13px 15px;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .guarantee-icon {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 9px;
+        background: white;
+        color: var(--coral);
+        box-shadow: 0 5px 16px -11px rgba(var(--coral-rgb), .9);
+      }
+
+      .feedback {
+        border: 1px solid rgba(var(--plum-rgb), .13);
+        border-radius: 16px;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 16px 40px -34px rgba(var(--plum-rgb), .62);
+      }
+      .feedback-heading {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr);
+        align-items: start;
+        gap: 13px;
+      }
+      .status-icon {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border-radius: 13px;
+      }
+      .status-icon.success { background: var(--success-light); color: var(--success); }
+      .status-icon.warning { background: var(--warning-light); color: var(--warning); }
+      .status-icon.error { background: var(--coral-light); color: var(--coral); }
+      .status-icon.pending { background: var(--plum-ice); color: var(--plum); }
+      .feedback h2,
+      .feedback h3 {
+        margin: 0;
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.35;
+        letter-spacing: -.012em;
+      }
+      .feedback p {
+        margin: 5px 0 0;
+        color: var(--subtle);
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.55;
+      }
+      .safety-note {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 14px;
+        border-radius: 10px;
+        background: var(--plum-ice);
+        padding: 9px 11px;
+        color: var(--plum-dark);
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1.5px solid var(--plum);
+        border-radius: 12px;
+        padding: 10px 18px;
+        background: transparent;
+        color: var(--plum);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .button.primary {
+        border-color: var(--plum);
+        background: var(--plum);
+        color: white;
+        box-shadow: 0 10px 26px -18px rgba(var(--plum-rgb), .9);
+      }
+      .hero-action { width: 100%; margin-top: 16px; }
+      .report {
+        display: flex;
+        width: 100%;
+        min-height: 38px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 12px;
+        border: 0;
+        border-top: 1px solid rgba(var(--plum-rgb), .1);
+        padding: 12px 2px 0;
+        background: transparent;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+      }
+      .report-label { display: inline-flex; align-items: center; gap: 7px; }
+      body[data-reporting="off"] [data-report] { display: none; }
+      .receipt {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        min-height: 38px;
+        align-items: center;
+        gap: 12px;
+        margin-top: 12px;
+        border-top: 1px solid rgba(var(--plum-rgb), .1);
+        padding: 12px 2px 0;
+        color: var(--success);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .receipt-copy { display: grid; gap: 3px; }
+      .receipt-note {
+        color: var(--subtle);
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+      .receipt code {
+        border-radius: 8px;
+        background: var(--plum-ice);
+        padding: 5px 8px;
+        color: var(--plum-dark);
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 10px;
+        letter-spacing: .04em;
+      }
+      .payment-note {
+        margin: -2px 0 0;
+        color: var(--subtle);
+        font-size: 11px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .variants { margin-top: 32px; }
+      .section-label { display: block; margin: 0 0 10px 2px; }
+      .variant-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .variant {
+        display: flex;
+        min-height: 302px;
+        flex-direction: column;
+        border: 1px solid rgba(var(--plum-rgb), .1);
+        border-radius: 20px;
+        background: rgba(255,255,255,.94);
+        padding: 20px;
+        box-shadow: 0 18px 48px -40px rgba(var(--plum-rgb), .7);
+      }
+      .variant .feedback-heading { grid-template-columns: 38px minmax(0, 1fr); gap: 12px; }
+      .variant .status-icon { width: 38px; height: 38px; border-radius: 12px; }
+      .variant .copy { min-height: 74px; }
+      .action-stack {
+        display: grid;
+        min-height: 98px;
+        align-content: end;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 16px;
+      }
+      .variant .button { width: 100%; }
+      .variant .safety-note { margin: 0 0 1px; }
+
+      @media (max-width: 900px) {
+        .page { width: min(100% - 28px, 760px); padding: 28px 0 48px; }
+        .review-heading { margin: 0 2px 13px; }
+        .review-heading span { display: none; }
+        .stage { min-height: 0; padding: 28px 18px; }
+        .variant-grid { grid-template-columns: 1fr; }
+        .variant { min-height: 0; }
+        .variant .copy { min-height: 0; }
+        .action-stack { min-height: 0; }
+      }
+
+      @media (max-width: 520px) {
+        .page { width: 100%; padding: 20px 0 36px; }
+        .review-heading { padding: 0 18px; }
+        .review-heading h1 { font-size: 18px; }
+        .stage { border-inline: 0; border-radius: 0; padding: 18px 12px; }
+        .modal { border-radius: 22px; }
+        .modal-header { padding: 17px 18px 14px; }
+        .modal-body { padding: 16px 18px 20px; }
+        .feedback { padding: 17px; }
+        .variants { padding: 0 14px; }
+        .feedback-heading { grid-template-columns: 36px minmax(0, 1fr); gap: 11px; }
+        .status-icon { width: 36px; height: 36px; border-radius: 12px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="review-heading">
+        <h1>Zahlungsfeedback</h1>
+        <span>UX Review · Personal Plan</span>
+      </header>
+
+      <section class="stage" aria-label="Bestehender Zugang erkannt">
+        <article class="modal">
+          <header class="modal-header">
+            <div>
+              <h2 class="modal-title">Sicher bezahlen</h2>
+              <div class="summary">
+                <strong>Persönlicher Haarplan · 29,99 €</strong>
+                <span aria-hidden="true">·</span>
+                <button type="button">Plan ändern</button>
+              </div>
+            </div>
+            <button class="close" aria-label="Zahlung schließen" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+            </button>
+          </header>
+
+          <div class="modal-body">
+            <div class="guarantee">
+              <span class="guarantee-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8Z"/><path d="m9 12 2 2 4-4"/></svg>
+              </span>
+              14 Tage Geld-zurück-Garantie
+            </div>
+
+            <section class="feedback">
+              <div class="feedback-heading">
+                <span class="status-icon success" aria-hidden="true">
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m9 11 3 3L22 4"/></svg>
+                </span>
+                <div>
+                  <h2>Zugang bereits aktiv</h2>
+                  <p>Alles ist in Ordnung. Für deine E-Mail ist bereits ein Zugang aktiv. Melde dich jetzt ein.</p>
+                </div>
+              </div>
+              <div class="safety-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Keine neue Zahlung gestartet
+              </div>
+              <button class="button primary hero-action" type="button">Mit E-Mail einloggen</button>
+              <button class="report" data-report type="button">
+                <span class="report-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>
+                  Stimmt nicht? Problem melden
+                </span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </section>
+            <p class="payment-note">Zahlungsdaten verarbeitet dein gewählter Anbieter.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="variants">
+        <span class="section-label">Weitere Zustände</span>
+        <div class="variant-grid">
+          <article class="variant">
+            <div class="feedback-heading">
+              <span class="status-icon warning" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.6 6"/><path d="M3 12A9 9 0 0 1 18.6 6"/><path d="M3 18v-6h6M21 6v6h-6"/></svg>
+              </span>
+              <div class="copy">
+                <h3>Kartenzahlung nicht geladen</h3>
+                <p>Die Verbindung zur Kartenzahlung ist fehlgeschlagen. Es wurde nichts abgebucht.</p>
+              </div>
+            </div>
+            <div class="action-stack">
+              <button class="button primary" type="button">Erneut laden</button>
+              <button class="button" type="button">Mit PayPal zahlen</button>
+            </div>
+            <button class="report" data-report type="button">
+              <span class="report-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>
+                Problem melden
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </article>
+
+          <article class="variant">
+            <div class="feedback-heading">
+              <span class="status-icon error" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              </span>
+              <div class="copy">
+                <h3>Karte abgelehnt</h3>
+                <p>Deine Bank hat diese Karte abgelehnt. Versuche eine andere Karte oder PayPal.</p>
+              </div>
+            </div>
+            <div class="action-stack">
+              <button class="button primary" type="button">Andere Karte verwenden</button>
+              <button class="button" type="button">Mit PayPal zahlen</button>
+            </div>
+            <button class="report" data-report type="button">
+              <span class="report-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>
+                Problem melden
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </article>
+
+          <article class="variant">
+            <div class="feedback-heading">
+              <span class="status-icon pending" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </span>
+              <div class="copy">
+                <h3>Zahlungsstatus noch offen</h3>
+                <p>Der Anbieter hat noch kein Ergebnis gesendet. Warte kurz und prüfe den Status.</p>
+              </div>
+            </div>
+            <div class="action-stack">
+              <div class="safety-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8 2.2 18a2 2 0 0 0 1.7 3h16.2a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"/></svg>
+                Bitte nicht erneut zahlen
+              </div>
+              <button class="button primary" type="button">Zahlungsstatus prüfen</button>
+            </div>
+            <button class="report" data-report type="button">
+              <span class="report-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>
+                Problem melden
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      if (new URLSearchParams(window.location.search).get("reporting") === "off") {
+        document.body.dataset.reporting = "off"
+      }
+      document.querySelectorAll("[data-report]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const receipt = document.createElement("div")
+          receipt.className = "receipt"
+          receipt.innerHTML = '<span class="receipt-copy"><span>✓ Problem gemeldet</span><span class="receipt-note">Wir informieren dich per E-Mail.</span></span><code>PAY-7K2M9Q4X</code>'
+          button.replaceWith(receipt)
+        })
+      })
+    </script>
+  </body>
+</html>

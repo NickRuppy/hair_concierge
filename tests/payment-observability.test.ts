@@ -65,6 +65,35 @@ test("payment reporter uses lead id only when the internal user id is absent", (
   assert.equal(payload.level, "warning")
 })
 
+test("support reports use a separate warning signal with only safe correlation fields", () => {
+  const payload = buildPaymentFailurePayload({
+    signal: "customer_payment_issue_reported",
+    provider: "stripe",
+    boundary: "customer_authorization",
+    errorFamily: "declined",
+    commerceKind: "subscription",
+    origin: "browser",
+    method: "card",
+    truth: "failed",
+    live: true,
+    isInternalTest: false,
+    checkoutAttemptId: "attempt-123",
+    feedbackKind: "card_declined",
+    reportCode: "PAY-7K2M9ABC",
+    deliveryState: "pending",
+  })
+
+  assert.equal(payload.level, "warning")
+  assert.deepEqual(payload.fingerprint, [
+    "payment/customer_payment_issue_reported/stripe/customer_authorization/declined",
+  ])
+  assert.equal(payload.tags["payment.feedback_kind"], "card_declined")
+  assert.equal(payload.tags["support.report_code"], "PAY-7K2M9ABC")
+  assert.equal(payload.context.support_delivery_state, "pending")
+  assert.equal(payload.context.provider_reference_present, false)
+  assert.doesNotMatch(JSON.stringify(payload), /@|client_secret|pi_[A-Za-z0-9]/)
+})
+
 test("checkout initialization failures use the closed error signal and severity", () => {
   const payload = buildPaymentFailurePayload({
     signal: "payment_checkout_initialization_failed",
