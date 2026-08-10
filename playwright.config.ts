@@ -18,14 +18,18 @@ if (fs.existsSync(envPath)) {
   }
 }
 
+const personalPlanDiagnostics = process.env.PERSONAL_PLAN_PLAYWRIGHT_DIAGNOSTICS === "1"
+
 export default defineConfig({
   testDir: "./tests",
   testIgnore: ["**/agent-*.spec.ts", "**/*.test.ts", "**/*.test.tsx"],
   timeout: 600_000, // 10 min — 16 sequential streaming questions + rate limit pauses
   retries: 0,
+  workers: personalPlanDiagnostics ? 1 : undefined,
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
-    trace: "on-first-retry",
+    trace: personalPlanDiagnostics ? "retain-on-failure" : "on-first-retry",
+    screenshot: personalPlanDiagnostics ? "only-on-failure" : "off",
   },
   projects: [
     {

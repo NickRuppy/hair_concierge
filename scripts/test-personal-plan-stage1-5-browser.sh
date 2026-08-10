@@ -7,8 +7,19 @@ cd "$repository_root"
 
 test_workspace="$(mktemp -d "${TMPDIR:-/tmp}/personal-plan-stage1-5-browser.XXXXXX")"
 test_project_root="$test_workspace/project"
-test_project_id="hc_personal_plan_stage1_5_browser"
+test_project_id="hc_personal_plan_stage1_5_browser_$$"
+port_seed=$((30000 + ($$ % 20000)))
+api_port="$port_seed"
+db_port=$((port_seed + 1))
+shadow_port=$((port_seed + 2))
+studio_port=$((port_seed + 3))
+mailpit_port=$((port_seed + 4))
+pooler_port=$((port_seed + 5))
+analytics_port=$((port_seed + 6))
+inspector_port=$((port_seed + 7))
+app_port=$((20000 + ($$ % 10000)))
 server_log="$test_workspace/next.log"
+failure_server_log="$repository_root/test-results/personal-plan-stage1-5/server.log"
 server_pid=""
 started_by_this_script=false
 
@@ -38,6 +49,8 @@ stop_server() {
 cleanup() {
   exit_status=$?
   if [[ "$exit_status" -ne 0 && -f "$server_log" ]]; then
+    mkdir -p "$(dirname "$failure_server_log")"
+    cp "$server_log" "$failure_server_log"
     tail -n 120 "$server_log" >&2
   fi
   stop_server
@@ -61,8 +74,17 @@ node "$repository_root/scripts/ci/prepare-personal-plan-db-transition.mjs" \
 
 cp "$repository_root/supabase/config.toml" "$test_project_root/supabase/config.toml"
 cp "$repository_root"/supabase/templates/*.html "$test_project_root/supabase/templates/"
+PERSONAL_PLAN_TEST_PROJECT_ID="$test_project_id" \
+PERSONAL_PLAN_API_PORT="$api_port" \
+PERSONAL_PLAN_DB_PORT="$db_port" \
+PERSONAL_PLAN_SHADOW_PORT="$shadow_port" \
+PERSONAL_PLAN_STUDIO_PORT="$studio_port" \
+PERSONAL_PLAN_MAILPIT_PORT="$mailpit_port" \
+PERSONAL_PLAN_POOLER_PORT="$pooler_port" \
+PERSONAL_PLAN_ANALYTICS_PORT="$analytics_port" \
+PERSONAL_PLAN_INSPECTOR_PORT="$inspector_port" \
 perl -0pi -e \
-  's/^project_id = "hair_conscierge"$/project_id = "hc_personal_plan_stage1_5_browser"/m; s/port = 54321/port = 55621/g; s/port = 54322/port = 55622/g; s/shadow_port = 54320/shadow_port = 55620/g; s/port = 54329/port = 55629/g; s/port = 54323/port = 55623/g; s/port = 54324/port = 55624/g; s/port = 54327/port = 55627/g; s/inspector_port = 8083/inspector_port = 18086/g' \
+  's/^project_id = "hair_conscierge"$/q{project_id = "} . $ENV{PERSONAL_PLAN_TEST_PROJECT_ID} . q{"}/me; s/port = 54321/q{port = } . $ENV{PERSONAL_PLAN_API_PORT}/ge; s/port = 54322/q{port = } . $ENV{PERSONAL_PLAN_DB_PORT}/ge; s/shadow_port = 54320/q{shadow_port = } . $ENV{PERSONAL_PLAN_SHADOW_PORT}/ge; s/port = 54329/q{port = } . $ENV{PERSONAL_PLAN_POOLER_PORT}/ge; s/port = 54323/q{port = } . $ENV{PERSONAL_PLAN_STUDIO_PORT}/ge; s/port = 54324/q{port = } . $ENV{PERSONAL_PLAN_MAILPIT_PORT}/ge; s/port = 54327/q{port = } . $ENV{PERSONAL_PLAN_ANALYTICS_PORT}/ge; s/inspector_port = 8083/q{inspector_port = } . $ENV{PERSONAL_PLAN_INSPECTOR_PORT}/ge' \
   "$test_project_root/supabase/config.toml"
 
 supabase=(npm exec -- supabase --workdir "$test_project_root")
@@ -85,16 +107,26 @@ export PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF="2026-08-01T00:00:00Z"
 export PERSONAL_PLAN_STAGE5_ISOLATED_BROWSER=1
 export PERSONAL_PLAN_STAGE1_5_ISOLATED_BROWSER=1
 export PERSONAL_PLAN_STAGE1_5_DB_CONTAINER="supabase_db_${test_project_id}"
-export PLAYWRIGHT_BASE_URL="http://127.0.0.1:3226"
+export PLAYWRIGHT_BASE_URL="http://127.0.0.1:$app_port"
+export PERSONAL_PLAN_PLAYWRIGHT_DIAGNOSTICS=1
+
+# NEXT_PUBLIC_* values are embedded in the browser bundle, so the production
+# build must happen after the disposable Supabase environment is exported.
+npm run build
 
 # Run Next in an isolated session. Killing npm alone leaves its Next child
-# behind, which can retain .next/dev/lock for the following browser harness.
+# behind, which can retain the port for the following browser harness.
 python3 -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' \
-  npm run dev -- --hostname 127.0.0.1 --port 3226 >"$server_log" 2>&1 &
+  npm run start -- --hostname 127.0.0.1 --port "$app_port" >"$server_log" 2>&1 &
 server_pid=$!
 
-for _ in $(seq 1 120); do
-  if curl --fail --silent --output /dev/null "$PLAYWRIGHT_BASE_URL/auth"; then
+readiness_deadline=$((SECONDS + 180))
+server_ready=false
+
+while (( SECONDS < readiness_deadline )); do
+  if curl --fail --silent --output /dev/null \
+    --connect-timeout 2 --max-time 5 "$PLAYWRIGHT_BASE_URL/auth"; then
+    server_ready=true
     break
   fi
   if ! kill -0 "$server_pid" >/dev/null 2>&1; then
@@ -103,6 +135,11 @@ for _ in $(seq 1 120); do
   fi
   sleep 1
 done
-curl --fail --silent --output /dev/null "$PLAYWRIGHT_BASE_URL/auth"
+
+if [[ "$server_ready" != "true" ]]; then
+  echo "Next server did not become ready within 180 seconds." >&2
+  tail -n 80 "$server_log" >&2
+  exit 1
+fi
 
 npm exec -- playwright test tests/personal-plan-stage1-5.spec.ts --project=chromium

@@ -422,7 +422,13 @@ test("stage 3 lab route is guarded and composed from the interactive flow", () =
     "utf8",
   )
 
-  assert.match(routeSource, /isPersonalPlanStage3LabEnabled\(process\.env\)/)
+  assert.match(routeSource, /CI: process\.env\.CI/)
+  assert.match(
+    routeSource,
+    /CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED: process\.env\.CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED/,
+  )
+  assert.match(routeSource, /NODE_ENV: process\.env\.NODE_ENV/)
+  assert.match(routeSource, /VERCEL_ENV: process\.env\.VERCEL_ENV/)
   assert.match(routeSource, /notFound\(\)/)
   assert.match(routeSource, /<PersonalPlanStage3LabClient \/>/)
   assert.match(clientSource, /developmentStage3Analytics/)

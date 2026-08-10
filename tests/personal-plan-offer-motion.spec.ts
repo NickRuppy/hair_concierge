@@ -295,7 +295,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
       await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toHaveCount(0)
       await expect(checkout.getByRole("checkbox")).toHaveCount(0)
       await expect(checkout.locator('[data-offer-payment-placeholder="paypal"]')).toHaveCount(0)
-      await expect(checkout.getByRole("button", { name: "PayPal" })).toBeVisible()
+      await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toBeVisible()
       expect(stripeRequests).toBe(0)
     })
   }
@@ -336,7 +336,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await openCheckout.click()
     checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     await expect(checkout.getByRole("checkbox")).toHaveCount(0)
-    await checkout.getByRole("button", { name: "PayPal" }).click()
+    await checkout.getByRole("button", { name: "PayPal", exact: true }).click()
     await checkout.getByRole("button", { name: "Zahlung schließen" }).last().click()
     const confirmation = page.getByRole("alertdialog", { name: "Zahlung abbrechen?" })
     await expect(confirmation).toBeVisible()
@@ -423,7 +423,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     expect(stripeSdkRequests).toBe(0)
     await openCheckout.click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
-    const paypalButton = checkout.getByRole("button", { name: "PayPal" })
+    const paypalButton = checkout.getByRole("button", { name: "PayPal", exact: true })
     await expect.poll(() => stripePreparationCalls).toBe(1)
     await expect.poll(() => stripeSdkRequests).toBe(1)
     await paypalButton.click()
@@ -444,12 +444,12 @@ test.describe("@ci personal plan offer motion hooks", () => {
     })
 
     await expect(checkout.getByText("Wir prüfen deine PayPal-Zahlung")).toBeVisible()
+    await expect.poll(() => statusCalls, { timeout: 15_000 }).toBe(3)
     await expect(checkout.getByText("Noch keine Zahlung bestätigt")).toBeVisible({
-      timeout: 10_000,
+      timeout: 5_000,
     })
     await expect(paypalOwnedAttempt).toBeVisible()
     await expect(checkout.getByText("Schließe die Zahlung dort ab.")).toHaveCount(0)
-    await expect.poll(() => statusCalls).toBe(3)
     await expect(paypalButton).toBeVisible()
     await expect
       .poll(() =>
@@ -619,7 +619,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await openCheckout.scrollIntoViewIfNeeded()
     await openCheckout.click()
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
-    await checkout.getByRole("button", { name: "PayPal" }).click()
+    await checkout.getByRole("button", { name: "PayPal", exact: true }).click()
     await expect(
       checkout.getByText(
         "Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.",
