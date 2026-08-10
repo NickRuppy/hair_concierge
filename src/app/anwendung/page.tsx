@@ -10,7 +10,10 @@ import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
-import { loadCachedPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/navigation-access"
+import {
+  loadCachedAuthenticatedAppUserId,
+  loadCachedPersonalPlanJourneyAccessForUser,
+} from "@/lib/personal-plan/navigation-access"
 import {
   adaptAcceptedActiveRoutineForApplication,
   loadImmutableRoutineProfile,
@@ -22,11 +25,11 @@ import { compileApplicationView } from "@/lib/routines/personal-plan/application
 import { createServerApplicationGuidanceRepository } from "@/lib/routines/personal-plan/application/repository"
 import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { createClient } from "@/lib/supabase/server"
 import {
   capturePersonalPlanApplicationFailure,
   type PersonalPlanApplicationFailureDetails,
 } from "@/lib/observability/personal-plan-application"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 export const dynamic = "force-dynamic"
 
@@ -148,10 +151,15 @@ function createAdminReadClient() {
   return createAdminClient() as unknown as AdminReadClient
 }
 const defaultDeps: AnwendungResolverDeps = {
-  getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  getUserId: loadCachedAuthenticatedAppUserId,
   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
   loadRoutine: (userId) =>
-    loadPersonalPlanRoutineView({ client: createAdminReadClient(), userId, enabled: true }),
+    loadPersonalPlanRoutineView({
+      client: createAdminReadClient(),
+      userId,
+      enabled: true,
+      includePendingProposal: false,
+    }),
   adaptRoutine: adaptAcceptedActiveRoutineForApplication,
   loadProfile: loadImmutableRoutineProfile,
   loadContent: createServerApplicationGuidanceRepository,
@@ -162,9 +170,21 @@ const defaultDeps: AnwendungResolverDeps = {
   reportFailure: capturePersonalPlanApplicationFailure,
 }
 
+async function resolveDefaultAnwendungPage(selectedDayType?: ApplicationDayTypeKey) {
+  const startedAt = performance.now()
+  const view = await resolveAnwendungPage(defaultDeps, selectedDayType)
+  reportPersonalPlanTransitionTiming({
+    layer: "server",
+    operation: selectedDayType ? "application_day_resolve" : "application_page_resolve",
+    outcome: view.state,
+    durationMs: performance.now() - startedAt,
+  })
+  return view
+}
+
 export default async function AnwendungPage({
   selectedDayType,
 }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
-  const view = await resolveAnwendungPage(defaultDeps, selectedDayType)
+  const view = await resolveDefaultAnwendungPage(selectedDayType)
   return <ApplicationPage view={view} />
 }

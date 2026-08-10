@@ -165,6 +165,10 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
     })
   }
 
+  const planPending = deps.loadPlan(userId).then(
+    (value) => ({ status: "fulfilled" as const, value }),
+    (reason: unknown) => ({ status: "rejected" as const, reason }),
+  )
   const artifact = await deps.loadPreparedArtifact(userId, entitlement.artifactLeadId)
   if (!artifact) {
     return resolvePersonalPlanJourneyAccess({
@@ -180,7 +184,9 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
     })
   }
 
-  const loadedPlan = await deps.loadPlan(userId)
+  const planResult = await planPending
+  if (planResult.status === "rejected") throw planResult.reason
+  const loadedPlan = planResult.value
   const plan = loadedPlan ? { ...loadedPlan } : null
   const stage2Enabled = deps.stage2Enabled()
   const stage3Enabled = deps.stage3Enabled()
@@ -196,21 +202,15 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
   let stage3AuthorityReady = false
   if (stage2Enabled && stage3Enabled && plan?.currentRefinedNeedVersionId) {
     try {
-      const refined = await deps.loadCurrentRefinedNeed(
-        userId,
-        plan.id,
-        plan.currentRefinedNeedVersionId,
-      )
+      const [refined, draft] = await Promise.all([
+        deps.loadCurrentRefinedNeed(userId, plan.id, plan.currentRefinedNeedVersionId),
+        deps.loadCurrentProductDraft(userId, plan.id, plan.currentRefinedNeedVersionId),
+      ])
       if (!refined) throw new Error("journey_access_current_refined_unavailable")
       const context = buildStage3EntryContext(refined, {
         personalPlanId: plan.id,
         refinedVersionId: plan.currentRefinedNeedVersionId,
       })
-      const draft = await deps.loadCurrentProductDraft(
-        userId,
-        plan.id,
-        plan.currentRefinedNeedVersionId,
-      )
       stage3AuthorityReady = !draft || hasCurrentAuthority(draft, context)
       plan.productDraftCompleted = draft?.status === "completed" && stage3AuthorityReady
     } catch (error) {

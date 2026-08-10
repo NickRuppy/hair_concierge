@@ -31,6 +31,7 @@ test("the server-derived frontier admits only contiguous persisted Personal Plan
     personalPlanId: "plan-1",
     frontier: "stage5",
     nextHref: "/anwendung",
+    hasPendingRoutineProposal: true,
     allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true },
   })
 })

@@ -163,6 +163,9 @@ test("Stage 2 save derives the owner server-side and maps validation, conflict a
   ).PATCH(save)
   assert.equal(owner, "owner-1")
   assert.equal(response.status, 200)
+  assert.match(response.headers.get("Server-Timing") ?? "", /auth;dur=/)
+  assert.match(response.headers.get("Server-Timing") ?? "", /journey;dur=/)
+  assert.match(response.headers.get("Server-Timing") ?? "", /operation;dur=/)
 
   for (const [code, status] of [
     ["invalid_answer", 422],
@@ -191,6 +194,73 @@ test("Stage 2 save derives the owner server-side and maps validation, conflict a
     )
     assert.deepEqual([response.status, await response.json()], [status, { error: code }])
   }
+})
+
+test("Stage 2 final save reuses one authorized gateway for durable save and completion", async () => {
+  const calls: string[] = []
+  const savedSession = { ...session, revision: 1 }
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => {
+            calls.push("save")
+            return savedSession
+          },
+          complete: async ({ expectedRevision }) => {
+            calls.push(`complete:${expectedRevision}`)
+            return { refinedVersionId: "refined-1", nextHref: "/plan-start" }
+          },
+        }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+        completeAfterSave: true,
+      }),
+    }),
+  )
+
+  assert.deepEqual(calls, ["save", "complete:1"])
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    handoff: { refinedVersionId: "refined-1", nextHref: "/plan-start" },
+  })
+})
+
+test("Stage 2 final save reports a durable saved page when completion fails", async () => {
+  const savedSession = { ...session, revision: 1 }
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          complete: async () => {
+            throw new Stage2RefinementError("completion_failed")
+          },
+        }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+        completeAfterSave: true,
+      }),
+    }),
+  )
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), {
+    error: "completion_failed",
+    savedSession: JSON.parse(JSON.stringify(savedSession)),
+  })
 })
 
 test("Stage 2 completion is a separate strict POST with owner-derived success, conflict and temporary failure outcomes", async () => {

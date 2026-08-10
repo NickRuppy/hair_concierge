@@ -23,6 +23,63 @@ test("the browser Stage 2 gateway maps a failed load to a typed error and retrie
   assert.equal(session.status, "in_progress")
 })
 
+test("the browser Stage 2 gateway saves and completes the final page in one request", async () => {
+  const requests: Array<{ url: string; init?: RequestInit }> = []
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async (input, init) => {
+      requests.push({ url: String(input), init })
+      return new Response(
+        JSON.stringify({
+          session: { schemaVersion: 1, status: "in_progress", revision: 7 },
+          handoff: { refinedVersionId: "refined-7", nextHref: "/plan-start" },
+        }),
+        { status: 200 },
+      )
+    },
+  })
+
+  const result = await gateway.saveAnswerAndComplete?.({
+    questionId: "night_protection",
+    answer: [],
+    expectedRevision: 6,
+  })
+
+  assert.deepEqual(result?.handoff, {
+    refinedVersionId: "refined-7",
+    nextHref: "/plan-start",
+  })
+  assert.equal(requests.length, 1)
+  assert.equal(requests[0]?.url, "/api/personal-plan/stage-2")
+  assert.equal(requests[0]?.init?.method, "PATCH")
+  assert.deepEqual(JSON.parse(String(requests[0]?.init?.body)), {
+    questionId: "night_protection",
+    answer: [],
+    expectedRevision: 6,
+    completeAfterSave: true,
+  })
+})
+
+test("the browser Stage 2 gateway preserves the durable final page on completion failure", async () => {
+  const savedSession = { schemaVersion: 1, status: "in_progress", revision: 7 }
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async () =>
+      new Response(JSON.stringify({ error: "completion_failed", savedSession }), { status: 503 }),
+  })
+
+  await assert.rejects(
+    gateway.saveAnswerAndComplete!({
+      questionId: "night_protection",
+      answer: [],
+      expectedRevision: 6,
+    }),
+    (error: unknown) => {
+      assert.equal((error as { code?: unknown }).code, "completion_failed")
+      assert.deepEqual((error as { savedSession?: unknown }).savedSession, savedSession)
+      return true
+    },
+  )
+})
+
 test("the browser intake client posts a stable UUID idempotency key with valid manual input", async () => {
   let request: RequestInit | undefined
   const client = createHttpStage3IntakeClient({

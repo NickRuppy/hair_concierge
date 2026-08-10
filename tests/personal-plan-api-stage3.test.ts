@@ -347,6 +347,10 @@ test("Stage 3 PATCH accepts semantic decision intent without accepting a client 
     }),
   )
   assert.equal(response!.status, 200)
+  assert.match(response!.headers.get("Server-Timing") ?? "", /auth;dur=/)
+  assert.match(response!.headers.get("Server-Timing") ?? "", /journey;dur=/)
+  assert.match(response!.headers.get("Server-Timing") ?? "", /rate_limit;dur=/)
+  assert.match(response!.headers.get("Server-Timing") ?? "", /gateway;dur=/)
   assert.deepEqual(received, {
     draftId: draft.draftId,
     expectedRevision: draft.revision,
@@ -355,6 +359,59 @@ test("Stage 3 PATCH accepts semantic decision intent without accepting a client 
       subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
       action: "keep_owned",
     },
+  })
+})
+
+test("Stage 3 PATCH accepts one revision-safe semantic decision batch", async () => {
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          resolveDecisions: async (input: unknown) => {
+            received = input
+            return { status: "saved", draft }
+          },
+        }) as never,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intents: [
+          {
+            type: "resolve_decision",
+            subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+            action: "keep_owned",
+          },
+          {
+            type: "resolve_decision",
+            subjectKey: "decision:conditioner:conditioner_rinse_out:capture-b",
+            action: "keep_owned",
+          },
+        ],
+      }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+        action: "keep_owned",
+      },
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-b",
+        action: "keep_owned",
+      },
+    ],
   })
 })
 

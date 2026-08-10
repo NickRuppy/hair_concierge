@@ -8,6 +8,7 @@ import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "@/lib/personal-plan/products/authority/contracts"
+import { STAGE3_AUTHORITY_DECISION_BATCH_LIMIT } from "@/lib/personal-plan/products/authority/contracts"
 import {
   noOpStage3Analytics,
   type Stage3AnalyticsPort,
@@ -31,6 +32,7 @@ import {
   type Stage3ProductsMutation,
 } from "@/lib/personal-plan/products/gateway"
 import { createHttpStage3ProductsGateway } from "@/lib/personal-plan/products/http-gateway"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import {
   PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS,
@@ -57,6 +59,11 @@ type Stage3UiGateway = Stage3ProductsGateway & {
     draftId: string
     expectedRevision: number
     intent: Stage3AuthoritySemanticIntent
+  }) => Promise<Stage3MutationResponse>
+  resolveDecisions?: (input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
   }) => Promise<Stage3MutationResponse>
 }
 
@@ -409,7 +416,7 @@ export function Stage3ProductsFlow({
       <Stage3SystemState
         state="loading"
         title="Deine Entscheidung wird gespeichert."
-        message="Deine Auswahl wird sicher übernommen."
+        message="Deine Auswahl wird sicher übernommen. Danach geht es direkt mit dem nächsten offenen Schritt weiter."
       />,
       "Speichern",
     )
@@ -744,24 +751,137 @@ export function Stage3ProductsFlow({
     expectedRevision: number
     intent: Stage3AuthoritySemanticIntent
   }): Promise<Stage3MutationResponse> {
-    if (gateway.resolveDecision) return gateway.resolveDecision(input)
-    const response = await fetch("/api/personal-plan/stage-3", {
-      method: "PATCH",
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify(input),
-      cache: "no-store",
-    })
-    const body = (await response.json().catch(() => null)) as
-      | Stage3MutationResponse
-      | { latestDraft?: Stage3ProductDraft }
-      | null
-    if (response.status === 409 && body && "latestDraft" in body && body.latestDraft) {
-      return { status: "conflict", latestDraft: body.latestDraft }
+    const startedAt = performance.now()
+    let timingReported = false
+    try {
+      if (gateway.resolveDecision) {
+        const result = await gateway.resolveDecision(input)
+        reportPersonalPlanTransitionTiming({
+          layer: "client",
+          operation: "stage3_individual_decision",
+          outcome: result.status,
+          durationMs: performance.now() - startedAt,
+        })
+        timingReported = true
+        return result
+      }
+      const response = await fetch("/api/personal-plan/stage-3", {
+        method: "PATCH",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+        cache: "no-store",
+      })
+      const body = (await response.json().catch(() => null)) as
+        | Stage3MutationResponse
+        | { latestDraft?: Stage3ProductDraft }
+        | null
+      reportPersonalPlanTransitionTiming({
+        layer: "client",
+        operation: "stage3_individual_decision",
+        outcome: response.ok ? "success" : "http_error",
+        durationMs: performance.now() - startedAt,
+        status: response.status,
+      })
+      timingReported = true
+      if (response.status === 409 && body && "latestDraft" in body && body.latestDraft) {
+        return { status: "conflict", latestDraft: body.latestDraft }
+      }
+      if (!response.ok || !body || !("status" in body)) {
+        throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      }
+      return body as Stage3MutationResponse
+    } catch (error) {
+      if (!timingReported) {
+        reportPersonalPlanTransitionTiming({
+          layer: "client",
+          operation: "stage3_individual_decision",
+          outcome: "failed",
+          durationMs: performance.now() - startedAt,
+        })
+      }
+      throw error
     }
-    if (!response.ok || !body || !("status" in body)) {
-      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+  }
+
+  async function resolveAuthorityDecisions(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }): Promise<Stage3MutationResponse> {
+    const startedAt = performance.now()
+    let timingReported = false
+    try {
+      if (gateway.resolveDecisions) {
+        const result = await gateway.resolveDecisions(input)
+        reportPersonalPlanTransitionTiming({
+          layer: "client",
+          operation: "stage3_grouped_decisions",
+          outcome: result.status,
+          durationMs: performance.now() - startedAt,
+        })
+        timingReported = true
+        return result
+      }
+      if (gateway.resolveDecision) {
+        let expectedRevision = input.expectedRevision
+        let result: Stage3MutationResponse | null = null
+        for (const intent of input.intents) {
+          result = await gateway.resolveDecision({
+            draftId: input.draftId,
+            expectedRevision,
+            intent,
+          })
+          if (result.status === "conflict") return result
+          expectedRevision = result.draft.revision
+        }
+        if (result) {
+          reportPersonalPlanTransitionTiming({
+            layer: "client",
+            operation: "stage3_grouped_decisions",
+            outcome: result.status,
+            durationMs: performance.now() - startedAt,
+          })
+          timingReported = true
+          return result
+        }
+        throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      }
+      const response = await fetch("/api/personal-plan/stage-3", {
+        method: "PATCH",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+        cache: "no-store",
+      })
+      const body = (await response.json().catch(() => null)) as
+        | Stage3MutationResponse
+        | { latestDraft?: Stage3ProductDraft }
+        | null
+      reportPersonalPlanTransitionTiming({
+        layer: "client",
+        operation: "stage3_grouped_decisions",
+        outcome: response.ok ? "success" : "http_error",
+        durationMs: performance.now() - startedAt,
+        status: response.status,
+      })
+      timingReported = true
+      if (response.status === 409 && body && "latestDraft" in body && body.latestDraft) {
+        return { status: "conflict", latestDraft: body.latestDraft }
+      }
+      if (!response.ok || !body || !("status" in body)) {
+        throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      }
+      return body as Stage3MutationResponse
+    } catch (error) {
+      if (!timingReported) {
+        reportPersonalPlanTransitionTiming({
+          layer: "client",
+          operation: "stage3_grouped_decisions",
+          outcome: "failed",
+          durationMs: performance.now() - startedAt,
+        })
+      }
+      throw error
     }
-    return body as Stage3MutationResponse
   }
 
   function openRoutine(ready: Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>) {
@@ -1154,16 +1274,21 @@ export function Stage3ProductsFlow({
     if (!beginDecisionSubmission()) return
     let nextDraft = activeDraft
     try {
-      for (const [index, { subject }] of clearFits.entries()) {
-        setSaveLabel(`${index + 1} von ${clearFits.length} gespeichert`)
-        const response = await resolveAuthorityDecision({
+      for (
+        let offset = 0;
+        offset < clearFits.length;
+        offset += STAGE3_AUTHORITY_DECISION_BATCH_LIMIT
+      ) {
+        const response = await resolveAuthorityDecisions({
           draftId: nextDraft.draftId,
           expectedRevision: nextDraft.revision,
-          intent: {
-            type: "resolve_decision",
-            subjectKey: subject.decisionKey,
-            action: "keep_owned",
-          },
+          intents: clearFits
+            .slice(offset, offset + STAGE3_AUTHORITY_DECISION_BATCH_LIMIT)
+            .map(({ subject }) => ({
+              type: "resolve_decision",
+              subjectKey: subject.decisionKey,
+              action: "keep_owned",
+            })),
         })
         if (response.status === "conflict") {
           finishDecisionSubmission()

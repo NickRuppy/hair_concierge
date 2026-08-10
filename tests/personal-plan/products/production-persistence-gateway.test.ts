@@ -302,15 +302,22 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
   let stageCalls = 0
   let compilerInput: Record<string, unknown> | null = null
   const sourceReadOrder: string[] = []
+  let releaseSnapshot!: () => void
+  const snapshotPending = new Promise<void>((resolve) => {
+    releaseSnapshot = resolve
+  })
+  let sourceRevisionStarted = false
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
     persistence: {
       ...persistence(),
       loadRefinedNeedSnapshot: async () => {
         sourceReadOrder.push("snapshot")
+        await snapshotPending
         return { needs: [] } as never
       },
       loadSourceRevision: async () => {
+        sourceRevisionStarted = true
         sourceReadOrder.push("source-revision")
         return 7
       },
@@ -342,7 +349,11 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
       },
     },
   })
-  const result = await gateway.complete({ draftId: "draft-a", expectedRevision: 4 })
+  const completionPending = gateway.complete({ draftId: "draft-a", expectedRevision: 4 })
+  await new Promise((resolve) => setImmediate(resolve))
+  const sourceReadsStartedTogether = sourceRevisionStarted
+  releaseSnapshot()
+  const result = await completionPending
   assert.equal(result.status, "ready_for_routine")
   if (result.status !== "ready_for_routine") return
   assert.equal(result.productPortfolioVersionId, "portfolio-a")
@@ -351,6 +362,7 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
   assert.ok(compilerInput)
   assert.equal((compilerInput as Record<string, unknown>).expectedSourceRevision, 7)
   assert.deepEqual((compilerInput as Record<string, unknown>).refinedNeedSnapshot, { needs: [] })
+  assert.equal(sourceReadsStartedTogether, true)
   assert.deepEqual(sourceReadOrder, ["snapshot", "source-revision", "compile"])
 })
 
@@ -653,6 +665,109 @@ test("semantic decision intent is evaluated and persisted as a server-authored d
     recommendationFactFingerprint: null,
     coverageRuleIds: [],
   })
+})
+
+test("semantic decision batch evaluates every subject and persists one CAS revision", async () => {
+  const first = authorityDraft()
+  const draft: Stage3ProductDraft = {
+    ...first,
+    products: [
+      ...first.products,
+      {
+        ...first.products[0]!,
+        capturedProductId: "capture-b",
+        userProductId: "owned-b",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-b",
+          displayName: "Pflege B",
+          category: "conditioner",
+        },
+      },
+    ],
+    roleAssignments: [
+      ...first.roleAssignments,
+      {
+        capturedProductId: "capture-b",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+    ],
+  }
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async () => conditionerFacts(),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  const result = await gateway.resolveDecisions({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+        action: "keep_owned",
+      },
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:conditioner:conditioner_rinse_out:capture-b",
+        action: "keep_owned",
+      },
+    ],
+  })
+
+  assert.equal(result.status, "saved")
+  assert.equal(saves, 1)
+  if (result.status === "saved") {
+    assert.equal(result.draft.revision, draft.revision + 1)
+    assert.deepEqual(
+      result.draft.decisions.map((decision) => decision.decisionKey),
+      [
+        "decision:conditioner:conditioner_rinse_out:capture-a",
+        "decision:conditioner:conditioner_rinse_out:capture-b",
+      ],
+    )
+  }
+})
+
+test("semantic decision batch rejects duplicate subjects without a partial write", async () => {
+  const draft = authorityDraft()
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async () => conditionerFacts(),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+  const intent = {
+    type: "resolve_decision" as const,
+    subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+    action: "keep_owned" as const,
+  }
+
+  await assert.rejects(
+    () =>
+      gateway.resolveDecisions({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intents: [intent, intent],
+      }),
+    /stage3_authority_subject_invalid/,
+  )
+  assert.equal(saves, 0)
 })
 
 test("one immutable refined context is shared across multiple owned-product evaluations", async () => {

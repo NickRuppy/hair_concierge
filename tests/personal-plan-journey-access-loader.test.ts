@@ -114,6 +114,64 @@ test("loader derives the frontier only from owner-scoped entitlement, source, pl
   assert.equal(access.allowed.stage4, true)
 })
 
+test("loader starts independent current refined-need and product-draft reads together", async () => {
+  let releaseRefined!: () => void
+  const refinedPending = new Promise<void>((resolve) => {
+    releaseRefined = resolve
+  })
+  let draftStarted = false
+  const accessPending = loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadCurrentRefinedNeed: async () => {
+        await refinedPending
+        return refinedSnapshot()
+      },
+      loadCurrentProductDraft: async (...args) => {
+        draftStarted = true
+        return deps().loadCurrentProductDraft(...args)
+      },
+    }),
+    "user-1",
+  )
+
+  await new Promise((resolve) => setImmediate(resolve))
+  const startedTogether = draftStarted
+  releaseRefined()
+  const access = await accessPending
+
+  assert.equal(access.kind, "personal_plan")
+  assert.equal(startedTogether, true)
+})
+
+test("loader starts independent prepared-artifact and plan reads together", async () => {
+  let releaseArtifact!: () => void
+  const artifactPending = new Promise<void>((resolve) => {
+    releaseArtifact = resolve
+  })
+  let planStarted = false
+  const accessPending = loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadPreparedArtifact: async () => {
+        await artifactPending
+        return { id: "artifact-1" }
+      },
+      loadPlan: async (...args) => {
+        planStarted = true
+        return deps().loadPlan(...args)
+      },
+    }),
+    "user-1",
+  )
+
+  await new Promise((resolve) => setImmediate(resolve))
+  const startedTogether = planStarted
+  releaseArtifact()
+  const access = await accessPending
+
+  assert.equal(access.kind, "personal_plan")
+  assert.equal(startedTogether, true)
+})
+
 test("loader keeps paid-pending buyers on the compact wait route and throws on authoritative read failure", async () => {
   const pending = await loadPersonalPlanJourneyAccessWithDeps(
     deps({

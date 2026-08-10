@@ -29,7 +29,13 @@ export function AuthenticatedAppShell({
   return (
     <div className="min-h-dvh" data-personal-plan-shell={personalPlan || undefined} style={style}>
       {personalPlan
-        ? (personalPlanNavigation ?? <PersonalPlanNavigation items={navigation.items} />)
+        ? (personalPlanNavigation ?? (
+            <PersonalPlanNavigation
+              key={navigation.hasPendingRoutineProposal ? "pending" : "clear"}
+              items={navigation.items}
+              initialHasPendingRoutineProposal={navigation.hasPendingRoutineProposal}
+            />
+          ))
         : (legacyHeader ?? <Header />)}
       {personalPlan ? (
         <div

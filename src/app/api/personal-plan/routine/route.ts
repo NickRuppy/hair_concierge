@@ -13,6 +13,7 @@ import {
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 export type PersonalPlanRoutineRouteDeps = {
   enabled: () => boolean
@@ -54,4 +55,17 @@ const handlers = createPersonalPlanRoutineRouteHandlers({
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   client: () => createAdminClient() as unknown as PersonalPlanRoutineReadClient,
 })
-export const GET = handlers.GET
+export const GET = async () => {
+  const startedAt = performance.now()
+  const result = await handlers.GET()
+  const durationMs = performance.now() - startedAt
+  result.headers.set("Server-Timing", `personal_plan_routine;dur=${durationMs.toFixed(2)}`)
+  reportPersonalPlanTransitionTiming({
+    layer: "server",
+    operation: "routine_api_read",
+    outcome: result.ok ? "ok" : "error",
+    status: result.status,
+    durationMs,
+  })
+  return result
+}

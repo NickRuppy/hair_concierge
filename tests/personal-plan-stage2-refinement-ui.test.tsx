@@ -20,6 +20,7 @@ import {
 import {
   getCompletedHandoffForLoadedSession,
   getBridgeBackQuestionId,
+  SavingTransitionShell,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
 import {
@@ -48,6 +49,17 @@ const baseTriggerContext: Stage2TriggerContext = {
 function countOccurrences(source: string, needle: string): number {
   return source.split(needle).length - 1
 }
+
+test("Stage 2 replaces the submitted page with truthful durable-save continuity", () => {
+  const html = renderToStaticMarkup(
+    <SavingTransitionShell liveMessage="Antwort wird gespeichert." />,
+  )
+
+  assert.match(html, /Deine Antwort wird sicher gespeichert/)
+  assert.match(html, /nächsten offenen Schritt/)
+  assert.match(html, /aria-busy="true"/)
+  assert.doesNotMatch(html, /Antwort gespeichert\./)
+})
 
 test("renders the German invitation and neutral bridge hierarchy without result leakage", () => {
   const bridgeHtml = renderToStaticMarkup(

@@ -13,9 +13,12 @@ import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
-import { loadCachedPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/navigation-access"
+import {
+  loadCachedAuthenticatedAppUserId,
+  loadCachedPersonalPlanJourneyAccessForUser,
+} from "@/lib/personal-plan/navigation-access"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { createClient } from "@/lib/supabase/server"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 export const dynamic = "force-dynamic"
 
@@ -58,7 +61,7 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
 }
 
 const defaultDeps: RoutinePageResolverDeps = {
-  getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+  getUserId: loadCachedAuthenticatedAppUserId,
   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
   readView: ({ userId, enabled }) =>
     loadPersonalPlanRoutineView({
@@ -87,8 +90,20 @@ export function RoutineUnavailableState({
   )
 }
 
-export default async function RoutinePage() {
+async function resolveDefaultRoutinePage() {
+  const startedAt = performance.now()
   const resolved = await resolveRoutinePage(defaultDeps)
+  reportPersonalPlanTransitionTiming({
+    layer: "server",
+    operation: "routine_page_resolve",
+    outcome: resolved.kind,
+    durationMs: performance.now() - startedAt,
+  })
+  return resolved
+}
+
+export default async function RoutinePage() {
+  const resolved = await resolveDefaultRoutinePage()
   if (resolved.kind === "legacy") return <RoutinePageClient />
 
   if (resolved.kind === "unavailable") {

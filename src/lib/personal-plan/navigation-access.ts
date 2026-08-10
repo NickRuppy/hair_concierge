@@ -14,7 +14,11 @@ export type PersonalPlanNavigationItem = {
 
 export type AuthenticatedAppNavigationAccess =
   | { kind: "legacy" }
-  | { kind: "personal_plan"; items: readonly PersonalPlanNavigationItem[] }
+  | {
+      kind: "personal_plan"
+      items: readonly PersonalPlanNavigationItem[]
+      hasPendingRoutineProposal: boolean
+    }
 
 export type AuthenticatedAppNavigationResolverDeps = {
   getUserId: () => Promise<string | null>
@@ -36,7 +40,12 @@ export function toAuthenticatedAppNavigationAccess(
     items.push({ key: "application", href: "/anwendung", label: "Anwendung" })
   }
   items.push({ key: "profile", href: "/profile", label: "Profil" })
-  return { kind: "personal_plan", items }
+  return {
+    kind: "personal_plan",
+    items,
+    hasPendingRoutineProposal:
+      access.kind === "personal_plan" ? access.hasPendingRoutineProposal === true : false,
+  }
 }
 
 export async function resolveAuthenticatedAppNavigationAccess(
@@ -57,10 +66,14 @@ export const loadCachedPersonalPlanJourneyAccessForUser = cache(
   loadPersonalPlanJourneyAccessForUser,
 )
 
+export const loadCachedAuthenticatedAppUserId = cache(
+  async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+)
+
 export const loadAuthenticatedAppNavigationAccess = cache(
   async (): Promise<AuthenticatedAppNavigationAccess> =>
     resolveAuthenticatedAppNavigationAccess({
-      getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
+      getUserId: loadCachedAuthenticatedAppUserId,
       loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
     }),
 )

@@ -17,6 +17,7 @@ export type PersonalPlanJourneyAccess =
       allowed: Readonly<Record<PersonalPlanJourneyStage, boolean>>
       nextHref: "/plan-start" | "/routine" | "/anwendung"
       personalPlanId: string
+      hasPendingRoutineProposal?: boolean
     }
 
 export type PersonalPlanJourneyAccessInput = {
@@ -116,7 +117,14 @@ export function resolvePersonalPlanJourneyAccess(
           : "stage1"
   const nextHref = stage5Ready ? "/anwendung" : stage4Ready ? "/routine" : "/plan-start"
 
-  return { kind: "personal_plan", personalPlanId: input.plan.id, frontier, nextHref, allowed }
+  return {
+    kind: "personal_plan",
+    personalPlanId: input.plan.id,
+    frontier,
+    nextHref,
+    allowed,
+    hasPendingRoutineProposal: Boolean(input.plan.pendingRoutineProposalId),
+  }
 }
 
 /**

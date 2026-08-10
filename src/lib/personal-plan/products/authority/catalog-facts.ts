@@ -52,19 +52,13 @@ export async function loadStage3AuthorityFactBundle(
   const productId =
     captured?.identity.kind === "catalog_product" ? captured.identity.productId : null
 
-  const productFacts = productId
-    ? await loadOneProduct(client, input.subject.category, productId, selectionContext)
-    : null
-  const recommendationCandidates = await loadRecommendationCandidates(
-    client,
-    input.subject.category,
-    selectionContext,
-  )
-  const heatCarrierCoverage = await resolveHeatCarrierCoverage(
-    client,
-    input.draft,
-    input.heatRoutes,
-  )
+  const [productFacts, recommendationCandidates, heatCarrierCoverage] = await Promise.all([
+    productId
+      ? loadOneProduct(client, input.subject.category, productId, selectionContext)
+      : Promise.resolve(null),
+    loadRecommendationCandidates(client, input.subject.category, selectionContext),
+    resolveHeatCarrierCoverage(client, input.draft, input.heatRoutes),
+  ])
 
   return {
     productFacts,

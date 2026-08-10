@@ -23,6 +23,7 @@ import type {
 } from "@/lib/personal-plan/routine-candidate-compiler"
 import type { RoutineProductDetail as RoutineProductDetailData } from "@/lib/personal-plan/routine/product-detail-service"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 import { requestRoutineAttentionRefresh } from "./routine-attention-indicator"
 import { RoutineEditor, type RoutineProductOption } from "./routine-editor"
@@ -215,15 +216,27 @@ export function PersonalPlanRoutineClient({
   )
 
   const reload = React.useCallback(async () => {
-    const response = await fetch("/api/personal-plan/routine", { cache: "no-store" })
-    if (!response.ok)
-      throw new Error(await readError(response, "Routine konnte nicht aktualisiert werden."))
-    const next = (await response.json()) as RoutineViewResponse
-    if (next.status === "no_personal_plan")
-      throw new Error("Dein persönlicher Plan ist nicht verfügbar.")
-    setView(next)
-    requestRoutineAttentionRefresh()
-    return next
+    const startedAt = performance.now()
+    let outcome = "error"
+    try {
+      const response = await fetch("/api/personal-plan/routine", { cache: "no-store" })
+      if (!response.ok)
+        throw new Error(await readError(response, "Routine konnte nicht aktualisiert werden."))
+      const next = (await response.json()) as RoutineViewResponse
+      if (next.status === "no_personal_plan")
+        throw new Error("Dein persönlicher Plan ist nicht verfügbar.")
+      setView(next)
+      requestRoutineAttentionRefresh(Boolean(next.pendingProposal))
+      outcome = "ok"
+      return next
+    } finally {
+      reportPersonalPlanTransitionTiming({
+        layer: "client",
+        operation: "routine_reload",
+        outcome,
+        durationMs: performance.now() - startedAt,
+      })
+    }
   }, [])
 
   const pending = view.pendingProposal
@@ -247,6 +260,8 @@ export function PersonalPlanRoutineClient({
     syncedOnEntry.current = true
     setEntrySyncPending(true)
     void (async () => {
+      const startedAt = performance.now()
+      let outcome = "error"
       try {
         const response = await fetch("/api/personal-plan/routine/sync", { method: "POST" })
         if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
@@ -255,13 +270,19 @@ export function PersonalPlanRoutineClient({
           const next = await reload()
           setProposalOpen(Boolean(next.pendingProposal))
         }
-        requestRoutineAttentionRefresh()
+        outcome = result.proposalStaged === true ? "proposal_staged" : "unchanged"
       } catch {
         routineAnalytics.track("personal_plan_stage4_outcome", {
           origin: "sync",
           outcome: "error",
         })
       } finally {
+        reportPersonalPlanTransitionTiming({
+          layer: "client",
+          operation: "routine_entry_sync",
+          outcome,
+          durationMs: performance.now() - startedAt,
+        })
         setEntrySyncPending(false)
       }
     })()

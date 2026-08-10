@@ -9,7 +9,10 @@ import {
   type Stage2RefinementGateway,
   type Stage2CompleteResult,
 } from "@/lib/personal-plan/refinement/gateway"
-import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import {
+  saveStage2SessionAnswer,
+  type Stage2RefinementSession,
+} from "@/lib/personal-plan/refinement/session"
 import type { Stage2QuestionId, Stage2StaticQuestionId } from "@/lib/personal-plan/refinement/types"
 
 import { RefinementBridge } from "./refinement-bridge"
@@ -61,7 +64,7 @@ export type Stage2HandoffPayload = {
   session: Stage2RefinementSession
 }
 
-type RefinementMode = "loading" | "invitation" | "resume" | "question" | "bridge"
+type RefinementMode = "loading" | "invitation" | "resume" | "question" | "saving" | "bridge"
 
 export function deriveRefinementEntryMode(
   session: Stage2RefinementSession,
@@ -251,23 +254,30 @@ export function RefinementFlow({
     return () => window.clearTimeout(timer)
   }, [autoHandoff, bridge, handleBridgeContinue, handoffStatus, mode, onHandoff])
 
+  const showCompletedStage2Session = useCallback(
+    (nextSession: Stage2RefinementSession, handoff: Stage2CompleteResult) => {
+      const completedSession: Stage2RefinementSession = {
+        ...nextSession,
+        status: "complete",
+        completedHandoff: handoff,
+      }
+      setSession(completedSession)
+      setBridge(handoff)
+      setMode("bridge")
+      setStatus("saved")
+      setLiveMessage("Verfeinerung gespeichert.")
+      emit({ name: "personal_plan_stage2_completed" })
+      emit({ name: "personal_plan_stage2_bridge_viewed" })
+    },
+    [emit],
+  )
+
   const completeStage2Session = useCallback(
     async (nextSession: Stage2RefinementSession) => {
       setSession(nextSession)
       try {
         const handoff = await gateway.complete({ expectedRevision: nextSession.revision })
-        const completedSession: Stage2RefinementSession = {
-          ...nextSession,
-          status: "complete",
-          completedHandoff: handoff,
-        }
-        setSession(completedSession)
-        setBridge(handoff)
-        setMode("bridge")
-        setStatus("saved")
-        setLiveMessage("Verfeinerung gespeichert.")
-        emit({ name: "personal_plan_stage2_completed" })
-        emit({ name: "personal_plan_stage2_bridge_viewed" })
+        showCompletedStage2Session(nextSession, handoff)
       } catch (error) {
         const code = error instanceof Stage2RefinementError ? error.code : "completion_failed"
         emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
@@ -280,7 +290,7 @@ export function RefinementFlow({
         setMode("question")
       }
     },
-    [emit, gateway, setActiveFromSession],
+    [emit, gateway, setActiveFromSession, showCompletedStage2Session],
   )
 
   const handleSubmit = useCallback(async () => {
@@ -288,6 +298,7 @@ export function RefinementFlow({
     if (status === "completion_failed" && session.path.firstUnresolvedQuestionId === null) {
       setStatus("saving")
       setLiveMessage("Übergabe wird erneut versucht.")
+      setMode("saving")
       await completeStage2Session(session)
       return
     }
@@ -295,6 +306,27 @@ export function RefinementFlow({
     setStatus("saving")
     setLiveMessage("Antwort wird gespeichert.")
     try {
+      const locallyAdvanced = saveStage2SessionAnswer(session, {
+        questionId: activeQuestionId,
+        answer: localAnswer,
+      })
+      const willCompletePage =
+        chooseNextQuestion(locallyAdvanced, activeQuestionId, editedCompletedQuestion) === null
+      setMode("saving")
+      const saveAnswerAndComplete = gateway.saveAnswerAndComplete?.bind(gateway)
+      if (willCompletePage && saveAnswerAndComplete) {
+        const result = await saveAnswerAndComplete({
+          questionId: activeQuestionId,
+          answer: localAnswer,
+          expectedRevision: session.revision,
+        })
+        emit({
+          name: "personal_plan_stage2_answer_saved",
+          family: getQuestionFamily(activeQuestionId),
+        })
+        showCompletedStage2Session(result.session, result.handoff)
+        return
+      }
       const nextSession = await gateway.saveAnswer({
         questionId: activeQuestionId,
         answer: localAnswer,
@@ -320,6 +352,21 @@ export function RefinementFlow({
       })
       setMode("question")
     } catch (error) {
+      if (error instanceof Stage2RefinementError && error.savedSession) {
+        emit({
+          name: "personal_plan_stage2_answer_saved",
+          family: getQuestionFamily(activeQuestionId),
+        })
+        emit({ name: "personal_plan_stage2_save_failed", errorCode: error.code })
+        setBridge(null)
+        setActiveFromSession(error.savedSession, getBridgeBackQuestionId(error.savedSession), {
+          liveMessage:
+            "Antwort gespeichert. Die Übergabe ist fehlgeschlagen und kann direkt wiederholt werden.",
+          status: "completion_failed",
+        })
+        setMode("question")
+        return
+      }
       if (error instanceof Stage2RefinementError && error.code === "revision_conflict") {
         emit({ name: "personal_plan_stage2_save_failed", errorCode: "revision_conflict" })
         try {
@@ -352,6 +399,7 @@ export function RefinementFlow({
         } catch {
           setStatus("save_failed")
           setLiveMessage("Speichern fehlgeschlagen. Der neuere Stand konnte nicht geladen werden.")
+          setMode("question")
           return
         }
       }
@@ -359,6 +407,7 @@ export function RefinementFlow({
       emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
       setStatus("save_failed")
       setLiveMessage("Speichern fehlgeschlagen.")
+      setMode("question")
     }
   }, [
     activeQuestionId,
@@ -368,6 +417,7 @@ export function RefinementFlow({
     localAnswer,
     session,
     setActiveFromSession,
+    showCompletedStage2Session,
     status,
   ])
 
@@ -388,6 +438,7 @@ export function RefinementFlow({
 
   const content = useMemo(() => {
     if (mode === "loading") return <LoadingShell status={status} liveMessage={liveMessage} />
+    if (mode === "saving") return <SavingTransitionShell liveMessage={liveMessage} />
     if (mode === "bridge" && bridge) {
       if (autoHandoff && onHandoff && handoffStatus !== "error") {
         return <LoadingShell status="saved" liveMessage="Produkte werden geöffnet." />
@@ -455,6 +506,28 @@ export function RefinementFlow({
   ])
 
   return content
+}
+
+export function SavingTransitionShell({ liveMessage }: { liveMessage: string }) {
+  return (
+    <div className="min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader currentStage={2} saveStatus="saving" />
+      <main className="grid min-h-[calc(100dvh-92px)] place-items-center px-5 text-center">
+        <section role="status" aria-live="polite" aria-busy="true" className="max-w-sm">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+            Verfeinerung
+          </p>
+          <h1 className="mt-2 font-serif text-3xl font-medium text-[var(--brand-plum-darkest,#2a1845)]">
+            Deine Antwort wird sicher gespeichert.
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-[var(--text-sub,#6a6560)]">
+            Danach geht es direkt mit dem nächsten offenen Schritt weiter.
+          </p>
+          <span className="sr-only">{liveMessage}</span>
+        </section>
+      </main>
+    </div>
+  )
 }
 
 export function getBridgeBackQuestionId(

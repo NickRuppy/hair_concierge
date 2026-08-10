@@ -3,9 +3,11 @@ import {
   type Stage2CompleteResult,
   type Stage2RefinementErrorCode,
   type Stage2RefinementGateway,
+  type Stage2SaveAndCompleteResult,
   type Stage2SaveAnswerInput,
 } from "./gateway"
 import type { Stage2RefinementSession } from "./session"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 
@@ -14,15 +16,27 @@ export function createHttpStage2RefinementGateway({
 }: { fetch?: FetchLike } = {}): Stage2RefinementGateway {
   return {
     async load() {
-      return request<Stage2RefinementSession>(fetcher, "/api/personal-plan/stage-2", {
-        method: "GET",
-      })
+      return request<Stage2RefinementSession>(
+        fetcher,
+        "/api/personal-plan/stage-2",
+        { method: "GET" },
+        "stage2_load",
+      )
     },
     async saveAnswer(input: Stage2SaveAnswerInput) {
       return request<Stage2RefinementSession>(
         fetcher,
         "/api/personal-plan/stage-2",
         jsonRequest("PATCH", input),
+        "stage2_answer_save",
+      )
+    },
+    async saveAnswerAndComplete(input: Stage2SaveAnswerInput) {
+      return request<Stage2SaveAndCompleteResult>(
+        fetcher,
+        "/api/personal-plan/stage-2",
+        jsonRequest("PATCH", { ...input, completeAfterSave: true }),
+        "stage2_final_save_complete",
       )
     },
     async complete(input: { expectedRevision: number }) {
@@ -30,6 +44,7 @@ export function createHttpStage2RefinementGateway({
         fetcher,
         "/api/personal-plan/stage-2/complete",
         jsonRequest("POST", input),
+        "stage2_complete_retry",
       )
     },
   }
@@ -43,7 +58,13 @@ function jsonRequest(method: "PATCH" | "POST", body: unknown): RequestInit {
   }
 }
 
-async function request<T>(fetcher: FetchLike, url: string, init: RequestInit): Promise<T> {
+async function request<T>(
+  fetcher: FetchLike,
+  url: string,
+  init: RequestInit,
+  operation: string,
+): Promise<T> {
+  const startedAt = performance.now()
   let response: Response
   try {
     response = await fetcher(url, {
@@ -52,11 +73,31 @@ async function request<T>(fetcher: FetchLike, url: string, init: RequestInit): P
       cache: "no-store",
     })
   } catch {
+    reportPersonalPlanTransitionTiming({
+      layer: "client",
+      operation,
+      outcome: "network_error",
+      durationMs: performance.now() - startedAt,
+    })
     throw new Stage2RefinementError("temporarily_unavailable")
   }
   const body = await response.json().catch(() => null)
+  reportPersonalPlanTransitionTiming({
+    layer: "client",
+    operation,
+    outcome: response.ok ? "success" : "http_error",
+    durationMs: performance.now() - startedAt,
+    status: response.status,
+  })
   if (response.ok) return body as T
-  throw new Stage2RefinementError(errorCode(body))
+  throw new Stage2RefinementError(errorCode(body), undefined, savedSession(body))
+}
+
+function savedSession(body: unknown): Stage2RefinementSession | undefined {
+  if (!body || typeof body !== "object" || !("savedSession" in body)) return undefined
+  const session = body.savedSession
+  if (!session || typeof session !== "object") return undefined
+  return session as Stage2RefinementSession
 }
 
 function errorCode(body: unknown): Stage2RefinementErrorCode {

@@ -412,15 +412,16 @@ test("initial confirmation and non-blocking successor review preserve the active
   await page.setViewportSize({ width: 1280, height: 900 })
   const applicationOrigin = new URL(process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000")
     .origin
-  const initialAttention = page.waitForResponse((response) => {
-    const request = response.request()
-    const responseUrl = new URL(response.url())
-    return (
-      responseUrl.origin === applicationOrigin &&
-      responseUrl.pathname === "/api/personal-plan/routine/attention" &&
-      request.method() === "GET" &&
-      response.status() === 200
-    )
+  let attentionRequestCount = 0
+  page.on("request", (request) => {
+    const requestUrl = new URL(request.url())
+    if (
+      requestUrl.origin === applicationOrigin &&
+      requestUrl.pathname === "/api/personal-plan/routine/attention" &&
+      request.method() === "GET"
+    ) {
+      attentionRequestCount += 1
+    }
   })
   await page.goto("/auth?next=/routine")
   const loginTab = page.getByRole("tab", { name: "Anmelden" })
@@ -430,7 +431,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   await page.getByRole("button", { name: "Anmelden", exact: true }).click()
   await page.waitForURL("**/routine")
   await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
-  expect(await (await initialAttention).json()).toEqual({ hasPendingProposal: true })
+  expect(attentionRequestCount).toBe(0)
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toBeAttached()
   await expect(page.getByText("Regelmäßige Reinigung", { exact: true }).last()).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo · hinzugefügt", { exact: true })).toBeVisible()
@@ -440,6 +441,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo", { exact: true })).toBeVisible()
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toHaveCount(0)
+  expect(attentionRequestCount).toBe(0)
 
   await page.getByRole("button", { name: "Routine bearbeiten" }).click()
   const inclusion = page.getByRole("checkbox", { name: "Kategorie einplanen" })
