@@ -10,6 +10,7 @@ test("full CI marker in PR title forces all path-aware gates", () => {
     playwright_smoke: true,
     security_scan: true,
     personal_plan_db: true,
+    personal_plan_journey: true,
     full_ci: true,
   })
 })
@@ -21,6 +22,7 @@ test("diff failures can force all path-aware gates without changed files", () =>
     playwright_smoke: true,
     security_scan: true,
     personal_plan_db: true,
+    personal_plan_journey: true,
     full_ci: true,
   })
 })
@@ -71,6 +73,7 @@ test("Personal Plan persistence and database contracts run the local database ga
     classifyCiScope(["scripts/ci/prepare-personal-plan-db-transition.mjs"]).personal_plan_db,
     true,
   )
+  assert.equal(classifyCiScope(["supabase/config.toml"]).personal_plan_db, true)
   assert.equal(
     classifyCiScope(["src/lib/personal-plan/persistence/plan-repository.ts"]).personal_plan_db,
     true,
@@ -82,7 +85,7 @@ test("Personal Plan persistence and database contracts run the local database ga
   assert.equal(classifyCiScope(["docs/readme.md"]).personal_plan_db, false)
 })
 
-test("persisted Personal Plan browser harness paths run the isolated database gate", () => {
+test("persisted Personal Plan browser harness paths run the journey without widening SQL scope", () => {
   for (const path of [
     "scripts/test-personal-plan-stage1-5-browser.sh",
     "tests/personal-plan-stage1-5.spec.ts",
@@ -90,12 +93,16 @@ test("persisted Personal Plan browser harness paths run the isolated database ga
     "tests/personal-plan-stage4-routine.spec.ts",
     "scripts/test-personal-plan-stage5-browser.sh",
     "tests/personal-plan-stage5-application.spec.ts",
+    "supabase/config.toml",
+    "playwright.config.ts",
   ]) {
-    assert.equal(classifyCiScope([path]).personal_plan_db, true, path)
+    assert.equal(classifyCiScope([path]).personal_plan_journey, true, path)
   }
+
+  assert.equal(classifyCiScope(["tests/personal-plan-stage1-5.spec.ts"]).personal_plan_db, false)
 })
 
-test("integrated Personal Plan runtime paths run the database and browser gate", () => {
+test("integrated Personal Plan runtime paths run the persisted journey", () => {
   for (const path of [
     "src/lib/personal-plan/journey-access-loader.ts",
     "src/app/anwendung/page.tsx",
@@ -107,10 +114,54 @@ test("integrated Personal Plan runtime paths run the database and browser gate",
     "src/components/routine/personal-plan/routine-page.tsx",
     "src/components/routine/routine-page-client.tsx",
     "src/components/layout/personal-plan-navigation.tsx",
+    "src/app/auth/confirm/route.ts",
+    "src/components/auth/auth-form.tsx",
+    "src/lib/auth/intake-state.ts",
+    "src/lib/supabase/middleware.ts",
   ]) {
-    assert.equal(classifyCiScope([path]).personal_plan_db, true, path)
+    assert.equal(classifyCiScope([path]).personal_plan_journey, true, path)
   }
 
-  assert.equal(classifyCiScope(["src/components/layout/header.tsx"]).personal_plan_db, false)
-  assert.equal(classifyCiScope(["src/components/routine/routine-card.tsx"]).personal_plan_db, false)
+  assert.equal(classifyCiScope(["src/components/layout/header.tsx"]).personal_plan_journey, false)
+  assert.equal(
+    classifyCiScope(["src/components/routine/routine-card.tsx"]).personal_plan_journey,
+    false,
+  )
+})
+
+test("database and journey scopes remain independent for representative changes", () => {
+  const migration = classifyCiScope(["supabase/migrations/20260810000000_example.sql"])
+  assert.equal(migration.personal_plan_db, true)
+  assert.equal(migration.personal_plan_journey, true)
+
+  const persistence = classifyCiScope(["src/lib/personal-plan/persistence/plan-repository.ts"])
+  assert.equal(persistence.personal_plan_db, true)
+  assert.equal(persistence.personal_plan_journey, true)
+
+  const presentation = classifyCiScope(["src/app/anwendung/page.tsx"])
+  assert.equal(presentation.personal_plan_db, false)
+  assert.equal(presentation.personal_plan_journey, true)
+
+  const docs = classifyCiScope(["docs/readme.md"])
+  assert.equal(docs.personal_plan_db, false)
+  assert.equal(docs.personal_plan_journey, false)
+})
+
+test("field-test access seams trigger the contracts they can invalidate", () => {
+  for (const path of [
+    "src/lib/personal-plan-field-test/server.ts",
+    "src/app/api/personal-plan/field-test/activate/route.ts",
+    "scripts/personal-plan-field-test-campaign.ts",
+  ]) {
+    const scope = classifyCiScope([path])
+    assert.equal(scope.personal_plan_db, true, `${path} should run SQL contracts`)
+    assert.equal(scope.personal_plan_journey, true, `${path} should run the persisted journey`)
+  }
+
+  for (const path of [
+    "src/app/test/haarplan/[token]/route.ts",
+    "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+  ]) {
+    assert.equal(classifyCiScope([path]).personal_plan_journey, true, path)
+  }
 })

@@ -4,6 +4,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "23 3 * * *"
 
 permissions:
   contents: read
@@ -106,6 +108,7 @@ jobs:
       playwright_smoke: ${{ steps.changes.outputs.playwright_smoke }}
       security_scan: ${{ steps.changes.outputs.security_scan }}
       personal_plan_db: ${{ steps.changes.outputs.personal_plan_db }}
+      personal_plan_journey: ${{ steps.changes.outputs.personal_plan_journey }}
       full_ci: ${{ steps.changes.outputs.full_ci }}
     steps:
       - uses: actions/checkout@v6
@@ -118,11 +121,12 @@ jobs:
           CI_HEAD_REF: ${{ github.sha }}
           PR_TITLE: ${{ github.event.pull_request.title || '' }}
           PR_BODY: ${{ github.event.pull_request.body || '' }}
+          FORCE_FULL_CI: ${{ github.event_name == 'schedule' }}
         run: node scripts/ci/changed-paths.mjs
 
-  quality-core:
+  quality-static:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -139,14 +143,88 @@ jobs:
         run: npm run build
       - name: Check funnel registries
         run: npm run funnel:check
+
+  quality-node:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run top-level Node contracts
+        run: npm run test:node
+      - name: Run nested Personal Plan contracts
+        run: npm run test:personal-plan:nested
+      - name: Run agent contracts
+        run: npm run test:agent
+
+  quality-browser-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run deterministic contract tests
-        run: npm run test:contracts
+      - name: Run generic Playwright contracts
+        run: npm run test:playwright:contracts
+
+  quality-personal-plan-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [detect-ci-scope]
+    if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Stage 3 browser contracts
+        run: npm run test:playwright:personal-plan-stage3
+      - name: Run Stage 4 browser contracts
+        run: npm run test:playwright:personal-plan-stage4
+      - name: Run Stage 5 browser contracts
+        run: npm run test:playwright:personal-plan-stage5
+
+  quality-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ always() }}
+    needs:
+      - detect-ci-scope
+      - quality-static
+      - quality-node
+      - quality-browser-contracts
+      - quality-personal-plan-browser
+    steps:
+      - uses: actions/checkout@v6
+      - name: Require successful quality lanes
+        run: >-
+          node scripts/ci/require-job-results.mjs
+          --allow-skipped=quality-personal-plan-browser
+          detect-ci-scope=${{ needs.detect-ci-scope.result }}
+          quality-static=${{ needs.quality-static.result }}
+          quality-node=${{ needs.quality-node.result }}
+          quality-browser-contracts=${{ needs.quality-browser-contracts.result }}
+          quality-personal-plan-browser=${{ needs.quality-personal-plan-browser.result }}
 
   personal-plan-db-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     needs: [detect-ci-scope]
     steps:
       - uses: actions/checkout@v6
@@ -160,15 +238,40 @@ jobs:
       - name: Install dependencies
         if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
         run: npm ci
-      - name: Install Playwright browsers
-        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
-        run: npx playwright install --with-deps chromium
       - name: Run local Personal Plan database contracts
         if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
         run: time npm run test:personal-plan-db
+
+  personal-plan-persisted-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [detect-ci-scope]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.personal_plan_journey != 'true'
+        run: echo "No Personal Plan runtime, persistence, auth, migration, or journey paths changed."
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+        run: npm ci
+      - name: Install Playwright browsers
+        if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+        run: npx playwright install --with-deps chromium
       - name: Run persisted Personal Plan browser journey
-        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
         run: time npm run test:playwright:personal-plan-stage1-5
+      - name: Upload persisted journey artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: personal-plan-persisted-journey-${{ github.run_id }}
+          path: test-results/personal-plan-stage1-5*/
+          if-no-files-found: ignore
+          retention-days: 7
 
   playwright-smoke:
     runs-on: ubuntu-latest
@@ -181,6 +284,7 @@ jobs:
       NEXT_PUBLIC_PAYPAL_ENABLED: "true"
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_ci_only"
       NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
+      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"
       PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
     steps:
       - uses: actions/checkout@v6
@@ -205,61 +309,12 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run Playwright smoke tests
         if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
-        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 "npx playwright test --grep '@ci|@payment-feedback-v2' --project=chromium"
       - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-smoke-${{ github.run_id }}
-          path: |
-            test-results/
-            tests/results/
-            tests/screenshots/
-          if-no-files-found: ignore
-          retention-days: 7
-
-  playwright-payment-feedback-v2:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: [detect-ci-scope]
-    env:
-      CI_OFFER_PAGE_LAB_ENABLED: "true"
-      NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true"
-      NEXT_PUBLIC_PAYPAL_CLIENT_ID: "ci-paypal-client-id"
-      NEXT_PUBLIC_PAYPAL_ENABLED: "true"
-      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_ci_only"
-      NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
-      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"
-      PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - name: Explain skip
-        if: needs.detect-ci-scope.outputs.playwright_smoke != 'true' || env.HAS_LIVE_SUPABASE_SECRETS != 'true'
-        run: |
-          echo "Payment feedback V2 smoke skipped."
-          echo "playwright_smoke=${{ needs.detect-ci-scope.outputs.playwright_smoke }}"
-          echo "HAS_LIVE_SUPABASE_SECRETS=$HAS_LIVE_SUPABASE_SECRETS"
-      - name: Install dependencies
-        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
-        run: npm ci
-      - name: Build V2 app for smoke server
-        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
-        run: npm run build
-      - name: Install Playwright browser
-        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
-        run: npx playwright install --with-deps chromium
-      - name: Run payment feedback V2 smoke tests
-        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
-        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @payment-feedback-v2 --project=chromium'
-      - name: Upload payment feedback V2 artifacts
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: playwright-payment-feedback-v2-${{ github.run_id }}
           path: |
             test-results/
             tests/results/

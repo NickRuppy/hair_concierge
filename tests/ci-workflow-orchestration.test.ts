@@ -166,8 +166,13 @@ test("Playwright smoke starts after scope detection without waiting for core qua
     "npm ci",
     "npm run build",
     "npx playwright install --with-deps chromium",
-    "npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'",
+    "npx start-server-and-test 'npm run start' http://localhost:3000 \"npx playwright test --grep '@ci|@payment-feedback-v2' --project=chromium\"",
   ])
+  assert.match(playwrightSmoke, /^      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"$/m)
+  assert.throws(
+    () => jobSource(ciWorkflow, "playwright-payment-feedback-v2"),
+    /missing playwright-payment-feedback-v2 job/,
+  )
   assert.match(
     playwrightSmoke,
     /^      - name: Upload Playwright artifacts\n        if: always\(\)\n        uses: actions\/upload-artifact@\S+(?:[ \t]+#.*)?$/m,
@@ -181,33 +186,75 @@ test("Playwright smoke starts after scope detection without waiting for core qua
   assert.throws(() => guardedRunCommands(unguardedInlineRun), /unguarded command/)
 })
 
-test("quality core installs Chromium before the self-hosted Personal Plan browser contracts", () => {
+test("quality core preserves its required name as a fail-closed parallel aggregate", () => {
   const qualityCore = jobSource(ciWorkflow, "quality-core")
-  const stage3BrowserScript = packageManifest.scripts["test:playwright:personal-plan-stage3"]
+  const expectedChildren = [
+    "detect-ci-scope",
+    "quality-browser-contracts",
+    "quality-node",
+    "quality-personal-plan-browser",
+    "quality-static",
+  ]
 
+  assert.deepEqual(jobDependencyNames(ciWorkflow, "quality-core"), expectedChildren)
+  assert.match(qualityCore, /^    if: \$\{\{ always\(\) \}\}$/m)
   assert.match(
     qualityCore,
-    /      - name: Install Playwright browsers\n        run: npx playwright install --with-deps chromium\n      - name: Run deterministic contract tests\n        run: npm run test:contracts/m,
+    /node scripts\/ci\/require-job-results\.mjs[\s\S]*--allow-skipped=quality-personal-plan-browser[\s\S]*detect-ci-scope=\$\{\{ needs\.detect-ci-scope\.result \}\}[\s\S]*quality-static=\$\{\{ needs\.quality-static\.result \}\}[\s\S]*quality-node=\$\{\{ needs\.quality-node\.result \}\}[\s\S]*quality-browser-contracts=\$\{\{ needs\.quality-browser-contracts\.result \}\}[\s\S]*quality-personal-plan-browser=\$\{\{ needs\.quality-personal-plan-browser\.result \}\}/m,
   )
+  assert.doesNotMatch(qualityCore, /npm ci|npm run build|playwright install|test:contracts/)
+})
+
+test("quality work is divided into independently scheduled lanes", () => {
+  const qualityStatic = jobSource(ciWorkflow, "quality-static")
+  const qualityNode = jobSource(ciWorkflow, "quality-node")
+  const qualityBrowser = jobSource(ciWorkflow, "quality-browser-contracts")
+  const qualityPersonalPlan = jobSource(ciWorkflow, "quality-personal-plan-browser")
+
+  assert.match(qualityStatic, /run: npm run typecheck/)
+  assert.match(qualityStatic, /run: npm run lint/)
+  assert.match(qualityStatic, /run: npm run build/)
+  assert.match(qualityStatic, /run: npm run funnel:check/)
+
+  assert.match(qualityNode, /run: npm run test:node/)
+  assert.match(qualityNode, /run: npm run test:personal-plan:nested/)
+  assert.match(qualityNode, /run: npm run test:agent/)
+
+  assert.match(qualityBrowser, /run: npx playwright install --with-deps chromium/)
+  assert.match(qualityBrowser, /run: npm run test:playwright:contracts/)
+
+  assert.deepEqual(jobDependencyNames(ciWorkflow, "quality-personal-plan-browser"), [
+    "detect-ci-scope",
+  ])
+  assert.match(
+    qualityPersonalPlan,
+    /^    if: needs\.detect-ci-scope\.outputs\.personal_plan_journey == 'true'$/m,
+  )
+  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3/)
+  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage4/)
+  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage5/)
+})
+
+test("aggregate contracts keep focused Personal Plan coverage without duplicate top-level tests", () => {
   assert.equal(
-    stage3BrowserScript,
-    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true PLAYWRIGHT_BASE_URL=http://127.0.0.1:3217 start-server-and-test 'npm run dev -- --hostname 127.0.0.1 --port 3217' http://127.0.0.1:3217 'playwright test tests/personal-plan-start.spec.ts tests/personal-plan-stage2-refinement.spec.ts tests/personal-plan-stage1-2-3.spec.ts tests/personal-plan-stage3.spec.ts --project=chromium'",
+    packageManifest.scripts["test:personal-plan:nested"],
+    "node scripts/ci/run-personal-plan-nested.mjs",
   )
   assert.match(
     packageManifest.scripts["test:contracts"],
-    /(?:^| && )npm run test:personal-plan(?: &&|$)/,
+    /(?:^| && )npm run test:personal-plan:nested(?: &&|$)/,
+  )
+  assert.doesNotMatch(
+    packageManifest.scripts["test:contracts"],
+    /npm run test:personal-plan(?: &&|$)/,
   )
   assert.match(
     packageManifest.scripts["test:contracts"],
     /(?:^| && )npm run test:playwright:personal-plan-stage3 && npm run test:playwright:personal-plan-stage4 && npm run test:playwright:personal-plan-stage5$/,
   )
-  assert.doesNotMatch(
-    packageManifest.scripts["test:contracts"],
-    /test:playwright:personal-plan-stage1-5/,
-  )
 })
 
-test("Personal Plan database contracts are path-scoped, local, and time-bounded", () => {
+test("Personal Plan database contract is path-scoped, local, SQL-only, and time-bounded", () => {
   const detectScope = jobSource(ciWorkflow, "detect-ci-scope")
   const databaseContracts = jobSource(ciWorkflow, "personal-plan-db-contract")
 
@@ -216,26 +263,50 @@ test("Personal Plan database contracts are path-scoped, local, and time-bounded"
     /^      personal_plan_db: \$\{\{ steps\.changes\.outputs\.personal_plan_db \}\}$/m,
   )
   assert.deepEqual(jobDependencyNames(ciWorkflow, "personal-plan-db-contract"), ["detect-ci-scope"])
-  assert.match(databaseContracts, /^    timeout-minutes: 30$/m)
-  assert.match(
-    databaseContracts,
-    /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: npx playwright install --with-deps chromium/m,
-  )
+  assert.match(databaseContracts, /^    timeout-minutes: 15$/m)
   assert.match(
     databaseContracts,
     /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: time npm run test:personal-plan-db/m,
   )
-  assert.match(
-    databaseContracts,
-    /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: time npm run test:playwright:personal-plan-stage1-5/m,
-  )
+  assert.doesNotMatch(databaseContracts, /playwright|stage1-5/i)
   assert.equal(
     packageManifest.scripts["test:personal-plan-db"],
     "bash scripts/test-personal-plan-db.sh",
   )
+})
+
+test("persisted Personal Plan journey is separately scoped and uploads failure evidence", () => {
+  const detectScope = jobSource(ciWorkflow, "detect-ci-scope")
+  const journey = jobSource(ciWorkflow, "personal-plan-persisted-journey")
+
+  assert.match(
+    detectScope,
+    /^      personal_plan_journey: \$\{\{ steps\.changes\.outputs\.personal_plan_journey \}\}$/m,
+  )
+  assert.deepEqual(jobDependencyNames(ciWorkflow, "personal-plan-persisted-journey"), [
+    "detect-ci-scope",
+  ])
+  assert.match(journey, /^    timeout-minutes: 20$/m)
+  assert.match(journey, /run: npx playwright install --with-deps chromium/)
+  assert.match(journey, /run: time npm run test:playwright:personal-plan-stage1-5/)
+  assert.match(
+    journey,
+    /^      - name: Upload persisted journey artifacts\n        if: always\(\)\n        uses: actions\/upload-artifact@\S+/m,
+  )
+  assert.match(journey, /test-results\/personal-plan-stage1-5\*\//)
   assert.equal(
     packageManifest.scripts["test:playwright:personal-plan-stage1-5"],
     "bash scripts/test-personal-plan-stage1-5-browser.sh",
+  )
+})
+
+test("scheduled CI explicitly forces every path-aware gate", () => {
+  const detectScope = jobSource(ciWorkflow, "detect-ci-scope")
+
+  assert.match(ciWorkflow, /^  schedule:\n    - cron: "[^\n]+"$/m)
+  assert.match(
+    detectScope,
+    /^          FORCE_FULL_CI: \$\{\{ github\.event_name == 'schedule' \}\}$/m,
   )
 })
 

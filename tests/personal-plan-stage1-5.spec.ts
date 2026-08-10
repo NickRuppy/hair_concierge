@@ -529,16 +529,20 @@ async function clickAndWaitForStage3AuthorityDecision(page: Page, currentAction:
 
 async function waitForStage3AuthorityState(page: Page) {
   const authorityAction = page.locator('article button[aria-label*=": "]').first()
+  const routineHandoff = page.getByRole("heading", { name: "Deine Routine steht", exact: true })
+  const stageState = async () => {
+    if (new URL(page.url()).pathname === "/routine" || (await routineHandoff.isVisible())) {
+      return "complete"
+    }
+    return (await authorityAction.isVisible()) ? "decision" : "transitioning"
+  }
 
   await expect
-    .poll(
-      async () => {
-        if (new URL(page.url()).pathname === "/routine") return "complete"
-        return (await authorityAction.isVisible()) ? "decision" : "transitioning"
-      },
-      { message: "Stage 3 should render its next decision or portfolio handoff" },
-    )
+    .poll(stageState, {
+      message: "Stage 3 should render its next decision or portfolio handoff",
+    })
     .not.toBe("transitioning")
+  return stageState()
 }
 
 const stage3CategoryHeading: Record<string, string> = {
@@ -710,7 +714,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     expect(stage3ClientReads - stage3ReadsBeforeSampling).toBe(9)
     console.info(
       `personal_plan_seeded_local_timing ${JSON.stringify({
-        environment: "isolated local Supabase + Next dev server + Chromium",
+        environment: "isolated local Supabase + Next production server + Chromium",
         coldSamples: 1,
         warmSamples: 8,
         readyFirstPollTiming,
@@ -759,8 +763,8 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
 
     const seen = new Set<string>()
     for (let decisions = 0; decisions < 24; decisions += 1) {
-      await waitForStage3AuthorityState(page)
-      if (new URL(page.url()).pathname === "/routine") break
+      const authorityState = await waitForStage3AuthorityState(page)
+      if (authorityState === "complete") break
       const ownedAction = page.getByRole("button", {
         name: /^E2E Sanftes Shampoo weiterverwenden: /,
       })

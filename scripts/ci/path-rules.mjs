@@ -13,9 +13,7 @@ const CHAT_PREFIXES = [
   "scripts/eval-chat/",
 ]
 
-const CHAT_EXACT = [
-  "docs/langfuse-quality-loop.md",
-]
+const CHAT_EXACT = ["docs/langfuse-quality-loop.md"]
 const CHAT_EXCLUDE = ["src/lib/product-matching/product-list-chunks.ts"]
 
 const RETRIEVAL_PREFIXES = [
@@ -55,36 +53,69 @@ const SECURITY_EXACT = ["package.json", "package-lock.json", ".github/dependabot
 const PERSONAL_PLAN_DB_PREFIXES = [
   "supabase/migrations/",
   "supabase/tests/",
-  "src/lib/personal-plan/",
+  "src/lib/personal-plan/persistence/",
+  "src/lib/personal-plan-field-test/",
   "src/lib/product-intake/",
   "src/app/api/personal-plan/",
-  "src/app/anwendung/",
-  "src/app/plan-bereit/",
-  "src/app/plan-start/",
-  "src/app/routine/",
-  "src/components/application/",
-  "src/components/personal-plan-products/",
-  "src/components/personal-plan-refinement/",
-  "src/components/personal-plan-start/",
-  "src/components/routine/personal-plan/",
+  "scripts/personal-plan-field-test-",
 ]
 
 const PERSONAL_PLAN_DB_EXACT = [
   "scripts/ci/prepare-personal-plan-db-transition.mjs",
   "scripts/test-personal-plan-db.sh",
+  "supabase/config.toml",
+  "package.json",
+  "package-lock.json",
+  ".github/workflows/ci.yml",
+]
+
+const PERSONAL_PLAN_JOURNEY_PREFIXES = [
+  "supabase/migrations/",
+  "supabase/tests/",
+  "src/lib/personal-plan/",
+  "src/lib/personal-plan-field-test/",
+  "src/lib/product-intake/",
+  "src/lib/auth/",
+  "src/lib/supabase/",
+  "src/app/auth/",
+  "src/app/api/personal-plan/",
+  "src/app/anwendung/",
+  "src/app/plan-bereit/",
+  "src/app/plan-start/",
+  "src/app/routine/",
+  "src/app/test/haarplan/",
+  "src/components/application/",
+  "src/components/auth/",
+  "src/components/personal-plan-field-test/",
+  "src/components/personal-plan-products/",
+  "src/components/personal-plan-refinement/",
+  "src/components/personal-plan-start/",
+  "src/components/routine/personal-plan/",
+  "scripts/test-personal-plan-stage",
+  "scripts/personal-plan-field-test-",
+  "tests/personal-plan-",
+]
+
+const PERSONAL_PLAN_JOURNEY_EXACT = [
+  "scripts/ci/prepare-personal-plan-db-transition.mjs",
   "scripts/test-personal-plan-stage1-5-browser.sh",
   "scripts/test-personal-plan-stage4-browser.sh",
   "scripts/test-personal-plan-stage5-browser.sh",
   "tests/personal-plan-stage1-5.spec.ts",
   "tests/personal-plan-stage4-routine.spec.ts",
   "tests/personal-plan-stage5-application.spec.ts",
+  "supabase/config.toml",
+  "playwright.config.ts",
   "src/app/chat/layout.tsx",
   "src/app/profile/layout.tsx",
   "src/app/welcome/page.tsx",
   "src/components/layout/authenticated-app-shell.tsx",
   "src/components/layout/personal-plan-navigation.tsx",
   "src/components/routine/routine-page-client.tsx",
+  "src/middleware.ts",
+  "next.config.ts",
   "package.json",
+  "package-lock.json",
   ".github/workflows/ci.yml",
 ]
 
@@ -105,10 +136,15 @@ export function classifyCiScope(files, prContext = {}) {
       fullCi || files.some((file) => matches(file, RETRIEVAL_PREFIXES, RETRIEVAL_EXACT)),
     playwright_smoke:
       fullCi || files.some((file) => matches(file, PLAYWRIGHT_PREFIXES, PLAYWRIGHT_EXACT)),
-    security_scan:
-      fullCi || files.some((file) => matches(file, SECURITY_PREFIXES, SECURITY_EXACT)),
+    security_scan: fullCi || files.some((file) => matches(file, SECURITY_PREFIXES, SECURITY_EXACT)),
     personal_plan_db:
-      fullCi || files.some((file) => matches(file, PERSONAL_PLAN_DB_PREFIXES, PERSONAL_PLAN_DB_EXACT)),
+      fullCi ||
+      files.some((file) => matches(file, PERSONAL_PLAN_DB_PREFIXES, PERSONAL_PLAN_DB_EXACT)),
+    personal_plan_journey:
+      fullCi ||
+      files.some((file) =>
+        matches(file, PERSONAL_PLAN_JOURNEY_PREFIXES, PERSONAL_PLAN_JOURNEY_EXACT),
+      ),
     full_ci: fullCi,
   }
 }

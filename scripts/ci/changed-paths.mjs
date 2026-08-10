@@ -10,7 +10,7 @@ const githubBaseRef = process.env.GITHUB_BASE_REF?.trim()
 const baseRef = ciBaseRef || (githubBaseRef ? `origin/${githubBaseRef}` : "origin/main")
 const headRef = process.env.CI_HEAD_REF?.trim() || "HEAD"
 const diffBase = baseRef
-let forcedFullCi = false
+let forcedFullCi = process.env.FORCE_FULL_CI === "true"
 
 function git(args) {
   return execFileSync("git", args, { encoding: "utf8" }).trim()
