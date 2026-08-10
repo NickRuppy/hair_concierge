@@ -284,7 +284,6 @@ jobs:
       NEXT_PUBLIC_PAYPAL_ENABLED: "true"
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_ci_only"
       NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
-      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"
       PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
     steps:
       - uses: actions/checkout@v6
@@ -309,12 +308,59 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run Playwright smoke tests
         if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
-        run: npx start-server-and-test 'npm run start' http://localhost:3000 "npx playwright test --grep '@ci|@payment-feedback-v2' --project=chromium"
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'
       - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-smoke-${{ github.run_id }}
+          path: |
+            test-results/
+            tests/results/
+            tests/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  playwright-payment-feedback-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope]
+    if: needs.detect-ci-scope.outputs.full_ci == 'true'
+    env:
+      CI_OFFER_PAGE_LAB_ENABLED: "true"
+      NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true"
+      NEXT_PUBLIC_PAYPAL_CLIENT_ID: "ci-paypal-client-id"
+      NEXT_PUBLIC_PAYPAL_ENABLED: "true"
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_ci_only"
+      NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
+      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"
+      PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: env.HAS_LIVE_SUPABASE_SECRETS != 'true'
+        run: echo "Payment feedback V2 smoke skipped because live Supabase secrets are unavailable."
+      - name: Install dependencies
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm ci
+      - name: Build V2 app for smoke server
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm run build
+      - name: Install Playwright browser
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Run payment feedback V2 smoke tests
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @payment-feedback-v2 --project=chromium'
+      - name: Upload payment feedback V2 artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-payment-feedback-v2-${{ github.run_id }}
           path: |
             test-results/
             tests/results/

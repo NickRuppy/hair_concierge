@@ -8,7 +8,7 @@ The outcome is a review-ready local change that keeps the existing required chec
 
 ## Chosen direction
 
-Keep `quality-core` as the required aggregate check, but move its work into parallel child lanes for static validation, Node contracts, generic Playwright contracts, and path-aware Personal Plan browser contracts. Keep `playwright-smoke` as the required smoke name while running the payment-feedback scenario in the same build and server lifecycle.
+Keep `quality-core` as the required aggregate check, but move its work into parallel child lanes for static validation, Node contracts, generic Playwright contracts, and path-aware Personal Plan browser contracts. Keep `playwright-smoke` aligned with the production-default payment-feedback flag, and move the V2-only scenario to scheduled or explicitly requested full CI.
 
 Make `personal-plan-db-contract` a SQL-only job and add a separately named `personal-plan-persisted-journey` job. Give the journey its own path signal, production-server harness, bounded readiness probes, retained failure evidence, and CI artifacts. Add a nightly full run plus the existing `[full-ci]` escape hatch so path scoping does not become the only safety net.
 
@@ -16,7 +16,7 @@ Make `personal-plan-db-contract` a SQL-only job and add a separately named `pers
 
 In scope:
 
-- `.github/workflows/ci.yml` job decomposition, aggregation, path-aware execution, smoke consolidation, artifact upload, and nightly trigger.
+- `.github/workflows/ci.yml` job decomposition, aggregation, path-aware execution, production-aligned smoke coverage, nightly V2 coverage, artifact upload, and nightly trigger.
 - `scripts/ci/path-rules.mjs` and `scripts/ci/changed-paths.mjs` scope outputs for the SQL contract and persisted journey.
 - Package test orchestration that removes the duplicate top-level Personal Plan Node pass without removing nested contracts.
 - `scripts/test-personal-plan-stage1-5-browser.sh` startup bounds, production-server execution, failure evidence, and cleanup behavior.
@@ -32,7 +32,7 @@ Non-goals:
 
 ## Target map
 
-- `.github/workflows/ci.yml`: parallel quality lanes, aggregate checks, split Personal Plan jobs, combined smoke, artifacts, and nightly run.
+- `.github/workflows/ci.yml`: parallel quality lanes, aggregate checks, split Personal Plan jobs, production-aligned required smoke, nightly V2 smoke, artifacts, and nightly run.
 - `scripts/ci/path-rules.mjs`: independent `personal_plan_db` and `personal_plan_journey` classifications, including shared auth/middleware seams used by the journey.
 - `scripts/ci/changed-paths.mjs`: explicit scheduled/full-CI forcing.
 - `package.json` and `scripts/ci/run-personal-plan-nested.mjs`: deterministic nested-only Personal Plan Node command and de-duplicated aggregate contracts.
@@ -50,14 +50,14 @@ There is no end-user journey change, so no user-facing mockup or prototype is re
 4. A relevant database/schema change runs the SQL-only `personal-plan-db-contract`. Its result identifies a database contract failure without browser noise.
 5. A relevant Personal Plan runtime/auth change runs `personal-plan-persisted-journey`. The harness starts a per-run Supabase project on a per-run port range, exports its generated URL and keys, then builds and starts the production server on its own app port so client-side `NEXT_PUBLIC_*` values are compiled correctly. It probes readiness with per-request and total bounds and runs the Stage 1-5 Playwright journey.
 6. If readiness or the journey fails, the job terminates its owned Next process group and Supabase project, prints the server tail, retains Playwright trace/screenshot plus server log, and uploads them under the journey job. A timeout cannot be caused by an unbounded readiness request.
-7. The required `playwright-smoke` job builds once, starts one server, and runs both the existing `@ci` and `@payment-feedback-v2` tests. Its required check name and artifact contract remain stable.
+7. The required `playwright-smoke` job builds once with the production-default payment-feedback flag and runs the existing `@ci` tests. Scheduled or explicitly requested full CI adds the V2-only smoke job, so ordinary pull requests avoid its second build without losing coverage of the live variant.
 8. CI completes with attributable child results and the same stable required gate names.
 
 ## Ordered tasks
 
 ### 1. Lock CI contracts with failing tests
 
-Add regression expectations for independent database/journey scope outputs, the previously missed auth and Supabase middleware seams, parallel quality children with a fail-closed `quality-core` aggregator, SQL-only database job, separate journey artifacts, combined smoke execution, nightly full-CI forcing, de-duplicated Node orchestration, and bounded browser readiness/failure evidence.
+Add regression expectations for independent database/journey scope outputs, the previously missed auth and Supabase middleware seams, parallel quality children with a fail-closed `quality-core` aggregator, SQL-only database job, separate journey artifacts, production-aligned required smoke, nightly V2 smoke, nightly full-CI forcing, de-duplicated Node orchestration, and bounded browser readiness/failure evidence.
 
 Produces: consumer-visible tests that fail against the current workflow and harness.
 
@@ -83,15 +83,15 @@ Produces: stable `quality-core` semantics with lower critical-path latency and u
 
 Completion: orchestration tests prove child dependencies and the exact fail/cancel/skip aggregation semantics, package tests prove de-duplication, and focused commands pass.
 
-### 4. Consolidate the smoke server lifecycle
+### 4. Keep required smoke production-aligned
 
 Consumes: existing `playwright_smoke` scope and required check contract.
 
-Enable the payment-feedback feature in `playwright-smoke`, run `@ci` and `@payment-feedback-v2` in one Playwright invocation against one build/server, retain the current artifact upload, and remove the redundant payment job.
+Keep the payment-feedback V2 flag unset in required `playwright-smoke`, retain its `@ci` command and artifact upload, and run the V2-only build and tag only for scheduled or explicitly requested full CI.
 
-Produces: one required smoke job with both scenario groups.
+Produces: one production-aligned required smoke job on ordinary pull requests, plus V2 coverage in the slower full-CI lane.
 
-Completion: workflow regression tests prove the required name, guards, flags, combined grep, and single build/install/server lifecycle.
+Completion: workflow regression tests prove the required job keeps the production-default flag, while the V2 job is gated by `full_ci` and retains its own build, test tag, and artifacts.
 
 ### 5. Harden the persisted journey harness
 
@@ -125,7 +125,7 @@ Automated checks:
 Manual/browser checks:
 
 - Run `npm run test:playwright:personal-plan-stage1-5` locally when Docker and Chromium are available; inspect failure artifact output if it does not pass.
-- Confirm the combined smoke command selects both tags without duplicate tagged test execution.
+- Confirm ordinary required smoke runs `@ci` with V2 disabled and scheduled/full CI separately runs `@payment-feedback-v2` with V2 enabled.
 
 Migration/live-state checks:
 

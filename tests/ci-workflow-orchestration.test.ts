@@ -166,13 +166,9 @@ test("Playwright smoke starts after scope detection without waiting for core qua
     "npm ci",
     "npm run build",
     "npx playwright install --with-deps chromium",
-    "npx start-server-and-test 'npm run start' http://localhost:3000 \"npx playwright test --grep '@ci|@payment-feedback-v2' --project=chromium\"",
+    "npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'",
   ])
-  assert.match(playwrightSmoke, /^      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"$/m)
-  assert.throws(
-    () => jobSource(ciWorkflow, "playwright-payment-feedback-v2"),
-    /missing playwright-payment-feedback-v2 job/,
-  )
+  assert.doesNotMatch(playwrightSmoke, /NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED/)
   assert.match(
     playwrightSmoke,
     /^      - name: Upload Playwright artifacts\n        if: always\(\)\n        uses: actions\/upload-artifact@\S+(?:[ \t]+#.*)?$/m,
@@ -184,6 +180,24 @@ test("Playwright smoke starts after scope detection without waiting for core qua
   )
 
   assert.throws(() => guardedRunCommands(unguardedInlineRun), /unguarded command/)
+})
+
+test("payment feedback V2 smoke is reserved for scheduled or explicit full CI", () => {
+  const paymentFeedback = jobSource(ciWorkflow, "playwright-payment-feedback-v2")
+
+  assert.deepEqual(jobDependencyNames(ciWorkflow, "playwright-payment-feedback-v2"), [
+    "detect-ci-scope",
+  ])
+  assert.match(paymentFeedback, /^    if: needs\.detect-ci-scope\.outputs\.full_ci == 'true'$/m)
+  assert.match(paymentFeedback, /^      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"$/m)
+  assert.match(
+    paymentFeedback,
+    /npx playwright test --grep @payment-feedback-v2 --project=chromium/,
+  )
+  assert.match(
+    paymentFeedback,
+    /^      - name: Upload payment feedback V2 artifacts\n        if: always\(\)\n        uses: actions\/upload-artifact@\S+(?:[ \t]+#.*)?$/m,
+  )
 })
 
 test("quality core preserves its required name as a fail-closed parallel aggregate", () => {
