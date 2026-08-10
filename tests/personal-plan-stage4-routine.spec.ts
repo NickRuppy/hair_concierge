@@ -410,6 +410,18 @@ test("initial confirmation and non-blocking successor review preserve the active
   await seedInitialProposal(created.user.id)
 
   await page.setViewportSize({ width: 1280, height: 900 })
+  const applicationOrigin = new URL(process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000")
+    .origin
+  const initialAttention = page.waitForResponse((response) => {
+    const request = response.request()
+    const responseUrl = new URL(response.url())
+    return (
+      responseUrl.origin === applicationOrigin &&
+      responseUrl.pathname === "/api/personal-plan/routine/attention" &&
+      request.method() === "GET" &&
+      response.status() === 200
+    )
+  })
   await page.goto("/auth?next=/routine")
   const loginTab = page.getByRole("tab", { name: "Anmelden" })
   if (await loginTab.isVisible()) await loginTab.click()
@@ -418,6 +430,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   await page.getByRole("button", { name: "Anmelden", exact: true }).click()
   await page.waitForURL("**/routine")
   await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
+  expect(await (await initialAttention).json()).toEqual({ hasPendingProposal: true })
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toBeAttached()
   await expect(page.getByText("Regelmäßige Reinigung", { exact: true }).last()).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo · hinzugefügt", { exact: true })).toBeVisible()
