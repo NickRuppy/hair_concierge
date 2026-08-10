@@ -19,3 +19,15 @@ export function isMissingPersonalPlanFieldTestRelation(error: unknown): boolean 
     (code === "PGRST205" || code === "42P01") && message.includes("personal_plan_test_enrollments")
   )
 }
+
+export function isMissingPersonalPlanFieldTestFunnelColumn(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false
+  const candidate = error as { code?: unknown; message?: unknown }
+  const code = typeof candidate.code === "string" ? candidate.code : ""
+  const message = typeof candidate.message === "string" ? candidate.message : ""
+  return (
+    (code === "PGRST204" || code === "42703") &&
+    message.includes("funnel_sessions") &&
+    (message.includes("test_kind") || message.includes("field_test_campaign_id"))
+  )
+}

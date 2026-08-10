@@ -7,7 +7,11 @@ import {
   decodePersonalPlanFieldTestCampaignCookie,
   type PersonalPlanFieldTestCampaignCookie,
 } from "./campaign-cookie"
-import { personalPlanFieldTestUnavailable, type PersonalPlanFieldTestUnavailable } from "./errors"
+import {
+  isMissingPersonalPlanFieldTestFunnelColumn,
+  personalPlanFieldTestUnavailable,
+  type PersonalPlanFieldTestUnavailable,
+} from "./errors"
 import {
   evaluatePersonalPlanFieldTestCampaign,
   type PersonalPlanFieldTestCampaignLifecycle,
@@ -177,6 +181,35 @@ export async function resolvePersonalPlanFieldTestOfferAuthorization(
   }
 }
 
+export async function hasPersonalPlanFieldTestOfferIntent(
+  input: { leadId: string; funnelSessionId?: string | null },
+  dependencies: {
+    loadOfferSession?: (leadId: string, sessionId?: string | null) => Promise<OfferSession | null>
+  } = {},
+) {
+  try {
+    const session = await (dependencies.loadOfferSession ?? loadOfferSession)(
+      input.leadId,
+      input.funnelSessionId,
+    )
+    return Boolean(
+      session &&
+      session.leadId === input.leadId &&
+      session.id === (input.funnelSessionId ?? session.id) &&
+      session.packageKey === "meta_personal_plan_v1" &&
+      session.testKind === "field_test" &&
+      typeof session.campaignId === "string",
+    )
+  } catch (error) {
+    // Before the additive field-test migration exists, the test_kind columns
+    // are unavailable. That is normal absence and must not break paid results.
+    if (isMissingPersonalPlanFieldTestFunnelColumn(error)) return false
+    // Once the columns should exist, uncertainty must not expose a paid offer
+    // inside a journey that may be a field test.
+    return true
+  }
+}
+
 export async function bindPersonalPlanFieldTestLead(
   input: {
     campaignCookieValue: string | null | undefined
@@ -278,7 +311,8 @@ async function loadOfferSession(leadId: string, sessionId?: string | null) {
     .limit(1)
   if (sessionId) query = query.eq("id", sessionId)
   const { data, error } = await query.maybeSingle()
-  if (error || !data) return null
+  if (error) throw error
+  if (!data) return null
   return {
     id: data.id,
     leadId: data.lead_id,

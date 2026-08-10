@@ -41,6 +41,7 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/one-time-activation-status",
+  "/api/personal-plan/field-test/activate",
 ]
 const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/",
@@ -87,6 +88,10 @@ export function isAdminRoutePath(pathname: string) {
   return (
     pathMatchesRoutePrefix(pathname, "/admin") || pathMatchesRoutePrefix(pathname, "/api/admin")
   )
+}
+
+export function isPersonalPlanFieldTestGuest(user: { app_metadata?: Record<string, unknown> }) {
+  return user.app_metadata?.access_kind === "field_test"
 }
 
 export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: string): URL {
@@ -223,6 +228,7 @@ export async function updateSession(request: NextRequest) {
 
   // --- Subscription paywall ---------------------------------------------
   const needsSub = requiresSubscriptionPath(pathname)
+  const fieldTestGuest = isPersonalPlanFieldTestGuest(user)
   let oneTimeAccessState: OneTimeAccessState | null = null
 
   if (needsSub) {
@@ -234,6 +240,16 @@ export async function updateSession(request: NextRequest) {
       ])
     } catch (error) {
       console.warn("[billing] app access check failed", error)
+      if (fieldTestGuest) {
+        if (pathMatchesRoutePrefix(pathname, "/api")) {
+          return NextResponse.json({ error: "field_test_access_unavailable" }, { status: 503 })
+        }
+        const url = request.nextUrl.clone()
+        url.pathname = "/test/haarplan/beendet"
+        url.search = ""
+        url.searchParams.set("reason", "unavailable")
+        return redirectWithSupabaseCookies(url, supabaseResponse)
+      }
       if (pathMatchesRoutePrefix(pathname, "/api")) {
         return NextResponse.json({ error: "access_check_unavailable" }, { status: 503 })
       }
@@ -265,6 +281,15 @@ export async function updateSession(request: NextRequest) {
     }
 
     if (!active) {
+      if (fieldTestGuest) {
+        if (pathMatchesRoutePrefix(pathname, "/api")) {
+          return NextResponse.json({ error: "field_test_ended" }, { status: 403 })
+        }
+        const url = request.nextUrl.clone()
+        url.pathname = "/test/haarplan/beendet"
+        url.search = ""
+        return redirectWithSupabaseCookies(url, supabaseResponse)
+      }
       if (pathMatchesRoutePrefix(pathname, "/api")) {
         return NextResponse.json({ error: "subscription_required" }, { status: 403 })
       }

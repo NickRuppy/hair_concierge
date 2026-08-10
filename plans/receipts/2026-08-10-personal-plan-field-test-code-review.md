@@ -9,8 +9,8 @@ No blocking findings remain in the reviewed implementation.
 ## Frozen review scope
 
 - Branch: `codex/cofounder-production-access`
-- Base: `origin/main` at `1b2cb6146baa3250f86f94e55bc07bfb6623ec60`
-- Canonical in-scope fingerprint: `bbf8e4930307159578e1672e3022eccc4b43f4870269b659ed592873ccfd5a65`
+- Base: `origin/main` at `52047e8f0990447ba9bd2a36322928a8a1f6f1c7`
+- Canonical in-scope fingerprint: `55d027f22aec58d03e83a31ee7c35df6a8ed0ab82ff2ccd7b2ecfe119b887af3`
 - Manifest: `plans/receipts/2026-08-10-personal-plan-field-test-manifest.sha256`
 - Review covered the full tracked and untracked implementation delta. Verification receipts are excluded from their own recursive fingerprint.
 - Review was performed locally by the owning Codex session without Claude or another counterpart, as required by the workstream instruction.
@@ -49,6 +49,8 @@ No blocking findings remain in the reviewed implementation.
 - Explicitly revoked browser write privileges on `manual_access_grants`.
 - Preserved ordinary existing-user Routine access when the additive field-test relation is not installed yet, while keeping unrelated database errors fail-closed.
 - Classified the narrow public bearer-entry route explicitly and synchronized its route-owned funnel test contract.
+- Exempted only the activation endpoint from generic auth/subscription middleware so first activation and exact guest retries can reach the route's stronger checks.
+- Preserved persisted field-test intent when campaign authorization disappears and added the dedicated payment-free end state for expired or revoked guests.
 
 ## Verification and residual gates
 

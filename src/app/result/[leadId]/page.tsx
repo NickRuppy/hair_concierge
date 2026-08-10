@@ -38,6 +38,7 @@ import {
   resolvePersonalPlanResultReturn,
 } from "@/lib/personal-plan-quiz/result-return"
 import {
+  hasPersonalPlanFieldTestOfferIntent,
   PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE,
   resolvePersonalPlanFieldTestOfferAuthorization,
 } from "@/lib/personal-plan-field-test"
@@ -251,6 +252,14 @@ export default async function ResultPage({ params, searchParams }: Props) {
           leadId,
         })
       : null
+  const fieldTestIntent =
+    lead.quiz_kind === "personal_plan"
+      ? await hasPersonalPlanFieldTestOfferIntent({
+          leadId,
+          funnelSessionId: funnelContext?.sessionId,
+        })
+      : false
+  const fieldTestUnavailable = fieldTestIntent && !fieldTestAuthorization
   const personalPlanSession = funnelContext
     ? {
         sessionId: funnelContext.sessionId,
@@ -279,17 +288,18 @@ export default async function ResultPage({ params, searchParams }: Props) {
   }
   const offerVariant =
     lead.quiz_kind === "personal_plan"
-      ? fieldTestAuthorization
+      ? fieldTestAuthorization || fieldTestUnavailable
         ? PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant
         : await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
       : hasAccess
         ? "organic-plan-v1"
         : resolveLegacyResultOfferVariant(funnelContext)
-  const offerTracking = hasAccess
-    ? null
-    : entryContext === "quiz_return"
-      ? buildReturnOfferTracking(funnelContext)
-      : await recordLeadOfferView(leadId, funnelContext, offerVariant)
+  const offerTracking =
+    hasAccess || fieldTestUnavailable
+      ? null
+      : entryContext === "quiz_return"
+        ? buildReturnOfferTracking(funnelContext)
+        : await recordLeadOfferView(leadId, funnelContext, offerVariant)
   const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (
@@ -305,6 +315,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       focusTarget={focusTarget}
       hasAccess={hasAccess}
       fieldTest={Boolean(fieldTestAuthorization)}
+      fieldTestUnavailable={fieldTestUnavailable}
       isInternalTest={personalPlanSession?.isInternalTest ?? false}
       returnTo={returnTo}
       offerTracking={offerTracking}

@@ -5,6 +5,7 @@ import {
   bindPersonalPlanFieldTestLead,
   createPersonalPlanFieldTestCampaignCookie,
   hashPersonalPlanFieldTestToken,
+  hasPersonalPlanFieldTestOfferIntent,
   isPersonalPlanFieldTestGuestRetry,
   personalPlanFieldTestCookieSecret,
   resolvePersonalPlanFieldTestCampaignCookie,
@@ -149,6 +150,63 @@ test("offer authorization requires the exact signed campaign, session, and lead"
       },
     ),
     null,
+  )
+})
+
+test("persisted field-test offer intent survives campaign authorization loss", async () => {
+  const loadOfferSession = async () => ({
+    id: sessionId,
+    leadId,
+    packageKey: "meta_personal_plan_v1",
+    testKind: "field_test",
+    campaignId,
+  })
+
+  assert.equal(
+    await hasPersonalPlanFieldTestOfferIntent(
+      { leadId, funnelSessionId: sessionId },
+      { loadOfferSession },
+    ),
+    true,
+  )
+  assert.equal(
+    await hasPersonalPlanFieldTestOfferIntent(
+      { leadId, funnelSessionId: "another-session" },
+      { loadOfferSession },
+    ),
+    false,
+  )
+})
+
+test("missing pre-migration field-test columns do not break ordinary paid results", async () => {
+  assert.equal(
+    await hasPersonalPlanFieldTestOfferIntent(
+      { leadId, funnelSessionId: sessionId },
+      {
+        loadOfferSession: async () => {
+          throw {
+            code: "PGRST204",
+            message:
+              "Could not find the 'test_kind' column of 'funnel_sessions' in the schema cache",
+          }
+        },
+      },
+    ),
+    false,
+  )
+})
+
+test("unexpected persisted-intent lookup failures remain non-commercial", async () => {
+  assert.equal(
+    await hasPersonalPlanFieldTestOfferIntent(
+      { leadId, funnelSessionId: sessionId },
+      {
+        loadOfferSession: async () => {
+          throw new Error("database unavailable")
+        },
+      },
+    ),
+    true,
   )
 })
 

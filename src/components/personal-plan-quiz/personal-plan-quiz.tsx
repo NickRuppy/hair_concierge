@@ -1932,6 +1932,16 @@ function EmailCapture({
       if (typeof leadId !== "string" || !leadId) {
         throw new Error("Save succeeded without a lead id")
       }
+      const fieldTestAttached =
+        payload && typeof payload === "object" && !Array.isArray(payload)
+          ? (payload as Record<string, unknown>).fieldTestAttached
+          : null
+      if (fieldTest && fieldTestAttached !== true) {
+        setError(
+          "Der Produkttest ist gerade nicht verfügbar. Bitte frage das Chaarlie-Team nach einem neuen Testlink.",
+        )
+        return
+      }
       trackAppEvent("quiz_lead_captured", {
         leadId,
         marketingConsent,

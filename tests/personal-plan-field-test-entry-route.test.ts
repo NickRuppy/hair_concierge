@@ -3,6 +3,8 @@ import test from "node:test"
 import { NextRequest } from "next/server"
 
 import { createPersonalPlanFieldTestEntryHandler } from "../src/app/test/haarplan/[token]/route"
+import { classifyRoute } from "../src/lib/auth/route-classification"
+import { updateSession } from "../src/lib/supabase/middleware"
 
 const now = Date.UTC(2026, 7, 10, 10, 0, 0)
 
@@ -54,4 +56,18 @@ test("unavailable token fails before issuing any campaign or funnel cookie", asy
   assert.equal(response.status, 404)
   assert.equal(response.headers.get("set-cookie"), null)
   assert.match(await response.text(), /gerade nicht verfügbar/)
+})
+
+test("activation reaches its signed route checks before any auth or subscription gate", async () => {
+  const pathname = "/api/personal-plan/field-test/activate"
+  assert.equal(
+    classifyRoute(pathname, { nodeEnv: "production", localDevLoginEnabled: false }),
+    "public",
+  )
+
+  const response = await updateSession(
+    new NextRequest(`https://chaarlie.de${pathname}`, { method: "POST" }),
+  )
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
 })
