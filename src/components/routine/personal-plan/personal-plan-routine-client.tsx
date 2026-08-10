@@ -197,6 +197,7 @@ export function PersonalPlanRoutineClient({
   // visit, but it must be presented again on the next Routine-page visit until
   // the owner explicitly accepts or rejects it.
   const [proposalOpen, setProposalOpen] = React.useState(Boolean(initialView.pendingProposal))
+  const [entrySyncPending, setEntrySyncPending] = React.useState(true)
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
@@ -238,26 +239,32 @@ export function PersonalPlanRoutineClient({
   }, [])
 
   React.useEffect(() => {
-    if (!enabled || syncedOnEntry.current) return
+    if (!enabled) {
+      setEntrySyncPending(false)
+      return
+    }
+    if (syncedOnEntry.current) return
     syncedOnEntry.current = true
-    void fetch("/api/personal-plan/routine/sync", { method: "POST" })
-      .then(async (response) => {
+    setEntrySyncPending(true)
+    void (async () => {
+      try {
+        const response = await fetch("/api/personal-plan/routine/sync", { method: "POST" })
         if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
-        return response.json() as Promise<{ proposalStaged?: unknown }>
-      })
-      .then(async (result) => {
+        const result = (await response.json()) as { proposalStaged?: unknown }
         if (result.proposalStaged === true) {
           const next = await reload()
           setProposalOpen(Boolean(next.pendingProposal))
         }
         requestRoutineAttentionRefresh()
-      })
-      .catch(() => {
+      } catch {
         routineAnalytics.track("personal_plan_stage4_outcome", {
           origin: "sync",
           outcome: "error",
         })
-      })
+      } finally {
+        setEntrySyncPending(false)
+      }
+    })()
   }, [enabled, reload])
 
   React.useEffect(() => {
@@ -332,7 +339,7 @@ export function PersonalPlanRoutineClient({
 
   const resolveProposal = React.useCallback(
     async (action: "accept" | "reject") => {
-      if (!pending || busy || proposalResolutionInFlight.current) return
+      if (!pending || busy || entrySyncPending || proposalResolutionInFlight.current) return
       proposalResolutionInFlight.current = true
       const attemptedProposalId = pending.id
       const retryMessage = "Deine Entscheidung konnte nicht gespeichert werden."
@@ -406,7 +413,7 @@ export function PersonalPlanRoutineClient({
         setBusy(false)
       }
     },
-    [busy, pending, reload, router, view.activeVersion, view.planRevision],
+    [busy, entrySyncPending, pending, reload, router, view.activeVersion, view.planRevision],
   )
 
   const openDetail = React.useCallback(async (item: RoutinePayloadV1["items"][number]) => {
@@ -511,7 +518,9 @@ export function PersonalPlanRoutineClient({
         view={view}
         stage5Reachable={stage5Reachable}
         onEdit={canEdit ? openEditor : undefined}
-        onConfirm={isInitial && enabled ? () => setProposalOpen(true) : undefined}
+        onConfirm={
+          isInitial && enabled && !entrySyncPending ? () => setProposalOpen(true) : undefined
+        }
         onItemDetail={(item) => void openDetail(item)}
       />
       {pending ? (
@@ -542,6 +551,7 @@ export function PersonalPlanRoutineClient({
           )}
           unchangedItemCount={pending.delta.unchangedItemCount}
           submitting={busy}
+          preparing={entrySyncPending}
           retrying={proposalRetryId === pending.id}
           errorMessage={error}
           onAccept={() => void resolveProposal("accept")}

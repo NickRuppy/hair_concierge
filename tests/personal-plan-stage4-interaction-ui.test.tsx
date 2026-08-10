@@ -397,6 +397,45 @@ test("proposal sheet body separates initial confirmation from successor review c
   assert.deepEqual(events, ["later", "accept", "reject"])
 })
 
+test("proposal sheet keeps every action unavailable while entry sync updates the Routine", () => {
+  const initialTree = RoutineProposalSheetBody({
+    variant: "initial",
+    directChanges: [],
+    consequentialChanges: [],
+    unchangedItemCount: 1,
+    preparing: true,
+    onAccept: () => undefined,
+    onBackToEditor: () => undefined,
+  })
+  assert.match(renderToStaticMarkup(initialTree), /Routine wird aktualisiert/)
+  assert.equal(findByText(initialTree, "Routine bestätigen").props.disabled, true)
+  assert.equal(findByText(initialTree, "Zurück zum Bearbeiten").props.disabled, true)
+
+  const tree = RoutineProposalSheetBody({
+    variant: "successor",
+    directChanges: [],
+    consequentialChanges: [],
+    unchangedItemCount: 1,
+    preparing: true,
+    onAccept: () => undefined,
+    onReject: () => undefined,
+    onDismissForVisit: () => undefined,
+    onBackToEditor: () => undefined,
+    onDiscardCandidate: () => undefined,
+  })
+
+  assert.match(renderToStaticMarkup(tree), /Routine wird aktualisiert/)
+  for (const label of [
+    "Später",
+    "Zurück zum Bearbeiten",
+    "Änderungen verwerfen",
+    "Ablehnen",
+    "Änderungen übernehmen",
+  ]) {
+    assert.equal(findByText(tree, label).props.disabled, true)
+  }
+})
+
 test("proposal acceptance reload distinguishes lost response, same pending, and supersession", () => {
   const candidate = payload([item()])
   const pendingView = {

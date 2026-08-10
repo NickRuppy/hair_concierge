@@ -24,6 +24,7 @@ export type RoutineProposalSheetBodyProps = {
   consequentialChanges: RoutineProposalSheetDeltaEntry[]
   unchangedItemCount: number
   submitting?: boolean
+  preparing?: boolean
   retrying?: boolean
   errorMessage?: string | null
   onAccept: () => void
@@ -77,6 +78,7 @@ export function RoutineProposalSheetBody({
   consequentialChanges,
   unchangedItemCount,
   submitting = false,
+  preparing = false,
   retrying = false,
   errorMessage,
   onAccept,
@@ -86,6 +88,7 @@ export function RoutineProposalSheetBody({
   onReject,
 }: RoutineProposalSheetBodyProps) {
   const isInitial = variant === "initial"
+  const actionsDisabled = submitting || preparing
   return (
     <div className="space-y-5">
       <div className="space-y-2">
@@ -127,15 +130,30 @@ export function RoutineProposalSheetBody({
           {errorMessage}
         </p>
       ) : null}
+      {preparing ? (
+        <p aria-live="polite" className="text-sm text-muted-foreground">
+          Routine wird aktualisiert …
+        </p>
+      ) : null}
 
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
         {!isInitial && onDismissForVisit ? (
-          <Button type="button" variant="ghost" disabled={submitting} onClick={onDismissForVisit}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={actionsDisabled}
+            onClick={onDismissForVisit}
+          >
             Später
           </Button>
         ) : null}
         {onBackToEditor ? (
-          <Button type="button" variant="outline" disabled={submitting} onClick={onBackToEditor}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={actionsDisabled}
+            onClick={onBackToEditor}
+          >
             Zurück zum Bearbeiten
           </Button>
         ) : null}
@@ -143,18 +161,18 @@ export function RoutineProposalSheetBody({
           <Button
             type="button"
             variant="outline"
-            disabled={submitting}
+            disabled={actionsDisabled}
             onClick={onDiscardCandidate}
           >
             Änderungen verwerfen
           </Button>
         ) : null}
         {!isInitial && onReject ? (
-          <Button type="button" variant="destructive" disabled={submitting} onClick={onReject}>
+          <Button type="button" variant="destructive" disabled={actionsDisabled} onClick={onReject}>
             Ablehnen
           </Button>
         ) : null}
-        <Button type="button" variant="cta" disabled={submitting} onClick={onAccept}>
+        <Button type="button" variant="cta" disabled={actionsDisabled} onClick={onAccept}>
           {submitting
             ? "Wird gespeichert …"
             : retrying
@@ -177,6 +195,7 @@ export function RoutineProposalSheet({
   consequentialChanges,
   unchangedItemCount,
   submitting,
+  preparing,
   retrying,
   errorMessage,
   onAccept,
@@ -193,6 +212,7 @@ export function RoutineProposalSheet({
         restoreFocusRef={returnFocusRef}
         rootClassName="z-[110] [&_.bottom-sheet-backdrop]:bg-black/40"
         onDismissRequest={() => {
+          if (submitting || preparing) return
           if (variant === "successor") onDismissForVisit?.()
           onOpenChange(false)
         }}
@@ -209,6 +229,7 @@ export function RoutineProposalSheet({
           consequentialChanges={consequentialChanges}
           unchangedItemCount={unchangedItemCount}
           submitting={submitting}
+          preparing={preparing}
           retrying={retrying}
           errorMessage={errorMessage}
           onAccept={onAccept}
