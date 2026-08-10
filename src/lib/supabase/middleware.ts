@@ -61,6 +61,14 @@ const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/api/auth/set-checkout-password",
   "/welcome",
 ]
+const AUTH_ONLY_REDIRECT_QUERY_PARAMETERS = [
+  "code",
+  "error",
+  "reason",
+  "token",
+  "token_hash",
+  "type",
+] as const
 
 export function isAuthenticatedAppRoutePath(pathname: string) {
   return AUTHENTICATED_APP_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
@@ -74,6 +82,25 @@ export function isAdminRoutePath(pathname: string) {
   return (
     pathMatchesRoutePrefix(pathname, "/admin") || pathMatchesRoutePrefix(pathname, "/api/admin")
   )
+}
+
+export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: string): URL {
+  const url = new URL(requestUrl)
+  url.pathname = redirectPath
+  if (requestUrl.pathname === "/auth") {
+    for (const parameter of AUTH_ONLY_REDIRECT_QUERY_PARAMETERS) {
+      url.searchParams.delete(parameter)
+    }
+  }
+  if (redirectPath === "/onboarding") {
+    const leadId = requestUrl.searchParams.get("lead")
+    if (leadId) {
+      url.searchParams.set("lead", leadId)
+    }
+  } else {
+    url.searchParams.delete("lead")
+  }
+  return url
 }
 
 export async function updateSession(request: NextRequest) {
@@ -268,16 +295,7 @@ export async function updateSession(request: NextRequest) {
     const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, { isQuizRetake })
 
     if (redirectPath) {
-      const url = request.nextUrl.clone()
-      url.pathname = redirectPath
-      if (redirectPath === "/onboarding") {
-        const leadId = request.nextUrl.searchParams.get("lead")
-        if (leadId) {
-          url.searchParams.set("lead", leadId)
-        }
-      } else {
-        url.searchParams.delete("lead")
-      }
+      const url = buildAuthenticatedAppRedirectUrl(request.nextUrl, redirectPath)
       return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }

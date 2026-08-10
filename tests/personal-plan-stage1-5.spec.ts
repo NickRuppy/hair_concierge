@@ -2,6 +2,9 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 import { execFileSync } from "node:child_process"
 
+import { expectedShampooBucket } from "../src/lib/personal-plan/products/authority/categories/shampoo"
+import type { PlanCategoryTarget, PlanProductRole } from "../src/lib/personal-plan/types"
+
 const password = "Stage15Browser!2026"
 const paidAt = "2026-08-08T12:00:00.000Z"
 
@@ -304,14 +307,16 @@ async function assertNoLabs(page: Page) {
 
 async function chooseAndContinue(page: Page, label: string | RegExp) {
   await page.getByRole("button", { name: label }).click()
-  await page.getByRole("button", { name: "Weiter" }).click()
+  await page.getByRole("button", { name: "Weiter", exact: true }).click()
 }
 
 async function chooseNoneAndContinue(page: Page) {
-  const none = page.getByRole("button", { name: /Nichts davon; andere Auswahl wird gelöscht/ })
+  const none = page.getByRole("button", {
+    name: /Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht|Nichts davon; andere Auswahl wird gelöscht/,
+  })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")
-  const continueButton = page.getByRole("button", { name: "Weiter" })
+  const continueButton = page.getByRole("button", { name: "Weiter", exact: true })
   await expect(continueButton).toBeEnabled()
   await continueButton.click()
 }
@@ -320,6 +325,7 @@ type Stage3AuthoritySeed = {
   draft: {
     personalPlanId: string
     refinedVersionId: string
+    completedCaptureCategories: string[]
     authoritySnapshot: {
       orderedCategories: string[]
       categoryDecisions: Array<{
@@ -351,6 +357,11 @@ async function seedStage3Catalog(
   const unknownMaskId = crypto.randomUUID()
   const shampooRole = shampoo.roles[0]
   if (!shampooRole) throw new Error("shampoo role is missing")
+  const shampooBucket = expectedShampooBucket({
+    role: shampooRole as PlanProductRole,
+    target: shampoo.target as unknown as Extract<PlanCategoryTarget, { category: "shampoo" }>,
+  })
+  if (!shampooBucket) throw new Error("shampoo target cannot be resolved to a signed bucket")
   await requireWrite(
     admin.from("product_categories").upsert({
       key: "mask",
@@ -410,7 +421,7 @@ async function seedStage3Catalog(
     admin.from("product_shampoo_specs").insert({
       product_id: shampooId,
       thickness: quizEnvelope.answers.thickness,
-      shampoo_bucket: shampooRole === "shampoo_dandruff" ? "schuppen" : "normal",
+      shampoo_bucket: shampooBucket,
       scalp_route: shampoo.target.scalpRoute,
       cleansing_intensity: "regular",
     }),
@@ -454,25 +465,39 @@ async function searchCaptureAndAssign(
   page: Page,
   query: string,
   productName: string,
-  role: string,
+  frequencyLabel?: string,
 ) {
   await page.getByRole("searchbox", { name: "Produkt suchen" }).fill(query)
-  await page.getByRole("option", { name: `${productName} auswählen`, exact: true }).click()
-  await page.getByRole("button", { name: "2x/Woche" }).click()
-  await page.getByRole("button", { name: "Kategorie abschließen" }).click()
-  await page.getByRole("checkbox", { name: new RegExp(role) }).check()
-  await clickAndWaitForStage3Save(page, "Zuordnung speichern")
+  if (frequencyLabel) {
+    await page.getByRole("option", { name: `${productName} auswählen`, exact: true }).click()
+    const captured = waitForStage3Save(page)
+    await page.getByRole("button", { name: frequencyLabel, exact: true }).click()
+    expect((await captured).status()).toBe(200)
+  } else {
+    const captured = waitForStage3Save(page)
+    await page.getByRole("option", { name: `${productName} auswählen`, exact: true }).click()
+    expect((await captured).status()).toBe(200)
+  }
+  await clickAndWaitForStage3Save(page, "Weiter")
 }
 
-async function clickAndWaitForStage3Save(page: Page, name: string | RegExp) {
-  const saved = page.waitForResponse((response) => {
+function waitForStage3Save(page: Page) {
+  return page.waitForResponse((response) => {
     const request = response.request()
     return (
       request.method() === "PATCH" &&
       new URL(response.url()).pathname === "/api/personal-plan/stage-3"
     )
   })
-  await page.getByRole("button", { name }).click()
+}
+
+async function clickAndWaitForStage3Save(page: Page, name: string | RegExp) {
+  const saved = waitForStage3Save(page)
+  const button =
+    typeof name === "string"
+      ? page.getByRole("button", { name, exact: true })
+      : page.getByRole("button", { name })
+  await button.click()
   expect((await saved).status()).toBe(200)
 }
 
@@ -503,13 +528,12 @@ async function clickAndWaitForStage3AuthorityDecision(page: Page, currentAction:
 }
 
 async function waitForStage3AuthorityState(page: Page) {
-  const completion = page.getByRole("heading", { name: "Deine Produkte sind vorbereitet." })
   const authorityAction = page.locator('article button[aria-label*=": "]').first()
 
   await expect
     .poll(
       async () => {
-        if (await completion.isVisible()) return "complete"
+        if (new URL(page.url()).pathname === "/routine") return "complete"
         return (await authorityAction.isVisible()) ? "decision" : "transitioning"
       },
       { message: "Stage 3 should render its next decision or portfolio handoff" },
@@ -523,11 +547,11 @@ const stage3CategoryHeading: Record<string, string> = {
   leave_in: "Dein Leave-in",
   heat_protectant: "Dein Hitzeschutz",
   oil: "Dein Öl",
-  mask: "Dein Maske",
+  mask: "Deine Maske",
   scalp_care: "Dein Kopfhautprodukt",
   dry_shampoo: "Dein Trockenshampoo",
   bondbuilder: "Dein Bondbuilder",
-  deep_cleansing_shampoo: "Dein Tiefenreinigung",
+  deep_cleansing_shampoo: "Deine Tiefenreinigung",
 }
 
 async function expectStage3Category(page: Page, category: string) {
@@ -536,23 +560,58 @@ async function expectStage3Category(page: Page, category: string) {
   await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible()
 }
 
+type NavigationTimingReceipt = {
+  coldMs: number
+  warm: { samples: number[]; p75Ms: number; p95Ms: number; maxMs: number }
+}
+
+function nearestRank(samples: number[], percentile: number) {
+  const sorted = [...samples].sort((left, right) => left - right)
+  return sorted[Math.max(0, Math.ceil(percentile * sorted.length) - 1)]!
+}
+
+async function sampleNavigationToVisible(input: {
+  page: Page
+  url: string
+  ready: () => Locator
+  warmSamples?: number
+}): Promise<NavigationTimingReceipt> {
+  const durations: number[] = []
+  for (let sample = 0; sample <= (input.warmSamples ?? 8); sample += 1) {
+    const startedAt = performance.now()
+    await input.page.goto(input.url)
+    await expect(input.ready()).toBeVisible()
+    durations.push(Math.round(performance.now() - startedAt))
+  }
+  const [coldMs, ...warmSamples] = durations
+  return {
+    coldMs: coldMs!,
+    warm: {
+      samples: warmSamples,
+      p75Ms: nearestRank(warmSamples, 0.75),
+      p95Ms: nearestRank(warmSamples, 0.95),
+      maxMs: Math.max(...warmSamples),
+    },
+  }
+}
+
 async function completeCurrentCategory(page: Page, category: string) {
   if (category === "shampoo") {
-    await searchCaptureAndAssign(page, "E2E Sanftes", "E2E Sanftes Shampoo", "Hauptreinigung")
+    await searchCaptureAndAssign(page, "E2E Sanftes", "E2E Sanftes Shampoo")
     return
   }
   if (category === "mask") {
-    await searchCaptureAndAssign(page, "E2E Unbekannte", "E2E Unbekannte Maske", "Intensivpflege")
+    await searchCaptureAndAssign(page, "E2E Unbekannte", "E2E Unbekannte Maske", "2x/Woche")
     return
   }
   if (category === "scalp_care") {
+    await page.getByRole("searchbox", { name: "Produkt suchen" }).fill("E2E nicht gefundenes Tonic")
     await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
+    await page.getByRole("textbox", { name: "Produktname" }).fill("E2E Kopfhaut-Tonic")
     await page.getByRole("button", { name: "2x/Woche" }).click()
-    await page.getByRole("button", { name: /Produkt per Foto oder manuell hinzufügen/ }).click()
+    await page.getByRole("button", { name: "Produkt speichern", exact: true }).click()
     await expect(page.getByText(/Noch in Prüfung.*gespeichert/)).toBeVisible()
-    await page.getByRole("button", { name: "Kategorie abschließen" }).click()
-    await page.getByRole("checkbox", { name: "Kopfhaut beruhigen" }).check()
-    await clickAndWaitForStage3Save(page, "Zuordnung speichern")
+    await clickAndWaitForStage3Save(page, "Weiter")
     return
   }
   await clickAndWaitForStage3Save(page, "Ich habe dafür kein Produkt")
@@ -567,31 +626,56 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       process.env.PERSONAL_PLAN_STAGE1_5_ISOLATED_BROWSER !== "1",
       "run through the isolated Stage 1–5 browser harness",
     )
+    page.setDefaultTimeout(15_000)
+    let stage3CompletionRequests = 0
+    let stage1ClientReads = 0
+    let stage3ClientReads = 0
+    page.on("request", (request) => {
+      const pathname = new URL(request.url()).pathname
+      if (request.method() === "GET" && pathname === "/api/personal-plan/stage-1") {
+        stage1ClientReads += 1
+      }
+      if (request.method() === "GET" && pathname === "/api/personal-plan/stage-3") {
+        stage3ClientReads += 1
+      }
+      if (request.method() === "POST" && pathname === "/api/personal-plan/stage-3/complete") {
+        stage3CompletionRequests += 1
+      }
+    })
     await assertNoLabs(page)
     const email = "stage15-ready@hairconscierge.test"
-    const { admin, userId } = await seedBuyer({ email, active: true, internal: true })
+    const { admin, userId, leadId } = await seedBuyer({ email, active: true, internal: true })
 
     await login(page, email, "/plan-start")
     await page.waitForURL("**/plan-start")
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
+    const readyFirstPollTiming = await sampleNavigationToVisible({
+      page,
+      url: `/plan-bereit?lead=${leadId}`,
+      ready: () => page.getByRole("link", { name: "Plan ansehen" }),
+    })
+    expect(readyFirstPollTiming.warm.p95Ms).toBeLessThanOrEqual(1_800)
+    const stage1Timing = await sampleNavigationToVisible({
+      page,
+      url: "/plan-start",
+      ready: () => page.getByRole("heading", { name: "Deine Basis" }),
+    })
+    expect(stage1Timing.warm.p75Ms).toBeLessThanOrEqual(1_000)
+    expect(stage1Timing.warm.p95Ms).toBeLessThanOrEqual(2_000)
+    expect(stage1ClientReads).toBe(0)
     const optional = page.getByRole("button", { name: "Optionale Empfehlungen" })
     if (await optional.isVisible()) {
       await optional.click()
       await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     }
-    await page.getByRole("button", { name: "Plan wirklich zu meinem machen" }).click()
-    await expect(
-      page.getByText("Als Nächstes verfeinern wir deinen Plan mit ein paar gezielten Fragen."),
-    ).toBeVisible()
     await page.getByRole("button", { name: "Plan verfeinern" }).click()
-    await expect(
-      page.getByRole("heading", { name: "Jetzt machen wir ihn zu deinem." }),
-    ).toBeVisible()
-    await page.getByRole("button", { name: "Verfeinerung starten →" }).click()
     await expect(
       page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
     ).toBeVisible()
-    await chooseNoneAndContinue(page)
+    for (const category of ["Shampoo", "Conditioner", "Maske", "Kopfhautpflege"]) {
+      await page.getByRole("button", { name: category, exact: true }).click()
+    }
+    await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await expect(page.getByRole("button", { name: "2x/Woche" })).toBeVisible()
     await page.reload()
     await expect(page.getByText("Weiter verfeinern", { exact: true })).toBeVisible()
@@ -612,9 +696,30 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     await expect(page.getByRole("heading", { name: /Wie oft nutzt du.*Föhn/i })).toBeVisible()
     await chooseAndContinue(page, "2x/Woche")
     await chooseNoneAndContinue(page)
-    await expect(page.locator("[data-refined-version-id]")).toBeVisible()
-    await page.getByRole("button", { name: /Produkte erfassen/ }).click()
-    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Dein Shampoo", exact: true })).toBeVisible({
+      timeout: 30_000,
+    })
+    const stage3ReadsBeforeSampling = stage3ClientReads
+    const stage3Timing = await sampleNavigationToVisible({
+      page,
+      url: "/plan-start",
+      ready: () => page.getByRole("heading", { name: "Dein Shampoo", exact: true }),
+    })
+    expect(stage3Timing.warm.p75Ms).toBeLessThanOrEqual(1_500)
+    expect(stage3Timing.warm.p95Ms).toBeLessThanOrEqual(3_000)
+    expect(stage3ClientReads - stage3ReadsBeforeSampling).toBe(9)
+    console.info(
+      `personal_plan_seeded_local_timing ${JSON.stringify({
+        environment: "isolated local Supabase + Next dev server + Chromium",
+        coldSamples: 1,
+        warmSamples: 8,
+        readyFirstPollTiming,
+        stage1Timing,
+        stage1ClientReads,
+        stage3Timing,
+        stage3ClientReadsPerNavigation: 1,
+      })}`,
+    )
     const { data: planBeforeStage3, error: planBeforeStage3Error } = await admin
       .from("personal_plans")
       .select("id,current_refined_need_version_id")
@@ -637,11 +742,12 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     expect(stage3Journey.draft.authoritySnapshot.orderedCategories).not.toContain("heat_protectant")
     await seedStage3Catalog(admin, stage3Journey)
 
-    await page.getByRole("button", { name: "Produkte suchen" }).click()
-    const orderedCategories = stage3Journey.draft.authoritySnapshot.orderedCategories
-    for (const [index, category] of orderedCategories.entries()) {
+    const captureCategories = stage3Journey.draft.authoritySnapshot.orderedCategories.filter(
+      (category) => !stage3Journey.draft.completedCaptureCategories.includes(category),
+    )
+    for (const [index, category] of captureCategories.entries()) {
       await completeCurrentCategory(page, category)
-      const successor = orderedCategories[index + 1]
+      const successor = captureCategories[index + 1]
       if (successor) await expectStage3Category(page, successor)
       if (index === 0) {
         await page.reload()
@@ -651,15 +757,10 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       }
     }
 
-    await expect(
-      page.getByRole("heading", { name: "Wie gut passen deine Produkte?" }),
-    ).toBeVisible()
-    await page.getByRole("button", { name: "Produkte prüfen" }).click()
     const seen = new Set<string>()
     for (let decisions = 0; decisions < 24; decisions += 1) {
       await waitForStage3AuthorityState(page)
-      if (await page.getByRole("heading", { name: "Deine Produkte sind vorbereitet." }).isVisible())
-        break
+      if (new URL(page.url()).pathname === "/routine") break
       const ownedAction = page.getByRole("button", {
         name: /^E2E Sanftes Shampoo weiterverwenden: /,
       })
@@ -707,14 +808,8 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     }
     expect(seen).toEqual(new Set(["owned", "planned", "pending", "unknown"]))
 
-    await expect(
-      page.getByRole("heading", { name: "Deine Produkte sind vorbereitet." }),
-    ).toBeVisible()
-    await expect(page.getByText("Aktive Produkte").locator("..")).toContainText("1")
-    await expect(page.getByText("Geplante Käufe").locator("..")).toContainText("1")
-    await expect(page.getByText("In Prüfung").locator("..")).toContainText("1")
-    await page.getByRole("button", { name: "Routine öffnen" }).click()
     await page.waitForURL("**/routine")
+    expect(stage3CompletionRequests).toBe(1)
     await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
     let proposalResolves = 0
     await page.route("**/api/personal-plan/routine/proposals/*/resolve", async (route) => {

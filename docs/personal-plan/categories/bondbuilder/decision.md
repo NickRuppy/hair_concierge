@@ -2,8 +2,8 @@
 category: bondbuilder
 document_type: decision
 status: confirmed
-decision_version: 1
-last_reviewed_at: 2026-08-06
+decision_version: 2
+last_reviewed_at: 2026-08-09
 current_main_revision_reviewed: f245db8e
 production_schema_reviewed_at: 2026-08-06
 evidence_file: docs/personal-plan/categories/bondbuilder/evidence.md
@@ -60,7 +60,7 @@ Stage 1 consumes only lossless person facts that can change tier or explanation:
 
 - `chemicalTreatments[]`: `colored | lightened | permed | chemically_straightened | natural`;
 - `currentConcerns[]`: `hair_damage`, `breakage`, and supporting-only `split_ends`;
-- `hairSurface`: `rough` is a strong indicator;
+- `hairSurface`: `rough` is corroborating-only context and never qualifies or escalates a tier by itself;
 - `elasticResponse`: `snaps` is a strong indicator; `stretches_stays` is context only;
 - `goals`: `strength_ends` is context only;
 - shared `PlanDamageAssessment` lane facts, drivers, confidence, and missing inputs for deduplication and plan-wide explanation.
@@ -80,16 +80,15 @@ Input semantics:
 
 ## Stage 1 inclusion and need tier
 
-### Strong observed indicators
+### Strong observed indicators and corroborating context
 
 Count each distinct canonical fact once:
 
 1. `currentConcerns` contains `breakage`;
 2. `currentConcerns` contains `hair_damage`;
-3. `hairSurface = rough`;
-4. `elasticResponse = snaps`.
+3. `elasticResponse = snaps`.
 
-`split_ends`, `strength_ends`, `stretches_stays`, Heat exposure, and a derived `repairPriority` are not additional strong indicators. A derived assessment cannot corroborate a raw fact that created it.
+`hairSurface = rough` is corroborating-only. It may be emitted beside a qualifying independent observation such as `breakage`, but it cannot create an optional route alone, satisfy a chemical-plus-damage rule, or count toward the two-indicator Basis rule. `split_ends`, `strength_ends`, `stretches_stays`, Heat exposure, and a derived `repairPriority` are also not additional strong indicators. A derived assessment cannot corroborate a raw fact that created it.
 
 `hairSurface = slightly_uneven` retains the shared assessment's moderate structural contribution but is deliberately not a strong Bondbuilder inclusion indicator. Assessment parity and category eligibility therefore remain separate, explicit decisions.
 
@@ -100,8 +99,8 @@ Count each distinct canonical fact once:
 | `bondbuilder.inclusion.lightened` | `chemicalTreatments` contains `lightened` | `basis` | calibrated product policy |
 | `bondbuilder.inclusion.chemical_straightening` | contains `chemically_straightened` | `basis` | calibrated product policy |
 | `bondbuilder.inclusion.colored_and_permed` | contains both `colored` and `permed` | `basis` | calibrated product policy |
-| `bondbuilder.inclusion.colored_with_damage` | contains `colored` and at least one strong observed indicator | `basis` | calibrated product policy |
-| `bondbuilder.inclusion.permed_with_damage` | contains `permed` and at least one strong observed indicator | `basis` | calibrated product policy |
+| `bondbuilder.inclusion.colored_with_damage` | contains `colored` and at least one qualifying strong observed indicator | `basis` | calibrated product policy |
+| `bondbuilder.inclusion.permed_with_damage` | contains `permed` and at least one qualifying strong observed indicator | `basis` | calibrated product policy |
 | `bondbuilder.inclusion.two_strong_indicators` | at least two distinct strong observed indicators | `basis` | calibrated non-chemical route |
 | `bondbuilder.inclusion.colored_only` | contains `colored`; no Basis rule matches | `optional` | calibrated product policy |
 | `bondbuilder.inclusion.permed_only` | contains `permed`; no Basis rule matches | `optional` | calibrated product policy |
@@ -116,8 +115,9 @@ Precedence and deduplication:
 4. one chemical treatment contributes once even when it also helped create shared repair priority;
 5. a high `repairPriority` plus `breakage` is still one underlying indicator when breakage created that priority;
 6. `breakage + split_ends` remains exactly one strong indicator and therefore `optional` without another rule;
-7. severe Heat alone does not create Basis or optional Bondbuilder need; Heat protection and source control remain primary;
-8. ownership never changes the need tier.
+7. `rough` alone is `not_needed`; `rough + breakage` remains one strong indicator and therefore `optional`;
+8. severe Heat alone does not create Basis or optional Bondbuilder need; Heat protection and source control remain primary;
+9. ownership never changes the need tier.
 
 The chemical proxy weights used by `PlanDamageAssessment` remain conservative and capped: one `colored` or `permed` stressor contributes `2`; `colored + permed` contributes `3`, not `4`; `chemically_straightened` contributes `3`; and quiz-native `lightened` maps to the legacy `bleached` lane at `4` and takes precedence. These are not calibrated damage measurements and not a second Bondbuilder threshold.
 
@@ -156,7 +156,7 @@ Emit all matching facts deterministically; the shared presentation pass chooses 
 | `bondbuilder.reason.permed` | `permed` | decisive optional or Basis context |
 | `bondbuilder.reason.breakage` | `breakage` | strong observed indicator |
 | `bondbuilder.reason.hair_damage` | `hair_damage` | strong observed indicator |
-| `bondbuilder.reason.rough_surface` | `rough` | strong observed indicator |
+| `bondbuilder.reason.rough_surface` | `rough` | corroborating-only detail; never decisive or tier-changing |
 | `bondbuilder.reason.snaps` | `snaps` | strong observed indicator |
 | `bondbuilder.reason.split_ends_context` | `split_ends` | supporting-only context; never decisive |
 | `bondbuilder.reason.strength_goal_context` | `strength_ends` | explanation-only context |
@@ -347,9 +347,9 @@ Every hard rule above maps to at least one fixture:
 4. `bondbuilder-permed-only`: permed only → `optional`.
 5. `bondbuilder-colored-permed`: colored + permed → `basis`.
 6. `bondbuilder-colored-breakage`: colored + breakage → `basis`.
-7. `bondbuilder-permed-rough`: permed + rough surface → `basis`.
+7. `bondbuilder-permed-rough`: permed + rough surface → `optional`; roughness does not satisfy the chemical-plus-damage rule.
 8. `bondbuilder-breakage-only`: breakage only → `optional`.
-9. `bondbuilder-breakage-rough`: breakage + rough surface → `basis`.
+9. `bondbuilder-breakage-rough`: breakage + rough surface → `optional`; roughness corroborates without counting twice.
 10. `bondbuilder-hair-damage-snaps`: hair damage + snapping → `basis`.
 11. `bondbuilder-breakage-split`: breakage + split ends → `optional`; split is supporting-only.
 12. `bondbuilder-split-only`: split ends only → `not_needed`.
@@ -358,28 +358,29 @@ Every hard rule above maps to at least one fixture:
 15. `bondbuilder-severe-heat-only`: `not_needed`; Heat protection reason remains primary.
 16. `bondbuilder-high-repair-dedup`: high repair priority derived from breakage plus that same breakage → one strong indicator, `optional`.
 17. `bondbuilder-v2-combined-migration`: historical combined concern → `split_ends`; supporting context only and no strong indicator.
-18. `bondbuilder-missing-required-profile`: typed incomplete-profile state.
-19. `bondbuilder-equal-shortlist`: Epres, K18, and Nº.3PLUS all pass with no preference → equal ideal shortlist.
-20. `bondbuilder-format-preference`: verified pre-wash spray preference selects Epres from otherwise equal ideal candidates.
-21. `bondbuilder-mechanism-neutral`: peptide/crosslink values do not change person fit or rank.
-22. `bondbuilder-weight-ignored`: fine/volume-sensitive profile does not rank or demote the same eligible candidates.
-23. `bondbuilder-addon-supportive`: Nº.0 is supportive companion and cannot fill primary alone.
-24. `bondbuilder-discontinued-replaced`: legacy Nº.3 is mismatch/not primary-eligible despite stale flags.
-25. `bondbuilder-pending-product`: visible `unknown`, excluded from recipe.
-26. `bondbuilder-missing-protocol`: core role retained as unknown; no executable occurrence.
-27. `bondbuilder-no-valid-candidate`: return `Empfehlung wird geprüft`.
-28. `bondbuilder-two-owned-primary-required`: both visible/evaluated; no recipe until one primary is selected.
-29. `bondbuilder-two-owned-one-primary`: primary receives complete course; other remains unassigned; no rotation.
-30. `bondbuilder-owned-not-needed-continue`: need remains `not_needed`; fitting product may remain only through informed continuation.
-31. `bondbuilder-owned-mismatch-override`: limitation persists and protocol must still be complete.
-32. `bondbuilder-shopping-no-recipe`: recommendation visible; no execution before acquisition confirmation.
-33. `bondbuilder-acquired-successor`: acquisition/primary binding previews a successor and requires confirmation.
-34. `bondbuilder-k18-protocol`: exact no-Conditioner/wait/leave-in course compiles from verified facts.
-35. `bondbuilder-olaplex-protocol`: exact pre-shampoo/rinse/Shampoo/Conditioner course compiles.
-36. `bondbuilder-epres-protocol`: exact dry-unwashed spray/wait/wash course compiles.
-37. `bondbuilder-mask-incompatible`: separate intensive-care variants; total wash cadence unchanged.
-38. `bondbuilder-adverse-reaction`: optimization suppressed and stop-use guidance emitted.
-39. `bondbuilder-stable-recompute`: unchanged facts retain tier, equal-shortlist status, and saved ideal primary.
+18. `bondbuilder-lea-untreated-rough`: natural, untreated, rough surface, no breakage/hair damage/snapping → `not_needed`, no Stage-1 card, and no chemical-stress copy.
+19. `bondbuilder-missing-required-profile`: typed incomplete-profile state.
+20. `bondbuilder-equal-shortlist`: Epres, K18, and Nº.3PLUS all pass with no preference → equal ideal shortlist.
+21. `bondbuilder-format-preference`: verified pre-wash spray preference selects Epres from otherwise equal ideal candidates.
+22. `bondbuilder-mechanism-neutral`: peptide/crosslink values do not change person fit or rank.
+23. `bondbuilder-weight-ignored`: fine/volume-sensitive profile does not rank or demote the same eligible candidates.
+24. `bondbuilder-addon-supportive`: Nº.0 is supportive companion and cannot fill primary alone.
+25. `bondbuilder-discontinued-replaced`: legacy Nº.3 is mismatch/not primary-eligible despite stale flags.
+26. `bondbuilder-pending-product`: visible `unknown`, excluded from recipe.
+27. `bondbuilder-missing-protocol`: core role retained as unknown; no executable occurrence.
+28. `bondbuilder-no-valid-candidate`: return `Empfehlung wird geprüft`.
+29. `bondbuilder-two-owned-primary-required`: both visible/evaluated; no recipe until one primary is selected.
+30. `bondbuilder-two-owned-one-primary`: primary receives complete course; other remains unassigned; no rotation.
+31. `bondbuilder-owned-not-needed-continue`: need remains `not_needed`; fitting product may remain only through informed continuation.
+32. `bondbuilder-owned-mismatch-override`: limitation persists and protocol must still be complete.
+33. `bondbuilder-shopping-no-recipe`: recommendation visible; no execution before acquisition confirmation.
+34. `bondbuilder-acquired-successor`: acquisition/primary binding previews a successor and requires confirmation.
+35. `bondbuilder-k18-protocol`: exact no-Conditioner/wait/leave-in course compiles from verified facts.
+36. `bondbuilder-olaplex-protocol`: exact pre-shampoo/rinse/Shampoo/Conditioner course compiles.
+37. `bondbuilder-epres-protocol`: exact dry-unwashed spray/wait/wash course compiles.
+38. `bondbuilder-mask-incompatible`: separate intensive-care variants; total wash cadence unchanged.
+39. `bondbuilder-adverse-reaction`: optimization suppressed and stop-use guidance emitted.
+40. `bondbuilder-stable-recompute`: unchanged facts retain tier, equal-shortlist status, and saved ideal primary.
 
 ## Catalog, data, implementation, and launch gates
 

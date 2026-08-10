@@ -124,11 +124,12 @@ test("omits the Optional page and progress step when no optional categories exis
     <PlanStartFlow
       state="ready"
       plan={{ basis: { ...readyPlan.basis, progress: 100 }, optional: null }}
+      onContinueToRefinement={() => {}}
     />,
   )
 
   assert.match(html, /data-plan-start-has-optional="false"/)
-  assert.match(html, /Plan wirklich zu meinem machen/)
+  assert.match(html, /Plan verfeinern/)
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
 })
 
@@ -149,13 +150,13 @@ test("Stage 1-only keeps signed Basis and Optional pages but removes the refinem
   assert.doesNotMatch(terminalBasis, /Plan wirklich zu meinem machen|Plan verfeinern/)
 })
 
-test("renders paused cards as visible included categories with Anforderungsprofil details", () => {
+test("renders paused cards as visible included categories with need details", () => {
   const html = renderToStaticMarkup(<NeedCard card={readyPlan.optional!.cards[0]!} />)
 
   assert.match(html, /data-plan-start-card-paused="true"/)
   assert.match(html, /Pausiert/)
   assert.match(html, /Aktuell nicht anwenden/)
-  assert.match(html, /Dein Anforderungsprofil/)
+  assert.match(html, /Was dein Haar braucht/)
   assert.match(html, /aria-expanded="true"/)
 })
 
@@ -169,7 +170,10 @@ test("renders loading, retry and transition states without questions or legacy d
   assert.match(retry, /Erneut versuchen/)
   assert.match(transition, /Deine Grundlage steht/)
   assert.match(transition, /Jetzt machen wir sie zu deiner/)
-  assert.doesNotMatch(`${loading}${retry}${transition}`, /Quiz starten|Chat|Routine/)
+  assert.doesNotMatch(
+    `${loading}${retry}${transition}`,
+    /Quiz starten|href="\/chat"|href="\/routine"/,
+  )
 })
 
 test("the production transition presents the signed Stage 2 handoff when a customer callback is injected", () => {
@@ -181,11 +185,10 @@ test("the production transition presents the signed Stage 2 handoff when a custo
   assert.match(disabled, /Als Nächstes verfeinern wir deinen Plan mit ein paar gezielten Fragen\./)
   assert.match(disabled, /Plan verfeinern/)
   assert.match(disabled, /disabled=""/)
-  assert.match(disabled, /bg-\[#6B50A0\]\/55/)
+  assert.match(disabled, /personal-plan-primary-action/)
   assert.match(enabled, /Plan verfeinern/)
   assert.doesNotMatch(enabled, /disabled=""/)
-  assert.match(enabled, /bg-\[#6B50A0\](?= px-3\.5)/)
-  assert.doesNotMatch(enabled, /bg-\[#6B50A0\]\/55/)
+  assert.match(enabled, /personal-plan-primary-action/)
 })
 
 test("renders compact unavailable state H with profile and support exits", () => {
@@ -273,6 +276,37 @@ test("the production page passes the Stage 2 gate independently of Stage 1 plan 
   )
 })
 
+test("the production page resolves the idempotent Stage 1 view model before hydration", async () => {
+  let stage1Loads = 0
+  const result = await resolvePlanStartPageState({
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan_start",
+      frontier: "stage1",
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+    }),
+    loadExistingRefinementSession: async () => null,
+    loadStage1Plan: async () => {
+      stage1Loads += 1
+      return readyPlan
+    },
+  })
+
+  assert.equal(stage1Loads, 1)
+  assert.match(
+    readFileSync("src/app/plan-start/page.tsx", "utf8"),
+    /createStage1PersistenceService[\s\S]*\.loadOrCreate\(\{ userId \}\)/,
+  )
+  assert.deepEqual(result, {
+    state: "production",
+    initialJourney: { stage: "stage1" },
+    initialPlan: readyPlan,
+  })
+})
+
 test("the enabled production gate maps ineligible API responses to unavailable H", () => {
   assert.equal(
     interpretPlanStartApiResponse(404, { error: "personal_plan_not_available" }).state,
@@ -330,7 +364,8 @@ test("adapts a valid saved Stage-1 snapshot into the signed Basis and Optional v
     plan.basis.cards.some((item) => item.categoryLabel === "Conditioner" && item.imageUrl === null),
   )
   assert.ok(plan.optional)
-  assert.equal(plan.optional.title, "Zusätzlich sinnvoll")
+  assert.ok(plan.optional.cards.some((item) => item.id === "bondbuilder"))
+  assert.ok(plan.optional.cards.some((item) => item.paused))
 
   const interpreted = interpretPlanStartApiResponse(200, {
     status: "completed",
@@ -365,9 +400,21 @@ test("adapts Basis-only snapshots without an empty Optional page", () => {
   assert.ok(plan)
   assert.equal(plan.optional, null)
   assert.equal(plan.basis.progress, 100)
-  const html = renderToStaticMarkup(<PlanStartFlow state="ready" plan={plan} />)
-  assert.match(html, /Plan wirklich zu meinem machen/)
+  const html = renderToStaticMarkup(
+    <PlanStartFlow state="ready" plan={plan} onContinueToRefinement={() => {}} />,
+  )
+  assert.match(html, /Plan verfeinern/)
   assert.doesNotMatch(html, /Optionale Empfehlungen/)
+})
+
+test("the final Stage 1 CTA enters the first Stage 2 question without an invitation screen", () => {
+  const componentSource = readFileSync(
+    "src/components/personal-plan-start/plan-start-flow.tsx",
+    "utf8",
+  )
+  assert.doesNotMatch(componentSource, /setStep\("transition"\)/)
+  assert.match(componentSource, /onNext=\{canRefine \? props\.onContinueToRefinement/)
+  assert.match(componentSource, /directEntry/)
 })
 
 test("preserves paused included categories from the saved snapshot", () => {
@@ -378,11 +425,65 @@ test("preserves paused included categories from the saved snapshot", () => {
   })
   const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
 
-  assert.ok(plan?.optional)
+  assert.ok(plan)
+  assert.ok(plan.optional)
   const paused = plan.optional.cards.find((item) => item.paused)
   assert.ok(paused)
   assert.equal(paused.statusLabel, "Pausiert")
   assert.equal(paused.targetType, "Aktuell nicht anwenden")
+})
+
+test("untreated rough-surface Lea gets no Bondbuilder card or chemical-stress presentation", () => {
+  const snapshot = computedSnapshot({
+    ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+    chemicalTreatments: ["natural"],
+    currentConcerns: [],
+    concernRecurrence: undefined,
+    hairSurface: "rough",
+    elasticResponse: "stretches_bounces",
+  })
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+
+  assert.ok(plan)
+  const html = renderToStaticMarkup(<PlanStartFlow state="ready" plan={plan} />)
+  assert.doesNotMatch(html, /data-plan-start-card="bondbuilder"/)
+  assert.doesNotMatch(html, /chemisch beansprucht|chemisch gestresst/i)
+})
+
+test("Bondbuilder presentation names chemical stress only for chemical-treatment reasons", () => {
+  const untreated = adaptInitialNeedSnapshotToPlanStartViewModel(
+    computedSnapshot({
+      ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+      chemicalTreatments: ["natural"],
+      currentConcerns: ["breakage"],
+      concernRecurrence: { concernId: "breakage", frequency: "often" },
+      hairSurface: "smooth",
+      elasticResponse: "stretches_bounces",
+    }),
+  )
+  const treated = adaptInitialNeedSnapshotToPlanStartViewModel(
+    computedSnapshot({
+      ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+      chemicalTreatments: ["colored"],
+      currentConcerns: [],
+      concernRecurrence: undefined,
+      hairSurface: "smooth",
+      elasticResponse: "stretches_bounces",
+    }),
+  )
+
+  assert.ok(untreated)
+  assert.ok(treated)
+  const untreatedCard = [...untreated.basis.cards, ...(untreated.optional?.cards ?? [])].find(
+    (item) => item.id === "bondbuilder",
+  )
+  const treatedCard = [...treated.basis.cards, ...(treated.optional?.cards ?? [])].find(
+    (item) => item.id === "bondbuilder",
+  )
+  assert.ok(untreatedCard)
+  assert.ok(treatedCard)
+  assert.doesNotMatch(JSON.stringify(untreatedCard), /chemisch/i)
+  assert.match(JSON.stringify(treatedCard), /chemisch/i)
 })
 
 test("invalid or unsupported snapshots fail closed to retryable error", () => {

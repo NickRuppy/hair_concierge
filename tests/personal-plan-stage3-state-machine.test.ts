@@ -9,6 +9,7 @@ import {
   computeStage3PathState,
   createStage3Draft,
   effectiveStage3Coverage,
+  finalizeCaptureCategory,
   invalidateDraftForRefinedVersion,
   markRoleUncovered,
   removeCapturedProduct,
@@ -43,6 +44,94 @@ const requirements: Stage3CategoryRequirement[] = [
     authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
   },
 ]
+
+test("Stage 2 ownership skips known-empty capture categories without claiming product coverage", () => {
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-v1",
+    refinedInputHash: "hash-v1",
+    categoryDecisions: [],
+    coverage: [],
+    orderedCategories: requirements.map(({ category }) => category),
+    authorityVersions: Object.fromEntries(
+      requirements.map(({ category, authorityVersion }) => [category, authorityVersion]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: ["dry_finish"],
+      ownedCategories: ["oil"],
+    },
+  }
+
+  const draft = createStage3Draft({
+    draftId: "draft-owned-only",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-v1",
+    requirements,
+    authoritySnapshot,
+    now,
+  })
+
+  assert.equal(draft.categoryCursor, "oil")
+  assert.deepEqual(draft.completedCaptureCategories, ["conditioner", "heat_protectant"])
+  assert.deepEqual(
+    draft.uncoveredRoles.map(({ category, role }) => [category, role]),
+    [
+      ["conditioner", "conditioner_rinse_out"],
+      ["heat_protectant", "pre_heat_protection"],
+    ],
+  )
+  assert.equal(draft.products.length, 0)
+})
+
+test("known-empty Stage 2 ownership enters product decisions instead of a cursorless capture", () => {
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1,
+    refinedNeedVersionId: "refined-empty-owned",
+    refinedInputHash: "hash-empty-owned",
+    categoryDecisions: [],
+    coverage: [],
+    orderedCategories: requirements.map(({ category }) => category),
+    authorityVersions: Object.fromEntries(
+      requirements.map(({ category, authorityVersion }) => [category, authorityVersion]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1,
+      scalpOiliness: "balanced",
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x",
+      oilPurposes: [],
+      ownedCategories: [],
+    },
+  }
+
+  const draft = createStage3Draft({
+    draftId: "draft-empty-owned",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-empty-owned",
+    requirements,
+    authoritySnapshot,
+    now,
+  })
+
+  assert.equal(draft.pass, "product_decisions")
+  assert.equal(draft.categoryCursor, null)
+  assert.deepEqual(
+    draft.completedCaptureCategories,
+    requirements.map(({ category }) => category),
+  )
+  assert.equal(
+    draft.uncoveredRoles.length,
+    requirements.flatMap(({ requiredRoles }) => requiredRoles).length,
+  )
+})
 
 function addConditioner(
   draft = createStage3Draft({
@@ -1180,6 +1269,61 @@ test("atomic category replacement moves Oil roles and clears the previous produc
       ),
     /required role pre_wash_fibre_treatment is uncovered/,
   )
+})
+
+test("finalizing a capture category assigns, records unique gaps, and completes in one revision", () => {
+  const oilRequirement = requirements[1]
+  let draft = createStage3Draft({
+    draftId: "draft-oil-finalize",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-v1",
+    requirements: [oilRequirement],
+    now,
+  })
+  draft = addCapturedProduct(draft, {
+    capturedProductId: "oil-a",
+    userProductId: "user-product-oil-a",
+    identity: {
+      kind: "catalog_product",
+      productId: "product-oil-a",
+      displayName: "Oil A",
+      category: "oil",
+    },
+    frequencyRange: "weekly_1x",
+    ownership: "owned",
+    source: "catalog_search",
+  })
+
+  const finalized = finalizeCaptureCategory(
+    draft,
+    "oil",
+    [
+      {
+        capturedProductId: "oil-a",
+        category: "oil",
+        roles: ["dry_finish"],
+      },
+    ],
+    [
+      { category: "oil", role: "pre_wash_fibre_treatment", reason: "not_ready_to_decide" },
+      { category: "oil", role: "pre_wash_fibre_treatment", reason: "not_ready_to_decide" },
+      { category: "oil", role: "leave_on_fibre_conditioning", reason: "not_ready_to_decide" },
+    ],
+    [oilRequirement],
+  )
+
+  assert.equal(finalized.revision, draft.revision + 1)
+  assert.equal(finalized.pass, "product_decisions")
+  assert.equal(finalized.categoryCursor, null)
+  assert.deepEqual(finalized.completedCaptureCategories, ["oil"])
+  assert.deepEqual(finalized.roleAssignments, [
+    { capturedProductId: "oil-a", category: "oil", roles: ["dry_finish"] },
+  ])
+  assert.deepEqual(finalized.uncoveredRoles, [
+    { category: "oil", role: "pre_wash_fibre_treatment", reason: "not_ready_to_decide" },
+    { category: "oil", role: "leave_on_fibre_conditioning", reason: "not_ready_to_decide" },
+  ])
 })
 
 test("capture completion uses the refined need roles and never invents optional category roles", () => {

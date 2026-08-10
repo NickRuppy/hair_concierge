@@ -94,7 +94,7 @@ export function RoutineProposalSheetBody({
         </p>
         <p className="text-sm text-muted-foreground">
           {isInitial
-            ? "Bestätige diesen vollständigen Schnappschuss, wenn die Produkt- und Rollenverteilung passt."
+            ? "Bestätige die vollständige Routine, wenn die Produkt- und Aufgabenverteilung passt."
             : "Deine aktive Routine bleibt unverändert, bis du diesen Vorschlag übernimmst."}
         </p>
       </div>

@@ -6,11 +6,23 @@ import type { PlanCategoryTarget } from "@/lib/personal-plan/types"
 
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type { PersonalPlanCategory, Stage3DecisionSubject, Stage3ProductDraft } from "../contracts"
-import type { Stage3AuthorityInput, Stage3CategoryProductFacts } from "./contracts"
+import { expectedShampooBucket } from "./categories/shampoo"
+import type {
+  Stage3AuthorityInput,
+  Stage3CategoryProductFacts,
+  Stage3EvaluationContext,
+} from "./contracts"
 
 type AdminClient = SupabaseClient
 type Row = Record<string, unknown>
+type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
 type ConditionerTarget = Extract<PlanCategoryTarget, { category: "conditioner" }>
+type CategorySelectionContext = {
+  hairThickness: string
+  role: Stage3DecisionSubject["role"]
+  shampooTarget: ShampooTarget | null
+  conditionerTarget: ConditionerTarget | null
+}
 
 export type Stage3AuthorityFactBundle = Pick<
   Stage3AuthorityInput,
@@ -23,9 +35,15 @@ export async function loadStage3AuthorityFactBundle(
     draft: Stage3ProductDraft
     subject: Stage3DecisionSubject
     heatRoutes: string[]
+    context: Stage3EvaluationContext
   },
 ): Promise<Stage3AuthorityFactBundle> {
-  const conditionerTarget = signedConditionerTarget(input.draft, input.subject.category)
+  const selectionContext: CategorySelectionContext = {
+    hairThickness: input.context.hairThickness,
+    role: input.subject.role,
+    shampooTarget: signedShampooTarget(input.draft, input.subject.category),
+    conditionerTarget: signedConditionerTarget(input.draft, input.subject.category),
+  }
   const captured = input.subject.capturedProductId
     ? input.draft.products.find(
         (product) => product.capturedProductId === input.subject.capturedProductId,
@@ -35,12 +53,12 @@ export async function loadStage3AuthorityFactBundle(
     captured?.identity.kind === "catalog_product" ? captured.identity.productId : null
 
   const productFacts = productId
-    ? await loadOneProduct(client, input.subject.category, productId, conditionerTarget)
+    ? await loadOneProduct(client, input.subject.category, productId, selectionContext)
     : null
   const recommendationCandidates = await loadRecommendationCandidates(
     client,
     input.subject.category,
-    conditionerTarget,
+    selectionContext,
   )
   const heatCarrierCoverage = await resolveHeatCarrierCoverage(
     client,
@@ -58,12 +76,12 @@ export async function loadStage3AuthorityFactBundle(
 async function loadRecommendationCandidates(
   client: AdminClient,
   category: PersonalPlanCategory,
-  conditionerTarget: ConditionerTarget | null,
+  selectionContext: CategorySelectionContext,
 ): Promise<Stage3CategoryProductFacts[]> {
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order",
+      "id,name,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,purchase_link_status",
     )
     .eq("category_key", category)
     .eq("is_active", true)
@@ -75,40 +93,42 @@ async function loadRecommendationCandidates(
   if (error) throw new Error("stage3_authority_catalog_unavailable")
   const facts = await Promise.all(
     (data ?? []).map((row) =>
-      normalizeProductFacts(client, category, row as Row, conditionerTarget),
+      normalizeProductFacts(client, category, row as Row, selectionContext),
     ),
   )
-  return facts.filter((value): value is Stage3CategoryProductFacts => value !== null)
+  return facts
+    .filter((value): value is Stage3CategoryProductFacts => value !== null)
+    .sort(compareRecommendationFacts)
 }
 
 async function loadOneProduct(
   client: AdminClient,
   category: PersonalPlanCategory,
   productId: string,
-  conditionerTarget: ConditionerTarget | null,
+  selectionContext: CategorySelectionContext,
 ): Promise<Stage3CategoryProductFacts | null> {
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at",
+      "id,name,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,purchase_link_status",
     )
     .eq("id", productId)
     .eq("category_key", category)
     .maybeSingle()
   if (error) throw new Error("stage3_authority_catalog_unavailable")
-  return data ? normalizeProductFacts(client, category, data as Row, conditionerTarget) : null
+  return data ? normalizeProductFacts(client, category, data as Row, selectionContext) : null
 }
 
 async function normalizeProductFacts(
   client: AdminClient,
   category: PersonalPlanCategory,
   product: Row,
-  conditionerTarget: ConditionerTarget | null,
+  selectionContext: CategorySelectionContext,
 ): Promise<Stage3CategoryProductFacts | null> {
   const productId = text(product.id)
   if (!productId || product.category_key !== category) return null
   const [spec, protocols] = await Promise.all([
-    loadCategorySpec(client, category, productId, conditionerTarget),
+    loadCategorySpec(client, category, productId, selectionContext),
     loadProtocols(client, category, productId),
   ])
   const common = {
@@ -126,6 +146,12 @@ async function normalizeProductFacts(
     // reaction is therefore a known non-exclusion, rather than missing data.
     knownReaction: false,
     protocols,
+    catalogSortOrder: numberOrNull(product.sort_order),
+    priceEur: numberOrNull(product.price_eur),
+    purchaseLinkStatus:
+      product.purchase_link_status === "available" || product.purchase_link_status === "unavailable"
+        ? product.purchase_link_status
+        : null,
   }
   const withoutFingerprint = { ...common, spec }
   return {
@@ -138,27 +164,22 @@ async function loadCategorySpec(
   client: AdminClient,
   category: PersonalPlanCategory,
   productId: string,
-  conditionerTarget: ConditionerTarget | null,
+  selectionContext: CategorySelectionContext,
 ): Promise<Stage3CategoryProductFacts["spec"]> {
   switch (category) {
     case "shampoo": {
-      const row = await one(client, "product_shampoo_specs", productId)
-      return {
-        thickness: text(row?.thickness),
-        shampooBucket: text(row?.shampoo_bucket),
-        scalpRoute: text(row?.scalp_route),
-        cleansingIntensity: text(row?.cleansing_intensity),
-      }
+      const rows = await many(client, "product_shampoo_specs", productId)
+      return selectShampooSpec(rows, selectionContext)
     }
     case "conditioner": {
       const [base, rerank] = await Promise.all([
         many(client, "product_conditioner_specs", productId),
         one(client, "product_conditioner_rerank_specs", productId),
       ])
-      const selected = selectConditionerSpec(base, conditionerTarget)
+      const selected = selectConditionerSpec(base, selectionContext)
       return {
-        thickness: text(selected?.thickness),
-        proteinMoistureBalance: conditionerBalance(selected?.protein_moisture_balance),
+        thickness: selected?.thickness ?? null,
+        proteinMoistureBalance: selected?.proteinMoistureBalance ?? null,
         weight: text(rerank?.weight),
         repairSupportLevel: text(rerank?.repair_level),
         balanceDirection: text(rerank?.balance_direction),
@@ -335,7 +356,12 @@ async function resolveHeatCarrierCoverage(
       ) {
         continue
       }
-      const facts = await loadOneProduct(client, category, captured.identity.productId, null)
+      const facts = await loadOneProduct(client, category, captured.identity.productId, {
+        hairThickness: "",
+        role: "pre_heat_protection",
+        shampooTarget: null,
+        conditionerTarget: null,
+      })
       if (!facts || !facts.isActive || facts.lifecycleStatus !== "active") continue
       const capability =
         facts.category === "leave_in" ||
@@ -401,12 +427,77 @@ function signedConditionerTarget(
   return target?.category === "conditioner" ? target : null
 }
 
-function selectConditionerSpec(rows: Row[], target: ConditionerTarget | null): Row | null {
-  if (!target) return null
-  const matches = rows.filter(
-    (row) => conditionerBalance(row.protein_moisture_balance) === target.careDirection,
-  )
-  return matches.length === 1 ? matches[0] : null
+function signedShampooTarget(
+  draft: Stage3ProductDraft,
+  category: PersonalPlanCategory,
+): ShampooTarget | null {
+  if (category !== "shampoo") return null
+  const target = draft.authoritySnapshot?.categoryDecisions.find(
+    (decision) => decision.category === "shampoo",
+  )?.target
+  return target?.category === "shampoo" ? target : null
+}
+
+function selectShampooSpec(
+  rows: Row[],
+  context: CategorySelectionContext,
+): {
+  thickness: string | null
+  shampooBucket: string | null
+  scalpRoute: string | null
+  cleansingIntensity: string | null
+} {
+  const empty = {
+    thickness: null,
+    shampooBucket: null,
+    scalpRoute: null,
+    cleansingIntensity: null,
+  }
+  if (!context.shampooTarget) return empty
+  const expectedBucket = expectedShampooBucket({
+    role: context.role,
+    target: context.shampooTarget,
+  })
+  if (!expectedBucket) return empty
+  const matches = rows
+    .filter(
+      (row) =>
+        text(row.thickness) === context.hairThickness &&
+        text(row.shampoo_bucket) === expectedBucket &&
+        text(row.scalp_route) === context.shampooTarget?.scalpRoute,
+    )
+    .map((row) => ({
+      thickness: text(row.thickness),
+      shampooBucket: text(row.shampoo_bucket),
+      scalpRoute: text(row.scalp_route),
+      cleansingIntensity: text(row.cleansing_intensity),
+    }))
+  return singleSemanticMatch(matches) ?? empty
+}
+
+function selectConditionerSpec(
+  rows: Row[],
+  context: CategorySelectionContext,
+): { thickness: string | null; proteinMoistureBalance: string | null } | null {
+  if (!context.conditionerTarget) return null
+  const matches = rows
+    .filter(
+      (row) =>
+        text(row.thickness) === context.hairThickness &&
+        conditionerBalance(row.protein_moisture_balance) ===
+          context.conditionerTarget?.careDirection,
+    )
+    .map((row) => ({
+      thickness: text(row.thickness),
+      proteinMoistureBalance: conditionerBalance(row.protein_moisture_balance),
+    }))
+  return singleSemanticMatch(matches)
+}
+
+function singleSemanticMatch<T extends object>(matches: T[]): T | null {
+  const canonical = new Map(matches.map((match) => [JSON.stringify(sortValue(match)), match]))
+  if (canonical.size !== 1) return null
+  return [...canonical.values()][0] ?? null
 }
 
 function conditionerBalance(value: unknown): "protein" | "moisture" | "balanced" | null {
@@ -435,6 +526,23 @@ function textArray(value: unknown): string[] | null {
 
 function booleanOrNull(value: unknown): boolean | null {
   return typeof value === "boolean" ? value : null
+}
+
+function numberOrNull(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null
+}
+
+function compareRecommendationFacts(
+  left: Stage3CategoryProductFacts,
+  right: Stage3CategoryProductFacts,
+): number {
+  const leftOrder = left.catalogSortOrder ?? Number.MAX_SAFE_INTEGER
+  const rightOrder = right.catalogSortOrder ?? Number.MAX_SAFE_INTEGER
+  return (
+    leftOrder - rightOrder ||
+    left.displayName.localeCompare(right.displayName, "de") ||
+    left.productId.localeCompare(right.productId)
+  )
 }
 
 function fingerprint(value: unknown): string {

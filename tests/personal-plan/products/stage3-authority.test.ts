@@ -104,7 +104,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
         category,
         spec: {
           thickness: "normal",
-          shampooBucket: "everyday",
+          shampooBucket: "normal",
           scalpRoute: "balanced",
           cleansingIntensity: "medium",
         },
@@ -292,6 +292,25 @@ function input(
   }
 }
 
+function heatCandidate(input: {
+  productId: string
+  displayName: string
+  priceEur: number | null
+  purchaseLinkStatus: "available" | "unavailable" | null
+}) {
+  const facts = knownFacts("heat_protectant")
+  if (facts.category !== "heat_protectant") throw new Error("expected Heat Protectant fixture")
+  return Object.assign(facts, {
+    productId: input.productId,
+    displayName: input.displayName,
+    recommendable: true,
+    suitableThicknesses: null,
+    priceEur: input.priceEur,
+    purchaseLinkStatus: input.purchaseLinkStatus,
+    factFingerprint: `facts-${input.displayName}`,
+  })
+}
+
 for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCategory[]) {
   test(`${category} preserves known, pending, unknown and unsupported authority states`, () => {
     const known = evaluateStage3Authority(input(category, "known"))
@@ -329,6 +348,168 @@ test("verified integrated heat carriers suppress a duplicate standalone recommen
   assert.ok(result.criteria.some((criterion) => criterion.criterionId.includes("carrier")))
 })
 
+test("standalone Heat does not require a suitable-thickness fact", () => {
+  const heatInput = input("heat_protectant", "known")
+  if (heatInput.productFacts?.category !== "heat_protectant") {
+    throw new Error("expected Heat Protectant fixture")
+  }
+  heatInput.productFacts.suitableThicknesses = null
+
+  const result = evaluateStage3Authority(heatInput)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+for (const category of ["shampoo", "conditioner", "leave_in", "oil", "mask"] as const) {
+  test(`${category} still fails closed without its required suitable-thickness fact`, () => {
+    const categoryInput = input(category, "known")
+    if (!categoryInput.productFacts) throw new Error(`expected ${category} fixture`)
+    categoryInput.productFacts.suitableThicknesses = null
+
+    const result = evaluateStage3Authority(categoryInput)
+
+    assert.equal(result.status, "unknown")
+    if (result.status !== "unknown") return
+    assert.ok(result.missingFacts.includes("suitable_thicknesses"))
+  })
+}
+
+test("Heat candidate selection is stable across input order and UUID changes", () => {
+  const heatInput = input("heat_protectant", "known") as Stage3AuthorityInput<"heat_protectant">
+  heatInput.capturedProductId = null
+  heatInput.subjectIdentity = null
+  heatInput.productFacts = null
+
+  const choose = (reverse: boolean, swapIds: boolean) => {
+    const affordable = heatCandidate({
+      productId: swapIds
+        ? "ffffffff-ffff-4fff-8fff-ffffffffffff"
+        : "00000000-0000-4000-8000-000000000000",
+      displayName: "A Preis-Favorit",
+      priceEur: 4.95,
+      purchaseLinkStatus: "available",
+    })
+    const expensive = heatCandidate({
+      productId: swapIds
+        ? "00000000-0000-4000-8000-000000000000"
+        : "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      displayName: "Z Preis-Alternative",
+      priceEur: 8.95,
+      purchaseLinkStatus: "available",
+    })
+    heatInput.recommendationCandidates = reverse ? [expensive, affordable] : [affordable, expensive]
+    return evaluateStage3Authority(heatInput as never)
+  }
+
+  for (const result of [
+    choose(false, false),
+    choose(true, false),
+    choose(false, true),
+    choose(true, true),
+  ]) {
+    assert.equal(result.status, "known")
+    if (result.status !== "known") continue
+    assert.equal(result.recommendation?.displayName, "A Preis-Favorit")
+  }
+})
+
+test("Heat candidate selection excludes products without verified current availability", () => {
+  const heatInput = input("heat_protectant", "known") as Stage3AuthorityInput<"heat_protectant">
+  heatInput.capturedProductId = null
+  heatInput.subjectIdentity = null
+  heatInput.productFacts = null
+  heatInput.recommendationCandidates = [
+    heatCandidate({
+      productId: "cheap-unavailable",
+      displayName: "A Nicht verfügbar",
+      priceEur: null,
+      purchaseLinkStatus: "unavailable",
+    }),
+    heatCandidate({
+      productId: "available",
+      displayName: "Z Verfügbar",
+      priceEur: 7.95,
+      purchaseLinkStatus: "available",
+    }),
+  ]
+
+  const result = evaluateStage3Authority(heatInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "available")
+})
+
+test("Heat candidate selection uses a stable name fallback instead of UUID or insertion order", () => {
+  const heatInput = input("heat_protectant", "known") as Stage3AuthorityInput<"heat_protectant">
+  heatInput.capturedProductId = null
+  heatInput.subjectIdentity = null
+  heatInput.productFacts = null
+
+  const choose = (reverse: boolean, swapIds: boolean) => {
+    const alpha = heatCandidate({
+      productId: swapIds
+        ? "ffffffff-ffff-4fff-8fff-ffffffffffff"
+        : "00000000-0000-4000-8000-000000000000",
+      displayName: "Alpha Spray",
+      priceEur: 5.95,
+      purchaseLinkStatus: "available",
+    })
+    const zeta = heatCandidate({
+      productId: swapIds
+        ? "00000000-0000-4000-8000-000000000000"
+        : "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      displayName: "Zeta Spray",
+      priceEur: 5.95,
+      purchaseLinkStatus: "available",
+    })
+    heatInput.recommendationCandidates = reverse ? [zeta, alpha] : [alpha, zeta]
+    return evaluateStage3Authority(heatInput as never)
+  }
+
+  for (const result of [
+    choose(false, false),
+    choose(true, false),
+    choose(false, true),
+    choose(true, true),
+  ]) {
+    assert.equal(result.status, "known")
+    if (result.status !== "known") continue
+    assert.equal(result.recommendation?.displayName, "Alpha Spray")
+  }
+})
+
+test("Heat candidate selection leaves a non-UUID tie unresolved", () => {
+  const heatInput = input("heat_protectant", "known") as Stage3AuthorityInput<"heat_protectant">
+  heatInput.capturedProductId = null
+  heatInput.subjectIdentity = null
+  heatInput.productFacts = null
+  heatInput.recommendationCandidates = [
+    heatCandidate({
+      productId: "00000000-0000-4000-8000-000000000000",
+      displayName: "Gleicher stabiler Name",
+      priceEur: 5.95,
+      purchaseLinkStatus: "available",
+    }),
+    heatCandidate({
+      productId: "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      displayName: "Gleicher stabiler Name",
+      priceEur: 5.95,
+      purchaseLinkStatus: "available",
+    }),
+  ]
+
+  const result = evaluateStage3Authority(heatInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation, null)
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+})
+
 test("bondbuilder without a suitable candidate remains unknown", () => {
   const bondbuilderInput = input("bondbuilder", "known")
   bondbuilderInput.capturedProductId = null
@@ -344,3 +525,101 @@ test("bondbuilder without a suitable candidate remains unknown", () => {
   assert.equal(result.productFactFingerprint, null)
   assert.equal(result.recommendationFactFingerprint, null)
 })
+
+test("Conditioner recommendation ranking prefers ideal authority before catalog order", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  conditionerInput.capturedProductId = null
+  conditionerInput.subjectIdentity = null
+  conditionerInput.productFacts = null
+  const ideal = knownFacts("conditioner")
+  if (ideal.category !== "conditioner") throw new Error("expected Conditioner fixture")
+  const supportive = structuredClone(ideal)
+  supportive.recommendable = true
+  supportive.productId = "conditioner-supportive"
+  supportive.displayName = "A Supportive"
+  supportive.catalogSortOrder = 1
+  supportive.spec.weight = "medium"
+  ideal.productId = "conditioner-ideal"
+  ideal.recommendable = true
+  ideal.displayName = "Z Ideal"
+  ideal.catalogSortOrder = 2
+  conditionerInput.recommendationCandidates = [supportive, ideal]
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "conditioner-ideal")
+})
+
+for (const route of [
+  {
+    name: "oily",
+    scalpRoute: "oily" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "dehydriert-fettig",
+  },
+  {
+    name: "dry",
+    scalpRoute: "dry" as const,
+    everydayConstraint: "gentle_dry_scalp" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "trocken",
+  },
+  {
+    name: "irritation",
+    scalpRoute: "balanced" as const,
+    everydayConstraint: "irritation_compatible" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "irritationen",
+  },
+  {
+    name: "balanced",
+    scalpRoute: "balanced" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "normal",
+  },
+  {
+    name: "dandruff",
+    scalpRoute: "oily" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_dandruff" as const,
+    bucket: "schuppen",
+  },
+]) {
+  test(`Shampoo authority evaluates the exact signed ${route.name} bucket`, () => {
+    const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+    shampooInput.role = route.role
+    shampooInput.categoryDecision = {
+      ...shampooInput.categoryDecision,
+      roles: [route.role],
+      target: {
+        category: "shampoo",
+        roles: [route.role],
+        scalpRoute: route.scalpRoute,
+        everydayConstraint: route.everydayConstraint,
+        requiresTargetedDandruffCapability: route.role === "shampoo_dandruff",
+      },
+    }
+    if (shampooInput.productFacts) {
+      shampooInput.productFacts.spec.shampooBucket = route.bucket
+      shampooInput.productFacts.spec.scalpRoute = route.scalpRoute
+      shampooInput.productFacts.protocols = [
+        {
+          role: route.role,
+          status: "verified_complete",
+          fingerprint: `protocol-${route.name}`,
+        },
+      ]
+    }
+
+    const result = evaluateStage3Authority(shampooInput as never)
+
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(result.verdict, "ideal")
+  })
+}

@@ -2,8 +2,8 @@
 category: bondbuilder
 document_type: evidence
 status: researched
-evidence_version: 1
-last_reviewed_at: 2026-08-06
+evidence_version: 2
+last_reviewed_at: 2026-08-09
 decision_file: docs/personal-plan/categories/bondbuilder/decision.md
 ---
 
@@ -44,7 +44,7 @@ Evidence implication: the study supports category plausibility for bleached fibr
 
 **Evidence: moderate for thermal/mechanical/environmental weathering; weak for Bondbuilder eligibility.** Repeated heat, friction, tension, UV, chlorine, and ordinary weathering can reduce surface quality and fibre strength. Roughness, long/older ends, “high porosity,” poor elasticity, and self-reported breakage can have several causes and do not identify a specific broken-bond mechanism.
 
-Evidence implication: heat reduction/protection, gentler handling, baseline conditioning, and trimming existing split ends remain primary responses. A non-chemical Bondbuilder route is product-policy calibration rather than an evidence-established diagnostic threshold.
+Evidence implication: heat reduction/protection, gentler handling, baseline conditioning, and trimming existing split ends remain primary responses. Rough surface may corroborate a separate qualifying damage observation, but roughness alone does not establish Bondbuilder eligibility and cannot count as an independent strong indicator. Any non-chemical Bondbuilder route remains product-policy calibration rather than an evidence-established diagnostic threshold.
 
 ### Existing split ends are not restored by a Bondbuilder
 
@@ -90,7 +90,7 @@ Evidence implication: community usage supports acknowledging non-chemical intere
 ## Source register
 
 | Source | Type | Supports | Limitations |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | [Bond-building hair treatments review (PMID 38733167)](https://pubmed.ncbi.nlm.nih.gov/38733167/) | Scientific review | Heterogeneous definitions, mechanisms, and evidence base | Does not validate a person-side mechanism-routing rule |
 | [Martins et al., Cosmetics 2024](https://doi.org/10.3390/cosmetics11050150) | Ex-vivo comparative study | Category plausibility and measured effects on bleached tresses | Small hair-tress study; K18 versus OLAPLEX Nº.0, not current three-product comparison |
 | [Chemical and physical behavior of human hair review](https://doi.org/10.3390/polym15030608) | Scientific review | Thermal, mechanical, chemical, and environmental weathering | Broad review; does not prove Bondbuilder eligibility |
@@ -106,7 +106,7 @@ Evidence implication: community usage supports acknowledging non-chemical intere
 ## Evidence gaps
 
 - No independent head-to-head evidence compares current Epres, K18, and OLAPLEX Nº.3PLUS under their official protocols.
-- No validated consumer diagnostic maps roughness, snapping, breakage, or home elasticity to a specific bond mechanism.
+- No validated consumer diagnostic maps roughness, snapping, breakage, or home elasticity to a specific bond mechanism; roughness alone is especially non-specific.
 - No strong evidence establishes the Personal Plan's exact chemical or non-chemical tier thresholds.
 - No defensible universal Bondbuilder cadence exists independently of the exact product protocol.
 - No verified V1 evidence supports a universal product-weight ranking or fine-hair preference among the current primary products.

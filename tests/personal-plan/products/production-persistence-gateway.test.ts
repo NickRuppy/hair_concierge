@@ -92,7 +92,14 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
         requirements,
         { portfolioVersionId: "portfolio-a", createdAt: "2026-08-08T00:01:00.000Z" },
       ),
-    loadRefinedNeedSnapshot: async () => ({ needs: [] }) as never,
+    loadRefinedNeedSnapshot: async () =>
+      ({
+        inputHash: draft.authoritySnapshot?.refinedInputHash ?? "refined-input-a",
+        profile: {
+          source: { projection: "refined_post_plan" },
+          hair: { thickness: "normal" },
+        },
+      }) as never,
     loadSourceRevision: async () => 7,
     loadCurrentRefinedVersionId: async () => draft.refinedVersionId,
     loadAuthorityFacts: async () => ({
@@ -103,6 +110,54 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
     loadDraft: async (input) => (input.userId === "owner-a" ? draft : null),
   }
 }
+
+test("loadOrCreate CAS-repairs a persisted cursorless capture draft", async () => {
+  const initial = createStage3Draft({
+    draftId: "draft-stranded-capture",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements,
+    now: "2026-08-08T00:00:00.000Z",
+  })
+  const stranded: Stage3ProductDraft = {
+    ...initial,
+    pass: "product_capture",
+    categoryCursor: null,
+    completedCaptureCategories: ["conditioner"],
+    uncoveredRoles: [
+      {
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        reason: "no_product_owned",
+      },
+    ],
+  }
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(stranded),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  const result = await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: [],
+  })
+
+  assert.equal(saves, 1)
+  assert.equal(result.draft.pass, "product_decisions")
+  assert.equal(result.draft.categoryCursor, null)
+  assert.equal(result.draft.revision, stranded.revision + 1)
+})
 
 function authorityDraft(): Stage3ProductDraft {
   const draft = readyDraft()
@@ -505,6 +560,61 @@ test("production gateway persists complete category assignments atomically and r
   assert.equal(invalidSaves, 0)
 })
 
+test("production gateway finalizes category assignments and gaps with one CAS save", async () => {
+  const shampooRequirements: Stage3CategoryRequirement[] = [
+    {
+      category: "shampoo",
+      requiredRoles: ["shampoo_everyday"],
+      needSummary: "Sanfte Reinigung",
+      authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+    },
+  ]
+  const shampooDraft = createStage3Draft({
+    draftId: "draft-shampoo-finalize",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: shampooRequirements,
+    now: "2026-08-08T00:00:00.000Z",
+  })
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(),
+      loadDraft: async () => shampooDraft,
+      loadRequirements: async () => shampooRequirements,
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  const result = await gateway.mutate({
+    draftId: shampooDraft.draftId,
+    expectedRevision: shampooDraft.revision,
+    mutation: {
+      type: "finalize_capture_category",
+      category: "shampoo",
+      assignments: [],
+      uncoveredRoles: [
+        { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
+      ],
+    },
+  })
+
+  assert.equal(result.status, "saved")
+  assert.equal(saves, 1)
+  if (result.status === "saved") {
+    assert.equal(result.draft.revision, shampooDraft.revision + 1)
+    assert.deepEqual(result.draft.completedCaptureCategories, ["shampoo"])
+    assert.deepEqual(result.draft.uncoveredRoles, [
+      { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
+    ])
+  }
+})
+
 test("semantic decision intent is evaluated and persisted as a server-authored decision", async () => {
   const draft = authorityDraft()
   const saved: Stage3ProductDraft[] = []
@@ -543,6 +653,75 @@ test("semantic decision intent is evaluated and persisted as a server-authored d
     recommendationFactFingerprint: null,
     coverageRuleIds: [],
   })
+})
+
+test("one immutable refined context is shared across multiple owned-product evaluations", async () => {
+  const first = authorityDraft()
+  const draft: Stage3ProductDraft = {
+    ...first,
+    products: [
+      ...first.products,
+      {
+        ...first.products[0]!,
+        capturedProductId: "capture-b",
+        userProductId: "owned-b",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-b",
+          displayName: "Pflege B",
+          category: "conditioner",
+        },
+      },
+    ],
+    roleAssignments: [
+      ...first.roleAssignments,
+      {
+        capturedProductId: "capture-b",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+    ],
+  }
+  let currentVersionReads = 0
+  let refinedSnapshotReads = 0
+  let saves = 0
+  const seenContexts = new Set<unknown>()
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadCurrentRefinedVersionId: async () => {
+        currentVersionReads += 1
+        return draft.refinedVersionId
+      },
+      loadRefinedNeedSnapshot: async () => {
+        refinedSnapshotReads += 1
+        return {
+          inputHash: "refined-input-a",
+          profile: {
+            source: { projection: "refined_post_plan" },
+            hair: { thickness: "normal" },
+          },
+        } as never
+      },
+      loadAuthorityFacts: async (input) => {
+        seenContexts.add(input.context)
+        return conditionerFacts()
+      },
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  const evaluations = await gateway.evaluateDecisions({ draftId: draft.draftId })
+
+  assert.equal(evaluations.length, 2)
+  assert.equal(currentVersionReads, 1)
+  assert.equal(refinedSnapshotReads, 1)
+  assert.equal(seenContexts.size, 1)
+  assert.equal(saves, 0)
 })
 
 test("a server-selected conditioner recommendation persists as a planned purchase", async () => {
@@ -687,6 +866,31 @@ test("forged subjects, actions, candidates and stale sources fail closed before 
   await assert.rejects(
     () =>
       staleGateway.resolveDecision({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intent: {
+          type: "resolve_decision",
+          subjectKey: "decision:conditioner:conditioner_rinse_out:capture-a",
+          action: "keep_owned",
+        },
+      }),
+    /stale_refined_source/,
+  )
+
+  const malformedRefinedGateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...base,
+      loadRefinedNeedSnapshot: async () =>
+        ({
+          inputHash: "refined-input-a",
+          profile: { source: { projection: "refined_post_plan" }, hair: {} },
+        }) as never,
+    },
+  })
+  await assert.rejects(
+    () =>
+      malformedRefinedGateway.resolveDecision({
         draftId: draft.draftId,
         expectedRevision: draft.revision,
         intent: {

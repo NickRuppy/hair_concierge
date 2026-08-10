@@ -16,18 +16,30 @@ export function getRoutineStatus(item: RoutineItem): RoutineStatus {
     return { label: "Nicht empfohlen · von dir eingeplant", tone: "bg-violet-50 text-violet-900" }
   }
   if (item.state.availability === "planned") {
-    return { label: "Geplant", tone: "bg-amber-50 text-amber-900" }
+    return {
+      label: "Geplant",
+      tone: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
+    }
   }
   if (item.state.availability === "pending_review") {
-    return { label: "Noch in Prüfung", tone: "bg-sky-50 text-sky-900" }
+    return {
+      label: "Noch in Prüfung",
+      tone: "bg-[var(--status-neutral-bg)] text-[var(--status-neutral-text)]",
+    }
   }
   if (item.state.availability === "none") {
-    return { label: "Noch nicht abgedeckt", tone: "bg-rose-50 text-rose-900" }
+    return {
+      label: "Noch nicht abgedeckt",
+      tone: "bg-[var(--status-danger-bg)] text-[var(--status-danger-text)]",
+    }
   }
   if (!item.executable) {
-    return { label: "Noch nicht einsatzbereit", tone: "bg-amber-50 text-amber-900" }
+    return {
+      label: "Noch nicht einsatzbereit",
+      tone: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
+    }
   }
-  return { label: "Aktiv", tone: "bg-emerald-50 text-emerald-900" }
+  return { label: "Aktiv", tone: "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]" }
 }
 
 export function RoutineStatusBadge({ item }: { item: RoutineItem }) {

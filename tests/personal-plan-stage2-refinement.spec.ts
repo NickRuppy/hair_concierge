@@ -12,10 +12,12 @@ async function begin(page: Page, scenario = "ready") {
   await expect(page.getByRole("heading", { level: 2 })).toBeFocused()
 }
 
+const continueButton = (page: Page) => page.getByRole("button", { name: "Weiter", exact: true })
+
 async function chooseAndContinue(page: Page, name: RegExp | string) {
-  await page.getByRole("button", { name }).click()
-  await expect(page.getByRole("button", { name: "Weiter" })).toBeEnabled()
-  await page.getByRole("button", { name: "Weiter" }).click()
+  await page.getByRole("button", { name, exact: typeof name === "string" }).click()
+  await expect(continueButton(page)).toBeEnabled()
+  await continueButton(page).click()
 }
 
 async function chooseNoneAndContinue(page: Page, label = "Nichts davon") {
@@ -24,12 +26,13 @@ async function chooseNoneAndContinue(page: Page, label = "Nichts davon") {
   })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")
-  await expect(page.getByRole("button", { name: "Weiter" })).toBeEnabled()
-  await page.getByRole("button", { name: "Weiter" }).click()
+  await expect(continueButton(page)).toBeEnabled()
+  await continueButton(page).click()
 }
 
-async function finishNeutral(page: Page) {
-  await chooseNoneAndContinue(page)
+async function finishNeutral(page: Page, shampooAlreadySelected = false) {
+  if (shampooAlreadySelected) await continueButton(page).click()
+  else await chooseAndContinue(page, "Shampoo")
   await chooseAndContinue(page, "2x/Woche")
   await chooseAndContinue(page, "Kein Handtuch oder Tuch")
   await chooseNoneAndContinue(page)
@@ -54,20 +57,20 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(
       page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
     ).toBeVisible()
-    await expect(page.getByRole("button", { name: "Weiter" })).toBeDisabled()
+    await expect(continueButton(page)).toBeDisabled()
 
     const shampoo = page.getByRole("button", { name: "Shampoo", exact: true })
     await shampoo.focus()
     await page.keyboard.press("Enter")
     await expect(shampoo).toHaveAttribute("aria-pressed", "true")
-    await expect(page.getByRole("button", { name: "Weiter" })).toBeEnabled()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await expect(continueButton(page)).toBeEnabled()
+    await continueButton(page).click()
     await expect(
       page.getByRole("heading", { name: "Wie oft wäschst du deine Haare nass?" }),
     ).toBeVisible()
 
     await page.getByRole("button", { name: "Zurück" }).click()
-    await finishNeutral(page)
+    await finishNeutral(page, true)
 
     const bridge = page.locator("[data-refined-version-id]")
     await expect(bridge).toBeVisible()
@@ -89,16 +92,16 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await chooseAndContinue(page, "2x/Woche")
     await page.getByRole("button", { name: "Brennend, schmerzhaft oder entzündet" }).click()
     await expect(page.getByText(/kosmetische Kopfhaut-Empfehlungen pausieren/i)).toBeVisible()
-    await page.getByRole("button", { name: "Weiter" }).click()
-    await chooseAndContinue(page, "Ja, als gelegentliche Brücke")
+    await continueButton(page).click()
+    await chooseAndContinue(page, "Ja, gelegentlich zwischen den Wäschen")
     await chooseAndContinue(page, "Braun")
     await chooseAndContinue(page, "Im trockenen Haar als Finish")
     await page.getByRole("button", { name: "Mikrofaser-Handtuch" }).click()
     await page.getByRole("button", { name: "Sanft ausdrücken / scrunchen" }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await page.getByRole("button", { name: "Lufttrocknen" }).click()
     await page.getByRole("button", { name: "Diffusor oder formender Luftstrom" }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await chooseAndContinue(page, "Glätteisen")
 
     await expect(
@@ -106,13 +109,13 @@ test.describe("Stage 2 refinement Labs preview", () => {
     ).toBeVisible()
     await page.getByRole("button", { name: "2x/Woche" }).click()
     await page.getByRole("button", { name: "Immer" }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await expect(
       page.getByRole("heading", { name: /Wie oft nutzt du das Glätteisen/ }),
     ).toBeVisible()
     await page.getByRole("button", { name: "2x/Woche" }).click()
     await page.getByRole("button", { name: "Manchmal" }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await chooseNoneAndContinue(page)
     await expect(page.locator("[data-refined-version-id]")).toBeVisible()
     await expect(page.getByText(/Ergebnis|Veränderungskarte|dein Ergebnis/i)).toHaveCount(0)
@@ -122,7 +125,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await begin(page, "save-error")
     const shampoo = page.getByRole("button", { name: "Shampoo", exact: true })
     await shampoo.click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await expect(page.getByRole("alert").filter({ hasText: /nicht geklappt/i })).toBeVisible()
     await expect(shampoo).toHaveAttribute("aria-pressed", "true")
     await expect(page.getByRole("button", { name: "Erneut versuchen" })).toBeVisible()
@@ -156,7 +159,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
   }) => {
     await begin(page, "conflict")
     await page.getByRole("button", { name: "Shampoo", exact: true }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await expect(
       page.getByRole("alert").filter({ hasText: /neuere gespeicherte Antworten/i }),
     ).toBeVisible()
@@ -167,7 +170,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
       "aria-pressed",
       "false",
     )
-    await chooseNoneAndContinue(page)
+    await chooseAndContinue(page, "Shampoo")
     await expect(
       page.getByRole("heading", { name: "Wie oft wäschst du deine Haare nass?" }),
     ).toBeVisible()
@@ -190,7 +193,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     ).toBeVisible()
     const none = page.getByRole("button", { name: /Nichts davon; andere Auswahl wird gelöscht/ })
     await expect(none).toHaveAttribute("aria-pressed", "true")
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await expect(
       page.getByRole("alert").filter({ hasText: /neuere gespeicherte Antworten/i }),
     ).toHaveCount(0)
@@ -213,9 +216,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
             return rect.bottom >= window.innerHeight - 2 && rect.top < window.innerHeight
           }),
         ).toBe(true)
-        const lastChoice = page.getByRole("button", {
-          name: /Nichts davon; andere Auswahl wird gelöscht/,
-        })
+        const lastChoice = page.getByRole("button", { name: /Keine weiteren; nur weitere/ })
         await lastChoice.scrollIntoViewIfNeeded()
         expect(
           await lastChoice.evaluate(
@@ -238,7 +239,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
         await expect(dock).toHaveCount(0)
         if (width === 1280) {
           await expect(
-            page.getByText("Dein Bedarfsplan steht. Jetzt wird die Routine präziser."),
+            page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
           ).toBeInViewport()
         }
         expect(
@@ -297,7 +298,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     expect(geometry.banner!.bottom).toBeLessThanOrEqual(geometry.dock!.top - 4)
 
     await page.getByRole("button", { name: "Shampoo", exact: true }).click()
-    await page.getByRole("button", { name: "Weiter" }).click()
+    await continueButton(page).click()
     await expect(
       page.getByRole("heading", { name: "Wie oft wäschst du deine Haare nass?" }),
     ).toBeVisible()

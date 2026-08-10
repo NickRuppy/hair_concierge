@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto"
+import { createServer } from "node:http"
 import { readFileSync } from "node:fs"
 import { expect, test } from "@playwright/test"
 import { resolveAuthRedirectPath, sanitizeAuthRedirectPath } from "../src/app/auth/confirm/route"
+import { buildAuthenticatedAppRedirectUrl } from "../src/lib/supabase/middleware"
 import { handleSendMagicLink } from "../src/app/api/auth/send-magic-link/route"
 import { handleSendSetupLink } from "../src/app/api/auth/send-setup-link/route"
 import { handleSetCheckoutPassword } from "../src/app/api/auth/set-checkout-password/route"
@@ -91,6 +93,12 @@ function stubDeps(overrides: Partial<Parameters<typeof handleSetCheckoutPassword
 test("auth confirm keeps only same-origin relative next paths", () => {
   expect(sanitizeAuthRedirectPath("/onboarding")).toBe("/onboarding")
   expect(sanitizeAuthRedirectPath("/chat?tab=routine")).toBe("/chat?tab=routine")
+  expect(
+    sanitizeAuthRedirectPath(
+      "/routine?tab=morning&error=link_expired&code=secret&token_hash=token&type=magiclink",
+    ),
+  ).toBe("/routine?tab=morning")
+  expect(sanitizeAuthRedirectPath("/auth/confirm?next=/routine")).toBe("/chat")
   expect(sanitizeAuthRedirectPath("//evil.example/onboarding")).toBe("/chat")
   expect(sanitizeAuthRedirectPath("/\\evil.example\\onboarding")).toBe("/chat")
   expect(sanitizeAuthRedirectPath("https://evil.example/onboarding")).toBe("/chat")
@@ -119,6 +127,51 @@ test("auth confirm allows password recovery links to land on password setup", ()
   })
 
   expect(resolveAuthRedirectPath(params, "https://hair.example")).toBe("/auth/update-password")
+})
+
+test("authenticated auth cleanup cannot resurrect an expired-link screen through Back or Forward", async ({
+  page,
+}) => {
+  const authRequests: string[] = []
+  const server = createServer((request, response) => {
+    const requestUrl = new URL(request.url ?? "/", `http://${request.headers.host}`)
+    if (requestUrl.pathname === "/auth") {
+      authRequests.push(requestUrl.toString())
+      const cleanDestination = buildAuthenticatedAppRedirectUrl(requestUrl, "/chat")
+      response.writeHead(307, { location: cleanDestination.toString() })
+      response.end()
+      return
+    }
+
+    response.writeHead(200, { "content-type": "text/html" })
+    response.end(`<main data-path="${requestUrl.pathname}">${requestUrl.pathname}</main>`)
+  })
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve))
+  const address = server.address()
+  if (!address || typeof address !== "object") throw new Error("test server did not bind")
+  const origin = `http://127.0.0.1:${address.port}`
+
+  try {
+    await page.goto(`${origin}/before`)
+    await page.goto(
+      `${origin}/auth?error=link_expired&code=consumed&token_hash=secret&type=magiclink`,
+    )
+
+    expect(page.url()).toBe(`${origin}/chat`)
+    expect(await page.goBack()).not.toBeNull()
+    expect(page.url()).toBe(`${origin}/before`)
+    expect(await page.goForward()).not.toBeNull()
+    expect(page.url()).toBe(`${origin}/chat`)
+    expect(page.url()).not.toContain("link_expired")
+    expect(page.url()).not.toContain("token_hash")
+    expect(authRequests).toEqual([
+      `${origin}/auth?error=link_expired&code=consumed&token_hash=secret&type=magiclink`,
+    ])
+  } finally {
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    )
+  }
 })
 
 test("rejects missing request body before rate limiting or Stripe work", async () => {

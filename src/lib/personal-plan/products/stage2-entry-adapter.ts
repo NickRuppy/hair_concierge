@@ -1,4 +1,6 @@
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import type { Stage3AuthorityEvaluation } from "./authority/contracts"
+import type { Stage3DraftResponse } from "./gateway"
 
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "./contracts"
@@ -22,6 +24,54 @@ const NEED_SUMMARIES: Record<PersonalPlanCategory, string> = {
 }
 
 type Stage3EntryIds = Pick<Stage3EntryContext, "personalPlanId" | "refinedVersionId">
+
+export type Stage3Bootstrap = {
+  entryContext: Stage3EntryContext
+  draft: Stage3DraftResponse["draft"]
+  requirements: Stage3DraftResponse["requirements"]
+  authorityEvaluations: Stage3AuthorityEvaluation[]
+}
+
+export function buildStage3Bootstrap(
+  response: Stage3DraftResponse & { authorityEvaluations?: Stage3AuthorityEvaluation[] },
+  ids: Stage3EntryIds,
+): Stage3Bootstrap {
+  const personalPlanId = requireOpaqueId(ids.personalPlanId, "personalPlanId")
+  const refinedVersionId = requireOpaqueId(ids.refinedVersionId, "refinedVersionId")
+  if (
+    response.draft.personalPlanId !== personalPlanId ||
+    response.draft.refinedVersionId !== refinedVersionId
+  ) {
+    throw new Error("Stage 3 bootstrap does not match the requested plan version")
+  }
+  if (!Array.isArray(response.requirements)) {
+    throw new Error("Stage 3 bootstrap requires canonical requirements")
+  }
+  if (!response.draft.authoritySnapshot) {
+    throw new Error("Stage 3 bootstrap requires an authority snapshot")
+  }
+  if (!Array.isArray(response.authorityEvaluations)) {
+    throw new Error("Stage 3 bootstrap requires authority evaluations")
+  }
+
+  return {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId,
+      refinedVersionId,
+      orderedCategories: response.requirements,
+      inventoryPrompts: response.requirements.map((requirement) => ({
+        category: requirement.category,
+        allowsMultiple: true,
+        allowsExplicitNone: true,
+      })),
+      authoritySnapshot: response.draft.authoritySnapshot,
+    },
+    draft: response.draft,
+    requirements: response.requirements,
+    authorityEvaluations: response.authorityEvaluations,
+  }
+}
 
 function requireOpaqueId(value: string, label: keyof Stage3EntryIds): string {
   if (!value.trim()) {
@@ -113,7 +163,7 @@ export function buildStage3EntryContext(
       schemaVersion: 1,
       refinedNeedVersionId: refinedVersionId,
       refinedInputHash: snapshot.inputHash,
-      ...(snapshot.profile.routine
+      ...(snapshot.profile.routine?.currentProductLoad.state === "known"
         ? {
             productLoadContext: {
               schemaVersion: 1 as const,
@@ -128,10 +178,8 @@ export function buildStage3EntryContext(
                 snapshot.profile.routine.shampooFrequency.state === "known"
                   ? snapshot.profile.routine.shampooFrequency.value
                   : null,
-              oilPurposes:
-                snapshot.profile.routine.currentProductLoad.state === "known"
-                  ? [...snapshot.profile.routine.currentProductLoad.value.oilPurposes]
-                  : [],
+              oilPurposes: [...snapshot.profile.routine.currentProductLoad.value.oilPurposes],
+              ownedCategories: [...snapshot.profile.routine.currentProductLoad.value.categories],
             },
           }
         : {}),

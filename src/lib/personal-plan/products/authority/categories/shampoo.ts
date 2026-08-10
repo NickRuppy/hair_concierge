@@ -1,3 +1,6 @@
+import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
+import { deriveShampooBucket, type ShampooBucket } from "@/lib/shampoo/constants"
+
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
@@ -15,6 +18,25 @@ import {
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
+
+type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
+
+export function expectedShampooBucket(input: {
+  role: PlanProductRole
+  target: ShampooTarget
+}): ShampooBucket | null {
+  if (input.role === "shampoo_dandruff") {
+    return deriveShampooBucket(null, "dandruff")
+  }
+  if (input.role !== "shampoo_everyday") return null
+
+  const condition = input.target.everydayConstraint.includes("irritation")
+    ? "irritated"
+    : input.target.everydayConstraint.includes("dry_scalp")
+      ? "dry_flakes"
+      : null
+  return deriveShampooBucket(input.target.scalpRoute, condition)
+}
 
 function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3ShampooFacts) {
   const target = input.categoryDecision.target
@@ -71,11 +93,11 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
   if (facts.spec.scalpRoute === null) missing.push("scalp_route")
   if (facts.spec.cleansingIntensity === null) missing.push("cleansing_intensity")
   if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
+  const requiredBucket = expectedShampooBucket({ role: input.role, target })
+  if (requiredBucket === null) missing.push("shampoo_bucket_target")
   if (missing.length) return { verdict: "unknown" as const, criteria, missing }
 
-  const requiredBucket =
-    input.role === "shampoo_dandruff" ? ["dandruff", "schuppen"] : ["everyday", "normal"]
-  if (!requiredBucket.includes(facts.spec.shampooBucket!)) {
+  if (facts.spec.shampooBucket !== requiredBucket) {
     return {
       verdict: "mismatch" as const,
       criteria: [

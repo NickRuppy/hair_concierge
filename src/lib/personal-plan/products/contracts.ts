@@ -115,6 +115,7 @@ export type Stage3ProductLoadContextV1 = {
   hasLowVolumeOrWeighedDown: boolean
   shampooFrequency: ProductFrequency | "does_not_wash" | null
   oilPurposes: Array<"prewash_lengths" | "damp_leave_on" | "dry_finish" | "scalp">
+  ownedCategories?: PersonalPlanCategory[]
 }
 
 export type Stage3ProductLoadResolutionV1 = {
@@ -150,6 +151,7 @@ export type Stage3CatalogCandidate = {
   displayName: string
   category: PersonalPlanCategory
   brandName: string | null
+  imageUrl?: string | null
   confidence: "exact" | "likely" | "category_mismatch"
 }
 
@@ -183,6 +185,7 @@ export type Stage3ProductIdentity =
       productId: string
       displayName: string
       category: PersonalPlanCategory
+      imageUrl?: string | null
     }
   | {
       kind: "pending_submission"
@@ -190,6 +193,7 @@ export type Stage3ProductIdentity =
       displayName: string
       category: PersonalPlanCategory
       reviewStatus: "pending_review" | "needs_more_info"
+      imageUrl?: string | null
     }
 
 export type Stage3CapturedProduct = {
@@ -403,6 +407,7 @@ export const stage3ProductIdentitySchema: z.ZodType<Stage3ProductIdentity> = z.d
       productId: idSchema,
       displayName: z.string().min(1),
       category: personalPlanCategorySchema,
+      imageUrl: z.string().url().nullable().optional(),
     }),
     z.object({
       kind: z.literal("pending_submission"),
@@ -410,6 +415,7 @@ export const stage3ProductIdentitySchema: z.ZodType<Stage3ProductIdentity> = z.d
       displayName: z.string().min(1),
       category: personalPlanCategorySchema,
       reviewStatus: z.enum(["pending_review", "needs_more_info"]),
+      imageUrl: z.string().url().nullable().optional(),
     }),
   ],
 )
@@ -626,6 +632,7 @@ const stage3ProductLoadContextSchema: z.ZodType<Stage3ProductLoadContextV1> = z
     hasLowVolumeOrWeighedDown: z.boolean(),
     shampooFrequency: z.union([productFrequencySchema, z.literal("does_not_wash")]).nullable(),
     oilPurposes: z.array(z.enum(["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"])),
+    ownedCategories: z.array(personalPlanCategorySchema).optional(),
   })
   .strict()
 

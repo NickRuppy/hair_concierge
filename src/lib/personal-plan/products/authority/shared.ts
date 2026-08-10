@@ -88,12 +88,16 @@ export function protocolForRole<C extends PersonalPlanCategory>(
 
 export function commonUnknownFacts<C extends PersonalPlanCategory>(
   input: Stage3AuthorityInput<C>,
+  options: { requiresSuitableThickness?: boolean } = {},
 ): string[] {
   const facts = input.productFacts
   if (!facts) return input.capturedProductId ? ["catalog_product_facts"] : []
   const missing: string[] = []
   if (facts.lifecycleStatus === null) missing.push("lifecycle_status")
-  if (facts.suitableThicknesses === null || facts.suitableThicknesses.length === 0) {
+  if (
+    options.requiresSuitableThickness !== false &&
+    (facts.suitableThicknesses === null || facts.suitableThicknesses.length === 0)
+  ) {
     missing.push("suitable_thicknesses")
   }
   if (facts.knownReaction === null) missing.push("known_reaction")

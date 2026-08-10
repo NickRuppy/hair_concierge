@@ -13,8 +13,15 @@ import {
   createHttpStage3IntakeClient,
   createHttpStage3ProductsGateway,
 } from "@/lib/personal-plan/products/http-gateway"
-import type { Stage3EntryContext } from "@/lib/personal-plan/products/contracts"
-import type { Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
+import type { Stage3AuthorityEvaluation } from "@/lib/personal-plan/products/authority/contracts"
+import {
+  Stage3ProductsGatewayError,
+  type Stage3ProductsGateway,
+} from "@/lib/personal-plan/products/gateway"
+import {
+  buildStage3Bootstrap,
+  type Stage3Bootstrap,
+} from "@/lib/personal-plan/products/stage2-entry-adapter"
 import { createHttpStage2RefinementGateway } from "@/lib/personal-plan/refinement/http-gateway"
 
 import {
@@ -35,6 +42,25 @@ export type PlanStartInitialJourney =
   | { stage: "stage1"; refinementAvailable?: boolean }
   | { stage: "stage2"; refinementAvailable?: boolean }
   | { stage: "stage3"; refinedVersionId: string }
+
+export type Stage3LoadRecoveryMode = "retry_stage3" | "reload_server_frontier"
+
+export function stage3LoadRecoveryMode(error: unknown): Stage3LoadRecoveryMode {
+  return error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source"
+    ? "reload_server_frontier"
+    : "retry_stage3"
+}
+
+export function recoverPlanStartStage3Load(
+  mode: Stage3LoadRecoveryMode,
+  actions: { retryStage3: () => void; reloadServerFrontier: () => void },
+): void {
+  if (mode === "reload_server_frontier") {
+    actions.reloadServerFrontier()
+    return
+  }
+  actions.retryStage3()
+}
 
 export type PlanStartFlowProps =
   | { state: "ready"; plan: PlanStartReadyViewModel }
@@ -74,10 +100,14 @@ export function interpretPlanStartApiResponse(status: number, body: unknown): Pl
 
 export function PlanStartProductionGate({
   initialJourney = { stage: "stage1" },
+  initialPlan,
 }: {
   initialJourney?: PlanStartInitialJourney
+  initialPlan?: PlanStartReadyViewModel
 }) {
-  const [state, setState] = useState<PlanStartApiState>({ state: "loading" })
+  const [state, setState] = useState<PlanStartApiState>(() =>
+    initialPlan ? { state: "ready", plan: initialPlan } : { state: "loading" },
+  )
 
   const load = useCallback(async (showLoading = false) => {
     if (showLoading) setState({ state: "loading" })
@@ -89,6 +119,7 @@ export function PlanStartProductionGate({
   }, [])
 
   useEffect(() => {
+    if (!shouldRequestPlanStartOnMount(initialPlan)) return
     let cancelled = false
     void requestPlanStart().then(
       (nextState) => {
@@ -101,12 +132,16 @@ export function PlanStartProductionGate({
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [initialPlan])
 
   if (state.state === "retryable_error")
     return <PlanStartRetryableError onRetry={() => void load(true)} />
   if (state.state !== "ready" || !state.plan.personalPlanId) return <PlanStartFlow {...state} />
   return <PlanStartCustomerJourney plan={state.plan} initialJourney={initialJourney} />
+}
+
+export function shouldRequestPlanStartOnMount(initialPlan?: PlanStartReadyViewModel): boolean {
+  return !initialPlan
 }
 
 async function requestPlanStart(): Promise<PlanStartApiState> {
@@ -119,11 +154,11 @@ async function requestPlanStart(): Promise<PlanStartApiState> {
   return interpretPlanStartApiResponse(response.status, body)
 }
 
-export async function loadPlanStartStage3Entry(input: {
+export async function loadPlanStartStage3Bootstrap(input: {
   gateway: Pick<Stage3ProductsGateway, "loadOrCreate">
   personalPlanId: string
   refinedVersionId: string
-}): Promise<Stage3EntryContext> {
+}): Promise<Stage3Bootstrap> {
   const loaded = await input.gateway.loadOrCreate({
     draftId: "client-derived",
     userId: "client-derived",
@@ -131,20 +166,10 @@ export async function loadPlanStartStage3Entry(input: {
     refinedVersionId: input.refinedVersionId,
     requirements: [],
   })
-  if (!Array.isArray(loaded.requirements)) throw new Error("stage3_requirements_unavailable")
-  if (!loaded.draft.authoritySnapshot) throw new Error("stage3_authority_unavailable")
-  return {
-    schemaVersion: 1,
-    personalPlanId: loaded.draft.personalPlanId,
-    refinedVersionId: loaded.draft.refinedVersionId,
-    orderedCategories: loaded.requirements,
-    inventoryPrompts: loaded.requirements.map((requirement) => ({
-      category: requirement.category,
-      allowsMultiple: true,
-      allowsExplicitNone: true,
-    })),
-    authoritySnapshot: loaded.draft.authoritySnapshot,
-  }
+  return buildStage3Bootstrap(
+    loaded as typeof loaded & { authorityEvaluations?: Stage3AuthorityEvaluation[] },
+    input,
+  )
 }
 
 export function PlanStartCustomerJourney({
@@ -155,17 +180,18 @@ export function PlanStartCustomerJourney({
   initialJourney: PlanStartInitialJourney
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
-  const [entryContext, setEntryContext] = useState<Stage3EntryContext | null>(null)
-  const [stage3LoadState, setStage3LoadState] = useState<"idle" | "loading" | "error">(
-    initialJourney.stage === "stage3" ? "loading" : "idle",
-  )
+  const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
+  const [returningToRefinement, setReturningToRefinement] = useState(false)
+  const [stage3LoadState, setStage3LoadState] = useState<
+    "idle" | "loading" | Stage3LoadRecoveryMode
+  >(initialJourney.stage === "stage3" ? "loading" : "idle")
   const stage3Gateway = useMemo(() => createHttpStage3ProductsGateway(), [])
   const intakeClient = useMemo(() => createHttpStage3IntakeClient(), [])
   const stage2Gateway = useMemo(() => createHttpStage2RefinementGateway(), [])
-  const loadStage3Entry = useCallback(
-    async (refinedVersionId: string): Promise<Stage3EntryContext> => {
+  const loadStage3Bootstrap = useCallback(
+    async (refinedVersionId: string): Promise<Stage3Bootstrap> => {
       if (!plan.personalPlanId) throw new Error("stage3_plan_unavailable")
-      return loadPlanStartStage3Entry({
+      return loadPlanStartStage3Bootstrap({
         gateway: stage3Gateway,
         personalPlanId: plan.personalPlanId,
         refinedVersionId,
@@ -175,41 +201,42 @@ export function PlanStartCustomerJourney({
   )
   const handleHandoff = useCallback(
     async ({ handoff }: Stage2HandoffPayload) => {
-      setEntryContext(await loadStage3Entry(handoff.refinedVersionId))
+      setStage3Bootstrap(await loadStage3Bootstrap(handoff.refinedVersionId))
       setStage3LoadState("idle")
+      setReturningToRefinement(false)
       setStage("stage3")
     },
-    [loadStage3Entry],
+    [loadStage3Bootstrap],
   )
 
   const resumeStage3 = useCallback(async () => {
     if (initialJourney.stage !== "stage3") return
     setStage3LoadState("loading")
     try {
-      setEntryContext(await loadStage3Entry(initialJourney.refinedVersionId))
+      setStage3Bootstrap(await loadStage3Bootstrap(initialJourney.refinedVersionId))
       setStage3LoadState("idle")
-    } catch {
-      setStage3LoadState("error")
+    } catch (error) {
+      setStage3LoadState(stage3LoadRecoveryMode(error))
     }
-  }, [initialJourney, loadStage3Entry])
+  }, [initialJourney, loadStage3Bootstrap])
 
   useEffect(() => {
     if (initialJourney.stage !== "stage3") return
     let cancelled = false
-    void loadStage3Entry(initialJourney.refinedVersionId).then(
+    void loadStage3Bootstrap(initialJourney.refinedVersionId).then(
       (loaded) => {
         if (cancelled) return
-        setEntryContext(loaded)
+        setStage3Bootstrap(loaded)
         setStage3LoadState("idle")
       },
-      () => {
-        if (!cancelled) setStage3LoadState("error")
+      (error) => {
+        if (!cancelled) setStage3LoadState(stage3LoadRecoveryMode(error))
       },
     )
     return () => {
       cancelled = true
     }
-  }, [initialJourney, loadStage3Entry])
+  }, [initialJourney, loadStage3Bootstrap])
 
   if (stage === "stage2")
     return (
@@ -217,23 +244,38 @@ export function PlanStartCustomerJourney({
         gateway={stage2Gateway}
         onSecondaryExit={() => setStage("stage1")}
         onHandoff={handleHandoff}
+        autoHandoff={!returningToRefinement}
+        directEntry
       />
     )
-  if (stage === "stage3" && !entryContext) {
-    if (stage3LoadState === "error") {
-      return <PlanStartRetryableError onRetry={() => void resumeStage3()} />
+  if (stage === "stage3" && !stage3Bootstrap) {
+    if (stage3LoadState === "retry_stage3" || stage3LoadState === "reload_server_frontier") {
+      return (
+        <PlanStartRetryableError
+          onRetry={() =>
+            recoverPlanStartStage3Load(stage3LoadState, {
+              retryStage3: () => void resumeStage3(),
+              reloadServerFrontier: () => window.location.reload(),
+            })
+          }
+        />
+      )
     }
     return <PlanStartLoading />
   }
-  if (stage === "stage3" && entryContext)
+  if (stage === "stage3" && stage3Bootstrap)
     return (
       <Stage3ProductsFlow
-        entryContext={entryContext}
+        entryContext={stage3Bootstrap.entryContext}
+        bootstrap={stage3Bootstrap}
         draftId="client-derived"
         userId="client-derived"
         gateway={stage3Gateway}
         intakeClient={intakeClient}
-        onBackToRefinement={() => setStage("stage2")}
+        onBackToRefinement={() => {
+          setReturningToRefinement(true)
+          setStage("stage2")
+        }}
       />
     )
   return (
@@ -248,7 +290,7 @@ export function PlanStartCustomerJourney({
   )
 }
 
-type FlowStep = "basis" | "optional" | "transition"
+type FlowStep = "basis" | "optional"
 
 export function PlanStartFlow(
   props: PlanStartFlowProps & {
@@ -262,20 +304,13 @@ export function PlanStartFlow(
 
   const content = useMemo(() => {
     if (props.state !== "ready") return null
-    if (step === "transition" && canRefine)
-      return (
-        <PlanStartTransition
-          onBack={() => setStep(hasOptionalPage ? "optional" : "basis")}
-          onContinue={props.onContinueToRefinement}
-        />
-      )
     if (step === "optional" && props.plan.optional) {
       return (
         <NeedPlanScreen
           screen={props.plan.optional}
           hasOptionalPage
           onBack={() => setStep("basis")}
-          onNext={canRefine ? () => setStep("transition") : undefined}
+          onNext={canRefine ? props.onContinueToRefinement : undefined}
         />
       )
     }
@@ -287,7 +322,7 @@ export function PlanStartFlow(
           hasOptionalPage
             ? () => setStep("optional")
             : canRefine
-              ? () => setStep("transition")
+              ? props.onContinueToRefinement
               : undefined
         }
       />
@@ -440,7 +475,7 @@ export function PlanStartTransition({
             type="button"
             disabled={!onContinue}
             onClick={onContinue}
-            className={`ml-auto inline-flex min-h-11 items-center gap-1 rounded-[12px] ${onContinue ? "bg-[#6B50A0]" : "bg-[#6B50A0]/55"} px-3.5 text-[11px] font-extrabold text-white`}
+            className="personal-plan-primary-action ml-auto inline-flex min-h-11 items-center gap-1 px-4 text-[11px]"
           >
             Plan verfeinern
             <ChevronRight className="h-4 w-4" aria-hidden="true" />

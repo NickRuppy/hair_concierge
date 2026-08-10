@@ -9,12 +9,12 @@ import {
   ProductCaptureScreen,
   ProductDecisionScreen,
   SemanticRoleAssignment,
+  Stage3Shell,
   Stage3SystemState,
   Stage3Transition,
   type Stage3DecisionAction,
 } from "../src/components/personal-plan-products"
 import {
-  PortfolioHandoff,
   Stage3ProductsFlow,
   type Stage3RoutineHandoff,
 } from "../src/components/personal-plan-products/stage3-products-flow"
@@ -28,6 +28,7 @@ import type {
 } from "../src/lib/personal-plan/products/authority/contracts"
 import {
   deriveStage3DecisionSubjects,
+  type Stage3AuthoritySnapshotV1,
   type Stage3EntryContext,
   type Stage3ProductDecision,
   type Stage3ProductDraft,
@@ -37,6 +38,7 @@ import type {
   Stage3MutationResponse,
   Stage3ProductsGateway,
 } from "../src/lib/personal-plan/products/gateway"
+import type { Stage3Bootstrap } from "../src/lib/personal-plan/products/stage2-entry-adapter"
 import { createStage3Draft } from "../src/lib/personal-plan/products/state-machine"
 
 type ClientStateHarness = {
@@ -383,7 +385,7 @@ async function assignEveryRoleToFirstProduct(harness: ClientStateHarness) {
     tree,
     SemanticRoleAssignment,
   )
-  assert.ok(roleScreen)
+  if (!roleScreen) return
   const firstProduct = roleScreen.props.products[0]!
   for (const role of roleScreen.props.roles) {
     roleScreen.props.onToggleRole(firstProduct.capturedProductId, role.role, true)
@@ -500,7 +502,155 @@ test("an unfinished Stage 3 draft resumes at the server-owned category cursor", 
   )
 })
 
-test("only the first capture category exposes a Back action", async () => {
+test("catalog search errors keep manual intake available without claiming no product is owned", async () => {
+  const gateway = createAuthorityTestGateway()
+  gateway.search = async () => {
+    throw new Error("catalog unavailable")
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-search-recovery",
+    refinedVersionId: "refined-search-recovery",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.intakeAvailable, false, "manual intake stays search-led while idle")
+  capture?.props.onQueryChange("mein shampoo")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.searchStatus, "error")
+  assert.equal(capture?.props.intakeAvailable, true)
+  assert.equal(typeof capture?.props.onExplicitNone, "function")
+  capture?.props.onOpenFallbackIntake()
+  tree = await renderSettled(harness)
+  assert.ok(findByType(tree, IntakeFallbackBoundary))
+})
+
+test("bootstrap-only Back skips known-empty categories using the resolved entry context", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "shampoo",
+      requiredRoles: ["shampoo_everyday"],
+      needSummary: "Sanfte Reinigung",
+      authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+    },
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+    {
+      category: "oil",
+      requiredRoles: ["dry_finish"],
+      needSummary: "Finish",
+      authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
+    },
+  ]
+  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
+    schemaVersion: 1 as const,
+    refinedNeedVersionId: "refined-bootstrap-back",
+    refinedInputHash: "hash-bootstrap-back",
+    categoryDecisions: [],
+    coverage: [],
+    orderedCategories: requirements.map(({ category }) => category),
+    authorityVersions: Object.fromEntries(
+      requirements.map(({ category, authorityVersion }) => [category, authorityVersion]),
+    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
+    productLoadContext: {
+      schemaVersion: 1 as const,
+      scalpOiliness: "balanced" as const,
+      deepCleansingScalpPause: false,
+      hasLowVolumeOrWeighedDown: false,
+      shampooFrequency: "weekly_2x" as const,
+      oilPurposes: ["dry_finish" as const],
+      ownedCategories: ["shampoo" as const],
+    },
+  }
+  const bootstrapDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-bootstrap-back",
+      userId: "user-bootstrap-back",
+      personalPlanId: "plan-bootstrap-back",
+      refinedVersionId: "refined-bootstrap-back",
+      requirements,
+      authoritySnapshot,
+      now: "2026-08-09T00:00:00.000Z",
+    }),
+    completedCaptureCategories: ["shampoo", "conditioner"],
+    categoryCursor: "oil",
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: bootstrapDraft.personalPlanId,
+      refinedVersionId: bootstrapDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: requirements.map(({ category }) => ({
+        category,
+        allowsMultiple: true,
+        allowsExplicitNone: true,
+      })),
+      authoritySnapshot,
+    },
+    draft: bootstrapDraft,
+    requirements,
+    authorityEvaluations: [],
+  }
+  const reopened: string[] = []
+  const gateway = createAuthorityTestGateway()
+  gateway.mutate = async (input) => {
+    assert.equal(input.mutation.type, "reopen_capture_category")
+    if (input.mutation.type !== "reopen_capture_category") throw new Error("unexpected mutation")
+    reopened.push(input.mutation.category)
+    return {
+      status: "saved",
+      draft: {
+        ...bootstrapDraft,
+        revision: bootstrapDraft.revision + 1,
+        categoryCursor: input.mutation.category,
+      },
+    }
+  }
+  const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
+
+  let tree = await renderSettled(harness)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.categoryLabel, "Öl")
+  await capture?.props.onBack?.()
+  tree = await renderSettled(harness)
+
+  assert.deepEqual(reopened, ["shampoo"])
+  assert.equal(
+    findByType<React.ComponentProps<typeof ProductCaptureScreen>>(tree, ProductCaptureScreen)?.props
+      .categoryLabel,
+    "Shampoo",
+  )
+})
+
+test("every capture category exposes a safe Back action", async () => {
   const gateway = createAuthorityTestGateway()
   const entryContext: Stage3EntryContext = {
     schemaVersion: 1,
@@ -526,14 +676,15 @@ test("only the first capture category exposes a Back action", async () => {
     ],
   }
   const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+    Stage3ProductsFlow({
+      entryContext,
+      gateway,
+      searchDebounceMs: 0,
+      onBackToRefinement: () => {},
+    }),
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
   await captureCatalogProduct(harness, "Shampoo", "shampoo")
   tree = await renderSettled(harness)
   const firstCapture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
@@ -550,7 +701,7 @@ test("only the first capture category exposes a Back action", async () => {
     ProductCaptureScreen,
   )
   assert.equal(laterCapture?.props.categoryLabel, "Conditioner")
-  assert.equal(laterCapture?.props.onBack, undefined)
+  assert.equal(typeof laterCapture?.props.onBack, "function")
 })
 
 test("editing from a server decision reopens that category through the persisted cursor", async () => {
@@ -574,10 +725,6 @@ test("editing from a server decision reopens that category through the persisted
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
   await captureCatalogProduct(harness, "Shampoo", "shampoo")
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
@@ -585,11 +732,6 @@ test("editing from a server decision reopens that category through the persisted
     ProductCaptureScreen,
   )?.props.onContinue()
   await assignEveryRoleToFirstProduct(harness)
-  tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
   tree = await renderSettled(harness)
   const decision = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
     tree,
@@ -633,10 +775,6 @@ test("two-product Shampoo submits one complete category assignment replacement",
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
   await captureCatalogProduct(harness, "Shampoo", "shampoo")
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
@@ -667,15 +805,236 @@ test("two-product Shampoo submits one complete category assignment replacement",
   )?.props.onContinue()
   tree = await renderSettled(harness)
 
-  assert.equal(
-    findByType<React.ComponentProps<typeof Stage3Transition>>(tree, Stage3Transition)?.props
-      .context,
-    "fit_check",
+  assert.ok(
+    findByType<React.ComponentProps<typeof ProductDecisionScreen>>(tree, ProductDecisionScreen),
   )
-  assert.deepEqual(recordedMutationTypes.slice(-2), [
-    "replace_category_role_assignments",
-    "complete_capture_category",
+  assert.deepEqual(recordedMutationTypes.slice(-1), ["finalize_capture_category"])
+})
+
+test("submitting an unchecked role deliberately records an open not-ready gap", async () => {
+  let finalization:
+    | Extract<
+        Parameters<Stage3ProductsGateway["mutate"]>[0]["mutation"],
+        { type: "finalize_capture_category" }
+      >
+    | undefined
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    if (input.mutation.type === "finalize_capture_category") finalization = input.mutation
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-open-role-gap",
+    refinedVersionId: "refined-open-role-gap",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday", "shampoo_dandruff"],
+        needSummary: "Sanfte Reinigung und Schuppenpflege",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onAddAnotherProduct()
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  let roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  assert.ok(roles)
+  roles.props.onToggleRole(roles.props.products[0]!.capturedProductId, "shampoo_everyday", true)
+  tree = await renderSettled(harness)
+  roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  await roles?.props.onContinue()
+
+  assert.deepEqual(finalization?.uncoveredRoles, [
+    { category: "shampoo", role: "shampoo_dandruff", reason: "not_ready_to_decide" },
   ])
+})
+
+test("role finalization shows saving immediately and suppresses duplicate actions", async () => {
+  let finalizationCalls = 0
+  let blockMutations = false
+  let release: () => void = () => {}
+  const blocker = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    if (blockMutations) {
+      finalizationCalls += 1
+      await blocker
+    }
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-role-saving",
+    refinedVersionId: "refined-role-saving",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await renderSettled(harness)
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onAddAnotherProduct()
+  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  const roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  assert.ok(roles)
+  roles.props.onToggleRole(roles.props.products[0]!.capturedProductId, "shampoo_everyday", true)
+  tree = await renderSettled(harness)
+  const readyRoles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  assert.ok(readyRoles)
+  blockMutations = true
+  readyRoles.props.onContinue()
+  readyRoles.props.onContinue()
+
+  tree = await harness.render()
+  const saving = findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)
+  assert.equal(finalizationCalls, 1)
+  assert.equal(saving?.props.state, "loading")
+  assert.match(saving?.props.title ?? "", /gespeichert/i)
+  release()
+  await renderSettled(harness)
+})
+
+test("no-product capture finalizes every gap with one mutation", async () => {
+  const recordedMutationTypes: string[] = []
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    recordedMutationTypes.push(input.mutation.type)
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-no-product-atomic",
+    refinedVersionId: "refined-no-product-atomic",
+    orderedCategories: [
+      {
+        category: "heat_protectant",
+        requiredRoles: ["pre_heat_protection"],
+        qualifyingRoutes: ["direct_contact_heat"],
+        needSummary: "Schutz vor Hitze",
+        authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [
+      { category: "heat_protectant", allowsMultiple: true, allowsExplicitNone: true },
+    ],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  const tree = await renderSettled(harness)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.ok(capture?.props.onExplicitNone)
+  await capture.props.onExplicitNone()
+
+  assert.deepEqual(recordedMutationTypes, ["finalize_capture_category"])
+})
+
+test("no-product finalization shows saving immediately and suppresses duplicate actions", async () => {
+  let finalizationCalls = 0
+  let release: () => void = () => {}
+  const blocker = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.mutate = async (input) => {
+    finalizationCalls += 1
+    await blocker
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-no-product-saving",
+    refinedVersionId: "refined-no-product-saving",
+    orderedCategories: [
+      {
+        category: "heat_protectant",
+        requiredRoles: ["pre_heat_protection"],
+        qualifyingRoutes: ["direct_contact_heat"],
+        needSummary: "Schutz vor Hitze",
+        authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [
+      { category: "heat_protectant", allowsMultiple: true, allowsExplicitNone: true },
+    ],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await renderSettled(harness)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.ok(capture?.props.onExplicitNone)
+  capture.props.onExplicitNone()
+  capture.props.onExplicitNone()
+
+  tree = await harness.render()
+  const saving = findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)
+  assert.equal(finalizationCalls, 1)
+  assert.equal(saving?.props.state, "loading")
+  release()
+  await renderSettled(harness)
 })
 
 test("unsupported authority offers a non-decision recovery exit to refinement", async () => {
@@ -716,10 +1075,6 @@ test("unsupported authority offers a non-decision recovery exit to refinement", 
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
   await captureCatalogProduct(harness, "Shampoo", "shampoo")
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
@@ -727,11 +1082,6 @@ test("unsupported authority offers a non-decision recovery exit to refinement", 
     ProductCaptureScreen,
   )?.props.onContinue()
   await assignEveryRoleToFirstProduct(harness)
-  tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
   tree = await renderSettled(harness)
 
   const decision = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
@@ -763,12 +1113,6 @@ test("the production-default Stage 3 flow keeps vendor analytics inert", async (
       Stage3ProductsFlow({ searchDebounceMs: 0, gateway }),
     )
     let tree = await renderSettled(harness)
-    const transition = findByType<React.ComponentProps<typeof Stage3Transition>>(
-      tree,
-      Stage3Transition,
-    )
-    transition?.props.onContinue()
-    tree = await renderSettled(harness)
     assert.ok(findByType(tree, ProductCaptureScreen))
   } finally {
     for (const [index, destination] of destinations.entries()) {
@@ -812,14 +1156,6 @@ test("integrated Stage 3 consumes the supplied refined entry context instead of 
     }),
   )
   let tree = await renderSettled(harness)
-  const transition = findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )
-  assert.equal(transition?.props.context, "product_capture")
-  transition?.props.onContinue()
-
-  tree = await renderSettled(harness)
   const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
@@ -862,11 +1198,6 @@ test("production intake retries retain one idempotency identity after a transpor
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
-  tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
@@ -877,6 +1208,7 @@ test("production intake retries retain one idempotency identity after a transpor
     IntakeFallbackBoundary,
   )
   fallback?.props.onFrequencyChange("weekly_1x")
+  fallback?.props.onProductNameChange?.("Test Shampoo")
   tree = await renderSettled(harness)
   fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
     tree,
@@ -913,11 +1245,6 @@ test("fallback intake requires and persists the user's selected product frequenc
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
-  tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
@@ -938,6 +1265,7 @@ test("fallback intake requires and persists the user's selected product frequenc
     IntakeFallbackBoundary,
   )
   fallback?.props.onFrequencyChange("weekly_1x")
+  fallback?.props.onProductNameChange?.("Test Shampoo")
   tree = await renderSettled(harness)
   fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
     tree,
@@ -949,13 +1277,103 @@ test("fallback intake requires and persists the user's selected product frequenc
   assert.deepEqual(submittedFrequencies, ["weekly_1x"])
 })
 
-test("pending UI actions send distinct keep and leave-uncovered semantic intents", async () => {
+test("either final pending-product action advances beyond the decision card", async () => {
+  for (const actionKind of ["pending", "skip"] as const) {
+    const intents: Stage3AuthoritySemanticIntent[] = []
+    const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+    const entryContext: Stage3EntryContext = {
+      schemaVersion: 1,
+      personalPlanId: `plan-pending-${actionKind}`,
+      refinedVersionId: `refined-pending-${actionKind}`,
+      orderedCategories: [
+        {
+          category: "scalp_care",
+          requiredRoles: ["scalp_comfort"],
+          needSummary: "Kopfhaut beruhigen",
+          authorityVersion: CATEGORY_ROLE_POLICIES.scalp_care.authorityVersion,
+        },
+      ],
+      inventoryPrompts: [
+        { category: "scalp_care", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+    }
+    const handoffs: Stage3RoutineHandoff[] = []
+    const harness = createClientStateHarness(() =>
+      Stage3ProductsFlow({
+        entryContext,
+        gateway,
+        searchDebounceMs: 0,
+        handoffRecoveryDelayMs: 0,
+        onOpenRoutine: (handoff) => handoffs.push(handoff),
+      }),
+    )
+
+    let tree = await renderSettled(harness)
+    findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+      tree,
+      ProductCaptureScreen,
+    )?.props.onOpenFallbackIntake()
+    tree = await renderSettled(harness)
+    let fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+      tree,
+      IntakeFallbackBoundary,
+    )
+    fallback?.props.onFrequencyChange("weekly_1x")
+    fallback?.props.onProductNameChange?.("Kopfhaut-Tonic")
+    tree = await renderSettled(harness)
+    fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
+      tree,
+      IntakeFallbackBoundary,
+    )
+    await fallback?.props.onOpen()
+    tree = await renderSettled(harness)
+    findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+      tree,
+      ProductCaptureScreen,
+    )?.props.onContinue()
+    await assignEveryRoleToFirstProduct(harness)
+    tree = await renderSettled(harness)
+    await chooseDecision(harness, actionKind)
+    tree = await renderSettled(harness)
+
+    assert.equal(
+      findByType<React.ComponentProps<typeof ProductDecisionScreen>>(tree, ProductDecisionScreen),
+      null,
+      `${actionKind} should advance past the final pending decision`,
+    )
+    assert.equal(handoffs.length, 1)
+    const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+      tree,
+      Stage3SystemState,
+    )
+    assert.equal(recovery?.props.actionLabel, "Routine öffnen")
+    recovery?.props.onAction?.()
+    assert.equal(handoffs.length, 2, "the delayed recovery retries the direct handoff")
+    assert.deepEqual(
+      intents.map((intent) => intent.action),
+      [actionKind === "pending" ? "keep_pending" : "leave_uncovered"],
+    )
+  }
+})
+
+test("pending decision shows saving synchronously and suppresses a second immediate intent", async () => {
   const intents: Stage3AuthoritySemanticIntent[] = []
   const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
+  const originalResolveDecision = gateway.resolveDecision.bind(gateway)
+  let releaseFirstDecision!: () => void
+  const firstDecisionPending = new Promise<void>((resolve) => {
+    releaseFirstDecision = resolve
+  })
+  let resolveCalls = 0
+  gateway.resolveDecision = async (input) => {
+    resolveCalls += 1
+    await firstDecisionPending
+    return originalResolveDecision(input)
+  }
   const entryContext: Stage3EntryContext = {
     schemaVersion: 1,
-    personalPlanId: "plan-pending-skip",
-    refinedVersionId: "refined-pending-skip",
+    personalPlanId: "plan-pending-double-submit",
+    refinedVersionId: "refined-pending-double-submit",
     orderedCategories: [
       {
         category: "scalp_care",
@@ -971,11 +1389,6 @@ test("pending UI actions send distinct keep and leave-uncovered semantic intents
   )
 
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
-    tree,
-    Stage3Transition,
-  )?.props.onContinue()
-  tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
@@ -986,12 +1399,13 @@ test("pending UI actions send distinct keep and leave-uncovered semantic intents
     IntakeFallbackBoundary,
   )
   fallback?.props.onFrequencyChange("weekly_1x")
+  fallback?.props.onProductNameChange?.("Kopfhaut-Tonic")
   tree = await renderSettled(harness)
   fallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
     tree,
     IntakeFallbackBoundary,
   )
-  await fallback?.props.onOpen()
+  fallback?.props.onOpen()
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
@@ -999,16 +1413,138 @@ test("pending UI actions send distinct keep and leave-uncovered semantic intents
   )?.props.onContinue()
   await assignEveryRoleToFirstProduct(harness)
   tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof Stage3Transition>>(
+  const decisionScreen = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
     tree,
-    Stage3Transition,
-  )?.props.onContinue()
-  await chooseDecision(harness, "skip")
+    ProductDecisionScreen,
+  )
+  assert.ok(decisionScreen)
+  const decision = decisionScreen.props.decisions[0]!
+  const pendingAction = decision.actions.find((action) => action.kind === "pending")
+  assert.ok(pendingAction)
 
+  decisionScreen.props.onChooseAction(decision.decisionKey, pendingAction)
+  decisionScreen.props.onChooseAction(decision.decisionKey, pendingAction)
+
+  assert.equal(resolveCalls, 1)
+  tree = await harness.render()
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.status,
+    "saving",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .state,
+    "loading",
+  )
+
+  releaseFirstDecision()
+  await new Promise((resolve) => setImmediate(resolve))
+  await renderSettled(harness)
+  assert.equal(resolveCalls, 1)
   assert.deepEqual(
     intents.map((intent) => intent.action),
-    ["leave_uncovered"],
+    ["keep_pending"],
   )
+})
+
+test("grouped clear-fit acceptance shows saving and suppresses a second immediate batch", async () => {
+  const gateway = createAuthorityTestGateway({
+    evaluate(draft, subject) {
+      const evaluation = testAuthorityEvaluation(draft, subject)
+      assert.equal(evaluation.status, "known")
+      return {
+        ...evaluation,
+        verdict: "ideal",
+        allowedActions: ["keep_owned"],
+        recommendation: null,
+        recommendationFactFingerprint: null,
+      }
+    },
+  })
+  const originalResolveDecision = gateway.resolveDecision.bind(gateway)
+  let releaseFirstDecision!: () => void
+  const firstDecisionPending = new Promise<void>((resolve) => {
+    releaseFirstDecision = resolve
+  })
+  let resolveCalls = 0
+  gateway.resolveDecision = async (input) => {
+    resolveCalls += 1
+    if (resolveCalls === 1) await firstDecisionPending
+    return originalResolveDecision(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-clear-fit-double-submit",
+    refinedVersionId: "refined-clear-fit-double-submit",
+    orderedCategories: [
+      {
+        category: "conditioner",
+        requiredRoles: ["conditioner_rinse_out"],
+        needSummary: "Pflege nach der Wäsche",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "conditioner", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  await captureCatalogProduct(harness, "Conditioner", "condition", 0)
+  let tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onAddAnotherProduct()
+  await captureCatalogProduct(harness, "Conditioner", "condition", 1)
+  tree = await renderSettled(harness)
+  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )?.props.onContinue()
+  tree = await renderSettled(harness)
+  let roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  assert.ok(roles)
+  for (const product of roles.props.products) {
+    roles.props.onToggleRole(product.capturedProductId, "conditioner_rinse_out", true)
+  }
+  tree = await renderSettled(harness)
+  roles = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+    tree,
+    SemanticRoleAssignment,
+  )
+  roles?.props.onContinue()
+  tree = await renderSettled(harness)
+  const grouped = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
+    tree,
+    ProductDecisionScreen,
+  )
+  assert.equal(grouped?.props.groupClearFits, true)
+  assert.equal(grouped?.props.decisions.length, 2)
+  assert.ok(grouped.props.onAcceptClearFits)
+
+  grouped.props.onAcceptClearFits()
+  grouped.props.onAcceptClearFits()
+
+  assert.equal(resolveCalls, 1)
+  tree = await harness.render()
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.status,
+    "saving",
+  )
+  assert.equal(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .state,
+    "loading",
+  )
+
+  releaseFirstDecision()
+  await new Promise((resolve) => setImmediate(resolve))
+  await renderSettled(harness)
+  assert.equal(resolveCalls, 2)
 })
 
 test("interactive lab flow captures products first, assigns roles, decides fit, and displays a typed handoff", async () => {
@@ -1023,10 +1559,6 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
     }),
   )
   let tree = await renderSettled(harness)
-
-  let transition = findByType<React.ComponentProps<typeof Stage3Transition>>(tree, Stage3Transition)
-  assert.equal(transition?.props.context, "product_capture")
-  transition.props.onContinue()
 
   await captureCatalogProduct(harness, "Conditioner", "condition", 0)
   tree = await renderSettled(harness)
@@ -1088,6 +1620,7 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   )
   assert.equal(fallback?.props.status, "idle")
   fallback?.props.onFrequencyChange("weekly_1x")
+  fallback?.props.onProductNameChange?.("Kopfhaut-Tonic")
   tree = await renderSettled(harness)
   const readyFallback = findByType<React.ComponentProps<typeof IntakeFallbackBoundary>>(
     tree,
@@ -1122,11 +1655,6 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   assert.ok(capture?.props.onExplicitNone)
   await capture.props.onExplicitNone()
 
-  tree = await renderSettled(harness)
-  transition = findByType<React.ComponentProps<typeof Stage3Transition>>(tree, Stage3Transition)
-  assert.equal(transition?.props.context, "fit_check")
-  transition.props.onContinue()
-
   await chooseDecision(harness, "keep")
   await chooseDecision(harness, "plan_purchase")
   await chooseDecision(harness, "keep")
@@ -1136,21 +1664,6 @@ test("interactive lab flow captures products first, assigns roles, decides fit, 
   await chooseDecision(harness, "skip")
 
   tree = await renderSettled(harness)
-  assert.equal(
-    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState),
-    null,
-  )
-  const handoff = findByType<React.ComponentProps<typeof PortfolioHandoff>>(tree, PortfolioHandoff)
-  assert.ok(handoff)
-  const handoffText = textContent(PortfolioHandoff(handoff.props))
-  assert.match(handoffText, /Routine öffnen/)
-  assert.doesNotMatch(handoffText, /fixture-portfolio-|fixture-routine-proposal-/)
-  assert.equal(handoff.props.completion.portfolio.ownedProducts.length, 4)
-  assert.equal(handoff.props.completion.portfolio.plannedPurchases.length, 1)
-  assert.equal(handoff.props.completion.portfolio.pendingProducts.length, 1)
-  assert.equal(handoff.props.completion.portfolio.uncoveredRoles.length, 3)
-  assert.doesNotMatch(handoffText, /\b(?:Pass|Teil\s+\d|Stage|Stufe)\b/i)
-  handoff.props.onOpenRoutine?.()
   assert.equal(handoffs.length, 1)
   assert.equal(handoffs[0]?.next.href, "/routine")
   assert.match(handoffs[0]?.productPortfolioVersionId ?? "", /^fixture-portfolio-/)

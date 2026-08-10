@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { InfoTip } from "@/components/ui/info-tip"
 import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
@@ -132,7 +133,9 @@ export function RefinementQuestion({
   const complete = isLocalAnswerComplete(questionId, answer)
 
   useEffect(() => {
-    headingRef.current?.focus()
+    window.scrollTo({ top: 0, behavior: "auto" })
+    const frame = window.requestAnimationFrame(() => headingRef.current?.focus())
+    return () => window.cancelAnimationFrame(frame)
   }, [questionId])
 
   const question = renderQuestionBody({
@@ -143,118 +146,80 @@ export function RefinementQuestion({
   })
 
   return (
-    <div className="min-h-dvh bg-[var(--background-soft,#fdfbf9)] text-[var(--text-main,#3a3835)]">
-      <div className="mx-auto flex min-h-dvh w-full max-w-[1180px]">
-        <aside className="sticky top-0 hidden h-dvh w-1/2 self-start items-center justify-center overflow-hidden bg-[var(--brand-plum-darkest,#21182b)] px-12 text-center text-white lg:flex">
-          <div className="max-w-sm">
-            <p className="font-serif text-5xl leading-none tracking-normal">Chaarlie</p>
-            <div className="mx-auto my-6 h-0.5 w-12 rounded-full bg-white/35" />
-            <p className="text-base leading-7 text-white/70">
-              Dein Bedarfsplan steht. Jetzt wird die Routine präziser.
+    <div className="personal-plan-cookie-clearance min-h-dvh bg-[var(--background)] text-[var(--text-body)]">
+      <PersonalPlanJourneyHeader
+        currentStage={2}
+        saveStatus={journeySaveStatus(status)}
+        onBack={canGoBack ? onBack : onSecondaryExit}
+      />
+      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[720px] min-w-0 flex-col">
+        <section className="mx-auto w-full max-w-[600px] flex-1 px-5 pb-32 pt-6 md:pb-8 md:pt-9">
+          {question.trigger ? (
+            <p className="mb-3 inline-flex rounded-full bg-[var(--brand-plum-ice)] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.06em] text-[var(--brand-plum)]">
+              {question.trigger}
             </p>
-            <p className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-white/75">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-coral,#d4616a)]" />
-              Stage 2
-            </p>
-          </div>
-        </aside>
-        <main className="flex min-h-dvh w-full min-w-0 flex-col bg-[var(--background,#fdfbf9)] lg:w-1/2">
-          <header className="sticky top-0 z-20 grid min-h-[60px] grid-cols-[44px_minmax(0,1fr)_auto] items-center border-b border-[rgba(231,224,217,0.9)] bg-[rgba(253,251,249,0.96)] px-4 backdrop-blur">
-            <button
-              type="button"
-              onClick={onBack}
-              disabled={!canGoBack}
-              aria-label="Zurück"
-              className={cn(
-                "grid h-11 w-11 place-items-center rounded-xl text-[var(--text-sub,#6a6560)] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]",
-                canGoBack ? "hover:bg-[var(--brand-plum-ice)]" : "invisible",
-              )}
+          ) : null}
+          <p className="mb-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+            {question.sectionLabel}
+          </p>
+          <div className="flex items-start gap-2">
+            <h2
+              ref={headingRef}
+              tabIndex={-1}
+              className="m-0 flex-1 font-serif text-[28px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)] outline-none"
             >
-              <span aria-hidden="true">←</span>
-            </button>
-            <div className="min-w-0 text-center">
-              <strong className="block truncate font-serif text-lg font-medium text-[var(--brand-plum-darkest,#2a1845)]">
-                Chaarlie
-              </strong>
-              <span className="block text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--text-muted,#736f69)]">
-                Verfeinerung
-              </span>
-            </div>
-            <SaveChip status={status} />
-          </header>
-
-          <section className="mx-auto w-full max-w-[540px] flex-1 px-5 pb-32 pt-5 md:pb-8">
-            <SectionProgress questionId={questionId} />
-            {question.trigger ? (
-              <p className="mb-3 inline-flex rounded-full bg-[var(--brand-plum-ice)] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.06em] text-[var(--brand-plum)]">
-                {question.trigger}
+              {question.title}
+            </h2>
+            {question.info ? (
+              <InfoTip
+                title={question.info.title}
+                body={question.info.body}
+                buttonClassName="h-8 w-8"
+              />
+            ) : null}
+          </div>
+          {question.lead ? (
+            <p className="mt-2 text-sm leading-6 text-[var(--text-sub,#6a6560)]">{question.lead}</p>
+          ) : null}
+          <div className="mt-5">{question.body}</div>
+          {question.note}
+          {status === "save_failed" ||
+          status === "completion_failed" ||
+          status === "revision_conflict" ? (
+            <div
+              role="alert"
+              className="mt-5 rounded-2xl border border-[rgba(163,67,75,0.25)] bg-[#fff1f2] p-4 text-sm leading-6 text-[#765b5e]"
+            >
+              <p className="font-bold text-[#a3434b]">
+                {status === "revision_conflict"
+                  ? "Wir haben neuere gespeicherte Antworten gefunden."
+                  : status === "completion_failed"
+                    ? "Deine Antwort ist gespeichert. Die Übergabe hat gerade nicht geklappt."
+                    : "Speichern hat gerade nicht geklappt."}
               </p>
-            ) : null}
-            <p className="mb-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-              {question.sectionLabel}
-            </p>
-            <div className="flex items-start gap-2">
-              <h2
-                ref={headingRef}
-                tabIndex={-1}
-                className="m-0 flex-1 font-serif text-[28px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)] outline-none"
-              >
-                {question.title}
-              </h2>
-              {question.info ? (
-                <InfoTip
-                  title={question.info.title}
-                  body={question.info.body}
-                  buttonClassName="h-8 w-8"
-                />
-              ) : null}
-            </div>
-            {question.lead ? (
-              <p className="mt-2 text-sm leading-6 text-[var(--text-sub,#6a6560)]">
-                {question.lead}
+              <p className="mt-1">
+                {status === "revision_conflict"
+                  ? "Der Stand wurde neu geladen. Du machst ohne Überschreiben bei der nächsten offenen Frage weiter."
+                  : status === "completion_failed"
+                    ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur die Übergabe erneut."
+                    : "Deine Auswahl bleibt auf dieser Seite sichtbar. Versuche das Speichern noch einmal."}
               </p>
-            ) : null}
-            <div className="mt-5">{question.body}</div>
-            {question.note}
-            {status === "save_failed" ||
-            status === "completion_failed" ||
-            status === "revision_conflict" ? (
-              <div
-                role="alert"
-                className="mt-5 rounded-2xl border border-[rgba(163,67,75,0.25)] bg-[#fff1f2] p-4 text-sm leading-6 text-[#765b5e]"
-              >
-                <p className="font-bold text-[#a3434b]">
-                  {status === "revision_conflict"
-                    ? "Wir haben neuere gespeicherte Antworten gefunden."
-                    : status === "completion_failed"
-                      ? "Deine Antwort ist gespeichert. Die Übergabe hat gerade nicht geklappt."
-                      : "Speichern hat gerade nicht geklappt."}
-                </p>
-                <p className="mt-1">
-                  {status === "revision_conflict"
-                    ? "Der Stand wurde neu geladen. Du machst ohne Überschreiben bei der nächsten offenen Frage weiter."
-                    : status === "completion_failed"
-                      ? "Du musst diese Antwort nicht noch einmal speichern. Versuche nur die Übergabe erneut."
-                      : "Deine Auswahl bleibt lokal sichtbar. Versuche es noch einmal, damit diese Seite wirklich gespeichert ist."}
-                </p>
-              </div>
-            ) : null}
-            <div aria-live="polite" className="sr-only">
-              {liveMessage ?? saveStatusText(status)}
             </div>
-            <ActionDock
-              disabled={!complete || status === "saving"}
-              isRetry={status === "save_failed" || status === "completion_failed"}
-              onSecondaryExit={onSecondaryExit}
-              onSubmit={onSubmit}
-              retryLabel={
-                status === "completion_failed" ? "Übergabe erneut versuchen" : "Erneut versuchen"
-              }
-              saving={status === "saving"}
-            />
-          </section>
-        </main>
-      </div>
+          ) : null}
+          <div aria-live="polite" className="sr-only">
+            {liveMessage ?? saveStatusText(status)}
+          </div>
+          <ActionDock
+            disabled={!complete || status === "saving"}
+            isRetry={status === "save_failed" || status === "completion_failed"}
+            onSubmit={onSubmit}
+            retryLabel={
+              status === "completion_failed" ? "Übergabe erneut versuchen" : "Erneut versuchen"
+            }
+            saving={status === "saving"}
+          />
+        </section>
+      </main>
     </div>
   )
 }
@@ -283,9 +248,10 @@ function renderQuestionBody({
     const heatAnswer = (answer ?? {}) as HeatEventAnswer
     return {
       sectionLabel: "Wie du dein Haar behandelst",
-      trigger: "Hitzeereignis",
       title: `Wie oft nutzt du ${HEAT_SOURCE_TITLES[source]}?`,
-      lead: "Häufigkeit und Hitzeschutz gehören hier zu genau diesem Ereignis.",
+      lead: requiresStage2HeatProtection(source)
+        ? "Gib deinen üblichen Rhythmus an und ob du dabei Hitzeschutz verwendest."
+        : "Gib deinen üblichen Rhythmus an.",
       body: (
         <div className="grid gap-6">
           <div>
@@ -324,12 +290,6 @@ function renderQuestionBody({
             </div>
           ) : null}
         </div>
-      ),
-      note: (
-        <RefinementInlineNote>
-          Gewöhnlicher Luftstrom fragt nur die Häufigkeit ab. Formender Luftstrom und direkte Hitze
-          brauchen zusätzlich die Hitzeschutz-Konsistenz.
-        </RefinementInlineNote>
       ),
     }
   }
@@ -392,8 +352,15 @@ function renderQuestionBody({
                 }
                 multi
                 allowNone
-                noneDescription="Ich nutze aktuell keine der genannten Produktarten."
-                onNoneChange={() => onLocalAnswerChange([], "Andere Auswahl wurde gelöscht.")}
+                noneLabel="Keine weiteren"
+                noneDescription="Das löscht nur die Auswahl unter Weitere unterstützte Kategorien."
+                noneAriaLabel="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"
+                onNoneChange={() =>
+                  onLocalAnswerChange(
+                    mergeCategoryGroup(remainingOptions, []),
+                    "Weitere unterstützte Kategorien wurden gelöscht.",
+                  )
+                }
                 onChange={(next) =>
                   onLocalAnswerChange(
                     mergeCategoryGroup(remainingOptions, next as Stage2ProductCategory[]),
@@ -402,12 +369,6 @@ function renderQuestionBody({
               />
             </div>
           </div>
-        ),
-        note: (
-          <RefinementInlineNote>
-            Die Reihenfolge kann relevante Kategorien zuerst zeigen. Vorausgewählt wird dadurch
-            nichts.
-          </RefinementInlineNote>
         ),
       }
     }
@@ -423,19 +384,12 @@ function renderQuestionBody({
             onChange={onLocalAnswerChange}
           />
         ),
-        note: (
-          <RefinementInlineNote>
-            Diese eine Rhythmusfrage verändert Shampoo-Rhythmus, Trockenshampoo-Brücke,
-            Maskenplanung und Tiefenreinigung.
-          </RefinementInlineNote>
-        ),
       }
     case "scalp_irritation_detail":
       return {
         sectionLabel: "Was du heute benutzt",
-        trigger: "Weil empfindliche / gereizte Kopfhaut relevant ist",
         title: "Wie fühlt sich deine Kopfhaut aktuell an?",
-        lead: "Diese Grenze hält kosmetische Pflege von medizinisch abklärbaren Beschwerden getrennt.",
+        lead: "Wähle, was heute am besten passt.",
         body: (
           <RefinementOptions
             options={SCALP_IRRITATION_OPTIONS}
@@ -455,9 +409,8 @@ function renderQuestionBody({
     case "dry_shampoo_bridge_preference":
       return {
         sectionLabel: "Was du heute benutzt",
-        trigger: "Weil Kopfhaut und Waschrhythmus eine Brücke nahelegen",
         title: "Möchtest du Trockenshampoo zwischen Nasswäschen nutzen?",
-        lead: "Das ist nur eine Brücken-Entscheidung. Konkrete Produkte kommen später.",
+        lead: "Ein konkretes Produkt wählen wir erst im nächsten Schritt aus.",
         body: (
           <RefinementOptions
             options={DRY_SHAMPOO_BRIDGE_OPTIONS}
@@ -469,7 +422,6 @@ function renderQuestionBody({
     case "dry_shampoo_visible_hair_color":
       return {
         sectionLabel: "Was du heute benutzt",
-        trigger: "Weil Trockenshampoo Teil deines Wegs ist",
         title: "Welche sichtbare Ansatzfarbe hast du?",
         lead: "Es geht um sichtbaren Ansatz und mögliche Rückstände, nicht um chemische Haarfarbe.",
         body: (
@@ -499,7 +451,6 @@ function renderQuestionBody({
       return {
         sectionLabel: "Wie du dein Haar behandelst",
         title: "Wie trocknest du dein Haar direkt nach der Wäsche an?",
-        lead: "Material und Technik bleiben auf einer Seite, weil sie zusammengehören.",
         body: (
           <div className="grid gap-6">
             <div>
@@ -547,19 +498,13 @@ function renderQuestionBody({
             onChange={onLocalAnswerChange}
           />
         ),
-        note: (
-          <RefinementInlineNote>
-            Föhn und Diffusor gehören zu den Trocknungswegen. Sie werden auf der nächsten Seite
-            nicht noch einmal als zusätzliche Hitze-Tools abgefragt.
-          </RefinementInlineNote>
-        ),
       }
     case "additional_heat_tools":
       return {
         sectionLabel: "Wie du dein Haar behandelst",
         trigger: "Zusätzliche Tools",
         title: "Welche weiteren Hitze-Tools nutzt du?",
-        lead: "Föhn und Diffusor sind bereits erfasst. Wähle hier nur weitere Tools.",
+        lead: "Wähle nur zusätzliche Geräte neben Föhn oder Diffusor.",
         body: (
           <RefinementOptions
             options={ADDITIONAL_HEAT_TOOL_OPTIONS}
@@ -587,71 +532,9 @@ function renderQuestionBody({
             onChange={onLocalAnswerChange}
           />
         ),
-        note: (
-          <RefinementInlineNote>
-            Nachtverhalten kann mechanische Reibung und Zug beeinflussen, unabhängig davon, welche
-            Produkte oder Tools du nutzt.
-          </RefinementInlineNote>
-        ),
       }
   }
   throw new Error(`Unknown Stage 2 refinement question: ${questionId}`)
-}
-
-function SectionProgress({ questionId }: { questionId: Stage2QuestionId }) {
-  const isHandling =
-    questionId === "towel_handling" ||
-    questionId === "drying_routes" ||
-    questionId === "additional_heat_tools" ||
-    questionId === "night_protection" ||
-    questionId.startsWith("heat:")
-  return (
-    <div className="mb-5">
-      <div className="relative grid grid-cols-2 gap-4 pt-3">
-        <span className="absolute left-0 right-0 top-1 h-1 rounded-full bg-[var(--border,#e7e0d9)]" />
-        <span
-          className={cn(
-            "absolute left-0 top-1 h-1 rounded-full bg-[var(--brand-plum)] transition-all",
-            isHandling ? "w-full" : "w-1/3",
-          )}
-        />
-        <span
-          className={cn(
-            "relative text-[10px] font-bold",
-            isHandling ? "text-[var(--brand-plum)]" : "text-[var(--brand-plum)]",
-          )}
-        >
-          Was du heute benutzt
-        </span>
-        <span
-          className={cn(
-            "relative text-right text-[10px] font-bold",
-            isHandling ? "text-[var(--brand-plum)]" : "text-[var(--text-muted,#736f69)]",
-          )}
-        >
-          Wie du dein Haar behandelst
-        </span>
-      </div>
-    </div>
-  )
-}
-
-function SaveChip({ status }: { status: RefinementQuestionStatus }) {
-  return (
-    <div
-      className={cn(
-        "inline-flex min-w-[84px] items-center justify-end gap-1.5 text-[10px] font-bold",
-        status === "save_failed" || status === "completion_failed" || status === "revision_conflict"
-          ? "text-[#a3434b]"
-          : status === "saving"
-            ? "text-[var(--brand-plum)]"
-            : "text-[#4f8058]",
-      )}
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {saveStatusText(status)}
-    </div>
-  )
 }
 
 function saveStatusText(status: RefinementQuestionStatus): string {
@@ -660,7 +543,14 @@ function saveStatusText(status: RefinementQuestionStatus): string {
   if (status === "completion_failed") return "Übergabe offen"
   if (status === "revision_conflict") return "neu geladen"
   if (status === "saved") return "gespeichert"
-  return "bereit"
+  return ""
+}
+
+function journeySaveStatus(status: RefinementQuestionStatus) {
+  if (status === "saving") return "saving" as const
+  if (status === "saved") return "saved" as const
+  if (status === "save_failed" || status === "completion_failed") return "error" as const
+  return "idle" as const
 }
 
 function ActionDock({
@@ -668,14 +558,12 @@ function ActionDock({
   isRetry,
   retryLabel,
   saving,
-  onSecondaryExit,
   onSubmit,
 }: {
   disabled: boolean
   isRetry: boolean
   retryLabel: string
   saving: boolean
-  onSecondaryExit: () => void
   onSubmit: () => void
 }) {
   const [dockTarget, setDockTarget] = useState<HTMLElement | null>(null)
@@ -741,16 +629,9 @@ function ActionDock({
     >
       <button
         type="button"
-        onClick={onSecondaryExit}
-        className="min-h-[52px] rounded-xl px-3 text-sm font-bold text-[var(--brand-plum)] transition hover:bg-[var(--brand-plum-ice)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]"
-      >
-        Zum Bedarfsplan
-      </button>
-      <button
-        type="button"
         disabled={disabled}
         onClick={onSubmit}
-        className="min-h-[52px] flex-1 rounded-xl bg-[var(--brand-coral,#d4616a)] px-4 text-sm font-bold text-white shadow-[0_10px_25px_rgba(212,97,106,0.18)] transition hover:bg-[var(--brand-coral-dark,#c0555d)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed disabled:opacity-45"
+        className="personal-plan-primary-action min-h-[52px] flex-1 px-4 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]"
       >
         {saving ? "Speichert ..." : isRetry ? retryLabel : "Weiter"}
       </button>

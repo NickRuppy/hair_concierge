@@ -37,17 +37,15 @@ export function createSupabaseStage3ProductionPersistence(
   return {
     async loadOrCreate(input) {
       const context = await loadRequirements(input)
-      const seed = {
-        ...createStage3Draft({
-          draftId: "pending-sql-assignment",
-          userId: input.userId,
-          personalPlanId: input.personalPlanId,
-          refinedVersionId: input.refinedVersionId,
-          requirements: context.orderedCategories,
-          now: new Date().toISOString(),
-        }),
+      const seed = createStage3Draft({
+        draftId: "pending-sql-assignment",
+        userId: input.userId,
+        personalPlanId: input.personalPlanId,
+        refinedVersionId: input.refinedVersionId,
+        requirements: context.orderedCategories,
         authoritySnapshot: context.authoritySnapshot,
-      }
+        now: new Date().toISOString(),
+      })
       const { data, error } = await client.rpc("personal_plan_create_or_load_product_draft", {
         p_user_id: input.userId,
         p_personal_plan_id: input.personalPlanId,
@@ -100,7 +98,7 @@ export function createSupabaseStage3ProductionPersistence(
             const { data, error } = await client
               .from("products")
               .select(
-                "id,brand,name,is_active,lifecycle_status,is_chaarlie_recommended,sort_order,category_key",
+                "id,brand,name,image_url,is_active,lifecycle_status,is_chaarlie_recommended,sort_order,category_key",
               )
               .eq("category_key", category)
             if (error) throw new Error("stage3_catalog_search_failed")
@@ -111,6 +109,7 @@ export function createSupabaseStage3ProductionPersistence(
                   category,
                   brandName: typeof row.brand === "string" ? row.brand : null,
                   displayName: String(row.name),
+                  imageUrl: typeof row.image_url === "string" ? row.image_url : null,
                   active: row.is_active === true,
                   lifecycleStatus:
                     typeof row.lifecycle_status === "string" ? row.lifecycle_status : null,
@@ -128,7 +127,7 @@ export function createSupabaseStage3ProductionPersistence(
     async resolveOwnedCatalogProduct(input) {
       const { data: candidate, error: candidateError } = await client
         .from("products")
-        .select("id,name,category_key,is_active,lifecycle_status")
+        .select("id,name,image_url,category_key,is_active,lifecycle_status")
         .eq("id", input.candidateId)
         .eq("category_key", input.category)
         .maybeSingle()
@@ -152,6 +151,7 @@ export function createSupabaseStage3ProductionPersistence(
         userProductId: String(owned.id),
         productId: String(owned.catalog_product_id),
         displayName: String(candidate.name),
+        imageUrl: typeof candidate.image_url === "string" ? candidate.image_url : null,
         category: owned.category as never,
       }
     },
@@ -207,6 +207,7 @@ export function createSupabaseStage3ProductionPersistence(
         draft: input.draft,
         subject: input.subject,
         heatRoutes: input.heatRoutes,
+        context: input.context,
       })
     },
     async loadDraft(input) {

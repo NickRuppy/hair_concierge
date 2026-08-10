@@ -18,11 +18,13 @@ export function PersonalPlanStage1To3JourneyClient({
   triggerContext: Stage2TriggerContext
 }) {
   const [entryContext, setEntryContext] = useState<Stage3EntryContext | null>(null)
+  const [returningToRefinement, setReturningToRefinement] = useState(false)
   const stage3Gateway = useMemo(() => createFixtureStage3Gateway({ searchDelayMs: 0 }), [])
 
   const handleHandoff = useCallback(async (payload: Stage2HandoffPayload) => {
     const nextEntryContext = await prepareStage3EntryContextAction(payload)
     setEntryContext(nextEntryContext)
+    setReturningToRefinement(false)
   }, [])
 
   return (
@@ -32,6 +34,7 @@ export function PersonalPlanStage1To3JourneyClient({
           scenario="ready"
           triggerContext={triggerContext}
           onHandoff={handleHandoff}
+          autoHandoff={!returningToRefinement}
         />
       </div>
       {entryContext ? (
@@ -44,7 +47,10 @@ export function PersonalPlanStage1To3JourneyClient({
             analytics={developmentStage3Analytics}
             gateway={stage3Gateway}
             searchDebounceMs={0}
-            onBackToRefinement={() => setEntryContext(null)}
+            onBackToRefinement={() => {
+              setReturningToRefinement(true)
+              setEntryContext(null)
+            }}
           />
         </div>
       ) : null}

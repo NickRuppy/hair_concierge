@@ -4,6 +4,7 @@ import type {
   Stage3CatalogSearchResult,
   Stage3CapturedUncoveredRole,
   Stage3CategoryRequirement,
+  Stage3AuthoritySnapshotV1,
   Stage3ProductDecision,
   Stage3ProductDraft,
   Stage3RoleAssignment,
@@ -11,6 +12,7 @@ import type {
 
 export type Stage3ProductsGatewayErrorCode =
   | "temporarily_unavailable"
+  | "stale_refined_source"
   | "unsupported_snapshot_version"
   | "snapshot_too_large"
   | "compensation_pending"
@@ -54,6 +56,14 @@ export type Stage3ProductsMutation =
       category: PersonalPlanCategory
       /** Complete non-empty assignment set for this category; omitted products are cleared. */
       assignments: Stage3RoleAssignment[]
+    }
+  | {
+      type: "finalize_capture_category"
+      category: PersonalPlanCategory
+      /** Complete assignment set for the category; omitted products are cleared. */
+      assignments: Stage3RoleAssignment[]
+      /** Complete uncovered-role set for the category; duplicate role entries are collapsed. */
+      uncoveredRoles: Stage3CapturedUncoveredRole[]
     }
   | { type: "mark_role_uncovered"; uncoveredRole: Stage3CapturedUncoveredRole }
   | { type: "complete_capture_category"; category: PersonalPlanCategory }
@@ -99,6 +109,7 @@ export type Stage3ProductsGateway = {
     personalPlanId: string
     refinedVersionId: string
     requirements: Stage3CategoryRequirement[]
+    authoritySnapshot?: Stage3AuthoritySnapshotV1
   }): Promise<Stage3DraftResponse>
   search(input: {
     category: PersonalPlanCategory

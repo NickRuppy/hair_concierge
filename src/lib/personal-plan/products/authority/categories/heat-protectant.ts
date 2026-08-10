@@ -26,18 +26,68 @@ function hasCompleteProtocol(facts: Stage3HeatProtectantFacts, input: HeatInput)
   )
 }
 
-function recommendationCandidate(input: HeatInput): Stage3HeatProtectantFacts | null {
+function hasKnownBudget(candidate: Stage3HeatProtectantFacts): boolean {
   return (
-    input.recommendationCandidates.find(
-      (candidate) =>
-        candidate.isActive &&
-        candidate.lifecycleStatus === "active" &&
-        candidate.recommendable &&
-        candidate.spec.providesHeatProtection === true &&
-        commonUnknownFacts({ ...input, productFacts: candidate }).length === 0 &&
-        hasCompleteProtocol(candidate, input),
-    ) ?? null
+    typeof candidate.priceEur === "number" &&
+    Number.isFinite(candidate.priceEur) &&
+    candidate.priceEur >= 0
   )
+}
+
+function stableCandidateName(candidate: Stage3HeatProtectantFacts): string {
+  return candidate.displayName
+    .normalize("NFKC")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("de-DE")
+}
+
+function compareRecommendationCandidates(
+  left: Stage3HeatProtectantFacts,
+  right: Stage3HeatProtectantFacts,
+): number {
+  const leftPrice = left.priceEur as number
+  const rightPrice = right.priceEur as number
+  return (
+    leftPrice - rightPrice ||
+    stableCandidateName(left).localeCompare(stableCandidateName(right), "de-DE")
+  )
+}
+
+function recommendationCandidate(input: HeatInput): Stage3HeatProtectantFacts | null {
+  const sharedFit = input.recommendationCandidates.filter(
+    (candidate) =>
+      candidate.isActive &&
+      candidate.lifecycleStatus === "active" &&
+      candidate.recommendable &&
+      candidate.spec.providesHeatProtection === true &&
+      commonUnknownFacts(
+        { ...input, productFacts: candidate },
+        { requiresSuitableThickness: false },
+      ).length === 0 &&
+      hasCompleteProtocol(candidate, input),
+  )
+
+  // Current availability and price are signed selection dimensions. Unknown
+  // availability blocks ranking, while known-unavailable products are removed
+  // before price comparison so a pending product cannot block the launch set.
+  if (
+    sharedFit.some(
+      (candidate) =>
+        candidate.purchaseLinkStatus === null || candidate.purchaseLinkStatus === undefined,
+    )
+  ) {
+    return null
+  }
+
+  const available = sharedFit.filter((candidate) => candidate.purchaseLinkStatus === "available")
+  if (available.some((candidate) => !hasKnownBudget(candidate))) return null
+  available.sort(compareRecommendationCandidates)
+  if (available.length === 0) return null
+  if (available.length > 1 && compareRecommendationCandidates(available[0], available[1]) === 0) {
+    return null
+  }
+  return available[0]
 }
 
 function recommendation(candidate: Stage3HeatProtectantFacts, input: HeatInput) {
@@ -105,7 +155,7 @@ export function evaluateHeatProtectantAuthority(input: HeatInput): Stage3Authori
   }
 
   const facts = input.productFacts
-  const missingFacts = commonUnknownFacts(input)
+  const missingFacts = commonUnknownFacts(input, { requiresSuitableThickness: false })
   if (facts.spec.providesHeatProtection === null) missingFacts.push("provides_heat_protection")
   const protocol = protocolForRole(input)
   if (!protocol || protocol.status !== "verified_complete")

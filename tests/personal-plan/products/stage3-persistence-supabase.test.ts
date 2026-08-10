@@ -235,6 +235,369 @@ function authorityFactClient(conditionerSpecs: Record<string, unknown>[]) {
   }
 }
 
+function shampooAuthorityDraft(
+  overrides: {
+    role?: "shampoo_everyday" | "shampoo_dandruff"
+    scalpRoute?: "oily" | "balanced" | "dry"
+    everydayConstraint?:
+      | "standard"
+      | "gentle_dry_scalp"
+      | "irritation_compatible"
+      | "gentle_dry_scalp_and_irritation_compatible"
+  } = {},
+): Stage3ProductDraft {
+  const role = overrides.role ?? "shampoo_everyday"
+  const scalpRoute = overrides.scalpRoute ?? "balanced"
+  const everydayConstraint = overrides.everydayConstraint ?? "standard"
+  const draft = conditionerAuthorityDraft()
+  return {
+    ...draft,
+    authorityVersions: { shampoo: "shampoo-v1" },
+    orderedCategories: ["shampoo"],
+    categoryCursor: "shampoo",
+    products: [
+      {
+        ...draft.products[0]!,
+        capturedProductId: "owned-shampoo-1",
+        userProductId: "user-shampoo-1",
+        identity: {
+          kind: "catalog_product",
+          productId: "shampoo-1",
+          displayName: "Mehrfach spezifiziertes Shampoo",
+          category: "shampoo",
+        },
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "owned-shampoo-1",
+        category: "shampoo",
+        roles: [role],
+      },
+    ],
+    completedCaptureCategories: ["shampoo"],
+    authoritySnapshot: {
+      ...draft.authoritySnapshot!,
+      categoryDecisions: [
+        {
+          category: "shampoo",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: [role],
+          target: {
+            category: "shampoo",
+            roles: [role],
+            scalpRoute,
+            everydayConstraint,
+            requiresTargetedDandruffCapability: role === "shampoo_dandruff",
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+      orderedCategories: ["shampoo"],
+    },
+  }
+}
+
+function shampooAuthorityFactClient(
+  shampooSpecs: Record<string, unknown>[],
+  recommendationProducts: Record<string, unknown>[] = [],
+) {
+  return {
+    from(table: string) {
+      const filters = new Map<string, unknown>()
+      const result = () => {
+        if (table === "products") {
+          return filters.has("id")
+            ? {
+                data: {
+                  id: "shampoo-1",
+                  name: "Mehrfach spezifiziertes Shampoo",
+                  category_key: "shampoo",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  is_chaarlie_recommended: true,
+                  suitable_thicknesses: ["normal"],
+                },
+                error: null,
+              }
+            : { data: recommendationProducts, error: null }
+        }
+        if (table === "product_shampoo_specs") return { data: shampooSpecs, error: null }
+        return { data: [], error: null }
+      }
+      const chain = {
+        select: () => chain,
+        eq: (column: string, value: unknown) => {
+          filters.set(column, value)
+          return chain
+        },
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => {
+          if (table === "product_shampoo_specs" && shampooSpecs.length > 1) {
+            return { data: null, error: { code: "PGRST116" } }
+          }
+          return result()
+        },
+        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
+          Promise.resolve(result()).then(resolve),
+      }
+      return chain
+    },
+  }
+}
+
+const normalRefinedContext = {
+  currentRefinedVersionId: "refined-1",
+  hairThickness: "normal",
+  refinedNeedSnapshot: {
+    inputHash: "input-1",
+    profile: {
+      source: { projection: "refined_post_plan" },
+      hair: { thickness: "normal" },
+    },
+  },
+}
+
+test("authority facts select a contextual Shampoo row without PGRST116", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      {
+        thickness: "fine",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "gentle",
+      },
+      {
+        thickness: "normal",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "regular",
+      },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.deepEqual(bundle.productFacts.spec, {
+    thickness: "normal",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+})
+
+for (const route of [
+  {
+    name: "oily",
+    scalpRoute: "oily" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "dehydriert-fettig",
+  },
+  {
+    name: "dry",
+    scalpRoute: "dry" as const,
+    everydayConstraint: "gentle_dry_scalp" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "trocken",
+  },
+  {
+    name: "irritation",
+    scalpRoute: "balanced" as const,
+    everydayConstraint: "irritation_compatible" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "irritationen",
+  },
+  {
+    name: "balanced",
+    scalpRoute: "balanced" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_everyday" as const,
+    bucket: "normal",
+  },
+  {
+    name: "dandruff",
+    scalpRoute: "oily" as const,
+    everydayConstraint: "standard" as const,
+    role: "shampoo_dandruff" as const,
+    bucket: "schuppen",
+  },
+]) {
+  test(`Shampoo catalog selection uses the exact signed ${route.name} bucket`, async () => {
+    const bundle = await loadStage3AuthorityFactBundle(
+      shampooAuthorityFactClient([
+        {
+          thickness: "normal",
+          shampoo_bucket: route.bucket,
+          scalp_route: route.scalpRoute,
+          cleansing_intensity: "regular",
+        },
+      ]) as never,
+      {
+        draft: shampooAuthorityDraft(route),
+        subject: {
+          decisionKey: `decision:shampoo:${route.role}:owned-shampoo-1`,
+          category: "shampoo",
+          role: route.role,
+          capturedProductId: "owned-shampoo-1",
+          subjectKind: "captured_product",
+        },
+        heatRoutes: [],
+        context: normalRefinedContext,
+      } as never,
+    )
+
+    assert.equal(bundle.productFacts?.category, "shampoo")
+    if (bundle.productFacts?.category !== "shampoo") return
+    assert.equal(bundle.productFacts.spec.shampooBucket, route.bucket)
+  })
+}
+
+test("distinct contextual Shampoo rows remain recoverably unknown", async () => {
+  const common = {
+    thickness: "normal",
+    shampoo_bucket: "normal",
+    scalp_route: "balanced",
+  }
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      { ...common, cleansing_intensity: "gentle" },
+      { ...common, cleansing_intensity: "regular" },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.equal(bundle.productFacts.spec.thickness, null)
+  assert.equal(bundle.productFacts.spec.shampooBucket, null)
+  assert.equal(bundle.productFacts.spec.scalpRoute, null)
+  assert.equal(bundle.productFacts.spec.cleansingIntensity, null)
+})
+
+test("semantically identical contextual Shampoo rows canonicalize to one fact", async () => {
+  const row = {
+    thickness: "normal",
+    shampoo_bucket: "normal",
+    scalp_route: "balanced",
+    cleansing_intensity: "regular",
+  }
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([{ ...row }, { ...row }]) as never,
+    {
+      draft: shampooAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.deepEqual(bundle.productFacts.spec, {
+    thickness: "normal",
+    shampooBucket: "normal",
+    scalpRoute: "balanced",
+    cleansingIntensity: "regular",
+  })
+})
+
+test("recommendation facts use stable sort order, German name, and product id tie-breaks", async () => {
+  const draft = {
+    ...shampooAuthorityDraft(),
+    products: [],
+    roleAssignments: [],
+    uncoveredRoles: [
+      {
+        category: "shampoo" as const,
+        role: "shampoo_everyday" as const,
+        reason: "no_product_owned" as const,
+      },
+    ],
+  }
+  const product = (id: string, name: string, sortOrder: number) => ({
+    id,
+    name,
+    sort_order: sortOrder,
+    category_key: "shampoo",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
+    suitable_thicknesses: ["normal"],
+  })
+  const client = shampooAuthorityFactClient(
+    [
+      {
+        thickness: "normal",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "regular",
+      },
+    ],
+    [
+      product("product-z", "Zeta", 1),
+      product("product-late", "Alpha", 2),
+      product("product-a", "Alpha", 1),
+    ],
+  )
+
+  const bundle = await loadStage3AuthorityFactBundle(
+    client as never,
+    {
+      draft,
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:gap",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: null,
+        subjectKind: "uncovered_role",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.deepEqual(
+    bundle.recommendationCandidates.map((candidate) => candidate.productId),
+    ["product-a", "product-z", "product-late"],
+  )
+})
+
 test("authority facts select the single Conditioner spec matching the signed target", async () => {
   const bundle = await loadStage3AuthorityFactBundle(
     authorityFactClient([
@@ -251,7 +614,8 @@ test("authority facts select the single Conditioner spec matching the signed tar
         subjectKind: "captured_product",
       },
       heatRoutes: [],
-    },
+      context: normalRefinedContext,
+    } as never,
   )
 
   assert.equal(bundle.productFacts?.category, "conditioner")
@@ -261,7 +625,7 @@ test("authority facts select the single Conditioner spec matching the signed tar
   assert.equal(bundle.productFacts.spec.proteinMoistureBalance, "moisture")
 })
 
-test("ambiguous Conditioner specs remain unknown instead of selecting the first row", async () => {
+test("Conditioner selection also filters by the actual refined thickness", async () => {
   const bundle = await loadStage3AuthorityFactBundle(
     authorityFactClient([
       { thickness: "fine", protein_moisture_balance: "snaps" },
@@ -277,13 +641,14 @@ test("ambiguous Conditioner specs remain unknown instead of selecting the first 
         subjectKind: "captured_product",
       },
       heatRoutes: [],
-    },
+      context: normalRefinedContext,
+    } as never,
   )
 
   assert.equal(bundle.productFacts?.category, "conditioner")
   if (bundle.productFacts?.category !== "conditioner") return
-  assert.equal(bundle.productFacts.spec.thickness, null)
-  assert.equal(bundle.productFacts.spec.proteinMoistureBalance, null)
+  assert.equal(bundle.productFacts.spec.thickness, "normal")
+  assert.equal(bundle.productFacts.spec.proteinMoistureBalance, "moisture")
 })
 
 test("incomplete Conditioner specs remain unknown", async () => {
@@ -299,11 +664,152 @@ test("incomplete Conditioner specs remain unknown", async () => {
         subjectKind: "captured_product",
       },
       heatRoutes: [],
-    },
+      context: normalRefinedContext,
+    } as never,
   )
 
   assert.equal(bundle.productFacts?.category, "conditioner")
   if (bundle.productFacts?.category !== "conditioner") return
   assert.equal(bundle.productFacts.spec.thickness, null)
   assert.equal(bundle.productFacts.spec.proteinMoistureBalance, null)
+})
+
+test("Oil combines every eligibility row while its product spec stays singular", async () => {
+  const base = conditionerAuthorityDraft()
+  const draft: Stage3ProductDraft = {
+    ...base,
+    authorityVersions: { oil: "oil-v1" },
+    orderedCategories: ["oil"],
+    categoryCursor: "oil",
+    products: [
+      {
+        ...base.products[0]!,
+        capturedProductId: "owned-oil-1",
+        userProductId: "user-oil-1",
+        identity: {
+          kind: "catalog_product",
+          productId: "oil-1",
+          displayName: "Mehrzwecköl",
+          category: "oil",
+        },
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "owned-oil-1",
+        category: "oil",
+        roles: ["dry_finish"],
+      },
+    ],
+    completedCaptureCategories: ["oil"],
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      categoryDecisions: [
+        {
+          category: "oil",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["dry_finish"],
+          target: {
+            category: "oil",
+            roles: ["dry_finish"],
+            roleTargets: [
+              {
+                role: "dry_finish",
+                tier: "basis",
+                weight: "light",
+                functionalBenefits: [],
+              },
+            ],
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+      orderedCategories: ["oil"],
+    },
+  }
+  let oilEligibilityMaybeSingleCalls = 0
+  let oilSpecMaybeSingleCalls = 0
+  const client = {
+    from(table: string) {
+      const filters = new Map<string, unknown>()
+      const result = () => {
+        if (table === "products") {
+          return filters.has("id")
+            ? {
+                data: {
+                  id: "oil-1",
+                  name: "Mehrzwecköl",
+                  category_key: "oil",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  is_chaarlie_recommended: true,
+                  suitable_thicknesses: ["normal"],
+                },
+                error: null,
+              }
+            : { data: [], error: null }
+        }
+        if (table === "product_oil_specs") {
+          return { data: { provides_heat_protection: false }, error: null }
+        }
+        if (table === "product_oil_eligibility") {
+          return {
+            data: [
+              { thickness: "normal", oil_purpose: "pre_wash_oiling" },
+              { thickness: "normal", oil_purpose: "styling_finish" },
+            ],
+            error: null,
+          }
+        }
+        return { data: [], error: null }
+      }
+      const chain = {
+        select: () => chain,
+        eq: (column: string, value: unknown) => {
+          filters.set(column, value)
+          return chain
+        },
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => {
+          if (table === "product_oil_eligibility") oilEligibilityMaybeSingleCalls += 1
+          if (table === "product_oil_specs") oilSpecMaybeSingleCalls += 1
+          return result()
+        },
+        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
+          Promise.resolve(result()).then(resolve),
+      }
+      return chain
+    },
+  }
+
+  const bundle = await loadStage3AuthorityFactBundle(
+    client as never,
+    {
+      draft,
+      subject: {
+        decisionKey: "decision:oil:dry_finish:owned-oil-1",
+        category: "oil",
+        role: "dry_finish",
+        capturedProductId: "owned-oil-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "oil")
+  if (bundle.productFacts?.category !== "oil") return
+  assert.deepEqual(bundle.productFacts.spec.roleSupport, {
+    pre_wash_fibre_treatment: true,
+    dry_finish: true,
+  })
+  assert.equal(oilEligibilityMaybeSingleCalls, 0)
+  assert.ok(oilSpecMaybeSingleCalls >= 1)
 })

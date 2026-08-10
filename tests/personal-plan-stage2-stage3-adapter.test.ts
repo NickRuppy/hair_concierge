@@ -154,6 +154,59 @@ test("preserves refined rendered order and appends current-only inventory in can
     "leave_in",
     "dry_shampoo",
   ])
+  assert.deepEqual(context.authoritySnapshot.productLoadContext?.ownedCategories, [
+    "dry_shampoo",
+    "conditioner",
+    "shampoo",
+    "leave_in",
+  ])
+  assert.equal(context.authoritySnapshot.productLoadContext?.shampooFrequency, "weekly_2x")
+})
+
+test("preserves unknown current product load instead of encoding known-empty authority facts", () => {
+  const snapshot = refinedSnapshot(["shampoo"])
+  snapshot.profile = {
+    source: { projection: "refined_post_plan" },
+    concerns: [],
+    scalp: { oiliness: "balanced", concerns: [] },
+    routine: {
+      shampooFrequency: { state: "known", value: "weekly_2x" },
+      currentProductLoad: { state: "unknown", reason: "current_product_load" },
+    },
+  } as never
+
+  const context = buildStage3EntryContext(snapshot, {
+    personalPlanId: "plan-opaque-1",
+    refinedVersionId: "refined-opaque-1",
+  })
+
+  assert.equal(context.authoritySnapshot.productLoadContext, undefined)
+  assert.deepEqual(context.authoritySnapshot.inventoryOnlyCategories, [])
+})
+
+test("preserves an explicitly known empty current product load", () => {
+  const snapshot = refinedSnapshot(["shampoo"])
+  snapshot.profile = {
+    source: { projection: "refined_post_plan" },
+    concerns: [],
+    scalp: { oiliness: "balanced", concerns: [] },
+    routine: {
+      shampooFrequency: { state: "known", value: "weekly_2x" },
+      currentProductLoad: {
+        state: "known",
+        value: { categories: [], oilPurposes: [] },
+      },
+    },
+  } as never
+
+  const context = buildStage3EntryContext(snapshot, {
+    personalPlanId: "plan-opaque-1",
+    refinedVersionId: "refined-opaque-1",
+  })
+
+  assert.deepEqual(context.authoritySnapshot.productLoadContext?.ownedCategories, [])
+  assert.deepEqual(context.authoritySnapshot.productLoadContext?.oilPurposes, [])
+  assert.equal(context.authoritySnapshot.productLoadContext?.shampooFrequency, "weekly_2x")
 })
 
 test("rejects an unrefined snapshot and blank opaque entry IDs", () => {

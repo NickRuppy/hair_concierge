@@ -7,6 +7,7 @@ import {
   type Stage3RouteDeps,
 } from "../src/app/api/personal-plan/stage-3/route"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
+import { Stage3AuthoritySnapshotError } from "../src/lib/personal-plan/products/authority/snapshot"
 
 const draft = {
   schemaVersion: 1 as const,
@@ -291,6 +292,33 @@ test("Stage 3 GET exposes server authority projections after capture", async () 
   assert.equal(body.authorityEvaluations[0]?.status, "unknown")
 })
 
+test("Stage 3 GET preserves stale refined authority as a recoverable conflict", async () => {
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => ({
+          status: "active",
+          draft: { ...draft, pass: "product_decisions" as const },
+          requirements,
+        }),
+        evaluateDecisions: async () => {
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.deepEqual(
+    [response!.status, await response!.json()],
+    [409, { error: "stale_refined_source" }],
+  )
+})
+
 test("Stage 3 PATCH accepts semantic decision intent without accepting a client decision", async () => {
   let received: unknown = null
   const response = await createStage3RouteHandlers(
@@ -376,6 +404,51 @@ test("Stage 3 PATCH accepts one atomic complete category-role replacement", asyn
           category: "shampoo",
           roles: ["shampoo_everyday"],
         },
+      ],
+    },
+  })
+})
+
+test("Stage 3 PATCH accepts atomic capture finalization with assignments and gaps", async () => {
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        mutate: async (input) => {
+          received = input
+          return { status: "saved", draft }
+        },
+      }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: {
+          type: "finalize_capture_category",
+          category: "shampoo",
+          assignments: [],
+          uncoveredRoles: [
+            { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
+          ],
+        },
+      }),
+    }),
+  )
+
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    mutation: {
+      type: "finalize_capture_category",
+      category: "shampoo",
+      assignments: [],
+      uncoveredRoles: [
+        { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
       ],
     },
   })

@@ -3,12 +3,19 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
+  canContinueToPersonalPlan,
   PERSONAL_PLAN_READY_MESSAGES,
   PERSONAL_PLAN_READY_MIN_STORY_MS,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
   PERSONAL_PLAN_READY_POLL_LIMIT,
   personalPlanStoryIndexAt,
 } from "../src/app/plan-bereit/transition"
+
+test("backend readiness enables the CTA on the first successful poll", () => {
+  assert.equal(canContinueToPersonalPlan("ready"), true)
+  assert.equal(canContinueToPersonalPlan("checking"), false)
+  assert.equal(canContinueToPersonalPlan("timeout"), false)
+})
 
 test("the post-payment story confirms purchase and leads with the provisional need plan", () => {
   assert.deepEqual(PERSONAL_PLAN_READY_MESSAGES, [
@@ -55,6 +62,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
   assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Plan ansehen/)
+  assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)
   assert.match(client, /Dein Bedarfsplan ist bereit/)
   assert.match(client, /Zuerst siehst du, was dein Haar laut deinem Quiz braucht/)
   assert.doesNotMatch(client, /Verfeinere ihn jetzt mit deinen Produkten/)

@@ -77,7 +77,7 @@ test("the bridge exposes a real continuation action and blocks duplicate handoff
   assert.match(bridgeHtml, /aria-busy="true"/)
 })
 
-test("renders two qualitative sections and never a numeric question total", () => {
+test("renders the current qualitative section and never a numeric question total", () => {
   const session = createStage2RefinementSession({
     pathVersion: "stage2-ui-test",
     triggerContext: baseTriggerContext,
@@ -108,8 +108,8 @@ test("renders two qualitative sections and never a numeric question total", () =
     />,
   )
 
-  assert.match(html, /Was du heute benutzt/)
   assert.match(html, /Wie du dein Haar behandelst/)
+  assert.match(html, /Personal-Plan-Stufen/)
   assert.doesNotMatch(html, /Frage\s+\d+\s+von\s+\d+/i)
 })
 
@@ -153,7 +153,7 @@ test("renders exactly ten current-product categories with no preselection from r
     assert.match(html, new RegExp(label))
   }
   assert.equal(countOccurrences(html, 'aria-pressed="true"'), 0)
-  assert.match(html, /Nichts davon/)
+  assert.match(html, /Keine weiteren/)
   assert.doesNotMatch(html, /Serum|Styling|Scrub|Andere/)
 })
 
@@ -180,18 +180,18 @@ test("UI option value order stays coupled to canonical Slice A vocabularies", ()
   )
 })
 
-test("global category none is inactive when only a relevant category is selected", () => {
+test("the secondary category empty action is group-local and preserves three primary selections", () => {
   const session = createStage2RefinementSession({
     pathVersion: "stage2-ui-test",
     triggerContext: baseTriggerContext,
-    answers: { currentProductCategories: ["shampoo"] },
+    answers: { currentProductCategories: ["shampoo", "mask", "heat_protectant"] },
     completedQuestionIds: ["current_product_categories"],
   })
   const html = renderToStaticMarkup(
     <RefinementQuestion
       session={session}
       questionId="current_product_categories"
-      localAnswer={["shampoo"]}
+      localAnswer={["shampoo", "mask", "heat_protectant"]}
       onLocalAnswerChange={() => {}}
       status="idle"
       canGoBack={false}
@@ -201,10 +201,17 @@ test("global category none is inactive when only a relevant category is selected
     />,
   )
 
-  assert.match(html, /aria-label="Nichts davon; andere Auswahl wird gelöscht"/)
+  assert.equal(countOccurrences(html, 'aria-pressed="true"'), 3)
+  assert.match(html, /Weitere unterstützte Kategorien/)
+  assert.match(html, /Keine weiteren/)
+  assert.match(html, /löscht nur die Auswahl unter Weitere unterstützte Kategorien/i)
+  assert.match(
+    html,
+    /aria-label="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"/,
+  )
   assert.doesNotMatch(
     html,
-    /aria-pressed="true" aria-label="Nichts davon; andere Auswahl wird gelöscht"/,
+    /aria-pressed="true" aria-label="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"/,
   )
 })
 
@@ -254,6 +261,14 @@ test("merges grouped category selections without dropping the other group", () =
     (value) => !relevantGroup.includes(value as (typeof relevantGroup)[number]),
   )
 
+  assert.deepEqual(
+    mergeGroupedCategorySelection({
+      currentSelection: ["shampoo", "heat_protectant", "oil", "mask"],
+      groupValues: remainingGroup,
+      nextGroupSelection: [],
+    }),
+    ["shampoo", "heat_protectant", "mask"],
+  )
   assert.deepEqual(
     mergeGroupedCategorySelection({
       currentSelection,
@@ -306,6 +321,7 @@ test("renders conservative severe-irritation boundary and accessible save/error 
   )
 
   assert.match(html, /brennend, schmerzhaft oder entzündet/i)
+  assert.match(html, /Fühlt sich normal an/)
   assert.match(html, /kosmetische Kopfhaut-Empfehlungen pausieren/i)
   assert.match(html, /ärztliche oder dermatologische Einschätzung/i)
   assert.match(html, /role="alert"/)

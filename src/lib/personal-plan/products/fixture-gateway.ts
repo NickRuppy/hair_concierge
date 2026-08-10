@@ -15,6 +15,7 @@ import {
   stage3CategoryRequirementSchema,
   type PersonalPlanCategory,
   type Stage3CatalogCandidate,
+  type Stage3AuthoritySnapshotV1,
   type Stage3CategoryRequirement,
   type Stage3DecisionSubject,
   type Stage3ProductDecision,
@@ -25,6 +26,7 @@ import {
   addCapturedProduct,
   assignProductRoles,
   completeCaptureCategory,
+  finalizeCaptureCategory,
   createStage3Draft,
   invalidateDraftForRefinedVersion,
   markRoleUncovered,
@@ -117,6 +119,7 @@ type LoadOrCreateInput = {
   personalPlanId: string
   refinedVersionId: string
   requirements: Stage3CategoryRequirement[]
+  authoritySnapshot?: Stage3AuthoritySnapshotV1
 }
 
 export type FixtureDraftResponse = Stage3DraftResponse
@@ -505,6 +508,14 @@ function applyMutation(
         draft,
         mutation.category,
         mutation.assignments,
+        requirements,
+      )
+    case "finalize_capture_category":
+      return finalizeCaptureCategory(
+        draft,
+        mutation.category,
+        mutation.assignments,
+        mutation.uncoveredRoles,
         requirements,
       )
     case "mark_role_uncovered":

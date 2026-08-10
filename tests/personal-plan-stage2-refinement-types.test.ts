@@ -48,6 +48,7 @@ test("Stage 2 vocabulary arrays preserve the approved stable order", () => {
     "thermal_rollers",
   ])
   assert.deepEqual(SCALP_IRRITATION_DETAILS, [
+    "normal",
     "mild_sensitive_or_itchy",
     "burning_painful_or_inflamed",
   ])

@@ -23,6 +23,7 @@ export type Stage2ProductCategory = (typeof STAGE2_PRODUCT_CATEGORIES)[number]
 export type WetWashFrequency = ProductFrequency | "does_not_wash"
 export const WET_WASH_FREQUENCIES = [...PRODUCT_FREQUENCIES, "does_not_wash"] as const
 export const SCALP_IRRITATION_DETAILS = [
+  "normal",
   "mild_sensitive_or_itchy",
   "burning_painful_or_inflamed",
 ] as const

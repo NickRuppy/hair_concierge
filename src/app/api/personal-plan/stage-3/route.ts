@@ -58,6 +58,14 @@ const clientMutationSchema = z
         .strict(),
       z
         .object({
+          type: z.literal("finalize_capture_category"),
+          category: personalPlanCategorySchema,
+          assignments: z.array(stage3RoleAssignmentSchema),
+          uncoveredRoles: z.array(stage3CapturedUncoveredRoleSchema),
+        })
+        .strict(),
+      z
+        .object({
           type: z.literal("mark_role_uncovered"),
           uncoveredRole: stage3CapturedUncoveredRoleSchema,
         })
@@ -165,7 +173,11 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
             ? []
             : await gateway.evaluateDecisions({ draftId: loaded.draft.draftId })
         return response({ ...loaded, authorityEvaluations })
-      } catch {
+      } catch (error) {
+        if (error instanceof Stage3AuthoritySnapshotError) {
+          log("conflict", started, error.code)
+          return response({ error: error.code }, 409)
+        }
         log("unavailable", started, "temporarily_unavailable")
         return response({ error: "temporarily_unavailable" }, 503)
       }

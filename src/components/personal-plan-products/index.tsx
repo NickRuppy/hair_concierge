@@ -1,10 +1,20 @@
 "use client"
 
-import { AlertCircle, ArrowLeft, Check, Clock, Loader2, Plus, Search } from "lucide-react"
+import {
+  AlertCircle,
+  ArrowLeft,
+  Check,
+  Clock,
+  ImageIcon,
+  Loader2,
+  Plus,
+  Search,
+} from "lucide-react"
 import type { ReactNode } from "react"
 
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
+import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
 type Tone = "neutral" | "positive" | "warning" | "negative"
@@ -22,6 +32,7 @@ export type Stage3CatalogCandidate = {
   brandName?: string
   detail?: string
   confidenceLabel?: string
+  imageUrl?: string
 }
 
 export type Stage3CapturedProductSummary = {
@@ -30,6 +41,7 @@ export type Stage3CapturedProductSummary = {
   frequencyLabel: string
   sourceLabel?: string
   statusLabel?: string
+  imageUrl?: string
 }
 
 export type Stage3FrequencyOption = {
@@ -67,6 +79,7 @@ export type Stage3RecommendationSummary = {
   priceLabel?: string
   availabilityLabel?: string
   sellerLabel?: string
+  imageUrl?: string
 }
 
 export type Stage3ProductDecisionProjection = {
@@ -99,50 +112,18 @@ export function Stage3Shell({
   children: ReactNode
   onBack?: () => void
 }) {
+  const saveStatus = saveState.status === "conflict" ? "error" : saveState.status
+
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-[540px] flex-col px-5 py-7 md:px-10 md:py-10">
-      <header className="mb-7 space-y-4">
-        <div className="grid grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onBack}
-            aria-label="Zurück"
-            className={cn("rounded-full text-muted-foreground", !onBack && "invisible")}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-
-          <div className="min-w-0 text-center">
-            <p className="truncate text-xs font-semibold text-foreground">{title}</p>
-            <p className="truncate text-[11px] text-[var(--text-caption)]">{currentStepLabel}</p>
-          </div>
-
-          <p
-            aria-live="polite"
-            className={cn(
-              "min-w-[5.75rem] text-right text-[11px] font-semibold",
-              saveState.status === "saved" && "text-emerald-700",
-              saveState.status === "saving" && "text-[var(--brand-plum)]",
-              saveState.status === "idle" && "text-[var(--text-caption)]",
-              (saveState.status === "error" || saveState.status === "conflict") &&
-                "text-destructive",
-            )}
-          >
-            {saveState.label}
-          </p>
-        </div>
-
-        <Progress
-          value={completedSteps}
-          max={totalSteps}
-          aria-label="Fortschritt Produkte"
-          className="h-[6px] bg-border"
-        />
-      </header>
-
-      <main className="min-w-0 flex-1">{children}</main>
+    <div className="min-h-[100dvh] bg-[var(--background)]">
+      <PersonalPlanJourneyHeader currentStage={3} saveStatus={saveStatus} onBack={onBack} />
+      <main
+        className="personal-plan-cookie-clearance mx-auto min-w-0 w-full max-w-[720px] px-5 pt-7 md:my-8 md:rounded-3xl md:border md:border-border md:bg-card md:px-10 md:pt-10 md:shadow-sm"
+        data-stage3-progress={`${completedSteps}/${totalSteps}`}
+        data-stage3-context={`${title}:${currentStepLabel}`}
+      >
+        {children}
+      </main>
     </div>
   )
 }
@@ -270,7 +251,9 @@ export function ProductCaptureScreen({
     <section>
       {onBack ? <BackButton onBack={onBack} /> : null}
       <div className="animate-fade-in-up mb-2">
-        <h1 className="font-header text-3xl leading-tight text-foreground">Dein {categoryLabel}</h1>
+        <h1 className="font-header text-3xl leading-tight text-foreground">
+          {categoryHeading(categoryLabel)}
+        </h1>
       </div>
       <p className="animate-fade-in-up mb-6 text-sm text-[var(--text-sub)]">{needSummary}</p>
 
@@ -386,8 +369,9 @@ export function ProductSearchResults({
           aria-selected="false"
           aria-label={`${result.displayName} auswählen`}
           onClick={() => onSelectCandidate(result.candidateId)}
-          className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors hover:border-[var(--brand-plum)]/40"
+          className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors hover:border-[var(--brand-plum)]/40"
         >
+          <ProductImage imageUrl={result.imageUrl} label={result.displayName} />
           <span className="min-w-0">
             <strong className="block break-words text-sm text-foreground">
               {result.displayName}
@@ -468,8 +452,9 @@ export function ProductCapturedProductList({
         {products.map((product) => (
           <article
             key={product.capturedProductId}
-            className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3"
+            className="grid grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3"
           >
+            <ProductImage imageUrl={product.imageUrl} label={product.displayName} />
             <div className="min-w-0">
               <h3 className="break-words text-sm font-semibold text-foreground">
                 {product.displayName}
@@ -479,7 +464,10 @@ export function ProductCapturedProductList({
                 {product.sourceLabel ? ` · ${product.sourceLabel}` : ""}
               </p>
               {product.statusLabel ? (
-                <p role="status" className="mt-1 text-xs font-semibold text-amber-700">
+                <p
+                  role="status"
+                  className="mt-1 text-xs font-semibold text-[var(--status-pending-text)]"
+                >
                   {product.statusLabel}
                 </p>
               ) : null}
@@ -544,9 +532,9 @@ export function ProductMultiProductControls({
         variant="unstyled"
         onClick={onContinue}
         disabled={!canContinue}
-        className="quiz-btn-primary w-full"
+        className="personal-plan-primary-action w-full"
       >
-        Kategorie abschließen
+        Weiter
       </Button>
     </div>
   )
@@ -558,7 +546,6 @@ export function SemanticRoleAssignment({
   products,
   roles,
   assignments,
-  errors = [],
   onToggleRole,
   onContinue,
   onBack,
@@ -568,7 +555,6 @@ export function SemanticRoleAssignment({
   products: Stage3RoleProduct[]
   roles: Stage3RoleOption[]
   assignments: Record<string, string[]>
-  errors?: string[]
   onToggleRole: (capturedProductId: string, role: string, checked: boolean) => void
   onContinue: () => void
   onBack: () => void
@@ -587,6 +573,9 @@ export function SemanticRoleAssignment({
         </h1>
       </div>
       <p className="animate-fade-in-up mb-6 text-sm text-[var(--text-sub)]">{roleCopy}</p>
+      <p className="animate-fade-in-up mb-6 text-sm font-semibold text-[var(--text-sub)]">
+        Nicht ausgewählte Aufgaben bleiben als offene Lücke im Plan erhalten.
+      </p>
 
       <div className="space-y-3">
         {products.map((product) => (
@@ -636,25 +625,14 @@ export function SemanticRoleAssignment({
         ))}
       </div>
 
-      {errors.length > 0 ? (
-        <div
-          role="alert"
-          className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-destructive"
-        >
-          {errors.map((error) => (
-            <p key={error}>{error}</p>
-          ))}
-        </div>
-      ) : null}
-
       <div className="mt-5">
         <Button
           type="button"
           variant="unstyled"
           onClick={onContinue}
-          className="quiz-btn-primary w-full"
+          className="personal-plan-primary-action w-full"
         >
-          Zuordnung speichern
+          Auswahl übernehmen
         </Button>
       </div>
     </section>
@@ -665,16 +643,27 @@ export function ProductDecisionScreen({
   decisions,
   onChooseAction,
   onBack,
+  groupClearFits = false,
+  onAcceptClearFits,
 }: {
   decisions: Stage3ProductDecisionProjection[]
   onChooseAction: (decisionKey: string, action: Stage3DecisionAction) => void
   onBack: () => void
+  groupClearFits?: boolean
+  onAcceptClearFits?: () => void
 }) {
   return (
     <section>
       <BackButton onBack={onBack} />
       <div className="animate-fade-in-up mb-2">
-        <h1 className="font-header text-3xl leading-tight text-foreground">Produkte prüfen</h1>
+        <h1 className="font-header text-3xl leading-tight text-foreground">
+          {groupClearFits ? "Diese Produkte passen" : "Produkte prüfen"}
+        </h1>
+        {groupClearFits ? (
+          <p className="mt-2 text-sm text-[var(--text-sub)]">
+            Die wichtigsten Anforderungen sind abgedeckt. Übernimm sie gemeinsam in deine Routine.
+          </p>
+        ) : null}
       </div>
 
       <div className="mt-5 space-y-4">
@@ -683,9 +672,20 @@ export function ProductDecisionScreen({
             key={decision.decisionKey}
             decision={decision}
             onChooseAction={onChooseAction}
+            hideActions={groupClearFits}
           />
         ))}
       </div>
+      {groupClearFits && onAcceptClearFits ? (
+        <Button
+          type="button"
+          variant="unstyled"
+          className="personal-plan-primary-action mt-5 w-full"
+          onClick={onAcceptClearFits}
+        >
+          {decisions.length} passende Produkte übernehmen
+        </Button>
+      ) : null}
     </section>
   )
 }
@@ -693,20 +693,17 @@ export function ProductDecisionScreen({
 function DecisionCard({
   decision,
   onChooseAction,
+  hideActions = false,
 }: {
   decision: Stage3ProductDecisionProjection
   onChooseAction: (decisionKey: string, action: Stage3DecisionAction) => void
+  hideActions?: boolean
 }) {
   const Icon = decision.kind === "fit" ? Check : decision.kind === "pending" ? Clock : AlertCircle
   const toneClass = decisionToneClass(decision.kind)
 
   return (
-    <article
-      className={cn(
-        "rounded-xl border border-border bg-card",
-        decision.actions.length > 1 ? "pb-40" : "pb-24",
-      )}
-    >
+    <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
       <div className="grid grid-cols-[40px_minmax(0,1fr)] gap-3 p-4">
         <div className={cn("grid h-10 w-10 place-items-center rounded-full", toneClass.icon)}>
           <Icon className="h-5 w-5" />
@@ -777,31 +774,36 @@ function DecisionCard({
         <p
           role="status"
           aria-live="polite"
-          className="border-t border-border px-4 py-3 text-sm text-amber-700"
+          className="border-t border-border px-4 py-3 text-sm text-[var(--status-pending-text)]"
         >
-          Dieses Produkt bleibt lokal in Prüfung und wird noch nicht als Routine-Schritt verwendet.
+          Solange die Produktangaben noch geprüft werden, erscheint es nicht als Anwendungsschritt.
         </p>
       ) : null}
 
-      <div className="fixed inset-x-5 bottom-4 z-40 mx-auto grid max-w-[500px] gap-2 rounded-xl border border-border bg-background/95 p-3 shadow-xl backdrop-blur-sm">
-        {decision.actions.map((action) => (
-          <Button
-            key={`${decision.decisionKey}-${action.kind}-${action.label}`}
-            type="button"
-            variant={primaryActionKinds.has(action.kind) ? "default" : "outline"}
-            onClick={() => onChooseAction(decision.decisionKey, action)}
-            data-stage3-decision-key={decision.decisionKey}
-            data-stage3-action-kind={action.kind}
-            aria-label={
-              action.productName
-                ? `${action.label}: ${action.productName}`
-                : `${action.label}: ${decision.categoryLabel} — ${decision.needSummary}`
-            }
-          >
-            {action.label}
-          </Button>
-        ))}
-      </div>
+      {!hideActions ? (
+        <div className="grid gap-2 border-t border-border bg-[var(--background)] p-4">
+          {decision.actions.map((action) => (
+            <Button
+              key={`${decision.decisionKey}-${action.kind}-${action.label}`}
+              type="button"
+              variant={primaryActionKinds.has(action.kind) ? "unstyled" : "outline"}
+              className={
+                primaryActionKinds.has(action.kind) ? "personal-plan-primary-action" : undefined
+              }
+              onClick={() => onChooseAction(decision.decisionKey, action)}
+              data-stage3-decision-key={decision.decisionKey}
+              data-stage3-action-kind={action.kind}
+              aria-label={
+                action.productName
+                  ? `${action.label}: ${action.productName}`
+                  : `${action.label}: ${decision.categoryLabel} — ${decision.needSummary}`
+              }
+            >
+              {action.label}
+            </Button>
+          ))}
+        </div>
+      ) : null}
     </article>
   )
 }
@@ -811,28 +813,28 @@ const primaryActionKinds = new Set<Stage3DecisionAction["kind"]>(["keep", "plan_
 function decisionToneClass(kind: Stage3ProductDecisionProjection["kind"]) {
   if (kind === "fit") {
     return {
-      icon: "bg-emerald-50 text-emerald-700",
-      badge: "bg-emerald-50 text-emerald-700",
+      icon: "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
+      badge: "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
     }
   }
 
   if (kind === "pending") {
     return {
-      icon: "bg-amber-50 text-amber-700",
-      badge: "bg-amber-50 text-amber-700",
+      icon: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
+      badge: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
     }
   }
 
   return {
-    icon: "bg-red-50 text-destructive",
-    badge: "bg-red-50 text-destructive",
+    icon: "bg-[var(--status-danger-bg)] text-[var(--status-danger-text)]",
+    badge: "bg-[var(--status-danger-bg)] text-[var(--status-danger-text)]",
   }
 }
 
 function criterionResultClass(tone: Exclude<Tone, "neutral">) {
-  if (tone === "positive") return "text-emerald-700"
-  if (tone === "warning") return "text-amber-700"
-  return "text-destructive"
+  if (tone === "positive") return "text-[var(--status-ok-text)]"
+  if (tone === "warning") return "text-[var(--status-pending-text)]"
+  return "text-[var(--status-danger-text)]"
 }
 
 export function Stage3SystemState({
@@ -889,6 +891,8 @@ export function IntakeFallbackBoundary({
   message,
   frequencyOptions,
   selectedFrequency,
+  productName = "",
+  onProductNameChange = () => {},
   onFrequencyChange,
   onOpen,
   onRetry,
@@ -899,6 +903,8 @@ export function IntakeFallbackBoundary({
   message?: string
   frequencyOptions: Stage3FrequencyOption[]
   selectedFrequency: string | null
+  productName?: string
+  onProductNameChange?: (value: string) => void
   onFrequencyChange: (value: string) => void
   onOpen: () => void
   onRetry?: () => void
@@ -917,9 +923,21 @@ export function IntakeFallbackBoundary({
         {categoryLabel} nicht gefunden?
       </h1>
       <p className="mt-2 text-sm text-[var(--text-sub)]">
-        Produkt per Foto oder manuell hinzufügen. Wenn es noch nicht sicher zugeordnet werden kann,
-        bleibt es in Prüfung und du kannst fortfahren.
+        Gib Marke und Produktname ein, damit du es später wiedererkennst. Ein Foto ist nicht nötig.
       </p>
+      <label
+        className="mt-4 block text-sm font-semibold text-foreground"
+        htmlFor="stage3-manual-product-name"
+      >
+        Produktname
+      </label>
+      <input
+        id="stage3-manual-product-name"
+        value={productName}
+        onChange={(event) => onProductNameChange(event.target.value)}
+        placeholder="Marke und Produktname"
+        className="mt-2 h-12 w-full rounded-xl border border-border bg-card px-4 text-base text-foreground focus:border-[var(--brand-plum)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--brand-plum)]/30"
+      />
       <div className="mt-4">
         <ProductFrequencyPicker
           options={frequencyOptions}
@@ -945,9 +963,12 @@ export function IntakeFallbackBoundary({
           type="button"
           variant="default"
           onClick={onOpen}
-          disabled={status === "pending" || selectedFrequency === null}
+          disabled={
+            status === "pending" || selectedFrequency === null || productName.trim().length < 2
+          }
+          className="personal-plan-primary-action"
         >
-          Produkt per Foto oder manuell hinzufügen
+          Produkt speichern
         </Button>
         {onRetry ? (
           <Button
@@ -965,6 +986,43 @@ export function IntakeFallbackBoundary({
       </div>
     </section>
   )
+}
+
+function ProductImage({ imageUrl, label }: { imageUrl?: string; label: string }) {
+  return (
+    <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
+      {imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+      ) : (
+        <ImageIcon className="h-5 w-5" aria-label={`Kein Produktbild für ${label}`} />
+      )}
+    </div>
+  )
+}
+
+const PERSONAL_PLAN_CATEGORY_HEADING_COPY = {
+  shampoo: { label: "Shampoo", heading: "Dein Shampoo" },
+  conditioner: { label: "Conditioner", heading: "Dein Conditioner" },
+  leave_in: { label: "Leave-in", heading: "Dein Leave-in" },
+  heat_protectant: { label: "Hitzeschutz", heading: "Dein Hitzeschutz" },
+  oil: { label: "Öl", heading: "Dein Öl" },
+  mask: { label: "Maske", heading: "Deine Maske" },
+  scalp_care: { label: "Kopfhautprodukt", heading: "Dein Kopfhautprodukt" },
+  dry_shampoo: { label: "Trockenshampoo", heading: "Dein Trockenshampoo" },
+  bondbuilder: { label: "Bondbuilder", heading: "Dein Bondbuilder" },
+  deep_cleansing_shampoo: {
+    label: "Tiefenreinigung",
+    heading: "Deine Tiefenreinigung",
+  },
+} as const satisfies Record<PersonalPlanCategory, { label: string; heading: string }>
+
+const CATEGORY_HEADING_BY_LABEL: Readonly<Record<string, string>> = Object.fromEntries(
+  Object.values(PERSONAL_PLAN_CATEGORY_HEADING_COPY).map(({ label, heading }) => [label, heading]),
+)
+
+function categoryHeading(categoryLabel: string) {
+  return CATEGORY_HEADING_BY_LABEL[categoryLabel] ?? categoryLabel
 }
 
 function BackButton({ onBack }: { onBack: () => void }) {

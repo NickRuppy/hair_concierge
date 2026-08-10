@@ -113,9 +113,9 @@ function frequencyLabel(frequency: PlanFrequencyTarget | null, paused: boolean):
     case "role_based_wash_linked":
       return `${prefix}nach Bedarf`
     case "product_protocol_course":
-      return `${prefix}nach Produktprotokoll`
+      return `${prefix}nach Herstellerangabe`
     case "role_keyed_product_protocol":
-      return `${prefix}nach Produktprotokoll`
+      return `${prefix}nach Herstellerangabe`
   }
 }
 
@@ -191,11 +191,18 @@ function presentationFor(decision: PlanCategoryDecision): CategoryPresentation |
         fit: "Dein Ansatz kann vor dem nächsten geplanten Waschtag nachfetten.",
       }
     case "bondbuilder":
+      const hasChemicalTreatmentReason = decision.reasons.some((reason) =>
+        reason.evidence.some((evidence) => evidence.key === "chemicalTreatments"),
+      )
       return {
         targetType: "Gezielter Strukturschutz",
         purpose: "Unterstützt beanspruchte Längen gezielter als normale Pflege allein.",
-        productCriteria: "Spezialisierte Strukturpflege für chemisch beanspruchtes Haar bieten.",
-        fit: "Deine Längen bringen einen erhöhten strukturellen Pflegebedarf mit.",
+        productCriteria: hasChemicalTreatmentReason
+          ? "Spezialisierte Strukturpflege für chemisch beanspruchtes Haar bieten."
+          : "Spezialisierte Strukturpflege für strukturell beanspruchte Längen bieten.",
+        fit: hasChemicalTreatmentReason
+          ? "Deine chemische Behandlung macht gezielte Strukturpflege sinnvoll."
+          : "Deine beobachteten Haarsignale machen gezielte Strukturpflege sinnvoll.",
       }
     case "deep_cleansing_shampoo":
       return {
@@ -338,9 +345,12 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   const optionalCards = cards.filter((card): card is NeedCardViewModel => card?.tone === "optional")
   if (basisCards.length === 0) return null
 
-  const hasOptionalPage = optionalCards.length > 0
+  const pausedOnlyOptional = optionalCards.length > 0 && optionalCards.every((card) => card.paused)
+  const visibleBasisCards = pausedOnlyOptional ? [...basisCards, ...optionalCards] : basisCards
+  const visibleOptionalCards = pausedOnlyOptional ? [] : optionalCards
+  const hasOptionalPage = visibleOptionalCards.length > 0
   return {
-    basis: screenFor("basis", basisCards, hasOptionalPage),
-    optional: hasOptionalPage ? screenFor("optional", optionalCards, hasOptionalPage) : null,
+    basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
+    optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,
   }
 }

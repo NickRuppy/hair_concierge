@@ -554,7 +554,7 @@ export function PersonalPlanRoutineClient({
         <BottomSheetContent>
           <BottomSheetTitle>Produktdetail</BottomSheetTitle>
           <BottomSheetDescription>
-            Eignung aus deinem Routine-Schnappschuss und aktuelle Shopdaten.
+            Eignung aus deiner bestätigten Routine und aktuelle Shopdaten.
           </BottomSheetDescription>
           {detail ? (
             <RoutineProductDetail

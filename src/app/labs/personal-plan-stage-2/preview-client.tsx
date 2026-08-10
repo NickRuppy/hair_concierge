@@ -30,10 +30,12 @@ export function Stage2PreviewClient({
   scenario,
   triggerContext,
   onHandoff,
+  autoHandoff,
 }: {
   scenario: Stage2PreviewScenario
   triggerContext?: Stage2TriggerContext
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
+  autoHandoff?: boolean
 }) {
   const gateway = useMemo(
     () => createPreviewGateway(scenario, triggerContext),
@@ -48,6 +50,7 @@ export function Stage2PreviewClient({
           // Preview-safe no-op: the customer component must not invent a Bedarfsplan href.
         }}
         onHandoff={onHandoff}
+        autoHandoff={autoHandoff}
       />
     </div>
   )

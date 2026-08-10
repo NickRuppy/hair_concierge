@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import { Stage3ProductsGatewayError } from "../src/lib/personal-plan/products/gateway"
+import { createHttpStage3ProductsGateway } from "../src/lib/personal-plan/products/http-gateway"
 import {
   createFixtureStage3Gateway,
   type FixtureStage3Gateway,
@@ -33,6 +34,29 @@ test("production product failures share the frozen unavailable and snapshot code
     assert.equal(error.name, "Stage3ProductsGatewayError")
     assert.equal(error.code, code)
   }
+})
+
+test("the HTTP gateway preserves a stale refined source conflict", async () => {
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async () =>
+      new Response(JSON.stringify({ error: "stale_refined_source" }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      }),
+  })
+
+  await assert.rejects(
+    () =>
+      subject.loadOrCreate({
+        draftId: "client-derived",
+        userId: "client-derived",
+        personalPlanId: "plan-1",
+        refinedVersionId: "stale-refined-1",
+        requirements: [],
+      }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source",
+  )
 })
 
 async function createDraft(subject: FixtureStage3Gateway) {

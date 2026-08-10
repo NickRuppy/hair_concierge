@@ -2,14 +2,25 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { resolvePlanStartPageState, type PlanStartPageDeps } from "../src/app/plan-start/page"
-import { loadPlanStartStage3Entry } from "../src/components/personal-plan-start/plan-start-flow"
+import {
+  loadPlanStartStage3Bootstrap,
+  recoverPlanStartStage3Load,
+  shouldRequestPlanStartOnMount,
+  stage3LoadRecoveryMode,
+} from "../src/components/personal-plan-start/plan-start-flow"
+import {
+  deriveRefinementEntryMode,
+  shouldReturnToStage1FromQuestion,
+} from "../src/components/personal-plan-refinement/refinement-flow"
+import { shouldLoadStage3DraftOnMount } from "../src/components/personal-plan-products/stage3-products-flow"
 import {
   loadExistingStage2RefinementSession,
   type Stage2PersistedDraft,
 } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
-import type {
-  Stage3DraftResponse,
-  Stage3ProductsGateway,
+import {
+  Stage3ProductsGatewayError,
+  type Stage3DraftResponse,
+  type Stage3ProductsGateway,
 } from "../src/lib/personal-plan/products/gateway"
 import type { Stage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
@@ -175,8 +186,82 @@ test("completed refinement remains at the Stage 2 bridge until Stage 3 authority
   })
 })
 
-test("the Stage 3 re-entry loader requests and returns the exact persisted authority", async () => {
+test("server-hydrated Stage 1 skips the duplicate browser GET while retry/direct entry may load", () => {
+  assert.equal(shouldRequestPlanStartOnMount({ basis: {} as never, optional: null }), false)
+  assert.equal(shouldRequestPlanStartOnMount(undefined), true)
+})
+
+test("a stale Stage 3 source retries through the server frontier instead of the stale version", () => {
+  let stage3Retries = 0
+  let frontierReloads = 0
+  const recover = (error: unknown) =>
+    recoverPlanStartStage3Load(stage3LoadRecoveryMode(error), {
+      retryStage3: () => {
+        stage3Retries += 1
+      },
+      reloadServerFrontier: () => {
+        frontierReloads += 1
+      },
+    })
+
+  recover(new Stage3ProductsGatewayError("stale_refined_source"))
+  assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 0, frontierReloads: 1 })
+
+  recover(new Stage3ProductsGatewayError("temporarily_unavailable"))
+  assert.deepEqual({ stage3Retries, frontierReloads }, { stage3Retries: 1, frontierReloads: 1 })
+})
+
+test("a transient server Stage 1 preload failure preserves the browser retry path", async () => {
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage2",
+      nextHref: "/plan-start",
+      allowed,
+    }),
+    loadExistingRefinementSession: async () => null,
+    loadStage1Plan: async () => {
+      throw new Error("temporary Stage 1 failure")
+    },
+  }
+
+  assert.deepEqual(await resolvePlanStartPageState(deps), {
+    state: "production",
+    initialJourney: { stage: "stage1" },
+  })
+})
+
+test("direct Stage 2 entry opens a new session immediately but preserves partial resume", () => {
+  const fresh = refinementSession("in_progress")
+  fresh.answers = {}
+  fresh.completedQuestionIds = []
+  fresh.path.completedQuestionIds = []
+  fresh.path.firstUnresolvedQuestionId = "current_product_categories"
+
+  assert.equal(deriveRefinementEntryMode(fresh, true), "question")
+  assert.equal(deriveRefinementEntryMode(fresh, false), "invitation")
+  assert.equal(deriveRefinementEntryMode(refinementSession("in_progress"), true), "resume")
+  assert.equal(
+    shouldReturnToStage1FromQuestion({
+      session: fresh,
+      activeQuestionId: "current_product_categories",
+      directEntry: true,
+    }),
+    true,
+  )
+  assert.equal(
+    deriveRefinementEntryMode(refinementSession("complete", "refined-1"), true),
+    "bridge",
+  )
+})
+
+test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstrap authority", async () => {
   let received: Parameters<Stage3ProductsGateway["loadOrCreate"]>[0] | null = null
+  let requestCount = 0
   const authorityVersions = {
     shampoo: "shampoo-v1",
     conditioner: "conditioner-v1",
@@ -189,7 +274,7 @@ test("the Stage 3 re-entry loader requests and returns the exact persisted autho
     bondbuilder: "bondbuilder-v1",
     deep_cleansing_shampoo: "deep-cleansing-v1",
   }
-  const response: Stage3DraftResponse = {
+  const response: Stage3DraftResponse & { authorityEvaluations: [] } = {
     status: "active",
     requirements: [
       {
@@ -230,15 +315,17 @@ test("the Stage 3 re-entry loader requests and returns the exact persisted autho
         authorityVersions,
       },
     },
+    authorityEvaluations: [],
   }
   const gateway: Pick<Stage3ProductsGateway, "loadOrCreate"> = {
     loadOrCreate: async (input) => {
+      requestCount += 1
       received = input
       return response
     },
   }
 
-  const entry = await loadPlanStartStage3Entry({
+  const bootstrap = await loadPlanStartStage3Bootstrap({
     gateway,
     personalPlanId: "plan-1",
     refinedVersionId: "refined-1",
@@ -251,7 +338,12 @@ test("the Stage 3 re-entry loader requests and returns the exact persisted autho
     refinedVersionId: "refined-1",
     requirements: [],
   })
-  assert.equal(entry.refinedVersionId, "refined-1")
-  assert.equal(entry.authoritySnapshot?.refinedInputHash, "hash-1")
-  assert.deepEqual(entry.orderedCategories, response.requirements)
+  assert.equal(requestCount, 1)
+  assert.equal(bootstrap.entryContext.refinedVersionId, "refined-1")
+  assert.equal(bootstrap.entryContext.authoritySnapshot?.refinedInputHash, "hash-1")
+  assert.deepEqual(bootstrap.requirements, response.requirements)
+  assert.equal(bootstrap.draft, response.draft)
+  assert.deepEqual(bootstrap.authorityEvaluations, [])
+  assert.equal(shouldLoadStage3DraftOnMount(bootstrap), false)
+  assert.equal(shouldLoadStage3DraftOnMount(undefined), true)
 })

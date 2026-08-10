@@ -5,6 +5,7 @@ import type {
   RoutinePayloadV1,
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 
 import { RoutineSection } from "./routine-section"
 
@@ -42,45 +43,55 @@ export function RoutinePage({
   const initialProposal = view.status === "proposal"
 
   return (
-    <main className="mx-auto w-full max-w-2xl space-y-8 px-4 py-8">
-      <header className="space-y-3">
-        <p className="text-sm font-semibold text-primary">Persönlicher Plan</p>
-        <h1 className="text-3xl font-semibold tracking-tight">
-          {initialProposal ? "Deine Routine steht" : "Deine Routine"}
-        </h1>
-        <p className="text-muted-foreground">
-          {initialProposal
-            ? "Dein Vorschlag ist bereit. Prüfe alle Bausteine, bevor du ihn bestätigst."
-            : "Dein bestätigter Routine-Schnappschuss."}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          {initialProposal && onConfirm ? (
-            <Button variant="cta" onClick={onConfirm}>
-              Routine bestätigen
-            </Button>
-          ) : null}
-          {view.activeVersion && stage5Reachable ? (
-            <Link href="/anwendung" className={buttonVariants({ variant: "cta" })}>
-              Anwendungsplan ansehen
-            </Link>
-          ) : null}
-          {onEdit ? (
-            <Button variant="outline" onClick={onEdit}>
-              Routine bearbeiten
-            </Button>
-          ) : null}
-        </div>
-      </header>
-      <RoutineSection
-        title="Deine Basis"
-        items={sectionItems("basis")}
-        onItemDetail={onItemDetail}
-      />
-      <RoutineSection
-        title="Optional"
-        items={sectionItems("optional")}
-        onItemDetail={onItemDetail}
-      />
-    </main>
+    <div className="min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader currentStage={4} saveStatus="saved" />
+      <main className="personal-plan-cookie-clearance mx-auto w-full max-w-2xl space-y-8 px-4 py-8">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">Persönlicher Plan</p>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {initialProposal ? "Deine Routine steht" : "Deine Routine"}
+          </h1>
+          <p className="text-muted-foreground">
+            {initialProposal
+              ? "Dein Vorschlag ist bereit. Prüfe alle Bausteine, bevor du ihn bestätigst."
+              : "Deine bestätigte Routine mit deinen aktuellen Produkten."}
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {initialProposal && onConfirm ? (
+              <Button
+                variant="unstyled"
+                className="personal-plan-primary-action"
+                onClick={onConfirm}
+              >
+                Routine bestätigen
+              </Button>
+            ) : null}
+            {view.activeVersion && stage5Reachable ? (
+              <Link
+                href="/anwendung"
+                className={`${buttonVariants({ variant: "unstyled" })} personal-plan-primary-action`}
+              >
+                Anwendungsplan ansehen
+              </Link>
+            ) : null}
+            {onEdit ? (
+              <Button variant="outline" onClick={onEdit}>
+                Routine bearbeiten
+              </Button>
+            ) : null}
+          </div>
+        </header>
+        <RoutineSection
+          title="Deine Basis"
+          items={sectionItems("basis")}
+          onItemDetail={onItemDetail}
+        />
+        <RoutineSection
+          title="Optional"
+          items={sectionItems("optional")}
+          onItemDetail={onItemDetail}
+        />
+      </main>
+    </div>
   )
 }

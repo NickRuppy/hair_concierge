@@ -6,7 +6,7 @@ import type {
   PlanReasonFact,
 } from "../types"
 
-type StrongBondbuilderIndicator = "breakage" | "hair_damage" | "rough_surface" | "snaps"
+type StrongBondbuilderIndicator = "breakage" | "hair_damage" | "snaps"
 
 function reason(
   id: string,
@@ -26,7 +26,6 @@ function strongIndicators(profile: PlanProfile): StrongBondbuilderIndicator[] {
   const indicators: StrongBondbuilderIndicator[] = []
   if (hasConcern(profile, "breakage")) indicators.push("breakage")
   if (hasConcern(profile, "hair_damage")) indicators.push("hair_damage")
-  if (profile.hair.surface === "rough") indicators.push("rough_surface")
   if (profile.hair.elasticity === "snaps") indicators.push("snaps")
   return indicators
 }
@@ -76,12 +75,13 @@ function indicatorReasons(
     if (indicator === "hair_damage") {
       reasons.push(reason("bondbuilder.reason.hair_damage", "primary", "currentConcerns"))
     }
-    if (indicator === "rough_surface") {
-      reasons.push(reason("bondbuilder.reason.rough_surface", "primary", "hairSurface"))
-    }
     if (indicator === "snaps") {
       reasons.push(reason("bondbuilder.reason.snaps", "primary", "elasticResponse"))
     }
+  }
+
+  if (profile.hair.surface === "rough") {
+    reasons.push(reason("bondbuilder.reason.rough_surface", "detail", "hairSurface"))
   }
 
   for (const treatment of profile.hair.chemicalTreatments) {

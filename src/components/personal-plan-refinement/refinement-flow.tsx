@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import {
   Stage2RefinementError,
   type Stage2RefinementErrorCode,
@@ -60,27 +61,54 @@ export type Stage2HandoffPayload = {
   session: Stage2RefinementSession
 }
 
+type RefinementMode = "loading" | "invitation" | "resume" | "question" | "bridge"
+
+export function deriveRefinementEntryMode(
+  session: Stage2RefinementSession,
+  directEntry: boolean,
+): Extract<RefinementMode, "invitation" | "resume" | "question" | "bridge"> {
+  if (session.status === "complete") return "bridge"
+  if (session.completedQuestionIds.length > 0) return "resume"
+  return directEntry ? "question" : "invitation"
+}
+
+export function shouldReturnToStage1FromQuestion(input: {
+  session: Stage2RefinementSession
+  activeQuestionId: Stage2QuestionId
+  directEntry: boolean
+}): boolean {
+  return (
+    input.directEntry &&
+    input.session.completedQuestionIds.length === 0 &&
+    input.session.path.orderedQuestionIds.indexOf(input.activeQuestionId) === 0
+  )
+}
+
 export function RefinementFlow({
   gateway,
   onTelemetry,
   onSecondaryExit,
   onHandoff,
+  autoHandoff = true,
+  directEntry = false,
 }: {
   gateway: Stage2RefinementGateway
   onTelemetry?: (event: Stage2RefinementTelemetryEvent) => void
   onSecondaryExit?: () => void
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
+  autoHandoff?: boolean
+  directEntry?: boolean
 }) {
   const [session, setSession] = useState<Stage2RefinementSession | null>(null)
   const [activeQuestionId, setActiveQuestionId] = useState<Stage2QuestionId | null>(null)
   const [localAnswer, setLocalAnswer] = useState<unknown>(undefined)
   const [status, setStatus] = useState<RefinementQuestionStatus>("idle")
-  const [mode, setMode] = useState<"loading" | "invitation" | "resume" | "question" | "bridge">(
-    "loading",
-  )
+  const [mode, setMode] = useState<RefinementMode>("loading")
   const [liveMessage, setLiveMessage] = useState("")
   const [bridge, setBridge] = useState<Stage2CompleteResult | null>(null)
-  const [handoffStatus, setHandoffStatus] = useState<"idle" | "loading" | "error">("idle")
+  const [handoffStatus, setHandoffStatus] = useState<"idle" | "loading" | "error" | "complete">(
+    "idle",
+  )
   const generationRef = useRef(0)
   const telemetryRef = useRef(onTelemetry)
 
@@ -150,11 +178,12 @@ export function RefinementFlow({
 
         setActiveFromSession(loadedSession, firstUnresolved)
 
+        const entryMode = deriveRefinementEntryMode(loadedSession, directEntry)
         if (loadedSession.completedQuestionIds.length === 0) {
-          setMode("invitation")
+          setMode(entryMode)
           emit({ name: "personal_plan_stage2_started" })
         } else {
-          setMode("resume")
+          setMode(entryMode)
           emit({ name: "personal_plan_stage2_resumed" })
         }
       })
@@ -168,7 +197,7 @@ export function RefinementFlow({
     return () => {
       cancelled = true
     }
-  }, [emit, gateway, setActiveFromSession])
+  }, [directEntry, emit, gateway, setActiveFromSession])
 
   const begin = useCallback(() => {
     if (!session?.path.firstUnresolvedQuestionId) return
@@ -183,12 +212,16 @@ export function RefinementFlow({
     const previousQuestionId =
       currentIndex > 0 ? session.path.orderedQuestionIds[currentIndex - 1] : null
     if (!previousQuestionId) {
+      if (shouldReturnToStage1FromQuestion({ session, activeQuestionId, directEntry })) {
+        onSecondaryExit?.()
+        return
+      }
       setMode(session.completedQuestionIds.length > 0 ? "resume" : "invitation")
       return
     }
     setActiveFromSession(session, previousQuestionId)
     setMode("question")
-  }, [activeQuestionId, session, setActiveFromSession])
+  }, [activeQuestionId, directEntry, onSecondaryExit, session, setActiveFromSession])
 
   const handleBridgeBack = useCallback(() => {
     if (!session) return
@@ -204,12 +237,19 @@ export function RefinementFlow({
     setHandoffStatus("loading")
     try {
       await onHandoff({ handoff: bridge, session })
-      setHandoffStatus("idle")
+      setHandoffStatus("complete")
     } catch {
       emit({ name: "personal_plan_stage2_handoff_failed" })
       setHandoffStatus("error")
     }
   }, [bridge, emit, handoffStatus, onHandoff, session])
+
+  useEffect(() => {
+    if (!autoHandoff || mode !== "bridge" || !bridge || !onHandoff || handoffStatus !== "idle")
+      return
+    const timer = window.setTimeout(() => void handleBridgeContinue(), 0)
+    return () => window.clearTimeout(timer)
+  }, [autoHandoff, bridge, handleBridgeContinue, handoffStatus, mode, onHandoff])
 
   const completeStage2Session = useCallback(
     async (nextSession: Stage2RefinementSession) => {
@@ -349,6 +389,9 @@ export function RefinementFlow({
   const content = useMemo(() => {
     if (mode === "loading") return <LoadingShell status={status} liveMessage={liveMessage} />
     if (mode === "bridge" && bridge) {
+      if (autoHandoff && onHandoff && handoffStatus !== "error") {
+        return <LoadingShell status="saved" liveMessage="Produkte werden geöffnet." />
+      }
       return (
         <RefinementBridge
           refinedVersionId={bridge.refinedVersionId}
@@ -393,6 +436,7 @@ export function RefinementFlow({
     )
   }, [
     activeQuestionId,
+    autoHandoff,
     begin,
     bridge,
     handleBack,
@@ -452,24 +496,30 @@ function LoadingShell({
   liveMessage: string
 }) {
   return (
-    <main className="grid min-h-dvh place-items-center bg-[var(--background,#fdfbf9)] px-5 text-center">
-      <div>
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-          Verfeinerung
-        </p>
-        <h1 className="mt-2 font-serif text-3xl font-medium text-[var(--brand-plum-darkest,#2a1845)]">
-          Wir laden deinen Stand.
-        </h1>
-        {status === "save_failed" ? (
-          <p role="alert" className="mt-3 text-sm text-[#a3434b]">
-            Das hat gerade nicht geklappt. Bitte lade die Vorschau neu.
+    <div className="min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader
+        currentStage={2}
+        saveStatus={status === "saved" ? "saved" : "idle"}
+      />
+      <main className="grid min-h-[calc(100dvh-92px)] place-items-center px-5 text-center">
+        <div>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+            Verfeinerung
           </p>
-        ) : null}
-        <p aria-live="polite" className="sr-only">
-          {liveMessage}
-        </p>
-      </div>
-    </main>
+          <h1 className="mt-2 font-serif text-3xl font-medium text-[var(--brand-plum-darkest,#2a1845)]">
+            Wir laden deinen Stand.
+          </h1>
+          {status === "save_failed" ? (
+            <p role="alert" className="mt-3 text-sm text-[#a3434b]">
+              Das hat gerade nicht geklappt. Bitte lade die Vorschau neu.
+            </p>
+          ) : null}
+          <p aria-live="polite" className="sr-only">
+            {liveMessage}
+          </p>
+        </div>
+      </main>
+    </div>
   )
 }
 
@@ -481,53 +531,43 @@ function InvitationShell({
   onSecondaryExit?: () => void
 }) {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-[540px] flex-col justify-center bg-[var(--background,#fdfbf9)] px-5 py-8">
-      <div className="mb-6 grid grid-cols-5 gap-1">
-        {["Bedarf", "Verfeinerung", "Produkte", "Routine", "Anwendung"].map((label, index) => (
-          <span
-            key={label}
-            className={`text-center text-[9px] font-bold ${index <= 1 ? "text-[var(--brand-plum)]" : "text-[var(--text-muted,#736f69)]"}`}
+    <div className="min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader currentStage={2} onBack={onSecondaryExit} />
+      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
+        <section className="rounded-[22px] border border-[rgba(var(--brand-plum-rgb),0.14)] bg-gradient-to-br from-[#f3edf8] to-[#fff8f3] px-5 py-7 text-center">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+            Dein Bedarfsplan steht
+          </p>
+          <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
+            Jetzt machen wir ihn zu deinem.
+          </h1>
+          <p className="mx-auto mt-3 max-w-[360px] text-sm leading-6 text-[var(--text-sub,#6a6560)]">
+            Ein kurzer Fragenfluss klärt, was du heute benutzt und wie du dein Haar behandelst.
+            Danach geht es direkt zur Produkterfassung.
+          </p>
+        </section>
+        <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
+          <span className="font-bold text-[#4f8058]">✓</span> Dein erster Bedarfsplan bleibt
+          gespeichert. Danach führen wir dich direkt zu deinen konkreten Produkten.
+        </p>
+        <div className="mt-6 flex gap-2">
+          <button
+            type="button"
+            onClick={onSecondaryExit}
+            className="min-h-[52px] rounded-xl px-3 text-sm font-bold text-[var(--brand-plum)] hover:bg-[var(--brand-plum-ice)]"
           >
-            <span
-              className={`mx-auto mb-1 block h-2.5 w-2.5 rounded-full ${index === 0 ? "bg-[var(--brand-plum)]" : index === 1 ? "border-2 border-[var(--brand-coral,#d4616a)]" : "border border-[var(--border,#e7e0d9)]"}`}
-            />
-            {label}
-          </span>
-        ))}
-      </div>
-      <section className="rounded-[22px] border border-[rgba(var(--brand-plum-rgb),0.14)] bg-gradient-to-br from-[#f3edf8] to-[#fff8f3] px-5 py-7 text-center">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-          Dein Bedarfsplan steht
-        </p>
-        <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
-          Jetzt machen wir ihn zu deinem.
-        </h1>
-        <p className="mx-auto mt-3 max-w-[360px] text-sm leading-6 text-[var(--text-sub,#6a6560)]">
-          Ein kurzer Fragenfluss klärt, was du heute benutzt und wie du dein Haar behandelst. Danach
-          geht es direkt zur Produkterfassung.
-        </p>
-      </section>
-      <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
-        <span className="font-bold text-[#4f8058]">✓</span> Dein erster Bedarfsplan bleibt
-        gespeichert. Danach führen wir dich direkt zu deinen konkreten Produkten.
-      </p>
-      <div className="mt-6 flex gap-2">
-        <button
-          type="button"
-          onClick={onSecondaryExit}
-          className="min-h-[52px] rounded-xl px-3 text-sm font-bold text-[var(--brand-plum)] hover:bg-[var(--brand-plum-ice)]"
-        >
-          Zum Bedarfsplan
-        </button>
-        <button
-          type="button"
-          onClick={onBegin}
-          className="min-h-[52px] flex-1 rounded-xl bg-[var(--brand-coral,#d4616a)] px-4 text-sm font-bold text-white"
-        >
-          Verfeinerung starten&nbsp; →
-        </button>
-      </div>
-    </main>
+            Zum Bedarfsplan
+          </button>
+          <button
+            type="button"
+            onClick={onBegin}
+            className="personal-plan-primary-action min-h-[52px] flex-1 px-4 text-sm"
+          >
+            Verfeinerung starten&nbsp; →
+          </button>
+        </div>
+      </main>
+    </div>
   )
 }
 
@@ -539,31 +579,34 @@ function ResumeShell({
   onBegin: () => void
 }) {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-[540px] flex-col justify-center bg-[var(--background,#fdfbf9)] px-5 py-8">
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-        Weiter verfeinern
-      </p>
-      <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
-        Du machst bei der ersten offenen Frage weiter.
-      </h1>
-      <div className="mt-5 rounded-[18px] border border-[rgba(var(--brand-plum-rgb),0.13)] bg-white p-4 shadow-[0_14px_40px_-34px_rgba(42,24,69,0.65)]">
-        <p className="text-xs font-bold text-[var(--brand-plum-darkest,#2a1845)]">Noch offen</p>
-        <p className="mt-1 text-sm text-[var(--text-sub,#6a6560)]">
-          {firstUnresolvedQuestionLabel}
+    <div className="min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader currentStage={2} saveStatus="saved" />
+      <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+          Weiter verfeinern
         </p>
-      </div>
-      <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
-        <span className="font-bold text-[#4f8058]">✓</span> Bis zur vorherigen Frage ist alles
-        gespeichert.
-      </p>
-      <button
-        type="button"
-        onClick={onBegin}
-        className="mt-6 min-h-[52px] rounded-xl bg-[var(--brand-coral,#d4616a)] px-4 text-sm font-bold text-white"
-      >
-        Bei der offenen Frage fortfahren&nbsp; →
-      </button>
-    </main>
+        <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
+          Du machst bei der ersten offenen Frage weiter.
+        </h1>
+        <div className="mt-5 rounded-[18px] border border-[rgba(var(--brand-plum-rgb),0.13)] bg-white p-4 shadow-[0_14px_40px_-34px_rgba(42,24,69,0.65)]">
+          <p className="text-xs font-bold text-[var(--brand-plum-darkest,#2a1845)]">Noch offen</p>
+          <p className="mt-1 text-sm text-[var(--text-sub,#6a6560)]">
+            {firstUnresolvedQuestionLabel}
+          </p>
+        </div>
+        <p className="mt-4 rounded-xl bg-[#f5f2ee] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub,#6a6560)]">
+          <span className="font-bold text-[#4f8058]">✓</span> Bis zur vorherigen Frage ist alles
+          gespeichert.
+        </p>
+        <button
+          type="button"
+          onClick={onBegin}
+          className="personal-plan-primary-action mt-6 min-h-[52px] px-4 text-sm"
+        >
+          Bei der offenen Frage fortfahren&nbsp; →
+        </button>
+      </main>
+    </div>
   )
 }
 
@@ -573,7 +616,7 @@ function labelForQuestion(questionId: Stage2QuestionId): string {
     current_product_categories: "Aktuelle Produktarten",
     wet_wash_frequency: "Nasswasch-Rhythmus",
     scalp_irritation_detail: "Kopfhaut-Klärung",
-    dry_shampoo_bridge_preference: "Trockenshampoo-Brücke",
+    dry_shampoo_bridge_preference: "Trockenshampoo zwischen den Wäschen",
     dry_shampoo_visible_hair_color: "Sichtbare Ansatzfarbe",
     oil_purposes: "Öl-Aufgaben",
     towel_handling: "Handtuch",

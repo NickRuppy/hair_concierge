@@ -3,8 +3,8 @@ import { expect, test, type Page } from "@playwright/test"
 const labPath = "/labs/personal-plan-stage-1-2"
 
 async function chooseAndContinue(page: Page, name: RegExp | string) {
-  await page.getByRole("button", { name }).click()
-  await page.getByRole("button", { name: "Weiter" }).click()
+  await page.getByRole("button", { name, exact: typeof name === "string" }).click()
+  await page.getByRole("button", { name: "Weiter", exact: true }).click()
 }
 
 async function chooseNoneAndContinue(page: Page) {
@@ -14,7 +14,7 @@ async function chooseNoneAndContinue(page: Page) {
 
 async function completeRefinement(page: Page) {
   await page.getByRole("button", { name: /Verfeinerung starten/ }).click()
-  await chooseNoneAndContinue(page)
+  await chooseAndContinue(page, "Shampoo")
   await chooseAndContinue(page, "2x/Woche")
   await chooseAndContinue(page, "Leicht empfindlich oder juckend")
   await chooseAndContinue(page, "Nein, lieber nicht")
@@ -42,23 +42,22 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
     await page.goto(labPath)
     await completeRefinement(page)
 
-    const bridge = page.locator("[data-refined-version-id]")
-    await expect(bridge).toBeVisible()
-    const firstRefinedVersion = await bridge.getAttribute("data-refined-version-id")
+    const stage3Entry = page.locator("[data-stage3-entry-refined-version-id]")
+    await expect(stage3Entry).toBeVisible()
+    const firstRefinedVersion = await stage3Entry.getAttribute(
+      "data-stage3-entry-refined-version-id",
+    )
 
-    await page.getByRole("button", { name: /Produkte erfassen/ }).click()
-    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
-    await expect(page.getByText("Gespeichert", { exact: true })).toBeVisible()
-    await expect(page.locator("[data-stage3-entry-refined-version-id]")).toHaveAttribute(
+    await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
+    await expect(stage3Entry.getByText("Gespeichert", { exact: true })).toBeVisible()
+    await expect(stage3Entry).toHaveAttribute(
       "data-stage3-entry-refined-version-id",
       firstRefinedVersion!,
     )
 
-    await page.getByRole("button", { name: "Produkte suchen" }).click()
-    await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
-    await page.getByRole("button", { name: "Zurück" }).click()
     await page.getByRole("button", { name: "Zurück" }).click()
 
+    const bridge = page.locator("[data-refined-version-id]")
     await expect(bridge).toBeVisible()
     await page.getByRole("button", { name: "Zur letzten Frage" }).click()
     await page.getByRole("button", { name: "Seidenkissenbezug" }).click()
@@ -68,8 +67,12 @@ test.describe("Personal Plan Stage 1 to 3 integration lab", () => {
     expect(successorVersion).not.toBe(firstRefinedVersion)
 
     await page.getByRole("button", { name: /Produkte erfassen/ }).click()
-    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
-    await expect(page.getByText("Gespeichert", { exact: true })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
+    await expect(
+      page
+        .locator("[data-stage3-entry-refined-version-id]")
+        .getByText("Gespeichert", { exact: true }),
+    ).toBeVisible()
     await expect(page.locator("[data-stage3-entry-refined-version-id]")).toHaveAttribute(
       "data-stage3-entry-refined-version-id",
       successorVersion!,

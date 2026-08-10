@@ -121,7 +121,7 @@ test("bondbuilder-colored-breakage: bondbuilder.inclusion.colored_with_damage cr
   )
 })
 
-test("bondbuilder-permed-rough: bondbuilder.inclusion.permed_with_damage creates Basis", () => {
+test("bondbuilder-permed-rough: roughness does not escalate a chemical optional route", () => {
   const decision = decide({
     chemicalTreatments: ["permed"],
     currentConcerns: [],
@@ -129,10 +129,9 @@ test("bondbuilder-permed-rough: bondbuilder.inclusion.permed_with_damage creates
     elasticResponse: "stretches_bounces",
   })
 
-  assert.equal(decision.needTier, "basis")
-  assert.ok(
-    decision.reasons.some((reason) => reason.id === "bondbuilder.inclusion.permed_with_damage"),
-  )
+  assert.equal(decision.needTier, "optional")
+  assert.ok(decision.reasons.some((reason) => reason.id === "bondbuilder.inclusion.permed_only"))
+  assert.ok(decision.reasons.some((reason) => reason.id === "bondbuilder.reason.rough_surface"))
 })
 
 test("bondbuilder-breakage-only: bondbuilder.inclusion.one_strong_indicator stays optional", () => {
@@ -149,7 +148,7 @@ test("bondbuilder-breakage-only: bondbuilder.inclusion.one_strong_indicator stay
   )
 })
 
-test("bondbuilder-breakage-rough: bondbuilder.inclusion.two_strong_indicators creates Basis", () => {
+test("bondbuilder-breakage-rough: roughness corroborates breakage without counting twice", () => {
   const decision = decide({
     chemicalTreatments: ["natural"],
     currentConcerns: ["breakage"],
@@ -157,9 +156,28 @@ test("bondbuilder-breakage-rough: bondbuilder.inclusion.two_strong_indicators cr
     elasticResponse: "stretches_bounces",
   })
 
-  assert.equal(decision.needTier, "basis")
+  assert.equal(decision.needTier, "optional")
   assert.ok(
-    decision.reasons.some((reason) => reason.id === "bondbuilder.inclusion.two_strong_indicators"),
+    decision.reasons.some((reason) => reason.id === "bondbuilder.inclusion.one_strong_indicator"),
+  )
+  assert.ok(decision.reasons.some((reason) => reason.id === "bondbuilder.reason.rough_surface"))
+})
+
+test("bondbuilder-lea-untreated-rough: exact untreated rough-surface profile has no Bondbuilder job", () => {
+  const decision = decide({
+    chemicalTreatments: ["natural"],
+    currentConcerns: [],
+    hairSurface: "rough",
+    elasticResponse: "stretches_bounces",
+  })
+
+  assert.equal(decision.needTier, "not_needed")
+  assert.equal(decision.target, null)
+  assert.ok(decision.reasons.some((reason) => reason.id === "bondbuilder.reason.rough_surface"))
+  assert.ok(
+    decision.reasons.every(
+      (reason) => reason.salience !== "primary" || reason.id !== "bondbuilder.reason.rough_surface",
+    ),
   )
 })
 

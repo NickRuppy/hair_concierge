@@ -90,7 +90,8 @@ function errorCode(body: unknown) {
     body &&
     typeof body === "object" &&
     "error" in body &&
-    (body.error === "unsupported_snapshot_version" ||
+    (body.error === "stale_refined_source" ||
+      body.error === "unsupported_snapshot_version" ||
       body.error === "snapshot_too_large" ||
       body.error === "compensation_pending" ||
       body.error === "rolled_back" ||

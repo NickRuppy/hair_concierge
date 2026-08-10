@@ -78,7 +78,9 @@ export type PlanRoutineContext = {
   heatToolUse: PlanKnowledge<PlanHeatToolUseEvent[]>
   mechanicalExposureSignals: PlanMechanicalExposureSignal[]
   dryShampooBridgePreference: PlanKnowledge<"accept" | "decline">
-  scalpIrritationState: PlanKnowledge<"mild_sensitive_or_itchy" | "burning_painful_or_inflamed">
+  scalpIrritationState: PlanKnowledge<
+    "normal" | "mild_sensitive_or_itchy" | "burning_painful_or_inflamed"
+  >
 }
 
 export const INITIAL_UNKNOWN_ROUTINE_CONTEXT: PlanRoutineContext = {

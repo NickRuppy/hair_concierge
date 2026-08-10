@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { cn } from "@/lib/utils"
 import { NeedCard, type NeedCardViewModel } from "./need-card"
 
@@ -27,13 +28,11 @@ type NeedPlanScreenProps = {
 
 export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: NeedPlanScreenProps) {
   const nextLabel =
-    screen.kind === "basis" && hasOptionalPage
-      ? "Optionale Empfehlungen"
-      : "Plan wirklich zu meinem machen"
+    screen.kind === "basis" && hasOptionalPage ? "Optionale Empfehlungen" : "Plan verfeinern"
 
   return (
     <section
-      className="flex min-h-dvh flex-col bg-[#fdfbf9]"
+      className="personal-plan-cookie-clearance flex min-h-dvh flex-col bg-[var(--background)]"
       data-plan-start-screen={screen.kind}
       data-plan-start-has-optional={hasOptionalPage ? "true" : "false"}
     >
@@ -89,7 +88,7 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
               <button
                 type="button"
                 onClick={onNext}
-                className="ml-auto inline-flex min-h-11 items-center gap-1 rounded-[12px] bg-[#6B50A0] px-3.5 text-[11px] font-extrabold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="personal-plan-primary-action ml-auto inline-flex min-h-11 items-center gap-1 px-4 text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {nextLabel}
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -104,15 +103,9 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
 
 export function PlanStartHeader({ stageLabel }: { stageLabel: string }) {
   return (
-    <header className="sticky top-0 z-20 flex h-[47px] items-center gap-2 border-b border-[#eee8e2] bg-[#fdfbf9]/95 px-3.5 backdrop-blur">
-      <span className="flex h-[15px] items-end gap-0.5" aria-hidden="true">
-        <span className="block h-[15px] w-[3px] rounded-sm bg-[#6B50A0]" />
-        <span className="block h-[10px] w-[3px] rounded-sm bg-[#6B50A0]/65" />
-        <span className="block h-1.5 w-[3px] rounded-sm bg-[#6B50A0]/35" />
-      </span>
-      <span className="font-header text-[19px] text-[#291a43]">chaarlie</span>
-      <span className="ml-auto text-[11px] font-bold text-[#756e70]">{stageLabel}</span>
-    </header>
+    <div aria-label={stageLabel}>
+      <PersonalPlanJourneyHeader currentStage={1} />
+    </div>
   )
 }
 

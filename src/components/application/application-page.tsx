@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 
 import { ApplicationDay } from "./application-day"
 import { ApplicationOverview } from "./application-overview"
@@ -39,20 +40,25 @@ function NoCompleteDayView({ restDay }: { restDay: ApplicationDayView }) {
 export function ApplicationPage({ view }: { view: ApplicationPageView }) {
   const days = useMemo(() => (view.state === "ready" ? sortDays(view.days) : []), [view])
 
+  let content
   if (view.state === "no_complete_day") {
-    return <NoCompleteDayView restDay={view.restDay} />
+    content = <NoCompleteDayView restDay={view.restDay} />
+  } else if (view.state !== "ready") {
+    content = <ApplicationState view={view} />
+  } else {
+    const selectedDayType = view.selectedDayType ?? null
+    const selectedDay = days.find((day) => day.dayType === selectedDayType) ?? null
+    content = selectedDay ? (
+      <ApplicationDay day={selectedDay} />
+    ) : (
+      <ApplicationOverview days={days} />
+    )
   }
 
-  if (view.state !== "ready") {
-    return <ApplicationState view={view} />
-  }
-
-  const selectedDayType = view.selectedDayType ?? null
-  const selectedDay = days.find((day) => day.dayType === selectedDayType) ?? null
-
-  if (selectedDay) {
-    return <ApplicationDay day={selectedDay} />
-  }
-
-  return <ApplicationOverview days={days} />
+  return (
+    <div className="personal-plan-cookie-clearance min-h-dvh bg-[var(--background)]">
+      <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" />
+      {content}
+    </div>
+  )
 }

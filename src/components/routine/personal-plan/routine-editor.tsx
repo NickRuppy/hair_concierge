@@ -398,7 +398,7 @@ export function RoutineEditor({
             Lokale Änderungen verwerfen?
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Der aktive Schnappschuss bleibt unverändert. Deine unbearbeitete Änderungsliste wird
+            Deine aktive Routine bleibt unverändert. Deine unbearbeitete Änderungsliste wird
             gelöscht.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">

@@ -13,6 +13,7 @@ export function CookieConsent() {
   const [settingsOpen, setSettingsOpen] = React.useState(false)
   const [analytics, setAnalytics] = React.useState(false)
   const [marketing, setMarketing] = React.useState(false)
+  const bannerRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     setMounted(true)
@@ -25,6 +26,28 @@ export function CookieConsent() {
       return () => window.clearTimeout(timer)
     }
   }, [])
+
+  React.useEffect(() => {
+    const root = document.documentElement
+    const banner = bannerRef.current
+    if (!bannerVisible || settingsOpen || !banner) {
+      root.style.setProperty("--cookie-consent-clearance", "0px")
+      return
+    }
+    const updateClearance = () => {
+      root.style.setProperty(
+        "--cookie-consent-clearance",
+        `${Math.ceil(banner.getBoundingClientRect().height + 20)}px`,
+      )
+    }
+    updateClearance()
+    const observer = new ResizeObserver(updateClearance)
+    observer.observe(banner)
+    return () => {
+      observer.disconnect()
+      root.style.setProperty("--cookie-consent-clearance", "0px")
+    }
+  }, [bannerVisible, settingsOpen])
 
   React.useEffect(() => {
     const handleOpen = () => {
@@ -70,6 +93,7 @@ export function CookieConsent() {
     <>
       {bannerVisible && !settingsOpen && (
         <div
+          ref={bannerRef}
           role="dialog"
           aria-label="Cookie-Einstellungen"
           className="fixed inset-x-2 bottom-[calc(0.5rem+var(--landing-sticky-cta-offset,0px))] z-[100] mx-auto max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl transition-[bottom] duration-200 ease-out motion-reduce:transition-none sm:inset-x-0 sm:flex sm:max-w-4xl sm:items-center sm:gap-6 sm:rounded-2xl sm:px-6 sm:py-4 md:bottom-6"

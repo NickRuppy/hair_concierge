@@ -144,7 +144,7 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
         className="mx-2.5 mb-2.5 rounded-[14px] border border-[rgba(107,80,160,0.12)] bg-white/75 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
       >
         <div className="mb-2 px-0.5 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#291a43]">
-          Dein Anforderungsprofil
+          Was dein Haar braucht
         </div>
         <div className="space-y-1.5">
           {card.detailBlocks.map((block, index) => (

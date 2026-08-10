@@ -26,9 +26,11 @@ import {
   addCapturedProduct,
   assignProductRoles,
   completeCaptureCategory,
+  finalizeCaptureCategory,
   markRoleUncovered,
   recordProductDecision,
   removeCapturedProduct,
+  repairCursorlessCaptureDraft,
   replaceCategoryRoleAssignments,
   reopenCaptureCategory,
 } from "./state-machine"
@@ -41,6 +43,7 @@ import type { Stage3DecisionSubject } from "./contracts"
 import type { Stage3AuthorityFactBundle } from "./authority/catalog-facts"
 import type {
   Stage3AuthorityEvaluation,
+  Stage3EvaluationContext,
   Stage3AuthorityInput,
   Stage3AuthoritySemanticIntent,
 } from "./authority/contracts"
@@ -81,6 +84,7 @@ export type Stage3ProductionPersistence = {
     userProductId: string
     productId: string
     displayName: string
+    imageUrl?: string | null
     category: PersonalPlanCategory
   } | null>
   loadRequirements(input: {
@@ -107,6 +111,7 @@ export type Stage3ProductionPersistence = {
     draft: Stage3ProductDraft
     subject: Stage3DecisionSubject
     heatRoutes: string[]
+    context: Stage3EvaluationContext
   }): Promise<Stage3AuthorityFactBundle>
   loadDraft(input: { userId: string; draftId: string }): Promise<Stage3ProductDraft | null>
 }
@@ -135,6 +140,26 @@ export function createProductionStage3ProductsGateway(
   const now = options.now ?? (() => new Date().toISOString())
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
+  async function repairLoadedDraft(input: {
+    draft: Stage3ProductDraft
+    requirements: Stage3CategoryRequirement[]
+  }) {
+    let loaded = input
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const repaired = repairCursorlessCaptureDraft(loaded.draft, now())
+      if (repaired === loaded.draft) return loaded
+      const saved = await options.persistence.save({
+        userId: options.userId,
+        draftId: loaded.draft.draftId,
+        expectedRevision: loaded.draft.revision,
+        draft: repaired,
+      })
+      loaded = { ...loaded, draft: saved.draft }
+      if (saved.outcome === "saved") return loaded
+    }
+    throw new Error("stage3_resume_repair_conflict")
+  }
+
   async function current(draftId: string) {
     if (cached?.draft.draftId === draftId) return cached
     const draft = await options.persistence.loadDraft({ userId: options.userId, draftId })
@@ -154,15 +179,9 @@ export function createProductionStage3ProductsGateway(
   async function authoritativeEvaluation(
     draft: Stage3ProductDraft,
     subjectKey: string,
+    context: Stage3EvaluationContext,
   ): Promise<Stage3AuthorityEvaluation> {
     const snapshot = requireCurrentAuthoritySnapshot(draft)
-    const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
-      userId: options.userId,
-      personalPlanId: draft.personalPlanId,
-    })
-    if (currentRefinedVersionId !== draft.refinedVersionId) {
-      throw new Stage3AuthoritySnapshotError("stale_refined_source")
-    }
 
     const subject = deriveStage3DecisionSubjects(draft).find(
       (candidate) => candidate.decisionKey === subjectKey,
@@ -181,6 +200,7 @@ export function createProductionStage3ProductsGateway(
       draft,
       subject,
       heatRoutes: qualifyingHeatRoutes(snapshot.categoryDecisions),
+      context,
     })
 
     return evaluateStage3Authority({
@@ -198,13 +218,48 @@ export function createProductionStage3ProductsGateway(
     } as Stage3AuthorityInput)
   }
 
+  async function loadEvaluationContext(
+    draft: Stage3ProductDraft,
+  ): Promise<Stage3EvaluationContext> {
+    const authoritySnapshot = requireCurrentAuthoritySnapshot(draft)
+    const [currentRefinedVersionId, refinedNeedSnapshot] = await Promise.all([
+      options.persistence.loadCurrentRefinedVersionId({
+        userId: options.userId,
+        personalPlanId: draft.personalPlanId,
+      }),
+      options.persistence.loadRefinedNeedSnapshot({
+        userId: options.userId,
+        personalPlanId: draft.personalPlanId,
+        refinedVersionId: draft.refinedVersionId,
+      }),
+    ])
+    const projection = refinedNeedSnapshot?.profile?.source?.projection
+    const hairThickness = refinedNeedSnapshot?.profile?.hair?.thickness
+    if (
+      currentRefinedVersionId !== draft.refinedVersionId ||
+      refinedNeedSnapshot.inputHash !== authoritySnapshot.refinedInputHash ||
+      projection !== "refined_post_plan" ||
+      !hairThickness ||
+      !["fine", "normal", "coarse"].includes(hairThickness)
+    ) {
+      throw new Stage3AuthoritySnapshotError("stale_refined_source")
+    }
+    return {
+      currentRefinedVersionId,
+      refinedNeedSnapshot,
+      hairThickness,
+    }
+  }
+
   return {
     async loadOrCreate(input): Promise<Stage3DraftResponse> {
-      const loaded = await options.persistence.loadOrCreate({
-        userId: options.userId,
-        personalPlanId: input.personalPlanId,
-        refinedVersionId: input.refinedVersionId,
-      })
+      const loaded = await repairLoadedDraft(
+        await options.persistence.loadOrCreate({
+          userId: options.userId,
+          personalPlanId: input.personalPlanId,
+          refinedVersionId: input.refinedVersionId,
+        }),
+      )
       cached = loaded
       return {
         status: loaded.draft.status,
@@ -361,9 +416,10 @@ export function createProductionStage3ProductsGateway(
     },
     async evaluateDecisions(input) {
       const loaded = await current(input.draftId)
+      const context = await loadEvaluationContext(loaded.draft)
       return Promise.all(
         deriveStage3DecisionSubjects(loaded.draft).map((subject) =>
-          authoritativeEvaluation(loaded.draft, subject.decisionKey),
+          authoritativeEvaluation(loaded.draft, subject.decisionKey, context),
         ),
       )
     },
@@ -377,7 +433,8 @@ export function createProductionStage3ProductsGateway(
         (candidate) => candidate.decisionKey === input.intent.subjectKey,
       )
       if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
-      const evaluation = await authoritativeEvaluation(draft, subject.decisionKey)
+      const context = await loadEvaluationContext(draft)
+      const evaluation = await authoritativeEvaluation(draft, subject.decisionKey, context)
       if (!evaluation.allowedActions.includes(input.intent.action as never)) {
         throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
       }
@@ -522,6 +579,7 @@ async function applyMutation(
             productId: owned.productId,
             displayName: owned.displayName,
             category: owned.category,
+            imageUrl: owned.imageUrl ?? null,
           },
           frequencyRange: mutation.frequencyRange,
           ownership: "owned",
@@ -556,6 +614,16 @@ async function applyMutation(
           draft,
           mutation.category,
           mutation.assignments,
+          effectiveStage3Requirements(requirements, draft),
+        ),
+      )
+    case "finalize_capture_category":
+      return withUpdatedAt(
+        finalizeCaptureCategory(
+          draft,
+          mutation.category,
+          mutation.assignments,
+          mutation.uncoveredRoles,
           effectiveStage3Requirements(requirements, draft),
         ),
       )

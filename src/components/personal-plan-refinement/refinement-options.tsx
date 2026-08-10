@@ -19,7 +19,7 @@ import type {
   TowelTechnique,
   WetWashFrequency,
 } from "@/lib/personal-plan/refinement/types"
-import { PRODUCT_FREQUENCY_LABELS } from "@/lib/vocabulary/frequencies"
+import { PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS } from "@/lib/vocabulary/frequencies"
 import {
   NIGHT_PROTECTION_LABELS,
   TOWEL_MATERIAL_LABELS,
@@ -63,20 +63,25 @@ export const REFINEMENT_CATEGORY_OPTIONS = [
 ] as const satisfies readonly RefinementOption<Stage2ProductCategory>[]
 
 export const WET_WASH_FREQUENCY_OPTIONS = [
-  {
-    value: "does_not_wash",
-    label: "Ich wasche meine Haare nicht nass / mit Shampoo",
-    description: "Das bleibt eine eigene Antwort und wird nicht als seltene Wäsche gewertet.",
-    icon: "heat-protection-no",
-  },
-  ...Object.entries(PRODUCT_FREQUENCY_LABELS).map(([value, label]) => ({
+  ...PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS.map(({ value, label }) => ({
     value: value as ProductFrequency,
     label,
     icon: "clock" as const,
   })),
+  {
+    value: "does_not_wash",
+    label: "Ich wasche meine Haare nicht nass / mit Shampoo",
+    icon: "heat-protection-no",
+  },
 ] as const satisfies readonly RefinementOption<WetWashFrequency>[]
 
 export const SCALP_IRRITATION_OPTIONS = [
+  {
+    value: "normal",
+    label: "Fühlt sich normal an",
+    description: "Aktuell bemerkst du keine Reizung oder Schmerzen.",
+    icon: "scalp-normal",
+  },
   {
     value: "mild_sensitive_or_itchy",
     label: "Leicht empfindlich oder juckend",
@@ -94,14 +99,14 @@ export const SCALP_IRRITATION_OPTIONS = [
 export const DRY_SHAMPOO_BRIDGE_OPTIONS = [
   {
     value: "accept",
-    label: "Ja, als gelegentliche Brücke",
-    description: "Später wird ein konkretes Produkt nur erfasst, wenn es wirklich passt.",
+    label: "Ja, gelegentlich zwischen den Wäschen",
+    description: "Ein konkretes Produkt prüfen wir später getrennt.",
     icon: "check",
   },
   {
     value: "decline",
     label: "Nein, lieber nicht",
-    description: "Dann planen wir ohne Trockenshampoo-Brücke weiter.",
+    description: "Dann planen wir ohne Trockenshampoo weiter.",
     icon: "heat-protection-no",
   },
 ] as const satisfies readonly RefinementOption<DryShampooBridgePreference>[]
@@ -121,7 +126,7 @@ export const OIL_PURPOSE_OPTIONS = [
   },
   {
     value: "damp_leave_on",
-    label: "Im feuchten Haar als Leave-on",
+    label: "Im feuchten Haar als Leave-in",
     description: "Für Längen, Definition oder geschmeidigeres Gefühl.",
     icon: "goal-moisture",
   },
@@ -256,6 +261,7 @@ export function RefinementOptions<T extends string>({
   allowNone,
   noneLabel = "Nichts davon",
   noneDescription = "Diese Frage bewusst leer abschließen.",
+  noneAriaLabel,
   className,
 }: {
   options: readonly RefinementOption<T>[]
@@ -266,6 +272,7 @@ export function RefinementOptions<T extends string>({
   allowNone?: boolean
   noneLabel?: string
   noneDescription?: string
+  noneAriaLabel?: string
   className?: string
 }) {
   const selectedValues = Array.isArray(value) ? value : []
@@ -300,7 +307,7 @@ export function RefinementOptions<T extends string>({
         <button
           type="button"
           aria-pressed={Array.isArray(value) && value.length === 0}
-          aria-label={`${noneLabel}; andere Auswahl wird gelöscht`}
+          aria-label={noneAriaLabel ?? `${noneLabel}; andere Auswahl wird gelöscht`}
           onClick={() => (onNoneChange ? onNoneChange() : onChange([]))}
           className={cn(
             "mt-1 min-h-11 rounded-full border px-4 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]",

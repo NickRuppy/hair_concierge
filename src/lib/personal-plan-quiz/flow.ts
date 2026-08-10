@@ -112,6 +112,7 @@ const PRIMARY_SEQUENCE: PersonalPlanQuizScreenId[] = [
   "result_reliability",
   "adaptation_confidence",
   "current_problems",
+  "admission_recurrence",
   "analysis_bridge",
   "hair_length",
   "hair_surface",
@@ -120,7 +121,6 @@ const PRIMARY_SEQUENCE: PersonalPlanQuizScreenId[] = [
   "chemical_treatments",
   "scalp_oiliness",
   "scalp_concerns",
-  "admission_recurrence",
   "admission_practical_cost",
   "admission_emotional_relevance",
   "positive_reframe",
@@ -138,14 +138,15 @@ export function getNextPersonalPlanQuizScreen(
   screen: PersonalPlanQuizScreenId,
   answers: PersonalPlanQuizAnswers,
 ): PersonalPlanQuizScreenId | null {
+  if (screen === "current_problems") {
+    return answers.currentConcerns?.length ? "admission_recurrence" : "analysis_bridge"
+  }
   if (screen === "admission_recurrence") {
-    return derivePersonalPlanConflictPrompt(answers)
-      ? "admission_conflict"
-      : "admission_practical_cost"
+    return "analysis_bridge"
   }
   if (screen === "admission_conflict") return "admission_practical_cost"
 
-  if (screen === "scalp_concerns" && !answers.currentConcerns?.length) {
+  if (screen === "scalp_concerns") {
     return derivePersonalPlanConflictPrompt(answers)
       ? "admission_conflict"
       : "admission_practical_cost"
@@ -187,7 +188,7 @@ const SCREEN_SECTIONS: Record<PersonalPlanQuizScreenId, PersonalPlanQuizSectionI
   chemical_treatments: "analysis",
   scalp_oiliness: "analysis",
   scalp_concerns: "analysis",
-  admission_recurrence: "analysis",
+  admission_recurrence: "goals_and_context",
   admission_conflict: "analysis",
   admission_practical_cost: "analysis",
   admission_emotional_relevance: "analysis",

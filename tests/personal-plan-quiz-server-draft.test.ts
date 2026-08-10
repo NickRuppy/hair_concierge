@@ -67,6 +67,37 @@ test("server quiz drafts accept partial durable answers but reject unknown and e
   assert.deepEqual(
     parsePersonalPlanQuizServerDraft({
       ...minimalDraft,
+      screen: "admission_recurrence",
+      history: ["current_problems"],
+      answers: {
+        currentConcerns: ["breakage"],
+        concernRecurrence: { concernId: "breakage", frequency: "sometimes" },
+      },
+    })?.draft,
+    {
+      screen: "admission_recurrence",
+      history: ["current_problems"],
+      answers: {
+        currentConcerns: ["breakage"],
+        concernRecurrence: { concernId: "breakage", frequency: "sometimes" },
+      },
+    },
+  )
+  assert.equal(
+    parsePersonalPlanQuizServerDraft({
+      ...minimalDraft,
+      screen: "analysis_bridge",
+      history: ["current_problems", "admission_recurrence"],
+      answers: {
+        currentConcerns: [],
+        concernRecurrence: { concernId: "breakage", frequency: "sometimes" },
+      },
+    }),
+    null,
+  )
+  assert.deepEqual(
+    parsePersonalPlanQuizServerDraft({
+      ...minimalDraft,
       answers: { currentConcerns: [], scalpConcerns: [] },
     })?.draft.answers,
     { currentConcerns: [], scalpConcerns: [] },

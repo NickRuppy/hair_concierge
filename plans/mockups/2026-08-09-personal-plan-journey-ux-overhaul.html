@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan · UX-Overhaul</title>
+    <style>
+      :root {
+        --ink: #2a1845;
+        --body: #3e3936;
+        --sub: #706964;
+        --line: #e7dfd8;
+        --paper: #fdfbf9;
+        --card: #fff;
+        --plum: #6b50a0;
+        --plum-dark: #3d2a62;
+        --plum-ice: #f2eefa;
+        --coral: #d4616a;
+        --coral-dark: #bb4e58;
+        --coral-ice: #fff0ef;
+        --green: #52775a;
+        --green-ice: #edf5ee;
+        --sand: #f5efe7;
+        --amber: #8b632d;
+        --amber-ice: #fff6e5;
+        --red: #944b51;
+        --red-ice: #fff0f0;
+        --shadow: 0 24px 65px rgba(42, 24, 69, 0.12);
+        --display: Georgia, "Times New Roman", serif;
+        --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--body);
+        background:
+          radial-gradient(circle at 8% 0%, rgba(107,80,160,.14), transparent 34rem),
+          #f0ece9;
+        font: 14px/1.5 var(--sans);
+      }
+      button { font: inherit; }
+      .artifact { width: min(1500px,100%); margin: 0 auto; padding: 28px 22px 70px; }
+      .artifact-head { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 22px; align-items: end; }
+      .eyebrow { margin: 0 0 6px; color: var(--plum); font-size: 10px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+      h1 { margin: 0; color: var(--ink); font: 500 clamp(32px,4vw,52px)/1.02 var(--display); }
+      .intro { max-width: 900px; margin: 12px 0 0; color: var(--sub); font-size: 14px; }
+      .legend { display: grid; gap: 7px; min-width: 230px; padding: 13px 15px; border: 1px solid #d8cee3; border-radius: 16px; background: rgba(255,255,255,.75); font-size: 11px; }
+      .legend span { display: flex; align-items: center; gap: 8px; }
+      .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--plum); }
+      .dot.coral { background: var(--coral); }
+      .dot.outline { border: 2px solid var(--amber); background: transparent; }
+      .decision-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
+      .decision-strip span { border: 1px solid #d9cfe6; border-radius: 999px; background: rgba(255,255,255,.82); padding: 7px 11px; color: var(--plum-dark); font-size: 11px; font-weight: 760; }
+      .section { margin-top: 28px; }
+      .section h2 { margin: 0; color: var(--ink); font: 500 27px/1.08 var(--display); }
+      .section-note { max-width: 850px; margin: 7px 0 15px; color: var(--sub); font-size: 12px; }
+      .stage-grid { display: grid; grid-template-columns: repeat(4,minmax(250px,1fr)); gap: 18px; align-items: start; }
+      .stage-grid.three { grid-template-columns: repeat(3,minmax(280px,1fr)); }
+      .frame-label { display: flex; justify-content: space-between; gap: 12px; margin: 0 3px 8px; color: var(--sub); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+      .phone { overflow: hidden; min-height: 690px; border: 1px solid #d8cfc8; border-radius: 28px; background: var(--paper); box-shadow: var(--shadow); }
+      .appbar { display: flex; height: 52px; align-items: center; gap: 9px; border-bottom: 1px solid #eee7e1; padding: 0 16px; background: rgba(253,251,249,.96); }
+      .back { display: grid; width: 30px; height: 30px; place-items: center; border: 0; border-radius: 9px; color: var(--plum); background: var(--plum-ice); font-size: 17px; }
+      .brand { color: var(--ink); font: 500 20px/1 var(--display); }
+      .save { margin-left: auto; color: var(--sub); font-size: 9px; font-weight: 760; }
+      .progress-wrap { padding: 12px 16px 10px; border-bottom: 1px solid #eee7e1; }
+      .steps { display: grid; grid-template-columns: repeat(5,1fr); gap: 5px; }
+      .step { text-align: center; color: #8a827c; font-size: 7px; font-weight: 820; }
+      .step i { display: block; height: 4px; margin-bottom: 5px; border-radius: 99px; background: #e7dfd8; }
+      .step.done { color: var(--plum); }
+      .step.done i { background: var(--plum); }
+      .step.current { color: var(--coral-dark); }
+      .step.current i { background: var(--coral); }
+      .content { padding: 18px 16px 112px; }
+      .kicker { margin: 0 0 5px; color: var(--plum); font-size: 9px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+      .phone h3 { margin: 0; color: var(--ink); font: 500 28px/1.08 var(--display); }
+      .lead { margin: 7px 0 0; color: var(--sub); font-size: 12px; line-height: 1.55; }
+      .inherit { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0; border-radius: 14px; background: var(--plum-ice); padding: 10px 12px; font-size: 10px; }
+      .inherit strong { display: block; color: var(--plum-dark); font-size: 11px; }
+      .text-link { border: 0; padding: 0; color: var(--plum); background: transparent; font-size: 9px; font-weight: 850; text-decoration: underline; }
+      .search { display: flex; height: 44px; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 13px; background: #fff; padding: 0 12px; color: #978f89; font-size: 11px; }
+      .card-list { display: grid; gap: 10px; margin-top: 12px; }
+      .product-card { display: grid; grid-template-columns: 62px minmax(0,1fr) auto; gap: 11px; align-items: center; border: 1px solid var(--line); border-radius: 17px; background: #fff; padding: 10px; box-shadow: 0 8px 25px rgba(42,24,69,.045); }
+      .product-card.tinted { border-color: #d8e7db; background: var(--green-ice); }
+      .product-card.pending { border-color: #eed8ad; background: var(--amber-ice); }
+      .thumb { position: relative; display: grid; width: 62px; height: 74px; place-items: end center; overflow: hidden; border-radius: 14px; background: linear-gradient(145deg,#eee7f6,#fff); }
+      .bottle { width: 28px; height: 54px; border-radius: 8px 8px 10px 10px; background: linear-gradient(180deg,#744ca8,#aa86ca); box-shadow: 0 6px 12px rgba(61,42,98,.22); }
+      .bottle::before { content:""; display:block; width:16px; height:8px; margin:-6px auto 0; border-radius:4px 4px 1px 1px; background:#3d2a62; }
+      .bottle.coral { background: linear-gradient(180deg,#de7380,#f2a7aa); }
+      .bottle.green { background: linear-gradient(180deg,#5d8765,#9ac09f); }
+      .bottle.gold { background: linear-gradient(180deg,#a97731,#dfb55e); }
+      .thumb span { position: absolute; inset: auto 5px 6px; border-radius: 99px; background: rgba(255,255,255,.86); color: var(--plum-dark); padding: 2px 4px; text-align:center; font-size: 6px; font-weight: 900; }
+      .product-copy { min-width: 0; }
+      .product-copy small { display:block; color: var(--plum); font-size: 8px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+      .product-copy strong { display:block; margin-top:2px; color: var(--ink); font-size: 12px; line-height: 1.3; }
+      .product-copy p { margin: 4px 0 0; color: var(--sub); font-size: 9px; line-height: 1.4; }
+      .chev { color: var(--plum); font-weight: 900; }
+      .chip { display: inline-flex; align-items:center; gap:4px; margin-top:6px; border-radius:99px; padding:4px 7px; font-size:8px; font-weight:850; }
+      .chip.good { color: var(--green); background:#fff; }
+      .chip.pending { color: var(--amber); background:#fff; }
+      .chip.gap { color: var(--red); background:var(--red-ice); }
+      .section-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 2px 8px; }
+      .section-title strong { color:var(--ink); font-size:12px; }
+      .section-title span { color:var(--plum); font-size:8px; font-weight:850; }
+      .role-row { display:flex; align-items:center; gap:9px; border:1px solid var(--line); border-radius:14px; background:#fff; padding:10px; }
+      .role-icon { display:grid; width:30px; height:30px; place-items:center; border-radius:10px; color:var(--plum); background:var(--plum-ice); }
+      .role-row strong { color:var(--ink); font-size:10px; }
+      .role-row p { margin:1px 0 0; color:var(--sub); font-size:8px; }
+      .role-row .check { margin-left:auto; color:var(--green); font-weight:900; }
+      .actions { position:absolute; inset:auto 12px 12px; display:grid; gap:7px; border:1px solid var(--line); border-radius:17px; background:rgba(253,251,249,.96); padding:10px; box-shadow:0 12px 36px rgba(42,24,69,.16); backdrop-filter: blur(8px); }
+      .phone-inner { position:relative; min-height:690px; }
+      .btn { min-height:46px; border:0; border-radius:13px; padding:0 14px; font-size:11px; font-weight:850; }
+      .btn.primary { color:#fff; background:var(--coral); box-shadow:0 9px 23px rgba(212,97,106,.2); }
+      .btn.secondary { border:1px solid #cfc1dc; color:var(--plum); background:#fff; }
+      .btn.ghost { color:var(--sub); background:transparent; }
+      .summary-box { margin-top:14px; border:1px solid #d8e7db; border-radius:17px; background:var(--green-ice); padding:12px; }
+      .summary-box h4 { margin:0; color:var(--ink); font-size:12px; }
+      .summary-box p { margin:4px 0 0; color:var(--sub); font-size:9px; }
+      .pending-note { margin-top:12px; border-left:3px solid var(--amber); border-radius:3px 13px 13px 3px; background:var(--amber-ice); padding:10px 11px; color:#6d522c; font-size:9px; }
+      .routine-card { overflow:hidden; margin-top:12px; border:1px solid #d8e7db; border-radius:18px; background:var(--green-ice); }
+      .routine-hero { height:120px; background: linear-gradient(115deg,rgba(107,80,160,.7),rgba(212,97,106,.45)), url('../../public/images/offer/routine.jpg') center/cover; }
+      .routine-body { padding:13px; }
+      .routine-body strong { color:var(--ink); font-size:13px; }
+      .routine-body p { margin:4px 0 0; color:var(--sub); font-size:9px; }
+      .error { margin-top:14px; border:1px solid #efc6c8; border-radius:16px; background:var(--red-ice); padding:12px; }
+      .error strong { color:var(--red); font-size:11px; }
+      .error p { margin:4px 0 0; color:#75565a; font-size:9px; }
+      .desktop-shell { display:grid; grid-template-columns:220px minmax(0,720px); min-height:590px; overflow:hidden; border:1px solid #d8cfc8; border-radius:28px; background:var(--paper); box-shadow:var(--shadow); }
+      .desktop-side { padding:24px 20px; color:#fff; background:linear-gradient(155deg,var(--ink),var(--plum-dark)); }
+      .desktop-side .brand { color:#fff; font-size:24px; }
+      .desktop-side h3 { margin-top:34px; color:#fff; font-size:31px; }
+      .desktop-side p { color:#ded5eb; font-size:11px; }
+      .side-steps { display:grid; gap:12px; margin-top:30px; }
+      .side-step { display:grid; grid-template-columns:24px 1fr; gap:9px; align-items:center; color:#bfb4cf; font-size:10px; }
+      .side-step i { display:grid; width:24px; height:24px; place-items:center; border-radius:50%; border:1px solid #8977a0; font-style:normal; }
+      .side-step.done, .side-step.current { color:#fff; }
+      .side-step.done i { background:var(--plum); border-color:var(--plum); }
+      .side-step.current i { background:var(--coral); border-color:var(--coral); }
+      .desktop-main { padding:26px 30px; }
+      .desktop-main .cards-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+      .journey-map { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:16px; }
+      .journey-map article { min-height:130px; border:1px solid var(--line); border-radius:17px; background:#fff; padding:13px; }
+      .journey-map small { color:var(--plum); font-size:8px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+      .journey-map strong { display:block; margin-top:6px; color:var(--ink); font-size:12px; }
+      .journey-map p { margin:5px 0 0; color:var(--sub); font-size:9px; }
+      .journey-map .selected { border-color:#e5a5aa; background:var(--coral-ice); }
+      .artifact-note { margin-top:20px; border:1px solid #d8cde5; border-radius:16px; background:rgba(255,255,255,.8); padding:14px 16px; color:var(--sub); font-size:11px; }
+      .artifact-note strong { color:var(--ink); }
+      @media (max-width:1180px) { .stage-grid { grid-template-columns:repeat(2,minmax(280px,1fr)); } .stage-grid.three { grid-template-columns:repeat(2,minmax(280px,1fr)); } }
+      @media (max-width:760px) {
+        .artifact { padding:20px 12px 48px; }
+        .artifact-head { grid-template-columns:1fr; }
+        .legend { min-width:0; }
+        .stage-grid,.stage-grid.three { grid-template-columns:1fr; }
+        .phone { width:min(390px,100%); margin:0 auto; }
+        .desktop-shell { grid-template-columns:1fr; }
+        .desktop-side { display:none; }
+        .desktop-main { padding:20px 15px; }
+        .desktop-main .cards-2 { grid-template-columns:1fr; }
+        .journey-map { grid-template-columns:1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-head">
+        <div>
+          <p class="eyebrow">Planungsevidenz · Launch-Candidate-Härtung</p>
+          <h1>Direkter weiter. Ehrlich warten.</h1>
+          <p class="intro">Routine-Karten bleiben die gemeinsame Sprache aller fünf Stufen. Die gehärtete Reise entfernt Klick-Zwischenstopps, stellt Rückfragen dort, wo sie entstehen, und zeigt Laden, Speichern oder Unsicherheit nur dann, wenn das Backend wirklich arbeitet oder Fakten fehlen.</p>
+        </div>
+        <aside class="legend">
+          <span><i class="dot coral"></i> Koralle führt weiter</span>
+          <span><i class="dot"></i> Pflaume orientiert</span>
+          <span><i class="dot outline"></i> Offen bleibt sichtbar</span>
+        </aside>
+      </header>
+
+      <div class="decision-strip">
+        <span>Stage-2-Antworten werden übernommen</span>
+        <span>Klare Treffer gemeinsam bestätigen</span>
+        <span>Ausnahmen einzeln entscheiden</span>
+        <span>Fünf Stufen bleiben sichtbar</span>
+        <span>Bilder mit sicherem Platzhalter</span>
+        <span>Keine künstliche 6,6-Sekunden-Wartezeit</span>
+        <span>Multi-Row-Fakten ohne Erster-Treffer-Abkürzung</span>
+      </div>
+
+      <section class="section">
+        <h2>Direkter Schwung zwischen den Stufen</h2>
+        <p class="section-note">Kein Button bestätigt nur, dass noch ein Button kommt. Ein Ladebild erscheint ausschließlich während einer echten Anfrage; Fehler und Zurück bleiben erreichbar.</p>
+        <div class="journey-map">
+          <article><small>Bedarf · letzte Karte</small><strong>Plan verfeinern</strong><p>Der letzte CTA öffnet direkt die erste noch offene Frage.</p></article>
+          <article><small>Verfeinerung · Einstieg</small><strong>Welche Produkte nutzt du?</strong><p>Keine Einladung für eine neue Session. Teilweise Antworten werden stattdessen sicher fortgesetzt.</p></article>
+          <article class="selected"><small>Nur bei echter Arbeit</small><strong>Produkte werden vorbereitet</strong><p>ARIA-Ladestatus, solange der eine Stage-3-Bootstrap läuft. Kein Pflichtklick.</p></article>
+          <article><small>Produkte · erster Inhalt</small><strong>Dein Shampoo</strong><p>Der Bootstrap wird wiederverwendet; der Screen lädt den Draft nicht noch einmal.</p></article>
+          <article><small>Fehler / Zurück</small><strong>Nichts erneut beantworten</strong><p>Retry wiederholt den Bootstrap. Zurück öffnet die letzte relevante Frage.</p></article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Die Rückfrage bleibt bei ihrem Auslöser</h2>
+        <p class="section-note">Recurrence gehört direkt hinter die ausgewählten Haarthemen. In Stage 2 löscht „Keine weiteren“ nur die zweite Produktgruppe; drei oder mehr Kategorien bleiben erlaubt.</p>
+        <div class="stage-grid three">
+          <div class="summary-box" style="margin-top:0"><h4>Haarthemen → Häufigkeit → Analyse</h4><p><strong>1.</strong> „Was beschäftigt dich aktuell?“<br><strong>2.</strong> „Kommt Haarbruch immer wieder?“<br><strong>3.</strong> Analyse und erst danach Kopfhautfragen.</p><span class="chip good">Zurück + Resume bleiben erhalten</span></div>
+          <div class="summary-box" style="margin-top:0"><h4>Kein Haarthema gewählt</h4><p>Die Häufigkeitsfrage wird übersprungen. Es geht direkt zur Analyse; eine alte gebundene Häufigkeit wird verworfen.</p><span class="chip good">Bedingt übersprungen</span></div>
+          <div class="product-card" style="align-self:stretch"><div class="thumb"><i class="bottle green"></i><span>3+</span></div><div class="product-copy"><small>Weitere unterstützte Kategorien</small><strong>Öl · Maske · Trockenshampoo</strong><p>„Keine weiteren“ leert nur diese Gruppe. Shampoo und andere relevante Auswahlen bleiben erhalten.</p><span class="chip good">Keine Obergrenze</span></div><span class="chev">✓</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Bondbuilder erklärt nur, was wirklich belegt ist</h2>
+        <p class="section-note">Eine raue Oberfläche allein ist ein Begleitsignal. Sie erzeugt bei natürlichem, unbehandeltem Haar weder eine Bondbuilder-Empfehlung noch chemische Belastungs-Sprache.</p>
+        <div class="stage-grid three">
+          <div class="summary-box" style="margin-top:0"><h4>Lea · natürlich + raue Oberfläche</h4><p>Kein Haarbruch, kein allgemeiner Haarschaden, normale Elastizität, keine chemische Behandlung.</p><span class="chip good">Bondbuilder: nicht benötigt</span></div>
+          <article class="product-card tinted"><div class="thumb"><i class="bottle"></i><span>BOND</span></div><div class="product-copy"><small>Nur mit passendem Grund</small><strong>Gezielte Strukturpflege</strong><p>„Dein aufgehelltes Haar braucht zusätzliche Strukturunterstützung.“</p><span class="chip good">Chemischer Grund vorhanden</span></div><span class="chev">⌄</span></article>
+          <div class="error" style="margin-top:0"><strong>Nicht zulässig</strong><p>„Spezialisierte Strukturpflege für chemisch beanspruchtes Haar“ darf nie bei einer unbehandelten Person erscheinen.</p><button class="btn secondary" style="width:100%;margin-top:10px">Copy folgt dem Reason-Code</button></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Der verkürzte Produkte-Flow auf Mobile</h2>
+        <p class="section-note">Drei Schlüsselmomente statt Intro-, Leer-, Ein-Checkbox-, Wiederholungs- und Übergabeseiten. Nach der letzten Entscheidung öffnet sich direkt die echte Routine. Die gezeigten Aktionen sind Planungsbeispiele; die Stufenanzeige bleibt nicht klickbar.</p>
+        <div class="stage-grid three">
+          <div>
+            <p class="frame-label"><span>1 · Direkt erfassen</span><span>Schritt 3 von 5</span></p>
+            <div class="phone"><div class="phone-inner">
+              <div class="appbar"><button class="back">‹</button><span class="brand">chaarlie</span><span class="save">Gespeichert</span></div>
+              <div class="progress-wrap"><div class="steps">
+                <span class="step done"><i></i>Bedarf</span><span class="step done"><i></i>Feinschliff</span><span class="step current"><i></i>Produkte</span><span class="step"><i></i>Routine</span><span class="step"><i></i>Anwendung</span>
+              </div></div>
+              <div class="content">
+                <p class="kicker">Deine Produkte</p><h3>Welches Shampoo nutzt du?</h3>
+                <p class="lead">Wir prüfen dein genaues Produkt gegen deinen Bedarf.</p>
+                <div class="inherit"><span><strong>2× pro Woche</strong>Aus deiner Verfeinerung übernommen</span><button class="text-link">Angaben ändern</button></div>
+                <div class="search">⌕&nbsp; Marke oder Produktname suchen</div>
+                <div class="card-list">
+                  <article class="product-card"><div class="thumb"><i class="bottle"></i><span>SHAMPOO</span></div><div class="product-copy"><small>Balea Professional</small><strong>Oil Repair Intensiv Shampoo</strong><p>Passender Katalogtreffer · mit Produktbild</p></div><span class="chev">›</span></article>
+                  <article class="role-row"><span class="role-icon">✓</span><div><strong>Hauptreinigung übernommen</strong><p>Ein Produkt · eine eindeutige Aufgabe</p></div><span class="check">✓</span></article>
+                </div>
+              </div>
+              <div class="actions"><button class="btn primary">Produkt übernehmen</button><button class="btn secondary">Nicht gefunden? Hinzufügen</button></div>
+            </div></div>
+          </div>
+
+          <div>
+            <p class="frame-label"><span>2 · Klare Treffer bündeln</span><span>1 Bestätigung</span></p>
+            <div class="phone"><div class="phone-inner">
+              <div class="appbar"><button class="back">‹</button><span class="brand">chaarlie</span><span class="save">3 Produkte geprüft</span></div>
+              <div class="progress-wrap"><div class="steps">
+                <span class="step done"><i></i>Bedarf</span><span class="step done"><i></i>Feinschliff</span><span class="step current"><i></i>Produkte</span><span class="step"><i></i>Routine</span><span class="step"><i></i>Anwendung</span>
+              </div></div>
+              <div class="content">
+                <p class="kicker">Passt zu deinem Bedarf</p><h3>Diese drei kannst du weiterverwenden.</h3>
+                <p class="lead">Details bleiben aufklappbar. Du bestätigst die passenden Produkte gemeinsam.</p>
+                <div class="card-list">
+                  <article class="product-card tinted"><div class="thumb"><i class="bottle"></i><span>SHAMPOO</span></div><div class="product-copy"><small>Reinigung</small><strong>Oil Repair Shampoo</strong><span class="chip good">✓ Passt sehr gut</span></div><span class="chev">⌄</span></article>
+                  <article class="product-card tinted"><div class="thumb"><i class="bottle coral"></i><span>PFLEGE</span></div><div class="product-copy"><small>Conditioner</small><strong>Feuchtigkeits-Spülung</strong><span class="chip good">✓ Passt sehr gut</span></div><span class="chev">⌄</span></article>
+                  <article class="product-card tinted"><div class="thumb"><i class="bottle green"></i><span>LEAVE-IN</span></div><div class="product-copy"><small>Pflege im Haar</small><strong>Hydration Leave-in</strong><span class="chip good">✓ Passt sehr gut</span></div><span class="chev">⌄</span></article>
+                </div>
+              </div>
+              <div class="actions"><button class="btn primary">3 passende Produkte übernehmen</button><button class="btn ghost">Details ansehen</button></div>
+            </div></div>
+          </div>
+
+          <div>
+            <p class="frame-label"><span>3 · Ausnahme einzeln</span><span>Sicherer Pending-State</span></p>
+            <div class="phone"><div class="phone-inner">
+              <div class="appbar"><button class="back">‹</button><span class="brand">chaarlie</span><span class="save">Noch offen</span></div>
+              <div class="progress-wrap"><div class="steps">
+                <span class="step done"><i></i>Bedarf</span><span class="step done"><i></i>Feinschliff</span><span class="step current"><i></i>Produkte</span><span class="step"><i></i>Routine</span><span class="step"><i></i>Anwendung</span>
+              </div></div>
+              <div class="content">
+                <p class="kicker">Noch nicht sicher beurteilbar</p><h3>Dein Kopfhaut-Tonic</h3>
+                <p class="lead">Das Produkt ist gespeichert. Uns fehlen noch bestätigte Produktinformationen.</p>
+                <article class="product-card pending"><div class="thumb"><i class="bottle gold"></i><span>DEIN FOTO</span></div><div class="product-copy"><small>Manuell hinzugefügt</small><strong>Kopfhaut-Tonic</strong><p>Für: Kopfhaut beruhigen</p><span class="chip pending">◷ Wird noch geprüft</span></div><span class="chev">⌄</span></article>
+                <div class="pending-note"><strong>Bleibt sicher:</strong> Das Tonic erscheint noch nicht als Anwendungsschritt. Deine anderen Produkte kannst du trotzdem abschließen.</div>
+              </div>
+              <div class="actions"><button class="btn primary">Später weiterprüfen</button><button class="btn secondary">Nicht übernehmen</button></div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Desktop: dieselbe Sprache, mehr Überblick</h2>
+        <p class="section-note">Die Desktop-Variante nutzt Platz für Orientierung und Vergleich, ohne andere Entscheidungen oder eine zweite Komponentenwelt einzuführen.</p>
+        <div class="desktop-shell">
+          <aside class="desktop-side">
+            <span class="brand">chaarlie</span><h3>Dein Plan entsteht Schritt für Schritt.</h3><p>Deine Angaben bleiben gespeichert. Du kannst sicher zurückgehen, ohne spätere Stufen direkt anzuspringen.</p>
+            <div class="side-steps"><span class="side-step done"><i>✓</i>Bedarf</span><span class="side-step done"><i>✓</i>Verfeinerung</span><span class="side-step current"><i>3</i>Produkte</span><span class="side-step"><i>4</i>Routine</span><span class="side-step"><i>5</i>Anwendung</span></div>
+          </aside>
+          <div class="desktop-main">
+            <p class="kicker">Passt zu deinem Bedarf</p><h3 style="font-size:34px">Deine passenden Produkte auf einen Blick.</h3><p class="lead">Einmal gemeinsam bestätigen. Nur offene oder widersprüchliche Produkte brauchen danach noch eine einzelne Entscheidung.</p>
+            <div class="cards-2 card-list">
+              <article class="product-card tinted"><div class="thumb"><i class="bottle"></i><span>SHAMPOO</span></div><div class="product-copy"><small>Reinigung</small><strong>Oil Repair Shampoo</strong><span class="chip good">✓ Passt sehr gut</span></div><span class="chev">⌄</span></article>
+              <article class="product-card tinted"><div class="thumb"><i class="bottle coral"></i><span>PFLEGE</span></div><div class="product-copy"><small>Conditioner</small><strong>Feuchtigkeits-Spülung</strong><span class="chip good">✓ Passt sehr gut</span></div><span class="chev">⌄</span></article>
+              <article class="product-card tinted"><div class="thumb"><i class="bottle green"></i><span>LEAVE-IN</span></div><div class="product-copy"><small>Pflege im Haar</small><strong>Hydration Leave-in</strong><span class="chip good">✓ Passt sehr gut</span></div><span class="chev">⌄</span></article>
+              <article class="product-card pending"><div class="thumb"><i class="bottle gold"></i><span>DEIN FOTO</span></div><div class="product-copy"><small>Kopfhautpflege</small><strong>Kopfhaut-Tonic</strong><span class="chip pending">◷ Einzeln prüfen</span></div><span class="chev">›</span></article>
+            </div>
+            <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px"><button class="btn secondary">Zurück</button><button class="btn primary">3 passende Produkte übernehmen</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Was sich durch alle fünf Stufen zieht</h2>
+        <p class="section-note">Eine gemeinsame Grammatik, aber weiterhin fünf klar getrennte Aufgaben.</p>
+        <div class="journey-map">
+          <article><small>1 · Bedarf</small><strong>Sofortiger Planwert</strong><p>Quiz-basierte Basis und optionale Bedürfnisse bleiben unverändert sichtbar.</p></article>
+          <article><small>2 · Verfeinerung</small><strong>Nur fehlende Fakten</strong><p>Keine Prozess-Erklärungen, keine Wiederholung in Stage 3.</p></article>
+          <article class="selected"><small>3 · Produkte</small><strong>Identität + echte Ausnahmen</strong><p>Bilder, stille Übernahme sicherer Angaben, klare Gruppenbestätigung.</p></article>
+          <article><small>4 · Routine</small><strong>Alles zusammenführen</strong><p>Aktiv, geplant, offen und in Prüfung bleiben unterscheidbar.</p></article>
+          <article><small>5 · Anwendung</small><strong>Nur bestätigte Produkte</strong><p>Schrittfolge ohne erfundene Produktanweisungen.</p></article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Recovery ist Teil der Oberfläche</h2>
+        <p class="section-note">Fehler werden nicht als tote Zustände gestaltet. Bereits gespeicherte Entscheidungen bleiben erhalten; ein eingeloggter Link-Replay führt sicher weiter statt zurück auf eine abgelaufene Auth-Seite.</p>
+        <div class="stage-grid three">
+          <div class="summary-box" style="margin-top:0"><h4>Wird gespeichert</h4><p>Der Status erscheint sofort. Aktionen sind bis zur einen atomaren Antwort deaktiviert; Doppelklicks senden nichts doppelt.</p><span class="chip pending">◷ Eine Anfrage</span></div>
+          <div class="error" style="margin-top:0"><strong>Produktprüfung gerade nicht verfügbar</strong><p>Mehrere unterschiedliche passende Spezifikationen bleiben ehrlich ungeklärt. Es wird nie einfach die erste gewählt.</p><button class="btn secondary" style="width:100%;margin-top:10px">Erneut versuchen</button></div>
+          <div class="error" style="margin-top:0"><strong>Kein Katalogtreffer</strong><p>Die Kategorie bleibt offen. Suche erneut oder füge dein Produkt manuell hinzu; es wird keine Empfehlung erfunden.</p><button class="btn secondary" style="width:100%;margin-top:10px">Produkt hinzufügen</button></div>
+          <div class="summary-box" style="margin-top:0"><h4>Link bereits verwendet</h4><p>Mit gültiger Sitzung geht es zum sicheren Ziel oder zur aktuellen Personal-Plan-Stufe. Ohne Sitzung bleibt die Ablauf-Hilfe sichtbar.</p><span class="chip good">Back/Forward bereinigt</span></div>
+          <div class="error" style="margin-top:0"><strong>Plan noch nicht bereit</strong><p>Nach etwa 30 Sekunden bleibt die bestehende Wiederherstellung sichtbar. Ein „ready“ auf dem ersten Poll wartet dagegen nicht künstlich.</p><button class="btn secondary" style="width:100%;margin-top:10px">Status erneut prüfen</button></div>
+          <div class="summary-box" style="margin-top:0"><h4>Bild nicht verfügbar</h4><p>Die Kategorie-Illustration hält das Layout stabil. Name, Marke und Entscheidung bleiben vollständig nutzbar.</p><span class="chip good">Kein Blocker</span></div>
+        </div>
+      </section>
+
+      <p class="artifact-note"><strong>Entscheidungsfrage:</strong> Trifft diese direkte Reise genau die gewünschte Balance? Normalzustände gehen ohne Klick-Zwischenstopps weiter; echtes Laden, Speichern, uneindeutige Produktfakten und Auth-Recovery bleiben sichtbar und sicher. Zu bestätigen sind besonders die neue Recurrence-Position, „Keine weiteren“, die reason-aware Bondbuilder-Sprache und das real-work-only Ladebild.</p>
+    </main>
+  </body>
+</html>

@@ -2,7 +2,11 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 
 import { PlanStartFlow, PlanStartProductionGate } from "@/components/personal-plan-start"
-import type { PlanStartInitialJourney } from "@/components/personal-plan-start/plan-start-flow"
+import type {
+  PlanStartInitialJourney,
+  PlanStartReadyViewModel,
+} from "@/components/personal-plan-start/plan-start-flow"
+import { adaptInitialNeedSnapshotToPlanStartViewModel } from "@/components/personal-plan-start/snapshot-adapter"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -10,6 +14,8 @@ import {
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { loadExistingStage2RefinementSession } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
+import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
+import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import {
   isPersonalPlanAppV1Enabled,
@@ -19,7 +25,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
-  title: "Dein Personal Plan | Chaarlie",
+  title: "Dein Personal Plan",
   robots: { index: false, follow: false },
 }
 
@@ -29,12 +35,17 @@ export type PlanStartPageDeps = {
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   loadExistingRefinementSession: (userId: string) => Promise<Stage2RefinementSession | null>
+  loadStage1Plan?: (userId: string) => Promise<PlanStartReadyViewModel | null>
 }
 
 export type PlanStartPageState =
   | { state: "unavailable" }
   | { state: "paid_pending" }
-  | { state: "production"; initialJourney: PlanStartInitialJourney }
+  | {
+      state: "production"
+      initialJourney: PlanStartInitialJourney
+      initialPlan?: PlanStartReadyViewModel
+    }
 
 export async function resolvePlanStartPageState(
   deps: PlanStartPageDeps,
@@ -50,19 +61,29 @@ export async function resolvePlanStartPageState(
     if (!canAccessPersonalPlanJourneyStage(access, "stage1")) {
       return { state: "unavailable" }
     }
+    let initialPlan: PlanStartReadyViewModel | null | undefined
+    try {
+      initialPlan = await deps.loadStage1Plan?.(userId)
+    } catch {
+      // Preserve the existing client retry path when only the optional server
+      // preload fails; access/auth failures still resolve through the outer gate.
+      initialPlan = undefined
+    }
+    const production = (initialJourney: PlanStartInitialJourney): PlanStartPageState => ({
+      state: "production",
+      initialJourney,
+      ...(initialPlan ? { initialPlan } : {}),
+    })
     const stage2Enabled = deps.stage2Enabled()
     if (!stage2Enabled || access.kind !== "personal_plan" || !access.allowed.stage2) {
-      return {
-        state: "production",
-        initialJourney: stage2Enabled
-          ? { stage: "stage1" }
-          : { stage: "stage1", refinementAvailable: false },
-      }
+      return production(
+        stage2Enabled ? { stage: "stage1" } : { stage: "stage1", refinementAvailable: false },
+      )
     }
 
     const refinement = await deps.loadExistingRefinementSession(userId)
     if (!refinement) {
-      return { state: "production", initialJourney: { stage: "stage1" } }
+      return production({ stage: "stage1" })
     }
     if (
       refinement.status === "complete" &&
@@ -70,15 +91,12 @@ export async function resolvePlanStartPageState(
       access.allowed.stage3 &&
       refinement.completedHandoff
     ) {
-      return {
-        state: "production",
-        initialJourney: {
-          stage: "stage3",
-          refinedVersionId: refinement.completedHandoff.refinedVersionId,
-        },
-      }
+      return production({
+        stage: "stage3",
+        refinedVersionId: refinement.completedHandoff.refinedVersionId,
+      })
     }
-    return { state: "production", initialJourney: { stage: "stage2" } }
+    return production({ stage: "stage2" })
   } catch {
     return { state: "unavailable" }
   }
@@ -95,9 +113,22 @@ export default async function PlanStartPage() {
         userId,
         persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
       }),
+    loadStage1Plan: async (userId) => {
+      const result = await createStage1PersistenceService(
+        createStage1SupabaseDependencies(createAdminClient() as never),
+      ).loadOrCreate({ userId })
+      if (result.status !== "completed") return null
+      const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot)
+      return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
+    },
   })
   if (state.state === "paid_pending") redirect("/plan-bereit")
   if (state.state === "unavailable") return <PlanStartFlow state="unavailable" />
 
-  return <PlanStartProductionGate initialJourney={state.initialJourney} />
+  return (
+    <PlanStartProductionGate
+      initialJourney={state.initialJourney}
+      initialPlan={state.initialPlan}
+    />
+  )
 }

@@ -77,7 +77,9 @@ if (!preparedStage3Entry.authoritySnapshot)
   throw new Error("production browser fixture is missing Stage 3 authority")
 
 test.describe("production-shaped Personal Plan Stage 1 surface", () => {
-  test("preserves the signed mobile Basis, Optional and transition journey", async ({ page }) => {
+  test("preserves the signed mobile Basis and Optional journey without a transition page", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 375, height: 844 })
     await page.goto(labPath)
 
@@ -85,10 +87,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(page.locator("[data-plan-start-card-list] article")).not.toHaveCount(0)
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
-    await page.getByRole("button", { name: "Plan wirklich zu meinem machen" }).click()
-    await expect(
-      page.getByRole("heading", { name: "Jetzt machen wir sie zu deiner." }),
-    ).toBeVisible()
+    await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
   })
 
   test("contains the reviewed surface at desktop without horizontal overflow", async ({ page }) => {
@@ -128,6 +127,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
         body: JSON.stringify({
           status: "active",
           requirements: preparedStage3Entry.orderedCategories,
+          authorityEvaluations: [],
           draft: {
             schemaVersion: 1,
             status: "active",
@@ -158,15 +158,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(productionCompositionLabPath)
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
-    await page.getByRole("button", { name: "Plan wirklich zu meinem machen" }).click()
     await page.getByRole("button", { name: "Plan verfeinern" }).click()
-    await expect(page.locator("[data-refined-version-id]")).toHaveAttribute(
-      "data-refined-version-id",
-      refinedVersionId,
-    )
-    await page.getByRole("button", { name: /Produkte erfassen/ }).click()
-    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
-    await page.getByRole("button", { name: "Produkte suchen" }).click()
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
     await expect(
       page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),

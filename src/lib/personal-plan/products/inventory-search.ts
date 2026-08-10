@@ -16,6 +16,7 @@ export type CatalogProductRecord = {
   category: PersonalPlanCategory
   brandName: string | null
   displayName: string
+  imageUrl?: string | null
   active: boolean
   lifecycleStatus: string | null
   recommended: boolean | null
@@ -220,6 +221,7 @@ function asCatalogCandidate(product: CatalogProductRecord, query: string): Stage
     displayName: product.displayName,
     category: product.category,
     brandName: product.brandName,
+    imageUrl: product.imageUrl ?? null,
     confidence: label === query.toLocaleLowerCase() ? "exact" : "likely",
   }
 }

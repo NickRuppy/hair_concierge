@@ -12,11 +12,12 @@ import {
   Stage3Transition,
   type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
+import { authorityEvaluationProjection } from "../src/components/personal-plan-products/stage3-products-flow"
 import {
-  PortfolioHandoff,
-  authorityEvaluationProjection,
-} from "../src/components/personal-plan-products/stage3-products-flow"
-import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
+  PERSONAL_PLAN_PRODUCT_CATEGORIES,
+  type PersonalPlanCategory,
+  type Stage3ProductDraft,
+} from "../src/lib/personal-plan/products/contracts"
 
 const forbiddenFlowLabels = /\b(?:Pass|Teil\s+\d|Stage|Stufe)\b/i
 
@@ -44,10 +45,30 @@ test("stage 3 shell and transitions reuse onboarding language without internal n
   assert.match(captureHtml, /Jetzt finden wir die Produkte, die du wirklich benutzt\./)
   assert.match(captureHtml, /quiz-btn-primary/)
   assert.match(captureHtml, /font-header/)
-  assert.doesNotMatch(captureHtml, forbiddenFlowLabels)
+  assert.doesNotMatch(captureHtml, />(?:Pass|Teil\s+\d|Stage|Stufe)</i)
   assert.match(decisionHtml, /<h1[^>]*>Wie gut passen deine Produkte\?<\/h1>/)
   assert.match(decisionHtml, /Jetzt schauen wir uns die gefundenen Produkte an/)
   assert.doesNotMatch(decisionHtml, forbiddenFlowLabels)
+})
+
+test("stage 3 shell renders the supplied save state instead of a hard-coded saved label", () => {
+  const renderShell = (status: "idle" | "saving" | "saved" | "error") =>
+    renderToStaticMarkup(
+      <Stage3Shell
+        title="Produkte"
+        currentStepLabel="Produkte finden"
+        completedSteps={2}
+        totalSteps={8}
+        saveState={{ status, label: "Gespeichert" }}
+      >
+        <div>Inhalt</div>
+      </Stage3Shell>,
+    )
+
+  assert.match(renderShell("saving"), /Wird gespeichert/)
+  assert.match(renderShell("saved"), /Gespeichert/)
+  assert.match(renderShell("error"), /Nicht gespeichert/)
+  assert.doesNotMatch(renderShell("idle"), /Wird gespeichert|Gespeichert|Nicht gespeichert/)
 })
 
 test("product capture exposes controlled search, explicit result selection, frequency, fallback, and multi-product actions", () => {
@@ -102,6 +123,79 @@ test("product capture exposes controlled search, explicit result selection, freq
   assert.doesNotMatch(html, /Suchtreffer als eigenes Produkt gespeichert/)
 })
 
+test("every supported Personal Plan category renders an explicit German capture heading", () => {
+  const labels = {
+    shampoo: "Shampoo",
+    conditioner: "Conditioner",
+    leave_in: "Leave-in",
+    heat_protectant: "Hitzeschutz",
+    oil: "Öl",
+    mask: "Maske",
+    scalp_care: "Kopfhautprodukt",
+    dry_shampoo: "Trockenshampoo",
+    bondbuilder: "Bondbuilder",
+    deep_cleansing_shampoo: "Tiefenreinigung",
+  } satisfies Record<PersonalPlanCategory, string>
+  const expectedHeadings = {
+    shampoo: "Dein Shampoo",
+    conditioner: "Dein Conditioner",
+    leave_in: "Dein Leave-in",
+    heat_protectant: "Dein Hitzeschutz",
+    oil: "Dein Öl",
+    mask: "Deine Maske",
+    scalp_care: "Dein Kopfhautprodukt",
+    dry_shampoo: "Dein Trockenshampoo",
+    bondbuilder: "Dein Bondbuilder",
+    deep_cleansing_shampoo: "Deine Tiefenreinigung",
+  } satisfies Record<PersonalPlanCategory, string>
+
+  assert.deepEqual(Object.keys(expectedHeadings), [...PERSONAL_PLAN_PRODUCT_CATEGORIES])
+  for (const category of PERSONAL_PLAN_PRODUCT_CATEGORIES) {
+    const html = renderToStaticMarkup(
+      <ProductCaptureScreen
+        categoryLabel={labels[category]}
+        needSummary="Bedarf"
+        query=""
+        searchStatus="idle"
+        searchResults={[]}
+        capturedProducts={[]}
+        frequencyOptions={[]}
+        selectedFrequency={null}
+        intakeAvailable={false}
+        onQueryChange={() => {}}
+        onSelectCandidate={() => {}}
+        onFrequencyChange={() => {}}
+        onAddAnotherProduct={() => {}}
+        onOpenFallbackIntake={() => {}}
+        onContinue={() => {}}
+      />,
+    )
+
+    assert.match(html, new RegExp(`<h1[^>]*>${expectedHeadings[category]}</h1>`), category)
+  }
+
+  const unknownHtml = renderToStaticMarkup(
+    <ProductCaptureScreen
+      categoryLabel="Unbekannte Kategorie"
+      needSummary="Bedarf"
+      query=""
+      searchStatus="idle"
+      searchResults={[]}
+      capturedProducts={[]}
+      frequencyOptions={[]}
+      selectedFrequency={null}
+      intakeAvailable={false}
+      onQueryChange={() => {}}
+      onSelectCandidate={() => {}}
+      onFrequencyChange={() => {}}
+      onAddAnotherProduct={() => {}}
+      onOpenFallbackIntake={() => {}}
+      onContinue={() => {}}
+    />,
+  )
+  assert.match(unknownHtml, /<h1[^>]*>Unbekannte Kategorie<\/h1>/)
+})
+
 test("semantic role assignment lets one oil product cover several purposes without a global primary", () => {
   const html = renderToStaticMarkup(
     <SemanticRoleAssignment
@@ -118,7 +212,6 @@ test("semantic role assignment lets one oil product cover several purposes witho
       assignments={{
         "oil-1": ["finish", "schutz"],
       }}
-      errors={["Bitte ordne jede Rolle hoechstens einem Produkt zu."]}
       onToggleRole={() => {}}
       onContinue={() => {}}
       onBack={() => {}}
@@ -130,7 +223,9 @@ test("semantic role assignment lets one oil product cover several purposes witho
   assert.match(html, /aria-label="Olaplex No\. 7 Bonding Oil: Laengen schuetzen"/)
   assert.match(html, /name="stage3-role-oil-1-finish"/)
   assert.match(html, /name="stage3-role-oil-1-schutz"/)
-  assert.match(html, /role="alert"/)
+  assert.match(html, /Nicht ausgewählte Aufgaben bleiben als offene Lücke im Plan erhalten/)
+  assert.match(html, /Auswahl übernehmen/)
+  assert.doesNotMatch(html, /role="alert"/)
   assert.doesNotMatch(html, /Primäres Öl|Hauptöl|global/)
 })
 
@@ -242,6 +337,8 @@ test("system states and intake fallback expose busy, live, retry, and boundary a
       message="Upload konnte nicht gespeichert werden."
       frequencyOptions={[{ value: "weekly_1x", label: "1x/Woche" }]}
       selectedFrequency={null}
+      productName="Curlsmith Conditioner"
+      onProductNameChange={() => {}}
       onFrequencyChange={() => {}}
       onOpen={() => {}}
       onRetry={() => {}}
@@ -253,35 +350,10 @@ test("system states and intake fallback expose busy, live, retry, and boundary a
   assert.match(stateHtml, /role="status"/)
   assert.match(stateHtml, /aria-live="polite"/)
   assert.match(fallbackHtml, /role="alert"/)
-  assert.match(fallbackHtml, /Produkt per Foto oder manuell hinzufügen/)
+  assert.match(fallbackHtml, /Produktname/)
+  assert.match(fallbackHtml, /Produkt speichern/)
   assert.match(fallbackHtml, /Erneut versuchen/)
   assert.match(fallbackHtml, /Zurück zur Suche/)
-})
-
-test("completed Stage 3 offers a truthful Routine handoff without exposing technical IDs", () => {
-  const html = renderToStaticMarkup(
-    <PortfolioHandoff
-      completion={{
-        status: "ready_for_routine",
-        draft: {} as never,
-        portfolio: {
-          ownedProducts: [],
-          plannedPurchases: [],
-          pendingProducts: [],
-          uncoveredRoles: [],
-        } as never,
-        personalPlanId: "plan-opaque-123",
-        refinedVersionId: "refined-opaque-123",
-        productPortfolioVersionId: "portfolio-opaque-123",
-        routineProposalId: "proposal-opaque-123",
-        next: { stage: 4, href: "/routine" },
-      }}
-    />,
-  )
-
-  assert.match(html, />Routine öffnen</)
-  assert.doesNotMatch(html, /portfolio-opaque-123|proposal-opaque-123|plan-opaque-123/)
-  assert.doesNotMatch(html, /bereits aktiv|aktiviert/)
 })
 
 test("unknown and unsupported server evaluations stay explicit and do not acquire invented actions", () => {

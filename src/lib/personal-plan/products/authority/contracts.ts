@@ -1,5 +1,7 @@
 import type {
+  InitialNeedPlanSnapshot,
   PlanCategoryDecision,
+  PlanHairThickness,
   PlanPortfolioCoverageFact,
   PlanProductRole,
 } from "@/lib/personal-plan/types"
@@ -46,6 +48,9 @@ export type Stage3AuthorityCommonProductFacts = {
   knownReaction: boolean | null
   protocols: Stage3AuthorityProtocolFact[]
   factFingerprint: string
+  catalogSortOrder?: number | null
+  priceEur?: number | null
+  purchaseLinkStatus?: "available" | "unavailable" | null
 }
 
 export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
@@ -179,6 +184,12 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
     verifiedRoutes: string[]
   }
 }
+
+export type Stage3EvaluationContext = Readonly<{
+  currentRefinedVersionId: string
+  refinedNeedSnapshot: InitialNeedPlanSnapshot
+  hairThickness: PlanHairThickness
+}>
 
 export type Stage3KnownAuthorityEvaluation = {
   status: "known"
