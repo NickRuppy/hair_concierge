@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  canBypassLegacyOnboardingForPersonalPlanRoutine,
   getAuthenticatedAppRedirect,
   hasQuizDiagnostics,
   resolveIntakeState,
@@ -88,4 +89,48 @@ test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
 
 test("getAuthenticatedAppRedirect preserves quiz retake access", () => {
   assert.equal(getAuthenticatedAppRedirect("/quiz", "ready", { isQuizRetake: true }), null)
+})
+
+test("Personal Plan routine access bypasses legacy onboarding only at the Stage 4/5 frontier", () => {
+  const pendingRoutine = {
+    hasActiveOneTimeEntitlement: true,
+    pendingRoutineProposalId: "proposal-1",
+    activeRoutineVersionId: null,
+  }
+  const activeRoutine = {
+    hasActiveOneTimeEntitlement: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: "routine-1",
+  }
+
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/routine", pendingRoutine), true)
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/routine/current", pendingRoutine),
+    true,
+  )
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung", pendingRoutine), false)
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung/wash_day", activeRoutine),
+    true,
+  )
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/chat", activeRoutine), false)
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/routine", {
+      ...activeRoutine,
+      hasActiveOneTimeEntitlement: false,
+    }),
+    false,
+  )
+  assert.equal(
+    getAuthenticatedAppRedirect("/routine", "needs_onboarding", {
+      personalPlanRoutineAccess: pendingRoutine,
+    }),
+    null,
+  )
+  assert.equal(
+    getAuthenticatedAppRedirect("/anwendung", "needs_onboarding", {
+      personalPlanRoutineAccess: pendingRoutine,
+    }),
+    "/onboarding",
+  )
 })
