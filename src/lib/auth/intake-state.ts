@@ -5,6 +5,12 @@ import {
 
 export type IntakeState = "needs_quiz" | "needs_onboarding" | "ready"
 
+export type PersonalPlanRoutineAccess = {
+  hasActiveOneTimeEntitlement: boolean
+  pendingRoutineProposalId: string | null
+  activeRoutineVersionId: string | null
+}
+
 type ProfileRow = {
   onboarding_completed?: boolean | null
 } | null
@@ -31,7 +37,7 @@ export function resolveIntakeState(
 export function getAuthenticatedAppRedirect(
   pathname: string,
   intakeState: IntakeState,
-  options?: { isQuizRetake?: boolean },
+  options?: { isQuizRetake?: boolean; personalPlanRoutineAccess?: PersonalPlanRoutineAccess },
 ): string | null {
   if (pathname === "/quiz" && options?.isQuizRetake) {
     return null
@@ -51,15 +57,42 @@ export function getAuthenticatedAppRedirect(
 
   if (isAuthenticatedAppRoute(pathname)) {
     if (intakeState === "needs_quiz") return "/quiz"
-    if (intakeState === "needs_onboarding") return "/onboarding"
+    if (intakeState === "needs_onboarding") {
+      return canBypassLegacyOnboardingForPersonalPlanRoutine(
+        pathname,
+        options?.personalPlanRoutineAccess,
+      )
+        ? null
+        : "/onboarding"
+    }
     return null
   }
 
   return null
 }
 
-function isAuthenticatedAppRoute(pathname: string): boolean {
-  return ["/anwendung", "/chat", "/routine"].some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+export function isPersonalPlanRoutineRoute(pathname: string): boolean {
+  return isRoute(pathname, "/routine") || isRoute(pathname, "/anwendung")
+}
+
+export function canBypassLegacyOnboardingForPersonalPlanRoutine(
+  pathname: string,
+  access: PersonalPlanRoutineAccess | undefined,
+): boolean {
+  if (!access?.hasActiveOneTimeEntitlement) return false
+
+  const hasPendingOrActiveRoutine = Boolean(
+    access.pendingRoutineProposalId || access.activeRoutineVersionId,
   )
+  if (isRoute(pathname, "/routine")) return hasPendingOrActiveRoutine
+  if (isRoute(pathname, "/anwendung")) return Boolean(access.activeRoutineVersionId)
+  return false
+}
+
+function isAuthenticatedAppRoute(pathname: string): boolean {
+  return ["/anwendung", "/chat", "/routine"].some((prefix) => isRoute(pathname, prefix))
+}
+
+function isRoute(pathname: string, prefix: string): boolean {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
 }

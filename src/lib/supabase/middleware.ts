@@ -1,6 +1,11 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
-import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
+import {
+  getAuthenticatedAppRedirect,
+  isPersonalPlanRoutineRoute,
+  resolveIntakeState,
+  type PersonalPlanRoutineAccess,
+} from "@/lib/auth/intake-state"
 import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
@@ -218,10 +223,10 @@ export async function updateSession(request: NextRequest) {
 
   // --- Subscription paywall ---------------------------------------------
   const needsSub = requiresSubscriptionPath(pathname)
+  let oneTimeAccessState: OneTimeAccessState | null = null
 
   if (needsSub) {
     let active: boolean
-    let oneTimeAccessState: OneTimeAccessState
     try {
       ;[active, oneTimeAccessState] = await Promise.all([
         hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }),
@@ -292,7 +297,42 @@ export async function updateSession(request: NextRequest) {
       .maybeSingle()
 
     const intakeState = resolveIntakeState(profile, hairProfile)
-    const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, { isQuizRetake })
+    let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined
+    if (
+      intakeState === "needs_onboarding" &&
+      oneTimeAccessState === "active" &&
+      isPersonalPlanRoutineRoute(pathname)
+    ) {
+      try {
+        const { data: plan, error } = await supabase
+          .from("personal_plans")
+          .select("pending_routine_proposal_id,active_routine_version_id")
+          .eq("user_id", user.id)
+          .maybeSingle()
+
+        if (error) {
+          console.warn("[personal-plan] routine access check failed", error)
+        } else {
+          personalPlanRoutineAccess = {
+            hasActiveOneTimeEntitlement: true,
+            pendingRoutineProposalId:
+              typeof plan?.pending_routine_proposal_id === "string"
+                ? plan.pending_routine_proposal_id
+                : null,
+            activeRoutineVersionId:
+              typeof plan?.active_routine_version_id === "string"
+                ? plan.active_routine_version_id
+                : null,
+          }
+        }
+      } catch (error) {
+        console.warn("[personal-plan] routine access check failed", error)
+      }
+    }
+    const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, {
+      isQuizRetake,
+      personalPlanRoutineAccess,
+    })
 
     if (redirectPath) {
       const url = buildAuthenticatedAppRedirectUrl(request.nextUrl, redirectPath)
