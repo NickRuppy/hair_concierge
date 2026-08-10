@@ -280,8 +280,8 @@ test("sticky offer CTA morph preserves pricing navigation before checkout intent
   assert.match(offerSource, /const handlePricingReached = useCallback/)
   assert.match(offerSource, /onPricingReached=\{handlePricingReached\}/)
   assert.match(offerSource, /onCheckoutSummaryChange=\{setCheckoutSummary\}/)
-  assert.match(offerSource, /pricingReached \? "checkout" : "pricing"/)
-  assert.match(offerSource, /pricingReached \? openCheckout : scrollToPricing/)
+  assert.match(offerSource, /pricingReached\s*\?\s*"checkout"\s*:\s*"pricing"/)
+  assert.match(offerSource, /pricingReached\s*\?\s*openCheckout\s*:\s*scrollToPricing/)
   assert.match(offerSource, /h-11 w-36 sm:w-40/)
   assert.match(
     offerSource,
@@ -428,7 +428,11 @@ test("personal plan offer opens checkout immediately without a readiness gate", 
   )
 
   assert.doesNotMatch(offerSource, /checkoutWaiting|onCheckoutWaitingChange/)
-  assert.match(offerSource, /onClick=\{openCheckout\}/)
+  assert.match(offerSource, /onClick=\{fieldTest \? activateFieldTest : openCheckout\}/)
+  assert.match(
+    offerSource,
+    /const stickyAction = fieldTest\s*\?\s*activateFieldTest\s*:\s*pricingReached\s*\?\s*openCheckout\s*:\s*scrollToPricing/,
+  )
   assert.match(offerSource, /data-offer-cta="final"/)
   assert.doesNotMatch(offerSource, /Zahlungsoptionen werden vorbereitet …/)
 })

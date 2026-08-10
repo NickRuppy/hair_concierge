@@ -2,7 +2,8 @@ import { PersonalPlanQuiz } from "@/components/personal-plan-quiz/personal-plan-
 import type { FunnelLandingVariantProps } from "@/funnels/types"
 
 export default function FunnelPersonalPlanQuizLandingVariant({
+  personalPlanFieldTest = false,
   personalPlanQuizResume,
 }: FunnelLandingVariantProps) {
-  return <PersonalPlanQuiz resume={personalPlanQuizResume} />
+  return <PersonalPlanQuiz fieldTest={personalPlanFieldTest} resume={personalPlanQuizResume} />
 }

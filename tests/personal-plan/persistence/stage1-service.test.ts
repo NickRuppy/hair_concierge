@@ -21,7 +21,7 @@ function dependencies(
     findEntitlement: async () => ({
       accessState: "active",
       enrollmentSourceId: "22222222-2222-4222-8222-222222222222",
-      paidAt: "2026-08-08T01:00:00.000Z",
+      qualifiedAt: "2026-08-08T01:00:00.000Z",
       artifactLeadId: "44444444-4444-4444-8444-444444444444",
     }),
     loadArtifact: async () => artifact,
@@ -70,7 +70,7 @@ test("Stage 1 keeps flag-off, non-cohort, and pending states outside all reads a
         findEntitlement: async () => ({
           accessState: expected === "activation_pending" ? "paid_pending" : "active",
           enrollmentSourceId: "purchase-1",
-          paidAt: "2026-08-08T01:00:00.000Z",
+          qualifiedAt: "2026-08-08T01:00:00.000Z",
           artifactLeadId: "lead-1",
         }),
         loadArtifact: async () => {
@@ -101,7 +101,7 @@ test("Stage 1 rejects a paid purchase before the rollout cutoff without mutating
       findEntitlement: async () => ({
         accessState: "active",
         enrollmentSourceId: "purchase-1",
-        paidAt: "2026-08-07T23:59:59.999Z",
+        qualifiedAt: "2026-08-07T23:59:59.999Z",
         artifactLeadId: "lead-1",
       }),
       createOrReuseInitialNeed: async () => {

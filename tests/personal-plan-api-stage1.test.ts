@@ -24,7 +24,7 @@ function dependencies(overrides: Partial<Stage1RouteDeps> = {}): Stage1RouteDeps
       findEntitlement: async () => ({
         accessState: "active",
         enrollmentSourceId: "purchase-1",
-        paidAt: "2026-08-08T01:00:00.000Z",
+        qualifiedAt: "2026-08-08T01:00:00.000Z",
         artifactLeadId: "lead-1",
       }),
       loadArtifact: async () => null,

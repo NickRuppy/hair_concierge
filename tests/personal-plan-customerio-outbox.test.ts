@@ -54,6 +54,7 @@ function dependencies(input: {
   row?: CustomerIoProfileSyncOutboxRow
   identifyOk?: boolean
   completionEventOk?: boolean
+  fieldTest?: boolean
 }) {
   const current = input.row ?? row()
   const deliveries: Array<{
@@ -61,6 +62,7 @@ function dependencies(input: {
     profileSyncRevision?: number
     sendCompletionEvent: boolean
     funnelPackageKey?: string | null
+    testKind?: "field_test" | null
   }> = []
   const delivered: boolean[] = []
   const failed: Array<{ error: string; permanent: boolean }> = []
@@ -80,12 +82,17 @@ function dependencies(input: {
         quiz_kind: "personal_plan",
         created_at: "2026-08-01T10:00:00.000Z",
       }),
-      loadFunnel: async () => ({ id: "session-123", package_key: "meta_personal_plan_v1" }),
+      loadFunnel: async () => ({
+        id: "session-123",
+        package_key: "meta_personal_plan_v1",
+        test_kind: input.fieldTest ? "field_test" : null,
+      }),
       deliver: async (delivery: {
         identifyTimestamp?: string
         profileSyncRevision?: number
         sendCompletionEvent: boolean
         funnelPackageKey?: string | null
+        testKind?: "field_test" | null
       }) => {
         deliveries.push(delivery)
         const identify =
@@ -132,6 +139,18 @@ test("historical profile-only outbox row can never request the completion event"
 
   assert.equal(outcome, "delivered")
   assert.equal(deps.deliveries[0].sendCompletionEvent, false)
+  assert.deepEqual(deps.delivered, [false])
+})
+
+test("field-test profile sync never emits the commercial completion event", async () => {
+  const deps = dependencies({ fieldTest: true })
+  const outcome = await dispatchCustomerIoProfileSyncForLead({} as never, "lead-123", {
+    dependencies: deps.value as never,
+  })
+
+  assert.equal(outcome, "delivered")
+  assert.equal(deps.deliveries[0].sendCompletionEvent, false)
+  assert.equal(deps.deliveries[0].testKind, "field_test")
   assert.deepEqual(deps.delivered, [false])
 })
 

@@ -19,6 +19,10 @@ function expectInternalQaExcluded(query: string) {
     query,
     /lower\(ifNull\(toString\((?:\w+\.)?properties\.is_internal_test\), 'false'\)\) NOT IN \('true', '1'\)/,
   )
+  assert.match(
+    query,
+    /lower\(ifNull\(toString\((?:\w+\.)?properties\.test_kind\), ''\)\) != 'field_test'/,
+  )
 }
 
 test("v4 dashboard declaration keeps the applied v2 declaration intact", () => {

@@ -9,6 +9,7 @@ export type FunnelAnalyticsEnvelope = {
   funnelEventId?: string | null
   funnelSessionId?: string | null
   funnelPackageKey?: string | null
+  testKind?: "field_test" | null
 }
 
 export type OfferEntryContext =
@@ -28,6 +29,7 @@ export type OfferAnalyticsContext = FunnelAnalyticsEnvelope & {
   entryContext: OfferEntryContext
   focusRoutine: boolean
   isInternalTest?: boolean
+  testKind?: "field_test" | null
   leadId?: string | null
   needLane?: string | null
   offerRevision: string
@@ -388,7 +390,7 @@ export type AppEventMap = {
     pricingCatalog?: SubscriptionPricingCatalog
     value: number
   }
-  personal_plan_quiz_screen_viewed: {
+  personal_plan_quiz_screen_viewed: FunnelAnalyticsEnvelope & {
     quizVersion: "v2"
     screenId: string
     sectionId: string
@@ -467,7 +469,7 @@ export type AppEventMap = {
     leadId: string
     marketingConsent: boolean
   }
-  quiz_email_deliverability_rejected: {
+  quiz_email_deliverability_rejected: FunnelAnalyticsEnvelope & {
     reason: EmailDeliverabilityFailure
     suggestionPresent: boolean
   }

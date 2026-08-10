@@ -8,6 +8,7 @@ import type { PersonalPlanQuizResumeBootstrap } from "@/lib/personal-plan-quiz/t
 
 export type FunnelLandingVariantProps = {
   personalPlanQuizResume?: PersonalPlanQuizResumeBootstrap
+  personalPlanFieldTest?: boolean
 }
 
 export type FunnelLandingVariantComponent = ComponentType<FunnelLandingVariantProps>

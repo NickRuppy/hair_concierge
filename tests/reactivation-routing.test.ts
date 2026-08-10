@@ -3,7 +3,10 @@ import test from "node:test"
 
 import { getUnauthenticatedRedirectTarget } from "../src/lib/auth/unauthenticated-redirect"
 import { classifyRoute } from "../src/lib/auth/route-classification"
-import { requiresSubscriptionPath } from "../src/lib/supabase/middleware"
+import {
+  isPersonalPlanFieldTestGuest,
+  requiresSubscriptionPath,
+} from "../src/lib/supabase/middleware"
 
 const production = { nodeEnv: "production", localDevLoginEnabled: false }
 
@@ -31,4 +34,11 @@ test("all membership surfaces remain subscription gated", () => {
   ]) {
     assert.equal(requiresSubscriptionPath(path), true, path)
   }
+})
+
+test("field-test guest identity is server-owned and cannot be inferred from email", () => {
+  assert.equal(isPersonalPlanFieldTestGuest({ app_metadata: { access_kind: "field_test" } }), true)
+  assert.equal(isPersonalPlanFieldTestGuest({ app_metadata: { access_kind: "customer" } }), false)
+  assert.equal(isPersonalPlanFieldTestGuest({}), false)
+  assert.equal(classifyRoute("/test/haarplan/beendet", production), "public")
 })

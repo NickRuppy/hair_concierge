@@ -28,6 +28,11 @@ import {
 } from "@/lib/funnel/server"
 import { isPersonalPlanQuizV1Enabled, isPersonalPlanResultReturnEnabled } from "@/lib/funnel/flags"
 import { issuePersonalPlanResultReturn } from "@/lib/personal-plan-quiz/result-return"
+import {
+  bindPersonalPlanFieldTestLead,
+  PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE,
+  resolvePersonalPlanFieldTestCampaignCookie,
+} from "@/lib/personal-plan-field-test"
 
 interface PersonalPlanLeadPostDependencies {
   checkRateLimit: typeof checkRateLimit
@@ -36,6 +41,12 @@ interface PersonalPlanLeadPostDependencies {
   createAdminClient: typeof createAdminClient
   cookies: typeof cookies
   issueResultReturn: typeof issuePersonalPlanResultReturn
+  enqueueMetaLead: typeof enqueueMetaLead
+  recordFunnelEvent: typeof recordFunnelEvent
+  resolveFunnelCookieContext: typeof resolveFunnelCookieContext
+  resolvePendingFunnelTouchValue: typeof resolvePendingFunnelTouchValue
+  bindPersonalPlanFieldTestLead: typeof bindPersonalPlanFieldTestLead
+  resolvePersonalPlanFieldTestCampaignCookie: typeof resolvePersonalPlanFieldTestCampaignCookie
   scheduleAfter: typeof after
 }
 
@@ -49,6 +60,12 @@ export function createPersonalPlanLeadPostHandler(
     createAdminClient,
     cookies,
     issueResultReturn: issuePersonalPlanResultReturn,
+    enqueueMetaLead,
+    recordFunnelEvent,
+    resolveFunnelCookieContext,
+    resolvePendingFunnelTouchValue,
+    bindPersonalPlanFieldTestLead,
+    resolvePersonalPlanFieldTestCampaignCookie,
     scheduleAfter: after,
     ...overrides,
   }
@@ -106,15 +123,19 @@ export function createPersonalPlanLeadPostHandler(
       const answerHash = hashPersonalPlanAnswers(quizAnswers)
       const supabase = dependencies.createAdminClient()
       const cookieStore = await dependencies.cookies()
-      const funnelContext = await resolveFunnelCookieContext(
+      const funnelContext = await dependencies.resolveFunnelCookieContext(
         cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
       )
       const funnelTouch = funnelContext
-        ? await resolvePendingFunnelTouchValue(
+        ? await dependencies.resolvePendingFunnelTouchValue(
             cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
             funnelContext,
           )
         : null
+      const fieldTestCookieValue = cookieStore.get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value
+      const fieldTestCampaign = funnelContext
+        ? await dependencies.resolvePersonalPlanFieldTestCampaignCookie(fieldTestCookieValue)
+        : { kind: "unavailable" as const, code: "field_test_unavailable" as const }
       const { data: savedLeads, error: saveError } = await supabase.rpc(
         "save_personal_plan_lead_with_artifact",
         {
@@ -148,30 +169,45 @@ export function createPersonalPlanLeadPostHandler(
           })
         }
       })
-      enqueueMetaLead({
-        browserEventId,
-        email: deliverableEmail,
-        eventSourceUrl: META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL,
-        eventTime: createdAt,
-        leadId,
-        name: "",
-        requestData: metaUserRequestData,
-      })
+      if (fieldTestCampaign.kind !== "eligible") {
+        dependencies.enqueueMetaLead({
+          browserEventId,
+          email: deliverableEmail,
+          eventSourceUrl: META_PERSONAL_PLAN_QUIZ_EVENT_SOURCE_URL,
+          eventTime: createdAt,
+          leadId,
+          name: "",
+          requestData: metaUserRequestData,
+        })
+      }
       const attributionAttached = funnelContext
-        ? await recordFunnelEvent({
-            context: funnelContext,
-            eventId: funnelEventId,
-            milestone: "lead_captured",
-            leadId,
-            touch: funnelTouch,
-          })
+        ? await dependencies
+            .recordFunnelEvent({
+              context: funnelContext,
+              eventId: funnelEventId,
+              milestone: "lead_captured",
+              leadId,
+              touch: funnelTouch,
+            })
             .then(() => true)
             .catch((error) => {
               console.warn("[funnel] personal-plan lead attachment failed", error)
               return false
             })
         : false
-      const response = NextResponse.json({ leadId, attributionAttached })
+      const fieldTestAttached =
+        attributionAttached && funnelContext && fieldTestCampaign.kind === "eligible"
+          ? await dependencies.bindPersonalPlanFieldTestLead({
+              campaignCookieValue: fieldTestCookieValue,
+              funnelContext,
+              leadId,
+            })
+          : false
+      const response = NextResponse.json(
+        fieldTestCampaign.kind === "eligible"
+          ? { leadId, attributionAttached, fieldTestAttached }
+          : { leadId, attributionAttached },
+      )
       if (isPersonalPlanResultReturnEnabled()) {
         try {
           const issued = await dependencies.issueResultReturn({

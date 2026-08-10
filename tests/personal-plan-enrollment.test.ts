@@ -5,7 +5,7 @@ import { findPersonalPlanEnrollmentForUser } from "../src/lib/personal-plan/enro
 
 type Row = Record<string, unknown>
 
-function client(responses: Record<string, Row[]>) {
+function client(responses: Record<string, Row[]>, errors: Record<string, unknown> = {}) {
   const queries: Array<{ table: string; predicates: Array<[string, unknown]> }> = []
   return {
     queries,
@@ -24,6 +24,7 @@ function client(responses: Record<string, Row[]>) {
           return builder
         },
         maybeSingle: async () => {
+          if (errors[table]) return { data: null, error: errors[table] }
           const rows = matching()
           return rows.length > 1
             ? { data: null, error: { code: "PGRST116", message: "multiple rows" } }
@@ -84,6 +85,7 @@ test("a current Personal Plan membership resolves through its exact provider pur
       accessState: "active",
       sourceId: subscription.id,
       paidAt: "2026-08-09T12:46:16.000Z",
+      qualifiedAt: "2026-08-09T12:46:16.000Z",
       artifactLeadId: "44444444-4444-4444-8444-444444444444",
       sourceKind: "launch_subscription",
     },
@@ -197,9 +199,55 @@ test("standard subscriptions and membership purchases without exact Personal Pla
         accessState: "none",
         sourceId: null,
         paidAt: null,
+        qualifiedAt: null,
         artifactLeadId: null,
         sourceKind: null,
       },
     )
   }
+})
+
+test("an unapplied field-test relation preserves ordinary non-Personal-Plan enrollment", async () => {
+  const admin = client(
+    {
+      billing_one_time_purchases: [],
+      billing_subscriptions: [{ ...subscription, metadata: { pricing_catalog: "standard" } }],
+    },
+    {
+      personal_plan_test_enrollments: {
+        code: "PGRST205",
+        message: "Could not find the table public.personal_plan_test_enrollments",
+      },
+    },
+  )
+
+  assert.deepEqual(
+    await findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2026-08-10")),
+    {
+      accessState: "none",
+      sourceId: null,
+      paidAt: null,
+      qualifiedAt: null,
+      artifactLeadId: null,
+      sourceKind: null,
+    },
+  )
+})
+
+test("field-test enrollment reads still fail closed on unrelated database errors", async () => {
+  const admin = client(
+    {
+      billing_one_time_purchases: [],
+      billing_subscriptions: [{ ...subscription, metadata: { pricing_catalog: "standard" } }],
+    },
+    {
+      personal_plan_test_enrollments: { code: "XX000", message: "database unavailable" },
+    },
+  )
+
+  await assert.rejects(
+    findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2026-08-10")),
+    (error: unknown) =>
+      typeof error === "object" && error !== null && "code" in error && error.code === "XX000",
+  )
 })

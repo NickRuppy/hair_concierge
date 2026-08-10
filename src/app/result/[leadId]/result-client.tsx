@@ -13,6 +13,7 @@ import {
   PersonalPlanPaidContinuation,
   PersonalPlanOfferRecovery,
 } from "@/components/personal-plan-offer/personal-plan-offer"
+import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { renderOfferVariant } from "@/funnels/offers/registry"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
@@ -36,6 +37,8 @@ export function ResultPageClient({
   focusRoutine,
   focusTarget = null,
   hasAccess,
+  fieldTest = false,
+  fieldTestUnavailable = false,
   isInternalTest = false,
   returnTo = null,
   offerTracking = null,
@@ -53,6 +56,8 @@ export function ResultPageClient({
   focusRoutine: boolean
   focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
+  fieldTest?: boolean
+  fieldTestUnavailable?: boolean
   isInternalTest?: boolean
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
@@ -66,6 +71,10 @@ export function ResultPageClient({
   if (quizKind === "personal_plan") {
     if (hasAccess) {
       return <PersonalPlanPaidContinuation leadId={leadId} name={name} />
+    }
+
+    if (fieldTestUnavailable) {
+      return <PersonalPlanFieldTestEnded />
     }
 
     if (!personalPlanOffer) {
@@ -82,6 +91,7 @@ export function ResultPageClient({
       <PersonalPlanOffer
         showQuizRestart={showQuizRestart}
         entryContext={resolvedEntryContext}
+        fieldTest={fieldTest}
         focusTarget={personalPlanFocusTarget}
         isInternalTest={isInternalTest}
         leadId={leadId}

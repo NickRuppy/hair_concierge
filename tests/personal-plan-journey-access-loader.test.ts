@@ -33,7 +33,7 @@ function deps(
   return {
     loadEntitlement: async () => ({
       accessState: "active" as const,
-      paidAt: "2026-08-08T00:00:00Z",
+      qualifiedAt: "2026-08-08T00:00:00Z",
       artifactLeadId: "lead-1",
     }),
     cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
@@ -177,7 +177,7 @@ test("loader keeps paid-pending buyers on the compact wait route and throws on a
     deps({
       loadEntitlement: async () => ({
         accessState: "paid_pending",
-        paidAt: "2026-08-08T00:00:00Z",
+        qualifiedAt: "2026-08-08T00:00:00Z",
         artifactLeadId: "lead-1",
       }),
     }),

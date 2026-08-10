@@ -485,6 +485,78 @@ test("lead completion does not issue a result capability while the feature is di
   }
 })
 
+test("field-test lead binds trusted campaign context and suppresses Meta conversion", async () => {
+  const previousQuizFlag = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+  process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+  let metaCalls = 0
+  let bindCalls = 0
+  const handler = createPersonalPlanLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    checkEmailDeliverability: async () => ({
+      ok: true,
+      normalized: "participant@example.com",
+      outcome: "mx",
+    }),
+    recordEmailDeliverabilityOutcome: () => {},
+    cookies: (async () => ({
+      get: (name: string) => ({ value: name === "chaarlie_funnel_session" ? "funnel" : "field" }),
+    })) as unknown as typeof import("next/headers").cookies,
+    scheduleAfter: (() => undefined) as typeof import("next/server").after,
+    createAdminClient: (() => ({
+      rpc: async () => ({
+        data: [{ lead_id: "10000000-0000-4000-8000-000000000093" }],
+        error: null,
+      }),
+    })) as unknown as typeof import("../src/lib/supabase/admin").createAdminClient,
+    resolveFunnelCookieContext: async () => ({
+      visitorId: "20000000-0000-4000-8000-000000000001",
+      sessionId: "20000000-0000-4000-8000-000000000002",
+      packageKey: "meta_personal_plan_v1",
+      issuedAt: Date.now(),
+    }),
+    resolvePendingFunnelTouchValue: async () => null,
+    resolvePersonalPlanFieldTestCampaignCookie: async () => ({
+      kind: "eligible",
+      campaign: {
+        id: "30000000-0000-4000-8000-000000000003",
+        accessDurationHours: 168,
+        startsAt: Date.now() - 1,
+        expiresAt: Date.now() + 60_000,
+      },
+    }),
+    recordFunnelEvent: async () => true,
+    bindPersonalPlanFieldTestLead: async () => {
+      bindCalls += 1
+      return true
+    },
+    enqueueMetaLead: () => {
+      metaCalls += 1
+      return true
+    },
+  })
+
+  try {
+    const response = await handler(
+      new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.10" },
+        body: JSON.stringify(request),
+      }),
+    )
+    assert.equal(response.status, 200)
+    assert.deepEqual(await response.json(), {
+      leadId: "10000000-0000-4000-8000-000000000093",
+      attributionAttached: true,
+      fieldTestAttached: true,
+    })
+    assert.equal(bindCalls, 1)
+    assert.equal(metaCalls, 0)
+  } finally {
+    if (previousQuizFlag === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = previousQuizFlag
+  }
+})
+
 test("Sentry deliverability metrics expose only bounded outcomes and never block", (context) => {
   const calls: unknown[][] = []
   const warning = context.mock.method(console, "warn", () => {})

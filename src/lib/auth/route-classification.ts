@@ -35,6 +35,7 @@ const PUBLIC_ROUTE_PREFIXES = [
   "/auth",
   "/lp",
   "/result",
+  "/test/haarplan",
   "/api/funnel",
   "/api/og",
   "/api/paypal",
@@ -52,6 +53,9 @@ const PUBLIC_API_EXACT_ROUTES = [
   // A paid buyer reaches this capability before an account/session exists.
   // Keep it exact: all other billing APIs remain behind the billing prefix.
   "/api/billing/one-time-activation-status",
+  // The field-test handler performs its own signed campaign, funnel, lead,
+  // session, and rate-limit checks before it creates or reuses a guest.
+  "/api/personal-plan/field-test/activate",
   "/api/waitlist",
   "/api/waitlist/survey",
   "/api/waitlist/survey-access",

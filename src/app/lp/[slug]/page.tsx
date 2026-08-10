@@ -20,6 +20,11 @@ import {
   resolvePersonalPlanReturnLanding,
 } from "@/lib/personal-plan-quiz/result-return"
 import { LandingTracking } from "@/providers/tracking-providers"
+import {
+  PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE,
+  resolvePersonalPlanFieldTestCampaignCookie,
+} from "@/lib/personal-plan-field-test"
+import { createClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
@@ -50,9 +55,23 @@ export default async function CampaignLandingPage({
   )
   const resumeEnabled = isPersonalPlanQuizCrossBrowserResumeEnabled()
   let personalPlanQuizResume
+  let personalPlanFieldTest = false
 
   if (funnelPackage.key === "meta_personal_plan_v1") {
     const cookieStore = await cookies()
+    const fieldTest = await resolvePersonalPlanFieldTestCampaignCookie(
+      cookieStore.get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value,
+    )
+    personalPlanFieldTest = fieldTest.kind === "eligible"
+    if (personalPlanFieldTest) {
+      const supabase = await createClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        return <PersonalPlanFieldTestExistingSessionNotice />
+      }
+    }
     const resultCookie = cookieStore.get(PERSONAL_PLAN_RESULT_RETURN_COOKIE)?.value
     let resultReturn: PersonalPlanResultReturnResolution = {
       leadId: null,
@@ -67,7 +86,7 @@ export default async function CampaignLandingPage({
       resultReturn,
       resumeToken,
     })
-    if (initialReturnDecision.kind === "result") {
+    if (!personalPlanFieldTest && initialReturnDecision.kind === "result") {
       redirect(`/result/${encodeURIComponent(initialReturnDecision.leadId)}?entry=quiz_return`)
     }
 
@@ -92,6 +111,7 @@ export default async function CampaignLandingPage({
   }
 
   const landingVariant = renderLandingVariant(funnelPackage.landingVariant, {
+    personalPlanFieldTest,
     personalPlanQuizResume,
   })
   if (!landingVariant) notFound()
@@ -101,6 +121,31 @@ export default async function CampaignLandingPage({
       <LandingTracking />
       {landingVariant}
     </>
+  )
+}
+
+function PersonalPlanFieldTestExistingSessionNotice() {
+  return (
+    <main className="grid min-h-screen place-items-center bg-[#fcfaf7] px-4 text-center text-[var(--brand-plum-darkest)]">
+      <section className="max-w-lg rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-7 shadow-[0_22px_54px_-40px_rgba(var(--brand-plum-rgb),0.55)]">
+        <p className="text-sm font-semibold text-[var(--brand-plum)]">
+          Produkttest separat starten
+        </p>
+        <h1 className="mt-3 font-header text-3xl">
+          Dieser Test braucht eine separate Browser-Sitzung.
+        </h1>
+        <p className="mt-4 leading-7 text-[var(--text-sub)]">
+          Dein bestehendes Chaarlie-Konto bleibt getrennt. Öffne den Testlink in einem anderen
+          Browser oder nach dem Abmelden erneut.
+        </p>
+        <a
+          className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"
+          href="/profile"
+        >
+          Zu meinem Konto
+        </a>
+      </section>
+    </main>
   )
 }
 
