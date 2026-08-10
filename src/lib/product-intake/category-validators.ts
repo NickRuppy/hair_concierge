@@ -213,7 +213,7 @@ const urlString = z.string().url()
 const productIdPlaceholder = PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER
 const identifierTypeSchema = z.preprocess(
   (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
-  z.enum(["ean", "gtin", "barcode", "retailer_sku", "retailer_url"]),
+  z.enum(["ean", "gtin", "barcode", "manufacturer_sku", "retailer_sku", "retailer_url"]),
 )
 const barcodeIdentifierTypes = new Set(["ean", "gtin", "barcode"])
 
@@ -848,6 +848,39 @@ export const PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS = {
   heat_protectant: validateHeatProtectant,
   scalp_care: validateScalpCare,
 } satisfies Record<ProductIntakeReviewCategoryKey, ProductIntakeCategoryApprovalValidator>
+
+export type ProductIntakeCategorySpecsValidationResult =
+  | {
+      ok: true
+      missingFields: []
+      targetSpecOperations: ProductIntakeTargetSpecOperation[]
+    }
+  | {
+      ok: false
+      missingFields: string[]
+      targetSpecOperations: []
+    }
+
+export function validateProductIntakeCategorySpecs(
+  categoryKey: ProductIntakeReviewCategoryKey,
+  categorySpecs: unknown,
+): ProductIntakeCategorySpecsValidationResult {
+  const result = PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS[categoryKey]({
+    category_specs: categorySpecs,
+  } as ProductIntakeFinalReviewedPayload)
+
+  return result.ok
+    ? {
+        ok: true,
+        missingFields: [],
+        targetSpecOperations: result.targetSpecOperations,
+      }
+    : {
+        ok: false,
+        missingFields: result.missingFields,
+        targetSpecOperations: [],
+      }
+}
 
 export function validateProductIntakeApprovalPayload(
   value: unknown,
