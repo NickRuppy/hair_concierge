@@ -95,6 +95,8 @@
     "products:intake:catalog-enrichment:heat:preflight": "tsx scripts/product-intake/catalog-enrichment/heat-preflight.ts",
     "products:intake:catalog-enrichment:heat:apply": "tsx scripts/product-intake/catalog-enrichment/heat-apply.ts",
     "products:intake:catalog-enrichment:heat:verify": "tsx scripts/product-intake/catalog-enrichment/heat-verify.ts",
+    "products:intake:stage5-protocol:preflight": "tsx scripts/product-intake/catalog-enrichment/stage5-protocol-preflight.ts",
+    "products:intake:stage5-protocol:apply": "tsx scripts/product-intake/catalog-enrichment/stage5-protocol-apply.ts",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",

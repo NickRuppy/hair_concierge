@@ -56,20 +56,30 @@
     {
       "batch_id": "S5-02-mask-critical-protocols",
       "priority": 1,
-      "status": "research_required",
+      "status": "policy_decision_required",
       "categories": ["mask"],
       "target_kind": "exact_product",
       "target_count": 35,
+      "research_result": {
+        "verified_exact_protocols": 5,
+        "blocked_products": 30,
+        "blocking_decision": "Default Mask-to-Conditioner relationship when the exact label is silent."
+      },
       "purpose": "Add contact time, placement, rinse behavior and Conditioner sequence for every active recommended Mask.",
       "completion_gate": "All 35 current products pass the Mask critical-protocol validator; incomplete rows remain non-executable."
     },
     {
       "batch_id": "S5-03-targeted-dandruff-shampoo",
       "priority": 1,
-      "status": "research_required",
+      "status": "research_complete_one_product_blocked",
       "categories": ["shampoo"],
       "target_kind": "exact_product",
       "target_count": 8,
+      "research_result": {
+        "verified_exact_protocols": 7,
+        "blocked_products": 1,
+        "blocked_product": "Head & Shoulders DERMAXPRO Anti-Schuppen Shampoo Pure Hydration"
+      },
       "target_product_ids": [
         "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
         "744de604-d266-453b-a56b-eea92c5ca565",
@@ -86,20 +96,30 @@
     {
       "batch_id": "S5-04-bondbuilder-primary-protocols",
       "priority": 1,
-      "status": "research_required",
+      "status": "research_complete",
       "categories": ["bondbuilder"],
       "target_kind": "exact_product",
       "target_count": 4,
+      "research_result": {
+        "verified_exact_protocols": 4,
+        "blocked_products": 0
+      },
       "purpose": "Backfill executable protocols for Epres, K18 and OLAPLEX No.3PLUS while retaining OLAPLEX No.0 as a companion-only product.",
       "completion_gate": "Three primaries have complete executable protocols and No.0 cannot fill the primary role by itself."
     },
     {
       "batch_id": "S5-05-oil-role-coverage",
       "priority": 1,
-      "status": "cohort_selection_required",
+      "status": "research_complete_coverage_blocked",
       "categories": ["oil"],
       "target_kind": "role_coverage",
       "source_population_count": 41,
+      "research_result": {
+        "verified_exact_role_protocols": 2,
+        "verified_products": 1,
+        "blocked_products_in_smallest_cohort": 4,
+        "coverage_gaps": ["pre_wash_fibre_treatment", "coarse_leave_on_or_finish"]
+      },
       "purpose": "Select the smallest verified cohort covering pre-wash, damp-care and dry-finish roles across supported thickness/load targets.",
       "completion_gate": "Every supported Oil role and launch fixture target has an ideal or supportive candidate with a complete role-specific protocol.",
       "non_goal": "Do not research all 41 products merely to maximize row coverage."
@@ -107,17 +127,22 @@
     {
       "batch_id": "S5-06-dry-shampoo-format-guidance",
       "priority": 1,
-      "status": "research_required",
+      "status": "research_complete_one_product_blocked",
       "categories": ["dry_shampoo"],
       "target_kind": "application_family_and_spec_integrity",
       "source_population_count": 10,
+      "research_result": {
+        "verified_exact_protocols": 9,
+        "blocked_products": 1,
+        "blocked_product": "got2b Liquid-to-Dry Spray"
+      },
       "purpose": "Verify the ten canonical specs and add conservative guidance families for aerosol spray, foam/liquid and powder where the live cohort supports them.",
       "completion_gate": "Every live product maps to one verified format family; an absent format remains unsupported rather than inferred."
     },
     {
       "batch_id": "S5-07-deep-cleansing-launch",
       "priority": 1,
-      "status": "catalog_research_required",
+      "status": "protocol_research_complete_intake_pending",
       "categories": ["deep_cleansing_shampoo"],
       "target_kind": "new_product_and_exact_protocol",
       "target_count": 5,
@@ -128,18 +153,29 @@
         "ISANA Professional Tiefenreinigung",
         "GLISS Scalp Balance Tiefenreinigung"
       ],
+      "research_result": {
+        "verified_protocol_templates": 5,
+        "intake_ready_products": 0,
+        "remaining_gate": "Identity/commercial/image Product Intake packages"
+      },
       "purpose": "Create the agreed Drogerie launch cohort with verified Reset roles, scalp targets and application protocols.",
       "completion_gate": "At least one exact active candidate covers each supported Reset role without inventing cleansing strength or colour compatibility."
     },
     {
       "batch_id": "S5-08-scalp-care-launch",
       "priority": 1,
-      "status": "commercial_refresh_and_apply_review_required",
+      "status": "commercial_refresh_complete_assets_missing",
       "categories": ["scalp_care"],
       "target_kind": "new_product_and_exact_protocol",
       "candidate_count": 8,
       "source_head": "43cdf380e7df3975b20d7e10371e98e7dc21cdcf",
       "source_pr": 345,
+      "research_result": {
+        "reviewed_manifests": 8,
+        "commercial_pages_http_200": 7,
+        "anti_bot_pages": 1,
+        "reviewed_assets_present_in_current_worktree": 0
+      },
       "purpose": "Reuse the previously reviewed two-per-role Scalp Care candidate set after identity, commercial and asset freshness checks.",
       "completion_gate": "At least one active Drogerie candidate per role has verified cosmetic status, format, rinse mode and critical protocol; density products retain the limited-evidence statement.",
       "apply_note": "Do not replay the old mixed Heat/Scalp executor because Heat is already live. Build a Scalp-only guarded package from refreshed manifests."

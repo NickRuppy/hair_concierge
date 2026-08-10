@@ -45,6 +45,27 @@ Styling-Tag and Pausentag.
 The exact frozen product list is in
 `data/catalog-enrichment/personal-plan-stage5-v1/current-cohorts.json`.
 
+## Exact research completed in this PR
+
+| Batch | Verified executable rows | Explicitly blocked | Remaining gate |
+|---|---:|---:|---|
+| Mask | 5 | 30 | Decide the default Mask/Conditioner relationship when the label is silent. |
+| Targeted dandruff Shampoo | 7 | 1 | Refresh DERMAXPRO exact directions or keep it unresolved. |
+| Bondbuilder | 4 | 0 | Named-batch apply approval only. |
+| Oil smallest cohort | 2 role rows / 1 product | 4 sampled products | Verify a genuine pre-wash hair product and coarse leave-on/finish route. |
+| Dry Shampoo | 9 | 1 | Refresh got2b Liquid-to-Dry identity/commercial source. |
+| Deep Cleansing | 5 protocol templates | 5 intake packages | Complete identity, price, image and guarded new-product packages. |
+| Scalp Care | 8 preserved reviewed manifests | 8 missing local assets | Recover/reverify images and construct a new Scalp-only fingerprint. |
+
+The three additive migrations and guarded CLI path pass the production-shaped
+local database harness, including exact apply, idempotent replay and role
+security. The versioned family-guidance migration also closes the previously
+narrow ordinary Shampoo/Conditioner day coverage required by composite routines.
+They are not applied to production by this PR. The existing-product
+executor cannot create products, change categories, or write on behalf of
+browser roles. Production preflight follows migration application; no
+production protocol batch has been preflighted or applied here.
+
 ## Reconciliation against older plans
 
 - The original five-stage architecture, persistence, QA owner and core Stage 5

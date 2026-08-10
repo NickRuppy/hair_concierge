@@ -294,6 +294,7 @@ test("individual authority evaluation overlaps independent fact reads", async ()
 function shampooAuthorityDraft(
   overrides: {
     role?: "shampoo_everyday" | "shampoo_dandruff"
+    productId?: string
     scalpRoute?: "oily" | "balanced" | "dry"
     everydayConstraint?:
       | "standard"
@@ -303,6 +304,7 @@ function shampooAuthorityDraft(
   } = {},
 ): Stage3ProductDraft {
   const role = overrides.role ?? "shampoo_everyday"
+  const productId = overrides.productId ?? "shampoo-1"
   const scalpRoute = overrides.scalpRoute ?? "balanced"
   const everydayConstraint = overrides.everydayConstraint ?? "standard"
   const draft = conditionerAuthorityDraft()
@@ -318,7 +320,7 @@ function shampooAuthorityDraft(
         userProductId: "user-shampoo-1",
         identity: {
           kind: "catalog_product",
-          productId: "shampoo-1",
+          productId,
           displayName: "Mehrfach spezifiziertes Shampoo",
           category: "shampoo",
         },
@@ -362,6 +364,8 @@ function shampooAuthorityDraft(
 function shampooAuthorityFactClient(
   shampooSpecs: Record<string, unknown>[],
   recommendationProducts: Record<string, unknown>[] = [],
+  exactProtocols: Record<string, unknown>[] = [],
+  productId = "shampoo-1",
 ) {
   return {
     from(table: string) {
@@ -371,7 +375,7 @@ function shampooAuthorityFactClient(
           return filters.has("id")
             ? {
                 data: {
-                  id: "shampoo-1",
+                  id: productId,
                   name: "Mehrfach spezifiziertes Shampoo",
                   category_key: "shampoo",
                   is_active: true,
@@ -384,6 +388,9 @@ function shampooAuthorityFactClient(
             : { data: recommendationProducts, error: null }
         }
         if (table === "product_shampoo_specs") return { data: shampooSpecs, error: null }
+        if (table === "product_application_protocols") {
+          return { data: exactProtocols, error: null }
+        }
         return { data: [], error: null }
       }
       const chain = {
@@ -407,6 +414,102 @@ function shampooAuthorityFactClient(
     },
   }
 }
+
+test("canonical exact guidance makes the matching Stage 3 product role protocol-complete", async () => {
+  const productId = "11111111-1111-4111-8111-111111111111"
+  const guidancePayload = {
+    schemaVersion: 1,
+    guidanceKey: `product-shampoo-${productId}`,
+    protocolVersion: 1,
+    locale: "de",
+    scope: { kind: "product", category: "shampoo", productId },
+    role: "cleanse",
+    applicationFamily: "standard_rinse_out_cleanse",
+    compatibleDayTypes: ["wash_day"],
+    exactGuidanceRequired: true,
+    sequence: {
+      anchor: "wet_cleanse",
+      before: [],
+      after: [],
+      conflictsWith: [],
+    },
+    requirements: {
+      requiredCatalogFacts: [],
+      requiredProtocolFacts: [],
+      requiredProfileFacts: [],
+    },
+    protocolFacts: {
+      applicationArea: "scalp_roots",
+      rinse: "rinse_out",
+      contactTimeSeconds: null,
+      conditionerRelationship: "not_applicable",
+      reapplication: "none",
+      amount: null,
+      cautions: [],
+    },
+    steps: [
+      {
+        stepKey: "apply-shampoo",
+        action: "apply_product",
+        copyTemplateDe: "Ins nasse Haar und auf die Kopfhaut einmassieren.",
+      },
+      { stepKey: "rinse-shampoo", action: "rinse", copyTemplateDe: "Gründlich ausspülen." },
+    ],
+    evidence: [
+      {
+        sourceUrl: "https://example.com/shampoo",
+        sourceType: "manufacturer",
+        checkedAt: "2026-08-10",
+      },
+    ],
+  }
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient(
+      [
+        {
+          thickness: "normal",
+          shampoo_bucket: "normal",
+          scalp_route: "balanced",
+          cleansing_intensity: "regular",
+        },
+      ],
+      [],
+      [
+        {
+          role: "shampoo_everyday",
+          guidance_payload: guidancePayload,
+          application_stage: null,
+          application_state: null,
+          placement: null,
+          contact_time_seconds: null,
+          rinse_action: null,
+          reapplication: null,
+          source_label: "Manufacturer",
+          source_url: "https://example.com/shampoo",
+          updated_at: "2026-08-10T09:00:00.000Z",
+        },
+      ],
+      productId,
+    ) as never,
+    {
+      draft: shampooAuthorityDraft({ productId }),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(
+    bundle.productFacts?.protocols.find((protocol) => protocol.role === "shampoo_everyday")?.status,
+    "verified_complete",
+  )
+})
 
 const normalRefinedContext = {
   currentRefinedVersionId: "refined-1",

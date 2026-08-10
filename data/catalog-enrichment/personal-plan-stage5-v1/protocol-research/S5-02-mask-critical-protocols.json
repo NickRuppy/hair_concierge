@@ -1,0 +1,972 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-02-mask-critical-protocols",
+  "category_key": "mask",
+  "products": [
+    {
+      "product_id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "product_name": "Alterra Haarkur Bio-Granatapfel & Bio-Aloe Vera",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarkur-bio-granatapfel-und-bio-aloe-vera/p/4305615307794",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states damp-hair placement and rinse, but no Conditioner relationship or numeric contact time."
+      ]
+    },
+    {
+      "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "product_name": "Balea 3 in 1 Intensivmaske",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states a three-minute rinse-out Mask use but not whether it replaces or follows Conditioner."
+      ]
+    },
+    {
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "product_name": "Balea Aqua Hyaluron 3 in 1",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states a three-minute rinse-out Mask use but not whether it replaces or follows Conditioner."
+      ]
+    },
+    {
+      "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "product_name": "Balea Natural Beauty 3in1 Locken",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states a three-minute rinse-out Mask use but not whether it replaces or follows Conditioner."
+      ]
+    },
+    {
+      "product_id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+      "product_name": "Balea Natural Beauty reparierend",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The catalog product page is no longer available; current commercial identity and directions need re-verification."
+      ]
+    },
+    {
+      "product_id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "product_name": "Balea Professional Glow & Shine",
+      "role": "intensive_conditioning_mask",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-1f3920fe-c91e-4298-a40e-99dccd13ea30",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "1f3920fe-c91e-4298-a40e-99dccd13ea30"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 300,
+          "conditionerRelationship": "conditioner_before",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Spülung ins handtuchtrockene Haar von den Ansätzen bis in die Spitzen geben."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+      "product_name": "Balea Professional Plex Care 2in1",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-plex-care-2in1",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The product has distinct pre-wash and rinse-out uses; the rinse-out Mask directions do not state the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+      "product_name": "Bali Curls Deep Hydration Mask",
+      "role": "intensive_conditioning_mask",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3106327/bali-curls-haarmaske-deep-repair",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ins handtuchtrockene Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3106327/bali-curls-haarmaske-deep-repair",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "c4b9eaef-dfeb-41ea-9d28-9901660406b7",
+      "product_name": "Bali Curls Haarkur Bonding Repair Overnight Elixir",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://www.bali-care.com/de-de/products/bonding-repair",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The exact product is an overnight leave-on bonding treatment, not an ordinary rinse-out Mask; category identity needs correction."
+      ]
+    },
+    {
+      "product_id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "product_name": "Bali Curls SOS Protein Treatment",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://www.bali-care.com/de-de/collections/bali-curls/products/total-repair-sos-protein-treatment",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Manufacturer page conflicts between a three-minute rinse-out direction and a 10–20 minute protocol followed by Conditioner."
+      ]
+    },
+    {
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "product_name": "Fructis Hair Food Aloe Vera",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states five to ten minutes in damp lengths and ends, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "product_name": "Fructis Hair Food Papaya",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1676330/garnier-fructis-haarkur-papaya-hair-food-3in1-maske",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states a three-minute rinse-out Mask use but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "17c50884-3c17-479a-848a-10447464e086",
+      "product_name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states a one-minute rinse-out treatment but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "product_name": "Gliss Aqua Revive",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/aqua-revive/aqua-revive-4-in-1-haarmaske-400ml.html",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The exact product is not currently commercially verified for Germany; current identity and purchase path need review."
+      ]
+    },
+    {
+      "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "product_name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+      "role": "intensive_conditioning_mask",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/glanz-4-in-1-bonding-haarmaske.html",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-d9825ad6-f549-4b02-a62a-eaa3bf917936",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Shampoo im nassen Haar verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/glanz-4-in-1-bonding-haarmaske.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "product_name": "Guhl 30 sec. Feuchtigkeit",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1649554/guhl-haarkur-30-sek-feuchtigkeit",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states 30 seconds on wet hair and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "product_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The page describes a short rinse-out 2-in-1 use but does not give a precise Conditioner sequence for the Mask role."
+      ]
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "product_name": "Hask Argan Oil Repairing Deep Conditioner",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states up to ten minutes on clean wet hair, but the Mask-versus-Conditioner relationship remains ambiguous."
+      ]
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "product_name": "Isana 3in1 Milchprotein & Mandel",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-3in1-haarmaske-mandelmilch/p/4305615627441",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The retailer page is no longer available; current commercial identity needs re-verification."
+      ]
+    },
+    {
+      "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "product_name": "Jean&Len Tiefenreparatur Haarkur",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-jeanundlen-tiefenreparatur-haarkur/p/4262401737824",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states three to five minutes on damp hair and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "product_name": "Neqi Build Boost",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label says Conditioner may be used as needed, which the current exact relationship enum cannot express without a policy choice."
+      ]
+    },
+    {
+      "product_id": "b281d528-b312-4e44-98be-3e01f7e56644",
+      "product_name": "Neqi Gloss Glaze",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/2972720/neqi-haarkur-treatment-treasures-gloss-glaze",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label says Conditioner may be used as needed, which the current exact relationship enum cannot express without a policy choice."
+      ]
+    },
+    {
+      "product_id": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "product_name": "Neqi Peptide Power",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label says Conditioner may be used as needed, which the current exact relationship enum cannot express without a policy choice."
+      ]
+    },
+    {
+      "product_id": "d33543b0-6011-45f1-9bb2-125289ac849a",
+      "product_name": "Neqi Repair Reveal",
+      "role": "intensive_conditioning_mask",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1455211/neqi-haarkur-repair-reveal",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-d33543b0-6011-45f1-9bb2-125289ac849a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d33543b0-6011-45f1-9bb2-125289ac849a"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Ins feuchte Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "5–10 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1455211/neqi-haarkur-repair-reveal",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+      "product_name": "Pantene Bond Repair",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states two minutes on wet hair and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+      "product_name": "Pantene Hydra Glow",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states two minutes on wet hair and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "077a94ae-fede-4773-9435-17022c2b89c0",
+      "product_name": "Pantene Keratin Repair & Care",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The current retailer GTIN differs from the catalog link and the label uses only 'a few minutes'; identity and protocol need review."
+      ]
+    },
+    {
+      "product_id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "product_name": "Pomélo+Co Shine Therapy",
+      "role": "intensive_conditioning_mask",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3110549/pomelo-co-haarmaske-shine-therapy",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 300,
+          "conditionerRelationship": "no_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche ohne Conditioner ins handtuchtrockene Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3110549/pomelo-co-haarmaske-shine-therapy",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "product_name": "Sante Intense Hydration",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.rossmann.de/",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The product is no longer in the retailer assortment; current commercial identity needs review."
+      ]
+    },
+    {
+      "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "product_name": "Schaebens Argan-Öl Haarmaske",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states five minutes after washing, three times weekly, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "product_name": "Syoss Haarkur Lamination Intense Glaze",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states three to five minutes on washed wet hair and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "product_name": "Syoss Intense Curls Haarmaske",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states two to three minutes after washing and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "product_name": "Syoss Intense Keratin",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3047025/syoss-haarmaske-intense-keratin",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The captured directions state two to three minutes but do not explicitly state rinse behavior or the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "product_name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Label states one minute on wet hair and rinse, but not the Conditioner relationship."
+      ]
+    },
+    {
+      "product_id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+      "product_name": "Wahre Schätze Avocado",
+      "role": "intensive_conditioning_mask",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The current replacement GTIN differs from the catalog identity; identity needs review before protocol attachment."
+      ]
+    }
+  ]
+}

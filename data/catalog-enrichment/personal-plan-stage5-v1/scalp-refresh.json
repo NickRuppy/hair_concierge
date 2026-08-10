@@ -1,0 +1,28 @@
+{
+  "schema_version": "personal-plan-stage5-scalp-refresh-v1",
+  "batch_id": "S5-08-scalp-care-launch",
+  "checked_at": "2026-08-10",
+  "candidate_count": 8,
+  "commercial_refresh": {
+    "http_200_count": 7,
+    "anti_bot_403_count": 1,
+    "unavailable_count": 0,
+    "anti_bot_candidate": "the-ordinary-multi-peptide-hair-density-serum"
+  },
+  "asset_refresh": {
+    "referenced_asset_count": 8,
+    "assets_present_in_current_worktree": 0,
+    "status": "blocked_missing_reviewed_assets"
+  },
+  "protocol_refresh": {
+    "reviewed_manifest_count": 8,
+    "roles": ["scalp_comfort", "scalp_flake_oil_adjunct", "density_claim_tonic", "scalp_exfoliant"],
+    "status": "reviewed_payloads_preserved"
+  },
+  "apply_readiness": "blocked",
+  "blockers": [
+    "Die acht freigegebenen Bilddateien sind im aktuellen Worktree nicht vorhanden und können daher nicht gehasht, hochgeladen oder gegen die Manifeste verifiziert werden.",
+    "The Ordinary blockiert den automatisierten Abruf mit HTTP 403; dies ist kein Nachweis für Nichtverfügbarkeit, erfordert aber eine manuelle kommerzielle Sichtprüfung vor Apply.",
+    "Ein Scalp-only Batch muss nach dem Asset-Import neu fingerprinted und separat freigegeben werden."
+  ]
+}

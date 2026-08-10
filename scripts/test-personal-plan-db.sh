@@ -57,6 +57,8 @@ cp "$repository_root/supabase/tests/personal_plan_stage4_source_reconciliation.s
   "$test_project_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql"
 cp "$repository_root/supabase/tests/personal_plan_stage5_application.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage5_application.sql"
+cp "$repository_root/supabase/tests/personal_plan_stage5_protocol_executor.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage5_protocol_executor.sql"
 cp "$repository_root/supabase/tests/catalog_enrichment_heat.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat.sql"
 cp "$repository_root/supabase/tests/personal_plan_field_test_access.sql" \
@@ -99,6 +101,7 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/personal_plan_stage4_routine.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage4_source_reconciliation.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage5_application.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage5_protocol_executor.sql" \
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql" \
   "$test_project_root/supabase/tests/personal_plan_test_owner.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat_real_package.sql" \
