@@ -545,7 +545,7 @@ test("catalog search errors keep manual intake available without claiming no pro
   assert.ok(findByType(tree, IntakeFallbackBoundary))
 })
 
-test("bootstrap-only Back skips known-empty categories using the resolved entry context", async () => {
+test("a supplied bootstrap skips duplicate loading and Back uses its resolved entry context", async () => {
   const requirements: Stage3EntryContext["orderedCategories"] = [
     {
       category: "shampoo",
@@ -617,7 +617,12 @@ test("bootstrap-only Back skips known-empty categories using the resolved entry 
     authorityEvaluations: [],
   }
   const reopened: string[] = []
+  let loadCalls = 0
   const gateway = createAuthorityTestGateway()
+  gateway.loadOrCreate = async () => {
+    loadCalls += 1
+    throw new Error("bootstrap must skip duplicate Stage 3 loading")
+  }
   gateway.mutate = async (input) => {
     assert.equal(input.mutation.type, "reopen_capture_category")
     if (input.mutation.type !== "reopen_capture_category") throw new Error("unexpected mutation")
@@ -639,6 +644,7 @@ test("bootstrap-only Back skips known-empty categories using the resolved entry 
     ProductCaptureScreen,
   )
   assert.equal(capture?.props.categoryLabel, "Öl")
+  assert.equal(loadCalls, 0)
   await capture?.props.onBack?.()
   tree = await renderSettled(harness)
 

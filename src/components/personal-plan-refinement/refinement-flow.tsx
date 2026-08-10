@@ -89,6 +89,7 @@ export function shouldReturnToStage1FromQuestion(input: {
 
 export function RefinementFlow({
   gateway,
+  initialSession,
   onTelemetry,
   onSecondaryExit,
   onHandoff,
@@ -96,19 +97,28 @@ export function RefinementFlow({
   directEntry = false,
 }: {
   gateway: Stage2RefinementGateway
+  initialSession?: Stage2RefinementSession
   onTelemetry?: (event: Stage2RefinementTelemetryEvent) => void
   onSecondaryExit?: () => void
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   autoHandoff?: boolean
   directEntry?: boolean
 }) {
-  const [session, setSession] = useState<Stage2RefinementSession | null>(null)
-  const [activeQuestionId, setActiveQuestionId] = useState<Stage2QuestionId | null>(null)
-  const [localAnswer, setLocalAnswer] = useState<unknown>(undefined)
-  const [status, setStatus] = useState<RefinementQuestionStatus>("idle")
-  const [mode, setMode] = useState<RefinementMode>("loading")
-  const [liveMessage, setLiveMessage] = useState("")
-  const [bridge, setBridge] = useState<Stage2CompleteResult | null>(null)
+  const initialView = useMemo(
+    () => initialRefinementView(initialSession, directEntry),
+    [directEntry, initialSession],
+  )
+  const [session, setSession] = useState<Stage2RefinementSession | null>(
+    initialView?.session ?? null,
+  )
+  const [activeQuestionId, setActiveQuestionId] = useState<Stage2QuestionId | null>(
+    initialView?.activeQuestionId ?? null,
+  )
+  const [localAnswer, setLocalAnswer] = useState<unknown>(initialView?.localAnswer)
+  const [status, setStatus] = useState<RefinementQuestionStatus>(initialView?.status ?? "idle")
+  const [mode, setMode] = useState<RefinementMode>(initialView?.mode ?? "loading")
+  const [liveMessage, setLiveMessage] = useState(initialView?.liveMessage ?? "")
+  const [bridge, setBridge] = useState<Stage2CompleteResult | null>(initialView?.bridge ?? null)
   const [handoffStatus, setHandoffStatus] = useState<"idle" | "loading" | "error" | "complete">(
     "idle",
   )
@@ -148,6 +158,12 @@ export function RefinementFlow({
   )
 
   useEffect(() => {
+    if (initialSession) {
+      if (initialSession.status === "complete") {
+        emit({ name: "personal_plan_stage2_bridge_viewed" })
+      }
+      return
+    }
     let cancelled = false
     const generation = generationRef.current + 1
     generationRef.current = generation
@@ -200,7 +216,7 @@ export function RefinementFlow({
     return () => {
       cancelled = true
     }
-  }, [directEntry, emit, gateway, setActiveFromSession])
+  }, [directEntry, emit, gateway, initialSession, setActiveFromSession])
 
   const begin = useCallback(() => {
     if (!session?.path.firstUnresolvedQuestionId) return
@@ -656,7 +672,7 @@ function ResumeShell({
       <PersonalPlanJourneyHeader currentStage={2} saveStatus="saved" />
       <main className="mx-auto flex min-h-[calc(100dvh-92px)] w-full max-w-[600px] flex-col justify-center px-5 py-8">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-          Weiter verfeinern
+          Wir laden deine Verfeinerung.
         </p>
         <h1 className="mt-2 font-serif text-[30px] font-medium leading-tight tracking-normal text-[var(--brand-plum-darkest,#2a1845)]">
           Du machst bei der ersten offenen Frage weiter.
@@ -681,6 +697,58 @@ function ResumeShell({
       </main>
     </div>
   )
+}
+
+type InitialRefinementView = {
+  session: Stage2RefinementSession
+  activeQuestionId: Stage2QuestionId | null
+  localAnswer: unknown
+  status: RefinementQuestionStatus
+  mode: "invitation" | "resume" | "question" | "bridge"
+  liveMessage: string
+  bridge: Stage2CompleteResult | null
+}
+
+function initialRefinementView(
+  session: Stage2RefinementSession | undefined,
+  directEntry: boolean,
+): InitialRefinementView | null {
+  if (!session) return null
+  if (session.status === "complete") {
+    return {
+      session,
+      activeQuestionId: null,
+      localAnswer: undefined,
+      status: "idle",
+      mode: "bridge",
+      liveMessage: "",
+      bridge: getCompletedHandoffForLoadedSession(session),
+    }
+  }
+  const firstUnresolvedQuestionId = session.path.firstUnresolvedQuestionId
+  if (!firstUnresolvedQuestionId) {
+    const finalQuestionId = getBridgeBackQuestionId(session)
+    return {
+      session,
+      activeQuestionId: finalQuestionId,
+      localAnswer: finalQuestionId
+        ? getAnswerForQuestion(session.answers, finalQuestionId)
+        : undefined,
+      status: "completion_failed",
+      mode: "question",
+      liveMessage: "Deine Antworten sind gespeichert. Die Übergabe ist noch offen.",
+      bridge: null,
+    }
+  }
+  return {
+    session,
+    activeQuestionId: firstUnresolvedQuestionId,
+    localAnswer: getAnswerForQuestion(session.answers, firstUnresolvedQuestionId),
+    status: "idle",
+    mode: deriveRefinementEntryMode(session, directEntry),
+    liveMessage: "",
+    bridge: null,
+  }
 }
 
 function labelForQuestion(questionId: Stage2QuestionId): string {

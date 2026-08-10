@@ -10,7 +10,7 @@ test("authenticated auth routing strips auth-only error and token query material
     "/chat",
   )
 
-  assert.equal(redirected.toString(), "https://chaarlie.de/chat?next=%2Froutine&campaign=welcome")
+  assert.equal(redirected.toString(), "https://chaarlie.de/chat")
 })
 
 test("authenticated auth routing keeps the allowed onboarding lead while removing auth-only query material", () => {

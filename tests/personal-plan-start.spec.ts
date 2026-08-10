@@ -77,9 +77,20 @@ if (!preparedStage3Entry.authoritySnapshot)
   throw new Error("production browser fixture is missing Stage 3 authority")
 
 test.describe("production-shaped Personal Plan Stage 1 surface", () => {
-  test("preserves the signed mobile Basis and Optional journey without a transition page", async ({
+  test("preserves the signed mobile Basis and Optional journey with one direct Stage 2 handoff", async ({
     page,
   }) => {
+    const freshRefinement = createStage2RefinementSession({
+      pathVersion: "stage2-fixture-v1",
+      triggerContext: completedRefinement.triggerContext,
+    })
+    await page.route("**/api/personal-plan/stage-2", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(freshRefinement),
+      }),
+    )
     await page.setViewportSize({ width: 375, height: 844 })
     await page.goto(labPath)
 
@@ -88,6 +99,13 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
+    await page.getByRole("button", { name: "Plan verfeinern" }).click()
+    await expect(
+      page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("heading", { name: "Jetzt machen wir ihn zu deinem." }),
+    ).toHaveCount(0)
   })
 
   test("contains the reviewed surface at desktop without horizontal overflow", async ({ page }) => {

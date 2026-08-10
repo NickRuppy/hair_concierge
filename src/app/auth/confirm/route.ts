@@ -15,6 +15,17 @@ type AuthConfirmClient = {
   }
 }
 
+type AuthResult = Promise<{ error: unknown | null }>
+
+export interface AuthConfirmDeps {
+  exchangeCodeForSession: (code: string) => AuthResult
+  verifyOtp: (params: { type: EmailOtpType; token_hash: string }) => AuthResult
+  getUser: () => Promise<{ data: { user: AuthConfirmUser | null } }>
+  linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<void>
+  loadJourneyAccess?: (userId: string) => Promise<PersonalPlanJourneyAccess>
+  redirect: (url: string) => Response
+}
+
 export type AuthConfirmRouteDeps = {
   createClient: () => Promise<AuthConfirmClient>
   linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<unknown>
@@ -107,35 +118,67 @@ function resolveJourneyFrontier(access: PersonalPlanJourneyAccess): string | nul
 }
 
 async function handleAuthConfirmGet(request: Request, deps: AuthConfirmRouteDeps) {
+  const supabase = await deps.createClient()
+  return handleAuthConfirm(request, {
+    exchangeCodeForSession: (code) => supabase.auth.exchangeCodeForSession(code),
+    verifyOtp: (params) => supabase.auth.verifyOtp(params),
+    getUser: () => supabase.auth.getUser(),
+    linkQuizToProfile: async (userId, email, leadId) => {
+      await deps.linkQuizToProfile(userId, email, leadId)
+    },
+    loadJourneyAccess: deps.loadJourneyAccess,
+    redirect: (url) => NextResponse.redirect(url),
+  })
+}
+
+function isPersonalPlanReplayDestination(next: string, origin: string) {
+  const destination = new URL(next, origin)
+  return destination.pathname === "/plan-bereit" || destination.pathname === "/plan-start"
+}
+
+function buildExpiredLinkDestination(origin: string, next: string, isRecovery: boolean) {
+  const destination = new URL("/auth", origin)
+  destination.searchParams.set("error", "link_expired")
+  if (isRecovery) {
+    destination.searchParams.set("force", "login")
+    destination.searchParams.set("next", "/auth/update-password")
+  } else {
+    destination.searchParams.set("next", next)
+  }
+  return destination.toString()
+}
+
+export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get("code")
   const tokenHash = searchParams.get("token_hash")
   const type = searchParams.get("type") as EmailOtpType | null
   const leadId = searchParams.get("lead") ?? undefined
   const intendedNext = resolveAuthIntendedRedirectPath(searchParams, origin)
-
-  const supabase = await deps.createClient()
+  const next = resolveAuthRedirectPath(searchParams, origin)
+  const isRecovery = type === "recovery" || next === "/auth/update-password"
   let verified = false
   let verificationAttempted = false
 
   // PKCE flow: Supabase SSR sends a `code` param instead of `token_hash`
   if (code) {
     verificationAttempted = true
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { error } = await deps.exchangeCodeForSession(code)
     if (!error) verified = true
   }
 
   // OTP flow: magic-link / email-otp sends `token_hash` + `type`
   if (!verified && tokenHash && type) {
     verificationAttempted = true
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash })
+    const { error } = await deps.verifyOtp({ type, token_hash: tokenHash })
     if (!error) verified = true
   }
 
+  const {
+    data: { user },
+  } = await deps.getUser()
+
   if (verified) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
     if (user) {
       try {
         await deps.linkQuizToProfile(user.id, user.email, leadId)
@@ -144,40 +187,28 @@ async function handleAuthConfirmGet(request: Request, deps: AuthConfirmRouteDeps
       }
     }
 
-    // Password-reset links are typed as "recovery" — send to update-password
-    if (type === "recovery") {
-      return NextResponse.redirect(`${origin}/auth/update-password`)
+    if (isRecovery) {
+      return deps.redirect(`${origin}/auth/update-password`)
     }
 
-    return NextResponse.redirect(`${origin}${intendedNext ?? "/chat"}`)
+    return deps.redirect(`${origin}${next}`)
   }
 
-  if (verificationAttempted) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+  if (!isRecovery && user && isPersonalPlanReplayDestination(next, origin)) {
+    return deps.redirect(`${origin}${next}`)
+  }
 
-    if (user) {
-      if (type === "recovery") {
-        return NextResponse.redirect(`${origin}/auth/update-password`)
-      }
-      if (intendedNext) {
-        return NextResponse.redirect(`${origin}${intendedNext}`)
-      }
-
-      try {
-        const access = await deps.loadJourneyAccess(user.id)
-        const frontier = resolveJourneyFrontier(access)
-        if (frontier) return NextResponse.redirect(`${origin}${frontier}`)
-      } catch (error) {
-        console.warn("Personal Plan auth replay frontier failed:", error)
-      }
-
-      return NextResponse.redirect(`${origin}/chat`)
+  if (verificationAttempted && user && !intendedNext && deps.loadJourneyAccess) {
+    try {
+      const access = await deps.loadJourneyAccess(user.id)
+      const frontier = resolveJourneyFrontier(access)
+      if (frontier) return deps.redirect(`${origin}${frontier}`)
+    } catch (error) {
+      console.warn("Personal Plan auth replay frontier failed:", error)
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth?error=link_expired`)
+  return deps.redirect(buildExpiredLinkDestination(origin, next, isRecovery))
 }
 
 export function createAuthConfirmGetHandler(deps: AuthConfirmRouteDeps) {

@@ -45,6 +45,8 @@ export type PlanStartPageState =
       state: "production"
       initialJourney: PlanStartInitialJourney
       initialPlan?: PlanStartReadyViewModel
+      personalPlanId?: string
+      initialRefinementSession?: Stage2RefinementSession
     }
 
 export async function resolvePlanStartPageState(
@@ -69,10 +71,17 @@ export async function resolvePlanStartPageState(
       // preload fails; access/auth failures still resolve through the outer gate.
       initialPlan = undefined
     }
-    const production = (initialJourney: PlanStartInitialJourney): PlanStartPageState => ({
+    const production = (
+      initialJourney: PlanStartInitialJourney,
+      bootstrap?: Pick<
+        Extract<PlanStartPageState, { state: "production" }>,
+        "personalPlanId" | "initialRefinementSession"
+      >,
+    ): PlanStartPageState => ({
       state: "production",
       initialJourney,
       ...(initialPlan ? { initialPlan } : {}),
+      ...bootstrap,
     })
     const stage2Enabled = deps.stage2Enabled()
     if (!stage2Enabled || access.kind !== "personal_plan" || !access.allowed.stage2) {
@@ -85,21 +94,46 @@ export async function resolvePlanStartPageState(
     if (!refinement) {
       return production({ stage: "stage1" })
     }
+    const initialRefinementSession = isUsableInitialRefinementSession(refinement)
+      ? refinement
+      : undefined
     if (
       refinement.status === "complete" &&
       access.frontier === "stage3" &&
       access.allowed.stage3 &&
       refinement.completedHandoff
     ) {
-      return production({
-        stage: "stage3",
-        refinedVersionId: refinement.completedHandoff.refinedVersionId,
-      })
+      return production(
+        {
+          stage: "stage3",
+          refinedVersionId: refinement.completedHandoff.refinedVersionId,
+        },
+        initialRefinementSession
+          ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+          : undefined,
+      )
     }
-    return production({ stage: "stage2" })
+    return production(
+      { stage: "stage2" },
+      initialRefinementSession
+        ? { personalPlanId: access.personalPlanId, initialRefinementSession }
+        : undefined,
+    )
   } catch {
     return { state: "unavailable" }
   }
+}
+
+function isUsableInitialRefinementSession(
+  session: Stage2RefinementSession,
+): session is Stage2RefinementSession {
+  return (
+    session.schemaVersion === 1 &&
+    typeof session.pathVersion === "string" &&
+    typeof session.revision === "number" &&
+    Array.isArray(session.completedQuestionIds) &&
+    Array.isArray(session.path?.orderedQuestionIds)
+  )
 }
 
 export default async function PlanStartPage() {
@@ -129,6 +163,8 @@ export default async function PlanStartPage() {
     <PlanStartProductionGate
       initialJourney={state.initialJourney}
       initialPlan={state.initialPlan}
+      personalPlanId={state.personalPlanId}
+      initialRefinementSession={state.initialRefinementSession}
     />
   )
 }

@@ -300,7 +300,7 @@ const TEXTURE_CONCERN_LABELS: Record<
     },
     low_volume_or_weighed_down: {
       label: "Mein Ansatz wirkt flach oder meine Längen schnell beschwert",
-      midSentenceLabel: "ein flacher Ansatz oder beschwerte Längen",
+      midSentenceLabel: "einen flachen Ansatz oder beschwerte Längen",
     },
   },
   curly: {
@@ -402,7 +402,8 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   thickness: {
     field: "thickness",
     title: "Wie dick ist ein einzelnes Haar?",
-    helper: "Wenn du unsicher bist: Reibe eine trockene Strähne zwischen zwei Fingern.",
+    helper:
+      "Wenn du unsicher bist: Rolle ein einzelnes trockenes Haar zwischen Daumen und Zeigefinger.",
     visual: true,
     visualLayout: "thumbnail",
     options: [
@@ -617,7 +618,8 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
   },
   previous_attempts: {
     field: "previousAttempts",
-    title: "Was hat dir bisher geholfen?",
+    title: "Wie gut haben deine bisherigen Versuche funktioniert?",
+    helper: "Denk an Produkte, einzelne Schritte und deine bisherige Routine.",
     scale: true,
     options: [
       {
@@ -720,10 +722,10 @@ export const QUESTION_CONFIGS: Partial<Record<PersonalPlanQuizScreenId, QuizQues
 }
 
 export const DAILY_TIME_OPTIONS: QuizOption[] = [
-  { value: "5_minutes", label: "5 Minuten pro Tag" },
-  { value: "10_minutes", label: "10 Minuten pro Tag" },
-  { value: "15_minutes", label: "15 Minuten pro Tag" },
-  { value: "20_plus_minutes", label: "20+ Minuten pro Tag" },
+  { value: "5_minutes", label: "5 Minuten" },
+  { value: "10_minutes", label: "10 Minuten" },
+  { value: "15_minutes", label: "15 Minuten" },
+  { value: "20_plus_minutes", label: "20+ Minuten" },
 ]
 
 export const PREPARATION_TESTIMONIALS = [

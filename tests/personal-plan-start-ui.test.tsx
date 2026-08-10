@@ -9,7 +9,6 @@ import {
   PlanStartFlow,
   PlanStartLoading,
   PlanStartRetryableError,
-  PlanStartTransition,
   PlanStartUnavailable,
   adaptInitialNeedSnapshotToPlanStartViewModel,
   interpretPlanStartApiResponse,
@@ -160,35 +159,22 @@ test("renders paused cards as visible included categories with need details", ()
   assert.match(html, /aria-expanded="true"/)
 })
 
-test("renders loading, retry and transition states without questions or legacy destinations", () => {
+test("renders loading and retry states without questions or legacy destinations", () => {
   const loading = renderToStaticMarkup(<PlanStartLoading />)
   const retry = renderToStaticMarkup(<PlanStartRetryableError />)
-  const transition = renderToStaticMarkup(<PlanStartTransition onBack={() => {}} />)
 
   assert.match(loading, /Dein Bedarfsplan entsteht/)
   assert.match(retry, /Dein Plan lädt gerade nicht/)
   assert.match(retry, /Erneut versuchen/)
-  assert.match(transition, /Deine Grundlage steht/)
-  assert.match(transition, /Jetzt machen wir sie zu deiner/)
-  assert.doesNotMatch(
-    `${loading}${retry}${transition}`,
-    /Quiz starten|href="\/chat"|href="\/routine"/,
-  )
+  assert.doesNotMatch(`${loading}${retry}`, /Quiz starten|href="\/chat"|href="\/routine"/)
 })
 
-test("the production transition presents the signed Stage 2 handoff when a customer callback is injected", () => {
-  const disabled = renderToStaticMarkup(<PlanStartTransition onBack={() => {}} />)
-  const enabled = renderToStaticMarkup(
-    <PlanStartTransition onBack={() => {}} onContinue={() => {}} />,
-  )
+test("the customer path has no redundant Stage 1 transition before the Stage 2 invitation", () => {
+  const source = readFileSync("src/components/personal-plan-start/plan-start-flow.tsx", "utf8")
+  const barrel = readFileSync("src/components/personal-plan-start/index.tsx", "utf8")
 
-  assert.match(disabled, /Als Nächstes verfeinern wir deinen Plan mit ein paar gezielten Fragen\./)
-  assert.match(disabled, /Plan verfeinern/)
-  assert.match(disabled, /disabled=""/)
-  assert.match(disabled, /personal-plan-primary-action/)
-  assert.match(enabled, /Plan verfeinern/)
-  assert.doesNotMatch(enabled, /disabled=""/)
-  assert.match(enabled, /personal-plan-primary-action/)
+  assert.doesNotMatch(source, /PlanStartTransition|step === ["']transition["']/)
+  assert.doesNotMatch(barrel, /PlanStartTransition/)
 })
 
 test("renders compact unavailable state H with profile and support exits", () => {

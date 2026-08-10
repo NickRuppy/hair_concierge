@@ -178,7 +178,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
 
   test("resume and completed fixtures preserve their canonical entry points", async ({ page }) => {
     await openLab(page, "resume")
-    await expect(page.getByText("Weiter verfeinern")).toBeVisible()
+    await expect(page.getByText("Du machst bei der ersten offenen Frage weiter.")).toBeVisible()
     await expect(page.getByText("Aktuelle Produktarten")).toHaveCount(0)
     await page.getByRole("button", { name: /offenen Frage fortfahren/ }).click()
     await expect(

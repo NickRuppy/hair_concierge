@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation"
 
 import {
-  PlanStartFlow,
   PlanStartProductionGate,
   adaptInitialNeedSnapshotToPlanStartViewModel,
 } from "@/components/personal-plan-start"
+import { PlanStartCustomerJourney } from "@/components/personal-plan-start/plan-start-flow"
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import { STAGE1_STAGE2_LAB_ENVELOPE } from "@/app/labs/personal-plan-stage-1-2/fixture"
 
@@ -31,5 +31,11 @@ export default async function PersonalPlanStartLabPage({
   const plan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot)
   if (!plan) notFound()
 
-  return <PlanStartFlow state="ready" plan={plan} />
+  return (
+    <PlanStartCustomerJourney
+      initialPlan={plan}
+      initialJourney={{ stage: "stage1" }}
+      personalPlanId="20000000-0000-4000-8000-000000000001"
+    />
+  )
 }

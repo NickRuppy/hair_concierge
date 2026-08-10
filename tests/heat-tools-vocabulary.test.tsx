@@ -54,4 +54,6 @@ test("heat tools onboarding screen renders thermal rollers as a selectable optio
   )
 
   assert.match(html, /Thermo-Lockenwickler/)
+  assert.match(html, /Wähle alles aus, was du zumindest gelegentlich nutzt\./)
+  assert.doesNotMatch(html, /Mehrfachauswahl möglich/)
 })

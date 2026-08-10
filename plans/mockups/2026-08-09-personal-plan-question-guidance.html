@@ -1,0 +1,376 @@
+<div id="pp-question-guidance-aug9">
+  <style>
+    #pp-question-guidance-aug9 {
+      width: 100%;
+      min-width: 0;
+      color: light-dark(#3a3835, #eee9e4);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+    #pp-question-guidance-aug9 * {
+      box-sizing: border-box;
+    }
+    #pp-question-guidance-aug9 .q-controls {
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    #pp-question-guidance-aug9 .q-controls label {
+      min-width: 0;
+      flex: 1;
+    }
+    #pp-question-guidance-aug9 .q-controls select {
+      width: 100%;
+      min-width: 0;
+    }
+    #pp-question-guidance-aug9 .q-state {
+      display: flex;
+      min-width: 0;
+      gap: 6px;
+    }
+    #pp-question-guidance-aug9 .q-wrap {
+      display: grid;
+      place-items: center;
+    }
+    #pp-question-guidance-aug9 .q-phone {
+      width: min(100%, 390px);
+      min-height: 548px;
+      overflow: hidden;
+      border: 1px solid light-dark(#e2d9d1, #48423d);
+      border-radius: 24px;
+      background: light-dark(#fdfbf9, #1d1a18);
+      box-shadow: 0 18px 48px light-dark(rgba(42, 24, 69, 0.09), rgba(0, 0, 0, 0.25));
+    }
+    #pp-question-guidance-aug9 .q-head {
+      display: grid;
+      min-height: 58px;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: center;
+      padding: 9px 14px;
+      border-bottom: 1px solid light-dark(#e7e0d9, #443e3a);
+    }
+    #pp-question-guidance-aug9 .q-head b {
+      color: light-dark(#291a43, #f0e8ff);
+      font:
+        500 21px/1 Georgia,
+        serif;
+      text-align: center;
+    }
+    #pp-question-guidance-aug9 .q-head span {
+      color: #6b50a0;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    #pp-question-guidance-aug9 .q-progress {
+      height: 3px;
+      background: linear-gradient(90deg, #6b50a0 58%, light-dark(#eee8e3, #39332f) 58%);
+    }
+    #pp-question-guidance-aug9 .q-body {
+      padding: 30px 22px 34px;
+    }
+    #pp-question-guidance-aug9 .q-kicker {
+      margin: 0 0 8px;
+      color: #6b50a0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    #pp-question-guidance-aug9 h2 {
+      margin: 0;
+      color: light-dark(#291a43, #f0e8ff);
+      font:
+        500 30px/1.1 Georgia,
+        serif;
+      overflow-wrap: anywhere;
+    }
+    #pp-question-guidance-aug9 .q-helper {
+      min-height: 42px;
+      margin: 11px 0 0;
+      color: light-dark(#6a6560, #c7c0ba);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    #pp-question-guidance-aug9 .q-answers {
+      display: grid;
+      gap: 9px;
+      margin-top: 22px;
+    }
+    #pp-question-guidance-aug9 .q-answer {
+      min-height: 48px;
+      padding: 14px;
+      border: 1px solid light-dark(#e3dad3, #4c4540);
+      border-radius: 13px;
+      color: light-dark(#413b36, #eee8e2);
+      background: light-dark(#fff, #282421);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    @media (max-width: 520px) {
+      #pp-question-guidance-aug9 .q-controls {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      #pp-question-guidance-aug9 .q-state {
+        width: 100%;
+      }
+      #pp-question-guidance-aug9 .q-state .btn {
+        min-width: 0;
+        flex: 1;
+      }
+      #pp-question-guidance-aug9 .q-phone {
+        min-height: 522px;
+      }
+      #pp-question-guidance-aug9 h2 {
+        font-size: 27px;
+      }
+    }
+  </style>
+
+  <div class="q-controls">
+    <label class="form-label"
+      >Frage
+      <select class="form-select" data-question>
+        <option value="thickness">Haarstärke</option>
+        <option value="concerns">Aktuelle Haarthemen</option>
+        <option value="scalp" selected>Kopfhaut · bewährte Copy bleibt</option>
+        <option value="recurrence">Haarbruch in letzter Zeit</option>
+        <option value="reliability">Bisherige Pflege</option>
+        <option value="time">Zeit für die Routine</option>
+        <option value="heat">Hitzetools</option>
+        <option value="towel">Handtuch</option>
+        <option value="drying">Trocknen</option>
+      </select>
+    </label>
+    <div class="q-state" aria-label="Version wählen">
+      <button type="button" class="btn" aria-pressed="false" data-version="before">Vorher</button>
+      <button type="button" class="btn btn-primary" aria-pressed="true" data-version="after">
+        Nachher
+      </button>
+    </div>
+  </div>
+
+  <div class="q-wrap">
+    <section class="q-phone" aria-live="polite">
+      <div class="q-head"><span>←</span><b>chaarlie</b><span data-area>Analyse</span></div>
+      <div class="q-progress"></div>
+      <div class="q-body">
+        <p class="q-kicker" data-kicker>Zurück zu deinen Haarthemen</p>
+        <h2 data-title>Wie oft bemerkst du Haarbruch?</h2>
+        <p class="q-helper" data-helper>Denk daran, wie es in letzter Zeit meistens war.</p>
+        <div class="q-answers" data-answers></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    ;(() => {
+      const root = document.getElementById("pp-question-guidance-aug9")
+      if (!root) return
+      const copy = {
+        thickness: {
+          before: {
+            area: "Analyse",
+            kicker: "Dein Haar",
+            title: "Wie dick ist ein einzelnes Haar?",
+            helper: "Wenn du unsicher bist: Reibe eine trockene Strähne zwischen zwei Fingern.",
+            answers: ["Fein", "Mittel", "Kräftig"],
+          },
+          after: {
+            area: "Analyse",
+            kicker: "Dein Haar",
+            title: "Wie dick ist ein einzelnes Haar?",
+            helper:
+              "Wenn du unsicher bist: Rolle ein einzelnes trockenes Haar zwischen Daumen und Zeigefinger.",
+            answers: ["Fein", "Mittel", "Kräftig"],
+          },
+        },
+        concerns: {
+          before: {
+            area: "Analyse",
+            kicker: "Aktuelle Themen",
+            title: "Was beschäftigt dich gerade?",
+            helper: "Wähle alles aus, was immer wieder eine Rolle spielt.",
+            answers: ["Frizz", "Trockenheit", "Haarbruch"],
+          },
+          after: {
+            area: "Analyse",
+            kicker: "Aktuelle Themen",
+            title: "Was beschäftigt dich gerade?",
+            helper: "Wähle alles aus, was du aktuell bemerkst.",
+            answers: ["Frizz", "Trockenheit", "Haarbruch"],
+          },
+        },
+        scalp: {
+          before: {
+            area: "Analyse",
+            kicker: "Kopfhaut",
+            title: "Wie würdest du deine Kopfhaut beschreiben?",
+            helper:
+              "Deine Gesichtshaut gibt dir einen guten Hinweis — eine ölige T-Zone deutet auf fettige Kopfhaut hin.",
+            answers: [
+              "Fettig — Ansätze werden nach 1–2 Tagen ölig.",
+              "Ausgeglichen — Kommt gut 2–3 Tage ohne Waschen klar.",
+              "Trocken — Spannt gelegentlich, fühlt sich eher rau an.",
+            ],
+          },
+          after: {
+            area: "Analyse",
+            kicker: "Kopfhaut",
+            title: "Wie würdest du deine Kopfhaut beschreiben?",
+            helper:
+              "Deine Gesichtshaut gibt dir einen guten Hinweis — eine ölige T-Zone deutet auf fettige Kopfhaut hin.",
+            answers: [
+              "Fettig — Ansätze werden nach 1–2 Tagen ölig.",
+              "Ausgeglichen — Kommt gut 2–3 Tage ohne Waschen klar.",
+              "Trocken — Spannt gelegentlich, fühlt sich eher rau an.",
+            ],
+          },
+        },
+        recurrence: {
+          before: {
+            area: "Analyse",
+            kicker: "Noch eine Frage",
+            title: "Kommt das immer wieder?",
+            helper: "Haarbruch beschäftigt dich wiederholt.",
+            answers: ["Oft", "Manchmal", "Eher nicht"],
+          },
+          after: {
+            area: "Analyse",
+            kicker: "Zurück zu deinen Haarthemen",
+            title: "Wie oft bemerkst du Haarbruch?",
+            helper: "Denk daran, wie es in letzter Zeit meistens war.",
+            answers: ["Oft", "Manchmal", "Eher nicht"],
+          },
+        },
+        reliability: {
+          before: {
+            area: "Analyse",
+            kicker: "Was du schon probiert hast",
+            title: "Was hat dir bisher geholfen?",
+            helper: "",
+            answers: [
+              "Vieles probiert, nichts zuverlässig",
+              "Bisher wenig gezielt ausprobiert",
+              "Einzelne Produkte oder Schritte halfen",
+              "Meine Routine funktioniert größtenteils",
+            ],
+          },
+          after: {
+            area: "Analyse",
+            kicker: "Was du schon probiert hast",
+            title: "Wie gut haben deine bisherigen Versuche funktioniert?",
+            helper: "Denk an Produkte, einzelne Schritte und deine bisherige Routine.",
+            answers: [
+              "Vieles probiert, nichts zuverlässig",
+              "Bisher wenig gezielt ausprobiert",
+              "Einzelne Produkte oder Schritte halfen",
+              "Meine Routine funktioniert größtenteils",
+            ],
+          },
+        },
+        time: {
+          before: {
+            area: "Analyse",
+            kicker: "Dein Alltag",
+            title: "Wie viel Zeit möchtest du täglich einplanen?",
+            helper: "",
+            answers: [
+              "5 Minuten pro Tag",
+              "10 Minuten pro Tag",
+              "15 Minuten pro Tag",
+              "20+ Minuten pro Tag",
+            ],
+          },
+          after: {
+            area: "Analyse",
+            kicker: "Dein Alltag",
+            title: "Wie viel aktive Zeit möchtest du an einem typischen Pflegetag einplanen?",
+            helper: "Trocknen und Warten zählen nicht mit.",
+            answers: ["5 Minuten", "10 Minuten", "15 Minuten", "20+ Minuten"],
+          },
+        },
+        heat: {
+          before: {
+            area: "Produkte",
+            kicker: "Hitze",
+            title: "Welche Hitzetools nutzt du?",
+            helper: "Mehrfachauswahl möglich.",
+            answers: ["Föhn", "Glätteisen", "Keine"],
+          },
+          after: {
+            area: "Produkte",
+            kicker: "Hitze",
+            title: "Welche Hitzetools nutzt du?",
+            helper: "Wähle alles aus, was du zumindest gelegentlich nutzt.",
+            answers: ["Föhn", "Glätteisen", "Keine"],
+          },
+        },
+        towel: {
+          before: {
+            area: "Routine",
+            kicker: "Nach dem Waschen",
+            title: "Womit trocknest du dein Haar?",
+            helper: "Dein Handtuch beeinflusst Frizz und Haarbruch mehr als du denkst.",
+            answers: ["Frotteehandtuch", "Mikrofaser", "Baumwollshirt"],
+          },
+          after: {
+            area: "Routine",
+            kicker: "Nach dem Waschen",
+            title: "Womit trocknest du dein Haar?",
+            helper: "Wähle, was dein nasses Haar meistens berührt.",
+            answers: ["Frotteehandtuch", "Mikrofaser", "Baumwollshirt"],
+          },
+        },
+        drying: {
+          before: {
+            area: "Routine",
+            kicker: "Nach dem Waschen",
+            title: "Wie trocknest du dein Haar hauptsächlich?",
+            helper: "Hitze ist der größte Stressfaktor — wir passen deinen Plan daran an.",
+            answers: ["An der Luft", "Mit dem Föhn", "Eine Mischung"],
+          },
+          after: {
+            area: "Routine",
+            kicker: "Nach dem Waschen",
+            title: "Wie trocknest du dein Haar hauptsächlich?",
+            helper: "Wähle, was du nach dem Waschen meistens machst.",
+            answers: ["An der Luft", "Mit dem Föhn", "Eine Mischung"],
+          },
+        },
+      }
+      const selector = root.querySelector("[data-question]")
+      const versionButtons = [...root.querySelectorAll("[data-version]")]
+      let version = "after"
+      const render = () => {
+        const item = copy[selector.value][version]
+        root.querySelector("[data-area]").textContent = item.area
+        root.querySelector("[data-kicker]").textContent = item.kicker
+        root.querySelector("[data-title]").textContent = item.title
+        root.querySelector("[data-helper]").textContent = item.helper
+        root.querySelector("[data-answers]").innerHTML = item.answers
+          .map((answer) => `<div class="q-answer">${answer}</div>`)
+          .join("")
+        versionButtons.forEach((button) => {
+          const active = button.dataset.version === version
+          button.setAttribute("aria-pressed", String(active))
+          button.classList.toggle("btn-primary", active)
+        })
+      }
+      selector.addEventListener("change", render)
+      versionButtons.forEach((button) =>
+        button.addEventListener("click", () => {
+          version = button.dataset.version
+          render()
+        }),
+      )
+      render()
+    })()
+  </script>
+</div>

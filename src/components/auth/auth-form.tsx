@@ -61,6 +61,12 @@ function buildNextDestination(next: string, leadId: string | null): string {
   return `${nextUrl.pathname}${nextUrl.search}`
 }
 
+export function buildPasswordRecoveryRedirect(origin: string): string {
+  const confirmUrl = new URL("/auth/confirm", origin)
+  confirmUrl.searchParams.set("next", "/auth/update-password")
+  return confirmUrl.toString()
+}
+
 export function AuthForm({
   defaultEmail,
   leadId,
@@ -174,7 +180,7 @@ export function AuthForm({
     setLoginErrorIsCredentials(false)
 
     const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
-      redirectTo: `${window.location.origin}/auth/confirm`,
+      redirectTo: buildPasswordRecoveryRedirect(window.location.origin),
     })
 
     if (error) {

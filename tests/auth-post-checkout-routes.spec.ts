@@ -2,7 +2,13 @@ import { createHash } from "node:crypto"
 import { createServer } from "node:http"
 import { readFileSync } from "node:fs"
 import { expect, test } from "@playwright/test"
-import { resolveAuthRedirectPath, sanitizeAuthRedirectPath } from "../src/app/auth/confirm/route"
+import {
+  handleAuthConfirm,
+  resolveAuthRedirectPath,
+  sanitizeAuthRedirectPath,
+  type AuthConfirmDeps,
+} from "../src/app/auth/confirm/route"
+import { buildPasswordRecoveryRedirect } from "../src/components/auth/auth-form"
 import { buildAuthenticatedAppRedirectUrl } from "../src/lib/supabase/middleware"
 import { handleSendMagicLink } from "../src/app/api/auth/send-magic-link/route"
 import { handleSendSetupLink } from "../src/app/api/auth/send-setup-link/route"
@@ -172,6 +178,172 @@ test("authenticated auth cleanup cannot resurrect an expired-link screen through
       server.close((error) => (error ? reject(error) : resolve())),
     )
   }
+})
+
+function confirmDeps(options: {
+  exchangeError?: unknown
+  otpError?: unknown
+  user?: { id: string; email?: string } | null
+}) {
+  const calls: unknown[][] = []
+  const deps: AuthConfirmDeps = {
+    async exchangeCodeForSession(code: string) {
+      calls.push(["exchange", code])
+      return { error: options.exchangeError ?? null }
+    },
+    async verifyOtp(params) {
+      calls.push(["verifyOtp", params])
+      return { error: options.otpError ?? null }
+    },
+    async getUser() {
+      calls.push(["getUser"])
+      return { data: { user: options.user ?? null } }
+    },
+    async linkQuizToProfile(userId: string, email?: string, leadId?: string) {
+      calls.push(["linkQuizToProfile", userId, email, leadId])
+    },
+    redirect(url: string) {
+      calls.push(["redirect", url])
+      return new Response(null, { status: 307, headers: { location: url } })
+    },
+  }
+
+  return { calls, deps }
+}
+
+async function handleConfirm(requestUrl: string, deps: ReturnType<typeof confirmDeps>["deps"]) {
+  return handleAuthConfirm(new Request(requestUrl), deps)
+}
+
+test("authenticated consumed Personal Plan confirmation replays its sanitized destination", async () => {
+  const { calls, deps } = confirmDeps({
+    exchangeError: new Error("code already used"),
+    user: { id: "user-1", email: "paid@example.com" },
+  })
+
+  const response = await handleConfirm(
+    "https://hair.example/auth/confirm?code=used&next=%2Fplan-start%3Fresume%3D1",
+    deps,
+  )
+
+  expect(response.headers.get("location")).toBe("https://hair.example/plan-start?resume=1")
+  expect(calls).not.toContainEqual(["linkQuizToProfile", "user-1", "paid@example.com", undefined])
+})
+
+test("authenticated consumed plan-bereit confirmation preserves its safe query", async () => {
+  const { deps } = confirmDeps({
+    exchangeError: new Error("code already used"),
+    user: { id: "user-1" },
+  })
+
+  const response = await handleConfirm(
+    "https://hair.example/auth/confirm?code=used&next=%2Fplan-bereit%3Flead%3Dlead-1",
+    deps,
+  )
+
+  expect(response.headers.get("location")).toBe("https://hair.example/plan-bereit?lead=lead-1")
+})
+
+test("signed-out expired confirmation retains only its sanitized next destination", async () => {
+  const { deps } = confirmDeps({ exchangeError: new Error("expired"), user: null })
+
+  const validResponse = await handleConfirm(
+    "https://hair.example/auth/confirm?code=expired&next=%2Fplan-start%3Fresume%3D1",
+    deps,
+  )
+  expect(validResponse.headers.get("location")).toBe(
+    "https://hair.example/auth?error=link_expired&next=%2Fplan-start%3Fresume%3D1",
+  )
+
+  const response = await handleConfirm(
+    "https://hair.example/auth/confirm?code=expired&next=https%3A%2F%2Fevil.example%2Fsteal",
+    deps,
+  )
+
+  expect(response.headers.get("location")).toBe(
+    "https://hair.example/auth?error=link_expired&next=%2Fchat",
+  )
+})
+
+test("authenticated failed confirmation cannot replay an unallowlisted internal path", async () => {
+  const { deps } = confirmDeps({
+    exchangeError: new Error("expired"),
+    user: { id: "user-1" },
+  })
+
+  const response = await handleConfirm(
+    "https://hair.example/auth/confirm?code=expired&next=%2Fprofile%3Fsection%3Droutine",
+    deps,
+  )
+
+  expect(response.headers.get("location")).toBe(
+    "https://hair.example/auth?error=link_expired&next=%2Fprofile%3Fsection%3Droutine",
+  )
+
+  const prefixedResponse = await handleConfirm(
+    "https://hair.example/auth/confirm?code=expired&next=%2Fplan-start%2Fpreview",
+    deps,
+  )
+  expect(prefixedResponse.headers.get("location")).toBe(
+    "https://hair.example/auth?error=link_expired&next=%2Fplan-start%2Fpreview",
+  )
+})
+
+test("verified PKCE recovery reaches password setup even without a recovery type", async () => {
+  const { calls, deps } = confirmDeps({ user: { id: "user-1", email: "user@example.com" } })
+
+  const response = await handleConfirm(
+    "https://hair.example/auth/confirm?code=recovery-code&next=%2Fauth%2Fupdate-password&lead=lead-1",
+    deps,
+  )
+
+  expect(response.headers.get("location")).toBe("https://hair.example/auth/update-password")
+  expect(calls).toContainEqual(["linkQuizToProfile", "user-1", "user@example.com", "lead-1"])
+})
+
+test("failed PKCE recovery stays on the forced recovery surface", async () => {
+  const { deps } = confirmDeps({
+    exchangeError: new Error("expired"),
+    user: { id: "already-signed-in" },
+  })
+
+  const response = await handleConfirm(
+    "https://hair.example/auth/confirm?code=expired&next=%2Fauth%2Fupdate-password",
+    deps,
+  )
+
+  expect(response.headers.get("location")).toBe(
+    "https://hair.example/auth?error=link_expired&force=login&next=%2Fauth%2Fupdate-password",
+  )
+})
+
+test("verified and failed OTP recovery preserve password recovery semantics", async () => {
+  const verified = confirmDeps({ user: { id: "user-1" } })
+  const verifiedResponse = await handleConfirm(
+    "https://hair.example/auth/confirm?token_hash=valid&type=recovery",
+    verified.deps,
+  )
+  expect(verifiedResponse.headers.get("location")).toBe("https://hair.example/auth/update-password")
+  expect(verified.calls).toContainEqual(["verifyOtp", { type: "recovery", token_hash: "valid" }])
+
+  const failed = confirmDeps({ otpError: new Error("expired"), user: null })
+  const failedResponse = await handleConfirm(
+    "https://hair.example/auth/confirm?token_hash=expired&type=recovery",
+    failed.deps,
+  )
+  expect(failedResponse.headers.get("location")).toBe(
+    "https://hair.example/auth?error=link_expired&force=login&next=%2Fauth%2Fupdate-password",
+  )
+})
+
+test("password-reset emails stamp the explicit PKCE recovery destination", () => {
+  const redirect = new URL(buildPasswordRecoveryRedirect("https://hair.example"))
+  const source = readFileSync("src/components/auth/auth-form.tsx", "utf8")
+
+  expect(`${redirect.pathname}${redirect.search}`).toBe(
+    "/auth/confirm?next=%2Fauth%2Fupdate-password",
+  )
+  expect(source).toContain("redirectTo: buildPasswordRecoveryRedirect(window.location.origin)")
 })
 
 test("rejects missing request body before rate limiting or Stripe work", async () => {

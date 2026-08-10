@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { Check, ChevronLeft, ChevronRight, Info, Loader2, RotateCcw } from "lucide-react"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { Info, Loader2, RotateCcw } from "lucide-react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
   RefinementFlow,
@@ -23,6 +23,7 @@ import {
   type Stage3Bootstrap,
 } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import { createHttpStage2RefinementGateway } from "@/lib/personal-plan/refinement/http-gateway"
+import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 
 import {
   NeedPlanScreen,
@@ -101,10 +102,19 @@ export function interpretPlanStartApiResponse(status: number, body: unknown): Pl
 export function PlanStartProductionGate({
   initialJourney = { stage: "stage1" },
   initialPlan,
+  personalPlanId,
+  initialRefinementSession,
 }: {
   initialJourney?: PlanStartInitialJourney
   initialPlan?: PlanStartReadyViewModel
+  personalPlanId?: string
+  initialRefinementSession?: Stage2RefinementSession
 }) {
+  const canBootstrapLaterStage = isValidLaterStageBootstrap(
+    initialJourney,
+    personalPlanId,
+    initialRefinementSession,
+  )
   const [state, setState] = useState<PlanStartApiState>(() =>
     initialPlan ? { state: "ready", plan: initialPlan } : { state: "loading" },
   )
@@ -119,7 +129,7 @@ export function PlanStartProductionGate({
   }, [])
 
   useEffect(() => {
-    if (!shouldRequestPlanStartOnMount(initialPlan)) return
+    if (canBootstrapLaterStage || !shouldRequestPlanStartOnMount(initialPlan)) return
     let cancelled = false
     void requestPlanStart().then(
       (nextState) => {
@@ -132,18 +142,34 @@ export function PlanStartProductionGate({
     return () => {
       cancelled = true
     }
-  }, [initialPlan])
+  }, [canBootstrapLaterStage, initialPlan])
+
+  if (canBootstrapLaterStage && personalPlanId) {
+    return (
+      <PlanStartCustomerJourney
+        initialPlan={initialPlan}
+        initialJourney={initialJourney}
+        personalPlanId={personalPlanId}
+        initialRefinementSession={initialRefinementSession}
+      />
+    )
+  }
 
   if (state.state === "retryable_error")
     return <PlanStartRetryableError onRetry={() => void load(true)} />
   if (state.state !== "ready" || !state.plan.personalPlanId) return <PlanStartFlow {...state} />
-  return <PlanStartCustomerJourney plan={state.plan} initialJourney={initialJourney} />
+  return (
+    <PlanStartCustomerJourney
+      initialPlan={state.plan}
+      initialJourney={initialJourney}
+      personalPlanId={state.plan.personalPlanId}
+    />
+  )
 }
 
 export function shouldRequestPlanStartOnMount(initialPlan?: PlanStartReadyViewModel): boolean {
   return !initialPlan
 }
-
 async function requestPlanStart(): Promise<PlanStartApiState> {
   const response = await fetch("/api/personal-plan/stage-1", {
     method: "GET",
@@ -173,13 +199,20 @@ export async function loadPlanStartStage3Bootstrap(input: {
 }
 
 export function PlanStartCustomerJourney({
-  plan,
+  initialPlan,
   initialJourney,
+  personalPlanId,
+  initialRefinementSession,
 }: {
-  plan: PlanStartReadyViewModel
+  initialPlan?: PlanStartReadyViewModel
   initialJourney: PlanStartInitialJourney
+  personalPlanId: string
+  initialRefinementSession?: Stage2RefinementSession
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
+  const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
+  const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
+  const stage2SeedRef = useRef(initialRefinementSession)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
   const [returningToRefinement, setReturningToRefinement] = useState(false)
   const [stage3LoadState, setStage3LoadState] = useState<
@@ -190,18 +223,18 @@ export function PlanStartCustomerJourney({
   const stage2Gateway = useMemo(() => createHttpStage2RefinementGateway(), [])
   const loadStage3Bootstrap = useCallback(
     async (refinedVersionId: string): Promise<Stage3Bootstrap> => {
-      if (!plan.personalPlanId) throw new Error("stage3_plan_unavailable")
       return loadPlanStartStage3Bootstrap({
         gateway: stage3Gateway,
-        personalPlanId: plan.personalPlanId,
+        personalPlanId,
         refinedVersionId,
       })
     },
-    [plan.personalPlanId, stage3Gateway],
+    [personalPlanId, stage3Gateway],
   )
   const handleHandoff = useCallback(
-    async ({ handoff }: Stage2HandoffPayload) => {
+    async ({ handoff, session }: Stage2HandoffPayload) => {
       setStage3Bootstrap(await loadStage3Bootstrap(handoff.refinedVersionId))
+      stage2SeedRef.current = session
       setStage3LoadState("idle")
       setReturningToRefinement(false)
       setStage("stage3")
@@ -238,11 +271,35 @@ export function PlanStartCustomerJourney({
     }
   }, [initialJourney, loadStage3Bootstrap])
 
+  const enterStage1 = useCallback(async () => {
+    setStage("stage1")
+    if (plan || stage1LoadState === "loading") return
+    setStage1LoadState("loading")
+    try {
+      const loaded = await requestPlanStart()
+      if (
+        loaded.state !== "ready" ||
+        !loaded.plan.personalPlanId ||
+        loaded.plan.personalPlanId !== personalPlanId
+      ) {
+        throw new Error("stage1_plan_unavailable")
+      }
+      setPlan(loaded.plan)
+      setStage1LoadState("idle")
+    } catch {
+      setStage1LoadState("error")
+    }
+  }, [personalPlanId, plan, stage1LoadState])
+
   if (stage === "stage2")
     return (
       <RefinementFlow
         gateway={stage2Gateway}
-        onSecondaryExit={() => setStage("stage1")}
+        initialSession={stage2SeedRef.current}
+        onSecondaryExit={() => {
+          stage2SeedRef.current = undefined
+          void enterStage1()
+        }}
         onHandoff={handleHandoff}
         autoHandoff={!returningToRefinement}
         directEntry
@@ -278,6 +335,13 @@ export function PlanStartCustomerJourney({
         }}
       />
     )
+  if (!plan) {
+    if (stage1LoadState === "error") {
+      return <PlanStartRetryableError onRetry={() => void enterStage1()} />
+    }
+    return <PlanStartLoading />
+  }
+
   return (
     <PlanStartFlow
       state="ready"
@@ -290,6 +354,20 @@ export function PlanStartCustomerJourney({
   )
 }
 
+function isValidLaterStageBootstrap(
+  initialJourney: PlanStartInitialJourney,
+  personalPlanId: string | undefined,
+  initialRefinementSession: Stage2RefinementSession | undefined,
+) {
+  if (initialJourney.stage === "stage1" || !personalPlanId || !initialRefinementSession) {
+    return false
+  }
+  if (initialJourney.stage === "stage2") return true
+  return (
+    initialRefinementSession.status === "complete" &&
+    initialRefinementSession.completedHandoff?.refinedVersionId === initialJourney.refinedVersionId
+  )
+}
 type FlowStep = "basis" | "optional"
 
 export function PlanStartFlow(
@@ -428,61 +506,6 @@ export function PlanStartUnavailable({
         </Link>
       </div>
     </StateShell>
-  )
-}
-
-export function PlanStartTransition({
-  onBack,
-  onContinue,
-}: {
-  onBack: () => void
-  onContinue?: () => void
-}) {
-  return (
-    <section className="flex min-h-dvh flex-col bg-[#fdfbf9]" data-plan-start-screen="transition">
-      <PlanStartHeader stageLabel="Nächster Schritt" />
-      <main className="mx-auto flex w-full max-w-[430px] flex-1 flex-col px-3 pb-24 pt-3 sm:max-w-[560px] sm:px-5">
-        <Progress value={100} label="Bedarfsplan abgeschlossen" />
-        <section className="mt-7 rounded-[22px] border border-[rgba(107,80,160,0.13)] bg-[#f4edf8] px-4 py-6 text-center">
-          <div className="mx-auto mb-4 grid h-[54px] w-[54px] place-items-center rounded-[18px] bg-white text-[#6B50A0] shadow-[0_8px_20px_rgba(59,38,80,0.10)]">
-            <Check className="h-6 w-6" aria-hidden="true" />
-          </div>
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#6e6863]">
-            Deine Grundlage steht
-          </div>
-          <h1 className="font-header mt-2 text-[26px] leading-tight text-[#291a43]">
-            Jetzt machen wir sie zu deiner.
-          </h1>
-          <p className="mx-auto mt-2 max-w-[270px] text-[11.5px] leading-relaxed text-[#625d58]">
-            Als Nächstes verfeinern wir deinen Plan mit ein paar gezielten Fragen.
-          </p>
-        </section>
-      </main>
-      <nav
-        aria-label="Nächster Schritt"
-        className="fixed inset-x-0 bottom-0 z-20 border-t border-[#ece6df] bg-[#fdfbf9]/95 px-3 py-2.5 backdrop-blur"
-      >
-        <div className="mx-auto flex max-w-[430px] items-center gap-2 sm:max-w-[560px]">
-          <button
-            type="button"
-            onClick={onBack}
-            className="inline-flex min-h-11 items-center gap-1 rounded-[12px] px-3 text-[11px] font-extrabold text-[#6B50A0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            Zum Plan
-          </button>
-          <button
-            type="button"
-            disabled={!onContinue}
-            onClick={onContinue}
-            className="personal-plan-primary-action ml-auto inline-flex min-h-11 items-center gap-1 px-4 text-[11px]"
-          >
-            Plan verfeinern
-            <ChevronRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-      </nav>
-    </section>
   )
 }
 
