@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
-import { StripeOfferElementsCheckout } from "@/components/checkout/stripe-offer-elements-checkout"
 import { ActiveSubscriptionDialog } from "@/components/checkout/active-subscription-dialog"
+import { StripeOfferElementsCheckout } from "@/components/checkout/stripe-offer-elements-checkout"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import { PaymentOptionExposure } from "@/components/checkout/payment-option-exposure"
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
@@ -14,6 +16,8 @@ import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { CheckoutLifecycleClaim } from "@/lib/analytics/checkout-attempt"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
+import { paymentFeedback } from "@/lib/checkout/payment-feedback"
+import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import type { CheckoutStage } from "@/lib/observability/checkout"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
@@ -113,6 +117,38 @@ export function PersonalPlanOneTimeCheckout({
   const canStartPayment = Boolean(leadId && funnelSessionId)
   const stripeAvailable = stripeElementsEnabled && stripePublishableKeyPresent
   const stripeCheckoutMounted = stripeAvailable && Boolean(checkoutAttemptId)
+  const feedbackV2Enabled = isPaymentFeedbackV2Enabled()
+  const duplicateAccessVisible =
+    duplicateDialogOpen || preparedStripeCheckoutState.kind === "duplicate_access"
+  const duplicateAccessEmail =
+    preparedStripeCheckoutState.kind === "duplicate_access"
+      ? preparedStripeCheckoutState.email
+      : null
+  const duplicateAccessFeedback = duplicateAccessVisible
+    ? paymentFeedback("access_already_active", {
+        provider: "checkout",
+        method: "unknown",
+        accessAction: "login",
+      })
+    : null
+  const duplicateAccessReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: "result_one_time",
+    feedback: duplicateAccessFeedback,
+  })
+  const preparedCheckoutFeedback =
+    preparedStripeCheckoutState.kind === "unavailable"
+      ? paymentFeedback("checkout_not_loaded", {
+          provider: "stripe",
+          method: "card",
+          confirmationPhase: "before_confirm",
+        })
+      : null
+  const preparedCheckoutReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: "result_one_time",
+    feedback: preparedCheckoutFeedback,
+  })
 
   const reportStripeCustomerError = useCallback(
     ({
@@ -836,23 +872,41 @@ export function PersonalPlanOneTimeCheckout({
   const stripeControlRecoveryCard =
     preparedStripeCheckoutState.kind === "unavailable" ||
     preparedStripeCheckoutState.kind === "provider_locked_stripe" ? (
-      <div className="grid gap-3 rounded-[14px] border border-[var(--brand-coral)]/30 bg-[var(--brand-coral)]/10 p-4 text-center text-[var(--brand-plum-darkest)]">
-        <p className="text-sm font-bold" role="status">
-          {preparedStripeCheckoutState.kind === "unavailable"
-            ? "Kartenzahlung neu verbinden"
-            : "Kartenzahlung ist bereits ausgewählt"}
-        </p>
-        <p className="text-sm leading-6">
-          {preparedStripeCheckoutState.kind === "unavailable"
-            ? "Die Kartenzahlung konnte nicht mit diesem vorbereiteten Zahlungsversuch verbunden werden. Dein Haarplan bleibt ausgewählt."
-            : "Diese Kartenzahlung gehört bereits zu deinem Zahlungsversuch. Wir öffnen genau diesen Versuch erneut, damit keine zweite Zahlung entsteht."}
-        </p>
-        <Button type="button" variant="outline" onClick={rotateStripePreparationForRecovery}>
-          {preparedStripeCheckoutState.kind === "unavailable"
-            ? "Haarplan-Zahlung erneut vorbereiten"
-            : "Kartenzahlung wieder öffnen"}
-        </Button>
-      </div>
+      preparedStripeCheckoutState.kind === "unavailable" &&
+      preparedCheckoutFeedback &&
+      isPaymentFeedbackV2Enabled() ? (
+        <PaymentFeedbackCard
+          feedback={preparedCheckoutFeedback}
+          onAction={(action) => {
+            if (action === "reload" || action === "retry") rotateStripePreparationForRecovery()
+            if (action === "use_paypal") setStripeSelected(false)
+          }}
+          onReportProblem={
+            checkoutAttemptId && isPaymentSupportUiEnabled()
+              ? preparedCheckoutReport.report
+              : undefined
+          }
+          reportState={preparedCheckoutReport.state}
+        />
+      ) : (
+        <div className="grid gap-3 rounded-[14px] border border-[var(--brand-coral)]/30 bg-[var(--brand-coral)]/10 p-4 text-center text-[var(--brand-plum-darkest)]">
+          <p className="text-sm font-bold" role="status">
+            {preparedStripeCheckoutState.kind === "unavailable"
+              ? "Kartenzahlung neu verbinden"
+              : "Kartenzahlung ist bereits ausgewählt"}
+          </p>
+          <p className="text-sm leading-6">
+            {preparedStripeCheckoutState.kind === "unavailable"
+              ? "Die Kartenzahlung konnte nicht mit diesem vorbereiteten Zahlungsversuch verbunden werden. Dein Haarplan bleibt ausgewählt."
+              : "Diese Kartenzahlung gehört bereits zu deinem Zahlungsversuch. Wir öffnen genau diesen Versuch erneut, damit keine zweite Zahlung entsteht."}
+          </p>
+          <Button type="button" variant="outline" onClick={rotateStripePreparationForRecovery}>
+            {preparedStripeCheckoutState.kind === "unavailable"
+              ? "Haarplan-Zahlung erneut vorbereiten"
+              : "Kartenzahlung wieder öffnen"}
+          </Button>
+        </div>
+      )
     ) : null
 
   const paypalOwnedUnavailableCard =
@@ -869,8 +923,25 @@ export function PersonalPlanOneTimeCheckout({
       </div>
     ) : null
 
-  const duplicateAccessCard =
-    preparedStripeCheckoutState.kind === "duplicate_access" ? (
+  const openExistingAccess = () => {
+    const href = duplicateAccessEmail
+      ? `/auth?email=${encodeURIComponent(duplicateAccessEmail)}`
+      : "/auth"
+    window.location.assign(href)
+  }
+  const duplicateAccessCard = duplicateAccessFeedback ? (
+    feedbackV2Enabled ? (
+      <PaymentFeedbackCard
+        feedback={duplicateAccessFeedback}
+        onAction={openExistingAccess}
+        onReportProblem={
+          checkoutAttemptId && isPaymentSupportUiEnabled()
+            ? duplicateAccessReport.report
+            : undefined
+        }
+        reportState={duplicateAccessReport.state}
+      />
+    ) : (
       <div className="grid gap-3 rounded-[14px] border border-border bg-muted/30 p-4 text-center text-[var(--brand-plum-darkest)]">
         <p className="text-sm font-bold" role="status">
           Dein Haarplan-Zugang ist bereits aktiv
@@ -883,7 +954,8 @@ export function PersonalPlanOneTimeCheckout({
           Bestehenden Zugang öffnen
         </Button>
       </div>
-    ) : null
+    )
+  ) : null
 
   const checkoutStartErrorMessage = (
     <p className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
@@ -929,6 +1001,11 @@ export function PersonalPlanOneTimeCheckout({
       }
       onFirstPaymentEngagement={markFirstEngagement}
       onPaymentMethodSelected={handlePaymentMethodSelected}
+      onPaymentFeedbackAction={(action) => {
+        if (action === "use_paypal" && paypalPaymentOption) {
+          setStripeSelected(false)
+        }
+      }}
       onPaymentOptionViewed={handlePaymentOptionViewed}
       onProviderReady={(provider, option) =>
         trackCheckoutLifecycle({ provider, option, transition: "provider_ready" })
@@ -965,6 +1042,7 @@ export function PersonalPlanOneTimeCheckout({
         setStripePreparationCredential(createPreparedCheckoutCredential())
       }}
       paymentButtonLabel="Zahlungspflichtig bestellen — €29,99"
+      paymentSupportContext="result_one_time"
       observabilitySource="quiz_result_offer"
       paymentElementEnabled={
         stripeSelected || preparedStripeCheckoutState.checkout.owner === "stripe"
@@ -995,16 +1073,14 @@ export function PersonalPlanOneTimeCheckout({
           Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige Rückerstattung.
         </p>
       </section>
-      <ActiveSubscriptionDialog
-        accessKind="one_time"
-        email={
-          preparedStripeCheckoutState.kind === "duplicate_access"
-            ? preparedStripeCheckoutState.email
-            : null
-        }
-        onOpenChange={setDuplicateDialogOpen}
-        open={duplicateDialogOpen}
-      />
+      {!feedbackV2Enabled ? (
+        <ActiveSubscriptionDialog
+          accessKind="one_time"
+          email={duplicateAccessEmail}
+          onOpenChange={setDuplicateDialogOpen}
+          open={duplicateDialogOpen}
+        />
+      ) : null}
       {primaryPaymentBody}
       {paypalStableSlot}
       {stripeSelectionControl}

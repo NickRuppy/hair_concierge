@@ -33,6 +33,28 @@ interface SendCustomerIoTransactionalEmailOptions {
   timeoutMs?: number
 }
 
+export type CustomerIoTransactionalDeliveryReceipt = {
+  deliveryId: string
+  queuedAt: string | number
+}
+
+export class CustomerIoHttpError extends Error {
+  readonly status: number
+
+  constructor(status: number, detail = "") {
+    super(`Customer.io transactional email failed: ${status} ${detail}`.trim())
+    this.name = "CustomerIoHttpError"
+    this.status = status
+  }
+}
+
+export class CustomerIoAmbiguousDeliveryError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = "CustomerIoAmbiguousDeliveryError"
+  }
+}
+
 const DEFAULT_CUSTOMERIO_APP_API_URL = "https://api-eu.customer.io"
 const DEFAULT_TIMEOUT_MS = 10_000
 
@@ -60,6 +82,13 @@ export async function sendCustomerIoTransactionalEmail(
   payload: CustomerIoTransactionalEmailPayload,
   options: SendCustomerIoTransactionalEmailOptions = {},
 ): Promise<void> {
+  await sendCustomerIoTransactionalRequest(payload, options)
+}
+
+async function sendCustomerIoTransactionalRequest(
+  payload: CustomerIoTransactionalEmailPayload,
+  options: SendCustomerIoTransactionalEmailOptions,
+): Promise<Response> {
   const apiKey = options.apiKey ?? process.env.CUSTOMERIO_APP_API_KEY
 
   if (!apiKey) {
@@ -75,21 +104,56 @@ export async function sendCustomerIoTransactionalEmail(
 
   let response: Response
   try {
-    response = await fetchImpl(joinApiUrl(apiUrl, request.path), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request.body),
-      signal: controller.signal,
-    })
+    try {
+      response = await fetchImpl(joinApiUrl(apiUrl, request.path), {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request.body),
+        signal: controller.signal,
+      })
+    } catch (error) {
+      throw new CustomerIoAmbiguousDeliveryError(
+        "Customer.io delivery result is unknown after the request failed",
+        { cause: error },
+      )
+    }
   } finally {
     clearTimeout(timeout)
   }
 
   if (!response.ok) {
     const text = await response.text().catch(() => "")
-    throw new Error(`Customer.io transactional email failed: ${response.status} ${text}`.trim())
+    throw new CustomerIoHttpError(response.status, text)
   }
+
+  return response
+}
+
+export async function sendCustomerIoTransactionalEmailWithReceipt(
+  payload: CustomerIoTransactionalEmailPayload,
+  options: SendCustomerIoTransactionalEmailOptions = {},
+): Promise<CustomerIoTransactionalDeliveryReceipt> {
+  const response = await sendCustomerIoTransactionalRequest(payload, options)
+  const body = await response.json().catch(() => null)
+  const deliveryId =
+    body && typeof body === "object" && typeof body.delivery_id === "string"
+      ? body.delivery_id.trim()
+      : ""
+  const queuedAt =
+    body &&
+    typeof body === "object" &&
+    (typeof body.queued_at === "string" || typeof body.queued_at === "number")
+      ? body.queued_at
+      : null
+
+  if (!deliveryId || queuedAt === null) {
+    throw new CustomerIoAmbiguousDeliveryError(
+      "Customer.io accepted the request without a valid delivery receipt",
+    )
+  }
+
+  return { deliveryId, queuedAt }
 }

@@ -3,7 +3,10 @@ import test from "node:test"
 
 import {
   buildCustomerIoTransactionalEmailRequest,
+  CustomerIoAmbiguousDeliveryError,
+  CustomerIoHttpError,
   sendCustomerIoTransactionalEmail,
+  sendCustomerIoTransactionalEmailWithReceipt,
   type CustomerIoTransactionalEmailPayload,
 } from "../src/lib/customerio/transactional"
 
@@ -72,5 +75,67 @@ test("throws with status and response text for non-ok responses", async () => {
       fetchImpl: (async () => new Response("bad request", { status: 422 })) as typeof fetch,
     }),
     /422 bad request/,
+  )
+})
+
+test("returns the documented Customer.io delivery receipt", async () => {
+  const receipt = await sendCustomerIoTransactionalEmailWithReceipt(
+    {
+      to: "lea@example.com",
+      transactionalMessageId: "payment_support_receipt",
+      messageData: { report_code: "PAY-7K2M9ABC" },
+    },
+    {
+      apiKey: "app-key",
+      fetchImpl: (async () =>
+        Response.json({ delivery_id: "cio-delivery-1", queued_at: 1_786_272_000 })) as typeof fetch,
+    },
+  )
+
+  assert.deepEqual(receipt, {
+    deliveryId: "cio-delivery-1",
+    queuedAt: 1_786_272_000,
+  })
+})
+
+test("classifies non-2xx responses as definitive HTTP failures", async () => {
+  await assert.rejects(
+    sendCustomerIoTransactionalEmailWithReceipt(
+      { to: "lea@example.com", transactionalMessageId: 7, messageData: {} },
+      {
+        apiKey: "app-key",
+        fetchImpl: (async () => new Response("invalid template", { status: 422 })) as typeof fetch,
+      },
+    ),
+    (error: unknown) =>
+      error instanceof CustomerIoHttpError &&
+      error.status === 422 &&
+      error.message.includes("invalid template"),
+  )
+})
+
+test("treats network failures and malformed success receipts as ambiguous", async () => {
+  const payload: CustomerIoTransactionalEmailPayload = {
+    to: "lea@example.com",
+    transactionalMessageId: 7,
+    messageData: {},
+  }
+
+  await assert.rejects(
+    sendCustomerIoTransactionalEmailWithReceipt(payload, {
+      apiKey: "app-key",
+      fetchImpl: (async () => {
+        throw new TypeError("connection reset")
+      }) as typeof fetch,
+    }),
+    CustomerIoAmbiguousDeliveryError,
+  )
+
+  await assert.rejects(
+    sendCustomerIoTransactionalEmailWithReceipt(payload, {
+      apiKey: "app-key",
+      fetchImpl: (async () => Response.json({ queued_at: 1_786_272_000 })) as typeof fetch,
+    }),
+    CustomerIoAmbiguousDeliveryError,
   )
 })

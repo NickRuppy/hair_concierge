@@ -9,6 +9,8 @@ import {
   isCheckoutAccessAlreadyExistsResponse,
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import {
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
@@ -25,6 +27,8 @@ import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/clien
 import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
 import type { BillingInterval } from "@/lib/stripe/intervals"
+import { paymentFeedback } from "@/lib/checkout/payment-feedback"
+import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import {
   DEFAULT_PRICING_INTERVAL,
   getStripePricingPlan,
@@ -73,6 +77,18 @@ export function MembershipReactivationCheckout({
     useState<Promise<Stripe | null>>(unloadedStripePromise)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
+  const duplicateFeedback = duplicateDialogOpen
+    ? paymentFeedback("access_already_active", {
+        provider: "checkout",
+        method: "unknown",
+        accessAction: "profile",
+      })
+    : null
+  const duplicateReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: "reactivation",
+    feedback: duplicateFeedback,
+  })
   const selectedPlan = getStripePricingPlan(selectedInterval, pricingCatalog)
 
   const reportStripeCustomerError = useCallback(
@@ -281,11 +297,13 @@ export function MembershipReactivationCheckout({
 
   return (
     <div className="mt-5 rounded-2xl border border-border/70 bg-background p-4 sm:p-5">
-      <ActiveSubscriptionDialog
-        email={duplicateEmail}
-        onOpenChange={setDuplicateDialogOpen}
-        open={duplicateDialogOpen}
-      />
+      {!isPaymentFeedbackV2Enabled() ? (
+        <ActiveSubscriptionDialog
+          email={duplicateEmail}
+          onOpenChange={setDuplicateDialogOpen}
+          open={duplicateDialogOpen}
+        />
+      ) : null}
       {lockedProvider === null ? (
         <SubscriptionPlanSelector
           actionLabel={`${selectedPlan.price} · Mitgliedschaft reaktivieren`}
@@ -297,7 +315,19 @@ export function MembershipReactivationCheckout({
         />
       ) : null}
       <div ref={checkoutRef}>
-        {checkoutInterval ? (
+        {checkoutInterval &&
+        duplicateDialogOpen &&
+        isPaymentFeedbackV2Enabled() &&
+        duplicateFeedback ? (
+          <PaymentFeedbackCard
+            feedback={duplicateFeedback}
+            onAction={() => window.location.assign("/profile")}
+            onReportProblem={
+              checkoutAttemptId && isPaymentSupportUiEnabled() ? duplicateReport.report : undefined
+            }
+            reportState={duplicateReport.state}
+          />
+        ) : checkoutInterval ? (
           <PaymentMethodCheckout
             checkoutAttemptId={checkoutAttemptId ?? undefined}
             checkoutContext={checkoutContext}

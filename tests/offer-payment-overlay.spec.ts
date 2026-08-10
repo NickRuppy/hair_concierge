@@ -226,12 +226,11 @@ test.describe("@ci offer payment overlay", () => {
     await expect(page.getByPlaceholder("1234 1234 1234 1234")).toBeVisible()
 
     await page.getByRole("button", { name: "Fehlermeldung simulieren" }).click()
-    const paymentError = page.getByRole("alert").filter({ hasText: "Zahlung nicht möglich" })
+    const paymentError = checkout.getByRole("status", { name: "Karte abgelehnt" })
     await expect(paymentError).toBeVisible()
     expect(await paymentError.evaluate((element) => Boolean(element.closest("[inert]")))).toBe(
       false,
     )
-    await expect(paymentError.locator("..")).toHaveAttribute("data-modal-layer-exempt", "true")
 
     const cookieBanner = page.locator('[aria-label="Cookie-Einstellungen"]')
     await expect(cookieBanner).toBeVisible()
@@ -1105,7 +1104,7 @@ test.describe("@ci offer payment overlay", () => {
     await expect(diagnostic).toHaveAttribute("data-apple-pay-confirm-return", "thenable_settled")
   })
 
-  test("a rejected Stripe confirmation shows recovery and releases its provider lock", async ({
+  test("@payment-feedback-v2 a rejected Stripe confirmation shows recovery and releases its provider lock", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
@@ -1120,9 +1119,18 @@ test.describe("@ci offer payment overlay", () => {
 
     await checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }).click()
 
-    await expect(checkout.getByRole("alert")).toContainText(
-      "Die Zahlung konnte nicht bestätigt werden.",
-    )
+    if (process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED === "true") {
+      const paymentRecovery = checkout.getByRole("status", {
+        name: "Zahlung gerade nicht verfügbar",
+      })
+      await expect(paymentRecovery).toContainText(
+        "Die Verbindung zum Zahlungsanbieter ist gerade nicht verfügbar.",
+      )
+    } else {
+      await expect(checkout.getByRole("alert")).toContainText(
+        "Die Zahlung konnte nicht bestätigt werden.",
+      )
+    }
     await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
     await expect(diagnostic).toHaveAttribute("data-provider-lock", "unlocked")
     await expect(checkout.getByTestId("paypal-button")).toBeEnabled()
@@ -1131,10 +1139,11 @@ test.describe("@ci offer payment overlay", () => {
     ).toBeEnabled()
   })
 
-  test("desktop modal is centered and a nested dialog retains the page lock", async ({ page }) => {
+  test("desktop modal is centered and inline duplicate feedback retains the page lock", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
     const { checkout, scrollBefore } = await openCheckoutAtNonzeroScroll(page)
-    const checkoutSurface = checkout.locator("[data-offer-payment-scroll-surface]")
 
     const geometry = await checkout.boundingBox()
     expect(geometry).not.toBeNull()
@@ -1144,17 +1153,16 @@ test.describe("@ci offer payment overlay", () => {
     await expect(checkout.locator("[data-bottom-sheet-handle]")).toHaveCount(0)
 
     await page.getByRole("button", { name: "Doppelzugang simulieren" }).click()
-    const duplicateDialog = page.getByRole("dialog", { name: "Aktives Abo gefunden" })
+    const duplicateFeedback = checkout.getByRole("status", { name: "Zugang bereits aktiv" })
     const checkoutRoot = page.locator(".bottom-sheet-root")
-    await expect(duplicateDialog).toBeVisible()
-    await expect(checkoutRoot).toHaveAttribute("inert", "")
-    await expect(duplicateDialog.getByRole("button", { name: "Schließen" }).first()).toBeFocused()
-
-    await page.keyboard.press("Escape")
-    await expect(duplicateDialog).toBeHidden()
+    await expect(duplicateFeedback).toBeVisible()
+    await expect(duplicateFeedback).toContainText("Keine neue Zahlung gestartet")
+    await expect(
+      duplicateFeedback.getByRole("button", { name: "Mit E-Mail einloggen" }),
+    ).toBeVisible()
+    await expect(page.getByRole("dialog", { name: "Aktives Abo gefunden" })).toHaveCount(0)
     await expect(checkoutRoot).not.toHaveAttribute("inert", "")
     await expect(checkout).toBeVisible()
-    await expect(checkoutSurface).toBeFocused()
     await expect(page.locator("body")).toHaveCSS("position", "fixed")
     await expect(page.locator("body")).toHaveCSS("top", `-${scrollBefore.y}px`)
 

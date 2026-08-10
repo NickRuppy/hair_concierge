@@ -18,6 +18,11 @@ import type {
 } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import {
+  usePaymentSupportReport,
+  type PaymentSupportCheckoutContext,
+} from "@/components/checkout/use-payment-support-report"
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import type { OfferPaymentOption, OfferPaymentOptionProvider } from "@/lib/analytics/events"
@@ -32,6 +37,13 @@ import {
   isAlreadyReportedPreparedCheckoutError,
   isHandledPreparedCheckoutControlError,
 } from "@/lib/stripe/prepared-checkout-credential"
+import {
+  classifyStripePaymentFeedback,
+  paymentFeedback,
+  type PaymentFeedback,
+  type PaymentFeedbackAction,
+} from "@/lib/checkout/payment-feedback"
+import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 
 export type StripeOfferPaymentMethodType = "apple_pay" | "payment_element"
 export type StripeOfferProvider = "stripe" | "paypal"
@@ -54,7 +66,16 @@ export type StripePaymentElementAvailablePaymentMethodsChangeEvent =
 const APPLE_PAY_INITIAL_RESPONSE_TIMEOUT_MS = 5_000
 const APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS = 10_000
 const PAYMENT_ELEMENT_READY_TIMEOUT_MS = 10_000
-type StripeOfferConfirmResult = { type: "success" } | { type: "error"; error: { message: string } }
+type StripeOfferConfirmResult =
+  | { type: "success" }
+  | {
+      type: "error"
+      error: {
+        message: string
+        code?: string | null
+        paymentFailed?: { declineCode?: string | null } | null
+      }
+    }
 export type StripeOfferBeforeConfirmResult = boolean | { allowed: boolean; errorMessage?: string }
 type StripeOfferExpressElement = {
   on: (event: "cancel", handler: () => void) => unknown
@@ -344,9 +365,11 @@ function StripeOfferElementsCheckoutBody({
   onConfirmFailed,
   paymentElementEnabled,
   paymentButtonLabel,
+  paymentSupportContext,
   visible,
   lockedProvider,
   onPaymentMethodSelected,
+  onPaymentFeedbackAction,
   onPaymentOptionViewed,
   onProviderReady,
   onProviderCancelled,
@@ -373,6 +396,7 @@ function StripeOfferElementsCheckoutBody({
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
+  onPaymentFeedbackAction?: (action: PaymentFeedbackAction) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onProviderReady?: OfferCheckoutProviderLifecycleCallback
   onProviderCancelled?: OfferCheckoutProviderLifecycleCallback
@@ -381,6 +405,7 @@ function StripeOfferElementsCheckoutBody({
   onProviderLoadTimeout?: OfferCheckoutProviderLifecycleFailureCallback
   paymentElementEnabled?: boolean
   paymentButtonLabel?: string
+  paymentSupportContext?: PaymentSupportCheckoutContext
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
@@ -404,6 +429,7 @@ function StripeOfferElementsCheckoutBody({
       onConfirmStarted={onConfirmStarted}
       onConfirmFailed={onConfirmFailed}
       onPaymentMethodSelected={onPaymentMethodSelected}
+      onPaymentFeedbackAction={onPaymentFeedbackAction}
       onPaymentOptionViewed={onPaymentOptionViewed}
       onProviderReady={onProviderReady}
       onProviderCancelled={onProviderCancelled}
@@ -412,6 +438,7 @@ function StripeOfferElementsCheckoutBody({
       onProviderLoadTimeout={onProviderLoadTimeout}
       paymentElementEnabled={paymentElementEnabled}
       paymentButtonLabel={paymentButtonLabel}
+      paymentSupportContext={paymentSupportContext}
       onProviderLockClaim={onProviderLockClaim}
       onProviderLockRelease={onProviderLockRelease}
       onRetry={onRetry}
@@ -436,6 +463,7 @@ export function StripeOfferElementsCheckoutContent({
   onConfirmStarted,
   onConfirmFailed,
   onPaymentMethodSelected,
+  onPaymentFeedbackAction,
   onPaymentOptionViewed,
   onProviderReady,
   onProviderCancelled,
@@ -444,6 +472,7 @@ export function StripeOfferElementsCheckoutContent({
   onProviderLoadTimeout,
   paymentElementEnabled = true,
   paymentButtonLabel,
+  paymentSupportContext,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
@@ -470,6 +499,7 @@ export function StripeOfferElementsCheckoutContent({
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
+  onPaymentFeedbackAction?: (action: PaymentFeedbackAction) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onProviderReady?: OfferCheckoutProviderLifecycleCallback
   onProviderCancelled?: OfferCheckoutProviderLifecycleCallback
@@ -478,6 +508,7 @@ export function StripeOfferElementsCheckoutContent({
   onProviderLoadTimeout?: OfferCheckoutProviderLifecycleFailureCallback
   paymentElementEnabled?: boolean
   paymentButtonLabel?: string
+  paymentSupportContext?: PaymentSupportCheckoutContext
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
@@ -498,8 +529,27 @@ export function StripeOfferElementsCheckoutContent({
   )
   const [confirming, setConfirming] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [customerFeedback, setCustomerFeedback] = useState<PaymentFeedback | null>(null)
   const [paymentElementReadyFromProvider, setPaymentElementReady] = useState(false)
   const paymentElementReady = paymentElementReadyOverride ?? paymentElementReadyFromProvider
+  const checkoutLoadFeedback =
+    checkoutResult.type === "error"
+      ? paymentFeedback("checkout_not_loaded", {
+          provider: "stripe",
+          method: "card",
+          confirmationPhase: "before_confirm",
+        })
+      : null
+  const activeFeedback = customerFeedback ?? checkoutLoadFeedback
+  const supportReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: paymentSupportContext ?? "result_membership",
+    feedback: activeFeedback,
+  })
+  const feedbackV2Enabled = isPaymentFeedbackV2Enabled()
+  const supportEnabled = Boolean(
+    paymentSupportContext && checkoutAttemptId && isPaymentSupportUiEnabled(),
+  )
   const debugEnabledRef = useRef(
     typeof window !== "undefined" && isWalletDebugEnabled(window.location.search),
   )
@@ -828,6 +878,24 @@ export function StripeOfferElementsCheckoutContent({
     onProviderLockRelease?.("stripe")
   }, [onProviderLockRelease])
 
+  const handlePaymentFeedbackAction = useCallback(
+    (action: PaymentFeedbackAction) => {
+      if (action === "reload" || action === "retry") {
+        setCustomerFeedback(null)
+        setErrorMessage(null)
+        onRetry()
+        return
+      }
+      if (action === "correct_details" || action === "use_other_card") {
+        setCustomerFeedback(null)
+        setErrorMessage(null)
+        return
+      }
+      onPaymentFeedbackAction?.(action)
+    },
+    [onPaymentFeedbackAction, onRetry],
+  )
+
   useEffect(() => {
     if (!checkout) return
     const element = checkout.getExpressCheckoutElement()
@@ -1028,6 +1096,7 @@ export function StripeOfferElementsCheckoutContent({
       confirmingRef.current = true
       setConfirming(true)
       setErrorMessage(null)
+      setCustomerFeedback(null)
       let shouldRelease = false
 
       try {
@@ -1044,6 +1113,13 @@ export function StripeOfferElementsCheckoutContent({
               ? beforeConfirmResult.errorMessage
               : getStripeOfferElementsErrorMessage()
           setErrorMessage(message)
+          setCustomerFeedback(
+            paymentFeedback("checkout_not_loaded", {
+              provider: "stripe",
+              method: mapStripeOfferPaymentMethod(paymentMethodType),
+              confirmationPhase: "before_confirm",
+            }),
+          )
           expressCheckoutConfirmEvent?.paymentFailed({ message })
           return
         }
@@ -1072,8 +1148,15 @@ export function StripeOfferElementsCheckoutContent({
           source: observabilitySource,
         })
         onConfirmFailed?.("stripe", getStripeOfferPaymentOption(paymentMethodType))
-        const message = getStripeOfferElementsErrorMessage(result.error.message)
+        const message = getStripeOfferElementsErrorMessage()
         setErrorMessage(message)
+        setCustomerFeedback(
+          classifyStripePaymentFeedback({
+            confirmationPhase: "after_confirm",
+            method: mapStripeOfferPaymentMethod(paymentMethodType),
+            error: result.error,
+          }),
+        )
         expressCheckoutConfirmEvent?.paymentFailed({ message })
       } catch (error) {
         shouldRelease = true
@@ -1092,6 +1175,13 @@ export function StripeOfferElementsCheckoutContent({
         onConfirmFailed?.("stripe", getStripeOfferPaymentOption(paymentMethodType))
         const message = getStripeOfferElementsErrorMessage()
         setErrorMessage(message)
+        setCustomerFeedback(
+          classifyStripePaymentFeedback({
+            confirmationPhase: "after_confirm",
+            method: mapStripeOfferPaymentMethod(paymentMethodType),
+            error: { code: "network_error" },
+          }),
+        )
         expressCheckoutConfirmEvent?.paymentFailed({ message })
       } finally {
         if (shouldRelease && confirmingRef.current && lockOwnerRef.current === "stripe") {
@@ -1121,19 +1211,28 @@ export function StripeOfferElementsCheckoutContent({
   if (checkoutResult.type === "error") {
     return (
       <div className="grid gap-3">
-        <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
-          <p className="mb-3 text-sm text-destructive" role="alert">
-            {getStripeOfferElementsErrorMessage(checkoutResult.error.message)}
-          </p>
-          <Button
-            type="button"
-            variant="unstyled"
-            onClick={onRetry}
-            className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
-          >
-            Erneut versuchen
-          </Button>
-        </div>
+        {feedbackV2Enabled && activeFeedback ? (
+          <PaymentFeedbackCard
+            feedback={activeFeedback}
+            onAction={handlePaymentFeedbackAction}
+            onReportProblem={supportEnabled ? supportReport.report : undefined}
+            reportState={supportReport.state}
+          />
+        ) : (
+          <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
+            <p className="mb-3 text-sm text-destructive" role="alert">
+              {getStripeOfferElementsErrorMessage()}
+            </p>
+            <Button
+              type="button"
+              variant="unstyled"
+              onClick={onRetry}
+              className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
+            >
+              Erneut versuchen
+            </Button>
+          </div>
+        )}
         {visible && secondaryPaymentMethod ? secondaryPaymentMethod : null}
       </div>
     )
@@ -1148,6 +1247,22 @@ export function StripeOfferElementsCheckoutContent({
   const showResolvedPaymentDivider =
     showPaymentElement && (state.applePayReady || showSecondaryPaymentMethod)
   const applePayProviderReady = state.applePayReady
+  const feedbackSurface =
+    feedbackV2Enabled && customerFeedback ? (
+      <PaymentFeedbackCard
+        feedback={customerFeedback}
+        onAction={handlePaymentFeedbackAction}
+        onReportProblem={supportEnabled ? supportReport.report : undefined}
+        reportState={supportReport.state}
+      />
+    ) : state.errorMessage ? (
+      <p
+        className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
+        role="alert"
+      >
+        {state.errorMessage}
+      </p>
+    ) : null
 
   return (
     <div className="relative grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">
@@ -1327,14 +1442,7 @@ export function StripeOfferElementsCheckoutContent({
               />
             )}
 
-            {state.errorMessage ? (
-              <p
-                className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
-                role="alert"
-              >
-                {state.errorMessage}
-              </p>
-            ) : null}
+            {feedbackSurface}
 
             <Button
               type="button"
@@ -1349,14 +1457,9 @@ export function StripeOfferElementsCheckoutContent({
             </Button>
           </div>
         </PaymentOptionExposure>
-      ) : state.errorMessage ? (
-        <p
-          className="rounded-[12px] bg-destructive/10 px-3 py-2 text-sm text-destructive"
-          role="alert"
-        >
-          {state.errorMessage}
-        </p>
-      ) : null}
+      ) : (
+        feedbackSurface
+      )}
     </div>
   )
 }
@@ -1375,6 +1478,7 @@ export function StripeOfferElementsCheckout({
   onConfirmFailed,
   onFirstPaymentEngagement,
   onPaymentMethodSelected,
+  onPaymentFeedbackAction,
   onPaymentOptionViewed,
   onProviderReady,
   onProviderCancelled,
@@ -1383,6 +1487,7 @@ export function StripeOfferElementsCheckout({
   onProviderLoadTimeout,
   paymentElementEnabled = true,
   paymentButtonLabel,
+  paymentSupportContext,
   onProviderLockClaim,
   onProviderLockRelease,
   onRetry,
@@ -1407,6 +1512,7 @@ export function StripeOfferElementsCheckout({
     provider: StripeOfferProvider,
     paymentMethodType?: StripeOfferPaymentMethodType,
   ) => void
+  onPaymentFeedbackAction?: (action: PaymentFeedbackAction) => void
   onPaymentOptionViewed?: (provider: OfferPaymentOptionProvider, option: OfferPaymentOption) => void
   onProviderReady?: OfferCheckoutProviderLifecycleCallback
   onProviderCancelled?: OfferCheckoutProviderLifecycleCallback
@@ -1415,6 +1521,7 @@ export function StripeOfferElementsCheckout({
   onProviderLoadTimeout?: OfferCheckoutProviderLifecycleFailureCallback
   paymentElementEnabled?: boolean
   paymentButtonLabel?: string
+  paymentSupportContext?: PaymentSupportCheckoutContext
   onProviderLockClaim?: (provider: StripeOfferProvider) => boolean
   onProviderLockRelease?: (provider: StripeOfferProvider) => boolean
   onRetry: () => void
@@ -1427,23 +1534,51 @@ export function StripeOfferElementsCheckout({
     if (clientSecret) return Promise.resolve(clientSecret)
     return fetchClientSecret?.() ?? null
   }, [clientSecret, fetchClientSecret])
+  const missingCheckoutFeedback = clientSecretPromise
+    ? null
+    : paymentFeedback("checkout_not_loaded", {
+        provider: "stripe",
+        method: "card",
+        confirmationPhase: "before_confirm",
+      })
+  const missingCheckoutReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: paymentSupportContext ?? "result_membership",
+    feedback: missingCheckoutFeedback,
+  })
 
   if (!clientSecretPromise) {
     return (
       <div className="grid gap-3">
-        <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
-          <p className="mb-3 text-sm text-destructive" role="alert">
-            {getStripeOfferElementsErrorMessage()}
-          </p>
-          <Button
-            type="button"
-            variant="unstyled"
-            onClick={onRetry}
-            className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
-          >
-            Erneut versuchen
-          </Button>
-        </div>
+        {isPaymentFeedbackV2Enabled() && missingCheckoutFeedback ? (
+          <PaymentFeedbackCard
+            feedback={missingCheckoutFeedback}
+            onAction={(action) => {
+              if (action === "reload" || action === "retry") onRetry()
+              else onPaymentFeedbackAction?.(action)
+            }}
+            onReportProblem={
+              paymentSupportContext && checkoutAttemptId && isPaymentSupportUiEnabled()
+                ? missingCheckoutReport.report
+                : undefined
+            }
+            reportState={missingCheckoutReport.state}
+          />
+        ) : (
+          <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
+            <p className="mb-3 text-sm text-destructive" role="alert">
+              {getStripeOfferElementsErrorMessage()}
+            </p>
+            <Button
+              type="button"
+              variant="unstyled"
+              onClick={onRetry}
+              className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
+            >
+              Erneut versuchen
+            </Button>
+          </div>
+        )}
         {visible && secondaryPaymentMethod ? secondaryPaymentMethod : null}
       </div>
     )
@@ -1472,6 +1607,7 @@ export function StripeOfferElementsCheckout({
         onConfirmStarted={onConfirmStarted}
         onConfirmFailed={onConfirmFailed}
         onPaymentMethodSelected={onPaymentMethodSelected}
+        onPaymentFeedbackAction={onPaymentFeedbackAction}
         onPaymentOptionViewed={onPaymentOptionViewed}
         onProviderReady={onProviderReady}
         onProviderCancelled={onProviderCancelled}
@@ -1480,6 +1616,7 @@ export function StripeOfferElementsCheckout({
         onProviderLoadTimeout={onProviderLoadTimeout}
         paymentElementEnabled={paymentElementEnabled}
         paymentButtonLabel={paymentButtonLabel}
+        paymentSupportContext={paymentSupportContext}
         onProviderLockClaim={onProviderLockClaim}
         onProviderLockRelease={onProviderLockRelease}
         onRetry={onRetry}

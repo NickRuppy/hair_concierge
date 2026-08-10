@@ -1,4 +1,5 @@
 import type { CheckoutInterval, CheckoutSource, CheckoutStage } from "@/lib/observability/checkout"
+import type { PaymentFeedbackKind } from "@/lib/checkout/payment-feedback"
 
 export type PaymentSignal =
   | "customer_payment_error_observed"
@@ -9,6 +10,7 @@ export type PaymentSignal =
   | "payment_integrity_mismatch"
   | "paid_but_entitlement_not_active"
   | "payment_monitor_failed"
+  | "customer_payment_issue_reported"
 
 export type PaymentProvider = "stripe" | "paypal" | "unknown"
 export type PaymentBoundary =
@@ -74,6 +76,9 @@ export type PaymentFailureDetails = PaymentBoundaryDetails & {
   invariant?: string | null
   purchaseId?: string | null
   providerReferenceDigest?: string | null
+  feedbackKind?: PaymentFeedbackKind | null
+  reportCode?: string | null
+  deliveryState?: "pending" | "sending" | "sent" | "failed" | "delivery_uncertain" | null
 }
 
 export type PaymentFailureReporter = (details: PaymentFailureDetails) => unknown
@@ -126,6 +131,7 @@ const PAYMENT_LEVEL_BY_SIGNAL: Record<PaymentSignal, PaymentFailureLevel> = {
   payment_integrity_mismatch: "fatal",
   paid_but_entitlement_not_active: "error",
   payment_monitor_failed: "error",
+  customer_payment_issue_reported: "warning",
 }
 
 export function getPaymentBoundary(stage: CheckoutStage): PaymentBoundary {
@@ -173,6 +179,10 @@ export function buildPaymentFailurePayload(details: PaymentFailureDetails): Paym
   addOptional(context, "duration_ms", details.durationMs)
   addSafeStatus(context, details.status)
   addOptional(context, "stage", details.stage)
+
+  if (details.feedbackKind) tags["payment.feedback_kind"] = details.feedbackKind
+  if (safeReportCode(details.reportCode)) tags["support.report_code"] = details.reportCode
+  addOptional(context, "support_delivery_state", details.deliveryState)
 
   if (details.source) tags["checkout.source"] = details.source
 
@@ -294,4 +304,8 @@ function safeInternalIdentifier(value: string | null | undefined): value is stri
 
 function safeOpaqueDigest(value: string | null | undefined): value is string {
   return typeof value === "string" && /^(?:[a-f0-9]{64}|[a-zA-Z0-9_-]{43})$/.test(value)
+}
+
+function safeReportCode(value: string | null | undefined): value is string {
+  return typeof value === "string" && /^PAY-[23456789ABCDEFGHJKMNPQRSTUVWXYZ_]{8}$/.test(value)
 }

@@ -18,6 +18,10 @@ const membershipReactivationSource = readFileSync(
   new URL("../src/components/reactivation/membership-reactivation-checkout.tsx", import.meta.url),
   "utf8",
 )
+const personalPlanOneTimeCheckoutSource = readFileSync(
+  new URL("../src/components/checkout/personal-plan-one-time-checkout.tsx", import.meta.url),
+  "utf8",
+)
 const resultOfferPricingSource = readFileSync(
   new URL("../src/components/quiz/result-offer-pricing.tsx", import.meta.url),
   "utf8",
@@ -70,6 +74,12 @@ test("Stripe duplicate responses are handled in offer and membership reactivatio
     assert.match(source, /readCheckoutAccessAlreadyExistsEmail/)
     assert.match(source, /setDuplicate(?:Dialog)?Open\(true\)/)
   }
+})
+
+test("one-time checkout preserves its legacy duplicate modal while feedback V2 is off", () => {
+  assert.match(personalPlanOneTimeCheckoutSource, /ActiveSubscriptionDialog/)
+  assert.match(personalPlanOneTimeCheckoutSource, /!feedbackV2Enabled/)
+  assert.match(personalPlanOneTimeCheckoutSource, /setDuplicateDialogOpen\(true\)/)
 })
 
 test("duplicate checkout API responses include known context email", () => {

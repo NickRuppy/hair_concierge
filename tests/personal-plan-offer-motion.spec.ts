@@ -539,7 +539,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     expect(prepareCalls).toBe(1)
   })
 
-  test("existing one-time access stops payment and carries the Chaarlie email into login", async ({
+  test("@payment-feedback-v2 existing one-time access stops payment and carries the Chaarlie email into login", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
@@ -563,20 +563,29 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await openCheckout.scrollIntoViewIfNeeded()
     await openCheckout.click()
 
-    const existingAccess = page.getByRole("dialog", { name: "Aktiver Zugang gefunden" })
-    await expect(existingAccess).toBeVisible()
-    await expect(existingAccess.getByText("lea@example.com", { exact: true })).toBeVisible()
-    await expect(existingAccess.getByRole("link", { name: "Einloggen" })).toHaveAttribute(
-      "href",
-      "/auth?email=lea%40example.com",
-    )
-
     const checkout = page.getByRole("dialog", { name: "Sicher bezahlen" })
     await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toHaveCount(0)
     await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toHaveCount(0)
-    await page.screenshot({
-      path: "/tmp/chaarlie-payment-existing-access.png",
-    })
+
+    if (process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED === "true") {
+      const existingAccess = checkout.getByRole("status", { name: "Zugang bereits aktiv" })
+      await expect(existingAccess).toBeVisible()
+      await expect(existingAccess).toContainText(
+        "Für deine E-Mail ist bereits ein Zugang aktiv. Melde dich jetzt ein.",
+      )
+      await expect(existingAccess).toContainText("Keine neue Zahlung gestartet")
+      await page.screenshot({ path: "/tmp/chaarlie-payment-existing-access.png" })
+      await existingAccess.getByRole("button", { name: "Mit E-Mail einloggen" }).click()
+      await expect(page).toHaveURL(/\/auth\?email=lea%40example\.com$/)
+    } else {
+      const existingAccess = page.getByRole("dialog", { name: "Aktiver Zugang gefunden" })
+      await expect(existingAccess).toBeVisible()
+      await expect(existingAccess.getByText("lea@example.com", { exact: true })).toBeVisible()
+      await expect(existingAccess.getByRole("link", { name: "Einloggen" })).toHaveAttribute(
+        "href",
+        "/auth?email=lea%40example.com",
+      )
+    }
   })
 
   test("a terminal PayPal recovery state hands the customer to support without another payment", async ({

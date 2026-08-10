@@ -10,6 +10,8 @@ import {
 import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js"
 
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
+import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
+import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import { useOfferTrackingContext } from "@/components/quiz/offer-tracking-provider"
 import { addCheckoutBreadcrumb } from "@/lib/observability/checkout"
 import type { CheckoutStage } from "@/lib/observability/checkout"
@@ -17,6 +19,8 @@ import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observabil
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import { paymentFeedback } from "@/lib/checkout/payment-feedback"
+import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import type { CheckoutFailure } from "./payment-method-checkout"
 import type { CheckoutContext } from "@/lib/analytics/events"
 import { reportPayPalScriptFailureOnce } from "./paypal-script-failure"
@@ -194,9 +198,38 @@ export function PayPalSubscriptionButton({
   source: PayPalCheckoutSource
   visible?: boolean
 }) {
+  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
   const [error, setError] = useState<string | null>(null)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
+  const duplicateFeedback = duplicateDialogOpen
+    ? paymentFeedback("access_already_active", {
+        provider: "paypal",
+        method: "paypal",
+        accessAction: checkoutContext === "membership_reactivation" ? "profile" : "login",
+      })
+    : null
+  const paymentErrorFeedback = error
+    ? paymentFeedback("payment_not_completed", {
+        provider: "paypal",
+        method: "paypal",
+        confirmationPhase: "after_confirm",
+      })
+    : null
+  const paypalLoadFeedback = !clientId
+    ? paymentFeedback("checkout_not_loaded", {
+        provider: "paypal",
+        method: "paypal",
+        confirmationPhase: "before_confirm",
+      })
+    : null
+  const activeFeedback = duplicateFeedback ?? paymentErrorFeedback ?? paypalLoadFeedback
+  const supportReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext:
+      checkoutContext === "membership_reactivation" ? "reactivation" : "result_membership",
+    feedback: activeFeedback,
+  })
   const intentTokenRef = useRef<string | null>(null)
   const suppressNextPayPalErrorRef = useRef(false)
   const configurationReportedRef = useRef(false)
@@ -210,7 +243,6 @@ export function PayPalSubscriptionButton({
   const { paypalLive } = usePaymentRuntime()
   const offerContext = useOfferTrackingContext()
   const isInternalTest = offerContext?.isInternalTest ?? false
-  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
 
   useEffect(() => {
     clientMountedReportedRef.current = false
@@ -307,6 +339,18 @@ export function PayPalSubscriptionButton({
   ])
 
   if (!clientId) {
+    if (isPaymentFeedbackV2Enabled() && paypalLoadFeedback) {
+      return (
+        <PaymentFeedbackCard
+          feedback={paypalLoadFeedback}
+          onAction={() => window.location.reload()}
+          onReportProblem={
+            checkoutAttemptId && isPaymentSupportUiEnabled() ? supportReport.report : undefined
+          }
+          reportState={supportReport.state}
+        />
+      )
+    }
     return (
       <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-4 text-center">
         <p className="text-sm text-destructive">{paypalStartError}</p>
@@ -314,13 +358,36 @@ export function PayPalSubscriptionButton({
     )
   }
 
+  if (duplicateFeedback && isPaymentFeedbackV2Enabled()) {
+    return (
+      <PaymentFeedbackCard
+        feedback={duplicateFeedback}
+        onAction={() => {
+          const href =
+            checkoutContext === "membership_reactivation"
+              ? "/profile"
+              : duplicateEmail
+                ? `/auth?email=${encodeURIComponent(duplicateEmail)}`
+                : "/auth"
+          window.location.assign(href)
+        }}
+        onReportProblem={
+          checkoutAttemptId && isPaymentSupportUiEnabled() ? supportReport.report : undefined
+        }
+        reportState={supportReport.state}
+      />
+    )
+  }
+
   return (
     <div>
-      <ActiveSubscriptionDialog
-        email={duplicateEmail}
-        onOpenChange={setDuplicateDialogOpen}
-        open={duplicateDialogOpen}
-      />
+      {!isPaymentFeedbackV2Enabled() ? (
+        <ActiveSubscriptionDialog
+          email={duplicateEmail}
+          onOpenChange={setDuplicateDialogOpen}
+          open={duplicateDialogOpen}
+        />
+      ) : null}
       <PayPalScriptProvider
         options={{
           clientId,
@@ -640,7 +707,7 @@ export function PayPalSubscriptionButton({
                 status: approved.status,
                 providerReferencePresent: true,
               })
-              setError(approved.message)
+              setError(paypalStartError)
               onCheckoutFailed?.({
                 errorCode: "paypal_approval_failed",
                 failureStage: "provider_approval",
@@ -708,7 +775,20 @@ export function PayPalSubscriptionButton({
           }}
         />
       </PayPalScriptProvider>
-      {error ? <p className="mt-3 text-center text-sm text-destructive">{error}</p> : null}
+      {error && paymentErrorFeedback && isPaymentFeedbackV2Enabled() ? (
+        <div className="mt-3">
+          <PaymentFeedbackCard
+            feedback={paymentErrorFeedback}
+            onAction={() => setError(null)}
+            onReportProblem={
+              checkoutAttemptId && isPaymentSupportUiEnabled() ? supportReport.report : undefined
+            }
+            reportState={supportReport.state}
+          />
+        </div>
+      ) : error ? (
+        <p className="mt-3 text-center text-sm text-destructive">{error}</p>
+      ) : null}
     </div>
   )
 }
@@ -762,8 +842,7 @@ async function approveSubscriptionIntent(
   token: string,
   subscriptionId: string,
 ): Promise<
-  | { ok: true }
-  | { ok: false; duplicate: boolean; email?: string | null; message: string; status: number }
+  { ok: true } | { ok: false; duplicate: boolean; email?: string | null; status: number }
 > {
   const response = await fetch("/api/paypal/approve-subscription", {
     method: "POST",
@@ -773,12 +852,10 @@ async function approveSubscriptionIntent(
   if (response.ok) return { ok: true }
 
   const body = await response.json().catch(() => ({}))
-  const message = typeof body.message === "string" ? body.message : paypalStartError
   return {
     ok: false,
     duplicate: isCheckoutAccessAlreadyExistsResponse(response, body),
     email: readCheckoutAccessAlreadyExistsEmail(body),
-    message,
     status: response.status,
   }
 }
