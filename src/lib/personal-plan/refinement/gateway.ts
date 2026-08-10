@@ -16,6 +16,7 @@ export class Stage2RefinementError extends Error {
   constructor(
     public readonly code: Stage2RefinementErrorCode,
     message: string = code,
+    public readonly savedSession?: Stage2RefinementSession,
   ) {
     super(message)
     this.name = "Stage2RefinementError"
@@ -30,8 +31,14 @@ export type Stage2SaveAnswerInput = {
 
 export type Stage2CompleteResult = Stage2RefinementHandoff
 
+export type Stage2SaveAndCompleteResult = {
+  session: Stage2RefinementSession
+  handoff: Stage2CompleteResult
+}
+
 export interface Stage2RefinementGateway {
   load(): Promise<Stage2RefinementSession>
   saveAnswer(input: Stage2SaveAnswerInput): Promise<Stage2RefinementSession>
+  saveAnswerAndComplete?(input: Stage2SaveAnswerInput): Promise<Stage2SaveAndCompleteResult>
   complete(input: { expectedRevision: number }): Promise<Stage2CompleteResult>
 }

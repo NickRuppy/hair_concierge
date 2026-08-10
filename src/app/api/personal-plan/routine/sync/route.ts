@@ -15,6 +15,7 @@ import {
 } from "@/lib/personal-plan/routine/source-sync-service"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 type Service = ReturnType<typeof createRoutineSourceSyncService>
 export type PersonalPlanRoutineSyncRouteDeps = {
@@ -58,4 +59,17 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
       repository: createSupabaseRoutineSourceSyncRepository(createAdminClient()),
     }),
 })
-export const POST = handlers.POST
+export const POST = async () => {
+  const startedAt = performance.now()
+  const result = await handlers.POST()
+  const durationMs = performance.now() - startedAt
+  result.headers.set("Server-Timing", `personal_plan_routine_sync;dur=${durationMs.toFixed(2)}`)
+  reportPersonalPlanTransitionTiming({
+    layer: "server",
+    operation: "routine_sync",
+    outcome: result.ok ? "ok" : "error",
+    status: result.status,
+    durationMs,
+  })
+  return result
+}

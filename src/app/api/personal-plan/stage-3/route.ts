@@ -7,7 +7,10 @@ import {
   type Stage3AuthorityProductionGateway,
   type Stage3ProductionPersistence,
 } from "@/lib/personal-plan/products/production-persistence-gateway"
-import { STAGE3_AUTHORITY_ACTION_KINDS } from "@/lib/personal-plan/products/authority/contracts"
+import {
+  STAGE3_AUTHORITY_ACTION_KINDS,
+  STAGE3_AUTHORITY_DECISION_BATCH_LIMIT,
+} from "@/lib/personal-plan/products/authority/contracts"
 import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
 import type { Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
 import {
@@ -88,21 +91,36 @@ const clientMutationSchema = z
     ]),
   })
   .strict()
+const authorityIntentPayloadSchema = z
+  .object({
+    type: z.literal("resolve_decision"),
+    subjectKey: domainIdentifier,
+    action: z.enum(STAGE3_AUTHORITY_ACTION_KINDS),
+    selectedCandidateId: domainIdentifier.optional(),
+  })
+  .strict()
 const authorityIntentSchema = z
   .object({
     draftId: identifier,
     expectedRevision: z.number().int().nonnegative(),
-    intent: z
-      .object({
-        type: z.literal("resolve_decision"),
-        subjectKey: domainIdentifier,
-        action: z.enum(STAGE3_AUTHORITY_ACTION_KINDS),
-        selectedCandidateId: domainIdentifier.optional(),
-      })
-      .strict(),
+    intent: authorityIntentPayloadSchema,
   })
   .strict()
-const mutationSchema = z.union([clientMutationSchema, authorityIntentSchema])
+const authorityIntentBatchSchema = z
+  .object({
+    draftId: identifier,
+    expectedRevision: z.number().int().nonnegative(),
+    intents: z
+      .array(authorityIntentPayloadSchema)
+      .min(1)
+      .max(STAGE3_AUTHORITY_DECISION_BATCH_LIMIT),
+  })
+  .strict()
+const mutationSchema = z.union([
+  clientMutationSchema,
+  authorityIntentSchema,
+  authorityIntentBatchSchema,
+])
 
 export type Stage3RouteDeps = {
   enabled: () => boolean
@@ -118,25 +136,44 @@ export type Stage3RouteDeps = {
 function response(body: unknown, status = 200, headers?: HeadersInit) {
   return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } })
 }
-function log(event: string, started: number, code?: string) {
-  console.info("personal_plan_stage3_api", { event, code, duration_ms: Date.now() - started })
+function log(event: string, started: number, code?: string, phases: Record<string, number> = {}) {
+  console.info("personal_plan_stage3_api", {
+    event,
+    code,
+    duration_ms: Date.now() - started,
+    ...Object.fromEntries(
+      Object.entries(phases).map(([name, duration]) => [`${name}_duration_ms`, duration]),
+    ),
+  })
+}
+function serverTiming(phases: Record<string, number>) {
+  return Object.entries(phases)
+    .map(([name, duration]) => `${name};dur=${Math.max(0, Math.round(duration * 100) / 100)}`)
+    .join(", ")
 }
 
 export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
   async function authorize(started: number, applyMutationLimit: boolean) {
+    const phases: Record<string, number> = {}
     if (!deps.enabled())
       return { response: response({ error: "personal_plan_not_available" }, 404) }
+    let phaseStarted = Date.now()
     const userId = await deps.getUserId()
+    phases.auth = Date.now() - phaseStarted
     if (!userId) return { response: response({ error: "unauthorized" }, 401) }
     try {
+      phaseStarted = Date.now()
       if (!canAccessPersonalPlanJourneyStage(await deps.loadJourneyAccess(userId), "stage3")) {
         return { response: response({ error: "stage_not_ready" }, 409) }
       }
+      phases.journey = Date.now() - phaseStarted
     } catch {
       return { response: response({ error: "temporarily_unavailable" }, 503) }
     }
     if (applyMutationLimit) {
+      phaseStarted = Date.now()
       const limited = await deps.checkRateLimit(userId, STAGE3_MUTATION_RATE_LIMIT)
+      phases.rate_limit = Date.now() - phaseStarted
       if (!limited.allowed) {
         const unavailable = limited.error === "service_unavailable"
         log("unavailable", started, unavailable ? "temporarily_unavailable" : "rate_limited")
@@ -149,7 +186,7 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         }
       }
     }
-    return { userId }
+    return { userId, phases }
   }
   return {
     async GET(request: Request) {
@@ -172,7 +209,9 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
           loaded.draft.pass === "product_capture" || !gateway.evaluateDecisions
             ? []
             : await gateway.evaluateDecisions({ draftId: loaded.draft.draftId })
-        return response({ ...loaded, authorityEvaluations })
+        return response({ ...loaded, authorityEvaluations }, 200, {
+          "Server-Timing": serverTiming(auth.phases),
+        })
       } catch (error) {
         if (error instanceof Stage3AuthoritySnapshotError) {
           log("conflict", started, error.code)
@@ -190,15 +229,31 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
       if (!parsed.success) return response({ error: "invalid_request" }, 400)
       try {
         const gateway = deps.gatewayFor(auth.userId)
+        const gatewayStarted = Date.now()
         const result =
           "intent" in parsed.data
-            ? await requireAuthorityGateway(gateway).resolveDecision(parsed.data)
-            : await gateway.mutate(parsed.data as never)
+            ? await requireAuthorityDecisionGateway(gateway).resolveDecision(parsed.data)
+            : "intents" in parsed.data
+              ? await requireAuthorityBatchGateway(gateway).resolveDecisions(parsed.data)
+              : await gateway.mutate(parsed.data as never)
+        auth.phases.gateway = Date.now() - gatewayStarted
         if (result.status === "conflict") {
-          log("conflict", started, "revision_conflict")
-          return response({ error: "revision_conflict", latestDraft: result.latestDraft }, 409)
+          log("conflict", started, "revision_conflict", auth.phases)
+          return response({ error: "revision_conflict", latestDraft: result.latestDraft }, 409, {
+            "Server-Timing": serverTiming(auth.phases),
+          })
         }
-        return response(result)
+        log(
+          "save",
+          started,
+          "intents" in parsed.data
+            ? "authority_batch"
+            : "intent" in parsed.data
+              ? "authority_single"
+              : "client_mutation",
+          auth.phases,
+        )
+        return response(result, 200, { "Server-Timing": serverTiming(auth.phases) })
       } catch (error) {
         if (error instanceof Stage3AuthorityMutationError) {
           return response({ error: "invalid_request" }, 400)
@@ -214,15 +269,27 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
   }
 }
 
-function requireAuthorityGateway(
+function requireAuthorityDecisionGateway(
   gateway: Stage3RouteGateway,
 ): Pick<Stage3AuthorityProductionGateway, "resolveDecision"> {
   if (!gateway.resolveDecision) throw new Error("stage3_authority_gateway_unavailable")
   return { resolveDecision: gateway.resolveDecision.bind(gateway) }
 }
 
+function requireAuthorityBatchGateway(
+  gateway: Stage3RouteGateway,
+): Pick<Stage3AuthorityProductionGateway, "resolveDecisions"> {
+  if (!gateway.resolveDecisions) throw new Error("stage3_authority_gateway_unavailable")
+  return { resolveDecisions: gateway.resolveDecisions.bind(gateway) }
+}
+
 type Stage3RouteGateway = Stage3ProductsGateway &
-  Partial<Pick<Stage3AuthorityProductionGateway, "evaluateDecisions" | "resolveDecision">>
+  Partial<
+    Pick<
+      Stage3AuthorityProductionGateway,
+      "evaluateDecisions" | "resolveDecision" | "resolveDecisions"
+    >
+  >
 
 const handlers = createStage3RouteHandlers({
   enabled: isPersonalPlanAppV1Enabled,

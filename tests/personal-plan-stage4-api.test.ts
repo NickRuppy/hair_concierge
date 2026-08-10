@@ -39,6 +39,7 @@ const stage4Access = {
   frontier: "stage4" as const,
   nextHref: "/routine" as const,
   allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+  hasPendingRoutineProposal: true,
 }
 
 function client(rows: Record<string, unknown>): PersonalPlanRoutineReadClient {
@@ -129,8 +130,17 @@ test("routine read preserves no-plan versus incomplete-plan and disables new ent
 })
 
 test("attention never leaks proposal facts and is false when Stage 4 is disabled", async () => {
-  let response = await createPersonalPlanRoutineAttentionRouteHandlers(routeDeps()).GET()
+  let constructed = false
+  let response = await createPersonalPlanRoutineAttentionRouteHandlers(
+    routeDeps({
+      client: () => {
+        constructed = true
+        return client({})
+      },
+    }),
+  ).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: true })
+  assert.equal(constructed, false)
   response = await createPersonalPlanRoutineAttentionRouteHandlers(
     routeDeps({ enabled: () => false }),
   ).GET()

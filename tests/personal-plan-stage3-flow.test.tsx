@@ -1436,6 +1436,11 @@ test("pending decision shows saving synchronously and suppresses a second immedi
       .state,
     "loading",
   )
+  assert.match(
+    findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)?.props
+      .message ?? "",
+    /nächsten offenen Schritt/i,
+  )
 
   releaseFirstDecision()
   await new Promise((resolve) => setImmediate(resolve))
@@ -1466,11 +1471,31 @@ test("grouped clear-fit acceptance shows saving and suppresses a second immediat
   const firstDecisionPending = new Promise<void>((resolve) => {
     releaseFirstDecision = resolve
   })
-  let resolveCalls = 0
+  let batchCalls = 0
+  let singleCalls = 0
   gateway.resolveDecision = async (input) => {
-    resolveCalls += 1
-    if (resolveCalls === 1) await firstDecisionPending
+    singleCalls += 1
     return originalResolveDecision(input)
+  }
+  const batchGateway = gateway as typeof gateway & {
+    resolveDecisions(input: {
+      draftId: string
+      expectedRevision: number
+      intents: Stage3AuthoritySemanticIntent[]
+    }): Promise<Stage3MutationResponse>
+  }
+  batchGateway.resolveDecisions = async (input) => {
+    batchCalls += 1
+    await firstDecisionPending
+    let nextRevision = input.expectedRevision
+    let response: Stage3MutationResponse | null = null
+    for (const intent of input.intents) {
+      response = await originalResolveDecision({ ...input, expectedRevision: nextRevision, intent })
+      if (response.status === "conflict") return response
+      nextRevision = response.draft.revision
+    }
+    assert.ok(response)
+    return response
   }
   const entryContext: Stage3EntryContext = {
     schemaVersion: 1,
@@ -1529,7 +1554,8 @@ test("grouped clear-fit acceptance shows saving and suppresses a second immediat
   grouped.props.onAcceptClearFits()
   grouped.props.onAcceptClearFits()
 
-  assert.equal(resolveCalls, 1)
+  assert.equal(batchCalls, 1)
+  assert.equal(singleCalls, 0)
   tree = await harness.render()
   assert.equal(
     findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)?.props.saveState.status,
@@ -1544,7 +1570,8 @@ test("grouped clear-fit acceptance shows saving and suppresses a second immediat
   releaseFirstDecision()
   await new Promise((resolve) => setImmediate(resolve))
   await renderSettled(harness)
-  assert.equal(resolveCalls, 2)
+  assert.equal(batchCalls, 1)
+  assert.equal(singleCalls, 0)
 })
 
 test("interactive lab flow captures products first, assigns roles, decides fit, and displays a typed handoff", async () => {

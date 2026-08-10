@@ -49,6 +49,7 @@ import type {
 } from "./authority/contracts"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from "./authority/snapshot"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 /**
  * This is deliberately a narrow, injected boundary.  SQL owns draft creation
@@ -131,6 +132,11 @@ export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
     draftId: string
     expectedRevision: number
     intent: Stage3AuthoritySemanticIntent
+  }): Promise<Stage3MutationResponse>
+  resolveDecisions(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
   }): Promise<Stage3MutationResponse>
 }
 
@@ -350,15 +356,17 @@ export function createProductionStage3ProductsGateway(
       }
       // Read the trusted compile source immediately before compilation. SQL
       // compares this token while holding the plan row lock before writing.
-      const refinedNeedSnapshot = await options.persistence.loadRefinedNeedSnapshot({
-        userId: options.userId,
-        personalPlanId: draft.personalPlanId,
-        refinedVersionId: draft.refinedVersionId,
-      })
-      const expectedSourceRevision = await options.persistence.loadSourceRevision({
-        userId: options.userId,
-        personalPlanId: draft.personalPlanId,
-      })
+      const [refinedNeedSnapshot, expectedSourceRevision] = await Promise.all([
+        options.persistence.loadRefinedNeedSnapshot({
+          userId: options.userId,
+          personalPlanId: draft.personalPlanId,
+          refinedVersionId: draft.refinedVersionId,
+        }),
+        options.persistence.loadSourceRevision({
+          userId: options.userId,
+          personalPlanId: draft.personalPlanId,
+        }),
+      ])
       const candidate = await options.compiler.compile({
         userId: options.userId,
         personalPlanId: draft.personalPlanId,
@@ -424,36 +432,95 @@ export function createProductionStage3ProductsGateway(
       )
     },
     async resolveDecision(input) {
-      const loaded = await current(input.draftId)
-      const draft = loaded.draft
-      if (draft.revision !== input.expectedRevision || draft.status !== "active") {
-        return { status: "conflict", latestDraft: draft }
+      return resolveAuthorityDecisions({ ...input, intents: [input.intent] })
+    },
+    async resolveDecisions(input) {
+      return resolveAuthorityDecisions(input)
+    },
+  }
+
+  async function resolveAuthorityDecisions(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }): Promise<Stage3MutationResponse> {
+    const operation =
+      input.intents.length === 1 ? "stage3_authority_single" : "stage3_authority_batch"
+    let phaseStartedAt = performance.now()
+    const loaded = await current(input.draftId)
+    reportPersonalPlanTransitionTiming({
+      layer: "server",
+      operation: `${operation}_canonical_draft`,
+      outcome: "success",
+      durationMs: performance.now() - phaseStartedAt,
+    })
+    const draft = loaded.draft
+    if (draft.revision !== input.expectedRevision || draft.status !== "active") {
+      return { status: "conflict", latestDraft: draft }
+    }
+    if (input.intents.length === 0) {
+      throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
+    }
+    const subjectsByKey = new Map(
+      deriveStage3DecisionSubjects(draft).map((subject) => [subject.decisionKey, subject]),
+    )
+    const seenSubjectKeys = new Set<string>()
+    const subjects = input.intents.map((intent) => {
+      if (seenSubjectKeys.has(intent.subjectKey)) {
+        throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
       }
-      const subject = deriveStage3DecisionSubjects(draft).find(
-        (candidate) => candidate.decisionKey === input.intent.subjectKey,
-      )
+      seenSubjectKeys.add(intent.subjectKey)
+      const subject = subjectsByKey.get(intent.subjectKey)
       if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
-      const context = await loadEvaluationContext(draft)
-      const evaluation = await authoritativeEvaluation(draft, subject.decisionKey, context)
-      if (!evaluation.allowedActions.includes(input.intent.action as never)) {
+      return subject
+    })
+    phaseStartedAt = performance.now()
+    const context = await loadEvaluationContext(draft)
+    reportPersonalPlanTransitionTiming({
+      layer: "server",
+      operation: `${operation}_source_context`,
+      outcome: "success",
+      durationMs: performance.now() - phaseStartedAt,
+    })
+    phaseStartedAt = performance.now()
+    const evaluations = await Promise.all(
+      subjects.map((subject) => authoritativeEvaluation(draft, subject.decisionKey, context)),
+    )
+    reportPersonalPlanTransitionTiming({
+      layer: "server",
+      operation: `${operation}_authority_facts`,
+      outcome: "success",
+      durationMs: performance.now() - phaseStartedAt,
+    })
+
+    const snapshot = requireCurrentAuthoritySnapshot(draft)
+    const decisions = input.intents.map((intent, index) => {
+      const evaluation = evaluations[index]!
+      if (!evaluation.allowedActions.includes(intent.action as never)) {
         throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
       }
-      validateSelectedCandidate(input.intent, evaluation)
-
-      const snapshot = requireCurrentAuthoritySnapshot(draft)
-      const decision = buildAuthorityDecision(subject, input.intent, evaluation, snapshot)
-      const next = { ...recordProductDecision(draft, decision), updatedAt: now() }
-      const saved = await options.persistence.save({
-        userId: options.userId,
-        draftId: draft.draftId,
-        expectedRevision: input.expectedRevision,
-        draft: next,
-      })
-      cached = { ...loaded, draft: saved.draft }
-      return saved.outcome === "saved"
-        ? { status: "saved", draft: saved.draft }
-        : { status: "conflict", latestDraft: saved.draft }
-    },
+      validateSelectedCandidate(intent, evaluation)
+      return buildAuthorityDecision(subjects[index]!, intent, evaluation, snapshot)
+    })
+    const folded = decisions.reduce(recordProductDecision, draft)
+    const next = { ...folded, revision: draft.revision + 1, updatedAt: now() }
+    phaseStartedAt = performance.now()
+    const saved = await options.persistence.save({
+      userId: options.userId,
+      draftId: draft.draftId,
+      expectedRevision: input.expectedRevision,
+      draft: next,
+    })
+    reportPersonalPlanTransitionTiming({
+      layer: "server",
+      operation: `${operation}_cas_save`,
+      outcome: saved.outcome,
+      durationMs: performance.now() - phaseStartedAt,
+    })
+    cached = { ...loaded, draft: saved.draft }
+    return saved.outcome === "saved"
+      ? { status: "saved", draft: saved.draft }
+      : { status: "conflict", latestDraft: saved.draft }
   }
 }
 

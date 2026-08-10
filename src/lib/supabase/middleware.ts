@@ -282,19 +282,16 @@ export async function updateSession(request: NextRequest) {
   // --- End subscription paywall ------------------------------------------
 
   if (needsAuthenticatedAppRouting) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("id", user.id)
-      .maybeSingle()
-
-    const { data: hairProfile } = await supabase
-      .from("hair_profiles")
-      .select(
-        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
-      )
-      .eq("user_id", user.id)
-      .maybeSingle()
+    const [{ data: profile }, { data: hairProfile }] = await Promise.all([
+      supabase.from("profiles").select("onboarding_completed").eq("id", user.id).maybeSingle(),
+      supabase
+        .from("hair_profiles")
+        .select(
+          "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
+        )
+        .eq("user_id", user.id)
+        .maybeSingle(),
+    ])
 
     const intakeState = resolveIntakeState(profile, hairProfile)
     let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined

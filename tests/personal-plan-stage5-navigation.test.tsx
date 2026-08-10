@@ -28,6 +28,7 @@ function personalPlanAccess(
 test("Personal Plan navigation exposes only reachable destinations in the signed order", () => {
   assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(false, false)), {
     kind: "personal_plan",
+    hasPendingRoutineProposal: false,
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "profile", href: "/profile", label: "Profil" },
@@ -35,6 +36,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
   })
   assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, false)), {
     kind: "personal_plan",
+    hasPendingRoutineProposal: false,
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "routine", href: "/routine", label: "Routine" },
@@ -43,6 +45,7 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
   })
   assert.deepEqual(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true)), {
     kind: "personal_plan",
+    hasPendingRoutineProposal: false,
     items: [
       { key: "chat", href: "/chat", label: "Chat" },
       { key: "routine", href: "/routine", label: "Routine" },
@@ -50,6 +53,17 @@ test("Personal Plan navigation exposes only reachable destinations in the signed
       { key: "profile", href: "/profile", label: "Profil" },
     ],
   })
+})
+
+test("Personal Plan navigation carries the already-authoritative routine-attention state", () => {
+  const access = {
+    ...personalPlanAccess(true, false),
+    hasPendingRoutineProposal: true,
+  } as PersonalPlanJourneyAccess
+  const navigation = toAuthenticatedAppNavigationAccess(access)
+
+  assert.equal(navigation.kind, "personal_plan")
+  assert.equal(navigation.hasPendingRoutineProposal, true)
 })
 
 test("legacy, paid-pending, and navigation read failures keep exactly one legacy Header", async () => {
@@ -147,8 +161,12 @@ test("journey access is request-cached for shell and guarded page composition", 
   const applicationSource = readFileSync("src/app/anwendung/page.tsx", "utf8")
   assert.match(navigationSource, /cache\(/)
   assert.match(navigationSource, /loadCachedPersonalPlanJourneyAccessForUser/)
+  assert.match(navigationSource, /loadCachedAuthenticatedAppUserId = cache/)
   assert.match(routineSource, /loadCachedPersonalPlanJourneyAccessForUser/)
+  assert.match(routineSource, /getUserId: loadCachedAuthenticatedAppUserId/)
   assert.match(applicationSource, /loadCachedPersonalPlanJourneyAccessForUser/)
+  assert.match(applicationSource, /getUserId: loadCachedAuthenticatedAppUserId/)
+  assert.match(applicationSource, /includePendingProposal: false/)
 })
 
 test("chat input reserves bottom navigation space only inside the Personal Plan shell", () => {

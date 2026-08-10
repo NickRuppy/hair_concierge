@@ -179,7 +179,13 @@ function conditionerAuthorityDraft(): Stage3ProductDraft {
   }
 }
 
-function authorityFactClient(conditionerSpecs: Record<string, unknown>[]) {
+function authorityFactClient(
+  conditionerSpecs: Record<string, unknown>[],
+  timing: {
+    ownedProductPending?: Promise<void>
+    onRecommendationQueryStarted?: () => void
+  } = {},
+) {
   return {
     from(table: string) {
       const filters = new Map<string, unknown>()
@@ -222,18 +228,68 @@ function authorityFactClient(conditionerSpecs: Record<string, unknown>[]) {
         order: () => chain,
         limit: () => chain,
         maybeSingle: async () => {
+          if (table === "products" && filters.has("id")) {
+            await timing.ownedProductPending
+          }
           if (table === "product_conditioner_specs") {
             return { data: null, error: { code: "PGRST116" } }
           }
           return result()
         },
-        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
-          Promise.resolve(result()).then(resolve),
+        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) => {
+          if (table === "products" && !filters.has("id")) {
+            timing.onRecommendationQueryStarted?.()
+          }
+          return Promise.resolve(result()).then(resolve)
+        },
       }
       return chain
     },
   }
 }
+
+test("individual authority evaluation overlaps independent fact reads", async () => {
+  let releaseOwnedProduct!: () => void
+  const ownedProductPending = new Promise<void>((resolve) => {
+    releaseOwnedProduct = resolve
+  })
+  let recommendationStarted = false
+  const bundlePending = loadStage3AuthorityFactBundle(
+    authorityFactClient(
+      [
+        {
+          thickness: "normal",
+          protein_moisture_balance: "balanced",
+        },
+      ],
+      {
+        ownedProductPending,
+        onRecommendationQueryStarted: () => {
+          recommendationStarted = true
+        },
+      },
+    ) as never,
+    {
+      draft: conditionerAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:conditioner:conditioner_rinse_out:owned-1",
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        capturedProductId: "owned-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  await new Promise((resolve) => setImmediate(resolve))
+  const startedBeforeOwnedProductFinished = recommendationStarted
+  releaseOwnedProduct()
+  await bundlePending
+
+  assert.equal(startedBeforeOwnedProductFinished, true)
+})
 
 function shampooAuthorityDraft(
   overrides: {

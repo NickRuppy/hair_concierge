@@ -22,6 +22,8 @@ export const STAGE3_AUTHORITY_ACTION_KINDS = [
   "leave_uncovered",
 ] as const
 
+export const STAGE3_AUTHORITY_DECISION_BATCH_LIMIT = 25
+
 export type Stage3AuthorityActionKind = (typeof STAGE3_AUTHORITY_ACTION_KINDS)[number]
 
 export type Stage3AuthoritySemanticIntent = {

@@ -14,17 +14,27 @@ export async function loadPersonalPlanRoutineView(input: {
   client: PersonalPlanRoutineReadClient
   userId: string
   enabled: boolean
+  includePendingProposal?: boolean
 }): Promise<PersonalPlanRoutineView | { status: "no_personal_plan" }> {
   const plan = await loadOwnerRoutinePlan(input.client, input.userId)
   if (!plan) return { status: "no_personal_plan" }
-  const active = plan.active_routine_version_id
-    ? await loadOwnerRoutineVersion(
-        input.client,
-        input.userId,
-        plan.id,
-        plan.active_routine_version_id,
-      )
-    : null
+  const shouldLoadProposal =
+    input.enabled &&
+    input.includePendingProposal !== false &&
+    Boolean(plan.pending_routine_proposal_id)
+  const [active, proposal] = await Promise.all([
+    plan.active_routine_version_id
+      ? loadOwnerRoutineVersion(input.client, input.userId, plan.id, plan.active_routine_version_id)
+      : null,
+    shouldLoadProposal
+      ? loadOwnerPendingRoutineProposal(
+          input.client,
+          input.userId,
+          plan.id,
+          plan.pending_routine_proposal_id!,
+        )
+      : null,
+  ])
   const activeVersion = active
     ? { id: active.id, payload: routinePayloadV1Schema.parse(active.payload) }
     : null
@@ -37,7 +47,7 @@ export async function loadPersonalPlanRoutineView(input: {
       activeVersion,
       pendingProposal: null,
     }
-  if (!plan.pending_routine_proposal_id)
+  if (!shouldLoadProposal)
     return {
       status: activeVersion ? "active" : "personal_plan_incomplete",
       personalPlanId: plan.id,
@@ -46,12 +56,6 @@ export async function loadPersonalPlanRoutineView(input: {
       activeVersion,
       pendingProposal: null,
     }
-  const proposal = await loadOwnerPendingRoutineProposal(
-    input.client,
-    input.userId,
-    plan.id,
-    plan.pending_routine_proposal_id,
-  )
   if (!proposal)
     return {
       status: activeVersion ? "active" : "personal_plan_incomplete",
@@ -90,14 +94,4 @@ export async function loadPersonalPlanRoutineView(input: {
       candidate: routinePayloadV1Schema.parse(candidate.payload),
     },
   }
-}
-
-export async function loadPersonalPlanRoutineAttention(input: {
-  client: PersonalPlanRoutineReadClient
-  userId: string
-  enabled: boolean
-}): Promise<{ hasPendingProposal: boolean }> {
-  if (!input.enabled) return { hasPendingProposal: false }
-  const plan = await loadOwnerRoutinePlan(input.client, input.userId)
-  return { hasPendingProposal: Boolean(plan?.pending_routine_proposal_id) }
 }

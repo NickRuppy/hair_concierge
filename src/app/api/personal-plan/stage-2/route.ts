@@ -11,6 +11,7 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import {
   Stage2RefinementError,
   type Stage2RefinementGateway,
@@ -29,11 +30,21 @@ const saveRequestSchema = z
     questionId: z.string().min(1).max(96),
     answer: z.unknown(),
     expectedRevision: z.number().int().nonnegative(),
+    completeAfterSave: z.literal(true).optional(),
   })
   .strict()
 
-function response(body: unknown, status = 200) {
-  return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } })
+function response(body: unknown, status = 200, headers?: HeadersInit) {
+  return NextResponse.json(body, {
+    status,
+    headers: { "Cache-Control": "no-store", ...headers },
+  })
+}
+
+function serverTiming(phases: Record<string, number>) {
+  return Object.entries(phases)
+    .map(([name, duration]) => `${name};dur=${Math.max(0, Math.round(duration * 100) / 100)}`)
+    .join(", ")
 }
 
 function errorResponse(error: unknown, started: number) {
@@ -65,20 +76,38 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
     operation: (gateway: Stage2RefinementGateway) => Promise<unknown>,
   ) => {
     const started = Date.now()
+    const phases: Record<string, number> = {}
     if (!deps.enabled()) return response({ error: "personal_plan_not_available" }, 404)
+    let phaseStarted = Date.now()
     const userId = await deps.getUserId()
+    phases.auth = Date.now() - phaseStarted
     if (!userId) return response({ error: "unauthorized" }, 401)
     try {
+      phaseStarted = Date.now()
       if (!canAccessPersonalPlanJourneyStage(await deps.loadJourneyAccess(userId), "stage2")) {
         return response({ error: "stage_not_ready" }, 409)
       }
+      phases.journey = Date.now() - phaseStarted
     } catch {
       return response({ error: "temporarily_unavailable" }, 503)
     }
     try {
+      phaseStarted = Date.now()
       const result = await operation(deps.gatewayFor(userId))
-      console.info("personal_plan_stage2_api", { event, duration_ms: Date.now() - started })
-      return response(result)
+      phases.operation = Date.now() - phaseStarted
+      console.info("personal_plan_stage2_api", {
+        event,
+        duration_ms: Date.now() - started,
+        auth_duration_ms: phases.auth,
+        journey_duration_ms: phases.journey,
+        operation_duration_ms: phases.operation,
+      })
+      const timing = serverTiming(phases)
+      if (result instanceof Response) {
+        result.headers.set("Server-Timing", timing)
+        return result
+      }
+      return response(result, 200, { "Server-Timing": timing })
     } catch (error) {
       return errorResponse(error, started)
     }
@@ -89,7 +118,49 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
       run("save", async (gateway) => {
         const parsed = saveRequestSchema.safeParse(await request.json().catch(() => null))
         if (!parsed.success) throw new Stage2InvalidRequestError()
-        return gateway.saveAnswer(parsed.data as Stage2SaveAnswerInput)
+        const { completeAfterSave, ...saveInput } = parsed.data
+        let phaseStarted = performance.now()
+        const savedSession = await gateway.saveAnswer(saveInput as Stage2SaveAnswerInput)
+        reportPersonalPlanTransitionTiming({
+          layer: "server",
+          operation: completeAfterSave ? "stage2_final_answer_save" : "stage2_answer_save",
+          outcome: "success",
+          durationMs: performance.now() - phaseStarted,
+        })
+        if (!completeAfterSave) return savedSession
+        try {
+          phaseStarted = performance.now()
+          const handoff = await gateway.complete({ expectedRevision: savedSession.revision })
+          reportPersonalPlanTransitionTiming({
+            layer: "server",
+            operation: "stage2_final_completion",
+            outcome: "success",
+            durationMs: performance.now() - phaseStarted,
+          })
+          return { session: savedSession, handoff }
+        } catch (error) {
+          const code =
+            error instanceof Stage2RefinementError ? error.code : "temporarily_unavailable"
+          const status =
+            code === "revision_conflict"
+              ? 409
+              : code === "invalid_answer" ||
+                  code === "question_not_current" ||
+                  code === "incomplete_refinement"
+                ? 422
+                : 503
+          console.info("personal_plan_stage2_api", {
+            event: "completion_after_save_failed",
+            code,
+          })
+          reportPersonalPlanTransitionTiming({
+            layer: "server",
+            operation: "stage2_final_completion",
+            outcome: code,
+            durationMs: performance.now() - phaseStarted,
+          })
+          return response({ error: code, savedSession }, status)
+        }
       }),
   }
 }

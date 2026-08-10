@@ -80,12 +80,15 @@ export function PersonalPlanNavigationView({
 
 export function PersonalPlanNavigation({
   items,
+  initialHasPendingRoutineProposal,
 }: {
   items: readonly PersonalPlanNavigationItem[]
+  initialHasPendingRoutineProposal: boolean
 }) {
   const pathname = usePathname() ?? ""
   const hasPendingRoutineProposal = useRoutineAttention(
     items.some((item) => item.key === "routine"),
+    initialHasPendingRoutineProposal,
   )
   return (
     <PersonalPlanNavigationView
