@@ -20,6 +20,12 @@ The script opens a visible browser and records Stage 2/3 request durations, Serv
 and non-identifying personal_plan_transition_performance console events. It never clicks or
 submits anything automatically. Close the opened browser after manually exercising the test-owner
 journey. The confirmation flag is mandatory because manual actions will write canonical test data.
+
+Create the disposable storage state first with:
+  ALLOW_PERSONAL_PLAN_TEST_OWNER_PRODUCTION_WRITE=1 \
+    node scripts/personal-plan/test-owner.mjs auth-state --apply \
+    --base-url=https://chaarlie.de \
+    --confirm-project=pqdkhefxsxkyeqelqegq
 `)
   process.exit(0)
 }

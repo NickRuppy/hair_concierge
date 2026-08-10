@@ -15,16 +15,20 @@ const env = Object.fromEntries(
 
 const url = env.NEXT_PUBLIC_SUPABASE_URL
 const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY
+const password = process.env.UX_AUDIT_TEST_PASSWORD
 
-if (!url || !serviceKey) {
-  console.error("missing env")
+if (!url || !serviceKey || !password) {
+  console.error("missing local Supabase env or UX_AUDIT_TEST_PASSWORD")
   process.exit(1)
+}
+const hostname = new URL(url).hostname
+if (hostname !== "127.0.0.1" && hostname !== "localhost") {
+  throw new Error("ux-audit test-user helper is local-Supabase-only")
 }
 
 const admin = createClient(url, serviceKey, { auth: { persistSession: false } })
 
 const email = "ux-audit-test@hairconscierge.test"
-const password = "uxAudit!Test123"
 
 // See if the user already exists by listing.
 const { data: list, error: listErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 })
@@ -53,4 +57,4 @@ if (existing) {
 }
 
 console.log("EMAIL=" + email)
-console.log("PASSWORD=" + password)
+console.log("PASSWORD_SOURCE=UX_AUDIT_TEST_PASSWORD")

@@ -249,6 +249,16 @@ test("quality work is divided into independently scheduled lanes", () => {
   assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage5/)
 })
 
+test("the Stage 3 CI browser suite pins its dev gate and prewarms the guarded lab route", () => {
+  const command = packageManifest.scripts["test:playwright:personal-plan-stage3"]
+
+  assert.match(
+    command,
+    /start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true npm run dev/,
+  )
+  assert.match(command, /http:\/\/127\.0\.0\.1:3217\/labs\/personal-plan\/stage-3/)
+})
+
 test("aggregate contracts keep focused Personal Plan coverage without duplicate top-level tests", () => {
   assert.equal(
     packageManifest.scripts["test:personal-plan:nested"],

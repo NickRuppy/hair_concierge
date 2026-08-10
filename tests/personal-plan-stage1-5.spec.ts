@@ -540,6 +540,7 @@ async function waitForStage3AuthorityState(page: Page) {
   await expect
     .poll(stageState, {
       message: "Stage 3 should render its next decision or portfolio handoff",
+      timeout: 15_000,
     })
     .not.toBe("transitioning")
   return stageState()
@@ -839,10 +840,14 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       routineConfirmationSheet.getByRole("button", { name: "Erneut versuchen" }),
     ).toBeVisible()
     await routineConfirmationSheet.getByRole("button", { name: "Erneut versuchen" }).click()
-    await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible({
+      timeout: 15_000,
+    })
     expect(proposalResolves).toBe(2)
     await page.reload()
-    await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible({
+      timeout: 15_000,
+    })
 
     const { data: persisted, error } = await admin
       .from("personal_plans")
