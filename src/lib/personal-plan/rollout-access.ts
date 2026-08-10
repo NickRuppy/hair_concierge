@@ -1,5 +1,6 @@
 import "server-only"
 
+import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   canAccessPersonalPlanAppV1Rollout,
@@ -88,7 +89,10 @@ export async function isActivePersonalPlanFieldTestOwner(
     .eq("user_id", userId)
     .eq("status", "active")
     .maybeSingle()
-  if (error) throw error
+  if (error) {
+    if (isMissingPersonalPlanFieldTestRelation(error)) return false
+    throw error
+  }
   const enrollment = (data as FieldTestEnrollmentRow | null) ?? null
   const grant = enrollment?.manual_access_grants as ManualAccessGrantRow | null
   return Boolean(

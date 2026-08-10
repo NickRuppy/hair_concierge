@@ -85,6 +85,7 @@ test("classifies every current public page and route handler", () => {
     "/pricing",
     "/quiz",
     "/result/lead-123",
+    "/test/haarplan/campaign-token",
     "/robots.txt",
     "/sitemap.xml",
     "/twitter-image",

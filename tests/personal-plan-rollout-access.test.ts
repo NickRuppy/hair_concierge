@@ -154,3 +154,68 @@ test("an active tester grant admits a field-test owner without an email allowlis
     true,
   )
 })
+
+test("an unapplied field-test relation is not an internal-owner signal", async () => {
+  const client = {
+    from() {
+      return {
+        select() {
+          return {
+            eq() {
+              return {
+                eq() {
+                  return {
+                    async maybeSingle() {
+                      return {
+                        data: null,
+                        error: {
+                          code: "42P01",
+                          message: 'relation "personal_plan_test_enrollments" does not exist',
+                        },
+                      }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  assert.equal(await isActivePersonalPlanFieldTestOwner("user-1", client as never), false)
+})
+
+test("field-test owner reads still fail closed on unrelated database errors", async () => {
+  const client = {
+    from() {
+      return {
+        select() {
+          return {
+            eq() {
+              return {
+                eq() {
+                  return {
+                    async maybeSingle() {
+                      return {
+                        data: null,
+                        error: { code: "XX000", message: "database unavailable" },
+                      }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  await assert.rejects(
+    isActivePersonalPlanFieldTestOwner("user-1", client as never),
+    (error: unknown) =>
+      typeof error === "object" && error !== null && "code" in error && error.code === "XX000",
+  )
+})

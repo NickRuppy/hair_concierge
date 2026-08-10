@@ -7,7 +7,7 @@ Status: **READY FOR CODE REVIEW · NO_ACTIVATION**
 - Branch: `codex/cofounder-production-access`
 - Base: `origin/main` at `1b2cb6146baa3250f86f94e55bc07bfb6623ec60`
 - Worktree: `/Users/nick/AI_work/hair_conscierge/.worktrees/cofounder-production-access`
-- Canonical in-scope fingerprint: `2f4ddf9c72e3fc5045ff0a3927a4b7dcd9e168ef5eb929cd8a8bf0b6e414d813`
+- Canonical in-scope fingerprint: `bbf8e4930307159578e1672e3022eccc4b43f4870269b659ed592873ccfd5a65`
 - Manifest: `plans/receipts/2026-08-10-personal-plan-field-test-manifest.sha256`
 - The receipt and manifest are verification artifacts and are intentionally excluded from their own recursive fingerprint.
 
@@ -20,6 +20,7 @@ Status: **READY FOR CODE REVIEW · NO_ACTIVATION**
 - Activation is rate-limited, creates a synthetic non-deliverable Auth guest, establishes the browser session, and uses one service-role-only transaction binding the exact campaign, funnel, lead, guest, grant, and prepared artifact.
 - The transaction binds the exact lead owner for existing `/plan-bereit` profile projection, is idempotent only while access remains active, and rejects expired or manually revoked grants.
 - Active field-test enrollment qualifies the five-stage Personal Plan journey without fabricating `paidAt`, provider purchases, subscriptions, or revenue.
+- Before the additive migration is installed, only the exact missing field-test relation is treated as no field-test enrollment, preserving ordinary existing-user Routine access; unrelated database failures remain fail-closed.
 - Campaign revocation atomically ends future entry, active enrollments, and tester grants.
 - Trusted `test_kind=field_test` propagates into usability analytics while Meta conversion, Customer.io completion events, and commercial PostHog/dashboard cohorts exclude it.
 - The operator command is dry-run by default; production create/revoke requires `--apply`, a dedicated environment write gate, exact project confirmation, and the production project URL.
@@ -32,6 +33,7 @@ Status: **READY FOR CODE REVIEW · NO_ACTIVATION**
 - Scoped ESLint for field-test routes, primitives, command, lab, and tests — PASS.
 - `git diff --check` — PASS.
 - `npm run typecheck` — PASS on the post-hook tree.
+- Post-PR CI correction — PASS, 45/45 focused funnel, route-inventory, enrollment, rollout, and field-test tests; the exact live Routine browser regression passed in 10.8 seconds with the field-test relation absent.
 - Post-hook refresh — Prettier reformatted 19 TypeScript files; two source-text assertions were made whitespace-insensitive, the manifest was regenerated, and the complete 943-test suite plus typecheck and database harness passed again against the final bytes.
 
 ## Browser/manual evidence

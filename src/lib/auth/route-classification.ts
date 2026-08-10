@@ -35,6 +35,7 @@ const PUBLIC_ROUTE_PREFIXES = [
   "/auth",
   "/lp",
   "/result",
+  "/test/haarplan",
   "/api/funnel",
   "/api/og",
   "/api/paypal",

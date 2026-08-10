@@ -7,6 +7,7 @@ import {
 import { PERSONAL_PLAN_LAUNCH_PRICING_CATALOG } from "@/lib/billing/pricing-catalog"
 import { findCurrentBillingSubscriptionsForUser } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState, SupabaseBillingClient } from "@/lib/billing/types"
+import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
 
 export type PersonalPlanEnrollment = {
   accessState: OneTimeAccessState
@@ -196,7 +197,10 @@ export async function findPersonalPlanEnrollmentForUser(
     .eq("user_id", userId)
     .eq("status", "active")
     .maybeSingle()
-  if (fieldTestError) throw fieldTestError
+  if (fieldTestError) {
+    if (isMissingPersonalPlanFieldTestRelation(fieldTestError)) return emptyEnrollment(oneTimeState)
+    throw fieldTestError
+  }
   return (
     resolveActiveFieldTestEnrollment(
       (fieldTestData as FieldTestEnrollmentRow | null) ?? null,
