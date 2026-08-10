@@ -105,10 +105,14 @@ export async function resolveAnwendungPage(
     const compiled = compileApplicationView({
       input: {
         routineItems: accepted.routineItems,
+        unresolvedRoutineItems: accepted.unresolvedRoutineItems,
         profile,
         dayTypes: dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
       },
-      protocols: protocols.map((protocol) => protocol.payload),
+      protocols: [
+        ...protocols.map((protocol) => protocol.payload),
+        ...accepted.exactGuidanceProtocols,
+      ],
     })
     const selectedFailure = selectedDayType
       ? compiled.failures.find((failure) => failure.dayType === selectedDayType)

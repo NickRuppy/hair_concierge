@@ -16,6 +16,9 @@ test("Anwendung view owns German day labels, summaries, and sort order", () => {
       summaryDe: "An einem Pausentag ist keine Anwendung nötig.",
       cadenceDe: null,
       steps: [],
+      isPartial: false,
+      provisionalProductCount: 0,
+      unresolvedProductCount: 0,
     },
     {
       dayType: "wash_day",
@@ -24,6 +27,9 @@ test("Anwendung view owns German day labels, summaries, and sort order", () => {
       summaryDe: "Reihenfolge aus dem View.",
       cadenceDe: "Nach deinem Rhythmus",
       steps: [],
+      isPartial: false,
+      provisionalProductCount: 0,
+      unresolvedProductCount: 0,
     },
   ]
 
@@ -43,6 +49,9 @@ test("no-complete-day state retains visible Pausentag plus recovery explanation"
     summaryDe: "An einem Pausentag ist keine Anwendung nötig.",
     cadenceDe: null,
     steps: [],
+    isPartial: false,
+    provisionalProductCount: 0,
+    unresolvedProductCount: 0,
   }
 
   const html = renderToStaticMarkup(

@@ -22,8 +22,8 @@ function NoCompleteDayView({ restDay }: { restDay: ApplicationDayView }) {
           Noch keine vollständige Anleitung verfügbar
         </h1>
         <p className="type-body-sm mt-2 max-w-2xl text-[var(--text-sub)]">
-          Deine Routine bleibt unverändert. Unvollständige Produktschritte werden hier nicht halb
-          angezeigt.
+          Deine Routine bleibt unverändert. Für die vorhandenen Produkte fehlen noch ausreichend
+          geprüfte Anwendungsschritte.
         </p>
         <Link
           href="/routine"

@@ -3,9 +3,15 @@ import "server-only"
 import type { RoutinePayloadV1 } from "./contracts"
 import { adaptCatalogApplicationFacts } from "@/lib/routines/personal-plan/application/catalog-facts"
 import type {
+  ApplicationGuidanceProtocolV1,
   NormalizedProfile,
   NormalizedRoutineItem,
+  NormalizedUnresolvedRoutineItem,
 } from "@/lib/routines/personal-plan/application/contracts"
+import {
+  adaptReviewedProductApplicationProtocols,
+  type ReviewedProductApplicationProtocolRow,
+} from "@/lib/routines/personal-plan/application/product-protocol-adapter"
 
 const semanticRoleByRoutineRole = {
   shampoo_everyday: "cleanse",
@@ -45,12 +51,14 @@ type ProductRow = {
 type Query = {
   select(columns: string): Query
   eq(column: string, value: string | boolean): Query
-  in(column: string, values: string[]): Promise<{ data: ProductRow[] | null; error: unknown }>
+  in(column: string, values: string[]): Promise<{ data: unknown[] | null; error: unknown }>
   maybeSingle(): Promise<{ data: unknown; error: unknown }>
 }
 export type ApplicationRoutineReadClient = { from(table: string): Query }
 const PRODUCT_SELECT =
   "id,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
+const PRODUCT_PROTOCOL_SELECT =
+  "product_id,category,role,application_state,reapplication,source_url,source_text,updated_at"
 const first = <T>(value: unknown): T | null =>
   Array.isArray(value)
     ? value.length === 1
@@ -113,38 +121,92 @@ function factsFor(category: string, row: ProductRow) {
   return spec ? { facts: spec, provenance: provenance(spec) } : { facts: {}, provenance: {} }
 }
 
-/** Owner-scoped active Routine in, verified catalog identities out. Exactly one products query. */
+/** Owner-scoped active Routine in, verified catalog identities and exact Heat guidance out. */
 export async function adaptAcceptedActiveRoutineForApplication(input: {
   client: ApplicationRoutineReadClient
   activeVersion: { id: string; payload: RoutinePayloadV1 }
-}): Promise<{ routineVersionId: string; planId: string; routineItems: NormalizedRoutineItem[] }> {
-  const candidates = input.activeVersion.payload.items.filter(
-    (item) =>
-      item.state.inclusion === "included" &&
-      item.state.availability === "owned" &&
-      item.executable &&
-      item.product.kind === "owned",
+}): Promise<{
+  routineVersionId: string
+  planId: string
+  routineItems: NormalizedRoutineItem[]
+  unresolvedRoutineItems: NormalizedUnresolvedRoutineItem[]
+  exactGuidanceProtocols: ApplicationGuidanceProtocolV1[]
+}> {
+  const includedItems = input.activeVersion.payload.items
+    .map((item, routineOrder) => ({ item, routineOrder }))
+    .filter(({ item }) => item.state.inclusion === "included")
+  const candidates = includedItems.filter(
+    ({ item }) =>
+      (item.product.kind === "owned" && item.state.availability === "owned") ||
+      (item.product.kind === "planned" &&
+        item.state.availability === "planned" &&
+        item.product.productId !== null),
+  )
+  const unresolvedRoutineItems = includedItems.flatMap(
+    ({ item, routineOrder }): NormalizedUnresolvedRoutineItem[] => {
+      const unresolvedIdentity =
+        (item.product.kind === "planned" &&
+          item.state.availability === "planned" &&
+          item.product.productId === null) ||
+        (item.product.kind === "pending_review" && item.state.availability === "pending_review") ||
+        (item.product.kind === "none" && item.state.availability === "none")
+      if (!unresolvedIdentity) return []
+      return [
+        {
+          itemId: item.itemKey,
+          category: item.category,
+          role: semanticRoleByRoutineRole[item.role],
+          routineOrder,
+          applicationInstanceKey: item.assignmentKey,
+        },
+      ]
+    },
   )
   const productIds = [
     ...new Set(
-      candidates.map((item) => (item.product.kind === "owned" ? item.product.productId : "")),
+      candidates.map(({ item }) =>
+        item.product.kind === "owned" || item.product.kind === "planned"
+          ? (item.product.productId ?? "")
+          : "",
+      ),
     ),
-  ]
+  ].filter(Boolean)
   if (!productIds.length)
     return {
       routineVersionId: input.activeVersion.id,
       planId: input.activeVersion.payload.planId,
       routineItems: [],
+      unresolvedRoutineItems,
+      exactGuidanceProtocols: [],
     }
   const { data, error } = await input.client
     .from("products")
     .select(PRODUCT_SELECT)
     .in("id", productIds)
   if (error) throw error
-  const products = new Map((data ?? []).map((row) => [row.id, row]))
-  const routineItems = candidates.map((item) => {
-    if (item.product.kind !== "owned") throw new Error("accepted_routine_product_not_owned")
-    const product = products.get(item.product.productId)
+  const products = new Map(((data ?? []) as ProductRow[]).map((row) => [row.id, row]))
+  const heatProductIds = candidates.flatMap(({ item }) => {
+    if (semanticRoleByRoutineRole[item.role] !== "heat_protection") return []
+    if (item.product.kind !== "owned" && item.product.kind !== "planned") return []
+    return item.product.productId ? [item.product.productId] : []
+  })
+  let protocolRows: ReviewedProductApplicationProtocolRow[] = []
+  if (heatProductIds.length > 0) {
+    const result = await input.client
+      .from("product_application_protocols")
+      .select(PRODUCT_PROTOCOL_SELECT)
+      .in("product_id", [...new Set(heatProductIds)])
+    if (result.error) throw result.error
+    protocolRows = (result.data ?? []) as ReviewedProductApplicationProtocolRow[]
+  }
+  const protocolByProduct = new Map(protocolRows.map((row) => [row.product_id, row]))
+  const routineItems = candidates.map(({ item, routineOrder }) => {
+    if (item.product.kind !== "owned" && item.product.kind !== "planned") {
+      throw new Error("accepted_routine_product_identity_unavailable")
+    }
+    const productId = item.product.productId
+    if (!productId) throw new Error("accepted_routine_product_identity_unavailable")
+    const product = products.get(productId)
     const category = product?.category_key ?? product?.category
     if (
       !product ||
@@ -155,6 +217,14 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       throw new Error("accepted_routine_product_unavailable")
     }
     const adapted = factsFor(category, product)
+    const reviewedProtocol = protocolByProduct.get(product.id)
+    const catalogFacts = reviewedProtocol
+      ? {
+          ...adapted.facts,
+          applicationState: reviewedProtocol.application_state,
+          reapplication: reviewedProtocol.reapplication,
+        }
+      : adapted.facts
     return {
       itemId: item.itemKey,
       productId: product.id,
@@ -163,10 +233,14 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       role: semanticRoleByRoutineRole[item.role],
       sourceRoutineRole: item.role,
       inclusion: "included" as const,
-      availability: "owned" as const,
-      executable: true as const,
+      availability: item.product.kind === "owned" ? ("owned" as const) : ("planned" as const),
+      executable: item.executable,
+      // The accepted payload is already sorted by Stage 4's global category +
+      // role order. `roleOrder` alone is category-local and cannot preserve an
+      // unresolved product's physical position across categories.
+      routineOrder,
       applicationInstanceKey: item.assignmentKey,
-      catalogFacts: adapted.facts,
+      catalogFacts,
       catalogFactProvenance: adapted.provenance,
     }
   })
@@ -174,6 +248,8 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     routineVersionId: input.activeVersion.id,
     planId: input.activeVersion.payload.planId,
     routineItems,
+    unresolvedRoutineItems,
+    exactGuidanceProtocols: adaptReviewedProductApplicationProtocols(protocolRows),
   }
 }
 
@@ -212,6 +288,33 @@ export async function loadImmutableRoutineProfile(input: {
         )
         .filter((route): route is string => typeof route === "string")
     : []
+  const heatEvents = Array.isArray(events)
+    ? events.flatMap((event) => {
+        if (!event || typeof event !== "object") return []
+        const candidate = event as { id?: unknown; tool?: unknown; route?: unknown }
+        if (
+          typeof candidate.id !== "string" ||
+          ![
+            "hair_dryer",
+            "dryer_brush",
+            "straightener",
+            "curling_iron",
+            "hot_air_styler",
+            "other",
+          ].includes(String(candidate.tool)) ||
+          !["airflow_shaping", "direct_contact_heat"].includes(String(candidate.route))
+        ) {
+          return []
+        }
+        return [
+          {
+            id: candidate.id,
+            tool: candidate.tool as NonNullable<NormalizedProfile["heatEvents"]>[number]["tool"],
+            route: candidate.route as NonNullable<NormalizedProfile["heatEvents"]>[number]["route"],
+          },
+        ]
+      })
+    : []
   const dryingRoute = routes.includes("direct_contact_heat")
     ? "heat_tool"
     : routes.includes("airflow_shaping")
@@ -228,5 +331,6 @@ export async function loadImmutableRoutineProfile(input: {
       ? (source.thickness as NormalizedProfile["thickness"])
       : undefined,
     dryingRoute,
+    ...(heatEvents.length > 0 ? { heatEvents } : {}),
   }
 }

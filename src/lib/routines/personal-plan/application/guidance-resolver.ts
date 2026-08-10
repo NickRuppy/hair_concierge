@@ -133,8 +133,13 @@ export function resolveApplicationGuidance({
       (protocol) => protocolIsCompatible(dayType, protocol) && protocolMatchesRole(item, protocol),
     )
     .sort((left, right) => left.guidanceKey.localeCompare(right.guidanceKey))
-  const exact = compatible.filter((protocol) => isExactProtocolFor(item, protocol))
+  const allExact = compatible.filter((protocol) => isExactProtocolFor(item, protocol))
   const family = compatible.filter((protocol) => isFamilyProtocolFor(item, protocol))
+  const expectedFamily = catalogApplicationFamily(item)
+  const exact =
+    expectedFamily === null
+      ? allExact
+      : allExact.filter((protocol) => protocol.applicationFamily === expectedFamily)
   const requiresExact =
     requiresExactProductGuidance(item, dayType) ||
     family.some((protocol) => protocol.exactGuidanceRequired)
@@ -147,13 +152,15 @@ export function resolveApplicationGuidance({
     return { status: "unresolved", reason: "format_disambiguation_required" }
   }
   if (requiresExact && exact.length === 0)
-    return { status: "unresolved", reason: "exact_guidance_required" }
+    return {
+      status: "unresolved",
+      reason: allExact.length > 0 ? "application_family_mismatch" : "exact_guidance_required",
+    }
 
   if (exact.length > 1) {
     return { status: "unresolved", reason: "ambiguous_exact_guidance" }
   }
 
-  const expectedFamily = catalogApplicationFamily(item)
   const compatibleFamily =
     expectedFamily === null
       ? family

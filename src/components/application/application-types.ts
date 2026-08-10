@@ -15,6 +15,17 @@ export type ApplicationProductStepView = {
   purposeDe: string
   actions: ApplicationProductActionView[]
   coverageNoteDe: string | null
+  status: "confirmed" | "provisional"
+  provisionalReason: "product_selection" | "application_review" | null
+}
+
+export type ApplicationUnresolvedProductStepView = {
+  kind: "unresolved_product"
+  stepKey: string
+  applicationInstanceKey: string
+  productId: string | null
+  productName: string | null
+  categoryLabelDe: string
 }
 
 export type ApplicationTransitionStepView = {
@@ -23,7 +34,10 @@ export type ApplicationTransitionStepView = {
   copyDe: string
 }
 
-export type ApplicationOuterStepView = ApplicationProductStepView | ApplicationTransitionStepView
+export type ApplicationOuterStepView =
+  | ApplicationProductStepView
+  | ApplicationUnresolvedProductStepView
+  | ApplicationTransitionStepView
 
 export type ApplicationDayView = {
   dayType: ApplicationDayTypeKey
@@ -32,6 +46,9 @@ export type ApplicationDayView = {
   summaryDe: string
   cadenceDe: string | null
   steps: ApplicationOuterStepView[]
+  isPartial: boolean
+  provisionalProductCount: number
+  unresolvedProductCount: number
 }
 
 export type ApplicationRecoveryKind =

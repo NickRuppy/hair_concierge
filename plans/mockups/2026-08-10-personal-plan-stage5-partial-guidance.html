@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anwendung · Teilweise verfügbare Anleitung</title>
+    <style>
+      :root {
+        --ink: #2b2030;
+        --muted: #716777;
+        --plum: #6f355f;
+        --plum-soft: #f3eaf0;
+        --rose: #f9edef;
+        --line: #e3d9e2;
+        --paper: #fffdfc;
+        --canvas: #f4f0f3;
+        --green: #2f6b57;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button,
+      a {
+        font: inherit;
+      }
+      button {
+        color: inherit;
+      }
+      .artifact {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .artifact-head {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+      .kicker {
+        margin: 0;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .artifact h1 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 500;
+      }
+      .artifact-head > p:last-child {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .decision {
+        margin: 16px 0;
+        border: 1px solid #d9c9d5;
+        border-radius: 16px;
+        background: #fff8fb;
+        padding: 14px 16px;
+        color: #55464f;
+        line-height: 1.5;
+      }
+      .decision strong {
+        color: var(--ink);
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 18px 0;
+      }
+      .controls button {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--paper);
+        padding: 9px 13px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .controls button[aria-pressed="true"] {
+        border-color: var(--plum);
+        background: var(--plum);
+        color: white;
+      }
+      .viewport {
+        margin-left: auto;
+      }
+      .stage {
+        display: grid;
+        place-items: start center;
+        min-height: 760px;
+        padding: 24px 12px;
+        border-radius: 24px;
+        background: #e9e2e7;
+      }
+      .device {
+        width: min(390px, 100%);
+        min-height: 700px;
+        overflow: hidden;
+        border: 1px solid #d5cad2;
+        border-radius: 28px;
+        background: var(--paper);
+        box-shadow: 0 24px 70px rgba(52, 34, 49, 0.18);
+        transition: width 0.2s ease;
+      }
+      .device.desktop {
+        width: min(920px, calc(100vw - 120px));
+      }
+      .brandbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 58px;
+        padding: 0 18px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 253, 252, 0.96);
+      }
+      .brand {
+        color: var(--plum);
+        font-family: Georgia, serif;
+        font-size: 21px;
+      }
+      .avatar {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-weight: 800;
+      }
+      .journey {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+        padding: 12px 14px 10px;
+        border-bottom: 1px solid var(--line);
+        font-size: 9px;
+        color: #847882;
+        text-align: center;
+      }
+      .journey span::before {
+        content: "";
+        display: block;
+        width: 7px;
+        height: 7px;
+        margin: 0 auto 4px;
+        border-radius: 50%;
+        background: #cbbfc8;
+      }
+      .journey .done::before {
+        background: #a47a99;
+      }
+      .journey .current {
+        color: var(--plum);
+        font-weight: 800;
+      }
+      .journey .current::before {
+        background: var(--plum);
+        box-shadow: 0 0 0 3px var(--plum-soft);
+      }
+      .screen {
+        display: none;
+        min-height: 560px;
+        padding: 24px 18px 90px;
+      }
+      .screen.active {
+        display: block;
+      }
+      .device.desktop .screen {
+        padding-inline: 42px;
+      }
+      .page-head {
+        max-width: 680px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .page-head h2,
+      .detail-head h2 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 32px;
+        font-weight: 500;
+      }
+      .page-head p,
+      .detail-head p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .notice {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        margin-top: 16px;
+        border: 1px solid #decfda;
+        border-radius: 14px;
+        background: #fbf5f8;
+        padding: 13px;
+      }
+      .notice-icon {
+        display: grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        border-radius: 50%;
+        background: white;
+        color: var(--plum);
+        font-weight: 900;
+      }
+      .notice strong {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 13px;
+      }
+      .notice p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .day-grid {
+        display: grid;
+        gap: 11px;
+        margin: 18px 0 0;
+      }
+      .device.desktop .day-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .day {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        width: 100%;
+        min-height: 78px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+        padding: 13px;
+        text-align: left;
+        box-shadow: 0 9px 24px -22px rgba(52, 34, 49, 0.9);
+        cursor: pointer;
+      }
+      .day-icon {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 13px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-size: 20px;
+      }
+      .day strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+      .day span span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .day small {
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 800;
+        text-align: right;
+      }
+      .quiet-link {
+        display: inline-flex;
+        margin-top: 16px;
+        color: var(--plum);
+        font-size: 13px;
+        font-weight: 750;
+        text-decoration: none;
+      }
+      .back {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        color: var(--plum);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 750;
+      }
+      .detail-head {
+        margin: 20px 0 18px;
+      }
+      .flow {
+        display: grid;
+        gap: 12px;
+        max-width: 720px;
+      }
+      .product {
+        border: 1px solid #dfced8;
+        border-radius: 18px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 14px 36px -30px rgba(52, 34, 49, 0.75);
+      }
+      .product-head {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 11px;
+        align-items: center;
+        padding: 15px;
+        background: var(--rose);
+      }
+      .product.provisional {
+        border-color: #d8b77a;
+      }
+      .product.provisional .product-head {
+        background: #fff7e7;
+      }
+      .product.provisional .major {
+        background: #9a6a1f;
+      }
+      .status {
+        display: inline-flex;
+        width: max-content;
+        margin-left: 7px;
+        border-radius: 999px;
+        background: #f3dfb8;
+        padding: 3px 7px;
+        color: #714b12;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .major {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum);
+        color: white;
+        font-weight: 900;
+      }
+      .product-head small {
+        display: block;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .product-head strong {
+        display: block;
+        margin: 3px 0;
+        font-size: 15px;
+      }
+      .product-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .actions {
+        display: grid;
+        gap: 10px;
+        padding: 15px;
+      }
+      .action {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 10px;
+        align-items: start;
+        color: #433842;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .action b {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-size: 11px;
+      }
+      .transition {
+        display: grid;
+        grid-template-columns: 32px 1fr;
+        gap: 10px;
+        align-items: center;
+        margin-left: 10px;
+        border-left: 1px dashed #bcaaba;
+        padding: 7px 0 7px 14px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .transition b {
+        color: var(--plum);
+      }
+      .gap {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 11px;
+        align-items: start;
+        border: 1px dashed #c8b9c3;
+        border-radius: 16px;
+        background: #fbf8fa;
+        padding: 15px;
+      }
+      .gap .major {
+        background: #e9e1e6;
+        color: var(--muted);
+      }
+      .gap strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+      .gap p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .current-empty {
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+        padding: 17px;
+      }
+      .current-empty h3 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 22px;
+        font-weight: 500;
+      }
+      .current-empty p {
+        margin: 8px 0 14px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .primary {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        border: 0;
+        border-radius: 11px;
+        background: var(--plum);
+        padding: 0 15px;
+        color: white;
+        font-weight: 800;
+      }
+      .bottomnav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        position: sticky;
+        bottom: 0;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 253, 252, 0.98);
+      }
+      .bottomnav span {
+        display: grid;
+        gap: 3px;
+        place-items: center;
+        min-height: 63px;
+        color: #827780;
+        font-size: 10px;
+      }
+      .bottomnav b {
+        font-size: 17px;
+        font-weight: 500;
+      }
+      .bottomnav .active {
+        color: var(--plum);
+        font-weight: 800;
+      }
+      .annotations {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .annotation {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--paper);
+        padding: 13px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .annotation strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+      }
+      @media (max-width: 720px) {
+        .artifact {
+          padding: 14px;
+        }
+        .viewport {
+          margin-left: 0;
+        }
+        .stage {
+          padding-inline: 0;
+          background: transparent;
+        }
+        .device {
+          border-radius: 20px;
+        }
+        .annotations {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-head">
+        <p class="kicker">Planungsartefakt · Stage 5</p>
+        <h1>Wahrheitsgemäße Anwendung bei Teilabdeckung</h1>
+        <p>
+          Entscheidungsfrage: Wie bleibt ein Routinetag nutzbar, wenn Produkte oder einzelne
+          Anwendungsdetails noch nicht endgültig bestätigt sind?
+        </p>
+      </header>
+      <div class="decision">
+        <strong>Gewählte Richtung:</strong> Der Tag bleibt sichtbar. Bestätigte Schritte erscheinen
+        normal; vorgemerkte Produkte mit bekannter Anwendung erscheinen vollständig und klar als
+        „Vorläufig“ markiert. Nur tatsächlich unbekannte Anwendungsdetails bleiben als sichtbare
+        Lücke stehen.
+      </div>
+      <nav class="controls" aria-label="Mockup-Ansicht wählen">
+        <button data-view="current" aria-pressed="true">Heute · Teilportfolio</button>
+        <button data-view="partial" aria-pressed="false">Vorschlag · Übersicht</button>
+        <button data-view="detail" aria-pressed="false">Vorschlag · Waschtag</button>
+        <button data-view="complete" aria-pressed="false">
+          Vorschlag · vollständiges Portfolio
+        </button>
+        <button class="viewport" data-viewport aria-pressed="false">Desktop ansehen</button>
+      </nav>
+      <section class="stage">
+        <div class="device" id="device">
+          <header class="brandbar">
+            <span class="brand">Ⅲ chaarlie</span><span class="avatar">N</span>
+          </header>
+          <div class="journey" aria-label="Planfortschritt">
+            <span class="done">Bedarf</span><span class="done">Verfeinerung</span
+            ><span class="done">Produkte</span><span class="done">Routine</span
+            ><span class="current">Anwendung</span>
+          </div>
+
+          <section class="screen active" data-screen="current">
+            <header class="page-head">
+              <h2>Anwendung</h2>
+              <p>Wähle den passenden Tag und folge der Reihenfolge.</p>
+            </header>
+            <div class="current-empty">
+              <p class="kicker">Anwendung</p>
+              <h3>Noch keine vollständige Anleitung verfügbar</h3>
+              <p>
+                Deine Routine bleibt unverändert. Unvollständige Produktschritte werden hier nicht
+                halb angezeigt.
+              </p>
+              <button class="primary">Zur Routine</button>
+            </div>
+            <div class="day-grid">
+              <article class="day">
+                <span class="day-icon">○</span
+                ><span
+                  ><strong>Pausentag</strong
+                  ><span>An einem Pausentag ist keine Anwendung nötig.</span></span
+                ><small>Immer möglich</small>
+              </article>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="partial">
+            <header class="page-head">
+              <h2>Anwendung</h2>
+              <p>Wähle den passenden Tag und folge der Reihenfolge.</p>
+            </header>
+            <div class="notice">
+              <span class="notice-icon">i</span>
+              <div>
+                <strong>Dein Plan wird noch vervollständigt</strong>
+                <p>
+                  Du kannst die bekannten Schritte bereits nutzen. Vorgemerkte Produkte und noch
+                  offene Anwendungsdetails sind klar markiert.
+                </p>
+              </div>
+            </div>
+            <div class="day-grid">
+              <button class="day" data-open-detail>
+                <span class="day-icon">⌁</span
+                ><span><strong>Waschtag</strong><span>3 Schritte · 1 Produkt vorläufig</span></span
+                ><small>Teilweise bereit</small>
+              </button>
+              <button class="day" data-open-detail>
+                <span class="day-icon">≈</span
+                ><span><strong>Styling-Tag</strong><span>Hitzeschutz vor dem Glätten</span></span
+                ><small>Anleitung bereit</small>
+              </button>
+              <article class="day">
+                <span class="day-icon">○</span
+                ><span
+                  ><strong>Pausentag</strong
+                  ><span>An einem Pausentag ist keine Anwendung nötig.</span></span
+                ><small>Immer möglich</small>
+              </article>
+            </div>
+            <a class="quiet-link" href="#">Routine ansehen →</a>
+          </section>
+
+          <section class="screen" data-screen="detail">
+            <button class="back" data-back>‹ Alle Tage</button>
+            <header class="detail-head">
+              <h2>Waschtag</h2>
+              <p>Reinigen, pflegen und vorbereiten</p>
+            </header>
+            <div class="flow">
+              <article class="product">
+                <header class="product-head">
+                  <span class="major">1</span>
+                  <div>
+                    <small>Shampoo</small><strong>Dein bestätigtes Shampoo</strong
+                    ><span>Produkt und Anwendung sind bestätigt.</span>
+                  </div>
+                </header>
+                <div class="actions">
+                  <div class="action">
+                    <b>1</b><span>Haare und Kopfhaut vollständig nass machen.</span>
+                  </div>
+                  <div class="action">
+                    <b>2</b
+                    ><span
+                      >Nach der geprüften Produktanleitung reinigen und gründlich ausspülen.</span
+                    >
+                  </div>
+                </div>
+              </article>
+              <div class="transition">
+                <b>Danach</b><span>Conditioner in Längen und Spitzen.</span>
+              </div>
+              <article class="product provisional">
+                <header class="product-head">
+                  <span class="major">2</span>
+                  <div>
+                    <small>Conditioner <span class="status">Vorläufig</span></small
+                    ><strong>Dein vorgemerkter Conditioner</strong
+                    ><span
+                      >Das Produkt ist noch nicht bestätigt; seine Anwendung ist bereits
+                      bekannt.</span
+                    >
+                  </div>
+                </header>
+                <div class="actions">
+                  <div class="action">
+                    <b>1</b
+                    ><span
+                      >Nach der bekannten Produktanleitung in Längen und Spitzen verteilen.</span
+                    >
+                  </div>
+                  <div class="action">
+                    <b>2</b
+                    ><span
+                      >Für die angegebene Zeit einwirken lassen und anschließend ausspülen.</span
+                    >
+                  </div>
+                </div>
+              </article>
+              <div class="transition">
+                <b>Danach</b><span>Mit dem bestätigten Leave-in fortfahren.</span>
+              </div>
+              <article class="product">
+                <header class="product-head">
+                  <span class="major">3</span>
+                  <div>
+                    <small>Leave-in</small><strong>Dein bestätigtes Leave-in</strong
+                    ><span>Produkt und Anwendung sind bestätigt.</span>
+                  </div>
+                </header>
+                <div class="actions">
+                  <div class="action">
+                    <b>1</b
+                    ><span
+                      >Nach der geprüften Produktanleitung in das feuchte Haar geben und nicht
+                      ausspülen.</span
+                    >
+                  </div>
+                </div>
+              </article>
+              <div class="gap">
+                <span class="major">?</span>
+                <div>
+                  <strong>Wenn ein Anwendungsdetail wirklich fehlt</strong>
+                  <p>
+                    Der Tag bleibt sichtbar. Nur der betroffene Schritt sagt klar, was noch geprüft
+                    wird; Chaarlie ergänzt keine Menge, Dauer oder Technik auf Verdacht.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="complete">
+            <header class="page-head">
+              <h2>Anwendung</h2>
+              <p>Wähle den passenden Tag und folge der Reihenfolge.</p>
+            </header>
+            <div class="day-grid">
+              <article class="day">
+                <span class="day-icon">⌁</span
+                ><span><strong>Waschtag</strong><span>Reinigen, pflegen und trocknen</span></span
+                ><small>Anleitung bereit</small>
+              </article>
+              <article class="day">
+                <span class="day-icon">≈</span
+                ><span><strong>Styling-Tag</strong><span>Hitzeschutz vor dem Glätten</span></span
+                ><small>Anleitung bereit</small>
+              </article>
+              <article class="day">
+                <span class="day-icon">○</span
+                ><span
+                  ><strong>Pausentag</strong
+                  ><span>An einem Pausentag ist keine Anwendung nötig.</span></span
+                ><small>Immer möglich</small>
+              </article>
+            </div>
+          </section>
+
+          <nav class="bottomnav" aria-label="Hauptnavigation">
+            <span><b>◌</b>Chat</span><span><b>▦</b>Routine</span
+            ><span class="active"><b>≋</b>Anwendung</span><span><b>○</b>Profil</span>
+          </nav>
+        </div>
+      </section>
+      <section class="annotations">
+        <div class="annotation">
+          <strong>Was sich ändert</strong>Ein unbestätigtes Produkt lässt weder den gesamten Schritt
+          noch den ganzen Routinetag verschwinden.
+        </div>
+        <div class="annotation">
+          <strong>Was „Vorläufig“ bedeutet</strong>Die Produktauswahl ist noch offen; bekannte,
+          geprüfte Anwendungsanweisungen dürfen trotzdem bereits angezeigt werden.
+        </div>
+        <div class="annotation">
+          <strong>Was fail-closed bleibt</strong>Nur unbekannte Details bleiben offen. Keine
+          erfundene Menge, Dauer, Technik, Reihenfolge oder Wiederholungsregel.
+        </div>
+      </section>
+    </main>
+    <script>
+      const screens = [...document.querySelectorAll("[data-screen]")]
+      const buttons = [...document.querySelectorAll("[data-view]")]
+      function show(name) {
+        screens.forEach((screen) =>
+          screen.classList.toggle("active", screen.dataset.screen === name),
+        )
+        buttons.forEach((button) =>
+          button.setAttribute("aria-pressed", String(button.dataset.view === name)),
+        )
+      }
+      buttons.forEach((button) => button.addEventListener("click", () => show(button.dataset.view)))
+      document.querySelector("[data-open-detail]").addEventListener("click", () => show("detail"))
+      document.querySelector("[data-back]").addEventListener("click", () => show("partial"))
+      document.querySelector("[data-viewport]").addEventListener("click", (event) => {
+        const desktop = document.querySelector("#device").classList.toggle("desktop")
+        event.currentTarget.setAttribute("aria-pressed", String(desktop))
+        event.currentTarget.textContent = desktop ? "Mobile ansehen" : "Desktop ansehen"
+      })
+      const requestedView = new URLSearchParams(window.location.search).get("view")
+      if (requestedView && screens.some((screen) => screen.dataset.screen === requestedView))
+        show(requestedView)
+      if (new URLSearchParams(window.location.search).get("viewport") === "desktop") {
+        document.querySelector("#device").classList.add("desktop")
+      }
+    </script>
+  </body>
+</html>

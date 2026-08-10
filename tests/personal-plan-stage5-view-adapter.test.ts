@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { createElement } from "react"
+import { renderToStaticMarkup } from "react-dom/server"
 
 import type { CompiledApplicationViewV1 } from "../src/lib/routines/personal-plan/application/compiler"
+import { ApplicationPage } from "../src/components/application/application-page"
 import { toApplicationPageView } from "../src/components/application/application-view-adapter"
 
 const shampooId = "11111111-1111-4111-8111-111111111111"
@@ -22,6 +25,7 @@ function compiledView(): CompiledApplicationViewV1 {
       },
     ],
     noteDe: null,
+    status: "confirmed" as const,
   }
 
   return {
@@ -113,4 +117,57 @@ test("fails closed when a compiled day has no active canonical definition", () =
     () => toApplicationPageView({ compiled: compiledView(), dayDefinitions: definitions.slice(1) }),
     /missing active day definition for wash_day/,
   )
+})
+
+test("adapts and renders provisional guidance plus a local unresolved product gap", () => {
+  const compiled = compiledView()
+  const washDay = compiled.days[0]!
+  const provisional = {
+    ...washDay.productBlocks[0]!,
+    productId: "22222222-2222-4222-8222-222222222222",
+    productName: "Vorgemerkter Conditioner",
+    category: "conditioner" as const,
+    roles: ["condition" as const],
+    applicationInstanceKey: "conditioner:application",
+    anchor: "post_cleanse_rinse_off",
+    status: "provisional" as const,
+  }
+  const unresolved = {
+    productId: null,
+    productName: null,
+    category: "leave_in" as const,
+    role: "leave_in" as const,
+    applicationInstanceKey: "leave-in:unresolved",
+    status: "unresolved" as const,
+  }
+  washDay.productBlocks.push(provisional)
+  washDay.outerSequence.push(
+    { kind: "product", block: provisional },
+    { kind: "unresolved_product", block: unresolved },
+  )
+  washDay.isPartial = true
+
+  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+  assert.deepEqual(
+    view.days[0]!.steps.map((step) => step.kind),
+    ["transition", "product", "product", "unresolved_product"],
+  )
+  assert.equal(view.days[0]!.provisionalProductCount, 1)
+  assert.equal(view.days[0]!.unresolvedProductCount, 1)
+
+  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(html, /Dein Plan wird noch vervollständigt/)
+  assert.match(html, /Teilweise bereit/)
+
+  const selectedHtml = renderToStaticMarkup(
+    createElement(ApplicationPage, {
+      view: { ...view, selectedDayType: "wash_day" },
+    }),
+  )
+  assert.match(selectedHtml, /Vorläufig/)
+  assert.match(selectedHtml, /seine Anwendung ist bereits bekannt/)
+  assert.match(selectedHtml, /Produkt noch offen/)
+  assert.match(selectedHtml, /Für diese Kategorie fehlen noch ein bestätigtes Produkt/)
 })

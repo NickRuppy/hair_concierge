@@ -104,8 +104,10 @@ export const normalizedRoutineItemSchema = z
     category: personalPlanCategorySchema,
     role: semanticRoleSchema,
     inclusion: z.literal("included"),
-    availability: z.literal("owned"),
-    executable: z.literal(true),
+    availability: z.enum(["owned", "planned"]),
+    executable: z.boolean(),
+    routineOrder: z.number().int().nonnegative().optional(),
+    heatEventId: z.string().min(1).optional(),
     applicationInstanceKey: z.string().min(1).optional(),
     sourceRoutineRole: z.string().min(1).optional(),
     catalogFacts: z.record(z.string(), z.unknown()).default({}),
@@ -115,12 +117,40 @@ export const normalizedRoutineItemSchema = z
   })
   .strict()
 
+export const normalizedUnresolvedRoutineItemSchema = z
+  .object({
+    itemId: z.string().min(1),
+    category: personalPlanCategorySchema,
+    role: semanticRoleSchema,
+    routineOrder: z.number().int().nonnegative(),
+    applicationInstanceKey: z.string().min(1),
+  })
+  .strict()
+
 export const normalizedProfileSchema = z
   .object({
     length: z.enum(["short", "medium", "long"]).optional(),
     density: z.enum(["low", "medium", "high"]).optional(),
     thickness: z.enum(["fine", "normal", "coarse"]).optional(),
     dryingRoute: z.enum(["air_dry", "blow_dry", "heat_tool"]).optional(),
+    heatEvents: z
+      .array(
+        z
+          .object({
+            id: z.string().min(1),
+            tool: z.enum([
+              "hair_dryer",
+              "dryer_brush",
+              "straightener",
+              "curling_iron",
+              "hot_air_styler",
+              "other",
+            ]),
+            route: z.enum(["airflow_shaping", "direct_contact_heat"]),
+          })
+          .strict(),
+      )
+      .optional(),
   })
   .strict()
 
@@ -134,6 +164,7 @@ export const canonicalDayTypeDefinitionSchema = z
 export const normalizedApplicationInputSchema = z
   .object({
     routineItems: z.array(normalizedRoutineItemSchema),
+    unresolvedRoutineItems: z.array(normalizedUnresolvedRoutineItemSchema).default([]),
     profile: normalizedProfileSchema,
     dayTypes: z.array(canonicalDayTypeDefinitionSchema).length(8),
   })
@@ -269,4 +300,5 @@ export type ApplicationFamily = z.infer<typeof applicationFamilySchema>
 export type ApplicationGuidanceProtocolV1 = z.infer<typeof applicationGuidanceProtocolSchema>
 export type NormalizedApplicationInput = z.infer<typeof normalizedApplicationInputSchema>
 export type NormalizedRoutineItem = z.infer<typeof normalizedRoutineItemSchema>
+export type NormalizedUnresolvedRoutineItem = z.infer<typeof normalizedUnresolvedRoutineItemSchema>
 export type NormalizedProfile = z.infer<typeof normalizedProfileSchema>
