@@ -1592,12 +1592,14 @@ function LoadingScreen({
   onContinue,
   onRetryPreparation,
   preparation,
+  fieldTest,
 }: {
   ephemeral: PersonalPlanQuizEphemeralState
   onEphemeral: (state: PersonalPlanQuizEphemeralState) => void
   onContinue: () => void
   onRetryPreparation: () => void
   preparation: PreparedPlanState
+  fieldTest: boolean
 }) {
   const initialCommitments = Math.min(3, ephemeral.microcommitments?.length ?? 0)
   const [stageIndex, setStageIndex] = useState(Math.min(2, initialCommitments))
@@ -1665,8 +1667,9 @@ function LoadingScreen({
       quizVersion: "v2",
       screenId: `plan_loading_${PERSONAL_PLAN_LOADING_STAGES[Math.min(stageIndex, 2)].id}`,
       sectionId: getPersonalPlanQuizSectionId("plan_loading"),
+      testKind: fieldTest ? "field_test" : null,
     })
-  }, [stageIndex])
+  }, [fieldTest, stageIndex])
 
   function confirmCommitment() {
     const nextCommitments = [...(ephemeral.microcommitments ?? [])]
@@ -1827,11 +1830,13 @@ function EmailCapture({
   onPreparedPlanRejected,
   onSaved,
   preparedPlan,
+  fieldTest,
 }: {
   answers: PersonalPlanQuizAnswers
   onPreparedPlanRejected: () => void
   onSaved: (leadId: string) => void | Promise<void>
   preparedPlan: PreparedPlanClaim
+  fieldTest: boolean
 }) {
   const [email, setEmail] = useState("")
   const [step, setStep] = useState<"email" | "consent">("email")
@@ -1907,6 +1912,7 @@ function EmailCapture({
             trackAppEvent("quiz_email_deliverability_rejected", {
               reason: rejection.reason,
               suggestionPresent: Boolean(suggestion),
+              testKind: fieldTest ? "field_test" : null,
             })
           }
           focusEmailOnRecoveryRef.current = true
@@ -1930,6 +1936,7 @@ function EmailCapture({
         leadId,
         marketingConsent,
         funnelEventId: funnelEventIdRef.current,
+        testKind: fieldTest ? "field_test" : null,
       })
       await onSaved(leadId)
     } catch {
@@ -2094,10 +2101,23 @@ const DISABLED_PERSONAL_PLAN_RESUME_BOOTSTRAP: PersonalPlanQuizResumeBootstrap =
   snapshot: null,
 }
 
+export function PersonalPlanFieldTestBanner({ surface }: { surface: "quiz" | "offer" }) {
+  return (
+    <p
+      className="mx-auto w-full max-w-[40rem] rounded-xl border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-4 py-2 text-center text-sm font-semibold text-[var(--brand-plum-darkest)]"
+      data-personal-plan-field-test-banner={surface}
+    >
+      Kostenloser Chaarlie Produkttest · keine Zahlung erforderlich
+    </p>
+  )
+}
+
 export function PersonalPlanQuiz({
   resume = DISABLED_PERSONAL_PLAN_RESUME_BOOTSTRAP,
+  fieldTest = false,
 }: {
   resume?: PersonalPlanQuizResumeBootstrap
+  fieldTest?: boolean
 }) {
   const router = useRouter()
   const initialServerDraft =
@@ -2362,8 +2382,9 @@ export function PersonalPlanQuiz({
       quizVersion: "v2",
       screenId: screen,
       sectionId: getPersonalPlanQuizSectionId(screen),
+      testKind: fieldTest ? "field_test" : null,
     })
-  }, [draftReady, screen])
+  }, [draftReady, fieldTest, screen])
 
   useEffect(() => {
     return () => {
@@ -2445,6 +2466,7 @@ export function PersonalPlanQuiz({
         scalpCondition: answers.scalpConcerns?.join(",") || null,
         scalpType: answers.scalpOiliness,
         thickness: answers.thickness,
+        testKind: fieldTest ? "field_test" : null,
       })
     }
     goNext()
@@ -2486,6 +2508,7 @@ export function PersonalPlanQuiz({
         funnelEventId,
         funnelPackageKey: funnel.funnelPackageKey,
         funnelSessionId: funnel.funnelSessionId,
+        testKind: fieldTest ? "field_test" : null,
       })
     }
     const next = withSingleAnswer(answers, config.field, value)
@@ -2763,6 +2786,7 @@ export function PersonalPlanQuiz({
           onEphemeral={setEphemeral}
           onRetryPreparation={() => void preparePersonalPlan(true)}
           preparation={preparedPlan}
+          fieldTest={fieldTest}
         />
       )
     }
@@ -2804,6 +2828,7 @@ export function PersonalPlanQuiz({
         <EmailCapture
           answers={answers}
           preparedPlan={preparedPlan.claim}
+          fieldTest={fieldTest}
           onPreparedPlanRejected={() => {
             const sessionStorage = getBrowserSessionStorage()
             if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
@@ -2860,13 +2885,18 @@ export function PersonalPlanQuiz({
         settledSectionIndices={settledSectionIndices}
       />
       <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4">
-        <PersonalPlanScreenTransition
-          activeLayerRef={transitionActiveLayerRef}
-          onOutgoingComplete={completeOutgoingLayer}
-          outgoing={outgoingLayer}
-        >
-          {renderScreen()}
-        </PersonalPlanScreenTransition>
+        <div className="w-full">
+          {fieldTest ? <PersonalPlanFieldTestBanner surface="quiz" /> : null}
+          <div className={fieldTest ? "mt-4" : undefined}>
+            <PersonalPlanScreenTransition
+              activeLayerRef={transitionActiveLayerRef}
+              onOutgoingComplete={completeOutgoingLayer}
+              outgoing={outgoingLayer}
+            >
+              {renderScreen()}
+            </PersonalPlanScreenTransition>
+          </div>
+        </div>
       </main>
     </div>
   )

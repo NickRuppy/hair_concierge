@@ -50,7 +50,7 @@ export function createStage1SupabaseDependencies(
       return {
         accessState: enrollment.accessState,
         enrollmentSourceId: enrollment.sourceId,
-        paidAt: enrollment.paidAt,
+        qualifiedAt: enrollment.qualifiedAt,
         artifactLeadId: enrollment.artifactLeadId,
       }
     },

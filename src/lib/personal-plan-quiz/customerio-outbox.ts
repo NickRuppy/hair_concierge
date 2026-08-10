@@ -44,6 +44,7 @@ type PersonalPlanLeadRow = {
 type FunnelAttributionRow = {
   id: string
   package_key: string
+  test_kind?: string | null
 }
 
 type SyncResult = Awaited<ReturnType<typeof syncPersonalPlanLeadToCustomerIo>>
@@ -100,7 +101,9 @@ export async function dispatchCustomerIoProfileSyncForLead(
     const quizAnswers = parseStoredEnvelope(lead)
     const funnel = await deps.loadFunnel(supabase, leadId)
     const shouldSendCompletionEvent =
-      claimed.send_completion_event && claimed.completion_event_delivered_at === null
+      claimed.send_completion_event &&
+      claimed.completion_event_delivered_at === null &&
+      funnel?.test_kind !== "field_test"
     const result = await deps.deliver({
       createdAt: lead.created_at,
       email: lead.email!,
@@ -110,6 +113,7 @@ export async function dispatchCustomerIoProfileSyncForLead(
       quizAnswers,
       funnelSessionId: funnel?.id,
       funnelPackageKey: funnel?.package_key,
+      testKind: funnel?.test_kind === "field_test" ? "field_test" : null,
       profileSyncRevision: claimed.profile_revision,
       sendCompletionEvent: shouldSendCompletionEvent,
     })
@@ -305,7 +309,7 @@ async function loadLead(supabase: SupabaseClient, leadId: string) {
 async function loadFunnel(supabase: SupabaseClient, leadId: string) {
   const { data, error } = await supabase
     .from("funnel_sessions")
-    .select("id,package_key")
+    .select("id,package_key,test_kind")
     .eq("lead_id", leadId)
     .order("first_seen_at", { ascending: false })
     .limit(1)

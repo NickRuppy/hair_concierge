@@ -27,6 +27,7 @@ import {
 } from "@/lib/personal-plan-quiz"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
+import { PersonalPlanFieldTestBanner } from "@/components/personal-plan-quiz/personal-plan-quiz"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
 
 const testimonials = [
@@ -159,6 +160,18 @@ const personalPlanMembershipFaqItems = [
     question: "Wie und wann kann ich kündigen?",
     answer:
       "Du kannst deine Mitgliedschaft jederzeit beenden. Sie läuft bis zum Ende der bereits bezahlten Abrechnungsperiode weiter; danach entstehen keine weiteren Kosten.",
+  },
+] as const
+
+const personalPlanFieldTestFaqItems = [
+  personalPlanSharedFaqItems[0],
+  personalPlanSharedFaqItems[1],
+  personalPlanSharedFaqItems[3],
+  {
+    id: "field-test-access",
+    question: "Wie lange kann ich den Produkttest nutzen?",
+    answer:
+      "Dein kostenloser Testzugang gilt sieben Tage in diesem Browser. Es werden keine Zahlungsdaten benötigt und es entsteht kein Abo.",
   },
 ] as const
 
@@ -591,6 +604,7 @@ export function PersonalPlanOffer({
   showQuizRestart = false,
   checkoutPresentationFixture,
   entryContext,
+  fieldTest = false,
   focusTarget = null,
   isInternalTest = false,
   leadId,
@@ -602,6 +616,7 @@ export function PersonalPlanOffer({
   showQuizRestart?: boolean
   checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
   entryContext: OfferEntryContext
+  fieldTest?: boolean
   focusTarget?: PersonalPlanOfferFocusTarget | null
   isInternalTest?: boolean
   leadId: string
@@ -641,17 +656,55 @@ export function PersonalPlanOffer({
     pricingReached && checkoutSummary.commerceKind === "membership"
       ? checkoutSummary.interval
       : undefined
-  const stickyDestination = pricingReached ? "checkout" : "pricing"
-  const stickySourceSection = pricingReached ? "pricing" : "hero"
-  const stickyAction = pricingReached ? openCheckout : scrollToPricing
   const stickyReferencePriceLabel = readOneTimeReferencePriceLabel(checkoutSummary)
   const handlePricingReached = useCallback(() => setPricingReached(true), [])
+  const [fieldTestActivating, setFieldTestActivating] = useState(false)
+  const [fieldTestError, setFieldTestError] = useState(false)
+  const activateFieldTest = useCallback(async () => {
+    if (fieldTestActivating) return
+    setFieldTestActivating(true)
+    setFieldTestError(false)
+    try {
+      const response = await fetch("/api/personal-plan/field-test/activate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leadId }),
+      })
+      const payload: unknown = await response.json().catch(() => null)
+      const destination =
+        payload && typeof payload === "object" && !Array.isArray(payload)
+          ? (payload as Record<string, unknown>).destination
+          : null
+      if (!response.ok || (destination !== "/plan-start" && typeof destination !== "string")) {
+        throw new Error("field-test activation failed")
+      }
+      if (!destination.startsWith("/plan-bereit?lead=") && destination !== "/plan-start") {
+        throw new Error("field-test activation destination rejected")
+      }
+      window.location.assign(destination)
+    } catch {
+      setFieldTestError(true)
+      setFieldTestActivating(false)
+    }
+  }, [fieldTestActivating, leadId])
+  const stickyDestination = fieldTest
+    ? "field_test_activation"
+    : pricingReached
+      ? "checkout"
+      : "pricing"
+  const stickySourceSection = fieldTest ? "field_test" : pricingReached ? "pricing" : "hero"
+  const stickyAction = fieldTest
+    ? activateFieldTest
+    : pricingReached
+      ? openCheckout
+      : scrollToPricing
 
   return (
     <OfferTrackingProvider
       entryContext={entryContext}
       focusRoutine={false}
       isInternalTest={isInternalTest}
+      testKind={fieldTest ? "field_test" : null}
       leadId={leadId}
       offerRevision={PERSONAL_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
@@ -684,7 +737,9 @@ export function PersonalPlanOffer({
               onClick={stickyAction}
               type="button"
             >
-              {pricingReached ? (
+              {fieldTest ? (
+                "Kostenlos fortfahren"
+              ) : pricingReached ? (
                 <span
                   key={
                     checkoutSummary.commerceKind === "membership"
@@ -713,6 +768,12 @@ export function PersonalPlanOffer({
             </button>
           </div>
         </div>
+
+        {fieldTest ? (
+          <div className="mx-auto max-w-4xl px-4 pt-4">
+            <PersonalPlanFieldTestBanner surface="offer" />
+          </div>
+        ) : null}
 
         <section
           className="mx-auto max-w-4xl px-4 pb-5 pt-5 text-center sm:pb-8 sm:pt-10 [@media(min-width:640px)_and_(max-height:700px)]:grid [@media(min-width:640px)_and_(max-height:700px)]:grid-cols-[0.8fr_1.2fr] [@media(min-width:640px)_and_(max-height:700px)]:items-center [@media(min-width:640px)_and_(max-height:700px)]:gap-x-6 [@media(min-width:640px)_and_(max-height:700px)]:pb-5 [@media(min-width:640px)_and_(max-height:700px)]:pt-5 [@media(min-width:640px)_and_(max-height:700px)]:text-left"
@@ -770,29 +831,39 @@ export function PersonalPlanOffer({
         >
           <div className="text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              Plan freischalten
+              {fieldTest ? "Produkttest" : "Plan freischalten"}
             </p>
             <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Starte mit deinem persönlichen Plan.
+              {fieldTest
+                ? "Starte kostenlos mit deinem persönlichen Plan."
+                : "Starte mit deinem persönlichen Plan."}
             </h2>
           </div>
           <div className="mt-7">
-            <ResultOfferPricing
-              checkoutPresentationFixture={checkoutPresentationFixture}
-              leadId={leadId}
-              offerTracking={offerTracking}
-              offerVariant={offerVariant}
-              onCheckoutSummaryChange={setCheckoutSummary}
-              onPricingReached={handlePricingReached}
-              openCheckoutRequestId={checkoutOpenRequest}
-              pricingCatalog={resolvedPricingCatalog}
-              referencePrices={
-                pricingCatalogWasProvided
-                  ? (getSubscriptionPlanReferencePrices(resolvedPricingCatalog) ??
-                    QUIZ_RESULT_REFERENCE_PRICES)
-                  : QUIZ_RESULT_REFERENCE_PRICES
-              }
-            />
+            {fieldTest ? (
+              <FieldTestActivationCard
+                activating={fieldTestActivating}
+                error={fieldTestError}
+                onActivate={activateFieldTest}
+              />
+            ) : (
+              <ResultOfferPricing
+                checkoutPresentationFixture={checkoutPresentationFixture}
+                leadId={leadId}
+                offerTracking={offerTracking}
+                offerVariant={offerVariant}
+                onCheckoutSummaryChange={setCheckoutSummary}
+                onPricingReached={handlePricingReached}
+                openCheckoutRequestId={checkoutOpenRequest}
+                pricingCatalog={resolvedPricingCatalog}
+                referencePrices={
+                  pricingCatalogWasProvided
+                    ? (getSubscriptionPlanReferencePrices(resolvedPricingCatalog) ??
+                      QUIZ_RESULT_REFERENCE_PRICES)
+                    : QUIZ_RESULT_REFERENCE_PRICES
+                }
+              />
+            )}
           </div>
         </section>
 
@@ -960,7 +1031,7 @@ export function PersonalPlanOffer({
           </div>
         </section>
 
-        {!isOneTimeOffer ? (
+        {!fieldTest && !isOneTimeOffer ? (
           <section
             className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
             data-offer-section="guarantee"
@@ -982,10 +1053,13 @@ export function PersonalPlanOffer({
             Häufige Fragen
           </h2>
           <div className="mt-6 space-y-3">
-            {[
-              ...personalPlanSharedFaqItems,
-              ...(isOneTimeOffer ? [] : personalPlanMembershipFaqItems),
-            ].map((item) => (
+            {(fieldTest
+              ? personalPlanFieldTestFaqItems
+              : [
+                  ...personalPlanSharedFaqItems,
+                  ...(isOneTimeOffer ? [] : personalPlanMembershipFaqItems),
+                ]
+            ).map((item) => (
               <AnimatedPersonalPlanFaqItem
                 answer={item.answer}
                 faqId={item.id}
@@ -1004,12 +1078,12 @@ export function PersonalPlanOffer({
             <button
               className="mt-5 rounded-full bg-white px-7 py-3 font-bold text-[var(--brand-plum-darkest)]"
               data-offer-cta="final"
-              data-offer-destination="checkout"
+              data-offer-destination={fieldTest ? "field_test_activation" : "checkout"}
               data-offer-source-section="final_cta"
-              onClick={openCheckout}
+              onClick={fieldTest ? activateFieldTest : openCheckout}
               type="button"
             >
-              Plan sichern
+              {fieldTest ? "Kostenlos mit meinem Plan fortfahren" : "Plan sichern"}
             </button>
             {showQuizRestart ? <PersonalPlanQuizRestart className="mt-5" /> : null}
           </div>
@@ -1017,6 +1091,42 @@ export function PersonalPlanOffer({
         <PersonalPlanOfferFooter />
       </main>
     </OfferTrackingProvider>
+  )
+}
+
+function FieldTestActivationCard({
+  activating,
+  error,
+  onActivate,
+}: {
+  activating: boolean
+  error: boolean
+  onActivate: () => void
+}) {
+  return (
+    <section
+      className="rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white p-6 text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+      data-personal-plan-field-test-card=""
+    >
+      <p className="font-serif text-4xl leading-none text-[var(--brand-plum-darkest)]">0 €</p>
+      <p className="mt-3 text-base font-semibold text-[var(--brand-plum-darkest)]">
+        Keine Zahlungsdaten · kein Abo · zeitlich begrenzter Testzugang
+      </p>
+      <button
+        className="mt-6 w-full rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        data-offer-cta="field_test_activation"
+        disabled={activating}
+        onClick={onActivate}
+        type="button"
+      >
+        {activating ? "Testzugang wird aktiviert…" : "Kostenlos mit meinem Plan fortfahren"}
+      </button>
+      {error ? (
+        <p className="mt-4 text-sm font-semibold text-destructive" role="alert">
+          Testzugang erneut aktivieren oder zur Auswertung zurückkehren.
+        </p>
+      ) : null}
+    </section>
   )
 }
 

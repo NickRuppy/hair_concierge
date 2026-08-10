@@ -39,7 +39,7 @@ type JourneyDraft = {
 export type PersonalPlanJourneyAccessLoaderDeps = {
   loadEntitlement: (userId: string) => Promise<{
     accessState: AccessState
-    paidAt: string | null
+    qualifiedAt: string | null
     artifactLeadId: string | null
   }>
   cohortCutoff: () => Date | null
@@ -64,9 +64,9 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
   loadIsInternal: (userId: string) => Promise<boolean>
 }
 
-function isNewBuyerCohort(paidAt: string | null, cutoff: Date | null): boolean {
-  if (!paidAt || !cutoff) return false
-  const parsed = new Date(paidAt)
+function isQualifiedOwnerCohort(qualifiedAt: string | null, cutoff: Date | null): boolean {
+  if (!qualifiedAt || !cutoff) return false
+  const parsed = new Date(qualifiedAt)
   return !Number.isNaN(parsed.getTime()) && parsed.getTime() >= cutoff.getTime()
 }
 
@@ -135,7 +135,7 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
     }
   }
   const entitlement = await deps.loadEntitlement(userId)
-  const newBuyer = isNewBuyerCohort(entitlement.paidAt, deps.cohortCutoff())
+  const newBuyer = isQualifiedOwnerCohort(entitlement.qualifiedAt, deps.cohortCutoff())
 
   if (entitlement.accessState !== "active") {
     return resolvePersonalPlanJourneyAccess({
@@ -261,7 +261,7 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
       const enrollment = await findPersonalPlanEnrollmentForUser(admin as never, userId)
       return {
         accessState: enrollment.accessState,
-        paidAt: enrollment.paidAt,
+        qualifiedAt: enrollment.qualifiedAt,
         artifactLeadId: enrollment.artifactLeadId,
       }
     },

@@ -171,6 +171,7 @@ export default async function OfferPageLab({
           overlay: params.overlay !== "off",
         }}
         entryContext="saved_result"
+        fieldTest={params.scenario === "field-test"}
         isInternalTest
         leadId="11111111-1111-4111-8111-111111111111"
         model={

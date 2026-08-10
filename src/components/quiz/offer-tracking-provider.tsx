@@ -82,6 +82,7 @@ export function OfferTrackingProvider({
   entryContext,
   focusRoutine,
   isInternalTest = false,
+  testKind = null,
   leadId,
   offerTracking,
   offerVariant,
@@ -95,6 +96,7 @@ export function OfferTrackingProvider({
   entryContext: OfferEntryContext
   focusRoutine: boolean
   isInternalTest?: boolean
+  testKind?: "field_test" | null
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
@@ -125,6 +127,7 @@ export function OfferTrackingProvider({
       funnelPackageKey: offerTracking?.funnelPackageKey,
       funnelSessionId: offerTracking?.funnelSessionId,
       isInternalTest,
+      testKind,
       leadId,
       needLane,
       offerRevision,
@@ -141,6 +144,7 @@ export function OfferTrackingProvider({
       offerTracking?.funnelPackageKey,
       offerTracking?.funnelSessionId,
       isInternalTest,
+      testKind,
       leadId,
       offerVariant,
       offerViewId,
@@ -180,7 +184,7 @@ export function OfferTrackingProvider({
     offerEngagedRef.current = true
     pendingOfferEngagementRef.current = null
     trackAppEvent("offer_engaged", payload)
-    void sendCustomerIoOfferEngagement(payload)
+    if (context.testKind !== "field_test") void sendCustomerIoOfferEngagement(payload)
   }, [context])
 
   const trackOfferEngagement = useCallback(
@@ -225,7 +229,7 @@ export function OfferTrackingProvider({
   }, [context, revealGeneration, revealedThrough])
 
   useEffect(() => {
-    if (entryContext !== "quiz_completion" || !leadId) return
+    if (entryContext !== "quiz_completion" || !leadId || testKind === "field_test") return
     void trackMetaOfferViewOnce({
       entryContext,
       funnelPackageKey: offerTracking?.funnelPackageKey,
@@ -241,6 +245,7 @@ export function OfferTrackingProvider({
     offerTracking?.funnelSessionId,
     offerRevision,
     offerVariant,
+    testKind,
   ])
 
   const emitOfferSectionViewed = useCallback(

@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { isPersonalPlanAppV1AllowedForUser } from "../src/lib/personal-plan/rollout-access"
+import {
+  isActivePersonalPlanFieldTestOwner,
+  isPersonalPlanAppV1AllowedForUser,
+} from "../src/lib/personal-plan/rollout-access"
 
 function profileClient(
   isAdmin: boolean,
@@ -21,8 +24,27 @@ function profileClient(
         },
       },
     },
-    from(table: "profiles") {
+    from(table: string) {
       calls.push(`from:${table}`)
+      if (table === "personal_plan_test_enrollments") {
+        return {
+          select() {
+            return {
+              eq() {
+                return {
+                  eq() {
+                    return {
+                      async maybeSingle() {
+                        return { data: null, error: null }
+                      },
+                    }
+                  },
+                }
+              },
+            }
+          },
+        }
+      }
       return {
         select(columns: "is_admin") {
           calls.push(`select:${columns}`)
@@ -56,11 +78,20 @@ test("internal rollout resolves eligibility from the server-owned admin profile 
     const customer = profileClient(false)
     const freshTestAccount = profileClient(false, "FRESH-PLAN-TEST@EXAMPLE.COM")
     const unconfirmedTestAccount = profileClient(false, "fresh-plan-test@example.com", null)
-    assert.equal(await isPersonalPlanAppV1AllowedForUser("nick-1", internal.client), true)
-    assert.equal(await isPersonalPlanAppV1AllowedForUser("customer-1", customer.client), false)
-    assert.equal(await isPersonalPlanAppV1AllowedForUser("fresh-1", freshTestAccount.client), true)
+    assert.equal(await isPersonalPlanAppV1AllowedForUser("nick-1", internal.client as never), true)
     assert.equal(
-      await isPersonalPlanAppV1AllowedForUser("unconfirmed-1", unconfirmedTestAccount.client),
+      await isPersonalPlanAppV1AllowedForUser("customer-1", customer.client as never),
+      false,
+    )
+    assert.equal(
+      await isPersonalPlanAppV1AllowedForUser("fresh-1", freshTestAccount.client as never),
+      true,
+    )
+    assert.equal(
+      await isPersonalPlanAppV1AllowedForUser(
+        "unconfirmed-1",
+        unconfirmedTestAccount.client as never,
+      ),
       false,
     )
     assert.deepEqual(internal.calls, ["from:profiles", "select:is_admin", "eq:id:nick-1"])
@@ -72,4 +103,54 @@ test("internal rollout resolves eligibility from the server-owned admin profile 
     if (previousEmails === undefined) delete process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS
     else process.env.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS = previousEmails
   }
+})
+
+test("an active tester grant admits a field-test owner without an email allowlist", async () => {
+  const client = {
+    from() {
+      return {
+        select() {
+          return {
+            eq() {
+              return {
+                eq() {
+                  return {
+                    async maybeSingle() {
+                      return {
+                        data: {
+                          id: "enrollment-1",
+                          user_id: "guest-1",
+                          status: "active",
+                          expires_at: "2026-08-17T12:00:00.000Z",
+                          revoked_at: null,
+                          manual_access_grant_id: "grant-1",
+                          manual_access_grants: {
+                            id: "grant-1",
+                            user_id: "guest-1",
+                            reason: "tester",
+                            expires_at: "2026-08-17T12:00:00.000Z",
+                            revoked_at: null,
+                          },
+                        },
+                        error: null,
+                      }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  assert.equal(
+    await isActivePersonalPlanFieldTestOwner(
+      "guest-1",
+      client as never,
+      new Date("2026-08-10T12:00:00.000Z"),
+    ),
+    true,
+  )
 })

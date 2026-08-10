@@ -21,6 +21,7 @@ function offerContextProperties(data: Partial<OfferAnalyticsContext>) {
     entry_context: data.entryContext,
     focus_routine: data.focusRoutine,
     is_internal_test: data.isInternalTest,
+    test_kind: data.testKind,
     lead_id: data.leadId,
     need_lane: data.needLane,
     offer_revision: data.offerRevision,
@@ -412,6 +413,7 @@ export const postHogDestination = {
       ...(funnel.funnelEventId ? { $insert_id: funnel.funnelEventId } : {}),
       ...(funnel.funnelSessionId ? { funnel_session_id: funnel.funnelSessionId } : {}),
       ...(funnel.funnelPackageKey ? { funnel_package_key: funnel.funnelPackageKey } : {}),
+      ...(funnel.testKind ? { test_kind: funnel.testKind } : {}),
     })
     return true
   },

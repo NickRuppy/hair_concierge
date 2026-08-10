@@ -78,6 +78,7 @@ const b2V4Prelude = `WITH section_events AS (
     AND properties.offer_revision = 'personal_plan_v4'
     AND properties.offer_variant IN ('personal-plan-v1', 'personal-plan-membership-v1', 'personal-plan-one-time-v1')
     AND lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')
+    AND lower(ifNull(toString(properties.test_kind), '')) != 'field_test'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
 ),
 eligible AS (
@@ -89,6 +90,7 @@ eligible AS (
     AND properties.offer_revision = 'personal_plan_v4'
     AND properties.offer_variant IN ('personal-plan-v1', 'personal-plan-membership-v1', 'personal-plan-one-time-v1')
     AND lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')
+    AND lower(ifNull(toString(properties.test_kind), '')) != 'field_test'
     AND notEmpty(ifNull(toString(properties.funnel_session_id), ''))
 ),
 counts AS (`

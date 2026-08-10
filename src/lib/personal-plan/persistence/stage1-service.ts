@@ -6,7 +6,7 @@ export const PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION = "stage1-v1"
 export type Stage1Entitlement = {
   accessState: "active" | "paid_pending" | "none" | "revoked"
   enrollmentSourceId: string | null
-  paidAt: string | null
+  qualifiedAt: string | null
   artifactLeadId: string | null
 }
 
@@ -74,7 +74,7 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
       }
 
       if (entitlement.accessState === "paid_pending") return { status: "activation_pending" }
-      if (!isEligibleNewBuyer(entitlement, deps.cohortCutoff())) {
+      if (!isEligibleQualifiedOwner(entitlement, deps.cohortCutoff())) {
         return { status: "personal_plan_not_available" }
       }
 
@@ -131,15 +131,15 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
   }
 }
 
-function isEligibleNewBuyer(entitlement: Stage1Entitlement, cutoff: Date | null): boolean {
+function isEligibleQualifiedOwner(entitlement: Stage1Entitlement, cutoff: Date | null): boolean {
   if (
     entitlement.accessState !== "active" ||
     !entitlement.enrollmentSourceId ||
-    !entitlement.paidAt ||
+    !entitlement.qualifiedAt ||
     !entitlement.artifactLeadId ||
     !cutoff
   )
     return false
-  const paidAt = new Date(entitlement.paidAt)
-  return !Number.isNaN(paidAt.getTime()) && paidAt.getTime() >= cutoff.getTime()
+  const qualifiedAt = new Date(entitlement.qualifiedAt)
+  return !Number.isNaN(qualifiedAt.getTime()) && qualifiedAt.getTime() >= cutoff.getTime()
 }

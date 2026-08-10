@@ -97,6 +97,7 @@ test("pure transforms move testimonials to B2 stage 4 and leave O4/reach unchang
   assert.match(query, /personal-plan-membership-v1/)
   assert.match(query, /personal-plan-one-time-v1/)
   assert.match(query, /is_internal_test/)
+  assert.match(query, /test_kind/)
   assert.match(query, /NOT IN \('true', '1'\)/)
   assert.match(query, /notEmpty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/)
   for (const id of [5235351, 5033903]) {

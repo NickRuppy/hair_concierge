@@ -37,6 +37,11 @@ import {
   PERSONAL_PLAN_RESULT_RETURN_COOKIE,
   resolvePersonalPlanResultReturn,
 } from "@/lib/personal-plan-quiz/result-return"
+import {
+  PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE,
+  resolvePersonalPlanFieldTestOfferAuthorization,
+} from "@/lib/personal-plan-field-test"
+import { PERSONAL_PLAN_PRICING_EXPERIMENT } from "@/lib/funnel/personal-plan-pricing-experiment"
 
 export const dynamic = "force-dynamic"
 
@@ -237,6 +242,15 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const hasAccess = authenticatedAccess.hasAccess
 
   const funnelContext = hasAccess ? null : await resolveFunnelContextForLead(leadId)
+  const fieldTestCookie = (await cookies()).get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value
+  const fieldTestAuthorization =
+    lead.quiz_kind === "personal_plan"
+      ? await resolvePersonalPlanFieldTestOfferAuthorization({
+          campaignCookieValue: fieldTestCookie,
+          funnelSessionId: funnelContext?.sessionId,
+          leadId,
+        })
+      : null
   const personalPlanSession = funnelContext
     ? {
         sessionId: funnelContext.sessionId,
@@ -265,7 +279,9 @@ export default async function ResultPage({ params, searchParams }: Props) {
   }
   const offerVariant =
     lead.quiz_kind === "personal_plan"
-      ? await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
+      ? fieldTestAuthorization
+        ? PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant
+        : await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
       : hasAccess
         ? "organic-plan-v1"
         : resolveLegacyResultOfferVariant(funnelContext)
@@ -288,6 +304,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
       focusRoutine={focusRoutine}
       focusTarget={focusTarget}
       hasAccess={hasAccess}
+      fieldTest={Boolean(fieldTestAuthorization)}
       isInternalTest={personalPlanSession?.isInternalTest ?? false}
       returnTo={returnTo}
       offerTracking={offerTracking}

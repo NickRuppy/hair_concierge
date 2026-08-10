@@ -34,6 +34,7 @@
     "worktree:prune": "git worktree prune",
     "funnel:new": "node scripts/funnels/new-package.mjs",
     "funnel:check": "node scripts/funnels/new-package.mjs --check",
+    "personal-plan:field-test-campaign": "tsx scripts/personal-plan-field-test-campaign.ts",
     "test:extract": "tsx scripts/extract-qa-fixtures.ts",
     "test:comparelab:extract": "tsx scripts/extract-comparelab-prompts.ts",
     "test:qa": "playwright test qa-validation",

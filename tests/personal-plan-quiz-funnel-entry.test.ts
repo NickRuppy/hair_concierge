@@ -33,7 +33,10 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
   const quiz = read("src/components/personal-plan-quiz/personal-plan-quiz.tsx")
   const api = read("src/app/api/quiz/personal-plan-lead/route.ts")
 
-  assert.match(landing, /<PersonalPlanQuiz(?: resume=\{personalPlanQuizResume\})? \/>/)
+  assert.match(
+    landing,
+    /<PersonalPlanQuiz fieldTest=\{personalPlanFieldTest\} resume=\{personalPlanQuizResume\} \/>/,
+  )
   assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-prepare"/)
   assert.match(quiz, /artifactId/)
   assert.match(quiz, /claimToken/)

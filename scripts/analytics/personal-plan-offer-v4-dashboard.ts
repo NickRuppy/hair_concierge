@@ -13,8 +13,10 @@ const experimentArmsSql = experimentArms.map((arm) => `'${arm}'`).join(", ")
 
 // PostHog has stored this flag both as a boolean and as a string. Keep the
 // comparison explicit so internal QA sessions never enter an operator metric.
-const excludeInternalQa =
-  "lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')"
+const excludeInternalQa = [
+  "lower(ifNull(toString(properties.is_internal_test), 'false')) NOT IN ('true', '1')",
+  "lower(ifNull(toString(properties.test_kind), '')) != 'field_test'",
+].join(" AND ")
 
 function excludeInternalQaFor(alias: string) {
   return excludeInternalQa.replaceAll("properties.", `${alias}.properties.`)

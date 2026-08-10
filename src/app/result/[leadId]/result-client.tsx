@@ -36,6 +36,7 @@ export function ResultPageClient({
   focusRoutine,
   focusTarget = null,
   hasAccess,
+  fieldTest = false,
   isInternalTest = false,
   returnTo = null,
   offerTracking = null,
@@ -53,6 +54,7 @@ export function ResultPageClient({
   focusRoutine: boolean
   focusTarget?: GuidedStoryFocusTarget
   hasAccess: boolean
+  fieldTest?: boolean
   isInternalTest?: boolean
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
@@ -82,6 +84,7 @@ export function ResultPageClient({
       <PersonalPlanOffer
         showQuizRestart={showQuizRestart}
         entryContext={resolvedEntryContext}
+        fieldTest={fieldTest}
         focusTarget={personalPlanFocusTarget}
         isInternalTest={isInternalTest}
         leadId={leadId}

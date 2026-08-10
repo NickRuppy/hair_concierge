@@ -63,6 +63,7 @@ function trackWithFunnelPackage(
 
 export const metaDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
+    if ((payload as { testKind?: unknown }).testKind === "field_test") return false
     switch (eventName) {
       case "checkout_started": {
         const data = payload as AppEventMap["checkout_started"]
