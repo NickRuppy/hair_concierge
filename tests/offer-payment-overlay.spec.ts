@@ -1104,7 +1104,7 @@ test.describe("@ci offer payment overlay", () => {
     await expect(diagnostic).toHaveAttribute("data-apple-pay-confirm-return", "thenable_settled")
   })
 
-  test("a rejected Stripe confirmation shows recovery and releases its provider lock", async ({
+  test("@payment-feedback-v2 a rejected Stripe confirmation shows recovery and releases its provider lock", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
@@ -1119,12 +1119,18 @@ test.describe("@ci offer payment overlay", () => {
 
     await checkout.getByRole("button", { name: "Kostenpflichtig abonnieren · 34,99 €" }).click()
 
-    const paymentRecovery = checkout.getByRole("status", {
-      name: "Zahlung gerade nicht verfügbar",
-    })
-    await expect(paymentRecovery).toContainText(
-      "Die Verbindung zum Zahlungsanbieter ist gerade nicht verfügbar.",
-    )
+    if (process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED === "true") {
+      const paymentRecovery = checkout.getByRole("status", {
+        name: "Zahlung gerade nicht verfügbar",
+      })
+      await expect(paymentRecovery).toContainText(
+        "Die Verbindung zum Zahlungsanbieter ist gerade nicht verfügbar.",
+      )
+    } else {
+      await expect(checkout.getByRole("alert")).toContainText(
+        "Die Zahlung konnte nicht bestätigt werden.",
+      )
+    }
     await expect(diagnostic).toHaveAttribute("data-confirmation-count", "1")
     await expect(diagnostic).toHaveAttribute("data-provider-lock", "unlocked")
     await expect(checkout.getByTestId("paypal-button")).toBeEnabled()

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
+import { ActiveSubscriptionDialog } from "@/components/checkout/active-subscription-dialog"
 import { StripeOfferElementsCheckout } from "@/components/checkout/stripe-offer-elements-checkout"
 import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
@@ -116,6 +117,7 @@ export function PersonalPlanOneTimeCheckout({
   const canStartPayment = Boolean(leadId && funnelSessionId)
   const stripeAvailable = stripeElementsEnabled && stripePublishableKeyPresent
   const stripeCheckoutMounted = stripeAvailable && Boolean(checkoutAttemptId)
+  const feedbackV2Enabled = isPaymentFeedbackV2Enabled()
   const duplicateAccessVisible =
     duplicateDialogOpen || preparedStripeCheckoutState.kind === "duplicate_access"
   const duplicateAccessEmail =
@@ -928,7 +930,7 @@ export function PersonalPlanOneTimeCheckout({
     window.location.assign(href)
   }
   const duplicateAccessCard = duplicateAccessFeedback ? (
-    isPaymentFeedbackV2Enabled() ? (
+    feedbackV2Enabled ? (
       <PaymentFeedbackCard
         feedback={duplicateAccessFeedback}
         onAction={openExistingAccess}
@@ -944,8 +946,11 @@ export function PersonalPlanOneTimeCheckout({
         <p className="text-sm font-bold" role="status">
           Dein Haarplan-Zugang ist bereits aktiv
         </p>
-        <p className="text-sm leading-6">Melde dich an, um deinen Haarplan zu öffnen.</p>
-        <Button type="button" variant="outline" onClick={openExistingAccess}>
+        <p className="text-sm leading-6">
+          Für dieses Konto wurde die Zahlung bereits abgeschlossen. Melde dich an, um deinen
+          Haarplan zu öffnen.
+        </p>
+        <Button type="button" variant="outline" onClick={() => setDuplicateDialogOpen(true)}>
           Bestehenden Zugang öffnen
         </Button>
       </div>
@@ -1068,6 +1073,14 @@ export function PersonalPlanOneTimeCheckout({
           Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige Rückerstattung.
         </p>
       </section>
+      {!feedbackV2Enabled ? (
+        <ActiveSubscriptionDialog
+          accessKind="one_time"
+          email={duplicateAccessEmail}
+          onOpenChange={setDuplicateDialogOpen}
+          open={duplicateDialogOpen}
+        />
+      ) : null}
       {primaryPaymentBody}
       {paypalStableSlot}
       {stripeSelectionControl}
