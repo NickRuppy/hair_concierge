@@ -8,6 +8,8 @@ export function ApplicationOverview({
   days: ApplicationDayView[]
   showHeader?: boolean
 }) {
+  const hasPartialGuidance = days.some((day) => day.isPartial)
+
   return (
     <section
       aria-labelledby={showHeader ? "application-overview-title" : undefined}
@@ -23,6 +25,15 @@ export function ApplicationOverview({
             Wähle den passenden Tag und folge der Reihenfolge.
           </p>
         </header>
+      ) : null}
+      {showHeader && hasPartialGuidance ? (
+        <div className="mt-4 rounded-md border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-4">
+          <p className="type-h3 text-[var(--text-heading)]">Dein Plan wird noch vervollständigt</p>
+          <p className="type-body-sm mt-1 text-[var(--text-sub)]">
+            Du kannst die bekannten Schritte bereits nutzen. Vorgemerkte Produkte und noch offene
+            Anwendungsdetails sind klar markiert.
+          </p>
+        </div>
       ) : null}
       <ol
         className={`${showHeader ? "mt-5 " : ""}grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3`}

@@ -138,6 +138,8 @@ function readyDeps(overrides: Partial<AnwendungResolverDeps> = {}): AnwendungRes
       routineVersionId: "routine-1",
       planId: "plan-1",
       routineItems: [shampooItem],
+      unresolvedRoutineItems: [],
+      exactGuidanceProtocols: [],
     }),
     loadProfile: async () => ({}),
     loadContent: () =>
@@ -260,6 +262,95 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   assert.equal(failures.length, 1)
   assert.equal((failures[0] as { reason: string }).reason, "database")
   assert.equal(typeof (failures[0] as { durationMs: unknown }).durationMs, "number")
+})
+
+test("a rendered partial day is usable and does not emit a route failure", async () => {
+  const failures: unknown[] = []
+  const view = await resolveAnwendungPage(
+    readyDeps({
+      adaptRoutine: async () => ({
+        routineVersionId: "routine-1",
+        planId: "plan-1",
+        routineItems: [{ ...shampooItem, availability: "planned", executable: false }],
+        unresolvedRoutineItems: [],
+        exactGuidanceProtocols: [],
+      }),
+      reportFailure: (details) => failures.push(details),
+    }),
+    "wash_day",
+  )
+
+  assert.equal(view.state, "ready")
+  assert.equal(view.state === "ready" ? view.days[0]?.isPartial : false, true)
+  assert.deepEqual(failures, [])
+})
+
+test("route composes a planned Heat item with its reviewed exact product instructions", async () => {
+  const productId = "10000000-0000-4000-8000-000000000009"
+  const heatProtocol = {
+    ...shampooProtocol,
+    guidanceKey: "exact-dry-heat",
+    scope: { kind: "product" as const, category: "heat_protectant" as const, productId },
+    role: "heat_protection" as const,
+    applicationFamily: "dry_hair_protection" as const,
+    compatibleDayTypes: ["styling_day" as const],
+    exactGuidanceRequired: true,
+    sequence: { ...shampooProtocol.sequence, anchor: "dry_pre_heat" as const },
+    requirements: {
+      requiredCatalogFacts: ["applicationState", "reapplication", "formatResolution"],
+      requiredProtocolFacts: [],
+      requiredProfileFacts: ["heatEvents"],
+    },
+    steps: [
+      {
+        stepKey: "apply-dry-heat",
+        action: "apply_product" as const,
+        copyTemplateDe: "Vor dem Glätteisen gleichmäßig auftragen.",
+      },
+    ],
+  }
+  const view = await resolveAnwendungPage(
+    readyDeps({
+      adaptRoutine: async () => ({
+        routineVersionId: "routine-1",
+        planId: "plan-1",
+        routineItems: [
+          {
+            ...shampooItem,
+            itemId: "item:heat",
+            productId,
+            productName: "Vorgemerkter Hitzeschutz",
+            category: "heat_protectant",
+            role: "heat_protection",
+            sourceRoutineRole: "pre_heat_protection",
+            availability: "planned",
+            executable: false,
+            applicationInstanceKey: "assignment:heat",
+            catalogFacts: { applicationState: "dry", reapplication: "not_stated" },
+          },
+        ],
+        unresolvedRoutineItems: [],
+        exactGuidanceProtocols: [heatProtocol],
+      }),
+      loadProfile: async () => ({
+        heatEvents: [
+          { id: "heat:dryer", tool: "hair_dryer", route: "airflow_shaping" },
+          { id: "heat:iron", tool: "straightener", route: "direct_contact_heat" },
+        ],
+      }),
+    }),
+  )
+
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+  const stylingDay = view.days.find((day) => day.dayType === "styling_day")
+  assert.ok(stylingDay)
+  assert.equal(stylingDay.isPartial, true)
+  assert.equal(stylingDay.provisionalProductCount, 1)
+  assert.equal(
+    stylingDay.steps.find((step) => step.kind === "product")?.actions[0]?.copyDe,
+    "Vor dem Glätteisen gleichmäßig auftragen.",
+  )
 })
 
 test("direct day route validates the canonical key and never renders an arbitrary segment", () => {

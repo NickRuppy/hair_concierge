@@ -3,6 +3,7 @@ import type {
   ApplicationGuidanceProtocolV1,
   NormalizedApplicationInput,
   NormalizedRoutineItem,
+  NormalizedUnresolvedRoutineItem,
   PersonalPlanCategory,
   SemanticRole,
 } from "./contracts"
@@ -35,11 +36,27 @@ export type CompiledProductBlock = {
   anchor: string
   steps: CompiledProductStep[]
   noteDe: string | null
+  status: "confirmed" | "provisional"
+  provisionalReason?: "product_selection" | "application_review" | null
+  heatEventIds?: string[]
+}
+export type CompiledUnresolvedProductBlock = {
+  productId: string | null
+  productName: string | null
+  category: PersonalPlanCategory
+  role: SemanticRole
+  applicationInstanceKey: string
+  status: "unresolved"
 }
 export type CompiledApplicationDayV1 = {
   key: ApplicationDayTypeKey
   productBlocks: CompiledProductBlock[]
-  outerSequence: Array<{ kind: "product"; block: CompiledProductBlock } | CompiledProductlessStep>
+  outerSequence: Array<
+    | { kind: "product"; block: CompiledProductBlock }
+    | { kind: "unresolved_product"; block: CompiledUnresolvedProductBlock }
+    | CompiledProductlessStep
+  >
+  isPartial?: boolean
 }
 export type CompiledApplicationViewV1 = {
   days: CompiledApplicationDayV1[]
@@ -47,6 +64,15 @@ export type CompiledApplicationViewV1 = {
 }
 
 type ResolvedItem = { item: NormalizedRoutineItem; protocol: ApplicationGuidanceProtocolV1 }
+type UnresolvedPosition = {
+  itemId: string
+  productId: string | null
+  productName: string | null
+  category: PersonalPlanCategory
+  role: SemanticRole
+  routineOrder?: number
+  applicationInstanceKey: string
+}
 type ApplicationAnchor = ApplicationGuidanceProtocolV1["sequence"]["anchor"]
 type ConditionerRelationship = NonNullable<
   ApplicationGuidanceProtocolV1["protocolFacts"]["conditionerRelationship"]
@@ -183,6 +209,7 @@ function orderAnchors(
 function compileDay(
   key: ApplicationDayTypeKey,
   items: readonly NormalizedRoutineItem[],
+  unresolvedRoutineItems: readonly NormalizedUnresolvedRoutineItem[],
   profile: NormalizedApplicationInput["profile"],
   protocols: readonly ApplicationGuidanceProtocolV1[],
 ):
@@ -193,9 +220,15 @@ function compileDay(
   | "product_guidance_conflict"
   | "incomplete_guidance"
   | null {
-  if (key === "rest_day") return { key, productBlocks: [], outerSequence: [] }
+  if (key === "rest_day") return { key, productBlocks: [], outerSequence: [], isPartial: false }
   let resolved: ResolvedItem[] = []
-  const unresolvedRelevantItems: NormalizedRoutineItem[] = []
+  let unresolvedRelevantItems: UnresolvedPosition[] = unresolvedRoutineItems
+    .filter(
+      (item) =>
+        CANONICAL_APPLICATION_DAY_RULES[key].acceptedRoles.includes(item.role) &&
+        isAlwaysRelevantRoleForDay(key, item.role),
+    )
+    .map((item) => ({ ...item, productId: null, productName: null }))
   for (const item of routineItemsForDay(key, items)) {
     const hasCompatibleProtocol = protocols.some(
       (protocol) =>
@@ -219,7 +252,16 @@ function compileDay(
       protocols: [...protocols],
     })
     if (result.status === "unresolved") {
-      unresolvedRelevantItems.push(item)
+      unresolvedRelevantItems.push({
+        itemId: item.itemId,
+        productId: item.productId,
+        productName: item.productName,
+        category: item.category,
+        role: item.role,
+        routineOrder: item.routineOrder,
+        applicationInstanceKey:
+          item.applicationInstanceKey ?? `${item.productId}:unresolved:${item.itemId}`,
+      })
       continue
     }
     resolved.push({ item, protocol: result.protocol })
@@ -237,35 +279,38 @@ function compileDay(
   const conditionerIsSuppressed =
     conditionerRelationship === "no_conditioner" ||
     conditionerRelationship === "replaces_conditioner"
-  if (
-    unresolvedRelevantItems.some((item) => !(conditionerIsSuppressed && item.role === "condition"))
-  ) {
-    return "incomplete_guidance"
-  }
   if (conditionerIsSuppressed) {
     resolved = resolved.filter(({ item }) => item.role !== "condition")
+    unresolvedRelevantItems = unresolvedRelevantItems.filter((item) => item.role !== "condition")
   }
   if (
     (conditionerRelationship === "conditioner_before" ||
       conditionerRelationship === "conditioner_after") &&
-    !resolved.some(({ item }) => item.role === "condition")
+    !resolved.some(({ item }) => item.role === "condition") &&
+    !unresolvedRelevantItems.some((item) => item.role === "condition")
   ) {
     return "incomplete_guidance"
   }
   const requiredRoles = CANONICAL_APPLICATION_DAY_RULES[key].requiredRoles
-  if (!requiredRoles.some((role) => resolved.some((entry) => entry.item.role === role))) return null
+  const relevantItems = [...resolved.map(({ item }) => item), ...unresolvedRelevantItems]
+  if (!requiredRoles.some((role) => relevantItems.some((item) => item.role === role))) return null
   if (
     key === "intensive_care_day" &&
-    !["cleanse", "intensive_care"].every((role) =>
-      resolved.some((entry) => entry.item.role === role),
-    )
+    !["cleanse", "intensive_care"].every((role) => relevantItems.some((item) => item.role === role))
   )
     return null
+  if (resolved.length === 0) {
+    return unresolvedRelevantItems.length > 0 ? "incomplete_guidance" : null
+  }
   const anchorOrdering = orderAnchors(resolved, conditionerRelationship)
   if (anchorOrdering.status !== "ordered") return anchorOrdering.status
   const blocks = new Map<
     string,
-    CompiledProductBlock & { guidanceKey: string; scopeKind: "application_family" | "product" }
+    CompiledProductBlock & {
+      guidanceKey: string
+      scopeKind: "application_family" | "product"
+      routineOrder?: number
+    }
   >()
   for (const { item, protocol } of sortResolved(
     resolved,
@@ -300,6 +345,19 @@ function compileDay(
         existing.scopeKind = "product"
       }
       if (!existing.roles.includes(item.role)) existing.roles.push(item.role)
+      if (item.heatEventId && !existing.heatEventIds?.includes(item.heatEventId)) {
+        existing.heatEventIds = [...(existing.heatEventIds ?? []), item.heatEventId]
+      }
+      if (item.availability === "planned" || !item.executable) existing.status = "provisional"
+      if (item.availability === "planned") existing.provisionalReason = "product_selection"
+      else if (!item.executable && existing.provisionalReason !== "product_selection")
+        existing.provisionalReason = "application_review"
+      if (
+        item.routineOrder !== undefined &&
+        (existing.routineOrder === undefined || item.routineOrder < existing.routineOrder)
+      ) {
+        existing.routineOrder = item.routineOrder
+      }
       continue
     }
     blocks.set(instanceKey, {
@@ -315,11 +373,23 @@ function compileDay(
         copyDe: step.copyTemplateDe,
       })),
       noteDe: null,
+      status: item.availability === "planned" || !item.executable ? "provisional" : "confirmed",
+      provisionalReason:
+        item.availability === "planned"
+          ? "product_selection"
+          : !item.executable
+            ? "application_review"
+            : null,
+      heatEventIds: item.heatEventId ? [item.heatEventId] : [],
       guidanceKey: protocol.guidanceKey,
       scopeKind: protocol.scope.kind,
+      routineOrder: item.routineOrder,
     })
   }
-  const productBlocks = [...blocks.values()].map((block) => ({
+  const internalProductBlocks = [...blocks.values()]
+  const publicProductBlock = (
+    block: (typeof internalProductBlocks)[number],
+  ): CompiledProductBlock => ({
     productId: block.productId,
     productName: block.productName,
     category: block.category,
@@ -331,11 +401,68 @@ function compileDay(
       block.roles.includes("leave_in") && block.roles.includes("heat_protection")
         ? heatProtectionNote()
         : null,
-  }))
+    status: block.status,
+    provisionalReason: block.provisionalReason,
+    heatEventIds: block.heatEventIds,
+  })
+  const productBlocks = internalProductBlocks.map(publicProductBlock)
   if (productBlocks.length === 0) return null
+  const unresolvedBlocks = unresolvedRelevantItems.map((item) => ({
+    block: {
+      productId: item.productId,
+      productName: item.productName,
+      category: item.category,
+      role: item.role,
+      applicationInstanceKey: item.applicationInstanceKey,
+      status: "unresolved" as const,
+    },
+    routineOrder: item.routineOrder,
+  }))
+  const resolvedSequenceEntries = internalProductBlocks.map((block, index) => ({
+    kind: "product" as const,
+    block: publicProductBlock(block),
+    routineOrder: block.routineOrder,
+    fallbackOrder: index,
+  }))
+  const unresolvedSequenceEntries = unresolvedBlocks
+    .map(({ block, routineOrder }, index) => ({
+      kind: "unresolved_product" as const,
+      block,
+      routineOrder,
+      fallbackOrder: internalProductBlocks.length + index,
+    }))
+    .sort(
+      (left, right) =>
+        (left.routineOrder ?? Number.MAX_SAFE_INTEGER) -
+          (right.routineOrder ?? Number.MAX_SAFE_INTEGER) ||
+        left.fallbackOrder - right.fallbackOrder,
+    )
+  const unresolvedByInsertionIndex = new Map<number, typeof unresolvedSequenceEntries>()
+  for (const entry of unresolvedSequenceEntries) {
+    const insertionIndex =
+      entry.routineOrder === undefined
+        ? resolvedSequenceEntries.length
+        : internalProductBlocks.filter(
+            (block) => block.routineOrder !== undefined && block.routineOrder < entry.routineOrder!,
+          ).length
+    unresolvedByInsertionIndex.set(insertionIndex, [
+      ...(unresolvedByInsertionIndex.get(insertionIndex) ?? []),
+      entry,
+    ])
+  }
+  const sequenceEntries = resolvedSequenceEntries.flatMap((entry, index) => [
+    ...(unresolvedByInsertionIndex.get(index) ?? []),
+    entry,
+  ])
+  sequenceEntries.push(...(unresolvedByInsertionIndex.get(resolvedSequenceEntries.length) ?? []))
   let previousAnchor: string | null = null
   const outerSequence: CompiledApplicationDayV1["outerSequence"] = []
-  for (const block of productBlocks) {
+  for (const entry of sequenceEntries) {
+    if (entry.kind === "unresolved_product") {
+      outerSequence.push({ kind: "unresolved_product", block: entry.block })
+      continue
+    }
+    const block = entry.block
     if (previousAnchor === null && block.anchor === "wet_cleanse") {
       outerSequence.push({
         kind: "state_transition",
@@ -355,7 +482,67 @@ function compileDay(
     outerSequence.push({ kind: "product", block })
     previousAnchor = block.anchor
   }
-  return { key, productBlocks, outerSequence }
+  return {
+    key,
+    productBlocks,
+    outerSequence,
+    isPartial:
+      unresolvedBlocks.length > 0 || productBlocks.some((block) => block.status === "provisional"),
+  }
+}
+
+function materializeHeatOccurrences(
+  items: readonly NormalizedRoutineItem[],
+  profile: NormalizedApplicationInput["profile"],
+): NormalizedRoutineItem[] {
+  return items.flatMap((item) => {
+    if (item.role !== "heat_protection") return [item]
+    const events = profile.heatEvents
+    const applicationState = item.catalogFacts.applicationState
+    const reapplication = item.catalogFacts.reapplication
+    if (
+      !events ||
+      events.length === 0 ||
+      !["damp", "dry", "either"].includes(String(applicationState)) ||
+      !["required", "optional", "not_stated"].includes(String(reapplication))
+    ) {
+      return [item]
+    }
+    const compatibleEvents = events.filter((event) => {
+      if (applicationState === "damp") return event.route === "airflow_shaping"
+      if (applicationState === "dry") return event.route === "direct_contact_heat"
+      return true
+    })
+    if (compatibleEvents.length === 0) return [item]
+    const selectedEvents =
+      reapplication === "required"
+        ? compatibleEvents
+        : [
+            compatibleEvents.find((event) => event.route === "direct_contact_heat") ??
+              compatibleEvents[0]!,
+          ]
+    return selectedEvents.map((event) => {
+      const family =
+        applicationState === "damp"
+          ? "damp_hair_protection"
+          : applicationState === "dry"
+            ? "dry_hair_protection"
+            : event.route === "direct_contact_heat"
+              ? "dry_hair_protection"
+              : "damp_hair_protection"
+      return {
+        ...item,
+        applicationInstanceKey: `${item.applicationInstanceKey ?? item.itemId}:${event.id}`,
+        heatEventId: event.id,
+        catalogFacts: {
+          ...item.catalogFacts,
+          heatEventRoute: event.route,
+          heatEventTool: event.tool,
+          formatResolution: { status: "resolved", applicationFamily: family },
+        },
+      }
+    })
+  })
 }
 
 export function compileApplicationView({
@@ -366,17 +553,24 @@ export function compileApplicationView({
   protocols: readonly ApplicationGuidanceProtocolV1[]
 }): CompiledApplicationViewV1 {
   const parsed = normalizedApplicationInputSchema.parse(input)
+  const routineItems = materializeHeatOccurrences(parsed.routineItems, parsed.profile)
   const days: CompiledApplicationDayV1[] = []
   const failures: CompiledApplicationViewV1["failures"] = []
   for (const definition of [...parsed.dayTypes].sort(
     (left, right) => left.sortOrder - right.sortOrder,
   )) {
-    const compiled = compileDay(definition.key, parsed.routineItems, parsed.profile, protocols)
+    const compiled = compileDay(
+      definition.key,
+      routineItems,
+      parsed.unresolvedRoutineItems,
+      parsed.profile,
+      protocols,
+    )
     if (compiled && typeof compiled !== "string") days.push(compiled)
     else if (definition.key !== "rest_day")
       failures.push({ dayType: definition.key, reason: compiled ?? "incomplete_day" })
   }
   if (!days.some((day) => day.key === "rest_day"))
-    days.push({ key: "rest_day", productBlocks: [], outerSequence: [] })
+    days.push({ key: "rest_day", productBlocks: [], outerSequence: [], isPartial: false })
   return { days, failures }
 }

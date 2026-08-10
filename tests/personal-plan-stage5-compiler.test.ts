@@ -63,6 +63,7 @@ function protocol(
 function input(items: NormalizedApplicationInput["routineItems"]): NormalizedApplicationInput {
   return {
     routineItems: items,
+    unresolvedRoutineItems: [],
     profile: { thickness: "normal" },
     dayTypes: dayTypes.map((key, index) => ({ key, sortOrder: index + 1 })),
   }
@@ -342,6 +343,38 @@ test("compiler inserts the wetting action when a pre-wash product precedes clean
   })
 })
 
+test("compiler keeps resolved products in protocol-anchor order when Routine order differs", () => {
+  const preWashOil = {
+    ...leaveInAndHeat,
+    itemId: "pre-wash-oil",
+    productId: "44444444-4444-4444-8444-444444444444",
+    productName: "Pflegeöl",
+    category: "oil" as const,
+    role: "finish" as const,
+    applicationInstanceKey: "pre-wash-oil",
+    routineOrder: 30,
+  }
+  const result = compileApplicationView({
+    input: input([
+      { ...shampoo, routineOrder: 10 },
+      { ...leaveInAndHeat, routineOrder: 20 },
+      preWashOil,
+    ] as never),
+    protocols: [
+      protocol("oil", "finish", "pre_wash_lengths_treatment", "wash_day", "pre_wash"),
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      protocol("leave_in", "leave_in", "post_wash_booster", "wash_day", "damp_leave_on"),
+    ],
+  })
+
+  assert.deepEqual(
+    result.days[0].outerSequence
+      .filter((step) => step.kind === "product")
+      .map((step) => step.block.productName),
+    ["Pflegeöl", "Shampoo", "Schutzspray"],
+  )
+})
+
 test("compiler suppresses a cyclic anchor graph with an internal failure reason", () => {
   const cleanse = protocol(
     "shampoo",
@@ -412,7 +445,7 @@ test("compiler honors non-cyclic sequence edges and fails closed on conflicts", 
   assert.ok(conflicted.failures.some((failure) => failure.reason === "anchor_conflict"))
 })
 
-test("an unresolved relevant product suppresses only its affected day", () => {
+test("an unresolved relevant product becomes a local gap while unrelated days remain usable", () => {
   const dryShampoo = {
     ...shampoo,
     itemId: "dry-shampoo",
@@ -430,12 +463,12 @@ test("an unresolved relevant product suppresses only its affected day", () => {
   })
   assert.deepEqual(
     result.days.map((day) => day.key),
-    ["refresh_day", "rest_day"],
+    ["wash_day", "refresh_day", "rest_day"],
   )
   assert.ok(
-    result.failures.some(
-      (failure) => failure.dayType === "wash_day" && failure.reason === "incomplete_guidance",
-    ),
+    result.days
+      .find((day) => day.key === "wash_day")
+      ?.outerSequence.some((step) => step.kind === "unresolved_product"),
   )
 })
 
@@ -458,4 +491,211 @@ test("unrelated Dry Shampoo guidance does not suppress a complete Waschtag", () 
     result.days.map((day) => day.key),
     ["wash_day", "rest_day"],
   )
+})
+
+test("compiler keeps reviewed guidance for a provisional product inside the day sequence", () => {
+  const provisionalConditioner = {
+    ...conditioner,
+    availability: "planned" as const,
+    executable: false as const,
+    routineOrder: 20,
+  }
+  const result = compileApplicationView({
+    input: input([
+      { ...shampoo, routineOrder: 10 },
+      provisionalConditioner,
+      { ...leaveInAndHeat, routineOrder: 30 },
+    ] as never),
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      protocol(
+        "conditioner",
+        "condition",
+        "standard_rinse_out_conditioning",
+        "wash_day",
+        "post_cleanse_rinse_off",
+      ),
+      protocol("leave_in", "leave_in", "post_wash_booster", "wash_day", "damp_leave_on"),
+    ],
+  })
+
+  const washDay = result.days.find((day) => day.key === "wash_day")
+  assert.ok(washDay)
+  assert.deepEqual(
+    washDay.productBlocks.map((block) => [block.productName, block.status]),
+    [
+      ["Shampoo", "confirmed"],
+      ["Conditioner", "provisional"],
+      ["Schutzspray", "confirmed"],
+    ],
+  )
+})
+
+test("compiler retains a local unresolved product gap without hiding independent reviewed steps", () => {
+  const result = compileApplicationView({
+    input: input([
+      { ...shampoo, routineOrder: 10 },
+      { ...conditioner, availability: "planned", executable: false, routineOrder: 20 },
+      { ...leaveInAndHeat, routineOrder: 30 },
+    ] as never),
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      protocol("leave_in", "leave_in", "post_wash_booster", "wash_day", "damp_leave_on"),
+    ],
+  })
+
+  const washDay = result.days.find((day) => day.key === "wash_day")
+  assert.ok(washDay)
+  assert.deepEqual(
+    washDay.outerSequence
+      .filter((step) => step.kind !== "state_transition")
+      .map((step) => step.kind),
+    ["product", "unresolved_product", "product"],
+  )
+  assert.equal(washDay.productBlocks.length, 2)
+  assert.deepEqual(
+    washDay.outerSequence
+      .filter((step) => step.kind === "state_transition")
+      .map((step) => [step.fromAnchor, step.toAnchor, step.copyDe]),
+    [
+      ["dry", "wet_cleanse", "Haare gründlich mit Wasser anfeuchten."],
+      ["wet_cleanse", "damp_leave_on", "Im handtuchtrockenen Haar weitermachen."],
+    ],
+  )
+  assert.equal(
+    result.failures.some((failure) => failure.dayType === "wash_day"),
+    false,
+  )
+})
+
+test("compiler keeps an identity-free Routine position between reviewed products", () => {
+  const result = compileApplicationView({
+    input: {
+      ...input([
+        { ...shampoo, routineOrder: 0 },
+        { ...leaveInAndHeat, routineOrder: 2 },
+      ] as never),
+      unresolvedRoutineItems: [
+        {
+          itemId: "pending-conditioner",
+          category: "conditioner",
+          role: "condition",
+          routineOrder: 1,
+          applicationInstanceKey: "assignment:pending-conditioner",
+        },
+      ],
+    },
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      protocol("leave_in", "leave_in", "post_wash_booster", "wash_day", "damp_leave_on"),
+    ],
+  })
+
+  const washDay = result.days.find((day) => day.key === "wash_day")
+  assert.ok(washDay)
+  assert.deepEqual(
+    washDay.outerSequence
+      .filter((step) => step.kind !== "state_transition")
+      .map((step) =>
+        step.kind === "unresolved_product" ? [step.kind, step.block.productName] : step.kind,
+      ),
+    ["product", ["unresolved_product", null], "product"],
+  )
+})
+
+test("Heat uses one direct event by default and repeats only when exact guidance requires it", () => {
+  const heatItem = {
+    ...leaveInAndHeat,
+    itemId: "planned-heat",
+    productName: "Vorgemerkter Hitzeschutz",
+    category: "heat_protectant" as const,
+    role: "heat_protection" as const,
+    sourceRoutineRole: "pre_heat_protection",
+    availability: "planned" as const,
+    executable: false,
+    catalogFacts: { applicationState: "either", reapplication: "not_stated" },
+  }
+  const heatProfile = {
+    thickness: "normal" as const,
+    heatEvents: [
+      { id: "heat:dryer", tool: "hair_dryer", route: "airflow_shaping" as const },
+      {
+        id: "heat:straightener",
+        tool: "straightener",
+        route: "direct_contact_heat" as const,
+      },
+    ],
+  }
+  const exactDry = {
+    ...protocol(
+      "heat_protectant",
+      "heat_protection",
+      "dry_hair_protection",
+      "styling_day",
+      "dry_pre_heat",
+    ),
+    guidanceKey: "exact-heat-dry",
+    scope: { kind: "product" as const, category: "heat_protectant" as const, productId: ids[2] },
+  }
+  const exactDamp = {
+    ...exactDry,
+    guidanceKey: "exact-heat-damp",
+    applicationFamily: "damp_hair_protection" as const,
+    sequence: { ...exactDry.sequence, anchor: "damp_leave_on" as const },
+  }
+  const once = compileApplicationView({
+    input: { ...input([heatItem] as never), profile: heatProfile } as never,
+    protocols: [exactDamp, exactDry],
+  })
+  const onceDay = once.days.find((day) => day.key === "styling_day")
+  assert.ok(onceDay)
+  assert.equal(onceDay.productBlocks.length, 1)
+  assert.deepEqual(onceDay.productBlocks[0]!.heatEventIds, ["heat:straightener"])
+
+  const dampOnly = compileApplicationView({
+    input: {
+      ...input([
+        {
+          ...heatItem,
+          catalogFacts: { applicationState: "damp", reapplication: "not_stated" },
+        },
+      ] as never),
+      profile: heatProfile,
+    } as never,
+    protocols: [exactDamp],
+  })
+  const dampDay = dampOnly.days.find((day) => day.key === "styling_day")
+  assert.ok(dampDay)
+  assert.deepEqual(dampDay.productBlocks[0]!.heatEventIds, ["heat:dryer"])
+
+  const repeated = compileApplicationView({
+    input: {
+      ...input([
+        {
+          ...heatItem,
+          catalogFacts: { applicationState: "either", reapplication: "required" },
+        },
+      ] as never),
+      profile: heatProfile,
+    } as never,
+    protocols: [
+      {
+        ...exactDamp,
+        protocolFacts: {
+          ...exactDamp.protocolFacts,
+          reapplication: "each_separate_heat_event" as const,
+        },
+      },
+      {
+        ...exactDry,
+        protocolFacts: {
+          ...exactDry.protocolFacts,
+          reapplication: "each_separate_heat_event" as const,
+        },
+      },
+    ],
+  })
+  const repeatedDay = repeated.days.find((day) => day.key === "styling_day")
+  assert.ok(repeatedDay)
+  assert.equal(repeatedDay.productBlocks.length, 2)
 })

@@ -52,7 +52,11 @@ function routinePayload() {
       productPortfolioVersionId: portfolioId,
       sourceFingerprint: "a".repeat(64),
       compilerVersion: "stage5-browser-v1",
-      authorityVersions: { shampoo: "stage5-browser-v1", conditioner: "stage5-browser-v1" },
+      authorityVersions: {
+        shampoo: "stage5-browser-v1",
+        conditioner: "stage5-browser-v1",
+        leave_in: "stage5-browser-v1",
+      },
     },
     intent: {
       schemaVersion: 1,
@@ -84,9 +88,27 @@ function routinePayload() {
               assignmentKey: "assignment:conditioner:rinse-out",
               role: "conditioner_rinse_out",
               productRef: {
-                kind: "owned",
-                capturedProductId: "captured-conditioner",
+                kind: "planned",
+                plannedPurchaseId: "planned-conditioner",
                 productId: conditionerId,
+              },
+              cadenceOverride: null,
+              fitDecision: "standard",
+            },
+          ],
+        },
+        {
+          category: "leave_in",
+          inclusion: "included",
+          inclusionSource: "stage3",
+          assignments: [
+            {
+              assignmentKey: "assignment:leave-in:pending",
+              role: "post_wash_leave_in",
+              productRef: {
+                kind: "pending_review",
+                capturedProductId: "captured-pending-leave-in",
+                submissionId: "submission-pending-leave-in",
               },
               cadenceOverride: null,
               fitDecision: "standard",
@@ -96,7 +118,10 @@ function routinePayload() {
       ],
     },
     sections: [
-      { key: "basis", itemKeys: ["item:shampoo:everyday", "item:conditioner:rinse-out"] },
+      {
+        key: "basis",
+        itemKeys: ["item:shampoo:everyday", "item:conditioner:rinse-out", "item:leave-in:pending"],
+      },
       { key: "optional", itemKeys: [] },
     ],
     items: [
@@ -134,19 +159,42 @@ function routinePayload() {
         state: {
           systemAssessment: "basis",
           inclusion: "included",
-          availability: "owned",
+          availability: "planned",
           fitDecision: "standard",
         },
         product: {
-          kind: "owned",
-          capturedProductId: "captured-conditioner",
+          kind: "planned",
+          plannedPurchaseId: "planned-conditioner",
           productId: conditionerId,
           displayName: "Leichter Conditioner",
         },
         cadence: { recommended: null, userOverride: null, displayKey: "weekly_2x" },
         sourceDecisionKeys: ["decision:conditioner:rinse-out"],
         authorityRuleIds: ["conditioner.browser.rinse-out"],
-        executable: true,
+        executable: false,
+      },
+      {
+        itemKey: "item:leave-in:pending",
+        assignmentKey: "assignment:leave-in:pending",
+        category: "leave_in",
+        role: "post_wash_leave_in",
+        purposeKey: "post_wash_leave_in",
+        roleOrder: 0,
+        state: {
+          systemAssessment: "basis",
+          inclusion: "included",
+          availability: "pending_review",
+          fitDecision: "standard",
+        },
+        product: {
+          kind: "pending_review",
+          submissionId: "submission-pending-leave-in",
+          displayName: "Ungeprüftes Leave-in",
+        },
+        cadence: { recommended: null, userOverride: null, displayKey: "weekly_2x" },
+        sourceDecisionKeys: ["decision:leave-in:pending"],
+        authorityRuleIds: ["leave-in.browser.pending"],
+        executable: false,
       },
     ],
     createdAt: "2026-08-08T08:00:00.000Z",
@@ -450,7 +498,11 @@ async function seedAcceptedRoutine(userId: string) {
     source_product_draft_id: draftId,
     source_product_draft_revision: 0,
     schema_version: 1,
-    category_authority_versions: { shampoo: "stage5-browser-v1", conditioner: "stage5-browser-v1" },
+    category_authority_versions: {
+      shampoo: "stage5-browser-v1",
+      conditioner: "stage5-browser-v1",
+      leave_in: "stage5-browser-v1",
+    },
     content_hash: "3".repeat(64),
     snapshot: {
       schemaVersion: 1,
@@ -477,7 +529,11 @@ async function seedAcceptedRoutine(userId: string) {
     source_product_draft_revision: 0,
     schema_version: 1,
     compiler_version: "stage5-browser-v1",
-    authority_versions: { shampoo: "stage5-browser-v1", conditioner: "stage5-browser-v1" },
+    authority_versions: {
+      shampoo: "stage5-browser-v1",
+      conditioner: "stage5-browser-v1",
+      leave_in: "stage5-browser-v1",
+    },
     source_fingerprint: "a".repeat(64),
     payload_hash: "4".repeat(64),
     payload: routinePayload(),
@@ -543,6 +599,9 @@ test("accepted Routine renders Anwendung overview and a bookmarkable day without
     timeout: 15_000,
   })
   await expect(page.getByRole("link", { name: "Waschtag" })).toBeVisible()
+  await expect(page.getByText("Dein Plan wird noch vervollständigt")).toBeVisible()
+  await expect(page.getByText("1 Produkt vorläufig")).toBeVisible()
+  await expect(page.getByText("1 Anwendungsdetail offen")).toBeVisible()
   await page.screenshot({ path: testInfo.outputPath("overview-mobile-320.png"), fullPage: true })
 
   await page.setViewportSize({ width: 390, height: 844 })
@@ -552,8 +611,28 @@ test("accepted Routine renders Anwendung overview and a bookmarkable day without
   await expect(
     page.getByRole("heading", { name: "Leichter Conditioner", exact: true }),
   ).toBeVisible()
+  await expect(page.getByText("Vorläufig", { exact: true }).first()).toBeVisible()
+  await expect(page.getByText(/seine Anwendung ist bereits bekannt/).first()).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Produkt noch offen" }).first()).toBeVisible()
+  await expect(
+    page.getByText(/Für diese Kategorie fehlen noch ein bestätigtes Produkt/).first(),
+  ).toBeVisible()
+  await expect(page.getByText("Ungeprüftes Leave-in", { exact: true })).toHaveCount(0)
   await expect(page.getByRole("link", { name: "Alle Tage" })).toBeVisible()
-  await page.screenshot({ path: testInfo.outputPath("wash-day-mobile-390.png"), fullPage: true })
+  await page.screenshot({ path: testInfo.outputPath("wash-day-mobile-top-390.png") })
+  const lastApplicationContent = page
+    .locator("p:visible")
+    .filter({ hasText: "Für diese Kategorie fehlen noch ein bestätigtes Produkt" })
+    .first()
+  await lastApplicationContent.scrollIntoViewIfNeeded()
+  const [lastContentBox, navigationBox] = await Promise.all([
+    lastApplicationContent.boundingBox(),
+    page.getByRole("navigation", { name: "Personal-Plan-Navigation" }).boundingBox(),
+  ])
+  expect(lastContentBox).not.toBeNull()
+  expect(navigationBox).not.toBeNull()
+  expect(lastContentBox!.y + lastContentBox!.height).toBeLessThanOrEqual(navigationBox!.y)
+  await page.screenshot({ path: testInfo.outputPath("wash-day-mobile-bottom-390.png") })
 
   const { data: before, error: beforeError } = await admin
     .from("personal_plans")

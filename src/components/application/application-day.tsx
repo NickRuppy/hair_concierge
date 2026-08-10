@@ -2,6 +2,7 @@ import type { ApplicationDayView } from "./application-types"
 import Link from "next/link"
 import { ProductApplicationBlock } from "./product-application-block"
 import { ProductlessStep } from "./productless-step"
+import { UnresolvedProductBlock } from "./unresolved-product-block"
 
 export function ApplicationDay({ day }: { day: ApplicationDayView }) {
   return (
@@ -29,6 +30,12 @@ export function ApplicationDay({ day }: { day: ApplicationDayView }) {
           {day.steps.map((step, index) =>
             step.kind === "product" ? (
               <ProductApplicationBlock
+                key={step.applicationInstanceKey}
+                step={step}
+                position={index + 1}
+              />
+            ) : step.kind === "unresolved_product" ? (
+              <UnresolvedProductBlock
                 key={step.applicationInstanceKey}
                 step={step}
                 position={index + 1}

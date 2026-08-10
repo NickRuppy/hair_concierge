@@ -61,6 +61,8 @@ function productStep(block: CompiledProductBlock): ApplicationOuterStepView {
     purposeDe: purposeDe(block),
     actions: block.steps.map((step) => ({ actionKey: step.stepKey, copyDe: step.copyDe })),
     coverageNoteDe: block.noteDe,
+    status: block.status,
+    provisionalReason: block.provisionalReason ?? null,
   }
 }
 
@@ -83,15 +85,29 @@ export function toApplicationPageView({
       labelDe: definition.label,
       summaryDe: definition.summary,
       cadenceDe: cadenceByDay[day.key] ?? null,
-      steps: day.outerSequence.map((step, index) =>
-        step.kind === "product"
-          ? productStep(step.block)
-          : {
-              kind: "transition" as const,
-              stepKey: `${day.key}:transition:${index}`,
-              copyDe: step.copyDe,
-            },
-      ),
+      steps: day.outerSequence.map((step, index) => {
+        if (step.kind === "product") return productStep(step.block)
+        if (step.kind === "unresolved_product") {
+          return {
+            kind: "unresolved_product" as const,
+            stepKey: step.block.applicationInstanceKey,
+            applicationInstanceKey: step.block.applicationInstanceKey,
+            productId: step.block.productId,
+            productName: step.block.productName,
+            categoryLabelDe: categoryLabelDe(step.block.category),
+          }
+        }
+        return {
+          kind: "transition" as const,
+          stepKey: `${day.key}:transition:${index}`,
+          copyDe: step.copyDe,
+        }
+      }),
+      isPartial: Boolean(day.isPartial),
+      provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
+        .length,
+      unresolvedProductCount: day.outerSequence.filter((step) => step.kind === "unresolved_product")
+        .length,
     }
   })
 

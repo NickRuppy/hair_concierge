@@ -99,7 +99,10 @@ for _ in $(seq 1 120); do
 done
 curl --fail --silent --output /dev/null "$PLAYWRIGHT_BASE_URL/auth"
 
-npm exec -- playwright test tests/personal-plan-stage5-application.spec.ts --project=chromium
+if ! npm exec -- playwright test tests/personal-plan-stage5-application.spec.ts --project=chromium; then
+  tail -n 120 "$server_log" >&2
+  exit 1
+fi
 
 if [[ "${STAGE5_BROWSER_INSPECTION:-0}" == "1" ]]; then
   printf 'Stage 5 browser inspection ready at %s/auth?next=/anwendung\n' "$PLAYWRIGHT_BASE_URL"

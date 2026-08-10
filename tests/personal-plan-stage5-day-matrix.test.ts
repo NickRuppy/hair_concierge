@@ -22,6 +22,7 @@ const DAY_TYPES = [
 function input(routineItems: NormalizedRoutineItem[]): NormalizedApplicationInput {
   return {
     routineItems,
+    unresolvedRoutineItems: [],
     profile: { thickness: "normal", dryingRoute: "blow_dry" },
     dayTypes: DAY_TYPES.map((key, index) => ({ key, sortOrder: index + 1 })),
   }
