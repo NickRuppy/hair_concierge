@@ -36,6 +36,21 @@ export type ProductIntakeSubmissionResult = {
   match: ProductIntakeMatchResult
 }
 
+export type ProductIntakePersonalPlanSubmissionResult = {
+  status: "pending_review"
+  source: "personal_plan"
+  intake_method: ProductIntakeMethod
+  category: ProductIntakeCategoryKey
+  frequency_range: ProductFrequency
+  user_product: {
+    id: string
+    category: ProductIntakeCategoryKey
+    identity_status: "pending_review"
+    ownership_status: "owned"
+  }
+  submission: ProductIntakeSubmittedSubmission
+}
+
 export type ProductIntakeConflict = {
   code: "product_category_already_filled"
   message: string

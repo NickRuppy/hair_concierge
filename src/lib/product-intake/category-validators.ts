@@ -59,6 +59,9 @@ export type ProductIntakeTargetSpecTable =
   | "product_dry_shampoo_specs"
   | "product_deep_cleansing_shampoo_specs"
   | "product_bondbuilder_specs"
+  | "product_heat_protectant_specs"
+  | "product_scalp_care_specs"
+  | "product_application_protocols"
 
 type ProductIntakeSpecRowByTable = {
   product_shampoo_specs: {
@@ -130,6 +133,47 @@ type ProductIntakeSpecRowByTable = {
     product_format: string
     usage_protocol: string
   }
+  product_heat_protectant_specs: {
+    format: "spray"
+    provides_heat_protection: boolean | null
+  }
+  product_scalp_care_specs: {
+    primary_role:
+      | "scalp_comfort"
+      | "scalp_flake_oil_adjunct"
+      | "density_claim_tonic"
+      | "scalp_exfoliant"
+    presentation_format:
+      | "serum"
+      | "tonic"
+      | "lotion_or_fluid"
+      | "oil"
+      | "scrub"
+      | "other"
+      | "unknown"
+    rinse_mode: "leave_on" | "rinse_off"
+    application_instructions: string
+  }
+  product_application_protocols: {
+    category: "heat_protectant" | "scalp_care"
+    role:
+      | "pre_heat_protection"
+      | "scalp_comfort"
+      | "scalp_flake_oil_adjunct"
+      | "density_claim_tonic"
+      | "scalp_exfoliant"
+    cadence: Record<string, unknown> | null
+    application_stage: string | null
+    application_state: "damp" | "dry" | "either" | null
+    placement: string | null
+    contact_time_seconds: number | null
+    rinse_action: string | null
+    reapplication: "required" | "optional" | "not_stated" | null
+    instruction_modifiers: string[]
+    source_label: string | null
+    source_url: string | null
+    source_text: string | null
+  }
 }
 
 export type ProductIntakeTargetSpecRow<
@@ -156,6 +200,12 @@ const optionalNullableTrimmedString = z.preprocess((value) => {
   const trimmed = value.trim()
   return trimmed.length > 0 ? trimmed : null
 }, z.string().min(1).nullable().optional())
+
+const nullableTrimmedString = z.preprocess((value) => {
+  if (typeof value !== "string") return value
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : null
+}, z.string().min(1).nullable())
 
 const isoDateString = z.string().datetime({ offset: true })
 const currencyString = z.literal("EUR")
@@ -565,6 +615,83 @@ const bondbuilderSpecsSchema = z
   })
   .strict()
 
+const heatProtectantSpecSchema = z
+  .object({
+    format: z.literal("spray"),
+    provides_heat_protection: z.boolean().nullable(),
+  })
+  .strict()
+
+const scalpCareRoleSchema = z.enum([
+  "scalp_comfort",
+  "scalp_flake_oil_adjunct",
+  "density_claim_tonic",
+  "scalp_exfoliant",
+])
+
+const applicationProtocolBaseSchema = z
+  .object({
+    cadence: z.record(z.string(), z.unknown()).nullable(),
+    application_stage: nullableTrimmedString,
+    application_state: z.enum(["damp", "dry", "either"]).nullable(),
+    placement: nullableTrimmedString,
+    contact_time_seconds: z.number().int().nonnegative().nullable(),
+    rinse_action: nullableTrimmedString,
+    reapplication: z.enum(["required", "optional", "not_stated"]).nullable(),
+    instruction_modifiers: z.array(trimmedString).default([]),
+    source_label: nullableTrimmedString,
+    source_url: z.string().url().nullable(),
+    source_text: nullableTrimmedString,
+  })
+  .strict()
+
+const heatProtectantProtocolSchema = applicationProtocolBaseSchema
+  .extend({
+    category: z.literal("heat_protectant"),
+    role: z.literal("pre_heat_protection"),
+    application_state: z.enum(["damp", "dry", "either"]),
+    reapplication: z.enum(["required", "optional", "not_stated"]),
+  })
+  .strict()
+
+const heatProtectantSpecsSchema = z
+  .object({
+    product_heat_protectant_specs: heatProtectantSpecSchema,
+    product_application_protocols: z.array(heatProtectantProtocolSchema).min(1),
+  })
+  .strict()
+
+const scalpCareSpecSchema = z
+  .object({
+    primary_role: scalpCareRoleSchema,
+    presentation_format: z.enum([
+      "serum",
+      "tonic",
+      "lotion_or_fluid",
+      "oil",
+      "scrub",
+      "other",
+      "unknown",
+    ]),
+    rinse_mode: z.enum(["leave_on", "rinse_off"]),
+    application_instructions: trimmedString,
+  })
+  .strict()
+
+const scalpCareProtocolSchema = applicationProtocolBaseSchema
+  .extend({
+    category: z.literal("scalp_care"),
+    role: scalpCareRoleSchema,
+  })
+  .strict()
+
+const scalpCareSpecsSchema = z
+  .object({
+    product_scalp_care_specs: scalpCareSpecSchema,
+    product_application_protocols: z.array(scalpCareProtocolSchema).min(1),
+  })
+  .strict()
+
 function hasOwn(object: object, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(object, key)
 }
@@ -678,6 +805,37 @@ function validateBondbuilder(
   ])
 }
 
+function validateHeatProtectant(
+  finalPayload: ProductIntakeFinalReviewedPayload,
+): ProductIntakeApprovalValidationResult {
+  const parsed = validateSpecs(finalPayload, heatProtectantSpecsSchema)
+  if (!parsed.ok) return invalidCategoryResult(parsed.missingFields)
+
+  return validCategoryResult(finalPayload, [
+    upsert("product_heat_protectant_specs", [parsed.specs.product_heat_protectant_specs]),
+    upsert("product_application_protocols", parsed.specs.product_application_protocols),
+  ])
+}
+
+function validateScalpCare(
+  finalPayload: ProductIntakeFinalReviewedPayload,
+): ProductIntakeApprovalValidationResult {
+  const parsed = validateSpecs(finalPayload, scalpCareSpecsSchema)
+  if (!parsed.ok) return invalidCategoryResult(parsed.missingFields)
+
+  const primaryRole = parsed.specs.product_scalp_care_specs.primary_role
+  if (
+    parsed.specs.product_application_protocols.some((protocol) => protocol.role !== primaryRole)
+  ) {
+    return invalidCategoryResult(["final.category_specs.product_application_protocols.role"])
+  }
+
+  return validCategoryResult(finalPayload, [
+    upsert("product_scalp_care_specs", [parsed.specs.product_scalp_care_specs]),
+    upsert("product_application_protocols", parsed.specs.product_application_protocols),
+  ])
+}
+
 export const PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS = {
   shampoo: validateShampoo,
   conditioner: validateConditioner,
@@ -687,6 +845,8 @@ export const PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS = {
   dry_shampoo: validateDryShampoo,
   deep_cleansing_shampoo: validateDeepCleansingShampoo,
   bondbuilder: validateBondbuilder,
+  heat_protectant: validateHeatProtectant,
+  scalp_care: validateScalpCare,
 } satisfies Record<ProductIntakeReviewCategoryKey, ProductIntakeCategoryApprovalValidator>
 
 export function validateProductIntakeApprovalPayload(

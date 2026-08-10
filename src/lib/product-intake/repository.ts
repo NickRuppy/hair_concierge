@@ -16,6 +16,7 @@ import type {
 import type {
   ProductIntakeRepository,
   ProductIntakeSubmissionRow,
+  ProductIntakeUserProductRow,
   ProductIntakeUsageRow,
 } from "@/lib/product-intake/repository-types"
 import type { ProductIntakeCategoryKey } from "@/lib/types"
@@ -289,6 +290,77 @@ export function createSupabaseProductIntakeRepository(
         usage_id: string | null
         submission_id: string | null
       }
+    },
+
+    async createSubmissionForUserProduct({
+      userId,
+      userProductId,
+      category,
+      frequencyRange,
+      intakeMethod,
+      brandText,
+      productNameText,
+      frontImagePath,
+      barcodeImagePath,
+      requestFingerprint,
+      now,
+    }) {
+      const payload = requireData<{
+        userProduct?: ProductIntakeUserProductRow
+        submission?: ProductIntakeSubmissionRow
+        replayed?: boolean
+      }>(
+        await admin.rpc("product_intake_create_submission_for_user_product", {
+          p_user_id: userId,
+          p_user_product_id: userProductId,
+          p_category: category,
+          p_frequency_range: frequencyRange,
+          p_intake_method: intakeMethod,
+          p_brand_text: brandText,
+          p_product_name_text: productNameText,
+          p_front_image_path: frontImagePath,
+          p_barcode_image_path: barcodeImagePath,
+          p_request_fingerprint: requestFingerprint,
+          p_source_conversation_id: null,
+          p_created_at: now,
+        }),
+        "create Personal Plan product intake submission",
+      )
+
+      if (!payload.userProduct || !payload.submission) {
+        throw new ProductIntakePersistenceError(
+          "create Personal Plan product intake submission: incomplete payload",
+        )
+      }
+
+      return {
+        userProduct: payload.userProduct,
+        submission: payload.submission,
+        replayed: payload.replayed === true,
+      }
+    },
+
+    async cancelSubmissionForUserProduct({ userId, userProductId, submissionId, now }) {
+      const payload = requireData<{
+        userProduct?: ProductIntakeUserProductRow
+        submission?: ProductIntakeSubmissionRow
+      }>(
+        await admin.rpc("product_intake_cancel_submission_for_user_product", {
+          p_user_id: userId,
+          p_user_product_id: userProductId,
+          p_submission_id: submissionId,
+          p_updated_at: now,
+        }),
+        "cancel Personal Plan product intake submission",
+      )
+
+      if (!payload.userProduct || !payload.submission) {
+        throw new ProductIntakePersistenceError(
+          "cancel Personal Plan product intake submission: incomplete payload",
+        )
+      }
+
+      return { userProduct: payload.userProduct, submission: payload.submission }
     },
 
     async findProductSubmission(id, userId) {

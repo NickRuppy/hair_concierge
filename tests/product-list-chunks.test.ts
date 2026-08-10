@@ -69,6 +69,9 @@ test("shampoo eligibility accepts explicit shampoo bucket pairs", () => {
 test("legacy product-list chunk ingestion refuses unflagged runs", () => {
   const env = { ...process.env }
   delete env.ALLOW_LEGACY_PRODUCT_LIST_CHUNKS
+  env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co"
+  env.SUPABASE_SERVICE_ROLE_KEY = "test-service-role-key"
+  env.OPENAI_API_KEY = "test-openai-key"
 
   const result = spawnSync("npx", ["tsx", "scripts/ingest-product-chunks.ts", "--dry-run"], {
     cwd: process.cwd(),

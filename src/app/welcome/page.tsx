@@ -12,11 +12,19 @@ import {
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
 import {
   getAuthenticatedCheckoutSuccessRedirect,
+  getCheckoutFirstTimeDestination,
+  resolvePersonalPlanCheckoutReadiness,
   resolveCheckoutFirstTimeDestination,
   type CheckoutFirstTimeDestination,
 } from "@/lib/billing/checkout-success-redirect"
 import { findPayPalCheckoutIntentByToken } from "@/lib/paypal/checkout-intents"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
+import { getPersonalPlanNewBuyerCohortCutoff } from "@/lib/personal-plan/release"
+import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
+import {
+  findOneTimePurchaseEntitlementForUser,
+  resolveOneTimePurchaseAccessState,
+} from "@/lib/billing/purchases"
 import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/checkout-reservations"
 import { getStripe } from "@/lib/stripe/client"
 import {
@@ -167,12 +175,6 @@ async function renderStripeWelcome(session_id: string) {
         />
       )
     }
-    const accountDestination = await resolveCheckoutFirstTimeDestination(
-      admin,
-      account.leadId ?? session.metadata?.lead_id,
-      account.checkoutContext ?? session.metadata?.checkout_context,
-    )
-
     if (account.state !== "active") {
       return (
         <WelcomeClient
@@ -180,11 +182,16 @@ async function renderStripeWelcome(session_id: string) {
           email={account.email}
           mode="pending"
           purchase={null}
-          activationRedirectTo={accountDestination}
+          activationRedirectTo={oneTimeDestination}
           sessionId={session_id}
         />
       )
     }
+    const accountDestination = await resolveOneTimePersonalPlanDestination(admin, {
+      userId: account.userId,
+      leadId: account.leadId ?? session.metadata?.lead_id,
+      checkoutContext: account.checkoutContext ?? session.metadata?.checkout_context,
+    })
 
     if (user?.email?.toLowerCase() === account.email.toLowerCase()) {
       const redirectTo = await resolveAuthenticatedCheckoutRedirect(
@@ -344,11 +351,11 @@ async function renderPayPalOneTimeWelcome(
   }
 
   const account = activation.account
-  const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
-    admin,
-    account.leadId,
-    account.checkoutContext,
-  )
+  const firstTimeDestination = await resolveOneTimePersonalPlanDestination(admin, {
+    userId: account.userId,
+    leadId: account.leadId,
+    checkoutContext: account.checkoutContext,
+  })
   const supabase = await createClient()
   const {
     data: { user },
@@ -523,6 +530,51 @@ async function resolveAuthenticatedCheckoutRedirect(
     reactivationReturnDestination,
     firstTimeDestination,
   )
+}
+
+async function resolveOneTimePersonalPlanDestination(
+  admin: ReturnType<typeof createAdminClient>,
+  input: { userId: string; leadId?: string | null; checkoutContext?: string | null },
+): Promise<CheckoutFirstTimeDestination> {
+  const delayedProvisioningDestination = await resolveCheckoutFirstTimeDestination(
+    admin,
+    input.leadId,
+    input.checkoutContext,
+  )
+  if (!delayedProvisioningDestination.startsWith("/plan-bereit?lead=")) {
+    return delayedProvisioningDestination
+  }
+  try {
+    const entitlement = await findOneTimePurchaseEntitlementForUser(admin, input.userId)
+    const artifactLeadId = entitlement?.consent?.lead_id ?? null
+    let preparedArtifactAttached = false
+    if (artifactLeadId) {
+      const { data, error } = await admin
+        .from("personal_plan_prepared_artifacts")
+        .select("id")
+        .eq("user_id", input.userId)
+        .eq("lead_id", artifactLeadId)
+        .eq("status", "attached")
+        .maybeSingle()
+      if (error) throw error
+      preparedArtifactAttached = Boolean(data)
+    }
+    const readiness = resolvePersonalPlanCheckoutReadiness({
+      appEnabled: await isPersonalPlanAppV1AllowedForUser(input.userId, admin as never),
+      accessState: resolveOneTimePurchaseAccessState(entitlement),
+      paidAt: entitlement?.purchase.paid_at ?? null,
+      artifactLeadId,
+      preparedArtifactAttached,
+      cohortCutoff: getPersonalPlanNewBuyerCohortCutoff(),
+    })
+    return getCheckoutFirstTimeDestination("personal_plan", input.leadId, input.checkoutContext, {
+      personalPlanActivationReady: readiness.activationReady,
+      personalPlanLegacy: readiness.legacy,
+    })
+  } catch (error) {
+    console.warn("[welcome] Personal Plan route readiness unavailable", error)
+    return delayedProvisioningDestination
+  }
 }
 
 function paypalCheckoutAnalyticsId(token: string): string {

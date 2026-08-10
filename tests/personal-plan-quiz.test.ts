@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,
   clearPersonalPlanQuizDraft,
+  appendPersonalPlanQuizHistory,
   derivePersonalPlanConflictPrompt,
   derivePersonalPlanProfileSummary,
   getPersonalPlanQuizTransitionDirection,
@@ -34,27 +35,37 @@ class MemoryStorage implements Pick<Storage, "getItem" | "setItem" | "removeItem
 }
 
 test("approved flow inserts the analysis bridge, midpoint, admission ladder, and daily commitment", () => {
-  assert.equal(getNextPersonalPlanQuizScreen("current_problems", {}), "analysis_bridge")
+  assert.equal(
+    getNextPersonalPlanQuizScreen("current_problems", {
+      currentConcerns: ["dry_lengths"],
+    }),
+    "admission_recurrence",
+  )
+  assert.equal(
+    getNextPersonalPlanQuizScreen("current_problems", { currentConcerns: [] }),
+    "analysis_bridge",
+  )
   assert.equal(getNextPersonalPlanQuizScreen("elastic_response", {}), "midpoint_profile")
   assert.equal(getNextPersonalPlanQuizScreen("midpoint_profile", {}), "chemical_treatments")
-  assert.equal(
-    getNextPersonalPlanQuizScreen("admission_recurrence", {}),
-    "admission_practical_cost",
-  )
-  assert.equal(
-    getNextPersonalPlanQuizScreen("admission_recurrence", {
-      thickness: "fine",
-      goals: ["moisture"],
-    }),
-    "admission_conflict",
-  )
+  assert.equal(getNextPersonalPlanQuizScreen("admission_recurrence", {}), "analysis_bridge")
   assert.equal(getNextPersonalPlanQuizScreen("profile_summary", {}), "daily_time")
   assert.equal(getNextPersonalPlanQuizScreen("daily_time", {}), "plan_loading")
+})
+
+test("recurrence keeps ordinary history-stack Back semantics after moving beside concerns", () => {
+  const history = appendPersonalPlanQuizHistory([], "current_problems")
+  assert.deepEqual(history, ["current_problems"])
+  assert.deepEqual(appendPersonalPlanQuizHistory(history, "current_problems"), history)
+  assert.deepEqual(appendPersonalPlanQuizHistory(history, "admission_recurrence"), [
+    "current_problems",
+    "admission_recurrence",
+  ])
 })
 
 test("five stable checkpoint sections cover every semantic phase", () => {
   assert.equal(getPersonalPlanQuizSectionId("texture"), "hair_profile")
   assert.equal(getPersonalPlanQuizSectionId("goals"), "goals_and_context")
+  assert.equal(getPersonalPlanQuizSectionId("admission_recurrence"), "goals_and_context")
   assert.equal(getPersonalPlanQuizSectionId("admission_emotional_relevance"), "analysis")
   assert.equal(getPersonalPlanQuizSectionId("profile_summary"), "plan_direction")
   assert.equal(getPersonalPlanQuizSectionId("email_capture"), "completion")
@@ -65,12 +76,23 @@ test("scalp concerns use one optional multi-select screen without a medical warn
   assert.equal(getNextPersonalPlanQuizScreen("scalp_concerns", {}), "admission_practical_cost")
   assert.equal(
     getNextPersonalPlanQuizScreen("scalp_concerns", { currentConcerns: ["dry_lengths"] }),
-    "admission_recurrence",
+    "admission_practical_cost",
   )
   assert.equal(
     getNextPersonalPlanQuizScreen("scalp_concerns", { thickness: "fine", goals: ["moisture"] }),
     "admission_conflict",
   )
+})
+
+test("the later scalp tail still reaches a conflict prompt after recurrence moved earlier", () => {
+  assert.equal(
+    getNextPersonalPlanQuizScreen("scalp_concerns", {
+      currentConcerns: ["dry_lengths"],
+      scalpOiliness: "oily",
+    }),
+    "admission_conflict",
+  )
+  assert.equal(getNextPersonalPlanQuizScreen("admission_conflict", {}), "admission_practical_cost")
 })
 
 test("browser draft trims malformed current concern notes without resetting v4 drafts", () => {
@@ -230,6 +252,19 @@ test("v4 drafts preserve exact concern recurrence and reject the retired v3 sche
     concernId: "breakage",
     frequency: "often",
   })
+
+  savePersonalPlanQuizDraft(
+    {
+      screen: "analysis_bridge",
+      history: ["current_problems", "admission_recurrence"],
+      answers: {
+        currentConcerns: [],
+        concernRecurrence: { concernId: "breakage", frequency: "often" },
+      },
+    },
+    storage,
+  )
+  assert.deepEqual(loadPersonalPlanQuizDraft(storage)?.answers, { currentConcerns: [] })
 
   storage.setItem(
     PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY,

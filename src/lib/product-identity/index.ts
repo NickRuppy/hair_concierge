@@ -12,10 +12,11 @@ export const SUPPORTED_PRODUCT_CATEGORY_KEYS = [
   "dry_shampoo",
   "deep_cleansing_shampoo",
   "bondbuilder",
+  "heat_protectant",
+  "scalp_care",
 ] as const
 
 export const KNOWN_UNSUPPORTED_PRODUCT_CATEGORY_KEYS = [
-  "heat_protectant",
   "serum",
   "scrub",
   "peeling",
@@ -44,6 +45,8 @@ export const PRODUCT_CATEGORY_DISPLAY_LABELS: Record<SupportedProductCategoryKey
   dry_shampoo: "Trockenshampoo",
   deep_cleansing_shampoo: "Tiefenreinigungsshampoo",
   bondbuilder: "Bondbuilder",
+  heat_protectant: "Hitzeschutz",
+  scalp_care: "Kopfhautpflege",
 }
 
 const CATEGORY_ALIASES: Array<[KnownProductCategoryKey, string]> = [
@@ -68,6 +71,8 @@ const CATEGORY_ALIASES: Array<[KnownProductCategoryKey, string]> = [
   ["bondbuilder", "Bondbuilder"],
   ["heat_protectant", "Hitzeschutz"],
   ["heat_protectant", "Heat Protectant"],
+  ["scalp_care", "Kopfhautpflege"],
+  ["scalp_care", "Scalp Care"],
   ["serum", "Serum"],
   ["scrub", "Scrub"],
   ["peeling", "Peeling"],

@@ -127,6 +127,21 @@ export const PRODUCT_FREQUENCY_OPTIONS = PRODUCT_FREQUENCIES.map((value) => ({
   label: PRODUCT_FREQUENCY_LABELS[value],
 }))
 
+export const PRODUCT_FREQUENCY_COMMON_FIRST = [
+  "weekly_2x",
+  "weekly_1x",
+  "weekly_3_4x",
+  "weekly_5_6x",
+  "daily_1x",
+  "biweekly_1x",
+  "monthly_1x",
+  "less_than_monthly",
+] as const satisfies readonly ProductFrequency[]
+
+export const PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS = PRODUCT_FREQUENCY_COMMON_FIRST.map(
+  (value) => ({ value, label: PRODUCT_FREQUENCY_LABELS[value] }),
+)
+
 export function normalizeProductFrequency(
   frequency: ProductFrequencyInput | string | null | undefined,
 ): ProductFrequency | null {

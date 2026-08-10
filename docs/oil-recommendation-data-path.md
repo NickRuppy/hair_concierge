@@ -1,8 +1,10 @@
 # Oil Recommendation Data Path
 
+> **Status:** Production compatibility snapshot for the legacy Routine/Chat Oil path. Its former recommendation to avoid `product_oil_specs` is superseded for the new canonical catalog authority by `docs/personal-plan/categories/oil/decision.md`. Keep this document for the live-reader inventory until the explicit expand/backfill/contract migration retires `product_oil_eligibility`.
+
 ## Decision
 
-Keep oil on `product_oil_eligibility` for now. Do not create or migrate to `product_oil_specs` until oil needs product-level properties that cannot be represented on the current eligibility rows.
+Existing production Routine/Chat readers remain temporarily on `product_oil_eligibility` during the expand/backfill phase. New canonical product-level Oil facts belong to `product_oil_specs`; the legacy table is a compatibility projection, not the future authority.
 
 The current table is already richer than the original strict matcher bridge:
 
@@ -71,4 +73,4 @@ Create a dedicated `product_oil_specs` table only if oil needs stable product-le
 - volatile/silicone-heavy finish behavior beyond ingredient flags
 - therapy-oil lifecycle once those products become catalogued
 
-Until then, `product_oil_eligibility` is the canonical oil fit table.
+For the current production readers described above, `product_oil_eligibility` remains the compatibility source until their explicit cutover. It is no longer the planned canonical authority for new Oil product facts.

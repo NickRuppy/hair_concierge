@@ -9,6 +9,7 @@ test("full CI marker in PR title forces all path-aware gates", () => {
     retrieval_eval: true,
     playwright_smoke: true,
     security_scan: true,
+    personal_plan_db: true,
     full_ci: true,
   })
 })
@@ -19,6 +20,7 @@ test("diff failures can force all path-aware gates without changed files", () =>
     retrieval_eval: true,
     playwright_smoke: true,
     security_scan: true,
+    personal_plan_db: true,
     full_ci: true,
   })
 })
@@ -58,4 +60,57 @@ test("product list chunk changes run retrieval eval", () => {
 test("workflow and dependency changes mark security scan relevant", () => {
   assert.equal(classifyCiScope([".github/workflows/ci.yml"]).security_scan, true)
   assert.equal(classifyCiScope(["package-lock.json"]).security_scan, true)
+})
+
+test("Personal Plan persistence and database contracts run the local database gate", () => {
+  assert.equal(
+    classifyCiScope(["supabase/tests/personal_plan_stage1_3_foundation.sql"]).personal_plan_db,
+    true,
+  )
+  assert.equal(
+    classifyCiScope(["scripts/ci/prepare-personal-plan-db-transition.mjs"]).personal_plan_db,
+    true,
+  )
+  assert.equal(
+    classifyCiScope(["src/lib/personal-plan/persistence/plan-repository.ts"]).personal_plan_db,
+    true,
+  )
+  assert.equal(
+    classifyCiScope(["src/lib/product-intake/submit-personal-plan-product.ts"]).personal_plan_db,
+    true,
+  )
+  assert.equal(classifyCiScope(["docs/readme.md"]).personal_plan_db, false)
+})
+
+test("persisted Personal Plan browser harness paths run the isolated database gate", () => {
+  for (const path of [
+    "scripts/test-personal-plan-stage1-5-browser.sh",
+    "tests/personal-plan-stage1-5.spec.ts",
+    "scripts/test-personal-plan-stage4-browser.sh",
+    "tests/personal-plan-stage4-routine.spec.ts",
+    "scripts/test-personal-plan-stage5-browser.sh",
+    "tests/personal-plan-stage5-application.spec.ts",
+  ]) {
+    assert.equal(classifyCiScope([path]).personal_plan_db, true, path)
+  }
+})
+
+test("integrated Personal Plan runtime paths run the database and browser gate", () => {
+  for (const path of [
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/app/anwendung/page.tsx",
+    "src/app/routine/page.tsx",
+    "src/components/application/application-page.tsx",
+    "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "src/components/personal-plan-refinement/refinement-bridge.tsx",
+    "src/components/personal-plan-start/plan-start-flow.tsx",
+    "src/components/routine/personal-plan/routine-page.tsx",
+    "src/components/routine/routine-page-client.tsx",
+    "src/components/layout/personal-plan-navigation.tsx",
+  ]) {
+    assert.equal(classifyCiScope([path]).personal_plan_db, true, path)
+  }
+
+  assert.equal(classifyCiScope(["src/components/layout/header.tsx"]).personal_plan_db, false)
+  assert.equal(classifyCiScope(["src/components/routine/routine-card.tsx"]).personal_plan_db, false)
 })

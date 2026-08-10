@@ -93,6 +93,14 @@ export async function findCurrentBillingSubscriptionForUser(
   userId: string,
   now: Date = new Date(),
 ): Promise<BillingSubscriptionRow | null> {
+  return (await findCurrentBillingSubscriptionsForUser(supabase, userId, now))[0] ?? null
+}
+
+export async function findCurrentBillingSubscriptionsForUser(
+  supabase: SupabaseBillingClient,
+  userId: string,
+  now: Date = new Date(),
+): Promise<BillingSubscriptionRow[]> {
   const { data, error } = await supabase
     .from("billing_subscriptions")
     .select("*")
@@ -110,7 +118,7 @@ export async function findCurrentBillingSubscriptionForUser(
     return compareNullableIsoDesc(left.current_period_end, right.current_period_end)
   })
 
-  return rows[0] ?? null
+  return rows
 }
 
 export async function findVisibleBillingSubscriptionForUser(

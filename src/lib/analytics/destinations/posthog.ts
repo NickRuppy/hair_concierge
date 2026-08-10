@@ -309,6 +309,62 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         step_index: data.stepIndex,
       }
     }
+    case "personal_plan_stage3_flow_viewed": {
+      const data = payload as AppEventMap["personal_plan_stage3_flow_viewed"]
+      return { pass: data.pass, step_key: data.stepKey }
+    }
+    case "personal_plan_stage3_search_interacted": {
+      const data = payload as AppEventMap["personal_plan_stage3_search_interacted"]
+      return {
+        interaction: data.interaction,
+        result_count_band: data.resultCountBand,
+        selected_candidate_position: data.selectedCandidatePosition,
+      }
+    }
+    case "personal_plan_stage3_fallback_opened": {
+      const data = payload as AppEventMap["personal_plan_stage3_fallback_opened"]
+      return { step_key: data.stepKey }
+    }
+    case "personal_plan_stage3_decision_selected": {
+      const data = payload as AppEventMap["personal_plan_stage3_decision_selected"]
+      return { decision_type: data.decisionType, step_key: data.stepKey }
+    }
+    case "personal_plan_stage3_save_outcome": {
+      const data = payload as AppEventMap["personal_plan_stage3_save_outcome"]
+      return { outcome: data.outcome }
+    }
+    case "personal_plan_stage3_handoff": {
+      const data = payload as AppEventMap["personal_plan_stage3_handoff"]
+      return { outcome: data.outcome }
+    }
+    case "personal_plan_stage4_routine_viewed": {
+      const data = payload as AppEventMap["personal_plan_stage4_routine_viewed"]
+      return { surface: data.surface, variant: data.variant }
+    }
+    case "personal_plan_stage4_proposal_interacted": {
+      const data = payload as AppEventMap["personal_plan_stage4_proposal_interacted"]
+      return {
+        change_count_band: data.changeCountBand,
+        interaction: data.interaction,
+        origin: data.origin,
+      }
+    }
+    case "personal_plan_stage4_editor_interacted": {
+      const data = payload as AppEventMap["personal_plan_stage4_editor_interacted"]
+      return {
+        change_count_band: data.changeCountBand,
+        interaction: data.interaction,
+        origin: data.origin,
+      }
+    }
+    case "personal_plan_stage4_item_interacted": {
+      const data = payload as AppEventMap["personal_plan_stage4_item_interacted"]
+      return { interaction: data.interaction, surface: data.surface }
+    }
+    case "personal_plan_stage4_outcome": {
+      const data = payload as AppEventMap["personal_plan_stage4_outcome"]
+      return { origin: data.origin, outcome: data.outcome }
+    }
     case "pricing_viewed": {
       const data = payload as AppEventMap["pricing_viewed"]
       return {

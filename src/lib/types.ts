@@ -315,6 +315,7 @@ export type CanonicalProductCategoryKey =
   | "deep_cleansing_shampoo"
   | "bondbuilder"
   | "heat_protectant"
+  | "scalp_care"
   | "serum"
   | "scrub"
   | "peeling"
@@ -332,10 +333,13 @@ export type ProductIntakeCategoryKey =
   | "dry_shampoo"
   | "deep_cleansing_shampoo"
   | "bondbuilder"
+  | "heat_protectant"
+  | "scalp_care"
 
 export type ProductIntakeMethod = "manual" | "photo"
 export type ProductUsageSource = "onboarding" | "chat" | "profile" | "script"
 export type ProductSubmissionSource = Extract<ProductUsageSource, "onboarding" | "chat">
+export type ProductIntakeSubmissionSource = ProductSubmissionSource | "personal_plan"
 export type ProductUsageMatchStatus = "text_only" | "matched" | "pending_review" | "needs_more_info"
 
 export type ProductSubmissionStatus =
@@ -381,7 +385,8 @@ export interface ProductSubmission {
   id: string
   user_id: string
   user_product_usage_id: string | null
-  source: ProductSubmissionSource
+  user_product_id: string | null
+  source: ProductIntakeSubmissionSource
   source_conversation_id: string | null
   intake_method: ProductIntakeMethod
   category: ProductIntakeCategoryKey

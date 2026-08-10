@@ -2,6 +2,7 @@ import { pathMatchesRoutePrefix } from "@/lib/auth/route-classification"
 
 const AUTH_FIRST_PREFIXES = [
   "/chat",
+  "/anwendung",
   "/routine",
   "/profile",
   "/reactivate",

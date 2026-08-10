@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MessageCircle, RefreshCw, SlidersHorizontal } from "lucide-react"
 
-import { Header } from "@/components/layout/header"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/providers/toast-provider"
 import { launchRoutineChatTrigger, type RoutineChatTriggerType } from "@/lib/routines/chat-triggers"
@@ -277,7 +276,6 @@ export function RoutinePageClient() {
 
   return (
     <>
-      <Header />
       <main className="min-h-screen bg-background">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-4 py-5 sm:px-6">
           <section className="flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between">

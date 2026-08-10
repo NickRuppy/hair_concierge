@@ -105,6 +105,7 @@ jobs:
       retrieval_eval: ${{ steps.changes.outputs.retrieval_eval }}
       playwright_smoke: ${{ steps.changes.outputs.playwright_smoke }}
       security_scan: ${{ steps.changes.outputs.security_scan }}
+      personal_plan_db: ${{ steps.changes.outputs.personal_plan_db }}
       full_ci: ${{ steps.changes.outputs.full_ci }}
     steps:
       - uses: actions/checkout@v6
@@ -138,8 +139,36 @@ jobs:
         run: npm run build
       - name: Check funnel registries
         run: npm run funnel:check
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
       - name: Run deterministic contract tests
         run: npm run test:contracts
+
+  personal-plan-db-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [detect-ci-scope]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.personal_plan_db != 'true'
+        run: echo "No Personal Plan persistence, Product Intake contract, migration, or Supabase test paths changed."
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: npm ci
+      - name: Install Playwright browsers
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Run local Personal Plan database contracts
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: time npm run test:personal-plan-db
+      - name: Run persisted Personal Plan browser journey
+        if: needs.detect-ci-scope.outputs.personal_plan_db == 'true'
+        run: time npm run test:playwright:personal-plan-stage1-5
 
   playwright-smoke:
     runs-on: ubuntu-latest

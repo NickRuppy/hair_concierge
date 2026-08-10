@@ -125,6 +125,47 @@ export const chatProductIntakeSubmissionSchema = z
     }
   })
 
+const personalPlanManualProductIntakeSchema = z
+  .object({
+    intake_method: z.literal("manual").default("manual"),
+    category: productIntakeCategorySchema,
+    frequency_range: productIntakeFrequencySchema,
+    brand_text: optionalTrimmedString,
+    brand_id: uuidString.optional(),
+    product_line_id: uuidString.nullable().optional(),
+    product_name_text: trimmedString.pipe(z.string().min(1).max(240)),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.brand_text && !value.brand_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["brand_text"],
+        message: "Marke ist erforderlich.",
+      })
+    }
+  })
+
+const personalPlanPhotoProductIntakeSchema = z.object({
+  intake_method: z.literal("photo"),
+  category: productIntakeCategorySchema,
+  frequency_range: productIntakeFrequencySchema,
+  front_image_path: uploadPathString,
+  front_image_validation_status: frontImageValidationStatusSchema.default("uncertain"),
+  front_image_validation_metadata: validationMetadataSchema.default({}),
+  barcode_image_path: uploadPathString.optional(),
+  barcode_image_validation_status: barcodeImageValidationStatusSchema.optional(),
+  barcode_image_validation_metadata: validationMetadataSchema.default({}),
+  brand_text: optionalTrimmedString,
+  brand_id: uuidString.optional(),
+  product_line_id: uuidString.nullable().optional(),
+  product_name_text: optionalTrimmedString.pipe(z.string().max(240).optional()),
+})
+
+export const personalPlanProductIntakeSubmissionSchema = z.discriminatedUnion("intake_method", [
+  personalPlanManualProductIntakeSchema,
+  personalPlanPhotoProductIntakeSchema,
+])
+
 export const onboardingProductIntakeCancelSchema = z.object({
   categories: z
     .array(productIntakeCategorySchema)
@@ -145,3 +186,9 @@ export type ChatProductIntakeSubmissionInput = z.infer<typeof chatProductIntakeS
 export type ProductIntakeSubmissionInput =
   | OnboardingProductIntakeSubmissionInput
   | ChatProductIntakeSubmissionInput
+
+export type PersonalPlanProductIntakeSubmissionInput = z.infer<
+  typeof personalPlanProductIntakeSubmissionSchema
+> & {
+  frequency_range: ProductFrequency
+}

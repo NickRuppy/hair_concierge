@@ -97,6 +97,28 @@ test("Stripe one-time welcome renders paid-pending instead of activation choices
   assert.match(welcomePageSource, /purchaseKind: "one_time"/)
 })
 
+test("authenticated Stripe and PayPal one-time returns pass their derived Personal Plan destination to the shared redirect contract", () => {
+  const stripeStart = welcomePageSource.indexOf("if (isOneTimePurchase)")
+  const stripeEnd = welcomePageSource.indexOf(
+    "if (user?.email?.toLowerCase() === email.toLowerCase())",
+    stripeStart,
+  )
+  const stripeOneTimeBranch = welcomePageSource.slice(stripeStart, stripeEnd)
+  const paypalStart = welcomePageSource.indexOf("async function renderPayPalOneTimeWelcome")
+  const paypalEnd = welcomePageSource.indexOf("async function renderPayPalWelcome", paypalStart)
+  const paypalOneTimeBranch = welcomePageSource.slice(paypalStart, paypalEnd)
+
+  assert.match(
+    stripeOneTimeBranch,
+    /resolveAuthenticatedCheckoutRedirect\(\s*supabase,\s*user\.id,\s*null,\s*accountDestination,\s*\)/,
+  )
+  assert.match(
+    paypalOneTimeBranch,
+    /resolveAuthenticatedCheckoutRedirect\(\s*supabase,\s*user\.id,\s*null,\s*firstTimeDestination,\s*\)/,
+  )
+  assert.match(welcomePageSource, /checkout_context === "membership_reactivation"/)
+})
+
 test("one-time activation errors render a safe support or revoked state instead of repricing", () => {
   const stripeStart = welcomePageSource.indexOf("if (isOneTimePurchase)")
   const subscriptionStart = welcomePageSource.indexOf(

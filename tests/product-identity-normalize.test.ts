@@ -23,11 +23,17 @@ test("canonical category constants include supported and known unsupported keys"
     "dry_shampoo",
     "deep_cleansing_shampoo",
     "bondbuilder",
+    "heat_protectant",
+    "scalp_care",
   ])
 
   assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes("heat_protectant"), true)
   assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes("hairspray"), true)
   assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, "Leave-in")
+  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes("heat_protectant"), true)
+  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes("scalp_care"), true)
+  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, "Hitzeschutz")
+  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, "Kopfhautpflege")
 })
 
 test("normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases", () => {
@@ -40,6 +46,8 @@ test("normalizeCategoryKey maps production labels, canonical keys, and simple oi
   assert.equal(normalizeCategoryKey("Tiefenreinigungsshampoo"), "deep_cleansing_shampoo")
   assert.equal(normalizeCategoryKey("Bondbuilder"), "bondbuilder")
   assert.equal(normalizeCategoryKey("Hitzeschutz"), "heat_protectant")
+  assert.equal(normalizeCategoryKey("Kopfhautpflege"), "scalp_care")
+  assert.equal(normalizeCategoryKey("Scalp Care"), "scalp_care")
   assert.equal(normalizeCategoryKey("Serum"), "serum")
   assert.equal(normalizeCategoryKey("Scrub"), "scrub")
   assert.equal(normalizeCategoryKey("Peeling"), "peeling")

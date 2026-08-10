@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan · Vollständige Reiseübersicht</title>
+    <style>
+      :root {
+        --paper: #fdfbf9;
+        --card: #ffffff;
+        --ink: #2a1845;
+        --body: #3a3835;
+        --sub: #6a6560;
+        --caption: #7a746e;
+        --line: #e4dcd7;
+        --plum: #6b50a0;
+        --plum-dark: #3d2a62;
+        --plum-ice: #f2eefa;
+        --rose: #88466c;
+        --green: #4f8058;
+        --green-ice: #edf6ee;
+        --sand: #f6f0e9;
+        --shadow: 0 18px 56px rgba(42, 24, 69, 0.12);
+        --display: Georgia, "Times New Roman", serif;
+        --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--body);
+        background:
+          radial-gradient(circle at 8% 0%, rgba(107, 80, 160, 0.12), transparent 32rem),
+          #f1edeb;
+        font: 14px/1.5 var(--sans);
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      .artifact {
+        width: min(1460px, 100%);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 24px 20px 48px;
+      }
+
+      .artifact-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 22px;
+        align-items: end;
+        margin-bottom: 18px;
+      }
+
+      .kicker {
+        margin: 0;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 4px 0 0;
+        color: var(--ink);
+        font: 500 clamp(30px, 4vw, 44px) / 1.08 var(--display);
+      }
+
+      .intro {
+        max-width: 850px;
+        margin: 8px 0 0;
+        color: var(--sub);
+        font-size: 13px;
+      }
+
+      .journey-key {
+        display: grid;
+        gap: 7px;
+        min-width: 220px;
+        padding: 12px 14px;
+        border: 1px solid #d8cde5;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.78);
+        font-size: 11px;
+      }
+
+      .key-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .key-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--plum);
+      }
+
+      .key-dot.seam {
+        border: 2px solid var(--rose);
+        background: transparent;
+      }
+
+      .journey-nav {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 9px;
+      }
+
+      .stage-button {
+        position: relative;
+        min-height: 78px;
+        padding: 11px 12px 10px 43px;
+        border: 1px solid #d9cfe6;
+        border-radius: 15px;
+        color: var(--plum-dark);
+        background: rgba(255, 255, 255, 0.88);
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+      }
+
+      .stage-button:hover {
+        border-color: #bba8d4;
+        transform: translateY(-1px);
+      }
+
+      .stage-button[aria-pressed="true"] {
+        border-color: var(--plum);
+        color: #fff;
+        background: var(--plum);
+        box-shadow: 0 10px 26px rgba(107, 80, 160, 0.2);
+      }
+
+      .stage-number {
+        position: absolute;
+        top: 13px;
+        left: 12px;
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--plum);
+        font-size: 10px;
+        font-weight: 900;
+      }
+
+      .stage-button[aria-pressed="true"] .stage-number {
+        color: var(--plum);
+        background: #fff;
+      }
+
+      .stage-button strong,
+      .stage-button small {
+        display: block;
+      }
+
+      .stage-button strong {
+        font-size: 12px;
+      }
+
+      .stage-button small {
+        margin-top: 3px;
+        color: var(--caption);
+        font-size: 9px;
+        line-height: 1.3;
+      }
+
+      .stage-button[aria-pressed="true"] small {
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .seam-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 15px;
+      }
+
+      .seam-row::before {
+        height: 1px;
+        flex: 1;
+        background: var(--line);
+        content: "";
+      }
+
+      .stage-button.seam-only {
+        min-height: 50px;
+        flex: 0 1 370px;
+        border-style: dashed;
+        border-color: #caa8b9;
+        color: #704057;
+        background: #fbf4f7;
+      }
+
+      .stage-button.seam-only .stage-number {
+        border: 1px solid var(--rose);
+        color: var(--rose);
+        background: #fff;
+      }
+
+      .stage-button.seam-only[aria-pressed="true"] {
+        border-color: var(--rose);
+        color: #fff;
+        background: var(--rose);
+      }
+
+      .stage-button.seam-only[aria-pressed="true"] .stage-number {
+        color: var(--rose);
+      }
+
+      .review-shell {
+        overflow: hidden;
+        border: 1px solid #dcd3ce;
+        border-radius: 20px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+      }
+
+      .review-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        padding: 17px 19px;
+        border-bottom: 1px solid var(--line);
+        background: var(--paper);
+      }
+
+      .stage-meta {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .selected-number {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        flex: none;
+        place-items: center;
+        border-radius: 12px;
+        color: #fff;
+        background: var(--plum);
+        font-weight: 900;
+      }
+
+      .selected-number.seam {
+        background: var(--rose);
+      }
+
+      .stage-type {
+        margin: 0;
+        color: var(--plum);
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .stage-title {
+        margin: 2px 0 0;
+        color: var(--ink);
+        font: 500 23px/1.15 var(--display);
+      }
+
+      .stage-description {
+        max-width: 850px;
+        margin: 5px 0 0;
+        color: var(--sub);
+        font-size: 12px;
+      }
+
+      .direct-link {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 14px;
+        border: 1px solid #c7b5dc;
+        border-radius: 11px;
+        color: var(--plum);
+        background: #fff;
+        font-size: 11px;
+        font-weight: 820;
+        text-decoration: none;
+      }
+
+      .direct-link:hover {
+        background: var(--plum-ice);
+      }
+
+      .frame-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 13px;
+        border-bottom: 1px solid var(--line);
+        color: var(--caption);
+        background: #f7f3f0;
+        font-size: 10px;
+      }
+
+      .frame-strip strong {
+        color: var(--green);
+      }
+
+      .review-frame {
+        display: block;
+        width: 100%;
+        height: min(1040px, 80vh);
+        min-height: 720px;
+        border: 0;
+        background: #f2eeeb;
+      }
+
+      .frame-fallback {
+        display: none;
+        padding: 34px 20px;
+        text-align: center;
+      }
+
+      .frame-fallback strong {
+        display: block;
+        color: var(--ink);
+        font: 500 24px/1.2 var(--display);
+      }
+
+      .frame-fallback p {
+        margin: 8px auto 16px;
+        color: var(--sub);
+      }
+
+      .journey-summary {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .summary-step {
+        padding: 11px 12px;
+        border: 1px solid #ded5cf;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.76);
+        color: var(--sub);
+        font-size: 10px;
+      }
+
+      .summary-step strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ink);
+        font-size: 11px;
+      }
+
+      .summary-arrow {
+        color: var(--plum);
+      }
+
+      @media (max-width: 980px) {
+        .artifact-header,
+        .review-header {
+          grid-template-columns: 1fr;
+        }
+
+        .journey-key {
+          min-width: 0;
+        }
+
+        .journey-nav {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .stage-button:last-child {
+          grid-column: 1 / -1;
+        }
+
+        .journey-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .summary-step::after {
+          display: block;
+          margin-top: 5px;
+          color: var(--plum);
+          content: "↓";
+        }
+
+        .summary-step:last-child::after {
+          content: "";
+        }
+
+        .direct-link {
+          width: fit-content;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .artifact {
+          padding: 15px 10px 36px;
+        }
+
+        .journey-nav {
+          grid-template-columns: 1fr;
+        }
+
+        .stage-button:last-child {
+          grid-column: auto;
+        }
+
+        .seam-row {
+          align-items: stretch;
+        }
+
+        .seam-row::before {
+          display: none;
+        }
+
+        .stage-button.seam-only {
+          flex-basis: 100%;
+        }
+
+        .review-frame {
+          min-height: 650px;
+          height: 75vh;
+        }
+
+        .frame-strip {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-header">
+        <div>
+          <p class="kicker">Personal Plan · vollständige Reiseübersicht</p>
+          <h1>Die fünf Stufen im Zusammenhang</h1>
+          <p class="intro">
+            Stufen 1–5 zeigen die vollständige Produkterfahrung in den bereits freigegebenen
+            Detailansichten. Die sechste Ansicht ergänzt ausschließlich die geänderten Übergänge.
+          </p>
+        </div>
+        <aside class="journey-key" aria-label="Legende">
+          <span class="key-row"><i class="key-dot"></i> Stufen 1–5: vollständige Reise</span>
+          <span class="key-row"><i class="key-dot seam"></i> Ansicht 6: nur Übergänge</span>
+        </aside>
+      </header>
+
+      <nav class="journey-nav" aria-label="Stufen der vollständigen Personal-Plan-Journey">
+        <button class="stage-button" type="button" data-stage="1" aria-pressed="true">
+          <span class="stage-number">1</span>
+          <strong>Bedarfsplan</strong>
+          <small>Was braucht mein Haar?</small>
+        </button>
+        <button class="stage-button" type="button" data-stage="2" aria-pressed="false">
+          <span class="stage-number">2</span>
+          <strong>Verfeinerung</strong>
+          <small>Was müssen wir noch wissen?</small>
+        </button>
+        <button class="stage-button" type="button" data-stage="3" aria-pressed="false">
+          <span class="stage-number">3</span>
+          <strong>Produkte &amp; Passung</strong>
+          <small>Welche Produkte passen wirklich?</small>
+        </button>
+        <button class="stage-button" type="button" data-stage="4" aria-pressed="false">
+          <span class="stage-number">4</span>
+          <strong>Routine</strong>
+          <small>Was gehört in meinen Plan?</small>
+        </button>
+        <button class="stage-button" type="button" data-stage="5" aria-pressed="false">
+          <span class="stage-number">5</span>
+          <strong>Anwendung</strong>
+          <small>Was mache ich an diesem Tag?</small>
+        </button>
+      </nav>
+
+      <div class="seam-row">
+        <button
+          class="stage-button seam-only"
+          type="button"
+          data-stage="6"
+          aria-pressed="false"
+        >
+          <span class="stage-number">6</span>
+          <strong>Nur geänderte Übergänge</strong>
+          <small>Keine vollständige Reise · ausschließlich Konsolidierungsdetails</small>
+        </button>
+      </div>
+
+      <section class="review-shell" aria-labelledby="selected-stage-title">
+        <header class="review-header">
+          <div class="stage-meta">
+            <span class="selected-number" id="selected-stage-number">1</span>
+            <div>
+              <p class="stage-type" id="selected-stage-type">Vollständige Reise · Stufe 1</p>
+              <h2 class="stage-title" id="selected-stage-title">Bedarfsplan</h2>
+              <p class="stage-description" id="selected-stage-description">
+                Die Nutzerin erhält direkt aus ihrem Quiz eine verständliche Basis und nur wirklich
+                relevante optionale Ergänzungen.
+              </p>
+            </div>
+          </div>
+          <a
+            class="direct-link"
+            id="direct-link"
+            href="2026-08-06-personal-plan-stage1-density-states.html"
+            target="_blank"
+            rel="noopener"
+          >
+            Originalansicht separat öffnen ↗
+          </a>
+        </header>
+
+        <div class="frame-strip">
+          <span id="source-file">2026-08-06-personal-plan-stage1-density-states.html</span>
+          <strong id="frame-status">Originalansicht eingebettet</strong>
+        </div>
+
+        <iframe
+          class="review-frame"
+          id="review-frame"
+          src="2026-08-06-personal-plan-stage1-density-states.html"
+          title="Originalansicht Bedarfsplan"
+        ></iframe>
+
+        <div class="frame-fallback" id="frame-fallback">
+          <strong>Die Originalansicht konnte hier nicht eingebettet werden.</strong>
+          <p>Öffne es direkt in einem eigenen Tab; die Quelldatei bleibt unverändert.</p>
+          <a
+            class="direct-link"
+            id="fallback-link"
+            href="2026-08-06-personal-plan-stage1-density-states.html"
+            target="_blank"
+            rel="noopener"
+          >
+            Originalansicht öffnen ↗
+          </a>
+        </div>
+      </section>
+
+      <section class="journey-summary" aria-label="Zusammenfassung der vollständigen Journey">
+        <div class="summary-step">
+          <strong>1 · Bedarf verstehen <span class="summary-arrow">→</span></strong>
+          Die Grundlage aus dem Quiz wird sichtbar.
+        </div>
+        <div class="summary-step">
+          <strong>2 · Plan verfeinern <span class="summary-arrow">→</span></strong>
+          Nur noch relevante offene Fragen werden geklärt.
+        </div>
+        <div class="summary-step">
+          <strong>3 · Produkte entscheiden <span class="summary-arrow">→</span></strong>
+          Vorhandene Produkte werden gefunden, zugeordnet und geprüft.
+        </div>
+        <div class="summary-step">
+          <strong>4 · Routine bestätigen <span class="summary-arrow">→</span></strong>
+          Der vollständige Vorschlag wird zum aktiven Plan.
+        </div>
+        <div class="summary-step">
+          <strong>5 · Sicher anwenden</strong>
+          Relevante Tage zeigen Produkte und Schritte in Nutzungsreihenfolge.
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const stages = {
+        1: {
+          title: "Bedarfsplan",
+          type: "Vollständige Reise · Stufe 1",
+          description:
+            "Die Nutzerin erhält direkt aus ihrem Quiz eine verständliche Basis und nur wirklich relevante optionale Ergänzungen.",
+          file: "2026-08-06-personal-plan-stage1-density-states.html",
+        },
+        2: {
+          title: "Verfeinerung",
+          type: "Vollständige Reise · Stufe 2",
+          description:
+            "Gezielte Folgefragen schließen nur die Lücken, die für persönliche Produkt- und Anwendungsentscheidungen noch relevant sind.",
+          file: "2026-08-07-personal-plan-stage2-refinement-flow.html",
+        },
+        3: {
+          title: "Produkte & Passung",
+          type: "Vollständige Reise · Stufe 3",
+          description:
+            "Die Nutzerin findet ihre exakten Produkte, ordnet ihnen Rollen zu und entscheidet anhand der Passung, was bleibt oder geplant wird.",
+          file: "2026-08-07-personal-plan-stage3-products-flow.html",
+        },
+        4: {
+          title: "Bestätigte Routine",
+          type: "Vollständige Reise · Stufe 4",
+          description:
+            "Der vollständige Routine-Vorschlag bündelt Produkte und Aufgaben. Erst die bewusste Bestätigung macht ihn zum aktiven Plan.",
+          file: "2026-08-07-personal-plan-stage4-routine-flow.html",
+        },
+        5: {
+          title: "Anwendung",
+          type: "Vollständige Reise · Stufe 5",
+          description:
+            "Die Nutzerin wählt einen passenden Tag und sieht die vollständige Produktreihenfolge mit detaillierten Anwendungsschritten.",
+          file: "2026-08-08-personal-plan-stage5-complete-application-flow.html",
+        },
+        6: {
+          title: "Geänderte Übergänge",
+          type: "Konsolidierung · nur die veränderten Übergänge",
+          description:
+            "Diese Zusatzansicht zeigt ausschließlich Checkout-, Stufen- und Navigationsübergänge. Sie ersetzt keine der vollständigen Stufen 1–5.",
+          file: "2026-08-08-personal-plan-connected-handoffs.html",
+          seam: true,
+        },
+      }
+
+      const buttons = document.querySelectorAll("[data-stage]")
+      const frame = document.querySelector("#review-frame")
+      const fallback = document.querySelector("#frame-fallback")
+      const directLink = document.querySelector("#direct-link")
+      const fallbackLink = document.querySelector("#fallback-link")
+      const stageNumber = document.querySelector("#selected-stage-number")
+      const stageType = document.querySelector("#selected-stage-type")
+      const stageTitle = document.querySelector("#selected-stage-title")
+      const stageDescription = document.querySelector("#selected-stage-description")
+      const sourceFile = document.querySelector("#source-file")
+      const frameStatus = document.querySelector("#frame-status")
+
+      function selectStage(stageKey, updateUrl = true) {
+        const stage = stages[stageKey]
+        if (!stage) return
+
+        buttons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.stage === String(stageKey)))
+        })
+
+        stageNumber.textContent = stageKey
+        stageNumber.classList.toggle("seam", Boolean(stage.seam))
+        stageType.textContent = stage.type
+        stageTitle.textContent = stage.title
+        stageDescription.textContent = stage.description
+        sourceFile.textContent = stage.file
+        directLink.href = stage.file
+        fallbackLink.href = stage.file
+        frame.title = `Originalansicht ${stage.title}`
+        frameStatus.textContent = "Originaldatei wird geladen …"
+        frame.hidden = false
+        fallback.style.display = "none"
+        frame.src = stage.file
+
+        if (updateUrl) {
+          const url = new URL(window.location.href)
+          url.searchParams.set("stage", stageKey)
+          window.history.replaceState({}, "", url)
+        }
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => selectStage(button.dataset.stage))
+      })
+
+      frame.addEventListener("load", () => {
+        frameStatus.textContent = "Originalansicht eingebettet"
+      })
+
+      frame.addEventListener("error", () => {
+        frame.hidden = true
+        fallback.style.display = "block"
+        frameStatus.textContent = "Direktlink verfügbar"
+      })
+
+      const requestedStage = new URLSearchParams(window.location.search).get("stage")
+      if (requestedStage && stages[requestedStage]) selectStage(requestedStage, false)
+    </script>
+  </body>
+</html>

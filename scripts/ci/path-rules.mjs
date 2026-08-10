@@ -52,6 +52,42 @@ const PLAYWRIGHT_EXACT = [
 const SECURITY_PREFIXES = [".github/workflows/", "supabase/migrations/"]
 const SECURITY_EXACT = ["package.json", "package-lock.json", ".github/dependabot.yml"]
 
+const PERSONAL_PLAN_DB_PREFIXES = [
+  "supabase/migrations/",
+  "supabase/tests/",
+  "src/lib/personal-plan/",
+  "src/lib/product-intake/",
+  "src/app/api/personal-plan/",
+  "src/app/anwendung/",
+  "src/app/plan-bereit/",
+  "src/app/plan-start/",
+  "src/app/routine/",
+  "src/components/application/",
+  "src/components/personal-plan-products/",
+  "src/components/personal-plan-refinement/",
+  "src/components/personal-plan-start/",
+  "src/components/routine/personal-plan/",
+]
+
+const PERSONAL_PLAN_DB_EXACT = [
+  "scripts/ci/prepare-personal-plan-db-transition.mjs",
+  "scripts/test-personal-plan-db.sh",
+  "scripts/test-personal-plan-stage1-5-browser.sh",
+  "scripts/test-personal-plan-stage4-browser.sh",
+  "scripts/test-personal-plan-stage5-browser.sh",
+  "tests/personal-plan-stage1-5.spec.ts",
+  "tests/personal-plan-stage4-routine.spec.ts",
+  "tests/personal-plan-stage5-application.spec.ts",
+  "src/app/chat/layout.tsx",
+  "src/app/profile/layout.tsx",
+  "src/app/welcome/page.tsx",
+  "src/components/layout/authenticated-app-shell.tsx",
+  "src/components/layout/personal-plan-navigation.tsx",
+  "src/components/routine/routine-page-client.tsx",
+  "package.json",
+  ".github/workflows/ci.yml",
+]
+
 function matches(file, prefixes, exact) {
   return exact.includes(file) || prefixes.some((prefix) => file.startsWith(prefix))
 }
@@ -71,6 +107,8 @@ export function classifyCiScope(files, prContext = {}) {
       fullCi || files.some((file) => matches(file, PLAYWRIGHT_PREFIXES, PLAYWRIGHT_EXACT)),
     security_scan:
       fullCi || files.some((file) => matches(file, SECURITY_PREFIXES, SECURITY_EXACT)),
+    personal_plan_db:
+      fullCi || files.some((file) => matches(file, PERSONAL_PLAN_DB_PREFIXES, PERSONAL_PLAN_DB_EXACT)),
     full_ci: fullCi,
   }
 }

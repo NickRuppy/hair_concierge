@@ -59,7 +59,7 @@ export function getAuthenticatedAppRedirect(
 }
 
 function isAuthenticatedAppRoute(pathname: string): boolean {
-  return ["/chat", "/routine"].some(
+  return ["/anwendung", "/chat", "/routine"].some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   )
 }

@@ -2674,6 +2674,8 @@ export function renderAppHtml(): string {
         dry_shampoo: "Trockenshampoo",
         deep_cleansing_shampoo: "Tiefenreinigungsshampoo",
         bondbuilder: "Bondbuilder",
+        heat_protectant: "Hitzeschutz",
+        scalp_care: "Kopfhautpflege",
       }[value] || value || "Aktuelles Paket");
       const packageApprovalLabel = (value) => ({
         approved_for_import: "Final freigegeben",

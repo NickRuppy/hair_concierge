@@ -12,14 +12,17 @@ import {
   type RouteEnvironment,
 } from "@/lib/auth/route-classification"
 
-const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/chat", "/routine", "/tracker"]
+const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/tracker"]
 const SUB_REQUIRED_PREFIXES = [
+  "/anwendung",
   "/onboarding",
   "/chat",
   "/api/chat",
   "/api/product-intake",
   "/profile",
   "/api/profile",
+  "/plan-start",
+  "/api/personal-plan",
   "/api/memory",
   "/routine",
   "/api/routine",
@@ -58,6 +61,14 @@ const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/api/auth/set-checkout-password",
   "/welcome",
 ]
+const AUTH_ONLY_REDIRECT_QUERY_PARAMETERS = [
+  "code",
+  "error",
+  "reason",
+  "token",
+  "token_hash",
+  "type",
+] as const
 
 export function isAuthenticatedAppRoutePath(pathname: string) {
   return AUTHENTICATED_APP_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
@@ -73,6 +84,25 @@ export function isAdminRoutePath(pathname: string) {
   )
 }
 
+export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: string): URL {
+  const url = new URL(requestUrl)
+  url.pathname = redirectPath
+  if (requestUrl.pathname === "/auth") {
+    for (const parameter of AUTH_ONLY_REDIRECT_QUERY_PARAMETERS) {
+      url.searchParams.delete(parameter)
+    }
+  }
+  if (redirectPath === "/onboarding") {
+    const leadId = requestUrl.searchParams.get("lead")
+    if (leadId) {
+      url.searchParams.set("lead", leadId)
+    }
+  } else {
+    url.searchParams.delete("lead")
+  }
+  return url
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -82,6 +112,11 @@ export async function updateSession(request: NextRequest) {
   const routeEnvironment: RouteEnvironment = {
     ciOfferPageLabEnabled:
       process.env.CI === "true" && process.env.CI_OFFER_PAGE_LAB_ENABLED === "true",
+    ciPersonalPlanStage3LabEnabled:
+      process.env.CI === "true" && process.env.CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED === "true",
+    ciPersonalPlanProductionJourneyEnabled:
+      process.env.CI === "true" &&
+      process.env.CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED === "true",
     nodeEnv: process.env.NODE_ENV,
     localDevLoginEnabled: process.env.LOCAL_DEV_LOGIN_ENABLED === "1",
     vercelEnv: process.env.VERCEL_ENV,
@@ -260,16 +295,7 @@ export async function updateSession(request: NextRequest) {
     const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, { isQuizRetake })
 
     if (redirectPath) {
-      const url = request.nextUrl.clone()
-      url.pathname = redirectPath
-      if (redirectPath === "/onboarding") {
-        const leadId = request.nextUrl.searchParams.get("lead")
-        if (leadId) {
-          url.searchParams.set("lead", leadId)
-        }
-      } else {
-        url.searchParams.delete("lead")
-      }
+      const url = buildAuthenticatedAppRedirectUrl(request.nextUrl, redirectPath)
       return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }

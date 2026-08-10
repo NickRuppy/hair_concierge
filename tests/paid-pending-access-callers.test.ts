@@ -49,10 +49,15 @@ test("plan-bereit renders the waiting surface for paid pending and keeps inactiv
   )
   assert.match(readyPageSource, /case "paid_pending_recovery":/)
   assert.match(readyPageSource, /return <PersonalPlanPaidPendingRecovery/)
-  assert.match(readyPageSource, /return <PersonalPlanReadyClient leadId=\{lead\.id\} \/>/)
+  assert.match(
+    readyPageSource,
+    /<PersonalPlanReadyClient[\s\S]*leadId=\{lead\.id\}[\s\S]*nextHref=/,
+  )
+  assert.match(readyPageSource, /isPersonalPlanAppV1AllowedForUser\(user\.id\)/)
+  assert.match(readyPageSource, /personalPlanV1Allowed \? "\/plan-start"/)
   assert.ok(
     readyPageSource.indexOf('case "paid_pending_recovery"') <
-      readyPageSource.indexOf("return <PersonalPlanReadyClient"),
+      readyPageSource.indexOf("<PersonalPlanReadyClient"),
   )
 })
 

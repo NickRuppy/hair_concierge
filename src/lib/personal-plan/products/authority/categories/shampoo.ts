@@ -1,0 +1,199 @@
+import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
+import { deriveShampooBucket, type ShampooBucket } from "@/lib/shampoo/constants"
+
+import type {
+  Stage3AuthorityInput,
+  Stage3CategoryAuthorityAdapter,
+  Stage3ShampooFacts,
+} from "../contracts"
+import type { Stage3CriterionResult } from "../../contracts"
+import {
+  commonUnknownFacts,
+  criterion,
+  hasValidTarget,
+  isInactiveOrRetired,
+  isPendingIdentity,
+  knownEvaluation,
+  pendingEvaluation,
+  unknownEvaluation,
+  unsupportedEvaluation,
+} from "../shared"
+
+type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
+
+export function expectedShampooBucket(input: {
+  role: PlanProductRole
+  target: ShampooTarget
+}): ShampooBucket | null {
+  if (input.role === "shampoo_dandruff") {
+    return deriveShampooBucket(null, "dandruff")
+  }
+  if (input.role !== "shampoo_everyday") return null
+
+  const condition = input.target.everydayConstraint.includes("irritation")
+    ? "irritated"
+    : input.target.everydayConstraint.includes("dry_scalp")
+      ? "dry_flakes"
+      : null
+  return deriveShampooBucket(input.target.scalpRoute, condition)
+}
+
+function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3ShampooFacts) {
+  const target = input.categoryDecision.target
+  const criteria: Stage3CriterionResult[] = []
+  const missing = commonUnknownFacts({ ...input, productFacts: facts })
+  const protocol = facts.protocols.find((candidate) => candidate.role === input.role) ?? null
+
+  if (isInactiveOrRetired({ ...input, productFacts: facts })) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "shampoo.lifecycle",
+          "Verfügbarkeit",
+          "fail",
+          "Das Produkt ist nicht aktiv verfügbar.",
+        ),
+      ],
+    }
+  }
+  if (facts.knownReaction) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "shampoo.safety",
+          "Verträglichkeit",
+          "fail",
+          "Für dieses Produkt ist eine Unverträglichkeit bekannt.",
+        ),
+      ],
+    }
+  }
+  if (
+    facts.suitableThicknesses?.length &&
+    !facts.suitableThicknesses.includes(facts.spec.thickness ?? "")
+  ) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "shampoo.thickness",
+          "Haardicke",
+          "fail",
+          "Das Produkt ist nicht für die bestätigte Haardicke geeignet.",
+        ),
+      ],
+    }
+  }
+  if (!target || target.category !== "shampoo") return { verdict: "mismatch" as const, criteria }
+
+  if (facts.spec.thickness === null) missing.push("shampoo.thickness")
+  if (facts.spec.shampooBucket === null) missing.push("shampoo_bucket")
+  if (facts.spec.scalpRoute === null) missing.push("scalp_route")
+  if (facts.spec.cleansingIntensity === null) missing.push("cleansing_intensity")
+  if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
+  const requiredBucket = expectedShampooBucket({ role: input.role, target })
+  if (requiredBucket === null) missing.push("shampoo_bucket_target")
+  if (missing.length) return { verdict: "unknown" as const, criteria, missing }
+
+  if (facts.spec.shampooBucket !== requiredBucket) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "shampoo.role",
+          "Reinigungsaufgabe",
+          "fail",
+          "Das Produkt deckt die erforderliche Shampoo-Aufgabe nicht ab.",
+        ),
+      ],
+    }
+  }
+  if (facts.spec.scalpRoute !== target.scalpRoute) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "shampoo.scalp_route",
+          "Kopfhautroute",
+          "fail",
+          "Die bestätigte Kopfhautroute passt nicht.",
+        ),
+      ],
+    }
+  }
+
+  return {
+    verdict: "ideal" as const,
+    criteria: [
+      criterion(
+        "shampoo.fit",
+        "Shampoo-Passung",
+        "pass",
+        "Rolle, Kopfhautroute und Protokoll sind bestätigt.",
+      ),
+    ],
+  }
+}
+
+export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo"> = (
+  input: Stage3AuthorityInput<"shampoo">,
+) => {
+  if (isPendingIdentity(input as never)) return pendingEvaluation(input as never)
+  if (!hasValidTarget(input as never))
+    return unsupportedEvaluation(input as never, "shampoo_target_unavailable")
+  if (!input.productFacts) {
+    if (input.capturedProductId) return unknownEvaluation(input as never, ["catalog_product_facts"])
+    const candidate = input.recommendationCandidates.find((item) => {
+      if (!item.recommendable) return false
+      const result = evaluateFacts(input, item)
+      return result.verdict === "ideal"
+    })
+    if (!candidate)
+      return knownEvaluation(input as never, {
+        verdict: "unknown",
+        criteria: [],
+        allowedActions: ["leave_uncovered"],
+        recommendation: null,
+        productFactFingerprint: null,
+        recommendationFactFingerprint: null,
+      })
+    return knownEvaluation(input as never, {
+      verdict: "ideal",
+      criteria: [
+        criterion(
+          "shampoo.recommendation",
+          "Empfehlung",
+          "pass",
+          "Eine passende aktive Empfehlung ist verifiziert.",
+        ),
+      ],
+      allowedActions: ["plan_recommendation"],
+      recommendation: {
+        recommendationId: `recommend:${candidate.productId}:${input.role}`,
+        productId: candidate.productId,
+        category: "shampoo",
+        role: input.role,
+        displayName: candidate.displayName,
+        reason: "Passt zur erforderlichen Shampoo-Aufgabe.",
+        authorityRuleId: "shampoo.selection.verified_role_fit",
+      },
+      productFactFingerprint: null,
+      recommendationFactFingerprint: candidate.factFingerprint,
+    })
+  }
+
+  const result = evaluateFacts(input, input.productFacts)
+  if (result.verdict === "unknown")
+    return unknownEvaluation(input as never, result.missing ?? [], result.criteria)
+  return knownEvaluation(input as never, {
+    verdict: result.verdict,
+    criteria: result.criteria,
+    allowedActions:
+      result.verdict === "ideal" ? ["keep_owned"] : ["acknowledge_override", "leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: input.productFacts.factFingerprint,
+    recommendationFactFingerprint: null,
+  })
+}

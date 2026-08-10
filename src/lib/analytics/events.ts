@@ -158,6 +158,47 @@ export type WaitlistSignupKind = "new" | "duplicate"
 export type WaitlistSurveyCompletion = "completed" | "skipped"
 export type WaitlistWhatsAppSurface = "thank_you"
 
+export type PersonalPlanStage3Pass = "product_capture" | "product_decisions"
+export type PersonalPlanStage3StepKey =
+  | "capture_orientation"
+  | "product_search"
+  | "frequency"
+  | "role_assignment"
+  | "fit_orientation"
+  | "fit_decision"
+  | "stage4_handoff"
+export type PersonalPlanStage3SearchInteraction = "results_viewed" | "candidate_selected"
+export type PersonalPlanStage3ResultCountBand = "0" | "1_3" | "4_8"
+export type PersonalPlanStage3DecisionType =
+  | "keep"
+  | "override"
+  | "plan_purchase"
+  | "pending_review"
+  | "uncovered"
+export type PersonalPlanStage3SaveOutcome = "saved" | "retry" | "conflict"
+export type PersonalPlanStage3HandoffOutcome =
+  | "ready_for_routine"
+  | "ready_with_pending"
+  | "ready_with_gap"
+
+// Stage 4 telemetry is deliberately structural. It must never contain product,
+// proposal, plan, user, profile, price, URL, or free-text data.
+export type PersonalPlanStage4Surface = "routine_page" | "routine_card" | "routine_detail"
+export type PersonalPlanStage4Origin = "routine_page" | "proposal" | "editor" | "sync"
+export type PersonalPlanStage4RoutineVariant = "active" | "proposal" | "empty"
+export type PersonalPlanStage4ChangeCountBand = "0" | "1" | "2_4" | "5_plus"
+export type PersonalPlanStage4ProposalInteraction =
+  | "displayed"
+  | "dismissed"
+  | "accepted"
+  | "rejected"
+export type PersonalPlanStage4EditorInteraction = "opened" | "submitted"
+export type PersonalPlanStage4ItemInteraction =
+  | "product_detail_opened"
+  | "shop_link_opened"
+  | "acquisition_declared"
+export type PersonalPlanStage4Outcome = "no_change" | "conflict" | "error"
+
 export function claimCheckoutFailure(
   seen: Set<string>,
   checkoutAttemptId: string,
@@ -364,6 +405,52 @@ export type AppEventMap = {
     daysFromStart: number
     leadId: string
     stepIndex: number
+  }
+  // Stage 3 telemetry is deliberately structural: never add raw search/product,
+  // image, free-text, criterion, or profile fields to this event family.
+  personal_plan_stage3_flow_viewed: {
+    pass: PersonalPlanStage3Pass
+    stepKey: PersonalPlanStage3StepKey
+  }
+  personal_plan_stage3_search_interacted: {
+    interaction: PersonalPlanStage3SearchInteraction
+    resultCountBand: PersonalPlanStage3ResultCountBand
+    selectedCandidatePosition?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+  }
+  personal_plan_stage3_fallback_opened: {
+    stepKey: "product_search"
+  }
+  personal_plan_stage3_decision_selected: {
+    decisionType: PersonalPlanStage3DecisionType
+    stepKey: "fit_decision"
+  }
+  personal_plan_stage3_save_outcome: {
+    outcome: PersonalPlanStage3SaveOutcome
+  }
+  personal_plan_stage3_handoff: {
+    outcome: PersonalPlanStage3HandoffOutcome
+  }
+  personal_plan_stage4_routine_viewed: {
+    surface: "routine_page"
+    variant: PersonalPlanStage4RoutineVariant
+  }
+  personal_plan_stage4_proposal_interacted: {
+    changeCountBand: PersonalPlanStage4ChangeCountBand
+    interaction: PersonalPlanStage4ProposalInteraction
+    origin: "routine_page"
+  }
+  personal_plan_stage4_editor_interacted: {
+    changeCountBand?: PersonalPlanStage4ChangeCountBand
+    interaction: PersonalPlanStage4EditorInteraction
+    origin: "routine_page"
+  }
+  personal_plan_stage4_item_interacted: {
+    interaction: PersonalPlanStage4ItemInteraction
+    surface: Exclude<PersonalPlanStage4Surface, "routine_page">
+  }
+  personal_plan_stage4_outcome: {
+    origin: PersonalPlanStage4Origin
+    outcome: PersonalPlanStage4Outcome
   }
   quiz_completed: FunnelAnalyticsEnvelope & {
     hairLength?: string

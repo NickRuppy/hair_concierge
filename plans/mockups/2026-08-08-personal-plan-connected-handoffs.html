@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan · Verbundene Übergänge</title>
+    <style>
+      :root {
+        --paper: #fdfbf9;
+        --paper-deep: #f5f0ec;
+        --card: #ffffff;
+        --ink: #2a1845;
+        --body: #3a3835;
+        --sub: #6a6560;
+        --caption: #7a746e;
+        --line: #e7e0d9;
+        --plum: #6b50a0;
+        --plum-dark: #3d2a62;
+        --plum-ice: #f2eefa;
+        --rose: #88466c;
+        --rose-ice: #f6edf2;
+        --coral: #d4616a;
+        --green: #4f8058;
+        --green-ice: #edf6ee;
+        --blue-ice: #edf3f7;
+        --sand-ice: #f7f1e8;
+        --shadow: 0 22px 70px rgba(42, 24, 69, 0.15);
+        --display: Georgia, "Times New Roman", serif;
+        --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--body);
+        background:
+          radial-gradient(circle at 10% 0%, rgba(107, 80, 160, 0.12), transparent 29rem),
+          #f0ecea;
+        font: 14px/1.5 var(--sans);
+      }
+
+      button {
+        color: inherit;
+        font: inherit;
+      }
+
+      .artifact {
+        width: min(1320px, 100%);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 24px 20px 56px;
+      }
+
+      .artifact-header,
+      .controls,
+      .review-notes {
+        width: min(1180px, 100%);
+        margin-inline: auto;
+      }
+
+      .artifact-header {
+        margin-bottom: 16px;
+      }
+
+      .kicker,
+      .eyebrow {
+        margin: 0;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .artifact-header h1 {
+        margin: 3px 0 0;
+        color: var(--ink);
+        font: 500 clamp(28px, 4vw, 40px) / 1.08 var(--display);
+      }
+
+      .artifact-header p {
+        max-width: 820px;
+        margin: 8px 0 0;
+        color: var(--sub);
+        font-size: 13px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-bottom: 15px;
+      }
+
+      .controls button {
+        min-height: 38px;
+        padding: 7px 11px;
+        border: 1px solid #d8cde9;
+        border-radius: 999px;
+        color: var(--plum-dark);
+        background: #fff;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 780;
+      }
+
+      .controls button[aria-pressed="true"] {
+        border-color: var(--plum);
+        color: #fff;
+        background: var(--plum);
+      }
+
+      .viewport-control {
+        margin-left: auto;
+      }
+
+      .preview-stage {
+        display: grid;
+        min-height: 830px;
+        place-items: start center;
+        padding: 22px;
+        overflow: hidden;
+        border: 1px solid rgba(107, 80, 160, 0.1);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .device {
+        position: relative;
+        width: 390px;
+        max-width: calc(100vw - 42px);
+        height: 780px;
+        overflow: hidden;
+        border: 1px solid rgba(42, 24, 69, 0.13);
+        border-radius: 28px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        transition: width 0.2s ease, border-radius 0.2s ease;
+      }
+
+      .device.desktop {
+        width: min(1180px, calc(100vw - 92px));
+        border-radius: 18px;
+      }
+
+      .screen {
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+
+      .screen.active {
+        display: block;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .brand-mark i {
+        width: 3px;
+        height: 14px;
+        border-radius: 3px;
+        background: currentColor;
+      }
+
+      .brand-mark i:nth-child(2) {
+        opacity: 0.6;
+      }
+
+      .brand-mark i:nth-child(3) {
+        opacity: 0.3;
+      }
+
+      .wordmark {
+        color: var(--ink);
+        font: 500 25px/1 var(--display);
+      }
+
+      .ready-shell {
+        display: flex;
+        min-height: 100%;
+        flex-direction: column;
+        padding: 26px 22px 42px;
+        color: #30232d;
+        background: #fbf8f5;
+      }
+
+      .ready-brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--rose);
+      }
+
+      .ready-brand .wordmark {
+        color: #30232d;
+        font-size: 29px;
+      }
+
+      .ready-content {
+        display: flex;
+        width: min(100%, 520px);
+        margin: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .ready-icon,
+      .transition-icon,
+      .completion-icon {
+        display: grid;
+        width: 72px;
+        height: 72px;
+        margin-bottom: 23px;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--rose);
+        background: #f1e4ec;
+        font-size: 28px;
+        font-weight: 800;
+      }
+
+      .ready-content h2,
+      .transition-card h2,
+      .completion-card h2,
+      .app-title {
+        margin: 8px 0 0;
+        color: var(--ink);
+        font: 500 32px/1.08 var(--display);
+      }
+
+      .ready-content h2 {
+        max-width: 460px;
+        color: #30232d;
+        font-size: 38px;
+      }
+
+      .ready-content .eyebrow {
+        color: var(--rose);
+      }
+
+      .body-copy {
+        max-width: 410px;
+        margin: 13px auto 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .primary,
+      .secondary {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        font-weight: 820;
+      }
+
+      .primary {
+        border: 0;
+        color: #fff;
+        background: var(--plum);
+      }
+
+      .primary.rose {
+        background: var(--rose);
+      }
+
+      .secondary {
+        border: 1px solid #cdbce2;
+        color: var(--plum);
+        background: #fff;
+      }
+
+      .ready-content .primary {
+        width: min(100%, 380px);
+        min-height: 54px;
+        margin-top: 28px;
+        border-radius: 999px;
+      }
+
+      .journey-shell {
+        display: grid;
+        min-height: 100%;
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel {
+        display: none;
+        place-items: center;
+        padding: 48px;
+        color: #fff;
+        background:
+          radial-gradient(circle at 75% 75%, rgba(107, 80, 160, 0.45), transparent 38%),
+          radial-gradient(circle at 18% 20%, rgba(212, 97, 106, 0.2), transparent 25%),
+          #21182b;
+        text-align: center;
+      }
+
+      .device.desktop .journey-shell {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .device.desktop .brand-panel {
+        display: grid;
+      }
+
+      .brand-panel strong {
+        display: block;
+        font: 500 50px/1 var(--display);
+      }
+
+      .brand-panel span {
+        display: block;
+        max-width: 350px;
+        margin-top: 20px;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 16px;
+      }
+
+      .journey-panel {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        background: var(--paper);
+      }
+
+      .journey-header,
+      .app-header {
+        display: flex;
+        min-height: 62px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 10px 18px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+      }
+
+      .journey-header .center-label {
+        color: var(--ink);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .saved {
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 750;
+      }
+
+      .back {
+        min-width: 58px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .journey-content {
+        display: flex;
+        width: min(100%, 570px);
+        margin: 0 auto;
+        flex: 1;
+        flex-direction: column;
+        padding: 20px 22px 24px;
+      }
+
+      .progress {
+        height: 6px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: #e6dfd9;
+      }
+
+      .progress i {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--plum);
+      }
+
+      .transition-card,
+      .completion-card {
+        margin: auto 0;
+        padding: 28px 22px;
+        border: 1px solid rgba(107, 80, 160, 0.14);
+        border-radius: 22px;
+        background: var(--plum-ice);
+        text-align: center;
+      }
+
+      .transition-icon,
+      .completion-icon {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto 16px;
+        border-radius: 18px;
+        color: var(--plum);
+        background: #fff;
+        font-size: 22px;
+        box-shadow: 0 8px 20px rgba(59, 38, 80, 0.1);
+      }
+
+      .completion-icon {
+        border-radius: 50%;
+        color: var(--green);
+        background: var(--green-ice);
+      }
+
+      .transition-card .primary,
+      .completion-card .primary {
+        width: 100%;
+        margin-top: 25px;
+      }
+
+      .mini-back {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        margin-top: 8px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .app-shell {
+        display: flex;
+        min-height: 100%;
+        flex-direction: column;
+        padding-bottom: 72px;
+        background: var(--paper);
+      }
+
+      .app-header {
+        flex: none;
+      }
+
+      .avatar {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--plum);
+        background: #fff;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .app-main {
+        width: min(100%, 980px);
+        margin: 0 auto;
+        padding: 25px 19px 38px;
+      }
+
+      .app-lede {
+        max-width: 580px;
+        margin: 8px 0 0;
+        color: var(--sub);
+        font-size: 13px;
+      }
+
+      .app-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .app-actions .secondary {
+        min-height: 42px;
+        padding: 0 14px;
+        font-size: 11px;
+      }
+
+      .section-heading {
+        margin: 24px 0 10px;
+        color: var(--ink);
+        font: 500 20px/1.2 var(--display);
+      }
+
+      .routine-grid,
+      .day-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .device.desktop .routine-grid,
+      .device.desktop .day-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .routine-card,
+      .day-card {
+        display: grid;
+        min-height: 90px;
+        grid-template-columns: 50px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 11px;
+        padding: 12px;
+        border: 1px solid rgba(70, 50, 55, 0.09);
+        border-radius: 17px;
+        background: var(--blue-ice);
+      }
+
+      .routine-card:nth-child(2),
+      .day-card:nth-child(2) {
+        background: var(--green-ice);
+      }
+
+      .routine-card:nth-child(3),
+      .day-card:nth-child(3) {
+        background: var(--sand-ice);
+      }
+
+      .tile {
+        display: grid;
+        width: 48px;
+        height: 56px;
+        place-items: center;
+        border-radius: 12px;
+        color: var(--plum);
+        background: rgba(255, 255, 255, 0.82);
+        font-weight: 900;
+      }
+
+      .card-copy strong {
+        display: block;
+        color: var(--ink);
+        font-size: 12px;
+      }
+
+      .card-copy span {
+        display: block;
+        margin-top: 3px;
+        color: var(--sub);
+        font-size: 10px;
+      }
+
+      .chevron {
+        color: var(--plum);
+        font-size: 18px;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        z-index: 5;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: grid;
+        min-height: 70px;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav-item {
+        display: grid;
+        min-width: 0;
+        place-items: center;
+        align-content: center;
+        gap: 3px;
+        color: #8b828c;
+        font-size: 9px;
+      }
+
+      .nav-item strong {
+        font-size: 17px;
+        line-height: 1;
+      }
+
+      .nav-item.active {
+        color: var(--plum);
+        font-weight: 850;
+      }
+
+      .legacy-banner {
+        margin-bottom: 18px;
+        padding: 10px 12px;
+        border: 1px solid #ded5ce;
+        border-radius: 12px;
+        color: #655d57;
+        background: var(--paper-deep);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .review-notes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        margin-top: 15px;
+      }
+
+      .review-note {
+        padding: 12px 13px;
+        border: 1px solid #ddd5d1;
+        border-radius: 14px;
+        color: var(--sub);
+        background: rgba(255, 255, 255, 0.76);
+        font-size: 11px;
+      }
+
+      .review-note strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ink);
+      }
+
+      @media (max-width: 720px) {
+        .artifact {
+          padding: 15px 11px 40px;
+        }
+
+        .viewport-control {
+          width: 100%;
+          margin-left: 0;
+        }
+
+        .preview-stage {
+          min-height: 806px;
+          padding: 11px;
+        }
+
+        .device {
+          max-width: calc(100vw - 32px);
+        }
+
+        .review-notes {
+          grid-template-columns: 1fr;
+        }
+
+        .ready-content h2 {
+          font-size: 34px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-header">
+        <p class="kicker">Konsolidierungs-Mockup · bestehende Oberflächen</p>
+        <h1>Verbundene Personal-Plan-Übergänge</h1>
+        <p>
+          Vier bereits abgestimmte Schritte werden ohne neue Seite miteinander verbunden. Die
+          Steuerung wechselt nur Ansicht und Darstellungsbreite.
+        </p>
+      </header>
+
+      <nav class="controls" aria-label="Mockup-Ansichten">
+        <button type="button" data-state="ready" aria-pressed="true">A · Plan bereit</button>
+        <button type="button" data-state="stage1" aria-pressed="false">B · Stage 1</button>
+        <button type="button" data-state="stage3" aria-pressed="false">C · Stage 3</button>
+        <button type="button" data-state="routine" aria-pressed="false">D1 · Routine</button>
+        <button type="button" data-state="application" aria-pressed="false">
+          D2 · Anwendung
+        </button>
+        <button type="button" data-state="legacy" aria-pressed="false">
+          Legacy / Stage 5 aus
+        </button>
+        <button
+          type="button"
+          class="viewport-control"
+          data-viewport
+          aria-pressed="false"
+        >
+          Desktop · 1440 px
+        </button>
+      </nav>
+
+      <section class="preview-stage" aria-label="Responsive Vorschau">
+        <div class="device" id="device">
+          <section class="screen active" data-screen="ready">
+            <div class="ready-shell">
+              <div class="ready-brand">
+                <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="wordmark">chaarlie</span>
+              </div>
+              <div class="ready-content">
+                <div class="ready-icon" aria-hidden="true">✓</div>
+                <p class="eyebrow">Dein Plan ist vorbereitet</p>
+                <h2>Starte mit deinem persönlichen Bedarfsplan.</h2>
+                <p class="body-copy">
+                  Du siehst zuerst, was dein Haar braucht. Danach verfeinern wir deinen Plan und
+                  gleichen ihn mit deinen Produkten ab.
+                </p>
+                <button class="primary rose" type="button">Plan ansehen</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="stage1">
+            <div class="journey-shell">
+              <aside class="brand-panel" aria-hidden="true">
+                <div>
+                  <strong>chaarlie</strong>
+                  <span>Dein persönlicher Haarplan, Schritt für Schritt.</span>
+                </div>
+              </aside>
+              <div class="journey-panel">
+                <header class="journey-header">
+                  <span class="back">← Zum Plan</span>
+                  <span class="center-label">Nächster Schritt</span>
+                  <span class="saved">Gespeichert</span>
+                </header>
+                <main class="journey-content">
+                  <div class="progress" aria-label="Bedarfsplan abgeschlossen"><i></i></div>
+                  <section class="transition-card">
+                    <div class="transition-icon" aria-hidden="true">✓</div>
+                    <p class="eyebrow">Deine Grundlage steht</p>
+                    <h2>Jetzt machen wir sie zu deiner.</h2>
+                    <p class="body-copy">
+                      Als Nächstes verfeinern wir deinen Plan mit ein paar gezielten Fragen.
+                    </p>
+                    <button class="primary" type="button">Plan verfeinern&nbsp; →</button>
+                  </section>
+                </main>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="stage3">
+            <div class="journey-shell">
+              <aside class="brand-panel" aria-hidden="true">
+                <div>
+                  <strong>chaarlie</strong>
+                  <span>Deine Produkte werden zur persönlichen Routine.</span>
+                </div>
+              </aside>
+              <div class="journey-panel">
+                <header class="journey-header">
+                  <span class="back">← Produkte</span>
+                  <span class="center-label">Bereit für deine Routine</span>
+                  <span class="saved">Gespeichert</span>
+                </header>
+                <main class="journey-content">
+                  <div class="progress" aria-label="Produkte abgeschlossen"><i></i></div>
+                  <section class="completion-card">
+                    <div class="completion-icon" aria-hidden="true">✓</div>
+                    <p class="eyebrow">Routine vorbereiten</p>
+                    <h2>Deine Produktauswahl steht.</h2>
+                    <p class="body-copy">
+                      Als Nächstes bauen wir daraus deine Routine und zeigen offene Punkte an der
+                      passenden Stelle.
+                    </p>
+                    <button class="primary" type="button">Routine öffnen&nbsp; →</button>
+                  </section>
+                </main>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="routine">
+            <div class="app-shell">
+              <header class="app-header">
+                <span class="wordmark">
+                  <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                  chaarlie
+                </span>
+                <span class="avatar" aria-hidden="true">NR</span>
+              </header>
+              <main class="app-main">
+                <p class="eyebrow">Persönlicher Plan</p>
+                <h2 class="app-title">Deine Routine</h2>
+                <p class="app-lede">Dein bestätigter Routine-Schnappschuss.</p>
+                <div class="app-actions">
+                  <button class="secondary" type="button">Routine bearbeiten</button>
+                </div>
+                <h3 class="section-heading">Deine Basis</h3>
+                <div class="routine-grid">
+                  <article class="routine-card">
+                    <span class="tile">S</span>
+                    <span class="card-copy">
+                      <strong>Kopfhaut und Ansatz reinigen</strong>
+                      <span>Balea MED Ultra Sensitive Shampoo</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                  <article class="routine-card">
+                    <span class="tile">C</span>
+                    <span class="card-copy">
+                      <strong>Längen und Spitzen pflegen</strong>
+                      <span>Jean &amp; Len Leichter Conditioner</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                  <article class="routine-card">
+                    <span class="tile">L</span>
+                    <span class="card-copy">
+                      <strong>Pflege im feuchten Haar</strong>
+                      <span>OLAPLEX Nº.5 Leave-In Conditioner</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                </div>
+              </main>
+              <nav class="bottom-nav" aria-label="Personal-Plan-Navigation">
+                <span class="nav-item"><strong>◌</strong>Chat</span>
+                <span class="nav-item active"><strong>▦</strong>Routine</span>
+                <span class="nav-item"><strong>≋</strong>Anwendung</span>
+                <span class="nav-item"><strong>○</strong>Profil</span>
+              </nav>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="application">
+            <div class="app-shell">
+              <header class="app-header">
+                <span class="wordmark">
+                  <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                  chaarlie
+                </span>
+                <span class="avatar" aria-hidden="true">NR</span>
+              </header>
+              <main class="app-main">
+                <h2 class="app-title">Anwendung</h2>
+                <p class="app-lede">Wähle den passenden Tag und folge der Reihenfolge.</p>
+                <div class="day-grid" style="margin-top: 18px">
+                  <article class="day-card">
+                    <span class="tile">W</span>
+                    <span class="card-copy">
+                      <strong>Waschtag</strong>
+                      <span>Reinigung, Pflege und Finish in Reihenfolge</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                  <article class="day-card">
+                    <span class="tile">B</span>
+                    <span class="card-copy">
+                      <strong>Bond-Repair-Tag</strong>
+                      <span>Reinigung und abgestimmte Bondpflege</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                  <article class="day-card">
+                    <span class="tile">A</span>
+                    <span class="card-copy">
+                      <strong>Auffrisch-Tag</strong>
+                      <span>Ansatz und Form zwischen Haarwäschen auffrischen</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                </div>
+              </main>
+              <nav class="bottom-nav" aria-label="Personal-Plan-Navigation">
+                <span class="nav-item"><strong>◌</strong>Chat</span>
+                <span class="nav-item"><strong>▦</strong>Routine</span>
+                <span class="nav-item active"><strong>≋</strong>Anwendung</span>
+                <span class="nav-item"><strong>○</strong>Profil</span>
+              </nav>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="legacy">
+            <div class="app-shell">
+              <header class="app-header">
+                <span class="wordmark">
+                  <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                  chaarlie
+                </span>
+                <span class="avatar" aria-hidden="true">NR</span>
+              </header>
+              <main class="app-main">
+                <div class="legacy-banner">
+                  Annotation: Legacy-Konto oder Stage 5 nicht freigeschaltet — die bestehende
+                  Navigation bleibt unverändert; Anwendung wird nicht gezeigt.
+                </div>
+                <p class="eyebrow">Deine Pflege</p>
+                <h2 class="app-title">Routine</h2>
+                <p class="app-lede">Deine bisherigen Produkte und Rhythmen bleiben verfügbar.</p>
+                <h3 class="section-heading">Deine Produkte</h3>
+                <div class="routine-grid">
+                  <article class="routine-card">
+                    <span class="tile">S</span>
+                    <span class="card-copy">
+                      <strong>Shampoo</strong>
+                      <span>2× pro Woche</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                  <article class="routine-card">
+                    <span class="tile">C</span>
+                    <span class="card-copy">
+                      <strong>Conditioner</strong>
+                      <span>Nach jeder Haarwäsche</span>
+                    </span>
+                    <span class="chevron">›</span>
+                  </article>
+                </div>
+              </main>
+              <nav class="bottom-nav" aria-label="Bestehende Navigation">
+                <span class="nav-item"><strong>◌</strong>Chat</span>
+                <span class="nav-item active"><strong>▦</strong>Routine</span>
+                <span class="nav-item"><strong>◷</strong>Tagebuch</span>
+                <span class="nav-item"><strong>○</strong>Profil</span>
+              </nav>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="review-notes" aria-label="Review-Anmerkungen">
+        <div class="review-note">
+          <strong>Navigation</strong>
+          Nach bestätigter Routine bleibt Chat · Routine · Anwendung · Profil dauerhaft erreichbar.
+          Der aktive Tab ist zusätzlich zur Farbe durch stärkere Schrift gekennzeichnet.
+        </div>
+        <div class="review-note">
+          <strong>Recovery</strong>
+          Schlägt ein Übergang fehl, bleibt der zuletzt gespeicherte Schritt erhalten. Bei
+          deaktiviertem Stage 5 bleibt Routine erreichbar; ein Direktaufruf führt zurück dorthin.
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const stateButtons = document.querySelectorAll("[data-state]")
+      const screens = document.querySelectorAll("[data-screen]")
+      const viewportButton = document.querySelector("[data-viewport]")
+      const device = document.querySelector("#device")
+
+      function showState(state) {
+        stateButtons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.state === state))
+        })
+        screens.forEach((screen) => {
+          screen.classList.toggle("active", screen.dataset.screen === state)
+          if (screen.dataset.screen === state) screen.scrollTop = 0
+        })
+      }
+
+      stateButtons.forEach((button) => {
+        button.addEventListener("click", () => showState(button.dataset.state))
+      })
+
+      viewportButton.addEventListener("click", () => {
+        const desktop = device.classList.toggle("desktop")
+        viewportButton.setAttribute("aria-pressed", String(desktop))
+        viewportButton.textContent = desktop ? "Mobile · 390 px" : "Desktop · 1440 px"
+      })
+    </script>
+  </body>
+</html>

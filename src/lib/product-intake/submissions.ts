@@ -21,12 +21,19 @@ import type {
   ProductIntakeUsageRow,
 } from "@/lib/product-intake/repository-types"
 import type { ProductIntakeCategoryKey, ProductSubmissionSource } from "@/lib/types"
-import type { ProductIntakeSubmissionInput } from "@/lib/product-intake/schemas"
-import type { ProductIntakeSubmissionResult } from "@/lib/product-intake/types"
+import type {
+  PersonalPlanProductIntakeSubmissionInput,
+  ProductIntakeSubmissionInput,
+} from "@/lib/product-intake/schemas"
+import type {
+  ProductIntakePersonalPlanSubmissionResult,
+  ProductIntakeSubmissionResult,
+} from "@/lib/product-intake/types"
 
 export type {
   ProductIntakeRepository,
   ProductIntakeSubmissionRow,
+  ProductIntakeUserProductRow,
   ProductIntakeUsageRow,
 } from "@/lib/product-intake/repository-types"
 
@@ -65,6 +72,26 @@ export type SubmitProductIntakeParams = {
   input: ProductIntakeSubmissionInput
   repository: ProductIntakeRepository
   now?: () => string
+}
+
+export type SubmitPersonalPlanProductIntakeParams = {
+  userId: string
+  /** Resolved from the authenticated Stage-3 draft on the server, never request input. */
+  userProductId: string
+  requestFingerprint: string
+  input: PersonalPlanProductIntakeSubmissionInput
+  repository: ProductIntakeRepository
+  now?: () => string
+}
+
+export class PersonalPlanProductIntakeCompensationError extends Error {
+  constructor(
+    public readonly outcome: "rolled_back" | "compensation_pending",
+    options?: ErrorOptions,
+  ) {
+    super(outcome, options)
+    this.name = "PersonalPlanProductIntakeCompensationError"
+  }
 }
 
 function brandId(brand: ProductIdentityBrand | null): string | null {
@@ -905,6 +932,177 @@ export async function cancelProductIntakeUsage(params: {
   })
 
   return result
+}
+
+export async function submitPersonalPlanProductIntake(
+  params: SubmitPersonalPlanProductIntakeParams,
+): Promise<ProductIntakePersonalPlanSubmissionResult> {
+  const frontUploadPath =
+    "front_image_path" in params.input ? (params.input.front_image_path ?? null) : null
+  const barcodeUploadPath =
+    "barcode_image_path" in params.input ? (params.input.barcode_image_path ?? null) : null
+
+  if (frontUploadPath) assertTemporaryUploadPathBelongsToUser(frontUploadPath, params.userId)
+  if (barcodeUploadPath) assertTemporaryUploadPathBelongsToUser(barcodeUploadPath, params.userId)
+  if (params.input.intake_method === "photo" && !frontUploadPath) {
+    throw new ProductIntakePersistenceError("Vorderseitenfoto fehlt.")
+  }
+
+  const now = params.now?.() ?? new Date().toISOString()
+  const created = await params.repository.createSubmissionForUserProduct({
+    userId: params.userId,
+    userProductId: params.userProductId,
+    category: params.input.category,
+    frequencyRange: params.input.frequency_range,
+    intakeMethod: params.input.intake_method,
+    brandText: params.input.brand_text ?? null,
+    productNameText: params.input.product_name_text ?? null,
+    frontImagePath: frontUploadPath,
+    barcodeImagePath: barcodeUploadPath,
+    requestFingerprint: params.requestFingerprint,
+    now,
+  })
+
+  const committedImagePaths: string[] = []
+  try {
+    if (
+      created.userProduct.id !== params.userProductId ||
+      created.userProduct.user_id !== params.userId ||
+      created.userProduct.category !== params.input.category ||
+      created.submission.user_id !== params.userId ||
+      created.submission.user_product_id !== params.userProductId ||
+      created.submission.category !== params.input.category ||
+      created.submission.source !== "personal_plan"
+    ) {
+      throw new ProductIntakePersistenceError(
+        "Personal Plan product intake returned a forged association.",
+      )
+    }
+
+    const replayedPhotoIsFinalized =
+      created.submission.intake_method === "photo" &&
+      committedSubmissionImagePath({
+        path: created.submission.front_image_path,
+        userId: params.userId,
+        submissionId: created.submission.id,
+      }) &&
+      (!barcodeUploadPath ||
+        committedSubmissionImagePath({
+          path: created.submission.barcode_image_path,
+          userId: params.userId,
+          submissionId: created.submission.id,
+        }))
+
+    if (
+      created.replayed &&
+      (created.submission.intake_method !== "photo" || replayedPhotoIsFinalized)
+    ) {
+      return {
+        status: "pending_review",
+        source: "personal_plan",
+        intake_method: created.submission.intake_method,
+        category: created.submission.category,
+        frequency_range: created.submission.frequency_range,
+        user_product: {
+          id: created.userProduct.id,
+          category: created.userProduct.category,
+          identity_status: "pending_review",
+          ownership_status: "owned",
+        },
+        submission: {
+          id: created.submission.id,
+          status: "pending_review",
+          category: created.submission.category,
+        },
+      }
+    }
+
+    if (params.input.intake_method === "photo") {
+      await verifySubmissionImages({
+        repository: params.repository,
+        userId: params.userId,
+        frontImagePath: frontUploadPath,
+        barcodeImagePath: barcodeUploadPath,
+      })
+    }
+    const committedImages =
+      params.input.intake_method === "photo"
+        ? await commitSubmissionImages({
+            repository: params.repository,
+            userId: params.userId,
+            submissionId: created.submission.id,
+            frontImagePath: frontUploadPath,
+            barcodeImagePath: barcodeUploadPath,
+            onCommitted: (path) => committedImagePaths.push(path),
+          })
+        : { frontImagePath: null, barcodeImagePath: null }
+
+    const submission = await params.repository.updateProductSubmission(created.submission.id, {
+      front_image_path: committedImages.frontImagePath,
+      barcode_image_path: committedImages.barcodeImagePath,
+      front_image_validation_status: params.input.intake_method === "photo" ? "uncertain" : null,
+      front_image_validation_metadata: {},
+      barcode_image_validation_status:
+        params.input.intake_method === "photo" && committedImages.barcodeImagePath
+          ? "uncertain"
+          : null,
+      barcode_image_validation_metadata: {},
+      updated_at: now,
+    })
+
+    return {
+      status: "pending_review",
+      source: "personal_plan",
+      intake_method: params.input.intake_method,
+      category: params.input.category,
+      frequency_range: params.input.frequency_range,
+      user_product: {
+        id: created.userProduct.id,
+        category: created.userProduct.category,
+        identity_status: "pending_review",
+        ownership_status: "owned",
+      },
+      submission: {
+        id: submission.id,
+        status: "pending_review",
+        category: submission.category,
+      },
+    }
+  } catch (error) {
+    let compensationOutcome: PersonalPlanProductIntakeCompensationError["outcome"] = "rolled_back"
+    try {
+      await params.repository.cancelSubmissionForUserProduct({
+        userId: params.userId,
+        userProductId: params.userProductId,
+        submissionId: created.submission.id,
+        now,
+      })
+    } catch (cancelError) {
+      compensationOutcome = "compensation_pending"
+      console.warn("[product-intake] Personal Plan submission cancellation failed", cancelError)
+    }
+    if (committedImagePaths.length > 0) {
+      await params.repository.removeCommittedImages(committedImagePaths).catch((removeError) => {
+        console.warn("[product-intake] Personal Plan image cleanup failed", removeError)
+      })
+    }
+    throw new PersonalPlanProductIntakeCompensationError(compensationOutcome, { cause: error })
+  }
+}
+
+export async function cancelPersonalPlanProductIntake(params: {
+  userId: string
+  userProductId: string
+  submissionId: string
+  repository: ProductIntakeRepository
+  now?: () => string
+}) {
+  return params.repository.cancelSubmissionForUserProduct({
+    userId: params.userId,
+    userProductId: params.userProductId,
+    submissionId: params.submissionId,
+    now: params.now?.() ?? new Date().toISOString(),
+  })
 }
 
 export function isOpenProductSubmissionStatus(status: string): boolean {
