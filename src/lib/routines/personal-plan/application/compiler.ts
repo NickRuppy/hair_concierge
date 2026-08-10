@@ -418,33 +418,48 @@ function compileDay(
     },
     routineOrder: item.routineOrder,
   }))
-  const sequenceEntries = [
-    ...internalProductBlocks.map((block, index) => ({
-      kind: "product" as const,
-      block: publicProductBlock(block),
-      routineOrder: block.routineOrder,
-      fallbackOrder: index,
-    })),
-    ...unresolvedBlocks.map(({ block, routineOrder }, index) => ({
+  const resolvedSequenceEntries = internalProductBlocks.map((block, index) => ({
+    kind: "product" as const,
+    block: publicProductBlock(block),
+    routineOrder: block.routineOrder,
+    fallbackOrder: index,
+  }))
+  const unresolvedSequenceEntries = unresolvedBlocks
+    .map(({ block, routineOrder }, index) => ({
       kind: "unresolved_product" as const,
       block,
       routineOrder,
       fallbackOrder: internalProductBlocks.length + index,
-    })),
-  ]
-  if (sequenceEntries.every(({ routineOrder }) => routineOrder !== undefined)) {
-    sequenceEntries.sort(
+    }))
+    .sort(
       (left, right) =>
-        (left.routineOrder as number) - (right.routineOrder as number) ||
+        (left.routineOrder ?? Number.MAX_SAFE_INTEGER) -
+          (right.routineOrder ?? Number.MAX_SAFE_INTEGER) ||
         left.fallbackOrder - right.fallbackOrder,
     )
+  const unresolvedByInsertionIndex = new Map<number, typeof unresolvedSequenceEntries>()
+  for (const entry of unresolvedSequenceEntries) {
+    const insertionIndex =
+      entry.routineOrder === undefined
+        ? resolvedSequenceEntries.length
+        : internalProductBlocks.filter(
+            (block) => block.routineOrder !== undefined && block.routineOrder < entry.routineOrder!,
+          ).length
+    unresolvedByInsertionIndex.set(insertionIndex, [
+      ...(unresolvedByInsertionIndex.get(insertionIndex) ?? []),
+      entry,
+    ])
   }
+  const sequenceEntries = resolvedSequenceEntries.flatMap((entry, index) => [
+    ...(unresolvedByInsertionIndex.get(index) ?? []),
+    entry,
+  ])
+  sequenceEntries.push(...(unresolvedByInsertionIndex.get(resolvedSequenceEntries.length) ?? []))
   let previousAnchor: string | null = null
   const outerSequence: CompiledApplicationDayV1["outerSequence"] = []
   for (const entry of sequenceEntries) {
     if (entry.kind === "unresolved_product") {
       outerSequence.push({ kind: "unresolved_product", block: entry.block })
-      previousAnchor = null
       continue
     }
     const block = entry.block

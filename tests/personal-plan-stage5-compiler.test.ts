@@ -343,6 +343,38 @@ test("compiler inserts the wetting action when a pre-wash product precedes clean
   })
 })
 
+test("compiler keeps resolved products in protocol-anchor order when Routine order differs", () => {
+  const preWashOil = {
+    ...leaveInAndHeat,
+    itemId: "pre-wash-oil",
+    productId: "44444444-4444-4444-8444-444444444444",
+    productName: "Pflegeöl",
+    category: "oil" as const,
+    role: "finish" as const,
+    applicationInstanceKey: "pre-wash-oil",
+    routineOrder: 30,
+  }
+  const result = compileApplicationView({
+    input: input([
+      { ...shampoo, routineOrder: 10 },
+      { ...leaveInAndHeat, routineOrder: 20 },
+      preWashOil,
+    ] as never),
+    protocols: [
+      protocol("oil", "finish", "pre_wash_lengths_treatment", "wash_day", "pre_wash"),
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      protocol("leave_in", "leave_in", "post_wash_booster", "wash_day", "damp_leave_on"),
+    ],
+  })
+
+  assert.deepEqual(
+    result.days[0].outerSequence
+      .filter((step) => step.kind === "product")
+      .map((step) => step.block.productName),
+    ["Pflegeöl", "Shampoo", "Schutzspray"],
+  )
+})
+
 test("compiler suppresses a cyclic anchor graph with an internal failure reason", () => {
   const cleanse = protocol(
     "shampoo",
@@ -521,6 +553,15 @@ test("compiler retains a local unresolved product gap without hiding independent
     ["product", "unresolved_product", "product"],
   )
   assert.equal(washDay.productBlocks.length, 2)
+  assert.deepEqual(
+    washDay.outerSequence
+      .filter((step) => step.kind === "state_transition")
+      .map((step) => [step.fromAnchor, step.toAnchor, step.copyDe]),
+    [
+      ["dry", "wet_cleanse", "Haare gründlich mit Wasser anfeuchten."],
+      ["wet_cleanse", "damp_leave_on", "Im handtuchtrockenen Haar weitermachen."],
+    ],
+  )
   assert.equal(
     result.failures.some((failure) => failure.dayType === "wash_day"),
     false,

@@ -188,8 +188,8 @@ Reviewed artifact: `plans/mockups/2026-08-10-personal-plan-stage5-partial-guidan
 
 ## 9. Verification receipt
 
-- Focused Stage-5 contracts: `npm run test:personal-plan-stage5` — 120/120 passed.
-- Broader Personal Plan contracts: `npm run test:personal-plan` — 937/937 passed after rebasing onto current `main`.
+- Focused Stage-5 contracts: `npm run test:personal-plan-stage5` — 122/122 passed.
+- Broader Personal Plan contracts: `npm run test:personal-plan` — 938/938 passed after rebasing onto current `main`.
 - Isolated database replay: `npm run test:personal-plan-db` — 7 files and 209 checks passed.
 - Authenticated responsive journey: `npm run test:playwright:personal-plan-stage5` — 2/2 passed, including confirmed, provisional, identity-free unresolved, read-only, direct-route, and recovery states.
 - Static verification: `npm run typecheck`, repository `npm run lint`, scoped Prettier check, and `git diff --check` passed. Repository lint retains four unrelated pre-existing warnings and no errors.
