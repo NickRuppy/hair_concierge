@@ -68,7 +68,7 @@ export function HeatToolsScreen({
         className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-6"
         style={{ animationDelay: "50ms" }}
       >
-        Mehrfachauswahl möglich.
+        Wähle alles aus, was du zumindest gelegentlich nutzt.
       </p>
 
       <div className="space-y-3 mb-6">

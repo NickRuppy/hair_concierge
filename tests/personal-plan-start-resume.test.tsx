@@ -1,15 +1,19 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import type React from "react"
+import { renderToStaticMarkup } from "react-dom/server"
 
 import { resolvePlanStartPageState, type PlanStartPageDeps } from "../src/app/plan-start/page"
 import {
   loadPlanStartStage3Bootstrap,
+  PlanStartProductionGate,
   recoverPlanStartStage3Load,
   shouldRequestPlanStartOnMount,
   stage3LoadRecoveryMode,
 } from "../src/components/personal-plan-start/plan-start-flow"
 import {
   deriveRefinementEntryMode,
+  RefinementFlow,
   shouldReturnToStage1FromQuestion,
 } from "../src/components/personal-plan-refinement/refinement-flow"
 import { shouldLoadStage3DraftOnMount } from "../src/components/personal-plan-products/stage3-products-flow"
@@ -141,6 +145,8 @@ test("plan-start re-entry selects the persisted Stage 2 session after the first 
   assert.deepEqual(await resolvePlanStartPageState(deps), {
     state: "production",
     initialJourney: { stage: "stage2" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("in_progress"),
   })
 })
 
@@ -162,6 +168,8 @@ test("plan-start re-entry selects Stage 3 when refinement is complete and curren
   assert.deepEqual(await resolvePlanStartPageState(deps), {
     state: "production",
     initialJourney: { stage: "stage3", refinedVersionId: "refined-1" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
   })
 })
 
@@ -183,6 +191,8 @@ test("completed refinement remains at the Stage 2 bridge until Stage 3 authority
   assert.deepEqual(await resolvePlanStartPageState(deps), {
     state: "production",
     initialJourney: { stage: "stage2" },
+    personalPlanId: "plan-1",
+    initialRefinementSession: refinementSession("complete", "refined-1"),
   })
 })
 
@@ -259,6 +269,45 @@ test("direct Stage 2 entry opens a new session immediately but preserves partial
   )
 })
 
+test("a server-seeded Stage 2 resumer renders the saved position on first paint", () => {
+  let clientLoads = 0
+  const initialSession = refinementSession("in_progress")
+  const props = {
+    gateway: {
+      load: async () => {
+        clientLoads += 1
+        return initialSession
+      },
+      saveAnswer: async () => initialSession,
+      complete: async () => {
+        throw new Error("not used")
+      },
+    },
+    initialSession,
+  } as React.ComponentProps<typeof RefinementFlow>
+
+  const html = renderToStaticMarkup(<RefinementFlow {...props} />)
+
+  assert.match(html, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.match(html, /Nasswasch-Rhythmus/)
+  assert.equal(clientLoads, 0)
+})
+
+test("the production gate bypasses Stage 1 for a valid server-selected Stage 2 resume", () => {
+  const initialSession = refinementSession("in_progress")
+  const html = renderToStaticMarkup(
+    <PlanStartProductionGate
+      initialJourney={{ stage: "stage2" }}
+      personalPlanId="plan-1"
+      initialRefinementSession={initialSession}
+    />,
+  )
+
+  assert.match(html, /Wir laden deine Verfeinerung\./)
+  assert.match(html, /Du machst bei der ersten offenen Frage weiter\./)
+  assert.doesNotMatch(html, /Dein Bedarfsplan entsteht/)
+})
+
 test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstrap authority", async () => {
   let received: Parameters<Stage3ProductsGateway["loadOrCreate"]>[0] | null = null
   let requestCount = 0
@@ -317,11 +366,12 @@ test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstra
     },
     authorityEvaluations: [],
   }
+  const authorityDraft = { ...response, authorityEvaluations: [] }
   const gateway: Pick<Stage3ProductsGateway, "loadOrCreate"> = {
     loadOrCreate: async (input) => {
       requestCount += 1
       received = input
-      return response
+      return authorityDraft
     },
   }
 

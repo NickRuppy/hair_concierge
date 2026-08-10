@@ -222,6 +222,7 @@ export function ProductCaptureScreen({
   onExplicitNone,
   onContinue,
   onBack,
+  disabled = false,
 }: {
   categoryLabel: string
   needSummary: string
@@ -246,6 +247,7 @@ export function ProductCaptureScreen({
   onExplicitNone?: () => void
   onContinue: () => void
   onBack?: () => void
+  disabled?: boolean
 }) {
   return (
     <section>
@@ -270,6 +272,7 @@ export function ProductCaptureScreen({
           type="search"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
+          disabled={disabled}
           aria-label="Produkt suchen"
           aria-controls="stage3-search-results"
           aria-busy={searchStatus === "loading"}
@@ -309,6 +312,7 @@ export function ProductCaptureScreen({
         onOpenFallbackIntake={onOpenFallbackIntake}
         onExplicitNone={onExplicitNone}
         onContinue={onContinue}
+        disabled={disabled}
       />
     </section>
   )
@@ -499,6 +503,7 @@ export function ProductMultiProductControls({
   onOpenFallbackIntake,
   onExplicitNone,
   onContinue,
+  disabled = false,
 }: {
   categoryLabel: string
   intakeAvailable: boolean
@@ -508,22 +513,23 @@ export function ProductMultiProductControls({
   onOpenFallbackIntake: () => void
   onExplicitNone?: () => void
   onContinue: () => void
+  disabled?: boolean
 }) {
   return (
     <div className="mt-5 grid gap-2">
       {showAddAnotherProduct ? (
-        <Button type="button" variant="outline" onClick={onAddAnotherProduct}>
+        <Button type="button" variant="outline" onClick={onAddAnotherProduct} disabled={disabled}>
           <Plus className="h-4 w-4" />
           Weiteres {categoryLabel} hinzufügen
         </Button>
       ) : null}
       {intakeAvailable ? (
-        <Button type="button" variant="ghost" onClick={onOpenFallbackIntake}>
+        <Button type="button" variant="ghost" onClick={onOpenFallbackIntake} disabled={disabled}>
           Nicht dabei? Produkt hinzufügen
         </Button>
       ) : null}
       {onExplicitNone ? (
-        <Button type="button" variant="ghost" onClick={onExplicitNone}>
+        <Button type="button" variant="ghost" onClick={onExplicitNone} disabled={disabled}>
           Ich habe dafür kein Produkt
         </Button>
       ) : null}
@@ -531,7 +537,7 @@ export function ProductMultiProductControls({
         type="button"
         variant="unstyled"
         onClick={onContinue}
-        disabled={!canContinue}
+        disabled={disabled || !canContinue}
         className="personal-plan-primary-action w-full"
       >
         Weiter
@@ -549,6 +555,7 @@ export function SemanticRoleAssignment({
   onToggleRole,
   onContinue,
   onBack,
+  disabled = false,
 }: {
   categoryLabel: string
   category: string
@@ -558,6 +565,7 @@ export function SemanticRoleAssignment({
   onToggleRole: (capturedProductId: string, role: string, checked: boolean) => void
   onContinue: () => void
   onBack: () => void
+  disabled?: boolean
 }) {
   const roleCopy =
     category === "oil"
@@ -566,7 +574,7 @@ export function SemanticRoleAssignment({
 
   return (
     <section>
-      <BackButton onBack={onBack} />
+      <BackButton onBack={onBack} disabled={disabled} />
       <div className="animate-fade-in-up mb-2">
         <h1 className="font-header text-3xl leading-tight text-foreground">
           Welche Aufgabe hat dein {categoryLabel}?
@@ -601,6 +609,7 @@ export function SemanticRoleAssignment({
                       type="checkbox"
                       name={inputName}
                       checked={checked}
+                      disabled={disabled}
                       onChange={(event) =>
                         onToggleRole(product.capturedProductId, role.role, event.target.checked)
                       }
@@ -630,6 +639,7 @@ export function SemanticRoleAssignment({
           type="button"
           variant="unstyled"
           onClick={onContinue}
+          disabled={disabled}
           className="personal-plan-primary-action w-full"
         >
           Auswahl übernehmen
@@ -1025,13 +1035,14 @@ function categoryHeading(categoryLabel: string) {
   return CATEGORY_HEADING_BY_LABEL[categoryLabel] ?? categoryLabel
 }
 
-function BackButton({ onBack }: { onBack: () => void }) {
+function BackButton({ onBack, disabled = false }: { onBack: () => void; disabled?: boolean }) {
   return (
     <Button
       type="button"
       variant="ghost"
       size="icon"
       onClick={onBack}
+      disabled={disabled}
       aria-label="Zurück"
       className="mb-2 rounded-full text-muted-foreground"
     >

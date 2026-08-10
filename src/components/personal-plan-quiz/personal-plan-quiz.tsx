@@ -1277,10 +1277,6 @@ function MidpointProfileScreen({
   )
 }
 
-function capitalizeFirst(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1)
-}
-
 // Per-admission-screen banner photo. Every consecutive pair of admission beats
 // (recurrence → optional conflict → practical-cost → emotional-relevance) uses a
 // different file, so no image repeats across adjacent screens on any path.
@@ -1315,10 +1311,10 @@ function AdmissionScreen({
   const content =
     screen === "admission_recurrence"
       ? {
-          title: "Kommt das immer wieder?",
-          subtitle: primaryConcernLabel
-            ? `${capitalizeFirst(primaryConcernLabel)} beschäftigt dich wiederholt.`
-            : "Deine aktuellen Haarthemen kehren wieder.",
+          title: primaryConcernLabel
+            ? `Wie oft bemerkst du ${primaryConcernLabel}?`
+            : "Wie oft bemerkst du deine Haarthemen?",
+          subtitle: "Denk daran, wie es in letzter Zeit meistens war.",
           selected:
             concernRecurrence && concernRecurrence.concernId === primaryConcern
               ? concernRecurrence.frequency
@@ -1353,6 +1349,7 @@ function AdmissionScreen({
 
   return (
     <ContextPanelLayout
+      eyebrow={screen === "admission_recurrence" ? "Zurück zu deinen Haarthemen" : undefined}
       image={`${PERSONAL_PLAN_ASSET_BASE}/${admissionImage.file}`}
       imagePosition={admissionImage.position}
       subtitle={
@@ -1513,7 +1510,12 @@ function DailyTimeScreen({
       eyebrow="Dein Alltag"
       image={`${PERSONAL_PLAN_ASSET_BASE}/daily-commitment.webp`}
       imagePosition="50% 20%"
-      title="Wie viel Zeit möchtest du täglich einplanen?"
+      subtitle={
+        <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
+          Trocknen und Warten zählen nicht mit.
+        </p>
+      }
+      title="Wie viel aktive Zeit möchtest du an einem typischen Pflegetag einplanen?"
     >
       <div className="grid gap-3">
         {DAILY_TIME_OPTIONS.map((option) => (
@@ -2662,7 +2664,7 @@ export function PersonalPlanQuiz({
         {
           field: "currentConcerns",
           title: "Was beschäftigt dich gerade?",
-          helper: "Wähle alles aus, was immer wieder eine Rolle spielt.",
+          helper: "Wähle alles aus, was du aktuell bemerkst.",
           options: getConcernOptions(answers.texture),
           multi: true,
           visual: true,

@@ -67,15 +67,6 @@ const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/api/auth/set-checkout-password",
   "/welcome",
 ]
-const AUTH_ONLY_REDIRECT_QUERY_PARAMETERS = [
-  "code",
-  "error",
-  "reason",
-  "token",
-  "token_hash",
-  "type",
-] as const
-
 export function isAuthenticatedAppRoutePath(pathname: string) {
   return AUTHENTICATED_APP_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
 }
@@ -94,16 +85,24 @@ export function isPersonalPlanFieldTestGuest(user: { app_metadata?: Record<strin
   return user.app_metadata?.access_kind === "field_test"
 }
 
-export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: string): URL {
-  const url = new URL(requestUrl)
+export function buildAuthenticatedIntakeRedirectUrl(
+  sourceUrl: URL,
+  sourcePathname: string,
+  redirectPath: string,
+) {
+  const url = new URL(sourceUrl.toString())
+  const leadId = url.searchParams.get("lead")
   url.pathname = redirectPath
-  if (requestUrl.pathname === "/auth") {
-    for (const parameter of AUTH_ONLY_REDIRECT_QUERY_PARAMETERS) {
-      url.searchParams.delete(parameter)
+
+  if (sourcePathname === "/auth") {
+    url.search = ""
+    if (redirectPath === "/onboarding" && leadId) {
+      url.searchParams.set("lead", leadId)
     }
+    return url
   }
+
   if (redirectPath === "/onboarding") {
-    const leadId = requestUrl.searchParams.get("lead")
     if (leadId) {
       url.searchParams.set("lead", leadId)
     }
@@ -111,6 +110,10 @@ export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: 
     url.searchParams.delete("lead")
   }
   return url
+}
+
+export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: string): URL {
+  return buildAuthenticatedIntakeRedirectUrl(requestUrl, requestUrl.pathname, redirectPath)
 }
 
 export async function updateSession(request: NextRequest) {
@@ -357,7 +360,7 @@ export async function updateSession(request: NextRequest) {
     })
 
     if (redirectPath) {
-      const url = buildAuthenticatedAppRedirectUrl(request.nextUrl, redirectPath)
+      const url = buildAuthenticatedIntakeRedirectUrl(request.nextUrl, pathname, redirectPath)
       return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }

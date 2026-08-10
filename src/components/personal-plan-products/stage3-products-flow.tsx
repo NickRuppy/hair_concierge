@@ -67,7 +67,7 @@ type Stage3UiGateway = Stage3ProductsGateway & {
   }) => Promise<Stage3MutationResponse>
 }
 
-type Stage3AuthorityDraftResponse = Stage3DraftResponse & {
+export type Stage3AuthorityDraftResponse = Stage3DraftResponse & {
   authorityEvaluations?: Stage3AuthorityEvaluation[]
 }
 
@@ -232,6 +232,7 @@ export function Stage3ProductsFlow({
   const [roleAssignments, setRoleAssignments] = useState<Record<string, string[]>>({})
   const [saveLabel, setSaveLabel] = useState(bootstrap ? "Gespeichert" : "Wird geladen")
   const [categoryFinalizeStatus, setCategoryFinalizeStatus] = useState<"idle" | "saving">("idle")
+  const [categoryFinalizeAction, setCategoryFinalizeAction] = useState<"roles" | "gap" | null>(null)
   const [decisionSubmitStatus, setDecisionSubmitStatus] = useState<"idle" | "saving">("idle")
   const [systemIssue, setSystemIssue] = useState<SystemIssue | null>(null)
   const [authorityEvaluations, setAuthorityEvaluations] = useState<Stage3AuthorityEvaluation[]>(
@@ -404,8 +405,16 @@ export function Stage3ProductsFlow({
     return shell(
       <Stage3SystemState
         state="loading"
-        title={`${currentCopy.label} wird gespeichert.`}
-        message="Deine Auswahl wird sicher übernommen."
+        title={
+          categoryFinalizeAction === "gap"
+            ? "Alles klar – dafür hast du noch kein Produkt."
+            : "Produkte werden gespeichert."
+        }
+        message={
+          categoryFinalizeAction === "gap"
+            ? "Wird gespeichert"
+            : "Deine Auswahl wird sicher übernommen."
+        }
       />,
       currentCopy.label,
     )
@@ -1061,19 +1070,23 @@ export function Stage3ProductsFlow({
   async function saveRolesAndContinue(assignments = roleAssignments) {
     const covered = new Set(Object.values(assignments).flat())
     const missing = currentRequirement.requiredRoles.filter((role) => !covered.has(role))
-    await finalizeCurrentCapture({
-      assignments: currentProducts.flatMap((product) => {
-        const roles = (assignments[product.capturedProductId] ?? []) as PlanProductRole[]
-        return roles.length > 0
-          ? [{ capturedProductId: product.capturedProductId, category: currentCategory, roles }]
-          : []
-      }),
-      uncoveredRoles: missing.map((role) => ({
-        category: currentCategory,
-        role,
-        reason: "not_ready_to_decide" as const,
-      })),
-    })
+    await finalizeCurrentCapture(
+      {
+        assignments: currentProducts.flatMap((product) => {
+          const roles = (assignments[product.capturedProductId] ?? []) as PlanProductRole[]
+          return roles.length > 0
+            ? [{ capturedProductId: product.capturedProductId, category: currentCategory, roles }]
+            : []
+        }),
+        uncoveredRoles: missing.map((role) => ({
+          category: currentCategory,
+          role,
+          reason: "not_ready_to_decide" as const,
+        })),
+      },
+      activeDraft,
+      "roles",
+    )
   }
 
   function suggestRoleAssignments(current: Record<string, string[]>) {
@@ -1104,14 +1117,18 @@ export function Stage3ProductsFlow({
   }
 
   async function markCurrentRoleGap() {
-    await finalizeCurrentCapture({
-      assignments: [],
-      uncoveredRoles: currentRequirement.requiredRoles.map((role) => ({
-        category: currentCategory,
-        role,
-        reason: "no_product_owned" as const,
-      })),
-    })
+    await finalizeCurrentCapture(
+      {
+        assignments: [],
+        uncoveredRoles: currentRequirement.requiredRoles.map((role) => ({
+          category: currentCategory,
+          role,
+          reason: "no_product_owned" as const,
+        })),
+      },
+      activeDraft,
+      "gap",
+    )
   }
 
   async function finalizeCurrentCapture(
@@ -1120,11 +1137,13 @@ export function Stage3ProductsFlow({
       "assignments" | "uncoveredRoles"
     >,
     sourceDraft = activeDraft,
+    action: "roles" | "gap" = "roles",
   ) {
     if (categoryFinalizeInFlight.current) return
     categoryFinalizeInFlight.current = true
     setCategoryFinalizeStatus("saving")
-    setSaveLabel("Wird gespeichert")
+    setCategoryFinalizeAction(action)
+    setSaveLabel(action === "roles" ? "Produkte werden gespeichert" : "Wird gespeichert")
 
     let response: Stage3MutationResponse
     try {
@@ -1139,7 +1158,7 @@ export function Stage3ProductsFlow({
       })
     } catch (error) {
       finishCategoryFinalization()
-      handleMutationError(error, () => void finalizeCurrentCapture(capture, sourceDraft))
+      handleMutationError(error, () => void finalizeCurrentCapture(capture, sourceDraft, action))
       return
     }
 
@@ -1147,7 +1166,7 @@ export function Stage3ProductsFlow({
       finishCategoryFinalization()
       handleConflict(
         response.latestDraft,
-        () => void finalizeCurrentCapture(capture, response.latestDraft),
+        () => void finalizeCurrentCapture(capture, response.latestDraft, action),
       )
       return
     }
@@ -1167,6 +1186,7 @@ export function Stage3ProductsFlow({
   function finishCategoryFinalization() {
     categoryFinalizeInFlight.current = false
     setCategoryFinalizeStatus("idle")
+    setCategoryFinalizeAction(null)
   }
 
   async function advanceFromServerCursor(nextDraft: Stage3ProductDraft) {

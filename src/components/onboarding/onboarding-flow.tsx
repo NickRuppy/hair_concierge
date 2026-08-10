@@ -862,7 +862,7 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Womit trocknest du dein Haar?"
-            subtitle="Dein Handtuch beeinflusst Frizz und Haarbruch mehr als du denkst."
+            subtitle="Wähle, was dein nasses Haar meistens berührt."
             options={towelMaterialWithIcon}
             selected={store.towelMaterial}
             onSelect={(val) => {
@@ -881,7 +881,6 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Wie gehst du mit dem Handtuch meistens vor?"
-            subtitle="Rubbeln oder sanft ausdrücken?"
             titleInfoTipId="routine.towel_technique"
             titleInfoLabel="Info zu sanftem Trocknen"
             options={towelTechniqueWithIcon}
@@ -898,7 +897,7 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Wie trocknest du dein Haar hauptsächlich?"
-            subtitle="Hitze ist der größte Stressfaktor — wir passen deinen Plan daran an."
+            subtitle="Wähle, was du nach dem Waschen meistens machst."
             titleInfoTipId="routine.diffuser"
             titleInfoLabel="Info zu Diffusor"
             options={dryingMethodWithIcon}

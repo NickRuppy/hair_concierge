@@ -106,7 +106,7 @@ test("fresh OTP recovery still opens password setup after linking", async () => 
   ])
 })
 
-test("consumed confirmation with a session follows a sanitized intended destination without replaying side effects", async () => {
+test("consumed confirmation with a session keeps an unrelated destination on auth recovery without replaying side effects", async () => {
   const { calls, handler } = stubHandler({ exchangeError: new Error("otp_expired") })
 
   const response = await handler(
@@ -115,7 +115,10 @@ test("consumed confirmation with a session follows a sanitized intended destinat
     ),
   )
 
-  assert.equal(location(response), "https://chaarlie.de/routine?tab=morning")
+  assert.equal(
+    location(response),
+    "https://chaarlie.de/auth?error=link_expired&next=%2Froutine%3Ftab%3Dmorning",
+  )
   assert.deepEqual(calls, [["exchange", "consumed"], ["getUser"]])
 })
 
@@ -164,13 +167,16 @@ test("unsafe replay destinations are rejected in favor of the owner-scoped front
   }
 })
 
-test("same-origin next and redirect_to are accepted while a foreign redirect_to falls back to the frontier", async () => {
+test("unrelated same-origin destinations retain auth recovery while a foreign redirect falls back to the frontier", async () => {
   const sameOriginNext = stubHandler({ exchangeError: new Error("otp_expired") })
   const sameOriginNextUrl = new URL("https://chaarlie.de/auth/confirm")
   sameOriginNextUrl.searchParams.set("code", "consumed")
   sameOriginNextUrl.searchParams.set("next", "https://chaarlie.de/routine?tab=morning")
   const sameOriginNextResponse = await sameOriginNext.handler(new Request(sameOriginNextUrl))
-  assert.equal(location(sameOriginNextResponse), "https://chaarlie.de/routine?tab=morning")
+  assert.equal(
+    location(sameOriginNextResponse),
+    "https://chaarlie.de/auth?error=link_expired&next=%2Froutine%3Ftab%3Dmorning",
+  )
   assert.equal(
     sameOriginNext.calls.some(([name]) => name === "loadJourney"),
     false,
@@ -182,7 +188,10 @@ test("same-origin next and redirect_to are accepted while a foreign redirect_to 
       "https://chaarlie.de/auth/confirm?code=consumed&redirect_to=https%3A%2F%2Fchaarlie.de%2Froutine%3Ftab%3Devening",
     ),
   )
-  assert.equal(location(sameOriginResponse), "https://chaarlie.de/routine?tab=evening")
+  assert.equal(
+    location(sameOriginResponse),
+    "https://chaarlie.de/auth?error=link_expired&next=%2Froutine%3Ftab%3Devening",
+  )
   assert.equal(
     sameOrigin.calls.some(([name]) => name === "loadJourney"),
     false,
@@ -209,7 +218,10 @@ test("consumed recovery link with a session remains password recovery and does n
     ),
   )
 
-  assert.equal(location(response), "https://chaarlie.de/auth/update-password")
+  assert.equal(
+    location(response),
+    "https://chaarlie.de/auth?error=link_expired&force=login&next=%2Fauth%2Fupdate-password",
+  )
   assert.deepEqual(calls, [
     ["verifyOtp", { token_hash: "consumed", type: "recovery" }],
     ["getUser"],
@@ -227,11 +239,11 @@ test("signed-out invalid links retain expired-link recovery", async () => {
     new Request("https://chaarlie.de/auth/confirm?code=consumed&next=%2Froutine"),
   )
 
-  assert.equal(location(response), "https://chaarlie.de/auth?error=link_expired")
+  assert.equal(location(response), "https://chaarlie.de/auth?error=link_expired&next=%2Froutine")
   assert.deepEqual(calls, [["exchange", "consumed"], ["getUser"]])
 })
 
-test("authenticated replay falls back to the existing default when no Personal Plan frontier can be loaded", async (context) => {
+test("authenticated replay falls back to auth recovery when no Personal Plan frontier can be loaded", async (context) => {
   context.mock.method(console, "warn", () => {})
   for (const options of [
     { exchangeError: new Error("otp_expired"), journeyHref: null },
@@ -240,7 +252,7 @@ test("authenticated replay falls back to the existing default when no Personal P
     const { calls, handler } = stubHandler(options)
     const response = await handler(new Request("https://chaarlie.de/auth/confirm?code=consumed"))
 
-    assert.equal(location(response), "https://chaarlie.de/chat")
+    assert.equal(location(response), "https://chaarlie.de/auth?error=link_expired&next=%2Fchat")
     assert.equal(
       calls.some(([name]) => name === "linkQuiz"),
       false,

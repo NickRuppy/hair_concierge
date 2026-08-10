@@ -9,7 +9,6 @@ export {
   PlanStartLoading,
   PlanStartProductionGate,
   PlanStartRetryableError,
-  PlanStartTransition,
   PlanStartUnavailable,
   interpretPlanStartApiResponse,
   type PlanStartFlowProps,

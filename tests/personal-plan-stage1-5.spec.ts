@@ -678,7 +678,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await expect(page.getByRole("button", { name: "2x/Woche" })).toBeVisible()
     await page.reload()
-    await expect(page.getByText("Weiter verfeinern", { exact: true })).toBeVisible()
+    await expect(page.getByText("Wir laden deine Verfeinerung.", { exact: true })).toBeVisible()
     await expect(page.getByText("Nasswasch-Rhythmus", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Bei der offenen Frage fortfahren →" }).click()
     await expect(page.getByRole("button", { name: "2x/Woche" })).toBeVisible()
