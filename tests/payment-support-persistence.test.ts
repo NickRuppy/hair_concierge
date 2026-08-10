@@ -11,7 +11,7 @@ import {
 } from "../src/lib/billing/payment-support"
 
 const migration = readFileSync(
-  "supabase/migrations/20260810071137_payment_support_cases.sql",
+  "supabase/migrations/20260810082837_payment_support_cases.sql",
   "utf8",
 )
 
