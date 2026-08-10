@@ -71,6 +71,55 @@ export const HEAT_IDENTITY = {
   },
 } as const
 
+export const HEAT_MIGRATION_IDENTITY_SEEDS = {
+  brands: [
+    {
+      id: "525123e1-1376-4fca-91b0-4eeb99c0bc50",
+      canonical_name: "L'Oréal Paris",
+      normalized_name: "loreal paris",
+    },
+    {
+      id: "7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1",
+      canonical_name: "taft",
+      normalized_name: "taft",
+    },
+  ],
+  lines: [
+    {
+      id: "424f3e04-4a35-4b52-a23a-a33c06b996b7",
+      brand_id: "525123e1-1376-4fca-91b0-4eeb99c0bc50",
+      canonical_name: "Elvital Dream Length",
+      normalized_name: "elvital dream length",
+    },
+    {
+      id: "4cfd54ce-fd3f-4d5a-a06d-ff4b74163480",
+      brand_id: "7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1",
+      canonical_name: "Aloe Boost",
+      normalized_name: "aloe boost",
+    },
+    {
+      id: "33bb265a-f7a5-4fce-a2bb-9d6d1b24d9cf",
+      brand_id: "7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1",
+      canonical_name: "taft x Gliss Lovely Long",
+      normalized_name: "taft x gliss lovely long",
+    },
+  ],
+  aliases: [
+    {
+      brand_id: "7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1",
+      product_line_id: null,
+      alias: "Schwarzkopf taft",
+      normalized_alias: "schwarzkopf taft",
+      source: "curated",
+    },
+  ],
+} as const
+
+const HEAT_MIGRATION_IDENTITY_SEED_FINGERPRINT =
+  "9a9a01ee5cb249511e84a9b2698799766619a7adc7d16c922e96ab282cc04e47"
+const HEAT_MIGRATION_SEED_BLOCK_SHA256 =
+  "95afc16465ba1bdfee7061f29b8a58ed443c93be60b80f799d340d3258fcc318"
+
 const HEAT_EXPECTED_KEY_LIST = [...HEAT_EXPECTED_KEYS.heat].sort()
 const HEAT_UNAVAILABLE_KEYS = new Set([
   "balea-two-phase-200ml",
@@ -245,14 +294,115 @@ function isEnabledCategory(row: UnknownRecord, category: string) {
     row.is_intake_supported === true
   )
 }
-export function resolveHeatIdentity(key: string, brands: UnknownRecord[], lines: UnknownRecord[]) {
+function exactFields(row: UnknownRecord, expected: UnknownRecord, fields: readonly string[]) {
+  return fields.every((field) => String(row[field] ?? "") === String(expected[field] ?? ""))
+}
+
+function heatMigrationSeedBlock(sql: string): string | null {
+  return sql.match(/DO \$seeds\$[\s\S]*?\$seeds\$;/)?.[0] ?? null
+}
+
+function heatIdentitySeedBlockers(input: {
+  brands: UnknownRecord[]
+  lines: UnknownRecord[]
+  aliases: UnknownRecord[]
+  migrationState: "absent" | "applied"
+  migrationSql: string | null
+}): string[] {
+  const blockers: string[] = []
+  if (
+    catalogEnrichmentFingerprint(HEAT_MIGRATION_IDENTITY_SEEDS) !==
+    HEAT_MIGRATION_IDENTITY_SEED_FINGERPRINT
+  )
+    blockers.push("Heat identity seed definition fingerprint drift")
+  const seedBlock = input.migrationSql ? heatMigrationSeedBlock(input.migrationSql) : null
+  if (!seedBlock || sha256Utf8(seedBlock) !== HEAT_MIGRATION_SEED_BLOCK_SHA256)
+    blockers.push("Heat migration identity seed block drift")
+
+  const exactBrands = new Set<string>()
+  for (const seed of HEAT_MIGRATION_IDENTITY_SEEDS.brands) {
+    const byId = input.brands.filter((row) => String(row.id) === seed.id)
+    const byNormalizedName = input.brands.filter(
+      (row) => String(row.normalized_name) === seed.normalized_name,
+    )
+    const exact = byId.filter((row) =>
+      exactFields(row, seed, ["id", "canonical_name", "normalized_name"]),
+    )
+    if (byNormalizedName.some((row) => String(row.id) !== seed.id))
+      blockers.push(`Heat identity seed collision: brand ${seed.canonical_name}`)
+    if (byId.length > 1 || byNormalizedName.length > 1)
+      blockers.push(`Heat identity seed partial state: brand ${seed.canonical_name}`)
+    if (byId.some((row) => !exact.includes(row)))
+      blockers.push(`Heat identity seed mismatch: brand ${seed.canonical_name}`)
+    if (exact.length === 1) exactBrands.add(seed.id)
+    else if (input.migrationState === "applied")
+      blockers.push(`Heat identity seed missing after migration: brand ${seed.canonical_name}`)
+  }
+
+  for (const seed of HEAT_MIGRATION_IDENTITY_SEEDS.lines) {
+    const byId = input.lines.filter((row) => String(row.id) === seed.id)
+    const byNormalizedName = input.lines.filter(
+      (row) =>
+        String(row.brand_id) === seed.brand_id &&
+        String(row.normalized_name) === seed.normalized_name,
+    )
+    const exact = byId.filter((row) =>
+      exactFields(row, seed, ["id", "brand_id", "canonical_name", "normalized_name"]),
+    )
+    if (byNormalizedName.some((row) => String(row.id) !== seed.id))
+      blockers.push(`Heat identity seed collision: line ${seed.canonical_name}`)
+    if (byId.length > 1 || byNormalizedName.length > 1)
+      blockers.push(`Heat identity seed partial state: line ${seed.canonical_name}`)
+    if (byId.some((row) => !exact.includes(row)))
+      blockers.push(`Heat identity seed mismatch: line ${seed.canonical_name}`)
+    if (exact.length === 1 && !exactBrands.has(seed.brand_id))
+      blockers.push(`Heat identity seed partial state: line ${seed.canonical_name} has no parent`)
+    if (exact.length !== 1 && input.migrationState === "applied")
+      blockers.push(`Heat identity seed missing after migration: line ${seed.canonical_name}`)
+  }
+
+  for (const seed of HEAT_MIGRATION_IDENTITY_SEEDS.aliases) {
+    const byNormalizedAlias = input.aliases.filter(
+      (row) => String(row.normalized_alias) === seed.normalized_alias,
+    )
+    const exact = byNormalizedAlias.filter((row) =>
+      exactFields(row, seed, [
+        "brand_id",
+        "product_line_id",
+        "alias",
+        "normalized_alias",
+        "source",
+      ]),
+    )
+    if (byNormalizedAlias.length > 1)
+      blockers.push(`Heat identity seed partial state: alias ${seed.alias}`)
+    if (byNormalizedAlias.some((row) => !exact.includes(row)))
+      blockers.push(`Heat identity seed collision: alias ${seed.alias}`)
+    if (exact.length === 1 && !exactBrands.has(seed.brand_id))
+      blockers.push(`Heat identity seed partial state: alias ${seed.alias} has no parent`)
+    if (exact.length !== 1 && input.migrationState === "applied")
+      blockers.push(`Heat identity seed missing after migration: alias ${seed.alias}`)
+  }
+  return blockers
+}
+
+export function resolveHeatIdentity(
+  key: string,
+  brands: UnknownRecord[],
+  lines: UnknownRecord[],
+  migrationState: "absent" | "applied" = "applied",
+) {
   const expected = HEAT_IDENTITY[key as keyof typeof HEAT_IDENTITY]
   if (!expected) return { error: `unknown approved identity: ${key}` }
   const brand = brands.filter(
     (row) =>
       String(row.id) === expected.brandId && String(row.canonical_name) === expected.brandName,
   )
-  if (brand.length !== 1) return { error: `canonical brand identity mismatch: ${key}` }
+  const seededBrand = HEAT_MIGRATION_IDENTITY_SEEDS.brands.some(
+    (seed) => seed.id === expected.brandId,
+  )
+  if (brand.length !== 1 && !(migrationState === "absent" && seededBrand && brand.length === 0))
+    return { error: `canonical brand identity mismatch: ${key}` }
   if (!expected.lineId) return { brand_id: expected.brandId, product_line_id: null }
   const line = lines.filter(
     (row) =>
@@ -260,7 +410,8 @@ export function resolveHeatIdentity(key: string, brands: UnknownRecord[], lines:
       String(row.brand_id) === expected.brandId &&
       String(row.canonical_name) === expected.lineName,
   )
-  return line.length === 1
+  const seededLine = HEAT_MIGRATION_IDENTITY_SEEDS.lines.some((seed) => seed.id === expected.lineId)
+  return line.length === 1 || (migrationState === "absent" && seededLine && line.length === 0)
     ? { brand_id: expected.brandId, product_line_id: expected.lineId }
     : { error: `canonical product line identity mismatch: ${key}` }
 }
@@ -295,6 +446,7 @@ export async function preflightHeat(options: {
   cwd?: string
   publicSupabaseUrl?: string
   gitState?: () => Promise<{ head: string; clean: boolean }>
+  migrationSql?: () => Promise<string>
   mode?: "pre_apply" | "post_apply"
 }): Promise<HEATPreflight> {
   const blockers: string[] = []
@@ -341,19 +493,41 @@ export async function preflightHeat(options: {
   const missingTables = options.read.hasTables ? await options.read.hasTables(tables) : []
   if (missingTables.length)
     blockers.push(`missing required Heat schema/table: ${missingTables.sort().join(", ")}`)
+  if (release.expectMigration === "absent" && options.read.hasTables) {
+    const missingLedger = await options.read.hasTables(["catalog_enrichment_applied_items"])
+    if (!missingLedger.includes("catalog_enrichment_applied_items"))
+      blockers.push("unexpected partial Heat migration state: executor ledger already exists")
+  }
   const publicBase = (
     options.publicSupabaseUrl ??
     process.env.NEXT_PUBLIC_SUPABASE_URL ??
     ""
   ).replace(/\/$/, "")
   if (publicBase !== HEAT_PUBLIC_SUPABASE_URL) blockers.push("public Supabase base URL mismatch")
-  const [products, identifiers, brandRows, productLines, categories] = await Promise.all([
-    readAllPages(options.read, "products"),
-    readAllPages(options.read, "product_identifiers"),
-    readAllPages(options.read, "brands"),
-    readAllPages(options.read, "product_lines"),
-    readAllPages(options.read, "product_categories"),
-  ])
+  const [products, identifiers, brandRows, productLines, brandAliases, categories, migrationSql] =
+    await Promise.all([
+      readAllPages(options.read, "products"),
+      readAllPages(options.read, "product_identifiers"),
+      readAllPages(options.read, "brands"),
+      readAllPages(options.read, "product_lines"),
+      readAllPages(options.read, "brand_aliases"),
+      readAllPages(options.read, "product_categories"),
+      options.migrationSql
+        ? options.migrationSql().catch(() => null)
+        : readFile(
+            resolve(options.cwd ?? process.cwd(), `supabase/migrations/${HEAT_MIGRATION}.sql`),
+            "utf8",
+          ).catch(() => null),
+    ])
+  blockers.push(
+    ...heatIdentitySeedBlockers({
+      brands: brandRows,
+      lines: productLines,
+      aliases: brandAliases,
+      migrationState: migration_state ?? release.expectMigration,
+      migrationSql,
+    }),
+  )
   const now = (options.now ?? new Date()).getTime()
   const maxAge = options.commercialMaxAgeMs ?? 1000 * 60 * 60 * 24 * 7
   const packageProducts: HEATPackageProduct[] = []
@@ -366,7 +540,12 @@ export async function preflightHeat(options: {
     )
     if (!Number.isFinite(Date.parse(checkedAt)) || now - Date.parse(checkedAt) > maxAge)
       blockers.push(`stale commercial observation: ${manifest.product_key}`)
-    const resolved = resolveHeatIdentity(manifest.product_key, brandRows, productLines)
+    const resolved = resolveHeatIdentity(
+      manifest.product_key,
+      brandRows,
+      productLines,
+      release.expectMigration,
+    )
     if ("error" in resolved && resolved.error) blockers.push(resolved.error)
     const category = String(product.category_key)
     if (!categories.some((row) => isEnabledCategory(row, category)))

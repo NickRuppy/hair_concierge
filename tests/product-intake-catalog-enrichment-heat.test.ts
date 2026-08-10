@@ -6,6 +6,7 @@ import {
   HEAT_BATCH_ID,
   HEAT_COHORT_INDEX_FINGERPRINT,
   HEAT_EXPECTED_KEYS,
+  HEAT_MIGRATION_IDENTITY_SEEDS,
   HEAT_PACKAGE_FINGERPRINT,
   HEAT_SUPABASE_PROJECT_ID,
   buildHeatPackage,
@@ -311,7 +312,9 @@ test("preflight requires the Heat ledger only after the migration is applied", a
         object: async () => null,
         hasTables: async (tables) => {
           calls.push([...tables])
-          return []
+          return state === "absent"
+            ? tables.filter((table) => table === "catalog_enrichment_applied_items")
+            : []
         },
         migrationState: async () => state,
       },
@@ -329,6 +332,152 @@ test("preflight requires the Heat ledger only after the migration is applied", a
   await run("applied")
   const dirty = await run("applied", false)
   assert.equal(calls[0]?.includes("catalog_enrichment_applied_items"), false)
-  assert.equal(calls[1]?.includes("catalog_enrichment_applied_items"), true)
+  assert.deepEqual(calls[1], ["catalog_enrichment_applied_items"])
+  assert.equal(calls[2]?.includes("catalog_enrichment_applied_items"), true)
   assert.equal(dirty.blockers.includes("current git worktree is not clean"), true)
+})
+
+test("absent-mode preflight accepts migration-safe missing Heat identity seeds", async () => {
+  const rows: Record<string, Record<string, unknown>[]> = {
+    products: [],
+    product_identifiers: [],
+    brands: [
+      {
+        id: "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+        canonical_name: "Balea",
+        normalized_name: "balea",
+      },
+      {
+        id: "a286e2c2-6b44-41f3-a37b-f57d4ed1e93c",
+        canonical_name: "got2b",
+        normalized_name: "got2b",
+      },
+      {
+        id: "d1a06eff-1c23-472e-908e-f5364edb1bec",
+        canonical_name: "Jean&Len",
+        normalized_name: "jean len",
+      },
+      {
+        id: "525123e1-1376-4fca-91b0-4eeb99c0bc50",
+        canonical_name: "L'Oréal Paris",
+        normalized_name: "loreal paris",
+      },
+    ],
+    product_lines: [],
+    brand_aliases: [],
+    product_categories: [
+      {
+        key: "heat_protectant",
+        is_catalog_supported: true,
+        is_intake_supported: true,
+      },
+    ],
+  }
+  const run = async (
+    input: {
+      rows?: typeof rows
+      state?: "absent" | "applied"
+      hasLedger?: boolean
+      migrationSql?: string
+    } = {},
+  ) => {
+    const state = input.state ?? "absent"
+    const hasLedger = input.hasLedger ?? state === "applied"
+    return preflightHeat({
+      read: {
+        list: async (table) => (input.rows ?? rows)[table] ?? [],
+        object: async () => null,
+        hasTables: async (tables) =>
+          hasLedger ? [] : tables.filter((table) => table === "catalog_enrichment_applied_items"),
+        migrationState: async () => state,
+      },
+      release: {
+        reviewedHead: "a".repeat(40),
+        projectId: HEAT_SUPABASE_PROJECT_ID,
+        expectMigration: state,
+      },
+      gitState: async () => ({ head: "a".repeat(40), clean: true }),
+      migrationSql: input.migrationSql ? async () => input.migrationSql! : undefined,
+      publicSupabaseUrl: `https://${HEAT_SUPABASE_PROJECT_ID}.supabase.co`,
+      now: new Date("2026-08-10T00:00:00Z"),
+    })
+  }
+
+  const result = await run()
+
+  assert.equal(result.ok, true, result.blockers.join("\n"))
+
+  const collision = await run({
+    rows: {
+      ...rows,
+      brands: [
+        ...rows.brands,
+        { id: "ffffffff-ffff-4fff-8fff-ffffffffffff", normalized_name: "taft" },
+      ],
+    },
+  })
+  assert.equal(collision.blockers.includes("Heat identity seed collision: brand taft"), true)
+
+  const mismatch = await run({
+    rows: {
+      ...rows,
+      brands: [
+        ...rows.brands,
+        {
+          id: "7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1",
+          canonical_name: "TAFT",
+          normalized_name: "taft",
+        },
+      ],
+    },
+  })
+  assert.equal(mismatch.blockers.includes("Heat identity seed mismatch: brand taft"), true)
+
+  const partial = await run({
+    rows: {
+      ...rows,
+      product_lines: [{ ...HEAT_MIGRATION_IDENTITY_SEEDS.lines[1] }],
+    },
+  })
+  assert.equal(
+    partial.blockers.includes("Heat identity seed partial state: line Aloe Boost has no parent"),
+    true,
+  )
+
+  const unexpectedLedger = await run({ hasLedger: true })
+  assert.equal(
+    unexpectedLedger.blockers.includes(
+      "unexpected partial Heat migration state: executor ledger already exists",
+    ),
+    true,
+  )
+
+  const migrationSql = await readFile(
+    "supabase/migrations/20260810090000_catalog_enrichment_personal_plan_heat_v1_executor.sql",
+    "utf8",
+  )
+  const drift = await run({
+    migrationSql: migrationSql.replace("Schwarzkopf taft", "Schwarzkopf Taft"),
+  })
+  assert.equal(drift.blockers.includes("Heat migration identity seed block drift"), true)
+
+  const appliedMissing = await run({ state: "applied" })
+  assert.equal(
+    appliedMissing.blockers.includes("Heat identity seed missing after migration: brand taft"),
+    true,
+  )
+
+  const applied = await run({
+    state: "applied",
+    rows: {
+      ...rows,
+      brands: [
+        ...rows.brands.filter((brand) => brand.id !== "525123e1-1376-4fca-91b0-4eeb99c0bc50"),
+        ...HEAT_MIGRATION_IDENTITY_SEEDS.brands.map((seed) => ({ ...seed })),
+      ],
+      product_lines: HEAT_MIGRATION_IDENTITY_SEEDS.lines.map((seed) => ({ ...seed })),
+      brand_aliases: HEAT_MIGRATION_IDENTITY_SEEDS.aliases.map((seed) => ({ ...seed })),
+    },
+  })
+  assert.equal(applied.ok, true, applied.blockers.join("\n"))
 })

@@ -29,7 +29,7 @@ DO $seeds$
 DECLARE seed record; found_brand uuid; found_line uuid;
 BEGIN
   FOR seed IN SELECT * FROM (VALUES
-    ('brand', '525123e1-1376-4fca-91b0-4eeb99c0bc50'::uuid, NULL::uuid, 'L''Oréal Paris', 'l oreal paris'),
+    ('brand', '525123e1-1376-4fca-91b0-4eeb99c0bc50'::uuid, NULL::uuid, 'L''Oréal Paris', 'loreal paris'),
     ('brand', '7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1'::uuid, NULL::uuid, 'taft', 'taft'),
     ('line', '424f3e04-4a35-4b52-a23a-a33c06b996b7'::uuid, '525123e1-1376-4fca-91b0-4eeb99c0bc50'::uuid, 'Elvital Dream Length', 'elvital dream length'),
     ('line', '4cfd54ce-fd3f-4d5a-a06d-ff4b74163480'::uuid, '7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1'::uuid, 'Aloe Boost', 'aloe boost'),

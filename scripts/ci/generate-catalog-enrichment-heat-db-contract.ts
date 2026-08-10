@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises"
 
 import {
   HEAT_IDENTITY,
+  HEAT_MIGRATION_IDENTITY_SEEDS,
   HEAT_PACKAGE_FINGERPRINT,
   HEAT_PUBLIC_SUPABASE_URL,
   loadHeatManifests,
@@ -32,7 +33,16 @@ async function main() {
     (rows, identity) =>
       rows.some((row) => row.id === identity.brandId)
         ? rows
-        : [...rows, { id: identity.brandId, canonical_name: identity.brandName }],
+        : [
+            ...rows,
+            {
+              id: identity.brandId,
+              canonical_name: identity.brandName,
+              normalized_name:
+                HEAT_MIGRATION_IDENTITY_SEEDS.brands.find((seed) => seed.id === identity.brandId)
+                  ?.normalized_name ?? normalizedIdentity(identity.brandName),
+            },
+          ],
     [],
   )
   const lines = Object.values(HEAT_IDENTITY).reduce<Row[]>(
@@ -41,7 +51,14 @@ async function main() {
         ? rows
         : [
             ...rows,
-            { id: identity.lineId, brand_id: identity.brandId, canonical_name: identity.lineName },
+            {
+              id: identity.lineId,
+              brand_id: identity.brandId,
+              canonical_name: identity.lineName,
+              normalized_name:
+                HEAT_MIGRATION_IDENTITY_SEEDS.lines.find((seed) => seed.id === identity.lineId)
+                  ?.normalized_name ?? normalizedIdentity(String(identity.lineName)),
+            },
           ],
     [],
   )
@@ -54,8 +71,9 @@ async function main() {
     )
   }
   const tables: Record<string, Row[]> = {
-    brands,
-    product_lines: lines,
+    brands: brands.filter((brand) => brand.id !== "7a2a7445-8f92-4f35-96c3-d7ba06bf1bc1"),
+    product_lines: [],
+    brand_aliases: [],
     product_categories: [
       { key: "heat_protectant", is_catalog_supported: true, is_intake_supported: true },
     ],
@@ -66,7 +84,8 @@ async function main() {
     read: {
       list: async (table, offset, limit) => (tables[table] ?? []).slice(offset, offset + limit),
       object: async (_bucket, path) => objects.get(path) ?? null,
-      hasTables: async () => [],
+      hasTables: async (required) =>
+        required.filter((table) => table === "catalog_enrichment_applied_items"),
       migrationState: async () => "absent",
     },
     release: {
@@ -98,13 +117,13 @@ async function main() {
   const brandSeed = brands
     .map(
       (brand) =>
-        `(${sqlLiteral(String(brand.id))}::uuid,${sqlLiteral(String(brand.canonical_name))},${sqlLiteral(normalizedIdentity(String(brand.canonical_name)))})`,
+        `(${sqlLiteral(String(brand.id))}::uuid,${sqlLiteral(String(brand.canonical_name))},${sqlLiteral(String(brand.normalized_name))})`,
     )
     .join(",\n  ")
   const lineSeed = lines
     .map(
       (line) =>
-        `(${sqlLiteral(String(line.id))}::uuid,${sqlLiteral(String(line.brand_id))}::uuid,${sqlLiteral(String(line.canonical_name))},${sqlLiteral(normalizedIdentity(String(line.canonical_name)))})`,
+        `(${sqlLiteral(String(line.id))}::uuid,${sqlLiteral(String(line.brand_id))}::uuid,${sqlLiteral(String(line.canonical_name))},${sqlLiteral(String(line.normalized_name))})`,
     )
     .join(",\n  ")
   await writeFile(
