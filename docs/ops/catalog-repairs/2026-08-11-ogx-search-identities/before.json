@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "repairKey": "2026-08-11-ogx-search-identities",
+  "captureStatus": "readonly_production_fingerprint_2026-08-11",
+  "capturedAt": "2026-08-11",
+  "brand": {
+    "id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+    "canonicalName": "OGX"
+  },
+  "products": [
+    {
+      "id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "current": {
+        "name": "OGX Biotin & Collagen",
+        "productLineId": null,
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "imageUrlContains": "/28-",
+        "imagePathFingerprint": "ogx-ogx-biotin-collagen-89197267cf81.webp"
+      },
+      "target": {
+        "productLineCandidateId": "42023ab3-00e6-4798-8417-85ec3276fee5",
+        "productLine": "Thick & Full +",
+        "name": "Biotin & Collagen Shampoo",
+        "stage3DisplayName": "Thick & Full + Biotin & Collagen Shampoo"
+      }
+    },
+    {
+      "id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "current": {
+        "name": "OGX Keratin Oil",
+        "productLineId": null,
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "imageUrlContains": "/29-",
+        "imagePathFingerprint": "ogx-ogx-keratin-oil-c2bde030beb2.webp"
+      },
+      "target": {
+        "productLineCandidateId": "03366918-eb15-41d9-8aaf-4a547f013d7d",
+        "productLine": "Strength & Length +",
+        "name": "Keratin Oil Shampoo",
+        "stage3DisplayName": "Strength & Length + Keratin Oil Shampoo"
+      }
+    },
+    {
+      "id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "current": {
+        "name": "OGX Rosemary",
+        "productLineId": null,
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "imageUrlContains": "/31-",
+        "imagePathFingerprint": "ogx-ogx-rosemary-c14a74393fc0.webp"
+      },
+      "target": {
+        "productLineCandidateId": "58a9d837-9658-4954-be08-77f613455d20",
+        "productLine": "Refreshing Scalp +",
+        "name": "Rosemary Mint Shampoo",
+        "stage3DisplayName": "Refreshing Scalp + Rosemary Mint Shampoo"
+      }
+    }
+  ],
+  "sources": [
+    "https://www.ogxbeauty.com/products/thick-full-biotin-and-collagen-hair-thickening-shampoo",
+    "https://www.mueller.de/p/ogx-thick-full-biotin-collagen-shampoo-385ml-107260/",
+    "https://www.ogxbeauty.fr/produits/shampooing-keratin-oil",
+    "https://www.ogxbeauty.ca/hair/shampoo/refreshing-scalp-rosemary-shampoo"
+  ],
+  "privacy": {
+    "containsUserIds": false,
+    "containsEmail": false,
+    "containsRawUserText": false,
+    "containsUserHistory": false
+  },
+  "scope": {
+    "operatorOnly": true,
+    "notMigration": true,
+    "productionWritePrepared": false,
+    "productColumnsAllowed": [
+      "name",
+      "product_line_id"
+    ],
+    "productLineRowsAllowed": "create missing OGX lines or reuse existing exact normalized lines"
+  }
+}

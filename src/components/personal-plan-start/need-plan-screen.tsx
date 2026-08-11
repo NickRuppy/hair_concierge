@@ -29,7 +29,9 @@ type NeedPlanScreenProps = {
 
 export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: NeedPlanScreenProps) {
   const nextLabel =
-    screen.kind === "basis" && hasOptionalPage ? "Optionale Empfehlungen" : "Plan verfeinern"
+    screen.kind === "basis" && hasOptionalPage
+      ? "Optionale Empfehlungen"
+      : "Jetzt auf meine Produkte abstimmen"
 
   return (
     <section

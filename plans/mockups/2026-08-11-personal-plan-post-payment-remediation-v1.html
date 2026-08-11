@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan · Post-Payment Remediation v1</title>
+    <style>
+      :root {
+        --ink: #2d2340;
+        --text: #3e3937;
+        --muted: #766f6b;
+        --paper: #f7f3ef;
+        --surface: #fffdfb;
+        --line: #e8e0da;
+        --plum: #6846a3;
+        --plum-soft: #f2ecf8;
+        --rose: #d65f6c;
+        --rose-soft: #fff0f1;
+        --green: #2f714e;
+        --green-soft: #eaf5ed;
+        --amber: #8b6527;
+        --amber-soft: #fbf2dc;
+        --shadow: 0 22px 60px rgba(50, 37, 31, 0.12);
+        --small-shadow: 0 12px 28px rgba(50, 37, 31, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 4%, rgba(104, 70, 163, 0.1), transparent 26%),
+          radial-gradient(circle at 90% 14%, rgba(214, 95, 108, 0.08), transparent 24%),
+          var(--paper);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button { font: inherit; }
+      h1, h2, h3, p { margin: 0; }
+      h1, h2, .serif { color: var(--ink); font-family: Georgia, "Times New Roman", serif; }
+
+      .artifact {
+        max-width: 1510px;
+        margin: 0 auto;
+        padding: 64px 34px 96px;
+      }
+
+      .artifact-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 34px;
+        align-items: end;
+        margin-bottom: 42px;
+      }
+      .artifact-head > * { min-width: 0; }
+
+      .eyebrow {
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .artifact h1 { margin-top: 12px; max-width: 840px; font-size: clamp(42px, 6vw, 78px); line-height: 0.98; }
+      .artifact-head > p { color: var(--muted); font-size: 17px; line-height: 1.55; }
+
+      .principles {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin: 0 0 58px;
+      }
+
+      .principle {
+        min-height: 112px;
+        padding: 20px;
+        border: 1px solid rgba(104, 70, 163, 0.14);
+        border-radius: 18px;
+        background: rgba(255, 253, 251, 0.75);
+      }
+
+      .principle b { display: block; color: var(--ink); font-size: 14px; }
+      .principle span { display: block; margin-top: 9px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+      .section { margin-top: 72px; }
+      .section-head { display: flex; justify-content: space-between; gap: 20px; align-items: end; margin-bottom: 22px; }
+      .section-head h2 { font-size: clamp(32px, 4vw, 52px); }
+      .section-head p { max-width: 560px; color: var(--muted); line-height: 1.5; }
+
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; align-items: start; }
+      .frame { border: 1px solid rgba(104, 70, 163, 0.14); border-radius: 28px; background: rgba(255, 253, 251, 0.68); overflow: hidden; }
+      .frame-caption { display: flex; justify-content: space-between; gap: 18px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+      .frame-caption b { color: var(--ink); }
+      .frame-caption span { color: var(--muted); font-size: 13px; }
+
+      .phone-wrap { padding: 28px; }
+      .phone {
+        width: min(100%, 390px);
+        min-height: 760px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 10px solid #211f21;
+        border-radius: 38px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .appbar { display: flex; align-items: center; justify-content: space-between; min-height: 68px; padding: 16px 20px 12px; }
+      .brand { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 27px; font-weight: 700; }
+      .back { width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 27px; }
+      .saved { color: var(--green); font-size: 12px; font-weight: 800; }
+      .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; padding: 0 16px 13px; border-bottom: 1px solid var(--line); }
+      .step { height: 4px; border-radius: 999px; background: #e7e0dc; }
+      .step.done { background: var(--plum); }
+      .step.current { background: var(--rose); }
+
+      .content { padding: 28px 22px 110px; }
+      .content h3 { color: var(--ink); font-size: 30px; line-height: 1.12; }
+      .lead { margin-top: 9px; color: var(--muted); font-size: 15px; line-height: 1.48; }
+      .micro { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+
+      .dock { position: sticky; bottom: 0; padding: 14px 18px 20px; border-top: 1px solid var(--line); background: rgba(255, 253, 251, 0.95); backdrop-filter: blur(12px); }
+      .primary, .secondary {
+        width: 100%; min-height: 52px; border-radius: 16px; font-weight: 800;
+      }
+      .primary { border: 0; color: white; background: var(--rose); box-shadow: 0 8px 20px rgba(214, 95, 108, 0.23); }
+      .secondary { border: 1.5px solid var(--plum); color: var(--plum); background: white; }
+
+      .ready-screen { display: grid; min-height: 760px; grid-template-rows: auto 1fr auto; }
+      .ready-main { display: flex; flex-direction: column; justify-content: center; padding: 28px 28px 40px; text-align: center; }
+      .ready-main h3 { margin-top: 26px; font-family: Georgia, "Times New Roman", serif; font-size: 34px; line-height: 1.06; color: var(--ink); }
+      .ready-main p { margin-top: 13px; color: var(--muted); font-size: 15px; line-height: 1.48; }
+      .plan-preview { position: relative; width: 230px; height: 215px; margin: 0 auto; }
+      .mini-card {
+        position: absolute; width: 180px; height: 118px; padding: 14px; border: 1px solid var(--line); border-radius: 20px;
+        background: white; box-shadow: var(--small-shadow); text-align: left;
+      }
+      .mini-card:nth-child(1) { left: 0; top: 28px; transform: rotate(-7deg); }
+      .mini-card:nth-child(2) { right: 0; top: 72px; transform: rotate(7deg); }
+      .mini-card:nth-child(3) { left: 28px; top: 0; z-index: 2; }
+      .mini-line { height: 7px; border-radius: 999px; background: var(--plum-soft); margin-top: 8px; }
+      .mini-line.short { width: 62%; background: var(--rose-soft); }
+      .mini-icon { width: 33px; height: 44px; border-radius: 9px 9px 12px 12px; background: linear-gradient(160deg, #8b6bb8, #4d317a); }
+
+      .need-card, .search-result, .routine-card, .pending-card {
+        border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: 0 7px 22px rgba(50, 37, 31, 0.06);
+      }
+      .need-card { margin-top: 22px; padding: 18px; }
+      .need-top { display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: center; }
+      .bottle { width: 44px; height: 64px; margin: auto; border-radius: 12px 12px 15px 15px; background: linear-gradient(160deg, #8667b4, #50357d); box-shadow: inset 0 4px 10px rgba(255,255,255,.25); }
+      .bottle.blue { background: linear-gradient(160deg, #4aa4c6, #17667e); }
+      .bottle.cream { background: linear-gradient(160deg, #f3e7d3, #caa97d); }
+      .need-card strong, .routine-card strong { display: block; margin-top: 5px; color: var(--ink); font-size: 16px; line-height: 1.3; }
+      .need-card p, .routine-card p { margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+      .pill-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+      .pill { padding: 7px 9px; border-radius: 999px; background: var(--plum-soft); color: var(--plum); font-size: 11px; font-weight: 800; }
+      .text-action { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--plum); font-size: 13px; font-weight: 800; }
+
+      .search-box { display: flex; gap: 10px; align-items: center; margin-top: 22px; padding: 15px 16px; border: 1.5px solid var(--plum); border-radius: 16px; color: var(--muted); }
+      .search-result { display: grid; grid-template-columns: 46px 1fr auto; gap: 12px; align-items: center; margin-top: 12px; padding: 14px; }
+      .search-result.selected { border-color: var(--plum); background: var(--plum-soft); box-shadow: 0 0 0 3px rgba(104, 70, 163, 0.08); }
+      .product-thumb { display: grid; place-items: center; width: 46px; height: 54px; border-radius: 13px; background: #f5f0ea; }
+      .product-thumb .bottle { width: 25px; height: 38px; }
+      .product-name { color: var(--ink); font-size: 14px; font-weight: 800; line-height: 1.3; }
+      .product-sub { margin-top: 3px; color: var(--muted); font-size: 11px; }
+      .check { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: white; background: var(--plum); font-size: 14px; font-weight: 900; }
+
+      .frequency { margin-top: 18px; padding: 18px; border-radius: 20px; background: white; border: 1px solid var(--line); }
+      .frequency-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+      .frequency-head b { color: var(--ink); font-size: 14px; }
+      .frequency-head strong { color: var(--plum); font-size: 13px; }
+      .slider { position: relative; margin: 34px 4px 22px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, #e5dcf0 0 58%, var(--plum) 58% 63%, #e5dcf0 63%); }
+      .ticks { position: absolute; inset: -4px 0 auto; display: grid; grid-template-columns: repeat(8, 1fr); }
+      .tick { width: 16px; height: 16px; justify-self: center; border: 3px solid #c7bbc9; border-radius: 50%; background: white; }
+      .tick.active { border-color: var(--plum); background: var(--plum); box-shadow: 0 0 0 5px rgba(104,70,163,.13); }
+      .slider-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
+      .note { margin-top: 13px; color: var(--green); font-size: 11px; font-weight: 750; }
+
+      .pending-card { margin-top: 22px; overflow: hidden; }
+      .pending-head { display: grid; grid-template-columns: 50px 1fr; gap: 14px; padding: 18px; align-items: center; }
+      .pending-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--amber-soft); color: var(--amber); font-weight: 900; }
+      .pending-card .body { padding: 17px 18px; border-top: 1px solid var(--line); }
+      .pending-card .body p { color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .pending-card .actions { display: grid; gap: 9px; padding: 0 18px 18px; }
+      .pending-card .actions .primary { background: var(--plum); box-shadow: none; }
+
+      .comparison { margin-top: 20px; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: white; }
+      .compare-head, .compare-row { display: grid; grid-template-columns: 1.05fr .95fr; gap: 14px; }
+      .compare-head { padding: 13px 15px; background: #f8f5f2; color: var(--muted); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
+      .compare-row { padding: 15px; border-top: 1px solid var(--line); }
+      .compare-row b { display: block; color: var(--ink); font-size: 12px; }
+      .compare-row span { display: flex; gap: 7px; align-items: flex-start; margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.35; }
+      .status-dot { flex: 0 0 auto; display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; color: white; background: var(--green); font-size: 10px; font-weight: 900; }
+      .status-dot.bad { background: var(--rose); }
+      .verdict { display: flex; align-items: center; gap: 9px; margin-top: 18px; padding: 14px; border-radius: 16px; color: #8c3b43; background: var(--rose-soft); font-size: 13px; font-weight: 800; }
+      .ideal-card { margin-top: 14px; padding: 14px; border-radius: 16px; background: var(--green-soft); }
+      .ideal-card b { color: var(--green); font-size: 12px; }
+      .ideal-card p { margin-top: 5px; color: #456452; font-size: 12px; line-height: 1.4; }
+
+      .routine-hero { padding: 26px 22px 22px; background: linear-gradient(150deg, #f5effa, #fff9f7); border-bottom: 1px solid var(--line); }
+      .routine-hero .success { display: inline-flex; gap: 7px; align-items: center; padding: 7px 10px; border-radius: 999px; color: var(--green); background: var(--green-soft); font-size: 11px; font-weight: 850; }
+      .routine-hero h3 { margin-top: 14px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 33px; }
+      .routine-hero p { margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+      .routine-stack { display: grid; gap: 12px; margin-top: 12px; }
+      .routine-card { display: grid; grid-template-columns: 66px 1fr; gap: 14px; padding: 16px; }
+      .routine-card .product-thumb { width: 66px; height: 84px; }
+      .routine-card .product-thumb .bottle { width: 34px; height: 58px; }
+      .routine-kicker { display: flex; justify-content: space-between; gap: 10px; color: var(--plum); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+      .fit-chip { color: var(--green); letter-spacing: 0; text-transform: none; }
+      .routine-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 12px; }
+      .routine-summary span { padding: 9px; border-radius: 11px; background: #f8f5f2; color: var(--muted); font-size: 10px; }
+      .routine-summary b { display: block; margin-top: 3px; color: var(--ink); font-size: 11px; }
+
+      .desktop-frame { padding: 22px; border: 1px solid rgba(104, 70, 163, 0.14); border-radius: 30px; background: rgba(255,253,251,.75); }
+      .desktop-shell { min-height: 780px; overflow: hidden; border-radius: 24px; background: var(--surface); box-shadow: var(--shadow); }
+      .desktop-top { display: flex; align-items: center; justify-content: space-between; padding: 18px 42px; border-bottom: 1px solid var(--line); }
+      .desktop-main { display: grid; grid-template-columns: 320px 1fr; min-height: 714px; }
+      .desktop-side { padding: 48px 34px; background: linear-gradient(160deg, #f4edf9, #fff5f4); border-right: 1px solid var(--line); }
+      .desktop-side h3 { margin-top: 34px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 41px; line-height: 1.04; }
+      .desktop-side p { margin-top: 14px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+      .desktop-stat { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 26px; }
+      .desktop-stat div { padding: 13px; border-radius: 14px; background: rgba(255,255,255,.65); }
+      .desktop-stat b { display: block; color: var(--ink); font-size: 20px; }
+      .desktop-stat span { color: var(--muted); font-size: 10px; }
+      .desktop-cta { margin-top: 30px; }
+      .desktop-content { padding: 42px; }
+      .desktop-content h3 { color: var(--ink); font-size: 28px; }
+      .desktop-routine-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+      .desktop-routine-grid .routine-card { min-height: 222px; grid-template-columns: 78px 1fr; }
+      .desktop-routine-grid .routine-card .product-thumb { width: 78px; height: 104px; }
+      .desktop-routine-grid .routine-card .product-thumb .bottle { width: 40px; height: 70px; }
+      .gap-card { border-style: dashed; box-shadow: none; background: #fcfaf8; }
+      .gap-card .product-thumb { color: var(--plum); background: var(--plum-soft); font-size: 28px; }
+      .later-strip { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 22px; padding: 16px 18px; border: 1px dashed #d7ccd8; border-radius: 16px; background: #fcfaf8; }
+      .later-strip b { display: block; color: var(--ink); font-size: 13px; }
+      .later-strip span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+      .later-strip a { flex: 0 0 auto; color: var(--plum); font-size: 12px; font-weight: 850; }
+
+      .decision-note { margin-top: 24px; padding: 18px 20px; border-left: 4px solid var(--plum); border-radius: 0 16px 16px 0; background: rgba(255,255,255,.68); color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .decision-note b { color: var(--ink); }
+
+      @media (max-width: 980px) {
+        .artifact-head, .grid, .desktop-main { grid-template-columns: 1fr; }
+        .principles { grid-template-columns: repeat(2, 1fr); }
+        .desktop-side { border-right: 0; border-bottom: 1px solid var(--line); }
+      }
+
+      @media (max-width: 620px) {
+        .artifact { padding: 38px 14px 70px; }
+        .artifact-head { gap: 20px; }
+        .artifact h1 { font-size: 40px; overflow-wrap: anywhere; }
+        .eyebrow { overflow-wrap: anywhere; }
+        .principles { grid-template-columns: 1fr; }
+        .section-head { display: block; }
+        .section-head p { margin-top: 10px; }
+        .phone-wrap { padding: 12px; }
+        .phone { border-width: 7px; border-radius: 30px; }
+        .desktop-frame { padding: 10px; }
+        .desktop-top, .desktop-content { padding: 24px 20px; }
+        .desktop-routine-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-head">
+        <div>
+          <div class="eyebrow">Post-Payment Remediation · v1</div>
+          <h1>Weniger Reibung. Mehr echte Entscheidungshilfe.</h1>
+        </div>
+        <p>
+          Korrigierte Planungsansicht für den Weg von der ersten Belohnung bis zur aktiven Routine.
+          Sie entfernt doppelte Bestätigungen, trennt Auswahl von Speichern und macht Produkt-Fit
+          konkret vergleichbar.
+        </p>
+      </header>
+
+      <section class="principles" aria-label="Designprinzipien">
+        <article class="principle"><b>Eine echte Übergangsseite</b><span>Ein Satz, ein visueller Vorgeschmack, ein klarer CTA. Keine Erklärung des nächsten Schritts.</span></article>
+        <article class="principle"><b>Auswahl zuerst, Speichern danach</b><span>Produkt und Frequenz bleiben direkt editierbar. Persistenz blockiert keine Mikrointeraktion.</span></article>
+        <article class="principle"><b>Fit wird bewiesen</b><span>Ideal und Ist stehen zeilenweise gegenüber. Unbekanntes wird nicht als positives Produkt verkauft.</span></article>
+        <article class="principle"><b>Erste Routine ist das Ergebnis</b><span>Sie ist direkt aktiv. Bestätigen bleibt nur für spätere Änderungsvorschläge.</span></article>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>1 · Ein leichter Einstieg</h2>
+          <p>Die Übergangsseite belohnt den Abschluss. Die Personalisierungsarbeit beginnt erst auf dem echten Bedarfsplan – über dessen CTA, nicht über weitere Erklärung.</p>
+        </div>
+        <div class="grid">
+          <article class="frame">
+            <div class="frame-caption"><b>Übergang</b><span>ein Satz + visueller Vorgeschmack</span></div>
+            <div class="phone-wrap">
+              <div class="phone ready-screen">
+                <div class="appbar"><span></span><div class="brand">chaarlie</div><span></span></div>
+                <section class="ready-main">
+                  <div class="plan-preview" aria-hidden="true">
+                    <div class="mini-card"><div class="mini-icon"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
+                    <div class="mini-card"><div class="mini-icon" style="background:linear-gradient(160deg,#69a48a,#2f714e)"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
+                    <div class="mini-card"><div class="mini-icon" style="background:linear-gradient(160deg,#e6959e,#b84655)"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
+                  </div>
+                  <h3>Das empfehlen wir für dein Haar.</h3>
+                  <p>Basierend auf deinen Quiz-Antworten.</p>
+                </section>
+                <footer class="dock"><button class="primary">Bedarfsplan ansehen</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-caption"><b>Bedarfsplan</b><span>Personalisierung beginnt am Ergebnis</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><button class="back">‹</button><div class="brand">chaarlie</div><span class="saved">Gespeichert</span></div>
+                <div class="steps"><i class="step current"></i><i class="step"></i><i class="step"></i><i class="step"></i><i class="step"></i></div>
+                <section class="content">
+                  <div class="micro">Dein Bedarfsplan</div>
+                  <h3 style="margin-top:8px">Deine Basis.</h3>
+                  <p class="lead">Diese Bausteine braucht dein Haar regelmäßig.</p>
+                  <article class="need-card">
+                    <div class="need-top"><div class="bottle"></div><div><div class="micro">Shampoo · Basis</div><strong>Sanfte, regelmäßige Reinigung</strong><p>Reinigt deine Kopfhaut, ohne deine Längen unnötig zu belasten.</p></div></div>
+                    <div class="pill-row"><span class="pill">3–4× pro Woche</span><span class="pill">Kopfhaut-Balance</span></div>
+                    <div class="text-action"><span>Warum das zu dir passt</span><span>›</span></div>
+                  </article>
+                </section>
+                <footer class="dock"><button class="primary">Jetzt auf meine Produkte abstimmen</button></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="decision-note"><b>Entfernt:</b> die separate Stage-2-Einladung im Happy Path und die Stage-3-Wiederholung „Deine Produktarten“. Der Recovery-Bridge bleibt nur für echten Resume-/Authority-Fehler.</div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>2 · Produkte ohne Lag erfassen</h2>
+          <p>Die Kategorie aus Stage 2 öffnet direkt in der Suche. Auswahl und Slider reagieren lokal; erst „Weiter“ bestätigt die Kategorie.</p>
+        </div>
+        <div class="grid">
+          <article class="frame">
+            <div class="frame-caption"><b>Auswahl + Frequenz</b><span>direkte Rückmeldung, kein Auto-Advance</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><button class="back">‹</button><div class="brand">chaarlie</div><span class="saved">Lokal gewählt</span></div>
+                <div class="steps"><i class="step done"></i><i class="step done"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+                <section class="content">
+                  <div class="micro">Produkte · Shampoo</div>
+                  <h3 style="margin-top:8px">Welches Shampoo nutzt du?</h3>
+                  <div class="search-box"><span>⌕</span><span>ogx renewing</span></div>
+                  <article class="search-result selected" aria-selected="true">
+                    <div class="product-thumb"><div class="bottle blue"></div></div>
+                    <div><div class="product-name">OGX Renewing + Argan Oil of Morocco Shampoo</div><div class="product-sub">Ausgewählt</div></div>
+                    <div class="check">✓</div>
+                  </article>
+                  <section class="frequency">
+                    <div class="frequency-head"><b>Wie oft nutzt du es?</b><strong>3–4× pro Woche</strong></div>
+                    <div class="slider" role="slider" aria-valuetext="3–4× pro Woche"><div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick active"></i><i class="tick"></i><i class="tick"></i></div></div>
+                    <div class="slider-labels"><span>Seltener als 1×/Monat</span><span>Täglich</span></div>
+                    <div class="note">Du kannst die Auswahl bis „Weiter“ jederzeit ändern.</div>
+                  </section>
+                </section>
+                <footer class="dock"><button class="primary">Weiter</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-caption"><b>Analyse ausstehend</b><span>temporär statt ausgeschlossen</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><button class="back">‹</button><div class="brand">chaarlie</div><span></span></div>
+                <div class="steps"><i class="step done"></i><i class="step done"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+                <section class="content">
+                  <div class="micro">Produkte · Shampoo</div>
+                  <h3 style="margin-top:8px">Wir prüfen dein Produkt.</h3>
+                  <p class="lead">Es ist gespeichert. Für die Empfehlung fehlen uns noch bestätigte Produktangaben.</p>
+                  <article class="pending-card">
+                    <div class="pending-head"><div class="pending-icon">…</div><div><div class="micro">Analyse läuft</div><div class="product-name" style="margin-top:5px">OGX Renewing + Argan Oil of Morocco Shampoo</div></div></div>
+                    <div class="body"><p>Sobald die Prüfung abgeschlossen ist, gleichen wir es mit deinem Bedarf ab. Bis dahin planen wir es nicht automatisch ein.</p></div>
+                    <div class="actions"><button class="primary">Auf Analyse warten</button><button class="secondary">Anderes Produkt wählen</button></div>
+                  </article>
+                </section>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-caption"><b>Speichern fehlgeschlagen</b><span>Auswahl bleibt erhalten</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><button class="back">‹</button><div class="brand">chaarlie</div><span style="color:var(--red);font-size:11px;font-weight:800">Nicht gespeichert</span></div>
+                <div class="steps"><i class="step done"></i><i class="step done"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+                <section class="content">
+                  <div class="micro">Produkte · Conditioner</div>
+                  <h3 style="margin-top:8px">Deine Auswahl ist noch da.</h3>
+                  <p class="lead">Conditioner konnte nicht gespeichert werden. Prüfe die Verbindung und versuche es erneut.</p>
+                  <article class="search-result selected" aria-selected="true">
+                    <div class="product-thumb"><div class="bottle cream"></div></div>
+                    <div><div class="product-name">Bali Curls Moisturising Conditioner</div><div class="product-sub">2× pro Woche · lokal behalten</div></div>
+                    <div class="check">✓</div>
+                  </article>
+                  <div class="note" style="margin-top:14px;border-color:#efc5c9;background:#fff5f6;color:var(--red)">Wir ändern nichts an deinen späteren Auswahlen, bis dieser Schritt gespeichert ist.</div>
+                </section>
+                <footer class="dock" style="display:grid;gap:9px"><button class="primary">Erneut versuchen</button><button class="secondary">Gespeicherten Stand laden</button></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="decision-note"><b>Empfohlener Persistenzvertrag:</b> pro Kategorie lokal erfassen, bei „Weiter“ in eine serielle Hintergrund-Queue schreiben, die nächste Kategorie sofort öffnen und erst vor „Produkte prüfen“ auf eine leere Queue bestehen. Ein versionierter lokaler Befehl stellt die Auswahl nach Reload wieder her; bei Konflikt bleibt sie sichtbar, bis Wiederholen oder Serverstand bewusst gewählt wird.</div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>3 · Produkt-Fit als echter Vergleich</h2>
+          <p>Die Bewertung benennt den idealen Bedarf und die bestätigte Produkteigenschaft nebeneinander. Nur Differenzen bekommen visuelles Gewicht.</p>
+        </div>
+        <div class="grid">
+          <article class="frame">
+            <div class="frame-caption"><b>Conditioner passt nicht</b><span>Ideal vs. dein Produkt</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><button class="back">‹</button><div class="brand">chaarlie</div><span class="saved">Gespeichert</span></div>
+                <div class="steps"><i class="step done"></i><i class="step done"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+                <section class="content">
+                  <div class="micro">Conditioner</div>
+                  <h3 style="margin-top:8px;font-size:24px">Bali Curls Moisturising Conditioner</h3>
+                  <div class="verdict"><span>!</span><span>Für deine feinen Längen zu reichhaltig.</span></div>
+                  <section class="comparison">
+                    <div class="compare-head"><span>Ideal für dich</span><span>Dein Produkt</span></div>
+                    <div class="compare-row"><div><b>Pflegegewicht</b><span><i class="status-dot">✓</i>leicht bis mittel</span></div><div><b>Bestätigt</b><span><i class="status-dot bad">×</i>reichhaltig</span></div></div>
+                    <div class="compare-row"><div><b>Haardicke</b><span><i class="status-dot">✓</i>feines Haar</span></div><div><b>Geeignet für</b><span><i class="status-dot bad">×</i>normales bis dickes Haar</span></div></div>
+                    <div class="compare-row"><div><b>Dein Ziel</b><span><i class="status-dot">✓</i>entwirren ohne Beschweren</span></div><div><b>Produktprofil</b><span><i class="status-dot">✓</i>starke Pflege &amp; Entwirrung</span></div></div>
+                  </section>
+                  <aside class="ideal-card"><b>Besser passend</b><p>Ein leichter Conditioner für feines Haar, der entwirrt, ohne Volumen zu nehmen.</p></aside>
+                </section>
+                <footer class="dock" style="display:grid;gap:9px"><button class="primary">Passendere Option wählen</button><button class="secondary">Trotzdem in der Routine verwenden</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-caption"><b>Offener Bedarf</b><span>kein erfundenes „Maske“-Produkt</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><button class="back">‹</button><div class="brand">chaarlie</div><span></span></div>
+                <div class="steps"><i class="step done"></i><i class="step done"></i><i class="step current"></i><i class="step"></i><i class="step"></i></div>
+                <section class="content">
+                  <div class="micro">Maske · Optional</div>
+                  <h3 style="margin-top:8px">Dieser Bedarf ist noch offen.</h3>
+                  <p class="lead">Du hast keine Maske angegeben. Wir bewerten deshalb kein Produkt.</p>
+                  <article class="need-card" style="border-style:dashed;box-shadow:none">
+                    <strong>Was zu dir passen würde</strong>
+                    <p>Eine leichte, auswaschbare Intensivpflege für trockene Längen – nur bei Bedarf.</p>
+                    <div class="pill-row"><span class="pill">leicht</span><span class="pill">auswaschbar</span><span class="pill">optional</span></div>
+                  </article>
+                </section>
+                <footer class="dock" style="display:grid;gap:9px"><button class="primary">Passendes Produkt suchen</button><button class="secondary">Ohne Produkt fortfahren</button></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>4 · Routine als fertiges Ergebnis</h2>
+          <p>Keine Pflichtbestätigung beim ersten Durchlauf. Die Routine ist aktiv, klar gegliedert und führt direkt zur Anwendung.</p>
+        </div>
+        <div class="grid">
+          <article class="frame">
+            <div class="frame-caption"><b>Mobile Routine</b><span>neutral, produktbezogen, direkt aktiv</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="appbar"><span></span><div class="brand">chaarlie</div><span class="saved">Gespeichert</span></div>
+                <div class="steps"><i class="step done"></i><i class="step done"></i><i class="step done"></i><i class="step current"></i><i class="step"></i></div>
+                <section class="routine-hero"><span class="success">✓ Aktiv</span><h3>Deine Routine ist bereit.</h3><p>Dein Bedarfsplan – jetzt mit deinen Produkten und ihrem Rhythmus.</p></section>
+                <section class="content" style="padding-top:22px">
+                  <div class="micro">Deine Basis</div>
+                  <div class="routine-stack">
+                    <article class="routine-card">
+                      <div class="product-thumb"><div class="bottle blue"></div></div>
+                      <div><div class="routine-kicker"><span>Shampoo</span><span class="fit-chip">✓ passt</span></div><strong>OGX Renewing + Argan Oil of Morocco Shampoo</strong><p>Regelmäßige Reinigung für deine Kopfhaut.</p><div class="routine-summary"><span>Rhythmus<b>3–4× / Woche</b></span><span>Wann<b>Haarwäsche</b></span></div><div class="text-action"><span>Anwendung ansehen</span><span>›</span></div></div>
+                    </article>
+                    <article class="routine-card">
+                      <div class="product-thumb"><div class="bottle cream"></div></div>
+                      <div><div class="routine-kicker"><span>Conditioner</span><span class="fit-chip">bewusste Wahl</span></div><strong>Bali Curls Moisturising Conditioner</strong><p>Entwirrt deine Längen nach der Haarwäsche.</p><div class="routine-summary"><span>Rhythmus<b>nach Bedarf</b></span><span>Wann<b>nach Shampoo</b></span></div><div class="text-action"><span>Anwendung ansehen</span><span>›</span></div></div>
+                    </article>
+                  </div>
+                </section>
+                <footer class="dock" style="display:grid;gap:9px"><button class="primary">Anwendung ansehen</button><button class="secondary">Routine anpassen</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="frame-caption"><b>Routine-Prinzip</b><span>Statusfarbe nur dort, wo sie Bedeutung hat</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <section class="routine-hero" style="margin-top:20px"><span class="success">✓ 2 Produkte aktiv</span><h3>Eine Routine, nicht mehrere Konzepte.</h3><p>Die aktive Routine zeigt nur eingeplante Produkte. Optionale Ergänzungen bleiben sichtbar getrennt.</p></section>
+                <section class="content" style="padding-top:22px">
+                  <div class="micro" style="margin-bottom:10px">Später ergänzen</div>
+                  <article class="routine-card gap-card">
+                    <div class="product-thumb">+</div>
+                    <div><div class="routine-kicker"><span>Maske · Optional</span></div><strong>Noch kein Produkt gewählt</strong><p>Dein Plan funktioniert auch ohne diesen optionalen Baustein.</p><div class="text-action"><span>Produkt ergänzen</span><span>›</span></div></div>
+                  </article>
+                  <div class="decision-note" style="margin-top:16px"><b>Spätere Änderung:</b> Erst wenn eine bestehende aktive Routine ersetzt werden soll, erscheint „Routine-Vorschlag prüfen“ mit echten Vorher-/Nachher-Unterschieden.</div>
+                </section>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <article class="desktop-frame" style="margin-top:28px">
+          <div class="desktop-shell">
+            <header class="desktop-top"><div class="brand">chaarlie</div><div class="saved">✓ Gespeichert · Routine aktiv</div></header>
+            <div class="desktop-main">
+              <aside class="desktop-side">
+                <div class="eyebrow">Persönlicher Plan</div>
+                <h3>Deine Routine ist bereit.</h3>
+                <p>Dein Bedarf, deine Produkte und der richtige Rhythmus – an einem Ort.</p>
+                <div class="desktop-stat"><div><b>2</b><span>aktive Produkte</span></div><div><b>3–4×</b><span>Haarwäsche / Woche</span></div></div>
+                <div class="desktop-cta"><button class="primary">Anwendung ansehen</button><button class="secondary" style="margin-top:10px">Routine anpassen</button></div>
+              </aside>
+              <section class="desktop-content">
+                <div class="micro">Deine Basis</div>
+                <h3 style="margin-top:8px">Alles, was du regelmäßig brauchst.</h3>
+                <div class="desktop-routine-grid">
+                  <article class="routine-card"><div class="product-thumb"><div class="bottle blue"></div></div><div><div class="routine-kicker"><span>Shampoo</span><span class="fit-chip">✓ passt</span></div><strong>OGX Renewing + Argan Oil of Morocco Shampoo</strong><p>Regelmäßige Reinigung für deine Kopfhaut.</p><div class="routine-summary"><span>Rhythmus<b>3–4× / Woche</b></span><span>Wann<b>Haarwäsche</b></span></div><div class="text-action"><span>Anwendung ansehen</span><span>›</span></div></div></article>
+                  <article class="routine-card"><div class="product-thumb"><div class="bottle cream"></div></div><div><div class="routine-kicker"><span>Conditioner</span><span class="fit-chip">bewusste Wahl</span></div><strong>Bali Curls Moisturising Conditioner</strong><p>Entwirrt deine Längen nach der Haarwäsche.</p><div class="routine-summary"><span>Rhythmus<b>nach Bedarf</b></span><span>Wann<b>nach Shampoo</b></span></div><div class="text-action"><span>Anwendung ansehen</span><span>›</span></div></div></article>
+                </div>
+                <div class="later-strip"><div><b>Später ergänzen · Maske optional</b><span>Kein Bestandteil deiner aktiven Routine.</span></div><a>Produkt finden ›</a></div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

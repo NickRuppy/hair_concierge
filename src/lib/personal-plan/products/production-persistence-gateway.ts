@@ -1,10 +1,14 @@
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type {
   PersonalPlanCategory,
+  Stage3CategoryCaptureCandidate,
   Stage3CatalogSearchResult,
   Stage3CategoryRequirement,
+  Stage3CapturedProduct,
+  Stage3CapturedUncoveredRole,
   Stage3ProductDecision,
   Stage3ProductDraft,
+  Stage3RoleAssignment,
   ProposedProductPortfolio,
 } from "./contracts"
 import { deriveStage3DecisionSubjects } from "./contracts"
@@ -31,6 +35,7 @@ import {
   recordProductDecision,
   removeCapturedProduct,
   repairCursorlessCaptureDraft,
+  replaceCaptureCategorySnapshot,
   replaceCategoryRoleAssignments,
   reopenCaptureCategory,
 } from "./state-machine"
@@ -50,6 +55,14 @@ import type {
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from "./authority/snapshot"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+import { expectedShampooBucket } from "./authority/categories/shampoo"
+
+export type Stage3AssessmentSearchContext = {
+  hairThickness: "fine" | "normal" | "coarse"
+  requiredRoles: string[]
+  shampooTargets: Array<{ thickness: string; shampooBucket: string; scalpRoute: string }>
+  conditionerTarget: { thickness: string; careDirection: string } | null
+}
 
 /**
  * This is deliberately a narrow, injected boundary.  SQL owns draft creation
@@ -77,6 +90,7 @@ export type Stage3ProductionPersistence = {
     category: PersonalPlanCategory
     query: string
     requestToken: number
+    assessmentContext: Stage3AssessmentSearchContext
   }): Promise<Stage3CatalogSearchResult>
   resolveOwnedCatalogProduct(input: {
     userId: string
@@ -87,6 +101,30 @@ export type Stage3ProductionPersistence = {
     productId: string
     displayName: string
     imageUrl?: string | null
+    category: PersonalPlanCategory
+  } | null>
+  loadCurrentCatalogProduct(input: {
+    userId: string
+    userProductId: string
+    productId: string
+    category: PersonalPlanCategory
+  }): Promise<{
+    userProductId: string
+    productId: string
+    displayName: string
+    imageUrl?: string | null
+    category: PersonalPlanCategory
+  } | null>
+  resolveOwnedPendingProduct?(input: {
+    userId: string
+    userProductId: string
+    submissionId: string
+    category: PersonalPlanCategory
+  }): Promise<{
+    userProductId: string
+    submissionId: string
+    displayName: string
+    reviewStatus: "pending_review" | "needs_more_info"
     category: PersonalPlanCategory
   } | null>
   loadRequirements(input: {
@@ -262,6 +300,74 @@ export function createProductionStage3ProductsGateway(
     }
   }
 
+  async function rehydrateCompletionDraft(
+    draft: Stage3ProductDraft,
+  ): Promise<Stage3ProductDraft | null> {
+    const products = await Promise.all(
+      draft.products.map(async (product) => {
+        if (product.identity.kind !== "catalog_product") return product
+        const currentProduct = await options.persistence.loadCurrentCatalogProduct({
+          userId: options.userId,
+          userProductId: product.userProductId,
+          productId: product.identity.productId,
+          category: product.identity.category,
+        })
+        if (
+          !currentProduct ||
+          currentProduct.userProductId !== product.userProductId ||
+          currentProduct.productId !== product.identity.productId ||
+          currentProduct.category !== product.identity.category
+        ) {
+          return null
+        }
+        return {
+          ...product,
+          identity: {
+            ...product.identity,
+            displayName: currentProduct.displayName,
+            imageUrl: currentProduct.imageUrl ?? null,
+          },
+        }
+      }),
+    )
+    if (products.some((product) => product === null)) return null
+    return { ...draft, products: products as Stage3CapturedProduct[] }
+  }
+
+  async function completionDecisionsRemainCurrent(
+    draft: Stage3ProductDraft,
+    context: Stage3EvaluationContext,
+  ): Promise<boolean> {
+    const evaluations = await Promise.all(
+      deriveStage3DecisionSubjects(draft).map((subject) =>
+        authoritativeEvaluation(draft, subject.decisionKey, context),
+      ),
+    )
+    const evaluationsBySubject = new Map(
+      evaluations.map((evaluation) => [evaluation.subjectKey, evaluation]),
+    )
+    return draft.decisions.every((decision) => {
+      const evaluation = evaluationsBySubject.get(decision.decisionKey)
+      if (!evaluation) return false
+      const action = authorityActionForChoiceState(decision.choiceState)
+      if (!action || !evaluation.allowedActions.includes(action as never)) return false
+      if (
+        (decision.choiceState === "owned_active" || decision.choiceState === "owned_override") &&
+        evaluation.status !== "known"
+      ) {
+        return false
+      }
+      if (decision.choiceState === "pending_review" && evaluation.status !== "pending") return false
+      if (decision.choiceState === "planned_purchase") {
+        return (
+          evaluation.status === "known" &&
+          evaluation.recommendation?.productId === decision.recommendation?.productId
+        )
+      }
+      return true
+    })
+  }
+
   return {
     async loadOrCreate(input): Promise<Stage3DraftResponse> {
       const loaded = await repairLoadedDraft(
@@ -280,7 +386,54 @@ export function createProductionStage3ProductsGateway(
     },
 
     async search(input): Promise<Stage3SearchResponse> {
-      const result = await options.persistence.search({ ...input, userId: options.userId })
+      if (!input.draftId) throw new Error("stage3_search_draft_required")
+      const loaded = await current(input.draftId)
+      const context = await loadEvaluationContext(loaded.draft)
+      const categoryDecision = effectiveStage3CategoryDecisions(loaded.draft).find(
+        (decision) => decision.category === input.category,
+      )
+      const requirement = loaded.requirements.find(
+        (candidate) => candidate.category === input.category,
+      )
+      if (!categoryDecision || !requirement) {
+        throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+      }
+      const target = categoryDecision.target
+      const shampooTargets =
+        target?.category === "shampoo"
+          ? requirement.requiredRoles.flatMap((role) => {
+              const shampooBucket = expectedShampooBucket({
+                role,
+                target,
+              })
+              return shampooBucket
+                ? [
+                    {
+                      thickness: context.hairThickness,
+                      shampooBucket,
+                      scalpRoute: target.scalpRoute,
+                    },
+                  ]
+                : []
+            })
+          : []
+      const conditionerTarget =
+        target?.category === "conditioner"
+          ? {
+              thickness: context.hairThickness,
+              careDirection: target.careDirection,
+            }
+          : null
+      const result = await options.persistence.search({
+        ...input,
+        userId: options.userId,
+        assessmentContext: {
+          hairThickness: context.hairThickness,
+          requiredRoles: requirement.requiredRoles,
+          shampooTargets,
+          conditionerTarget,
+        },
+      })
       return { status: "ready", requestToken: input.requestToken, result }
     },
 
@@ -298,6 +451,54 @@ export function createProductionStage3ProductsGateway(
         loaded.requirements,
         now,
       )
+      if (input.mutation.type === "replace_capture_category" && next !== draft) {
+        const category = input.mutation.category
+        const assignedProductIds = new Set(
+          next.roleAssignments
+            .filter((assignment) => assignment.category === category)
+            .map((assignment) => assignment.capturedProductId),
+        )
+        if (assignedProductIds.size > 0) {
+          const subjects = deriveStage3DecisionSubjects(next).filter(
+            (subject) =>
+              subject.category === category &&
+              subject.capturedProductId !== null &&
+              assignedProductIds.has(subject.capturedProductId),
+          )
+          const subjectProductIds = new Set(subjects.map((subject) => subject.capturedProductId))
+          if ([...assignedProductIds].some((productId) => !subjectProductIds.has(productId))) {
+            throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
+          }
+          const context = await loadEvaluationContext(next)
+          const evaluatedSubjects = await Promise.all(
+            subjects.map((subject) =>
+              authoritativeEvaluation(next, subject.decisionKey, context).then((evaluation) => ({
+                subject,
+                evaluation,
+              })),
+            ),
+          )
+          const productsById = new Map(
+            next.products.map((product) => [product.capturedProductId, product]),
+          )
+          if (
+            evaluatedSubjects.some(({ subject, evaluation }) => {
+              const product = subject.capturedProductId
+                ? productsById.get(subject.capturedProductId)
+                : null
+              if (!product) return true
+              return product.identity.kind === "pending_submission"
+                ? evaluation.status !== "pending"
+                : evaluation.status !== "known"
+            })
+          ) {
+            throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
+          }
+        }
+      }
+      if (input.mutation.type === "replace_capture_category" && next === draft) {
+        return { status: "saved", draft }
+      }
       const saved = await options.persistence.save({
         userId: options.userId,
         draftId: draft.draftId,
@@ -332,6 +533,38 @@ export function createProductionStage3ProductsGateway(
       ) {
         return { status: "conflict", latestDraft: draft }
       }
+      let completionDraft = draft
+      let refinedNeedSnapshot: InitialNeedPlanSnapshot
+      let expectedSourceRevision: number
+      if (draft.status === "completed") {
+        ;[refinedNeedSnapshot, expectedSourceRevision] = await Promise.all([
+          options.persistence.loadRefinedNeedSnapshot({
+            userId: options.userId,
+            personalPlanId: draft.personalPlanId,
+            refinedVersionId: draft.refinedVersionId,
+          }),
+          options.persistence.loadSourceRevision({
+            userId: options.userId,
+            personalPlanId: draft.personalPlanId,
+          }),
+        ])
+      } else {
+        const rehydrated = await rehydrateCompletionDraft(draft)
+        if (!rehydrated) return { status: "not_ready", draft }
+        const [context, sourceRevision] = await Promise.all([
+          loadEvaluationContext(rehydrated),
+          options.persistence.loadSourceRevision({
+            userId: options.userId,
+            personalPlanId: draft.personalPlanId,
+          }),
+        ])
+        if (!(await completionDecisionsRemainCurrent(rehydrated, context))) {
+          return { status: "not_ready", draft }
+        }
+        completionDraft = rehydrated
+        refinedNeedSnapshot = context.refinedNeedSnapshot
+        expectedSourceRevision = sourceRevision
+      }
       let portfolio: ProposedProductPortfolio
       try {
         // Rebuild from the canonical server draft, never from completion flags
@@ -344,7 +577,7 @@ export function createProductionStage3ProductsGateway(
           if (!frozen) throw new Stage3ProductionUnavailableError()
           portfolio = frozen
         } else {
-          portfolio = createProposedProductPortfolio(draft, loaded.requirements, {
+          portfolio = createProposedProductPortfolio(completionDraft, loaded.requirements, {
             portfolioVersionId: "pending-sql-assignment",
             createdAt: now(),
           })
@@ -363,19 +596,8 @@ export function createProductionStage3ProductsGateway(
       if (!options.compiler || !options.stager) {
         throw new Stage3ProductionUnavailableError()
       }
-      // Read the trusted compile source immediately before compilation. SQL
-      // compares this token while holding the plan row lock before writing.
-      const [refinedNeedSnapshot, expectedSourceRevision] = await Promise.all([
-        options.persistence.loadRefinedNeedSnapshot({
-          userId: options.userId,
-          personalPlanId: draft.personalPlanId,
-          refinedVersionId: draft.refinedVersionId,
-        }),
-        options.persistence.loadSourceRevision({
-          userId: options.userId,
-          personalPlanId: draft.personalPlanId,
-        }),
-      ])
+      // SQL compares this freshly read source token while holding the plan row
+      // lock before writing; active drafts were also re-evaluated above.
       const candidate = await options.compiler.compile({
         userId: options.userId,
         personalPlanId: draft.personalPlanId,
@@ -583,6 +805,24 @@ function validateSelectedCandidate(
   }
 }
 
+function authorityActionForChoiceState(
+  choiceState: Stage3ProductDecision["choiceState"],
+): Stage3AuthoritySemanticIntent["action"] | null {
+  switch (choiceState) {
+    case "owned_active":
+      return "keep_owned"
+    case "owned_override":
+      return "acknowledge_override"
+    case "planned_purchase":
+      return "plan_recommendation"
+    case "pending_review":
+      return "keep_pending"
+    case "unassigned":
+      return "leave_uncovered"
+  }
+  return null
+}
+
 function buildAuthorityDecision(
   subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
   intent: Stage3AuthoritySemanticIntent,
@@ -637,6 +877,28 @@ async function applyMutation(
 ): Promise<Stage3ProductDraft> {
   const withUpdatedAt = (value: Stage3ProductDraft) => ({ ...value, updatedAt: now() })
   switch (mutation.type) {
+    case "replace_capture_category": {
+      const snapshot = requireCurrentAuthoritySnapshot(draft)
+      if (
+        mutation.refinedNeedVersionId !== draft.refinedVersionId ||
+        mutation.refinedInputHash !== snapshot.refinedInputHash ||
+        mutation.categoryAuthorityVersion !== snapshot.authorityVersions[mutation.category] ||
+        mutation.categoryAuthorityVersion !== draft.authorityVersions[mutation.category]
+      ) {
+        throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+      }
+      return withUpdatedAt(
+        await rehydrateCaptureCategorySnapshot(
+          persistence,
+          userId,
+          draft,
+          mutation.category,
+          mutation.candidates,
+          mutation.uncoveredRoles,
+          requirements,
+        ),
+      )
+    }
     case "capture_catalog_candidate": {
       const category = draft.orderedCategories.find(
         (candidate) => candidate === draft.categoryCursor,
@@ -732,6 +994,109 @@ async function applyMutation(
       return withUpdatedAt(removeCapturedProduct(draft, mutation.capturedProductId))
     case "record_decision":
       throw new Error("stage3_client_decision_rejected")
+  }
+}
+
+async function rehydrateCaptureCategorySnapshot(
+  persistence: Stage3ProductionPersistence,
+  userId: string,
+  draft: Stage3ProductDraft,
+  category: PersonalPlanCategory,
+  candidates: Stage3CategoryCaptureCandidate[],
+  uncoveredRoles: Stage3CapturedUncoveredRole[],
+  requirements: Stage3CategoryRequirement[],
+): Promise<Stage3ProductDraft> {
+  if (!draft.orderedCategories.includes(category) || draft.categoryCursor !== category) {
+    throw new Error("stage3_capture_category_unavailable")
+  }
+  const ids = new Set<string>()
+  const resolved: Stage3CapturedProduct[] = []
+  const assignments: Stage3RoleAssignment[] = []
+  for (const candidate of candidates) {
+    const identityKey =
+      candidate.kind === "catalog"
+        ? `catalog:${candidate.candidateId}`
+        : `pending:${candidate.userProductId}:${candidate.submissionId}`
+    if (ids.has(identityKey)) throw new Error("stage3_capture_snapshot_duplicate_candidate")
+    ids.add(identityKey)
+    const product =
+      candidate.kind === "catalog"
+        ? await resolveCatalogCapture(persistence, userId, category, candidate)
+        : await resolvePendingCapture(persistence, userId, category, candidate)
+    resolved.push(product)
+    if (candidate.roles.length > 0) {
+      assignments.push({
+        capturedProductId: product.capturedProductId,
+        category,
+        roles: candidate.roles,
+      })
+    }
+  }
+
+  return replaceCaptureCategorySnapshot(
+    draft,
+    category,
+    resolved,
+    assignments,
+    uncoveredRoles,
+    effectiveStage3Requirements(requirements, draft),
+  )
+}
+
+async function resolveCatalogCapture(
+  persistence: Stage3ProductionPersistence,
+  userId: string,
+  category: PersonalPlanCategory,
+  candidate: Extract<Stage3CategoryCaptureCandidate, { kind: "catalog" }>,
+): Promise<Stage3CapturedProduct> {
+  const owned = await persistence.resolveOwnedCatalogProduct({
+    userId,
+    candidateId: candidate.candidateId,
+    category,
+  })
+  if (!owned || owned.category !== category) throw new Error("stage3_catalog_candidate_unavailable")
+  return {
+    capturedProductId: owned.userProductId,
+    userProductId: owned.userProductId,
+    identity: {
+      kind: "catalog_product",
+      productId: owned.productId,
+      displayName: owned.displayName,
+      category,
+      imageUrl: owned.imageUrl ?? null,
+    },
+    frequencyRange: candidate.frequencyRange,
+    ownership: "owned",
+    source: "catalog_search",
+  }
+}
+
+async function resolvePendingCapture(
+  persistence: Stage3ProductionPersistence,
+  userId: string,
+  category: PersonalPlanCategory,
+  candidate: Extract<Stage3CategoryCaptureCandidate, { kind: "pending" }>,
+): Promise<Stage3CapturedProduct> {
+  const owned = await persistence.resolveOwnedPendingProduct?.({
+    userId,
+    userProductId: candidate.userProductId,
+    submissionId: candidate.submissionId,
+    category,
+  })
+  if (!owned || owned.category !== category) throw new Error("stage3_pending_candidate_unavailable")
+  return {
+    capturedProductId: owned.userProductId,
+    userProductId: owned.userProductId,
+    identity: {
+      kind: "pending_submission",
+      submissionId: owned.submissionId,
+      displayName: owned.displayName,
+      category,
+      reviewStatus: owned.reviewStatus,
+    },
+    frequencyRange: candidate.frequencyRange,
+    ownership: "owned",
+    source: "intake_fallback",
   }
 }
 

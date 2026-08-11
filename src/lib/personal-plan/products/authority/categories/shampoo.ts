@@ -169,7 +169,7 @@ export const evaluateShampooAuthority: Stage3CategoryAuthorityAdapter<"shampoo">
           "Eine passende aktive Empfehlung ist verifiziert.",
         ),
       ],
-      allowedActions: ["plan_recommendation"],
+      allowedActions: ["plan_recommendation", "leave_uncovered"],
       recommendation: {
         recommendationId: `recommend:${candidate.productId}:${input.role}`,
         productId: candidate.productId,

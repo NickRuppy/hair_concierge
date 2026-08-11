@@ -3,9 +3,9 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import { cleanProductDisplayName } from "@/lib/product-identity"
-import type { Stage3ProductDraft } from "./contracts"
+import type { PersonalPlanCategory, Stage3ProductDraft } from "./contracts"
 import type { Stage3ProductionPersistence } from "./production-persistence-gateway"
-import { searchOwnedProductCatalog, type CatalogProductRecord } from "./inventory-search"
+import { normalizeOwnedProductSearchQuery } from "./inventory-search"
 import { createStage3Draft } from "./state-machine"
 import { loadStage3AuthorityFactBundle } from "./authority/catalog-facts"
 import { Stage3AuthoritySnapshotError } from "./authority/snapshot"
@@ -98,47 +98,33 @@ export function createSupabaseStage3ProductionPersistence(
         | { outcome: "stale_source"; draft: Stage3ProductDraft }
     },
     async search(input) {
-      return searchOwnedProductCatalog({
-        category: input.category,
-        query: input.query,
-        requestToken: input.requestToken,
-        catalog: {
-          async listActiveProducts(category) {
-            const { data, error } = await client
-              .from("products")
-              .select(
-                "id,brand,name,image_url,is_active,lifecycle_status,is_chaarlie_recommended,sort_order,category_key",
-              )
-              .eq("category_key", category)
-            if (error) throw new Error("stage3_catalog_search_failed")
-            return (data ?? []).map(
-              (row) =>
-                ({
-                  id: String(row.id),
-                  category,
-                  brandName: typeof row.brand === "string" ? row.brand : null,
-                  displayName: cleanProductDisplayName(String(row.name), {
-                    brand: typeof row.brand === "string" ? row.brand : null,
-                  }),
-                  imageUrl: typeof row.image_url === "string" ? row.image_url : null,
-                  active: row.is_active === true,
-                  lifecycleStatus:
-                    typeof row.lifecycle_status === "string" ? row.lifecycle_status : null,
-                  recommended:
-                    typeof row.is_chaarlie_recommended === "boolean"
-                      ? row.is_chaarlie_recommended
-                      : null,
-                  sortOrder: typeof row.sort_order === "number" ? row.sort_order : null,
-                }) satisfies CatalogProductRecord,
-            )
-          },
-        },
+      const query = normalizeOwnedProductSearchQuery(input.query)
+      const { data, error } = await client.rpc("personal_plan_search_assessment_products_v1", {
+        p_category: input.category,
+        p_query: query,
+        p_limit: 8,
+        p_context: input.assessmentContext,
       })
+      if (error) throw new Error("stage3_catalog_search_failed")
+
+      const rows = Array.isArray(data) ? data : []
+      const candidates = rows.map((raw) => mapAssessmentSearchCandidate(raw, input.category, query))
+      return {
+        requestToken: input.requestToken,
+        query,
+        category: input.category,
+        candidates,
+        totalCapped: rows.some(
+          (row) => row && typeof row === "object" && row.total_capped === true,
+        ),
+      }
     },
     async resolveOwnedCatalogProduct(input) {
       const { data: candidate, error: candidateError } = await client
         .from("products")
-        .select("id,brand,name,image_url,category_key,is_active,lifecycle_status")
+        .select(
+          "id,brand,name,image_url,category_key,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
+        )
         .eq("id", input.candidateId)
         .eq("category_key", input.category)
         .maybeSingle()
@@ -158,14 +144,101 @@ export function createSupabaseStage3ProductionPersistence(
         throw new Error("stage3_owned_product_create_failed")
       }
       const owned = data.userProduct as Record<string, unknown>
+      const productLine = readProductLineName(candidate.product_line)
       return {
         userProductId: String(owned.id),
         productId: String(owned.catalog_product_id),
-        displayName: cleanProductDisplayName(String(candidate.name), {
-          brand: typeof candidate.brand === "string" ? candidate.brand : null,
-        }),
+        displayName: canonicalCatalogCompleteIdentity(candidate, productLine),
         imageUrl: typeof candidate.image_url === "string" ? candidate.image_url : null,
         category: owned.category as never,
+      }
+    },
+    async loadCurrentCatalogProduct(input) {
+      const { data: owned, error: ownedError } = await client
+        .from("user_products")
+        .select("id,catalog_product_id,category,identity_status,ownership_status")
+        .eq("id", input.userProductId)
+        .eq("user_id", input.userId)
+        .eq("catalog_product_id", input.productId)
+        .eq("category", input.category)
+        .maybeSingle()
+      if (
+        ownedError ||
+        !owned ||
+        owned.identity_status !== "matched" ||
+        owned.ownership_status !== "owned"
+      ) {
+        return null
+      }
+      const { data: product, error: productError } = await client
+        .from("products")
+        .select(
+          "id,brand,name,image_url,category_key,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
+        )
+        .eq("id", input.productId)
+        .eq("category_key", input.category)
+        .maybeSingle()
+      if (
+        productError ||
+        !product ||
+        product.is_active !== true ||
+        product.lifecycle_status !== "active"
+      ) {
+        return null
+      }
+      return {
+        userProductId: String(owned.id),
+        productId: String(product.id),
+        displayName: canonicalCatalogCompleteIdentity(
+          product,
+          readProductLineName(product.product_line),
+        ),
+        imageUrl: typeof product.image_url === "string" ? product.image_url : null,
+        category: owned.category as PersonalPlanCategory,
+      }
+    },
+    async resolveOwnedPendingProduct(input) {
+      const { data: owned, error: ownedError } = await client
+        .from("user_products")
+        .select("id,category,identity_status,ownership_status,brand_text,product_name_text")
+        .eq("id", input.userProductId)
+        .eq("user_id", input.userId)
+        .eq("category", input.category)
+        .maybeSingle()
+      if (
+        ownedError ||
+        !owned ||
+        owned.ownership_status !== "owned" ||
+        (owned.identity_status !== "pending_review" && owned.identity_status !== "needs_more_info")
+      )
+        return null
+      const { data: submission, error: submissionError } = await client
+        .from("product_submissions")
+        .select("id,user_product_id,user_id,category,status")
+        .eq("id", input.submissionId)
+        .eq("user_product_id", input.userProductId)
+        .eq("user_id", input.userId)
+        .eq("category", input.category)
+        .maybeSingle()
+      if (
+        submissionError ||
+        !submission ||
+        !["pending_review", "researching", "ready_for_review", "needs_more_info"].includes(
+          String(submission.status),
+        )
+      )
+        return null
+      const displayName = [owned.brand_text, owned.product_name_text]
+        .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+        .join(" ")
+        .trim()
+      if (!displayName) return null
+      return {
+        userProductId: String(owned.id),
+        submissionId: String(submission.id),
+        displayName,
+        reviewStatus: owned.identity_status,
+        category: owned.category as PersonalPlanCategory,
       }
     },
     async loadRequirements(input) {
@@ -234,6 +307,63 @@ export function createSupabaseStage3ProductionPersistence(
       return data ? mapStage3Draft(data) : null
     },
   }
+}
+
+function mapAssessmentSearchCandidate(raw: unknown, category: PersonalPlanCategory, query: string) {
+  const row = raw as Record<string, unknown>
+  const brandName = typeof row.brand_name === "string" ? row.brand_name : null
+  const productLine = typeof row.product_line_name === "string" ? row.product_line_name : null
+  const rawName = typeof row.product_name === "string" ? row.product_name : ""
+  const saleableName = cleanProductDisplayName(rawName, { brand: brandName, productLine })
+  const displayName = [productLine, saleableName].filter(Boolean).join(" ").trim() || rawName
+  const assessmentStatus =
+    row.assessment_status === "ready" ? ("ready" as const) : ("pending_analysis" as const)
+  const assessmentReasonCodes = Array.isArray(row.assessment_reason_codes)
+    ? row.assessment_reason_codes.filter(
+        (code): code is "missing_required_spec" | "missing_application_protocol" =>
+          code === "missing_required_spec" || code === "missing_application_protocol",
+      )
+    : []
+  const label = `${brandName ?? ""} ${displayName}`.trim().toLocaleLowerCase()
+
+  return {
+    candidateId: String(row.product_id),
+    productId: String(row.product_id),
+    displayName,
+    category,
+    brandName,
+    imageUrl: typeof row.image_url === "string" ? row.image_url : null,
+    confidence: label === query.toLocaleLowerCase() ? ("exact" as const) : ("likely" as const),
+    assessmentStatus,
+    assessmentReasonCodes,
+  }
+}
+
+function readProductLineName(value: unknown): string | null {
+  const row = Array.isArray(value) ? value[0] : value
+  if (!row || typeof row !== "object") return null
+  const canonicalName = (row as Record<string, unknown>).canonical_name
+  return typeof canonicalName === "string" && canonicalName.trim() ? canonicalName.trim() : null
+}
+
+function canonicalCatalogDisplayName(
+  product: { name: unknown; brand: unknown },
+  productLine: string | null,
+) {
+  const rawName = String(product.name ?? "").trim()
+  const brand = typeof product.brand === "string" ? product.brand : null
+  const saleableName = cleanProductDisplayName(rawName, { brand, productLine })
+  return [productLine, saleableName].filter(Boolean).join(" ").trim() || rawName
+}
+
+function canonicalCatalogCompleteIdentity(
+  product: { name: unknown; brand: unknown },
+  productLine: string | null,
+) {
+  const title = canonicalCatalogDisplayName(product, productLine)
+  const brand = typeof product.brand === "string" ? product.brand.trim() : ""
+  if (!brand || title.toLocaleLowerCase().startsWith(brand.toLocaleLowerCase())) return title
+  return `${brand} ${title}`
 }
 
 function draftPayload(draft: Stage3ProductDraft) {

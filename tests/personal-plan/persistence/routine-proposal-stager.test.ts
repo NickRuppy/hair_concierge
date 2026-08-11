@@ -94,6 +94,38 @@ test("routine-proposal adapter carries the compiler's fresh source CAS token", a
   assert.equal(calls[0]?.p_expected_source_revision, 7)
 })
 
+test("initial activation selects the versioned RPC and permits no proposal pointer", async () => {
+  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
+  const result = await createRoutineProposalStagerRpcAdapter({
+    activateInitialRoutine: true,
+    client: {
+      async rpc(fn, args) {
+        calls.push({ fn, args })
+        return {
+          data: {
+            status: "completed",
+            portfolioVersionId: "portfolio-1",
+            routineVersionId: "routine-1",
+            routineProposalId: null,
+            revision: 5,
+          },
+          error: null,
+        }
+      },
+    },
+  }).stage(request)
+
+  assert.deepEqual(result, {
+    status: "completed",
+    portfolioVersionId: "portfolio-1",
+    routineVersionId: "routine-1",
+    routineProposalId: null,
+    revision: 5,
+  })
+  assert.equal(calls[0]?.fn, "personal_plan_complete_draft_activate_initial_v1")
+  assert.equal(calls[0]?.args.p_expected_source_revision, 7)
+})
+
 test("routine-proposal adapter preserves stable SQL outcomes and maps transport failures", async () => {
   const adapter = createRoutineProposalStagerRpcAdapter({
     client: {

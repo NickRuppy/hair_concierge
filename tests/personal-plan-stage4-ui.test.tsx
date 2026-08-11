@@ -145,11 +145,142 @@ test("uses proposal copy initially, and exposes Anwendung only when the Stage 5 
   assert.doesNotMatch(html, /Anwendungsplan ansehen/)
   const stage5Html = renderToStaticMarkup(<RoutinePage view={activeWithPending} stage5Reachable />)
   assert.match(stage5Html, /href="\/anwendung"/)
-  assert.match(stage5Html, /Anwendungsplan ansehen/)
+  assert.match(stage5Html, /Anwendung ansehen/)
   assert.doesNotMatch(
     renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),
-    /Anwendungsplan ansehen/,
+    /Anwendung ansehen/,
   )
+})
+
+test("renders active routine as product-led result with separated later additions", () => {
+  const routine = payload(
+    [
+      item({
+        itemKey: "basis-shampoo",
+        product: {
+          kind: "owned",
+          capturedProductId: "captured-ogx",
+          productId: "product-ogx",
+          displayName: "OGX Renewing + Argan Oil of Morocco Shampoo",
+        },
+        cadence: { recommended: null, userOverride: "weekly_3_4x", displayKey: "weekly_3_4x" },
+      }),
+      item({
+        itemKey: "basis-conditioner",
+        assignmentKey: "basis-conditioner",
+        category: "conditioner",
+        purposeKey: "conditioner_rinse_out",
+        role: "conditioner_rinse_out",
+        state: {
+          systemAssessment: "basis",
+          inclusion: "included",
+          availability: "owned",
+          fitDecision: "informed_override",
+        },
+        product: {
+          kind: "owned",
+          capturedProductId: "captured-conditioner",
+          productId: "product-conditioner",
+          displayName: "Bali Curls Moisturising Conditioner",
+        },
+        cadence: {
+          recommended: { kind: "after_each_eligible_wash" },
+          userOverride: null,
+          displayKey: "personal_plan.cadence.after_each_eligible_wash",
+        },
+      }),
+      item({
+        itemKey: "optional-mask-gap",
+        assignmentKey: "optional-mask-gap",
+        category: "mask",
+        purposeKey: "intensive_conditioning_mask",
+        role: "intensive_conditioning_mask",
+        state: {
+          systemAssessment: "optional",
+          inclusion: "included",
+          availability: "none",
+          fitDecision: "standard",
+        },
+        product: { kind: "none", displayName: null },
+        executable: false,
+      }),
+    ],
+    [
+      { key: "basis", itemKeys: ["basis-shampoo", "basis-conditioner"] },
+      { key: "optional", itemKeys: ["optional-mask-gap"] },
+    ],
+  )
+  const view: PersonalPlanRoutineView = {
+    ...proposalView(routine),
+    status: "active",
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+  }
+
+  const html = renderToStaticMarkup(
+    <RoutinePage view={view} stage5Reachable onEdit={() => undefined} />,
+  )
+
+  assert.match(html, /Deine Routine ist bereit/)
+  assert.match(html, /2 aktive Produkte/)
+  assert.match(html, /OGX Renewing \+ Argan Oil of Morocco Shampoo/)
+  assert.match(html, /Bali Curls Moisturising Conditioner/)
+  assert.match(html, /Regelmäßige Reinigung für deine Kopfhaut/)
+  assert.match(html, /Pflegt und entwirrt die Längen nach der Haarwäsche/)
+  assert.match(html, /3–4× pro Woche/)
+  assert.match(html, /Nach jeder passenden Haarwäsche/)
+  assert.match(html, /Haarwäsche/)
+  assert.match(html, /Nach Shampoo/)
+  assert.match(html, /✓ Passt/)
+  assert.match(html, /Bewusste Wahl/)
+  assert.match(html, /Anwendungsdetails/)
+  assert.match(html, /Später ergänzen/)
+  assert.match(html, /Maske optional/)
+  assert.match(html, /Kein Bestandteil deiner aktiven Routine/)
+  assert.ok(html.indexOf("Bali Curls Moisturising Conditioner") < html.indexOf("Später ergänzen"))
+  assert.match(html, /Anwendung ansehen/)
+  assert.match(html, /Routine anpassen/)
+  assert.doesNotMatch(html, /Routine bestätigen/)
+  assert.doesNotMatch(html, /Kein Produkt ausgewählt/)
+})
+
+test("keeps required Basis gaps explicit and renders a named recovery state without payload", () => {
+  const routine = payload([
+    item({
+      itemKey: "basis-gap",
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "none",
+        fitDecision: "standard",
+      },
+      product: { kind: "none", displayName: null },
+      executable: false,
+    }),
+  ])
+  const gapView: PersonalPlanRoutineView = {
+    ...proposalView(routine),
+    status: "active",
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+  }
+  const gapHtml = renderToStaticMarkup(<RoutinePage view={gapView} stage5Reachable />)
+
+  assert.match(gapHtml, /Basis-Lücke/)
+  assert.match(gapHtml, /Für diesen Basis-Baustein fehlt noch ein Produkt/)
+  assert.doesNotMatch(gapHtml, /href="\/anwendung"/)
+
+  const missingPayloadView: PersonalPlanRoutineView = {
+    status: "stage4_not_available",
+    personalPlanId: "plan-1",
+    planRevision: 1,
+    sourceRevision: 1,
+    activeVersion: null,
+    pendingProposal: null,
+  }
+  const recoveryHtml = renderToStaticMarkup(<RoutinePage view={missingPayloadView} />)
+  assert.match(recoveryHtml, /Routine noch nicht verfügbar/)
+  assert.match(recoveryHtml, /Produkte prüfen/)
 })
 
 test("states non-executable conditions plainly and keeps editing global", () => {
@@ -207,8 +338,8 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   assert.match(html, /Empfohlen, aber nicht eingeplant/)
   assert.match(html, /Noch in Prüfung/)
   assert.match(html, /Nicht empfohlen · von dir eingeplant/)
-  assert.match(html, /Noch nicht abgedeckt/)
-  assert.match(html, /Routine bearbeiten/)
+  assert.match(html, /Offen/)
+  assert.match(html, /Routine anpassen/)
   assert.doesNotMatch(html, />Bearbeiten</)
   assert.match(
     html,

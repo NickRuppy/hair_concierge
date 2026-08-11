@@ -112,9 +112,11 @@ export function evaluateDeepCleansingAuthority(
       .filter((item) => item.recommendable && item.isActive && item.lifecycleStatus === "active")
       .find((item) => evaluateProduct(input, item)?.verdict === "ideal")
     return knownEvaluation(sharedInput, {
-      verdict: "ideal",
+      // A recommendation can be ideal; an absent owned product cannot be.
+      // Keep the uncovered state explicit when the catalog yields no candidate.
+      verdict: candidate ? "ideal" : "unknown",
       criteria: [],
-      allowedActions: candidate ? ["plan_recommendation"] : ["leave_uncovered"],
+      allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
       recommendation: candidate ? recommendationFor(candidate) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: candidate?.factFingerprint ?? null,

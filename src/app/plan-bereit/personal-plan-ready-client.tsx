@@ -7,12 +7,9 @@ import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import {
-  PERSONAL_PLAN_READY_MESSAGES,
-  PERSONAL_PLAN_READY_MIN_STORY_MS,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
   PERSONAL_PLAN_READY_POLL_LIMIT,
   canContinueToPersonalPlan,
-  personalPlanStoryIndexAt,
   type PersonalPlanReadinessPhase,
 } from "./transition"
 
@@ -23,26 +20,8 @@ export function PersonalPlanReadyClient({
   leadId: string
   nextHref: "/plan-start" | "/onboarding?returnTo=%2Froutine"
 }) {
-  const [storyIndex, setStoryIndex] = useState(0)
-  const [storyComplete, setStoryComplete] = useState(false)
   const [readiness, setReadiness] = useState<PersonalPlanReadinessPhase>("checking")
   const [retryKey, setRetryKey] = useState(0)
-
-  useEffect(() => {
-    const startedAt = Date.now()
-    const messageTimer = window.setInterval(() => {
-      setStoryIndex(personalPlanStoryIndexAt(Date.now() - startedAt))
-    }, 200)
-    const completeTimer = window.setTimeout(() => {
-      setStoryIndex(PERSONAL_PLAN_READY_MESSAGES.length - 1)
-      setStoryComplete(true)
-    }, PERSONAL_PLAN_READY_MIN_STORY_MS)
-
-    return () => {
-      window.clearInterval(messageTimer)
-      window.clearTimeout(completeTimer)
-    }
-  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -95,7 +74,6 @@ export function PersonalPlanReadyClient({
   }, [leadId, retryKey])
 
   const canContinue = canContinueToPersonalPlan(readiness)
-  const waitingForPlan = storyComplete && readiness === "checking"
   const showRecovery = readiness === "timeout" || readiness === "error"
 
   return (
@@ -112,16 +90,33 @@ export function PersonalPlanReadyClient({
               )}
             </div>
 
+            <div
+              aria-hidden="true"
+              className="mb-7 grid w-full max-w-sm grid-cols-[1.1fr_0.9fr] gap-2 rounded-3xl border border-[var(--brand-plum)]/15 bg-[var(--brand-plum-ice)] p-3 text-left"
+              data-personal-plan-ready-preview
+            >
+              <div className="rounded-2xl bg-white/85 p-3 shadow-sm">
+                <span className="block h-2 w-14 rounded-full bg-[var(--brand-plum)]/25" />
+                <span className="mt-3 block h-3 w-full rounded-full bg-[var(--brand-plum)]/80" />
+                <span className="mt-2 block h-3 w-4/5 rounded-full bg-[var(--brand-coral)]/70" />
+                <span className="mt-2 block h-3 w-3/5 rounded-full bg-[#6FAA70]/70" />
+              </div>
+              <div className="flex flex-col justify-between rounded-2xl bg-[var(--brand-plum)] p-3 text-white">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/75">
+                  Dein Plan
+                </span>
+                {canContinue ? <Check className="h-8 w-8" /> : <Sparkles className="h-8 w-8" />}
+              </div>
+            </div>
+
             {canContinue ? (
               <div className="w-full space-y-7">
-                <div className="space-y-3">
-                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-                    Dein Bedarfsplan ist bereit
-                  </p>
-                  <h1 className="font-header text-4xl leading-tight">Das braucht dein Haar.</h1>
+                <div className="space-y-4">
+                  <h1 className="font-header text-4xl leading-tight">
+                    Das empfehlen wir für dein Haar.
+                  </h1>
                   <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                    Zuerst siehst du, was dein Haar laut deiner Haaranalyse braucht. Danach machen
-                    wir den Plan mit deinen eigenen Produkten wirklich zu deinem.
+                    Basierend auf deinen Quiz-Antworten.
                   </p>
                 </div>
 
@@ -129,39 +124,19 @@ export function PersonalPlanReadyClient({
                   href={nextHref}
                   className={cn(buttonVariants({ variant: "funnelCta", size: null }))}
                 >
-                  Plan ansehen
+                  Bedarfsplan ansehen
                 </Link>
               </div>
             ) : (
-              <div className="w-full space-y-8">
-                <div className="min-h-36 space-y-4" aria-live="polite">
-                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-                    Dein persönlicher Haarplan
-                  </p>
+              <div className="w-full space-y-6" aria-live="polite">
+                <div className="space-y-4">
                   <h1 className="font-header text-4xl leading-tight">
-                    {PERSONAL_PLAN_READY_MESSAGES[storyIndex]}
+                    Wir bereiten deinen Haarplan vor.
                   </h1>
-                  {waitingForPlan ? (
-                    <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-sub)]">
-                      <LoaderCircle
-                        className="h-4 w-4 motion-safe:animate-spin"
-                        aria-hidden="true"
-                      />
-                      Wir schließen die letzten Details ab.
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className="mx-auto grid w-44 grid-cols-3 gap-2" aria-hidden="true">
-                  {PERSONAL_PLAN_READY_MESSAGES.map((message, index) => (
-                    <span
-                      key={message}
-                      className={[
-                        "h-1.5 rounded-full",
-                        index <= storyIndex ? "bg-[var(--brand-plum)]" : "bg-[var(--border)]",
-                      ].join(" ")}
-                    />
-                  ))}
+                  <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-sub)]">
+                    <LoaderCircle className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />
+                    Wir gleichen deine Quiz-Antworten ab.
+                  </p>
                 </div>
 
                 {showRecovery ? (

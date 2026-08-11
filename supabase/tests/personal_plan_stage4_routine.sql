@@ -1,40 +1,136 @@
 begin;
 
-select plan(40);
+select plan(56);
 
+select has_function('public', 'personal_plan_complete_draft_activate_initial_v1', 'versioned first-Routine activation RPC exists');
 select has_function('public', 'personal_plan_stage_routine_successor', 'successor staging RPC exists');
 select has_function('public', 'personal_plan_reject_routine_proposal', 'proposal rejection RPC exists');
 select has_function('public', 'personal_plan_record_routine_no_semantic_change', 'no-change RPC exists');
 select ok(not has_function_privilege('authenticated', 'public.personal_plan_stage_routine_successor(uuid,uuid,uuid,bigint,bigint,uuid,uuid,uuid,bigint,integer,text,jsonb,text,jsonb,jsonb,text[],text)'::regprocedure, 'EXECUTE'), 'authenticated cannot stage successors');
+select ok(not has_function_privilege('authenticated', 'public.personal_plan_complete_draft_activate_initial_v1(uuid,uuid,uuid,bigint,bigint,integer,jsonb,integer,text,jsonb,text,jsonb,jsonb)'::regprocedure, 'EXECUTE'), 'authenticated cannot auto-activate an initial Routine');
 select ok(not has_function_privilege('authenticated', 'public.personal_plan_reject_routine_proposal(uuid,uuid,uuid,bigint)'::regprocedure, 'EXECUTE'), 'authenticated cannot reject proposals');
 select ok(not has_function_privilege('authenticated', 'public.personal_plan_record_routine_no_semantic_change(uuid,uuid,uuid,bigint,bigint,text)'::regprocedure, 'EXECUTE'), 'authenticated cannot record no-change results');
 select ok(has_function_privilege('service_role', 'public.personal_plan_stage_routine_successor(uuid,uuid,uuid,bigint,bigint,uuid,uuid,uuid,bigint,integer,text,jsonb,text,jsonb,jsonb,text[],text)'::regprocedure, 'EXECUTE'), 'service role can stage successors');
+select ok(has_function_privilege('service_role', 'public.personal_plan_complete_draft_activate_initial_v1(uuid,uuid,uuid,bigint,bigint,integer,jsonb,integer,text,jsonb,text,jsonb,jsonb)'::regprocedure, 'EXECUTE'), 'service role can auto-activate an initial Routine');
 select ok(has_function_privilege('service_role', 'public.personal_plan_reject_routine_proposal(uuid,uuid,uuid,bigint)'::regprocedure, 'EXECUTE'), 'service role can reject proposals');
 select ok(has_function_privilege('service_role', 'public.personal_plan_record_routine_no_semantic_change(uuid,uuid,uuid,bigint,bigint,text)'::regprocedure, 'EXECUTE'), 'service role can record no-change results');
 
 insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at) values
   ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000001', 'authenticated', 'authenticated', 'routine-lifecycle-a@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now()),
-  ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000002', 'authenticated', 'authenticated', 'routine-lifecycle-b@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now());
+  ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000002', 'authenticated', 'authenticated', 'routine-lifecycle-b@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now()),
+  ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000003', 'authenticated', 'authenticated', 'routine-initial-activation@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now());
 insert into public.personal_plans (id, user_id, current_refined_need_version_id) values
   ('21000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', null),
-  ('21000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000002', null);
+  ('21000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000002', null),
+  ('21000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000003', null);
 insert into public.personal_plan_need_versions (id, user_id, personal_plan_id, kind, parent_need_version_id, schema_version, computation_version, input_hash, input_snapshot, output_snapshot) values
   ('31000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 'initial', null, 1, 'test', repeat('1', 64), '{}'::jsonb, '{}'::jsonb),
   ('31000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 'refined', '31000000-0000-0000-0000-000000000001', 1, 'test', repeat('2', 64), '{}'::jsonb, '{}'::jsonb),
   ('31000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'initial', null, 1, 'test', repeat('3', 64), '{}'::jsonb, '{}'::jsonb),
-  ('31000000-0000-0000-0000-000000000004', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'refined', '31000000-0000-0000-0000-000000000003', 1, 'test', repeat('4', 64), '{}'::jsonb, '{}'::jsonb);
+  ('31000000-0000-0000-0000-000000000004', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'refined', '31000000-0000-0000-0000-000000000003', 1, 'test', repeat('4', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000005', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', 'initial', null, 1, 'test', repeat('5', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000006', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', 'refined', '31000000-0000-0000-0000-000000000005', 1, 'test', repeat('6', 64), '{}'::jsonb, '{}'::jsonb);
 update public.personal_plans set current_refined_need_version_id = case id
   when '21000000-0000-0000-0000-000000000001'::uuid then '31000000-0000-0000-0000-000000000002'::uuid
-  else '31000000-0000-0000-0000-000000000004'::uuid end;
+  when '21000000-0000-0000-0000-000000000002'::uuid then '31000000-0000-0000-0000-000000000004'::uuid
+  else '31000000-0000-0000-0000-000000000006'::uuid end;
 insert into public.personal_plan_product_drafts (id, user_id, personal_plan_id, refined_need_version_id, contract_version, revision, status) values
   ('41000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', '31000000-0000-0000-0000-000000000002', 1, 1, 'completed'),
-  ('41000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', '31000000-0000-0000-0000-000000000004', 1, 1, 'completed');
+  ('41000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', '31000000-0000-0000-0000-000000000004', 1, 1, 'completed'),
+  ('41000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', '31000000-0000-0000-0000-000000000006', 1, 0, 'active');
 insert into public.personal_plan_portfolio_versions (id, user_id, personal_plan_id, refined_need_version_id, source_product_draft_id, source_product_draft_revision, schema_version, category_authority_versions, content_hash, snapshot) values
   ('42000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', '31000000-0000-0000-0000-000000000002', '41000000-0000-0000-0000-000000000001', 1, 1, '{}'::jsonb, repeat('5', 64), '{}'::jsonb),
   ('42000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', '31000000-0000-0000-0000-000000000004', '41000000-0000-0000-0000-000000000002', 1, 1, '{}'::jsonb, repeat('6', 64), '{}'::jsonb);
 insert into public.personal_plan_routine_versions (id, user_id, personal_plan_id, source_refined_need_version_id, source_portfolio_version_id, source_product_draft_id, source_product_draft_revision, schema_version, compiler_version, authority_versions, source_fingerprint, payload_hash, payload) values
   ('51000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', '31000000-0000-0000-0000-000000000002', '42000000-0000-0000-0000-000000000001', '41000000-0000-0000-0000-000000000001', 1, 1, 'test', '{}'::jsonb, 'active', repeat('7', 64), '{"steps":["active"]}'::jsonb);
 update public.personal_plans set active_routine_version_id = '51000000-0000-0000-0000-000000000001' where id = '21000000-0000-0000-0000-000000000001';
+
+-- This third plan stays draft-active so the additive first-Routine path can
+-- be exercised without changing the legacy successor fixtures above.
+insert into public.products (id, name, category, category_key, is_active, lifecycle_status, is_chaarlie_recommended) values
+  ('71000000-0000-0000-0000-000000000001', 'Initial activation shampoo', 'Shampoo', 'shampoo', true, 'active', false);
+insert into public.user_products (id, user_id, category, catalog_product_id, identity_status, ownership_status) values
+  ('81000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000003', 'shampoo', '71000000-0000-0000-0000-000000000001', 'matched', 'owned');
+
+create function pg_temp.complete_initial(p_source_revision bigint default null)
+returns jsonb language sql as $$
+  select public.personal_plan_complete_draft_activate_initial_v1(
+    '11000000-0000-0000-0000-000000000003',
+    '21000000-0000-0000-0000-000000000003',
+    '41000000-0000-0000-0000-000000000003',
+    0,
+    coalesce(p_source_revision, (select source_revision from public.personal_plans where id = '21000000-0000-0000-0000-000000000003')),
+    1,
+    jsonb_build_object(
+      'schemaVersion', 1,
+      'personalPlanId', '21000000-0000-0000-0000-000000000003',
+      'refinedVersionId', '31000000-0000-0000-0000-000000000006',
+      'sourceDraftRevision', 0,
+      'categoryResolutions', '[]'::jsonb,
+      'ownedProducts', jsonb_build_array(jsonb_build_object(
+        'userProductId', '81000000-0000-0000-0000-000000000001',
+        'category', 'shampoo',
+        'productId', '71000000-0000-0000-0000-000000000001'
+      )),
+      'plannedPurchases', '[]'::jsonb,
+      'pendingProducts', '[]'::jsonb,
+      'uncoveredRoles', '[]'::jsonb
+    ),
+    1,
+    'test-initial-compiler',
+    '{}'::jsonb,
+    'initial-routine-source',
+    '{"steps":["initial"]}'::jsonb,
+    '{"changed":["initial"]}'::jsonb
+  )
+$$;
+
+select is(pg_temp.complete_initial(0)->>'status', 'source_revision_conflict', 'first-Routine activation rejects a stale source CAS token');
+select is((select count(*)::integer from public.personal_plan_portfolio_versions where source_product_draft_id = '41000000-0000-0000-0000-000000000003'), 0, 'stale initial activation writes no immutable portfolio or Routine');
+select is((select status from public.personal_plan_product_drafts where id = '41000000-0000-0000-0000-000000000003'), 'active', 'stale initial activation preserves the editable draft');
+
+-- Simulate source work that arrives after the compiled source token.  The
+-- activation must settle only captured rows and leave newer work pending.
+insert into public.personal_plan_routine_source_change_outbox (
+  user_id, personal_plan_id, source_kind, source_key, observed_revision
+) values (
+  '11000000-0000-0000-0000-000000000003',
+  '21000000-0000-0000-0000-000000000003',
+  'user_product',
+  'newer-source-work',
+  (select source_revision + 1 from public.personal_plans where id = '21000000-0000-0000-0000-000000000003')
+);
+
+select is(pg_temp.complete_initial()->>'status', 'completed', 'first completed product draft activates its Routine atomically');
+select is(
+  (select active_routine_version_id::text from public.personal_plans where id = '21000000-0000-0000-0000-000000000003'),
+  (select id::text from public.personal_plan_routine_versions where source_product_draft_id = '41000000-0000-0000-0000-000000000003'),
+  'first activation returns the immutable Routine as the active pointer'
+);
+select ok((select pending_routine_proposal_id is null from public.personal_plans where id = '21000000-0000-0000-0000-000000000003'), 'first activation leaves no pending Routine confirmation');
+select is((select count(*)::integer from public.personal_plan_routine_proposals where personal_plan_id = '21000000-0000-0000-0000-000000000003'), 0, 'first activation creates no Routine proposal');
+select is((select status from public.personal_plan_product_drafts where id = '41000000-0000-0000-0000-000000000003'), 'completed', 'first activation completes its product draft');
+select is(
+  (select processed_revision::text || ':' || available_at::text from public.personal_plan_routine_source_change_outbox where personal_plan_id = '21000000-0000-0000-0000-000000000003' and source_key = '81000000-0000-0000-0000-000000000001'),
+  '1:infinity',
+  'first activation consumes the captured product source outbox row'
+);
+select is(
+  (select status || ':' || processed_revision::text || ':' || observed_revision::text from public.personal_plan_routine_source_change_outbox where personal_plan_id = '21000000-0000-0000-0000-000000000003' and source_key = 'newer-source-work'),
+  'pending:0:2',
+  'first activation preserves newer source work for successor staging'
+);
+select is(pg_temp.complete_initial()->>'status', 'already_completed', 'lost-response replay returns the stable initial completion');
+select is(
+  pg_temp.complete_initial()->>'portfolioVersionId',
+  (select id::text from public.personal_plan_portfolio_versions where source_product_draft_id = '41000000-0000-0000-0000-000000000003'),
+  'initial completion replay retains its portfolio ID'
+);
+select is(
+  pg_temp.complete_initial()->>'routineVersionId',
+  (select active_routine_version_id::text from public.personal_plans where id = '21000000-0000-0000-0000-000000000003'),
+  'initial completion replay retains its active Routine ID'
+);
 
 create function pg_temp.stage(p_payload jsonb default '{"steps":["next"]}'::jsonb, p_delta jsonb default '{"changed":["next"]}'::jsonb, p_origin text default 'source_sync', p_expected_active uuid default '51000000-0000-0000-0000-000000000001', p_expected_revision bigint default null, p_expected_source_revision bigint default null)
 returns jsonb language sql as $$

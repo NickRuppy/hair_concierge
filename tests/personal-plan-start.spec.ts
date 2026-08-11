@@ -112,7 +112,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
       page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
     ).toHaveCount(await optionalCards.count())
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
-    await page.getByRole("button", { name: "Plan verfeinern" }).click()
+    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(
       page.getByRole("heading", { name: "Jetzt machen wir ihn zu deinem." }),
@@ -187,9 +187,8 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(productionCompositionLabPath)
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
-    await page.getByRole("button", { name: "Plan verfeinern" }).click()
-    await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toBeVisible()
-    await page.getByRole("button", { name: "Produktarten bestätigen" }).click()
+    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
+    await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
     await expect(
       page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),

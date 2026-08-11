@@ -7,6 +7,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_STAGE2_ENABLED?: string
   PERSONAL_PLAN_STAGE3_ENABLED?: string
   PERSONAL_PLAN_STAGE4_ENABLED?: string
+  PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL?: string
 }
 
 export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
@@ -64,6 +65,21 @@ export function isPersonalPlanStage4Enabled(
   environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
   return environment.PERSONAL_PLAN_STAGE4_ENABLED === "true"
+}
+
+/**
+ * Keeps first-Routine auto-activation independently reversible while refusing
+ * to create a Routine that the Stage 4 journey cannot expose. The migration is
+ * additive; with either flag absent or disabled callers retain the legacy
+ * pending-proposal completion RPC.
+ */
+export function isPersonalPlanStage4AutoActivateInitialEnabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return (
+    isPersonalPlanStage4Enabled(environment) &&
+    environment.PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL === "true"
+  )
 }
 
 const UTC_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/

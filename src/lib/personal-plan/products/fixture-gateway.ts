@@ -20,6 +20,8 @@ import {
   type Stage3DecisionSubject,
   type Stage3ProductDecision,
   type Stage3ProductDraft,
+  type Stage3CapturedProduct,
+  type Stage3RoleAssignment,
 } from "./contracts"
 import { createProposedProductPortfolio } from "./portfolio"
 import {
@@ -32,6 +34,7 @@ import {
   markRoleUncovered,
   recordProductDecision,
   removeCapturedProduct,
+  replaceCaptureCategorySnapshot,
   replaceCategoryRoleAssignments,
   reopenCaptureCategory,
 } from "./state-machine"
@@ -51,6 +54,14 @@ const FIXTURE_CATALOG: FixtureCatalogRecord[] = [
     category: "shampoo",
     brandName: "Chaarlie Fixture",
     confidence: "exact",
+  },
+  {
+    candidateId: "fixture-candidate-shampoo-2",
+    productId: "fixture-product-shampoo-2",
+    displayName: "Shampoo Feuchtigkeits-Balance",
+    category: "shampoo",
+    brandName: "Chaarlie Fixture",
+    confidence: "likely",
   },
   {
     candidateId: "fixture-candidate-conditioner-1",
@@ -137,7 +148,14 @@ export type FixtureCompleteResponse = Stage3CompleteResponse
  * boundary without importing product facts or authority decisions from the
  * production server.
  */
-export type FixtureStage3Gateway = Stage3ProductsGateway & {
+export type FixtureStage3Gateway = Omit<Stage3ProductsGateway, "search"> & {
+  /** Labs do not have an owner-bound persisted draft behind catalog search. */
+  search(input: {
+    draftId?: string
+    category: PersonalPlanCategory
+    query: string
+    requestToken: number
+  }): Promise<Stage3SearchResponse>
   evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
   resolveDecision(input: {
     draftId: string
@@ -469,6 +487,66 @@ function applyMutation(
   nextCapturedProductId: () => string,
 ): Stage3ProductDraft {
   switch (mutation.type) {
+    case "replace_capture_category": {
+      const products: Stage3CapturedProduct[] = []
+      const assignments: Stage3RoleAssignment[] = []
+      for (const input of mutation.candidates) {
+        if (input.kind === "pending") {
+          const pending = draft.products.find(
+            (product) =>
+              product.userProductId === input.userProductId &&
+              product.identity.kind === "pending_submission" &&
+              product.identity.submissionId === input.submissionId,
+          )
+          if (!pending) throw new Error(`unknown fixture pending product ${input.submissionId}`)
+          products.push({
+            ...pending,
+            frequencyRange: input.frequencyRange,
+          })
+          if (input.roles.length > 0) {
+            assignments.push({
+              capturedProductId: pending.capturedProductId,
+              category: mutation.category,
+              roles: input.roles,
+            })
+          }
+          continue
+        }
+        const candidate = FIXTURE_CATALOG.find((entry) => entry.candidateId === input.candidateId)
+        if (!candidate || candidate.category !== mutation.category) {
+          throw new Error(`unknown fixture candidate ${input.candidateId}`)
+        }
+        const capturedProductId = `fixture-user-product:${candidate.productId}`
+        products.push({
+          capturedProductId,
+          userProductId: capturedProductId,
+          identity: {
+            kind: "catalog_product",
+            productId: candidate.productId,
+            displayName: candidate.displayName,
+            category: candidate.category,
+          },
+          frequencyRange: input.frequencyRange,
+          ownership: "owned",
+          source: "catalog_search",
+        })
+        if (input.roles.length > 0) {
+          assignments.push({
+            capturedProductId,
+            category: mutation.category,
+            roles: input.roles,
+          })
+        }
+      }
+      return replaceCaptureCategorySnapshot(
+        draft,
+        mutation.category,
+        products,
+        assignments,
+        mutation.uncoveredRoles,
+        requirements,
+      )
+    }
     case "capture_catalog_candidate": {
       const candidate = FIXTURE_CATALOG.find((entry) => entry.candidateId === mutation.candidateId)
       if (!candidate) throw new Error(`unknown fixture candidate ${mutation.candidateId}`)

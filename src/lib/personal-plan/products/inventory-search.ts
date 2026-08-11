@@ -21,6 +21,8 @@ export type CatalogProductRecord = {
   lifecycleStatus: string | null
   recommended: boolean | null
   sortOrder: number | null
+  assessmentStatus?: "ready" | "pending_analysis"
+  assessmentReasonCodes?: Array<"missing_required_spec" | "missing_application_protocol">
 }
 
 export type OwnedProductCatalogSource = {
@@ -223,6 +225,12 @@ function asCatalogCandidate(product: CatalogProductRecord, query: string): Stage
     brandName: product.brandName,
     imageUrl: product.imageUrl ?? null,
     confidence: label === query.toLocaleLowerCase() ? "exact" : "likely",
+    ...(product.assessmentStatus
+      ? {
+          assessmentStatus: product.assessmentStatus,
+          assessmentReasonCodes: product.assessmentReasonCodes ?? [],
+        }
+      : {}),
   }
 }
 

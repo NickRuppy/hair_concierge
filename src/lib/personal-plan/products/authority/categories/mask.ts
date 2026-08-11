@@ -200,9 +200,11 @@ export function evaluateMaskAuthority(
       .map((candidate) => ({ candidate, assessment: evaluateProduct(input, candidate) }))
       .find(({ assessment }) => assessment?.verdict === "ideal")
     return knownEvaluation(sharedInput, {
-      verdict: "ideal",
+      // A recommendation can be ideal; an absent owned product cannot be.
+      // Keep the uncovered state explicit when the catalog yields no candidate.
+      verdict: eligible ? "ideal" : "unknown",
       criteria: [],
-      allowedActions: eligible ? ["plan_recommendation"] : ["leave_uncovered"],
+      allowedActions: eligible ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
       recommendation: eligible ? recommendationFor(eligible.candidate) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: eligible?.candidate.factFingerprint ?? null,

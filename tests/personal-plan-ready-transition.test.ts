@@ -4,11 +4,8 @@ import test from "node:test"
 
 import {
   canContinueToPersonalPlan,
-  PERSONAL_PLAN_READY_MESSAGES,
-  PERSONAL_PLAN_READY_MIN_STORY_MS,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
   PERSONAL_PLAN_READY_POLL_LIMIT,
-  personalPlanStoryIndexAt,
 } from "../src/app/plan-bereit/transition"
 
 test("backend readiness enables the CTA on the first successful poll", () => {
@@ -17,27 +14,10 @@ test("backend readiness enables the CTA on the first successful poll", () => {
   assert.equal(canContinueToPersonalPlan("timeout"), false)
 })
 
-test("the post-payment story confirms purchase and leads with the provisional need plan", () => {
-  assert.deepEqual(PERSONAL_PLAN_READY_MESSAGES, [
-    "Deine Zahlung ist bestätigt.",
-    "Dein persönlicher Haarplan ist vorbereitet.",
-    "Sieh dir jetzt zuerst deinen Bedarfsplan an.",
-  ])
-})
-
-test("the story lasts about seven seconds and readiness polling lasts thirty seconds", () => {
-  assert.equal(PERSONAL_PLAN_READY_MIN_STORY_MS, 6_600)
+test("readiness polling remains bounded to thirty seconds", () => {
   assert.equal(PERSONAL_PLAN_READY_POLL_INTERVAL_MS, 1_500)
   assert.equal(PERSONAL_PLAN_READY_POLL_LIMIT, 20)
   assert.equal(PERSONAL_PLAN_READY_POLL_INTERVAL_MS * PERSONAL_PLAN_READY_POLL_LIMIT, 30_000)
-})
-
-test("story progression exposes each message before completion", () => {
-  assert.equal(personalPlanStoryIndexAt(0), 0)
-  assert.equal(personalPlanStoryIndexAt(2_199), 0)
-  assert.equal(personalPlanStoryIndexAt(2_200), 1)
-  assert.equal(personalPlanStoryIndexAt(4_400), 2)
-  assert.equal(personalPlanStoryIndexAt(6_600), 2)
 })
 
 test("readiness failures are recoverable and the ready CTA stays explicit", () => {
@@ -61,11 +41,17 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /method: attempts === 1 \? "POST" : "GET"/)
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
-  assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Plan ansehen/)
+  assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Bedarfsplan ansehen/)
   assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)
-  assert.match(client, /Dein Bedarfsplan ist bereit/)
-  assert.match(client, /Zuerst siehst du, was dein Haar laut deiner Haaranalyse braucht/)
-  assert.doesNotMatch(client, /Verfeinere ihn jetzt mit deinen Produkten/)
+  assert.match(client, /data-personal-plan-ready-preview/)
+  assert.match(client, /Das empfehlen wir für dein Haar\./)
+  assert.match(client, /Basierend auf deinen Quiz-Antworten\./)
+  assert.match(client, /Wir bereiten deinen Haarplan vor\./)
+  assert.doesNotMatch(client, /PERSONAL_PLAN_READY_MESSAGES/)
+  assert.doesNotMatch(client, /personalPlanStoryIndexAt/)
+  assert.doesNotMatch(client, /setInterval/)
+  assert.doesNotMatch(client, /Zuerst siehst du, was dein Haar laut deinem Quiz braucht/)
+  assert.doesNotMatch(client, /wirklich zu deinem/)
   assert.match(route, /loadPersonalPlanReadiness\(admin, user\.id, user\.email, leadId\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)

@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type {
-  Stage3AuthorityActionKind,
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "@/lib/personal-plan/products/authority/contracts"
@@ -57,8 +56,28 @@ import {
   type Stage3CatalogCandidate,
   type Stage3DecisionAction,
   type Stage3ProductKindOption,
-  type Stage3ProductDecisionProjection,
 } from "."
+import {
+  automaticAuthorityOutcomes,
+  automaticOutcomeIntents,
+  authorityDecisionIntent,
+  clearFitDecisions,
+  hasUnresolvedDecisionSubjects,
+  unresolvedDecisionSubjects,
+  type Stage3AutomaticOutcome,
+  type Stage3ClearFit,
+} from "./stage3-decision-controller"
+import {
+  authorityEvaluationProjection,
+  CATEGORY_COPY,
+  ROLE_COPY,
+  semanticActionFor,
+} from "./stage3-decision-projection"
+import {
+  completeCandidateIdentity,
+  useStage3CategoryCaptureController,
+  type LocalCatalogCapture,
+} from "./use-stage3-category-capture-controller"
 
 type FlowPhase = "product_kinds" | "capture" | "roles" | "decisions" | "handoff"
 
@@ -110,52 +129,6 @@ const DEFAULT_REQUIREMENTS: Stage3CategoryRequirement[] = [
   ]),
 ]
 
-const CATEGORY_COPY: Record<PersonalPlanCategory, { label: string; need: string }> = {
-  shampoo: { label: "Shampoo", need: "Reinigung passend zu deiner Kopfhaut" },
-  conditioner: { label: "Conditioner", need: "Pflege nach jeder Wäsche" },
-  leave_in: { label: "Leave-in", need: "Pflege, die im Haar bleibt" },
-  heat_protectant: { label: "Hitzeschutz", need: "Schutz bei Styling mit Hitze" },
-  oil: { label: "Öl", need: "Schutz und Finish für deine Längen" },
-  mask: { label: "Maske", need: "Zusätzliche intensive Pflege" },
-  scalp_care: { label: "Kopfhautprodukt", need: "Beruhigende Pflege für deine Kopfhaut" },
-  dry_shampoo: { label: "Trockenshampoo", need: "Frische zwischen den Haarwäschen" },
-  bondbuilder: { label: "Bondbuilder", need: "Unterstützung für beanspruchtes Haar" },
-  deep_cleansing_shampoo: {
-    label: "Tiefenreinigung",
-    need: "Gezielte Entfernung von Rückständen",
-  },
-}
-
-const ROLE_COPY: Record<PlanProductRole, { label: string; description: string }> = {
-  shampoo_everyday: { label: "Hauptreinigung", description: "Für deine regelmäßige Haarwäsche" },
-  shampoo_dandruff: { label: "Gezielte Reinigung", description: "Als gezielte Ergänzung" },
-  conditioner_rinse_out: { label: "Pflege nach der Wäsche", description: "Zum Ausspülen" },
-  post_wash_leave_in: { label: "Pflege im feuchten Haar", description: "Nach der Haarwäsche" },
-  pre_heat_application: { label: "Vor dem Styling", description: "Vor Wärme im Haar" },
-  intensive_conditioning_mask: { label: "Intensivpflege", description: "Als auswaschbare Pflege" },
-  pre_wash_fibre_treatment: {
-    label: "Vor der Haarwäsche",
-    description: "Als Pflege vor dem Waschen",
-  },
-  leave_on_fibre_conditioning: {
-    label: "Im feuchten Haar",
-    description: "Nach dem Waschen im feuchten Haar",
-  },
-  dry_finish: { label: "Im trockenen Haar", description: "Für Glanz und Finish" },
-  residue_reset: { label: "Rückstände lösen", description: "Bei Bedarf" },
-  mineral_reset: { label: "Mineralrückstände lösen", description: "Bei Bedarf" },
-  root_refresh_bridge: { label: "Ansatz auffrischen", description: "Zwischen Haarwäschen" },
-  pre_heat_protection: { label: "Schutz vor Stylinghitze", description: "Vor Hitze" },
-  specialized_bond_treatment: { label: "Bondpflege", description: "Nach Herstellerangabe" },
-  scalp_comfort: { label: "Kopfhaut beruhigen", description: "Für ein ruhigeres Hautgefühl" },
-  scalp_flake_oil_adjunct: {
-    label: "Schuppen kontrollieren",
-    description: "Bei sichtbaren Schuppen",
-  },
-  density_claim_tonic: { label: "Kopfhaut-Tonic", description: "Mit begrenzter Evidenz" },
-  scalp_exfoliant: { label: "Kopfhaut klären", description: "Bei Bedarf" },
-}
-
 const FREQUENCIES: Array<{ value: ProductFrequency; label: string; shortLabel: string }> =
   PRODUCT_FREQUENCIES.map((value) => ({
     value,
@@ -172,20 +145,6 @@ const PRODUCT_KIND_OPTIONS: Stage3ProductKindOption[] = (
   label: copy.label,
   description: copy.need,
 }))
-
-export function automaticOilAuthorityAction(
-  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
-  evaluation: Stage3AuthorityEvaluation,
-): Stage3AuthorityActionKind | null {
-  if (subject.category !== "oil" || evaluation.allowedActions.length !== 1) return null
-  const action = evaluation.allowedActions[0]
-  if (action === "keep_owned" && evaluation.status === "known" && evaluation.verdict === "ideal") {
-    return action
-  }
-  if (action === "keep_pending" && evaluation.status === "pending") return action
-  if (action === "leave_uncovered" && subject.subjectKind === "uncovered_role") return action
-  return null
-}
 
 export function updateStage3RoleAssignments(
   current: Record<string, string[]>,
@@ -249,7 +208,7 @@ export function Stage3ProductsFlow({
   }
   const gateway = gatewayRef.current
 
-  const shouldReviewProductKinds = Boolean(bootstrap?.entryContext.authoritySnapshot)
+  const canReviewProductKinds = Boolean(bootstrap?.entryContext.authoritySnapshot)
   const initialDraft = useMemo(
     () =>
       bootstrap?.draft ??
@@ -278,16 +237,14 @@ export function Stage3ProductsFlow({
   )
   const [confirmedOwnedCategories, setConfirmedOwnedCategories] =
     useState<PersonalPlanCategory[]>(initialOwnedCategories)
-  const [reviewedProductKinds, setReviewedProductKinds] = useState(() => !shouldReviewProductKinds)
+  const [reviewedProductKinds, setReviewedProductKinds] = useState(true)
   const [reviewSelectedKinds, setReviewSelectedKinds] =
     useState<PersonalPlanCategory[]>(initialOwnedCategories)
   const [productKindStatus, setProductKindStatus] = useState<"idle" | "saving" | "error">("idle")
   const [phase, setPhase] = useState<FlowPhase>(() =>
-    shouldReviewProductKinds
-      ? "product_kinds"
-      : initialDraft.pass === "product_capture" && initialDraft.categoryCursor
-        ? "capture"
-        : "decisions",
+    initialDraft.pass === "product_capture" && initialDraft.categoryCursor
+      ? "capture"
+      : "decisions",
   )
   const [draft, setDraft] = useState<Stage3ProductDraft>(initialDraft)
   const [categoryIndex, setCategoryIndex] = useState(() =>
@@ -309,9 +266,6 @@ export function Stage3ProductsFlow({
   const [fallbackError, setFallbackError] = useState<string>()
   const [manualProductName, setManualProductName] = useState("")
   const [roleAssignments, setRoleAssignments] = useState<Record<string, string[]>>({})
-  const [saveLabel, setSaveLabel] = useState(bootstrap ? "Gespeichert" : "Wird geladen")
-  const [categoryFinalizeStatus, setCategoryFinalizeStatus] = useState<"idle" | "saving">("idle")
-  const [categoryFinalizeAction, setCategoryFinalizeAction] = useState<"roles" | "gap" | null>(null)
   const [decisionSubmitStatus, setDecisionSubmitStatus] = useState<"idle" | "saving">("idle")
   const [systemIssue, setSystemIssue] = useState<SystemIssue | null>(null)
   const [authorityEvaluations, setAuthorityEvaluations] = useState<Stage3AuthorityEvaluation[]>(
@@ -325,21 +279,44 @@ export function Stage3ProductsFlow({
     { status: "ready_for_routine" }
   > | null>(null)
   const [showHandoffRecovery, setShowHandoffRecovery] = useState(false)
+  const [draftReadyForQueueReconciliation, setDraftReadyForQueueReconciliation] = useState(
+    Boolean(bootstrap),
+  )
   const searchToken = useRef(0)
   const intakeIdempotencyKey = useRef<string | null>(null)
   const completionInFlight = useRef(false)
-  const categoryFinalizeInFlight = useRef(false)
   const decisionSubmitInFlight = useRef(false)
   const saveMutationInFlight = useRef(false)
   const bootstrapDecisionPreparationStarted = useRef(false)
 
-  const currentRequirement = requirements[categoryIndex]
+  const currentRequirement =
+    requirements[categoryIndex] ?? requirements[0] ?? DEFAULT_REQUIREMENTS[0]!
   const currentCategory = currentRequirement?.category ?? requirements[0]?.category ?? "shampoo"
   const currentCopy = CATEGORY_COPY[currentCategory]
-  const currentProducts = useMemo(
-    () => draft?.products.filter((product) => product.identity.category === currentCategory) ?? [],
-    [currentCategory, draft],
-  )
+  const activeDraft = draft
+  const categoryCapture = useStage3CategoryCaptureController({
+    draft: activeDraft,
+    personalPlanId,
+    requirements,
+    currentRequirement,
+    currentCategory,
+    categoryIndex,
+    authoritySnapshot: resolvedEntryContext?.authoritySnapshot,
+    gateway,
+    analytics,
+    readyToReconcile: draftReadyForQueueReconciliation,
+    initialSaveLabel: bootstrap ? "Gespeichert" : "Wird geladen",
+    onDraftChange: setDraft,
+    onOpenCaptureCategory: (nextIndex) => {
+      setCategoryIndex(nextIndex)
+      setPhase("capture")
+    },
+    onPrepareDecisionPhase: prepareDecisionPhase,
+    onMutationError: handleMutationError,
+    onConflict: handleConflict,
+  })
+  const currentProducts = categoryCapture.currentProducts
+  const localCatalogCaptures = categoryCapture.localCatalogCaptures
 
   useEffect(() => {
     if (
@@ -420,7 +397,12 @@ export function Stage3ProductsFlow({
     setSearchStatus("loading")
     const timeout = setTimeout(() => {
       void gateway
-        .search({ category: currentCategory, query: trimmed, requestToken })
+        .search({
+          draftId: draft.draftId,
+          category: currentCategory,
+          query: trimmed,
+          requestToken,
+        })
         .then((response) => {
           if (response.requestToken !== searchToken.current) return
           const results = response.result.candidates.map((candidate) => ({
@@ -432,6 +414,8 @@ export function Stage3ProductsFlow({
               candidate.confidence === "exact"
                 ? "Eindeutiger Treffer"
                 : "Wahrscheinlich dein Produkt",
+            assessmentStatus: candidate.assessmentStatus ?? "ready",
+            assessmentReasonCodes: candidate.assessmentReasonCodes,
           }))
           setSearchResults(results)
           setSearchStatus(results.length > 0 ? "ready" : "empty")
@@ -449,7 +433,16 @@ export function Stage3ProductsFlow({
     }, searchDebounceMs)
 
     return () => clearTimeout(timeout)
-  }, [analytics, currentCategory, gateway, phase, query, reviewedProductKinds, searchDebounceMs])
+  }, [
+    analytics,
+    currentCategory,
+    draft.draftId,
+    gateway,
+    phase,
+    query,
+    reviewedProductKinds,
+    searchDebounceMs,
+  ])
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof document === "undefined") return
@@ -469,14 +462,15 @@ export function Stage3ProductsFlow({
     return () => clearTimeout(timeout)
   }, [completion, handoffRecoveryDelayMs, phase])
 
-  const activeDraft = draft
   const shellSaveStatus = systemIssue
     ? "error"
-    : saveLabel === "Gespeichert"
-      ? "saved"
-      : saveLabel === "Wird geladen"
-        ? "idle"
-        : "saving"
+    : categoryCapture.queuedCategoryCount > 0
+      ? "saving"
+      : categoryCapture.saveLabel === "Gespeichert"
+        ? "saved"
+        : categoryCapture.saveLabel === "Wird geladen"
+          ? "idle"
+          : "saving"
 
   const shell = (children: React.ReactNode, stepLabel: string, onBack?: () => void) => (
     <Stage3Shell
@@ -486,7 +480,7 @@ export function Stage3ProductsFlow({
       totalSteps={requirements.length + 3}
       saveState={{
         status: shellSaveStatus,
-        label: systemIssue ? "Nicht gespeichert" : saveLabel,
+        label: systemIssue ? "Nicht gespeichert" : categoryCapture.saveLabel,
       }}
       onBack={onBack}
     >
@@ -522,17 +516,17 @@ export function Stage3ProductsFlow({
     )
   }
 
-  if (categoryFinalizeStatus === "saving") {
+  if (categoryCapture.categoryFinalizeStatus === "saving") {
     return shell(
       <Stage3SystemState
         state="loading"
         title={
-          categoryFinalizeAction === "gap"
+          categoryCapture.categoryFinalizeAction === "gap"
             ? "Alles klar – dafür hast du noch kein Produkt."
             : "Produkte werden gespeichert."
         }
         message={
-          categoryFinalizeAction === "gap"
+          categoryCapture.categoryFinalizeAction === "gap"
             ? "Wird gespeichert"
             : "Deine Auswahl wird sicher übernommen."
         }
@@ -586,25 +580,41 @@ export function Stage3ProductsFlow({
         query={query}
         searchStatus={searchStatus}
         searchResults={searchResults}
-        capturedProducts={currentProducts.map((product) => ({
-          capturedProductId: product.capturedProductId,
-          displayName: product.identity.displayName,
-          frequencyLabel:
-            FREQUENCIES.find((option) => option.value === product.frequencyRange)?.label ??
-            product.frequencyRange,
-          sourceLabel: product.source === "catalog_search" ? "Gefunden" : "Manuell hinzugefügt",
-          statusLabel:
-            product.identity.kind === "pending_submission"
-              ? "Noch in Prüfung · gespeichert"
-              : undefined,
-          imageUrl: product.identity.imageUrl ?? undefined,
-        }))}
+        capturedProducts={[
+          ...currentProducts.map((product) => ({
+            capturedProductId: product.capturedProductId,
+            displayName: product.identity.displayName,
+            frequencyLabel:
+              FREQUENCIES.find((option) => option.value === product.frequencyRange)?.label ??
+              product.frequencyRange,
+            sourceLabel: product.source === "catalog_search" ? "Gefunden" : "Manuell hinzugefügt",
+            statusLabel:
+              product.identity.kind === "pending_submission" ? "Analyse läuft" : undefined,
+            imageUrl: product.identity.imageUrl ?? undefined,
+          })),
+          ...localCatalogCaptures.map(({ candidate, frequencyRange }) => ({
+            capturedProductId: `local:${candidate.candidateId}`,
+            displayName: completeCandidateIdentity(candidate),
+            frequencyLabel:
+              FREQUENCIES.find((option) => option.value === frequencyRange)?.label ??
+              frequencyRange,
+            sourceLabel: "Ausgewählt",
+            imageUrl: candidate.imageUrl,
+          })),
+        ]}
         frequencyOptions={FREQUENCIES}
         selectedFrequency={frequency}
+        selectedCandidateId={pendingCandidate?.candidateId}
         frequencyProductName={pendingCandidate?.displayName}
         showFrequency={pendingCandidate !== null}
-        showAddAnotherProduct={currentProducts.length > 0}
-        canContinue={currentProducts.length > 0}
+        showAddAnotherProduct={
+          currentProducts.length + localCatalogCaptures.length > 0 ||
+          Boolean(pendingCandidate && frequency)
+        }
+        canContinue={
+          currentProducts.length + localCatalogCaptures.length > 0 ||
+          Boolean(pendingCandidate && frequency)
+        }
         intakeAvailable={
           searchStatus === "ready" || searchStatus === "empty" || searchStatus === "error"
         }
@@ -617,36 +627,42 @@ export function Stage3ProductsFlow({
         }}
         onSelectCandidate={(candidateId) => selectCandidate(candidateId)}
         onFrequencyChange={(value) => {
-          if (saveMutationInFlight.current) return
-          const selectedFrequency = value as ProductFrequency
-          setFrequency(selectedFrequency)
-          if (pendingCandidate)
-            void captureCandidate(pendingCandidate.candidateId, selectedFrequency)
+          setFrequency(value as ProductFrequency)
         }}
-        disabled={saveMutationInFlight.current}
+        disabled={false}
         onAddAnotherProduct={() => {
+          commitPendingCatalogCandidate()
           setQuery("")
           setSearchStatus("idle")
           setSearchResults([])
           setPendingCandidate(null)
           setFrequency(null)
         }}
-        onRemoveProduct={(capturedProductId) => void removeProduct(capturedProductId)}
+        onRemoveProduct={(capturedProductId) => removeWorkingProduct(capturedProductId)}
         onOpenFallbackIntake={() => {
           intakeIdempotencyKey.current ??= createStableIdempotencyKey()
           setFallbackError(undefined)
           setShowFallback(true)
           analytics.track("personal_plan_stage3_fallback_opened", { stepKey: "product_search" })
         }}
+        onChangeProductKinds={
+          canReviewProductKinds
+            ? () => {
+                setReviewSelectedKinds(confirmedOwnedCategories)
+                setProductKindStatus("idle")
+                setReviewedProductKinds(false)
+                setPhase("product_kinds")
+              }
+            : undefined
+        }
+        onChooseOtherProduct={() => {
+          setPendingCandidate(null)
+          setFrequency(null)
+        }}
         onContinue={() => void continueCapture()}
         onBack={
           categoryIndex === 0
-            ? shouldReviewProductKinds
-              ? () => {
-                  setReviewedProductKinds(false)
-                  setPhase("product_kinds")
-                }
-              : onBackToRefinement
+            ? onBackToRefinement
             : () => void reopenPreviousCategory(currentCategory)
         }
       />
@@ -675,9 +691,9 @@ export function Stage3ProductsFlow({
       <SemanticRoleAssignment
         categoryLabel={currentCopy.label}
         category={currentCategory}
-        products={currentProducts.map((product) => ({
-          capturedProductId: product.capturedProductId,
-          displayName: product.identity.displayName,
+        products={categoryCapture.workingCategoryCaptures().map((product) => ({
+          capturedProductId: product.key,
+          displayName: product.displayName,
         }))}
         roles={currentRequirement.requiredRoles.map((role) => ({ role, ...ROLE_COPY[role] }))}
         assignments={roleAssignments}
@@ -690,10 +706,7 @@ export function Stage3ProductsFlow({
   }
 
   if (phase === "decisions") {
-    const unresolvedSubjects = deriveStage3DecisionSubjects(draft).filter(
-      (subject) =>
-        !draft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
-    )
+    const unresolvedSubjects = unresolvedDecisionSubjects(draft)
     const nextSubject = unresolvedSubjects[0]
     if (!nextSubject) {
       if (!completionInFlight.current) {
@@ -776,24 +789,7 @@ export function Stage3ProductsFlow({
         CATEGORY_COPY.oil.label,
       )
     }
-    const clearFits = unresolvedSubjects
-      .map((subject) => ({
-        subject,
-        evaluation: authorityEvaluations.find(
-          (candidate) => candidate.subjectKey === subject.decisionKey,
-        ),
-      }))
-      .filter(
-        (
-          item,
-        ): item is {
-          subject: (typeof unresolvedSubjects)[number]
-          evaluation: Extract<Stage3AuthorityEvaluation, { status: "known" }>
-        } =>
-          item.evaluation?.status === "known" &&
-          item.evaluation.verdict === "ideal" &&
-          item.evaluation.allowedActions.includes("keep_owned"),
-      )
+    const clearFits = clearFitDecisions(draft, authorityEvaluations)
     if (clearFits.length > 1) {
       return shell(
         <ProductDecisionScreen
@@ -876,7 +872,8 @@ export function Stage3ProductsFlow({
       throw new Error("stage3_refined_version_mismatch")
     }
     setDraft(loadedDraft)
-    setSaveLabel("Gespeichert")
+    categoryCapture.setSaveLabel("Gespeichert")
+    setDraftReadyForQueueReconciliation(true)
 
     if (loadedDraft.pass === "ready_for_routine" || loadedDraft.status === "completed") {
       await completeFlow(loadedDraft)
@@ -986,18 +983,7 @@ export function Stage3ProductsFlow({
     preloaded?: Stage3AuthorityEvaluation[],
   ) {
     const evaluations = await loadAuthorityEvaluations(sourceDraft, preloaded)
-    const automaticOutcomes = deriveStage3DecisionSubjects(sourceDraft)
-      .filter(
-        (subject) =>
-          !sourceDraft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
-      )
-      .flatMap((subject) => {
-        const evaluation = evaluations.find(
-          (candidate) => candidate.subjectKey === subject.decisionKey,
-        )
-        const action = evaluation ? automaticOilAuthorityAction(subject, evaluation) : null
-        return evaluation && action ? [{ subject, action }] : []
-      })
+    const automaticOutcomes = automaticAuthorityOutcomes(sourceDraft, evaluations)
 
     if (automaticOutcomes.length > 0) {
       await acceptAutomaticOutcomes(sourceDraft, automaticOutcomes)
@@ -1148,8 +1134,7 @@ export function Stage3ProductsFlow({
       ready.next.href !== "/routine" ||
       !ready.personalPlanId ||
       !ready.refinedVersionId ||
-      !ready.productPortfolioVersionId ||
-      !ready.routineProposalId
+      !ready.productPortfolioVersionId
     ) {
       handleMutationError(new Error("stage3_routine_handoff_invalid"), () => openRoutine(ready))
       return
@@ -1175,12 +1160,14 @@ export function Stage3ProductsFlow({
       currentCategory === "shampoo" && currentProducts.length === 0
         ? resolvedEntryContext?.authoritySnapshot?.productLoadContext?.shampooFrequency
         : null
-    if (inheritedFrequency && inheritedFrequency !== "does_not_wash") {
-      void captureCandidate(candidate.candidateId, inheritedFrequency)
-    } else {
-      setPendingCandidate(candidate)
-      setFrequency(null)
-    }
+    setPendingCandidate(candidate)
+    setFrequency(
+      candidate.assessmentStatus !== "pending_analysis" &&
+        inheritedFrequency &&
+        inheritedFrequency !== "does_not_wash"
+        ? inheritedFrequency
+        : null,
+    )
     analytics.track("personal_plan_stage3_search_interacted", {
       interaction: "candidate_selected",
       resultCountBand: searchResults.length <= 3 ? "1_3" : "4_8",
@@ -1196,17 +1183,8 @@ export function Stage3ProductsFlow({
     })
   }
 
-  async function captureCandidate(candidateId: string, selectedFrequency: ProductFrequency) {
-    await saveMutation(
-      { type: "capture_catalog_candidate", candidateId, frequencyRange: selectedFrequency },
-      () => {
-        setQuery("")
-        setSearchStatus("idle")
-        setSearchResults([])
-        setPendingCandidate(null)
-        setFrequency(null)
-      },
-    )
+  function commitPendingCatalogCandidate(): LocalCatalogCapture | null {
+    return categoryCapture.commitLocalCatalogCapture(pendingCandidate, frequency)
   }
 
   async function capturePendingProduct() {
@@ -1238,6 +1216,7 @@ export function Stage3ProductsFlow({
         })
         intakeIdempotencyKey.current = null
         setDraft(response.draft)
+        categoryCapture.synchronizeRevision(response.draft.revision)
         setFallbackPending(false)
         setShowFallback(false)
         setManualProductName("")
@@ -1272,7 +1251,21 @@ export function Stage3ProductsFlow({
   }
 
   async function continueCapture() {
-    if (currentProducts.length === 0) {
+    if (pendingCandidate?.assessmentStatus === "pending_analysis") {
+      await waitForPendingAnalysis()
+      return
+    }
+    const committed = commitPendingCatalogCandidate()
+    const localCaptures = committed
+      ? [
+          ...localCatalogCaptures.filter(
+            (item) => item.candidate.candidateId !== committed.candidate.candidateId,
+          ),
+          committed,
+        ]
+      : localCatalogCaptures
+    const working = categoryCapture.workingCategoryCaptures(localCaptures)
+    if (working.length === 0) {
       setSearchStatus("empty")
       setSearchMessage(
         "Wähle ein Produkt aus dem Katalog oder füge es manuell hinzu. Wenn diese Produktart nicht stimmt, gehe zurück zu deinen Produktarten.",
@@ -1280,17 +1273,17 @@ export function Stage3ProductsFlow({
       return
     }
     const initialAssignments = Object.fromEntries(
-      currentProducts.map((product) => [
-        product.capturedProductId,
+      working.map((product) => [
+        product.key,
         activeDraft.roleAssignments.find(
-          (assignment) => assignment.capturedProductId === product.capturedProductId,
+          (assignment) => assignment.capturedProductId === product.key,
         )?.roles ?? [],
       ]),
     )
-    const suggestedAssignments = suggestRoleAssignments(initialAssignments)
+    const suggestedAssignments = suggestRoleAssignments(initialAssignments, working)
     setRoleAssignments(suggestedAssignments)
-    if (canAutoAssignRoles(suggestedAssignments)) {
-      await saveRolesAndContinue(suggestedAssignments)
+    if (canAutoAssignRoles(suggestedAssignments, working)) {
+      await saveRolesAndContinue(suggestedAssignments, working)
       return
     }
     setPhase("roles")
@@ -1312,31 +1305,30 @@ export function Stage3ProductsFlow({
     )
   }
 
-  async function saveRolesAndContinue(assignments = roleAssignments) {
+  async function saveRolesAndContinue(
+    assignments = roleAssignments,
+    working = categoryCapture.workingCategoryCaptures(),
+  ) {
     const covered = new Set(Object.values(assignments).flat())
     const missing = currentRequirement.requiredRoles.filter((role) => !covered.has(role))
-    await finalizeCurrentCapture(
-      {
-        assignments: currentProducts.flatMap((product) => {
-          const roles = (assignments[product.capturedProductId] ?? []) as PlanProductRole[]
-          return roles.length > 0
-            ? [{ capturedProductId: product.capturedProductId, category: currentCategory, roles }]
-            : []
-        }),
-        uncoveredRoles: missing.map((role) => ({
-          category: currentCategory,
-          role,
-          reason: "not_ready_to_decide" as const,
-        })),
-      },
-      activeDraft,
-      "roles",
-    )
+    resetCategoryInteractionState()
+    await categoryCapture.enqueueCategoryReplacement({
+      working,
+      assignments,
+      uncoveredRoles: missing.map((role) => ({
+        category: currentCategory,
+        role,
+        reason: "not_ready_to_decide" as const,
+      })),
+    })
   }
 
-  function suggestRoleAssignments(current: Record<string, string[]>) {
-    if (currentProducts.length !== 1) return current
-    const productId = currentProducts[0].capturedProductId
+  function suggestRoleAssignments(
+    current: Record<string, string[]>,
+    working = categoryCapture.workingCategoryCaptures(),
+  ) {
+    if (working.length !== 1) return current
+    const productId = working[0].key
     if (currentRequirement.requiredRoles.length === 1) {
       return { ...current, [productId]: [...currentRequirement.requiredRoles] }
     }
@@ -1354,89 +1346,52 @@ export function Stage3ProductsFlow({
     return allowed.length > 0 ? { ...current, [productId]: allowed } : current
   }
 
-  function canAutoAssignRoles(assignments: Record<string, string[]>) {
-    if (currentProducts.length !== 1) return false
+  function canAutoAssignRoles(
+    assignments: Record<string, string[]>,
+    working = categoryCapture.workingCategoryCaptures(),
+  ) {
+    if (working.length !== 1) return false
     if (currentRequirement.requiredRoles.length === 1) return true
     if (currentCategory !== "oil") return false
-    return (assignments[currentProducts[0].capturedProductId]?.length ?? 0) > 0
+    return (assignments[working[0].key]?.length ?? 0) > 0
   }
 
-  async function finalizeCurrentCapture(
-    capture: Pick<
-      Extract<Stage3ProductsMutation, { type: "finalize_capture_category" }>,
-      "assignments" | "uncoveredRoles"
-    >,
-    sourceDraft = activeDraft,
-    action: "roles" | "gap" = "roles",
-  ) {
-    if (categoryFinalizeInFlight.current) return
-    categoryFinalizeInFlight.current = true
-    setCategoryFinalizeStatus("saving")
-    setCategoryFinalizeAction(action)
-    setSaveLabel(action === "roles" ? "Produkte werden gespeichert" : "Wird gespeichert")
-
-    let response: Stage3MutationResponse
-    try {
-      response = await gateway.mutate({
-        draftId: sourceDraft.draftId,
-        expectedRevision: sourceDraft.revision,
-        mutation: {
-          type: "finalize_capture_category",
-          category: currentCategory,
-          ...capture,
-        },
-      })
-    } catch (error) {
-      finishCategoryFinalization()
-      handleMutationError(error, () => void finalizeCurrentCapture(capture, sourceDraft, action))
+  async function waitForPendingAnalysis() {
+    if (!pendingCandidate || !frequency) {
+      setSearchMessage("Wähle zuerst aus, wie oft du dieses Produkt nutzt.")
       return
     }
-
-    if (response.status === "conflict") {
-      finishCategoryFinalization()
-      handleConflict(
-        response.latestDraft,
-        () => void finalizeCurrentCapture(capture, response.latestDraft, action),
-      )
-      return
+    const pendingCapture: LocalCatalogCapture = {
+      candidate: pendingCandidate,
+      frequencyRange: frequency,
     }
-
-    setDraft(response.draft)
-    setSaveLabel("Gespeichert")
-    analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
-    try {
-      await advanceFromServerCursor(response.draft)
-      finishCategoryFinalization()
-    } catch (error) {
-      finishCategoryFinalization()
-      handleMutationError(error, () => void advanceFromServerCursor(response.draft))
-    }
+    const localCaptures = [
+      ...localCatalogCaptures.filter(
+        (item) => item.candidate.candidateId !== pendingCandidate.candidateId,
+      ),
+      pendingCapture,
+    ]
+    resetCategoryInteractionState()
+    await categoryCapture.enqueueCategoryReplacement({
+      working: categoryCapture.workingCategoryCaptures(localCaptures),
+      assignments: {},
+      uncoveredRoles: currentRequirement.requiredRoles.map((role) => ({
+        category: currentCategory,
+        role,
+        reason: "not_ready_to_decide",
+      })),
+    })
   }
 
-  function finishCategoryFinalization() {
-    categoryFinalizeInFlight.current = false
-    setCategoryFinalizeStatus("idle")
-    setCategoryFinalizeAction(null)
-  }
-
-  async function advanceFromServerCursor(nextDraft: Stage3ProductDraft) {
+  function resetCategoryInteractionState() {
     setQuery("")
     setSearchResults([])
     setSearchStatus("idle")
     setPendingCandidate(null)
     setFrequency(null)
     setManualProductName("")
+    categoryCapture.resetLocalCategoryState()
     setRoleAssignments({})
-    if (nextDraft.pass === "product_capture" && nextDraft.categoryCursor) {
-      const nextIndex = requirements.findIndex(
-        (requirement) => requirement.category === nextDraft.categoryCursor,
-      )
-      if (nextIndex < 0) throw new Error("stage3_category_cursor_invalid")
-      setCategoryIndex(nextIndex)
-      setPhase("capture")
-    } else {
-      await prepareDecisionPhase(nextDraft)
-    }
   }
 
   async function chooseDecision(
@@ -1473,16 +1428,13 @@ export function Stage3ProductsFlow({
       finishDecisionSubmission()
       return
     }
-    const intent: Stage3AuthoritySemanticIntent = {
-      type: "resolve_decision",
-      subjectKey: decisionKey,
-      action: semanticAction,
-      ...(semanticAction === "plan_recommendation" &&
-      evaluation.status === "known" &&
-      evaluation.recommendation
-        ? { selectedCandidateId: evaluation.recommendation.productId }
-        : {}),
-    }
+    const intent = authorityDecisionIntent(
+      decisionKey,
+      semanticAction,
+      evaluation.status === "known" && evaluation.recommendation
+        ? evaluation.recommendation.productId
+        : undefined,
+    )
     try {
       const response = await resolveAuthorityDecision({
         draftId: sourceDraft.draftId,
@@ -1498,7 +1450,7 @@ export function Stage3ProductsFlow({
       }
       const nextDraft = response.draft
       setDraft(nextDraft)
-      setSaveLabel("Gespeichert")
+      categoryCapture.setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       analytics.track("personal_plan_stage3_decision_selected", {
         decisionType:
@@ -1509,10 +1461,7 @@ export function Stage3ProductsFlow({
               : action.kind,
         stepKey: "fit_decision",
       })
-      const remaining = deriveStage3DecisionSubjects(nextDraft).some(
-        (candidate) =>
-          !nextDraft.decisions.some((entry) => entry.decisionKey === candidate.decisionKey),
-      )
+      const remaining = hasUnresolvedDecisionSubjects(nextDraft)
       if (!remaining) void completeFlow(nextDraft)
       finishDecisionSubmission()
     } catch (error) {
@@ -1521,12 +1470,7 @@ export function Stage3ProductsFlow({
     }
   }
 
-  async function acceptClearFits(
-    clearFits: Array<{
-      subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]
-      evaluation: Extract<Stage3AuthorityEvaluation, { status: "known" }>
-    }>,
-  ) {
+  async function acceptClearFits(clearFits: Stage3ClearFit[]) {
     if (!beginDecisionSubmission()) return
     let nextDraft = activeDraft
     try {
@@ -1553,12 +1497,9 @@ export function Stage3ProductsFlow({
         nextDraft = response.draft
         setDraft(nextDraft)
       }
-      setSaveLabel("Gespeichert")
+      categoryCapture.setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
-      const remaining = deriveStage3DecisionSubjects(nextDraft).some(
-        (subject) =>
-          !nextDraft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
-      )
+      const remaining = hasUnresolvedDecisionSubjects(nextDraft)
       if (!remaining) void completeFlow(nextDraft)
       finishDecisionSubmission()
     } catch (error) {
@@ -1569,20 +1510,24 @@ export function Stage3ProductsFlow({
 
   async function acceptAutomaticOutcomes(
     sourceDraft: Stage3ProductDraft,
-    outcomes: Array<{
-      subject: ReturnType<typeof deriveStage3DecisionSubjects>[number]
-      action: Stage3AuthorityActionKind
-    }>,
+    outcomes: Stage3AutomaticOutcome[],
   ) {
     if (!beginDecisionSubmission()) return
     let nextDraft = sourceDraft
     try {
-      for (const [index, { subject, action }] of outcomes.entries()) {
-        setSaveLabel(`${index + 1} von ${outcomes.length} gespeichert`)
-        const response = await resolveAuthorityDecision({
+      for (
+        let offset = 0;
+        offset < outcomes.length;
+        offset += STAGE3_AUTHORITY_DECISION_BATCH_LIMIT
+      ) {
+        const batch = outcomes.slice(offset, offset + STAGE3_AUTHORITY_DECISION_BATCH_LIMIT)
+        categoryCapture.setSaveLabel(
+          `${Math.min(offset + batch.length, outcomes.length)} von ${outcomes.length} gespeichert`,
+        )
+        const response = await resolveAuthorityDecisions({
           draftId: nextDraft.draftId,
           expectedRevision: nextDraft.revision,
-          intent: { type: "resolve_decision", subjectKey: subject.decisionKey, action },
+          intents: automaticOutcomeIntents(batch),
         })
         if (response.status === "conflict") {
           finishDecisionSubmission()
@@ -1594,12 +1539,9 @@ export function Stage3ProductsFlow({
         nextDraft = response.draft
         setDraft(nextDraft)
       }
-      setSaveLabel("Gespeichert")
+      categoryCapture.setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
-      const remaining = deriveStage3DecisionSubjects(nextDraft).some(
-        (subject) =>
-          !nextDraft.decisions.some((decision) => decision.decisionKey === subject.decisionKey),
-      )
+      const remaining = hasUnresolvedDecisionSubjects(nextDraft)
       finishDecisionSubmission()
       if (remaining) setPhase("decisions")
       else void completeFlow(nextDraft)
@@ -1613,7 +1555,7 @@ export function Stage3ProductsFlow({
     if (decisionSubmitInFlight.current) return false
     decisionSubmitInFlight.current = true
     setDecisionSubmitStatus("saving")
-    setSaveLabel("Wird gespeichert")
+    categoryCapture.setSaveLabel("Wird gespeichert")
     return true
   }
 
@@ -1622,8 +1564,8 @@ export function Stage3ProductsFlow({
     setDecisionSubmitStatus("idle")
   }
 
-  async function removeProduct(capturedProductId: string) {
-    await saveMutation({ type: "remove_captured_product", capturedProductId })
+  function removeWorkingProduct(capturedProductId: string) {
+    categoryCapture.removeWorkingProduct(capturedProductId)
   }
 
   async function reopenCategory(category: PersonalPlanCategory) {
@@ -1659,16 +1601,14 @@ export function Stage3ProductsFlow({
           activeDraft.products.some((product) => product.identity.category === item.category),
       )
     if (previous) await reopenCategory(previous.category)
-    else if (shouldReviewProductKinds) {
-      setReviewedProductKinds(false)
-      setPhase("product_kinds")
-    } else onBackToRefinement?.()
+    else onBackToRefinement?.()
   }
 
   async function completeFlow(sourceDraft: Stage3ProductDraft) {
     if (completion || completionInFlight.current) return
     completionInFlight.current = true
     try {
+      await categoryCapture.drainQueuedCategories()
       const response = await gateway.complete({
         draftId: sourceDraft.draftId,
         expectedRevision: sourceDraft.revision,
@@ -1691,6 +1631,7 @@ export function Stage3ProductsFlow({
         return
       }
       setDraft(response.draft)
+      categoryCapture.clearCompletedDraftQueue(sourceDraft, response.draft)
       setCompletion(response)
       setPhase("handoff")
       const hasPending = response.portfolio.pendingProducts.length > 0
@@ -1716,7 +1657,7 @@ export function Stage3ProductsFlow({
   ) {
     if (saveMutationInFlight.current) return
     saveMutationInFlight.current = true
-    setSaveLabel("Wird gespeichert")
+    categoryCapture.setSaveLabel("Wird gespeichert")
     try {
       const response = await gateway.mutate({
         draftId: sourceDraft.draftId,
@@ -1729,7 +1670,8 @@ export function Stage3ProductsFlow({
           () => void saveMutation(mutation, afterSave, response.latestDraft),
         )
       setDraft(response.draft)
-      setSaveLabel("Gespeichert")
+      categoryCapture.synchronizeRevision(response.draft.revision)
+      categoryCapture.setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       afterSave?.(response.draft)
     } catch (error) {
@@ -1876,169 +1818,6 @@ function frequencyShortLabel(value: ProductFrequency): string {
       return "5-6x/W"
     case "daily_1x":
       return "Täglich"
-  }
-}
-
-export function authorityEvaluationProjection(
-  draft: Stage3ProductDraft,
-  subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
-  evaluation: Stage3AuthorityEvaluation,
-  needSummary = CATEGORY_COPY[subject.category].need,
-): Stage3ProductDecisionProjection {
-  if (evaluation.subjectKey !== subject.decisionKey || evaluation.category !== subject.category) {
-    throw new Error("stage3_authority_projection_mismatch")
-  }
-  const product = subject.capturedProductId
-    ? draft.products.find((candidate) => candidate.capturedProductId === subject.capturedProductId)
-    : undefined
-  const base = {
-    decisionKey: subject.decisionKey,
-    categoryLabel: CATEGORY_COPY[subject.category].label,
-    ...(subject.category === "oil" ? { roleLabel: ROLE_COPY[subject.role].label } : {}),
-    needSummary,
-    ...(product ? { ownedProductName: product.identity.displayName } : {}),
-  }
-
-  if (evaluation.status === "pending") {
-    return {
-      ...base,
-      kind: "pending",
-      verdictLabel: "Noch in Prüfung",
-      rationale: "Wir prüfen das Produkt, bevor wir seine Passung bewerten.",
-      actions: projectAuthorityActions(evaluation, product?.identity.displayName),
-    }
-  }
-  if (evaluation.status === "unknown") {
-    return {
-      ...base,
-      kind: "gap",
-      verdictLabel: "Noch nicht beurteilbar",
-      rationale: "Für eine verlässliche Bewertung fehlen noch bestätigte Produktinformationen.",
-      criteria: evaluation.criteria.map(projectCriterion),
-      actions: projectAuthorityActions(evaluation, product?.identity.displayName),
-    }
-  }
-  if (evaluation.status === "unsupported") {
-    return {
-      ...base,
-      kind: "gap",
-      verdictLabel: "Prüfung nicht verfügbar",
-      rationale: "Diese Passung können wir aktuell noch nicht verlässlich prüfen.",
-      actions: [],
-    }
-  }
-  const kind =
-    evaluation.verdict === "mismatch"
-      ? "mismatch"
-      : evaluation.verdict === "unknown"
-        ? "gap"
-        : "fit"
-  return {
-    ...base,
-    kind,
-    verdictLabel:
-      evaluation.verdict === "ideal"
-        ? "Passt sehr gut"
-        : evaluation.verdict === "supportive"
-          ? "Passt mit Einschränkung"
-          : evaluation.verdict === "mismatch"
-            ? "Passt nicht zu deinem Bedarf"
-            : "Noch nicht beurteilbar",
-    rationale:
-      evaluation.verdict === "ideal"
-        ? "Das Produkt erfüllt den vorgesehenen Bedarf. Das ist ein guter Baustein für deine Routine."
-        : evaluation.verdict === "supportive"
-          ? "Das Produkt unterstützt deinen Bedarf mit einer dokumentierten Einschränkung."
-          : evaluation.verdict === "mismatch"
-            ? "Die bestätigten Produkteigenschaften passen nicht zu diesem Bedarf."
-            : "Eine verlässliche Bewertung ist noch nicht möglich.",
-    criteria: evaluation.criteria.map(projectCriterion),
-    ...(evaluation.recommendation
-      ? { recommendation: { productName: evaluation.recommendation.displayName } }
-      : {}),
-    actions: projectAuthorityActions(
-      evaluation,
-      product?.identity.displayName,
-      evaluation.recommendation?.displayName,
-    ),
-  }
-}
-
-function projectCriterion(
-  criterion: Extract<
-    Stage3AuthorityEvaluation,
-    { status: "known" | "unknown" }
-  >["criteria"][number],
-) {
-  return {
-    label: criterion.label,
-    result:
-      criterion.result === "pass"
-        ? "Erfüllt"
-        : criterion.result === "caution"
-          ? "Teilweise"
-          : criterion.result === "fail"
-            ? "Nicht erfüllt"
-            : "Noch offen",
-    tone:
-      criterion.result === "pass"
-        ? ("positive" as const)
-        : criterion.result === "fail"
-          ? ("negative" as const)
-          : ("warning" as const),
-    explanation: criterion.explanation,
-  }
-}
-
-function projectAuthorityActions(
-  evaluation: Stage3AuthorityEvaluation,
-  productName?: string,
-  recommendationName?: string,
-): Stage3DecisionAction[] {
-  return evaluation.allowedActions.map((action) => {
-    switch (action) {
-      case "keep_owned":
-        return { kind: "keep", label: `${productName ?? "Produkt"} weiterverwenden`, productName }
-      case "acknowledge_override":
-        return {
-          kind: "override",
-          label: `${productName ?? "Produkt"} trotzdem behalten`,
-          productName,
-        }
-      case "plan_recommendation":
-        return {
-          kind: "plan_purchase",
-          label: `${recommendationName ?? "Empfehlung"} einplanen`,
-          productName: recommendationName,
-        }
-      case "keep_pending":
-        return { kind: "pending", label: "Prüfung später fortsetzen", productName }
-      case "leave_uncovered":
-        return {
-          kind: "skip",
-          label: productName ? "Nicht in die Routine übernehmen" : "Lücke im Plan markieren",
-          productName,
-        }
-    }
-  })
-}
-
-function semanticActionFor(
-  action: Stage3DecisionAction,
-): Stage3AuthoritySemanticIntent["action"] | null {
-  switch (action.kind) {
-    case "keep":
-      return "keep_owned"
-    case "override":
-      return "acknowledge_override"
-    case "plan_purchase":
-      return "plan_recommendation"
-    case "pending":
-      return "keep_pending"
-    case "skip":
-      return "leave_uncovered"
-    case "choose_other":
-      return null
   }
 }
 

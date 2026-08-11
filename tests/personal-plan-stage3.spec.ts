@@ -31,9 +31,9 @@ test.describe("Personal Plan products lab", () => {
     await openStage3Lab(page)
     await expect(page.locator("body")).not.toContainText(/\b(?:Pass\s*[12]|Stage\s*3|Part)\b/i)
 
-    await searchAndSelect(page, "Balance", "Conditioner Balance")
+    await searchAndSelect(page, "Balance", "Chaarlie Fixture Conditioner Balance")
     await page.getByRole("button", { name: /Weiteres Conditioner hinzufügen/ }).click()
-    await searchAndSelect(page, "Soft Care", "Conditioner Soft Care")
+    await searchAndSelect(page, "Soft Care", "Chaarlie Fixture Conditioner Soft Care")
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await expect(
       page.getByRole("heading", { name: /Welche Aufgabe hat dein Conditioner/ }),
@@ -47,7 +47,7 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: "Auswahl übernehmen" }).click()
 
     await expect(page.getByRole("heading", { name: /Dein Öl/ })).toBeVisible()
-    await searchAndSelect(page, "Length Seal", "Oil Length Seal")
+    await searchAndSelect(page, "Length Seal", "Chaarlie Fixture Oil Length Seal")
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await expect(page.getByRole("heading", { name: "Wofür nutzt du dein Öl?" })).toBeVisible()
     await page.getByRole("checkbox", { name: /Oil Length Seal: Vor der Haarwäsche/ }).check()
@@ -66,7 +66,7 @@ test.describe("Personal Plan products lab", () => {
     await page.getByLabel("Produktname").fill("Kopfhaut-Tonic")
     await page.getByRole("button", { name: "1x/Woche" }).click()
     await page.getByRole("button", { name: "Produkt speichern" }).click()
-    await expect(page.getByText(/Noch in Prüfung · gespeichert/i)).toBeVisible()
+    await expect(page.getByText("Analyse läuft", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
 
     await expect(page.getByRole("heading", { name: /Dein Hitzeschutz/ })).toBeVisible()
@@ -76,7 +76,7 @@ test.describe("Personal Plan products lab", () => {
     await page.getByLabel("Produktname").fill("Hitzeschutz Spray")
     await page.getByRole("button", { name: "1x/Woche" }).click()
     await page.getByRole("button", { name: "Produkt speichern" }).click()
-    await expect(page.getByText(/Noch in Prüfung · gespeichert/i)).toBeVisible()
+    await expect(page.getByText("Analyse läuft", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
 
     await expect(page.getByRole("heading", { name: "Produkte prüfen" })).toBeVisible()
@@ -84,10 +84,10 @@ test.describe("Personal Plan products lab", () => {
     await expect(page.getByText("Passt nicht zu deinem Bedarf", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /einplanen/ }).click()
     await expect(page.getByText("Noch in Prüfung", { exact: true })).toBeVisible()
-    await page.getByRole("button", { name: /Prüfung später fortsetzen/ }).click()
+    await page.getByRole("button", { name: /Auf Analyse warten/ }).click()
     await expect(page.getByRole("heading", { name: "Hitzeschutz Spray" })).toBeVisible()
     await expect(page.getByText("Noch in Prüfung", { exact: true })).toBeVisible()
-    await page.getByRole("button", { name: /Prüfung später fortsetzen/ }).click()
+    await page.getByRole("button", { name: /Auf Analyse warten/ }).click()
 
     await page.waitForURL((url) => url.pathname !== labPath)
     await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
