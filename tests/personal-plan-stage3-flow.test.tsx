@@ -1600,6 +1600,96 @@ test("a stale refined source offers a current-state reload instead of retrying t
   assert.match(recovery?.props.message ?? "", /aktuellen Stand/)
 })
 
+test("direct authority decision requests preserve stale refined-source recovery", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege nach jeder Wäsche",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+  ]
+  const initialDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-direct-stale-decision",
+      userId: "user-direct-stale-decision",
+      personalPlanId: "plan-direct-stale-decision",
+      refinedVersionId: "refined-direct-stale-decision",
+      requirements,
+      now: "2026-08-11T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [
+      {
+        capturedProductId: "capture-direct-stale-decision",
+        userProductId: "product-direct-stale-decision",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-direct-stale-decision",
+          displayName: "Pflege-Conditioner",
+          category: "conditioner",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "capture-direct-stale-decision",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+    ],
+  }
+  const subject = deriveStage3DecisionSubjects(initialDraft)[0]!
+  const evaluation = testAuthorityEvaluation(initialDraft, subject)
+  const fixtureGateway = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const gateway = { ...fixtureGateway, resolveDecision: undefined }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: initialDraft.personalPlanId,
+      refinedVersionId: initialDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [
+        { category: "conditioner", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+    },
+    draft: initialDraft,
+    requirements,
+    authorityEvaluations: [evaluation],
+  }
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ error: "stale_refined_source" }), {
+      status: 409,
+      headers: { "Content-Type": "application/json" },
+    })
+  try {
+    const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
+    let tree = await renderSettled(harness)
+    const decisionScreen = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
+      tree,
+      ProductDecisionScreen,
+    )
+    assert.ok(decisionScreen)
+    const action = decisionScreen.props.decisions[0]!.actions[0]!
+    await decisionScreen.props.onChooseAction(subject.decisionKey, action)
+    tree = await renderSettled(harness)
+
+    const recovery = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+      tree,
+      Stage3SystemState,
+    )
+    assert.equal(recovery?.props.state, "conflict")
+    assert.equal(recovery?.props.actionLabel, "Aktuellen Stand laden")
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test("a decision conflict retries with the latest draft revision", async () => {
   const revisions: number[] = []
   const gateway = createAuthorityTestGateway()

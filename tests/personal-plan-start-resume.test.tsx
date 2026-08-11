@@ -452,6 +452,76 @@ test("corrected Stage 3 product kinds save through Stage 2 completion and load a
   assert.equal(result.bootstrap.entryContext.refinedVersionId, "refined-new")
 })
 
+test("product-kind correction preserves its completed handoff when only Stage 3 bootstrap loading fails", async () => {
+  const session = refinementSession("complete", "refined-old")
+  const savedSession = { ...session, revision: 11, status: "in_progress" as const }
+  const handoff = { refinedVersionId: "refined-new", nextHref: "/plan-start" as const }
+  let saveCalls = 0
+  let completionCalls = 0
+  let preservedSession: Stage2RefinementSession | null = null
+
+  try {
+    await completeStage2ProductKindCorrection({
+      categories: ["shampoo", "conditioner"],
+      session,
+      stage2Gateway: {
+        saveAnswerAndComplete: async () => {
+          saveCalls += 1
+          return { session: savedSession, handoff }
+        },
+        complete: async () => {
+          completionCalls += 1
+          throw new Error("completion retry must not run")
+        },
+      },
+      loadStage3Bootstrap: async () => {
+        throw new Error("temporary bootstrap failure")
+      },
+    })
+    assert.fail("expected the first bootstrap load to fail")
+  } catch (error) {
+    assert.ok(error instanceof Stage3ProductKindCorrectionError)
+    assert.equal(error.code, "bootstrap_failed_after_completion")
+    assert.equal(error.savedSession?.status, "complete")
+    assert.equal(error.savedSession?.completedHandoff?.refinedVersionId, "refined-new")
+    preservedSession = error.savedSession
+  }
+
+  const expectedBootstrap = {
+    entryContext: {
+      schemaVersion: 1 as const,
+      personalPlanId: "plan-1",
+      refinedVersionId: "refined-new",
+      orderedCategories: [],
+      inventoryPrompts: [],
+    },
+    draft: {} as never,
+    requirements: [],
+    authorityEvaluations: [],
+  }
+  const result = await completeStage2ProductKindCorrection({
+    categories: ["shampoo", "conditioner"],
+    session,
+    pendingBootstrapSession: preservedSession,
+    stage2Gateway: {
+      saveAnswerAndComplete: async () => {
+        saveCalls += 1
+        throw new Error("saved answers must not be replayed")
+      },
+      complete: async () => {
+        completionCalls += 1
+        throw new Error("completion must not be replayed")
+      },
+    },
+    loadStage3Bootstrap: async () => expectedBootstrap,
+  })
+
+  assert.equal(saveCalls, 1)
+  assert.equal(completionCalls, 0)
+  assert.equal(result.bootstrap, expectedBootstrap)
+  assert.equal(result.session.completedHandoff?.refinedVersionId, "refined-new")
+})
+
 test("product-kind correction completion failure preserves a saved session for completion-only retry", async () => {
   const session = refinementSession("complete", "refined-old")
   const savedSession = { ...session, revision: 11, status: "in_progress" as const }

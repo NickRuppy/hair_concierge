@@ -74,6 +74,7 @@ export class Stage3ProductKindCorrectionError extends Error {
     public readonly code:
       | "save_failed"
       | "completion_failed_after_save"
+      | "bootstrap_failed_after_completion"
       | "revision_conflict"
       | "stage2_session_unavailable",
     message = code,
@@ -89,19 +90,27 @@ export type Stage3ProductKindCorrectionResult = {
   handoff: Stage2CompleteResult
   bootstrap: Stage3Bootstrap
   pendingCompletionSession: null
+  pendingBootstrapSession: null
 }
 
 export async function completeStage2ProductKindCorrection(input: {
   categories: PersonalPlanCategory[]
   session: Stage2RefinementSession
   pendingCompletionSession?: Stage2RefinementSession | null
+  pendingBootstrapSession?: Stage2RefinementSession | null
   stage2Gateway: Pick<Stage2RefinementGateway, "saveAnswerAndComplete" | "complete">
   loadStage3Bootstrap: (refinedVersionId: string) => Promise<Stage3Bootstrap>
 }): Promise<Stage3ProductKindCorrectionResult> {
   try {
     let handoff: Stage2CompleteResult
-    let nextSession = input.pendingCompletionSession ?? input.session
-    if (input.pendingCompletionSession) {
+    let nextSession =
+      input.pendingBootstrapSession ?? input.pendingCompletionSession ?? input.session
+    if (input.pendingBootstrapSession) {
+      if (!input.pendingBootstrapSession.completedHandoff) {
+        throw new Stage3ProductKindCorrectionError("stage2_session_unavailable")
+      }
+      handoff = input.pendingBootstrapSession.completedHandoff
+    } else if (input.pendingCompletionSession) {
       handoff = await input.stage2Gateway.complete({
         expectedRevision: input.pendingCompletionSession.revision,
       })
@@ -123,12 +132,22 @@ export async function completeStage2ProductKindCorrection(input: {
       status: "complete",
       completedHandoff: handoff,
     }
-    const bootstrap = await input.loadStage3Bootstrap(handoff.refinedVersionId)
+    let bootstrap: Stage3Bootstrap
+    try {
+      bootstrap = await input.loadStage3Bootstrap(handoff.refinedVersionId)
+    } catch {
+      throw new Stage3ProductKindCorrectionError(
+        "bootstrap_failed_after_completion",
+        "bootstrap_failed_after_completion",
+        completedSession,
+      )
+    }
     return {
       session: completedSession,
       handoff,
       bootstrap,
       pendingCompletionSession: null,
+      pendingBootstrapSession: null,
     }
   } catch (error) {
     if (
@@ -301,6 +320,7 @@ export function PlanStartCustomerJourney({
   const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
   const stage2SeedRef = useRef(initialRefinementSession)
   const pendingStage2CompletionRef = useRef<Stage2RefinementSession | null>(null)
+  const pendingStage3BootstrapRef = useRef<Stage2RefinementSession | null>(null)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
   const [returningToRefinement, setReturningToRefinement] = useState(false)
   const [stage3LoadState, setStage3LoadState] = useState<
@@ -332,17 +352,22 @@ export function PlanStartCustomerJourney({
 
   const handleProductKindsCorrection = useCallback(
     async (categories: PersonalPlanCategory[]) => {
-      const session = pendingStage2CompletionRef.current ?? stage2SeedRef.current
+      const session =
+        pendingStage3BootstrapRef.current ??
+        pendingStage2CompletionRef.current ??
+        stage2SeedRef.current
       if (!session) throw new Stage3ProductKindCorrectionError("stage2_session_unavailable")
       try {
         const result = await completeStage2ProductKindCorrection({
           categories,
           session,
           pendingCompletionSession: pendingStage2CompletionRef.current,
+          pendingBootstrapSession: pendingStage3BootstrapRef.current,
           stage2Gateway,
           loadStage3Bootstrap,
         })
         pendingStage2CompletionRef.current = result.pendingCompletionSession
+        pendingStage3BootstrapRef.current = result.pendingBootstrapSession
         stage2SeedRef.current = result.session
         setStage3Bootstrap(result.bootstrap)
         setStage3LoadState("idle")
@@ -354,6 +379,10 @@ export function PlanStartCustomerJourney({
               pendingStage2CompletionRef.current = error.savedSession
               stage2SeedRef.current = error.savedSession
             }
+          }
+          if (error.code === "bootstrap_failed_after_completion" && error.savedSession) {
+            pendingStage3BootstrapRef.current = error.savedSession
+            stage2SeedRef.current = error.savedSession
           }
           throw error
         }

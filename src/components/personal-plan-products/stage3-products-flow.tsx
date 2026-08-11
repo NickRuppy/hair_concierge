@@ -34,6 +34,7 @@ import {
 } from "@/lib/personal-plan/products/gateway"
 import {
   createHttpStage3ProductsGateway,
+  parseStage3GatewayErrorCode,
   parseStage3RevisionConflict,
 } from "@/lib/personal-plan/products/http-gateway"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
@@ -1038,7 +1039,10 @@ export function Stage3ProductsFlow({
       timingReported = true
       const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
       if (conflict) return conflict
-      if (!response.ok || !body || typeof body !== "object" || !("status" in body)) {
+      if (!response.ok) {
+        throw new Stage3ProductsGatewayError(parseStage3GatewayErrorCode(body))
+      }
+      if (!body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
       }
       return body as Stage3MutationResponse
@@ -1115,7 +1119,10 @@ export function Stage3ProductsFlow({
       timingReported = true
       const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
       if (conflict) return conflict
-      if (!response.ok || !body || typeof body !== "object" || !("status" in body)) {
+      if (!response.ok) {
+        throw new Stage3ProductsGatewayError(parseStage3GatewayErrorCode(body))
+      }
+      if (!body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
       }
       return body as Stage3MutationResponse
@@ -1775,7 +1782,7 @@ export function Stage3ProductsFlow({
     setSystemIssue({
       kind: code === "revision_conflict" ? "conflict" : "error",
       title:
-        code === "completion_failed_after_save"
+        code === "completion_failed_after_save" || code === "bootstrap_failed_after_completion"
           ? "Produktarten gespeichert. Übergabe fehlgeschlagen."
           : code === "revision_conflict"
             ? "Deine Verfeinerung wurde zwischenzeitlich aktualisiert."
@@ -1783,9 +1790,11 @@ export function Stage3ProductsFlow({
       message:
         code === "completion_failed_after_save"
           ? "Du musst die Produktarten nicht noch einmal speichern. Versuche nur die Übergabe erneut."
-          : code === "revision_conflict"
-            ? "Wir laden den neuesten Stand, bevor du weiter machst."
-            : "Versuche es noch einmal.",
+          : code === "bootstrap_failed_after_completion"
+            ? "Du musst die Produktarten nicht noch einmal speichern. Lade nur den Produkt-Schritt erneut."
+            : code === "revision_conflict"
+              ? "Wir laden den neuesten Stand, bevor du weiter machst."
+              : "Versuche es noch einmal.",
       retry,
     })
   }
