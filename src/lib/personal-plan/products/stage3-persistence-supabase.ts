@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import { cleanProductDisplayName } from "@/lib/product-identity"
 import type { Stage3ProductDraft } from "./contracts"
 import type { Stage3ProductionPersistence } from "./production-persistence-gateway"
 import { searchOwnedProductCatalog, type CatalogProductRecord } from "./inventory-search"
@@ -116,7 +117,9 @@ export function createSupabaseStage3ProductionPersistence(
                   id: String(row.id),
                   category,
                   brandName: typeof row.brand === "string" ? row.brand : null,
-                  displayName: String(row.name),
+                  displayName: cleanProductDisplayName(String(row.name), {
+                    brand: typeof row.brand === "string" ? row.brand : null,
+                  }),
                   imageUrl: typeof row.image_url === "string" ? row.image_url : null,
                   active: row.is_active === true,
                   lifecycleStatus:
@@ -135,7 +138,7 @@ export function createSupabaseStage3ProductionPersistence(
     async resolveOwnedCatalogProduct(input) {
       const { data: candidate, error: candidateError } = await client
         .from("products")
-        .select("id,name,image_url,category_key,is_active,lifecycle_status")
+        .select("id,brand,name,image_url,category_key,is_active,lifecycle_status")
         .eq("id", input.candidateId)
         .eq("category_key", input.category)
         .maybeSingle()
@@ -158,7 +161,9 @@ export function createSupabaseStage3ProductionPersistence(
       return {
         userProductId: String(owned.id),
         productId: String(owned.catalog_product_id),
-        displayName: String(candidate.name),
+        displayName: cleanProductDisplayName(String(candidate.name), {
+          brand: typeof candidate.brand === "string" ? candidate.brand : null,
+        }),
         imageUrl: typeof candidate.image_url === "string" ? candidate.image_url : null,
         category: owned.category as never,
       }
