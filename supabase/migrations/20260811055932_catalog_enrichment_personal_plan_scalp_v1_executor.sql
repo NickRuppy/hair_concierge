@@ -118,7 +118,7 @@ DECLARE
   v_expected_brand_name text;
   v_expected_line_name text;
   v_existing_count integer;
-  v_approved_batch_fingerprint constant text := 'c324d3c818e9b1d5d8980f487eab6988b9a7ec64db40451115f7370c56c170d6';
+  v_approved_batch_fingerprint constant text := 'e6cbbe9ce2dc3d3b29655741cfe7572dd29d8b5bb5bea1a7225fd58359328e50';
 BEGIN
   IF p_reviewed_by <> 'nick' THEN
     RAISE EXCEPTION 'catalog enrichment Scalp reviewer must be nick';
@@ -143,7 +143,7 @@ BEGIN
 
   IF v_batch->>'schema_version' IS DISTINCT FROM 'personal-plan-catalog-enrichment-scalp-v1'
      OR v_batch->>'batch_id' IS DISTINCT FROM 'personal-plan-scalp-launch-v1'
-     OR v_batch->>'cohort_index_fingerprint' IS DISTINCT FROM 'f5e5fc5d74068647a9213467d9a914a3c683c58fafe5b8b4facf257616a079c7' THEN
+     OR v_batch->>'cohort_index_fingerprint' IS DISTINCT FROM '8ed553db305cf715058eece4b364565b3552df2505516657c9d2cf67437aa01f' THEN
     RAISE EXCEPTION 'catalog enrichment Scalp batch header is invalid';
   END IF;
 

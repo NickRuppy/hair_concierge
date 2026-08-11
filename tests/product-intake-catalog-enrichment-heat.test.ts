@@ -224,7 +224,58 @@ test("linked migration output is parsed without an operator-supplied state claim
     ),
     "applied",
   )
+  assert.throws(
+    () =>
+      parseHeatLinkedMigrationState(
+        "  20260810090000 |                | 2026-08-10 09:00:00\n  20260810090000 | 20260810090000 | 2026-08-10 09:00:00\n",
+      ),
+    /duplicate/,
+  )
   assert.throws(() => parseHeatLinkedMigrationState("no migration rows\n"), /omitted/)
+})
+
+test("Heat parses Supabase CLI JSON migration output and fails closed on ambiguous rows", () => {
+  const migration = "20260810090000_catalog_enrichment_personal_plan_heat_v1_executor"
+  assert.equal(
+    parseHeatLinkedMigrationState(
+      JSON.stringify({
+        migrations: [
+          { local: "00001", remote: "00001", time: "2020-01-01T00:00:00Z" },
+          { local: "20260409", remote: "20260409", time: "2026-04-09T00:00:00Z" },
+          { local: "20260810090000", remote: "", time: "2026-08-10T09:00:00Z" },
+        ],
+        message: "untrusted",
+      }),
+      migration,
+    ),
+    "absent",
+  )
+  assert.equal(
+    parseHeatLinkedMigrationState(
+      JSON.stringify({
+        migrations: [
+          { local: "20260810090000", remote: "20260810090000", time: "2026-08-10T09:00:00Z" },
+        ],
+      }),
+      migration,
+    ),
+    "applied",
+  )
+  for (const output of [
+    '{"migrations":',
+    JSON.stringify({ migrations: {} }),
+    JSON.stringify({ migrations: [{ local: "20260409", remote: "20260409" }] }),
+    JSON.stringify({ migrations: [{ local: "20260810090000" }] }),
+    JSON.stringify({ migrations: [{ local: "20260810090000", remote: "20260810090001" }] }),
+    JSON.stringify({
+      migrations: [
+        { local: "20260810090000", remote: "" },
+        { local: "20260810090000", remote: "20260810090000" },
+      ],
+    }),
+  ]) {
+    assert.throws(() => parseHeatLinkedMigrationState(output, migration))
+  }
 })
 
 test("apply arguments require the immutable approved package fingerprint", () => {
