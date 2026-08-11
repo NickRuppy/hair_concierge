@@ -276,8 +276,8 @@ function PersonalPlanQuizRestart({ className = "" }: { className?: string }) {
         type="button"
       >
         {status === "restarting"
-          ? "Haar-Check wird vorbereitet …"
-          : "Du möchtest deine Angaben ändern? Haar-Check neu starten"}
+          ? "Haaranalyse wird vorbereitet …"
+          : "Du möchtest deine Angaben ändern? Haaranalyse neu starten"}
       </button>
       {status === "error" ? (
         <p aria-live="polite" className="mt-3 text-sm" role="status">
