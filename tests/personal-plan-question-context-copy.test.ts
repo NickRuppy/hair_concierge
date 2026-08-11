@@ -34,7 +34,7 @@ test("Personal Plan question helpers use the approved bounded context copy", () 
   assert.match(currentProblems, /helper: "Wähle alles aus, was du aktuell bemerkst\."/)
   assert.match(
     recurrence,
-    /eyebrow=\{screen === "admission_recurrence" \? "Zurück zu deinen Haarthemen" : undefined\}/,
+    /eyebrow=\{screen === "admission_recurrence" \? "Deine Haarthemen" : undefined\}/,
   )
   assert.match(recurrence, /`Wie oft bemerkst du \$\{primaryConcernLabel\}\?`/)
   assert.match(recurrence, /Denk daran, wie es in letzter Zeit meistens war\./)

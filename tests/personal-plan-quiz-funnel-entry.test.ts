@@ -158,7 +158,7 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.doesNotMatch(quiz, /Um dich wohlzufühlen mit gesundem und schönem Haar/)
   assert.match(quiz, /4\.000\+[\s\S]*Antworten aus unserer Haarpflege-Umfrage/)
   assert.match(data, /L\. · Chaarlie-Kundin/)
-  assert.match(quiz, /Hat dich Haarpflege schon Zeit oder Geld gekostet\?/)
+  assert.match(quiz, /Hast du schon Produkte gekauft, die dann doch nicht gepasst haben\?/)
   assert.match(quiz, /Wie wichtig ist dir dein Haargefühl\?/)
   assert.match(quiz, /Sehr wichtig/)
   assert.match(quiz, /rounded-b-none rounded-t-2xl/)

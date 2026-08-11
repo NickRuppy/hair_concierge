@@ -402,8 +402,6 @@ function ScreenHeader({
 }) {
   const currentSection = getPersonalPlanQuizSectionId(screen)
   const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
-  const currentSectionLabel =
-    SECTION_LABELS.find((section) => section.id === currentSection)?.label ?? "Profil"
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur">
@@ -425,9 +423,9 @@ function ScreenHeader({
         <span className="justify-self-center font-header text-xl font-medium text-[var(--brand-plum-darkest)]">
           chaarlie
         </span>
-        <span className="w-full whitespace-nowrap text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
-          {currentSectionLabel}
-        </span>
+        {/* Empty third cell keeps the wordmark optically centred; the stepper
+            below is the only stage indicator. */}
+        <span aria-hidden="true" />
       </div>
       <div className="mx-auto mt-2 max-w-[44rem]" aria-label="Fortschritt">
         <div className="relative h-2" data-layout="progress-track-with-dots">
@@ -856,6 +854,24 @@ function QuestionScreen({
     onClear: () => void
   }
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const notePanelRef = useRef<HTMLDivElement>(null)
+  const noteVisible = Boolean(standaloneOtherText?.visible)
+  // The note panel opens below the fold on short viewports, so bring it into
+  // view as soon as it mounts — otherwise the autofocused textarea is offscreen.
+  useEffect(() => {
+    if (!noteVisible) return
+    notePanelRef.current?.scrollIntoView({
+      block: "center",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    })
+  }, [noteVisible, prefersReducedMotion])
+
+  // A typed note is an answer in its own right, so it counts towards the CTA
+  // tally next to the picked option cards.
+  const noteHasContent = Boolean(standaloneOtherText?.value?.trim())
+  const selectedCount = selected.length + (noteHasContent ? 1 : 0)
+
   return (
     <section className="mx-auto w-full max-w-[40rem]">
       {intro ? (
@@ -974,7 +990,10 @@ function QuestionScreen({
             selected={standaloneOtherText.visible || Boolean(standaloneOtherText.value?.trim())}
           />
           {standaloneOtherText.visible ? (
-            <div className="mt-3 rounded-2xl border border-[var(--brand-plum-light)] bg-white p-4">
+            <div
+              className="mt-3 rounded-2xl border border-[var(--brand-plum-light)] bg-white p-4"
+              ref={notePanelRef}
+            >
               <label
                 className="mb-2 block text-sm font-medium text-[var(--brand-plum-darkest)]"
                 htmlFor="personal-plan-current-concerns-other-text"
@@ -1017,8 +1036,8 @@ function QuestionScreen({
       {config.multi ? (
         <MobileBottomAction>
           <Button variant="funnelCta" disabled={!canContinue} onClick={onContinue}>
-            <span className="personal-plan-multi-count" key={selected.length}>
-              {selected.length > 0 ? `${selected.length} ausgewählt · Weiter` : "Weiter"}
+            <span className="personal-plan-multi-count" key={selectedCount}>
+              {selectedCount > 0 ? `${selectedCount} ausgewählt · Weiter` : "Weiter"}
             </span>
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
@@ -1339,7 +1358,7 @@ function AdmissionScreen({
           }
         : screen === "admission_practical_cost"
           ? {
-              title: "Hat dich Haarpflege schon Zeit oder Geld gekostet?",
+              title: "Hast du schon Produkte gekauft, die dann doch nicht gepasst haben?",
               subtitle: undefined,
               selected: ephemeral.admissionPracticalCost,
               options: PRACTICAL_COST_OPTIONS,
@@ -1358,7 +1377,7 @@ function AdmissionScreen({
 
   return (
     <ContextPanelLayout
-      eyebrow={screen === "admission_recurrence" ? "Zurück zu deinen Haarthemen" : undefined}
+      eyebrow={screen === "admission_recurrence" ? "Deine Haarthemen" : undefined}
       image={`${PERSONAL_PLAN_ASSET_BASE}/${admissionImage.file}`}
       imagePosition={admissionImage.position}
       subtitle={
@@ -1434,10 +1453,8 @@ function ProfileSummaryScreen({
 
   return (
     <section className="mx-auto w-full max-w-[40rem]">
-      <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-        Viel Potenzial
-      </p>
-      <h1 className="mt-2 text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:mt-3 sm:text-[2.4rem] [@media(max-height:700px)]:mt-2 [@media(max-height:700px)]:text-[1.625rem]">
+      {/* No eyebrow here: the green "Viel Potenzial" badge below is the single verdict. */}
+      <h1 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.4rem] [@media(max-height:700px)]:text-[1.625rem]">
         Dein Haarprofil ist bereit für einen persönlichen Plan.
       </h1>
 
@@ -2140,7 +2157,8 @@ function EmailCapture({
           ) : null}
           <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-[var(--text-sub)]">
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
-            Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.
+            Hierhin schicken wir deine Auswertung – so kannst du sie jederzeit wieder öffnen. Kein
+            Spam.
           </p>
           <Button className="mt-7" disabled={emailStepBusy} type="submit" variant="funnelCta">
             {emailStepBusy ? emailStepBusyLabel : "Weiter zu meiner Auswertung"}
@@ -2762,8 +2780,7 @@ export function PersonalPlanQuiz({
         {
           field: "goals",
           title: `Was wünschst du dir für ${TEXTURE_COPY[answers.texture ?? "wavy"].possessive}?`,
-          helper:
-            "Wähle alles aus, was dir wichtig ist. Du musst dich nicht auf ein Ziel begrenzen.",
+          helper: "Wähl ruhig mehrere Ziele aus – alles, was dir wichtig ist.",
           options: getGoalOptions(answers.texture),
           multi: true,
           visual: true,
