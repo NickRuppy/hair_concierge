@@ -15,6 +15,7 @@ const CHAT_PREFIXES = [
 
 const CHAT_EXACT = ["docs/langfuse-quality-loop.md"]
 const CHAT_EXCLUDE = ["src/lib/product-matching/product-list-chunks.ts"]
+const CHAT_EXCLUDE_PREFIXES = ["src/lib/routines/personal-plan/application/"]
 
 const RETRIEVAL_PREFIXES = [
   "src/lib/product-matching/product-list-chunks.ts",
@@ -73,6 +74,7 @@ const PERSONAL_PLAN_JOURNEY_PREFIXES = [
   "supabase/migrations/",
   "supabase/tests/",
   "src/lib/personal-plan/",
+  "src/lib/routines/personal-plan/",
   "src/lib/personal-plan-field-test/",
   "src/lib/product-intake/",
   "src/lib/auth/",
@@ -129,7 +131,11 @@ export function hasFullCiMarker({ prTitle = "", prBody = "" } = {}) {
 
 export function classifyCiScope(files, prContext = {}) {
   const fullCi = hasFullCiMarker(prContext) || prContext.forceFullCi === true
-  const chatFiles = files.filter((file) => !CHAT_EXCLUDE.includes(file))
+  const chatFiles = files.filter(
+    (file) =>
+      !CHAT_EXCLUDE.includes(file) &&
+      !CHAT_EXCLUDE_PREFIXES.some((prefix) => file.startsWith(prefix)),
+  )
   return {
     chat_eval: fullCi || chatFiles.some((file) => matches(file, CHAT_PREFIXES, CHAT_EXACT)),
     retrieval_eval:
