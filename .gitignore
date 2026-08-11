@@ -175,6 +175,24 @@ test-screenshots*/
 /ops/catalog-enrichment/personal-plan-launch-v1/heat/taft-gliss-lovely-long-150ml/images/final/*
 !/ops/catalog-enrichment/personal-plan-launch-v1/heat/taft-gliss-lovely-long-150ml/images/final/dm-packshot.webp
 
+# Approved Personal Plan Scalp final assets only.
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/
+/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*/
+/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*/*
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*/images/
+/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*/images/*
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*/images/final/
+/ops/catalog-enrichment/personal-plan-launch-v1/scalp/*/images/final/*
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/balea-professional-aha-scalp-peeling/images/final/balea-professional-aha-scalp-peeling-478290983df3.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/balea-professional-sensitive-scalp-serum/images/final/balea-professional-sensitive-scalp-serum-b98faea00ab9.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/eucerin-dermocapillaire-urea-intensive-tonic/images/final/eucerin-dermocapillaire-urea-intensiv-tonikum-c99df18a696b.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/gliss-scalp-balance-clarifying-serum/images/final/gliss-scalp-balance-clarifying-serum-a1b9b7c69938.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/head-shoulders-derma-x-pro-scalp-leave-in/images/final/head-shoulders-derma-x-pro-scalp-leave-in-4efb303b25dd.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/isana-professional-aha-pha-scalp-peeling/images/final/isana-professional-aha-pha-scalp-peeling-cf3f6d227eeb.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/loreal-elvital-fiber-booster-scalp-serum/images/final/loreal-elvital-fiber-booster-scalp-serum-f054aa159e75.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum/images/final/the-ordinary-multi-peptide-hair-density-serum-6bb9be89b327.webp
+
 # Reviewed Personal Plan Heat evidence only.
 !/data/
 /data/*
@@ -193,3 +211,13 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-launch-v1/heat/loreal-elvital-dream-length-defeat-the-heat-150ml.json
 !/data/catalog-enrichment/personal-plan-launch-v1/heat/taft-aloe-boost-hydra-protect-150ml.json
 !/data/catalog-enrichment/personal-plan-launch-v1/heat/taft-gliss-lovely-long-150ml.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/
+/data/catalog-enrichment/personal-plan-launch-v1/scalp/*
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/balea-professional-aha-scalp-peeling.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/balea-professional-sensitive-scalp-serum.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/eucerin-dermocapillaire-urea-intensive-tonic.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/gliss-scalp-balance-clarifying-serum.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/head-shoulders-derma-x-pro-scalp-leave-in.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/isana-professional-aha-pha-scalp-peeling.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/loreal-elvital-fiber-booster-scalp-serum.json
+!/data/catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum.json
