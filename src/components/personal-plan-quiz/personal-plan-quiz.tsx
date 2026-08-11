@@ -132,7 +132,7 @@ import {
 } from "./quiz-data"
 
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
-const AUTO_ADVANCE_MS = 260
+const AUTO_ADVANCE_MS = 400
 const SCREEN_EXIT_MS = 200
 const subscribeToClientReady = () => () => {}
 const getClientReadySnapshot = () => true
@@ -610,10 +610,10 @@ function OptionCard({
       <button
         aria-pressed={selected}
         className={cn(
-          "personal-plan-option-card group relative flex w-full items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+          "personal-plan-option-card group relative flex w-full items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
           selected
-            ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
-            : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
+            ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
+            : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-24px_rgba(var(--brand-plum-rgb),0.5)]",
         )}
         onClick={onClick}
         type="button"
@@ -655,25 +655,19 @@ function OptionCard({
     )
   }
 
-  // Graded tint follows pip strength: deepest tint = strongest reading = most pips.
-  const rampRatio =
-    showPips && intensity.max > 1 ? Math.max(0, intensity.pips - 1) / (intensity.max - 1) : 0
-  const rampAlpha = !selected && showPips ? 0.05 + rampRatio * 0.12 : null
-
+  // Intensity cards keep uniform chrome: the graded pip dots alone encode the
+  // scale, so an unselected card never carries a tint that reads as "chosen".
   return (
     <button
       aria-pressed={selected}
       className={cn(
-        "personal-plan-option-card group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+        "personal-plan-option-card group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
         hasMedia ? "min-h-0" : "px-4 py-4",
         selected
-          ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
-          : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
+          ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
+          : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-24px_rgba(var(--brand-plum-rgb),0.5)]",
       )}
       onClick={onClick}
-      style={
-        rampAlpha ? { backgroundColor: `rgba(var(--brand-plum-rgb), ${rampAlpha})` } : undefined
-      }
       type="button"
     >
       {option.portrait ? (
@@ -815,6 +809,7 @@ function QuestionScreen({
   onContinue,
   onEmpty,
   noneOption,
+  noneSelected,
   canContinue,
   intro,
   transition,
@@ -829,9 +824,12 @@ function QuestionScreen({
   selected: readonly string[]
   onSelect: (value: string) => void
   onContinue: () => void
+  /** Toggles the explicit "nothing applies" answer. Never navigates by itself. */
   onEmpty?: () => void
-  /** Card-styled, mutually-exclusive "Nichts davon" shown above the Weiter CTA. */
+  /** Card-styled, mutually-exclusive "Nichts davon" shown with the other options. */
   noneOption?: { label: string; description?: string }
+  /** True while the none card is the standing answer, so it renders pressed. */
+  noneSelected?: boolean
   canContinue: boolean
   intro?: { title: string; body: string }
   transition?: string
@@ -941,8 +939,8 @@ function QuestionScreen({
           )
         })}
         {noneOption && onEmpty ? (
-          // Mutually exclusive shortcut: choosing it clears any concerns and
-          // advances, so it never shows a lingering pre-selected state on entry.
+          // Mutually exclusive answer, not a shortcut: pressing it clears the
+          // concerns and stays put, so the screen always advances via Weiter.
           <OptionCard
             multi
             onClick={onEmpty}
@@ -951,7 +949,7 @@ function QuestionScreen({
               label: noneOption.label,
               description: noneOption.description,
             }}
-            selected={false}
+            selected={Boolean(noneSelected)}
           />
         ) : null}
       </div>
@@ -2509,7 +2507,11 @@ export function PersonalPlanQuiz({
     scheduleNext(next)
   }
 
-  function selectMulti(config: QuizQuestionConfig, value: string) {
+  function selectMulti(
+    config: QuizQuestionConfig,
+    value: string,
+    { clearWhenEmpty = false }: { clearWhenEmpty?: boolean } = {},
+  ) {
     const current = (answers[config.field] as readonly string[] | undefined) ?? []
     let next: string[]
     if (value === config.exclusiveValue) {
@@ -2522,6 +2524,11 @@ export function PersonalPlanQuiz({
     }
     setAnswers((existing) => {
       const updated = { ...existing, [config.field]: next } as PersonalPlanQuizAnswers
+      // On screens with a "Nichts davon" card the empty array is that card's
+      // answer, so unticking the last real option must fall back to unanswered.
+      if (clearWhenEmpty && next.length === 0) {
+        delete (updated as Record<string, unknown>)[config.field]
+      }
       if (config.field === "currentConcerns") delete updated.concernRecurrence
       // Drop the free-text detail when "Etwas anderes" is no longer selected.
       if (config.field === "blockers" && !next.includes("other")) {
@@ -2538,6 +2545,7 @@ export function PersonalPlanQuiz({
       intro?: { title: string; body: string }
       onEmpty?: () => void
       noneOption?: { label: string; description?: string }
+      noneSelected?: boolean
       otherText?: {
         triggerValue: string
         value?: string
@@ -2558,7 +2566,10 @@ export function PersonalPlanQuiz({
     },
   ) {
     const selected = selectedValues(config, answers)
-    const canContinue = options?.continueValidity ?? selected.length > 0
+    const noneSelected = Boolean(options?.noneSelected)
+    // A pressed "Nichts davon" is a real answer, so it unlocks Weiter — but it
+    // stays out of the "n ausgewählt" count, which only speaks for real options.
+    const canContinue = options?.continueValidity ?? (selected.length > 0 || noneSelected)
 
     return (
       <QuestionScreen
@@ -2567,10 +2578,13 @@ export function PersonalPlanQuiz({
         intro={options?.intro}
         onEmpty={options?.onEmpty}
         noneOption={options?.noneOption}
+        noneSelected={noneSelected}
         onContinue={() => goNext()}
         onOtherTextChange={options?.otherText?.onChange}
         onSelect={(value) =>
-          config.multi ? selectMulti(config, value) : selectSingle(config, value)
+          config.multi
+            ? selectMulti(config, value, { clearWhenEmpty: Boolean(options?.noneOption) })
+            : selectSingle(config, value)
         }
         otherTextPlaceholder={options?.otherText?.placeholder}
         otherTextMaxLength={options?.otherText?.maxLength}
@@ -2704,15 +2718,25 @@ export function PersonalPlanQuiz({
     if (screen === "scalp_concerns") {
       const config = QUESTION_CONFIGS.scalp_concerns
       if (!config) return null
+      // An empty array is the explicit "Nichts davon" answer; undefined means
+      // the question is still unanswered.
+      const noneSelected = answers.scalpConcerns?.length === 0
       return renderQuestion(config, undefined, {
         noneOption: {
           label: "Nichts davon",
           description: "Meine Kopfhaut macht mir gerade keine Probleme.",
         },
+        noneSelected,
         onEmpty: () => {
-          const next = { ...answers, scalpConcerns: [] }
-          setAnswers(next)
-          goNext(next)
+          setAnswers((existing) => {
+            const updated = { ...existing }
+            if (existing.scalpConcerns?.length === 0) {
+              delete updated.scalpConcerns
+            } else {
+              updated.scalpConcerns = []
+            }
+            return updated
+          })
         },
       })
     }
