@@ -60,13 +60,14 @@ DECLARE
   v_new_notes constant text := 'Nick approved the final shadow-free image on 2026-08-11; official alpha source with deterministic symmetric shadow mask.';
   v_approved_correction_fingerprint constant text := '31211abbdd19464bd9d2d151c59e239279909769e2f1ea8e2737bf60d6e29828';
 BEGIN
-  IF p_reviewed_by <> 'nick' THEN
+  IF p_reviewed_by IS DISTINCT FROM 'nick' THEN
     RAISE EXCEPTION 'Scalp image correction reviewer must be nick';
   END IF;
-  IF p_expected_correction_fingerprint !~ '^[a-f0-9]{64}$' THEN
+  IF p_expected_correction_fingerprint IS NULL
+     OR p_expected_correction_fingerprint !~ '^[a-f0-9]{64}$' THEN
     RAISE EXCEPTION 'Scalp image correction fingerprint must be lowercase sha256';
   END IF;
-  IF p_expected_correction_fingerprint <> v_approved_correction_fingerprint THEN
+  IF p_expected_correction_fingerprint IS DISTINCT FROM v_approved_correction_fingerprint THEN
     RAISE EXCEPTION 'Scalp image correction fingerprint is not approved';
   END IF;
 

@@ -1,5 +1,5 @@
 begin;
-select plan(23);
+select plan(25);
 
 select has_table('public', 'catalog_enrichment_image_corrections', 'image correction has a dedicated receipt ledger');
 select ok((select relrowsecurity from pg_catalog.pg_class where oid = 'public.catalog_enrichment_image_corrections'::regclass), 'image correction ledger has RLS');
@@ -106,6 +106,18 @@ select throws_ok(
   null,
   'Scalp image correction reviewer must be nick',
   'an unapproved reviewer cannot apply the correction'
+);
+select throws_ok(
+  $$select * from public.apply_catalog_enrichment_scalp_image_correction_v1('31211abbdd19464bd9d2d151c59e239279909769e2f1ea8e2737bf60d6e29828', null)$$,
+  null,
+  'Scalp image correction reviewer must be nick',
+  'a null reviewer cannot bypass confirmation'
+);
+select throws_ok(
+  $$select * from public.apply_catalog_enrichment_scalp_image_correction_v1(null, 'nick')$$,
+  null,
+  'Scalp image correction fingerprint must be lowercase sha256',
+  'a null fingerprint cannot bypass confirmation'
 );
 select is(
   (select image_url from public.products where id = '58aa2f19-b23a-4e09-ab0f-68c359371c9e'),
