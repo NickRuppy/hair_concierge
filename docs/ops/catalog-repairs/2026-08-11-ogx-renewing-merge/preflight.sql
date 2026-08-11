@@ -100,13 +100,16 @@ WITH constants AS (
         FROM public.personal_plan_product_drafts d, constants c
         WHERE d.status = 'active' AND d.payload::text LIKE '%' || c.duplicate_id::text || '%'
         UNION ALL
-        SELECT walk.draft_id, walk.path || object_item.key, object_item.value
-        FROM walk CROSS JOIN LATERAL jsonb_each(walk.value) object_item
-        WHERE jsonb_typeof(walk.value) = 'object'
-        UNION ALL
-        SELECT walk.draft_id, walk.path || (array_item.ordinality - 1)::text, array_item.value
-        FROM walk CROSS JOIN LATERAL jsonb_array_elements(walk.value) WITH ORDINALITY array_item(value, ordinality)
-        WHERE jsonb_typeof(walk.value) = 'array'
+        SELECT walk.draft_id, walk.path || child.path_part, child.value
+        FROM walk
+        CROSS JOIN LATERAL (
+          SELECT object_item.key AS path_part, object_item.value
+          FROM jsonb_each(CASE WHEN jsonb_typeof(walk.value) = 'object' THEN walk.value ELSE '{}'::jsonb END) object_item
+          UNION ALL
+          SELECT (array_item.ordinality - 1)::text AS path_part, array_item.value
+          FROM jsonb_array_elements(CASE WHEN jsonb_typeof(walk.value) = 'array' THEN walk.value ELSE '[]'::jsonb END)
+            WITH ORDINALITY array_item(value, ordinality)
+        ) child
       )
       SELECT coalesce(jsonb_agg(jsonb_build_object(
         'idHash', encode(sha256(convert_to(walk.draft_id::text, 'utf8')), 'hex'),

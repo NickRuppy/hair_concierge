@@ -14,8 +14,9 @@ must never be sent through a browser/API route.
   provenance, and records `replaced_by` the canonical row.
 
 The forward operator moves the four duplicate identifiers, two matched owner
-links, one approved submission pointer, and the two active Stage 3 draft
-references. It deliberately removes the duplicate's three `regular` specs;
+links, one approved submission pointer, and every active Stage 3 draft
+reference enumerated by the fresh preflight. It deliberately removes the
+duplicate's three `regular` specs;
 they are not authority for the canonical product. The `user_products` update
 uses the established trigger, so affected Personal Plans receive a monotonic
 source revision/outbox change.

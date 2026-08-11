@@ -22,6 +22,7 @@ DECLARE
   v_canonical_row public.products%ROWTYPE;
   v_duplicate_row public.products%ROWTYPE;
   v_count integer;
+  v_expected_draft_count integer;
   v_linked_submission_owner_count integer;
   v_fingerprint text;
   v_current_snapshot jsonb;
@@ -62,7 +63,7 @@ BEGIN
     'activeDraftIdHashes', (SELECT coalesce(jsonb_agg(encode(sha256(convert_to(d.id::text, 'utf8')), 'hex') ORDER BY d.id), '[]'::jsonb) FROM public.personal_plan_product_drafts d WHERE d.status = 'active' AND d.payload::text LIKE '%' || v_duplicate::text || '%'),
     'activeDraftRevisionFingerprint', (SELECT encode(sha256(convert_to(coalesce(jsonb_agg(jsonb_build_object('idHash', encode(sha256(convert_to(d.id::text, 'utf8')), 'hex'), 'revision', d.revision) ORDER BY d.id)::text, '[]'), 'utf8')), 'hex') FROM public.personal_plan_product_drafts d WHERE d.status = 'active' AND d.payload::text LIKE '%' || v_duplicate::text || '%'),
     'draftProductIdPaths', (SELECT coalesce(jsonb_agg(jsonb_build_object('idHash', encode(sha256(convert_to(d.id::text, 'utf8')), 'hex'), 'revision', d.revision, 'paths', refs.paths) ORDER BY d.id), '[]'::jsonb) FROM public.personal_plan_product_drafts d CROSS JOIN LATERAL (SELECT jsonb_agg(jsonb_build_array('products', (item.ordinality - 1)::text, 'identity', 'productId') ORDER BY item.ordinality) AS paths FROM jsonb_array_elements(coalesce(d.payload->'products', '[]'::jsonb)) WITH ORDINALITY AS item(value, ordinality) WHERE item.value #>> '{identity,productId}' = v_duplicate::text) refs WHERE d.status = 'active' AND jsonb_array_length(coalesce(refs.paths, '[]'::jsonb)) > 0),
-    'allDuplicateUuidStringPaths', (WITH RECURSIVE walk(draft_id, path, value) AS (SELECT d.id, ARRAY[]::text[], d.payload FROM public.personal_plan_product_drafts d WHERE d.status = 'active' AND d.payload::text LIKE '%' || v_duplicate::text || '%' UNION ALL SELECT walk.draft_id, walk.path || object_item.key, object_item.value FROM walk CROSS JOIN LATERAL jsonb_each(walk.value) object_item WHERE jsonb_typeof(walk.value) = 'object' UNION ALL SELECT walk.draft_id, walk.path || (array_item.ordinality - 1)::text, array_item.value FROM walk CROSS JOIN LATERAL jsonb_array_elements(walk.value) WITH ORDINALITY array_item(value, ordinality) WHERE jsonb_typeof(walk.value) = 'array') SELECT coalesce(jsonb_agg(jsonb_build_object('idHash', encode(sha256(convert_to(walk.draft_id::text, 'utf8')), 'hex'), 'path', to_jsonb(walk.path)) ORDER BY walk.draft_id, walk.path), '[]'::jsonb) FROM walk WHERE jsonb_typeof(walk.value) = 'string' AND trim(both '"' FROM walk.value::text) = v_duplicate::text),
+    'allDuplicateUuidStringPaths', (WITH RECURSIVE walk(draft_id, path, value) AS (SELECT d.id, ARRAY[]::text[], d.payload FROM public.personal_plan_product_drafts d WHERE d.status = 'active' AND d.payload::text LIKE '%' || v_duplicate::text || '%' UNION ALL SELECT walk.draft_id, walk.path || child.path_part, child.value FROM walk CROSS JOIN LATERAL (SELECT object_item.key AS path_part, object_item.value FROM jsonb_each(CASE WHEN jsonb_typeof(walk.value) = 'object' THEN walk.value ELSE '{}'::jsonb END) object_item UNION ALL SELECT (array_item.ordinality - 1)::text AS path_part, array_item.value FROM jsonb_array_elements(CASE WHEN jsonb_typeof(walk.value) = 'array' THEN walk.value ELSE '[]'::jsonb END) WITH ORDINALITY array_item(value, ordinality)) child) SELECT coalesce(jsonb_agg(jsonb_build_object('idHash', encode(sha256(convert_to(walk.draft_id::text, 'utf8')), 'hex'), 'path', to_jsonb(walk.path)) ORDER BY walk.draft_id, walk.path), '[]'::jsonb) FROM walk WHERE jsonb_typeof(walk.value) = 'string' AND trim(both '"' FROM walk.value::text) = v_duplicate::text),
     'affectedPlanSourceStates', (SELECT coalesce(jsonb_agg(jsonb_build_object('planIdHash', encode(sha256(convert_to(plan.id::text, 'utf8')), 'hex'), 'sourceRevision', plan.source_revision, 'expectedSourceRevisionDelta', owner_links.link_count, 'userProductIdHashes', owner_links.user_product_id_hashes) ORDER BY plan.id), '[]'::jsonb) FROM (SELECT up.user_id, count(*)::integer AS link_count, jsonb_agg(encode(sha256(convert_to(up.id::text, 'utf8')), 'hex') ORDER BY up.id) AS user_product_id_hashes FROM public.user_products up WHERE up.catalog_product_id = v_duplicate AND up.identity_status = 'matched' AND up.ownership_status = 'owned' GROUP BY up.user_id) owner_links JOIN public.personal_plans plan ON plan.user_id = owner_links.user_id)
   ) INTO v_current_snapshot;
   IF v_current_snapshot IS DISTINCT FROM v_before_image
@@ -140,8 +141,8 @@ BEGIN
         SELECT entry->>'idHash' FROM jsonb_array_elements(v_draft_product_id_paths) entry
       )
     FOR UPDATE;
-  SELECT count(*) INTO v_count FROM jsonb_array_elements(v_draft_product_id_paths);
-  IF v_count <> 2 THEN RAISE EXCEPTION 'OGX repair active-draft reference count drifted: %', v_count USING ERRCODE = '22000'; END IF;
+  SELECT count(*) INTO v_expected_draft_count FROM jsonb_array_elements(v_draft_product_id_paths);
+  IF v_expected_draft_count = 0 THEN RAISE EXCEPTION 'OGX repair fresh snapshot contains no active draft references' USING ERRCODE = '22000'; END IF;
   IF EXISTS (SELECT 1 FROM public.product_relationships WHERE source_product_id IN (v_canonical, v_duplicate) OR target_product_id IN (v_canonical, v_duplicate))
      OR EXISTS (SELECT 1 FROM public.user_product_usage WHERE product_id = v_duplicate)
      OR EXISTS (SELECT 1 FROM public.product_image_assets WHERE product_id = v_duplicate)
@@ -190,7 +191,7 @@ BEGIN
      SET payload = final_payload.payload, revision = draft.revision + 1, updated_at = now()
     FROM final_payload WHERE draft.id = final_payload.id;
   GET DIAGNOSTICS v_count = ROW_COUNT;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'OGX repair draft path set drifted: %', v_count USING ERRCODE = '22000'; END IF;
+  IF v_count <> v_expected_draft_count THEN RAISE EXCEPTION 'OGX repair draft path set drifted: %', v_count USING ERRCODE = '22000'; END IF;
   DELETE FROM public.product_shampoo_specs WHERE product_id = v_duplicate;
   DELETE FROM public.product_shampoo_specs WHERE product_id = v_canonical;
   INSERT INTO public.product_shampoo_specs(product_id, thickness, shampoo_bucket, scalp_route, cleansing_intensity) VALUES (v_canonical, 'normal', 'normal', 'balanced', 'gentle');
