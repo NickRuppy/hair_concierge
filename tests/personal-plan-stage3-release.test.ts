@@ -122,7 +122,7 @@ test("Stage 3 fixture lab is available only in dev, Preview, or explicitly flagg
       CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED: "true",
       NODE_ENV: "production",
     }),
-    false,
+    true,
   )
   assert.equal(isPersonalPlanStage3LabEnabled({ CI: "true", NODE_ENV: "production" }), false)
   assert.equal(
