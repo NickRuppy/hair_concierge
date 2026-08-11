@@ -23,6 +23,7 @@ DECLARE
   v_duplicate_row public.products%ROWTYPE;
   v_count integer;
   v_expected_draft_count integer;
+  v_expected_user_product_count integer;
   v_linked_submission_owner_count integer;
   v_fingerprint text;
   v_current_snapshot jsonb;
@@ -126,8 +127,10 @@ BEGIN
   END IF;
 
   PERFORM 1 FROM public.user_products WHERE catalog_product_id = v_duplicate AND identity_status = 'matched' AND ownership_status = 'owned' FOR UPDATE;
+  SELECT count(*) INTO v_expected_user_product_count FROM jsonb_array_elements(v_user_product_id_hashes);
+  IF v_expected_user_product_count = 0 THEN RAISE EXCEPTION 'OGX repair fresh snapshot contains no matched owner links' USING ERRCODE = '22000'; END IF;
   SELECT count(*) INTO v_count FROM public.user_products WHERE catalog_product_id = v_duplicate AND identity_status = 'matched' AND ownership_status = 'owned';
-  IF v_count <> 2 THEN RAISE EXCEPTION 'OGX repair user-product reference count drifted: %', v_count USING ERRCODE = '22000'; END IF;
+  IF v_count <> v_expected_user_product_count THEN RAISE EXCEPTION 'OGX repair user-product reference count drifted: %', v_count USING ERRCODE = '22000'; END IF;
   IF EXISTS (SELECT 1 FROM public.user_products d JOIN public.user_products c ON c.user_id = d.user_id AND c.category = d.category AND c.catalog_product_id = v_canonical AND c.identity_status = 'matched' AND c.ownership_status = 'owned' WHERE d.catalog_product_id = v_duplicate AND d.identity_status = 'matched' AND d.ownership_status = 'owned') THEN
     RAISE EXCEPTION 'OGX repair would collide with an existing canonical owner link' USING ERRCODE = '22000';
   END IF;
@@ -161,7 +164,7 @@ BEGIN
        WHERE link->>'userProductIdHash' IS NOT NULL
      );
   GET DIAGNOSTICS v_count = ROW_COUNT;
-  IF v_count <> 2 - v_linked_submission_owner_count THEN RAISE EXCEPTION 'OGX repair direct owner-link set drifted: %', v_count USING ERRCODE = '22000'; END IF;
+  IF v_count <> v_expected_user_product_count - v_linked_submission_owner_count THEN RAISE EXCEPTION 'OGX repair direct owner-link set drifted: %', v_count USING ERRCODE = '22000'; END IF;
   UPDATE public.product_submissions SET approved_product_id = v_canonical
    WHERE approved_product_id = v_duplicate AND status IN ('approved', 'matched_existing')
      AND encode(sha256(convert_to(id::text, 'utf8')), 'hex') IN (SELECT jsonb_array_elements_text(v_submission_id_hashes));

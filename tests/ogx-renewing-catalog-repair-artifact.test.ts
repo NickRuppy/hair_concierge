@@ -21,7 +21,8 @@ test("OGX repair package is privacy-safe and blocked until fresh preflight captu
 
   assert.equal(before.canonicalProduct.id, canonicalId)
   assert.equal(before.duplicateProduct.id, duplicateId)
-  assert.equal(before.duplicateProduct.expected.activeDraftReferenceCount, 1)
+  assert.equal("matchedUserProductCount" in before.duplicateProduct.expected, false)
+  assert.equal("activeDraftReferenceCount" in before.duplicateProduct.expected, false)
   assert.equal(before.captureStatus, "revalidate_before_apply")
   assert.equal(before.snapshotFingerprint, null)
   assert.deepEqual(before.duplicateIdentifiers, [])
@@ -41,6 +42,7 @@ test("OGX repair package is privacy-safe and blocked until fresh preflight captu
   assert.match(merge, /allDuplicateUuidStringPaths/)
   assert.match(merge, /SELECT walk\.draft_id, walk\.path \|\| child\.path_part/)
   assert.match(merge, /v_expected_draft_count/)
+  assert.match(merge, /v_expected_user_product_count/)
   assert.match(merge, /approvedSubmissionLinks/)
   assert.match(merge, /outside products\[\*\]\.identity\.productId/)
   assert.match(merge, /direct owner-link set drifted/)
