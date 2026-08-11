@@ -64,7 +64,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /<Link[\s\S]*href=\{nextHref\}[\s\S]*Plan ansehen/)
   assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)
   assert.match(client, /Dein Bedarfsplan ist bereit/)
-  assert.match(client, /Zuerst siehst du, was dein Haar laut deinem Quiz braucht/)
+  assert.match(client, /Zuerst siehst du, was dein Haar laut deiner Haaranalyse braucht/)
   assert.doesNotMatch(client, /Verfeinere ihn jetzt mit deinen Produkten/)
   assert.match(route, /loadPersonalPlanReadiness\(admin, user\.id, user\.email, leadId\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)

@@ -172,7 +172,13 @@ export function RoutineProposalSheetBody({
             Ablehnen
           </Button>
         ) : null}
-        <Button type="button" variant="cta" disabled={actionsDisabled} onClick={onAccept}>
+        <Button
+          className="sm:w-auto"
+          type="button"
+          variant="funnelCta"
+          disabled={actionsDisabled}
+          onClick={onAccept}
+        >
           {submitting
             ? "Wird gespeichert …"
             : retrying

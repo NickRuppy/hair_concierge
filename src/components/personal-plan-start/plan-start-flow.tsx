@@ -589,7 +589,7 @@ export function PlanStartLoading() {
       stageLabel="Dein Plan"
       overline="Dein persönlicher Plan"
       title="Dein Bedarfsplan entsteht"
-      lead="Wir bereiten die Empfehlungen aus deinem Quiz vor."
+      lead="Wir bereiten die Empfehlungen aus deiner Haaranalyse vor."
       icon={<Loader2 className="h-7 w-7 animate-spin" aria-hidden="true" />}
       dataState="loading"
     >

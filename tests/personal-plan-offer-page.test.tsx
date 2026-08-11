@@ -464,12 +464,12 @@ test("personal plan restart is an explicit opt-in after the final CTA only", () 
     />,
   )
 
-  assert.match(enabledHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+  assert.match(enabledHtml, /Du möchtest deine Angaben ändern\? Haaranalyse neu starten/)
   assert.ok(
     enabledHtml.indexOf('data-offer-cta="final"') <
-      enabledHtml.indexOf("Du möchtest deine Angaben ändern? Haar-Check neu starten"),
+      enabledHtml.indexOf("Du möchtest deine Angaben ändern? Haaranalyse neu starten"),
   )
-  assert.doesNotMatch(disabledHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+  assert.doesNotMatch(disabledHtml, /Du möchtest deine Angaben ändern\? Haaranalyse neu starten/)
 })
 
 test("personal plan restart stays out of paid, legacy, and default recovery result paths", () => {
@@ -496,8 +496,8 @@ test("personal plan restart stays out of paid, legacy, and default recovery resu
     />,
   )
 
-  assert.doesNotMatch(paidHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
-  assert.doesNotMatch(legacyHtml, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+  assert.doesNotMatch(paidHtml, /Du möchtest deine Angaben ändern\? Haaranalyse neu starten/)
+  assert.doesNotMatch(legacyHtml, /Du möchtest deine Angaben ändern\? Haaranalyse neu starten/)
 })
 
 test("personal plan recovery exposes restart only when the server explicitly allows it", () => {
@@ -515,7 +515,7 @@ test("personal plan recovery exposes restart only when the server explicitly all
   )
 
   assert.match(html, /Dein Ergebnis ist noch nicht vollständig bereit\./)
-  assert.match(html, /Du möchtest deine Angaben ändern\? Haar-Check neu starten/)
+  assert.match(html, /Du möchtest deine Angaben ändern\? Haaranalyse neu starten/)
 })
 
 test("personal plan return recovery reloads with its return entry context", () => {

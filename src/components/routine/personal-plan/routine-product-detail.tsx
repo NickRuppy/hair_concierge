@@ -79,7 +79,12 @@ export function RoutineProductDetail({
 
       <div className="flex flex-col gap-2 sm:flex-row">
         {canOpenProduct ? (
-          <Button type="button" variant="cta" onClick={() => onOpenProduct?.(item)}>
+          <Button
+            className="sm:w-auto"
+            type="button"
+            variant="funnelCta"
+            onClick={() => onOpenProduct?.(item)}
+          >
             Zum Produkt
           </Button>
         ) : null}

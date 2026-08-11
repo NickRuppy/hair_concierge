@@ -306,7 +306,7 @@ export function RefinementOptions<T extends string>({
   onNoneChange,
   allowNone,
   noneLabel = "Nichts davon",
-  noneDescription = "Diese Frage bewusst leer abschließen.",
+  noneDescription = "Diese Frage bewusst leer lassen.",
   noneAriaLabel,
   className,
 }: {

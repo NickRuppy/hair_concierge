@@ -65,7 +65,7 @@ test("stage 3 shell and transitions reuse onboarding language without internal n
   assert.match(captureHtml, /Gespeichert/)
   assert.match(captureHtml, /<h1[^>]*>Welche Produkte nutzt du\?<\/h1>/)
   assert.match(captureHtml, /Jetzt finden wir die Produkte, die du wirklich benutzt\./)
-  assert.match(captureHtml, /quiz-btn-primary/)
+  assert.match(captureHtml, /rounded-full bg-\[var\(--brand-coral\)\]/)
   assert.match(captureHtml, /font-header/)
   assert.doesNotMatch(captureHtml, />(?:Pass|Teil\s+\d|Stage|Stufe)</i)
   assert.match(decisionHtml, /<h1[^>]*>Wie gut passen deine Produkte\?<\/h1>/)

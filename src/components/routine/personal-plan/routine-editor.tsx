@@ -378,8 +378,9 @@ export function RoutineEditor({
           Abbrechen
         </Button>
         <Button
+          className="sm:w-auto"
           type="button"
-          variant="cta"
+          variant="funnelCta"
           disabled={!dirty || isSubmitting}
           onClick={() => onSubmitOperations([...operations])}
         >

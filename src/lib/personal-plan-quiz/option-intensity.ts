@@ -4,9 +4,8 @@
  * Each qualifying option renders a leading "pip" glyph (filled dots out of a
  * per-question maximum) instead of a diagnostic icon. The filled count encodes
  * how strongly the option sits on its question's scale — the strongest reading
- * gets the most pips AND the deepest tint. Mappings are derived from each
- * option's semantics (not its list index), so reordering the option list never
- * silently flips the ramp.
+ * gets the most pips. Mappings are derived from each option's semantics (not
+ * its list index), so reordering the option list never silently flips the ramp.
  */
 
 export type OptionIntensity = {

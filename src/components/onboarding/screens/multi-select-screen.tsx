@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import { Button } from "@/components/ui/button"
 import type { IconName } from "@/components/ui/icon"
 import { InfoTip } from "@/components/ui/info-tip"
 import { INFO_TIPS, type InfoTipId } from "@/lib/help/info-tips"
@@ -124,13 +125,9 @@ export function MultiSelectScreen({
         className="animate-fade-in-up"
         style={{ animationDelay: `${100 + (options.length + 1) * 60}ms` }}
       >
-        <button
-          onClick={onContinue}
-          disabled={!hasSelection || isSaving}
-          className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
-        >
+        <Button onClick={onContinue} disabled={!hasSelection || isSaving} variant="funnelCta">
           {isSaving ? "Speichern..." : continueLabel}
-        </button>
+        </Button>
       </div>
     </div>
   )

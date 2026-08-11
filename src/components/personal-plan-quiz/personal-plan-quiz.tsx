@@ -71,6 +71,7 @@ import {
   EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
   parseEmailDeliverabilityRejection,
   suggestEmailCorrection,
+  type EmailDeliverabilityRejectionResponse,
 } from "@/lib/email-deliverability-shared"
 import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
 import {
@@ -132,7 +133,14 @@ import {
 } from "./quiz-data"
 
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
-const AUTO_ADVANCE_MS = 260
+
+/**
+ * Obergrenze fuer die Vorabpruefung der E-Mail-Adresse. Der Server deckelt den
+ * DNS-Lookup bei 3 Sekunden; diese Grenze faengt haengende Verbindungen ab,
+ * damit der Funnel nie an einem Spinner stehen bleibt.
+ */
+const EMAIL_PRECHECK_TIMEOUT_MS = 6000
+const AUTO_ADVANCE_MS = 400
 const SCREEN_EXIT_MS = 200
 const subscribeToClientReady = () => () => {}
 const getClientReadySnapshot = () => true
@@ -394,8 +402,6 @@ function ScreenHeader({
 }) {
   const currentSection = getPersonalPlanQuizSectionId(screen)
   const currentSectionIndex = SECTION_LABELS.findIndex((section) => section.id === currentSection)
-  const currentSectionLabel =
-    SECTION_LABELS.find((section) => section.id === currentSection)?.label ?? "Profil"
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--brand-plum-light)] bg-[hsl(var(--background))]/95 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur">
@@ -417,9 +423,9 @@ function ScreenHeader({
         <span className="justify-self-center font-header text-xl font-medium text-[var(--brand-plum-darkest)]">
           chaarlie
         </span>
-        <span className="w-full whitespace-nowrap text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
-          {currentSectionLabel}
-        </span>
+        {/* Empty third cell keeps the wordmark optically centred; the stepper
+            below is the only stage indicator. */}
+        <span aria-hidden="true" />
       </div>
       <div className="mx-auto mt-2 max-w-[44rem]" aria-label="Fortschritt">
         <div className="relative h-2" data-layout="progress-track-with-dots">
@@ -559,11 +565,16 @@ function HairPortraitFigure({
 }
 
 /** Leading intensity indicator for icon-less scale/frequency answer rows. */
-function IntensityPips({ intensity }: { intensity: OptionIntensity }) {
+function IntensityPips({ intensity, selected }: { intensity: OptionIntensity; selected: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="flex h-10 w-10 shrink-0 items-center justify-center gap-[2px] rounded-xl bg-[var(--brand-plum-ice)]"
+      className={cn(
+        "flex h-10 w-10 shrink-0 items-center justify-center gap-[2px] rounded-xl",
+        // The selected card fills with plum-ice, so the well switches to white
+        // to keep the pips readable instead of dissolving into the card.
+        selected ? "bg-white" : "bg-[var(--brand-plum-ice)]",
+      )}
     >
       {intensity.unknown ? (
         <HelpCircle className="h-5 w-5 text-[var(--brand-plum)]" />
@@ -610,10 +621,10 @@ function OptionCard({
       <button
         aria-pressed={selected}
         className={cn(
-          "personal-plan-option-card group relative flex w-full items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+          "personal-plan-option-card group relative flex w-full items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
           selected
-            ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
-            : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
+            ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
+            : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-24px_rgba(var(--brand-plum-rgb),0.5)]",
         )}
         onClick={onClick}
         type="button"
@@ -655,25 +666,19 @@ function OptionCard({
     )
   }
 
-  // Graded tint follows pip strength: deepest tint = strongest reading = most pips.
-  const rampRatio =
-    showPips && intensity.max > 1 ? Math.max(0, intensity.pips - 1) / (intensity.max - 1) : 0
-  const rampAlpha = !selected && showPips ? 0.05 + rampRatio * 0.12 : null
-
+  // Intensity cards keep uniform chrome: the graded pip dots alone encode the
+  // scale, so an unselected card never carries a tint that reads as "chosen".
   return (
     <button
       aria-pressed={selected}
       className={cn(
-        "personal-plan-option-card group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
+        "personal-plan-option-card group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
         hasMedia ? "min-h-0" : "px-4 py-4",
         selected
-          ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
-          : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]",
+          ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
+          : "border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-24px_rgba(var(--brand-plum-rgb),0.5)]",
       )}
       onClick={onClick}
-      style={
-        rampAlpha ? { backgroundColor: `rgba(var(--brand-plum-rgb), ${rampAlpha})` } : undefined
-      }
       type="button"
     >
       {option.portrait ? (
@@ -733,11 +738,18 @@ function OptionCard({
         )}
       >
         {Icon ? (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
+          <span
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[var(--brand-plum)]",
+              // Same plum-ice as the selected card fill, so the chip flips to
+              // white once chosen and the icon keeps its own container.
+              selected ? "bg-white" : "bg-[var(--brand-plum-ice)]",
+            )}
+          >
             <Icon className="h-5 w-5" />
           </span>
         ) : showPips ? (
-          <IntensityPips intensity={intensity} />
+          <IntensityPips intensity={intensity} selected={selected} />
         ) : null}
         <span
           className={cn(
@@ -815,6 +827,7 @@ function QuestionScreen({
   onContinue,
   onEmpty,
   noneOption,
+  noneSelected = false,
   canContinue,
   intro,
   transition,
@@ -829,9 +842,12 @@ function QuestionScreen({
   selected: readonly string[]
   onSelect: (value: string) => void
   onContinue: () => void
+  /** Toggles the explicit "nothing applies" answer. Never navigates by itself. */
   onEmpty?: () => void
-  /** Card-styled, mutually-exclusive "Nichts davon" shown above the Weiter CTA. */
+  /** Card-styled, mutually-exclusive "Nichts davon" shown with the other options. */
   noneOption?: { label: string; description?: string }
+  /** True while the none card is the standing answer, so it renders pressed. */
+  noneSelected?: boolean
   canContinue: boolean
   intro?: { title: string; body: string }
   transition?: string
@@ -850,6 +866,24 @@ function QuestionScreen({
     onClear: () => void
   }
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const notePanelRef = useRef<HTMLDivElement>(null)
+  const noteVisible = Boolean(standaloneOtherText?.visible)
+  // The note panel opens below the fold on short viewports, so bring it into
+  // view as soon as it mounts — otherwise the autofocused textarea is offscreen.
+  useEffect(() => {
+    if (!noteVisible) return
+    notePanelRef.current?.scrollIntoView({
+      block: "center",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    })
+  }, [noteVisible, prefersReducedMotion])
+
+  // A typed note is an answer in its own right, so it counts towards the CTA
+  // tally next to the picked option cards.
+  const noteHasContent = Boolean(standaloneOtherText?.value?.trim())
+  const selectedCount = selected.length + (noteHasContent ? 1 : 0)
+
   return (
     <section className="mx-auto w-full max-w-[40rem]">
       {intro ? (
@@ -941,8 +975,8 @@ function QuestionScreen({
           )
         })}
         {noneOption && onEmpty ? (
-          // Mutually exclusive shortcut: choosing it clears any concerns and
-          // advances, so it never shows a lingering pre-selected state on entry.
+          // Mutually exclusive answer, not a shortcut: pressing it clears the
+          // concerns and stays put, so the screen always advances via Weiter.
           <OptionCard
             multi
             onClick={onEmpty}
@@ -951,7 +985,7 @@ function QuestionScreen({
               label: noneOption.label,
               description: noneOption.description,
             }}
-            selected={false}
+            selected={noneSelected}
           />
         ) : null}
       </div>
@@ -968,7 +1002,10 @@ function QuestionScreen({
             selected={standaloneOtherText.visible || Boolean(standaloneOtherText.value?.trim())}
           />
           {standaloneOtherText.visible ? (
-            <div className="mt-3 rounded-2xl border border-[var(--brand-plum-light)] bg-white p-4">
+            <div
+              className="mt-3 rounded-2xl border border-[var(--brand-plum-light)] bg-white p-4"
+              ref={notePanelRef}
+            >
               <label
                 className="mb-2 block text-sm font-medium text-[var(--brand-plum-darkest)]"
                 htmlFor="personal-plan-current-concerns-other-text"
@@ -1010,14 +1047,9 @@ function QuestionScreen({
       ) : null}
       {config.multi ? (
         <MobileBottomAction>
-          <Button
-            className="h-12 w-full text-base"
-            variant="cta"
-            disabled={!canContinue}
-            onClick={onContinue}
-          >
-            <span className="personal-plan-multi-count" key={selected.length}>
-              {selected.length > 0 ? `${selected.length} ausgewählt · Weiter` : "Weiter"}
+          <Button variant="funnelCta" disabled={!canContinue} onClick={onContinue}>
+            <span className="personal-plan-multi-count" key={selectedCount}>
+              {selectedCount > 0 ? `${selectedCount} ausgewählt · Weiter` : "Weiter"}
             </span>
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
@@ -1105,7 +1137,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         Deine Antworten werden zu einem echten Haarprofil.
       </h1>
 
-      <div className="relative mx-auto mt-5 h-36 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:mt-6 sm:h-56 [@media(max-height:700px)]:h-28">
+      <div className="relative mx-auto mt-5 h-36 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:mt-6 sm:h-44 [@media(max-height:700px)]:h-28">
         <Image
           alt="Drei lachende Frauen"
           className="object-cover"
@@ -1117,8 +1149,8 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         />
       </div>
 
-      <div className="mt-5 flex flex-col items-center sm:mt-8">
-        <span className="font-header text-[2.75rem] font-medium leading-none text-[var(--brand-plum)] sm:text-[4.25rem]">
+      <div className="mt-5 flex flex-col items-center sm:mt-6">
+        <span className="font-header text-[2.75rem] font-medium leading-none text-[var(--brand-plum)] sm:text-[3.5rem]">
           4.000+
         </span>
         <p className="mx-auto mt-3 max-w-md text-base leading-7 text-[var(--text-sub)]">
@@ -1126,7 +1158,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         </p>
       </div>
 
-      <blockquote className="mx-auto mt-5 max-w-md rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white p-4 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)] sm:mt-8 sm:rounded-[2rem] sm:p-6">
+      <blockquote className="mx-auto mt-5 max-w-md rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white p-4 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)] sm:mt-6 sm:rounded-[2rem] sm:p-5">
         <p className="text-base italic leading-7 text-[var(--brand-plum-darkest)] sm:text-lg sm:leading-8">
           {`„${EARLY_PROOF_TESTIMONIAL.quote}“`}
         </p>
@@ -1136,7 +1168,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
       </blockquote>
 
       <MobileBottomAction>
-        <Button className="h-12 w-full text-base" variant="cta" onClick={onContinue}>
+        <Button variant="funnelCta" onClick={onContinue}>
           Weiter
         </Button>
       </MobileBottomAction>
@@ -1168,7 +1200,7 @@ function AnalysisBridgeScreen({
       title="Jetzt machen wir dein Profil genauer."
     >
       <MobileBottomAction>
-        <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
+        <Button onClick={onContinue} variant="funnelCta">
           Haaranalyse fortsetzen
         </Button>
       </MobileBottomAction>
@@ -1190,7 +1222,6 @@ const MIDPOINT_DENSITY_LABELS = {
 }
 const MIDPOINT_REVEAL_MS = 350
 const MIDPOINT_CHECK_DELAY_MS = 500
-const MIDPOINT_HOLD_MS = 2400
 
 function MidpointProfileScreen({
   answers,
@@ -1213,6 +1244,8 @@ function MidpointProfileScreen({
   const [revealed, setRevealed] = useState(0)
   const [ready, setReady] = useState(false)
 
+  // Reveal timers only depend on the memoised rows, never on `onContinue` (a new
+  // inline arrow on every parent render), so the sequence runs once per mount.
   useEffect(() => {
     const timers: number[] = []
     rows.forEach((_, index) => {
@@ -1220,9 +1253,8 @@ function MidpointProfileScreen({
     })
     const readyAt = MIDPOINT_REVEAL_MS * rows.length + MIDPOINT_CHECK_DELAY_MS
     timers.push(window.setTimeout(() => setReady(true), readyAt))
-    timers.push(window.setTimeout(onContinue, readyAt + MIDPOINT_HOLD_MS))
     return () => timers.forEach((timer) => window.clearTimeout(timer))
-  }, [onContinue, rows])
+  }, [rows])
 
   return (
     <section
@@ -1273,6 +1305,14 @@ function MidpointProfileScreen({
           </div>
         ))}
       </dl>
+
+      {/* Rendered from mount and only disabled until the reveal finishes, so the
+          dock keeps its space and fades in instead of popping into the layout. */}
+      <MobileBottomAction className="w-full max-w-sm">
+        <Button disabled={!ready} onClick={onContinue} variant="funnelCta">
+          Weiter
+        </Button>
+      </MobileBottomAction>
     </section>
   )
 }
@@ -1330,7 +1370,7 @@ function AdmissionScreen({
           }
         : screen === "admission_practical_cost"
           ? {
-              title: "Hat dich Haarpflege schon Zeit oder Geld gekostet?",
+              title: "Hast du schon Produkte gekauft, die dann doch nicht gepasst haben?",
               subtitle: undefined,
               selected: ephemeral.admissionPracticalCost,
               options: PRACTICAL_COST_OPTIONS,
@@ -1349,7 +1389,7 @@ function AdmissionScreen({
 
   return (
     <ContextPanelLayout
-      eyebrow={screen === "admission_recurrence" ? "Zurück zu deinen Haarthemen" : undefined}
+      eyebrow={screen === "admission_recurrence" ? "Deine Haarthemen" : undefined}
       image={`${PERSONAL_PLAN_ASSET_BASE}/${admissionImage.file}`}
       imagePosition={admissionImage.position}
       subtitle={
@@ -1405,7 +1445,7 @@ function ReframeScreen({ onContinue }: { onContinue: () => void }) {
         Mit dem richtigen Plan wird es einfach.
       </p>
       <MobileBottomAction className="order-4 sm:col-start-1">
-        <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
+        <Button onClick={onContinue} variant="funnelCta">
           Weiter
         </Button>
       </MobileBottomAction>
@@ -1425,10 +1465,8 @@ function ProfileSummaryScreen({
 
   return (
     <section className="mx-auto w-full max-w-[40rem]">
-      <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-        Viel Potenzial
-      </p>
-      <h1 className="mt-2 text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:mt-3 sm:text-[2.4rem] [@media(max-height:700px)]:mt-2 [@media(max-height:700px)]:text-[1.625rem]">
+      {/* No eyebrow here: the green "Viel Potenzial" badge below is the single verdict. */}
+      <h1 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-[var(--brand-plum-darkest)] sm:text-[2.4rem] [@media(max-height:700px)]:text-[1.625rem]">
         Dein Haarprofil ist bereit für einen persönlichen Plan.
       </h1>
 
@@ -1490,7 +1528,7 @@ function ProfileSummaryScreen({
         sollten medizinisch oder dermatologisch eingeordnet werden.
       </p>
       <MobileBottomAction>
-        <Button className="h-12 w-full text-base" variant="cta" onClick={onContinue}>
+        <Button variant="funnelCta" onClick={onContinue}>
           Meinen Plan vorbereiten
         </Button>
       </MobileBottomAction>
@@ -1573,12 +1611,7 @@ function CommitmentOverlay({
         >
           {commitment.question}
         </p>
-        <Button
-          className="mt-5 h-12 w-full text-base"
-          id="ppq-commit-button"
-          onClick={onConfirm}
-          variant="cta"
-        >
+        <Button className="mt-5" id="ppq-commit-button" onClick={onConfirm} variant="funnelCta">
           {commitment.button}
         </Button>
       </div>
@@ -1752,7 +1785,7 @@ function LoadingScreen({
               <p className="mt-3 text-xl font-semibold text-[var(--brand-plum-darkest)]">
                 Deine persönliche Auswertung ist bereit.
               </p>
-              <Button className="mt-5 h-12 w-full text-base" onClick={onContinue} variant="cta">
+              <Button className="mt-5" onClick={onContinue} variant="funnelCta">
                 Weiter
               </Button>
             </div>
@@ -1765,11 +1798,7 @@ function LoadingScreen({
                 Deine Antworten sind sicher gespeichert. Bitte versuche die Vorbereitung noch
                 einmal.
               </p>
-              <Button
-                className="mt-5 h-12 w-full text-base"
-                onClick={onRetryPreparation}
-                variant="cta"
-              >
+              <Button className="mt-5" onClick={onRetryPreparation} variant="funnelCta">
                 Vorbereitung erneut versuchen
               </Button>
             </div>
@@ -1845,10 +1874,32 @@ function EmailCapture({
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [checking, setChecking] = useState(false)
   const [pendingConsent, setPendingConsent] = useState<boolean | null>(null)
+  // Merkt sich eine bereits gegebene Antwort auf die Consent-Frage. Nur der
+  // Backstop im Lead-Endpunkt kann dorthin zurueckwerfen; die Frage darf
+  // deshalb kein zweites Mal gestellt werden.
+  const [rememberedConsent, setRememberedConsent] = useState<boolean | null>(null)
+  const [emailRecoveryToken, setEmailRecoveryToken] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
-  const focusEmailOnRecoveryRef = useRef(false)
   const funnelEventIdRef = useRef<string | null>(null)
+  // Zaehlt jede Bearbeitung waehrend einer laufenden Pruefung. Eine Pruefung,
+  // deren Version beim Abschluss nicht mehr der aktuellen entspricht, ist
+  // komplett ueberholt und darf nichts mehr veraendern.
+  const precheckVersionRef = useRef(0)
+  /**
+   * Einziger Schreibpfad fuer das E-Mail-Feld. Die Version steigt im selben
+   * Tick, damit eine laufende Pruefung ihre Ueberholung auch dann bemerkt,
+   * wenn React den Re-Render noch nicht ausgefuehrt hat. Der CTA wird sofort
+   * wieder freigegeben, statt auf die alte Antwort zu warten.
+   */
+  function applyEmailValue(value: string) {
+    precheckVersionRef.current += 1
+    setEmail(value)
+    setError("")
+    setServerSuggestion(null)
+    setChecking(false)
+  }
   const localSuggestions = getEmailSuggestions(email)
   // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
   // fehlgeschlagenen Zustellpruefung, nicht aus einer Heuristik im Formular.
@@ -1857,24 +1908,110 @@ function EmailCapture({
       ? [serverSuggestion, ...localSuggestions.filter((s) => s !== serverSuggestion)]
       : localSuggestions
 
+  // Der Zaehler laeuft bei jeder Rueckkehr ins E-Mail-Feld hoch, damit der
+  // Fokus auch dann gesetzt wird, wenn der Schritt sich gar nicht geaendert
+  // hat (Ablehnung direkt im E-Mail-Schritt).
   useEffect(() => {
-    if (step !== "email" || !focusEmailOnRecoveryRef.current) return
-    focusEmailOnRecoveryRef.current = false
+    if (emailRecoveryToken === 0) return
     emailInputRef.current?.focus()
-  }, [step])
+  }, [emailRecoveryToken])
 
-  function continueToConsent() {
-    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
+  /**
+   * Wirft zurueck ins E-Mail-Feld und erklaert, warum. Gemeinsamer Pfad fuer
+   * die Vorabpruefung und den Backstop im Lead-Endpunkt.
+   */
+  function recoverToEmailStep(rejection: EmailDeliverabilityRejectionResponse | null) {
+    setServerSuggestion(rejection?.suggestion ?? null)
+    setStep("email")
+    setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
+    setEmailRecoveryToken((token) => token + 1)
+    window.scrollTo(0, 0)
+  }
+
+  /**
+   * Prueft die Zustellbarkeit, bevor die Consent-Frage kommt.
+   *
+   * Fail-open ist Absicht: Timeout, Abbruch, Netzwerkfehler und jeder Status
+   * ausser 422 lassen durch. Der Lead-Endpunkt prueft ohnehin erneut, und ein
+   * wackelnder DNS-Resolver darf keinen Lead kosten.
+   */
+  async function precheckEmailDeliverability(
+    candidate: string,
+  ): Promise<
+    | { deliverable: true }
+    | { deliverable: false; rejection: EmailDeliverabilityRejectionResponse | null }
+  > {
+    try {
+      const response = await fetch("/api/quiz/personal-plan-email-precheck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: candidate }),
+        signal: AbortSignal.timeout(EMAIL_PRECHECK_TIMEOUT_MS),
+      })
+      if (response.status !== 422) return { deliverable: true }
+      const detail: unknown = await response.json().catch(() => null)
+      return { deliverable: false, rejection: parseEmailDeliverabilityRejection(detail) }
+    } catch {
+      return { deliverable: true }
+    }
+  }
+
+  async function continueToConsent() {
+    if (checking || saving) return
+    const candidate = email.trim()
+    if (!EMAIL_ADDRESS_PATTERN.test(candidate)) {
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
     }
     setError("")
-    setStep("consent")
-    window.scrollTo(0, 0)
+    setChecking(true)
+    const requestVersion = precheckVersionRef.current
+    try {
+      const result = await precheckEmailDeliverability(candidate)
+      // Das Feld darf waehrend der Pruefung bearbeitet werden; jede Bearbeitung
+      // zaehlt die Version hoch. Ein Ergebnis zu einer ueberholten Version
+      // gehoert zu einer verworfenen Adresse und darf ueberhaupt nichts mehr
+      // veraendern -- weder Schrittwechsel noch Submit noch Fehlermeldung, die
+      // sonst ueber die neue Eingabe faellt. Der CTA wurde von applyEmailValue
+      // schon freigegeben.
+      if (precheckVersionRef.current !== requestVersion) return
+      if (!result.deliverable) {
+        if (result.rejection) {
+          trackAppEvent("quiz_email_deliverability_rejected", {
+            phase: "precheck",
+            reason: result.rejection.reason,
+            suggestionPresent: Boolean(result.rejection.suggestion),
+            testKind: fieldTest ? "field_test" : null,
+          })
+        }
+        recoverToEmailStep(result.rejection)
+        return
+      }
+      // Die Consent-Frage wurde vor einem Backstop-Rueckwurf schon beantwortet.
+      // Sie ein zweites Mal zu stellen waere ein Fehler, kein Sicherheitsnetz.
+      if (rememberedConsent !== null) {
+        await submit(rememberedConsent, candidate)
+        return
+      }
+      setStep("consent")
+      window.scrollTo(0, 0)
+    } finally {
+      // Eine ueberholte Pruefung besitzt den Ladezustand nicht mehr --
+      // applyEmailValue hat ihn bereits geloescht, und ein neuerer Lauf
+      // koennte ihn gerade wieder gesetzt haben. Nur die aktuelle Version
+      // darf ihn also zuruecksetzen.
+      if (precheckVersionRef.current === requestVersion) setChecking(false)
+    }
   }
 
-  async function submit(marketingConsent: boolean) {
-    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
+  /**
+   * `prechecked` ist die Adresse, die gerade die Vorabpruefung bestanden hat.
+   * Sie hat Vorrang vor dem Feldinhalt, damit nie eine andere Adresse
+   * gespeichert wird als die gepruefte.
+   */
+  async function submit(marketingConsent: boolean, prechecked?: string) {
+    const address = prechecked ?? email.trim()
+    if (!EMAIL_ADDRESS_PATTERN.test(address)) {
       setStep("email")
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
@@ -1888,7 +2025,7 @@ function EmailCapture({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email.trim(),
+          email: address,
           marketingConsent,
           funnelEventId: funnelEventIdRef.current,
           answers,
@@ -1912,16 +2049,16 @@ function EmailCapture({
           const suggestion = rejection?.suggestion ?? null
           if (rejection) {
             trackAppEvent("quiz_email_deliverability_rejected", {
+              phase: "lead_submit",
               reason: rejection.reason,
               suggestionPresent: Boolean(suggestion),
               testKind: fieldTest ? "field_test" : null,
             })
           }
-          focusEmailOnRecoveryRef.current = true
-          setServerSuggestion(suggestion)
-          setStep("email")
-          setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
-          window.scrollTo(0, 0)
+          // Die Zustimmung ist damit gegeben. Nach der Korrektur geht es
+          // direkt weiter, ohne die Frage ein zweites Mal zu stellen.
+          setRememberedConsent(marketingConsent)
+          recoverToEmailStep(rejection)
           return
         }
         throw new Error(`Save failed with ${response.status}`)
@@ -1961,6 +2098,16 @@ function EmailCapture({
     }
   }
 
+  // Auf dem E-Mail-Schritt kann entweder die Vorabpruefung laufen oder – nach
+  // einem Backstop-Rueckwurf mit bereits gegebener Zustimmung – der Lead-Save.
+  const emailStepBusy = checking || saving
+  const emailStepBusyLabel = (
+    <>
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      {saving ? "Wird gespeichert…" : "E-Mail wird geprüft…"}
+    </>
+  )
+
   return (
     <section className="mx-auto w-full max-w-[40rem]">
       <div className="rounded-full bg-[var(--brand-plum-ice)] px-4 py-2 text-center text-sm font-semibold text-[var(--brand-plum)]">
@@ -1971,7 +2118,7 @@ function EmailCapture({
           noValidate
           onSubmit={(event) => {
             event.preventDefault()
-            continueToConsent()
+            void continueToConsent()
           }}
         >
           <h1 className="mt-6 text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
@@ -1997,11 +2144,7 @@ function EmailCapture({
               )}
               id="personal-plan-email"
               enterKeyHint="go"
-              onChange={(event) => {
-                setEmail(event.target.value)
-                setError("")
-                setServerSuggestion(null)
-              }}
+              onChange={(event) => applyEmailValue(event.target.value)}
               placeholder="du@beispiel.de"
               ref={emailInputRef}
               spellCheck={false}
@@ -2014,11 +2157,7 @@ function EmailCapture({
                   <button
                     className="block w-full border-t border-[var(--brand-plum-light)] px-4 py-2.5 text-left text-sm font-semibold text-[var(--brand-plum-darkest)] first:border-t-0 hover:bg-[var(--brand-plum-ice)]"
                     key={suggestion}
-                    onClick={() => {
-                      setEmail(suggestion)
-                      setError("")
-                      setServerSuggestion(null)
-                    }}
+                    onClick={() => applyEmailValue(suggestion)}
                     type="button"
                   >
                     {suggestion}
@@ -2038,10 +2177,10 @@ function EmailCapture({
           ) : null}
           <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-[var(--text-sub)]">
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
-            Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.
+            Hierhin schicken wir deine Auswertung.
           </p>
-          <Button className="mt-7 h-12 w-full text-base" type="submit" variant="cta">
-            Weiter zu meiner Auswertung
+          <Button className="mt-7" disabled={emailStepBusy} type="submit" variant="funnelCta">
+            {emailStepBusy ? emailStepBusyLabel : "Weiter zu meiner Auswertung"}
           </Button>
         </form>
       ) : (
@@ -2055,12 +2194,7 @@ function EmailCapture({
           </p>
           {error ? <p className="mt-5 text-sm font-semibold text-destructive">{error}</p> : null}
           <div className="mt-7 grid gap-3">
-            <Button
-              className="h-12 text-base"
-              disabled={saving}
-              onClick={() => submit(true)}
-              variant="cta"
-            >
+            <Button disabled={saving} onClick={() => submit(true)} variant="funnelCta">
               {saving && pendingConsent === true ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -2528,7 +2662,11 @@ export function PersonalPlanQuiz({
     scheduleNext(next)
   }
 
-  function selectMulti(config: QuizQuestionConfig, value: string) {
+  function selectMulti(
+    config: QuizQuestionConfig,
+    value: string,
+    { clearWhenEmpty = false }: { clearWhenEmpty?: boolean } = {},
+  ) {
     const current = (answers[config.field] as readonly string[] | undefined) ?? []
     let next: string[]
     if (value === config.exclusiveValue) {
@@ -2541,6 +2679,11 @@ export function PersonalPlanQuiz({
     }
     setAnswers((existing) => {
       const updated = { ...existing, [config.field]: next } as PersonalPlanQuizAnswers
+      // On screens with a "Nichts davon" card the empty array is that card's
+      // answer, so unticking the last real option must fall back to unanswered.
+      if (clearWhenEmpty && next.length === 0) {
+        delete (updated as Record<string, unknown>)[config.field]
+      }
       if (config.field === "currentConcerns") delete updated.concernRecurrence
       // Drop the free-text detail when "Etwas anderes" is no longer selected.
       if (config.field === "blockers" && !next.includes("other")) {
@@ -2557,6 +2700,7 @@ export function PersonalPlanQuiz({
       intro?: { title: string; body: string }
       onEmpty?: () => void
       noneOption?: { label: string; description?: string }
+      noneSelected?: boolean
       otherText?: {
         triggerValue: string
         value?: string
@@ -2577,7 +2721,10 @@ export function PersonalPlanQuiz({
     },
   ) {
     const selected = selectedValues(config, answers)
-    const canContinue = options?.continueValidity ?? selected.length > 0
+    const noneSelected = Boolean(options?.noneSelected)
+    // A pressed "Nichts davon" is a real answer, so it unlocks Weiter — but it
+    // stays out of the "n ausgewählt" count, which only speaks for real options.
+    const canContinue = options?.continueValidity ?? (selected.length > 0 || noneSelected)
 
     return (
       <QuestionScreen
@@ -2586,10 +2733,13 @@ export function PersonalPlanQuiz({
         intro={options?.intro}
         onEmpty={options?.onEmpty}
         noneOption={options?.noneOption}
+        noneSelected={noneSelected}
         onContinue={() => goNext()}
         onOtherTextChange={options?.otherText?.onChange}
         onSelect={(value) =>
-          config.multi ? selectMulti(config, value) : selectSingle(config, value)
+          config.multi
+            ? selectMulti(config, value, { clearWhenEmpty: Boolean(options?.noneOption) })
+            : selectSingle(config, value)
         }
         otherTextPlaceholder={options?.otherText?.placeholder}
         otherTextMaxLength={options?.otherText?.maxLength}
@@ -2649,8 +2799,7 @@ export function PersonalPlanQuiz({
         {
           field: "goals",
           title: `Was wünschst du dir für ${TEXTURE_COPY[answers.texture ?? "wavy"].possessive}?`,
-          helper:
-            "Wähle alles aus, was dir wichtig ist. Du musst dich nicht auf ein Ziel begrenzen.",
+          helper: "Wähl ruhig mehrere Ziele aus – alles, was dir wichtig ist.",
           options: getGoalOptions(answers.texture),
           multi: true,
           visual: true,
@@ -2723,15 +2872,25 @@ export function PersonalPlanQuiz({
     if (screen === "scalp_concerns") {
       const config = QUESTION_CONFIGS.scalp_concerns
       if (!config) return null
+      // An empty array is the explicit "Nichts davon" answer; undefined means
+      // the question is still unanswered.
+      const noneSelected = answers.scalpConcerns?.length === 0
       return renderQuestion(config, undefined, {
         noneOption: {
           label: "Nichts davon",
           description: "Meine Kopfhaut macht mir gerade keine Probleme.",
         },
+        noneSelected,
         onEmpty: () => {
-          const next = { ...answers, scalpConcerns: [] }
-          setAnswers(next)
-          goNext(next)
+          setAnswers((existing) => {
+            const updated = { ...existing }
+            if (existing.scalpConcerns?.length === 0) {
+              delete updated.scalpConcerns
+            } else {
+              updated.scalpConcerns = []
+            }
+            return updated
+          })
         },
       })
     }
@@ -2812,12 +2971,12 @@ export function PersonalPlanQuiz({
                   Wir müssen deinen Plan noch einmal vorbereiten.
                 </h1>
                 <p className="mt-3 leading-7 text-[var(--text-sub)]">
-                  Deine Quiz-Antworten sind weiterhin da.
+                  Deine Antworten aus der Haaranalyse sind weiterhin da.
                 </p>
                 <Button
-                  className="mt-7 h-12 w-full text-base"
+                  className="mt-7"
                   onClick={() => void preparePersonalPlan(true)}
-                  variant="cta"
+                  variant="funnelCta"
                 >
                   Vorbereitung erneut versuchen
                 </Button>
@@ -2896,7 +3055,10 @@ export function PersonalPlanQuiz({
         screen={screen}
         settledSectionIndices={settledSectionIndices}
       />
-      <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4">
+      {/* The 7rem bottom reserve only pays for the fixed MobileBottomAction dock.
+          Its exact complement — the viewport range where the action renders inline —
+          drops back to a normal 3rem page padding. */}
+      <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4 [@media(min-width:640px)_and_(min-height:701px)]:scroll-pb-12 [@media(min-width:640px)_and_(min-height:701px)]:pb-12">
         <div className="w-full">
           {fieldTest ? <PersonalPlanFieldTestBanner surface="quiz" /> : null}
           <div className={fieldTest ? "mt-4" : undefined}>

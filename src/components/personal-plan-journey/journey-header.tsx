@@ -89,7 +89,7 @@ export function PersonalPlanJourneyHeader({
                       complete
                         ? "bg-[var(--brand-plum)]"
                         : current
-                          ? "bg-[var(--brand-coral)]"
+                          ? "bg-[var(--brand-plum-dark)]"
                           : "bg-[var(--border)]",
                     )}
                   />
@@ -97,7 +97,7 @@ export function PersonalPlanJourneyHeader({
                     className={cn(
                       "mt-1 block truncate text-center text-[8px] font-bold sm:text-[9px]",
                       current
-                        ? "text-[var(--brand-coral-deep)]"
+                        ? "text-[var(--brand-plum-darkest)]"
                         : complete
                           ? "text-[var(--brand-plum)]"
                           : "text-[var(--text-caption)]",

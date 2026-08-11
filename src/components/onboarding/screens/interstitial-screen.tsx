@@ -2,6 +2,8 @@
 
 import { ArrowLeft } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
+
 interface InterstitialScreenProps {
   onContinue: () => void
   onBack: () => void
@@ -31,9 +33,9 @@ export function InterstitialScreen({ onContinue, onBack }: InterstitialScreenPro
       </p>
 
       <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-        <button onClick={onContinue} className="quiz-btn-primary w-full">
+        <Button onClick={onContinue} variant="funnelCta">
           Weiter
-        </button>
+        </Button>
       </div>
     </div>
   )

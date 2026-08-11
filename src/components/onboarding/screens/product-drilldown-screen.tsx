@@ -7,6 +7,7 @@ import {
   ProductIntakeImageFields,
   ProductIntakeMethodToggle,
 } from "@/components/product-intake/product-intake-form-fields"
+import { Button } from "@/components/ui/button"
 import { DiscreteSlider } from "@/components/ui/slider"
 import { PRODUCT_FREQUENCY_OPTIONS } from "@/lib/vocabulary"
 import type { ProductFrequency } from "@/lib/vocabulary"
@@ -300,13 +301,13 @@ export function ProductDrilldownScreen({
       </div>
 
       <div className="animate-fade-in-up" style={{ animationDelay: "220ms" }}>
-        <button
+        <Button
           onClick={onContinue}
           disabled={!canContinue || isSaving || uploading !== null}
-          className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
+          variant="funnelCta"
         >
           {isSaving ? "Speichern..." : continueLabel}
-        </button>
+        </Button>
       </div>
 
       <input type="hidden" name="product-category" value={category} />

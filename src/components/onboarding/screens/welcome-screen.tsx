@@ -1,5 +1,7 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+
 interface WelcomeScreenProps {
   onContinue: () => void
 }
@@ -20,9 +22,9 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       </p>
 
       <div className="animate-fade-in-up w-full" style={{ animationDelay: "200ms" }}>
-        <button onClick={onContinue} className="quiz-btn-primary w-full">
-          LOS GEHT&apos;S
-        </button>
+        <Button onClick={onContinue} variant="funnelCta">
+          Los geht&apos;s
+        </Button>
       </div>
     </div>
   )

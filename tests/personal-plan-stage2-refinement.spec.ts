@@ -213,7 +213,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
             return rect.bottom >= window.innerHeight - 2 && rect.top < window.innerHeight
           }),
         ).toBe(true)
-        const lastChoice = page.getByRole("button", { name: /Keine weiteren; nur weitere/ })
+        const lastChoice = page.getByRole("button", { name: /Keine weiteren; ersetzt die Auswahl/ })
         await lastChoice.scrollIntoViewIfNeeded()
         expect(
           await lastChoice.evaluate(

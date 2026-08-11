@@ -141,7 +141,7 @@ function presentationFor(decision: PlanCategoryDecision): CategoryPresentation |
       targetType: "Aktuell nicht anwenden",
       purpose: "Die Kategorie kann sinnvoll sein, soll aber gerade pausieren.",
       productCriteria: "Die Anwendung setzt voraus, dass die pausierende Bedingung geklärt ist.",
-      fit: "Dein Quiz zeigt einen möglichen Bedarf, aber auch einen Grund für Vorsicht.",
+      fit: "Deine Haaranalyse zeigt einen möglichen Bedarf, aber auch einen Grund für Vorsicht.",
     }
   }
 
@@ -161,7 +161,7 @@ function presentationFor(decision: PlanCategoryDecision): CategoryPresentation |
           decision.target.scalpRoute === "balanced"
             ? "Ausgeglichen reinigend"
             : "Ausgleichend reinigend",
-        purpose: "Reinigt passend zu deiner Kopfhaut und deinem Quizprofil.",
+        purpose: "Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.",
         productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
         fit: "Deine Kopfhaut-Angaben bestimmen die Reinigungsrichtung.",
       }
@@ -184,7 +184,7 @@ function presentationFor(decision: PlanCategoryDecision): CategoryPresentation |
         targetType: "Intensive Pflege",
         purpose: "Ergänzt deine normale Pflege, wenn die Längen mehr Unterstützung brauchen.",
         productCriteria: "Konzentrierte Pflege in einer passenden Pflegerichtung liefern.",
-        fit: "Dein Quiz zeigt einen erhöhten Pflegebedarf in den Längen.",
+        fit: "Deine Haaranalyse zeigt einen erhöhten Pflegebedarf in den Längen.",
       }
     case "oil":
       return {
@@ -300,8 +300,8 @@ function screenFor(
     title: kind === "basis" ? "Deine Basis" : "Zusätzlich sinnvoll",
     lead:
       kind === "basis"
-        ? "Basierend auf deinem Quiz sind das die Grundlagen für deine Routine."
-        : "Basierend auf deinem Quiz können diese Ergänzungen deine Ziele zusätzlich unterstützen.",
+        ? "Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine."
+        : "Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich unterstützen.",
     sectionTitle: kind === "basis" ? "Von uns klar empfohlen" : "Für deine Ziele",
     countLabel,
     progress: kind === "basis" && hasOptionalPage ? 50 : 100,

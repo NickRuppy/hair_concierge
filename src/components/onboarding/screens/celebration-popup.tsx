@@ -1,5 +1,7 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+
 interface CelebrationPopupProps {
   ctaLabel: string
   onDismiss: () => void
@@ -17,9 +19,9 @@ export function CelebrationPopup({ ctaLabel, onDismiss }: CelebrationPopupProps)
           Dein Haarprofil ist komplett. Jetzt kann ich dir personalisierte Empfehlungen geben.
         </p>
 
-        <button onClick={onDismiss} className="quiz-btn-primary w-full">
+        <Button onClick={onDismiss} variant="funnelCta">
           {ctaLabel}
-        </button>
+        </Button>
       </div>
     </div>
   )

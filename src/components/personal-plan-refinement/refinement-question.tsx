@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { Button } from "@/components/ui/button"
 import { InfoTip } from "@/components/ui/info-tip"
 import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
@@ -355,12 +356,12 @@ function renderQuestionBody({
                 multi
                 allowNone
                 noneLabel="Keine weiteren"
-                noneDescription="Das löscht nur die Auswahl unter Weitere Kategorien."
-                noneAriaLabel="Keine weiteren; nur weitere Kategorien werden gelöscht"
+                noneDescription="Du nutzt keine weiteren Kategorien."
+                noneAriaLabel="Keine weiteren; ersetzt die Auswahl unter Weitere Kategorien"
                 onNoneChange={() =>
                   onLocalAnswerChange(
                     mergeCategoryGroup(remainingOptions, []),
-                    "Weitere Kategorien wurden gelöscht.",
+                    "Auswahl unter Weitere Kategorien aufgehoben.",
                   )
                 }
                 onChange={(next) =>
@@ -628,14 +629,15 @@ function ActionDock({
       )}
       data-stage2-mobile-dock={mobile ? "portal" : undefined}
     >
-      <button
+      <Button
         type="button"
         disabled={disabled}
         onClick={onSubmit}
-        className="personal-plan-primary-action min-h-[52px] flex-1 px-4 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]"
+        variant="funnelCta"
+        className="flex-1"
       >
         {saving ? "Speichert ..." : isRetry ? retryLabel : "Weiter"}
-      </button>
+      </Button>
     </div>
   )
 

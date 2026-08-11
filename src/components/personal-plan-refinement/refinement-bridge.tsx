@@ -1,5 +1,7 @@
 "use client"
 
+import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { Button } from "@/components/ui/button"
 import { Icon } from "@/components/ui/icon"
 
 export function RefinementBridge({
@@ -18,24 +20,12 @@ export function RefinementBridge({
   continueError?: string
 }) {
   return (
-    <div className="min-h-dvh bg-[var(--background,#fdfbf9)] text-[var(--text-main,#3a3835)]">
+    <div className="flex min-h-dvh flex-col bg-[var(--background,#fdfbf9)] text-[var(--text-main,#3a3835)]">
+      <PersonalPlanJourneyHeader currentStage={3} sticky={false} />
       <main
-        className="mx-auto flex min-h-dvh w-full max-w-[540px] flex-col justify-center px-5 py-8"
+        className="mx-auto flex w-full max-w-[540px] flex-1 flex-col justify-center px-5 py-8"
         data-refined-version-id={refinedVersionId}
       >
-        <div className="mb-6 grid grid-cols-5 gap-1" aria-label="Personal-Plan-Stufen">
-          {["Bedarf", "Verfeinerung", "Produkte", "Routine", "Anwendung"].map((label, index) => (
-            <span
-              key={label}
-              className={`text-center text-[9px] font-bold ${index <= 2 ? "text-[var(--brand-plum)]" : "text-[var(--text-muted,#736f69)]"}`}
-            >
-              <span
-                className={`mx-auto mb-1 block h-2.5 w-2.5 rounded-full ${index < 2 ? "bg-[var(--brand-plum)]" : index === 2 ? "border-2 border-[var(--brand-coral,#d4616a)]" : "border border-[var(--border,#e7e0d9)]"}`}
-              />
-              {label}
-            </span>
-          ))}
-        </div>
         <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
           Nächster Schritt · Produkte erfassen
         </p>
@@ -65,16 +55,17 @@ export function RefinementBridge({
               Zur letzten Frage
             </button>
           ) : null}
-          <button
+          <Button
             type="button"
             data-stage2-next-href={nextHref}
             onClick={onContinue}
             disabled={isContinuing}
             aria-busy={isContinuing}
-            className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-xl bg-[var(--brand-coral,#d4616a)] px-4 text-sm font-bold text-white shadow-[0_10px_25px_rgba(212,97,106,0.18)] transition hover:bg-[var(--brand-coral-dark,#c0555d)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]"
+            variant="funnelCta"
+            className="flex-1"
           >
             {isContinuing ? "Produkte werden vorbereitet …" : "Produkte erfassen →"}
-          </button>
+          </Button>
         </div>
         {continueError ? (
           <p role="alert" className="mt-3 text-sm text-[#a3434b]">

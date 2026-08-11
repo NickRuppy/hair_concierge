@@ -54,7 +54,7 @@ const readyPlan: PlanStartReadyViewModel = {
     kind: "basis",
     overline: "Dein persönlicher Plan",
     title: "Deine Basis",
-    lead: "Basierend auf deinem Quiz sind das die Grundlagen für deine Routine.",
+    lead: "Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine.",
     sectionTitle: "Von uns klar empfohlen",
     countLabel: "2 Kategorien",
     progress: 50,
@@ -64,7 +64,7 @@ const readyPlan: PlanStartReadyViewModel = {
     kind: "optional",
     overline: "Optionale Empfehlungen",
     title: "Zusätzlich sinnvoll",
-    lead: "Basierend auf deinem Quiz können diese Ergänzungen deine Ziele zusätzlich unterstützen.",
+    lead: "Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich unterstützen.",
     sectionTitle: "Für deine Ziele",
     countLabel: "1 Vorschlag",
     progress: 100,
@@ -110,7 +110,7 @@ test("renders the signed-off Basis shell with folded cards and example-preview g
 
   assert.match(html, /data-plan-start-screen="basis"/)
   assert.match(html, /Deine Basis/)
-  assert.match(html, /Basierend auf deinem Quiz sind das die Grundlagen/)
+  assert.match(html, /Basierend auf deiner Haaranalyse sind das die Grundlagen/)
   assert.match(html, /Optionale Empfehlungen/)
   assert.match(html, /data-plan-start-card-preview="example"/)
   assert.match(

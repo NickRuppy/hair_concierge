@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { NeedCard, type NeedCardViewModel } from "./need-card"
 
@@ -88,14 +89,10 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
               </button>
             ) : null}
             {onNext ? (
-              <button
-                type="button"
-                onClick={onNext}
-                className="personal-plan-primary-action ml-auto inline-flex min-h-11 items-center gap-1 px-4 text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
+              <Button type="button" onClick={onNext} variant="funnelCta">
                 {nextLabel}
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
-              </button>
+              </Button>
             ) : null}
           </div>
         </nav>

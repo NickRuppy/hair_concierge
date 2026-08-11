@@ -1,5 +1,7 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+
 export function ProductReplacementDialog({
   disabled,
   onCancel,
@@ -33,14 +35,15 @@ export function ProductReplacementDialog({
           >
             Abbrechen
           </button>
-          <button
+          <Button
+            className="sm:w-auto"
             type="button"
             onClick={onConfirm}
             disabled={disabled}
-            className="quiz-btn-primary disabled:opacity-40"
+            variant="funnelCta"
           >
             Produkt ersetzen
-          </button>
+          </Button>
         </div>
       </div>
     </div>

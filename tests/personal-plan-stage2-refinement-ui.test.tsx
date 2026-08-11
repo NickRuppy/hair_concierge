@@ -273,11 +273,11 @@ test("the secondary category empty action is group-local and preserves three pri
   assert.equal(countOccurrences(html, 'aria-pressed="true"'), 3)
   assert.match(html, /Weitere Kategorien/)
   assert.match(html, /Keine weiteren/)
-  assert.match(html, /löscht nur die Auswahl unter Weitere Kategorien/i)
-  assert.match(html, /aria-label="Keine weiteren; nur weitere Kategorien werden gelöscht"/)
+  assert.match(html, /Du nutzt keine weiteren Kategorien/i)
+  assert.match(html, /aria-label="Keine weiteren; ersetzt die Auswahl unter Weitere Kategorien"/)
   assert.doesNotMatch(
     html,
-    /aria-pressed="true" aria-label="Keine weiteren; nur weitere Kategorien werden gelöscht"/,
+    /aria-pressed="true" aria-label="Keine weiteren; ersetzt die Auswahl unter Weitere Kategorien"/,
   )
 })
 
