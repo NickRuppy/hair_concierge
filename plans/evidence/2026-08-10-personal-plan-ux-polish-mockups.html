@@ -1,0 +1,211 @@
+<title>Personal Plan UX-Politur — Mockup-Evidenz</title>
+<style>
+  :root {
+    --plum-darkest: #2a1845; --plum-dark: #3d2a62; --plum: #6b50a0;
+    --plum-light: #c8b8e0; --plum-ice: #f2eefa;
+    --coral: #d4616a; --coral-dark: #c0555d; --coral-light: #fdeef0;
+    --ground: #faf8f5; --card: #ffffff; --ink: #2a1845; --muted: #6d6478;
+    --line: #e8e2ee; --ok-bg: #edf7ef; --ok-text: #356b45;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  .wrap { max-width: 56rem; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 2rem; line-height: 1.2; text-wrap: balance; margin: 0 0 .4rem; }
+  .sub { color: var(--muted); margin: 0 0 2.5rem; max-width: 42rem; }
+  h2 { font-family: Georgia, serif; font-size: 1.35rem; margin: 3rem 0 .3rem; }
+  h2 .tag { font-family: -apple-system, sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+    vertical-align: .25em; color: var(--plum); background: var(--plum-ice); border-radius: 999px; padding: .2em .7em; margin-left: .5rem; }
+  .why { color: var(--muted); font-size: .92rem; margin: 0 0 1.1rem; max-width: 44rem; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.4rem; margin-bottom: 1rem; }
+  .panel h3 { margin: 0 0 1rem; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .panel h3.after { color: var(--ok-text); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 700px) { .cols { grid-template-columns: 1fr; } }
+  .note { font-size: .85rem; color: var(--muted); margin-top: .8rem; }
+  .hint { display: inline-block; background: var(--plum-ice); color: var(--plum-dark); font-size: .78rem; border-radius: 8px; padding: .25em .6em; }
+
+  /* ===== CTAs (real current styles + proposed) ===== */
+  .btn { display: block; width: 100%; border: 0; cursor: pointer; color: #fff; font-weight: 700; font-size: 1rem; font-family: inherit; }
+  .btn + .btn, .btn + .lbl, .lbl + .btn { margin-top: .9rem; }
+  .lbl { font-size: .78rem; color: var(--muted); }
+  .btn-quiz-old { height: 3.5rem; padding: 0 1.5rem; letter-spacing: .025em; background: var(--coral); border-radius: 12px;
+    transition: transform .2s ease, box-shadow .2s ease; }
+  .btn-quiz-old:hover { transform: rotate(-.5deg) scale(1.02); box-shadow: 0 4px 20px rgba(212,97,106,.25); }
+  .btn-plan-old { min-height: 3.5rem; border-radius: 999px; background: var(--coral);
+    transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+  .btn-plan-old:hover { background: var(--coral-dark); box-shadow: 0 12px 30px -20px rgba(212,97,106,.85); transform: translateY(-1px); }
+  .btn-onb-old { height: 3.5rem; background: var(--coral); border-radius: 12px; letter-spacing: .04em; }
+  .btn-new { min-height: 3.5rem; padding: .6rem 1.5rem; border-radius: 999px; background: var(--coral);
+    transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+  .btn-new:hover { background: var(--coral-dark); box-shadow: 0 12px 30px -20px rgba(212,97,106,.85); transform: translateY(-1px); }
+  .btn-new:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--plum-dark); }
+  .btn-new:disabled { opacity: .45; transform: none; box-shadow: none; cursor: not-allowed; }
+
+  /* ===== Option cards ===== */
+  .card-row { display: flex; flex-direction: column; gap: .8rem; }
+  .opt { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; text-align: left;
+    background: var(--card); border: 1px solid var(--plum-light); border-radius: 16px; padding: 1.05rem 1.15rem;
+    font: inherit; color: inherit; cursor: pointer; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
+  .opt .ring { flex: none; width: 1.5rem; height: 1.5rem; border-radius: 999px; border: 1.5px solid var(--plum-light); background: #fff; }
+  .opt-old:hover { transform: translateY(-2px); border-color: var(--plum); }           /* BUG: hover = selected border */
+  .opt-old:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--plum); }          /* BUG: focus = selected color */
+  .opt-old.sel { border-color: var(--plum); box-shadow: 0 0 0 2px rgba(107,80,160,.2); }
+  .opt-new:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -24px rgba(107,80,160,.5); } /* lift only */
+  .opt-new:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--plum-dark); } /* offset ring */
+  .opt-new.sel { border-color: var(--plum); box-shadow: 0 0 0 2px rgba(107,80,160,.2); background: var(--plum-ice); }
+  .opt.sel .ring { border-color: var(--plum); background: var(--plum); box-shadow: inset 0 0 0 3px #fff; }
+
+  /* ===== Stepper ===== */
+  .stepper { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; }
+  .step { display: flex; flex-direction: column; gap: .45rem; }
+  .step .bar { height: 6px; border-radius: 999px; background: var(--line); }
+  .step .cap { font-size: .68rem; font-weight: 600; letter-spacing: .04em; color: var(--muted); }
+  .st-old .done .bar { background: var(--plum); } .st-old .done .cap { color: var(--plum); }
+  .st-old .cur .bar { background: var(--coral); } .st-old .cur .cap { color: #aa464e; font-weight: 700; }
+  .st-new .done .bar { background: var(--plum); } .st-new .done .cap { color: var(--plum); }
+  .st-new .cur .bar { background: var(--plum-dark); } .st-new .cur .cap { color: var(--plum-darkest); font-weight: 700; }
+
+  /* ===== Copy frames ===== */
+  .frame { border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; background: var(--card); }
+  .frame + .frame { margin-top: .8rem; }
+  .frame .k { font-size: .68rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; margin-bottom: .5rem; }
+  .frame .k.b { color: #9a3f48; } .frame .k.a { color: var(--ok-text); }
+  .qh { font-family: Georgia, serif; font-size: 1.3rem; margin: .1rem 0 .2rem; }
+  .eyebrow { font-family: ui-monospace, Menlo, monospace; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--plum); font-weight: 700; }
+  .lock { display: flex; gap: .5rem; align-items: flex-start; font-size: .85rem; color: var(--muted); }
+  .strike { color: #9a3f48; }
+  table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  td:first-child { color: var(--muted); white-space: nowrap; }
+  .arrow { color: var(--plum); font-weight: 700; }
+</style>
+
+<div class="wrap">
+  <h1>Personal Plan UX-Politur — Mockups</h1>
+  <p class="sub">Evidenz für die geplanten Änderungen (Plan: <code>plans/2026-08-10-personal-plan-ux-polish.md</code>). Alle Farben sind die echten Brand-Tokens aus <code>globals.css</code>. Buttons und Karten sind interaktiv — <span class="hint">Hover und Tab-Fokus ausprobieren</span></p>
+
+  <h2>1 · Ein CTA-System <span class="tag">D1</span></h2>
+  <p class="why">Heute existieren drei Coral-Buttons nebeneinander: Quiz (eckig, Dreh-Hover), Plan-Bereich (Pill) und Onboarding (eckig, CAPS). Neu: eine Button-Variante <code>funnelCta</code> — Pill, weil alle wählbaren Flächen (Options-Karten) eckig sind: Die Pill liest sich eindeutig als „Aktion", nie als „Option". Legacy-Quiz bleibt unangetastet.</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>Vorher — 3 Stile</h3>
+      <button class="btn btn-quiz-old">Weiter</button>
+      <div class="lbl">Quiz: eckig, Hover dreht um −0,5°</div>
+      <button class="btn btn-plan-old">Plan ansehen</button>
+      <div class="lbl">Plan-Bereich: Pill</div>
+      <button class="btn btn-onb-old">LOS GEHT'S</button>
+      <div class="lbl">Onboarding: eckig, Versalien</div>
+    </div>
+    <div class="panel">
+      <h3 class="after">Nachher — 1 Stil, überall</h3>
+      <button class="btn btn-new">Weiter</button>
+      <button class="btn btn-new">Plan ansehen</button>
+      <button class="btn btn-new">Los geht's</button>
+      <button class="btn btn-new" disabled>Weiter</button>
+      <div class="lbl">Disabled: 45 % Opazität — Hover: dunkleres Coral + sanfter Schatten, kein Drehen</div>
+    </div>
+  </div>
+
+  <h2>2 · Options-Karten: Hover ≠ Ausgewählt <span class="tag">D3 · M5</span></h2>
+  <p class="why">Der Audit-Hauptbefund „erste Karte wirkt vorausgewählt": Nach dem Auto-Advance ruht der Cursor auf der ersten Karte des nächsten Screens — und Hover setzt heute denselben Plum-Rahmen wie „ausgewählt". Neu: Hover hebt nur an (Lift + Schatten), Ausgewählt bekommt zusätzlich die Plum-Ice-Füllung, Tastatur-Fokus einen abgesetzten dunklen Ring.</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>Vorher — Hover sieht aus wie ausgewählt</h3>
+      <div class="card-row">
+        <button class="opt opt-old"><span>Fein<br><small style="color:var(--muted)">Kaum spürbar, dünner als ein Nähfaden.</small></span><span class="ring"></span></button>
+        <button class="opt opt-old sel"><span>Mittel<br><small style="color:var(--muted)">Spürbar, etwa wie ein Nähfaden.</small></span><span class="ring"></span></button>
+      </div>
+      <p class="note">Hover über „Fein" → Plum-Rahmen ≈ identisch mit „Mittel" (ausgewählt).</p>
+    </div>
+    <div class="panel">
+      <h3 class="after">Nachher — drei unterscheidbare Zustände</h3>
+      <div class="card-row">
+        <button class="opt opt-new"><span>Fein<br><small style="color:var(--muted)">Kaum spürbar, dünner als ein Nähfaden.</small></span><span class="ring"></span></button>
+        <button class="opt opt-new sel"><span>Mittel<br><small style="color:var(--muted)">Spürbar, etwa wie ein Nähfaden.</small></span><span class="ring"></span></button>
+      </div>
+      <p class="note">Hover = nur Lift · Ausgewählt = Rahmen + Ice-Füllung + Häkchen · Tab-Fokus = abgesetzter dunkler Ring. Dazu: Auto-Advance 260 ms → 400 ms, damit die Auswahl sichtbar bestätigt, bevor der Screen wechselt. „Nichts davon" (Kopfhaut) wird eine echte anwählbare Karte + Weiter — springt nicht mehr sofort.</p>
+    </div>
+  </div>
+
+  <h2>3 · Stepper vereinheitlicht, Coral bleibt CTA-exklusiv <span class="tag">D6 · N10</span></h2>
+  <p class="why">Der Plan-Bereich-Stepper markiert die aktive Stufe heute in Coral — Coral ist aber der CTA-Akzent. Neu: aktive Stufe in Plum-Dark, fertige Stufen in Plum (wie im Quiz-Header). Der doppelte, abweichende Punkte-Stepper der Produkt-Brücke wird durch den kanonischen Header ersetzt. Im Quiz-Header verschwindet das doppelte Stufen-Label oben rechts (Stepper bleibt einzige Stufenanzeige).</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>Vorher</h3>
+      <div class="stepper st-old">
+        <div class="step done"><div class="bar"></div><div class="cap">Bedarf</div></div>
+        <div class="step cur"><div class="bar"></div><div class="cap">Verfeinerung</div></div>
+        <div class="step"><div class="bar"></div><div class="cap">Produkte</div></div>
+        <div class="step"><div class="bar"></div><div class="cap">Routine</div></div>
+        <div class="step"><div class="bar"></div><div class="cap">Anwendung</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3 class="after">Nachher</h3>
+      <div class="stepper st-new">
+        <div class="step done"><div class="bar"></div><div class="cap">Bedarf</div></div>
+        <div class="step cur"><div class="bar"></div><div class="cap">Verfeinerung</div></div>
+        <div class="step"><div class="bar"></div><div class="cap">Produkte</div></div>
+        <div class="step"><div class="bar"></div><div class="cap">Routine</div></div>
+        <div class="step"><div class="bar"></div><div class="cap">Anwendung</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>4 · E-Mail-Check vor der Consent-Frage <span class="tag">D2 · M2/M3</span></h2>
+  <p class="why">Heute: E-Mail eingeben → Consent-Frage beantworten → <em>dann</em> Fehler „Domain kann keine E-Mails empfangen" und zurück. Neu: Der Check läuft beim Klick auf „Weiter zu meiner Auswertung" (Button zeigt „E-Mail wird geprüft…"), Fehler erscheinen sofort auf dem E-Mail-Screen. Falls der Server-Backstop doch später ablehnt, bleibt die Consent-Antwort gemerkt — niemand beantwortet sie zweimal.</p>
+  <div class="frame">
+    <div class="k b">Vorher — Microcopy unterm Feld</div>
+    <div class="lock">🔒 <span class="strike">Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.</span></div>
+    <p class="note">Verweist auf eine „Zustimmung", die es auf diesem Screen noch gar nicht gibt.</p>
+  </div>
+  <div class="frame">
+    <div class="k a">Nachher</div>
+    <div class="lock">🔒 <span>Hierhin schicken wir deine Auswertung – so kannst du sie jederzeit wieder öffnen. Kein Spam.</span></div>
+  </div>
+
+  <h2>5 · Zwischenstand mit echtem Weiter <span class="tag">D5 · N6</span></h2>
+  <p class="why">„Dein Profil nimmt Form an." (erste persönliche Auswertung!) verschwindet heute nach ~4 s von selbst. Neu: Reveal-Animation bleibt, danach erscheint ein aktiver Weiter-Button — gerendert ab Start (disabled), damit nichts springt. Desktop-Bonus: Auf Interstitials rutscht der CTA nicht mehr unter den Fold (Bild/Abstände kompakter, totes 7-rem-Padding nur noch, wenn der mobile Dock wirklich rendert).</p>
+
+  <h2>6 · Copy-Änderungen im Komponenten-Kontext <span class="tag">T6/T7/T9/T10</span></h2>
+  <div class="frame">
+    <div class="k b">Vorher</div>
+    <div class="eyebrow">Zurück zu deinen Haarthemen</div>
+    <div class="qh">Wie oft bemerkst du Frizz oder abstehende Haare?</div>
+    <p class="note">Eyebrow liest sich wie ein Zurück-Link, ist aber keiner.</p>
+  </div>
+  <div class="frame">
+    <div class="k a">Nachher</div>
+    <div class="eyebrow">Deine Haarthemen</div>
+    <div class="qh">Wie oft bemerkst du Frizz oder abstehende Haare?</div>
+  </div>
+  <div class="frame">
+    <div class="k b">Vorher</div>
+    <div class="qh">Hat dich Haarpflege schon Zeit oder Geld gekostet?</div>
+    <p class="note">Semantisch leer — Haarpflege kostet immer Zeit und Geld.</p>
+  </div>
+  <div class="frame">
+    <div class="k a">Nachher</div>
+    <div class="qh">Hast du schon Produkte gekauft, die dann doch nicht gepasst haben?</div>
+  </div>
+  <div class="panel">
+    <h3>Weitere Strings</h3>
+    <table>
+      <tr><th>Wo</th><th>Vorher <span class="arrow">→</span> Nachher</th></tr>
+      <tr><td>Ziele-Helper</td><td>„…Du musst dich nicht auf ein Ziel begrenzen." <span class="arrow">→</span> „Wähl ruhig mehrere Ziele aus – alles, was dir wichtig ist."</td></tr>
+      <tr><td>None-Option (Verfeinerung)</td><td>„Das löscht nur die Auswahl unter Weitere unterstützte Kategorien." <span class="arrow">→</span> „Du nutzt keine weiteren Kategorien." · Aria ohne „gelöscht"-Framing</td></tr>
+      <tr><td>Produktsuche leer</td><td>„Kein sicherer Treffer gefunden." <span class="arrow">→</span> „Wir haben dein Produkt nicht gefunden. Füge es über ‚Produkt hinzufügen' einfach selbst hinzu."</td></tr>
+      <tr><td>Begriff überall</td><td>„Quiz" / „Haar-Check" <span class="arrow">→</span> „Haaranalyse" (z. B. „Basierend auf deinem Quiz…" → „Basierend auf deiner Haaranalyse…"; „Haar-Check neu starten" → „Haaranalyse neu starten")</td></tr>
+      <tr><td>Profil-Screen</td><td>Doppeltes „VIEL POTENZIAL" (Eyebrow + Badge) <span class="arrow">→</span> nur noch Badge</td></tr>
+      <tr><td>Waschfrequenz</td><td>Reihenfolge 2×/1×/3-4×/… <span class="arrow">→</span> aufsteigend sortiert (seltener → täglich)</td></tr>
+      <tr><td>Quiz-Header</td><td>Stufen-Label oben rechts („PROFIL") <span class="arrow">→</span> entfernt (Stepper zeigt die Stufe)</td></tr>
+      <tr><td>Notiz-Feld</td><td>öffnet verdeckt hinterm CTA <span class="arrow">→</span> scrollt in Sicht; zählt im „N ausgewählt · Weiter"-Zähler mit</td></tr>
+    </table>
+  </div>
+
+  <p class="note">Nicht in diesem PR (Nicks separate Fixes bzw. bewusst so gelassen): „Produkte prüfen"-Sackgasse, Onboarding-Übergang, Phantom-Maske-Verdikt, Lade-Modals, Tracking/Consent, „Viel Potenzial"-Skala.</p>
+</div>
