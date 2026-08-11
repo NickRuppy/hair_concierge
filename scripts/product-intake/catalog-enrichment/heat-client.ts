@@ -24,13 +24,55 @@ export function parseHeatLinkedMigrationState(
 ): "absent" | "applied" {
   const version = migration.match(/^\d{14}/)?.[0]
   if (!version) throw new Error(`Heat migration has no timestamp version: ${migration}`)
+  const trimmed = output.trim()
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(trimmed)
+    } catch {
+      throw new Error("linked migration list returned malformed JSON")
+    }
+    if (
+      !parsed ||
+      typeof parsed !== "object" ||
+      Array.isArray(parsed) ||
+      !Array.isArray((parsed as { migrations?: unknown }).migrations)
+    ) {
+      throw new Error("linked migration JSON has an invalid migrations shape")
+    }
+    const rows = (parsed as { migrations: unknown[] }).migrations
+    const targetRows = rows.filter((row) => {
+      if (!row || typeof row !== "object" || Array.isArray(row)) {
+        throw new Error("linked migration JSON has an invalid migration row")
+      }
+      const { local, remote } = row as { local?: unknown; remote?: unknown }
+      if (typeof local !== "string" || typeof remote !== "string") {
+        throw new Error("linked migration JSON has an invalid migration row")
+      }
+      return local === version
+    })
+    if (targetRows.length === 0) {
+      throw new Error(`linked migration list omitted local Heat migration ${version}`)
+    }
+    if (targetRows.length !== 1) {
+      throw new Error(`linked migration list has duplicate local Heat migration ${version}`)
+    }
+    const remote = (targetRows[0] as { remote: string }).remote
+    if (!remote) return "absent"
+    if (remote === version) return "applied"
+    throw new Error(`linked migration list has conflicting remote version for ${version}`)
+  }
+  let state: "absent" | "applied" | undefined
   for (const line of output.split("\n")) {
     const row = line.match(/^\s*(\d{14})?\s*(?:│|\|)\s*(\d{14})?\s*(?:│|\|)/)
     if (!row || row[1] !== version) continue
-    if (!row[2]) return "absent"
-    if (row[2] === version) return "applied"
-    throw new Error(`linked migration list has conflicting remote version for ${version}`)
+    if (state)
+      throw new Error(`linked migration list has duplicate local Heat migration ${version}`)
+    if (!row[2]) state = "absent"
+    else if (row[2] === version) state = "applied"
+    else throw new Error(`linked migration list has conflicting remote version for ${version}`)
   }
+  if (state) return state
   throw new Error(`linked migration list omitted local Heat migration ${version}`)
 }
 
