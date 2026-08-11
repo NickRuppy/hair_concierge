@@ -438,12 +438,14 @@ test("initial confirmation and non-blocking successor review preserve the active
   await expect(page.getByText("shampoo · everyday", { exact: true })).toHaveCount(0)
   await page.screenshot({ path: testInfo.outputPath("initial-proposal.png"), fullPage: true })
   await page.getByRole("button", { name: "Routine bestätigen" }).click()
-  await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Deine Routine ist bereit.", exact: true }),
+  ).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo", { exact: true })).toBeVisible()
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toHaveCount(0)
   expect(attentionRequestCount).toBe(0)
 
-  await page.getByRole("button", { name: "Routine bearbeiten" }).click()
+  await page.getByRole("button", { name: "Routine anpassen" }).click()
   const inclusion = page.getByRole("checkbox", { name: "Kategorie einplanen" })
   await inclusion.uncheck()
   await page.getByRole("button", { name: "Änderungen prüfen" }).click()
@@ -471,7 +473,9 @@ test("initial confirmation and non-blocking successor review preserve the active
   await expect(page.getByRole("heading", { name: "Routine-Vorschlag prüfen" })).toBeVisible()
   await page.getByRole("button", { name: "Änderungen verwerfen" }).click()
 
-  await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Deine Routine ist bereit.", exact: true }),
+  ).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo", { exact: true })).toBeVisible()
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toHaveCount(0)
   const { data: finalPlan, error: finalError } = await admin
