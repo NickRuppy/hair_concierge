@@ -1,5 +1,5 @@
 begin;
-select plan(19);
+select plan(21);
 
 select ok(
   not exists (
@@ -9,6 +9,24 @@ select ok(
       and is_active = true
   ),
   'Bali overnight leave-on treatment is excluded from the active Mask cohort'
+);
+select is(
+  (
+    select lifecycle_status
+    from public.products
+    where id = 'c4b9eaef-dfeb-41ea-9d28-9901660406b7'
+  ),
+  'active',
+  'Bali overnight leave-on treatment stays commercially current'
+);
+select is(
+  (
+    select purchase_link_status
+    from public.products
+    where id = 'c4b9eaef-dfeb-41ea-9d28-9901660406b7'
+  ),
+  'available',
+  'Bali overnight leave-on treatment keeps its verified purchase link'
 );
 select is(
   (

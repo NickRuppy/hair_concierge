@@ -338,8 +338,10 @@ test("Mask catalog correction removes the false Bali Mask and refreshes successo
   )
 
   assert.match(migration, /c4b9eaef-dfeb-41ea-9d28-9901660406b7/)
-  assert.match(migration, /lifecycle_status = 'discontinued'/)
+  assert.match(migration, /is_active = false/)
+  assert.match(migration, /lifecycle_status = 'active'/)
   assert.match(migration, /is_chaarlie_recommended = false/)
+  assert.match(migration, /purchase_link_status = 'available'/)
   assert.match(migration, /d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4/)
   assert.match(migration, /Bali Curls Deep Repair Mask/)
   assert.match(migration, /4262391990001/)

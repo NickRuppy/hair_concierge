@@ -42,9 +42,9 @@ $$;
 UPDATE public.products
 SET
   is_active = false,
-  lifecycle_status = 'discontinued',
+  lifecycle_status = 'active',
   is_chaarlie_recommended = false,
-  purchase_link_status = 'unavailable',
+  purchase_link_status = 'available',
   purchase_link_checked_at = now(),
   updated_at = now()
 WHERE id = 'c4b9eaef-dfeb-41ea-9d28-9901660406b7'

@@ -73,9 +73,10 @@ percentage, decide whether a fallback is launch-capable.
    otherwise complete and silent only about that relationship. Research found
    that the 35th production row, Bali Curls Bonding Repair Overnight Elixir, is
    a leave-on overnight treatment rather than a rinse-out Mask. A guarded
-   correction therefore excludes that row and refreshes the Bali Deep Repair,
-   Alterra, Balea reparierend, Pantene and Wahre Schätze successor identities
-   before the 34-row protocol batch is applied. A category validator now rejects
+   correction therefore deactivates it only from the catalog recommendation
+   cohort while preserving its live commercial lifecycle, and refreshes the
+   Bali Deep Repair, Alterra, Balea reparierend, Pantene and Wahre Schätze
+   successor identities before the 34-row protocol batch is applied. A category validator now rejects
    any supposedly verified Mask protocol that has neither a structured duration
    nor a quantified label-specific wait step.
 2. Targeted dandruff Shampoo: 7 exact protocols verified; DERMAXPRO remains
@@ -164,7 +165,7 @@ Broad Stage 5 rollout remains `no_go`. Reconsider only when:
 - `npm run test:personal-plan`: 1,028 passed.
 - `npm run test:personal-plan-stage5`: 138 passed.
 - `npm run test:node`: 3,376 passed.
-- `npm run test:personal-plan-db`: 265 passed across 10 files, including the
+- `npm run test:personal-plan-db`: 305 passed across 13 files, including the
   exact-protocol executor apply/replay/security contract, Mask identity
   correction and successor GTINs.
 - The refreshed research validator reports 56 verified and six explicitly
