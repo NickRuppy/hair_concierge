@@ -113,9 +113,7 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     ).toHaveCount(await optionalCards.count())
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
     await page.getByRole("button", { name: "Plan verfeinern" }).click()
-    await expect(
-      page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
-    ).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(
       page.getByRole("heading", { name: "Jetzt machen wir ihn zu deinem." }),
     ).toHaveCount(0)

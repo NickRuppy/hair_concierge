@@ -687,9 +687,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     }
     await page.getByRole("button", { name: "Plan verfeinern" }).click()
-    await expect(
-      page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
-    ).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     for (const category of ["Shampoo", "Conditioner", "Maske", "Kopfhautpflege"]) {
       await page.getByRole("button", { name: category, exact: true }).click()
     }

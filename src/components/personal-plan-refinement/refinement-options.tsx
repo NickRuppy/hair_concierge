@@ -365,6 +365,71 @@ export function RefinementOptions<T extends string>({
   )
 }
 
+export function WetWashFrequencyScale({
+  value,
+  onChange,
+}: {
+  value: WetWashFrequency | undefined
+  onChange: (value: WetWashFrequency) => void
+}) {
+  const frequencyOptions = WET_WASH_FREQUENCY_OPTIONS.filter(
+    (option) => option.value !== "does_not_wash",
+  )
+  const noWashOption = WET_WASH_FREQUENCY_OPTIONS.find((option) => option.value === "does_not_wash")
+
+  return (
+    <div data-wet-wash-frequency-scale="true">
+      <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-2.5">
+        <div aria-hidden="true" className="relative flex min-h-full flex-col items-center">
+          <span className="mb-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
+            Häufig
+          </span>
+          <span
+            data-wet-wash-frequency-rail="true"
+            className="absolute bottom-7 top-7 w-px bg-[var(--brand-plum-light)]"
+          />
+          <div className="relative z-10 grid flex-1 content-between gap-2.5 py-7">
+            {frequencyOptions.map((option, index) => (
+              <span
+                data-wet-wash-frequency-rank={String(frequencyOptions.length - index)}
+                key={option.value}
+                className="grid h-6 w-6 place-items-center rounded-full border border-[var(--brand-plum-light)] bg-white text-[10px] font-extrabold text-[var(--brand-plum)]"
+              >
+                {frequencyOptions.length - index}
+              </span>
+            ))}
+          </div>
+          <span className="mt-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--text-muted,#736f69)]">
+            Selten
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-2.5">
+          {frequencyOptions.map((option, index) => (
+            <QuizOptionCard
+              active={value === option.value}
+              animationDelay={index * 18}
+              icon={option.icon}
+              key={option.value}
+              label={option.label}
+              onClick={() => onChange(option.value)}
+            />
+          ))}
+        </div>
+      </div>
+      {noWashOption ? (
+        <div className="mt-4 border-t border-[var(--brand-plum-light)] pt-4">
+          <QuizOptionCard
+            active={value === noWashOption.value}
+            icon={noWashOption.icon}
+            label={noWashOption.label}
+            onClick={() => onChange(noWashOption.value)}
+          />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 export function RefinementInlineNote({ children }: { children: ReactNode }) {
   return (
     <p className="mt-4 rounded-xl bg-[var(--brand-plum-ice)] px-3 py-2.5 text-xs leading-5 text-[var(--text-sub)]">

@@ -52,9 +52,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     page,
   }) => {
     await begin(page)
-    await expect(
-      page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
-    ).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(continueButton(page)).toBeDisabled()
 
     const shampoo = page.getByRole("button", { name: "Shampoo", exact: true })
@@ -164,9 +162,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(
       page.getByRole("alert").filter({ hasText: /neuere gespeicherte Antworten/i }),
     ).toBeVisible()
-    await expect(
-      page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
-    ).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     await expect(page.getByRole("button", { name: "Shampoo", exact: true })).toHaveAttribute(
       "aria-pressed",
       "false",
@@ -240,7 +236,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
         await expect(dock).toHaveCount(0)
         if (width === 1280) {
           await expect(
-            page.getByRole("heading", { name: "Welche Produktarten benutzt du aktuell?" }),
+            page.getByRole("heading", { name: "Welche Produkte nutzt du?" }),
           ).toBeInViewport()
         }
         expect(

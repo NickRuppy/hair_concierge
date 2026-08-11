@@ -16,6 +16,7 @@ import type {
   Stage2QuestionId,
   TowelMaterial,
   TowelTechnique,
+  WetWashFrequency,
 } from "@/lib/personal-plan/refinement/types"
 import { cn } from "@/lib/utils"
 
@@ -34,6 +35,7 @@ import {
   SCALP_IRRITATION_OPTIONS,
   TOWEL_MATERIAL_OPTIONS,
   TOWEL_TECHNIQUE_OPTIONS,
+  WetWashFrequencyScale,
   WET_WASH_FREQUENCY_OPTIONS,
   mergeGroupedCategorySelection,
 } from "./refinement-options"
@@ -318,14 +320,14 @@ function renderQuestionBody({
         })
       return {
         sectionLabel: "Was du heute benutzt",
-        title: "Welche Produktarten benutzt du aktuell?",
-        lead: "Wähle nur Kategorien, die gerade wirklich in deiner Routine vorkommen. Das sagt noch nicht, ob sie gut passen.",
+        title: "Welche Produkte nutzt du?",
+        lead: "Alle unterstützten Kategorien: zuerst für deinen Plan, danach alle weiteren.",
         body: (
           <div className="grid gap-5">
             {relevantOptions.length > 0 ? (
               <div>
                 <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
-                  Für deinen Bedarfsplan relevant
+                  Für deinen Plan
                 </p>
                 <RefinementOptions
                   options={relevantOptions}
@@ -341,7 +343,7 @@ function renderQuestionBody({
             ) : null}
             <div>
               <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-[var(--text-muted,#736f69)]">
-                Weitere unterstützte Kategorien
+                Weitere Kategorien
               </p>
               <RefinementOptions
                 options={remainingOptions}
@@ -353,12 +355,12 @@ function renderQuestionBody({
                 multi
                 allowNone
                 noneLabel="Keine weiteren"
-                noneDescription="Das löscht nur die Auswahl unter Weitere unterstützte Kategorien."
-                noneAriaLabel="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"
+                noneDescription="Das löscht nur die Auswahl unter Weitere Kategorien."
+                noneAriaLabel="Keine weiteren; nur weitere Kategorien werden gelöscht"
                 onNoneChange={() =>
                   onLocalAnswerChange(
                     mergeCategoryGroup(remainingOptions, []),
-                    "Weitere unterstützte Kategorien wurden gelöscht.",
+                    "Weitere Kategorien wurden gelöscht.",
                   )
                 }
                 onChange={(next) =>
@@ -378,10 +380,9 @@ function renderQuestionBody({
         title: "Wie oft wäschst du deine Haare nass?",
         lead: "Es geht um deinen allgemeinen Rhythmus, nicht um ein konkretes Shampoo.",
         body: (
-          <RefinementOptions
-            options={WET_WASH_FREQUENCY_OPTIONS}
-            value={answer as string | undefined}
-            onChange={onLocalAnswerChange}
+          <WetWashFrequencyScale
+            value={answer as WetWashFrequency | undefined}
+            onChange={(frequency) => onLocalAnswerChange(frequency)}
           />
         ),
       }

@@ -167,6 +167,11 @@ test("renders exactly ten contextual current-product categories with no preselec
     assert.match(html, new RegExp(label))
   }
   assert.equal(countOccurrences(html, 'aria-pressed="true"'), 0)
+  assert.match(
+    html,
+    /Alle unterstützten Kategorien: zuerst für deinen Plan, danach alle weiteren\./,
+  )
+  assert.match(html, /Für deinen Plan/)
   assert.match(html, /Keine weiteren/)
   assert.match(html, /Produkt, das du vor Föhn, Glätteisen oder anderer direkter Hitze verwendest/)
   assert.match(html, /Serum, Tonic oder Peeling, das direkt auf die Kopfhaut kommt/)
@@ -230,10 +235,18 @@ test("renders the wet-wash rhythm from most to least frequent in one column, the
   )
 
   assert.match(html, /grid grid-cols-1 gap-2\.5/)
+  assert.match(html, /data-wet-wash-frequency-scale="true"/)
+  assert.match(html, /data-wet-wash-frequency-rail="true"/)
+  assert.match(html, /Häufig/)
+  assert.match(html, /Selten/)
+  for (const rank of ["8", "7", "6", "5", "4", "3", "2", "1"]) {
+    assert.match(html, new RegExp(`data-wet-wash-frequency-rank="${rank}"`))
+  }
   assert.ok(html.indexOf("Täglich") < html.indexOf("5-6x/Woche"))
   assert.ok(
     html.indexOf("Seltener als 1x/Monat") < html.indexOf("Ich wasche meine Haare nicht nass"),
   )
+  assert.ok(html.indexOf("Selten") < html.indexOf("Ich wasche meine Haare nicht nass"))
 })
 
 test("the secondary category empty action is group-local and preserves three primary selections", () => {
@@ -258,16 +271,13 @@ test("the secondary category empty action is group-local and preserves three pri
   )
 
   assert.equal(countOccurrences(html, 'aria-pressed="true"'), 3)
-  assert.match(html, /Weitere unterstützte Kategorien/)
+  assert.match(html, /Weitere Kategorien/)
   assert.match(html, /Keine weiteren/)
-  assert.match(html, /löscht nur die Auswahl unter Weitere unterstützte Kategorien/i)
-  assert.match(
-    html,
-    /aria-label="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"/,
-  )
+  assert.match(html, /löscht nur die Auswahl unter Weitere Kategorien/i)
+  assert.match(html, /aria-label="Keine weiteren; nur weitere Kategorien werden gelöscht"/)
   assert.doesNotMatch(
     html,
-    /aria-pressed="true" aria-label="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"/,
+    /aria-pressed="true" aria-label="Keine weiteren; nur weitere Kategorien werden gelöscht"/,
   )
 })
 
