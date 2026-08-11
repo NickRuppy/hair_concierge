@@ -41,7 +41,9 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
   assert.match(quiz, /artifactId/)
   assert.match(quiz, /claimToken/)
   assert.match(quiz, /fetch\("\/api\/quiz\/personal-plan-lead"/)
-  assert.match(quiz, /email: email\.trim\(\)/)
+  // Gespeichert wird die geprüfte Adresse, sonst der getrimmte Feldinhalt.
+  assert.match(quiz, /const address = prechecked \?\? email\.trim\(\)/)
+  assert.match(quiz, /email: address,/)
   assert.match(quiz, /marketingConsent/)
   assert.match(quiz, /funnelEventId: funnelEventIdRef\.current/)
   assert.match(quiz, /preparedPlan/)

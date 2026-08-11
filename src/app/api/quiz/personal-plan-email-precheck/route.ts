@@ -8,6 +8,7 @@ import {
 } from "@/lib/email-deliverability-shared"
 import { isPersonalPlanQuizV1Enabled } from "@/lib/funnel/flags"
 import { normalizePersonalPlanEmail } from "@/lib/personal-plan-quiz/persistence"
+import { checkRateLimit, QUIZ_EMAIL_PRECHECK_RATE_LIMIT } from "@/lib/rate-limit"
 
 /**
  * Zustellbarkeit pruefen, BEVOR die Consent-Frage gestellt wird.
@@ -22,6 +23,7 @@ import { normalizePersonalPlanEmail } from "@/lib/personal-plan-quiz/persistence
  */
 
 interface PersonalPlanEmailPrecheckDependencies {
+  checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
 }
@@ -39,6 +41,7 @@ export function createPersonalPlanEmailPrecheckPostHandler(
   overrides: Partial<PersonalPlanEmailPrecheckDependencies> = {},
 ) {
   const dependencies: PersonalPlanEmailPrecheckDependencies = {
+    checkRateLimit,
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
     ...overrides,
@@ -47,6 +50,18 @@ export function createPersonalPlanEmailPrecheckPostHandler(
   return async function POST(request: Request) {
     if (!isPersonalPlanQuizV1Enabled()) {
       return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 })
+    }
+
+    // Eigener Topf, damit die Pruefung das Lead-Budget nicht anknabbert.
+    const rateCheck = await dependencies.checkRateLimit(
+      request.headers.get("x-forwarded-for") ?? "unknown",
+      QUIZ_EMAIL_PRECHECK_RATE_LIMIT,
+    )
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: "Zu viele Anfragen" },
+        { status: rateCheck.error === "service_unavailable" ? 503 : 429 },
+      )
     }
 
     let body: unknown

@@ -55,6 +55,18 @@ export const QUIZ_LEAD_RATE_LIMIT: RateLimitConfig = {
   windowMs: 3_600_000,
 }
 
+/**
+ * Eigener Topf fuer die Zustellbarkeits-Vorabpruefung: Sie loest einen
+ * ausgehenden DNS-Lookup aus, darf aber niemals das Lead-Budget eines echten
+ * Nutzers aufbrauchen. Grosszuegig bemessen, weil der Client bei 429 ohnehin
+ * durchlaesst und der Lead-Endpunkt erneut prueft.
+ */
+export const QUIZ_EMAIL_PRECHECK_RATE_LIMIT: RateLimitConfig = {
+  prefix: "quiz-email-precheck",
+  limit: 60,
+  windowMs: 60_000,
+}
+
 export const FUNNEL_EVENT_RATE_LIMIT: RateLimitConfig = {
   prefix: "funnel-event",
   limit: 60,

@@ -21,6 +21,7 @@ test("precheck accepts a deliverable address without touching persistence", asyn
   const recorded: { journey: EmailDeliverabilityJourney; deliverability: EmailDeliverability }[] =
     []
   const handler = createPersonalPlanEmailPrecheckPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async (email) => {
       checkedEmail = email
       return { ok: true, normalized: email, outcome: "known_good" }
@@ -46,6 +47,7 @@ test("precheck accepts a deliverable address without touching persistence", asyn
 test("precheck rejects an undeliverable address in the lead route's rejection shape", async () => {
   const journeys: EmailDeliverabilityJourney[] = []
   const handler = createPersonalPlanEmailPrecheckPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async () => ({
       ok: false,
       reason: "no_mx",
@@ -77,6 +79,7 @@ test("precheck rejects malformed bodies before any deliverability lookup", async
   ]) {
     let checked = false
     const handler = createPersonalPlanEmailPrecheckPostHandler({
+      checkRateLimit: async () => ({ allowed: true }),
       checkEmailDeliverability: async () => {
         checked = true
         return { ok: true, normalized: "max@gmail.com", outcome: "known_good" }
@@ -94,6 +97,7 @@ test("precheck rejects malformed bodies before any deliverability lookup", async
 test("precheck fails with 500 when the lookup throws so the client can fail open", async (context) => {
   const errorLog = context.mock.method(console, "error", () => {})
   const handler = createPersonalPlanEmailPrecheckPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async () => {
       throw new Error("resolver exploded")
     },
@@ -104,4 +108,53 @@ test("precheck fails with 500 when the lookup throws so the client can fail open
 
   assert.equal(response.status, 500)
   assert.equal(errorLog.mock.callCount(), 1)
+})
+
+test("precheck throttles on its own budget before resolving any domain", async () => {
+  const seen: { identifier: string; prefix: string; limit: number; windowMs: number }[] = []
+  let checked = false
+  const handler = createPersonalPlanEmailPrecheckPostHandler({
+    checkRateLimit: async (identifier, config) => {
+      seen.push({ identifier, ...config })
+      return { allowed: false }
+    },
+    checkEmailDeliverability: async () => {
+      checked = true
+      return { ok: true, normalized: "max@gmail.com", outcome: "known_good" }
+    },
+    recordEmailDeliverabilityOutcome: () => {},
+  })
+
+  const request = precheckRequest({ email: "max@gmail.com" })
+  request.headers.set("x-forwarded-for", "203.0.113.20")
+  const response = await handler(request)
+
+  assert.equal(response.status, 429)
+  assert.deepEqual(await response.json(), { error: "Zu viele Anfragen" })
+  assert.equal(checked, false)
+  // Eigener Topf: Die Pruefung darf das Lead-Budget nicht anfassen.
+  assert.deepEqual(seen, [
+    {
+      identifier: "203.0.113.20",
+      prefix: "quiz-email-precheck",
+      limit: 60,
+      windowMs: 60_000,
+    },
+  ])
+})
+
+test("precheck answers 503 when the rate limiter itself is unavailable", async () => {
+  const handler = createPersonalPlanEmailPrecheckPostHandler({
+    checkRateLimit: async () => ({ allowed: false, error: "service_unavailable" }),
+    checkEmailDeliverability: async () => ({
+      ok: true,
+      normalized: "max@gmail.com",
+      outcome: "known_good",
+    }),
+    recordEmailDeliverabilityOutcome: () => {},
+  })
+
+  const response = await handler(precheckRequest({ email: "max@gmail.com" }))
+
+  assert.equal(response.status, 503)
 })

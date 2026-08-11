@@ -1853,6 +1853,10 @@ function EmailCapture({
   const [rememberedConsent, setRememberedConsent] = useState<boolean | null>(null)
   const [emailRecoveryToken, setEmailRecoveryToken] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
+  // Immer der zuletzt gerenderte Feldinhalt. Eine laufende Pruefung haelt in
+  // ihrem Closure nur den Stand von damals; ohne diese Referenz koennte sie
+  // nicht erkennen, dass die Adresse inzwischen eine andere ist.
+  const latestEmailRef = useRef(email)
   const funnelEventIdRef = useRef<string | null>(null)
   const localSuggestions = getEmailSuggestions(email)
   // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
@@ -1861,6 +1865,10 @@ function EmailCapture({
     serverSuggestion && serverSuggestion !== email.trim().toLowerCase()
       ? [serverSuggestion, ...localSuggestions.filter((s) => s !== serverSuggestion)]
       : localSuggestions
+
+  useEffect(() => {
+    latestEmailRef.current = email
+  }, [email])
 
   // Der Zaehler laeuft bei jeder Rueckkehr ins E-Mail-Feld hoch, damit der
   // Fokus auch dann gesetzt wird, wenn der Schritt sich gar nicht geaendert
@@ -1921,6 +1929,11 @@ function EmailCapture({
     setChecking(true)
     try {
       const result = await precheckEmailDeliverability(candidate)
+      // Das Feld darf waehrend der Pruefung bearbeitet werden. Ein Ergebnis zu
+      // einer inzwischen verworfenen Adresse ist wertlos: Es wuerde eine
+      // fremde Fehlermeldung ueber die neue Eingabe legen und den Fokus
+      // stehlen. Also verfaellt es stillschweigend.
+      if (latestEmailRef.current.trim() !== candidate) return
       if (!result.deliverable) {
         if (result.rejection) {
           trackAppEvent("quiz_email_deliverability_rejected", {
@@ -1936,7 +1949,7 @@ function EmailCapture({
       // Die Consent-Frage wurde vor einem Backstop-Rueckwurf schon beantwortet.
       // Sie ein zweites Mal zu stellen waere ein Fehler, kein Sicherheitsnetz.
       if (rememberedConsent !== null) {
-        await submit(rememberedConsent)
+        await submit(rememberedConsent, candidate)
         return
       }
       setStep("consent")
@@ -1946,8 +1959,14 @@ function EmailCapture({
     }
   }
 
-  async function submit(marketingConsent: boolean) {
-    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
+  /**
+   * `prechecked` ist die Adresse, die gerade die Vorabpruefung bestanden hat.
+   * Sie hat Vorrang vor dem Feldinhalt, damit nie eine andere Adresse
+   * gespeichert wird als die gepruefte.
+   */
+  async function submit(marketingConsent: boolean, prechecked?: string) {
+    const address = prechecked ?? email.trim()
+    if (!EMAIL_ADDRESS_PATTERN.test(address)) {
       setStep("email")
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
@@ -1961,7 +1980,7 @@ function EmailCapture({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email.trim(),
+          email: address,
           marketingConsent,
           funnelEventId: funnelEventIdRef.current,
           answers,
