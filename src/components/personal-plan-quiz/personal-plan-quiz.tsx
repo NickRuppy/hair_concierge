@@ -565,11 +565,16 @@ function HairPortraitFigure({
 }
 
 /** Leading intensity indicator for icon-less scale/frequency answer rows. */
-function IntensityPips({ intensity }: { intensity: OptionIntensity }) {
+function IntensityPips({ intensity, selected }: { intensity: OptionIntensity; selected: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="flex h-10 w-10 shrink-0 items-center justify-center gap-[2px] rounded-xl bg-[var(--brand-plum-ice)]"
+      className={cn(
+        "flex h-10 w-10 shrink-0 items-center justify-center gap-[2px] rounded-xl",
+        // The selected card fills with plum-ice, so the well switches to white
+        // to keep the pips readable instead of dissolving into the card.
+        selected ? "bg-white" : "bg-[var(--brand-plum-ice)]",
+      )}
     >
       {intensity.unknown ? (
         <HelpCircle className="h-5 w-5 text-[var(--brand-plum)]" />
@@ -733,11 +738,18 @@ function OptionCard({
         )}
       >
         {Icon ? (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
+          <span
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[var(--brand-plum)]",
+              // Same plum-ice as the selected card fill, so the chip flips to
+              // white once chosen and the icon keeps its own container.
+              selected ? "bg-white" : "bg-[var(--brand-plum-ice)]",
+            )}
+          >
             <Icon className="h-5 w-5" />
           </span>
         ) : showPips ? (
-          <IntensityPips intensity={intensity} />
+          <IntensityPips intensity={intensity} selected={selected} />
         ) : null}
         <span
           className={cn(
