@@ -14,15 +14,9 @@ import {
   type Stage2RefinementGateway,
 } from "../src/lib/personal-plan/refinement/gateway"
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
-import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
+import type { PersonalPlanStage2Access } from "../src/lib/personal-plan/journey-access-loader"
 
-const stage2Access: PersonalPlanJourneyAccess = {
-  kind: "personal_plan",
-  personalPlanId: "plan-1",
-  frontier: "stage2",
-  nextHref: "/plan-start",
-  allowed: { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false },
-}
+const stage2Access: PersonalPlanStage2Access = { allowed: true }
 
 const session = createStage2RefinementSession({
   pathVersion: "stage2.refinement.v1",
@@ -49,7 +43,7 @@ function deps(overrides: Partial<Stage2RouteDeps> = {}): Stage2RouteDeps {
   return {
     enabled: () => true,
     getUserId: async () => "owner-1",
-    loadJourneyAccess: async () => stage2Access,
+    loadStage2Access: async () => stage2Access,
     gatewayFor: () => gateway(),
     ...overrides,
   }
@@ -59,7 +53,7 @@ function completeDeps(overrides: Partial<Stage2CompleteRouteDeps> = {}): Stage2C
   return {
     enabled: () => true,
     getUserId: async () => "owner-1",
-    loadJourneyAccess: async () => stage2Access,
+    loadStage2Access: async () => stage2Access,
     gatewayFor: () => gateway(),
     ...overrides,
   }
@@ -81,12 +75,7 @@ test("Stage 2 fails closed before constructing its gateway when Stage 1 is not r
   let gatewayCalls = 0
   const response = await createStage2RouteHandlers(
     deps({
-      loadJourneyAccess: async () => ({
-        kind: "personal_plan_start",
-        frontier: "stage1",
-        nextHref: "/plan-start",
-        allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
-      }),
+      loadStage2Access: async () => ({ allowed: false }),
       gatewayFor: () => {
         gatewayCalls += 1
         return gateway()
@@ -284,6 +273,9 @@ test("Stage 2 completion is a separate strict POST with owner-derived success, c
     [response.status, await response.json()],
     [200, { refinedVersionId: "refined-1", nextHref: "/plan-start" }],
   )
+  assert.match(response.headers.get("Server-Timing") ?? "", /auth;dur=/)
+  assert.match(response.headers.get("Server-Timing") ?? "", /journey;dur=/)
+  assert.match(response.headers.get("Server-Timing") ?? "", /operation;dur=/)
 
   response = await handler(
     new Request("http://test/api/personal-plan/stage-2/complete", {

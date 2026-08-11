@@ -1,6 +1,7 @@
 import "server-only"
 
 import { createAdminClient } from "@/lib/supabase/admin"
+import { reportPersonalPlanTransitionTiming } from "./transition-performance"
 import { buildStage3EntryContext } from "./products/stage2-entry-adapter"
 import { requireCurrentAuthoritySnapshot } from "./products/authority/snapshot"
 import type { PersonalPlanCategory, Stage3AuthoritySnapshotV1 } from "./products/contracts"
@@ -62,6 +63,58 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
     refinedVersionId: string,
   ) => Promise<JourneyDraft | null>
   loadIsInternal: (userId: string) => Promise<boolean>
+  /**
+   * Server-only, non-identifying phase timing. It is intentionally optional so
+   * deterministic loaders and the narrow Stage 2 authorization read stay silent.
+   */
+  reportStage3AccessTiming?: (timing: PersonalPlanStage3AccessTiming) => void
+  now?: () => number
+}
+
+export type PersonalPlanStage3AccessTiming = {
+  operation:
+    | "stage3_access_entitlement"
+    | "stage3_access_artifact_plan"
+    | "stage3_access_refined_draft"
+  outcome: string
+  durationMs: number
+}
+
+export type PersonalPlanStage2Access = { allowed: boolean }
+
+type JourneyAuthorizationPrefix =
+  | { excludedByAppRollout: true }
+  | {
+      excludedByAppRollout: false
+      appEnabled: boolean
+      accessState: AccessState
+      isNewBuyerCohort: boolean
+      preparedSourceReady: boolean
+      plan: JourneyPlanRow | null
+    }
+
+type JourneyAccessPhaseReporter = Pick<
+  PersonalPlanJourneyAccessLoaderDeps,
+  "reportStage3AccessTiming" | "now"
+>
+
+function reportJourneyAccessPhase(
+  reporter: JourneyAccessPhaseReporter | undefined,
+  timing: PersonalPlanStage3AccessTiming,
+) {
+  try {
+    reporter?.reportStage3AccessTiming?.(timing)
+  } catch {
+    // Observability must never affect owner authorization or routing.
+  }
+}
+
+function phaseStartedAt(reporter: JourneyAccessPhaseReporter | undefined): number {
+  return reporter?.now?.() ?? performance.now()
+}
+
+function phaseElapsed(reporter: JourneyAccessPhaseReporter | undefined, startedAt: number): number {
+  return (reporter?.now?.() ?? performance.now()) - startedAt
 }
 
 function isQualifiedOwnerCohort(qualifiedAt: string | null, cutoff: Date | null): boolean {
@@ -116,6 +169,140 @@ function hasCurrentAuthority(
 }
 
 /**
+ * Shared owner-scoped authorization prefix. It intentionally reaches only the
+ * facts common to Stage 2 and the full journey; later-stage authority work is
+ * layered by the full loader below.
+ */
+async function loadJourneyAuthorizationPrefixWithDeps(
+  deps: PersonalPlanJourneyAccessLoaderDeps,
+  userId: string,
+  reporter?: JourneyAccessPhaseReporter,
+): Promise<JourneyAuthorizationPrefix> {
+  if (!userId.trim() || userId === "user-id-required") {
+    throw new Error("journey_access_user_required")
+  }
+  const appEnabled = deps.appEnabled()
+  const appRollout = deps.appRollout()
+  if (appEnabled && appRollout !== "all") {
+    const isInternal = appRollout === "internal" ? await deps.loadIsInternal(userId) : false
+    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {
+      return { excludedByAppRollout: true }
+    }
+  }
+
+  const entitlementStartedAt = phaseStartedAt(reporter)
+  let entitlement: Awaited<ReturnType<PersonalPlanJourneyAccessLoaderDeps["loadEntitlement"]>>
+  try {
+    entitlement = await deps.loadEntitlement(userId)
+  } catch (error) {
+    reportJourneyAccessPhase(reporter, {
+      operation: "stage3_access_entitlement",
+      outcome: "error",
+      durationMs: phaseElapsed(reporter, entitlementStartedAt),
+    })
+    throw error
+  }
+  const isNewBuyerCohort = isQualifiedOwnerCohort(entitlement.qualifiedAt, deps.cohortCutoff())
+  const entitlementEligible =
+    entitlement.accessState === "active" && isNewBuyerCohort && Boolean(entitlement.artifactLeadId)
+  reportJourneyAccessPhase(reporter, {
+    operation: "stage3_access_entitlement",
+    outcome: entitlementEligible ? "eligible" : "denied",
+    durationMs: phaseElapsed(reporter, entitlementStartedAt),
+  })
+  if (!entitlementEligible) {
+    return {
+      excludedByAppRollout: false,
+      appEnabled,
+      accessState: entitlement.accessState,
+      // Preserve the full journey's legacy classification for an enrollment
+      // that is not attached to a prepared source, while Stage 2 still sees a
+      // simple denied fact either way.
+      isNewBuyerCohort:
+        entitlement.accessState === "active"
+          ? isNewBuyerCohort && Boolean(entitlement.artifactLeadId)
+          : isNewBuyerCohort,
+      preparedSourceReady: false,
+      plan: null,
+    }
+  }
+
+  // Start the independent owner reads together. Like the previous loader, an
+  // unavailable artifact denies access without requiring the unused plan read.
+  const artifactPlanStartedAt = phaseStartedAt(reporter)
+  const planPending = deps.loadPlan(userId).then(
+    (value) => ({ status: "fulfilled" as const, value }),
+    (reason: unknown) => ({ status: "rejected" as const, reason }),
+  )
+  let artifact: { id: string } | null
+  try {
+    artifact = await deps.loadPreparedArtifact(userId, entitlement.artifactLeadId!)
+  } catch (error) {
+    reportJourneyAccessPhase(reporter, {
+      operation: "stage3_access_artifact_plan",
+      outcome: "error",
+      durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
+    })
+    throw error
+  }
+  if (!artifact) {
+    reportJourneyAccessPhase(reporter, {
+      operation: "stage3_access_artifact_plan",
+      outcome: "artifact_missing",
+      durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
+    })
+    return {
+      excludedByAppRollout: false,
+      appEnabled,
+      accessState: "active",
+      isNewBuyerCohort: true,
+      preparedSourceReady: false,
+      plan: null,
+    }
+  }
+  const planResult = await planPending
+  if (planResult.status === "rejected") {
+    reportJourneyAccessPhase(reporter, {
+      operation: "stage3_access_artifact_plan",
+      outcome: "error",
+      durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
+    })
+    throw planResult.reason
+  }
+  reportJourneyAccessPhase(reporter, {
+    operation: "stage3_access_artifact_plan",
+    outcome: planResult.value ? "ready" : "plan_missing",
+    durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
+  })
+  return {
+    excludedByAppRollout: false,
+    appEnabled,
+    accessState: "active",
+    isNewBuyerCohort: true,
+    preparedSourceReady: true,
+    plan: planResult.value ? { ...planResult.value } : null,
+  }
+}
+
+/** Minimal per-request fact for Stage 2 routes. */
+export async function loadPersonalPlanStage2AccessWithDeps(
+  deps: PersonalPlanJourneyAccessLoaderDeps,
+  userId = "user-id-required",
+): Promise<PersonalPlanStage2Access> {
+  const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId)
+  if (prefix.excludedByAppRollout) return { allowed: false }
+  return {
+    allowed:
+      prefix.appEnabled &&
+      prefix.accessState === "active" &&
+      prefix.isNewBuyerCohort &&
+      prefix.preparedSourceReady &&
+      Boolean(prefix.plan?.currentInitialNeedVersionId) &&
+      deps.stage2Enabled(),
+  }
+}
+
+/**
  * Server-only, owner-scoped source of journey reachability. This intentionally
  * throws on database or malformed-source failures so routes cannot accidentally
  * turn an unavailable authorization read into access.
@@ -124,24 +311,15 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
   deps: PersonalPlanJourneyAccessLoaderDeps,
   userId = "user-id-required",
 ): Promise<PersonalPlanJourneyAccess> {
-  if (!userId.trim() || userId === "user-id-required")
-    throw new Error("journey_access_user_required")
-  const appEnabled = deps.appEnabled()
-  const appRollout = deps.appRollout()
-  if (appEnabled && appRollout !== "all") {
-    const isInternal = appRollout === "internal" ? await deps.loadIsInternal(userId) : false
-    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {
-      return { kind: "legacy" }
-    }
-  }
-  const entitlement = await deps.loadEntitlement(userId)
-  const newBuyer = isQualifiedOwnerCohort(entitlement.qualifiedAt, deps.cohortCutoff())
+  const reporter: JourneyAccessPhaseReporter = deps
+  const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId, reporter)
+  if (prefix.excludedByAppRollout) return { kind: "legacy" }
 
-  if (entitlement.accessState !== "active") {
+  if (prefix.accessState !== "active") {
     return resolvePersonalPlanJourneyAccess({
-      accessState: entitlement.accessState,
-      isNewBuyerCohort: newBuyer,
-      appEnabled: deps.appEnabled(),
+      accessState: prefix.accessState,
+      isNewBuyerCohort: prefix.isNewBuyerCohort,
+      appEnabled: prefix.appEnabled,
       stage2Enabled: deps.stage2Enabled(),
       stage3Enabled: deps.stage3Enabled(),
       stage4Enabled: deps.stage4Enabled(),
@@ -151,11 +329,11 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
     })
   }
 
-  if (!newBuyer || !entitlement.artifactLeadId) {
+  if (!prefix.isNewBuyerCohort || !prefix.preparedSourceReady) {
     return resolvePersonalPlanJourneyAccess({
       accessState: "active",
-      isNewBuyerCohort: false,
-      appEnabled: deps.appEnabled(),
+      isNewBuyerCohort: prefix.isNewBuyerCohort,
+      appEnabled: prefix.appEnabled,
       stage2Enabled: deps.stage2Enabled(),
       stage3Enabled: deps.stage3Enabled(),
       stage4Enabled: deps.stage4Enabled(),
@@ -165,29 +343,7 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
     })
   }
 
-  const planPending = deps.loadPlan(userId).then(
-    (value) => ({ status: "fulfilled" as const, value }),
-    (reason: unknown) => ({ status: "rejected" as const, reason }),
-  )
-  const artifact = await deps.loadPreparedArtifact(userId, entitlement.artifactLeadId)
-  if (!artifact) {
-    return resolvePersonalPlanJourneyAccess({
-      accessState: "active",
-      isNewBuyerCohort: true,
-      appEnabled: deps.appEnabled(),
-      stage2Enabled: deps.stage2Enabled(),
-      stage3Enabled: deps.stage3Enabled(),
-      stage4Enabled: deps.stage4Enabled(),
-      stage5Allowed: false,
-      preparedSourceReady: false,
-      plan: null,
-    })
-  }
-
-  const planResult = await planPending
-  if (planResult.status === "rejected") throw planResult.reason
-  const loadedPlan = planResult.value
-  const plan = loadedPlan ? { ...loadedPlan } : null
+  const plan = prefix.plan
   const stage2Enabled = deps.stage2Enabled()
   const stage3Enabled = deps.stage3Enabled()
   const stage4Enabled = deps.stage4Enabled()
@@ -201,6 +357,7 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
 
   let stage3AuthorityReady = false
   if (stage2Enabled && stage3Enabled && plan?.currentRefinedNeedVersionId) {
+    const refinedDraftStartedAt = phaseStartedAt(reporter)
     try {
       const [refined, draft] = await Promise.all([
         deps.loadCurrentRefinedNeed(userId, plan.id, plan.currentRefinedNeedVersionId),
@@ -213,7 +370,17 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
       })
       stage3AuthorityReady = !draft || hasCurrentAuthority(draft, context)
       plan.productDraftCompleted = draft?.status === "completed" && stage3AuthorityReady
+      reportJourneyAccessPhase(reporter, {
+        operation: "stage3_access_refined_draft",
+        outcome: stage3AuthorityReady ? "ready" : "authority_stale",
+        durationMs: phaseElapsed(reporter, refinedDraftStartedAt),
+      })
     } catch (error) {
+      reportJourneyAccessPhase(reporter, {
+        operation: "stage3_access_refined_draft",
+        outcome: "error",
+        durationMs: phaseElapsed(reporter, refinedDraftStartedAt),
+      })
       // A Routine that was explicitly accepted is immutable evidence for
       // Stage 4/5. A broken later successor must degrade Stage 3 only; an
       // unaccepted pending proposal remains fail-closed.
@@ -224,7 +391,7 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
   return resolvePersonalPlanJourneyAccess({
     accessState: "active",
     isNewBuyerCohort: true,
-    appEnabled,
+    appEnabled: prefix.appEnabled,
     stage2Enabled,
     stage3Enabled,
     stage4Enabled,
@@ -257,6 +424,13 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
   admin: PersonalPlanJourneyAccessSupabaseClient,
 ): PersonalPlanJourneyAccessLoaderDeps {
   return {
+    reportStage3AccessTiming: (timing) =>
+      reportPersonalPlanTransitionTiming({
+        layer: "server",
+        operation: timing.operation,
+        outcome: timing.outcome,
+        durationMs: timing.durationMs,
+      }),
     async loadEntitlement(userId) {
       const enrollment = await findPersonalPlanEnrollmentForUser(admin as never, userId)
       return {
@@ -376,6 +550,17 @@ export function loadPersonalPlanJourneyAccessForUser(
   userId: string,
 ): Promise<PersonalPlanJourneyAccess> {
   return loadPersonalPlanJourneyAccessWithDeps(
+    createSupabasePersonalPlanJourneyAccessLoader(
+      createAdminClient() as unknown as PersonalPlanJourneyAccessSupabaseClient,
+    ),
+    userId,
+  )
+}
+
+export function loadPersonalPlanStage2AccessForUser(
+  userId: string,
+): Promise<PersonalPlanStage2Access> {
+  return loadPersonalPlanStage2AccessWithDeps(
     createSupabasePersonalPlanJourneyAccessLoader(
       createAdminClient() as unknown as PersonalPlanJourneyAccessSupabaseClient,
     ),

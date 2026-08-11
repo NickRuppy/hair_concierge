@@ -33,7 +33,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
         const clamped = Math.max(0, Math.min(stops.length - 1, index))
         onValueChange?.(stops[clamped].value)
       },
-      [disabled, stops, onValueChange]
+      [disabled, stops, onValueChange],
     )
 
     const indexFromPointer = React.useCallback(
@@ -44,7 +44,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
         const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
         return Math.round(ratio * maxIndex)
       },
-      [maxIndex]
+      [maxIndex],
     )
 
     const handlePointerDown = React.useCallback(
@@ -55,7 +55,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
         setDragging(true)
         selectIndex(indexFromPointer(e.clientX))
       },
-      [disabled, selectIndex, indexFromPointer]
+      [disabled, selectIndex, indexFromPointer],
     )
 
     const handlePointerMove = React.useCallback(
@@ -63,7 +63,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
         if (!dragging) return
         selectIndex(indexFromPointer(e.clientX))
       },
-      [dragging, selectIndex, indexFromPointer]
+      [dragging, selectIndex, indexFromPointer],
     )
 
     const handlePointerUp = React.useCallback(() => {
@@ -87,20 +87,17 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
           selectIndex(stops.length - 1)
         }
       },
-      [disabled, selectedIndex, selectIndex, stops.length]
+      [disabled, selectedIndex, selectIndex, stops.length],
     )
 
     return (
-      <div
-        ref={ref}
-        className={cn("w-full select-none", disabled && "opacity-50", className)}
-      >
+      <div ref={ref} className={cn("w-full select-none", disabled && "opacity-50", className)}>
         {/* Track area */}
         <div
           ref={trackRef}
           className={cn(
             "relative h-10 flex items-center touch-none rounded-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-            disabled ? "cursor-not-allowed" : "cursor-pointer"
+            disabled ? "cursor-not-allowed" : "cursor-pointer",
           )}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -139,7 +136,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
                     ? "border-primary bg-primary"
                     : selectedIndex >= 0
                       ? "border-muted-foreground/40 bg-background"
-                      : "border-muted-foreground/30 bg-muted"
+                      : "border-muted-foreground/30 bg-muted",
                 )}
                 style={{ left: `${pos}%` }}
               />
@@ -161,6 +158,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
             <button
               key={stop.value}
               type="button"
+              aria-label={stop.label}
               disabled={disabled}
               className={cn(
                 "text-[11px] leading-tight text-center transition-colors px-0.5 max-w-[20%]",
@@ -169,7 +167,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
                   : selectedIndex >= 0
                     ? "text-muted-foreground"
                     : "text-muted-foreground/60",
-                !disabled && "cursor-pointer hover:text-foreground"
+                !disabled && "cursor-pointer hover:text-foreground",
               )}
               onClick={() => selectIndex(i)}
             >
@@ -180,7 +178,7 @@ const DiscreteSlider = React.forwardRef<HTMLDivElement, DiscreteSliderProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 DiscreteSlider.displayName = "DiscreteSlider"
 

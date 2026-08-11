@@ -1,6 +1,6 @@
 begin;
 
-select plan(89);
+select plan(92);
 
 select has_table('public', 'personal_plans', 'one owner-scoped Personal Plan root exists');
 select has_table('public', 'personal_plan_need_versions', 'immutable need versions exist');
@@ -251,10 +251,10 @@ select is(
   public.personal_plan_save_product_draft(
     '10000000-0000-0000-0000-000000000003',
     (select id from public.personal_plan_product_drafts where personal_plan_id='20000000-0000-0000-0000-000000000003' and status='active'),
-    0,
-    'product_capture',
-    '{"categoryCursor":"shampoo","completedCaptureCategories":[],"completedDecisionKeys":[]}'::jsonb,
-    '{"schemaVersion":1,"pass":"product_capture","orderedCategories":["shampoo"],"products":[],"roleAssignments":[],"uncoveredRoles":[],"decisions":[],"completedCaptureCategories":[],"completedDecisionKeys":[]}'::jsonb
+  0,
+  'product_capture',
+  '{"categoryCursor":"shampoo","completedCaptureCategories":[],"completedDecisionKeys":[]}'::jsonb,
+  '{"schemaVersion":1,"pass":"product_capture","orderedCategories":["shampoo"],"products":[],"roleAssignments":[],"uncoveredRoles":[],"decisions":[],"completedCaptureCategories":[],"completedDecisionKeys":[]}'::jsonb
   )->>'outcome',
   'saved',
   'Stage-3 mutation performs one service-only compare-and-set'
@@ -270,6 +270,44 @@ select is(
   )->>'outcome',
   'revision_conflict',
   'a stale Stage-3 mutation returns the canonical conflict without overwriting'
+);
+create temporary table test_stage3_stale_source_draft on commit drop as
+select id
+from public.personal_plan_product_drafts
+where personal_plan_id='20000000-0000-0000-0000-000000000003' and status='active';
+insert into public.personal_plan_need_versions (
+  id, user_id, personal_plan_id, kind, parent_need_version_id, schema_version,
+  computation_version, input_hash, input_snapshot, output_snapshot
+) values (
+  '30000000-0000-0000-0000-000000000007',
+  '10000000-0000-0000-0000-000000000003',
+  '20000000-0000-0000-0000-000000000003',
+  'refined', '30000000-0000-0000-0000-000000000005', 1, 'test', repeat('7', 64), '{}'::jsonb, '{}'::jsonb
+);
+update public.personal_plans
+set current_refined_need_version_id='30000000-0000-0000-0000-000000000007', revision=revision+1
+where id='20000000-0000-0000-0000-000000000003';
+select is(
+  public.personal_plan_save_product_draft(
+    '10000000-0000-0000-0000-000000000003',
+    (select id from test_stage3_stale_source_draft),
+    1,
+    'product_capture',
+    '{"categoryCursor":"shampoo","completedCaptureCategories":[],"completedDecisionKeys":[]}'::jsonb,
+    '{"schemaVersion":1,"pass":"product_capture","sourceGuard":"must-not-persist","orderedCategories":["shampoo"],"products":[],"roleAssignments":[],"uncoveredRoles":[],"decisions":[],"completedCaptureCategories":[],"completedDecisionKeys":[]}'::jsonb
+  )->>'outcome',
+  'stale_source',
+  'a Stage-3 save rejects an active draft after the refined pointer has moved'
+);
+select is(
+  (select revision from public.personal_plan_product_drafts where id=(select id from test_stage3_stale_source_draft)),
+  1::bigint,
+  'a stale refined-source save does not advance the old draft revision'
+);
+select is(
+  (select payload->>'sourceGuard' from public.personal_plan_product_drafts where id=(select id from test_stage3_stale_source_draft)),
+  null,
+  'a stale refined-source save does not overwrite the old draft payload'
 );
 select is(
   public.personal_plan_create_or_load_product_draft(

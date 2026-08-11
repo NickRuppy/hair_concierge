@@ -19,7 +19,7 @@ import type {
   TowelTechnique,
   WetWashFrequency,
 } from "@/lib/personal-plan/refinement/types"
-import { PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS } from "@/lib/vocabulary/frequencies"
+import { PRODUCT_FREQUENCIES, PRODUCT_FREQUENCY_LABELS } from "@/lib/vocabulary/frequencies"
 import {
   NIGHT_PROTECTION_LABELS,
   TOWEL_MATERIAL_LABELS,
@@ -46,26 +46,72 @@ export const REFINEMENT_TELEMETRY_EVENTS = [
 ] as const
 
 export const REFINEMENT_CATEGORY_OPTIONS = [
-  { value: "shampoo", label: "Shampoo", icon: "product-shampoo" },
-  { value: "conditioner", label: "Conditioner", icon: "product-conditioner" },
-  { value: "leave_in", label: "Leave-in", icon: "product-leave-in" },
-  { value: "heat_protectant", label: "Hitzeschutz", icon: "heat-protection-yes" },
-  { value: "oil", label: "Öl", icon: "product-oil" },
-  { value: "mask", label: "Maske", icon: "product-mask" },
-  { value: "scalp_care", label: "Kopfhautpflege", icon: "scalp-sensitive" },
-  { value: "dry_shampoo", label: "Trockenshampoo", icon: "product-dry-shampoo" },
-  { value: "bondbuilder", label: "Bondbuilder", icon: "product-bond-builder" },
+  {
+    value: "shampoo",
+    label: "Shampoo",
+    description: "Reinigung für Kopfhaut und Haar.",
+    icon: "product-shampoo",
+  },
+  {
+    value: "conditioner",
+    label: "Conditioner",
+    description: "Ausspülbare Pflege nach der Haarwäsche.",
+    icon: "product-conditioner",
+  },
+  {
+    value: "leave_in",
+    label: "Leave-in",
+    description: "Pflege, die im Haar bleibt und nicht ausgespült wird.",
+    icon: "product-leave-in",
+  },
+  {
+    value: "heat_protectant",
+    label: "Hitzeschutz",
+    description: "Produkt, das du vor Föhn, Glätteisen oder anderer direkter Hitze verwendest.",
+    icon: "heat-protection-yes",
+  },
+  {
+    value: "oil",
+    label: "Öl",
+    description: "Öl für Längen, Spitzen oder als Vorwäsche.",
+    icon: "product-oil",
+  },
+  {
+    value: "mask",
+    label: "Maske",
+    description: "Intensivere, meist ausspülbare Pflege.",
+    icon: "product-mask",
+  },
+  {
+    value: "scalp_care",
+    label: "Kopfhautpflege",
+    description: "Serum, Tonic oder Peeling, das direkt auf die Kopfhaut kommt.",
+    icon: "scalp-sensitive",
+  },
+  {
+    value: "dry_shampoo",
+    label: "Trockenshampoo",
+    description: "Frischt den Ansatz zwischen Haarwäschen auf.",
+    icon: "product-dry-shampoo",
+  },
+  {
+    value: "bondbuilder",
+    label: "Bondbuilder",
+    description: "Spezielle Strukturpflege, zum Beispiel für chemisch behandeltes Haar.",
+    icon: "product-bond-builder",
+  },
   {
     value: "deep_cleansing_shampoo",
     label: "Tiefenreinigungsshampoo",
+    description: "Stärkere Reinigung gegen hartnäckige Rückstände.",
     icon: "product-deep-cleansing",
   },
 ] as const satisfies readonly RefinementOption<Stage2ProductCategory>[]
 
 export const WET_WASH_FREQUENCY_OPTIONS = [
-  ...PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS.map(({ value, label }) => ({
+  ...[...PRODUCT_FREQUENCIES].reverse().map((value) => ({
     value: value as ProductFrequency,
-    label,
+    label: PRODUCT_FREQUENCY_LABELS[value],
     icon: "clock" as const,
   })),
   {
@@ -278,7 +324,7 @@ export function RefinementOptions<T extends string>({
   const selectedValues = Array.isArray(value) ? value : []
 
   return (
-    <div className={cn("grid gap-2.5", className)}>
+    <div className={cn("grid grid-cols-1 gap-2.5", className)}>
       {options.map((option, index) => {
         const active = multi ? selectedValues.includes(option.value) : value === option.value
         return (
@@ -304,21 +350,81 @@ export function RefinementOptions<T extends string>({
         )
       })}
       {multi && allowNone ? (
-        <button
-          type="button"
-          aria-pressed={Array.isArray(value) && value.length === 0}
-          aria-label={noneAriaLabel ?? `${noneLabel}; andere Auswahl wird gelöscht`}
-          onClick={() => (onNoneChange ? onNoneChange() : onChange([]))}
-          className={cn(
-            "mt-1 min-h-11 rounded-full border px-4 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]",
-            Array.isArray(value) && value.length === 0
-              ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum-darkest)]"
-              : "border-border bg-transparent text-[var(--text-sub)] hover:border-[var(--brand-plum-light)]",
-          )}
-        >
-          <span className="block">{noneLabel}</span>
-          <span className="block text-xs font-normal leading-5">{noneDescription}</span>
-        </button>
+        <div className="mt-1 opacity-[0.92]" data-refinement-none-option>
+          <QuizOptionCard
+            ariaLabel={noneAriaLabel}
+            label={noneLabel}
+            description={noneDescription}
+            active={Array.isArray(value) && value.length === 0}
+            multi
+            onClick={() => (onNoneChange ? onNoneChange() : onChange([]))}
+          />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export function WetWashFrequencyScale({
+  value,
+  onChange,
+}: {
+  value: WetWashFrequency | undefined
+  onChange: (value: WetWashFrequency) => void
+}) {
+  const frequencyOptions = WET_WASH_FREQUENCY_OPTIONS.filter(
+    (option) => option.value !== "does_not_wash",
+  )
+  const noWashOption = WET_WASH_FREQUENCY_OPTIONS.find((option) => option.value === "does_not_wash")
+
+  return (
+    <div data-wet-wash-frequency-scale="true">
+      <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-2.5">
+        <div aria-hidden="true" className="relative flex min-h-full flex-col items-center">
+          <span className="mb-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
+            Häufig
+          </span>
+          <span
+            data-wet-wash-frequency-rail="true"
+            className="absolute bottom-7 top-7 w-px bg-[var(--brand-plum-light)]"
+          />
+          <div className="relative z-10 grid flex-1 content-between gap-2.5 py-7">
+            {frequencyOptions.map((option, index) => (
+              <span
+                data-wet-wash-frequency-rank={String(frequencyOptions.length - index)}
+                key={option.value}
+                className="grid h-6 w-6 place-items-center rounded-full border border-[var(--brand-plum-light)] bg-white text-[10px] font-extrabold text-[var(--brand-plum)]"
+              >
+                {frequencyOptions.length - index}
+              </span>
+            ))}
+          </div>
+          <span className="mt-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--text-muted,#736f69)]">
+            Selten
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-2.5">
+          {frequencyOptions.map((option, index) => (
+            <QuizOptionCard
+              active={value === option.value}
+              animationDelay={index * 18}
+              icon={option.icon}
+              key={option.value}
+              label={option.label}
+              onClick={() => onChange(option.value)}
+            />
+          ))}
+        </div>
+      </div>
+      {noWashOption ? (
+        <div className="mt-4 border-t border-[var(--brand-plum-light)] pt-4">
+          <QuizOptionCard
+            active={value === noWashOption.value}
+            icon={noWashOption.icon}
+            label={noWashOption.label}
+            onClick={() => onChange(noWashOption.value)}
+          />
+        </div>
       ) : null}
     </div>
   )

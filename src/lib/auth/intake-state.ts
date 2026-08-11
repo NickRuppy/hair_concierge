@@ -6,7 +6,7 @@ import {
 export type IntakeState = "needs_quiz" | "needs_onboarding" | "ready"
 
 export type PersonalPlanRoutineAccess = {
-  hasActiveOneTimeEntitlement: boolean
+  hasActivePersonalPlanEntitlement: boolean
   pendingRoutineProposalId: string | null
   activeRoutineVersionId: string | null
 }
@@ -79,7 +79,7 @@ export function canBypassLegacyOnboardingForPersonalPlanRoutine(
   pathname: string,
   access: PersonalPlanRoutineAccess | undefined,
 ): boolean {
-  if (!access?.hasActiveOneTimeEntitlement) return false
+  if (!access?.hasActivePersonalPlanEntitlement) return false
 
   const hasPendingOrActiveRoutine = Boolean(
     access.pendingRoutineProposalId || access.activeRoutineVersionId,
