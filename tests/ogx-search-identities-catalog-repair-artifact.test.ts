@@ -39,6 +39,15 @@ const targetIdentities = [
   },
 ]
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
+test("escapeRegExp escapes every JavaScript regular-expression metacharacter", () => {
+  const value = String.raw`OGX \\ Thick & Full + (Shampoo)? [385ml].*`
+  assert.match(value, new RegExp(`^${escapeRegExp(value)}$`))
+})
+
 test("OGX search identity repair package is guarded, source-scoped, and rollbackable", async () => {
   const before = JSON.parse(await readFile(path.join(directory, "before.json"), "utf8")) as {
     brand: { id: string; canonicalName: string }
@@ -77,14 +86,14 @@ test("OGX search identity repair package is guarded, source-scoped, and rollback
     assert.equal(product.target.productLine, identity.line)
     assert.equal(product.target.name, identity.name)
     assert.equal(product.target.stage3DisplayName, identity.displayName)
-    assert.match(repair, new RegExp(identity.currentName.replace(/[+]/g, "\\+")))
-    assert.match(repair, new RegExp(identity.imageFingerprint))
-    assert.match(repair, new RegExp(identity.line.replace(/[+]/g, "\\+")))
-    assert.match(repair, new RegExp(identity.name.replace(/[+]/g, "\\+")))
-    assert.match(rollback, new RegExp(identity.currentName.replace(/[+]/g, "\\+")))
-    assert.match(rollback, new RegExp(identity.line.replace(/[+]/g, "\\+")))
-    assert.match(rollback, new RegExp(identity.name.replace(/[+]/g, "\\+")))
-    assert.match(readme, new RegExp(identity.displayName.replace(/[+]/g, "\\+")))
+    assert.match(repair, new RegExp(escapeRegExp(identity.currentName)))
+    assert.match(repair, new RegExp(escapeRegExp(identity.imageFingerprint)))
+    assert.match(repair, new RegExp(escapeRegExp(identity.line)))
+    assert.match(repair, new RegExp(escapeRegExp(identity.name)))
+    assert.match(rollback, new RegExp(escapeRegExp(identity.currentName)))
+    assert.match(rollback, new RegExp(escapeRegExp(identity.line)))
+    assert.match(rollback, new RegExp(escapeRegExp(identity.name)))
+    assert.match(readme, new RegExp(escapeRegExp(identity.displayName)))
   }
   assert.equal(before.privacy.containsUserIds, false)
   assert.equal(before.privacy.containsEmail, false)

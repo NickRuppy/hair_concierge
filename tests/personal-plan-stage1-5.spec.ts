@@ -930,12 +930,12 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     await expect(page.getByRole("link", { name: "Waschtag" })).toBeVisible()
     await page.goto("/anwendung/wash_day")
     await expect(page.getByRole("heading", { name: "Waschtag", exact: true })).toBeVisible()
-    await expect(page.getByText("E2E Sanftes Shampoo", { exact: true })).toBeVisible()
-    await expect(page.getByText("E2E Leichter Conditioner", { exact: true })).toBeVisible()
+    await expect(page.getByText("E2E Sanftes Shampoo", { exact: true }).first()).toBeVisible()
+    await expect(page.getByText("E2E Leichter Conditioner", { exact: true }).first()).toBeVisible()
     await page.reload()
     await expect(page.getByRole("heading", { name: "Waschtag", exact: true })).toBeVisible()
-    await expect(page.getByText("E2E Sanftes Shampoo", { exact: true })).toBeVisible()
-    await expect(page.getByText("E2E Leichter Conditioner", { exact: true })).toBeVisible()
+    await expect(page.getByText("E2E Sanftes Shampoo", { exact: true }).first()).toBeVisible()
+    await expect(page.getByText("E2E Leichter Conditioner", { exact: true }).first()).toBeVisible()
     await page.goto("/anwendung/intensive_care_day")
     await expect(
       page.getByRole("heading", { name: "Dieser Anwendungstag ist gerade nicht verfügbar" }),
