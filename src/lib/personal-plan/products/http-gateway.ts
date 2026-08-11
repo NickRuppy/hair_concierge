@@ -7,6 +7,7 @@ import {
   type Stage3ProductsGateway,
   type Stage3SearchResponse,
 } from "./gateway"
+import { stage3ProductDraftSchema } from "./contracts"
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 
@@ -31,6 +32,7 @@ export function createHttpStage3ProductsGateway({
         fetcher,
         "/api/personal-plan/stage-3",
         jsonRequest("PATCH", input),
+        { allowRevisionConflict: true },
       ),
     invalidateForRefinedVersion: async () => {
       throw new Stage3ProductsGatewayError("temporarily_unavailable")
@@ -40,6 +42,7 @@ export function createHttpStage3ProductsGateway({
         fetcher,
         "/api/personal-plan/stage-3/complete",
         jsonRequest("POST", input),
+        { allowRevisionConflict: true },
       ),
   }
 }
@@ -73,7 +76,12 @@ function jsonRequest(
   }
 }
 
-async function request<T>(fetcher: FetchLike, url: string, init: RequestInit): Promise<T> {
+async function request<T>(
+  fetcher: FetchLike,
+  url: string,
+  init: RequestInit,
+  options?: { allowRevisionConflict?: boolean },
+): Promise<T> {
   let response: Response
   try {
     response = await fetcher(url, { ...init, cache: "no-store" })
@@ -82,7 +90,19 @@ async function request<T>(fetcher: FetchLike, url: string, init: RequestInit): P
   }
   const body = await response.json().catch(() => null)
   if (response.ok) return body as T
+  if (options?.allowRevisionConflict && response.status === 409) {
+    const conflict = parseStage3RevisionConflict(body)
+    if (conflict) return conflict as T
+  }
   throw new Stage3ProductsGatewayError(errorCode(body))
+}
+
+export function parseStage3RevisionConflict(body: unknown) {
+  if (!body || typeof body !== "object") return null
+  const candidate = body as Record<string, unknown>
+  if (candidate.error !== "revision_conflict") return null
+  const latestDraft = stage3ProductDraftSchema.safeParse(candidate.latestDraft)
+  return latestDraft.success ? { status: "conflict" as const, latestDraft: latestDraft.data } : null
 }
 
 function errorCode(body: unknown) {

@@ -552,6 +552,194 @@ test("catalog search errors keep manual intake available without claiming no pro
   assert.ok(findByType(tree, IntakeFallbackBoundary))
 })
 
+test("a revision conflict waits for a user retry and resubmits once with the canonical revision", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege nach jeder Wäsche",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+  ]
+  const initialDraft = createStage3Draft({
+    draftId: "draft-conflict-retry",
+    userId: "user-conflict-retry",
+    personalPlanId: "plan-conflict-retry",
+    refinedVersionId: "refined-conflict-retry",
+    requirements,
+    now: "2026-08-11T00:00:00.000Z",
+  })
+  const canonicalDraft = { ...initialDraft, revision: 1 }
+  const gateway = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const expectedRevisions: number[] = []
+  gateway.loadOrCreate = async () => ({ status: "active", draft: initialDraft, requirements })
+  gateway.mutate = async (input) => {
+    expectedRevisions.push(input.expectedRevision)
+    if (expectedRevisions.length === 1) return { status: "conflict", latestDraft: canonicalDraft }
+    return { status: "saved", draft: { ...canonicalDraft, revision: 2 } }
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext: {
+        schemaVersion: 1,
+        personalPlanId: initialDraft.personalPlanId,
+        refinedVersionId: initialDraft.refinedVersionId,
+        orderedCategories: requirements,
+        inventoryPrompts: [
+          { category: "conditioner", allowsMultiple: true, allowsExplicitNone: true },
+        ],
+      },
+      gateway,
+      searchDebounceMs: 0,
+    }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.ok(capture)
+  capture.props.onQueryChange("condition")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.ok(capture?.props.searchResults[0])
+  await capture.props.onSelectCandidate(capture.props.searchResults[0]!.candidateId)
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onFrequencyChange("weekly_2x")
+
+  tree = await renderSettled(harness)
+  const conflict = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )
+  assert.equal(conflict?.props.state, "conflict")
+  assert.deepEqual(expectedRevisions, [0])
+  assert.ok(conflict)
+  const retry = conflict.props.onAction
+  assert.ok(retry)
+  retry()
+  await renderSettled(harness)
+
+  assert.deepEqual(expectedRevisions, [0, 1])
+})
+
+test("an authority decision retry uses the canonical revision only after the user retries", async () => {
+  const requirements: Stage3EntryContext["orderedCategories"] = [
+    {
+      category: "conditioner",
+      requiredRoles: ["conditioner_rinse_out"],
+      needSummary: "Pflege nach jeder Wäsche",
+      authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+    },
+  ]
+  const initialDraft: Stage3ProductDraft = {
+    ...createStage3Draft({
+      draftId: "draft-authority-conflict-retry",
+      userId: "user-authority-conflict-retry",
+      personalPlanId: "plan-authority-conflict-retry",
+      refinedVersionId: "refined-authority-conflict-retry",
+      requirements,
+      now: "2026-08-11T00:00:00.000Z",
+    }),
+    pass: "product_decisions",
+    categoryCursor: null,
+    products: [
+      {
+        capturedProductId: "capture-authority-conflict-retry",
+        userProductId: "product-authority-conflict-retry",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-authority-conflict-retry",
+          displayName: "Pflege-Conditioner",
+          category: "conditioner",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "capture-authority-conflict-retry",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+    ],
+  }
+  const subject = deriveStage3DecisionSubjects(initialDraft)[0]!
+  const evaluation = testAuthorityEvaluation(initialDraft, subject)
+  const canonicalDraft = { ...initialDraft, revision: 1 }
+  const expectedRevisions: number[] = []
+  const base = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const gateway = {
+    ...base,
+    evaluateDecisions: async () => [evaluation],
+    resolveDecision: async (input: {
+      draftId: string
+      expectedRevision: number
+      intent: Stage3AuthoritySemanticIntent
+    }): Promise<Stage3MutationResponse> => {
+      expectedRevisions.push(input.expectedRevision)
+      if (expectedRevisions.length === 1) return { status: "conflict", latestDraft: canonicalDraft }
+      return {
+        status: "saved",
+        draft: {
+          ...canonicalDraft,
+          revision: 2,
+          decisions: [testAuthorityDecision(subject, evaluation, input.intent)],
+        },
+      }
+    },
+    complete: async () => ({ status: "not_ready" as const, draft: canonicalDraft }),
+  }
+  const bootstrap: Stage3Bootstrap = {
+    entryContext: {
+      schemaVersion: 1,
+      personalPlanId: initialDraft.personalPlanId,
+      refinedVersionId: initialDraft.refinedVersionId,
+      orderedCategories: requirements,
+      inventoryPrompts: [
+        { category: "conditioner", allowsMultiple: true, allowsExplicitNone: true },
+      ],
+    },
+    draft: initialDraft,
+    requirements,
+    authorityEvaluations: [evaluation],
+  }
+  const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
+
+  let tree = await renderSettled(harness)
+  const decisionScreen = findByType<React.ComponentProps<typeof ProductDecisionScreen>>(
+    tree,
+    ProductDecisionScreen,
+  )
+  assert.ok(decisionScreen)
+  const action = decisionScreen.props.decisions[0]!.actions.find(({ kind }) => kind === "keep")
+  assert.ok(action)
+  await decisionScreen.props.onChooseAction(subject.decisionKey, action)
+  tree = await renderSettled(harness)
+  const conflict = findByType<React.ComponentProps<typeof Stage3SystemState>>(
+    tree,
+    Stage3SystemState,
+  )
+  assert.equal(conflict?.props.state, "conflict")
+  assert.deepEqual(expectedRevisions, [0])
+  const retry = conflict?.props.onAction
+  assert.ok(retry)
+  retry()
+  await renderSettled(harness)
+
+  assert.deepEqual(expectedRevisions, [0, 1])
+})
+
 test("a supplied bootstrap skips duplicate loading and Back uses its resolved entry context", async () => {
   const requirements: Stage3EntryContext["orderedCategories"] = [
     {

@@ -59,6 +59,24 @@ test("product list chunk changes run retrieval eval", () => {
   assert.equal(scope.chat_eval, false)
 })
 
+test("Personal Plan application routines run the journey without paid chat evaluation", () => {
+  const scope = classifyCiScope([
+    "src/lib/routines/personal-plan/application/product-protocol-adapter.ts",
+  ])
+
+  assert.equal(scope.chat_eval, false)
+  assert.equal(scope.personal_plan_journey, true)
+})
+
+test("shared chat routine changes still run chat evaluation", () => {
+  for (const path of [
+    "src/lib/routines/planner.ts",
+    "src/lib/routines/personal-plan/chat-adapter.ts",
+  ]) {
+    assert.equal(classifyCiScope([path]).chat_eval, true, path)
+  }
+})
+
 test("workflow and dependency changes mark security scan relevant", () => {
   assert.equal(classifyCiScope([".github/workflows/ci.yml"]).security_scan, true)
   assert.equal(classifyCiScope(["package-lock.json"]).security_scan, true)

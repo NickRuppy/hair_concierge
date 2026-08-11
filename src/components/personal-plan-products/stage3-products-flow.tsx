@@ -32,7 +32,10 @@ import {
   type Stage3ProductsGateway,
   type Stage3ProductsMutation,
 } from "@/lib/personal-plan/products/gateway"
-import { createHttpStage3ProductsGateway } from "@/lib/personal-plan/products/http-gateway"
+import {
+  createHttpStage3ProductsGateway,
+  parseStage3RevisionConflict,
+} from "@/lib/personal-plan/products/http-gateway"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import {
@@ -923,10 +926,7 @@ export function Stage3ProductsFlow({
         body: JSON.stringify(input),
         cache: "no-store",
       })
-      const body = (await response.json().catch(() => null)) as
-        | Stage3MutationResponse
-        | { latestDraft?: Stage3ProductDraft }
-        | null
+      const body = (await response.json().catch(() => null)) as unknown
       reportPersonalPlanTransitionTiming({
         layer: "client",
         operation: "stage3_individual_decision",
@@ -935,10 +935,9 @@ export function Stage3ProductsFlow({
         status: response.status,
       })
       timingReported = true
-      if (response.status === 409 && body && "latestDraft" in body && body.latestDraft) {
-        return { status: "conflict", latestDraft: body.latestDraft }
-      }
-      if (!response.ok || !body || !("status" in body)) {
+      const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
+      if (conflict) return conflict
+      if (!response.ok || !body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
       }
       return body as Stage3MutationResponse
@@ -1004,10 +1003,7 @@ export function Stage3ProductsFlow({
         body: JSON.stringify(input),
         cache: "no-store",
       })
-      const body = (await response.json().catch(() => null)) as
-        | Stage3MutationResponse
-        | { latestDraft?: Stage3ProductDraft }
-        | null
+      const body = (await response.json().catch(() => null)) as unknown
       reportPersonalPlanTransitionTiming({
         layer: "client",
         operation: "stage3_grouped_decisions",
@@ -1016,10 +1012,9 @@ export function Stage3ProductsFlow({
         status: response.status,
       })
       timingReported = true
-      if (response.status === 409 && body && "latestDraft" in body && body.latestDraft) {
-        return { status: "conflict", latestDraft: body.latestDraft }
-      }
-      if (!response.ok || !body || !("status" in body)) {
+      const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
+      if (conflict) return conflict
+      if (!response.ok || !body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
       }
       return body as Stage3MutationResponse
@@ -1346,8 +1341,12 @@ export function Stage3ProductsFlow({
     }
   }
 
-  async function chooseDecision(decisionKey: string, action: Stage3DecisionAction) {
-    const subject = deriveStage3DecisionSubjects(activeDraft).find(
+  async function chooseDecision(
+    decisionKey: string,
+    action: Stage3DecisionAction,
+    sourceDraft: Stage3ProductDraft = activeDraft,
+  ) {
+    const subject = deriveStage3DecisionSubjects(sourceDraft).find(
       (candidate) => candidate.decisionKey === decisionKey,
     )
     if (!subject) return
@@ -1371,7 +1370,7 @@ export function Stage3ProductsFlow({
     ) {
       handleMutationError(
         new Error("stage3_authority_action_unavailable"),
-        () => void chooseDecision(decisionKey, action),
+        () => void chooseDecision(decisionKey, action, sourceDraft),
       )
       finishDecisionSubmission()
       return
@@ -1388,13 +1387,16 @@ export function Stage3ProductsFlow({
     }
     try {
       const response = await resolveAuthorityDecision({
-        draftId: activeDraft.draftId,
-        expectedRevision: activeDraft.revision,
+        draftId: sourceDraft.draftId,
+        expectedRevision: sourceDraft.revision,
         intent,
       })
       if (response.status === "conflict") {
         finishDecisionSubmission()
-        return handleConflict(response.latestDraft, () => void chooseDecision(decisionKey, action))
+        return handleConflict(
+          response.latestDraft,
+          () => void chooseDecision(decisionKey, action, response.latestDraft),
+        )
       }
       const nextDraft = response.draft
       setDraft(nextDraft)
@@ -1417,7 +1419,7 @@ export function Stage3ProductsFlow({
       finishDecisionSubmission()
     } catch (error) {
       finishDecisionSubmission()
-      handleMutationError(error, () => void chooseDecision(decisionKey, action))
+      handleMutationError(error, () => void chooseDecision(decisionKey, action, sourceDraft))
     }
   }
 
@@ -1611,22 +1613,26 @@ export function Stage3ProductsFlow({
   async function saveMutation(
     mutation: Stage3ProductsMutation,
     afterSave?: (nextDraft: Stage3ProductDraft) => void,
+    sourceDraft: Stage3ProductDraft = activeDraft,
   ) {
     setSaveLabel("Wird gespeichert")
     try {
       const response = await gateway.mutate({
-        draftId: activeDraft.draftId,
-        expectedRevision: activeDraft.revision,
+        draftId: sourceDraft.draftId,
+        expectedRevision: sourceDraft.revision,
         mutation,
       })
       if (response.status === "conflict")
-        return handleConflict(response.latestDraft, () => void saveMutation(mutation, afterSave))
+        return handleConflict(
+          response.latestDraft,
+          () => void saveMutation(mutation, afterSave, response.latestDraft),
+        )
       setDraft(response.draft)
       setSaveLabel("Gespeichert")
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       afterSave?.(response.draft)
     } catch (error) {
-      handleMutationError(error, () => void saveMutation(mutation, afterSave))
+      handleMutationError(error, () => void saveMutation(mutation, afterSave, sourceDraft))
     }
   }
 

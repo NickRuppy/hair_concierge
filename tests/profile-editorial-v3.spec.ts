@@ -106,6 +106,9 @@ test.describe.serial("@ci profile editorial v3", () => {
     await expect(page.getByRole("heading", { name: "Erinnerungen" })).toBeVisible()
     await expect(page.getByRole("heading", { name: "Mitgliedschaft" })).toBeVisible()
     await expect(page.getByRole("heading", { name: "Account" })).toBeVisible()
+    await expect(page.getByText("Dein Zugang bleibt bewusst sekundär")).toHaveCount(0)
+    const signOut = page.getByRole("main").getByRole("button", { name: "Abmelden", exact: true })
+    await expect(signOut).toBeVisible()
     // Old copy must be gone
     await expect(page.getByRole("heading", { name: "Was Hair Concierge sich merkt" })).toHaveCount(
       0,
@@ -131,5 +134,14 @@ test.describe.serial("@ci profile editorial v3", () => {
 
     // 7. Hero has no body paragraph
     await expect(page.getByText("Je vollständiger dein Profil ist")).toHaveCount(0)
+
+    // 8. The same Account action remains visible at the representative mobile width
+    await page.setViewportSize({ width: 375, height: 812 })
+    await expect(signOut).toBeVisible()
+
+    // 9. Account logout uses the existing server action and signed-out recovery screen
+    await signOut.click()
+    await expect(page).toHaveURL(/\/auth\?reason=signed_out$/)
+    await expect(page.getByText("Du wurdest erfolgreich abgemeldet.")).toBeVisible()
   })
 })

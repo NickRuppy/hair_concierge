@@ -63,6 +63,8 @@ cp "$repository_root/supabase/tests/catalog_enrichment_heat.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat.sql"
 cp "$repository_root/supabase/tests/catalog_enrichment_scalp.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_scalp.sql"
+cp "$repository_root/supabase/tests/catalog_enrichment_scalp_image_correction.sql" \
+  "$test_project_root/supabase/tests/catalog_enrichment_scalp_image_correction.sql"
 cp "$repository_root/supabase/tests/personal_plan_field_test_access.sql" \
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql"
 cp "$repository_root/supabase/tests/personal_plan_test_owner_removed.sql" \
@@ -112,4 +114,5 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/catalog_enrichment_heat.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_scalp_real_package.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_scalp.sql" \
+  "$test_project_root/supabase/tests/catalog_enrichment_scalp_image_correction.sql" \
   --local

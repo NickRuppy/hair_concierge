@@ -192,12 +192,16 @@ test-screenshots*/
 !/ops/catalog-enrichment/personal-plan-launch-v1/scalp/isana-professional-aha-pha-scalp-peeling/images/final/isana-professional-aha-pha-scalp-peeling-cf3f6d227eeb.webp
 !/ops/catalog-enrichment/personal-plan-launch-v1/scalp/loreal-elvital-fiber-booster-scalp-serum/images/final/loreal-elvital-fiber-booster-scalp-serum-f054aa159e75.webp
 !/ops/catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum/images/final/the-ordinary-multi-peptide-hair-density-serum-6bb9be89b327.webp
+!/ops/catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum/images/final/the-ordinary-multi-peptide-hair-density-serum-1a79af996795.webp
 
 # Reviewed Personal Plan Heat evidence only.
 !/data/
 /data/*
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*
+!/data/catalog-enrichment/image-corrections/
+/data/catalog-enrichment/image-corrections/*
+!/data/catalog-enrichment/image-corrections/the-ordinary-multi-peptide-hair-density-serum-v1.json
 !/data/catalog-enrichment/personal-plan-launch-v1/
 /data/catalog-enrichment/personal-plan-launch-v1/*
 !/data/catalog-enrichment/personal-plan-launch-v1/README.md
