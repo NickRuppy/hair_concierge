@@ -71,7 +71,7 @@ test.describe("Personal Plan products lab", () => {
 
     await expect(page.getByRole("heading", { name: /Dein Hitzeschutz/ })).toBeVisible()
     await page.getByRole("searchbox", { name: "Produkt suchen" }).fill("unbekannter hitzeschutz")
-    await expect(page.getByRole("status")).toContainText(/Kein sicherer Treffer/i)
+    await expect(page.getByRole("status")).toContainText(/Wir haben dein Produkt nicht gefunden/i)
     await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
     await page.getByLabel("Produktname").fill("Hitzeschutz Spray")
     await page.getByRole("button", { name: "1x/Woche" }).click()

@@ -1887,16 +1887,24 @@ function EmailCapture({
   // nicht erkennen, dass die Adresse inzwischen eine andere ist.
   const latestEmailRef = useRef(email)
   const funnelEventIdRef = useRef<string | null>(null)
+  // Zaehlt jede Bearbeitung waehrend einer laufenden Pruefung. Eine Pruefung,
+  // deren Version beim Abschluss nicht mehr der aktuellen entspricht, ist
+  // komplett ueberholt und darf nichts mehr veraendern.
+  const precheckVersionRef = useRef(0)
   /**
    * Einziger Schreibpfad fuer das E-Mail-Feld. Die Referenz wird im selben
    * Tick gesetzt, damit eine laufende Pruefung die neue Adresse auch dann
-   * sieht, wenn React den Re-Render noch nicht gerendert hat.
+   * sieht, wenn React den Re-Render noch nicht gerendert hat. Eine laufende
+   * Pruefung wird damit ueberholt: Die Version steigt, und der CTA wird
+   * sofort wieder freigegeben, statt auf die alte Antwort zu warten.
    */
   function applyEmailValue(value: string) {
     latestEmailRef.current = value
+    precheckVersionRef.current += 1
     setEmail(value)
     setError("")
     setServerSuggestion(null)
+    setChecking(false)
   }
   const localSuggestions = getEmailSuggestions(email)
   // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
@@ -1963,12 +1971,19 @@ function EmailCapture({
     }
     setError("")
     setChecking(true)
+    const requestVersion = precheckVersionRef.current
     try {
       const result = await precheckEmailDeliverability(candidate)
+      // Eine Bearbeitung waehrend der Pruefung zaehlt die Version hoch. Ein
+      // Ergebnis zu einer ueberholten Version ist wertlos und darf ueberhaupt
+      // nichts mehr veraendern -- weder Schrittwechsel noch Submit noch
+      // Fehlermeldung. Der CTA wurde von applyEmailValue schon freigegeben.
+      if (precheckVersionRef.current !== requestVersion) return
       // Das Feld darf waehrend der Pruefung bearbeitet werden. Ein Ergebnis zu
       // einer inzwischen verworfenen Adresse ist wertlos: Es wuerde eine
       // fremde Fehlermeldung ueber die neue Eingabe legen und den Fokus
-      // stehlen. Also verfaellt es stillschweigend.
+      // stehlen. Also verfaellt es stillschweigend. (Deckt sich mit der
+      // Versionspruefung oben, bleibt aber als zweite Sicherung bestehen.)
       if (latestEmailRef.current.trim() !== candidate) return
       if (!result.deliverable) {
         if (result.rejection) {
@@ -1991,7 +2006,11 @@ function EmailCapture({
       setStep("consent")
       window.scrollTo(0, 0)
     } finally {
-      setChecking(false)
+      // Eine ueberholte Pruefung besitzt den Ladezustand nicht mehr --
+      // applyEmailValue hat ihn bereits geloescht, und ein neuerer Lauf
+      // koennte ihn gerade wieder gesetzt haben. Nur die aktuelle Version
+      // darf ihn also zuruecksetzen.
+      if (precheckVersionRef.current === requestVersion) setChecking(false)
     }
   }
 

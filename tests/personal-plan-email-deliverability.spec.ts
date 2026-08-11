@@ -242,9 +242,14 @@ test.describe("@ci personal-plan email deliverability recovery", () => {
     await page.getByRole("button", { name: "Weiter zu meiner Auswertung" }).click()
     await expect(page.getByRole("button", { name: "E-Mail wird geprüft…" })).toBeVisible()
 
-    // Waehrend die Pruefung laeuft: Adresse korrigieren.
+    // Waehrend die Pruefung laeuft: Adresse korrigieren. Der CTA muss sofort
+    // wieder freigegeben sein -- nicht erst, wenn die alte (1500ms
+    // verzoegerte) Pruefung antwortet. Ein knappes Timeout beweist das: Es
+    // liegt weit unter der Verzoegerung der ersten Antwort.
     await email.fill("max.mustermann@web.de")
-    await expect(page.getByRole("button", { name: "Weiter zu meiner Auswertung" })).toBeEnabled()
+    await expect(page.getByRole("button", { name: "Weiter zu meiner Auswertung" })).toBeEnabled({
+      timeout: 300,
+    })
 
     // Das verspaetete 422 gehoert zur alten Adresse und muss folgenlos bleiben.
     await page.waitForTimeout(1500)
