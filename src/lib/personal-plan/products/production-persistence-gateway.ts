@@ -650,6 +650,21 @@ async function applyMutation(
         category,
       })
       if (!owned) throw new Error("stage3_catalog_candidate_unavailable")
+      const existing = draft.products.find(
+        (product) => product.userProductId === owned.userProductId,
+      )
+      if (existing) {
+        const isExactReplay =
+          existing.capturedProductId === owned.userProductId &&
+          existing.identity.kind === "catalog_product" &&
+          existing.identity.productId === owned.productId &&
+          existing.identity.category === owned.category &&
+          existing.frequencyRange === mutation.frequencyRange &&
+          existing.ownership === "owned" &&
+          existing.source === "catalog_search"
+        if (isExactReplay) return draft
+        throw new Error("stage3_catalog_capture_conflict")
+      }
       return withUpdatedAt(
         addCapturedProduct(draft, {
           capturedProductId: owned.userProductId,

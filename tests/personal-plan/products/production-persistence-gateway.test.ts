@@ -112,6 +112,129 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
   }
 }
 
+test("catalog capture replay is idempotent after the first save committed", async () => {
+  const initial = createStage3Draft({
+    draftId: "draft-catalog-replay",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements,
+    now: "2026-08-08T00:00:00.000Z",
+  })
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(initial),
+      resolveOwnedCatalogProduct: async () => ({
+        userProductId: "owned-replayed-catalog",
+        productId: "catalog-replayed",
+        displayName: "Replay Conditioner",
+        category: "conditioner",
+        imageUrl: null,
+      }),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+
+  await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: [],
+  })
+  const mutation = {
+    type: "capture_catalog_candidate" as const,
+    candidateId: "catalog-replayed",
+    frequencyRange: "weekly_2x" as const,
+  }
+  const first = await gateway.mutate({
+    draftId: initial.draftId,
+    expectedRevision: initial.revision,
+    mutation,
+  })
+  assert.equal(first.status, "saved")
+  if (first.status !== "saved") return
+
+  const replay = await gateway.mutate({
+    draftId: initial.draftId,
+    expectedRevision: first.draft.revision,
+    mutation,
+  })
+
+  assert.equal(replay.status, "saved")
+  if (replay.status !== "saved") return
+  assert.equal(replay.draft.revision, first.draft.revision)
+  assert.equal(replay.draft.products.length, 1)
+  assert.equal(saves, 2)
+})
+
+test("catalog capture replay retains the current-refined-source save guard", async () => {
+  const initial = createStage3Draft({
+    draftId: "draft-catalog-replay-stale",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements,
+    now: "2026-08-08T00:00:00.000Z",
+  })
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(initial),
+      resolveOwnedCatalogProduct: async () => ({
+        userProductId: "owned-replayed-catalog",
+        productId: "catalog-replayed",
+        displayName: "Replay Conditioner",
+        category: "conditioner",
+        imageUrl: null,
+      }),
+      save: async (input) => {
+        saves += 1
+        return saves === 1
+          ? { outcome: "saved" as const, draft: input.draft }
+          : { outcome: "stale_source" as const, draft: input.draft }
+      },
+    },
+  })
+
+  await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: [],
+  })
+  const mutation = {
+    type: "capture_catalog_candidate" as const,
+    candidateId: "catalog-replayed",
+    frequencyRange: "weekly_2x" as const,
+  }
+  const first = await gateway.mutate({
+    draftId: initial.draftId,
+    expectedRevision: initial.revision,
+    mutation,
+  })
+  assert.equal(first.status, "saved")
+  if (first.status !== "saved") return
+
+  await assert.rejects(
+    gateway.mutate({
+      draftId: initial.draftId,
+      expectedRevision: first.draft.revision,
+      mutation,
+    }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
+  assert.equal(saves, 2)
+})
+
 test("loadOrCreate CAS-repairs a persisted cursorless capture draft", async () => {
   const initial = createStage3Draft({
     draftId: "draft-stranded-capture",
