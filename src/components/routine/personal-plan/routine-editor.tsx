@@ -379,7 +379,7 @@ export function RoutineEditor({
         </Button>
         <Button
           type="button"
-          variant="cta"
+          variant="funnelCta"
           disabled={!dirty || isSubmitting}
           onClick={() => onSubmitOperations([...operations])}
         >
