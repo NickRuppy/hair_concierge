@@ -7,10 +7,9 @@ import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createPersistedStage2RefinementGateway } from "@/lib/personal-plan/refinement/production-persistence-gateway"
 import {
-  canAccessPersonalPlanJourneyStage,
-  type PersonalPlanJourneyAccess,
-} from "@/lib/personal-plan/journey-access"
-import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+  loadPersonalPlanStage2AccessForUser,
+  type PersonalPlanStage2Access,
+} from "@/lib/personal-plan/journey-access-loader"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import {
   Stage2RefinementError,
@@ -22,7 +21,7 @@ export type Stage2RouteDeps = {
   getUserId: () => Promise<string | null>
   gatewayFor: (userId: string) => Stage2RefinementGateway
   enabled: () => boolean
-  loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
+  loadStage2Access: (userId: string) => Promise<PersonalPlanStage2Access>
 }
 
 const saveRequestSchema = z
@@ -84,7 +83,7 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
     if (!userId) return response({ error: "unauthorized" }, 401)
     try {
       phaseStarted = Date.now()
-      if (!canAccessPersonalPlanJourneyStage(await deps.loadJourneyAccess(userId), "stage2")) {
+      if (!(await deps.loadStage2Access(userId)).allowed) {
         return response({ error: "stage_not_ready" }, 409)
       }
       phases.journey = Date.now() - phaseStarted
@@ -168,7 +167,7 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
 const handlers = createStage2RouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
-  loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
+  loadStage2Access: loadPersonalPlanStage2AccessForUser,
   gatewayFor: (userId) =>
     createPersistedStage2RefinementGateway({
       userId,

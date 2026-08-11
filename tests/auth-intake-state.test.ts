@@ -91,16 +91,11 @@ test("getAuthenticatedAppRedirect preserves quiz retake access", () => {
   assert.equal(getAuthenticatedAppRedirect("/quiz", "ready", { isQuizRetake: true }), null)
 })
 
-test("Personal Plan routine access bypasses legacy onboarding only at the Stage 4/5 frontier", () => {
+test("active Personal Plan access with a pending proposal permits the Stage 4 routine route", () => {
   const pendingRoutine = {
-    hasActiveOneTimeEntitlement: true,
+    hasActivePersonalPlanEntitlement: true,
     pendingRoutineProposalId: "proposal-1",
     activeRoutineVersionId: null,
-  }
-  const activeRoutine = {
-    hasActiveOneTimeEntitlement: true,
-    pendingRoutineProposalId: null,
-    activeRoutineVersionId: "routine-1",
   }
 
   assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/routine", pendingRoutine), true)
@@ -108,29 +103,71 @@ test("Personal Plan routine access bypasses legacy onboarding only at the Stage 
     canBypassLegacyOnboardingForPersonalPlanRoutine("/routine/current", pendingRoutine),
     true,
   )
-  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung", pendingRoutine), false)
-  assert.equal(
-    canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung/wash_day", activeRoutine),
-    true,
-  )
-  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/chat", activeRoutine), false)
-  assert.equal(
-    canBypassLegacyOnboardingForPersonalPlanRoutine("/routine", {
-      ...activeRoutine,
-      hasActiveOneTimeEntitlement: false,
-    }),
-    false,
-  )
   assert.equal(
     getAuthenticatedAppRedirect("/routine", "needs_onboarding", {
       personalPlanRoutineAccess: pendingRoutine,
     }),
     null,
   )
+})
+
+test("anwendung still requires an active routine version", () => {
+  const pendingRoutine = {
+    hasActivePersonalPlanEntitlement: true,
+    pendingRoutineProposalId: "proposal-1",
+    activeRoutineVersionId: null,
+  }
+  const activeRoutine = {
+    hasActivePersonalPlanEntitlement: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: "routine-1",
+  }
+
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung", pendingRoutine), false)
   assert.equal(
-    getAuthenticatedAppRedirect("/anwendung", "needs_onboarding", {
-      personalPlanRoutineAccess: pendingRoutine,
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung/wash_day", activeRoutine),
+    true,
+  )
+})
+
+test("Personal Plan access without a pending or active routine remains blocked", () => {
+  assert.equal(
+    getAuthenticatedAppRedirect("/routine", "needs_onboarding", {
+      personalPlanRoutineAccess: {
+        hasActivePersonalPlanEntitlement: true,
+        pendingRoutineProposalId: null,
+        activeRoutineVersionId: null,
+      },
     }),
     "/onboarding",
+  )
+})
+
+test("field-test metadata without active app access does not bypass legacy onboarding", () => {
+  assert.equal(
+    getAuthenticatedAppRedirect("/routine", "needs_onboarding", {
+      personalPlanRoutineAccess: {
+        hasActivePersonalPlanEntitlement: false,
+        pendingRoutineProposalId: "proposal-1",
+        activeRoutineVersionId: null,
+      },
+    }),
+    "/onboarding",
+  )
+})
+
+test("one-time purchasers retain Personal Plan routine access", () => {
+  const activeRoutine = {
+    hasActivePersonalPlanEntitlement: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: "routine-1",
+  }
+
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/chat", activeRoutine), false)
+  assert.equal(
+    getAuthenticatedAppRedirect("/anwendung", "needs_onboarding", {
+      personalPlanRoutineAccess: activeRoutine,
+    }),
+    null,
   )
 })

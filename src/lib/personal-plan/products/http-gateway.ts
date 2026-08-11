@@ -94,7 +94,7 @@ async function request<T>(
     const conflict = parseStage3RevisionConflict(body)
     if (conflict) return conflict as T
   }
-  throw new Stage3ProductsGatewayError(errorCode(body))
+  throw new Stage3ProductsGatewayError(parseStage3GatewayErrorCode(body))
 }
 
 export function parseStage3RevisionConflict(body: unknown) {
@@ -105,7 +105,7 @@ export function parseStage3RevisionConflict(body: unknown) {
   return latestDraft.success ? { status: "conflict" as const, latestDraft: latestDraft.data } : null
 }
 
-function errorCode(body: unknown) {
+export function parseStage3GatewayErrorCode(body: unknown) {
   if (
     body &&
     typeof body === "object" &&

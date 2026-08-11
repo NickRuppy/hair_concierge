@@ -1,25 +1,47 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import {
   IntakeFallbackBoundary,
   ProductCaptureScreen,
   ProductDecisionScreen,
+  ProductFrequencyPicker,
+  ProductKindReviewScreen,
   SemanticRoleAssignment,
   Stage3Shell,
   Stage3SystemState,
   Stage3Transition,
   type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
+import { DiscreteSlider } from "../src/components/ui/slider"
 import { authorityEvaluationProjection } from "../src/components/personal-plan-products/stage3-products-flow"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
   type Stage3ProductDraft,
 } from "../src/lib/personal-plan/products/contracts"
+import { PRODUCT_FREQUENCIES, PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
 
 const forbiddenFlowLabels = /\b(?:Pass|Teil\s+\d|Stage|Stufe)\b/i
+
+function childrenOf(node: ReactNode): ReactNode[] {
+  if (!React.isValidElement(node)) return []
+  const element = node as ReactElement<{ children?: ReactNode }>
+  return React.Children.toArray(element.props.children)
+}
+
+function findByType<P>(node: ReactNode, type: ReactElement<P>["type"]): ReactElement<P> | null {
+  if (!React.isValidElement(node)) return null
+  const element = node as ReactElement<P & { children?: ReactNode }>
+  if (element.type === type) return element as ReactElement<P>
+  for (const child of childrenOf(element)) {
+    const match = findByType<P>(child, type)
+    if (match) return match
+  }
+  return null
+}
 
 test("stage 3 shell and transitions reuse onboarding language without internal numbering", () => {
   const captureHtml = renderToStaticMarkup(
@@ -115,12 +137,133 @@ test("product capture exposes controlled search, explicit result selection, freq
   assert.match(html, /aria-label="Produkt suchen"/)
   assert.match(html, /role="listbox"/)
   assert.match(html, /aria-label="Kérastase Bain Satin auswählen"/)
+  assert.match(html, /role="slider"/)
   assert.match(html, /aria-label="Nutzungshäufigkeit"/)
-  assert.match(html, /aria-pressed="true"[^>]*>2x\/Woche/)
+  assert.match(html, /aria-valuetext="2x\/Woche"/)
   assert.match(html, /Weiteres Shampoo hinzufügen/)
   assert.match(html, /Nicht dabei\? Produkt hinzufügen/)
   assert.match(html, /Kérastase Bain Satin/)
   assert.doesNotMatch(html, /Suchtreffer als eigenes Produkt gespeichert/)
+  assert.doesNotMatch(html, /Ich habe dafür kein Produkt/)
+})
+
+test("saving product capture disables search-result selection and captured-product removal", () => {
+  const html = renderToStaticMarkup(
+    <ProductCaptureScreen
+      categoryLabel="Shampoo"
+      needSummary="Bedarf"
+      query="kerastase"
+      searchStatus="ready"
+      searchResults={[
+        {
+          candidateId: "candidate-1",
+          displayName: "Kérastase Bain Satin",
+          brandName: "Kérastase",
+          detail: "Shampoo",
+        },
+      ]}
+      capturedProducts={[
+        {
+          capturedProductId: "owned-1",
+          displayName: "Kérastase Bain Satin",
+          frequencyLabel: "2x/Woche",
+        },
+      ]}
+      frequencyOptions={[]}
+      selectedFrequency={null}
+      showFrequency={false}
+      intakeAvailable
+      onQueryChange={() => {}}
+      onSelectCandidate={() => {}}
+      onFrequencyChange={() => {}}
+      onAddAnotherProduct={() => {}}
+      onRemoveProduct={() => {}}
+      onOpenFallbackIntake={() => {}}
+      onContinue={() => {}}
+      disabled
+    />,
+  )
+
+  assert.match(html, /aria-label="Kérastase Bain Satin auswählen"[^>]*disabled/)
+  assert.match(html, /aria-label="Kérastase Bain Satin aus Shampoo entfernen"[^>]*disabled/)
+})
+
+test("global product-kind review uses one-column German category choices", () => {
+  const html = renderToStaticMarkup(
+    <ProductKindReviewScreen
+      options={[
+        {
+          value: "shampoo",
+          label: "Shampoo",
+          description: "Reinigung passend zu deiner Kopfhaut",
+        },
+        {
+          value: "conditioner",
+          label: "Conditioner",
+          description: "Pflege nach jeder Wäsche",
+        },
+      ]}
+      selected={["shampoo"]}
+      onToggle={() => {}}
+      onContinue={() => {}}
+      onBack={() => {}}
+    />,
+  )
+
+  assert.match(html, /<h1[^>]*>Deine Produktarten<\/h1>/)
+  assert.match(html, /Prüfe einmal global/)
+  assert.match(html, /aria-label="Shampoo"/)
+  assert.match(html, /checked/)
+  assert.match(html, /Produktarten bestätigen/)
+  assert.doesNotMatch(html, /grid-cols-2|Ich habe dafür kein Produkt/)
+})
+
+test("product frequency picker delegates the canonical 8-stop rare-to-daily slider", () => {
+  const element = ProductFrequencyPicker({
+    options: PRODUCT_FREQUENCIES.map((value) => ({
+      value,
+      label: PRODUCT_FREQUENCY_LABELS[value],
+    })),
+    selected: "weekly_2x",
+    productName: "Test Shampoo",
+    onChange: () => {},
+  })
+  const slider = findByType<React.ComponentProps<typeof DiscreteSlider>>(element, DiscreteSlider)
+
+  assert.deepEqual(
+    slider?.props.stops.map((stop) => stop.value),
+    [...PRODUCT_FREQUENCIES],
+  )
+  assert.equal(slider?.props.value, "weekly_2x")
+  assert.equal(slider?.props["aria-label"], "Nutzungshäufigkeit")
+  assert.equal(slider?.props.disabled, false)
+
+  const html = renderToStaticMarkup(element)
+  assert.match(html, /aria-valuemin="0"/)
+  assert.match(html, /aria-valuemax="7"/)
+  assert.match(html, /aria-valuenow="4"/)
+  assert.match(html, /aria-valuetext="2x\/Woche"/)
+  assert.match(html, /Seltener als 1x\/Monat/)
+  assert.match(html, /Täglich/)
+})
+
+test("product frequency slider disables pointer, label buttons, and focus when saving", () => {
+  const html = renderToStaticMarkup(
+    <ProductFrequencyPicker
+      options={PRODUCT_FREQUENCIES.map((value) => ({
+        value,
+        label: PRODUCT_FREQUENCY_LABELS[value],
+      }))}
+      selected="weekly_2x"
+      onChange={() => {}}
+      disabled
+    />,
+  )
+
+  assert.match(html, /role="slider"/)
+  assert.match(html, /aria-disabled="true"/)
+  assert.match(html, /tabIndex="-1"|tabindex="-1"/)
+  assert.match(html, /disabled/)
 })
 
 test("every supported Personal Plan category renders an explicit German capture heading", () => {

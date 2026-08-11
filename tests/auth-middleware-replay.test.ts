@@ -1,6 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { buildAuthenticatedAppRedirectUrl } from "../src/lib/supabase/middleware"
+import {
+  buildAuthenticatedAppRedirectUrl,
+  hasActivePersonalPlanRoutineEntitlement,
+} from "../src/lib/supabase/middleware"
 
 test("authenticated auth routing strips auth-only error and token query material", () => {
   const redirected = buildAuthenticatedAppRedirectUrl(
@@ -29,4 +32,45 @@ test("non-auth app routing does not silently strip ordinary route query paramete
   )
 
   assert.equal(redirected.toString(), "https://chaarlie.de/quiz?reason=attention&next=%2Fanwendung")
+})
+
+test("Personal Plan routine entitlement accepts active one-time access", () => {
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: true,
+      fieldTestGuest: false,
+      oneTimeAccessState: "active",
+    }),
+    true,
+  )
+})
+
+test("Personal Plan routine entitlement accepts only active field-test access", () => {
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: true,
+      fieldTestGuest: true,
+      oneTimeAccessState: "none",
+    }),
+    true,
+  )
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: false,
+      fieldTestGuest: true,
+      oneTimeAccessState: "none",
+    }),
+    false,
+  )
+})
+
+test("ordinary app access does not become Personal Plan routine entitlement", () => {
+  assert.equal(
+    hasActivePersonalPlanRoutineEntitlement({
+      hasCurrentAppAccess: true,
+      fieldTestGuest: false,
+      oneTimeAccessState: "none",
+    }),
+    false,
+  )
 })

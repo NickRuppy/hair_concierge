@@ -25,6 +25,27 @@ const CATEGORY_LABELS: Record<Stage1Category, string> = {
   deep_cleansing_shampoo: "Tiefenreinigung",
 }
 
+const CATEGORY_EXAMPLE_IMAGES = {
+  shampoo:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1ef2be82-259c-4a1f-af2e-3ac3403f9731/37-1ef2be82-259c-4a1f-af2e-3ac3403f9731-salthouse-salthouse-anti-juckreiz-d55447789e9c.webp",
+  conditioner:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/007a0b35-2372-4836-9aa5-fd089cd588d4/05-007a0b35-2372-4836-9aa5-fd089cd588d4-balea-balea-natural-beauty-hibiskus-78479c0a7a2f.webp",
+  leave_in:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/5dc2fae3-a0ca-4e6c-9c30-02dd192772f0/16-5dc2fae3-a0ca-4e6c-9c30-02dd192772f0-gliss-gliss-ultimate-repair-spruh-conditioner-e4d12ef3de4d.webp",
+  heat_protectant:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/jean-len-beat-the-heat-100ml/manufacturer-front.webp",
+  oil: "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/4a95e1de-54e9-4fcd-b227-72a5824d13c1/11-4a95e1de-54e9-4fcd-b227-72a5824d13c1-dr-scheller-dr-scheller-jojobaol-18ac55078631.webp",
+  mask: "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/9e1442c9-4ab8-4819-a851-66859a98ed80/13-9e1442c9-4ab8-4819-a851-66859a98ed80-fructis-fructis-hair-food-papaya-00daf3210708.webp",
+  scalp_care:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/6b01025d-9e72-4514-b42e-bbb6065fbe1c/13-6b01025d-9e72-4514-b42e-bbb6065fbe1c-elvital-elvital-ol-magique-midnight-serum-ae5a315dc466.webp",
+  dry_shampoo:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-05/786a1396-914e-4739-a32c-1c3ead39a3d1/03-786a1396-914e-4739-a32c-1c3ead39a3d1-batiste-trockenshampoo-original-43040f50c097.webp",
+  bondbuilder:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/38dace91-0fba-49ee-a93f-ac36e488fe4b/17-38dace91-0fba-49ee-a93f-ac36e488fe4b-k18-k18-leave-in-molecular-repair-hair-mask-8595971dcd08.webp",
+  deep_cleansing_shampoo:
+    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-additions/2026-07-03/deep-cleansing/balea-professional-shampoo-tiefenreinigung.webp",
+} satisfies Record<Stage1Category, string>
+
 const ROLE_PILLS: Partial<Record<PlanProductRole, string>> = {
   shampoo_everyday: "sanft",
   shampoo_dandruff: "Kopfhaut",
@@ -78,13 +99,6 @@ function isInitialProductPreview(value: unknown): value is InitialProductPreview
   return (
     value.state === "selected" && typeof value.imageUrl === "string" && value.imageUrl.length > 0
   )
-}
-
-function selectedPreviewFor(
-  previews: readonly InitialProductPreview[],
-  category: Stage1Category,
-): InitialProductPreview | null {
-  return previews.find((preview) => preview.category === category) ?? null
 }
 
 function displayFrequencyValue(value: ProductFrequency): string {
@@ -230,10 +244,7 @@ function presentationFor(decision: PlanCategoryDecision): CategoryPresentation |
   }
 }
 
-function cardFromDecision(
-  decision: PlanCategoryDecision,
-  preview: InitialProductPreview | null,
-): NeedCardViewModel | null {
+function cardFromDecision(decision: PlanCategoryDecision): NeedCardViewModel | null {
   if (decision.needTier !== "basis" && decision.needTier !== "optional") return null
   if (decision.resolution === "deferred_until_post_plan_onboarding") return null
   if (!decision.target || decision.target.category !== decision.category) return null
@@ -244,7 +255,6 @@ function cardFromDecision(
   const cadence = frequencyLabel(decision.frequency, decision.executionState === "paused")
   if (!cadence) return null
 
-  const selected = preview?.state === "selected" ? preview : null
   const pills = decision.roles
     .map((role) => ROLE_PILLS[role])
     .filter((pill): pill is string => Boolean(pill))
@@ -263,8 +273,8 @@ function cardFromDecision(
     purpose: presentation.purpose,
     pills: [...new Set(pills)].slice(0, 2),
     frequency: cadence,
-    imageUrl: selected?.imageUrl ?? null,
-    imageAlt: "",
+    imageUrl: CATEGORY_EXAMPLE_IMAGES[decision.category] ?? null,
+    imageAlt: `Beispielbild für ${CATEGORY_LABELS[decision.category]}; kein ausgewähltes Produkt.`,
     paused: decision.executionState === "paused",
     detailBlocks: [
       { title: DETAIL_TITLE_PRODUCT, body: presentation.productCriteria },
@@ -334,7 +344,7 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
     cards = snapshot.renderedOrder.map((category) => {
       const decision = snapshot.decisions.find((candidate) => candidate.category === category)
       if (!decision) return null
-      return cardFromDecision(decision, selectedPreviewFor(snapshot.productPreviews, category))
+      return cardFromDecision(decision)
     })
   } catch {
     return null

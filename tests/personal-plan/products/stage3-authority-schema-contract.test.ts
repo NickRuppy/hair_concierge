@@ -61,3 +61,26 @@ test("Stage 3 one-row authority relations keep product_id as their primary key",
     )
   }
 })
+
+test("Stage 3 product-draft saves lock and verify the current refined source", async () => {
+  const source = await migration(
+    "20260811070307_personal_plan_stage3_current_refined_source_guard.sql",
+  )
+
+  assert.match(source, /SECURITY DEFINER SET search_path = ''/)
+  assert.match(source, /FROM public\.personal_plans[\s\S]*?FOR UPDATE/)
+  assert.match(source, /FROM public\.personal_plan_product_drafts[\s\S]*?FOR UPDATE/)
+  assert.match(
+    source,
+    /v_draft\.refined_need_version_id IS DISTINCT FROM v_plan\.current_refined_need_version_id[\s\S]*?'stale_source'/,
+  )
+  assert.match(source, /'revision_conflict'/)
+  assert.match(
+    source,
+    /REVOKE ALL ON FUNCTION public\.personal_plan_save_product_draft\(uuid,uuid,bigint,text,jsonb,jsonb\) FROM PUBLIC, anon, authenticated;/,
+  )
+  assert.match(
+    source,
+    /GRANT EXECUTE ON FUNCTION public\.personal_plan_save_product_draft\(uuid,uuid,bigint,text,jsonb,jsonb\) TO service_role;/,
+  )
+})

@@ -66,7 +66,14 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
 
     await expect(page.getByRole("heading", { name: /Dein Hitzeschutz/ })).toBeVisible()
-    await page.getByRole("button", { name: "Ich habe dafür kein Produkt" }).click()
+    await page.getByRole("searchbox", { name: "Produkt suchen" }).fill("unbekannter hitzeschutz")
+    await expect(page.getByRole("status")).toContainText(/Kein sicherer Treffer/i)
+    await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
+    await page.getByLabel("Produktname").fill("Hitzeschutz Spray")
+    await page.getByRole("button", { name: "1x/Woche" }).click()
+    await page.getByRole("button", { name: "Produkt speichern" }).click()
+    await expect(page.getByText(/Noch in Prüfung · gespeichert/i)).toBeVisible()
+    await page.getByRole("button", { name: "Weiter", exact: true }).click()
 
     await expect(page.getByRole("heading", { name: "Produkte prüfen" })).toBeVisible()
     await page.getByRole("button", { name: /Conditioner Balance weiterverwenden/ }).click()
@@ -74,8 +81,9 @@ test.describe("Personal Plan products lab", () => {
     await page.getByRole("button", { name: /einplanen/ }).click()
     await expect(page.getByText("Noch in Prüfung", { exact: true })).toBeVisible()
     await page.getByRole("button", { name: /Prüfung später fortsetzen/ }).click()
-    await expect(page.getByText("Noch nicht beurteilbar", { exact: true })).toBeVisible()
-    await page.getByRole("button", { name: /Lücke im Plan markieren/ }).click()
+    await expect(page.getByRole("heading", { name: "Hitzeschutz Spray" })).toBeVisible()
+    await expect(page.getByText("Noch in Prüfung", { exact: true })).toBeVisible()
+    await page.getByRole("button", { name: /Prüfung später fortsetzen/ }).click()
 
     await page.waitForURL((url) => url.pathname !== labPath)
     await expect(page).not.toHaveURL(new RegExp(`${labPath}$`))
