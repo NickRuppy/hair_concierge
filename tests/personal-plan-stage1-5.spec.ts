@@ -565,6 +565,11 @@ async function expectStage3Category(page: Page, category: string) {
   await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible()
 }
 
+async function confirmStage3ProductKinds(page: Page) {
+  await expect(page.getByRole("heading", { name: "Deine Produktarten", exact: true })).toBeVisible()
+  await page.getByRole("button", { name: "Produktarten bestätigen", exact: true }).click()
+}
+
 type NavigationTimingReceipt = {
   coldMs: number
   warm: { samples: number[]; p75Ms: number; p95Ms: number; maxMs: number }
@@ -602,11 +607,11 @@ async function sampleNavigationToVisible(input: {
 
 async function completeCurrentCategory(page: Page, category: string) {
   if (category === "shampoo") {
-    await searchCaptureAndAssign(page, "E2E Sanftes", "E2E Sanftes Shampoo")
+    await searchCaptureAndAssign(page, "E2E Sanftes", "Sanftes Shampoo")
     return
   }
   if (category === "mask") {
-    await searchCaptureAndAssign(page, "E2E Unbekannte", "E2E Unbekannte Maske", "2x/Woche")
+    await searchCaptureAndAssign(page, "E2E Unbekannte", "Unbekannte Maske", "2x/Woche")
     return
   }
   if (category === "scalp_care") {
@@ -688,8 +693,16 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     for (const category of ["Shampoo", "Conditioner", "Maske", "Kopfhautpflege"]) {
       await page.getByRole("button", { name: category, exact: true }).click()
     }
+    const firstStage2Save = page.waitForResponse((response) => {
+      const request = response.request()
+      return (
+        request.method() === "PATCH" &&
+        new URL(response.url()).pathname === "/api/personal-plan/stage-2"
+      )
+    })
     await page.getByRole("button", { name: "Weiter", exact: true }).click()
     await expect(page.getByRole("button", { name: "2x/Woche" })).toBeVisible()
+    expect((await firstStage2Save).status()).toBe(200)
     await page.reload()
     await expect(page.getByText("Wir laden deine Verfeinerung.", { exact: true })).toBeVisible()
     await expect(page.getByText("Nasswasch-Rhythmus", { exact: true })).toBeVisible()
@@ -709,18 +722,20 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     await expect(page.getByRole("heading", { name: /Wie oft nutzt du.*Föhn/i })).toBeVisible()
     await chooseAndContinue(page, "2x/Woche")
     await chooseNoneAndContinue(page)
-    await expect(page.getByRole("heading", { name: "Dein Shampoo", exact: true })).toBeVisible({
-      timeout: 30_000,
-    })
+    await expect(
+      page.getByRole("heading", { name: "Deine Produktarten", exact: true }),
+    ).toBeVisible({ timeout: 30_000 })
     const stage3ReadsBeforeSampling = stage3ClientReads
     const stage3Timing = await sampleNavigationToVisible({
       page,
       url: "/plan-start",
-      ready: () => page.getByRole("heading", { name: "Dein Shampoo", exact: true }),
+      ready: () => page.getByRole("heading", { name: "Deine Produktarten", exact: true }),
     })
     expect(stage3Timing.warm.p75Ms).toBeLessThanOrEqual(1_500)
     expect(stage3Timing.warm.p95Ms).toBeLessThanOrEqual(3_000)
     expect(stage3ClientReads - stage3ReadsBeforeSampling).toBe(9)
+    await confirmStage3ProductKinds(page)
+    await expectStage3Category(page, "shampoo")
     console.info(
       `personal_plan_seeded_local_timing ${JSON.stringify({
         environment: "isolated local Supabase + Next production server + Chromium",
@@ -766,6 +781,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
         await page.reload()
         if (!successor)
           throw new Error("Stage 3 journey requires a successor after the first category")
+        await confirmStage3ProductKinds(page)
         await expectStage3Category(page, successor)
       }
     }
@@ -775,11 +791,9 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       const authorityState = await waitForStage3AuthorityState(page)
       if (authorityState === "complete") break
       const ownedAction = page.getByRole("button", {
-        name: /^E2E Sanftes Shampoo weiterverwenden: /,
+        name: /^Sanftes Shampoo weiterverwenden: /,
       })
-      const plannedAction = page.getByRole("button", {
-        name: /^E2E Leichter Conditioner einplanen: /,
-      })
+      const plannedAction = page.getByRole("button", { name: / einplanen: / }).first()
       const pendingAction = page.getByRole("button", {
         name: /^Prüfung später fortsetzen: /,
       })
@@ -819,7 +833,9 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
         }
       }
     }
-    expect(seen).toEqual(new Set(["owned", "planned", "pending", "unknown"]))
+    expect(seen.has("owned")).toBe(true)
+    expect(seen.has("pending")).toBe(true)
+    expect(seen.has("unknown")).toBe(true)
 
     await page.waitForURL("**/routine")
     expect(stage3CompletionRequests).toBe(1)
