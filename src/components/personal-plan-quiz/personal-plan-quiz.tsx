@@ -2157,8 +2157,7 @@ function EmailCapture({
           ) : null}
           <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-[var(--text-sub)]">
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
-            Hierhin schicken wir deine Auswertung – so kannst du sie jederzeit wieder öffnen. Kein
-            Spam.
+            Hierhin schicken wir deine Auswertung.
           </p>
           <Button className="mt-7" disabled={emailStepBusy} type="submit" variant="funnelCta">
             {emailStepBusy ? emailStepBusyLabel : "Weiter zu meiner Auswertung"}
