@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronDown } from "lucide-react"
+import { signOutAction } from "@/app/auth/actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -2065,10 +2066,6 @@ export default function ProfilePage() {
               <h2 className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
                 Account
               </h2>
-              <CardDescription className="mt-1 text-sm">
-                Dein Zugang bleibt bewusst sekundär, damit das Profil weiterhin mit deiner Haarreise
-                startet.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4">
@@ -2085,6 +2082,15 @@ export default function ProfilePage() {
                   <p className="text-sm text-muted-foreground">{profile?.email}</p>
                 </div>
               </div>
+              <form action={signOutAction} className="mt-4 border-t border-border/60 pt-4">
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="w-full border-border text-foreground hover:bg-muted hover:text-foreground"
+                >
+                  Abmelden
+                </Button>
+              </form>
             </CardContent>
           </Card>
         </div>
