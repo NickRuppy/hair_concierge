@@ -1,0 +1,35 @@
+{
+  "schema_version": "personal-plan-scalp-image-correction-v1",
+  "correction_id": "personal-plan-scalp-the-ordinary-image-correction-v1",
+  "product_id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+  "product_key": "the-ordinary-multi-peptide-hair-density-serum",
+  "source_batch_id": "personal-plan-launch-v1",
+  "source_apply_batch_id": "personal-plan-scalp-launch-v1",
+  "source_batch_fingerprint": "e6cbbe9ce2dc3d3b29655741cfe7572dd29d8b5bb5bea1a7225fd58359328e50",
+  "source_content_fingerprint": "10fbf543434519912f702856b25742c418df5782f5de06472be27a79d51fb6e7",
+  "review": {
+    "reviewed_by": "nick",
+    "reviewed_at": "2026-08-11",
+    "user_approved": true,
+    "feedback": "looks good"
+  },
+  "old_asset": {
+    "storage_path": "catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum/the-ordinary-multi-peptide-hair-density-serum-6bb9be89b327.webp",
+    "sha256": "6bb9be89b327984d4fe8f95c8009896bfec386f04dbf544a208e78268079dd5c"
+  },
+  "new_asset": {
+    "local_asset_path": "ops/catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum/images/final/the-ordinary-multi-peptide-hair-density-serum-1a79af996795.webp",
+    "storage_path": "catalog-enrichment/personal-plan-launch-v1/scalp/the-ordinary-multi-peptide-hair-density-serum/the-ordinary-multi-peptide-hair-density-serum-1a79af996795.webp",
+    "sha256": "1a79af996795ea031e0a28b0220d37109950e0aed1a1175bb358e944efdbbc66",
+    "source_page_url": "https://theordinary.com/de-de/multi-peptide-serum-for-hair-density-hair-scalp-treatment-100434.html",
+    "source_image_url": "https://theordinary.com/dw/image/v2/BFKJ_PRD/on/demandware.static/-/Sites-deciem-master/default/dwe085e4f9/Images/products/The%20Ordinary/rdn-multi-peptide-serum-for-hair-density-60ml.png?sw=1200&sh=1200&sm=fit",
+    "source_type": "brand",
+    "processing_method": "local",
+    "processing_notes": "official_alpha_source_with_deterministic_symmetric_shadow_mask",
+    "quality_gate": "pass"
+  },
+  "scope": {
+    "updated_columns": ["products.image_url", "product_image_assets"],
+    "frozen_launch_package_unchanged": true
+  }
+}

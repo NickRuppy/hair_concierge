@@ -3,7 +3,10 @@ import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import { Stage3ProductsGatewayError } from "../src/lib/personal-plan/products/gateway"
-import { createHttpStage3ProductsGateway } from "../src/lib/personal-plan/products/http-gateway"
+import {
+  createHttpStage3ProductsGateway,
+  parseStage3RevisionConflict,
+} from "../src/lib/personal-plan/products/http-gateway"
 import {
   createFixtureStage3Gateway,
   type FixtureStage3Gateway,
@@ -56,6 +59,62 @@ test("the HTTP gateway preserves a stale refined source conflict", async () => {
       }),
     (error: unknown) =>
       error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source",
+  )
+})
+
+test("the HTTP gateway returns the canonical draft from revision conflicts for mutate and complete", async () => {
+  const latestDraft = (await createDraft(gateway())).draft
+  const requests: Array<{ url: string; init?: RequestInit }> = []
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async (url, init) => {
+      requests.push({ url: String(url), init })
+      return new Response(JSON.stringify({ error: "revision_conflict", latestDraft }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      })
+    },
+  })
+
+  const mutation = await subject.mutate({
+    draftId: latestDraft.draftId,
+    expectedRevision: latestDraft.revision,
+    mutation: { type: "complete_capture_category", category: "conditioner" },
+  })
+  const completion = await subject.complete({
+    draftId: latestDraft.draftId,
+    expectedRevision: latestDraft.revision,
+  })
+
+  assert.deepEqual(mutation, { status: "conflict", latestDraft })
+  assert.deepEqual(completion, { status: "conflict", latestDraft })
+  assert.deepEqual(
+    requests.map(({ url, init }) => [url, init?.method]),
+    [
+      ["/api/personal-plan/stage-3", "PATCH"],
+      ["/api/personal-plan/stage-3/complete", "POST"],
+    ],
+  )
+})
+
+test("the HTTP gateway fails closed when a revision conflict lacks a valid canonical draft", async () => {
+  assert.equal(parseStage3RevisionConflict({ error: "revision_conflict", latestDraft: {} }), null)
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async () =>
+      new Response(JSON.stringify({ error: "revision_conflict", latestDraft: { revision: 7 } }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      }),
+  })
+
+  await assert.rejects(
+    () =>
+      subject.mutate({
+        draftId: "11111111-1111-4111-8111-111111111111",
+        expectedRevision: 0,
+        mutation: { type: "complete_capture_category", category: "conditioner" },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3ProductsGatewayError && error.code === "temporarily_unavailable",
   )
 })
 
