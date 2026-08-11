@@ -147,7 +147,7 @@ function presentationFor(decision: PlanCategoryDecision): CategoryPresentation |
           decision.target.scalpRoute === "balanced"
             ? "Ausgeglichen reinigend"
             : "Ausgleichend reinigend",
-        purpose: "Reinigt passend zu deiner Kopfhaut und deinem Analyseprofil.",
+        purpose: "Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.",
         productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
         fit: "Deine Kopfhaut-Angaben bestimmen die Reinigungsrichtung.",
       }

@@ -2951,7 +2951,7 @@ export function PersonalPlanQuiz({
                   Wir müssen deinen Plan noch einmal vorbereiten.
                 </h1>
                 <p className="mt-3 leading-7 text-[var(--text-sub)]">
-                  Deine Quiz-Antworten sind weiterhin da.
+                  Deine Antworten aus der Haaranalyse sind weiterhin da.
                 </p>
                 <Button
                   className="mt-7"

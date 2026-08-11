@@ -120,8 +120,8 @@ export function PersonalPlanReadyClient({
                   </p>
                   <h1 className="font-header text-4xl leading-tight">Das braucht dein Haar.</h1>
                   <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                    Zuerst siehst du, was dein Haar laut deinem Quiz braucht. Danach machen wir den
-                    Plan mit deinen eigenen Produkten wirklich zu deinem.
+                    Zuerst siehst du, was dein Haar laut deiner Haaranalyse braucht. Danach machen
+                    wir den Plan mit deinen eigenen Produkten wirklich zu deinem.
                   </p>
                 </div>
 
@@ -164,8 +164,8 @@ export function PersonalPlanReadyClient({
                 {showRecovery ? (
                   <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
                     <p className="text-sm leading-6 text-[var(--text-sub)]">
-                      Die Aktivierung dauert gerade etwas länger. Deine Zahlung und deine
-                      Quiz-Antworten bleiben sicher gespeichert.
+                      Die Aktivierung dauert gerade etwas länger. Deine Zahlung und deine Antworten
+                      aus der Haaranalyse bleiben sicher gespeichert.
                     </p>
                     <Button
                       type="button"

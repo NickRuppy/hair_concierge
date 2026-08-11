@@ -1149,8 +1149,8 @@ export function PersonalPlanOfferRecovery({
           Dein Ergebnis ist noch nicht vollständig bereit.
         </h1>
         <p className="mt-4 text-base leading-7 text-[rgba(var(--brand-plum-rgb),0.72)]">
-          Bitte versuche es noch einmal. Deine Quizdaten bleiben erhalten, aber wir zeigen keine
-          erfundenen Produktempfehlungen an.
+          Bitte versuche es noch einmal. Deine Angaben aus der Haaranalyse bleiben erhalten, aber
+          wir zeigen keine erfundenen Produktempfehlungen an.
         </p>
         <Link
           className="mt-6 inline-flex rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"
