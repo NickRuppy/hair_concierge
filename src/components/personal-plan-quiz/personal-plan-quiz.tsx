@@ -1882,11 +1882,22 @@ function EmailCapture({
   const [rememberedConsent, setRememberedConsent] = useState<boolean | null>(null)
   const [emailRecoveryToken, setEmailRecoveryToken] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
-  // Immer der zuletzt gerenderte Feldinhalt. Eine laufende Pruefung haelt in
+  // Immer der zuletzt eingegebene Feldinhalt. Eine laufende Pruefung haelt in
   // ihrem Closure nur den Stand von damals; ohne diese Referenz koennte sie
   // nicht erkennen, dass die Adresse inzwischen eine andere ist.
   const latestEmailRef = useRef(email)
   const funnelEventIdRef = useRef<string | null>(null)
+  /**
+   * Einziger Schreibpfad fuer das E-Mail-Feld. Die Referenz wird im selben
+   * Tick gesetzt, damit eine laufende Pruefung die neue Adresse auch dann
+   * sieht, wenn React den Re-Render noch nicht gerendert hat.
+   */
+  function applyEmailValue(value: string) {
+    latestEmailRef.current = value
+    setEmail(value)
+    setError("")
+    setServerSuggestion(null)
+  }
   const localSuggestions = getEmailSuggestions(email)
   // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
   // fehlgeschlagenen Zustellpruefung, nicht aus einer Heuristik im Formular.
@@ -1894,10 +1905,6 @@ function EmailCapture({
     serverSuggestion && serverSuggestion !== email.trim().toLowerCase()
       ? [serverSuggestion, ...localSuggestions.filter((s) => s !== serverSuggestion)]
       : localSuggestions
-
-  useEffect(() => {
-    latestEmailRef.current = email
-  }, [email])
 
   // Der Zaehler laeuft bei jeder Rueckkehr ins E-Mail-Feld hoch, damit der
   // Fokus auch dann gesetzt wird, wenn der Schritt sich gar nicht geaendert
@@ -2128,11 +2135,7 @@ function EmailCapture({
               )}
               id="personal-plan-email"
               enterKeyHint="go"
-              onChange={(event) => {
-                setEmail(event.target.value)
-                setError("")
-                setServerSuggestion(null)
-              }}
+              onChange={(event) => applyEmailValue(event.target.value)}
               placeholder="du@beispiel.de"
               ref={emailInputRef}
               spellCheck={false}
@@ -2145,11 +2148,7 @@ function EmailCapture({
                   <button
                     className="block w-full border-t border-[var(--brand-plum-light)] px-4 py-2.5 text-left text-sm font-semibold text-[var(--brand-plum-darkest)] first:border-t-0 hover:bg-[var(--brand-plum-ice)]"
                     key={suggestion}
-                    onClick={() => {
-                      setEmail(suggestion)
-                      setError("")
-                      setServerSuggestion(null)
-                    }}
+                    onClick={() => applyEmailValue(suggestion)}
                     type="button"
                   >
                     {suggestion}

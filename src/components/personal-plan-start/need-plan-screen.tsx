@@ -86,7 +86,7 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
               </button>
             ) : null}
             {onNext ? (
-              <Button type="button" onClick={onNext} variant="funnelCta" className="ml-auto">
+              <Button type="button" onClick={onNext} variant="funnelCta">
                 {nextLabel}
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </Button>

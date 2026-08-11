@@ -378,6 +378,7 @@ export function RoutineEditor({
           Abbrechen
         </Button>
         <Button
+          className="sm:w-auto"
           type="button"
           variant="funnelCta"
           disabled={!dirty || isSubmitting}

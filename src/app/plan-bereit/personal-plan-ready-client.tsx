@@ -125,7 +125,10 @@ export function PersonalPlanReadyClient({
                   </p>
                 </div>
 
-                <Link href={nextHref} className={cn(buttonVariants({ variant: "funnelCta" }))}>
+                <Link
+                  href={nextHref}
+                  className={cn(buttonVariants({ variant: "funnelCta", size: null }))}
+                >
                   Plan ansehen
                 </Link>
               </div>

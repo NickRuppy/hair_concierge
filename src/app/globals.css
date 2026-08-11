@@ -330,6 +330,7 @@
     box-shadow: none;
   }
 
+  /* DEPRECATED — remaining consumers live in personal-plan-products/index.tsx 671-960 (owned by parallel Produkte-prüfen fix). Delete this block when that fix removes them. */
   .personal-plan-primary-action {
     min-height: 3.5rem;
     border-radius: 999px;

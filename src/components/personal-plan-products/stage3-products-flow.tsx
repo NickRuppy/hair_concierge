@@ -45,6 +45,7 @@ import {
   ProductCaptureScreen,
   ProductDecisionScreen,
   SemanticRoleAssignment,
+  STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE,
   Stage3Shell,
   Stage3SystemState,
   type Stage3CatalogCandidate,
@@ -395,11 +396,7 @@ export function Stage3ProductsFlow({
           }))
           setSearchResults(results)
           setSearchStatus(results.length > 0 ? "ready" : "empty")
-          setSearchMessage(
-            results.length > 0
-              ? undefined
-              : "Wir haben dein Produkt nicht gefunden. Füge es über ‚Produkt hinzufügen' einfach selbst hinzu.",
-          )
+          setSearchMessage(results.length > 0 ? undefined : STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE)
           analytics.track("personal_plan_stage3_search_interacted", {
             interaction: "results_viewed",
             resultCountBand: results.length === 0 ? "0" : results.length <= 3 ? "1_3" : "4_8",

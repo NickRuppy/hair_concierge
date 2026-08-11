@@ -1019,6 +1019,39 @@ test("email deliverability rejection is privacy-safe PostHog-only telemetry", ()
   ])
 })
 
+test("PostHog forwards the deliverability phase only when the caller knows it", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("quiz_email_deliverability_rejected", {
+      phase: "precheck",
+      reason: "no_mx",
+      suggestionPresent: true,
+    })
+    // Der Legacy-Funnel kennt nur den Lead-Endpunkt und setzt keine Phase.
+    postHogDestination.track("quiz_email_deliverability_rejected", {
+      reason: "no_mx",
+      suggestionPresent: true,
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "quiz_email_deliverability_rejected",
+      { phase: "precheck", reason: "no_mx", suggestion_present: true },
+    ],
+    ["quiz_email_deliverability_rejected", { reason: "no_mx", suggestion_present: true }],
+  ])
+  assert.equal(Object.hasOwn(calls[1]?.[1] as object, "phase"), false)
+})
+
 test("PostHog retains truthful payment option exposure context", () => {
   const originalCapture = posthog.capture
   const calls: unknown[][] = []

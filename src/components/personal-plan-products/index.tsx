@@ -17,6 +17,14 @@ import { Button } from "@/components/ui/button"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
+/**
+ * Einzige Quelle fuer den Leertreffer-Hinweis der Produktsuche: Die Suche in
+ * `index.tsx` rendert ihn, `stage3-products-flow.tsx` setzt ihn als
+ * Status-Nachricht. Zwei Kopien waren zuvor typografisch auseinandergelaufen.
+ */
+export const STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE =
+  "Wir haben dein Produkt nicht gefunden. Füge es über „Produkt hinzufügen“ einfach selbst hinzu."
+
 type Tone = "neutral" | "positive" | "warning" | "negative"
 
 export type Stage3TransitionContext = "product_capture" | "fit_check" | "routine_ready"
@@ -349,8 +357,7 @@ export function ProductSearchResults({
         aria-live="polite"
         className="mb-5 rounded-xl border border-border bg-muted p-3 text-sm text-[var(--text-sub)]"
       >
-        {message ??
-          "Wir haben dein Produkt nicht gefunden. Füge es über ‚Produkt hinzufügen' einfach selbst hinzu."}
+        {message ?? STAGE3_PRODUCT_SEARCH_EMPTY_MESSAGE}
       </p>
     )
   }

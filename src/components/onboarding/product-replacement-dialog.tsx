@@ -35,7 +35,13 @@ export function ProductReplacementDialog({
           >
             Abbrechen
           </button>
-          <Button type="button" onClick={onConfirm} disabled={disabled} variant="funnelCta">
+          <Button
+            className="sm:w-auto"
+            type="button"
+            onClick={onConfirm}
+            disabled={disabled}
+            variant="funnelCta"
+          >
             Produkt ersetzen
           </Button>
         </div>

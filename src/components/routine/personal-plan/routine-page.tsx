@@ -6,6 +6,7 @@ import type {
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { cn } from "@/lib/utils"
 
 import { RoutineSection } from "./routine-section"
 
@@ -58,12 +59,15 @@ export function RoutinePage({
           </p>
           <div className="flex flex-wrap gap-3">
             {initialProposal && onConfirm ? (
-              <Button variant="funnelCta" onClick={onConfirm}>
+              <Button className="sm:w-auto" variant="funnelCta" onClick={onConfirm}>
                 Routine bestätigen
               </Button>
             ) : null}
             {view.activeVersion && stage5Reachable ? (
-              <Link href="/anwendung" className={buttonVariants({ variant: "funnelCta" })}>
+              <Link
+                href="/anwendung"
+                className={cn(buttonVariants({ variant: "funnelCta", size: null }), "sm:w-auto")}
+              >
                 Anwendungsplan ansehen
               </Link>
             ) : null}
