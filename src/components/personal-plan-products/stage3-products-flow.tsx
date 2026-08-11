@@ -389,11 +389,17 @@ export function Stage3ProductsFlow({
             brandName: candidate.brandName ?? undefined,
             imageUrl: candidate.imageUrl ?? undefined,
             confidenceLabel:
-              candidate.confidence === "exact" ? "Sicherer Treffer" : "Wahrscheinlicher Treffer",
+              candidate.confidence === "exact"
+                ? "Eindeutiger Treffer"
+                : "Wahrscheinlich dein Produkt",
           }))
           setSearchResults(results)
           setSearchStatus(results.length > 0 ? "ready" : "empty")
-          setSearchMessage(results.length > 0 ? undefined : "Kein sicherer Treffer gefunden.")
+          setSearchMessage(
+            results.length > 0
+              ? undefined
+              : "Wir haben dein Produkt nicht gefunden. Füge es über ‚Produkt hinzufügen' einfach selbst hinzu.",
+          )
           analytics.track("personal_plan_stage3_search_interacted", {
             interaction: "results_viewed",
             resultCountBand: results.length === 0 ? "0" : results.length <= 3 ? "1_3" : "4_8",

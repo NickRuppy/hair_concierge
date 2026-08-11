@@ -349,7 +349,8 @@ export function ProductSearchResults({
         aria-live="polite"
         className="mb-5 rounded-xl border border-border bg-muted p-3 text-sm text-[var(--text-sub)]"
       >
-        {message ?? "Kein sicherer Treffer gefunden."}
+        {message ??
+          "Wir haben dein Produkt nicht gefunden. Füge es über ‚Produkt hinzufügen' einfach selbst hinzu."}
       </p>
     )
   }

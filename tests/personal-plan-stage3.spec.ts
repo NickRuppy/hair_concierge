@@ -57,7 +57,7 @@ test.describe("Personal Plan products lab", () => {
 
     await expect(page.getByRole("heading", { name: /Dein Kopfhautprodukt/ })).toBeVisible()
     await page.getByRole("searchbox", { name: "Produkt suchen" }).fill("unbekanntes tonic")
-    await expect(page.getByRole("status")).toContainText(/Kein sicherer Treffer/i)
+    await expect(page.getByRole("status")).toContainText(/Wir haben dein Produkt nicht gefunden/i)
     await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
     await page.getByLabel("Produktname").fill("Kopfhaut-Tonic")
     await page.getByRole("button", { name: "1x/Woche" }).click()
