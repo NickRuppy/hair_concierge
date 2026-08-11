@@ -162,12 +162,7 @@ export function Stage3Transition({
       </div>
 
       <div className="animate-fade-in-up" style={{ animationDelay: "120ms" }}>
-        <Button
-          type="button"
-          variant="unstyled"
-          onClick={onContinue}
-          className="quiz-btn-primary w-full"
-        >
+        <Button type="button" variant="funnelCta" onClick={onContinue}>
           {copy.buttonLabel}
         </Button>
       </div>
@@ -536,10 +531,9 @@ export function ProductMultiProductControls({
       ) : null}
       <Button
         type="button"
-        variant="unstyled"
+        variant="funnelCta"
         onClick={onContinue}
         disabled={disabled || !canContinue}
-        className="personal-plan-primary-action w-full"
       >
         Weiter
       </Button>
@@ -654,13 +648,7 @@ export function SemanticRoleAssignment({
       </div>
 
       <div className="mt-5">
-        <Button
-          type="button"
-          variant="unstyled"
-          onClick={onContinue}
-          disabled={disabled}
-          className="personal-plan-primary-action w-full"
-        >
+        <Button type="button" variant="funnelCta" onClick={onContinue} disabled={disabled}>
           Auswahl übernehmen
         </Button>
       </div>
@@ -993,12 +981,7 @@ export function Stage3SystemState({
       <h1 className="font-header text-3xl leading-tight text-foreground">{title}</h1>
       <p className="mt-3 text-sm leading-relaxed text-[var(--text-sub)]">{message}</p>
       {actionLabel && onAction ? (
-        <Button
-          type="button"
-          variant="unstyled"
-          onClick={onAction}
-          className="quiz-btn-primary mt-7 w-full"
-        >
+        <Button type="button" variant="funnelCta" onClick={onAction} className="mt-7">
           {actionLabel}
         </Button>
       ) : null}
@@ -1082,12 +1065,11 @@ export function IntakeFallbackBoundary({
       <div className="mt-4 grid gap-2">
         <Button
           type="button"
-          variant="default"
+          variant="funnelCta"
           onClick={onOpen}
           disabled={
             status === "pending" || selectedFrequency === null || productName.trim().length < 2
           }
-          className="personal-plan-primary-action"
         >
           Produkt speichern
         </Button>

@@ -3,6 +3,7 @@
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { STYLING_TOOL_OPTIONS } from "@/lib/vocabulary"
+import { Button } from "@/components/ui/button"
 import type { IconName } from "@/components/ui/icon"
 
 const HEAT_TOOL_ICONS: Record<string, IconName> = {
@@ -104,13 +105,9 @@ export function HeatToolsScreen({
         className="animate-fade-in-up"
         style={{ animationDelay: `${100 + (STYLING_TOOL_OPTIONS.length + 1) * 60}ms` }}
       >
-        <button
-          onClick={onContinue}
-          disabled={!hasSelection || isSaving}
-          className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
-        >
+        <Button onClick={onContinue} disabled={!hasSelection || isSaving} variant="funnelCta">
           {isSaving ? "Speichern..." : continueLabel}
-        </button>
+        </Button>
       </div>
     </div>
   )

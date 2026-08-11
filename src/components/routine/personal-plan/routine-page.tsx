@@ -58,19 +58,12 @@ export function RoutinePage({
           </p>
           <div className="flex flex-wrap gap-3">
             {initialProposal && onConfirm ? (
-              <Button
-                variant="unstyled"
-                className="personal-plan-primary-action"
-                onClick={onConfirm}
-              >
+              <Button variant="funnelCta" onClick={onConfirm}>
                 Routine bestätigen
               </Button>
             ) : null}
             {view.activeVersion && stage5Reachable ? (
-              <Link
-                href="/anwendung"
-                className={`${buttonVariants({ variant: "unstyled" })} personal-plan-primary-action`}
-              >
+              <Link href="/anwendung" className={buttonVariants({ variant: "funnelCta" })}>
                 Anwendungsplan ansehen
               </Link>
             ) : null}

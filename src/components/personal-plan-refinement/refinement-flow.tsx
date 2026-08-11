@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { Button } from "@/components/ui/button"
 import {
   Stage2RefinementError,
   type Stage2RefinementErrorCode,
@@ -647,13 +648,9 @@ function InvitationShell({
           >
             Zum Bedarfsplan
           </button>
-          <button
-            type="button"
-            onClick={onBegin}
-            className="personal-plan-primary-action min-h-[52px] flex-1 px-4 text-sm"
-          >
+          <Button type="button" onClick={onBegin} variant="funnelCta" className="flex-1">
             Verfeinerung starten&nbsp; →
-          </button>
+          </Button>
         </div>
       </main>
     </div>
@@ -687,13 +684,9 @@ function ResumeShell({
           <span className="font-bold text-[#4f8058]">✓</span> Bis zur vorherigen Frage ist alles
           gespeichert.
         </p>
-        <button
-          type="button"
-          onClick={onBegin}
-          className="personal-plan-primary-action mt-6 min-h-[52px] px-4 text-sm"
-        >
+        <Button type="button" onClick={onBegin} variant="funnelCta" className="mt-6">
           Bei der offenen Frage fortfahren&nbsp; →
-        </button>
+        </Button>
       </main>
     </div>
   )

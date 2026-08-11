@@ -4,6 +4,8 @@ import { Check, LoaderCircle, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import {
   PERSONAL_PLAN_READY_MESSAGES,
   PERSONAL_PLAN_READY_MIN_STORY_MS,
@@ -123,10 +125,7 @@ export function PersonalPlanReadyClient({
                   </p>
                 </div>
 
-                <Link
-                  href={nextHref}
-                  className="personal-plan-primary-action inline-flex min-h-14 w-full items-center justify-center px-6 py-3 text-base"
-                >
+                <Link href={nextHref} className={cn(buttonVariants({ variant: "funnelCta" }))}>
                   Plan ansehen
                 </Link>
               </div>
@@ -168,16 +167,17 @@ export function PersonalPlanReadyClient({
                       Die Aktivierung dauert gerade etwas länger. Deine Zahlung und deine
                       Quiz-Antworten bleiben sicher gespeichert.
                     </p>
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      className="w-full rounded-full"
                       onClick={() => {
                         setReadiness("checking")
                         setRetryKey((value) => value + 1)
                       }}
-                      className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[var(--brand-plum)] px-5 py-2 text-sm font-semibold text-[var(--brand-plum)] hover:bg-[var(--brand-plum-ice)]"
                     >
                       Erneut prüfen
-                    </button>
+                    </Button>
                   </div>
                 ) : null}
               </div>

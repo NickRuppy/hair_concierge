@@ -1010,12 +1010,7 @@ function QuestionScreen({
       ) : null}
       {config.multi ? (
         <MobileBottomAction>
-          <Button
-            className="h-12 w-full text-base"
-            variant="cta"
-            disabled={!canContinue}
-            onClick={onContinue}
-          >
+          <Button variant="funnelCta" disabled={!canContinue} onClick={onContinue}>
             <span className="personal-plan-multi-count" key={selected.length}>
               {selected.length > 0 ? `${selected.length} ausgewählt · Weiter` : "Weiter"}
             </span>
@@ -1136,7 +1131,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
       </blockquote>
 
       <MobileBottomAction>
-        <Button className="h-12 w-full text-base" variant="cta" onClick={onContinue}>
+        <Button variant="funnelCta" onClick={onContinue}>
           Weiter
         </Button>
       </MobileBottomAction>
@@ -1168,7 +1163,7 @@ function AnalysisBridgeScreen({
       title="Jetzt machen wir dein Profil genauer."
     >
       <MobileBottomAction>
-        <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
+        <Button onClick={onContinue} variant="funnelCta">
           Haaranalyse fortsetzen
         </Button>
       </MobileBottomAction>
@@ -1405,7 +1400,7 @@ function ReframeScreen({ onContinue }: { onContinue: () => void }) {
         Mit dem richtigen Plan wird es einfach.
       </p>
       <MobileBottomAction className="order-4 sm:col-start-1">
-        <Button className="h-12 w-full text-base" onClick={onContinue} variant="cta">
+        <Button onClick={onContinue} variant="funnelCta">
           Weiter
         </Button>
       </MobileBottomAction>
@@ -1490,7 +1485,7 @@ function ProfileSummaryScreen({
         sollten medizinisch oder dermatologisch eingeordnet werden.
       </p>
       <MobileBottomAction>
-        <Button className="h-12 w-full text-base" variant="cta" onClick={onContinue}>
+        <Button variant="funnelCta" onClick={onContinue}>
           Meinen Plan vorbereiten
         </Button>
       </MobileBottomAction>
@@ -1573,12 +1568,7 @@ function CommitmentOverlay({
         >
           {commitment.question}
         </p>
-        <Button
-          className="mt-5 h-12 w-full text-base"
-          id="ppq-commit-button"
-          onClick={onConfirm}
-          variant="cta"
-        >
+        <Button className="mt-5" id="ppq-commit-button" onClick={onConfirm} variant="funnelCta">
           {commitment.button}
         </Button>
       </div>
@@ -1752,7 +1742,7 @@ function LoadingScreen({
               <p className="mt-3 text-xl font-semibold text-[var(--brand-plum-darkest)]">
                 Deine persönliche Auswertung ist bereit.
               </p>
-              <Button className="mt-5 h-12 w-full text-base" onClick={onContinue} variant="cta">
+              <Button className="mt-5" onClick={onContinue} variant="funnelCta">
                 Weiter
               </Button>
             </div>
@@ -1765,11 +1755,7 @@ function LoadingScreen({
                 Deine Antworten sind sicher gespeichert. Bitte versuche die Vorbereitung noch
                 einmal.
               </p>
-              <Button
-                className="mt-5 h-12 w-full text-base"
-                onClick={onRetryPreparation}
-                variant="cta"
-              >
+              <Button className="mt-5" onClick={onRetryPreparation} variant="funnelCta">
                 Vorbereitung erneut versuchen
               </Button>
             </div>
@@ -2040,7 +2026,7 @@ function EmailCapture({
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
             Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.
           </p>
-          <Button className="mt-7 h-12 w-full text-base" type="submit" variant="cta">
+          <Button className="mt-7" type="submit" variant="funnelCta">
             Weiter zu meiner Auswertung
           </Button>
         </form>
@@ -2055,12 +2041,7 @@ function EmailCapture({
           </p>
           {error ? <p className="mt-5 text-sm font-semibold text-destructive">{error}</p> : null}
           <div className="mt-7 grid gap-3">
-            <Button
-              className="h-12 text-base"
-              disabled={saving}
-              onClick={() => submit(true)}
-              variant="cta"
-            >
+            <Button disabled={saving} onClick={() => submit(true)} variant="funnelCta">
               {saving && pendingConsent === true ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -2815,9 +2796,9 @@ export function PersonalPlanQuiz({
                   Deine Quiz-Antworten sind weiterhin da.
                 </p>
                 <Button
-                  className="mt-7 h-12 w-full text-base"
+                  className="mt-7"
                   onClick={() => void preparePersonalPlan(true)}
-                  variant="cta"
+                  variant="funnelCta"
                 >
                   Vorbereitung erneut versuchen
                 </Button>
