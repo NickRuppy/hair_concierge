@@ -1098,7 +1098,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         Deine Antworten werden zu einem echten Haarprofil.
       </h1>
 
-      <div className="relative mx-auto mt-5 h-36 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:mt-6 sm:h-56 [@media(max-height:700px)]:h-28">
+      <div className="relative mx-auto mt-5 h-36 w-full overflow-hidden rounded-[1.5rem] bg-[var(--brand-plum-ice)] shadow-[0_24px_70px_-45px_rgba(70,41,59,0.65)] sm:mt-6 sm:h-44 [@media(max-height:700px)]:h-28">
         <Image
           alt="Drei lachende Frauen"
           className="object-cover"
@@ -1110,8 +1110,8 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         />
       </div>
 
-      <div className="mt-5 flex flex-col items-center sm:mt-8">
-        <span className="font-header text-[2.75rem] font-medium leading-none text-[var(--brand-plum)] sm:text-[4.25rem]">
+      <div className="mt-5 flex flex-col items-center sm:mt-6">
+        <span className="font-header text-[2.75rem] font-medium leading-none text-[var(--brand-plum)] sm:text-[3.5rem]">
           4.000+
         </span>
         <p className="mx-auto mt-3 max-w-md text-base leading-7 text-[var(--text-sub)]">
@@ -1119,7 +1119,7 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
         </p>
       </div>
 
-      <blockquote className="mx-auto mt-5 max-w-md rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white p-4 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)] sm:mt-8 sm:rounded-[2rem] sm:p-6">
+      <blockquote className="mx-auto mt-5 max-w-md rounded-[1.5rem] border border-[var(--brand-plum-light)] bg-white p-4 text-center shadow-[0_24px_60px_-40px_rgba(70,41,59,0.55)] sm:mt-6 sm:rounded-[2rem] sm:p-5">
         <p className="text-base italic leading-7 text-[var(--brand-plum-darkest)] sm:text-lg sm:leading-8">
           {`„${EARLY_PROOF_TESTIMONIAL.quote}“`}
         </p>
@@ -1183,7 +1183,6 @@ const MIDPOINT_DENSITY_LABELS = {
 }
 const MIDPOINT_REVEAL_MS = 350
 const MIDPOINT_CHECK_DELAY_MS = 500
-const MIDPOINT_HOLD_MS = 2400
 
 function MidpointProfileScreen({
   answers,
@@ -1206,6 +1205,8 @@ function MidpointProfileScreen({
   const [revealed, setRevealed] = useState(0)
   const [ready, setReady] = useState(false)
 
+  // Reveal timers only depend on the memoised rows, never on `onContinue` (a new
+  // inline arrow on every parent render), so the sequence runs once per mount.
   useEffect(() => {
     const timers: number[] = []
     rows.forEach((_, index) => {
@@ -1213,9 +1214,8 @@ function MidpointProfileScreen({
     })
     const readyAt = MIDPOINT_REVEAL_MS * rows.length + MIDPOINT_CHECK_DELAY_MS
     timers.push(window.setTimeout(() => setReady(true), readyAt))
-    timers.push(window.setTimeout(onContinue, readyAt + MIDPOINT_HOLD_MS))
     return () => timers.forEach((timer) => window.clearTimeout(timer))
-  }, [onContinue, rows])
+  }, [rows])
 
   return (
     <section
@@ -1266,6 +1266,14 @@ function MidpointProfileScreen({
           </div>
         ))}
       </dl>
+
+      {/* Rendered from mount and only disabled until the reveal finishes, so the
+          dock keeps its space and fades in instead of popping into the layout. */}
+      <MobileBottomAction className="w-full max-w-sm">
+        <Button disabled={!ready} onClick={onContinue} variant="funnelCta">
+          Weiter
+        </Button>
+      </MobileBottomAction>
     </section>
   )
 }
@@ -2901,7 +2909,10 @@ export function PersonalPlanQuiz({
         screen={screen}
         settledSectionIndices={settledSectionIndices}
       />
-      <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4">
+      {/* The 7rem bottom reserve only pays for the fixed MobileBottomAction dock.
+          Its exact complement — the viewport range where the action renders inline —
+          drops back to a normal 3rem page padding. */}
+      <main className="flex min-h-[calc(100dvh-84px)] scroll-pb-[calc(7rem+env(safe-area-inset-bottom))] items-start px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:px-6 sm:py-12 [@media(max-height:700px)]:items-start [@media(max-height:700px)]:pb-[calc(6rem+env(safe-area-inset-bottom))] [@media(max-height:700px)]:pt-4 [@media(min-width:640px)_and_(min-height:701px)]:scroll-pb-12 [@media(min-width:640px)_and_(min-height:701px)]:pb-12">
         <div className="w-full">
           {fieldTest ? <PersonalPlanFieldTestBanner surface="quiz" /> : null}
           <div className={fieldTest ? "mt-4" : undefined}>

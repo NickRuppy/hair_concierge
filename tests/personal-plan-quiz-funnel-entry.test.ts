@@ -174,7 +174,8 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.match(quiz, /max-height:700px/)
   assert.match(quiz, /const MIDPOINT_REVEAL_MS = 350/)
   assert.match(quiz, /const MIDPOINT_CHECK_DELAY_MS = 500/)
-  assert.match(quiz, /const MIDPOINT_HOLD_MS = 2400/)
+  // The midpoint summary never auto-advances; it waits for an explicit Weiter.
+  assert.doesNotMatch(quiz, /MIDPOINT_HOLD_MS/)
   assert.match(quiz, /sm:min-h-24 sm:items-start/)
   assert.match(quiz, /imageVariant="portrait"/)
   assert.doesNotMatch(quiz, /imageFit|bg-\[#d4b69c\]/)
