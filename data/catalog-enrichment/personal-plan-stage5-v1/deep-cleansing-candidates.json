@@ -1,0 +1,136 @@
+{
+  "schema_version": "personal-plan-stage5-new-product-research-v1",
+  "batch_id": "S5-07-deep-cleansing-launch",
+  "category_key": "deep_cleansing_shampoo",
+  "checked_at": "2026-08-10",
+  "products": [
+    {
+      "candidate_key": "neqi-deep-cleansing-shampoo",
+      "product_name": "NEQI x THE BEAUTIFUL PEOPLE Deep Cleansing Shampoo",
+      "source_url": "https://neqi-hair.com/products/neqi-x-the-beautiful-people-deep-cleansing-shampoo",
+      "source_type": "manufacturer",
+      "source_http_status": 200,
+      "supported_reset_roles": ["residue_reset"],
+      "target_scalp_types": ["oily", "dry"],
+      "label_cadence": null,
+      "protocol_template": {
+        "role": "residue_reset",
+        "application_family": "reset_cleanse",
+        "application_area": "scalp_roots",
+        "contact_time_seconds": null,
+        "rinse": "rinse_out",
+        "steps_de": [
+          "Auf das nasse Haar und die Kopfhaut auftragen.",
+          "Sanft einmassieren und aufschäumen.",
+          "Gründlich ausspülen."
+        ],
+        "excluded_label_option": "Double Cleansing wird nicht als Personal-Plan-Standard übernommen."
+      },
+      "readiness": "protocol_research_complete_intake_pending",
+      "blockers": ["Kanonische Produktidentität, bevorzugter Kauflink, Preis und finales Bild müssen noch als Product-Intake-Paket bestätigt werden."]
+    },
+    {
+      "candidate_key": "swiss-o-par-tiefenreinigung-shampoo",
+      "product_name": "Swiss-O-Par Tiefenreinigung Shampoo",
+      "source_url": "https://swissopar.de/produkt/tiefenreinigung-shampoo/",
+      "source_type": "manufacturer",
+      "source_http_status": 200,
+      "supported_reset_roles": ["residue_reset", "mineral_reset"],
+      "target_scalp_types": [],
+      "label_cadence": null,
+      "protocol_template": {
+        "role": "residue_reset",
+        "application_family": "reset_cleanse",
+        "application_area": "all_hair",
+        "contact_time_seconds": null,
+        "rinse": "rinse_out",
+        "steps_de": [
+          "Das nasse Haar mit dem Shampoo einschäumen.",
+          "Durchwaschen, ohne aggressiv zu schrubben.",
+          "Gründlich ausspülen."
+        ],
+        "excluded_label_option": null
+      },
+      "readiness": "protocol_research_complete_intake_pending",
+      "blockers": ["Bevorzugter Drogerie-Kauflink, Preis und finales Bild müssen noch als Product-Intake-Paket bestätigt werden."]
+    },
+    {
+      "candidate_key": "balea-professional-tiefenreinigung-shampoo",
+      "product_name": "Balea Professional Tiefenreinigung Shampoo",
+      "source_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+      "source_type": "retailer",
+      "source_http_status": 200,
+      "supported_reset_roles": ["residue_reset"],
+      "target_scalp_types": ["oily"],
+      "label_cadence": null,
+      "protocol_template": {
+        "role": "residue_reset",
+        "application_family": "reset_cleanse",
+        "application_area": "scalp_roots",
+        "contact_time_seconds": null,
+        "rinse": "rinse_out",
+        "steps_de": [
+          "In das nasse Haar und auf die Kopfhaut geben.",
+          "Sanft einmassieren und kurz ohne erfundene Zeitangabe wirken lassen.",
+          "Gründlich ausspülen."
+        ],
+        "excluded_label_option": null
+      },
+      "readiness": "protocol_research_complete_intake_pending",
+      "blockers": ["GTIN, aktueller Preis und finales Produktbild müssen noch als Product-Intake-Paket bestätigt werden."]
+    },
+    {
+      "candidate_key": "isana-professional-tiefenreinigung-shampoo",
+      "product_name": "ISANA Professional Tiefenreinigung Shampoo",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+      "source_type": "retailer",
+      "source_http_status": 200,
+      "supported_reset_roles": ["residue_reset"],
+      "target_scalp_types": [],
+      "label_cadence": null,
+      "protocol_template": {
+        "role": "residue_reset",
+        "application_family": "reset_cleanse",
+        "application_area": "scalp_roots",
+        "contact_time_seconds": null,
+        "rinse": "rinse_out",
+        "steps_de": [
+          "In das feuchte Haar und auf die Kopfhaut geben.",
+          "Sanft einmassieren und kurz ohne erfundene Zeitangabe wirken lassen.",
+          "Gründlich ausspülen."
+        ],
+        "excluded_label_option": null
+      },
+      "readiness": "protocol_research_complete_intake_pending",
+      "blockers": ["Aktueller Preis und finales Produktbild müssen noch als Product-Intake-Paket bestätigt werden."]
+    },
+    {
+      "candidate_key": "gliss-scalp-balance-tiefenreinigungs-shampoo",
+      "product_name": "GLISS Scalp Balance Tiefenreinigungs-Shampoo",
+      "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/scalp-balance/tiefenreinigungs-shampoo.html",
+      "source_type": "manufacturer",
+      "source_http_status": 200,
+      "supported_reset_roles": ["residue_reset"],
+      "target_scalp_types": ["oily"],
+      "label_cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Ein- bis zweimal pro Woche laut Herstellerpositionierung; der Personal Plan erhöht seine berechnete Reset-Frequenz dadurch nicht."
+      },
+      "protocol_template": {
+        "role": "residue_reset",
+        "application_family": "reset_cleanse",
+        "application_area": "scalp_roots",
+        "contact_time_seconds": null,
+        "rinse": "rinse_out",
+        "steps_de": [
+          "Auf das nasse Haar und die Kopfhaut geben.",
+          "Sanft einmassieren und aufschäumen.",
+          "Gründlich ausspülen."
+        ],
+        "excluded_label_option": null
+      },
+      "readiness": "protocol_research_complete_intake_pending",
+      "blockers": ["Bevorzugter Drogerie-Kauflink, Preis, GTIN und finales Bild müssen noch als Product-Intake-Paket bestätigt werden."]
+    }
+  ]
+}

@@ -58,7 +58,7 @@ export type ApplicationRoutineReadClient = { from(table: string): Query }
 const PRODUCT_SELECT =
   "id,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
 const PRODUCT_PROTOCOL_SELECT =
-  "product_id,category,role,application_state,reapplication,source_url,source_text,updated_at"
+  "product_id,category,role,guidance_payload,application_state,reapplication,source_url,source_text,updated_at"
 const first = <T>(value: unknown): T | null =>
   Array.isArray(value)
     ? value.length === 1
@@ -185,21 +185,15 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     .in("id", productIds)
   if (error) throw error
   const products = new Map(((data ?? []) as ProductRow[]).map((row) => [row.id, row]))
-  const heatProductIds = candidates.flatMap(({ item }) => {
-    if (semanticRoleByRoutineRole[item.role] !== "heat_protection") return []
-    if (item.product.kind !== "owned" && item.product.kind !== "planned") return []
-    return item.product.productId ? [item.product.productId] : []
-  })
   let protocolRows: ReviewedProductApplicationProtocolRow[] = []
-  if (heatProductIds.length > 0) {
+  if (productIds.length > 0) {
     const result = await input.client
       .from("product_application_protocols")
       .select(PRODUCT_PROTOCOL_SELECT)
-      .in("product_id", [...new Set(heatProductIds)])
+      .in("product_id", productIds)
     if (result.error) throw result.error
     protocolRows = (result.data ?? []) as ReviewedProductApplicationProtocolRow[]
   }
-  const protocolByProduct = new Map(protocolRows.map((row) => [row.product_id, row]))
   const routineItems = candidates.map(({ item, routineOrder }) => {
     if (item.product.kind !== "owned" && item.product.kind !== "planned") {
       throw new Error("accepted_routine_product_identity_unavailable")
@@ -217,7 +211,9 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       throw new Error("accepted_routine_product_unavailable")
     }
     const adapted = factsFor(category, product)
-    const reviewedProtocol = protocolByProduct.get(product.id)
+    const reviewedProtocol = protocolRows.find(
+      (row) => row.product_id === product.id && row.role === "pre_heat_protection",
+    )
     const catalogFacts = reviewedProtocol
       ? {
           ...adapted.facts,

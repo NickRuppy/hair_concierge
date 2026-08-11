@@ -97,6 +97,8 @@
     "products:intake:catalog-enrichment:heat:preflight": "tsx scripts/product-intake/catalog-enrichment/heat-preflight.ts",
     "products:intake:catalog-enrichment:heat:apply": "tsx scripts/product-intake/catalog-enrichment/heat-apply.ts",
     "products:intake:catalog-enrichment:heat:verify": "tsx scripts/product-intake/catalog-enrichment/heat-verify.ts",
+    "products:intake:stage5-protocol:preflight": "tsx scripts/product-intake/catalog-enrichment/stage5-protocol-preflight.ts",
+    "products:intake:stage5-protocol:apply": "tsx scripts/product-intake/catalog-enrichment/stage5-protocol-apply.ts",
     "products:intake:catalog-enrichment:scalp:preflight": "tsx scripts/product-intake/catalog-enrichment/scalp-preflight.ts",
     "products:intake:catalog-enrichment:scalp:apply": "tsx scripts/product-intake/catalog-enrichment/scalp-apply.ts",
     "products:intake:catalog-enrichment:scalp:verify": "tsx scripts/product-intake/catalog-enrichment/scalp-verify.ts",

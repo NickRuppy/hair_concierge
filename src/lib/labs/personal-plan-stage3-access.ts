@@ -1,8 +1,5 @@
 type PersonalPlanStage3LabEnvironment = Partial<
-  Pick<
-    NodeJS.ProcessEnv,
-    "CI" | "CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED" | "NODE_ENV" | "VERCEL_ENV"
-  >
+  Pick<NodeJS.ProcessEnv, "CI" | "CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED" | "NODE_ENV" | "VERCEL_ENV">
 >
 
 /** Standalone fixture preview guard; production access is deliberately closed. */

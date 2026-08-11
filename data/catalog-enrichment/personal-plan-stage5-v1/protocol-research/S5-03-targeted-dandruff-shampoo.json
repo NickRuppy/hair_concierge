@@ -1,0 +1,577 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-03-targeted-dandruff-shampoo",
+  "category_key": "shampoo",
+  "products": [
+    {
+      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "product_name": "Balea Med Anti Schuppen",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für die tägliche Anwendung geeignet."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf feuchter Kopfhaut und im feuchten Haar sanft einmassieren."
+          },
+          {
+            "stepKey": "wait-dandruff-shampoo",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "product_name": "Guhl Anti Schuppen",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1446893/guhl-shampoo-anti-schuppen",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-744de604-d266-453b-a56b-eea92c5ca565",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "744de604-d266-453b-a56b-eea92c5ca565"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Eine kleine Menge im nassen Haar und auf der Kopfhaut sanft einmassieren."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1446893/guhl-shampoo-anti-schuppen",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "product_name": "Head & Shoulders Anti Schuppen Sensitive",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für die regelmäßige Anwendung vorgesehen."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf die nasse Kopfhaut geben und sanft einmassieren."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "product_name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "role": "shampoo_dandruff",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The current exact product page verifies identity and dandruff positioning but exposes no application directions; do not inherit another Head & Shoulders label."
+      ]
+    },
+    {
+      "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "product_name": "Pantene Anti Schuppen",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für die tägliche Anwendung geeignet."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-5effc311-25d7-44dd-8c16-b93c182068d3",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "5effc311-25d7-44dd-8c16-b93c182068d3"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Ins nasse Haar und auf die Kopfhaut einmassieren und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "product_name": "Salthouse Anti Schuppen",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für die tägliche Haarwäsche geeignet."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-261e5c9f-d312-4206-82da-fbd0ab6f3614",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "261e5c9f-d312-4206-82da-fbd0ab6f3614"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "In die nasse Kopfhaut einmassieren."
+          },
+          {
+            "stepKey": "wait-dandruff-shampoo",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "product_name": "Schauma Anti Schuppen Classic",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für die tägliche Haarwäsche geeignet."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-9d8d4709-4041-495e-98ee-e0261fa30e27",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "9d8d4709-4041-495e-98ee-e0261fa30e27"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft im feuchten Haar und auf der Kopfhaut verteilen."
+          },
+          {
+            "stepKey": "wait-dandruff-shampoo",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "product_name": "Sebamed Anti Schuppen",
+      "role": "shampoo_dandruff",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://sebamed.de/de/p/antischuppen-shampoo/",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Täglich oder zwei- bis dreimal pro Woche anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-303b4c0c-53a4-46de-883d-c29e448ee590",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "303b4c0c-53a4-46de-883d-c29e448ee590"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "In der Hand aufschäumen und unter leichtem Massieren auf die nasse Kopfhaut auftragen."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://sebamed.de/de/p/antischuppen-shampoo/",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

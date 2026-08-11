@@ -118,6 +118,19 @@ test("guidance rejects unknown keys, invalid product scopes, and invalid version
   assert.equal(
     applicationGuidanceProtocolSchema.safeParse({
       ...protocol,
+      evidence: [
+        {
+          sourceUrl: "https://www.dm.de/example-shampoo",
+          sourceType: "retailer",
+          checkedAt: "2026-08-10",
+        },
+      ],
+    }).success,
+    true,
+  )
+  assert.equal(
+    applicationGuidanceProtocolSchema.safeParse({
+      ...protocol,
       protocolFacts: {
         ...protocol.protocolFacts,
         cautions: ["Nicht in die Augen bringen."],

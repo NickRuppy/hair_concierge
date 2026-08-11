@@ -206,6 +206,68 @@ test("compiler fails the affected day closed when conditioner relationships conf
   )
 })
 
+test("an intensive-care Mask with replacement guidance suppresses Conditioner and keeps Mask instructions", () => {
+  const maskProtocol = protocol(
+    "mask",
+    "intensive_care",
+    "post_shampoo_rinse_out_mask",
+    "intensive_care_day",
+    "post_cleanse_rinse_off",
+  )
+  maskProtocol.guidanceKey = "mask-exact-replaces-conditioner"
+  maskProtocol.scope = { kind: "product", category: "mask", productId: ids[2] }
+  maskProtocol.exactGuidanceRequired = true
+  maskProtocol.protocolFacts.rinse = "rinse_out"
+  maskProtocol.protocolFacts.conditionerRelationship = "replaces_conditioner"
+  maskProtocol.steps = [
+    { stepKey: "apply-mask", action: "apply_product", copyTemplateDe: "Maske auftragen." },
+    { stepKey: "wait-mask", action: "wait", copyTemplateDe: "3 Minuten einwirken lassen." },
+    { stepKey: "rinse-mask", action: "rinse", copyTemplateDe: "Gründlich ausspülen." },
+  ]
+
+  const result = compileApplicationView({
+    input: input([
+      shampoo,
+      conditioner,
+      {
+        ...leaveInAndHeat,
+        itemId: "mask",
+        productName: "Intensiv-Maske",
+        category: "mask",
+        role: "intensive_care",
+      },
+    ]),
+    protocols: [
+      protocol(
+        "shampoo",
+        "cleanse",
+        "standard_rinse_out_cleanse",
+        "intensive_care_day",
+        "wet_cleanse",
+      ),
+      protocol(
+        "conditioner",
+        "condition",
+        "standard_rinse_out_conditioning",
+        "intensive_care_day",
+        "post_cleanse_rinse_off",
+      ),
+      maskProtocol,
+    ],
+  })
+  const day = result.days.find(({ key }) => key === "intensive_care_day")
+
+  assert.deepEqual(
+    day?.productBlocks.map(({ productName }) => productName),
+    ["Shampoo", "Intensiv-Maske"],
+  )
+  assert.deepEqual(day?.productBlocks[1]?.steps, [
+    { stepKey: "apply-mask", action: "apply_product", copyDe: "Maske auftragen." },
+    { stepKey: "wait-mask", action: "wait", copyDe: "3 Minuten einwirken lassen." },
+    { stepKey: "rinse-mask", action: "rinse", copyDe: "Gründlich ausspülen." },
+  ])
+})
+
 test("compiler keeps separately reapplied heat events distinct and fails closed on incompatible exact product steps", () => {
   const heatRole = {
     ...leaveInAndHeat,

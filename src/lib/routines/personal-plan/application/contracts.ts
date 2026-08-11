@@ -271,7 +271,12 @@ export const applicationGuidanceProtocolSchema = z
         z
           .object({
             sourceUrl: z.string().url(),
-            sourceType: z.enum(["manufacturer", "professional_authority", "internal_authority"]),
+            sourceType: z.enum([
+              "manufacturer",
+              "retailer",
+              "professional_authority",
+              "internal_authority",
+            ]),
             checkedAt: z.string().date(),
           })
           .strict(),

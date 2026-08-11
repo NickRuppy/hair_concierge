@@ -1,0 +1,737 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-06-dry-shampoo-format-guidance",
+  "category_key": "dry_shampoo",
+  "products": [
+    {
+      "product_id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "product_name": "Balea Trockenshampoo Kopfhaut Sensitive",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "41e09958-5a1f-4997-b99b-f8384b7a8c0c"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Haar ausbürsten, Kleidung schützen und die Dose kräftig schütteln."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 20 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Kurz einwirken lassen und gründlich ausbürsten."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "product_name": "Balea Trockenshampoo Schaum Kopfhaut Sensitive",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a"
+        },
+        "role": "refresh",
+        "applicationFamily": "foam",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo-foam",
+            "action": "apply_product",
+            "copyTemplateDe": "Dose kräftig schütteln und senkrecht halten."
+          },
+          {
+            "stepKey": "apply-dry-shampoo-foam",
+            "action": "apply_product",
+            "copyTemplateDe": "Eine tennisballgroße Menge Schaum am trockenen Ansatz verteilen."
+          },
+          {
+            "stepKey": "dry-dry-shampoo-foam",
+            "action": "dry",
+            "copyTemplateDe": "Trocken föhnen, lufttrocknen oder über Nacht trocknen lassen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "product_name": "Batiste Trockenshampoo Blond",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1435894/batiste-trockenshampoo-blond",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Dose einige Sekunden schütteln und das trockene Haar in Partien teilen."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 30 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Mit den Fingerspitzen einmassieren, Überschüsse ausbürsten und stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1435894/batiste-trockenshampoo-blond",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "product_name": "Batiste Trockenshampoo Bruenett",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/batiste-trockenshampoo-bruenett-p5010724527474.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-d28643c8-c340-4514-826a-6c1ac8419fe9",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "d28643c8-c340-4514-826a-6c1ac8419fe9"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Dose einige Sekunden schütteln und das trockene Haar in Partien teilen."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 30 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Mit den Fingerspitzen einmassieren, Überschüsse ausbürsten und stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/batiste-trockenshampoo-bruenett-p5010724527474.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "product_name": "Batiste Trockenshampoo dunkel",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/batiste-trockenshampoo-dunkel-p5010724527443.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "6a1116a0-731f-46bb-9dd6-a0db89de5a13"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Dose einige Sekunden schütteln und das trockene Haar in Partien teilen."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 30 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Mit den Fingerspitzen einmassieren, Überschüsse ausbürsten und stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/batiste-trockenshampoo-dunkel-p5010724527443.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "product_name": "Batiste Trockenshampoo Original",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/batiste-trockenshampoo-original-p5010724527481.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-786a1396-914e-4739-a32c-1c3ead39a3d1",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "786a1396-914e-4739-a32c-1c3ead39a3d1"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Dose einige Sekunden schütteln und das trockene Haar in Partien teilen."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 30 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Mit den Fingerspitzen einmassieren, Überschüsse ausbürsten und stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/batiste-trockenshampoo-original-p5010724527481.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "product_name": "Batiste Trockenshampoo Sensible Kopfhaut",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft-p5010724004777.html",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Dose einige Sekunden schütteln und das trockene Haar in Partien teilen."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 30 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Mit den Fingerspitzen einmassieren, Überschüsse ausbürsten und stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft-p5010724004777.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "product_name": "got2b Trockenshampoo Extra Volumen",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-volumen/p/4015100800227",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-2b2161a2-6c09-435f-adbb-49da44d434ae",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "2b2161a2-6c09-435f-adbb-49da44d434ae"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Haar ausbürsten, Kleidung schützen, die Dose schütteln und das trockene Haar in Partien teilen."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 20 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Kurz trocknen lassen, einarbeiten und mögliche Rückstände ausbürsten."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-volumen/p/4015100800227",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "product_name": "got2b Trockenshampoo Liquid to Dry",
+      "role": "root_refresh_bridge",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Katalog-Kauflink",
+          "url": "https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "The live catalog marks the purchase link unavailable; refresh commercial identity and exact directions before attaching an executable protocol."
+      ]
+    },
+    {
+      "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "product_name": "ISANA Trockenshampoo Jedes Haar",
+      "role": "root_refresh_bridge",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56"
+        },
+        "role": "refresh",
+        "applicationFamily": "aerosol_spray",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-dry-shampoo",
+            "action": "section",
+            "copyTemplateDe": "Haar sorgfältig bürsten und die Dose kräftig schütteln."
+          },
+          {
+            "stepKey": "apply-dry-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus etwa 20 cm sparsam auf den trockenen Ansatz sprühen."
+          },
+          {
+            "stepKey": "finish-dry-shampoo",
+            "action": "tool",
+            "copyTemplateDe": "Kurz trocknen lassen, mit einem Handtuch einarbeiten und gründlich ausbürsten."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

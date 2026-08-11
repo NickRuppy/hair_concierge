@@ -1,0 +1,235 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-05-oil-role-coverage",
+  "category_key": "oil",
+  "products": [
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "product_name": "Olaplex No.7 Bonding Oil",
+      "role": "leave_on_fibre_conditioning",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "OLAPLEX Herstelleranleitung",
+          "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "occurrence_linked",
+        "copy_de": "Bei einem geplanten feuchten Pflege- oder Styling-Schritt anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-oil-7d8c0150-778d-4cb9-abf5-bfc16ad93b12-damp",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+        },
+        "role": "leave_in",
+        "applicationFamily": "post_wash_damp_conditioning",
+        "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "damp_leave_on",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit zwei bis drei Tropfen starten."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "dose-olaplex-7-damp",
+            "action": "apply_product",
+            "copyTemplateDe": "Zwei bis drei Tropfen in den Händen verteilen."
+          },
+          {
+            "stepKey": "apply-olaplex-7-damp",
+            "action": "apply_product",
+            "copyTemplateDe": "In das feuchte Haar geben, besonders in Längen und Spitzen, und anschließend wie gewünscht stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "product_name": "Olaplex No.7 Bonding Oil",
+      "role": "dry_finish",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "OLAPLEX Herstelleranleitung",
+          "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "as_needed",
+        "copy_de": "Bei Bedarf als Finish verwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-oil-7d8c0150-778d-4cb9-abf5-bfc16ad93b12-dry",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+        },
+        "role": "finish",
+        "applicationFamily": "dry_finish",
+        "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day", "between_wash_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit zwei bis drei Tropfen starten."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "dose-olaplex-7-dry",
+            "action": "apply_product",
+            "copyTemplateDe": "Zwei bis drei Tropfen in den Händen verteilen."
+          },
+          {
+            "stepKey": "apply-olaplex-7-dry",
+            "action": "apply_product",
+            "copyTemplateDe": "Sparsam in die trockenen Längen und Spitzen geben und als Finish verteilen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "product_name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "role": "pre_wash_fibre_treatment",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Die exakte Verkaufsseite dokumentiert keine Anwendung als Vorwäsche im Haar; die bisherige Katalogrolle darf deshalb nicht als exakte Produktanleitung ausgegeben werden."
+      ]
+    },
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "product_name": "benecos BIO Körperöl Macadamianussöl",
+      "role": "pre_wash_fibre_treatment",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Die exakte Verkaufsseite dokumentiert keine Anwendung als Vorwäsche im Haar; die bisherige Katalogrolle darf deshalb nicht als exakte Produktanleitung ausgegeben werden."
+      ]
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "product_name": "dmBio Kokosöl nativ",
+      "role": "pre_wash_fibre_treatment",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Die exakte Verkaufsseite dokumentiert keine Anwendung als Vorwäsche im Haar; die bisherige Katalogrolle darf deshalb nicht als exakte Produktanleitung ausgegeben werden."
+      ]
+    },
+    {
+      "product_id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "product_name": "Balea Oil Repair Haaröl",
+      "role": "dry_finish",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Die aktuelle Produktseite war erreichbar, stellte die genaue Anwendung im überprüfbaren Seiteninhalt aber nicht bereit; eine exakte Dosierungs- oder Nass/Trocken-Anleitung bleibt offen."
+      ]
+    }
+  ]
+}
