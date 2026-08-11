@@ -8,6 +8,7 @@ export type ReviewedProductApplicationProtocolRow = {
   product_id: string
   category: string
   role: string
+  guidance_payload?: unknown
   application_state: string | null
   reapplication: string | null
   source_url: string | null
@@ -20,6 +21,18 @@ export function adaptReviewedProductApplicationProtocols(
 ): ApplicationGuidanceProtocolV1[] {
   const protocols: ApplicationGuidanceProtocolV1[] = []
   for (const row of rows) {
+    const canonical = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
+    if (canonical.success) {
+      const payload = canonical.data
+      if (
+        payload.scope.kind === "product" &&
+        payload.scope.productId === row.product_id &&
+        payload.scope.category === row.category
+      ) {
+        protocols.push(payload)
+      }
+      continue
+    }
     if (
       !["heat_protectant", "leave_in", "oil"].includes(row.category) ||
       row.role !== "pre_heat_protection" ||
@@ -96,7 +109,5 @@ export function adaptReviewedProductApplicationProtocols(
       if (parsed.success) protocols.push(parsed.data)
     }
   }
-  return protocols.sort((left, right) =>
-    left.applicationFamily.localeCompare(right.applicationFamily),
-  )
+  return protocols.sort((left, right) => left.guidanceKey.localeCompare(right.guidanceKey))
 }

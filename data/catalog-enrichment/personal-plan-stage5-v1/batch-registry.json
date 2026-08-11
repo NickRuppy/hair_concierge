@@ -1,0 +1,215 @@
+{
+  "schema_version": "personal-plan-stage5-batch-registry-v1",
+  "batch_program": "personal-plan-stage5-v1",
+  "created_at": "2026-08-10T20:00:00+02:00",
+  "source_cohort": "current-cohorts.json",
+  "policy_authority": "docs/personal-plan/categories/*/decision.md",
+  "rules": {
+    "unknown_is_not_suitable": true,
+    "category_fallbacks_are_not_product_claims": true,
+    "exact_protocols_override_application_families": true,
+    "catalog_apply_requires_separate_product_or_batch_approval": true,
+    "rollout_activation_requires_separate_authorization": true
+  },
+  "active_application_families": [
+    {
+      "category_key": "shampoo",
+      "role_key": "cleanse",
+      "application_family": "standard_rinse_out_cleanse"
+    },
+    {
+      "category_key": "conditioner",
+      "role_key": "condition",
+      "application_family": "standard_rinse_out_conditioning"
+    },
+    {
+      "category_key": "leave_in",
+      "role_key": "leave_in",
+      "application_family": "post_wash_booster"
+    }
+  ],
+  "batches": [
+    {
+      "batch_id": "S5-00-core-family-integrity",
+      "priority": 0,
+      "status": "complete_in_production",
+      "categories": ["shampoo", "conditioner", "leave_in"],
+      "target_kind": "application_family",
+      "target_count": 3,
+      "purpose": "Keep the highest-reach everyday wash path executable without fabricating exact product claims.",
+      "completion_gate": "Three active family protocols remain present and category authorities still permit their conservative fallback.",
+      "exceptions": [
+        "Targeted dandruff Shampoo is owned by S5-03.",
+        "A materially different exact product protocol must override the family fallback."
+      ]
+    },
+    {
+      "batch_id": "S5-01-heat-exact",
+      "priority": 0,
+      "status": "complete_in_production",
+      "categories": ["heat_protectant"],
+      "target_kind": "exact_product",
+      "target_count": 5,
+      "purpose": "Preserve the already-live exact Heat cohort and its verified application protocols.",
+      "completion_gate": "All five active recommended Heat products retain one exact protocol and their reviewed specs."
+    },
+    {
+      "batch_id": "S5-02-mask-critical-protocols",
+      "priority": 1,
+      "status": "research_complete_catalog_correction_pending",
+      "categories": ["mask"],
+      "target_kind": "exact_product",
+      "target_count": 34,
+      "research_result": {
+        "verified_exact_protocols": 34,
+        "blocked_products": 0,
+        "excluded_wrong_category_product": "Bali Curls Haarkur Bonding Repair Overnight Elixir",
+        "resolved_policy": "On an intensive-care wash, Mask replaces Conditioner when exact directions are otherwise complete and silent only about Conditioner sequencing.",
+        "remaining_gates": [
+          "Apply the reviewed Mask identity correction before the exact protocol batch.",
+          "Apply and verify all 34 exact Mask protocols."
+        ]
+      },
+      "purpose": "Add contact time, placement, rinse behavior and Conditioner sequence for every active recommended Mask.",
+      "completion_gate": "The false overnight leave-on Mask row is inactive, reviewed successor identities are current, and all 34 eligible Mask products pass the quantified contact-time and critical-protocol validators."
+    },
+    {
+      "batch_id": "S5-03-targeted-dandruff-shampoo",
+      "priority": 1,
+      "status": "research_complete_one_product_blocked",
+      "categories": ["shampoo"],
+      "target_kind": "exact_product",
+      "target_count": 8,
+      "research_result": {
+        "verified_exact_protocols": 7,
+        "blocked_products": 1,
+        "blocked_product": "Head & Shoulders DERMAXPRO Anti-Schuppen Shampoo Pure Hydration"
+      },
+      "target_product_ids": [
+        "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+        "744de604-d266-453b-a56b-eea92c5ca565",
+        "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+        "088b1427-ed22-424e-8cfd-ea2578120ae6",
+        "5effc311-25d7-44dd-8c16-b93c182068d3",
+        "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+        "9d8d4709-4041-495e-98ee-e0261fa30e27",
+        "303b4c0c-53a4-46de-883d-c29e448ee590"
+      ],
+      "purpose": "Provide material initial and maintenance schedules, contact time, rinse behavior and response-check authority for targeted dandruff use.",
+      "completion_gate": "Every launch-eligible dandruff route has at least one exact safe candidate; unverified products remain unresolved rather than inheriting everyday Shampoo guidance."
+    },
+    {
+      "batch_id": "S5-04-bondbuilder-primary-protocols",
+      "priority": 1,
+      "status": "research_complete",
+      "categories": ["bondbuilder"],
+      "target_kind": "exact_product",
+      "target_count": 4,
+      "research_result": {
+        "verified_exact_protocols": 4,
+        "blocked_products": 0
+      },
+      "purpose": "Backfill executable protocols for Epres, K18 and OLAPLEX No.3PLUS while retaining OLAPLEX No.0 as a companion-only product.",
+      "completion_gate": "Three primaries have complete executable protocols and No.0 cannot fill the primary role by itself."
+    },
+    {
+      "batch_id": "S5-05-oil-role-coverage",
+      "priority": 1,
+      "status": "research_complete_coverage_blocked",
+      "categories": ["oil"],
+      "target_kind": "role_coverage",
+      "source_population_count": 41,
+      "research_result": {
+        "verified_exact_role_protocols": 2,
+        "verified_products": 1,
+        "blocked_products_in_smallest_cohort": 4,
+        "coverage_gaps": ["pre_wash_fibre_treatment", "coarse_leave_on_or_finish"]
+      },
+      "purpose": "Select the smallest verified cohort covering pre-wash, damp-care and dry-finish roles across supported thickness/load targets.",
+      "completion_gate": "Every supported Oil role and launch fixture target has an ideal or supportive candidate with a complete role-specific protocol.",
+      "non_goal": "Do not research all 41 products merely to maximize row coverage."
+    },
+    {
+      "batch_id": "S5-06-dry-shampoo-format-guidance",
+      "priority": 1,
+      "status": "research_complete_one_product_blocked",
+      "categories": ["dry_shampoo"],
+      "target_kind": "application_family_and_spec_integrity",
+      "source_population_count": 10,
+      "research_result": {
+        "verified_exact_protocols": 9,
+        "blocked_products": 1,
+        "blocked_product": "got2b Liquid-to-Dry Spray"
+      },
+      "purpose": "Verify the ten canonical specs and add conservative guidance families for aerosol spray, foam/liquid and powder where the live cohort supports them.",
+      "completion_gate": "Every live product maps to one verified format family; an absent format remains unsupported rather than inferred."
+    },
+    {
+      "batch_id": "S5-07-deep-cleansing-launch",
+      "priority": 1,
+      "status": "protocol_research_complete_intake_pending",
+      "categories": ["deep_cleansing_shampoo"],
+      "target_kind": "new_product_and_exact_protocol",
+      "target_count": 5,
+      "candidate_names": [
+        "NEQI Stylist Edition Tiefenreinigung",
+        "Swiss-O-Par Tiefenreinigung",
+        "Balea Professional Tiefenreinigung",
+        "ISANA Professional Tiefenreinigung",
+        "GLISS Scalp Balance Tiefenreinigung"
+      ],
+      "research_result": {
+        "verified_protocol_templates": 5,
+        "intake_ready_products": 0,
+        "remaining_gate": "Identity/commercial/image Product Intake packages"
+      },
+      "purpose": "Create the agreed Drogerie launch cohort with verified Reset roles, scalp targets and application protocols.",
+      "completion_gate": "At least one exact active candidate covers each supported Reset role without inventing cleansing strength or colour compatibility."
+    },
+    {
+      "batch_id": "S5-08-scalp-care-launch",
+      "priority": 1,
+      "status": "commercial_refresh_complete_assets_missing",
+      "categories": ["scalp_care"],
+      "target_kind": "new_product_and_exact_protocol",
+      "candidate_count": 8,
+      "source_head": "43cdf380e7df3975b20d7e10371e98e7dc21cdcf",
+      "source_pr": 345,
+      "research_result": {
+        "reviewed_manifests": 8,
+        "commercial_pages_http_200": 7,
+        "anti_bot_pages": 1,
+        "reviewed_assets_present_in_current_worktree": 0
+      },
+      "purpose": "Reuse the previously reviewed two-per-role Scalp Care candidate set after identity, commercial and asset freshness checks.",
+      "completion_gate": "At least one active Drogerie candidate per role has verified cosmetic status, format, rinse mode and critical protocol; density products retain the limited-evidence statement.",
+      "apply_note": "Do not replay the old mixed Heat/Scalp executor because Heat is already live. Build a Scalp-only guarded package from refreshed manifests."
+    },
+    {
+      "batch_id": "S5-09-conditioner-integrity",
+      "priority": 2,
+      "status": "verification_only",
+      "categories": ["conditioner"],
+      "target_kind": "integrity",
+      "target_count": 43,
+      "purpose": "Preserve thickness, weight, repair and balance facts; exact protocol research is only needed for products that materially differ from the safe family fallback.",
+      "completion_gate": "All 43 current products retain valid non-empty thickness coverage and required rerank facts."
+    }
+  ],
+  "rollout_decision": {
+    "broad_stage5_rollout": "no_go",
+    "internal_field_testing": "continue",
+    "reason_ids": [
+      "stage5.recent_walkthrough_bugs_pending_external_fix_confirmation",
+      "stage5.missing_scalp_care_launch_products",
+      "stage5.missing_deep_cleansing_launch_products",
+      "stage5.missing_specialized_exact_protocols"
+    ],
+    "reconsider_when": [
+      "The reported walkthrough bugs are fixed and retested on the deployed head.",
+      "All priority-1 batches satisfy their category-specific gates or the affected category is explicitly held out.",
+      "A fresh production field-test walkthrough contains no fabricated or partial instruction presented as exact.",
+      "Exposure change is separately approved."
+    ]
+  }
+}

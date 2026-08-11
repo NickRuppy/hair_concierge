@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils"
 
 interface QuizOptionCardProps {
+  ariaLabel?: string
   icon?: IconName
   label: string
   description?: string
@@ -89,6 +90,7 @@ function HairPortraitVisual({
 }
 
 export function QuizOptionCard({
+  ariaLabel,
   icon,
   label,
   description,
@@ -112,7 +114,8 @@ export function QuizOptionCard({
       <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
         <button
           type="button"
-          aria-labelledby={labelId}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabel ? undefined : labelId}
           aria-describedby={description ? descriptionId : undefined}
           aria-pressed={active}
           disabled={disabled}
@@ -216,7 +219,8 @@ export function QuizOptionCard({
       >
         <button
           type="button"
-          aria-labelledby={labelId}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabel ? undefined : labelId}
           aria-describedby={description ? descriptionId : undefined}
           aria-pressed={active}
           disabled={disabled}
@@ -244,8 +248,8 @@ export function QuizOptionCard({
           </div>
           <div
             className={cn(
-              "pointer-events-auto flex shrink-0 items-center justify-end gap-2",
-              trailing && "min-w-[4.25rem]",
+              "flex shrink-0 items-center justify-end gap-2",
+              trailing ? "pointer-events-auto min-w-[4.25rem]" : "pointer-events-none",
             )}
           >
             {trailing}

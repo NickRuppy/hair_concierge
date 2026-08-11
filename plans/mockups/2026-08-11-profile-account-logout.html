@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Profile Account logout decision evidence</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, system-ui, sans-serif;
+        background: #f5f1ef;
+        color: #2d1746;
+      }
+      body {
+        margin: 0;
+        padding: 32px 16px;
+      }
+      main {
+        width: min(100%, 390px);
+        margin: 0 auto;
+      }
+      .context {
+        margin: 0 0 8px;
+        color: #6b50a0;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0 0 22px;
+        font:
+          400 34px/1.08 Georgia,
+          serif;
+      }
+      section {
+        padding: 20px;
+        border: 1px solid #ded5d8;
+        border-radius: 20px;
+        background: #fffdfc;
+      }
+      h2 {
+        margin: 0 0 18px;
+        font:
+          400 24px/1.2 Georgia,
+          serif;
+      }
+      .identity {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .avatar {
+        display: grid;
+        width: 46px;
+        height: 46px;
+        place-items: center;
+        border-radius: 50%;
+        background: #f3eef7;
+        color: #6b50a0;
+        font-weight: 600;
+      }
+      p {
+        margin: 0;
+      }
+      .name {
+        font-weight: 600;
+      }
+      .email {
+        margin-top: 3px;
+        color: #665f62;
+        font-size: 14px;
+      }
+      form {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid #ded5d8;
+      }
+      button {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid #6f6870;
+        border-radius: 12px;
+        background: transparent;
+        color: #2d1746;
+        font:
+          600 15px/1 Inter,
+          system-ui,
+          sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="context">Einstellungen</p>
+      <h1>Profil</h1>
+      <section aria-labelledby="account-heading">
+        <h2 id="account-heading">Account</h2>
+        <div class="identity">
+          <span class="avatar" aria-hidden="true">N</span>
+          <div>
+            <p class="name">Nick</p>
+            <p class="email">nick@…</p>
+          </div>
+        </div>
+        <form>
+          <button type="button">Abmelden</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,358 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-04-bondbuilder-primary-protocols",
+  "category_key": "bondbuilder",
+  "products": [
+    {
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "product_name": "Epres Bond Repair Treatment",
+      "role": "specialized_bond_treatment",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://epres.com/de/products/bond-repair-treatment",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Ein- bis zweimal pro Woche anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-bondbuilder-f8a63590-9d80-454a-8008-e2a56321e64c",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "bondbuilder",
+          "productId": "f8a63590-9d80-454a-8008-e2a56321e64c"
+        },
+        "role": "bond_repair",
+        "applicationFamily": "pre_shampoo_single_treatment",
+        "compatibleDayTypes": [
+          "bond_repair_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "pre_wash",
+          "before": [
+            "wet_cleanse"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": null,
+          "contactTimeSeconds": 600,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-epres",
+            "action": "apply_product",
+            "copyTemplateDe": "Konzentrat nach Herstellerangabe in der Sprühflasche mit Wasser mischen und gut schütteln."
+          },
+          {
+            "stepKey": "apply-epres",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf trockenes, ungewaschenes Haar sprühen, bis es vollständig benetzt ist."
+          },
+          {
+            "stepKey": "wait-epres",
+            "action": "wait",
+            "copyTemplateDe": "Mindestens 10 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "cleanse-epres",
+            "action": "rinse",
+            "copyTemplateDe": "Anschließend wie gewohnt shampoonieren und Conditioner verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://epres.com/de/products/bond-repair-treatment",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "product_name": "K18 Leave-In Molecular Repair Hair Mask",
+      "role": "specialized_bond_treatment",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_course",
+        "copy_de": "Nach einer Salonbehandlung vier bis sechs Haarwäschen hintereinander, danach nach Bedarf."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-bondbuilder-38dace91-0fba-49ee-a93f-ac36e488fe4b",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "bondbuilder",
+          "productId": "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+        },
+        "role": "bond_repair",
+        "applicationFamily": "post_shampoo_timed_leave_in",
+        "compatibleDayTypes": [
+          "bond_repair_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "timed_treatment",
+          "before": [
+            "damp_leave_on"
+          ],
+          "after": [
+            "wet_cleanse",
+            "post_rinse_towel_dry"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": 240,
+          "conditionerRelationship": null,
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-k18",
+            "action": "apply_product",
+            "copyTemplateDe": "Shampoonieren, keinen Conditioner davor verwenden und das Haar handtuchtrocknen."
+          },
+          {
+            "stepKey": "apply-k18",
+            "action": "apply_product",
+            "copyTemplateDe": "Mit drei Pumpstößen beginnen und gleichmäßig von den mittleren Längen bis in die Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-k18",
+            "action": "wait",
+            "copyTemplateDe": "4 Minuten warten; in dieser Zeit nicht kämmen und nicht ausspülen."
+          },
+          {
+            "stepKey": "finish-k18",
+            "action": "apply_product",
+            "copyTemplateDe": "Danach bei Bedarf weitere Pflege- oder Stylingprodukte verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
+      "product_name": "OLAPLEX No.0 Intensive Bond Building Treatment",
+      "role": "specialized_bond_treatment",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://olaplex.de/products/olaplex-no-0-intensive-bond-building-hair-treatment",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Wöchentlich oder abhängig vom Haarzustand nach Bedarf anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-bondbuilder-aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "bondbuilder",
+          "productId": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d"
+        },
+        "role": "bond_repair",
+        "applicationFamily": "pre_shampoo_booster_plus_treatment",
+        "compatibleDayTypes": [
+          "bond_repair_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "pre_wash",
+          "before": [
+            "wet_cleanse"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-olaplex-0",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf trockenem Haar gleichmäßig vom Ansatz bis in die Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-olaplex-0",
+            "action": "wait",
+            "copyTemplateDe": "10 Minuten einwirken lassen und noch nicht ausspülen."
+          },
+          {
+            "stepKey": "apply-olaplex-3",
+            "action": "apply_product",
+            "copyTemplateDe": "Olaplex No.3 Hair Perfector darüber geben und durchkämmen."
+          },
+          {
+            "stepKey": "wait-olaplex-3",
+            "action": "wait",
+            "copyTemplateDe": "Weitere 10 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-olaplex-0",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen und danach Shampoo und Conditioner verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://olaplex.de/products/olaplex-no-0-intensive-bond-building-hair-treatment",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "product_name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "role": "specialized_bond_treatment",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Herstelleranleitung",
+          "url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-10"
+        }
+      ],
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Alle ein bis drei Haarwäschen anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-bondbuilder-3dc24d67-e6c0-4239-a273-058a87d13553",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "bondbuilder",
+          "productId": "3dc24d67-e6c0-4239-a273-058a87d13553"
+        },
+        "role": "bond_repair",
+        "applicationFamily": "pre_shampoo_single_treatment",
+        "compatibleDayTypes": [
+          "bond_repair_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "pre_wash",
+          "before": [
+            "wet_cleanse"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-olaplex-3plus",
+            "action": "apply_product",
+            "copyTemplateDe": "Unter der Dusche großzügig auf nasses Haar vom Ansatz bis in die Spitzen auftragen."
+          },
+          {
+            "stepKey": "wait-olaplex-3plus",
+            "action": "wait",
+            "copyTemplateDe": "3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-olaplex-3plus",
+            "action": "rinse",
+            "copyTemplateDe": "Ausspülen und anschließend Shampoo und Conditioner verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

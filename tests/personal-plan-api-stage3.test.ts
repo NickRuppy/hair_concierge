@@ -6,6 +6,7 @@ import {
   createStage3RouteHandlers,
   type Stage3RouteDeps,
 } from "../src/app/api/personal-plan/stage-3/route"
+import { createStage3CompleteRouteHandler } from "../src/app/api/personal-plan/stage-3/complete/route"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 import { Stage3AuthoritySnapshotError } from "../src/lib/personal-plan/products/authority/snapshot"
 
@@ -313,6 +314,81 @@ test("Stage 3 GET preserves stale refined authority as a recoverable conflict", 
     ),
   )
 
+  assert.deepEqual(
+    [response!.status, await response!.json()],
+    [409, { error: "stale_refined_source" }],
+  )
+})
+
+test("Stage 3 GET returns a refined-source restart when draft creation sees a moved pointer", async () => {
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => {
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        },
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.deepEqual(
+    [response!.status, await response!.json()],
+    [409, { error: "stale_refined_source" }],
+  )
+})
+
+test("Stage 3 completion returns a refined-source restart rather than a revision conflict", async () => {
+  const handler = createStage3CompleteRouteHandler({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => ({ allowed: true }),
+    complete: async () => {
+      throw new Stage3AuthoritySnapshotError("stale_refined_source")
+    },
+  } as never)
+  const response = await handler(
+    new Request("http://test/api/personal-plan/stage-3/complete", {
+      method: "POST",
+      body: JSON.stringify({ draftId: draft.draftId, expectedRevision: draft.revision }),
+    }),
+  )
+
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [409, { error: "stale_refined_source" }],
+  )
+})
+
+test("Stage 3 PATCH preserves a stale refined source without retrying the obsolete mutation", async () => {
+  let mutationCalls = 0
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        mutate: async () => {
+          mutationCalls += 1
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        },
+      }),
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: { type: "remove_captured_product", capturedProductId: "capture-a" },
+      }),
+    }),
+  )
+
+  assert.equal(mutationCalls, 1)
   assert.deepEqual(
     [response!.status, await response!.json()],
     [409, { error: "stale_refined_source" }],

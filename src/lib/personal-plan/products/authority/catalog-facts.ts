@@ -3,6 +3,7 @@ import { createHash } from "node:crypto"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PlanCategoryTarget } from "@/lib/personal-plan/types"
+import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type { PersonalPlanCategory, Stage3DecisionSubject, Stage3ProductDraft } from "../contracts"
@@ -287,7 +288,7 @@ async function loadProtocols(
       client
         .from("product_application_protocols")
         .select(
-          "role,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
+          "role,guidance_payload,application_stage,application_state,placement,contact_time_seconds,rinse_action,reapplication,source_label,source_url,updated_at",
         )
         .eq("product_id", productId),
       client
@@ -316,14 +317,21 @@ async function loadProtocols(
     const sourceRole = role === "pre_heat_application" ? "pre_heat_protection" : role
     const row = protocolRows.find((candidate) => candidate.role === sourceRole)
     if (!row) return { role: role as never, status: "missing" as const, fingerprint: null }
+    const canonicalGuidance = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
+    const hasMatchingCanonicalGuidance =
+      canonicalGuidance.success &&
+      canonicalGuidance.data.scope.kind === "product" &&
+      canonicalGuidance.data.scope.productId === productId &&
+      canonicalGuidance.data.scope.category === category
     const complete =
-      sourceRole === "pre_heat_protection"
+      hasMatchingCanonicalGuidance ||
+      (sourceRole === "pre_heat_protection"
         ? Boolean(row.application_state && row.reapplication)
         : Boolean(
             row.application_stage &&
             row.placement &&
             (row.rinse_action || row.contact_time_seconds),
-          )
+          ))
     return {
       role: role as never,
       status: complete ? ("verified_complete" as const) : ("verified_incomplete" as const),

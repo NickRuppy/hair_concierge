@@ -94,6 +94,182 @@ test("draft creation persists the server-created immutable authority snapshot in
   assert.deepEqual(result.draft.authoritySnapshot?.coverage, refinedSnapshot.coverage)
 })
 
+test("draft creation turns an RPC stale source into a typed refined-source restart", async () => {
+  const refinedSnapshot = {
+    inputHash: "refined-input-hash",
+    profile: { source: { projection: "refined_post_plan" } },
+    renderedOrder: ["shampoo"],
+    decisions: [
+      {
+        category: "shampoo",
+        resolution: "resolved",
+        needTier: "basis",
+        roles: ["shampoo_everyday"],
+        target: {
+          category: "shampoo",
+          roles: ["shampoo_everyday"],
+          scalpRoute: "balanced",
+          everydayConstraint: "standard",
+          requiresTargetedDandruffCapability: false,
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: [],
+      },
+    ],
+    coverage: [],
+  }
+  const client = {
+    from() {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => ({
+          data: { id: "refined-1", output_snapshot: refinedSnapshot },
+          error: null,
+        }),
+      }
+      return chain
+    },
+    async rpc() {
+      return { data: { outcome: "stale_source" }, error: null }
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  await assert.rejects(
+    () =>
+      persistence.loadOrCreate({
+        userId: "owner-1",
+        personalPlanId: "plan-1",
+        refinedVersionId: "refined-1",
+      }),
+    (error: unknown) =>
+      error instanceof Error &&
+      error.name === "Stage3AuthoritySnapshotError" &&
+      error.message === "stale_refined_source",
+  )
+})
+
+test("owned-product search presents one brand plus the complete line and product title", async () => {
+  const client = {
+    from(table: string) {
+      assert.equal(table, "products")
+      const rows = [
+        {
+          id: "ogx-renewing",
+          brand: "OGX",
+          name: "OGX Renewing + Argan Oil of Morocco Shampoo",
+          image_url: "https://example.test/ogx.webp",
+          is_active: true,
+          lifecycle_status: "active",
+          is_chaarlie_recommended: true,
+          sort_order: 1,
+          category_key: "shampoo",
+          origin: "curated",
+        },
+        {
+          id: "balea-professional",
+          brand: "Balea",
+          name: "Balea Professional Shampoo Tiefenreinigung",
+          image_url: null,
+          is_active: true,
+          lifecycle_status: "active",
+          is_chaarlie_recommended: false,
+          sort_order: 2,
+          category_key: "shampoo",
+          origin: "user_submitted",
+        },
+      ]
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
+          Promise.resolve({ data: rows, error: null }).then(resolve),
+      }
+      return chain
+    },
+  }
+
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  const ogx = await persistence.search({
+    userId: "owner-1",
+    category: "shampoo",
+    query: "ogx renewing",
+    requestToken: 1,
+  })
+  const balea = await persistence.search({
+    userId: "owner-1",
+    category: "shampoo",
+    query: "balea professional",
+    requestToken: 2,
+  })
+
+  assert.deepEqual(
+    ogx.candidates.map((candidate) => [candidate.brandName, candidate.displayName]),
+    [["OGX", "Renewing + Argan Oil of Morocco Shampoo"]],
+  )
+  assert.deepEqual(
+    balea.candidates.map((candidate) => [candidate.brandName, candidate.displayName]),
+    [["Balea", "Professional Shampoo Tiefenreinigung"]],
+  )
+})
+
+test("selected owned-product resolution keeps the same origin-neutral display title", async () => {
+  let selectedColumns = ""
+  const client = {
+    from(table: string) {
+      assert.equal(table, "products")
+      const chain = {
+        select: (columns: string) => {
+          selectedColumns = columns
+          return chain
+        },
+        eq: () => chain,
+        maybeSingle: async () => ({
+          data: {
+            id: "ogx-renewing",
+            brand: "OGX",
+            name: "OGX Renewing + Argan Oil of Morocco Shampoo",
+            image_url: "https://example.test/ogx.webp",
+            category_key: "shampoo",
+            is_active: true,
+            lifecycle_status: "active",
+          },
+          error: null,
+        }),
+      }
+      return chain
+    },
+    async rpc(name: string) {
+      assert.equal(name, "personal_plan_create_or_reuse_user_product")
+      return {
+        data: {
+          outcome: "ready",
+          userProduct: {
+            id: "owned-1",
+            catalog_product_id: "ogx-renewing",
+            category: "shampoo",
+          },
+        },
+        error: null,
+      }
+    },
+  }
+
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  const resolved = await persistence.resolveOwnedCatalogProduct({
+    userId: "owner-1",
+    category: "shampoo",
+    candidateId: "ogx-renewing",
+  })
+
+  assert.match(selectedColumns, /brand/)
+  assert.equal(resolved?.displayName, "Renewing + Argan Oil of Morocco Shampoo")
+})
+
 function conditionerAuthorityDraft(): Stage3ProductDraft {
   return {
     schemaVersion: 1,
@@ -178,6 +354,30 @@ function conditionerAuthorityDraft(): Stage3ProductDraft {
     },
   }
 }
+
+test("a guarded save exposes refined-source drift without fabricating an obsolete SQL draft", async () => {
+  const calls: Array<{ name: string; args: Record<string, unknown> }> = []
+  const client = {
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      return { data: { outcome: "stale_source" }, error: null }
+    },
+  }
+  const draft = conditionerAuthorityDraft()
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  const result = await persistence.save({
+    userId: draft.userId,
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    draft,
+  })
+
+  assert.equal(result.outcome, "stale_source")
+  assert.equal(result.draft, draft)
+  assert.equal(calls[0]?.name, "personal_plan_save_product_draft")
+  assert.equal(calls[0]?.args.p_expected_revision, draft.revision)
+})
 
 function authorityFactClient(
   conditionerSpecs: Record<string, unknown>[],
@@ -294,6 +494,7 @@ test("individual authority evaluation overlaps independent fact reads", async ()
 function shampooAuthorityDraft(
   overrides: {
     role?: "shampoo_everyday" | "shampoo_dandruff"
+    productId?: string
     scalpRoute?: "oily" | "balanced" | "dry"
     everydayConstraint?:
       | "standard"
@@ -303,6 +504,7 @@ function shampooAuthorityDraft(
   } = {},
 ): Stage3ProductDraft {
   const role = overrides.role ?? "shampoo_everyday"
+  const productId = overrides.productId ?? "shampoo-1"
   const scalpRoute = overrides.scalpRoute ?? "balanced"
   const everydayConstraint = overrides.everydayConstraint ?? "standard"
   const draft = conditionerAuthorityDraft()
@@ -318,7 +520,7 @@ function shampooAuthorityDraft(
         userProductId: "user-shampoo-1",
         identity: {
           kind: "catalog_product",
-          productId: "shampoo-1",
+          productId,
           displayName: "Mehrfach spezifiziertes Shampoo",
           category: "shampoo",
         },
@@ -362,6 +564,8 @@ function shampooAuthorityDraft(
 function shampooAuthorityFactClient(
   shampooSpecs: Record<string, unknown>[],
   recommendationProducts: Record<string, unknown>[] = [],
+  exactProtocols: Record<string, unknown>[] = [],
+  productId = "shampoo-1",
 ) {
   return {
     from(table: string) {
@@ -371,7 +575,7 @@ function shampooAuthorityFactClient(
           return filters.has("id")
             ? {
                 data: {
-                  id: "shampoo-1",
+                  id: productId,
                   name: "Mehrfach spezifiziertes Shampoo",
                   category_key: "shampoo",
                   is_active: true,
@@ -384,6 +588,9 @@ function shampooAuthorityFactClient(
             : { data: recommendationProducts, error: null }
         }
         if (table === "product_shampoo_specs") return { data: shampooSpecs, error: null }
+        if (table === "product_application_protocols") {
+          return { data: exactProtocols, error: null }
+        }
         return { data: [], error: null }
       }
       const chain = {
@@ -407,6 +614,102 @@ function shampooAuthorityFactClient(
     },
   }
 }
+
+test("canonical exact guidance makes the matching Stage 3 product role protocol-complete", async () => {
+  const productId = "11111111-1111-4111-8111-111111111111"
+  const guidancePayload = {
+    schemaVersion: 1,
+    guidanceKey: `product-shampoo-${productId}`,
+    protocolVersion: 1,
+    locale: "de",
+    scope: { kind: "product", category: "shampoo", productId },
+    role: "cleanse",
+    applicationFamily: "standard_rinse_out_cleanse",
+    compatibleDayTypes: ["wash_day"],
+    exactGuidanceRequired: true,
+    sequence: {
+      anchor: "wet_cleanse",
+      before: [],
+      after: [],
+      conflictsWith: [],
+    },
+    requirements: {
+      requiredCatalogFacts: [],
+      requiredProtocolFacts: [],
+      requiredProfileFacts: [],
+    },
+    protocolFacts: {
+      applicationArea: "scalp_roots",
+      rinse: "rinse_out",
+      contactTimeSeconds: null,
+      conditionerRelationship: "not_applicable",
+      reapplication: "none",
+      amount: null,
+      cautions: [],
+    },
+    steps: [
+      {
+        stepKey: "apply-shampoo",
+        action: "apply_product",
+        copyTemplateDe: "Ins nasse Haar und auf die Kopfhaut einmassieren.",
+      },
+      { stepKey: "rinse-shampoo", action: "rinse", copyTemplateDe: "Gründlich ausspülen." },
+    ],
+    evidence: [
+      {
+        sourceUrl: "https://example.com/shampoo",
+        sourceType: "manufacturer",
+        checkedAt: "2026-08-10",
+      },
+    ],
+  }
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient(
+      [
+        {
+          thickness: "normal",
+          shampoo_bucket: "normal",
+          scalp_route: "balanced",
+          cleansing_intensity: "regular",
+        },
+      ],
+      [],
+      [
+        {
+          role: "shampoo_everyday",
+          guidance_payload: guidancePayload,
+          application_stage: null,
+          application_state: null,
+          placement: null,
+          contact_time_seconds: null,
+          rinse_action: null,
+          reapplication: null,
+          source_label: "Manufacturer",
+          source_url: "https://example.com/shampoo",
+          updated_at: "2026-08-10T09:00:00.000Z",
+        },
+      ],
+      productId,
+    ) as never,
+    {
+      draft: shampooAuthorityDraft({ productId }),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(
+    bundle.productFacts?.protocols.find((protocol) => protocol.role === "shampoo_everyday")?.status,
+    "verified_complete",
+  )
+})
 
 const normalRefinedContext = {
   currentRefinedVersionId: "refined-1",

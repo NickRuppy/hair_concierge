@@ -2,11 +2,13 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import { cleanProductDisplayName } from "@/lib/product-identity"
 import type { Stage3ProductDraft } from "./contracts"
 import type { Stage3ProductionPersistence } from "./production-persistence-gateway"
 import { searchOwnedProductCatalog, type CatalogProductRecord } from "./inventory-search"
 import { createStage3Draft } from "./state-machine"
 import { loadStage3AuthorityFactBundle } from "./authority/catalog-facts"
+import { Stage3AuthoritySnapshotError } from "./authority/snapshot"
 
 type AdminClient = SupabaseClient
 
@@ -58,11 +60,10 @@ export function createSupabaseStage3ProductionPersistence(
       })
       if (error || !data) throw new Error("stage3_draft_create_failed")
       if (typeof data === "object" && "outcome" in data) {
-        throw new Error(
-          String(data.outcome) === "stale_source"
-            ? "stage3_stale_source"
-            : "stage3_draft_create_rejected",
-        )
+        if (String(data.outcome) === "stale_source") {
+          throw new Stage3AuthoritySnapshotError("stale_refined_source")
+        }
+        throw new Error("stage3_draft_create_rejected")
       }
       return { draft: mapStage3Draft(data), requirements: context.orderedCategories }
     },
@@ -81,12 +82,20 @@ export function createSupabaseStage3ProductionPersistence(
       })
       if (error || !data) throw new Error("stage3_draft_save_failed")
       const outcome = String((data as Record<string, unknown>).outcome)
-      if (outcome !== "saved" && outcome !== "revision_conflict")
+      if (outcome !== "saved" && outcome !== "revision_conflict" && outcome !== "stale_source")
         throw new Error("stage3_draft_save_rejected")
+      if (outcome === "stale_source") {
+        // The guarded RPC intentionally does not disclose an obsolete draft.
+        // The production gateway turns this into a restart from the current
+        // refined source, so keep the locally supplied draft only to satisfy
+        // the narrow persistence contract.
+        return { outcome, draft: input.draft } as const
+      }
       const draft = mapStage3Draft((data as Record<string, unknown>).draft ?? data)
       return { outcome, draft } as
         | { outcome: "saved"; draft: Stage3ProductDraft }
         | { outcome: "revision_conflict"; draft: Stage3ProductDraft }
+        | { outcome: "stale_source"; draft: Stage3ProductDraft }
     },
     async search(input) {
       return searchOwnedProductCatalog({
@@ -108,7 +117,9 @@ export function createSupabaseStage3ProductionPersistence(
                   id: String(row.id),
                   category,
                   brandName: typeof row.brand === "string" ? row.brand : null,
-                  displayName: String(row.name),
+                  displayName: cleanProductDisplayName(String(row.name), {
+                    brand: typeof row.brand === "string" ? row.brand : null,
+                  }),
                   imageUrl: typeof row.image_url === "string" ? row.image_url : null,
                   active: row.is_active === true,
                   lifecycleStatus:
@@ -127,7 +138,7 @@ export function createSupabaseStage3ProductionPersistence(
     async resolveOwnedCatalogProduct(input) {
       const { data: candidate, error: candidateError } = await client
         .from("products")
-        .select("id,name,image_url,category_key,is_active,lifecycle_status")
+        .select("id,brand,name,image_url,category_key,is_active,lifecycle_status")
         .eq("id", input.candidateId)
         .eq("category_key", input.category)
         .maybeSingle()
@@ -150,7 +161,9 @@ export function createSupabaseStage3ProductionPersistence(
       return {
         userProductId: String(owned.id),
         productId: String(owned.catalog_product_id),
-        displayName: String(candidate.name),
+        displayName: cleanProductDisplayName(String(candidate.name), {
+          brand: typeof candidate.brand === "string" ? candidate.brand : null,
+        }),
         imageUrl: typeof candidate.image_url === "string" ? candidate.image_url : null,
         category: owned.category as never,
       }

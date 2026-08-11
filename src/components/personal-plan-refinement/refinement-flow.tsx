@@ -65,7 +65,7 @@ export type Stage2HandoffPayload = {
   session: Stage2RefinementSession
 }
 
-type RefinementMode = "loading" | "invitation" | "resume" | "question" | "saving" | "bridge"
+type RefinementMode = "loading" | "invitation" | "resume" | "question" | "bridge"
 
 export function deriveRefinementEntryMode(
   session: Stage2RefinementSession,
@@ -124,6 +124,7 @@ export function RefinementFlow({
     "idle",
   )
   const generationRef = useRef(0)
+  const saveGenerationRef = useRef(0)
   const telemetryRef = useRef(onTelemetry)
 
   useEffect(() => {
@@ -227,6 +228,7 @@ export function RefinementFlow({
   }, [session, setActiveFromSession])
 
   const handleBack = useCallback(() => {
+    if (status === "saving") return
     if (!session || !activeQuestionId) return
     const currentIndex = session.path.orderedQuestionIds.indexOf(activeQuestionId)
     const previousQuestionId =
@@ -241,7 +243,7 @@ export function RefinementFlow({
     }
     setActiveFromSession(session, previousQuestionId)
     setMode("question")
-  }, [activeQuestionId, directEntry, onSecondaryExit, session, setActiveFromSession])
+  }, [activeQuestionId, directEntry, onSecondaryExit, session, setActiveFromSession, status])
 
   const handleBridgeBack = useCallback(() => {
     if (!session) return
@@ -312,51 +314,69 @@ export function RefinementFlow({
 
   const handleSubmit = useCallback(async () => {
     if (!session || !activeQuestionId) return
+    if (status === "saving") return
     if (status === "completion_failed" && session.path.firstUnresolvedQuestionId === null) {
       setStatus("saving")
       setLiveMessage("Übergabe wird erneut versucht.")
-      setMode("saving")
       await completeStage2Session(session)
       return
     }
     const editedCompletedQuestion = session.completedQuestionIds.includes(activeQuestionId)
+    const submittedSession = session
+    const submittedQuestionId = activeQuestionId
+    const submittedAnswer = localAnswer
+    const saveGeneration = saveGenerationRef.current + 1
+    saveGenerationRef.current = saveGeneration
     setStatus("saving")
     setLiveMessage("Antwort wird gespeichert.")
     try {
-      const locallyAdvanced = saveStage2SessionAnswer(session, {
-        questionId: activeQuestionId,
-        answer: localAnswer,
+      const locallyAdvanced = saveStage2SessionAnswer(submittedSession, {
+        questionId: submittedQuestionId,
+        answer: submittedAnswer,
       })
       const willCompletePage =
-        chooseNextQuestion(locallyAdvanced, activeQuestionId, editedCompletedQuestion) === null
-      setMode("saving")
+        chooseNextQuestion(locallyAdvanced, submittedQuestionId, editedCompletedQuestion) === null
+      const optimisticNextQuestionId = chooseNextQuestion(
+        locallyAdvanced,
+        submittedQuestionId,
+        editedCompletedQuestion,
+      )
+      if (!willCompletePage && optimisticNextQuestionId) {
+        setActiveFromSession(locallyAdvanced, optimisticNextQuestionId, {
+          liveMessage: "Antwort wird gespeichert. Nächste Frage geladen.",
+          status: "saving",
+        })
+        setMode("question")
+      }
       const saveAnswerAndComplete = gateway.saveAnswerAndComplete?.bind(gateway)
       if (willCompletePage && saveAnswerAndComplete) {
         const result = await saveAnswerAndComplete({
-          questionId: activeQuestionId,
-          answer: localAnswer,
-          expectedRevision: session.revision,
+          questionId: submittedQuestionId,
+          answer: submittedAnswer,
+          expectedRevision: submittedSession.revision,
         })
+        if (saveGenerationRef.current !== saveGeneration) return
         emit({
           name: "personal_plan_stage2_answer_saved",
-          family: getQuestionFamily(activeQuestionId),
+          family: getQuestionFamily(submittedQuestionId),
         })
         showCompletedStage2Session(result.session, result.handoff)
         return
       }
       const nextSession = await gateway.saveAnswer({
-        questionId: activeQuestionId,
-        answer: localAnswer,
-        expectedRevision: session.revision,
+        questionId: submittedQuestionId,
+        answer: submittedAnswer,
+        expectedRevision: submittedSession.revision,
       })
+      if (saveGenerationRef.current !== saveGeneration) return
       emit({
         name: "personal_plan_stage2_answer_saved",
-        family: getQuestionFamily(activeQuestionId),
+        family: getQuestionFamily(submittedQuestionId),
       })
 
       const nextQuestionId = chooseNextQuestion(
         nextSession,
-        activeQuestionId,
+        submittedQuestionId,
         editedCompletedQuestion,
       )
       if (!nextQuestionId) {
@@ -364,15 +384,23 @@ export function RefinementFlow({
         await completeStage2Session(nextSession)
         return
       }
-      setActiveFromSession(nextSession, nextQuestionId, {
-        liveMessage: "Antwort gespeichert. Nächste Frage geladen.",
-      })
+      setSession(nextSession)
+      if (nextQuestionId !== optimisticNextQuestionId) {
+        setActiveFromSession(nextSession, nextQuestionId, {
+          liveMessage: "Antwort gespeichert. Nächste Frage geladen.",
+          status: "saved",
+        })
+      } else {
+        setStatus("saved")
+        setLiveMessage("Antwort gespeichert.")
+      }
       setMode("question")
     } catch (error) {
+      if (saveGenerationRef.current !== saveGeneration) return
       if (error instanceof Stage2RefinementError && error.savedSession) {
         emit({
           name: "personal_plan_stage2_answer_saved",
-          family: getQuestionFamily(activeQuestionId),
+          family: getQuestionFamily(submittedQuestionId),
         })
         emit({ name: "personal_plan_stage2_save_failed", errorCode: error.code })
         setBridge(null)
@@ -422,6 +450,9 @@ export function RefinementFlow({
       }
       const code = error instanceof Stage2RefinementError ? error.code : "save_failed"
       emit({ name: "personal_plan_stage2_save_failed", errorCode: code })
+      setSession(submittedSession)
+      setActiveQuestionId(submittedQuestionId)
+      setLocalAnswer(submittedAnswer)
       setStatus("save_failed")
       setLiveMessage("Speichern fehlgeschlagen.")
       setMode("question")
@@ -455,7 +486,6 @@ export function RefinementFlow({
 
   const content = useMemo(() => {
     if (mode === "loading") return <LoadingShell status={status} liveMessage={liveMessage} />
-    if (mode === "saving") return <SavingTransitionShell liveMessage={liveMessage} />
     if (mode === "bridge" && bridge) {
       if (autoHandoff && onHandoff && handoffStatus !== "error") {
         return <LoadingShell status="saved" liveMessage="Produkte werden geöffnet." />
@@ -523,28 +553,6 @@ export function RefinementFlow({
   ])
 
   return content
-}
-
-export function SavingTransitionShell({ liveMessage }: { liveMessage: string }) {
-  return (
-    <div className="min-h-dvh bg-[var(--background)]">
-      <PersonalPlanJourneyHeader currentStage={2} saveStatus="saving" />
-      <main className="grid min-h-[calc(100dvh-92px)] place-items-center px-5 text-center">
-        <section role="status" aria-live="polite" aria-busy="true" className="max-w-sm">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            Verfeinerung
-          </p>
-          <h1 className="mt-2 font-serif text-3xl font-medium text-[var(--brand-plum-darkest,#2a1845)]">
-            Deine Antwort wird sicher gespeichert.
-          </h1>
-          <p className="mt-3 text-sm leading-6 text-[var(--text-sub,#6a6560)]">
-            Danach geht es direkt mit dem nächsten offenen Schritt weiter.
-          </p>
-          <span className="sr-only">{liveMessage}</span>
-        </section>
-      </main>
-    </div>
-  )
 }
 
 export function getBridgeBackQuestionId(

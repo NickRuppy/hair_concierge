@@ -85,6 +85,18 @@ export function isPersonalPlanFieldTestGuest(user: { app_metadata?: Record<strin
   return user.app_metadata?.access_kind === "field_test"
 }
 
+export function hasActivePersonalPlanRoutineEntitlement({
+  hasCurrentAppAccess,
+  fieldTestGuest,
+  oneTimeAccessState,
+}: {
+  hasCurrentAppAccess: boolean
+  fieldTestGuest: boolean
+  oneTimeAccessState: OneTimeAccessState | null
+}) {
+  return oneTimeAccessState === "active" || (fieldTestGuest && hasCurrentAppAccess)
+}
+
 export function buildAuthenticatedIntakeRedirectUrl(
   sourceUrl: URL,
   sourcePathname: string,
@@ -116,13 +128,15 @@ export function buildAuthenticatedAppRedirectUrl(requestUrl: URL, redirectPath: 
   return buildAuthenticatedIntakeRedirectUrl(requestUrl, requestUrl.pathname, redirectPath)
 }
 
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+export type UpdateSessionDependencies = {
+  createServerClient: typeof createServerClient
+  hasCurrentAppAccess: typeof hasCurrentAppAccess
+  resolveOneTimeAccessState: typeof resolveOneTimeAccessState
+  getRouteEnvironment: () => RouteEnvironment
+}
 
-  const { pathname } = request.nextUrl
-  const routeEnvironment: RouteEnvironment = {
+function getDefaultRouteEnvironment(): RouteEnvironment {
+  return {
     ciOfferPageLabEnabled:
       process.env.CI === "true" && process.env.CI_OFFER_PAGE_LAB_ENABLED === "true",
     ciPersonalPlanStage3LabEnabled:
@@ -134,254 +148,289 @@ export async function updateSession(request: NextRequest) {
     localDevLoginEnabled: process.env.LOCAL_DEV_LOGIN_ENABLED === "1",
     vercelEnv: process.env.VERCEL_ENV,
   }
-  const routeClassification = classifyRoute(pathname, routeEnvironment)
+}
 
-  if (routeClassification === "legacy") {
-    const url = request.nextUrl.clone()
-    const leadId = url.searchParams.get("lead_id") ?? url.searchParams.get("lead")
+const defaultUpdateSessionDependencies: UpdateSessionDependencies = {
+  createServerClient,
+  hasCurrentAppAccess,
+  resolveOneTimeAccessState,
+  getRouteEnvironment: getDefaultRouteEnvironment,
+}
 
-    url.search = ""
-    if (leadId) {
-      url.pathname = `/result/${encodeURIComponent(leadId)}`
-      url.searchParams.set("focus", "unlock-plan")
-    } else {
-      url.pathname = "/pricing"
+/**
+ * Builds the middleware handler with injectable server-side dependencies.
+ *
+ * Production callers use `updateSession`; the factory only exists to make the
+ * authenticated routing order testable without a network-backed Supabase client.
+ */
+export function createUpdateSession(
+  dependencies: UpdateSessionDependencies = defaultUpdateSessionDependencies,
+) {
+  return async function updateSession(request: NextRequest) {
+    let supabaseResponse = NextResponse.next({
+      request,
+    })
+
+    const { pathname } = request.nextUrl
+    const routeEnvironment = dependencies.getRouteEnvironment()
+    const routeClassification = classifyRoute(pathname, routeEnvironment)
+
+    if (routeClassification === "legacy") {
+      const url = request.nextUrl.clone()
+      const leadId = url.searchParams.get("lead_id") ?? url.searchParams.get("lead")
+
+      url.search = ""
+      if (leadId) {
+        url.pathname = `/result/${encodeURIComponent(leadId)}`
+        url.searchParams.set("focus", "unlock-plan")
+      } else {
+        url.pathname = "/pricing"
+      }
+
+      return NextResponse.redirect(url)
     }
 
-    return NextResponse.redirect(url)
-  }
+    if (routeClassification === "unknown") {
+      return supabaseResponse
+    }
 
-  if (routeClassification === "unknown") {
-    return supabaseResponse
-  }
+    if (
+      SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
+      UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
+      ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))
+    ) {
+      return supabaseResponse
+    }
 
-  if (
-    SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
-    UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
-    ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))
-  ) {
-    return supabaseResponse
-  }
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          )
+    const supabase = dependencies.createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+            supabaseResponse = NextResponse.next({
+              request,
+            })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options),
+            )
+          },
         },
       },
-    },
-  )
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const isQuizRetake = pathname === "/quiz" && request.nextUrl.searchParams.get("mode") === "retake"
-  const isForcedAuthLogin =
-    pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
-  const needsAuthenticatedAppRouting =
-    pathname === "/auth" || pathname === "/quiz" || isAuthenticatedAppRoutePath(pathname)
-
-  const isPublicRoute = routeClassification === "public" || routeClassification === "development"
-
-  if (!user && !isPublicRoute) {
-    const url = request.nextUrl.clone()
-    const redirectTarget = getUnauthenticatedRedirectTarget(
-      pathname,
-      request.nextUrl.search,
-      request.cookies.has("hc_returning"),
     )
-    const [targetPathname, targetSearch = ""] = redirectTarget.split("?")
-    url.pathname = targetPathname
-    url.search = targetSearch ? `?${targetSearch}` : ""
-    return redirectWithSupabaseCookies(url, supabaseResponse)
-  }
 
-  // All checks below require an authenticated user
-  if (!user) {
-    return supabaseResponse
-  }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-  if (isForcedAuthLogin) {
-    return supabaseResponse
-  }
+    const isQuizRetake =
+      pathname === "/quiz" && request.nextUrl.searchParams.get("mode") === "retake"
+    const isForcedAuthLogin =
+      pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
+    const needsAuthenticatedAppRouting =
+      pathname === "/auth" || pathname === "/quiz" || isAuthenticatedAppRoutePath(pathname)
 
-  // Mark user as returning (survives session expiry, 1 year)
-  if (!request.cookies.has("hc_returning")) {
-    supabaseResponse.cookies.set("hc_returning", "1", {
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 365,
-    })
-  }
+    const isPublicRoute = routeClassification === "public" || routeClassification === "development"
 
-  // --- Subscription paywall ---------------------------------------------
-  const needsSub = requiresSubscriptionPath(pathname)
-  const fieldTestGuest = isPersonalPlanFieldTestGuest(user)
-  let oneTimeAccessState: OneTimeAccessState | null = null
-
-  if (needsSub) {
-    let active: boolean
-    try {
-      ;[active, oneTimeAccessState] = await Promise.all([
-        hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }),
-        resolveOneTimeAccessState(supabase, user.id),
-      ])
-    } catch (error) {
-      console.warn("[billing] app access check failed", error)
-      if (fieldTestGuest) {
-        if (pathMatchesRoutePrefix(pathname, "/api")) {
-          return NextResponse.json({ error: "field_test_access_unavailable" }, { status: 503 })
-        }
-        const url = request.nextUrl.clone()
-        url.pathname = "/test/haarplan/beendet"
-        url.search = ""
-        url.searchParams.set("reason", "unavailable")
-        return redirectWithSupabaseCookies(url, supabaseResponse)
-      }
-      if (pathMatchesRoutePrefix(pathname, "/api")) {
-        return NextResponse.json({ error: "access_check_unavailable" }, { status: 503 })
-      }
+    if (!user && !isPublicRoute) {
       const url = request.nextUrl.clone()
-      const next = sanitizeReactivationReturnDestination(
-        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+      const redirectTarget = getUnauthenticatedRedirectTarget(
+        pathname,
+        request.nextUrl.search,
+        request.cookies.has("hc_returning"),
       )
-      url.pathname = "/reactivate"
-      url.search = ""
-      url.searchParams.set("reason", "access_check_unavailable")
-      url.searchParams.set("next", next)
+      const [targetPathname, targetSearch = ""] = redirectTarget.split("?")
+      url.pathname = targetPathname
+      url.search = targetSearch ? `?${targetSearch}` : ""
       return redirectWithSupabaseCookies(url, supabaseResponse)
     }
 
-    if (!active && oneTimeAccessState === "paid_pending") {
-      if (pathMatchesRoutePrefix(pathname, "/api")) {
-        return NextResponse.json({ error: "activation_pending" }, { status: 409 })
-      }
-      if (pathname !== "/plan-bereit") {
-        const url = request.nextUrl.clone()
-        url.pathname = "/plan-bereit"
-        url.search = ""
-        const leadId = request.nextUrl.searchParams.get("lead")
-        if (leadId) {
-          url.searchParams.set("lead", leadId)
-        }
-        return redirectWithSupabaseCookies(url, supabaseResponse)
-      }
+    // All checks below require an authenticated user
+    if (!user) {
+      return supabaseResponse
     }
 
-    if (!active) {
-      if (fieldTestGuest) {
-        if (pathMatchesRoutePrefix(pathname, "/api")) {
-          return NextResponse.json({ error: "field_test_ended" }, { status: 403 })
-        }
-        const url = request.nextUrl.clone()
-        url.pathname = "/test/haarplan/beendet"
-        url.search = ""
-        return redirectWithSupabaseCookies(url, supabaseResponse)
-      }
-      if (pathMatchesRoutePrefix(pathname, "/api")) {
-        return NextResponse.json({ error: "subscription_required" }, { status: 403 })
-      }
-      const url = request.nextUrl.clone()
-      const next = sanitizeReactivationReturnDestination(
-        `${request.nextUrl.pathname}${request.nextUrl.search}`,
-      )
-      url.pathname = "/reactivate"
-      url.search = ""
-      url.searchParams.set("reason", "expired")
-      url.searchParams.set("next", next)
-      return redirectWithSupabaseCookies(url, supabaseResponse)
+    if (isForcedAuthLogin) {
+      return supabaseResponse
     }
-  }
-  // --- End subscription paywall ------------------------------------------
 
-  if (needsAuthenticatedAppRouting) {
-    const [{ data: profile }, { data: hairProfile }] = await Promise.all([
-      supabase.from("profiles").select("onboarding_completed").eq("id", user.id).maybeSingle(),
-      supabase
-        .from("hair_profiles")
-        .select(
-          "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
-        )
-        .eq("user_id", user.id)
-        .maybeSingle(),
-    ])
+    // Mark user as returning (survives session expiry, 1 year)
+    if (!request.cookies.has("hc_returning")) {
+      supabaseResponse.cookies.set("hc_returning", "1", {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 365,
+      })
+    }
 
-    const intakeState = resolveIntakeState(profile, hairProfile)
-    let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined
-    if (
-      intakeState === "needs_onboarding" &&
-      oneTimeAccessState === "active" &&
-      isPersonalPlanRoutineRoute(pathname)
-    ) {
+    // --- Subscription paywall ---------------------------------------------
+    const needsSub = requiresSubscriptionPath(pathname)
+    const fieldTestGuest = isPersonalPlanFieldTestGuest(user)
+    let oneTimeAccessState: OneTimeAccessState | null = null
+    let hasActivePersonalPlanEntitlement = false
+
+    if (needsSub) {
+      let active: boolean
       try {
-        const { data: plan, error } = await supabase
-          .from("personal_plans")
-          .select("pending_routine_proposal_id,active_routine_version_id")
-          .eq("user_id", user.id)
-          .maybeSingle()
-
-        if (error) {
-          console.warn("[personal-plan] routine access check failed", error)
-        } else {
-          personalPlanRoutineAccess = {
-            hasActiveOneTimeEntitlement: true,
-            pendingRoutineProposalId:
-              typeof plan?.pending_routine_proposal_id === "string"
-                ? plan.pending_routine_proposal_id
-                : null,
-            activeRoutineVersionId:
-              typeof plan?.active_routine_version_id === "string"
-                ? plan.active_routine_version_id
-                : null,
-          }
-        }
+        ;[active, oneTimeAccessState] = await Promise.all([
+          dependencies.hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }),
+          dependencies.resolveOneTimeAccessState(supabase, user.id),
+        ])
+        hasActivePersonalPlanEntitlement = hasActivePersonalPlanRoutineEntitlement({
+          hasCurrentAppAccess: active,
+          fieldTestGuest,
+          oneTimeAccessState,
+        })
       } catch (error) {
-        console.warn("[personal-plan] routine access check failed", error)
+        console.warn("[billing] app access check failed", error)
+        if (fieldTestGuest) {
+          if (pathMatchesRoutePrefix(pathname, "/api")) {
+            return NextResponse.json({ error: "field_test_access_unavailable" }, { status: 503 })
+          }
+          const url = request.nextUrl.clone()
+          url.pathname = "/test/haarplan/beendet"
+          url.search = ""
+          url.searchParams.set("reason", "unavailable")
+          return redirectWithSupabaseCookies(url, supabaseResponse)
+        }
+        if (pathMatchesRoutePrefix(pathname, "/api")) {
+          return NextResponse.json({ error: "access_check_unavailable" }, { status: 503 })
+        }
+        const url = request.nextUrl.clone()
+        const next = sanitizeReactivationReturnDestination(
+          `${request.nextUrl.pathname}${request.nextUrl.search}`,
+        )
+        url.pathname = "/reactivate"
+        url.search = ""
+        url.searchParams.set("reason", "access_check_unavailable")
+        url.searchParams.set("next", next)
+        return redirectWithSupabaseCookies(url, supabaseResponse)
+      }
+
+      if (!active && oneTimeAccessState === "paid_pending") {
+        if (pathMatchesRoutePrefix(pathname, "/api")) {
+          return NextResponse.json({ error: "activation_pending" }, { status: 409 })
+        }
+        if (pathname !== "/plan-bereit") {
+          const url = request.nextUrl.clone()
+          url.pathname = "/plan-bereit"
+          url.search = ""
+          const leadId = request.nextUrl.searchParams.get("lead")
+          if (leadId) {
+            url.searchParams.set("lead", leadId)
+          }
+          return redirectWithSupabaseCookies(url, supabaseResponse)
+        }
+      }
+
+      if (!active) {
+        if (fieldTestGuest) {
+          if (pathMatchesRoutePrefix(pathname, "/api")) {
+            return NextResponse.json({ error: "field_test_ended" }, { status: 403 })
+          }
+          const url = request.nextUrl.clone()
+          url.pathname = "/test/haarplan/beendet"
+          url.search = ""
+          return redirectWithSupabaseCookies(url, supabaseResponse)
+        }
+        if (pathMatchesRoutePrefix(pathname, "/api")) {
+          return NextResponse.json({ error: "subscription_required" }, { status: 403 })
+        }
+        const url = request.nextUrl.clone()
+        const next = sanitizeReactivationReturnDestination(
+          `${request.nextUrl.pathname}${request.nextUrl.search}`,
+        )
+        url.pathname = "/reactivate"
+        url.search = ""
+        url.searchParams.set("reason", "expired")
+        url.searchParams.set("next", next)
+        return redirectWithSupabaseCookies(url, supabaseResponse)
       }
     }
-    const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, {
-      isQuizRetake,
-      personalPlanRoutineAccess,
-    })
+    // --- End subscription paywall ------------------------------------------
 
-    if (redirectPath) {
-      const url = buildAuthenticatedIntakeRedirectUrl(request.nextUrl, pathname, redirectPath)
-      return redirectWithSupabaseCookies(url, supabaseResponse)
+    if (needsAuthenticatedAppRouting) {
+      const [{ data: profile }, { data: hairProfile }] = await Promise.all([
+        supabase.from("profiles").select("onboarding_completed").eq("id", user.id).maybeSingle(),
+        supabase
+          .from("hair_profiles")
+          .select(
+            "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
+          )
+          .eq("user_id", user.id)
+          .maybeSingle(),
+      ])
+
+      const intakeState = resolveIntakeState(profile, hairProfile)
+      let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined
+      if (
+        intakeState === "needs_onboarding" &&
+        hasActivePersonalPlanEntitlement &&
+        isPersonalPlanRoutineRoute(pathname)
+      ) {
+        try {
+          const { data: plan, error } = await supabase
+            .from("personal_plans")
+            .select("pending_routine_proposal_id,active_routine_version_id")
+            .eq("user_id", user.id)
+            .maybeSingle()
+
+          if (error) {
+            console.warn("[personal-plan] routine access check failed", error)
+          } else {
+            personalPlanRoutineAccess = {
+              hasActivePersonalPlanEntitlement,
+              pendingRoutineProposalId:
+                typeof plan?.pending_routine_proposal_id === "string"
+                  ? plan.pending_routine_proposal_id
+                  : null,
+              activeRoutineVersionId:
+                typeof plan?.active_routine_version_id === "string"
+                  ? plan.active_routine_version_id
+                  : null,
+            }
+          }
+        } catch (error) {
+          console.warn("[personal-plan] routine access check failed", error)
+        }
+      }
+      const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, {
+        isQuizRetake,
+        personalPlanRoutineAccess,
+      })
+
+      if (redirectPath) {
+        const url = buildAuthenticatedIntakeRedirectUrl(request.nextUrl, pathname, redirectPath)
+        return redirectWithSupabaseCookies(url, supabaseResponse)
+      }
     }
-  }
 
-  // Admin route protection
-  if (isAdminRoutePath(pathname)) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", user.id)
-      .single()
+    // Admin route protection
+    if (isAdminRoutePath(pathname)) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", user.id)
+        .single()
 
-    if (!profile?.is_admin) {
-      const url = request.nextUrl.clone()
-      url.pathname = "/chat"
-      return redirectWithSupabaseCookies(url, supabaseResponse)
+      if (!profile?.is_admin) {
+        const url = request.nextUrl.clone()
+        url.pathname = "/chat"
+        return redirectWithSupabaseCookies(url, supabaseResponse)
+      }
     }
-  }
 
-  return supabaseResponse
+    return supabaseResponse
+  }
 }
+
+export const updateSession = createUpdateSession()
 
 export function redirectWithSupabaseCookies(
   url: string | URL,

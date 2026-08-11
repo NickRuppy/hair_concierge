@@ -1,0 +1,1637 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie - Personal Plan UX v5</title>
+    <style>
+      :root {
+        --page: #f4eff4;
+        --paper: #fffdfb;
+        --card: #ffffff;
+        --ink: #2c1c3e;
+        --text: #413b37;
+        --muted: #746d67;
+        --faint: #efe8e2;
+        --plum: #6f55a5;
+        --plum-dark: #3f2b64;
+        --plum-soft: #f1ecf8;
+        --coral: #d75f6a;
+        --coral-dark: #b94b55;
+        --green: #3f744d;
+        --green-soft: #edf8ef;
+        --amber: #805b16;
+        --amber-soft: #fff5df;
+        --danger: #99424b;
+        --danger-soft: #fff0f1;
+        --shadow: 0 26px 70px rgba(44, 28, 62, 0.14);
+        --soft-shadow: 0 14px 38px rgba(44, 28, 62, 0.08);
+        --display: Georgia, "Times New Roman", serif;
+        --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 9% 0%, rgba(111, 85, 165, 0.18), transparent 32rem),
+          linear-gradient(180deg, #faf7f8 0%, var(--page) 100%);
+        color: var(--text);
+        font: 14px/1.48 var(--sans);
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p {
+        margin: 0;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        color: inherit;
+      }
+
+      .artifact {
+        width: min(1220px, 100%);
+        margin: 0 auto;
+        padding: 30px 16px 70px;
+      }
+      .hero {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+      .kicker,
+      .eyebrow,
+      .stage,
+      .mini,
+      .chip,
+      .badge {
+        font-weight: 860;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .kicker,
+      .eyebrow,
+      .mini {
+        color: var(--plum);
+        font-size: 10px;
+      }
+      h1 {
+        max-width: 850px;
+        color: var(--ink);
+        font: 500 clamp(32px, 5vw, 54px) / 1.02 var(--display);
+      }
+      .intro {
+        max-width: 820px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .artifact-note {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .artifact-note span {
+        border: 1px solid rgba(111, 85, 165, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.74);
+        padding: 8px 10px;
+        color: var(--plum-dark);
+        font-size: 11px;
+        font-weight: 760;
+      }
+
+      .section {
+        margin-top: 28px;
+      }
+      .section-head {
+        display: grid;
+        gap: 5px;
+        margin-bottom: 14px;
+      }
+      h2 {
+        color: var(--ink);
+        font: 500 30px/1.08 var(--display);
+      }
+      .section-head p {
+        max-width: 790px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(405px, 1fr));
+        gap: 20px;
+        align-items: start;
+      }
+      .frame {
+        overflow: hidden;
+        border: 1px solid rgba(111, 85, 165, 0.12);
+        border-radius: 20px;
+        background: rgba(255, 253, 251, 0.78);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+      }
+      .caption {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--faint);
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .caption strong {
+        color: var(--plum);
+      }
+      .phone {
+        width: min(390px, calc(100vw - 56px));
+        margin: 14px auto 16px;
+        border-radius: 34px;
+        background: #17111d;
+        padding: 9px;
+        box-shadow: var(--shadow);
+      }
+      .screen {
+        position: relative;
+        min-height: 720px;
+        overflow: hidden;
+        border-radius: 25px;
+        background: var(--paper);
+      }
+      .screen.long {
+        min-height: 820px;
+      }
+      .screen.tall {
+        min-height: 930px;
+      }
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        border-bottom: 1px solid rgba(111, 85, 165, 0.1);
+        background: rgba(255, 253, 251, 0.96);
+        backdrop-filter: blur(12px);
+      }
+      .appbar {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) 82px;
+        align-items: center;
+        min-height: 51px;
+        gap: 7px;
+        padding: 8px 12px 6px;
+      }
+      .back {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border: 0;
+        border-radius: 13px;
+        background: transparent;
+        color: var(--plum);
+        font-size: 24px;
+      }
+      .brand {
+        text-align: center;
+        color: var(--ink);
+        font: 500 20px/1 var(--display);
+      }
+      .save {
+        color: var(--green);
+        font-size: 9px;
+        font-weight: 830;
+        text-align: right;
+      }
+      .save.saving {
+        color: var(--plum);
+      }
+      .save.error {
+        color: var(--danger);
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+        padding: 0 12px 9px;
+      }
+      .stage {
+        color: #968e87;
+        text-align: center;
+        font-size: 7.5px;
+      }
+      .stage::before {
+        content: "";
+        display: block;
+        height: 5px;
+        margin-bottom: 5px;
+        border-radius: 999px;
+        background: var(--faint);
+      }
+      .stage.done {
+        color: var(--plum);
+      }
+      .stage.done::before {
+        background: var(--plum);
+      }
+      .stage.current {
+        color: var(--coral-dark);
+      }
+      .stage.current::before {
+        background: var(--coral);
+      }
+      .content {
+        padding: 20px 16px 108px;
+      }
+      .content.no-dock {
+        padding-bottom: 30px;
+      }
+      .screen h3 {
+        color: var(--ink);
+        font: 500 28px/1.08 var(--display);
+      }
+      .lead {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.55;
+      }
+      .dock {
+        position: absolute;
+        inset: auto 0 0;
+        border-top: 1px solid rgba(239, 232, 226, 0.92);
+        background: rgba(255, 253, 251, 0.97);
+        padding: 10px 12px 12px;
+        backdrop-filter: blur(12px);
+      }
+      .primary,
+      .secondary {
+        width: 100%;
+        min-height: 48px;
+        border-radius: 14px;
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .primary {
+        border: 0;
+        background: linear-gradient(180deg, var(--coral), var(--coral-dark));
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(215, 95, 106, 0.25);
+      }
+      .secondary {
+        margin-top: 8px;
+        border: 1px solid rgba(111, 85, 165, 0.24);
+        background: #fff;
+        color: var(--plum);
+      }
+
+      .need-stack,
+      .choice-stack,
+      .results,
+      .routine-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .need-card {
+        display: grid;
+        grid-template-columns: 78px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+        border: 1px solid rgba(63, 116, 77, 0.24);
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(237, 248, 239, 0.88), rgba(255, 255, 255, 0.88));
+        padding: 10px;
+        box-shadow: var(--soft-shadow);
+      }
+      .need-card.optional {
+        border-color: rgba(111, 85, 165, 0.16);
+        background: linear-gradient(180deg, rgba(241, 236, 248, 0.9), rgba(255, 255, 255, 0.86));
+      }
+      .packshot {
+        position: relative;
+        display: grid;
+        height: 92px;
+        place-items: end center;
+        overflow: hidden;
+        border-radius: 16px;
+        background:
+          radial-gradient(circle at 35% 18%, rgba(255, 255, 255, 0.95), transparent 35%),
+          linear-gradient(145deg, #eee8f6, #fff);
+      }
+      .packshot img {
+        display: block;
+        width: 92%;
+        height: 83%;
+        object-fit: contain;
+        filter: drop-shadow(0 10px 14px rgba(44, 28, 62, 0.18));
+      }
+      .example {
+        position: absolute;
+        inset: auto 6px 6px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        padding: 3px 5px;
+        color: var(--plum-dark);
+        text-align: center;
+        font-size: 6.6px;
+        font-weight: 900;
+      }
+      .card-copy strong,
+      .choice-copy strong {
+        display: block;
+        color: var(--ink);
+        line-height: 1.22;
+      }
+      .card-copy strong {
+        margin-top: 3px;
+        font-size: 13.5px;
+      }
+      .card-copy p,
+      .choice-copy span,
+      .result-copy .detail {
+        color: var(--muted);
+        line-height: 1.38;
+      }
+      .card-copy p {
+        margin-top: 4px;
+        font-size: 10px;
+      }
+      .tap-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 8px;
+        color: var(--plum);
+        font-size: 9px;
+        font-weight: 850;
+      }
+      .tap-row i {
+        display: grid;
+        width: 20px;
+        height: 20px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        font-style: normal;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 7px;
+      }
+      .chip {
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 4px 7px;
+        color: #655870;
+        font-size: 8px;
+      }
+      .dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        margin-right: 6px;
+      }
+      .dot.plum {
+        background: var(--plum);
+      }
+
+      .context-note {
+        display: grid;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .context-pill,
+      .choice,
+      .result-card,
+      .selected-card {
+        display: grid;
+        align-items: center;
+        border: 1px solid var(--faint);
+        border-radius: 17px;
+        background: #fff;
+        box-shadow: 0 9px 24px rgba(44, 28, 62, 0.045);
+      }
+      .context-pill {
+        grid-template-columns: 36px minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px;
+      }
+      .context-pill i,
+      .choice-icon,
+      .small-icon {
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-style: normal;
+        font-weight: 900;
+      }
+      .context-pill i,
+      .choice-icon {
+        width: 36px;
+        height: 36px;
+      }
+      .context-pill strong {
+        display: block;
+        color: var(--ink);
+        font-size: 11.5px;
+      }
+      .context-pill span span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 9.6px;
+        line-height: 1.36;
+      }
+      .choice {
+        grid-template-columns: 36px minmax(0, 1fr) 22px;
+        gap: 10px;
+        min-height: 60px;
+        padding: 10px;
+        text-align: left;
+      }
+      .choice.active {
+        border-color: rgba(111, 85, 165, 0.54);
+        background: var(--plum-soft);
+      }
+      .choice.active .choice-icon {
+        background: var(--plum);
+        color: #fff;
+      }
+      .choice.none {
+        border-color: rgba(111, 85, 165, 0.14);
+        background: linear-gradient(180deg, #fff, rgba(241, 236, 248, 0.42));
+      }
+      .choice.wash-none {
+        border-color: rgba(128, 91, 22, 0.24);
+        background: var(--amber-soft);
+      }
+      .choice.compact {
+        min-height: 54px;
+        padding: 8px 10px;
+      }
+      .choice.compact .choice-copy strong {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .choice-badge {
+        border-radius: 999px;
+        background: rgba(111, 85, 165, 0.1);
+        padding: 2px 6px;
+        color: var(--plum-dark);
+        font-size: 7px;
+        font-style: normal;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .choice-badge.optional {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .choice-badge.more {
+        background: rgba(239, 232, 226, 0.75);
+        color: var(--muted);
+      }
+      .choice-copy strong {
+        font-size: 12px;
+      }
+      .choice-copy span {
+        display: block;
+        margin-top: 3px;
+        font-size: 9.5px;
+      }
+      .check {
+        color: var(--green);
+        text-align: center;
+        font-weight: 900;
+      }
+
+      .inventory-summary {
+        display: grid;
+        gap: 9px;
+        margin-top: 15px;
+        border: 1px solid rgba(111, 85, 165, 0.13);
+        border-radius: 19px;
+        background: #fff;
+        padding: 12px;
+        box-shadow: var(--soft-shadow);
+      }
+      .summary-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .summary-head strong {
+        color: var(--ink);
+        font-size: 13px;
+      }
+      .link {
+        border: 0;
+        background: transparent;
+        color: var(--plum);
+        font-size: 10px;
+        font-weight: 850;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .tags span {
+        border-radius: 999px;
+        background: var(--plum-soft);
+        padding: 5px 8px;
+        color: var(--plum-dark);
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .tags .optional {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .frequency-scale {
+        position: relative;
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+        padding-left: 14px;
+      }
+      .frequency-scale::before {
+        content: "";
+        position: absolute;
+        top: 24px;
+        bottom: 76px;
+        left: 17px;
+        width: 3px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--coral), var(--plum), rgba(111, 85, 165, 0.16));
+      }
+      .frequency-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 26px;
+        color: var(--plum);
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .frequency-label.bottom {
+        color: var(--muted);
+      }
+      .frequency-option {
+        position: relative;
+        z-index: 1;
+        grid-template-columns: 38px minmax(0, 1fr) 22px;
+      }
+      .frequency-option .choice-icon {
+        border: 2px solid #fff;
+        background: #fff;
+        color: var(--plum);
+        box-shadow: 0 0 0 1px rgba(111, 85, 165, 0.18);
+        font-size: 12px;
+      }
+      .frequency-option.active .choice-icon {
+        background: var(--plum);
+        color: #fff;
+        box-shadow: 0 0 0 3px rgba(111, 85, 165, 0.16);
+      }
+      .search-input {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        align-items: center;
+        height: 49px;
+        margin-top: 12px;
+        border: 1px solid var(--faint);
+        border-radius: 15px;
+        background: #fff;
+        padding: 0 12px;
+        color: #8f8781;
+        font-size: 12px;
+      }
+      .result-card,
+      .selected-card {
+        grid-template-columns: 56px minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 10px;
+      }
+      .result-card.selected,
+      .selected-card {
+        border-color: rgba(63, 116, 77, 0.32);
+        background: var(--green-soft);
+      }
+      .thumb {
+        display: grid;
+        width: 56px;
+        height: 64px;
+        place-items: end center;
+        overflow: hidden;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #eee8f6, #fff);
+      }
+      .bottle,
+      .spray,
+      .tube {
+        width: 28px;
+        height: 56px;
+        border-radius: 9px 9px 12px 12px;
+        background: linear-gradient(180deg, #5d8295, #a5c5d3);
+        box-shadow: 0 7px 14px rgba(44, 28, 62, 0.16);
+      }
+      .bottle.gold {
+        background: linear-gradient(180deg, #af7d33, #e6be68);
+      }
+      .spray {
+        background: linear-gradient(180deg, #f6d3d6, #d75f6a);
+      }
+      .tube {
+        width: 34px;
+        border-radius: 8px 8px 14px 14px;
+        background: linear-gradient(180deg, #f6f0e7, #d6b77c 48%, #9c6f2c);
+        transform: rotate(-7deg);
+      }
+      .brand-name {
+        display: block;
+        color: var(--plum);
+        font-size: 8.5px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .sale-name {
+        display: block;
+        margin-top: 2px;
+        color: var(--ink);
+        font-size: 11.7px;
+        font-weight: 830;
+        line-height: 1.26;
+      }
+      .detail {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 9px;
+      }
+      .badge {
+        border-radius: 999px;
+        background: var(--plum-soft);
+        padding: 5px 7px;
+        color: var(--plum-dark);
+        font-size: 8px;
+        white-space: nowrap;
+      }
+
+      .slider-panel {
+        margin-top: 15px;
+        border: 1px solid rgba(111, 85, 165, 0.15);
+        border-radius: 20px;
+        background: #fff;
+        padding: 14px 12px 13px;
+        box-shadow: var(--soft-shadow);
+      }
+      .slider-head {
+        text-align: center;
+      }
+      .slider-head .current-value {
+        display: block;
+        color: var(--ink);
+        font: 500 30px/1.05 var(--display);
+      }
+      .slider-head span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 9.5px;
+      }
+      .slider {
+        position: relative;
+        height: 108px;
+        margin-top: 8px;
+        padding-top: 34px;
+      }
+      .target-range {
+        position: absolute;
+        left: 42.5%;
+        right: 28.5%;
+        top: 36px;
+        height: 25px;
+        border: 1px solid rgba(111, 85, 165, 0.4);
+        border-radius: 999px;
+        background: rgba(241, 236, 248, 0.68);
+      }
+      .track {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        top: 45px;
+        height: 7px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ede8e1 0%, #cfc1e4 58%, #6f55a5 100%);
+      }
+      .ticks {
+        position: absolute;
+        inset: 48px 8px auto;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+      }
+      .ticks span {
+        position: relative;
+        height: 8px;
+      }
+      .ticks span::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        width: 2px;
+        height: 8px;
+        border-radius: 2px;
+        background: rgba(44, 28, 62, 0.25);
+        transform: translateX(-50%);
+      }
+      .marker {
+        position: absolute;
+        left: 57%;
+        top: 29px;
+        width: 30px;
+        height: 30px;
+        border: 5px solid #fff;
+        border-radius: 50%;
+        background: var(--coral);
+        box-shadow: 0 10px 20px rgba(215, 95, 106, 0.25);
+      }
+      .c-marker {
+        position: absolute;
+        left: 43%;
+        top: 16px;
+        display: grid;
+        width: 23px;
+        height: 23px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+        transform: translateX(-50%);
+      }
+      .c-marker::after {
+        content: "";
+        position: absolute;
+        top: 20px;
+        border: 6px solid transparent;
+        border-top-color: var(--plum);
+      }
+      .slider-labels {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-top: 24px;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 850;
+      }
+      .slider-labels span:nth-child(2) {
+        text-align: center;
+      }
+      .slider-labels span:last-child {
+        text-align: right;
+      }
+      .legend {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 7px;
+        color: var(--plum);
+        font-size: 9.5px;
+        font-weight: 800;
+      }
+      .legend::before {
+        content: "";
+        width: 18px;
+        height: 4px;
+        border-radius: 999px;
+        background: #c8b8e0;
+      }
+      .state {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 9px;
+        margin-top: 12px;
+        border-radius: 15px;
+        background: var(--danger-soft);
+        padding: 10px;
+        color: #75565a;
+        font-size: 9.6px;
+      }
+      .state i {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--danger);
+        font-style: normal;
+        font-weight: 900;
+      }
+      .state strong {
+        display: block;
+        color: var(--ink);
+        font-size: 10.5px;
+      }
+
+      .routine-card {
+        overflow: hidden;
+        margin-top: 16px;
+        border: 1px solid rgba(63, 116, 77, 0.22);
+        border-radius: 19px;
+        background: var(--green-soft);
+        box-shadow: var(--soft-shadow);
+      }
+      .routine-hero {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        height: 112px;
+        padding: 14px;
+        background: linear-gradient(135deg, rgba(44, 28, 62, 0.88), rgba(111, 85, 165, 0.58));
+      }
+      .routine-hero .thumb {
+        width: auto;
+        height: 84px;
+        background: rgba(255, 255, 255, 0.14);
+      }
+      .routine-body {
+        padding: 13px;
+      }
+      .routine-body strong {
+        color: var(--ink);
+        font-size: 13px;
+      }
+      .routine-body p {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .routine-item {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 9px;
+        border: 1px solid var(--faint);
+        border-radius: 15px;
+        background: #fff;
+        padding: 9px;
+      }
+      .small-icon {
+        width: 34px;
+        height: 34px;
+      }
+      .routine-item strong {
+        display: block;
+        color: var(--ink);
+        font-size: 11px;
+      }
+      .routine-item span span {
+        color: var(--muted);
+        font-size: 8.8px;
+      }
+
+      .desktop-frame {
+        overflow: hidden;
+        border: 1px solid rgba(111, 85, 165, 0.13);
+        border-radius: 25px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .desktop-shell {
+        display: grid;
+        grid-template-columns: 290px minmax(0, 1fr);
+        min-height: 690px;
+      }
+      .side {
+        display: grid;
+        align-content: space-between;
+        padding: 32px 26px;
+        background:
+          radial-gradient(circle at 25% 12%, rgba(215, 95, 106, 0.25), transparent 34%),
+          linear-gradient(155deg, var(--ink), var(--plum-dark));
+        color: #fff;
+      }
+      .side .logo {
+        font: 500 36px/1 var(--display);
+      }
+      .side h3 {
+        margin-top: 26px;
+        color: #fff;
+        font: 500 34px/1.08 var(--display);
+      }
+      .side p {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.74);
+        font-size: 13px;
+      }
+      .side-steps {
+        display: grid;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .side-steps span {
+        color: rgba(255, 255, 255, 0.66);
+        font-size: 12px;
+        font-weight: 780;
+      }
+      .side-steps .current {
+        color: #fff;
+      }
+      .desktop-main {
+        min-width: 0;
+        padding: 30px;
+      }
+      .desktop-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      .desktop-top h3 {
+        color: var(--ink);
+        font: 500 34px/1.05 var(--display);
+      }
+      .desktop-workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        align-items: start;
+      }
+      .panel {
+        border: 1px solid var(--faint);
+        border-radius: 20px;
+        background: #fff;
+        padding: 16px;
+        box-shadow: var(--soft-shadow);
+      }
+      .panel h4 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 15px;
+      }
+      .panel p {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .inventory-cards {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .inventory-card {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) 22px;
+        gap: 9px;
+        align-items: center;
+        border: 1px solid var(--faint);
+        border-radius: 15px;
+        background: var(--paper);
+        padding: 10px;
+      }
+      .inventory-card.active {
+        border-color: rgba(111, 85, 165, 0.42);
+        background: var(--plum-soft);
+      }
+      .inventory-card strong {
+        display: block;
+        color: var(--ink);
+        font-size: 12px;
+      }
+      .inventory-card span span {
+        display: block;
+        color: var(--muted);
+        font-size: 9px;
+      }
+      .desktop-products {
+        display: grid;
+        gap: 9px;
+        margin-top: 12px;
+      }
+
+      @media (max-width: 860px) {
+        .mobile-grid {
+          grid-template-columns: 1fr;
+        }
+        .desktop-shell {
+          grid-template-columns: 1fr;
+        }
+        .side {
+          display: none;
+        }
+        .desktop-main {
+          padding: 18px 14px;
+        }
+        .desktop-workspace {
+          grid-template-columns: 1fr;
+        }
+        .desktop-top {
+          flex-direction: column;
+        }
+      }
+      @media (max-width: 390px) {
+        .artifact {
+          padding-inline: 10px;
+        }
+        .phone {
+          width: calc(100vw - 32px);
+        }
+        .content {
+          padding-inline: 14px;
+        }
+        .screen h3 {
+          font-size: 26px;
+        }
+        .need-card {
+          grid-template-columns: 70px minmax(0, 1fr);
+        }
+        .packshot {
+          height: 86px;
+        }
+        .badge {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="hero">
+        <p class="kicker">Personal Plan · v5 Review</p>
+        <h1>Weniger erklären. Produkte schneller finden. Routine klar überblicken.</h1>
+        <p class="intro">
+          Bedarf und Routine nutzen dieselbe Kartenlogik. Produktsuche und Frequenz bleiben auf
+          genau eine Aufgabe fokussiert.
+        </p>
+        <div class="artifact-note">
+          <span>Keine separate Hitzeschutz-Kontextseite</span>
+          <span>Waschrhythmus: eine Spalte, häufig bis selten</span>
+          <span>Keine Produktarten-Wiederholung in der Suche</span>
+          <span>Slider: großer Wert, drei Anker</span>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Mobile Kernreise</h2>
+          <p>
+            Die Frames zeigen nur die Nutzeroberflächen, die für die Entscheidung relevant sind.
+          </p>
+        </div>
+        <div class="mobile-grid">
+          <article class="frame">
+            <div class="caption">
+              <strong>1 · Bedarfsplan</strong><span>Beispielbilder + öffnende Karten</span>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <header class="top">
+                  <div class="appbar">
+                    <button class="back" aria-label="Zurück">‹</button>
+                    <div class="brand">chaarlie</div>
+                    <div class="save">Gespeichert</div>
+                  </div>
+                  <div class="steps">
+                    <span class="stage current">Bedarf</span><span class="stage">Feinschliff</span
+                    ><span class="stage">Produkte</span><span class="stage">Routine</span
+                    ><span class="stage">Anwendung</span>
+                  </div>
+                </header>
+                <section class="content">
+                  <p class="eyebrow">Dein erster Plan</p>
+                  <h3>Was dein Haar jetzt braucht.</h3>
+                  <p class="lead">
+                    Die Bilder sind Beispiele für Produktarten. Das genaue Produkt wählst du später.
+                  </p>
+                  <div class="need-stack">
+                    <article class="need-card">
+                      <div class="packshot" aria-label="Beispiel Shampoo">
+                        <img
+                          src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1ef2be82-259c-4a1f-af2e-3ac3403f9731/37-1ef2be82-259c-4a1f-af2e-3ac3403f9731-salthouse-salthouse-anti-juckreiz-d55447789e9c.webp"
+                          alt="Beispielbild Shampoo"
+                        />
+                        <span class="example">Beispiel</span>
+                      </div>
+                      <div class="card-copy">
+                        <p class="mini"><span class="dot"></span>Shampoo · Basis</p>
+                        <strong>Milde Hauptreinigung</strong>
+                        <p>Regelmäßige Wäsche, ohne Kopfhaut und Längen unnötig zu beschweren.</p>
+                        <div class="chips">
+                          <span class="chip">2x/Woche</span><span class="chip">mild</span>
+                        </div>
+                        <div class="tap-row"><span>Warum das passt</span><i>›</i></div>
+                      </div>
+                    </article>
+                    <article class="need-card optional">
+                      <div class="packshot" aria-label="Beispiel Conditioner">
+                        <img
+                          src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/007a0b35-2372-4836-9aa5-fd089cd588d4/05-007a0b35-2372-4836-9aa5-fd089cd588d4-balea-balea-natural-beauty-hibiskus-78479c0a7a2f.webp"
+                          alt="Beispielbild Conditioner"
+                        />
+                        <span class="example">Beispiel</span>
+                      </div>
+                      <div class="card-copy">
+                        <p class="mini"><span class="dot plum"></span>Conditioner · Optional</p>
+                        <strong>Pflege nach der Wäsche</strong>
+                        <p>
+                          Bei sehr kurzem Haar nur ergänzend, wenn Längen trocken oder rau wirken.
+                        </p>
+                        <div class="chips">
+                          <span class="chip">kurze Längen</span><span class="chip">bei Bedarf</span>
+                        </div>
+                        <div class="tap-row"><span>Mehr Details</span><i>›</i></div>
+                      </div>
+                    </article>
+                    <article class="need-card">
+                      <div class="packshot" aria-label="Beispiel Hitzeschutz">
+                        <img
+                          src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/5dc2fae3-a0ca-4e6c-9c30-02dd192772f0/16-5dc2fae3-a0ca-4e6c-9c30-02dd192772f0-gliss-gliss-ultimate-repair-spruh-conditioner-e4d12ef3de4d.webp"
+                          alt="Beispielbild Spray"
+                        />
+                        <span class="example">Beispiel</span>
+                      </div>
+                      <div class="card-copy">
+                        <p class="mini"><span class="dot"></span>Hitzeschutz · Basis</p>
+                        <strong>Schutz vor Stylinghitze</strong>
+                        <p>Relevant, sobald heiße Tools direkt mit dem Haar arbeiten.</p>
+                        <div class="chips">
+                          <span class="chip">vor Hitze</span><span class="chip">Schutz</span>
+                        </div>
+                        <div class="tap-row"><span>Warum das passt</span><i>›</i></div>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+                <footer class="dock"><button class="primary">Plan verfeinern</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="caption">
+              <strong>2 · Produktarten</strong><span>alle prüfbaren Kategorien</span>
+            </div>
+            <div class="phone">
+              <div class="screen tall">
+                <header class="top">
+                  <div class="appbar">
+                    <button class="back" aria-label="Zurück">‹</button>
+                    <div class="brand">chaarlie</div>
+                    <div class="save saving">Speichert</div>
+                  </div>
+                  <div class="steps">
+                    <span class="stage done">Bedarf</span
+                    ><span class="stage current">Feinschliff</span
+                    ><span class="stage">Produkte</span><span class="stage">Routine</span
+                    ><span class="stage">Anwendung</span>
+                  </div>
+                </header>
+                <section class="content">
+                  <h3>Welche Produkte nutzt du?</h3>
+                  <p class="lead">
+                    Alle unterstützten Kategorien: zuerst für deinen Plan, danach alle weiteren.
+                  </p>
+                  <div class="choice-stack">
+                    <p class="mini">Für deinen Plan</p>
+                    <button class="choice compact active" type="button">
+                      <span class="choice-icon">S</span>
+                      <span class="choice-copy"><strong>Shampoo</strong></span>
+                      <span class="check">✓</span>
+                    </button>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">C</span>
+                      <span class="choice-copy"><strong>Conditioner</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">L</span>
+                      <span class="choice-copy"><strong>Leave-in</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact active" type="button">
+                      <span class="choice-icon">H</span>
+                      <span class="choice-copy"><strong>Hitzeschutz</strong></span>
+                      <span class="check">✓</span>
+                    </button>
+                    <button class="choice compact active" type="button">
+                      <span class="choice-icon">K</span>
+                      <span class="choice-copy"><strong>Kopfhautpflege</strong></span>
+                      <span class="check">✓</span>
+                    </button>
+                    <p class="mini">Weitere Kategorien</p>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">Ö</span>
+                      <span class="choice-copy"><strong>Öl</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">M</span>
+                      <span class="choice-copy"><strong>Maske</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">T</span>
+                      <span class="choice-copy"><strong>Trockenshampoo</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">B</span>
+                      <span class="choice-copy"><strong>Bondbuilder</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact" type="button">
+                      <span class="choice-icon">R</span>
+                      <span class="choice-copy"><strong>Tiefenreinigungsshampoo</strong></span>
+                      <span></span>
+                    </button>
+                    <button class="choice compact none" type="button">
+                      <span class="choice-icon">–</span>
+                      <span class="choice-copy"><strong>Keine weiteren</strong></span>
+                      <span></span>
+                    </button>
+                  </div>
+                </section>
+                <footer class="dock"><button class="primary">Weiter</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="caption">
+              <strong>2 · Waschrhythmus</strong><span>eine Spalte, häufig bis selten</span>
+            </div>
+            <div class="phone">
+              <div class="screen tall">
+                <header class="top">
+                  <div class="appbar">
+                    <button class="back" aria-label="Zurück">‹</button>
+                    <div class="brand">chaarlie</div>
+                    <div class="save">Gespeichert</div>
+                  </div>
+                  <div class="steps">
+                    <span class="stage done">Bedarf</span
+                    ><span class="stage current">Feinschliff</span
+                    ><span class="stage">Produkte</span><span class="stage">Routine</span
+                    ><span class="stage">Anwendung</span>
+                  </div>
+                </header>
+                <section class="content">
+                  <h3>Wie oft wäschst du deine Haare nass?</h3>
+                  <div class="frequency-scale">
+                    <div class="frequency-label">Häufig</div>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">8</span
+                      ><span class="choice-copy"><strong>Täglich</strong></span
+                      ><span></span>
+                    </button>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">7</span
+                      ><span class="choice-copy"><strong>5-6x pro Woche</strong></span
+                      ><span></span>
+                    </button>
+                    <button class="choice frequency-option active" type="button">
+                      <span class="choice-icon">6</span
+                      ><span class="choice-copy"><strong>3-4x pro Woche</strong></span
+                      ><span class="check">✓</span>
+                    </button>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">5</span
+                      ><span class="choice-copy"><strong>2x pro Woche</strong></span
+                      ><span></span>
+                    </button>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">4</span
+                      ><span class="choice-copy"><strong>1x pro Woche</strong></span
+                      ><span></span>
+                    </button>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">3</span
+                      ><span class="choice-copy"><strong>Ca. alle 2 Wochen</strong></span
+                      ><span></span>
+                    </button>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">2</span
+                      ><span class="choice-copy"><strong>Ca. 1x pro Monat</strong></span
+                      ><span></span>
+                    </button>
+                    <button class="choice frequency-option" type="button">
+                      <span class="choice-icon">1</span
+                      ><span class="choice-copy"><strong>Seltener als 1x pro Monat</strong></span
+                      ><span></span>
+                    </button>
+                    <div class="frequency-label bottom">Selten</div>
+                    <button class="choice wash-none" type="button">
+                      <span class="choice-icon">–</span
+                      ><span class="choice-copy"
+                        ><strong>Ich wasche nicht nass / mit Shampoo</strong></span
+                      ><span></span>
+                    </button>
+                  </div>
+                </section>
+                <footer class="dock"><button class="primary">Antwort übernehmen</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="caption">
+              <strong>3 · Produkt suchen</strong><span>eine Aufgabe, sofort suchen</span>
+            </div>
+            <div class="phone">
+              <div class="screen long">
+                <header class="top">
+                  <div class="appbar">
+                    <button class="back" aria-label="Zurück">‹</button>
+                    <div class="brand">chaarlie</div>
+                    <div class="save">Gespeichert</div>
+                  </div>
+                  <div class="steps">
+                    <span class="stage done">Bedarf</span><span class="stage done">Feinschliff</span
+                    ><span class="stage current">Produkte</span><span class="stage">Routine</span
+                    ><span class="stage">Anwendung</span>
+                  </div>
+                </header>
+                <section class="content">
+                  <h3>Welches Shampoo nutzt du?</h3>
+                  <div class="search-input"><span>⌕</span><span>Produkt suchen</span></div>
+                  <div class="results">
+                    <button class="result-card selected" type="button">
+                      <div class="thumb"><div class="bottle"></div></div>
+                      <span class="result-copy"
+                        ><span class="brand-name">OGX</span
+                        ><span class="sale-name">Renewing + Argan Oil of Morocco Shampoo</span
+                        ><span class="detail">385 ml · Shampoo · Katalogtreffer</span></span
+                      >
+                      <span class="badge">Ausgewählt</span>
+                    </button>
+                    <button class="result-card" type="button">
+                      <div class="thumb"><div class="bottle gold"></div></div>
+                      <span class="result-copy"
+                        ><span class="brand-name">OGX</span
+                        ><span class="sale-name">Thick & Full + Biotin & Collagen Shampoo</span
+                        ><span class="detail">385 ml · Volumen-Shampoo</span></span
+                      >
+                      <span class="badge">Ähnlich</span>
+                    </button>
+                  </div>
+                </section>
+                <footer class="dock"><button class="primary">Shampoo übernehmen</button></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="caption">
+              <strong>3 · Frequenz</strong><span>Produkt + ein klarer Wert</span>
+            </div>
+            <div class="phone">
+              <div class="screen long">
+                <header class="top">
+                  <div class="appbar">
+                    <button class="back" aria-label="Zurück">‹</button>
+                    <div class="brand">chaarlie</div>
+                    <div class="save error">Aktueller Stand geladen</div>
+                  </div>
+                  <div class="steps">
+                    <span class="stage done">Bedarf</span><span class="stage done">Feinschliff</span
+                    ><span class="stage current">Produkte</span><span class="stage">Routine</span
+                    ><span class="stage">Anwendung</span>
+                  </div>
+                </header>
+                <section class="content">
+                  <h3>Wie oft nutzt du den Hitzeschutz?</h3>
+                  <article class="selected-card" style="margin-top: 14px">
+                    <div class="thumb"><div class="spray"></div></div>
+                    <span class="result-copy"
+                      ><span class="brand-name">ghd</span
+                      ><span class="sale-name">Bodyguard Heat Protect Spray</span
+                      ><span class="detail">120 ml · vor direkter Hitze</span></span
+                    >
+                    <span class="badge">Drin</span>
+                  </article>
+                  <fieldset class="slider-panel">
+                    <div class="slider-head">
+                      <strong class="current-value">2x/Woche</strong>
+                      <span>aktuelle Nutzung</span>
+                    </div>
+                    <div
+                      class="slider"
+                      role="slider"
+                      aria-label="Nutzungshäufigkeit"
+                      aria-valuemin="1"
+                      aria-valuemax="8"
+                      aria-valuenow="5"
+                      aria-valuetext="2x pro Woche"
+                    >
+                      <div class="target-range" aria-hidden="true"></div>
+                      <div class="track" aria-hidden="true"></div>
+                      <div class="ticks" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span><span></span
+                        ><span></span><span></span><span></span>
+                      </div>
+                      <div class="c-marker" aria-hidden="true">C</div>
+                      <div class="marker" aria-hidden="true"></div>
+                      <div class="slider-labels" aria-hidden="true">
+                        <span>&lt;1x/M</span><span>1x/Woche</span><span>Täglich</span>
+                      </div>
+                    </div>
+                    <div class="legend">Im Zielbereich</div>
+                  </fieldset>
+                  <div class="state" role="alert">
+                    <i>!</i>
+                    <div>
+                      <strong>Deine Verfeinerung wurde aktualisiert.</strong>Wir laden den aktuellen
+                      Stand, bevor du erneut speicherst.
+                    </div>
+                  </div>
+                </section>
+                <footer class="dock">
+                  <button class="primary">Aktuellen Stand laden</button>
+                </footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="frame">
+            <div class="caption">
+              <strong>4 · Routine</strong><span>Bedarfsplan mit konkreten Produkten</span>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <header class="top">
+                  <div class="appbar">
+                    <button class="back" aria-label="Zurück">‹</button>
+                    <div class="brand">chaarlie</div>
+                    <div class="save">Gespeichert</div>
+                  </div>
+                  <div class="steps">
+                    <span class="stage done">Bedarf</span><span class="stage done">Feinschliff</span
+                    ><span class="stage done">Produkte</span
+                    ><span class="stage current">Routine</span><span class="stage">Anwendung</span>
+                  </div>
+                </header>
+                <section class="content">
+                  <h3>Deine Routine.</h3>
+                  <p class="lead">Alle Produkte und ihre Anwendung auf einen Blick.</p>
+                  <p class="mini" style="margin-top: 16px">Basis</p>
+                  <div class="need-stack" style="margin-top: 8px">
+                    <article class="need-card">
+                      <div class="packshot" aria-label="OGX Shampoo">
+                        <div class="bottle" style="transform: scale(1.35)"></div>
+                      </div>
+                      <div class="card-copy">
+                        <p class="mini"><span class="dot"></span>Shampoo</p>
+                        <strong>OGX Renewing + Argan Oil of Morocco Shampoo</strong>
+                        <p>Für deine regelmäßige Haarwäsche.</p>
+                        <div class="chips">
+                          <span class="chip">2x/Woche</span><span class="chip">Haarwäsche</span>
+                        </div>
+                        <div class="tap-row"><span>Anwendung ansehen</span><i>›</i></div>
+                      </div>
+                    </article>
+                    <article class="need-card">
+                      <div class="packshot" aria-label="ghd Hitzeschutz">
+                        <div class="spray" style="transform: scale(1.35)"></div>
+                      </div>
+                      <div class="card-copy">
+                        <p class="mini"><span class="dot"></span>Hitzeschutz</p>
+                        <strong>ghd Bodyguard Heat Protect Spray</strong>
+                        <p>Vor Föhn oder direkter Stylinghitze.</p>
+                        <div class="chips">
+                          <span class="chip">bei Hitze</span><span class="chip">vorher</span>
+                        </div>
+                        <div class="tap-row"><span>Anwendung ansehen</span><i>›</i></div>
+                      </div>
+                    </article>
+                    <article class="need-card optional">
+                      <div class="packshot" aria-label="Conditioner offen">
+                        <img
+                          src="https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/007a0b35-2372-4836-9aa5-fd089cd588d4/05-007a0b35-2372-4836-9aa5-fd089cd588d4-balea-balea-natural-beauty-hibiskus-78479c0a7a2f.webp"
+                          alt="Conditioner"
+                        />
+                      </div>
+                      <div class="card-copy">
+                        <p class="mini"><span class="dot plum"></span>Conditioner · Optional</p>
+                        <strong>Noch kein Produkt gewählt</strong>
+                        <p>Nur wenn deine Längen zusätzliche Pflege brauchen.</p>
+                        <div class="tap-row"><span>Produkt ergänzen</span><i>›</i></div>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+                <footer class="dock"><button class="primary">Routine bestätigen</button></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Desktop-Composite</h2>
+          <p>Auch auf Desktop steht die Suche im Mittelpunkt.</p>
+        </div>
+        <article class="desktop-frame">
+          <div class="desktop-shell">
+            <aside class="side">
+              <div>
+                <div class="logo">chaarlie</div>
+                <h3>Finde dein Produkt.</h3>
+                <div class="side-steps">
+                  <span>1 Bedarf</span><span>2 Verfeinerung</span
+                  ><span class="current">3 Produkte</span><span>4 Routine</span
+                  ><span>5 Anwendung</span>
+                </div>
+              </div>
+            </aside>
+            <section class="desktop-main">
+              <div class="desktop-top">
+                <div>
+                  <h3>Welches Shampoo nutzt du?</h3>
+                </div>
+                <span class="badge" style="background: var(--green-soft); color: var(--green)"
+                  >Gespeichert</span
+                >
+              </div>
+              <div class="desktop-workspace">
+                <article class="panel">
+                  <div class="search-input" style="margin-top: 0">
+                    <span>⌕</span><span>Produkt suchen</span>
+                  </div>
+                  <div class="desktop-products">
+                    <button class="result-card selected" type="button">
+                      <div class="thumb"><div class="bottle"></div></div>
+                      <span class="result-copy"
+                        ><span class="brand-name">OGX</span
+                        ><span class="sale-name">Renewing + Argan Oil of Morocco Shampoo</span
+                        ><span class="detail">385 ml · Shampoo · sauberer Name</span></span
+                      ><span class="badge">Ausgewählt</span>
+                    </button>
+                    <button class="result-card" type="button">
+                      <div class="thumb"><div class="bottle gold"></div></div>
+                      <span class="result-copy"
+                        ><span class="brand-name">OGX</span
+                        ><span class="sale-name">Thick & Full + Biotin & Collagen Shampoo</span
+                        ><span class="detail">385 ml · Volumen-Shampoo</span></span
+                      ><span class="badge">Ähnlich</span>
+                    </button>
+                  </div>
+                  <div class="slider-panel">
+                    <div class="slider-head">
+                      <strong class="current-value">3-4x/Woche</strong><span>aktuelle Nutzung</span>
+                    </div>
+                    <div
+                      class="slider"
+                      role="slider"
+                      aria-label="Nutzungshäufigkeit Shampoo"
+                      aria-valuemin="1"
+                      aria-valuemax="8"
+                      aria-valuenow="6"
+                      aria-valuetext="3-4x pro Woche"
+                    >
+                      <div class="track"></div>
+                      <div class="ticks">
+                        <span></span><span></span><span></span><span></span><span></span
+                        ><span></span><span></span><span></span>
+                      </div>
+                      <div class="marker" style="left: 70%"></div>
+                      <div class="slider-labels">
+                        <span>&lt;1x/M</span><span>1x/Woche</span><span>Täglich</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

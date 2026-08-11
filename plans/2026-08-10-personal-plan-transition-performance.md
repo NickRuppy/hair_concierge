@@ -72,7 +72,7 @@ Exact scheduler overhead varies. HTTP request counts, state transitions, concurr
 
 ## Production comparison checklist
 
-1. Use the same dedicated authenticated test owner, deployment SHA, browser engine, network conditions, and stage path as the baseline. Never use a customer account.
+1. Use the same field-test guest session, deployment SHA, browser engine, network conditions, and stage path as the baseline. Create it through the shareable field-test link and free continuation CTA. Never use a customer account.
 2. Capture read-only Routine/Anwendung samples (all writes are blocked):
 
    ```bash
@@ -83,14 +83,14 @@ Exact scheduler overhead varies. HTTP request counts, state transitions, concurr
      --output=/absolute/path/personal-plan-read-after.json
    ```
 
-3. Only after separate write-test authorization, capture Stage 2 and individual Stage 3 actions manually with the dedicated test owner:
+3. Only after separate write-test authorization, capture Stage 2 and individual Stage 3 actions manually with the field-test guest:
 
    ```bash
    node scripts/personal-plan/measure-write-transitions.mjs \
      --base-url=https://chaarlie.de \
-     --storage-state=/absolute/path/dedicated-test-owner.json \
+     --storage-state=/absolute/path/field-test-guest.json \
      --output=/absolute/path/personal-plan-write-after.json \
-     --confirm-dedicated-write-test-owner
+     --confirm-field-test-write-session
    ```
 
    The script opens a visible browser, records matching requests/`Server-Timing`/client timing events, and performs no clicks or submissions itself. Close the browser to write the report.
@@ -101,4 +101,4 @@ Exact scheduler overhead varies. HTTP request counts, state transitions, concurr
 
 ## Region experiment recommendation
 
-No `vercel.json` change is included. If the new phase timing still shows cross-region wall time dominating, create a separate preview deployment pinned nearer Supabase, run the same read-only and dedicated-test-owner scripts, and compare it with an otherwise identical preview. Personal Plan is not currently isolated into a deployable unit that permits a truthful route-only region setting without affecting other application functions.
+No `vercel.json` change is included. If the new phase timing still shows cross-region wall time dominating, create a separate preview deployment pinned nearer Supabase, run the same scripts with a field-test guest session, and compare it with an otherwise identical preview. Personal Plan is not currently isolated into a deployable unit that permits a truthful route-only region setting without affecting other application functions.

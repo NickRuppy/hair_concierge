@@ -48,6 +48,9 @@ export function NeedPlanScreen({ screen, hasOptionalPage, onBack, onNext }: Need
         <p className="mt-1 max-w-[34rem] text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
           {screen.lead}
         </p>
+        <p className="mt-1.5 max-w-[34rem] text-[10.5px] leading-relaxed text-[#706a65] sm:text-xs">
+          Bilder zeigen nur Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.
+        </p>
 
         <Progress value={hasOptionalPage ? screen.progress : 100} label="Bedarfsplan-Fortschritt" />
 

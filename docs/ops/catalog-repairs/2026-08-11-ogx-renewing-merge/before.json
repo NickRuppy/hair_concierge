@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "repairKey": "2026-08-11-ogx-renewing-merge",
+  "captureStatus": "revalidate_before_apply",
+  "capturedAt": null,
+  "snapshotFingerprint": null,
+  "canonicalName": null,
+  "duplicateIdentifiers": [],
+  "duplicateShampooSpecs": [],
+  "canonicalProduct": {
+    "id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+    "expected": {
+      "categoryKey": "shampoo",
+      "origin": "curated",
+      "isActive": true,
+      "lifecycleStatus": "active",
+      "isChaarlieRecommended": true,
+      "shampooSpecCount": 1
+    }
+  },
+  "duplicateProduct": {
+    "id": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+    "expected": {
+      "categoryKey": "shampoo",
+      "origin": "user_submitted",
+      "isActive": true,
+      "lifecycleStatus": "active",
+      "isChaarlieRecommended": false,
+      "identifierCount": 4,
+      "shampooSpecCount": 3,
+      "approvedSubmissionCount": 1,
+      "relationshipCount": 0
+    }
+  },
+  "privacy": {
+    "containsUserIds": false,
+    "containsEmail": false,
+    "containsRawUserText": false,
+    "rowIdentityEncoding": "sha256(uuid text), populated only by preflight.sql"
+  },
+  "requiredCaptureFields": [
+    "snapshotFingerprint",
+    "duplicateIdentifierFingerprint",
+    "matchedUserProductIdHashes",
+    "approvedSubmissionIdHashes",
+    "approvedSubmissionLinks",
+    "activeDraftIdHashes",
+    "draftProductIdPaths",
+    "matchedUserProductRevisionFingerprint",
+    "activeDraftRevisionFingerprint",
+    "affectedPlanSourceStates"
+  ]
+}
