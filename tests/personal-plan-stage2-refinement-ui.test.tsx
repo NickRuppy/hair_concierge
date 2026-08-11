@@ -216,14 +216,14 @@ test("the secondary category empty action is group-local and preserves three pri
   assert.equal(countOccurrences(html, 'aria-pressed="true"'), 3)
   assert.match(html, /Weitere unterstützte Kategorien/)
   assert.match(html, /Keine weiteren/)
-  assert.match(html, /löscht nur die Auswahl unter Weitere unterstützte Kategorien/i)
+  assert.match(html, /Du nutzt keine weiteren Kategorien/i)
   assert.match(
     html,
-    /aria-label="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"/,
+    /aria-label="Keine weiteren; ersetzt die Auswahl unter Weitere unterstützte Kategorien"/,
   )
   assert.doesNotMatch(
     html,
-    /aria-pressed="true" aria-label="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"/,
+    /aria-pressed="true" aria-label="Keine weiteren; ersetzt die Auswahl unter Weitere unterstützte Kategorien"/,
   )
 })
 
@@ -259,7 +259,8 @@ test("an unanswered additional heat-tool selection stays distinct from an explic
     />,
   )
 
-  const noneControl = /aria-pressed="true" aria-label="Nichts davon; andere Auswahl wird gelöscht"/
+  const noneControl =
+    /aria-pressed="true" aria-label="Nichts davon; ersetzt deine bisherige Auswahl"/
   assert.doesNotMatch(unansweredHtml, noneControl)
   assert.match(unansweredHtml, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
   assert.match(explicitNoneHtml, noneControl)

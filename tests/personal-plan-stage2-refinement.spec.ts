@@ -22,7 +22,7 @@ async function chooseAndContinue(page: Page, name: RegExp | string) {
 
 async function chooseNoneAndContinue(page: Page, label = "Nichts davon") {
   const none = page.getByRole("button", {
-    name: new RegExp(`${label}; andere Auswahl wird gelöscht`),
+    name: new RegExp(`${label}; ersetzt deine bisherige Auswahl`),
   })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")
@@ -191,7 +191,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(
       page.getByRole("heading", { name: "Was schützt dein Haar nachts meistens?" }),
     ).toBeVisible()
-    const none = page.getByRole("button", { name: /Nichts davon; andere Auswahl wird gelöscht/ })
+    const none = page.getByRole("button", { name: /Nichts davon; ersetzt deine bisherige Auswahl/ })
     await expect(none).toHaveAttribute("aria-pressed", "true")
     await continueButton(page).click()
     await expect(
@@ -216,7 +216,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
             return rect.bottom >= window.innerHeight - 2 && rect.top < window.innerHeight
           }),
         ).toBe(true)
-        const lastChoice = page.getByRole("button", { name: /Keine weiteren; nur weitere/ })
+        const lastChoice = page.getByRole("button", { name: /Keine weiteren; ersetzt die Auswahl/ })
         await lastChoice.scrollIntoViewIfNeeded()
         expect(
           await lastChoice.evaluate(

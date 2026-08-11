@@ -312,7 +312,7 @@ async function chooseAndContinue(page: Page, label: string | RegExp) {
 
 async function chooseNoneAndContinue(page: Page) {
   const none = page.getByRole("button", {
-    name: /Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht|Nichts davon; andere Auswahl wird gelöscht/,
+    name: /Keine weiteren; ersetzt die Auswahl unter Weitere unterstützte Kategorien|Nichts davon; ersetzt deine bisherige Auswahl/,
   })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")

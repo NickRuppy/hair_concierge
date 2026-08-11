@@ -19,7 +19,7 @@ import type {
   TowelTechnique,
   WetWashFrequency,
 } from "@/lib/personal-plan/refinement/types"
-import { PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS } from "@/lib/vocabulary/frequencies"
+import { PRODUCT_FREQUENCY_OPTIONS } from "@/lib/vocabulary/frequencies"
 import {
   NIGHT_PROTECTION_LABELS,
   TOWEL_MATERIAL_LABELS,
@@ -63,7 +63,7 @@ export const REFINEMENT_CATEGORY_OPTIONS = [
 ] as const satisfies readonly RefinementOption<Stage2ProductCategory>[]
 
 export const WET_WASH_FREQUENCY_OPTIONS = [
-  ...PRODUCT_FREQUENCY_COMMON_FIRST_OPTIONS.map(({ value, label }) => ({
+  ...PRODUCT_FREQUENCY_OPTIONS.map(({ value, label }) => ({
     value: value as ProductFrequency,
     label,
     icon: "clock" as const,
@@ -260,7 +260,7 @@ export function RefinementOptions<T extends string>({
   onNoneChange,
   allowNone,
   noneLabel = "Nichts davon",
-  noneDescription = "Diese Frage bewusst leer abschließen.",
+  noneDescription = "Diese Frage bewusst leer lassen.",
   noneAriaLabel,
   className,
 }: {
@@ -307,7 +307,7 @@ export function RefinementOptions<T extends string>({
         <button
           type="button"
           aria-pressed={Array.isArray(value) && value.length === 0}
-          aria-label={noneAriaLabel ?? `${noneLabel}; andere Auswahl wird gelöscht`}
+          aria-label={noneAriaLabel ?? `${noneLabel}; ersetzt deine bisherige Auswahl`}
           onClick={() => (onNoneChange ? onNoneChange() : onChange([]))}
           className={cn(
             "mt-1 min-h-11 rounded-full border px-4 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)]",

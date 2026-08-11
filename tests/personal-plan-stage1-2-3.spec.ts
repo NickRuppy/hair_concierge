@@ -8,7 +8,7 @@ async function chooseAndContinue(page: Page, name: RegExp | string) {
 }
 
 async function chooseNoneAndContinue(page: Page) {
-  await page.getByRole("button", { name: /Nichts davon; andere Auswahl wird gelöscht/ }).click()
+  await page.getByRole("button", { name: /Nichts davon; ersetzt deine bisherige Auswahl/ }).click()
   await page.getByRole("button", { name: "Weiter" }).click()
 }
 

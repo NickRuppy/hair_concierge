@@ -354,12 +354,12 @@ function renderQuestionBody({
                 multi
                 allowNone
                 noneLabel="Keine weiteren"
-                noneDescription="Das löscht nur die Auswahl unter Weitere unterstützte Kategorien."
-                noneAriaLabel="Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht"
+                noneDescription="Du nutzt keine weiteren Kategorien."
+                noneAriaLabel="Keine weiteren; ersetzt die Auswahl unter Weitere unterstützte Kategorien"
                 onNoneChange={() =>
                   onLocalAnswerChange(
                     mergeCategoryGroup(remainingOptions, []),
-                    "Weitere unterstützte Kategorien wurden gelöscht.",
+                    "Auswahl unter Weitere unterstützte Kategorien aufgehoben.",
                   )
                 }
                 onChange={(next) =>
