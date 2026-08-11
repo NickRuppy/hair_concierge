@@ -470,6 +470,12 @@ export type AppEventMap = {
     marketingConsent: boolean
   }
   quiz_email_deliverability_rejected: FunnelAnalyticsEnvelope & {
+    /**
+     * `precheck` = Pruefung beim Verlassen des E-Mail-Schritts,
+     * `lead_submit` = Backstop im Lead-Endpunkt. Optional, weil der
+     * Legacy-Funnel nur den Lead-Endpunkt kennt.
+     */
+    phase?: "precheck" | "lead_submit"
     reason: EmailDeliverabilityFailure
     suggestionPresent: boolean
   }

@@ -71,6 +71,7 @@ import {
   EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
   parseEmailDeliverabilityRejection,
   suggestEmailCorrection,
+  type EmailDeliverabilityRejectionResponse,
 } from "@/lib/email-deliverability-shared"
 import { createFunnelEventId, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
 import {
@@ -132,6 +133,13 @@ import {
 } from "./quiz-data"
 
 const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud.com"]
+
+/**
+ * Obergrenze fuer die Vorabpruefung der E-Mail-Adresse. Der Server deckelt den
+ * DNS-Lookup bei 3 Sekunden; diese Grenze faengt haengende Verbindungen ab,
+ * damit der Funnel nie an einem Spinner stehen bleibt.
+ */
+const EMAIL_PRECHECK_TIMEOUT_MS = 6000
 const AUTO_ADVANCE_MS = 400
 const SCREEN_EXIT_MS = 200
 const subscribeToClientReady = () => () => {}
@@ -1837,9 +1845,14 @@ function EmailCapture({
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [checking, setChecking] = useState(false)
   const [pendingConsent, setPendingConsent] = useState<boolean | null>(null)
+  // Merkt sich eine bereits gegebene Antwort auf die Consent-Frage. Nur der
+  // Backstop im Lead-Endpunkt kann dorthin zurueckwerfen; die Frage darf
+  // deshalb kein zweites Mal gestellt werden.
+  const [rememberedConsent, setRememberedConsent] = useState<boolean | null>(null)
+  const [emailRecoveryToken, setEmailRecoveryToken] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
-  const focusEmailOnRecoveryRef = useRef(false)
   const funnelEventIdRef = useRef<string | null>(null)
   const localSuggestions = getEmailSuggestions(email)
   // Der Servervorschlag hat Vorrang: Er kommt aus der tatsaechlich
@@ -1849,20 +1862,88 @@ function EmailCapture({
       ? [serverSuggestion, ...localSuggestions.filter((s) => s !== serverSuggestion)]
       : localSuggestions
 
+  // Der Zaehler laeuft bei jeder Rueckkehr ins E-Mail-Feld hoch, damit der
+  // Fokus auch dann gesetzt wird, wenn der Schritt sich gar nicht geaendert
+  // hat (Ablehnung direkt im E-Mail-Schritt).
   useEffect(() => {
-    if (step !== "email" || !focusEmailOnRecoveryRef.current) return
-    focusEmailOnRecoveryRef.current = false
+    if (emailRecoveryToken === 0) return
     emailInputRef.current?.focus()
-  }, [step])
+  }, [emailRecoveryToken])
 
-  function continueToConsent() {
-    if (!EMAIL_ADDRESS_PATTERN.test(email.trim())) {
+  /**
+   * Wirft zurueck ins E-Mail-Feld und erklaert, warum. Gemeinsamer Pfad fuer
+   * die Vorabpruefung und den Backstop im Lead-Endpunkt.
+   */
+  function recoverToEmailStep(rejection: EmailDeliverabilityRejectionResponse | null) {
+    setServerSuggestion(rejection?.suggestion ?? null)
+    setStep("email")
+    setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
+    setEmailRecoveryToken((token) => token + 1)
+    window.scrollTo(0, 0)
+  }
+
+  /**
+   * Prueft die Zustellbarkeit, bevor die Consent-Frage kommt.
+   *
+   * Fail-open ist Absicht: Timeout, Abbruch, Netzwerkfehler und jeder Status
+   * ausser 422 lassen durch. Der Lead-Endpunkt prueft ohnehin erneut, und ein
+   * wackelnder DNS-Resolver darf keinen Lead kosten.
+   */
+  async function precheckEmailDeliverability(
+    candidate: string,
+  ): Promise<
+    | { deliverable: true }
+    | { deliverable: false; rejection: EmailDeliverabilityRejectionResponse | null }
+  > {
+    try {
+      const response = await fetch("/api/quiz/personal-plan-email-precheck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: candidate }),
+        signal: AbortSignal.timeout(EMAIL_PRECHECK_TIMEOUT_MS),
+      })
+      if (response.status !== 422) return { deliverable: true }
+      const detail: unknown = await response.json().catch(() => null)
+      return { deliverable: false, rejection: parseEmailDeliverabilityRejection(detail) }
+    } catch {
+      return { deliverable: true }
+    }
+  }
+
+  async function continueToConsent() {
+    if (checking || saving) return
+    const candidate = email.trim()
+    if (!EMAIL_ADDRESS_PATTERN.test(candidate)) {
       setError("Bitte gib eine gültige E-Mail-Adresse ein.")
       return
     }
     setError("")
-    setStep("consent")
-    window.scrollTo(0, 0)
+    setChecking(true)
+    try {
+      const result = await precheckEmailDeliverability(candidate)
+      if (!result.deliverable) {
+        if (result.rejection) {
+          trackAppEvent("quiz_email_deliverability_rejected", {
+            phase: "precheck",
+            reason: result.rejection.reason,
+            suggestionPresent: Boolean(result.rejection.suggestion),
+            testKind: fieldTest ? "field_test" : null,
+          })
+        }
+        recoverToEmailStep(result.rejection)
+        return
+      }
+      // Die Consent-Frage wurde vor einem Backstop-Rueckwurf schon beantwortet.
+      // Sie ein zweites Mal zu stellen waere ein Fehler, kein Sicherheitsnetz.
+      if (rememberedConsent !== null) {
+        await submit(rememberedConsent)
+        return
+      }
+      setStep("consent")
+      window.scrollTo(0, 0)
+    } finally {
+      setChecking(false)
+    }
   }
 
   async function submit(marketingConsent: boolean) {
@@ -1904,16 +1985,16 @@ function EmailCapture({
           const suggestion = rejection?.suggestion ?? null
           if (rejection) {
             trackAppEvent("quiz_email_deliverability_rejected", {
+              phase: "lead_submit",
               reason: rejection.reason,
               suggestionPresent: Boolean(suggestion),
               testKind: fieldTest ? "field_test" : null,
             })
           }
-          focusEmailOnRecoveryRef.current = true
-          setServerSuggestion(suggestion)
-          setStep("email")
-          setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
-          window.scrollTo(0, 0)
+          // Die Zustimmung ist damit gegeben. Nach der Korrektur geht es
+          // direkt weiter, ohne die Frage ein zweites Mal zu stellen.
+          setRememberedConsent(marketingConsent)
+          recoverToEmailStep(rejection)
           return
         }
         throw new Error(`Save failed with ${response.status}`)
@@ -1953,6 +2034,16 @@ function EmailCapture({
     }
   }
 
+  // Auf dem E-Mail-Schritt kann entweder die Vorabpruefung laufen oder – nach
+  // einem Backstop-Rueckwurf mit bereits gegebener Zustimmung – der Lead-Save.
+  const emailStepBusy = checking || saving
+  const emailStepBusyLabel = (
+    <>
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      {saving ? "Wird gespeichert…" : "E-Mail wird geprüft…"}
+    </>
+  )
+
   return (
     <section className="mx-auto w-full max-w-[40rem]">
       <div className="rounded-full bg-[var(--brand-plum-ice)] px-4 py-2 text-center text-sm font-semibold text-[var(--brand-plum)]">
@@ -1963,7 +2054,7 @@ function EmailCapture({
           noValidate
           onSubmit={(event) => {
             event.preventDefault()
-            continueToConsent()
+            void continueToConsent()
           }}
         >
           <h1 className="mt-6 text-balance text-center font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
@@ -2032,8 +2123,8 @@ function EmailCapture({
             <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0" />
             Deine Auswertung senden wir dir unabhängig von der optionalen Zustimmung.
           </p>
-          <Button className="mt-7" type="submit" variant="funnelCta">
-            Weiter zu meiner Auswertung
+          <Button className="mt-7" disabled={emailStepBusy} type="submit" variant="funnelCta">
+            {emailStepBusy ? emailStepBusyLabel : "Weiter zu meiner Auswertung"}
           </Button>
         </form>
       ) : (

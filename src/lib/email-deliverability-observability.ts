@@ -2,7 +2,12 @@ import * as Sentry from "@sentry/nextjs"
 
 import type { EmailDeliverability } from "@/lib/email-deliverability"
 
-export type EmailDeliverabilityJourney = "personal_plan" | "legacy"
+/**
+ * `personal_plan_precheck` ist die Pruefung beim Verlassen des E-Mail-Schritts,
+ * `personal_plan` die verbindliche Pruefung im Lead-Endpunkt. Getrennte Werte,
+ * damit die Metrik nicht doppelt zaehlt und beide Phasen vergleichbar bleiben.
+ */
+export type EmailDeliverabilityJourney = "personal_plan" | "personal_plan_precheck" | "legacy"
 
 export function recordEmailDeliverabilityOutcome(
   journey: EmailDeliverabilityJourney,

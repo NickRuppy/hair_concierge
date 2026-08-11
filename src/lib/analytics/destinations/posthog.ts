@@ -147,6 +147,9 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       return {
         reason: data.reason,
         suggestion_present: data.suggestionPresent,
+        // Nur mitschicken, wenn der Aufrufer die Phase kennt. Der
+        // Legacy-Funnel setzt sie nicht und soll die Property nicht bekommen.
+        ...(data.phase ? { phase: data.phase } : {}),
       }
     }
     case "quiz_goals_selected":
