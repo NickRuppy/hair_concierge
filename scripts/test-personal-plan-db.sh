@@ -61,12 +61,16 @@ cp "$repository_root/supabase/tests/personal_plan_stage5_protocol_executor.sql" 
   "$test_project_root/supabase/tests/personal_plan_stage5_protocol_executor.sql"
 cp "$repository_root/supabase/tests/catalog_enrichment_heat.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat.sql"
+cp "$repository_root/supabase/tests/catalog_enrichment_scalp.sql" \
+  "$test_project_root/supabase/tests/catalog_enrichment_scalp.sql"
 cp "$repository_root/supabase/tests/personal_plan_field_test_access.sql" \
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql"
-cp "$repository_root/supabase/tests/personal_plan_test_owner.sql" \
-  "$test_project_root/supabase/tests/personal_plan_test_owner.sql"
+cp "$repository_root/supabase/tests/personal_plan_test_owner_removed.sql" \
+  "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql"
 node --import tsx "$repository_root/scripts/ci/generate-catalog-enrichment-heat-db-contract.ts" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat_real_package.sql"
+node --import tsx "$repository_root/scripts/ci/generate-catalog-enrichment-scalp-db-contract.ts" \
+  "$test_project_root/supabase/tests/catalog_enrichment_scalp_real_package.sql"
 
 supabase=(npm exec -- supabase --workdir "$test_project_root")
 started_by_this_script=false
@@ -103,7 +107,9 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/personal_plan_stage5_application.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage5_protocol_executor.sql" \
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql" \
-  "$test_project_root/supabase/tests/personal_plan_test_owner.sql" \
+  "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat_real_package.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat.sql" \
+  "$test_project_root/supabase/tests/catalog_enrichment_scalp_real_package.sql" \
+  "$test_project_root/supabase/tests/catalog_enrichment_scalp.sql" \
   --local

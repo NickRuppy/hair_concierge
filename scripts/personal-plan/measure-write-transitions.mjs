@@ -12,20 +12,17 @@ if (process.argv.includes("--help")) {
   process.stdout.write(`Usage:
   node scripts/personal-plan/measure-write-transitions.mjs \\
     --base-url=https://example.test \\
-    --storage-state=/absolute/path/dedicated-test-owner.json \\
+    --storage-state=/absolute/path/field-test-guest.json \\
     --output=/absolute/path/results.json \\
-    --confirm-dedicated-write-test-owner
+    --confirm-field-test-write-session
 
 The script opens a visible browser and records Stage 2/3 request durations, Server-Timing,
 and non-identifying personal_plan_transition_performance console events. It never clicks or
-submits anything automatically. Close the opened browser after manually exercising the test-owner
+submits anything automatically. Close the opened browser after manually exercising the field-test
 journey. The confirmation flag is mandatory because manual actions will write canonical test data.
 
-Create the disposable storage state first with:
-  ALLOW_PERSONAL_PLAN_TEST_OWNER_PRODUCTION_WRITE=1 \
-    node scripts/personal-plan/test-owner.mjs auth-state --apply \
-    --base-url=https://chaarlie.de \
-    --confirm-project=pqdkhefxsxkyeqelqegq
+Create a disposable storage state by completing the shareable Personal Plan field-test
+link through its free continuation CTA in a fresh browser context. Never use a customer session.
 `)
   process.exit(0)
 }
@@ -33,12 +30,12 @@ Create the disposable storage state first with:
 const baseUrl = readArgument("base-url")
 const storageState = readArgument("storage-state")
 const output = readArgument("output")
-const confirmed = process.argv.includes("--confirm-dedicated-write-test-owner")
+const confirmed = process.argv.includes("--confirm-field-test-write-session")
 
 if (!baseUrl || !storageState || !output) {
   throw new Error("base-url_storage-state_and_output_are_required")
 }
-if (!confirmed) throw new Error("dedicated_write_test_owner_confirmation_required")
+if (!confirmed) throw new Error("field_test_write_session_confirmation_required")
 
 const origin = new URL(baseUrl)
 if (
@@ -58,7 +55,10 @@ const consoleTimings = []
 
 context.on("request", (request) => {
   const pathname = new URL(request.url()).pathname
-  if (!pathname.startsWith("/api/personal-plan/stage-2") && pathname !== "/api/personal-plan/stage-3") {
+  if (
+    !pathname.startsWith("/api/personal-plan/stage-2") &&
+    pathname !== "/api/personal-plan/stage-3"
+  ) {
     return
   }
   requests.set(request, { startedAt: performance.now(), method: request.method(), pathname })
@@ -78,7 +78,10 @@ context.on("response", async (response) => {
 })
 
 page.on("console", async (message) => {
-  if (message.type() !== "info" || !message.text().includes("personal_plan_transition_performance")) {
+  if (
+    message.type() !== "info" ||
+    !message.text().includes("personal_plan_transition_performance")
+  ) {
     return
   }
   const values = await Promise.all(message.args().map((argument) => argument.jsonValue()))
@@ -100,7 +103,7 @@ await new Promise((resolveDisconnected) => browser.once("disconnected", resolveD
 const report = {
   capturedAt: new Date().toISOString(),
   baseUrl: origin.origin,
-  mode: "manual_dedicated_write_test_owner",
+  mode: "manual_field_test_guest",
   interrupted,
   transitions,
   consoleTimings,
