@@ -827,7 +827,7 @@ function QuestionScreen({
   onContinue,
   onEmpty,
   noneOption,
-  noneSelected,
+  noneSelected = false,
   canContinue,
   intro,
   transition,
@@ -985,7 +985,7 @@ function QuestionScreen({
               label: noneOption.label,
               description: noneOption.description,
             }}
-            selected={Boolean(noneSelected)}
+            selected={noneSelected}
           />
         ) : null}
       </div>
@@ -1882,24 +1882,18 @@ function EmailCapture({
   const [rememberedConsent, setRememberedConsent] = useState<boolean | null>(null)
   const [emailRecoveryToken, setEmailRecoveryToken] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
-  // Immer der zuletzt eingegebene Feldinhalt. Eine laufende Pruefung haelt in
-  // ihrem Closure nur den Stand von damals; ohne diese Referenz koennte sie
-  // nicht erkennen, dass die Adresse inzwischen eine andere ist.
-  const latestEmailRef = useRef(email)
   const funnelEventIdRef = useRef<string | null>(null)
   // Zaehlt jede Bearbeitung waehrend einer laufenden Pruefung. Eine Pruefung,
   // deren Version beim Abschluss nicht mehr der aktuellen entspricht, ist
   // komplett ueberholt und darf nichts mehr veraendern.
   const precheckVersionRef = useRef(0)
   /**
-   * Einziger Schreibpfad fuer das E-Mail-Feld. Die Referenz wird im selben
-   * Tick gesetzt, damit eine laufende Pruefung die neue Adresse auch dann
-   * sieht, wenn React den Re-Render noch nicht gerendert hat. Eine laufende
-   * Pruefung wird damit ueberholt: Die Version steigt, und der CTA wird
-   * sofort wieder freigegeben, statt auf die alte Antwort zu warten.
+   * Einziger Schreibpfad fuer das E-Mail-Feld. Die Version steigt im selben
+   * Tick, damit eine laufende Pruefung ihre Ueberholung auch dann bemerkt,
+   * wenn React den Re-Render noch nicht ausgefuehrt hat. Der CTA wird sofort
+   * wieder freigegeben, statt auf die alte Antwort zu warten.
    */
   function applyEmailValue(value: string) {
-    latestEmailRef.current = value
     precheckVersionRef.current += 1
     setEmail(value)
     setError("")
@@ -1974,17 +1968,13 @@ function EmailCapture({
     const requestVersion = precheckVersionRef.current
     try {
       const result = await precheckEmailDeliverability(candidate)
-      // Eine Bearbeitung waehrend der Pruefung zaehlt die Version hoch. Ein
-      // Ergebnis zu einer ueberholten Version ist wertlos und darf ueberhaupt
-      // nichts mehr veraendern -- weder Schrittwechsel noch Submit noch
-      // Fehlermeldung. Der CTA wurde von applyEmailValue schon freigegeben.
+      // Das Feld darf waehrend der Pruefung bearbeitet werden; jede Bearbeitung
+      // zaehlt die Version hoch. Ein Ergebnis zu einer ueberholten Version
+      // gehoert zu einer verworfenen Adresse und darf ueberhaupt nichts mehr
+      // veraendern -- weder Schrittwechsel noch Submit noch Fehlermeldung, die
+      // sonst ueber die neue Eingabe faellt. Der CTA wurde von applyEmailValue
+      // schon freigegeben.
       if (precheckVersionRef.current !== requestVersion) return
-      // Das Feld darf waehrend der Pruefung bearbeitet werden. Ein Ergebnis zu
-      // einer inzwischen verworfenen Adresse ist wertlos: Es wuerde eine
-      // fremde Fehlermeldung ueber die neue Eingabe legen und den Fokus
-      // stehlen. Also verfaellt es stillschweigend. (Deckt sich mit der
-      // Versionspruefung oben, bleibt aber als zweite Sicherung bestehen.)
-      if (latestEmailRef.current.trim() !== candidate) return
       if (!result.deliverable) {
         if (result.rejection) {
           trackAppEvent("quiz_email_deliverability_rejected", {

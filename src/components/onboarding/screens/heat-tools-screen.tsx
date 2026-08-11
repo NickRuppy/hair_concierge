@@ -2,9 +2,9 @@
 
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
-import { STYLING_TOOL_OPTIONS } from "@/lib/vocabulary"
 import { Button } from "@/components/ui/button"
 import type { IconName } from "@/components/ui/icon"
+import { STYLING_TOOL_OPTIONS } from "@/lib/vocabulary"
 
 const HEAT_TOOL_ICONS: Record<string, IconName> = {
   blow_dryer: "heat-blow-dryer",
