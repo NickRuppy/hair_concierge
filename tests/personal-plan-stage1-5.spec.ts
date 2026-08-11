@@ -312,7 +312,7 @@ async function chooseAndContinue(page: Page, label: string | RegExp) {
 
 async function chooseNoneAndContinue(page: Page) {
   const none = page.getByRole("button", {
-    name: /Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht|Nichts davon; andere Auswahl wird gelöscht/,
+    name: /Keine weiteren; nur weitere unterstützte Kategorien werden gelöscht|^Nichts davon$/,
   })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")
@@ -619,7 +619,15 @@ async function completeCurrentCategory(page: Page, category: string) {
     await clickAndWaitForStage3Save(page, "Weiter")
     return
   }
-  await clickAndWaitForStage3Save(page, "Ich habe dafür kein Produkt")
+  await page
+    .getByRole("searchbox", { name: "Produkt suchen" })
+    .fill(`E2E nicht gefundenes ${category}`)
+  await page.getByRole("button", { name: "Nicht dabei? Produkt hinzufügen" }).click()
+  await page.getByRole("textbox", { name: "Produktname" }).fill(`E2E ${category}`)
+  await page.getByRole("button", { name: "2x/Woche" }).click()
+  await page.getByRole("button", { name: "Produkt speichern", exact: true }).click()
+  await expect(page.getByText(/Noch in Prüfung.*gespeichert/)).toBeVisible()
+  await clickAndWaitForStage3Save(page, "Weiter")
 }
 
 test.describe("persisted production Personal Plan Stage 1 to 5", () => {

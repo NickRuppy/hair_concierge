@@ -29,9 +29,10 @@ export type NeedCardViewModel = {
 
 export function NeedCard({ card }: { card: NeedCardViewModel }) {
   const [open, setOpen] = useState(Boolean(card.initiallyOpen))
+  const [imageAvailable, setImageAvailable] = useState(Boolean(card.imageUrl))
   const fallbackId = useId()
   const panelId = `need-card-${card.id || fallbackId}-detail`
-  const hasImage = Boolean(card.imageUrl)
+  const hasImage = Boolean(card.imageUrl) && imageAvailable
 
   return (
     <article
@@ -45,7 +46,7 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
       data-plan-start-card={card.id}
       data-plan-start-card-tone={card.tone}
       data-plan-start-card-paused={card.paused ? "true" : "false"}
-      data-plan-start-card-preview={hasImage ? "selected" : "absent"}
+      data-plan-start-card-preview={hasImage ? "example" : "absent"}
     >
       <button
         type="button"
@@ -69,12 +70,19 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
           >
             <Image
               src={card.imageUrl!}
-              alt={card.imageAlt ?? ""}
+              alt={
+                card.imageAlt ??
+                `Beispielbild für ${card.categoryLabel}; kein ausgewähltes Produkt.`
+              }
               width={56}
               height={78}
               unoptimized
               className="h-[94%] w-[78%] object-contain"
+              onError={() => setImageAvailable(false)}
             />
+            <span className="absolute bottom-1 left-1 rounded-full bg-[#291a43]/80 px-1.5 py-0.5 text-[7px] font-extrabold uppercase tracking-[0.08em] text-white">
+              Beispiel
+            </span>
           </span>
         ) : null}
 

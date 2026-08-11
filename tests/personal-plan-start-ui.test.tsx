@@ -105,14 +105,19 @@ function withPreviews(
   return { ...snapshot, productPreviews }
 }
 
-test("renders the signed-off Basis shell with folded cards and absent-preview geometry", () => {
+test("renders the signed-off Basis shell with folded cards and example-preview geometry", () => {
   const html = renderToStaticMarkup(<PlanStartFlow state="ready" plan={readyPlan} />)
 
   assert.match(html, /data-plan-start-screen="basis"/)
   assert.match(html, /Deine Basis/)
   assert.match(html, /Basierend auf deinem Quiz sind das die Grundlagen/)
   assert.match(html, /Optionale Empfehlungen/)
-  assert.match(html, /data-plan-start-card-preview="selected"/)
+  assert.match(html, /data-plan-start-card-preview="example"/)
+  assert.match(
+    html,
+    /Bilder zeigen nur Beispiele für die Produktart\. Ein konkretes Produkt wählen wir später\./,
+  )
+  assert.match(html, />Beispiel<\/span>/)
   assert.match(html, /data-plan-start-card-preview="absent"/)
   assert.match(html, /aria-expanded="false"/)
   assert.doesNotMatch(html, /Zusätzlich sinnvoll/)
@@ -312,7 +317,7 @@ test("the enabled production gate maps ineligible API responses to unavailable H
   )
 })
 
-test("adapts a valid saved Stage-1 snapshot into the signed Basis and Optional view", () => {
+test("adapts a valid saved Stage-1 snapshot into catalog-independent example cards", () => {
   const snapshot = withPreviews(
     computedSnapshot({
       ...COMPLETE_V3_PLAN_ENVELOPE.answers,
@@ -345,10 +350,13 @@ test("adapts a valid saved Stage-1 snapshot into the signed Basis and Optional v
   const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
   assert.ok(plan)
   assert.equal(plan.basis.title, "Deine Basis")
-  assert.ok(plan.basis.cards.some((item) => item.categoryLabel === "Shampoo" && item.imageUrl))
-  assert.ok(
-    plan.basis.cards.some((item) => item.categoryLabel === "Conditioner" && item.imageUrl === null),
-  )
+  const shampoo = plan.basis.cards.find((item) => item.categoryLabel === "Shampoo")
+  const conditioner = plan.basis.cards.find((item) => item.categoryLabel === "Conditioner")
+  assert.ok(shampoo?.imageUrl)
+  assert.match(shampoo.imageUrl, /salthouse-anti-juckreiz/)
+  assert.doesNotMatch(shampoo.imageUrl, /test-shampoo/)
+  assert.match(shampoo.imageAlt ?? "", /Beispielbild/)
+  assert.match(conditioner?.imageUrl ?? "", /balea-natural-beauty-hibiskus/)
   assert.ok(plan.optional)
   assert.ok(plan.optional.cards.some((item) => item.id === "bondbuilder"))
   assert.ok(plan.optional.cards.some((item) => item.paused))
@@ -361,8 +369,8 @@ test("adapts a valid saved Stage-1 snapshot into the signed Basis and Optional v
   if (interpreted.state !== "ready") return
   const html = renderToStaticMarkup(<PlanStartFlow state="ready" plan={interpreted.plan} />)
   assert.match(html, /Deine Basis/)
-  assert.match(html, /data-plan-start-card-preview="selected"/)
-  assert.match(html, /data-plan-start-card-preview="absent"/)
+  assert.match(html, /data-plan-start-card-preview="example"/)
+  assert.doesNotMatch(html, /data-plan-start-card-preview="absent"/)
 })
 
 test("adapts Basis-only snapshots without an empty Optional page", () => {

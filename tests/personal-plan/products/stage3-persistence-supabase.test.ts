@@ -94,6 +94,65 @@ test("draft creation persists the server-created immutable authority snapshot in
   assert.deepEqual(result.draft.authoritySnapshot?.coverage, refinedSnapshot.coverage)
 })
 
+test("draft creation turns an RPC stale source into a typed refined-source restart", async () => {
+  const refinedSnapshot = {
+    inputHash: "refined-input-hash",
+    profile: { source: { projection: "refined_post_plan" } },
+    renderedOrder: ["shampoo"],
+    decisions: [
+      {
+        category: "shampoo",
+        resolution: "resolved",
+        needTier: "basis",
+        roles: ["shampoo_everyday"],
+        target: {
+          category: "shampoo",
+          roles: ["shampoo_everyday"],
+          scalpRoute: "balanced",
+          everydayConstraint: "standard",
+          requiresTargetedDandruffCapability: false,
+        },
+        frequency: null,
+        reasons: [],
+        executionState: "available",
+        executionPauseReason: null,
+        deferredFacts: [],
+      },
+    ],
+    coverage: [],
+  }
+  const client = {
+    from() {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () => ({
+          data: { id: "refined-1", output_snapshot: refinedSnapshot },
+          error: null,
+        }),
+      }
+      return chain
+    },
+    async rpc() {
+      return { data: { outcome: "stale_source" }, error: null }
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  await assert.rejects(
+    () =>
+      persistence.loadOrCreate({
+        userId: "owner-1",
+        personalPlanId: "plan-1",
+        refinedVersionId: "refined-1",
+      }),
+    (error: unknown) =>
+      error instanceof Error &&
+      error.name === "Stage3AuthoritySnapshotError" &&
+      error.message === "stale_refined_source",
+  )
+})
+
 function conditionerAuthorityDraft(): Stage3ProductDraft {
   return {
     schemaVersion: 1,
@@ -178,6 +237,30 @@ function conditionerAuthorityDraft(): Stage3ProductDraft {
     },
   }
 }
+
+test("a guarded save exposes refined-source drift without fabricating an obsolete SQL draft", async () => {
+  const calls: Array<{ name: string; args: Record<string, unknown> }> = []
+  const client = {
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      return { data: { outcome: "stale_source" }, error: null }
+    },
+  }
+  const draft = conditionerAuthorityDraft()
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  const result = await persistence.save({
+    userId: draft.userId,
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    draft,
+  })
+
+  assert.equal(result.outcome, "stale_source")
+  assert.equal(result.draft, draft)
+  assert.equal(calls[0]?.name, "personal_plan_save_product_draft")
+  assert.equal(calls[0]?.args.p_expected_revision, draft.revision)
+})
 
 function authorityFactClient(
   conditionerSpecs: Record<string, unknown>[],

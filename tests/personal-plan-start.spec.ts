@@ -95,9 +95,22 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await page.goto(labPath)
 
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
-    await expect(page.locator("[data-plan-start-card-list] article")).not.toHaveCount(0)
+    const basisCards = page.locator("[data-plan-start-card-list] article")
+    await expect(basisCards).not.toHaveCount(0)
+    await expect(
+      page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
+    ).toHaveCount(await basisCards.count())
+    await expect(basisCards.getByText("Beispiel", { exact: true })).toHaveCount(
+      await basisCards.count(),
+    )
+    await basisCards.first().getByRole("button").click()
+    await expect(basisCards.first().getByText("Warum das zu deinem Haar passt")).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
+    const optionalCards = page.locator("[data-plan-start-card-list] article")
+    await expect(
+      page.locator('[data-plan-start-card-list] article[data-plan-start-card-preview="example"]'),
+    ).toHaveCount(await optionalCards.count())
     await expect(page.locator('[data-plan-start-screen="transition"]')).toHaveCount(0)
     await page.getByRole("button", { name: "Plan verfeinern" }).click()
     await expect(
@@ -177,6 +190,8 @@ test.describe("production-shaped Personal Plan Stage 1 surface", () => {
     await expect(page.getByRole("heading", { name: "Deine Basis" })).toBeVisible()
     await page.getByRole("button", { name: "Optionale Empfehlungen" }).click()
     await page.getByRole("button", { name: "Plan verfeinern" }).click()
+    await expect(page.getByRole("heading", { name: "Deine Produktarten" })).toBeVisible()
+    await page.getByRole("button", { name: "Produktarten bestätigen" }).click()
     await expect(page.getByRole("heading", { name: "Dein Shampoo" })).toBeVisible()
     await expect(
       page.getByText(preparedStage3Entry.orderedCategories[0]!.needSummary),

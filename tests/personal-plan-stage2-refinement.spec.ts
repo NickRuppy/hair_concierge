@@ -21,9 +21,7 @@ async function chooseAndContinue(page: Page, name: RegExp | string) {
 }
 
 async function chooseNoneAndContinue(page: Page, label = "Nichts davon") {
-  const none = page.getByRole("button", {
-    name: new RegExp(`${label}; andere Auswahl wird gelöscht`),
-  })
+  const none = page.getByRole("button", { name: label, exact: true })
   await none.click()
   await expect(none).toHaveAttribute("aria-pressed", "true")
   await expect(continueButton(page)).toBeEnabled()
@@ -65,6 +63,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(shampoo).toHaveAttribute("aria-pressed", "true")
     await expect(continueButton(page)).toBeEnabled()
     await continueButton(page).click()
+    await expect(page.getByText("Deine Antwort wird sicher gespeichert.")).toHaveCount(0)
     await expect(
       page.getByRole("heading", { name: "Wie oft wäschst du deine Haare nass?" }),
     ).toBeVisible()
@@ -126,6 +125,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     const shampoo = page.getByRole("button", { name: "Shampoo", exact: true })
     await shampoo.click()
     await continueButton(page).click()
+    await expect(page.getByText("Deine Antwort wird sicher gespeichert.")).toHaveCount(0)
     await expect(page.getByRole("alert").filter({ hasText: /nicht geklappt/i })).toBeVisible()
     await expect(shampoo).toHaveAttribute("aria-pressed", "true")
     await expect(page.getByRole("button", { name: "Erneut versuchen" })).toBeVisible()
@@ -160,6 +160,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await begin(page, "conflict")
     await page.getByRole("button", { name: "Shampoo", exact: true }).click()
     await continueButton(page).click()
+    await expect(page.getByText("Deine Antwort wird sicher gespeichert.")).toHaveCount(0)
     await expect(
       page.getByRole("alert").filter({ hasText: /neuere gespeicherte Antworten/i }),
     ).toBeVisible()
@@ -191,7 +192,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(
       page.getByRole("heading", { name: "Was schützt dein Haar nachts meistens?" }),
     ).toBeVisible()
-    const none = page.getByRole("button", { name: /Nichts davon; andere Auswahl wird gelöscht/ })
+    const none = page.getByRole("button", { name: "Nichts davon", exact: true })
     await expect(none).toHaveAttribute("aria-pressed", "true")
     await continueButton(page).click()
     await expect(

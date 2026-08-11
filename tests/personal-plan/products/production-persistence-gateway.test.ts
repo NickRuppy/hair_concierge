@@ -20,6 +20,7 @@ import type {
   Stage3ProductDraft,
 } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import { Stage3AuthoritySnapshotError } from "../../../src/lib/personal-plan/products/authority/snapshot"
 
 const requirements: Stage3CategoryRequirement[] = [
   {
@@ -157,6 +158,31 @@ test("loadOrCreate CAS-repairs a persisted cursorless capture draft", async () =
   assert.equal(result.draft.pass, "product_decisions")
   assert.equal(result.draft.categoryCursor, null)
   assert.equal(result.draft.revision, stranded.revision + 1)
+})
+
+test("loadOrCreate propagates a refined-source restart without caching an obsolete draft", async () => {
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(),
+      loadOrCreate: async () => {
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.loadOrCreate({
+        draftId: "server-derived",
+        userId: "owner-a",
+        personalPlanId: "plan-a",
+        refinedVersionId: "refined-a",
+        requirements: [],
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
 })
 
 function authorityDraft(): Stage3ProductDraft {
@@ -394,6 +420,43 @@ test("a source change between compile and stage is a reloadable conflict without
   assert.equal(result.status, "conflict")
 })
 
+test("a refined-source change between compile and stage restarts Stage 3 instead of returning an obsolete conflict", async () => {
+  let reloads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(),
+      loadDraft: async () => {
+        reloads += 1
+        return readyDraft()
+      },
+    },
+    compiler: {
+      compile: async () => ({
+        schemaVersion: 1,
+        compilerVersion: "test",
+        authorityVersions: {},
+        sourceFingerprint: "source",
+        payload: {},
+        proposalDelta: {},
+      }),
+    },
+    stager: {
+      stage: async () => ({
+        status: "stale_source",
+        currentRefinedNeedVersionId: "refined-new",
+      }),
+    },
+  })
+
+  await assert.rejects(
+    () => gateway.complete({ draftId: "draft-a", expectedRevision: 4 }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
+  assert.equal(reloads, 1)
+})
+
 test("lost-response completion replays the same atomic stager without creating a successor draft", async () => {
   const completed = {
     ...readyDraft(),
@@ -469,6 +532,35 @@ test("CAS conflicts return the persistence canonical draft without overwriting i
   })
   assert.equal(result.status, "conflict")
   if (result.status === "conflict") assert.equal(result.latestDraft.revision, 9)
+})
+
+test("a save rejected after the refined pointer moves restarts Stage 3 instead of surfacing an old draft", async () => {
+  const staleDraft = readyDraft()
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(staleDraft),
+      // Simulates the SQL transaction seeing that the parent plan now points
+      // at a newer refined need after this request loaded its old draft.
+      save: async () => {
+        saves += 1
+        return { outcome: "stale_source", draft: staleDraft }
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.mutate({
+        draftId: staleDraft.draftId,
+        expectedRevision: staleDraft.revision,
+        mutation: { type: "complete_capture_category", category: "conditioner" },
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
+  )
+  assert.equal(saves, 1)
 })
 
 test("production gateway persists complete category assignments atomically and rejects incomplete replacement", async () => {

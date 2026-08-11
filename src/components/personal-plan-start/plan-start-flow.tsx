@@ -14,6 +14,7 @@ import {
   createHttpStage3ProductsGateway,
 } from "@/lib/personal-plan/products/http-gateway"
 import type { Stage3AuthorityEvaluation } from "@/lib/personal-plan/products/authority/contracts"
+import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import {
   Stage3ProductsGatewayError,
   type Stage3ProductsGateway,
@@ -23,6 +24,11 @@ import {
   type Stage3Bootstrap,
 } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import { createHttpStage2RefinementGateway } from "@/lib/personal-plan/refinement/http-gateway"
+import {
+  Stage2RefinementError,
+  type Stage2RefinementGateway,
+  type Stage2CompleteResult,
+} from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 
 import {
@@ -61,6 +67,87 @@ export function recoverPlanStartStage3Load(
     return
   }
   actions.retryStage3()
+}
+
+export class Stage3ProductKindCorrectionError extends Error {
+  constructor(
+    public readonly code:
+      | "save_failed"
+      | "completion_failed_after_save"
+      | "revision_conflict"
+      | "stage2_session_unavailable",
+    message = code,
+    public readonly savedSession?: Stage2RefinementSession,
+  ) {
+    super(message)
+    this.name = "Stage3ProductKindCorrectionError"
+  }
+}
+
+export type Stage3ProductKindCorrectionResult = {
+  session: Stage2RefinementSession
+  handoff: Stage2CompleteResult
+  bootstrap: Stage3Bootstrap
+  pendingCompletionSession: null
+}
+
+export async function completeStage2ProductKindCorrection(input: {
+  categories: PersonalPlanCategory[]
+  session: Stage2RefinementSession
+  pendingCompletionSession?: Stage2RefinementSession | null
+  stage2Gateway: Pick<Stage2RefinementGateway, "saveAnswerAndComplete" | "complete">
+  loadStage3Bootstrap: (refinedVersionId: string) => Promise<Stage3Bootstrap>
+}): Promise<Stage3ProductKindCorrectionResult> {
+  try {
+    let handoff: Stage2CompleteResult
+    let nextSession = input.pendingCompletionSession ?? input.session
+    if (input.pendingCompletionSession) {
+      handoff = await input.stage2Gateway.complete({
+        expectedRevision: input.pendingCompletionSession.revision,
+      })
+    } else {
+      const saveAnswerAndComplete = input.stage2Gateway.saveAnswerAndComplete?.bind(
+        input.stage2Gateway,
+      )
+      if (!saveAnswerAndComplete) throw new Stage3ProductKindCorrectionError("save_failed")
+      const result = await saveAnswerAndComplete({
+        questionId: "current_product_categories",
+        answer: input.categories,
+        expectedRevision: input.session.revision,
+      })
+      nextSession = result.session
+      handoff = result.handoff
+    }
+    const completedSession: Stage2RefinementSession = {
+      ...nextSession,
+      status: "complete",
+      completedHandoff: handoff,
+    }
+    const bootstrap = await input.loadStage3Bootstrap(handoff.refinedVersionId)
+    return {
+      session: completedSession,
+      handoff,
+      bootstrap,
+      pendingCompletionSession: null,
+    }
+  } catch (error) {
+    if (
+      error instanceof Stage2RefinementError &&
+      error.code === "completion_failed" &&
+      error.savedSession
+    ) {
+      throw new Stage3ProductKindCorrectionError(
+        "completion_failed_after_save",
+        "completion_failed_after_save",
+        error.savedSession,
+      )
+    }
+    if (error instanceof Stage2RefinementError && error.code === "revision_conflict") {
+      throw new Stage3ProductKindCorrectionError("revision_conflict")
+    }
+    if (error instanceof Stage3ProductKindCorrectionError) throw error
+    throw new Stage3ProductKindCorrectionError("save_failed")
+  }
 }
 
 export type PlanStartFlowProps =
@@ -213,6 +300,7 @@ export function PlanStartCustomerJourney({
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [stage1LoadState, setStage1LoadState] = useState<"idle" | "loading" | "error">("idle")
   const stage2SeedRef = useRef(initialRefinementSession)
+  const pendingStage2CompletionRef = useRef<Stage2RefinementSession | null>(null)
   const [stage3Bootstrap, setStage3Bootstrap] = useState<Stage3Bootstrap | null>(null)
   const [returningToRefinement, setReturningToRefinement] = useState(false)
   const [stage3LoadState, setStage3LoadState] = useState<
@@ -240,6 +328,48 @@ export function PlanStartCustomerJourney({
       setStage("stage3")
     },
     [loadStage3Bootstrap],
+  )
+
+  const handleProductKindsCorrection = useCallback(
+    async (categories: PersonalPlanCategory[]) => {
+      const session = pendingStage2CompletionRef.current ?? stage2SeedRef.current
+      if (!session) throw new Stage3ProductKindCorrectionError("stage2_session_unavailable")
+      try {
+        const result = await completeStage2ProductKindCorrection({
+          categories,
+          session,
+          pendingCompletionSession: pendingStage2CompletionRef.current,
+          stage2Gateway,
+          loadStage3Bootstrap,
+        })
+        pendingStage2CompletionRef.current = result.pendingCompletionSession
+        stage2SeedRef.current = result.session
+        setStage3Bootstrap(result.bootstrap)
+        setStage3LoadState("idle")
+      } catch (error) {
+        if (error instanceof Stage3ProductKindCorrectionError) {
+          if (error.code === "revision_conflict") window.location.reload()
+          if (error.code === "completion_failed_after_save") {
+            if (error.savedSession) {
+              pendingStage2CompletionRef.current = error.savedSession
+              stage2SeedRef.current = error.savedSession
+            }
+          }
+          throw error
+        }
+        if (
+          error instanceof Stage2RefinementError &&
+          error.code === "completion_failed" &&
+          error.savedSession
+        ) {
+          pendingStage2CompletionRef.current = error.savedSession
+          stage2SeedRef.current = error.savedSession
+          throw new Stage3ProductKindCorrectionError("completion_failed_after_save")
+        }
+        throw new Stage3ProductKindCorrectionError("save_failed")
+      }
+    },
+    [loadStage3Bootstrap, stage2Gateway],
   )
 
   const resumeStage3 = useCallback(async () => {
@@ -323,12 +453,14 @@ export function PlanStartCustomerJourney({
   if (stage === "stage3" && stage3Bootstrap)
     return (
       <Stage3ProductsFlow
+        key={stage3Bootstrap.entryContext.refinedVersionId}
         entryContext={stage3Bootstrap.entryContext}
         bootstrap={stage3Bootstrap}
         draftId="client-derived"
         userId="client-derived"
         gateway={stage3Gateway}
         intakeClient={intakeClient}
+        onProductKindsCorrection={handleProductKindsCorrection}
         onBackToRefinement={() => {
           setReturningToRefinement(true)
           setStage("stage2")

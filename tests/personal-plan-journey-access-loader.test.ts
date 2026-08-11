@@ -6,6 +6,7 @@ import { resolveRoutinePage } from "../src/app/routine/page"
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import {
   createSupabasePersonalPlanJourneyAccessLoader,
+  loadPersonalPlanStage2AccessWithDeps,
   loadPersonalPlanJourneyAccessWithDeps,
   type PersonalPlanJourneyAccessLoaderDeps,
 } from "../src/lib/personal-plan/journey-access-loader"
@@ -78,6 +79,131 @@ function deps(
   }
 }
 
+test("Stage 2 access keeps the app rollout gate and stops before later-stage authority reads", async () => {
+  let entitlementReads = 0
+  const excluded = await loadPersonalPlanStage2AccessWithDeps(
+    deps({
+      appRollout: () => "internal",
+      loadIsInternal: async () => false,
+      loadEntitlement: async () => {
+        entitlementReads += 1
+        throw new Error("must not read entitlement for excluded users")
+      },
+    }),
+    "customer-1",
+  )
+  assert.deepEqual(excluded, { allowed: false })
+  assert.equal(entitlementReads, 0)
+
+  let refinedReads = 0
+  let draftReads = 0
+  let stage3Reads = 0
+  let stage4Reads = 0
+  let stage5Reads = 0
+  const access = await loadPersonalPlanStage2AccessWithDeps(
+    deps({
+      loadCurrentRefinedNeed: async () => {
+        refinedReads += 1
+        throw new Error("must not load refined need")
+      },
+      loadCurrentProductDraft: async () => {
+        draftReads += 1
+        throw new Error("must not load draft")
+      },
+      stage3Enabled: () => {
+        stage3Reads += 1
+        throw new Error("must not read Stage 3 flag")
+      },
+      stage4Enabled: () => {
+        stage4Reads += 1
+        throw new Error("must not read Stage 4 flag")
+      },
+      stage5Rollout: () => {
+        stage5Reads += 1
+        throw new Error("must not read Stage 5 rollout")
+      },
+    }),
+    "owner-1",
+  )
+  assert.deepEqual(access, { allowed: true })
+  assert.equal(refinedReads, 0)
+  assert.equal(draftReads, 0)
+  assert.equal(stage3Reads, 0)
+  assert.equal(stage4Reads, 0)
+  assert.equal(stage5Reads, 0)
+})
+
+test("Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads", async () => {
+  assert.deepEqual(
+    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), "owner-1"),
+    { allowed: false },
+  )
+
+  for (const accessState of ["paid_pending", "none", "revoked"] as const) {
+    assert.deepEqual(
+      await loadPersonalPlanStage2AccessWithDeps(
+        deps({
+          loadEntitlement: async () => ({
+            accessState,
+            qualifiedAt: "2026-08-08T00:00:00Z",
+            artifactLeadId: "lead-1",
+          }),
+        }),
+        "owner-1",
+      ),
+      { allowed: false },
+    )
+  }
+  assert.deepEqual(
+    await loadPersonalPlanStage2AccessWithDeps(
+      deps({
+        loadEntitlement: async () => ({
+          accessState: "active",
+          qualifiedAt: "2026-07-31T23:59:59Z",
+          artifactLeadId: "lead-1",
+        }),
+      }),
+      "owner-1",
+    ),
+    { allowed: false },
+  )
+  assert.deepEqual(
+    await loadPersonalPlanStage2AccessWithDeps(deps({ stage2Enabled: () => false }), "owner-1"),
+    { allowed: false },
+  )
+
+  for (const override of [
+    { loadPreparedArtifact: async () => null },
+    {
+      loadPlan: async () => ({
+        id: "plan-1",
+        currentInitialNeedVersionId: null,
+        currentRefinedNeedVersionId: "refined-1",
+        productDraftCompleted: false,
+        pendingRoutineProposalId: null,
+        activeRoutineVersionId: null,
+      }),
+    },
+  ]) {
+    assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(deps(override), "owner-1"), {
+      allowed: false,
+    })
+  }
+
+  await assert.rejects(
+    () =>
+      loadPersonalPlanStage2AccessWithDeps(
+        deps({
+          loadPreparedArtifact: async () => {
+            throw new Error("artifact database unavailable")
+          },
+        }),
+        "owner-1",
+      ),
+    /artifact database unavailable/,
+  )
+})
+
 test("internal app rollout excludes non-internal users before plan data is read", async () => {
   let entitlementReads = 0
   const access = await loadPersonalPlanJourneyAccessWithDeps(
@@ -112,6 +238,96 @@ test("loader derives the frontier only from owner-scoped entitlement, source, pl
   assert.equal(access.frontier, "stage4")
   assert.equal(access.allowed.stage3, true)
   assert.equal(access.allowed.stage4, true)
+})
+
+test("full journey access reports non-identifying Stage 3 sub-phase timings in dependency order", async () => {
+  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+  const clockValues = [0, 5, 10, 15, 20, 25]
+
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      now: () => {
+        const value = clockValues.shift()
+        if (value === undefined) throw new Error("unexpected clock read")
+        return value
+      },
+      reportStage3AccessTiming: (timing) => timings.push(timing),
+    }),
+    "user-1",
+  )
+
+  assert.equal(access.kind, "personal_plan")
+  assert.deepEqual(timings, [
+    { operation: "stage3_access_entitlement", outcome: "eligible", durationMs: 5 },
+    { operation: "stage3_access_artifact_plan", outcome: "ready", durationMs: 5 },
+    { operation: "stage3_access_refined_draft", outcome: "ready", durationMs: 5 },
+  ])
+  assert.equal(JSON.stringify(timings).includes("user-1"), false)
+  assert.equal(JSON.stringify(timings).includes("plan-1"), false)
+})
+
+test("full journey access stops access timing after an early entitlement denial", async () => {
+  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+  const clockValues = [10, 16]
+
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadEntitlement: async () => ({
+        accessState: "paid_pending",
+        qualifiedAt: "2026-08-08T00:00:00Z",
+        artifactLeadId: "lead-1",
+      }),
+      now: () => clockValues.shift() ?? 99,
+      reportStage3AccessTiming: (timing) => timings.push(timing),
+      loadPreparedArtifact: async () => {
+        throw new Error("must not load artifact after denial")
+      },
+    }),
+    "user-1",
+  )
+
+  assert.deepEqual(access, { kind: "paid_pending", recoveryHref: "/plan-bereit" })
+  assert.deepEqual(timings, [
+    { operation: "stage3_access_entitlement", outcome: "denied", durationMs: 6 },
+  ])
+})
+
+test("full journey access reports the reached sub-phase when a dependency throws", async () => {
+  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+  const clockValues = [0, 4, 5, 12]
+
+  await assert.rejects(
+    () =>
+      loadPersonalPlanJourneyAccessWithDeps(
+        deps({
+          loadPreparedArtifact: async () => {
+            throw new Error("artifact database unavailable")
+          },
+          now: () => clockValues.shift() ?? 99,
+          reportStage3AccessTiming: (timing) => timings.push(timing),
+        }),
+        "user-1",
+      ),
+    /artifact database unavailable/,
+  )
+
+  assert.deepEqual(timings, [
+    { operation: "stage3_access_entitlement", outcome: "eligible", durationMs: 4 },
+    { operation: "stage3_access_artifact_plan", outcome: "error", durationMs: 7 },
+  ])
+})
+
+test("the narrow Stage 2 access read never emits Stage 3 access timing", async () => {
+  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+
+  assert.deepEqual(
+    await loadPersonalPlanStage2AccessWithDeps(
+      deps({ reportStage3AccessTiming: (timing) => timings.push(timing) }),
+      "user-1",
+    ),
+    { allowed: true },
+  )
+  assert.deepEqual(timings, [])
 })
 
 test("loader starts independent current refined-need and product-draft reads together", async () => {
@@ -185,6 +401,21 @@ test("loader keeps paid-pending buyers on the compact wait route and throws on a
   )
   assert.deepEqual(pending, { kind: "paid_pending", recoveryHref: "/plan-bereit" })
 
+  const pendingWithoutArtifactLead = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadEntitlement: async () => ({
+        accessState: "paid_pending",
+        qualifiedAt: "2026-08-08T00:00:00Z",
+        artifactLeadId: null,
+      }),
+    }),
+    "user-1",
+  )
+  assert.deepEqual(pendingWithoutArtifactLead, {
+    kind: "paid_pending",
+    recoveryHref: "/plan-bereit",
+  })
+
   await assert.rejects(
     () =>
       loadPersonalPlanJourneyAccessWithDeps(
@@ -197,6 +428,21 @@ test("loader keeps paid-pending buyers on the compact wait route and throws on a
       ),
     /db failed/,
   )
+})
+
+test("full journey keeps an active enrollment without an attached artifact lead on legacy routing", async () => {
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadEntitlement: async () => ({
+        accessState: "active",
+        qualifiedAt: "2026-08-08T00:00:00Z",
+        artifactLeadId: null,
+      }),
+    }),
+    "user-1",
+  )
+
+  assert.deepEqual(access, { kind: "legacy" })
 })
 
 test("a valid refined source admits Stage 3 before a draft exists and while its current draft is active", async () => {

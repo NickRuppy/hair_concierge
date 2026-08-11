@@ -14,6 +14,7 @@ import type { ReactNode } from "react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
+import { DiscreteSlider, type SliderStop } from "@/components/ui/slider"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
@@ -47,6 +48,13 @@ export type Stage3CapturedProductSummary = {
 export type Stage3FrequencyOption = {
   value: string
   label: string
+  shortLabel?: string
+}
+
+export type Stage3ProductKindOption = {
+  value: PersonalPlanCategory
+  label: string
+  description: string
 }
 
 export type Stage3RoleOption = {
@@ -220,7 +228,6 @@ export function ProductCaptureScreen({
   onAddAnotherProduct,
   onRemoveProduct,
   onOpenFallbackIntake,
-  onExplicitNone,
   onContinue,
   onBack,
   disabled = false,
@@ -245,7 +252,6 @@ export function ProductCaptureScreen({
   onAddAnotherProduct: () => void
   onRemoveProduct?: (capturedProductId: string) => void
   onOpenFallbackIntake: () => void
-  onExplicitNone?: () => void
   onContinue: () => void
   onBack?: () => void
   disabled?: boolean
@@ -287,6 +293,7 @@ export function ProductCaptureScreen({
         status={searchStatus}
         message={searchMessage}
         onSelectCandidate={onSelectCandidate}
+        disabled={disabled}
       />
 
       {showFrequency ? (
@@ -295,6 +302,7 @@ export function ProductCaptureScreen({
           selected={selectedFrequency}
           productName={frequencyProductName}
           onChange={onFrequencyChange}
+          disabled={disabled}
         />
       ) : null}
 
@@ -302,6 +310,7 @@ export function ProductCaptureScreen({
         categoryLabel={categoryLabel}
         products={capturedProducts}
         onRemoveProduct={onRemoveProduct}
+        disabled={disabled}
       />
 
       <ProductMultiProductControls
@@ -311,10 +320,97 @@ export function ProductCaptureScreen({
         canContinue={canContinue}
         onAddAnotherProduct={onAddAnotherProduct}
         onOpenFallbackIntake={onOpenFallbackIntake}
-        onExplicitNone={onExplicitNone}
         onContinue={onContinue}
         disabled={disabled}
       />
+    </section>
+  )
+}
+
+export function ProductKindReviewScreen({
+  options,
+  selected,
+  disabled = false,
+  status = "idle",
+  onToggle,
+  onContinue,
+  onBack,
+}: {
+  options: Stage3ProductKindOption[]
+  selected: PersonalPlanCategory[]
+  disabled?: boolean
+  status?: "idle" | "saving" | "error"
+  onToggle: (category: PersonalPlanCategory, checked: boolean) => void
+  onContinue: () => void
+  onBack?: () => void
+}) {
+  const selectedSet = new Set(selected)
+
+  return (
+    <section>
+      {onBack ? <BackButton onBack={onBack} disabled={disabled} /> : null}
+      <div className="animate-fade-in-up mb-2">
+        <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+          Produktarten
+        </p>
+        <h1 className="font-header text-3xl leading-tight text-foreground">Deine Produktarten</h1>
+      </div>
+      <p className="animate-fade-in-up mb-6 text-sm leading-6 text-[var(--text-sub)]">
+        Prüfe einmal global, welche Produktarten du aktuell wirklich benutzt. Danach fragen wir nur
+        für diese Kategorien nach konkreten Produkten.
+      </p>
+
+      <div className="grid gap-2">
+        {options.map((option) => {
+          const checked = selectedSet.has(option.value)
+          return (
+            <label
+              key={option.value}
+              className={cn(
+                "grid min-h-[64px] grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-xl border p-3 transition-colors",
+                checked
+                  ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
+                  : "border-border bg-card",
+                disabled && "opacity-60",
+              )}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                disabled={disabled}
+                onChange={(event) => onToggle(option.value, event.target.checked)}
+                aria-label={option.label}
+                className="mt-1 h-4 w-4 accent-[var(--brand-plum)]"
+              />
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-foreground">{option.label}</span>
+                <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                  {option.description}
+                </span>
+              </span>
+            </label>
+          )
+        })}
+      </div>
+
+      {status === "error" ? (
+        <p
+          role="alert"
+          className="mt-4 rounded-xl border border-destructive/30 bg-card p-3 text-sm text-destructive"
+        >
+          Die Produktarten konnten gerade nicht gespeichert werden.
+        </p>
+      ) : null}
+
+      <Button
+        type="button"
+        variant="unstyled"
+        onClick={onContinue}
+        disabled={disabled}
+        className="personal-plan-primary-action mt-5 w-full"
+      >
+        {status === "saving" ? "Wird gespeichert" : "Produktarten bestätigen"}
+      </Button>
     </section>
   )
 }
@@ -324,11 +420,13 @@ export function ProductSearchResults({
   status,
   message,
   onSelectCandidate,
+  disabled = false,
 }: {
   results: Stage3CatalogCandidate[]
   status: "idle" | "loading" | "ready" | "empty" | "error"
   message?: string
   onSelectCandidate: (candidateId: string) => void
+  disabled?: boolean
 }) {
   if (status === "idle") {
     return <p className="mb-5 text-sm text-muted-foreground">Tippe mindestens zwei Zeichen ein.</p>
@@ -374,6 +472,7 @@ export function ProductSearchResults({
           aria-selected="false"
           aria-label={`${result.displayName} auswählen`}
           onClick={() => onSelectCandidate(result.candidateId)}
+          disabled={disabled}
           className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors hover:border-[var(--brand-plum)]/40"
         >
           <ProductImage imageUrl={result.imageUrl} label={result.displayName} />
@@ -401,35 +500,39 @@ export function ProductFrequencyPicker({
   selected,
   productName,
   onChange,
+  disabled = false,
 }: {
   options: Stage3FrequencyOption[]
   selected: string | null
   productName?: string
   onChange: (value: string) => void
+  disabled?: boolean
 }) {
+  const selectedLabel = options.find((option) => option.value === selected)?.label
+  const stops: SliderStop[] = options.map((option) => ({
+    value: option.value,
+    label: option.label,
+    shortLabel: option.shortLabel ?? option.label,
+  }))
+
   return (
     <fieldset className="mb-5">
-      <legend className="mb-2 text-sm font-semibold text-foreground">
+      <legend className="text-sm font-semibold text-foreground">
         {productName ? `Wie oft nutzt du ${productName}?` : "Wie oft nutzt du dieses Produkt?"}
       </legend>
-      <div aria-label="Nutzungshäufigkeit" className="grid grid-cols-2 gap-2" role="group">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            aria-pressed={selected === option.value}
-            onClick={() => onChange(option.value)}
-            className={cn(
-              "min-h-[44px] rounded-xl border px-3 py-2 text-sm font-semibold transition-colors",
-              selected === option.value
-                ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum-dark)]"
-                : "border-border bg-card text-[var(--text-sub)]",
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="mb-3 mt-1 flex items-baseline justify-between gap-3">
+        <p className="text-xs text-muted-foreground">Von selten bis täglich</p>
+        <p className="text-sm font-semibold text-[var(--brand-plum)]">
+          {selectedLabel ?? "Bitte auswählen"}
+        </p>
       </div>
+      <DiscreteSlider
+        stops={stops}
+        value={selected ?? undefined}
+        onValueChange={onChange}
+        disabled={disabled}
+        aria-label="Nutzungshäufigkeit"
+      />
     </fieldset>
   )
 }
@@ -438,10 +541,12 @@ export function ProductCapturedProductList({
   categoryLabel,
   products,
   onRemoveProduct,
+  disabled = false,
 }: {
   categoryLabel: string
   products: Stage3CapturedProductSummary[]
   onRemoveProduct?: (capturedProductId: string) => void
+  disabled?: boolean
 }) {
   if (products.length === 0) return null
 
@@ -484,6 +589,7 @@ export function ProductCapturedProductList({
                 size="sm"
                 onClick={() => onRemoveProduct(product.capturedProductId)}
                 aria-label={`${product.displayName} aus ${categoryLabel} entfernen`}
+                disabled={disabled}
               >
                 Entfernen
               </Button>
@@ -502,7 +608,6 @@ export function ProductMultiProductControls({
   canContinue = true,
   onAddAnotherProduct,
   onOpenFallbackIntake,
-  onExplicitNone,
   onContinue,
   disabled = false,
 }: {
@@ -512,7 +617,6 @@ export function ProductMultiProductControls({
   canContinue?: boolean
   onAddAnotherProduct: () => void
   onOpenFallbackIntake: () => void
-  onExplicitNone?: () => void
   onContinue: () => void
   disabled?: boolean
 }) {
@@ -527,11 +631,6 @@ export function ProductMultiProductControls({
       {intakeAvailable ? (
         <Button type="button" variant="ghost" onClick={onOpenFallbackIntake} disabled={disabled}>
           Nicht dabei? Produkt hinzufügen
-        </Button>
-      ) : null}
-      {onExplicitNone ? (
-        <Button type="button" variant="ghost" onClick={onExplicitNone} disabled={disabled}>
-          Ich habe dafür kein Produkt
         </Button>
       ) : null}
       <Button

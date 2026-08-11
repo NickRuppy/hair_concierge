@@ -70,6 +70,7 @@ export type Stage3ProductionPersistence = {
   }): Promise<
     | { outcome: "saved"; draft: Stage3ProductDraft }
     | { outcome: "revision_conflict"; draft: Stage3ProductDraft }
+    | { outcome: "stale_source"; draft: Stage3ProductDraft }
   >
   search(input: {
     userId: string
@@ -160,6 +161,10 @@ export function createProductionStage3ProductsGateway(
         expectedRevision: loaded.draft.revision,
         draft: repaired,
       })
+      if (saved.outcome === "stale_source") {
+        cached = null
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      }
       loaded = { ...loaded, draft: saved.draft }
       if (saved.outcome === "saved") return loaded
     }
@@ -299,6 +304,10 @@ export function createProductionStage3ProductsGateway(
         expectedRevision: input.expectedRevision,
         draft: next,
       })
+      if (saved.outcome === "stale_source") {
+        cached = null
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      }
       cached = { ...loaded, draft: saved.draft }
       return saved.outcome === "saved"
         ? { status: "saved", draft: saved.draft }
@@ -386,11 +395,11 @@ export function createProductionStage3ProductsGateway(
         portfolio: { schemaVersion: portfolio.schemaVersion, snapshot: portfolio as never },
         candidate,
       })
-      if (
-        staged.status === "revision_conflict" ||
-        staged.status === "source_revision_conflict" ||
-        staged.status === "stale_source"
-      ) {
+      if (staged.status === "stale_source") {
+        cached = null
+        throw new Stage3AuthoritySnapshotError("stale_refined_source")
+      }
+      if (staged.status === "revision_conflict" || staged.status === "source_revision_conflict") {
         cached = null
         const latest = await options.persistence.loadDraft({
           userId: options.userId,
@@ -517,6 +526,10 @@ export function createProductionStage3ProductsGateway(
       outcome: saved.outcome,
       durationMs: performance.now() - phaseStartedAt,
     })
+    if (saved.outcome === "stale_source") {
+      cached = null
+      throw new Stage3AuthoritySnapshotError("stale_refined_source")
+    }
     cached = { ...loaded, draft: saved.draft }
     return saved.outcome === "saved"
       ? { status: "saved", draft: saved.draft }

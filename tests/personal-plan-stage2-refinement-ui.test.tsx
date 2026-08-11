@@ -15,12 +15,12 @@ import {
   DRYING_ROUTE_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
   OIL_PURPOSE_OPTIONS,
+  WET_WASH_FREQUENCY_OPTIONS,
   mergeGroupedCategorySelection,
 } from "../src/components/personal-plan-refinement/refinement-options"
 import {
   getCompletedHandoffForLoadedSession,
   getBridgeBackQuestionId,
-  SavingTransitionShell,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
 import {
@@ -50,15 +50,17 @@ function countOccurrences(source: string, needle: string): number {
   return source.split(needle).length - 1
 }
 
-test("Stage 2 replaces the submitted page with truthful durable-save continuity", () => {
-  const html = renderToStaticMarkup(
-    <SavingTransitionShell liveMessage="Antwort wird gespeichert." />,
+test("Stage 2 ordinary answer saves stay in the question flow without a full-screen interstitial", async () => {
+  const flowSource = await readFile(
+    new URL("../src/components/personal-plan-refinement/refinement-flow.tsx", import.meta.url),
+    "utf8",
   )
 
-  assert.match(html, /Deine Antwort wird sicher gespeichert/)
-  assert.match(html, /nächsten offenen Schritt/)
-  assert.match(html, /aria-busy="true"/)
-  assert.doesNotMatch(html, /Antwort gespeichert\./)
+  assert.doesNotMatch(flowSource, /type RefinementMode = .*"saving"/)
+  assert.doesNotMatch(flowSource, /SavingTransitionShell/)
+  assert.doesNotMatch(flowSource, /setMode\("saving"\)/)
+  assert.match(flowSource, /Antwort wird gespeichert\. Nächste Frage geladen\./)
+  assert.match(flowSource, /if \(status === "saving"\) return/)
 })
 
 test("renders the German invitation and neutral bridge hierarchy without result leakage", () => {
@@ -125,7 +127,7 @@ test("renders the current qualitative section and never a numeric question total
   assert.doesNotMatch(html, /Frage\s+\d+\s+von\s+\d+/i)
 })
 
-test("renders exactly ten current-product categories with no preselection from relevant categories", () => {
+test("renders exactly ten contextual current-product categories with no preselection", () => {
   assert.equal(REFINEMENT_CATEGORY_OPTIONS.length, 10)
   assert.deepEqual(
     REFINEMENT_CATEGORY_OPTIONS.map((option) => option.value),
@@ -166,7 +168,8 @@ test("renders exactly ten current-product categories with no preselection from r
   }
   assert.equal(countOccurrences(html, 'aria-pressed="true"'), 0)
   assert.match(html, /Keine weiteren/)
-  assert.doesNotMatch(html, /Serum|Styling|Scrub|Andere/)
+  assert.match(html, /Produkt, das du vor Föhn, Glätteisen oder anderer direkter Hitze verwendest/)
+  assert.match(html, /Serum, Tonic oder Peeling, das direkt auf die Kopfhaut kommt/)
 })
 
 test("UI option value order stays coupled to canonical Slice A vocabularies", () => {
@@ -189,6 +192,47 @@ test("UI option value order stays coupled to canonical Slice A vocabularies", ()
   assert.deepEqual(
     NIGHT_PROTECTION_OPTIONS.map((option) => option.value),
     [...NIGHT_PROTECTIONS],
+  )
+})
+
+test("renders the wet-wash rhythm from most to least frequent in one column, then no-wash", () => {
+  assert.deepEqual(
+    WET_WASH_FREQUENCY_OPTIONS.map((option) => option.value),
+    [
+      "daily_1x",
+      "weekly_5_6x",
+      "weekly_3_4x",
+      "weekly_2x",
+      "weekly_1x",
+      "biweekly_1x",
+      "monthly_1x",
+      "less_than_monthly",
+      "does_not_wash",
+    ],
+  )
+
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+  })
+  const html = renderToStaticMarkup(
+    <RefinementQuestion
+      session={session}
+      questionId="wet_wash_frequency"
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack={false}
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+    />,
+  )
+
+  assert.match(html, /grid grid-cols-1 gap-2\.5/)
+  assert.ok(html.indexOf("Täglich") < html.indexOf("5-6x/Woche"))
+  assert.ok(
+    html.indexOf("Seltener als 1x/Monat") < html.indexOf("Ich wasche meine Haare nicht nass"),
   )
 })
 
@@ -259,10 +303,13 @@ test("an unanswered additional heat-tool selection stays distinct from an explic
     />,
   )
 
-  const noneControl = /aria-pressed="true" aria-label="Nichts davon; andere Auswahl wird gelöscht"/
-  assert.doesNotMatch(unansweredHtml, noneControl)
+  assert.doesNotMatch(
+    unansweredHtml,
+    /data-refinement-none-option="true"[\s\S]*?aria-pressed="true"/,
+  )
   assert.match(unansweredHtml, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
-  assert.match(explicitNoneHtml, noneControl)
+  assert.match(explicitNoneHtml, /data-refinement-none-option="true"[\s\S]*?aria-pressed="true"/)
+  assert.match(explicitNoneHtml, /personal-plan-option-card quiz-card/)
   assert.doesNotMatch(explicitNoneHtml, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
 })
 

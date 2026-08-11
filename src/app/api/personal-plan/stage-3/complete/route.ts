@@ -4,6 +4,7 @@ import {
   createProductionStage3ProductsGateway,
   Stage3ProductionUnavailableError,
 } from "@/lib/personal-plan/products/production-persistence-gateway"
+import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
 import type { Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
@@ -86,6 +87,14 @@ export function createStage3CompleteRouteHandler(deps: Stage3CompleteRouteDeps) 
       if (result.status === "not_ready") return fail("completion_not_ready", 409)
       return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } })
     } catch (error) {
+      if (error instanceof Stage3AuthoritySnapshotError) {
+        console.info("personal_plan_stage3_api", {
+          event: "conflict",
+          code: error.code,
+          duration_ms: Date.now() - started,
+        })
+        return fail(error.code, 409)
+      }
       console.info("personal_plan_stage3_api", {
         event:
           error instanceof Stage3ProductionUnavailableError
