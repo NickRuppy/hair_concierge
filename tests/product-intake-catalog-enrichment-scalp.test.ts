@@ -247,6 +247,34 @@ test("Scalp identity keeps the current Gliss and L'Oréal Paris spelling", () =>
   )
 })
 
+test("Scalp The Ordinary commercial source uses the current official manufacturer PDP", async () => {
+  const manifest = (await loadScalpManifests()).find(
+    ({ manifest: item }) => item.product_key === "the-ordinary-multi-peptide-hair-density-serum",
+  )?.manifest as Record<string, unknown> | undefined
+  assert.ok(manifest)
+  const officialUrl =
+    "https://theordinary.com/de-de/multi-peptide-serum-for-hair-density-hair-scalp-treatment-100434.html"
+  assert.deepEqual(manifest.sources, [
+    { label: "The Ordinary DE Produktseite", type: "manufacturer", url: officialUrl },
+  ])
+  assert.deepEqual(manifest.commercial, {
+    purchase_url: officialUrl,
+    status: "available",
+    price_eur: 26.5,
+    currency: "EUR",
+    checked_at: "2026-08-11T08:26:31Z",
+    availability_blocker: null,
+  })
+  const final = (manifest.product_payload as Record<string, unknown>).final as Record<
+    string,
+    unknown
+  >
+  const product = final.product as Record<string, unknown>
+  assert.equal(product.affiliate_link, officialUrl)
+  assert.equal(product.purchase_link_checked_at, "2026-08-11T08:26:31Z")
+  assert.equal(product.price_checked_at, "2026-08-11T08:26:31Z")
+})
+
 test("Scalp project URL parsing accepts only a direct Supabase project host", () => {
   assert.equal(
     scalpProjectIdFromUrl(`https://${SCALP_SUPABASE_PROJECT_ID}.supabase.co`),
@@ -271,7 +299,55 @@ test("Scalp linked project and migration state come from local CLI evidence", ()
     ),
     "applied",
   )
+  assert.throws(
+    () =>
+      parseScalpLinkedMigrationState(
+        "  20260811055932 |                | 2026-08-11 05:59:32\n  20260811055932 | 20260811055932 | 2026-08-11 05:59:32\n",
+      ),
+    /duplicate/,
+  )
   assert.throws(() => parseScalpLinkedMigrationState("no migration rows\n"), /omitted/)
+})
+
+test("Scalp parses Supabase CLI JSON migration output and fails closed on ambiguous rows", () => {
+  assert.equal(
+    parseScalpLinkedMigrationState(
+      JSON.stringify({
+        migrations: [
+          { local: "00001", remote: "00001", time: "2020-01-01T00:00:00Z" },
+          { local: "20260409", remote: "20260409", time: "2026-04-09T00:00:00Z" },
+          { local: "20260811055932", remote: "", time: "2026-08-11T05:59:32Z" },
+        ],
+        message: "untrusted",
+      }),
+    ),
+    "absent",
+  )
+  assert.equal(
+    parseScalpLinkedMigrationState(
+      JSON.stringify({
+        migrations: [
+          { local: "20260811055932", remote: "20260811055932", time: "2026-08-11T05:59:32Z" },
+        ],
+      }),
+    ),
+    "applied",
+  )
+  for (const output of [
+    '{"migrations":',
+    JSON.stringify({ migrations: {} }),
+    JSON.stringify({ migrations: [{ local: "20260409", remote: "20260409" }] }),
+    JSON.stringify({ migrations: [{ local: "20260811055932" }] }),
+    JSON.stringify({ migrations: [{ local: "20260811055932", remote: "20260811055933" }] }),
+    JSON.stringify({
+      migrations: [
+        { local: "20260811055932", remote: "" },
+        { local: "20260811055932", remote: "20260811055932" },
+      ],
+    }),
+  ]) {
+    assert.throws(() => parseScalpLinkedMigrationState(output))
+  }
 })
 
 test("Scalp migration-owned identity seeds are absent-safe but fail closed after apply", () => {

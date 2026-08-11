@@ -16,7 +16,7 @@ export const SCALP_SCHEMA_VERSION = "personal-plan-catalog-enrichment-scalp-v1" 
 export const SCALP_BATCH_ID = "personal-plan-scalp-launch-v1" as const
 export const SCALP_SOURCE_BATCH_ID = "personal-plan-launch-v1" as const
 export const SCALP_COHORT_INDEX_FINGERPRINT =
-  "f5e5fc5d74068647a9213467d9a914a3c683c58fafe5b8b4facf257616a079c7" as const
+  "8ed553db305cf715058eece4b364565b3552df2505516657c9d2cf67437aa01f" as const
 export const SCALP_EXPECTED_KEYS = {
   scalp: [
     "balea-professional-aha-scalp-peeling",
@@ -133,7 +133,7 @@ export const SCALP_MIGRATION =
 export const SCALP_SUPABASE_PROJECT_ID = "pqdkhefxsxkyeqelqegq" as const
 export const SCALP_PUBLIC_SUPABASE_URL = `https://${SCALP_SUPABASE_PROJECT_ID}.supabase.co` as const
 export const SCALP_PACKAGE_FINGERPRINT =
-  "c324d3c818e9b1d5d8980f487eab6988b9a7ec64db40451115f7370c56c170d6" as const
+  "e6cbbe9ce2dc3d3b29655741cfe7572dd29d8b5bb5bea1a7225fd58359328e50" as const
 export const SCALP_MIGRATION_IDENTITY_SEED_FINGERPRINT =
   "1c00ecfe39b88940e81fecd93331eec4701ca4edac82afb9d030f78bbb15681b" as const
 export const SCALP_MIGRATION_SEED_BLOCK_SHA256 =
