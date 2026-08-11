@@ -1080,10 +1080,12 @@ test("two-product Shampoo submits one complete category assignment replacement",
   let tree = await renderSettled(harness)
   await captureCatalogProduct(harness, "Shampoo", "shampoo")
   tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+  const firstCapture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
-  )?.props.onAddAnotherProduct()
+  )
+  assert.equal(firstCapture?.props.showAddAnotherProduct, true)
+  firstCapture?.props.onAddAnotherProduct()
   await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(

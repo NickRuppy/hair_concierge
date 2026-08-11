@@ -607,7 +607,10 @@ export function Stage3ProductsFlow({
         selectedCandidateId={pendingCandidate?.candidateId}
         frequencyProductName={pendingCandidate?.displayName}
         showFrequency={pendingCandidate !== null}
-        showAddAnotherProduct={currentProducts.length + localCatalogCaptures.length > 0}
+        showAddAnotherProduct={
+          currentProducts.length + localCatalogCaptures.length > 0 ||
+          Boolean(pendingCandidate && frequency)
+        }
         canContinue={
           currentProducts.length + localCatalogCaptures.length > 0 ||
           Boolean(pendingCandidate && frequency)
