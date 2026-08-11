@@ -278,7 +278,7 @@ test("Stage 5 apply batch contains only verified exact protocols and has a stabl
   assert.equal(first.canonicalJson, second.canonicalJson)
 })
 
-test("Mask research applies the intensive-care replacement default without overriding label exceptions", async () => {
+test("Mask research closes the eligible cohort and applies label-specific Conditioner relationships", async () => {
   const manifest = validateProtocolResearchManifest(
     await json<unknown>(`${ROOT}/protocol-research/S5-02-mask-critical-protocols.json`),
   )
@@ -287,24 +287,72 @@ test("Mask research applies the intensive-care replacement default without overr
     ({ guidance_payload }) => guidance_payload.protocolFacts.conditionerRelationship,
   )
 
-  assert.equal(built.batch.protocols.length, 25)
+  assert.equal(manifest.products.length, 34)
+  assert.equal(built.batch.protocols.length, 34)
   assert.equal(
     manifest.products.filter(({ research_status }) => research_status !== "verified").length,
-    10,
+    0,
   )
   assert.equal(
     relationships.filter((relationship) => relationship === "replaces_conditioner").length,
-    21,
+    29,
   )
   assert.equal(
     relationships.filter((relationship) => relationship === "conditioner_after").length,
-    2,
+    3,
   )
   assert.equal(
     relationships.filter((relationship) => relationship === "conditioner_before").length,
     1,
   )
   assert.equal(relationships.filter((relationship) => relationship === "no_conditioner").length, 1)
+})
+
+test("Mask research rejects verified protocols without a real contact-time direction", async () => {
+  const input = await json<{
+    products: Array<{
+      guidance_payload: {
+        protocolFacts: { contactTimeSeconds: number | null }
+        steps: Array<{ action: string; copyTemplateDe: string }>
+      } | null
+    }>
+  }>(`${ROOT}/protocol-research/S5-02-mask-critical-protocols.json`)
+  const invalid = structuredClone(input)
+  const protocol = invalid.products[0]?.guidance_payload
+  assert.ok(protocol)
+  protocol.protocolFacts.contactTimeSeconds = null
+  const waitStep = protocol.steps.find(({ action }) => action === "wait")
+  assert.ok(waitStep)
+  waitStep.copyTemplateDe = "Nach Bedarf einwirken lassen."
+
+  assert.throws(
+    () => validateProtocolResearchManifest(invalid),
+    /mask_protocol_missing_contact_time/,
+  )
+})
+
+test("Mask catalog correction removes the false Bali Mask and refreshes successor identities", async () => {
+  const migration = await readFile(
+    "supabase/migrations/20260810203501_personal_plan_mask_catalog_identity_corrections.sql",
+    "utf8",
+  )
+
+  assert.match(migration, /c4b9eaef-dfeb-41ea-9d28-9901660406b7/)
+  assert.match(migration, /lifecycle_status = 'discontinued'/)
+  assert.match(migration, /is_chaarlie_recommended = false/)
+  assert.match(migration, /d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4/)
+  assert.match(migration, /Bali Curls Deep Repair Mask/)
+  assert.match(migration, /4262391990001/)
+  assert.match(migration, /29fc985e-3b7e-4567-b7bc-b416583139fe/)
+  assert.match(migration, /077a94ae-fede-4773-9435-17022c2b89c0/)
+  assert.match(migration, /8700216502672/)
+  assert.match(migration, /b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75/)
+  assert.match(migration, /3600542510127/)
+  assert.match(migration, /1568b623-f411-4ed6-a89f-e797bb1b48f5/)
+  assert.match(migration, /4068134014122/)
+  assert.match(migration, /expected six reviewed Mask rows/)
+  assert.match(migration, /unexpected existing GTIN/)
+  assert.match(migration, /ON CONFLICT/i)
 })
 
 test("Stage 5 protocol preflight rejects category drift and conflicting existing authority", async () => {

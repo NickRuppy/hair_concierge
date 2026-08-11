@@ -1,5 +1,79 @@
 begin;
-select plan(11);
+select plan(19);
+
+select ok(
+  not exists (
+    select 1
+    from public.products
+    where id = 'c4b9eaef-dfeb-41ea-9d28-9901660406b7'
+      and is_active = true
+  ),
+  'Bali overnight leave-on treatment is excluded from the active Mask cohort'
+);
+select is(
+  (
+    select name
+    from public.products
+    where id = 'd0e4bc78-2aeb-4e88-8abf-08aa28fbfba4'
+  ),
+  'Bali Curls Deep Repair Mask',
+  'Bali moisture Mask uses its current canonical identity'
+);
+select ok(
+  exists (
+    select 1
+    from public.product_identifiers
+    where product_id = 'd0e4bc78-2aeb-4e88-8abf-08aa28fbfba4'
+      and identifier_type = 'gtin'
+      and normalized_identifier_value = '4262391990001'
+  ),
+  'Bali Deep Repair and legacy Deep Hydration resolve to one physical GTIN'
+);
+select ok(
+  exists (
+    select 1
+    from public.product_identifiers
+    where product_id = '29fc985e-3b7e-4567-b7bc-b416583139fe'
+      and normalized_identifier_value = '4070765053357'
+  ),
+  'Balea reparierend points at the current German successor GTIN'
+);
+select ok(
+  exists (
+    select 1
+    from public.product_identifiers
+    where product_id = '077a94ae-fede-4773-9435-17022c2b89c0'
+      and normalized_identifier_value = '8700216502672'
+  ),
+  'Pantene Mask points at the current retailer GTIN'
+);
+select ok(
+  exists (
+    select 1
+    from public.product_identifiers
+    where product_id = 'b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75'
+      and normalized_identifier_value = '3600542510127'
+  ),
+  'Wahre Schaetze Mask points at the current retailer GTIN'
+);
+select is(
+  (
+    select name
+    from public.products
+    where id = '1568b623-f411-4ed6-a89f-e797bb1b48f5'
+  ),
+  'Alterra Intensiv Repair Haarmaske Feuchtigkeit',
+  'Alterra Mask points at the current exact commercial product'
+);
+select ok(
+  exists (
+    select 1
+    from public.product_identifiers
+    where product_id = '1568b623-f411-4ed6-a89f-e797bb1b48f5'
+      and normalized_identifier_value = '4068134014122'
+  ),
+  'Alterra Mask points at the current retailer GTIN'
+);
 
 select is(
   (

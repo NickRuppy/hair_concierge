@@ -85,6 +85,9 @@ export const protocolResearchManifestSchema = z
 
 export type ProtocolResearchManifest = z.infer<typeof protocolResearchManifestSchema>
 
+const quantifiedContactTimePattern =
+  /\b(?:ca\.?\s*|etwa\s*|mindestens\s*|bis\s+zu\s*)?\d+(?:\s*[–-]\s*\d+)?\s*(?:sekunden?|minuten?)\b/i
+
 export function validateProtocolResearchManifest(input: unknown): ProtocolResearchManifest {
   const manifest = protocolResearchManifestSchema.parse(input)
   const seen = new Set<string>()
@@ -104,6 +107,15 @@ export function validateProtocolResearchManifest(input: unknown): ProtocolResear
     const evidence = new Set(guidance.evidence.map(({ sourceUrl }) => sourceUrl))
     if (product.sources.some(({ url }) => !evidence.has(url))) {
       throw new Error(`protocol_research_evidence_mismatch:${identity}`)
+    }
+    if (manifest.category_key === "mask") {
+      const hasQuantifiedWait = guidance.steps.some(
+        ({ action, copyTemplateDe }) =>
+          action === "wait" && quantifiedContactTimePattern.test(copyTemplateDe),
+      )
+      if (guidance.protocolFacts.contactTimeSeconds === null && !hasQuantifiedWait) {
+        throw new Error(`mask_protocol_missing_contact_time:${identity}`)
+      }
     }
   }
   return manifest

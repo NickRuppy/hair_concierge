@@ -5,22 +5,78 @@
   "products": [
     {
       "product_id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
-      "product_name": "Alterra Haarkur Bio-Granatapfel & Bio-Aloe Vera",
+      "product_name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
-          "url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarkur-bio-granatapfel-und-bio-aloe-vera/p/4305615307794",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Label states damp-hair placement and rinse, but no Conditioner relationship or numeric contact time."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-1568b623-f411-4ed6-a89f-e797bb1b48f5",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche im handtuchtrockenen Haar verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "5–10 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
@@ -48,16 +104,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -127,16 +179,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -206,16 +254,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -261,22 +305,78 @@
     },
     {
       "product_id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
-      "product_name": "Balea Natural Beauty reparierend",
+      "product_name": "Balea Haarkur reparierend",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
-          "label": "Händler-Produktseite",
-          "url": "https://www.dm.de/",
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1674120/balea-haarkur-reparierend",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The catalog product page is no longer available; current commercial identity and directions need re-verification."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-29fc985e-3b7e-4567-b7bc-b416583139fe",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche in die feuchten Haarlängen einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1674120/balea-haarkur-reparierend",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
@@ -304,16 +404,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -383,16 +479,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -438,7 +530,7 @@
     },
     {
       "product_id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
-      "product_name": "Bali Curls Deep Hydration Mask",
+      "product_name": "Bali Curls Deep Repair Mask",
       "role": "intensive_conditioning_mask",
       "research_status": "verified",
       "sources": [
@@ -462,16 +554,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -516,42 +604,87 @@
       "blockers": []
     },
     {
-      "product_id": "c4b9eaef-dfeb-41ea-9d28-9901660406b7",
-      "product_name": "Bali Curls Haarkur Bonding Repair Overnight Elixir",
-      "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
-      "sources": [
-        {
-          "label": "Herstelleranleitung",
-          "url": "https://www.bali-care.com/de-de/products/bonding-repair",
-          "source_type": "manufacturer",
-          "checked_at": "2026-08-10"
-        }
-      ],
-      "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The exact product is an overnight leave-on bonding treatment, not an ordinary rinse-out Mask; category identity needs correction."
-      ]
-    },
-    {
       "product_id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
       "product_name": "Bali Curls SOS Protein Treatment",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Herstelleranleitung",
-          "url": "https://www.bali-care.com/de-de/collections/bali-curls/products/total-repair-sos-protein-treatment",
+          "url": "https://www.bali-care.com/de-de/products/total-repair-sos-protein-treatment",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
       ],
-      "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "Manufacturer page conflicts between a three-minute rinse-out direction and a 10–20 minute protocol followed by Conditioner."
-      ]
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Alle 2–4 Wochen oder bei Bedarf anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-43232fe6-28b6-4f45-a09f-b1354e47b0be",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf sauberes, feuchtes Haar geben und in Längen und Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "10–20 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          },
+          {
+            "stepKey": "condition-after-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Anschließend einen feuchtigkeitsspendenden Conditioner verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.bali-care.com/de-de/products/total-repair-sos-protein-treatment",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
@@ -579,16 +712,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -658,16 +787,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -737,16 +862,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -792,22 +913,81 @@
     },
     {
       "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
-      "product_name": "Gliss Aqua Revive",
+      "product_name": "Gliss Aqua Revive 4-in-1 Haarmaske",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Herstelleranleitung",
-          "url": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/aqua-revive/aqua-revive-4-in-1-haarmaske-400ml.html",
+          "url": "https://www.schwarzkopf.com.tr/markalarimiz/sac-bakimi/gliss/aqua-revive/aqua-revive-maske-300ml.html",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
       ],
-      "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The exact product is not currently commercially verified for Germany; current identity and purchase path need review."
-      ]
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "Laut Hersteller 2–3 Mal pro Woche; dein Plan kann seltener bleiben."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Shampoo auf die nassen Haarlängen und Spitzen geben."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.schwarzkopf.com.tr/markalarimiz/sac-bakimi/gliss/aqua-revive/aqua-revive-maske-300ml.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
@@ -835,16 +1015,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -914,16 +1090,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -993,16 +1165,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1072,16 +1240,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1129,20 +1293,76 @@
       "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
       "product_name": "Isana 3in1 Milchprotein & Mandel",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Händler-Produktseite",
-          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-3in1-haarmaske-mandelmilch/p/4305615627441",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The retailer page is no longer available; current commercial identity needs re-verification."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-47795618-40e7-4ef6-8034-0fd8eb747575",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Für die Maskenanwendung in das nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "3–5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
@@ -1170,16 +1390,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1249,16 +1465,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1328,16 +1540,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1407,16 +1615,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1486,16 +1690,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1565,16 +1765,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1644,16 +1840,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1699,22 +1891,89 @@
     },
     {
       "product_id": "077a94ae-fede-4773-9435-17022c2b89c0",
-      "product_name": "Pantene Keratin Repair & Care",
+      "product_name": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
-          "label": "Händler-Produktseite",
+          "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care",
+          "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        },
+        {
+          "label": "Händler-Produktseite mit exakter GTIN und Einwirkzeit",
+          "url": "https://duitsedrogistinhuis.nl/p/pantene-pro-v-haarmaske-keratine-reparatie-en-verzorging-300-ml",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The current retailer GTIN differs from the catalog link and the label uses only 'a few minutes'; identity and protocol need review."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-077a94ae-fede-4773-9435-17022c2b89c0",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "077a94ae-fede-4773-9435-17022c2b89c0"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Ins feuchte Haar geben und von den Spitzen nach oben einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          },
+          {
+            "sourceUrl": "https://duitsedrogistinhuis.nl/p/pantene-pro-v-haarmaske-keratine-reparatie-en-verzorging-300-ml",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
@@ -1742,16 +2001,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1797,22 +2052,89 @@
     },
     {
       "product_id": "869abd97-a499-4f39-97e5-2722773e46ae",
-      "product_name": "Sante Intense Hydration",
+      "product_name": "Sante Intense Hydration 1 Minute Wonder Maske",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
-          "label": "Händler-Produktseite",
-          "url": "https://www.rossmann.de/",
+          "label": "Händler-Produktseite mit exakter GTIN",
+          "url": "https://www.ecco-verde.at/sante-naturkosmetik/intense-hydration-1-min-wonder-mask",
           "source_type": "retailer",
+          "checked_at": "2026-08-10"
+        },
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.sante.de/de/produkt/intense-hydration-1-minute-wonder-maske.html",
+          "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The product is no longer in the retailer assortment; current commercial identity needs review."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-869abd97-a499-4f39-97e5-2722773e46ae",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "869abd97-a499-4f39-97e5-2722773e46ae"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "In den feuchten Haarlängen verteilen."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "1 Minute einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.ecco-verde.at/sante-naturkosmetik/intense-hydration-1-min-wonder-mask",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          },
+          {
+            "sourceUrl": "https://www.sante.de/de/produkt/intense-hydration-1-minute-wonder-maske.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
@@ -1840,16 +2162,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1919,16 +2237,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -1998,16 +2312,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -2053,22 +2363,81 @@
     },
     {
       "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
-      "product_name": "Syoss Intense Keratin",
+      "product_name": "Syoss Intense Keratin Haarmaske",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
-          "label": "Händler-Produktseite",
-          "url": "https://www.dm.de/p/d/3047025/syoss-haarmaske-intense-keratin",
-          "source_type": "retailer",
+          "label": "Herstelleranleitung",
+          "url": "https://www.syoss.de/haarpflege/haarmaske/syoss-intense-keratin-haarmaske.html",
+          "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
       ],
-      "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The captured directions state two to three minutes but do not explicitly state rinse behavior or the Conditioner relationship."
-      ]
+      "cadence": {
+        "kind": "label_schedule",
+        "copy_de": "1–2 Mal pro Woche anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-961e3935-f823-44e7-8601-900c62855d3d",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "961e3935-f823-44e7-8601-900c62855d3d"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Waschen in die noch nassen Haarlängen einarbeiten."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.syoss.de/haarpflege/haarmaske/syoss-intense-keratin-haarmaske.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
@@ -2096,16 +2465,12 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": [
-          "intensive_care_day"
-        ],
+        "compatibleDayTypes": ["intensive_care_day"],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": [
-            "wet_cleanse"
-          ],
+          "after": ["wet_cleanse"],
           "conflictsWith": []
         },
         "requirements": {
@@ -2151,22 +2516,78 @@
     },
     {
       "product_id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
-      "product_name": "Wahre Schätze Avocado",
+      "product_name": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
       "role": "intensive_conditioning_mask",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
-          "label": "Händler-Produktseite",
+          "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The current replacement GTIN differs from the catalog identity; identity needs review before protocol attachment."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-mask-b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75"
+        },
+        "role": "intensive_care",
+        "applicationFamily": "post_shampoo_rinse_out_mask",
+        "compatibleDayTypes": ["intensive_care_day"],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": ["wet_cleanse"],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-mask",
+            "action": "apply_product",
+            "copyTemplateDe": "Eine großzügige Menge in das nasse Haar geben, verteilen und gut einmassieren."
+          },
+          {
+            "stepKey": "wait-mask",
+            "action": "wait",
+            "copyTemplateDe": "1 Minute einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-mask",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          }
+        ]
+      },
+      "blockers": []
     }
   ]
 }

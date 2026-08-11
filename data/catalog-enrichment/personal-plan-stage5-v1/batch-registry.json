@@ -56,21 +56,22 @@
     {
       "batch_id": "S5-02-mask-critical-protocols",
       "priority": 1,
-      "status": "research_complete_ten_products_blocked",
+      "status": "research_complete_catalog_correction_pending",
       "categories": ["mask"],
       "target_kind": "exact_product",
-      "target_count": 35,
+      "target_count": 34,
       "research_result": {
-        "verified_exact_protocols": 25,
-        "blocked_products": 10,
+        "verified_exact_protocols": 34,
+        "blocked_products": 0,
+        "excluded_wrong_category_product": "Bali Curls Haarkur Bonding Repair Overnight Elixir",
         "resolved_policy": "On an intensive-care wash, Mask replaces Conditioner when exact directions are otherwise complete and silent only about Conditioner sequencing.",
         "remaining_gates": [
-          "Seven products require identity or commercial re-verification.",
-          "Three products still lack or contradict a critical application direction."
+          "Apply the reviewed Mask identity correction before the exact protocol batch.",
+          "Apply and verify all 34 exact Mask protocols."
         ]
       },
       "purpose": "Add contact time, placement, rinse behavior and Conditioner sequence for every active recommended Mask.",
-      "completion_gate": "All 35 current products pass the Mask critical-protocol validator; incomplete rows remain non-executable."
+      "completion_gate": "The false overnight leave-on Mask row is inactive, reviewed successor identities are current, and all 34 eligible Mask products pass the quantified contact-time and critical-protocol validators."
     },
     {
       "batch_id": "S5-03-targeted-dandruff-shampoo",

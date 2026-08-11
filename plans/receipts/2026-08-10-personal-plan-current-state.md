@@ -36,7 +36,7 @@ Styling-Tag and Pausentag.
 | Leave-in | 42 | 0 | Post-wash booster family guidance exists; specialized product behavior still needs exact authority. |
 | Heat Protectant | 5 | 5 | Complete current exact cohort. |
 | Oil | 41 | 0 | Role-coverage cohort and role-specific protocols required. |
-| Mask | 35 | 0 | All 35 need critical timing/sequence protocols under the confirmed Mask gate. |
+| Mask | 35 | 0 | Production still includes one wrong-category Bali overnight leave-on row; the prepared correction yields 34 eligible Masks. |
 | Dry Shampoo | 10 | 0 | Canonical spec check plus supported format-family guidance required. |
 | Bondbuilder | 4 | 0 | Three primary protocols required; No.0 remains companion-only. |
 | Scalp Care | 0 | 0 | Eight reviewed candidate manifests exist but no live launch cohort. |
@@ -49,7 +49,7 @@ The exact frozen product list is in
 
 | Batch | Verified executable rows | Explicitly blocked | Remaining gate |
 |---|---:|---:|---|
-| Mask | 25 | 10 | Seven identity/commercial gaps and three genuine application-direction gaps remain; silence only about Conditioner now defaults to replacement on the intensive-care wash. |
+| Mask | 34 | 0 | Research complete for the corrected cohort. The guarded correction removes the false Bali overnight Mask, unifies Bali Deep Hydration/Deep Repair by GTIN, and refreshes four other successor identities before the 34 exact protocols. |
 | Targeted dandruff Shampoo | 7 | 1 | Refresh DERMAXPRO exact directions or keep it unresolved. |
 | Bondbuilder | 4 | 0 | Named-batch apply approval only. |
 | Oil smallest cohort | 2 role rows / 1 product | 4 sampled products | Verify a genuine pre-wash hair product and coarse leave-on/finish route. |
