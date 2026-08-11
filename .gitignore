@@ -92,6 +92,7 @@ test-screenshots*/
 *.png
 !plans/mockups/apple-pay-cold-checkout.png
 !plans/mockups/2026-08-07-checkout-readiness-before-after.png
+!plans/evidence/2026-08-11-personal-plan-post-payment-remediation-v1-*.png
 !public/images/**/*.png
 /daily-briefing-*.md
 

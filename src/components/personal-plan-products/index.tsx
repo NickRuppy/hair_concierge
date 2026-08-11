@@ -42,6 +42,8 @@ export type Stage3CatalogCandidate = {
   detail?: string
   confidenceLabel?: string
   imageUrl?: string
+  assessmentStatus?: "ready" | "pending_analysis"
+  assessmentReasonCodes?: Array<"missing_required_spec" | "missing_application_protocol">
 }
 
 export type Stage3CapturedProductSummary = {
@@ -219,6 +221,7 @@ export function ProductCaptureScreen({
   capturedProducts,
   frequencyOptions,
   selectedFrequency,
+  selectedCandidateId,
   frequencyProductName,
   showFrequency = true,
   showAddAnotherProduct = true,
@@ -231,6 +234,8 @@ export function ProductCaptureScreen({
   onAddAnotherProduct,
   onRemoveProduct,
   onOpenFallbackIntake,
+  onChooseOtherProduct,
+  onChangeProductKinds,
   onContinue,
   onBack,
   disabled = false,
@@ -243,6 +248,7 @@ export function ProductCaptureScreen({
   capturedProducts: Stage3CapturedProductSummary[]
   frequencyOptions: Stage3FrequencyOption[]
   selectedFrequency: string | null
+  selectedCandidateId?: string
   frequencyProductName?: string
   showFrequency?: boolean
   showAddAnotherProduct?: boolean
@@ -255,10 +261,17 @@ export function ProductCaptureScreen({
   onAddAnotherProduct: () => void
   onRemoveProduct?: (capturedProductId: string) => void
   onOpenFallbackIntake: () => void
+  onChooseOtherProduct?: () => void
+  onChangeProductKinds?: () => void
   onContinue: () => void
   onBack?: () => void
   disabled?: boolean
 }) {
+  const selectedSearchCandidate = searchResults.find(
+    (candidate) => candidate.candidateId === selectedCandidateId,
+  )
+  const analysisPending = selectedSearchCandidate?.assessmentStatus === "pending_analysis"
+
   return (
     <section>
       {onBack ? <BackButton onBack={onBack} /> : null}
@@ -268,6 +281,20 @@ export function ProductCaptureScreen({
         </h1>
       </div>
       <p className="animate-fade-in-up mb-6 text-sm text-[var(--text-sub)]">{needSummary}</p>
+
+      {onChangeProductKinds ? (
+        <div className="mb-5 flex justify-end">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onChangeProductKinds}
+            disabled={disabled}
+            className="h-auto px-0 py-1 text-sm font-semibold text-[var(--brand-plum)] hover:bg-transparent"
+          >
+            Produktarten ändern
+          </Button>
+        </div>
+      ) : null}
 
       <label
         className="mb-2 block text-sm font-semibold text-foreground"
@@ -296,10 +323,43 @@ export function ProductCaptureScreen({
         status={searchStatus}
         message={searchMessage}
         onSelectCandidate={onSelectCandidate}
+        selectedCandidateId={selectedCandidateId}
         disabled={disabled}
       />
 
-      {showFrequency ? (
+      {analysisPending ? (
+        <div
+          role="status"
+          className="mb-5 rounded-2xl border border-[var(--status-pending-text)]/25 bg-[var(--status-pending-bg)] p-4"
+        >
+          <p className="text-sm font-semibold text-[var(--status-pending-text)]">Analyse läuft</p>
+          <p className="mt-1 text-sm leading-6 text-[var(--text-sub)]">
+            Die Produktangaben sind noch nicht vollständig geprüft. Es wird bis dahin nicht in deine
+            aktive Routine eingeplant.
+          </p>
+          <div className="mt-4">
+            <ProductFrequencyPicker
+              options={frequencyOptions}
+              selected={selectedFrequency}
+              productName={frequencyProductName}
+              onChange={onFrequencyChange}
+              disabled={disabled}
+            />
+          </div>
+          <div className="mt-4">
+            {onChooseOtherProduct ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={onChooseOtherProduct}
+              >
+                Anderes Produkt wählen
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      ) : showFrequency ? (
         <ProductFrequencyPicker
           options={frequencyOptions}
           selected={selectedFrequency}
@@ -324,6 +384,7 @@ export function ProductCaptureScreen({
         onAddAnotherProduct={onAddAnotherProduct}
         onOpenFallbackIntake={onOpenFallbackIntake}
         onContinue={onContinue}
+        continueLabel={analysisPending ? "Auf Analyse warten" : "Weiter"}
         disabled={disabled}
       />
     </section>
@@ -423,12 +484,14 @@ export function ProductSearchResults({
   status,
   message,
   onSelectCandidate,
+  selectedCandidateId,
   disabled = false,
 }: {
   results: Stage3CatalogCandidate[]
   status: "idle" | "loading" | "ready" | "empty" | "error"
   message?: string
   onSelectCandidate: (candidateId: string) => void
+  selectedCandidateId?: string
   disabled?: boolean
 }) {
   if (status === "idle") {
@@ -467,35 +530,51 @@ export function ProductSearchResults({
       aria-label="Suchergebnisse"
       className="mb-5 space-y-2"
     >
-      {results.map((result) => (
-        <button
-          key={result.candidateId}
-          type="button"
-          role="option"
-          aria-selected="false"
-          aria-label={`${result.displayName} auswählen`}
-          onClick={() => onSelectCandidate(result.candidateId)}
-          disabled={disabled}
-          className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors hover:border-[var(--brand-plum)]/40"
-        >
-          <ProductImage imageUrl={result.imageUrl} label={result.displayName} />
-          <span className="min-w-0">
-            <strong className="block break-words text-sm text-foreground">
-              {result.displayName}
-            </strong>
-            <span className="mt-1 block text-xs text-muted-foreground">
-              {[result.brandName, result.detail].filter(Boolean).join(" · ")}
+      {results.map((result) => {
+        const selected = result.candidateId === selectedCandidateId
+        const pending = result.assessmentStatus === "pending_analysis"
+        const identity = completeProductIdentity(result)
+        return (
+          <button
+            key={result.candidateId}
+            type="button"
+            role="option"
+            aria-selected={selected}
+            aria-label={pending ? `${identity}: Analyse ausstehend` : `${identity} auswählen`}
+            onClick={() => onSelectCandidate(result.candidateId)}
+            disabled={disabled}
+            className={cn(
+              "grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border bg-card p-3 text-left transition-colors",
+              selected
+                ? "border-[var(--brand-plum)] ring-1 ring-[var(--brand-plum)]/20"
+                : "border-border hover:border-[var(--brand-plum)]/40",
+            )}
+          >
+            <ProductImage imageUrl={result.imageUrl} label={identity} />
+            <span className="min-w-0">
+              <strong className="block break-words text-sm text-foreground">
+                {result.displayName}
+              </strong>
+              <span className="mt-1 block text-xs text-muted-foreground">
+                {[result.brandName, result.detail].filter(Boolean).join(" · ")}
+              </span>
             </span>
-          </span>
-          {result.confidenceLabel ? (
-            <span className="rounded-full bg-[var(--brand-plum-ice)] px-2 py-1 text-[11px] font-semibold text-[var(--brand-plum-dark)]">
-              {result.confidenceLabel}
+            <span className="flex items-center gap-1 rounded-full bg-[var(--brand-plum-ice)] px-2 py-1 text-[11px] font-semibold text-[var(--brand-plum-dark)]">
+              {selected ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : null}
+              {selected ? "Ausgewählt" : pending ? "Analyse ausstehend" : result.confidenceLabel}
             </span>
-          ) : null}
-        </button>
-      ))}
+          </button>
+        )
+      })}
     </div>
   )
+}
+
+function completeProductIdentity(result: Stage3CatalogCandidate) {
+  const title = result.displayName.trim()
+  const brand = result.brandName?.trim()
+  if (!brand || title.toLocaleLowerCase().startsWith(brand.toLocaleLowerCase())) return title
+  return `${brand} ${title}`
 }
 
 export function ProductFrequencyPicker({
@@ -612,6 +691,7 @@ export function ProductMultiProductControls({
   onAddAnotherProduct,
   onOpenFallbackIntake,
   onContinue,
+  continueLabel = "Weiter",
   disabled = false,
 }: {
   categoryLabel: string
@@ -621,6 +701,7 @@ export function ProductMultiProductControls({
   onAddAnotherProduct: () => void
   onOpenFallbackIntake: () => void
   onContinue: () => void
+  continueLabel?: string
   disabled?: boolean
 }) {
   return (
@@ -642,7 +723,7 @@ export function ProductMultiProductControls({
         onClick={onContinue}
         disabled={disabled || !canContinue}
       >
-        Weiter
+        {continueLabel}
       </Button>
     </div>
   )
@@ -916,7 +997,8 @@ function DecisionCard({
         <div className="min-w-0">
           <p className="text-xs font-semibold text-[var(--brand-plum)]">{decision.categoryLabel}</p>
           <h2 className="mt-1 break-words text-base font-semibold text-foreground">
-            {decision.ownedProductName ?? decision.categoryLabel}
+            {decision.ownedProductName ??
+              (decision.kind === "gap" ? "Offener Bedarf" : decision.categoryLabel)}
           </h2>
           <p
             className={cn(
@@ -940,26 +1022,43 @@ function DecisionCard({
       </div>
 
       {decision.criteria && decision.criteria.length > 0 ? (
-        <dl className="border-t border-border">
+        <div className="border-t border-border" role="table" aria-label="Produktvergleich">
+          {decision.ownedProductName ? (
+            <div
+              className="grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-3 bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground"
+              role="row"
+            >
+              <span role="columnheader">Ideal für dich</span>
+              <span role="columnheader">Dein Produkt</span>
+            </div>
+          ) : (
+            <div className="bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground">
+              Ideal für dich
+            </div>
+          )}
           {decision.criteria.map((criterion) => (
             <div
               key={`${decision.decisionKey}-${criterion.label}`}
               className="grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-3 border-b border-border px-4 py-3 last:border-b-0"
+              role="row"
             >
-              <dt className="text-sm font-semibold text-foreground">
+              <div className="text-sm font-semibold text-foreground" role="cell">
                 {criterion.label}
+              </div>
+              <div
+                className={cn("text-sm font-semibold", criterionResultClass(criterion.tone))}
+                role="cell"
+              >
+                {criterion.result}
                 {criterion.explanation ? (
                   <span className="mt-1 block text-xs font-normal text-muted-foreground">
                     {criterion.explanation}
                   </span>
                 ) : null}
-              </dt>
-              <dd className={cn("text-sm font-semibold", criterionResultClass(criterion.tone))}>
-                {criterion.result}
-              </dd>
+              </div>
             </div>
           ))}
-        </dl>
+        </div>
       ) : null}
 
       {decision.recommendation ? (

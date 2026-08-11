@@ -34,6 +34,11 @@ test("persisted Stage 1-5 harness bounds readiness and retains failure evidence"
   assert.match(source, /curl[\s\S]*--connect-timeout[\s\S]*--max-time/, relativePath)
   assert.match(source, /readiness_deadline/, relativePath)
   assert.match(source, /PERSONAL_PLAN_PLAYWRIGHT_DIAGNOSTICS=1/, relativePath)
+  assert.match(
+    source,
+    /PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL=true/,
+    "exercises initial Routine activation without a proposal confirmation",
+  )
   assert.match(source, /test-results\/personal-plan-stage1-5\/server\.log/, relativePath)
 })
 

@@ -153,6 +153,10 @@ export type Stage3CatalogCandidate = {
   brandName: string | null
   imageUrl?: string | null
   confidence: "exact" | "likely" | "category_mismatch"
+  /** Present for the production assessment-search projection. */
+  assessmentStatus?: "ready" | "pending_analysis"
+  /** Bounded, non-diagnostic reasons for a temporary pending state. */
+  assessmentReasonCodes?: Array<"missing_required_spec" | "missing_application_protocol">
 }
 
 export type Stage3CatalogSearchResult = {
@@ -216,6 +220,22 @@ export type Stage3CapturedUncoveredRole = {
   role: PlanProductRole
   reason: "no_product_owned" | "not_ready_to_decide"
 }
+
+/** Identifier-only capture input. Server rehydrates display identity before persistence. */
+export type Stage3CategoryCaptureCandidate =
+  | {
+      kind: "catalog"
+      candidateId: string
+      frequencyRange: ProductFrequency
+      roles: PlanProductRole[]
+    }
+  | {
+      kind: "pending"
+      userProductId: string
+      submissionId: string
+      frequencyRange: ProductFrequency
+      roles: PlanProductRole[]
+    }
 
 export type Stage3DecisionSubject = {
   decisionKey: string

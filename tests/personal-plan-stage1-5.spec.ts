@@ -322,6 +322,7 @@ async function chooseNoneAndContinue(page: Page) {
 }
 
 type Stage3AuthoritySeed = {
+  requirements: Array<{ category: string }>
   draft: {
     personalPlanId: string
     refinedVersionId: string
@@ -465,20 +466,21 @@ async function searchCaptureAndAssign(
   page: Page,
   query: string,
   productName: string,
-  frequencyLabel?: string,
+  frequencyLabel = "2x/Woche",
+  pendingAnalysis = false,
 ) {
   await page.getByRole("searchbox", { name: "Produkt suchen" }).fill(query)
-  if (frequencyLabel) {
-    await page.getByRole("option", { name: `${productName} auswählen`, exact: true }).click()
-    const captured = waitForStage3Save(page)
-    await page.getByRole("button", { name: frequencyLabel, exact: true }).click()
-    expect((await captured).status()).toBe(200)
-  } else {
-    const captured = waitForStage3Save(page)
-    await page.getByRole("option", { name: `${productName} auswählen`, exact: true }).click()
-    expect((await captured).status()).toBe(200)
-  }
-  await clickAndWaitForStage3Save(page, "Weiter")
+  const selectedProduct = page.getByRole("option", {
+    name: pendingAnalysis ? `${productName}: Analyse ausstehend` : `${productName} auswählen`,
+    exact: true,
+  })
+  await selectedProduct.click()
+  await expect(selectedProduct).toHaveAttribute("aria-selected", "true")
+  const frequency = page.getByRole("slider", { name: "Nutzungshäufigkeit" })
+  await page.getByRole("button", { name: frequencyLabel, exact: true }).click()
+  await expect(frequency).toHaveAttribute("aria-valuetext", frequencyLabel)
+  // Product and cadence stay local until this explicit category boundary.
+  await clickAndWaitForStage3Save(page, pendingAnalysis ? "Auf Analyse warten" : "Weiter")
 }
 
 function waitForStage3Save(page: Page) {
@@ -528,12 +530,16 @@ async function clickAndWaitForStage3AuthorityDecision(page: Page, currentAction:
 }
 
 async function waitForStage3AuthorityState(page: Page) {
-  const authorityAction = page.locator('article button[aria-label*=": "]').first()
+  const authorityAction = page.locator("article button[data-stage3-action-kind]").first()
+  const groupedClearFitAction = page.getByRole("button", {
+    name: /\d+ passende Produkte übernehmen/,
+  })
   const routineHandoff = page.getByRole("heading", { name: "Deine Routine steht", exact: true })
   const stageState = async () => {
     if (new URL(page.url()).pathname === "/routine" || (await routineHandoff.isVisible())) {
       return "complete"
     }
+    if (await groupedClearFitAction.isVisible()) return "grouped-clear-fits"
     return (await authorityAction.isVisible()) ? "decision" : "transitioning"
   }
 
@@ -563,6 +569,25 @@ async function expectStage3Category(page: Page, category: string) {
   const heading = stage3CategoryHeading[category]
   if (!heading) throw new Error(`Stage 3 test has no heading contract for ${category}`)
   await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible()
+}
+
+async function currentVisibleStage3Category(page: Page, categories: string[]) {
+  const visibleCategory = async () => {
+    for (const category of categories) {
+      const heading = stage3CategoryHeading[category]
+      if (
+        heading &&
+        (await page.getByRole("heading", { name: heading, exact: true }).isVisible())
+      ) {
+        return category
+      }
+    }
+    return null
+  }
+  await expect.poll(visibleCategory, { timeout: 15_000 }).not.toBeNull()
+  const category = await visibleCategory()
+  if (!category) throw new Error("Stage 3 did not expose a capture category")
+  return category
 }
 
 async function confirmStage3ProductKinds(page: Page) {
@@ -607,11 +632,15 @@ async function sampleNavigationToVisible(input: {
 
 async function completeCurrentCategory(page: Page, category: string) {
   if (category === "shampoo") {
-    await searchCaptureAndAssign(page, "E2E Sanftes", "Sanftes Shampoo")
+    await searchCaptureAndAssign(page, "E2E Sanftes", "E2E Sanftes Shampoo")
+    return
+  }
+  if (category === "conditioner") {
+    await searchCaptureAndAssign(page, "E2E Leichter", "E2E Leichter Conditioner")
     return
   }
   if (category === "mask") {
-    await searchCaptureAndAssign(page, "E2E Unbekannte", "Unbekannte Maske", "2x/Woche")
+    await searchCaptureAndAssign(page, "E2E Unbekannte", "E2E Unbekannte Maske", "2x/Woche", true)
     return
   }
   if (category === "scalp_care") {
@@ -620,7 +649,7 @@ async function completeCurrentCategory(page: Page, category: string) {
     await page.getByRole("textbox", { name: "Produktname" }).fill("E2E Kopfhaut-Tonic")
     await page.getByRole("button", { name: "2x/Woche" }).click()
     await page.getByRole("button", { name: "Produkt speichern", exact: true }).click()
-    await expect(page.getByText(/Noch in Prüfung.*gespeichert/)).toBeVisible()
+    await expect(page.getByText("Analyse läuft", { exact: true })).toBeVisible()
     await clickAndWaitForStage3Save(page, "Weiter")
     return
   }
@@ -631,7 +660,7 @@ async function completeCurrentCategory(page: Page, category: string) {
   await page.getByRole("textbox", { name: "Produktname" }).fill(`E2E ${category}`)
   await page.getByRole("button", { name: "2x/Woche" }).click()
   await page.getByRole("button", { name: "Produkt speichern", exact: true }).click()
-  await expect(page.getByText(/Noch in Prüfung.*gespeichert/)).toBeVisible()
+  await expect(page.getByText("Analyse läuft", { exact: true })).toBeVisible()
   await clickAndWaitForStage3Save(page, "Weiter")
 }
 
@@ -646,6 +675,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     )
     page.setDefaultTimeout(15_000)
     let stage3CompletionRequests = 0
+    let routineProposalResolves = 0
     let stage1ClientReads = 0
     let stage3ClientReads = 0
     page.on("request", (request) => {
@@ -658,6 +688,12 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       }
       if (request.method() === "POST" && pathname === "/api/personal-plan/stage-3/complete") {
         stage3CompletionRequests += 1
+      }
+      if (
+        request.method() === "POST" &&
+        /^\/api\/personal-plan\/routine\/proposals\/[^/]+\/resolve$/.test(pathname)
+      ) {
+        routineProposalResolves += 1
       }
     })
     await assertNoLabs(page)
@@ -686,7 +722,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       await optional.click()
       await expect(page.getByRole("heading", { name: "Zusätzlich sinnvoll" })).toBeVisible()
     }
-    await page.getByRole("button", { name: "Plan verfeinern" }).click()
+    await page.getByRole("button", { name: "Jetzt auf meine Produkte abstimmen" }).click()
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
     for (const category of ["Shampoo", "Conditioner", "Maske", "Kopfhautpflege"]) {
       await page.getByRole("button", { name: category, exact: true }).click()
@@ -720,19 +756,16 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     await expect(page.getByRole("heading", { name: /Wie oft nutzt du.*Föhn/i })).toBeVisible()
     await chooseAndContinue(page, "2x/Woche")
     await chooseNoneAndContinue(page)
-    await expect(
-      page.getByRole("heading", { name: "Deine Produktarten", exact: true }),
-    ).toBeVisible({ timeout: 30_000 })
+    await expectStage3Category(page, "shampoo")
     const stage3ReadsBeforeSampling = stage3ClientReads
     const stage3Timing = await sampleNavigationToVisible({
       page,
       url: "/plan-start",
-      ready: () => page.getByRole("heading", { name: "Deine Produktarten", exact: true }),
+      ready: () => page.getByRole("heading", { name: "Dein Shampoo", exact: true }),
     })
     expect(stage3Timing.warm.p75Ms).toBeLessThanOrEqual(1_500)
     expect(stage3Timing.warm.p95Ms).toBeLessThanOrEqual(3_000)
     expect(stage3ClientReads - stage3ReadsBeforeSampling).toBe(9)
-    await confirmStage3ProductKinds(page)
     await expectStage3Category(page, "shampoo")
     console.info(
       `personal_plan_seeded_local_timing ${JSON.stringify({
@@ -768,108 +801,109 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     expect(stage3Journey.draft.authoritySnapshot.orderedCategories).not.toContain("heat_protectant")
     await seedStage3Catalog(admin, stage3Journey)
 
-    const captureCategories = stage3Journey.draft.authoritySnapshot.orderedCategories.filter(
-      (category) => !stage3Journey.draft.completedCaptureCategories.includes(category),
-    )
-    for (const [index, category] of captureCategories.entries()) {
+    const captureCategories = stage3Journey.requirements
+      .map(({ category }) => category)
+      .filter((category) => !stage3Journey.draft.completedCaptureCategories.includes(category))
+    const capturedCategories = new Set<string>()
+    while (capturedCategories.size < captureCategories.length) {
+      const category = await currentVisibleStage3Category(page, captureCategories)
+      expect(capturedCategories.has(category)).toBe(false)
       await completeCurrentCategory(page, category)
-      const successor = captureCategories[index + 1]
-      if (successor) await expectStage3Category(page, successor)
-      if (index === 0) {
+      capturedCategories.add(category)
+      if (capturedCategories.size === 1) {
         await page.reload()
-        if (!successor)
-          throw new Error("Stage 3 journey requires a successor after the first category")
-        await confirmStage3ProductKinds(page)
-        await expectStage3Category(page, successor)
+        const resumedCategory = await currentVisibleStage3Category(page, captureCategories)
+        expect(capturedCategories.has(resumedCategory)).toBe(false)
       }
     }
+    expect([...capturedCategories].sort()).toEqual([...captureCategories].sort())
 
     const seen = new Set<string>()
     for (let decisions = 0; decisions < 24; decisions += 1) {
       const authorityState = await waitForStage3AuthorityState(page)
       if (authorityState === "complete") break
-      const ownedAction = page.getByRole("button", {
-        name: /^Sanftes Shampoo weiterverwenden: /,
-      })
-      const plannedAction = page.getByRole("button", { name: / einplanen: / }).first()
-      const pendingAction = page.getByRole("button", {
-        name: /^Prüfung später fortsetzen: /,
-      })
+      if (authorityState === "grouped-clear-fits") {
+        seen.add("owned")
+        await expect(page.getByRole("heading", { name: "Diese Produkte passen" })).toBeVisible()
+        await clickAndWaitForStage3Save(page, /\d+ passende Produkte übernehmen/)
+        continue
+      }
+      const ownedAction = page.locator('button[data-stage3-action-kind="keep"]').first()
+      const plannedAction = page.locator('button[data-stage3-action-kind="plan_purchase"]').first()
+      const pendingAction = page.locator('button[data-stage3-action-kind="pending"]').first()
       if (await ownedAction.isVisible()) {
         seen.add("owned")
-        await expect(page.getByText("Passt sehr gut", { exact: true })).toBeVisible()
+        await expect(
+          page.getByText(/Passt (sehr gut|mit Einschränkung)/, { exact: true }),
+        ).toBeVisible()
         await clickAndWaitForStage3AuthorityDecision(page, ownedAction)
       } else if (await plannedAction.isVisible()) {
         seen.add("planned")
-        await expect(page.getByText("Passt sehr gut", { exact: true })).toBeVisible()
         await clickAndWaitForStage3AuthorityDecision(page, plannedAction)
       } else if (await pendingAction.isVisible()) {
         seen.add("pending")
         await expect(page.getByText("Noch in Prüfung", { exact: true })).toBeVisible()
         await clickAndWaitForStage3AuthorityDecision(page, pendingAction)
       } else {
+        const skipOrOverride = page
+          .locator(
+            'button[data-stage3-action-kind="skip"], button[data-stage3-action-kind="override"]',
+          )
+          .first()
+        await expect(skipOrOverride).toBeVisible()
+        const fallbackActionKind = await skipOrOverride.getAttribute("data-stage3-action-kind")
         const unknownVerdict = page.getByText("Noch nicht beurteilbar", { exact: true })
         if (await unknownVerdict.isVisible()) {
           seen.add("unknown")
           await expect(unknownVerdict).toBeVisible()
+        } else if (fallbackActionKind === "skip") {
+          await expect(
+            page.getByText("Dieser Bedarf ist noch offen", { exact: true }),
+          ).toBeVisible()
         } else {
           await expect(
             page.getByText("Passt nicht zu deinem Bedarf", { exact: true }),
           ).toBeVisible()
         }
-        const skipProduct = page.getByRole("button", {
-          name: /^Nicht in die Routine übernehmen: /,
-        })
-        const markGap = page.getByRole("button", {
-          name: /^Lücke im Plan markieren: /,
-        })
-        if (await skipProduct.isVisible()) {
-          await clickAndWaitForStage3AuthorityDecision(page, skipProduct)
-        } else {
-          await expect(markGap).toBeVisible()
-          await clickAndWaitForStage3AuthorityDecision(page, markGap)
-        }
+        await clickAndWaitForStage3AuthorityDecision(page, skipOrOverride)
       }
     }
     expect(seen.has("owned")).toBe(true)
     expect(seen.has("pending")).toBe(true)
-    expect(seen.has("unknown")).toBe(true)
 
     await page.waitForURL("**/routine")
     expect(stage3CompletionRequests).toBe(1)
-    await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
-    let proposalResolves = 0
-    await page.route("**/api/personal-plan/routine/proposals/*/resolve", async (route) => {
-      proposalResolves += 1
-      if (proposalResolves === 1) {
-        await route.fulfill({
-          status: 503,
-          contentType: "application/json",
-          body: '{"error":"temporarily_unavailable"}',
-        })
-        return
-      }
-      await route.continue()
+    await expect(page.getByRole("heading", { name: "Deine Routine ist bereit." })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toHaveCount(0)
+    await expect(page.getByRole("button", { name: "Routine bestätigen", exact: true })).toHaveCount(
+      0,
+    )
+    const shampooRoutineItem = page.getByRole("group", {
+      name: /Kategorie: Shampoo; Produkt: E2E Sanftes Shampoo;.*Rhythmus: 2× pro Woche/,
     })
+    const conditionerRoutineItem = page.getByRole("group", {
+      name: /Kategorie: Conditioner; Produkt: E2E Leichter Conditioner;.*Rhythmus: Nach jeder passenden Haarwäsche/,
+    })
+    await expect(shampooRoutineItem).toBeVisible()
+    await expect(conditionerRoutineItem).toBeVisible()
+    await expect(shampooRoutineItem.getByText("Rhythmus", { exact: true })).toBeVisible()
+    await expect(conditionerRoutineItem.getByText("Rhythmus", { exact: true })).toBeVisible()
     await page.reload()
-    await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
-    const routineConfirmationSheet = page.getByLabel("Routine bestätigen")
-    await page.getByRole("button", { name: "Routine bestätigen" }).click()
-    await expect(
-      routineConfirmationSheet.getByText("Deine Entscheidung konnte nicht gespeichert werden."),
-    ).toBeVisible()
-    await expect(
-      routineConfirmationSheet.getByRole("button", { name: "Erneut versuchen" }),
-    ).toBeVisible()
-    await routineConfirmationSheet.getByRole("button", { name: "Erneut versuchen" }).click()
-    await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible({
+    await expect(page.getByRole("heading", { name: "Deine Routine ist bereit." })).toBeVisible({
       timeout: 15_000,
     })
-    expect(proposalResolves).toBe(2)
-    await page.reload()
-    await expect(page.getByRole("heading", { name: "Deine Routine", exact: true })).toBeVisible({
-      timeout: 15_000,
-    })
+    await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toHaveCount(0)
+    expect(routineProposalResolves).toBe(0)
+    await expect(
+      page.getByRole("group", {
+        name: /Kategorie: Shampoo; Produkt: E2E Sanftes Shampoo;.*Rhythmus: 2× pro Woche/,
+      }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("group", {
+        name: /Kategorie: Conditioner; Produkt: E2E Leichter Conditioner;.*Rhythmus: Nach jeder passenden Haarwäsche/,
+      }),
+    ).toBeVisible()
 
     const { data: persisted, error } = await admin
       .from("personal_plans")
@@ -893,10 +927,15 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
     await expect(page.getByRole("link", { name: "Waschtag" })).toBeVisible()
     await page.reload()
     await expect(page.getByRole("heading", { name: "Anwendung", exact: true })).toBeVisible()
+    await expect(page.getByRole("link", { name: "Waschtag" })).toBeVisible()
     await page.goto("/anwendung/wash_day")
     await expect(page.getByRole("heading", { name: "Waschtag", exact: true })).toBeVisible()
+    await expect(page.getByText("E2E Sanftes Shampoo", { exact: true })).toBeVisible()
+    await expect(page.getByText("E2E Leichter Conditioner", { exact: true })).toBeVisible()
     await page.reload()
     await expect(page.getByRole("heading", { name: "Waschtag", exact: true })).toBeVisible()
+    await expect(page.getByText("E2E Sanftes Shampoo", { exact: true })).toBeVisible()
+    await expect(page.getByText("E2E Leichter Conditioner", { exact: true })).toBeVisible()
     await page.goto("/anwendung/intensive_care_day")
     await expect(
       page.getByRole("heading", { name: "Dieser Anwendungstag ist gerade nicht verfügbar" }),

@@ -177,7 +177,7 @@ export const evaluateLeaveInAuthority: Stage3CategoryAuthorityAdapter<"leave_in"
     return knownEvaluation(input as never, {
       verdict: selected.result.verdict,
       criteria: selected.result.criteria,
-      allowedActions: ["plan_recommendation"],
+      allowedActions: ["plan_recommendation", "leave_uncovered"],
       recommendation: {
         recommendationId: `recommend:${selected.item.productId}:${input.role}`,
         productId: selected.item.productId,

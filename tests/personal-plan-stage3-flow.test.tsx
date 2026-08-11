@@ -554,7 +554,99 @@ test("catalog search errors keep manual intake available without claiming no pro
   assert.ok(findByType(tree, IntakeFallbackBoundary))
 })
 
-test("bootstrap Stage 3 starts with the global product-kind review and unchanged inventory continues locally", async () => {
+test("waiting for catalog analysis preserves the selected product and cadence", async () => {
+  let replacement:
+    | Extract<
+        Parameters<Stage3ProductsGateway["mutate"]>[0]["mutation"],
+        { type: "replace_capture_category" }
+      >
+    | undefined
+  const gateway = createAuthorityTestGateway()
+  const originalMutate = gateway.mutate.bind(gateway)
+  gateway.search = async (input) => ({
+    status: "ready",
+    requestToken: input.requestToken,
+    result: {
+      category: input.category,
+      query: input.query,
+      candidates: [
+        {
+          candidateId: "ogx-pending-analysis",
+          productId: "ogx-pending-analysis",
+          displayName: "Renewing + Argan Oil of Morocco Shampoo",
+          brandName: "OGX",
+          category: "shampoo",
+          confidence: "exact",
+          assessmentStatus: "pending_analysis",
+          assessmentReasonCodes: ["missing_required_spec"],
+        },
+      ],
+      totalCapped: false,
+    },
+  })
+  gateway.mutate = async (input) => {
+    if (input.mutation.type === "replace_capture_category") replacement = input.mutation
+    return originalMutate(input)
+  }
+  const entryContext: Stage3EntryContext = {
+    schemaVersion: 1,
+    personalPlanId: "plan-catalog-pending-analysis",
+    refinedVersionId: "refined-catalog-pending-analysis",
+    orderedCategories: [
+      {
+        category: "shampoo",
+        requiredRoles: ["shampoo_everyday"],
+        needSummary: "Sanfte Reinigung",
+        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+  }
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+  )
+
+  let tree = await renderSettled(harness)
+  let capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onQueryChange("ogx")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onSelectCandidate("ogx-pending-analysis")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.canContinue, false)
+  capture?.props.onFrequencyChange("weekly_2x")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onContinue()
+  await renderSettled(harness)
+
+  assert.deepEqual(replacement?.candidates, [
+    {
+      kind: "catalog",
+      candidateId: "ogx-pending-analysis",
+      frequencyRange: "weekly_2x",
+      roles: [],
+    },
+  ])
+  assert.deepEqual(replacement?.uncoveredRoles, [
+    { category: "shampoo", role: "shampoo_everyday", reason: "not_ready_to_decide" },
+  ])
+})
+
+test("bootstrap Stage 3 opens capture directly and keeps product-kind correction available", async () => {
   const requirements: Stage3EntryContext["orderedCategories"] = [
     {
       category: "shampoo",
@@ -623,6 +715,19 @@ test("bootstrap Stage 3 starts with the global product-kind review and unchanged
   )
 
   let tree = await renderSettled(harness)
+  assert.equal(findByType(tree, ProductKindReviewScreen), null)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.categoryLabel, "Shampoo")
+  ;(
+    capture?.props as React.ComponentProps<typeof ProductCaptureScreen> & {
+      onChangeProductKinds?: () => void
+    }
+  ).onChangeProductKinds?.()
+
+  tree = await renderSettled(harness)
   const review = findByType<React.ComponentProps<typeof ProductKindReviewScreen>>(
     tree,
     ProductKindReviewScreen,
@@ -703,6 +808,17 @@ test("corrected product kinds delegate to Stage 2 and do not continue from the s
   )
 
   let tree = await renderSettled(harness)
+  const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  assert.equal(capture?.props.categoryLabel, "Shampoo")
+  ;(
+    capture?.props as React.ComponentProps<typeof ProductCaptureScreen> & {
+      onChangeProductKinds?: () => void
+    }
+  ).onChangeProductKinds?.()
+  tree = await renderSettled(harness)
   let review = findByType<React.ComponentProps<typeof ProductKindReviewScreen>>(
     tree,
     ProductKindReviewScreen,
@@ -819,13 +935,7 @@ test("a supplied bootstrap skips duplicate loading and Back uses its resolved en
   const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
 
   let tree = await renderSettled(harness)
-  const review = findByType<React.ComponentProps<typeof ProductKindReviewScreen>>(
-    tree,
-    ProductKindReviewScreen,
-  )
-  assert.deepEqual(review?.props.selected, ["shampoo", "oil"])
-  await review?.props.onContinue()
-  tree = await renderSettled(harness)
+  assert.equal(findByType(tree, ProductKindReviewScreen), null)
   const capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
@@ -878,7 +988,7 @@ test("every capture category exposes a safe Back action", async () => {
   )
 
   let tree = await renderSettled(harness)
-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   tree = await renderSettled(harness)
   const firstCapture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
@@ -974,7 +1084,7 @@ test("two-product Shampoo submits one complete category assignment replacement",
     tree,
     ProductCaptureScreen,
   )?.props.onAddAnotherProduct()
-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
@@ -1001,20 +1111,20 @@ test("two-product Shampoo submits one complete category assignment replacement",
   assert.ok(
     findByType<React.ComponentProps<typeof ProductDecisionScreen>>(tree, ProductDecisionScreen),
   )
-  assert.deepEqual(recordedMutationTypes.slice(-1), ["finalize_capture_category"])
+  assert.deepEqual(recordedMutationTypes.slice(-1), ["replace_capture_category"])
 })
 
 test("submitting an unchecked role deliberately records an open not-ready gap", async () => {
   let finalization:
     | Extract<
         Parameters<Stage3ProductsGateway["mutate"]>[0]["mutation"],
-        { type: "finalize_capture_category" }
+        { type: "replace_capture_category" }
       >
     | undefined
   const gateway = createAuthorityTestGateway()
   const originalMutate = gateway.mutate.bind(gateway)
   gateway.mutate = async (input) => {
-    if (input.mutation.type === "finalize_capture_category") finalization = input.mutation
+    if (input.mutation.type === "replace_capture_category") finalization = input.mutation
     return originalMutate(input)
   }
   const entryContext: Stage3EntryContext = {
@@ -1035,13 +1145,13 @@ test("submitting an unchecked role deliberately records an open not-ready gap", 
     Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
   )
 
-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   let tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
   )?.props.onAddAnotherProduct()
-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
@@ -1107,7 +1217,7 @@ test("role finalization shows saving immediately and suppresses duplicate action
     tree,
     ProductCaptureScreen,
   )?.props.onAddAnotherProduct()
-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
@@ -1205,14 +1315,7 @@ test("global inventory review keeps server-authored no-owned gaps local without 
   )
 
   let tree = await renderSettled(harness)
-  const review = findByType<React.ComponentProps<typeof ProductKindReviewScreen>>(
-    tree,
-    ProductKindReviewScreen,
-  )
-  assert.deepEqual(review?.props.selected, [])
-  await review?.props.onContinue()
-  tree = await renderSettled(harness)
-
+  assert.equal(findByType(tree, ProductKindReviewScreen), null)
   assert.deepEqual(recordedMutationTypes, [])
   assert.equal(findByType(tree, ProductCaptureScreen), null)
 })
@@ -1301,7 +1404,7 @@ test("global no-owned-category review suppresses duplicate confirmation while st
   assert.equal(findByType(tree, ProductCaptureScreen), null)
 })
 
-test("catalog capture disables competing frequency saves while the mutation is in flight", async () => {
+test("catalog selection and frequency stay editable until one explicit category save", async () => {
   let mutationCalls = 0
   let release: () => void = () => {}
   const blocker = new Promise<void>((resolve) => {
@@ -1356,14 +1459,17 @@ test("catalog capture disables competing frequency saves while the mutation is i
   capture?.props.onFrequencyChange("weekly_1x")
   await new Promise((resolve) => setImmediate(resolve))
 
-  assert.equal(mutationCalls, 1)
+  assert.equal(mutationCalls, 0)
   tree = await renderSettled(harness)
   capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
   )
-  assert.equal(capture?.props.disabled, true)
-  assert.equal(capture?.props.selectedFrequency, "weekly_2x")
+  assert.equal(capture?.props.disabled, false)
+  assert.equal(capture?.props.selectedFrequency, "weekly_1x")
+  capture?.props.onContinue()
+  await new Promise((resolve) => setImmediate(resolve))
+  assert.equal(mutationCalls, 1)
   release()
   await renderSettled(harness)
 })
@@ -1527,6 +1633,12 @@ test("a generic product mutation conflict adopts the latest draft and retries de
     ProductCaptureScreen,
   )
   capture?.props.onFrequencyChange("weekly_2x")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onContinue()
   await new Promise((resolve) => setImmediate(resolve))
 
   tree = await renderSettled(harness)
@@ -1587,6 +1699,12 @@ test("a stale refined source offers a current-state reload instead of retrying t
     ProductCaptureScreen,
   )
   capture?.props.onFrequencyChange("weekly_2x")
+  tree = await renderSettled(harness)
+  capture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+    tree,
+    ProductCaptureScreen,
+  )
+  capture?.props.onContinue()
   await new Promise((resolve) => setImmediate(resolve))
 
   tree = await renderSettled(harness)
@@ -1748,7 +1866,7 @@ test("a decision conflict retries with the latest draft revision", async () => {
   recovery?.props.onAction?.()
   await new Promise((resolve) => setImmediate(resolve))
 
-  assert.deepEqual(revisions, [2, 3])
+  assert.deepEqual(revisions, [1, 2])
 })
 
 test("unsupported authority offers a non-decision recovery exit to refinement", async () => {
@@ -1991,8 +2109,8 @@ test("fallback intake requires and persists the user's selected product frequenc
   assert.deepEqual(submittedFrequencies, ["weekly_1x"])
 })
 
-test("either final pending-product action advances beyond the decision card", async () => {
-  for (const actionKind of ["pending", "skip"] as const) {
+test("waiting for analysis advances a pending product without framing it as exclusion", async () => {
+  for (const actionKind of ["pending"] as const) {
     const intents: Stage3AuthoritySemanticIntent[] = []
     const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
     const entryContext: Stage3EntryContext = {
@@ -2065,7 +2183,7 @@ test("either final pending-product action advances beyond the decision card", as
     assert.equal(handoffs.length, 2, "the delayed recovery retries the direct handoff")
     assert.deepEqual(
       intents.map((intent) => intent.action),
-      [actionKind === "pending" ? "keep_pending" : "leave_uncovered"],
+      ["keep_pending"],
     )
   }
 })
@@ -2346,12 +2464,12 @@ test("Oil resolves checked use and unchecked gaps without replaying decision car
   assert.equal(handoffs.length, 1)
 })
 
-test("bootstrapped Oil decisions auto-resolve sole safe actions before review", async () => {
+test("bootstrapped Oil decisions batch auto-resolve sole safe actions before review", async () => {
   const requirements: Stage3EntryContext["orderedCategories"] = [
     {
       category: "oil",
-      requiredRoles: ["dry_finish"],
-      needSummary: "Finish für die Längen",
+      requiredRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+      needSummary: "Schutz und Finish für die Längen",
       authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
     },
   ]
@@ -2368,11 +2486,18 @@ test("bootstrapped Oil decisions auto-resolve sole safe actions before review", 
     revision: 1,
     pass: "product_decisions",
     categoryCursor: null,
-    uncoveredRoles: [{ category: "oil", role: "dry_finish", reason: "no_product_owned" }],
+    uncoveredRoles: [
+      { category: "oil", role: "pre_wash_fibre_treatment", reason: "no_product_owned" },
+      { category: "oil", role: "leave_on_fibre_conditioning", reason: "no_product_owned" },
+      { category: "oil", role: "dry_finish", reason: "no_product_owned" },
+    ],
   }
-  const subject = deriveStage3DecisionSubjects(latestDraft)[0]!
-  const evaluation = testAuthorityEvaluation(latestDraft, subject)
+  const evaluations = deriveStage3DecisionSubjects(latestDraft).map((subject) =>
+    testAuthorityEvaluation(latestDraft, subject),
+  )
   const intents: Stage3AuthoritySemanticIntent[] = []
+  let singleCalls = 0
+  let batchCalls = 0
   const base = createFixtureStage3Gateway({ searchDelayMs: 0 })
   const gateway = {
     ...base,
@@ -2381,6 +2506,15 @@ test("bootstrapped Oil decisions auto-resolve sole safe actions before review", 
       expectedRevision: number
       intent: Stage3AuthoritySemanticIntent
     }): Promise<Stage3MutationResponse> {
+      singleCalls += 1
+      const subject = deriveStage3DecisionSubjects(latestDraft).find(
+        (candidate) => candidate.decisionKey === input.intent.subjectKey,
+      )
+      assert.ok(subject)
+      const evaluation = evaluations.find(
+        (candidate) => candidate.subjectKey === subject.decisionKey,
+      )
+      assert.ok(evaluation)
       intents.push(input.intent)
       const decision = testAuthorityDecision(subject, evaluation, input.intent)
       latestDraft = {
@@ -2389,6 +2523,34 @@ test("bootstrapped Oil decisions auto-resolve sole safe actions before review", 
         decisions: [...latestDraft.decisions, decision],
       }
       return { status: "saved", draft: latestDraft }
+    },
+    async resolveDecisions(input: {
+      draftId: string
+      expectedRevision: number
+      intents: Stage3AuthoritySemanticIntent[]
+    }): Promise<Stage3MutationResponse> {
+      batchCalls += 1
+      assert.equal(input.expectedRevision, latestDraft.revision)
+      let response: Stage3MutationResponse | null = null
+      for (const intent of input.intents) {
+        const subject = deriveStage3DecisionSubjects(latestDraft).find(
+          (candidate) => candidate.decisionKey === intent.subjectKey,
+        )
+        assert.ok(subject)
+        const evaluation = evaluations.find(
+          (candidate) => candidate.subjectKey === subject.decisionKey,
+        )
+        assert.ok(evaluation)
+        intents.push(intent)
+        latestDraft = {
+          ...latestDraft,
+          revision: latestDraft.revision + 1,
+          decisions: [...latestDraft.decisions, testAuthorityDecision(subject, evaluation, intent)],
+        }
+        response = { status: "saved", draft: latestDraft }
+      }
+      assert.ok(response)
+      return response
     },
     async complete() {
       return { status: "not_ready" as const, draft: latestDraft }
@@ -2404,15 +2566,17 @@ test("bootstrapped Oil decisions auto-resolve sole safe actions before review", 
     },
     draft: latestDraft,
     requirements,
-    authorityEvaluations: [evaluation],
+    authorityEvaluations: evaluations,
   }
   const harness = createClientStateHarness(() => Stage3ProductsFlow({ bootstrap, gateway }))
 
   const tree = await renderSettled(harness)
 
+  assert.equal(batchCalls, 1)
+  assert.equal(singleCalls, 0)
   assert.deepEqual(
     intents.map((intent) => intent.action),
-    ["leave_uncovered"],
+    ["leave_uncovered", "leave_uncovered", "leave_uncovered"],
   )
   assert.equal(
     findByType<React.ComponentProps<typeof ProductDecisionScreen>>(tree, ProductDecisionScreen),

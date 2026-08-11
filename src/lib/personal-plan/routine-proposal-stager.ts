@@ -116,7 +116,8 @@ export type RoutineProposalStageResult =
       status: "completed" | "already_completed"
       portfolioVersionId: string
       routineVersionId: string
-      routineProposalId: string
+      /** Null only for the first atomically activated Routine. */
+      routineProposalId: string | null
       revision: number
     }
   | { status: "revision_conflict"; currentRevision: number }
@@ -154,7 +155,7 @@ export const routineProposalStageResultSchema: z.ZodType<RoutineProposalStageRes
       status: z.enum(["completed", "already_completed"]),
       portfolioVersionId: opaqueIdSchema,
       routineVersionId: opaqueIdSchema,
-      routineProposalId: opaqueIdSchema,
+      routineProposalId: opaqueIdSchema.nullable(),
       revision: z.number().int().nonnegative(),
     }),
     z.object({
@@ -188,7 +189,9 @@ export type RoutineProposalStager = {
 
 export type RoutineProposalRpcClient = {
   rpc(
-    functionName: "personal_plan_complete_product_draft_and_stage_routine",
+    functionName:
+      | "personal_plan_complete_product_draft_and_stage_routine"
+      | "personal_plan_complete_draft_activate_initial_v1",
     args: Record<string, unknown>,
   ): Promise<{ data: unknown; error: unknown | null }>
 }
@@ -199,6 +202,7 @@ export type RoutineProposalRpcClient = {
  */
 export function createRoutineProposalStagerRpcAdapter(input: {
   client: RoutineProposalRpcClient
+  activateInitialRoutine?: boolean
 }): RoutineProposalStager {
   return {
     async stage(rawRequest) {
@@ -207,7 +211,9 @@ export function createRoutineProposalStagerRpcAdapter(input: {
 
       try {
         const response = await input.client.rpc(
-          "personal_plan_complete_product_draft_and_stage_routine",
+          input.activateInitialRoutine
+            ? "personal_plan_complete_draft_activate_initial_v1"
+            : "personal_plan_complete_product_draft_and_stage_routine",
           {
             p_user_id: request.data.userId,
             p_personal_plan_id: request.data.personalPlanId,

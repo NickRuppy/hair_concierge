@@ -537,6 +537,7 @@ test("completion freezes one opaque portfolio and routine proposal idempotently"
   const resumed = await createDraft(subject)
 
   assert.match(first.productPortfolioVersionId, /^fixture-portfolio-/)
+  assert.ok(first.routineProposalId)
   assert.match(first.routineProposalId, /^fixture-routine-proposal-/)
   assert.equal(second.status, "ready_for_routine")
   assert.equal(second.productPortfolioVersionId, first.productPortfolioVersionId)

@@ -19,6 +19,7 @@ import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journe
 const rate: RateLimitConfig = { prefix: "personal-plan-stage3-search", limit: 30, windowMs: 60_000 }
 const querySchema = z
   .object({
+    draftId: z.string().uuid(),
     category: personalPlanCategorySchema,
     q: z.string().trim().min(2).max(120),
     requestToken: z.coerce.number().int().nonnegative(),
@@ -31,7 +32,12 @@ export type Stage3SearchRouteDeps = {
   checkRateLimit: typeof checkRateLimit
   search: (
     userId: string,
-    input: { category: PersonalPlanCategory; query: string; requestToken: number },
+    input: {
+      draftId: string
+      category: PersonalPlanCategory
+      query: string
+      requestToken: number
+    },
   ) => Promise<unknown>
 }
 
@@ -69,6 +75,7 @@ export function createStage3SearchRouteHandler(deps: Stage3SearchRouteDeps) {
     try {
       return NextResponse.json(
         await deps.search(userId, {
+          draftId: parsed.data.draftId,
           category: parsed.data.category,
           query: parsed.data.q,
           requestToken: parsed.data.requestToken,

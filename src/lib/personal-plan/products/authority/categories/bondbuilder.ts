@@ -145,7 +145,8 @@ export function evaluateBondbuilderAuthority(
             ),
           ]
         : [],
-      allowedActions: ideal.length === 1 ? ["plan_recommendation"] : ["leave_uncovered"],
+      allowedActions:
+        ideal.length === 1 ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
       recommendation: ideal.length === 1 ? recommendationFor(ideal[0]) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: ideal.length === 1 ? ideal[0].factFingerprint : null,

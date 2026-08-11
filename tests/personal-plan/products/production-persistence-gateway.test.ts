@@ -13,6 +13,7 @@ import {
   completeCaptureCategory,
   createStage3Draft,
   recordProductDecision,
+  replaceCaptureCategorySnapshot,
 } from "../../../src/lib/personal-plan/products/state-machine"
 import { createProposedProductPortfolio } from "../../../src/lib/personal-plan/products/portfolio"
 import type {
@@ -59,7 +60,7 @@ function readyDraft(): Stage3ProductDraft {
     roles: ["conditioner_rinse_out"],
   })
   const captureComplete = completeCaptureCategory(assigned, "conditioner", requirements)
-  return recordProductDecision(captureComplete, {
+  const decided = recordProductDecision(captureComplete, {
     decisionKey: "decision:conditioner:conditioner_rinse_out:capture-a",
     category: "conditioner",
     role: "conditioner_rinse_out",
@@ -70,6 +71,43 @@ function readyDraft(): Stage3ProductDraft {
     recommendation: null,
     limitationAcknowledged: false,
   })
+  return {
+    ...decided,
+    authoritySnapshot: {
+      schemaVersion: 1,
+      refinedNeedVersionId: decided.refinedVersionId,
+      refinedInputHash: "refined-input-a",
+      categoryDecisions: [
+        {
+          category: "conditioner",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["conditioner_rinse_out"],
+          target: {
+            category: "conditioner",
+            roles: ["conditioner_rinse_out"],
+            weight: "light",
+            careDirection: "moisture",
+            repairSupportLevel: "medium",
+            functionalNeeds: [],
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+      coverage: [],
+      orderedCategories: ["conditioner"],
+      authorityVersions: Object.fromEntries(
+        Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+          category,
+          policy.authorityVersion,
+        ]),
+      ) as never,
+    },
+  }
 }
 
 function persistence(draft = readyDraft()): Stage3ProductionPersistence {
@@ -86,6 +124,23 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
       totalCapped: false,
     }),
     resolveOwnedCatalogProduct: async () => null,
+    loadCurrentCatalogProduct: async (input) => {
+      const product = draft.products.find(
+        (candidate) =>
+          candidate.userProductId === input.userProductId &&
+          candidate.identity.kind === "catalog_product" &&
+          candidate.identity.productId === input.productId &&
+          candidate.identity.category === input.category,
+      )
+      if (!product || product.identity.kind !== "catalog_product") return null
+      return {
+        userProductId: product.userProductId,
+        productId: product.identity.productId,
+        displayName: product.identity.displayName,
+        imageUrl: product.identity.imageUrl ?? null,
+        category: product.identity.category,
+      }
+    },
     loadRequirements: async () => requirements,
     loadCompletedPortfolio: async () =>
       createProposedProductPortfolio(
@@ -103,11 +158,14 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
       }) as never,
     loadSourceRevision: async () => 7,
     loadCurrentRefinedVersionId: async () => draft.refinedVersionId,
-    loadAuthorityFacts: async () => ({
-      productFacts: null,
-      recommendationCandidates: [],
-      heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
-    }),
+    loadAuthorityFacts: async (input) =>
+      input.subject.category === "conditioner"
+        ? conditionerFacts()
+        : {
+            productFacts: null,
+            recommendationCandidates: [],
+            heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
+          },
     loadDraft: async (input) => (input.userId === "owner-a" ? draft : null),
   }
 }
@@ -171,6 +229,254 @@ test("catalog capture replay is idempotent after the first save committed", asyn
   assert.equal(replay.draft.revision, first.draft.revision)
   assert.equal(replay.draft.products.length, 1)
   assert.equal(saves, 2)
+})
+
+test("atomic category replacement swaps the full category in one acknowledged revision", async () => {
+  const base = authorityDraft()
+  const initial: Stage3ProductDraft = {
+    ...base,
+    pass: "product_capture",
+    categoryCursor: "conditioner",
+    completedCaptureCategories: [],
+  }
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(initial),
+      loadDraft: async () => initial,
+      resolveOwnedCatalogProduct: async ({ candidateId, category }) => ({
+        userProductId: `owned-${candidateId}`,
+        productId: candidateId,
+        displayName: "Canonical Conditioner",
+        category,
+        imageUrl: null,
+      }),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved" as const, draft: input.draft }
+      },
+    },
+  })
+  await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: "plan-a",
+    refinedVersionId: "refined-a",
+    requirements: [],
+  })
+
+  const result = await gateway.mutate({
+    draftId: initial.draftId,
+    expectedRevision: initial.revision,
+    mutation: {
+      type: "replace_capture_category",
+      category: "conditioner",
+      refinedNeedVersionId: "refined-a",
+      refinedInputHash: "refined-input-a",
+      categoryAuthorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      candidates: [
+        {
+          kind: "catalog",
+          candidateId: "catalog-replaced",
+          frequencyRange: "weekly_2x",
+          roles: ["conditioner_rinse_out"],
+        },
+      ],
+      uncoveredRoles: [],
+    },
+  })
+
+  assert.equal(result.status, "saved")
+  assert.equal(saves, 1)
+  if (result.status !== "saved") return
+  assert.equal(result.draft.revision, initial.revision + 1)
+  assert.deepEqual(
+    result.draft.products.map((product) =>
+      product.identity.kind === "catalog_product" ? product.identity.productId : "pending",
+    ),
+    ["catalog-replaced"],
+  )
+  assert.deepEqual(result.draft.roleAssignments, [
+    {
+      capturedProductId: "owned-catalog-replaced",
+      category: "conditioner",
+      roles: ["conditioner_rinse_out"],
+    },
+  ])
+})
+
+test("atomic category replacement revalidates assessment readiness before saving", async () => {
+  const base = authorityDraft()
+  const initial: Stage3ProductDraft = {
+    ...base,
+    pass: "product_capture",
+    categoryCursor: "conditioner",
+    completedCaptureCategories: [],
+  }
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(initial),
+      loadDraft: async () => initial,
+      resolveOwnedCatalogProduct: async ({ candidateId, category }) => ({
+        userProductId: `owned-${candidateId}`,
+        productId: candidateId,
+        displayName: "Conditioner ohne aktuelle Analyse",
+        category,
+        imageUrl: null,
+      }),
+      loadAuthorityFacts: async () => ({
+        productFacts: null,
+        recommendationCandidates: [],
+        heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
+      }),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved" as const, draft: input.draft }
+      },
+    },
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.mutate({
+        draftId: initial.draftId,
+        expectedRevision: initial.revision,
+        mutation: {
+          type: "replace_capture_category",
+          category: "conditioner",
+          refinedNeedVersionId: "refined-a",
+          refinedInputHash: "refined-input-a",
+          categoryAuthorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+          candidates: [
+            {
+              kind: "catalog",
+              candidateId: "catalog-stale-readiness",
+              frequencyRange: "weekly_2x",
+              roles: ["conditioner_rinse_out"],
+            },
+          ],
+          uncoveredRoles: [],
+        },
+      }),
+    /stage3_authority_candidate_invalid/,
+  )
+  assert.equal(saves, 0)
+})
+
+test("atomic category replacement preserves an owner-bound pending product for later analysis", async () => {
+  const base = authorityDraft()
+  const initial: Stage3ProductDraft = {
+    ...base,
+    pass: "product_capture",
+    categoryCursor: "conditioner",
+    completedCaptureCategories: [],
+  }
+  let saves = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(initial),
+      loadDraft: async () => initial,
+      resolveOwnedPendingProduct: async ({ userProductId, submissionId, category }) => ({
+        userProductId,
+        submissionId,
+        displayName: "Conditioner in Analyse",
+        reviewStatus: "pending_review",
+        category,
+      }),
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved" as const, draft: input.draft }
+      },
+    },
+  })
+
+  const result = await gateway.mutate({
+    draftId: initial.draftId,
+    expectedRevision: initial.revision,
+    mutation: {
+      type: "replace_capture_category",
+      category: "conditioner",
+      refinedNeedVersionId: "refined-a",
+      refinedInputHash: "refined-input-a",
+      categoryAuthorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      candidates: [
+        {
+          kind: "pending",
+          userProductId: "pending-owned-a",
+          submissionId: "pending-submission-a",
+          frequencyRange: "weekly_2x",
+          roles: ["conditioner_rinse_out"],
+        },
+      ],
+      uncoveredRoles: [],
+    },
+  })
+
+  assert.equal(result.status, "saved")
+  assert.equal(saves, 1)
+  if (result.status !== "saved") return
+  assert.equal(result.draft.products[0]?.identity.kind, "pending_submission")
+})
+
+test("canonical category snapshot replacement prunes stale decisions and finalizes capture once", () => {
+  const base = readyDraft()
+  const draft: Stage3ProductDraft = {
+    ...base,
+    pass: "product_capture",
+    categoryCursor: "conditioner",
+    completedCaptureCategories: [],
+  }
+
+  const replaced = replaceCaptureCategorySnapshot(
+    draft,
+    "conditioner",
+    [
+      {
+        capturedProductId: "capture-replacement",
+        userProductId: "owned-replacement",
+        identity: {
+          kind: "catalog_product",
+          productId: "catalog-replacement",
+          displayName: "Ersatzpflege",
+          category: "conditioner",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    [
+      {
+        capturedProductId: "capture-replacement",
+        category: "conditioner",
+        roles: ["conditioner_rinse_out"],
+      },
+    ],
+    [],
+    requirements,
+  )
+
+  assert.equal(replaced.revision, draft.revision + 1)
+  assert.equal(replaced.pass, "product_decisions")
+  assert.equal(replaced.categoryCursor, null)
+  assert.deepEqual(replaced.completedCaptureCategories, ["conditioner"])
+  assert.deepEqual(
+    replaced.products.map((product) => product.capturedProductId),
+    ["capture-replacement"],
+  )
+  assert.deepEqual(replaced.roleAssignments, [
+    {
+      capturedProductId: "capture-replacement",
+      category: "conditioner",
+      roles: ["conditioner_rinse_out"],
+    },
+  ])
+  assert.deepEqual(replaced.decisions, [])
+  assert.deepEqual(replaced.completedDecisionKeys, [])
 })
 
 test("catalog capture replay retains the current-refined-source save guard", async () => {
@@ -351,6 +657,35 @@ function authorityDraft(): Stage3ProductDraft {
   }
 }
 
+test("catalog search derives assessment context from the signed owner draft", async () => {
+  const draft = authorityDraft()
+  const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      search: async (input) => {
+        received.push(input)
+        return { query: input.query, category: input.category, candidates: [], totalCapped: false }
+      },
+    },
+  })
+
+  await gateway.search({
+    draftId: draft.draftId,
+    category: "conditioner",
+    query: "pflege",
+    requestToken: 1,
+  })
+
+  assert.deepEqual(received[0]?.assessmentContext, {
+    hairThickness: "normal",
+    requiredRoles: ["conditioner_rinse_out"],
+    shampooTargets: [],
+    conditionerTarget: { thickness: "normal", careDirection: "moisture" },
+  })
+})
+
 function pendingAuthorityDraft(): Stage3ProductDraft {
   const draft = authorityDraft()
   return {
@@ -463,7 +798,14 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
       loadRefinedNeedSnapshot: async () => {
         sourceReadOrder.push("snapshot")
         await snapshotPending
-        return { needs: [] } as never
+        return {
+          inputHash: "refined-input-a",
+          profile: {
+            source: { projection: "refined_post_plan" },
+            hair: { thickness: "normal" },
+          },
+          needs: [],
+        } as never
       },
       loadSourceRevision: async () => {
         sourceRevisionStarted = true
@@ -510,9 +852,106 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
   assert.equal(stageCalls, 1)
   assert.ok(compilerInput)
   assert.equal((compilerInput as Record<string, unknown>).expectedSourceRevision, 7)
-  assert.deepEqual((compilerInput as Record<string, unknown>).refinedNeedSnapshot, { needs: [] })
+  assert.deepEqual((compilerInput as Record<string, unknown>).refinedNeedSnapshot, {
+    inputHash: "refined-input-a",
+    profile: {
+      source: { projection: "refined_post_plan" },
+      hair: { thickness: "normal" },
+    },
+    needs: [],
+  })
   assert.equal(sourceReadsStartedTogether, true)
-  assert.deepEqual(sourceReadOrder, ["snapshot", "source-revision", "compile"])
+  assert.deepEqual(sourceReadOrder.slice(0, 2).sort(), ["snapshot", "source-revision"])
+  assert.equal(sourceReadOrder[2], "compile")
+})
+
+test("completion rehydrates canonical catalog identity before freezing the portfolio", async () => {
+  let portfolioSnapshot: Record<string, unknown> | null = null
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(),
+      loadCurrentCatalogProduct: async () => ({
+        userProductId: "owned-a",
+        productId: "catalog-a",
+        displayName: "OGX Renewing + Argan Oil of Morocco Conditioner",
+        imageUrl: "https://example.test/current.jpg",
+        category: "conditioner" as const,
+      }),
+      loadAuthorityFacts: async () => conditionerFacts(),
+    } as unknown as Stage3ProductionPersistence,
+    compiler: {
+      compile: async (input) => {
+        portfolioSnapshot = input.portfolioSnapshot as Record<string, unknown>
+        return {
+          schemaVersion: 1,
+          compilerVersion: "test",
+          authorityVersions: {},
+          sourceFingerprint: "source",
+          payload: {},
+          proposalDelta: {},
+        }
+      },
+    },
+    stager: {
+      stage: async () => ({
+        status: "completed",
+        portfolioVersionId: "portfolio-current-identity",
+        routineVersionId: "routine-current-identity",
+        routineProposalId: null,
+        revision: 5,
+      }),
+    },
+  })
+
+  const result = await gateway.complete({ draftId: "draft-a", expectedRevision: 4 })
+
+  assert.equal(result.status, "ready_for_routine")
+  const capturedPortfolio = portfolioSnapshot as unknown as Record<string, unknown> | null
+  assert.ok(capturedPortfolio)
+  const ownedProducts = capturedPortfolio.ownedProducts as Array<Record<string, unknown>>
+  assert.equal(ownedProducts[0]?.displayName, "OGX Renewing + Argan Oil of Morocco Conditioner")
+})
+
+test("completion stops before compile when current authority can no longer assess an owned product", async () => {
+  let compileCalls = 0
+  let stageCalls = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(),
+      loadCurrentCatalogProduct: async () => ({
+        userProductId: "owned-a",
+        productId: "catalog-a",
+        displayName: "Current Conditioner",
+        imageUrl: null,
+        category: "conditioner" as const,
+      }),
+      loadAuthorityFacts: async () => ({
+        productFacts: null,
+        recommendationCandidates: [],
+        heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
+      }),
+    } as unknown as Stage3ProductionPersistence,
+    compiler: {
+      compile: async () => {
+        compileCalls += 1
+        throw new Error("compile must not run")
+      },
+    },
+    stager: {
+      stage: async () => {
+        stageCalls += 1
+        throw new Error("stage must not run")
+      },
+    },
+  })
+
+  const result = await gateway.complete({ draftId: "draft-a", expectedRevision: 4 })
+
+  assert.equal(result.status, "not_ready")
+  assert.equal(compileCalls, 0)
+  assert.equal(stageCalls, 0)
 })
 
 test("a source change between compile and stage is a reloadable conflict without a completion result", async () => {
@@ -1500,4 +1939,28 @@ test("missing and stale authority snapshots fail closed", async () => {
       /stale_authority_snapshot/,
     )
   }
+})
+
+test("v1 owned-fit snapshots fail closed after the authority semantic correction", async () => {
+  const draft = authorityDraft()
+  const authoritySnapshot = draft.authoritySnapshot!
+  const stale = {
+    ...draft,
+    authoritySnapshot: {
+      ...authoritySnapshot,
+      authorityVersions: {
+        ...authoritySnapshot.authorityVersions,
+        shampoo: "personal-plan.shampoo.v1",
+      },
+    },
+  }
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: persistence(stale),
+  })
+
+  await assert.rejects(
+    () => gateway.evaluateDecisions({ draftId: stale.draftId }),
+    /stale_authority_snapshot/,
+  )
 })

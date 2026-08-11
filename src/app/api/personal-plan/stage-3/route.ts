@@ -15,6 +15,7 @@ import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/autho
 import type { Stage3ProductsGateway } from "@/lib/personal-plan/products/gateway"
 import {
   personalPlanCategorySchema,
+  planProductRoleSchema,
   productFrequencySchema,
   stage3CapturedUncoveredRoleSchema,
   stage3RoleAssignmentSchema,
@@ -37,6 +38,26 @@ const STAGE3_MUTATION_RATE_LIMIT: RateLimitConfig = {
 }
 const identifier = z.string().uuid()
 const domainIdentifier = z.string().trim().min(1).max(200)
+const authorityFingerprint = z.string().trim().min(1).max(200)
+const categoryCaptureCandidateSchema = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("catalog"),
+      candidateId: domainIdentifier,
+      frequencyRange: productFrequencySchema,
+      roles: z.array(planProductRoleSchema).max(20),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("pending"),
+      userProductId: identifier,
+      submissionId: identifier,
+      frequencyRange: productFrequencySchema,
+      roles: z.array(planProductRoleSchema).max(20),
+    })
+    .strict(),
+])
 const loadQuerySchema = z
   .object({ personalPlanId: identifier, refinedVersionId: identifier })
   .strict()
@@ -45,6 +66,17 @@ const clientMutationSchema = z
     draftId: identifier,
     expectedRevision: z.number().int().nonnegative(),
     mutation: z.discriminatedUnion("type", [
+      z
+        .object({
+          type: z.literal("replace_capture_category"),
+          category: personalPlanCategorySchema,
+          refinedNeedVersionId: identifier,
+          refinedInputHash: authorityFingerprint,
+          categoryAuthorityVersion: authorityFingerprint,
+          candidates: z.array(categoryCaptureCandidateSchema).max(10),
+          uncoveredRoles: z.array(stage3CapturedUncoveredRoleSchema).max(20),
+        })
+        .strict(),
       z
         .object({
           type: z.literal("capture_catalog_candidate"),

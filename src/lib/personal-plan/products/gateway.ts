@@ -2,6 +2,7 @@ import type {
   PersonalPlanCategory,
   ProposedProductPortfolio,
   Stage3CatalogSearchResult,
+  Stage3CategoryCaptureCandidate,
   Stage3CapturedUncoveredRole,
   Stage3CategoryRequirement,
   Stage3AuthoritySnapshotV1,
@@ -30,6 +31,16 @@ export class Stage3ProductsGatewayError extends Error {
 }
 
 export type Stage3ProductsMutation =
+  | {
+      /** Complete atomic category snapshot; server rehydrates every candidate. */
+      type: "replace_capture_category"
+      category: PersonalPlanCategory
+      refinedNeedVersionId: string
+      refinedInputHash: string
+      categoryAuthorityVersion: string
+      candidates: Stage3CategoryCaptureCandidate[]
+      uncoveredRoles: Stage3CapturedUncoveredRole[]
+    }
   | {
       type: "capture_catalog_candidate"
       candidateId: string
@@ -96,7 +107,8 @@ export type Stage3CompleteResponse =
       personalPlanId: string
       refinedVersionId: string
       productPortfolioVersionId: string
-      routineProposalId: string
+      /** Null only when the first Routine was activated directly. */
+      routineProposalId: string | null
       next: { stage: 4; href: string }
     }
   | { status: "conflict"; latestDraft: Stage3ProductDraft }
@@ -112,6 +124,8 @@ export type Stage3ProductsGateway = {
     authoritySnapshot?: Stage3AuthoritySnapshotV1
   }): Promise<Stage3DraftResponse>
   search(input: {
+    /** Owner-bound draft whose signed authority context drives assessment readiness. */
+    draftId: string
     category: PersonalPlanCategory
     query: string
     requestToken: number

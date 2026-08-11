@@ -7,6 +7,7 @@ import {
   type Stage3RouteDeps,
 } from "../src/app/api/personal-plan/stage-3/route"
 import { createStage3CompleteRouteHandler } from "../src/app/api/personal-plan/stage-3/complete/route"
+import { createStage3SearchRouteHandler } from "../src/app/api/personal-plan/stage-3/search/route"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
 import { Stage3AuthoritySnapshotError } from "../src/lib/personal-plan/products/authority/snapshot"
 
@@ -48,6 +49,40 @@ const stage3Access: PersonalPlanJourneyAccess = {
   nextHref: "/plan-start",
   allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
 }
+
+test("Stage 3 search requires and forwards the owner draft context", async () => {
+  let received: Record<string, unknown> | null = null
+  const handler = createStage3SearchRouteHandler({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage3Access,
+    checkRateLimit: async () => ({ allowed: true }),
+    search: async (_userId, input) => {
+      received = input
+      return { status: "ready" }
+    },
+  })
+
+  const missing = await handler(
+    new Request(
+      "http://test/api/personal-plan/stage-3/search?category=shampoo&q=ogx&requestToken=1",
+    ),
+  )
+  assert.equal(missing.status, 400)
+
+  const response = await handler(
+    new Request(
+      `http://test/api/personal-plan/stage-3/search?draftId=${draft.draftId}&category=shampoo&q=ogx&requestToken=2`,
+    ),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(received, {
+    draftId: draft.draftId,
+    category: "shampoo",
+    query: "ogx",
+    requestToken: 2,
+  })
+})
 
 function deps(overrides: Partial<Stage3RouteDeps> = {}): Stage3RouteDeps {
   return {
@@ -183,6 +218,60 @@ test("Stage 3 main boundary derives owner server-side and maps conflicts", async
     [response!.status, await response!.json()],
     [409, { error: "revision_conflict", latestDraft: draft }],
   )
+})
+
+test("Stage 3 accepts an identifier-only atomic category replacement and rejects display text", async () => {
+  let received: unknown = null
+  const handlers = createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        mutate: async (input) => {
+          received = input.mutation
+          return { status: "saved", draft }
+        },
+      }),
+    }),
+  )
+  const mutation = {
+    type: "replace_capture_category",
+    category: "shampoo",
+    refinedNeedVersionId: draft.refinedVersionId,
+    refinedInputHash: "hash-a",
+    categoryAuthorityVersion: "personal-plan.shampoo.v1",
+    candidates: [
+      {
+        kind: "catalog",
+        candidateId: "catalog-a",
+        frequencyRange: "weekly_2x",
+        roles: ["shampoo_everyday"],
+      },
+    ],
+    uncoveredRoles: [],
+  }
+  let response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({ draftId: draft.draftId, expectedRevision: draft.revision, mutation }),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, mutation)
+
+  response = await handlers.PATCH(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "PATCH",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        mutation: {
+          ...mutation,
+          candidates: [{ ...mutation.candidates[0], displayName: "forged" }],
+        },
+      }),
+    }),
+  )
+  assert.equal(response!.status, 400)
 })
 
 test("Stage 3 GET is not mutation-rate-limited and PATCH rejects forged/server-only payloads", async () => {

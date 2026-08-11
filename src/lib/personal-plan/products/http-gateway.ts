@@ -21,10 +21,15 @@ export function createHttpStage3ProductsGateway({
         `/api/personal-plan/stage-3?${new URLSearchParams({ personalPlanId, refinedVersionId })}`,
         { method: "GET" },
       ),
-    search: async ({ category, query, requestToken }) =>
+    search: async ({ draftId, category, query, requestToken }) =>
       request<Stage3SearchResponse>(
         fetcher,
-        `/api/personal-plan/stage-3/search?${new URLSearchParams({ category, q: query, requestToken: String(requestToken) })}`,
+        `/api/personal-plan/stage-3/search?${new URLSearchParams({
+          draftId,
+          category,
+          q: query,
+          requestToken: String(requestToken),
+        })}`,
         { method: "GET" },
       ),
     mutate: async (input) =>

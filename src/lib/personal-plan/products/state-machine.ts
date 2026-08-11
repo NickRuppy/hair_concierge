@@ -481,6 +481,63 @@ export function finalizeCaptureCategory(
   return captureComplete ? applyProductLoadResolution(next) : next
 }
 
+/**
+ * Replaces one category's captured snapshot as a single draft transition.
+ *
+ * Gateways must finish identity ownership checks before calling this operation;
+ * this operation owns all draft-local replacement, descendant pruning, and
+ * capture finalization invariants so the acknowledged CAS has one revision.
+ */
+export function replaceCaptureCategorySnapshot(
+  draft: Stage3ProductDraft,
+  category: PersonalPlanCategory,
+  products: Stage3CapturedProduct[],
+  assignments: Stage3RoleAssignment[],
+  uncoveredRoles: Stage3CapturedUncoveredRole[],
+  requirements: Stage3CategoryRequirement[],
+): Stage3ProductDraft {
+  if (!draft.orderedCategories.includes(category)) {
+    throw new Error(`category ${category} is not in this draft`)
+  }
+
+  const retainedProducts = draft.products.filter(
+    (product) => product.identity.category !== category,
+  )
+  const capturedProductIds = new Set(retainedProducts.map((product) => product.capturedProductId))
+  const parsedProducts = products.map((product) => {
+    const parsed = stage3CapturedProductSchema.parse(product)
+    if (parsed.identity.category !== category) {
+      throw new Error(`product ${parsed.capturedProductId} does not belong to category ${category}`)
+    }
+    if (capturedProductIds.has(parsed.capturedProductId)) {
+      throw new Error(`captured product ${parsed.capturedProductId} already exists`)
+    }
+    capturedProductIds.add(parsed.capturedProductId)
+    return parsed
+  })
+  if (!CATEGORY_ROLE_POLICIES[category].allowsMultiple && parsedProducts.length > 1) {
+    throw new Error(`category ${category} does not allow multiple products`)
+  }
+
+  const decisions = draft.decisions.filter((decision) => decision.category !== category)
+  const remainingDecisionKeys = new Set(decisions.map((decision) => decision.decisionKey))
+  const replacement: Stage3ProductDraft = {
+    ...draft,
+    products: [...retainedProducts, ...parsedProducts],
+    roleAssignments: draft.roleAssignments.filter((assignment) => assignment.category !== category),
+    uncoveredRoles: draft.uncoveredRoles.filter((role) => role.category !== category),
+    decisions,
+    completedDecisionKeys: draft.completedDecisionKeys.filter((key) =>
+      remainingDecisionKeys.has(key),
+    ),
+    completedCaptureCategories: draft.completedCaptureCategories.filter(
+      (item) => item !== category,
+    ),
+  }
+
+  return finalizeCaptureCategory(replacement, category, assignments, uncoveredRoles, requirements)
+}
+
 export function reopenCaptureCategory(
   draft: Stage3ProductDraft,
   category: PersonalPlanCategory,

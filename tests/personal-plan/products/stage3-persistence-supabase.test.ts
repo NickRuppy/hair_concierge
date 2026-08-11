@@ -5,6 +5,13 @@ import { loadStage3AuthorityFactBundle } from "../../../src/lib/personal-plan/pr
 import type { Stage3ProductDraft } from "../../../src/lib/personal-plan/products/contracts"
 import { createSupabaseStage3ProductionPersistence } from "../../../src/lib/personal-plan/products/stage3-persistence-supabase"
 
+const shampooSearchContext = {
+  hairThickness: "normal" as const,
+  requiredRoles: ["shampoo_everyday"],
+  shampooTargets: [{ thickness: "normal", shampooBucket: "normal", scalpRoute: "balanced" }],
+  conditionerTarget: null,
+}
+
 test("draft creation persists the server-created immutable authority snapshot in CAS JSON", async () => {
   const createPayloads: Record<string, unknown>[] = []
   const refinedSnapshot = {
@@ -155,41 +162,42 @@ test("draft creation turns an RPC stale source into a typed refined-source resta
 
 test("owned-product search presents one brand plus the complete line and product title", async () => {
   const client = {
-    from(table: string) {
-      assert.equal(table, "products")
+    async rpc(name: string, args: { p_query: string }) {
+      assert.equal(name, "personal_plan_search_assessment_products_v1")
       const rows = [
         {
-          id: "ogx-renewing",
-          brand: "OGX",
-          name: "OGX Renewing + Argan Oil of Morocco Shampoo",
+          product_id: "ogx-renewing",
+          brand_name: "OGX",
+          product_line_name: "Renewing + Argan Oil of Morocco",
+          product_name: "OGX Renewing + Argan Oil of Morocco Shampoo",
           image_url: "https://example.test/ogx.webp",
-          is_active: true,
-          lifecycle_status: "active",
-          is_chaarlie_recommended: true,
           sort_order: 1,
           category_key: "shampoo",
-          origin: "curated",
+          assessment_status: "ready",
+          assessment_reason_codes: [],
+          total_capped: false,
         },
         {
-          id: "balea-professional",
-          brand: "Balea",
-          name: "Balea Professional Shampoo Tiefenreinigung",
+          product_id: "balea-professional",
+          brand_name: "Balea",
+          product_line_name: "Professional",
+          product_name: "Balea Professional Shampoo Tiefenreinigung",
           image_url: null,
-          is_active: true,
-          lifecycle_status: "active",
-          is_chaarlie_recommended: false,
           sort_order: 2,
           category_key: "shampoo",
-          origin: "user_submitted",
+          assessment_status: "ready",
+          assessment_reason_codes: [],
+          total_capped: false,
         },
       ]
-      const chain = {
-        select: () => chain,
-        eq: () => chain,
-        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
-          Promise.resolve({ data: rows, error: null }).then(resolve),
+      return {
+        data: rows.filter((row) =>
+          `${row.brand_name} ${row.product_line_name} ${row.product_name}`
+            .toLocaleLowerCase()
+            .includes(args.p_query.toLocaleLowerCase()),
+        ),
+        error: null,
       }
-      return chain
     },
   }
 
@@ -199,12 +207,14 @@ test("owned-product search presents one brand plus the complete line and product
     category: "shampoo",
     query: "ogx renewing",
     requestToken: 1,
+    assessmentContext: shampooSearchContext,
   })
   const balea = await persistence.search({
     userId: "owner-1",
     category: "shampoo",
     query: "balea professional",
     requestToken: 2,
+    assessmentContext: shampooSearchContext,
   })
 
   assert.deepEqual(
@@ -217,7 +227,88 @@ test("owned-product search presents one brand plus the complete line and product
   )
 })
 
-test("selected owned-product resolution keeps the same origin-neutral display title", async () => {
+test("owned-product search delegates active identity and assessment readiness to the set-based RPC", async () => {
+  const calls: Array<{ name: string; args: Record<string, unknown> }> = []
+  const client = {
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      return {
+        data: [
+          {
+            product_id: "ogx-renewing",
+            category_key: "shampoo",
+            brand_name: "OGX",
+            product_line_name: "Renewing + Argan Oil of Morocco",
+            product_name: "Shampoo",
+            image_url: "https://example.test/ogx.webp",
+            sort_order: 1,
+            assessment_status: "ready",
+            assessment_reason_codes: [],
+            total_capped: false,
+          },
+          {
+            product_id: "pending-shampoo",
+            category_key: "shampoo",
+            brand_name: "Acme",
+            product_line_name: null,
+            product_name: "Unvollständiges Shampoo",
+            image_url: null,
+            sort_order: 2,
+            assessment_status: "pending_analysis",
+            assessment_reason_codes: ["missing_required_spec"],
+            total_capped: false,
+          },
+        ],
+        error: null,
+      }
+    },
+  }
+
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  const result = await persistence.search({
+    userId: "owner-1",
+    category: "shampoo",
+    query: "ogx",
+    requestToken: 4,
+    assessmentContext: shampooSearchContext,
+  })
+
+  assert.deepEqual(calls, [
+    {
+      name: "personal_plan_search_assessment_products_v1",
+      args: {
+        p_category: "shampoo",
+        p_query: "ogx",
+        p_limit: 8,
+        p_context: shampooSearchContext,
+      },
+    },
+  ])
+  assert.deepEqual(
+    result.candidates.map((candidate) => ({
+      brand: candidate.brandName,
+      name: candidate.displayName,
+      status: candidate.assessmentStatus,
+      reasons: candidate.assessmentReasonCodes,
+    })),
+    [
+      {
+        brand: "OGX",
+        name: "Renewing + Argan Oil of Morocco Shampoo",
+        status: "ready",
+        reasons: [],
+      },
+      {
+        brand: "Acme",
+        name: "Unvollständiges Shampoo",
+        status: "pending_analysis",
+        reasons: ["missing_required_spec"],
+      },
+    ],
+  )
+})
+
+test("selected owned-product resolution persists the complete brand, line, and title identity", async () => {
   let selectedColumns = ""
   const client = {
     from(table: string) {
@@ -233,6 +324,7 @@ test("selected owned-product resolution keeps the same origin-neutral display ti
             id: "ogx-renewing",
             brand: "OGX",
             name: "OGX Renewing + Argan Oil of Morocco Shampoo",
+            product_line: { canonical_name: "Renewing + Argan Oil of Morocco" },
             image_url: "https://example.test/ogx.webp",
             category_key: "shampoo",
             is_active: true,
@@ -267,7 +359,67 @@ test("selected owned-product resolution keeps the same origin-neutral display ti
   })
 
   assert.match(selectedColumns, /brand/)
-  assert.equal(resolved?.displayName, "Renewing + Argan Oil of Morocco Shampoo")
+  assert.match(selectedColumns, /product_lines\(canonical_name\)/)
+  assert.equal(resolved?.displayName, "OGX Renewing + Argan Oil of Morocco Shampoo")
+})
+
+test("completion identity lookup is owner-bound and restores brand, line, and saleable title", async () => {
+  const selectedByTable = new Map<string, string>()
+  const client = {
+    from(table: string) {
+      const chain = {
+        select: (columns: string) => {
+          selectedByTable.set(table, columns)
+          return chain
+        },
+        eq: () => chain,
+        maybeSingle: async () =>
+          table === "user_products"
+            ? {
+                data: {
+                  id: "owned-1",
+                  catalog_product_id: "ogx-renewing",
+                  category: "shampoo",
+                  identity_status: "matched",
+                  ownership_status: "owned",
+                },
+                error: null,
+              }
+            : {
+                data: {
+                  id: "ogx-renewing",
+                  brand: "OGX",
+                  name: "OGX Renewing + Argan Oil of Morocco Shampoo",
+                  product_line: { canonical_name: "Renewing + Argan Oil of Morocco" },
+                  image_url: "https://example.test/ogx.webp",
+                  category_key: "shampoo",
+                  is_active: true,
+                  lifecycle_status: "active",
+                },
+                error: null,
+              },
+      }
+      return chain
+    },
+  }
+
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  const resolved = await persistence.loadCurrentCatalogProduct({
+    userId: "owner-1",
+    userProductId: "owned-1",
+    productId: "ogx-renewing",
+    category: "shampoo",
+  })
+
+  assert.match(selectedByTable.get("user_products") ?? "", /ownership_status/)
+  assert.match(selectedByTable.get("products") ?? "", /product_lines\(canonical_name\)/)
+  assert.deepEqual(resolved, {
+    userProductId: "owned-1",
+    productId: "ogx-renewing",
+    displayName: "OGX Renewing + Argan Oil of Morocco Shampoo",
+    imageUrl: "https://example.test/ogx.webp",
+    category: "shampoo",
+  })
 })
 
 function conditionerAuthorityDraft(): Stage3ProductDraft {

@@ -9,6 +9,7 @@ import {
   ProductDecisionScreen,
   ProductFrequencyPicker,
   ProductKindReviewScreen,
+  ProductSearchResults,
   SemanticRoleAssignment,
   Stage3Shell,
   Stage3SystemState,
@@ -16,7 +17,7 @@ import {
   type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
 import { DiscreteSlider } from "../src/components/ui/slider"
-import { authorityEvaluationProjection } from "../src/components/personal-plan-products/stage3-products-flow"
+import { authorityEvaluationProjection } from "../src/components/personal-plan-products/stage3-decision-projection"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
@@ -122,6 +123,7 @@ test("product capture exposes controlled search, explicit result selection, freq
         { value: "weekly_2", label: "2x/Woche" },
       ]}
       selectedFrequency="weekly_2"
+      selectedCandidateId="candidate-1"
       intakeAvailable
       onQueryChange={() => {}}
       onSelectCandidate={() => {}}
@@ -137,6 +139,8 @@ test("product capture exposes controlled search, explicit result selection, freq
   assert.match(html, /aria-label="Produkt suchen"/)
   assert.match(html, /role="listbox"/)
   assert.match(html, /aria-label="Kérastase Bain Satin auswählen"/)
+  assert.match(html, /aria-selected="true"/)
+  assert.match(html, /Ausgewählt/)
   assert.match(html, /role="slider"/)
   assert.match(html, /aria-label="Nutzungshäufigkeit"/)
   assert.match(html, /aria-valuetext="2x\/Woche"/)
@@ -145,6 +149,78 @@ test("product capture exposes controlled search, explicit result selection, freq
   assert.match(html, /Kérastase Bain Satin/)
   assert.doesNotMatch(html, /Suchtreffer als eigenes Produkt gespeichert/)
   assert.doesNotMatch(html, /Ich habe dafür kein Produkt/)
+})
+
+test("search results expose one complete identity and distinguish temporary analysis from selection", () => {
+  const html = renderToStaticMarkup(
+    <ProductSearchResults
+      results={[
+        {
+          candidateId: "ogx-ready",
+          displayName: "Renewing + Argan Oil of Morocco Shampoo",
+          brandName: "OGX",
+          assessmentStatus: "ready",
+        },
+        {
+          candidateId: "ogx-pending",
+          displayName: "Biotin & Collagen Shampoo",
+          brandName: "OGX",
+          assessmentStatus: "pending_analysis",
+        },
+      ]}
+      selectedCandidateId="ogx-pending"
+      status="ready"
+      onSelectCandidate={() => {}}
+    />,
+  )
+
+  assert.match(html, /aria-label="OGX Renewing \+ Argan Oil of Morocco Shampoo auswählen"/)
+  assert.match(html, /aria-label="OGX Biotin &amp; Collagen Shampoo: Analyse ausstehend"/)
+  assert.equal((html.match(/>OGX</g) ?? []).length, 2)
+  assert.match(html, /Analyse ausstehend/)
+  assert.match(html, /aria-selected="true"/)
+})
+
+test("pending analysis keeps cadence editable and names the temporary action", () => {
+  const html = renderToStaticMarkup(
+    <ProductCaptureScreen
+      categoryLabel="Shampoo"
+      needSummary="Sanfte Reinigung"
+      query="ogx"
+      searchStatus="ready"
+      searchResults={[
+        {
+          candidateId: "ogx-pending",
+          displayName: "Renewing + Argan Oil of Morocco Shampoo",
+          brandName: "OGX",
+          assessmentStatus: "pending_analysis",
+        },
+      ]}
+      capturedProducts={[]}
+      frequencyOptions={[
+        { value: "weekly_1x", label: "1x/Woche", shortLabel: "1x/W" },
+        { value: "weekly_2x", label: "2x/Woche", shortLabel: "2x/W" },
+      ]}
+      selectedFrequency="weekly_2x"
+      selectedCandidateId="ogx-pending"
+      frequencyProductName="Renewing + Argan Oil of Morocco Shampoo"
+      intakeAvailable
+      canContinue
+      onQueryChange={() => {}}
+      onSelectCandidate={() => {}}
+      onFrequencyChange={() => {}}
+      onAddAnotherProduct={() => {}}
+      onOpenFallbackIntake={() => {}}
+      onChooseOtherProduct={() => {}}
+      onContinue={() => {}}
+    />,
+  )
+
+  assert.match(html, /Analyse läuft/)
+  assert.match(html, /role="slider"/)
+  assert.match(html, /aria-valuetext="2x\/Woche"/)
+  assert.match(html, />Auf Analyse warten</)
+  assert.match(html, />Anderes Produkt wählen</)
 })
 
 test("saving product capture disables search-result selection and captured-product removal", () => {
@@ -459,7 +535,10 @@ test("product decisions keep fit, mismatch, pending, and gap actions product-own
       needSummary: "Schutz vor Foenhitzte fehlt.",
       verdictLabel: "Offene Luecke",
       rationale: "Kein sicher passendes Produkt vorhanden.",
-      actions: [{ kind: "skip", label: "Luecke im Plan markieren" }],
+      actions: [
+        { kind: "choose_other", label: "Passendes Produkt suchen" },
+        { kind: "skip", label: "Ohne Produkt fortfahren" },
+      ],
     },
   ]
 
@@ -478,10 +557,12 @@ test("product decisions keep fit, mismatch, pending, and gap actions product-own
   assert.match(html, /data-stage3-action-kind="skip"/)
   assert.match(
     html,
-    /aria-label="Luecke im Plan markieren: Hitzeschutz — Schutz vor Foenhitzte fehlt\."/,
+    /aria-label="Ohne Produkt fortfahren: Hitzeschutz — Schutz vor Foenhitzte fehlt\."/,
   )
   assert.match(html, /ca\. 29 EUR/)
   assert.match(html, /role="status"/)
+  assert.match(html, /Ideal für dich/)
+  assert.match(html, /Dein Produkt/)
 })
 
 test("consolidated product decisions show genuine Oil choices together", () => {
@@ -602,10 +683,15 @@ test("unknown and unsupported server evaluations stay explicit and do not acquir
     coverageRuleIds: [],
   })
 
-  assert.equal(unknown.verdictLabel, "Noch nicht beurteilbar")
+  assert.equal(unknown.verdictLabel, "Dieser Bedarf ist noch offen")
+  assert.equal(unknown.ownedProductName, undefined)
   assert.deepEqual(
     unknown.actions.map((action) => action.kind),
-    ["skip"],
+    ["choose_other", "skip"],
+  )
+  assert.deepEqual(
+    unknown.actions.map((action) => action.label),
+    ["Passendes Produkt suchen", "Ohne Produkt fortfahren"],
   )
   assert.equal(unknown.criteria?.[0]?.result, "Noch offen")
   assert.equal(unsupported.verdictLabel, "Prüfung nicht verfügbar")

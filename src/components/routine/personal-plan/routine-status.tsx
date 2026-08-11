@@ -29,7 +29,7 @@ export function getRoutineStatus(item: RoutineItem): RoutineStatus {
   }
   if (item.state.availability === "none") {
     return {
-      label: "Noch nicht abgedeckt",
+      label: item.state.systemAssessment === "basis" ? "Basis-Lücke" : "Offen",
       tone: "bg-[var(--status-danger-bg)] text-[var(--status-danger-text)]",
     }
   }

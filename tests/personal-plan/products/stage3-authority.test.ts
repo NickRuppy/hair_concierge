@@ -330,6 +330,82 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
   })
 }
 
+for (const category of [
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "mask",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+] as const) {
+  test(`${category} does not fabricate an owned-product fit when no product was captured`, () => {
+    const noOwnedProduct = input(category, "known")
+    noOwnedProduct.capturedProductId = null
+    noOwnedProduct.subjectIdentity = null
+    noOwnedProduct.productFacts = null
+    noOwnedProduct.recommendationCandidates = []
+
+    const result = evaluateStage3Authority(noOwnedProduct)
+
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(result.verdict, "unknown")
+    assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+    assert.equal(result.recommendation, null)
+    assert.equal(result.productFactFingerprint, null)
+  })
+}
+
+for (const category of [
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "mask",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+] as const) {
+  test(`${category} keeps leaving the need uncovered available beside a recommendation`, () => {
+    const noOwnedProduct = input(category, "known")
+    const candidate = knownFacts(category)
+    candidate.recommendable = true
+    noOwnedProduct.capturedProductId = null
+    noOwnedProduct.subjectIdentity = null
+    noOwnedProduct.productFacts = null
+    noOwnedProduct.recommendationCandidates = [candidate] as never
+
+    const result = evaluateStage3Authority(noOwnedProduct)
+
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.ok(result.recommendation)
+    assert.ok(result.allowedActions.includes("plan_recommendation"))
+    assert.ok(result.allowedActions.includes("leave_uncovered"))
+  })
+}
+
+test("only owned-fit authority policies advance for this semantic correction", () => {
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ),
+    {
+      shampoo: "personal-plan.shampoo.v2",
+      conditioner: "personal-plan.conditioner.v2",
+      leave_in: "personal-plan.leave-in.v2",
+      heat_protectant: "personal-plan.heat-protectant.v1",
+      oil: "personal-plan.oil.v1",
+      mask: "personal-plan.mask.v2",
+      scalp_care: "personal-plan.scalp-care.v1",
+      dry_shampoo: "personal-plan.dry-shampoo.v1",
+      bondbuilder: "personal-plan.bondbuilder.v2",
+      deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
+    },
+  )
+})
+
 test("verified integrated heat carriers suppress a duplicate standalone recommendation", () => {
   const heatInput = input("heat_protectant", "known")
   heatInput.capturedProductId = null
