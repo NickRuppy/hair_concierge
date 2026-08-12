@@ -71,6 +71,8 @@ cp "$repository_root/supabase/tests/regular_quiz_field_test_access.sql" \
   "$test_project_root/supabase/tests/regular_quiz_field_test_access.sql"
 cp "$repository_root/supabase/tests/personal_plan_test_owner_removed.sql" \
   "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql"
+cp "$repository_root/supabase/tests/personal_plan_legacy_quiz_source.sql" \
+  "$test_project_root/supabase/tests/personal_plan_legacy_quiz_source.sql"
 cp "$repository_root/supabase/tests/personal_plan_curated_publication_gate.sql" \
   "$test_project_root/supabase/tests/personal_plan_curated_publication_gate.sql"
 cp "$repository_root/supabase/tests/personal_plan_exact_catalog_bundle.sql" \
@@ -119,6 +121,7 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql" \
   "$test_project_root/supabase/tests/regular_quiz_field_test_access.sql" \
   "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql" \
+  "$test_project_root/supabase/tests/personal_plan_legacy_quiz_source.sql" \
   "$test_project_root/supabase/tests/personal_plan_curated_publication_gate.sql" \
   "$test_project_root/supabase/tests/personal_plan_exact_catalog_bundle.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage3_search_jsonb_shape.sql" \

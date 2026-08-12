@@ -24,7 +24,10 @@ import {
   type PayPalCheckoutAccountResult,
 } from "@/lib/paypal/checkout-activation"
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
-import { resolveCheckoutFirstTimeDestination } from "@/lib/billing/checkout-success-redirect"
+import {
+  getCheckoutFirstTimeDestinationOptionsFromAccount,
+  resolveCheckoutFirstTimeDestination,
+} from "@/lib/billing/checkout-success-redirect"
 import { recoverPayPalOrderActivation } from "@/lib/paypal/order-activation"
 
 export const runtime = "nodejs"
@@ -140,6 +143,7 @@ export async function handleSetCheckoutPassword(
       deps.supabase,
       account.leadId,
       account.checkoutContext,
+      getCheckoutFirstTimeDestinationOptionsFromAccount(account),
     )
 
     if (!account.canSetInitialPassword) {

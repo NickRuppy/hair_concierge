@@ -11,6 +11,7 @@ import {
 } from "@/lib/paypal/checkout-activation"
 import { getPremiumTierId } from "@/lib/billing/tier-ids"
 import {
+  getCheckoutFirstTimeDestinationOptionsFromAccount,
   getAuthenticatedCheckoutSuccessRedirect,
   getCheckoutFirstTimeDestination,
   resolvePersonalPlanCheckoutReadiness,
@@ -191,6 +192,7 @@ async function renderStripeWelcome(session_id: string) {
       userId: account.userId,
       leadId: account.leadId ?? session.metadata?.lead_id,
       checkoutContext: account.checkoutContext ?? session.metadata?.checkout_context,
+      destinationOptions: getCheckoutFirstTimeDestinationOptionsFromAccount(account),
     })
 
     if (user?.email?.toLowerCase() === account.email.toLowerCase()) {
@@ -224,7 +226,7 @@ async function renderStripeWelcome(session_id: string) {
   }
 
   if (user?.email?.toLowerCase() === email.toLowerCase()) {
-    await ensureCheckoutAccount(session, {
+    const account = await ensureCheckoutAccount(session, {
       supabase: admin,
       stripe,
       premiumTierId: await getPremiumTierId(admin),
@@ -250,7 +252,12 @@ async function renderStripeWelcome(session_id: string) {
       supabase,
       user.id,
       returnDestination,
-      firstTimeDestination,
+      await resolveCheckoutFirstTimeDestination(
+        admin,
+        account.leadId ?? session.metadata?.lead_id,
+        account.checkoutContext ?? session.metadata?.checkout_context,
+        getCheckoutFirstTimeDestinationOptionsFromAccount(account),
+      ),
     )
     return (
       <WelcomeClient
@@ -355,6 +362,7 @@ async function renderPayPalOneTimeWelcome(
     userId: account.userId,
     leadId: account.leadId,
     checkoutContext: account.checkoutContext,
+    destinationOptions: getCheckoutFirstTimeDestinationOptionsFromAccount(account),
   })
   const supabase = await createClient()
   const {
@@ -449,6 +457,7 @@ async function renderPayPalWelcome(token: string | undefined) {
     admin,
     intent?.lead_id,
     checkoutContext,
+    getCheckoutFirstTimeDestinationOptionsFromAccount(activation),
   )
 
   const supabase = await createClient()
@@ -522,7 +531,7 @@ async function resolveAuthenticatedCheckoutRedirect(
 
   if (error) {
     console.warn("[welcome] could not resolve existing onboarding state", error)
-    return "/onboarding"
+    return reactivationReturnDestination ?? firstTimeDestination
   }
 
   return getAuthenticatedCheckoutSuccessRedirect(
@@ -534,14 +543,23 @@ async function resolveAuthenticatedCheckoutRedirect(
 
 async function resolveOneTimePersonalPlanDestination(
   admin: ReturnType<typeof createAdminClient>,
-  input: { userId: string; leadId?: string | null; checkoutContext?: string | null },
+  input: {
+    userId: string
+    leadId?: string | null
+    checkoutContext?: string | null
+    destinationOptions?: Parameters<typeof resolveCheckoutFirstTimeDestination>[3]
+  },
 ): Promise<CheckoutFirstTimeDestination> {
   const delayedProvisioningDestination = await resolveCheckoutFirstTimeDestination(
     admin,
     input.leadId,
     input.checkoutContext,
+    input.destinationOptions,
   )
-  if (!delayedProvisioningDestination.startsWith("/plan-bereit?lead=")) {
+  if (
+    !delayedProvisioningDestination.startsWith("/plan-bereit?lead=") ||
+    input.destinationOptions?.legacyQuizFuturePurchaseEligible
+  ) {
     return delayedProvisioningDestination
   }
   try {
@@ -570,6 +588,7 @@ async function resolveOneTimePersonalPlanDestination(
     return getCheckoutFirstTimeDestination("personal_plan", input.leadId, input.checkoutContext, {
       personalPlanActivationReady: readiness.activationReady,
       personalPlanLegacy: readiness.legacy,
+      ...input.destinationOptions,
     })
   } catch (error) {
     console.warn("[welcome] Personal Plan route readiness unavailable", error)

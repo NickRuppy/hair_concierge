@@ -23,6 +23,7 @@ import {
 } from "@/lib/billing/offer-products"
 import { intervalFromPrice } from "./intervals"
 import { getStripePriceCatalogForId } from "./client"
+import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
 
 export interface CheckoutActivationDeps {
   supabase: SupabaseClient
@@ -73,6 +74,7 @@ export interface CheckoutAccountResult {
   stripeCustomerId?: string
   stripeSubscriptionId?: string
   subscriptionStatus?: string
+  legacyQuizFuturePurchaseEligible?: boolean
 }
 
 interface OneTimeCheckoutPaymentResult {
@@ -117,6 +119,7 @@ interface SubscriptionProfilePatch {
 /** Shape we actually read from the retrieved subscription. */
 export interface RetrievedSub {
   id: string
+  created?: number
   status?: string
   current_period_end?: number
   items: {
@@ -273,6 +276,16 @@ export async function ensureCheckoutAccount(
   )
 
   await linkCheckoutQuizProfile(session, deps, userId, valid.email)
+  const subscriptionPaidAtSeconds = typeof sub.created === "number" ? sub.created : null
+  const legacyQuizFuturePurchaseEligible =
+    typeof subscriptionPaidAtSeconds === "number"
+      ? await resolveLegacyQuizFuturePurchaseEligibility(deps.supabase, {
+          userId,
+          leadId: session.metadata?.lead_id,
+          paidAt: new Date(subscriptionPaidAtSeconds * 1000).toISOString(),
+          provider: "stripe",
+        })
+      : false
 
   console.info("[checkout-activation] account ensured", {
     sessionHash,
@@ -291,6 +304,7 @@ export async function ensureCheckoutAccount(
     stripeCustomerId: valid.customerId,
     stripeSubscriptionId: sub.id,
     subscriptionStatus: sub.status ?? "active",
+    legacyQuizFuturePurchaseEligible,
   }
 }
 
@@ -387,6 +401,10 @@ export async function ensureOneTimeCheckoutAccount(
       accountResult?.canSetInitialPassword ??
       (await canSetPasswordForCheckoutSession(deps, userId, valid.id)),
     state: activation.state,
+    legacyQuizFuturePurchaseEligible: await resolveLegacyQuizFuturePurchaseEligibility(
+      deps.supabase,
+      { userId, leadId: valid.leadId, paidAt: valid.paidAt, provider: "stripe" },
+    ),
   }
 }
 

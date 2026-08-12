@@ -5,27 +5,39 @@ import {
 } from "@/lib/billing/purchases"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
+import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
-import { findPersonalPlanLead } from "./readiness"
 import { PersonalPlanReadyClient } from "./personal-plan-ready-client"
 
 export const dynamic = "force-dynamic"
 
-export type PlanBereitAccessSurface = "pricing" | "paid_pending_recovery" | "onboarding" | "ready"
+export type PlanBereitAccessSurface =
+  | "pricing"
+  | "paid_pending_recovery"
+  | "source_pending"
+  | "transient_error"
+  | "onboarding"
+  | "ready"
 
 export function resolvePlanBereitAccessSurface({
   active,
   oneTimeAccessState,
   hasLead,
+  hasRequestedLead = false,
+  sourceLookupUnavailable = false,
 }: {
   active: boolean
   oneTimeAccessState: OneTimeAccessState
   hasLead: boolean
+  hasRequestedLead?: boolean
+  sourceLookupUnavailable?: boolean
 }): PlanBereitAccessSurface {
   if (!active && oneTimeAccessState === "paid_pending") return "paid_pending_recovery"
   if (!active) return "pricing"
+  if (sourceLookupUnavailable) return "transient_error"
+  if (!hasLead && hasRequestedLead) return "source_pending"
   if (!hasLead) return "onboarding"
   return "ready"
 }
@@ -64,33 +76,68 @@ export default async function PersonalPlanReadyPage({
     redirect("/pricing")
   }
 
-  let lead = await findPersonalPlanLead(admin, user.id, user.email, requestedLeadId)
-  let canonicalLeadId: string | null = null
-  if (!active && oneTimeAccessState === "paid_pending") {
-    const entitlement = await findOneTimePurchaseEntitlementForUser(admin, user.id)
-    canonicalLeadId = entitlement?.consent?.lead_id ?? lead?.id ?? null
-    if (canonicalLeadId && canonicalLeadId !== requestedLeadId) {
-      lead = await findPersonalPlanLead(admin, user.id, user.email, canonicalLeadId)
+  if (active) {
+    const rollout = await isPersonalPlanAppV1AllowedForUser(user.id).then(
+      (allowed) => ({ allowed, unavailable: false as const }),
+      (error) => {
+        console.warn("[plan-bereit] Personal Plan rollout eligibility unavailable", error)
+        return { allowed: false, unavailable: true as const }
+      },
+    )
+    if (rollout.unavailable) {
+      return <PersonalPlanReadyClient leadId={null} initialStatus="transient_error" />
+    }
+    if (!rollout.allowed) {
+      redirect("/onboarding")
     }
   }
 
-  switch (resolvePlanBereitAccessSurface({ active, oneTimeAccessState, hasLead: Boolean(lead) })) {
+  let canonicalLeadId: string | null = null
+  let requestedLeadMatchesEnrollment = true
+  const enrollmentResult = active
+    ? await findPersonalPlanEnrollmentForUser(admin, user.id).then(
+        (enrollment) => ({ enrollment, unavailable: false as const }),
+        (error) => {
+          console.warn("[plan-bereit] Personal Plan enrollment unavailable", error)
+          return { enrollment: null, unavailable: true as const }
+        },
+      )
+    : { enrollment: null, unavailable: false as const }
+  const sourceLookupUnavailable = enrollmentResult.unavailable
+  if (!active && oneTimeAccessState === "paid_pending") {
+    const entitlement = await findOneTimePurchaseEntitlementForUser(admin, user.id)
+    canonicalLeadId = entitlement?.consent?.lead_id ?? null
+    requestedLeadMatchesEnrollment =
+      !requestedLeadId || (canonicalLeadId !== null && requestedLeadId === canonicalLeadId)
+  } else if (active) {
+    canonicalLeadId = enrollmentResult.enrollment?.artifactLeadId ?? null
+    requestedLeadMatchesEnrollment =
+      !requestedLeadId || (canonicalLeadId !== null && requestedLeadId === canonicalLeadId)
+  }
+
+  switch (
+    resolvePlanBereitAccessSurface({
+      active,
+      oneTimeAccessState,
+      hasLead: Boolean(canonicalLeadId),
+      hasRequestedLead: Boolean(requestedLeadId),
+      sourceLookupUnavailable,
+    })
+  ) {
     case "paid_pending_recovery":
       return <PersonalPlanPaidPendingRecovery canonicalLeadId={canonicalLeadId} />
     case "onboarding":
       redirect("/onboarding")
+    case "source_pending":
+      return <PersonalPlanReadyClient leadId={null} initialStatus="source_pending" />
+    case "transient_error":
+      return <PersonalPlanReadyClient leadId={null} initialStatus="transient_error" />
     case "ready":
-      if (!lead) redirect("/onboarding")
-      const personalPlanV1Allowed = await isPersonalPlanAppV1AllowedForUser(user.id).catch(
-        (error) => {
-          console.warn("[plan-bereit] Personal Plan rollout eligibility unavailable", error)
-          return false
-        },
-      )
       return (
         <PersonalPlanReadyClient
-          leadId={lead.id}
-          nextHref={personalPlanV1Allowed ? "/plan-start" : "/onboarding?returnTo=%2Froutine"}
+          leadId={canonicalLeadId}
+          initialStatus={requestedLeadMatchesEnrollment ? "checking" : "forbidden"}
+          nextHref="/plan-start"
         />
       )
     case "pricing":

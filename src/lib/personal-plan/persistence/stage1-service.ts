@@ -1,4 +1,6 @@
 import { computeNeedPlan } from "../compute-stage1"
+import { buildLegacyQuizStage1Source } from "../input"
+import type { QuizAnswers } from "@/lib/quiz/types"
 import { hashPersonalPlanNeedVersionInput, type JsonValue } from "./index"
 
 export const PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION = "stage1-v1"
@@ -8,6 +10,7 @@ export type Stage1Entitlement = {
   enrollmentSourceId: string | null
   qualifiedAt: string | null
   artifactLeadId: string | null
+  quizSourceKind?: "personal_plan" | "legacy" | null
 }
 
 export type Stage1PreparedArtifact = {
@@ -15,10 +18,17 @@ export type Stage1PreparedArtifact = {
   quizAnswers: unknown
 }
 
+export type Stage1LegacyLead = {
+  id: string
+  quizAnswers: QuizAnswers
+}
+
 export type CreateInitialNeedRequest = {
   userId: string
   enrollmentPurchaseSourceId: string
-  preparedArtifactSourceId: string
+  preparedArtifactSourceId: string | null
+  stage1SourceKind: "personal_plan_artifact" | "legacy_quiz_lead"
+  stage1SourceLeadId: string | null
   schemaVersion: number
   computationVersion: string
   inputHash: string
@@ -41,6 +51,7 @@ export type Stage1PersistenceDependencies = {
   cohortCutoff: () => Date | null
   findEntitlement: (userId: string) => Promise<Stage1Entitlement>
   loadArtifact: (userId: string, artifactLeadId: string) => Promise<Stage1PreparedArtifact | null>
+  loadLegacyLead?: (userId: string, leadId: string) => Promise<Stage1LegacyLead | null>
   createOrReuseInitialNeed: (request: CreateInitialNeedRequest) => Promise<CreateInitialNeedResult>
   now?: () => Date
 }
@@ -78,17 +89,27 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
         return { status: "personal_plan_not_available" }
       }
 
-      let artifact: Stage1PreparedArtifact | null
+      let artifact: Stage1PreparedArtifact | null = null
+      let legacyLead: Stage1LegacyLead | null = null
       try {
-        artifact = await deps.loadArtifact(userId, entitlement.artifactLeadId!)
+        if (entitlement.quizSourceKind === "legacy") {
+          legacyLead = (await deps.loadLegacyLead?.(userId, entitlement.artifactLeadId!)) ?? null
+        } else {
+          artifact = await deps.loadArtifact(userId, entitlement.artifactLeadId!)
+        }
       } catch {
         return { status: "temporarily_unavailable" }
       }
-      if (!artifact) return { status: "activation_pending" }
+      if (!artifact && !legacyLead) return { status: "activation_pending" }
+
+      const stage1Source = legacyLead
+        ? buildLegacyQuizStage1Source({ leadId: legacyLead.id, answers: legacyLead.quizAnswers })
+        : artifact!.quizAnswers
+      const sourceId = legacyLead?.id ?? artifact!.id
 
       const computed = computeNeedPlan({
-        rawEnvelope: artifact.quizAnswers,
-        artifactId: artifact.id,
+        rawEnvelope: stage1Source,
+        artifactId: sourceId,
         projection: "initial_quiz",
         computationVersion: PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION,
         createdAt: (deps.now ?? (() => new Date()))().toISOString(),
@@ -100,7 +121,9 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
       const request: CreateInitialNeedRequest = {
         userId,
         enrollmentPurchaseSourceId: entitlement.enrollmentSourceId!,
-        preparedArtifactSourceId: artifact.id,
+        preparedArtifactSourceId: artifact?.id ?? null,
+        stage1SourceKind: legacyLead ? "legacy_quiz_lead" : "personal_plan_artifact",
+        stage1SourceLeadId: legacyLead?.id ?? null,
         schemaVersion: computed.snapshot.schemaVersion,
         computationVersion: computed.snapshot.computationVersion,
         inputHash: hashPersonalPlanNeedVersionInput({

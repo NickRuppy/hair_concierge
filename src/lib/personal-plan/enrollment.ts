@@ -8,6 +8,11 @@ import { PERSONAL_PLAN_LAUNCH_PRICING_CATALOG } from "@/lib/billing/pricing-cata
 import { findCurrentBillingSubscriptionsForUser } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState, SupabaseBillingClient } from "@/lib/billing/types"
 import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
+import {
+  getPersonalPlanNewBuyerCohortCutoff,
+  isPersonalPlanLegacyQuizCutoverEnabled,
+} from "@/lib/personal-plan/release"
+import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
 
 export type PersonalPlanEnrollment = {
   accessState: OneTimeAccessState
@@ -15,6 +20,7 @@ export type PersonalPlanEnrollment = {
   paidAt: string | null
   qualifiedAt: string | null
   artifactLeadId: string | null
+  quizSourceKind: "personal_plan" | "legacy" | null
   sourceKind: "one_time" | "launch_subscription" | "field_test" | null
 }
 
@@ -25,6 +31,19 @@ type CorrelationRow = {
 
 type LeadRow = {
   quiz_kind?: unknown
+  user_id?: unknown
+}
+
+type EnrollmentReleaseDependencies = {
+  legacyQuizCutoverEnabled: () => boolean
+  cohortCutoff: () => Date | null
+  appAllowedForUser: (userId: string, client: unknown) => Promise<boolean>
+}
+
+const defaultReleaseDependencies: EnrollmentReleaseDependencies = {
+  legacyQuizCutoverEnabled: isPersonalPlanLegacyQuizCutoverEnabled,
+  cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
+  appAllowedForUser: (userId, client) => isPersonalPlanAppV1AllowedForUser(userId, client as never),
 }
 
 type FieldTestEnrollmentRow = {
@@ -64,6 +83,7 @@ function emptyEnrollment(accessState: OneTimeAccessState = "none"): PersonalPlan
     paidAt: null,
     qualifiedAt: null,
     artifactLeadId: null,
+    quizSourceKind: null,
     sourceKind: null,
   }
 }
@@ -112,6 +132,7 @@ function resolveActiveFieldTestEnrollment(
     paidAt: null,
     qualifiedAt: activatedAt,
     artifactLeadId: leadId,
+    quizSourceKind: "personal_plan",
     sourceKind: "field_test",
   }
 }
@@ -125,17 +146,28 @@ export async function findPersonalPlanEnrollmentForUser(
   supabase: SupabaseBillingClient,
   userId: string,
   now: Date = new Date(),
+  release: EnrollmentReleaseDependencies = defaultReleaseDependencies,
 ): Promise<PersonalPlanEnrollment> {
   const oneTime = await findOneTimePurchaseEntitlementForUser(supabase, userId)
   const oneTimeState = resolveOneTimePurchaseAccessState(oneTime)
   if (oneTimeState === "active" && oneTime?.consent?.lead_id) {
-    return {
-      accessState: "active",
-      sourceId: oneTime.purchase.id,
-      paidAt: oneTime.purchase.paid_at,
+    const quizSourceKind = await resolveEligibleQuizSourceKind({
+      supabase,
+      userId,
+      leadId: oneTime.consent.lead_id,
       qualifiedAt: oneTime.purchase.paid_at,
-      artifactLeadId: oneTime.consent.lead_id,
-      sourceKind: "one_time",
+      release,
+    })
+    if (quizSourceKind) {
+      return {
+        accessState: "active",
+        sourceId: oneTime.purchase.id,
+        paidAt: oneTime.purchase.paid_at,
+        qualifiedAt: oneTime.purchase.paid_at,
+        artifactLeadId: oneTime.consent.lead_id,
+        quizSourceKind,
+        sourceKind: "one_time",
+      }
     }
   }
 
@@ -170,17 +202,26 @@ export async function findPersonalPlanEnrollmentForUser(
       if (leadId && paidAt) {
         const { data: leadData, error: leadError } = await enrollmentClient
           .from("leads")
-          .select("quiz_kind")
+          .select("quiz_kind,user_id")
           .eq("id", leadId)
           .maybeSingle()
         if (leadError) throw leadError
-        if ((leadData as LeadRow | null)?.quiz_kind === "personal_plan") {
+        const lead = leadData as LeadRow | null
+        const quizSourceKind = await resolveEligibleLeadKind({
+          lead,
+          userId,
+          qualifiedAt: paidAt,
+          supabase,
+          release,
+        })
+        if (quizSourceKind) {
           return {
             accessState: "active",
             sourceId: subscription.id,
             paidAt,
             qualifiedAt: paidAt,
             artifactLeadId: leadId,
+            quizSourceKind,
             sourceKind: "launch_subscription",
           }
         }
@@ -208,4 +249,45 @@ export async function findPersonalPlanEnrollmentForUser(
       now,
     ) ?? emptyEnrollment(oneTimeState)
   )
+}
+
+async function resolveEligibleQuizSourceKind(input: {
+  supabase: SupabaseBillingClient
+  userId: string
+  leadId: string
+  qualifiedAt: string
+  release: EnrollmentReleaseDependencies
+}): Promise<"personal_plan" | "legacy" | null> {
+  const client = input.supabase as unknown as EnrollmentSupabaseClient
+  const { data, error } = await client
+    .from("leads")
+    .select("quiz_kind,user_id")
+    .eq("id", input.leadId)
+    .maybeSingle()
+  if (error) throw error
+  return resolveEligibleLeadKind({
+    lead: data as LeadRow | null,
+    userId: input.userId,
+    qualifiedAt: input.qualifiedAt,
+    supabase: input.supabase,
+    release: input.release,
+  })
+}
+
+async function resolveEligibleLeadKind(input: {
+  lead: LeadRow | null
+  userId: string
+  qualifiedAt: string
+  supabase: SupabaseBillingClient
+  release: EnrollmentReleaseDependencies
+}): Promise<"personal_plan" | "legacy" | null> {
+  if (input.lead?.user_id !== input.userId) return null
+  if (input.lead.quiz_kind === "personal_plan") return "personal_plan"
+  if (input.lead.quiz_kind !== "legacy" || !input.release.legacyQuizCutoverEnabled()) return null
+  const cutoff = input.release.cohortCutoff()
+  const qualifiedAt = new Date(input.qualifiedAt)
+  if (!cutoff || Number.isNaN(qualifiedAt.getTime()) || qualifiedAt.getTime() < cutoff.getTime()) {
+    return null
+  }
+  return (await input.release.appAllowedForUser(input.userId, input.supabase)) ? "legacy" : null
 }

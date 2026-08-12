@@ -25,6 +25,7 @@ type RoutinePlanResult =
 
 function createMiddleware({
   currentAccess = true,
+  frontierResult = { data: { eligible: false, source_ready: false, plan: null }, error: null },
   planResult = {
     data: { pending_routine_proposal_id: "proposal-1", active_routine_version_id: null },
     error: null,
@@ -32,6 +33,19 @@ function createMiddleware({
   throwsOnPlanLookup = false,
 }: {
   currentAccess?: boolean
+  frontierResult?: {
+    data: {
+      eligible: boolean
+      source_ready: boolean
+      plan: null | {
+        current_initial_need_version_id: string | null
+        current_refined_need_version_id: string | null
+        pending_routine_proposal_id: string | null
+        active_routine_version_id: string | null
+      }
+    } | null
+    error: null | { message: string }
+  }
   planResult?: RoutinePlanResult
   throwsOnPlanLookup?: boolean
 } = {}) {
@@ -82,6 +96,20 @@ function createMiddleware({
     resolveOneTimeAccessState: (async () =>
       "none") as UpdateSessionDependencies["resolveOneTimeAccessState"],
     getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
+    loadPersonalPlanRoutingFrontier: async () => {
+      if (frontierResult.error) throw frontierResult.error
+      const data = frontierResult.data
+      if (!data?.eligible) return { kind: "legacy" }
+      if (!data.source_ready) return { kind: "recovery", nextHref: "/plan-bereit" }
+      if (!data.plan) return { kind: "personal_plan", frontier: "stage1", nextHref: "/plan-start" }
+      if (data.plan.active_routine_version_id) {
+        return { kind: "personal_plan", frontier: "stage5", nextHref: "/anwendung" }
+      }
+      if (data.plan.pending_routine_proposal_id) {
+        return { kind: "personal_plan", frontier: "stage4", nextHref: "/routine" }
+      }
+      return { kind: "personal_plan", frontier: "stage3", nextHref: "/plan-start" }
+    },
   }
 
   return createUpdateSession(dependencies)
@@ -126,4 +154,58 @@ test("a thrown personal-plan lookup preserves legacy onboarding protection", asy
 
   assert.equal(response.status, 307)
   assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
+})
+
+test("an eligible new buyer follows the Personal Plan frontier instead of legacy onboarding", async () => {
+  const response = await createMiddleware({
+    frontierResult: {
+      data: { eligible: true, source_ready: true, plan: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/plan-start")
+})
+
+test("an eligible buyer with an unready source stays in readiness recovery", async () => {
+  const response = await createMiddleware({
+    frontierResult: {
+      data: { eligible: true, source_ready: false, plan: null },
+      error: null,
+    },
+  })(new NextRequest("https://chaarlie.de/routine"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/plan-bereit")
+})
+
+test("a routing-frontier outage cannot silently fall through to legacy onboarding", async () => {
+  const response = await createMiddleware({
+    frontierResult: {
+      data: null,
+      error: { message: "routing source unavailable" },
+    },
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 503)
+  assert.equal(response.headers.get("location"), null)
+  assert.equal(response.headers.get("cache-control"), "private, no-store")
+  assert.match(await response.text(), /Bitte versuche es gleich noch einmal/)
+})
+
+test("explicit legacy onboarding edits are not intercepted by the Personal Plan frontier", async () => {
+  const response = await createMiddleware({
+    frontierResult: {
+      data: { eligible: true, source_ready: true, plan: null },
+      error: null,
+    },
+  })(
+    new NextRequest(
+      "https://chaarlie.de/onboarding?step=products&editMode=profile&returnTo=%2Fprofile",
+    ),
+  )
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
 })

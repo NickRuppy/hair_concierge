@@ -16,6 +16,7 @@ import {
   type PayPalSubscription,
 } from "./subscription-shapes"
 import { getPayPalIntervalForPlanId } from "./plans"
+import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
 
 export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
@@ -66,6 +67,7 @@ export type PayPalCheckoutAccountResult =
       canSetInitialPassword: boolean
       leadId?: string | null
       checkoutContext?: string | null
+      legacyQuizFuturePurchaseEligible?: boolean
     }
   | { status: "pending" }
   | { status: "duplicate" }
@@ -77,7 +79,7 @@ type ProfileRow = {
 
 export async function ensurePayPalOneTimePurchaseAccount(
   deps: PayPalCheckoutActivationDeps,
-  input: { email: string; activationKey: string; leadId?: string | null },
+  input: { email: string; activationKey: string; leadId?: string | null; paidAt?: string | null },
 ): Promise<Extract<PayPalCheckoutAccountResult, { status: "active" }>> {
   const email = input.email.trim().toLowerCase()
   const existing = await findProfileByEmail(deps, email)
@@ -97,6 +99,10 @@ export async function ensurePayPalOneTimePurchaseAccount(
     canSetInitialPassword,
     leadId: input.leadId ?? null,
     checkoutContext: null,
+    legacyQuizFuturePurchaseEligible: await resolveLegacyQuizFuturePurchaseEligibility(
+      deps.supabase,
+      { userId, leadId: input.leadId, paidAt: input.paidAt, provider: "paypal" },
+    ),
   }
 }
 
@@ -214,6 +220,15 @@ export async function ensurePayPalCheckoutAccount(
   )
   await mirrorBillingSubscriptionToProfile(deps.supabase, billingRow, deps.premiumTierId)
   await linkPayPalQuizProfile(subscription, deps, userId, accountEmail)
+  const legacyQuizFuturePurchaseEligible = await resolveLegacyQuizFuturePurchaseEligibility(
+    deps.supabase,
+    {
+      userId,
+      leadId: deps.leadId,
+      paidAt: subscription.start_time ?? null,
+      provider: "paypal",
+    },
+  )
 
   return {
     status: "active",
@@ -223,6 +238,7 @@ export async function ensurePayPalCheckoutAccount(
     canSetInitialPassword,
     leadId: deps.leadId ?? null,
     checkoutContext: deps.checkoutContext ?? null,
+    legacyQuizFuturePurchaseEligible,
   }
 }
 

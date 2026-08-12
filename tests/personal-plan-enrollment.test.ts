@@ -75,6 +75,7 @@ test("a current Personal Plan membership resolves through its exact provider pur
       {
         id: "44444444-4444-4444-8444-444444444444",
         quiz_kind: "personal_plan",
+        user_id: "user-1",
       },
     ],
   })
@@ -87,6 +88,7 @@ test("a current Personal Plan membership resolves through its exact provider pur
       paidAt: "2026-08-09T12:46:16.000Z",
       qualifiedAt: "2026-08-09T12:46:16.000Z",
       artifactLeadId: "44444444-4444-4444-8444-444444444444",
+      quizSourceKind: "personal_plan",
       sourceKind: "launch_subscription",
     },
   )
@@ -118,6 +120,7 @@ test("Stripe launch memberships use the checkout session reference persisted at 
       {
         id: "44444444-4444-4444-8444-444444444444",
         quiz_kind: "personal_plan",
+        user_id: "user-1",
       },
     ],
   })
@@ -151,6 +154,7 @@ test("the launch membership is selected even when a standard subscription sorts 
       {
         id: "44444444-4444-4444-8444-444444444444",
         quiz_kind: "personal_plan",
+        user_id: "user-1",
       },
     ],
   })
@@ -186,7 +190,7 @@ test("standard subscriptions and membership purchases without exact Personal Pla
           purchase_completed_at: "2026-08-09T12:46:16.000Z",
         },
       ],
-      leads: [{ id: "lead-1", quiz_kind: "legacy" }],
+      leads: [{ id: "lead-1", quiz_kind: "legacy", user_id: "user-1" }],
     },
   ]) {
     assert.deepEqual(
@@ -201,6 +205,7 @@ test("standard subscriptions and membership purchases without exact Personal Pla
         paidAt: null,
         qualifiedAt: null,
         artifactLeadId: null,
+        quizSourceKind: null,
         sourceKind: null,
       },
     )
@@ -229,9 +234,49 @@ test("an unapplied field-test relation preserves ordinary non-Personal-Plan enro
       paidAt: null,
       qualifiedAt: null,
       artifactLeadId: null,
+      quizSourceKind: null,
       sourceKind: null,
     },
   )
+})
+
+test("a post-cutoff owned legacy lead is eligible only behind the independent cutover", async () => {
+  const responses = {
+    billing_one_time_purchases: [],
+    billing_subscriptions: [subscription],
+    funnel_sessions: [
+      attributedSession({ provider: "paypal", purchaseReference: "I-PERSONAL-PLAN" }),
+    ],
+    leads: [
+      {
+        id: "44444444-4444-4444-8444-444444444444",
+        quiz_kind: "legacy",
+        user_id: "user-1",
+      },
+    ],
+  }
+  const release = {
+    legacyQuizCutoverEnabled: () => true,
+    cohortCutoff: () => new Date("2026-08-08T00:00:00.000Z"),
+    appAllowedForUser: async () => true,
+  }
+
+  const enrollment = await findPersonalPlanEnrollmentForUser(
+    client(responses) as never,
+    "user-1",
+    new Date("2026-08-10"),
+    release,
+  )
+  assert.equal(enrollment.quizSourceKind, "legacy")
+  assert.equal(enrollment.artifactLeadId, "44444444-4444-4444-8444-444444444444")
+
+  const disabled = await findPersonalPlanEnrollmentForUser(
+    client(responses) as never,
+    "user-1",
+    new Date("2026-08-10"),
+    { ...release, legacyQuizCutoverEnabled: () => false },
+  )
+  assert.equal(disabled.accessState, "none")
 })
 
 test("field-test enrollment reads still fail closed on unrelated database errors", async () => {

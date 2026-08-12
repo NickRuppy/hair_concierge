@@ -14,6 +14,7 @@ export type PayPalSubscription = {
   id?: string
   status?: string
   plan_id?: string
+  start_time?: string
   custom_id?: string
   subscriber?: {
     payer_id?: string

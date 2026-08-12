@@ -2,28 +2,71 @@
 
 import { Check, LoaderCircle, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { HairLength } from "@/lib/vocabulary/hair-length"
 import {
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
   PERSONAL_PLAN_READY_POLL_LIMIT,
   canContinueToPersonalPlan,
   type PersonalPlanReadinessPhase,
 } from "./transition"
+import type { PlanBereitMissingSourceFact } from "./readiness"
+
+type PlanBereitStatusBody = {
+  status?: PersonalPlanReadinessPhase
+  leadId?: string | null
+  sourceVersion?: string | null
+  missingFacts?: PlanBereitMissingSourceFact[]
+}
+
+type ClientReadiness = {
+  status: PersonalPlanReadinessPhase
+  leadId: string | null
+  sourceVersion: string | null
+  missingFacts: PlanBereitMissingSourceFact[]
+}
+
+function toClientReadiness(
+  body: PlanBereitStatusBody,
+  fallbackLeadId: string | null,
+): ClientReadiness {
+  return {
+    status: body.status ?? "transient_error",
+    leadId: body.leadId ?? fallbackLeadId,
+    sourceVersion: body.sourceVersion ?? null,
+    missingFacts: Array.isArray(body.missingFacts) ? body.missingFacts : [],
+  }
+}
 
 export function PersonalPlanReadyClient({
   leadId,
-  nextHref,
+  initialStatus = "checking",
+  nextHref = "/plan-start",
 }: {
-  leadId: string
-  nextHref: "/plan-start" | "/onboarding?returnTo=%2Froutine"
+  leadId: string | null
+  initialStatus?: PersonalPlanReadinessPhase
+  nextHref?: "/plan-start"
 }) {
-  const [readiness, setReadiness] = useState<PersonalPlanReadinessPhase>("checking")
+  const [readiness, setReadiness] = useState<ClientReadiness>({
+    status: initialStatus,
+    leadId,
+    sourceVersion: null,
+    missingFacts: [],
+  })
   const [retryKey, setRetryKey] = useState(0)
+  const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
+  const [isSavingFact, setIsSavingFact] = useState(false)
+
+  const currentLeadId = readiness.leadId ?? leadId
+  const missingHairLength =
+    readiness.missingFacts.find((fact) => fact.field === "hair_length") ?? null
 
   useEffect(() => {
+    if (initialStatus === "forbidden") return
+    const pollLeadId = leadId
     let cancelled = false
     let timer: ReturnType<typeof setTimeout> | null = null
     let attempts = 0
@@ -31,7 +74,10 @@ export function PersonalPlanReadyClient({
     async function poll() {
       attempts += 1
       try {
-        const response = await fetch(`/plan-bereit/status?lead=${encodeURIComponent(leadId)}`, {
+        const statusUrl = pollLeadId
+          ? `/plan-bereit/status?lead=${encodeURIComponent(pollLeadId)}`
+          : "/plan-bereit/status"
+        const response = await fetch(statusUrl, {
           method: attempts === 1 ? "POST" : "GET",
           headers: { Accept: "application/json" },
           cache: "no-store",
@@ -40,19 +86,21 @@ export function PersonalPlanReadyClient({
         if (cancelled) return
 
         if (response.status === 401) {
-          window.location.assign(`/auth?next=${encodeURIComponent(`/plan-bereit?lead=${leadId}`)}`)
+          const authTarget = leadId ? `/plan-bereit?lead=${leadId}` : "/plan-bereit"
+          window.location.assign(`/auth?next=${encodeURIComponent(authTarget)}`)
           return
         }
         if (response.status === 403) {
-          setReadiness("error")
+          setReadiness((current) => ({ ...current, status: "forbidden" }))
           return
         }
-        if (!response.ok || body.status === "error") {
-          setReadiness("error")
+        if (!response.ok || body.status === "transient_error") {
+          setReadiness((current) => ({ ...current, status: "transient_error" }))
           return
         }
-        if (response.ok && body.status === "ready") {
-          setReadiness("ready")
+        const next = toClientReadiness(body, pollLeadId)
+        setReadiness(next)
+        if (next.status !== "checking" && next.status !== "source_pending") {
           return
         }
       } catch {
@@ -60,7 +108,7 @@ export function PersonalPlanReadyClient({
       }
 
       if (attempts >= PERSONAL_PLAN_READY_POLL_LIMIT) {
-        setReadiness("timeout")
+        setReadiness((current) => ({ ...current, status: "timeout" }))
         return
       }
       timer = setTimeout(poll, PERSONAL_PLAN_READY_POLL_INTERVAL_MS)
@@ -71,10 +119,52 @@ export function PersonalPlanReadyClient({
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [leadId, retryKey])
+  }, [leadId, initialStatus, retryKey])
 
-  const canContinue = canContinueToPersonalPlan(readiness)
-  const showRecovery = readiness === "timeout" || readiness === "error"
+  async function submitMissingHairLength(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!currentLeadId || !readiness.sourceVersion || !selectedHairLength) return
+    setIsSavingFact(true)
+    try {
+      const response = await fetch(
+        `/plan-bereit/status?lead=${encodeURIComponent(currentLeadId)}`,
+        {
+          method: "PATCH",
+          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({
+            field: "hair_length",
+            value: selectedHairLength,
+            sourceVersion: readiness.sourceVersion,
+          }),
+        },
+      )
+      const body = await response.json().catch(() => ({}))
+      if (response.status === 401) {
+        window.location.assign(
+          `/auth?next=${encodeURIComponent(`/plan-bereit?lead=${currentLeadId}`)}`,
+        )
+        return
+      }
+      if (!response.ok || body.status === "transient_error") {
+        setReadiness((current) => ({ ...current, status: "transient_error" }))
+        return
+      }
+      setReadiness(toClientReadiness(body, currentLeadId))
+    } catch {
+      setReadiness((current) => ({ ...current, status: "transient_error" }))
+    } finally {
+      setIsSavingFact(false)
+    }
+  }
+
+  const canContinue = canContinueToPersonalPlan(readiness.status)
+  const showRetry =
+    readiness.status === "timeout" ||
+    readiness.status === "transient_error" ||
+    readiness.status === "source_pending" ||
+    readiness.status === "paid_pending"
+  const showSupport = readiness.status === "invalid_source" || readiness.status === "forbidden"
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
@@ -139,7 +229,7 @@ export function PersonalPlanReadyClient({
                   </p>
                 </div>
 
-                {showRecovery ? (
+                {showRetry ? (
                   <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
                     <p className="text-sm leading-6 text-[var(--text-sub)]">
                       Die Aktivierung dauert gerade etwas länger. Deine Zahlung und deine Antworten
@@ -150,12 +240,72 @@ export function PersonalPlanReadyClient({
                       variant="outline"
                       className="w-full rounded-full"
                       onClick={() => {
-                        setReadiness("checking")
+                        setReadiness((current) => ({ ...current, status: "checking" }))
                         setRetryKey((value) => value + 1)
                       }}
                     >
                       Erneut prüfen
                     </Button>
+                  </div>
+                ) : null}
+                {readiness.status === "missing_source_facts" && missingHairLength ? (
+                  <form
+                    className="space-y-4 rounded-3xl border border-border bg-card p-5 text-left"
+                    onSubmit={submitMissingHairLength}
+                  >
+                    <div className="space-y-2">
+                      <h2 className="text-base font-semibold text-foreground">
+                        {missingHairLength.question}
+                      </h2>
+                      <p className="text-sm leading-6 text-[var(--text-sub)]">
+                        {missingHairLength.helper}
+                      </p>
+                    </div>
+                    <div className="grid gap-2">
+                      {missingHairLength.options.map((option) => (
+                        <label
+                          key={option.value}
+                          className={cn(
+                            "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium",
+                            selectedHairLength === option.value
+                              ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
+                              : "border-border bg-background text-foreground",
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name="hair_length"
+                            value={option.value}
+                            checked={selectedHairLength === option.value}
+                            onChange={() => setSelectedHairLength(option.value)}
+                            className="h-4 w-4 accent-[var(--brand-plum)]"
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <Button
+                      type="submit"
+                      variant="funnelCta"
+                      className="w-full"
+                      disabled={!selectedHairLength || isSavingFact}
+                    >
+                      {isSavingFact ? "Speichern..." : "Weiter"}
+                    </Button>
+                  </form>
+                ) : null}
+                {showSupport ? (
+                  <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                    <p className="text-sm leading-6 text-[var(--text-sub)]">
+                      Wir können diesen Haarplan gerade nicht eindeutig deinem Konto zuordnen. Deine
+                      Zahlung bleibt sicher erfasst.
+                    </p>
+                    <a
+                      href="/kontakt"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                    >
+                      Support kontaktieren
+                    </a>
                   </div>
                 ) : null}
               </div>

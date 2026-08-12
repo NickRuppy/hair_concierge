@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import { NextResponse, type NextRequest } from "next/server"
 import {
   getAuthenticatedAppRedirect,
@@ -11,6 +12,11 @@ import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
+import {
+  getPersonalPlanFrontierRedirect,
+  type PersonalPlanRoutingFrontier,
+} from "@/lib/personal-plan/frontier-routing"
+import { loadPersonalPlanRoutingFrontierForUser } from "@/lib/personal-plan/frontier-routing-loader"
 import {
   classifyRoute,
   pathMatchesRoutePrefix,
@@ -141,6 +147,10 @@ export type UpdateSessionDependencies = {
   hasCurrentAppAccess: typeof hasCurrentAppAccess
   resolveOneTimeAccessState: typeof resolveOneTimeAccessState
   getRouteEnvironment: () => RouteEnvironment
+  loadPersonalPlanRoutingFrontier?: (
+    client: Pick<SupabaseClient, "from">,
+    userId: string,
+  ) => Promise<PersonalPlanRoutingFrontier>
 }
 
 function getDefaultRouteEnvironment(): RouteEnvironment {
@@ -163,6 +173,7 @@ const defaultUpdateSessionDependencies: UpdateSessionDependencies = {
   hasCurrentAppAccess,
   resolveOneTimeAccessState,
   getRouteEnvironment: getDefaultRouteEnvironment,
+  loadPersonalPlanRoutingFrontier: loadPersonalPlanRoutingFrontierForUser as never,
 }
 
 /**
@@ -381,6 +392,43 @@ export function createUpdateSession(
       ])
 
       const intakeState = resolveIntakeState(profile, hairProfile)
+      try {
+        const frontier = await (
+          dependencies.loadPersonalPlanRoutingFrontier ?? loadPersonalPlanRoutingFrontierForUser
+        )(supabase as never, user.id)
+        const frontierRedirect = getPersonalPlanFrontierRedirect(pathname, frontier)
+        if (frontierRedirect) {
+          const url = buildAuthenticatedIntakeRedirectUrl(
+            request.nextUrl,
+            pathname,
+            frontierRedirect,
+          )
+          return redirectWithSupabaseCookies(url, supabaseResponse)
+        }
+      } catch (error) {
+        console.warn("[personal-plan] routing frontier unavailable", error)
+        if (
+          getPersonalPlanFrontierRedirect(pathname, {
+            kind: "recovery",
+            nextHref: "/plan-bereit",
+          })
+        ) {
+          const unavailableResponse = new NextResponse(
+            "Dein Haarplan ist gerade nicht erreichbar. Bitte versuche es gleich noch einmal.",
+            {
+              status: 503,
+              headers: {
+                "Cache-Control": "private, no-store",
+                "Content-Type": "text/plain; charset=utf-8",
+              },
+            },
+          )
+          supabaseResponse.cookies
+            .getAll()
+            .forEach((cookie) => unavailableResponse.cookies.set(cookie))
+          return unavailableResponse
+        }
+      }
       let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined
       if (
         intakeState === "needs_onboarding" &&

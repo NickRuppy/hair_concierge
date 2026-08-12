@@ -25,11 +25,17 @@ export function createSupabaseStage2RefinementPersistence(
 
     const { data: initial, error: initialError } = await client
       .from("personal_plan_need_versions")
-      .select("id,prepared_artifact_source_id,input_snapshot,output_snapshot")
+      .select(
+        "id,prepared_artifact_source_id,stage1_source_kind,stage1_source_lead_id,input_snapshot,output_snapshot",
+      )
       .eq("id", plan.current_initial_need_version_id)
       .eq("user_id", userId)
       .maybeSingle()
-    if (initialError || !initial?.prepared_artifact_source_id)
+    if (
+      initialError ||
+      !initial ||
+      (!initial.prepared_artifact_source_id && !initial.stage1_source_lead_id)
+    )
       throw new Error("stage2_initial_need_unavailable")
 
     return {
@@ -130,6 +136,7 @@ export function createSupabaseStage2RefinementPersistence(
         .single()
       const initial = {
         prepared_artifact_source_id: draft.preparedArtifactSourceId,
+        stage1_source_lead_id: null,
         input_snapshot: draft.baseInputSnapshot,
       }
       if (!error && created) return mapDraft(created, draft.triggerContext, initial)
@@ -187,14 +194,24 @@ export function createSupabaseStage2RefinementPersistence(
 function mapDraft(
   row: Record<string, unknown>,
   triggerContext: Stage2PersistedDraft["triggerContext"],
-  initial: { prepared_artifact_source_id: string; input_snapshot: unknown },
+  initial: {
+    prepared_artifact_source_id: string | null
+    stage1_source_lead_id?: string | null
+    input_snapshot: unknown
+  },
 ): Stage2PersistedDraft {
+  const stage1SourceId =
+    initial.prepared_artifact_source_id ?? initial.stage1_source_lead_id ?? null
+  if (!stage1SourceId) throw new Error("stage2_initial_source_missing")
+
   return {
     id: String(row.id),
     personalPlanId: String(row.personal_plan_id),
     baseInitialNeedVersionId: String(row.base_initial_need_version_id),
     schemaVersion: Number(row.schema_version),
-    preparedArtifactSourceId: initial.prepared_artifact_source_id,
+    // Stage 2 currently names this generic computation input after the original
+    // artifact source. Legacy Stage 1 snapshots use their exact lead id here.
+    preparedArtifactSourceId: stage1SourceId,
     baseInputSnapshot: initial.input_snapshot as Stage2PersistedDraft["baseInputSnapshot"],
     pathVersion: `stage2-v${String(row.schema_version)}`,
     triggerContext,

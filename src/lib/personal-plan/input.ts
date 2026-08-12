@@ -17,7 +17,12 @@ import {
   type PlanProfile,
   type PlanRoutineContext,
   type SupportedPersonalPlanQuizEnvelope,
+  type LegacyQuizStage1Source,
+  type SupportedStage1Source,
 } from "./types"
+import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
+import { adaptLegacyQuizAnswersForAssessment } from "@/lib/personal-plan-quiz/offer-adapter"
+import type { QuizAnswers } from "@/lib/quiz/types"
 
 const legacyConcernValues = [
   "dry_dull_lengths",
@@ -54,6 +59,27 @@ const v2EnvelopeSchema = z
   })
   .strict()
 
+const legacyStage1SourceSchema = z
+  .object({
+    kind: z.literal("legacy_quiz"),
+    version: z.literal(1),
+    leadId: z.string().min(1),
+    answers: personalPlanDurableAnswersBaseSchema.pick({
+      texture: true,
+      thickness: true,
+      density: true,
+      goals: true,
+      currentConcerns: true,
+      hairLength: true,
+      hairSurface: true,
+      elasticResponse: true,
+      chemicalTreatments: true,
+      scalpOiliness: true,
+      scalpConcerns: true,
+    }),
+  })
+  .strict()
+
 export type ParsedSupportedPersonalPlanQuizEnvelope =
   | { ok: true; envelope: SupportedPersonalPlanQuizEnvelope }
   | {
@@ -63,6 +89,50 @@ export type ParsedSupportedPersonalPlanQuizEnvelope =
         quizVersion: number | null
       }
     }
+
+export function buildLegacyQuizStage1Source(input: {
+  leadId: string
+  answers: QuizAnswers
+}): LegacyQuizStage1Source {
+  const answers = adaptLegacyQuizAnswersForAssessment(canonicalizeQuizAnswers(input.answers))
+  return {
+    kind: "legacy_quiz",
+    version: 1,
+    leadId: input.leadId,
+    answers: {
+      texture: answers.texture,
+      thickness: answers.thickness,
+      density: answers.density,
+      goals: [...(answers.goals ?? [])].sort(),
+      currentConcerns: [...(answers.currentConcerns ?? [])].sort(),
+      hairLength: answers.hairLength,
+      hairSurface: answers.hairSurface,
+      elasticResponse: answers.elasticResponse,
+      chemicalTreatments: [...(answers.chemicalTreatments ?? [])].sort(),
+      scalpOiliness: answers.scalpOiliness,
+      scalpConcerns: [...(answers.scalpConcerns ?? [])].sort(),
+    },
+  }
+}
+
+export function parseSupportedStage1Source(raw: unknown):
+  | { ok: true; source: SupportedStage1Source }
+  | {
+      ok: false
+      error: {
+        code: "invalid_quiz_envelope" | "unsupported_quiz_version"
+        quizVersion: number | null
+      }
+    } {
+  if (raw && typeof raw === "object" && (raw as { kind?: unknown }).kind === "legacy_quiz") {
+    const parsed = legacyStage1SourceSchema.safeParse(raw)
+    return parsed.success
+      ? { ok: true, source: parsed.data as LegacyQuizStage1Source }
+      : { ok: false, error: { code: "invalid_quiz_envelope", quizVersion: 1 } }
+  }
+  const parsed = parseSupportedPersonalPlanQuizEnvelope(raw)
+  return parsed.ok ? { ok: true, source: parsed.envelope } : parsed
+}
 
 export function parseSupportedPersonalPlanQuizEnvelope(
   raw: unknown,
@@ -113,7 +183,7 @@ function normalizeV2Concerns(values: readonly PersonalPlanLegacyConcern[] | unde
 }
 
 export function buildPlanProfile(
-  envelope: SupportedPersonalPlanQuizEnvelope,
+  envelope: SupportedStage1Source,
   options: {
     artifactId: string
     projection: "initial_quiz" | "refined_post_plan"
@@ -123,6 +193,30 @@ export function buildPlanProfile(
   const routine = options.routine
     ? { ...INITIAL_UNKNOWN_ROUTINE_CONTEXT, ...options.routine }
     : INITIAL_UNKNOWN_ROUTINE_CONTEXT
+  if (envelope.kind === "legacy_quiz") {
+    const answers = envelope.answers
+    return {
+      source: { quizVersion: 1, artifactId: envelope.leadId, projection: options.projection },
+      hair: {
+        texture: answers.texture!,
+        thickness: answers.thickness!,
+        density: answers.density!,
+        length: answers.hairLength!,
+        surface: answers.hairSurface!,
+        elasticity: answers.elasticResponse!,
+        chemicalTreatments: [...(answers.chemicalTreatments ?? [])],
+      },
+      scalp: {
+        oiliness: answers.scalpOiliness!,
+        concerns: [...(answers.scalpConcerns ?? [])],
+        irritationState: routine.scalpIrritationState,
+      },
+      goals: [...(answers.goals ?? [])],
+      concerns: [...(answers.currentConcerns ?? [])],
+      concernRecurrence: { state: "unknown", reason: "concern_recurrence" },
+      routine,
+    }
+  }
   const concerns: PlanCurrentConcern[] =
     envelope.version === 2
       ? normalizeV2Concerns(envelope.answers.currentConcerns)
@@ -171,9 +265,7 @@ function stableJson(value: unknown): string {
   return JSON.stringify(value)
 }
 
-export function hashSupportedPersonalPlanQuizEnvelope(
-  envelope: SupportedPersonalPlanQuizEnvelope,
-): string {
+export function hashSupportedPersonalPlanQuizEnvelope(envelope: SupportedStage1Source): string {
   return createHash("sha256").update(stableJson(envelope)).digest("hex")
 }
 
