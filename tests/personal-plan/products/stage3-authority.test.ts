@@ -403,7 +403,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       heat_protectant: "personal-plan.heat-protectant.v1",
       oil: "personal-plan.oil.v2",
       mask: "personal-plan.mask.v3",
-      scalp_care: "personal-plan.scalp-care.v1",
+      scalp_care: "personal-plan.scalp-care.v2",
       dry_shampoo: "personal-plan.dry-shampoo.v2",
       bondbuilder: "personal-plan.bondbuilder.v2",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
@@ -754,6 +754,41 @@ test("Dry Shampoo does not fabricate or require a hair-thickness fit dimension",
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
   assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+test("Scalp Care does not require a hair-thickness fact when its exact role protocol is complete", () => {
+  const scalpCareInput = input("scalp_care", "known")
+  if (scalpCareInput.productFacts?.category !== "scalp_care") {
+    throw new Error("expected Scalp Care fixture")
+  }
+  scalpCareInput.productFacts.suitableThicknesses = []
+
+  const result = evaluateStage3Authority(scalpCareInput)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+test("Scalp Care recommends an exact-role candidate without a hair-thickness fact", () => {
+  const scalpCareInput = input("scalp_care", "known")
+  const candidate = knownFacts("scalp_care")
+  if (candidate.category !== "scalp_care") throw new Error("expected Scalp Care fixture")
+  candidate.recommendable = true
+  candidate.suitableThicknesses = []
+  scalpCareInput.capturedProductId = null
+  scalpCareInput.subjectIdentity = null
+  scalpCareInput.productFacts = null
+  scalpCareInput.recommendationCandidates = [candidate]
+
+  const result = evaluateStage3Authority(scalpCareInput)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "unknown")
+  assert.equal(result.recommendation?.productId, candidate.productId)
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
 })
 
 for (const category of ["shampoo", "conditioner", "leave_in", "oil", "mask"] as const) {

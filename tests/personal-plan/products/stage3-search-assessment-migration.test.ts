@@ -10,6 +10,10 @@ const dryShampooApplicabilityMigration = readFileSync(
   "supabase/migrations/20260812101000_personal_plan_dry_shampoo_thickness_applicability.sql",
   "utf8",
 )
+const scalpCareApplicabilityMigration = readFileSync(
+  "supabase/migrations/20260812102000_personal_plan_scalp_care_thickness_applicability.sql",
+  "utf8",
+)
 
 test("Stage 3 assessment search v2 is an owner-aware private, set-based, capped canonical-identity projection", () => {
   assert.match(
@@ -104,5 +108,34 @@ test("Dry Shampoo readiness does not fabricate a hair-thickness applicability fa
   assert.match(
     dryShampooApplicabilityMigration,
     /v_product\.category_key IN \('heat_protectant', 'dry_shampoo'\)[\s\S]*pg_catalog\.cardinality\(v_product\.suitable_thicknesses\) > 0/,
+  )
+})
+
+test("Scalp Care readiness preserves Dry Shampoo semantics and exempts scalp-targeted products from hair thickness", () => {
+  assert.match(
+    scalpCareApplicabilityMigration,
+    /p\.category_key IN \('heat_protectant', 'dry_shampoo', 'scalp_care'\)[\s\S]*pg_catalog\.cardinality\(p\.suitable_thicknesses\) > 0/,
+  )
+  assert.match(
+    scalpCareApplicabilityMigration,
+    /v_product\.category_key IN \('heat_protectant', 'dry_shampoo', 'scalp_care'\)[\s\S]*pg_catalog\.cardinality\(v_product\.suitable_thicknesses\) > 0/,
+  )
+  assert.match(
+    scalpCareApplicabilityMigration,
+    /CREATE OR REPLACE FUNCTION public\.personal_plan_search_assessment_products_v2\(/,
+  )
+  assert.match(
+    scalpCareApplicabilityMigration,
+    /CREATE OR REPLACE FUNCTION public\.assert_personal_plan_curated_publication\(p_product_id uuid\)/,
+  )
+  assert.match(scalpCareApplicabilityMigration, /SECURITY DEFINER/)
+  assert.match(scalpCareApplicabilityMigration, /SET search_path = ''/)
+  assert.match(
+    scalpCareApplicabilityMigration,
+    /REVOKE ALL ON FUNCTION public\.personal_plan_search_assessment_products_v2\(uuid,text,text,jsonb,integer\) FROM PUBLIC, anon, authenticated/,
+  )
+  assert.match(
+    scalpCareApplicabilityMigration,
+    /GRANT EXECUTE ON FUNCTION public\.personal_plan_search_assessment_products_v2\(uuid,text,text,jsonb,integer\) TO service_role/,
   )
 })

@@ -1,5 +1,5 @@
 begin;
-select plan(13);
+select plan(15);
 
 select has_function(
   'public',
@@ -131,6 +131,52 @@ where id = '66666666-6666-4666-8666-666666666666';
 select lives_ok(
   $$set constraints all immediate$$,
   'Dry Shampoo publication relies on exact refresh facts rather than a fabricated hair-thickness fact'
+);
+
+insert into public.products (
+  id, name, brand, category, category_key, suitable_thicknesses,
+  is_active, lifecycle_status, origin, is_chaarlie_recommended
+) values (
+  '77777777-7777-4777-8777-777777777777', 'Complete scalp care fixture',
+  'Fixture', 'Kopfhautpflege', 'scalp_care', array[]::text[],
+  false, 'active', 'curated', false
+);
+insert into public.product_scalp_care_specs (
+  product_id, primary_role, presentation_format, rinse_mode
+) values (
+  '77777777-7777-4777-8777-777777777777', 'scalp_comfort', 'serum', 'leave_on'
+);
+insert into public.product_application_protocols (
+  product_id, category, role, source_url, source_text, guidance_payload
+) values (
+  '77777777-7777-4777-8777-777777777777', 'scalp_care', 'scalp_comfort',
+  'https://example.test/scalp-care', 'Source-backed scalp care protocol',
+  jsonb_build_object(
+    'scope', jsonb_build_object(
+      'kind', 'product',
+      'productId', '77777777-7777-4777-8777-777777777777',
+      'category', 'scalp_care'
+    ),
+    'evidence', jsonb_build_array(jsonb_build_object('sourceUrl', 'https://example.test/scalp-care'))
+  )
+);
+update public.products
+set is_active = true
+where id = '77777777-7777-4777-8777-777777777777';
+select lives_ok(
+  $$set constraints all immediate$$,
+  'Scalp Care publication relies on exact scalp facts rather than a fabricated hair-thickness fact'
+);
+select is(
+  (
+    select assessment_status
+    from public.personal_plan_search_assessment_products_v2(
+      '00000000-0000-4000-8000-000000000000', 'scalp_care', 'complete scalp care', '{}'::jsonb, 8
+    )
+    where product_id = '77777777-7777-4777-8777-777777777777'
+  ),
+  'ready',
+  'a complete active Scalp Care product with an empty thickness array is search-ready'
 );
 
 insert into public.products (
