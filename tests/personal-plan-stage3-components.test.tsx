@@ -16,7 +16,7 @@ import {
   Stage3Transition,
   type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
-import { DiscreteSlider } from "../src/components/ui/slider"
+import { FrequencySliderField } from "../src/components/ui/frequency-slider-field"
 import { authorityEvaluationProjection } from "../src/components/personal-plan-products/stage3-decision-projection"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
@@ -107,7 +107,6 @@ test("product capture exposes controlled search, explicit result selection, freq
           displayName: "Kérastase Bain Satin",
           brandName: "Kérastase",
           detail: "Shampoo",
-          confidenceLabel: "Exakter Treffer",
         },
       ]}
       capturedProducts={[
@@ -167,8 +166,14 @@ test("search results expose one complete identity and distinguish temporary anal
           brandName: "OGX",
           assessmentStatus: "pending_analysis",
         },
+        {
+          candidateId: "ogx-selected",
+          displayName: "Rosemary Mint Shampoo",
+          brandName: "OGX",
+          assessmentStatus: "ready",
+        },
       ]}
-      selectedCandidateId="ogx-pending"
+      selectedCandidateId="ogx-selected"
       status="ready"
       onSelectCandidate={() => {}}
     />,
@@ -176,8 +181,11 @@ test("search results expose one complete identity and distinguish temporary anal
 
   assert.match(html, /aria-label="OGX Renewing \+ Argan Oil of Morocco Shampoo auswählen"/)
   assert.match(html, /aria-label="OGX Biotin &amp; Collagen Shampoo: Analyse ausstehend"/)
-  assert.equal((html.match(/>OGX</g) ?? []).length, 2)
+  assert.match(html, /aria-label="OGX Rosemary Mint Shampoo auswählen"/)
+  assert.equal((html.match(/>OGX</g) ?? []).length, 3)
   assert.match(html, /Analyse ausstehend/)
+  assert.match(html, /Ausgewählt/)
+  assert.doesNotMatch(html, /Wahrscheinlich dein Produkt|Eindeutiger Treffer/)
   assert.match(html, /aria-selected="true"/)
 })
 
@@ -304,14 +312,17 @@ test("product frequency picker delegates the canonical 8-stop rare-to-daily slid
     productName: "Test Shampoo",
     onChange: () => {},
   })
-  const slider = findByType<React.ComponentProps<typeof DiscreteSlider>>(element, DiscreteSlider)
+  const slider = findByType<React.ComponentProps<typeof FrequencySliderField>>(
+    element,
+    FrequencySliderField,
+  )
 
   assert.deepEqual(
     slider?.props.stops.map((stop) => stop.value),
     [...PRODUCT_FREQUENCIES],
   )
   assert.equal(slider?.props.value, "weekly_2x")
-  assert.equal(slider?.props["aria-label"], "Nutzungshäufigkeit")
+  assert.equal(slider?.props.ariaLabel, "Nutzungshäufigkeit")
   assert.equal(slider?.props.disabled, false)
 
   const html = renderToStaticMarkup(element)
