@@ -294,6 +294,18 @@ export type Stage3ProductDraft = {
   productLoadResolution?: Stage3ProductLoadResolutionV1
 }
 
+/** Minimal canonical draft shape required to validate persisted Stage 3 authority. */
+export type Stage3AuthorityDraftInput = Pick<
+  Stage3ProductDraft,
+  | "refinedVersionId"
+  | "orderedCategories"
+  | "authorityVersions"
+  | "authoritySnapshot"
+  | "productLoadResolution"
+  | "products"
+  | "roleAssignments"
+>
+
 export type Stage3CategoryProgress = {
   category: PersonalPlanCategory
   capturedCount: number

@@ -4,6 +4,13 @@ import test from "node:test"
 import { resolvePlanStartPageState } from "../src/app/plan-start/page"
 import { resolveRoutinePage } from "../src/app/routine/page"
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import { requireCurrentAuthoritySnapshot } from "../src/lib/personal-plan/products/authority/snapshot"
+import type {
+  PersonalPlanCategory,
+  Stage3ProductDraft,
+} from "../src/lib/personal-plan/products/contracts"
+import { resolveStage3ProductLoadResolution } from "../src/lib/personal-plan/products/product-load-resolution"
+import { buildStage3EntryContext } from "../src/lib/personal-plan/products/stage2-entry-adapter"
 import {
   createSupabasePersonalPlanJourneyAccessLoader,
   loadPersonalPlanStage2AccessWithDeps,
@@ -25,6 +32,154 @@ function refinedSnapshot(): InitialNeedPlanSnapshot {
       },
     ],
   } as unknown as InitialNeedPlanSnapshot
+}
+
+function productLoadOverlayFixture(options?: { deepCleansingStartsInBase?: boolean }): {
+  snapshot: InitialNeedPlanSnapshot
+  draft: Stage3ProductDraft
+} {
+  const baseCategories: PersonalPlanCategory[] = ["shampoo", "conditioner", "leave_in", "oil"]
+  if (options?.deepCleansingStartsInBase) baseCategories.push("deep_cleansing_shampoo")
+  const snapshot = {
+    inputHash: "refined-product-load-input-hash",
+    coverage: [],
+    profile: {
+      source: { projection: "refined_post_plan" },
+      concerns: [],
+      scalp: {
+        oiliness: options?.deepCleansingStartsInBase ? "oily" : "balanced",
+        concerns: [],
+      },
+      hair: { thickness: "normal" },
+      routine: {
+        shampooFrequency: { state: "known", value: "weekly_3_4x" },
+        currentProductLoad: {
+          state: "known",
+          value: {
+            categories: [...baseCategories],
+            oilPurposes: ["dry_finish"],
+          },
+        },
+      },
+    },
+    renderedOrder: [...baseCategories],
+    decisions: baseCategories.map((category) =>
+      category === "deep_cleansing_shampoo"
+        ? {
+            category,
+            needTier: "optional",
+            roles: ["residue_reset"],
+            frequency: {
+              kind: "unscheduled_as_needed",
+              roles: ["residue_reset"],
+              boundary: "bei_bedarf",
+            },
+          }
+        : {
+            category,
+            roles: [CATEGORY_ROLE_POLICIES[category].allowedRoles[0]],
+          },
+    ),
+  } as unknown as InitialNeedPlanSnapshot
+  const context = buildStage3EntryContext(snapshot, {
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+  })
+  const leaveIn = {
+    capturedProductId: "leave-in-1",
+    userProductId: "user-product-leave-in-1",
+    identity: {
+      kind: "catalog_product" as const,
+      productId: "catalog-leave-in-1",
+      displayName: "Leave-in",
+      category: "leave_in" as const,
+    },
+    frequencyRange: "weekly_2x" as const,
+    ownership: "owned" as const,
+    source: "catalog_search" as const,
+  }
+  const baseDraft: Stage3ProductDraft = {
+    schemaVersion: 1,
+    status: "active",
+    authorityVersions: Object.fromEntries(
+      context.orderedCategories.map((item) => [item.category, item.authorityVersion]),
+    ),
+    draftId: "draft-1",
+    userId: "user-1",
+    personalPlanId: "plan-1",
+    refinedVersionId: "refined-1",
+    staleRefinedVersionId: null,
+    revision: 9,
+    pass: "product_decisions",
+    orderedCategories: [...baseCategories],
+    categoryCursor: null,
+    products: [leaveIn],
+    roleAssignments: [
+      {
+        capturedProductId: leaveIn.capturedProductId,
+        category: "leave_in",
+        roles: ["post_wash_leave_in"],
+      },
+    ],
+    uncoveredRoles: [],
+    decisions: [],
+    completedCaptureCategories: [...baseCategories],
+    completedDecisionKeys: [],
+    createdAt: "2026-08-12T09:00:00.000Z",
+    updatedAt: "2026-08-12T09:58:23.880Z",
+    authoritySnapshot: context.authoritySnapshot,
+  }
+  const productLoadResolution = resolveStage3ProductLoadResolution(baseDraft)
+  assert.ok(productLoadResolution)
+  assert.deepEqual(
+    productLoadResolution.requirements.map((item) => item.category),
+    ["deep_cleansing_shampoo"],
+  )
+  return {
+    snapshot,
+    draft: {
+      ...baseDraft,
+      orderedCategories: productLoadResolution.requirements.reduce(
+        (categories, requirement) =>
+          categories.includes(requirement.category)
+            ? categories
+            : [...categories, requirement.category],
+        [...baseDraft.orderedCategories],
+      ),
+      productLoadResolution,
+    },
+  }
+}
+
+async function projectJourneyDraft(
+  draft: Stage3ProductDraft,
+): Promise<Awaited<ReturnType<PersonalPlanJourneyAccessLoaderDeps["loadCurrentProductDraft"]>>> {
+  const admin = {
+    from(table: string) {
+      assert.equal(table, "personal_plan_product_drafts")
+      const builder = {
+        select: () => builder,
+        eq: () => builder,
+        neq: () => builder,
+        maybeSingle: async () => ({
+          data: {
+            status: draft.status,
+            refined_need_version_id: draft.refinedVersionId,
+            category_authority_versions: draft.authorityVersions,
+            payload: draft,
+          },
+          error: null,
+        }),
+      }
+      return builder
+    },
+  }
+
+  return createSupabasePersonalPlanJourneyAccessLoader(admin).loadCurrentProductDraft(
+    draft.userId,
+    draft.personalPlanId,
+    draft.refinedVersionId,
+  )
 }
 
 function deps(
@@ -73,6 +228,9 @@ function deps(
           ]),
         ) as never,
       },
+      productLoadResolution: undefined,
+      products: [],
+      roleAssignments: [],
     }),
     loadIsInternal: async () => false,
     ...overrides,
@@ -238,6 +396,83 @@ test("loader derives the frontier only from owner-scoped entitlement, source, pl
   assert.equal(access.frontier, "stage4")
   assert.equal(access.allowed.stage3, true)
   assert.equal(access.allowed.stage4, true)
+})
+
+test("journey access accepts a current Stage 3 draft with a valid product-load overlay", async () => {
+  const { snapshot, draft } = productLoadOverlayFixture()
+  const projectedDraft = await projectJourneyDraft(draft)
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadCurrentRefinedNeed: async () => snapshot,
+      loadCurrentProductDraft: async () => projectedDraft,
+      loadPlan: async () => ({
+        id: "plan-1",
+        currentInitialNeedVersionId: "initial-1",
+        currentRefinedNeedVersionId: "refined-1",
+        productDraftCompleted: false,
+        pendingRoutineProposalId: null,
+        activeRoutineVersionId: null,
+      }),
+    }),
+    "user-1",
+  )
+
+  assert.equal(access.kind, "personal_plan")
+  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
+  assert.equal(access.frontier, "stage3")
+  assert.equal(access.allowed.stage3, true)
+})
+
+test("journey access accepts a product-load upgrade of an existing base category", async () => {
+  const { snapshot, draft } = productLoadOverlayFixture({ deepCleansingStartsInBase: true })
+  assert.equal(
+    draft.orderedCategories.filter((category) => category === "deep_cleansing_shampoo").length,
+    1,
+  )
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadCurrentRefinedNeed: async () => snapshot,
+      loadCurrentProductDraft: async () => draft,
+      loadPlan: async () => ({
+        id: "plan-1",
+        currentInitialNeedVersionId: "initial-1",
+        currentRefinedNeedVersionId: "refined-1",
+        productDraftCompleted: false,
+        pendingRoutineProposalId: null,
+        activeRoutineVersionId: null,
+      }),
+    }),
+    "user-1",
+  )
+
+  assert.equal(access.kind, "personal_plan")
+  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
+  assert.equal(access.frontier, "stage3")
+  assert.equal(access.allowed.stage3, true)
+})
+
+test("journey access still rejects a semantically stale product-load overlay", async () => {
+  const { snapshot, draft } = productLoadOverlayFixture()
+  const staleDraft = {
+    ...draft,
+    products: draft.products.map((product) => ({
+      ...product,
+      frequencyRange: "monthly_1x" as const,
+    })),
+  }
+  assert.throws(() => requireCurrentAuthoritySnapshot(staleDraft), /stale_product_load_resolution/)
+  const access = await loadPersonalPlanJourneyAccessWithDeps(
+    deps({
+      loadCurrentRefinedNeed: async () => snapshot,
+      loadCurrentProductDraft: async () => staleDraft,
+    }),
+    "user-1",
+  )
+
+  assert.equal(access.kind, "personal_plan")
+  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
+  assert.equal(access.frontier, "stage2")
+  assert.equal(access.allowed.stage3, false)
 })
 
 test("full journey access reports non-identifying Stage 3 sub-phase timings in dependency order", async () => {
@@ -652,11 +887,20 @@ test("Supabase draft selection ignores stale rows while retaining a current row,
     status: "active",
     refined_need_version_id: "refined-1",
     category_authority_versions: {},
-    payload: { orderedCategories: [] },
+    payload: {
+      orderedCategories: [],
+      products: [{ capturedProductId: "product-1" }],
+      roleAssignments: [{ capturedProductId: "product-1" }],
+      productLoadResolution: { schemaVersion: 1 },
+    },
   }
   const stale = { ...current, status: "stale" }
   const mixed = loadDraft([stale, current])
-  assert.equal((await mixed.load("user-1", "plan-1", "refined-1"))?.status, "active")
+  const loaded = await mixed.load("user-1", "plan-1", "refined-1")
+  assert.equal(loaded?.status, "active")
+  assert.deepEqual(loaded?.products, current.payload.products)
+  assert.deepEqual(loaded?.roleAssignments, current.payload.roleAssignments)
+  assert.deepEqual(loaded?.productLoadResolution, current.payload.productLoadResolution)
   assert.deepEqual(mixed.predicates.at(-1), ["status", "neq:stale"])
 
   const staleOnly = loadDraft([stale])

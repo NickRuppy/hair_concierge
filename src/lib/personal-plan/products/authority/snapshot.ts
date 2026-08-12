@@ -1,8 +1,8 @@
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type {
+  Stage3AuthorityDraftInput,
   PersonalPlanCategory,
   Stage3AuthoritySnapshotV1,
-  Stage3ProductDraft,
 } from "../contracts"
 import { requireCurrentProductLoadResolution } from "../product-load-resolution"
 
@@ -14,28 +14,30 @@ export class Stage3AuthoritySnapshotError extends Error {
 }
 
 export function requireCurrentAuthoritySnapshot(
-  draft: Stage3ProductDraft,
+  draft: Stage3AuthorityDraftInput,
 ): Stage3AuthoritySnapshotV1 {
   const snapshot = draft.authoritySnapshot
-  const overlayOrder = draft.productLoadResolution?.requirements.map((item) => item.category) ?? []
-  const overlayCategories = new Set(overlayOrder)
-  const baseDraftOrder = draft.orderedCategories.filter(
-    (category) => !overlayCategories.has(category),
-  )
   if (
     !snapshot ||
     snapshot.schemaVersion !== 1 ||
     snapshot.refinedNeedVersionId !== draft.refinedVersionId ||
-    !snapshot.refinedInputHash?.trim() ||
-    !sameValues(snapshot.orderedCategories, baseDraftOrder) ||
-    !sameValues(draft.orderedCategories.slice(baseDraftOrder.length), overlayOrder)
+    !snapshot.refinedInputHash?.trim()
   ) {
     throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
   }
 
+  const overlayOrder = draft.productLoadResolution?.requirements.map((item) => item.category) ?? []
+  const baseCategories = new Set(snapshot.orderedCategories)
+  const appendedOverlayOrder = overlayOrder.filter((category) => !baseCategories.has(category))
+  const expectedOrder = [...snapshot.orderedCategories, ...appendedOverlayOrder]
+  if (!sameValues(draft.orderedCategories, expectedOrder)) {
+    throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
+  }
+
+  const appendedOverlayCategories = new Set(appendedOverlayOrder)
   const inventoryOnlyCategories = new Set(snapshot.inventoryOnlyCategories ?? [])
   for (const category of draft.orderedCategories) {
-    if (overlayCategories.has(category) || inventoryOnlyCategories.has(category)) {
+    if (appendedOverlayCategories.has(category) || inventoryOnlyCategories.has(category)) {
       continue
     }
     const decisions = snapshot.categoryDecisions.filter(
