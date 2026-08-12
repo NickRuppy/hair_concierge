@@ -104,3 +104,25 @@ test("keeps a compiled refresh day event-driven when no defining refresh item is
     { refresh_day: "Bei Bedarf" },
   )
 })
+
+test("does not present cadence from planned non-executable products as confirmed", () => {
+  assert.deepEqual(
+    projectApplicationCadenceByDay({
+      routineItems: [
+        item("cleanse", "Zweimal pro Woche", {
+          availability: "planned",
+          executable: false,
+        }),
+        item("refresh", "Dreimal pro Woche", {
+          availability: "planned",
+          executable: false,
+        }),
+      ],
+      compiledDayKeys: ["wash_day", "refresh_day", "between_wash_care_day"],
+    }),
+    {
+      refresh_day: "Bei Bedarf",
+      between_wash_care_day: "Bei Bedarf",
+    },
+  )
+})

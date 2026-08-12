@@ -123,7 +123,7 @@ export async function resolveSuccessorRoutineCadences(input: {
   return routine
 }
 
-function alignLegacyCadenceForDelta(
+export function alignLegacyCadenceForDelta(
   previous: RoutineCompiledPayload,
   next: RoutineCompiledPayload,
 ): RoutineCompiledPayload {

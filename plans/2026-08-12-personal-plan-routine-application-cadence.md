@@ -328,3 +328,12 @@ Status: **review-ready, uncommitted**.
 - Read-only production audit: all four active recommended Bondbuilders have supported non-empty cadence copy. Scalp Care has five schedule-bearing supported rows; three null rows and one timing-only row intentionally remain safe generic fallbacks.
 - Whole-tree Claude review: no blocking findings. Its two supported behavioral findings—legacy fallback copy drift and noisy v1 successor deltas—were fixed and covered by focused regression tests. Maintainability nits were also reconciled.
 - No migration, catalog write, feature activation, commit, push, PR, deploy, or production mutation was performed.
+
+### PR review hardening — 2026-08-12
+
+- Rebased conflict-free onto `b86ac2a8` after the adjacent frequency and product-selection work merged; the 24-path implementation fingerprint remained `085005475f2e95eefba4cad7f269bceb9dc8f444f86ec7992e051437323a5868` before review hardening.
+- Final PR review exposed two supported gaps. The editor proposal path now re-resolves cadence after exact-product or role changes before hashing, diffing, and staging. Stage 5 now projects dynamic cadence only from accepted owned, executable items; planned guidance keeps the approved event-driven fallback.
+- TDD red proof: the focused Stage 4/5 regression command failed 2/9 with the old exact-product cadence and planned-item cadence visible. After the fix it passed 9/9.
+- The required final counterpart review found one additional supported transitional issue: exact cadence enrichment on untouched legacy items could appear as consequential editor changes. The editor now uses the same legacy-delta alignment as source sync, and the focused legacy fixture proves one unchanged item remains unchanged.
+- Final verification after alignment: the focused regression suite passed 10/10; Personal Plan passed 1,188/1,188; typecheck passed; ESLint passed with zero errors and four pre-existing warnings; feature-flag-off production build passed. The final review delta was inspected with no blocking finding remaining.
+- No migration, catalog write, feature activation, deployment, or production mutation was added by the hardening.

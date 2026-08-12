@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { createRoutineProposalService } from "../src/lib/personal-plan/routine/proposal-service"
+import type { RoutineCompiledPayload } from "../src/lib/personal-plan/routine-candidate-compiler"
 
 const ids = {
   plan: "11111111-1111-4111-8111-111111111111",
@@ -11,7 +12,7 @@ const ids = {
   draft: "55555555-5555-4555-8555-555555555555",
 }
 
-const payload = {
+const payload: RoutineCompiledPayload = {
   schemaVersion: 1,
   planId: ids.plan,
   versionId: ids.active,
@@ -75,7 +76,7 @@ const payload = {
   createdAt: "2026-08-08T00:00:00.000Z",
 }
 
-function repository() {
+function repository(versionPayload: typeof payload = payload) {
   return {
     async loadPlan() {
       return {
@@ -89,7 +90,7 @@ function repository() {
     async loadVersion() {
       return {
         id: ids.active,
-        payload,
+        payload: versionPayload,
         source_refined_need_version_id: ids.refined,
         source_portfolio_version_id: ids.portfolio,
         source_product_draft_id: ids.draft,
@@ -98,6 +99,159 @@ function repository() {
     },
   }
 }
+
+test("proposal service re-resolves cadence after an exact product replacement", async () => {
+  const versionPayload = structuredClone(payload)
+  versionPayload.intent.categories[0].assignments.push({
+    assignmentKey: "assignment:conditioner:conditioner_rinse_out:captured-b",
+    role: "conditioner_rinse_out",
+    productRef: { kind: "owned", capturedProductId: "captured-b", productId: "product-b" },
+    cadenceOverride: null,
+    fitDecision: "standard",
+  })
+  versionPayload.items[0].cadence.resolved = {
+    copyDe: "Alter Produktrhythmus",
+    source: "exact_product_protocol",
+  }
+  versionPayload.items.push({
+    ...structuredClone(versionPayload.items[0]),
+    itemKey: "item:conditioner:conditioner_rinse_out:captured-b",
+    assignmentKey: "assignment:conditioner:conditioner_rinse_out:captured-b",
+    product: {
+      kind: "owned",
+      capturedProductId: "captured-b",
+      productId: "product-b",
+      displayName: "Conditioner B",
+    },
+  })
+  versionPayload.sections[0].itemKeys.push("item:conditioner:conditioner_rinse_out:captured-b")
+  const stagedPayloads: RoutineCompiledPayload[] = []
+  const service = createRoutineProposalService({
+    repository: repository(versionPayload),
+    resolveCadences: async (candidate) => {
+      assert.equal(candidate.items[0].product.kind, "owned")
+      assert.equal(
+        candidate.items[0].product.kind === "owned" ? candidate.items[0].product.productId : null,
+        "product-b",
+      )
+      const resolved = structuredClone(candidate)
+      resolved.items[0].cadence.resolved = {
+        copyDe: "Neuer Produktrhythmus",
+        source: "exact_product_protocol",
+      }
+      return resolved
+    },
+    rpc: async (_name, args) => {
+      stagedPayloads.push(args.p_routine_payload as RoutineCompiledPayload)
+      return {
+        data: {
+          outcome: "staged",
+          routineVersionId: "66666666-6666-4666-8666-666666666666",
+          routineProposalId: "77777777-7777-4777-8777-777777777777",
+          revision: 4,
+        },
+        error: null,
+      }
+    },
+  })
+
+  const result = await service.propose({
+    userId: "owner",
+    expectedRevision: 3,
+    expectedSourceRevision: 4,
+    operations: [
+      {
+        kind: "assignment_replace",
+        assignmentKey: "assignment:conditioner:conditioner_rinse_out:captured-a",
+        productRef: { kind: "owned", capturedProductId: "captured-b", productId: "product-b" },
+      },
+    ],
+  })
+
+  assert.equal(result.status, "staged")
+  assert.equal(stagedPayloads[0]?.items[0].cadence.resolved?.copyDe, "Neuer Produktrhythmus")
+})
+
+test("proposal service does not report cadence enrichment of untouched legacy items", async () => {
+  const versionPayload = structuredClone(payload)
+  versionPayload.intent.categories[0].assignments.push({
+    assignmentKey: "assignment:conditioner:conditioner_rinse_out:captured-b",
+    role: "conditioner_rinse_out",
+    productRef: { kind: "owned", capturedProductId: "captured-b", productId: "product-b" },
+    cadenceOverride: null,
+    fitDecision: "standard",
+  })
+  versionPayload.items.push({
+    ...structuredClone(versionPayload.items[0]),
+    itemKey: "item:conditioner:conditioner_rinse_out:captured-b",
+    assignmentKey: "assignment:conditioner:conditioner_rinse_out:captured-b",
+    product: {
+      kind: "owned",
+      capturedProductId: "captured-b",
+      productId: "product-b",
+      displayName: "Conditioner B",
+    },
+  })
+  versionPayload.sections[0].itemKeys.push("item:conditioner:conditioner_rinse_out:captured-b")
+  const stagedDeltas: Array<{
+    direct: Array<{ itemKey: string }>
+    consequential: Array<{ itemKey: string }>
+    unchangedItemCount: number
+  }> = []
+  const service = createRoutineProposalService({
+    repository: repository(versionPayload),
+    resolveCadences: async (candidate) => {
+      const resolved = structuredClone(candidate)
+      resolved.items = resolved.items.map((entry) => ({
+        ...entry,
+        cadence: {
+          ...entry.cadence,
+          resolved: {
+            copyDe:
+              entry.itemKey === "item:conditioner:conditioner_rinse_out:captured-a"
+                ? "Neuer Produktrhythmus"
+                : "Unveränderter Produktrhythmus",
+            source: "category" as const,
+          },
+        },
+      }))
+      return resolved
+    },
+    rpc: async (_name, args) => {
+      stagedDeltas.push(args.p_proposal_delta as (typeof stagedDeltas)[number])
+      return {
+        data: {
+          outcome: "staged",
+          routineVersionId: "66666666-6666-4666-8666-666666666666",
+          routineProposalId: "77777777-7777-4777-8777-777777777777",
+          revision: 4,
+        },
+        error: null,
+      }
+    },
+  })
+
+  const result = await service.propose({
+    userId: "owner",
+    expectedRevision: 3,
+    expectedSourceRevision: 4,
+    operations: [
+      {
+        kind: "assignment_replace",
+        assignmentKey: "assignment:conditioner:conditioner_rinse_out:captured-a",
+        productRef: { kind: "owned", capturedProductId: "captured-b", productId: "product-b" },
+      },
+    ],
+  })
+
+  assert.equal(result.status, "staged")
+  assert.deepEqual(
+    stagedDeltas[0].direct.map((entry) => entry.itemKey),
+    ["item:conditioner:conditioner_rinse_out:captured-a"],
+  )
+  assert.deepEqual(stagedDeltas[0].consequential, [])
+  assert.equal(stagedDeltas[0].unchangedItemCount, 1)
+})
 
 test("proposal service rejects forged product identities before any transition RPC", async () => {
   const calls: string[] = []

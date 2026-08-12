@@ -42,7 +42,11 @@ export function projectApplicationCadenceByDay({
     const definingRole = DEFINING_ROLE_BY_DAY[dayKey]
     const cadence = definingRole
       ? orderedItems.find(
-          (item) => item.role === definingRole && typeof item.effectiveCadenceDe === "string",
+          (item) =>
+            item.role === definingRole &&
+            item.availability === "owned" &&
+            item.executable &&
+            typeof item.effectiveCadenceDe === "string",
         )?.effectiveCadenceDe
       : undefined
     if (cadence) result[dayKey] = cadence
