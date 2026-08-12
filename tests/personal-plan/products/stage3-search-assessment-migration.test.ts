@@ -14,6 +14,10 @@ const scalpCareApplicabilityMigration = readFileSync(
   "supabase/migrations/20260812102000_personal_plan_scalp_care_thickness_applicability.sql",
   "utf8",
 )
+const jsonbRoleShapeGuardMigration = readFileSync(
+  "supabase/migrations/20260812105000_personal_plan_stage3_search_jsonb_role_shape_guard.sql",
+  "utf8",
+)
 
 test("Stage 3 assessment search v2 is an owner-aware private, set-based, capped canonical-identity projection", () => {
   assert.match(
@@ -138,4 +142,21 @@ test("Scalp Care readiness preserves Dry Shampoo semantics and exempts scalp-tar
     scalpCareApplicabilityMigration,
     /GRANT EXECUTE ON FUNCTION public\.personal_plan_search_assessment_products_v2\(uuid,text,text,jsonb,integer\) TO service_role/,
   )
+})
+
+test("Stage 3 assessment search v2 guards malformed legacy role JSON before expansion", () => {
+  assert.match(
+    jsonbRoleShapeGuardMigration,
+    /pg_get_functiondef\([\s\S]*personal_plan_search_assessment_products_v2/,
+  )
+  assert.match(
+    jsonbRoleShapeGuardMigration,
+    /jsonb_typeof\(to_jsonb\(li\)->''plan_roles''\) = ''array''/,
+  )
+  assert.match(
+    jsonbRoleShapeGuardMigration,
+    /jsonb_typeof\(to_jsonb\(os\)->''role_support''\) = ''array''/,
+  )
+  assert.match(jsonbRoleShapeGuardMigration, /ELSE ''\[\]''::jsonb END/)
+  assert.match(jsonbRoleShapeGuardMigration, /EXECUTE v_definition/)
 })
