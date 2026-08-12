@@ -18,6 +18,7 @@ import {
 } from "@/lib/auth/route-classification"
 
 const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/tracker"]
+export const AUTHENTICATED_SESSION_RESPONSE_HEADER = "x-chaarlie-authenticated-session"
 const SUB_REQUIRED_PREFIXES = [
   "/anwendung",
   "/onboarding",
@@ -42,6 +43,7 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/one-time-activation-status",
   "/api/personal-plan/field-test/activate",
+  "/api/quiz/field-test/activate",
 ]
 const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/",
@@ -83,6 +85,12 @@ export function isAdminRoutePath(pathname: string) {
 
 export function isPersonalPlanFieldTestGuest(user: { app_metadata?: Record<string, unknown> }) {
   return user.app_metadata?.access_kind === "field_test"
+}
+
+export function getFieldTestEndedRoute(user: { app_metadata?: Record<string, unknown> }) {
+  return user.app_metadata?.field_test_flow === "regular_quiz"
+    ? "/test/quiz/beendet"
+    : "/test/haarplan/beendet"
 }
 
 export function hasActivePersonalPlanRoutineEntitlement({
@@ -254,6 +262,11 @@ export function createUpdateSession(
       return supabaseResponse
     }
 
+    // Internal proxy signal only. The proxy removes it before returning the
+    // response and uses it to keep signed field-test cookies from overriding
+    // authenticated app routing on `/quiz`.
+    supabaseResponse.headers.set(AUTHENTICATED_SESSION_RESPONSE_HEADER, "1")
+
     if (isForcedAuthLogin) {
       return supabaseResponse
     }
@@ -294,7 +307,7 @@ export function createUpdateSession(
             return NextResponse.json({ error: "field_test_access_unavailable" }, { status: 503 })
           }
           const url = request.nextUrl.clone()
-          url.pathname = "/test/haarplan/beendet"
+          url.pathname = getFieldTestEndedRoute(user)
           url.search = ""
           url.searchParams.set("reason", "unavailable")
           return redirectWithSupabaseCookies(url, supabaseResponse)
@@ -335,7 +348,7 @@ export function createUpdateSession(
             return NextResponse.json({ error: "field_test_ended" }, { status: 403 })
           }
           const url = request.nextUrl.clone()
-          url.pathname = "/test/haarplan/beendet"
+          url.pathname = getFieldTestEndedRoute(user)
           url.search = ""
           return redirectWithSupabaseCookies(url, supabaseResponse)
         }

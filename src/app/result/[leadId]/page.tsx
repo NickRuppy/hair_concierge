@@ -38,9 +38,13 @@ import {
   resolvePersonalPlanResultReturn,
 } from "@/lib/personal-plan-quiz/result-return"
 import {
+  hasRegularQuizFieldTestOfferIntent,
   hasPersonalPlanFieldTestOfferIntent,
+  isRegularQuizFieldTestEnabled,
   PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE,
+  REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE,
   resolvePersonalPlanFieldTestOfferAuthorization,
+  resolveRegularQuizFieldTestOfferAuthorization,
 } from "@/lib/personal-plan-field-test"
 import { PERSONAL_PLAN_PRICING_EXPERIMENT } from "@/lib/funnel/personal-plan-pricing-experiment"
 
@@ -69,6 +73,13 @@ interface LeadResultRow {
   name: string
   quiz_kind: "legacy" | "personal_plan"
   quiz_answers: unknown
+}
+
+type RegularQuizFieldTestAuthorization = {
+  campaignId: string
+  funnelSessionId: string
+  leadId: string
+  accessDurationHours: number
 }
 
 async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
@@ -197,6 +208,57 @@ async function hasTrustedPersonalPlanResultReturn(input: {
   return isPersonalPlanResultReturnForLead(resolution, input.lead.id)
 }
 
+async function resolveRegularQuizFieldTestOfferState(input: {
+  hasAccess: boolean
+  lead: LeadResultRow
+  funnelContext:
+    | (FunnelCookieContext & {
+        testKind?: string | null
+        fieldTestCampaignId?: string | null
+      })
+    | null
+}): Promise<{
+  authorization: RegularQuizFieldTestAuthorization | null
+  unavailable: boolean
+}> {
+  if (input.lead.quiz_kind !== "legacy" || input.hasAccess) {
+    return { authorization: null, unavailable: false }
+  }
+
+  const cookieValue = (await cookies()).get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value
+  const contextIntent = Boolean(
+    input.funnelContext?.packageKey === "default_organic" &&
+    input.funnelContext.testKind === "field_test" &&
+    input.funnelContext.fieldTestCampaignId,
+  )
+  if (!cookieValue && !contextIntent) return { authorization: null, unavailable: false }
+  const intent =
+    contextIntent ||
+    (cookieValue
+      ? await hasRegularQuizFieldTestOfferIntent({
+          leadId: input.lead.id,
+          funnelSessionId: contextIntent ? input.funnelContext?.sessionId : undefined,
+        })
+      : false)
+  // The global stop must close an already-bound test journey, never turn it
+  // into the commercial offer. Cookie presence alone is not lead authority.
+  if (!isRegularQuizFieldTestEnabled()) return { authorization: null, unavailable: intent }
+
+  const authorization = await resolveRegularQuizFieldTestOfferAuthorization({
+    campaignCookieValue: cookieValue,
+    funnelSessionId: contextIntent ? input.funnelContext?.sessionId : undefined,
+    leadId: input.lead.id,
+  })
+
+  return {
+    authorization,
+    // A campaign cookie proves only that this browser entered some regular
+    // field test. The lead-bound funnel session is the authority for deciding
+    // whether this exact result must fail closed instead of showing pricing.
+    unavailable: intent && !authorization,
+  }
+}
+
 export default async function ResultPage({ params, searchParams }: Props) {
   const [{ leadId }, sp] = await Promise.all([params, searchParams])
   const focus = getQuizResultSearchParamValue(sp.focus)
@@ -260,6 +322,11 @@ export default async function ResultPage({ params, searchParams }: Props) {
         })
       : false
   const fieldTestUnavailable = fieldTestIntent && !fieldTestAuthorization
+  const regularFieldTestState = await resolveRegularQuizFieldTestOfferState({
+    hasAccess,
+    lead,
+    funnelContext,
+  })
   const personalPlanSession = funnelContext
     ? {
         sessionId: funnelContext.sessionId,
@@ -295,7 +362,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
         ? "organic-plan-v1"
         : resolveLegacyResultOfferVariant(funnelContext)
   const offerTracking =
-    hasAccess || fieldTestUnavailable
+    hasAccess || fieldTestUnavailable || regularFieldTestState.unavailable
       ? null
       : entryContext === "quiz_return"
         ? buildReturnOfferTracking(funnelContext)
@@ -317,6 +384,12 @@ export default async function ResultPage({ params, searchParams }: Props) {
       fieldTest={Boolean(fieldTestAuthorization)}
       fieldTestUnavailable={fieldTestUnavailable}
       isInternalTest={personalPlanSession?.isInternalTest ?? false}
+      regularFieldTest={
+        regularFieldTestState.authorization
+          ? { accessDurationHours: regularFieldTestState.authorization.accessDurationHours }
+          : null
+      }
+      regularFieldTestUnavailable={regularFieldTestState.unavailable}
       returnTo={returnTo}
       offerTracking={offerTracking}
       offerVariant={offerVariant}

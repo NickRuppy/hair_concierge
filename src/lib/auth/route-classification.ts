@@ -36,6 +36,7 @@ const PUBLIC_ROUTE_PREFIXES = [
   "/lp",
   "/result",
   "/test/haarplan",
+  "/test/quiz",
   "/api/funnel",
   "/api/og",
   "/api/paypal",
@@ -56,6 +57,7 @@ const PUBLIC_API_EXACT_ROUTES = [
   // The field-test handler performs its own signed campaign, funnel, lead,
   // session, and rate-limit checks before it creates or reuses a guest.
   "/api/personal-plan/field-test/activate",
+  "/api/quiz/field-test/activate",
   "/api/waitlist",
   "/api/waitlist/survey",
   "/api/waitlist/survey-access",

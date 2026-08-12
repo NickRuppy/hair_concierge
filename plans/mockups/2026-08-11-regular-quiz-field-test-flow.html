@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reguläres Quiz · kostenloser Feldtest</title>
+    <style>
+      :root {
+        --paper: #fcfaf7;
+        --card: #fff;
+        --ink: #2e1747;
+        --body: #514b4c;
+        --muted: #766e70;
+        --plum: #7251ad;
+        --plum-dark: #4b326f;
+        --plum-ice: #f1ecf8;
+        --green: #356b45;
+        --green-ice: #edf7ef;
+        --amber: #8b5d1a;
+        --amber-ice: #fff7e7;
+        --line: #e4dce3;
+        --shadow: 0 20px 54px rgba(46, 23, 71, 0.12);
+        --display: Georgia, "Times New Roman", serif;
+        --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--body); background: #eee9e7; font: 14px/1.5 var(--sans); }
+      button { font: inherit; }
+      .artifact { width: min(1480px, 100%); margin: 0 auto; padding: 24px 20px 56px; }
+      .artifact-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; margin-bottom: 20px; }
+      .kicker { margin: 0; color: var(--plum); font-size: 11px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+      h1 { margin: 4px 0 0; color: var(--ink); font: 500 clamp(30px, 4vw, 46px)/1.08 var(--display); }
+      .intro { max-width: 900px; margin: 8px 0 0; color: var(--muted); }
+      .legend { max-width: 340px; padding: 12px 14px; border: 1px solid #d8cbe4; border-radius: 14px; background: rgba(255,255,255,.76); font-size: 12px; }
+      .legend strong { display: block; color: var(--ink); }
+      .journey { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+      .journey-step { min-height: 74px; padding: 12px; border: 1px solid #d9cfe1; border-radius: 14px; background: rgba(255,255,255,.8); }
+      .journey-step b { display: grid; width: 25px; height: 25px; place-items: center; margin-bottom: 5px; border-radius: 50%; color: #fff; background: var(--plum); }
+      .journey-step strong { display: block; color: var(--ink); font-size: 12px; }
+      .journey-step small { color: var(--muted); font-size: 10px; }
+      .review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+      .review-card { overflow: hidden; border: 1px solid #dcd3dc; border-radius: 22px; background: #f7f4f2; box-shadow: var(--shadow); }
+      .review-note { display: flex; gap: 12px; align-items: center; padding: 12px 15px; border-bottom: 1px solid #ddd3db; background: #fff; }
+      .review-note b { display: grid; flex: 0 0 auto; width: 28px; height: 28px; place-items: center; border-radius: 50%; color: #fff; background: var(--plum); }
+      .review-note strong { display: block; color: var(--ink); font-size: 12px; }
+      .review-note span { color: var(--muted); font-size: 11px; }
+      .surface { min-height: 600px; background: var(--paper); }
+      .brandbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 58px; padding: 0 22px; border-bottom: 1px solid #eadfeb; }
+      .brand { color: var(--ink); font: 600 23px/1 var(--display); }
+      .test-pill { justify-self: end; padding: 7px 11px; border-radius: 999px; color: var(--green); background: var(--green-ice); font-size: 10px; font-weight: 800; }
+      .test-banner { display: flex; justify-content: center; gap: 7px; align-items: center; padding: 8px 16px; color: var(--plum-dark); background: var(--plum-ice); font-size: 11px; font-weight: 750; text-align: center; }
+      .test-banner i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #61a06d; }
+      .quiz-body { max-width: 640px; margin: 0 auto; padding: 24px 24px 34px; text-align: center; }
+      .info { margin: 0 0 18px; padding: 12px 14px; border-radius: 14px; color: var(--plum-dark); background: #f4f0f8; text-align: left; font-size: 12px; }
+      .progress { color: var(--plum); font-weight: 800; font-size: 11px; }
+      .quiz-body h2, .offer h2, .state-panel h2 { margin: 7px 0 0; color: var(--ink); font: 500 30px/1.15 var(--display); }
+      .quiz-body > p { margin: 8px 0 20px; color: var(--muted); }
+      .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .option { overflow: hidden; border: 1px solid #cdb9df; border-radius: 14px; background: #fff; text-align: left; }
+      .option-image { display: grid; height: 105px; place-items: center; color: #876da8; background: linear-gradient(135deg,#eee7f5,#faf8fc); font: 500 36px var(--display); }
+      .option-copy { position: relative; min-height: 68px; padding: 10px 38px 10px 12px; }
+      .option-copy strong { display: block; color: var(--ink); }
+      .option-copy small { color: var(--muted); }
+      .radio { position: absolute; top: 15px; right: 12px; width: 20px; height: 20px; border: 1px solid #bda5d3; border-radius: 50%; }
+      .offer { max-width: 660px; margin: 0 auto; padding: 28px 25px 38px; }
+      .eyebrow { margin: 0 0 8px; color: var(--plum); font-size: 11px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+      .offer-lead { margin: 10px 0 18px; color: var(--muted); }
+      .diagnosis { padding: 16px; border: 1px solid #e1d7df; border-radius: 16px; background: #fff; }
+      .diagnosis strong { display: block; color: var(--ink); font-size: 16px; }
+      .diagnosis p { margin: 5px 0 0; }
+      .free-card { margin-top: 16px; padding: 18px; border: 2px solid var(--plum); border-radius: 18px; background: #fff; }
+      .free-row { display: flex; justify-content: space-between; gap: 14px; align-items: start; }
+      .free-row strong { color: var(--ink); font-size: 17px; }
+      .price { color: var(--plum); font: 600 26px/1 var(--display); white-space: nowrap; }
+      .free-card p { margin: 6px 0 15px; color: var(--muted); }
+      .primary { width: 100%; min-height: 48px; border: 0; border-radius: 999px; color: #fff; background: var(--plum); font-weight: 800; }
+      .free-note { display: flex; gap: 7px; align-items: start; margin: 10px 2px 0; color: var(--green); font-size: 11px; }
+      .state-wrap { display: grid; min-height: 542px; place-items: center; padding: 28px; }
+      .state-panel { width: min(480px, 100%); padding: 28px; border: 1px solid #e1d8df; border-radius: 22px; background: #fff; text-align: center; box-shadow: 0 14px 40px rgba(46,23,71,.08); }
+      .state-icon { display: grid; width: 54px; height: 54px; place-items: center; margin: 0 auto 15px; border-radius: 50%; color: var(--green); background: var(--green-ice); font-size: 25px; font-weight: 800; }
+      .state-panel > p { color: var(--muted); }
+      .detail { margin: 17px 0; padding: 12px; border-radius: 12px; background: var(--plum-ice); color: var(--plum-dark); font-size: 12px; text-align: left; }
+      .secondary { width: 100%; min-height: 46px; margin-top: 10px; border: 1px solid #cdb9df; border-radius: 999px; color: var(--plum); background: #fff; font-weight: 750; }
+      .warning .state-icon { color: var(--amber); background: var(--amber-ice); }
+      .warning .detail { color: var(--amber); background: var(--amber-ice); }
+      .footer-note { margin: 18px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+      @media (max-width: 800px) {
+        .artifact { padding: 16px 10px 40px; }
+        .artifact-header { grid-template-columns: 1fr; }
+        .legend { display: none; }
+        .journey { display: flex; overflow-x: auto; padding-bottom: 3px; }
+        .journey-step { flex: 0 0 140px; }
+        .review-grid { grid-template-columns: 1fr; }
+        .surface { min-height: 0; }
+        .brandbar { height: 52px; padding: 0 14px; }
+        .brand { font-size: 20px; }
+        .test-pill { display: none; }
+        .quiz-body { padding: 16px 14px 26px; }
+        .quiz-body h2, .offer h2, .state-panel h2 { font-size: 27px; }
+        .options { gap: 9px; }
+        .option-image { height: 92px; }
+        .option-copy { min-height: 77px; padding-left: 9px; }
+        .offer { padding: 22px 15px 30px; }
+        .state-wrap { min-height: 500px; padding: 18px 13px; }
+        .state-panel { padding: 23px 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="artifact">
+      <header class="artifact-header">
+        <div>
+          <p class="kicker">Planungsartefakt · keine Produktionsfunktion</p>
+          <h1>Kostenloser Testlink für das reguläre Quiz</h1>
+          <p class="intro">Gewählte Richtung: dieselbe sichere Feldtest-Struktur wie beim Personal Plan, vorangestellt vor dem bestehenden 10-Fragen-Quiz. Quiz, Auswertung und Angebot bleiben echt; Zahlung wird durch einen siebentägigen Testzugang ersetzt.</p>
+        </div>
+        <div class="legend"><strong>Entscheidungsfrage</strong>Entspricht dies exakt der gewünschten Replikation – mit dem regulären Quiz und dessen normalem Onboarding als Ziel?</div>
+      </header>
+
+      <nav class="journey" aria-label="Testreise">
+        <div class="journey-step"><b>1</b><strong>Testlink</strong><small>Widerrufbar und ohne sichtbares Token</small></div>
+        <div class="journey-step"><b>2</b><strong>Reguläres Quiz</strong><small>Alle 10 Fragen unverändert</small></div>
+        <div class="journey-step"><b>3</b><strong>Auswertung & Angebot</strong><small>Echte organische Angebotsseite</small></div>
+        <div class="journey-step"><b>4</b><strong>Kostenlos aktivieren</strong><small>Keine Zahlungsdaten</small></div>
+        <div class="journey-step"><b>5</b><strong>Onboarding</strong><small>Normaler App-Weg ab Produkteingabe</small></div>
+      </nav>
+
+      <section class="review-grid">
+        <article class="review-card">
+          <header class="review-note"><b>1</b><div><strong>Quiz: bestehender Inhalt, klarer Testkontext</strong><span>Die schmale Kennzeichnung ergänzt den bestehenden Hinweis und bleibt durch alle Quizschritte sichtbar.</span></div></header>
+          <div class="surface">
+            <div class="brandbar"><span></span><div class="brand">chaarlie</div><div class="test-pill">FELDTEST</div></div>
+            <div class="test-banner"><i></i>Kostenloser Chaarlie Produkttest · keine Zahlung erforderlich</div>
+            <div class="quiz-body">
+              <div class="info"><strong>Lass uns deine Haare verstehen — Schritt für Schritt.</strong><br />10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte.</div>
+              <div class="progress">1/10</div>
+              <h2>Welche Haarstruktur haben die meisten deiner Haare?</h2>
+              <p>Wähle die natürliche Form deiner Haare, so gut du sie erkennen kannst.</p>
+              <div class="options">
+                <div class="option"><div class="option-image">〰</div><div class="option-copy"><strong>Glatt</strong><small>Die Strähne hängt glatt runter</small><span class="radio"></span></div></div>
+                <div class="option"><div class="option-image">∿</div><div class="option-copy"><strong>Wellig</strong><small>Bildet eine S-Kurve</small><span class="radio"></span></div></div>
+                <div class="option"><div class="option-image">➰</div><div class="option-copy"><strong>Lockig</strong><small>Deutliche 3D-Locke</small><span class="radio"></span></div></div>
+                <div class="option"><div class="option-image">⌇</div><div class="option-copy"><strong>Kraus</strong><small>Enge Windungen</small><span class="radio"></span></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <header class="review-note"><b>2</b><div><strong>Angebot: echte Auswertung, kostenlose Aktivierung</strong><span>Video, Diagnose, Nutzen und Produkterklärung bleiben; Tarifwahl, Checkout und Kaufgarantie verschwinden.</span></div></header>
+          <div class="surface">
+            <div class="brandbar"><span></span><div class="brand">chaarlie</div><div class="test-pill">FELDTEST</div></div>
+            <div class="test-banner"><i></i>Dein kostenloser Testzugang ist für diese Sitzung reserviert</div>
+            <div class="offer">
+              <p class="eyebrow">Deine Analyse ist bereit</p>
+              <h2>Dein Haarplan ist bereit.</h2>
+              <p class="offer-lead">Welliges, mittelstarkes Haar mit mittlerer Dichte. Die vollständige organische Auswertung bleibt sichtbar.</p>
+              <div class="diagnosis"><strong>Dein Fokus: Oberfläche, Feuchtigkeit und verlässliche Definition</strong><p>Deine Antworten zeigen, wo wir mit Routine, Produkten und Anwendung gezielt ansetzen.</p></div>
+              <div class="free-card">
+                <div class="free-row"><div><strong>Chaarlie · Produkttest</strong><p>Vollständige App inklusive persönlicher Routine, Chat und Haartagebuch.</p></div><div class="price">0 €</div></div>
+                <button class="primary">Kostenlos mit Chaarlie fortfahren</button>
+                <div class="free-note">✓ Keine Zahlungsdaten · kein Abo · 7 Tage Testzugang</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <header class="review-note"><b>3</b><div><strong>Aktivierung: direkt in das normale Onboarding</strong><span>Der Testgast erhält Zugriff; die Quizdaten werden seinem Haarprofil zugeordnet.</span></div></header>
+          <div class="surface">
+            <div class="brandbar"><span></span><div class="brand">chaarlie</div><div class="test-pill">FELDTEST</div></div>
+            <div class="state-wrap">
+              <div class="state-panel">
+                <div class="state-icon">✓</div>
+                <p class="eyebrow">Testzugang aktiviert</p>
+                <h2>Dein Testzugang ist bereit.</h2>
+                <p>Deine Quiz-Auswertung ist verbunden. Als Nächstes ergänzt du deine vorhandenen Produkte und Gewohnheiten – genau wie nach einem regulären Start.</p>
+                <div class="detail"><strong>Für diesen Test:</strong><br />Keine Zahlung · Zugang für 7 Tage · auf diesem Gerät sofort verfügbar</div>
+                <button class="primary">Meine Routine vervollständigen</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <header class="review-note"><b>4</b><div><strong>Recovery: Ergebnis und Antworten bleiben erhalten</strong><span>Ein fehlgeschlagener Aktivierungsversuch fällt nie zurück in einen echten Checkout.</span></div></header>
+          <div class="surface">
+            <div class="brandbar"><span></span><div class="brand">chaarlie</div><div class="test-pill">FELDTEST</div></div>
+            <div class="state-wrap warning">
+              <div class="state-panel">
+                <div class="state-icon">!</div>
+                <p class="eyebrow">Aktivierung unterbrochen</p>
+                <h2>Dein Testzugang konnte noch nicht aktiviert werden.</h2>
+                <p>Deine Quiz-Antworten und deine Auswertung sind gespeichert. Versuche die Aktivierung noch einmal.</p>
+                <button class="primary">Testzugang erneut aktivieren</button>
+                <button class="secondary">Zur Auswertung zurück</button>
+                <div class="detail">Es wurde keine Zahlung ausgelöst. Ein angemeldetes Kundenkonto wird niemals für den Feldtest übernommen.</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+      <p class="footer-note">Responsive Planungsansicht: Unter 800 px werden die Karten auf eine mobile Spalte reduziert. Umsetzung, Datenbankmigration und Produktionsaktivierung sind nicht Teil dieses Artefakts.</p>
+    </main>
+  </body>
+</html>

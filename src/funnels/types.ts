@@ -24,6 +24,10 @@ export type FunnelOfferVariantProps = {
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string
+  regularFieldTest?: {
+    accessDurationHours: number
+    activationApiPath?: string
+  } | null
 }
 
 export type FunnelOfferVariantComponent = ComponentType<FunnelOfferVariantProps>
