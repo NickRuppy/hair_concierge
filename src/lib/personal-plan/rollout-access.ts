@@ -140,7 +140,7 @@ export async function isPersonalPlanInternalUser(
 
 export async function isPersonalPlanAppV1AllowedForUser(
   userId: string,
-  client: PersonalPlanInternalUserClient = createAdminClient() as unknown as PersonalPlanInternalUserClient,
+  client?: PersonalPlanInternalUserClient,
 ): Promise<boolean> {
   const appEnabled = isPersonalPlanAppV1Enabled()
   const rollout = resolvePersonalPlanAppV1Rollout()
@@ -150,6 +150,9 @@ export async function isPersonalPlanAppV1AllowedForUser(
   return canAccessPersonalPlanAppV1Rollout({
     appEnabled,
     rollout,
-    isInternal: await isPersonalPlanInternalUser(userId, client),
+    isInternal: await isPersonalPlanInternalUser(
+      userId,
+      client ?? (createAdminClient() as unknown as PersonalPlanInternalUserClient),
+    ),
   })
 }

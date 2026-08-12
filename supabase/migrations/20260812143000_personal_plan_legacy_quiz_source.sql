@@ -4,9 +4,19 @@ ALTER TABLE public.personal_plan_need_versions
   ADD COLUMN stage1_source_kind text,
   ADD COLUMN stage1_source_lead_id uuid REFERENCES public.leads(id) ON DELETE RESTRICT;
 
+-- The version table is intentionally immutable after insert. This migration
+-- holds a table lock while temporarily suspending that exact trigger so the
+-- one-time provenance backfill can run atomically; PostgreSQL
+-- rolls the trigger state back too if any later statement fails.
+ALTER TABLE public.personal_plan_need_versions
+  DISABLE TRIGGER personal_plan_need_versions_immutable;
+
 UPDATE public.personal_plan_need_versions
   SET stage1_source_kind = 'personal_plan_artifact'
   WHERE kind = 'initial';
+
+ALTER TABLE public.personal_plan_need_versions
+  ENABLE TRIGGER personal_plan_need_versions_immutable;
 
 ALTER TABLE public.personal_plan_need_versions
   ADD CONSTRAINT personal_plan_need_versions_initial_stage1_source_check CHECK (

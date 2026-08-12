@@ -22,7 +22,7 @@ type RoutingReleaseDependencies = {
 const releaseDefaults: RoutingReleaseDependencies = {
   cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
   legacyQuizCutoverEnabled: isPersonalPlanLegacyQuizCutoverEnabled,
-  appAllowedForUser: (userId, client) => isPersonalPlanAppV1AllowedForUser(userId, client as never),
+  appAllowedForUser: (userId) => isPersonalPlanAppV1AllowedForUser(userId),
 }
 
 type RoutingSource = {
