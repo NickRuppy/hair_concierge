@@ -4,6 +4,7 @@ import { useQuizStore } from "@/lib/quiz/store"
 import { QuizBrowserHistoryProvider } from "@/components/quiz/quiz-browser-history"
 import { QuizInfoStrip } from "@/components/quiz/quiz-info-strip"
 import { QuizProgressTransitionProvider } from "@/components/quiz/quiz-progress-bar"
+import { RegularQuizFieldTestBanner } from "@/components/regular-quiz-field-test/banner"
 import { AppRouteProviders } from "@/providers/route-providers"
 import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import type { QuizStep } from "@/lib/quiz/types"
@@ -37,7 +38,13 @@ function getProgressCurrent(step: QuizStep) {
   return getQuizQuestionNumber(step) ?? QUIZ_TOTAL_QUESTIONS
 }
 
-export function QuizShell({ children }: { children: React.ReactNode }) {
+export function QuizShell({
+  children,
+  regularFieldTest = false,
+}: {
+  children: React.ReactNode
+  regularFieldTest?: boolean
+}) {
   const step = useQuizStore((s) => s.step)
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
   const standardScrollRef = useRef<HTMLDivElement>(null)
@@ -165,6 +172,7 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
       <AppRouteProviders>
         <QuizBrowserHistoryProvider>
           <div ref={resultScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
+            {regularFieldTest ? <RegularQuizFieldTestBanner surface="quiz" /> : null}
             <div className="mx-auto max-w-[960px] px-5 py-8 md:px-10 md:py-12">{children}</div>
           </div>
         </QuizBrowserHistoryProvider>
@@ -180,6 +188,7 @@ export function QuizShell({ children }: { children: React.ReactNode }) {
             <div
               className={`mx-auto w-full max-w-[40rem] ${step === 9 || step === 10 ? "px-5 py-8" : "px-4 py-5"} sm:px-6 sm:py-8 md:py-12`}
             >
+              {regularFieldTest ? <RegularQuizFieldTestBanner surface="quiz" /> : null}
               {step === 2 && !infoStripDismissed && (
                 <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
               )}

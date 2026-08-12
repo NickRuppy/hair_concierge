@@ -6,6 +6,8 @@ import { ArrowDown, ChevronDown } from "lucide-react"
 
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { WistiaVideo } from "@/components/organic-plan-offer/wistia-video"
+import { RegularQuizFieldTestActivationCard } from "@/components/regular-quiz-field-test/activation-card"
+import { RegularQuizFieldTestBanner } from "@/components/regular-quiz-field-test/banner"
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import { buildPersonalPlanAssessmentRows } from "@/lib/personal-plan-quiz/assessment-copy"
 import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment"
@@ -216,10 +218,16 @@ export function OrganicPlanOffer({
   offerVariant,
   pricingSlot,
   quizAnswers,
+  regularFieldTest = null,
 }: FunnelOfferVariantProps) {
   const diagnosticInput = adaptLegacyQuizAnswersForAssessment(quizAnswers)
   const assessment = assessPersonalPlanHair(diagnosticInput)
   const diagnosticRows = buildPersonalPlanAssessmentRows(assessment, diagnosticInput)
+  const isRegularFieldTest = Boolean(regularFieldTest)
+  const visibleFaqItems = isRegularFieldTest
+    ? faqItems.filter(([question]) => question !== "Was passiert direkt nach dem Kauf?")
+    : faqItems
+  const activationHref = "#regular_field_test_activation"
 
   return (
     <OfferTrackingProvider
@@ -229,6 +237,7 @@ export function OrganicPlanOffer({
       offerRevision={ORGANIC_PLAN_OFFER_REVISION}
       offerTracking={offerTracking}
       offerVariant={offerVariant}
+      testKind={isRegularFieldTest ? "field_test" : null}
       trackingIdentity={{
         conditionerModuleId: null,
         needLane: null,
@@ -238,6 +247,7 @@ export function OrganicPlanOffer({
     >
       <main className="min-h-screen bg-[#fcfaf7] text-[var(--brand-plum-darkest)]">
         <div className="sticky top-0 z-30 border-b border-[rgba(var(--brand-plum-rgb),0.10)] bg-[#fcfaf7]/95 backdrop-blur">
+          {isRegularFieldTest ? <RegularQuizFieldTestBanner surface="offer" /> : null}
           <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-3">
             <Link href="/" className="font-serif text-2xl font-semibold tracking-tight">
               chaarlie
@@ -245,11 +255,13 @@ export function OrganicPlanOffer({
             <a
               className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
               data-offer-cta="sticky_header"
-              data-offer-destination="pricing"
+              data-offer-destination={
+                isRegularFieldTest ? "regular_field_test_activation" : "pricing"
+              }
               data-offer-source-section="hero"
-              href="#pricing"
+              href={isRegularFieldTest ? activationHref : "#pricing"}
             >
-              Angebot ansehen
+              {isRegularFieldTest ? "Kostenlos fortfahren" : "Angebot ansehen"}
             </a>
           </div>
         </div>
@@ -345,18 +357,30 @@ export function OrganicPlanOffer({
         <section
           className="mx-auto max-w-4xl scroll-mt-16 px-4 py-10 sm:py-14"
           data-offer-section="pricing"
-          id="pricing"
+          id={isRegularFieldTest ? "regular_field_test_activation" : "pricing"}
           tabIndex={-1}
         >
           <div className="text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              Plan freischalten
+              {isRegularFieldTest ? "Kostenlos aktivieren" : "Plan freischalten"}
             </p>
             <h2 className="mx-auto mt-3 max-w-[24ch] font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Starte mit deinem persönlichen Plan.
+              {isRegularFieldTest
+                ? "Starte deinen siebentägigen Chaarlie Testzugang."
+                : "Starte mit deinem persönlichen Plan."}
             </h2>
           </div>
-          <div className="mt-7">{pricingSlot}</div>
+          <div className="mt-7">
+            {regularFieldTest ? (
+              <RegularQuizFieldTestActivationCard
+                accessDurationHours={regularFieldTest.accessDurationHours}
+                activationApiPath={regularFieldTest.activationApiPath}
+                leadId={leadId}
+              />
+            ) : (
+              pricingSlot
+            )}
+          </div>
         </section>
 
         <section
@@ -504,29 +528,31 @@ export function OrganicPlanOffer({
           </div>
         </section>
 
-        <section
-          className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
-          data-offer-section="guarantee"
-        >
-          <div className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 text-center sm:rounded-[1.75rem] sm:p-6">
-            <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)] sm:text-sm">
-              Ohne Risiko
-            </p>
-            <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
-              14 Tage Geld-zurück-Garantie
-            </h2>
-            <p className="mx-auto mt-3 max-w-[34rem] text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:mt-4 sm:text-base sm:leading-7">
-              Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.
-            </p>
-          </div>
-        </section>
+        {!isRegularFieldTest ? (
+          <section
+            className="mx-auto max-w-4xl px-4 pb-6 pt-3 sm:py-14"
+            data-offer-section="guarantee"
+          >
+            <div className="rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-5 text-center sm:rounded-[1.75rem] sm:p-6">
+              <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[rgba(var(--brand-plum-rgb),0.60)] sm:text-sm">
+                Ohne Risiko
+              </p>
+              <h2 className="mx-auto mt-2 max-w-[18ch] font-serif text-[2rem] leading-[1.05] sm:max-w-none sm:text-4xl sm:leading-tight">
+                14 Tage Geld-zurück-Garantie
+              </h2>
+              <p className="mx-auto mt-3 max-w-[34rem] text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.72)] sm:mt-4 sm:text-base sm:leading-7">
+                Wenn Chaarlie für dich nicht hilfreich ist, bekommst du dein Geld zurück.
+              </p>
+            </div>
+          </section>
+        ) : null}
 
         <section className="mx-auto max-w-4xl px-4 pb-24 pt-1" data-offer-section="faq">
           <h2 className="text-center font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">
             Häufige Fragen
           </h2>
           <div className="mt-6 space-y-3">
-            {faqItems.map(([question, answer], index) => (
+            {visibleFaqItems.map(([question, answer], index) => (
               <FaqItem
                 answer={answer}
                 faqId={`organic-plan-${index + 1}`}
@@ -540,16 +566,20 @@ export function OrganicPlanOffer({
             data-offer-section="final_cta"
           >
             <h2 className="font-serif text-3xl leading-tight">
-              Dein Plan zu schöneren Haaren in 30 Tagen.
+              {isRegularFieldTest
+                ? "Dein Testzugang ist für diese Auswertung bereit."
+                : "Dein Plan zu schöneren Haaren in 30 Tagen."}
             </h2>
             <a
               className="mt-5 inline-flex rounded-full bg-white px-7 py-3 font-bold text-[var(--brand-plum-darkest)]"
               data-offer-cta="final"
-              data-offer-destination="pricing"
+              data-offer-destination={
+                isRegularFieldTest ? "regular_field_test_activation" : "pricing"
+              }
               data-offer-source-section="final_cta"
-              href="#pricing"
+              href={isRegularFieldTest ? activationHref : "#pricing"}
             >
-              Plan sichern
+              {isRegularFieldTest ? "Kostenlos mit Chaarlie fortfahren" : "Plan sichern"}
             </a>
           </div>
         </section>

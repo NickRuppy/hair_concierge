@@ -1,4 +1,4 @@
-import { updateSession } from "@/lib/supabase/middleware"
+import { AUTHENTICATED_SESSION_RESPONSE_HEADER, updateSession } from "@/lib/supabase/middleware"
 import {
   decodeFunnelContext,
   decodeFunnelTouch,
@@ -21,6 +21,11 @@ import {
 } from "@/lib/funnel/packages"
 import { type NextRequest } from "next/server"
 import { NextResponse } from "next/server"
+import {
+  decodeSignedRegularQuizFieldTestCampaignCookie,
+  REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE,
+} from "@/lib/personal-plan-field-test/regular-quiz-campaign-cookie"
+import { regularQuizFieldTestCookieSecret } from "@/lib/personal-plan-field-test/server"
 
 export async function proxy(request: NextRequest) {
   if (request.nextUrl.hostname === "www.chaarlie.de") {
@@ -39,12 +44,37 @@ export async function proxy(request: NextRequest) {
   }
 
   const response = await updateSession(request)
-  if (!isFunnelAttributionEnabled()) return response
+  const regularFieldTestSecret = regularQuizFieldTestCookieSecret()
+  const requestedRegularFieldTestRewrite = shouldRewriteRegularQuizFieldTest(request)
+  const authenticated = response.headers.get(AUTHENTICATED_SESSION_RESPONSE_HEADER) === "1"
+  response.headers.delete(AUTHENTICATED_SESSION_RESPONSE_HEADER)
+  if (
+    shouldClearInvalidRegularQuizFieldTestCookie({
+      pathname: request.nextUrl.pathname,
+      hasCookie: request.cookies.has(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE),
+      secretAvailable: Boolean(regularFieldTestSecret),
+      rewriteRequested: requestedRegularFieldTestRewrite,
+    })
+  ) {
+    response.cookies.set(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE, "", {
+      path: "/",
+      maxAge: 0,
+    })
+  }
+  const rewriteRegularFieldTest = shouldApplyRegularQuizFieldTestRewrite({
+    authenticated,
+    location: response.headers.get("location"),
+    requested: requestedRegularFieldTestRewrite,
+    status: response.status,
+  })
+  if (!isFunnelAttributionEnabled()) {
+    return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
+  }
 
   const secret = process.env.FUNNEL_COOKIE_SIGNING_SECRET
   if (!secret) {
     console.error("[funnel] FUNNEL_COOKIE_SIGNING_SECRET is required when attribution is enabled")
-    return response
+    return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
   }
 
   const personalPlanEnabled = isPersonalPlanQuizV1Enabled()
@@ -52,12 +82,16 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname,
     personalPlanEnabled,
   )
-  if (!selectedPackage) return response
+  if (!selectedPackage) {
+    return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
+  }
 
   const existingValue = request.cookies.get(FUNNEL_SESSION_COOKIE)?.value
   const existing = existingValue ? await decodeFunnelContext(existingValue, secret) : null
   const explicitlySelectsPackage =
-    request.nextUrl.pathname === "/" || request.nextUrl.pathname.startsWith("/lp/")
+    rewriteRegularFieldTest ||
+    request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname.startsWith("/lp/")
 
   const startNewSession = shouldStartNewFunnelSession({
     existingPackageKey: existing?.packageKey ?? null,
@@ -93,7 +127,59 @@ export async function proxy(request: NextRequest) {
       funnelTouchCookieOptions,
     )
   }
-  return response
+  return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
+}
+
+export function shouldApplyRegularQuizFieldTestRewrite({
+  authenticated,
+  location,
+  requested,
+  status,
+}: {
+  authenticated: boolean
+  location: string | null
+  requested: boolean
+  status: number
+}) {
+  return requested && !authenticated && !location && status === 200
+}
+
+export function shouldClearInvalidRegularQuizFieldTestCookie({
+  pathname,
+  hasCookie,
+  secretAvailable,
+  rewriteRequested,
+}: {
+  pathname: string
+  hasCookie: boolean
+  secretAvailable: boolean
+  rewriteRequested: boolean
+}) {
+  return pathname === "/quiz" && hasCookie && secretAvailable && !rewriteRequested
+}
+
+function finalizeRegularQuizFieldTestRewrite(
+  request: NextRequest,
+  response: NextResponse,
+  rewrite: boolean,
+) {
+  if (!rewrite) return response
+  const url = request.nextUrl.clone()
+  url.pathname = "/test/quiz/session"
+  const rewriteResponse = NextResponse.rewrite(url)
+  for (const cookie of response.cookies.getAll()) rewriteResponse.cookies.set(cookie)
+  return rewriteResponse
+}
+
+export function shouldRewriteRegularQuizFieldTest(request: NextRequest) {
+  if (request.nextUrl.pathname !== "/quiz") return false
+  const value = request.cookies.get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value
+  // A signed cookie stays on the server-validated path even after the global
+  // switch is disabled. The dynamic layout then sends the participant to the
+  // neutral ended surface instead of letting the test fall into paid `/quiz`.
+  return Boolean(
+    decodeSignedRegularQuizFieldTestCampaignCookie(value, regularQuizFieldTestCookieSecret()),
+  )
 }
 
 const SAFE_RETIRED_ROUTINE_QUERY_KEYS = new Set([

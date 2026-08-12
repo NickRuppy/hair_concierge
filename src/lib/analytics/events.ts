@@ -71,6 +71,7 @@ export type OfferCtaId =
   | "locked_plan"
   | "pricing_primary"
   | "change_plan"
+  | "field_test_activation"
   | "final"
 
 export type OfferEngagementReason = "cta_clicked" | "faq_opened" | "section_depth"
