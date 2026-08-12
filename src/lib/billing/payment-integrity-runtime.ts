@@ -1125,6 +1125,13 @@ function dateOrNow(value: unknown): Date {
   return Number.isFinite(ms) ? new Date(ms) : new Date()
 }
 
+class PaymentIntegrityProviderTimeoutError extends Error {
+  constructor() {
+    super("payment_integrity_provider_timeout")
+    this.name = "PaymentIntegrityProviderTimeoutError"
+  }
+}
+
 async function withProviderTimeout<T>(
   work: Promise<T> | ((signal: AbortSignal) => Promise<T>),
   deadlineAt: Date,
@@ -1141,8 +1148,8 @@ async function withProviderTimeout<T>(
       pending,
       new Promise<never>((_, reject) => {
         timeout = setTimeout(() => {
+          reject(new PaymentIntegrityProviderTimeoutError())
           controller.abort()
-          reject(new Error("payment_integrity_provider_timeout"))
         }, timeoutMs)
       }),
     ])
@@ -1163,8 +1170,11 @@ async function mapProviderRowsWithConcurrency<T, R>(
 
   try {
     results[0] = await worker(rows[0])
-  } catch {
+  } catch (error) {
     incomplete = true
+    if (error instanceof PaymentIntegrityProviderTimeoutError) {
+      return { results: [], incomplete }
+    }
   }
 
   let nextIndex = 1
