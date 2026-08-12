@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import type { IconName } from "@/components/ui/icon"
+import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type {
   AdditionalHeatTool,
   DryingRoute,
@@ -109,7 +110,7 @@ export const REFINEMENT_CATEGORY_OPTIONS = [
 ] as const satisfies readonly RefinementOption<Stage2ProductCategory>[]
 
 export const WET_WASH_FREQUENCY_OPTIONS = [
-  ...[...PRODUCT_FREQUENCIES].reverse().map((value) => ({
+  ...PRODUCT_FREQUENCIES.map((value) => ({
     value: value as ProductFrequency,
     label: PRODUCT_FREQUENCY_LABELS[value],
     icon: "clock" as const,
@@ -379,43 +380,16 @@ export function WetWashFrequencyScale({
 
   return (
     <div data-wet-wash-frequency-scale="true">
-      <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-2.5">
-        <div aria-hidden="true" className="relative flex min-h-full flex-col items-center">
-          <span className="mb-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
-            Häufig
-          </span>
-          <span
-            data-wet-wash-frequency-rail="true"
-            className="absolute bottom-7 top-7 w-px bg-[var(--brand-plum-light)]"
-          />
-          <div className="relative z-10 grid flex-1 content-between gap-2.5 py-7">
-            {frequencyOptions.map((option, index) => (
-              <span
-                data-wet-wash-frequency-rank={String(frequencyOptions.length - index)}
-                key={option.value}
-                className="grid h-6 w-6 place-items-center rounded-full border border-[var(--brand-plum-light)] bg-white text-[10px] font-extrabold text-[var(--brand-plum)]"
-              >
-                {frequencyOptions.length - index}
-              </span>
-            ))}
-          </div>
-          <span className="mt-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--text-muted,#736f69)]">
-            Selten
-          </span>
-        </div>
-        <div className="grid grid-cols-1 gap-2.5">
-          {frequencyOptions.map((option, index) => (
-            <QuizOptionCard
-              active={value === option.value}
-              animationDelay={index * 18}
-              icon={option.icon}
-              key={option.value}
-              label={option.label}
-              onClick={() => onChange(option.value)}
-            />
-          ))}
-        </div>
-      </div>
+      <FrequencySliderField
+        stops={frequencyOptions.map((option) => ({
+          value: option.value,
+          label: option.label,
+        }))}
+        value={value === "does_not_wash" ? undefined : value}
+        onValueChange={(next) => onChange(next as WetWashFrequency)}
+        ariaLabel="Häufigkeit der Haarwäsche"
+        selectedPlaceholder="Bitte auswählen"
+      />
       {noWashOption ? (
         <div className="mt-4 border-t border-[var(--brand-plum-light)] pt-4">
           <QuizOptionCard

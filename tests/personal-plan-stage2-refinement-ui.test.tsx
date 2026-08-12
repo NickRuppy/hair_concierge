@@ -200,18 +200,18 @@ test("UI option value order stays coupled to canonical Slice A vocabularies", ()
   )
 })
 
-test("renders the wet-wash rhythm from most to least frequent in one column, then no-wash", () => {
+test("renders wet-wash frequency with the shared rare-to-daily slider and a separate no-wash branch", () => {
   assert.deepEqual(
     WET_WASH_FREQUENCY_OPTIONS.map((option) => option.value),
     [
-      "daily_1x",
-      "weekly_5_6x",
-      "weekly_3_4x",
-      "weekly_2x",
-      "weekly_1x",
-      "biweekly_1x",
-      "monthly_1x",
       "less_than_monthly",
+      "monthly_1x",
+      "biweekly_1x",
+      "weekly_1x",
+      "weekly_2x",
+      "weekly_3_4x",
+      "weekly_5_6x",
+      "daily_1x",
       "does_not_wash",
     ],
   )
@@ -234,19 +234,45 @@ test("renders the wet-wash rhythm from most to least frequent in one column, the
     />,
   )
 
-  assert.match(html, /grid grid-cols-1 gap-2\.5/)
   assert.match(html, /data-wet-wash-frequency-scale="true"/)
-  assert.match(html, /data-wet-wash-frequency-rail="true"/)
-  assert.match(html, /Häufig/)
-  assert.match(html, /Selten/)
-  for (const rank of ["8", "7", "6", "5", "4", "3", "2", "1"]) {
-    assert.match(html, new RegExp(`data-wet-wash-frequency-rank="${rank}"`))
-  }
-  assert.ok(html.indexOf("Täglich") < html.indexOf("5-6x/Woche"))
+  assert.match(html, /role="slider"/)
+  assert.match(html, /aria-label="Häufigkeit der Haarwäsche"/)
+  assert.match(html, /aria-valuemin="0"/)
+  assert.match(html, /aria-valuemax="7"/)
+  assert.match(html, /&lt; 1x\/M/)
+  assert.match(html, /2 Wo\./)
+  assert.doesNotMatch(html, /data-wet-wash-frequency-rail/)
+  assert.doesNotMatch(html, /data-wet-wash-frequency-rank/)
+  assert.ok(html.indexOf("Seltener als 1x\/Monat") < html.indexOf("Täglich"))
   assert.ok(
     html.indexOf("Seltener als 1x/Monat") < html.indexOf("Ich wasche meine Haare nicht nass"),
   )
-  assert.ok(html.indexOf("Selten") < html.indexOf("Ich wasche meine Haare nicht nass"))
+
+  const resumedNoWashSession = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+    answers: { wetWashFrequency: "does_not_wash" },
+    completedQuestionIds: ["wet_wash_frequency"],
+  })
+  const resumedNoWashHtml = renderToStaticMarkup(
+    <RefinementQuestion
+      session={resumedNoWashSession}
+      questionId="wet_wash_frequency"
+      localAnswer={undefined}
+      onLocalAnswerChange={() => {}}
+      status="idle"
+      canGoBack={false}
+      onBack={() => {}}
+      onSubmit={() => {}}
+      onSecondaryExit={() => {}}
+    />,
+  )
+
+  assert.match(resumedNoWashHtml, /aria-valuetext="Nicht ausgewählt"/)
+  assert.match(
+    resumedNoWashHtml,
+    /aria-pressed="true"[\s\S]*?Ich wasche meine Haare nicht nass \/ mit Shampoo/,
+  )
 })
 
 test("the secondary category empty action is group-local and preserves three primary selections", () => {

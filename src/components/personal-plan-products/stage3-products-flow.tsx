@@ -41,6 +41,7 @@ import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-
 import {
   PRODUCT_FREQUENCIES,
   PRODUCT_FREQUENCY_LABELS,
+  productFrequencyShortLabel,
   type ProductFrequency,
 } from "@/lib/vocabulary/frequencies"
 
@@ -133,7 +134,7 @@ const FREQUENCIES: Array<{ value: ProductFrequency; label: string; shortLabel: s
   PRODUCT_FREQUENCIES.map((value) => ({
     value,
     label: PRODUCT_FREQUENCY_LABELS[value],
-    shortLabel: frequencyShortLabel(value),
+    shortLabel: productFrequencyShortLabel(value),
   }))
 
 const PRODUCT_KIND_OPTIONS: Stage3ProductKindOption[] = (
@@ -410,10 +411,6 @@ export function Stage3ProductsFlow({
             displayName: candidate.displayName,
             brandName: candidate.brandName ?? undefined,
             imageUrl: candidate.imageUrl ?? undefined,
-            confidenceLabel:
-              candidate.confidence === "exact"
-                ? "Eindeutiger Treffer"
-                : "Wahrscheinlich dein Produkt",
             assessmentStatus: candidate.assessmentStatus ?? "ready",
             assessmentReasonCodes: candidate.assessmentReasonCodes,
           }))
@@ -1798,27 +1795,6 @@ function sameProductKinds(
     normalizedLeft.length === normalizedRight.length &&
     normalizedLeft.every((category, index) => category === normalizedRight[index])
   )
-}
-
-function frequencyShortLabel(value: ProductFrequency): string {
-  switch (value) {
-    case "less_than_monthly":
-      return "< 1x/M"
-    case "monthly_1x":
-      return "1x/M"
-    case "biweekly_1x":
-      return "2 Wo."
-    case "weekly_1x":
-      return "1x/W"
-    case "weekly_2x":
-      return "2x/W"
-    case "weekly_3_4x":
-      return "3-4x/W"
-    case "weekly_5_6x":
-      return "5-6x/W"
-    case "daily_1x":
-      return "Täglich"
-  }
 }
 
 function createStableIdempotencyKey(): string {

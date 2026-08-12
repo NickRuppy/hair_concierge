@@ -14,7 +14,7 @@ import type { ReactNode } from "react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
-import { DiscreteSlider, type SliderStop } from "@/components/ui/slider"
+import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
@@ -40,7 +40,6 @@ export type Stage3CatalogCandidate = {
   displayName: string
   brandName?: string
   detail?: string
-  confidenceLabel?: string
   imageUrl?: string
   assessmentStatus?: "ready" | "pending_analysis"
   assessmentReasonCodes?: Array<"missing_required_spec" | "missing_application_protocol">
@@ -559,10 +558,12 @@ export function ProductSearchResults({
                 {[result.brandName, result.detail].filter(Boolean).join(" · ")}
               </span>
             </span>
-            <span className="flex items-center gap-1 rounded-full bg-[var(--brand-plum-ice)] px-2 py-1 text-[11px] font-semibold text-[var(--brand-plum-dark)]">
-              {selected ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : null}
-              {selected ? "Ausgewählt" : pending ? "Analyse ausstehend" : result.confidenceLabel}
-            </span>
+            {selected || pending ? (
+              <span className="flex items-center gap-1 rounded-full bg-[var(--brand-plum-ice)] px-2 py-1 text-[11px] font-semibold text-[var(--brand-plum-dark)]">
+                {selected ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : null}
+                {selected ? "Ausgewählt" : "Analyse ausstehend"}
+              </span>
+            ) : null}
           </button>
         )
       })}
@@ -590,32 +591,22 @@ export function ProductFrequencyPicker({
   onChange: (value: string) => void
   disabled?: boolean
 }) {
-  const selectedLabel = options.find((option) => option.value === selected)?.label
-  const stops: SliderStop[] = options.map((option) => ({
+  const stops = options.map((option) => ({
     value: option.value,
     label: option.label,
     shortLabel: option.shortLabel ?? option.label,
   }))
 
   return (
-    <fieldset className="mb-5">
-      <legend className="text-sm font-semibold text-foreground">
-        {productName ? `Wie oft nutzt du ${productName}?` : "Wie oft nutzt du dieses Produkt?"}
-      </legend>
-      <div className="mb-3 mt-1 flex items-baseline justify-between gap-3">
-        <p className="text-xs text-muted-foreground">Von selten bis täglich</p>
-        <p className="text-sm font-semibold text-[var(--brand-plum)]">
-          {selectedLabel ?? "Bitte auswählen"}
-        </p>
-      </div>
-      <DiscreteSlider
-        stops={stops}
-        value={selected ?? undefined}
-        onValueChange={onChange}
-        disabled={disabled}
-        aria-label="Nutzungshäufigkeit"
-      />
-    </fieldset>
+    <FrequencySliderField
+      stops={stops}
+      value={selected ?? undefined}
+      onValueChange={onChange}
+      disabled={disabled}
+      ariaLabel="Nutzungshäufigkeit"
+      selectedPlaceholder="Bitte auswählen"
+      legend={productName ? `Wie oft nutzt du ${productName}?` : "Wie oft nutzt du dieses Produkt?"}
+    />
   )
 }
 
