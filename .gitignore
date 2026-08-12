@@ -234,6 +234,9 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/
 /data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/*
 !/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-*.json
+!/data/catalog-enrichment/personal-plan-stage5-v2/
+/data/catalog-enrichment/personal-plan-stage5-v2/*
+!/data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-02-mask-critical-protocols.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-03-targeted-dandruff-shampoo.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-04-bondbuilder-primary-protocols.json

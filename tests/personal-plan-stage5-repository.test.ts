@@ -106,6 +106,7 @@ test("loads only active German canonical rows in database order", async () => {
         role_key: "cleanse",
         product_id: null,
         application_family: "standard_rinse_out_cleanse",
+        contract_version: 1,
         payload: protocolPayload,
         status: "active",
         verified_at: "2026-08-08T00:00:00.000Z",
@@ -146,6 +147,7 @@ test("loads only active German canonical rows in database order", async () => {
         eq: [
           { column: "status", value: "active" },
           { column: "locale", value: "de" },
+          { column: "contract_version", value: 1 },
         ],
         order: [{ column: "guidance_key", ascending: true }],
       },
@@ -166,6 +168,7 @@ test("fails closed when a supposedly active protocol has an invalid payload", as
         role_key: "cleanse",
         product_id: null,
         application_family: "standard_rinse_out_cleanse",
+        contract_version: 1,
         payload: { ...protocolPayload, protocolVersion: 0 },
         status: "active",
         verified_at: "2026-08-08T00:00:00.000Z",
@@ -192,6 +195,7 @@ test("fails closed when active guidance has no verification timestamp", async ()
         role_key: "cleanse",
         product_id: null,
         application_family: "standard_rinse_out_cleanse",
+        contract_version: 1,
         payload: protocolPayload,
         status: "active",
         verified_at: null,
@@ -203,4 +207,57 @@ test("fails closed when active guidance has no verification timestamp", async ()
     createApplicationGuidanceRepository(client).loadActiveGuidanceProtocols(),
     /active application guidance protocol shampoo-base is not verified/,
   )
+})
+
+test("selects exactly one requested guidance contract generation", async () => {
+  const v2Payload = {
+    schemaVersion: 2,
+    contractKind: "family_template",
+    guidanceKey: "shampoo-base-v2",
+    protocolVersion: 2,
+    locale: "de",
+    scope: { kind: "application_family", category: "shampoo" },
+    role: "cleanse",
+    applicationFamily: "standard_rinse_out_cleanse",
+    compatibleDayTypes: ["wash_day"],
+    sequence: { anchor: "wet_cleanse", before: [], after: [], conflictsWith: [] },
+    steps: [
+      {
+        stepKey: "cleanse",
+        action: "apply_product",
+        copyTemplateDe: "Auf die Kopfhaut geben.",
+      },
+    ],
+    evidence: protocolPayload.evidence,
+  }
+  const { client, calls } = createClient({
+    application_guidance_protocols: [
+      {
+        id: "8dbeab63-c10d-4c21-8eef-4e1782d0ad13",
+        guidance_key: "shampoo-base-v2",
+        protocol_version: 2,
+        locale: "de",
+        scope_kind: "application_family",
+        category_key: "shampoo",
+        role_key: "cleanse",
+        product_id: null,
+        application_family: "standard_rinse_out_cleanse",
+        contract_version: 2,
+        payload: v2Payload,
+        status: "active",
+        verified_at: "2026-08-12T00:00:00.000Z",
+      },
+    ],
+  })
+
+  const protocols = await createApplicationGuidanceRepository(client, {
+    contractVersion: 2,
+  }).loadActiveGuidanceProtocols()
+
+  assert.equal(protocols[0]?.payload.schemaVersion, 2)
+  assert.deepEqual(calls[0]?.eq, [
+    { column: "status", value: "active" },
+    { column: "locale", value: "de" },
+    { column: "contract_version", value: 2 },
+  ])
 })

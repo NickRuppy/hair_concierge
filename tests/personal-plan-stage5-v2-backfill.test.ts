@@ -1,0 +1,112 @@
+import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
+import test from "node:test"
+
+import { productApplicationPointerV2Schema } from "../src/lib/routines/personal-plan/application/contracts-v2"
+import { SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
+
+const artifact = JSON.parse(
+  readFileSync(
+    "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json",
+    "utf8",
+  ),
+) as {
+  observed_counts: {
+    rows: number
+    products: number
+    exact_workflows: number
+    family_templates: number
+    composable_rows: number
+    blocked_rows: number
+    by_category: Record<string, number>
+  }
+  family_templates: unknown[]
+  items: Array<{
+    key: string
+    product_id: string
+    product_name: string
+    source_role: string
+    template_keys: string[]
+    exact_workflow_id: string | null
+    guidance_payload_v2: unknown
+  }>
+}
+
+test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped snapshot", () => {
+  assert.deepEqual(artifact.observed_counts, {
+    rows: 273,
+    products: 224,
+    exact_workflows: 5,
+    family_templates: 23,
+    composable_rows: 272,
+    blocked_rows: 1,
+    by_category: {
+      bondbuilder: 4,
+      conditioner: 41,
+      deep_cleansing_shampoo: 6,
+      dry_shampoo: 10,
+      heat_protectant: 7,
+      leave_in: 61,
+      mask: 34,
+      oil: 54,
+      scalp_care: 8,
+      shampoo: 48,
+    },
+  })
+  assert.equal(new Set(artifact.items.map(({ key }) => key)).size, artifact.items.length)
+  assert.equal(new Set(artifact.items.map(({ product_id }) => product_id)).size, 224)
+  assert.equal(artifact.family_templates.length, SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.size)
+})
+
+test("every V2 row validates and ordinary products contain no visible bespoke steps", () => {
+  for (const item of artifact.items) {
+    const pointer = productApplicationPointerV2Schema.parse(item.guidance_payload_v2)
+    assert.equal(pointer.scope.productId, item.product_id)
+    assert.equal(pointer.sourceRole, item.source_role)
+    if (item.exact_workflow_id === null) {
+      assert.deepEqual(pointer.exactSteps, [], item.key)
+      assert.ok(item.template_keys.length > 0, item.key)
+      for (const templateKey of item.template_keys) {
+        assert.ok(SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.has(templateKey), templateKey)
+      }
+    } else {
+      assert.equal(pointer.workflowId, item.exact_workflow_id)
+      assert.ok(pointer.exactSteps.length > 0, item.key)
+    }
+  }
+})
+
+test("all OGX shampoos use the canonical shampoo template with no exact steps", () => {
+  const rows = artifact.items.filter(
+    (item) => /OGX/i.test(item.product_name) && item.source_role.startsWith("shampoo_"),
+  )
+  assert.ok(rows.length > 0)
+  for (const row of rows) {
+    const pointer = productApplicationPointerV2Schema.parse(row.guidance_payload_v2)
+    assert.deepEqual(row.template_keys, ["shampoo.standard-scalp-cleanse.v2"])
+    assert.deepEqual(pointer.exactSteps, [])
+    assert.equal(pointer.facts.contactTime, null)
+  }
+})
+
+test("only the two reviewed conditioners retain a typed wait", () => {
+  const timed = artifact.items
+    .filter((item) => item.source_role === "conditioner_rinse_out")
+    .flatMap((item) => {
+      const pointer = productApplicationPointerV2Schema.parse(item.guidance_payload_v2)
+      return pointer.facts.contactTime ? [item.product_name] : []
+    })
+    .sort()
+
+  assert.deepEqual(timed, ["Elvital Fiber Booster Conditioner", "Nivea Power Repair Conditioner"])
+})
+
+test("OLAPLEX No.0 remains explicitly blocked until its real companion is verified", () => {
+  const row = artifact.items.find(
+    ({ exact_workflow_id }) => exact_workflow_id === "olaplex_no0_companion",
+  )
+  assert.ok(row)
+  const pointer = productApplicationPointerV2Schema.parse(row.guidance_payload_v2)
+  assert.equal(pointer.requiredCompanionProductId, null)
+  assert.equal(pointer.runtimeBlockerCode, "missing_verified_companion")
+})

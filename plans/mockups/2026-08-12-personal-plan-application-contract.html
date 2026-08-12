@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chaarlie Anwendung — kanonische Techniken</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #281f25;
+        --muted: #6f656a;
+        --paper: #fffdfb;
+        --wash: #f4efeb;
+        --line: #ded4d0;
+        --rose: #a4495d;
+        --rose-soft: #f6e7ea;
+        --green: #2e6d56;
+        --green-soft: #e7f2ed;
+        --amber: #916112;
+        --amber-soft: #fff3d7;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--wash);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      .page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 42px 24px 72px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+      h1 {
+        max-width: 820px;
+        font-family: Georgia, serif;
+        font-size: clamp(38px, 6vw, 68px);
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+      }
+      .lead {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+      .pill {
+        display: inline-flex;
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin: 28px 0 38px;
+      }
+      .stat {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px;
+      }
+      .stat b {
+        display: block;
+        font-size: 28px;
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 34px;
+        align-items: start;
+      }
+      .decision {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px;
+        margin-bottom: 16px;
+      }
+      .decision h2 {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+      .decision p {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .rule {
+        border-left: 4px solid var(--rose);
+        padding-left: 14px;
+        font-weight: 650;
+      }
+      .category-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .category {
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 14px;
+      }
+      .category b {
+        display: block;
+        margin-bottom: 4px;
+      }
+      .category span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .exception {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        background: var(--amber-soft);
+        border-radius: 14px;
+        padding: 12px;
+        margin-top: 10px;
+      }
+      .exception b {
+        color: var(--amber);
+      }
+      .phone {
+        position: sticky;
+        top: 24px;
+        background: #221d20;
+        border-radius: 38px;
+        padding: 11px;
+        box-shadow: 0 22px 55px rgba(53, 35, 44, 0.22);
+      }
+      .screen {
+        background: #faf7f4;
+        border-radius: 30px;
+        overflow: hidden;
+        min-height: 780px;
+      }
+      .top {
+        padding: 24px 20px 18px;
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
+      }
+      .eyebrow {
+        color: var(--rose);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .top h2 {
+        font-family: Georgia, serif;
+        font-size: 30px;
+        margin: 8px 0 6px;
+      }
+      .top p {
+        color: var(--muted);
+        font-size: 14px;
+        margin: 0;
+      }
+      .partial {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: var(--amber-soft);
+        color: var(--amber);
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .cards {
+        padding: 15px;
+      }
+      .card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 13px;
+      }
+      .card h3 {
+        margin: 3px 0 0;
+        font-size: 17px;
+      }
+      .type {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .shared {
+        color: var(--green);
+        background: var(--green-soft);
+        border-radius: 999px;
+        padding: 5px 8px;
+        font-size: 10px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .exact {
+        color: var(--rose);
+        background: var(--rose-soft);
+        border-radius: 999px;
+        padding: 5px 8px;
+        font-size: 10px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      ol {
+        margin: 0;
+        padding-left: 22px;
+      }
+      li {
+        padding-left: 3px;
+        margin-bottom: 9px;
+        font-size: 14px;
+        line-height: 1.43;
+      }
+      li:last-child {
+        margin-bottom: 0;
+      }
+      .next {
+        margin-top: 13px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .next b {
+        color: var(--ink);
+      }
+      .unresolved {
+        border-style: dashed;
+        background: #fffaf0;
+      }
+      .unresolved p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .unresolved .action {
+        display: inline-block;
+        margin-top: 10px;
+        color: var(--rose);
+        font-weight: 750;
+        font-size: 12px;
+      }
+      .review {
+        margin-top: 34px;
+        background: #2d2529;
+        color: white;
+        border-radius: 24px;
+        padding: 24px;
+      }
+      .review p {
+        color: #d9cfd4;
+        line-height: 1.5;
+        margin-bottom: 0;
+      }
+      @media (max-width: 900px) {
+        .stats {
+          grid-template-columns: 1fr 1fr;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .phone {
+          position: static;
+          max-width: 430px;
+          margin: 0 auto;
+        }
+      }
+      @media (max-width: 540px) {
+        .page {
+          padding: 28px 14px 48px;
+        }
+        .stats,
+        .category-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <span class="pill">Review-Mockup · keine Produktionsänderung</span>
+      <h1>Eine Technik pro Kategorie. Exakt nur, wenn es wirklich anders ist.</h1>
+      <p class="lead">
+        Anwendung zeigt Chaarlies geprüfte Technik. Produktdaten liefern nur echte Unterschiede wie
+        Einwirkzeit, Zustand, Ausspülen oder Reihenfolge. Herstellerformulierungen überschreiben die
+        Technik nicht mehr.
+      </p>
+
+      <section class="stats" aria-label="Bestandsaufnahme">
+        <div class="stat"><b>273</b><span>aktive Protokollzeilen geprüft</span></div>
+        <div class="stat"><b>224</b><span>aktive Produkte abgedeckt</span></div>
+        <div class="stat"><b>5</b><span>echte exakte Workflows</span></div>
+        <div class="stat"><b>0</b><span>bespoke OGX-Anweisungen danach</span></div>
+      </section>
+
+      <div class="layout">
+        <section>
+          <article class="decision">
+            <h2>Die Architekturentscheidung</h2>
+            <p class="rule">
+              Sichtbarer Text = geteiltes Template + geprüfte strukturierte Fakten.
+            </p>
+            <p>
+              „Danach Conditioner verwenden“ gehört nicht in ein Shampoo. Anwendung kennt die
+              akzeptierte Routine und setzt den tatsächlich vorhandenen Conditioner an die richtige
+              Stelle.
+            </p>
+          </article>
+
+          <article class="decision">
+            <h2>Geteilte Techniken</h2>
+            <div class="category-grid">
+              <div class="category">
+                <b>Shampoo</b><span>Kopfhaut reinigen, Längen beim Ausspülen mitreinigen.</span>
+              </div>
+              <div class="category">
+                <b>Conditioner</b><span>Längen und Spitzen, optionale geprüfte Einwirkzeit.</span>
+              </div>
+              <div class="category">
+                <b>Leave-in</b><span>Spray oder Handauftrag; feucht oder trocken als Fakt.</span>
+              </div>
+              <div class="category">
+                <b>Maske</b><span>Eine Hülle; Zeit und Conditioner-Regel als Werte.</span>
+              </div>
+              <div class="category">
+                <b>Öl</b><span>Finish, feuchte Pflege oder Pre-wash als Rollen.</span>
+              </div>
+              <div class="category">
+                <b>Tiefenreinigung</b><span>Eine Reset-Technik; Reset-Fokus steuert den Tag.</span>
+              </div>
+              <div class="category">
+                <b>Trockenshampoo</b><span>Aerosol, Schaum oder Liquid als Formatfamilien.</span>
+              </div>
+              <div class="category">
+                <b>Hitzeschutz</b><span>Feucht/trocken, Temperatur und erneute Anwendung.</span>
+              </div>
+              <div class="category">
+                <b>Kopfhautpflege</b
+                ><span>Leave-on oder Rinse-off; klare medizinische Grenze.</span>
+              </div>
+              <div class="category">
+                <b>Bond Repair</b
+                ><span>Exakt, weil Reihenfolge und Zeiten wirklich variieren.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="decision">
+            <h2>Vollständig exakte Ausnahmen</h2>
+            <p>Swiss-O-Par Teebaumöl, Epres, K18, OLAPLEX No.0 + No.3 und OLAPLEX No.3PLUS.</p>
+            <div class="exception">
+              <b>Review</b
+              ><span
+                >Fünf Masken haben eine nicht-standardmäßige Conditioner-Regel, die vor
+                Veröffentlichung bestätigt wird.</span
+              >
+            </div>
+            <div class="exception">
+              <b>Repair</b
+              ><span
+                >Balea Sensitive Scalp Serum, Epres rinse transition und K18 amount sind aktuell
+                widersprüchlich oder unpräzise.</span
+              >
+            </div>
+          </article>
+
+          <article class="review">
+            <h2>Was Nick freigibt</h2>
+            <p>
+              Die kanonischen Texte, genau fünf exakte Workflows und die fünf abweichenden
+              Conditioner-Beziehungen bei Masken. Danach kann kein gewöhnliches Produkt wieder still
+              ein eigenes Textprotokoll einschleusen.
+            </p>
+          </article>
+        </section>
+
+        <aside class="phone" aria-label="Anwendung mobile Vorschau">
+          <div class="screen">
+            <header class="top">
+              <div class="eyebrow">Anwendung · Waschtag</div>
+              <h2>So wendest du deine Produkte an</h2>
+              <p>In der Reihenfolge deiner bestätigten Routine.</p>
+              <span class="partial">Teilweise verfügbar · 1 Produkthinweis offen</span>
+            </header>
+            <div class="cards">
+              <article class="card">
+                <div class="card-head">
+                  <div>
+                    <span class="type">Shampoo</span>
+                    <h3>OGX Renewing Argan Oil</h3>
+                  </div>
+                  <span class="shared">Geteilte Technik</span>
+                </div>
+                <ol>
+                  <li>Haare und Kopfhaut vollständig anfeuchten.</li>
+                  <li>
+                    Eine kleine Menge auf die Kopfhaut geben und sanft einmassieren. Die Längen
+                    werden beim Ausspülen mitgereinigt.
+                  </li>
+                  <li>Gründlich ausspülen.</li>
+                </ol>
+                <div class="next">
+                  Danach in deiner Routine: <b>Gliss Ultimate Repair Spülung</b>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-head">
+                  <div>
+                    <span class="type">Conditioner</span>
+                    <h3>Gliss Ultimate Repair Spülung</h3>
+                  </div>
+                  <span class="shared">Geteilte Technik</span>
+                </div>
+                <ol>
+                  <li>Überschüssiges Wasser sanft aus dem Haar drücken.</li>
+                  <li>Eine kleine Menge gleichmäßig in Längen und Spitzen verteilen.</li>
+                  <li>Gründlich ausspülen.</li>
+                </ol>
+              </article>
+
+              <article class="card">
+                <div class="card-head">
+                  <div>
+                    <span class="type">Bond Repair</span>
+                    <h3>K18 Leave-In Molecular Repair Mask</h3>
+                  </div>
+                  <span class="exact">Exakter Workflow</span>
+                </div>
+                <ol>
+                  <li>
+                    Shampoonieren, davor keinen Conditioner verwenden und das Haar handtuchtrocknen.
+                  </li>
+                  <li>Mit 1–3 Pumpstößen beginnen und von den Spitzen nach oben verteilen.</li>
+                  <li>4 Minuten warten. Nicht ausspülen und in dieser Zeit nicht kämmen.</li>
+                  <li>Danach mit Pflege oder Styling fortfahren.</li>
+                </ol>
+              </article>
+
+              <article class="card">
+                <div class="card-head">
+                  <div>
+                    <span class="type">Kopfhautpflege</span>
+                    <h3>The Ordinary Multi-Peptide Serum</h3>
+                  </div>
+                  <span class="shared">Geteilte Technik</span>
+                </div>
+                <ol>
+                  <li>
+                    Scheitelweise wenige Tropfen direkt auf die saubere, trockene Kopfhaut geben.
+                  </li>
+                  <li>Sanft verteilen und nicht ausspülen.</li>
+                  <li>
+                    <b>Wichtig:</b> Nur auf intakter Haut anwenden. Bei Reizung abspülen und die
+                    Anwendung beenden.
+                  </li>
+                </ol>
+              </article>
+
+              <article class="card unresolved">
+                <div class="card-head">
+                  <div>
+                    <span class="type">Kopfhautpflege</span>
+                    <h3>Balea Sensitive Serum</h3>
+                  </div>
+                  <span class="exact">Noch offen</span>
+                </div>
+                <p>
+                  Die Ausspül-Regel dieses Produkts ist widersprüchlich. Die übrigen Schritte deines
+                  Tages bleiben nutzbar; für dieses Produkt zeigen wir keine erfundene Anleitung.
+                </p>
+                <span class="action">Produktanleitung wird geprüft</span>
+              </article>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

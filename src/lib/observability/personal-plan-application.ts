@@ -5,6 +5,7 @@ export type PersonalPlanApplicationFailureReason =
   | "schema_contract"
   | "missing_protocol"
   | "incomplete_guidance"
+  | "product_guidance_unresolved"
   | "unknown"
 
 export type PersonalPlanApplicationFailureDetails = {
@@ -13,6 +14,8 @@ export type PersonalPlanApplicationFailureDetails = {
   planId?: string
   routineVersionId?: string
   refinedVersionId?: string
+  productId?: string
+  issueCode?: string
 }
 
 type Scope = {
@@ -50,10 +53,16 @@ export function capturePersonalPlanApplicationFailure(
   if (details.planId) context.plan_id = details.planId
   if (details.routineVersionId) context.routine_version_id = details.routineVersionId
   if (details.refinedVersionId) context.refined_version_id = details.refinedVersionId
+  if (details.productId) context.product_id = details.productId
+  if (details.issueCode) context.issue_code = details.issueCode
 
   sink.withScope((scope) => {
-    scope.setFingerprint(["personal-plan-application-failure", details.reason])
-    scope.setLevel("error")
+    scope.setFingerprint([
+      "personal-plan-application-failure",
+      details.reason,
+      details.issueCode ?? "none",
+    ])
+    scope.setLevel(details.reason === "product_guidance_unresolved" ? "warning" : "error")
     scope.setTag("personal_plan.stage", "application")
     scope.setTag("personal_plan.failure_reason", details.reason)
     scope.setContext("personal_plan_application", context)

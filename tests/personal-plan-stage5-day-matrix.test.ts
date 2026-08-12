@@ -389,7 +389,7 @@ test("the full canonical-day fixture compiles each customer-visible day in canon
   assert.equal(day(result, "rest_day").productBlocks.length, 0)
 })
 
-test("refresh keeps roots and lengths independent, and dry care fails closed without verified dry-use guidance", () => {
+test("refresh keeps roots and lengths independent, and dry care stays explicitly partial without verified dry-use guidance", () => {
   const roots = item({
     itemId: "roots",
     productId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
@@ -473,19 +473,21 @@ test("refresh keeps roots and lengths independent, and dry care fails closed wit
     day(both, "refresh_day").productBlocks.map((block) => block.productName),
     ["Ansatz Refresh", "Längen Refresh"],
   )
-  assert.equal(
-    dryCareRejected.days.some((candidate) => candidate.key === "between_wash_care_day"),
-    false,
-  )
+  const partialDryCareDay = day(dryCareRejected, "between_wash_care_day")
+  assert.equal(partialDryCareDay.isPartial, true)
   assert.ok(
-    dryCareRejected.failures.some(
-      (failure) =>
-        failure.dayType === "between_wash_care_day" && failure.reason === "incomplete_guidance",
+    partialDryCareDay.outerSequence.some(
+      (step) =>
+        step.kind === "unresolved_product" && step.block.productId === unverifiedLeaveIn.productId,
     ),
+  )
+  assert.equal(
+    dryCareRejected.failures.some((failure) => failure.dayType === "between_wash_care_day"),
+    false,
   )
 })
 
-test("multi-role product dedupes once, preserves separately re-applied heat protection, and an incomplete day leaves unrelated days", () => {
+test("multi-role product dedupes once, preserves separately re-applied heat protection, and an incomplete day is isolated as partial", () => {
   const multitasker = item({
     itemId: "leave-in",
     productId: "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
@@ -577,8 +579,16 @@ test("multi-role product dedupes once, preserves separately re-applied heat prot
     1,
   )
   assert.match(block.steps.map((step) => step.copyDe).join(" "), /späteren Hot-Tool erneut/)
+  const partialClarifyingDay = day(result, "clarifying_wash_day")
+  assert.equal(partialClarifyingDay.isPartial, true)
+  assert.ok(
+    partialClarifyingDay.outerSequence.some(
+      (step) =>
+        step.kind === "unresolved_product" && step.block.productId === incompleteReset.productId,
+    ),
+  )
   assert.equal(
-    result.days.some((candidate) => candidate.key === "clarifying_wash_day"),
+    result.failures.some((failure) => failure.dayType === "clarifying_wash_day"),
     false,
   )
   assert.ok(result.days.some((candidate) => candidate.key === "wash_day"))

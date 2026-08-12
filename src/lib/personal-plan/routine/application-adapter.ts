@@ -10,9 +10,12 @@ import type {
   NormalizedUnresolvedRoutineItem,
 } from "@/lib/routines/personal-plan/application/contracts"
 import {
+  adaptReviewedProductApplicationPointersV2,
   adaptReviewedProductApplicationProtocols,
   type ReviewedProductApplicationProtocolRow,
 } from "@/lib/routines/personal-plan/application/product-protocol-adapter"
+import type { ProductApplicationPointerV2 } from "@/lib/routines/personal-plan/application/contracts-v2"
+import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-rollout"
 
 const semanticRoleByRoutineRole = {
   shampoo_everyday: "cleanse",
@@ -60,6 +63,8 @@ const PRODUCT_SELECT =
   "id,category,category_key,is_active,lifecycle_status,product_leave_in_specs(format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage),product_bondbuilder_specs(application_mode,treatment_mode,product_format,usage_protocol),product_mask_specs(weight,concentration,balance_direction),product_oil_specs(provides_heat_protection),product_heat_protectant_specs(provides_heat_protection),product_scalp_care_specs(primary_role,presentation_format,rinse_mode),product_dry_shampoo_specs(format)"
 const PRODUCT_PROTOCOL_SELECT =
   "product_id,category,role,guidance_payload,application_state,reapplication,source_url,source_text,updated_at"
+const PRODUCT_PROTOCOL_V2_SELECT =
+  "product_id,category,role,guidance_payload_v2,application_state,reapplication,source_url,updated_at"
 const first = <T>(value: unknown): T | null =>
   Array.isArray(value)
     ? value.length === 1
@@ -126,13 +131,16 @@ function factsFor(category: string, row: ProductRow) {
 export async function adaptAcceptedActiveRoutineForApplication(input: {
   client: ApplicationRoutineReadClient
   activeVersion: { id: string; payload: RoutinePayloadV1 }
+  contractVersion?: PersonalPlanStage5ContractVersion
 }): Promise<{
   routineVersionId: string
   planId: string
   routineItems: NormalizedRoutineItem[]
   unresolvedRoutineItems: NormalizedUnresolvedRoutineItem[]
   exactGuidanceProtocols: ApplicationGuidanceProtocolV1[]
+  applicationPointersV2?: ProductApplicationPointerV2[]
 }> {
+  const contractVersion = input.contractVersion ?? 1
   const includedItems = input.activeVersion.payload.items
     .map((item, routineOrder) => ({ item, routineOrder }))
     .filter(({ item }) => item.state.inclusion === "included")
@@ -179,6 +187,7 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       routineItems: [],
       unresolvedRoutineItems,
       exactGuidanceProtocols: [],
+      applicationPointersV2: [],
     }
   const { data, error } = await input.client
     .from("products")
@@ -190,7 +199,7 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
   if (productIds.length > 0) {
     const result = await input.client
       .from("product_application_protocols")
-      .select(PRODUCT_PROTOCOL_SELECT)
+      .select(contractVersion === 2 ? PRODUCT_PROTOCOL_V2_SELECT : PRODUCT_PROTOCOL_SELECT)
       .in("product_id", productIds)
     if (result.error) throw result.error
     protocolRows = (result.data ?? []) as ReviewedProductApplicationProtocolRow[]
@@ -254,7 +263,10 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     planId: input.activeVersion.payload.planId,
     routineItems,
     unresolvedRoutineItems,
-    exactGuidanceProtocols: adaptReviewedProductApplicationProtocols(protocolRows),
+    exactGuidanceProtocols:
+      contractVersion === 1 ? adaptReviewedProductApplicationProtocols(protocolRows) : [],
+    applicationPointersV2:
+      contractVersion === 2 ? adaptReviewedProductApplicationPointersV2(protocolRows) : [],
   }
 }
 

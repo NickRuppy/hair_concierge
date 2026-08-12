@@ -3,17 +3,40 @@ import {
   type ApplicationFamily,
   type ApplicationGuidanceProtocolV1,
 } from "./contracts"
+import { productApplicationPointerV2Schema, type ProductApplicationPointerV2 } from "./contracts-v2"
 
 export type ReviewedProductApplicationProtocolRow = {
   product_id: string
   category: string
   role: string
   guidance_payload?: unknown
+  guidance_payload_v2?: unknown
   application_state: string | null
   reapplication: string | null
   source_url: string | null
   source_text: string | null
   updated_at: string
+}
+
+export function adaptReviewedProductApplicationPointersV2(
+  rows: readonly ReviewedProductApplicationProtocolRow[],
+): ProductApplicationPointerV2[] {
+  return rows
+    .flatMap((row): ProductApplicationPointerV2[] => {
+      const parsed = productApplicationPointerV2Schema.safeParse(row.guidance_payload_v2)
+      if (!parsed.success) return []
+      const pointer = parsed.data
+      return pointer.scope.productId === row.product_id &&
+        pointer.scope.category === row.category &&
+        pointer.sourceRole === row.role
+        ? [pointer]
+        : []
+    })
+    .sort(
+      (left, right) =>
+        left.scope.productId.localeCompare(right.scope.productId) ||
+        left.role.localeCompare(right.role),
+    )
 }
 
 export function adaptReviewedProductApplicationProtocols(

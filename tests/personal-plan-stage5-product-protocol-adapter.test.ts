@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { adaptReviewedProductApplicationProtocols } from "../src/lib/routines/personal-plan/application/product-protocol-adapter"
+import {
+  adaptReviewedProductApplicationPointersV2,
+  adaptReviewedProductApplicationProtocols,
+} from "../src/lib/routines/personal-plan/application/product-protocol-adapter"
 
 const productId = "30000000-0000-4000-8000-000000000001"
 
@@ -58,4 +61,64 @@ test("exact Heat adapter rejects rows without visible reviewed provenance", () =
 
   assert.deepEqual(adaptReviewedProductApplicationProtocols([{ ...base, source_text: null }]), [])
   assert.deepEqual(adaptReviewedProductApplicationProtocols([{ ...base, source_url: null }]), [])
+})
+
+test("V2 adapter reads only the separate typed pointer payload and verifies indexed identity", () => {
+  const pointer = {
+    schemaVersion: 2,
+    contractKind: "product_pointer",
+    scope: { kind: "product", category: "shampoo", productId },
+    sourceRole: "shampoo_everyday",
+    role: "cleanse",
+    applicationFamily: "standard_rinse_out_cleanse",
+    facts: {
+      applicationState: "wet_hair",
+      applicationArea: "scalp_roots",
+      rinse: "rinse_out",
+      contactTime: null,
+      amount: null,
+      heat: null,
+      conditionerPolicy: "not_applicable",
+    },
+    workflowId: null,
+    requiredCompanionProductId: null,
+    runtimeBlockerCode: null,
+    exactSteps: [],
+    cautionCodes: [],
+    evidence: [
+      {
+        sourceUrl: "https://example.com/shampoo",
+        sourceType: "manufacturer",
+        checkedAt: "2026-08-12",
+      },
+    ],
+  }
+  const rows = [
+    {
+      product_id: productId,
+      category: "shampoo",
+      role: "shampoo_everyday",
+      guidance_payload: { schemaVersion: 1 },
+      guidance_payload_v2: pointer,
+      application_state: null,
+      reapplication: null,
+      source_url: "https://example.com/shampoo",
+      source_text: "Untrusted manufacturer prose",
+      updated_at: "2026-08-12T09:00:00.000Z",
+    },
+  ]
+
+  assert.deepEqual(adaptReviewedProductApplicationPointersV2(rows), [pointer])
+  assert.deepEqual(
+    adaptReviewedProductApplicationPointersV2([
+      {
+        ...rows[0]!,
+        guidance_payload_v2: {
+          ...pointer,
+          scope: { ...pointer.scope, productId: "30000000-0000-4000-8000-000000000099" },
+        },
+      },
+    ]),
+    [],
+  )
 })

@@ -59,7 +59,11 @@ function plannedPayload(): RoutinePayloadV1 {
   } as unknown as RoutinePayloadV1
 }
 
-function productClient(rows: unknown[] | null, error: unknown = null) {
+function productClient(
+  rows: unknown[] | null,
+  error: unknown = null,
+  protocolRows: unknown[] | null = rows,
+) {
   const calls: Array<{ table: string; select?: string; ids?: string[] }> = []
   const client = {
     from(table: string) {
@@ -73,7 +77,10 @@ function productClient(rows: unknown[] | null, error: unknown = null) {
         },
         in(_column: string, ids: string[]) {
           calls[calls.length - 1]!.ids = ids
-          return Promise.resolve({ data: rows, error })
+          return Promise.resolve({
+            data: table === "product_application_protocols" ? protocolRows : rows,
+            error,
+          })
         },
         maybeSingle() {
           return Promise.resolve({ data: null, error })
@@ -109,6 +116,71 @@ test("Stage 5 adapter bulk-reads products and exact protocols while preserving a
     result.routineItems.map((item) => item.productId),
     [productId],
   )
+})
+
+test("Stage 5 V2 adapter selects only typed pointer storage and ignores V1 manufacturer prose", async () => {
+  const pointer = {
+    schemaVersion: 2,
+    contractKind: "product_pointer",
+    scope: { kind: "product", category: "shampoo", productId },
+    sourceRole: "shampoo_everyday",
+    role: "cleanse",
+    applicationFamily: "standard_rinse_out_cleanse",
+    facts: {
+      applicationState: "wet_hair",
+      applicationArea: "scalp_roots",
+      rinse: "rinse_out",
+      contactTime: null,
+      amount: null,
+      heat: null,
+      conditionerPolicy: "not_applicable",
+    },
+    workflowId: null,
+    requiredCompanionProductId: null,
+    runtimeBlockerCode: null,
+    exactSteps: [],
+    cautionCodes: [],
+    evidence: [
+      {
+        sourceUrl: "https://example.com/shampoo",
+        sourceType: "manufacturer",
+        checkedAt: "2026-08-12",
+      },
+    ],
+  }
+  const { client, calls } = productClient(
+    [
+      {
+        id: productId,
+        category: "shampoo",
+        category_key: "shampoo",
+        is_active: true,
+        lifecycle_status: "active",
+      },
+    ],
+    null,
+    [
+      {
+        product_id: productId,
+        category: "shampoo",
+        role: "shampoo_everyday",
+        guidance_payload_v2: pointer,
+        source_text: "Bespoke manufacturer wording must not render.",
+        updated_at: "2026-08-12T00:00:00.000Z",
+      },
+    ],
+  )
+
+  const result = await adaptAcceptedActiveRoutineForApplication({
+    client,
+    activeVersion: { id: "routine-v1", payload: activePayload() },
+    contractVersion: 2,
+  })
+
+  assert.match(calls[1]!.select!, /guidance_payload_v2/)
+  assert.doesNotMatch(calls[1]!.select!, /(^|,)guidance_payload(,|$)/)
+  assert.deepEqual(result.applicationPointersV2, [pointer])
+  assert.deepEqual(result.exactGuidanceProtocols, [])
 })
 
 test("Stage 5 adapter preserves a canonical planned product as provisional guidance input", async () => {

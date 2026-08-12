@@ -1,7 +1,11 @@
 import { ApplicationPage } from "@/components/application/application-page"
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
-import { resolvePersonalPlanStage5Rollout } from "@/lib/personal-plan/stage5-rollout"
+import {
+  resolvePersonalPlanStage5ContractVersion,
+  resolvePersonalPlanStage5Rollout,
+  type PersonalPlanStage5ContractVersion,
+} from "@/lib/personal-plan/stage5-rollout"
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
@@ -22,9 +26,13 @@ import {
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import { compileApplicationView } from "@/lib/routines/personal-plan/application/compiler"
+import { compileApplicationViewV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
 import { projectApplicationCadenceByDay } from "@/lib/routines/personal-plan/application/cadence-projector"
 import { createServerApplicationGuidanceRepository } from "@/lib/routines/personal-plan/application/repository"
-import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
+import type {
+  ApplicationDayTypeKey,
+  ApplicationGuidanceProtocolV1,
+} from "@/lib/routines/personal-plan/application/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   capturePersonalPlanApplicationFailure,
@@ -42,11 +50,14 @@ export type AnwendungResolverDeps = {
   loadRoutine: (userId: string) => ReturnType<typeof loadPersonalPlanRoutineView>
   adaptRoutine: typeof adaptAcceptedActiveRoutineForApplication
   loadProfile: typeof loadImmutableRoutineProfile
-  loadContent: () => ReturnType<typeof createServerApplicationGuidanceRepository>
+  loadContent: (
+    contractVersion: PersonalPlanStage5ContractVersion,
+  ) => ReturnType<typeof createServerApplicationGuidanceRepository>
   createReadClient: () => AdminReadClient
   appEnabled: () => boolean
   stage4Enabled: () => boolean
   rollout: () => ReturnType<typeof resolvePersonalPlanStage5Rollout>
+  contractVersion?: () => PersonalPlanStage5ContractVersion
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
 }
 
@@ -89,32 +100,57 @@ export async function resolveAnwendungPage(
       refinedVersionId: routine.activeVersion.payload.source.refinedVersionId,
     }
     const client = deps.createReadClient()
+    const contractVersion = deps.contractVersion?.() ?? 1
     const [accepted, profile, content] = await Promise.all([
-      deps.adaptRoutine({ client, activeVersion: routine.activeVersion }),
+      deps.adaptRoutine({ client, activeVersion: routine.activeVersion, contractVersion }),
       deps.loadProfile({
         client,
         userId,
         planId: routine.personalPlanId,
         refinedVersionId: routine.activeVersion.payload.source.refinedVersionId,
       }),
-      deps.loadContent(),
+      deps.loadContent(contractVersion),
     ])
     const [dayDefinitions, protocols] = await Promise.all([
       content.loadActiveDayTypeDefinitions(),
       content.loadActiveGuidanceProtocols(),
     ])
-    const compiled = compileApplicationView({
-      input: {
-        routineItems: accepted.routineItems,
-        unresolvedRoutineItems: accepted.unresolvedRoutineItems,
-        profile,
-        dayTypes: dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
-      },
-      protocols: [
-        ...protocols.map((protocol) => protocol.payload),
-        ...accepted.exactGuidanceProtocols,
-      ],
-    })
+    const familyPayloads = protocols.map((protocol) => protocol.payload)
+    const applicationInput = {
+      routineItems: accepted.routineItems,
+      unresolvedRoutineItems: accepted.unresolvedRoutineItems,
+      profile,
+      dayTypes: dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
+    }
+    const compiled =
+      contractVersion === 2
+        ? compileApplicationViewV2({
+            input: applicationInput,
+            familyTemplates: familyPayloads.filter((payload) => payload.schemaVersion === 2),
+            productPointers: accepted.applicationPointersV2 ?? [],
+          })
+        : compileApplicationView({
+            input: applicationInput,
+            protocols: [
+              ...(familyPayloads as ApplicationGuidanceProtocolV1[]),
+              ...accepted.exactGuidanceProtocols,
+            ],
+          })
+    const pointerIssues =
+      contractVersion === 2
+        ? (compiled as ReturnType<typeof compileApplicationViewV2>).pointerIssues
+        : []
+    if (pointerIssues.length > 0) {
+      for (const issue of pointerIssues) {
+        deps.reportFailure({
+          ...failureContext,
+          durationMs: Date.now() - startedAt,
+          reason: "product_guidance_unresolved",
+          productId: issue.productId,
+          issueCode: issue.reason,
+        })
+      }
+    }
     const selectedFailure = selectedDayType
       ? compiled.failures.find((failure) => failure.dayType === selectedDayType)
       : undefined
@@ -171,29 +207,35 @@ const defaultDeps: AnwendungResolverDeps = {
     }),
   adaptRoutine: adaptAcceptedActiveRoutineForApplication,
   loadProfile: loadImmutableRoutineProfile,
-  loadContent: createServerApplicationGuidanceRepository,
+  loadContent: (contractVersion) => createServerApplicationGuidanceRepository(contractVersion),
   createReadClient: createAdminReadClient,
   appEnabled: isPersonalPlanAppV1Enabled,
   stage4Enabled: isPersonalPlanStage4Enabled,
   rollout: resolvePersonalPlanStage5Rollout,
+  contractVersion: resolvePersonalPlanStage5ContractVersion,
   reportFailure: capturePersonalPlanApplicationFailure,
 }
 
 async function resolveDefaultAnwendungPage(selectedDayType?: ApplicationDayTypeKey) {
   const startedAt = performance.now()
   const view = await resolveAnwendungPage(defaultDeps, selectedDayType)
+  const durationMs = performance.now() - startedAt
   reportPersonalPlanTransitionTiming({
     layer: "server",
     operation: selectedDayType ? "application_day_resolve" : "application_page_resolve",
     outcome: view.state,
-    durationMs: performance.now() - startedAt,
+    durationMs,
   })
-  return view
+  return { view, durationMs }
 }
 
 export default async function AnwendungPage({
   selectedDayType,
 }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
-  const view = await resolveDefaultAnwendungPage(selectedDayType)
-  return <ApplicationPage view={view} />
+  const { view, durationMs } = await resolveDefaultAnwendungPage(selectedDayType)
+  const internalComputeMs =
+    process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"
+      ? Math.round(durationMs * 100) / 100
+      : undefined
+  return <ApplicationPage view={view} internalComputeMs={internalComputeMs} />
 }

@@ -3,7 +3,9 @@ import test from "node:test"
 
 import {
   canAccessPersonalPlanStage5,
+  parsePersonalPlanStage5V2Enabled,
   parsePersonalPlanStage5Rollout,
+  resolvePersonalPlanStage5ContractVersion,
   resolvePersonalPlanStage5Rollout,
 } from "../src/lib/personal-plan/stage5-rollout"
 
@@ -16,6 +18,19 @@ test("Stage 5 rollout parsing fails closed for unset and invalid environment val
   assert.equal(
     resolvePersonalPlanStage5Rollout({ PERSONAL_PLAN_STAGE5_ROLLOUT: "internal" }),
     "internal",
+  )
+})
+
+test("Stage 5 V2 resolver selection is a strict independent fail-closed flag", () => {
+  assert.equal(parsePersonalPlanStage5V2Enabled(undefined), false)
+  assert.equal(parsePersonalPlanStage5V2Enabled(""), false)
+  assert.equal(parsePersonalPlanStage5V2Enabled("1"), false)
+  assert.equal(parsePersonalPlanStage5V2Enabled("TRUE"), false)
+  assert.equal(parsePersonalPlanStage5V2Enabled("true"), true)
+  assert.equal(resolvePersonalPlanStage5ContractVersion({}), 1)
+  assert.equal(
+    resolvePersonalPlanStage5ContractVersion({ PERSONAL_PLAN_STAGE5_V2_ENABLED: "true" }),
+    2,
   )
 })
 
