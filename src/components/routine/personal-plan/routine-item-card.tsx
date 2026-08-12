@@ -2,7 +2,7 @@ import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import { PRODUCT_FREQUENCY_LABELS } from "@/lib/vocabulary/frequencies"
+import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
 
 import { getRoutineStatus, RoutineStatusBadge } from "./routine-status"
 
@@ -84,51 +84,6 @@ const categoryLabels: Record<string, string> = {
   deep_cleansing_shampoo: "Tiefenreinigendes Shampoo",
 }
 
-const cadenceLabels: Record<string, string> = {
-  "personal_plan.cadence.none": "Nach Bedarf",
-  "personal_plan.cadence.wet_wash_total": "Entsprechend deinem Waschrhythmus",
-  "personal_plan.cadence.after_each_eligible_wash": "Nach jeder passenden Haarwäsche",
-  "personal_plan.cadence.event_based": "Vor jedem passenden Anlass",
-  "personal_plan.cadence.every_nth_wash": "Bei jeder dritten oder vierten Haarwäsche",
-  "personal_plan.cadence.interval": "In deinem empfohlenen Abstand",
-  "personal_plan.cadence.unscheduled_as_needed": "Bei Bedarf",
-  "personal_plan.cadence.mask_regular_interval": "In deinem empfohlenen Abstand",
-  "personal_plan.cadence.role_based_wash_linked": "Passend zu deiner Haarwäsche",
-  "personal_plan.cadence.product_protocol_course": "Nach Herstellerangabe",
-  "personal_plan.cadence.role_keyed_product_protocol": "Nach Herstellerangabe",
-  ...PRODUCT_FREQUENCY_LABELS,
-}
-
-const maskIntervalLabels: Record<string, string> = {
-  weekly_1x: "1× pro Woche",
-  biweekly_1x: "Etwa alle 2 Wochen",
-  every_3_weeks: "Etwa alle 3 Wochen",
-}
-
-const recommendedFrequencyLabels: Record<string, string> = {
-  daily_1x: "Täglich",
-  weekly_5_6x: "5–6× pro Woche",
-  weekly_3_4x: "3–4× pro Woche",
-  weekly_2x: "2× pro Woche",
-  weekly_1x: "1× pro Woche",
-  biweekly_1x: "Etwa alle 2 Wochen",
-  monthly_1x: "Etwa 1× pro Monat",
-  less_than_monthly: "Seltener als monatlich",
-}
-
-const washLinkedCadenceLabels: Record<string, string> = {
-  before_every_compatible_wash: "Vor jeder passenden Haarwäsche",
-  after_every_compatible_wash: "Nach jeder passenden Haarwäsche",
-  finish_after_every_compatible_wash: "Als Finish nach jeder passenden Haarwäsche",
-  optional_allocation_deferred_to_day_type: "Bei Bedarf passend zu deinem Waschtag",
-}
-
-const protocolCadenceLabels: Record<string, string> = {
-  as_needed_according_to_product: "Bei Bedarf nach Herstellerangabe",
-  regular_according_to_product: "Regelmäßig nach Herstellerangabe",
-  occasional_according_to_product: "Gelegentlich nach Herstellerangabe",
-}
-
 const categoryAccentBorders: Record<string, string> = {
   shampoo: "border-amber-300",
   conditioner: "border-sky-300",
@@ -159,71 +114,14 @@ function productName(item: RoutineItem) {
   return typeof name === "string" && name.length > 0 ? name : "Noch kein Produkt gewählt"
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-}
-
-function roleCadence(
-  recommended: Record<string, unknown>,
-  role: string,
-): Record<string, unknown> | undefined {
-  const roleFrequencies = recommended.roleFrequencies
-  if (!Array.isArray(roleFrequencies)) return undefined
-  return roleFrequencies.find(
-    (entry): entry is Record<string, unknown> => isRecord(entry) && entry.role === role,
-  )
-}
-
 export function routineCadenceLabel(item: RoutineItem): string {
-  if (typeof item.cadence.userOverride === "string") {
-    return (
-      recommendedFrequencyLabels[item.cadence.userOverride] ??
-      cadenceLabels[item.cadence.userOverride] ??
-      "Nach deinem gewählten Rhythmus"
-    )
-  }
-
-  const recommended = item.cadence.recommended
-  if (isRecord(recommended) && typeof recommended.kind === "string") {
-    switch (recommended.kind) {
-      case "wet_wash_total":
-        return typeof recommended.target === "string"
-          ? (recommendedFrequencyLabels[recommended.target] ?? "Entsprechend deinem Waschrhythmus")
-          : "Entsprechend deinem Waschrhythmus"
-      case "after_each_eligible_wash":
-        return "Nach jeder passenden Haarwäsche"
-      case "event_based":
-        return "Vor jeder passenden Hitze-Anwendung"
-      case "every_nth_wash":
-        return recommended.every === 3
-          ? "Bei jeder dritten Haarwäsche"
-          : recommended.every === 4
-            ? "Bei jeder vierten Haarwäsche"
-            : "In deinem empfohlenen Waschrhythmus"
-      case "unscheduled_as_needed":
-        return "Bei Bedarf"
-      case "mask_regular_interval":
-        return typeof recommended.baseInterval === "string"
-          ? (maskIntervalLabels[recommended.baseInterval] ?? "In deinem empfohlenen Abstand")
-          : "In deinem empfohlenen Abstand"
-      case "role_based_wash_linked": {
-        const cadence = roleCadence(recommended, item.role)?.cadence
-        return typeof cadence === "string"
-          ? (washLinkedCadenceLabels[cadence] ?? "Passend zu deiner Haarwäsche")
-          : "Passend zu deiner Haarwäsche"
-      }
-      case "product_protocol_course":
-        return "Nach Herstellerangabe"
-      case "role_keyed_product_protocol": {
-        const cadence = roleCadence(recommended, item.role)?.cadence
-        return typeof cadence === "string"
-          ? (protocolCadenceLabels[cadence] ?? "Nach Herstellerangabe")
-          : "Nach Herstellerangabe"
-      }
-    }
-  }
-
-  return cadenceLabels[item.cadence.displayKey] ?? "Nach deinem Plan"
+  return effectiveRoutineCadenceCopyDe({
+    recommended: item.cadence.recommended,
+    userOverride: typeof item.cadence.userOverride === "string" ? item.cadence.userOverride : null,
+    resolved: item.cadence.resolved,
+    role: item.role,
+    displayKey: item.cadence.displayKey,
+  })
 }
 
 function routinePurposeDescription(item: RoutineItem) {

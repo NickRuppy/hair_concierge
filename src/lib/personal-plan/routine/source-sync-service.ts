@@ -4,10 +4,13 @@ import type { ProposedProductPortfolio } from "../products/contracts"
 import {
   diffRoutinePayloads,
   hashRoutineSemantics,
+  PERSONAL_PLAN_ROUTINE_COMPILER_VERSION,
   type RoutineCompiledPayload,
   type RoutineProposalDelta,
 } from "../routine-candidate-compiler"
 import { semanticHash } from "./canonicalize"
+import { resolveRoutineItemCadence } from "./cadence"
+import type { RoutineCadenceAuthorityReader } from "./cadence-authority"
 import { routinePayloadV1Schema } from "./contracts"
 import {
   reconcileRoutineUserProductSource,
@@ -78,6 +81,66 @@ export type RoutineSourceSyncResult =
   | { status: "conflict"; reason: string }
   | { status: "temporarily_unavailable" }
 
+export type RoutineSuccessorCadenceResolver = (
+  routine: RoutineCompiledPayload,
+) => Promise<RoutineCompiledPayload>
+
+function productIdForCadence(item: RoutineCompiledPayload["items"][number]): string | null {
+  return item.product.kind === "owned" || item.product.kind === "planned"
+    ? item.product.productId
+    : null
+}
+
+export async function resolveSuccessorRoutineCadences(input: {
+  routine: RoutineCompiledPayload
+  authorityReader: RoutineCadenceAuthorityReader
+}): Promise<RoutineCompiledPayload> {
+  const productIds = input.routine.items
+    .map(productIdForCadence)
+    .filter((productId): productId is string => Boolean(productId))
+  const authorityFacts = await input.authorityReader.load({ productIds })
+  const routine = structuredClone(input.routine)
+  routine.source.compilerVersion = PERSONAL_PLAN_ROUTINE_COMPILER_VERSION
+  routine.source.authorityVersions.routine = PERSONAL_PLAN_ROUTINE_COMPILER_VERSION
+  routine.items = routine.items.map((item) => {
+    const resolved = resolveRoutineItemCadence({
+      category: item.category,
+      role: item.role,
+      productId: productIdForCadence(item),
+      recommended: item.cadence.recommended,
+      userOverride:
+        typeof item.cadence.userOverride === "string" ? item.cadence.userOverride : null,
+      authorityFacts,
+    })
+    return {
+      ...item,
+      cadence: {
+        ...item.cadence,
+        ...(resolved ? { resolved } : {}),
+      },
+    }
+  })
+  return routine
+}
+
+export function alignLegacyCadenceForDelta(
+  previous: RoutineCompiledPayload,
+  next: RoutineCompiledPayload,
+): RoutineCompiledPayload {
+  const aligned = structuredClone(previous)
+  const nextByItemKey = new Map(next.items.map((item) => [item.itemKey, item]))
+  aligned.items = aligned.items.map((item) => {
+    if (item.cadence.resolved) return item
+    const successor = nextByItemKey.get(item.itemKey)
+    if (!successor?.cadence.resolved) return item
+    return {
+      ...item,
+      cadence: { ...item.cadence, resolved: successor.cadence.resolved },
+    }
+  })
+  return aligned
+}
+
 const successfulOutcomes = new Set<SourceTransitionOutcome>([
   "staged",
   "already_staged",
@@ -85,7 +148,20 @@ const successfulOutcomes = new Set<SourceTransitionOutcome>([
   "no_semantic_change",
 ])
 
-export function createRoutineSourceSyncService(input: { repository: RoutineSourceSyncRepository }) {
+export function createRoutineSourceSyncService(input: {
+  repository: RoutineSourceSyncRepository
+  cadenceAuthorityReader?: RoutineCadenceAuthorityReader
+  resolveCadences?: RoutineSuccessorCadenceResolver
+}) {
+  const resolveCadences =
+    input.resolveCadences ??
+    (input.cadenceAuthorityReader
+      ? (routine: RoutineCompiledPayload) =>
+          resolveSuccessorRoutineCadences({
+            routine,
+            authorityReader: input.cadenceAuthorityReader!,
+          })
+      : async (routine: RoutineCompiledPayload) => routine)
   return {
     async sync(request: { userId: string; limit?: number }): Promise<RoutineSourceSyncResult> {
       const plan = await input.repository.loadPlan(request.userId)
@@ -145,6 +221,10 @@ export function createRoutineSourceSyncService(input: { repository: RoutineSourc
 
       let outcome: SourceTransitionOutcome | null = null
       if (changedClaims.length > 0) {
+        // Product replacement preserves the old frozen cadence while the pure
+        // source reconciler is building the batch. Resolve once against the
+        // complete successor candidate before hashing, diffing, or staging it.
+        routine = await resolveCadences(routine)
         const sourceClaims = changedClaims
           .map((claim) => [claim.sourceKind, claim.sourceKey, claim.observedRevision] as const)
           .sort(
@@ -159,7 +239,11 @@ export function createRoutineSourceSyncService(input: { repository: RoutineSourc
           sourceClaims,
           routineSemantics: hashRoutineSemantics(routine),
         })
-        const delta = diffRoutinePayloads(base.routine, routine, [])
+        const delta = diffRoutinePayloads(
+          alignLegacyCadenceForDelta(base.routine, routine),
+          routine,
+          [],
+        )
         delta.direct = delta.consequential
           .filter((change) => directChangesByItemKey.has(change.itemKey))
           .map((change) => directChangesByItemKey.get(change.itemKey) ?? change)

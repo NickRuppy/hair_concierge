@@ -38,6 +38,19 @@ const productRefSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("none") }).strict(),
 ])
 
+const resolvedRoutineCadenceSchema = z
+  .object({
+    copyDe: boundedText,
+    source: z.enum([
+      "category",
+      "exact_product_protocol",
+      "category_fallback",
+      "safe_generic_fallback",
+    ]),
+    gapCode: z.literal("exact_product_cadence_unavailable").optional(),
+  })
+  .strict()
+
 const routineIntentCategorySchema = z
   .object({
     category: personalPlanCategorySchema,
@@ -106,6 +119,7 @@ const routineItemSchema = z
         recommended: json.nullable(),
         userOverride: json.nullable(),
         displayKey: boundedText,
+        resolved: resolvedRoutineCadenceSchema.optional(),
       })
       .strict(),
     sourceDecisionKeys: z.array(boundedText).max(64),

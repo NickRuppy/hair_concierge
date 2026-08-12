@@ -6,6 +6,10 @@ import {
   createRoutineSourceSyncService,
   createSupabaseRoutineSourceSyncRepository,
 } from "./source-sync-service"
+import {
+  createSupabaseRoutineCadenceAuthorityReader,
+  type RoutineCadenceAuthorityReadClient,
+} from "./cadence-authority"
 
 type PlannedItem = { personalPlanId: string; category: string; productId: string }
 
@@ -56,6 +60,9 @@ export function createRoutineAcquisitionService(input: {
 export function createSupabaseRoutineAcquisitionService(client: SupabaseClient) {
   const sync = createRoutineSourceSyncService({
     repository: createSupabaseRoutineSourceSyncRepository(client),
+    cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
+      client as unknown as RoutineCadenceAuthorityReadClient,
+    ),
   })
   return createRoutineAcquisitionService({
     repository: {

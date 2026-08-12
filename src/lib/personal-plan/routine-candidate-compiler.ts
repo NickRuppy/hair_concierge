@@ -14,8 +14,13 @@ import { STAGE1_CATEGORY_ORDER, type PlanCategoryDecision, type PlanProductRole 
 import { semanticHash } from "./routine/canonicalize"
 import { applyRoutineEdits as applyEdits } from "./routine/editor"
 import { diffRoutinePayloads as diffPayloads } from "./routine/diff"
+import {
+  resolveRoutineItemCadence,
+  type ProductCadenceAuthorityFact,
+  type ResolvedRoutineCadence,
+} from "./routine/cadence"
 
-const COMPILER_VERSION = "personal-plan-routine-compiler.v1"
+export const PERSONAL_PLAN_ROUTINE_COMPILER_VERSION = "personal-plan-routine-compiler.v2"
 const PORTFOLIO_AUTHORITY_VERSION = "personal-plan-product-portfolio.v1"
 
 export type RoutineSystemAssessment = "basis" | "optional" | "not_recommended"
@@ -64,6 +69,7 @@ export type RoutineItem = {
     recommended: PlanCategoryDecision["frequency"]
     userOverride: string | null
     displayKey: string
+    resolved?: ResolvedRoutineCadence
   }
   sourceDecisionKeys: string[]
   authorityRuleIds: string[]
@@ -198,8 +204,9 @@ function makeItem(input: {
   resolution: Stage3CategoryResolution
   decision: PlanCategoryDecision
   portfolio: ProposedProductPortfolio
+  cadenceAuthorityFacts: readonly ProductCadenceAuthorityFact[]
 }): RoutineItem {
-  const { resolution, decision, portfolio } = input
+  const { resolution, decision, portfolio, cadenceAuthorityFacts } = input
   if (!resolution.role) {
     throw new Error(`routine_candidate_missing_role:${resolution.decisionKey}`)
   }
@@ -254,6 +261,16 @@ function makeItem(input: {
     throw new Error(`routine_candidate_invalid_executable_state:${resolution.decisionKey}`)
   }
 
+  const productId =
+    product.kind === "owned" || product.kind === "planned" ? product.productId : null
+  const resolved = resolveRoutineItemCadence({
+    category: resolution.category,
+    role: resolution.role,
+    productId,
+    recommended: decision.frequency,
+    userOverride: null,
+    authorityFacts: cadenceAuthorityFacts,
+  })
   return {
     itemKey,
     assignmentKey,
@@ -274,6 +291,7 @@ function makeItem(input: {
       displayKey: decision.frequency
         ? `personal_plan.cadence.${decision.frequency.kind}`
         : "personal_plan.cadence.none",
+      ...(resolved ? { resolved } : {}),
     },
     sourceDecisionKeys: [resolution.decisionKey],
     authorityRuleIds: Array.from(
@@ -347,7 +365,12 @@ export async function compileInitialRoutineCandidate(
     if (!decision) {
       throw new Error(`routine_candidate_missing_refined_decision:${resolution.category}`)
     }
-    return makeItem({ resolution, decision, portfolio })
+    return makeItem({
+      resolution,
+      decision,
+      portfolio,
+      cadenceAuthorityFacts: input.cadenceAuthorityFacts ?? [],
+    })
   })
   items.sort(sortItems)
 
@@ -357,7 +380,7 @@ export async function compileInitialRoutineCandidate(
       .map((category) => [category, CATEGORY_ROLE_POLICIES[category].authorityVersion]),
   )
   authorityVersions.portfolio = PORTFOLIO_AUTHORITY_VERSION
-  authorityVersions.routine = COMPILER_VERSION
+  authorityVersions.routine = PERSONAL_PLAN_ROUTINE_COMPILER_VERSION
 
   const categories: RoutineIntentCategory[] = Array.from(
     new Set(items.map((item) => item.category)),
@@ -415,7 +438,7 @@ export async function compileInitialRoutineCandidate(
       refinedVersionId: portfolio.refinedVersionId,
       productPortfolioVersionId: "pending-sql-assignment",
       sourceFingerprint,
-      compilerVersion: COMPILER_VERSION,
+      compilerVersion: PERSONAL_PLAN_ROUTINE_COMPILER_VERSION,
       authorityVersions,
     },
     intent: { schemaVersion: 1, categories },
@@ -426,7 +449,7 @@ export async function compileInitialRoutineCandidate(
 
   return {
     schemaVersion: 1,
-    compilerVersion: COMPILER_VERSION,
+    compilerVersion: PERSONAL_PLAN_ROUTINE_COMPILER_VERSION,
     authorityVersions,
     sourceFingerprint,
     payload,

@@ -15,6 +15,15 @@ import {
   type RoutinePlanRow,
   type RoutineVersionRow,
 } from "./repository"
+import {
+  createSupabaseRoutineCadenceAuthorityReader,
+  type RoutineCadenceAuthorityReadClient,
+} from "./cadence-authority"
+import {
+  alignLegacyCadenceForDelta,
+  resolveSuccessorRoutineCadences,
+  type RoutineSuccessorCadenceResolver,
+} from "./source-sync-service"
 import { numberField, transitionOutcome, type RoutineTransitionRpc } from "./transitions"
 
 type Repository = {
@@ -102,7 +111,9 @@ function mapConflict(outcome: string): RoutineProposalResult | RoutineProposalRe
 export function createRoutineProposalService(input: {
   repository: Repository
   rpc: RoutineTransitionRpc
+  resolveCadences?: RoutineSuccessorCadenceResolver
 }) {
+  const resolveCadences = input.resolveCadences ?? (async (routine) => routine)
   async function baseFor(userId: string) {
     const plan = await input.repository.loadPlan(userId)
     if (!plan) return null
@@ -156,7 +167,12 @@ export function createRoutineProposalService(input: {
               return { status: "invalid_request", reason: "product_identity_not_frozen" }
           }
         }
-        const next = applyRoutineEdits(previous, request.operations)
+        const edited = applyRoutineEdits(previous, request.operations)
+        const cadenceAuthorityChanged = request.operations.some(
+          (operation) =>
+            operation.kind === "assignment_replace" || operation.kind === "assignment_role",
+        )
+        const next = cadenceAuthorityChanged ? await resolveCadences(edited) : edited
         next.parentVersionId = loaded.plan.active_routine_version_id
         const source = loaded.version
         if (
@@ -185,7 +201,7 @@ export function createRoutineProposalService(input: {
             : { status: "temporarily_unavailable" }
         }
         const delta = diffRoutinePayloads(
-          previous,
+          cadenceAuthorityChanged ? alignLegacyCadenceForDelta(previous, next) : previous,
           next,
           request.operations,
         ) as RoutineProposalDeltaV1
@@ -269,6 +285,9 @@ export function createRoutineProposalService(input: {
 export function createSupabaseRoutineProposalService(input: {
   client: PersonalPlanRoutineReadClient & { rpc: RoutineTransitionRpc }
 }) {
+  const cadenceAuthorityReader = createSupabaseRoutineCadenceAuthorityReader(
+    input.client as unknown as RoutineCadenceAuthorityReadClient,
+  )
   return createRoutineProposalService({
     repository: {
       loadPlan: (userId) => loadOwnerRoutinePlan(input.client, userId),
@@ -279,5 +298,7 @@ export function createSupabaseRoutineProposalService(input: {
       },
     },
     rpc: input.client.rpc.bind(input.client),
+    resolveCadences: (routine) =>
+      resolveSuccessorRoutineCadences({ routine, authorityReader: cadenceAuthorityReader }),
   })
 }

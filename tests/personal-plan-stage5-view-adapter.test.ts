@@ -86,6 +86,12 @@ test("adapts compiler output into the product-led Anwendung view", () => {
     ],
   )
   assert.equal(view.days[0].cadenceDe, "Bei deiner nächsten Haarwäsche")
+  const overviewHtml = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  const detailHtml = renderToStaticMarkup(
+    createElement(ApplicationPage, { view: { ...view, selectedDayType: "wash_day" } }),
+  )
+  assert.match(overviewHtml, /Bei deiner nächsten Haarwäsche/)
+  assert.match(detailHtml, /Bei deiner nächsten Haarwäsche/)
   assert.equal(view.days[0].steps[0].kind, "transition")
   assert.equal(view.days[0].steps[1].kind, "product")
   if (view.days[0].steps[1].kind !== "product") return

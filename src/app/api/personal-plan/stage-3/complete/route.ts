@@ -13,6 +13,10 @@ import {
 } from "@/lib/personal-plan/release"
 import { createInitialRoutineCandidateCompiler } from "@/lib/personal-plan/routine-candidate-compiler"
 import {
+  createSupabaseRoutineCadenceAuthorityReader,
+  type RoutineCadenceAuthorityReadClient,
+} from "@/lib/personal-plan/routine/cadence-authority"
+import {
   createRoutineProposalStagerRpcAdapter,
   type RoutineProposalRpcClient,
 } from "@/lib/personal-plan/routine-proposal-stager"
@@ -122,6 +126,9 @@ export const POST = createStage3CompleteRouteHandler({
       userId,
       persistence: createSupabaseStage3ProductionPersistence(admin),
       compiler: createInitialRoutineCandidateCompiler(),
+      cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
+        admin as unknown as RoutineCadenceAuthorityReadClient,
+      ),
       stager: createRoutineProposalStagerRpcAdapter({
         client: admin as unknown as RoutineProposalRpcClient,
         activateInitialRoutine: isPersonalPlanStage4AutoActivateInitialEnabled(),

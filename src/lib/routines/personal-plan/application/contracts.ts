@@ -110,6 +110,9 @@ export const normalizedRoutineItemSchema = z
     heatEventId: z.string().min(1).optional(),
     applicationInstanceKey: z.string().min(1).optional(),
     sourceRoutineRole: z.string().min(1).optional(),
+    // Frozen by the accepted Stage 4 Routine. Anwendung displays this value
+    // only; it must never recover cadence from catalog or protocol facts.
+    effectiveCadenceDe: copyTemplateSchema.optional(),
     catalogFacts: z.record(z.string(), z.unknown()).default({}),
     catalogFactProvenance: z
       .record(z.string(), z.enum(["catalog_spec", "bond_usage_protocol"]))
