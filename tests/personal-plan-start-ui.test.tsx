@@ -70,7 +70,7 @@ const readyPlan: PlanStartReadyViewModel = {
     progress: 100,
     cards: [
       card({
-        id: "dry-shampoo",
+        id: "dry_shampoo",
         tone: "optional",
         categoryLabel: "Trockenshampoo",
         statusLabel: "Pausiert",
@@ -168,6 +168,64 @@ test("renders paused cards as visible included categories with need details", ()
   assert.match(html, /Aktuell nicht anwenden/)
   assert.match(html, /Was dein Haar braucht/)
   assert.match(html, /aria-expanded="true"/)
+})
+
+test("renders every Stage 1 category with its approved shell and dot palette", () => {
+  const categoryStyles = {
+    shampoo: ["bg-[#F5F0E5]", "border-[#E2D4B8]", "bg-[#A77D31]"],
+    conditioner: ["bg-[#EDF3F5]", "border-[#CFDEE3]", "bg-[#4C8EA8]"],
+    leave_in: ["bg-[#EDF4F0]", "border-[#CEDFD5]", "bg-[#56866B]"],
+    heat_protectant: ["bg-[#F5F0EA]", "border-[#E5D6C8]", "bg-[#B76A3E]"],
+    oil: ["bg-[#F5EDEF]", "border-[#E2D0D4]", "bg-[#A85F70]"],
+    mask: ["bg-[#F1EEF5]", "border-[#DCD3E5]", "bg-[#7D67A8]"],
+    scalp_care: ["bg-[#EBF3F2]", "border-[#CADEDB]", "bg-[#2F817A]"],
+    dry_shampoo: ["bg-[#F1F3E9]", "border-[#DCE2C6]", "bg-[#7D913F]"],
+    bondbuilder: ["bg-[#F4EDF3]", "border-[#E2D1DF]", "bg-[#985D8F]"],
+    deep_cleansing_shampoo: ["bg-[#F5F2E5]", "border-[#E2DBC0]", "bg-[#998323]"],
+  } as const
+
+  for (const [id, expectedClasses] of Object.entries(categoryStyles)) {
+    const html = renderToStaticMarkup(<NeedCard card={card({ id, imageUrl: null })} />)
+    for (const expectedClass of expectedClasses) {
+      assert.ok(html.includes(expectedClass), `expected ${id} to include ${expectedClass}`)
+    }
+  }
+})
+
+test("keeps Optional and Pausiert as explicit status text without replacing category styling", () => {
+  const optional = renderToStaticMarkup(
+    <NeedCard
+      card={card({
+        id: "oil",
+        tone: "optional",
+        statusLabel: "Optional",
+        imageUrl: card().imageUrl,
+      })}
+    />,
+  )
+  const paused = renderToStaticMarkup(<NeedCard card={readyPlan.optional!.cards[0]!} />)
+
+  assert.match(optional, /Optional/)
+  assert.match(optional, /bg-\[#F5EDEF\]/)
+  assert.match(optional, /border-\[#E2D0D4\]/)
+  assert.match(optional, /bg-\[#A85F70\]/)
+  assert.doesNotMatch(optional, /opacity-75|saturate-\[0\.72\]/)
+
+  assert.match(paused, /Pausiert/)
+  assert.match(paused, /Aktuell nicht anwenden/)
+  assert.match(paused, /bg-\[#F1F3E9\]/)
+  assert.match(paused, /border-\[#DCE2C6\]/)
+  assert.match(paused, /bg-\[#7D913F\]/)
+  assert.doesNotMatch(paused, /bg-\[rgba\(220,180,60,0\.12\)\]|bg-\[#C8A038\]/)
+})
+
+test("uses a neutral shell and dot for malformed legacy category IDs", () => {
+  const html = renderToStaticMarkup(
+    <NeedCard card={card({ id: "legacy-category", imageUrl: null })} />,
+  )
+
+  assert.match(html, /border-\[rgba\(31,26,20,0\.07\)\] bg-white/)
+  assert.match(html, /rounded-full bg-\[#6B50A0\]/)
 })
 
 test("renders loading and retry states without questions or legacy destinations", () => {
