@@ -1,5 +1,5 @@
 begin;
-select plan(13);
+select plan(17);
 select has_table('public', 'personal_plan_catalog_fact_evidence', 'fact evidence ledger exists');
 select has_function('public', 'apply_personal_plan_exact_catalog_bundle_v1', array['text','text','text'], 'exact bundle executor exists');
 select ok(not has_function_privilege('anon', 'public.apply_personal_plan_exact_catalog_bundle_v1(text,text,text)', 'execute'), 'anon cannot apply a bundle');
@@ -151,6 +151,116 @@ select is((select count(*)::integer from public.personal_plan_catalog_fact_evide
 select is((select count(*)::integer from public.catalog_enrichment_applied_items where product_key='bundle:22222222-2222-4222-8222-222222222222'), 1, 'bundle replay keeps one guarded ledger item');
 select is((select guidance_payload#>>'{scope,productId}' from public.product_application_protocols where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask'), '22222222-2222-4222-8222-222222222222', 'stored guidance remains scoped to the exact product');
 select is((select source_text from public.product_application_protocols where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask'), 'Nach der Haarwaesche auftragen und ausspuelen.', 'bundle upgrades deterministic legacy Mask source text to the reviewed summary');
+
+insert into public.product_categories (
+  key, display_name_de, is_catalog_supported, is_intake_supported, sort_order
+) values (
+  'leave_in', 'Leave-in', true, true, 70
+)
+on conflict (key) do nothing;
+
+set constraints all deferred;
+
+insert into public.products (
+  id, name, brand, category, category_key, suitable_thicknesses,
+  is_active, lifecycle_status, origin, is_chaarlie_recommended
+) values (
+  '33333333-3333-4333-8333-333333333333', 'Exact heat Leave-in fixture',
+  'Fixture', 'Leave-in', 'leave_in', array['normal']::text[],
+  true, 'active', 'curated', false
+);
+insert into public.product_leave_in_specs (
+  product_id, format, weight, roles, provides_heat_protection,
+  heat_protection_max_c, heat_activation_required, care_benefits,
+  ingredient_flags, application_stage
+) values (
+  '33333333-3333-4333-8333-333333333333', 'spray', 'light',
+  array['styling_prep']::text[], true, 230, false, array['anti_frizz']::text[],
+  array[]::text[], array['pre_heat']::text[]
+);
+
+do $heat_apply$
+declare
+  bundle_json jsonb := jsonb_build_object(
+    'schema_version', 'personal-plan-exact-catalog-bundle-v1',
+    'batch_id', 'S5-98-heat-bundle-contract',
+    'items', jsonb_build_array(jsonb_build_object(
+      'product_id', '33333333-3333-4333-8333-333333333333',
+      'product_name', 'Exact heat Leave-in fixture',
+      'expected_current_category', 'leave_in',
+      'target_category', 'leave_in',
+      'facts', jsonb_build_object(
+        'category', 'leave_in',
+        'values', jsonb_build_object(
+          'care_direction', 'balanced',
+          'repair_support_level', 'low',
+          'plan_roles', jsonb_build_array('pre_heat_application'),
+          'functional_benefits', jsonb_build_array('heat_protect')
+        ),
+        'sources', jsonb_build_array(jsonb_build_object(
+          'label', 'Hersteller', 'url', 'https://example.com/exact-heat-leave-in',
+          'text', 'Vor jedem Hitzestyling auf das handtuchtrockene Haar geben.',
+          'sourceType', 'manufacturer', 'checkedAt', '2026-08-12'
+        ))
+      ),
+      'protocols', jsonb_build_array(jsonb_build_object(
+        'role', 'pre_heat_protection', 'cadence', null,
+        'source', jsonb_build_object(
+          'label', 'Hersteller', 'url', 'https://example.com/exact-heat-leave-in',
+          'text', 'Vor jedem Hitzestyling auf das handtuchtrockene Haar geben.',
+          'sourceType', 'manufacturer', 'checkedAt', '2026-08-12'
+        ),
+        'guidance_payload', jsonb_build_object(
+          'schemaVersion', 1, 'guidanceKey', 'exact-heat-bundle-fixture',
+          'protocolVersion', 1, 'locale', 'de',
+          'scope', jsonb_build_object(
+            'kind', 'product', 'category', 'leave_in',
+            'productId', '33333333-3333-4333-8333-333333333333'
+          ),
+          'role', 'heat_protection', 'applicationFamily', 'pre_heat_damp',
+          'compatibleDayTypes', jsonb_build_array('styling_day'),
+          'exactGuidanceRequired', true,
+          'sequence', jsonb_build_object(
+            'anchor', 'damp_pre_heat', 'before', jsonb_build_array(),
+            'after', jsonb_build_array(), 'conflictsWith', jsonb_build_array()
+          ),
+          'requirements', jsonb_build_object(
+            'requiredCatalogFacts', jsonb_build_array(),
+            'requiredProtocolFacts', jsonb_build_array(),
+            'requiredProfileFacts', jsonb_build_array()
+          ),
+          'protocolFacts', jsonb_build_object(
+            'applicationArea', 'lengths_ends', 'rinse', 'leave_in',
+            'contactTimeSeconds', null, 'conditionerRelationship', 'not_applicable',
+            'reapplication', 'each_separate_heat_event', 'amount', null,
+            'cautions', jsonb_build_array()
+          ),
+          'steps', jsonb_build_array(jsonb_build_object(
+            'stepKey', 'apply', 'action', 'apply_product',
+            'copyTemplateDe', 'Vor jedem Hitzestyling gleichmaessig auftragen.'
+          )),
+          'evidence', jsonb_build_array(jsonb_build_object(
+            'sourceUrl', 'https://example.com/exact-heat-leave-in',
+            'sourceType', 'manufacturer', 'checkedAt', '2026-08-12'
+          ))
+        )
+      ))
+    ))
+  );
+  bundle text := bundle_json::text;
+  fingerprint text := encode(extensions.digest(convert_to(bundle, 'UTF8'), 'sha256'), 'hex');
+begin
+  perform * from public.apply_personal_plan_exact_catalog_bundle_v1(bundle, fingerprint, 'nick');
+  perform * from public.apply_personal_plan_exact_catalog_bundle_v1(bundle, fingerprint, 'nick');
+end;
+$heat_apply$;
+set constraints all immediate;
+
+select is((select application_state from public.product_application_protocols where product_id='33333333-3333-4333-8333-333333333333' and role='pre_heat_protection'), 'damp', 'exact Leave-in heat bundle maps damp application state');
+select is((select reapplication from public.product_application_protocols where product_id='33333333-3333-4333-8333-333333333333' and role='pre_heat_protection'), 'required', 'exact Leave-in heat bundle maps required reapplication');
+select is((select count(*)::integer from public.product_application_protocols where product_id='33333333-3333-4333-8333-333333333333' and role='pre_heat_protection'), 1, 'exact Leave-in heat bundle replay inserts one protocol');
+select is((select count(*)::integer from public.catalog_enrichment_applied_items where product_key='bundle:33333333-3333-4333-8333-333333333333'), 1, 'exact Leave-in heat bundle replay keeps one guarded ledger item');
+
 update public.product_application_protocols set source_text='Drifted protocol provenance' where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask';
 select throws_ok(
   format(

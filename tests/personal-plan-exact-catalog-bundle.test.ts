@@ -250,6 +250,26 @@ test("exact catalog bundle migration keeps the apply path atomic, conflict-safe,
   assert.match(sql, /TO service_role/)
 })
 
+test("exact catalog bundle heat protocol migration maps canonical heat fields without widening access", async () => {
+  const sql = await readFile(
+    "supabase/migrations/20260812103000_personal_plan_exact_catalog_bundle_heat_protocol_mapping.sql",
+    "utf8",
+  )
+  assert.match(
+    sql,
+    /pg_get_functiondef\('public\.apply_personal_plan_exact_catalog_bundle_v1\(text,text,text\)'::regprocedure\)/,
+  )
+  assert.match(sql, /SECURITY DEFINER/)
+  assert.match(sql, /SET search_path TO '''''/)
+  assert.match(sql, /WHEN 'pre_heat_damp' THEN 'damp'/)
+  assert.match(sql, /WHEN 'pre_heat_dry' THEN 'dry'/)
+  assert.match(sql, /WHEN 'either_state_protection' THEN 'either'/)
+  assert.match(sql, /WHEN 'each_separate_heat_event' THEN 'required'/)
+  assert.match(sql, /WHEN 'none' THEN 'not_stated'/)
+  assert.match(sql, /REVOKE ALL ON FUNCTION public\.apply_personal_plan_exact_catalog_bundle_v1/)
+  assert.match(sql, /TO service_role/)
+})
+
 test("exact catalog bundle apply requires the reviewed head and a clean worktree", async () => {
   const source = await readFile(
     "scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts",
