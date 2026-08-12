@@ -557,11 +557,14 @@ async function seedAcceptedRoutine(userId: string) {
       scalp_route: "balanced",
       cleansing_intensity: "regular",
     }),
-    admin.from("product_conditioner_specs").insert({
-      product_id: conditionerId,
-      thickness: "fine",
-      protein_moisture_balance: "snaps",
-    }),
+    admin.from("product_conditioner_specs").upsert(
+      {
+        product_id: conditionerId,
+        thickness: "fine",
+        protein_moisture_balance: "snaps",
+      },
+      { onConflict: "product_id,thickness,protein_moisture_balance" },
+    ),
     admin.from("product_conditioner_rerank_specs").insert({
       product_id: conditionerId,
       weight: "light",

@@ -47,6 +47,7 @@ function protocol(role = "intensive_conditioning_mask") {
       },
       steps: [
         { stepKey: "apply", action: "apply_product", copyTemplateDe: "In die Längen geben." },
+        { stepKey: "rinse", action: "rinse", copyTemplateDe: "Gründlich ausspülen." },
       ],
       evidence: [{ sourceUrl: source.url, sourceType: "manufacturer", checkedAt: "2026-08-11" }],
     },
@@ -179,6 +180,50 @@ test("exact catalog bundle preflight refuses any persisted protocol authority dr
   }
 })
 
+test("exact catalog bundle preflight accepts only the deterministic legacy Mask source text upgrade", async () => {
+  const built = buildExactCatalogBundle({
+    ...bundle,
+    items: [
+      {
+        ...bundle.items[0]!,
+        protocols: [{ ...protocol(), cadence: { frequency: "weekly" } }],
+      },
+    ],
+  })
+  const exactProtocol = built.bundle.items[0]!.protocols[0]!
+  const legacySourceText = exactProtocol.guidance_payload.steps
+    .map(({ copyTemplateDe }) => copyTemplateDe)
+    .join(" ")
+  const readProducts = async () => [
+    { id, category_key: "mask", origin: "curated", is_active: true, lifecycle_status: "active" },
+  ]
+  const legacyExisting = {
+    product_id: id,
+    category: "mask",
+    role: "intensive_conditioning_mask",
+    cadence: exactProtocol.cadence,
+    source_label: exactProtocol.source.label,
+    source_url: exactProtocol.source.url,
+    source_text: legacySourceText,
+    guidance_payload: exactProtocol.guidance_payload,
+  }
+  const result = await preflightExactCatalogBundle(built, {
+    listProducts: readProducts,
+    async listProtocols() {
+      return [legacyExisting]
+    },
+  })
+  assert.deepEqual(result.blockers, [])
+
+  const immutableDrift = await preflightExactCatalogBundle(built, {
+    listProducts: readProducts,
+    async listProtocols() {
+      return [{ ...legacyExisting, source_label: "Drifted label" }]
+    },
+  })
+  assert.deepEqual(immutableDrift.blockers, [`protocol_conflict:${id}:intensive_conditioning_mask`])
+})
+
 test("exact catalog bundle migration keeps the apply path atomic, conflict-safe, and private", async () => {
   const sql = await readFile(
     "supabase/migrations/20260811214000_personal_plan_exact_catalog_bundle_v1.sql",
@@ -191,6 +236,11 @@ test("exact catalog bundle migration keeps the apply path atomic, conflict-safe,
   assert.match(sql, /p\.cadence IS DISTINCT FROM v_protocol->'cadence'/)
   assert.match(sql, /p\.source_label IS DISTINCT FROM v_protocol#>>'\{source,label\}'/)
   assert.match(sql, /p\.source_text IS DISTINCT FROM v_protocol#>>'\{source,text\}'/)
+  assert.match(sql, /string_agg\(step->>'copyTemplateDe', ' ' ORDER BY ordinality\)/)
+  assert.match(
+    sql,
+    /UPDATE public\.product_application_protocols AS p[\s\S]*SET source_text=v_protocol#>>'\{source,text\}'/,
+  )
   assert.match(sql, /fact evidence conflicts/)
   assert.match(sql, /existing\.source_text IS DISTINCT FROM source->>'text'/)
   assert.match(sql, /only Deep Cleansing category repair may start with a NULL category/)

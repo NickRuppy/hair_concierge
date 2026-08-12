@@ -1,5 +1,5 @@
 begin;
-select plan(11);
+select plan(13);
 select has_table('public', 'personal_plan_catalog_fact_evidence', 'fact evidence ledger exists');
 select has_function('public', 'apply_personal_plan_exact_catalog_bundle_v1', array['text','text','text'], 'exact bundle executor exists');
 select ok(not has_function_privilege('anon', 'public.apply_personal_plan_exact_catalog_bundle_v1(text,text,text)', 'execute'), 'anon cannot apply a bundle');
@@ -114,6 +114,31 @@ declare
   fingerprint text := encode(extensions.digest(convert_to(bundle, 'UTF8'), 'sha256'), 'hex');
 begin
   insert into exact_bundle_fixture(bundle, fingerprint) values (bundle, fingerprint);
+  insert into public.product_application_protocols(
+    product_id, category, role, cadence, application_stage, application_state,
+    placement, contact_time_seconds, rinse_action, reapplication,
+    instruction_modifiers, source_label, source_url, source_text, guidance_payload
+  )
+  select
+    '22222222-2222-4222-8222-222222222222',
+    'mask',
+    bundle_json#>>'{items,0,protocols,0,role}',
+    bundle_json#>'{items,0,protocols,0,cadence}',
+    bundle_json#>>'{items,0,protocols,0,guidance_payload,sequence,anchor}',
+    null,
+    bundle_json#>>'{items,0,protocols,0,guidance_payload,protocolFacts,applicationArea}',
+    null,
+    bundle_json#>>'{items,0,protocols,0,guidance_payload,protocolFacts,rinse}',
+    null,
+    '[]'::jsonb,
+    bundle_json#>>'{items,0,protocols,0,source,label}',
+    bundle_json#>>'{items,0,protocols,0,source,url}',
+    (
+      select string_agg(step->>'copyTemplateDe', ' ' order by ordinality)
+      from jsonb_array_elements(bundle_json#>'{items,0,protocols,0,guidance_payload,steps}')
+        with ordinality as steps(step, ordinality)
+    ),
+    bundle_json#>'{items,0,protocols,0,guidance_payload}';
   perform * from public.apply_personal_plan_exact_catalog_bundle_v1(bundle, fingerprint, 'nick');
   perform * from public.apply_personal_plan_exact_catalog_bundle_v1(bundle, fingerprint, 'nick');
 end;
@@ -125,6 +150,7 @@ select is((select count(*)::integer from public.product_application_protocols wh
 select is((select count(*)::integer from public.personal_plan_catalog_fact_evidence where product_id='22222222-2222-4222-8222-222222222222'), 1, 'bundle records source-backed fact evidence once');
 select is((select count(*)::integer from public.catalog_enrichment_applied_items where product_key='bundle:22222222-2222-4222-8222-222222222222'), 1, 'bundle replay keeps one guarded ledger item');
 select is((select guidance_payload#>>'{scope,productId}' from public.product_application_protocols where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask'), '22222222-2222-4222-8222-222222222222', 'stored guidance remains scoped to the exact product');
+select is((select source_text from public.product_application_protocols where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask'), 'Nach der Haarwaesche auftragen und ausspuelen.', 'bundle upgrades deterministic legacy Mask source text to the reviewed summary');
 update public.product_application_protocols set source_text='Drifted protocol provenance' where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask';
 select throws_ok(
   format(
@@ -136,6 +162,18 @@ select throws_ok(
   'P0001',
   'exact catalog bundle protocol conflicts with existing authority: 22222222-2222-4222-8222-222222222222:intensive_conditioning_mask',
   'bundle replay rejects protocol source text drift'
+);
+update public.product_application_protocols set source_text='In die Laengen geben. Gruendlich ausspuelen.', source_label='Drifted label' where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask';
+select throws_ok(
+  format(
+    'select * from public.apply_personal_plan_exact_catalog_bundle_v1(%L,%L,%L)',
+    (select bundle from exact_bundle_fixture),
+    (select fingerprint from exact_bundle_fixture),
+    'nick'
+  ),
+  'P0001',
+  'exact catalog bundle protocol conflicts with existing authority: 22222222-2222-4222-8222-222222222222:intensive_conditioning_mask',
+  'legacy source text cannot bypass another immutable protocol conflict'
 );
 select * from finish();
 rollback;

@@ -84,7 +84,52 @@ BEGIN
             OR p.source_text IS DISTINCT FROM v_protocol#>>'{source,text}'
             OR p.guidance_payload IS DISTINCT FROM v_protocol->'guidance_payload'
           )
+          AND NOT (
+            v_target = 'mask'
+            AND p.cadence IS NOT DISTINCT FROM v_protocol->'cadence'
+            AND p.source_label IS NOT DISTINCT FROM v_protocol#>>'{source,label}'
+            AND p.source_url IS NOT DISTINCT FROM v_protocol#>>'{source,url}'
+            AND p.guidance_payload IS NOT DISTINCT FROM v_protocol->'guidance_payload'
+            AND p.source_text IS NOT DISTINCT FROM (
+              SELECT string_agg(step->>'copyTemplateDe', ' ' ORDER BY ordinality)
+              FROM jsonb_array_elements(v_protocol->'guidance_payload'->'steps')
+                WITH ORDINALITY AS steps(step, ordinality)
+            )
+            AND coalesce(pg_catalog.btrim(v_protocol#>>'{source,text}'), '') <> ''
+            AND EXISTS (
+              SELECT 1
+              FROM jsonb_array_elements(v_protocol->'guidance_payload'->'evidence') evidence
+              WHERE evidence->>'sourceUrl' = v_protocol#>>'{source,url}'
+            )
+          )
       ) THEN RAISE EXCEPTION 'exact catalog bundle protocol conflicts with existing authority: %:%', v_product_id, v_protocol->>'role'; END IF;
+    END LOOP;
+
+    -- Legacy Mask rows used the rendered step copy as provenance. Upgrade only
+    -- that deterministic shape; every other authority field remains immutable.
+    FOR v_protocol IN SELECT protocol FROM jsonb_array_elements(v_item->'protocols') entries(protocol) LOOP
+      UPDATE public.product_application_protocols AS p
+      SET source_text=v_protocol#>>'{source,text}'
+      WHERE p.product_id=v_product_id
+        AND p.category=v_target
+        AND p.role=v_protocol->>'role'
+        AND v_target = 'mask'
+        AND p.cadence IS NOT DISTINCT FROM v_protocol->'cadence'
+        AND p.source_label IS NOT DISTINCT FROM v_protocol#>>'{source,label}'
+        AND p.source_url IS NOT DISTINCT FROM v_protocol#>>'{source,url}'
+        AND p.guidance_payload IS NOT DISTINCT FROM v_protocol->'guidance_payload'
+        AND p.source_text IS DISTINCT FROM v_protocol#>>'{source,text}'
+        AND p.source_text IS NOT DISTINCT FROM (
+          SELECT string_agg(step->>'copyTemplateDe', ' ' ORDER BY ordinality)
+          FROM jsonb_array_elements(v_protocol->'guidance_payload'->'steps')
+            WITH ORDINALITY AS steps(step, ordinality)
+        )
+        AND coalesce(pg_catalog.btrim(v_protocol#>>'{source,text}'), '') <> ''
+        AND EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(v_protocol->'guidance_payload'->'evidence') evidence
+          WHERE evidence->>'sourceUrl' = v_protocol#>>'{source,url}'
+        );
     END LOOP;
 
     -- Whitelist exactly the authority fields added by v3/v4; no generic JSON-to-row update exists.

@@ -257,9 +257,7 @@ export function buildExactCatalogBundle(input: unknown): BuiltExactCatalogBundle
 }
 
 export type ExactCatalogBundleRead = {
-  listProducts(
-    ids: string[],
-  ): Promise<
+  listProducts(ids: string[]): Promise<
     Array<{
       id: string
       category_key: string | null
@@ -268,9 +266,7 @@ export type ExactCatalogBundleRead = {
       lifecycle_status: string
     }>
   >
-  listProtocols(
-    ids: string[],
-  ): Promise<
+  listProtocols(ids: string[]): Promise<
     Array<{
       product_id: string
       category: string
@@ -286,6 +282,39 @@ export type ExactCatalogBundleRead = {
 
 function stableJson(value: unknown) {
   return JSON.stringify(stable(value))
+}
+
+type ExactCatalogProtocol = ExactCatalogBundle["items"][number]["protocols"][number]
+type PersistedProtocol = Awaited<ReturnType<ExactCatalogBundleRead["listProtocols"]>>[number]
+
+function isLegacyMaskSourceTextUpgrade(
+  productId: string,
+  targetCategory: ExactCatalogBundle["items"][number]["target_category"],
+  existing: PersistedProtocol,
+  incoming: ExactCatalogProtocol,
+) {
+  const immutableFieldsMatch =
+    existing.product_id === productId &&
+    existing.category === targetCategory &&
+    existing.role === incoming.role &&
+    stableJson(existing.cadence) === stableJson(incoming.cadence) &&
+    existing.source_label === incoming.source.label &&
+    existing.source_url === incoming.source.url &&
+    stableJson(existing.guidance_payload) === stableJson(incoming.guidance_payload)
+  const legacySourceText = incoming.guidance_payload.steps
+    .map(({ copyTemplateDe }) => copyTemplateDe)
+    .join(" ")
+  const incomingSourceIsEvidence = incoming.guidance_payload.evidence.some(
+    ({ sourceUrl }) => sourceUrl === incoming.source.url,
+  )
+
+  return (
+    targetCategory === "mask" &&
+    immutableFieldsMatch &&
+    existing.source_text === legacySourceText &&
+    incoming.source.text.trim().length > 0 &&
+    incomingSourceIsEvidence
+  )
 }
 
 export async function preflightExactCatalogBundle(
@@ -320,7 +349,8 @@ export async function preflightExactCatalogBundle(
           existing.source_label !== protocol.source.label ||
           existing.source_url !== protocol.source.url ||
           existing.source_text !== protocol.source.text ||
-          stableJson(existing.guidance_payload) !== stableJson(protocol.guidance_payload))
+          stableJson(existing.guidance_payload) !== stableJson(protocol.guidance_payload)) &&
+        !isLegacyMaskSourceTextUpgrade(item.product_id, item.target_category, existing, protocol)
       )
         blockers.push(`protocol_conflict:${item.product_id}:${protocol.role}`)
     }
