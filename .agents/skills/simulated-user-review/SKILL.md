@@ -50,6 +50,21 @@ For a production Personal Plan Stage 1–5 review, use a valid shareable field-t
 
 The field-test activation writes isolated production test state and consumes campaign capacity, but it does not create a payment, subscription, or commercial conversion. Do not use a customer account or invent a direct-login shortcut. If the link is invalid, expired, revoked, exhausted, or already opened inside an authenticated customer session, stop and request a valid campaign link or a fresh browser context rather than falling back to paid checkout.
 
+#### Production post-payment route verification without a provider charge
+
+Use this setup when the user explicitly asks to verify a production checkout-to-Personal-Plan handoff but a real Stripe or PayPal charge is unnecessary. It is an internal synthetic-entitlement test, not a payment-provider test. Production activation and production database writes require explicit authorization; ordinary invocation of this skill does not grant either.
+
+1. Put the release behind the intended internal-only eligibility gate. Confirm migrations and the exact production deployment are ready before creating test state, and do not widen the rollout to customers for this review.
+2. In fresh browser contexts, complete every relevant real production quiz through its actual result, offer, and checkout boundary. Stop before submitting payment. Record the exact lead ID, quiz kind, funnel session, and checkout correlation for each flow; never substitute a convenient older lead.
+3. Create a separate confirmed QA identity for each flow. Prefer a repository-supported operator helper or narrowly scoped RPC. If none exists, use the minimum service-role operation needed to create app-recognized synthetic access. Never use a customer identity, expose the service-role credential, or make authorization decisions from user-editable metadata.
+4. Correlate each QA identity only to its exact lead and funnel session, using a timestamp that satisfies the release cutoff. Mark every synthetic record with explicit internal-test metadata and a stable test kind such as `synthetic_post_payment`. Use non-colliding QA-only provider references only where the application schema requires them; they are not real provider records.
+5. Preserve source truth. A legacy quiz must enter Stage 1 from the exact legacy lead and answers. A Personal Plan quiz must enter from its exact prepared Personal Plan artifact. Do not translate one source into the other merely to make routing pass.
+6. Sign in as each QA identity in its own clean browser context and open the exact `/plan-bereit?lead=<lead-id>` route. Verify the readiness state completes, continue through `/plan-start`, and confirm the Personal Plan shell and Stage 1 load. Record that `/onboarding` was not visited.
+7. Verify the durable source provenance after entry: the legacy case identifies `legacy_quiz_lead` plus the exact lead ID and no Personal Plan artifact; the Personal Plan case identifies `personal_plan_artifact` plus the exact prepared artifact. Check runtime errors for both journeys.
+8. Revoke, expire, or schedule prompt expiry of synthetic access, according to the application's supported cleanup path. Confirm internal-test records remain excluded from customer analytics and operational payment handling, and leave the public rollout unchanged.
+
+The report must label this as **synthetic post-payment application-state coverage**. It proves the application's eligibility, redirect, readiness, source-provenance, and Stage 1 entry behavior. It does not prove payment confirmation, provider webhooks, settlement, refunds, or provider-owned subscription lifecycle unless those events actually occurred and were separately verified. If exact lead-to-user correlation cannot be established safely, stop with a blocker rather than testing a different journey.
+
 ### 2. Use browser automation
 
 Use the browser to navigate the experience directly. Re-snapshot after page changes, stay oriented to the active step, and record concrete evidence such as the screen, state change, and short text snippets that explain why a moment felt clear or confusing.
