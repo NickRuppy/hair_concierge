@@ -77,6 +77,12 @@ test.describe.serial("@ci profile editorial v3", () => {
     await page.click('button[type="submit"]')
     await page.waitForURL(/\/(chat|profile|quiz|onboarding)/, { timeout: 10_000 })
 
+    const cookieDialog = page.getByRole("dialog", { name: "Cookie-Einstellungen" })
+    await cookieDialog.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined)
+    if (await cookieDialog.isVisible()) {
+      await cookieDialog.getByRole("button", { name: "Nur essentielle" }).click()
+    }
+
     await page.goto(`${baseUrl}/profile`)
     await expect(page.getByRole("heading", { name: "Mein Profil", level: 1 })).toBeVisible()
 
