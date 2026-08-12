@@ -3,6 +3,7 @@ export const PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_MAX_ACTIVATIONS = 100
 export const PERSONAL_PLAN_FIELD_TEST_ACCESS_DURATION_HOURS = 168
 
 export const PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE = "chaarlie_personal_plan_field_test"
+export const REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE = "chaarlie_regular_quiz_field_test"
 export const PERSONAL_PLAN_FIELD_TEST_KIND = "field_test" as const
 
 export const PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_TTL_SECONDS =

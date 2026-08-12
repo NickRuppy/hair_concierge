@@ -14,6 +14,7 @@ import {
   PersonalPlanOfferRecovery,
 } from "@/components/personal-plan-offer/personal-plan-offer"
 import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
+import { RegularQuizFieldTestUnavailable } from "@/components/regular-quiz-field-test/unavailable"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { renderOfferVariant } from "@/funnels/offers/registry"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
@@ -40,6 +41,8 @@ export function ResultPageClient({
   fieldTest = false,
   fieldTestUnavailable = false,
   isInternalTest = false,
+  regularFieldTest = null,
+  regularFieldTestUnavailable = false,
   returnTo = null,
   offerTracking = null,
   offerVariant = "default",
@@ -59,6 +62,10 @@ export function ResultPageClient({
   fieldTest?: boolean
   fieldTestUnavailable?: boolean
   isInternalTest?: boolean
+  regularFieldTest?: {
+    accessDurationHours: number
+  } | null
+  regularFieldTestUnavailable?: boolean
   returnTo?: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
@@ -107,6 +114,10 @@ export function ResultPageClient({
     return <PersonalPlanOfferRecovery leadId={leadId} />
   }
 
+  if (regularFieldTestUnavailable) {
+    return <RegularQuizFieldTestUnavailable />
+  }
+
   return (
     <LegacyResultPageClient
       entryContext={resolvedEntryContext}
@@ -120,6 +131,7 @@ export function ResultPageClient({
       pricingCatalog={resolvedPricingCatalog}
       pricingCatalogWasProvided={pricingCatalogWasProvided}
       quizAnswers={quizAnswers}
+      regularFieldTest={regularFieldTest}
       returnTo={returnTo}
     />
   )
@@ -137,6 +149,7 @@ function LegacyResultPageClient({
   pricingCatalog,
   pricingCatalogWasProvided,
   quizAnswers,
+  regularFieldTest,
   returnTo,
 }: {
   entryContext: OfferEntryContext
@@ -150,6 +163,9 @@ function LegacyResultPageClient({
   pricingCatalog: SubscriptionPricingCatalog
   pricingCatalogWasProvided: boolean
   quizAnswers: QuizAnswers
+  regularFieldTest?: {
+    accessDurationHours: number
+  } | null
   returnTo?: string | null
 }) {
   const narrative = buildQuizResultNarrative(quizAnswers)
@@ -162,11 +178,13 @@ function LegacyResultPageClient({
       focusTarget === "unlock-plan" ? "personal_plan_complete_plan" : focusTarget
 
     window.requestAnimationFrame(() => {
+      const fieldTestTarget =
+        regularFieldTest && focusTarget === "pricing" ? "regular_field_test_activation" : null
       document
-        .getElementById(presentationTarget)
+        .getElementById(fieldTestTarget ?? presentationTarget)
         ?.scrollIntoView({ behavior: "smooth", block: "start" })
     })
-  }, [focusTarget, offerVariant])
+  }, [focusTarget, offerVariant, regularFieldTest])
 
   if (hasAccess) {
     return (
@@ -204,6 +222,7 @@ function LegacyResultPageClient({
         }
       />
     ),
+    regularFieldTest,
   })
   if (!offer) throw new Error(`Unknown funnel offer variant: ${offerVariant}`)
   return offer

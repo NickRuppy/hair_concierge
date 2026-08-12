@@ -67,6 +67,8 @@ cp "$repository_root/supabase/tests/catalog_enrichment_scalp_image_correction.sq
   "$test_project_root/supabase/tests/catalog_enrichment_scalp_image_correction.sql"
 cp "$repository_root/supabase/tests/personal_plan_field_test_access.sql" \
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql"
+cp "$repository_root/supabase/tests/regular_quiz_field_test_access.sql" \
+  "$test_project_root/supabase/tests/regular_quiz_field_test_access.sql"
 cp "$repository_root/supabase/tests/personal_plan_test_owner_removed.sql" \
   "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql"
 cp "$repository_root/supabase/tests/personal_plan_curated_publication_gate.sql" \
@@ -115,6 +117,7 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/personal_plan_stage5_application.sql" \
   "$test_project_root/supabase/tests/personal_plan_stage5_protocol_executor.sql" \
   "$test_project_root/supabase/tests/personal_plan_field_test_access.sql" \
+  "$test_project_root/supabase/tests/regular_quiz_field_test_access.sql" \
   "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql" \
   "$test_project_root/supabase/tests/personal_plan_curated_publication_gate.sql" \
   "$test_project_root/supabase/tests/personal_plan_exact_catalog_bundle.sql" \

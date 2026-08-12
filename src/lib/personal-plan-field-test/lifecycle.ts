@@ -10,6 +10,7 @@ export type PersonalPlanFieldTestCampaignLifecycle = {
   maxActivations: number
   successfulActivations: number
   accessDurationHours: number
+  flowKind?: "personal_plan" | "regular_quiz"
 }
 
 export type PersonalPlanFieldTestCampaignEvaluation =

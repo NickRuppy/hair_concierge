@@ -204,6 +204,14 @@ export default async function OfferPageLab({
       offerVariant="organic-plan-v1"
       quizAnswers={REVIEW_ANSWERS}
       pricingSlot={<StaticPricingPreview />}
+      regularFieldTest={
+        params.scenario === "field-test"
+          ? {
+              accessDurationHours: 168,
+              activationApiPath: "/api/quiz/field-test/activate",
+            }
+          : null
+      }
     />
   )
 }

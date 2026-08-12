@@ -65,7 +65,7 @@ export async function resolveFunnelContextForLead(
   let query = createAdminClient()
     .from("funnel_sessions")
     .select(
-      "id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, checkout_started_at, is_internal_test",
+      "id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, checkout_started_at, is_internal_test, test_kind, field_test_campaign_id",
     )
     .eq("lead_id", leadId)
     .order("first_seen_at", { ascending: false })
@@ -81,6 +81,8 @@ export async function resolveFunnelContextForLead(
     offerViewedAt: data.offer_viewed_at,
     checkoutStartedAt: data.checkout_started_at,
     isInternalTest: data.is_internal_test,
+    testKind: data.test_kind,
+    fieldTestCampaignId: data.field_test_campaign_id,
     issuedAt: Date.parse(data.first_seen_at),
   }
 }

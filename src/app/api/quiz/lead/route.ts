@@ -5,6 +5,11 @@ import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
 import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
+import {
+  bindRegularQuizFieldTestLead,
+  isRegularQuizFieldTestEnabled,
+  REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE,
+} from "@/lib/personal-plan-field-test"
 import { cookies } from "next/headers"
 import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import {
@@ -42,6 +47,14 @@ interface QuizLeadPostDependencies {
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
   createAdminClient: typeof createAdminClient
   cookies: typeof cookies
+  bindRegularQuizFieldTestLead: typeof bindRegularQuizFieldTestLead
+  isRegularQuizFieldTestEnabled: typeof isRegularQuizFieldTestEnabled
+  resolveFunnelCookieContext: typeof resolveFunnelCookieContext
+  resolvePendingFunnelTouchValue: typeof resolvePendingFunnelTouchValue
+  recordFunnelEvent: typeof recordFunnelEvent
+  syncQuizLeadToCustomerIo: typeof syncQuizLeadToCustomerIo
+  enqueueMetaLead: typeof enqueueMetaLead
+  scheduleAfter: typeof after
 }
 
 export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDependencies> = {}) {
@@ -51,6 +64,14 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     recordEmailDeliverabilityOutcome,
     createAdminClient,
     cookies,
+    bindRegularQuizFieldTestLead,
+    isRegularQuizFieldTestEnabled,
+    resolveFunnelCookieContext,
+    resolvePendingFunnelTouchValue,
+    recordFunnelEvent,
+    syncQuizLeadToCustomerIo,
+    enqueueMetaLead,
+    scheduleAfter: after,
     ...overrides,
   }
 
@@ -81,13 +102,23 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const quizAnswers = canonicalizeQuizAnswers(parsed.quizAnswers)
       const metaUserRequestData = metaRequestData(request)
 
-      const supabase = dependencies.createAdminClient()
       const cookieStore = await dependencies.cookies()
-      const funnelContext = await resolveFunnelCookieContext(
+      // A field-test cookie is a non-commercial intent marker. If the global
+      // switch is turned off after a tester entered, fail closed instead of
+      // allowing their submission to fall through into the paid funnel.
+      const regularFieldTestIntent = Boolean(
+        cookieStore.get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value,
+      )
+      if (regularFieldTestIntent && !dependencies.isRegularQuizFieldTestEnabled()) {
+        return fieldTestUnavailableResponse()
+      }
+
+      const supabase = dependencies.createAdminClient()
+      const funnelContext = await dependencies.resolveFunnelCookieContext(
         cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
       )
       const funnelTouch = funnelContext
-        ? await resolvePendingFunnelTouchValue(
+        ? await dependencies.resolvePendingFunnelTouchValue(
             cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
             funnelContext,
           )
@@ -130,35 +161,15 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           }
         }
 
-        after(() =>
-          syncQuizLeadToCustomerIo({
-            createdAt,
-            email: deliverableEmail,
-            leadId: existingLead.id,
-            marketingConsent: parsed.marketingConsent,
-            name: parsed.name,
-            quizAnswers,
-            funnelSessionId: funnelContext?.sessionId,
-            funnelPackageKey: funnelContext?.packageKey,
-          }),
-        )
-        enqueueMetaLead({
-          browserEventId,
-          eventTime: createdAt,
-          email: deliverableEmail,
-          leadId: existingLead.id,
-          name: parsed.name,
-          requestData: metaUserRequestData,
-        })
-
         const funnelRecorded = funnelContext
-          ? await recordFunnelEvent({
-              context: funnelContext,
-              eventId: funnelEventId,
-              milestone: "lead_captured",
-              leadId: existingLead.id,
-              touch: funnelTouch,
-            })
+          ? await dependencies
+              .recordFunnelEvent({
+                context: funnelContext,
+                eventId: funnelEventId,
+                milestone: "lead_captured",
+                leadId: existingLead.id,
+                touch: funnelTouch,
+              })
               .then(() => true)
               .catch((error) => {
                 console.warn("[funnel] lead attachment failed", error)
@@ -166,7 +177,42 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
               })
           : false
 
-        return leadResponse(existingLead.id, Boolean(funnelTouch) && funnelRecorded)
+        const fieldTestAttached = await bindRegularFieldTestLead({
+          intent: regularFieldTestIntent,
+          campaignCookieValue: cookieStore.get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value,
+          funnelContext,
+          leadId: existingLead.id,
+          bind: dependencies.bindRegularQuizFieldTestLead,
+        })
+        if (regularFieldTestIntent && !fieldTestAttached) return fieldTestUnavailableResponse()
+        if (!regularFieldTestIntent) {
+          dependencies.scheduleAfter(() =>
+            dependencies.syncQuizLeadToCustomerIo({
+              createdAt,
+              email: deliverableEmail,
+              leadId: existingLead.id,
+              marketingConsent: parsed.marketingConsent,
+              name: parsed.name,
+              quizAnswers,
+              funnelSessionId: funnelContext?.sessionId,
+              funnelPackageKey: funnelContext?.packageKey,
+            }),
+          )
+          dependencies.enqueueMetaLead({
+            browserEventId,
+            eventTime: createdAt,
+            email: deliverableEmail,
+            leadId: existingLead.id,
+            name: parsed.name,
+            requestData: metaUserRequestData,
+          })
+        }
+
+        return leadResponse(
+          existingLead.id,
+          Boolean(funnelTouch) && funnelRecorded,
+          regularFieldTestIntent ? fieldTestAttached : undefined,
+        )
       }
 
       const { data, error } = await supabase
@@ -187,35 +233,15 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       }
 
       const createdAt = new Date().toISOString()
-      after(() =>
-        syncQuizLeadToCustomerIo({
-          createdAt,
-          email: deliverableEmail,
-          leadId: data.id,
-          marketingConsent: parsed.marketingConsent,
-          name: parsed.name,
-          quizAnswers,
-          funnelSessionId: funnelContext?.sessionId,
-          funnelPackageKey: funnelContext?.packageKey,
-        }),
-      )
-      enqueueMetaLead({
-        browserEventId,
-        eventTime: createdAt,
-        email: deliverableEmail,
-        leadId: data.id,
-        name: parsed.name,
-        requestData: metaUserRequestData,
-      })
-
       const funnelRecorded = funnelContext
-        ? await recordFunnelEvent({
-            context: funnelContext,
-            eventId: funnelEventId,
-            milestone: "lead_captured",
-            leadId: data.id,
-            touch: funnelTouch,
-          })
+        ? await dependencies
+            .recordFunnelEvent({
+              context: funnelContext,
+              eventId: funnelEventId,
+              milestone: "lead_captured",
+              leadId: data.id,
+              touch: funnelTouch,
+            })
             .then(() => true)
             .catch((error) => {
               console.warn("[funnel] lead attachment failed", error)
@@ -223,7 +249,42 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
             })
         : false
 
-      return leadResponse(data.id, Boolean(funnelTouch) && funnelRecorded)
+      const fieldTestAttached = await bindRegularFieldTestLead({
+        intent: regularFieldTestIntent,
+        campaignCookieValue: cookieStore.get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value,
+        funnelContext,
+        leadId: data.id,
+        bind: dependencies.bindRegularQuizFieldTestLead,
+      })
+      if (regularFieldTestIntent && !fieldTestAttached) return fieldTestUnavailableResponse()
+      if (!regularFieldTestIntent) {
+        dependencies.scheduleAfter(() =>
+          dependencies.syncQuizLeadToCustomerIo({
+            createdAt,
+            email: deliverableEmail,
+            leadId: data.id,
+            marketingConsent: parsed.marketingConsent,
+            name: parsed.name,
+            quizAnswers,
+            funnelSessionId: funnelContext?.sessionId,
+            funnelPackageKey: funnelContext?.packageKey,
+          }),
+        )
+        dependencies.enqueueMetaLead({
+          browserEventId,
+          eventTime: createdAt,
+          email: deliverableEmail,
+          leadId: data.id,
+          name: parsed.name,
+          requestData: metaUserRequestData,
+        })
+      }
+
+      return leadResponse(
+        data.id,
+        Boolean(funnelTouch) && funnelRecorded,
+        regularFieldTestIntent ? fieldTestAttached : undefined,
+      )
     } catch (err) {
       console.error("Lead API error:", err)
       return NextResponse.json({ error: "Ungueltige Daten" }, { status: 400 })
@@ -292,8 +353,32 @@ export function enqueueMetaLead(
   return true
 }
 
-function leadResponse(leadId: string, clearTouch: boolean) {
-  const response = NextResponse.json({ leadId })
+export async function bindRegularFieldTestLead({
+  intent,
+  campaignCookieValue,
+  funnelContext,
+  leadId,
+  bind,
+}: {
+  intent: boolean
+  campaignCookieValue: string | undefined
+  funnelContext: Awaited<ReturnType<typeof resolveFunnelCookieContext>>
+  leadId: string
+  bind: typeof bindRegularQuizFieldTestLead
+}) {
+  if (!intent) return false
+  if (!funnelContext || funnelContext.packageKey !== "default_organic") return false
+  return bind({ campaignCookieValue, funnelContext, leadId })
+}
+
+function fieldTestUnavailableResponse() {
+  return NextResponse.json({ error: "Testzugang ist nicht verfügbar" }, { status: 503 })
+}
+
+function leadResponse(leadId: string, clearTouch: boolean, fieldTestAttached?: boolean) {
+  const response = NextResponse.json(
+    fieldTestAttached === undefined ? { leadId } : { leadId, fieldTestAttached },
+  )
   if (clearTouch) response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
   return response
 }

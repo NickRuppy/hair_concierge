@@ -45,7 +45,7 @@ test("acquisition funnel keeps Meta, Customer.io, and PostHog tracking from land
     read("src/app/welcome/layout.tsx"),
     /<PublicAuthFlowProviders>{children}<\/PublicAuthFlowProviders>/,
   )
-  assert.match(read("src/app/quiz/layout.tsx"), /<QuizShell>{children}<\/QuizShell>/)
+  assert.match(read("src/app/quiz/layout.tsx"), /<QuizShell[^>]*>{children}<\/QuizShell>/)
   assert.match(read("src/app/quiz/quiz-shell.tsx"), /<AppRouteProviders>/)
 })
 
