@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { reportPersonalPlanTransitionTiming } from "./transition-performance"
 import { buildStage3EntryContext } from "./products/stage2-entry-adapter"
 import { requireCurrentAuthoritySnapshot } from "./products/authority/snapshot"
-import type { PersonalPlanCategory, Stage3AuthoritySnapshotV1 } from "./products/contracts"
+import type { Stage3AuthorityDraftInput, Stage3ProductDraft } from "./products/contracts"
 import type { InitialNeedPlanSnapshot } from "./types"
 import {
   getPersonalPlanNewBuyerCohortCutoff,
@@ -29,13 +29,7 @@ type AccessState = PersonalPlanJourneyAccessInput["accessState"]
 
 type JourneyPlanRow = NonNullable<PersonalPlanJourneyAccessInput["plan"]>
 
-type JourneyDraft = {
-  status: "active" | "completed" | "stale"
-  refinedVersionId: string
-  orderedCategories: readonly PersonalPlanCategory[]
-  authorityVersions: Partial<Record<PersonalPlanCategory, string>>
-  authoritySnapshot: Stage3AuthoritySnapshotV1 | null
-}
+type JourneyDraft = Stage3AuthorityDraftInput & Pick<Stage3ProductDraft, "status">
 
 export type PersonalPlanJourneyAccessLoaderDeps = {
   loadEntitlement: (userId: string) => Promise<{
@@ -146,12 +140,7 @@ function hasCurrentAuthority(
 ): boolean {
   if (!draft || draft.status === "stale" || !draft.authoritySnapshot) return false
   try {
-    requireCurrentAuthoritySnapshot({
-      refinedVersionId: draft.refinedVersionId,
-      orderedCategories: [...draft.orderedCategories],
-      authorityVersions: draft.authorityVersions as Record<PersonalPlanCategory, string>,
-      authoritySnapshot: draft.authoritySnapshot,
-    } as never)
+    requireCurrentAuthoritySnapshot(draft)
   } catch {
     return false
   }
@@ -531,13 +520,21 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
         status,
         refinedVersionId: refined,
         orderedCategories: Array.isArray(payloadRecord.orderedCategories)
-          ? (payloadRecord.orderedCategories as PersonalPlanCategory[])
+          ? (payloadRecord.orderedCategories as Stage3ProductDraft["orderedCategories"])
           : [],
-        authorityVersions: (data.category_authority_versions ?? {}) as Partial<
-          Record<PersonalPlanCategory, string>
-        >,
+        authorityVersions: (data.category_authority_versions ??
+          {}) as Stage3ProductDraft["authorityVersions"],
         authoritySnapshot: (payloadRecord.authoritySnapshot ??
-          null) as Stage3AuthoritySnapshotV1 | null,
+          undefined) as Stage3ProductDraft["authoritySnapshot"],
+        productLoadResolution: payloadRecord.productLoadResolution as
+          | Stage3ProductDraft["productLoadResolution"]
+          | undefined,
+        products: Array.isArray(payloadRecord.products)
+          ? (payloadRecord.products as Stage3ProductDraft["products"])
+          : [],
+        roleAssignments: Array.isArray(payloadRecord.roleAssignments)
+          ? (payloadRecord.roleAssignments as Stage3ProductDraft["roleAssignments"])
+          : [],
       }
     },
     async loadIsInternal(userId) {

@@ -10,6 +10,7 @@ import { isProductFrequencyAtLeast, type ProductFrequency } from "@/lib/vocabula
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
 import type {
   PersonalPlanCategory,
+  Stage3AuthorityDraftInput,
   Stage3AuthoritySnapshotV1,
   Stage3CategoryRequirement,
   Stage3ProductDraft,
@@ -58,7 +59,7 @@ function chooseHigher(left: ProductFrequency | null, right: ProductFrequency): P
   return isProductFrequencyAtLeast(left, right) ? left : right
 }
 
-function capturedLoadFacts(draft: Stage3ProductDraft): CapturedLoadFacts {
+function capturedLoadFacts(draft: Stage3AuthorityDraftInput): CapturedLoadFacts {
   let dryShampooFrequency: ProductFrequency | null = null
   let leaveInFrequency: ProductFrequency | null = null
   let finishingOilFrequency: ProductFrequency | null = null
@@ -92,7 +93,7 @@ function capturedLoadFacts(draft: Stage3ProductDraft): CapturedLoadFacts {
   return { dryShampooFrequency, leaveInFrequency, finishingOilFrequency }
 }
 
-function scalpLoadFacts(draft: Stage3ProductDraft): ScalpLoadFacts {
+function scalpLoadFacts(draft: Stage3AuthorityDraftInput): ScalpLoadFacts {
   let dryShampooFrequency: ProductFrequency | null = null
   let scalpOilFrequency: ProductFrequency | null = null
   const oilProducts = draft.products.filter((product) => product.identity.category === "oil")
@@ -119,7 +120,7 @@ function scalpCareCadence(role: ScalpCareRole) {
 }
 
 function capturedFrequencyFingerprint(
-  draft: Stage3ProductDraft,
+  draft: Stage3AuthorityDraftInput,
   snapshot: Stage3AuthoritySnapshotV1,
 ): string {
   return semanticHash({
@@ -168,7 +169,7 @@ function included(decision: PlanCategoryDecision | undefined): boolean {
 }
 
 function deepCleansingDecision(
-  draft: Stage3ProductDraft,
+  draft: Stage3AuthorityDraftInput,
   snapshot: Stage3AuthoritySnapshotV1,
 ): PlanCategoryDecision | null {
   const context = snapshot.productLoadContext
@@ -312,7 +313,7 @@ function deepCleansingDecision(
 }
 
 function scalpCareDecision(
-  draft: Stage3ProductDraft,
+  draft: Stage3AuthorityDraftInput,
   snapshot: Stage3AuthoritySnapshotV1,
 ): PlanCategoryDecision | null {
   const existing = baseDecision(snapshot, "scalp_care")
@@ -456,7 +457,7 @@ function coverageDelta(
 }
 
 export function resolveStage3ProductLoadResolution(
-  draft: Stage3ProductDraft,
+  draft: Stage3AuthorityDraftInput,
 ): Stage3ProductLoadResolutionV1 | undefined {
   const snapshot = draft.authoritySnapshot
   if (!snapshot || snapshot.refinedNeedVersionId !== draft.refinedVersionId) return undefined
@@ -485,7 +486,7 @@ export function resolveStage3ProductLoadResolution(
   }
 }
 
-export function requireCurrentProductLoadResolution(draft: Stage3ProductDraft): void {
+export function requireCurrentProductLoadResolution(draft: Stage3AuthorityDraftInput): void {
   if (!draft.productLoadResolution) return
   const current = resolveStage3ProductLoadResolution({ ...draft, productLoadResolution: undefined })
   if (
