@@ -73,6 +73,8 @@ cp "$repository_root/supabase/tests/personal_plan_curated_publication_gate.sql" 
   "$test_project_root/supabase/tests/personal_plan_curated_publication_gate.sql"
 cp "$repository_root/supabase/tests/personal_plan_exact_catalog_bundle.sql" \
   "$test_project_root/supabase/tests/personal_plan_exact_catalog_bundle.sql"
+cp "$repository_root/supabase/tests/personal_plan_stage3_search_jsonb_shape.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage3_search_jsonb_shape.sql"
 node --import tsx "$repository_root/scripts/ci/generate-catalog-enrichment-heat-db-contract.ts" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat_real_package.sql"
 node --import tsx "$repository_root/scripts/ci/generate-catalog-enrichment-scalp-db-contract.ts" \
@@ -116,6 +118,7 @@ started_by_this_script=true
   "$test_project_root/supabase/tests/personal_plan_test_owner_removed.sql" \
   "$test_project_root/supabase/tests/personal_plan_curated_publication_gate.sql" \
   "$test_project_root/supabase/tests/personal_plan_exact_catalog_bundle.sql" \
+  "$test_project_root/supabase/tests/personal_plan_stage3_search_jsonb_shape.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat_real_package.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_heat.sql" \
   "$test_project_root/supabase/tests/catalog_enrichment_scalp_real_package.sql" \
