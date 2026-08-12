@@ -10,6 +10,7 @@ import {
 } from "../../../src/lib/routines/personal-plan/application/contracts"
 import {
   auditStage5CuratedCohort,
+  type PersonalPlanSearchDisposition,
   type Stage5CuratedCohortProduct,
 } from "@/lib/product-intake/catalog-enrichment/stage5-protocols"
 import { stage5ProtocolClientAdapters } from "./stage5-protocol-client"
@@ -163,6 +164,7 @@ export type Stage5CuratedCohortAuditRead = {
       guidance_payload: unknown
     }>
   >
+  listDispositions: (productIds: string[]) => Promise<PersonalPlanSearchDisposition[]>
 }
 
 /**
@@ -174,11 +176,16 @@ export async function auditFrozenStage5CuratedCohort(
   read: Stage5CuratedCohortAuditRead,
 ) {
   const products = await read.listCuratedProducts()
-  const protocols = await read.listProtocols(products.map(({ product_id }) => product_id))
+  const productIds = products.map(({ product_id }) => product_id)
+  const [protocols, dispositions] = await Promise.all([
+    read.listProtocols(productIds),
+    read.listDispositions(productIds),
+  ])
   return auditStage5CuratedCohort(
     frozen as Parameters<typeof auditStage5CuratedCohort>[0],
     products,
     protocols,
+    dispositions,
   )
 }
 
@@ -281,10 +288,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         frozen: unknown
         products: Stage5CuratedCohortProduct[]
         protocols: Awaited<ReturnType<Stage5CuratedCohortAuditRead["listProtocols"]>>
+        dispositions?: PersonalPlanSearchDisposition[]
       }
       const result = await auditFrozenStage5CuratedCohort(fixture.frozen, {
         listCuratedProducts: async () => fixture.products,
         listProtocols: async () => fixture.protocols,
+        listDispositions: async () => fixture.dispositions ?? [],
       })
       process.stdout.write(`${JSON.stringify(result, null, 2)}\n`)
       process.exitCode = result.ok ? 0 : 1

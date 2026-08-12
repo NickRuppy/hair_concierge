@@ -180,6 +180,18 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
         })
       },
       listProtocols: read.listProtocols,
+      async listDispositions(productIds: string[]) {
+        const { data, error } = await client
+          .from("personal_plan_product_search_dispositions")
+          .select<{
+            product_id: string
+            disposition: string
+            reason_code: string
+          }>("product_id,disposition,reason_code")
+          .in("product_id", productIds)
+        if (error) throw new Error(`Stage 5 disposition audit failed: ${error.message}`)
+        return data ?? []
+      },
     },
     async apply(canonicalJson: string, fingerprint: string) {
       const { data, error } = await client.rpc("apply_personal_plan_stage5_protocol_batch_v1", {

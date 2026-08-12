@@ -743,12 +743,29 @@ test("live Stage 5 audit derives roles only from explicit category facts and rem
         reads += 1
         return []
       },
+      listDispositions: async () => {
+        reads += 1
+        return [
+          {
+            product_id: product.product_id,
+            disposition: "awaiting_exact_analysis",
+            reason_code: "insufficient_executable_directions",
+          },
+        ]
+      },
     },
   )
-  assert.equal(reads, 2)
+  assert.equal(reads, 3)
   assert.equal(result.writes, false)
-  assert.ok(
+  assert.equal(result.disposedProductCount, 1)
+  assert.deepEqual(result.disposedProductIds, [product.product_id])
+  assert.equal(result.ok, true)
+  assert.equal(
     result.blockers.includes(`exact_protocol_missing:${product.product_id}:post_wash_leave_in`),
+    false,
   )
-  assert.ok(result.worklist.some(({ role }) => role === "pre_heat_protection"))
+  assert.equal(
+    result.worklist.some(({ role }) => role === "pre_heat_protection"),
+    false,
+  )
 })
