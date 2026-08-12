@@ -210,7 +210,9 @@ test("owner sync records and acknowledges a semantic no-op", async () => {
   assert.deepEqual(result, {
     status: "processed",
     processed: 1,
+    terminalized: 0,
     deferred: 0,
+    unfinished: 0,
     proposalStaged: false,
   })
   assert.equal(db.recorded.length, 1)
@@ -232,18 +234,197 @@ test("a failed source transition is requeued instead of acknowledged", async () 
 })
 
 test("a terminal invalid candidate is finished instead of retried forever", async () => {
+  const reported: unknown[] = []
   const db = repository({
     async recordNoChange() {
       return "invalid_source"
     },
   })
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, { status: "conflict", reason: "invalid_source" })
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_invalid_source" }])
+  assert.deepEqual(reported, [
+    {
+      planId: "plan-a",
+      sourceKind: "user_product",
+      observedRevision: 4,
+      terminalCode: "terminal_invalid_source",
+    },
+  ])
+})
+
+test("an active-plan refined need is terminalized without returning a 409 conflict", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [
+        {
+          ...claim,
+          sourceKind: "refined_need",
+          sourceKey: "refined-a",
+        },
+      ]
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 0,
+    terminalized: 1,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_refinement_pending_stage3" }])
+  assert.deepEqual(reported, [
+    {
+      planId: "plan-a",
+      sourceKind: "refined_need",
+      observedRevision: 4,
+      terminalCode: "terminal_refinement_pending_stage3",
+    },
+  ])
+})
+
+test("an unknown active-plan source kind is terminalized without retrying", async () => {
+  const db = repository({
+    async claim() {
+      return [{ ...claim, sourceKind: "portfolio_version", sourceKey: "portfolio-a" }]
+    },
+  })
+
   const result = await createRoutineSourceSyncService({ repository: db }).sync({
     userId: "owner-a",
   })
 
-  assert.deepEqual(result, { status: "conflict", reason: "invalid_source" })
-  assert.deepEqual(db.finished, [{ errorCode: "terminal_invalid_source" }])
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 0,
+    terminalized: 1,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_unsupported_routine_source" }])
 })
+
+test("a genuinely unknown future source kind remains retryable for deploy compatibility", async () => {
+  const db = repository({
+    async claim() {
+      return [{ ...claim, sourceKind: "future_source_kind", sourceKey: "future-a" }]
+    },
+  })
+
+  assert.deepEqual(
+    await createRoutineSourceSyncService({ repository: db }).sync({ userId: "owner-a" }),
+    { status: "conflict", reason: "unsupported_routine_source" },
+  )
+  assert.deepEqual(db.finished, [{ errorCode: "unsupported_routine_source" }])
+})
+
+test("a lost source lease is not counted or reported as terminalized", async () => {
+  const reported: unknown[] = []
+  const db = repository({
+    async claim() {
+      return [{ ...claim, sourceKind: "portfolio_version", sourceKey: "portfolio-a" }]
+    },
+    async finish() {
+      return false
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    reportTerminalSource(details) {
+      reported.push(details)
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, { status: "temporarily_unavailable" })
+  assert.deepEqual(reported, [])
+})
+
+test("a deleted user-product source is terminal while pending review remains retryable", async () => {
+  const db = repository({
+    async loadUserProduct() {
+      return null
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({ repository: db }).sync({
+    userId: "owner-a",
+  })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 0,
+    terminalized: 1,
+    deferred: 0,
+    unfinished: 0,
+    proposalStaged: false,
+  })
+  assert.deepEqual(db.finished, [{ errorCode: "terminal_user_product_not_found" }])
+})
+
+for (const terminalCase of [
+  {
+    name: "category mismatch",
+    category: "conditioner",
+    ownershipStatus: "owned" as const,
+    errorCode: "terminal_category_mismatch",
+  },
+  {
+    name: "archived product state",
+    category: "shampoo",
+    ownershipStatus: "archived" as const,
+    errorCode: "terminal_invalid_product_state",
+  },
+]) {
+  test(`${terminalCase.name} is terminal for the exact observed source revision`, async () => {
+    const base = acquisitionBase()
+    const db = repository({
+      async loadBase() {
+        return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+      },
+      async loadUserProduct() {
+        return {
+          id: claim.sourceKey,
+          category: terminalCase.category,
+          catalogProductId: "product-a",
+          displayName: "Shampoo A",
+          identityStatus: "matched",
+          ownershipStatus: terminalCase.ownershipStatus,
+        }
+      },
+    })
+
+    assert.deepEqual(
+      await createRoutineSourceSyncService({ repository: db }).sync({ userId: "owner-a" }),
+      {
+        status: "processed",
+        processed: 0,
+        terminalized: 1,
+        deferred: 0,
+        unfinished: 0,
+        proposalStaged: false,
+      },
+    )
+    assert.deepEqual(db.finished, [{ errorCode: terminalCase.errorCode }])
+  })
+}
 
 test("unresolved product-review source is retried rather than acknowledged as no change", async () => {
   const db = repository({
@@ -309,7 +490,9 @@ test("a deferred product review does not block an independent changed claim", as
   assert.deepEqual(result, {
     status: "processed",
     processed: 1,
+    terminalized: 0,
     deferred: 1,
+    unfinished: 0,
     proposalStaged: true,
   })
   assert.equal(staged.length, 1)
@@ -360,7 +543,14 @@ test("two changed claims stage one complete deterministic successor delta", asyn
 
   assert.deepEqual(
     await createRoutineSourceSyncService({ repository: db }).sync({ userId: "owner-a" }),
-    { status: "processed", processed: 2, deferred: 0, proposalStaged: true },
+    {
+      status: "processed",
+      processed: 2,
+      terminalized: 0,
+      deferred: 0,
+      unfinished: 0,
+      proposalStaged: true,
+    },
   )
   assert.equal(staged.length, 1)
   assert.equal(staged[0]?.sourceKey, "user-product-a")
@@ -430,7 +620,9 @@ test("successor cadence is re-resolved once after the complete acquisition batch
   assert.deepEqual(result, {
     status: "processed",
     processed: 2,
+    terminalized: 0,
     deferred: 0,
+    unfinished: 0,
     proposalStaged: true,
   })
   assert.equal(resolutionCalls, 1)

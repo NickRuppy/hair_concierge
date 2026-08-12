@@ -1,6 +1,6 @@
 begin;
 
-select plan(56);
+select plan(58);
 
 select has_function('public', 'personal_plan_complete_draft_activate_initial_v1', 'versioned first-Routine activation RPC exists');
 select has_function('public', 'personal_plan_stage_routine_successor', 'successor staging RPC exists');
@@ -99,6 +99,15 @@ select is((select status from public.personal_plan_product_drafts where id = '41
 
 -- Simulate source work that arrives after the compiled source token.  The
 -- activation must settle only captured rows and leave newer work pending.
+select ok(
+  public.personal_plan_enqueue_routine_source_change(
+    '11000000-0000-0000-0000-000000000003',
+    '21000000-0000-0000-0000-000000000003',
+    'refined_need',
+    '31000000-0000-0000-0000-000000000006'
+  ) > 0,
+  'initial activation fixture enqueues its exact refinement source'
+);
 insert into public.personal_plan_routine_source_change_outbox (
   user_id, personal_plan_id, source_kind, source_key, observed_revision
 ) values (
@@ -124,8 +133,13 @@ select is(
   'first activation consumes the captured product source outbox row'
 );
 select is(
+  (select processed_revision::text || ':' || available_at::text from public.personal_plan_routine_source_change_outbox where personal_plan_id = '21000000-0000-0000-0000-000000000003' and source_kind = 'refined_need'),
+  '2:infinity',
+  'first activation consumes the exact refinement source compiled into the Routine'
+);
+select is(
   (select status || ':' || processed_revision::text || ':' || observed_revision::text from public.personal_plan_routine_source_change_outbox where personal_plan_id = '21000000-0000-0000-0000-000000000003' and source_key = 'newer-source-work'),
-  'pending:0:2',
+  'pending:0:3',
   'first activation preserves newer source work for successor staging'
 );
 select is(pg_temp.complete_initial()->>'status', 'already_completed', 'lost-response replay returns the stable initial completion');

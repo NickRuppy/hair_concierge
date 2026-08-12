@@ -20,6 +20,7 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+import { capturePersonalPlanRoutineTerminalSource } from "@/lib/observability/personal-plan-application"
 
 type Service = ReturnType<typeof createRoutineSourceSyncService>
 export type PersonalPlanRoutineSyncRouteDeps = {
@@ -62,6 +63,7 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
     const admin = createAdminClient()
     return createRoutineSourceSyncService({
       repository: createSupabaseRoutineSourceSyncRepository(admin),
+      reportTerminalSource: capturePersonalPlanRoutineTerminalSource,
       cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
         admin as unknown as RoutineCadenceAuthorityReadClient,
       ),
