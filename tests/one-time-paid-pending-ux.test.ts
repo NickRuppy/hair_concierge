@@ -14,24 +14,19 @@ const readyPageSource = readFileSync(
   "utf8",
 )
 
-test("paid-pending plan-bereit resolves the canonical consent lead before recovery fallback", () => {
+test("plan-bereit resolves the canonical source from the owned enrollment or pending entitlement", () => {
   assert.match(readyPageSource, /findOneTimePurchaseEntitlementForUser/)
-  assert.match(
-    readyPageSource,
-    /let lead = await findPersonalPlanLead\(admin, user\.id, user\.email, requestedLeadId\)/,
-  )
+  assert.match(readyPageSource, /findPersonalPlanEnrollmentForUser\(admin, user\.id\)/)
   assert.match(
     readyPageSource,
     /const entitlement = await findOneTimePurchaseEntitlementForUser\(admin, user\.id\)/,
   )
+  assert.match(readyPageSource, /canonicalLeadId = entitlement\?\.consent\?\.lead_id \?\? null/)
   assert.match(
     readyPageSource,
-    /canonicalLeadId = entitlement\?\.consent\?\.lead_id \?\? lead\?\.id \?\? null/,
+    /canonicalLeadId = enrollmentResult\.enrollment\?\.artifactLeadId \?\? null/,
   )
-  assert.match(
-    readyPageSource,
-    /lead = await findPersonalPlanLead\(admin, user\.id, user\.email, canonicalLeadId\)/,
-  )
+  assert.doesNotMatch(readyPageSource, /findPersonalPlanLead/)
 })
 
 test("paid-pending plan-bereit stays on recovery instead of looping to onboarding or pricing", () => {
