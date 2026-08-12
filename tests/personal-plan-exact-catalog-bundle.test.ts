@@ -270,6 +270,23 @@ test("exact catalog bundle heat protocol migration maps canonical heat fields wi
   assert.match(sql, /TO service_role/)
 })
 
+test("exact catalog bundle Oil migration creates a missing exact spec row without widening access", async () => {
+  const sql = await readFile(
+    "supabase/migrations/20260812104000_personal_plan_exact_catalog_bundle_oil_specs_insert.sql",
+    "utf8",
+  )
+  assert.match(
+    sql,
+    /pg_get_functiondef\('public\.apply_personal_plan_exact_catalog_bundle_v1\(text,text,text\)'::regprocedure\)/,
+  )
+  assert.match(sql, /SECURITY DEFINER/)
+  assert.match(sql, /SET search_path TO '''''/)
+  assert.match(sql, /INSERT INTO public\.product_oil_specs/)
+  assert.match(sql, /ON CONFLICT ON CONSTRAINT product_oil_specs_pkey DO NOTHING/)
+  assert.match(sql, /REVOKE ALL ON FUNCTION public\.apply_personal_plan_exact_catalog_bundle_v1/)
+  assert.match(sql, /TO service_role/)
+})
+
 test("exact catalog bundle apply requires the reviewed head and a clean worktree", async () => {
   const source = await readFile(
     "scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts",

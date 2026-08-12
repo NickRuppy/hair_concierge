@@ -1,11 +1,12 @@
 begin;
-select plan(17);
+select plan(24);
 select has_table('public', 'personal_plan_catalog_fact_evidence', 'fact evidence ledger exists');
 select has_function('public', 'apply_personal_plan_exact_catalog_bundle_v1', array['text','text','text'], 'exact bundle executor exists');
 select ok(not has_function_privilege('anon', 'public.apply_personal_plan_exact_catalog_bundle_v1(text,text,text)', 'execute'), 'anon cannot apply a bundle');
 select ok(not has_function_privilege('authenticated', 'public.apply_personal_plan_exact_catalog_bundle_v1(text,text,text)', 'execute'), 'authenticated cannot apply a bundle');
 select ok(has_function_privilege('service_role', 'public.apply_personal_plan_exact_catalog_bundle_v1(text,text,text)', 'execute'), 'service role may apply a reviewed bundle');
 create temporary table exact_bundle_fixture(bundle text not null, fingerprint text not null) on commit drop;
+create temporary table exact_oil_bundle_fixture(bundle text not null, fingerprint text not null) on commit drop;
 
 insert into public.products (
   id, name, brand, category, category_key, suitable_thicknesses,
@@ -260,6 +261,120 @@ select is((select application_state from public.product_application_protocols wh
 select is((select reapplication from public.product_application_protocols where product_id='33333333-3333-4333-8333-333333333333' and role='pre_heat_protection'), 'required', 'exact Leave-in heat bundle maps required reapplication');
 select is((select count(*)::integer from public.product_application_protocols where product_id='33333333-3333-4333-8333-333333333333' and role='pre_heat_protection'), 1, 'exact Leave-in heat bundle replay inserts one protocol');
 select is((select count(*)::integer from public.catalog_enrichment_applied_items where product_key='bundle:33333333-3333-4333-8333-333333333333'), 1, 'exact Leave-in heat bundle replay keeps one guarded ledger item');
+
+insert into public.product_categories (
+  key, display_name_de, is_catalog_supported, is_intake_supported, sort_order
+) values (
+  'oil', 'Öl', true, true, 80
+)
+on conflict (key) do nothing;
+
+set constraints all deferred;
+
+insert into public.products (
+  id, name, brand, category, category_key, suitable_thicknesses,
+  is_active, lifecycle_status, origin, is_chaarlie_recommended
+) values (
+  '44444444-4444-4444-8444-444444444444', 'Exact Oil fixture',
+  'Fixture', 'Öl', 'oil', array['normal']::text[],
+  true, 'active', 'curated', false
+);
+insert into public.product_oil_eligibility(product_id, thickness, oil_subtype)
+values ('44444444-4444-4444-8444-444444444444', 'normal', 'styling-oel');
+select is((select count(*)::integer from public.product_oil_specs where product_id='44444444-4444-4444-8444-444444444444'), 0, 'Oil fixture starts with eligibility but no spec row');
+
+do $oil_apply$
+declare
+  bundle_json jsonb := jsonb_build_object(
+    'schema_version', 'personal-plan-exact-catalog-bundle-v1',
+    'batch_id', 'S5-97-oil-bundle-contract',
+    'items', jsonb_build_array(jsonb_build_object(
+      'product_id', '44444444-4444-4444-8444-444444444444',
+      'product_name', 'Exact Oil fixture',
+      'expected_current_category', 'oil',
+      'target_category', 'oil',
+      'facts', jsonb_build_object(
+        'category', 'oil',
+        'values', jsonb_build_object(
+          'weight', 'rich',
+          'role_support', jsonb_build_array('dry_finish')
+        ),
+        'sources', jsonb_build_array(jsonb_build_object(
+          'label', 'Hersteller', 'url', 'https://example.com/exact-oil',
+          'text', 'Eine kleine Menge in die trockenen Längen geben.',
+          'sourceType', 'manufacturer', 'checkedAt', '2026-08-12'
+        ))
+      ),
+      'protocols', jsonb_build_array(jsonb_build_object(
+        'role', 'dry_finish', 'cadence', null,
+        'source', jsonb_build_object(
+          'label', 'Hersteller', 'url', 'https://example.com/exact-oil',
+          'text', 'Eine kleine Menge in die trockenen Längen geben.',
+          'sourceType', 'manufacturer', 'checkedAt', '2026-08-12'
+        ),
+        'guidance_payload', jsonb_build_object(
+          'schemaVersion', 1, 'guidanceKey', 'exact-oil-bundle-fixture',
+          'protocolVersion', 1, 'locale', 'de',
+          'scope', jsonb_build_object(
+            'kind', 'product', 'category', 'oil',
+            'productId', '44444444-4444-4444-8444-444444444444'
+          ),
+          'role', 'dry_finish', 'applicationFamily', 'dry_finish',
+          'compatibleDayTypes', jsonb_build_array('styling_day'),
+          'exactGuidanceRequired', true,
+          'sequence', jsonb_build_object(
+            'anchor', 'dry_finish', 'before', jsonb_build_array(),
+            'after', jsonb_build_array(), 'conflictsWith', jsonb_build_array()
+          ),
+          'requirements', jsonb_build_object(
+            'requiredCatalogFacts', jsonb_build_array(),
+            'requiredProtocolFacts', jsonb_build_array(),
+            'requiredProfileFacts', jsonb_build_array()
+          ),
+          'protocolFacts', jsonb_build_object(
+            'applicationArea', 'lengths_ends', 'rinse', 'leave_in',
+            'contactTimeSeconds', null, 'conditionerRelationship', 'not_applicable',
+            'reapplication', 'none', 'amount', null, 'cautions', jsonb_build_array()
+          ),
+          'steps', jsonb_build_array(jsonb_build_object(
+            'stepKey', 'apply', 'action', 'apply_product',
+            'copyTemplateDe', 'Eine kleine Menge in die trockenen Längen geben.'
+          )),
+          'evidence', jsonb_build_array(jsonb_build_object(
+            'sourceUrl', 'https://example.com/exact-oil',
+            'sourceType', 'manufacturer', 'checkedAt', '2026-08-12'
+          ))
+        )
+      ))
+    ))
+  );
+  bundle text := bundle_json::text;
+  fingerprint text := encode(extensions.digest(convert_to(bundle, 'UTF8'), 'sha256'), 'hex');
+begin
+  insert into exact_oil_bundle_fixture(bundle, fingerprint) values (bundle, fingerprint);
+  perform * from public.apply_personal_plan_exact_catalog_bundle_v1(bundle, fingerprint, 'nick');
+  perform * from public.apply_personal_plan_exact_catalog_bundle_v1(bundle, fingerprint, 'nick');
+end;
+$oil_apply$;
+set constraints all immediate;
+
+select is((select count(*)::integer from public.product_oil_specs where product_id='44444444-4444-4444-8444-444444444444'), 1, 'exact Oil bundle creates one missing spec row');
+select is((select weight from public.product_oil_specs where product_id='44444444-4444-4444-8444-444444444444'), 'rich', 'exact Oil bundle writes canonical weight');
+select is((select role_support from public.product_oil_specs where product_id='44444444-4444-4444-8444-444444444444'), array['dry_finish']::text[], 'exact Oil bundle writes canonical role support');
+select is((select count(*)::integer from public.product_application_protocols where product_id='44444444-4444-4444-8444-444444444444' and role='dry_finish'), 1, 'exact Oil bundle replay inserts one protocol');
+select is((select count(*)::integer from public.catalog_enrichment_applied_items where product_key='bundle:44444444-4444-4444-8444-444444444444'), 1, 'exact Oil bundle replay keeps one guarded ledger item');
+update public.product_oil_specs set weight='light' where product_id='44444444-4444-4444-8444-444444444444';
+select throws_ok(
+  format(
+    'select * from public.apply_personal_plan_exact_catalog_bundle_v1(%L,%L,%L)',
+    (select bundle from exact_oil_bundle_fixture),
+    (select fingerprint from exact_oil_bundle_fixture),
+    'nick'
+  ),
+  'P0001',
+  'exact catalog bundle Oil facts conflict: 44444444-4444-4444-8444-444444444444',
+  'exact Oil bundle rejects a conflicting existing spec row'
+);
 
 update public.product_application_protocols set source_text='Drifted protocol provenance' where product_id='22222222-2222-4222-8222-222222222222' and role='intensive_conditioning_mask';
 select throws_ok(
