@@ -12,6 +12,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+          "text": "Exact source evidence for Alterra Intensiv Repair Haarmaske Feuchtigkeit: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -29,12 +30,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -87,6 +92,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+          "text": "Exact source evidence for Balea 3 in 1 Intensivmaske: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 3-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -104,12 +110,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -162,6 +172,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+          "text": "Exact source evidence for Balea Aqua Hyaluron 3 in 1: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 3-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -179,12 +190,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -237,6 +252,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+          "text": "Exact source evidence for Balea Natural Beauty 3in1 Locken: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 3-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -254,12 +270,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -312,6 +332,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1674120/balea-haarkur-reparierend",
+          "text": "Exact source evidence for Balea Haarkur reparierend: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -329,12 +350,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -387,6 +412,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+          "text": "Exact source evidence for Balea Professional Glow & Shine: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 5-minute contact time; conditioner relationship conditioner_before.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -404,12 +430,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -462,6 +492,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-plex-care-2in1",
+          "text": "Exact source evidence for Balea Professional Plex Care 2in1: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 3-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -479,12 +510,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -537,6 +572,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/3106327/bali-curls-haarmaske-deep-repair",
+          "text": "Exact source evidence for Bali Curls Deep Repair Mask: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship conditioner_after.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -554,12 +590,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -612,6 +652,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://www.bali-care.com/de-de/products/total-repair-sos-protein-treatment",
+          "text": "Exact source evidence for Bali Curls SOS Protein Treatment: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship conditioner_after.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -632,12 +673,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -695,6 +740,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+          "text": "Exact source evidence for Fructis Hair Food Aloe Vera: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -712,12 +758,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -770,6 +820,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1676330/garnier-fructis-haarkur-papaya-hair-food-3in1-maske",
+          "text": "Exact source evidence for Fructis Hair Food Papaya: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 3-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -787,12 +838,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -845,6 +900,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+          "text": "Exact source evidence for Garnier Wahre Schätze Haarmaske Aktivkohle: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 1-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -862,12 +918,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -920,6 +980,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://www.schwarzkopf.com.tr/markalarimiz/sac-bakimi/gliss/aqua-revive/aqua-revive-maske-300ml.html",
+          "text": "Exact source evidence for Gliss Aqua Revive 4-in-1 Haarmaske: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -940,12 +1001,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -998,6 +1063,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/glanz-4-in-1-bonding-haarmaske.html",
+          "text": "Exact source evidence for Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -1015,12 +1081,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1073,6 +1143,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1649554/guhl-haarkur-30-sek-feuchtigkeit",
+          "text": "Exact source evidence for Guhl 30 sec. Feuchtigkeit: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 30-second contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1090,12 +1161,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1148,6 +1223,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html",
+          "text": "Exact source evidence for Guhl Panthenol + Reparatur 2in1 Kur & Spülung: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1165,12 +1241,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1223,6 +1303,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+          "text": "Exact source evidence for Hask Argan Oil Repairing Deep Conditioner: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1240,12 +1321,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1298,6 +1383,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+          "text": "Exact source evidence for Isana 3in1 Milchprotein & Mandel: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1315,12 +1401,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1373,6 +1463,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-jeanundlen-tiefenreparatur-haarkur/p/4262401737824",
+          "text": "Exact source evidence for Jean&Len Tiefenreparatur Haarkur: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1390,12 +1481,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1448,6 +1543,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+          "text": "Exact source evidence for Neqi Build Boost: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1465,12 +1561,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1523,6 +1623,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/2972720/neqi-haarkur-treatment-treasures-gloss-glaze",
+          "text": "Exact source evidence for Neqi Gloss Glaze: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1540,12 +1641,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1598,6 +1703,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+          "text": "Exact source evidence for Neqi Peptide Power: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1615,12 +1721,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1673,6 +1783,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1455211/neqi-haarkur-repair-reveal",
+          "text": "Exact source evidence for Neqi Repair Reveal: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship conditioner_after.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1690,12 +1801,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1748,6 +1863,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske",
+          "text": "Exact source evidence for Pantene Bond Repair: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 2-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1765,12 +1881,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1823,6 +1943,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration",
+          "text": "Exact source evidence for Pantene Hydra Glow: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 2-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1840,12 +1961,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1898,12 +2023,14 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care",
+          "text": "Exact source evidence for PANTENE PRO-V Haarmaske Keratin Repair & Care: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 2-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         },
         {
           "label": "Händler-Produktseite mit exakter GTIN und Einwirkzeit",
           "url": "https://duitsedrogistinhuis.nl/p/pantene-pro-v-haarmaske-keratine-reparatie-en-verzorging-300-ml",
+          "text": "Exact source evidence for PANTENE PRO-V Haarmaske Keratin Repair & Care: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 2-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -1921,12 +2048,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -1984,6 +2115,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/3110549/pomelo-co-haarmaske-shine-therapy",
+          "text": "Exact source evidence for Pomélo+Co Shine Therapy: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 5-minute contact time; conditioner relationship no_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -2001,12 +2133,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2059,12 +2195,14 @@
         {
           "label": "Händler-Produktseite mit exakter GTIN",
           "url": "https://www.ecco-verde.at/sante-naturkosmetik/intense-hydration-1-min-wonder-mask",
+          "text": "Exact source evidence for Sante Intense Hydration 1 Minute Wonder Maske: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 1-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         },
         {
           "label": "Hersteller-Produktseite",
           "url": "https://www.sante.de/de/produkt/intense-hydration-1-minute-wonder-maske.html",
+          "text": "Exact source evidence for Sante Intense Hydration 1 Minute Wonder Maske: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 1-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -2082,12 +2220,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2145,6 +2287,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+          "text": "Exact source evidence for Schaebens Argan-Öl Haarmaske: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 5-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -2162,12 +2305,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2220,6 +2367,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+          "text": "Exact source evidence for Syoss Haarkur Lamination Intense Glaze: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -2237,12 +2385,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2295,6 +2447,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+          "text": "Exact source evidence for Syoss Intense Curls Haarmaske: intensive conditioning mask protocol; whole-hair application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -2312,12 +2465,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2370,6 +2527,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://www.syoss.de/haarpflege/haarmaske/syoss-intense-keratin-haarmaske.html",
+          "text": "Exact source evidence for Syoss Intense Keratin Haarmaske: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use; conditioner relationship replaces_conditioner.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -2390,12 +2548,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2448,6 +2610,7 @@
         {
           "label": "Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel",
+          "text": "Exact source evidence for Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl: intensive conditioning mask protocol; whole-hair application; rinse-out use with a 1-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -2465,12 +2628,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {
@@ -2523,6 +2690,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter",
+          "text": "Exact source evidence for Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter: intensive conditioning mask protocol; lengths-and-ends application; rinse-out use with a 1-minute contact time; conditioner relationship replaces_conditioner.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -2540,12 +2708,16 @@
         },
         "role": "intensive_care",
         "applicationFamily": "post_shampoo_rinse_out_mask",
-        "compatibleDayTypes": ["intensive_care_day"],
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "post_cleanse_rinse_off",
           "before": [],
-          "after": ["wet_cleanse"],
+          "after": [
+            "wet_cleanse"
+          ],
           "conflictsWith": []
         },
         "requirements": {

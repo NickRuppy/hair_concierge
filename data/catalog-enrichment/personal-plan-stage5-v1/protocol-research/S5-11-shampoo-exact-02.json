@@ -1,0 +1,1595 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-11-shampoo-exact-02",
+  "category_key": "shampoo",
+  "products": [
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "product_name": "Wahre Schätze Aktivkohle Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut",
+          "text": "Exact source evidence for Wahre Schätze Aktivkohle Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use and amount evidence (eine kleine Menge).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-7200bb0b-7463-433b-86c8-744f5c1431de",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "7200bb0b-7463-433b-86c8-744f5c1431de"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "eine kleine Menge"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Eine kleine Menge auf das nasse Haar geben, auf der Kopfhaut aufschäumen und bis in Ansatz und Längen verteilen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich mit klarem, warmem Wasser ausspülen, bis keine Rückstände bleiben."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "product_name": "Pantene Pro-V Grow Abundant Anti-Haarverlust Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+          "text": "Exact source evidence for Pantene Pro-V Grow Abundant Anti-Haarverlust Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "In das nasse Haar einmassieren und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "product_name": "OGX Rosemary Mint Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.notino.at/ogx/rosemary-mint-das-reinigungsshampoo-fuer-fettige-kopfhaut/",
+          "text": "Exact source evidence for OGX Rosemary Mint Shampoo: shampoo everyday protocol; scalp/root-zone application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf das nasse Haar auftragen und sanft in die Kopfhaut einmassieren."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Anschließend gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.notino.at/ogx/rosemary-mint-das-reinigungsshampoo-fuer-fettige-kopfhaut/",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "product_name": "Sebamed Anti-Schuppen Plus Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+          "text": "Exact source evidence for Sebamed Anti-Schuppen Plus Shampoo: shampoo everyday protocol; scalp/root-zone application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für die tägliche Anwendung geeignet."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-7e95671b-41a7-4f5c-9188-e535e46678ba",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Das Haar anfeuchten, das Shampoo in der Handinnenfläche verreiben und unter leichtem Massieren auf die Kopfhaut auftragen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "product_name": "Guhl Kraft & Fülle Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+          "text": "Exact source evidence for Guhl Kraft & Fülle Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use with a 2-minute contact time and amount evidence (eine kleine Menge).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "9bfad335-a086-45a0-9af7-f26b36b4ecff"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "eine kleine Menge"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Eine kleine Menge 2 Minuten lang in das nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "product_name": "Hair Biology Revitalize & Soothe Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+          "text": "Exact source evidence for Hair Biology Revitalize & Soothe Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Für den täglichen Gebrauch geeignet."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf das nasse Haar auftragen und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "product_name": "Cantu Cream Cleanse Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+          "text": "Exact source evidence for Cantu Cream Cleanse Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Das Haar vollständig anfeuchten und das Shampoo vom Ansatz bis zu den Spitzen in das nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich mit kaltem Wasser ausspülen."
+          },
+          {
+            "stepKey": "optional-second-lather",
+            "action": "section",
+            "copyTemplateDe": "Bei starken Produktablagerungen einen zweiten Schaum und eine zweite Spülung einplanen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "product_name": "Balea med Ultra Sensitive Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+          "text": "Exact source evidence for Balea med Ultra Sensitive Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Ideal für die tägliche Haarwäsche bei sensibler Haut."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "In das feuchte Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-shampoo",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "product_name": "NEQI Moisture Mystery Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-shampoo/p/4063528078285",
+          "text": "Exact source evidence for NEQI Moisture Mystery Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf das nasse Haar auftragen, sanft einmassieren und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-shampoo/p/4063528078285",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "product_name": "Balea med Duschgel & Shampoo 5% Urea 2in1",
+      "role": "shampoo_everyday",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1376376/balea-med-duschgel-und-shampoo-5-prozent-urea-2in1",
+          "text": "Blocked exact source evidence for Balea med Duschgel & Shampoo 5% Urea 2in1: Exact dm page confirms this is a 2in1 shower gel and shampoo for skin and hair, but the only usage field says \"Dusche + Shampoo\" and does not provide enough product-specific wet-hair, massage, or rinse direction for an executable shampoo protocol.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Exact dm page confirms this is a 2in1 shower gel and shampoo for skin and hair, but the only usage field says \"Dusche + Shampoo\" and does not provide enough product-specific wet-hair, massage, or rinse direction for an executable shampoo protocol."
+      ]
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "product_name": "OGX Keratin Oil Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1443762/ogx-shampoo-strenght-und-lenght-keratin-oil",
+          "text": "Exact source evidence for OGX Keratin Oil Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use and amount evidence (großzügig).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "bef4f219-2c1f-4e02-8e3a-93056b95465a"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "großzügig"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1443762/ogx-shampoo-strenght-und-lenght-keratin-oil",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "product_name": "HASK Curl Care Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1622384/hask-shampoo-curl-care",
+          "text": "Exact source evidence for HASK Curl Care Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_suitability",
+        "copy_de": "Sanft genug für die tägliche Anwendung."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-c07a181b-3d55-4d47-ad68-9c1e324d4496",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "c07a181b-3d55-4d47-ad68-9c1e324d4496"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf nasses Haar auftragen und einmassieren, bis sich Schaum bildet."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gut ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1622384/hask-shampoo-curl-care",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "product_name": "Guhl Frische & Leichtigkeit Anti Fett Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett",
+          "text": "Exact source evidence for Guhl Frische & Leichtigkeit Anti Fett Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use and amount evidence (eine kleine Menge).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "eine kleine Menge"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Eine kleine Menge sanft in das nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gut ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "product_name": "Balea Professional Ultimate Volume Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+          "text": "Exact source evidence for Balea Professional Ultimate Volume Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf nassem Haar verteilen und den Ansatz mit Shampoo reinigen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Sorgfältig mit lauwarmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "product_name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+          "text": "Exact source evidence for Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Aktuelle Hersteller-Produktseite",
+          "url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/sensitive-pflege/",
+          "text": "Exact source evidence for Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Exakte Händler-Produktseite mit Gebrauchsanweisung",
+          "url": "https://www.amazon.de/Head-Shoulders-Anti-Schuppen-Shampoo-Manuka-Honig-Feuchtigkeit/dp/B0FF59MF88",
+          "text": "Exact source evidence for Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-d408aca9-cd16-4cb0-90e7-bab26a698000",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "d408aca9-cd16-4cb0-90e7-bab26a698000"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf dem feuchten Haar verteilen und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "sourceUrl": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/sensitive-pflege/",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "sourceUrl": "https://www.amazon.de/Head-Shoulders-Anti-Schuppen-Shampoo-Manuka-Honig-Feuchtigkeit/dp/B0FF59MF88",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "product_name": "Langhaarmädchen Lovely Long Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+          "text": "Exact source evidence for Langhaarmädchen Lovely Long Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "e76e0ed4-bd20-40cd-84ae-e93030610d40"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft in Haar und Kopfhaut einmassieren."
+          },
+          {
+            "stepKey": "wait-shampoo",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "product_name": "Sebamed Every-Day Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-sebamed-every-day-shampoo/p/4103040051752",
+          "text": "Exact source evidence for Sebamed Every-Day Shampoo: shampoo everyday protocol; scalp/root-zone application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Das Haar anfeuchten, das Shampoo in der Handinnenfläche verreiben und unter leichtem Massieren auf die Kopfhaut auftragen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-sebamed-every-day-shampoo/p/4103040051752",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "product_name": "Balea Professional Aqua Hyaluron Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+          "text": "Exact source evidence for Balea Professional Aqua Hyaluron Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-ead1333b-6839-464d-b272-673d39bb95a4",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "ead1333b-6839-464d-b272-673d39bb95a4"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft in das nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Sorgfältig mit lauwarmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "product_name": "Balea Professional Kopfhaut Sensitive Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+          "text": "Exact source evidence for Balea Professional Kopfhaut Sensitive Shampoo: shampoo everyday protocol; scalp/root-zone application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft auf die Kopfhaut und in das Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-shampoo",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Sorgfältig mit lauwarmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "product_name": "NIVEA Shampoo & Conditioner Express 2in1",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1",
+          "text": "Exact source evidence for NIVEA Shampoo & Conditioner Express 2in1: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-f033afbe-281a-419e-a245-3ad83d721bd0",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "f033afbe-281a-419e-a245-3ad83d721bd0"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Im nassen Haar verteilen und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich mit warmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "product_name": "Pantene Pro-V Miracles Hydra Glow Shampoo",
+      "role": "shampoo_everyday",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Aktuelle Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+          "text": "Exact source evidence for Pantene Pro-V Miracles Hydra Glow Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-everyday-fcbc469f-93c8-4be5-85db-e789b09189c7",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "fcbc469f-93c8-4be5-85db-e789b09189c7"
+        },
+        "role": "cleanse",
+        "applicationFamily": "standard_rinse_out_cleanse",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "In das nasse Haar einmassieren und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gut ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

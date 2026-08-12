@@ -1,5 +1,5 @@
 begin;
-select plan(21);
+select plan(22);
 
 select ok(
   not exists (
@@ -193,17 +193,53 @@ insert into public.products (
   '11111111-1111-4111-8111-111111111111',
   'Stage 5 protocol fixture',
   'Fixture',
-  'Shampoo',
-  'shampoo',
+  'Hitzeschutz',
+  'heat_protectant',
   true,
   'active',
   'curated',
   true
 );
 
+-- Heat/Scalp launch rows predate canonical guidance. The reviewed batch must
+-- upgrade the NULL payload atomically, and the retry must stay idempotent.
+insert into public.product_application_protocols (
+  product_id,
+  category,
+  role,
+  cadence,
+  application_stage,
+  application_state,
+  placement,
+  contact_time_seconds,
+  rinse_action,
+  reapplication,
+  instruction_modifiers,
+  source_label,
+  source_url,
+  source_text,
+  guidance_payload
+) values (
+  '11111111-1111-4111-8111-111111111111',
+  'heat_protectant',
+  'pre_heat_protection',
+  '{"legacy":true}'::jsonb,
+  'legacy_stage',
+  'either',
+  'legacy_placement',
+  null,
+  'legacy_rinse',
+  'not_stated',
+  '[]'::jsonb,
+  'Legacy fixture source',
+  'https://legacy.example/fixture',
+  'Legacy source text',
+  null
+);
+
 do $apply$
 declare
-  batch text := '{"batch_id":"S5-99-contract-test","protocols":[{"cadence":null,"category_key":"shampoo","guidance_payload":{"applicationFamily":"targeted_treatment_shampoo","compatibleDayTypes":["wash_day"],"evidence":[{"checkedAt":"2026-08-10","sourceType":"manufacturer","sourceUrl":"https://example.com/fixture"}],"exactGuidanceRequired":true,"guidanceKey":"stage5-contract-fixture","locale":"de","protocolFacts":{"amount":null,"applicationArea":"scalp_roots","cautions":[],"conditionerRelationship":"not_applicable","contactTimeSeconds":null,"reapplication":"none","rinse":"rinse_out"},"protocolVersion":1,"requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"role":"cleanse","schemaVersion":1,"scope":{"category":"shampoo","kind":"product","productId":"11111111-1111-4111-8111-111111111111"},"sequence":{"after":[],"anchor":"wet_cleanse","before":[],"conflictsWith":[]},"steps":[{"action":"apply_product","copyTemplateDe":"Sanft auf die nasse Kopfhaut geben.","stepKey":"apply"},{"action":"rinse","copyTemplateDe":"Gründlich ausspülen.","stepKey":"rinse"}]},"product_id":"11111111-1111-4111-8111-111111111111","product_name":"Stage 5 protocol fixture","role":"shampoo_dandruff","source_label":"Fixture source","source_text":"Sanft anwenden und ausspülen.","source_url":"https://example.com/fixture"}],"schema_version":"personal-plan-stage5-protocol-apply-v1"}';
+  batch text := '{"batch_id":"S5-99-contract-test","protocols":[{"cadence":null,"category_key":"heat_protectant","guidance_payload":{"applicationFamily":"either_state_protection","compatibleDayTypes":["styling_day"],"evidence":[{"checkedAt":"2026-08-10","sourceType":"manufacturer","sourceUrl":"https://example.com/fixture"}],"exactGuidanceRequired":true,"guidanceKey":"stage5-contract-fixture","locale":"de","protocolFacts":{"amount":null,"applicationArea":"all_hair","cautions":[],"conditionerRelationship":"not_applicable","contactTimeSeconds":null,"reapplication":"none","rinse":"leave_in"},"protocolVersion":1,"requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"role":"heat_protection","schemaVersion":1,"scope":{"category":"heat_protectant","kind":"product","productId":"11111111-1111-4111-8111-111111111111"},"sequence":{"after":[],"anchor":"dry_pre_heat","before":["heat_tool"],"conflictsWith":[]},"steps":[{"action":"apply_product","copyTemplateDe":"Gleichmäßig vor Hitze anwenden.","stepKey":"apply"}]},"product_id":"11111111-1111-4111-8111-111111111111","product_name":"Stage 5 protocol fixture","role":"pre_heat_protection","source_label":"Fixture source","source_text":"Gleichmäßig vor Hitze anwenden.","source_url":"https://example.com/fixture"}],"schema_version":"personal-plan-stage5-protocol-apply-v1"}';
 begin
   perform * from public.apply_personal_plan_stage5_protocol_batch_v1(
     batch,
@@ -223,8 +259,8 @@ select is(
     select count(*)::integer
     from public.product_application_protocols
     where product_id = '11111111-1111-4111-8111-111111111111'
-      and category = 'shampoo'
-      and role = 'shampoo_dandruff'
+      and category = 'heat_protectant'
+      and role = 'pre_heat_protection'
   ),
   1,
   'reviewed exact protocol inserts once and replay remains idempotent'
@@ -234,10 +270,20 @@ select is(
     select guidance_payload#>>'{scope,productId}'
     from public.product_application_protocols
     where product_id = '11111111-1111-4111-8111-111111111111'
-      and role = 'shampoo_dandruff'
+      and role = 'pre_heat_protection'
   ),
   '11111111-1111-4111-8111-111111111111',
   'stored canonical guidance remains scoped to the exact product'
+);
+select is(
+  (
+    select source_url
+    from public.product_application_protocols
+    where product_id = '11111111-1111-4111-8111-111111111111'
+      and role = 'pre_heat_protection'
+  ),
+  'https://example.com/fixture',
+  'legacy protocol is upgraded with reviewed canonical source metadata'
 );
 
 select * from finish();

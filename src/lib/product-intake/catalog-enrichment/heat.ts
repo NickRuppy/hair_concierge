@@ -476,7 +476,9 @@ export async function preflightHeat(options: {
     [...seen].some((key) => !expected.has(key))
   )
     blockers.push("approved Heat cohort must be exactly 7 product keys")
-  const valid = manifests.map(({ manifest }) => validateCatalogEnrichmentManifest(manifest))
+  const valid = manifests.map(({ manifest }) =>
+    validateCatalogEnrichmentManifest(manifest, undefined, "legacy_personal_plan_launch_v1"),
+  )
   for (const [index, validation] of valid.entries())
     if (!validation.ok)
       blockers.push(

@@ -12,6 +12,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://epres.com/de/products/bond-repair-treatment",
+          "text": "Exact source evidence for Epres Bond Repair Treatment: specialized bond treatment protocol; whole-hair application; rinse state recorded in the exact protocol with a 10-minute contact time; conditioner relationship conditioner_after.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -99,6 +100,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/",
+          "text": "Exact source evidence for K18 Leave-In Molecular Repair Hair Mask: specialized bond treatment protocol; lengths-and-ends application; leave-in use without rinsing with a 4-minute contact time.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -189,6 +191,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://olaplex.de/products/olaplex-no-0-intensive-bond-building-hair-treatment",
+          "text": "Exact source evidence for OLAPLEX No.0 Intensive Bond Building Treatment: specialized bond treatment protocol; whole-hair application; rinse-out use; conditioner relationship conditioner_after.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -281,6 +284,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+          "text": "Exact source evidence for OLAPLEX No.3PLUS Complete Repair Treatment: specialized bond treatment protocol; whole-hair application; rinse-out use with a 3-minute contact time; conditioner relationship conditioner_after.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }

@@ -10,6 +10,58 @@ import { dryRunProductIntakeReadyForReview } from "../src/lib/product-intake/rev
 
 const PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__"
 
+function exactProtocol(category: ProductIntakeReviewCategoryKey, role: string) {
+  return {
+    category,
+    role,
+    cadence: { kind: "fixture" },
+    application_stage: "fixture_stage",
+    application_state: "either",
+    placement: "fixture_area",
+    contact_time_seconds: null,
+    rinse_action: "fixture_action",
+    reapplication: "not_stated",
+    instruction_modifiers: [],
+    source_label: "Hersteller",
+    source_url: "https://example.test/instructions",
+    source_text: "Exakte Herstelleranleitung.",
+    guidance_payload: {
+      schemaVersion: 1,
+      guidanceKey: `fixture-${category}-${role}`,
+      protocolVersion: 1,
+      locale: "de",
+      scope: { kind: "product", category, productId: PRODUCT_ID_PLACEHOLDER },
+      role: null,
+      applicationFamily: "post_wash_booster",
+      compatibleDayTypes: ["wash_day"],
+      exactGuidanceRequired: true,
+      sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
+      requirements: {
+        requiredCatalogFacts: [],
+        requiredProtocolFacts: [],
+        requiredProfileFacts: [],
+      },
+      protocolFacts: {
+        applicationArea: "lengths_ends",
+        rinse: "leave_in",
+        contactTimeSeconds: null,
+        conditionerRelationship: "not_applicable",
+        reapplication: "none",
+        amount: null,
+        cautions: [],
+      },
+      steps: [{ stepKey: "apply", action: "apply_product", copyTemplateDe: "Auftragen." }],
+      evidence: [
+        {
+          sourceUrl: "https://example.test/instructions",
+          sourceType: "manufacturer",
+          checkedAt: "2026-08-11",
+        },
+      ],
+    },
+  }
+}
+
 function reviewedPayload(
   categoryKey: ProductIntakeReviewCategoryKey | "peeling",
   categorySpecs: Record<string, unknown>,
@@ -82,6 +134,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
             cleansing_intensity: "gentle",
           },
         ],
+        product_application_protocols: [exactProtocol(categoryKey, "shampoo_everyday")],
       }
     case "conditioner":
       return {
@@ -95,6 +148,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           balance_direction: null,
           ingredient_flags: ["humectants"],
         },
+        product_application_protocols: [exactProtocol(categoryKey, "conditioner_rinse_out")],
       }
     case "mask":
       return {
@@ -103,7 +157,10 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           concentration: "high",
           balance_direction: "moisture",
           ingredient_flags: ["humectants", "oils"],
+          repair_support_level: "medium",
+          functional_benefits: ["shine"],
         },
+        product_application_protocols: [exactProtocol(categoryKey, "intensive_conditioning_mask")],
       }
     case "leave_in":
       return {
@@ -117,6 +174,10 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           care_benefits: ["moisture", "anti_frizz"],
           ingredient_flags: ["polymers"],
           application_stage: ["pre_heat"],
+          care_direction: "moisture",
+          repair_support_level: "low",
+          plan_roles: ["post_wash_leave_in", "pre_heat_application"],
+          functional_benefits: ["heat_protect"],
         },
         product_leave_in_fit_specs: {
           weight: "light",
@@ -127,9 +188,17 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           { thickness: "fine", need_bucket: "heat_protect", styling_context: "heat_style" },
           { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "air_dry" },
         ],
+        product_application_protocols: [
+          exactProtocol(categoryKey, "post_wash_leave_in"),
+          exactProtocol(categoryKey, "pre_heat_protection"),
+        ],
       }
     case "oil":
       return {
+        product_oil_specs: {
+          weight: "light",
+          role_support: ["dry_finish", "leave_on_fibre_conditioning"],
+        },
         product_oil_eligibility: [
           {
             thickness: "fine",
@@ -144,6 +213,10 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
             ingredient_flags: ["oils"],
           },
         ],
+        product_application_protocols: [
+          exactProtocol(categoryKey, "dry_finish"),
+          exactProtocol(categoryKey, "leave_on_fibre_conditioning"),
+        ],
       }
     case "dry_shampoo":
       return {
@@ -153,6 +226,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           scalp_sensitivity_fit: "sensitive_ok",
           format: "aerosol_spray",
         },
+        product_application_protocols: [exactProtocol(categoryKey, "root_refresh_bridge")],
       }
     case "deep_cleansing_shampoo":
       return {
@@ -162,6 +236,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           reset_focus: "product_sebum_buildup",
           color_treated_suitability: "suitable",
         },
+        product_application_protocols: [exactProtocol(categoryKey, "residue_reset")],
       }
     case "bondbuilder":
       return {
@@ -173,6 +248,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           product_format: "leave_in_mask",
           usage_protocol: "k18_leave_in",
         },
+        product_application_protocols: [exactProtocol(categoryKey, "specialized_bond_treatment")],
       }
     case "heat_protectant":
       return {
@@ -192,6 +268,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
             source_label: "Hersteller",
             source_url: "https://example.test/instructions",
             source_text: "Vor jeder Hitze anwenden.",
+            guidance_payload: exactProtocol(categoryKey, "pre_heat_protection").guidance_payload,
           },
         ],
       }
@@ -218,6 +295,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
             source_label: "Hersteller",
             source_url: "https://example.test/instructions",
             source_text: "Bei Bedarf anwenden.",
+            guidance_payload: exactProtocol(categoryKey, "scalp_comfort").guidance_payload,
           },
         ],
       }
@@ -231,6 +309,65 @@ test("unsupported category fails approval validation", () => {
 
   assert.equal(result.ok, false)
   assert.ok(result.missingFields.includes("final.product.category_key"))
+})
+
+test("every curated category requires its own exact canonical application protocol", () => {
+  const specs = validCategorySpecs("mask")
+  delete specs.product_application_protocols
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("mask", specs))
+
+  assert.equal(result.ok, false)
+  if (!result.ok) {
+    assert.ok(result.missingFields.includes("final.category_specs.product_application_protocols"))
+  }
+})
+
+test("multi-role Leave-in requires an exact canonical protocol for every executable role", () => {
+  const specs = validCategorySpecs("leave_in")
+  specs.product_application_protocols = [exactProtocol("leave_in", "post_wash_leave_in")]
+
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("leave_in", specs))
+
+  assert.equal(result.ok, false)
+  if (!result.ok) {
+    assert.ok(
+      result.missingFields.includes("final.category_specs.product_application_protocols.role"),
+    )
+  }
+})
+
+test("Mask and Leave-in emit every canonical v3 fact", () => {
+  for (const category of ["mask", "leave_in"] as const) {
+    const result = validateProductIntakeApprovalPayload(
+      reviewedPayload(category, validCategorySpecs(category)),
+    )
+    assert.equal(result.ok, true)
+    if (!result.ok) continue
+    const row = result.targetSpecOperations.find(
+      (operation) =>
+        operation.table === (category === "mask" ? "product_mask_specs" : "product_leave_in_specs"),
+    )?.rows[0] as Record<string, unknown>
+    assert.ok(row.repair_support_level)
+    assert.ok(Array.isArray(row.functional_benefits))
+    if (category === "leave_in") {
+      assert.ok(row.care_direction)
+      assert.ok(Array.isArray(row.plan_roles))
+    }
+  }
+})
+
+test("canonical protocol validation retains the pre-insert placeholder but rejects invalid evidence", () => {
+  const specs = validCategorySpecs("mask")
+  const protocol = (specs.product_application_protocols as Array<Record<string, unknown>>)[0]!
+  const payload = protocol.guidance_payload as Record<string, unknown>
+  assert.equal((payload.scope as Record<string, unknown>).productId, PRODUCT_ID_PLACEHOLDER)
+  payload.evidence = []
+
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("mask", specs))
+  assert.equal(result.ok, false)
+  if (!result.ok) {
+    assert.ok(result.missingFields.some((field) => field.includes("guidance_payload")))
+  }
 })
 
 test("heat protectant requires verified tri-state capability and an exact pre-heat protocol", () => {
@@ -254,6 +391,7 @@ test("heat protectant requires verified tri-state capability and an exact pre-he
         source_label: "Hersteller",
         source_url: "https://example.test/instructions",
         source_text: "Vor jedem Hitzestyling anwenden.",
+        guidance_payload: exactProtocol("heat_protectant", "pre_heat_protection").guidance_payload,
       },
     ],
   })
@@ -294,6 +432,7 @@ test("scalp care requires an exact role, cosmetic format and product protocol", 
         source_label: "Hersteller",
         source_url: "https://example.test/instructions",
         source_text: "Bei Bedarf anwenden.",
+        guidance_payload: exactProtocol("scalp_care", "scalp_comfort").guidance_payload,
       },
     ],
   })
@@ -420,18 +559,26 @@ test("researched payload parser keeps draft and final JSON payloads", () => {
 
 test("each supported category emits expected target table operation shapes", () => {
   const expectedTablesByCategory: Record<ProductIntakeReviewCategoryKey, string[]> = {
-    shampoo: ["product_shampoo_specs"],
-    conditioner: ["product_conditioner_specs", "product_conditioner_rerank_specs"],
-    mask: ["product_mask_specs"],
+    shampoo: ["product_shampoo_specs", "product_application_protocols"],
+    conditioner: [
+      "product_conditioner_specs",
+      "product_conditioner_rerank_specs",
+      "product_application_protocols",
+    ],
+    mask: ["product_mask_specs", "product_application_protocols"],
     leave_in: [
       "product_leave_in_specs",
       "product_leave_in_fit_specs",
       "product_leave_in_eligibility",
+      "product_application_protocols",
     ],
-    oil: ["product_oil_eligibility"],
-    dry_shampoo: ["product_dry_shampoo_specs"],
-    deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
-    bondbuilder: ["product_bondbuilder_specs"],
+    oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
+    dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
+    deep_cleansing_shampoo: [
+      "product_deep_cleansing_shampoo_specs",
+      "product_application_protocols",
+    ],
+    bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
     heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
     scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
   }
@@ -491,7 +638,7 @@ test("bondbuilder product relationships are optional and do not block approval",
   assert.equal(result.ok, true)
   assert.deepEqual(
     result.targetSpecOperations.map((operation) => operation.table),
-    ["product_bondbuilder_specs"],
+    ["product_bondbuilder_specs", "product_application_protocols"],
   )
 })
 

@@ -163,7 +163,7 @@ test("draft creation turns an RPC stale source into a typed refined-source resta
 test("owned-product search presents one brand plus the complete line and product title", async () => {
   const client = {
     async rpc(name: string, args: { p_query: string }) {
-      assert.equal(name, "personal_plan_search_assessment_products_v1")
+      assert.equal(name, "personal_plan_search_assessment_products_v2")
       const rows = [
         {
           product_id: "ogx-renewing",
@@ -275,8 +275,9 @@ test("owned-product search delegates active identity and assessment readiness to
 
   assert.deepEqual(calls, [
     {
-      name: "personal_plan_search_assessment_products_v1",
+      name: "personal_plan_search_assessment_products_v2",
       args: {
+        p_user_id: "owner-1",
         p_category: "shampoo",
         p_query: "ogx",
         p_limit: 8,
@@ -361,6 +362,50 @@ test("selected owned-product resolution persists the complete brand, line, and t
   assert.match(selectedColumns, /brand/)
   assert.match(selectedColumns, /product_lines\(canonical_name\)/)
   assert.equal(resolved?.displayName, "OGX Renewing + Argan Oil of Morocco Shampoo")
+})
+
+test("direct Stage 3 capture cannot claim another owner's submitted catalog product", async () => {
+  let createOrReuseCalled = false
+  const client = {
+    from(table: string) {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        maybeSingle: async () =>
+          table === "products"
+            ? {
+                data: {
+                  id: "submitted-1",
+                  brand: "Private Brand",
+                  name: "Private Shampoo",
+                  image_url: null,
+                  category_key: "shampoo",
+                  origin: "user_submitted",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  product_line: null,
+                },
+                error: null,
+              }
+            : { data: null, error: null },
+      }
+      return chain
+    },
+    async rpc() {
+      createOrReuseCalled = true
+      return { data: null, error: null }
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  const resolved = await persistence.resolveOwnedCatalogProduct({
+    userId: "owner-1",
+    category: "shampoo",
+    candidateId: "submitted-1",
+  })
+
+  assert.equal(resolved, null)
+  assert.equal(createOrReuseCalled, false)
 })
 
 test("completion identity lookup is owner-bound and restores brand, line, and saleable title", async () => {
@@ -912,6 +957,7 @@ test("authority facts select a contextual Shampoo row without PGRST116", async (
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
+    targetFit: "matched",
   })
 })
 
@@ -1013,6 +1059,36 @@ test("distinct contextual Shampoo rows remain recoverably unknown", async () => 
   assert.equal(bundle.productFacts.spec.shampooBucket, null)
   assert.equal(bundle.productFacts.spec.scalpRoute, null)
   assert.equal(bundle.productFacts.spec.cleansingIntensity, null)
+  assert.equal(bundle.productFacts.spec.targetFit, "unknown")
+})
+
+test("complete nonmatching Shampoo rows load as a known semantic mismatch", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      {
+        thickness: "normal",
+        shampoo_bucket: "trocken",
+        scalp_route: "dry",
+        cleansing_intensity: "gentle",
+      },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.equal(bundle.productFacts.spec.targetFit, "known_mismatch")
 })
 
 test("semantically identical contextual Shampoo rows canonicalize to one fact", async () => {
@@ -1045,6 +1121,7 @@ test("semantically identical contextual Shampoo rows canonicalize to one fact", 
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
+    targetFit: "matched",
   })
 })
 
@@ -1160,6 +1237,7 @@ test("Conditioner selection also filters by the actual refined thickness", async
   if (bundle.productFacts?.category !== "conditioner") return
   assert.equal(bundle.productFacts.spec.thickness, "normal")
   assert.equal(bundle.productFacts.spec.proteinMoistureBalance, "moisture")
+  assert.equal(bundle.productFacts.spec.targetFit, "matched")
 })
 
 test("incomplete Conditioner specs remain unknown", async () => {
@@ -1183,13 +1261,283 @@ test("incomplete Conditioner specs remain unknown", async () => {
   if (bundle.productFacts?.category !== "conditioner") return
   assert.equal(bundle.productFacts.spec.thickness, null)
   assert.equal(bundle.productFacts.spec.proteinMoistureBalance, null)
+  assert.equal(bundle.productFacts.spec.targetFit, "unknown")
+})
+
+test("complete nonmatching Conditioner rows load as a known semantic mismatch", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    authorityFactClient([
+      { thickness: "normal", protein_moisture_balance: "stretches_stays" },
+    ]) as never,
+    {
+      draft: conditionerAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:conditioner:conditioner_rinse_out:owned-1",
+        category: "conditioner",
+        role: "conditioner_rinse_out",
+        capturedProductId: "owned-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "conditioner")
+  if (bundle.productFacts?.category !== "conditioner") return
+  assert.equal(bundle.productFacts.spec.targetFit, "known_mismatch")
+})
+
+function maskAuthorityDraft(): Stage3ProductDraft {
+  const base = conditionerAuthorityDraft()
+  return {
+    ...base,
+    authorityVersions: { mask: "mask-v3" },
+    orderedCategories: ["mask"],
+    categoryCursor: "mask",
+    products: [
+      {
+        ...base.products[0]!,
+        capturedProductId: "owned-mask-1",
+        userProductId: "user-mask-1",
+        identity: {
+          kind: "catalog_product",
+          productId: "mask-1",
+          displayName: "Explizite Maske",
+          category: "mask",
+        },
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "owned-mask-1",
+        category: "mask",
+        roles: ["intensive_conditioning_mask"],
+      },
+    ],
+    completedCaptureCategories: ["mask"],
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      categoryDecisions: [
+        {
+          category: "mask",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["intensive_conditioning_mask"],
+          target: {
+            category: "mask",
+            roles: ["intensive_conditioning_mask"],
+            needStrength: "standard",
+            weight: "light",
+            careDirection: "moisture",
+            repairSupportLevel: "medium",
+            functionalNeeds: [],
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+      orderedCategories: ["mask"],
+    },
+  }
+}
+
+function leaveInAuthorityDraft(): Stage3ProductDraft {
+  const base = conditionerAuthorityDraft()
+  return {
+    ...base,
+    authorityVersions: { leave_in: "leave-in-v3" },
+    orderedCategories: ["leave_in"],
+    categoryCursor: "leave_in",
+    products: [
+      {
+        ...base.products[0]!,
+        capturedProductId: "owned-leave-in-1",
+        userProductId: "user-leave-in-1",
+        identity: {
+          kind: "catalog_product",
+          productId: "leave-in-1",
+          displayName: "Explizites Leave-in",
+          category: "leave_in",
+        },
+      },
+    ],
+    roleAssignments: [
+      {
+        capturedProductId: "owned-leave-in-1",
+        category: "leave_in",
+        roles: ["post_wash_leave_in"],
+      },
+    ],
+    completedCaptureCategories: ["leave_in"],
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      categoryDecisions: [
+        {
+          category: "leave_in",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["post_wash_leave_in"],
+          target: {
+            category: "leave_in",
+            roles: ["post_wash_leave_in"],
+            weight: "light",
+            careDirection: "moisture",
+            repairSupportLevel: "high",
+            functions: [{ function: "detangle", priority: 3, ownership: "required" }],
+            conditionerReplacementEligible: false,
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+      orderedCategories: ["leave_in"],
+    },
+  }
+}
+
+function singleSpecAuthorityFactClient(
+  category: "mask" | "leave_in",
+  productId: string,
+  specRow: Record<string, unknown>,
+) {
+  return {
+    from(table: string) {
+      const filters = new Map<string, unknown>()
+      const result = () => {
+        if (table === "products") {
+          return filters.has("id")
+            ? {
+                data: {
+                  id: productId,
+                  name: category === "mask" ? "Explizite Maske" : "Explizites Leave-in",
+                  category_key: category,
+                  is_active: true,
+                  lifecycle_status: "active",
+                  is_chaarlie_recommended: true,
+                  suitable_thicknesses: ["normal"],
+                },
+                error: null,
+              }
+            : { data: [], error: null }
+        }
+        if (table === "product_mask_specs" || table === "product_leave_in_specs") {
+          return { data: specRow, error: null }
+        }
+        if (table === "product_application_protocols") {
+          return {
+            data: [
+              {
+                role: category === "mask" ? "intensive_conditioning_mask" : "post_wash_leave_in",
+                guidance_payload: null,
+                application_stage: category === "mask" ? "post_shampoo" : "towel_dry",
+                application_state: null,
+                placement: "lengths_ends",
+                contact_time_seconds: category === "mask" ? 300 : null,
+                rinse_action: category === "mask" ? "rinse_out" : null,
+                reapplication: null,
+                source_label: "Fixture",
+                source_url: "https://example.com",
+                updated_at: "2026-08-11T09:00:00.000Z",
+              },
+            ],
+            error: null,
+          }
+        }
+        return { data: [], error: null }
+      }
+      const chain = {
+        select: () => chain,
+        eq: (column: string, value: unknown) => {
+          filters.set(column, value)
+          return chain
+        },
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => result(),
+        then: <T>(resolve: (value: unknown) => T | PromiseLike<T>) =>
+          Promise.resolve(result()).then(resolve),
+      }
+      return chain
+    },
+  }
+}
+
+test("Mask authority facts load v3 repair and functional benefits explicitly", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    singleSpecAuthorityFactClient("mask", "mask-1", {
+      weight: "light",
+      balance_direction: "moisture",
+      repair_support_level: "medium",
+      functional_benefits: ["detangling_slip"],
+    }) as never,
+    {
+      draft: maskAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:mask:intensive_conditioning_mask:owned-mask-1",
+        category: "mask",
+        role: "intensive_conditioning_mask",
+        capturedProductId: "owned-mask-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "mask")
+  if (bundle.productFacts?.category !== "mask") return
+  assert.equal(bundle.productFacts.spec.repairSupportLevel, "medium")
+  assert.deepEqual(bundle.productFacts.spec.functionalBenefits, ["detangling_slip"])
+})
+
+test("Leave-in authority facts load plan-facing v3 columns instead of legacy roles", async () => {
+  const bundle = await loadStage3AuthorityFactBundle(
+    singleSpecAuthorityFactClient("leave_in", "leave-in-1", {
+      format: "cream",
+      weight: "light",
+      care_direction: "moisture",
+      repair_support_level: "high",
+      roles: ["styling_prep"],
+      plan_roles: ["post_wash_leave_in"],
+      provides_heat_protection: false,
+      care_benefits: ["detangling"],
+      functional_benefits: ["detangle"],
+      application_stage: ["towel_dry"],
+    }) as never,
+    {
+      draft: leaveInAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:leave_in:post_wash_leave_in:owned-leave-in-1",
+        category: "leave_in",
+        role: "post_wash_leave_in",
+        capturedProductId: "owned-leave-in-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "leave_in")
+  if (bundle.productFacts?.category !== "leave_in") return
+  assert.equal(bundle.productFacts.spec.careDirection, "moisture")
+  assert.equal(bundle.productFacts.spec.repairSupportLevel, "high")
+  assert.deepEqual(bundle.productFacts.spec.roles, ["post_wash_leave_in"])
+  assert.deepEqual(bundle.productFacts.spec.careBenefits, ["detangle"])
 })
 
 test("Oil combines every eligibility row while its product spec stays singular", async () => {
   const base = conditionerAuthorityDraft()
   const draft: Stage3ProductDraft = {
     ...base,
-    authorityVersions: { oil: "oil-v1" },
+    authorityVersions: { oil: "personal-plan.oil.v2" },
     orderedCategories: ["oil"],
     categoryCursor: "oil",
     products: [
@@ -1266,7 +1614,14 @@ test("Oil combines every eligibility row while its product spec stays singular",
             : { data: [], error: null }
         }
         if (table === "product_oil_specs") {
-          return { data: { provides_heat_protection: false }, error: null }
+          return {
+            data: {
+              provides_heat_protection: false,
+              weight: "light",
+              role_support: ["pre_wash_fibre_treatment", "dry_finish"],
+            },
+            error: null,
+          }
         }
         if (table === "product_oil_eligibility") {
           return {
@@ -1319,8 +1674,12 @@ test("Oil combines every eligibility row while its product spec stays singular",
   if (bundle.productFacts?.category !== "oil") return
   assert.deepEqual(bundle.productFacts.spec.roleSupport, {
     pre_wash_fibre_treatment: true,
+    leave_on_fibre_conditioning: false,
     dry_finish: true,
+    pre_heat_protection: false,
   })
+  assert.equal(bundle.productFacts.spec.weight, "light")
+  assert.equal(bundle.productFacts.spec.targetThicknessEligible, true)
   assert.equal(oilEligibilityMaybeSingleCalls, 0)
   assert.ok(oilSpecMaybeSingleCalls >= 1)
 })

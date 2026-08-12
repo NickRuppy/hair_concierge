@@ -1,0 +1,1703 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-12-conditioner-exact-01",
+  "category_key": "conditioner",
+  "products": [
+    {
+      "product_id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "product_name": "Balea Natural Beauty Hibiskus Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+          "text": "Exact source evidence for Balea Natural Beauty Hibiskus Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-007a0b35-2372-4836-9aa5-fd089cd588d4",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "007a0b35-2372-4836-9aa5-fd089cd588d4"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche in das feuchte Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "product_name": "SANTE Deep Repair Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.sante.de/deep-repair-conditioner-squalan-3-fach-protein-komplex/4062701",
+          "text": "Exact source evidence for SANTE Deep Repair Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-01b11043-5c87-43d2-95b5-f1cabd845423",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "01b11043-5c87-43d2-95b5-f1cabd845423"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "In den feuchten Haarlängen verteilen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.sante.de/deep-repair-conditioner-squalan-3-fach-protein-komplex/4062701",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "product_name": "Gliss Kur Aqua Revive Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite für rinse-out Conditioner SKU",
+          "url": "https://www.ohfeliz.com/schwarzkopf/gliss-aqua-revive-conditioner",
+          "text": "Exact source evidence for Gliss Kur Aqua Revive Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Händler-Produktseite für rinse-out Conditioner SKU",
+          "url": "https://www.caretobeauty.com/en/schwarzkopf-gliss-aqua-revive-conditioner-200ml/",
+          "text": "Exact source evidence for Gliss Kur Aqua Revive Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-02113cc7-80c4-45a5-a56b-738ac96f4f02",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "02113cc7-80c4-45a5-a56b-738ac96f4f02"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Gleichmäßig in das feuchte Haar und die Längen einarbeiten."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.ohfeliz.com/schwarzkopf/gliss-aqua-revive-conditioner",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "sourceUrl": "https://www.caretobeauty.com/en/schwarzkopf-gliss-aqua-revive-conditioner-200ml/",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "product_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html",
+          "text": "Exact source evidence for Guhl Panthenol + Reparatur 2in1 Kur & Spülung: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Als Spülung nach der Haarwäsche in das gewaschene, nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Anschließend gut ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "product_name": "OGX Bond Protein Repair Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.ogxbeauty.com/products/bond-protein-repair-lightweight-conditioner",
+          "text": "Exact source evidence for OGX Bond Protein Repair Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use and amount evidence (eine großzügige Menge).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.at/p/d/3068101/ogx-conditioner-bond-protein-repair",
+          "text": "Exact source evidence for OGX Bond Protein Repair Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use and amount evidence (eine großzügige Menge).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-1bfa5b02-26d9-457b-a5e6-445cc2284490",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "1bfa5b02-26d9-457b-a5e6-445cc2284490"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "eine großzügige Menge"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche großzügig im Haar bis in die Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "3–5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Danach gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.ogxbeauty.com/products/bond-protein-repair-lightweight-conditioner",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "sourceUrl": "https://www.dm.at/p/d/3068101/ogx-conditioner-bond-protein-repair",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "product_name": "Nivea Power Repair Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.nivea.de/produkte/power-repair-reparatur-spuelung-200ml-40060001925980001.html",
+          "text": "Exact source evidence for Nivea Power Repair Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use with a 1-minute contact time and amount evidence (je nach Haarlänge 1–2 walnussgroße Portionen).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-215522e5-95a6-469f-bc34-1fa74b311a23",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "215522e5-95a6-469f-bc34-1fa74b311a23"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "je nach Haarlänge 1–2 walnussgroße Portionen"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-conditioner",
+            "action": "section",
+            "copyTemplateDe": "Haare wie gewohnt mit Shampoo waschen."
+          },
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Je nach Haarlänge 1–2 walnussgroße Portionen in die feuchten Haarlängen und -spitzen einmassieren; Kopfhaut und Ansatz aussparen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Ca. 1 Minute einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Mit klarem, lauwarmem Wasser sorgfältig ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.nivea.de/produkte/power-repair-reparatur-spuelung-200ml-40060001925980001.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "product_name": "Pomélo+Co Shine Therapy Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.pomelo-co.de/products/shine-therapy-conditioner",
+          "text": "Exact source evidence for Pomélo+Co Shine Therapy Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-25931499-63ac-4076-b88c-8c23a38f0fa5",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "25931499-63ac-4076-b88c-8c23a38f0fa5"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche in die Haarlängen und -spitzen auftragen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Sorgfältig ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.pomelo-co.de/products/shine-therapy-conditioner",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "product_name": "Nivea Volumen & Kraft Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.ohfeliz.de/nivea/volumen-kraft-spuelung",
+          "text": "Blocked exact source evidence for Nivea Volumen & Kraft Conditioner: No current exact product-specific rinse-out directions found on manufacturer, dm, Rossmann, Müller, or available exact retailer pages; generic Nivea conditioner guidance was not used.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "No current exact product-specific rinse-out directions found on manufacturer, dm, Rossmann, Müller, or available exact retailer pages; generic Nivea conditioner guidance was not used."
+      ]
+    },
+    {
+      "product_id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "product_name": "Langhaarmädchen Lovely Long Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1559585/langhaarmaedchen-conditioner-lovely-long",
+          "text": "Exact source evidence for Langhaarmädchen Lovely Long Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-2a159694-6799-4be7-a0aa-572757c94801",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "2a159694-6799-4be7-a0aa-572757c94801"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft ins Haar und in die Kopfhaut einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1559585/langhaarmaedchen-conditioner-lovely-long",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "product_name": "Neqi Repair Reveal Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://neqi-hair.com/products/repair-reveal-conditioner",
+          "text": "Exact source evidence for Neqi Repair Reveal Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-35ae622e-1458-42bf-a44d-1b23ecfd5516",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "35ae622e-1458-42bf-a44d-1b23ecfd5516"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche in die Haarlängen einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://neqi-hair.com/products/repair-reveal-conditioner",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "product_name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+          "text": "Exact source evidence for Langhaarmädchen Beautiful Curls Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "35d81c4a-dbb0-474b-a068-2e1562adb0a8"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft in die feuchten Längen und Spitzen einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "product_name": "Hask Curl Care Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+          "text": "Exact source evidence for Hask Curl Care Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "37c65daf-cc2e-44ba-a976-ac0239c11f7d"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf nasses Haar auftragen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "1–2 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "product_name": "Dejan Garz The Foundation Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.dejangarz.com/products/conditioner",
+          "text": "Exact source evidence for Dejan Garz The Foundation Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use and amount evidence (passend zu Haarstruktur und -dichte dosieren).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-3901b2cf-6888-4363-9d5b-a695c0b3170b",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "3901b2cf-6888-4363-9d5b-a695c0b3170b"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "passend zu Haarstruktur und -dichte dosieren"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "prepare-conditioner",
+            "action": "section",
+            "copyTemplateDe": "Frisch gewaschenes Haar leicht ausdrücken oder vorsichtig antrocknen."
+          },
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Passend zur Haarstruktur dosieren und in Längen und Spitzen auftragen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Bis zu 1 Minute einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dejangarz.com/products/conditioner",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "product_name": "Hair Biology Full & Shining Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+          "text": "Exact source evidence for Hair Biology Full & Shining Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-4506954b-128a-473c-866f-54a300ff23f4",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "4506954b-128a-473c-866f-54a300ff23f4"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach dem Waschen auf das nasse Haar auftragen und bis in die Spitzen einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "product_name": "Balea Med Ultra Sensitive Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+          "text": "Exact source evidence for Balea Med Ultra Sensitive Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "483b41d6-632c-4efe-9bcc-488c80bf5bb7"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche in das feuchte Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "product_name": "Garnier Hair Food Macadamia",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+          "text": "Exact source evidence for Garnier Hair Food Macadamia: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-4c3e1a63-4696-406a-be67-f2aacc678b0c",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "4c3e1a63-4696-406a-be67-f2aacc678b0c"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Als Spülung auf das nasse Haar auftragen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "product_name": "Herbal Essences Aloe Vera Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.ohfeliz.de/herbal-essences/pflegespuelung-feuchtigkeit-aloe-vera",
+          "text": "Exact source evidence for Herbal Essences Aloe Vera Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche gleichmäßig im feuchten Haar verteilen, besonders in den Längen und Spitzen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Mit warmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.ohfeliz.de/herbal-essences/pflegespuelung-feuchtigkeit-aloe-vera",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "product_name": "OGX Biotin & Collagen Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+          "text": "Exact source evidence for OGX Biotin & Collagen Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use and amount evidence (eine großzügige Menge).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "eine großzügige Menge"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche großzügig im gesamten Haar bis in die Spitzen verteilen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "3–5 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Dann gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "product_name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/feuchtigkeits-spuelung-mit-aloe-vera",
+          "text": "Exact source evidence for Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung: conditioner rinse out protocol; lengths-and-ends application; rinse-out use and amount evidence (eine ausreichende Menge).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-5516009a-eecb-42dd-87f6-07c560161136",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "5516009a-eecb-42dd-87f6-07c560161136"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "eine ausreichende Menge"
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Nach der Haarwäsche eine ausreichende Menge in die feuchten Haarlängen und Spitzen einarbeiten."
+          },
+          {
+            "stepKey": "massage-conditioner",
+            "action": "tool",
+            "copyTemplateDe": "Sanft einmassieren."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/feuchtigkeits-spuelung-mit-aloe-vera",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "product_name": "Bali Curls Moisturising Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.bali-care.com/de-de/products/moisturizing-conditioner",
+          "text": "Exact source evidence for Bali Curls Moisturising Conditioner: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-63239c38-5633-4062-9e8d-d528ee71502a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "63239c38-5633-4062-9e8d-d528ee71502a"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft auf das nasse Haar auftragen."
+          },
+          {
+            "stepKey": "wait-conditioner",
+            "action": "wait",
+            "copyTemplateDe": "2–3 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "detangle-conditioner",
+            "action": "tool",
+            "copyTemplateDe": "Locken mit den Fingern oder einer lockenfreundlichen Bürste entwirren."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Mit lauwarmem Wasser gut ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.bali-care.com/de-de/products/moisturizing-conditioner",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "product_name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "role": "conditioner_rinse_out",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+          "text": "Exact source evidence for Pantene Pro-V Miracles Bond Repair Conditioner: conditioner rinse out protocol; lengths-and-ends application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-conditioner-71d9bccb-74c7-499c-b5de-13ceef57ecde",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "conditioner",
+          "productId": "71d9bccb-74c7-499c-b5de-13ceef57ecde"
+        },
+        "role": "condition",
+        "applicationFamily": "standard_rinse_out_conditioning",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "post_cleanse_rinse_off",
+          "before": [],
+          "after": [
+            "wet_cleanse"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-conditioner",
+            "action": "apply_product",
+            "copyTemplateDe": "Als Pflegespülung in die Längen geben."
+          },
+          {
+            "stepKey": "rinse-conditioner",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "product_name": "Cantu Leave-In Repair Cream",
+      "role": "conditioner_rinse_out",
+      "research_status": "blocked_missing_direction",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme",
+          "text": "Blocked exact source evidence for Cantu Leave-In Repair Cream: Exact product is a leave-in repair cream with explicit no-rinse directions; no conditioner_rinse_out protocol should be created under the current Conditioner role.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.cantubeauty.com/search/leave-in-conditioning-cream/?term=repair+cream",
+          "text": "Blocked exact source evidence for Cantu Leave-In Repair Cream: Exact product is a leave-in repair cream with explicit no-rinse directions; no conditioner_rinse_out protocol should be created under the current Conditioner role.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Exact product is a leave-in repair cream with explicit no-rinse directions; no conditioner_rinse_out protocol should be created under the current Conditioner role."
+      ]
+    }
+  ]
+}

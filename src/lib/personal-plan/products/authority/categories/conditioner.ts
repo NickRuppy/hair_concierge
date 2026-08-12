@@ -37,6 +37,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
     }
   if (
     facts.suitableThicknesses?.length &&
+    facts.spec.thickness !== null &&
     !facts.suitableThicknesses.includes(facts.spec.thickness ?? "")
   )
     return {
@@ -52,15 +53,30 @@ function evaluateFacts(input: Stage3AuthorityInput<"conditioner">, facts: Stage3
     }
   if (!target || target.category !== "conditioner")
     return { verdict: "mismatch" as const, criteria }
+  const protocol = facts.protocols.find((candidate) => candidate.role === input.role)
+  if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
+  if (facts.spec.targetFit === "unknown") missing.push("conditioner.target_fit")
+  if (facts.spec.targetFit === "known_mismatch" && missing.length === 0) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "conditioner.role",
+          "Conditioner-Zielprofil",
+          "fail",
+          "Das Produkt deckt das erforderliche Conditioner-Zielprofil nicht ab.",
+        ),
+      ],
+    }
+  }
   for (const [key, value] of Object.entries({
-    thickness: facts.spec.thickness,
+    thickness: facts.spec.targetFit === "matched" ? facts.spec.thickness : "not_required",
     weight: facts.spec.weight,
-    protein_moisture_balance: facts.spec.proteinMoistureBalance,
+    protein_moisture_balance:
+      facts.spec.targetFit === "matched" ? facts.spec.proteinMoistureBalance : "not_required",
     repair_support_level: facts.spec.repairSupportLevel,
   }))
     if (value === null) missing.push(key)
-  const protocol = facts.protocols.find((candidate) => candidate.role === input.role)
-  if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
   if (missing.length) return { verdict: "unknown" as const, criteria, missing }
   const weightDistance = Math.abs(
     WEIGHTS.indexOf(facts.spec.weight as (typeof WEIGHTS)[number]) - WEIGHTS.indexOf(target.weight),

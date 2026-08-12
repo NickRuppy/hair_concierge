@@ -55,7 +55,11 @@ test("Heat package accepts the seven reviewed manifests with no fabricated thick
   assert.equal(manifests.length, 7)
   const products = manifests.map(({ manifest: rawManifest }) => {
     const manifest = asHeatManifest(rawManifest)
-    const validation = validateCatalogEnrichmentManifest(manifest)
+    const validation = validateCatalogEnrichmentManifest(
+      manifest,
+      undefined,
+      "legacy_personal_plan_launch_v1",
+    )
     assert.equal(validation.ok, true)
     const finalPayload = manifest.product_payload.final
     const categoryPayload = manifest.category_payload

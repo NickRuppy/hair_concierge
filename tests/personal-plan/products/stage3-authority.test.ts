@@ -107,6 +107,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
           shampooBucket: "normal",
           scalpRoute: "balanced",
           cleansingIntensity: "medium",
+          targetFit: "matched",
         },
       }
     case "conditioner":
@@ -119,6 +120,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
           weight: "light",
           repairSupportLevel: "medium",
           balanceDirection: "moisture",
+          targetFit: "matched",
         },
       }
     case "leave_in":
@@ -145,6 +147,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
         spec: {
           roleSupport: { dry_finish: true },
           weight: "light",
+          targetThicknessEligible: true,
           providesHeatProtection: false,
         },
       }
@@ -206,9 +209,11 @@ function unknownFacts(category: PersonalPlanCategory): Stage3CategoryProductFact
   switch (facts.category) {
     case "shampoo":
       facts.spec.scalpRoute = null
+      facts.spec.targetFit = "unknown"
       break
     case "conditioner":
       facts.spec.weight = null
+      facts.spec.targetFit = "unknown"
       break
     case "leave_in":
       facts.spec.roles = null
@@ -217,7 +222,7 @@ function unknownFacts(category: PersonalPlanCategory): Stage3CategoryProductFact
       facts.spec.providesHeatProtection = null
       break
     case "oil":
-      facts.spec.roleSupport = {}
+      facts.spec.roleSupport = { dry_finish: null }
       break
     case "mask":
       facts.spec.repairSupportLevel = null
@@ -392,18 +397,315 @@ test("only owned-fit authority policies advance for this semantic correction", (
       ]),
     ),
     {
-      shampoo: "personal-plan.shampoo.v2",
-      conditioner: "personal-plan.conditioner.v2",
-      leave_in: "personal-plan.leave-in.v2",
+      shampoo: "personal-plan.shampoo.v3",
+      conditioner: "personal-plan.conditioner.v3",
+      leave_in: "personal-plan.leave-in.v3",
       heat_protectant: "personal-plan.heat-protectant.v1",
-      oil: "personal-plan.oil.v1",
-      mask: "personal-plan.mask.v2",
+      oil: "personal-plan.oil.v2",
+      mask: "personal-plan.mask.v3",
       scalp_care: "personal-plan.scalp-care.v1",
       dry_shampoo: "personal-plan.dry-shampoo.v1",
       bondbuilder: "personal-plan.bondbuilder.v2",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
     },
   )
+})
+
+test("Shampoo with complete nonmatching semantic facts is a known mismatch, not unknown", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  if (shampooInput.productFacts?.category !== "shampoo") throw new Error("expected Shampoo fixture")
+  shampooInput.productFacts.spec = {
+    thickness: null,
+    shampooBucket: null,
+    scalpRoute: null,
+    cleansingIntensity: null,
+    targetFit: "known_mismatch",
+  }
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.ok(result.criteria.some((criterion) => criterion.criterionId === "shampoo.role"))
+})
+
+test("Shampoo known mismatch can use its exact verified supported-role protocol", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  if (shampooInput.productFacts?.category !== "shampoo") throw new Error("expected Shampoo fixture")
+  shampooInput.role = "shampoo_dandruff"
+  shampooInput.productFacts.protocols = [
+    {
+      role: "shampoo_everyday",
+      status: "verified_complete",
+      fingerprint: "exact-everyday-protocol",
+    },
+  ]
+  shampooInput.productFacts.spec = {
+    thickness: null,
+    shampooBucket: null,
+    scalpRoute: null,
+    cleansingIntensity: null,
+    targetFit: "known_mismatch",
+  }
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.ok(result.criteria.some((criterion) => criterion.criterionId === "shampoo.role"))
+})
+
+test("Shampoo with ambiguous or incomplete semantic facts remains unknown", () => {
+  const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
+  if (shampooInput.productFacts?.category !== "shampoo") throw new Error("expected Shampoo fixture")
+  shampooInput.productFacts.spec.targetFit = "unknown"
+  shampooInput.productFacts.spec.shampooBucket = null
+
+  const result = evaluateStage3Authority(shampooInput as never)
+
+  assert.equal(result.status, "unknown")
+  if (result.status !== "unknown") return
+  assert.ok(result.missingFacts.includes("shampoo.target_fit"))
+})
+
+test("Conditioner with complete nonmatching semantic facts is a known mismatch, not unknown", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  if (conditionerInput.productFacts?.category !== "conditioner") {
+    throw new Error("expected Conditioner fixture")
+  }
+  conditionerInput.productFacts.spec = {
+    thickness: null,
+    proteinMoistureBalance: null,
+    weight: "light",
+    repairSupportLevel: "medium",
+    balanceDirection: "moisture",
+    targetFit: "known_mismatch",
+  }
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.ok(result.criteria.some((criterion) => criterion.criterionId === "conditioner.role"))
+})
+
+test("Conditioner with ambiguous or incomplete semantic facts remains unknown", () => {
+  const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
+  if (conditionerInput.productFacts?.category !== "conditioner") {
+    throw new Error("expected Conditioner fixture")
+  }
+  conditionerInput.productFacts.spec.targetFit = "unknown"
+  conditionerInput.productFacts.spec.proteinMoistureBalance = null
+
+  const result = evaluateStage3Authority(conditionerInput as never)
+
+  assert.equal(result.status, "unknown")
+  if (result.status !== "unknown") return
+  assert.ok(result.missingFacts.includes("conditioner.target_fit"))
+})
+
+test("Oil v2 distinguishes known unsupported roles from missing role support", () => {
+  const unsupportedInput = input("oil", "known") as Stage3AuthorityInput<"oil">
+  if (unsupportedInput.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
+  unsupportedInput.productFacts.spec.roleSupport = {
+    pre_wash_fibre_treatment: true,
+    leave_on_fibre_conditioning: false,
+    dry_finish: false,
+  }
+  unsupportedInput.productFacts.spec.weight = "light"
+  unsupportedInput.productFacts.spec.targetThicknessEligible = true
+
+  const unsupported = evaluateStage3Authority(unsupportedInput as never)
+  assert.equal(unsupported.status, "known")
+  if (unsupported.status !== "known") return
+  assert.equal(unsupported.verdict, "mismatch")
+
+  const missingInput = structuredClone(unsupportedInput) as Stage3AuthorityInput<"oil">
+  if (missingInput.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
+  missingInput.productFacts.spec.roleSupport = { dry_finish: null }
+  const missing = evaluateStage3Authority(missingInput as never)
+  assert.equal(missing.status, "unknown")
+  if (missing.status !== "unknown") return
+  assert.ok(missing.missingFacts.includes("oil.role_support"))
+})
+
+test("Oil v2 requires explicit leave-on support, canonical weight, and target-thickness eligibility", () => {
+  const oilInput = input("oil", "known") as Stage3AuthorityInput<"oil">
+  oilInput.role = "leave_on_fibre_conditioning"
+  oilInput.subjectKey = "decision:oil:leave_on_fibre_conditioning:owned-1"
+  oilInput.categoryDecision.roles = ["leave_on_fibre_conditioning"]
+  oilInput.categoryDecision.target = {
+    category: "oil",
+    roles: ["leave_on_fibre_conditioning"],
+    roleTargets: [
+      {
+        role: "leave_on_fibre_conditioning",
+        tier: "basis",
+        weight: "light",
+        functionalBenefits: [],
+      },
+    ],
+  } as never
+  if (oilInput.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
+  oilInput.productFacts.protocols = [
+    {
+      role: "leave_on_fibre_conditioning",
+      status: "verified_complete",
+      fingerprint: "protocol-oil-leave-on",
+    },
+  ]
+  oilInput.productFacts.spec.roleSupport = {
+    leave_on_fibre_conditioning: true,
+    dry_finish: false,
+    pre_wash_fibre_treatment: false,
+  }
+  oilInput.productFacts.spec.weight = "light"
+  oilInput.productFacts.spec.targetThicknessEligible = true
+
+  const ideal = evaluateStage3Authority(oilInput as never)
+  assert.equal(ideal.status, "known")
+  if (ideal.status !== "known") return
+  assert.equal(ideal.verdict, "ideal")
+
+  const noWeight = structuredClone(oilInput) as Stage3AuthorityInput<"oil">
+  if (noWeight.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
+  noWeight.productFacts.spec.weight = null
+  const missingWeight = evaluateStage3Authority(noWeight as never)
+  assert.equal(missingWeight.status, "unknown")
+  if (missingWeight.status !== "unknown") return
+  assert.ok(missingWeight.missingFacts.includes("oil.weight"))
+
+  const wrongThickness = structuredClone(oilInput) as Stage3AuthorityInput<"oil">
+  if (wrongThickness.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
+  wrongThickness.productFacts.spec.targetThicknessEligible = false
+  const mismatch = evaluateStage3Authority(wrongThickness as never)
+  assert.equal(mismatch.status, "known")
+  if (mismatch.status !== "known") return
+  assert.equal(mismatch.verdict, "mismatch")
+})
+
+test("Mask v3 evaluates complete canonical facts as ideal, supportive, or mismatch", () => {
+  const idealInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  idealInput.categoryDecision.target = {
+    category: "mask",
+    roles: ["intensive_conditioning_mask"],
+    needStrength: "standard",
+    weight: "light",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+    functionalNeeds: [
+      {
+        need: "detangling_slip",
+        priority: 2,
+        ownership: "required",
+      },
+    ],
+  }
+  if (!idealInput.productFacts || idealInput.productFacts.category !== "mask") {
+    throw new Error("expected Mask fixture")
+  }
+  idealInput.productFacts.spec.functionalBenefits = ["detangling_slip"]
+
+  const ideal = evaluateStage3Authority(idealInput as never)
+  assert.equal(ideal.status, "known")
+  if (ideal.status !== "known") return
+  assert.equal(ideal.verdict, "ideal")
+
+  const supportiveInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
+  if (supportiveInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
+  supportiveInput.productFacts.spec.weight = "medium"
+  const supportive = evaluateStage3Authority(supportiveInput as never)
+  assert.equal(supportive.status, "known")
+  if (supportive.status !== "known") return
+  assert.equal(supportive.verdict, "supportive")
+
+  const mismatchInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
+  if (mismatchInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
+  mismatchInput.productFacts.spec.functionalBenefits = ["shine"]
+  const mismatch = evaluateStage3Authority(mismatchInput as never)
+  assert.equal(mismatch.status, "known")
+  if (mismatch.status !== "known") return
+  assert.equal(mismatch.verdict, "mismatch")
+})
+
+test("Mask v3 fails closed when required canonical functional benefits are missing", () => {
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  maskInput.categoryDecision.target = {
+    category: "mask",
+    roles: ["intensive_conditioning_mask"],
+    needStrength: "standard",
+    weight: "light",
+    careDirection: "moisture",
+    repairSupportLevel: "medium",
+    functionalNeeds: [
+      {
+        need: "detangling_slip",
+        priority: 2,
+        ownership: "required",
+      },
+    ],
+  }
+  if (maskInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
+  maskInput.productFacts.spec.functionalBenefits = null
+
+  const result = evaluateStage3Authority(maskInput as never)
+
+  assert.equal(result.status, "unknown")
+  if (result.status !== "unknown") return
+  assert.ok(result.missingFacts.includes("mask.functional_benefits"))
+})
+
+test("Leave-in v3 evaluates towel-dry post-wash facts and repair support deterministically", () => {
+  const idealInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  idealInput.categoryDecision.target = {
+    category: "leave_in",
+    roles: ["post_wash_leave_in"],
+    weight: "light",
+    careDirection: "moisture",
+    repairSupportLevel: "high",
+    functions: [
+      {
+        function: "detangle",
+        priority: 3,
+        ownership: "required",
+      },
+    ],
+    conditionerReplacementEligible: false,
+  }
+  if (!idealInput.productFacts || idealInput.productFacts.category !== "leave_in") {
+    throw new Error("expected Leave-in fixture")
+  }
+  idealInput.productFacts.spec.repairSupportLevel = "high"
+  idealInput.productFacts.spec.careBenefits = ["detangle"]
+  idealInput.productFacts.spec.applicationStages = ["towel_dry"]
+
+  const ideal = evaluateStage3Authority(idealInput as never)
+  assert.equal(ideal.status, "known")
+  if (ideal.status !== "known") return
+  assert.equal(ideal.verdict, "ideal")
+
+  const supportiveInput = structuredClone(idealInput) as Stage3AuthorityInput<"leave_in">
+  if (supportiveInput.productFacts?.category !== "leave_in") {
+    throw new Error("expected Leave-in fixture")
+  }
+  supportiveInput.productFacts.spec.weight = "medium"
+  const supportive = evaluateStage3Authority(supportiveInput as never)
+  assert.equal(supportive.status, "known")
+  if (supportive.status !== "known") return
+  assert.equal(supportive.verdict, "supportive")
+
+  const mismatchInput = structuredClone(idealInput) as Stage3AuthorityInput<"leave_in">
+  if (mismatchInput.productFacts?.category !== "leave_in") {
+    throw new Error("expected Leave-in fixture")
+  }
+  mismatchInput.productFacts.spec.repairSupportLevel = "low"
+  const mismatch = evaluateStage3Authority(mismatchInput as never)
+  assert.equal(mismatch.status, "known")
+  if (mismatch.status !== "known") return
+  assert.equal(mismatch.verdict, "mismatch")
 })
 
 test("verified integrated heat carriers suppress a duplicate standalone recommendation", () => {

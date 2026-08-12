@@ -43,6 +43,11 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
   const criteria: Stage3CriterionResult[] = []
   const missing = commonUnknownFacts({ ...input, productFacts: facts })
   const protocol = facts.protocols.find((candidate) => candidate.role === input.role) ?? null
+  const hasVerifiedShampooProtocol = facts.protocols.some(
+    (candidate) =>
+      (candidate.role === "shampoo_everyday" || candidate.role === "shampoo_dandruff") &&
+      candidate.status === "verified_complete",
+  )
 
   if (isInactiveOrRetired({ ...input, productFacts: facts })) {
     return {
@@ -72,6 +77,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
   }
   if (
     facts.suitableThicknesses?.length &&
+    facts.spec.thickness !== null &&
     !facts.suitableThicknesses.includes(facts.spec.thickness ?? "")
   ) {
     return {
@@ -88,13 +94,35 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
   }
   if (!target || target.category !== "shampoo") return { verdict: "mismatch" as const, criteria }
 
-  if (facts.spec.thickness === null) missing.push("shampoo.thickness")
-  if (facts.spec.shampooBucket === null) missing.push("shampoo_bucket")
-  if (facts.spec.scalpRoute === null) missing.push("scalp_route")
-  if (facts.spec.cleansingIntensity === null) missing.push("cleansing_intensity")
-  if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
+  if (
+    facts.spec.targetFit === "known_mismatch"
+      ? !hasVerifiedShampooProtocol
+      : !protocol || protocol.status !== "verified_complete"
+  ) {
+    missing.push("verified_protocol")
+  }
   const requiredBucket = expectedShampooBucket({ role: input.role, target })
   if (requiredBucket === null) missing.push("shampoo_bucket_target")
+  if (facts.spec.targetFit === "unknown") missing.push("shampoo.target_fit")
+  if (facts.spec.targetFit === "known_mismatch" && missing.length === 0) {
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "shampoo.role",
+          "Reinigungsaufgabe",
+          "fail",
+          "Das Produkt deckt die erforderliche Shampoo-Aufgabe nicht ab.",
+        ),
+      ],
+    }
+  }
+  if (facts.spec.targetFit === "matched") {
+    if (facts.spec.thickness === null) missing.push("shampoo.thickness")
+    if (facts.spec.shampooBucket === null) missing.push("shampoo_bucket")
+    if (facts.spec.scalpRoute === null) missing.push("scalp_route")
+    if (facts.spec.cleansingIntensity === null) missing.push("cleansing_intensity")
+  }
   if (missing.length) return { verdict: "unknown" as const, criteria, missing }
 
   if (facts.spec.shampooBucket !== requiredBucket) {

@@ -1,0 +1,691 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-09-scalp-canonical-protocols",
+  "category_key": "scalp_care",
+  "products": [
+    {
+      "product_id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "product_name": "ISANA Professional Kopfhautpeeling Tiefenreinigung",
+      "role": "scalp_exfoliant",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Rossmann Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+          "text": "Exact source evidence for ISANA Professional Kopfhautpeeling Tiefenreinigung: scalp exfoliant protocol; scalp/root-zone application; rinse-out use with a 15-minute contact time.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-2544de60-e295-47ec-98a1-6b4ca58ce4be",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "2544de60-e295-47ec-98a1-6b4ca58ce4be"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "rinse_off_scalp_care",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "pre_wash",
+          "before": [
+            "wet_cleanse"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [
+            "contact_time"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 900,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-isana-scalp-peeling",
+            "action": "apply_product",
+            "copyTemplateDe": "Das Peeling auf die Kopfhaut auftragen und leicht einmassieren."
+          },
+          {
+            "stepKey": "wait-isana-scalp-peeling",
+            "action": "wait",
+            "copyTemplateDe": "15 bis 20 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-isana-scalp-peeling",
+            "action": "rinse",
+            "copyTemplateDe": "Anschließend mit Shampoo ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "product_name": "Balea Professional Kopfhautpflege Serum Sensitive",
+      "role": "scalp_comfort",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive",
+          "text": "Exact source evidence for Balea Professional Kopfhautpflege Serum Sensitive: scalp comfort protocol; scalp/root-zone application; rinse-out use and amount evidence (Direkt auf betroffene Kopfhautstellen auftragen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_timing",
+        "copy_de": "Abends anwenden; morgens auswaschen."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "leave_on_scalp_care",
+        "compatibleDayTypes": [
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Direkt auf betroffene Kopfhautstellen auftragen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-balea-sensitive-scalp",
+            "action": "apply_product",
+            "copyTemplateDe": "Abends im trockenen Haar direkt auf betroffene Kopfhautstellen auftragen."
+          },
+          {
+            "stepKey": "massage-balea-sensitive-scalp",
+            "action": "tool",
+            "copyTemplateDe": "Leicht einmassieren."
+          },
+          {
+            "stepKey": "wash-balea-sensitive-scalp",
+            "action": "rinse",
+            "copyTemplateDe": "Am nächsten Morgen wie gewohnt Haare waschen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
+      "product_name": "L'Oréal Paris Elvital Fiber Booster Anti-Haarverlust Serum",
+      "role": "density_claim_tonic",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/2976343/l-oreal-paris-elvital-haarserum-fiber-booster-anti-haarverlust",
+          "text": "Exact source evidence for L'Oréal Paris Elvital Fiber Booster Anti-Haarverlust Serum: density claim tonic protocol; scalp/root-zone application; leave-in use without rinsing.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "weekly_range",
+        "copy_de": "5 bis 7 Mal pro Woche anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-3f3542c0-e82b-4306-a9e0-85df313a78cf",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "3f3542c0-e82b-4306-a9e0-85df313a78cf"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "leave_on_scalp_care",
+        "compatibleDayTypes": [
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "damp_leave_on",
+          "before": [],
+          "after": [
+            "post_rinse_towel_dry"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [
+            "weekly_cadence"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-loreal-fiber-booster",
+            "action": "apply_product",
+            "copyTemplateDe": "5 bis 7 Mal pro Woche mit dem Applikator direkt auf die Kopfhaut auftragen."
+          },
+          {
+            "stepKey": "massage-loreal-fiber-booster",
+            "action": "tool",
+            "copyTemplateDe": "Sanft in kreisenden Bewegungen einmassieren."
+          },
+          {
+            "stepKey": "leave-loreal-fiber-booster",
+            "action": "tool",
+            "copyTemplateDe": "Nicht ausspülen; nach Shampoo und Spülung verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2976343/l-oreal-paris-elvital-haarserum-fiber-booster-anti-haarverlust",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+      "product_name": "The Ordinary Multi-Peptide Serum for Hair Density",
+      "role": "density_claim_tonic",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "The Ordinary Produktseite",
+          "url": "https://theordinary.com/de-de/multi-peptide-serum-for-hair-density-hair-scalp-treatment-100434.html",
+          "text": "Exact source evidence for The Ordinary Multi-Peptide Serum for Hair Density: density claim tonic protocol; scalp/root-zone application; leave-in use without rinsing and amount evidence (Ein paar Tropfen verwenden.).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "daily",
+        "copy_de": "Einmal täglich, idealerweise vor dem Schlafengehen."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "58aa2f19-b23a-4e09-ab0f-68c359371c9e"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "leave_on_scalp_care",
+        "compatibleDayTypes": [
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [
+            "daily_cadence"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Ein paar Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-ordinary-peptide-scalp",
+            "action": "apply_product",
+            "copyTemplateDe": "Einmal täglich, idealerweise vor dem Schlafengehen, ein paar Tropfen gründlich in die saubere, trockene Kopfhaut einmassieren."
+          },
+          {
+            "stepKey": "leave-ordinary-peptide-scalp",
+            "action": "tool",
+            "copyTemplateDe": "Als Leave-in im Haar lassen und Haare sowie Kopfhaut nach der Anwendung nicht waschen."
+          },
+          {
+            "stepKey": "caution-ordinary-peptide-scalp",
+            "action": "section",
+            "copyTemplateDe": "Nur auf unversehrter Haut verwenden; bei Reizungen sofort abspülen und die Anwendung einstellen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://theordinary.com/de-de/multi-peptide-serum-for-hair-density-hair-scalp-treatment-100434.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+      "product_name": "Schwarzkopf Gliss Scalp Balance Klärendes Serum",
+      "role": "scalp_flake_oil_adjunct",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+          "text": "Exact source evidence for Schwarzkopf Gliss Scalp Balance Klärendes Serum: scalp flake oil adjunct protocol; scalp/root-zone application; leave-in use without rinsing.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "daily",
+        "copy_de": "Täglich nach der Haarwäsche oder zwischen den Haarwäschen möglich."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "945ecca3-c4f0-4426-9af5-a5a8482b3b27"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "leave_on_scalp_care",
+        "compatibleDayTypes": [
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "damp_leave_on",
+          "before": [],
+          "after": [
+            "post_rinse_towel_dry"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [
+            "daily_cadence"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "section-gliss-scalp",
+            "action": "section",
+            "copyTemplateDe": "Das Haar scheitelweise abteilen."
+          },
+          {
+            "stepKey": "apply-gliss-scalp",
+            "action": "apply_product",
+            "copyTemplateDe": "Direkt auf nasse oder trockene Kopfhaut auftragen, bis die Kopfhaut bedeckt ist."
+          },
+          {
+            "stepKey": "leave-gliss-scalp",
+            "action": "tool",
+            "copyTemplateDe": "Einmassieren, nicht ausspülen und die Haare danach wie gewohnt stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+      "product_name": "Head & Shoulders Derma x Pro Kopfhaut-Feuchtigkeitspflege Leave-In Serum",
+      "role": "scalp_comfort",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
+          "text": "Exact source evidence for Head & Shoulders Derma x Pro Kopfhaut-Feuchtigkeitspflege Leave-In Serum: scalp comfort protocol; scalp/root-zone application; leave-in use without rinsing.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "leave_on_scalp_care",
+        "compatibleDayTypes": [
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-head-shoulders-scalp-serum",
+            "action": "apply_product",
+            "copyTemplateDe": "Leave-In Serum auf die Kopfhaut auftragen."
+          },
+          {
+            "stepKey": "leave-head-shoulders-scalp-serum",
+            "action": "tool",
+            "copyTemplateDe": "Nicht ausspülen."
+          },
+          {
+            "stepKey": "caution-head-shoulders-scalp-serum",
+            "action": "section",
+            "copyTemplateDe": "Nur wie beschrieben verwenden und Kontakt mit den Augen vermeiden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "product_name": "Eucerin DermoCapillaire Urea Kopfhautberuhigendes Intensiv-Tonikum",
+      "role": "scalp_comfort",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Eucerin Produktseite",
+          "url": "https://www.eucerin.de/produkte/dermocapillaire/kopfhautberuhigendes-urea-intensiv-tonikum",
+          "text": "Exact source evidence for Eucerin DermoCapillaire Urea Kopfhautberuhigendes Intensiv-Tonikum: scalp comfort protocol; scalp/root-zone application; leave-in use without rinsing.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "daily_or_twice_daily_as_needed",
+        "copy_de": "Täglich anwenden; bei Bedarf morgens und abends."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-cd76afea-d332-4b1d-b44b-7de5bef9034f",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "cd76afea-d332-4b1d-b44b-7de5bef9034f"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "leave_on_scalp_care",
+        "compatibleDayTypes": [
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [
+            "daily_cadence"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-eucerin-scalp-tonic",
+            "action": "apply_product",
+            "copyTemplateDe": "Täglich auf trockener oder feuchter Kopfhaut anwenden; bei Bedarf morgens und abends."
+          },
+          {
+            "stepKey": "leave-eucerin-scalp-tonic",
+            "action": "tool",
+            "copyTemplateDe": "Nicht ausspülen und Augenkontakt vermeiden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.eucerin.de/produkte/dermocapillaire/kopfhautberuhigendes-urea-intensiv-tonikum",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+      "product_name": "Balea Professional Kopfhautpflege Peeling Tiefenreinigung",
+      "role": "scalp_exfoliant",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+          "text": "Exact source evidence for Balea Professional Kopfhautpflege Peeling Tiefenreinigung: scalp exfoliant protocol; scalp/root-zone application; rinse-out use with a 15-minute contact time.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-scalp-care-e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "scalp_care",
+          "productId": "e51cfce0-fd76-4873-a868-cc3ca0301cbc"
+        },
+        "role": "scalp_care",
+        "applicationFamily": "rinse_off_scalp_care",
+        "compatibleDayTypes": [
+          "intensive_care_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "pre_wash",
+          "before": [
+            "wet_cleanse"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "primary_role",
+            "rinse_mode"
+          ],
+          "requiredProtocolFacts": [
+            "contact_time"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 900,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-balea-scalp-peeling",
+            "action": "apply_product",
+            "copyTemplateDe": "Das Peeling auf die Kopfhaut auftragen und anschließend leicht einmassieren."
+          },
+          {
+            "stepKey": "wait-balea-scalp-peeling",
+            "action": "wait",
+            "copyTemplateDe": "15 bis 20 Minuten einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-balea-scalp-peeling",
+            "action": "rinse",
+            "copyTemplateDe": "Anschließend mit Shampoo ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

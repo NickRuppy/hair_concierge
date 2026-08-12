@@ -31,6 +31,8 @@ test("database harness isolates its project and ports from a developer Supabase 
   assert.match(harness, /port = 55321/)
   assert.match(harness, /port = 55322/)
   assert.doesNotMatch(harness, /repository_supabase/)
+  assert.match(harness, /personal_plan_curated_publication_gate\.sql/)
+  assert.match(harness, /personal_plan_exact_catalog_bundle\.sql/)
 })
 
 function sha256(content: string): string {

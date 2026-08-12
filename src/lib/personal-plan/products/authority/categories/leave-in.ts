@@ -1,9 +1,11 @@
+import type { PlanRepairSupportLevel } from "@/lib/personal-plan/types"
+
+import type { Stage3CriterionResult } from "../../contracts"
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
   Stage3LeaveInFacts,
 } from "../contracts"
-import type { Stage3CriterionResult } from "../../contracts"
 import {
   commonUnknownFacts,
   criterion,
@@ -17,6 +19,17 @@ import {
 } from "../shared"
 
 const WEIGHTS = ["light", "medium", "rich"] as const
+const REPAIR_LEVELS: PlanRepairSupportLevel[] = ["low", "medium", "high"]
+
+function repairDistance(product: string, target: PlanRepairSupportLevel) {
+  return Math.abs(
+    REPAIR_LEVELS.indexOf(product as PlanRepairSupportLevel) - REPAIR_LEVELS.indexOf(target),
+  )
+}
+
+function supportsPostWashApplication(stages: readonly string[]) {
+  return stages.some((stage) => stage === "towel_dry" || stage === "damp" || stage === "wet")
+}
 
 function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3LeaveInFacts) {
   const target = input.categoryDecision.target
@@ -40,8 +53,9 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
   for (const [key, value] of Object.entries({
     weight: facts.spec.weight,
     care_direction: facts.spec.careDirection,
-    roles: facts.spec.roles,
-    application_stages: facts.spec.applicationStages,
+    repair_support_level: facts.spec.repairSupportLevel,
+    plan_roles: facts.spec.roles,
+    application_stage: facts.spec.applicationStages,
   }))
     if (value === null) missing.push(key)
   const requiredFunctions = target.functions
@@ -89,9 +103,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
     }
   if (
     input.role === "post_wash_leave_in" &&
-    !facts.spec.applicationStages?.some(
-      (stage) => stage === "damp" || stage === "wet" || stage === "either",
-    )
+    !supportsPostWashApplication(facts.spec.applicationStages ?? [])
   )
     return {
       verdict: "mismatch" as const,
@@ -101,6 +113,18 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
           "Anwendungszeitpunkt",
           "fail",
           "Die Anwendung auf feuchtem Haar ist nicht bestätigt.",
+        ),
+      ],
+    }
+  if (input.role === "pre_heat_application" && !facts.spec.applicationStages?.includes("pre_heat"))
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "leave_in.application",
+          "Anwendungszeitpunkt",
+          "fail",
+          "Die Anwendung vor Hitze ist nicht bestätigt.",
         ),
       ],
     }
@@ -119,6 +143,26 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
         ),
       ],
     }
+  const repairLevelDistance = repairDistance(
+    facts.spec.repairSupportLevel!,
+    target.repairSupportLevel,
+  )
+  if (
+    REPAIR_LEVELS.indexOf(facts.spec.repairSupportLevel as PlanRepairSupportLevel) <
+      REPAIR_LEVELS.indexOf(target.repairSupportLevel) &&
+    repairLevelDistance >= 2
+  )
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "leave_in.repair_support",
+          "Repair-Unterstützung",
+          "fail",
+          "Die Repair-Unterstützung liegt deutlich unter dem Ziel.",
+        ),
+      ],
+    }
   const opposite = new Set(["moisture:protein", "protein:moisture"])
   if (opposite.has(`${facts.spec.careDirection}:${target.careDirection}`))
     return {
@@ -134,6 +178,8 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
     }
   const supportive =
     weightDistance === 1 ||
+    repairLevelDistance === 1 ||
+    (facts.spec.repairSupportLevel === "high" && target.repairSupportLevel !== "high") ||
     facts.spec.careDirection === "balanced" ||
     target.careDirection === "balanced"
   return {

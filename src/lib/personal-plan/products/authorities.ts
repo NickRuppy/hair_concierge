@@ -17,21 +17,21 @@ const single = "single_product_per_role" as const
 export const CATEGORY_ROLE_POLICIES = {
   shampoo: {
     category: "shampoo",
-    authorityVersion: "personal-plan.shampoo.v2",
+    authorityVersion: "personal-plan.shampoo.v3",
     allowsMultiple: true,
     allowedRoles: ["shampoo_everyday", "shampoo_dandruff"],
     roleMultiplicity: { shampoo_everyday: single, shampoo_dandruff: single },
   },
   conditioner: {
     category: "conditioner",
-    authorityVersion: "personal-plan.conditioner.v2",
+    authorityVersion: "personal-plan.conditioner.v3",
     allowsMultiple: true,
     allowedRoles: ["conditioner_rinse_out"],
     roleMultiplicity: { conditioner_rinse_out: "multiple_products_per_role" },
   },
   leave_in: {
     category: "leave_in",
-    authorityVersion: "personal-plan.leave-in.v2",
+    authorityVersion: "personal-plan.leave-in.v3",
     allowsMultiple: true,
     allowedRoles: ["post_wash_leave_in", "pre_heat_application"],
     roleMultiplicity: { post_wash_leave_in: single, pre_heat_application: single },
@@ -45,7 +45,7 @@ export const CATEGORY_ROLE_POLICIES = {
   },
   oil: {
     category: "oil",
-    authorityVersion: "personal-plan.oil.v1",
+    authorityVersion: "personal-plan.oil.v2",
     allowsMultiple: true,
     allowedRoles: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
     roleMultiplicity: {
@@ -56,7 +56,7 @@ export const CATEGORY_ROLE_POLICIES = {
   },
   mask: {
     category: "mask",
-    authorityVersion: "personal-plan.mask.v2",
+    authorityVersion: "personal-plan.mask.v3",
     allowsMultiple: true,
     allowedRoles: ["intensive_conditioning_mask"],
     roleMultiplicity: { intensive_conditioning_mask: single },
