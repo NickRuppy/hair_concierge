@@ -2,6 +2,7 @@ import { z } from "zod"
 
 import type { JsonValue } from "./persistence"
 import type { InitialNeedPlanSnapshot } from "./types"
+import type { ProductCadenceAuthorityFact } from "./routine/cadence"
 
 const opaqueIdSchema = z.string().min(1)
 const boundedReasonCodeSchema = z.string().min(1).max(96)
@@ -87,6 +88,7 @@ export type RoutineCandidateCompilerInput = {
   portfolioSchemaVersion: number
   portfolioSnapshot: JsonValue
   refinedNeedSnapshot: InitialNeedPlanSnapshot
+  cadenceAuthorityFacts?: readonly ProductCadenceAuthorityFact[]
 }
 
 /**

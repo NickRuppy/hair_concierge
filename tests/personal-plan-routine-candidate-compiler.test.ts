@@ -189,8 +189,86 @@ test("initial Routine compilation is deterministic and excludes volatile portfol
     mask: CATEGORY_ROLE_POLICIES.mask.authorityVersion,
     oil: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
     portfolio: "personal-plan-product-portfolio.v1",
-    routine: "personal-plan-routine-compiler.v1",
+    routine: "personal-plan-routine-compiler.v2",
   })
+})
+
+test("freezes matching delegated exact cadence into the initial Routine and fingerprints its fact", async () => {
+  const bondPortfolio = {
+    ...portfolio(),
+    categoryResolutions: [
+      {
+        decisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        verdict: "ideal",
+        choiceState: "owned_active",
+        capturedProductId: "captured-bond",
+        executable: true,
+        gapPreserved: false,
+      },
+    ],
+    ownedProducts: [
+      {
+        capturedProductId: "captured-bond",
+        userProductId: "user-product-bond",
+        productId: "product-bond",
+        displayName: "Bondbuilder",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        frequencyRange: null,
+        choiceState: "owned_active",
+        sourceDecisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+      },
+    ],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [],
+  } as unknown as ProposedProductPortfolio
+  const snapshot = {
+    ...refinedNeedSnapshot,
+    decisions: [
+      {
+        category: "bondbuilder",
+        needTier: "optional",
+        roles: ["specialized_bond_treatment"],
+        frequency: { kind: "product_protocol_course" },
+        reasons: [{ id: "bond.protocol.v1" }],
+      },
+    ],
+  } as unknown as InitialNeedPlanSnapshot
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSnapshot: bondPortfolio as never,
+    refinedNeedSnapshot: snapshot,
+    cadenceAuthorityFacts: [
+      {
+        productId: "product-bond",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        cadence: { kind: "label_course", copy_de: "4 Anwendungen, dann 4 Haarwäschen Pause." },
+      },
+    ],
+  })
+  const payload = candidate.payload as Record<string, any>
+  assert.deepEqual(payload.items[0]?.cadence.resolved, {
+    copyDe: "4 Anwendungen, dann 4 Haarwäschen Pause.",
+    source: "exact_product_protocol",
+  })
+  const changed = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSnapshot: bondPortfolio as never,
+    refinedNeedSnapshot: snapshot,
+    cadenceAuthorityFacts: [
+      {
+        productId: "product-bond",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        cadence: { kind: "label_course", copy_de: "Andere Kursfolge." },
+      },
+    ],
+  })
+  assert.notEqual(candidate.sourceFingerprint, changed.sourceFingerprint)
 })
 
 test("initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering", async () => {

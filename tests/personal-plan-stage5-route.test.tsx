@@ -80,6 +80,7 @@ const shampooItem = {
   availability: "owned" as const,
   executable: true as const,
   catalogFacts: {},
+  effectiveCadenceDe: "Bei Bedarf",
 }
 
 const shampooProtocol = {
@@ -245,6 +246,9 @@ test("route has explicit no-active recovery, active success, unavailable direct 
   )
   assert.equal(activeFailures.length, 0, JSON.stringify(activeFailures))
   assert.equal(active.state, "ready")
+  if (active.state === "ready") {
+    assert.equal(active.days.find((day) => day.dayType === "wash_day")?.cadenceDe, "Bei Bedarf")
+  }
 
   const unavailableDay = await resolveAnwendungPage(readyDeps(), "refresh_day")
   assert.deepEqual(unavailableDay, { state: "day_unavailable", overviewHref: "/anwendung" })

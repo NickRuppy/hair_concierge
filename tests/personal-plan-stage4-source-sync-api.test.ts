@@ -4,6 +4,7 @@ import test from "node:test"
 import { createPersonalPlanRoutineSyncRouteHandlers } from "../src/app/api/personal-plan/routine/sync/route"
 import {
   createRoutineSourceSyncService,
+  resolveSuccessorRoutineCadences,
   type RoutineSourceSyncRepository,
 } from "../src/lib/personal-plan/routine/source-sync-service"
 import type { ProposedProductPortfolio } from "../src/lib/personal-plan/products/contracts"
@@ -371,6 +372,185 @@ test("two changed claims stage one complete deterministic successor delta", asyn
     base.routine.source.sourceFingerprint,
   )
   assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
+})
+
+test("successor cadence is re-resolved once after the complete acquisition batch", async () => {
+  const base = acquisitionBase()
+  const staged: Array<{ routine: RoutineCompiledPayload }> = []
+  let resolutionCalls = 0
+  const db = repository({
+    async claim() {
+      return [claimB, claim]
+    },
+    async loadBase() {
+      return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+    },
+    async loadUserProduct(_, sourceKey) {
+      return sourceKey === claim.sourceKey
+        ? {
+            id: sourceKey,
+            category: "shampoo",
+            catalogProductId: "product-a",
+            displayName: "Shampoo A",
+            identityStatus: "matched",
+            ownershipStatus: "owned",
+          }
+        : {
+            id: sourceKey,
+            category: "conditioner",
+            catalogProductId: "product-b",
+            displayName: "Conditioner B",
+            identityStatus: "matched",
+            ownershipStatus: "owned",
+          }
+    },
+    async stage(input) {
+      staged.push(input)
+      return "staged"
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    async resolveCadences(candidate) {
+      resolutionCalls += 1
+      assert.deepEqual(
+        candidate.items.map((item) => item.product.kind),
+        ["owned", "owned"],
+      )
+      const resolved = structuredClone(candidate)
+      resolved.items[0]!.cadence.resolved = {
+        copyDe: "2× pro Woche",
+        source: "category",
+      }
+      return resolved
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.deepEqual(result, {
+    status: "processed",
+    processed: 2,
+    deferred: 0,
+    proposalStaged: true,
+  })
+  assert.equal(resolutionCalls, 1)
+  assert.equal(staged.length, 1)
+  assert.equal(staged[0]?.routine.items[0]?.cadence.resolved?.copyDe, "2× pro Woche")
+})
+
+test("legacy cadence enrichment is not presented as a change to untouched Routine items", async () => {
+  const base = acquisitionBase()
+  // Match the source reconciler's stable projection for the untouched item so
+  // this fixture isolates cadence enrichment rather than pre-existing fixture drift.
+  base.routine.items[1]!.roleOrder = 0
+  base.routine.items[1]!.executable = false
+  const staged: Array<{ delta: unknown }> = []
+  const db = repository({
+    async loadBase() {
+      return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
+    },
+    async loadUserProduct() {
+      return {
+        id: claim.sourceKey,
+        category: "shampoo",
+        catalogProductId: "product-a",
+        displayName: "Shampoo A",
+        identityStatus: "matched",
+        ownershipStatus: "owned",
+      }
+    },
+    async stage(input) {
+      staged.push(input)
+      return "staged"
+    },
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    async resolveCadences(candidate) {
+      const resolved = structuredClone(candidate)
+      resolved.items = resolved.items.map((item) => ({
+        ...item,
+        cadence: {
+          ...item.cadence,
+          resolved: { copyDe: "Nach deinem Plan", source: "category" as const },
+        },
+      }))
+      return resolved
+    },
+  }).sync({ userId: "owner-a" })
+
+  assert.equal(result.status, "processed")
+  const delta = staged[0]?.delta as {
+    direct: Array<{ itemKey: string }>
+    consequential: Array<{ itemKey: string }>
+  }
+  assert.deepEqual(
+    delta.direct.map((entry) => entry.itemKey),
+    ["item-0"],
+  )
+  assert.deepEqual(delta.consequential, [])
+})
+
+test("successor cadence authority binds the acquired exact Bondbuilder course", async () => {
+  const base = acquisitionBase().routine
+  const successor = structuredClone(base)
+  successor.items = [
+    {
+      ...successor.items[0]!,
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      product: {
+        kind: "owned",
+        capturedProductId: "captured-bond",
+        productId: "product-bond",
+        displayName: "Bondbuilder",
+      },
+      cadence: {
+        recommended: {
+          kind: "product_protocol_course",
+          role: "specialized_bond_treatment",
+        },
+        userOverride: null,
+        displayKey: "personal_plan.cadence.product_protocol_course",
+        resolved: {
+          copyDe: "Nach Herstellerangabe",
+          source: "safe_generic_fallback",
+          gapCode: "exact_product_cadence_unavailable",
+        },
+      },
+    },
+  ]
+
+  let loads = 0
+  const resolved = await resolveSuccessorRoutineCadences({
+    routine: successor,
+    authorityReader: {
+      async load({ productIds }) {
+        loads += 1
+        assert.deepEqual(productIds, ["product-bond"])
+        return [
+          {
+            productId: "product-bond",
+            category: "bondbuilder",
+            role: "specialized_bond_treatment",
+            cadence: {
+              kind: "label_course",
+              copy_de: "Alle ein bis drei Haarwäschen anwenden.",
+            },
+          },
+        ]
+      },
+    },
+  })
+
+  assert.equal(loads, 1)
+  assert.deepEqual(resolved.items[0]?.cadence.resolved, {
+    copyDe: "Alle ein bis drei Haarwäschen anwenden.",
+    source: "exact_product_protocol",
+  })
+  assert.equal(resolved.source.compilerVersion, "personal-plan-routine-compiler.v2")
+  assert.equal(resolved.source.authorityVersions.routine, "personal-plan-routine-compiler.v2")
 })
 
 test("sync route authenticates before admin service construction and respects the composed gate", async () => {

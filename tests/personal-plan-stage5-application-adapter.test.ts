@@ -26,7 +26,7 @@ function activePayload(): RoutinePayloadV1 {
         product: { kind: "owned", productId, displayName: "Never sent to observability" },
       },
     ],
-  } as RoutinePayloadV1
+  } as unknown as RoutinePayloadV1
 }
 
 function plannedPayload(): RoutinePayloadV1 {
@@ -42,6 +42,12 @@ function plannedPayload(): RoutinePayloadV1 {
         roleOrder: 20,
         state: { inclusion: "included", availability: "planned" },
         executable: false,
+        cadence: {
+          recommended: null,
+          userOverride: null,
+          displayKey: "personal_plan.cadence.product_protocol_course",
+          resolved: { copyDe: "Alle drei Haarwäschen", source: "exact_product_protocol" },
+        },
         product: {
           kind: "planned",
           plannedPurchaseId: "purchase:conditioner",
@@ -50,7 +56,7 @@ function plannedPayload(): RoutinePayloadV1 {
         },
       },
     ],
-  } as RoutinePayloadV1
+  } as unknown as RoutinePayloadV1
 }
 
 function productClient(rows: unknown[] | null, error: unknown = null) {
@@ -123,19 +129,81 @@ test("Stage 5 adapter preserves a canonical planned product as provisional guida
 
   assert.equal(result.routineItems.length, 1)
   assert.deepEqual(
-    result.routineItems.map(({ productName, availability, executable, routineOrder }) => ({
-      productName,
-      availability,
-      executable,
-      routineOrder,
-    })),
+    result.routineItems.map(
+      ({ productName, availability, executable, routineOrder, effectiveCadenceDe }) => ({
+        productName,
+        availability,
+        executable,
+        routineOrder,
+        effectiveCadenceDe,
+      }),
+    ),
     [
       {
         productName: "Vorgemerkter Conditioner",
         availability: "planned",
         executable: false,
         routineOrder: 0,
+        effectiveCadenceDe: "Alle drei Haarwäschen",
       },
+    ],
+  )
+})
+
+test("Stage 5 adapter carries only the frozen effective cadence for resolved, override, and legacy accepted Routine items", async () => {
+  const payload = activePayload()
+  payload.items = [
+    {
+      ...payload.items[0]!,
+      itemKey: "item:resolved",
+      cadence: {
+        recommended: null,
+        userOverride: null,
+        displayKey: "personal_plan.cadence.product_protocol_course",
+        resolved: { copyDe: "Alle drei Haarwäschen", source: "exact_product_protocol" },
+      },
+    },
+    {
+      ...payload.items[0]!,
+      itemKey: "item:override",
+      cadence: {
+        recommended: null,
+        userOverride: "weekly_2x",
+        displayKey: "weekly_2x",
+        resolved: { copyDe: "Nicht anzeigen", source: "category" },
+      },
+    },
+    {
+      ...payload.items[0]!,
+      itemKey: "item:legacy",
+      cadence: {
+        recommended: { kind: "wet_wash_total", target: "weekly_2x" },
+        userOverride: null,
+        displayKey: "weekly_2x",
+      },
+    },
+  ] as never
+  const { client } = productClient([
+    {
+      id: productId,
+      category: "shampoo",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+    },
+  ])
+
+  const result = await adaptAcceptedActiveRoutineForApplication({
+    client,
+    activeVersion: { id: "routine-v1", payload },
+  })
+
+  assert.deepEqual(
+    result.routineItems.map(({ itemId, effectiveCadenceDe }) => ({ itemId, effectiveCadenceDe })),
+    [
+      { itemId: "item:resolved", effectiveCadenceDe: "Alle drei Haarwäschen" },
+      { itemId: "item:override", effectiveCadenceDe: "2× pro Woche" },
+      { itemId: "item:legacy", effectiveCadenceDe: "2× pro Woche" },
     ],
   )
 })

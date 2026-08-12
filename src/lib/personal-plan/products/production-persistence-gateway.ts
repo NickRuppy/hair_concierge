@@ -43,6 +43,7 @@ import type {
   RoutineCandidateCompiler,
   RoutineProposalStager,
 } from "@/lib/personal-plan/routine-proposal-stager"
+import type { RoutineCadenceAuthorityReader } from "@/lib/personal-plan/routine/cadence-authority"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type { Stage3DecisionSubject } from "./contracts"
 import type { Stage3AuthorityFactBundle } from "./authority/catalog-facts"
@@ -162,6 +163,7 @@ export type Stage3ProductionGatewayOptions = {
   /** Omitted in production until Stage 4 supplies the real compiler. */
   compiler?: RoutineCandidateCompiler
   stager?: RoutineProposalStager
+  cadenceAuthorityReader?: RoutineCadenceAuthorityReader
   now?: () => string
 }
 
@@ -596,6 +598,14 @@ export function createProductionStage3ProductsGateway(
       if (!options.compiler || !options.stager) {
         throw new Stage3ProductionUnavailableError()
       }
+      const cadenceAuthorityFacts = options.cadenceAuthorityReader
+        ? await options.cadenceAuthorityReader.load({
+            productIds: [
+              ...portfolio.ownedProducts.map((product) => product.productId),
+              ...portfolio.plannedPurchases.map((product) => product.productId),
+            ],
+          })
+        : []
       // SQL compares this freshly read source token while holding the plan row
       // lock before writing; active drafts were also re-evaluated above.
       const candidate = await options.compiler.compile({
@@ -607,6 +617,7 @@ export function createProductionStage3ProductsGateway(
         portfolioSchemaVersion: portfolio.schemaVersion,
         portfolioSnapshot: portfolio as never,
         refinedNeedSnapshot,
+        cadenceAuthorityFacts,
       })
       const staged = await options.stager.stage({
         userId: options.userId,

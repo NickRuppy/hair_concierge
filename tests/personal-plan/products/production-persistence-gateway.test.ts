@@ -787,6 +787,7 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
   let stageCalls = 0
   let compilerInput: Record<string, unknown> | null = null
   const sourceReadOrder: string[] = []
+  const cadenceReads: string[][] = []
   let releaseSnapshot!: () => void
   const snapshotPending = new Promise<void>((resolve) => {
     releaseSnapshot = resolve
@@ -828,6 +829,13 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
         }
       },
     },
+    cadenceAuthorityReader: {
+      load: async ({ productIds }) => {
+        sourceReadOrder.push("cadence")
+        cadenceReads.push([...productIds])
+        return []
+      },
+    },
     stager: {
       stage: async () => {
         stageCalls += 1
@@ -863,7 +871,9 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
   })
   assert.equal(sourceReadsStartedTogether, true)
   assert.deepEqual(sourceReadOrder.slice(0, 2).sort(), ["snapshot", "source-revision"])
-  assert.equal(sourceReadOrder[2], "compile")
+  assert.deepEqual(cadenceReads, [["catalog-a"]])
+  assert.deepEqual((compilerInput as Record<string, unknown>).cadenceAuthorityFacts, [])
+  assert.deepEqual(sourceReadOrder.slice(2), ["cadence", "compile"])
 })
 
 test("completion rehydrates canonical catalog identity before freezing the portfolio", async () => {

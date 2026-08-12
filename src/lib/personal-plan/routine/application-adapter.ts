@@ -1,6 +1,7 @@
 import "server-only"
 
 import type { RoutinePayloadV1 } from "./contracts"
+import { effectiveRoutineCadenceCopyDe } from "./cadence"
 import { adaptCatalogApplicationFacts } from "@/lib/routines/personal-plan/application/catalog-facts"
 import type {
   ApplicationGuidanceProtocolV1,
@@ -228,6 +229,14 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       category: item.category,
       role: semanticRoleByRoutineRole[item.role],
       sourceRoutineRole: item.role,
+      effectiveCadenceDe: effectiveRoutineCadenceCopyDe({
+        recommended: item.cadence?.recommended ?? null,
+        userOverride:
+          typeof item.cadence?.userOverride === "string" ? item.cadence.userOverride : null,
+        resolved: item.cadence?.resolved,
+        role: item.role,
+        displayKey: item.cadence?.displayKey,
+      }),
       inclusion: "included" as const,
       availability: item.product.kind === "owned" ? ("owned" as const) : ("planned" as const),
       executable: item.executable,

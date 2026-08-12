@@ -22,6 +22,7 @@ import {
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import { compileApplicationView } from "@/lib/routines/personal-plan/application/compiler"
+import { projectApplicationCadenceByDay } from "@/lib/routines/personal-plan/application/cadence-projector"
 import { createServerApplicationGuidanceRepository } from "@/lib/routines/personal-plan/application/repository"
 import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -130,6 +131,10 @@ export async function resolveAnwendungPage(
     const view = toApplicationPageView({
       compiled,
       dayDefinitions,
+      cadenceByDay: projectApplicationCadenceByDay({
+        routineItems: accepted.routineItems,
+        compiledDayKeys: compiled.days.map((day) => day.key),
+      }),
     })
     if (selectedDayType) {
       if (view.state === "ready" && view.days.some((day) => day.dayType === selectedDayType)) {

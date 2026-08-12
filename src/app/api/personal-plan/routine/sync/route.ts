@@ -13,6 +13,10 @@ import {
   createRoutineSourceSyncService,
   createSupabaseRoutineSourceSyncRepository,
 } from "@/lib/personal-plan/routine/source-sync-service"
+import {
+  createSupabaseRoutineCadenceAuthorityReader,
+  type RoutineCadenceAuthorityReadClient,
+} from "@/lib/personal-plan/routine/cadence-authority"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
@@ -54,10 +58,15 @@ const handlers = createPersonalPlanRoutineSyncRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-  service: () =>
-    createRoutineSourceSyncService({
-      repository: createSupabaseRoutineSourceSyncRepository(createAdminClient()),
-    }),
+  service: () => {
+    const admin = createAdminClient()
+    return createRoutineSourceSyncService({
+      repository: createSupabaseRoutineSourceSyncRepository(admin),
+      cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
+        admin as unknown as RoutineCadenceAuthorityReadClient,
+      ),
+    })
+  },
 })
 export const POST = async () => {
   const startedAt = performance.now()
