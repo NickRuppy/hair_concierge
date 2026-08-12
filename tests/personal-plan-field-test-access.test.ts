@@ -67,6 +67,7 @@ test("an active field-test enrollment uses its activation time without inventing
     paidAt: null,
     qualifiedAt: activeEnrollment.activated_at,
     artifactLeadId: activeEnrollment.lead_id,
+    quizSourceKind: "personal_plan",
     sourceKind: "field_test",
   })
 })

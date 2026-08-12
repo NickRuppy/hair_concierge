@@ -935,6 +935,7 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       delivery_reference: "delivery-1",
       delivered_at: "2026-08-08T00:00:00Z",
     },
+    leads: { quiz_kind: "personal_plan", user_id: "user-1" },
     personal_plan_prepared_artifacts: { id: "artifact-1" },
     personal_plans: {
       id: "plan-1",

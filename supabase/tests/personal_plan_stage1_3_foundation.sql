@@ -129,18 +129,36 @@ insert into auth.users (
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000003', 'authenticated', 'authenticated', 'personal-plan-c@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now()),
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000004', 'authenticated', 'authenticated', 'personal-plan-d@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now());
 
+insert into public.leads (
+  id, name, email, marketing_consent, quiz_answers, quiz_kind, user_id
+) values
+  ('91000000-0000-0000-0000-000000000001', '', 'personal-plan-a@example.invalid', false, '{}'::jsonb, 'personal_plan', '10000000-0000-0000-0000-000000000001'),
+  ('91000000-0000-0000-0000-000000000002', '', 'personal-plan-b@example.invalid', false, '{}'::jsonb, 'personal_plan', '10000000-0000-0000-0000-000000000002'),
+  ('91000000-0000-0000-0000-000000000003', '', 'personal-plan-c@example.invalid', false, '{}'::jsonb, 'personal_plan', '10000000-0000-0000-0000-000000000003'),
+  ('91000000-0000-0000-0000-000000000004', '', 'personal-plan-d@example.invalid', false, '{}'::jsonb, 'personal_plan', '10000000-0000-0000-0000-000000000004');
+
+insert into public.personal_plan_prepared_artifacts (
+  id, answer_hash, claim_token_hash, quiz_answers, canonical_profile,
+  fallback_metadata, priorities, diagnostic_scores, public_offer_model,
+  locked_plan, status, lead_id, user_id, expires_at, attached_at
+) values
+  ('91000000-0000-0000-0000-000000000011', repeat('1', 64), repeat('5', 64), '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'attached', '91000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', now() + interval '1 hour', now()),
+  ('91000000-0000-0000-0000-000000000012', repeat('2', 64), repeat('6', 64), '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'attached', '91000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000002', now() + interval '1 hour', now()),
+  ('91000000-0000-0000-0000-000000000013', repeat('3', 64), repeat('7', 64), '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'attached', '91000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000003', now() + interval '1 hour', now()),
+  ('90000000-0000-0000-0000-000000000002', repeat('4', 64), repeat('8', 64), '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'attached', '91000000-0000-0000-0000-000000000004', '10000000-0000-0000-0000-000000000004', now() + interval '1 hour', now());
+
 insert into public.personal_plans (id, user_id) values
   ('20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001'),
   ('20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000002'),
   ('20000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000003');
 
 insert into public.personal_plan_need_versions (
-  id, user_id, personal_plan_id, kind, schema_version, computation_version,
+  id, user_id, personal_plan_id, kind, prepared_artifact_source_id, stage1_source_kind, schema_version, computation_version,
   input_hash, input_snapshot, output_snapshot
 ) values
-  ('30000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', 'initial', 1, 'test', repeat('a', 64), '{}'::jsonb, '{}'::jsonb),
-  ('30000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000002', '20000000-0000-0000-0000-000000000002', 'initial', 1, 'test', repeat('b', 64), '{}'::jsonb, '{}'::jsonb),
-  ('30000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000003', 'initial', 1, 'test', repeat('c', 64), '{}'::jsonb, '{}'::jsonb);
+  ('30000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', 'initial', '91000000-0000-0000-0000-000000000011', 'personal_plan_artifact', 1, 'test', repeat('a', 64), '{}'::jsonb, '{}'::jsonb),
+  ('30000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000002', '20000000-0000-0000-0000-000000000002', 'initial', '91000000-0000-0000-0000-000000000012', 'personal_plan_artifact', 1, 'test', repeat('b', 64), '{}'::jsonb, '{}'::jsonb),
+  ('30000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000003', 'initial', '91000000-0000-0000-0000-000000000013', 'personal_plan_artifact', 1, 'test', repeat('c', 64), '{}'::jsonb, '{}'::jsonb);
 
 insert into public.personal_plan_need_versions (
   id, user_id, personal_plan_id, kind, parent_need_version_id, schema_version,
@@ -396,9 +414,12 @@ select is(
 
 select throws_ok(
   $$insert into public.personal_plan_need_versions (
-      user_id, personal_plan_id, kind, schema_version, computation_version, input_hash, input_snapshot, output_snapshot
+      user_id, personal_plan_id, kind, prepared_artifact_source_id, stage1_source_kind,
+      schema_version, computation_version, input_hash, input_snapshot, output_snapshot
     ) values (
-      '10000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000002', 'initial', 1, 'test', repeat('1', 64), '{}'::jsonb, '{}'::jsonb
+      '10000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000002', 'initial',
+      '91000000-0000-0000-0000-000000000011', 'personal_plan_artifact',
+      1, 'test', repeat('1', 64), '{}'::jsonb, '{}'::jsonb
     )$$,
   '23503',
   'insert or update on table "personal_plan_need_versions" violates foreign key constraint "personal_plan_need_versions_personal_plan_id_user_id_fkey"',

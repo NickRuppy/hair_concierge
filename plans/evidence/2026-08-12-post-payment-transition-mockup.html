@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post-Payment-Übergang – Planungsnachweis</title>
+    <style>
+      :root {
+        --plum: #6b50a0;
+        --plum-dark: #291a43;
+        --plum-ice: #f1edf8;
+        --coral: #e98372;
+        --paper: #fdfbf9;
+        --line: #e7e0d9;
+        --muted: #706a65;
+        --green: #5b8d63;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f3f0ec;
+        color: var(--plum-dark);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      header {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 42px 24px 20px;
+      }
+      h1, h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; }
+      header p { max-width: 760px; color: var(--muted); line-height: 1.6; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 20px 24px 44px;
+      }
+      .proposal {
+        border-radius: 28px;
+        background: white;
+        padding: 24px;
+        box-shadow: 0 18px 55px rgba(41, 26, 67, 0.08);
+      }
+      .label {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 7px 11px;
+        background: #f2efeb;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .proposal.new .label { background: var(--plum-ice); color: var(--plum); }
+      .proposal > p { min-height: 48px; color: var(--muted); line-height: 1.55; }
+      .phone {
+        position: relative;
+        width: min(100%, 390px);
+        min-height: 610px;
+        margin: 18px auto 0;
+        overflow: hidden;
+        border: 10px solid #241c2d;
+        border-radius: 38px;
+        background: var(--paper);
+        box-shadow: 0 22px 45px rgba(36, 28, 45, 0.16);
+      }
+      .notch { width: 120px; height: 22px; margin: 0 auto; border-radius: 0 0 16px 16px; background: #241c2d; }
+      .legacy-bg {
+        min-height: 578px;
+        padding: 86px 18px 18px;
+        background: linear-gradient(rgba(0,0,0,.72), rgba(0,0,0,.72)), linear-gradient(150deg, #d8cfe6, #f5dfd8);
+      }
+      .modal {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 32px 22px;
+        background: white;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,.28);
+      }
+      .modal h2 { font-size: 30px; }
+      .modal p, .ready p { color: var(--muted); line-height: 1.6; }
+      .cta {
+        display: block;
+        width: 100%;
+        margin-top: 26px;
+        border: 0;
+        border-radius: 14px;
+        padding: 15px 16px;
+        background: var(--plum);
+        color: white;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: .04em;
+      }
+      .journey-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        padding: 15px 18px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .stage { color: var(--plum); }
+      .ready { padding: 34px 22px 24px; text-align: center; }
+      .sparkle {
+        display: grid;
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 24px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum-ice);
+        color: var(--plum);
+        font-size: 30px;
+      }
+      .preview {
+        display: grid;
+        grid-template-columns: 1.1fr .9fr;
+        gap: 8px;
+        margin: 0 0 26px;
+        border: 1px solid #d8cde9;
+        border-radius: 24px;
+        padding: 11px;
+        background: var(--plum-ice);
+        text-align: left;
+      }
+      .preview > div { min-height: 116px; border-radius: 17px; padding: 14px; background: rgba(255,255,255,.88); }
+      .preview .cover { display: flex; flex-direction: column; justify-content: space-between; background: var(--plum); color: white; }
+      .bar { display: block; height: 10px; margin-top: 9px; border-radius: 99px; background: var(--plum); opacity: .8; }
+      .bar.coral { width: 82%; background: var(--coral); }
+      .bar.green { width: 65%; background: var(--green); }
+      .ready h2 { font-size: 34px; line-height: 1.05; }
+      .route {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        align-items: center;
+        gap: 8px;
+        max-width: 1120px;
+        margin: 0 auto 46px;
+        padding: 0 24px;
+      }
+      .route div {
+        min-height: 88px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+        background: white;
+      }
+      .route strong { display: block; margin-bottom: 6px; }
+      .route span { color: var(--muted); font-size: 13px; line-height: 1.4; }
+      .arrow { color: var(--plum); font-size: 24px; }
+      .recovery-evidence {
+        display: grid;
+        grid-template-columns: .8fr 1.2fr;
+        gap: 28px;
+        align-items: center;
+        max-width: 1072px;
+        margin: 0 auto 46px;
+        border: 1px solid #d8cde9;
+        border-radius: 28px;
+        padding: 28px;
+        background: white;
+        box-shadow: 0 18px 55px rgba(41, 26, 67, 0.06);
+      }
+      .recovery-copy p { color: var(--muted); line-height: 1.6; }
+      .question-card {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px;
+        background: var(--paper);
+      }
+      .question-card h2 { margin-top: 14px; font-size: 29px; }
+      .question-card p { color: var(--muted); line-height: 1.5; }
+      .options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 18px; }
+      .option { border: 1px solid #d8cde9; border-radius: 12px; padding: 12px 8px; background: white; color: var(--plum-dark); font-weight: 750; }
+      .safe-note { display: block; margin-top: 16px; color: var(--green); font-size: 12px; font-weight: 750; }
+      .kept {
+        max-width: 1072px;
+        margin: 0 auto 50px;
+        border: 1px solid #d8cde9;
+        border-radius: 22px;
+        padding: 20px 22px;
+        background: var(--plum-ice);
+        color: var(--plum-dark);
+        line-height: 1.55;
+      }
+      .kept strong { color: var(--plum); }
+      @media (max-width: 760px) {
+        .grid { grid-template-columns: 1fr; padding-inline: 14px; }
+        header { padding-inline: 18px; }
+        .proposal > p { min-height: 0; }
+        .route { grid-template-columns: 1fr; padding-inline: 18px; }
+        .arrow { transform: rotate(90deg); justify-self: center; }
+        .recovery-evidence { grid-template-columns: 1fr; margin-inline: 18px; padding: 20px; }
+        .options { grid-template-columns: repeat(2, 1fr); }
+        .kept { margin-inline: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="label">Planungsnachweis · Mobile Hauptpfad</span>
+      <h1 style="margin-top:14px">Vom alten Onboarding direkt in den Personal Plan</h1>
+      <p>Entscheidungsfrage: Braucht der Käufer nach der Zahlung noch einen zusätzlichen Übergangsbildschirm? Gewählte Richtung: nein. Die bestehende Bereitschaftsseite übernimmt Prüfung und Recovery; danach beginnt unmittelbar der Bedarfsplan.</p>
+    </header>
+
+    <main class="grid">
+      <section class="proposal old">
+        <span class="label">Heute · regulärer Quiz-Kauf</span>
+        <p>Nach der Zahlung folgt das komplette alte Produkt- und Gewohnheiten-Onboarding. Erst dessen Abschluss führt zur bisherigen Routine.</p>
+        <div class="phone" aria-label="Bisherige Abschlussansicht">
+          <div class="notch"></div>
+          <div class="legacy-bg">
+            <div class="modal">
+              <h2>Geschafft! 🎉</h2>
+              <p>Dein Haarprofil ist komplett. Jetzt kann ich dir personalisierte Empfehlungen geben.</p>
+              <button class="cta">ZU MEINER ROUTINE</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="proposal new">
+        <span class="label">Neu · beide Quiz-Käufe</span>
+        <p>Die Zahlungsaktivierung prüft und verknüpft die Quelle. Sobald sie bereit ist, sieht der Käufer den bestehenden Einstieg in den Personal Plan.</p>
+        <div class="phone" aria-label="Vorgeschlagene Bereitschaftsansicht">
+          <div class="notch"></div>
+          <div class="journey-head"><span>CHAARLIE</span><span class="stage">1 · Bedarf</span></div>
+          <div class="ready">
+            <div class="sparkle">✓</div>
+            <div class="preview" aria-hidden="true">
+              <div><small>DEIN PLAN</small><span class="bar"></span><span class="bar coral"></span><span class="bar green"></span></div>
+              <div class="cover"><small>DEIN PLAN</small><strong style="font-size:28px">✓</strong></div>
+            </div>
+            <h2>Das empfehlen wir für dein Haar.</h2>
+            <p>Basierend auf deinen Quiz-Antworten.</p>
+            <button class="cta">BEDARFSPLAN ANSEHEN</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="route" aria-label="Vorgeschlagener Übergang">
+      <div><strong>Zahlung bestätigt</strong><span>Stripe oder PayPal; regulärer oder Personal-Plan-Quiz</span></div>
+      <span class="arrow">→</span>
+      <div><strong>/plan-bereit</strong><span>Quelle verknüpfen, Status prüfen, bei Verzögerung sicher wiederholen</span></div>
+      <span class="arrow">→</span>
+      <div><strong>/plan-start</strong><span>Stage 1 Bedarf → Stage 2 Verfeinerung → Stage 3 Produkte → Routine → Anwendung</span></div>
+    </section>
+
+    <section class="recovery-evidence" aria-label="Seltene Recovery für unvollständige historische Quiz-Ergebnisse">
+      <div class="recovery-copy">
+        <span class="label">Seltene Recovery · nur bei Alt-Ergebnis</span>
+        <h2 style="margin-top:14px">Kein Neustart, keine erfundene Antwort.</h2>
+        <p>Fehlt in einem älteren regulären Quiz genau eine Pflichtangabe, bleibt der Käufer auf <code>/plan-bereit</code> und ergänzt nur diese Angabe. Der normale Kaufpfad überspringt diesen Zustand.</p>
+      </div>
+      <div class="question-card">
+        <span class="label">Eine Angabe fehlt noch</span>
+        <h2>Wie lang sind deine Haare aktuell?</h2>
+        <p>Bei Wellen, Locken und krausem Haar zählt die sanft gestreckte Länge einer Strähne.</p>
+        <div class="options" aria-label="Haarlängen">
+          <button class="option">Sehr kurz</button>
+          <button class="option">Kurz</button>
+          <button class="option">Mittellang</button>
+          <button class="option">Lang</button>
+          <button class="option">Sehr lang</button>
+        </div>
+        <button class="cta">ANGABE SPEICHERN UND PLAN PRÜFEN</button>
+        <span class="safe-note">✓ Deine Zahlung und übrigen Antworten sind bereits sicher gespeichert.</span>
+      </div>
+    </section>
+
+    <aside class="kept"><strong>Was bleibt:</strong> <code>/onboarding</code> wird nicht gelöscht. Bestehende Profil- und Routine-Links können die alten Produkt- und Gewohnheitsangaben weiterhin gezielt öffnen. Die Route ist nur nicht mehr der automatische Post-Payment-Einstieg für neue Käufe.</aside>
+  </body>
+</html>

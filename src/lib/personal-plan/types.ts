@@ -45,6 +45,27 @@ export type SupportedPersonalPlanQuizEnvelope =
   | PersonalPlanQuizSubmissionEnvelope
   | PersonalPlanV2QuizEnvelope
 
+export type LegacyQuizStage1Source = {
+  kind: "legacy_quiz"
+  version: 1
+  leadId: string
+  answers: Pick<
+    PersonalPlanQuizAnswers,
+    | "texture"
+    | "thickness"
+    | "density"
+    | "goals"
+    | "currentConcerns"
+    | "hairLength"
+    | "hairSurface"
+    | "elasticResponse"
+    | "chemicalTreatments"
+    | "scalpOiliness"
+    | "scalpConcerns"
+  >
+}
+export type SupportedStage1Source = SupportedPersonalPlanQuizEnvelope | LegacyQuizStage1Source
+
 export type PlanMissingFactId =
   | "shampoo_frequency"
   | "current_product_load"
@@ -111,7 +132,7 @@ export type PlanConcernRecurrence = NonNullable<PersonalPlanQuizAnswers["concern
 
 export type PlanProfile = {
   source: {
-    quizVersion: 2 | 3
+    quizVersion: 1 | 2 | 3
     artifactId: string
     projection: "initial_quiz" | "refined_post_plan"
   }
@@ -513,7 +534,7 @@ export type InitialNeedPlanSnapshot = {
   computationVersion: string
   inputHash: string
   createdAt: string
-  sourceQuiz: SupportedPersonalPlanQuizEnvelope
+  sourceQuiz: SupportedStage1Source
   profile: PlanProfile
   assessments: PlanNeedAssessment
   decisions: PlanCategoryDecision[]

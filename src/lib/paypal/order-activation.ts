@@ -307,6 +307,7 @@ export async function activateVerifiedPayPalOrderIntent(
               email: payment.email,
               activationKey: intent.token,
               leadId: canonicalConsent.lead_id,
+              paidAt: payment.paidAt,
             },
           )
           return { userId: account.userId }
@@ -552,6 +553,7 @@ export async function processPayPalOneTimeFulfillmentJob(
           email: payment.email,
           activationKey: intent.token,
           leadId: consent.lead_id,
+          paidAt: payment.paidAt,
         },
       )
       return { userId: account.userId }

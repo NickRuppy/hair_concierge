@@ -35,6 +35,14 @@ type AdminClient = {
   rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>
 }
 
+type LegacyLeadQuery = {
+  select: (columns: string) => LegacyLeadQuery
+  eq: (column: string, value: string) => LegacyLeadQuery
+  maybeSingle: () => Promise<{ data: unknown; error: unknown }>
+}
+
+type LegacyLeadClient = { from: (table: "leads") => LegacyLeadQuery }
+
 /**
  * Server-only persistence wiring. The artifact is bound to the entitlement's
  * consent lead rather than selected from a user's historical artifacts.
@@ -52,7 +60,24 @@ export function createStage1SupabaseDependencies(
         enrollmentSourceId: enrollment.sourceId,
         qualifiedAt: enrollment.qualifiedAt,
         artifactLeadId: enrollment.artifactLeadId,
+        quizSourceKind: enrollment.quizSourceKind,
       }
+    },
+    async loadLegacyLead(userId, leadId) {
+      const { data, error } = await (admin as unknown as LegacyLeadClient)
+        .from("leads")
+        .select("id, quiz_answers")
+        .eq("id", leadId)
+        .eq("user_id", userId)
+        .eq("quiz_kind", "legacy")
+        .maybeSingle()
+      if (error) throw error
+      if (!data || typeof data !== "object") return null
+      const row = data as { id?: unknown; quiz_answers?: unknown }
+      if (typeof row.id !== "string" || !row.quiz_answers || typeof row.quiz_answers !== "object") {
+        return null
+      }
+      return { id: row.id, quizAnswers: row.quiz_answers as never }
     },
     async loadArtifact(userId, artifactLeadId): Promise<Stage1PreparedArtifact | null> {
       const { data, error } = await admin
@@ -85,6 +110,8 @@ async function callCreateInitialNeed(
     p_input_hash: request.inputHash,
     p_input_snapshot: request.inputSnapshot,
     p_output_snapshot: request.outputSnapshot,
+    p_stage1_source_kind: request.stage1SourceKind,
+    p_stage1_source_lead_id: request.stage1SourceLeadId,
   })
   if (error || !data || typeof data !== "object") return { outcome: "temporarily_unavailable" }
   const result = data as Record<string, unknown>

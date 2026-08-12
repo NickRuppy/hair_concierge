@@ -19,17 +19,25 @@ insert into auth.users (instance_id, id, aud, role, email, encrypted_password, e
   ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000001', 'authenticated', 'authenticated', 'routine-lifecycle-a@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now()),
   ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000002', 'authenticated', 'authenticated', 'routine-lifecycle-b@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now()),
   ('00000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000003', 'authenticated', 'authenticated', 'routine-initial-activation@example.invalid', '', now(), '{}'::jsonb, '{}'::jsonb, now(), now());
+insert into public.leads (id, name, email, marketing_consent, quiz_answers, quiz_kind, user_id) values
+  ('11100000-0000-0000-0000-000000000001', '', 'routine-lifecycle-a@example.invalid', false, '{}'::jsonb, 'legacy', '11000000-0000-0000-0000-000000000001'),
+  ('11100000-0000-0000-0000-000000000002', '', 'routine-lifecycle-b@example.invalid', false, '{}'::jsonb, 'legacy', '11000000-0000-0000-0000-000000000002'),
+  ('11100000-0000-0000-0000-000000000003', '', 'routine-initial-activation@example.invalid', false, '{}'::jsonb, 'legacy', '11000000-0000-0000-0000-000000000003');
 insert into public.personal_plans (id, user_id, current_refined_need_version_id) values
   ('21000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', null),
   ('21000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000002', null),
   ('21000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000003', null);
-insert into public.personal_plan_need_versions (id, user_id, personal_plan_id, kind, parent_need_version_id, schema_version, computation_version, input_hash, input_snapshot, output_snapshot) values
-  ('31000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 'initial', null, 1, 'test', repeat('1', 64), '{}'::jsonb, '{}'::jsonb),
-  ('31000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 'refined', '31000000-0000-0000-0000-000000000001', 1, 'test', repeat('2', 64), '{}'::jsonb, '{}'::jsonb),
-  ('31000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'initial', null, 1, 'test', repeat('3', 64), '{}'::jsonb, '{}'::jsonb),
-  ('31000000-0000-0000-0000-000000000004', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'refined', '31000000-0000-0000-0000-000000000003', 1, 'test', repeat('4', 64), '{}'::jsonb, '{}'::jsonb),
-  ('31000000-0000-0000-0000-000000000005', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', 'initial', null, 1, 'test', repeat('5', 64), '{}'::jsonb, '{}'::jsonb),
-  ('31000000-0000-0000-0000-000000000006', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', 'refined', '31000000-0000-0000-0000-000000000005', 1, 'test', repeat('6', 64), '{}'::jsonb, '{}'::jsonb);
+insert into public.personal_plan_need_versions (
+  id, user_id, personal_plan_id, kind, parent_need_version_id,
+  prepared_artifact_source_id, stage1_source_kind, stage1_source_lead_id,
+  schema_version, computation_version, input_hash, input_snapshot, output_snapshot
+) values
+  ('31000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 'initial', null, null, 'legacy_quiz_lead', '11100000-0000-0000-0000-000000000001', 1, 'test', repeat('1', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 'refined', '31000000-0000-0000-0000-000000000001', null, null, null, 1, 'test', repeat('2', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'initial', null, null, 'legacy_quiz_lead', '11100000-0000-0000-0000-000000000002', 1, 'test', repeat('3', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000004', '11000000-0000-0000-0000-000000000002', '21000000-0000-0000-0000-000000000002', 'refined', '31000000-0000-0000-0000-000000000003', null, null, null, 1, 'test', repeat('4', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000005', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', 'initial', null, null, 'legacy_quiz_lead', '11100000-0000-0000-0000-000000000003', 1, 'test', repeat('5', 64), '{}'::jsonb, '{}'::jsonb),
+  ('31000000-0000-0000-0000-000000000006', '11000000-0000-0000-0000-000000000003', '21000000-0000-0000-0000-000000000003', 'refined', '31000000-0000-0000-0000-000000000005', null, null, null, 1, 'test', repeat('6', 64), '{}'::jsonb, '{}'::jsonb);
 update public.personal_plans set current_refined_need_version_id = case id
   when '21000000-0000-0000-0000-000000000001'::uuid then '31000000-0000-0000-0000-000000000002'::uuid
   when '21000000-0000-0000-0000-000000000002'::uuid then '31000000-0000-0000-0000-000000000004'::uuid

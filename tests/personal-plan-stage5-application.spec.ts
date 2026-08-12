@@ -29,6 +29,20 @@ const recoveryConsentId = "17000000-0000-4000-8000-000000000002"
 const recoveryPurchaseId = "18000000-0000-4000-8000-000000000002"
 const recoveryArtifactId = "19000000-0000-4000-8000-000000000002"
 const postCutoffPaidAt = "2026-08-09T08:00:00.000Z"
+const canonicalDiagnostics = {
+  structure: "wavy",
+  thickness: "fine",
+  density: "medium",
+  hair_length: "long",
+  fingertest: "rau",
+  pulltest: "stretches_stays",
+  scalp_type: "ausgeglichen",
+  has_scalp_issue: true,
+  scalp_condition: "gereizt",
+  concerns: ["dryness", "split_ends"],
+  treatment: ["gefaerbt"],
+  goals: ["moisture", "shine"],
+}
 
 type BrowserSeedClient = {
   from: (table: string) => {
@@ -355,7 +369,7 @@ async function seedQualifyingPersonalPlanJourney(admin: BrowserSeedClient, userI
       answer_hash: "b".repeat(64),
       claim_token_hash: "c".repeat(64),
       quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
-      canonical_profile: {},
+      canonical_profile: canonicalDiagnostics,
       fallback_metadata: {},
       priorities: [],
       diagnostic_scores: {},
@@ -444,7 +458,7 @@ async function seedQualifyingBuyerWithoutRoutine(
       answer_hash: "f".repeat(64),
       claim_token_hash: "a".repeat(64),
       quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
-      canonical_profile: {},
+      canonical_profile: canonicalDiagnostics,
       fallback_metadata: {},
       priorities: [],
       diagnostic_scores: {},
@@ -802,7 +816,7 @@ test("accepted Routine renders Anwendung overview and a bookmarkable day without
   expect(after).toEqual(before)
 })
 
-test("owner without an accepted Routine gets a recovery path without exposing application content", async ({
+test("new buyer without a plan resumes at readiness without exposing application content", async ({
   page,
 }) => {
   test.skip(
@@ -848,13 +862,12 @@ test("owner without an accepted Routine gets a recovery path without exposing ap
   await page.locator('input[type="email"]:visible').fill(recoveryEmail)
   await page.locator('input[type="password"]:visible').fill(password)
   await page.getByRole("button", { name: "Anmelden", exact: true }).click()
-  await page.waitForURL("**/anwendung")
+  await page.waitForURL("**/plan-bereit")
   await expect(
-    page.getByRole("heading", { name: "Anwendung gerade nicht verfügbar", exact: true }),
+    page.getByRole("heading", { name: "Das empfehlen wir für dein Haar." }),
   ).toBeVisible()
-  await expect(page.getByRole("link", { name: "Zur Routine", exact: true })).toHaveAttribute(
-    "href",
-    "/routine",
-  )
+  await expect(
+    page.getByRole("link", { name: "Bedarfsplan ansehen", exact: true }),
+  ).toHaveAttribute("href", "/plan-start")
   await expect(page.getByText("Waschtag", { exact: true })).toHaveCount(0)
 })

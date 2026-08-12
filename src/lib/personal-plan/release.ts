@@ -4,6 +4,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_APP_V1_ROLLOUT?: string
   PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
+  PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
   PERSONAL_PLAN_STAGE2_ENABLED?: string
   PERSONAL_PLAN_STAGE3_ENABLED?: string
   PERSONAL_PLAN_STAGE4_ENABLED?: string
@@ -88,6 +89,13 @@ export function isPersonalPlanAppV1Enabled(
   environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {
   return environment.PERSONAL_PLAN_APP_V1_ENABLED === "true"
+}
+
+/** Separate default-off rollback gate for regular-quiz buyers. */
+export function isPersonalPlanLegacyQuizCutoverEnabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED === "true"
 }
 
 export function getPersonalPlanNewBuyerCohortCutoff(

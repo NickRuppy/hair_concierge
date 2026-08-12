@@ -16,12 +16,18 @@ select ok(has_function_privilege('service_role', 'public.personal_plan_acquire_c
 insert into auth.users (instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at) values
   ('00000000-0000-0000-0000-000000000000','12000000-0000-0000-0000-000000000001','authenticated','authenticated','source-a@example.invalid','',now(),'{}','{}',now(),now()),
   ('00000000-0000-0000-0000-000000000000','12000000-0000-0000-0000-000000000002','authenticated','authenticated','source-b@example.invalid','',now(),'{}','{}',now(),now());
+insert into public.leads (id,name,email,marketing_consent,quiz_answers,quiz_kind,user_id) values
+  ('12100000-0000-0000-0000-000000000001','','source-a@example.invalid',false,'{}','legacy','12000000-0000-0000-0000-000000000001'),
+  ('12100000-0000-0000-0000-000000000002','','source-b@example.invalid',false,'{}','legacy','12000000-0000-0000-0000-000000000002');
 insert into public.personal_plans (id,user_id) values
   ('22000000-0000-0000-0000-000000000001','12000000-0000-0000-0000-000000000001'),
   ('22000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000002');
-insert into public.personal_plan_need_versions (id,user_id,personal_plan_id,kind,parent_need_version_id,schema_version,computation_version,input_hash,input_snapshot,output_snapshot) values
-  ('32000000-0000-0000-0000-000000000001','12000000-0000-0000-0000-000000000001','22000000-0000-0000-0000-000000000001','initial',null,1,'test',repeat('1',64),'{}','{}'),
-  ('32000000-0000-0000-0000-000000000003','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','initial',null,1,'test',repeat('3',64),'{}','{}');
+insert into public.personal_plan_need_versions (
+  id,user_id,personal_plan_id,kind,parent_need_version_id,stage1_source_kind,
+  stage1_source_lead_id,schema_version,computation_version,input_hash,input_snapshot,output_snapshot
+) values
+  ('32000000-0000-0000-0000-000000000001','12000000-0000-0000-0000-000000000001','22000000-0000-0000-0000-000000000001','initial',null,'legacy_quiz_lead','12100000-0000-0000-0000-000000000001',1,'test',repeat('1',64),'{}','{}'),
+  ('32000000-0000-0000-0000-000000000003','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','initial',null,'legacy_quiz_lead','12100000-0000-0000-0000-000000000002',1,'test',repeat('3',64),'{}','{}');
 insert into public.personal_plan_need_versions (id,user_id,personal_plan_id,kind,parent_need_version_id,schema_version,computation_version,input_hash,input_snapshot,output_snapshot) values
   ('32000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000001','22000000-0000-0000-0000-000000000001','refined','32000000-0000-0000-0000-000000000001',1,'test',repeat('2',64),'{}','{}'),
   ('32000000-0000-0000-0000-000000000004','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','refined','32000000-0000-0000-0000-000000000003',1,'test',repeat('4',64),'{}','{}');

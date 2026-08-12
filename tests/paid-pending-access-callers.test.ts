@@ -51,13 +51,13 @@ test("plan-bereit renders the waiting surface for paid pending and keeps inactiv
   assert.match(readyPageSource, /return <PersonalPlanPaidPendingRecovery/)
   assert.match(
     readyPageSource,
-    /<PersonalPlanReadyClient[\s\S]*leadId=\{lead\.id\}[\s\S]*nextHref=/,
+    /<PersonalPlanReadyClient[\s\S]*leadId=\{canonicalLeadId\}[\s\S]*nextHref="\/plan-start"/,
   )
   assert.match(readyPageSource, /isPersonalPlanAppV1AllowedForUser\(user\.id\)/)
-  assert.match(readyPageSource, /personalPlanV1Allowed \? "\/plan-start"/)
+  assert.match(readyPageSource, /if \(!rollout\.allowed\) \{[\s\S]*redirect\("\/onboarding"\)/)
   assert.ok(
     readyPageSource.indexOf('case "paid_pending_recovery"') <
-      readyPageSource.indexOf("<PersonalPlanReadyClient"),
+      readyPageSource.indexOf('case "ready"'),
   )
 })
 
@@ -65,12 +65,12 @@ test("plan-bereit status returns paid pending as a successful status, not subscr
   assert.match(readyStatusSource, /resolveOneTimeAccessState/)
   assert.match(readyStatusSource, /\{ status: "paid_pending" \}/)
   assert.match(readyStatusSource, /Cache-Control": "private, no-store"/)
-  assert.match(readyStatusSource, /\{ status: "subscription_required" \}/)
+  assert.match(readyStatusSource, /\{ status: "forbidden" \}/)
   assert.match(readyStatusSource, /status: 403/)
 
   assert.ok(
     readyStatusSource.indexOf('{ status: "paid_pending" }') <
-      readyStatusSource.indexOf('{ status: "subscription_required" }'),
+      readyStatusSource.indexOf('{ status: "forbidden" }'),
   )
 })
 

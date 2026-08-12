@@ -136,3 +136,54 @@ test("Stage 1 maps unavailable storage and invalid compute sources to typed safe
   )
   assert.deepEqual(await invalid.loadOrCreate({ userId: "user-1" }), { status: "invalid_source" })
 })
+
+test("Stage 1 loads and persists an exact legacy lead without a prepared artifact", async () => {
+  let artifactReads = 0
+  let persisted: unknown
+  const service = createStage1PersistenceService(
+    dependencies({
+      findEntitlement: async () => ({
+        accessState: "active",
+        enrollmentSourceId: "purchase-legacy",
+        qualifiedAt: "2026-08-08T01:00:00.000Z",
+        artifactLeadId: "lead-legacy",
+        quizSourceKind: "legacy",
+      }),
+      loadArtifact: async () => {
+        artifactReads += 1
+        return null
+      },
+      loadLegacyLead: async () => ({
+        id: "lead-legacy",
+        quizAnswers: {
+          structure: "wavy",
+          thickness: "normal",
+          density: "medium",
+          hair_length: "medium",
+          fingertest: "leicht_uneben",
+          pulltest: "stretches_bounces",
+          treatment: ["natur"],
+          scalp_type: "ausgeglichen",
+          has_scalp_issue: false,
+          goals: ["moisture"],
+          concerns: ["dryness"],
+        },
+      }),
+      createOrReuseInitialNeed: async (request) => {
+        persisted = request
+        return {
+          outcome: "completed",
+          personalPlanId: "plan-legacy",
+          needVersionId: "need-legacy",
+          outputSnapshot: request.outputSnapshot,
+        }
+      },
+    }),
+  )
+
+  assert.equal((await service.loadOrCreate({ userId: "user-1" })).status, "completed")
+  assert.equal(artifactReads, 0)
+  assert.equal((persisted as { stage1SourceKind: string }).stage1SourceKind, "legacy_quiz_lead")
+  assert.equal((persisted as { stage1SourceLeadId: string }).stage1SourceLeadId, "lead-legacy")
+  assert.equal((persisted as { preparedArtifactSourceId: null }).preparedArtifactSourceId, null)
+})

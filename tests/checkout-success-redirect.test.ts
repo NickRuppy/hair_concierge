@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs"
 
 import {
   getAuthenticatedCheckoutSuccessRedirect,
+  getCheckoutFirstTimeDestinationOptionsFromAccount,
   getCheckoutFirstTimeDestination,
   resolvePersonalPlanCheckoutReadiness,
   resolveCheckoutFirstTimeDestination,
@@ -43,6 +44,72 @@ test("a verified, enabled, prepared new-buyer Personal Plan activation enters pl
     getCheckoutFirstTimeDestination("personal_plan", "lead-v2"),
     "/plan-bereit?lead=lead-v2",
   )
+})
+
+test("a legacy-quiz buyer enters readiness only with server-provided future-purchase eligibility", () => {
+  assert.equal(getCheckoutFirstTimeDestination("legacy", "legacy lead"), "/onboarding")
+  assert.equal(
+    getCheckoutFirstTimeDestination("legacy", "legacy lead", null, {
+      legacyQuizFuturePurchaseEligible: true,
+    }),
+    "/plan-bereit?lead=legacy%20lead",
+  )
+  assert.equal(
+    getCheckoutFirstTimeDestination("unsupported", "foreign lead", null, {
+      legacyQuizFuturePurchaseEligible: true,
+    }),
+    "/onboarding",
+  )
+})
+
+test("activation-account eligibility ignores non-boolean values", () => {
+  assert.deepEqual(
+    getCheckoutFirstTimeDestinationOptionsFromAccount({ legacyQuizFuturePurchaseEligible: true }),
+    { legacyQuizFuturePurchaseEligible: true },
+  )
+  assert.deepEqual(
+    getCheckoutFirstTimeDestinationOptionsFromAccount({ legacyQuizFuturePurchaseEligible: "true" }),
+    { legacyQuizFuturePurchaseEligible: false },
+  )
+})
+
+test("a proven eligible legacy purchase keeps readiness recovery when quiz-kind reload fails", async () => {
+  const builder = {
+    select: () => builder,
+    eq: () => builder,
+    maybeSingle: async () => ({ data: null, error: { message: "temporarily unavailable" } }),
+  }
+  assert.equal(
+    await resolveCheckoutFirstTimeDestination(
+      { from: () => builder } as never,
+      "legacy lead",
+      null,
+      { legacyQuizFuturePurchaseEligible: true },
+    ),
+    "/plan-bereit?lead=legacy%20lead",
+  )
+})
+
+test("Stripe and PayPal share the exact first-time quiz destination matrix", () => {
+  for (const provider of ["stripe", "paypal"]) {
+    assert.equal(
+      getCheckoutFirstTimeDestination("personal_plan", "personal-lead"),
+      "/plan-bereit?lead=personal-lead",
+      `${provider} personal plan buyer`,
+    )
+    assert.equal(
+      getCheckoutFirstTimeDestination("legacy", "legacy-lead", null, {
+        legacyQuizFuturePurchaseEligible: true,
+      }),
+      "/plan-bereit?lead=legacy-lead",
+      `${provider} eligible legacy buyer`,
+    )
+    assert.equal(
+      getCheckoutFirstTimeDestination("legacy", "legacy-lead"),
+      "/onboarding",
+      `${provider} cutover-off legacy buyer`,
+    )
+  }
 })
 
 test("checkout readiness keeps provisioning pending and preserves legacy before the cutoff", () => {

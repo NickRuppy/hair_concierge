@@ -36,6 +36,7 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
     accessState: AccessState
     qualifiedAt: string | null
     artifactLeadId: string | null
+    quizSourceKind?: "personal_plan" | "legacy" | null
   }>
   cohortCutoff: () => Date | null
   appEnabled: () => boolean
@@ -44,7 +45,11 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
   stage3Enabled: () => boolean
   stage4Enabled: () => boolean
   stage5Rollout: () => "off" | "internal" | "all"
-  loadPreparedArtifact: (userId: string, leadId: string) => Promise<{ id: string } | null>
+  loadPreparedArtifact: (
+    userId: string,
+    leadId: string,
+    quizSourceKind?: "personal_plan" | "legacy" | null,
+  ) => Promise<{ id: string } | null>
   loadPlan: (userId: string) => Promise<JourneyPlanRow | null>
   loadCurrentRefinedNeed: (
     userId: string,
@@ -225,7 +230,11 @@ async function loadJourneyAuthorizationPrefixWithDeps(
   )
   let artifact: { id: string } | null
   try {
-    artifact = await deps.loadPreparedArtifact(userId, entitlement.artifactLeadId!)
+    artifact = await deps.loadPreparedArtifact(
+      userId,
+      entitlement.artifactLeadId!,
+      entitlement.quizSourceKind,
+    )
   } catch (error) {
     reportJourneyAccessPhase(reporter, {
       operation: "stage3_access_artifact_plan",
@@ -426,6 +435,7 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
         accessState: enrollment.accessState,
         qualifiedAt: enrollment.qualifiedAt,
         artifactLeadId: enrollment.artifactLeadId,
+        quizSourceKind: enrollment.quizSourceKind,
       }
     },
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
@@ -435,7 +445,19 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
     stage3Enabled: isPersonalPlanStage3Enabled,
     stage4Enabled: isPersonalPlanStage4Enabled,
     stage5Rollout: resolvePersonalPlanStage5Rollout,
-    async loadPreparedArtifact(userId, leadId) {
+    async loadPreparedArtifact(userId, leadId, quizSourceKind) {
+      if (quizSourceKind === "legacy") {
+        const lead = await required(
+          admin
+            .from("leads")
+            .select("id")
+            .eq("id", leadId)
+            .eq("user_id", userId)
+            .eq("quiz_kind", "legacy")
+            .maybeSingle(),
+        )
+        return lead && typeof lead.id === "string" ? { id: lead.id } : null
+      }
       const data = await required(
         admin
           .from("personal_plan_prepared_artifacts")

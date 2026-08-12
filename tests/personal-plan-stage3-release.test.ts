@@ -6,6 +6,7 @@ import {
   canAccessPersonalPlanAppV1Rollout,
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanAppV1Enabled,
+  isPersonalPlanLegacyQuizCutoverEnabled,
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   resolvePersonalPlanAppV1Rollout,
@@ -17,6 +18,22 @@ test("the single Personal Plan app kill-switch is strict and default-off", () =>
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "false" }), false)
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "TRUE" }), false)
   assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), true)
+})
+
+test("the legacy-quiz Personal Plan cutover is independently strict and default-off", () => {
+  assert.equal(isPersonalPlanLegacyQuizCutoverEnabled({}), false)
+  assert.equal(
+    isPersonalPlanLegacyQuizCutoverEnabled({
+      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "TRUE",
+    }),
+    false,
+  )
+  assert.equal(
+    isPersonalPlanLegacyQuizCutoverEnabled({
+      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "true",
+    }),
+    true,
+  )
 })
 
 test("the Personal Plan rollout supports an internal-only production cohort", () => {

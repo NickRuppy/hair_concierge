@@ -23,6 +23,36 @@ export type CheckoutFirstTimeDestination =
   | "/plan-start"
   | `/plan-bereit?lead=${string}`
 
+export type CheckoutFirstTimeDestinationOptions = {
+  personalPlanActivationReady?: boolean
+  personalPlanLegacy?: boolean
+  /**
+   * Server-derived eligibility for the reversible legacy-quiz cutover. This
+   * remains false until the purchase/enrollment resolver proves the exact
+   * future purchase qualifies; it must never come from checkout query state.
+   */
+  legacyQuizFuturePurchaseEligible?: boolean
+}
+
+/**
+ * Checkout activation returns may carry this field only after the server has
+ * correlated the account with a qualifying purchase/enrollment. Keeping the
+ * projection here makes password and magic-link routes consume the same
+ * server-owned bit without accepting a client request parameter.
+ */
+export function getCheckoutFirstTimeDestinationOptionsFromAccount(
+  input: object,
+): CheckoutFirstTimeDestinationOptions {
+  const legacyQuizFuturePurchaseEligible = (
+    input as {
+      legacyQuizFuturePurchaseEligible?: unknown
+    }
+  ).legacyQuizFuturePurchaseEligible
+  return {
+    legacyQuizFuturePurchaseEligible: legacyQuizFuturePurchaseEligible === true,
+  }
+}
+
 export type PersonalPlanCheckoutReadiness = {
   appEnabled: boolean
   accessState: "active" | "paid_pending" | "none" | "revoked"
@@ -54,12 +84,14 @@ export function getCheckoutFirstTimeDestination(
   quizKind: string | null | undefined,
   leadId?: string | null,
   checkoutContext?: string | null,
-  options: { personalPlanActivationReady?: boolean; personalPlanLegacy?: boolean } = {},
+  options: CheckoutFirstTimeDestinationOptions = {},
 ): CheckoutFirstTimeDestination {
   if (checkoutContext === "membership_reactivation") return "/onboarding"
   if (quizKind === "personal_plan" && options.personalPlanLegacy) return "/onboarding"
   if (quizKind === "personal_plan" && options.personalPlanActivationReady) return "/plan-start"
-  return quizKind === "personal_plan" && leadId
+  return (quizKind === "personal_plan" ||
+    (quizKind === "legacy" && options.legacyQuizFuturePurchaseEligible)) &&
+    leadId
     ? `/plan-bereit?lead=${encodeURIComponent(leadId)}`
     : "/onboarding"
 }
@@ -78,7 +110,7 @@ export async function resolveCheckoutFirstTimeDestination(
   supabase: Pick<SupabaseClient, "from">,
   leadId?: string | null,
   checkoutContext?: string | null,
-  options?: { personalPlanActivationReady?: boolean; personalPlanLegacy?: boolean },
+  options?: CheckoutFirstTimeDestinationOptions,
 ): Promise<CheckoutFirstTimeDestination> {
   if (!leadId || checkoutContext === "membership_reactivation") return "/onboarding"
 
@@ -90,6 +122,9 @@ export async function resolveCheckoutFirstTimeDestination(
 
   if (error) {
     console.warn("[checkout-success] could not resolve quiz kind", error)
+    if (options?.legacyQuizFuturePurchaseEligible) {
+      return `/plan-bereit?lead=${encodeURIComponent(leadId)}`
+    }
     return "/onboarding"
   }
 

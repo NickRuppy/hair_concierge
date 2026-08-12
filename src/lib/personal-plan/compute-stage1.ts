@@ -11,7 +11,7 @@ import { computeShampooDecision } from "./categories/shampoo"
 import {
   buildPlanProfile,
   hashSupportedPersonalPlanQuizEnvelope,
-  parseSupportedPersonalPlanQuizEnvelope,
+  parseSupportedStage1Source,
 } from "./input"
 import { buildPlanNeedAssessment } from "./needs"
 import { composeStage1Portfolio } from "./portfolio"
@@ -65,10 +65,10 @@ function renderedOrder(decisions: readonly PlanCategoryDecision[]) {
 }
 
 export function computeNeedPlan(input: ComputeNeedPlanInput): ComputeNeedPlanResult {
-  const parsed = parseSupportedPersonalPlanQuizEnvelope(input.rawEnvelope)
+  const parsed = parseSupportedStage1Source(input.rawEnvelope)
   if (!parsed.ok) return { status: "incomplete_input", error: parsed.error }
 
-  const profile = buildPlanProfile(parsed.envelope, {
+  const profile = buildPlanProfile(parsed.source, {
     artifactId: input.artifactId,
     projection: input.projection,
     routine: input.routine,
@@ -100,9 +100,9 @@ export function computeNeedPlan(input: ComputeNeedPlanInput): ComputeNeedPlanRes
       schemaVersion: 1,
       snapshotKind: "initial_need",
       computationVersion: input.computationVersion,
-      inputHash: hashSupportedPersonalPlanQuizEnvelope(parsed.envelope),
+      inputHash: hashSupportedPersonalPlanQuizEnvelope(parsed.source),
       createdAt: input.createdAt,
-      sourceQuiz: parsed.envelope,
+      sourceQuiz: parsed.source,
       profile,
       assessments,
       decisions,
