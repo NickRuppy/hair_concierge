@@ -148,7 +148,7 @@ function createNotificationSupabaseFake(
     }
 
     async then(resolve: (value: { data: unknown; error: { message: string } | null }) => unknown) {
-      if (this.table.startsWith("product_") && this.table.endsWith("_specs")) {
+      if (this.table === "product_mask_specs" || this.table === "product_application_protocols") {
         return resolve({
           data: options.specRowsByTable?.[this.table] ?? [{ product_id: "product-1" }],
           error: null,

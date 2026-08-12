@@ -1,0 +1,381 @@
+{
+  "schema_version": "personal-plan-stage5-product-dispositions-v1",
+  "batch_id": "S5-21-product-search-dispositions",
+  "frozen_cohort_fingerprint": "1c56268a721201a573b374269df3df6d4dce14780abd7db07eeda48e4ca95006",
+  "review": {
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
+  },
+  "items": [
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "product_name": "benecos BIO Körperöl Macadamianussöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_executable_directions",
+      "reason": "Exact product evidence does not provide a complete executable hair-oil protocol for Personal Plan.",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "text": "The exact page supports a body-oil identity and does not provide enough product-specific hair timing, placement, or rinse/leave-in direction for an executable Personal Plan oil protocol.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "product_name": "Primavera Calendulaöl Bio",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_finished_product_evidence",
+      "reason": "Exact product evidence has limited hair-use support but does not establish the complete Oil v2 Personal Plan fact set.",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.primaveralife.com/calendulaoel-bio.html",
+          "text": "The exact manufacturer page documents cosmetic oil use, but the available evidence is not enough to assign a source-backed Oil v2 weight and full role support without inference.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "product_name": "OGX Argan Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "identity_ambiguous",
+      "reason_code": "identity_ambiguous",
+      "reason": "Catalog identity is incomplete and overlaps multiple current OGX Argan Oil finished products.",
+      "sources": [
+        {
+          "label": "OGX Kollektion",
+          "url": "https://www.ogxbeauty.com/collections/argan-oil-of-morocco",
+          "text": "OGX lists multiple Argan Oil of Morocco products, so the catalog name 'OGX Argan Oil' is not a complete finished-product identity.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "OGX Produktseite",
+          "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-penetrating-oil",
+          "text": "The exact OGX Penetrating Oil page indicates one possible finished product, but the catalog record does not distinguish it from other OGX Argan Oil products.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "product_name": "BioGourmet Distelöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "non_hair_product",
+      "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://bio-gourmet.com/essig-oel-und-dips/biogourmet-produkte-essig-oel-und-dips-disteloel/",
+          "text": "The exact BioGourmet page presents the product as an edible oil for food, not as a finished hair-care product.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "product_name": "nedura Schwarzkümmelöl ungefiltert",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_finished_product_evidence",
+      "reason": "Exact evidence does not establish a complete finished hair-product fact set for Personal Plan.",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.nedura.de/products/bio-schwarzkummeloel-kaltgepresst-kaufen",
+          "text": "The exact page primarily presents the oil for ingestion and general use; it does not provide enough finished-product hair evidence for Oil v2 facts.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "product_name": "MoriVeda Premium Moringaöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_executable_directions",
+      "reason": "Exact listing does not provide enough executable hair-use instructions for Personal Plan.",
+      "sources": [
+        {
+          "label": "Amazon Produktseite",
+          "url": "https://www.amazon.de/MoriVeda-Kaltgepresstes-unges%C3%A4ttigten-Fetts%C3%A4uren-Antioxidantien/dp/B0787ZH6LC",
+          "text": "The exact listing mentions cosmetic use including hair, but does not provide complete placement, amount, timing, or rinse/leave-in instructions.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "product_name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_executable_directions",
+      "reason": "Exact evidence has some hair-use support but not a complete executable Personal Plan protocol.",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+          "text": "The exact retailer page does not provide enough hair-specific execution details to turn this body-oil record into a Personal Plan oil protocol.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://cosmondial.com/products/benecosbio-koerperoel-wunderbaumsamen",
+          "text": "The manufacturer page supports the exact product identity, but the available evidence remains insufficient for complete Personal Plan hair-oil guidance.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "product_name": "KoRo MCT Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "non_hair_product",
+      "reason": "Exact product evidence supports food/ingestion use, not a hair-care product.",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1657270/koro-mct-oel",
+          "text": "The exact dm page presents the product as MCT edible oil; it does not identify it as a finished hair-care product.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "product_name": "Dr. Scheller Jojobaöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_finished_product_evidence",
+      "reason": "Exact evidence includes limited hair directions but does not establish all Oil v2 facts without inference.",
+      "sources": [
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://dr-scheller.de/products/reines-jojobaol",
+          "text": "The exact manufacturer page includes hair-tip and mask use, but the source does not establish a complete Oil v2 weight and role-support set.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "4f373d4f-fef8-4434-91c7-055133d8427f",
+      "product_name": "Balea Pflegeöl Natural Beauty",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "wrong_category",
+      "reason": "Exact product page identifies a face/body care oil, not a hair oil.",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1610163/balea-pflegeoel-natural-beauty",
+          "text": "The exact dm page presents the product as face/body care oil and gives skin-focused usage, not a finished hair-oil protocol.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "product_name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "non_hair_product",
+      "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "text": "The exact retailer page documents food use and does not support a Personal Plan pre-wash or leave-on hair-oil protocol.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "product_name": "dmBio natives Olivenöl extra",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "non_hair_product",
+      "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1512947/dmbio-natives-olivenoel",
+          "text": "The exact dm page presents native extra olive oil for Mediterranean cooking, not as a finished hair-care oil.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "product_name": "benecos BIO Körperöl Aprikosenkernöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "wrong_category",
+      "reason": "Exact product page identifies a body/skin oil, not a hair oil.",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+          "text": "The exact retailer page describes the product as body oil for skin feel and complexion; no hair-care direction is provided.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "product_name": "dmBio Kokosöl nativ",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "non_hair_product",
+      "reason": "Exact product evidence supports food use, not a cosmetic hair product.",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "text": "The exact dm page does not document a hair pre-wash or leave-on protocol; the previous catalog role cannot be used as exact product guidance.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "product_name": "Balea med Duschgel & Shampoo 5% Urea 2in1",
+      "expected_current_category": "shampoo",
+      "target_category": "shampoo",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_executable_directions",
+      "reason": "Exact source confirms identity but does not provide enough shampoo-specific directions for an executable protocol.",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1376376/balea-med-duschgel-und-shampoo-5-prozent-urea-2in1",
+          "text": "Exact dm page confirms a 2in1 shower gel and shampoo for skin and hair, but the usage field does not provide enough wet-hair, massage, or rinse direction.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "product_name": "benecos BIO Körperöl Mandelöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "wrong_category",
+      "reason": "Exact product page identifies a body/skin oil, not a hair oil.",
+      "sources": [
+        {
+          "label": "Müller Produktseite",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+          "text": "The exact retailer page describes a rich body oil for skin and massage use; no finished-product hair directions are provided.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "product_name": "Nivea Volumen & Kraft Conditioner",
+      "expected_current_category": "conditioner",
+      "target_category": "conditioner",
+      "disposition": "awaiting_exact_analysis",
+      "reason_code": "insufficient_executable_directions",
+      "reason": "No current exact product-specific rinse-out conditioner directions were found.",
+      "sources": [
+        {
+          "label": "Händler-Produktseite",
+          "url": "https://www.ohfeliz.de/nivea/volumen-kraft-spuelung",
+          "text": "Available exact retailer evidence did not provide product-specific rinse-out directions; generic Nivea conditioner guidance was not used.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "product_name": "Cantu Leave-In Repair Cream",
+      "expected_current_category": "conditioner",
+      "target_category": "conditioner",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "duplicate_identity",
+      "reason": "Exact product is a leave-in cream, duplicates the stronger leave-in identity, and should not be used as conditioner_rinse_out.",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme",
+          "text": "Exact product evidence gives no-rinse leave-in directions, so it should not be used as conditioner_rinse_out.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Hersteller-Produktseite",
+          "url": "https://www.cantubeauty.com/search/leave-in-conditioning-cream/?term=repair+cream",
+          "text": "Manufacturer evidence supports the leave-in identity, not the current rinse-out Conditioner role.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    },
+    {
+      "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "product_name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "expected_current_category": "leave_in",
+      "target_category": "leave_in",
+      "disposition": "retired_from_personal_plan",
+      "reason_code": "wrong_category",
+      "reason": "Exact product is a professional-service mist and is not compatible with the consumer Personal Plan leave-in role.",
+      "sources": [
+        {
+          "label": "K18 Pro Produktseite",
+          "url": "https://www.k18hair.com/products/professional-molecular-repair-mist",
+          "text": "The exact product is a PRO-exclusive mist intended before salon services; its consumer Personal Plan role and v3 facts need explicit review.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "K18 Pro Wholesale Produktseite",
+          "url": "https://www.k18hairpro.com/products/professional-molecular-repair-mist-300-ml-wholesale",
+          "text": "The exact directions describe professional-service sequencing before chemical services, which should not be inferred into a normal consumer leave-in role.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ]
+    }
+  ]
+}

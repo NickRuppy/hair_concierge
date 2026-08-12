@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
+import { execFileSync } from "node:child_process"
 
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import { buildStage3EntryContext } from "../src/lib/personal-plan/products/stage2-entry-adapter"
@@ -39,6 +40,95 @@ function requiredEnvironment(name: string) {
   const value = process.env[name]
   if (!value) throw new Error(`${name} is required for the isolated Stage 5 browser test`)
   return value
+}
+
+function seedCanonicalProductGuidance(
+  rows: Array<{
+    productId: string
+    sourceGuidanceKey: string
+    guidanceKey: string
+    role: "shampoo_everyday" | "conditioner_rinse_out"
+  }>,
+) {
+  const literal = (value: string) => value.replaceAll("'", "''")
+  const sql = rows
+    .map(
+      ({ productId, sourceGuidanceKey, guidanceKey, role }) => `
+DO $seed$
+DECLARE
+  inserted_count integer;
+BEGIN
+  INSERT INTO public.application_guidance_protocols (
+    id, guidance_key, protocol_version, locale, scope_kind, category_key, role_key,
+    product_id, application_family, payload, status, verified_at
+  )
+  SELECT
+    gen_random_uuid(), '${literal(guidanceKey)}', source.protocol_version, source.locale,
+    'product', source.category_key, NULL, '${literal(productId)}'::uuid,
+    source.application_family,
+    jsonb_set(
+      jsonb_set(
+        jsonb_set(source.payload, '{guidanceKey}', to_jsonb('${literal(guidanceKey)}'::text)),
+        '{scope}', jsonb_build_object('kind', 'product', 'category', source.category_key, 'productId', '${literal(productId)}')
+      ),
+      '{role}', 'null'::jsonb
+    ),
+    source.status, source.verified_at
+  FROM public.application_guidance_protocols AS source
+  WHERE source.guidance_key = '${literal(sourceGuidanceKey)}'
+    AND source.scope_kind = 'application_family'
+    AND source.status = 'active';
+
+  GET DIAGNOSTICS inserted_count = ROW_COUNT;
+  IF inserted_count <> 1 THEN
+    RAISE EXCEPTION 'expected one source guidance row for ${literal(sourceGuidanceKey)}';
+  END IF;
+
+  INSERT INTO public.product_application_protocols (
+    product_id, category, role, source_url, source_text, guidance_payload
+  )
+  SELECT
+    '${literal(productId)}'::uuid, source.category_key, '${literal(role)}',
+    source.payload#>>'{evidence,0,sourceUrl}',
+    'Canonical browser-test protocol derived from the verified family guidance.',
+    jsonb_set(
+      jsonb_set(
+        jsonb_set(source.payload, '{guidanceKey}', to_jsonb('${literal(guidanceKey)}'::text)),
+        '{scope}', jsonb_build_object('kind', 'product', 'category', source.category_key, 'productId', '${literal(productId)}')
+      ),
+      '{role}', to_jsonb('${literal(role)}'::text)
+    )
+  FROM public.application_guidance_protocols AS source
+  WHERE source.guidance_key = '${literal(sourceGuidanceKey)}'
+    AND source.scope_kind = 'application_family'
+    AND source.status = 'active';
+
+  GET DIAGNOSTICS inserted_count = ROW_COUNT;
+  IF inserted_count <> 1 THEN
+    RAISE EXCEPTION 'expected one canonical protocol row for ${literal(sourceGuidanceKey)}';
+  END IF;
+END
+$seed$;
+`,
+    )
+    .join("\n")
+
+  execFileSync(
+    "docker",
+    [
+      "exec",
+      "-i",
+      "supabase_db_hc_personal_plan_stage5_browser",
+      "psql",
+      "-U",
+      "postgres",
+      "-d",
+      "postgres",
+      "-v",
+      "ON_ERROR_STOP=1",
+    ],
+    { input: sql, stdio: ["pipe", "pipe", "pipe"] },
+  )
 }
 
 function routinePayload() {
@@ -428,18 +518,29 @@ async function seedAcceptedRoutine(userId: string) {
       {
         id: shampooId,
         name: "Sanftes Shampoo",
+        brand: "E2E",
         category: "shampoo",
         category_key: "shampoo",
-        is_active: true,
+        origin: "curated",
+        is_active: false,
         lifecycle_status: "active",
+        is_chaarlie_recommended: false,
+        suitable_thicknesses: ["fine"],
+        sort_order: 10,
       },
       {
         id: conditionerId,
         name: "Leichter Conditioner",
+        brand: "E2E",
         category: "conditioner",
         category_key: "conditioner",
-        is_active: true,
+        origin: "curated",
+        is_active: false,
         lifecycle_status: "active",
+        is_chaarlie_recommended: false,
+        suitable_thicknesses: ["fine"],
+        suitable_concerns: ["feuchtigkeit"],
+        sort_order: 20,
       },
     ]),
     admin.from("personal_plans").insert({ id: planId, user_id: userId }),
@@ -448,6 +549,49 @@ async function seedAcceptedRoutine(userId: string) {
     const { error } = await operation
     if (error) throw new Error(error.message)
   }
+  const productFacts = [
+    admin.from("product_shampoo_specs").insert({
+      product_id: shampooId,
+      thickness: "fine",
+      shampoo_bucket: "normal",
+      scalp_route: "balanced",
+      cleansing_intensity: "regular",
+    }),
+    admin.from("product_conditioner_specs").insert({
+      product_id: conditionerId,
+      thickness: "fine",
+      protein_moisture_balance: "snaps",
+    }),
+    admin.from("product_conditioner_rerank_specs").insert({
+      product_id: conditionerId,
+      weight: "light",
+      repair_level: "low",
+      balance_direction: "moisture",
+    }),
+  ]
+  for (const operation of productFacts) {
+    const { error } = await operation
+    if (error) throw new Error(error.message)
+  }
+  seedCanonicalProductGuidance([
+    {
+      productId: shampooId,
+      sourceGuidanceKey: "shampoo-standard-rinse-out-cleanse",
+      guidanceKey: `stage5-browser-shampoo-${shampooId}`,
+      role: "shampoo_everyday",
+    },
+    {
+      productId: conditionerId,
+      sourceGuidanceKey: "conditioner-standard-rinse-out-conditioning",
+      guidanceKey: `stage5-browser-conditioner-${conditionerId}`,
+      role: "conditioner_rinse_out",
+    },
+  ])
+  const { error: activationError } = await admin
+    .from("products")
+    .update({ is_active: true, is_chaarlie_recommended: true })
+    .in("id", [shampooId, conditionerId])
+  if (activationError) throw new Error(activationError.message)
   const { error: initialError } = await admin.from("personal_plan_need_versions").insert({
     id: initialNeedId,
     user_id: userId,

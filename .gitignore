@@ -223,6 +223,7 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v1/current-cohorts.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/deep-cleansing-candidates.json
+!/data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research.schema.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/scalp-refresh.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/

@@ -28,6 +28,44 @@ function manifest(overrides: Record<string, unknown> = {}) {
     source_label: "Hersteller",
     source_url: "https://example.test/product",
     source_text: "Vor der Hitze anwenden.",
+    guidance_payload: {
+      schemaVersion: 1,
+      guidanceKey: "fixture-heat-protectant-pre-heat-protection",
+      protocolVersion: 1,
+      locale: "de",
+      scope: {
+        kind: "product",
+        category: "heat_protectant",
+        productId: "__PRODUCT_ID__",
+      },
+      role: null,
+      applicationFamily: "post_wash_booster",
+      compatibleDayTypes: ["wash_day"],
+      exactGuidanceRequired: true,
+      sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
+      requirements: {
+        requiredCatalogFacts: [],
+        requiredProtocolFacts: [],
+        requiredProfileFacts: [],
+      },
+      protocolFacts: {
+        applicationArea: "lengths_ends",
+        rinse: "leave_in",
+        contactTimeSeconds: null,
+        conditionerRelationship: "not_applicable",
+        reapplication: "none",
+        amount: null,
+        cautions: [],
+      },
+      steps: [{ stepKey: "apply", action: "apply_product", copyTemplateDe: "Auftragen." }],
+      evidence: [
+        {
+          sourceUrl: "https://example.test/product",
+          sourceType: "manufacturer",
+          checkedAt: "2026-08-11",
+        },
+      ],
+    },
   }
   const product = {
     canonical_brand: " Acme ",
