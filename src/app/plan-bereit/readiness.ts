@@ -358,27 +358,9 @@ async function persistProfileOutput(
   const output: Record<string, unknown> = { ...profileData, user_id: userId }
   delete output.goals
 
-  const existing = await supabase.from("hair_profiles").select("id").eq("user_id", userId).single()
-  if (existing.error && existing.error.code !== "PGRST116") {
-    throw new Error(`hair_profiles lookup failed: ${existing.error.message}`)
-  }
-
-  if (existing.data && typeof (existing.data as { id?: unknown }).id === "string") {
-    const updates: Record<string, unknown> = { ...output }
-    delete updates.user_id
-    const updated = await supabase
-      .from("hair_profiles")
-      .update(updates)
-      .eq("id", (existing.data as { id: string }).id)
-    if (updated.error) {
-      throw new Error(`hair_profiles update failed: ${updated.error.message}`)
-    }
-    return
-  }
-
-  const inserted = await supabase.from("hair_profiles").insert(output)
-  if (inserted.error) {
-    throw new Error(`hair_profiles insert failed: ${inserted.error.message}`)
+  const persisted = await supabase.from("hair_profiles").upsert(output, { onConflict: "user_id" })
+  if (persisted.error) {
+    throw new Error(`hair_profiles upsert failed: ${persisted.error.message}`)
   }
 }
 

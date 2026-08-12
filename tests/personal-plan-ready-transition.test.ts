@@ -85,5 +85,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(route, /loadPlanBereitReadiness\(admin, readinessInput\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)
+  assert.match(readiness, /\.upsert\(output, \{ onConflict: "user_id" \}\)/)
+  assert.doesNotMatch(readiness, /hair_profiles insert failed/)
   assert.doesNotMatch(readiness, /\.eq\("email", email\.toLowerCase\(\)\)/)
 })

@@ -69,6 +69,18 @@ class FakeQuery {
     return Promise.resolve({ error: null })
   }
 
+  upsert(values: Row, options: { onConflict: string }) {
+    const rows = this.db.tables[this.table] ?? []
+    const existing = rows.find((row) => row[options.onConflict] === values[options.onConflict])
+    if (existing) {
+      Object.assign(existing, values)
+    } else {
+      this.db.tables[this.table] = [...rows, values]
+    }
+    this.db.upserts.push({ table: this.table, values, onConflict: options.onConflict })
+    return Promise.resolve({ error: null })
+  }
+
   single() {
     return this.maybeSingle()
   }
@@ -98,6 +110,7 @@ class FakeSupabase {
     filters: Array<{ column: string; value: unknown }>
   }> = []
   readonly inserts: Array<{ table: string; values: Row }> = []
+  readonly upserts: Array<{ table: string; values: Row; onConflict: string }> = []
 
   constructor(readonly tables: Record<string, Row[]>) {}
 
@@ -216,6 +229,12 @@ test("missing hair length persists against the exact owner-scoped lead with sour
       ["updated_at", "2026-08-12T08:00:00.000Z"],
     ],
   )
+  assert.equal(db.upserts.length, 1)
+  assert.equal(db.upserts[0].table, "hair_profiles")
+  assert.equal(db.upserts[0].onConflict, "user_id")
+  assert.equal(db.upserts[0].values.user_id, "user-1")
+  assert.equal(db.upserts[0].values.hair_length, "long")
+  assert.equal("goals" in db.upserts[0].values, false)
 })
 
 test("foreign exact leads are forbidden and never patched from the recovery form", async () => {
