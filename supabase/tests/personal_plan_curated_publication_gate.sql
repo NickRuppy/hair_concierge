@@ -1,5 +1,5 @@
 begin;
-select plan(10);
+select plan(12);
 
 select has_function(
   'public',
@@ -125,6 +125,60 @@ select lives_ok(
   $$set constraints all immediate$$,
   'a complete curated product can become globally visible'
 );
+select lives_ok(
+  $test$
+  do $block$
+  declare
+    manifest_json text := jsonb_build_object(
+      'schema_version', 'personal-plan-stage5-product-dispositions-v1',
+      'batch_id', 'S5-99-test-disposition',
+      'frozen_cohort_fingerprint', repeat('a', 64),
+      'review', jsonb_build_object('state', 'approved_by_nick', 'reviewed_by', 'nick'),
+      'items', jsonb_build_array(jsonb_build_object(
+        'product_id', '44444444-4444-4444-8444-444444444444',
+        'expected_current_category', 'heat_protectant',
+        'target_category', 'heat_protectant',
+        'disposition', 'awaiting_exact_analysis',
+        'reason_code', 'insufficient_finished_product_evidence',
+        'reason', 'Fixture disposition exercises the table-returning RPC lookup.',
+        'sources', jsonb_build_array(jsonb_build_object(
+          'label', 'Fixture source',
+          'url', 'https://example.test/heat',
+          'text', 'Fixture evidence summary',
+          'source_type', 'manufacturer',
+          'checked_at', '2026-08-12'
+        ))
+      ))
+    )::text;
+  begin
+    perform *
+    from public.apply_personal_plan_product_search_dispositions_v1(
+      manifest_json,
+      encode(extensions.digest(convert_to(manifest_json, 'UTF8'), 'sha256'), 'hex'),
+      'nick'
+    );
+    perform *
+    from public.apply_personal_plan_product_search_dispositions_v1(
+      manifest_json,
+      encode(extensions.digest(convert_to(manifest_json, 'UTF8'), 'sha256'), 'hex'),
+      'nick'
+    );
+  end;
+  $block$;
+  $test$,
+  'the disposition RPC qualifies product_id and replays an exact manifest'
+);
+select is(
+  (
+    select disposition
+    from public.personal_plan_product_search_dispositions
+    where product_id = '44444444-4444-4444-8444-444444444444'
+  ),
+  'awaiting_exact_analysis',
+  'the disposition RPC stores the reviewed result'
+);
+delete from public.personal_plan_product_search_dispositions
+where product_id = '44444444-4444-4444-8444-444444444444';
 set constraints all immediate;
 select throws_ok(
   $$delete from public.product_application_protocols where product_id = '44444444-4444-4444-8444-444444444444'$$,

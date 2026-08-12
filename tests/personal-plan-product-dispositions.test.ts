@@ -10,6 +10,8 @@ import { auditStage5CuratedCohort } from "@/lib/product-intake/catalog-enrichmen
 
 const migrationPath =
   "supabase/migrations/20260811205500_personal_plan_product_search_dispositions.sql"
+const rpcFixMigrationPath =
+  "supabase/migrations/20260812100000_personal_plan_product_search_disposition_rpc_fix.sql"
 const manifestPath =
   "data/catalog-enrichment/personal-plan-stage5-v1/S5-21-product-search-dispositions.json"
 const cohortPath = "data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json"
@@ -51,6 +53,25 @@ test("Personal Plan product dispositions are private, replay-safe, and never mut
   assert.match(sql, /v_product\.category_key IS DISTINCT FROM v_expected_category/i)
   assert.doesNotMatch(sql, /UPDATE public\.products/i)
   assert.doesNotMatch(sql, /INSERT INTO public\.products/i)
+  assert.match(
+    sql,
+    /REVOKE ALL ON FUNCTION public\.apply_personal_plan_product_search_dispositions_v1\(text,text,text\)[\s\S]*FROM PUBLIC, anon, authenticated/i,
+  )
+  assert.match(sql, /GRANT EXECUTE ON FUNCTION[\s\S]*TO service_role/i)
+})
+
+test("product disposition RPC qualifies its table lookup against the product_id output column", async () => {
+  const sql = await readFile(rpcFixMigrationPath, "utf8")
+
+  assert.match(
+    sql,
+    /FROM public\.personal_plan_product_search_dispositions AS existing_disposition[\s\S]*WHERE existing_disposition\.product_id = v_product_id/i,
+  )
+  assert.doesNotMatch(
+    sql,
+    /FROM public\.personal_plan_product_search_dispositions\s+WHERE product_id = v_product_id/i,
+  )
+  assert.match(sql, /SECURITY DEFINER[\s\S]*SET search_path = ''/i)
   assert.match(
     sql,
     /REVOKE ALL ON FUNCTION public\.apply_personal_plan_product_search_dispositions_v1\(text,text,text\)[\s\S]*FROM PUBLIC, anon, authenticated/i,
