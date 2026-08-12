@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bedarfsplan – Kategorie-Farben</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --page: #fdfbf9;
+        --plum: #291a43;
+        --purple: #6b50a0;
+        --muted: #706a65;
+        --line: #e9e2dc;
+        --shampoo-bg: #f5f0e5;
+        --shampoo-border: #e2d4b8;
+        --shampoo-dot: #a77d31;
+        --conditioner-bg: #edf3f5;
+        --conditioner-border: #cfdee3;
+        --conditioner-dot: #4c8ea8;
+        --leave-in-bg: #edf4f0;
+        --leave-in-border: #cedfd5;
+        --leave-in-dot: #56866b;
+        --oil-bg: #f5edef;
+        --oil-border: #e2d0d4;
+        --oil-dot: #a85f70;
+        --scalp-bg: #ebf3f2;
+        --scalp-border: #cadedb;
+        --scalp-dot: #2f817a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f3f0ed;
+        color: var(--plum);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .review-header {
+        margin: 0 auto;
+        max-width: 1220px;
+        padding: 28px 28px 18px;
+      }
+
+      .review-header strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .review-header p {
+        color: #625c57;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 8px 0 0;
+      }
+
+      .comparison {
+        display: grid;
+        gap: 22px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin: 0 auto;
+        max-width: 1220px;
+        padding: 0 28px 40px;
+      }
+
+      .page {
+        background: var(--page);
+        border: 1px solid rgba(41, 26, 67, 0.08);
+        box-shadow: 0 20px 55px rgba(41, 26, 67, 0.08);
+        min-height: 880px;
+        overflow: hidden;
+      }
+
+      .journey {
+        background: rgba(255, 255, 255, 0.72);
+        border-bottom: 1px solid #ede7e2;
+        padding: 24px 28px 18px;
+      }
+
+      .brand {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 29px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .stages {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(5, 1fr);
+        margin-top: 18px;
+      }
+
+      .stage {
+        color: #8c8580;
+        font-size: 10px;
+        font-weight: 700;
+        padding-top: 10px;
+        position: relative;
+        text-align: center;
+      }
+
+      .stage.active {
+        color: var(--plum);
+      }
+
+      .stage.active::before {
+        background: var(--plum);
+        border-radius: 999px;
+        content: "";
+        height: 5px;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      .content {
+        margin: 0 auto;
+        max-width: 540px;
+        padding: 26px 22px 40px;
+      }
+
+      .eyebrow {
+        color: #6e6863;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 1.1;
+        margin: 8px 0 10px;
+      }
+
+      .lead,
+      .example-note {
+        color: var(--muted);
+        line-height: 1.55;
+        margin: 0;
+      }
+
+      .lead {
+        font-size: 14px;
+      }
+      .example-note {
+        font-size: 11px;
+        margin-top: 7px;
+      }
+
+      .progress {
+        background: #e7e0d9;
+        border-radius: 99px;
+        height: 5px;
+        margin: 22px 0 14px;
+        overflow: hidden;
+      }
+
+      .progress span {
+        background: var(--purple);
+        display: block;
+        height: 100%;
+      }
+
+      .section-heading {
+        align-items: baseline;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 2px 10px;
+      }
+
+      .section-heading strong {
+        font-size: 14px;
+      }
+      .section-heading span {
+        color: var(--purple);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .cards {
+        display: grid;
+        gap: 12px;
+      }
+
+      .card {
+        align-items: center;
+        border: 1px solid;
+        border-radius: 19px;
+        box-shadow: 0 3px 11px rgba(43, 26, 67, 0.035);
+        display: grid;
+        gap: 13px;
+        grid-template-columns: 68px minmax(0, 1fr) 18px;
+        min-height: 128px;
+        padding: 13px;
+      }
+
+      .shampoo {
+        background: var(--shampoo-bg);
+        border-color: var(--shampoo-border);
+      }
+      .conditioner {
+        background: var(--conditioner-bg);
+        border-color: var(--conditioner-border);
+      }
+      .leave-in {
+        background: var(--leave-in-bg);
+        border-color: var(--leave-in-border);
+      }
+      .oil {
+        background: var(--oil-bg);
+        border-color: var(--oil-border);
+      }
+      .scalp {
+        background: var(--scalp-bg);
+        border-color: var(--scalp-border);
+      }
+
+      .image {
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid rgba(31, 26, 20, 0.04);
+        border-radius: 14px;
+        display: grid;
+        height: 92px;
+        place-items: center;
+        position: relative;
+      }
+
+      .image span:first-child {
+        font-size: 32px;
+      }
+
+      .example {
+        background: rgba(41, 26, 67, 0.76);
+        border-radius: 999px;
+        bottom: 5px;
+        color: white;
+        font-size: 7px;
+        font-weight: 800;
+        left: 5px;
+        letter-spacing: 0.08em;
+        padding: 3px 6px;
+        position: absolute;
+        text-transform: uppercase;
+      }
+
+      .meta {
+        align-items: center;
+        color: var(--purple);
+        display: flex;
+        font-size: 9px;
+        font-weight: 800;
+        gap: 6px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .dot {
+        border-radius: 50%;
+        height: 7px;
+        width: 7px;
+      }
+      .shampoo .dot {
+        background: var(--shampoo-dot);
+      }
+      .conditioner .dot {
+        background: var(--conditioner-dot);
+      }
+      .leave-in .dot {
+        background: var(--leave-in-dot);
+      }
+      .oil .dot {
+        background: var(--oil-dot);
+      }
+      .scalp .dot {
+        background: var(--scalp-dot);
+      }
+
+      .pill {
+        background: rgba(107, 80, 160, 0.13);
+        border-radius: 999px;
+        color: var(--purple);
+        font-size: 8px;
+        letter-spacing: 0.08em;
+        padding: 3px 7px;
+      }
+
+      .pill.paused {
+        background: rgba(200, 160, 40, 0.18);
+        color: #7f5d0c;
+      }
+
+      h2 {
+        font-size: 15px;
+        line-height: 1.2;
+        margin: 7px 0 3px;
+      }
+
+      .description {
+        color: #5f5954;
+        font-size: 10.5px;
+        line-height: 1.35;
+        margin: 0;
+      }
+
+      .tag {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(107, 80, 160, 0.13);
+        border-radius: 999px;
+        color: #62507e;
+        display: inline-block;
+        font-size: 8px;
+        font-weight: 700;
+        margin-top: 7px;
+        padding: 3px 7px;
+      }
+
+      .frequency {
+        border-top: 1px solid rgba(67, 55, 48, 0.08);
+        color: #665e58;
+        font-size: 9px;
+        font-weight: 700;
+        margin-top: 8px;
+        padding-top: 7px;
+      }
+
+      .chevron {
+        color: rgba(31, 26, 20, 0.4);
+        font-size: 20px;
+      }
+
+      .annotation {
+        background: white;
+        border: 1px solid rgba(107, 80, 160, 0.16);
+        border-radius: 14px;
+        color: #554c5e;
+        font-size: 11px;
+        line-height: 1.45;
+        margin-top: 16px;
+        padding: 11px 12px;
+      }
+
+      .annotation strong {
+        color: var(--plum);
+      }
+
+      @media (max-width: 860px) {
+        .comparison {
+          grid-template-columns: 1fr;
+          max-width: 620px;
+        }
+        .page {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="review-header">
+      <strong>Entscheidungsmockup · Stage 1 Bedarfsplan</strong>
+      <p>
+        Kategorie-Farben ersetzen die flächige Basis-/Optional-Farbtrennung. Status bleibt immer
+        explizit über Seitenkontext, Pill und Text erkennbar.
+      </p>
+    </header>
+
+    <main class="comparison">
+      <section class="page" aria-label="Basis-Seite mit Kategorie-Farben">
+        <div class="journey">
+          <div class="brand">chaarlie</div>
+          <div class="stages">
+            <span class="stage active">Bedarf</span><span class="stage">Verfeinerung</span>
+            <span class="stage">Produkte</span><span class="stage">Routine</span>
+            <span class="stage">Anwendung</span>
+          </div>
+        </div>
+        <div class="content">
+          <div class="eyebrow">Dein persönlicher Plan</div>
+          <h1>Deine Basis</h1>
+          <p class="lead">
+            Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine.
+          </p>
+          <p class="example-note">
+            Bilder zeigen nur Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.
+          </p>
+          <div class="progress"><span style="width: 50%"></span></div>
+          <div class="section-heading">
+            <strong>Von uns klar empfohlen</strong><span>2 Kategorien</span>
+          </div>
+          <div class="cards">
+            <article class="card shampoo">
+              <div class="image"><span>🧴</span><span class="example">Beispiel</span></div>
+              <div>
+                <div class="meta"><span class="dot"></span><span>Shampoo</span></div>
+                <h2>Sanft reinigend</h2>
+                <p class="description">
+                  Entfernt Talg und Rückstände, ohne deine Kopfhaut unnötig zu reizen.
+                </p>
+                <span class="tag">sanft</span>
+                <div class="frequency">◷ 2× pro Woche</div>
+              </div>
+              <span class="chevron">⌄</span>
+            </article>
+            <article class="card conditioner">
+              <div class="image"><span>🧴</span><span class="example">Beispiel</span></div>
+              <div>
+                <div class="meta"><span class="dot"></span><span>Conditioner</span></div>
+                <h2>Leicht pflegend</h2>
+                <p class="description">
+                  Glättet deine Längen nach der Wäsche, ohne unnötig zu beschweren.
+                </p>
+                <span class="tag">leichte Pflege</span>
+                <div class="frequency">◷ nach jeder Haarwäsche</div>
+              </div>
+              <span class="chevron">⌄</span>
+            </article>
+          </div>
+          <div class="annotation">
+            <strong>Basis bleibt eindeutig:</strong> durch Seitentitel und Abschnitt – nicht durch
+            eine identische grüne Fläche auf jeder Karte.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" aria-label="Optional-Seite und pausierter Status mit Kategorie-Farben">
+        <div class="journey">
+          <div class="brand">chaarlie</div>
+          <div class="stages">
+            <span class="stage active">Bedarf</span><span class="stage">Verfeinerung</span>
+            <span class="stage">Produkte</span><span class="stage">Routine</span>
+            <span class="stage">Anwendung</span>
+          </div>
+        </div>
+        <div class="content">
+          <div class="eyebrow">Optionale Empfehlungen</div>
+          <h1>Zusätzlich sinnvoll</h1>
+          <p class="lead">
+            Basierend auf deiner Haaranalyse können diese Ergänzungen deine Ziele zusätzlich
+            unterstützen.
+          </p>
+          <p class="example-note">
+            Bilder zeigen nur Beispiele für die Produktart. Ein konkretes Produkt wählen wir später.
+          </p>
+          <div class="progress"><span style="width: 100%"></span></div>
+          <div class="section-heading">
+            <strong>Für deine Ziele</strong><span>3 Vorschläge</span>
+          </div>
+          <div class="cards">
+            <article class="card leave-in">
+              <div class="image"><span>💧</span><span class="example">Beispiel</span></div>
+              <div>
+                <div class="meta">
+                  <span class="dot"></span><span>Leave-in</span><span class="pill">Optional</span>
+                </div>
+                <h2>Leicht schützend</h2>
+                <p class="description">
+                  Gibt deinen Längen zusätzlichen Schutz vor Trockenheit und Reibung.
+                </p>
+                <span class="tag">Schutz &amp; Glättung</span>
+                <div class="frequency">◷ nach jeder Haarwäsche</div>
+              </div>
+              <span class="chevron">⌄</span>
+            </article>
+            <article class="card oil">
+              <div class="image"><span>🫗</span><span class="example">Beispiel</span></div>
+              <div>
+                <div class="meta">
+                  <span class="dot"></span><span>Haaröl</span><span class="pill">Optional</span>
+                </div>
+                <h2>Leichtes Finish</h2>
+                <p class="description">Glättet Frizz und gibt Glanz, ohne unnötig zu beschweren.</p>
+                <span class="tag">Finish &amp; Glanz</span>
+                <div class="frequency">◷ bei Bedarf</div>
+              </div>
+              <span class="chevron">⌄</span>
+            </article>
+            <article class="card scalp">
+              <div class="image"><span>✦</span><span class="example">Beispiel</span></div>
+              <div>
+                <div class="meta">
+                  <span class="dot"></span><span>Kopfhautpflege</span
+                  ><span class="pill paused">Pausiert</span>
+                </div>
+                <h2>Aktuell nicht anwenden</h2>
+                <p class="description">
+                  Die Kategorie kann sinnvoll sein, soll aber gerade pausieren.
+                </p>
+                <span class="tag">Kopfhautkomfort</span>
+                <div class="frequency">◷ später: nach Klärung</div>
+              </div>
+              <span class="chevron">⌄</span>
+            </article>
+          </div>
+          <div class="annotation">
+            <strong>Pausiert bleibt explizit:</strong> gelbe Status-Pill plus „Aktuell nicht
+            anwenden“. Die Kartenfläche bleibt in der Farbe der Kategorie.
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

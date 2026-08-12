@@ -4,6 +4,7 @@ import Image from "next/image"
 import { ChevronDown, Clock3 } from "lucide-react"
 import { useId, useState } from "react"
 
+import type { Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
 export type NeedCardTone = "basis" | "optional"
@@ -27,21 +28,46 @@ export type NeedCardViewModel = {
   }>
 }
 
+const CATEGORY_CARD_STYLES = {
+  shampoo: { shellClassName: "border-[#E2D4B8] bg-[#F5F0E5]", dotClassName: "bg-[#A77D31]" },
+  conditioner: { shellClassName: "border-[#CFDEE3] bg-[#EDF3F5]", dotClassName: "bg-[#4C8EA8]" },
+  leave_in: { shellClassName: "border-[#CEDFD5] bg-[#EDF4F0]", dotClassName: "bg-[#56866B]" },
+  heat_protectant: {
+    shellClassName: "border-[#E5D6C8] bg-[#F5F0EA]",
+    dotClassName: "bg-[#B76A3E]",
+  },
+  oil: { shellClassName: "border-[#E2D0D4] bg-[#F5EDEF]", dotClassName: "bg-[#A85F70]" },
+  mask: { shellClassName: "border-[#DCD3E5] bg-[#F1EEF5]", dotClassName: "bg-[#7D67A8]" },
+  scalp_care: { shellClassName: "border-[#CADEDB] bg-[#EBF3F2]", dotClassName: "bg-[#2F817A]" },
+  dry_shampoo: {
+    shellClassName: "border-[#DCE2C6] bg-[#F1F3E9]",
+    dotClassName: "bg-[#7D913F]",
+  },
+  bondbuilder: { shellClassName: "border-[#E2D1DF] bg-[#F4EDF3]", dotClassName: "bg-[#985D8F]" },
+  deep_cleansing_shampoo: {
+    shellClassName: "border-[#E2DBC0] bg-[#F5F2E5]",
+    dotClassName: "bg-[#998323]",
+  },
+} satisfies Record<Stage1Category, { shellClassName: string; dotClassName: string }>
+
+const NEUTRAL_CARD_STYLE = {
+  shellClassName: "border-[rgba(31,26,20,0.07)] bg-white",
+  dotClassName: "bg-[#6B50A0]",
+}
+
 export function NeedCard({ card }: { card: NeedCardViewModel }) {
   const [open, setOpen] = useState(Boolean(card.initiallyOpen))
   const [imageAvailable, setImageAvailable] = useState(Boolean(card.imageUrl))
   const fallbackId = useId()
   const panelId = `need-card-${card.id || fallbackId}-detail`
   const hasImage = Boolean(card.imageUrl) && imageAvailable
+  const categoryStyle = CATEGORY_CARD_STYLES[card.id as Stage1Category] ?? NEUTRAL_CARD_STYLE
 
   return (
     <article
       className={cn(
         "overflow-hidden rounded-[19px] border shadow-[0_3px_11px_rgba(43,26,67,0.035)]",
-        card.tone === "basis" && "border-[rgba(110,170,110,0.24)] bg-[rgba(110,170,110,0.10)]",
-        card.tone === "optional" &&
-          "border-[rgba(31,26,20,0.07)] bg-[rgba(110,105,95,0.10)] shadow-[inset_0_2px_5px_rgba(31,26,20,0.06),inset_0_-1px_1px_rgba(255,255,255,0.65)]",
-        card.paused && "border-[rgba(200,160,40,0.28)] bg-[rgba(220,180,60,0.12)] shadow-none",
+        categoryStyle.shellClassName,
       )}
       data-plan-start-card={card.id}
       data-plan-start-card-tone={card.tone}
@@ -63,8 +89,6 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
           <span
             className={cn(
               "relative grid h-[82px] w-[66px] shrink-0 place-items-center overflow-hidden rounded-[14px] bg-[#f3efe8] shadow-[inset_0_0_0_1px_rgba(31,26,20,0.04)]",
-              card.tone === "optional" && "opacity-75 saturate-[0.72]",
-              card.paused && "bg-[#f5ebd2] opacity-100 saturate-100",
               "max-[360px]:h-[76px] max-[360px]:w-[58px]",
             )}
           >
@@ -90,11 +114,7 @@ export function NeedCard({ card }: { card: NeedCardViewModel }) {
           <span className="flex min-w-0 items-center gap-1.5 text-[8.5px] font-extrabold uppercase tracking-[0.11em] text-[#6B50A0]">
             <span
               aria-hidden="true"
-              className={cn(
-                "h-1.5 w-1.5 shrink-0 rounded-full bg-[#6FAA70]",
-                card.tone === "optional" && "bg-[#6B50A0]",
-                card.paused && "bg-[#C8A038]",
-              )}
+              className={cn("h-1.5 w-1.5 shrink-0 rounded-full", categoryStyle.dotClassName)}
             />
             <span className="truncate">{card.categoryLabel}</span>
             {card.statusLabel !== "Basis" ? (
