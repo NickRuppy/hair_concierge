@@ -37,7 +37,13 @@ function NoCompleteDayView({ restDay }: { restDay: ApplicationDayView }) {
   )
 }
 
-export function ApplicationPage({ view }: { view: ApplicationPageView }) {
+export function ApplicationPage({
+  view,
+  internalComputeMs,
+}: {
+  view: ApplicationPageView
+  internalComputeMs?: number
+}) {
   const days = useMemo(() => (view.state === "ready" ? sortDays(view.days) : []), [view])
 
   let content
@@ -56,7 +62,11 @@ export function ApplicationPage({ view }: { view: ApplicationPageView }) {
   }
 
   return (
-    <div className="personal-plan-cookie-clearance min-h-dvh bg-[var(--background)]">
+    <div
+      className="personal-plan-cookie-clearance min-h-dvh bg-[var(--background)]"
+      data-personal-plan-application-root="true"
+      data-personal-plan-application-compute-ms={internalComputeMs}
+    >
       <PersonalPlanJourneyHeader currentStage={5} saveStatus="saved" />
       {content}
     </div>

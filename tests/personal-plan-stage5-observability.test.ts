@@ -135,3 +135,41 @@ test("anomalous Routine terminal-source observability excludes source keys and u
   })
   assert.equal((captured as Error).message, "personal_plan_routine_source_terminalized")
 })
+
+test("Stage 5 V2 unresolved guidance reports a typed product identifier without copy", () => {
+  let context: Record<string, unknown> | undefined
+  let level: "error" | "warning" | undefined
+  const sink: PersonalPlanApplicationSentrySink = {
+    withScope(callback) {
+      callback({
+        setTag() {},
+        setContext(_name, value) {
+          context = value
+        },
+        setFingerprint() {},
+        setLevel(value) {
+          level = value
+        },
+      })
+    },
+    captureException() {},
+  }
+
+  capturePersonalPlanApplicationFailure(
+    {
+      reason: "product_guidance_unresolved",
+      durationMs: 3,
+      productId: "30000000-0000-4000-8000-000000000001",
+      issueCode: "blocked_missing_verified_companion",
+    },
+    sink,
+  )
+
+  assert.deepEqual(context, {
+    reason: "product_guidance_unresolved",
+    duration_ms: 3,
+    product_id: "30000000-0000-4000-8000-000000000001",
+    issue_code: "blocked_missing_verified_companion",
+  })
+  assert.equal(level, "warning")
+})

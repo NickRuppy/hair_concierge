@@ -759,10 +759,11 @@ test("accepted Routine renders Anwendung overview and a bookmarkable day without
   await expect(page.getByRole("heading", { name: "Anwendung", exact: true })).toBeVisible({
     timeout: 15_000,
   })
-  await expect(page.getByRole("link", { name: "Waschtag" })).toBeVisible()
+  const washDayCard = page.getByRole("link", { name: /^Waschtag/ })
+  await expect(washDayCard).toBeVisible()
   await expect(page.getByText("Dein Plan wird noch vervollständigt")).toBeVisible()
-  await expect(page.getByText("1 Produkt vorläufig")).toBeVisible()
-  await expect(page.getByText("1 Anwendungsdetail offen")).toBeVisible()
+  await expect(washDayCard).toContainText("1 Produkt vorläufig")
+  await expect(washDayCard).toContainText("1 Anwendungsdetail offen")
   await page.screenshot({ path: testInfo.outputPath("overview-mobile-320.png"), fullPage: true })
 
   await page.setViewportSize({ width: 390, height: 844 })

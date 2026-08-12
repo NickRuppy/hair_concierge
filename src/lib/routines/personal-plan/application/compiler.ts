@@ -122,7 +122,10 @@ function transitionCopy(fromAnchor: string, toAnchor: string) {
 
 type AnchorOrdering =
   | { status: "ordered"; ranks: Map<ApplicationAnchor, number> }
-  | { status: "ordering_cycle" | "anchor_conflict" }
+  | {
+      status: "ordering_cycle" | "anchor_conflict"
+      involvedAnchors: Set<ApplicationAnchor>
+    }
 
 function hasEquivalentVisibleSteps(
   left: readonly CompiledProductStep[],
@@ -148,8 +151,14 @@ function orderAnchors(
   const indegree = new Map([...anchors].map((anchor) => [anchor, 0]))
   for (const { protocol } of items) {
     const anchor = protocol.sequence.anchor
-    if (protocol.sequence.conflictsWith.some((conflict) => anchors.has(conflict))) {
-      return { status: "anchor_conflict" }
+    const activeConflicts = protocol.sequence.conflictsWith.filter((conflict) =>
+      anchors.has(conflict),
+    )
+    if (activeConflicts.length > 0) {
+      return {
+        status: "anchor_conflict",
+        involvedAnchors: new Set([anchor, ...activeConflicts]),
+      }
     }
     for (const target of protocol.sequence.before) {
       if (anchors.has(target)) edges.set(anchor, [...(edges.get(anchor) ?? []), target])
@@ -202,8 +211,63 @@ function orderAnchors(
       }
     }
   }
-  if (ordered.length !== anchors.size) return { status: "ordering_cycle" }
+  if (ordered.length !== anchors.size)
+    return {
+      status: "ordering_cycle",
+      involvedAnchors: new Set([...anchors].filter((anchor) => !ordered.includes(anchor))),
+    }
   return { status: "ordered", ranks: new Map(ordered.map((anchor, index) => [anchor, index])) }
+}
+
+function unresolvedPosition(item: NormalizedRoutineItem): UnresolvedPosition {
+  return {
+    itemId: item.itemId,
+    productId: item.productId,
+    productName: item.productName,
+    category: item.category,
+    role: item.role,
+    routineOrder: item.routineOrder,
+    applicationInstanceKey:
+      item.applicationInstanceKey ?? `${item.productId}:unresolved:${item.itemId}`,
+  }
+}
+
+function addUnresolvedPosition(positions: UnresolvedPosition[], item: NormalizedRoutineItem): void {
+  const unresolved = unresolvedPosition(item)
+  if (
+    !positions.some(
+      (existing) =>
+        existing.productId === unresolved.productId &&
+        existing.applicationInstanceKey === unresolved.applicationInstanceKey,
+    )
+  ) {
+    positions.push(unresolved)
+  }
+}
+
+function unresolvedOnlyDay(
+  key: ApplicationDayTypeKey,
+  positions: readonly UnresolvedPosition[],
+): CompiledApplicationDayV1 {
+  const outerSequence = [...positions]
+    .sort(
+      (left, right) =>
+        (left.routineOrder ?? Number.MAX_SAFE_INTEGER) -
+          (right.routineOrder ?? Number.MAX_SAFE_INTEGER) ||
+        left.applicationInstanceKey.localeCompare(right.applicationInstanceKey),
+    )
+    .map((item) => ({
+      kind: "unresolved_product" as const,
+      block: {
+        productId: item.productId,
+        productName: item.productName,
+        category: item.category,
+        role: item.role,
+        applicationInstanceKey: item.applicationInstanceKey,
+        status: "unresolved" as const,
+      },
+    }))
+  return { key, productBlocks: [], outerSequence, isPartial: true }
 }
 
 function compileDay(
@@ -252,16 +316,7 @@ function compileDay(
       protocols: [...protocols],
     })
     if (result.status === "unresolved") {
-      unresolvedRelevantItems.push({
-        itemId: item.itemId,
-        productId: item.productId,
-        productName: item.productName,
-        category: item.category,
-        role: item.role,
-        routineOrder: item.routineOrder,
-        applicationInstanceKey:
-          item.applicationInstanceKey ?? `${item.productId}:unresolved:${item.itemId}`,
-      })
+      addUnresolvedPosition(unresolvedRelevantItems, item)
       continue
     }
     resolved.push({ item, protocol: result.protocol })
@@ -274,8 +329,19 @@ function compileDay(
           relationship !== null && relationship !== "not_applicable",
       ),
   )
-  if (relationships.size > 1) return "conditioner_relationship_conflict"
-  const conditionerRelationship = relationships.values().next().value ?? "not_applicable"
+  if (relationships.size > 1) {
+    const conflicting = resolved.filter(({ protocol }) => {
+      const relationship = protocol.protocolFacts.conditionerRelationship
+      return relationship !== null && relationship !== "not_applicable"
+    })
+    for (const { item } of conflicting) addUnresolvedPosition(unresolvedRelevantItems, item)
+    const conflictedItemIds = new Set(conflicting.map(({ item }) => item.itemId))
+    resolved = resolved.filter(({ item }) => !conflictedItemIds.has(item.itemId))
+  }
+  let conditionerRelationship =
+    relationships.size > 1
+      ? ("not_applicable" as const)
+      : (relationships.values().next().value ?? "not_applicable")
   const conditionerIsSuppressed =
     conditionerRelationship === "no_conditioner" ||
     conditionerRelationship === "replaces_conditioner"
@@ -289,7 +355,15 @@ function compileDay(
     !resolved.some(({ item }) => item.role === "condition") &&
     !unresolvedRelevantItems.some((item) => item.role === "condition")
   ) {
-    return "incomplete_guidance"
+    const imposing = resolved.filter(
+      ({ protocol }) =>
+        protocol.protocolFacts.conditionerRelationship === "conditioner_before" ||
+        protocol.protocolFacts.conditionerRelationship === "conditioner_after",
+    )
+    for (const { item } of imposing) addUnresolvedPosition(unresolvedRelevantItems, item)
+    const imposingIds = new Set(imposing.map(({ item }) => item.itemId))
+    resolved = resolved.filter(({ item }) => !imposingIds.has(item.itemId))
+    conditionerRelationship = "not_applicable"
   }
   const requiredRoles = CANONICAL_APPLICATION_DAY_RULES[key].requiredRoles
   const relevantItems = [...resolved.map(({ item }) => item), ...unresolvedRelevantItems]
@@ -300,18 +374,33 @@ function compileDay(
   )
     return null
   if (resolved.length === 0) {
-    return unresolvedRelevantItems.length > 0 ? "incomplete_guidance" : null
+    return unresolvedRelevantItems.length > 0
+      ? unresolvedOnlyDay(key, unresolvedRelevantItems)
+      : null
   }
-  const anchorOrdering = orderAnchors(resolved, conditionerRelationship)
-  if (anchorOrdering.status !== "ordered") return anchorOrdering.status
+  let anchorOrdering = orderAnchors(resolved, conditionerRelationship)
+  while (anchorOrdering.status !== "ordered") {
+    const involvedAnchors = anchorOrdering.involvedAnchors
+    const isolated = resolved.filter(({ protocol }) =>
+      involvedAnchors.has(protocol.sequence.anchor),
+    )
+    if (isolated.length === 0) return anchorOrdering.status
+    for (const { item } of isolated) addUnresolvedPosition(unresolvedRelevantItems, item)
+    const isolatedIds = new Set(isolated.map(({ item }) => item.itemId))
+    resolved = resolved.filter(({ item }) => !isolatedIds.has(item.itemId))
+    if (resolved.length === 0) return unresolvedOnlyDay(key, unresolvedRelevantItems)
+    anchorOrdering = orderAnchors(resolved, conditionerRelationship)
+  }
   const blocks = new Map<
     string,
     CompiledProductBlock & {
       guidanceKey: string
       scopeKind: "application_family" | "product"
       routineOrder?: number
+      sourceItems: NormalizedRoutineItem[]
     }
   >()
+  const conflictedInstanceKeys = new Set<string>()
   for (const { item, protocol } of sortResolved(
     resolved,
     anchorOrdering.ranks,
@@ -324,6 +413,10 @@ function compileDay(
         ? (item.applicationInstanceKey ??
           `${item.productId}:${protocol.sequence.anchor}:${item.itemId}`)
         : `${item.productId}:${protocol.sequence.anchor}`
+    if (conflictedInstanceKeys.has(instanceKey)) {
+      addUnresolvedPosition(unresolvedRelevantItems, item)
+      continue
+    }
     const existing = blocks.get(instanceKey)
     if (existing) {
       const exact = protocol.scope.kind === "product"
@@ -333,7 +426,12 @@ function compileDay(
         existingExact === exact &&
         !hasEquivalentVisibleSteps(existing.steps, protocol.steps)
       ) {
-        return "product_guidance_conflict"
+        for (const sourceItem of existing.sourceItems)
+          addUnresolvedPosition(unresolvedRelevantItems, sourceItem)
+        addUnresolvedPosition(unresolvedRelevantItems, item)
+        blocks.delete(instanceKey)
+        conflictedInstanceKeys.add(instanceKey)
+        continue
       }
       if (exact && !existingExact) {
         existing.steps = protocol.steps.map((step) => ({
@@ -345,6 +443,7 @@ function compileDay(
         existing.scopeKind = "product"
       }
       if (!existing.roles.includes(item.role)) existing.roles.push(item.role)
+      existing.sourceItems.push(item)
       if (item.heatEventId && !existing.heatEventIds?.includes(item.heatEventId)) {
         existing.heatEventIds = [...(existing.heatEventIds ?? []), item.heatEventId]
       }
@@ -384,6 +483,7 @@ function compileDay(
       guidanceKey: protocol.guidanceKey,
       scopeKind: protocol.scope.kind,
       routineOrder: item.routineOrder,
+      sourceItems: [item],
     })
   }
   const internalProductBlocks = [...blocks.values()]
@@ -406,7 +506,10 @@ function compileDay(
     heatEventIds: block.heatEventIds,
   })
   const productBlocks = internalProductBlocks.map(publicProductBlock)
-  if (productBlocks.length === 0) return null
+  if (productBlocks.length === 0)
+    return unresolvedRelevantItems.length > 0
+      ? unresolvedOnlyDay(key, unresolvedRelevantItems)
+      : null
   const unresolvedBlocks = unresolvedRelevantItems.map((item) => ({
     block: {
       productId: item.productId,

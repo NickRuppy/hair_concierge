@@ -1,8 +1,12 @@
 begin;
-select plan(18);
+select plan(22);
 
 select has_table('public', 'application_day_type_definitions', 'day definitions are present');
 select has_table('public', 'application_guidance_protocols', 'guidance protocols are present');
+select has_column('public', 'application_guidance_protocols', 'contract_version', 'guidance rows identify their contract generation');
+select col_has_check('public', 'application_guidance_protocols', 'contract_version', 'guidance generation is constrained');
+select has_column('public', 'product_application_protocols', 'guidance_payload_v2', 'product protocols retain separate V2 storage');
+select col_has_check('public', 'product_application_protocols', 'guidance_payload_v2', 'V2 product payload shape is constrained');
 select is((select count(*)::integer from public.application_day_type_definitions where status = 'active'), 8, 'eight active canonical day types');
 select is((select count(*)::integer from public.application_day_type_definitions where locale = 'de'), 8, 'day types are German');
 

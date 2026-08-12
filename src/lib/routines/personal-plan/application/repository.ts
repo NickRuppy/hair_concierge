@@ -1,6 +1,9 @@
 import "server-only"
 
 import { APPLICATION_DAY_TYPE_KEYS, applicationGuidanceProtocolSchema } from "./contracts"
+import { applicationFamilyTemplateV2Schema, type ApplicationFamilyTemplateV2 } from "./contracts-v2"
+import type { ApplicationGuidanceProtocolV1 } from "./contracts"
+import type { PersonalPlanStage5ContractVersion } from "@/lib/personal-plan/stage5-rollout"
 import { createAdminClient } from "@/lib/supabase/admin"
 
 type QueryError = { message?: string }
@@ -42,6 +45,7 @@ type ApplicationGuidanceProtocolRow = {
   role_key: string | null
   product_id: string | null
   application_family: string
+  contract_version: number
   payload: unknown
   status: string
   verified_at: string | null
@@ -66,14 +70,14 @@ export type ApplicationGuidanceProtocol = {
   roleKey: string | null
   productId: string | null
   applicationFamily: string
-  payload: ReturnType<typeof applicationGuidanceProtocolSchema.parse>
+  payload: ApplicationGuidanceProtocolV1 | ApplicationFamilyTemplateV2
   verifiedAt: string | null
 }
 
 const DAY_TYPE_DEFINITION_SELECT =
   "day_type_key, definition_version, locale, label, summary, sort_order, status"
 const GUIDANCE_PROTOCOL_SELECT =
-  "id, guidance_key, protocol_version, locale, scope_kind, category_key, role_key, product_id, application_family, payload, status, verified_at"
+  "id, guidance_key, protocol_version, locale, scope_kind, category_key, role_key, product_id, application_family, contract_version, payload, status, verified_at"
 
 function queryError(table: string, error: QueryError | null): Error {
   return new Error(
@@ -114,15 +118,21 @@ function parseDayTypeDefinition(
   }
 }
 
-function parseGuidanceProtocol(row: ApplicationGuidanceProtocolRow): ApplicationGuidanceProtocol {
-  if (row.status !== "active" || row.locale !== "de") {
+function parseGuidanceProtocol(
+  row: ApplicationGuidanceProtocolRow,
+  contractVersion: PersonalPlanStage5ContractVersion,
+): ApplicationGuidanceProtocol {
+  if (row.status !== "active" || row.locale !== "de" || row.contract_version !== contractVersion) {
     throw invalidRow("application guidance protocol", row.guidance_key)
   }
   if (row.verified_at === null) {
     throw new Error(`active application guidance protocol ${row.guidance_key} is not verified`)
   }
 
-  const parsed = applicationGuidanceProtocolSchema.safeParse(row.payload)
+  const parsed =
+    contractVersion === 1
+      ? applicationGuidanceProtocolSchema.safeParse(row.payload)
+      : applicationFamilyTemplateV2Schema.safeParse(row.payload)
   if (!parsed.success) {
     throw new Error(`invalid application guidance protocol ${row.guidance_key}`)
   }
@@ -158,7 +168,10 @@ function parseGuidanceProtocol(row: ApplicationGuidanceProtocolRow): Application
   }
 }
 
-export function createApplicationGuidanceRepository(client: ApplicationContentQueryClient) {
+export function createApplicationGuidanceRepository(
+  client: ApplicationContentQueryClient,
+  options: { contractVersion: PersonalPlanStage5ContractVersion } = { contractVersion: 1 },
+) {
   return {
     async loadActiveDayTypeDefinitions(): Promise<ApplicationDayTypeDefinition[]> {
       const result = (await client
@@ -178,18 +191,22 @@ export function createApplicationGuidanceRepository(client: ApplicationContentQu
         .select(GUIDANCE_PROTOCOL_SELECT)
         .eq("status", "active")
         .eq("locale", "de")
+        .eq("contract_version", options.contractVersion)
         .order("guidance_key", { ascending: true })) as QueryResult<
         ApplicationGuidanceProtocolRow[]
       >
 
       if (result.error) throw queryError("application_guidance_protocols", result.error)
-      return (result.data ?? []).map(parseGuidanceProtocol)
+      return (result.data ?? []).map((row) => parseGuidanceProtocol(row, options.contractVersion))
     },
   }
 }
 
-export function createServerApplicationGuidanceRepository() {
+export function createServerApplicationGuidanceRepository(
+  contractVersion: PersonalPlanStage5ContractVersion,
+) {
   return createApplicationGuidanceRepository(
     createAdminClient() as unknown as ApplicationContentQueryClient,
+    { contractVersion },
   )
 }

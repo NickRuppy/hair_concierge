@@ -131,7 +131,7 @@ test("compiler builds canonical complete days, deduplicates a multi-role applica
   })
   assert.deepEqual(
     result.days.map((day) => day.key),
-    ["wash_day", "rest_day"],
+    ["wash_day", "refresh_day", "between_wash_care_day", "styling_day", "rest_day"],
   )
   assert.deepEqual(
     result.days[0].productBlocks.map((block) => block.productName),
@@ -150,7 +150,7 @@ test("compiler builds canonical complete days, deduplicates a multi-role applica
   })
 })
 
-test("compiler fails the affected day closed when conditioner relationships conflict", () => {
+test("compiler isolates products with conflicting conditioner relationships", () => {
   const shampooProtocol = protocol(
     "shampoo",
     "cleanse",
@@ -196,13 +196,13 @@ test("compiler fails the affected day closed when conditioner relationships conf
     ],
   })
 
+  const day = result.days.find((entry) => entry.key === "intensive_care_day")
+  assert.ok(day)
+  assert.equal(day.isPartial, true)
+  assert.equal(day.outerSequence.filter((step) => step.kind === "unresolved_product").length, 2)
   assert.equal(
-    result.days.some((day) => day.key === "intensive_care_day"),
+    result.failures.some((failure) => failure.dayType === "intensive_care_day"),
     false,
-  )
-  assert.deepEqual(
-    result.failures.find((failure) => failure.dayType === "intensive_care_day"),
-    { dayType: "intensive_care_day", reason: "conditioner_relationship_conflict" },
   )
 })
 
@@ -336,10 +336,18 @@ test("compiler keeps separately reapplied heat events distinct and fails closed 
       incompatibleExactHeat,
     ],
   })
-  assert.ok(
-    conflicted.failures.some(
-      (failure) => failure.dayType === "wash_day" && failure.reason === "product_guidance_conflict",
+  const conflictedDay = conflicted.days.find((day) => day.key === "wash_day")
+  assert.ok(conflictedDay)
+  assert.equal(conflictedDay.isPartial, true)
+  assert.equal(
+    conflictedDay.outerSequence.some(
+      (step) => step.kind === "unresolved_product" && step.block.productId === ids[2],
     ),
+    true,
+  )
+  assert.equal(
+    conflicted.failures.some((failure) => failure.dayType === "wash_day"),
+    false,
   )
 })
 
@@ -437,7 +445,7 @@ test("compiler keeps resolved products in protocol-anchor order when Routine ord
   )
 })
 
-test("compiler suppresses a cyclic anchor graph with an internal failure reason", () => {
+test("compiler isolates a cyclic anchor graph as unresolved products", () => {
   const cleanse = protocol(
     "shampoo",
     "cleanse",
@@ -460,16 +468,63 @@ test("compiler suppresses a cyclic anchor graph with an internal failure reason"
   })
   assert.deepEqual(
     result.days.map((day) => day.key),
-    ["rest_day"],
+    ["wash_day", "rest_day"],
   )
-  assert.ok(
-    result.failures.some(
-      (failure) => failure.dayType === "wash_day" && failure.reason === "ordering_cycle",
-    ),
+  const day = result.days.find((entry) => entry.key === "wash_day")
+  assert.equal(day?.productBlocks.length, 0)
+  assert.equal(day?.outerSequence.filter((step) => step.kind === "unresolved_product").length, 2)
+  assert.equal(
+    result.failures.some((failure) => failure.dayType === "wash_day"),
+    false,
   )
 })
 
-test("compiler honors non-cyclic sequence edges and fails closed on conflicts", () => {
+test("compiler repeatedly isolates independent anchor conflicts instead of failing the whole day", () => {
+  const cleanse = protocol(
+    "shampoo",
+    "cleanse",
+    "standard_rinse_out_cleanse",
+    "wash_day",
+    "wet_cleanse",
+  )
+  const condition = protocol(
+    "conditioner",
+    "condition",
+    "standard_rinse_out_conditioning",
+    "wash_day",
+    "post_cleanse_rinse_off",
+  )
+  const leaveIn = protocol("leave_in", "leave_in", "post_wash_booster", "wash_day", "damp_leave_on")
+  const finish = protocol("oil", "finish", "dry_finish", "wash_day", "dry_finish")
+  cleanse.sequence.conflictsWith = ["post_cleanse_rinse_off"]
+  leaveIn.sequence.conflictsWith = ["dry_finish"]
+  const oil = {
+    ...leaveInAndHeat,
+    itemId: "finish-oil",
+    productId: "44444444-4444-4444-8444-444444444444",
+    productName: "Finish-Öl",
+    category: "oil" as const,
+    role: "finish" as const,
+    applicationInstanceKey: "finish-oil",
+  }
+
+  const result = compileApplicationView({
+    input: input([shampoo, conditioner, leaveInAndHeat, oil]),
+    protocols: [cleanse, condition, leaveIn, finish],
+  })
+
+  const washDay = result.days.find((day) => day.key === "wash_day")
+  assert.ok(washDay)
+  assert.equal(washDay.isPartial, true)
+  assert.equal(washDay.productBlocks.length, 0)
+  assert.equal(washDay.outerSequence.filter((step) => step.kind === "unresolved_product").length, 4)
+  assert.equal(
+    result.failures.some((failure) => failure.dayType === "wash_day"),
+    false,
+  )
+})
+
+test("compiler honors non-cyclic sequence edges and isolates direct conflicts", () => {
   const cleanse = protocol(
     "shampoo",
     "cleanse",
@@ -502,9 +557,18 @@ test("compiler honors non-cyclic sequence edges and fails closed on conflicts", 
   })
   assert.deepEqual(
     conflicted.days.map((day) => day.key),
-    ["rest_day"],
+    ["wash_day", "rest_day"],
   )
-  assert.ok(conflicted.failures.some((failure) => failure.reason === "anchor_conflict"))
+  const conflictedDay = conflicted.days.find((day) => day.key === "wash_day")
+  assert.equal(conflictedDay?.productBlocks.length, 0)
+  assert.equal(
+    conflictedDay?.outerSequence.filter((step) => step.kind === "unresolved_product").length,
+    2,
+  )
+  assert.equal(
+    conflicted.failures.some((failure) => failure.dayType === "wash_day"),
+    false,
+  )
 })
 
 test("an unresolved relevant product becomes a local gap while unrelated days remain usable", () => {
@@ -534,7 +598,7 @@ test("an unresolved relevant product becomes a local gap while unrelated days re
   )
 })
 
-test("unrelated Dry Shampoo guidance does not suppress a complete Waschtag", () => {
+test("missing Dry Shampoo guidance creates only a partial refresh day and keeps Waschtag complete", () => {
   const dryShampoo = {
     ...shampoo,
     itemId: "unresolved-dry-shampoo",
@@ -551,8 +615,10 @@ test("unrelated Dry Shampoo guidance does not suppress a complete Waschtag", () 
   })
   assert.deepEqual(
     result.days.map((day) => day.key),
-    ["wash_day", "rest_day"],
+    ["wash_day", "refresh_day", "rest_day"],
   )
+  assert.equal(result.days.find((day) => day.key === "wash_day")?.isPartial, false)
+  assert.equal(result.days.find((day) => day.key === "refresh_day")?.isPartial, true)
 })
 
 test("compiler keeps reviewed guidance for a provisional product inside the day sequence", () => {

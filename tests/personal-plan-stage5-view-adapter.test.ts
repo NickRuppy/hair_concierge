@@ -118,6 +118,46 @@ test("retains Pausentag as the recovery route when no complete product day exist
   }
 })
 
+test("renders an unresolved-only day as explicitly partial rather than claiming complete guidance", () => {
+  const unresolved = {
+    productId: "33333333-3333-4333-8333-333333333333",
+    productName: "Produkt mit offener Anleitung",
+    category: "shampoo" as const,
+    role: "cleanse" as const,
+    applicationInstanceKey: "shampoo:unresolved",
+    status: "unresolved" as const,
+  }
+  const view = toApplicationPageView({
+    compiled: {
+      days: [
+        {
+          key: "wash_day",
+          productBlocks: [],
+          outerSequence: [{ kind: "unresolved_product", block: unresolved }],
+          isPartial: true,
+        },
+        { key: "rest_day", productBlocks: [], outerSequence: [] },
+      ],
+      failures: [],
+    },
+    dayDefinitions: definitions,
+  })
+
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+  assert.equal(view.days[0]?.isPartial, true)
+  assert.equal(view.days[0]?.unresolvedProductCount, 1)
+  const overviewHtml = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+  assert.match(overviewHtml, /Teilweise bereit/)
+  const detailHtml = renderToStaticMarkup(
+    createElement(ApplicationPage, {
+      view: { ...view, selectedDayType: "wash_day" },
+    }),
+  )
+  assert.match(detailHtml, /Produkt mit offener Anleitung/)
+  assert.match(detailHtml, /Die Anwendung für dieses Produkt wird noch geprüft/)
+})
+
 test("fails closed when a compiled day has no active canonical definition", () => {
   assert.throws(
     () => toApplicationPageView({ compiled: compiledView(), dayDefinitions: definitions.slice(1) }),

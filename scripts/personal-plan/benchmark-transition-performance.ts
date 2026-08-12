@@ -1,8 +1,15 @@
 import { performance } from "node:perf_hooks"
+import { readFileSync } from "node:fs"
 
 import { STAGE3_AUTHORITY_DECISION_BATCH_LIMIT } from "../../src/lib/personal-plan/products/authority/contracts"
 import { loadPersonalPlanRoutineView } from "../../src/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "../../src/lib/personal-plan/routine/repository"
+import { compileApplicationViewV2 } from "../../src/lib/routines/personal-plan/application/compiler-v2"
+import {
+  applicationFamilyTemplateV2Schema,
+  productApplicationPointerV2Schema,
+} from "../../src/lib/routines/personal-plan/application/contracts-v2"
+import type { NormalizedApplicationInput } from "../../src/lib/routines/personal-plan/application/contracts"
 
 const ids = {
   plan: "11111111-1111-4111-8111-111111111111",
@@ -24,6 +31,61 @@ function numberArgument(name: string, fallback: number) {
 const latencyMs = numberArgument("latency-ms", 50)
 const iterations = Math.floor(numberArgument("iterations", 5))
 const stage3IntentCount = Math.floor(numberArgument("stage3-intents", 13))
+
+const applicationArtifact = JSON.parse(
+  readFileSync(
+    "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json",
+    "utf8",
+  ),
+) as {
+  family_templates: unknown[]
+  items: Array<{
+    key: string
+    product_id: string
+    source_role: string
+    guidance_payload_v2: unknown
+  }>
+}
+const applicationTemplates = applicationArtifact.family_templates.map((template) =>
+  applicationFamilyTemplateV2Schema.parse(template),
+)
+const applicationPointers = applicationArtifact.items.map((item) =>
+  productApplicationPointerV2Schema.parse(item.guidance_payload_v2),
+)
+const applicationInput: NormalizedApplicationInput = {
+  routineItems: applicationArtifact.items.map((item, index) => {
+    const pointer = applicationPointers[index]!
+    return {
+      itemId: `benchmark:${index}`,
+      productId: item.product_id,
+      productName: "Benchmarkprodukt",
+      category: pointer.scope.category,
+      role: pointer.role,
+      sourceRoutineRole: item.source_role,
+      applicationInstanceKey: item.key,
+      inclusion: "included",
+      availability: "owned",
+      executable: true,
+      catalogFacts: {},
+      routineOrder: index,
+    }
+  }),
+  unresolvedRoutineItems: [],
+  profile: { thickness: "normal", dryingRoute: "blow_dry" },
+  dayTypes: [
+    "wash_day",
+    "intensive_care_day",
+    "bond_repair_day",
+    "clarifying_wash_day",
+    "refresh_day",
+    "between_wash_care_day",
+    "styling_day",
+    "rest_day",
+  ].map((key, index) => ({
+    key: key as NormalizedApplicationInput["dayTypes"][number]["key"],
+    sortOrder: index + 1,
+  })),
+}
 
 function payload(versionId: string) {
   return {
@@ -148,6 +210,14 @@ async function runTransitionSamples(operation: () => Promise<void>) {
   return Math.round(median(samples) * 100) / 100
 }
 
+async function applicationCompilerSample() {
+  compileApplicationViewV2({
+    input: applicationInput,
+    familyTemplates: applicationTemplates,
+    productPointers: applicationPointers,
+  })
+}
+
 async function stage2RegularBefore() {
   for (let span = 0; span < 8; span += 1) await delay()
 }
@@ -213,6 +283,7 @@ async function main() {
     runTransitionSamples(stage3IndividualBefore),
     runTransitionSamples(stage3IndividualAfter),
   ])
+  const applicationCompilerV2Ms = await runTransitionSamples(applicationCompilerSample)
 
   const result = {
     assumptions: {
@@ -236,6 +307,12 @@ async function main() {
         modeledCriticalPathMs: latencyMs * 2,
         databaseRequestCount: applicationAfter.requestCount,
       },
+    },
+    applicationCompilerV2: {
+      measuredMedianMs: applicationCompilerV2Ms,
+      productRoleCount: applicationPointers.length,
+      familyTemplateCount: applicationTemplates.length,
+      note: "Local deterministic compiler-only regression over the pinned full V2 artifact; the preview navigation sampler owns the release SLO.",
     },
     personalPlanShell: {
       authenticatedUserReads: { before: 2, after: 1 },

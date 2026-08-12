@@ -8,10 +8,13 @@ import AnwendungPage, {
   type AnwendungResolverDeps,
 } from "../src/app/anwendung/page"
 import type { ApplicationDayTypeKey } from "../src/lib/routines/personal-plan/application/contracts"
+import { SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 
 test("direct Anwendung route stays compact and non-exposing while the rollout is off", async () => {
   const previous = process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
+  const previousMarker = process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
   process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = "off"
+  delete process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
 
   try {
     const html = renderToStaticMarkup(await AnwendungPage())
@@ -22,9 +25,32 @@ test("direct Anwendung route stays compact and non-exposing while the rollout is
     assert.doesNotMatch(html, /Waschtag|Bond-Repair-Tag|Auffrisch-Tag/)
     assert.doesNotMatch(html, /K18|Olaplex|Batiste|Moroccanoil/i)
     assert.doesNotMatch(html, /checkbox|Kalender|heute|erledigt|Fortschritt/i)
+    assert.doesNotMatch(html, /data-personal-plan-application-compute-ms/)
   } finally {
     if (previous === undefined) delete process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
     else process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = previous
+    if (previousMarker === undefined)
+      delete process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
+    else process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED = previousMarker
+  }
+})
+
+test("application compute timing is exposed only behind the diagnostic marker", async () => {
+  const previousRollout = process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
+  const previousMarker = process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
+  process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = "off"
+  process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED = "true"
+
+  try {
+    const html = renderToStaticMarkup(await AnwendungPage())
+    assert.match(html, /data-personal-plan-application-root="true"/)
+    assert.match(html, /data-personal-plan-application-compute-ms="[0-9.]+"/)
+  } finally {
+    if (previousRollout === undefined) delete process.env.PERSONAL_PLAN_STAGE5_ROLLOUT
+    else process.env.PERSONAL_PLAN_STAGE5_ROLLOUT = previousRollout
+    if (previousMarker === undefined)
+      delete process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED
+    else process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED = previousMarker
   }
 })
 
@@ -287,6 +313,90 @@ test("a rendered partial day is usable and does not emit a route failure", async
   assert.equal(view.state, "ready")
   assert.equal(view.state === "ready" ? view.days[0]?.isPartial : false, true)
   assert.deepEqual(failures, [])
+})
+
+test("V2 route uses one generation for product and family reads and ignores V1 exact prose", async () => {
+  let adaptedContractVersion: number | undefined
+  const template = SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.get("shampoo.standard-scalp-cleanse.v2")!
+  const view = await resolveAnwendungPage(
+    readyDeps({
+      contractVersion: () => 2,
+      adaptRoutine: async (options) => {
+        adaptedContractVersion = options.contractVersion
+        return {
+          routineVersionId: "routine-1",
+          planId: "plan-1",
+          routineItems: [{ ...shampooItem, sourceRoutineRole: "shampoo_everyday" }],
+          unresolvedRoutineItems: [],
+          exactGuidanceProtocols: [
+            {
+              ...shampooProtocol,
+              scope: {
+                kind: "product" as const,
+                category: "shampoo" as const,
+                productId: shampooItem.productId,
+              },
+              exactGuidanceRequired: true,
+              steps: [
+                {
+                  stepKey: "old-bespoke",
+                  action: "apply_product" as const,
+                  copyTemplateDe: "Old bespoke manufacturer prose.",
+                },
+              ],
+            },
+          ],
+          applicationPointersV2: [
+            {
+              schemaVersion: 2,
+              contractKind: "product_pointer",
+              scope: {
+                kind: "product",
+                category: "shampoo",
+                productId: shampooItem.productId,
+              },
+              sourceRole: "shampoo_everyday",
+              role: "cleanse",
+              applicationFamily: "standard_rinse_out_cleanse",
+              facts: {
+                applicationState: "wet_hair",
+                applicationArea: "scalp_roots",
+                rinse: "rinse_out",
+                contactTime: null,
+                amount: null,
+                heat: null,
+                conditionerPolicy: "not_applicable",
+              },
+              workflowId: null,
+              requiredCompanionProductId: null,
+              runtimeBlockerCode: null,
+              exactSteps: [],
+              cautionCodes: [],
+              evidence: shampooProtocol.evidence,
+            },
+          ],
+        }
+      },
+      loadContent: () =>
+        ({
+          loadActiveDayTypeDefinitions: async () =>
+            DAY_KEYS.map((key, index) => ({
+              key,
+              definitionVersion: 1,
+              locale: "de" as const,
+              label: key,
+              summary: key,
+              sortOrder: index + 1,
+            })),
+          loadActiveGuidanceProtocols: async () => [{ id: "guidance-v2", payload: template }],
+        }) as never,
+    }),
+  )
+
+  assert.equal(adaptedContractVersion, 2)
+  assert.equal(view.state, "ready")
+  assert.doesNotMatch(JSON.stringify(view), /Old bespoke manufacturer prose/)
+  assert.match(JSON.stringify(view), /Haare und Kopfhaut vollständig anfeuchten/)
 })
 
 test("route composes a planned Heat item with its reviewed exact product instructions", async () => {
