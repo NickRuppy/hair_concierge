@@ -80,7 +80,7 @@ export const CATEGORY_ROLE_POLICIES = {
   },
   dry_shampoo: {
     category: "dry_shampoo",
-    authorityVersion: "personal-plan.dry-shampoo.v1",
+    authorityVersion: "personal-plan.dry-shampoo.v2",
     allowsMultiple: true,
     allowedRoles: ["root_refresh_bridge"],
     roleMultiplicity: { root_refresh_bridge: single },

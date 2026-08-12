@@ -1,5 +1,5 @@
 begin;
-select plan(12);
+select plan(13);
 
 select has_function(
   'public',
@@ -91,6 +91,46 @@ select throws_ok(
   $$update public.products set is_active = true where id = '55555555-5555-4555-8555-555555555555'$$,
   'curated publication requires complete category facts and exact canonical protocol',
   'nullable shampoo facts cannot bypass curated publication with an otherwise complete protocol'
+);
+
+insert into public.product_categories (
+  key, display_name_de, is_catalog_supported, is_intake_supported, sort_order
+) values (
+  'dry_shampoo', 'Trockenshampoo', true, true, 80
+) on conflict (key) do nothing;
+insert into public.products (
+  id, name, brand, category, category_key, suitable_thicknesses,
+  is_active, lifecycle_status, origin, is_chaarlie_recommended
+) values (
+  '66666666-6666-4666-8666-666666666666', 'Complete dry shampoo fixture',
+  'Fixture', 'Trockenshampoo', 'dry_shampoo', array[]::text[],
+  false, 'active', 'curated', false
+);
+insert into public.product_dry_shampoo_specs (
+  product_id, primary_effect, hair_color_fit, scalp_sensitivity_fit, format
+) values (
+  '66666666-6666-4666-8666-666666666666', 'classic_refresh', 'universal', 'sensitive_ok', 'aerosol_spray'
+);
+insert into public.product_application_protocols (
+  product_id, category, role, source_url, source_text, guidance_payload
+) values (
+  '66666666-6666-4666-8666-666666666666', 'dry_shampoo', 'root_refresh_bridge',
+  'https://example.test/dry-shampoo', 'Source-backed dry shampoo protocol',
+  jsonb_build_object(
+    'scope', jsonb_build_object(
+      'kind', 'product',
+      'productId', '66666666-6666-4666-8666-666666666666',
+      'category', 'dry_shampoo'
+    ),
+    'evidence', jsonb_build_array(jsonb_build_object('sourceUrl', 'https://example.test/dry-shampoo'))
+  )
+);
+update public.products
+set is_active = true
+where id = '66666666-6666-4666-8666-666666666666';
+select lives_ok(
+  $$set constraints all immediate$$,
+  'Dry Shampoo publication relies on exact refresh facts rather than a fabricated hair-thickness fact'
 );
 
 insert into public.products (

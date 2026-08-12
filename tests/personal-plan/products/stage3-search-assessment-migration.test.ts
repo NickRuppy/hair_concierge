@@ -6,6 +6,10 @@ const migration = readFileSync(
   "supabase/migrations/20260811210000_personal_plan_stage3_search_readiness_v2.sql",
   "utf8",
 )
+const dryShampooApplicabilityMigration = readFileSync(
+  "supabase/migrations/20260812101000_personal_plan_dry_shampoo_thickness_applicability.sql",
+  "utf8",
+)
 
 test("Stage 3 assessment search v2 is an owner-aware private, set-based, capped canonical-identity projection", () => {
   assert.match(
@@ -90,4 +94,15 @@ test("Stage 3 assessment search v2 separates source completeness from fit and wa
   assert.match(migration, /to_jsonb\(os\)->'role_support'/)
   assert.match(migration, /'leave_on_fibre_conditioning'/)
   assert.doesNotMatch(migration, /oe\.oil_purpose IS NULL[\s\S]*leave_on/)
+})
+
+test("Dry Shampoo readiness does not fabricate a hair-thickness applicability fact", () => {
+  assert.match(
+    dryShampooApplicabilityMigration,
+    /p\.category_key IN \('heat_protectant', 'dry_shampoo'\)[\s\S]*pg_catalog\.cardinality\(p\.suitable_thicknesses\) > 0/,
+  )
+  assert.match(
+    dryShampooApplicabilityMigration,
+    /v_product\.category_key IN \('heat_protectant', 'dry_shampoo'\)[\s\S]*pg_catalog\.cardinality\(v_product\.suitable_thicknesses\) > 0/,
+  )
 })

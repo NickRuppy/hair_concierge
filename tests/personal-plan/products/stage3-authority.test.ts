@@ -404,7 +404,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       oil: "personal-plan.oil.v2",
       mask: "personal-plan.mask.v3",
       scalp_care: "personal-plan.scalp-care.v1",
-      dry_shampoo: "personal-plan.dry-shampoo.v1",
+      dry_shampoo: "personal-plan.dry-shampoo.v2",
       bondbuilder: "personal-plan.bondbuilder.v2",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
     },
@@ -734,6 +734,21 @@ test("standalone Heat does not require a suitable-thickness fact", () => {
   heatInput.productFacts.suitableThicknesses = null
 
   const result = evaluateStage3Authority(heatInput)
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+test("Dry Shampoo does not fabricate or require a hair-thickness fit dimension", () => {
+  const dryShampooInput = input("dry_shampoo", "known")
+  if (dryShampooInput.productFacts?.category !== "dry_shampoo") {
+    throw new Error("expected Dry Shampoo fixture")
+  }
+  dryShampooInput.productFacts.suitableThicknesses = null
+
+  const result = evaluateStage3Authority(dryShampooInput)
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
