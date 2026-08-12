@@ -103,6 +103,58 @@ async function writePackage(params: {
 const chaarlieImageUrl =
   "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake-2026-06-26/submission-1/granatapfel-conditioner-aaaaaaaaaaaa.webp"
 
+function conditionerProtocol() {
+  return {
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    cadence: { kind: "fixture" },
+    application_stage: "fixture_stage",
+    application_state: "either",
+    placement: "fixture_area",
+    contact_time_seconds: null,
+    rinse_action: "fixture_action",
+    reapplication: "not_stated",
+    instruction_modifiers: [],
+    source_label: "Hersteller",
+    source_url: "https://example.test/instructions",
+    source_text: "Exakte Herstelleranleitung.",
+    guidance_payload: {
+      schemaVersion: 1,
+      guidanceKey: "fixture-conditioner-rinse-out",
+      protocolVersion: 1,
+      locale: "de",
+      scope: { kind: "product", category: "conditioner", productId: "__PRODUCT_ID__" },
+      role: null,
+      applicationFamily: "post_wash_booster",
+      compatibleDayTypes: ["wash_day"],
+      exactGuidanceRequired: true,
+      sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
+      requirements: {
+        requiredCatalogFacts: [],
+        requiredProtocolFacts: [],
+        requiredProfileFacts: [],
+      },
+      protocolFacts: {
+        applicationArea: "lengths_ends",
+        rinse: "leave_in",
+        contactTimeSeconds: null,
+        conditionerRelationship: "not_applicable",
+        reapplication: "none",
+        amount: null,
+        cautions: [],
+      },
+      steps: [{ stepKey: "apply", action: "apply_product", copyTemplateDe: "Auftragen." }],
+      evidence: [
+        {
+          sourceUrl: "https://example.test/instructions",
+          sourceType: "manufacturer",
+          checkedAt: "2026-08-11",
+        },
+      ],
+    },
+  }
+}
+
 function approvedImageFinalization(overrides: Record<string, unknown> = {}) {
   return {
     status: "approved_asset",
@@ -208,6 +260,7 @@ function readyPayload(imageUrl: string | null = chaarlieImageUrl) {
           balance_direction: null,
           ingredient_flags: [],
         },
+        product_application_protocols: [conditionerProtocol()],
       },
       sources: [
         {
@@ -228,6 +281,8 @@ function readyPayload(imageUrl: string | null = chaarlieImageUrl) {
           "Conditioner specs are reviewed for test approval.",
         "category_specs.product_conditioner_rerank_specs":
           "Conditioner rerank specs are reviewed for test approval.",
+        "category_specs.product_application_protocols":
+          "Exact conditioner application is reviewed for test approval.",
       },
       review: {
         manual_reviewed: true,

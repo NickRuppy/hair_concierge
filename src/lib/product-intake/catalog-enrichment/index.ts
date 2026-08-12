@@ -9,6 +9,7 @@ import {
   type ProductIntakeTargetSpecOperation,
   type ProductIntakeTargetSpecTable,
   type ProductIntakeReviewCategoryKey,
+  type ProductIntakeValidationProfile,
 } from "@/lib/product-intake/category-validators"
 
 export const CATALOG_ENRICHMENT_SCHEMA_VERSION = "personal-plan-launch-v1" as const
@@ -152,8 +153,9 @@ function catalogContentFromApprovedPayload(
   productPayload: Record<string, unknown>,
   catalogState: Record<string, unknown>,
   image: Record<string, unknown>,
+  validationProfile: ProductIntakeValidationProfile,
 ): CatalogContentInput | null {
-  const approved = validateProductIntakeApprovalPayload(productPayload)
+  const approved = validateProductIntakeApprovalPayload(productPayload, validationProfile)
   if (!approved.ok) return null
   const product = approved.normalizedPayload.final.product
   return {
@@ -178,12 +180,15 @@ function catalogContentFromApprovedPayload(
   }
 }
 
-function catalogContentErrors(manifest: Record<string, unknown>): string[] {
+function catalogContentErrors(
+  manifest: Record<string, unknown>,
+  validationProfile: ProductIntakeValidationProfile,
+): string[] {
   const productPayload = manifest.product_payload as Record<string, unknown>
   const catalogState = manifest.catalog_state as Record<string, unknown>
   const image = manifest.image as Record<string, unknown>
   if (!productPayload || !catalogState || !image) return []
-  const approved = validateProductIntakeApprovalPayload(productPayload)
+  const approved = validateProductIntakeApprovalPayload(productPayload, validationProfile)
   if (!approved.ok)
     return approved.missingFields.map((field) => `product intake validation: ${field}`)
   if (manifest.commercial && typeof manifest.commercial === "object") {
@@ -214,7 +219,12 @@ function catalogContentErrors(manifest: Record<string, unknown>): string[] {
   ) {
     return ["unavailable products cannot be Chaarlie recommended"]
   }
-  const expected = catalogContentFromApprovedPayload(productPayload, catalogState, image)
+  const expected = catalogContentFromApprovedPayload(
+    productPayload,
+    catalogState,
+    image,
+    validationProfile,
+  )
   const insert = Array.isArray(manifest.planned_operations)
     ? (manifest.planned_operations.find(
         (operation) =>
@@ -287,7 +297,11 @@ function operationErrors(operations: unknown, lifecycle: unknown): string[] {
   ]
 }
 
-function categoryOperationErrors(manifest: Record<string, unknown>, lifecycle: unknown): string[] {
+function categoryOperationErrors(
+  manifest: Record<string, unknown>,
+  lifecycle: unknown,
+  validationProfile: ProductIntakeValidationProfile,
+): string[] {
   if (lifecycle !== "new_product" && lifecycle !== "existing_product_enrichment") {
     return []
   }
@@ -319,6 +333,7 @@ function categoryOperationErrors(manifest: Record<string, unknown>, lifecycle: u
   const categoryValidation = validateProductIntakeCategorySpecs(
     manifest.category_key as ProductIntakeReviewCategoryKey,
     manifest.category_payload,
+    validationProfile,
   )
   if (!categoryValidation.ok) {
     errors.push(
@@ -378,6 +393,7 @@ function categoryOperationErrors(manifest: Record<string, unknown>, lifecycle: u
 export function validateCatalogEnrichmentManifest(
   value: unknown,
   currentTarget?: CurrentCatalogTarget,
+  validationProfile: ProductIntakeValidationProfile = "current",
 ):
   | { ok: true; planned_operations: CatalogEnrichmentOperation[]; content_fingerprint: string }
   | { ok: false; errors: string[] } {
@@ -465,12 +481,12 @@ export function validateCatalogEnrichmentManifest(
       errors.push("target fingerprint is stale")
   }
   errors.push(...operationErrors(manifest.planned_operations, lifecycle))
-  errors.push(...categoryOperationErrors(manifest, lifecycle))
+  errors.push(...categoryOperationErrors(manifest, lifecycle, validationProfile))
   if (
     lifecycle === "new_product" &&
     PRODUCT_INTAKE_REVIEW_CATEGORY_KEYS.includes(manifest.category_key as never)
   ) {
-    errors.push(...catalogContentErrors(manifest))
+    errors.push(...catalogContentErrors(manifest, validationProfile))
   }
   const contentFingerprint = catalogEnrichmentContentFingerprint(manifest)
   const review = manifest.review as Record<string, unknown> | undefined

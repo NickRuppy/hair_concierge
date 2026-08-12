@@ -12,6 +12,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
+          "text": "Exact source evidence for Balea Med Anti Schuppen: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -94,6 +95,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1446893/guhl-shampoo-anti-schuppen",
+          "text": "Exact source evidence for Guhl Anti Schuppen: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -168,6 +170,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+          "text": "Exact source evidence for Head & Shoulders Anti Schuppen Sensitive: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -240,20 +243,100 @@
       "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
       "product_name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
       "role": "shampoo_dandruff",
-      "research_status": "blocked_missing_direction",
+      "research_status": "verified",
       "sources": [
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+          "text": "Exact source evidence for Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
+        },
+        {
+          "label": "Aktuelle Hersteller-Produktseite",
+          "url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/dermaxpro-beruhigend/",
+          "text": "Exact source evidence for Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "Exakte Händler-Produktseite mit Gebrauchsanweisung",
+          "url": "https://www.amazon.de/Head-Shoulders-Beruhigend-Anti-Schuppen-Kopfhautpflege/dp/B0CR1KYZDY",
+          "text": "Exact source evidence for Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The current exact product page verifies identity and dandruff positioning but exposes no application directions; do not inherit another Head & Shoulders label."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-shampoo-dandruff-088b1427-ed22-424e-8cfd-ea2578120ae6",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "shampoo",
+          "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6"
+        },
+        "role": "cleanse",
+        "applicationFamily": "targeted_treatment_shampoo",
+        "compatibleDayTypes": [
+          "wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-dandruff-shampoo",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf das nasse Haar und die Kopfhaut auftragen und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-dandruff-shampoo",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-10"
+          },
+          {
+            "sourceUrl": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/dermaxpro-beruhigend/",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "sourceUrl": "https://www.amazon.de/Head-Shoulders-Beruhigend-Anti-Schuppen-Kopfhautpflege/dp/B0CR1KYZDY",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
@@ -264,6 +347,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
+          "text": "Exact source evidence for Pantene Anti Schuppen: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -341,6 +425,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+          "text": "Exact source evidence for Salthouse Anti Schuppen: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -423,6 +508,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
+          "text": "Exact source evidence for Schauma Anti Schuppen Classic: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -505,6 +591,7 @@
         {
           "label": "Herstelleranleitung",
           "url": "https://sebamed.de/de/p/antischuppen-shampoo/",
+          "text": "Exact source evidence for Sebamed Anti Schuppen: shampoo dandruff protocol; scalp/root-zone application; rinse-out use.",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }

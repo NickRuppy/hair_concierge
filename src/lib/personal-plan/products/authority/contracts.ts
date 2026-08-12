@@ -62,6 +62,7 @@ export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
     shampooBucket: string | null
     scalpRoute: string | null
     cleansingIntensity: string | null
+    targetFit: "matched" | "known_mismatch" | "unknown"
   }
 }
 
@@ -73,6 +74,7 @@ export type Stage3ConditionerFacts = Stage3AuthorityCommonProductFacts & {
     weight: string | null
     repairSupportLevel: string | null
     balanceDirection: string | null
+    targetFit: "matched" | "known_mismatch" | "unknown"
   }
 }
 
@@ -103,6 +105,7 @@ export type Stage3OilFacts = Stage3AuthorityCommonProductFacts & {
   spec: {
     roleSupport: Partial<Record<PlanProductRole, boolean | null>>
     weight: string | null
+    targetThicknessEligible: boolean | null
     providesHeatProtection: boolean | null
   }
 }

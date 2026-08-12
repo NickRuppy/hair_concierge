@@ -1,0 +1,590 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-08-heat-canonical-protocols",
+  "category_key": "heat_protectant",
+  "products": [
+    {
+      "product_id": "1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+      "product_name": "Jean&Len Hitzeschutzspray beat the heat",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Jean&Len Produktseite",
+          "url": "https://www.jeanlen.de/hitzeschutzspray-beat-the-heat",
+          "text": "Exact source evidence for Jean&Len Hitzeschutzspray beat the heat: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Gleichmäßig aufsprühen.).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "1b8f56b9-b186-4bed-a65c-f582ac0e9453"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "either_state_protection",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_pre_heat",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-jeanlen-heat",
+            "action": "apply_product",
+            "copyTemplateDe": "Gleichmäßig ins handtuchtrockene oder trockene Haar sprühen."
+          },
+          {
+            "stepKey": "style-jeanlen-heat",
+            "action": "tool",
+            "copyTemplateDe": "Danach wie gewohnt föhnen und stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.jeanlen.de/hitzeschutzspray-beat-the-heat",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "71302fae-decd-4b10-80ea-148d5998e2fa",
+      "product_name": "L'ORÉAL PARIS ELVITAL Hitzeschutzspray Defeat the Heat",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1571140/l-oreal-paris-elvital-hitzeschutzspray-dream-length-langes-und-glattes-haar",
+          "text": "Exact source evidence for L'ORÉAL PARIS ELVITAL Hitzeschutzspray Defeat the Heat: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Auf feuchtes bis trockenes Haar sprühen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-71302fae-decd-4b10-80ea-148d5998e2fa",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "71302fae-decd-4b10-80ea-148d5998e2fa"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "either_state_protection",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_pre_heat",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Auf feuchtes bis trockenes Haar sprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-loreal-defeat-heat",
+            "action": "apply_product",
+            "copyTemplateDe": "Auf das feuchte bis trockene Haar sprühen."
+          },
+          {
+            "stepKey": "style-loreal-defeat-heat",
+            "action": "tool",
+            "copyTemplateDe": "Nicht ausspülen und das Haar wie gewohnt stylen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1571140/l-oreal-paris-elvital-hitzeschutzspray-dream-length-langes-und-glattes-haar",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "product_name": "Balea Hitzeschutzspray 2-Phasen",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+          "text": "Exact source evidence for Balea Hitzeschutzspray 2-Phasen: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Aus etwa 15 cm Entfernung gleichmäßig aufsprühen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-a0cc0c36-b5ce-4a38-b224-64c666a83809",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "a0cc0c36-b5ce-4a38-b224-64c666a83809"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "either_state_protection",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_pre_heat",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [
+            "reapply_before_direct_heat"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Aus etwa 15 cm Entfernung gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "shake-balea-two-phase",
+            "action": "section",
+            "copyTemplateDe": "Vor jeder Anwendung gut schütteln, damit sich die zwei Phasen vermischen."
+          },
+          {
+            "stepKey": "apply-balea-two-phase-damp",
+            "action": "apply_product",
+            "copyTemplateDe": "Vor dem Föhnen aus 15 cm Entfernung gleichmäßig auf das handtuchtrockene Haar sprühen."
+          },
+          {
+            "stepKey": "reapply-balea-two-phase-hot-tool",
+            "action": "apply_product",
+            "copyTemplateDe": "Vor Glätteisen oder Lockenstab nochmals auf trockene Partien auftragen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "product_name": "Schwarzkopf taft Hydra Protect Hitzeschutzspray",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/3121122/schwarzkopf-taft-hitzeschutzspray-aloe-boost",
+          "text": "Exact source evidence for Schwarzkopf taft Hydra Protect Hitzeschutzspray: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Aus 15 bis 20 cm Entfernung aufsprühen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "cb228f9d-4e46-4302-9a6f-92c393eda1bd"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "damp_leave_on",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [
+            "post_rinse_towel_dry"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Aus 15 bis 20 cm Entfernung aufsprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "shake-taft-aloe",
+            "action": "section",
+            "copyTemplateDe": "Gut schütteln."
+          },
+          {
+            "stepKey": "apply-taft-aloe",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus 15 bis 20 cm Abstand auf das handtuchtrockene Haar sprühen."
+          },
+          {
+            "stepKey": "style-taft-aloe",
+            "action": "tool",
+            "copyTemplateDe": "Nicht ausspülen und wie gewohnt föhnen; bei Bedarf für Glanz auch auf trockenes Haar sprühen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3121122/schwarzkopf-taft-hitzeschutzspray-aloe-boost",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+      "product_name": "got2b Hitzeschutzspray Schutzengel",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+          "text": "Exact source evidence for got2b Hitzeschutzspray Schutzengel: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Großzügig aufsprühen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-efaff579-e411-41eb-972a-2734a8517356",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "efaff579-e411-41eb-972a-2734a8517356"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "damp_leave_on",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [
+            "post_rinse_towel_dry"
+          ],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Großzügig aufsprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-got2b-schutzengel",
+            "action": "apply_product",
+            "copyTemplateDe": "Großzügig ins handtuchtrockene Haar sprühen."
+          },
+          {
+            "stepKey": "dry-got2b-schutzengel",
+            "action": "dry",
+            "copyTemplateDe": "Das Haar wie gewohnt föhnen; Glätteisen oder Lockenstab erst auf trockenem Haar verwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "f66f2f93-a1f2-43fb-8647-48d49cdae7d3",
+      "product_name": "Balea Hitzeschutzspray Ultralight",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/3101587/balea-hitzeschutzspray-ultralight",
+          "text": "Exact source evidence for Balea Hitzeschutzspray Ultralight: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Aus ca. 30 cm Entfernung gleichmäßig aufsprühen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-f66f2f93-a1f2-43fb-8647-48d49cdae7d3",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "f66f2f93-a1f2-43fb-8647-48d49cdae7d3"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_dry",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_pre_heat",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Aus ca. 30 cm Entfernung gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-balea-ultralight",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen."
+          },
+          {
+            "stepKey": "style-balea-ultralight",
+            "action": "tool",
+            "copyTemplateDe": "Anschließend nach Belieben föhnen, wellen oder glätten."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3101587/balea-hitzeschutzspray-ultralight",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "f8c47bf8-a075-4568-a9ab-aa336b7ae50a",
+      "product_name": "Schwarzkopf taft Hitzeschutzspray taft x Gliss Lovely Long",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1681631/schwarzkopf-taft-hitzeschutzspray-taft-x-gliss-lovely-long",
+          "text": "Exact source evidence for Schwarzkopf taft Hitzeschutzspray taft x Gliss Lovely Long: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Aus 15 bis 20 cm Entfernung aufsprühen.).",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-heat-protectant-f8c47bf8-a075-4568-a9ab-aa336b7ae50a",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "heat_protectant",
+          "productId": "f8c47bf8-a075-4568-a9ab-aa336b7ae50a"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "either_state_protection",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_pre_heat",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "provides_heat_protection"
+          ],
+          "requiredProtocolFacts": [
+            "dry_before_hot_tools"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Aus 15 bis 20 cm Entfernung aufsprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "shake-taft-lovely-long",
+            "action": "section",
+            "copyTemplateDe": "Gut schütteln."
+          },
+          {
+            "stepKey": "apply-taft-lovely-long",
+            "action": "apply_product",
+            "copyTemplateDe": "Aus 15 bis 20 cm Abstand auf das handtuchtrockene Haar sprühen und wie gewohnt föhnen."
+          },
+          {
+            "stepKey": "dry-taft-lovely-long",
+            "action": "dry",
+            "copyTemplateDe": "Bei Anwendung auf trockenem Haar das Produkt vor heißen Stylinggeräten trocknen lassen oder kurz anföhnen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1681631/schwarzkopf-taft-hitzeschutzspray-taft-x-gliss-lovely-long",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

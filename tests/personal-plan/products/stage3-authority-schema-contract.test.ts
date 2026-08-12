@@ -62,6 +62,47 @@ test("Stage 3 one-row authority relations keep product_id as their primary key",
   }
 })
 
+test("Mask and Leave-in v3 authority facts are additive nullable columns", async () => {
+  const source = await migration("20260811211000_personal_plan_mask_leave_in_authority_v3.sql")
+
+  assert.match(source, /ALTER TABLE public\.product_mask_specs[\s\S]*repair_support_level text/)
+  assert.match(source, /ALTER TABLE public\.product_mask_specs[\s\S]*functional_benefits text\[\]/)
+  assert.match(source, /product_mask_specs_repair_support_level_check/)
+  assert.match(source, /'low', 'medium', 'high'/)
+  assert.match(source, /'smoothing_frizz_control'[\s\S]*'detangling_slip'[\s\S]*'shine'/)
+
+  assert.match(source, /ALTER TABLE public\.product_leave_in_specs[\s\S]*care_direction text/)
+  assert.match(source, /ALTER TABLE public\.product_leave_in_specs[\s\S]*repair_support_level text/)
+  assert.match(source, /ALTER TABLE public\.product_leave_in_specs[\s\S]*plan_roles text\[\]/)
+  assert.match(
+    source,
+    /ALTER TABLE public\.product_leave_in_specs[\s\S]*functional_benefits text\[\]/,
+  )
+  assert.match(source, /'post_wash_leave_in'[\s\S]*'pre_heat_application'/)
+  assert.match(
+    source,
+    /'detangle'[\s\S]*'moisture_softness'[\s\S]*'smooth_anti_frizz'[\s\S]*'heat_protect'[\s\S]*'repair_support'[\s\S]*'curl_shape_support'[\s\S]*'shine_support'/,
+  )
+  assert.doesNotMatch(source, /\bUPDATE\s+public\./i)
+  assert.doesNotMatch(source, /\bDEFAULT\b/i)
+})
+
+test("Oil v2 authority facts are additive nullable canonical fields", async () => {
+  const source = await migration("20260811213000_personal_plan_oil_authority_v2.sql")
+
+  assert.match(source, /ALTER TABLE public\.product_oil_specs[\s\S]*weight text/)
+  assert.match(source, /ALTER TABLE public\.product_oil_specs[\s\S]*role_support text\[\]/)
+  assert.match(source, /product_oil_specs_weight_check/)
+  assert.match(source, /'light', 'medium', 'rich'/)
+  assert.match(source, /product_oil_specs_role_support_check/)
+  assert.match(
+    source,
+    /'pre_wash_fibre_treatment'[\s\S]*'leave_on_fibre_conditioning'[\s\S]*'dry_finish'[\s\S]*'pre_heat_protection'/,
+  )
+  assert.doesNotMatch(source, /\bUPDATE\s+public\./i)
+  assert.doesNotMatch(source, /\bDEFAULT\b/i)
+})
+
 test("Stage 3 product-draft saves lock and verify the current refined source", async () => {
   const source = await migration(
     "20260811070307_personal_plan_stage3_current_refined_source_guard.sql",

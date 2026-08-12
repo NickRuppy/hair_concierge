@@ -59,13 +59,18 @@ function requiredEnvironment(name: string) {
 }
 
 function seedProductGuidanceViaLocalPostgres(
-  rows: Array<{ productId: string; sourceGuidanceKey: string; guidanceKey: string }>,
+  rows: Array<{
+    productId: string
+    sourceGuidanceKey: string
+    guidanceKey: string
+    role: "shampoo_everyday" | "conditioner_rinse_out"
+  }>,
 ) {
   const container = requiredEnvironment("PERSONAL_PLAN_STAGE1_5_DB_CONTAINER")
   const literal = (value: string) => value.replaceAll("'", "''")
   const sql = rows
     .map(
-      ({ productId, sourceGuidanceKey, guidanceKey }) => `
+      ({ productId, sourceGuidanceKey, guidanceKey, role }) => `
 DO $seed$
 DECLARE
   inserted_count integer;
@@ -107,6 +112,38 @@ BEGIN
   GET DIAGNOSTICS inserted_count = ROW_COUNT;
   IF inserted_count <> 1 THEN
     RAISE EXCEPTION 'expected one source guidance row for ${literal(sourceGuidanceKey)}';
+  END IF;
+
+  INSERT INTO public.product_application_protocols (
+    product_id, category, role, source_url, source_text, guidance_payload
+  )
+  SELECT
+    '${literal(productId)}'::uuid,
+    source.category_key,
+    '${literal(role)}',
+    source.payload#>>'{evidence,0,sourceUrl}',
+    'Canonical browser-test protocol derived from the verified family guidance.',
+    jsonb_set(
+      jsonb_set(
+        jsonb_set(source.payload, '{guidanceKey}', to_jsonb('${literal(guidanceKey)}'::text)),
+        '{scope}',
+        jsonb_build_object(
+          'kind', 'product',
+          'category', source.category_key,
+          'productId', '${literal(productId)}'
+        )
+      ),
+      '{role}',
+      to_jsonb('${literal(role)}'::text)
+    )
+  FROM public.application_guidance_protocols AS source
+  WHERE source.guidance_key = '${literal(sourceGuidanceKey)}'
+    AND source.scope_kind = 'application_family'
+    AND source.status = 'active';
+
+  GET DIAGNOSTICS inserted_count = ROW_COUNT;
+  IF inserted_count <> 1 THEN
+    RAISE EXCEPTION 'expected one canonical protocol row for ${literal(sourceGuidanceKey)}';
   END IF;
 END
 $seed$;
@@ -341,6 +378,7 @@ type Stage3AuthoritySeed = {
 async function seedStage3Catalog(
   admin: ReturnType<typeof adminClient>,
   journey: Stage3AuthoritySeed,
+  userId: string,
 ) {
   const decisions = journey.draft.authoritySnapshot.categoryDecisions
   const decision = (category: string): { roles: string[]; target: Record<string, string> } => {
@@ -380,7 +418,8 @@ async function seedStage3Catalog(
         brand: "E2E",
         category: "shampoo",
         category_key: "shampoo",
-        is_active: true,
+        origin: "curated",
+        is_active: false,
         lifecycle_status: "active",
         is_chaarlie_recommended: false,
         suitable_thicknesses: [quizEnvelope.answers.thickness],
@@ -392,9 +431,10 @@ async function seedStage3Catalog(
         brand: "E2E",
         category: "conditioner",
         category_key: "conditioner",
-        is_active: true,
+        origin: "curated",
+        is_active: false,
         lifecycle_status: "active",
-        is_chaarlie_recommended: true,
+        is_chaarlie_recommended: false,
         suitable_thicknesses: [quizEnvelope.answers.thickness],
         suitable_concerns: [
           conditioner.target.careDirection === "protein"
@@ -411,6 +451,7 @@ async function seedStage3Catalog(
         brand: "E2E",
         category: "mask",
         category_key: "mask",
+        origin: "user_submitted",
         is_active: true,
         lifecycle_status: "active",
         is_chaarlie_recommended: false,
@@ -447,18 +488,39 @@ async function seedStage3Catalog(
       balance_direction: conditioner.target.careDirection,
     }),
   )
+  await requireWrite(
+    admin.from("user_products").insert({
+      user_id: userId,
+      category: "mask",
+      catalog_product_id: unknownMaskId,
+      brand_text: "E2E",
+      product_name_text: "E2E Unbekannte Maske",
+      identity_status: "matched",
+      ownership_status: "owned",
+      intake_source: "catalog_search",
+    }),
+  )
   seedProductGuidanceViaLocalPostgres([
     {
       productId: shampooId,
       sourceGuidanceKey: "shampoo-standard-rinse-out-cleanse",
       guidanceKey: `e2e-shampoo-${shampooId}`,
+      role: "shampoo_everyday",
     },
     {
       productId: conditionerId,
       sourceGuidanceKey: "conditioner-standard-rinse-out-conditioning",
       guidanceKey: `e2e-conditioner-${conditionerId}`,
+      role: "conditioner_rinse_out",
     },
   ])
+  await requireWrite(
+    admin
+      .from("products")
+      .update({ is_active: true, is_chaarlie_recommended: true })
+      .eq("id", conditionerId),
+  )
+  await requireWrite(admin.from("products").update({ is_active: true }).eq("id", shampooId))
   return { shampooId, conditionerId, unknownMaskId }
 }
 
@@ -799,7 +861,7 @@ test.describe("persisted production Personal Plan Stage 1 to 5", () => {
       expect.arrayContaining(["shampoo", "conditioner", "scalp_care", "mask"]),
     )
     expect(stage3Journey.draft.authoritySnapshot.orderedCategories).not.toContain("heat_protectant")
-    await seedStage3Catalog(admin, stage3Journey)
+    await seedStage3Catalog(admin, stage3Journey, userId)
 
     const captureCategories = stage3Journey.requirements
       .map(({ category }) => category)

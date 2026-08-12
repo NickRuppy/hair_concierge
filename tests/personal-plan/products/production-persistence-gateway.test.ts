@@ -729,6 +729,7 @@ function conditionerFacts(): Stage3AuthorityFactBundle {
         weight: "light",
         repairSupportLevel: "medium",
         balanceDirection: "moisture",
+        targetFit: "matched",
       },
     },
     recommendationCandidates: [],

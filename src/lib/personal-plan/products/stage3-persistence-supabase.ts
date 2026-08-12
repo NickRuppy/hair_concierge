@@ -99,7 +99,8 @@ export function createSupabaseStage3ProductionPersistence(
     },
     async search(input) {
       const query = normalizeOwnedProductSearchQuery(input.query)
-      const { data, error } = await client.rpc("personal_plan_search_assessment_products_v1", {
+      const { data, error } = await client.rpc("personal_plan_search_assessment_products_v2", {
+        p_user_id: input.userId,
         p_category: input.category,
         p_query: query,
         p_limit: 8,
@@ -123,7 +124,7 @@ export function createSupabaseStage3ProductionPersistence(
       const { data: candidate, error: candidateError } = await client
         .from("products")
         .select(
-          "id,brand,name,image_url,category_key,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
+          "id,brand,name,image_url,category_key,origin,is_active,lifecycle_status,product_line:product_lines(canonical_name)",
         )
         .eq("id", input.candidateId)
         .eq("category_key", input.category)
@@ -135,6 +136,18 @@ export function createSupabaseStage3ProductionPersistence(
         candidate.lifecycle_status !== "active"
       )
         return null
+      if (candidate.origin === "user_submitted") {
+        const { data: owned, error: ownedError } = await client
+          .from("user_products")
+          .select("id")
+          .eq("user_id", input.userId)
+          .eq("catalog_product_id", input.candidateId)
+          .eq("category", input.category)
+          .eq("identity_status", "matched")
+          .eq("ownership_status", "owned")
+          .maybeSingle()
+        if (ownedError || !owned) return null
+      }
       const { data, error } = await client.rpc("personal_plan_create_or_reuse_user_product", {
         p_user_id: input.userId,
         p_category: input.category,

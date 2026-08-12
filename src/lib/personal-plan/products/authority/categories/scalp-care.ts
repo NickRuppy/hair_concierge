@@ -27,7 +27,7 @@ function coverageSuppressesPurchase(input: ScalpCareInput): boolean {
 }
 
 function productMissingFacts(input: ScalpCareInput, facts: Stage3ScalpCareFacts): string[] {
-  const missing = commonUnknownFacts(input)
+  const missing = commonUnknownFacts(input, { requiresSuitableThickness: false })
   if (facts.spec.primaryRole === null) missing.push("primary_role")
   if (facts.spec.presentationFormat === null || facts.spec.presentationFormat === "unknown") {
     missing.push("presentation_format")
@@ -48,8 +48,6 @@ function isRecommendableForRole(
     facts.lifecycleStatus === "active" &&
     facts.recommendable &&
     facts.knownReaction === false &&
-    facts.suitableThicknesses !== null &&
-    facts.suitableThicknesses.length > 0 &&
     facts.spec.primaryRole === role &&
     facts.spec.presentationFormat !== null &&
     facts.spec.presentationFormat !== "unknown" &&

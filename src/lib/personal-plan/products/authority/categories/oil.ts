@@ -49,6 +49,7 @@ function candidateForRole(input: OilInput, targetWeight: string | null): Stage3O
         candidate.lifecycleStatus === "active" &&
         candidate.recommendable &&
         roleSupport === true &&
+        candidate.spec.targetThicknessEligible === true &&
         commonUnknownFacts({ ...input, productFacts: candidate }).length === 0 &&
         hasCompleteProtocol(candidate, input) &&
         (!isLeaveOnRole(input.role) ||
@@ -95,8 +96,9 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
   const facts = input.productFacts
   const missingFacts = commonUnknownFacts(input)
   const roleSupport = facts.spec.roleSupport[input.role]
-  if (roleSupport === null || roleSupport === undefined) missingFacts.push("role_support")
-  if (isLeaveOnRole(input.role) && facts.spec.weight === null) missingFacts.push("weight")
+  if (roleSupport === null || roleSupport === undefined) missingFacts.push("oil.role_support")
+  if (facts.spec.targetThicknessEligible === null) missingFacts.push("oil.thickness_eligibility")
+  if (isLeaveOnRole(input.role) && facts.spec.weight === null) missingFacts.push("oil.weight")
   const protocol = protocolForRole(input)
   if (!protocol || protocol.status !== "verified_complete")
     missingFacts.push("application_protocol")
@@ -111,7 +113,11 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
     ])
   }
 
-  if (isInactiveOrRetired(input) || roleSupport === false) {
+  if (
+    isInactiveOrRetired(input) ||
+    roleSupport === false ||
+    facts.spec.targetThicknessEligible === false
+  ) {
     const candidate = candidateForRole(input, targetWeight)
     return knownEvaluation(input, {
       verdict: "mismatch",
@@ -122,7 +128,9 @@ export function evaluateOilAuthority(input: OilInput): Stage3AuthorityEvaluation
           "fail",
           isInactiveOrRetired(input)
             ? "Das Produkt ist nicht aktiv."
-            : "Das Produkt unterstützt die zugeordnete Öl-Rolle nicht.",
+            : roleSupport === false
+              ? "Das Produkt unterstützt die zugeordnete Öl-Rolle nicht."
+              : "Das Produkt ist nicht für die bestätigte Haardicke verifiziert.",
         ),
       ],
       allowedActions: candidate

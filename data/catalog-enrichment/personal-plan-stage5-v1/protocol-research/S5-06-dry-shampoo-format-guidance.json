@@ -12,6 +12,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+          "text": "Exact source evidence for Balea Trockenshampoo Kopfhaut Sensitive: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -91,6 +92,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+          "text": "Exact source evidence for Balea Trockenshampoo Schaum Kopfhaut Sensitive: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -170,6 +172,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/p/d/1435894/batiste-trockenshampoo-blond",
+          "text": "Exact source evidence for Batiste Trockenshampoo Blond: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -249,6 +252,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/batiste-trockenshampoo-bruenett-p5010724527474.html",
+          "text": "Exact source evidence for Batiste Trockenshampoo Bruenett: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -328,6 +332,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/batiste-trockenshampoo-dunkel-p5010724527443.html",
+          "text": "Exact source evidence for Batiste Trockenshampoo dunkel: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -407,6 +412,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/batiste-trockenshampoo-original-p5010724527481.html",
+          "text": "Exact source evidence for Batiste Trockenshampoo Original: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -486,6 +492,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.dm.de/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft-p5010724004777.html",
+          "text": "Exact source evidence for Batiste Trockenshampoo Sensible Kopfhaut: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -565,6 +572,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-volumen/p/4015100800227",
+          "text": "Exact source evidence for got2b Trockenshampoo Extra Volumen: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -639,20 +647,109 @@
       "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
       "product_name": "got2b Trockenshampoo Liquid to Dry",
       "role": "root_refresh_bridge",
-      "research_status": "blocked_identity_or_commercial",
+      "research_status": "verified",
       "sources": [
         {
-          "label": "Katalog-Kauflink",
+          "label": "got2b Produktseite",
+          "url": "https://www.got2b.de/haarstyling/produkt/trockenshampoo/trockenshampoo-liquid-to-dry-spray.html",
+          "text": "Exact source evidence for got2b Trockenshampoo Liquid to Dry: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing with a 15-second contact time and amount evidence (3 bis 6 Pumpstöße verwenden.).",
+          "source_type": "manufacturer",
+          "checked_at": "2026-08-11"
+        },
+        {
+          "label": "dm Produktseite",
           "url": "https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry",
+          "text": "Exact source evidence for got2b Trockenshampoo Liquid to Dry: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing with a 15-second contact time and amount evidence (3 bis 6 Pumpstöße verwenden.).",
           "source_type": "retailer",
-          "checked_at": "2026-08-10"
+          "checked_at": "2026-08-11"
         }
       ],
       "cadence": null,
-      "guidance_payload": null,
-      "blockers": [
-        "The live catalog marks the purchase link unavailable; refresh commercial identity and exact directions before attaching an executable protocol."
-      ]
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-dry-shampoo-dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "dry_shampoo",
+          "productId": "dc8b8d4a-8ca9-452c-8d04-03b785b63275"
+        },
+        "role": "refresh",
+        "applicationFamily": "liquid_to_dry",
+        "compatibleDayTypes": [
+          "refresh_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "dry_finish",
+          "before": [],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "format"
+          ],
+          "requiredProtocolFacts": [
+            "pump_count",
+            "contact_time"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "leave_in",
+          "contactTimeSeconds": 15,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "3 bis 6 Pumpstöße verwenden."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "shake-got2b-liquid-dry",
+            "action": "section",
+            "copyTemplateDe": "Vor Gebrauch gut schütteln und das Haar abteilen."
+          },
+          {
+            "stepKey": "apply-got2b-liquid-dry",
+            "action": "apply_product",
+            "copyTemplateDe": "3 bis 6 Pumpstöße auf den Ansatz beziehungsweise das Haar auftragen."
+          },
+          {
+            "stepKey": "wait-got2b-liquid-dry",
+            "action": "wait",
+            "copyTemplateDe": "15 bis 30 Sekunden einwirken lassen."
+          },
+          {
+            "stepKey": "brush-got2b-liquid-dry",
+            "action": "tool",
+            "copyTemplateDe": "Danach durchkämmen."
+          },
+          {
+            "stepKey": "dry-got2b-liquid-dry",
+            "action": "dry",
+            "copyTemplateDe": "Für ein besseres Ergebnis mit einem Handtuch trocknen oder kalt föhnen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.got2b.de/haarstyling/produkt/trockenshampoo/trockenshampoo-liquid-to-dry-spray.html",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
     },
     {
       "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
@@ -663,6 +760,7 @@
         {
           "label": "Aktuelle Händler-Produktseite",
           "url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532",
+          "text": "Exact source evidence for ISANA Trockenshampoo Jedes Haar: root refresh bridge protocol; scalp/root-zone application; leave-in use without rinsing.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }

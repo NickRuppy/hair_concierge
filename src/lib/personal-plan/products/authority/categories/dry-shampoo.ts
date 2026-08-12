@@ -19,7 +19,7 @@ import {
 type DryShampooInput = Stage3AuthorityInput<"dry_shampoo">
 
 function productMissingFacts(input: DryShampooInput, facts: Stage3DryShampooFacts): string[] {
-  const missing = commonUnknownFacts(input)
+  const missing = commonUnknownFacts(input, { requiresSuitableThickness: false })
   if (facts.spec.primaryEffect === null) missing.push("styling_effect")
   if (facts.spec.hairColorFit === null) missing.push("hair_color_fit")
   if (facts.spec.scalpSensitivityFit === null) missing.push("scalp_sensitivity_fit")
@@ -35,8 +35,6 @@ function isRecommendable(facts: Stage3DryShampooFacts, role: DryShampooInput["ro
     facts.lifecycleStatus === "active" &&
     facts.recommendable &&
     facts.knownReaction === false &&
-    facts.suitableThicknesses !== null &&
-    facts.suitableThicknesses.length > 0 &&
     facts.spec.primaryEffect !== null &&
     facts.spec.hairColorFit !== null &&
     facts.spec.scalpSensitivityFit !== null &&

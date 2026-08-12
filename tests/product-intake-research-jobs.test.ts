@@ -123,6 +123,58 @@ const ARRAY_SPEC_TABLES = new Set([
   "product_application_protocols",
 ])
 
+function exactProtocol(category: ProductIntakeReviewCategoryKey, role: string) {
+  return {
+    category,
+    role,
+    cadence: { kind: "fixture" },
+    application_stage: "fixture_stage",
+    application_state: "either",
+    placement: "fixture_area",
+    contact_time_seconds: null,
+    rinse_action: "fixture_action",
+    reapplication: "not_stated",
+    instruction_modifiers: [],
+    source_label: "Hersteller",
+    source_url: "https://example.test/instructions",
+    source_text: "Exakte Herstelleranleitung.",
+    guidance_payload: {
+      schemaVersion: 1,
+      guidanceKey: `fixture-${category}-${role}`,
+      protocolVersion: 1,
+      locale: "de",
+      scope: { kind: "product", category, productId: "__PRODUCT_ID__" },
+      role: null,
+      applicationFamily: "post_wash_booster",
+      compatibleDayTypes: ["wash_day"],
+      exactGuidanceRequired: true,
+      sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
+      requirements: {
+        requiredCatalogFacts: [],
+        requiredProtocolFacts: [],
+        requiredProfileFacts: [],
+      },
+      protocolFacts: {
+        applicationArea: "lengths_ends",
+        rinse: "leave_in",
+        contactTimeSeconds: null,
+        conditionerRelationship: "not_applicable",
+        reapplication: "none",
+        amount: null,
+        cautions: [],
+      },
+      steps: [{ stepKey: "apply", action: "apply_product", copyTemplateDe: "Auftragen." }],
+      evidence: [
+        {
+          sourceUrl: "https://example.test/instructions",
+          sourceType: "manufacturer",
+          checkedAt: "2026-08-11",
+        },
+      ],
+    },
+  }
+}
+
 function approvalReadyPayload(
   categoryKey: ProductIntakeReviewCategoryKey,
   categorySpecs: Record<string, unknown>,
@@ -188,6 +240,7 @@ function approvalReadyPayload(
 function legacyRowsWrappedSpecs(specs: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(specs).map(([table, value]) => {
+      if (table === "product_oil_specs") return [table, value]
       if (Array.isArray(value)) return [table, { rows: value }]
       if (value && typeof value === "object") return [table, { rows: [value] }]
       return [table, value]
@@ -215,6 +268,7 @@ function validCategorySpecsForAudit(
             cleansing_intensity: "gentle",
           },
         ],
+        product_application_protocols: [exactProtocol(categoryKey, "shampoo_everyday")],
       }
     case "conditioner":
       return {
@@ -228,6 +282,7 @@ function validCategorySpecsForAudit(
           balance_direction: null,
           ingredient_flags: ["humectants"],
         },
+        product_application_protocols: [exactProtocol(categoryKey, "conditioner_rinse_out")],
       }
     case "mask":
       return {
@@ -236,7 +291,10 @@ function validCategorySpecsForAudit(
           concentration: "high",
           balance_direction: "moisture",
           ingredient_flags: ["humectants", "oils"],
+          repair_support_level: "medium",
+          functional_benefits: ["shine"],
         },
+        product_application_protocols: [exactProtocol(categoryKey, "intensive_conditioning_mask")],
       }
     case "leave_in":
       return {
@@ -250,6 +308,10 @@ function validCategorySpecsForAudit(
           care_benefits: ["moisture", "anti_frizz"],
           ingredient_flags: ["polymers"],
           application_stage: ["pre_heat"],
+          care_direction: "moisture",
+          repair_support_level: "low",
+          plan_roles: ["post_wash_leave_in", "pre_heat_application"],
+          functional_benefits: ["heat_protect"],
         },
         product_leave_in_fit_specs: {
           weight: "light",
@@ -260,9 +322,17 @@ function validCategorySpecsForAudit(
           { thickness: "fine", need_bucket: "heat_protect", styling_context: "heat_style" },
           { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "air_dry" },
         ],
+        product_application_protocols: [
+          exactProtocol(categoryKey, "post_wash_leave_in"),
+          exactProtocol(categoryKey, "pre_heat_protection"),
+        ],
       }
     case "oil":
       return {
+        product_oil_specs: {
+          weight: "light",
+          role_support: ["dry_finish", "leave_on_fibre_conditioning"],
+        },
         product_oil_eligibility: [
           {
             thickness: "fine",
@@ -277,6 +347,10 @@ function validCategorySpecsForAudit(
             ingredient_flags: ["oils"],
           },
         ],
+        product_application_protocols: [
+          exactProtocol(categoryKey, "dry_finish"),
+          exactProtocol(categoryKey, "leave_on_fibre_conditioning"),
+        ],
       }
     case "dry_shampoo":
       return {
@@ -286,6 +360,7 @@ function validCategorySpecsForAudit(
           scalp_sensitivity_fit: "sensitive_ok",
           format: "aerosol_spray",
         },
+        product_application_protocols: [exactProtocol(categoryKey, "root_refresh_bridge")],
       }
     case "deep_cleansing_shampoo":
       return {
@@ -295,6 +370,7 @@ function validCategorySpecsForAudit(
           reset_focus: "product_sebum_buildup",
           color_treated_suitability: "suitable",
         },
+        product_application_protocols: [exactProtocol(categoryKey, "residue_reset")],
       }
     case "bondbuilder":
       return {
@@ -306,6 +382,7 @@ function validCategorySpecsForAudit(
           product_format: "leave_in_mask",
           usage_protocol: "k18_leave_in",
         },
+        product_application_protocols: [exactProtocol(categoryKey, "specialized_bond_treatment")],
       }
     case "heat_protectant":
       return {
@@ -325,6 +402,7 @@ function validCategorySpecsForAudit(
             source_label: "Hersteller",
             source_url: "https://example.test/instructions",
             source_text: "Vor jeder Hitze anwenden.",
+            guidance_payload: exactProtocol(categoryKey, "pre_heat_protection").guidance_payload,
           },
         ],
       }
@@ -351,6 +429,7 @@ function validCategorySpecsForAudit(
             source_label: "Hersteller",
             source_url: "https://example.test/instructions",
             source_text: "Bei Bedarf anwenden.",
+            guidance_payload: exactProtocol(categoryKey, "scalp_comfort").guidance_payload,
           },
         ],
       }

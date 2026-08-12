@@ -510,7 +510,9 @@ export async function preflightScalp(options: {
     options.mode !== "post_apply"
   )
     blockers.push("Scalp batch ledger must have zero rows before apply")
-  const validations = manifests.map(({ manifest }) => validateCatalogEnrichmentManifest(manifest))
+  const validations = manifests.map(({ manifest }) =>
+    validateCatalogEnrichmentManifest(manifest, undefined, "legacy_personal_plan_launch_v1"),
+  )
   validations.forEach((validation, index) => {
     if (!validation.ok)
       blockers.push(

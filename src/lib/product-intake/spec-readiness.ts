@@ -1,18 +1,23 @@
 import type { SupportedProductCategoryKey } from "@/lib/product-identity"
 
 export const PRODUCT_INTAKE_REQUIRED_SPEC_TABLES_BY_CATEGORY = {
-  shampoo: ["product_shampoo_specs"],
-  conditioner: ["product_conditioner_specs", "product_conditioner_rerank_specs"],
+  shampoo: ["product_shampoo_specs", "product_application_protocols"],
+  conditioner: [
+    "product_conditioner_specs",
+    "product_conditioner_rerank_specs",
+    "product_application_protocols",
+  ],
   leave_in: [
     "product_leave_in_specs",
     "product_leave_in_fit_specs",
     "product_leave_in_eligibility",
+    "product_application_protocols",
   ],
-  mask: ["product_mask_specs"],
-  oil: ["product_oil_eligibility"],
-  dry_shampoo: ["product_dry_shampoo_specs"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs"],
-  bondbuilder: ["product_bondbuilder_specs"],
+  mask: ["product_mask_specs", "product_application_protocols"],
+  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
+  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
+  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
+  bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
   heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
   scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
 } as const satisfies Record<SupportedProductCategoryKey, readonly string[]>

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import type { PlanCategoryTarget } from "@/lib/personal-plan/types"
+import type { PlanCategoryTarget, PlanProductRole } from "@/lib/personal-plan/types"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
@@ -173,11 +173,12 @@ async function loadCategorySpec(
       ])
       const selected = selectConditionerSpec(base, selectionContext)
       return {
-        thickness: selected?.thickness ?? null,
-        proteinMoistureBalance: selected?.proteinMoistureBalance ?? null,
+        thickness: selected.thickness,
+        proteinMoistureBalance: selected.proteinMoistureBalance,
         weight: text(rerank?.weight),
         repairSupportLevel: text(rerank?.repair_level),
         balanceDirection: text(rerank?.balance_direction),
+        targetFit: selected.targetFit,
       }
     }
     case "leave_in": {
@@ -185,11 +186,11 @@ async function loadCategorySpec(
       return {
         format: text(row?.format),
         weight: text(row?.weight),
-        careDirection: null,
-        repairSupportLevel: null,
-        roles: textArray(row?.roles),
+        careDirection: text(row?.care_direction),
+        repairSupportLevel: text(row?.repair_support_level),
+        roles: textArray(row?.plan_roles),
         providesHeatProtection: booleanOrNull(row?.provides_heat_protection),
-        careBenefits: textArray(row?.care_benefits),
+        careBenefits: textArray(row?.functional_benefits),
         applicationStages: textArray(row?.application_stage),
       }
     }
@@ -205,17 +206,12 @@ async function loadCategorySpec(
         one(client, "product_oil_specs", productId),
         many(client, "product_oil_eligibility", productId),
       ])
-      const roleSupport: Record<string, boolean> = {}
-      for (const item of eligibility) {
-        const purpose = text(item.oil_purpose)
-        if (purpose === "pre_wash_oiling") roleSupport.pre_wash_fibre_treatment = true
-        if (purpose === "styling_finish" || purpose === "light_finish") {
-          roleSupport.dry_finish = true
-        }
-      }
+      const explicitRoles = textArray(row?.role_support)
+      const roleSupport = explicitOilRoleSupport(explicitRoles)
       return {
         roleSupport,
-        weight: null,
+        weight: text(row?.weight),
+        targetThicknessEligible: targetOilThicknessEligible(eligibility, selectionContext),
         providesHeatProtection: booleanOrNull(row?.provides_heat_protection),
       }
     }
@@ -224,8 +220,8 @@ async function loadCategorySpec(
       return {
         weight: text(row?.weight),
         careDirection: text(row?.balance_direction),
-        repairSupportLevel: null,
-        functionalBenefits: null,
+        repairSupportLevel: text(row?.repair_support_level),
+        functionalBenefits: textArray(row?.functional_benefits),
       }
     }
     case "scalp_care": {
@@ -323,18 +319,11 @@ async function loadProtocols(
       canonicalGuidance.data.scope.kind === "product" &&
       canonicalGuidance.data.scope.productId === productId &&
       canonicalGuidance.data.scope.category === category
-    const complete =
-      hasMatchingCanonicalGuidance ||
-      (sourceRole === "pre_heat_protection"
-        ? Boolean(row.application_state && row.reapplication)
-        : Boolean(
-            row.application_stage &&
-            row.placement &&
-            (row.rinse_action || row.contact_time_seconds),
-          ))
     return {
       role: role as never,
-      status: complete ? ("verified_complete" as const) : ("verified_incomplete" as const),
+      status: hasMatchingCanonicalGuidance
+        ? ("verified_complete" as const)
+        : ("verified_incomplete" as const),
       fingerprint: fingerprint(row),
     }
   })
@@ -448,12 +437,14 @@ function selectShampooSpec(
   shampooBucket: string | null
   scalpRoute: string | null
   cleansingIntensity: string | null
+  targetFit: "matched" | "known_mismatch" | "unknown"
 } {
   const empty = {
     thickness: null,
     shampooBucket: null,
     scalpRoute: null,
     cleansingIntensity: null,
+    targetFit: "unknown" as const,
   }
   if (!context.shampooTarget) return empty
   const expectedBucket = expectedShampooBucket({
@@ -461,6 +452,21 @@ function selectShampooSpec(
     target: context.shampooTarget,
   })
   if (!expectedBucket) return empty
+  const completeRows = rows
+    .map((row) => ({
+      thickness: text(row.thickness),
+      shampooBucket: text(row.shampoo_bucket),
+      scalpRoute: text(row.scalp_route),
+      cleansingIntensity: text(row.cleansing_intensity),
+    }))
+    .filter(
+      (row) =>
+        row.thickness !== null &&
+        row.shampooBucket !== null &&
+        row.scalpRoute !== null &&
+        row.cleansingIntensity !== null,
+    )
+  if (completeRows.length !== rows.length || rows.length === 0) return empty
   const matches = rows
     .filter(
       (row) =>
@@ -474,14 +480,34 @@ function selectShampooSpec(
       scalpRoute: text(row.scalp_route),
       cleansingIntensity: text(row.cleansing_intensity),
     }))
-  return singleSemanticMatch(matches) ?? empty
+  const selected = singleSemanticMatch(matches)
+  if (!selected) {
+    return matches.length > 0 ? empty : { ...empty, targetFit: "known_mismatch" as const }
+  }
+  return { ...selected, targetFit: "matched" as const }
 }
 
 function selectConditionerSpec(
   rows: Row[],
   context: CategorySelectionContext,
-): { thickness: string | null; proteinMoistureBalance: string | null } | null {
-  if (!context.conditionerTarget) return null
+): {
+  thickness: string | null
+  proteinMoistureBalance: string | null
+  targetFit: "matched" | "known_mismatch" | "unknown"
+} {
+  const empty = {
+    thickness: null,
+    proteinMoistureBalance: null,
+    targetFit: "unknown" as const,
+  }
+  if (!context.conditionerTarget) return empty
+  const completeRows = rows
+    .map((row) => ({
+      thickness: text(row.thickness),
+      proteinMoistureBalance: conditionerBalance(row.protein_moisture_balance),
+    }))
+    .filter((row) => row.thickness !== null && row.proteinMoistureBalance !== null)
+  if (completeRows.length !== rows.length || rows.length === 0) return empty
   const matches = rows
     .filter(
       (row) =>
@@ -493,7 +519,11 @@ function selectConditionerSpec(
       thickness: text(row.thickness),
       proteinMoistureBalance: conditionerBalance(row.protein_moisture_balance),
     }))
-  return singleSemanticMatch(matches)
+  const selected = singleSemanticMatch(matches)
+  if (!selected) {
+    return matches.length > 0 ? empty : { ...empty, targetFit: "known_mismatch" as const }
+  }
+  return { ...selected, targetFit: "matched" as const }
 }
 
 function singleSemanticMatch<T extends object>(matches: T[]): T | null {
@@ -516,6 +546,36 @@ function conditionerBalance(value: unknown): "protein" | "moisture" | "balanced"
     default:
       return null
   }
+}
+
+const OIL_EXPLICIT_ROLES = [
+  "pre_wash_fibre_treatment",
+  "leave_on_fibre_conditioning",
+  "dry_finish",
+  "pre_heat_protection",
+] as const satisfies readonly PlanProductRole[]
+
+function explicitOilRoleSupport(
+  roles: string[] | null,
+): Partial<Record<PlanProductRole, boolean | null>> {
+  if (roles === null) {
+    return Object.fromEntries(OIL_EXPLICIT_ROLES.map((role) => [role, null])) as Partial<
+      Record<PlanProductRole, boolean | null>
+    >
+  }
+  return Object.fromEntries(
+    OIL_EXPLICIT_ROLES.map((role) => [role, roles.includes(role)]),
+  ) as Partial<Record<PlanProductRole, boolean | null>>
+}
+
+function targetOilThicknessEligible(
+  eligibility: Row[],
+  context: CategorySelectionContext,
+): boolean | null {
+  if (!context.hairThickness) return null
+  if (eligibility.length === 0) return null
+  if (eligibility.some((row) => text(row.thickness) === null)) return null
+  return eligibility.some((row) => text(row.thickness) === context.hairThickness)
 }
 
 function text(value: unknown): string | null {

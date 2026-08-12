@@ -40,6 +40,7 @@ import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/cons
 import { SHAMPOO_BUCKETS } from "@/lib/shampoo/constants"
 import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 export const PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__" as const
 
@@ -56,6 +57,7 @@ export type ProductIntakeTargetSpecTable =
   | "product_leave_in_fit_specs"
   | "product_leave_in_eligibility"
   | "product_oil_eligibility"
+  | "product_oil_specs"
   | "product_dry_shampoo_specs"
   | "product_deep_cleansing_shampoo_specs"
   | "product_bondbuilder_specs"
@@ -85,6 +87,8 @@ type ProductIntakeSpecRowByTable = {
     concentration: string
     balance_direction: string | null
     ingredient_flags: string[]
+    repair_support_level: "low" | "medium" | "high"
+    functional_benefits: string[]
   }
   product_leave_in_specs: {
     format: string
@@ -96,6 +100,10 @@ type ProductIntakeSpecRowByTable = {
     care_benefits: string[]
     ingredient_flags: string[]
     application_stage: string[]
+    care_direction: "moisture" | "balanced" | "protein"
+    repair_support_level: "low" | "medium" | "high"
+    plan_roles: string[]
+    functional_benefits: string[]
   }
   product_leave_in_fit_specs: {
     weight: string
@@ -113,6 +121,7 @@ type ProductIntakeSpecRowByTable = {
     oil_purpose: string | null
     ingredient_flags: string[]
   }
+  product_oil_specs: { weight: "light" | "medium" | "rich"; role_support: string[] }
   product_dry_shampoo_specs: {
     primary_effect: string
     hair_color_fit: string
@@ -155,13 +164,8 @@ type ProductIntakeSpecRowByTable = {
     application_instructions: string
   }
   product_application_protocols: {
-    category: "heat_protectant" | "scalp_care"
-    role:
-      | "pre_heat_protection"
-      | "scalp_comfort"
-      | "scalp_flake_oil_adjunct"
-      | "density_claim_tonic"
-      | "scalp_exfoliant"
+    category: ProductIntakeReviewCategoryKey
+    role: string
     cadence: Record<string, unknown> | null
     application_stage: string | null
     application_state: "damp" | "dry" | "either" | null
@@ -173,6 +177,7 @@ type ProductIntakeSpecRowByTable = {
     source_label: string | null
     source_url: string | null
     source_text: string | null
+    guidance_payload: Record<string, unknown>
   }
 }
 
@@ -513,6 +518,10 @@ const maskSpecsSchema = z
         concentration: z.enum(MASK_CONCENTRATIONS),
         balance_direction: z.enum(PRODUCT_BALANCE_TARGETS).nullable(),
         ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)),
+        repair_support_level: z.enum(["low", "medium", "high"]),
+        functional_benefits: z
+          .array(z.enum(["smoothing_frizz_control", "detangling_slip", "shine"]))
+          .min(1),
       })
       .strict(),
   })
@@ -533,6 +542,22 @@ const leaveInSpecsSchema = z
         care_benefits: z.array(z.enum(LEAVE_IN_CARE_BENEFITS)).min(1),
         ingredient_flags: z.array(z.enum(LEAVE_IN_INGREDIENT_FLAGS)),
         application_stage: z.array(z.enum(LEAVE_IN_APPLICATION_STAGES)).min(1),
+        care_direction: z.enum(["moisture", "balanced", "protein"]),
+        repair_support_level: z.enum(["low", "medium", "high"]),
+        plan_roles: z.array(z.enum(["post_wash_leave_in", "pre_heat_application"])).min(1),
+        functional_benefits: z
+          .array(
+            z.enum([
+              "detangle",
+              "moisture_softness",
+              "smooth_anti_frizz",
+              "heat_protect",
+              "repair_support",
+              "curl_shape_support",
+              "shine_support",
+            ]),
+          )
+          .min(1),
       })
       .strict(),
     product_leave_in_fit_specs: z
@@ -558,6 +583,21 @@ const leaveInSpecsSchema = z
 
 const oilSpecsSchema = z
   .object({
+    product_oil_specs: z
+      .object({
+        weight: z.enum(["light", "medium", "rich"]),
+        role_support: z
+          .array(
+            z.enum([
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection",
+            ]),
+          )
+          .min(1),
+      })
+      .strict(),
     product_oil_eligibility: z
       .array(
         z
@@ -629,6 +669,62 @@ const scalpCareRoleSchema = z.enum([
   "scalp_exfoliant",
 ])
 
+const canonicalGuidancePayloadSchema = z
+  .unknown()
+  .superRefine((value, context) => {
+    if (!value || typeof value !== "object") {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Canonical guidance payload is required",
+      })
+      return
+    }
+    const payload = value as Record<string, unknown>
+    const scope = payload.scope
+    const normalized =
+      scope &&
+      typeof scope === "object" &&
+      (scope as Record<string, unknown>).productId === PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER
+        ? {
+            ...payload,
+            scope: {
+              ...(scope as Record<string, unknown>),
+              productId: "00000000-0000-4000-8000-000000000001",
+            },
+          }
+        : value
+    const parsed = applicationGuidanceProtocolSchema.safeParse(normalized)
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: issue.path, message: issue.message })
+      }
+    }
+  })
+  .transform((value) => value as Record<string, unknown>)
+
+const REQUIRED_PROTOCOL_ROLES_BY_CATEGORY = {
+  shampoo: ["shampoo_everyday", "shampoo_dandruff"],
+  conditioner: ["conditioner_rinse_out"],
+  leave_in: ["post_wash_leave_in", "pre_heat_protection"],
+  mask: ["intensive_conditioning_mask"],
+  oil: [
+    "pre_wash_fibre_treatment",
+    "leave_on_fibre_conditioning",
+    "dry_finish",
+    "pre_heat_protection",
+  ],
+  dry_shampoo: ["root_refresh_bridge"],
+  deep_cleansing_shampoo: ["residue_reset", "mineral_reset"],
+  bondbuilder: ["specialized_bond_treatment"],
+  heat_protectant: ["pre_heat_protection"],
+  scalp_care: [
+    "scalp_comfort",
+    "scalp_flake_oil_adjunct",
+    "density_claim_tonic",
+    "scalp_exfoliant",
+  ],
+} as const satisfies Record<ProductIntakeReviewCategoryKey, readonly string[]>
+
 const applicationProtocolBaseSchema = z
   .object({
     cadence: z.record(z.string(), z.unknown()).nullable(),
@@ -642,6 +738,7 @@ const applicationProtocolBaseSchema = z
     source_label: nullableTrimmedString,
     source_url: z.string().url().nullable(),
     source_text: nullableTrimmedString,
+    guidance_payload: canonicalGuidancePayloadSchema,
   })
   .strict()
 
@@ -654,10 +751,27 @@ const heatProtectantProtocolSchema = applicationProtocolBaseSchema
   })
   .strict()
 
+const legacyHeatProtectantProtocolSchema = applicationProtocolBaseSchema
+  .omit({ guidance_payload: true })
+  .extend({
+    category: z.literal("heat_protectant"),
+    role: z.literal("pre_heat_protection"),
+    application_state: z.enum(["damp", "dry", "either"]),
+    reapplication: z.enum(["required", "optional", "not_stated"]),
+  })
+  .strict()
+
 const heatProtectantSpecsSchema = z
   .object({
     product_heat_protectant_specs: heatProtectantSpecSchema,
     product_application_protocols: z.array(heatProtectantProtocolSchema).min(1),
+  })
+  .strict()
+
+const legacyHeatProtectantSpecsSchema = z
+  .object({
+    product_heat_protectant_specs: heatProtectantSpecSchema,
+    product_application_protocols: z.array(legacyHeatProtectantProtocolSchema).min(1),
   })
   .strict()
 
@@ -685,10 +799,25 @@ const scalpCareProtocolSchema = applicationProtocolBaseSchema
   })
   .strict()
 
+const legacyScalpCareProtocolSchema = applicationProtocolBaseSchema
+  .omit({ guidance_payload: true })
+  .extend({
+    category: z.literal("scalp_care"),
+    role: scalpCareRoleSchema,
+  })
+  .strict()
+
 const scalpCareSpecsSchema = z
   .object({
     product_scalp_care_specs: scalpCareSpecSchema,
     product_application_protocols: z.array(scalpCareProtocolSchema).min(1),
+  })
+  .strict()
+
+const legacyScalpCareSpecsSchema = z
+  .object({
+    product_scalp_care_specs: scalpCareSpecSchema,
+    product_application_protocols: z.array(legacyScalpCareProtocolSchema).min(1),
   })
   .strict()
 
@@ -766,6 +895,7 @@ function validateOil(
   if (!parsed.ok) return invalidCategoryResult(parsed.missingFields)
 
   return validCategoryResult(finalPayload, [
+    upsert("product_oil_specs", [parsed.specs.product_oil_specs]),
     upsert("product_oil_eligibility", parsed.specs.product_oil_eligibility),
   ])
 }
@@ -817,6 +947,23 @@ function validateHeatProtectant(
   ])
 }
 
+function validateLegacyHeatProtectant(
+  finalPayload: ProductIntakeFinalReviewedPayload,
+): ProductIntakeApprovalValidationResult {
+  const parsed = validateSpecs(finalPayload, legacyHeatProtectantSpecsSchema)
+  if (!parsed.ok) return invalidCategoryResult(parsed.missingFields)
+
+  return validCategoryResult(finalPayload, [
+    upsert("product_heat_protectant_specs", [parsed.specs.product_heat_protectant_specs]),
+    upsert(
+      "product_application_protocols",
+      parsed.specs.product_application_protocols as unknown as Array<
+        ProductIntakeSpecRowByTable["product_application_protocols"]
+      >,
+    ),
+  ])
+}
+
 function validateScalpCare(
   finalPayload: ProductIntakeFinalReviewedPayload,
 ): ProductIntakeApprovalValidationResult {
@@ -834,6 +981,113 @@ function validateScalpCare(
     upsert("product_scalp_care_specs", [parsed.specs.product_scalp_care_specs]),
     upsert("product_application_protocols", parsed.specs.product_application_protocols),
   ])
+}
+
+function validateLegacyScalpCare(
+  finalPayload: ProductIntakeFinalReviewedPayload,
+): ProductIntakeApprovalValidationResult {
+  const parsed = validateSpecs(finalPayload, legacyScalpCareSpecsSchema)
+  if (!parsed.ok) return invalidCategoryResult(parsed.missingFields)
+
+  const primaryRole = parsed.specs.product_scalp_care_specs.primary_role
+  if (
+    parsed.specs.product_application_protocols.some((protocol) => protocol.role !== primaryRole)
+  ) {
+    return invalidCategoryResult(["final.category_specs.product_application_protocols.role"])
+  }
+
+  return validCategoryResult(finalPayload, [
+    upsert("product_scalp_care_specs", [parsed.specs.product_scalp_care_specs]),
+    upsert(
+      "product_application_protocols",
+      parsed.specs.product_application_protocols as unknown as Array<
+        ProductIntakeSpecRowByTable["product_application_protocols"]
+      >,
+    ),
+  ])
+}
+
+function validateExactProtocol(
+  categoryKey: ProductIntakeReviewCategoryKey,
+  categorySpecs: unknown,
+): ProductIntakeCategorySpecsValidationResult {
+  const requiredRoles = requiredProtocolRoles(categoryKey, categorySpecs)
+  const protocols = z
+    .object({
+      product_application_protocols: z
+        .array(
+          applicationProtocolBaseSchema.extend({
+            category: z.literal(categoryKey),
+            role: z.string(),
+            guidance_payload: canonicalGuidancePayloadSchema,
+          }),
+        )
+        .min(1),
+    })
+    .passthrough()
+    .safeParse(categorySpecs)
+
+  if (!protocols.success) {
+    return {
+      ok: false,
+      missingFields: parseErrors(protocols.error, ["final", "category_specs"]),
+      targetSpecOperations: [],
+    }
+  }
+  const suppliedRoles = new Set(
+    protocols.data.product_application_protocols.map((protocol) => protocol.role),
+  )
+  if (requiredRoles.some((role) => !suppliedRoles.has(role))) {
+    return {
+      ok: false,
+      missingFields: ["final.category_specs.product_application_protocols.role"],
+      targetSpecOperations: [],
+    }
+  }
+
+  return {
+    ok: true,
+    missingFields: [],
+    targetSpecOperations: [
+      upsert("product_application_protocols", protocols.data.product_application_protocols),
+    ],
+  }
+}
+
+function requiredProtocolRoles(
+  categoryKey: ProductIntakeReviewCategoryKey,
+  categorySpecs: unknown,
+): readonly string[] {
+  const specs = categorySpecs as Record<string, unknown>
+  switch (categoryKey) {
+    case "shampoo": {
+      const rows = Array.isArray(specs.product_shampoo_specs) ? specs.product_shampoo_specs : []
+      return rows.some((row) => (row as { shampoo_bucket?: unknown }).shampoo_bucket === "schuppen")
+        ? ["shampoo_everyday", "shampoo_dandruff"]
+        : ["shampoo_everyday"]
+    }
+    case "leave_in":
+      return (specs.product_leave_in_specs as { provides_heat_protection?: unknown })
+        ?.provides_heat_protection === true
+        ? ["post_wash_leave_in", "pre_heat_protection"]
+        : ["post_wash_leave_in"]
+    case "oil": {
+      return (specs.product_oil_specs as { role_support?: string[] })?.role_support ?? []
+    }
+    case "deep_cleansing_shampoo": {
+      const focus = (specs.product_deep_cleansing_shampoo_specs as { reset_focus?: string })
+        ?.reset_focus
+      return focus === "metal_mineral_hard_water"
+        ? ["mineral_reset"]
+        : focus === "broad_spectrum_detox"
+          ? ["residue_reset", "mineral_reset"]
+          : ["residue_reset"]
+    }
+    case "scalp_care":
+      return [(specs.product_scalp_care_specs as { primary_role?: string })?.primary_role ?? ""]
+    default:
+      return [REQUIRED_PROTOCOL_ROLES_BY_CATEGORY[categoryKey][0]]
+  }
 }
 
 export const PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS = {
@@ -861,13 +1115,25 @@ export type ProductIntakeCategorySpecsValidationResult =
       targetSpecOperations: []
     }
 
+export type ProductIntakeValidationProfile = "current" | "legacy_personal_plan_launch_v1"
+
 export function validateProductIntakeCategorySpecs(
   categoryKey: ProductIntakeReviewCategoryKey,
   categorySpecs: unknown,
+  profile: ProductIntakeValidationProfile = "current",
 ): ProductIntakeCategorySpecsValidationResult {
-  const result = PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS[categoryKey]({
-    category_specs: categorySpecs,
-  } as ProductIntakeFinalReviewedPayload)
+  const result =
+    profile === "legacy_personal_plan_launch_v1" && categoryKey === "heat_protectant"
+      ? validateLegacyHeatProtectant({
+          category_specs: categorySpecs,
+        } as ProductIntakeFinalReviewedPayload)
+      : profile === "legacy_personal_plan_launch_v1" && categoryKey === "scalp_care"
+        ? validateLegacyScalpCare({
+            category_specs: categorySpecs,
+          } as ProductIntakeFinalReviewedPayload)
+        : PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS[categoryKey]({
+            category_specs: categorySpecs,
+          } as ProductIntakeFinalReviewedPayload)
 
   return result.ok
     ? {
@@ -884,6 +1150,7 @@ export function validateProductIntakeCategorySpecs(
 
 export function validateProductIntakeApprovalPayload(
   value: unknown,
+  profile: ProductIntakeValidationProfile = "current",
 ): ProductIntakeApprovalValidationResult {
   const parsed = approvalPayloadSchema.safeParse(value)
   if (!parsed.success) {
@@ -894,13 +1161,52 @@ export function validateProductIntakeApprovalPayload(
   const rationaleValidation = validateFieldRationales(finalPayload)
   if (rationaleValidation) return rationaleValidation
 
+  const categoryKey = finalPayload.product.category_key
   const categoryValidation =
-    PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS[finalPayload.product.category_key](finalPayload)
+    profile === "legacy_personal_plan_launch_v1" && categoryKey === "heat_protectant"
+      ? validateLegacyHeatProtectant(finalPayload)
+      : profile === "legacy_personal_plan_launch_v1" && categoryKey === "scalp_care"
+        ? validateLegacyScalpCare(finalPayload)
+        : PRODUCT_INTAKE_CATEGORY_APPROVAL_VALIDATORS[categoryKey](
+            categoryKey === "heat_protectant" || categoryKey === "scalp_care"
+              ? finalPayload
+              : {
+                  ...finalPayload,
+                  category_specs: Object.fromEntries(
+                    Object.entries(finalPayload.category_specs).filter(
+                      ([key]) => key !== "product_application_protocols",
+                    ),
+                  ),
+                },
+          )
 
   if (!categoryValidation.ok) return categoryValidation
 
+  if (
+    profile === "legacy_personal_plan_launch_v1" &&
+    (categoryKey === "heat_protectant" || categoryKey === "scalp_care")
+  ) {
+    return categoryValidation
+  }
+
+  const protocolValidation = validateExactProtocol(categoryKey, finalPayload.category_specs)
+  if (!protocolValidation.ok) {
+    return {
+      ok: false,
+      missingFields: protocolValidation.missingFields,
+      normalizedPayload: null,
+      targetSpecOperations: [],
+    }
+  }
+
   return {
     ...categoryValidation,
+    targetSpecOperations: [
+      ...categoryValidation.targetSpecOperations.filter(
+        (operation) => operation.table !== "product_application_protocols",
+      ),
+      ...protocolValidation.targetSpecOperations,
+    ],
     normalizedPayload: parsed.data,
   }
 }

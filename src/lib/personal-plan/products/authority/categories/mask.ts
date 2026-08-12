@@ -1,4 +1,5 @@
 import type {
+  MaskFunctionalNeed,
   PlanCareDirection,
   PlanCareWeight,
   PlanRepairSupportLevel,
@@ -153,6 +154,41 @@ function evaluateProduct(input: Stage3AuthorityInput<"mask">, product: Stage3Mas
         REPAIR_LEVELS,
       ),
     )
+  const requiredBenefits = target.functionalNeeds
+    .filter((need) => need.ownership === "required")
+    .map((need) => need.need)
+  if (requiredBenefits.length > 0 && product.spec.functionalBenefits === null) {
+    criteria.push(
+      criterion(
+        "mask.functional_benefits",
+        "Funktionsnutzen",
+        "unknown",
+        "Die kanonischen Masken-Funktionen sind noch nicht geprüft.",
+      ),
+    )
+  } else if (
+    requiredBenefits.some(
+      (benefit) => !product.spec.functionalBenefits?.includes(benefit as MaskFunctionalNeed),
+    )
+  ) {
+    criteria.push(
+      criterion(
+        "mask.functional_benefits",
+        "Funktionsnutzen",
+        "fail",
+        "Das Produkt deckt eine erforderliche Masken-Funktion nicht ab.",
+      ),
+    )
+  } else if (requiredBenefits.length > 0) {
+    criteria.push(
+      criterion(
+        "mask.functional_benefits",
+        "Funktionsnutzen",
+        "pass",
+        "Die erforderlichen Masken-Funktionen sind verifiziert.",
+      ),
+    )
+  }
   const protocol = product.protocols.find((entry) => entry.role === input.role)
   criteria.push(
     criterion(

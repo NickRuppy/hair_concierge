@@ -1,0 +1,490 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-07-deep-cleansing-launch",
+  "category_key": "deep_cleansing_shampoo",
+  "products": [
+    {
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "product_name": "Schwarzkopf GLISS Shampoo scalp balance Tiefenreinigung",
+      "role": "residue_reset",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+          "text": "Exact source evidence for Schwarzkopf GLISS Shampoo scalp balance Tiefenreinigung: residue reset protocol; scalp/root-zone application; rinse-out use; conditioner relationship conditioner_after.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "weekly_range",
+        "copy_de": "Ein- bis zweimal pro Woche anwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-deep-cleansing-shampoo-05753f93-907f-427d-a4dc-0a690ff3a76d-residue-reset",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "05753f93-907f-427d-a4dc-0a690ff3a76d"
+        },
+        "role": "reset_cleanse",
+        "applicationFamily": "reset_cleanse",
+        "compatibleDayTypes": [
+          "clarifying_wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "reset_focus"
+          ],
+          "requiredProtocolFacts": [
+            "weekly_cadence"
+          ],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "cleanse-gliss-deep",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft im feuchten Haar verteilen."
+          },
+          {
+            "stepKey": "rinse-gliss-deep",
+            "action": "rinse",
+            "copyTemplateDe": "Gut ausspülen; ein- bis zweimal pro Woche anwenden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "07895098-a301-4137-b5c6-9061589b1800",
+      "product_name": "NEQI Deep Cleansing Shampoo",
+      "role": "residue_reset",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Rossmann Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192",
+          "text": "Exact source evidence for NEQI Deep Cleansing Shampoo: residue reset protocol; whole-hair application; rinse-out use; conditioner relationship conditioner_after.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-deep-cleansing-shampoo-07895098-a301-4137-b5c6-9061589b1800-residue-reset",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "07895098-a301-4137-b5c6-9061589b1800"
+        },
+        "role": "reset_cleanse",
+        "applicationFamily": "reset_cleanse",
+        "compatibleDayTypes": [
+          "clarifying_wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "reset_focus"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "cleanse-neqi-deep",
+            "action": "apply_product",
+            "copyTemplateDe": "Shampoo auf das nasse Haar auftragen und sanft in das Haar einmassieren und aufschäumen."
+          },
+          {
+            "stepKey": "rinse-neqi-deep",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "product_name": "Balea Professional Shampoo Tiefenreinigung",
+      "role": "residue_reset",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+          "text": "Exact source evidence for Balea Professional Shampoo Tiefenreinigung: residue reset protocol; whole-hair application; rinse-out use; conditioner relationship conditioner_after.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_daily_suitable",
+        "copy_de": "Laut Produktseite für die tägliche Anwendung geeignet; im Plan nur als Reset-Baustein verwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-deep-cleansing-shampoo-375ee7a0-3262-4b99-8e48-4f327c6e09aa-residue-reset",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "375ee7a0-3262-4b99-8e48-4f327c6e09aa"
+        },
+        "role": "reset_cleanse",
+        "applicationFamily": "reset_cleanse",
+        "compatibleDayTypes": [
+          "clarifying_wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "reset_focus"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "cleanse-balea-deep",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft ins nasse Haar einmassieren."
+          },
+          {
+            "stepKey": "wait-balea-deep",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-balea-deep",
+            "action": "rinse",
+            "copyTemplateDe": "Sorgfältig mit lauwarmem Wasser ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "product_name": "Swiss-o-Par Shampoo Tiefenreinigung",
+      "role": "mineral_reset",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+          "text": "Exact source evidence for Swiss-o-Par Shampoo Tiefenreinigung: mineral reset protocol; whole-hair application; rinse-out use; conditioner relationship conditioner_after.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-deep-cleansing-shampoo-898a5a1e-1cf1-4812-8f9e-f14563a740ca-mineral-reset",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "898a5a1e-1cf1-4812-8f9e-f14563a740ca"
+        },
+        "role": "reset_cleanse",
+        "applicationFamily": "reset_cleanse",
+        "compatibleDayTypes": [
+          "clarifying_wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "reset_focus"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "cleanse-swiss-o-par-mineral",
+            "action": "apply_product",
+            "copyTemplateDe": "Ins nasse Haar geben und einmassieren."
+          },
+          {
+            "stepKey": "rinse-swiss-o-par-mineral",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "product_name": "Swiss-o-Par Shampoo Tiefenreinigung",
+      "role": "residue_reset",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "dm Produktseite",
+          "url": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+          "text": "Exact source evidence for Swiss-o-Par Shampoo Tiefenreinigung: residue reset protocol; whole-hair application; rinse-out use; conditioner relationship conditioner_after.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-deep-cleansing-shampoo-898a5a1e-1cf1-4812-8f9e-f14563a740ca-residue-reset",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "898a5a1e-1cf1-4812-8f9e-f14563a740ca"
+        },
+        "role": "reset_cleanse",
+        "applicationFamily": "reset_cleanse",
+        "compatibleDayTypes": [
+          "clarifying_wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "reset_focus"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "cleanse-swiss-o-par-residue",
+            "action": "apply_product",
+            "copyTemplateDe": "Ins nasse Haar geben und einmassieren."
+          },
+          {
+            "stepKey": "rinse-swiss-o-par-residue",
+            "action": "rinse",
+            "copyTemplateDe": "Gründlich ausspülen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    },
+    {
+      "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "product_name": "ISANA Professional Shampoo Tiefenreinigung",
+      "role": "residue_reset",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Rossmann Produktseite",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+          "text": "Exact source evidence for ISANA Professional Shampoo Tiefenreinigung: residue reset protocol; scalp/root-zone application; rinse-out use; conditioner relationship conditioner_after.",
+          "source_type": "retailer",
+          "checked_at": "2026-08-11"
+        }
+      ],
+      "cadence": {
+        "kind": "label_daily_suitable",
+        "copy_de": "Laut Produktseite für die tägliche Haarwäsche geeignet; im Plan nur als Reset-Baustein verwenden."
+      },
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-deep-cleansing-shampoo-ae0e9d21-1e16-4c03-9792-773dbdc2fd18-residue-reset",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18"
+        },
+        "role": "reset_cleanse",
+        "applicationFamily": "reset_cleanse",
+        "compatibleDayTypes": [
+          "clarifying_wash_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "wet_cleanse",
+          "before": [
+            "post_cleanse_rinse_off"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [
+            "reset_focus"
+          ],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "cleanse-isana-deep",
+            "action": "apply_product",
+            "copyTemplateDe": "Sanft ins feuchte Haar und die Kopfhaut einmassieren."
+          },
+          {
+            "stepKey": "wait-isana-deep",
+            "action": "wait",
+            "copyTemplateDe": "Kurz einwirken lassen."
+          },
+          {
+            "stepKey": "rinse-isana-deep",
+            "action": "rinse",
+            "copyTemplateDe": "Sorgfältig ausspülen und Kontakt mit den Augen vermeiden."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

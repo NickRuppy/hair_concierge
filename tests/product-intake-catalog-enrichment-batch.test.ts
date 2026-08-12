@@ -17,7 +17,11 @@ test("the approved Heat source cohort contains exactly seven valid manifests wit
     files.map(async (file) => JSON.parse(await readFile(`${root}/${file}`, "utf8"))),
   )
   for (const manifest of manifests) {
-    const validation = validateCatalogEnrichmentManifest(manifest)
+    const validation = validateCatalogEnrichmentManifest(
+      manifest,
+      undefined,
+      "legacy_personal_plan_launch_v1",
+    )
     assert.equal(validation.ok, true)
     assert.equal(manifest.category_key, "heat_protectant")
   }

@@ -12,6 +12,7 @@
         {
           "label": "OLAPLEX Herstelleranleitung",
           "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+          "text": "Exact source evidence for Olaplex No.7 Bonding Oil: leave on fibre conditioning protocol; lengths-and-ends application; leave-in use without rinsing and amount evidence (Mit zwei bis drei Tropfen starten.).",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -32,7 +33,11 @@
         },
         "role": "leave_in",
         "applicationFamily": "post_wash_damp_conditioning",
-        "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+        "compatibleDayTypes": [
+          "wash_day",
+          "intensive_care_day",
+          "styling_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "damp_leave_on",
@@ -88,6 +93,7 @@
         {
           "label": "OLAPLEX Herstelleranleitung",
           "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+          "text": "Exact source evidence for Olaplex No.7 Bonding Oil: dry finish protocol; lengths-and-ends application; leave-in use without rinsing and amount evidence (Mit zwei bis drei Tropfen starten.).",
           "source_type": "manufacturer",
           "checked_at": "2026-08-10"
         }
@@ -108,7 +114,12 @@
         },
         "role": "finish",
         "applicationFamily": "dry_finish",
-        "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day", "between_wash_care_day"],
+        "compatibleDayTypes": [
+          "wash_day",
+          "intensive_care_day",
+          "styling_day",
+          "between_wash_care_day"
+        ],
         "exactGuidanceRequired": true,
         "sequence": {
           "anchor": "dry_finish",
@@ -164,6 +175,7 @@
         {
           "label": "Müller Produktseite",
           "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "text": "Blocked exact source evidence for Allgäuer Ölmühle Bio Traubenkernöl: Die exakte Verkaufsseite dokumentiert keine Anwendung als Vorwäsche im Haar; die bisherige Katalogrolle darf deshalb nicht als exakte Produktanleitung ausgegeben werden.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -183,6 +195,7 @@
         {
           "label": "Müller Produktseite",
           "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "text": "Blocked exact source evidence for benecos BIO Körperöl Macadamianussöl: Die exakte Verkaufsseite dokumentiert keine Anwendung als Vorwäsche im Haar; die bisherige Katalogrolle darf deshalb nicht als exakte Produktanleitung ausgegeben werden.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -202,6 +215,7 @@
         {
           "label": "dm Produktseite",
           "url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "text": "Blocked exact source evidence for dmBio Kokosöl nativ: Die exakte Verkaufsseite dokumentiert keine Anwendung als Vorwäsche im Haar; die bisherige Katalogrolle darf deshalb nicht als exakte Produktanleitung ausgegeben werden.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }
@@ -221,6 +235,7 @@
         {
           "label": "dm Produktseite",
           "url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+          "text": "Blocked exact source evidence for Balea Oil Repair Haaröl: Die aktuelle Produktseite war erreichbar, stellte die genaue Anwendung im überprüfbaren Seiteninhalt aber nicht bereit; eine exakte Dosierungs- oder Nass/Trocken-Anleitung bleibt offen.",
           "source_type": "retailer",
           "checked_at": "2026-08-10"
         }

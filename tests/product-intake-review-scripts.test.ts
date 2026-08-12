@@ -551,13 +551,19 @@ test("promotion command reports state and preserves category-specific readiness 
   assert.deepEqual(REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY.conditioner, [
     "product_conditioner_specs",
     "product_conditioner_rerank_specs",
+    "product_application_protocols",
   ])
   assert.deepEqual(REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY.leave_in, [
     "product_leave_in_specs",
     "product_leave_in_fit_specs",
     "product_leave_in_eligibility",
+    "product_application_protocols",
   ])
-  assert.deepEqual(REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY.oil, ["product_oil_eligibility"])
+  assert.deepEqual(REQUIRED_PROMOTION_SPEC_TABLES_BY_CATEGORY.oil, [
+    "product_oil_specs",
+    "product_oil_eligibility",
+    "product_application_protocols",
+  ])
 
   const payload = buildPromotionPayload({
     product: {
@@ -596,7 +602,7 @@ test("promotion command reports state and preserves category-specific readiness 
       lifecycle_status: "active",
       is_chaarlie_recommended: false,
     }),
-    ["product_mask_specs"],
+    ["product_mask_specs", "product_application_protocols"],
   )
 
   assert.throws(
@@ -680,7 +686,10 @@ test("promotion command blocks missing specs and stale guarded updates", async (
     const staleSupabase = fakePromotionSupabase({
       product,
       approvedSubmissionRows: [{ id: "submission-1", approved_product_id: "product-1" }],
-      specRowsByTable: { product_mask_specs: [{ product_id: "product-1" }] },
+      specRowsByTable: {
+        product_mask_specs: [{ product_id: "product-1" }],
+        product_application_protocols: [{ product_id: "product-1" }],
+      },
       updateResult: null,
     })
 
@@ -722,7 +731,10 @@ test("promotion command requires an approved intake submission and updates only 
     const noApprovedSubmissionSupabase = fakePromotionSupabase({
       product,
       approvedSubmissionRows: [],
-      specRowsByTable: { product_mask_specs: [{ product_id: "product-1" }] },
+      specRowsByTable: {
+        product_mask_specs: [{ product_id: "product-1" }],
+        product_application_protocols: [{ product_id: "product-1" }],
+      },
       updateResult: { id: "product-1", updated_at: "2026-06-17T11:00:00.000Z" },
     })
 
@@ -742,7 +754,10 @@ test("promotion command requires an approved intake submission and updates only 
     const successSupabase = fakePromotionSupabase({
       product,
       approvedSubmissionRows: [{ id: "submission-1", approved_product_id: "product-1" }],
-      specRowsByTable: { product_mask_specs: [{ product_id: "product-1" }] },
+      specRowsByTable: {
+        product_mask_specs: [{ product_id: "product-1" }],
+        product_application_protocols: [{ product_id: "product-1" }],
+      },
       updateResult: { id: "product-1", updated_at: "2026-06-17T11:00:00.000Z" },
     })
 

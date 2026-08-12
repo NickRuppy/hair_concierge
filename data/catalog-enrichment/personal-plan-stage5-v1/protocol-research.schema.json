@@ -35,10 +35,11 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["label", "url", "source_type", "checked_at"],
+              "required": ["label", "url", "text", "source_type", "checked_at"],
               "properties": {
                 "label": { "type": "string", "minLength": 1 },
                 "url": { "type": "string", "format": "uri" },
+                "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
                 "source_type": { "enum": ["manufacturer", "retailer", "professional_authority"] },
                 "checked_at": { "type": "string", "format": "date" }
               }
