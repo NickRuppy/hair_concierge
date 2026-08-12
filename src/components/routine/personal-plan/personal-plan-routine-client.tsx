@@ -198,7 +198,6 @@ export function PersonalPlanRoutineClient({
   // visit, but it must be presented again on the next Routine-page visit until
   // the owner explicitly accepts or rejects it.
   const [proposalOpen, setProposalOpen] = React.useState(Boolean(initialView.pendingProposal))
-  const [entrySyncPending, setEntrySyncPending] = React.useState(true)
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
@@ -243,6 +242,10 @@ export function PersonalPlanRoutineClient({
   const isInitial = Boolean(pending && !view.activeVersion)
   const seed = editorSeed(view)
   const canEdit = enabled && Boolean(seed)
+  const entrySyncTiming = routineEntrySyncTiming({
+    enabled,
+    hasPendingProposal: Boolean(pending),
+  })
 
   React.useEffect(() => {
     routineAnalytics.track("personal_plan_stage4_routine_viewed", {
@@ -251,42 +254,44 @@ export function PersonalPlanRoutineClient({
     })
   }, [])
 
-  React.useEffect(() => {
-    if (!enabled) {
-      setEntrySyncPending(false)
-      return
-    }
-    if (syncedOnEntry.current) return
-    syncedOnEntry.current = true
-    setEntrySyncPending(true)
-    void (async () => {
-      const startedAt = performance.now()
-      let outcome = "error"
-      try {
-        const response = await fetch("/api/personal-plan/routine/sync", { method: "POST" })
-        if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
-        const result = (await response.json()) as { proposalStaged?: unknown }
-        if (result.proposalStaged === true) {
-          const next = await reload()
-          setProposalOpen(Boolean(next.pendingProposal))
+  const kickRoutineSync = React.useCallback(
+    (restart = false) => {
+      if (restart) syncedOnEntry.current = false
+      if (!enabled || syncedOnEntry.current) return
+      syncedOnEntry.current = true
+      void (async () => {
+        const startedAt = performance.now()
+        let outcome = "error"
+        try {
+          const response = await fetch("/api/personal-plan/routine/sync", { method: "POST" })
+          if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
+          const result = (await response.json()) as { proposalStaged?: unknown }
+          if (result.proposalStaged === true) {
+            const next = await reload()
+            setProposalOpen(Boolean(next.pendingProposal))
+          }
+          outcome = result.proposalStaged === true ? "proposal_staged" : "unchanged"
+        } catch {
+          routineAnalytics.track("personal_plan_stage4_outcome", {
+            origin: "sync",
+            outcome: "error",
+          })
+        } finally {
+          reportPersonalPlanTransitionTiming({
+            layer: "client",
+            operation: "routine_entry_sync",
+            outcome,
+            durationMs: performance.now() - startedAt,
+          })
         }
-        outcome = result.proposalStaged === true ? "proposal_staged" : "unchanged"
-      } catch {
-        routineAnalytics.track("personal_plan_stage4_outcome", {
-          origin: "sync",
-          outcome: "error",
-        })
-      } finally {
-        reportPersonalPlanTransitionTiming({
-          layer: "client",
-          operation: "routine_entry_sync",
-          outcome,
-          durationMs: performance.now() - startedAt,
-        })
-        setEntrySyncPending(false)
-      }
-    })()
-  }, [enabled, reload])
+      })()
+    },
+    [enabled, reload],
+  )
+
+  React.useEffect(() => {
+    if (entrySyncTiming === "after_render") kickRoutineSync()
+  }, [entrySyncTiming, kickRoutineSync])
 
   React.useEffect(() => {
     if (!proposalOpen || !pending || displayedProposalId.current === pending.id) return
@@ -360,7 +365,7 @@ export function PersonalPlanRoutineClient({
 
   const resolveProposal = React.useCallback(
     async (action: "accept" | "reject") => {
-      if (!pending || busy || entrySyncPending || proposalResolutionInFlight.current) return
+      if (!pending || busy || proposalResolutionInFlight.current) return
       proposalResolutionInFlight.current = true
       const attemptedProposalId = pending.id
       const retryMessage = "Deine Entscheidung konnte nicht gespeichert werden."
@@ -382,6 +387,7 @@ export function PersonalPlanRoutineClient({
             wasInitial: !view.activeVersion,
             refresh: () => router.refresh(),
           })
+          kickRoutineSync(true)
           return
         }
 
@@ -434,7 +440,7 @@ export function PersonalPlanRoutineClient({
         setBusy(false)
       }
     },
-    [busy, entrySyncPending, pending, reload, router, view.activeVersion, view.planRevision],
+    [busy, kickRoutineSync, pending, reload, router, view.activeVersion, view.planRevision],
   )
 
   const openDetail = React.useCallback(async (item: RoutinePayloadV1["items"][number]) => {
@@ -539,9 +545,7 @@ export function PersonalPlanRoutineClient({
         view={view}
         stage5Reachable={stage5Reachable}
         onEdit={canEdit ? openEditor : undefined}
-        onConfirm={
-          isInitial && enabled && !entrySyncPending ? () => setProposalOpen(true) : undefined
-        }
+        onConfirm={isInitial && enabled ? () => setProposalOpen(true) : undefined}
         onItemDetail={(item) => void openDetail(item)}
       />
       {pending ? (
@@ -572,7 +576,6 @@ export function PersonalPlanRoutineClient({
           )}
           unchangedItemCount={pending.delta.unchangedItemCount}
           submitting={busy}
-          preparing={entrySyncPending}
           retrying={proposalRetryId === pending.id}
           errorMessage={error}
           onAccept={() => void resolveProposal("accept")}
@@ -612,4 +615,12 @@ export function PersonalPlanRoutineClient({
       </BottomSheet>
     </>
   )
+}
+
+export function routineEntrySyncTiming(input: {
+  enabled: boolean
+  hasPendingProposal: boolean
+}): "disabled" | "after_render" | "after_proposal_resolution" {
+  if (!input.enabled) return "disabled"
+  return input.hasPendingProposal ? "after_proposal_resolution" : "after_render"
 }

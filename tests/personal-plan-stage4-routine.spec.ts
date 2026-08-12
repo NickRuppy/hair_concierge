@@ -413,6 +413,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   const applicationOrigin = new URL(process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000")
     .origin
   let attentionRequestCount = 0
+  let routineSyncRequestCount = 0
   page.on("request", (request) => {
     const requestUrl = new URL(request.url())
     if (
@@ -421,6 +422,13 @@ test("initial confirmation and non-blocking successor review preserve the active
       request.method() === "GET"
     ) {
       attentionRequestCount += 1
+    }
+    if (
+      requestUrl.origin === applicationOrigin &&
+      requestUrl.pathname === "/api/personal-plan/routine/sync" &&
+      request.method() === "POST"
+    ) {
+      routineSyncRequestCount += 1
     }
   })
   await page.goto("/auth?next=/routine")
@@ -432,6 +440,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   await page.waitForURL("**/routine")
   await expect(page.getByRole("heading", { name: "Routine bestätigen" })).toBeVisible()
   expect(attentionRequestCount).toBe(0)
+  expect(routineSyncRequestCount).toBe(0)
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toBeAttached()
   await expect(page.getByText("Regelmäßige Reinigung", { exact: true }).last()).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo · hinzugefügt", { exact: true })).toBeVisible()
@@ -444,12 +453,14 @@ test("initial confirmation and non-blocking successor review preserve the active
   await expect(page.getByText("Sanftes Shampoo", { exact: true })).toBeVisible()
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toHaveCount(0)
   expect(attentionRequestCount).toBe(0)
+  await expect.poll(() => routineSyncRequestCount).toBe(1)
 
   await page.getByRole("button", { name: "Routine anpassen" }).click()
   const inclusion = page.getByRole("checkbox", { name: "Kategorie einplanen" })
   await inclusion.uncheck()
   await page.getByRole("button", { name: "Änderungen prüfen" }).click()
   await expect(page.getByRole("heading", { name: "Routine-Vorschlag prüfen" })).toBeVisible()
+  expect(routineSyncRequestCount).toBe(1)
   await expect(page.getByText("Kategorie nicht mehr verwenden", { exact: true })).toBeVisible()
   await expect(
     page.getByText("Sanftes Shampoo · nicht mehr in Verwendung", { exact: true }),
@@ -478,6 +489,7 @@ test("initial confirmation and non-blocking successor review preserve the active
   ).toBeVisible()
   await expect(page.getByText("Sanftes Shampoo", { exact: true })).toBeVisible()
   await expect(page.getByText("Routine hat Änderungen zur Prüfung")).toHaveCount(0)
+  await expect.poll(() => routineSyncRequestCount).toBe(2)
   const { data: finalPlan, error: finalError } = await admin
     .from("personal_plans")
     .select("active_routine_version_id,pending_routine_proposal_id")

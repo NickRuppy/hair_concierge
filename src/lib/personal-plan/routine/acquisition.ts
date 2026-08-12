@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { capturePersonalPlanRoutineTerminalSource } from "@/lib/observability/personal-plan-application"
+
 import { loadPersonalPlanRoutineView } from "./load-view"
 import type { PersonalPlanRoutineReadClient } from "./repository"
 import {
@@ -60,6 +62,7 @@ export function createRoutineAcquisitionService(input: {
 export function createSupabaseRoutineAcquisitionService(client: SupabaseClient) {
   const sync = createRoutineSourceSyncService({
     repository: createSupabaseRoutineSourceSyncRepository(client),
+    reportTerminalSource: capturePersonalPlanRoutineTerminalSource,
     cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
       client as unknown as RoutineCadenceAuthorityReadClient,
     ),

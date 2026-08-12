@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import type { PersonalPlanRoutineTerminalSourceDetails } from "@/lib/observability/personal-plan-application"
+
 import type { ProposedProductPortfolio } from "../products/contracts"
 import {
   diffRoutinePayloads,
@@ -77,13 +79,34 @@ export type RoutineSourceSyncRepository = {
 
 export type RoutineSourceSyncResult =
   | { status: "no_personal_plan" }
-  | { status: "processed"; processed: number; deferred: number; proposalStaged: boolean }
+  | {
+      status: "processed"
+      processed: number
+      terminalized: number
+      deferred: number
+      unfinished: number
+      proposalStaged: boolean
+    }
   | { status: "conflict"; reason: string }
   | { status: "temporarily_unavailable" }
 
 export type RoutineSuccessorCadenceResolver = (
   routine: RoutineCompiledPayload,
 ) => Promise<RoutineCompiledPayload>
+
+function terminalSourceError(claim: RoutineSourceClaim, reason?: string): string | null {
+  if (claim.sourceKind === "refined_need") return "terminal_refinement_pending_stage3"
+  if (claim.sourceKind === "portfolio_version") return "terminal_unsupported_routine_source"
+  if (claim.sourceKind !== "user_product") return null
+  if (reason === "user_product_not_found") return "terminal_user_product_not_found"
+  if (reason === "category_mismatch") return "terminal_category_mismatch"
+  if (reason === "invalid_product_state") return "terminal_invalid_product_state"
+  return null
+}
+
+function isTerminalSourceError(reason: string | null | undefined): reason is `terminal_${string}` {
+  return Boolean(reason?.startsWith("terminal_"))
+}
 
 function productIdForCadence(item: RoutineCompiledPayload["items"][number]): string | null {
   return item.product.kind === "owned" || item.product.kind === "planned"
@@ -152,6 +175,7 @@ export function createRoutineSourceSyncService(input: {
   repository: RoutineSourceSyncRepository
   cadenceAuthorityReader?: RoutineCadenceAuthorityReader
   resolveCadences?: RoutineSuccessorCadenceResolver
+  reportTerminalSource?: (details: PersonalPlanRoutineTerminalSourceDetails) => void
 }) {
   const resolveCadences =
     input.resolveCadences ??
@@ -172,7 +196,14 @@ export function createRoutineSourceSyncService(input: {
         Math.min(Math.max(request.limit ?? 20, 1), 100),
       )
       if (claims.length === 0)
-        return { status: "processed", processed: 0, deferred: 0, proposalStaged: false }
+        return {
+          status: "processed",
+          processed: 0,
+          terminalized: 0,
+          deferred: 0,
+          unfinished: 0,
+          proposalStaged: false,
+        }
 
       const base = await input.repository.loadBase(request.userId, plan)
       if (!base) {
@@ -191,12 +222,18 @@ export function createRoutineSourceSyncService(input: {
       const directChangesByItemKey = new Map<string, RoutineProposalDelta["direct"][number]>()
       for (const claim of claims) {
         if (claim.sourceKind !== "user_product") {
-          claimErrors.set(claim.outboxId, "unsupported_routine_source")
+          claimErrors.set(
+            claim.outboxId,
+            terminalSourceError(claim) ?? "unsupported_routine_source",
+          )
           continue
         }
         const userProduct = await input.repository.loadUserProduct(request.userId, claim.sourceKey)
         if (!userProduct) {
-          claimErrors.set(claim.outboxId, "user_product_not_found")
+          claimErrors.set(
+            claim.outboxId,
+            terminalSourceError(claim, "user_product_not_found") ?? "user_product_not_found",
+          )
           continue
         }
         const result = reconcileRoutineUserProductSource({
@@ -206,7 +243,10 @@ export function createRoutineSourceSyncService(input: {
           sourceRevision: plan.sourceRevision,
         })
         if (result.status === "invalid_source") {
-          claimErrors.set(claim.outboxId, result.reason)
+          claimErrors.set(
+            claim.outboxId,
+            terminalSourceError(claim, result.reason) ?? result.reason,
+          )
           continue
         }
         if (result.status === "changed") {
@@ -276,7 +316,7 @@ export function createRoutineSourceSyncService(input: {
       const transitionError = outcome && !successfulOutcomes.has(outcome) ? outcome : null
       const finishTransitionError =
         transitionError === "invalid_source" ? "terminal_invalid_source" : transitionError
-      await Promise.all(
+      const finished = await Promise.all(
         claims.map((claim) =>
           input.repository.finish({
             claim,
@@ -284,20 +324,44 @@ export function createRoutineSourceSyncService(input: {
           }),
         ),
       )
+      for (const [index, claim] of claims.entries()) {
+        if (!finished[index]) continue
+        const terminalCode = claimErrors.get(claim.outboxId) ?? finishTransitionError
+        if (!isTerminalSourceError(terminalCode)) continue
+        try {
+          input.reportTerminalSource?.({
+            planId: claim.personalPlanId,
+            sourceKind: claim.sourceKind,
+            observedRevision: claim.observedRevision,
+            terminalCode,
+          })
+        } catch {
+          // Observability must never make a durably settled source retry.
+        }
+      }
       if (transitionError) return { status: "conflict", reason: transitionError }
-      const deferredError = claims
-        .map((claim) => claimErrors.get(claim.outboxId))
-        .find((reason): reason is string => Boolean(reason))
+      const unfinished = finished.filter((didFinish) => !didFinish).length
+      const deferredErrors = claims
+        .map((claim, index) => (finished[index] ? claimErrors.get(claim.outboxId) : undefined))
+        .filter((reason): reason is string => Boolean(reason) && !isTerminalSourceError(reason))
+      const deferredError = deferredErrors[0]
       // A staged sibling change is already a successful user-visible outcome.
       // Keep unresolved claims retryable without hiding that proposal behind a
       // batch-level conflict. If every claim was deferred, retain the conflict
       // response so background callers know there was no progress to surface.
       if (deferredError && changedClaims.length === 0)
         return { status: "conflict", reason: deferredError }
+      if (unfinished > 0 && outcome !== "staged" && outcome !== "already_staged")
+        return { status: "temporarily_unavailable" }
+      const terminalized = claims.filter(
+        (claim, index) => finished[index] && isTerminalSourceError(claimErrors.get(claim.outboxId)),
+      ).length
       return {
         status: "processed",
-        processed: claims.length - claimErrors.size,
-        deferred: claimErrors.size,
+        processed: claims.length - terminalized - deferredErrors.length - unfinished,
+        terminalized,
+        deferred: deferredErrors.length,
+        unfinished,
         proposalStaged: outcome === "staged" || outcome === "already_staged",
       }
     },

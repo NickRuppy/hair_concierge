@@ -1,6 +1,6 @@
 begin;
 
-select plan(34);
+select plan(40);
 
 select has_column('public', 'personal_plan_portfolio_versions', 'parent_portfolio_version_id', 'successor portfolios retain their parent');
 select has_column('public', 'personal_plan_portfolio_versions', 'lineage_product_draft_id', 'successor portfolios retain immutable draft lineage');
@@ -37,11 +37,37 @@ insert into public.personal_plan_product_drafts (id,user_id,personal_plan_id,ref
  ('42000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','32000000-0000-0000-0000-000000000004',1,1,'completed');
 insert into public.personal_plan_portfolio_versions (id,user_id,personal_plan_id,refined_need_version_id,source_product_draft_id,lineage_product_draft_id,source_product_draft_revision,schema_version,category_authority_versions,content_hash,snapshot) values
  ('52000000-0000-0000-0000-000000000001','12000000-0000-0000-0000-000000000001','22000000-0000-0000-0000-000000000001','32000000-0000-0000-0000-000000000002','42000000-0000-0000-0000-000000000001','42000000-0000-0000-0000-000000000001',1,1,'{}',repeat('5',64),'{}'),
- ('52000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','32000000-0000-0000-0000-000000000004','42000000-0000-0000-0000-000000000002','42000000-0000-0000-0000-000000000002',1,1,'{}',repeat('6',64),'{}');
+ ('52000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','32000000-0000-0000-0000-000000000004','42000000-0000-0000-0000-000000000002','42000000-0000-0000-0000-000000000002',1,1,'{}',repeat('6',64),'{"ownedProducts":[{"userProductId":"82000000-0000-0000-0000-000000000099"}],"pendingProducts":[]}');
 insert into public.personal_plan_routine_versions (id,user_id,personal_plan_id,source_refined_need_version_id,source_portfolio_version_id,source_product_draft_id,source_product_draft_revision,schema_version,compiler_version,authority_versions,source_fingerprint,payload_hash,payload) values
  ('61000000-0000-0000-0000-000000000001','12000000-0000-0000-0000-000000000001','22000000-0000-0000-0000-000000000001','32000000-0000-0000-0000-000000000002','52000000-0000-0000-0000-000000000001','42000000-0000-0000-0000-000000000001',1,1,'test','{}','active',repeat('7',64),'{}'),
  ('61000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','32000000-0000-0000-0000-000000000004','52000000-0000-0000-0000-000000000002','42000000-0000-0000-0000-000000000002',1,1,'test','{}','active',repeat('8',64),'{}');
 update public.personal_plans set active_routine_version_id='61000000-0000-0000-0000-000000000001' where id='22000000-0000-0000-0000-000000000001';
+do $setup$
+begin
+  perform public.personal_plan_enqueue_routine_source_change('12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','refined_need','32000000-0000-0000-0000-000000000004');
+  perform public.personal_plan_enqueue_routine_source_change('12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','portfolio_version','52000000-0000-0000-0000-000000000002');
+  perform public.personal_plan_enqueue_routine_source_change('12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','user_product','82000000-0000-0000-0000-000000000099');
+  perform public.personal_plan_enqueue_routine_source_change('12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','refined_need','32000000-0000-0000-0000-000000000003');
+end;
+$setup$;
+insert into public.personal_plan_routine_proposals (id,user_id,personal_plan_id,candidate_routine_version_id,origin,status,source_revision,source_fingerprint,proposal_fingerprint,delta) values
+ ('71000000-0000-0000-0000-000000000002','12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','61000000-0000-0000-0000-000000000002','stage3_completion','pending',(select source_revision from public.personal_plans where id='22000000-0000-0000-0000-000000000002'),'active',repeat('9',64),'{}');
+update public.personal_plan_routine_source_change_outbox
+   set status='processing',
+       lease_token='92000000-0000-0000-0000-000000000099',
+       lease_expires_at=now()+interval '60 seconds',
+       last_error_code='unresolved_product_review'
+ where personal_plan_id='22000000-0000-0000-0000-000000000002'
+   and source_kind='user_product';
+update public.personal_plans
+   set pending_routine_proposal_id='71000000-0000-0000-0000-000000000002', revision=1
+ where id='22000000-0000-0000-0000-000000000002';
+select is(public.personal_plan_confirm_routine_proposal('12000000-0000-0000-0000-000000000002','22000000-0000-0000-0000-000000000002','71000000-0000-0000-0000-000000000002',1)->>'outcome','accepted','proposal acceptance drives exact refinement settlement');
+select is((select active_routine_version_id::text from public.personal_plans where id='22000000-0000-0000-0000-000000000002'),'61000000-0000-0000-0000-000000000002','activation trigger preserves the accepted Routine pointer');
+select is((select count(*)::integer from public.personal_plan_routine_source_change_outbox where personal_plan_id='22000000-0000-0000-0000-000000000002' and source_kind='refined_need' and source_key='32000000-0000-0000-0000-000000000004' and available_at='infinity'::timestamptz and processed_revision=observed_revision),1,'activation settles the exact accepted refinement revision');
+select is((select count(*)::integer from public.personal_plan_routine_source_change_outbox where personal_plan_id='22000000-0000-0000-0000-000000000002' and source_kind='portfolio_version' and available_at<>'infinity'::timestamptz and processed_revision=0),1,'activation does not sweep portfolio work outside its owning completion transaction');
+select is((select count(*)::integer from public.personal_plan_routine_source_change_outbox where personal_plan_id='22000000-0000-0000-0000-000000000002' and source_kind='user_product' and status='processing' and lease_token='92000000-0000-0000-0000-000000000099' and last_error_code='unresolved_product_review'),1,'activation preserves a live deferred product-review lease and operator breadcrumb');
+select is((select count(*)::integer from public.personal_plan_routine_source_change_outbox where personal_plan_id='22000000-0000-0000-0000-000000000002' and source_key='32000000-0000-0000-0000-000000000003' and available_at<>'infinity'::timestamptz and processed_revision=0),1,'activation leaves an unrelated source key available');
 insert into public.products (id,name,category,category_key,is_active,lifecycle_status,is_chaarlie_recommended) values ('72000000-0000-0000-0000-000000000001','Source contract conditioner','Conditioner','conditioner',true,'active',false);
 insert into public.user_products (id,user_id,category,catalog_product_id,identity_status,ownership_status) values ('82000000-0000-0000-0000-000000000001','12000000-0000-0000-0000-000000000001','conditioner','72000000-0000-0000-0000-000000000001','matched','owned');
 

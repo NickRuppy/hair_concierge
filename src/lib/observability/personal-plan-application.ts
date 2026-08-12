@@ -18,8 +18,15 @@ export type PersonalPlanApplicationFailureDetails = {
 type Scope = {
   setContext(name: string, context: Record<string, unknown>): void
   setFingerprint(value: string[]): void
-  setLevel(level: "error"): void
+  setLevel(level: "error" | "warning"): void
   setTag(key: string, value: string): void
+}
+
+export type PersonalPlanRoutineTerminalSourceDetails = {
+  planId: string
+  sourceKind: string
+  observedRevision: number
+  terminalCode: `terminal_${string}`
 }
 
 export type PersonalPlanApplicationSentrySink = {
@@ -52,5 +59,29 @@ export function capturePersonalPlanApplicationFailure(
     scope.setContext("personal_plan_application", context)
     // Do not forward a caught database/Zod error: either can contain raw data.
     sink.captureException(new Error("personal_plan_application_unavailable"))
+  })
+}
+
+/**
+ * Terminal Routine-source events contain no product identity or user-authored
+ * content. The durable outbox row remains the detailed operator ledger.
+ */
+export function capturePersonalPlanRoutineTerminalSource(
+  details: PersonalPlanRoutineTerminalSourceDetails,
+  sink: PersonalPlanApplicationSentrySink = Sentry,
+) {
+  if (details.terminalCode === "terminal_refinement_pending_stage3") return
+  sink.withScope((scope) => {
+    scope.setFingerprint(["personal-plan-routine-terminal-source", details.terminalCode])
+    scope.setLevel("warning")
+    scope.setTag("personal_plan.stage", "routine")
+    scope.setTag("personal_plan.terminal_code", details.terminalCode)
+    scope.setContext("personal_plan_routine_source", {
+      plan_id: details.planId,
+      source_kind: details.sourceKind,
+      observed_revision: details.observedRevision,
+      terminal_code: details.terminalCode,
+    })
+    sink.captureException(new Error("personal_plan_routine_source_terminalized"))
   })
 }

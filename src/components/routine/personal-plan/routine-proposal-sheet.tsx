@@ -24,7 +24,6 @@ export type RoutineProposalSheetBodyProps = {
   consequentialChanges: RoutineProposalSheetDeltaEntry[]
   unchangedItemCount: number
   submitting?: boolean
-  preparing?: boolean
   retrying?: boolean
   errorMessage?: string | null
   onAccept: () => void
@@ -78,7 +77,6 @@ export function RoutineProposalSheetBody({
   consequentialChanges,
   unchangedItemCount,
   submitting = false,
-  preparing = false,
   retrying = false,
   errorMessage,
   onAccept,
@@ -88,7 +86,7 @@ export function RoutineProposalSheetBody({
   onReject,
 }: RoutineProposalSheetBodyProps) {
   const isInitial = variant === "initial"
-  const actionsDisabled = submitting || preparing
+  const actionsDisabled = submitting
   return (
     <div className="space-y-5">
       <div className="space-y-2">
@@ -130,12 +128,6 @@ export function RoutineProposalSheetBody({
           {errorMessage}
         </p>
       ) : null}
-      {preparing ? (
-        <p aria-live="polite" className="text-sm text-muted-foreground">
-          Routine wird aktualisiert …
-        </p>
-      ) : null}
-
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
         {!isInitial && onDismissForVisit ? (
           <Button
@@ -201,7 +193,6 @@ export function RoutineProposalSheet({
   consequentialChanges,
   unchangedItemCount,
   submitting,
-  preparing,
   retrying,
   errorMessage,
   onAccept,
@@ -218,7 +209,7 @@ export function RoutineProposalSheet({
         restoreFocusRef={returnFocusRef}
         rootClassName="z-[110] [&_.bottom-sheet-backdrop]:bg-black/40"
         onDismissRequest={() => {
-          if (submitting || preparing) return
+          if (submitting) return
           if (variant === "successor") onDismissForVisit?.()
           onOpenChange(false)
         }}
@@ -235,7 +226,6 @@ export function RoutineProposalSheet({
           consequentialChanges={consequentialChanges}
           unchangedItemCount={unchangedItemCount}
           submitting={submitting}
-          preparing={preparing}
           retrying={retrying}
           errorMessage={errorMessage}
           onAccept={onAccept}
