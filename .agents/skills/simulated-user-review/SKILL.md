@@ -39,7 +39,7 @@ Decide the authentication mode before navigating:
 - **Authenticated review:** Use when the user asks to test full functionality, profile, onboarding edits, chat, recommendations, saved state, subscription-gated pages, or anything behind an auth/paywall gate.
 - **Both:** Use when a release touches handoff between public and private areas, such as quiz-to-onboarding, checkout-to-welcome, or login redirects.
 
-For authenticated reviews, do not stop at the auth gate unless no safe auth path exists. First look for a repo-supported test login, seeded account, Playwright auth helper, local dev login route, or documented QA credential. For Hair Concierge local development, prefer the supported local dev login flow when available, and verify that any required app-access state is seeded too, such as an active billing subscription row when middleware gates `/onboarding`, `/chat`, or `/api/chat`. The legacy `scripts/ux-audit-create-test-user.mjs` and `scripts/ux-audit-seed.mjs` helpers are local-Supabase-only and do not prepare Personal Plan access.
+For authenticated reviews, do not stop at the auth gate unless no safe auth path exists. First look for a repo-supported test login, seeded account, Playwright auth helper, local dev login route, or documented QA credential. For Hair Concierge local development, prefer the supported local dev login flow when available, and verify that any required app-access state is seeded too, such as an active billing subscription row when middleware gates `/onboarding`, `/chat`, or `/api/chat`.
 
 For a production Personal Plan Stage 1–5 review, use a valid shareable field-test campaign link supplied by the user or campaign operator:
 

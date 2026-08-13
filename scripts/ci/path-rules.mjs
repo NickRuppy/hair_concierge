@@ -51,28 +51,8 @@ const PLAYWRIGHT_EXACT = [
 const SECURITY_PREFIXES = [".github/workflows/", "supabase/migrations/"]
 const SECURITY_EXACT = ["package.json", "package-lock.json", ".github/dependabot.yml"]
 
-const PERSONAL_PLAN_DB_PREFIXES = [
-  "supabase/migrations/",
-  "supabase/tests/",
-  "src/lib/personal-plan/persistence/",
-  "src/lib/personal-plan-field-test/",
-  "src/lib/product-intake/",
-  "src/app/api/personal-plan/",
-  "scripts/personal-plan-field-test-",
-]
-
-const PERSONAL_PLAN_DB_EXACT = [
-  "scripts/ci/prepare-personal-plan-db-transition.mjs",
-  "scripts/test-personal-plan-db.sh",
-  "supabase/config.toml",
-  "package.json",
-  "package-lock.json",
-  ".github/workflows/ci.yml",
-]
-
 const PERSONAL_PLAN_JOURNEY_PREFIXES = [
   "supabase/migrations/",
-  "supabase/tests/",
   "src/lib/personal-plan/",
   "src/lib/routines/personal-plan/",
   "src/lib/personal-plan-field-test/",
@@ -93,20 +73,11 @@ const PERSONAL_PLAN_JOURNEY_PREFIXES = [
   "src/components/personal-plan-refinement/",
   "src/components/personal-plan-start/",
   "src/components/routine/personal-plan/",
-  "scripts/test-personal-plan-stage",
   "scripts/personal-plan-field-test-",
   "tests/personal-plan-",
 ]
 
 const PERSONAL_PLAN_JOURNEY_EXACT = [
-  "scripts/ci/prepare-personal-plan-db-transition.mjs",
-  "scripts/test-personal-plan-stage1-5-browser.sh",
-  "scripts/test-personal-plan-stage4-browser.sh",
-  "scripts/test-personal-plan-stage5-browser.sh",
-  "tests/personal-plan-stage1-5.spec.ts",
-  "tests/personal-plan-stage4-routine.spec.ts",
-  "tests/personal-plan-stage5-application.spec.ts",
-  "supabase/config.toml",
   "playwright.config.ts",
   "src/app/chat/layout.tsx",
   "src/app/profile/layout.tsx",
@@ -143,9 +114,6 @@ export function classifyCiScope(files, prContext = {}) {
     playwright_smoke:
       fullCi || files.some((file) => matches(file, PLAYWRIGHT_PREFIXES, PLAYWRIGHT_EXACT)),
     security_scan: fullCi || files.some((file) => matches(file, SECURITY_PREFIXES, SECURITY_EXACT)),
-    personal_plan_db:
-      fullCi ||
-      files.some((file) => matches(file, PERSONAL_PLAN_DB_PREFIXES, PERSONAL_PLAN_DB_EXACT)),
     personal_plan_journey:
       fullCi ||
       files.some((file) =>

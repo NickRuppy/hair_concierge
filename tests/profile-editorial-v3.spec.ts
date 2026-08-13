@@ -14,7 +14,7 @@ const PASSWORD = "uxAudit!Test123"
 
 test.describe.serial("@ci profile editorial v3", () => {
   test.beforeAll(async () => {
-    // Ensure the seeded user exists; mirror scripts/ux-audit-create-test-user.mjs
+    // Ensure the configured development test user exists.
     // by re-establishing a known password on every run so the shared account
     // remains deterministic across reruns.
     const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 })

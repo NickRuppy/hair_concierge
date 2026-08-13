@@ -10,10 +10,6 @@ const quizVariantMigration = readFileSync(
   "supabase/migrations/20260730120000_add_funnel_session_quiz_variant.sql",
   "utf8",
 )
-const quizVariantManualProof = readFileSync(
-  "supabase/manual-test-backfills/20260730_funnel_session_quiz_variant.sql",
-  "utf8",
-)
 
 test("migration creates private summary and append-only event tables", () => {
   assert.match(foundationMigration, /CREATE TABLE IF NOT EXISTS public\.funnel_sessions/)
@@ -95,27 +91,4 @@ test("quiz variant RPC migration supports old named callers while granting only 
     quizVariantMigration,
     /GRANT EXECUTE ON FUNCTION public\.record_funnel_event\([\s\S]*uuid, uuid, text, text, text, text, text, text, text, text, text, text, text,[\s\S]*jsonb[\s\S]*\) TO service_role/,
   )
-})
-
-test("manual proof exercises the complete old named RPC shape around the defaulted quiz variant", () => {
-  for (const parameter of [
-    "p_landing_slug",
-    "p_landing_variant",
-    "p_offer_variant",
-    "p_entry_path",
-    "p_entry_url",
-    "p_referrer",
-    "p_first_touch",
-    "p_first_seen_at",
-    "p_occurred_at",
-    "p_lead_id",
-    "p_user_id",
-    "p_checkout_provider",
-    "p_checkout_reference",
-    "p_properties",
-  ]) {
-    assert.match(quizVariantManualProof, new RegExp(`${parameter} :=`))
-  }
-  assert.match(quizVariantManualProof, /entry_path = '\/quiz\?source=old-named-rpc'/)
-  assert.match(quizVariantManualProof, /properties = '\{"proof":"old-named-rpc"\}'::jsonb/)
 })
