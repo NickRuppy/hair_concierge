@@ -123,10 +123,15 @@ async function hasActiveFieldTestEnrollment(
   supabase: SupabaseClient,
   userId: string,
   leadId: string,
+  quizSourceKind: PlanBereitQuizSourceKind,
   now: Date = new Date(),
 ): Promise<boolean> {
+  const enrollmentTable =
+    quizSourceKind === "legacy"
+      ? "regular_quiz_test_enrollments"
+      : "personal_plan_test_enrollments"
   const { data, error } = await supabase
-    .from("personal_plan_test_enrollments")
+    .from(enrollmentTable)
     .select(
       "id,user_id,lead_id,status,expires_at,revoked_at,manual_access_grant_id,manual_access_grants!inner(id,user_id,reason,expires_at,revoked_at)",
     )
@@ -135,7 +140,7 @@ async function hasActiveFieldTestEnrollment(
     .eq("status", "active")
     .maybeSingle()
   if (error) {
-    throw new Error(`personal plan field-test enrollment lookup failed: ${error.message}`)
+    throw new Error(`${quizSourceKind} field-test enrollment lookup failed: ${error.message}`)
   }
   const enrollment = (data as FieldTestEnrollmentRow | null) ?? null
   const grant = enrollment?.manual_access_grants as ManualAccessGrantRow | null
@@ -181,7 +186,7 @@ export async function findPersonalPlanLead(
         { email: lead.email, userId: lead.user_id },
         { email: email ?? undefined, userId },
       ) ||
-      (await hasActiveFieldTestEnrollment(supabase, userId, leadId))
+      (await hasActiveFieldTestEnrollment(supabase, userId, leadId, "personal_plan"))
     ) {
       return exact.data as PersonalPlanLead
     }
@@ -230,7 +235,15 @@ async function loadExactPlanBereitLead(
     { email: lead.email, userId: lead.user_id },
     { email: input.email ?? undefined, userId: input.userId },
   )
-  if (directOwner || (await hasActiveFieldTestEnrollment(supabase, input.userId, input.leadId))) {
+  if (
+    directOwner ||
+    (await hasActiveFieldTestEnrollment(
+      supabase,
+      input.userId,
+      input.leadId,
+      lead.quiz_kind,
+    ))
+  ) {
     return { lead, forbidden: false }
   }
 

@@ -112,6 +112,52 @@ test("the owner-only routing source keeps a new legacy buyer in readiness until 
   assert.deepEqual(result, { kind: "recovery", nextHref: "/plan-bereit" })
 })
 
+test("an explicit regular-quiz field test reaches readiness without opening the customer cutover", async () => {
+  const client = {
+    rpc: async () => ({
+      data: {
+        qualified_at: "2026-08-11T12:00:00.000Z",
+        quiz_source_kind: "legacy",
+        source_kind: "field_test",
+        plan: null,
+      },
+      error: null,
+    }),
+    from: () => {
+      throw new Error("routing must not load private tables from middleware")
+    },
+  }
+  const result = await loadPersonalPlanRoutingFrontierForUser(client as never, "guest-1", {
+    cohortCutoff: () => new Date("2026-08-12T12:00:00.000Z"),
+    legacyQuizCutoverEnabled: () => false,
+    appAllowedForUser: async () => true,
+  })
+  assert.deepEqual(result, { kind: "recovery", nextHref: "/plan-bereit" })
+})
+
+test("a paid legacy source still requires the customer cutover", async () => {
+  const client = {
+    rpc: async () => ({
+      data: {
+        qualified_at: "2026-08-13T12:00:00.000Z",
+        quiz_source_kind: "legacy",
+        source_kind: "paid",
+        plan: null,
+      },
+      error: null,
+    }),
+    from: () => {
+      throw new Error("routing must not load private tables from middleware")
+    },
+  }
+  const result = await loadPersonalPlanRoutingFrontierForUser(client as never, "buyer-1", {
+    cohortCutoff: () => new Date("2026-08-12T12:00:00.000Z"),
+    legacyQuizCutoverEnabled: () => false,
+    appAllowedForUser: async () => true,
+  })
+  assert.deepEqual(result, { kind: "legacy" })
+})
+
 test("the narrow owner source routes from durable plan pointers and fails closed on cutoff", async () => {
   const row = {
     qualified_at: "2026-08-12T12:00:00.000Z",

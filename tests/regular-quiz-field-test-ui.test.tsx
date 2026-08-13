@@ -44,16 +44,23 @@ test("regular quiz field-test activation card is payment-free and targets the ac
 
   assert.match(html, /0 €/)
   assert.match(html, /Keine Zahlungsdaten · kein Abo · 7 Tage Testzugang/)
+  assert.match(html, /direkt mit deinem Personal Plan verbunden/)
   assert.match(html, /Kostenlos mit Chaarlie fortfahren/)
   assert.match(html, /data-regular-quiz-field-test-activation-card/)
-  assert.doesNotMatch(html, /Stripe|PayPal|Checkout|Kauf|Garantie/)
+  assert.doesNotMatch(html, /Stripe|PayPal|Checkout|Kauf|Garantie|Onboarding/)
 })
 
 test("regular quiz field-test activation consumes the exact server destination contract", () => {
-  const destination = "/onboarding?lead=11111111-1111-4111-8111-111111111111"
+  const destination = "/plan-bereit?lead=11111111-1111-4111-8111-111111111111"
 
   assert.equal(parseRegularQuizFieldTestActivationDestination({ destination }), destination)
   assert.equal(parseRegularQuizFieldTestActivationDestination({ redirectTo: destination }), null)
+  assert.equal(
+    parseRegularQuizFieldTestActivationDestination({
+      destination: "/onboarding?lead=11111111-1111-4111-8111-111111111111",
+    }),
+    null,
+  )
   assert.equal(parseRegularQuizFieldTestActivationDestination({ destination: "/pricing" }), null)
 })
 

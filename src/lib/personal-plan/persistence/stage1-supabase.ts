@@ -61,6 +61,7 @@ export function createStage1SupabaseDependencies(
         qualifiedAt: enrollment.qualifiedAt,
         artifactLeadId: enrollment.artifactLeadId,
         quizSourceKind: enrollment.quizSourceKind,
+        sourceKind: enrollment.sourceKind,
       }
     },
     async loadLegacyLead(userId, leadId) {

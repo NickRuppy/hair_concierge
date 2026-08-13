@@ -150,6 +150,59 @@ test("legacy readiness is ready from the exact lead snapshot without hair_profil
   )
 })
 
+test("legacy readiness accepts the exact active regular-quiz field-test enrollment", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy-field-test",
+        email: "participant@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: COMPLETE_LEGACY_ANSWERS,
+        user_id: null,
+        updated_at: "2026-08-13T08:00:00.000Z",
+      },
+    ],
+    personal_plan_test_enrollments: [],
+    regular_quiz_test_enrollments: [
+      {
+        id: "regular-enrollment-1",
+        user_id: "guest-1",
+        lead_id: "lead-legacy-field-test",
+        status: "active",
+        expires_at: "2099-08-20T12:00:00.000Z",
+        revoked_at: null,
+        manual_access_grant_id: "grant-1",
+        manual_access_grants: {
+          id: "grant-1",
+          user_id: "guest-1",
+          reason: "tester",
+          expires_at: "2099-08-20T12:00:00.000Z",
+          revoked_at: null,
+        },
+      },
+    ],
+  })
+
+  const readiness = await loadPlanBereitReadiness(db as never, {
+    userId: "guest-1",
+    email: "field-test@guest.chaarlie.invalid",
+    leadId: "lead-legacy-field-test",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.equal(readiness.quizSourceKind, "legacy")
+  assert.equal(
+    db.queries.some(
+      (query) =>
+        query.table === "regular_quiz_test_enrollments" &&
+        query.column === "lead_id" &&
+        query.value === "lead-legacy-field-test",
+    ),
+    true,
+  )
+})
+
 test("legacy readiness asks only the canonical hair-length question when that exact fact is missing", async () => {
   const db = new FakeSupabase({
     leads: [

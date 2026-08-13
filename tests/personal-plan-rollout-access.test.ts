@@ -124,9 +124,66 @@ test("an active tester grant admits a field-test owner without an email allowlis
   )
 })
 
+test("an active regular-quiz tester grant is also an internal field-test owner", async () => {
+  const queriedTables: string[] = []
+  const enrollment = {
+    id: "regular-enrollment-1",
+    user_id: "guest-1",
+    status: "active",
+    expires_at: "2026-08-17T12:00:00.000Z",
+    revoked_at: null,
+    manual_access_grant_id: "grant-1",
+    manual_access_grants: {
+      id: "grant-1",
+      user_id: "guest-1",
+      reason: "tester",
+      expires_at: "2026-08-17T12:00:00.000Z",
+      revoked_at: null,
+    },
+  }
+  const client = {
+    from(table: string) {
+      queriedTables.push(table)
+      return {
+        select() {
+          return {
+            eq() {
+              return {
+                eq() {
+                  return {
+                    async maybeSingle() {
+                      return {
+                        data: table === "regular_quiz_test_enrollments" ? enrollment : null,
+                        error: null,
+                      }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  assert.equal(
+    await isActivePersonalPlanFieldTestOwner(
+      "guest-1",
+      client as never,
+      new Date("2026-08-10T12:00:00.000Z"),
+    ),
+    true,
+  )
+  assert.deepEqual(queriedTables, [
+    "personal_plan_test_enrollments",
+    "regular_quiz_test_enrollments",
+  ])
+})
+
 test("an unapplied field-test relation is not an internal-owner signal", async () => {
   const client = {
-    from() {
+    from(table: string) {
       return {
         select() {
           return {
@@ -139,7 +196,7 @@ test("an unapplied field-test relation is not an internal-owner signal", async (
                         data: null,
                         error: {
                           code: "42P01",
-                          message: 'relation "personal_plan_test_enrollments" does not exist',
+                          message: `relation "${table}" does not exist`,
                         },
                       }
                     },

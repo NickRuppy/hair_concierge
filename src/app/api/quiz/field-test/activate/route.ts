@@ -98,7 +98,7 @@ export function createRegularQuizFieldTestActivationHandler(
     if (!authorization) return jsonError("Testzugang ist nicht verfügbar", 403)
 
     const response = NextResponse.json(
-      { destination: `/onboarding?lead=${encodeURIComponent(leadId)}` },
+      { destination: `/plan-bereit?lead=${encodeURIComponent(leadId)}` },
       { headers: NO_STORE_HEADERS },
     )
     let session: FieldTestSessionClient

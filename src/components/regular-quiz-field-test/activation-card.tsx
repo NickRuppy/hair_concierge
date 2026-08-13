@@ -11,7 +11,7 @@ type ActivationState =
 export function parseRegularQuizFieldTestActivationDestination(payload: unknown) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return null
   const destination = (payload as Record<string, unknown>).destination
-  return typeof destination === "string" && destination.startsWith("/onboarding?lead=")
+  return typeof destination === "string" && destination.startsWith("/plan-bereit?lead=")
     ? destination
     : null
 }
@@ -84,8 +84,8 @@ export function RegularQuizFieldTestActivationCard({
         Keine Zahlungsdaten · kein Abo · {durationLabel} Testzugang
       </p>
       <p className="mt-2 text-sm leading-6 text-[rgba(var(--brand-plum-rgb),0.68)]">
-        Du aktivierst einen temporären Testgast. Deine Quiz-Auswertung wird direkt mit dem normalen
-        Chaarlie Onboarding verbunden.
+        Du aktivierst einen temporären Testgast. Deine Quiz-Auswertung wird direkt mit deinem
+        Personal Plan verbunden.
       </p>
       <button
         className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-emerald-700 px-6 py-3 text-center text-sm font-extrabold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
@@ -120,9 +120,9 @@ export function RegularQuizFieldTestActivationCard({
       ) : null}
       {state.status === "success" ? (
         <p className="mt-3 text-sm font-bold text-emerald-700">
-          Weiterleitung zum Onboarding läuft. Falls nichts passiert, öffne{" "}
+          Weiterleitung zu deinem Personal Plan läuft. Falls nichts passiert, öffne{" "}
           <a className="underline" href={state.redirectTo}>
-            dein Onboarding
+            deinen Personal Plan
           </a>
           .
         </p>

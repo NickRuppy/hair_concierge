@@ -11,6 +11,7 @@ export type Stage1Entitlement = {
   qualifiedAt: string | null
   artifactLeadId: string | null
   quizSourceKind?: "personal_plan" | "legacy" | null
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | null
 }
 
 export type Stage1PreparedArtifact = {
@@ -159,10 +160,12 @@ function isEligibleQualifiedOwner(entitlement: Stage1Entitlement, cutoff: Date |
     entitlement.accessState !== "active" ||
     !entitlement.enrollmentSourceId ||
     !entitlement.qualifiedAt ||
-    !entitlement.artifactLeadId ||
-    !cutoff
+    !entitlement.artifactLeadId
   )
     return false
   const qualifiedAt = new Date(entitlement.qualifiedAt)
-  return !Number.isNaN(qualifiedAt.getTime()) && qualifiedAt.getTime() >= cutoff.getTime()
+  if (Number.isNaN(qualifiedAt.getTime())) return false
+  return entitlement.sourceKind === "field_test"
+    ? true
+    : Boolean(cutoff && qualifiedAt.getTime() >= cutoff.getTime())
 }

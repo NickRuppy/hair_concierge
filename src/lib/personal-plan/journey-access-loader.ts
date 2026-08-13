@@ -37,6 +37,7 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
     qualifiedAt: string | null
     artifactLeadId: string | null
     quizSourceKind?: "personal_plan" | "legacy" | null
+    sourceKind?: "one_time" | "launch_subscription" | "field_test" | null
   }>
   cohortCutoff: () => Date | null
   appEnabled: () => boolean
@@ -115,10 +116,17 @@ function phaseElapsed(reporter: JourneyAccessPhaseReporter | undefined, startedA
   return (reporter?.now?.() ?? performance.now()) - startedAt
 }
 
-function isQualifiedOwnerCohort(qualifiedAt: string | null, cutoff: Date | null): boolean {
-  if (!qualifiedAt || !cutoff) return false
+function isQualifiedOwnerCohort(
+  qualifiedAt: string | null,
+  cutoff: Date | null,
+  sourceKind?: "one_time" | "launch_subscription" | "field_test" | null,
+): boolean {
+  if (!qualifiedAt) return false
   const parsed = new Date(qualifiedAt)
-  return !Number.isNaN(parsed.getTime()) && parsed.getTime() >= cutoff.getTime()
+  if (Number.isNaN(parsed.getTime())) return false
+  return sourceKind === "field_test"
+    ? true
+    : Boolean(cutoff && parsed.getTime() >= cutoff.getTime())
 }
 
 function sameJson(left: unknown, right: unknown): boolean {
@@ -195,7 +203,11 @@ async function loadJourneyAuthorizationPrefixWithDeps(
     })
     throw error
   }
-  const isNewBuyerCohort = isQualifiedOwnerCohort(entitlement.qualifiedAt, deps.cohortCutoff())
+  const isNewBuyerCohort = isQualifiedOwnerCohort(
+    entitlement.qualifiedAt,
+    deps.cohortCutoff(),
+    entitlement.sourceKind,
+  )
   const entitlementEligible =
     entitlement.accessState === "active" && isNewBuyerCohort && Boolean(entitlement.artifactLeadId)
   reportJourneyAccessPhase(reporter, {
@@ -431,6 +443,7 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
         qualifiedAt: enrollment.qualifiedAt,
         artifactLeadId: enrollment.artifactLeadId,
         quizSourceKind: enrollment.quizSourceKind,
+        sourceKind: enrollment.sourceKind,
       }
     },
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,

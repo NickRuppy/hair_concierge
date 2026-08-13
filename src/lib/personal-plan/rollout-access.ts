@@ -1,6 +1,9 @@
 import "server-only"
 
-import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
+import {
+  isMissingPersonalPlanFieldTestRelation,
+  isMissingRegularQuizFieldTestRelation,
+} from "@/lib/personal-plan-field-test/errors"
 import { resolvePersonalPlanAppV1InternalEmails } from "./release"
 
 export type PersonalPlanInternalUserClient = {
@@ -27,7 +30,7 @@ export type PersonalPlanInternalUserClient = {
 }
 
 type FieldTestEnrollmentClient = {
-  from: (table: "personal_plan_test_enrollments") => {
+  from: (table: "personal_plan_test_enrollments" | "regular_quiz_test_enrollments") => {
     select: (columns: string) => {
       eq: (
         column: string,
@@ -75,8 +78,29 @@ export async function isActivePersonalPlanFieldTestOwner(
   client: FieldTestEnrollmentClient,
   now: Date = new Date(),
 ): Promise<boolean> {
+  const personalPlanOwner = await hasActiveFieldTestOwnerInTable(
+    userId,
+    client,
+    "personal_plan_test_enrollments",
+    now,
+  )
+  if (personalPlanOwner) return true
+  return hasActiveFieldTestOwnerInTable(
+    userId,
+    client,
+    "regular_quiz_test_enrollments",
+    now,
+  )
+}
+
+async function hasActiveFieldTestOwnerInTable(
+  userId: string,
+  client: FieldTestEnrollmentClient,
+  table: "personal_plan_test_enrollments" | "regular_quiz_test_enrollments",
+  now: Date,
+): Promise<boolean> {
   const { data, error } = await client
-    .from("personal_plan_test_enrollments")
+    .from(table)
     .select(
       "id,user_id,status,expires_at,revoked_at,manual_access_grant_id,manual_access_grants!inner(id,user_id,reason,expires_at,revoked_at)",
     )
@@ -84,7 +108,14 @@ export async function isActivePersonalPlanFieldTestOwner(
     .eq("status", "active")
     .maybeSingle()
   if (error) {
-    if (isMissingPersonalPlanFieldTestRelation(error)) return false
+    if (
+      (table === "personal_plan_test_enrollments" &&
+        isMissingPersonalPlanFieldTestRelation(error)) ||
+      (table === "regular_quiz_test_enrollments" &&
+        isMissingRegularQuizFieldTestRelation(error))
+    ) {
+      return false
+    }
     throw error
   }
   const enrollment = (data as FieldTestEnrollmentRow | null) ?? null
