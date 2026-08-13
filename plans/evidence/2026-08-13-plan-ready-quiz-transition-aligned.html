@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plan-bereit – ruhiger Übergang</title>
+    <style>
+      :root {
+        --ink: #2d1d35;
+        --muted: #756c73;
+        --paper: #fbf8f4;
+        --card: #fff;
+        --line: #e8dfea;
+        --plum: #6f4b78;
+        --plum-ice: #f7f1f7;
+        --coral: #dd6571;
+        --green: #547a5a;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .sheet { width: min(1040px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 64px; }
+      .context { max-width: 690px; margin-bottom: 32px; }
+      .eyebrow { margin: 0 0 10px; color: var(--plum); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+      h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+      .context h1 { margin: 0; font-size: clamp(34px, 5vw, 54px); line-height: 1.02; letter-spacing: -.035em; }
+      .context p:last-child { margin: 15px 0 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
+      .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+      .example { border: 1px solid var(--line); border-radius: 28px; background: rgba(255,255,255,.72); padding: 16px; }
+      .label { margin: 2px 2px 14px; color: var(--plum); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .phone { overflow: hidden; min-height: 650px; border: 1px solid #ded5df; border-radius: 24px; background: #fffdfa; }
+      .brand { padding: 21px 20px 17px; border-bottom: 1px solid #eee7eb; text-align: center; font-family: Georgia, serif; font-size: 20px; font-weight: 700; }
+      .stage { display: grid; grid-template-columns: repeat(5,1fr); gap: 5px; padding: 13px 20px 0; }
+      .stage span { height: 3px; border-radius: 3px; background: #e8e0e5; }
+      .stage span:first-child { background: var(--plum); }
+      .screen { display: flex; min-height: 575px; flex-direction: column; align-items: center; justify-content: center; padding: 42px 28px 54px; text-align: center; }
+      .saved { margin: 0; color: var(--green); font-size: 13px; font-weight: 700; }
+      .screen h2 { max-width: 12ch; margin: 18px auto 12px; font-size: clamp(34px, 4.2vw, 48px); line-height: 1.03; letter-spacing: -.025em; }
+      .lead { max-width: 36ch; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+      .status { width: min(100%, 390px); margin-top: 28px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); padding: 18px; text-align: left; }
+      .status-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+      .status strong { font-size: 14px; }
+      .status small { color: var(--muted); font-size: 12px; }
+      .truth { margin: 13px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .button { display: block; width: min(100%, 390px); margin-top: 24px; border-radius: 14px; background: var(--coral); color: #fff; padding: 15px 20px; font-size: 15px; font-weight: 800; text-decoration: none; }
+      .ready .status { background: var(--plum-ice); }
+      .note { margin: 15px 3px 2px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .principle { margin-top: 26px; border-left: 4px solid var(--plum); background: var(--plum-ice); padding: 18px 20px; color: #4e4150; line-height: 1.55; }
+      @media (max-width: 760px) {
+        .sheet { width: min(100% - 20px, 540px); padding-top: 28px; }
+        .comparison { grid-template-columns: 1fr; }
+        .example { padding: 9px; border-radius: 22px; }
+        .phone { min-height: 600px; }
+        .screen { min-height: 525px; padding: 34px 21px 44px; }
+        .screen h2 { font-size: 37px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="context">
+        <p class="eyebrow">Überarbeiteter Planungsnachweis · Phase 3</p>
+        <h1>Ein ruhiger Übergang statt einer eigenen Show.</h1>
+        <p>Die Bereitschaftsseite übernimmt die klare Sprache des Quiz-Abschlusses: gespeichert, prüfen, weiter. Keine Plan-Illustration, keine Sparkles, keine künstlichen Prozentwerte und keine Mindest-Wartezeit.</p>
+      </header>
+
+      <section class="comparison" aria-label="Zustände der vereinfachten Bereitschaftsseite">
+        <article class="example">
+          <p class="label">Nur wenn wirklich noch etwas fehlt</p>
+          <div class="phone">
+            <div class="brand">chaarlie</div>
+            <div class="stage"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="screen">
+              <p class="saved">Deine Angaben sind gespeichert</p>
+              <h2>Wir bereiten deinen Haarplan vor.</h2>
+              <p class="lead">Du musst nichts weiter tun. Wir prüfen, ob deine Haaranalyse vollständig mit deinem Profil verbunden ist.</p>
+              <div class="status" role="status">
+                <div class="status-row"><strong>Haarplan wird geprüft</strong><small>Bitte kurz warten</small></div>
+                <p class="truth">Die Anzeige bleibt bei einem überprüfbaren Status. Erst nach dem bestehenden Zeitlimit erscheinen „Erneut prüfen“ und Support. Ohne JavaScript bleibt ein manueller Status-Link erreichbar.</p>
+              </div>
+            </div>
+          </div>
+          <p class="note">Kein künstlicher Fortschritt: Der Status sagt nur, was Chaarlie gerade tatsächlich weiß.</p>
+        </article>
+
+        <article class="example ready">
+          <p class="label">Wenn der Server den fertigen Zustand schon kennt</p>
+          <div class="phone">
+            <div class="brand">chaarlie</div>
+            <div class="stage"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="screen">
+              <p class="saved">Deine Angaben sind gespeichert</p>
+              <h2>Dein Haarplan ist bereit.</h2>
+              <p class="lead">Starte mit deinem Bedarfsplan. Danach verfeinern wir Schritt für Schritt deine Empfehlungen.</p>
+              <div class="status">
+                <div class="status-row"><strong>Haaranalyse verbunden</strong><small>Bereit</small></div>
+              </div>
+              <a class="button" href="#">Bedarfsplan ansehen</a>
+            </div>
+          </div>
+          <p class="note">Kein Hydration-POST und kein kurzer falscher Wartezustand, wenn Eigentum, Quelle und Profildaten bereits vollständig belegt sind.</p>
+        </article>
+      </section>
+
+      <aside class="principle"><strong>Technische Leitplanke:</strong> Ein GET bleibt read-only. Wenn eine echte, idempotente Verknüpfung nötig ist, bleibt die linke Pending-Variante mit begrenztem POST/GET-Polling und Recovery bestehen. Payment-, Provider- und Entitlement-Logik ist nicht Teil dieses Plans.</aside>
+    </main>
+  </body>
+</html>

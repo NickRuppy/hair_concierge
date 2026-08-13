@@ -21,11 +21,20 @@ import {
 } from "@/lib/funnel/packages"
 import { type NextRequest } from "next/server"
 import { NextResponse } from "next/server"
+import * as Sentry from "@sentry/nextjs"
 import {
   decodeSignedRegularQuizFieldTestCampaignCookie,
   REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE,
 } from "@/lib/personal-plan-field-test/regular-quiz-campaign-cookie"
 import { regularQuizFieldTestCookieSecret } from "@/lib/personal-plan-field-test/server"
+import {
+  appendServerTiming,
+  createAppPerformanceEvent,
+  outcomeForResponseStatus,
+  routeGroupForPathname,
+  toSentryPerformanceSpanContext,
+  toStructuredPerformanceLog,
+} from "@/lib/observability/app-performance"
 
 export async function proxy(request: NextRequest) {
   if (request.nextUrl.hostname === "www.chaarlie.de") {
@@ -43,7 +52,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url, 307)
   }
 
-  const response = await updateSession(request)
+  const routeGroup = routeGroupForPathname(request.nextUrl.pathname)
+  const response = routeGroup
+    ? await measureProxyAccess(request, routeGroup)
+    : await updateSession(request)
   const regularFieldTestSecret = regularQuizFieldTestCookieSecret()
   const requestedRegularFieldTestRewrite = shouldRewriteRegularQuizFieldTest(request)
   const authenticated = response.headers.get(AUTHENTICATED_SESSION_RESPONSE_HEADER) === "1"
@@ -128,6 +140,50 @@ export async function proxy(request: NextRequest) {
     )
   }
   return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
+}
+
+async function measureProxyAccess(
+  request: NextRequest,
+  routeGroup: NonNullable<ReturnType<typeof routeGroupForPathname>>,
+) {
+  const correlationId = crypto.randomUUID()
+  return Sentry.startSpan(
+    {
+      name: "app_performance.proxy_access",
+      op: "middleware",
+      onlyIfParent: true,
+      attributes: {
+        "app_performance.route_group": routeGroup,
+        "app_performance.operation": "proxy_access",
+        "app_performance.correlation_id": correlationId,
+      },
+    },
+    async (span) => {
+      const startedAt = performance.now()
+      let response: NextResponse | undefined
+      try {
+        response = await updateSession(request)
+        return response
+      } finally {
+        const event = createAppPerformanceEvent({
+          routeGroup,
+          operation: "proxy_access",
+          outcome: response ? outcomeForResponseStatus(response.status) : "transient_error",
+          durationMs: performance.now() - startedAt,
+          region: process.env.VERCEL_REGION,
+          correlationId,
+        })
+        span.setAttributes(toSentryPerformanceSpanContext(event))
+        console.info(JSON.stringify(toStructuredPerformanceLog(event)))
+        if (response) {
+          response.headers.set(
+            "Server-Timing",
+            appendServerTiming(response.headers.get("Server-Timing"), event),
+          )
+        }
+      }
+    },
+  )
 }
 
 export function shouldApplyRegularQuizFieldTestRewrite({

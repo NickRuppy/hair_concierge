@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { LazyCookieConsent } from "@/components/cookie-consent/lazy-cookie-consent"
+import { PrivacySafeSpeedInsights } from "@/components/observability/privacy-safe-speed-insights"
 import { PaymentRuntimeProvider } from "@/components/providers/payment-runtime-provider"
 import { getPaymentRuntime } from "@/lib/billing/payment-runtime"
 import { ROOT_METADATA } from "@/lib/seo/site-identity"
@@ -51,6 +52,7 @@ export default function RootLayout({
       >
         <PaymentRuntimeProvider runtime={paymentRuntime}>{children}</PaymentRuntimeProvider>
         <LazyCookieConsent />
+        <PrivacySafeSpeedInsights />
       </body>
     </html>
   )
