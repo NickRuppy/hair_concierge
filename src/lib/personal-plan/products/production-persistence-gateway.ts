@@ -598,16 +598,18 @@ export function createProductionStage3ProductsGateway(
       if (!input.draftId) throw new Error("stage3_search_draft_required")
       const loaded = await current(input.draftId)
       const context = await loadEvaluationContext(loaded.draft)
+      const authoritySnapshot = requireCurrentAuthoritySnapshot(loaded.draft)
       const categoryDecision = effectiveStage3CategoryDecisions(loaded.draft).find(
         (decision) => decision.category === input.category,
       )
       const requirement = loaded.requirements.find(
         (candidate) => candidate.category === input.category,
       )
-      if (!categoryDecision || !requirement) {
+      const inventoryOnly = authoritySnapshot.inventoryOnlyCategories?.includes(input.category)
+      if (!requirement || (!categoryDecision && !inventoryOnly)) {
         throw new Stage3AuthoritySnapshotError("stale_authority_snapshot")
       }
-      const target = categoryDecision.target
+      const target = categoryDecision?.target
       const shampooTargets =
         target?.category === "shampoo"
           ? requirement.requiredRoles.flatMap((role) => {

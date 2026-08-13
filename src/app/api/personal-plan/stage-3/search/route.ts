@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import { createProductionStage3ProductsGateway } from "@/lib/personal-plan/products/production-persistence-gateway"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
+import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
 import {
   personalPlanCategorySchema,
   type PersonalPlanCategory,
@@ -82,10 +83,12 @@ export function createStage3SearchRouteHandler(deps: Stage3SearchRouteDeps) {
         }),
         { headers: { "Cache-Control": "no-store" } },
       )
-    } catch {
+    } catch (error) {
+      const code =
+        error instanceof Stage3AuthoritySnapshotError ? error.code : "temporarily_unavailable"
       console.info("personal_plan_stage3_api", {
         event: "unavailable",
-        code: "temporarily_unavailable",
+        code,
         duration_ms: Date.now() - started,
       })
       return fail("temporarily_unavailable", 503)
