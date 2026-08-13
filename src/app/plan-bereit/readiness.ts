@@ -18,6 +18,12 @@ type PersonalPlanLead = {
   user_id: string | null
 }
 
+type PersonalPlanPreparedArtifact = {
+  id: string
+  canonical_profile?: unknown
+  user_id: string | null
+}
+
 type PersonalPlanReadiness = {
   ready: boolean
   leadId: string | null
@@ -78,6 +84,17 @@ export type PlanBereitReadiness =
       sourceVersion: string | null
     }
 
+export type PlanBereitInitialAction = "none" | "link" | "poll"
+
+export type PlanBereitInitialReadiness = {
+  status: PlanBereitReadiness["status"] | "checking"
+  leadId: string | null
+  quizSourceKind: PlanBereitQuizSourceKind | null
+  sourceVersion: string | null
+  missingFacts: PlanBereitMissingSourceFact[]
+  initialAction: PlanBereitInitialAction
+}
+
 type ExactReadinessInput = {
   userId: string
   email?: string | null
@@ -99,8 +116,80 @@ const HAIR_LENGTH_FACT: PlanBereitMissingSourceFact = {
   options: HAIR_LENGTH_OPTIONS,
 }
 
+const PROFILE_PROJECTION_FIELDS = [
+  "hair_texture",
+  "thickness",
+  "hair_length",
+  "density",
+  "cuticle_condition",
+  "protein_moisture_balance",
+  "scalp_type",
+  "scalp_condition",
+  "concerns",
+  "chemical_treatment",
+] as const
+
+type LinkablePlanBereitSource = {
+  status: "linkable"
+  lead: PersonalPlanLead
+  projectedProfile: Record<string, unknown>
+  artifact: PersonalPlanPreparedArtifact | null
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key)
+}
+
+function structurallyEqual(left: unknown, right: unknown): boolean {
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return (
+      Array.isArray(left) &&
+      Array.isArray(right) &&
+      left.length === right.length &&
+      left.every((item, index) => structurallyEqual(item, right[index]))
+    )
+  }
+  if (isRecord(left) || isRecord(right)) {
+    if (!isRecord(left) || !isRecord(right)) return false
+    const leftKeys = Object.keys(left)
+    const rightKeys = Object.keys(right)
+    return (
+      leftKeys.length === rightKeys.length &&
+      leftKeys.every((key) => hasOwn(right, key) && structurallyEqual(left[key], right[key]))
+    )
+  }
+  return Object.is(left, right)
+}
+
+function profileMatchesProjected(
+  profile: unknown,
+  projectedProfile: Record<string, unknown>,
+): boolean {
+  if (!isRecord(profile)) return false
+  return PROFILE_PROJECTION_FIELDS.every((field) => {
+    if (!hasOwn(projectedProfile, field)) return true
+    return structurallyEqual(projectedProfile[field], profile[field])
+  })
+}
+
+async function loadProjectedHairProfile(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<Record<string, unknown> | null> {
+  const { data, error } = await supabase
+    .from("hair_profiles")
+    .select(PROFILE_PROJECTION_FIELDS.join(","))
+    .eq("user_id", userId)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(`plan-bereit profile readiness failed: ${error.message}`)
+  }
+  return (data as Record<string, unknown> | null) ?? null
 }
 
 function isSupportedQuizKind(value: unknown): value is PlanBereitQuizSourceKind {
@@ -284,10 +373,57 @@ function classifyLegacySource(
   return { status: "invalid_source" }
 }
 
-export async function loadPlanBereitReadiness(
+async function loadAttachedPersonalPlanArtifact(
+  supabase: SupabaseClient,
+  leadId: string,
+): Promise<PersonalPlanPreparedArtifact | null> {
+  const { data, error } = await supabase
+    .from("personal_plan_prepared_artifacts")
+    .select("id,user_id,canonical_profile")
+    .eq("lead_id", leadId)
+    .eq("status", "attached")
+    .limit(2)
+
+  if (error) {
+    throw new Error(`personal plan artifact readiness failed: ${error.message}`)
+  }
+  const artifacts = Array.isArray(data) ? (data as PersonalPlanPreparedArtifact[]) : []
+  if (artifacts.length > 1) {
+    throw new Error("personal plan artifact readiness failed: multiple attached artifacts")
+  }
+  return artifacts[0] ?? null
+}
+
+function readinessFromInitial(initial: PlanBereitInitialReadiness): PlanBereitReadiness {
+  if (initial.status === "checking") {
+    return {
+      status: "source_pending",
+      leadId: initial.leadId,
+      quizSourceKind: initial.quizSourceKind,
+      sourceVersion: initial.sourceVersion,
+    }
+  }
+  if (initial.status === "missing_source_facts") {
+    return {
+      status: "missing_source_facts",
+      leadId: initial.leadId ?? "",
+      quizSourceKind: "legacy",
+      sourceVersion: initial.sourceVersion,
+      missingFacts: initial.missingFacts,
+    }
+  }
+  return {
+    status: initial.status,
+    leadId: initial.leadId,
+    quizSourceKind: initial.quizSourceKind,
+    sourceVersion: initial.sourceVersion,
+  } as PlanBereitReadiness
+}
+
+async function loadPlanBereitLinkCandidate(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
-): Promise<PlanBereitReadiness> {
+): Promise<PlanBereitReadiness | LinkablePlanBereitSource> {
   if (!input.leadId) {
     return {
       status: "source_pending",
@@ -324,23 +460,31 @@ export async function loadPlanBereitReadiness(
   }
 
   if (lead.quiz_kind === "personal_plan") {
-    const artifact = await supabase
-      .from("personal_plan_prepared_artifacts")
-      .select("id")
-      .eq("lead_id", lead.id)
-      .eq("user_id", input.userId)
-      .eq("status", "attached")
-      .maybeSingle()
-
-    if (artifact.error) {
-      throw new Error(`personal plan artifact readiness failed: ${artifact.error.message}`)
+    const artifact = await loadAttachedPersonalPlanArtifact(supabase, lead.id)
+    if (!artifact) {
+      return {
+        status: "source_pending",
+        leadId: lead.id,
+        quizSourceKind: lead.quiz_kind,
+        sourceVersion: lead.updated_at ?? null,
+      }
     }
-
-    return {
-      status: artifact.data ? "ready" : "source_pending",
-      leadId: lead.id,
-      quizSourceKind: lead.quiz_kind,
-      sourceVersion: lead.updated_at ?? null,
+    try {
+      return {
+        status: "linkable",
+        lead,
+        artifact,
+        projectedProfile: buildProfileDataFromPersonalPlanCanonicalProfile(
+          artifact.canonical_profile,
+        ),
+      }
+    } catch {
+      return {
+        status: "invalid_source",
+        leadId: lead.id,
+        quizSourceKind: lead.quiz_kind,
+        sourceVersion: lead.updated_at ?? null,
+      }
     }
   }
 
@@ -355,12 +499,70 @@ export async function loadPlanBereitReadiness(
     }
   }
 
-  return {
-    status: source.status,
-    leadId: lead.id,
-    quizSourceKind: "legacy",
-    sourceVersion: lead.updated_at ?? null,
+  if (source.status === "invalid_source") {
+    return {
+      status: "invalid_source",
+      leadId: lead.id,
+      quizSourceKind: "legacy",
+      sourceVersion: lead.updated_at ?? null,
+    }
   }
+
+  return {
+    status: "linkable",
+    lead,
+    artifact: null,
+    projectedProfile: buildProfileDataFromQuizAnswers(lead.quiz_answers as QuizAnswers),
+  }
+}
+
+export async function loadPlanBereitInitialReadiness(
+  supabase: SupabaseClient,
+  input: ExactReadinessInput,
+): Promise<PlanBereitInitialReadiness> {
+  const candidate = await loadPlanBereitLinkCandidate(supabase, input)
+  if (candidate.status !== "linkable") {
+    return {
+      ...candidate,
+      missingFacts: candidate.status === "missing_source_facts" ? candidate.missingFacts : [],
+      initialAction: candidate.status === "source_pending" ? "poll" : "none",
+    }
+  }
+
+  const profile = await loadProjectedHairProfile(supabase, input.userId)
+  const alreadyProjected =
+    candidate.lead.quiz_kind === "legacy"
+      ? candidate.lead.user_id === input.userId &&
+        profileMatchesProjected(profile, candidate.projectedProfile)
+      : candidate.artifact?.user_id === input.userId &&
+        profileMatchesProjected(profile, candidate.projectedProfile)
+
+  if (alreadyProjected) {
+    return {
+      status: "ready",
+      leadId: candidate.lead.id,
+      quizSourceKind: candidate.lead.quiz_kind,
+      sourceVersion: candidate.lead.updated_at ?? null,
+      missingFacts: [],
+      initialAction: "none",
+    }
+  }
+
+  return {
+    status: "checking",
+    leadId: candidate.lead.id,
+    quizSourceKind: candidate.lead.quiz_kind,
+    sourceVersion: candidate.lead.updated_at ?? null,
+    missingFacts: [],
+    initialAction: "link",
+  }
+}
+
+export async function loadPlanBereitReadiness(
+  supabase: SupabaseClient,
+  input: ExactReadinessInput,
+): Promise<PlanBereitReadiness> {
+  return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input))
 }
 
 async function persistProfileOutput(
@@ -381,19 +583,12 @@ export async function linkExactPlanBereitSourceToProfile(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
 ): Promise<PlanBereitReadiness> {
-  const readiness = await loadPlanBereitReadiness(supabase, input)
-  if (readiness.status !== "ready" || !readiness.leadId) return readiness
-
-  const { lead } = await loadExactPlanBereitLead(supabase, input)
-  if (!lead) return readiness
+  const candidate = await loadPlanBereitLinkCandidate(supabase, input)
+  if (candidate.status !== "linkable") return candidate
+  const { lead } = candidate
 
   if (lead.quiz_kind === "legacy") {
-    if (!isRecord(lead.quiz_answers)) return readiness
-    await persistProfileOutput(
-      supabase,
-      input.userId,
-      buildProfileDataFromQuizAnswers(lead.quiz_answers as QuizAnswers),
-    )
+    await persistProfileOutput(supabase, input.userId, candidate.projectedProfile)
     if (lead.user_id !== input.userId) {
       const linked = await supabase
         .from("leads")
@@ -401,7 +596,7 @@ export async function linkExactPlanBereitSourceToProfile(
         .eq("id", lead.id)
       if (linked.error) throw new Error(`leads.user_id update failed: ${linked.error.message}`)
     }
-    return readiness
+    return loadPlanBereitReadiness(supabase, input)
   }
 
   const artifactLink = await supabase.rpc("link_personal_plan_artifact_to_user", {
@@ -420,7 +615,7 @@ export async function linkExactPlanBereitSourceToProfile(
     )
   }
 
-  return readiness
+  return loadPlanBereitReadiness(supabase, input)
 }
 
 export async function updateMissingPlanBereitSourceFact(

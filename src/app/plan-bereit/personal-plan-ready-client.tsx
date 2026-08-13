@@ -1,6 +1,6 @@
 "use client"
 
-import { Check, LoaderCircle, Sparkles } from "lucide-react"
+import { Check } from "lucide-react"
 import Link from "next/link"
 import { FormEvent, useEffect, useState } from "react"
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
@@ -8,18 +8,26 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { HairLength } from "@/lib/vocabulary/hair-length"
 import {
+  applyPersonalPlanReadyPollResponse,
   PERSONAL_PLAN_READY_POLL_INTERVAL_MS,
   PERSONAL_PLAN_READY_POLL_LIMIT,
   canContinueToPersonalPlan,
+  createPersonalPlanReadyPollRequestState,
+  takePersonalPlanReadyPollRequest,
   type PersonalPlanReadinessPhase,
 } from "./transition"
-import type { PlanBereitMissingSourceFact } from "./readiness"
+import type {
+  PlanBereitInitialAction,
+  PlanBereitInitialReadiness,
+  PlanBereitMissingSourceFact,
+} from "./readiness"
 
 type PlanBereitStatusBody = {
   status?: PersonalPlanReadinessPhase
   leadId?: string | null
   sourceVersion?: string | null
   missingFacts?: PlanBereitMissingSourceFact[]
+  initialAction?: PlanBereitInitialAction
 }
 
 type ClientReadiness = {
@@ -44,19 +52,31 @@ function toClientReadiness(
 export function PersonalPlanReadyClient({
   leadId,
   initialStatus = "checking",
+  initialReadiness,
   nextHref = "/plan-start",
 }: {
   leadId: string | null
   initialStatus?: PersonalPlanReadinessPhase
+  initialReadiness?: PlanBereitInitialReadiness
   nextHref?: "/plan-start"
 }) {
-  const [readiness, setReadiness] = useState<ClientReadiness>({
+  const serverReadiness = initialReadiness ?? {
     status: initialStatus,
     leadId,
     sourceVersion: null,
     missingFacts: [],
+    initialAction: initialStatus === "checking" ? "link" : "none",
+  }
+  const initialAction = serverReadiness.initialAction
+  const initialLeadId = serverReadiness.leadId ?? leadId
+  const [readiness, setReadiness] = useState<ClientReadiness>({
+    status: serverReadiness.status,
+    leadId: initialLeadId,
+    sourceVersion: serverReadiness.sourceVersion ?? null,
+    missingFacts: serverReadiness.missingFacts,
   })
   const [retryKey, setRetryKey] = useState(0)
+  const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
   const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
   const [isSavingFact, setIsSavingFact] = useState(false)
 
@@ -65,8 +85,10 @@ export function PersonalPlanReadyClient({
     readiness.missingFacts.find((fact) => fact.field === "hair_length") ?? null
 
   useEffect(() => {
-    if (initialStatus === "forbidden") return
-    const pollLeadId = leadId
+    const activeInitialAction = retryAction ?? initialAction
+    if (activeInitialAction === "none") return
+    const pollLeadId = initialLeadId
+    let requestState = createPersonalPlanReadyPollRequestState(activeInitialAction)
     let cancelled = false
     let timer: ReturnType<typeof setTimeout> | null = null
     let attempts = 0
@@ -77,8 +99,10 @@ export function PersonalPlanReadyClient({
         const statusUrl = pollLeadId
           ? `/plan-bereit/status?lead=${encodeURIComponent(pollLeadId)}`
           : "/plan-bereit/status"
+        const request = takePersonalPlanReadyPollRequest(requestState)
+        requestState = request.nextState
         const response = await fetch(statusUrl, {
-          method: attempts === 1 ? "POST" : "GET",
+          method: request.method,
           headers: { Accept: "application/json" },
           cache: "no-store",
         })
@@ -99,6 +123,7 @@ export function PersonalPlanReadyClient({
           return
         }
         const next = toClientReadiness(body, pollLeadId)
+        requestState = applyPersonalPlanReadyPollResponse(body.initialAction)
         setReadiness(next)
         if (next.status !== "checking" && next.status !== "source_pending") {
           return
@@ -119,7 +144,7 @@ export function PersonalPlanReadyClient({
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [leadId, initialStatus, retryKey])
+  }, [initialAction, initialLeadId, leadId, retryAction, retryKey])
 
   async function submitMissingHairLength(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -159,11 +184,16 @@ export function PersonalPlanReadyClient({
   }
 
   const canContinue = canContinueToPersonalPlan(readiness.status)
+  const readinessPath = currentLeadId
+    ? `/plan-bereit?lead=${encodeURIComponent(currentLeadId)}`
+    : "/plan-bereit"
   const showRetry =
     readiness.status === "timeout" ||
     readiness.status === "transient_error" ||
-    readiness.status === "source_pending" ||
-    readiness.status === "paid_pending"
+    readiness.status === "paid_pending" ||
+    (readiness.status === "missing_source_facts" && missingHairLength === null)
+  const showWaiting = readiness.status === "checking" || readiness.status === "source_pending"
+  const showMissingFact = readiness.status === "missing_source_facts" && missingHairLength !== null
   const showSupport = readiness.status === "invalid_source" || readiness.status === "forbidden"
 
   return (
@@ -176,38 +206,25 @@ export function PersonalPlanReadyClient({
               {canContinue ? (
                 <Check className="h-9 w-9 text-[var(--brand-plum)]" aria-hidden="true" />
               ) : (
-                <Sparkles className="h-9 w-9 text-[var(--brand-plum)]" aria-hidden="true" />
+                <span className="h-3 w-3 rounded-full bg-[var(--brand-plum)]" aria-hidden="true" />
               )}
             </div>
 
-            <div
-              aria-hidden="true"
-              className="mb-7 grid w-full max-w-sm grid-cols-[1.1fr_0.9fr] gap-2 rounded-3xl border border-[var(--brand-plum)]/15 bg-[var(--brand-plum-ice)] p-3 text-left"
-              data-personal-plan-ready-preview
-            >
-              <div className="rounded-2xl bg-white/85 p-3 shadow-sm">
-                <span className="block h-2 w-14 rounded-full bg-[var(--brand-plum)]/25" />
-                <span className="mt-3 block h-3 w-full rounded-full bg-[var(--brand-plum)]/80" />
-                <span className="mt-2 block h-3 w-4/5 rounded-full bg-[var(--brand-coral)]/70" />
-                <span className="mt-2 block h-3 w-3/5 rounded-full bg-[#6FAA70]/70" />
-              </div>
-              <div className="flex flex-col justify-between rounded-2xl bg-[var(--brand-plum)] p-3 text-white">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/75">
-                  Dein Plan
-                </span>
-                {canContinue ? <Check className="h-8 w-8" /> : <Sparkles className="h-8 w-8" />}
-              </div>
-            </div>
+            <p className="mb-3 text-sm font-medium text-[var(--brand-plum)]">
+              Deine Angaben sind gespeichert
+            </p>
 
             {canContinue ? (
               <div className="w-full space-y-7">
                 <div className="space-y-4">
-                  <h1 className="font-header text-4xl leading-tight">
-                    Das empfehlen wir für dein Haar.
-                  </h1>
+                  <h1 className="font-header text-4xl leading-tight">Dein Haarplan ist bereit.</h1>
                   <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                    Basierend auf deinen Quiz-Antworten.
+                    Starte mit deinem Bedarfsplan und verfeinere ihn danach Schritt für Schritt.
                   </p>
+                </div>
+                <div className="rounded-2xl border border-border bg-card px-4 py-3 text-left">
+                  <p className="text-sm font-semibold text-foreground">Haaranalyse verbunden</p>
+                  <p className="mt-1 text-sm text-[var(--text-sub)]">Bereit</p>
                 </div>
 
                 <Link
@@ -219,94 +236,171 @@ export function PersonalPlanReadyClient({
               </div>
             ) : (
               <div className="w-full space-y-6" aria-live="polite">
-                <div className="space-y-4">
-                  <h1 className="font-header text-4xl leading-tight">
-                    Wir bereiten deinen Haarplan vor.
-                  </h1>
-                  <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-sub)]">
-                    <LoaderCircle className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />
-                    Wir gleichen deine Quiz-Antworten ab.
-                  </p>
-                </div>
-
-                {showRetry ? (
-                  <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
-                    <p className="text-sm leading-6 text-[var(--text-sub)]">
-                      Die Aktivierung dauert gerade etwas länger. Deine Zahlung und deine Antworten
-                      aus der Haaranalyse bleiben sicher gespeichert.
-                    </p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full rounded-full"
-                      onClick={() => {
-                        setReadiness((current) => ({ ...current, status: "checking" }))
-                        setRetryKey((value) => value + 1)
-                      }}
-                    >
-                      Erneut prüfen
-                    </Button>
-                  </div>
-                ) : null}
-                {readiness.status === "missing_source_facts" && missingHairLength ? (
-                  <form
-                    className="space-y-4 rounded-3xl border border-border bg-card p-5 text-left"
-                    onSubmit={submitMissingHairLength}
-                  >
-                    <div className="space-y-2">
-                      <h2 className="text-base font-semibold text-foreground">
-                        {missingHairLength.question}
-                      </h2>
-                      <p className="text-sm leading-6 text-[var(--text-sub)]">
-                        {missingHairLength.helper}
+                {showWaiting ? (
+                  <>
+                    <div className="space-y-4">
+                      <h1 className="font-header text-4xl leading-tight">
+                        Wir bereiten deinen Haarplan vor.
+                      </h1>
+                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                        Du musst nichts tun. Wir prüfen gerade, ob dein vollständiges Profil mit
+                        deinem Konto verbunden ist.
                       </p>
                     </div>
-                    <div className="grid gap-2">
-                      {missingHairLength.options.map((option) => (
-                        <label
-                          key={option.value}
-                          className={cn(
-                            "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium",
-                            selectedHairLength === option.value
-                              ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
-                              : "border-border bg-background text-foreground",
-                          )}
-                        >
-                          <input
-                            type="radio"
-                            name="hair_length"
-                            value={option.value}
-                            checked={selectedHairLength === option.value}
-                            onChange={() => setSelectedHairLength(option.value)}
-                            className="h-4 w-4 accent-[var(--brand-plum)]"
-                          />
-                          <span>{option.label}</span>
-                        </label>
-                      ))}
+                    <div className="rounded-2xl border border-border bg-card px-4 py-3 text-left">
+                      <p className="text-sm font-semibold text-foreground">Haarplan wird geprüft</p>
+                      <p className="mt-1 text-sm text-[var(--text-sub)]">Bitte kurz warten</p>
                     </div>
-                    <Button
-                      type="submit"
-                      variant="funnelCta"
-                      className="w-full"
-                      disabled={!selectedHairLength || isSavingFact}
-                    >
-                      {isSavingFact ? "Speichern..." : "Weiter"}
-                    </Button>
-                  </form>
+                    <noscript>
+                      <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
+                        <p className="text-sm leading-6 text-[var(--text-sub)]">
+                          Ohne JavaScript aktualisiert sich dieser Status nicht automatisch.
+                        </p>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <a
+                            href={readinessPath}
+                            className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+                          >
+                            Status neu laden
+                          </a>
+                          <a
+                            href="/kontakt"
+                            className="inline-flex min-h-11 items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
+                          >
+                            Support kontaktieren
+                          </a>
+                        </div>
+                      </div>
+                    </noscript>
+                  </>
                 ) : null}
-                {showSupport ? (
-                  <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
-                    <p className="text-sm leading-6 text-[var(--text-sub)]">
-                      Wir können diesen Haarplan gerade nicht eindeutig deinem Konto zuordnen. Deine
-                      Zahlung bleibt sicher erfasst.
-                    </p>
-                    <a
-                      href="/kontakt"
-                      className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+
+                {showRetry ? (
+                  <>
+                    <div className="space-y-4">
+                      <h1 className="font-header text-4xl leading-tight">
+                        Die Prüfung dauert länger.
+                      </h1>
+                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                        Wir konnten den aktuellen Status gerade nicht bestätigen. Bitte prüfe ihn
+                        erneut.
+                      </p>
+                    </div>
+                    <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full rounded-full"
+                        onClick={() => {
+                          setReadiness((current) => ({ ...current, status: "checking" }))
+                          setRetryAction("poll")
+                          setRetryKey((value) => value + 1)
+                        }}
+                      >
+                        Erneut prüfen
+                      </Button>
+                      <noscript>
+                        <a
+                          href={readinessPath}
+                          className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+                        >
+                          Status neu laden
+                        </a>
+                      </noscript>
+                    </div>
+                  </>
+                ) : null}
+
+                {showMissingFact ? (
+                  <>
+                    <div className="space-y-4">
+                      <h1 className="font-header text-4xl leading-tight">
+                        Eine Angabe fehlt noch.
+                      </h1>
+                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                        Beantworte noch eine kurze Frage, damit wir deinen Haarplan vorbereiten
+                        können.
+                      </p>
+                    </div>
+                    <form
+                      className="space-y-4 rounded-3xl border border-border bg-card p-5 text-left"
+                      onSubmit={submitMissingHairLength}
                     >
-                      Support kontaktieren
-                    </a>
-                  </div>
+                      <div className="space-y-2">
+                        <h2 className="text-base font-semibold text-foreground">
+                          {missingHairLength.question}
+                        </h2>
+                        <p className="text-sm leading-6 text-[var(--text-sub)]">
+                          {missingHairLength.helper}
+                        </p>
+                      </div>
+                      <div className="grid gap-2">
+                        {missingHairLength.options.map((option) => (
+                          <label
+                            key={option.value}
+                            className={cn(
+                              "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium",
+                              selectedHairLength === option.value
+                                ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
+                                : "border-border bg-background text-foreground",
+                            )}
+                          >
+                            <input
+                              type="radio"
+                              name="hair_length"
+                              value={option.value}
+                              checked={selectedHairLength === option.value}
+                              onChange={() => setSelectedHairLength(option.value)}
+                              className="h-4 w-4 accent-[var(--brand-plum)]"
+                            />
+                            <span>{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <Button
+                        type="submit"
+                        variant="funnelCta"
+                        className="w-full"
+                        disabled={!selectedHairLength || isSavingFact}
+                      >
+                        {isSavingFact ? "Speichern..." : "Weiter"}
+                      </Button>
+                    </form>
+                    <noscript>
+                      <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
+                        <p className="text-sm leading-6 text-[var(--text-sub)]">
+                          Zum Speichern dieser Angabe muss JavaScript aktiviert sein.
+                        </p>
+                        <a
+                          href="/kontakt"
+                          className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
+                        >
+                          Support kontaktieren
+                        </a>
+                      </div>
+                    </noscript>
+                  </>
+                ) : null}
+
+                {showSupport ? (
+                  <>
+                    <div className="space-y-4">
+                      <h1 className="font-header text-4xl leading-tight">
+                        Wir können deinen Haarplan gerade nicht zuordnen.
+                      </h1>
+                      <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
+                        Bitte kontaktiere den Support. Wir prüfen die Zuordnung mit dir gemeinsam.
+                      </p>
+                    </div>
+                    <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                      <a
+                        href="/kontakt"
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                      >
+                        Support kontaktieren
+                      </a>
+                    </div>
+                  </>
                 ) : null}
               </div>
             )}

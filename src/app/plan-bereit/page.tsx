@@ -10,6 +10,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
 import { PersonalPlanReadyClient } from "./personal-plan-ready-client"
+import { loadPlanBereitInitialReadiness, type PlanBereitInitialReadiness } from "./readiness"
 
 export const dynamic = "force-dynamic"
 
@@ -85,7 +86,19 @@ export default async function PersonalPlanReadyPage({
       },
     )
     if (rollout.unavailable) {
-      return <PersonalPlanReadyClient leadId={null} initialStatus="transient_error" />
+      return (
+        <PersonalPlanReadyClient
+          leadId={null}
+          initialReadiness={{
+            status: "transient_error",
+            leadId: null,
+            quizSourceKind: null,
+            sourceVersion: null,
+            missingFacts: [],
+            initialAction: "none",
+          }}
+        />
+      )
     }
     if (!rollout.allowed) {
       redirect("/onboarding")
@@ -129,14 +142,63 @@ export default async function PersonalPlanReadyPage({
     case "onboarding":
       redirect("/onboarding")
     case "source_pending":
-      return <PersonalPlanReadyClient leadId={null} initialStatus="source_pending" />
+      return (
+        <PersonalPlanReadyClient
+          leadId={null}
+          initialReadiness={{
+            status: "source_pending",
+            leadId: null,
+            quizSourceKind: null,
+            sourceVersion: null,
+            missingFacts: [],
+            initialAction: "poll",
+          }}
+        />
+      )
     case "transient_error":
-      return <PersonalPlanReadyClient leadId={null} initialStatus="transient_error" />
+      return (
+        <PersonalPlanReadyClient
+          leadId={null}
+          initialReadiness={{
+            status: "transient_error",
+            leadId: null,
+            quizSourceKind: null,
+            sourceVersion: null,
+            missingFacts: [],
+            initialAction: "none",
+          }}
+        />
+      )
     case "ready":
+      const initialReadiness: PlanBereitInitialReadiness = requestedLeadMatchesEnrollment
+        ? await loadPlanBereitInitialReadiness(admin, {
+            userId: user.id,
+            email: user.email,
+            leadId: canonicalLeadId,
+            expectedQuizSourceKind: enrollmentResult.enrollment?.quizSourceKind ?? null,
+          }).catch((error) => {
+            console.warn("[plan-bereit] initial readiness unavailable", error)
+            return {
+              status: "transient_error",
+              leadId: canonicalLeadId,
+              quizSourceKind: enrollmentResult.enrollment?.quizSourceKind ?? null,
+              sourceVersion: null,
+              missingFacts: [],
+              initialAction: "none",
+            }
+          })
+        : {
+            status: "forbidden",
+            leadId: canonicalLeadId,
+            quizSourceKind: enrollmentResult.enrollment?.quizSourceKind ?? null,
+            sourceVersion: null,
+            missingFacts: [],
+            initialAction: "none",
+          }
       return (
         <PersonalPlanReadyClient
           leadId={canonicalLeadId}
-          initialStatus={requestedLeadMatchesEnrollment ? "checking" : "forbidden"}
+          initialReadiness={initialReadiness}
           nextHref="/plan-start"
         />
       )
