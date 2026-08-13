@@ -98,6 +98,34 @@ test("Routine resolver shows scoped recovery instead of legacy on a Personal Pla
   assert.deepEqual(result, { kind: "unavailable" })
 })
 
+test("Routine resolver loads v3 presentation from an initial proposal candidate", async () => {
+  let loadedPortfolioVersionId: string | null = null
+  const proposal: PersonalPlanRoutineView = {
+    ...activeView,
+    status: "proposal",
+    activeVersion: null,
+    pendingProposal: {
+      id: "proposal-1",
+      candidateVersionId: "routine-candidate",
+      sourceRevision: 4,
+      delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 0 },
+      candidate: { ...activeView.activeVersion!.payload, versionId: "routine-candidate" },
+    },
+  }
+  const result = await resolveRoutinePage({
+    getUserId: async () => "user-1",
+    loadJourneyAccess: async () => stage4Access,
+    stage4Enabled: () => true,
+    readView: async () => proposal,
+    readPortfolioPresentation: async (_userId, _planId, portfolioVersionId) => {
+      loadedPortfolioVersionId = portfolioVersionId
+      return null
+    },
+  })
+  assert.equal(result.kind, "personal_plan")
+  assert.equal(loadedPortfolioVersionId, "portfolio-1")
+})
+
 test("Routine unavailable recovery offers an explicit reload action", () => {
   const html = renderToStaticMarkup(
     RoutineUnavailableState({

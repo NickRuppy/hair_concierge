@@ -11,7 +11,7 @@ import {
 import {
   classifyProposalReload,
   friendlyError,
-  refreshRouteAfterInitialRoutineAcceptance,
+  refreshRouteAfterRoutineAcceptance,
   routineEntrySyncTiming,
   routineProposalDeltaEntries,
 } from "../src/components/routine/personal-plan/personal-plan-routine-client"
@@ -439,27 +439,24 @@ test("proposal acceptance reload distinguishes lost response, same pending, and 
   assert.equal(classifyProposalReload(successorView, "proposal-1"), "superseded")
 })
 
-test("initial Routine acceptance refreshes the server route so navigation gains Anwendung", () => {
+test("every Routine acceptance refreshes server-owned navigation and portfolio presentation", () => {
   let refreshes = 0
   const refresh = () => refreshes++
 
-  refreshRouteAfterInitialRoutineAcceptance({
+  refreshRouteAfterRoutineAcceptance({
     action: "accept",
-    wasInitial: true,
     refresh,
   })
-  refreshRouteAfterInitialRoutineAcceptance({
+  refreshRouteAfterRoutineAcceptance({
     action: "reject",
-    wasInitial: true,
     refresh,
   })
-  refreshRouteAfterInitialRoutineAcceptance({
+  refreshRouteAfterRoutineAcceptance({
     action: "accept",
-    wasInitial: false,
     refresh,
   })
 
-  assert.equal(refreshes, 1)
+  assert.equal(refreshes, 2)
 })
 
 test("proposal sheet blocks duplicate requests only while a request is running", () => {

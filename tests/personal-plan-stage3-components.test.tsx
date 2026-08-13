@@ -6,7 +6,6 @@ import { renderToStaticMarkup } from "react-dom/server"
 import {
   IntakeFallbackBoundary,
   ProductCaptureScreen,
-  ProductDecisionScreen,
   ProductFrequencyPicker,
   ProductKindReviewScreen,
   ProductSearchResults,
@@ -14,11 +13,8 @@ import {
   Stage3Shell,
   Stage3SystemState,
   Stage3Transition,
-  type Stage3DecisionAction,
-  type Stage3ProductDecisionProjection,
 } from "../src/components/personal-plan-products"
 import { FrequencySliderField } from "../src/components/ui/frequency-slider-field"
-import { authorityEvaluationProjection } from "../src/components/personal-plan-products/stage3-decision-projection"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
@@ -480,152 +476,6 @@ test("single oil role assignment uses the concise approved question and helper",
   assert.match(html, /Wähle alles aus, was auf dieses Produkt zutrifft\./)
 })
 
-test("product decisions keep fit, mismatch, pending, and gap actions product-owned and explicit", () => {
-  const decisions: Stage3ProductDecisionProjection[] = [
-    {
-      kind: "fit",
-      decisionKey: "fit-1",
-      categoryLabel: "Leave-in",
-      needSummary: "Feuchtigkeit ohne zu beschweren.",
-      ownedProductName: "Innersense Sweet Spirit Leave In",
-      verdictLabel: "Passt sehr gut",
-      rationale: "Deckt Feuchtigkeit und leichte Pflege ab.",
-      criteria: [
-        { label: "Feuchtigkeit", result: "Deckt den Bedarf", tone: "positive" },
-        { label: "Gewicht", result: "Leicht genug", tone: "positive" },
-      ],
-      actions: [
-        {
-          kind: "keep",
-          label: "Innersense weiterverwenden",
-          productName: "Innersense Sweet Spirit Leave In",
-        },
-      ],
-    },
-    {
-      kind: "mismatch",
-      decisionKey: "mismatch-1",
-      categoryLabel: "Maske",
-      needSummary: "Staerkere Pflege fuer strapazierte Laengen.",
-      ownedProductName: "Alte Proteinmaske",
-      verdictLabel: "Wechseln empfohlen",
-      rationale: "Zu proteinlastig fuer den aktuellen Bedarf.",
-      criteria: [
-        { label: "Balance", result: "Zu viel Protein", tone: "negative" },
-        { label: "Pflege", result: "Empfehlung passt besser", tone: "positive" },
-      ],
-      recommendation: {
-        productName: "Briogeo Don't Despair, Repair!",
-        priceLabel: "ca. 29 EUR",
-        availabilityLabel: "Preis zuletzt geprüft",
-      },
-      actions: [
-        {
-          kind: "plan_purchase",
-          label: "Briogeo einplanen",
-          productName: "Briogeo Don't Despair, Repair!",
-        },
-        { kind: "override", label: "Alte Proteinmaske behalten", productName: "Alte Proteinmaske" },
-      ],
-    },
-    {
-      kind: "pending",
-      decisionKey: "pending-1",
-      categoryLabel: "Scalp Care",
-      needSummary: "Kopfhautprodukt wird noch geprüft.",
-      ownedProductName: "Apotheken-Tonic",
-      verdictLabel: "Noch in Prüfung",
-      rationale: "Wir koennen es noch nicht sicher einordnen.",
-      actions: [
-        { kind: "pending", label: "Prüfung spaeter fortsetzen", productName: "Apotheken-Tonic" },
-      ],
-    },
-    {
-      kind: "gap",
-      decisionKey: "gap-1",
-      categoryLabel: "Hitzeschutz",
-      needSummary: "Schutz vor Foenhitzte fehlt.",
-      verdictLabel: "Offene Luecke",
-      rationale: "Kein sicher passendes Produkt vorhanden.",
-      actions: [
-        { kind: "choose_other", label: "Passendes Produkt suchen" },
-        { kind: "skip", label: "Ohne Produkt fortfahren" },
-      ],
-    },
-  ]
-
-  const html = renderToStaticMarkup(
-    <ProductDecisionScreen decisions={decisions} onChooseAction={() => {}} onBack={() => {}} />,
-  )
-
-  assert.match(html, /<h1[^>]*>Produkte prüfen<\/h1>/)
-  assert.match(html, /Passt sehr gut/)
-  assert.match(html, /Wechseln empfohlen/)
-  assert.match(html, /Noch in Prüfung/)
-  assert.match(html, /Offene Luecke/)
-  assert.match(html, /aria-label="Briogeo einplanen: Briogeo Don&#x27;t Despair, Repair!"/)
-  assert.match(html, /aria-label="Alte Proteinmaske behalten: Alte Proteinmaske"/)
-  assert.match(html, /data-stage3-decision-key="gap-1"/)
-  assert.match(html, /data-stage3-action-kind="skip"/)
-  assert.match(
-    html,
-    /aria-label="Ohne Produkt fortfahren: Hitzeschutz — Schutz vor Foenhitzte fehlt\."/,
-  )
-  assert.match(html, /ca\. 29 EUR/)
-  assert.match(html, /role="status"/)
-  assert.match(html, /Ideal für dich/)
-  assert.match(html, /Dein Produkt/)
-})
-
-test("consolidated product decisions show genuine Oil choices together", () => {
-  const decisions: Stage3ProductDecisionProjection[] = [
-    {
-      kind: "mismatch",
-      decisionKey: "oil-pre-wash",
-      categoryLabel: "Öl",
-      roleLabel: "Vor der Haarwäsche",
-      needSummary: "Pflege vor der Haarwäsche",
-      ownedProductName: "Arganöl",
-      verdictLabel: "Andere Option empfohlen",
-      rationale: "Ein anderes Produkt passt hier besser.",
-      actions: [
-        { kind: "plan_purchase", label: "Empfehlung einplanen" },
-        { kind: "override", label: "Arganöl trotzdem verwenden" },
-      ],
-    },
-    {
-      kind: "pending",
-      decisionKey: "oil-finish",
-      categoryLabel: "Öl",
-      roleLabel: "Im trockenen Haar",
-      needSummary: "Glanz und Finish",
-      ownedProductName: "Arganöl",
-      verdictLabel: "Noch in Prüfung",
-      rationale: "Die Produktdaten werden noch geprüft.",
-      actions: [
-        { kind: "pending", label: "Später prüfen" },
-        { kind: "skip", label: "Nicht einplanen" },
-      ],
-    },
-  ]
-
-  const html = renderToStaticMarkup(
-    <ProductDecisionScreen
-      decisions={decisions}
-      consolidated
-      onChooseAction={() => {}}
-      onBack={() => {}}
-    />,
-  )
-
-  assert.match(html, /<h1[^>]*>Offene Punkte zu deinem Öl<\/h1>/)
-  assert.match(html, /Vor der Haarwäsche/)
-  assert.match(html, /Im trockenen Haar/)
-  assert.match(html, /aria-label="Empfehlung einplanen: Öl — Vor der Haarwäsche"/)
-  assert.match(html, /aria-label="Später prüfen: Öl — Im trockenen Haar"/)
-  assert.equal((html.match(/data-stage3-decision-key=/g) ?? []).length, 4)
-})
-
 test("system states and intake fallback expose busy, live, retry, and boundary actions", () => {
   const stateHtml = renderToStaticMarkup(
     <Stage3SystemState
@@ -659,81 +509,4 @@ test("system states and intake fallback expose busy, live, retry, and boundary a
   assert.match(fallbackHtml, /Produkt speichern/)
   assert.match(fallbackHtml, /Erneut versuchen/)
   assert.match(fallbackHtml, /Zurück zur Suche/)
-})
-
-test("unknown and unsupported server evaluations stay explicit and do not acquire invented actions", () => {
-  const draft = { products: [] } as unknown as Stage3ProductDraft
-  const subject = {
-    decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
-    category: "conditioner" as const,
-    role: "conditioner_rinse_out" as const,
-    capturedProductId: null,
-    subjectKind: "uncovered_role" as const,
-  }
-  const unknown = authorityEvaluationProjection(draft, subject, {
-    status: "unknown",
-    category: "conditioner",
-    subjectKey: subject.decisionKey,
-    missingFacts: ["catalog_product_facts"],
-    criteria: [
-      {
-        criterionId: "conditioner.weight",
-        label: "Gewicht",
-        result: "unknown",
-        explanation: "Noch nicht bestätigt.",
-      },
-    ],
-    allowedActions: ["leave_uncovered"],
-    coverageRuleIds: [],
-  })
-  const unsupported = authorityEvaluationProjection(draft, subject, {
-    status: "unsupported",
-    category: "conditioner",
-    subjectKey: subject.decisionKey,
-    reason: "conditioner_target_unavailable",
-    allowedActions: [],
-    coverageRuleIds: [],
-  })
-
-  assert.equal(unknown.verdictLabel, "Dieser Bedarf ist noch offen")
-  assert.equal(unknown.ownedProductName, undefined)
-  assert.deepEqual(
-    unknown.actions.map((action) => action.kind),
-    ["choose_other", "skip"],
-  )
-  assert.deepEqual(
-    unknown.actions.map((action) => action.label),
-    ["Passendes Produkt suchen", "Ohne Produkt fortfahren"],
-  )
-  assert.equal(unknown.criteria?.[0]?.result, "Noch offen")
-  assert.equal(unsupported.verdictLabel, "Prüfung nicht verfügbar")
-  assert.deepEqual(unsupported.actions, [])
-})
-
-test("server-only replacement selection stays outside the legacy decision action contract", () => {
-  const draft = { products: [] } as unknown as Stage3ProductDraft
-  const subject = {
-    decisionKey: "decision:conditioner:conditioner_rinse_out:capture-1",
-    category: "conditioner" as const,
-    role: "conditioner_rinse_out" as const,
-    capturedProductId: "capture-1",
-    subjectKind: "captured_product" as const,
-  }
-  const projection = authorityEvaluationProjection(draft, subject, {
-    status: "known",
-    category: "conditioner",
-    subjectKey: subject.decisionKey,
-    verdict: "mismatch",
-    criteria: [],
-    allowedActions: ["select_replacement"],
-    recommendation: null,
-    productFactFingerprint: null,
-    recommendationFactFingerprint: null,
-    coverageRuleIds: [],
-  })
-
-  assert.deepEqual(projection.actions, [])
-  // @ts-expect-error select_replacement is server-only and cannot be emitted by legacy UI callers.
-  const legacyAction: Stage3DecisionAction = { kind: "select_replacement", label: "Ersatz wählen" }
-  void legacyAction
 })

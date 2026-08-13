@@ -6,6 +6,9 @@ import type {
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
+
+import { routineCategoryLabel } from "./routine-item-card"
 
 import { RoutineSection } from "./routine-section"
 
@@ -17,6 +20,7 @@ export type RoutinePageProps = {
   onEdit?: () => void
   onConfirm?: () => void
   onItemDetail?: (item: RoutineItem) => void
+  portfolioPresentation?: PortfolioPresentation | null
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -42,6 +46,7 @@ export function RoutinePage({
   onEdit,
   onConfirm,
   onItemDetail,
+  portfolioPresentation = null,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -149,9 +154,15 @@ export function RoutinePage({
           items={basisItems}
           emptyLabel="Deine Basis wird aus deinem Bedarfsplan aufgebaut."
           onItemDetail={onItemDetail}
+          presentation={portfolioPresentation}
         />
         {optionalItems.length > 0 ? (
-          <RoutineSection title="Optional" items={optionalItems} onItemDetail={onItemDetail} />
+          <RoutineSection
+            title="Optional"
+            items={optionalItems}
+            onItemDetail={onItemDetail}
+            presentation={portfolioPresentation}
+          />
         ) : null}
         {laterItems.length > 0 ? (
           <RoutineSection
@@ -159,7 +170,23 @@ export function RoutinePage({
             items={laterItems}
             variant="later"
             onItemDetail={onItemDetail}
+            presentation={portfolioPresentation}
           />
+        ) : null}
+        {portfolioPresentation?.schemaVersion === 3 &&
+        portfolioPresentation.retainedOwnedProducts.length > 0 ? (
+          <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">
+            <summary className="cursor-pointer text-sm font-semibold text-[var(--brand-plum-darkest)]">
+              Nicht verwendete Produkte ({portfolioPresentation.retainedOwnedProducts.length})
+            </summary>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              {portfolioPresentation.retainedOwnedProducts.map((product) => (
+                <li key={product.capturedProductId}>
+                  {product.displayName} · {routineCategoryLabel(product.category)}
+                </li>
+              ))}
+            </ul>
+          </details>
         ) : null}
       </main>
     </div>

@@ -7,6 +7,7 @@ import { ApplicationPage } from "../src/components/application/application-page"
 import { resolveAnwendungPage, type AnwendungResolverDeps } from "../src/app/anwendung/page"
 import type { ApplicationDayTypeKey } from "../src/lib/routines/personal-plan/application/contracts"
 import { SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
+import { adaptAcceptedActiveRoutineForApplication } from "../src/lib/personal-plan/routine/application-adapter"
 
 test("direct Anwendung route stays compact and non-exposing without an eligible owner", async () => {
   const view = await resolveAnwendungPage(readyDeps({ getUserId: async () => null }))
@@ -45,6 +46,29 @@ test("Anwendung page has no production fixture import or sample product path", (
   assert.doesNotMatch(source, /fixture|mock|sample/i)
   assert.doesNotMatch(source, /K18|Olaplex|Batiste|Moroccanoil/i)
   assert.match(source, /compileApplicationViewV2\(/)
+})
+
+test("retained portfolio presentation data cannot create an Anwendung item", async () => {
+  const adapted = await adaptAcceptedActiveRoutineForApplication({
+    client: {
+      from: () => {
+        throw new Error("no catalog read expected")
+      },
+    },
+    activeVersion: {
+      id: "routine-1",
+      payload: {
+        planId: "plan-1",
+        items: [],
+        retainedOwnedProducts: [{ displayName: "Altes Shampoo" }],
+      } as never,
+    },
+  })
+  assert.deepEqual(adapted.routineItems, [])
+  assert.doesNotMatch(
+    readFileSync("src/lib/personal-plan/routine/application-adapter.ts", "utf8"),
+    /retainedOwnedProducts/,
+  )
 })
 
 test("loading does not flash Anwendung navigation before owner eligibility is known", () => {

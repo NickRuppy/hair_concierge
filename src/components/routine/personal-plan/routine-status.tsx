@@ -1,4 +1,6 @@
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
+import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
+import { routinePresentationLabels } from "@/lib/personal-plan/routine/portfolio-presentation"
 import { cn } from "@/lib/utils"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
@@ -8,7 +10,10 @@ export type RoutineStatus = {
   tone: string
 }
 
-export function getRoutineStatus(item: RoutineItem): RoutineStatus {
+export function getRoutineStatus(
+  item: RoutineItem,
+  presentation: PortfolioPresentation | null = null,
+): RoutineStatus {
   if (item.state.inclusion === "excluded") {
     return { label: "Empfohlen, aber nicht eingeplant", tone: "bg-stone-100 text-stone-800" }
   }
@@ -17,7 +22,9 @@ export function getRoutineStatus(item: RoutineItem): RoutineStatus {
   }
   if (item.state.availability === "planned") {
     return {
-      label: "Geplant",
+      label:
+        routinePresentationLabels(presentation).plannedLabelFor(item.sourceDecisionKeys) ??
+        "Geplant",
       tone: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
     }
   }
@@ -42,8 +49,14 @@ export function getRoutineStatus(item: RoutineItem): RoutineStatus {
   return { label: "Aktiv", tone: "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]" }
 }
 
-export function RoutineStatusBadge({ item }: { item: RoutineItem }) {
-  const status = getRoutineStatus(item)
+export function RoutineStatusBadge({
+  item,
+  presentation = null,
+}: {
+  item: RoutineItem
+  presentation?: PortfolioPresentation | null
+}) {
+  const status = getRoutineStatus(item, presentation)
   return (
     <span className={cn("rounded-full px-2.5 py-1 text-xs font-semibold", status.tone)}>
       {status.label}

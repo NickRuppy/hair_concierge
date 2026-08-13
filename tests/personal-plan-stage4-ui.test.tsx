@@ -9,6 +9,7 @@ import type {
   PersonalPlanRoutineView,
   RoutinePayloadV1,
 } from "../src/lib/personal-plan/routine/contracts"
+import type { PortfolioPresentation } from "../src/lib/personal-plan/routine/portfolio-presentation"
 
 const item = (overrides: Record<string, unknown> = {}) => ({
   itemKey: "item:shampoo:shampoo_everyday:owned",
@@ -242,6 +243,70 @@ test("renders active routine as product-led result with separated later addition
   assert.match(html, /Routine anpassen/)
   assert.doesNotMatch(html, /Routine bestätigen/)
   assert.doesNotMatch(html, /Kein Produkt ausgewählt/)
+})
+
+test("shows v3 replacement labels and retained owned products without adding them to Routine items", () => {
+  const routine = payload([
+    item({
+      itemKey: "replacement",
+      sourceDecisionKeys: ["decision-replace"],
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "planned",
+        fitDecision: "standard",
+      },
+      product: { kind: "planned", displayName: "Neues Shampoo" },
+      executable: false,
+    }),
+    item({
+      itemKey: "override",
+      assignmentKey: "override",
+      sourceDecisionKeys: ["decision-override"],
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "owned",
+        fitDecision: "informed_override",
+      },
+      product: { kind: "owned", displayName: "Bewusst behalten" },
+    }),
+  ])
+  const presentation: PortfolioPresentation = {
+    schemaVersion: 3,
+    plannedPurchaseDecisionKeys: ["decision-replace"],
+    retainedOwnedProducts: [
+      {
+        capturedProductId: "captured-old",
+        userProductId: "usage-old",
+        productId: "product-old",
+        displayName: "Altes Shampoo",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        sourceDecisionKey: "decision-replace",
+        planStatus: "not_used",
+      },
+    ],
+  }
+  const html = renderToStaticMarkup(
+    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,
+  )
+
+  assert.match(html, /Noch kaufen/)
+  assert.match(html, /Mit Einschränkung/)
+  assert.match(html, /Nicht verwendete Produkte \(1\)/)
+  assert.match(html, /Altes Shampoo/)
+  assert.equal((html.match(/Altes Shampoo/g) ?? []).length, 1)
+  assert.match(html, /<details class=/)
+  assert.doesNotMatch(html, /<details[^>]* open/)
+
+  const emptyHtml = renderToStaticMarkup(
+    <RoutinePage
+      view={proposalView(routine)}
+      portfolioPresentation={{ ...presentation, retainedOwnedProducts: [] }}
+    />,
+  )
+  assert.doesNotMatch(emptyHtml, /Nicht verwendete Produkte/)
 })
 
 test("keeps required Basis gaps explicit and renders a named recovery state without payload", () => {

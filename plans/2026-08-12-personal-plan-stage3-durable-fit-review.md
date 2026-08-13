@@ -1,6 +1,6 @@
 # Personal Plan Stage 3 durable save and product-fit review
 
-Status: consolidated implementation plan approved after cross-plan grilling, combined evidence review, and designed-user-journey sign-off.
+Status: PR 1 and PR 2 shipped. PR 3/4 addendum updated and independently reviewed after final product/UX grilling. Nick approved implementation on 2026-08-13; PR 3 is in implementation and PR 4 remains a separate follow-up.
 
 ## Outcome and source context
 
@@ -18,7 +18,7 @@ The plan consolidates:
 - the production 409/503 investigation and canonical-save recovery work from task 019ff566-b29c-7663-8043-fc1aa0b64d55;
 - the signed product-fit redesign from task 019ff565-80fb-7ef2-9570-db115ac63c43;
 - the 2026-08-12 cross-plan grilling in the current task;
-- current source on origin/main at 19e05f4c, including the Stage 3 authority-recovery work merged in PR 375 and Routine source settlement merged in PR 378.
+- current source on origin/main at 032245c5, including the shipped PR 1 recovery/readers and PR 2 server fit/replacement/v3-writer contract.
 
 Durable evidence:
 
@@ -29,12 +29,12 @@ Durable evidence:
 
 - Outcome: every Stage 3 save has a deterministic desired state and bounded recovery, while the signed individual product-fit journey is implemented against that safe foundation.
 - Constraints: preserve owner isolation, current refined-source authority, expected-revision CAS, exact-product facts, the five-stage journey, and truthful owned-versus-planned availability.
-- Non-goals: no command ledger, background worker, generic workflow engine, new recommendation score, inferred product facts, Product Intake redesign, database migration, production activation, or Stage 3 GET prepare/passive-read migration.
-- Done when: all three ordered delivery slices satisfy their own acceptance gates, the combined journey is rendered and reviewed, ready-check and whole-branch review pass for each PR, and production deployment remains a separate authorization.
+- Non-goals: no command ledger, background worker, generic workflow engine, new recommendation score, inferred product facts, Product Intake redesign, database migration, production activation, or Stage 3 GET prepare/passive-read migration. Product research completion alone never activates a Routine; only a later explicit affected-product reconfirmation may do so.
+- Done when: all four ordered delivery slices satisfy their own acceptance gates, the combined journey is rendered and reviewed, ready-check and whole-branch review pass for each PR, and production deployment remains a separate authorization.
 
 ## Chosen direction
 
-Use one master plan with three ordered pull requests.
+Use one master plan with four ordered pull requests. The fourth is a deliberately separate lifecycle change, not a condition for shipping the core individual-review redesign.
 
 ### PR 1 — Canonical save recovery and forward-compatible readers
 
@@ -67,10 +67,15 @@ PR 3 depends on the deployed PR 2 server contract and replaces the whole visible
 - the owned product is compared with up to three exact, server-verified alternatives;
 - one sticky primary CTA is paired with quieter replacement, override, or permitted-uncovered actions;
 - replacements enter Routine and Anwendung as Noch kaufen;
-- replaced owned products remain owned and appear as Nicht verwendet;
+- replaced owned products remain owned and appear as Nicht verwendet in Profile and in a collapsed secondary section at the bottom of Routine;
+- when no verified alternative or other truthful action exists, the review says so and returns to product capture without inventing a product;
 - the final successful product decision opens Routine directly.
 
 There is no redesign feature flag or maintained dual-path UI. PR 3 is verified in Preview before deployment. Operational rollback means redeploying the reviewed PR 2 release, which has the old UI plus recovery and v3-safe server readers. PR 3 deletes the superseded criteria/grouped/automatic UI instead of carrying it indefinitely.
+
+### PR 4 — Later-verified product re-review
+
+PR 4 follows PR 3 and adds the later verification lifecycle: a read-derived Routine invitation, affected-product-only reconfirmation, and direct guarded successor activation. Keeping it separate prevents the relatively rare Product Intake follow-up path from blocking or destabilizing the core Stage 3 redesign. It includes the narrow migration that treats explicitly confirmed `product_review` proposals differently from rejected automatic proposals.
 
 ## Canonical state is the receipt
 
@@ -234,12 +239,15 @@ The existing category queue permits two attempts per 60-second window and curren
 | No owned coverage                 | {Visible ideal product} in Routine übernehmen | Cycle; Vorerst ohne Produkt only when authority permits | planned product, or confirmed uncovered role                 |
 | New submission pending            | Verifizierte Alternative wählen               | Cycle                                                   | pending source remains; verified alternative becomes planned |
 | Existing catalog analysis missing | Erneut versuchen                              | Back after no save is pending                           | unresolved system/data error; no normal uncovered escape     |
+| No truthful action available      | Zurück zu meinen Produkten                    | none                                                    | unresolved; no placeholder product and no completion         |
 
 Normal successful actions save and advance immediately. Only Vorerst ohne Produkt opens a short confirmation. The final successful decision completes Stage 3 and opens Routine.
 
 Product-card taps change marker focus only. Alternative arrows change the displayed candidate and its purple markers only. Only an explicit action persists.
 
 There is no purchase CTA on the comparison page.
+
+If the bounded candidate bundle is empty, first apply the subject's remaining truthful action contract: keep an eligible owned product, permit an informed override only when authority allows it, retain a pending submission, or permit an uncovered role only when authority allows it. Only when none applies, show **Keine passende Alternative verfügbar.** with **Zurück zu meinen Produkten**. The user remains unresolved and Stage 3 cannot complete; the client never fabricates a recommendation or silently drops a required role.
 
 ### Exact replacement action
 
@@ -276,14 +284,14 @@ When replacement validation fails, the client reloads the current review bundle,
 - Add sourceDecisionKey to each planned purchase.
 - Use planned:{decisionKey} as plannedPurchaseId so multiple same-role replacements cannot collide.
 - Add retainedOwnedProducts with the owned product identity, sourceDecisionKey, and planStatus: not_used. Do not derive this only in the UI: frozen categoryResolutions carry capturedProductId but not the product ID/display identity required after the mutable draft is gone.
-- A replaced owned product remains owned, is excluded from active Routine/Anwendung, and renders as Nicht verwendet in the Stage 3 completion/profile product presentation.
+- A replaced owned product remains owned and is excluded from active Routine/Anwendung. It renders as Nicht verwendet in Profile and in a collapsed, secondary **Nicht verwendete Produkte (n)** disclosure after all core Routine sections.
 - A selected replacement enters plannedPurchases and the intended Routine/Anwendung slot as Noch kaufen.
 - Planned is not owned and is not executable until the existing Ich habe es schon gekauft acquisition succeeds.
 - A pending submission may coexist with a verified planned alternative. The submission stays Wird geprüft and never silently replaces the routine later.
 - An informed override remains active and renders downstream as Mit Einschränkung.
 - Completion revalidates select_replacement against the current allowlist and stored fingerprint rather than assuming the adapter's first recommendation.
 
-retainedOwnedProducts do not enter RoutinePayloadV1 and do not create a Routine item or a new availability enum. Routine ignores them by design; the product/profile presentation reads them directly from the schema-v3 portfolio. PR 3 must name and test that exact presentation surface.
+retainedOwnedProducts do not enter RoutinePayloadV1 and do not create a Routine item or a new availability enum. The Routine page loader presents them as separate read-only portfolio context, outside `RoutinePayloadV1`; Profile reads the same frozen portfolio truth. The bottom disclosure is omitted when empty, collapsed by default when present, and never creates an Anwendung step. PR 3 must test both presentation surfaces and the no-Routine-item invariant.
 
 planned_purchase_not_acquired remains an internal execution-gap reason until acquisition. When an exact planned item is present, customer UI shows that item as Noch kaufen and does not also label the role generally uncovered; the uncovered wording is reserved for an actual leave_uncovered decision.
 
@@ -293,7 +301,24 @@ routine-candidate-compiler explicitly accepts wrapper and snapshot versions 1, 2
 
 Noch kaufen and Mit Einschränkung are derived only for schema-v3/resolution-action items. Existing version-1/version-2 routines retain their current Geplant/Bewusste Wahl presentation, so PR 2 does not silently relabel old customer plans.
 
-No database migration is required.
+PR 3 requires no database migration. PR 4 adds one narrow migration: `product_review` is removed from automatic rejected-fingerprint suppression because the preceding affected-product confirmations are explicit user consent. `source_sync` and `acquisition` remain suppressed exactly as before.
+
+## Later product verification and direct Routine activation
+
+A successful Product Intake review is a new fact, not permission to change the active Routine. Detection is a canonical read, not an automatic write:
+
+1. Product research completion updates the owner-scoped `user_product`; existing intake/outbox behavior remains unchanged.
+2. The Routine loader compares the active frozen portfolio's `pendingProducts` with current owner products. A formerly pending source that is now `matched` becomes an affected product-review invitation. Each pending product joins to every `categoryResolution` with the same `capturedProductId`, yielding exact decision keys even when one product fills multiple roles. No `(category, role)` fallback is used, no proposal is staged, and the active Routine remains untouched.
+3. On Routine entry, show **Dein Produkt wurde geprüft.** with **Jetzt prüfen** and **Später**. Dismissal changes nothing; the prompt returns while the active portfolio still contains that now-resolved pending source.
+4. **Jetzt prüfen** loads fresh server-authored fit bundles for only those affected decision keys. The user reconfirms each through the same comparison component; unrelated decisions are not reopened.
+5. Keep a proposal-scoped, owner-scoped minimal local envelope of confirmed semantic actions so navigation/hot reload does not lose progress. It contains opaque decision/action/candidate IDs only and is discarded when authority changes, ownership changes, activation succeeds, or the owner logs out.
+6. The final reconfirmation is the consent boundary. One server endpoint reloads the active portfolio, current owner products, plan/source revisions, and fit authority; revalidates every supplied action/candidate; projects a successor portfolio; compiles the successor Routine; stages it with `origin: product_review`; and accepts that exact proposal through the existing `personal_plan_confirm_routine_proposal` CAS.
+7. On success the successor becomes active and Routine reloads directly. There is no second proposal summary.
+8. If the first transition staged but the confirmation response is lost or fails, the pending proposal's `origin` is exposed by the Routine read contract, the generic successor sheet is suppressed, and canonical reload determines whether the exact candidate activated, remains retryable, or was superseded.
+9. On every failure the old active Routine remains active. Changed authority returns to the affected comparison; a transient final failure shows **Deine Routine konnte noch nicht aktualisiert werden. Erneut versuchen** without discarding still-current confirmations.
+10. The failure state also offers **Aktualisierung verwerfen**. It rejects the exact pending `product_review` proposal through the existing guarded rejection RPC, clears the local confirmation envelope, and returns to the unchanged active Routine. Because the underlying verified-product fact still exists, the non-blocking invitation may appear again on a later visit.
+
+This is direct in the user journey, but deliberately retains the existing guarded stage-then-confirm persistence lifecycle. It needs no new table or activation RPC: a new application service and route own the idempotent orchestration, while database confirmation remains the single active-pointer transition. The narrow suppression migration prevents an explicitly reconfirmed `product_review` candidate from being discarded as an earlier rejected automatic proposal. The server, never the client, builds the successor portfolio and Routine from canonical facts.
 
 ## Product-fit presentation contract
 
@@ -349,6 +374,8 @@ Reason copy is a fixed German mapping over signed profile/plan facts and control
 - Exact server-validated replacement action.
 - Schema-v3 decision-keyed planned identity and retained ownership projection.
 - Truthful Stage 4/5 status continuity.
+- Collapsed Routine/Profile visibility for retained owned products.
+- Explicit later-verified-product review with direct guarded successor activation after affected choices are reconfirmed.
 - Typed analytics, bounded payload/performance checks, responsive and fault-injection verification.
 
 ### Non-goals
@@ -358,8 +385,8 @@ Reason copy is a fixed German mapping over signed profile/plan facts and control
 - Recommendation rule, category verdict, target, score, or catalog enrichment change.
 - Product Intake submission/compensation changes.
 - Direct purchase on the comparison page.
-- Automatic routine mutation when product research completes.
-- New DB table, migration, RPC, worker, offline sync, or cross-device unsent-intent recovery.
+- Automatic Routine activation when product research completes; activation requires the later explicit affected-product reconfirmation.
+- New DB table, activation RPC, worker, offline sync, or cross-device unsent-intent recovery. The only persistence change is PR 4's narrow product-review suppression migration.
 - Stage 3 prepare/passive-GET migration; keep it as a separately reviewed follow-up after recovery is stable.
 - Production deployment, production migration/write, or old-worktree cleanup.
 
@@ -401,14 +428,25 @@ Reason copy is a fixed German mapping over signed profile/plan facts and control
 - new src/components/personal-plan-products/product-fit-comparison.tsx
 - stage3-decision-controller.ts, stage3-decision-projection.ts, stage3-products-flow.tsx, and index.tsx
 - Routine status and item cards
+- src/lib/personal-plan/routine/contracts.ts, repository.ts, and load-view.ts for the shared active-portfolio presentation context
+- src/components/routine/personal-plan/personal-plan-routine-client.tsx and routine-page.tsx for the collapsed retained-product disclosure
 - typed analytics, fixture data, component/domain/browser tests
-- the Stage 3 completion/profile product presentation for retained-owned Nicht verwendet status
+- the Profile product presentation for retained-owned Nicht verwendet status
 
-Before PR 2 and PR 3 implementation, refresh each target map against the preceding merged head and record every changed seam in the implementation contract. Neither branches from a superseded planning worktree. Completion criterion: each starts with a no-write seam audit naming the actual files/functions it will change.
+### PR 4 likely surfaces
+
+- the shared Routine active-portfolio presentation loader from PR 3, extended with read-derived product-review invitations
+- Routine contracts/repository/load-view/proposal-service plus a bounded product-review successor service
+- PersonalPlanRoutineClient and the existing Routine proposal read/resolve routes for prompt, retry, discard, and generic-sheet suppression
+- the Routine successor lifecycle migration's automatic-rejection suppression predicate
+- owner-scoped minimal product-review confirmation recovery
+- focused loader/service/route/migration/component/browser tests
+
+Before each remaining PR implementation, refresh its target map against the preceding merged head and record every changed seam in the implementation contract. None branches from a superseded planning worktree. Completion criterion: each starts with a no-write seam audit naming the actual files/functions it will change.
 
 ## Designed user journey
 
-Sign-off: confirmed by Nick on 2026-08-12 when authorizing implementation after reviewing the consolidated plan and combined artifact.
+Original sign-off: confirmed by Nick on 2026-08-12. Renewed PR 3/4 evidence review and journey sign-off were confirmed by Nick through explicit implementation authorization on 2026-08-13.
 
 1. An authenticated Personal Plan owner enters Stage 3 after Stage 2 saved the refined need and confirmed categories.
 2. For each category they search and select the exact product, assign roles, and provide required frequency/usage facts.
@@ -420,11 +458,16 @@ Sign-off: confirmed by Nick on 2026-08-12 when authorizing implementation after 
 8. Alternative arrows cycle up to three exact candidates without saving. Card taps only focus markers.
 9. The sticky action reflects the authority result: keep a good owned product, choose a replacement for a mismatch/no-owned role, or choose a verified alternative for a pending submission. Quiet actions allow an informed override, a voluntary replacement, or an authority-permitted uncovered role.
 10. When an alternative is chosen, the server revalidates that exact product. On success the replacement becomes Noch kaufen in Routine/Anwendung and the replaced owned product becomes Nicht verwendet without losing ownership.
-11. If the candidate changed during save, no substitute is applied. The same detailed comparison reloads with current alternatives, an update notice, and a fresh product-specific CTA.
-12. A 429 shows a short wait and then automatically starts canonical recovery after Retry-After. A 503 or lost response always checks canonical state before one resend.
-13. Back opens the previous completed product decision. From the first decision it returns to product capture. Back is unavailable only while a save outcome is unresolved.
-14. Correcting an owned product recomputes only the affected product/category and preserves unrelated accepted decisions.
-15. After the final successful decision, completion is reconciled idempotently and Stage 4 Routine opens directly.
+11. If no verified alternative and no other truthful action exists, the page says Keine passende Alternative verfügbar. and returns to product capture. The role remains unresolved and no placeholder is planned.
+12. If the candidate changed during save, no substitute is applied. The same detailed comparison reloads with current alternatives, an update notice, and a fresh product-specific CTA.
+13. A 429 shows a short wait and then automatically starts canonical recovery after Retry-After. A 503 or lost response always checks canonical state before one resend.
+14. Back toward a previous completed product choice uses the existing guarded correction path and reopens that product's category capture; persisted decisions are never made locally editable again. From the first decision it returns to product capture. Back is unavailable only while a save outcome is unresolved.
+15. Correcting an owned product recomputes only the affected product/category and preserves unrelated accepted decisions.
+16. After the final successful decision, completion is reconciled idempotently and Stage 4 Routine opens directly.
+17. Routine shows active products first. If retained owned products exist, a collapsed Nicht verwendete Produkte (n) section appears at the bottom; expanding it shows those products without adding Routine or Anwendung steps.
+18. If a pending product is verified later, Routine detects the difference between the active frozen portfolio and the current owner product without staging or activating anything. Routine shows Dein Produkt wurde geprüft. with Jetzt prüfen and Später.
+19. Jetzt prüfen opens only the affected product reviews with fresh server-authored facts. After the last affected confirmation, the server revalidates, builds, stages, and accepts the exact successor; the updated Routine opens directly with no second summary.
+20. If direct activation cannot be confirmed, the old Routine remains active and the completed confirmations remain retryable. A canonical reload decides whether to finish, refresh a changed comparison, or show Erneut versuchen.
 
 Meaningful variants:
 
@@ -434,6 +477,8 @@ Meaningful variants:
 - supportive alternative;
 - no owned product and optional uncovered confirmation;
 - pending submission plus verified planned alternative;
+- no verified alternative and no other truthful action;
+- later verified pending product with one or multiple affected decisions, dismissal, stale authority, and direct-activation retry;
 - existing product analysis unavailable;
 - multiple owned products in one category;
 - Oil roles and specialist compact states;
@@ -453,6 +498,7 @@ Decision criterion:
 - a changed candidate is visible in the detailed comparison before reconfirmation;
 - no uncertain outcome is falsely called failed or unsaved;
 - recovery does not add a second competing CTA.
+- later verification never mutates the active Routine before explicit affected-product reconfirmation, and successful reconfirmation never adds a second summary.
 
 Selected direction:
 
@@ -461,8 +507,9 @@ Selected direction:
 - render checking, rate-limit waiting, and manual recovery as locked full decision states;
 - preserve one sticky product action only when the system is ready to accept a new choice.
 - show the downstream consequence states Noch kaufen, Nicht verwendet, Mit Einschränkung, and the authority-permitted Vorerst ohne Produkt confirmation in the same artifact.
+- keep Nicht verwendete Produkte collapsed below core Routine content and add the later-verification prompt plus direct-activation contract.
 
-Evidence review status: confirmed by Nick on 2026-08-12. The source comparison and source recovery artifacts were separately reviewed first; the combined artifact was then presented with the consolidated plan before implementation authorization.
+Evidence review status: the original combined artifact was confirmed by Nick on 2026-08-12. The updated no-alternative, retained-product, and later-verification evidence and journey were approved through explicit implementation authorization on 2026-08-13.
 
 ## Ordered implementation tasks
 
@@ -552,37 +599,69 @@ Complete when the server can read/transport comparisons and safely persist exact
 
 Consumes: PR 2 review bundle and the combined artifact.
 
-Implement product cards/images, alternative arrows/count, comparison rails and compact facts, exact overlap/stacking, one-sentence reasons, verdict strip, live announcements, image fallback, reduced motion, and state-specific sticky/quiet actions.
+Implement product cards/images, alternative arrows/count, comparison rails and compact facts, exact overlap/stacking, one-sentence reasons, verdict strip, live announcements, image fallback, reduced motion, and state-specific sticky/quiet actions. Add the explicit no-truthful-action state with Keine passende Alternative verfügbar. and Zurück zu meinen Produkten; it must not appear while keep, override, pending, or authority-permitted uncovered remains valid.
 
 Produces: ProductFitComparison.
 
-Complete when component tests prove accessible focus/navigation, candidate-specific CTA, no horizontal overflow, one sticky action, and no persistence from card/arrow interactions.
+Complete when component tests prove accessible focus/navigation, candidate-specific CTA, no horizontal overflow, one sticky action, no persistence from card/arrow interactions, and truthful zero-alternative fallback without a placeholder selection.
 
-### PR 3 task 2 — Replace the old journey with individual review
+### PR 3 task 2 — Integrate one normal individual review end to end
 
 Consumes: PR 2 server contract, task 1 component, and PR 1 recovery state machine.
 
-Replace criteria UI, grouped clear fits, and automatic Oil with individual history and delete their obsolete callers/components. Route all actions—including replacement—through the same pending-intent recovery; explicitly bypass the current client evaluation.allowedActions rejection only for select_replacement when the current server bundle allowlists that product. Implement updated-comparison reconfirmation, previous-decision Back, first-decision return to capture, and correction isolation. Retain the PR 2 journey_started/routine_opened definitions and add typed personal_plan_stage3_review_viewed, review_action, review_back, and review_completed events in stage3-analytics.ts and analytics/events.ts using only finite category/verdict/action/destination/position/count fields—never product identity or comparison facts. Use explicit stop-gates: first integrate one normal individual subject end to end; then multi-product/back correction; then Oil/specialist/pending/error variants; do not delete the old components until every replacement test passes.
+Connect one ordinary owned-product subject to `ProductFitComparison`. Route keep and replacement through the same pending-intent recovery; explicitly bypass the current client `evaluation.allowedActions` rejection only for `select_replacement` when the current server bundle allowlists that exact product. Preserve changed-candidate reconfirmation and unresolved-save navigation locks. Keep the legacy UI components/callers in place during this stop-gate.
 
-Produces: the complete signed individual journey, with PR 2 deployment as the operational rollback target.
+Produces: one fully tested vertical slice without removing rollback behavior inside the branch.
 
-Complete when flow/browser tests cover all action states, changed candidate, unresolved-save navigation lock, multiple products, Oil, pending/error states, direct Routine handoff, and rg proves grouped-clear-fit and automatic-Oil UI callers are absent.
+Complete when component/flow tests prove normal keep, exact replacement, changed candidate, 503/lost-response recovery, and no duplicate decision.
 
-### PR 3 task 3 — Align Routine and Anwendung statuses
+### PR 3 task 3 — Add navigation and the full subject matrix
+
+Extend the individual history to multiple products, previous-decision Back, first-decision return to capture, correction isolation, Oil roles, specialist compact states, pending submissions, no-owned roles, optional uncovered confirmation, analysis error, and the no-truthful-action fallback. Do not delete legacy components yet.
+
+Complete when flow/browser tests cover every signed action state, multiple same-category products, direct Routine handoff, mobile/desktop navigation, and all error/recovery variants with the old path still available only as internal branch fallback.
+
+### PR 3 task 4 — Switch over, add analytics, and delete the legacy decision path
+
+Make the individual history the only production post-capture journey. Delete grouped clear-fit and automatic Oil callers/components after every replacement test passes. Retain the PR 2 `journey_started`/`routine_opened` definitions and add typed `personal_plan_stage3_review_viewed`, `review_action`, `review_back`, and `review_completed` events using only finite category/verdict/action/destination/position/count fields—never product identity or comparison facts.
+
+Complete when focused/flow tests pass and `rg` proves grouped-clear-fit and automatic-Oil production callers are absent.
+
+### PR 3 task 5 — Align Routine, Anwendung, and Profile statuses
 
 Consumes: portfolio v3.
 
-Render Noch kaufen and Mit Einschränkung only for schema-v3/resolution-action items. Render retained owned products as Nicht verwendet from the Stage 3/profile product portfolio surface; do not add them to RoutinePayloadV1. Keep planned products unowned/non-executable until acquisition while retaining the exact future item and verified protocol fields already produced by the compiler. Existing schema-v1/v2 routines keep their current copy and identities.
+Render Noch kaufen and Mit Einschränkung only for schema-v3/resolution-action items. Add one owner-scoped active-portfolio presentation loader reused by Routine and Profile. Render retained owned products as Nicht verwendet in Profile and in a collapsed Nicht verwendete Produkte (n) disclosure after the Routine sections; keep them outside RoutinePayloadV1 and omit the disclosure when empty. Keep planned products unowned/non-executable until acquisition while retaining the exact future item and verified protocol fields already produced by the compiler. Existing schema-v1/v2 routines keep their current copy and identities.
 
 Produces: truthful downstream continuity.
 
-Complete when Stage 3/profile, Stage 4/5, source reconciliation, legacy active Routine, and acquisition tests pass for multiple replacements and pending sources; planned exact items show Noch kaufen rather than a duplicate uncovered label.
+Complete when Profile, Stage 4/5, source reconciliation, legacy active Routine, and acquisition tests pass for multiple replacements and pending sources; planned exact items show Noch kaufen rather than a duplicate uncovered label; retained products are collapsed by default, expandable, absent from Anwendung, and omitted entirely when none exist.
 
-### PR 3 task 4 — Verify and review the all-user release
+### PR 3 task 6 — Verify and review the all-user release
 
 Run focused domain/component tests, Personal Plan browser journeys, CI, responsive rendered review, recovery fault injection, ready-check, and one whole-branch Claude code review. Verify the production candidate in Preview before deployment and record the current completion baseline for post-deploy comparison.
 
 Complete when the implementation matches the reviewed artifact, no presentation fact becomes authority, PR 2 is recorded as the deployment rollback target, and production deployment remains separately unauthorized.
+
+### PR 4 task 1 — Reconfirm later-verified products and activate directly
+
+Consumes: the active frozen portfolio, current owner products, fresh PR 2 fit bundle, and guarded Routine successor/confirmation lifecycle.
+
+Extend the Routine loader with a bounded product-review invitation projection: compare active-portfolio pending entries with owner products that are now matched, and derive their exact source decision keys. Show the reviewed prompt; Später preserves the active Routine and the read-derived invitation. Jetzt prüfen opens only those comparisons. Persist completed confirmations in a minimal owner/proposal-scope recovery envelope so a transient final activation failure is retryable without replaying product decisions.
+
+After the final affected confirmation, call one product-review activation service/route. It reloads canonical plan/source, active portfolio, owner products, and current fit authority; validates every supplied semantic action; builds a successor portfolio and Routine server-side; stages it with `origin: product_review`; then accepts that exact proposal through the existing CAS. Expose pending proposal origin for lost-response recovery and suppress the ordinary successor sheet for `product_review`. Reconcile uncertain outcomes by reloading the Routine view: exact active candidate is success, a current pending candidate is retryable, a superseded candidate returns to fresh affected review. The active Routine pointer never changes on a partial failure.
+
+Produces: explicit, bounded product re-review followed by a direct updated Routine with no second summary.
+
+Add a narrow migration that excludes `product_review` from `last_rejected_auto_fingerprint` suppression while preserving suppression for `source_sync` and `acquisition`. This is safe only because the application service requires a fresh explicit affected-decision confirmation before using that origin.
+
+Complete when service/component/browser/migration tests cover exact capturedProductId-to-decisionKey mapping, dismiss-and-return, one/multiple affected decisions, stale authority, suppressed automatic proposals remaining suppressed, product-review restaging after an earlier rejection, superseded proposal, lost response after acceptance, retry without decision replay, discard escape hatch, old-Routine preservation on failure, exact direct activation, and absence of the generic successor sheet for product_review.
+
+### PR 4 task 2 — Verify the later-verification lifecycle
+
+Run focused loader/service/route/migration/component tests, the authenticated Routine browser journey, CI, recovery fault injection, ready-check, and one whole-branch Claude code review. Verify the production candidate in Preview before deployment.
+
+Complete when the implementation matches the reviewed prompt/direct-activation/error states, PR 3 remains a viable product rollback target, and production deployment/migration application remain separately unauthorized.
 
 ## Verification
 
@@ -590,7 +669,6 @@ Complete when the implementation matches the reviewed artifact, no presentation 
 
 - Focused Node tests for recovery predicates, queues, gateways, routes, authority, comparison, portfolio, compiler, source reconciler, acquisition, components, flow, analytics, and completion.
 - npm run test:personal-plan
-- npm run test:playwright:personal-plan-stage1-5
 - npm run test:playwright:personal-plan-stage3
 - npm run bench:personal-plan-transitions
 - npm run ci:verify
@@ -603,9 +681,11 @@ Use the repository server-only register and tsx import pattern for focused Node 
 - Normal save, 503 before save, response lost after commit, GET failure, one-resend failure, manual recovery, hot reload, concurrent tab, changed candidate, 429 countdown/automatic check, and completion replay.
 - Product focus versus alternative switching versus persistence.
 - Zero/one/three alternatives, supportive candidate, pending submission, analysis error, no-owned, optional uncovered confirmation, multi-product and Oil/specialist states.
+- No-truthful-action fallback, retained-products accordion empty/closed/open states, and later-verification dismiss/review/direct-activation/retry states.
 - Keyboard order, live regions, disabled navigation, non-color identity, reduced motion, no horizontal overflow, and unobstructed sticky CTA.
-- Exact replacements and statuses through Routine/Anwendung and acquisition.
+- Exact replacements and statuses through Routine/Anwendung and acquisition; retained owned products never create Routine/Anwendung items.
 - A deployment rollback to PR 2 restores the complete old decision journey with canonical recovery and v3-safe readers.
+- After PR 4, a Routine activated through `product_review` must still load under the PR 3 rollback code; the migration is additive and leaves source_sync/acquisition suppression intact.
 
 ### Rollout and observability
 
@@ -615,19 +695,19 @@ Use the repository server-only register and tsx import pattern for focused Node 
 - Record comparable journey-start-to-Routine baseline from the PR 2 events before PR 3 deployment.
 - Immediate rollback to PR 2 for any ownership/product misassignment, v3 completion replay failure, or cross-decision acquisition.
 - Fast tripwire: roll back if any rolling 24-hour window has at least 10 eligible review starts and zero Routine completions.
-- Main evaluation: after at least 50 eligible Stage 3 starts or seven days, whichever is later, roll back if review-to-Routine completion is more than 10 percentage points below baseline, warm p95 readiness exceeds 3,000 ms, or save-recovery failure materially regresses.
+- Main evaluation uses consented analytics explicitly: evaluate when 50 consented eligible Stage 3 starts are observed or on day 14, whichever comes first. At day 14, record the sample size; apply the completion-rate threshold only with at least 20 starts, while warm p95/readiness and recovery-error tripwires remain active regardless. Roll back if review-to-Routine completion is more than 10 percentage points below the consent-matched PR 2 baseline, warm p95 readiness exceeds 3,000 ms, or save-recovery failure materially regresses.
 - Operational counts: failure phase, response class, canonical recovery result, one-resend result, manual recovery entry, rate-limit wait, changed-authority reconfirmation, and completion replay.
 - No duplicate save/success analytics when canonical reconciliation finds committed state.
 
 ## Review and handoff
 
-- Planning worktree: /Users/nick/AI_work/hair_conscierge/.worktrees/personal-plan-stage3-recovery-fit-consolidation
-- Planning branch: codex/personal-plan-stage3-recovery-fit-consolidation
-- Base: origin/main at 19e05f4c after refreshing the clean planning worktree; includes PR 378 Routine source settlement.
+- PR 3 planning worktree: /Users/nick/AI_work/hair_conscierge/.worktrees/personal-plan-stage3-fit-ui
+- PR 3 planning branch: codex/personal-plan-stage3-fit-ui
+- Refreshed base: origin/main at 032245c5 after PR 1 and PR 2 shipped.
 - Source recovery worktree: preserved and unmodified.
 - Source fit worktree: preserved and unmodified.
 - Cross-plan decisions confirmed:
-  - one master plan, three ordered PRs;
+  - one master plan, four ordered PRs; PR 4 isolates the later-verification lifecycle from the core PR 3 redesign;
   - PR 1 behavior-preserving;
   - uncertain saves lock Stage 3 decisions;
   - changed candidates return to the refreshed comparison;
@@ -638,9 +718,12 @@ Use the repository server-only register and tsx import pattern for focused Node 
   - Stage 3 writes use layered aggregate plus capture/reopen or decision budgets with actual Retry-After;
   - comparable journey start/completion telemetry begins in PR 2 before the redesigned UI;
   - acquiring one exact product resolves every already-approved Routine use of that product, never merely the first matching slot.
-- Counterpart review: three high-effort read-only passes completed. The final pass found pending-plus-planned projection ambiguity, decision-keyed compiler/acquisition gaps, an omitted exhaustive action consumer, reload-reset attempt bounds, hardcoded Retry-After, and rollout-baseline risk. Each finding was checked against current source and incorporated or explicitly clarified; no further reviewer loop is planned.
-- Combined evidence review: confirmed on 2026-08-12.
-- Consolidated designed-user-journey sign-off: confirmed on 2026-08-12.
+  - a true zero-action state says no alternative is currently available and returns to product capture;
+  - retained owned products appear in Profile and a collapsed bottom-of-Routine disclosure, never as Routine/Anwendung items;
+  - later product verification triggers a read-derived invitation; after affected choices are reconfirmed, the successor Routine activates directly with no second summary.
+- Earlier counterpart review: three high-effort read-only passes completed for the consolidated PR 1–3 plan. A renewed high-effort read-only Claude review of the PR 3/4 addendum completed on 2026-08-13 with approve-with-revisions. Verified findings were incorporated: the invalid test command was removed, PR 3 execution was split into explicit stop-gates, Profile/Routine share one portfolio read, later verification moved to PR 4, exact pending identity uses capturedProductId, product-review suppression gets a narrow migration, discard recovery is defined, and rollout sampling is consent-matched and time-bounded. The claimed missing decision-key join was rejected after source inspection because `categoryResolutions.capturedProductId` provides the exact one-to-many mapping.
+- Original combined evidence review: confirmed on 2026-08-12. Updated PR 3/4 evidence review: confirmed on 2026-08-13.
+- Original designed-user-journey sign-off: confirmed on 2026-08-12. Updated PR 3/4 journey sign-off: confirmed on 2026-08-13.
 - Artifact disposition after sign-off:
   - commit this plan and the combined mockup with PR 1;
   - keep the plan on main as PR 2 and PR 3's implementation contract;
@@ -650,40 +733,43 @@ Use the repository server-only register and tsx import pattern for focused Node 
 
 ## Consolidation findings ledger
 
-| ID  | Type                  | Evidence                                                                                                                                                       | Decision                                         | Plan change                                                                                                                                               | Revalidation                                            |
-| --- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| R1  | scope/product         | Recovery plan removed grouped clear fits before the redesigned UI was ready                                                                                    | accepted user decision                           | PR 1/2 preserve behavior; PR 3 replaces the old journey for all eligible users                                                                            | PR 1 behavior tests and PR 3 absence tests              |
-| R2  | architecture          | Legacy automatic Oil exists only in the current controller but is part of the failing journey and rollback release                                             | accepted                                         | PR 1 recovers it; PR 2 retains it; PR 3 deletes its caller and shows individual Oil decisions                                                             | Batch tests and PR 3 rg/browser proof                   |
-| R3  | UX                    | Recovery's generic changed-recommendation card conflicts with the signed detailed comparison                                                                   | accepted user decision                           | Refresh same comparison, clear old candidate, show update notice, require fresh action                                                                    | Combined artifact and changed-candidate browser test    |
-| R4  | safety                | Back during unknown outcome can create a second intent                                                                                                         | accepted user decision                           | Lock Stage 3 decisions/navigation until canonical status is known                                                                                         | Component/flow/browser tests                            |
-| R5  | reliability           | 429 supplies a server wait boundary                                                                                                                            | accepted user decision                           | Respect Retry-After, then automatic canonical read and at most one resend                                                                                 | Fake-timer gateway/flow tests                           |
-| R6  | contract              | Recovery's older action/status table used one recommendation and Geplant; signed redesign uses selected replacement and Noch kaufen                            | accepted                                         | Signed redesign supersedes the old follow-up table                                                                                                        | Contract, portfolio, Routine tests                      |
-| R7  | architecture          | Candidate selection and recovery both need stable semantic identity                                                                                            | accepted                                         | Pending intent stores action plus selectedCandidateId; server checks exact canonical resolutionAction/product/fingerprint                                 | Lost-response and stale-candidate tests                 |
-| C1  | defect                | Existing category queue is owner-scoped; first draft pending intent was not                                                                                    | accepted                                         | Add ownerId storage scope and clearOnLogout behavior                                                                                                      | Owner-switch/logout tests                               |
-| C2  | defect                | Route maps all Stage3AuthorityMutationError values to 400                                                                                                      | accepted                                         | Candidate-invalid alone becomes 409; shape/action errors stay 400                                                                                         | Route/gateway changed-candidate tests                   |
-| C3  | defect                | stage_not_ready and personal_plan_not_available do not carry latestDraft                                                                                       | accepted                                         | Add terminal 409/404 recovery exits                                                                                                                       | HTTP and flow tests                                     |
-| C4  | defect                | HTTP gateway discards status/header and flattens error codes                                                                                                   | accepted                                         | Error carries code, status, retryAfterSeconds parsed from Response                                                                                        | Gateway tests                                           |
-| C5  | defect                | choiceState reverse mapping would collapse select_replacement to plan_recommendation                                                                           | accepted                                         | Prefer persisted resolutionAction; legacy fallback only when absent                                                                                       | Mapper/completion tests                                 |
-| C6  | defect                | validateSelectedCandidate/buildAuthorityDecision only support evaluation.recommendation                                                                        | accepted                                         | Rebuild allowlist and persist exact selected full candidate/fingerprint                                                                                   | Candidate 2/3 tests                                     |
-| C7  | defect                | Portfolio version is derived and compiler hardcodes [1,2]                                                                                                      | accepted                                         | Define v3 emission, compiler [1,2,3], and legacy/new identity reconciliation                                                                              | Portfolio/compiler/acquisition tests                    |
-| C8  | plan ambiguity        | Reviewer assumed Nicht verwendet needed a Routine availability state                                                                                           | corrected after source/plan inspection           | Retained products never enter RoutinePayloadV1; profile product presentation owns the label                                                               | Profile surface and no-Routine-item tests               |
-| C9  | rollout defect        | A global copy rename would alter existing v1/v2 plans                                                                                                          | accepted                                         | New copy derives only for v3/resolution-action items                                                                                                      | Legacy/new Routine UI tests                             |
-| C10 | defect                | reconciled marker, completed draft, GET rate-limit invariant, and early-return diagnostics lacked exact consumers/guards                                       | accepted                                         | Name shared consumers and add route/completion tests                                                                                                      | Focused route/flow tests                                |
-| C11 | scope                 | Reviewer proposed adapter-level select_replacement allowedActions                                                                                              | rejected                                         | Voluntary replacement remains a gateway candidate-allowlist carve-out; category adapters keep authority-required actions only                             | Gateway/adapters regression tests                       |
-| C12 | evidence              | Combined mockup omitted downstream statuses and uncovered confirmation                                                                                         | accepted                                         | Add Noch kaufen, Nicht verwendet, Mit Einschränkung, and skip confirmation evidence                                                                       | Nick evidence review                                    |
-| C13 | product/rollout       | Review asked whether to retain a redesign flag                                                                                                                 | superseded by user decision                      | No redesign flag; Preview verification then all-user PR 3 deployment, with PR 2 rollback                                                                  | Deployment plan and browser verification                |
-| C14 | defect                | select_replacement was rejected by the ordinary allowedActions guard and could fall through to unassigned                                                      | accepted                                         | Name production/fixture carve-out and exhaustive planned_purchase/recommendation mapping                                                                  | Direct gateway and mapper tests                         |
-| C15 | rollback defect       | PR 1 compiler could not replay a frozen v3 portfolio after PR 3 rollback                                                                                       | accepted with user decision                      | Three PRs; PR 1 ships tolerant v3 readers/compiler/source/acquisition before PR 2 writes v3                                                               | Frozen-v3 replay under PR 1 code                        |
-| C16 | defect                | Existing stage3_authority_candidate_invalid is also used by category capture                                                                                   | accepted                                         | New stage3_replacement_candidate_invalid is replacement-only; capture remains 400                                                                         | Route tests for both mutation families                  |
-| C17 | defect                | Queue attempt limit, completion_not_ready, separate completion limiter, closed error union, multi-chunk batch semantics, and analytics ownership were implicit | accepted                                         | Add explicit queue retryAt, completion contract, widened error union, per-chunk recovery, and typed event owners                                          | Queue/complete/route/analytics tests                    |
-| C18 | architecture tradeoff | categoryResolutions lacks frozen product display identity for a derived Nicht verwendet surface                                                                | accepted                                         | Keep explicit retainedOwnedProducts array and document why UI-only derivation is insufficient                                                             | Portfolio/profile tests                                 |
-| C19 | scope tradeoff        | reconciled marker added wide shared-contract churn without different client behavior                                                                           | accepted                                         | Drop public marker; retain internal reconciliation metric                                                                                                 | Route/gateway/analytics tests                           |
-| C20 | scope defect          | Catalog query already has a literal 12-row cap                                                                                                                 | accepted                                         | Export and reuse that existing limit instead of adding a second constant                                                                                  | Catalog/selector tests                                  |
-| C21 | contract ambiguity    | Current portfolio projection returns after one branch, so a pending source plus planned replacement could disappear                                            | accepted by Nick                                 | Keep one decision carrying pending captured identity plus selected recommendation; independently emit both pending and planned projections                | Draft/portfolio/compiler tests                          |
-| C22 | identity defect       | Compiler takes the first category/role planned match and source reconciliation takes the first productId match                                                 | accepted by Nick                                 | Resolve v3 compilation by sourceDecisionKey; product acquisition resolves every already-approved use of that exact product/category, never just the first | Same-role/same-product acquisition tests                |
-| C23 | type defect           | Widening the authority action union also widens stage3-decision-projection.ts                                                                                  | accepted                                         | Move its exhaustive select_replacement handling into PR 2 while keeping the old UI unable to emit it                                                      | PR 2 typecheck and projection tests                     |
-| C24 | recovery defect       | In-memory retry attempts reset on hot reload                                                                                                                   | accepted                                         | Persist minimal attempt count/window in the owner-scoped recovery envelope                                                                                | Reload/fake-timer tests                                 |
-| C25 | rate-limit tradeoff   | Per-product saves can compete with capture under the current shared 30/60 budget; 429 hardcodes 60 despite an existing fixed-window helper                     | accepted after senior-engineering recommendation | Use a coarse 90/60 aggregate plus 30/60 capture and 60/60 decision budgets; return the real fixed-window remainder                                        | Route/load tests and production-shaped count validation |
-| C26 | rollout tradeoff      | PR 3 introduces its own completion signals, leaving no directly comparable pre-redesign baseline                                                               | accepted by Nick                                 | Land stable journey start/Routine-opened events in PR 2 and retain them in PR 3                                                                           | Analytics tests                                         |
-| C28 | ownership semantics   | Fresh main still emits a product-keyed acquisition event, so first-match reconciliation is ambiguous when one product fills two approved slots                 | accepted by Nick                                 | Treat ownership as product-wide and resolve every already-approved planned use of the acquired exact product/category; add no clicked-slot migration      | Same-product multi-role acquisition tests               |
-| C27 | contract defect       | Production completion HTTP converts internal not_ready to 409, making the client success-union arm unreachable                                                 | accepted                                         | Split internal completion result from HTTP success and recover through typed completion_not_ready                                                         | Gateway/flow/completion tests                           |
+| ID  | Type                   | Evidence                                                                                                                                                       | Decision                                         | Plan change                                                                                                                                               | Revalidation                                            |
+| --- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| R1  | scope/product          | Recovery plan removed grouped clear fits before the redesigned UI was ready                                                                                    | accepted user decision                           | PR 1/2 preserve behavior; PR 3 replaces the old journey for all eligible users                                                                            | PR 1 behavior tests and PR 3 absence tests              |
+| R2  | architecture           | Legacy automatic Oil exists only in the current controller but is part of the failing journey and rollback release                                             | accepted                                         | PR 1 recovers it; PR 2 retains it; PR 3 deletes its caller and shows individual Oil decisions                                                             | Batch tests and PR 3 rg/browser proof                   |
+| R3  | UX                     | Recovery's generic changed-recommendation card conflicts with the signed detailed comparison                                                                   | accepted user decision                           | Refresh same comparison, clear old candidate, show update notice, require fresh action                                                                    | Combined artifact and changed-candidate browser test    |
+| R4  | safety                 | Back during unknown outcome can create a second intent                                                                                                         | accepted user decision                           | Lock Stage 3 decisions/navigation until canonical status is known                                                                                         | Component/flow/browser tests                            |
+| R5  | reliability            | 429 supplies a server wait boundary                                                                                                                            | accepted user decision                           | Respect Retry-After, then automatic canonical read and at most one resend                                                                                 | Fake-timer gateway/flow tests                           |
+| R6  | contract               | Recovery's older action/status table used one recommendation and Geplant; signed redesign uses selected replacement and Noch kaufen                            | accepted                                         | Signed redesign supersedes the old follow-up table                                                                                                        | Contract, portfolio, Routine tests                      |
+| R7  | architecture           | Candidate selection and recovery both need stable semantic identity                                                                                            | accepted                                         | Pending intent stores action plus selectedCandidateId; server checks exact canonical resolutionAction/product/fingerprint                                 | Lost-response and stale-candidate tests                 |
+| C1  | defect                 | Existing category queue is owner-scoped; first draft pending intent was not                                                                                    | accepted                                         | Add ownerId storage scope and clearOnLogout behavior                                                                                                      | Owner-switch/logout tests                               |
+| C2  | defect                 | Route maps all Stage3AuthorityMutationError values to 400                                                                                                      | accepted                                         | Candidate-invalid alone becomes 409; shape/action errors stay 400                                                                                         | Route/gateway changed-candidate tests                   |
+| C3  | defect                 | stage_not_ready and personal_plan_not_available do not carry latestDraft                                                                                       | accepted                                         | Add terminal 409/404 recovery exits                                                                                                                       | HTTP and flow tests                                     |
+| C4  | defect                 | HTTP gateway discards status/header and flattens error codes                                                                                                   | accepted                                         | Error carries code, status, retryAfterSeconds parsed from Response                                                                                        | Gateway tests                                           |
+| C5  | defect                 | choiceState reverse mapping would collapse select_replacement to plan_recommendation                                                                           | accepted                                         | Prefer persisted resolutionAction; legacy fallback only when absent                                                                                       | Mapper/completion tests                                 |
+| C6  | defect                 | validateSelectedCandidate/buildAuthorityDecision only support evaluation.recommendation                                                                        | accepted                                         | Rebuild allowlist and persist exact selected full candidate/fingerprint                                                                                   | Candidate 2/3 tests                                     |
+| C7  | defect                 | Portfolio version is derived and compiler hardcodes [1,2]                                                                                                      | accepted                                         | Define v3 emission, compiler [1,2,3], and legacy/new identity reconciliation                                                                              | Portfolio/compiler/acquisition tests                    |
+| C8  | plan ambiguity         | Reviewer assumed Nicht verwendet needed a Routine availability state                                                                                           | corrected after source/plan inspection           | Retained products never enter RoutinePayloadV1; Profile and a separate Routine portfolio-context disclosure own the label                                 | Profile/Routine surface and no-Routine-item tests       |
+| C9  | rollout defect         | A global copy rename would alter existing v1/v2 plans                                                                                                          | accepted                                         | New copy derives only for v3/resolution-action items                                                                                                      | Legacy/new Routine UI tests                             |
+| C10 | defect                 | reconciled marker, completed draft, GET rate-limit invariant, and early-return diagnostics lacked exact consumers/guards                                       | accepted                                         | Name shared consumers and add route/completion tests                                                                                                      | Focused route/flow tests                                |
+| C11 | scope                  | Reviewer proposed adapter-level select_replacement allowedActions                                                                                              | rejected                                         | Voluntary replacement remains a gateway candidate-allowlist carve-out; category adapters keep authority-required actions only                             | Gateway/adapters regression tests                       |
+| C12 | evidence               | Combined mockup omitted downstream statuses and uncovered confirmation                                                                                         | accepted                                         | Add Noch kaufen, Nicht verwendet, Mit Einschränkung, and skip confirmation evidence                                                                       | Nick evidence review                                    |
+| C13 | product/rollout        | Review asked whether to retain a redesign flag                                                                                                                 | superseded by user decision                      | No redesign flag; Preview verification then all-user PR 3 deployment, with PR 2 rollback                                                                  | Deployment plan and browser verification                |
+| C14 | defect                 | select_replacement was rejected by the ordinary allowedActions guard and could fall through to unassigned                                                      | accepted                                         | Name production/fixture carve-out and exhaustive planned_purchase/recommendation mapping                                                                  | Direct gateway and mapper tests                         |
+| C15 | rollback defect        | PR 1 compiler could not replay a frozen v3 portfolio after PR 3 rollback                                                                                       | accepted with user decision                      | Three PRs; PR 1 ships tolerant v3 readers/compiler/source/acquisition before PR 2 writes v3                                                               | Frozen-v3 replay under PR 1 code                        |
+| C16 | defect                 | Existing stage3_authority_candidate_invalid is also used by category capture                                                                                   | accepted                                         | New stage3_replacement_candidate_invalid is replacement-only; capture remains 400                                                                         | Route tests for both mutation families                  |
+| C17 | defect                 | Queue attempt limit, completion_not_ready, separate completion limiter, closed error union, multi-chunk batch semantics, and analytics ownership were implicit | accepted                                         | Add explicit queue retryAt, completion contract, widened error union, per-chunk recovery, and typed event owners                                          | Queue/complete/route/analytics tests                    |
+| C18 | architecture tradeoff  | categoryResolutions lacks frozen product display identity for a derived Nicht verwendet surface                                                                | accepted                                         | Keep explicit retainedOwnedProducts array and document why UI-only derivation is insufficient                                                             | Portfolio/profile tests                                 |
+| C19 | scope tradeoff         | reconciled marker added wide shared-contract churn without different client behavior                                                                           | accepted                                         | Drop public marker; retain internal reconciliation metric                                                                                                 | Route/gateway/analytics tests                           |
+| C20 | scope defect           | Catalog query already has a literal 12-row cap                                                                                                                 | accepted                                         | Export and reuse that existing limit instead of adding a second constant                                                                                  | Catalog/selector tests                                  |
+| C21 | contract ambiguity     | Current portfolio projection returns after one branch, so a pending source plus planned replacement could disappear                                            | accepted by Nick                                 | Keep one decision carrying pending captured identity plus selected recommendation; independently emit both pending and planned projections                | Draft/portfolio/compiler tests                          |
+| C22 | identity defect        | Compiler takes the first category/role planned match and source reconciliation takes the first productId match                                                 | accepted by Nick                                 | Resolve v3 compilation by sourceDecisionKey; product acquisition resolves every already-approved use of that exact product/category, never just the first | Same-role/same-product acquisition tests                |
+| C23 | type defect            | Widening the authority action union also widens stage3-decision-projection.ts                                                                                  | accepted                                         | Move its exhaustive select_replacement handling into PR 2 while keeping the old UI unable to emit it                                                      | PR 2 typecheck and projection tests                     |
+| C24 | recovery defect        | In-memory retry attempts reset on hot reload                                                                                                                   | accepted                                         | Persist minimal attempt count/window in the owner-scoped recovery envelope                                                                                | Reload/fake-timer tests                                 |
+| C25 | rate-limit tradeoff    | Per-product saves can compete with capture under the current shared 30/60 budget; 429 hardcodes 60 despite an existing fixed-window helper                     | accepted after senior-engineering recommendation | Use a coarse 90/60 aggregate plus 30/60 capture and 60/60 decision budgets; return the real fixed-window remainder                                        | Route/load tests and production-shaped count validation |
+| C26 | rollout tradeoff       | PR 3 introduces its own completion signals, leaving no directly comparable pre-redesign baseline                                                               | accepted by Nick                                 | Land stable journey start/Routine-opened events in PR 2 and retain them in PR 3                                                                           | Analytics tests                                         |
+| C28 | ownership semantics    | Fresh main still emits a product-keyed acquisition event, so first-match reconciliation is ambiguous when one product fills two approved slots                 | accepted by Nick                                 | Treat ownership as product-wide and resolve every already-approved planned use of the acquired exact product/category; add no clicked-slot migration      | Same-product multi-role acquisition tests               |
+| C27 | contract defect        | Production completion HTTP converts internal not_ready to 409, making the client success-union arm unreachable                                                 | accepted                                         | Split internal completion result from HTTP success and recover through typed completion_not_ready                                                         | Gateway/flow/completion tests                           |
+| C29 | UX fallback            | A bounded comparison can truthfully yield no alternative and no permitted fallback                                                                             | accepted by Nick                                 | Show Keine passende Alternative verfügbar.; return to product capture; keep the role unresolved                                                           | Zero-action component/flow/browser tests                |
+| C30 | information hierarchy  | Retained owned products should remain available without becoming core Routine content                                                                          | accepted by Nick                                 | Keep Profile status and add a collapsed bottom-of-Routine disclosure, omitted when empty and excluded from Anwendung                                      | Closed/open/empty and no-item tests                     |
+| C31 | lifecycle architecture | Product verification is a new fact, while direct Routine mutation would skip user consent and a second summary would duplicate that consent                    | accepted by Nick                                 | Detect from active portfolio vs owner product; reconfirm only affected decisions; server builds/stages/confirms successor and opens Routine directly      | Re-review, CAS, lost-response, and old-active tests     |

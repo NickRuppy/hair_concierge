@@ -11,6 +11,7 @@ import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "./authority/contracts"
+import type { Stage3FitComparison, Stage3SelectedComparisonCandidate } from "./fit-comparison"
 import {
   deriveStage3DecisionSubjects,
   stage3CategoryRequirementSchema,
@@ -159,11 +160,18 @@ export type FixtureStage3Gateway = Omit<Stage3ProductsGateway, "search"> & {
     requestToken: number
   }): Promise<Stage3SearchResponse>
   evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
+  reviewDecisionBundles(input: { draftId: string }): Promise<FixtureStage3DecisionReviewBundle[]>
   resolveDecision(input: {
     draftId: string
     expectedRevision: number
     intent: Stage3AuthoritySemanticIntent
   }): Promise<Stage3MutationResponse>
+}
+
+/** Labs-shaped equivalent of the production plural review bundle contract. */
+export type FixtureStage3DecisionReviewBundle = {
+  authorityEvaluation: Stage3AuthorityEvaluation
+  fitComparison: Stage3FitComparison
 }
 
 export function createFixtureStage3Gateway(
@@ -325,6 +333,19 @@ export function createFixtureStage3Gateway(
     )
   }
 
+  async function reviewDecisionBundles(input: {
+    draftId: string
+  }): Promise<FixtureStage3DecisionReviewBundle[]> {
+    const draft = requireDraft(drafts, input.draftId)
+    return deriveStage3DecisionSubjects(draft).map((subject) => {
+      const authorityEvaluation = evaluateFixtureDecision(draft, subject)
+      return {
+        authorityEvaluation,
+        fitComparison: fixtureFitComparison(draft, subject),
+      }
+    })
+  }
+
   async function resolveDecision(input: {
     draftId: string
     expectedRevision: number
@@ -399,6 +420,7 @@ export function createFixtureStage3Gateway(
     },
     complete,
     evaluateDecisions,
+    reviewDecisionBundles,
     resolveDecision,
   }
 }
@@ -568,6 +590,117 @@ function fixtureReplacementCandidates(
       authorityRuleId: "fixture.conditioner_balance",
     },
   ]
+}
+
+function fixtureFitComparison(
+  draft: Stage3ProductDraft,
+  subject: Stage3DecisionSubject,
+): Stage3FitComparison {
+  const captured = subject.capturedProductId
+    ? (draft.products.find((product) => product.capturedProductId === subject.capturedProductId) ??
+      null)
+    : null
+  const alternatives = fixtureReplacementCandidates(subject).map((recommendation, index) =>
+    fixtureComparisonCandidate(subject, recommendation, index),
+  )
+  const products = [
+    ...(captured?.identity.kind === "catalog_product"
+      ? [
+          {
+            productId: captured.identity.productId,
+            displayName: captured.identity.displayName,
+            category: subject.category,
+            role: subject.role,
+            source: "current" as const,
+          },
+        ]
+      : []),
+    ...alternatives.map((alternative) => ({
+      productId: alternative.productId,
+      displayName: alternative.recommendation.displayName,
+      category: subject.category,
+      role: subject.role,
+      source: "alternative" as const,
+    })),
+  ]
+
+  if (subject.category === "conditioner" && products.length > 0) {
+    const currentProductId = products.find((product) => product.source === "current")?.productId
+    return {
+      schemaVersion: 1,
+      mode: "comparison",
+      category: subject.category,
+      role: subject.role,
+      subjectKey: subject.decisionKey,
+      sourceIdentity: captured?.identity ?? null,
+      products,
+      alternatives,
+      dimensions: [
+        {
+          dimensionId: "fixture-care-weight",
+          label: "Pflegegewicht",
+          presentationKind: "ordered",
+          stops: [
+            { stopId: "light", label: "Leicht" },
+            { stopId: "balanced", label: "Ausgewogen" },
+            { stopId: "rich", label: "Reichhaltig" },
+          ],
+          targetPosition: { kind: "position", stopId: "light" },
+          productPositions: [
+            ...(currentProductId
+              ? [
+                  {
+                    productId: currentProductId,
+                    position: { kind: "position" as const, stopId: "rich" },
+                  },
+                ]
+              : []),
+            ...alternatives.map((alternative) => ({
+              productId: alternative.productId,
+              position: { kind: "position" as const, stopId: "light" },
+            })),
+          ],
+          reason: "Eine leichte Pflege passt besser zu deinem Bedarf.",
+        },
+      ],
+    }
+  }
+
+  return {
+    schemaVersion: 1,
+    mode: products.length > 0 ? "compact" : "unavailable",
+    category: subject.category,
+    role: subject.role,
+    subjectKey: subject.decisionKey,
+    sourceIdentity: captured?.identity ?? null,
+    products,
+    alternatives,
+    dimensions: [],
+    reason: products.length > 0 ? "specialist_category" : "no_exact_product",
+  }
+}
+
+function fixtureComparisonCandidate(
+  subject: Stage3DecisionSubject,
+  recommendation: NonNullable<Stage3ProductDecision["recommendation"]>,
+  index: number,
+): Stage3SelectedComparisonCandidate {
+  return {
+    productId: recommendation.productId,
+    category: subject.category,
+    role: subject.role,
+    verdict: index === 2 ? "supportive" : "ideal",
+    criteria: [
+      {
+        criterionId: `fixture-comparison:${recommendation.productId}`,
+        label: "Bedarf",
+        result: index === 2 ? "caution" : "pass",
+        explanation: recommendation.reason,
+      },
+    ],
+    recommendation,
+    factFingerprint: `fixture-facts:${recommendation.productId}`,
+  }
 }
 
 function applyMutation(

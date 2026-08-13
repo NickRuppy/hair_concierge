@@ -528,6 +528,196 @@
         max-width: 940px;
         margin: 34px auto 0;
       }
+      .followups {
+        max-width: 940px;
+        margin: 34px auto 0;
+      }
+      .followups > h3 {
+        margin: 0 0 6px;
+        font:
+          700 28px/1.1 Georgia,
+          serif;
+        color: #321d43;
+      }
+      .followups > p {
+        margin: 0 0 16px;
+        color: var(--sub);
+      }
+      .followup-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .followup-phone {
+        position: relative;
+        min-height: 610px;
+        overflow: hidden;
+        border: 1px solid rgba(52, 44, 50, 0.14);
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+      .routine-shell {
+        padding: 22px 18px 28px;
+        background: linear-gradient(180deg, #fffaf7 0%, #fff 45%);
+      }
+      .routine-shell h4 {
+        margin: 6px 0 4px;
+        font:
+          700 29px/1.08 Georgia,
+          serif;
+        color: #321d43;
+      }
+      .routine-shell > p {
+        margin: 0 0 18px;
+        color: var(--sub);
+        font-size: 13px;
+      }
+      .routine-block {
+        margin-bottom: 13px;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+      }
+      .routine-block strong,
+      .unused-product strong {
+        display: block;
+      }
+      .routine-block small,
+      .unused-product small {
+        color: var(--sub);
+      }
+      .routine-status {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        color: var(--warning);
+        background: var(--warning-soft);
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .unused-products {
+        margin-top: 22px;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+      }
+      .unused-products summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        cursor: pointer;
+        color: var(--sub);
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .unused-products summary::-webkit-details-marker {
+        display: none;
+      }
+      .unused-products summary::after {
+        content: "+";
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--violet);
+      }
+      .unused-products[open] summary::after {
+        content: "−";
+      }
+      .unused-product {
+        margin-top: 12px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--soft);
+      }
+      .unused-label {
+        display: inline-block;
+        margin-top: 9px;
+        color: var(--sub);
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .popup-backdrop {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: end center;
+        padding: 18px;
+        background: rgba(47, 24, 63, 0.28);
+      }
+      .popup {
+        width: 100%;
+        padding: 22px 18px 18px;
+        border-radius: 24px;
+        background: white;
+        box-shadow: 0 20px 60px rgba(47, 24, 63, 0.25);
+      }
+      .popup-icon {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--green);
+        background: var(--green-soft);
+        font-weight: 900;
+      }
+      .popup h4 {
+        margin: 13px 0 7px;
+        font:
+          700 27px/1.08 Georgia,
+          serif;
+        color: #321d43;
+      }
+      .popup p {
+        margin: 0;
+        color: var(--sub);
+      }
+      .popup .primary {
+        margin-top: 19px;
+      }
+      .popup .later {
+        width: 100%;
+        margin-top: 8px;
+        border: 0;
+        background: transparent;
+        color: var(--violet);
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .direct-note {
+        margin-top: 13px;
+        padding: 11px 12px;
+        border-radius: 13px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .activation-failure {
+        grid-column: 1 / -1;
+        padding: 17px;
+        border: 1px solid #ead6a6;
+        border-radius: 18px;
+        background: var(--warning-soft);
+      }
+      .activation-failure h4 {
+        margin: 0 0 5px;
+        font-size: 16px;
+      }
+      .activation-failure p {
+        margin: 0;
+        color: var(--sub);
+      }
+      .activation-failure .confirm-actions {
+        max-width: 480px;
+      }
       .outcomes h3 {
         margin: 0 0 6px;
         font:
@@ -615,17 +805,20 @@
       }
       body[data-state="checking"] .decision-view,
       body[data-state="rate"] .decision-view,
-      body[data-state="manual"] .decision-view {
+      body[data-state="manual"] .decision-view,
+      body[data-state="none"] .decision-view {
         display: none;
       }
       body[data-state="checking"] .status-view.checking,
       body[data-state="rate"] .status-view.rate,
-      body[data-state="manual"] .status-view.manual {
+      body[data-state="manual"] .status-view.manual,
+      body[data-state="none"] .status-view.none {
         display: flex;
       }
       body[data-state="checking"] .dock,
       body[data-state="rate"] .dock,
-      body[data-state="manual"] .dock {
+      body[data-state="manual"] .dock,
+      body[data-state="none"] .dock {
         display: none;
       }
       body[data-state="checking"] .back,
@@ -651,6 +844,10 @@
         .outcome-grid {
           grid-template-columns: 1fr;
         }
+        .followup-grid {
+          grid-template-columns: minmax(0, 430px);
+          justify-content: center;
+        }
       }
       @media (max-width: 460px) {
         .board {
@@ -672,6 +869,10 @@
           border-radius: 0;
         }
         .outcomes {
+          padding-right: 16px;
+          padding-left: 16px;
+        }
+        .followups {
           padding-right: 16px;
           padding-left: 16px;
         }
@@ -709,6 +910,9 @@
           </button>
           <button class="state-button" data-state="updated" aria-pressed="false">
             Alternativen aktualisiert
+          </button>
+          <button class="state-button" data-state="none" aria-pressed="false">
+            Keine Alternative
           </button>
         </div>
       </section>
@@ -842,6 +1046,19 @@
             </section>
           </div>
 
+          <div class="content status-view none">
+            <section class="status-card">
+              <div class="status-icon">i</div>
+              <h3>Keine passende Alternative verfügbar.</h3>
+              <p>
+                Es tut uns leid – aktuell können wir dir für dieses Produkt keine verifizierte
+                Alternative empfehlen.
+              </p>
+              <button class="primary">Zurück zu meinen Produkten</button>
+              <div class="hint">Wir setzen kein Platzhalter-Produkt in deine Routine.</div>
+            </section>
+          </div>
+
           <footer class="dock">
             <button class="primary" id="primary">OGX Shampoo weiterverwenden</button>
           </footer>
@@ -869,6 +1086,10 @@
             <li>
               <strong>Aktualisiert:</strong> Eine veraltete Alternative führt zurück in denselben
               detaillierten Vergleich. Die neue Auswahl muss ausdrücklich bestätigt werden.
+            </li>
+            <li>
+              <strong>Keine Alternative:</strong> Wenn weder eine verifizierte Alternative noch eine
+              andere ehrliche Aktion möglich ist, endet der Schritt ohne erfundenes Produkt.
             </li>
           </ol>
           <div class="rule">
@@ -927,6 +1148,85 @@
           </article>
         </div>
       </section>
+
+      <section class="followups">
+        <h3>Routine und spätere Produktprüfung</h3>
+        <p>
+          Die aktive Routine bleibt fokussiert. Nicht verwendete Produkte sind nur bei Bedarf
+          sichtbar; ein später verifiziertes Produkt öffnet ausschließlich die betroffenen
+          Produktschritte.
+        </p>
+        <div class="followup-grid">
+          <article class="followup-phone" aria-label="Routine mit eingeklappten Produkten">
+            <header class="topbar">
+              <button class="back" aria-label="Zurück">‹</button>
+              <div class="brand">chaarlie</div>
+              <div class="save">Gespeichert</div>
+            </header>
+            <div class="routine-shell">
+              <div class="category">Routine</div>
+              <h4>Deine Routine ist bereit.</h4>
+              <p>Deine aktiven Produkte und die nächsten Anwendungsschritte.</p>
+              <div class="routine-block">
+                <strong>Balea Med Ultra Sensitive Shampoo</strong>
+                <small>Sanfte Reinigung · Shampoo</small>
+                <span class="routine-status">Noch kaufen</span>
+              </div>
+              <div class="routine-block">
+                <strong>Balea Professional Conditioner</strong>
+                <small>Pflege · Conditioner</small>
+              </div>
+              <details class="unused-products">
+                <summary>Nicht verwendete Produkte (1)</summary>
+                <div class="unused-product">
+                  <strong>OGX Renewing + Argan Oil Shampoo</strong>
+                  <small>Bleibt in deinen Produkten gespeichert</small>
+                  <span class="unused-label">Nicht verwendet</span>
+                </div>
+              </details>
+            </div>
+          </article>
+
+          <article class="followup-phone" aria-label="Hinweis nach abgeschlossener Produktprüfung">
+            <div class="routine-shell">
+              <div class="category">Deine aktive Routine</div>
+              <h4>Alles bleibt wie es ist.</h4>
+              <p>Bis du die betroffenen Produktschritte bestätigt hast, ändert sich nichts.</p>
+              <div class="routine-block">
+                <strong>Shampoo</strong>
+                <small>Aktuelle Routine weiterhin aktiv</small>
+              </div>
+              <div class="direct-note">
+                Nach deiner letzten Bestätigung berechnen und aktivieren wir die aktualisierte
+                Routine direkt – ohne zweite Zusammenfassung.
+              </div>
+            </div>
+            <div class="popup-backdrop">
+              <section class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+                <div class="popup-icon">✓</div>
+                <h4 id="popup-title">Dein Produkt wurde geprüft.</h4>
+                <p>
+                  Bitte bestätige kurz die betroffenen Produktschritte. Danach aktualisieren wir
+                  deine Routine direkt.
+                </p>
+                <button class="primary">Jetzt prüfen</button>
+                <button class="later">Später</button>
+              </section>
+            </div>
+          </article>
+          <article class="activation-failure" aria-label="Fehler bei der Routine-Aktualisierung">
+            <h4>Deine bisherige Routine bleibt aktiv.</h4>
+            <p>
+              Die Aktualisierung konnte noch nicht bestätigt werden. Deine Produktauswahl ist
+              erhalten; wir prüfen beim nächsten Versuch zuerst den aktuellen Stand.
+            </p>
+            <div class="confirm-actions">
+              <button class="keep">Erneut versuchen</button>
+              <button class="cancel">Aktualisierung verwerfen</button>
+            </div>
+          </article>
+        </div>
+      </section>
     </main>
 
     <script>
@@ -978,6 +1278,7 @@
           rate: "Kurze Wartezeit",
           manual: "Noch nicht bestätigt",
           updated: "Bitte erneut prüfen",
+          none: "Keine Alternative",
         }
         saveLabel.textContent = labels[state]
         if (state === "updated") {

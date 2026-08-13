@@ -24,6 +24,7 @@ import type {
 import type { RoutineProductDetail as RoutineProductDetailData } from "@/lib/personal-plan/routine/product-detail-service"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
 import { requestRoutineAttentionRefresh } from "./routine-attention-indicator"
 import { RoutineEditor, type RoutineProductOption } from "./routine-editor"
@@ -82,16 +83,14 @@ export function classifyProposalReload(
   return "resolved"
 }
 
-export function refreshRouteAfterInitialRoutineAcceptance({
+export function refreshRouteAfterRoutineAcceptance({
   action,
-  wasInitial,
   refresh,
 }: {
   action: "accept" | "reject"
-  wasInitial: boolean
   refresh: () => void
 }) {
-  if (action === "accept" && wasInitial) refresh()
+  if (action === "accept") refresh()
 }
 
 function editorSeed(view: PersonalPlanRoutineView): RoutinePayloadV1 | null {
@@ -186,10 +185,12 @@ export function PersonalPlanRoutineClient({
   initialView,
   enabled,
   stage5Reachable,
+  portfolioPresentation = null,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
   stage5Reachable: boolean
+  portfolioPresentation?: PortfolioPresentation | null
 }) {
   const router = useRouter()
   const [view, setView] = React.useState(initialView)
@@ -382,9 +383,8 @@ export function PersonalPlanRoutineClient({
               pending.delta.direct.length + pending.delta.consequential.length,
             ),
           })
-          refreshRouteAfterInitialRoutineAcceptance({
+          refreshRouteAfterRoutineAcceptance({
             action,
-            wasInitial: !view.activeVersion,
             refresh: () => router.refresh(),
           })
           kickRoutineSync(true)
@@ -440,7 +440,7 @@ export function PersonalPlanRoutineClient({
         setBusy(false)
       }
     },
-    [busy, kickRoutineSync, pending, reload, router, view.activeVersion, view.planRevision],
+    [busy, kickRoutineSync, pending, reload, router, view.planRevision],
   )
 
   const openDetail = React.useCallback(async (item: RoutinePayloadV1["items"][number]) => {
@@ -547,6 +547,7 @@ export function PersonalPlanRoutineClient({
         onEdit={canEdit ? openEditor : undefined}
         onConfirm={isInitial && enabled ? () => setProposalOpen(true) : undefined}
         onItemDetail={(item) => void openDetail(item)}
+        portfolioPresentation={portfolioPresentation}
       />
       {pending ? (
         <RoutineProposalSheet
