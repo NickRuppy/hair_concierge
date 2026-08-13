@@ -251,8 +251,9 @@ export function createUpdateSession(
     const isForcedAuthLogin =
       pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
     const needsAuthenticatedAppRouting =
-      pathname === "/auth" || pathname === "/quiz" || isAuthenticatedAppRoutePath(pathname)
-
+      pathname === "/auth" ||
+      pathname === "/quiz" ||
+      (isAuthenticatedAppRoutePath(pathname) && !pathMatchesRoutePrefix(pathname, "/tracker"))
     const isPublicRoute = routeClassification === "public" || routeClassification === "development"
 
     if (!user && !isPublicRoute) {
