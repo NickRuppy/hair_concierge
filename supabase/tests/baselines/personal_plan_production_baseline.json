@@ -1,8 +1,0 @@
-{
-  "sourceProjectId": "pqdkhefxsxkyeqelqegq",
-  "capturedAt": "2026-08-08",
-  "sourceMigrationHead": "20260803122000",
-  "schemaFile": "20260808_production_public_schema.sql",
-  "sha256": "0a02ede4a8b62cf89ff199a86b8c2404e87c48096d6766a7eb97daddddf12478",
-  "contentIntent": "schema-only; no production rows or customer data"
-}

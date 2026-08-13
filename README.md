@@ -36,9 +36,10 @@ http://localhost:<port>/api/dev/login?next=/chat
 ```
 
 The route only works on localhost in `next dev` when the flag is enabled. It
-creates or refreshes a local Supabase test user, marks onboarding complete,
-seeds a realistic hair profile, sets `subscription_status` to `active`, signs
-the browser in, and redirects to `/chat`.
+creates or refreshes a development test user in the configured Supabase
+project, marks onboarding complete, seeds a realistic hair profile, sets
+`subscription_status` to `active`, signs the browser in, and redirects to
+`/chat`.
 
 ## Standard Commands
 

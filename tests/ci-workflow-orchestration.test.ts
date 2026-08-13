@@ -245,8 +245,7 @@ test("quality work is divided into independently scheduled lanes", () => {
     /^    if: needs\.detect-ci-scope\.outputs\.personal_plan_journey == 'true'$/m,
   )
   assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage3/)
-  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage4/)
-  assert.match(qualityPersonalPlan, /run: npm run test:playwright:personal-plan-stage5/)
+  assert.doesNotMatch(qualityPersonalPlan, /personal-plan-stage4|personal-plan-stage5/)
 })
 
 test("the Stage 3 CI browser suite pins its dev gate and prewarms the guarded lab route", () => {
@@ -274,53 +273,30 @@ test("aggregate contracts keep focused Personal Plan coverage without duplicate 
   )
   assert.match(
     packageManifest.scripts["test:contracts"],
-    /(?:^| && )npm run test:playwright:personal-plan-stage3 && npm run test:playwright:personal-plan-stage4 && npm run test:playwright:personal-plan-stage5$/,
+    /(?:^| && )npm run test:playwright:personal-plan-stage3$/,
   )
 })
 
-test("Personal Plan database contract is path-scoped, local, SQL-only, and time-bounded", () => {
+test("Docker-backed Personal Plan jobs and commands stay retired", () => {
   const detectScope = jobSource(ciWorkflow, "detect-ci-scope")
-  const databaseContracts = jobSource(ciWorkflow, "personal-plan-db-contract")
-
-  assert.match(
-    detectScope,
-    /^      personal_plan_db: \$\{\{ steps\.changes\.outputs\.personal_plan_db \}\}$/m,
-  )
-  assert.deepEqual(jobDependencyNames(ciWorkflow, "personal-plan-db-contract"), ["detect-ci-scope"])
-  assert.match(databaseContracts, /^    timeout-minutes: 15$/m)
-  assert.match(
-    databaseContracts,
-    /if: needs\.detect-ci-scope\.outputs\.personal_plan_db == 'true'[\s\S]*?run: time npm run test:personal-plan-db/m,
-  )
-  assert.doesNotMatch(databaseContracts, /playwright|stage1-5/i)
-  assert.equal(
-    packageManifest.scripts["test:personal-plan-db"],
-    "bash scripts/test-personal-plan-db.sh",
-  )
-})
-
-test("persisted Personal Plan journey is separately scoped and uploads failure evidence", () => {
-  const detectScope = jobSource(ciWorkflow, "detect-ci-scope")
-  const journey = jobSource(ciWorkflow, "personal-plan-persisted-journey")
 
   assert.match(
     detectScope,
     /^      personal_plan_journey: \$\{\{ steps\.changes\.outputs\.personal_plan_journey \}\}$/m,
   )
-  assert.deepEqual(jobDependencyNames(ciWorkflow, "personal-plan-persisted-journey"), [
-    "detect-ci-scope",
-  ])
-  assert.match(journey, /^    timeout-minutes: 20$/m)
-  assert.match(journey, /run: npx playwright install --with-deps chromium/)
-  assert.match(journey, /run: time npm run test:playwright:personal-plan-stage1-5/)
-  assert.match(
-    journey,
-    /^      - name: Upload persisted journey artifacts\n        if: always\(\)\n        uses: actions\/upload-artifact@\S+/m,
+  assert.doesNotMatch(detectScope, /personal_plan_db/)
+  assert.doesNotMatch(
+    ciWorkflow,
+    /^  personal-plan-db-contract:|^  personal-plan-persisted-journey:/m,
   )
-  assert.match(journey, /test-results\/personal-plan-stage1-5\*\//)
-  assert.equal(
-    packageManifest.scripts["test:playwright:personal-plan-stage1-5"],
-    "bash scripts/test-personal-plan-stage1-5-browser.sh",
+  assert.doesNotMatch(ciWorkflow, /test:personal-plan-db|test:playwright:personal-plan-stage1-5/)
+  assert.equal(packageManifest.scripts["test:personal-plan-db"], undefined)
+  assert.equal(packageManifest.scripts["test:playwright:personal-plan-stage1-5"], undefined)
+  assert.equal(packageManifest.scripts["test:playwright:personal-plan-stage4"], undefined)
+  assert.equal(packageManifest.scripts["test:playwright:personal-plan-stage5"], undefined)
+  assert.doesNotMatch(
+    JSON.stringify(packageManifest.scripts),
+    /\bdocker\b|supabase (?:start|stop|test db)/i,
   )
 })
 
