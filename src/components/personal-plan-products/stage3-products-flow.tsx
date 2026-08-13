@@ -1551,7 +1551,6 @@ export function Stage3ProductsFlow({
         message: "Melde dich erneut an, bevor du deine Auswahl fortsetzt.",
         actionLabel: "Erneut anmelden",
         retry: () => {
-          // eslint-disable-next-line @next/next/no-location-assign-relative-destination
           window.location.href = "/auth"
         },
       })
