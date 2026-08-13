@@ -274,7 +274,7 @@ export function evaluateMaskAuthority(
         ? ["keep_owned"]
         : assessment.verdict === "mismatch"
           ? ["acknowledge_override"]
-          : ["leave_uncovered"],
+          : ["keep_owned", "leave_uncovered"],
     recommendation,
     productFactFingerprint: input.productFacts.factFingerprint,
     recommendationFactFingerprint: recommendation ? input.productFacts.factFingerprint : null,

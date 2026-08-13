@@ -352,7 +352,7 @@ export function createFixtureStage3Gateway(
       const authorityEvaluation = evaluateFixtureDecision(draft, subject)
       return {
         authorityEvaluation,
-        fitComparison: fixtureFitComparison(draft, subject),
+        fitComparison: fixtureFitComparison(draft, subject, authorityEvaluation),
       }
     })
   }
@@ -606,6 +606,7 @@ function fixtureReplacementCandidates(
 function fixtureFitComparison(
   draft: Stage3ProductDraft,
   subject: Stage3DecisionSubject,
+  authorityEvaluation: Stage3AuthorityEvaluation,
 ): Stage3FitComparison {
   const captured = subject.capturedProductId
     ? (draft.products.find((product) => product.capturedProductId === subject.capturedProductId) ??
@@ -637,6 +638,11 @@ function fixtureFitComparison(
 
   if (subject.category === "conditioner" && products.length > 0) {
     const currentProductId = products.find((product) => product.source === "current")?.productId
+    const currentProductIndex = draft.products
+      .filter((product) => product.identity.category === subject.category)
+      .findIndex((product) => product.capturedProductId === subject.capturedProductId)
+    const currentWeight = currentProductIndex === 1 ? "Reichhaltig" : "Leicht"
+    const currentRelation = currentProductIndex === 1 ? "outside_target" : "in_target"
     return {
       schemaVersion: 1,
       mode: "comparison",
@@ -674,6 +680,33 @@ function fixtureFitComparison(
           reason: "Eine leichte Pflege passt besser zu deinem Bedarf.",
         },
       ],
+      evidenceRows: [
+        {
+          rowId: "fixture-care-weight",
+          label: "Pflegegewicht",
+          target: {
+            valueLabel: "Leicht",
+            rationale: "Leichte Pflege unterstützt dein Ziel, ohne das Haar unnötig zu beschweren.",
+            profileEvidenceLabels: ["wird schnell beschwert"],
+          },
+          productValues: [
+            ...(currentProductId
+              ? [
+                  {
+                    productId: currentProductId,
+                    valueLabel: currentWeight,
+                    relation: currentRelation as "in_target" | "outside_target",
+                  },
+                ]
+              : []),
+            ...alternatives.map((alternative) => ({
+              productId: alternative.productId,
+              valueLabel: "Leicht",
+              relation: "in_target" as const,
+            })),
+          ],
+        },
+      ],
     }
   }
 
@@ -687,8 +720,63 @@ function fixtureFitComparison(
     products,
     alternatives,
     dimensions: [],
+    evidenceRows: fixtureCompactEvidenceRows(authorityEvaluation, products, alternatives),
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
   }
+}
+
+function fixtureCompactEvidenceRows(
+  evaluation: Stage3AuthorityEvaluation,
+  products: Stage3FitComparison["products"],
+  alternatives: readonly Stage3SelectedComparisonCandidate[],
+) {
+  if (!products.length) return []
+  const currentProductId = products.find((product) => product.source === "current")?.productId
+  const criteriaByProduct = new Map(
+    alternatives.map((alternative) => [alternative.productId, alternative.criteria] as const),
+  )
+  if (currentProductId && evaluation.status === "known") {
+    criteriaByProduct.set(currentProductId, evaluation.criteria)
+  }
+  const criteria = Array.from(criteriaByProduct.values()).flat()
+  const criterionIds = Array.from(
+    new Set(criteria.map((criterion) => criterion.criterionId)),
+  ).slice(0, 3)
+
+  return criterionIds.map((criterionId) => {
+    const representative = criteria.find((criterion) => criterion.criterionId === criterionId)!
+    return {
+      rowId: criterionId,
+      label: representative.label,
+      target: {
+        valueLabel: "erfüllt",
+        rationale: "Für eine passende Produktempfehlung muss dieser Prüfpunkt erfüllt sein.",
+        profileEvidenceLabels: [],
+      },
+      productValues: products.map((product) => {
+        const result = criteriaByProduct
+          .get(product.productId)
+          ?.find((criterion) => criterion.criterionId === criterionId)?.result
+        return {
+          productId: product.productId,
+          valueLabel:
+            result === "pass"
+              ? "erfüllt"
+              : result === "caution"
+                ? "mit Einschränkung"
+                : result === "fail"
+                  ? "nicht erfüllt"
+                  : "nicht bestätigt",
+          relation:
+            result === "pass"
+              ? ("in_target" as const)
+              : result
+                ? ("outside_target" as const)
+                : ("unknown" as const),
+        }
+      }),
+    }
+  })
 }
 
 function fixtureComparisonCandidate(

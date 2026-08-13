@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 – fünf visuelle Varianten für „Passt nicht“</title>
+    <style>
+      :root {
+        --ink: #302834;
+        --muted: #716b70;
+        --plum: #5b3587;
+        --plum-dark: #3c2058;
+        --lav: #f3eef9;
+        --line: #e3dce6;
+        --paper: #fffdfa;
+        --green: #287149;
+        --green-bg: #e9f5ed;
+        --red: #a53b46;
+        --red-bg: #fbebed;
+        --coral: #dc606c;
+        --target: #e5daf2;
+        --target-border: #9b7abc;
+        --charcoal: #352f35;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #262626;
+        color: var(--ink);
+        font-family:
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 3px solid #e5b3ff;
+        outline-offset: 3px;
+      }
+      .lab {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        padding: 12px 16px;
+        color: #fff;
+        background: #191919;
+        border-bottom: 1px solid #555;
+      }
+      .lab strong {
+        margin-right: 6px;
+      }
+      .lab .group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+      .lab button {
+        min-height: 38px;
+        padding: 7px 11px;
+        border: 1px solid #747474;
+        border-radius: 8px;
+        color: #fff;
+        background: #303030;
+      }
+      .lab button[aria-pressed="true"] {
+        background: #754ca4;
+        border-color: #c5a4eb;
+      }
+      .study-note {
+        width: min(1040px, calc(100% - 32px));
+        margin: 14px auto 0;
+        padding: 11px 14px;
+        border-radius: 10px;
+        color: #f3edf8;
+        background: #3d3446;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .study-note b {
+        color: #fff;
+      }
+      .canvas {
+        display: grid;
+        place-items: center;
+        padding: 18px 20px 48px;
+      }
+      .phone {
+        display: flex;
+        flex-direction: column;
+        width: min(400px, 100vw);
+        height: 822px;
+        overflow: hidden;
+        background: var(--paper);
+        box-shadow: 0 24px 55px #0008;
+      }
+      .phone.desktop {
+        width: min(940px, calc(100vw - 40px));
+        height: 850px;
+      }
+      header {
+        flex: 0 0 auto;
+        padding: 14px 18px 12px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      .brand-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        color: #432260;
+        font:
+          700 31px/1 Georgia,
+          serif;
+      }
+      .saved {
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+        margin-top: 12px;
+        color: #777;
+        font-size: 10px;
+        font-weight: 750;
+        text-align: center;
+      }
+      .step::before {
+        content: "";
+        display: block;
+        height: 6px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+        background: #e4e0e5;
+      }
+      .step.done::before {
+        background: #7651a5;
+      }
+      .step.active {
+        color: #342047;
+      }
+      .step.active::before {
+        background: #442463;
+      }
+      .content {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        padding: 18px 18px 26px;
+        scroll-behavior: smooth;
+      }
+      .desktop .content {
+        width: 100%;
+        max-width: 850px;
+        margin: auto;
+        padding: 24px 34px 34px;
+      }
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .back {
+        padding: 4px;
+        border: 0;
+        color: var(--ink);
+        background: transparent;
+        font-size: 24px;
+      }
+      .context {
+        margin: 18px 0 6px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.055em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        font:
+          700 35px/1.02 Georgia,
+          serif;
+        letter-spacing: -0.03em;
+      }
+      .desktop h1 {
+        font-size: 44px;
+      }
+      .result-line {
+        display: flex;
+        gap: 9px;
+        align-items: center;
+        margin: 12px 0 14px;
+        color: var(--red);
+        font-weight: 850;
+      }
+      .result-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--red);
+        font-size: 17px;
+      }
+      .product-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        margin-bottom: 14px;
+      }
+      .product {
+        min-width: 0;
+        padding: 10px 9px;
+        border: 1.5px solid #8362aa;
+        border-radius: 16px;
+        background: #fff;
+        text-align: center;
+      }
+      .product.alt {
+        border-color: var(--green);
+        background: #fcfffd;
+      }
+      .product .label {
+        display: block;
+        min-height: 26px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .product.alt .label {
+        color: var(--green);
+      }
+      .pack {
+        display: grid;
+        place-items: center;
+        width: 45px;
+        height: 55px;
+        margin: 2px auto 7px;
+        border-radius: 12px;
+        color: #fff;
+        background: linear-gradient(145deg, #74b6d5, #1e6f94);
+        box-shadow: inset 0 0 0 6px #fff7;
+        font-size: 7px;
+        font-weight: 900;
+      }
+      .alt .pack {
+        background: linear-gradient(145deg, #edc473, #a65d33);
+      }
+      .product h2 {
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-size: 13px;
+        line-height: 1.2;
+      }
+      .visual {
+        margin-top: 4px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .visual-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
+        font-size: 15px;
+        font-weight: 850;
+      }
+      .count {
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+        color: var(--red);
+        font-size: 12px;
+      }
+      .x,
+      .check,
+      .target-symbol {
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 21px;
+        height: 21px;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--red);
+        font-weight: 900;
+      }
+      .check {
+        background: var(--green);
+      }
+      .target-symbol {
+        border-radius: 5px;
+        color: var(--plum-dark);
+        background: var(--target);
+        border: 1px solid var(--target-border);
+        font-size: 11px;
+      }
+      .secondary {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: #fbf9f8;
+      }
+      .secondary strong {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 12px;
+      }
+      .secondary button {
+        display: block;
+        width: 100%;
+        padding: 7px 0;
+        border: 0;
+        color: #50465b;
+        background: transparent;
+        text-align: left;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        font-size: 13px;
+      }
+      .footer {
+        flex: 0 0 auto;
+        padding: 12px 18px 16px;
+        border-top: 1px solid var(--line);
+        background: #fffdfaee;
+        backdrop-filter: blur(8px);
+      }
+      .cta {
+        width: 100%;
+        min-height: 54px;
+        padding: 11px 16px;
+        border: 0;
+        border-radius: 28px;
+        color: #fff;
+        background: var(--coral);
+        font-weight: 850;
+      }
+
+      /* Variant 1: diagnostic rows */
+      .diagnostic-row {
+        display: grid;
+        grid-template-columns: minmax(92px, 1fr) minmax(0, 1.55fr);
+        gap: 10px;
+        align-items: center;
+        padding: 12px 14px;
+        border-top: 1px solid var(--line);
+      }
+      .diagnostic-row:first-of-type {
+        border-top: 0;
+      }
+      .criterion {
+        font-size: 13px;
+        font-weight: 850;
+      }
+      .status-values {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .value-chip {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 5px;
+        align-items: center;
+        min-width: 0;
+        padding: 7px;
+        border-radius: 9px;
+        font-size: 10px;
+        line-height: 1.15;
+      }
+      .value-chip.bad {
+        color: #752932;
+        background: var(--red-bg);
+      }
+      .value-chip.good {
+        color: #1e603c;
+        background: var(--green-bg);
+      }
+      .value-chip b {
+        display: block;
+        overflow-wrap: anywhere;
+      }
+      .value-chip small {
+        display: block;
+        color: inherit;
+        opacity: 0.82;
+      }
+
+      /* Variant 2: matrix */
+      .matrix {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      .matrix th,
+      .matrix td {
+        padding: 9px 5px;
+        border-bottom: 1px solid var(--line);
+        font-size: 10px;
+        text-align: center;
+        vertical-align: middle;
+        overflow-wrap: anywhere;
+      }
+      .matrix th {
+        color: var(--muted);
+        font-weight: 850;
+      }
+      .matrix th:first-child,
+      .matrix td:first-child {
+        width: 26%;
+        padding-left: 11px;
+        text-align: left;
+      }
+      .matrix tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      .matrix .bad-cell {
+        color: #752932;
+        background: var(--red-bg);
+      }
+      .matrix .good-cell {
+        color: #1e603c;
+        background: var(--green-bg);
+      }
+      .matrix .target-cell {
+        color: var(--plum-dark);
+        background: #f6f1fb;
+      }
+      .cell-icon {
+        display: block;
+        margin: 0 auto 3px;
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      /* Variant 3: product profiles */
+      .profiles {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        padding: 11px;
+      }
+      .profile {
+        min-width: 0;
+        padding: 10px;
+        border-radius: 13px;
+        background: var(--red-bg);
+      }
+      .profile.good {
+        background: var(--green-bg);
+      }
+      .profile h3 {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        margin: 0 0 8px;
+        color: #752932;
+        font-size: 12px;
+      }
+      .profile.good h3 {
+        color: #1e603c;
+      }
+      .trait {
+        padding: 7px 0;
+        border-top: 1px solid #8c5f6530;
+      }
+      .profile.good .trait {
+        border-color: #4f856130;
+      }
+      .trait:first-of-type {
+        border-top: 0;
+      }
+      .trait b {
+        display: block;
+        font-size: 11px;
+      }
+      .trait span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 9px;
+        line-height: 1.25;
+      }
+
+      /* Variant 4: direct-label rails */
+      .mini-rail {
+        padding: 11px 14px 13px;
+        border-top: 1px solid var(--line);
+      }
+      .mini-rail:first-of-type {
+        border-top: 0;
+      }
+      .rail-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .rail-head span:last-child {
+        color: var(--green);
+        font-size: 10px;
+      }
+      .rail {
+        position: relative;
+        height: 62px;
+      }
+      .track {
+        position: absolute;
+        left: 2px;
+        right: 2px;
+        top: 27px;
+        height: 6px;
+        border-radius: 6px;
+        background: #ece7ef;
+      }
+      .target-band {
+        position: absolute;
+        top: 21px;
+        left: 42%;
+        width: 23%;
+        height: 18px;
+        border: 1px solid var(--target-border);
+        border-radius: 8px;
+        background: var(--target);
+      }
+      .marker {
+        position: absolute;
+        z-index: 2;
+        top: 17px;
+        transform: translateX(-50%);
+      }
+      .marker .pin {
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--red);
+        box-shadow: 0 0 0 1px #98444d;
+        font-size: 10px;
+        font-weight: 900;
+      }
+      .marker.alt-mark {
+        top: 33px;
+      }
+      .marker.alt-mark .pin {
+        background: var(--green);
+        box-shadow: 0 0 0 1px #40815a;
+      }
+      .marker-label {
+        position: absolute;
+        width: 90px;
+        color: #752932;
+        font-size: 9px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .marker.owned .marker-label {
+        right: 32px;
+        top: 3px;
+        text-align: right;
+      }
+      .marker.owned.edge-left .marker-label {
+        right: auto;
+        left: 32px;
+        text-align: left;
+      }
+      .marker.alt-mark .marker-label {
+        left: 32px;
+        top: 4px;
+        color: #1e603c;
+      }
+      .axis {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 8px;
+      }
+
+      /* Variant 5: spotlight */
+      .spotlight {
+        padding: 14px;
+        background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
+      }
+      .spot-main {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 9px;
+        align-items: center;
+      }
+      .spot-main h3 {
+        margin: 0;
+        color: #752932;
+        font-size: 14px;
+      }
+      .spot-main p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.3;
+      }
+      .arrow-fix {
+        display: grid;
+        gap: 2px;
+        text-align: center;
+        font-size: 9px;
+        font-weight: 850;
+      }
+      .arrow-fix b {
+        color: var(--green);
+        font-size: 20px;
+        line-height: 1;
+      }
+      .more-issues {
+        display: flex;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .issue-pill {
+        flex: 1;
+        min-width: 0;
+        padding: 8px;
+        border: 1px solid #e9bdc1;
+        border-radius: 10px;
+        color: #752932;
+        background: var(--red-bg);
+        font-size: 9px;
+        line-height: 1.25;
+      }
+      .issue-pill b {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 10px;
+      }
+      details {
+        margin-top: 10px;
+      }
+      summary {
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      details p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      .desktop .product-pair {
+        max-width: 650px;
+      }
+      .desktop .visual {
+        max-width: 760px;
+      }
+      .desktop .diagnostic-row {
+        grid-template-columns: 180px 1fr;
+      }
+      .desktop .product h2 {
+        font-size: 15px;
+      }
+      .desktop .matrix th,
+      .desktop .matrix td {
+        font-size: 12px;
+        padding: 12px 8px;
+      }
+      .desktop .secondary {
+        max-width: 760px;
+      }
+      .desktop .footer {
+        padding-inline: max(18px, calc((100% - 782px) / 2));
+      }
+      @media (max-width: 420px) {
+        .canvas {
+          padding-inline: 0;
+        }
+        .study-note {
+          width: calc(100% - 20px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="lab" aria-label="Prototyp-Steuerung">
+      <strong>Fünf Varianten</strong>
+      <div class="group" id="variantControls"></div>
+      <div class="group" aria-label="Ansicht">
+        <button type="button" data-view="mobile" aria-pressed="true">Mobil 400×822</button>
+        <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+      </div>
+    </nav>
+    <aside class="study-note" id="studyNote"></aside>
+    <div class="canvas">
+      <main class="phone" id="journey" aria-live="polite">
+        <header>
+          <div class="brand-row">
+            <span class="brand">chaarlie</span><span class="saved">Gespeichert</span>
+          </div>
+          <div class="steps" aria-label="Schritt Produkte">
+            <span class="step done">Bedarf</span><span class="step done">Verfeinerung</span
+            ><span class="step active">Produkte</span><span class="step">Routine</span
+            ><span class="step">Anwendung</span>
+          </div>
+        </header>
+        <section class="content" id="content"></section>
+        <footer class="footer">
+          <button type="button" class="cta">Diese Alternative wählen</button>
+        </footer>
+      </main>
+    </div>
+    <script>
+      const criteria = [
+        {
+          name: "Pflegegewicht",
+          own: "leicht",
+          target: "mittel",
+          alt: "mittel",
+          ownPos: 16,
+          targetPos: 54,
+          altPos: 54,
+        },
+        {
+          name: "Pflegefokus",
+          own: "Protein",
+          target: "ausgewogen",
+          alt: "ausgewogen",
+          ownPos: 82,
+          targetPos: 52,
+          altPos: 52,
+        },
+        {
+          name: "Repair-Unterstützung",
+          own: "hoch",
+          target: "mittel",
+          alt: "mittel",
+          ownPos: 78,
+          targetPos: 50,
+          altPos: 50,
+        },
+      ]
+      const variants = [
+        {
+          id: 1,
+          short: "Status-Zeilen",
+          title: "Diagnose in drei Status-Zeilen",
+          note: "Jede Zeile beantwortet ohne Legende: Was ist bei deinem Produkt anders – und trifft die Alternative genau das Ziel?",
+          render: renderRows,
+        },
+        {
+          id: 2,
+          short: "Matrix",
+          title: "Dreispaltige Vergleichsmatrix",
+          note: "Die dichteste Gegenüberstellung: Deins, Ziel und Alternative stehen für jeden Prüfpunkt direkt nebeneinander.",
+          render: renderMatrix,
+        },
+        {
+          id: 3,
+          short: "Profile",
+          title: "Zwei visuelle Produktprofile",
+          note: "Der Blick bleibt bei den Produkten: drei rote Abweichungen links, drei grüne Zieltreffer rechts.",
+          render: renderProfiles,
+        },
+        {
+          id: 4,
+          short: "Direkte Rails",
+          title: "Rails ohne Legenden-Suche",
+          note: "Die vertrauten Skalen bleiben, aber jeder Marker trägt seinen Wert und seine Identität direkt am Punkt.",
+          render: renderRails,
+        },
+        {
+          id: 5,
+          short: "Spotlight",
+          title: "Eine Hauptabweichung im Fokus",
+          note: "Minimalste Leselast: eine dominante Abweichung wird erklärt, die beiden weiteren bleiben kompakt sichtbar.",
+          render: renderSpotlight,
+        },
+      ]
+      let current = 1
+      const controls = document.getElementById("variantControls")
+      const content = document.getElementById("content")
+      const note = document.getElementById("studyNote")
+      const journey = document.getElementById("journey")
+
+      function products() {
+        return `<div class="product-pair" aria-label="Produktvergleich">
+          <article class="product"><span class="label">Dein Produkt</span><span class="pack">JEAN<br>&amp;LEN</span><h2>Conditioner Keratin/Mandel</h2></article>
+          <article class="product alt"><span class="label">Alternative trifft alle 3 Ziele</span><span class="pack">SANTE</span><h2>Intense Hydration Conditioner</h2></article>
+        </div>`
+      }
+      function secondary() {
+        return `<div class="secondary"><strong>Andere Entscheidung</strong><button type="button">Mein Produkt trotzdem behalten</button><button type="button">Vorerst ohne Conditioner fortfahren</button></div>`
+      }
+      function shell(body) {
+        return `<div class="topline"><button type="button" class="back" aria-label="Zurück">←</button><span>Produkte prüfen</span></div>
+          <p class="context">Conditioner · Produkt 2 von 5</p>
+          <h1>Passt dein Conditioner?</h1>
+          <div class="result-line" role="status"><span class="result-icon" aria-hidden="true">×</span><span>Nein – 3 geprüfte Eigenschaften liegen außerhalb deines Ziels.</span></div>
+          ${products()}${body}${secondary()}`
+      }
+      function renderRows() {
+        const rows = criteria
+          .map(
+            (
+              c,
+            ) => `<div class="diagnostic-row"><div class="criterion">${c.name}</div><div class="status-values">
+          <div class="value-chip bad"><span class="x" aria-hidden="true">×</span><span><small>Deins</small><b>${c.own}</b></span></div>
+          <div class="value-chip good"><span class="check" aria-hidden="true">✓</span><span><small>Alternative = Ziel</small><b>${c.alt}</b></span></div>
+        </div></div>`,
+          )
+          .join("")
+        return shell(
+          `<section class="visual" aria-label="Drei geprüfte Eigenschaften"><div class="visual-title"><span>Wo es abweicht</span><span class="count"><span class="x" aria-hidden="true">×</span>3 Abweichungen</span></div>${rows}</section>`,
+        )
+      }
+      function renderMatrix() {
+        const rows = criteria
+          .map(
+            (c) =>
+              `<tr><td><b>${c.name}</b></td><td class="bad-cell"><span class="cell-icon" aria-hidden="true">×</span>${c.own}</td><td class="target-cell"><span class="cell-icon" aria-hidden="true">▣</span>${c.target}</td><td class="good-cell"><span class="cell-icon" aria-hidden="true">✓</span>${c.alt}</td></tr>`,
+          )
+          .join("")
+        return shell(
+          `<section class="visual" aria-label="Vergleichsmatrix"><div class="visual-title"><span>Eigenschaft für Eigenschaft</span><span class="count">3 von 3 gelöst</span></div><table class="matrix"><thead><tr><th>Prüfpunkt</th><th>Deins</th><th>Ziel</th><th>Alternative</th></tr></thead><tbody>${rows}</tbody></table></section>`,
+        )
+      }
+      function renderProfiles() {
+        const own = criteria
+          .map(
+            (c) =>
+              `<div class="trait"><b>× ${c.name}: ${c.own}</b><span>Ziel: ${c.target}</span></div>`,
+          )
+          .join("")
+        const alt = criteria
+          .map(
+            (c) =>
+              `<div class="trait"><b>✓ ${c.name}: ${c.alt}</b><span>trifft Ziel: ${c.target}</span></div>`,
+          )
+          .join("")
+        return shell(
+          `<section class="visual" aria-label="Produktprofile"><div class="visual-title"><span>Die Profile im Überblick</span><span class="count">Alternative löst alle 3</span></div><div class="profiles"><article class="profile"><h3><span class="x" aria-hidden="true">×</span>3× außerhalb</h3>${own}</article><article class="profile good"><h3><span class="check" aria-hidden="true">✓</span>3× im Ziel</h3>${alt}</article></div></section>`,
+        )
+      }
+      function renderRails() {
+        const rows = criteria
+          .map(
+            (
+              c,
+            ) => `<div class="mini-rail"><div class="rail-head"><span>${c.name}</span><span>Alternative im Ziel</span></div><div class="rail">
+          <div class="track"></div><div class="target-band" aria-label="Ziel ${c.target}"></div>
+          <div class="marker owned ${c.ownPos < 30 ? "edge-left" : ""}" style="left:${c.ownPos}%"><span class="pin">×</span><span class="marker-label">Deins: ${c.own}</span></div>
+          <div class="marker alt-mark" style="left:${c.altPos}%"><span class="pin">✓</span><span class="marker-label">Alternative: ${c.alt}</span></div>
+          <div class="axis"><span>${c.name === "Pflegegewicht" ? "leicht" : c.name === "Pflegefokus" ? "Feuchtigkeit" : "niedrig"}</span><span>Ziel: ${c.target}</span><span>${c.name === "Pflegegewicht" ? "reichhaltig" : c.name === "Pflegefokus" ? "Protein" : "hoch"}</span></div>
+        </div></div>`,
+          )
+          .join("")
+        return shell(
+          `<section class="visual" aria-label="Direkt beschriftete Skalen"><div class="visual-title"><span>Wo die Produkte liegen</span><span class="count"><span class="target-symbol" aria-hidden="true">▣</span>Zielbereich</span></div>${rows}</section>`,
+        )
+      }
+      function renderSpotlight() {
+        return shell(`<section class="visual" aria-label="Wichtigste Abweichungen"><div class="visual-title"><span>Warum die Alternative besser passt</span><span class="count">3 Punkte</span></div><div class="spotlight">
+          <div class="spot-main"><span class="x" aria-hidden="true">×</span><div><h3>Zu proteinbetont</h3><p>Deins: Protein · Ziel: ausgewogen</p></div><div class="arrow-fix"><b>→</b><span>Alternative:<br>ausgewogen ✓</span></div></div>
+          <div class="more-issues"><div class="issue-pill"><b>× Zu leicht</b>Alternative: mittel ✓</div><div class="issue-pill"><b>× Zu viel Repair</b>Alternative: mittel ✓</div></div>
+          <details><summary>Alle drei Prüfpunkte im Detail</summary><p>Pflegegewicht: leicht statt mittel. Pflegefokus: Protein statt ausgewogen. Repair-Unterstützung: hoch statt mittel. Die Alternative trifft in allen drei Punkten den Zielwert.</p></details>
+        </div></section>`)
+      }
+      function render() {
+        const variant = variants.find((v) => v.id === current)
+        content.innerHTML = variant.render()
+        content.scrollTop = 0
+        note.innerHTML = `<b>Variante ${variant.id}: ${variant.title}.</b> ${variant.note} Gleiche Fakten und Entscheidungen; keine erfundene Prozentwertung.`
+        document
+          .querySelectorAll("[data-variant]")
+          .forEach((button) =>
+            button.setAttribute("aria-pressed", String(Number(button.dataset.variant) === current)),
+          )
+      }
+      variants.forEach((v) => {
+        const button = document.createElement("button")
+        button.type = "button"
+        button.dataset.variant = String(v.id)
+        button.textContent = `${v.id}. ${v.short}`
+        button.setAttribute("aria-pressed", String(v.id === current))
+        button.addEventListener("click", () => {
+          current = v.id
+          render()
+        })
+        controls.appendChild(button)
+      })
+      document.querySelectorAll("[data-view]").forEach((button) =>
+        button.addEventListener("click", () => {
+          const desktop = button.dataset.view === "desktop"
+          journey.classList.toggle("desktop", desktop)
+          document
+            .querySelectorAll("[data-view]")
+            .forEach((item) => item.setAttribute("aria-pressed", String(item === button)))
+        }),
+      )
+      render()
+    </script>
+  </body>
+</html>

@@ -340,7 +340,7 @@ export function createProductionStage3ProductsGateway(
     return {
       authorityInput,
       authorityEvaluation,
-      fitComparison: buildStage3FitComparison(authorityInput, authorityEvaluation),
+      fitComparison: buildStage3FitComparison(authorityInput, authorityEvaluation, context),
     }
   }
 
@@ -482,10 +482,12 @@ export function createProductionStage3ProductsGateway(
       const disposition = draft.inventoryDispositions?.find(
         (candidate) => candidate.dispositionKey === input.dispositionKey,
       )
-      if (!disposition) throw new Stage3AuthorityMutationError("stage3_inventory_disposition_invalid")
+      if (!disposition)
+        throw new Stage3AuthorityMutationError("stage3_inventory_disposition_invalid")
       // Canonical acknowledgement is idempotent after a lost response.
       if (disposition.acknowledged) return { status: "saved", draft }
-      if (draft.revision !== input.expectedRevision) return { status: "conflict", latestDraft: draft }
+      if (draft.revision !== input.expectedRevision)
+        return { status: "conflict", latestDraft: draft }
       const next = acknowledgeStage3InventoryDisposition(draft, input.dispositionKey)
       const saved = await options.persistence.save({
         userId: options.userId,
@@ -537,7 +539,8 @@ export function createProductionStage3ProductsGateway(
               refinedVersionId: draft.refinedVersionId,
             })
           : null
-      const next = resolveStage3NeedRevision(draft,
+      const next = resolveStage3NeedRevision(
+        draft,
         input.action === "accept"
           ? {
               action: "accept",
@@ -653,10 +656,7 @@ export function createProductionStage3ProductsGateway(
       // must still prove that this draft belongs to the plan's current refined
       // source before returning a canonical receipt.
       await assertCurrentRefinedSource(draft)
-      const baseRefinedSnapshot = shouldLoadBaseRefinedSnapshotForMutation(
-        draft,
-        input.mutation,
-      )
+      const baseRefinedSnapshot = shouldLoadBaseRefinedSnapshotForMutation(draft, input.mutation)
         ? await options.persistence.loadRefinedNeedSnapshot({
             userId: options.userId,
             personalPlanId: draft.personalPlanId,

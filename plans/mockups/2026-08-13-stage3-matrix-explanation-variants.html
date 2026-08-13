@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 3 – Matrix mit erklärbarem Warum</title>
+    <style>
+      :root {
+        --ink: #302834;
+        --muted: #716b70;
+        --plum: #5b3587;
+        --plum-dark: #3d2259;
+        --lav: #f3eef9;
+        --line: #e3dce6;
+        --paper: #fffdfa;
+        --green: #287149;
+        --green-bg: #e9f5ed;
+        --red: #983d47;
+        --red-bg: #fbebed;
+        --coral: #dc606c;
+        --target: #f4eef9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #262626;
+        font-family:
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      button:focus-visible,
+      summary:focus-visible,
+      tr[tabindex]:focus-visible {
+        outline: 3px solid #d9aff6;
+        outline-offset: 2px;
+      }
+      .lab {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        align-items: center;
+        padding: 12px 16px;
+        color: #fff;
+        background: #191919;
+        border-bottom: 1px solid #555;
+      }
+      .lab strong {
+        margin-right: 5px;
+      }
+      .lab-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .lab button {
+        min-height: 38px;
+        padding: 7px 11px;
+        color: #fff;
+        background: #303030;
+        border: 1px solid #747474;
+        border-radius: 8px;
+      }
+      .lab button[aria-pressed="true"] {
+        background: #754ca4;
+        border-color: #c5a4eb;
+      }
+      .study-note {
+        width: min(1000px, calc(100% - 30px));
+        margin: 14px auto 0;
+        padding: 11px 14px;
+        color: #f4edf8;
+        background: #3d3446;
+        border-radius: 10px;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .study-note b {
+        color: #fff;
+      }
+      .canvas {
+        display: grid;
+        place-items: center;
+        padding: 18px 20px 48px;
+      }
+      .journey {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: min(400px, 100vw);
+        height: 822px;
+        overflow: hidden;
+        background: var(--paper);
+        box-shadow: 0 24px 55px #0008;
+      }
+      .journey.desktop {
+        width: min(900px, calc(100vw - 40px));
+        height: 850px;
+      }
+      header {
+        flex: 0 0 auto;
+        padding: 14px 18px 12px;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        color: #432260;
+        font:
+          700 30px/1 Georgia,
+          serif;
+      }
+      .saved {
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+        margin-top: 12px;
+        color: #777;
+        font-size: 10px;
+        font-weight: 750;
+        text-align: center;
+      }
+      .step::before {
+        content: "";
+        display: block;
+        height: 6px;
+        margin-bottom: 5px;
+        background: #e4e0e5;
+        border-radius: 8px;
+      }
+      .step.done::before {
+        background: #7651a5;
+      }
+      .step.active {
+        color: #342047;
+      }
+      .step.active::before {
+        background: #442463;
+      }
+      .content {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        padding: 17px 18px 26px;
+      }
+      .desktop .content {
+        width: 100%;
+        max-width: 820px;
+        margin: auto;
+        padding: 22px 32px 34px;
+      }
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .back {
+        padding: 4px;
+        color: var(--ink);
+        background: transparent;
+        border: 0;
+        font-size: 23px;
+      }
+      .context {
+        margin: 15px 0 4px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        font:
+          700 27px/1.1 Georgia,
+          serif;
+        letter-spacing: -0.025em;
+      }
+      .desktop h1 {
+        font-size: 34px;
+      }
+      .quiet-result {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        margin: 10px 0 13px;
+        padding: 6px 9px;
+        color: #71313a;
+        background: #f7eef0;
+        border: 1px solid #ecd1d5;
+        border-radius: 16px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .quiet-result .icon {
+        display: grid;
+        place-items: center;
+        width: 17px;
+        height: 17px;
+        color: #fff;
+        background: var(--red);
+        border-radius: 50%;
+        font-size: 11px;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .product {
+        min-width: 0;
+        padding: 9px 8px;
+        background: #fff;
+        border: 1px solid #b99dce;
+        border-radius: 13px;
+      }
+      .product.alt {
+        border-color: #8bb69b;
+        background: #fcfffd;
+      }
+      .product small {
+        display: block;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 0.035em;
+        text-transform: uppercase;
+      }
+      .product.alt small {
+        color: var(--green);
+      }
+      .product b {
+        display: block;
+        margin-top: 4px;
+        overflow-wrap: anywhere;
+        font-size: 11px;
+        line-height: 1.22;
+      }
+      .matrix-wrap {
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+      .matrix-head {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+        font-weight: 850;
+      }
+      .matrix-head span:last-child {
+        color: var(--green);
+        font-size: 10px;
+      }
+      table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px 4px;
+        border-bottom: 1px solid var(--line);
+        font-size: 9px;
+        text-align: center;
+        vertical-align: middle;
+        overflow-wrap: anywhere;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 850;
+      }
+      th:first-child,
+      td:first-child {
+        width: 31%;
+        padding-left: 10px;
+        text-align: left;
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      .own-cell {
+        color: #752932;
+        background: var(--red-bg);
+      }
+      .target-cell {
+        color: var(--plum-dark);
+        background: var(--target);
+      }
+      .alt-cell {
+        color: #1e603c;
+        background: var(--green-bg);
+      }
+      .symbol {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 14px;
+        font-weight: 900;
+      }
+      .metric-name {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .metric-name b {
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: auto;
+      }
+      .info {
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        color: var(--plum);
+        background: #fff;
+        border: 1px solid #a88bc3;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .why {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .why strong {
+        color: var(--ink);
+      }
+      .basis {
+        display: inline-flex;
+        margin-top: 5px;
+        padding: 3px 6px;
+        color: var(--plum-dark);
+        background: var(--lav);
+        border-radius: 5px;
+        font-size: 9px;
+        font-weight: 750;
+      }
+      .footer {
+        flex: 0 0 auto;
+        padding: 11px 18px 15px;
+        background: #fffdfaea;
+        border-top: 1px solid var(--line);
+        backdrop-filter: blur(8px);
+      }
+      .cta {
+        width: 100%;
+        min-height: 53px;
+        padding: 11px 15px;
+        color: #fff;
+        background: var(--coral);
+        border: 0;
+        border-radius: 27px;
+        font-weight: 850;
+      }
+
+      /* Variant 1: each matrix row owns its explanation */
+      .inline-why td {
+        padding: 0;
+        background: #fcfafc;
+      }
+      .inline-panel {
+        padding: 9px 11px 10px;
+        text-align: left;
+      }
+      .inline-panel[hidden] {
+        display: none;
+      }
+
+      /* Variant 2: one grouped disclosure below matrix */
+      .grouped {
+        margin-top: 10px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+      .grouped summary {
+        padding: 11px 13px;
+        color: var(--plum-dark);
+        font-size: 12px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+      .grouped-content {
+        display: grid;
+        gap: 10px;
+        padding: 0 13px 13px;
+      }
+      .grouped-content .why {
+        padding-top: 9px;
+        border-top: 1px solid var(--line);
+      }
+
+      /* Variant 3: selected metric panel */
+      tr.selectable {
+        cursor: pointer;
+      }
+      tr.selectable[aria-selected="true"] td:first-child {
+        box-shadow: inset 4px 0 0 var(--plum);
+        background: #faf7fc;
+      }
+      .selected-panel {
+        min-height: 116px;
+        margin-top: 10px;
+        padding: 12px 13px;
+        background: #fff;
+        border: 1px solid #cbb7dc;
+        border-radius: 14px;
+      }
+      .selected-panel .eyebrow {
+        color: var(--plum);
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .selected-panel h2 {
+        margin: 4px 0 5px;
+        font-size: 15px;
+      }
+
+      /* Variant 4: focused bottom sheet */
+      .sheet-hint {
+        margin: 9px 2px 0;
+        color: var(--muted);
+        font-size: 10px;
+        text-align: center;
+      }
+      .sheet-backdrop {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        align-items: end;
+        background: #251e2a77;
+      }
+      .sheet-backdrop[hidden] {
+        display: none;
+      }
+      .sheet {
+        padding: 17px 18px 21px;
+        background: #fff;
+        border-radius: 22px 22px 0 0;
+        box-shadow: 0 -12px 35px #0003;
+      }
+      .sheet-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sheet h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .close {
+        width: 34px;
+        height: 34px;
+        color: var(--ink);
+        background: #f3eff4;
+        border: 0;
+        border-radius: 50%;
+        font-size: 18px;
+      }
+      .sheet .why {
+        margin: 11px 0 4px;
+        font-size: 13px;
+      }
+      .sheet-values {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-top: 13px;
+      }
+      .sheet-value {
+        padding: 8px 5px;
+        border-radius: 9px;
+        font-size: 10px;
+        text-align: center;
+      }
+      .sheet-value b {
+        display: block;
+        margin-top: 2px;
+      }
+      .sheet-value.own {
+        background: var(--red-bg);
+      }
+      .sheet-value.target {
+        background: var(--target);
+      }
+      .sheet-value.alt {
+        background: var(--green-bg);
+      }
+      .desktop table th,
+      .desktop table td {
+        padding: 11px 7px;
+        font-size: 12px;
+      }
+      .desktop .products,
+      .desktop .matrix-wrap,
+      .desktop .grouped,
+      .desktop .selected-panel,
+      .desktop .sheet-hint {
+        max-width: 720px;
+      }
+      .desktop .footer {
+        padding-inline: max(18px, calc((100% - 756px) / 2));
+      }
+      .desktop .sheet {
+        width: min(720px, 100%);
+        margin: auto;
+        border-radius: 22px 22px 0 0;
+      }
+      @media (max-width: 420px) {
+        .canvas {
+          padding-inline: 0;
+        }
+        .study-note {
+          width: calc(100% - 20px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="lab" aria-label="Prototyp-Steuerung">
+      <strong>Matrix-Erklärungen</strong>
+      <div class="lab-group" id="variantControls"></div>
+      <div class="lab-group">
+        <button type="button" data-view="mobile" aria-pressed="true">Mobil 400×822</button>
+        <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+      </div>
+    </nav>
+    <aside class="study-note" id="studyNote"></aside>
+    <div class="canvas">
+      <main class="journey" id="journey" aria-live="polite">
+        <header>
+          <div class="brand-row">
+            <span class="brand">chaarlie</span><span class="saved">Gespeichert</span>
+          </div>
+          <div class="steps" aria-label="Schritt Produkte">
+            <span class="step done">Bedarf</span><span class="step done">Verfeinerung</span
+            ><span class="step active">Produkte</span><span class="step">Routine</span
+            ><span class="step">Anwendung</span>
+          </div>
+        </header>
+        <section class="content" id="content"></section>
+        <footer class="footer">
+          <button type="button" class="cta">Diese Alternative wählen</button>
+        </footer>
+        <div class="sheet-backdrop" id="sheetBackdrop" hidden>
+          <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+            <div class="sheet-top">
+              <h2 id="sheetTitle"></h2>
+              <button type="button" class="close" id="closeSheet" aria-label="Erklärung schließen">
+                ×
+              </button>
+            </div>
+            <div id="sheetBody"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <script>
+      const metrics = [
+        {
+          id: "weight",
+          name: "Pflegegewicht",
+          own: "leicht",
+          target: "mittel",
+          alt: "mittel",
+          why: "Mittlere Pflege gibt deinem Haar genug Geschmeidigkeit, ohne es unnötig zu beschweren.",
+          basis: "Aus deinem Profil: braucht Pflege, wird aber schnell beschwert",
+        },
+        {
+          id: "focus",
+          name: "Pflegefokus",
+          own: "Protein",
+          target: "ausgewogen",
+          alt: "ausgewogen",
+          why: "Ein ausgewogener Fokus verbindet Feuchtigkeit und Strukturpflege. Eine starke Proteinrichtung ist für deinen aktuellen Bedarf nicht nötig.",
+          basis: "Aus deinem Profil: mehr Geschmeidigkeit, keine starke Strukturbelastung",
+        },
+        {
+          id: "repair",
+          name: "Repair-Unterstützung",
+          own: "hoch",
+          target: "mittel",
+          alt: "mittel",
+          why: "Mittlere Repair-Unterstützung reicht für deine derzeitige Belastung aus. Mehr Repair würde keinen zusätzlichen bestätigten Bedarf abdecken.",
+          basis: "Aus deinem Profil: geringe bis mittlere aktuelle Belastung",
+        },
+      ]
+      const variants = [
+        {
+          id: 1,
+          label: "In jeder Zeile",
+          title: "Info direkt an der jeweiligen Metrik",
+          note: "Ein Info-Knopf öffnet die Erklärung genau unter der berührten Matrixzeile. Kontext bleibt maximal nah, die Matrix wird beim Öffnen aber höher.",
+        },
+        {
+          id: 2,
+          label: "Ein Akkordeon",
+          title: "Ein gemeinsamer Bereich unter der Matrix",
+          note: "Die Matrix bleibt völlig ruhig. „Warum diese Zielwerte?“ öffnet alle drei kurzen Erklärungen gemeinsam – gut zum bewussten Vertiefen.",
+        },
+        {
+          id: 3,
+          label: "Auswahl-Panel",
+          title: "Eine Erklärung gleichzeitig",
+          note: "Ein Tipp auf eine Matrixzeile aktualisiert ein festes Erklärfeld darunter. Das ist kompakt und vergleichbar, braucht aber ein erkennbares Auswahlverhalten.",
+        },
+        {
+          id: 4,
+          label: "Info-Sheet",
+          title: "Fokussierte Erklärung als mobiles Sheet",
+          note: "Die Matrix bleibt am kompaktesten. Der Info-Knopf öffnet eine fokussierte Erklärung mit den drei konkreten Werten – klar, aber einen Interaktionsschritt weiter entfernt.",
+        },
+      ]
+      let currentVariant = 1
+      let selectedMetric = metrics[0].id
+      const controls = document.getElementById("variantControls")
+      const content = document.getElementById("content")
+      const note = document.getElementById("studyNote")
+      const journey = document.getElementById("journey")
+      const sheetBackdrop = document.getElementById("sheetBackdrop")
+      const sheetTitle = document.getElementById("sheetTitle")
+      const sheetBody = document.getElementById("sheetBody")
+
+      function headerAndProducts() {
+        return `<div class="topline"><button type="button" class="back" aria-label="Zurück">←</button><span>Produkte prüfen</span></div>
+          <p class="context">Conditioner · 2 von 5</p>
+          <h1>Dein Conditioner im Vergleich</h1>
+          <div class="quiet-result" role="status"><span class="icon" aria-hidden="true">×</span><span>3 Unterschiede zum Ziel</span></div>
+          <div class="products"><article class="product"><small>Dein Produkt</small><b>Jean&amp;Len Conditioner Keratin/Mandel</b></article><article class="product alt"><small>Passende Alternative</small><b>Sante Intense Hydration Conditioner</b></article></div>`
+      }
+      function infoButton(metric, mode) {
+        return `<button type="button" class="info" data-info="${metric.id}" data-mode="${mode}" aria-label="Warum ist ${metric.name} wichtig?">i</button>`
+      }
+      function row(metric, options = {}) {
+        const info = options.infoMode ? infoButton(metric, options.infoMode) : ""
+        const selectable = options.selectable
+          ? ` class="selectable" tabindex="0" aria-selected="${selectedMetric === metric.id}" data-select="${metric.id}"`
+          : ""
+        return `<tr${selectable}><td><span class="metric-name"><b>${metric.name}</b>${info}</span></td><td class="own-cell"><span class="symbol" aria-hidden="true">×</span>${metric.own}</td><td class="target-cell"><span class="symbol" aria-hidden="true">▣</span>${metric.target}</td><td class="alt-cell"><span class="symbol" aria-hidden="true">✓</span>${metric.alt}</td></tr>`
+      }
+      function matrix(rows) {
+        return `<section class="matrix-wrap"><div class="matrix-head"><span>Eigenschaft für Eigenschaft</span><span>Alternative trifft alle 3 Ziele</span></div><table><thead><tr><th>Prüfpunkt</th><th>Deins</th><th>Ziel</th><th>Alternative</th></tr></thead><tbody>${rows}</tbody></table></section>`
+      }
+      function explanation(metric) {
+        return `<div class="why"><strong>Warum ${metric.target}?</strong> ${metric.why}<br><span class="basis">${metric.basis}</span></div>`
+      }
+      function renderInline() {
+        const rows = metrics
+          .map(
+            (metric) =>
+              `${row(metric, { infoMode: "inline" })}<tr class="inline-why"><td colspan="4"><div class="inline-panel" id="inline-${metric.id}" hidden>${explanation(metric)}</div></td></tr>`,
+          )
+          .join("")
+        return headerAndProducts() + matrix(rows)
+      }
+      function renderGrouped() {
+        const rows = metrics.map((metric) => row(metric)).join("")
+        const whys = metrics.map(explanation).join("")
+        return (
+          headerAndProducts() +
+          matrix(rows) +
+          `<details class="grouped"><summary>Warum sind das meine Zielwerte?</summary><div class="grouped-content">${whys}</div></details>`
+        )
+      }
+      function renderSelected() {
+        const metric = metrics.find((item) => item.id === selectedMetric) || metrics[0]
+        const rows = metrics.map((item) => row(item, { selectable: true })).join("")
+        return (
+          headerAndProducts() +
+          matrix(rows) +
+          `<section class="selected-panel" aria-live="polite"><span class="eyebrow">Ausgewählter Prüfpunkt</span><h2>${metric.name}</h2>${explanation(metric)}</section>`
+        )
+      }
+      function renderSheet() {
+        const rows = metrics.map((metric) => row(metric, { infoMode: "sheet" })).join("")
+        return (
+          headerAndProducts() +
+          matrix(rows) +
+          `<p class="sheet-hint">Tippe auf <b>i</b>, um zu sehen, warum ein Zielwert zu deinem Profil gehört.</p>`
+        )
+      }
+      function render() {
+        closeSheet()
+        const variant = variants.find((item) => item.id === currentVariant)
+        const renderers = { 1: renderInline, 2: renderGrouped, 3: renderSelected, 4: renderSheet }
+        content.innerHTML = renderers[currentVariant]()
+        content.scrollTop = 0
+        note.innerHTML = `<b>Variante ${variant.id}: ${variant.title}.</b> ${variant.note} Gemeinsame Änderung: kleiner Titel und leiser Status statt dominanter „Passt nicht“-Überschrift.`
+        document
+          .querySelectorAll("[data-variant]")
+          .forEach((button) =>
+            button.setAttribute(
+              "aria-pressed",
+              String(Number(button.dataset.variant) === currentVariant),
+            ),
+          )
+        bindInteractions()
+      }
+      function bindInteractions() {
+        document.querySelectorAll('[data-mode="inline"]').forEach((button) =>
+          button.addEventListener("click", () => {
+            const panel = document.getElementById(`inline-${button.dataset.info}`)
+            const willOpen = panel.hidden
+            document.querySelectorAll(".inline-panel").forEach((item) => (item.hidden = true))
+            panel.hidden = !willOpen
+          }),
+        )
+        document
+          .querySelectorAll('[data-mode="sheet"]')
+          .forEach((button) =>
+            button.addEventListener("click", () => openSheet(button.dataset.info)),
+          )
+        document.querySelectorAll("tr[data-select]").forEach((tr) => {
+          const select = () => {
+            selectedMetric = tr.dataset.select
+            render()
+          }
+          tr.addEventListener("click", select)
+          tr.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault()
+              select()
+            }
+          })
+        })
+      }
+      function openSheet(id) {
+        const metric = metrics.find((item) => item.id === id)
+        sheetTitle.textContent = metric.name
+        sheetBody.innerHTML = `${explanation(metric)}<div class="sheet-values"><div class="sheet-value own">Deins<b>${metric.own} ×</b></div><div class="sheet-value target">Ziel<b>${metric.target}</b></div><div class="sheet-value alt">Alternative<b>${metric.alt} ✓</b></div></div>`
+        sheetBackdrop.hidden = false
+        document.getElementById("closeSheet").focus()
+      }
+      function closeSheet() {
+        sheetBackdrop.hidden = true
+      }
+      variants.forEach((variant) => {
+        const button = document.createElement("button")
+        button.type = "button"
+        button.dataset.variant = String(variant.id)
+        button.textContent = `${variant.id}. ${variant.label}`
+        button.setAttribute("aria-pressed", String(variant.id === currentVariant))
+        button.addEventListener("click", () => {
+          currentVariant = variant.id
+          render()
+        })
+        controls.appendChild(button)
+      })
+      document.querySelectorAll("[data-view]").forEach((button) =>
+        button.addEventListener("click", () => {
+          journey.classList.toggle("desktop", button.dataset.view === "desktop")
+          document
+            .querySelectorAll("[data-view]")
+            .forEach((item) => item.setAttribute("aria-pressed", String(item === button)))
+        }),
+      )
+      document.getElementById("closeSheet").addEventListener("click", closeSheet)
+      sheetBackdrop.addEventListener("click", (event) => {
+        if (event.target === sheetBackdrop) closeSheet()
+      })
+      render()
+    </script>
+  </body>
+</html>
