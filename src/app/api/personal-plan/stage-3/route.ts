@@ -24,7 +24,11 @@ import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/p
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
-import { checkRateLimit, type RateLimitConfig } from "@/lib/rate-limit"
+import {
+  checkRateLimit,
+  fixedWindowRetryAfterSeconds,
+  type RateLimitConfig,
+} from "@/lib/rate-limit"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -33,7 +37,17 @@ import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journe
 
 const STAGE3_MUTATION_RATE_LIMIT: RateLimitConfig = {
   prefix: "personal-plan-stage3-mutation",
+  limit: 90,
+  windowMs: 60_000,
+}
+const STAGE3_CAPTURE_RATE_LIMIT: RateLimitConfig = {
+  prefix: "personal-plan-stage3-capture",
   limit: 30,
+  windowMs: 60_000,
+}
+const STAGE3_DECISION_RATE_LIMIT: RateLimitConfig = {
+  prefix: "personal-plan-stage3-decision",
+  limit: 60,
   windowMs: 60_000,
 }
 const identifier = z.string().uuid()
@@ -185,7 +199,7 @@ function serverTiming(phases: Record<string, number>) {
 }
 
 export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
-  async function authorize(started: number, applyMutationLimit: boolean) {
+  async function authorize() {
     const phases: Record<string, number> = {}
     if (!deps.enabled())
       return { response: response({ error: "personal_plan_not_available" }, 404) }
@@ -196,34 +210,45 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
     try {
       phaseStarted = Date.now()
       if (!canAccessPersonalPlanJourneyStage(await deps.loadJourneyAccess(userId), "stage3")) {
-        return { response: response({ error: "stage_not_ready" }, 409) }
+        phases.journey = Date.now() - phaseStarted
+        return {
+          response: response({ error: "stage_not_ready" }, 409, {
+            "Server-Timing": serverTiming(phases),
+          }),
+        }
       }
       phases.journey = Date.now() - phaseStarted
     } catch {
-      return { response: response({ error: "temporarily_unavailable" }, 503) }
-    }
-    if (applyMutationLimit) {
-      phaseStarted = Date.now()
-      const limited = await deps.checkRateLimit(userId, STAGE3_MUTATION_RATE_LIMIT)
-      phases.rate_limit = Date.now() - phaseStarted
-      if (!limited.allowed) {
-        const unavailable = limited.error === "service_unavailable"
-        log("unavailable", started, unavailable ? "temporarily_unavailable" : "rate_limited")
-        return {
-          response: response(
-            { error: unavailable ? "temporarily_unavailable" : "rate_limited" },
-            unavailable ? 503 : 429,
-            unavailable ? undefined : { "Retry-After": "60" },
-          ),
-        }
+      phases.journey = Date.now() - phaseStarted
+      return {
+        response: response({ error: "temporarily_unavailable" }, 503, {
+          "Server-Timing": serverTiming(phases),
+        }),
       }
     }
     return { userId, phases }
   }
+  async function applyMutationLimits(
+    userId: string,
+    parsed: z.infer<typeof mutationSchema>,
+    phases: Record<string, number>,
+  ) {
+    const family =
+      "intent" in parsed || "intents" in parsed
+        ? STAGE3_DECISION_RATE_LIMIT
+        : STAGE3_CAPTURE_RATE_LIMIT
+    for (const config of [STAGE3_MUTATION_RATE_LIMIT, family]) {
+      const phaseStarted = Date.now()
+      const limited = await deps.checkRateLimit(userId, config)
+      phases.rate_limit = (phases.rate_limit ?? 0) + Date.now() - phaseStarted
+      if (!limited.allowed) return { config, limited }
+    }
+    return null
+  }
   return {
     async GET(request: Request) {
       const started = Date.now()
-      const auth = await authorize(started, false)
+      const auth = await authorize()
       if ("response" in auth) return auth.response
       const parsed = loadQuerySchema.safeParse(
         Object.fromEntries(new URL(request.url).searchParams),
@@ -247,18 +272,34 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
       } catch (error) {
         if (error instanceof Stage3AuthoritySnapshotError) {
           log("conflict", started, error.code)
-          return response({ error: error.code }, 409)
+          return response({ error: error.code }, 409, {
+            "Server-Timing": serverTiming(auth.phases),
+          })
         }
         log("unavailable", started, "temporarily_unavailable")
-        return response({ error: "temporarily_unavailable" }, 503)
+        return response({ error: "temporarily_unavailable" }, 503, {
+          "Server-Timing": serverTiming(auth.phases),
+        })
       }
     },
     async PATCH(request: Request) {
       const started = Date.now()
-      const auth = await authorize(started, true)
+      const auth = await authorize()
       if ("response" in auth) return auth.response
       const parsed = mutationSchema.safeParse(await request.json().catch(() => null))
       if (!parsed.success) return response({ error: "invalid_request" }, 400)
+      const limited = await applyMutationLimits(auth.userId, parsed.data, auth.phases)
+      if (limited) {
+        const unavailable = limited.limited.error === "service_unavailable"
+        const code = unavailable ? "temporarily_unavailable" : "rate_limited"
+        log("unavailable", started, code, auth.phases)
+        return response({ error: code }, unavailable ? 503 : 429, {
+          ...(unavailable
+            ? {}
+            : { "Retry-After": String(fixedWindowRetryAfterSeconds(limited.config)) }),
+          "Server-Timing": serverTiming(auth.phases),
+        })
+      }
       try {
         const gateway = deps.gatewayFor(auth.userId)
         const gatewayStarted = Date.now()
@@ -288,14 +329,20 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         return response(result, 200, { "Server-Timing": serverTiming(auth.phases) })
       } catch (error) {
         if (error instanceof Stage3AuthorityMutationError) {
-          return response({ error: "invalid_request" }, 400)
+          return response({ error: "invalid_request" }, 400, {
+            "Server-Timing": serverTiming(auth.phases),
+          })
         }
         if (error instanceof Stage3AuthoritySnapshotError) {
           log("conflict", started, error.code)
-          return response({ error: error.code }, 409)
+          return response({ error: error.code }, 409, {
+            "Server-Timing": serverTiming(auth.phases),
+          })
         }
-        log("unavailable", started, "temporarily_unavailable")
-        return response({ error: "temporarily_unavailable" }, 503)
+        log("unavailable", started, "temporarily_unavailable", auth.phases)
+        return response({ error: "temporarily_unavailable" }, 503, {
+          "Server-Timing": serverTiming(auth.phases),
+        })
       }
     },
   }

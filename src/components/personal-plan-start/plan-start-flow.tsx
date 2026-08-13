@@ -210,11 +210,13 @@ export function PlanStartProductionGate({
   initialPlan,
   personalPlanId,
   initialRefinementSession,
+  reloadServerFrontier,
 }: {
   initialJourney?: PlanStartInitialJourney
   initialPlan?: PlanStartReadyViewModel
   personalPlanId?: string
   initialRefinementSession?: Stage2RefinementSession
+  reloadServerFrontier?: () => void
 }) {
   const canBootstrapLaterStage = isValidLaterStageBootstrap(
     initialJourney,
@@ -257,6 +259,7 @@ export function PlanStartProductionGate({
         initialJourney={initialJourney}
         personalPlanId={personalPlanId}
         initialRefinementSession={initialRefinementSession}
+        reloadServerFrontier={reloadServerFrontier}
       />
     )
   }
@@ -269,6 +272,7 @@ export function PlanStartProductionGate({
       initialPlan={state.plan}
       initialJourney={initialJourney}
       personalPlanId={state.plan.personalPlanId}
+      reloadServerFrontier={reloadServerFrontier}
     />
   )
 }
@@ -304,16 +308,34 @@ export async function loadPlanStartStage3Bootstrap(input: {
   )
 }
 
+export async function loadPlanStartStage2HandoffBootstrap(input: {
+  handoff: Stage2CompleteResult
+  loadStage3Bootstrap: (refinedVersionId: string) => Promise<Stage3Bootstrap>
+  reloadServerFrontier: () => void
+}): Promise<Stage3Bootstrap | null> {
+  try {
+    return await input.loadStage3Bootstrap(input.handoff.refinedVersionId)
+  } catch (error) {
+    if (stage3LoadRecoveryMode(error) === "reload_server_frontier") {
+      input.reloadServerFrontier()
+      return null
+    }
+    throw error
+  }
+}
+
 export function PlanStartCustomerJourney({
   initialPlan,
   initialJourney,
   personalPlanId,
   initialRefinementSession,
+  reloadServerFrontier = () => window.location.reload(),
 }: {
   initialPlan?: PlanStartReadyViewModel
   initialJourney: PlanStartInitialJourney
   personalPlanId: string
   initialRefinementSession?: Stage2RefinementSession
+  reloadServerFrontier?: () => void
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
@@ -341,13 +363,19 @@ export function PlanStartCustomerJourney({
   )
   const handleHandoff = useCallback(
     async ({ handoff, session }: Stage2HandoffPayload) => {
-      setStage3Bootstrap(await loadStage3Bootstrap(handoff.refinedVersionId))
+      const bootstrap = await loadPlanStartStage2HandoffBootstrap({
+        handoff,
+        loadStage3Bootstrap,
+        reloadServerFrontier,
+      })
+      if (!bootstrap) return
+      setStage3Bootstrap(bootstrap)
       stage2SeedRef.current = session
       setStage3LoadState("idle")
       setReturningToRefinement(false)
       setStage("stage3")
     },
-    [loadStage3Bootstrap],
+    [loadStage3Bootstrap, reloadServerFrontier],
   )
 
   const handleProductKindsCorrection = useCallback(
@@ -471,7 +499,7 @@ export function PlanStartCustomerJourney({
           onRetry={() =>
             recoverPlanStartStage3Load(stage3LoadState, {
               retryStage3: () => void resumeStage3(),
-              reloadServerFrontier: () => window.location.reload(),
+              reloadServerFrontier,
             })
           }
         />

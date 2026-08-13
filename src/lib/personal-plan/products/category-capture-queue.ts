@@ -68,6 +68,8 @@ type StoredEnvelope = {
   savedAt: number
   scope: CategoryCaptureQueueScope
   command: CategoryCaptureCommand
+  /** Attempt timestamps only; no display or free-text data is persisted. */
+  retryAttemptedAt: number[]
 }
 
 export type CategoryCaptureQueueAcknowledgement = {
@@ -100,6 +102,17 @@ export type CategoryCaptureQueue = {
 export type CreateCategoryCaptureQueueOptions = {
   storage?: CategoryCaptureQueueStorage | null
   now?: () => number
+}
+
+/** Raised before a third in-window execution, while the failed command remains recoverable. */
+export class CategoryCaptureRetryLimitedError extends Error {
+  readonly retryAt: number
+
+  constructor(retryAt: number) {
+    super("category_capture_retry_limited")
+    this.name = "CategoryCaptureRetryLimitedError"
+    this.retryAt = retryAt
+  }
 }
 
 /** Compare complete category snapshots after the same canonicalization used for persistence. */
@@ -137,7 +150,11 @@ export function createCategoryCaptureQueue(
     ].join(":")
   }
 
-  function persist(scope: CategoryCaptureQueueScope, input: CategoryCaptureCommand) {
+  function persist(
+    scope: CategoryCaptureQueueScope,
+    input: CategoryCaptureCommand,
+    retryAttemptedAt = retryAttempts(scope),
+  ) {
     const command = canonicalCommand(scope, input)
     const key = storageKey(scope)
     knownKeys.add(key)
@@ -149,6 +166,7 @@ export function createCategoryCaptureQueue(
         savedAt: now(),
         scope,
         command,
+        retryAttemptedAt,
       } satisfies StoredEnvelope),
     )
   }
@@ -173,6 +191,7 @@ export function createCategoryCaptureQueue(
   function clear(scope: CategoryCaptureQueueScope) {
     const key = storageKey(scope)
     knownKeys.add(key)
+    attemptsByCategory.delete(key)
     removeSafely(storage, key)
   }
 
@@ -211,8 +230,8 @@ export function createCategoryCaptureQueue(
         ...input,
         expectedRevision: acknowledgedRevision ?? input.expectedRevision,
       })
-      recordAttempt(scope, now())
-      persist(scope, command)
+      const retryAttemptedAt = recordAttempt(scope, now())
+      persist(scope, command, retryAttemptedAt)
       try {
         const result = await execute(command)
         if (!isNonNegativeInteger(result.acknowledgedRevision)) {
@@ -238,6 +257,7 @@ export function createCategoryCaptureQueue(
   function clearOnLogout(ownerId: string) {
     for (const key of allKnownStorageKeys(storage, knownKeys)) {
       if (key.startsWith(`${STORAGE_PREFIX}:${encodeURIComponent(ownerId)}:`)) {
+        attemptsByCategory.delete(key)
         removeSafely(storage, key)
       }
     }
@@ -246,20 +266,49 @@ export function createCategoryCaptureQueue(
   function clearOnCompletion(scope: CategoryCaptureQueueScope) {
     const prefix = `${STORAGE_PREFIX}:${encodeURIComponent(scope.ownerId)}:${encodeURIComponent(scope.personalPlanId)}:${encodeURIComponent(scope.draftId)}:`
     for (const key of allKnownStorageKeys(storage, knownKeys)) {
-      if (key.startsWith(prefix)) removeSafely(storage, key)
+      if (key.startsWith(prefix)) {
+        attemptsByCategory.delete(key)
+        removeSafely(storage, key)
+      }
     }
   }
 
   function recordAttempt(scope: CategoryCaptureQueueScope, timestamp: number) {
-    const key = storageKeyForAttempts(scope)
-    const attempts = (attemptsByCategory.get(key) ?? []).filter(
-      (attemptedAt) => attemptedAt > timestamp - CATEGORY_CAPTURE_QUEUE_RETRY_WINDOW_MS,
+    const key = storageKey(scope)
+    const storedAttempts = retryAttempts(scope)
+    const attempts = (
+      storedAttempts.length > 0 ? storedAttempts : (attemptsByCategory.get(key) ?? [])
     )
+      .slice()
+      .sort((left, right) => left - right)
+      .filter((attemptedAt) => attemptedAt > timestamp - CATEGORY_CAPTURE_QUEUE_RETRY_WINDOW_MS)
     if (attempts.length >= CATEGORY_CAPTURE_QUEUE_MAX_ATTEMPTS) {
-      throw new Error("category_capture_retry_limited")
+      throw new CategoryCaptureRetryLimitedError(
+        attempts[0] + CATEGORY_CAPTURE_QUEUE_RETRY_WINDOW_MS,
+      )
     }
     attempts.push(timestamp)
     attemptsByCategory.set(key, attempts)
+    return attempts
+  }
+
+  function retryAttempts(scope: CategoryCaptureQueueScope) {
+    const key = storageKey(scope)
+    knownKeys.add(key)
+    const raw = readSafely(storage, key)
+    if (!raw) return []
+    const envelope = parseEnvelope(raw)
+    if (
+      !envelope ||
+      envelope.savedAt + CATEGORY_CAPTURE_QUEUE_TTL_MS < now() ||
+      !sameScope(envelope.scope, scope)
+    ) {
+      removeSafely(storage, key)
+      return []
+    }
+    return envelope.retryAttemptedAt.filter(
+      (attemptedAt) => attemptedAt > now() - CATEGORY_CAPTURE_QUEUE_RETRY_WINDOW_MS,
+    )
   }
 
   return {
@@ -401,11 +450,12 @@ function parseEnvelope(raw: string): StoredEnvelope | null {
       !isRecord(value) ||
       value.version !== CATEGORY_CAPTURE_QUEUE_STORAGE_VERSION ||
       !isFiniteTimestamp(value.savedAt) ||
-      !hasOnlyKeys(value, ["version", "savedAt", "scope", "command"]) ||
+      !hasOnlyKeys(value, ["version", "savedAt", "scope", "command", "retryAttemptedAt"]) ||
       !isRecord(value.scope) ||
       !isStoredScope(value.scope) ||
       !isRecord(value.command) ||
-      !isStoredCommand(value.command)
+      !isStoredCommand(value.command) ||
+      (value.retryAttemptedAt !== undefined && !isStoredRetryAttempts(value.retryAttemptedAt))
     )
       return null
     const scope = parseScope(value.scope)
@@ -415,6 +465,7 @@ function parseEnvelope(raw: string): StoredEnvelope | null {
       savedAt: value.savedAt,
       scope,
       command: canonicalCommand(scope, value.command as CategoryCaptureCommand),
+      retryAttemptedAt: (value.retryAttemptedAt ?? []) as number[],
     }
   } catch {
     return null
@@ -471,6 +522,14 @@ function isStoredCandidate(value: unknown) {
 
 function isStoredUncoveredRole(value: unknown) {
   return isRecord(value) && hasOnlyKeys(value, ["category", "role", "reason"])
+}
+
+function isStoredRetryAttempts(value: unknown): value is number[] {
+  return (
+    Array.isArray(value) &&
+    value.length <= CATEGORY_CAPTURE_QUEUE_MAX_ATTEMPTS &&
+    value.every(isFiniteTimestamp)
+  )
 }
 
 function validScope(value: unknown): value is CategoryCaptureQueueScope {
@@ -547,10 +606,6 @@ function compareUncoveredRoles(
   right: CategoryCaptureUncoveredRole,
 ) {
   return `${left.role}:${left.reason}`.localeCompare(`${right.role}:${right.reason}`)
-}
-
-function storageKeyForAttempts(scope: CategoryCaptureQueueScope) {
-  return `${scope.ownerId}:${scope.personalPlanId}:${scope.draftId}:${scope.category}`
 }
 
 function readSafely(storage: CategoryCaptureQueueStorage | null, key: string) {

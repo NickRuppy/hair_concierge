@@ -67,8 +67,7 @@ function createHookStateHarness(renderHook: () => void): HookStateHarness {
       const stateIndex = cursor
       cursor += 1
       const previous = hookValues[stateIndex] as
-        | { deps: unknown[] | undefined; value: T }
-        | undefined
+        { deps: unknown[] | undefined; value: T } | undefined
       if (previous && !depsChanged(previous.deps, deps)) return previous.value
       const value = factory()
       hookValues[stateIndex] = { deps, value }
@@ -160,6 +159,14 @@ function command(category: PersonalPlanCategory = "shampoo"): CategoryCaptureCom
     uncoveredRoles: [],
     expectedRevision: 1,
   }
+}
+
+function canonicalLoad(sourceDraft: Stage3ProductDraft) {
+  return {
+    status: sourceDraft.status,
+    draft: sourceDraft,
+    requirements,
+  } as const
 }
 
 test("category capture scope preserves owner identity and authority fingerprint", () => {
@@ -283,6 +290,9 @@ test("hook enqueue uses one replacement command, advances optimistically, and cl
   const openedCategories: number[] = []
   const mutations: Array<Parameters<(typeof gateway)["mutate"]>[0]> = []
   const gateway = {
+    async loadOrCreate() {
+      return canonicalLoad(sourceDraft)
+    },
     async mutate(input: {
       draftId: string
       expectedRevision: number
@@ -368,4 +378,318 @@ test("hook enqueue uses one replacement command, advances optimistically, and cl
   assert.deepEqual(openedCategories, [2])
   assert.equal(queue.load(scope), null)
   assert.equal(sourceDraft.revision, 1)
+})
+
+test("uncertain category save acknowledges an exact canonical category without a resend", async () => {
+  let sourceDraft = draft()
+  let controller: ReturnType<typeof useStage3CategoryCaptureController> | undefined
+  const queue = createCategoryCaptureQueue({ storage: createMemoryCategoryCaptureQueueStorage() })
+  const scope = createStage3CategoryCaptureScope({
+    draft: sourceDraft,
+    personalPlanId: sourceDraft.personalPlanId,
+    category: "shampoo",
+    currentRequirement: requirements[0]!,
+  })
+  const canonical = draft({
+    revision: 1,
+    completedCaptureCategories: ["shampoo"],
+    categoryCursor: "conditioner",
+    products: [
+      {
+        capturedProductId: "captured-shampoo",
+        userProductId: "user-product-shampoo",
+        identity: {
+          kind: "catalog_product",
+          productId: "fixture-shampoo-a",
+          displayName: "Shampoo A",
+          category: "shampoo",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    roleAssignments: [
+      { capturedProductId: "captured-shampoo", category: "shampoo", roles: ["shampoo_everyday"] },
+    ],
+  })
+  let mutations = 0
+  let canonicalLoads = 0
+  const harness = createHookStateHarness(() => {
+    controller = useStage3CategoryCaptureController({
+      draft: sourceDraft,
+      personalPlanId: sourceDraft.personalPlanId,
+      requirements,
+      currentRequirement: requirements[0]!,
+      currentCategory: "shampoo",
+      categoryIndex: 0,
+      gateway: {
+        async loadOrCreate() {
+          canonicalLoads += 1
+          return canonicalLoad(canonical)
+        },
+        async mutate() {
+          mutations += 1
+          throw new Error("lost_response")
+        },
+      },
+      analytics: noOpStage3Analytics,
+      readyToReconcile: false,
+      queue,
+      onDraftChange: (nextDraft) => {
+        sourceDraft = nextDraft
+      },
+      onOpenCaptureCategory: () => {},
+      onPrepareDecisionPhase: async () => {},
+      onMutationError: (error) => {
+        throw error
+      },
+      onConflict: (latestDraft) => {
+        throw new Error(`unexpected conflict at ${latestDraft.revision}`)
+      },
+    })
+  })
+
+  await harness.render()
+  await controller!.enqueueCategoryReplacement({
+    working: [
+      {
+        key: "local:fixture-shampoo-a",
+        displayName: "Shampoo A",
+        candidate: { ...command().candidates[0]!, roles: [] },
+      },
+    ],
+    assignments: { "local:fixture-shampoo-a": ["shampoo_everyday"] },
+    uncoveredRoles: [],
+  })
+
+  assert.equal(canonicalLoads, 1)
+  assert.equal(mutations, 1)
+  assert.equal(sourceDraft.revision, 1)
+  assert.equal(queue.load(scope), null)
+})
+
+test("uncertain category save reloads canonical state before one persisted-command resend", async () => {
+  let sourceDraft = draft()
+  let controller: ReturnType<typeof useStage3CategoryCaptureController> | undefined
+  const queue = createCategoryCaptureQueue({ storage: createMemoryCategoryCaptureQueueStorage() })
+  const canonical = draft({ revision: 4 })
+  const saved = draft({
+    revision: 5,
+    completedCaptureCategories: ["shampoo"],
+    categoryCursor: "conditioner",
+  })
+  const expectedRevisions: number[] = []
+  let canonicalLoads = 0
+  const harness = createHookStateHarness(() => {
+    controller = useStage3CategoryCaptureController({
+      draft: sourceDraft,
+      personalPlanId: sourceDraft.personalPlanId,
+      requirements,
+      currentRequirement: requirements[0]!,
+      currentCategory: "shampoo",
+      categoryIndex: 0,
+      gateway: {
+        async loadOrCreate() {
+          canonicalLoads += 1
+          return canonicalLoad(canonical)
+        },
+        async mutate(input) {
+          expectedRevisions.push(input.expectedRevision)
+          if (expectedRevisions.length === 1) throw new Error("lost_response")
+          return { status: "saved", draft: saved }
+        },
+      },
+      analytics: noOpStage3Analytics,
+      readyToReconcile: false,
+      queue,
+      onDraftChange: (nextDraft) => {
+        sourceDraft = nextDraft
+      },
+      onOpenCaptureCategory: () => {},
+      onPrepareDecisionPhase: async () => {},
+      onMutationError: (error) => {
+        throw error
+      },
+      onConflict: () => {
+        throw new Error("unexpected conflict")
+      },
+    })
+  })
+
+  await harness.render()
+  await controller!.enqueueCategoryReplacement({
+    working: [
+      {
+        key: "local:fixture-shampoo-a",
+        displayName: "Shampoo A",
+        candidate: { ...command().candidates[0]!, roles: [] },
+      },
+    ],
+    assignments: { "local:fixture-shampoo-a": ["shampoo_everyday"] },
+    uncoveredRoles: [],
+  })
+
+  assert.equal(canonicalLoads, 1)
+  assert.deepEqual(expectedRevisions, [0, 4])
+  assert.equal(sourceDraft.revision, 5)
+})
+
+test("canonical category divergence reports conflict without replaying obsolete capture authority", async () => {
+  let sourceDraft = draft()
+  let controller: ReturnType<typeof useStage3CategoryCaptureController> | undefined
+  const queue = createCategoryCaptureQueue({ storage: createMemoryCategoryCaptureQueueStorage() })
+  const scope = createStage3CategoryCaptureScope({
+    draft: sourceDraft,
+    personalPlanId: sourceDraft.personalPlanId,
+    category: "shampoo",
+    currentRequirement: requirements[0]!,
+  })
+  const canonical = draft({
+    revision: 3,
+    completedCaptureCategories: ["shampoo"],
+    categoryCursor: "conditioner",
+  })
+  let mutations = 0
+  let conflict: Stage3ProductDraft | undefined
+  const harness = createHookStateHarness(() => {
+    controller = useStage3CategoryCaptureController({
+      draft: sourceDraft,
+      personalPlanId: sourceDraft.personalPlanId,
+      requirements,
+      currentRequirement: requirements[0]!,
+      currentCategory: "shampoo",
+      categoryIndex: 0,
+      gateway: {
+        async loadOrCreate() {
+          return canonicalLoad(canonical)
+        },
+        async mutate() {
+          mutations += 1
+          throw new Error("lost_response")
+        },
+      },
+      analytics: noOpStage3Analytics,
+      readyToReconcile: false,
+      queue,
+      onDraftChange: (nextDraft) => {
+        sourceDraft = nextDraft
+      },
+      onOpenCaptureCategory: () => {},
+      onPrepareDecisionPhase: async () => {},
+      onMutationError: (error) => {
+        throw error
+      },
+      onConflict: (latestDraft) => {
+        conflict = latestDraft
+      },
+    })
+  })
+
+  await harness.render()
+  await controller!.enqueueCategoryReplacement({
+    working: [
+      {
+        key: "local:fixture-shampoo-a",
+        displayName: "Shampoo A",
+        candidate: { ...command().candidates[0]!, roles: [] },
+      },
+    ],
+    assignments: { "local:fixture-shampoo-a": ["shampoo_everyday"] },
+    uncoveredRoles: [],
+  })
+
+  assert.equal(mutations, 1)
+  assert.equal(conflict, canonical)
+  assert.equal(sourceDraft.revision, 3)
+  assert.equal(queue.load(scope), null)
+})
+
+test("revision conflict acknowledges an exact latest category without replaying it", async () => {
+  let sourceDraft = draft()
+  let controller: ReturnType<typeof useStage3CategoryCaptureController> | undefined
+  const queue = createCategoryCaptureQueue({ storage: createMemoryCategoryCaptureQueueStorage() })
+  const canonical = draft({
+    revision: 1,
+    completedCaptureCategories: ["shampoo"],
+    categoryCursor: "conditioner",
+    products: [
+      {
+        capturedProductId: "captured-shampoo",
+        userProductId: "user-product-shampoo",
+        identity: {
+          kind: "catalog_product",
+          productId: "fixture-shampoo-a",
+          displayName: "Shampoo A",
+          category: "shampoo",
+        },
+        frequencyRange: "weekly_2x",
+        ownership: "owned",
+        source: "catalog_search",
+      },
+    ],
+    roleAssignments: [
+      { capturedProductId: "captured-shampoo", category: "shampoo", roles: ["shampoo_everyday"] },
+    ],
+  })
+  const scope = createStage3CategoryCaptureScope({
+    draft: sourceDraft,
+    personalPlanId: sourceDraft.personalPlanId,
+    category: "shampoo",
+    currentRequirement: requirements[0]!,
+  })
+  let mutations = 0
+  let canonicalLoads = 0
+  const harness = createHookStateHarness(() => {
+    controller = useStage3CategoryCaptureController({
+      draft: sourceDraft,
+      personalPlanId: sourceDraft.personalPlanId,
+      requirements,
+      currentRequirement: requirements[0]!,
+      currentCategory: "shampoo",
+      categoryIndex: 0,
+      gateway: {
+        async loadOrCreate() {
+          canonicalLoads += 1
+          return canonicalLoad(canonical)
+        },
+        async mutate() {
+          mutations += 1
+          return { status: "conflict", latestDraft: canonical }
+        },
+      },
+      analytics: noOpStage3Analytics,
+      readyToReconcile: false,
+      queue,
+      onDraftChange: (nextDraft) => {
+        sourceDraft = nextDraft
+      },
+      onOpenCaptureCategory: () => {},
+      onPrepareDecisionPhase: async () => {},
+      onMutationError: (error) => {
+        throw error
+      },
+      onConflict: () => {
+        throw new Error("unexpected conflict")
+      },
+    })
+  })
+
+  await harness.render()
+  await controller!.enqueueCategoryReplacement({
+    working: [
+      {
+        key: "local:fixture-shampoo-a",
+        displayName: "Shampoo A",
+        candidate: { ...command().candidates[0]!, roles: [] },
+      },
+    ],
+    assignments: { "local:fixture-shampoo-a": ["shampoo_everyday"] },
+    uncoveredRoles: [],
+  })
+
+  assert.equal(mutations, 1)
+  assert.equal(canonicalLoads, 0)
+  assert.equal(sourceDraft.revision, 1)
+  assert.equal(queue.load(scope), null)
 })

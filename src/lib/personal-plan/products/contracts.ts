@@ -365,6 +365,8 @@ export type Stage3OwnedProduct = {
 
 export type Stage3PlannedPurchase = {
   plannedPurchaseId: string
+  /** Present only in schema-v3 snapshots; v1/v2 use category/role identity. */
+  sourceDecisionKey?: string
   category: PersonalPlanCategory
   role: PlanProductRole | null
   recommendationId: string
@@ -372,6 +374,17 @@ export type Stage3PlannedPurchase = {
   displayName: string
   reason: string
   authorityRuleId: string
+}
+
+export type Stage3RetainedOwnedProduct = {
+  capturedProductId: string
+  userProductId: string
+  productId: string
+  displayName: string
+  category: PersonalPlanCategory
+  role: PlanProductRole | null
+  sourceDecisionKey: string
+  planStatus: "not_used"
 }
 
 export type Stage3PendingProduct = {
@@ -398,7 +411,7 @@ export type Stage3UncoveredRole = {
 }
 
 export type ProposedProductPortfolio = {
-  schemaVersion: 1 | 2
+  schemaVersion: 1 | 2 | 3
   portfolioVersionId: string
   personalPlanId: string
   refinedVersionId: string
@@ -409,6 +422,8 @@ export type ProposedProductPortfolio = {
   pendingProducts: Stage3PendingProduct[]
   uncoveredRoles: Stage3UncoveredRole[]
   productLoadResolution?: Stage3ProductLoadResolutionV1
+  /** Schema-v3 presentation data. Routine intentionally does not consume it. */
+  retainedOwnedProducts?: Stage3RetainedOwnedProduct[]
   createdAt: string
 }
 
@@ -689,6 +704,133 @@ const stage3ProductLoadResolutionSchema: z.ZodType<Stage3ProductLoadResolutionV1
     >,
   })
   .strict()
+
+const stage3CategoryResolutionSchema: z.ZodType<Stage3CategoryResolution> = z
+  .object({
+    decisionKey: idSchema,
+    category: personalPlanCategorySchema,
+    role: planProductRoleSchema.nullable(),
+    verdict: z.enum(STAGE3_FIT_VERDICTS),
+    choiceState: z.enum(STAGE3_CHOICE_STATES),
+    capturedProductId: idSchema.nullable(),
+    executable: z.boolean(),
+    gapPreserved: z.boolean(),
+  })
+  .strict()
+
+const stage3OwnedProductSchema: z.ZodType<Stage3OwnedProduct> = z
+  .object({
+    capturedProductId: idSchema,
+    userProductId: idSchema,
+    productId: idSchema,
+    displayName: idSchema,
+    category: personalPlanCategorySchema,
+    role: planProductRoleSchema.nullable(),
+    frequencyRange: productFrequencySchema.nullable(),
+    choiceState: z.enum(["owned_active", "owned_override"]),
+    sourceDecisionKey: idSchema,
+  })
+  .strict()
+
+const stage3PlannedPurchaseSchema = z
+  .object({
+    plannedPurchaseId: idSchema,
+    category: personalPlanCategorySchema,
+    role: planProductRoleSchema.nullable(),
+    recommendationId: idSchema,
+    productId: idSchema,
+    displayName: idSchema,
+    reason: idSchema,
+    authorityRuleId: idSchema,
+  })
+  .strict()
+
+const stage3PendingProductSchema: z.ZodType<Stage3PendingProduct> = z
+  .object({
+    capturedProductId: idSchema,
+    userProductId: idSchema,
+    submissionId: idSchema,
+    category: personalPlanCategorySchema,
+    role: planProductRoleSchema.nullable(),
+    displayName: idSchema,
+    reviewStatus: z.enum(["pending_review", "needs_more_info"]),
+  })
+  .strict()
+
+const stage3UncoveredRoleSchema: z.ZodType<Stage3UncoveredRole> = z
+  .object({
+    category: personalPlanCategorySchema,
+    role: planProductRoleSchema.nullable(),
+    reason: z.enum([
+      "planned_purchase_not_acquired",
+      "pending_review",
+      "inactive",
+      "unassigned",
+      "no_product_owned",
+      "not_ready_to_decide",
+    ]),
+    linkedDecisionKey: idSchema,
+  })
+  .strict()
+
+const portfolioBaseSchema = {
+  portfolioVersionId: idSchema,
+  personalPlanId: idSchema,
+  refinedVersionId: idSchema,
+  sourceDraftRevision: z.number().int().nonnegative(),
+  categoryResolutions: z.array(stage3CategoryResolutionSchema),
+  ownedProducts: z.array(stage3OwnedProductSchema),
+  pendingProducts: z.array(stage3PendingProductSchema),
+  uncoveredRoles: z.array(stage3UncoveredRoleSchema),
+  createdAt: idSchema,
+}
+
+/** Strict historical snapshot parser. Writers retain their existing v1/v2 derivation. */
+export const proposedProductPortfolioSchema: z.ZodType<ProposedProductPortfolio> = z.union([
+  z
+    .object({
+      schemaVersion: z.literal(1),
+      ...portfolioBaseSchema,
+      plannedPurchases: z.array(stage3PlannedPurchaseSchema),
+    })
+    .strict(),
+  z
+    .object({
+      schemaVersion: z.literal(2),
+      ...portfolioBaseSchema,
+      plannedPurchases: z.array(stage3PlannedPurchaseSchema),
+      productLoadResolution: stage3ProductLoadResolutionSchema,
+    })
+    .strict(),
+  z
+    .object({
+      schemaVersion: z.literal(3),
+      ...portfolioBaseSchema,
+      plannedPurchases: z.array(
+        stage3PlannedPurchaseSchema.extend({ sourceDecisionKey: idSchema }),
+      ),
+      retainedOwnedProducts: z.array(
+        z
+          .object({
+            capturedProductId: idSchema,
+            userProductId: idSchema,
+            productId: idSchema,
+            displayName: idSchema,
+            category: personalPlanCategorySchema,
+            role: planProductRoleSchema.nullable(),
+            sourceDecisionKey: idSchema,
+            planStatus: z.literal("not_used"),
+          })
+          .strict(),
+      ),
+      productLoadResolution: stage3ProductLoadResolutionSchema.optional(),
+    })
+    .strict(),
+])
+
+export function parseProposedProductPortfolio(value: unknown): ProposedProductPortfolio {
+  return proposedProductPortfolioSchema.parse(value)
+}
 
 export const stage3ProductDraftSchema: z.ZodType<Stage3ProductDraft> = z.object({
   schemaVersion: z.literal(1),

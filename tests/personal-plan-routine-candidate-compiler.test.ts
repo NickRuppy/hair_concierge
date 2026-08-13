@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
-import type { ProposedProductPortfolio } from "../src/lib/personal-plan/products/contracts"
+import {
+  parseProposedProductPortfolio,
+  type ProposedProductPortfolio,
+} from "../src/lib/personal-plan/products/contracts"
 import { compileInitialRoutineCandidate } from "../src/lib/personal-plan/routine-candidate-compiler"
 import type { InitialNeedPlanSnapshot } from "../src/lib/personal-plan/types"
 
@@ -443,4 +446,96 @@ test("compiler accepts a v2 portfolio with a frozen supplemental product-load de
   assert.equal(payload.items[0]?.category, "deep_cleansing_shampoo")
   assert.equal(payload.items[0]?.state.systemAssessment, "basis")
   assert.equal(payload.items[0]?.cadence.recommended.every, 3)
+})
+
+test("compiler reads a frozen v3 planned replacement by decision key, not its shared role", async () => {
+  const v3Portfolio = {
+    ...portfolio(),
+    schemaVersion: 3,
+    categoryResolutions: [
+      {
+        decisionKey: "decision:oil:dry_finish:replacement-a",
+        category: "oil",
+        role: "dry_finish",
+        verdict: "ideal",
+        choiceState: "planned_purchase",
+        capturedProductId: null,
+        executable: false,
+        gapPreserved: true,
+      },
+      {
+        decisionKey: "decision:oil:dry_finish:replacement-b",
+        category: "oil",
+        role: "dry_finish",
+        verdict: "ideal",
+        choiceState: "planned_purchase",
+        capturedProductId: null,
+        executable: false,
+        gapPreserved: true,
+      },
+    ],
+    ownedProducts: [],
+    plannedPurchases: [
+      {
+        plannedPurchaseId: "planned:decision:oil:dry_finish:replacement-a",
+        sourceDecisionKey: "decision:oil:dry_finish:replacement-a",
+        category: "oil",
+        role: "dry_finish",
+        recommendationId: "recommendation-a",
+        productId: "product-a",
+        displayName: "Öl A",
+        reason: "A",
+        authorityRuleId: "oil.v1",
+      },
+      {
+        plannedPurchaseId: "planned:decision:oil:dry_finish:replacement-b",
+        sourceDecisionKey: "decision:oil:dry_finish:replacement-b",
+        category: "oil",
+        role: "dry_finish",
+        recommendationId: "recommendation-b",
+        productId: "product-b",
+        displayName: "Öl B",
+        reason: "B",
+        authorityRuleId: "oil.v1",
+      },
+    ],
+    pendingProducts: [],
+    uncoveredRoles: [],
+    retainedOwnedProducts: [
+      {
+        capturedProductId: "retained-a",
+        userProductId: "user-retained-a",
+        productId: "old-product-a",
+        displayName: "Altes Öl",
+        category: "oil",
+        role: "dry_finish",
+        sourceDecisionKey: "decision:oil:dry_finish:replacement-a",
+        planStatus: "not_used",
+      },
+    ],
+  }
+  const parsed = parseProposedProductPortfolio(v3Portfolio)
+  const candidate = await compileInitialRoutineCandidate({
+    ...compilerInput(),
+    portfolioSchemaVersion: 3,
+    portfolioSnapshot: parsed as never,
+  })
+  const payload = candidate.payload as Record<string, any>
+
+  assert.deepEqual(
+    payload.items.map((item: { product: { productId: string }; assignmentKey: string }) => ({
+      productId: item.product.productId,
+      assignmentKey: item.assignmentKey,
+    })),
+    [
+      {
+        productId: "product-a",
+        assignmentKey: "assignment:oil:dry_finish:planned:decision:oil:dry_finish:replacement-a",
+      },
+      {
+        productId: "product-b",
+        assignmentKey: "assignment:oil:dry_finish:planned:decision:oil:dry_finish:replacement-b",
+      },
+    ],
+  )
 })

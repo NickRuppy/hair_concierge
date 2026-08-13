@@ -13,6 +13,7 @@ import type {
 } from "./contracts"
 import { deriveStage3DecisionSubjects } from "./contracts"
 import type {
+  Stage3CompletionReceiptResponse,
   Stage3CompleteResponse,
   Stage3DraftResponse,
   Stage3MutationResponse,
@@ -57,6 +58,7 @@ import { evaluateStage3Authority } from "./authority/evaluate"
 import { requireCurrentAuthoritySnapshot, Stage3AuthoritySnapshotError } from "./authority/snapshot"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { expectedShampooBucket } from "./authority/categories/shampoo"
+import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
 
 export type Stage3AssessmentSearchContext = {
   hairThickness: "fine" | "normal" | "coarse"
@@ -137,6 +139,12 @@ export type Stage3ProductionPersistence = {
     userId: string
     draftId: string
   }): Promise<ProposedProductPortfolio | null>
+  loadCompletionReceipt?(input: { userId: string; draftId: string }): Promise<{
+    portfolio: ProposedProductPortfolio
+    productPortfolioVersionId: string
+    routineVersionId: string
+    routineProposalId: string | null
+  } | null>
   loadRefinedNeedSnapshot(input: {
     userId: string
     personalPlanId: string
@@ -225,6 +233,17 @@ export function createProductionStage3ProductsGateway(
     })
     cached = { draft, requirements }
     return cached
+  }
+
+  async function assertCurrentRefinedSource(draft: Stage3ProductDraft) {
+    const currentRefinedVersionId = await options.persistence.loadCurrentRefinedVersionId({
+      userId: options.userId,
+      personalPlanId: draft.personalPlanId,
+    })
+    if (currentRefinedVersionId !== draft.refinedVersionId) {
+      cached = null
+      throw new Stage3AuthoritySnapshotError("stale_refined_source")
+    }
   }
 
   async function authoritativeEvaluation(
@@ -442,9 +461,13 @@ export function createProductionStage3ProductsGateway(
     async mutate(input): Promise<Stage3MutationResponse> {
       const loaded = await current(input.draftId)
       const draft = loaded.draft
-      if (draft.revision !== input.expectedRevision || draft.status !== "active") {
+      if (draft.status !== "active") {
         return { status: "conflict", latestDraft: draft }
       }
+      // A semantic replay may legitimately avoid a second CAS write, but it
+      // must still prove that this draft belongs to the plan's current refined
+      // source before returning a canonical receipt.
+      await assertCurrentRefinedSource(draft)
       const next = await applyMutation(
         options.persistence,
         options.userId,
@@ -453,6 +476,9 @@ export function createProductionStage3ProductsGateway(
         loaded.requirements,
         now,
       )
+      if (stage3DraftsSemanticallyEqual(draft, next)) return { status: "saved", draft }
+      if (draft.revision !== input.expectedRevision)
+        return { status: "conflict", latestDraft: draft }
       if (input.mutation.type === "replace_capture_category" && next !== draft) {
         const category = input.mutation.category
         const assignedProductIds = new Set(
@@ -526,6 +552,13 @@ export function createProductionStage3ProductsGateway(
       }
     },
 
+    async loadCompletionReceipt(input): Promise<Stage3CompletionReceiptResponse> {
+      const loaded = await current(input.draftId)
+      const receipt = await completionReceiptForDraft(loaded.draft)
+      if (!receipt) throw new Stage3ProductionUnavailableError()
+      return receipt
+    },
+
     async complete(input): Promise<Stage3CompleteResponse> {
       const loaded = await current(input.draftId)
       const draft = loaded.draft
@@ -536,6 +569,10 @@ export function createProductionStage3ProductsGateway(
         return { status: "conflict", latestDraft: draft }
       }
       let completionDraft = draft
+      if (draft.status === "completed") {
+        const receipt = await completionReceiptForDraft(draft)
+        if (receipt) return receipt
+      }
       let refinedNeedSnapshot: InitialNeedPlanSnapshot
       let expectedSourceRevision: number
       if (draft.status === "completed") {
@@ -681,6 +718,27 @@ export function createProductionStage3ProductsGateway(
     },
   }
 
+  async function completionReceiptForDraft(
+    draft: Stage3ProductDraft,
+  ): Promise<Stage3CompletionReceiptResponse | null> {
+    if (draft.status !== "completed" || !options.persistence.loadCompletionReceipt) return null
+    const receipt = await options.persistence.loadCompletionReceipt({
+      userId: options.userId,
+      draftId: draft.draftId,
+    })
+    if (!receipt) return null
+    return {
+      status: "ready_for_routine",
+      draft,
+      portfolio: receipt.portfolio,
+      personalPlanId: draft.personalPlanId,
+      refinedVersionId: draft.refinedVersionId,
+      productPortfolioVersionId: receipt.productPortfolioVersionId,
+      routineProposalId: receipt.routineProposalId,
+      next: { stage: 4, href: "/routine" },
+    }
+  }
+
   async function resolveAuthorityDecisions(input: {
     draftId: string
     expectedRevision: number
@@ -697,25 +755,19 @@ export function createProductionStage3ProductsGateway(
       durationMs: performance.now() - phaseStartedAt,
     })
     const draft = loaded.draft
-    if (draft.revision !== input.expectedRevision || draft.status !== "active") {
+    if (draft.status !== "active") {
       return { status: "conflict", latestDraft: draft }
     }
     if (input.intents.length === 0) {
       throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
     }
-    const subjectsByKey = new Map(
-      deriveStage3DecisionSubjects(draft).map((subject) => [subject.decisionKey, subject]),
-    )
     const seenSubjectKeys = new Set<string>()
-    const subjects = input.intents.map((intent) => {
+    for (const intent of input.intents) {
       if (seenSubjectKeys.has(intent.subjectKey)) {
         throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
       }
       seenSubjectKeys.add(intent.subjectKey)
-      const subject = subjectsByKey.get(intent.subjectKey)
-      if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
-      return subject
-    })
+    }
     phaseStartedAt = performance.now()
     const context = await loadEvaluationContext(draft)
     reportPersonalPlanTransitionTiming({
@@ -723,6 +775,19 @@ export function createProductionStage3ProductsGateway(
       operation: `${operation}_source_context`,
       outcome: "success",
       durationMs: performance.now() - phaseStartedAt,
+    })
+    const desired = classifyStage3DesiredState(draft, input.intents)
+    if (desired === "satisfied") return { status: "saved", draft }
+    if (desired === "different" || draft.revision !== input.expectedRevision) {
+      return { status: "conflict", latestDraft: draft }
+    }
+    const subjectsByKey = new Map(
+      deriveStage3DecisionSubjects(draft).map((subject) => [subject.decisionKey, subject]),
+    )
+    const subjects = input.intents.map((intent) => {
+      const subject = subjectsByKey.get(intent.subjectKey)
+      if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
+      return subject
     })
     phaseStartedAt = performance.now()
     const evaluations = await Promise.all(

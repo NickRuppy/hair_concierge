@@ -6,6 +6,7 @@ export type Stage3AnalyticsEventName =
   | "personal_plan_stage3_fallback_opened"
   | "personal_plan_stage3_decision_selected"
   | "personal_plan_stage3_save_outcome"
+  | "personal_plan_stage3_recovery_outcome"
   | "personal_plan_stage3_handoff"
 
 export type Stage3AnalyticsPort = {

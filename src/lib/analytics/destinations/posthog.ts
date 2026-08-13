@@ -337,6 +337,14 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["personal_plan_stage3_save_outcome"]
       return { outcome: data.outcome }
     }
+    case "personal_plan_stage3_recovery_outcome": {
+      const data = payload as AppEventMap["personal_plan_stage3_recovery_outcome"]
+      return {
+        operation: data.operation,
+        outcome: data.outcome,
+        failure_phase: data.failurePhase,
+      }
+    }
     case "personal_plan_stage3_handoff": {
       const data = payload as AppEventMap["personal_plan_stage3_handoff"]
       return { outcome: data.outcome }

@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { resolvePlanStartPageState, type PlanStartPageDeps } from "../src/app/plan-start/page"
 import {
   completeStage2ProductKindCorrection,
+  loadPlanStartStage2HandoffBootstrap,
   loadPlanStartStage3Bootstrap,
   PlanStartProductionGate,
   recoverPlanStartStage3Load,
@@ -399,6 +400,47 @@ test("the Stage 2 handoff performs one Stage 3 GET and returns reusable bootstra
   assert.deepEqual(bootstrap.authorityEvaluations, [])
   assert.equal(shouldLoadStage3DraftOnMount(bootstrap), false)
   assert.equal(shouldLoadStage3DraftOnMount(undefined), true)
+})
+
+test("a stale Stage 2 bridge reloads the current server frontier without replaying completion", async () => {
+  const stage3Requests: string[] = []
+  let serverFrontierReloads = 0
+
+  const result = await loadPlanStartStage2HandoffBootstrap({
+    handoff: { refinedVersionId: "refined-stale", nextHref: "/plan-start" },
+    loadStage3Bootstrap: async (refinedVersionId) => {
+      stage3Requests.push(refinedVersionId)
+      throw new Stage3ProductsGatewayError("stale_refined_source")
+    },
+    reloadServerFrontier: () => {
+      serverFrontierReloads += 1
+    },
+  })
+
+  assert.equal(result, null)
+  assert.deepEqual(stage3Requests, ["refined-stale"])
+  assert.equal(serverFrontierReloads, 1)
+})
+
+test("a transient Stage 2 bridge failure preserves its same-handoff retry", async () => {
+  const stage3Requests: string[] = []
+  const handoff = { refinedVersionId: "refined-retry", nextHref: "/plan-start" as const }
+
+  await assert.rejects(
+    loadPlanStartStage2HandoffBootstrap({
+      handoff,
+      loadStage3Bootstrap: async (refinedVersionId) => {
+        stage3Requests.push(refinedVersionId)
+        throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      },
+      reloadServerFrontier: () =>
+        assert.fail("transient errors must stay on the bridge retry path"),
+    }),
+    (error) =>
+      error instanceof Stage3ProductsGatewayError && error.code === "temporarily_unavailable",
+  )
+
+  assert.deepEqual(stage3Requests, [handoff.refinedVersionId])
 })
 
 test("corrected Stage 3 product kinds save through Stage 2 completion and load a fresh Stage 3 bootstrap", async () => {

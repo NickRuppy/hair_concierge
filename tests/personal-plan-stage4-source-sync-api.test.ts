@@ -4,6 +4,7 @@ import test from "node:test"
 import { createPersonalPlanRoutineSyncRouteHandlers } from "../src/app/api/personal-plan/routine/sync/route"
 import {
   createRoutineSourceSyncService,
+  parseRoutineSourceBaseSnapshots,
   resolveSuccessorRoutineCadences,
   type RoutineSourceSyncRepository,
 } from "../src/lib/personal-plan/routine/source-sync-service"
@@ -53,6 +54,32 @@ const portfolio = {
   uncoveredRoles: [],
   createdAt: "2026-08-08T00:00:00.000Z",
 } satisfies ProposedProductPortfolio
+
+test("stored source snapshots fail closed instead of throwing on a legacy portfolio shape", () => {
+  const legacyPortfolio = {
+    ...portfolio,
+    ownedProducts: [
+      {
+        capturedProductId: "captured-a",
+        userProductId: "owned-a",
+        productId: "product-a",
+        displayName: "Legacy Shampoo",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        frequencyRange: "weekly_2x",
+      },
+    ],
+  }
+  assert.equal(
+    parseRoutineSourceBaseSnapshots({
+      routine,
+      portfolio: legacyPortfolio,
+      sourceProductDraftId: "draft-a",
+      sourceProductDraftRevision: 4,
+    }),
+    null,
+  )
+})
 
 const claimB = {
   ...claim,

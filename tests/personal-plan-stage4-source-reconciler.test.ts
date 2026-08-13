@@ -183,3 +183,104 @@ test("a category-mismatched source identity is rejected", () => {
   })
   assert.deepEqual(result, { status: "invalid_source", reason: "category_mismatch" })
 })
+
+test("v3 acquisition resolves every approved exact planned use and leaves other decisions intact", () => {
+  const previousPortfolio = portfolio() as ProposedProductPortfolio & { schemaVersion: 3 }
+  previousPortfolio.schemaVersion = 3
+  previousPortfolio.plannedPurchases = [
+    {
+      ...previousPortfolio.plannedPurchases[0]!,
+      plannedPurchaseId: "planned:decision:oil:dry_finish:a",
+      sourceDecisionKey: decisionKey,
+    },
+    {
+      ...previousPortfolio.plannedPurchases[0]!,
+      plannedPurchaseId: "planned:decision:oil:dry_finish:b",
+      sourceDecisionKey: "decision:oil:dry_finish:b",
+    },
+    {
+      ...previousPortfolio.plannedPurchases[0]!,
+      plannedPurchaseId: "planned:other-product",
+      productId: "other-product",
+      sourceDecisionKey: "decision:oil:dry_finish:other",
+    },
+  ]
+  previousPortfolio.categoryResolutions = [
+    previousPortfolio.categoryResolutions[0]!,
+    { ...previousPortfolio.categoryResolutions[0]!, decisionKey: "decision:oil:dry_finish:b" },
+    { ...previousPortfolio.categoryResolutions[0]!, decisionKey: "decision:oil:dry_finish:other" },
+  ]
+  const previousRoutine = routine()
+  previousRoutine.intent.categories[0]!.assignments[0]!.productRef = {
+    kind: "planned",
+    plannedPurchaseId: "planned:decision:oil:dry_finish:a",
+    productId: "product-oil",
+  }
+  previousRoutine.items[0]!.product = {
+    kind: "planned",
+    plannedPurchaseId: "planned:decision:oil:dry_finish:a",
+    productId: "product-oil",
+    displayName: "Leichtes Öl",
+  }
+  previousRoutine.intent.categories[0]!.assignments = [
+    ...previousRoutine.intent.categories[0]!.assignments,
+    {
+      ...previousRoutine.intent.categories[0]!.assignments[0]!,
+      assignmentKey: "assignment:oil:dry_finish:planned-b",
+      productRef: {
+        kind: "planned",
+        plannedPurchaseId: "planned:decision:oil:dry_finish:b",
+        productId: "product-oil",
+      },
+    },
+    {
+      ...previousRoutine.intent.categories[0]!.assignments[0]!,
+      assignmentKey: "assignment:oil:dry_finish:other",
+      productRef: {
+        kind: "planned",
+        plannedPurchaseId: "planned:other-product",
+        productId: "other-product",
+      },
+    },
+  ]
+  previousRoutine.items = [
+    ...previousRoutine.items,
+    {
+      ...previousRoutine.items[0]!,
+      assignmentKey: "assignment:oil:dry_finish:planned-b",
+      itemKey: "item:oil:dry_finish:planned-b",
+      sourceDecisionKeys: ["decision:oil:dry_finish:b"],
+    },
+    {
+      ...previousRoutine.items[0]!,
+      assignmentKey: "assignment:oil:dry_finish:other",
+      itemKey: "item:oil:dry_finish:other",
+      sourceDecisionKeys: ["decision:oil:dry_finish:other"],
+      product: {
+        ...previousRoutine.items[0]!.product,
+        plannedPurchaseId: "planned:other-product",
+        productId: "other-product",
+      } as never,
+    },
+  ]
+
+  const result = reconcileRoutineUserProductSource({
+    routine: previousRoutine,
+    portfolio: previousPortfolio,
+    userProduct: acquired,
+    sourceRevision: 8,
+  })
+
+  assert.equal(result.status, "changed")
+  if (result.status !== "changed") return
+  assert.deepEqual(
+    result.portfolio.plannedPurchases.map((entry) => entry.plannedPurchaseId),
+    ["planned:other-product"],
+  )
+  assert.equal(result.routine.items.filter((item) => item.product.kind === "owned").length, 2)
+  assert.equal(
+    result.routine.items.find((item) => item.assignmentKey === "assignment:oil:dry_finish:other")
+      ?.product.kind,
+    "planned",
+  )
+})
